@@ -1,0 +1,27 @@
+{
+  "task_id": "issue-229-230-operator-programme-readiness-0630",
+  "task_slug": "issue-229-230-operator-programme-readiness-0630",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-13/issue-229-230-operator-programme-readiness-0630-research.md",
+    "plan": null,
+    "details": null,
+    "critique": null,
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Research disposition", "status": "executed (bounded)", "evidence": "Ledger prior dispositions plus live #229/#230 bodies and comments; only AC4 (human AT/WCAG) unmet on both"},
+    {"decision": "Critique", "status": "self-critique only, not independent", "evidence": "Recorded in research artifact; five-minute budget"},
+    {"decision": "Review", "status": "root self-review only, not independent", "evidence": "No executable change; documentation-only"}
+  ],
+  "blockers": [
+    {"id": "ac4-human-at", "summary": "WCAG 2.2/AT acceptance for #229 and #230 requires human evidence owned by #151/#155", "resolution": "Resume when such evidence exists"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "No local engineering slice; resume on human AT evidence or an observed current-head defect"},
+  "prioritized_follow_ups": []
+}

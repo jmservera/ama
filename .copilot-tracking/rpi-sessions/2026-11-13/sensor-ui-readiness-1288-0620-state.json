@@ -1,0 +1,26 @@
+{
+  "task_id": "sensor-ui-readiness-1288-0620",
+  "task_slug": "sensor-ui-readiness-1288-0620",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Research",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-13/sensor-ui-readiness-1288-0620-research.md",
+    "plan": null,
+    "details": null,
+    "critique": null,
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Research disposition executed; no ready initial slice", "status": "recorded", "evidence": "research artifact Determination"},
+    {"decision": "Critique, Review and backlog-manager route not executed", "status": "not-run", "evidence": "six-minute budget; no slice to critique or review"}
+  ],
+  "blockers": [
+    {"id": "ledger", "summary": "ROOT demo-run-ledger.md not found", "resolution": "owner supplies path"}
+  ],
+  "next_action": {"phase": "Research", "action": "None locally; wait for owner retrofit marker source, cloud/SQL admission or new pin"},
+  "prioritized_follow_ups": []
+}
