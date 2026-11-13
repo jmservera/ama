@@ -1,0 +1,49 @@
+[
+  {
+    "issue": 153,
+    "head": "c358dd675182bbeff1ec36b6c0d650319b334c86",
+    "tree": "47f5a94edd83428223384ebd07ff3664fd029d4a",
+    "status": "",
+    "target": "feat/demo-ux-integration-1112",
+    "target_sha": "43b2187b918206666c63cb25d8b338be09791118",
+    "main": "eac1206c6ca08bd551e3d0d2384bb87a1f05c24f",
+    "diff_files": [
+      ".copilot-tracking/changes/2026-11-12-employee-denial-copy-153-1112-race-changes.md",
+      ".copilot-tracking/details/2026-11-12-employee-denial-copy-153-1112-race-details.md",
+      ".copilot-tracking/plans/2026-11-12-employee-denial-copy-153-1112-race-critique.md",
+      ".copilot-tracking/plans/2026-11-12-employee-denial-copy-153-1112-race-plan.instructions.md",
+      ".copilot-tracking/research/2026-11-12-employee-denial-copy-153-1112-race-research.md",
+      ".copilot-tracking/research/2026-11-12-employee-denial-copy-153-1112-research.md",
+      ".copilot-tracking/reviews/2026-11-12-employee-denial-copy-153-1112-race-review.md",
+      ".copilot-tracking/rpi-sessions/2026-11-12/employee-denial-copy-153-1112-race-state.json",
+      ".copilot-tracking/rpi-sessions/2026-11-12/employee-denial-copy-153-1112-state.json",
+      "src/api/tests/test_mvp.py",
+      "src/core/src/zava_forward/core/store.py"
+    ],
+    "merge_tree_exit": 0,
+    "merge_tree_output": "409af7164319304b30dcb037abd556463c10120b\n",
+    "merge_tree_stderr": ""
+  },
+  {
+    "issue": 157,
+    "head": "a5c503e6d7f03d856d053dcc2638031b8cd0276a",
+    "tree": "3a9703bedaf237e64365491bf839c7a26cea0bda",
+    "status": "",
+    "target": "feat/demo-ai-integration-1112",
+    "target_sha": "43b2187b918206666c63cb25d8b338be09791118",
+    "main": "eac1206c6ca08bd551e3d0d2384bb87a1f05c24f",
+    "diff_files": [
+      ".copilot-tracking/changes/2026-11-12-memory-evidence-boundary-157-1112-changes.md",
+      ".copilot-tracking/details/2026-11-12-memory-evidence-boundary-157-1112-details.md",
+      ".copilot-tracking/plans/2026-11-12-memory-evidence-boundary-157-1112-plan.md",
+      ".copilot-tracking/plans/critiques/2026-11-12-memory-evidence-boundary-157-1112-plan-critique.md",
+      ".copilot-tracking/research/2026-11-12-memory-evidence-boundary-157-1112-research.md",
+      ".copilot-tracking/reviews/2026-11-12-memory-evidence-boundary-157-1112-review.md",
+      ".copilot-tracking/rpi-sessions/2026-11-12/memory-evidence-boundary-157-1112-state.json",
+      "src/api/tests/test_assistants.py"
+    ],
+    "merge_tree_exit": 0,
+    "merge_tree_output": "3a9703bedaf237e64365491bf839c7a26cea0bda\n",
+    "merge_tree_stderr": ""
+  }
+]

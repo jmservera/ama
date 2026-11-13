@@ -1,0 +1,20 @@
+{
+  "summary": "Pass: bounded closure of the provenance and scoped-execution deferrals in 153-independent-final-1112.json. Original report remains unchanged. This is candidate publication readiness against the declared pinned target, not whole-issue acceptance or merge authorization. No remaining selected-tier publication prerequisite identified.",
+  "verdict": "approve",
+  "severity_counts": {"critical": 0, "high": 0, "medium": 0, "low": 0},
+  "findings": [],
+  "positive_changes": [
+    "Coordinator actual git evidence in 153157-provenance-2228.json binds issue 153 to head c358dd675182bbeff1ec36b6c0d650319b334c86, tree 47f5a94edd83428223384ebd07ff3664fd029d4a and empty status. Declared target feat/demo-ux-integration-1112 remains pinned at 43b2187b918206666c63cb25d8b338be09791118. Its complete three-dot file list matches the previously reviewed eleven-file surface. Merge-tree exits 0 without stderr, producing 409af7164319304b30dcb037abd556463c10120b. This closes the missing exact-head, cleanliness and prospective-target readiness evidence, without rebasing or changing the candidate.",
+    "Separate validate-153-frozen-1112-result.json binds installed-worktree execution to that same final head and reports empty git status before and after. New worker-owned pip venv installs the worktree core/agents/api distributions, with no source-package PYTHONPATH substitution. Shared fixture paths only are used.",
+    "Read referenced raw /tmp/v153-frozen-1112/tests-72.out: 72 tests OK. Read raw configured Ruff core/api check and format outputs: all checks pass, 245 and 152 files already formatted. Read raw mypy-core.out and mypy-api-rerun.out: 298 and 236 source files without issues. Pinned tool installation evidence identifies Ruff 0.17.1 and mypy 2.4.0. These close the original missing independently reproduced scoped-check provenance.",
+    "The previously reviewed synthetic stale-two-client browser observations remain credible retained evidence for this text-only change; independent browser replay is explicitly Deferred, not claimed executed. It is not an additional publication prerequisite for this bounded source review."
+  ],
+  "recommended_actions": [
+    "Publish only with Refs #153 and the declared pinned prospective target. Whole issue remains unmet; leave universal criteria 2/3 and named-human criterion 5 unproven.",
+    "Preserve original 153-independent-final-1112.json and all raw adverse evidence. This supplement closes only its missing exact-head/provenance/scoped-execution concerns; it does not rewrite the original Deferred assessment.",
+    "Preserve /tmp/v153-frozen-1112/mypy-api.out: initial missing playwright dependency caused 64 errors. Worker installed pinned playwright 1.64.0 and the configured rerun passed. This is a resolved environment prerequisite, not a silently waived failed check.",
+    "Retain law-store-unavailable tracebacks in both original and reproduced test output; passing targeted tests are not healthy live rule-engine acceptance. Original overwritten first missing-Playwright output remains unrecoverable; original incorrect editable installs and original non-pinned tool versions remain historical limitations, now supplemented rather than erased.",
+    "No broader gates, full suites, hosted CI, MSSQL, live operation, accessibility or human acceptance are asserted. None is newly invented as a publication prerequisite in this bounded closure. No tests, source review, source edits or nested-agent work were repeated."
+  ],
+  "risk_assessment": "Pass for the frozen bounded candidate: prior source assessment found no functional defect; new coordinator provenance and separate pinned execution evidence close the selected deferrals on the same clean head/tree. Original ancestry assessment and all unrelated limitations remain as recorded. This conclusion does not extend to another head, tree or target."
+}

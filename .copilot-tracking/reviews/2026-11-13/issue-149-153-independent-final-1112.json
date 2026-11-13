@@ -1,0 +1,46 @@
+{
+  "summary": "Deferred for exact-head integration readiness; functional inspection of the supplied complete diff passes with no demonstrated functional defect. HEAD ref independently reads c358dd675182bbeff1ec36b6c0d650319b334c86; local prospective target ref independently reads 43b2187b918206666c63cb25d8b338be09791118. Tree 47f5a94edd83428223384ebd07ff3664fd029d4a and clean status are author assertions in rpi-153-stale-stage-1112.log:352, not independently verified here. Available tools cannot execute git, tests, or object/tree comparison. Therefore neither pristine exact-head validation nor current target differences/mergeability are certified. Refs #153 only; the whole issue remains unmet.",
+  "verdict": "approve",
+  "severity_counts": {"critical": 0, "high": 0, "medium": 0, "low": 0},
+  "changed_files": [
+    {"file": "src/core/src/zava_forward/core/store.py", "lines_changed": "671: one exception message replaced", "risk": "Medium", "issue_count": 0},
+    {"file": "src/api/tests/test_mvp.py", "lines_changed": "127-159: HTTP regression added", "risk": "Low", "issue_count": 0},
+    {"file": ".copilot-tracking/", "lines_changed": "Nine dated research, plan, critique, details, changes, review and state records added; all read in supplied diff", "risk": "Low", "issue_count": 0}
+  ],
+  "findings": [],
+  "positive_changes": [
+    "store.py:671 now supplies the stage refusal reason, existing case owner and a concrete safe next action. 'May have changed' does not falsely assert another actor advanced the case. Copy notes before reload avoids promising draft retention.",
+    "store.py:668-700 leaves the controlled writer, guard, stage precondition, gate checks, safety, resident authority, booking, capacity, history and persistence sequence unchanged. No automatic retry, mutation, consent weakening or new role assignment appears in the complete supplied diff. No web source file appears in that diff.",
+    "test_mvp.py:127-159 signs in two distinct actors, advances as Pam and refuses Sam's later request; also covers an earlier-stage case, HTTP 400 without structured reasons, stable booked stage and no extra advance event.",
+    "/tmp/i153/race.py genuinely renders Sam's eligible button before Pam's HTTP advance and then clicks the stale button. This is a valid stale-view interleaving, not a simultaneous-writer stress test. Button-only-at-stage reasoning does not exclude it.",
+    "Raw /tmp/i153/race-out.txt and race-out-after.txt show B=200, A=400 and old/new rendered messages respectively. The stale card/button persist in both; no automatic replay is evidenced.",
+    "Original NOT_READY research/state remain in the full diff alongside the explicit stale-view correction. Critique corrections are present in actual source/test context: Case owner, may-have-changed wording, copy-notes instruction and earlier-stage coverage.",
+    "Worktree HEAD reflog records original base 59eac895112ebb97cfa6c27413b3d398e6f056e4 -> aded42cb4cf1e5ab25ccac02aab0e1eb99996c3a -> c358dd675182bbeff1ec36b6c0d650319b334c86, with a same-head reset and no recorded rebase. This supports original ancestry but is not a commit-object ancestry proof."
+  ],
+  "testing_recommendations": [
+    "Complete read-only git verification: rev-parse HEAD and HEAD^{tree}, status --porcelain=v1 including untracked files, merge-base/ancestor checks against original base and pinned prospective target, full target...HEAD file list and conflict check. Preserve original ancestry; do not rebase.",
+    "Retain exact commands, exit codes and raw output for configured core/api lint, format and mypy checks at this head; run any required scoped gate rather than waiving it. Review prospective-target changes before declaring this candidate integration-ready.",
+    "No live, human, accessibility, WCAG, axe or contrast acceptance is established. SQL Server, full suites, hosted CI and full/changed gate were not run according to the author; these are not silently treated as passing."
+  ],
+  "recommended_actions": [
+    "Disposition: Deferred for final readiness, not Revise for a demonstrated source defect. Functional verdict approve refers only to inspected code and supplied evidence, not merge authorization.",
+    "Use Refs #153, never Fixes/Closes. Leave criteria 2, universal 3 and named-human 5 unticked.",
+    "Evidence limitation: /tmp/i153/test-before.txt retains one failing pre-change regression; test-after.txt retains Ran 72 tests / OK. Both include 'Rule evaluation unavailable' and the unloaded-law-store traceback. This is targeted synthetic evidence, not pristine output or a healthy rule-engine acceptance result.",
+    "Evidence limitation: before/after browser logs also retain unloaded-law-store errors and unknown alert/rule coverage, SQL-required and synthetic-demo restrictions. Preserve these adverse observations; do not reinterpret successful rendering as full operational readiness.",
+    "Evidence limitation: the first missing-Playwright output was overwritten, as explicitly admitted in race-research:16. Its raw failure is unavailable. Initial wrong editable-install provenance and subsequent correction are narrative evidence, not independently replayed or authenticated package provenance.",
+    "Evidence limitation: lint/format/mypy commands and success assertions appear in rpi-153-stale-stage-1112.log and changes:18-25, but standalone raw tool outputs were not found in /tmp/i153. The log shows command summaries, including truncated/piped invocations, not a pristine reproducible check transcript. Prior Review explicitly did not rerun these checks.",
+    "No matching candidate diff-state.json was supplied or discovered. The similarly named 153-card-1112-diff-state.json was read once and rejected as unrelated: different worktree/base/head. Candidate scope and inputs were taken from the explicit request and complete 153-current-independent.diff instead.",
+    "This assessment made no source changes, commits, pushes, issue changes or nested-agent calls. Only review artifacts were written."
+  ],
+  "out_of_scope_observations": [
+    {"file": "src/api/src/zava_forward/api/web/app.js", "observation": "995-1035 retains existing stale-session suppression, uncertain/recorded-write history barriers and confirmed-denial rendering. Stale card/button persistence is a pre-existing follow-up, not introduced by the message change. Browser draft retention was not tested."},
+    {"file": ".copilot-tracking/plans/2026-11-12-employee-denial-copy-153-1112-race-plan.instructions.md", "observation": "Historical unchecked plan still quotes superseded wording and the wrong content-test location; critique/changes and actual final source resolve these. Do not execute obsolete wording as the final specification."}
+  ],
+  "risk_assessment": "Small text-only production change with focused HTTP regression and credible retained synthetic browser interleaving. No concrete functional defect found. Exact tree cleanliness, commit-object ancestry, prospective-target delta and check provenance remain unverified, so final readiness is Deferred.",
+  "acceptance_criteria_coverage": [
+    {"ac": "One confirmed non-funding stage denial states reason, owner and next action", "status": "Implemented", "notes": "store.py:671 and test_mvp.py:127-159; raw browser before/after confirms rendering in a synthetic fixture."},
+    {"ac": "No automatic retry/mutation or consent weakening", "status": "Implemented", "notes": "Only production exception text changes; existing controlled writer and gates remain in place."},
+    {"ac": "Issue #153 universal terminology and blocked-message coverage, and named-human resident wording review", "status": "Partial", "notes": "Only one denial path assessed. Criteria 2, universal 3 and 5 remain unproven; no closure or accessibility acceptance."},
+    {"ac": "Independent exact-head clean tree and current prospective-target readiness", "status": "Partial", "notes": "HEAD and local target refs read directly; reported tree/clean status not independently proven. Execution-capable read-only verification remains required."}
+  ]
+}

@@ -6,7 +6,7 @@
     "task_slug": "issue-149-parent-plan-2333"
   },
   "mode": "manual",
-  "active_phase": "Implement",
+  "active_phase": "Review",
   "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
@@ -15,7 +15,7 @@
     "details": ".copilot-tracking/details/2026-11-12/issue-149-parent-plan-2333-details.md",
     "critique": ".copilot-tracking/plans/2026-11-12/issue-149-parent-plan-2333-critique.md",
     "changes": ".copilot-tracking/changes/2026-11-13/issue-149-independent-ux-0042-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/2026-11-13/issue-149-original-review-0104-public-technical-copy.md"
   },
   "confirmed_decisions": [
     {
@@ -67,6 +67,46 @@
       "decision": "Fresh read-only origin/main equals c401e5d56446b5752e8d91af6a45f3f06269c4bd; no merge or rebase. 233 held; five cycles spent; extension unavailable is NO approval; C3 3/5 spent, two left, no renewal. No push, PR, merge, issue, tick, board edit or approval",
       "status": "recorded",
       "evidence": "pack section Boundaries, gaps, owners and resume conditions"
+    },
+    {
+      "decision": "Review execution (separate from the critique state): original final Review rpi-149-original-review-0104 executed once, execution PARTIAL, outcome conformant within the bounded partial source, test and check scope, no Critical, High or Medium finding, five Low (RV-L1..RV-L5) open. Adopted as an immutable original result, not upgraded or replaced. Tracked artifact is a labelled PUBLIC TECHNICAL COPY (derivative, not verbatim, not a newly executed Review) omitting only private operational handling text with explicit markers; SHA256 of the privately retained original report ad5a288ac821f434833926eed5d09df131106e4ea19ba5d52bcb20e501e72128",
+      "status": "recorded; Review not accepted, not publication approval, no criterion ticked",
+      "evidence": ".copilot-tracking/reviews/2026-11-13/issue-149-original-review-0104-public-technical-copy.md; issue-149-partial-release-evidence-adoption-0131.md"
+    },
+    {
+      "decision": "Provenance complements 0122 (core: 74/82/176/216 and parent lineage; UX: 96/C3/215/134/156 and public documentation) each read their relevant child RPI bodies and public cells in full, each Partial by its own status with exact residuals; no Critical, High or Medium finding; they do not make the original Review complete. Core and UX lows (BOM stripping, unverified 176 as-of mutation, stale markers, author-only original 96, 134 ordering and amend-after-Review) stay OPEN and disclosed; no optional source repair; 96 C3 3/5 spent with two left; 233 five spent, no extra permission, excluded not deferred",
+      "status": "recorded; open lows disclosed",
+      "evidence": ".copilot-tracking/reviews/2026-11-13/issue-149-provenance-core-0122-result.json; issue-149-provenance-ux-0122-result.json; issue-149-provenance-ux-0122-review.md"
+    },
+    {
+      "decision": "Metadata input proof 0125 binds 37e2715b5 (not the final head): no actually-read source, configuration, helper, fixture or documentation input differs from 288b6a376; exactly three metadata files differ and no lane reads them; not whole-archive equality; core 72 exactly three historic inputs REUSED not fresh; dynamic and transitive-read caveats preserved. Final independent assessor must recheck the new metadata paths, input manifest, clean head and main. No blanket new documentation or full-gate campaign adopted; focused Markdown, link, table, JSON and diff review only; no failed applicable check waived",
+      "status": "recorded; partial-supported",
+      "evidence": ".copilot-tracking/reviews/2026-11-13/issue-149-metadata-inputs-0125-result.json"
+    },
+    {
+      "decision": "216 law-link content and artifacts are already on main via e05606413 and squash e44de171e (PR 1495), not a child introduced by this branch; child e4aac8b72 is not an ancestor; the integrated 12 of 12 run proves coexistence only",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/2026-11-13/issue-149-216-integrated-validation-0117-result.json"
+    },
+    {
+      "decision": "Issue 153 employee-denial-copy race read as input: nine tracked paths in full; blobs equal at c358dd675, squash 8f8be74e1 (ancestor of head, not of main) and head; c358dd675 not an ancestor. Independent Pass is per input, bound to c358dd675 and target 43b2187b9, and does not assess this head; no source review or test repeated",
+      "status": "recorded; per-input Pass not inherited",
+      "evidence": ".copilot-tracking/reviews/2026-11-13/issue-149-153-independent-closure-1112.json; issue-149-153-independent-final-1112.json; issue-149-153157-provenance-2228.json"
+    },
+    {
+      "decision": "Supersession: historical stale markers (0048 state blockers roles-failures, validators-incomplete, publication-gates, c3-candidate; this state's validation-pending blocker and pending-Review wording) are superseded. C3 is integrated, lanes passed on actual results, the Review has an actual outcome. This current state is authoritative; original critique and child state history are not rewritten",
+      "status": "recorded",
+      "evidence": "issue-149-partial-release-evidence-adoption-0131.md section Historical blockers and stale markers"
+    },
+    {
+      "decision": "Actual native phase-log markers show independent critic and reviewer launches for 74 (351/952), 176 (186/343), 216 (182/292) and original 82 (254/787); single-commit chronology cannot prove ordering (PV-1 open); not tamper-proof attestation. 74 mutation M1..M8 and A1..A4 failed intended assertions, A2 not a pure amount-only control, first M8 invalid-JS timeout is not a valid result, later M8 failed the intended ZF-3 system assertion, final browser 24 PASS; earlier adverse qualifications preserved",
+      "status": "recorded",
+      "evidence": "coordinator root phase logs and rpi-74-2300-evidence; provenance core result"
+    },
+    {
+      "decision": "Fresh read-only fetch: origin/main equals c401e5d56446b5752e8d91af6a45f3f06269c4bd; no merge or rebase. Final evidence assembly is metadata only: no source, test, tool, workflow, infrastructure, manifest or README change",
+      "status": "recorded",
+      "evidence": "pack subsection Final evidence assembly; changes record"
     }
   ],
   "blockers": [
@@ -87,8 +127,8 @@
     }
   ],
   "next_action": {
-    "phase": "Implement",
-    "action": "Stop. Root consumes the provisional checkpoint candidate and the actual original Review, then routes final metadata equivalence, independent exact-head assessment and hosted gates; no push or publication here"
+    "phase": "Review",
+    "action": "Stop. Final independent exact-head assessment of the final local candidate (rechecking new metadata paths, input manifest, clean head and current main), current-main applicability, publication authority with Refs-only closing hygiene and actual hosted checks remain; no push, PR or merge here. Original Review execution remains Partial; no acceptance, 233 deferral or relaxation"
   },
   "prioritized_follow_ups": null
 }
