@@ -18,6 +18,7 @@ from .finance import _identity
 GRANT_FLOW = {"Not recorded": ("Opportunity",), "Opportunity": ("Award",), "Award": ("Claimable",), "Claimable": ("Submitted",),
               "Submitted": ("Accepted", "Rejected"), "Accepted": ("Cash received",), "Rejected": ("Claimable",), "Cash received": ()}
 GRANT_STATES = tuple(GRANT_FLOW)
+ELIGIBILITY_OUTCOMES = ("Eligible", "Not eligible", "Not assessed")
 GRANT_ACTIONS = ("grant_open", "grant_propose", "grant_approve", "grant_withdraw")
 
 
@@ -72,6 +73,21 @@ def require_authority(store, user, action, case_id, route):
     return deepcopy(authority)
 
 
+def grant_eligibility_verdict(recorded, on=None):
+    """Gate a submission on recorded eligibility; only an explicit Eligible with evidence passes."""
+    outcome = recorded.get("outcome") if isinstance(recorded, dict) else None
+    source = recorded.get("source") if isinstance(recorded, dict) else None
+    evidenced = isinstance(source, str) and bool(source.strip())
+    state = None
+    if outcome == "Eligible" and evidenced:
+        state = True
+    elif outcome == "Not eligible" and evidenced:
+        state = False
+    reason = {True: "Eligibility confirmed: met.", False: "The grant is recorded as not eligible."}.get(
+        state, "Eligibility is not assessed, so the grant cannot be submitted.")
+    return gates.eligibility_gate(state, reason, "Grants Officer", on)
+
+
 def grant_summary(c):
     gs = c.get("grants") or []
     return ", ".join(f"{g['scheme']}: {g['state']}" for g in gs) if gs else "No grant record"
@@ -87,7 +103,7 @@ class GrantMixin:
             grants = c.setdefault("grants", [])
             if action == "grant_open":
                 g = dict(id=k.next_id(grants, "GR"), scheme=k.text(body.get("scheme"), "the scheme or funder", 80), state="Not recorded",
-                         pending=None, history=[])
+                         pending=None, history=[], eligibility=dict(outcome="Not assessed", source=None, by=None, at=None))
                 grants.append(g)
                 self._grant_set_pending(user, g, "Opportunity", body)
                 detail = f"{g['id']} opened"
@@ -107,8 +123,18 @@ class GrantMixin:
         if not isinstance(source, str) or not source.strip() or len(source) > 200:
             raise ValueError("Add the exact evidence reference, from 1 to 200 characters.")
         amount = k.money(body.get("amount"), "the amount") if (to == "Cash received" or body.get("amount") not in (None, "")) else None
+        eligibility = None
+        if body.get("eligibility") not in (None, ""):
+            outcome = k.choice(body["eligibility"], ELIGIBILITY_OUTCOMES, "the eligibility outcome")
+            ref = body.get("eligibility_source")
+            if outcome != "Not assessed" and (not isinstance(ref, str) or not ref.strip() or len(ref) > 200):
+                raise ValueError("Add the exact eligibility evidence reference, from 1 to 200 characters.")
+            eligibility = dict(outcome=outcome, source=ref.strip() if isinstance(ref, str) and ref.strip() else None,
+                               by=user["email"], at=k.now())
         g["pending"] = dict(to=to, source=source.strip(), amount=amount, currency="GBP",
                             by=user["email"], name=user["name"], at=k.now(), identity=_identity(user))
+        if eligibility is not None:
+            g["pending"]["eligibility"] = eligibility
 
     def _grant_propose(self, user, g, body, case_id):
         self._grant_set_pending(user, g, body.get("to"), body)
@@ -122,11 +148,19 @@ class GrantMixin:
         identity = self._fin_independent(user, p["by"], p.get("identity"), "approve this grant change")
         if p.get("currency") != "GBP":
             raise ValueError("Legacy proposal currency is unknown. Withdraw and re-propose with GBP evidence.")
+        recorded = p["eligibility"] if "eligibility" in p else g.get("eligibility", "legacy")
+        if p["to"] == "Submitted" and recorded != "legacy":
+            verdict = grant_eligibility_verdict(recorded)
+            if not gates.transition_allowed([verdict]):
+                raise ValueError(f"{verdict.reason} Owner: {verdict.owner}. Next action: {verdict.correction}")
         authority = self._financial_authority(user, "grant:" + p["to"], case_id, g["scheme"])
         g["history"].append(dict(state=p["to"], source=p["source"], amount=p["amount"], proposed_by=p["name"], proposed_at=p["at"],
                                  approved_by=user["name"], approved_at=k.now(), case_id=case_id, scheme=g["scheme"], currency=p["currency"],
                                  proposed_identity=deepcopy(identity), approved_identity=_identity(user), authority=authority,
-                                 source_status="Supplied, unverified"))
+                                 source_status="Supplied, unverified",
+                                 eligibility="Not assessed (legacy record)" if recorded == "legacy" else deepcopy(recorded)))
+        if "eligibility" in p:
+            g["eligibility"] = p["eligibility"]
         g.update(state=p["to"], pending=None)
         return f"{g['id']} now {g['state']}"
 

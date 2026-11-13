@@ -17,6 +17,8 @@ from zava_forward.core.grants import GRANT_STATES, require_authority
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, Store
 
+ELIGIBLE = dict(eligibility="Eligible", eligibility_source="SYN eligibility")
+
 
 def designate(user: dict[str, Any]) -> dict[str, Any]:
     """Explicit fixture authority only, never a production staff default."""
@@ -221,6 +223,7 @@ class GrantChecks:
                 to=target,
                 source="SYN " + target,
                 amount=1 if target == "Cash received" else None,
+                **(ELIGIBLE if target == "Submitted" else {}),
             )
             self.grant(self.b, "grant_approve", id="GR-1")
         grant = self.record(self.open())["grants"][0]
@@ -351,6 +354,74 @@ class GrantChecks:
             self.staff(self.b)
             with self.assertRaises(PermissionError):
                 self.store.funding_step(dict(self.b, oid="forged"), "ZF-1", action, "SYN")
+
+    def to_claimable(self: Any) -> None:
+        self.opportunity()
+        for target in ("Award", "Claimable"):
+            self.grant(self.a, "grant_propose", id="GR-1", to=target, source="SYN " + target)
+            self.grant(self.b, "grant_approve", id="GR-1")
+
+    def propose_submit(self: Any, **eligibility: Any) -> None:
+        self.grant(
+            self.a, "grant_propose", id="GR-1", to="Submitted", source="SYN submit", **eligibility
+        )
+
+    def grant_state(self: Any) -> str:
+        with self.store.lock:
+            return str(self.store._case("ZF-1")["grants"][0]["state"])
+
+    def test_submission_needs_recorded_eligibility_pass(self: Any) -> None:
+        self.to_claimable()
+        self.propose_submit(eligibility="Eligible", eligibility_source="SYN eligibility check")
+        self.grant(self.b, "grant_approve", id="GR-1")
+        self.assertEqual(self.grant_state(), "Submitted")
+        recorded = self.record()["grants"][0]["history"][-1]["eligibility"]
+        self.assertEqual(recorded["outcome"], "Eligible")
+
+    def test_not_eligible_and_unknown_never_submit_and_can_be_corrected(self: Any) -> None:
+        self.to_claimable()
+        cases: list[dict[str, Any]] = [
+            {},
+            dict(eligibility="Not assessed"),
+            dict(eligibility="Not eligible", eligibility_source="SYN check"),
+        ]
+        for evidence in cases:
+            with self.subTest(evidence=evidence):
+                if self.record()["grants"][0]["pending"]:
+                    self.grant(self.a, "grant_withdraw", id="GR-1")
+                self.propose_submit(**evidence)
+                with self.assertRaises(ValueError):
+                    self.grant(self.b, "grant_approve", id="GR-1")
+                self.assertEqual(self.grant_state(), "Claimable")
+        self.grant(self.a, "grant_withdraw", id="GR-1")
+        self.propose_submit(eligibility="Eligible", eligibility_source="SYN corrected check")
+        self.grant(self.b, "grant_approve", id="GR-1")
+        self.assertEqual(self.grant_state(), "Submitted")
+
+    def test_malformed_pending_eligibility_is_unknown_not_a_fallback(self: Any) -> None:
+        self.to_claimable()
+        self.propose_submit(eligibility="Eligible", eligibility_source="SYN check")
+        for bad in (None, {}, dict(outcome="Eligible", source=""), dict(outcome="Eligible")):
+            with self.subTest(bad=bad):
+                with self.store.lock:
+                    self.store._case("ZF-1")["grants"][0]["pending"]["eligibility"] = bad
+                    self.store.save()
+                with self.assertRaises(ValueError):
+                    self.grant(self.b, "grant_approve", id="GR-1")
+        with self.assertRaises(ValueError):
+            self.propose_submit(eligibility="Eligible")
+
+    def test_pre_field_legacy_grant_is_not_gated(self: Any) -> None:
+        self.to_claimable()
+        with self.store.lock:
+            self.store._case("ZF-1")["grants"][0].pop("eligibility", None)
+            self.store.save()
+        self.propose_submit()
+        self.grant(self.b, "grant_approve", id="GR-1")
+        self.assertEqual(self.grant_state(), "Submitted")
+        self.assertEqual(
+            self.record()["grants"][0]["history"][-1]["eligibility"], "Not assessed (legacy record)"
+        )
 
 
 class JsonGrantChecks(GrantFixture, GrantChecks, unittest.TestCase):

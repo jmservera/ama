@@ -93,11 +93,11 @@ function grantPanel(c, id, refresh) {
   return h("section", { class: "card" }, h("h2", {}, "Grant stages"),
     h("p", { class: "muted" }, "Each stage is kept on its own with its evidence and who approved it. Grants are separate from invoices and payments."),
     grants.length ? grants.map((g) => h("div", {}, h("strong", {}, `${g.id}: ${g.scheme}. Now: ${g.state}.`),
-      g.pending ? h("div", { class: "muted" }, `Waiting for approval: ${g.pending.to}, proposed by ${g.pending.name}. Evidence: ${g.pending.source}.`) : null,
+      g.pending ? h("div", { class: "muted" }, `Waiting for approval: ${g.pending.to}, proposed by ${g.pending.name}. Evidence: ${g.pending.source}. Eligibility: ${(g.pending.eligibility || g.eligibility || { outcome: "Not assessed" }).outcome}.`) : null,
       h("ul", {}, g.history.map((x) => h("li", {}, `${x.state}: ${x.source}. Proposed by ${x.proposed_by}, approved by ${x.approved_by}.${x.amount ? ` ${money(x.amount)}.` : ""}`))))) : h("p", { class: "muted" }, "No grant recorded."),
     actForm("Add a grant", [["scheme", "Scheme or funder"], ["source", "Evidence for the opportunity"]], (b, submitted) => go("grant_open", b, submitted), "Add grant"),
     ids.length ? [
-      actForm("Propose the next stage", [["id", "Grant", { options: ids }], ["to", "Next stage", { options: ["Award", "Claimable", "Submitted", "Accepted", "Rejected", "Cash received"] }], ["source", "Evidence"], ["amount", "Amount in pounds (needed for cash received)"]], (b, submitted) => go("grant_propose", b, submitted), "Propose"),
+      actForm("Propose the next stage", [["id", "Grant", { options: ids }], ["to", "Next stage", { options: ["Award", "Claimable", "Submitted", "Accepted", "Rejected", "Cash received"] }], ["source", "Evidence"], ["amount", "Amount in pounds (needed for cash received)"], ["eligibility", "Eligibility check (needed before Submitted)", { options: [{ value: "", label: "Not changed" }, "Eligible", "Not eligible", "Not assessed"] }], ["eligibility_source", "Eligibility evidence reference"]], (b, submitted) => go("grant_propose", b, submitted), "Propose"),
       actForm("Approve a proposed stage", [["id", "Grant", { options: ids }]], (b, submitted) => go("grant_approve", b, submitted), "Approve"),
       actForm("Withdraw a proposal", [["id", "Grant", { options: ids }]], (b, submitted) => go("grant_withdraw", b, submitted), "Withdraw"),
     ] : null);
