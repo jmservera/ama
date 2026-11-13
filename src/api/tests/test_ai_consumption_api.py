@@ -247,6 +247,41 @@ class ConsumptionApi(unittest.TestCase):
         self.assertEqual(completed["tokens"]["cached_tokens"], 10)
         self.assertEqual(completed["tokens"], envelope["usage"])
 
+    def call_join(
+        self,
+        meter_id: str,
+        *,
+        capability: str,
+        outcome: str,
+        tokens: dict[str, int] | None,
+        held: bool,
+        eligible: bool,
+        output: str,
+        retry: int = 0,
+    ) -> dict[str, Any]:
+        """Assert one call is joined to every Criterion 6 field and returns its ledger rows."""
+        records = self.records()
+        (reserved,) = [r for r in records if r["kind"] == "reserved" and r["id"] == meter_id]
+        (completed,) = [r for r in records if r["kind"] == "completed" and r["id"] == meter_id]
+        (joined,) = [r for r in records if r["kind"] == "output" and r["root"] == reserved["root"]]
+        self.assertEqual(
+            [reserved[k] for k in ("capability", "case_type", "model", "retry")],
+            [capability, "retrofit-case", "test-model", retry],
+        )
+        for key in ("configuration", "prompt", "root", "attempt"):
+            self.assertRegex(reserved[key], r"^[0-9a-f]{64}$")
+        self.assertEqual(
+            [completed["tokens"], completed["outcome"], completed["held"]],
+            [tokens, outcome, held],
+        )
+        self.assertEqual([joined["output"], joined["eligible"]], [output, eligible])
+        return reserved
+
+    def assert_content_free(self, *canaries: str) -> None:
+        serialized = json.dumps(self.records())
+        for canary in canaries:
+            self.assertNotIn(canary, serialized)
+
     def test_assistant_thread_preserves_usage_metadata_and_review_join(self) -> None:
         self.authority("assessment-preparation")
         task = self.fixture.run_ready("assessment-preparation")
@@ -260,6 +295,18 @@ class ConsumptionApi(unittest.TestCase):
             reference(f"{task['id']}:{task['fence']}"),
             self.inner.configuration("standard", 0, 600),
             reference(runtime_binding("assessment-preparation", self.provider)["prompt_version"]),
+        )
+        self.call_join(
+            envelope["meter_id"],
+            capability="assessment-preparation",
+            outcome="returned",
+            tokens=dict(
+                prompt_tokens=100, completion_tokens=20, total_tokens=120, cached_tokens=10
+            ),
+            held=False,
+            eligible=True,
+            output=reference(task["id"]),
+            retry=task["attempts"] - 1,
         )
         before = self.fixture.domain()
         verified = self.fixture.verify(task)
@@ -988,6 +1035,23 @@ class ConsumptionApi(unittest.TestCase):
                         self.assertIsNone(receipt["tokens"])
                         self.assertEqual(report["unknown_liabilities"], 1)
                         self.assertEqual(report["coverage"], "incomplete")
+                last = self.store.chat_resume(self.pm, thread["id"])["messages"][-1]
+                failed = mode == "provider-failure"
+                self.call_join(
+                    latest["id"],
+                    capability=TASK,
+                    outcome="provider-unavailable" if failed else "returned",
+                    tokens=None
+                    if failed
+                    else dict(
+                        prompt_tokens=100, completion_tokens=20, total_tokens=120, cached_tokens=10
+                    ),
+                    held=failed,
+                    eligible=False,
+                    output=reference(f"chat:{thread['id']}:{last['seq']}"),
+                )
+                self.assertEqual(report["failures"], report_before["failures"] + failed)
+                self.assert_content_free("Tell me a story.", "Check the case stage.")
         self.assertEqual(before[:3], self.fixture.domain()[:3])
 
     def test_actual_worker_thread_settlement_survives_failure_revocation_and_fence(self) -> None:
