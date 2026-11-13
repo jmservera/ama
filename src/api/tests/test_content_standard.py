@@ -462,6 +462,60 @@ console.log(JSON.stringify(out));
                         literal,
                     )
 
+    @staticmethod
+    def _server_message_text(source):
+        """Message text by category: raised, listed as blockers, or returned as reasons."""
+        import ast
+
+        def joined(node):
+            return "".join(
+                n.value for n in ast.walk(node) if isinstance(n, ast.Constant) and isinstance(n.value, str)
+            )
+
+        found = {"raise": [], "why": [], "reason": []}
+        tree = ast.parse(source)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Raise) and isinstance(node.exc, ast.Call):
+                for arg in node.exc.args:
+                    found["raise"].append(joined(arg))
+            elif isinstance(node, (ast.Assign, ast.AugAssign)):
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+                if any(isinstance(t, ast.Name) and t.id == "why" for t in targets):
+                    found["why"].append(joined(node.value))
+            elif isinstance(node, ast.FunctionDef) and node.name in ("missing_items", "technical_gate"):
+                found["reason"].append(
+                    "".join(joined(n) for n in node.body if not isinstance(n, ast.Expr))
+                )
+        return found
+
+    def test_server_refusals_in_signoffs_and_workflows_avoid_internal_terms(self):
+        core = ROOT / "src" / "core" / "src" / "zava_forward" / "core"
+        minimum = {
+            "signoffs.py": {"raise": 5, "why": 2, "reason": 2},
+            "workflows.py": {"raise": 20, "why": 0, "reason": 0},
+        }
+        for name, needs in minimum.items():
+            found = self._server_message_text((core / name).read_text())
+            for category, texts in found.items():
+                self.assertGreaterEqual(len(texts), needs[category], (name, category))
+                for text in texts:
+                    with self.subTest(name=name, category=category, text=text[:60]):
+                        self.assertIsNone(BANNED.search(text), text)
+
+    def test_server_message_guard_flags_banned_words_in_every_category(self):
+        source = (
+            "def missing_items(c):\n    return [dict(item='Provenance check')]\n"
+            "def technical_gate(c):\n    return ['Snapshot is stale']\n"
+            "def f(c):\n    why = ['The gate is closed']\n    why += ['Trace missing']\n"
+            "    raise ValueError(f'Envelope {c} on hold')\n"
+        )
+        found = self._server_message_text(source)
+        self.assertEqual({k: len(v) for k, v in found.items()}, {"raise": 1, "why": 2, "reason": 2})
+        for category, texts in found.items():
+            for text in texts:
+                with self.subTest(category=category, text=text):
+                    self.assertIsNotNone(BANNED.search(text))
+
     def test_consultation_and_restart_gate_refusals_use_plain_wording(self):
         core = ROOT / "src" / "core" / "src" / "zava_forward" / "core"
         for name in ("procurement.py", "gates.py"):
