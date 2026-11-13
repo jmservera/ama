@@ -1,0 +1,23 @@
+{
+  "task_id": "184-midslot-rebase-1509",
+  "task_slug": "184-midslot-rebase-1509",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-13/184-midslot-rebase-1509-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-13/184-midslot-rebase-1509-plan.md",
+    "details": ".copilot-tracking/details/184-midslot-rebase-20261113T1509Z-details.md",
+    "critique": ".copilot-tracking/critiques/184-midslot-rebase-20261113T1509Z-critique.md",
+    "changes": ".copilot-tracking/changes/184-midslot-rebase-20261113T1509Z-changes.md",
+    "review": ".copilot-tracking/reviews/184-midslot-rebase-20261113T1509Z-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research disposition executed; Planning Readiness Ready", "status": "recorded", "evidence": ".copilot-tracking/research/2026-11-13/184-midslot-rebase-1509-research.md"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Plan", "action": "Write plan and details, then rubber-duck critique before rebase"},
+  "prioritized_follow_ups": []
+}
