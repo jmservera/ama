@@ -3,7 +3,7 @@
 Verdict: Changes required (no user decision needed).
 
 Blocking
-* Probe source unspecified; `/tmp/probe-165.py` did not exist and no hash basis. 
+* Probe source unspecified; `/tmp/probe-165.py` did not exist and no hash basis.
 * Sensor selection ambiguous: `sensor_stock.select` sorts all rows by id before taking first N, so filtering to consent granted first changes the subset; fixture has no consent field. Define N, seed, consent assumptions and order; label hypothetical.
 
 Non-blocking
