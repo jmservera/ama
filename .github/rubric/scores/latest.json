@@ -2,18 +2,18 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-13T07:54:47+00:00",
-  "commit": "5cedff3f468b5f8d56c86107f791e0311765b5cd",
+  "scored_at": "2026-11-13T14:50:06+00:00",
+  "commit": "1ccfae438a2df3a7c3ae8c9fc1a3196172846a29",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43388547747",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43445223220",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
-    "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
+    "prd": "11fe0160a47c2ee2ac0fbab89e659a3867d928531b08367b03329afbcf02e8d8",
     "adr": "a0004921843db2b041b1e8a0c28a107f22d55d544d06084f2cdaa628ccbcc8e1",
     "solution-code": "06ed118939d194deef0e5adb52a742d0c475c40d987c1137a62d566c048bcfbe",
     "infrastructure": "dd044fc59726c16e169aff9739920dd967cf68348fa64f386b67587f6c0e86f4",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
-    "pitch": "cfae108f4e940d7a2473840137688392c15cdc5e37149c43ed7efdd287ca8758",
+    "pitch": "3b1ad575bcb303c981844fd6c915f3059a8f06ac5b939af8e64c6687924ae121",
     "thought-leadership": "f7f2adc273905a84d848d54be0a77abc3550013fd1c9ea9e2fedb743bdacf70a"
   },
   "total": 79,
@@ -46,7 +46,7 @@
         "src/api/src/zava_forward/api/web/role-screens.js:907-960",
         "src/api/tests/test_exception_register_screen.py:239-345"
       ],
-      "rationale": "Not touched by this diff; infra/README.md secret-naming clarification has no new security/compliance substance. Ceiling 5 unchanged."
+      "rationale": "Not touched by this diff; pitch/PRD edits have no new security/compliance substance. Ceiling 5 unchanged."
     },
     "A4": {
       "score": 5,
@@ -80,36 +80,36 @@
     "B1": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live readiness; no rehearsal evidence in this diff. New runbook section is procedural demo-scope documentation, not narrative/argument structure evidence. Baseline retained."
+      "rationale": "Live readiness; diff only renumbers pitch slide-page references and records a draft owner decision, no rehearsal or narrative-structure evidence changed. Baseline retained."
     },
     "B2": {
       "score": 4,
       "evidence": [
         "docs/capstone/pitch/README.md:27-33"
       ],
-      "rationale": "Archetype/register-calibration table persists unchanged in substance this revision. Still unrehearsed, readiness retained."
+      "rationale": "Archetype/register-calibration table unchanged in substance; new table row is a Tokenomics placement cross-reference, not register calibration. Readiness retained."
     },
     "B3": {
       "score": 2,
       "evidence": [],
-      "rationale": "runbook.md gains a five-home target section but adds no rehearsed demo evidence or recovery-from-failure proof; this is pre-live scoping, not an executed or rehearsed demo. Needs Improvement retained."
+      "rationale": "No demo/executive-hook content changed in this diff. Needs Improvement retained."
     },
     "B4": {
       "score": 3,
       "evidence": [],
-      "rationale": "No Q&A transcript or live-challenge evidence changed in this diff. Readiness unchanged at 3."
+      "rationale": "No Q&A transcript or live-challenge evidence changed; draft only records an owner decision on B25/B27 placement, not a performed exchange. Readiness unchanged at 3."
     },
     "B5": {
       "score": 2,
       "evidence": [],
-      "rationale": "No pacing/delivery evidence changed. Unrehearsed pacing retained."
+      "rationale": "Diff only renumbers S17/S18 page references for the now-55-slide deck; no pacing/delivery or rehearsal evidence changed. Unrehearsed pacing retained."
     },
     "B6": {
       "score": 4,
       "evidence": [
         "src/core/README.md:636-637"
       ],
-      "rationale": "README clarification about open-issue staleness is incremental technical documentation, not capstone deck/presentation documentation. Good (4) retained."
+      "rationale": "Tokenomics draft and pitch README edits are clearer status tracking of an open issue, still explicitly DRAFT with unmet criteria; not a material change to deck/documentation completeness. Good (4) retained."
     },
     "B7": {
       "score": 5,
@@ -117,28 +117,27 @@
         "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide40",
         "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide41"
       ],
-      "rationale": "Slides (renumbered 40/41, formerly 30/40) retain claims backed by specific actionable numbers (315 planned trajectories, 1,247 completed steps across named commits) with visuals built to make the point. Excellent discipline preserved on fresh deck evidence."
+      "rationale": "Slides retain claims backed by specific actionable numbers with visuals built to make the point. Excellent discipline preserved on unchanged deck evidence."
     },
     "C1": {
       "score": 5,
       "evidence": [],
-      "rationale": "No new BRD/stakeholder-framing change relevant to pitch/business framing; the discovery-brief status update records delivery gaps, not stakeholder discovery. Baseline ceiling unchanged."
+      "rationale": "No new BRD/stakeholder-framing change relevant to pitch/business framing in this diff. Baseline ceiling unchanged."
     },
     "C2": {
       "score": 2,
       "evidence": [
         "docs/capstone/pitch/README.md:79-86"
       ],
-      "rationale": "New 'Strengthening The Four Challenged Criteria' section gives written advice for C2 (restate the concern, concede sound points) but is preparation, not a transcript or live exchange demonstrating the behaviour under challenge. Readiness unchanged."
+      "rationale": "No live Q&A/disagreement-navigation transcript evidence changed in this diff; the Tokenomics draft documents a written owner decision, not a live exchange. Readiness unchanged."
     },
     "C3": {
       "score": 5,
       "evidence": [
-        "docs/capstone/demo/runbook.md:49-53",
-        "docs/capstone/demo/runbook.md:90-93",
-        "docs/capstone/demo/runbook.md:100-102"
+        "docs/capstone/pitch/tokenomics-placement-draft.md:11-17",
+        "docs/capstone/pitch/tokenomics-placement-draft.md:108-114"
       ],
-      "rationale": "Runbook addition is unprompted, explicit risk/limitation disclosure (every claim tagged unverified or target-only) paired with a defended, mechanically-justified recommendation; raised from Good to Excellent."
+      "rationale": "Draft continues explicit, unprompted disclosure discipline: records owner decisions while stating plainly which acceptance criteria remain unmet and that no rehearsal/measurement result is claimed or may be fabricated. Reinforces existing Excellent (5); ceiling unchanged."
     },
     "D1": {
       "score": 4,
