@@ -171,3 +171,49 @@ The A2 text above is preserved unedited; these notes supersede it where they dif
 * Diff inspection (supersedes the single G3 `--name-only` check). At G3 inspect the pinned input diffs, including hunks touching authorisation, CSRF, consent, SQL persistence or gate semantics. After assembly inspect the actual candidate diff and reassess the tier before publication. File names alone do not establish that a control is unchanged.
 * Tier. The focused classification is kept (confirmed A1 decision, AC-02); the critique advice to apply the full tier was rejected as a conflict with it. Any further persisted-SQL, security-control, workflow, manifest, Dockerfile or gate change found at G3 or in the candidate escalates to the full tier, and doubt takes the full tier.
 * Critique status. The A2 independent critique is executed (Revise, A2C-01 to A2C-04; see the critique file). It is not an assembly authorisation; G1 (1490 not merged), G2 and per-member G6 stay open. DO NOT ASSEMBLE.
+
+## Amendment A5 independent-lane release without 233 (2026-11-13, prospective, written before any merge)
+
+PLAN ONLY until the merges below run. A1, A2 and all earlier critiques are preserved unedited. This is a separately owned task (`issue-149-independent-ux-0042`, branch `feat/demo-149-independent-ux-0042`, exclusive worktree) that prepares an INDEPENDENT-LANE release from the original plan `c807923ec`. It does not change, adopt or supersede the separately owned original candidate `d790b6b45d31131f600414a2728af85ec5b5444f` (branch `feat/demo-149-ux-assembly-0017`), the original full-union Review `rpi-149-original-review-0031-result.json`, or the unmerged sibling `1498`. A3 and A4 live only on that original branch and are not part of this lineage.
+
+### Root decision recorded (not an approval of 233)
+
+* 233 is HUMAN-HELD: five corrections are spent, 15 new mypy errors remain, one extra typing-only correction was requested and the owner is UNAVAILABLE, which is NO APPROVAL. The hold stops 233 and its dependent closure and expansion only. It does not stop the independent lanes 96, 74, 176, 215, 134, 156 and 82.
+* The root does NOT approve a 233 deferral, a requirement relaxation, epic closure or a new source pool. 233 stays open and held with its original candidate. This amendment is a work selection of independently admitted lanes (the A2 admitted-members-only merge rule), not acceptance of incomplete 233, and no failing 233 test is deleted, waived or silently fixed.
+* The ENTIRE 233 new feature is excluded: `837da4fde` and `aebd381d9` are NOT merged and not in the candidate ancestry; no 233 code, helper or test change is carried. The programme paging code, `test_programme_screen.py` additions, `programme_paging_browser_check.py` additions and `atlas-screen-trace.md` edits from 233 are absent. The source-base programme features already on main stay the baseline.
+
+### Frozen accepted inputs (exact SHAs)
+
+| Input | Pin | Tree |
+| --- | --- | --- |
+| UX parent (includes 82 and the 1490 funding correction) | `318465aae0e484a5523fb37fda434714ca5200ab` | `2e0bd9706` |
+| Fresh main (includes 1495 `e44de171e`) | `origin/main` at fetch time, at least `bb9f450fd0ad451a94d65f8cd683bf74f8975b2e` | recorded at merge |
+| 74 | `467a0cf5d108cd6b3f0111661facfc2e85a6ce8a` | `fd79cf693` |
+| 176 | `da436be3e149f1e445440f16d5460edd590fefc3` | `0089dd522` |
+| 215 | `6eacb4953534ab86416a65c337cb9c43bc5cb1f2` | `45fd37bc1` |
+| 96 combined (backend `94760af7d` carried once, never merged separately) | `423517a71f2acb41baaa292cff08d3be7d32d995` | `0a28fe0e8` |
+| 156 docs | `d8fe60017407f3f7df4b339dfa0bfaff06dfacbd` | `856766483` |
+| 134 main-aligned correction | `ca14b1523495c9304ecc076bd3fef7b4a43d19fa` | `5fd680566` |
+
+203 stays excluded and no generated inventory is regenerated. 108 and its unmerged sibling `1498` are not adopted. The original 134 adverse amend process note and the root fresh assessment of 134 are preserved, not repeated or rewritten. The six partial and four deferred dispositions and open #83 wording in 134 stay exactly as in `ca14b1523`.
+
+### Dependency verification (read-only, before any merge)
+
+Shared-file overlap is not an implementation dependency. Facts read now:
+
+* None of the six inputs has `aebd381d9` or `837da4fde` as an ancestor; `837da4fde` has `aebd381d9` as ancestor, and neither is an ancestor of the parent or main.
+* Files touched against main: 74 `home_case_browser_check.py`, `test_home_case_api.py`; 176 runbook, `log.md`, retrofit README, `test_generated_dataset.py`; 215 `src/api/README.md`, `regulatory_ux_check.py`, `chat.js`; 96 `src/api/README.md`, `held_form_download_browser_check.py`, `server.py`, `role-screens.js`, `test_finance_grants_screens.py`, `test_form_held_download_api.py`, `test_role_endpoint_inventory.py`; 156 index row, `log.md`, one review document; 134 `cutover-evidence-pack.md`, README index, `log.md`.
+* The only file in both 96 and 233 is `role-screens.js`: 96 adds two hunks in `fundingDraftPanel` and the Held-check code (about lines 1346 to 1452); 233 changes `screenTable`, `programmeRow`, `programmeQueue`, the programme overview and adds `screenPageSize` and `programmeCell`. The 96 hunks use no 233 symbol; read-only sequential `git merge-tree` of parent, main, 74, 176, 215, 96 and 156 is clean and a search of that tree finds no `screenPageSize`, `programmeCell` or "Open connected view" text. The only conflict in the full sequence is the known 134 `cutover-evidence-pack.md` keep-both case (original 134 plan and A4 rule).
+* Therefore no real dependency of the independent lanes on 233 is found at plan time. The assembly re-verifies this on the actual merged tree (source search and import check). If a real dependency on 233 is found, no workaround is invented: the affected merge is not made, the route stops with the proof recorded, and the root is told.
+
+### Merge order (normal `git merge --no-ff` only)
+
+M0 actual UX parent `318465aae`; M1 fresh `origin/main`; M2 74; M3 176; M4 215; M5 96 combined; M6 156; M7 134 (keep-both on the pack if it conflicts, main's sections first, no wording edited). No cherry-pick, squash, amend, rebase, rewrite, product-code fix, new test, new issue, tick, publication, cloud, provider, deployment, spend or private working data. `git diff --check`, conflict-marker search, `node --check`, `compileall` and symbol-preservation checks only; that is the whole source-assembly check set.
+
+### Boundary of the result
+
+STOP at a clean, new SOURCE-FROZEN tree with an original source-assembly record (exact base, parent, head, `src` and module tree hashes, diff relative to fresh main). This is NOT acceptance. The new subset has no test evidence: it must undergo FRESH configured mypy, focused unit and browser checks and an original independent Review before any publication; the earlier Pass for the d790 candidate and any earlier per-input Pass are not reused as acceptance of the new head. The new record and any navigation or index text make no claim that 233 is delivered, accepted or deferred. Human, hosted CI, Finance, assistive-technology and legal approvals stay unrecorded. All actual source correction history and extensions are retained and unknown is not zero (research file, spent history: 82/1490 one combined correction; 134 corrections 1 and 2 and the later alignment process note; 96 corrections 1 and 2; 233 five spent, held; 74, 176, 215 none recorded).
+
+### Pending genuine independent critique
+
+A5 changes the cut line and routing, so one genuine independent read-only critique executes once before any merge. It must challenge: the dependency claim (no real 233 dependency), the exclusion completeness, the merge order and the single 134 conflict rule, the no-test-evidence boundary and the non-claim of 233 status. A verdict and dispositions are recorded in the critique file; it is not repeated.
