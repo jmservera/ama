@@ -8027,3 +8027,30 @@ CONTINUE, bounded: a scoped proposal for further local engineering work only. It
 ### Process limits (post-1504 checkpoint)
 
 Documentation only. Checked by `git diff --check`, an ASCII scan of added lines and `tests.test_live_doc_links` from `src/core`. None of these refreshes any observation. No browser, SQL, Docker, install, scanner, model, provider, Azure, whole-suite, `--changed` or complete-gate run. Not a complete-gate receipt. Original plan artifacts: research, plan, critique, changes, Review and state `issue-440-post1504-plan-0630` under `.copilot-tracking/`; the implementation records are `issue-440-post1504-impl-0638`.
+
+### Dated clarification of the post-1504 checkpoint (2026-11-13, requirement mapping and rollup projection)
+
+The section above is preserved as written. This clarification completes the planned requirement mapping (critique CR-1) and corrects one hosted reading. It is documentation only and not a source, policy or acceptance change.
+
+#### Clauses read at main `33c261a63`
+
+* PRD (in-review, 0.21.0, blob `c788b917bafa`): FR-001 (one versioned home case linked to its building), FR-002 (show building-level shared systems, dependencies, holds, works and costs separately from each home's evidence, decision, cost allocation and outcome; a shared building ID alone shall not establish package applicability or transfer a home-specific gate) and AC-002 (each home keeps its own gates; only affected homes or scopes are blocked; recorded as "Not run" in the PRD).
+* BRD (draft, 0.21.0, blob `34d88395de86`): the home-case scoping text near its "each apartment or house has its own home case" passage. BRD FR-001 and FR-002 are different requirements (safety evidence blocking and emergency response); the BRD and PRD reuse the same FR numbers, so an ID must always be written with its document.
+
+#### Mapping of the display
+
+| Document-qualified ID | Source and journey | Supported | Not supported |
+| --- | --- | --- | --- |
+| PRD FR-002 and PRD AC-002 | `app.js` lists each shared building record's recorded `case_ids` and `package_ids` (listed, Unknown for null, None for empty) on the home case view; `home_case_browser_check.py` carries the browser markers (fixture ZF-2 and ZF-3); `src/api/README.md` describes the display | The display shows recorded scope and does not infer package applicability from a building ID; the disclaimer states scopes do not establish eligibility, approval or coverage | Per-home gate retention and "only affected homes are blocked" are not shown or tested by this display; AC-002 stays Not run |
+| PRD FR-001 | Existing home case to building link, unchanged by the delta | Link context only | No new claim |
+| BRD requirements | No BRD clause covering this optional display was found in the searched passages | None | Traceability gap recorded; no BRD ID is asserted |
+
+This does not claim #74 criterion 2, any approval or conformance. The search was a targeted keyword read of the BRD and PRD, not a requirements audit.
+
+#### Rollup projection correction
+
+The earlier reading of PR 1504 as 18 successful entries plus one empty entry was a partial projection. The nineteenth entry is a commit status context `rubric/score` with state SUCCESS (run `43376512251`), not an unknown check; the merge guard `gh pr checks` showed all 19 passing (root observation). Those are PR observations on a tree equal to main, not fresh main observations. Fresh main `33c261a63` check runs observed by root: eight scorer jobs completed with success and no Source projects CI result. No main Source CI success is claimed.
+
+#### Original Review coverage
+
+The one plan Review covered commit range `5c2b63364..b1e01f79e` only (the annex, log entry, index row and changes record). It did not cover this clarification or the final Review and state files; independent root assessment of the full frozen head is still required. Not repeated.

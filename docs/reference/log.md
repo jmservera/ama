@@ -11662,3 +11662,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Appended a [draft checkpoint](../architecture/cutover-evidence-pack.md#post-1504-merged-main-home-scope-checkpoint-2026-11-13-refs-440-74) after PR 1504 merged as `33c261a63` (tree equal to the frozen head). Documentation only: records identities, source and document blobs, inherited focused source observations, hosted state (merged-head checks running or absent, not success) and unknowns.
 * No source change, new observation, tick, closure, approval or owner decision; #74 and #440 stay open. Held lanes are not reopened. Evidence under `.copilot-tracking/` (issue-440-post1504-impl-0638).
+
+## [2026-11-13] update | Post-1504 checkpoint requirement mapping and rollup clarification (Refs #440 #74)
+
+* Added a dated [clarification](../architecture/cutover-evidence-pack.md#dated-clarification-of-the-post-1504-checkpoint-2026-11-13-requirement-mapping-and-rollup-projection) mapping the home-scope display to PRD FR-002 and AC-002 (PRD FR-001 as context), recording a BRD traceability gap, and correcting the PR 1504 rollup reading (the nineteenth entry is a passing status context). Earlier text unchanged; documentation only; no tick, approval or closure.
