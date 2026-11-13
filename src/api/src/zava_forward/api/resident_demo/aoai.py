@@ -24,6 +24,7 @@ from zava_forward.core.resident_assistant import (
 )
 
 from .assistant import EXPIRES, RequestEnvelope, _post
+from .ledger_meter import AdvisorLedger, advisor_meters
 
 LOG = logging.getLogger(__name__)
 DEPLOYMENT = "resident-mini"
@@ -360,19 +361,19 @@ class AzureAdvisor:
             ):
                 raise AssistantUnavailable("meter_held")
             acquire = meter.token(self.token)
+        # Everything between admission and the network closes the reservation exactly once.
         try:
-            token = acquire()
-        except ValueError:
-            self._close(meter, "provider-unavailable")
-            raise AssistantUnavailable("credential_or_expiry") from None
-        if not token or "\r" in token or "\n" in token or self.clock() >= EXPIRES:
-            self._close(meter, "provider-unavailable")
-            raise AssistantUnavailable("credential_or_expiry")
-        try:
+            try:
+                token = acquire()
+            except ValueError:
+                raise AssistantUnavailable("credential_or_expiry") from None
+            if not token or "\r" in token or "\n" in token or self.clock() >= EXPIRES:
+                raise AssistantUnavailable("credential_or_expiry")
             raw = self.transport(self.url, payload, token)
         except Exception as error:
             self._close(
-                meter, "timeout" if isinstance(error, TimeoutError) else "provider-unavailable"
+                meter,
+                "timeout" if isinstance(error, TimeoutError) else "provider-unavailable",
             )
             raise
         self._close(meter, "returned", raw)
@@ -423,12 +424,23 @@ def configured_advisor(
     connect: Callable[[], Any],
     *,
     meters: Mapping[str, Meter] | None = None,
+    ledger: AdvisorLedger | None = None,
 ) -> AzureAdvisor | None:
     """No developer/key credential chain and no implicit activation.
 
-    Meters come only from the caller (see ledger_meter.advisor_meters); no host supplies
-    a ledger, price or authority yet, so the default stays unmetered.
+    Meters come only from the caller: either ready meters or an AdvisorLedger that is
+    turned into advisor_meters. Without either the advisor stays unmetered; the ledger
+    itself holds the price and authority, and an unauthorised kind is held.
     """
+    if meters is not None and ledger is not None:
+        raise ValueError("Supply either meters or a ledger, not both.")
+    if ledger is not None:
+        meters = advisor_meters(
+            ledger.consumption,
+            model=ledger.model,
+            configuration=ledger.configuration,
+            prompts=ledger.prompts,
+        )
     prefix = "ZF_DEMO_ASSISTANT_"
     allowed = {prefix + suffix for suffix in ("ENABLED", "ENDPOINT")}
     if any(key.startswith(prefix) and key not in allowed for key in env):
