@@ -1,0 +1,35 @@
+{
+  "task_id": "issue-96-ui-plan-2323",
+  "task_slug": "issue-96-ui-plan-2323",
+  "parent_task": {"task_id": "issue-96-saved-export-check-2236", "task_slug": "issue-96-saved-export-check-2236"},
+  "mode": "automatic",
+  "active_phase": "Plan",
+  "status": "blocked",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-12/issue-96-ui-plan-2323-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-12/issue-96-ui-plan-2323-plan.md",
+    "details": ".copilot-tracking/details/2026-11-12/issue-96-ui-plan-2323-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-12/issue-96-ui-plan-2323-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Prospective UI PLAN ONLY; no UI, README or product source edit until the root releases the corrected backend contract", "status": "confirmed", "evidence": "Coordinator brief 2026-11-12"},
+    {"decision": "Budget carried: saved-check correction 1 spent, M1 correction 2 in progress under backend96, no new pool", "status": "confirmed", "evidence": "Coordinator brief 2026-11-12"},
+    {"decision": "Research executed; Planning Readiness Ready for planning, not for implementation", "status": "done", "evidence": ".copilot-tracking/research/2026-11-12/issue-96-ui-plan-2323-research.md"},
+    {"decision": "Plan, details and research committed in b8702f97b before any critique", "status": "done", "evidence": "git commit b8702f97ba9effa21f8a23816ac207938d1fe305"},
+    {"decision": "Independent critique executed once in a separate rubber-duck context: verdict Revise; CR-1 to CR-8 accepted and applied to the plan and details; none rejected; CR-1 needs root decision G4", "status": "done", "evidence": ".copilot-tracking/plans/2026-11-12/issue-96-ui-plan-2323-critique.md"},
+    {"decision": "Review not applicable: no implementation exists; independent Review is Phase 5 of a later authorised task", "status": "recorded", "evidence": ".copilot-tracking/plans/2026-11-12/issue-96-ui-plan-2323-plan.md"}
+  ],
+  "blockers": [
+    {"id": "B1", "summary": "Candidate backend 7f3386ddd is UNAPPROVED (independent verdict Revise, M1); backend96 corrector running", "resolution": "Root records the exact frozen, independently accepted corrected head and tree (G1)"},
+    {"id": "B2", "summary": "R-UI-1: client JSON re-serialisation can falsely report Invalid for float or above-2^53 values; needs numerically faithful contract or explicit root exception (G4)", "resolution": "Root decision before any UI code"},
+    {"id": "B3", "summary": "No separate authorisation yet for a UI implementation task; origin/main moved to e4854bd7e from merge base eac1206c6", "resolution": "Root authorises, directs repin method and re-fetches main (G2)"}
+  ],
+  "next_action": {"phase": "Plan", "action": "Stop. Root releases corrected backend contract, decides G4 and authorises repin and implementation; then run the repin checklist (G3) and amend the plan before any UI edit"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Root decision G4 on numeric fidelity and release of the corrected backend contract", "rationale": "Gates all UI work; ease high, value high", "evidence": "independent assessment M1; critique CR-1"},
+    {"rank": 2, "task": "Implement the Funding-screen saved Held copy checker per the plan after G1 to G5", "rationale": "Value medium; ease medium", "evidence": "plan phases 1 to 5"}
+  ]
+}
