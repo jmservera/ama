@@ -518,6 +518,19 @@ output `src/core/evals/document_control_fixtures.json`, tested by
   reviewed-pack block; every split contains every kind.
 * Dependency manifest (AC-051): per family, exact affected and unaffected field and
   calculation IDs for an invoice-template change and an EPC supersession.
+* Generator revision (candidate, Refs #176, 2026-11-13, not merged): in the
+  candidate change, both generators record `generator_revision` in newly
+  constructed output only, through `zava_forward.core.synthetic.provenance`, so
+  `src/core` must be pip-installed (`pip install -e src/core`) before running
+  them. The committed fixtures above are unchanged and their generator revision
+  stays historically unrecorded. The original private register inputs are
+  unavailable, so regeneration is not possible and whole #176 remains open.
+  Bounded validation covered only fresh constructed output and the 8 importer
+  tests; see the
+  [validation record](../../../../.copilot-tracking/evidence/2026-11-13-provenance-validation-176-0702/validation-record.md).
+  The support generators have no configured lint, and one ad hoc long-line
+  finding on the added controls line is unassessed. Human refresh approval is
+  unchanged.
 
 Open items: the real funding form schema, terms and approved rules are unresolved
 (PRD OQ-015), so the schema is a labelled placeholder with no approver. Gold labels

@@ -1,0 +1,9 @@
+cwd=/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702 argv: /home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/venv/bin/python /home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/identity.py (env cleaned of PYTHONPATH: '')
+python /home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/venv/bin/python
+prefix /home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/venv
+helper_path /home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702/src/core/src/zava_forward/core/synthetic/provenance.py
+helper_sha256 fe7294aa283bd336648698ca6c3ee7d199f9bc9dba9801af6ea1395d90d81b03
+exit=0
+git25 blob sha256:
+fe7294aa283bd336648698ca6c3ee7d199f9bc9dba9801af6ea1395d90d81b03  -
+f35d3577cc0eae159eb1caf62ffd76a568021f63

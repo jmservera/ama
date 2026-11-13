@@ -1,0 +1,16 @@
+cwd=/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702 argv: /home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/venv/bin/python -B support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py --help
+usage: zf_documents.py [-h] [--seed SEED] --out OUT
+
+options:
+  -h, --help   show this help message and exit
+  --seed SEED
+  --out OUT
+exit=0
+cwd=/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702 argv: /home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/venv/bin/python -B support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_document_controls.py --help
+usage: zf_document_controls.py [-h] [--seed SEED] --out OUT
+
+options:
+  -h, --help   show this help message and exit
+  --seed SEED
+  --out OUT
+exit=0

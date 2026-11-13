@@ -1,0 +1,15 @@
+cwd=/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702/src/importer argv: /home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/venv/bin/python -m unittest tests.test_document_form_fixtures -v
+test_fresh_controls_output_records_both_source_revision_with_unchanged_payload (tests.test_document_form_fixtures.DocumentControlGeneratorRevisionTests.test_fresh_controls_output_records_both_source_revision_with_unchanged_payload) ... ok
+test_historical_committed_fixtures_remain_unmodified_and_unrecorded (tests.test_document_form_fixtures.DocumentControlGeneratorRevisionTests.test_historical_committed_fixtures_remain_unmodified_and_unrecorded) ... ok
+test_committed_fixture_is_current (tests.test_document_form_fixtures.DocumentFormFixtureTests.test_committed_fixture_is_current) ... ok
+test_dependency_manifest_partitions_fields (tests.test_document_form_fixtures.DocumentFormFixtureTests.test_dependency_manifest_partitions_fields) ... ok
+test_deterministic_and_labelled_synthetic (tests.test_document_form_fixtures.DocumentFormFixtureTests.test_deterministic_and_labelled_synthetic) ... ok
+test_fresh_documents_output_records_source_revision_with_unchanged_payload (tests.test_document_form_fixtures.DocumentFormFixtureTests.test_fresh_documents_output_records_source_revision_with_unchanged_payload) ... ok
+test_seeded_defects_match_fixture_owned_expectations (tests.test_document_form_fixtures.DocumentFormFixtureTests.test_seeded_defects_match_fixture_owned_expectations) ... ok
+test_split_is_fixed_and_independent (tests.test_document_form_fixtures.DocumentFormFixtureTests.test_split_is_fixed_and_independent) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.061s
+
+OK
+exit=0

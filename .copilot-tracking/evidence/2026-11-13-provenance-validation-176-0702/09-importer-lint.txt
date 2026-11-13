@@ -1,0 +1,8 @@
+cwd=/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702/src/importer ruff check tests/test_document_form_fixtures.py
+All checks passed!
+exit=0
+ruff format --check
+1 file already formatted
+exit=0
+mypy tests/test_document_form_fixtures.py
+/bin/bash: line 2: ../../../../../..//home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/venv/bin/mypy: No such file or directory
