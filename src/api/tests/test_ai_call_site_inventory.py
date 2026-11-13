@@ -37,6 +37,16 @@ INVENTORY = {
         "optional counts; ledger join only via ledger_meter.py when a caller wires it "
         "(proven in test_resident_ledger_meter); disabled by default, no host wires it",
     ),
+    "agents/src/zava_forward/agents/heldout_aoai.py": (
+        "own-accounting",
+        "opt-in adapter for the held-out batch runner; heldout_batch.run_batch checks a "
+        "worst-case token and cost reserve before each call under a finite owner "
+        "authorization (USD and call caps), books measured usage, and charges the worst case "
+        "on any unmeasured reply; no core ledger, "
+        "price register or authority is wired, so it stays own-accounting until the owner "
+        "approves host wiring; construction sends nothing and the CLI runner needs explicit "
+        "live flags, but a direct call to the returned provider bypasses the runner accounting",
+    ),
 }
 
 
