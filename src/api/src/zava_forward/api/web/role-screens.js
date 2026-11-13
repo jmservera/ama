@@ -1460,6 +1460,19 @@ function fundingSavedCopyCheck(draft, caseId) {
     h("p", {}, button),
     result);
 }
+const proposalRecheck = (found) => {
+  if (!found || !Array.isArray(found.proposals)) return "Unknown. The proposal check could not be read.";
+  const open = found.proposals.filter((p) => p.state !== "Current");
+  return open.length ? open.map((p) => `${p.field_id ? screenValue(p.field_id) : "a proposal with no field named"} (${screenValue(p.state)})`).join(", ")
+    : "None. Each proposal still matches its source and field definition.";
+};
+const approvalRecheck = (draft) => {
+  const list = draft.dependency_impact?.approvals;
+  if (!Array.isArray(list)) return "Unknown. The approval check could not be read.";
+  const open = list.filter((a) => a.state === "Review required");
+  return open.length ? open.map((a) => `${screenValue(a.decision_id ?? "an approval with no name")}${(a.fields || []).length ? ` (fields ${a.fields.join(", ")})` : " (no field named)"}`).join("; ")
+    : "None recorded. Only approvals that depend on a changed source, schema or rule are listed.";
+};
 function fundingDraftPanel(draft, caseId, downloadEnabled) {
   if (draft.status === "Unavailable") return screenPanel(`Field draft ${screenValue(draft.draft_id)}`,
     screenUnknown(draft.notice, "Document owner", "Recover the source document before reading this draft"));
@@ -1470,6 +1483,8 @@ function fundingDraftPanel(draft, caseId, downloadEnabled) {
       ["Rule references", (draft.rule_refs || []).length ? draft.rule_refs.map((r) => (typeof r === "string" ? r : r.id)).join(", ") : "Unknown. None supplied."],
       ["Conflicting source candidates", conflicts.length ? `${conflicts.length} field${conflicts.length === 1 ? "" : "s"}: ${conflicts.map((i) => i.field_id).join(", ")}. A person must review them. Nothing here picks a winning source.` : "None recorded"],
       ["Stale fields", (draft.stale_fields || []).length ? draft.stale_fields.join(", ") : "None recorded"],
+      ["Proposals to check again", proposalRecheck(draft.proposal_freshness)],
+      ["Approvals to review again", approvalRecheck(draft)],
       ["Reviewed ready", draft.reviewed_ready ? "Yes, as recorded by the reviewer" : "No. Held until a person reviews the evidence."],
       ["Approved rule validation", screenValue(draft.approved_rule_validation)],
       ["Unit and currency verification", screenValue(draft.unit_currency_verification)]]),
@@ -1489,6 +1504,11 @@ registerRoleScreen({
     const signal = routeController.signal;
     const review = await api(`/api/cases/${encodeURIComponent(c.id)}/form-review`, undefined, signal).catch(() => null);
     const report = await api("/api/ai/report", undefined, signal).catch(() => null);
+    for (const d of Array.isArray(review?.drafts) ? review.drafts : []) {
+      if (d.draft_id && d.status !== "Unavailable") {
+        d.proposal_freshness = await api(`/api/cases/${encodeURIComponent(c.id)}/form-review/${encodeURIComponent(d.draft_id)}/proposal-freshness`, undefined, signal).catch(() => null);
+      }
+    }
     return { review, report };
   },
   render(c, extra) {

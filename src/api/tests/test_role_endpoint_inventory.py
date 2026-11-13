@@ -26,7 +26,7 @@ GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api
                  "/api/law/cards", "/api/law/cards/reviews", "/api/law/cards/hazard-awareness-clock", "/api/law/alerts",
                  "/api/aftercare/form", "/api/aftercare/concerns", "/api/aftercare/evaluator",
                  "/api/assistants", "/api/assistants/forecast", "/api/assistants/proposals", "/api/assistants/simulation/quality", "/api/chat/status", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1",
-                 "/api/form-schemas", "/api/cases/ZF-1/form-candidates", "/api/cases/ZF-1/form-review", "/api/cases/ZF-1/form-review/SYN-DRAFT/held-export", "/api/nothing"]
+                 "/api/form-schemas", "/api/cases/ZF-1/form-candidates", "/api/cases/ZF-1/form-review", "/api/cases/ZF-1/form-review/SYN-DRAFT/held-export", "/api/cases/ZF-1/form-review/SYN-DRAFT/proposal-freshness", "/api/nothing"]
 POST_ENDPOINTS = [("/api/ranking/publish", {}), ("/api/workorders/WO-0001/field-capture", {}), ("/api/workorders/WO-0001/field-correct", {}), ("/api/workorders/WO-0001/field-acknowledge", {}), ("/api/bulk-edits/preview", {}), ("/api/bulk-edits/apply", {}),
                   ("/api/ai/priority", {"n": 3}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
                   ("/api/form-schemas", {}), ("/api/cases/ZF-1/form-candidates", {}), ("/api/cases/ZF-1/form-review", {}),
