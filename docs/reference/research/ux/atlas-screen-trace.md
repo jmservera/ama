@@ -1,7 +1,7 @@
 ---
 title: Atlas findings and role journeys traced to screens
 description: Cross-role trace of the eleven profile perspectives, five atlas design themes, two tensions and one same-home walkthrough to role screens or recorded deferrals (issue #233)
-ms.date: 2026-11-10
+ms.date: 2026-11-12
 ms.topic: reference
 ---
 
@@ -34,7 +34,7 @@ role simulator.
 | Perspective | Screen and status | Confirms | Changes | Remains hypothesis |
 | --- | --- | --- | --- | --- |
 | Asset and investment | `asset-board` (main, #226) | Conflict, source age and unknown investment inputs shown with a resolution owner | Portfolio scope shown separately from stock total | Which inputs asset staff need; no asset role exists in fixtures; AI report Loaded or Unavailable with a without-AI manual path; a second panel lists metered calls, held-call alerts with owners and other cost components, with Unknown (never zero) for any missing figure (unit-tested only, Refs #100) |
-| Programme coordinator | `programme-queue` (main, PR 662) | Returned work, sender, current owner and receiver shown | Chase and update responsibility kept apart from return reason | Whether visible reset suffices as recovery; Previous page and Next page controls (read-only GET, 50 cases a page, unit-tested only) reach every permitted case, while the scope filter still applies to the loaded page only and no portfolio-wide returned-work total exists |
+| Programme coordinator | `programme-queue` (main, PR 662) | Returned work, sender, current owner and receiver shown; since 2026-11-12 each queue row, on every page, has a final "Connected view" link ("Open connected view for <case id>") to that home's connected view, keeping the scope that filtered the rows, GET only (unit-tested; keyboard check in Chromium written but not rerun here; navigation only, not a conformance claim) | Chase and update responsibility kept apart from return reason | Whether visible reset suffices as recovery; Previous page and Next page controls (read-only GET, 50 cases a page, unit-tested only) reach every permitted case, while the scope filter still applies to the loaded page only and no portfolio-wide returned-work total exists; opening a row keeps its queue page: the link carries the sidebar page and the table opens on the page that holds the row (unit-tested; the Chromium check was updated but not run in this change), while the Previous page and Next page buttons still do not write the address and are disabled at the first and last page (unit-tested, #230) |
 | Retrofit case team | `programme-queue` connected home view (main, PR 662) | Independent technical, resident, delivery, quality and finance states per home | One linked fixture home first, separate homes never merged | Whether a read-only lifecycle is enough for case teams |
 | Retrofit Assessor, designer and Coordinator | `technical-queue` (main, PR 656) | Missing design reference blocks readiness | Return routed to a named competent reviewer, not a generic approval | Separate sign-off wording |
 | Housing and Resident Engagement | `resident-choice` (main, #652) | Measure-specific choice, pause and withdrawal distinct from contact and access | Update commitment shows purpose, owner and safe-route reference | Resident-facing wording; no resident contact |

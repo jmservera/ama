@@ -4,6 +4,7 @@ import json
 import subprocess
 import unittest
 from pathlib import Path
+from typing import Any
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
@@ -43,6 +44,12 @@ vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('programme-queue');"
   const overview = await s.overview(new AbortController().signal);
   const find = (n, tag, out = []) => { if (n && typeof n === "object") { if (n.tag === tag) out.push(n); (n.kids || []).forEach(k => find(k, tag, out)); } return out; };
   const before = JSON.stringify(overview);
+  const rowLinks = () => find(find(overview, "tbody")[0], "a").map(a => ({href: a.attrs.href, text: a.kids.join(""),
+    handler: Object.keys(a.attrs).some(k => k.startsWith("on"))}));
+  const firstCells = () => find(find(overview, "tbody")[0], "tr").map(r => r.kids[0].kids.join(""));
+  const initialLinks = rowLinks();
+  const initialCells = firstCells();
+  const headings = find(overview, "th").map(t => t.kids.join(""));
   const initialScope = find(overview, "select")[0].value;
   const form = find(overview, "form")[0];
   const select = find(form, "select")[0];
@@ -50,11 +57,13 @@ vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('programme-queue');"
   form.attrs.onsubmit({preventDefault() {}});
   const queueRows = () => find(overview, "tbody")[0].kids.length;
   const filteredRows = queueRows();
+  const filteredLinks = rowLinks();
   const keptHash = loc.hash;
   const buttons = find(form, "button");
   const reset = buttons.find(b => b.attrs.type === "button");
   reset.attrs.onclick();
   const resetRows = queueRows();
+  const resetLinks = rowLinks();
   const gates = (c, orders) => s.render(c, {orders});
   const bound = {measure: "Loft", context_revision: 2};
   const done = [{id: "WO-1", state: "Appointed", appointment_control: {status: "Committed", missing: []},
@@ -63,7 +72,7 @@ vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('programme-queue');"
     versions: [{resident_bindings: [{measure: "Loft", context_revision: 1}]}]}];
   const decisions = [{measure: "Loft", context: {revision: 2}}];
   const accepted = {state: "Accepted", measure: "Loft", resident_binding: bound};
-  console.log(JSON.stringify({initialScope, keptHash, resetHash: loc.hash, roles: s.roles, before, filteredRows, resetRows, defaultRows: 2,
+  console.log(JSON.stringify({initialScope, keptHash, resetHash: loc.hash, initialLinks, initialCells, headings, filteredLinks, resetLinks, roles: s.roles, before, filteredRows, resetRows, defaultRows: 2,
     blocked: gates({id: "C-9", work: {blockers: [
       {step: "Final checks: funding", reason: "Funding has not been confirmed.", owner: "Owen", next_action: "Check funding"},
       {step: "Technical review", reason: "Survey missing.", owner: "Unknown", responsible_role: "Retrofit Coordinator", next_action: "Complete survey"},
@@ -127,10 +136,13 @@ const vm = require("node:vm");
 const host = fs.readFileSync(process.argv[1] + "/role-screens.js", "utf8");
 const mode = process.argv[2];
 const calls = [];
+const open = process.argv[3] ? JSON.parse(process.argv[3]) : null;
+const sparse = Boolean(open && open.sparse);
 const row = (n) => ({id: "C-" + n, address: n + " Test Street", work: {owner: "Owen", queues: [],
-  returned: {reason: "Reason " + n, sender: "Sender"}, handoff: null}});
+  returned: sparse && n % 2 === 0 ? null : {reason: "Reason " + n, sender: "Sender"}, handoff: null}});
 const context = vm.createContext({
-  location: {hash: "#/screens?screen=programme-queue"}, history: {replaceState() {}},
+  location: {hash: "#/screens?screen=programme-queue" + (open && open.scope ? "&scope=" + open.scope : "")},
+  history: {replaceState() {}},
   URLSearchParams, Intl, AbortController, Date,
   routeController: new AbortController(), me: {user: {role: "Retrofit Programme Manager"}},
   api: async (path) => {
@@ -146,23 +158,50 @@ const context = vm.createContext({
     const node = {tag, attrs, kids: kids.flat(Infinity).filter(k => k !== false && k !== null && k !== undefined)};
     Object.defineProperty(node, "replaceChildren", {value: (...k) => { node.kids = k; }});
     Object.defineProperty(node, "textContent", {set: (v) => { node.kids = [v]; }});
+    Object.defineProperty(node, "disabled", {set: (v) => { node.attrs.disabled = v; }});
     return node;
   }
 });
 vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('programme-queue');", context);
 (async () => {
-  const overview = await context.__s.overview(new AbortController().signal);
+  const sidebar = open ? Array.from({length: 20}, (_, i) => row(open.page * 20 + i + 1)) : undefined;
+  const overview = await context.__s.overview(new AbortController().signal, sidebar,
+    open ? {id: "C-" + open.case} : null, open ? open.page : undefined);
   const find = (n, pred, out = []) => { if (n && typeof n === "object") { if (pred(n)) out.push(n); (n.kids || []).forEach(k => find(k, pred, out)); } return out; };
   const text = (n) => JSON.stringify(n);
   const btn = (id) => find(overview, n => n.attrs && n.attrs.id === id)[0];
   const rows = () => find(overview, n => n.tag === "tbody")[0].kids.length;
   const pageStatus = () => text(find(overview, n => n.attrs && n.attrs.id === "programme-page-status")[0]);
-  const out = {first: pageStatus(), firstRows: rows()};
+  const dis = () => ["programme-prev", "programme-next"].map(id => Boolean(btn(id).attrs.disabled));
+  const out = {first: pageStatus(), firstRows: rows(), firstDisabled: dis()};
   const calls0 = calls.length;
+  const rowLinks = () => find(find(overview, n => n.tag === "tbody")[0], n => n.tag === "a").map(a => ({href: a.attrs.href,
+    text: a.kids.join(""), handler: Object.keys(a.attrs).some(k => k.startsWith("on"))}));
+  out.firstLinks = rowLinks();
+  if (open) {
+    out.openStatus = pageStatus();
+    out.openLinks = rowLinks();
+    out.openDisabled = dis();
+    const step = async (id) => {
+      btn(id).attrs.onclick();
+      await new Promise(r => setTimeout(r, 0));
+      return {status: pageStatus(), links: rowLinks(), disabled: dis()};
+    };
+    if (open.walk) {
+      out.afterNext = await step("programme-next");
+      out.afterPrev = await step("programme-prev");
+      out.afterPrevAgain = await step("programme-prev");
+    }
+    out.paths = calls.filter(c => c.startsWith("/api/cases"));
+    console.log(JSON.stringify(out));
+    return;
+  }
   btn("programme-prev").attrs.onclick();
   out.prevAtStartCalls = calls.length - calls0;
+  find(overview, n => n.tag === "select")[0].value = "all";
   btn("programme-next").attrs.onclick();
   await new Promise(r => setTimeout(r, 0));
+  out.secondLinks = rowLinks();
   out.second = pageStatus();
   out.secondRows = rows();
   out.secondHasRow51 = text(overview).includes("Reason 51");
@@ -175,9 +214,9 @@ vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('programme-queue');"
 """  # noqa: E501
 
 
-def run_paging(mode: str = "ok") -> dict[str, object]:
+def run_paging(mode: str = "ok", opened: dict[str, object] | None = None) -> dict[str, object]:
     result = subprocess.run(
-        ["node", "-e", PAGING_SCRIPT, str(WEB), mode],
+        ["node", "-e", PAGING_SCRIPT, str(WEB), mode, json.dumps(opened) if opened else ""],
         capture_output=True,
         text=True,
         timeout=30,
@@ -185,6 +224,10 @@ def run_paging(mode: str = "ok") -> dict[str, object]:
     assert result.returncode == 0, result.stderr
     parsed: dict[str, object] = json.loads(result.stdout)
     return parsed
+
+
+def any_out(result: dict[str, object]) -> dict[str, Any]:
+    return result
 
 
 def tags(node: object) -> list[str]:
@@ -346,6 +389,7 @@ class ProgrammeScreen(unittest.TestCase):
         self.assertIn("scope filter applies to this page only", str(out["first"]))
         self.assertEqual(out["firstRows"], 50)
         self.assertEqual(out["prevAtStartCalls"], 0)
+        self.assertEqual(out["firstDisabled"], [True, False])
         self.assertIn("cases 51 to 100 of 120", str(out["second"]))
         self.assertTrue(out["secondHasRow51"])
         self.assertTrue(out["backHasRow1"])
@@ -354,6 +398,114 @@ class ProgrammeScreen(unittest.TestCase):
             paths,
             [f"/api/cases?view=all&limit=50&offset={o}" for o in (0, 50, 0)],
         )
+
+    def test_every_queue_row_opens_its_connected_view_by_a_read_only_link(self) -> None:
+        out = any_out(run())
+        self.assertEqual(out["headings"][0], "Home")
+        self.assertEqual(
+            out["headings"][6:8], ["Resident-update owner (updates the resident)", "Connected view"]
+        )
+        self.assertEqual(out["initialCells"], ["C-1: 1 Test Street", "C-2: 2 Test Street"])
+        links = out["initialLinks"]
+        self.assertEqual(
+            [(link["href"], link["text"]) for link in links],
+            [
+                ("#/screens?screen=programme-queue&case=C-1", "Open connected view for C-1"),
+                ("#/screens?screen=programme-queue&case=C-2", "Open connected view for C-2"),
+            ],
+        )
+        self.assertFalse(any(link["handler"] for link in links))
+        filtered = out["filteredLinks"]
+        self.assertEqual(
+            [link["href"] for link in filtered],
+            ["#/screens?screen=programme-queue&case=C-1&scope=returned"],
+        )
+        self.assertEqual(
+            [link["href"] for link in out["resetLinks"]],
+            [link["href"] for link in links],
+        )
+
+    def test_queue_page_two_links_use_the_scope_that_filtered_the_rows(self) -> None:
+        out = any_out(run_paging())
+        first, second = out["firstLinks"], out["secondLinks"]
+        self.assertEqual(len(first), 50)
+        self.assertEqual(len(second), 50)
+        self.assertEqual(second[0]["text"], "Open connected view for C-51")
+        self.assertTrue(all("scope=" not in link["href"] for link in first))
+        for link in second:
+            self.assertTrue(link["href"].endswith("&scope=all"), link)
+            self.assertFalse(link["handler"])
+        texts = [link["text"] for link in first + second]
+        self.assertEqual(len(texts), len(set(texts)))
+
+    def test_row_links_carry_the_sidebar_page_of_the_row(self) -> None:
+        out = any_out(run_paging())
+        page_of = {"C-1": None, "C-20": None, "C-21": "1", "C-40": "1", "C-41": "2", "C-50": "2"}
+        first = {link["text"].rsplit(" ", 1)[1]: link["href"] for link in out["firstLinks"]}
+        for case, page in page_of.items():
+            base = f"#/screens?screen=programme-queue&case={case}"
+            self.assertEqual(first[case], base if page is None else f"{base}&page={page}")
+        second = {link["text"].rsplit(" ", 1)[1]: link["href"] for link in out["secondLinks"]}
+        self.assertEqual(
+            second["C-51"], "#/screens?screen=programme-queue&case=C-51&page=2&scope=all"
+        )
+        self.assertEqual(
+            second["C-60"], "#/screens?screen=programme-queue&case=C-60&page=2&scope=all"
+        )
+        self.assertEqual(
+            second["C-61"], "#/screens?screen=programme-queue&case=C-61&page=3&scope=all"
+        )
+        self.assertEqual(
+            second["C-100"], "#/screens?screen=programme-queue&case=C-100&page=4&scope=all"
+        )
+
+    def test_row_link_page_counts_unfiltered_rows_not_the_visible_ones(self) -> None:
+        out = any_out(run_paging(opened={"case": 1, "page": 0, "sparse": True}))
+        links = {link["text"].rsplit(" ", 1)[1]: link["href"] for link in out["openLinks"]}
+        self.assertNotIn("C-2", links)
+        self.assertEqual(links["C-21"], "#/screens?screen=programme-queue&case=C-21&page=1")
+        self.assertEqual(links["C-41"], "#/screens?screen=programme-queue&case=C-41&page=2")
+
+    def test_opening_a_row_keeps_the_table_on_the_page_that_holds_it(self) -> None:
+        out = any_out(run_paging(opened={"case": 51, "page": 2, "scope": "all"}))
+        paths = [str(p) for p in out["paths"]]
+        self.assertEqual(paths, ["/api/cases?view=all&limit=50&offset=50"])
+        self.assertIn("cases 51 to 100 of 120", str(out["openStatus"]))
+        links = out["openLinks"]
+        self.assertEqual(len(links), 50)
+        self.assertEqual(links[0]["text"], "Open connected view for C-51")
+        self.assertTrue(all("&scope=all" in link["href"] for link in links))
+        self.assertFalse(any(link["handler"] for link in links))
+
+    def test_restored_page_still_pages_both_ways(self) -> None:
+        out = any_out(run_paging(opened={"case": 51, "page": 2, "scope": "all", "walk": True}))
+        self.assertIn("cases 101 to 120 of 120", str(out["afterNext"]["status"]))
+        self.assertIn("cases 51 to 100 of 120", str(out["afterPrev"]["status"]))
+        self.assertIn("cases 1 to 50 of 120", str(out["afterPrevAgain"]["status"]))
+        self.assertEqual(
+            out["afterPrevAgain"]["links"][0]["href"],
+            "#/screens?screen=programme-queue&case=C-1&scope=all",
+        )
+        paths = [str(p) for p in out["paths"]]
+        self.assertEqual(
+            paths, [f"/api/cases?view=all&limit=50&offset={o}" for o in (50, 100, 50, 0)]
+        )
+
+    def test_pager_buttons_are_disabled_only_at_the_range_ends(self) -> None:
+        out = any_out(run_paging(opened={"case": 51, "page": 2, "scope": "all", "walk": True}))
+        self.assertEqual(out["firstDisabled"], [False, False])
+        self.assertEqual(out["openDisabled"], [False, False])
+        self.assertEqual(out["afterNext"]["disabled"], [False, True])
+        self.assertEqual(out["afterPrev"]["disabled"], [False, False])
+        self.assertEqual(out["afterPrevAgain"]["disabled"], [True, False])
+
+    def test_direct_links_without_the_row_in_the_sidebar_keep_the_first_table_page(self) -> None:
+        cases: list[dict[str, object]] = [{"case": 51, "page": 0}, {"case": 999, "page": 2}]
+        for opened in cases:
+            out = any_out(run_paging(opened=opened))
+            paths = [str(p) for p in out["paths"]]
+            self.assertEqual(paths, ["/api/cases?view=all&limit=50&offset=0"])
+            self.assertIn("cases 1 to 50 of 120", str(out["openStatus"]))
 
     def test_queue_page_failure_keeps_rows_and_says_so(self) -> None:
         out = run_paging("fail")
