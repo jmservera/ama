@@ -4,6 +4,10 @@ description: Phase details for the role-screen POST and timer contract correctio
 ms.date: 2026-11-13
 ---
 
+## Critique amendment (CR-1 to CR-3, see the critique artifact)
+
+The guards below are strengthened before implementation: exact full `path` assignment and exact full `fetch(...)` call text, single `fetch` and `method` tokens, no other transports, all `api(` sites with `undefined` options, balanced-parenthesis `setTimeout` call extraction with exact allowed calls, `if (hadFocus)` prefix and alias rejection, each with negative fixtures. The substring rules in the sections below are superseded where stricter.
+
 ## Phase 3 details
 
 ### test_role_screens.py

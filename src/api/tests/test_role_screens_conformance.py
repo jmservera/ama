@@ -15,6 +15,46 @@ CSS = (WEB / "style.css").read_text()
 TRACE = (ROOT / "docs" / "reference" / "research" / "ux" / "atlas-screen-trace.md").read_text()
 
 
+REVOKE_TIMER = "setTimeout(() => URL.revokeObjectURL(started), 1000)"
+FOCUS_TIMER = (
+    "setTimeout(() => { if (button.isConnected && !button.disabled && "
+    "document.activeElement === document.body) button.focus(); }, 0)"
+)
+
+
+def timer_calls(source: str) -> list[tuple[str, str]]:
+    """Complete setTimeout calls with the text just before each, using balanced parentheses."""
+    calls = []
+    for found in re.finditer(r"setTimeout\(", source):
+        depth, index = 0, found.end() - 1
+        while index < len(source):
+            depth += {"(": 1, ")": -1}.get(source[index], 0)
+            if depth == 0:
+                break
+            index += 1
+        calls.append(
+            (source[max(0, found.start() - 14) : found.start()], source[found.start() : index + 1])
+        )
+    return calls
+
+
+def timer_findings(source: str) -> list[str]:
+    """Reasons a timer is not the export-URL release or the guarded focus restoration."""
+    calls = timer_calls(source)
+    found = []
+    if len(re.findall(r"\bsetTimeout\b", source)) != len(calls):
+        found.append("setTimeout is used other than as a direct call")
+    for before, call in calls:
+        if call == FOCUS_TIMER:
+            if before != "if (hadFocus) ":
+                found.append("focus restoration is not limited to a control that had focus")
+        elif call != REVOKE_TIMER:
+            found.append(f"unexpected timer {call}")
+    if sorted(call for _, call in calls) != sorted([FOCUS_TIMER, REVOKE_TIMER]):
+        found.append("the timers are not exactly the revoke and focus restoration")
+    return found
+
+
 class RoleScreenConformance(unittest.TestCase):
     def test_every_registered_screen_is_traced(self) -> None:
         registered = re.findall(r"registerRoleScreen\(\{\s*id: \"([a-z-]+)\"", SCREENS)
@@ -56,11 +96,26 @@ class RoleScreenConformance(unittest.TestCase):
         for rule in rules:
             self.assertNotRegex(rule, r"animation|transition")
         self.assertNotRegex(SCREENS, r"setInterval|requestAnimationFrame|\.animate\(")
-        # The only timer is the delayed object-URL release of the exception summary download.
-        self.assertEqual(
-            re.findall(r"setTimeout\([^;]*;", SCREENS),
-            ["setTimeout(() => URL.revokeObjectURL(started), 1000);"],
-        )
+        # Timers: the delayed object-URL release of the exception summary download and the
+        # guarded return of focus to the saved-copy check button (accessibility, not motion).
+        self.assertEqual(timer_findings(SCREENS), [])
+
+    def test_timer_guard_rejects_motion_and_unguarded_focus_timers(self) -> None:
+        focus_body = "button.focus(); }, 0)"
+        changed = {
+            "motion after focus": SCREENS.replace(
+                focus_body, 'button.focus(); button.classList.add("fade"); }, 0)'
+            ),
+            "long delay": SCREENS.replace(focus_body, "button.focus(); }, 300)"),
+            "non-literal delay": SCREENS.replace(focus_body, "button.focus(); }, delay)"),
+            "string callback": SCREENS + '\nsetTimeout("fade()", 0);',
+            "extra animation timer": SCREENS + '\nsetTimeout(() => el.classList.add("fade"), 300);',
+            "alias": SCREENS + "\nconst later = setTimeout;",
+            "unguarded focus": SCREENS.replace("if (hadFocus) setTimeout", "setTimeout"),
+        }
+        for name, source in changed.items():
+            self.assertNotEqual(source, SCREENS, name)
+            self.assertNotEqual(timer_findings(source), [], name)
 
     def test_screens_state_no_action_is_taken(self) -> None:
         self.assertIn("No message, approval or record change is made from this screen.", SCREENS)
