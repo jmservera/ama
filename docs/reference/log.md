@@ -11657,3 +11657,13 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Corrected the unit-failure narrative in the [issue 74 integration section](../architecture/cutover-evidence-pack.md#issue-74-home-and-building-separation-evidence-integration-2026-11-13-refs-74-440): only the core attempt shows the missing package; the two byte-identical API error files show a wrong selector and the distinct attempt count is not claimed. Added the axe scope beside the browser row and a note on the unreconciled observation plan, and updated the existing [index](./README.md) row. The earlier log entry is unchanged.
 * Documentation only: the independent REVISE review is preserved byte-for-byte; counts, passes and open adverse items are unchanged; no source, test, check or configuration change, no tick, closure or approval. Independent changed-line reassessment is pending.
 * Evidence under `.copilot-tracking/` (2026-11-13 issue-74-evidence-integration-0424).
+
+## [2026-11-13] update | Document generators emit generator_revision (Refs #176)
+
+* `zf_documents.py` and `zf_document_controls.py` now record `generator_revision` (source fingerprint) in new output. Committed document fixtures were not regenerated; their generator revision remains historically unrecorded (#176 criterion unmet for them).
+
+## [2026-11-13] update | Compact publication parent for the #176 local provenance child (Refs #176)
+
+* Packaged the three changed source/test blobs and the original research, plan, critique, Review and small-log records of local child 25a7135b1 byte-unchanged into a new parent. Two raw `before-*.json` snapshots, byte-identical to the public fixtures at main 33c261a63, are omitted; the manifest records both blobs and the restoration pointer. Nothing was deleted, moved or rewritten.
+* Source equivalence is a blob comparison, not a new runtime result; legacy fixtures remain unrecorded and whole #176 stays open. Frozen-source validation, base refresh and independent exact-head assessment are pending. Docs checkpoint PR1506 also appends this file; keep both entries when reconciled.
+* Evidence under `.copilot-tracking/changes/2026-11-13-demo-provenance-parent-176-0702-changes.md`.

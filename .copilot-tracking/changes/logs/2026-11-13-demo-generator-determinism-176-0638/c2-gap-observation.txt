@@ -1,0 +1,2 @@
+src/importer/evals/document_form_fixtures.json header keys: ['content_sha256', 'generator_version', 'is_synthetic', 'seed', 'stock_register_rows'] has generator_revision: False
+src/core/evals/document_control_fixtures.json header keys: ['as_of', 'content_sha256', 'generator_version', 'is_synthetic', 'seed', 'stock_register_rows'] has generator_revision: False

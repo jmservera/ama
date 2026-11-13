@@ -1,0 +1,56 @@
+diff --git a/src/importer/tests/test_document_form_fixtures.py b/src/importer/tests/test_document_form_fixtures.py
+index 401402494..c6a86e392 100644
+--- a/src/importer/tests/test_document_form_fixtures.py
++++ b/src/importer/tests/test_document_form_fixtures.py
+@@ -7,11 +7,15 @@ import unittest
+ from pathlib import Path
+ from typing import Any
+ 
++from zava_forward.core.synthetic import provenance
++
+ ROOT = Path(__file__).resolve().parents[3]
+ GENERATOR = ROOT / "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator"
+ sys.path.insert(0, str(GENERATOR))
+ gen = importlib.import_module("zf_documents")
++controls = importlib.import_module("zf_document_controls")
+ COMMITTED = ROOT / "src/importer/evals/document_form_fixtures.json"
++COMMITTED_CONTROLS = ROOT / "src/core/evals/document_control_fixtures.json"
+ 
+ 
+ def register() -> list[dict[str, Any]]:
+@@ -130,6 +134,35 @@ class DocumentFormFixtureTests(unittest.TestCase):
+                 {f["seeded_defect"]["rule_id"]} if f["seeded_defect"] else set(),
+             )
+ 
++    def test_generator_revision_is_source_fingerprint_and_header_only(self) -> None:
++        expected = provenance.source_revision([GENERATOR / "zf_documents.py"])
++        self.assertEqual(self.data["generator_revision"], expected)
++        self.assertEqual(gen.build(register(), 20260901)["generator_revision"], expected)
++        self.assertEqual(
++            self.data["content_sha256"], gen.build(register(), 20260901)["content_sha256"]
++        )
++        committed = json.loads(COMMITTED.read_text())
++        self.assertEqual(committed["generator_revision"], expected)
++
++
++class DocumentControlFixtureProvenanceTests(unittest.TestCase):
++    def test_revision_covers_both_generator_sources_and_is_deterministic(self) -> None:
++        expected = provenance.source_revision([GENERATOR / "zf_document_controls.py", GENERATOR / "zf_documents.py"])
++        first = controls.build(register(), 20260901)
++        self.assertEqual(first["generator_revision"], expected)
++        self.assertEqual(
++            json.dumps(first, sort_keys=True), json.dumps(controls.build(register(), 20260901), sort_keys=True)
++        )
++        self.assertNotEqual(first["generator_revision"], provenance.source_revision([GENERATOR / "zf_documents.py"]))
++
++    def test_committed_control_fixture_records_current_revision(self) -> None:
++        committed = json.loads(COMMITTED_CONTROLS.read_text())
++        self.assertEqual(
++            committed["generator_revision"],
++            provenance.source_revision([GENERATOR / "zf_document_controls.py", GENERATOR / "zf_documents.py"]),
++        )
++        self.assertEqual(committed["seed"], 20260901)
++
+ 
+ if __name__ == "__main__":
+     unittest.main()

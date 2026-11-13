@@ -1,5 +1,6 @@
 """Document, form-schema and field-candidate fixtures: determinism, split and seeded defects."""
 
+import hashlib
 import importlib
 import json
 import sys
@@ -7,11 +8,32 @@ import unittest
 from pathlib import Path
 from typing import Any
 
+from zava_forward.core.synthetic import provenance
+
 ROOT = Path(__file__).resolve().parents[3]
 GENERATOR = ROOT / "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator"
 sys.path.insert(0, str(GENERATOR))
 gen = importlib.import_module("zf_documents")
+controls = importlib.import_module("zf_document_controls")
 COMMITTED = ROOT / "src/importer/evals/document_form_fixtures.json"
+COMMITTED_CONTROLS = ROOT / "src/core/evals/document_control_fixtures.json"
+
+
+# Pre-change generator output on the constructed register (seed 20260901), recorded in the C2 logs.
+BASELINE = {
+    "docs_whole": "c01bfa9d26a2ffc442309f88ee7aa07080a4afbc9987b424e6e9eda144522c87",
+    "docs_content": "f959369fb2c1d417e695a092c82e2f397785361937c38d7524836a9274ec7cb8",
+    "ctrl_whole": "63839fe0a3d7d9b40d817bea0248c842cf598f0e059c8f5e4edbd7e10d56360f",
+    "ctrl_content": "0cb50e868809e11f00c05af26697e737ec94d5286a2e9b0cf830eb620ca1f79d",
+}
+
+
+def without_revision(out: dict[str, Any]) -> str:
+    return hashlib.sha256(
+        json.dumps(
+            {k: v for k, v in out.items() if k != "generator_revision"}, sort_keys=True
+        ).encode()
+    ).hexdigest()
 
 
 def register() -> list[dict[str, Any]]:
@@ -129,6 +151,37 @@ class DocumentFormFixtureTests(unittest.TestCase):
                 check(f, committed["form_schema"]),
                 {f["seeded_defect"]["rule_id"]} if f["seeded_defect"] else set(),
             )
+
+    def test_fresh_documents_output_records_source_revision_with_unchanged_payload(self) -> None:
+        expected = provenance.source_revision([GENERATOR / "zf_documents.py"])
+        first, second = gen.build(register(), 20260901), gen.build(register(), 20260901)
+        self.assertEqual(first["generator_revision"], expected)
+        self.assertEqual(json.dumps(first, sort_keys=True), json.dumps(second, sort_keys=True))
+        self.assertEqual(first["content_sha256"], BASELINE["docs_content"])
+        self.assertEqual(without_revision(first), BASELINE["docs_whole"])
+
+
+class DocumentControlGeneratorRevisionTests(unittest.TestCase):
+    def test_fresh_controls_output_records_both_source_revision_with_unchanged_payload(
+        self,
+    ) -> None:
+        expected = provenance.source_revision(
+            [GENERATOR / "zf_document_controls.py", GENERATOR / "zf_documents.py"]
+        )
+        first, second = controls.build(register(), 20260901), controls.build(register(), 20260901)
+        self.assertEqual(first["generator_revision"], expected)
+        self.assertEqual(json.dumps(first, sort_keys=True), json.dumps(second, sort_keys=True))
+        self.assertEqual(first["content_sha256"], BASELINE["ctrl_content"])
+        self.assertEqual(without_revision(first), BASELINE["ctrl_whole"])
+
+    def test_historical_committed_fixtures_remain_unmodified_and_unrecorded(self) -> None:
+        # Historically unrecorded (Unknown); stamping one now would fabricate provenance.
+        for path in (COMMITTED, COMMITTED_CONTROLS):
+            self.assertNotIn("generator_revision", json.loads(path.read_text()))
+
+    # Unperformed future requirement (not active): once the committed fixtures are genuinely
+    # regenerated from their original inputs, assert committed["generator_revision"] equals
+    # the matching source_revision above.
 
 
 if __name__ == "__main__":

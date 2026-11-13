@@ -16,7 +16,10 @@ import json
 import os
 import random
 from datetime import date, timedelta
+from pathlib import Path
 
+import zf_documents
+from zava_forward.core.synthetic import provenance
 from zf_documents import REGISTER, _pick_families, load_register
 
 VERSION = "document-control-fixtures-v1"
@@ -41,6 +44,7 @@ def build(register, seed, count=120):
                          "scan_class": rng.choice(SCAN_CLASSES)}
                         for k in rng.sample(KINDS, 3)]})
     out = {"is_synthetic": True, "generator_version": VERSION, "seed": seed, "as_of": AS_OF,
+           "generator_revision": provenance.source_revision([Path(__file__), Path(zf_documents.__file__)]),
            "stock_register_rows": len(register), "cases": cases}
     out["content_sha256"] = hashlib.sha256(json.dumps(cases, sort_keys=True).encode()).hexdigest()
     return out

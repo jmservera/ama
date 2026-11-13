@@ -1,0 +1,108 @@
+E501 Line too long (104 > 100)
+  --> src/importer/tests/test_document_form_fixtures.py:33:101
+   |
+31 | def without_revision(out: dict[str, Any]) -> str:
+32 |     return hashlib.sha256(
+33 |         json.dumps({k: v for k, v in out.items() if k != "generator_revision"}, sort_keys=True).encode()
+   |                                                                                                     ^^^^
+34 |     ).hexdigest()
+   |
+
+E501 Line too long (101 > 100)
+   --> src/importer/tests/test_document_form_fixtures.py:163:101
+    |
+162 | class DocumentControlGeneratorRevisionTests(unittest.TestCase):
+163 |     def test_fresh_controls_output_records_both_source_revision_with_unchanged_payload(self) -> None:
+    |                                                                                                     ^
+164 |         expected = provenance.source_revision([GENERATOR / "zf_document_controls.py", GENERATOR / "zf_documents.py"])
+165 |         first, second = controls.build(register(), 20260901), controls.build(register(), 20260901)
+    |
+
+E501 Line too long (117 > 100)
+   --> src/importer/tests/test_document_form_fixtures.py:164:101
+    |
+162 | class DocumentControlGeneratorRevisionTests(unittest.TestCase):
+163 |     def test_fresh_controls_output_records_both_source_revision_with_unchanged_payload(self) -> None:
+164 |         expected = provenance.source_revision([GENERATOR / "zf_document_controls.py", GENERATOR / "zf_documents.py"])
+    |                                                                                                     ^^^^^^^^^^^^^^^^^
+165 |         first, second = controls.build(register(), 20260901), controls.build(register(), 20260901)
+166 |         self.assertEqual(first["generator_revision"], expected)
+    |
+
+E501 Line too long (117 > 100)
+   --> src/importer/tests/test_document_form_fixtures.py:172:101
+    |
+171 |     def test_historical_committed_fixtures_remain_unmodified_and_unrecorded(self) -> None:
+172 |         # Their generator revision is historically unrecorded (Unknown); stamping one now would fabricate provenance.
+    |                                                                                                     ^^^^^^^^^^^^^^^^^
+173 |         for path in (COMMITTED, COMMITTED_CONTROLS):
+174 |             self.assertNotIn("generator_revision", json.loads(path.read_text()))
+    |
+
+E501 Line too long (109 > 100)
+   --> src/importer/tests/test_document_form_fixtures.py:176:101
+    |
+174 |             self.assertNotIn("generator_revision", json.loads(path.read_text()))
+175 |
+176 |     # Unperformed future requirement (not active): once the committed fixtures are genuinely regenerated from
+    |                                                                                                     ^^^^^^^^^
+177 |     # their original inputs, assert committed["generator_revision"] equals the matching source_revision above.
+    |
+
+E501 Line too long (110 > 100)
+   --> src/importer/tests/test_document_form_fixtures.py:177:101
+    |
+176 |     # Unperformed future requirement (not active): once the committed fixtures are genuinely regenerated from
+177 |     # their original inputs, assert committed["generator_revision"] equals the matching source_revision above.
+    |                                                                                                     ^^^^^^^^^^
+
+C408 Unnecessary `dict()` call (rewrite as a literal)
+   --> support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:165:24
+    |
+163 |               "approval": {"status": "synthetic fixture only", "approved_by": None},
+164 |               "match_budget_ceiling_gbp": BUDGET_CEILING,
+165 |               "fields": [dict(name=f, required=f in REQUIRED, conditional_on=("eligibility_status contains match funding"
+    |  ________________________^
+166 | |                        if f == "match_funding_gbp" else None)) for f in FIELDS],
+    | |______________________________________________________________^
+167 |               "calculations": [{"id": "invoice_total_check", "formula": "net_cost_gbp + vat_gbp == invoice_total_gbp",
+168 |                                 "inputs": ["net_cost_gbp", "vat_gbp", "invoice_total_gbp"]},
+    |
+help: Rewrite as a literal
+    |
+164 |             "match_budget_ceiling_gbp": BUDGET_CEILING,
+    -             "fields": [dict(name=f, required=f in REQUIRED, conditional_on=("eligibility_status contains match funding"
+    -                        if f == "match_funding_gbp" else None)) for f in FIELDS],
+165 +             "fields": [{"name": f, "required": f in REQUIRED, "conditional_on": ("eligibility_status contains match funding"
+166 +                        if f == "match_funding_gbp" else None)} for f in FIELDS],
+167 |             "calculations": [{"id": "invoice_total_check", "formula": "net_cost_gbp + vat_gbp == invoice_total_gbp",
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+Found 7 errors.
+1 unsafe fix available with `--fix --unsafe-fixes`.
+exit=1
+unformatted: File would be reformatted
+   --> src/importer/tests/test_document_form_fixtures.py:33:20
+    |
+32  |     return hashlib.sha256(
+    -         json.dumps({k: v for k, v in out.items() if k != "generator_revision"}, sort_keys=True).encode()
+33  +         json.dumps(
+34  +             {k: v for k, v in out.items() if k != "generator_revision"}, sort_keys=True
+35  +         ).encode()
+36  |     ).hexdigest()
+--------------------------------------------------------------------------------
+164 | class DocumentControlGeneratorRevisionTests(unittest.TestCase):
+    -     def test_fresh_controls_output_records_both_source_revision_with_unchanged_payload(self) -> None:
+    -         expected = provenance.source_revision([GENERATOR / "zf_document_controls.py", GENERATOR / "zf_documents.py"])
+165 +     def test_fresh_controls_output_records_both_source_revision_with_unchanged_payload(
+166 +         self,
+167 +     ) -> None:
+168 +         expected = provenance.source_revision(
+169 +             [GENERATOR / "zf_document_controls.py", GENERATOR / "zf_documents.py"]
+170 +         )
+171 |         first, second = controls.build(register(), 20260901), controls.build(register(), 20260901)
+    |
+
+1 file would be reformatted
+exit=1
