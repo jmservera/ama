@@ -35,6 +35,21 @@ function h(tag, attrs, ...kids) {
   return el;
 }
 
+const SUPPORT_OWNER = "Owner: application support.";
+// Keeps a server message that already names an owner; otherwise adds the owner and next action.
+function ownedNotice(reason, nextAction) {
+  const text = String(reason || "").trim();
+  if (/\bOwner:/.test(text)) return text;
+  return `${text}${/[.!?]$/.test(text) ? "" : "."} ${SUPPORT_OWNER} Next action: ${nextAction}`;
+}
+// Names only the briefing control that is on screen in the current state.
+function briefingRetryAction(painted, hidden) {
+  const button = painted ? "Refresh briefing" : "Try loading briefing again";
+  return hidden ? `choose Show briefing, then use ${button}` : `use ${button}`;
+}
+function startupRetryAction(error) {
+  return error.reloadWorkspace ? "choose Reload workspace" : "choose Try again";
+}
 function mutationNeedsHistory(error) {
   return error.outcome === "committed" || error.outcome === "uncertain" || !error.status;
 }
@@ -619,6 +634,7 @@ function aiBox() {
     return id
       ? h("a", { href: `#/case/${encodeURIComponent(id)}` }, cite) : cite;
   };
+  let painted = false;
   const paint = b => {
     const ai = b.source === "ai";
     const refreshed = b.generated_at ? new Date(b.generated_at) : null;
@@ -638,6 +654,7 @@ function aiBox() {
       h("p", {}, "References show what was cited, not whether the statement is correct. Correct the draft or explain why you will not use it below. Recorded reviews cannot be undone."),
       h("p", { class: "muted", "data-briefing-feedback": "" }, "Something wrong or missing? If review controls are shown, choose Edit this draft to correct it, or Do not use this draft and give a reason. Your reason is kept in the audit log as feedback. If Edit this draft is unavailable, or the review is already recorded, Refresh briefing may reuse the cached draft for an unverified briefing with unchanged records. If the sources still do not match, choose Use rules and templates, without AI, or continue with ordinary case work."),
       aiNotes(b), h("button", { type: "button", class: "alt", onclick: () => load() }, "Refresh briefing"));
+    painted = true;
   };
   let sequence = 0, loading = false;
   const load = async () => {
@@ -668,8 +685,8 @@ function aiBox() {
       paint(b); status.textContent = "Briefing ready. Check the sources, then choose how to review the draft.";
     } catch (error) {
       if (signal.aborted || own !== sequence) return;
-      status.textContent = `Briefing unavailable: ${error.message}. Try loading the briefing again.`;
-      if (!content.childElementCount) {
+      status.textContent = ownedNotice(`Briefing unavailable: ${error.message}`, `${briefingRetryAction(painted, content.hidden)}, then contact application support if it continues.`);
+      if (!painted) {
         content.replaceChildren(h("button", { type: "button", onclick: () => load() }, "Try loading briefing again"));
       }
     } finally {
@@ -746,7 +763,7 @@ function priorityPanel() {
   };
   box.append(h("p", { role: "status" }, "Loading priority suggestions..."));
   api("/api/ai/priority").then((d) => paint(d.recommendation && (d.recommendation.status === "Proposed" || d.recommendation.order_note) ? d.recommendation : null)).catch(error => {
-    if (error.name !== "AbortError") paint(null, `Priority suggestions unavailable: ${error.message}. Try requesting a suggestion again.`);
+    if (error.name !== "AbortError") paint(null, ownedNotice(`Priority suggestions unavailable: ${error.message}`, "request a suggestion again, then contact application support if it continues."));
   });
   return box;
 }
@@ -903,8 +920,8 @@ async function listView(view) {
     try { d = await api(`/api/cases?view=${view}&${qs(listState)}&limit=${PAGE}&${paging}`, undefined, signal); }
     catch (error) {
       if (signal.aborted || my !== seq || !me) return;
-      workspaceStatus.textContent = `Cases unavailable: ${error.message}`;
-      results.replaceChildren(h("p", { class: "err", role: "alert" }, error.message),
+      workspaceStatus.textContent = ownedNotice(`Cases unavailable: ${error.message}`, "choose Try loading cases again, then contact application support if it continues.");
+      results.replaceChildren(h("p", { class: "err", role: "alert" }, ownedNotice(error.message, "choose Try loading cases again, then contact application support if it continues.")),
         h("button", { onclick: () => load(false) }, "Try loading cases again"));
       return;
     }
@@ -1365,7 +1382,7 @@ async function homeCaseView(id) {
   } catch (e) {
     if (e.name === "AbortError" || !me) return;
     show(back, h("h1", {}, "Home case view unavailable"),
-      h("p", { class: "err", role: "alert" }, `${e.message} Use the case and building screens instead.`));
+      h("p", { class: "err", role: "alert" }, `${ownedNotice(e.message, "contact application support if it continues.")} Use the case and building screens instead.`));
   }
 }
 
@@ -1402,7 +1419,7 @@ async function buildingView(id) {
     if (e.name === "AbortError" || !me) return;
     show(h("a", { class: "back", href: "#/" }, "Back to the list"),
       h("h1", {}, "Shared building context unavailable"),
-      h("p", { class: "err", role: "alert" }, e.message));
+      h("p", { class: "err", role: "alert" }, ownedNotice(e.message, "go back to the list and open the case, then contact application support if it continues.")));
   }
 }
 
@@ -1957,7 +1974,7 @@ function startupFailed(error) {
   if (error.status === 401) return;
   workspaceStatus.textContent = `Workspace unavailable: ${error.message}`;
   show(h("h1", {}, "Workspace unavailable"),
-    h("p", { class: "err", role: "alert" }, `Could not start the workspace: ${error.message}. Try again. If this continues, contact application support.`),
+    h("p", { class: "err", role: "alert" }, ownedNotice(`Could not start the workspace: ${error.message}`, `${startupRetryAction(error)}, then contact application support if it continues.`)),
     error.reloadWorkspace
       ? h("button", { type: "button", onclick: () => location.reload() }, "Reload workspace")
       : h("button", { type: "button", onclick: () => start().catch(startupFailed) }, "Try again"));
@@ -2201,7 +2218,7 @@ function mapPanel(coordinator = null, filters = null) {
       if (restore) el.focus({ preventScroll: true });
       listUl.replaceChildren();
       info.setAttribute("role", "alert");
-      info.textContent = `Map unavailable: ${error.message}. Use the case list or try changing the map filter.`;
+      info.textContent = ownedNotice(`Map unavailable: ${error.message}`, "use the case list or change the map filter, then contact application support if it continues.");
       return;
     } finally {
       progress.finish();
