@@ -8109,3 +8109,40 @@ Exact resume point: with #176 still open, the next step is an owner-approved ref
 ### Process limits (post-1507 checkpoint)
 
 Documentation only. Checked by `git diff --check`, an ASCII scan of added lines and link review. None refreshes an observation. No install, source, test, helper, fixture or policy change; no cloud, model, SQL, Docker, browser, `--changed` or complete-gate run, and no private dataset regeneration. Not a complete-gate receipt. Original records: `.copilot-tracking/{research,plans,changes,reviews}/2026-11-13-demo-provenance-checkpoint-440-0750-*` and state `demo-provenance-checkpoint-440-0750-state.json`.
+
+## Qualified role-screen evidence record (2026-11-13, Refs #149 #231 #232 #151 #440)
+
+Draft, documentation only. It records two frozen local children as inputs. It is not a new business-policy decision, sensor checkpoint or approved sent-evidence contract, and it accepts nothing.
+
+### Scope and pins
+
+* Source pin: origin/main `347962dace94171724cc8db4044c8d783335fecf`. Both children descend directly from it and add only `.copilot-tracking/` files; `src`, `infra`, `tools` and `.github` are byte-equal to that base in both children and in this parent.
+* #231 review child `32fd2163547589b50f1e4e4bea4407321b82ab71` (six original RPI files).
+* #232 validation child `eeb8ec157905265355f94177f9280863ba92486e`, containing original `fbd12ac941473bc468d2518a154673fd3003c66f` (16 files) and the recovery (19 files). Original and recovery files are merged unchanged, path and blob for path and blob.
+
+### Covered assertions
+
+| Item | Source-only (static) | Locally observed | Recorded adverse outcome |
+| --- | --- | --- | --- |
+| #231 Technical and Quality renderers | Fresh guideline review of the source; corrections to CSS and citation lines are in an addendum | None; no runtime, keyboard or AT check | Critique ProceedWithAmendments, Review ConformantWithFindings, no repeat Review. Low: "1 days old" plural. The `p.ok` glyph/style mismatch is grep-qualified and noncolour text is present, so it is not a proved colour-only failure |
+| #232 original attempt | None | Selectors `232` and `232s` exited 0 with no FAIL; Tab reached table regions; page-only CSV download | Axe SKIP twice, critique NOTRUN, independent Review Partial; kept verbatim |
+| #232 recovery | None | Pinned axe 4.10.3 (sha256 `880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb`): both selectors exit 0, no axe violations or incompletes, Tab in the table region at 1280 px only, no POST, reflow markers at 320, 390 and 1280 px | Plan and critique were genuinely before execution, independent Review Partial |
+
+The recovery log birth (08:41:52.547) and exit file (08:44:42.440) imply under 2m50s wall time as an upper bound only. It is not an independent timing proof and not the reported CLI session lifetime as active work.
+
+### Limits
+
+* Origins: the recovery configured the current tree. Server-process import origins are not fully attested; the import-origin probe is separate from the server and a foreign editable namespace fallback remains.
+* Resources: the scope's own cgroup memory.max 2147483648 and swap.max 0 were captured before the browser; ancestor limits were not.
+* Test coverage: Tab reach was observed at 1280 px only; the `232s` text check asserts the heading and panel, not the issue-state explanation.
+* Process: the first #232 attempt did not meet the required phase order and is not upgraded. This parent integration has its own research, plan, prospective critique before the merges, changes and independent Review, and does not claim otherwise.
+
+### Unmet and dependent gates
+
+Not a final pass, whole-WCAG, assistive-technology, named-human, live or production acceptance. WCAG conformance, human acceptance, AT closure and the dependent gates stay unmet. #149, #151, #231 and #232 remain open and unticked.
+
+### Recommendation
+
+CONTINUE, bounded (a scoped proposal, not an owner decision). Safe existing demo lanes may proceed; this record is not global acceptance. No requirement is relaxed and no new bug issue is opened. The existing issues own the remaining work. No HTTP, SQL, browser, install or full-gate run was added by this integration.
+
+Original records: `.copilot-tracking/{research,plans,changes,reviews}/2026-11-13-demo-role231-web-review-0835-*`, `.copilot-tracking/evidence/2026-11-13-role232-keyboard-browser/`, `.copilot-tracking/evidence/2026-11-13-role232-keyboard-browser-recovery/` and this integration under `2026-11-13-demo-role-evidence-parent-149-0847-*`.
