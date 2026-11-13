@@ -41,3 +41,16 @@ No finding conflicted with a confirmed decision. No new correction pool. The pla
 ## A2 pending critique (2026-11-13)
 
 The A2 amendment (final inputs 96 combined `423517a71` and 233 final `837da4fde`, revised cut line, order and checks) changes decisions and requires a genuine independent read-only critique before any assembly. It has NOT been run here and no verdict is claimed. The scope is listed in the A2 section of the [policy amendment](issue-149-parent-plan-2333-policy-amendment.md). The Revise results above (PC-01 to PC-05, AC-01 to AC-05) are preserved and not repeated.
+
+## A2 critique (2026-11-13, executed once)
+
+The pending note above is now closed by this execution. One independent read-only rubber-duck critique ran in fresh context on commit `4a424b321`, with no writes and no nested implementation agents. Verdict: Revise (four blocking). The critic verified that the pins exist, both ancestry chains and the final-input file scopes hold, and that `837da4fde` with `423517a71` merges cleanly with both web additions present. It could not run the sequential simulation or read the external acceptance evidence. Not repeated; PC-01 to PC-05 and AC-01 to AC-05 above are unchanged history.
+
+| Id | Finding | Disposition |
+| --- | --- | --- |
+| A2C-01 | "Rubric delta only" and main `774a91e5f` are stale: main is `c58f87135` after #1493 | Applied: truthful rebind note in the amendment; the earlier statement is kept as history and is not claimed to have covered `c58f87135` |
+| A2C-02 | Focused tier conflicts with the full-tier rule for SQL and security-sensitive changes | Rejected without re-asking: conflicts with the confirmed A1 owner classification and AC-02; the 1490c persisted queue revision was already assessed there. The G3 escalation to the full tier on any further persisted SQL, security-control or gate change stays |
+| A2C-03 | Per-merge two-code check is wrong before M5 and M6, and unconditional if a member is deferred | Applied: check each addition only after its own merge; union after M6 only when both are admitted |
+| A2C-04 | G3 cannot inspect an assembled diff before assembly; names alone cannot show control changes | Applied: two-stage inspection of pinned input diffs and hunks at G3, then of the actual candidate before publication |
+
+No finding was left open. Assembly is still not authorised: G1, G2, per-member G6 and the G3 rebinding at the then-current main remain.

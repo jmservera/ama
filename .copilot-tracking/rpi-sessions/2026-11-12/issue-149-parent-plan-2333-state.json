@@ -69,9 +69,9 @@
       "evidence": "A2 section; read-only merge-tree matrix at the pins"
     },
     {
-      "decision": "A2 independent critique PENDING: a genuine independent read-only critique of A2 must execute once before any future assembly; not run, no verdict claimed. Original and A1 critiques preserved",
-      "status": "pending",
-      "evidence": "A2 section, Pending genuine independent critique"
+      "decision": "A2 independent critique EXECUTED once (fresh-context read-only rubber-duck, commit 4a424b321): verdict Revise, A2C-01 rebind to main c58f87135 applied, A2C-03 and A2C-04 applied, A2C-02 (full tier) rejected as conflicting with the confirmed A1 focused classification, not re-asked. Not repeated. Original and A1 critiques preserved. Not an assembly authorisation",
+      "status": "recorded (plan only)",
+      "evidence": "plans/2026-11-12/issue-149-parent-plan-2333-critique.md (A2 critique); policy amendment A2 correction notes"
     }
   ],
   "blockers": [
@@ -87,8 +87,8 @@
     },
     {
       "id": "G6",
-      "summary": "A2: 233 final and 96 combined have independent acceptance at frozen heads (root accepted); coordinator admission of 215, 233 and 96 and the A2 independent critique remain open",
-      "resolution": "coordinator admission per member; independent A2 critique; recorded deferral if any member is not admitted"
+      "summary": "A2: 233 final and 96 combined have independent acceptance at frozen heads (root accepted); coordinator admission of 215, 233 and 96 remains open (A2 critique executed, Revise applied)",
+      "resolution": "coordinator admission per member; recorded deferral if any member is not admitted"
     },
     {
       "id": "G4",
@@ -98,7 +98,7 @@
   ],
   "next_action": {
     "phase": "Plan",
-    "action": "Run the genuine independent A2 critique once; coordinator satisfies G1 (1490 merge and hosted CI) and G2 (cut line), per-member G6; then Phase 0 G3 re-binding. DO NOT ASSEMBLE before then"
+    "action": "Coordinator satisfies G1 (1490 merge and hosted CI) and G2 (cut line), per-member G6; then Phase 0 G3 re-binding to the then-current main (c58f87135 at last read). A2 critique done. DO NOT ASSEMBLE before then"
   },
   "prioritized_follow_ups": [
     {
