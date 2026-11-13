@@ -633,9 +633,15 @@ class ChatPanel:
         ) -> dict[str, Any]:
             def finalize(message: dict[str, Any], db: Any = None) -> None:
                 nonlocal kind, text, cites, model_name
+                meter = store.ai.consumption
                 if not receipt.get("meter_root"):
                     return
-                held = store.ai.consumption.publish_output(
+                if meter is None:
+                    logging.getLogger(__name__).warning(
+                        "Chat meter reference present but no consumption meter is configured"
+                    )
+                    return
+                held = meter.publish_output(
                     receipt["meter_root"], f"chat:{tid}:{message['seq']}", eligible=False, db=db
                 )
                 if held:

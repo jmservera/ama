@@ -12,7 +12,7 @@ import urllib.request
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import test_role_matrix as roles
 from zava_forward.api import auth
@@ -100,6 +100,54 @@ class PanelTests(roles.Matrix):
         self.assertEqual([m["role"] for m in stored], ["user", "assistant"])
         self.assertEqual(stored[1]["evidence"], [c["id"] for c in d["citations"]])
 
+    def test_blocked_case_questions_are_answered_with_cited_sources(self) -> None:
+        def draft(prompt: str) -> dict[str, Any]:
+            first = re.search(r'"(ZF-4/[^"]+)"', prompt)
+            cites = [first.group(1)] if first else []
+            return envelope(json.dumps(dict(answer="From the case card.", citations=cites)))
+
+        questions = (
+            "what can I do to unblock this case?",
+            "review what is blocking it",
+            "how can we fix this safety? Should we schedule a visit?",
+        )
+        for generative in (True, False):
+            self.model = draft if generative else (lambda _p: envelope("not json at all"))
+            for question in questions:
+                with self.subTest(generative=generative, question=question):
+                    tid = self.thread(case="ZF-4")
+                    code, d = self.ask(tid, question)
+                    self.assertEqual(code, 200, d)
+                    self.assertEqual(d["kind"], "answer", d)
+                    self.assertIn(
+                        d["answer_source"], ("generative-grounded", "decision-rules-fallback")
+                    )
+                    self.assertTrue(d["citations"], d)
+                    self.assertTrue(all(c["id"].startswith("ZF-4/") for c in d["citations"]))
+                    self.assertTrue(
+                        all(
+                            c["source_kind"] in ("decision-rule", "case-record")
+                            for c in d["citations"]
+                        )
+                    )
+
+    def test_post_dispatch_provider_failure_settles_the_meter_as_ineligible(self) -> None:
+        meter = MagicMock()
+        meter.publish_output.return_value = None
+        failed = dict(
+            outcome="timeout", text=None, usage=None, meter_id="rid-1", meter_root="root-1"
+        )
+        self.model = lambda _p: dict(envelope(None), **failed)
+        tid = self.thread(case="ZF-4")
+        with patch.object(self.store.ai, "consumption", meter):
+            code, d = self.ask(tid, "why is this case blocked?")
+        self.assertEqual(code, 200, d)
+        self.assertNotEqual(d.get("answer_source"), "generative-grounded")
+        meter.publish_output.assert_called_once()
+        args, kwargs = meter.publish_output.call_args
+        self.assertEqual(args[0], "root-1")
+        self.assertIs(kwargs["eligible"], False)
+
     def test_maximum_stored_question_with_expanding_mask_falls_back_safely(self) -> None:
         question = "x" * (MAX_CONTENT - 8) + " NE1 1AA"
         self.assertEqual(len(question), MAX_CONTENT)
@@ -123,7 +171,7 @@ class PanelTests(roles.Matrix):
                 ]
                 self.assertEqual(events[-1]["question_seq"], stored[0]["seq"])
 
-    def test_uncited_or_foreign_citation_abstains(self) -> None:
+    def test_uncited_or_foreign_citation_falls_back_to_cited_case_rules(self) -> None:
         tid = self.thread()
         for reply in (
             envelope(json.dumps(dict(answer="Probably fine.", citations=[]))),
@@ -132,10 +180,11 @@ class PanelTests(roles.Matrix):
         ):
             self.model = lambda _p, r=reply: r
             code, d = self.ask(tid)
-            self.assertEqual(
-                (code, d["kind"], d["reply"], d["citations"]), (200, "abstain", ABSTAIN, [])
-            )
-            self.assertEqual(d["label"], LABEL)
+            self.assertEqual((code, d["kind"]), (200, "answer"))
+            self.assertEqual(d["answer_source"], "decision-rules-fallback")
+            self.assertTrue(d["citations"])
+            self.assertTrue(all(c["id"].startswith("ZF-1/") for c in d["citations"]))
+            self.assertNotIn("Probably fine", d["reply"])
 
     def test_no_case_means_no_sources_and_no_model_call(self) -> None:
         tid = str(self.api(ROLE, "/api/chat/threads", {})[1]["id"])

@@ -21,9 +21,9 @@
    "cases": [{"id": "ZF-1"}],
    "turns": [
     {"say": "What is the grant reference?", "script": {"answer": "", "citations": []},
-     "expect": {"kind": "abstain", "cites": [], "contains": ["cannot answer"]}},
+     "expect": {"contains": ["recorded case rules"]}},
     {"say": "What is the grant reference, with a source?", "script": {"answer": "The grant is G-1.", "citations": ["grant.reference"]},
-     "expect": {"kind": "abstain", "cites": []}},
+     "expect": {"forbid": ["The grant is G-1"]}},
     {"say": "Say it in plain text.", "script": {"raw": "The grant is G-1."},
      "expect": {"kind": "abstain", "cites": []}}
    ]
@@ -80,7 +80,7 @@
    "cases": [{"id": "ZF-1", "stage": "Survey booked"}],
    "turns": [
     {"say": "Is funding secured?", "script": {"answer": "Funding is secured.", "citations": ["stage"]},
-     "expect": {"kind": "withheld", "forbid": ["Funding is secured"]}}
+     "expect": {"forbid": ["Funding is secured"]}}
    ]
   },
   {
