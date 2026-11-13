@@ -4,6 +4,7 @@ no credentials, no network, no paid call, no resident text."""
 from __future__ import annotations
 
 import json
+import logging
 import sqlite3
 import tempfile
 import unittest
@@ -12,12 +13,18 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from zava_forward.core.ai_consumption import Consumption, reference, timestamp
-from zava_forward.core.resident_assistant import AssistantUnavailable, CaseProgress, Topic
+from zava_forward.core.resident_assistant import (
+    AssistantUnavailable,
+    CaseProgress,
+    FakeProvider,
+    Topic,
+    advise,
+)
 
-from zava_forward.api.resident_demo.aoai import AzureAdvisor, resident_key
+from zava_forward.api.resident_demo.aoai import AzureAdvisor, configured_advisor, resident_key
 from zava_forward.api.resident_demo.assistant import EXPIRES, AzureTopicProvider
 from zava_forward.api.resident_demo.ledger_meter import (
     ADVISOR_CAPABILITIES,
@@ -70,6 +77,39 @@ class Port:
             "INSERT INTO assistant_events VALUES (?,?,?,?)",
             (uuid.uuid4().hex, tid, self.clock, json.dumps(body)),
         )
+
+
+CANARIES = ("SYN-RESIDENT-QUESTION-CANARY", "Ada Example", "07700 900123", "SYN-CASE-CANARY")
+QUESTION = "SYN-RESIDENT-QUESTION-CANARY: I am Ada Example, phone 07700 900123. When is my visit?"
+
+
+def call_join(
+    test: unittest.TestCase, records: list[dict[str, Any]], capability: str, **completed: Any
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """One reservation joined by id to one completion; context on it, counts on the latter."""
+    reserved = [r for r in records if r["kind"] == "reserved"]
+    closed = [r for r in records if r["kind"] == "completed"]
+    test.assertEqual((len(reserved), len(closed)), (1, 1))
+    test.assertEqual(reserved[0]["id"], closed[0]["id"])
+    test.assertEqual(reserved[0]["capability"], capability)
+    test.assertEqual(reserved[0]["case_type"], "resident-chat")
+    test.assertEqual(reserved[0]["configuration"], CONFIG)
+    test.assertEqual(reserved[0]["prompt"], PROMPT)
+    for key, value in completed.items():
+        test.assertEqual(closed[0][key], value, key)
+    return reserved[0], closed[0]
+
+
+def assert_content_free(
+    test: unittest.TestCase, records: list[dict[str, Any]], sent: list[bytes], logs: str
+) -> None:
+    """The canaries really reached the provider, yet no ledger record or log line holds one."""
+    test.assertTrue(sent)
+    test.assertTrue(any(b"SYN-RESIDENT-QUESTION-CANARY" in payload for payload in sent))
+    stored = json.dumps(records)
+    for canary in CANARIES:
+        test.assertNotIn(canary, stored)
+        test.assertNotIn(canary, logs)
 
 
 def reply(usage: dict[str, Any] | None, model: str = MODEL) -> bytes:
@@ -158,6 +198,34 @@ class ResidentLedgerJoinTests(unittest.TestCase):
         self.assertEqual(completed[0]["tokens"]["total_tokens"], 42)
         self.assertFalse(completed[0]["held"])
         self.assertNotIn("status", json.dumps(self.kinds()))
+
+    def test_topic_call_joins_by_id_and_empty_credential_closes_the_reservation(self) -> None:
+        self.authorize()
+        self.provider().select(Topic.STATUS)
+        call_join(
+            self,
+            self.kinds(),
+            CAPABILITY,
+            outcome="returned",
+            held=False,
+            tokens=COUNTS | {"cached_tokens": 0},
+        )
+        meter = LedgerTopicMeter(self.ledger, model=MODEL, configuration=CONFIG, prompt=PROMPT)
+        provider = AzureTopicProvider(
+            ENDPOINT,
+            MODEL,
+            enabled=True,
+            token=lambda: "",
+            reserve=meter.reserve,
+            record_call=meter.close,
+            transport=lambda url, payload, token: reply(None),
+            clock=lambda: EXPIRES - 10,
+        )
+        with self.assertRaises(AssistantUnavailable):
+            provider.select(Topic.STATUS)
+        closed = [r for r in self.kinds() if r["kind"] == "completed"]
+        self.assertEqual(sorted(r["outcome"] for r in closed), ["provider-unavailable", "returned"])
+        self.assertEqual(len({r["id"] for r in closed}), 2)
 
     def test_unknown_authority_refuses_before_the_network_and_alerts(self) -> None:
         with self.assertRaises(AssistantUnavailable) as caught:
@@ -255,6 +323,7 @@ class ResidentAdvisorLedgerJoinTests(unittest.TestCase):
         self.ledger = Consumption(self.port)
         self.response: bytes | Exception = advisor_reply(dict(COUNTS, **CACHED))
         self.sent = 0
+        self.payloads: list[bytes] = []
         self.accounting = Mock()
         self.accounting.reserve.return_value = "ticket"
 
@@ -287,6 +356,9 @@ class ResidentAdvisorLedgerJoinTests(unittest.TestCase):
             budgets=[dict(id=reference(capability), calls=10, tokens=100000, amount="100")],
         )
 
+    def credential(self) -> str:
+        return "FAKE-TOKEN"
+
     def advisor(
         self, metered: bool = True, kinds: tuple[str, ...] = ("guidance", "question")
     ) -> AzureAdvisor:
@@ -299,6 +371,7 @@ class ResidentAdvisorLedgerJoinTests(unittest.TestCase):
 
         def transport(url: str, payload: bytes, token: str) -> bytes:
             self.sent += 1
+            self.payloads.append(payload)
             if isinstance(self.response, Exception):
                 raise self.response
             return self.response
@@ -306,16 +379,23 @@ class ResidentAdvisorLedgerJoinTests(unittest.TestCase):
         return AzureAdvisor(
             ENDPOINT,
             self.accounting,
-            lambda: "FAKE-TOKEN",
+            self.credential,
             transport=transport,
             clock=lambda: EXPIRES - 10,
             meters={k: m for k, m in meters.items() if k in kinds} if metered else None,
         )
 
-    def records(self, kind: str) -> list[dict[str, Any]]:
+    def everything(self) -> list[dict[str, Any]]:
         with self.port.transaction() as db:
             rows: list[dict[str, Any]] = self.ledger._read(db)
-        return [r for r in rows if r["kind"] == kind]
+        return rows
+
+    def records(self, kind: str) -> list[dict[str, Any]]:
+        return [r for r in self.everything() if r["kind"] == kind]
+
+    def ask(self) -> Any:
+        base = advise(Topic.STATUS, CASE, FakeProvider())
+        return self.advisor().answer_question(QUESTION, CASE, resident_key("C-1"), base)
 
     def test_admitted_guidance_call_is_closed_with_its_own_capability(self) -> None:
         self.authorize("resident-guidance")
@@ -367,6 +447,100 @@ class ResidentAdvisorLedgerJoinTests(unittest.TestCase):
         advice = self.advisor(metered=False).answer(Topic.STATUS, CASE, resident_key("C-1"))
         self.assertEqual(advice.label, "AI suggestion, not approved")
         self.assertEqual(self.records("reserved"), [])
+
+    def test_question_call_joins_the_ledger_and_stays_content_free(self) -> None:
+        self.authorize("resident-question")
+        self.response = json.dumps(
+            {
+                "model": MODEL,
+                "usage": dict(COUNTS, **CACHED),
+                "choices": [
+                    {
+                        "finish_reason": "stop",
+                        "message": {
+                            "content": json.dumps({"answer": "Soon.", "sources": ["case"]})
+                        },
+                    }
+                ],
+            }
+        ).encode()
+        with self.assertLogs("zava_forward.api.resident_demo.aoai", level="INFO") as logs:
+            advice = self.ask()
+        self.assertEqual(advice.label, "AI-generated")
+        everything = self.everything()
+        _, closed = call_join(
+            self,
+            everything,
+            "resident-question",
+            outcome="returned",
+            held=False,
+            tokens=COUNTS | {"cached_tokens": 0},
+        )
+        assert_content_free(self, everything, self.payloads, "\n".join(logs.output))
+
+    def test_guidance_call_joins_by_id_with_counts(self) -> None:
+        self.authorize("resident-guidance")
+        self.advisor().answer(Topic.STATUS, CASE, resident_key("C-1"))
+        call_join(
+            self,
+            self.everything(),
+            "resident-guidance",
+            outcome="returned",
+            held=False,
+            tokens=COUNTS | {"cached_tokens": 0},
+        )
+
+    def test_failed_question_call_stays_joined_and_content_free(self) -> None:
+        self.authorize("resident-question")
+        self.response = TimeoutError("synthetic")
+        with self.assertLogs("zava_forward.api.resident_demo.aoai", level="INFO") as logs:
+            logging.getLogger("zava_forward.api.resident_demo.aoai").info("started")
+            advice = self.ask()
+        self.assertTrue(advice.label.startswith("Summary by rules - AI unavailable"))
+        everything = self.everything()
+        call_join(self, everything, "resident-question", outcome="timeout", held=True)
+        self.assertEqual(
+            [r["reason"] for r in everything if r["kind"] == "alert"], ["liability-unknown"]
+        )
+        assert_content_free(self, everything, self.payloads, "\n".join(logs.output))
+
+    def test_credential_failure_after_admission_closes_the_reservation(self) -> None:
+        self.authorize("resident-guidance")
+        with patch.object(self, "credential", return_value=""):
+            advice = self.advisor().answer(Topic.STATUS, CASE, resident_key("C-1"))
+        self.assertTrue(advice.label.startswith("Summary by rules - AI unavailable"))
+        self.assertEqual(self.sent, 0)
+        call_join(
+            self, self.everything(), "resident-guidance", outcome="provider-unavailable", held=True
+        )
+
+    def test_configured_advisor_joins_only_when_the_caller_supplies_meters(self) -> None:
+        self.authorize("resident-guidance")
+        env = {
+            "ZF_DEMO_ASSISTANT_ENABLED": "true",
+            "ZF_DEMO_ASSISTANT_ENDPOINT": ENDPOINT,
+            "ZF_SQL_CLIENT_ID": "synthetic-client",
+        }
+        meters = advisor_meters(
+            self.ledger,
+            model=MODEL,
+            configuration=CONFIG,
+            prompts={kind: PROMPT for kind in ADVISOR_CAPABILITIES},
+        )
+        with patch("zava_forward.api.resident_demo.aoai.ManagedIdentityCredential") as identity:
+            identity.return_value.get_token.return_value.token = "FAKE-TOKEN"
+            unmetered = configured_advisor(env, Mock())
+            metered = configured_advisor(env, Mock(), meters=meters)
+        assert unmetered is not None and metered is not None
+        self.assertIsNone(unmetered.meters)
+        for advisor in (unmetered, metered):
+            advisor.accounting = self.accounting
+            advisor.clock = lambda: EXPIRES - 10
+            advisor.transport = lambda url, payload, token: advisor_reply(dict(COUNTS, **CACHED))
+            advisor.answer(Topic.STATUS, CASE, resident_key("C-1"))
+            if advisor is unmetered:
+                self.assertEqual(self.records("reserved"), [])
+        call_join(self, self.everything(), "resident-guidance", outcome="returned", held=False)
 
     def test_each_request_kind_needs_a_prompt_version(self) -> None:
         with self.assertRaises(ValueError):

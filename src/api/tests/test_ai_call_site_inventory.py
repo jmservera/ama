@@ -27,12 +27,15 @@ INVENTORY = {
     "core/src/zava_forward/core/ai.py": ("ledger", "admission, call context, counts, outcome"),
     "api/src/zava_forward/api/resident_demo/aoai.py": (
         "own-accounting",
-        "reserved and closed token accounting for the resident demo; optional ledger join "
-        "via ledger_meter.advisor_meters when meters are supplied, which no host does yet",
+        "reserved and closed token accounting for the resident demo; ledger join via "
+        "ledger_meter.advisor_meters is proven by test_resident_ledger_meter when a caller "
+        "supplies meters, but no host supplies a ledger, price or authority, so it stays "
+        "own-accounting until the owner approves host wiring",
     ),
     "api/src/zava_forward/api/resident_demo/assistant.py": (
         "counts-only-sink",
-        "optional counts; ledger join only via ledger_meter.py when wired; disabled by default",
+        "optional counts; ledger join only via ledger_meter.py when a caller wires it "
+        "(proven in test_resident_ledger_meter); disabled by default, no host wires it",
     ),
 }
 

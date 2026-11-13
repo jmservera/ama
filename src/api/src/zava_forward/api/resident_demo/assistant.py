@@ -107,8 +107,10 @@ class AzureTopicProvider:
                 raise AssistantUnavailable("budget_unavailable")
             token = self.token()
             if not token or "\r" in token or "\n" in token:
+                self._close("provider-unavailable")
                 raise AssistantUnavailable("credential_unavailable")
             if self.clock() >= EXPIRES:
+                self._close("provider-unavailable")
                 raise AssistantUnavailable("expired")
             payload = json.dumps(
                 {
