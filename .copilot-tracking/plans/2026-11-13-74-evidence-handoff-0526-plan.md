@@ -12,8 +12,8 @@ Refs #74. Not closing. Research: [2026-11-13-74-evidence-handoff-0526-research.m
 * [x] Phase 2: add a dated clarification of the over-ticked API-regression checkbox in the original author plan, leaving that plan untouched.
 * [x] Phase 3: write the local parent handoff for the ready #74 evidence only.
 * [x] Phase 4: record one independent critique of this plan, then the changes file with direct dispositions.
-* [ ] Phase 5: commit, then one independent Review that reads the committed records and verifies byte identity, statuses, provenance and claims without rerunning tests or the browser.
-* [ ] Phase 6: record the Review, commit, and verify a clean tree and no `src/` diff against `f50c5c7fd`.
+* [x] Phase 5: commit, then one independent Review that reads the committed records and verifies byte identity, statuses, provenance and claims without rerunning tests or the browser.
+* [x] Phase 6: record the Review, commit, and verify a clean tree and no `src/` diff against `f50c5c7fd`.
 
 ## Constraints
 
