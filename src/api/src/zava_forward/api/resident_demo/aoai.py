@@ -363,8 +363,10 @@ class AzureAdvisor:
         try:
             token = acquire()
         except ValueError:
+            self._close(meter, "provider-unavailable")
             raise AssistantUnavailable("credential_or_expiry") from None
         if not token or "\r" in token or "\n" in token or self.clock() >= EXPIRES:
+            self._close(meter, "provider-unavailable")
             raise AssistantUnavailable("credential_or_expiry")
         try:
             raw = self.transport(self.url, payload, token)
@@ -416,8 +418,17 @@ class AzureAdvisor:
             LOG.warning("resident_assistant meter_close_failed")
 
 
-def configured_advisor(env: Mapping[str, str], connect: Callable[[], Any]) -> AzureAdvisor | None:
-    """No developer/key credential chain and no implicit activation."""
+def configured_advisor(
+    env: Mapping[str, str],
+    connect: Callable[[], Any],
+    *,
+    meters: Mapping[str, Meter] | None = None,
+) -> AzureAdvisor | None:
+    """No developer/key credential chain and no implicit activation.
+
+    Meters come only from the caller (see ledger_meter.advisor_meters); no host supplies
+    a ledger, price or authority yet, so the default stays unmetered.
+    """
     prefix = "ZF_DEMO_ASSISTANT_"
     allowed = {prefix + suffix for suffix in ("ENABLED", "ENDPOINT")}
     if any(key.startswith(prefix) and key not in allowed for key in env):
@@ -435,4 +446,5 @@ def configured_advisor(env: Mapping[str, str], connect: Callable[[], Any]) -> Az
         env.get(prefix + "ENDPOINT", ""),
         SqlAccounting(connect),
         lambda: credential.get_token("https://cognitiveservices.azure.com/.default").token,
+        meters=meters,
     )

@@ -1348,6 +1348,40 @@ class ConsumptionApi(unittest.TestCase):
         self.assertIsNone(CURRENT.get())
         self.assertEqual(len(self.requests), 2)
 
+    def test_document_text_call_joins_the_ledger_and_receipt_content_free(self) -> None:
+        self.authority("read-document", deployment="capable", temperature=0.3, output=500)
+        self.response_text = "Constructed document description."
+        context = CallContext(
+            reference("document-join-root"),
+            reference("document-join-attempt"),
+            "read-document",
+            "document",
+            self.inner.configuration("capable", 0.3, 500),
+            reference("document-join-prompt"),
+        )
+        with call_context(context):
+            result = self.inner.look_at(
+                "PRIVATE-DOCUMENT-NAME.txt", b"PRIVATE-DOCUMENT-BODY", "text/plain"
+            )
+        self.assertEqual(result["source"], "ai")
+        self.assertIn("PRIVATE-DOCUMENT-BODY", json.dumps(self.requests))
+        records = self.records()
+        reserved = [r for r in records if r["kind"] == "reserved"]
+        completed = [r for r in records if r["kind"] == "completed"]
+        self.assertEqual((len(reserved), len(completed)), (1, 1))
+        self.assertEqual(reserved[0]["id"], completed[0]["id"])
+        self.assertEqual(result["meter_id"], reserved[0]["id"])
+        self.assertEqual(result["meter_root"], context.root)
+        self.assertEqual(
+            [reserved[0][k] for k in ("root", "attempt", "capability", "configuration", "prompt")],
+            [context.root, context.attempt, "read-document", context.configuration, context.prompt],
+        )
+        self.assertEqual(completed[0]["outcome"], "returned")
+        self.assertFalse(completed[0]["held"])
+        self.assertEqual(completed[0]["tokens"]["cached_tokens"], 10)
+        for canary in ("PRIVATE-DOCUMENT-NAME", "PRIVATE-DOCUMENT-BODY", "Constructed document"):
+            self.assertNotIn(canary, json.dumps(records))
+
     def test_model_mismatch_survives_worker_roundtrip_and_suspends_release(self) -> None:
         for returned in ("other-model", "m-" * 40, "m-" * 41, "m" * 513, {"private": "canary"}):
             with self.subTest(model=type(returned).__name__, length=len(returned)):
