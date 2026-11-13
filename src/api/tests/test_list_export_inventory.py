@@ -138,10 +138,15 @@ class InventoryIsComplete(unittest.TestCase):
             self.assertIn(READ_ONLY_NOTE, link, csv_path)
 
     def test_no_download_link_offers_a_write_back_route(self) -> None:
+        write_back = re.compile(r"(?i)\bmethod\b|upload|\bPOST\b")
+        self.assertTrue(write_back.search('href: "/api/x.csv", method: "POST"'))
+        links = 0
         for js in WEB.glob("*.js"):
             for line in js.read_text().splitlines():
                 if ".csv" in line and "href" in line and "/api/" in line:
-                    self.assertNotRegex(line, r"(?i)\\bmethod\\b|upload|\\bPOST\\b")
+                    links += 1
+                    self.assertIsNone(write_back.search(line), f"{js.name}: {line.strip()}")
+        self.assertGreaterEqual(links, len(NEW))
 
 
 class ExportRowContracts(unittest.TestCase):
@@ -165,7 +170,22 @@ class ExportRowContracts(unittest.TestCase):
         row = server.concern_export_row(item)  # type: ignore[no-untyped-call]
         self.assertNotIn("CANARY", json.dumps(row))
         self.assertEqual(row["owner"], "Owner")
-        self.assertEqual(sorted(row), sorted([*row]))
+        self.assertEqual(
+            list(row),
+            [
+                "id",
+                "home_ref",
+                "kind",
+                "raised_by",
+                "route",
+                "channel",
+                "recorded_by",
+                "next_update",
+                "unresolved",
+                "overdue",
+                "owner",
+            ],
+        )
         self.assertNotIn("statement", row)
 
     def test_proposal_export_follows_every_page_of_the_scope(self) -> None:
@@ -198,12 +218,85 @@ class ExportRowContracts(unittest.TestCase):
                         "retrieved": "2026-01-01",
                         "version": 1,
                         "caveats": [],
-                    }
+                        "review_status": "reviewed",
+                        "reviewed": "2026-01-02",
+                        "authority_type": "legislation",
+                        "official_url": "https://www.legislation.gov.uk/x",
+                    },
+                    {
+                        "title": "Old Act",
+                        "status": "historical",
+                        "completeness": "full",
+                        "effective": "2020-01-01",
+                        "retrieved": "2026-01-01",
+                        "version": 2,
+                        "caveats": ["Historical source."],
+                        "review_status": "pending",
+                    },
                 ],
                 "gaps": [{"topic": "Topic", "answer": "No source is held.", "reason": "Not yet."}],
             }
         )
-        self.assertEqual([r["kind"] for r in rows], ["Source held", "No source held"])
+        self.assertEqual(
+            [r["kind"] for r in rows], ["Source held", "Source held", "No source held"]
+        )
+        self.assertEqual(
+            [
+                rows[0][k]
+                for k in (
+                    "review_status",
+                    "reviewed",
+                    "authority_type",
+                    "official_url",
+                    "supersession",
+                )
+            ],
+            [
+                "reviewed",
+                "2026-01-02",
+                "legislation",
+                "https://www.legislation.gov.uk/x",
+                "Not superseded",
+            ],
+        )
+        self.assertEqual(
+            rows[1]["supersession"], "Superseded or historical, not the current authority"
+        )
+        self.assertIsNone(rows[1]["official_url"])
+
+    def test_proposal_row_carries_source_freshness_and_reviewer_decision_without_payloads(
+        self,
+    ) -> None:
+        item = {
+            "id": "P-1",
+            "case_id": "ZF-1",
+            "capability": "summary",
+            "display_state": "stale",
+            "state": "accepted",
+            "stale": True,
+            "epoch_current": True,
+            "relied_on": False,
+            "source_signature": "sig",
+            "verification": {
+                "by": "a@x",
+                "signature": "sig",
+                "note": "CANARY-NOTE",
+                "at": "2026-02-01",
+            },
+            "review": {"action": "accept", "by": "a@x", "note": "CANARY-NOTE", "at": "2026-02-02"},
+            "output": {"text": "CANARY-OUTPUT"},
+            "snapshot": {"x": "CANARY-SNAPSHOT"},
+        }
+        row = server.proposal_export_row(item)  # type: ignore[no-untyped-call]
+        self.assertNotIn("CANARY", json.dumps(row))
+        self.assertNotIn("a@x", json.dumps(row))
+        self.assertEqual(row["source_state"], "Source changed since drafted")
+        self.assertTrue(row["source_verified"])
+        self.assertEqual((row["review_decision"], row["reviewed_at"]), ("accept", "2026-02-02"))
+        bare = server.proposal_export_row({"id": "P-2", "stale": False, "source_signature": "s"})  # type: ignore[no-untyped-call]
+        self.assertFalse(bare["source_verified"])
+        self.assertEqual(bare["source_state"], "Source unchanged")
+        self.assertIsNone(bare["review_decision"])
 
     def test_every_download_link_on_a_screen_points_at_a_listed_copy(self) -> None:
         listed = {csv_path for csv_path, _ in EXPORTED.values()}

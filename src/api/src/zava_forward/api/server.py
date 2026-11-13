@@ -197,7 +197,20 @@ def concern_export_row(item):
     return {**{k: item.get(k) for k in keep}, "owner": item["owner"]["label"]}
 
 
-PROPOSAL_EXPORT_FIELDS = ("id", "case_id", "capability", "display_state", "state", "stale")
+PROPOSAL_EXPORT_FIELDS = ("id", "case_id", "capability", "display_state", "state", "stale", "epoch_current", "relied_on")
+
+
+def proposal_export_row(item):
+    """State, source freshness and reviewer decision of a proposal; the draft, source snapshot, notes and reviewer names stay in the application."""
+    verified = item.get("verification") or {}
+    review = item.get("review") or {}
+    row = {k: item.get(k) for k in PROPOSAL_EXPORT_FIELDS}
+    row["source_state"] = "Source changed since drafted" if item.get("stale") else "Source unchanged"
+    row["source_verified"] = bool(verified) and verified.get("signature") == item.get("source_signature")
+    row["source_verified_at"] = verified.get("at")
+    row["review_decision"] = review.get("action")
+    row["reviewed_at"] = review.get("at")
+    return row
 
 
 def all_proposals(read_page, max_pages=200):
@@ -215,7 +228,10 @@ def all_proposals(read_page, max_pages=200):
 def law_source_rows(listing):
     """The law viewer list as plain rows: sources held, then topics with no source held."""
     held = [dict(kind="Source held", title=x["title"], status=x["status"], completeness=x["completeness"], effective=x["effective"],
-                 retrieved=x["retrieved"], version=x["version"], note=" ".join(x["caveats"])) for x in listing["sources"]]
+                 retrieved=x["retrieved"], version=x["version"], review_status=x.get("review_status"), reviewed=x.get("reviewed"),
+                 authority_type=x.get("authority_type"), official_url=x.get("official_url"),
+                 supersession="Superseded or historical, not the current authority" if x["status"] == "historical" else "Not superseded",
+                 note=" ".join(x["caveats"])) for x in listing["sources"]]
     gaps = [dict(kind="No source held", title=g["topic"], note=f'{g["answer"]} {g["reason"]}') for g in listing["gaps"]]
     return held + gaps
 
@@ -674,7 +690,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(200, app.assistants.listing(u, q.get("case_id", [None])[0], q.get("after", [""])[0]))
                     if url.path == "/api/assistants/proposals.csv":
                         every = all_proposals(lambda after: app.assistants.listing(u, q.get("case_id", [None])[0], after))
-                        return self._csv("assistant-proposals.csv", [{k: p.get(k) for k in PROPOSAL_EXPORT_FIELDS} for p in every])
+                        return self._csv("assistant-proposals.csv", [proposal_export_row(p) for p in every])
                     parts = url.path.strip("/").split("/")
                     if len(parts) == 4 and parts[:3] == ["api", "assistants", "proposals"]:
                         return self._json(200, app.assistants.detail(u, parts[3], num(q, "history_offset", 0, 0, 1000000)))
