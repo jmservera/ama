@@ -14,7 +14,7 @@
     "plan": ".copilot-tracking/plans/2026-11-12/issue-149-parent-plan-2333-policy-amendment.md",
     "details": ".copilot-tracking/details/2026-11-12/issue-149-parent-plan-2333-details.md",
     "critique": ".copilot-tracking/plans/2026-11-12/issue-149-parent-plan-2333-critique.md",
-    "changes": null,
+    "changes": ".copilot-tracking/changes/2026-11-13/issue-149-independent-ux-0042-changes.md",
     "review": null
   },
   "confirmed_decisions": [
@@ -37,6 +37,11 @@
       "decision": "A5 independent critique executed once: Revise (A5C-01..03), applied; not repeated",
       "status": "recorded",
       "evidence": "critique file A5 section"
+    },
+    {
+      "decision": "Source-only assembly M0..M7 done without any 233 code; one keep-both conflict (134 pack); no product code, tests, push or publication",
+      "status": "recorded; source frozen, not accepted",
+      "evidence": "changes record"
     }
   ],
   "blockers": [
@@ -44,11 +49,16 @@
       "id": "validation-pending",
       "summary": "New subset has no test evidence; fresh mypy, focused unit and browser checks and an original independent Review are required before any publication",
       "resolution": "Root dispatches validators after the source freeze"
+    },
+    {
+      "id": "233-held",
+      "summary": "233 remains human-held and open; neither admitted nor deferred here; subset cannot be published as complete A2 cut line",
+      "resolution": "Root records scope or deferral decision; validators and original Review first"
     }
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Source-only assembly M0..M7 on this branch, then source-frozen record and STOP"
+    "action": "Root dispatches fresh configured mypy, focused unit and browser validators and an original independent Review against the frozen head; no publication before then"
   },
   "prioritized_follow_ups": null
 }
