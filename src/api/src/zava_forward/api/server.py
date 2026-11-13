@@ -28,7 +28,7 @@ from zava_forward.core.ai import Ai, may_carry_captured_readings
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARNING
-from zava_forward.core.chat_panel import ChatPanel, chat_skills, TASK as CHAT_TASK, MAX_INPUT_CHARS, MAX_HISTORY_CHARS, MAX_THREAD_TURNS, all_role_limits, role_limits
+from zava_forward.core.chat_panel import ChatPanel, chat_skills, TASK as CHAT_TASK, MAX_INPUT_CHARS, MAX_HISTORY_CHARS, MAX_THREAD_TURNS, all_role_limits, role_limits, AGENT_DEPTH, MEMORY_CAPS, CALLS_PER_REQUEST_BASIS
 from zava_forward.core.regulatory_chat import RegulatoryChat, TASK as REGULATORY_TASK
 from zava_forward.agents import regulatory_chat
 from zava_forward.core.source_monitor import dated_card
@@ -1054,7 +1054,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         "limits": {"calls_per_turn": 1, "calls_per_request": 1, "retries": 0, "output_tokens": 600,
                                    "turns_per_thread": MAX_THREAD_TURNS,
                                    "context_chars": MAX_INPUT_CHARS, "history_chars": MAX_HISTORY_CHARS,
-                                   "memory_used": False, "authority": "engineering caps, not spend authorization"}})
+                                   "memory_used": False, "memory_caps": dict(MEMORY_CAPS), "agent_depth": AGENT_DEPTH,
+                                   "calls_per_request_basis": CALLS_PER_REQUEST_BASIS, "authority": "engineering caps, not spend authorization"}})
                 if parts and parts[0] == "regulatory":
                     self._regulatory_access(user)
                     if not post and parts == ["regulatory", "status"]:

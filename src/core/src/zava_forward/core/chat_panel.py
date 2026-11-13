@@ -39,7 +39,7 @@ from zava_forward.core.ai_consumption import CallContext, call_context, referenc
 from zava_forward.core.assistants import REGISTRY
 from zava_forward.core.chat_case_answers import answer as grounded_answer
 from zava_forward.core.chat_isolation import CONTEXT_MESSAGES, ChatIsolation, block, neutralise
-from zava_forward.core.chat_privacy import redact
+from zava_forward.core.chat_privacy import MEMORY_LIMIT, MEMORY_MAX, redact
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
 
 LABEL = "AI suggestion, not approved"
@@ -280,6 +280,14 @@ LIMIT_REACHED = (
     "This question or conversation exceeds the assistant's context limit. "
     "Use a shorter question or continue with the ordinary case workflow."
 )
+
+
+AGENT_DEPTH = 1
+CALLS_PER_REQUEST_BASIS = (
+    "Cap of one model call per question. A question refused before the model is called uses none. "
+    "When the provider reports no call count, one call is assumed."
+)
+MEMORY_CAPS = dict(max_items=MEMORY_LIMIT, max_item_chars=MEMORY_MAX, prompt_injection=False)
 
 
 def role_limits(role: object = None) -> dict[str, Any]:
