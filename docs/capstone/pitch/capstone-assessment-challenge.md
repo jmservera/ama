@@ -13,7 +13,7 @@ This is an AI-assisted offline preparation challenge. It is not an assessor scor
 * No numeric score, band or section sum is given. Live criteria cannot be scored from files, and a number would imply an assessor judgement that does not exist.
 * Evidence is content-only: PDF page text (`pdftotext`), speaker script and answers, repository files. No rendering, native PowerPoint, rehearsal, projector, accessibility or audience check was done. The recorded preview in [validation.json](../source/validation.json) has `human_acceptance` false and `rehearsal_performed` false.
 * Receipt check: `candidate_sha256` `949e2077...7fca` equals the SHA-256 of the delivered [PPTX](../deck/zava-forward-cowork-v2-draft.pptx). No file hashed by the receipt was edited. The manifest is `slides.json`; no `content.yaml` exists in this checkout.
-* Not yet performed: held-out batch (authorised up to USD 5.00, `zava_forward.agents.heldout_batch` absent from this checkout), billing reconciliation, mentor confirmation, thought-leadership artifact submission and masterclass attendance evidence.
+* Not yet performed: live held-out batch (authorised up to USD 5.00; `zava_forward.agents.heldout_batch` is implemented on main but not yet run live, awaiting owner-authorised live provider execution), billing reconciliation, mentor confirmation, thought-leadership artifact submission and masterclass attendance evidence.
 
 ## Reading Key
 
@@ -77,7 +77,7 @@ Section D floor (9 of 15) is not determinable. Slides alone are explicitly insuf
 | Do slide and cards agree on controls? | Slide 22 lists money budgets and call and depth limits under HELD; B25 and B27 say they are source-coded, not live-proved; brief says S18 notes cite B25 and B27 as slides 52 and 54 and S18 says controls remain proposed | Wording inconsistency (F3). Prefer the B27 wording: source-coded, live activation and reconciliation unproved. Cross-reference numbers on S18 notes are stale |
 | Is the unit meaningful? | B25: accepted-outcome TCA equals attributable cost divided by human-accepted proposals above a quality floor; zero or unknown denominator is not measurable | Method supported, measurement absent. Denominator, quality floor and Finance basis remain open (OD-51) |
 | Is hidden-call risk answered? | B27: one selected skill, one bounded call, serialized admission; correction of the historical answer | Supported as a source contract (README and `ai_consumption.py` cited). Not a production attestation, and retried or other inference paths still need attribution |
-| Is the held-out batch evidence? | Brief: up to USD 5.00 authorised, not run, module absent | No. It is a plan. Do not claim it ran, reconciled or proves saving |
+| Is the held-out batch evidence? | Brief: up to USD 5.00 authorised; implemented on main (`zava_forward.agents.heldout_batch`), not yet run live; awaiting owner-authorised live provider execution | No. It is a plan. Do not claim it ran, reconciled or proves saving |
 | Does the 50 s slot hold? | Slide 22 script covers workings, double workload, TCA method and controls | Timing risk (B5); the brief's 30-second answer is the safe cut |
 
 ## Overlap Rules Applied

@@ -66,7 +66,7 @@ slot.
 | 27 | S23 close | 30 | 20 | 13:40-14:00 | Close |
 | 28, 53, 55 | CFO block | n/a | 60 | 14:00-15:00 | See the [CFO answer script](#cfo-answer-script) |
 
-Arithmetic check (run before commit): the 24:30 column sums to 1,470 s, the
+Arithmetic result (verified): the 24:30 column sums to 1,470 s, the
 15-minute column sums to 840 s plus 60 s, and the clock column is cumulative.
 The slot values in the 24:30 column come from the `CURRENT ROUTE TIMING` lines
 of the speaker script, except page 13 (S11A), whose 45 s comes from the route statement at the top of that file.
@@ -116,7 +116,7 @@ return to the page you left, then restart the interrupted slot's clock.
 | USD 6,872.9856 across 15,600 modelled homes | Modelled scenario total; not a forecast or saving | B25 workings |
 | USD 0.881152 per home if workload doubles | Sensitivity of the same scenario | B25 workings |
 | Accepted-outcome cost | Unknown: not measurable until the denominator, quality floor and billing basis exist | B25, OD-51 |
-| USD 5.00 held-out batch | Owner authorisation of 2026-11-13; not run; `zava_forward.agents.heldout_batch` is not present in this checkout | [Q&A brief](../tokenomics-qa-brief.md) |
+| USD 5.00 held-out batch | Owner authorisation of 2026-11-13; not run live; implemented on main (`zava_forward.agents.heldout_batch`), awaiting owner-authorised live provider execution | [Q&A brief](../tokenomics-qa-brief.md) |
 | 20 s, 60 s, 840 s and 900 s | Planning allocations for this rehearsal, not observed timings | This file |
 
 Do not say any price, saving or payback as fact, that the batch has run, or that
