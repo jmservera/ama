@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-13T22:26:03+00:00",
-  "commit": "36a2a57335dc95273292d6fda54fe60ff9f9b4f9",
+  "scored_at": "2026-11-13T22:51:27+00:00",
+  "commit": "9c8c89890ce783cf78761af0698e42c928dbca2f",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43517294548",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43521387667",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "11fe0160a47c2ee2ac0fbab89e659a3867d928531b08367b03329afbcf02e8d8",
     "adr": "a0004921843db2b041b1e8a0c28a107f22d55d544d06084f2cdaa628ccbcc8e1",
-    "solution-code": "0bafa5790a19590fa267cc3edcd811e9b7f370b7e8f7530fad18abea73b0250c",
+    "solution-code": "ae51711ed7bba9d36d3fdada9cfad287ed16e52209cbc9702ca6a2395bebf61c",
     "infrastructure": "f9ab88c245639aba9a15ec5c43edc8876ecc33d16fb8c3683f2916de9b09728e",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "687ae0ad2df52516882908bf45ecca662c52802d59a5116a4fe119ec3ae97840",
@@ -43,18 +43,18 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/resident_demo/aoai.py:363-370",
-        "src/core/src/zava_forward/core/controls.py:49-62"
+        "src/core/src/zava_forward/core/finance.py:37-68",
+        "src/core/src/zava_forward/core/gates.py:128-205"
       ],
-      "rationale": "Diff extends memory-never-evidence refusal (is_memory_reference/evidence_text) across hazard, quality and change-provenance paths, plus closes ledger reservations on credential/transport failure; reinforces fail-closed RAI control at ceiling (5)."
+      "rationale": "Diff adds fail-closed handling of malformed/non-string identity and reason fields across finance and gates (never raises TypeError, falls back to Unknown), tightening existing RAI/security control surface. Reinforces ceiling (5), unchanged."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/chat_eval.py:770-795",
-        "src/agents/tests/test_chat_eval.py:506-548"
+        "src/agents/src/zava_forward/agents/chat_eval.py:456-480",
+        "src/core/src/zava_forward/core/grants.py:77-191"
       ],
-      "rationale": "AuthorizedModel/_gated complete the previously-declared actual-model dispatch gate (ledger reservation, reconciliation, refusal of unauthorised models) with tests; completeness reinforced at ceiling (5)."
+      "rationale": "Adds explicit criterion-3 memory-poisoning/prompt-injection flags with fail-closed enablement check, and a new grant eligibility separation-of-duties gate; both complete previously partial capability with tests. Completeness reinforced at ceiling (5)."
     },
     "A5": {
       "score": 5,
@@ -67,9 +67,10 @@
     "A6": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/ai.py:217-230"
+        "src/agents/src/zava_forward/agents/regulatory_gates.py:262-330",
+        "src/agents/src/zava_forward/agents/paired_trial.py:215-280"
       ],
-      "rationale": "Evidence/consumption paths route model identifiers through the shared safe_identity bound; reinforces AI design safety, does not exceed existing ceiling (5)."
+      "rationale": "New beside_cost reporting ties AI cost per accepted check to citation-validity, refusal-accuracy and hazard-miss gates in both arms, with cards-alone-unless-all-gates-pass logic and tests; strengthens evaluation rigor at ceiling (5), unchanged."
     },
     "A7": {
       "score": 5,
@@ -108,9 +109,9 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "src/agents/README.md:137-145"
+        "src/agents/README.md:401-421"
       ],
-      "rationale": "README documents the new AuthorizedModel/ledger behaviour and names its open gap (#\u200b164); code-level documentation only, no deck change. Good (4) retained."
+      "rationale": "README adds a clear, well-organised section documenting the new beside_cost/eligibility behaviour, its scope and open gaps (#\u200b216); code-level documentation only, no deck change. Good (4) retained."
     },
     "B7": {
       "score": 5,
