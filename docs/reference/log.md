@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-11-11
+ms.date: 2026-11-13
 ms.topic: reference
 ---
 
@@ -11735,3 +11735,16 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Audited issue #233 criteria on tensions and the connected same-home walk: both already have rendered Chromium checks (`atlas_tensions_browser_check`, `connected_home_browser_check`) that exited 0 at this head (`python -m checks.<name>` from `src/api`); no screen change was needed.
 * Updated [atlas-screen-trace.md](./research/ux/atlas-screen-trace.md) to describe the ZF-1 walk separately from the design-level EX-HOME-901 walk, and added a unit guard that the checker does not relabel it. Engineering evidence only; no tick or closure.
+## [2026-11-13] add | Demo feature-wave stabilization checkpoint (Refs #440)
+
+* Appended a [section](../architecture/cutover-evidence-pack.md#demo-feature-wave-stabilization-checkpoint-2026-11-13-refs-440-1288-184-432-144-133-435-216) and an index row. Pinned to `origin/main` `34b11967b93df40b653d384ab3b136bb1fb842f9` (tree `dfe71a6354772012d894bf1e9f3ddb92cbba1610`) and qualified merged PRs 1514, 1515, 1516, 1518, 1519, 1520, 1523, 1525 and 1527 by recorded, not rerun, local evidence. Recorded the BRD draft, PRD in-review and ADR 0007 Proposed status, and that PR 1519 changed one PRD link only.
+* Documentation only. No source change, tick, closure or approval. Gates before the live Azure demo sync: open PRs 1517 and 1521 and the #131 tenure owner decision. Adverse limits kept: 59 MSSQL skips (#184, #1288), stale diagram derivative hashes (#435), unrun live token batch (#432), no image build or queue run (#144). Recommendation CONTINUE, epic closures held.
+
+## [2026-11-13] update | Issue #146 demo console-alerts routing decision (Refs #146)
+
+* Added a Demo Routing Decision section to the [monitoring runbooks](../../infra/monitoring-runbooks.md) recording owner decision `keep_console_alerts_for_demo`, AC1 to AC5 file-and-line proof and the deferral of candidate `9c2a59f6` to production, and noted it in the [index](README.md).
+* Local checks only: `infra/tests/test_bicep_policy.py` (61 tests passing) and `az bicep build` of all `infra/*.bicep` and `infra/modules/*.bicep` files. No deployment, cloud read, privacy acceptance or issue closure.
+## [2026-11-13] add | Issue 203 close-out audit of references, links and CI (Refs #203)
+
+* Audit only, no tick or closure. The cut-over audit test passes (9 tests) and the inventory has no unclassified row. A relative-link scan of tracked Markdown found broken targets under `docs/reference/` only in earlier, immutable entries of this log; none in the index, research, regulatory, method or resources files.
+* Criteria 1 and 2 stay pending owner review. Criterion 3 is unproven: the last Source projects CI run on `main` is a green manual dispatch of 2026-11-08, the workflow is path-filtered with no run on the current head, no deployment workflow run exists on `main`, and the `ca-cutover-test-demo-api` status could not be read (Azure authorization denied). Not a failure, not a pass.

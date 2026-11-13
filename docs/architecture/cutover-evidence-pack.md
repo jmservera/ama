@@ -8254,3 +8254,86 @@ The [reference inventory](./cutover-reference-inventory.tsv) was regenerated aga
 
 * Refs only for #203, #201, #202, #198, #228, #435, #441 and #440. No criterion tick, closure or approval is made here.
 * Independent exact-head review, human approvals and applicable hosted CI remain required before merge.
+
+## Demo feature-wave stabilization checkpoint (2026-11-13, Refs #440 #1288 #184 #432 #144 #133 #435 #216)
+
+Draft, documentation only, not approved. This is the bounded recurring #440 checkpoint after the merged demo feature wave reached `main`. It changes no source, test, tool, workflow, requirement or ADR, opens or edits no issue, ticks no criterion and approves nothing. It reruns none of the merged waves' checks; results below are the merging authors' recorded observations, each tied to the head it was recorded at, and none is asserted for the current head unless stated. Open sibling PRs 1517, 1521, 1524 and 1528 are excluded and appear only as gates.
+
+### Identity pins (static Git observations, read 2026-11-13)
+
+| Item | Observed value |
+| --- | --- |
+| Main | `34b11967b93df40b653d384ab3b136bb1fb842f9` (merge of PR 1527), equal to this worktree HEAD and to `origin/main` after a fetch |
+| Main tree | `dfe71a6354772012d894bf1e9f3ddb92cbba1610` |
+| Wave start | `3b05143179`, the merge base recorded in the Wave-1045 section (parent of the first merge listed); the wave contains merges `74a93a137` (1514), `dafed6a27` (1515), `b605f78a3` (1519), `1ccfae438` (1520), `74cd8cb08` (1516), `1db0c4462` (1518), `96da501c1` (1523), `0893bbcdb` (1525) and `34b11967b` (1527), plus rubric-only commits |
+| Documents (blob at main) | BRD 0.21.0 `draft` `34d88395de86`; PRD zava-forward 0.21.0 `in-review` `a385d27481f8`; ADR 0003 `d60645397b20` and ADR 0006 `956da1a3b804` Accepted; ADR 0007 `541e0f72dd2c` Proposed |
+| Issues (read live) | #440, #1288, #184, #432, #144, #133, #435, #203, #441, #891, #149 and #131 are OPEN. Nothing here closes or ticks any of them |
+| Excluded open PRs | 1517 (chat grounding, #891), 1521 (UX parent, #149), 1524 (#184 mid-slot exit) and 1528 (Azure sync preflight, tokenomics Q and A) |
+
+Document qualification: BRD draft, PRD in-review and ADR 0007 Proposed are not approval. BRD, ADR 0003, ADR 0006 and ADR 0007 are unchanged across the wave. PR 1519 changed one PRD link (the capstone process-map target) and one addendum line, which changed the PRD blob from `c788b917bafa` to `a385d27481f8`; PRD version, status and `ms.date` are unchanged. No requirement or decision was amended.
+
+### Wave identity: what each merge actually contains
+
+| PR (merge) | Issues | Actual content (from the merge diff) | Source change |
+| --- | --- | --- | --- |
+| 1514 (`74a93a137`) | #440 | Wave-1045 section and 86 child files under `.copilot-tracking/` | None |
+| 1515 (`dafed6a27`) | #440 | Waves 1105 and 1143 section and 112 child files | None |
+| 1516 (`74cd8cb08`) | #216 | `src/agents/README.md` states ten, not nine, scorer fields and the 1 to 64 character id rule | Documentation inside `src/` only |
+| 1518 (`1db0c4462`) | #184, #1288 | One-minute and five-home simulator cadence, fail-closed Quality scope, operator-triggered analysis guard, `sensor_handover_verify` accepting only a literal bool; 23 files in `src/core` and `src/api` | Yes, with tests |
+| 1519 (`b605f78a3`) | #203, #441, #201, #202, #228 | Regenerated cut-over inventory, PRD and addendum anchor repair, Wave-1222 and owner sign-off sections, pitch placement draft | None |
+| 1520 (`1ccfae438`) | #435 | Regenerated architecture diagrams, `build_assets.py` slide 52 qualifier and two tests | Capstone tooling only |
+| 1523 (`96da501c1`) | #144 | Standalone queue worker runtime (`runtime.py`), safe standby `serve` entrypoint, `infra/modules/containerapps.bicep` startup command and a container-contract test | Yes, including a Bicep deployment contract |
+| 1525 (`0893bbcdb`) | #432, #435 | `heldout_batch.py` token measurement and cost-cap runner with 34 new tests | Yes; never run against a provider |
+| 1527 (`34b11967b`) | #133 | Aftercare evaluator Outcomes column and stricter `neutral_text` guard | Yes, with tests |
+
+The Azure demo sync authorised on 2026-11-13 (see the [owner sign-offs](#owner-sign-offs-for-cut-over-staff-mediated-capture-and-tokenomics-2026-11-13-refs-203)) has not been performed; this checkpoint does not perform or schedule it.
+
+### Commands and exits as recorded by the merged waves (not rerun here)
+
+Environment as recorded: local, constructed synthetic data, no Azure, provider, Docker or browser unless a row says otherwise. Where a merged record gives only a summary, the command or exit is marked not recorded.
+
+| Source | Tested head and scope | Recorded command and result | Exit | Qualification |
+| --- | --- | --- | --- | --- |
+| 1516 changes and review | PR 1516 candidate, README only | `test_paired_report_command`: 21 tests OK (rc 0); `git diff --check` clean | 0 for the test run | Python untouched, ruff and mypy not rerun; paired trial and regulatory suites not rerun |
+| 1518 changes and review | Candidate rebased on `dafed6a27` | ruff check and format check (398 files) and mypy (core 142, api 28 files) clean; core `live_readings` 24, `sensor_consumer` 50, `device_identity` 40 OK; api `live_simulator`, `live_control`, handover guard and demo 102 OK; api `assistants` 138 OK with 59 MSSQL skips | not recorded per command | Impacted suites only, full api suite not run, MSSQL unavailable, no hosted CI observed; review found no significant issues but did not run tests |
+| 1519 review | Inventory refresh on `dafed6a27` | `cutover_audit` check PASS; `test_cutover_audit` 9 tests OK; `git diff --check` clean | not recorded | Live parity, the token batch and rehearsal not run |
+| 1520 changes and review | Regenerated diagrams | `test-architecture.mjs` 11 of 11; `build-architecture.mjs --check` exit 0; pytest 26 of 26 | `--check` 0; others not recorded | `test-geometry.mjs` and `Test-SourceHashes.ps1` not run (no excalidraw CLI, Chromium or pwsh); `catalog.json` derivative hashes remain stale and infra line anchors in `build-architecture.mjs` have drifted, both routed as follow-ups; 7 pre-existing ruff errors unchanged; reviewer did not inspect regenerated diagram bodies |
+| 1523 changes and review | Worker runtime and standby candidates | `src/agents/tests` 355 tests OK; `infra/tests` container_contract, bicep_policy, deploy and pipeline 118 OK; ruff and mypy on `src/agents` clean | not recorded per command | The first run had one assertion failure (fixed) and a `test_bicep_policy` error from the uninstalled `zava_forward.orchestrator` package, also present on the base commit; no image build, queue, model or Azure run; the API `/api/agent-results` route, Bicep `ZF_ASSIST_*` allowance and financial meter are open follow-ups |
+| 1525 changes and review | Held-out runner candidate | 34 new tests OK; agents suite 370 run, OK after one own-test wording fix; ruff and mypy clean | not recorded per command | Two low-severity robustness notes routed (non-dict proposal items raise a traceback instead of a refusal report; usage above authorised bounds is charged at worst case only); nothing run against a provider or Azure |
+| 1527 changes and review | Aftercare candidate | Core `test_aftercare*` 111 OK with 15 skipped; `test_scenario_manifest`, api `test_aftercare*` and `test_content_standard` OK; ruff and core mypy clean | not recorded per command | api mypy reports only missing Playwright imports in this environment; review found one High and one Medium finding, both fixed and rechecked by targeted tests |
+
+Earlier waves (Wave-1045, Waves 1105 and 1143, Wave-1222) are recorded in their own sections above and keep their own heads and skips. Later merges changed sensor, aftercare, agents and infrastructure inputs that those waves exercised, so no earlier count is carried forward as current-head proof.
+
+### Document-qualified evidence classes (proposed, not an authoritative mapping)
+
+Classes: `local observed` is a recorded local run on the stated head; `implemented-unverified` is code or text read but not run in the relevant environment; `deferred` and `blocked` are routed to named gates.
+
+| Boundary | Evidence | Class | Not supported |
+| --- | --- | --- | --- |
+| #184 and #1288 cadence and five-home Quality scope (ADR 0003 Accepted, BRD sensor and Quality requirements draft) | 1518 tests above | local observed on the merge candidate | No Event Hub, IoT Hub or live run, no SQL-backed Quality path (59 MSSQL skips), no browser or device run; the mid-slot cohort exit code is in unmerged PR 1524 |
+| #144 standalone worker | 1523 tests and container contract | local observed for the worker and contract tests; implemented-unverified for the Container Apps rollout | Deployed revision, queue scale, image build, API result route, allowance and meter; with the route flag unset the worker stays in standby by design |
+| #432 and #435 held-out token batch (owner authorised up to USD 5 on 2026-11-13) | 1525 runner and 34 tests | local observed for the fail-closed runner; deferred for the batch | The batch has not run and waits for the live Azure OpenAI step of the sync; USD 0.44 per home stays a labelled scenario; no measured cost per accepted outcome |
+| #133 aftercare evaluator outcomes | 1527 tests | local observed for the column and guard | No resident, professional or Legal acceptance; the guard is a pattern check and not a proof of neutral language |
+| #435 diagrams and slide 52 | 1520 checks | local observed for the generator chain | Geometry check, source-hash check, catalog re-baseline and rehearsal timing; no rendered-deck review is claimed |
+| #216 paired report README | 1516 | local observed (one module) | Documentation correction only, no behaviour change |
+| #203, #441, #201, #202, #228 sign-offs and inventory | 1519 | local observed for the audit; owner decisions recorded, not re-asked | Live deployed parity, private-data backup, the `OD-47` supplier portal and C5 and C9 human gates stay pending |
+| #131 tenure and unverified-home hold | Unchanged by the wave; latest issue comments (2026-11-11, 2026-11-12) | blocked on an owner product decision | Universal tenure routing changes test-locked gate semantics; no Legal interpretation or criterion tick is inferred |
+| #891 chat and #149 UX epic | Not in the merged wave | blocked on PRs 1517 and 1521 | No claim is made about unmerged work |
+
+### Remaining open PRs and gates before the live `ama` Azure demo sync
+
+* PR 1517 (chat grounding, #891), head `b3d4282c611cd6b620416518a936b5fb6d531260`, state OPEN and UNSTABLE when read, with `agent`, `mssql`, `src-namespace`, `src-api`, `src-core` and `rubric/score` still pending. Gate: merge with applicable hosted checks successful at the exact head.
+* PR 1521 (UX parent, #149), head `aee5504572b23b5cdf90df20ccae2d2b6dd627df`, state OPEN and UNSTABLE when read, with `src-api` pending. Gate: the same.
+* #131 tenure hold: an owner product decision on routing for legacy cases without tenure records remains open and is not resolved by any PR; the sync must not present tenure routing as complete.
+* Not hard gates, but open: PR 1524 (#184 non-zero exit on mid-slot cohort mismatch) and PR 1528 (sync preflight and Q and A brief). This checkpoint proposes that each be merged or consciously deferred by the owner before the sync; the merged sign-offs set no such condition.
+* Sync-scope items still unperformed: the live Azure OpenAI held-out batch, the #144 route, allowance and meter wiring, SQL Server and browser runs of the merged changes, and assistive-technology and human acceptance. The only admission recorded in this pack is the 2026-11-13 owner sign-off (finite batch up to USD 5; Azure sync authorised); its exact terms are not widened here.
+
+### Findings and recommendation (proposed, not an owner decision)
+
+* No new product defect is confirmed here. Adverse limits are recorded above: stale diagram derivative hashes and drifted anchors (#435), the 1523 `bicep_policy` environment error, the 59 MSSQL skips (#184, #1288), the missing Playwright imports for api mypy (#133), and the two low-severity runner notes (#432).
+* Recommendation: CONTINUE, bounded. Epic closures (#440, #149, #144, #184, #432, #435, #133, #131, #891) stay held, because their acceptance criteria are not proven by local synthetic evidence. The live Azure demo sync may proceed once PRs 1517 and 1521 have merged with successful exact-head hosted checks, under the recorded owner sign-off and the #131 limitation stated above. The merge condition is this checkpoint's proposal; the 2026-11-13 owner sign-offs authorise the sync and the finite batch but name no PR-merge condition. It is a scoped proposal and not an approval.
+* Resume point: read the exact head of `origin/main` after 1517 and 1521 merge, repeat this checkpoint's pins, and run the sync preflight from PR 1528 if it has merged, or record why not; any step that spends or touches Azure needs the owner admission already recorded, and nothing here substitutes for it.
+
+### Process limits
+
+Documentation only. Checks run for this record: the cut-over audit check, `test_cutover_audit`, `git diff --check` and an ASCII scan of added lines. No install, source, test, Azure, SQL, browser, model or complete-gate run, and not a complete-gate receipt. Independent exact-head review, human approvals and applicable hosted CI remain required before merge. Original records: `.copilot-tracking/{research,plans,details,changes,reviews}/2026-11-13/440-demo-feature-wave-checkpoint-1531-*` and its state file.

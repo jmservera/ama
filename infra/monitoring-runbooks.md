@@ -1,7 +1,7 @@
 ---
 title: Monitoring candidates and operator runbooks
 description: Source-only alert catalogue, proposed routing, safe responses and unresolved monitoring acceptance
-ms.date: 2026-11-01
+ms.date: 2026-11-13
 ms.topic: how-to
 ---
 
@@ -382,6 +382,37 @@ allowlisting/redaction and restricted evidence retention/access are tested and
 approved by the DPO/Compliance owners. Do not enable content tracing, prompt/
 completion capture, raw readings/chat or raw exception/source text to make a
 dashboard populate. Existing collection settings are not silently changed here.
+
+## Demo Routing Decision
+
+Owner decision `bicep_146_routing = keep_console_alerts_for_demo` (2026-11-13):
+the demo keeps the existing Container Apps environment `allLogs` diagnostic
+setting (`modules/containerapps.bicep:93-101`) so the source configuration of
+the two severity-1 console-based ledger alerts (`main.bicep:587-640`, query
+table `ContainerAppConsoleLogs`) is preserved. Deployed signal operation is not
+proven; see [Ledger verify missing](#ledger-verify-missing). Candidate commit
+`9c2a59f6` (explicit diagnostic categories with an
+`exportContainerConsoleLogs` opt-in) stays unmerged and is deferred to
+production.
+
+Verified against `origin/main` 96da501c1 on 2026-11-13:
+`infra/tests/test_bicep_policy.py` ran 61 tests, all passing, and `az bicep build` (Bicep CLI 0.48.1)
+reported no errors for every `infra/*.bicep` and `infra/modules/*.bicep` file. Local source
+checks only: no deployment, cloud read, Portal rendering or privacy acceptance.
+
+| Criterion | Source proof | Status |
+| --- | --- | --- |
+| AC1 alerts for job failures, poison queue, ledger digest, IoT ingestion | Ledger: `main.bicep:587-640`, markers `digest_blob.py:23-24`, test `test_bicep_policy.py:1141-1171`. Job and IoT candidates: `modules/operationalMonitoring.bicep:25-82`, default disabled (`:12-16`). Poison queue: no alert, gap in [Explicit Missing-Signal Procedures](#explicit-missing-signal-procedures) | Partial; poison queue unmet, candidates disabled |
+| AC2 dashboard for availability, errors, latency, cost against budget | `modules/operationalMonitoring.bicep:84-104`, `monitoring-workbook.json:37-67` | Unmet overall; partial source evidence, actual cost Unknown, rendering unproved |
+| AC3 each alert has a runbook entry with an owner | Entries in this file, runbook links at `modules/operationalMonitoring.bicep:30,60` | Unmet overall; partial source evidence, owners proposed not appointed |
+| AC4 diagnostic logs exclude personal data, raw readings, chat content | `modules/containerapps.bicep:93-101` exports `allLogs` including console output | Unmet; accepted demo exposure, production privacy approval required |
+| AC5 budget notification documented as a notification, not a hard cap | `main.bicep:24`, `main.bicep:667-692`, `monitoring-workbook.json:67` | Documented in source; delivery untested |
+
+Deferred to production: merge or rework of `9c2a59f6` once a non-console ledger
+signal exists, Action Group delivery verification and approved activation of
+the candidate alerts (source already references the Action Group at
+`modules/operationalMonitoring.bicep:51,80`), a poison-queue signal producer,
+billing reconciliation and DPO/Compliance approval of diagnostic collection.
 
 ## Issue Evidence and Gap Matrix
 
