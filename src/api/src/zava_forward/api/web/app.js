@@ -1561,68 +1561,221 @@ function handoffPanel(c, id, refresh) {
 
 function hazardState(x) {
   if (x.released) return "Retrofit work restriction lifted";
-  if (x.repaired) return "Repair evidenced; retrofit work still stopped";
+  if (x.repaired && x.repair_evidence && x.accepted_at) return "Repair evidenced; retrofit work still stopped";
+  if (x.repaired) return "Older tracker shows a repair; verification not recorded here";
   return x.state || "Legacy evidence needed";
 }
 
 function safetyPanel(c, id, refresh) {
-  const canRelease = SAFETY_ROLES.includes(me.user.role);
-  const safeStaff = me.staff.filter((s) => SAFETY_ROLES.includes(s.role));
+  const canAct = SAFETY_ROLES.includes(me.user.role);
+  const liaison = "Building Safety Liaison";
+  const safeStaff = me.staff.filter((s) => SAFETY_ROLES.includes(s.role))
+    .sort((a, b) => (b.role === liaison) - (a.role === liaison));
   const iso = (v) => v ? new Date(v).toISOString() : "";
+  const lower = (v) => typeof v === "string" ? v.trim().toLowerCase() : "";
   const timingLabels = {
-    response_due_at: "Service response due", responded_at: "Service responded",
-    resident_update_due_at: "Service resident update due", resident_updated_at: "Service resident updated"
+    response_due_at: ["Service response due", "When service response is due (local date and time)"],
+    responded_at: ["Service responded", "When service responded (local date and time, not in the future)"],
+    resident_update_due_at: ["Service resident update due", "When service resident update is due (local date and time)"],
+    resident_updated_at: ["Service resident updated", "When service updated the resident (local date and time, not in the future)"]
+  };
+  const field = (fid, label, hint, control) => {
+    control.setAttribute("aria-describedby", `${fid}-hint`);
+    return h("div", {}, h("label", { for: fid }, label), h("p", { id: `${fid}-hint`, class: "field-hint muted" }, hint), control);
+  };
+  const textInput = (fid, required, value = "") => {
+    const input = h("input", { id: fid, type: "text", maxlength: 300, required, autocomplete: "off" });
+    input.value = value;
+    input.addEventListener("input", () => input.setCustomValidity(""));
+    return input;
+  };
+  const step = (legend, primary, controls, label, send, submitted, required, button = "alt") => h("form", {
+    onsubmit: async (e) => {
+      e.preventDefault();
+      for (const input of required) {
+        input.setCustomValidity(input.value.trim() ? "" : "Enter this detail.");
+        if (!input.reportValidity()) { input.focus(); return; }
+      }
+      return refresh(send, submitted);
+    }
+  }, h("fieldset", { class: `safety-step${primary ? " primary-step" : ""}` }, h("legend", {}, legend), controls,
+    h("button", { type: "submit", class: button === "alt" ? "alt" : "" }, label)));
+  const sameAs = (record) => {
+    const keys = ["email", "code", "oid"];
+    if (keys.some((k) => lower(record[k]) && lower(record[k]) === lower(me.user[k]))) return true;
+    return !keys.some((k) => record[k]) && Boolean(lower(record.name)) && lower(record.name) === lower(me.user.name);
+  };
+  const recordedBy = (x, prefix, action) => {
+    const found = x[`${prefix}_identity`] || ((x.history || []).find((e) => e.action === action) || {}).actor || {};
+    return { ...found, email: "email" in found ? found.email : x[`${prefix}_by_email`], name: "name" in found ? found.name : x[`${prefix}_by`] };
   };
   const items = c.hazards.map((x, i) => {
-    const st = hazardState(x);
-    const job = h("input", { type: "text", maxlength: 40, "aria-label": `External service case reference for ${x.category}` });
-    const to = h("select", { "aria-label": `Refer ${x.category} to` }, safeStaff.map((s) => h("option", { value: s.email }, `${s.name} (${s.role})`)));
-    const evidence = h("input", { type: "text", maxlength: 300, "aria-label": `External evidence reference for ${x.category}` });
-    const note = h("input", { type: "text", maxlength: 300, "aria-label": `Reason to restart retrofit work for ${x.category}` });
-    const receiver = x.destination && x.destination.code === me.user.code && canRelease;
-    const action = (name) => refresh(() => post(id, name, { index: i, evidence: evidence.value, note: note.value }), name === "hazard-release" ? [evidence, note] : [evidence]);
-    const times = Object.entries(timingLabels).filter(([key]) => !x[key]).map(([key, label]) => [
-      key, h("input", { type: "datetime-local", "aria-label": `${label} for ${x.category}` })
-    ]);
-    return h("li", {},
-      h("strong", {}, `Reported: ${x.category}, ${x.priority || "urgency unknown"}`), ` ${st}.`,
-      h("p", {}, `Source: ${x.source || "Unknown (legacy)"}. Awareness: ${x.aware_at || "Unknown (legacy)"}.`),
-      h("p", {}, `Stopped work scope: home ${x.hold.case_id}. Accountable role: ${x.hold.accountable_role || "Unknown (legacy)"}. Follow-up: ${x.follow_up ? x.follow_up.name : "Unknown (legacy)"}.`),
-      h("p", {}, `Destination: ${x.destination ? `${x.destination.name} (${x.destination.role})` : "Not bound"}. External case: ${x.job || "Unknown"}.`),
-      h("p", {}, `Sent: ${x.sent_at || "Unknown"}; receipt: ${x.received_at || "Not evidenced"}; acceptance: ${x.accepted_at || "Not evidenced"}.`),
-      h("p", {}, `Sending evidence: ${x.sent_evidence || "Unknown"}; receipt evidence: ${x.receipt_evidence || "Unknown"}; acceptance evidence: ${x.acceptance_evidence || "Unknown"}.`),
-      h("p", {}, `Repair evidence: ${x.repair_evidence || "Unknown"}. Restart decision: ${x.hold.decision ? `${x.hold.decision.actor.name} (${x.hold.decision.actor.role}): ${x.hold.decision.reason}; ${x.hold.decision.evidence}` : "Not recorded"}.`),
-      h("ul", {}, Object.entries(timingLabels).map(([key, label]) => h("li", {}, `${label}: ${x[key] || "Unknown (external service owns timing)"}`))),
-      (!x.released || (receiver && x.accepted_at && times.length > 0)) && h("div", {}, h("label", {}, "External evidence reference", evidence)),
-      !x.released && !x.referral_version && h("div", { class: "row" }, to, job, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-refer", { index: i, to: to.value, job: job.value, evidence: evidence.value }), [to, job, evidence]) }, x.referred ? "Bind legacy referral prospectively" : "Record referral sent")),
-      receiver && !x.received_at && h("button", { class: "alt", onclick: () => action("hazard-receive") }, "Record separate receipt evidence"),
-      receiver && x.received_at && !x.accepted_at && h("button", { class: "alt", onclick: () => action("hazard-accept") }, "Record separate acceptance evidence"),
-      receiver && x.accepted_at && h("div", {},
-        times.map(([key, input]) => h("label", {}, timingLabels[key], input)),
-        times.length > 0 && h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-times", {
+    const p = `hz-${i}`;
+    const caseRef = x.job || "reference not recorded";
+    const referred = Boolean(x.referral_version);
+    const legacy = !referred && Boolean(x.referred || x.repaired);
+    const readyToRestart = Boolean(x.repaired && x.repair_evidence && x.accepted_at) && !x.released;
+    const receiver = Boolean(x.destination && x.destination.code === me.user.code && canAct);
+    const coordinator = x.destination ? `${x.destination.name} (${x.destination.role})` : null;
+    const waitingOn = coordinator || "the assigned Zava safety coordinator";
+    const evidenceStep = (key, legend, label, hint, button, action, guidance) => {
+      const evidence = textInput(`${p}-${key}-evidence`, true);
+      return [guidance, step(legend, false, field(evidence.id, label, hint, evidence), button,
+        () => post(id, action, { index: i, evidence: evidence.value }), [evidence], [evidence])];
+    };
+    let guidance = null;
+    let controls = null;
+    let after = null;
+    if (!x.released && readyToRestart) {
+      const requiredRole = !x.hold.legacy && x.hold.accountable_role ? x.hold.accountable_role : null;
+      const hasRole = canAct && (!requiredRole || me.user.role === requiredRole);
+      const conflicted = sameAs(recordedBy(x, "raised", "safety_raised")) || sameAs(recordedBy(x, "repaired", "safety_repaired"));
+      const owner = requiredRole || "Building Safety Liaison or programme manager";
+      if (conflicted) {
+        guidance = `External repair evidence is recorded, so this home is ready for an independent restart decision. You cannot approve the restart yourself because you recorded the original safety observation or the repair evidence. Owner: another ${owner}. Next action: ask a different ${requiredRole || "authorised safety reviewer"} to check case ${x.job || x.hold.case_id} and record the restart decision.`;
+      } else if (!hasRole) {
+        guidance = `External repair evidence is recorded, and retrofit work is waiting for an independent safety review. Owner: ${owner}. Next action: ask an independent ${owner} (not the reporter or repair recorder) to review the repair evidence and restart retrofit work.`;
+      } else {
+        guidance = `Repair completion is evidenced on external case ${x.job || x.hold.case_id}. As an independent ${me.user.role}, verify the external clearance evidence and record your decision below to allow retrofit work on home ${x.hold.case_id} to restart.`;
+        const evidence = textInput(`${p}-release-evidence`, true);
+        const note = textInput(`${p}-release-note`, true);
+        controls = step("Decision to restart retrofit work (independent reviewer)", true, [
+          h("p", { class: "muted" }, "Approving restart lifts the restriction on this home's retrofit work only. The external hazard and repairs service still owns closure of its own case."),
+          field(evidence.id, "External evidence reference supporting restart (required)",
+            `Cite the signed-off repair certificate, post-works inspection or clearance note you verified (up to 300 characters). Example: Verified damp clearance certificate DM-9921 and dry-out readings on ${x.job || "RJ-700047"}.`, evidence),
+          field(note.id, "Reason retrofit work can safely restart (required)",
+            "Explain why planned retrofit works on this home are now safe to proceed (up to 300 characters). Example: Leak fixed, extractor fan installed and wall moisture normal, so loft and cavity insulation can proceed safely.", note)
+        ], "Allow home retrofit work to restart (independent reviewer)",
+        () => post(id, "hazard-release", { index: i, evidence: evidence.value, note: note.value }), [evidence, note], [evidence, note], "primary");
+      }
+    } else if (!x.released && !referred) {
+      const to = h("select", { id: `${p}-refer-to` }, safeStaff.map((s) => h("option", { value: s.email }, `${s.name} (${s.role})`)));
+      const job = textInput(`${p}-refer-job`, true, x.job);
+      job.setAttribute("maxlength", "40");
+      const evidence = textInput(`${p}-refer-evidence`, true);
+      guidance = legacy
+        ? `This safety issue was imported from an older tracker${x.job ? ` under external case ${x.job}` : ""} without verified evidence. Any staff member can assign a Zava safety coordinator below to verify the external case, record confirmed receipt, acceptance and repair evidence, and prepare it for an independent restart review.`
+        : "Report this concern to the hazard and repairs service first if you have not already done so. Any staff member can then record the external case reference below and assign a Zava safety coordinator to track it.";
+      controls = step(legacy ? "Step 1: Assign a Zava coordinator to track this older referral" : "Step 1: Record referral to the hazard service and assign a Zava coordinator", false, [
+        field(to.id, "Zava safety coordinator to track this case (required)",
+          "Choose the Building Safety Liaison or manager who will check updates from the hazard and repairs service. Selecting a name here does not send a message.", to),
+        field(job.id, "External hazard or repairs case reference (required)", x.job
+          ? `Pre-filled from the existing record (${x.job}). Check it matches the repairs or hazard system before saving.`
+          : "Enter the job or case number from the repairs or hazard system (up to 40 characters), for example RJ-700047.", job),
+        field(evidence.id, "External evidence reference for this referral (required)",
+          "Write where the referral can be checked outside this workbench (up to 300 characters). Example: Repairs portal job RJ-700047 verified on 13 Nov 2026, or email sent to hazard triage desk at 09:15.", evidence)
+      ], legacy ? "Assign coordinator and record referral" : "Record referral sent",
+      () => post(id, "hazard-refer", { index: i, to: to.value, job: job.value, evidence: evidence.value }), [to, job, evidence], [job, evidence]);
+      if (x.repaired) after = h("p", { class: "muted" }, `Why retrofit work cannot restart yet: an independent reviewer (${x.hold.accountable_role || "Building Safety Liaison or manager"}) can only restart retrofit work after a Zava safety coordinator records confirmed receipt, acceptance and completed repair evidence from the hazard service.`);
+    } else if (!x.released && !x.received_at) {
+      guidance = receiver
+        ? `You are the assigned safety coordinator for external case ${caseRef}. Check that the hazard or repairs service received the referral, then record the receipt reference below. Receipt confirms arrival only, not service acceptance.`
+        : `Waiting on ${waitingOn} to confirm that the external hazard or repairs service received case ${caseRef}. You do not need to enter anything for this step.`;
+      if (receiver) [guidance, controls] = evidenceStep("receive", "Step 2: Confirm the hazard service received this referral", "External evidence reference for receipt (required)",
+        `Enter the acknowledgement reference or timestamp from the hazard or repairs service. Example: Repairs portal receipt ACK-8841 on job ${x.job || "RJ-700047"} at 10:05.`, "Record receipt evidence", "hazard-receive", guidance);
+    } else if (!x.released && !x.accepted_at) {
+      guidance = receiver
+        ? `Confirm that the hazard or repairs service has triaged and accepted external case ${caseRef}, then record the acceptance reference below.`
+        : `Referral receipt is recorded. Waiting on ${waitingOn} to record evidence that the hazard or repairs service accepted responsibility for case ${caseRef}.`;
+      if (receiver) [guidance, controls] = evidenceStep("accept", "Step 3: Confirm the hazard service accepted this case", "External evidence reference for acceptance (required)",
+        `Enter proof that the external service accepted the case for inspection or repair. Example: Accepted by repairs officer C. Patel on ${x.job || "RJ-700047"}, significant damp inspection booked.`, "Record acceptance evidence", "hazard-accept", guidance);
+    } else if (!x.released && !x.repaired) {
+      guidance = receiver
+        ? `Once the hazard or repairs service completes make-safe or repair works on ${caseRef}, record their completion reference below. Recording repair evidence keeps retrofit work stopped until a different safety reviewer approves restart.`
+        : `The hazard service accepted case ${caseRef}. Retrofit work stays stopped while external repairs take place. Waiting on ${waitingOn} to record completed repair or make-safe evidence once the external service finishes.`;
+      if (receiver) [guidance, controls] = evidenceStep("repair", "Step 4: Record external repair or make-safe completion", "External evidence reference for completed repair (required)",
+        `Enter the completion certificate, post-inspection sign-off or closed works order reference. Example: Mould wash, plaster repair and extractor fan signed off on ${x.job || "RJ-700047"}, cert DM-9921.`, "Record completed repair evidence", "hazard-repaired", guidance);
+    }
+    const times = Object.entries(timingLabels).filter(([key]) => !x[key]).map(([key, [, label]]) => [key, h("input", { id: `${p}-time-${key}`, type: "datetime-local" }), label]);
+    let timing = null;
+    if (receiver && x.accepted_at && times.length > 0) {
+      const evidence = textInput(`${p}-times-evidence`, true);
+      timing = h("details", { class: "safety-optional" },
+        h("summary", {}, `Optional: Record target or actual dates from the hazard service (${times.length} unrecorded)`),
+        step("External hazard-service dates (optional)", false, [
+          h("p", { id: `${p}-times-intro`, class: "field-hint muted" }, "Fill in only the dates supplied by the external hazard or repairs service. Actual response and resident-update times cannot be in the future or earlier than first awareness, and saved dates cannot be overwritten here."),
+          ...times.map(([key, input, label]) => {
+            input.setAttribute("aria-describedby", `${p}-times-intro`);
+            return h("div", {}, h("label", { for: input.id }, label), input);
+          }),
+          field(evidence.id, "External evidence reference for these dates (required to save dates)",
+            `Where you checked these dates, for example: SLA screen on job ${x.job || "RJ-700047"} checked 14 Nov 2026.`, evidence)
+        ], "Save external service dates", () => post(id, "hazard-times", {
           index: i, evidence: evidence.value, ...Object.fromEntries(times.map(([key, input]) => [key, iso(input.value)]))
-        }), [evidence, ...times.map(([, input]) => input)]) }, "Record externally supplied times"),
-        !x.repaired && !x.released && h("button", { class: "alt", onclick: () => action("hazard-repaired") }, "Record external repair evidence")),
-      x.repaired && !x.released && canRelease && h("div", { class: "row" }, note,
-        h("button", { onclick: () => action("hazard-release") }, "Allow home retrofit work to restart (independent reviewer)")));
+        }), [evidence, ...times.map(([, input]) => input)], [evidence]));
+    }
+    const statusClass = x.released ? "ok" : readyToRestart ? "wait" : "danger";
+    const status = x.released ? `Retrofit work restriction lifted on home ${x.hold.case_id}.`
+      : readyToRestart ? "Repair evidence recorded. Retrofit work is still stopped until an independent reviewer approves restart."
+        : x.repaired ? `Retrofit work stopped on home ${x.hold.case_id}. Older tracker shows a repair, but verification evidence is not recorded here yet.`
+          : `Retrofit work stopped on home ${x.hold.case_id} (${hazardState(x)}).`;
+    const progress = !referred
+      ? (x.referred || x.repaired ? "Imported from an older tracker without verified referral, receipt, acceptance or repair references."
+        : "Observation logged; referral to the hazard service not yet recorded here.")
+      : `Referred (${x.sent_at}), then receipt: ${x.received_at || "waiting"}, then acceptance: ${x.accepted_at || "waiting"}, then repair: ${x.repair_evidence ? "recorded" : "waiting"}`;
+    const decision = x.hold.decision;
+    return h("li", { class: "safety-item" },
+      h("h3", {}, `Reported safety concern: ${x.category} (${x.priority || "urgency not recorded"})`),
+      h("div", { class: `status-line ${statusClass}` }, status),
+      h("dl", { class: "safety-facts" },
+        h("dt", {}, "External case"), h("dd", {}, x.job || "Not recorded yet"),
+        h("dt", {}, "Zava coordinator"), h("dd", {}, coordinator || "Not assigned yet"),
+        h("dt", {}, "Evidence progress"), h("dd", {}, progress),
+        h("dt", {}, "Restart decision"), h("dd", {}, decision
+          ? `Restarted by ${decision.actor.name} (${decision.actor.role}). Reason: ${decision.reason}. Evidence: ${decision.evidence}`
+          : "Not recorded (retrofit work remains stopped)")),
+      guidance && h("div", { class: "notice safety-next" }, h("h4", {}, "What humans need to do next"), h("p", {}, guidance)),
+      controls, after, timing,
+      h("details", { class: "safety-details" },
+        h("summary", {}, "View full recorded evidence and external service dates"),
+        h("ul", {},
+          h("li", {}, `Source: ${x.source || "Unknown (older record)"}`),
+          h("li", {}, `First aware: ${x.aware_at || "Unknown (older record)"}`),
+          h("li", {}, `Accountable role: ${x.hold.accountable_role || "Not recorded (older record)"}`),
+          h("li", {}, `Follow-up: ${x.follow_up ? x.follow_up.name : "Not recorded"}`),
+          h("li", {}, `Sent: ${x.sent_at || "Not recorded"}; receipt: ${x.received_at || "Not evidenced"}; acceptance: ${x.accepted_at || "Not evidenced"}`),
+          h("li", {}, `Sending evidence: ${x.sent_evidence || "Not recorded"}`),
+          h("li", {}, `Receipt evidence: ${x.receipt_evidence || "Not recorded"}`),
+          h("li", {}, `Acceptance evidence: ${x.acceptance_evidence || "Not recorded"}`),
+          h("li", {}, `Repair evidence: ${x.repair_evidence || "Not recorded"}`),
+          Object.entries(timingLabels).map(([key, [label]]) => h("li", {}, `${label}: ${x[key] || "Unknown (external service owns timing)"}`))))
+    );
   });
-  const cat = h("select", { id: "hz-cat" }, HAZ_CATEGORIES.map((x) => h("option", {}, x)));
-  const pri = h("select", { id: "hz-pri" }, HAZ_PRIORITIES.map((x) => h("option", {}, x)));
-  const note = h("input", { id: "hz-note", type: "text", maxlength: 300 });
-  const source = h("input", { id: "hz-source", type: "text", maxlength: 300 });
-  const aware = h("input", { id: "hz-aware", type: "datetime-local" });
+  const cat = h("select", { id: "hz-cat", "aria-describedby": "hz-cat-hint" }, HAZ_CATEGORIES.map((x) => h("option", {}, x)));
+  const pri = h("select", { id: "hz-pri", "aria-describedby": "hz-pri-hint" }, HAZ_PRIORITIES.map((x) => h("option", {}, x)));
+  pri.value = "Significant";
+  const note = h("input", { id: "hz-note", type: "text", maxlength: 300, autocomplete: "off", "aria-describedby": "hz-note-hint" });
+  const source = h("input", { id: "hz-source", type: "text", maxlength: 300, required: true, autocomplete: "off", "aria-describedby": "hz-source-hint" });
+  const aware = h("input", { id: "hz-aware", type: "datetime-local", required: true, "aria-describedby": "hz-aware-hint" });
+  const hint = (fid, text) => h("p", { id: `${fid}-hint`, class: "field-hint muted" }, text);
+  source.addEventListener("input", () => source.setCustomValidity(""));
+  const raise = h("form", {
+    onsubmit: async (e) => {
+      e.preventDefault();
+      source.setCustomValidity(source.value.trim() ? "" : "Enter how the concern was reported.");
+      for (const input of [source, aware]) if (!input.reportValidity()) { input.focus(); return; }
+      return refresh(() => post(id, "hazard-raise", {
+        category: cat.value, priority: pri.value, note: note.value, source: source.value, aware_at: iso(aware.value)
+      }), [cat, pri, note, source, aware]);
+    }
+  }, h("fieldset", { class: "safety-step", "aria-describedby": "hz-raise-intro" }, h("legend", { class: "sr-only" }, "Raise a safety observation"),
+    h("label", { for: "hz-cat" }, "Type of safety concern observed (required)"),
+    hint("hz-cat", "Select what was seen or reported so retrofit work pauses under the right topic. This is an unverified report; the hazard and repairs service decides official categorisation."), cat,
+    h("label", { for: "hz-pri" }, "How urgent it appears (required)"),
+    hint("hz-pri", "Choose Emergency for immediate danger to health or safety (report by phone to emergency repairs immediately), Significant for serious hazards needing prompt action, or Routine. Official service priority and clocks are set by the hazard service."), pri,
+    h("label", { for: "hz-note" }, "What you saw or were told (optional)"),
+    hint("hz-note", "Describe where in the home the issue is and what is visible in plain words (up to 300 characters). Avoid unnecessary personal or medical details. Example: Heavy black mould around main bedroom window reveal and damp plaster on external wall."), note,
+    h("label", { for: "hz-source" }, "How it was reported and source reference (required)"),
+    hint("hz-source", "Record who raised the concern, how Zava North Homes received it (phone call, home visit, surveyor inspection, email or portal), and any call or ticket reference (up to 300 characters). Example: Resident phone call to RLO on 13 Nov 2026, logged with repairs desk as RJ-700118."), source,
+    h("label", { for: "hz-aware" }, "When Zava North Homes first became aware (required, local date and time)"),
+    hint("hz-aware", "Enter the earliest date and time any Zava North Homes staff member or contractor acting for us saw or was told about the issue (must not be in the future). Use the time of the original call, message or visit, even if you are recording it here later. Example: Resident phoned the repairs desk at 09:15 on 13 Nov 2026."), aware,
+    h("p", {}, h("button", { type: "submit", class: "alt" }, "Record safety observation and stop retrofit work"))));
   return h("section", { class: "card" }, h("h2", {}, "Safety referrals and stopped retrofit work"),
     h("p", { class: "muted" }, "The existing hazard and repairs service owns categorisation, clocks, resident updates and closure. These are unverified reports and human-recorded external evidence, not service commands or verified transport. No message is sent here. Use the existing hazard service immediately for urgent concerns; AI and stopped retrofit work must not delay it."),
     items.length ? h("ul", { class: "list" }, items) : h("p", {}, "No safety issues recorded."),
     h("div", {}, h("h3", {}, "Raise a safety observation (also available after retrofit closure)"),
-      h("label", { for: "hz-cat" }, "Reported observation (not service classification)"), cat,
-      h("label", { for: "hz-pri" }, "Reported urgency (not service priority)"), pri,
-      h("label", { for: "hz-note" }, "What you saw"), note,
-      h("label", { for: "hz-source" }, "Source and channel reference"), source,
-      h("label", { for: "hz-aware" }, "When the landlord first became aware (local time)"), aware,
-      h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-raise", {
-        category: cat.value, priority: pri.value, note: note.value, source: source.value, aware_at: iso(aware.value)
-      }), [cat, pri, note, source, aware]) }, "Raise safety issue"))));
+      h("p", { id: "hz-raise-intro", class: "muted" }, "Use this form whenever a resident, surveyor, contractor or colleague reports or spots a potential hazard at this home, even after retrofit works are closed. Saving this form immediately stops retrofit work on this home until repair and safety clearance are evidenced. For urgent concerns, contact the hazard and repairs service immediately by phone or portal first, because this form does not send an alert or create a repairs job."),
+      raise));
 }
 
 async function contractorListView() {
