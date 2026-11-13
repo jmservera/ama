@@ -313,13 +313,14 @@ ui.dispose();
   h.resolve("/api/chat/skills", {skills: []});
   h.resolve("/api/chat/status", {warning: "Synthetic only.", retention: "Local.",
     storage_approved: true, limits: {calls_per_turn: 1, retries: 0, output_tokens: 600,
-      context_chars: 16000, history_chars: 4000}});
+      context_chars: 16000, history_chars: 4000, turns_per_thread: 30}});
   await turn();
   await opening;
   const ui = h.nodes();
   const limits = h.document.getElementById("chat-limits");
   assert.match(limits.textContent, /1 model call, 0 retries/);
   assert.match(limits.textContent, /16000 characters of context and 4000 characters/);
+  assert.match(limits.textContent, /30 questions in one conversation/);
   assert.match(limits.textContent, /not spend authorization/);
   assert.match(limits.textContent, /workflow-only help/);
   const texts = el => [el.textContent || "", ...el.children.flatMap(texts)];

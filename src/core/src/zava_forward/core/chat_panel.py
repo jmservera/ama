@@ -664,9 +664,7 @@ class ChatPanel:
             prior_turns = sum(1 for m in current_thread["messages"] if m["role"] == "user")
             question_seq = store.chat_add_message(user, tid, "user", masked)["seq"]
         receipt["thread_turns_used"] = min(prior_turns + 1, limits["turns_per_thread"])
-        over_limit = (
-            limits["calls_per_request"] < 1 or prior_turns >= limits["turns_per_thread"]
-        )
+        over_limit = limits["calls_per_request"] < 1 or prior_turns >= limits["turns_per_thread"]
 
         def finish(
             kind: str,
