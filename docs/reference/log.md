@@ -11691,3 +11691,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Appended a [compact record](../architecture/cutover-evidence-pack.md#qualified-role-screen-evidence-record-2026-11-13-refs-149-231-232-151-440) and an index row. Merged two frozen local children unchanged: #231 review `32fd2163` and #232 validation `eeb8ec15` (original `fbd12ac9` plus recovery). Adverse verdicts and origin, resource and coverage limits are kept; WCAG, human and AT gates stay unmet.
 * Documentation only. No source change, rerun, tick, closure or approval; #149, #151, #231 and #232 stay open. Evidence under `.copilot-tracking/` (demo-role-evidence-parent-149-0847).
+
+## [2026-11-13] add | Qualified local chat validation observation (Refs #891)
+
+* Appended a [short section](../architecture/cutover-evidence-pack.md#qualified-local-chat-validation-observation-2026-11-13-refs-891) and an index row. Integrated 15 frozen local files from `b05d92788b19` (original failed candidate `e01ae7796fc5`) byte-identically: original 36 of 37 failure (exit 1) with retrospective reject critique, and the later prospective recovery with 37 of 37, 0 skips (exit 0).
+* Documentation only. No rerun, source change, tick, closure or approval; #891 stays open. Not provider, Azure, UI or whole-issue acceptance. Evidence under `.copilot-tracking/` (demo-chat-validation-parent-891-0945).

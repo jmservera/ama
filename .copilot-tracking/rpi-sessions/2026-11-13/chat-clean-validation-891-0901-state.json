@@ -1,0 +1,30 @@
+{
+  "task_id": "chat-clean-validation-891-0901",
+  "task_slug": "chat-clean-validation-891-0901",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-13-chat-clean-validation-891-0901-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-13-chat-clean-validation-891-0901-plan.md",
+    "details": null,
+    "critique": ".copilot-tracking/plans/2026-11-13-chat-clean-validation-891-0901-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-13-chat-clean-validation-891-0901-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-13-chat-clean-validation-891-0901-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed; selector recovered: tests module test_ai_consumption_api only", "status": "recorded", "evidence": "git show 8c735ae research/review"},
+    {"decision": "Critique executed retrospectively, verdict reject, findings applied directly", "status": "recorded", "evidence": "plans/...-critique.md"},
+    {"decision": "Validation run exit 1, 36/37 ok, one error; not a pass", "status": "recorded", "evidence": ".copilot-tracking/validation/chat-clean-validation-891-0901/run891.out sha256 fafc2035fe9272b38c98bb0e3934e786f2ab3a301fe9dd6d49a44b9da7d5d0a6"},
+    {"decision": "Review executed once, pass_with_comments for the evidence record", "status": "recorded", "evidence": "reviews/...-review.md"}
+  ],
+  "blockers": [
+    {"id": "B1", "summary": "Test_manager_report_local_http_and_bad_period errored FileNotFoundError at ai_eval.py:615 under non-editable install; cause unconfirmed", "resolution": "Re-run with README editable install, later user-selected work"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Owner-selected re-run with editable install of the same selector; no push"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Re-run test_ai_consumption_api with README editable install in owned venv", "rationale": "Closes the single adverse result cheaply", "evidence": "changes file resume point"}
+  ]
+}

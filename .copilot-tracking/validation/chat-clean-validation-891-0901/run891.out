@@ -1,0 +1,70 @@
+test_a_lock_wait_that_crosses_authority_expiry_refuses_without_a_reservation (test_ai_consumption_api.ConsumptionApi.test_a_lock_wait_that_crosses_authority_expiry_refuses_without_a_reservation) ... ok
+test_a_lock_wait_that_crosses_the_lease_margin_refuses_without_a_reservation (test_ai_consumption_api.ConsumptionApi.test_a_lock_wait_that_crosses_the_lease_margin_refuses_without_a_reservation) ... ok
+test_a_short_authority_shortens_the_window_and_too_short_is_refused_unreserved (test_ai_consumption_api.ConsumptionApi.test_a_short_authority_shortens_the_window_and_too_short_is_refused_unreserved) ... ok
+test_actual_chat_adapter_preserves_metering_without_proposal_eligibility (test_ai_consumption_api.ConsumptionApi.test_actual_chat_adapter_preserves_metering_without_proposal_eligibility) ... ok
+test_actual_worker_thread_settlement_survives_failure_revocation_and_fence (test_ai_consumption_api.ConsumptionApi.test_actual_worker_thread_settlement_survives_failure_revocation_and_fence) ... ok
+test_an_unavailable_send_fence_refuses_without_a_reservation_or_a_marker (test_ai_consumption_api.ConsumptionApi.test_an_unavailable_send_fence_refuses_without_a_reservation_or_a_marker) ... ok
+test_assistant_completion_preserves_capacity_quarantine_and_terminal_release (test_ai_consumption_api.ConsumptionApi.test_assistant_completion_preserves_capacity_quarantine_and_terminal_release) ... ok
+test_assistant_thread_preserves_usage_metadata_and_review_join (test_ai_consumption_api.ConsumptionApi.test_assistant_thread_preserves_usage_metadata_and_review_join) ... ok
+test_capacity_held_withdrawal_persists_unresolved_economics_after_recovery (test_ai_consumption_api.ConsumptionApi.test_capacity_held_withdrawal_persists_unresolved_economics_after_recovery) ... ok
+test_chat_finalization_has_no_phantom_join_on_fault_or_other_writer (test_ai_consumption_api.ConsumptionApi.test_chat_finalization_has_no_phantom_join_on_fault_or_other_writer) ... ok
+test_consent_withdrawal_and_captured_readings_fail_closed_to_manual (test_ai_consumption_api.ConsumptionApi.test_consent_withdrawal_and_captured_readings_fail_closed_to_manual) ... ok
+test_document_calls_preserve_shared_call_and_depth_limits (test_ai_consumption_api.ConsumptionApi.test_document_calls_preserve_shared_call_and_depth_limits) ... ok
+test_exact_capacity_publication_returns_persisted_manual_routes (test_ai_consumption_api.ConsumptionApi.test_exact_capacity_publication_returns_persisted_manual_routes) ... ok
+test_failed_metered_provider_pending_task_can_be_rejected_without_redispatch (test_ai_consumption_api.ConsumptionApi.test_failed_metered_provider_pending_task_can_be_rejected_without_redispatch) ... ok
+test_legacy_and_priority_reviews_recover_only_committed_matching_links (test_ai_consumption_api.ConsumptionApi.test_legacy_and_priority_reviews_recover_only_committed_matching_links) ... ok
+test_legacy_draft_joins_returned_usage_to_ledger_and_output (test_ai_consumption_api.ConsumptionApi.test_legacy_draft_joins_returned_usage_to_ledger_and_output) ... ok
+test_legacy_draft_missing_or_malformed_usage_is_unknown (test_ai_consumption_api.ConsumptionApi.test_legacy_draft_missing_or_malformed_usage_is_unknown) ... ok
+test_legacy_draft_provider_failure_has_no_usage_and_stays_manual (test_ai_consumption_api.ConsumptionApi.test_legacy_draft_provider_failure_has_no_usage_and_stays_manual) ... ok
+test_legacy_draft_settlement_failure_never_reports_unsettled_usage (test_ai_consumption_api.ConsumptionApi.test_legacy_draft_settlement_failure_never_reports_unsettled_usage) ... ok
+test_legacy_draft_workflow_only_dispatches_and_reserves_nothing (test_ai_consumption_api.ConsumptionApi.test_legacy_draft_workflow_only_dispatches_and_reserves_nothing) ... ok
+test_manager_report_local_http_and_bad_period (test_ai_consumption_api.ConsumptionApi.test_manager_report_local_http_and_bad_period) ... http-error GET /api/ai/report status=500 exc=FileNotFoundError at=ai_eval.py:615:run_eval response_started=False
+http-response GET /api/ai/report status=500
+ERROR
+test_marker_blocks_reclaim (test_ai_consumption_api.ConsumptionApi.test_marker_blocks_reclaim) ... ok
+test_model_mismatch_survives_worker_roundtrip_and_suspends_release (test_ai_consumption_api.ConsumptionApi.test_model_mismatch_survives_worker_roundtrip_and_suspends_release) ... ok
+test_money_limit_prevents_transport_and_ordinary_case_is_unchanged (test_ai_consumption_api.ConsumptionApi.test_money_limit_prevents_transport_and_ordinary_case_is_unchanged) ... ok
+test_permit_denials_reserve_nothing (test_ai_consumption_api.ConsumptionApi.test_permit_denials_reserve_nothing) ... ok
+test_permit_reads_database_time_after_the_blocking_update_for_every_use (test_ai_consumption_api.ConsumptionApi.test_permit_reads_database_time_after_the_blocking_update_for_every_use) ... ok
+test_permit_reserves_once_marks_and_fences_the_attempt (test_ai_consumption_api.ConsumptionApi.test_permit_reserves_once_marks_and_fences_the_attempt) ... ok
+test_permitted_failure_without_root_settles_the_meter_and_publishes_no_output (test_ai_consumption_api.ConsumptionApi.test_permitted_failure_without_root_settles_the_meter_and_publishes_no_output) ... ok
+test_permitted_result_binds_attribution_to_the_stored_reservation_root (test_ai_consumption_api.ConsumptionApi.test_permitted_result_binds_attribution_to_the_stored_reservation_root) ... ok
+test_permitted_result_rejects_conflicting_attribution_without_settling (test_ai_consumption_api.ConsumptionApi.test_permitted_result_rejects_conflicting_attribution_without_settling) ... ok
+test_rejection_link_capacity_boundary_and_sql_failures_are_atomic (test_ai_consumption_api.ConsumptionApi.test_rejection_link_capacity_boundary_and_sql_failures_are_atomic) ... ok
+test_result_without_a_permit_closes_the_task_against_a_later_permit (test_ai_consumption_api.ConsumptionApi.test_result_without_a_permit_closes_the_task_against_a_later_permit) ... ok
+test_settlement_binds_to_the_marker_and_late_results_settle_the_meter_only (test_ai_consumption_api.ConsumptionApi.test_settlement_binds_to_the_marker_and_late_results_settle_the_meter_only) ... ok
+test_shared_root_fanout_stops_real_transport_at_two (test_ai_consumption_api.ConsumptionApi.test_shared_root_fanout_stops_real_transport_at_two) ... ok
+test_suspension_after_claim_denies_the_permit_and_refunds_once (test_ai_consumption_api.ConsumptionApi.test_suspension_after_claim_denies_the_permit_and_refunds_once) ... ok
+test_unknown_price_and_liability_never_claim_success (test_ai_consumption_api.ConsumptionApi.test_unknown_price_and_liability_never_claim_success) ... ok
+test_unmetered_unknown_authority_and_image_stop_before_http (test_ai_consumption_api.ConsumptionApi.test_unmetered_unknown_authority_and_image_stop_before_http) ... ok
+
+======================================================================
+ERROR: test_manager_report_local_http_and_bad_period (test_ai_consumption_api.ConsumptionApi.test_manager_report_local_http_and_bad_period)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/demo-chat-clean-validation-891-0901/src/api/tests/test_ai_consumption_api.py", line 1673, in test_manager_report_local_http_and_bad_period
+    with urllib.request.urlopen(base) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 500: Internal Server Error
+
+----------------------------------------------------------------------
+Ran 37 tests in 71.309s
+
+FAILED (errors=1)
