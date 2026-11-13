@@ -396,9 +396,9 @@ class GoldenRunTests(unittest.TestCase):
             max_tokens=1000,
             max_budget=5,
             budget_currency="GBP",
-            expires_at="2026-12-01",
+            expires_at="2026-12-01T00:00:00+00:00",
         )
-        now = "2026-11-04"
+        now = "2026-11-04T00:00:00Z"
         allowed = chat_eval.call_authorization(ok, 2, 200, now=now)
         self.assertEqual((allowed["outcome"], allowed["reasons"]), ("within-limit", []))
         self.assertIn("not implied", allowed["spend_authority"])
@@ -411,7 +411,19 @@ class GoldenRunTests(unittest.TestCase):
             (dict(ok, max_budget=0), 1, 1, now),
             (dict(ok, budget_currency=""), 1, 1, now),
             (dict(ok, expires_at=""), 1, 1, now),
-            (ok, 1, 1, "2026-12-01"),
+            (ok, 1, 1, "2026-12-01T00:00:00+00:00"),
+            (dict(ok, max_budget=float("inf")), 1, 1, now),
+            (dict(ok, max_budget=float("nan")), 1, 1, now),
+            (dict(ok, max_budget=True), 1, 1, now),
+            (dict(ok, max_budget=-1), 1, 1, now),
+            (dict(ok, expires_at="zzz"), 1, 1, now),
+            (dict(ok, expires_at="2026-12-01"), 1, 1, now),
+            (dict(ok, expires_at="2026-12-01T00:00:00"), 1, 1, now),
+            (dict(ok, expires_at="2026-12-01T00:00:00+01:00"), 1, 1, now),
+            (dict(ok, authorised_by=None), 1, 1, now),
+            (ok, -1, 1, now),
+            (ok, 1, 1, "zzz"),
+            (ok, 1, 1, ""),
             (ok, 11, 1, now),
             (ok, 1, 1001, now),
         ]
@@ -422,6 +434,182 @@ class GoldenRunTests(unittest.TestCase):
                 self.assertTrue(r["reasons"])
         used = chat_eval.call_authorization(ok, 1, 1, now=now, used_calls=10)
         self.assertEqual(used["outcome"], "blocked")
+
+    def test_spend_is_checked_against_the_budget(self) -> None:
+        ok = dict(
+            authorised_by="constructed-fixture",
+            max_calls=10,
+            max_tokens=1000,
+            max_budget=5,
+            budget_currency="GBP",
+            expires_at="2026-12-01T00:00:00+00:00",
+        )
+        now = "2026-11-04T00:00:00+00:00"
+        fits = chat_eval.call_authorization(ok, 1, 1, now=now, projected_spend=5, used_spend=0)
+        self.assertEqual(fits["outcome"], "within-limit")
+        for kwargs in (
+            dict(projected_spend=5.01),
+            dict(projected_spend=1, used_spend=4.5),
+            dict(projected_spend=float("nan")),
+            dict(projected_spend=float("inf")),
+            dict(projected_spend=-1),
+            dict(used_spend=float("nan")),
+        ):
+            with self.subTest(kwargs=kwargs):
+                r = chat_eval.call_authorization(ok, 1, 1, now=now, **kwargs)
+                self.assertEqual(r["outcome"], "blocked")
+
+    def test_actual_model_dispatch_is_gated_by_the_authorisation(self) -> None:
+        auth = dict(
+            authorised_by="constructed-fixture",
+            max_calls=2,
+            max_tokens=100,
+            max_budget=1,
+            budget_currency="GBP",
+            expires_at="2026-12-01T00:00:00+00:00",
+        )
+        dispatched: list[str] = []
+
+        def provider(system: str, prompt: str) -> str:
+            dispatched.append(prompt)
+            return json.dumps(dict(answer="", citations=[]))
+
+        def gate(a: Any, clock: str = "2026-11-04T00:00:00+00:00", **kw: Any) -> Any:
+            return chat_eval.AuthorizedModel(
+                provider, a, tokens_per_call=10, spend_per_call=0.4, clock=lambda: clock, **kw
+            )
+
+        for blocked in (
+            None,
+            {},
+            dict(auth, max_budget=float("inf")),
+            dict(auth, expires_at="zzz"),
+        ):
+            with self.subTest(auth=blocked), self.assertRaises(chat_panel.ModelUnavailable):
+                gate(blocked)("s", "p")
+        with self.assertRaises(chat_panel.ModelUnavailable):
+            gate(auth, clock="2026-12-02T00:00:00+00:00")("s", "p")
+        self.assertEqual(dispatched, [])
+
+        model = gate(auth)
+        model("s", "one")
+        model("s", "two")
+        self.assertEqual(dispatched, ["one", "two"])
+        with self.assertRaises(chat_panel.ModelUnavailable):
+            model("s", "three")
+        self.assertEqual(dispatched, ["one", "two"])
+        self.assertEqual((model.ledger.calls, model.ledger.tokens), (2, 20))
+
+        shared = chat_eval.CallLedger()
+        gate(dict(auth, max_budget=0.5), ledger=shared)("s", "a")
+        with self.assertRaises(chat_panel.ModelUnavailable):
+            gate(dict(auth, max_budget=0.5), ledger=shared)("s", "b")
+
+    def test_failed_dispatch_keeps_its_reservation(self) -> None:
+        auth = dict(
+            authorised_by="constructed-fixture",
+            max_calls=1,
+            max_tokens=100,
+            max_budget=1,
+            budget_currency="GBP",
+            expires_at="2026-12-01T00:00:00+00:00",
+        )
+
+        def failing(system: str, prompt: str) -> str:
+            raise TimeoutError
+
+        model = chat_eval.AuthorizedModel(
+            failing,
+            auth,
+            tokens_per_call=10,
+            spend_per_call=0.1,
+            clock=lambda: "2026-11-04T00:00:00+00:00",
+        )
+        with self.assertRaises(TimeoutError):
+            model("s", "p")
+        with self.assertRaises(chat_panel.ModelUnavailable):
+            model("s", "p")
+
+    def test_run_with_actual_provider_is_blocked_without_authorisation(self) -> None:
+        sc = scenario("grounding-cited-follow-ups")
+        calls: list[str] = []
+
+        def provider(system: str, prompt: str) -> str:
+            calls.append(prompt)
+            return "{}"
+
+        with tempfile.TemporaryDirectory() as tmp:
+            model = chat_eval.AuthorizedModel(
+                provider, None, tokens_per_call=10, spend_per_call=0.1
+            )
+            result = chat_eval.Run(sc, tmp, model=model).ask(sc["turns"][0])
+        self.assertEqual(calls, [])
+        self.assertIsNotNone(result[0] or result[1])
+
+    def test_non_positive_per_call_bounds_are_rejected(self) -> None:
+        for tokens, spend in ((0, 0.1), (10, 0), (-1, 0.1), (10, -0.1), (10, float("nan"))):
+            with self.subTest(tokens=tokens, spend=spend), self.assertRaises(ValueError):
+                chat_eval.AuthorizedModel(
+                    lambda s, p: "{}", None, tokens_per_call=tokens, spend_per_call=spend
+                )
+
+    def test_run_wraps_an_actual_model_or_refuses_it(self) -> None:
+        sc = scenario("grounding-cited-follow-ups")
+        calls: list[str] = []
+
+        def provider(system: str, prompt: str) -> str:
+            calls.append(prompt)
+            return "{}"
+
+        class Sneaky(chat_eval.Scripted):
+            def __call__(self, system: str, prompt: str) -> str:
+                return provider(system, prompt)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaises(ValueError):
+                chat_eval.Run(sc, tmp, model=provider)
+            run = chat_eval.Run(sc, tmp, model=Sneaky(), tokens_per_call=5, spend_per_call=0.1)
+            self.assertIsInstance(run.model, chat_eval.AuthorizedModel)
+            run.ask(sc["turns"][0])
+        self.assertEqual(calls, [])
+
+    def test_reported_usage_is_charged_and_a_breach_halts_the_ledger(self) -> None:
+        auth = dict(
+            authorised_by="constructed-fixture",
+            max_calls=5,
+            max_tokens=100,
+            max_budget=1,
+            budget_currency="GBP",
+            expires_at="2026-12-01T00:00:00+00:00",
+        )
+        reported = [40, 70, 1]
+        dispatched: list[str] = []
+
+        def provider(system: str, prompt: str) -> chat_panel.ModelReply:
+            dispatched.append(prompt)
+            total = reported[len(dispatched) - 1]
+            usage = dict(prompt_tokens=total, completion_tokens=0, total_tokens=total)
+            return chat_panel.ModelReply("{}", usage)
+
+        model = chat_eval.AuthorizedModel(
+            provider,
+            auth,
+            tokens_per_call=10,
+            spend_per_call=0.01,
+            clock=lambda: "2026-11-04T00:00:00+00:00",
+        )
+        model("s", "one")
+        self.assertEqual(model.ledger.tokens, 40)
+        self.assertAlmostEqual(model.ledger.spend, 0.04)
+        with self.assertRaises(chat_panel.ModelUnavailable) as caught:
+            model("s", "two")
+        self.assertEqual(
+            (caught.exception.calls, caught.exception.outcome), (1, "usage-exceeds-authorisation")
+        )
+        self.assertTrue(model.ledger.halted)
+        with self.assertRaises(chat_panel.ModelUnavailable):
+            model("s", "three")
+        self.assertEqual(dispatched, ["one", "two"])
 
     def test_consumption_is_reported_per_turn_scenario_and_runtime_answer(self) -> None:
         summary = self.report["summary"]["economics"]

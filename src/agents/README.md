@@ -134,6 +134,15 @@ currency) and an unexpired date, and the request plus prior use fits them. An
 allowed result implies no spend authority. No such authorisation exists, no
 actual call is made, and `enablement_decision` reports `actual_calls: blocked`.
 
+`AuthorizedModel` requires positive per-call token and spend bounds, serialises
+dispatch on its ledger and reconciles provider-reported usage (`ModelReply.usage`)
+after each call, charging the larger of reserved and reported (spend priced at the
+rate the bounds imply). A breach withholds the reply and halts the ledger.
+`chat_eval.Run` runs only the exact scripted stand-in or an `AuthorizedModel`
+ungated; any other model is wrapped with the supplied authorisation and bounds, or
+refused. The ledger is in memory and `authorised_by` is unverified text, so a
+persisted shared ledger and verifiable owner evidence remain open for #164.
+
 ### Resource-specific isolation fixtures (#172, 2026-10-18)
 
 `test_chat_fixture` separates all eleven persona/memory perspectives from the
