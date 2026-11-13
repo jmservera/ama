@@ -584,7 +584,9 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     len(form_parts) == 4 and form_parts[:2] == ["api", "cases"]
                     and form_parts[3] in ("form-candidates", "form-review")) or (
                     len(form_parts) == 6 and form_parts[:2] == ["api", "cases"]
-                    and form_parts[3] == "form-review" and form_parts[5] == "held-export"):
+                    and form_parts[3] == "form-review" and form_parts[5] == "held-export") or (
+                    len(form_parts) == 6 and form_parts[:2] == ["api", "cases"]
+                    and form_parts[3] == "form-review" and form_parts[5] == "proposal-freshness"):
                 return self._forms(u, url.path, None)
             if url.path.startswith("/api/buildings/"):
                 try:
@@ -1215,6 +1217,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     saved = body if saved_export_ids_are_text(body) else {}
                     checked = form_export.export_freshness(app.store, user, unquote(parts[2]), saved)
                     return self._send(200, json.dumps(checked), "application/json; charset=utf-8", {"Cache-Control": "private, no-store"})
+                if len(parts) == 6 and parts[5] == "proposal-freshness":
+                    return self._send(200, json.dumps(form_review.proposal_freshness(app.store, user, unquote(parts[2]), unquote(parts[4]))), "application/json; charset=utf-8", {"Cache-Control": "private, no-store"})
                 if len(parts) == 6:
                     if not held_download_enabled(app.provider.name):
                         return self._json(404, {"error": "Not found."})

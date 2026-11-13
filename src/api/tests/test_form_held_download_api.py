@@ -11,6 +11,7 @@ from typing import Any
 from unittest.mock import patch
 
 from dataset import change_metadata
+from test_form_staging import batch
 from zava_forward.core import form_export
 
 import test_form_staging_api as staging
@@ -352,6 +353,89 @@ class HeldDownload(staging.FormApiFixture):
             # The digest detects accidental edits only, so a recomputed one is compared as supplied.
             self.assertEqual(result["status"], "Current")
             self.assertEqual(self.state(), before)
+
+    def test_criterion_5_reviewed_export_over_http_never_submits_or_implies_eligibility(
+        self,
+    ) -> None:
+        draft, path = self.prepare()
+        with (
+            patch.dict(os.environ, ON),
+            patch.object(self.store.ai, "_chat", side_effect=AssertionError("No inference")),
+        ):
+            before = self.state()
+            code, _, body = self.fetch("pam", path)
+            saved = json.loads(body)
+            checked = self.check("pam", path + "/freshness", saved)
+            self.assertEqual(self.fetch("pam", path)[0], 200)
+            self.assertEqual(checked[0], 200)
+            self.assertEqual(self.state(), before)
+            view = self.call("pam", "/api/cases/ZF-1/form-review")[1]
+        self.assertEqual(code, 200, body)
+        self.assertEqual(
+            (saved["status"], saved["reviewed"], saved["submission"], saved["eligibility"]),
+            ("Held", False, "Not submitted", "Not assessed"),
+        )
+        for words in ("not a reviewed", "does not submit", "eligibility"):
+            self.assertIn(words, saved["notice"])
+        for claim in ("submitted", "eligible", "approved", "award", "payment", "reviewed_ready"):
+            self.assertNotIn(claim, saved)
+        self.assertFalse(view["drafts"][0]["reviewed_ready"])
+        self.assertEqual(view["drafts"][0]["status"], "Held")
+        self.assertEqual(view["decision_holds"][0]["status"], "Held")
+        self.assertTrue(self.store.verify_audit())
+
+    def test_criterion_6_only_dependent_proposals_go_stale_and_other_records_stay_current(
+        self,
+    ) -> None:
+        draft, path = self.prepare()
+        actor = self.store.staff["pam@example.test"]
+        proposals = f"/api/cases/ZF-1/form-review/{draft['draft_id']}/proposal-freshness"
+        second = self.store.add_document(
+            actor,
+            "ZF-1",
+            "other.txt",
+            "EPC",
+            b"EPC E",
+            metadata=change_metadata(self.store, "ZF-1"),
+        )
+        request = batch(second["id"], "E", 4)
+        self.assertEqual(self.call("pam", "/api/cases/ZF-1/form-candidates", request)[0], 201)
+        elsewhere = self.store.add_document(
+            actor,
+            "ZF-2",
+            "elsewhere.txt",
+            "EPC",
+            b"EPC D",
+            metadata=change_metadata(self.store, "ZF-2"),
+        )
+
+        def states() -> dict[str, str]:
+            code, found = self.call("pam", proposals)
+            self.assertEqual(code, 200, found)
+            return {p["batch_id"]: p["state"] for p in found["proposals"]}
+
+        def bump(case: str, doc: str) -> None:
+            with self.store.lock:
+                for document in self.store._case(case)["documents"]:
+                    if document["id"] == doc:
+                        document["version"] += 1
+                self.store.save()
+
+        baseline = states()
+        self.assertEqual(len(baseline), 2)
+        self.assertEqual(set(baseline.values()), {"Current"})
+        before = self.state()
+        bump("ZF-2", elsewhere["id"])
+        bump("ZF-1", second["id"])
+        stale = states()
+        self.assertEqual(sorted(stale.values()), ["Current", "Stale"])
+        self.assertEqual(self.call("kim", proposals)[0], 403)
+        self.assertNotEqual(self.state(), before)
+        view = self.call("pam", "/api/cases/ZF-1/form-review")[1]["drafts"][0]
+        self.assertEqual(view["stale_fields"], [])
+        self.assertEqual(view["fields"]["epc"]["effective_state"], "Accepted")
+        other_case = self.call("pam", "/api/cases/ZF-2/form-review")[1]
+        self.assertEqual(other_case["drafts"], [])
 
     def test_malformed_field_ids_are_invalid_for_any_binding_and_write_nothing(self) -> None:
         path, saved = self.saved()
