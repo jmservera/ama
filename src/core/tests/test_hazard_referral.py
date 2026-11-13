@@ -119,6 +119,56 @@ class JsonHazardReferral(unittest.TestCase):
         self.accept()
         self.store.record_repair(self.bea, "ZF-3", 0, "SYN-REPAIR")
 
+    def test_chat_memory_is_never_hazard_decision_evidence(self) -> None:
+        refs = (
+            "CM-18f1a2b3c4d5e6f71a2b",
+            "memory:note-1",
+            "Chat-Memory/7",
+            "see ref-CM-18f1a2b3c4d5e6f71a2b",
+        )
+        for ref in refs:
+            with self.subTest(ref=ref):
+                self.unchanged_failure(
+                    partial(
+                        self.store.raise_hazard,
+                        self.sam,
+                        "ZF-3",
+                        "Damp and mould",
+                        "Emergency",
+                        "",
+                        dict(SOURCE, source=ref),
+                    )
+                )
+        self.raise_report()
+        for ref in refs:
+            with self.subTest(ref=ref):
+                self.unchanged_failure(
+                    partial(
+                        self.store.refer_hazard,
+                        self.sam,
+                        "ZF-3",
+                        0,
+                        self.bea["email"],
+                        "SYN-JOB",
+                        dict(evidence=ref),
+                    )
+                )
+        self.refer()
+        self.unchanged_failure(
+            lambda: self.store.receive_hazard(self.bea, "ZF-3", 0, "CM-18f1a2b3c4d5e6f71a2b")
+        )
+        self.accept()
+        self.unchanged_failure(lambda: self.store.record_repair(self.bea, "ZF-3", 0, "memory:r1"))
+        self.store.record_repair(self.bea, "ZF-3", 0, "SYN-REPAIR 5 cm-thick, chat-memory-dpia.md")
+
+    def test_stored_memory_evidence_cannot_release_a_hold(self) -> None:
+        self.ready_for_release()
+        with self.store.lock:
+            self.store.cases["ZF-3"]["hazards"][0]["repair_evidence"] = "CM-18f1a2b3c4d5e6f71a2b"
+            self.store.save()
+        with self.assertRaises(ValueError):
+            self.store.release_hazard(self.bo, "ZF-3", 0, "SYN-REASON", "SYN-DECISION")
+
     def test_current_registered_actors_and_destinations_are_required(self) -> None:
         for actor in (
             dict(self.sam, email="absent@example.test"),
