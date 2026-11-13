@@ -1,0 +1,6 @@
+4f63aa12b2178d2a3f1fd04bd48338877fd3186c0a9b0cc87cfe2e41956671e6  -
+f9edde5c98cec3f7b73a6b5d330908397011f6299bdde70ec563615f70fe94f3  src/api/checks/role_screens_browser_check.py
+13dedb62b6709c74a30d71343fe7c814457e24e991d2b7527847a7910f6db271  src/api/checks/design_system_browser_check.py
+ac9e24aa9d764690cf5fef5f7dbcfe114698403176b72a21b60b0f9ab7418ec4  src/api/checks/role_screens_fixtures.py
+27733a54c7ee778dd499fd920c674911ae7779940007c51e68f5e38c65b77195  docs/reference/research/ux/design-system.md
+880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb  /home/azureuser/.local/share/ama/gates/g79-p-dd92-r1-1108/axe-4.10.3.min.js

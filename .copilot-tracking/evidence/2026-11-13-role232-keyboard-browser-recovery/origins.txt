@@ -1,0 +1,5 @@
+/home/azureuser/source/ama-demo-wt/demo-role232-keyboard-0833/src/api/src/zava_forward/api/server.py
+/home/azureuser/source/ama-demo-wt/demo-role232-keyboard-0833/src/core/src/zava_forward/core/store.py
+_NamespacePath(['/home/azureuser/source/ama-demo-wt/demo-role232-keyboard-0833/src/agents/src/zava_forward/agents', '/home/azureuser/source/ama-demo-wt/issue-133-aftercare-hooks-1110/src/agents/src/zava_forward/agents'])
+['/home/azureuser/source/ama-demo-wt/demo-role232-keyboard-0833/src/core/src/zava_forward/core', '/home/azureuser/source/ama-demo-wt/issue-133-aftercare-hooks-1110/src/core/src/zava_forward/core']
+origins-exit=0
