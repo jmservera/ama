@@ -11597,6 +11597,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added an [offline, content-only assessment](../capstone/pitch/current-deck-assessment-2026-11-12.md) of the delivered 55-slide capstone deck and notes (PPTX blob `3da73fd2dd`, main `cd81888e4`) against every Capstone Assessment Guide criterion, with a statement-by-statement Tokenomics source, label and class register. It is not an assessor score, floor pass or approval; it flags the unresolved criterion 6 price-figure tension, price and model basis, control wording and stale page-count text for owner decision. Issue #435 criteria 1-4 stay unmet and no deck, source or placement file changed.
 * Evidence under `.copilot-tracking/` (2026-11-12 current-capstone-assessment-435-1112).
 
+## [2026-11-13] update | AI offline harness per-task coverage (Refs #108)
+
+* Documented in the [agents README](../../src/agents/README.md#ai-evaluation-harness) that the `ai_eval` evidence gate now derives per-task coverage from the task registry and reports exercised, template-fallback-only and not-evaluated tasks, with scripted `funding_draft` and `read_document` checks. Offline scaffolding only: not held-out accuracy, no live model, no human acceptance; the actual #108 history stays unknown.
+* Evidence under `.copilot-tracking/` (2026-11-13 108-offline-coverage-0008).
 ## [2026-11-12] update | Name the Bicep secret parameter for redeploys (Refs #358)
 
 * The [direct Entra setup section](../../infra/README.md#direct-entra-setup-and-acceptance) of `infra/README.md` now names `entraClientSecretName` and the `zava-forward-credential-name` tag for retaining the generated Key Vault secret name on later Bicep redeploys; the default would revert it.

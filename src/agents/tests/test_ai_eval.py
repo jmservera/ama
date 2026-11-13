@@ -5,6 +5,7 @@ import unittest
 from unittest import mock
 
 from zava_forward.agents import ai_eval
+from zava_forward.core import ai_registry
 from zava_forward.core.store import Store
 
 
@@ -228,3 +229,70 @@ class AiEvalTests(unittest.TestCase):
             return s
         with mock.patch.object(ai_eval, "summarise", missed):
             self.assertFalse(ai_eval.run_eval()["passed"])
+
+
+RETAINED = {"briefing", "message", "summary", "priority", "funding_draft", "read_document"}
+
+
+def _failures(rep, word):
+    return [f for r in rep["results"] for f in r["failures"] if word in f]
+
+
+class TaskCoverageTests(unittest.TestCase):
+    def test_coverage_is_registry_derived_and_states_what_is_not_evaluated(self):
+        rep = ai_eval.run_eval()
+        cov = rep["evidence"]["task_coverage"]
+        self.assertTrue(rep["passed"], rep["results"])
+        self.assertEqual(set(cov["tasks"]), set(ai_registry.tasks()))
+        for task_id, row in cov["tasks"].items():
+            want = ai_eval.EXERCISED if task_id in RETAINED else ai_eval.NOT_EVALUATED
+            self.assertEqual(row["status"], want, task_id)
+        for assistant in ("stock-prioritisation", "assessment-preparation", "funding-evidence",
+                          "works-resident-coordination", "quality-evidence"):
+            self.assertEqual(cov["tasks"][assistant]["status"], ai_eval.NOT_EVALUATED)
+        self.assertEqual(cov["namespace_errors"], [])
+        self.assertIn("not held-out semantic accuracy", cov["note"])
+
+    def test_a_template_fallback_is_not_coverage(self):
+        def template(self, name, data, mime, off=False):
+            return dict(text="The file is stored.", source="template", model=None, validated=True, task="read_document")
+        with mock.patch("zava_forward.core.ai.Ai.look_at", template):
+            rep = ai_eval.run_eval()
+        self.assertFalse(rep["passed"])
+        self.assertEqual(rep["evidence"]["task_coverage"]["tasks"]["read_document"]["status"], ai_eval.FALLBACK_ONLY)
+
+    def test_a_late_quarantined_result_is_not_coverage(self):
+        real = Store.continuity_publish
+        with mock.patch.object(Store, "continuity_publish",
+                               lambda self, task, epoch, source, publish: publish(True) if task == "funding_draft"
+                               else real(self, task, epoch, source, publish)):
+            rep = ai_eval.run_eval()
+        self.assertFalse(rep["passed"])
+        self.assertEqual(rep["evidence"]["task_coverage"]["tasks"]["funding_draft"]["status"], ai_eval.FALLBACK_ONLY)
+
+    def test_a_retained_task_that_is_never_exercised_fails_the_run(self):
+        with mock.patch.object(ai_eval, "run_document_checks", lambda workdir, observed=None: []):
+            rep = ai_eval.run_eval()
+        self.assertFalse(rep["passed"])
+        self.assertEqual(rep["evidence"]["task_coverage"]["tasks"]["read_document"]["status"], ai_eval.NOT_EVALUATED)
+        self.assertIn("read_document", " ".join(rep["evidence"]["task_coverage"]["failures"]))
+
+    def test_assistant_or_prefixed_names_seen_by_the_spy_are_namespace_errors(self):
+        seen = [dict(kind="dispatch", task=name, via="run", source="ai", model_called=True)
+                for name in ("stock-prioritisation", "legacy:funding_draft")]
+        cov = ai_eval.task_coverage(seen)
+        self.assertEqual(sorted(cov["namespace_errors"]), ["legacy:funding_draft", "stock-prioritisation"])
+        self.assertEqual(cov["tasks"]["stock-prioritisation"]["status"], ai_eval.NOT_EVALUATED)
+        self.assertEqual(cov["tasks"]["funding_draft"]["status"], ai_eval.NOT_EVALUATED)
+
+    def test_funding_draft_and_document_checks_discriminate(self):
+        with mock.patch.object(ai_eval.ai_tasks, "workflow_only", lambda mode: False):
+            rep = ai_eval.run_eval()
+        self.assertTrue(_failures(rep, "funding draft"))
+        self.assertTrue(_failures(rep, "document"))
+        with mock.patch.object(ai_eval.ai_tasks, "resolve", lambda label, sources: True):
+            rep = ai_eval.run_eval()
+        self.assertTrue(_failures(rep, "funding draft"))
+        with mock.patch.object(ai_eval.ai_tasks, "resolve", lambda label, sources: False):
+            rep = ai_eval.run_eval()
+        self.assertTrue(_failures(rep, "document"))
