@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-13T19:28:46+00:00",
-  "commit": "e3e5f60e3a691fb96b505c97254b302bdc4d29a5",
+  "scored_at": "2026-11-13T20:03:20+00:00",
+  "commit": "dab0b089341dc8ef4818b454f6443109258c8458",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43491483256",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43496803050",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "11fe0160a47c2ee2ac0fbab89e659a3867d928531b08367b03329afbcf02e8d8",
     "adr": "a0004921843db2b041b1e8a0c28a107f22d55d544d06084f2cdaa628ccbcc8e1",
-    "solution-code": "69802c68519edf133d9f2728a40c2a3628437a309c9280432f113a2e917d3ec8",
+    "solution-code": "1a71749fec6479360459180b8ce3b112ac17bfd06caf5d07f82a5af1f9ce2663",
     "infrastructure": "f9ab88c245639aba9a15ec5c43edc8876ecc33d16fb8c3683f2916de9b09728e",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "3b1ad575bcb303c981844fd6c915f3059a8f06ac5b939af8e64c6687924ae121",
@@ -43,10 +43,10 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/chat_eval.py:592-650",
-        "src/agents/tests/test_chat_eval.py:461-479"
+        "src/api/src/zava_forward/api/resident_demo/aoai.py:363-370",
+        "src/core/src/zava_forward/core/controls.py:49-62"
       ],
-      "rationale": "call_authorization now rejects malformed/non-finite spend, owner and expiry fields plus timezone-naive timestamps, with new negative tests; reinforces fail-closed control at ceiling (5)."
+      "rationale": "Diff extends memory-never-evidence refusal (is_memory_reference/evidence_text) across hazard, quality and change-provenance paths, plus closes ledger reservations on credential/transport failure; reinforces fail-closed RAI control at ceiling (5)."
     },
     "A4": {
       "score": 5,
