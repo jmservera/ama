@@ -244,7 +244,13 @@ ACTION_CLAIM = re.compile(
     r"|(?:record(?:ed)?|confirm(?:ed)?|log(?:ged)?|give|given|mark(?:ed)?)"
     r"\s+[^.;!?]{0,100}?\b(?:consent|consented))\b"
     r"|\b(?:consent\s+(?:has\s+been|is|was)\s+(?:recorded|confirmed|logged)"
-    r"|(?:case|work|proposal)\s+(?:has\s+been|is|was)\s+(?:approved|signed[\s-]off))\b",
+    r"|(?:case|work|proposal)\s+(?:has\s+been|is|was)\s+(?:approved|signed[\s-]off))\b"
+    r"|(?<!\bno\s)(?<!\bno\sresident\s)\bconsent\s+(?:(?:is|was|has\s+been)\s+)?"
+    r"(?:recorded|confirmed|logged|granted|given|on\s+file)\b"
+    r"|(?<!\bno\s)\b(?:approval|sign[\s-]off|authori[sz]ation)\s+(?:(?:is|was|has\s+been)\s+)?"
+    r"(?:recorded|granted|given|confirmed|logged|on\s+file)\b"
+    r"|\b(?:resident|tenant)\s+(?:has\s+|had\s+)?(?:gave|given|granted)\s+"
+    r"(?:(?:their|his|her)\s+)?consent\b",
     re.I,
 )
 STATUS_CLAIM = re.compile(
