@@ -1328,9 +1328,10 @@ async function homeCaseView(id) {
     const l = v.links, home = v.home, b = v.building;
     const list = (items, render, none) => items == null ? h("p", {}, "Unknown: no source-backed records supplied.") :
       items.length === 0 ? h("p", {}, none) : h("ul", {}, items.map(render));
+    const scope = (ids) => ids === null ? "Unknown" : ids.join(", ") || "None";
     const shared = (key, title) => h("section", {}, h("h3", {}, title),
       !b || b[key] === undefined ? h("p", {}, "Unknown: no shared building record is linked.") :
-        list(b[key], (x) => h("li", {}, `${x.id}: ${x.label}`, x.status ? `. Recorded status: ${x.status}.` : "", ` Source: ${x.source}`), "Source records explicitly list none."));
+        list(b[key], (x) => h("li", {}, `${x.id}: ${x.label}`, x.status ? `. Recorded status: ${x.status}.` : "", x.case_ids !== undefined ? ` Recorded scope. Homes: ${scope(x.case_ids)}. Packages: ${scope(x.package_ids)}.` : "", ` Source: ${x.source}`), "Source records explicitly list none."));
     show(back,
       h("h1", {}, `Home case ${v.case_id}`),
       h("p", { role: "status" }, `${v.version_status}.${v.changed_since_version ? " Linked records have changed since the last version." : ""}`),
@@ -1354,6 +1355,7 @@ async function homeCaseView(id) {
         b ? h("p", {}, `${b.name || b.id}${b.version ? `, version ${b.version}` : ""}. `, h("a", { href: `#/building/${encodeURIComponent(b.id)}` }, "Open full building context")) : h("p", {}, "Building link not recorded; shared context is unknown."),
         shared("systems", "Shared systems"), shared("dependencies", "Dependencies"),
         shared("holds", "Work stopped pending review"), shared("works", "Shared works"),
+        h("p", { class: "muted" }, "Recorded scopes are copied from the source records. They do not establish eligibility, approval or coverage of any home for any package."),
         h("h3", {}, "Shared building costs"),
         !b || b.costs_restricted ? h("p", {}, "Restricted to authorised Finance roles, or unknown.") :
           list(b.costs, (x) => h("li", {}, `${x.id}: GBP ${x.amount_gbp}. Source: ${x.source}`), "No shared costs recorded.")),

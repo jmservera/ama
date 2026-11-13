@@ -46,6 +46,15 @@ def home_case_data() -> dict[str, Any]:
         }
     ]
     building["holds"] = [hold()]
+    scopes = [
+        ("WORK-U", None, []),
+        ("WORK-N", [], None),
+        ("WORK-M", ["ZF-2", "ZF-3"], ["PKG-SHARED"]),
+    ]
+    building["works"] += [
+        {**building["works"][0], "id": wid, "case_ids": homes, "package_ids": packages}
+        for wid, homes, packages in scopes
+    ]
     own, sibling = data["cases"]
     own["documents"].append(
         {
@@ -103,6 +112,23 @@ def run_browser(base: str) -> None:
                     token in shared_text and token not in home_text
                     for token in ("DEP-1", "HOLD-1", "WORK-1", "GBP 12000.00")
                 ),
+            )
+
+            def item(wid: str) -> str:
+                return shared.locator("li", has_text=wid).first.inner_text()
+
+            check(
+                "recorded scopes show listed IDs, unknown and none apart, in the building panel only",
+                "Homes: ZF-2. Packages: PKG-SHARED." in item("DEP-1")
+                and "Homes: Unknown. Packages: None." in item("WORK-U")
+                and "Homes: None. Packages: Unknown." in item("WORK-N")
+                and "Homes: ZF-2, ZF-3. Packages: PKG-SHARED." in item("WORK-M")
+                and "Homes: " not in home_text
+                and "do not establish eligibility, approval or coverage" in shared_text,
+            )
+            check(
+                "systems carry no scope line",
+                "Homes:" not in item("SYS-1"),
             )
             check(
                 "home panel shows this home's decision, stage and cost allocation",
