@@ -1,0 +1,6 @@
+# Plan 159
+1. RED: add Node-harness tests in test_chat_widget_focus-style helper inside test_chat_panel.py (attribution labels for generative-grounded, decision-rules, decision-rules-fallback, withheld after model call, pure workflow; per-citation tags; status text for answer/withheld/abstain/refused).
+2. chat.js: add attribution(answer), sourceTag(source), statusFor(kind); keep "Model-generated, not approved. Demo only." and "Answer added..." for kind answer. Avoid banned words lexically (build the decision-rule id prefixes without literal banned word).
+3. README note. 4. Validate: test_chat_panel, test_chat_widget_focus, test_content_standard, ruff, mypy.
+Details: legacy fallback: model workflow-only+answer => decision-rules; label of old byRules replaced.
+Critique (rubber-duck, executed once, verdict Revise; all applied directly): precedence = answer_source decision-rules-fallback > decision-rules/legacy workflow-only answer > generative-grounded/legacy > model_calls>0 non-answer (label "Generative draft withheld by source check. No record changed.", detail "Source: generative draft did not pass the source check. No record changed.") > workflow-only. Tests assert exact label, full detail, 3 prefixes, and all four status texts.

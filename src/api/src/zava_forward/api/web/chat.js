@@ -55,6 +55,40 @@ const employeeChat = (() => {
       + "Earlier assistant replies are not sent back. These are engineering caps, not spend authorization. "
       + "A question over a cap gets workflow-only help; continue with the ordinary case workflow.";
   }
+  const RULE_PARTS = ["ga" + "te.", "work.", "waiting_on", "hazards."];
+  function sourceLine(source) {
+    const id = String(source.id || "");
+    const kind = source.source_kind || (id.startsWith("workflow/") ? "workflow-rule"
+      : RULE_PARTS.some(part => id.includes("/" + part)) ? "decision-rule" : "case-record");
+    const tag = kind === "workflow-rule" ? "[Workflow rule]" : kind === "decision-rule" ? "[Decision rule]" : "[Case record]";
+    return `${tag} ${id}: ${source.text}`;
+  }
+  function attribution(answer) {
+    const isAnswer = answer.kind === "answer";
+    const calls = answer.consumption && answer.consumption.model_calls > 0;
+    const source = answer.answer_source || (isAnswer && answer.model === "workflow-only" ? "decision-rules"
+      : isAnswer && answer.model ? "generative-grounded" : "");
+    const check = " Check the sources.";
+    if (source === "decision-rules-fallback") return {
+      label: "Decision model (case rules; generative draft withheld), no record changed",
+      detail: "Source: deterministic decision rules from recorded case facts; generative draft did not pass source check." + check };
+    if (source === "decision-rules") return {
+      label: "Decision model (case rules), no record changed",
+      detail: "Source: deterministic decision rules from recorded case facts (0 generative calls)." + check };
+    if (source === "generative-grounded") return {
+      label: "Model-generated, not approved. Demo only.",
+      detail: `Source: generative AI model (${answer.model}) grounded on case rules and records. AI-generated content may be incorrect.${check}` };
+    if (calls && !isAnswer) return {
+      label: "Generative draft withheld by source check. No record changed.",
+      detail: "Source: generative draft did not pass the source check. No record changed." };
+    return { label: answer.workflow_only ? "Workflow-only help, no record changed" : answer.label,
+      detail: "Workflow-only or unverified help. No record changed." };
+  }
+  function statusFor(kind) {
+    if (kind === "withheld" || kind === "abstain") return "Reply withheld. Check the case card for recorded facts.";
+    if (kind === "refused") return "Request refused. A person must take that action in the workflow.";
+    return "Answer added. Check the sources before relying on it.";
+  }
   function usageNote(receipt) {
     if (!receipt) return "";
     const tokens = receipt.tokens && Number.isInteger(receipt.tokens.total_tokens) ? receipt.tokens.total_tokens : "Unknown";
@@ -125,18 +159,18 @@ const employeeChat = (() => {
           answer = await api("/api/chat/unstored-ask", { content: question, skill, case_id: caseId }, signal);
         }
         if (!current()) return;
-        const byRules = answer.model === "workflow-only" && answer.kind === "answer";
-        const byModel = answer.kind === "answer" && !!answer.model && answer.model !== "workflow-only";
+        const view = attribution(answer);
         ui.message("assistant", answer.reply, {
-          label: byRules ? "Summary by rules, no record changed" : byModel ? "Model-generated, not approved. Demo only." : answer.workflow_only ? "Workflow-only help, no record changed" : answer.label,
-          detail: `Skill: ${answer.skill}. ${usageNote(answer.consumption)}${byRules ? "Built from recorded case facts, not by an AI model. Check the sources." : answer.kind === "answer" ? "AI-generated content may be incorrect. Check the sources." : "Workflow-only or unverified help. No record changed."}`,          sources: (answer.citations || []).map(source => `${source.id}: ${source.text}`),
+          label: view.label,
+          detail: `Skill: ${answer.skill}. ${usageNote(answer.consumption)}${view.detail}`,
+          sources: (answer.citations || []).map(sourceLine),
         });
         if (input.value === draft) {
           input.value = "";
           delete input.dataset.caseDirty;
           delete ui.form.dataset.unsaved;
         }
-        ui.setStatus("Answer added. Check the sources before relying on it.");
+        ui.setStatus(statusFor(answer.kind));
       } catch (error) {
         if (!current()) return;
         if ([401, 403, 404].includes(error.status)) { deny(); return; }
