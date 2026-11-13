@@ -87,6 +87,72 @@ class WorkbenchNavigation(unittest.TestCase):
         for width in manifest["widths"]:
             self.assertIn(f"| {width} |", text)
 
+    def test_ac043_manifest_declares_slice_coverage_and_unavailable(self) -> None:
+        manifest = json.loads(MANIFEST.read_text())
+        self.assertTrue(manifest["version"])
+        self.assertTrue(manifest["active_slice"].startswith("Shared IA engineering only"))
+        self.assertIn("not complete", manifest["active_slice"])
+        self.assertIn("Full AC-034/043 acceptance", manifest["unavailable"])
+        self.assertTrue(manifest["unknowns"])
+        profiles = {item["perspective"]: item for item in manifest["profiles"]}
+        workflows = {item["name"]: item for item in manifest["workflows"]}
+        self.assertEqual(
+            set(profiles),
+            {
+                "Asset and investment",
+                "Programme coordinator",
+                "Retrofit case team",
+                "Retrofit Assessor, designer and Coordinator",
+                "Housing and Resident Engagement",
+                "Repairs and Building Safety",
+                "Procurement and contract manager",
+                "Provider / contractor contact",
+                "Quality and assurance",
+                "Finance and Grants",
+                "Digital operator and auditor",
+            },
+        )
+        self.assertEqual(len(manifest["profiles"]), 11)
+        self.assertEqual(len(workflows), 9)
+        self.assertEqual(len(manifest["workflows"]), 9)
+        routes = {link for role in manifest["roles"] for link in role["navigation"]}
+        routes |= {f"#/case/{case_id}" for case_id in manifest["all_case_ids"]}
+        for item in [*profiles.values(), *workflows.values()]:
+            if item["status"] != "partial":
+                self.assertTrue(item["reason"])
+                continue
+            self.assertIn(item["endpoint"], routes)
+            self.assertTrue(set(item["fixture"]) <= set(manifest["all_case_ids"]))
+            self.assertTrue(item["checks"])
+            self.assertTrue(item["deferred"])
+        for item in workflows.values():
+            if item["status"] == "partial":
+                self.assertTrue(item["fixture"])
+
+    def test_ac034_scope_reset_checks_follow_default_manifest(self) -> None:
+        manifest = json.loads(MANIFEST.read_text())
+        self.assertIsNone(manifest["default_selection"])
+        self.assertEqual(manifest["default_sort"], "urgent")
+        reset_profiles = []
+        for item in manifest["profiles"]:
+            if item["status"] != "partial":
+                self.assertNotIn("default", item)
+                continue
+            default = item["default"]
+            self.assertTrue(item["checks"], item["perspective"])
+            if not default["ids"]:
+                self.assertEqual(default["count"], 0, item["perspective"])
+                self.assertEqual(
+                    default["empty_reason"],
+                    "no representative scenario supplied",
+                    item["perspective"],
+                )
+            if "reset" in item["checks"]:
+                reset_profiles.append(item["perspective"])
+                self.assertIn("scope", item["checks"])
+                self.assertTrue(default["ids"])
+        self.assertEqual(reset_profiles, ["Housing and Resident Engagement"])
+
     def test_every_role_navigation_omits_the_role_simulator(self) -> None:
         manifest = json.loads(MANIFEST.read_text())
         self.assertEqual(len(manifest["roles"]), 8)
