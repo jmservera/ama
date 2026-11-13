@@ -11763,3 +11763,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Recorded [tokenomics-rehearsal-notes.md](../capstone/pitch/tokenomics-rehearsal-notes.md) (page-by-page timing table, Slide 22 cue and figures table) and stated its arithmetic result directly: the 24:30 column sums to 1,470 s and the 15-minute column to 840 s plus 60 s.
 * Corrected the earlier claim, in the entries above and in the [Q&A brief](../capstone/tokenomics-qa-brief.md), the rehearsal notes and the [assessment challenge](../capstone/pitch/capstone-assessment-challenge.md), that `zava_forward.agents.heldout_batch` is absent: it is implemented on main (merged in #1525 and #1531) and not yet run live, awaiting owner-authorised live provider execution. The earlier entries are unchanged.
 * Documentation only. No live run, measurement, deck change, tick or closure.
+
+## [2026-11-13] update | Resident engagement screens accessibility audit (Refs #232)
+
+* Audited the resident choice and service issue screens and recorded the result in the [WCAG baseline](research/ux/wcag-conformance-baseline.md#resident-engagement-screens-status-2026-11-13-232): row headers added to resident tables, textual state meaning added to the choice screen's service request table, and new rendered checks for table headers, queue-state axe and 320 px keyboard reach.
+* Automated, synthetic-data evidence only. No screen-reader or human testing, no conformance claim, and the #232 criterion is not ticked.

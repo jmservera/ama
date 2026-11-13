@@ -135,6 +135,10 @@ STORY_231 = ("231", "231q")
 STORY_POSITIVE = ("231p", "231qp")
 STORY_ACCESSIBLE = ("231", "231q", "231p", "231qp", "226", "232", "232s")
 STORY_RESIDENT = ("232", "232s")
+SCENARIO_QUEUE = {
+    "232": "Choice and update commitments by home",
+    "232s": "Open service issues by home",
+}
 DESIGN_SYSTEM = ROOT / "docs/reference/research/ux/design-system.md"
 
 
@@ -222,7 +226,9 @@ def check_design_system_use(page: Page, story: str) -> None:
     )
     check(
         f"{story} has no custom elements or role simulator in the user view",
-        page.evaluate("() => [...document.querySelectorAll('main *')].every(e => !e.localName.includes('-'))")
+        page.evaluate(
+            "() => [...document.querySelectorAll('main *')].every(e => !e.localName.includes('-'))"
+        )
         and page.get_by_text("Simulate", exact=False).count() == 0
         and page.get_by_role("combobox", name="Role").count() == 0,
     )
@@ -282,6 +288,28 @@ def reach_table_regions(page: Page, story: str, width: int) -> None:
     )
 
 
+def check_table_headers(page: Page, story: str, scope: str = "main") -> None:
+    """Every rendered table has a caption, column headers and a row header per body row."""
+    problems = page.evaluate(
+        """(root) => [...document.querySelector(root).querySelectorAll('table')].flatMap(t => {
+          const name = t.caption ? t.caption.textContent.trim() : '(no caption)';
+          const bad = [];
+          if (!t.caption) bad.push(name + ': no caption');
+          if (![...t.tHead.querySelectorAll('th')].every(th => th.scope === 'col')) bad.push(name + ': column header without scope');
+          for (const row of t.tBodies[0].rows) {
+            if (row.cells[0].localName !== 'th' || row.cells[0].scope !== 'row') bad.push(name + ': no row header');
+          }
+          return bad;
+        })""",
+        scope,
+    )
+    tables = page.locator(f"{scope} table").count()
+    check(
+        f"{story} {tables} tables have captions, column headers and row headers: {problems}",
+        tables > 0 and not problems,
+    )
+
+
 def check_readonly_accessibility(page: Page, story: str) -> None:
     """Keyboard reachability, text-only state meaning and optional pinned axe scan."""
     evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
@@ -317,6 +345,8 @@ def check_readonly_accessibility(page: Page, story: str) -> None:
             "Recorded evidence is complete" not in text
             and "Every measure has accepted evidence" not in text,
         )
+    if story in STORY_RESIDENT:
+        check_table_headers(page, story)
     regions = evidence.locator('div.table-scroll[role="region"]')
     expected = regions.evaluate_all("els => els.map(el => el.getAttribute('aria-label'))")
     check(
@@ -338,9 +368,14 @@ def check_readonly_accessibility(page: Page, story: str) -> None:
     check(
         f"{story} keyboard Tab reaches every table region: {reached}", len(reached) == len(expected)
     )
+    run_axe(page, story, "selected home")
+
+
+def run_axe(page: Page, story: str, state: str) -> None:
+    """Pinned axe 4.10.3 scan of main; automated evidence only, not assistive-technology output."""
     axe_path = os.environ.get("ZF_AXE_JS")
     if not axe_path:
-        print(f"SKIP {story} axe scan: set ZF_AXE_JS to the pinned axe 4.10.3 file")
+        print(f"SKIP {story} {state} axe scan: set ZF_AXE_JS to the pinned axe 4.10.3 file")
         return
     raw = Path(axe_path).read_bytes()
     check("axe file is the pinned 4.10.3 build", hashlib.sha256(raw).hexdigest() == AXE_SHA256)
@@ -348,10 +383,10 @@ def check_readonly_accessibility(page: Page, story: str) -> None:
     result = page.evaluate("""async () => await axe.run(document.querySelector('main'), {
       runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']}})""")
     check(
-        f"{story} axe finds no violations: {[v['id'] for v in result['violations']]}",
+        f"{story} {state} axe finds no violations: {[v['id'] for v in result['violations']]}",
         not result["violations"],
     )
-    print(f"INFO {story} axe incomplete: {[i['id'] for i in result['incomplete']]}")
+    print(f"INFO {story} {state} axe incomplete: {[i['id'] for i in result['incomplete']]}")
 
 
 def check_projected_queue(browser: Browser, base: str) -> None:
@@ -708,6 +743,10 @@ def run_browser(base: str) -> None:
                     ),
                 )
                 check("no automatic selection or detail fetch", "case=" not in page.url)
+                if selected in STORY_RESIDENT:
+                    page.get_by_role("region", name=SCENARIO_QUEUE[selected], exact=True).wait_for()
+                    check_table_headers(page, selected)
+                    run_axe(page, selected, "queue, no home selected")
                 if selected == "232":
                     summary = page.get_by_role(
                         "region", name="Choice and update commitments by home", exact=True
@@ -781,6 +820,9 @@ def run_browser(base: str) -> None:
                 check("same home remains ZF-1", "Selected home ZF-1" in text)
                 if selected in STORY_ACCESSIBLE:
                     check_readonly_accessibility(page, selected)
+                if selected in STORY_RESIDENT:
+                    reach_table_regions(page, selected, 320)
+                    page.set_viewport_size({"width": 1280, "height": 900})
                 if selected in STORY_POSITIVE:
                     reach_table_regions(page, selected, 320)
                     page.set_viewport_size({"width": 1280, "height": 900})

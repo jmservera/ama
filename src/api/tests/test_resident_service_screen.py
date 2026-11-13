@@ -76,7 +76,32 @@ def tags(node: object) -> list[str]:
     return found
 
 
+def table_nodes(node: object) -> list[dict[str, Any]]:
+    found: list[dict[str, Any]] = []
+    if isinstance(node, dict):
+        if node.get("tag") == "table":
+            found.append(node)
+        for kid in node.get("kids", []):
+            found += table_nodes(kid)
+    return found
+
+
 class ResidentServiceScreen(unittest.TestCase):
+    def test_every_table_has_a_caption_column_headers_and_a_row_header(self) -> None:
+        out = run()
+        for key, expected in (("tree", 2), ("summary", 1)):
+            tables = table_nodes(out[key])
+            self.assertEqual(len(tables), expected)
+            for table in tables:
+                caption, head, body = table["kids"]
+                self.assertEqual(caption["tag"], "caption")
+                self.assertTrue(
+                    all(c["attrs"] == {"scope": "col"} for c in head["kids"][0]["kids"])
+                )
+                for row in body["kids"]:
+                    first = row["kids"][0]
+                    self.assertEqual((first["tag"], first["attrs"]), ("th", {"scope": "row"}))
+
     def test_issue_owners_needs_and_commitment_are_visible(self) -> None:
         out = run()
         text = json.dumps(out["tree"])
