@@ -265,6 +265,17 @@ class RegulatoryGates(unittest.TestCase):
                 self.assertTrue(all(p["link"] for p in card["provisions"]))
         self.assertEqual(self.stale["matched"], 1)
 
+    def test_committed_comparison_reports_unknown_cost_beside_the_gate_results(self) -> None:
+        report = run(60)
+        beside = report["comparison"]["beside_cost"]
+        self.assertEqual(beside["ai_cost_per_accepted_check"], "Unknown")
+        self.assertTrue(beside["missing_inputs"])
+        for name in ("citation_validity", "refusal_accuracy"):
+            self.assertEqual(beside[name]["total"], report["answers"]["checks"][name]["total"])
+        self.assertEqual(beside["hazard_misses"]["arm"], "deterministic_rule_cards")
+        self.assertEqual(beside["hazard_misses"]["failure_severity"], "critical")
+        self.assertEqual(report["comparison"]["ship_recommendation"], "cards_only")
+
     def test_forged_usage_or_content_bearing_metering_fails_contract(self) -> None:
         for field, value in (
             ("model_calls", 1),

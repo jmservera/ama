@@ -7,11 +7,17 @@ cards-only recommendation; no outcome here approves shipment or spend.
 from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
-from datetime import datetime
+from datetime import date, datetime
 from math import isfinite
 from typing import Any
 
-from zava_forward.agents.regulatory_gates import OWNER, authorise_model_run
+from zava_forward.agents.regulatory_gates import (
+    GATE_NAMES,
+    OWNER,
+    authorise_model_run,
+    beside_cost,
+    gate_passed,
+)
 
 ARMS = ("cards", "chat")
 ROLES = ("repairs", "housing", "grants")
@@ -151,6 +157,15 @@ def cost_per_accepted_check(
             for key in keys
             if not _non_negative(sections[name][key])
         ]
+    if not missing:
+        for key in ("id", "currency"):
+            if not isinstance(price[key], str) or not price[key].strip():
+                missing.append(f"price_source.{key} not a non-empty string")
+        try:
+            if date.fromisoformat(str(price["as_of"])) > now.date():
+                missing.append("price_source.as_of is after the evaluation date")
+        except ValueError:
+            missing.append("price_source.as_of not an ISO date")
     cost: float | None = None
     if not missing:
         try:
@@ -200,9 +215,13 @@ def evaluate_paired_trial(
     *,
     thresholds: Mapping[str, Any] | None = None,
     cost_inputs: Mapping[str, Any] | None = None,
+    gates: Mapping[str, Any] | None = None,
     now: datetime,
 ) -> dict[str, Any]:
-    """Score a staff trial per check; chat ships alone only after measured, owner-agreed value."""
+    """Score a staff trial per check; chat ships alone only after measured, owner-agreed value.
+
+    `gates` holds the citation_validity and refusal_accuracy checks of the same evaluation.
+    """
     valid, invalid = [], []
     for index, row in enumerate(observations):
         reason = valid_observation(row)
@@ -220,6 +239,7 @@ def evaluate_paired_trial(
     hazard = dict(
         name="chat_hazard_misses",
         misses=len(misses),
+        total=len(chat_rows),
         failed_case_ids=misses,
         failure_severity="critical",
         status="not_evaluated" if not chat_rows else "failed" if misses else "no_misses_observed",
@@ -239,9 +259,20 @@ def evaluate_paired_trial(
                 reasons.append(f"{role}: completion gain below agreed threshold")
             if found["comprehension_gain"] < thresholds["min_comprehension_gain"]:
                 reasons.append(f"{role}: comprehension gain below agreed threshold")
+            if found["completion_gain"] <= 0 and found["comprehension_gain"] <= 0:
+                reasons.append(f"{role}: no measured chat improvement over cards")
             if ratio is None or ratio > thresholds["max_elapsed_ratio"]:
                 reasons.append(f"{role}: elapsed time above agreed ratio")
     accepted = sum(1 for row in chat_rows if row["accepted"])
+    economics = cost_per_accepted_check(accepted, cost_inputs, now)
+    if economics["ai_cost_per_accepted_check"] == "Unknown":
+        reasons.append("AI cost per accepted check Unknown; value at cost not measured")
+    supplied = gates or {}
+    reasons += [
+        f"{name.replace('_', ' ')} not met against an owner-agreed target"
+        for name in GATE_NAMES
+        if not gate_passed(supplied.get(name))
+    ]
     value_measured = not reasons
     return dict(
         check="paired_staff_comparison",
@@ -258,7 +289,8 @@ def evaluate_paired_trial(
             gaps=gaps,
             owner=OWNER,
         ),
-        economics=cost_per_accepted_check(accepted, cost_inputs, now),
+        economics=economics,
+        beside_cost=beside_cost(economics, gates, "chat", hazard),
         ship_recommendation="chat_value_measured_owner_decision_required"
         if value_measured
         else "cards_only",

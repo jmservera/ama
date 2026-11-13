@@ -398,6 +398,28 @@ No model, network or data-store access is added. Tests:
 `tests/test_paired_report_command.py`. The staff trial, owner thresholds, graded set,
 tokenomics and live-run criteria of #216 remain unmet.
 
+### Paired comparison cost beside the gates, cards alone (2026-11-13)
+
+`regulatory_gates.beside_cost` puts AI cost per accepted check beside citation validity,
+refusal accuracy and hazard-miss results, in both the committed report
+(`comparison.beside_cost`, deterministic rule cards arm) and `evaluate_paired_trial`
+(`beside_cost`, chat arm; new optional `gates` argument takes the `answers.checks` result).
+Cost stays `Unknown` with each missing input named and is never estimated; a known cost also
+needs an identified, ISO-dated price that is not after the evaluation date, usage, allocation
+basis and an unexpired owner authority covering the usage.
+
+Cards ship alone unless, in every role, chat shows a strictly positive completion or
+comprehension gain that meets the owner thresholds, there is no chat hazard miss, cost per
+accepted check is known, and citation validity and refusal accuracy are met against an
+owner-agreed target (the repository's provisional targets never qualify). Ties and
+zero-gain thresholds therefore still ship cards alone. The outcome is only
+`chat_value_measured_owner_decision_required`; no spend, shipment or approval is implied.
+
+This closes the reporting and verdict mechanics with synthetic unit fixtures only. #216
+criteria 4 and 7 still need a real staff trial, owner thresholds and an owner-authorised,
+dated price and usage record before measured value can be claimed. Tests:
+`tests/test_paired_trial.py`, `tests/test_regulatory_gates.py`.
+
 ### Staff alert precision and acknowledgement scoring (2026-11-03)
 
 `alert_triage.evaluate_alert_triage` scores recorded staff classifications
