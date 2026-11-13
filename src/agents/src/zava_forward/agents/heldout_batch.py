@@ -18,6 +18,7 @@ approval of a model or of any later spend.
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import math
 import statistics
@@ -192,6 +193,9 @@ def _gate_problems(
         problems.append("live provider model is not the authorized model")
     held_out = manifest.get("held_out")
     known = set(held_out.get("case_ids") or []) if isinstance(held_out, Mapping) else set()
+    if any(not isinstance(p, Mapping) for p in proposals):
+        problems.append("every proposal must be an object")
+        return problems
     ids = [p.get("id") for p in proposals]
     if not proposals:
         problems.append("no proposals to measure")
@@ -205,6 +209,34 @@ def _gate_problems(
     return problems
 
 
+def _drift(
+    auth: Mapping[str, Any],
+    manifest: Mapping[str, Any],
+    frozen: tuple[Any, Any],
+    tick: Callable[[], datetime],
+) -> str | None:
+    """Stop reason when authorization or the frozen set changed since the gate; fail closed."""
+    try:
+        issues = authorization_problems(auth, tick())
+        if "authorization expired" in issues:
+            return "authorization-expired"
+        if issues:
+            return "authorization-invalid"
+        freeze = check_freeze(manifest)
+        if (
+            freeze["outcome"] != "frozen"
+            or (
+                freeze["manifest_digest"],
+                manifest.get("threshold_approval"),
+            )
+            != frozen
+        ):
+            return "freeze-drift"
+    except Exception:
+        return "check-failed"
+    return None
+
+
 def run_batch(
     auth: Mapping[str, Any],
     manifest: Mapping[str, Any],
@@ -213,11 +245,22 @@ def run_batch(
     *,
     mode: str,
     provider_model: str | None = None,
-    now: datetime | None = None,
+    clock: Callable[[], datetime] | None = None,
 ) -> dict[str, Any]:
-    """Measure tokens per proposal, or refuse. ``mode`` is ``dry-run`` or ``live``."""
-    problems = _gate_problems(auth, manifest, proposals, mode, provider_model, now)
+    """Measure tokens per proposal, or refuse. ``mode`` is ``dry-run`` or ``live``.
+
+    Authorization expiry and the frozen manifest are re-checked before every dispatch. A dry-run
+    always uses the offline estimator, whatever ``call`` is supplied.
+    """
+    tick = clock or (lambda: datetime.now(UTC))
+    proposals = proposals if isinstance(proposals, Sequence) else []
+    try:
+        problems = _gate_problems(auth, manifest, proposals, mode, provider_model, tick())
+    except Exception as error:
+        problems = [f"gate check failed: {type(error).__name__}"]
     live = mode == "live"
+    if not live:
+        call = dry_run_call
     report: dict[str, Any] = dict(
         outcome="refused" if problems else "completed",
         problems=problems,
@@ -238,6 +281,10 @@ def run_batch(
     report["spread"] = {k: spread([]) for k in ("total", "input", "output")}
     if problems:
         return report
+    frozen = (
+        check_freeze(manifest)["manifest_digest"],
+        copy.deepcopy(manifest.get("threshold_approval")),
+    )
     limit = Decimal(str(auth["max_budget_usd"]))
     worst = worst_case_usd(auth)
     reserve = auth["max_prompt_tokens"] + auth["max_completion_tokens"]
@@ -246,7 +293,10 @@ def run_batch(
     stop = "exhausted"
     for proposal in proposals:
         system, prompt = str(proposal.get("system", "")), proposal["prompt"]
-        if len(rows) >= auth["max_calls"]:
+        drift = _drift(auth, manifest, frozen, tick)
+        if drift:
+            stop = drift
+        elif len(rows) >= auth["max_calls"]:
             stop = "max_calls"
         elif tokens["total"] + reserve > auth["max_total_tokens"]:
             stop = "max_total_tokens"
