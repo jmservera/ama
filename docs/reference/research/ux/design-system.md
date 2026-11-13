@@ -96,6 +96,28 @@ touched; new rules must use tokens.
 * One primary action per card; a case list shows one plain status and one next
   action per item (SA-001).
 
+## Supported devices and widths
+
+The owner decided on 2026-11-13 (issue #152, Batch-2 Q1) which devices the
+workbench supports. Source: `src/api/checks/workbench-manifest.json` and the
+[decision record](supported-devices-proposal.md).
+
+| Tier | CSS width | Layout rule |
+| --- | --- | --- |
+| Desktop | 1280px and wider | `.layout` keeps the filter side column beside `.main` |
+| Tablet | 768px | `.layout` is one column under 900px; navigation wraps under 1100px |
+| Mobile | 360px | One column; the under-600px rules stack lists, cards and definitions |
+
+* The 320px reflow check from the PRD stays as a separate minimum; 390px and
+  1024px remain checked widths but are not named tiers.
+* Every tier shows the same role navigation, one next action per case and
+  visible safety markers (SA-001, SA-007); only layout changes.
+* These are CSS and DOM contract checks (`test_design_system.py`,
+  `test_workbench.py`). Real-device and assistive-technology acceptance remain manual and open.
+* 360px is not checked by a browser run in this change; the browser check reads
+  the width from the manifest and runs it when Chromium is installed.
+* PRD AC-034 and AC-043 stay partial; this decision does not tick them.
+
 ## Component inventory
 
 States: default, focus, disabled, error, loading, empty, blocked.

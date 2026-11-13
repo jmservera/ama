@@ -1,0 +1,2 @@
+# Details
+Doc section placed after "Layout rules": tiers table (Desktop >=1280 two-column `.layout`; Tablet 768 single column under 900px; Mobile 360 single column under 600px), reflow boundaries, 320px reflow retained from the PRD, scope: CSS/DOM contract checks only; real-device and assistive-technology acceptance remain manual and open; AC-034/AC-043 unproved; browser check and manifest widths ([320,390,768]) not changed, noted as follow-up.
