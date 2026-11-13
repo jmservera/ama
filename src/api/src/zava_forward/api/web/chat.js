@@ -52,6 +52,9 @@ const employeeChat = (() => {
   function limitsNote(limits) {
     return `Limits for each question: ${limits.calls_per_turn} model call, ${limits.retries} retries, `
       + `up to ${limits.context_chars} characters of context and ${limits.history_chars} characters of your earlier questions, and ${limits.turns_per_thread} questions in one conversation. `
+      + (limits.calls_per_request === undefined ? "" : `Most model calls for one request: ${limits.calls_per_request}. `)
+      + (limits.agent_depth === undefined ? "" : `Assistant depth: ${limits.agent_depth}, a single assistant with no helper assistants. `)
+      + (limits.memory_caps ? `Saved notes are not sent to the assistant (up to ${limits.memory_caps.max_items} notes of ${limits.memory_caps.max_item_chars} characters can be kept). ` : "")
       + "Earlier assistant replies are not sent back. These are engineering caps, not spend authorization. "
       + "A question over a cap gets workflow-only help; continue with the ordinary case workflow.";
   }

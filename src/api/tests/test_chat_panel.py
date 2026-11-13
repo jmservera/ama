@@ -502,6 +502,51 @@ class PanelTests(roles.Matrix):
         self.assertEqual(self.api("Contractor", "/api/chat/threads", {"case_id": "ZF-1"})[0], 403)
         self.assertEqual(self.prompts, [])
 
+    def test_status_reports_agent_depth_memory_caps_and_call_basis(self) -> None:
+        limits = self.api(ROLE, "/api/chat/status")[1]["limits"]
+        self.assertEqual(limits["agent_depth"], 1)
+        self.assertEqual(
+            limits["memory_caps"],
+            {"max_items": 50, "max_item_chars": 1000, "prompt_injection": False},
+        )
+        self.assertIs(limits["memory_used"], False)
+        self.assertIn(
+            "refused before the model is called uses none", limits["calls_per_request_basis"]
+        )
+        self.assertIn("one call is assumed", limits["calls_per_request_basis"])
+        js = (WEB / "chat.js").read_text()
+        for field in ("calls_per_request", "agent_depth", "memory_caps"):
+            self.assertIn(f"limits.{field}", js)
+
+    def test_application_administrator_is_refused_with_zero_model_calls(self) -> None:
+        tid = self.thread()
+        row = next(x for x in self.store.data["staff"] if x["role"] == "Contractor")
+        self.addCleanup(row.__setitem__, "role", "Contractor")
+        ck = self.session(row["email"])
+        row["role"] = "Application Administrator"
+        self.assertEqual(self.call(ck, "/api/chat/status")[0], 403)
+        self.assertEqual(self.call(ck, "/api/chat/threads", {"case_id": "ZF-1"})[0], 403)
+        self.assertEqual(
+            self.call(ck, f"/api/chat/threads/{tid}/ask", {"content": "Stage?"})[0], 403
+        )
+        self.assertEqual(self.prompts, [])
+
+    def test_case_stays_readable_and_unchanged_after_thread_limit_fallback(self) -> None:
+        tid = self.thread()
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        with patch.object(chat_panel, "MAX_THREAD_TURNS", 1):
+            self.assertEqual(self.ask(tid)[1]["kind"], "answer")
+            self.prompts.clear()
+            over = self.ask(tid)[1]
+        self.assertEqual(
+            (over["kind"], over["reply"]), ("fallback", chat_panel.THREAD_LIMIT_REACHED)
+        )
+        self.assertEqual(self.prompts, [])
+        code, case = self.api(ROLE, "/api/cases/ZF-1")
+        self.assertEqual(code, 200)
+        self.assertEqual(case["id"], "ZF-1")
+        self.assertEqual(self.store.cases["ZF-1"], before)
+
     def test_unstored_ask_is_rules_only_without_storage_or_model(self) -> None:
         with patch.dict(os.environ, {k: "" for k in APPROVED}):
             before = json.dumps(self.store.data.get("chat_threads"), sort_keys=True)

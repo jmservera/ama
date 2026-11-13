@@ -312,7 +312,9 @@ ui.dispose();
   const opening = h.launcher.onclick();
   h.resolve("/api/chat/skills", {skills: []});
   h.resolve("/api/chat/status", {warning: "Synthetic only.", retention: "Local.",
-    storage_approved: true, limits: {calls_per_turn: 1, retries: 0, output_tokens: 600,
+    storage_approved: true, limits: {calls_per_turn: 1, calls_per_request: 1, retries: 0,
+      output_tokens: 600,
+      agent_depth: 1, memory_caps: {max_items: 50, max_item_chars: 1000, prompt_injection: false},
       context_chars: 16000, history_chars: 4000, turns_per_thread: 30}});
   await turn();
   await opening;
@@ -321,6 +323,10 @@ ui.dispose();
   assert.match(limits.textContent, /1 model call, 0 retries/);
   assert.match(limits.textContent, /16000 characters of context and 4000 characters/);
   assert.match(limits.textContent, /30 questions in one conversation/);
+  assert.match(limits.textContent, /Most model calls for one request: 1\./);
+  assert.match(limits.textContent, /Assistant depth: 1, a single assistant/);
+  assert.match(limits.textContent, /up to 50 notes of 1000 characters/);
+  assert.doesNotMatch(limits.textContent, /undefined/);
   assert.match(limits.textContent, /not spend authorization/);
   assert.match(limits.textContent, /workflow-only help/);
   const texts = el => [el.textContent || "", ...el.children.flatMap(texts)];
