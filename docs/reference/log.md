@@ -11601,3 +11601,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Documented in the [agents README](../../src/agents/README.md#ai-evaluation-harness) that the `ai_eval` evidence gate now derives per-task coverage from the task registry and reports exercised, template-fallback-only and not-evaluated tasks, with scripted `funding_draft` and `read_document` checks. Offline scaffolding only: not held-out accuracy, no live model, no human acceptance; the actual #108 history stays unknown.
 * Evidence under `.copilot-tracking/` (2026-11-13 108-offline-coverage-0008).
+## [2026-11-12] update | Name the Bicep secret parameter for redeploys (Refs #358)
+
+* The [direct Entra setup section](../../infra/README.md#direct-entra-setup-and-acceptance) of `infra/README.md` now names `entraClientSecretName` and the `zava-forward-credential-name` tag for retaining the generated Key Vault secret name on later Bicep redeploys; the default would revert it.
+* Evidence class: source-derived only (`main.bicep`, `containerapps.bicep`, `setup-entra.py`); no live redeploy, Graph, Key Vault or cloud action, no sign-in claim, no criterion tick or closure. The earlier readiness result stays research-only `NOT_READY`, and its 278-test run with one missing-distribution error is not recorded as a pass.
+* Evidence under `.copilot-tracking/` (2026-11-12 secret-name-redeploy-358-2236).

@@ -2,18 +2,18 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-12T22:06:29+00:00",
-  "commit": "e155c88ed6357259a11520e7150b7ad9d349b9f8",
+  "scored_at": "2026-11-13T00:21:45+00:00",
+  "commit": "e44de171e3db133d393030d055e1369fb3c1774c",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43315833903",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43335514240",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "a0004921843db2b041b1e8a0c28a107f22d55d544d06084f2cdaa628ccbcc8e1",
-    "solution-code": "1d024d19c0525a020f2199abae5b277670d34d279a5fba01f04fe6a17fd687b7",
-    "infrastructure": "25b88e066245400c6075ea2781088d09f2127cb2247205736d7803a26d8768d9",
+    "solution-code": "aa858ea6cc55a18b5cc047fd0244a491ab5991997544b761d2236193e34bf552",
+    "infrastructure": "dd044fc59726c16e169aff9739920dd967cf68348fa64f386b67587f6c0e86f4",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
-    "pitch": "32f651fc1e2b5de9810180555c17d82033c47514bcb1b973383e0e4f94fb831d",
+    "pitch": "a84b7856363120acb55ae20ad2f23e3569c52594250e9dfd726a0a2c8a411025",
     "thought-leadership": "f7f2adc273905a84d848d54be0a77abc3550013fd1c9ea9e2fedb743bdacf70a"
   },
   "total": 79,
@@ -46,7 +46,7 @@
         "src/api/src/zava_forward/api/web/role-screens.js:907-960",
         "src/api/tests/test_exception_register_screen.py:239-345"
       ],
-      "rationale": "Not touched by this diff (form_export.py has no security/compliance relevance). Ceiling 5 unchanged."
+      "rationale": "Not touched by this diff; infra/README.md secret-naming clarification has no new security/compliance substance. Ceiling 5 unchanged."
     },
     "A4": {
       "score": 5,
@@ -61,7 +61,7 @@
       "evidence": [
         "src/api/checks/photo_flag_stale_browser_check.py:300-380"
       ],
-      "rationale": "Not touched by this change; operations evidence unchanged. Ceiling 5 retained."
+      "rationale": "Not touched by this change; infra README edit documents secret naming, not instrumentation/cost. Ceiling 5 retained."
     },
     "A6": {
       "score": 5,
