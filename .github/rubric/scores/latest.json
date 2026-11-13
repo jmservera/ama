@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-13T15:01:02+00:00",
-  "commit": "1db0c4462c25266b9df4755a4453b612eef7a660",
+  "scored_at": "2026-11-13T15:37:34+00:00",
+  "commit": "34b11967b93df40b653d384ab3b136bb1fb842f9",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43446758306",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43453024205",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "11fe0160a47c2ee2ac0fbab89e659a3867d928531b08367b03329afbcf02e8d8",
     "adr": "a0004921843db2b041b1e8a0c28a107f22d55d544d06084f2cdaa628ccbcc8e1",
-    "solution-code": "25aa4529eb0c5d9216071f05d69e1bf843bb6ef69aaa4ef91a9b02709c714ff1",
-    "infrastructure": "dd044fc59726c16e169aff9739920dd967cf68348fa64f386b67587f6c0e86f4",
+    "solution-code": "3ae64a2e94877d57a065fc2407dfaf8d8de509aaff716450a8d174db2bd6a68c",
+    "infrastructure": "3939a5360e03f58d0ec33454ddf7911e7d63d9b8d98e657b94cb5e980541e8c6",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "3b1ad575bcb303c981844fd6c915f3059a8f06ac5b939af8e64c6687924ae121",
     "thought-leadership": "f7f2adc273905a84d848d54be0a77abc3550013fd1c9ea9e2fedb743bdacf70a"
@@ -43,10 +43,9 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/web/role-screens.js:907-960",
-        "src/api/tests/test_exception_register_screen.py:239-345"
+        "src/agents/src/zava_forward/agents/runtime.py:88-130"
       ],
-      "rationale": "Not touched by this diff; pitch/PRD edits have no new security/compliance substance. Ceiling 5 unchanged."
+      "rationale": "New runtime wiring adds fail-closed identity-token handling, TLS-only endpoints, no-redirect opener and secret redaction; reinforces but does not exceed the existing ceiling (5)."
     },
     "A4": {
       "score": 5,
@@ -59,23 +58,23 @@
     "A5": {
       "score": 5,
       "evidence": [
-        "src/api/checks/photo_flag_stale_browser_check.py:300-380"
+        "src/agents/src/zava_forward/agents/runtime.py:150-183"
       ],
-      "rationale": "Not touched by this change; infra README edit documents secret naming, not instrumentation/cost. Ceiling 5 retained."
+      "rationale": "New heartbeat/health-check wiring (worker.py, runtime.py) adds reliability instrumentation; reinforces but does not exceed the existing ceiling (5)."
     },
     "A6": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/heldout_freeze.py:1-136"
+        "src/agents/src/zava_forward/agents/heldout_batch.py:1-374"
       ],
-      "rationale": "Not touched by this change. Ceiling unchanged."
+      "rationale": "New held-out token/cost-cap measurement harness with defined metrics (min/p50/mean/p90/max, USD totals) and fail-closed authorization is strong evaluation evidence, but the baseline was already at ceiling (5), so the score is unchanged."
     },
     "A7": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/assistants.py:262-300"
+        "src/agents/src/zava_forward/agents/worker.py:60-121"
       ],
-      "rationale": "Not touched by this change; proactive-scheduling and autonomy evidence unchanged. Baseline retained."
+      "rationale": "Worker now enforces fail-closed guardrails (ZF_AGENT_RESULT_ROUTE, ZF_ASSIST_* allowance expiry, standby mode) around autonomous task processing; reinforces but does not exceed the existing ceiling (5)."
     },
     "B1": {
       "score": 3,
@@ -107,9 +106,9 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "src/core/README.md:636-637"
+        "src/agents/README.md:607-626"
       ],
-      "rationale": "Tokenomics draft and pitch README edits are clearer status tracking of an open issue, still explicitly DRAFT with unmet criteria; not a material change to deck/documentation completeness. Good (4) retained."
+      "rationale": "README edits document component wiring (standalone queue worker, held-out runner) status, not deck/capstone documentation completeness; still explicitly gated and incomplete. Good (4) retained."
     },
     "B7": {
       "score": 5,
