@@ -1490,16 +1490,24 @@ the checkout sources.
 `python -m checks.procurement_screens_browser_check` (#228) builds a synthetic
 package, capacity record and issued work order through the real store, signs in
 as a Retrofit Programme Manager and as a Contractor, and opens the read-only
-Package queue and Job pack screens. It checks the package queue columns, draft
-readiness wording, separate submission, acknowledgement and review states, no
-write controls or contact links, no vulnerability reason, keyboard reach of
-every table region, 320 px reflow and no non-GET/HEAD/OPTIONS requests after
-sign-in. Set `ZF_AXE_JS` to the pinned axe 4.10.3 file to add the axe scan of
-the `main` region at 1280 px for each role and view; without it the run ends
-PARTIAL (or fails when `ZF_AXE_REQUIRED=1`). Zero violations in a run covers
-only those scans and is not a complete accessibility result. This is an engineering check, not
-assistive-technology or WCAG acceptance (#155, #151). Submission, correction
-and checklist capture are not built (OD-47).
+Package queue and Job pack screens with the keyboard only (Tab and Enter). It
+covers four states per role: Issued (the real store response), and Completed and
+corrected, Withdrawn and Empty (the same real responses rewritten by a test
+route, reads only). Per state it checks the package queue columns, draft
+readiness wording, separate submission, acknowledgement and review states, text
+in every cell and field so no state rests on colour, labelled and captioned
+table regions, the readiness status region, no write controls or contact links,
+no vulnerability reason, Tab order through every table region to the case
+workspace link at 1280 px and 320 px, a visible and uncovered focus indicator,
+one Shift+Tab step off the last stop, 320 px and 1280 px reflow and no non-GET/HEAD/OPTIONS requests after sign-in.
+Set `ZF_AXE_JS` to the pinned axe 4.10.3 file to add the axe scan of the `main`
+region at 1280 px and 320 px for every state; without it the run ends PARTIAL
+(or fails when `ZF_AXE_REQUIRED=1`). Panels use `content-visibility: auto`, so
+the check reads text from the DOM and renders every panel before the axe scan.
+Zero violations covers only those scans and is not a complete accessibility
+result. This is an engineering check, not assistive-technology or human
+usability acceptance (#155, #151). Submission, correction and checklist
+capture are not built (OD-47).
 
 `PYTHONDONTWRITEBYTECODE=1 python -m checks.atlas_tensions_browser_check`
 (#233) builds the shared synthetic home plus three packages through the real
