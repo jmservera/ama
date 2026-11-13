@@ -1374,11 +1374,11 @@ const fundingFieldRows = (draft) => Object.entries(draft.fields || {}).map(([id,
 });
 const HELD_CHECK_LIMIT = 8000000;
 const HELD_CHECK_ERRORS = {
-  400: "Choose the saved Held file for this draft (held-form-draft-export.json). Next action: pick the file you downloaded for this draft.",
+  400: "That file is not the saved Held file for this draft, so it could not be checked. Owner: you, the signed-in reviewer. Next action: choose the saved Held file for this draft (held-form-draft-export.json) that you downloaded.",
   403: "Your role cannot run this check. Owner: the Retrofit Programme Manager. Next action: ask them, or compare the version and hash in the file by hand.",
-  404: "This check is not available here. Next action: compare the version and hash in the file by hand.",
-  409: "The form or source changed. Next action: reload the page, then check again.",
-  502: "The document store is unavailable. Nothing was approved or submitted. Next action: reload and try again."
+  404: "This check is not available here. Owner: application support. Next action: compare the version and hash in the file by hand.",
+  409: "The form or source changed. Owner: you, the signed-in reviewer. Next action: reload the page, then check again.",
+  502: "The document store is unavailable. Nothing was approved or submitted. Owner: application support. Next action: reload and try again."
 };
 const HELD_CHECK_NOT_RUN = "The check could not run, so nothing is judged about your file. Nothing was approved or submitted. Owner: application support. Next action: reload and try once more, then contact application support.";
 const HELD_CHECK_UNREADABLE = "We could not read that file as a saved Held draft (JSON). Next action: choose the held-form-draft-export.json file you downloaded for this draft.";
