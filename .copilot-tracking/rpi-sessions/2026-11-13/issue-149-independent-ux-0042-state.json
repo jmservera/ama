@@ -107,9 +107,19 @@
       "decision": "Fresh read-only fetch: origin/main equals c401e5d56446b5752e8d91af6a45f3f06269c4bd; no merge or rebase. Final evidence assembly is metadata only: no source, test, tool, workflow, infrastructure, manifest or README change",
       "status": "recorded",
       "evidence": "pack subsection Final evidence assembly; changes record"
+    },
+    {
+      "decision": "Supersession note 2026-11-13: hosted Source projects CI run 43347366743 job 131630021882 failed one API test, 8 != 7 in test_every_invalid_field_is_tied_to_a_message (2965 tests, 629 skips) on the 9f1da5a31 checkpoint. That checkpoint did not pass hosted CI. 96 C4 corrects it with tests and WCAG record only (product source unchanged) in later commits; earlier checkpoint results and the Partial Review are preserved, not rewritten",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/rpi-sessions/2026-11-13/issue-96-c4-ci-baseline-0208-state.json"
     }
   ],
   "blockers": [
+    {
+      "id": "hosted-ci-8-ne-7",
+      "summary": "Hosted API suite failure 8 != 7 on 9f1da5a31; merge blocked",
+      "resolution": "96 C4 candidate corrects it locally; root independent exact-head assessment, one push and a new hosted CI run are required; no pass claimed until then"
+    },
     {
       "id": "233-held",
       "summary": "233 remains human-held and open; neither admitted nor deferred here; subset cannot be published as complete A2 cut line",

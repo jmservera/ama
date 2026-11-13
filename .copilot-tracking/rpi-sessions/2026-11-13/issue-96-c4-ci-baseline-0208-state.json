@@ -3,16 +3,16 @@
   "task_slug": "issue-96-c4-ci-baseline-0208",
   "parent_task": {"task_id": "issue-96-impact-c3-0052", "task_slug": "issue-96-impact-c3-0052"},
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
-  "session_status": "running",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-13/issue-96-c4-ci-baseline-0208-research.md",
     "plan": ".copilot-tracking/plans/2026-11-13/issue-96-c4-ci-baseline-0208-plan.md",
     "details": ".copilot-tracking/details/2026-11-13/issue-96-c4-ci-baseline-0208-details.md",
     "critique": ".copilot-tracking/plans/2026-11-13/issue-96-c4-ci-baseline-0208-critique.md",
     "changes": ".copilot-tracking/changes/2026-11-13/issue-96-c4-ci-baseline-0208-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/2026-11-13/issue-96-c4-ci-baseline-0208-review.md"
   },
   "confirmed_decisions": [
     {"decision": "Budget: current scoped 96 task C3 of 5 spent, two remaining; root admits one C4, ending 4 of 5 spent, one left. Older whole-96 history unknown and preserved; 233 excluded; no newer conflicting spend found", "status": "confirmed", "evidence": "root brief; 96-c3-root-assessment-0101.json; issue-96-impact-c3-0052-state.json"},
@@ -20,9 +20,11 @@
     {"decision": "Eighth site (saved Held copy file input) is a truthful label and describedby association with a visible non-colour message; no product defect; tests and record only", "status": "done", "evidence": "research artifact"},
     {"decision": "Independent critique executed once: Revise, CR-1 and CR-2 applied, none rejected", "status": "done", "evidence": ".copilot-tracking/plans/2026-11-13/issue-96-c4-ci-baseline-0208-critique.md"},
     {"decision": "C4 implemented; baseline module 13 OK, 21 role guards OK, 7 mutations fail the new test; correction 4 of 5 spent, one remaining", "status": "done", "evidence": ".copilot-tracking/changes/2026-11-13/issue-96-c4-ci-baseline-0208-changes.md"},
-    {"decision": "Review execution: pending (one original independent Review of the frozen head)", "status": "pending", "evidence": null}
+    {"decision": "Review executed once at 6a3f7a9e1: Conformant, no blocking finding, one Low non-blocking note; not repeated", "status": "done", "evidence": ".copilot-tracking/reviews/2026-11-13/issue-96-c4-ci-baseline-0208-review.md"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Review", "action": "Run the single original independent Review, record it, then STOP and return the frozen candidate to root"},
-  "prioritized_follow_ups": []
+  "next_action": {"phase": "Follow-up", "action": "STOP; root independently assesses the exact new head before any publication; a new hosted CI run is required; no C5 inferred"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Root independent exact-head assessment, then one push and new hosted CI", "rationale": "The hosted 8 != 7 failure stays preserved until a new run on the pushed head", "evidence": ".copilot-tracking/research/2026-11-13/issue-96-c4-ci-baseline-0208-research.md"}
+  ]
 }
