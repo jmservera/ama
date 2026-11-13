@@ -13,6 +13,8 @@ from pathlib import Path
 from contextlib import contextmanager
 
 from . import controls as k
+from . import gates
+from .gates import FinanceGateError, finance_gate
 from .change_provenance import _actor
 
 INVOICE_KINDS = ("Invoice", "Valuation")
@@ -209,11 +211,23 @@ class FinanceMixin:
 
     def _fin_commit_raise(self, user, c, f, body):
         b = f["budget"]
-        if not b or b["status"] != "Approved":
-            raise ValueError("A commitment needs an approved budget first.")
+        if not b:
+            raise FinanceGateError("A commitment needs an approved budget first.", False)
+        if not isinstance(b, dict) or not isinstance(b.get("status"), str):
+            raise FinanceGateError("The budget record cannot be read. Ask Finance to restore it.", None)
+        if b["status"] != "Approved":
+            raise FinanceGateError("A commitment needs an approved budget first.", False)
         amount = k.money(body.get("amount"), "the commitment")
-        if _committed(f) + amount > b["amount"] + 0.005:
-            raise ValueError(f"That is more than the budget left (£{b['amount'] - _committed(f):,.2f}).")
+        try:
+            left = b["amount"] - _committed(f)
+            over = amount > left + 0.005
+        except (KeyError, TypeError, ValueError):
+            raise FinanceGateError("The budget or commitment amounts cannot be read. Ask Finance to restore them.", None) from None
+        if over:
+            raise FinanceGateError(f"That is more than the budget left (£{left:,.2f}).", False)
+        verdict = finance_gate(True, "Approved budget covers the commitment: met.")
+        if not gates.transition_allowed([verdict]):
+            raise FinanceGateError(verdict.reason, None)
         com = dict(id=k.next_id(f["commitments"], "COM"), supplier=k.text(body.get("supplier"), "the supplier", 80),
                    contract=k.text(body.get("contract"), "the contract reference", 60),
                    work_order=k.text(body.get("work_order"), "the work order", 60),

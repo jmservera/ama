@@ -317,3 +317,108 @@ class CapacityGateError(ValueError):
         super().__init__(message)
         self.state = state
         self.result = capacity_gate(state, message)
+
+
+def _controlled_rule(gate: str, requirement: str) -> GateRule:
+    return GateRule(
+        gate,
+        f"docs/prds/zava-forward-retrofit-programme-demonstrator.md FR-008 (governing) and "
+        f"{requirement} (exercise fixture)",
+        "2026-11-13",
+        "1",
+        _UNREVIEWED,
+    )
+
+
+ELIGIBILITY_RULE = _controlled_rule("eligibility", "FR-019 grant and funder eligibility")
+AUTHORITY_RULE = _controlled_rule("authority", "FR-019 scoped financial designation")
+FINANCE_RULE = _controlled_rule("finance", "FR-019 approved budget and commitment limit")
+
+
+def _outcome_gate(
+    rule: GateRule,
+    state: bool | None,
+    reason: str,
+    owner: str,
+    correction: str,
+    label: str,
+    on: str | None,
+) -> GateResult:
+    """True passes only through the rule's effective-date check; False fails, None is unknown."""
+    if state is True:
+        return check(rule, True, owner=owner, correction=correction, label=label, on=on)
+    return _result(rule, UNKNOWN if state is None else FAIL, reason, owner, correction)
+
+
+def eligibility_gate(
+    state: bool | None, reason: str, owner: str, on: str | None = None
+) -> GateResult:
+    """Only an explicit recorded eligibility pass lets a transition go ahead."""
+    return _outcome_gate(
+        ELIGIBILITY_RULE,
+        state,
+        reason,
+        owner,
+        "Ask the Grants Officer to record the eligibility check.",
+        "Eligibility confirmed",
+        on,
+    )
+
+
+def authority_gate(state: bool | None, reason: str, on: str | None = None) -> GateResult:
+    owner = "Finance authority owner"
+    return _outcome_gate(
+        AUTHORITY_RULE,
+        state,
+        reason,
+        owner,
+        "Ask the Finance authority owner to record a current scoped designation.",
+        "Current scoped financial designation",
+        on,
+    )
+
+
+def finance_gate(state: bool | None, reason: str, on: str | None = None) -> GateResult:
+    return _outcome_gate(
+        FINANCE_RULE,
+        state,
+        reason,
+        "Finance approver",
+        "Ask Finance to approve a budget that covers this commitment.",
+        "Approved budget covers the commitment",
+        on,
+    )
+
+
+class AuthorityGateError(PermissionError):
+    """An authority refusal that keeps its PermissionError text and carries the gate result."""
+
+    def __init__(self, message: str, state: bool | None, on: str | None = None) -> None:
+        super().__init__(message)
+        self.state = state
+        self.result = authority_gate(state, message, on)
+
+
+class FinanceGateError(ValueError):
+    """A finance refusal that keeps its ValueError text and carries the gate result."""
+
+    def __init__(self, message: str, state: bool | None, on: str | None = None) -> None:
+        super().__init__(message)
+        self.state = state
+        self.result = finance_gate(state, message, on)
+
+
+CONTROLLED_RULES: tuple[GateRule, ...] = (
+    SAFETY_RELEASE_RULE,
+    *BOOKING_RULES.values(),
+    QUALITY_RULE,
+    CAPACITY_RULE,
+    ELIGIBILITY_RULE,
+    AUTHORITY_RULE,
+    FINANCE_RULE,
+)
+
+
+def unreviewed_rules() -> list[GateRule]:
+    """Rules still carrying the explicit unreviewed marker; a named reviewer clears an entry."""
+    return [r for r in CONTROLLED_RULES if r.reviewer == _UNREVIEWED]
