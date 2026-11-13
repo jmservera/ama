@@ -380,7 +380,9 @@ async function aftercareWorkspaceView() {
       h("h2", { id: "ac-list-title" }, `Recorded concerns (${acText(concerns.count)})`),
       concerns.items.length
         ? concerns.items.map((c) => aftercareConcernView(c))
-        : h("p", {}, "No concerns have been recorded yet.")));
+        : h("p", {}, "No concerns have been recorded yet."),
+      h("p", {}, h("a", { class: "btn alt", href: `${AFTERCARE_API}/concerns.csv`, download: "aftercare-concerns.csv" }, "Download concerns for Excel"),
+        " The file is a read-only copy without the resident's own words; changes in it are not imported back.")));
     parts.push(acSecondaryHeading(aftercareEvaluatorView(evaluator)));
     show(...parts);
     wire();

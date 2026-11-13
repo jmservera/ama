@@ -11,7 +11,10 @@ class ListExportTests(unittest.TestCase):
     def test_formula_prefixes_are_neutralised(self) -> None:
         for bad in ("=1+1", "+1", "-1", "@SUM(A1)", "\tx", "\rx"):
             self.assertEqual(list_export.safe_cell(bad), "'" + bad)
+        for spaced in (" =1+1", "  @SUM(A1)", " \t-1"):
+            self.assertEqual(list_export.safe_cell(spaced), "'" + spaced)
         self.assertEqual(list_export.safe_cell("plain"), "plain")
+        self.assertEqual(list_export.safe_cell("a =b"), "a =b")
         self.assertEqual(list_export.safe_cell(None), "")
         self.assertEqual(list_export.safe_cell(False), "No")
         self.assertEqual(list_export.safe_cell(7), "7")

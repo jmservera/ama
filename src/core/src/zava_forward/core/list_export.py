@@ -25,7 +25,9 @@ def safe_cell(value: object) -> str:
         text = json.dumps(value, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
     else:
         text = str(value)
-    return "'" + text if text.startswith(FORMULA_PREFIXES) else text
+    if text.startswith(FORMULA_PREFIXES) or text.lstrip(" \t\r\n").startswith(FORMULA_PREFIXES):
+        return "'" + text
+    return text
 
 
 def to_csv(rows: Sequence[Mapping[str, Any]]) -> str:

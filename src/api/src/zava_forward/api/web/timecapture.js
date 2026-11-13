@@ -33,13 +33,15 @@ async function timeView() {
         body.push(h("h2", {}, "Record time"), h("div", { class: "row" }, cs, mins, act,
           h("button", { onclick: () => save("/api/time", { case_id: cs.value, minutes: mins.value, activity: act.value }) }, "Save")));
         const mine = await api("/api/time/mine");
-        body.push(h("h2", {}, "My entries"), h("ul", {}, mine.map((e) => h("li", {}, `${e.at} ${e.case_id} ${e.minutes} min ${e.activity}`))));
+        body.push(h("h2", {}, "My entries"), h("ul", {}, mine.map((e) => h("li", {}, `${e.at} ${e.case_id} ${e.minutes} min ${e.activity}`))),
+          h("p", {}, h("a", { class: "btn alt", href: "/api/time/mine.csv", download: "my-time-entries.csv" }, "Download my entries for Excel"), " The file is a read-only copy; changes in it are not imported back."));
       }
       if (isManager()) {
         const rep = await api("/api/time/report");
         body.push(h("h2", {}, "Totals by activity"), h("p", { class: "muted" }, `${rep.note} Minimum group: ${rep.min_group} people.`),
           h("ul", {}, rep.by_activity.map((r) => h("li", {}, `${r.activity}: ${r.minutes} min in ${r.entries} entries`))),
-          h("p", {}, `${rep.suppressed_activities} activity group(s) hidden because too few people contributed.`));
+          h("p", {}, `${rep.suppressed_activities} activity group(s) hidden because too few people contributed.`),
+          h("p", {}, h("a", { class: "btn alt", href: "/api/time/report.csv", download: "time-report.csv" }, "Download totals for Excel"), " The file is a read-only copy; changes in it are not imported back."));
       }
     }
     show(...body);

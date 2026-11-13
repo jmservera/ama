@@ -27,6 +27,10 @@
       li.append(b, meta(s), ...caveats(s));
       ul.append(li);
     });
+    const csv = el("a", "Download sources for Excel", "btn alt");
+    csv.href = "/api/law/sources.csv";
+    csv.download = "law-sources.csv";
+    nodes.push(csv, el("p", "The file is a read-only copy; changes in it are not imported back.", "muted"));
     nodes.push(ul, el("h2", "No source held"));
     const gl = el("ul");
     d.gaps.forEach((g) => { const li = el("li"); li.append(el("strong", g.topic), el("p", g.answer + " " + g.reason)); gl.append(li); });
