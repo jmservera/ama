@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import tempfile
 import threading
@@ -323,6 +324,72 @@ class RegulatoryApi(unittest.TestCase):
         self.assertEqual(reply["cards"][0]["source_freshness"]["status"], "out_of_cadence")
         self.assertEqual(before, self.f.law.sql.all("SELECT body FROM reg_alert ORDER BY id"))
         self.assertEqual(self.f.law.rules.is_active("synthetic-hazard", "2026-10-16"), 1)
+
+    def resolve_links(self, reply: dict[str, Any]) -> None:
+        """Follow every emitted citation and card link through the real routes."""
+        for cited in (c for c in reply["citations"] if "link" in c):
+            code, body = self.call(cited["link"])
+            self.assertEqual(code, 200, cited["link"])
+            for field in ("id", "version", "hash", "status"):
+                self.assertEqual(body[field], cited[field], field)
+            self.assertEqual(hashlib.sha256(body["text"].encode()).hexdigest(), body["hash"])
+            self.assertEqual(cited["text"], body["text"][:350])
+            self.assertEqual(cited["excerpt_truncated"], len(body["text"]) > 350)
+        shown = {s["citation"]: s["quote"] for s in reply["sections"]["what_sources_say"]}
+        self.assertEqual(shown, {c["id"]: c["text"] for c in reply["citations"] if "link" in c})
+        cited_ids = set(shown)
+        for card in reply["cards"]:
+            code, history = self.call(card["link"])
+            self.assertEqual(code, 200, card["link"])
+            card_id, _, version = card["id"].rpartition("@v")
+            self.assertTrue(card["link"].endswith("/" + card_id), card["link"])
+            entry = next(v for v in history["versions"] if v["version"] == int(version))
+            self.assertEqual(entry["card_id"], card_id)
+            self.assertTrue(entry["provisions"])
+            self.assertLessEqual(set(entry["provisions"]), cited_ids)
+
+    def ask_and_resolve(self, kind: str, citations: int, cards: int) -> dict[str, Any]:
+        tid = self.start()
+        code, reply = self.call(
+            f"/api/chat/regulatory/threads/{tid}/ask", dict(content="What are the hazard sources?")
+        )
+        self.assertEqual((code, reply["kind"]), (200, kind), reply)
+        self.assertEqual((len(reply["citations"]), len(reply["cards"])), (citations, cards))
+        self.resolve_links(reply)
+        return dict(reply)
+
+    def test_emitted_links_resolve_to_the_cited_content_and_forgeries_fail(self) -> None:
+        self.negative_controls(self.ask_and_resolve("answer", 3, 1))
+
+    def test_truncated_excerpt_links_resolve_to_the_full_provision(self) -> None:
+        self.f.source(2, text="Synthetic long provision text, not law. " * 20)
+        self.f.card(pid="synthetic@v2#0001")
+        reply = self.ask_and_resolve("answer", 3, 1)
+        self.assertTrue(reply["citations"][0]["excerpt_truncated"])
+
+    def test_conflict_links_resolve_for_both_provision_versions(self) -> None:
+        self.f.source(2, text="Different synthetic source, not law.")
+        reply = self.ask_and_resolve("conflict", 2, 0)
+        self.assertEqual({c["version"] for c in reply["citations"]}, {1, 2})
+
+    def negative_controls(self, reply: dict[str, Any]) -> None:
+        def forged(**change: Any) -> dict[str, Any]:
+            return {**reply, **change}
+
+        provision = next(c for c in reply["citations"] if "link" in c)
+        swapped = [dict(provision, link="/api/law/provisions/synthetic%40v1%230002")]
+        wrong_text = [dict(provision, text="Forged quote")]
+        card = reply["cards"][0]
+        other_card = dict(card, link="/api/law/cards/other-card")
+        wrong_id = dict(card, id="other-card@v" + card["id"].rpartition("@v")[2])
+        for change in (
+            dict(citations=swapped),
+            dict(citations=wrong_text),
+            dict(cards=[other_card]),
+            dict(cards=[wrong_id]),
+        ):
+            with self.subTest(change=list(change)), self.assertRaises(AssertionError):
+                self.resolve_links(forged(**change))
 
 
 if __name__ == "__main__":

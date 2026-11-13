@@ -1,0 +1,18 @@
+test_changed_policy_process_revokes_and_fresh_process_stays_denied (test_assistant_release.SqliteUnleasedRevocation.test_changed_policy_process_revokes_and_fresh_process_stays_denied) ... ok
+test_changed_prompt_process_revokes_and_fresh_process_stays_denied (test_assistant_release.SqliteUnleasedRevocation.test_changed_prompt_process_revokes_and_fresh_process_stays_denied) ... ok
+test_changed_permission_process_revokes_and_fresh_process_stays_denied (test_assistant_release.SqliteUnleasedRevocation.test_changed_permission_process_revokes_and_fresh_process_stays_denied) ... FAIL
+
+======================================================================
+FAIL: test_changed_permission_process_revokes_and_fresh_process_stays_denied (test_assistant_release.SqliteUnleasedRevocation.test_changed_permission_process_revokes_and_fresh_process_stays_denied)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-107-process-binding-1112/src/api/tests/test_assistant_release.py", line 1259, in test_changed_permission_process_revokes_and_fresh_process_stays_denied
+    self.check_changed_binding_process("roles", "permissions")
+  File "/home/azureuser/source/ama-demo-wt/issue-107-process-binding-1112/src/api/tests/test_assistant_release.py", line 1244, in check_changed_binding_process
+    self.assertIn(trigger, again["reason"])
+AssertionError: 'permissions' not found in 'Release admission denied: no approved release matches (permission_version, task_contract_version). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.'
+
+----------------------------------------------------------------------
+Ran 3 tests in 10.498s
+
+FAILED (failures=1)

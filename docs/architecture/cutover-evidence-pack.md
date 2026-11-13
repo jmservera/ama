@@ -7640,3 +7640,41 @@ No refactoring is confirmed necessary and no new defect was found by the checks 
 * The case study addendum was read by headings and relevant sections only, not end to end. No push, PR, issue, criterion or board write was made.
 * Correction batch (2026-11-12, documentation only, after independent review RV2-1 to RV2-4 of frozen head `5244265c8`): qualified the pin identity at observation time, added the test-helper `PYTHONPATH` to T5 and T6, named the ADR 0002 Audit row accurately and stated that both AC-051 and AC-073 are `Not run` in the PRD. Original results, counts and adverse outcomes are unchanged and nothing was rerun.
 * Evidence under `.copilot-tracking/` (`post-fix-wave-440-1112`, `post-fix-wave-440-1112-correction`).
+
+
+## AI parent integration checkpoint (2026-11-12, Refs #104 #107 #157 #216)
+
+Draft, local-only, not approved. A candidate integration of the AI parent (merged PR 1488 for #157 and PR 1489 for #107) with fresh main and one reviewed unmerged candidate (#216). It is not whole-issue acceptance, epic closure, a closing reference, a new issue, an approval or a hosted result. The prospective broad matrix and baseline inventory belong to the existing `parent-base-preflight-2300` task and are not repeated here.
+
+### Identities (candidate and parent kept separate from merged main)
+
+| Item | Identity (read 2026-11-12) |
+| --- | --- |
+| Merged main | `origin/main` `8e6e554570f4075ff41ea130e29511455f57df2d` (`src` tree `7b61d44bc705`). Merged, post-merge-of-PRs state; its delta over the parent base touches `src/core` `form_export.py`, its test and `src/core/README.md` only, outside the AI assistant, release, memory and citation code |
+| Actual AI parent | `4459dadb4c751fcb4e1cc93d369ff844f2cbc9b7` (`src` tree `0b5ec0b6c344`), containing merged PR 1488 (#157) and PR 1489 (#107). Its `src` tree equals the merged tree validated in the 107 actual-parent run |
+| Candidate 216 | `e4aac8b72802f583f19eabf88e14742f68f4f653` (`src` tree `ed460bbb673c`): one own commit after `eac1206c6` (already in main), test-only change to `src/api/tests/test_regulatory_chat_api.py` plus its dated original RPI files. Unmerged candidate, not main |
+| Integrated local candidate | Source-validated commit `e056064136855b5ee9335c72d4e6a57b41ed80f2` (tree `9e206e8b5fc7`, `src` tree `4cf9398b44db`): the parent plus the plan and critique commit `0e03a176a`, a normal local merge of main, then a normal local merge of candidate 216. Source delta over main is exactly four test files (214 insertions, 1 deletion): `assistant_process_worker.py`, `test_assistant_release.py`, `test_assistants.py`, `test_regulatory_chat_api.py`. No production code changed. Later commits on the branch add only this record and its tracking files |
+
+### Environment, commands and results (local, constructed synthetic data)
+
+Python 3.12.3 venv outside the repository (`/tmp/v2333`), pip only, no uv. Tests and non-editable installs both came from one `git archive` of the validated commit: `pip install --require-hashes -r src/api/requirements.txt`, then `pip install --no-deps ./core ./agents ./api`. The three packages loaded from the venv `site-packages`, not the source trees. `PYTHONPATH` held only the canonical test-helper directories (`tests:../core/tests:../agents/tests`). `ZF_TEST_MSSQL` was explicitly unset for every run.
+
+| Id | Command (from `src/api`) | Exit | Ran | Skipped | Covers |
+| --- | --- | --- | --- | --- | --- |
+| T1 | `unittest test_assistant_release.SqliteUnleasedRevocation -k changed -v` | 0 | 3 | 0 | #107 changed policy, prompt and permission process revoke, then a fresh process stays denied |
+| T2 | `unittest test_assistants.ApiTests.test_active_chat_memory_is_never_evidence_for_a_chat_proposal -v` | 0 | 1 | 0 | #157 active chat memory cannot become proposal evidence |
+| T3 | `unittest test_regulatory_chat_api -v` | 0 | 12 | 0 | #216 emitted citation and card links resolve to the cited content; forgery controls fail |
+| T4 | `unittest test_assistant_release -v` | 0 | 60 | 7 | Whole canonical release module, including the 3 changed tests; the 7 skips are the `MssqlUnleasedRevocation` tests that need a disposable SQL Server |
+| T5 | `ruff check` on the four touched files (ruff 0.17.1, the project pin) | 0 | not applicable | not applicable | Lint |
+| T6 | `ruff format --check` on the project scope `tests` | 0 | not applicable | not applicable | 126 files already formatted. `test_assistant_release.py` and `test_assistants.py` are listed in the project `[tool.ruff.format] exclude`, so they were not format-checked; passing them explicitly would ignore that configuration and report a diff unrelated to this change |
+
+All runs exited 0 with no failures. T1 is a subset of T4, so the distinct tests run were 73 (60 release including 7 skipped, 1 memory, 12 citation). Raw logs are outside the repository at `/home/azureuser/.copilot/session-state/38e61c82-3c44-4b97-af59-9eed5c151ac7/files/rpi-104-parent-integration-2333-evidence/`.
+
+Adverse and intermediate results, retained: the first import-origin probe used a wrong module name (`api.server`) and failed with `ModuleNotFoundError`, then a second probe printed `None` for `__file__` because the packages are namespace packages; the origin was proved from `__path__` instead. The first ruff run from the `tests` directory explicitly named the format-excluded files and reported two files would be reformatted; that is a configuration artefact, resolved as the T6 note. Earlier results are preserved unchanged: the 107 actual-parent proof `rpi-107-current-parent-validation-2320-result.json` (60 release tests, 3 changed tests, 1 memory test, 7 MSSQL skips) and the original 107 independent assessment, which ran against the older parent `43b2187b9` with `PYTHONPATH` set to worktree source in a throwaway venv. That source-`PYTHONPATH` caveat applies to that earlier run; this checkpoint used installed distributions.
+
+### Limits
+
+* Not run: MSSQL or any SQL Server lane, old-image exclusion, broad or full gate, browser, mypy, scanners, hosted CI, provider or model calls, cloud, private data, spend.
+* #107, #157 and #216 acceptance criteria stay unmet or human and live owned (for #216: owner thresholds, independent grader, staff paired trial, cost). No criterion is ticked and no approval is implied.
+* No push, PR or merge was made. A later pull request would use `Refs` only. Hosted CI and human review for the exact head remain required.
+* Original dated RPI evidence is under `.copilot-tracking/` (`ai-parent-integration-2333`): research, plan, details, one independent read-only critique (verdict Revise, five findings, all applied; the worker could not write its file so the coordinator persisted its findings), changes, state and one Review. The model label (Claude Sonnet 5.5) is asserted; no host attestation exists.

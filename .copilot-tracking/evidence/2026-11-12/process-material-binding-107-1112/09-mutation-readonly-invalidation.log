@@ -1,0 +1,18 @@
+F
+======================================================================
+FAIL: test_changed_policy_process_revokes_and_fresh_process_stays_denied (test_assistant_release.SqliteUnleasedRevocation.test_changed_policy_process_revokes_and_fresh_process_stays_denied)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mut107/tests/test_assistant_release.py", line 1254, in test_changed_policy_process_revokes_and_fresh_process_stays_denied
+    self.check_changed_binding_process("rule", "policy", "policy_version")
+  File "/tmp/mut107/tests/test_assistant_release.py", line 1226, in check_changed_binding_process
+    self.assertEqual(revoked["status"], "revoked")
+AssertionError: 'active' != 'revoked'
+- active
++ revoked
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.645s
+
+FAILED (failures=1)
