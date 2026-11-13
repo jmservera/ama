@@ -15,6 +15,7 @@ from typing import Any
 
 from heldout_freeze_fixture import manifest
 from zava_forward.agents import heldout_batch as hb
+from zava_forward.agents.heldout_freeze import check_freeze
 
 NOW = datetime(2026, 11, 13, 12, 0, tzinfo=UTC)
 DRY = "dry-run simulation - not measured evidence"
@@ -73,7 +74,7 @@ def run(
         spy,
         mode=mode,
         provider_model=provider_model,
-        now=NOW,
+        clock=lambda: NOW,
     )
 
 
@@ -243,7 +244,7 @@ class ReportTests(unittest.TestCase):
 
     def test_dry_run_makes_no_provider_call_and_is_labelled(self) -> None:
         report = hb.run_batch(
-            auth(), manifest(), proposals(4), hb.dry_run_call, mode="dry-run", now=NOW
+            auth(), manifest(), proposals(4), hb.dry_run_call, mode="dry-run", clock=lambda: NOW
         )
         self.assertEqual(report["evidence_label"], DRY)
         self.assertEqual(report["outcome"], "completed")
@@ -251,8 +252,94 @@ class ReportTests(unittest.TestCase):
 
     def test_dry_run_with_injected_stand_in_stays_unmeasured(self) -> None:
         spy = Spy()
-        report = hb.run_batch(auth(), manifest(), proposals(2), spy, mode="dry-run", now=NOW)
+        report = hb.run_batch(
+            auth(), manifest(), proposals(2), spy, mode="dry-run", clock=lambda: NOW
+        )
         self.assertEqual((report["evidence_label"], report["source"]), (DRY, hb.SOURCE_DRY))
+
+    def test_dry_run_ignores_a_live_callable(self) -> None:
+        spy = Spy()
+        report = run(spy, mode="dry-run")
+        self.assertEqual(spy.calls, [])
+        self.assertEqual((report["source"], report["outcome"]), (hb.SOURCE_DRY, "completed"))
+
+    def _clocked(self, readings: list[Any], **kw: Any) -> tuple[Spy, dict[str, Any]]:
+        spy, ticks = Spy(), iter(readings)
+
+        def clock() -> datetime:
+            value = next(ticks)
+            if isinstance(value, Exception):
+                raise value
+            return datetime.fromisoformat(value.isoformat())
+
+        report = hb.run_batch(
+            kw.get("a") or auth(),
+            kw.get("m") or manifest(),
+            proposals(4),
+            spy,
+            mode="live",
+            provider_model="m-1",
+            clock=clock,
+        )
+        return spy, report
+
+    def test_expiry_mid_batch_stops_before_next_dispatch(self) -> None:
+        late = NOW + timedelta(days=2)
+        spy, report = self._clocked([NOW, NOW, NOW, late])
+        self.assertEqual(len(spy.calls), 2)
+        self.assertEqual(
+            (report["outcome"], report["stop_reason"]), ("stopped", "authorization-expired")
+        )
+        self.assertEqual(report["calls"], 2)
+
+    def test_freeze_drift_mid_batch_stops(self) -> None:
+        m = manifest()
+
+        class Mutating(Spy):
+            def __call__(self, *args: Any) -> dict[str, Any]:
+                m["held_out"]["seed"] = "seed-8"
+                return super().__call__(*args)
+
+        spy = Mutating()
+        report = hb.run_batch(
+            auth(), m, proposals(4), spy, mode="live", provider_model="m-1", clock=lambda: NOW
+        )
+        self.assertEqual(len(spy.calls), 1)
+        self.assertEqual(report["stop_reason"], "freeze-drift")
+        self.assertEqual(report["calls"], 1)
+
+    def test_reapproved_replacement_manifest_is_drift(self) -> None:
+        m = manifest()
+
+        class Swapping(Spy):
+            def __call__(self, *args: Any) -> dict[str, Any]:
+                m["held_out"]["seed"] = "seed-8"
+                m["threshold_approval"]["manifest_digest"] = check_freeze(m)["manifest_digest"]
+                return super().__call__(*args)
+
+        report = hb.run_batch(
+            auth(),
+            m,
+            proposals(4),
+            Swapping(),
+            mode="live",
+            provider_model="m-1",
+            clock=lambda: NOW,
+        )
+        self.assertEqual(report["stop_reason"], "freeze-drift")
+
+    def test_clock_failure_stops_and_keeps_accrued_spend(self) -> None:
+        spy, report = self._clocked([NOW, NOW, RuntimeError("clock")])
+        self.assertEqual(len(spy.calls), 1)
+        self.assertEqual((report["stop_reason"], report["calls"]), ("check-failed", 1))
+        self.assertNotEqual(report["accrued_usd"], "0.000000")
+
+    def test_non_object_proposals_refuse(self) -> None:
+        for bad in (["x"], [None], [1, 2], [dict(id="h1", prompt="p"), "h2"]):
+            spy = Spy()
+            report = run(spy, props=bad)  # type: ignore[arg-type]
+            self.assertEqual(report["outcome"], "refused", bad)
+            self.assertEqual(spy.calls, [])
 
     def test_refused_report_has_no_measured_label(self) -> None:
         report = run(Spy(), auth(currency="EUR"))
