@@ -4,6 +4,15 @@ const FIN_ROLES = ["Grants and Evidence Officer", "Retrofit Programme Manager", 
 const financeDecisionLabel = (d) => (d === "Keep on hold" ? "Keep payment paused" : d);
 const money = (n) => `£${Number(n).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const caseApi = (id, part, body) => api(`/api/cases/${encodeURIComponent(id)}/${part}`, body);
+// Keeps a message that already names an owner and a next action; otherwise adds both.
+const panelOwned = (message, owner, next, status) => {
+  const m = String(message ?? "").trim().replace(/([^.!?])$/, "$1.");
+  const o = m.indexOf("Owner:");
+  if (o >= 0 && m.indexOf("Next action:") > o) return m;
+  const refused = status >= 400 && status < 500;
+  return `${m} Owner: ${refused ? "your team manager" : owner}. Next action: ${refused ? "follow the advice above, or ask your team manager if you cannot" : next}`;
+};
+const PANEL_SUPPORT = "application support";
 
 function bindCaseMutationForm(session, key, form, button, status) {
   session.rawFormStates ||= new Map();
@@ -69,7 +78,7 @@ function financePanel(c, id, refresh) {
     fx.invoices.length ? fx.invoices.map((i) => h("div", { class: "card" },
       h("strong", {}, `${i.id}: ${i.kind.toLowerCase()} ${i.ref} from ${i.supplier}. ${i.status}.`),
       h("div", { class: "muted" }, `Payment: ${i.payment_status}. ${i.disposition ? `Finance decision: ${financeDecisionLabel(i.disposition)} (${i.disposition_by}).` : "No Finance decision yet."}${i.hold ? ` Payment paused: ${i.hold.reason}.` : ""}`),
-      i.exceptions.length ? h("ul", {}, i.exceptions.map((e) => h("li", {}, `${e.line == null ? "Whole invoice" : `Line ${e.line + 1}`}: ${e.message}`))) : null)) : null,
+      i.exceptions.length ? h("ul", {}, i.exceptions.map((e) => h("li", {}, panelOwned(`${e.line == null ? "Whole invoice" : `Line ${e.line + 1}`}: ${e.message}`, "the finance officer", "correct this invoice item or ask the supplier for a corrected invoice")))) : null)) : null,
     actForm("Propose a budget", [["amount", "Amount in pounds"], ["note", "Note"]], (b, submitted) => go("budget_propose", b, submitted), "Save proposed budget"),
     fx.budget && fx.budget.status === "Proposed" ? h("p", {}, h("button", { onclick: () => go("budget_approve") }, `Approve the budget as ${me.user.name}`)) : null,
     actForm("Raise a commitment", [["supplier", "Supplier"], ["contract", "Contract reference"], ["work_order", "Work order"], ["measure", "Measure"], ["amount", "Amount in pounds"], ["quantity", "Quantity"]], (b, submitted) => go("commit_raise", b, submitted), "Raise commitment"),
@@ -128,7 +137,7 @@ function technicalPanel(c, id, refresh) {
   const TYPES = [["assessment", "Retrofit assessment"], ["design", "Design"], ["building", "Building and safety dependency"], ["coordination", "Coordination"]];
   return h("section", { class: "card" }, h("h2", {}, "Assessment and technical sign-offs"),
     !t ? h("p", { class: "muted" }, "No design recorded yet.") : [
-      h("p", {}, `Design version ${t.design_version}, recorded by ${t.design_name}. The person who recorded the design cannot sign it off.`),
+      h("p", {}, `Design version ${t.design_version}, recorded by ${t.design_name}. The person who recorded the design cannot sign it off. Owner: a different technical reviewer. Next action: ask a different technical reviewer to sign off this design version.`),
       h("p", {}, "Technical sign-off is a named human professional decision, never an AI approval. Role membership alone does not attest competence."),
       h("table", {}, h("caption", { class: "sr-only" }, "Technical sign-offs"), h("thead", {}, h("tr", {}, ["Sign-off", "State", "Design version", "By", "Note"].map((x) => h("th", { scope: "col" }, x)))),
         h("tbody", {}, TYPES.map(([k, label]) => { const s = t.signoffs[k]; return h("tr", {}, h("td", {}, label), h("td", {}, s ? s.status : "Not given"), h("td", {}, s && s.version ? String(s.version) : "Not given"), h("td", {}, s && s.by ? s.by : ""), h("td", {}, s ? (s.reason || s.note || "") : "")); }))),
@@ -196,15 +205,15 @@ function residentPanel(c, id, refresh) {
         const result = await refresh(async () => {}, submitted);
         mutation.checkHistory = result === "check-history";
         mutation.message = mutation.checkHistory
-          ? "The evidence was recorded, but case history could not be reloaded. Reload and check the history before another action. Your unsubmitted edits are retained."
+          ? panelOwned("The evidence was recorded, but case history could not be reloaded. Reload and check the history before another action. Your unsubmitted edits are retained.", PANEL_SUPPORT, "reload and check the case history before another action")
           : "Supplied evidence recorded. Your unsubmitted edits are retained.";
       } catch (error) {
         const checkHistory = dispatched && mutationNeedsHistory(error);
         if (checkHistory) requireCaseHistory(session);
         mutation.checkHistory = checkHistory;
         mutation.message = checkHistory
-          ? "Confirmation is unavailable. Reload and check the history before another action."
-          : error.message;
+          ? panelOwned("Confirmation is unavailable. Reload and check the history before another action.", PANEL_SUPPORT, "reload and check the case history before another action")
+          : panelOwned(error.message, PANEL_SUPPORT, "correct the entries or refresh, then try again", error.status);
         mutation.focus = true;
       } finally {
         mutation.pending = false;
@@ -487,22 +496,22 @@ function affectedChallengePanel(c, id, refresh) {
           mutation.recordedForm = changed ? form : null;
           if (changed) {
             form.dataset.unsaved = "true";
-            mutation.message = "Only the submitted values were recorded. Your later edits remain an unsaved draft; they were not submitted. Check the history before another action.";
+            mutation.message = panelOwned("Only the submitted values were recorded. Your later edits remain an unsaved draft; they were not submitted. Check the history before another action.", "the person recording the evidence", "check the case history, then submit your later edits again if they are still needed");
           } else {
             delete form.dataset.unsaved;
           }
           if (dispatchSignal.aborted) return;
           const result = await refresh(async () => {});
           mutation.checkHistory = result === "check-history";
-          if (mutation.checkHistory) mutation.message = "The evidence was recorded, but case history could not be reloaded. Reload and check the history before another action. Your unsubmitted edits are retained.";
+          if (mutation.checkHistory) mutation.message = panelOwned("The evidence was recorded, but case history could not be reloaded. Reload and check the history before another action. Your unsubmitted edits are retained.", PANEL_SUPPORT, "reload and check the case history before another action");
           else if (!changed) mutation.message = "Supplied evidence recorded.";
         } catch (error) {
           const checkHistory = dispatched && mutationNeedsHistory(error);
           if (checkHistory) requireCaseHistory(session);
           mutation.checkHistory = checkHistory;
           mutation.message = checkHistory
-            ? "Confirmation is unavailable. Reload and check the history before recording another action."
-            : error.message;
+            ? panelOwned("Confirmation is unavailable. Reload and check the history before recording another action.", PANEL_SUPPORT, "reload and check the case history before recording another action")
+            : panelOwned(error.message, PANEL_SUPPORT, "correct the entries or refresh, then try again", error.status);
           mutation.focus = true;
         } finally {
           mutation.pending = false;
@@ -557,7 +566,7 @@ function affectedChallengePanel(c, id, refresh) {
 
 function exposureNotice(x) {
   if (!x) return h("section", { "aria-labelledby": "exposure-h" }, h("h2", { id: "exposure-h" }, "Investment limits"),
-    h("p", { role: "status" }, "Limit check unavailable. Treat acceleration as paused until a person checks the Board limits by hand."));
+    h("p", { role: "status" }, "Limit check unavailable. Treat acceleration as paused until a person checks the Board limits by hand. Owner: the finance lead. Next action: check the Board limits by hand and tell application support if the check stays unavailable."));
   const rows = (x.findings || []).map((f) => h("li", {}, f.state === "Unknown" ? `${f.limit}: not known` : `${f.limit}: ${f.state}, ${f.observed} of ${f.maximum}${f.unit ? " " + f.unit : ""}`));
   return h("section", { "aria-labelledby": "exposure-h" }, h("h2", { id: "exposure-h" }, "Investment limits"),
     h("p", { role: "status" }, `${x.signal}. ${x.status}. ${x.reason || ""}`), rows.length ? h("ul", {}, rows) : null,
@@ -566,7 +575,7 @@ function exposureNotice(x) {
 
 async function financeQueueView() {
   let rows;
-  try { rows = await api("/api/finance"); } catch (e) { if (e.name === "AbortError" || !me) return; return show(h("h1", {}, "Finance queue"), h("p", {}, e.message)); }
+  try { rows = await api("/api/finance"); } catch (e) { if (e.name === "AbortError" || !me) return; return show(h("h1", {}, "Finance queue"), h("p", {}, panelOwned(e.message, PANEL_SUPPORT, "refresh to try again, then tell application support if it continues", e.status))); }
   let exposure = null;
   try { exposure = await api("/api/finance/exposure"); } catch (e) { if (e.name === "AbortError" || !me) return; }
   show(h("h1", {}, "Finance queue"),

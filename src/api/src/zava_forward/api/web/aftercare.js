@@ -212,14 +212,15 @@ function aftercareEvaluatorView(v) {
     h("p", {}, acText(v.sensor_note)));
 }
 
-const AC_UNCONFIRMED = "Saving could not be confirmed. The concern may or may not have been saved. Do not start another record or use the paper route yet. Send again with the same details, which is safe because the same request reference is kept, or ask a colleague to check. Check the concerns list for a receipt first.";
-const AC_EARLIER = "An earlier attempt may have been saved. Send the original details again without changes, or check the concerns list for a receipt, before starting another record or using the paper route.";
+const AC_UNCONFIRMED = "Saving could not be confirmed. The concern may or may not have been saved. Check the concerns list for a receipt first. Do not start another record or use the paper route yet. Owner: you, the person recording. Next action: if there is no receipt, send again with the same details, which is safe because the same request reference is kept, or ask a colleague to check.";
+const AC_EARLIER = "An earlier attempt may have been saved. Send the original details again without changes, or check the concerns list for a receipt, before starting another record or using the paper route. Owner: you, the person recording. Next action: send again or check the receipt now.";
 
 function acRefusal(error, unresolved) {
   const own = error.status === 403
-    ? "Your role cannot do this. Ask a colleague who can, or use the paper route."
+    ? "Your role cannot do this. Owner: a colleague whose role can record concerns. Next action: ask them, or use the paper route."
     : (error.message || "Some details need fixing.");
-  return unresolved ? `${own} ${AC_EARLIER}` : own;
+  const message = error.status === 403 || /Next action:/.test(own) ? own : `${own} Owner: you, the person recording. Next action: correct the fields marked with a problem, then send again.`;
+  return unresolved ? `${message} ${AC_EARLIER}` : message;
 }
 
 function acValidReceipt(receipt, requestId) {
@@ -347,7 +348,7 @@ async function aftercareWorkspaceView() {
     else {
       parts.push(h("h1", { id: "ac-title", tabindex: "-1" }, "Aftercare concerns"),
         h("p", { class: "notice" }, acText(concerns.synthetic_notice)),
-        h("p", { role: "status" }, "Your role can read these concerns but cannot record one. Ask a colleague who can."));
+        h("p", { role: "status" }, "Your role can read these concerns but cannot record one. Owner: a colleague whose role can record concerns. Next action: ask them."));
     }
     parts.push(h("section", { "aria-labelledby": "ac-list-title" },
       h("h2", { id: "ac-list-title" }, `Recorded concerns (${acText(concerns.count)})`),

@@ -4,6 +4,16 @@ const QUALITY_ROLES = ["Quality Inspector", "Retrofit Programme Manager", "Progr
 const SENSOR_ROLES = ["Quality Inspector", "Retrofit Programme Manager"];
 const QUALITY_SOURCES = ["Installer", "Contractor", "Provider submission", "Our own inspection"];
 const WO_OUTCOMES = ["Booked", "Declined by provider", "Resident not available", "No access", "Rebooking needed"];
+// Keeps a message that already names an owner and a next action; otherwise adds both.
+const opsOwned = (message, owner, next, status) => {
+  const m = String(message ?? "").trim().replace(/([^.!?])$/, "$1.");
+  const o = m.indexOf("Owner:");
+  if (o >= 0 && m.indexOf("Next action:") > o) return m;
+  const refused = status >= 400 && status < 500;
+  return `${m} Owner: ${refused ? "your team manager" : owner}. Next action: ${refused ? "follow the advice above, or ask your team manager if you cannot" : next}`;
+};
+const OPS_SUPPORT = "application support";
+const OPS_MANUAL_NEXT = "use the manual route and tell application support if it continues";
 let capacityHistoryBarrier = null;
 let capacityHistoryGeneration;
 const QUALITY_WORDS = { "Submitted": "Waiting for an independent check", "Returned": "Returned: defect to put right", "Fixed, awaiting reinspection": "Fixed, waiting to be checked again",
@@ -41,12 +51,12 @@ function sensorDraftSection(id) {
     box.setAttribute("aria-labelledby", "sensor-drafts-h");
     const kids = [h("h3", { id: "sensor-drafts-h" }, "Sensor review draft (proposed, not approved)")];
     if (v.state === "consent-withheld") {
-      kids.push(h("p", { role: "status" }, `${v.note} Use the manual route: manual-sensor-review.`));
+      kids.push(h("p", { role: "status" }, opsOwned(`${v.note} Use the manual route: manual-sensor-review.`, "the resident's consent owner", "ask the resident liaison whether consent can be recorded, and use the manual route: manual-sensor-review")));
     } else if (!v.drafts.length) {
       kids.push(h("p", { class: "muted" }, "No review draft exists for this home. Use the manual route: manual-sensor-review."));
     } else {
       kids.push(h("ul", {}, v.drafts.map((d) => {
-        if (d.state !== "PROPOSED_UNAPPROVED") return h("li", {}, "A saved draft failed its integrity check and is withheld. Use the manual route: manual-sensor-review.");
+        if (d.state !== "PROPOSED_UNAPPROVED") return h("li", {}, "A saved draft failed its integrity check and is withheld. Use the manual route: manual-sensor-review. Owner: application support. Next action: tell application support, and use the manual route: manual-sensor-review.");
         const c = d.candidate, l = d.lineage;
         return h("li", {},
           h("p", {}, d.label),
@@ -56,7 +66,7 @@ function sensorDraftSection(id) {
     }
     body.replaceChildren(...kids);
   }).catch(() => {
-    body.replaceChildren(h("p", { class: "err", role: "alert" }, "Sensor review drafts are unavailable. Use the manual route: manual-sensor-review."));
+    body.replaceChildren(h("p", { class: "err", role: "alert" }, "Sensor review drafts are unavailable. Use the manual route: manual-sensor-review. Owner: application support. Next action: refresh this home to try again, then tell application support if it continues."));
   });
   return box;
 }
@@ -65,7 +75,7 @@ function sensorPanel(id) {
   const body = h("div", {}, h("p", { role: "status" }, "Loading retained readings..."));
   const box = h("section", { class: "card", id: "sensors" }, h("h2", {}, "Retained sensor readings (synthetic demonstration)"), body);
   if (!SENSOR_ROLES.includes(me.user.role)) {
-    body.replaceChildren(h("p", {}, "Your role does not include indoor readings. Ask the quality team."));
+    body.replaceChildren(h("p", {}, "Your role does not include indoor readings. Ask the quality team. Owner: your team manager. Next action: ask the quality team for the readings you need."));
     return box;
   }
   api(`/api/cases/${encodeURIComponent(id)}/sensors`).then((v) => {
@@ -88,7 +98,7 @@ function sensorPanel(id) {
     kids.push(sensorDraftSection(id));
     body.replaceChildren(...kids);
   }).catch((error) => {
-    body.replaceChildren(h("p", { class: "err", role: "alert" }, `${error.message || "Readings are unavailable."} Use the manual route: manual-sensor-review.`));
+    body.replaceChildren(h("p", { class: "err", role: "alert" }, opsOwned(`${error.message || "Readings are unavailable."} Use the manual route: manual-sensor-review.`, OPS_SUPPORT, "refresh to try again, and use the manual route: manual-sensor-review if it continues", error.status)));
   });
   return box;
 }
@@ -97,14 +107,14 @@ function simulationPanel() {
   const body = h("div", {}, h("p", { role: "status" }, "Loading simulation…"));
   const box = h("section", { class: "card", id: "simulation" }, h("h2", {}, "Public synthetic simulation (not this home)"), body);
   if (!SENSOR_ROLES.includes(me.user.role)) {
-    body.replaceChildren(h("p", {}, "Your role does not include this simulation. Ask the quality team."));
+    body.replaceChildren(h("p", {}, "Your role does not include this simulation. Ask the quality team. Owner: your team manager. Next action: ask the quality team for the result you need."));
     return box;
   }
   const feedback = h("p", { role: "status", "aria-live": "polite" });
   const render = (s) => {
     const kids = [h("p", { class: "muted" }, s.label)];
     if (s.status === "unavailable") {
-      kids.push(h("p", { role: "status" }, `The simulation is unavailable (${s.reason}). ${s.manual_route}`));
+      kids.push(h("p", { role: "status" }, opsOwned(`The simulation is unavailable (${s.reason}). ${s.manual_route}`, OPS_SUPPORT, "refresh to try again, and use the manual route if it continues")));
       return body.replaceChildren(...kids);
     }
     const v = s.view || {};
@@ -135,10 +145,10 @@ function simulationPanel() {
     feedback.textContent = `${label}…`;
     try {
       const r = await api(`/api/assistants/simulation/quality/${action}`, {});
-      feedback.textContent = r.status === "proposal" ? "Proposal stored as unapproved." : r.status === "ready" ? `Stored ${r.added || 0} new simulated readings.` : `Not sent (${r.reason || r.status}). ${r.manual_route || ""}`;
+      feedback.textContent = r.status === "proposal" ? "Proposal stored as unapproved." : r.status === "ready" ? `Stored ${r.added || 0} new simulated readings.` : opsOwned(`Not sent (${r.reason || r.status}). ${r.manual_route || ""}`, OPS_SUPPORT, "refresh to try again, and use the manual route if it continues");
       render(await api("/api/assistants/simulation/quality"));
     } catch (error) {
-      feedback.textContent = `${error.message || "Simulation unavailable."} Use the manual route.`;
+      feedback.textContent = opsOwned(`${error.message || "Simulation unavailable."} Use the manual route.`, OPS_SUPPORT, "refresh to check what was stored, then try again or use the manual route", error.status);
     }
   };
   const observe = h("button", { type: "button", class: "btn" }, "Add Simulated Readings");
@@ -147,7 +157,7 @@ function simulationPanel() {
   ask.addEventListener("click", () => run("request", "Requesting proposal"));
   const controls = h("div", {}, observe, " ", ask, feedback);
   api("/api/assistants/simulation/quality").then(render).catch((error) => {
-    body.replaceChildren(h("p", { class: "err", role: "alert" }, `${error.message || "Simulation unavailable."} Use the manual route.`));
+    body.replaceChildren(h("p", { class: "err", role: "alert" }, opsOwned(`${error.message || "Simulation unavailable."} Use the manual route.`, OPS_SUPPORT, "refresh to try again, and use the manual route if it continues", error.status)));
   });
   return box;
 }
@@ -170,7 +180,7 @@ function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
     });
     const act = async (name, body) => {
       if (name === "quality-fix" && !note.value.trim()) {
-        message.textContent = "Enter the remediation evidence before recording the fix.";
+        message.textContent = "Enter the remediation evidence before recording the fix. Owner: the person recording the fix. Next action: add the photo, document or inspection reference, then record the fix again.";
         note.setAttribute("aria-invalid", "true");
         note.setAttribute("aria-describedby", message.id); note.focus(); return;
       }
@@ -181,7 +191,7 @@ function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
         outcome = await refresh(async () => {
           try { await post(id, name, Object.assign({ index: i }, body)); }
           catch (error) {
-            message.textContent = error.message;
+            message.textContent = opsOwned(error.message, OPS_SUPPORT, "check the recorded history before repeating this change, then tell application support if it continues", error.status);
             message.className = "err";
             message.focus();
             throw error;
@@ -205,7 +215,7 @@ function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
       r.handover && h("p", {}, `Handed over by ${r.handover.by}: ${r.handover.note}`),
       r.aftercare.length > 0 && h("ul", {}, r.aftercare.map((a) => h("li", {}, `${fmtDate(a.at)} ${a.by}: ${a.note}`))),
       (r.state === "Submitted" || r.state === "Fixed, awaiting reinspection") && (canCheck
-        ? h("div", {}, h("p", { class: "muted" }, "You cannot accept work you submitted, recorded or fixed. Nothing is accepted automatically."),
+        ? h("div", {}, h("p", { class: "muted" }, "You cannot accept work you submitted, recorded or fixed. Nothing is accepted automatically. Owner: the independent checker. Next action: ask a different quality inspector to check and accept it."),
           h("div", { class: "row" }, note,
             h("button", { onclick: () => act(r.state === "Submitted" ? "quality-accept" : "quality-reinspect", { result: "pass", note: note.value }) }, "Accept this work"),
             r.state === "Fixed, awaiting reinspection" && h("button", { class: "alt", onclick: () => act("quality-reinspect", { result: "fail", note: note.value }) }, "Still not right")),
@@ -254,7 +264,7 @@ function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
       lists = l;
       if (measures.length) paint();
       else checks.replaceChildren(h("p", { class: "muted" }, "This case has no measures to check yet."));
-    }).catch(error => checks.replaceChildren(h("p", { class: "err", role: "alert" }, `Could not load checklists: ${error.message}. Refresh this case to try again.`)));
+    }).catch(error => checks.replaceChildren(h("p", { class: "err", role: "alert" }, opsOwned(`Could not load checklists: ${error.message}. Refresh this case to try again.`, OPS_SUPPORT, "refresh this case to try again, then tell application support if it continues", error.status))));
     const revision = h("input", { id: "q-revision", type: "number", min: 1 });
     form.append(h("label", { for: "q-measure" }, "Which measure"), measure,
       h("label", { for: "q-revision" }, "Scope revision the evidence covers (see the resident decision panel)"), revision,
@@ -373,7 +383,8 @@ async function capacityView() {
       checkHistory ||= recorded || Boolean(fn && mutationNeedsHistory(e));
       if (checkHistory) capacityHistoryBarrier = capacityHistoryGeneration = {};
       msg.replaceChildren(h("p", { class: "err" }, checkHistory
-        ? `Reload and check work order or package history before another action. ${e.message}` : e.message));
+        ? opsOwned(`Reload and check work order or package history before another action. ${e.message}`, OPS_SUPPORT, "reload and check the work order or package history before another action")
+        : opsOwned(e.message, OPS_SUPPORT, "correct the entries or refresh, then try again", e.status)));
       if (e.capacityLoadFailure || checkHistory) msg.append(h("button", { type: "button", onclick: () => go() }, "Try again"));
       msg.focus();
     }
@@ -384,7 +395,7 @@ async function capacityView() {
     catch (error) {
       if (signal.aborted || !me) throw error;
       const detail = error instanceof TypeError || error.generic ? "" : ` ${error.message}`;
-      error.message = `We could not load ${label}. Try again. If this continues, contact application support.${detail}`;
+      error.message = opsOwned(`We could not load ${label}. Try again. If this continues, contact application support.${detail}`, OPS_SUPPORT, "refresh to try again, then contact application support if it continues", error.status);
       error.capacityLoadFailure = true;
       throw error;
     }
@@ -426,7 +437,7 @@ async function capacityView() {
   const createPackage = () => {
     if (!contractVersion[1].value.trim()) {
       contractVersion[1].setAttribute("aria-invalid", "true");
-      versionError.textContent = "Enter the contract or call-off version before creating the package.";
+      versionError.textContent = "Enter the contract or call-off version before creating the package. Owner: the person creating the package. Next action: type the version, then create the package again.";
       contractVersion[1].focus();
       return;
     }
@@ -520,7 +531,7 @@ function appointmentControls(w, submit) {
     const error = h("span", { id: `${id}-error`, role: "status", "aria-live": "polite", class: "err" });
     const control = h("input", { id, name: id, autocomplete: "off", type, maxlength: 500, value,
       required: required && type !== "checkbox", "aria-describedby": `${id}-error`,
-      oninvalid: () => { error.textContent = control.validationMessage; control.setAttribute("aria-invalid", "true"); },
+      oninvalid: () => { error.textContent = opsOwned(control.validationMessage, "the person filling in this form", "correct this entry, then submit again"); control.setAttribute("aria-invalid", "true"); },
       oninput: () => { error.textContent = ""; control.removeAttribute("aria-invalid"); }
     });
     return [h("label", { for: id }, `${label} (${w.id})`), control, error];
