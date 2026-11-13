@@ -11778,3 +11778,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added `infra/tests/test_container_hosting_completeness.py` (source contract over every declared app and job: limits, replica bounds, scale rules, probes, single revision, rollback path) and `src/api/tests/test_scale_fixture_load_and_restart.py` (separate API process, concurrent load, SIGKILL restart, audit chain check).
 * Recorded a local 60,000-home loopback run in [scale-restart-2026-11-13.json](../architecture/scale-restart-2026-11-13.json) and in the [infra README](../../infra/README.md#separate-process-load-and-restart-run-issue-144-2026-11-13): 20 clients, 62 s, error rate 0, p95 9.5 s (over NFR-002), 622 MiB high-water RSS, audit chain intact after SIGKILL restart.
 * Local only: no Azure, hosted replica, autoscaling or production-scale claim, no criterion ticked, no Bicep change.
+## [2026-11-13] update | Issue #215 alert and chat non-colour cues, Escape and plain language (Refs #215)
+
+* Added a dated note to the [WCAG baseline](research/ux/wcag-conformance-baseline.md) status-messages row and to the API README criterion audit: regulatory alert and cited-lookup states carry a glyph and border shape, plain-language explanations cover outcomes, no-source, doubt and unknown coverage, and Escape restores focus to the lookup summary.
+* Local engineering evidence only (static tests and the browser check with axe 4.10.3). No screen-reader, assistive-technology, conformance or staff comprehension claim; criterion 5 stays unmet.

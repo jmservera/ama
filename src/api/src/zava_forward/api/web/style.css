@@ -103,6 +103,25 @@ textarea{width:100%;min-height:5rem}
 .regulatory{overflow-wrap:anywhere;min-width:0}
 .regulatory .plain-explanation{display:none}
 .regulatory.plain-language .plain-explanation{display:block}
+.regulatory.plain-language li.plain-explanation{display:list-item}
+.regulatory-state{border-left:4px solid currentColor;padding-left:.5rem}
+.regulatory-state:before{margin-right:.4rem;font-weight:700;content:"\2022\00a0" / ""}
+.state-breach-risk{border-left-style:double;border-left-width:6px}
+.state-breach-risk:before{content:"\26A0\00a0" / ""}
+.state-attention:before{content:"\25B2\00a0" / ""}
+.state-unknown{border-left-style:dashed}
+.state-unknown:before{content:"?\00a0" / ""}
+.state-clear:before{content:"\2713\00a0" / ""}
+.state-not-applicable{border-left-style:dotted}
+.state-not-applicable:before{content:"\2212\00a0" / ""}
+.state-answer:before{content:"\2139\00a0" / ""}
+.state-refused{border-left-style:dashed}
+.state-refused:before{content:"\2715\00a0" / ""}
+.state-conflict{border-left-style:double;border-left-width:6px}
+.state-conflict:before{content:"\26A0\00a0" / ""}
+.state-no-source{border-left-style:dotted}
+.state-no-source:before{content:"\2205\00a0" / ""}
+.state-sent:before{content:"\2713\00a0" / ""}
 .regulatory-mode{display:flex;align-items:center;gap:.5rem;min-height:2.75rem}
 .regulatory-mode input{width:1.5rem;height:1.5rem;flex-shrink:0}
 .regulatory-alert,.regulatory-turn{border-top:2px solid var(--line);padding:1rem 0}

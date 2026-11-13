@@ -5393,6 +5393,21 @@ chat-unavailable run. It judges nothing: complete records are not WCAG acceptanc
 | Doubt and no-source states explicitly designed | Met in bounded synthetic slice | Persisted exercise inbox receipt, visible unsupported/missing-source state, disabled/outage text and manual owner route. No real owner notification or approval claimed. |
 | Comprehension tested with repairs, housing and grants staff | Unmet / Not run | Protocol only. Actual staff testing is unavailable and remains required before use. |
 
+Update 2026-11-13 (#215, criterion 3 software and markup slice): every alert
+state (`breach risk`, `attention`, `unknown`, `clear`, `not applicable`), chat
+outcome (`answer`, `refused`, `conflict`), the no-source held item, the sent
+doubt route and the unknown-coverage notice now carry a text label plus a
+decorative glyph and a distinct left-border shape (double, dashed, dotted or
+solid), so no state relies on colour. Plain-language mode adds explanations for
+each chat outcome, the no-source state, the doubt route and unknown alert
+coverage. Escape closes the cited lookup disclosure and returns focus to its
+summary. Evidence: `tests/test_regulatory_a11y_cues.py` (static) and new
+assertions in the local browser check (computed glyph and border shape, Escape
+focus restoration; 21 states, axe 4.10.3 executed). This is engineering
+evidence only: screen reader behaviour, assistive technology and manual
+acceptance are not tested, WCAG conformance is not claimed, and criterion 5
+(staff comprehension) is unmet and not run.
+
 No issue checkboxes are changed by this implementation. Real delegates,
 verified applicable sources, operational acceptance and the ADR 0005 measured
 chat-value ship test remain open.
