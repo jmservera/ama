@@ -8,6 +8,9 @@ ms.topic: reference
 
 ## Scope and evidence
 
+Dated references below to `mvp/` paths describe the code as it stood on
+2026-10-29; those paths are retired and preserved only in archive `v0.21.0`.
+
 For the current presentation, pitch and demo inventory, use the
 [capstone working set](../../capstone/README.md) and
 [source/technology register](../../capstone/source/README.md).

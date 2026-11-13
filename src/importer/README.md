@@ -6,7 +6,7 @@ ms.date: 2026-11-09
 ms.topic: reference
 ---
 
-The importer (`zava_forward.importer`) is the quarantining import workload described in ADR 0001. The former `mvp/` application had no import service, so the former `mvp/README.md` had no importer content to move in M6 of #199. The project holds the Excel transition library of #80 (below), a `python -m zava_forward.importer` entry point and its tests.
+The importer (`zava_forward.importer`) is the quarantining import workload described in ADR 0001. The former `mvp/` application (archive `v0.21.0`) had no import service, so the former `mvp/README.md` had no importer content to move in M6 of #199. The project holds the Excel transition library of #80 (below), a `python -m zava_forward.importer` entry point and its tests.
 
 * Fixtures: `evals/document_form_fixtures.json` (document-form fixtures, registered in `src/agents/evals/registry.json`) with its test in `tests/`.
 * Boundary: the project imports `zava_forward.core` only (the document controls and scanner live in `core`, `doc_controls`); no project imports it. Dependency rule tests are in `tests/test_dependency_rule.py`.

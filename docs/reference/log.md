@@ -11768,3 +11768,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Audited the resident choice and service issue screens and recorded the result in the [WCAG baseline](research/ux/wcag-conformance-baseline.md#resident-engagement-screens-status-2026-11-13-232): row headers added to resident tables, textual state meaning added to the choice screen's service request table, and new rendered checks for table headers, queue-state axe and 320 px keyboard reach.
 * Automated, synthetic-data evidence only. No screen-reader or human testing, no conformance claim, and the #232 criterion is not ticked.
+## [2026-11-13] update | Legacy reference and link verification for cleanup (Refs #203)
+
+* Added `tools/check-legacy-references.py` with tests: retired `mvp/` and `prototype/` paths must name archive `v0.21.0`, `zavaforward_mvp` and `properwarm_mvp` stay in dated records or guards, and changed Markdown relative links must resolve. Repointed the two architecture diagrams' source locators to `src/` and added the tag beside retained history in live pages, including the gap analysis, Decision 1 specification and synthetic data README.
+* Criteria 1 and 2 only, as a file-class check; not a line-by-line proof of the generated inventory, no all-link audit of historical debt, no tick or closure.

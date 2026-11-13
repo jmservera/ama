@@ -90,7 +90,7 @@ fallback keeps case access safe but cannot supply a successful delivery gate.
 
 ## Context
 
-The `mvp/` application is a Python standard-library server. It keeps all state
+The `mvp/` application (retired; archive `v0.21.0`) is a Python standard-library server. It keeps all state
 in one JSON file on local disk, writes uploads to local disk, signs staff in
 with one shared password, draws every open case on a Leaflet map using
 OpenStreetMap public tiles, and calls Azure OpenAI through a managed identity.
@@ -966,7 +966,7 @@ Proposal:
   CI (as ADR 0001 already notes).
 * Secrets: none by default; managed identities for SQL, Blob and the model.
 * CI (extends `.github/workflows/mvp-validation.yml`, which already compiles,
-  runs `unittest discover` in `mvp/tests`, checks the JavaScript syntax and
+  runs `unittest discover` in `mvp/tests` (archive `v0.21.0`), checks the JavaScript syntax and
   refuses committed data): add a SQL integration job against a SQL Server
   container, the role-by-field matrix test, the ranking golden test, a
   restart-persistence test, an image build with vulnerability scan that fails

@@ -34,7 +34,7 @@ explicit_package_bases = true
 namespace_packages = true
 files = ["src", "tests"]
 
-# Moved unchanged from mvp/ (ADR 0006 move-not-copy); formatting and typing follow after the migration.
+# Moved unchanged from mvp/ (archive v0.21.0; ADR 0006 move-not-copy); formatting and typing follow after the migration.
 [tool.ruff.format]
 exclude = ["src/zava_forward/agents/ai_eval.py", "tests/{chat_fixture,test_ai_eval,test_ai_identity,test_chat_fixture,test_eval_registry}.py"]
 

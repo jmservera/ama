@@ -1360,7 +1360,7 @@ operational authority, complete event capture or independent acceptance.
 
 The shared domain library (`zava_forward.core`): stores (JSON, SQLite, Azure SQL), ledger, law store,
 rule cards, governance, continuity, chat storage and isolation, and the synthetic tools. It imports no
-workload. The sections below are moved unchanged from the former `mvp/README.md` (ADR 0006, issue #199,
+workload. The sections below are moved unchanged from the former `mvp/README.md` (archive `v0.21.0`; ADR 0006, issue #199,
 M6); the staff-facing behaviour and configuration are in [api](../api/README.md).
 
 Test paths named `tests/...` are in `src/core/tests/` unless they name another project:
@@ -3922,7 +3922,7 @@ legal advice or approval. Seed metadata is `src/core/src/zava_forward/core/law/l
 
 ## Rule cards (ADR 0005, phase 2)
 
-`src/core/src/zava_forward/core/rulecards.py` (moved from `mvp/` in M1 of #199) holds versioned rule cards in append-only tables
+`src/core/src/zava_forward/core/rulecards.py` (moved from `mvp/` in M1 of #199; archive `v0.21.0`) holds versioned rule cards in append-only tables
 (`rule_card_version`, `rule_card_event`, `rule_card_review`, `rule_card_review_event`,
 `rule_card_check`) with a draft, approved,
 active, held, retired lifecycle. A card is drafted by the `rule_author` role and only
