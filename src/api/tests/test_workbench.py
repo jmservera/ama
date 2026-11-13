@@ -3,6 +3,7 @@
 import json
 import unittest
 from pathlib import Path
+from typing import Any
 
 from zava_forward.api.workbench import navigation
 
@@ -26,7 +27,7 @@ class WorkbenchNavigation(unittest.TestCase):
         manifest = json.loads(MANIFEST.read_text())
         self.assertEqual(len(manifest["profiles"]), 11)
         self.assertEqual(len(manifest["workflows"]), 9)
-        self.assertEqual(manifest["widths"], [320, 390, 768, 1024, 1280])
+        self.assertEqual(manifest["widths"], [320, 360, 390, 768, 1024, 1280])
         self.assertIsNone(manifest["default_selection"])
         identities = {item["email"] for item in manifest["roles"]}
         for item in manifest["profiles"] + manifest["workflows"]:
@@ -64,20 +65,42 @@ class WorkbenchNavigation(unittest.TestCase):
                 self.assertTrue(set(default["ids"]) <= set(item["fixture"]) or not default["ids"])
         self.assertEqual(with_default, 8)
 
-    def test_supported_devices_stay_proposed_and_match_checked_widths(self) -> None:
+    def test_owner_decided_device_widths_match_checked_widths(self) -> None:
         manifest = json.loads(MANIFEST.read_text())
         devices = manifest["supported_devices"]
-        self.assertEqual(devices["status"], "proposed")
+        self.assertEqual(devices["status"], "decided")
         self.assertEqual(devices["decider"], "owner")
-        self.assertEqual(devices["field_mobile"], "undecided")
-        self.assertEqual(sorted(item["width"] for item in devices["classes"]), manifest["widths"])
-        self.assertIn(320, [item["width"] for item in devices["classes"]])
+        self.assertEqual(devices["decided_on"], "2026-11-13")
+        supported = {
+            item["class"]: item["width"]
+            for item in devices["classes"]
+            if item["class"] in ("desktop", "tablet", "mobile")
+        }
+        self.assertEqual(supported, {"desktop": 1280, "tablet": 768, "mobile": 360})
+        self.assertTrue({1280, 768, 360, 320} <= set(manifest["widths"]))
+        self.assertEqual(
+            sorted(item["width"] for item in devices["classes"]), sorted(manifest["widths"])
+        )
         proposal = MANIFEST.parents[3] / devices["proposal"]
-        self.assertTrue(proposal.is_file())
         text = proposal.read_text()
-        self.assertIn("Proposed, not decided", text)
+        self.assertIn("Decided by the owner on 2026-11-13", text)
         for width in manifest["widths"]:
             self.assertIn(f"| {width} |", text)
+
+    def test_every_role_navigation_omits_the_role_simulator(self) -> None:
+        manifest = json.loads(MANIFEST.read_text())
+        self.assertEqual(len(manifest["roles"]), 8)
+        self.assertFalse(self.simulator_links(manifest["roles"]))
+        injected = [{"code": "X", "navigation": ["#/", "#/simulator"]}]
+        self.assertEqual(self.simulator_links(injected), ["X"])
+
+    @staticmethod
+    def simulator_links(roles: list[dict[str, Any]]) -> list[str]:
+        return [
+            role["code"]
+            for role in roles
+            if any("simulator" in link for link in role["navigation"])
+        ]
 
 
 if __name__ == "__main__":
