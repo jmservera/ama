@@ -511,5 +511,49 @@ class FinanceAuthorityWiringTests(unittest.TestCase):
         self.assertEqual(caught.exception.result.outcome, gates.UNKNOWN)
 
 
+class GateBoundaryTests(unittest.TestCase):
+    def assertSafe(self, result: gates.GateResult, outcomes: tuple[str, ...]) -> None:
+        self.assertIn(result.outcome, outcomes)
+        self.assertTrue(isinstance(result.reason, str) and result.reason.strip())
+
+    def test_non_string_or_non_iterable_items_are_unknown(self) -> None:
+        shapes: list[Any] = [[None], [1], ["ok", 2], 5, "text", [""]]
+        for bad in shapes:
+            with self.subTest(bad=bad):
+                self.assertSafe(gates.evidence_gate(bad, "Owner"), (gates.UNKNOWN,))
+                self.assertSafe(gates.quality_gate(bad, "Owner"), (gates.UNKNOWN,))
+                self.assertSafe(gates.booking_gates({}, bad)[2], (gates.UNKNOWN,))
+        self.assertSafe(gates.evidence_gate(["loft"], "Owner"), (gates.FAIL,))
+        self.assertTrue(gates.evidence_gate([], "Owner", on="2026-12-01").passed)
+
+    def test_blank_or_non_string_reasons_never_raise(self) -> None:
+        for bad in ("", "  ", None, 5, ["x"]):
+            for state in (None, False):
+                with self.subTest(bad=bad, state=state):
+                    for result in (
+                        gates.eligibility_gate(state, bad, "Owner"),  # type: ignore[arg-type]
+                        gates.authority_gate(state, bad),  # type: ignore[arg-type]
+                        gates.finance_gate(state, bad),  # type: ignore[arg-type]
+                        gates.capacity_gate(state, bad),  # type: ignore[arg-type]
+                    ):
+                        self.assertSafe(result, (gates.UNKNOWN, gates.FAIL))
+        for err in (gates.FinanceGateError("", None), gates.AuthorityGateError(" ", False)):
+            self.assertTrue(err.result.reason.strip())
+
+    def test_safety_release_malformed_inputs_are_unknown(self) -> None:
+        hold = {"accountable_role": "Building Safety Liaison"}
+        actor = {"role": "Building Safety Liaison", "email": "a@x.test", "code": "A", "oid": "o"}
+        shapes: list[Any] = [None, 5, "a@x.test", [3], [["x"]]]
+        for bad in shapes:
+            with self.subTest(recorders=bad):
+                self.assertSafe(gates.safety_release_gate(hold, actor, bad), (gates.UNKNOWN,))
+        for who in ({**actor, "oid": 0}, {**actor, "code": []}, {**actor, "email": 7}):
+            with self.subTest(actor=who):
+                self.assertSafe(
+                    gates.safety_release_gate(hold, who, ["b@x.test"]), (gates.UNKNOWN,)
+                )
+        self.assertSafe(gates.safety_release_gate(hold, actor, ["b@x.test"]), (gates.PASS,))
+
+
 if __name__ == "__main__":
     unittest.main()

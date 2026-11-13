@@ -103,13 +103,12 @@ class GrantFixture:
         with selected.lock:
             return copy.deepcopy(selected.cases["ZF-1"])
 
-    def staff(self: Any, user: dict[str, Any]) -> None:
+    def staff(self: Any, user: dict[str, Any], key: str | None = None) -> None:
+        key = key or user["email"]
         if self.sql:
-            self.store.db.execute(
-                "UPDATE staff SET body=? WHERE email=?", (json.dumps(user), user["email"])
-            )
+            self.store.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(user), key))
         else:
-            self.store.staff[user["email"]] = copy.deepcopy(user)
+            self.store.staff[key] = copy.deepcopy(user)
 
 
 class GrantChecks:
@@ -431,6 +430,75 @@ class GrantChecks:
                     verdict = grant_eligibility_verdict(recorded, people[1], people[2])
                     self.assertEqual(verdict.outcome, "unknown")
                     self.assertTrue(verdict.reason)
+
+    def test_every_non_string_identity_field_is_unknown_on_every_party(self: Any) -> None:
+        good: dict[str, Any] = {"email": "a@x.test", "code": "A1", "oid": "o1"}
+        others: list[dict[str, Any]] = [
+            {"email": "b@x.test", "code": "B1", "oid": "o2"},
+            {"email": "c@x.test", "code": "C1", "oid": "o3"},
+        ]
+        values: list[Any] = [0, False, [], {}, 0.0, 123, True, ["bad"], {"a": 1}]
+        for who in range(3):
+            for key in ("email", "code", "oid"):
+                for value in values:
+                    with self.subTest(who=who, key=key, value=value):
+                        people = [dict(good), *(dict(o) for o in others)]
+                        people[who][key] = value
+                        recorded = {
+                            "outcome": "Eligible",
+                            "source": "SYN",
+                            "role": "Grants and Evidence Officer",
+                            "identity": people[0],
+                        }
+                        verdict = grant_eligibility_verdict(recorded, people[1], people[2])
+                        self.assertEqual(verdict.outcome, "unknown")
+                        self.assertIn("malformed", verdict.reason)
+
+    def test_missing_or_none_oid_is_still_a_valid_identity(self: Any) -> None:
+        recorded = {
+            "outcome": "Eligible",
+            "source": "SYN",
+            "role": "Grants and Evidence Officer",
+            "identity": {"email": "a@x.test", "code": "A1"},
+        }
+        people = (
+            {"email": "b@x.test", "code": "B1", "oid": None},
+            {"email": "c@x.test", "code": "C1"},
+        )
+        self.assertEqual(
+            grant_eligibility_verdict(recorded, *people, on="2026-12-01").outcome, "pass"
+        )
+
+    def test_grant_approve_refuses_non_string_identity_without_raising_type_errors(
+        self: Any,
+    ) -> None:
+        self.to_claimable()
+        self.verify()
+        values: list[Any] = [0, False, [], {}, 0.0, 123, ["bad"], {"a": 1}]
+        for key in ("email", "code", "oid"):
+            for value in values:
+                for party in ("proposer", "approver", "recorder"):
+                    with self.subTest(key=key, value=value, party=party):
+                        self.propose_submit()
+                        with self.store.lock:
+                            g = self.store._case("ZF-1")["grants"][0]
+                            if party == "proposer":
+                                g["pending"]["identity"][key] = value
+                            elif party == "recorder":
+                                g["eligibility"]["identity"][key] = value
+                            self.store.save()
+                        approver = self.b
+                        if party == "approver":
+                            approver = dict(self.b)
+                            approver[key] = value
+                            self.staff(approver, self.b["email"])
+                        with self.assertRaises((ValueError, PermissionError)) as caught:
+                            self.grant(approver, "grant_approve", id="GR-1")
+                        self.assertNotIsInstance(caught.exception, (AttributeError, TypeError))
+                        self.assertEqual(self.grant_state(), "Claimable")
+                        self.staff(self.b)
+                        self.grant(self.a, "grant_withdraw", id="GR-1")
+                        self.verify()
 
     def test_proposer_text_and_non_officers_cannot_assert_eligibility(self: Any) -> None:
         self.to_claimable()

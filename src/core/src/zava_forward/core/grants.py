@@ -13,7 +13,7 @@ from datetime import UTC, datetime
 from . import controls as k
 from . import gates
 from .change_provenance import _actor
-from .finance import _identity
+from .finance import _identity, identity_well_formed
 
 GRANT_FLOW = {"Not recorded": ("Opportunity",), "Opportunity": ("Award",), "Award": ("Claimable",), "Claimable": ("Submitted",),
               "Submitted": ("Accepted", "Rejected"), "Accepted": ("Cash received",), "Rejected": ("Claimable",), "Cash received": ()}
@@ -83,8 +83,13 @@ def _same_person(a, b):
 
 
 def _complete(identity):
-    return (isinstance(identity, dict) and all(_norm(identity.get(key)) for key in ("email", "code"))
-            and isinstance(identity.get("oid") or "", str))
+    return identity_well_formed(identity)
+
+
+def _malformed(identity):
+    return isinstance(identity, dict) and any(
+        identity.get(key) is not None and not isinstance(identity.get(key), str)
+        for key in ("email", "code", "oid"))
 
 
 def grant_eligibility_verdict(recorded, proposer=None, approver=None, on=None):
@@ -100,6 +105,8 @@ def grant_eligibility_verdict(recorded, proposer=None, approver=None, on=None):
     elif outcome == "Eligible" and evidenced:
         if rec.get("role") != ELIGIBILITY_VERIFIER:
             reason = "Eligibility was not recorded by the Grants Officer, so it is unverified."
+        elif any(_malformed(party) for party in (identity, proposer, approver)):
+            reason = "Eligibility recorder, proposer or approver identity is malformed, so independence is unverified."
         elif not (_complete(identity) and _complete(proposer) and _complete(approver)):
             reason = "Eligibility recorder or approver identity is unknown, so independence is unverified."
         elif _same_person(identity, proposer) or _same_person(identity, approver):

@@ -64,6 +64,34 @@ class Flows:
         self.fin(self.geo, "commit_raise", supplier="Test Ltd", contract="C-1", work_order="WO-1", measure="Loft insulation", amount=commit, quantity=10)
         self.fin(self.pm1, "commit_approve", id="COM-1")
 
+    def test_non_string_identity_refuses_signoff_without_type_errors(self):
+        from zava_forward.core.finance import _fin, _independent
+        values = [0, False, [], {}, 0.0, 123, ["bad"], {"a": 1}]
+        for key in ("email", "code", "oid"):
+            for value in values:
+                with self.subTest(key=key, value=value):
+                    self.fin(self.geo, "budget_propose", amount=100)
+                    with self.store.lock:
+                        _fin(self.store._case("ZF-1"))["budget"]["proposed_identity"][key] = value
+                        self.store.save()
+                    with self.assertRaises(PermissionError):
+                        self.fin(self.pm1, "budget_approve")
+                    with self.assertRaises(PermissionError):
+                        _independent(self.store, self.pm1, "x@example.test", dict(email="a@x.test", code="A", oid=value), "act")
+                    with self.assertRaises(PermissionError):
+                        _independent(self.store, {**self.pm1, key: value}, "x@example.test", dict(email="a@x.test", code="A", oid="o"), "act")
+                    with self.store.lock:
+                        _fin(self.store._case("ZF-1"))["budget"] = None
+                        self.store.save()
+        self.assertEqual(_independent(self.store, self.pm1, "x@example.test", dict(email="a@x.test", code="A"), "act")["code"], "A")
+
+    def test_invoice_match_never_pairs_malformed_values(self):
+        from zava_forward.core.finance import match_invoice
+        c = dict(finance=dict(budget=None, commitments=[dict(status="Approved", supplier=5, work_order=5, measure="m", quantity=1, amount=1, id="C")],
+                              invoices=[]))
+        inv = dict(id="I", supplier=5, work_order=5, ref="r", lines=[dict(measure="m", quantity=1, amount=1, milestone_ref="x")])
+        self.assertTrue(any(e["code"] == "no_commitment" for e in match_invoice(c, inv)))
+
     # FR-018
     def test_budget_and_commitment_need_a_different_approver(self):
         self.fin(self.geo, "budget_propose", amount="10,000")
