@@ -1,0 +1,27 @@
+{
+  "target_revision": "cbb5d01a40f0c8b812574510b0f805cf9889832a",
+  "outer_shell": "/bin/sh",
+  "explicit_launcher_shell": "bash",
+  "bash_syntax_exit": 0,
+  "attempts": [
+    {
+      "attempt": "attempt-1",
+      "expected_exit": 17,
+      "actual_exit": 17,
+      "literal_brief_preserved": true,
+      "stdout": "stub stderr\nstub stdout\n",
+      "stderr": ""
+    },
+    {
+      "attempt": "attempt-2",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "literal_brief_preserved": true,
+      "stdout": "stub stderr\nstub stdout\n",
+      "stderr": ""
+    }
+  ],
+  "append_only_log": "historical-sentinel\n--- launch attempt-1\nstub stderr\nstub stdout\nexit=17\n--- launch attempt-2\nstub stderr\nstub stdout\nexit=0\n",
+  "scope": "Extracted script and explicitly quoted shell arguments; full tmux command interpolation not exercised.",
+  "real_copilot_model_calls": 0
+}
