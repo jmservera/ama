@@ -149,10 +149,47 @@ def _set(case: dict[str, Any], path: str, value: Any) -> None:
     case[leaf] = value
 
 
+def _gated(
+    model: Any,
+    authorization: dict[str, Any] | None,
+    tokens_per_call: int | None,
+    spend_per_call: float | None,
+    ledger: Any,
+    clock: Callable[[], str] | None,
+) -> Any:
+    """Only the exact scripted stand-in or an AuthorizedModel runs ungated; any other model is
+    wrapped, and refused when the bounds it needs are missing, so the gate cannot be skipped."""
+    if model is None:
+        return Scripted()
+    if type(model) in (Scripted, AuthorizedModel):
+        return model
+    if tokens_per_call is None or spend_per_call is None:
+        raise ValueError("an actual model needs authorization, tokens_per_call and spend_per_call")
+    return AuthorizedModel(
+        model,
+        authorization,
+        tokens_per_call=tokens_per_call,
+        spend_per_call=spend_per_call,
+        ledger=ledger,
+        clock=clock if clock is not None else utc_now,
+    )
+
+
 class Run:
     """One scenario: its own store, user, thread and scripted model."""
 
-    def __init__(self, sc: dict[str, Any], workdir: str, model: Any = None) -> None:
+    def __init__(
+        self,
+        sc: dict[str, Any],
+        workdir: str,
+        model: Any = None,
+        *,
+        authorization: dict[str, Any] | None = None,
+        tokens_per_call: int | None = None,
+        spend_per_call: float | None = None,
+        ledger: CallLedger | None = None,
+        clock: Callable[[], str] | None = None,
+    ) -> None:
         self.sc = sc
         role = sc.get("role", "Retrofit Coordinator")
         data = dict(staff=[dict(USER, role=role)], cases=[_case(c) for c in sc["cases"]])
@@ -160,7 +197,7 @@ class Run:
         path.write_text(json.dumps(data))
         self.store = Store(str(path))
         self.iso = ChatIsolation(self.store, env=dict(SYNTHETIC_REFS))
-        self.model = model if model is not None else Scripted()
+        self.model = _gated(model, authorization, tokens_per_call, spend_per_call, ledger, clock)
         self.panel = ChatPanel(self.iso, self.model)
         self.user: dict[str, Any] = dict(USER, role=role)
         self.case_id = sc["cases"][0]["id"]
@@ -613,6 +650,7 @@ class CallLedger:
         self.calls = 0
         self.tokens = 0
         self.spend = 0.0
+        self.halted = ""
         self.lock = threading.Lock()
 
 
@@ -620,12 +658,22 @@ def utc_now() -> str:
     return datetime.now(UTC).isoformat()
 
 
+def _positive(value: Any) -> bool:
+    return _amount(value) and value > 0
+
+
 class AuthorizedModel:
     """Fail-closed gate in front of an actual model provider.
 
     Every dispatch is checked with `call_authorization` first; a blocked call never reaches the
-    provider. The conservative per-call token and spend bounds are reserved before dispatch and
-    kept if the provider fails, because a failed call may still have been billed.
+    provider. The conservative per-call token and spend bounds must be positive and are reserved
+    before dispatch and kept if the provider fails, because a failed call may still have been
+    billed. Dispatch is serialised on the ledger so reconciliation cannot race another call.
+
+    Provider-reported usage (`ModelReply.usage`, or `ModelUnavailable.usage`) is reconciled after
+    each call: the charge is the larger of reserved and reported, spend being priced at the rate
+    the declared bounds imply. A reply whose usage or retries breach the limits is withheld and
+    the ledger halts, so every later call is blocked.
     """
 
     def __init__(
@@ -638,6 +686,10 @@ class AuthorizedModel:
         ledger: CallLedger | None = None,
         clock: Callable[[], str] = utc_now,
     ) -> None:
+        if not (_positive(tokens_per_call) and isinstance(tokens_per_call, int)):
+            raise ValueError("tokens_per_call must be a positive integer")
+        if not _positive(spend_per_call):
+            raise ValueError("spend_per_call must be a finite positive amount")
         self.provider = provider
         self.auth = auth
         self.tokens_per_call = tokens_per_call
@@ -649,9 +701,20 @@ class AuthorizedModel:
         self.script: dict[str, Any] | None = None
         self.case = ""
 
-    def __call__(self, system: str, prompt: str) -> str:
+    def expand(self, ref: str) -> str:
+        return ref if "/" in ref else f"{self.case}/{ref}"
+
+    def __call__(self, system: str, prompt: str) -> Any:
         ledger = self.ledger
         with ledger.lock:
+            if ledger.halted:
+                raise ModelUnavailable("call-not-authorised: " + ledger.halted)
+            if not (
+                _positive(self.tokens_per_call)
+                and isinstance(self.tokens_per_call, int)
+                and _positive(self.spend_per_call)
+            ):
+                raise ModelUnavailable("call-not-authorised: per-call bounds are not positive")
             verdict = call_authorization(
                 self.auth,
                 1,
@@ -667,8 +730,54 @@ class AuthorizedModel:
             ledger.calls += 1
             ledger.tokens += self.tokens_per_call
             ledger.spend += self.spend_per_call
-        self.prompts.append(prompt)
-        return self.provider(system, prompt)  # type: ignore[no-any-return]
+            self.prompts.append(prompt)
+            try:
+                reply = self.provider(system, prompt)
+            except ModelUnavailable as error:
+                self._reconcile(error.usage, error.calls)
+                raise
+            self._reconcile(getattr(reply, "usage", None), getattr(reply, "calls", 1), reply)
+            return reply
+
+    def _reconcile(self, usage: Any, calls: Any, reply: Any = None) -> None:
+        """Charge max(reserved, reported); halt and withhold the reply on any breach."""
+        ledger = self.ledger
+        extra_calls = max(calls - 1, 0) if _count(calls) else 0
+        extra_tokens = 0
+        extra_spend = 0.0
+        if usage is not None:
+            total = usage.get("total_tokens") if isinstance(usage, dict) else None
+            if not (_count(total) and isinstance(total, int)):
+                ledger.halted = "provider usage is not readable"
+                raise self._breach(usage, calls, reply)
+            extra_tokens = max(total - self.tokens_per_call, 0)
+            priced = total * self.spend_per_call / self.tokens_per_call
+            extra_spend = max(priced - self.spend_per_call, 0.0)
+        ledger.calls += extra_calls
+        ledger.tokens += extra_tokens
+        ledger.spend += extra_spend
+        verdict = call_authorization(
+            self.auth,
+            0,
+            0,
+            now=self.clock(),
+            used_calls=ledger.calls,
+            used_tokens=ledger.tokens,
+            projected_spend=0.0,
+            used_spend=ledger.spend,
+        )
+        if verdict["outcome"] != "within-limit":
+            ledger.halted = "reported usage breached limits: " + "; ".join(verdict["reasons"])
+            raise self._breach(usage, calls, reply)
+
+    def _breach(self, usage: Any, calls: Any, reply: Any) -> ModelUnavailable:
+        return ModelUnavailable(
+            "usage-exceeds-authorisation",
+            calls=calls if _count(calls) and calls > 0 else 1,
+            usage=usage if isinstance(usage, dict) else None,
+            meter_id=getattr(reply, "meter_id", None),
+            meter_root=getattr(reply, "meter_root", None),
+        )
 
 
 GATE_CATEGORIES = ("prompt-injection", "memory-poisoning", "permission", "out-of-scope")
