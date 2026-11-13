@@ -631,10 +631,32 @@ case and stops the batch. The report (JSON, or Markdown with `--markdown`)
 gives count, min, p50, mean, p90 and max tokens per proposal, token and USD
 totals, the spend-authority reference and an evidence label: `measured held-out
 batch` only for live calls, otherwise `dry-run simulation - not measured
-evidence`. The command line wires no provider, so `--execute-live` exits 2; a
-live run needs a caller to inject `AgentWorker.provider_call` and requires
-separate owner action. No live call has been made. Tests:
-`tests/test_heldout_batch.py` (synthetic fixtures).
+evidence`. `--execute-live` is opt-in: it needs an explicit `--endpoint`
+(`https://<resource>.openai.azure.com` or `.cognitiveservices.azure.com`),
+`--deployment`, `--model` (the authorized model the deployment serves) and an
+authorization that passes validation (at most USD 5.00) and carries matching
+`endpoint` and `deployment` fields (the token is only sent to the authorized
+resource); otherwise it exits 2 or refuses before any token request or network
+call. The adapter
+(`heldout_aoai.py`, stdlib HTTP) takes a bearer token from
+`az account get-access-token` (default `--auth az-cli`) or a managed identity
+(`--auth managed-identity`, needs `azure-identity`), sends one non-streaming
+chat completion per proposal with `max_tokens` and `temperature` 0, never
+retries or follows redirects, and never logs or stores the token or response
+text. A failed call, a response `model` that is not `--model` (optionally with
+a `-YYYY-MM-DD` suffix), or
+a missing cached-token count is charged at the worst case and stops the batch.
+The proposals file is a JSON list of `{id, prompt, system?}` from the frozen
+held-out set; none is committed here. Before a run the owner confirms the
+dated per-1M rates for the deployment, that `max_tokens` is honoured on API
+version 2024-10-21, and runs one live batch per authorization (the spend
+counter is per process). No live call has been made. Tests:
+`tests/test_heldout_batch.py` and `tests/test_heldout_aoai.py` (synthetic
+fixtures, mocked HTTP). Example:
+`python -m zava_forward.agents.heldout_batch --authorization auth.json
+--manifest manifest.json --proposals proposals.json --execute-live --endpoint
+https://aif-cutover-test-rzsrg.openai.azure.com --deployment standard --model
+gpt-4.1-nano`.
 
 ### Meaningful human-review protocol (#223; proposed, Not run)
 
