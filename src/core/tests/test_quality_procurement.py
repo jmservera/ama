@@ -2321,6 +2321,7 @@ class HandoverBlockersTest(unittest.TestCase):
         case = dict(
             quality=[dict(measure="Loft insulation", checklist="Loft insulation", state="Accepted", items=full)],
             hazards=[],
+            home=dict(tenure="Social rent"),
         )
         self.assertEqual(
             [b["reason"].split(".")[0] for b in handover_blockers(case)], ["Resident scope is unknown"]
