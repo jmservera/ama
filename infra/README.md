@@ -4618,9 +4618,17 @@ no Azure command that mutates state was run. Read-only metadata check at
 max 1, `ZF_DEMO_EXPIRES_AT` `2027-01-31T23:59:00Z`, all eight jobs Manual. The
 source cap stays `2028-01-01T00:00:00Z` (owner decision 2026-11-03); the live
 window is the earlier, narrower value. Moving the live SQL constraint, rows and
-app expiry to 2028-01-01 remains **Pending** a separate owner confirmation of
-that exact value. The live SQL constraint was not re-probed, and no external
-HTTP sign-in check was run.
+app expiry to 2028-01-01 remained **Pending** a separate owner confirmation of
+that exact value at 2026-11-04. The live SQL constraint was not re-probed, and no
+external HTTP sign-in check was run. The 2027-01-31 value above is the 2026-11-04
+observation, not the current window.
+
+Read-only observation at 2026-11-13 (Refs #521, #133, #152, #360, #440): the
+`ca-resident-demo` environment variable `ZF_DEMO_EXPIRES_AT` now carries
+`2028-01-01T00:00:00Z`. This is observed app configuration only, not verified
+runtime behaviour. Live SQL constraint and row verification remains **Pending**:
+the SQL side was not probed, no external sign-in check was run, and #521 is not
+closed by this metadata.
 
 #### Rollback test fixture correction (2026-11-11, Refs #521)
 
