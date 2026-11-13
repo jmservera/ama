@@ -73,3 +73,47 @@ The text above is preserved unedited; these notes supersede it where they differ
 * Ancestry and tier (P48C-05). On the final candidate, re-run `git merge-base --is-ancestor` for `aebd381d9` and `837da4fde` against the candidate and re-search for 233 symbols; stop with proof on any ancestry or dependency. Inspect the actual final diff hunks, and escalate to the full tier for any workflow, gate-tool, Dockerfile, dependency-manifest, permission, secret, deployment, security-control or unresolved-impact change.
 * Forms status (P48C-06). The forms result now exists: the initial run failed 1 of 74 (500 on `/api/ai/report`, `FileNotFoundError` because the non-editable archive lacks the `evals/` golden file), then a diagnostic run with `ZF_AI_GOLDEN` pointed at the archived golden file passed 74 of 74, no failures or skips. This is an environment-only diagnosis; it counts as the required forms evidence only if the final run documents that archive and `ZF_AI_GOLDEN` setup against the exact final input, and it is not an unconditional final-head pass.
 * ADR wording (P48C-07). The checkpoint preserves each actual document status and its scope as read at the checkpoint (for example ADR 0005 Accepted for synthetic development only; the BRD, PRD and ADR 0003 to 0007 blobs equal main `bb9f450`). The phrase "still draft or in review" is not used as a blanket claim and no further approval is inferred.
+
+## Amendment 0055: caller-scope correction and C3 integration conditions (2026-11-13)
+
+PLAN ONLY, tracking files only. Everything above, including the original A6 plan (source-only `f128...`) and its actual Revise critique with P48C-01..07, is preserved unedited. This amendment supersedes earlier text only where it differs, and only prospectively. It waives no failing check and erases no adverse history.
+
+### A55-01 Root correction of the "full API" requirement
+
+The original caller brief (`ux-partial-plan-0048.txt`) named "home/baselineprogramme/fullApiTests". That meant the FULL LOCAL `test_mvp.ApiTests` CLASS (6 methods) inside the home, baseline programme and ApiTests lane. The earlier table rows "Home, baseline programme, full API" and "ApiTests (28 tests) and the full api suite", and the unresolved-gate bullet "Full api suite actual result", misread this as a new gate over the entire api project suite. That was a caller-scope misinterpretation, not a failing check that is being waived. The whole-api-suite gate is withdrawn before it becomes a publication condition. The home lane is `HomeCaseApiTests`, `ProgrammeScreen` and the full `ApiTests` class (28 tests in the 0045 run, which is the actual count and not changed here). The 0045 home lane result (28 run, OK) is an actual new result on `9085e85c6` and is not final-head acceptance.
+
+The validation tier stays the standing owner focused modified and impact tier. There is no default full gate. A full api suite or any extra selector is required only for a distinct, source-backed impact that is identified explicitly in the final diff review (for example an api route, auth or SQL change); no full campaign is invented.
+
+### A55-02 Required impact-selected validators on the final candidate
+
+All run against exact archived final-input identity, with actual outcomes recorded. Failures and diagnostics are preserved; no test is deleted, relaxed or waived.
+
+* Core 72: all 10 original selector classes with exact input and selector proof. Reuse of the original ROOT result `rpi-149-core-validation-0025-result.json` (10 selectors, 72 tests, 0 skips, SQLite plus mocked portability, NOT actual MSSQL) is allowed only when the archived inputs are identical: `src/core` tree `93de8839f422d3d502f7f6197bedaf68e45f12a7`, `src/README.md` blob `b6e13012a836b53d1d04ae9ce6c021c331cbfb82`, `README.md` blob `f47c6be00a06ffaa54b561d89fb8bff1fe792434`. Root already proved these three identities equal for the archived inputs at `9085e85c6`; the final candidate must be re-compared, and any difference means a fresh run. The SQLite, queue and funding selectors required by P48C-02 are mapped to the enumerated selectors honestly; any selector not actually present runs fresh. Mocked or SQLite results are never reported as MSSQL.
+* Forms 74: the four forms classes with the documented archive plus `ZF_AI_GOLDEN` input path per P48C-06, on the final input lineage.
+* Home, baseline programme and ApiTests: `HomeCaseApiTests`, `ProgrammeScreen`, full `ApiTests` class.
+* Role 19: the local `RoleScreens` and `RoleScreenConformance` classes (19 tests) plus the existing role browser check. The two recorded failures stay actual until a reviewed C3 candidate actually fixes them.
+* Finance, design and content impact selectors: required only if the final source differs in those areas.
+* Synthetic 51: the four classes `GeneratedDatasetTests`, `NeedsInventoryTests`, `ScenarioManifestTests`, `DeterminismAuditTests`, rerun if any lane input differs (P48C-03).
+* Four browser journeys (`held_form_download`, `programme_paging`, `home_case`, `regulatory_ux_check`) plus the existing role browser check.
+* Configured lint and types (core and api `ruff check`, `ruff format --check`, `mypy`).
+
+### A55-03 C3 candidate and integration conditions
+
+Facts recorded as of 2026-11-13: native `96-impact-c3-0052` is correcting two role contract failures (the approved read-only freshness POST versus the blanket no-POST expectation, and accessible focus restoration versus the single-timer expectation). It works in a separate `9085e85c6`-based worktree, with one C3 of five cycles using the ORIGINAL 423 UI and backend 2236 states and two spent. The older whole-96 unknown is preserved. No actual fix or Pass exists yet.
+
+* The current `9085e85c6` head is NOT publishable. The A6 plan source-only `f128...` stays immutable.
+* Publication needs an actual reviewed clean C3 candidate (reviewed against the original role contract tests, which are not rewritten to fit), normal integration of that candidate into the exclusive parent, a FRESH final source freeze, and the impact-selected validators of A55-02 on the new identity with explicit input-identity mapping.
+* A `9085e85c6` Pass or diagnostic is not reused after any source change unless an input-identity proof shows the lane inputs are identical.
+* This plan task does not fix, merge or adopt any source. The C3 author is not instructed to adopt main.
+
+### A55-04 Merged 1498 and current main
+
+PR 1498 actually merged 2026-11-13T00:53:04Z; main is `c5bfac6eeca7f6180588a3ffdad124bfb14d0943`. This supersedes P48 condition 7 and the "unmerged sibling 1498 is not adopted" wording prospectively, and makes the earlier `bb9f450f` snapshot historical. The root permits a LATER final integration author to normally merge actual current main after C3 acceptance, with no new parent deferral, retarget or rewrite. This plan task merges no product source. Every input that changed on main (AI harness, README, tests, original RPI records) is compared for final validation compatibility at integration, and the old `bb9f450f` base claims stay historical. The full tier is triggered only by actual new permission, SQL, security, deployment, dependency-manifest or control changes.
+
+### A55-05 Unchanged and retained gates
+
+* The release stays the separately named PARTIAL independent UX release, not the complete A2. 233 is neither admitted nor deferred, the original full candidate and Review are immutable, and the five-spent 233 extension is unavailable, which is no approval.
+* No epic, human, resident, assistive-technology, Finance, live, full or MSSQL acceptance is recorded, and no new source pool is created.
+* Before the respective publication gates: actual final original RPI Review, a fresh independent exact-head assessment, the checkpoint, hosted checks all green and MERGEABLE, a clean candidate, the four RPI areas and the log proof.
+* Standing coordinator guarded merge authority is unchanged. No new human merge approval gate is invented for run-owned PRs; the named human acceptance ACs stay open.
+* Final ADR status is read per blob, with no blanket draft claim. PR and squash message are Refs-only with empty `closingIssuesReferences`, and #83 stays OPEN; no history rewrite.
