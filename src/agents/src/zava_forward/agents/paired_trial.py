@@ -40,6 +40,13 @@ def _number(value: Any) -> bool:
     return isinstance(value, int | float) and not isinstance(value, bool) and isfinite(value)
 
 
+def _non_negative(value: Any) -> bool:
+    try:
+        return _number(value) and value >= 0
+    except OverflowError:
+        return False
+
+
 def valid_observation(row: Mapping[str, Any]) -> str | None:
     """Return the reason an observation cannot be scored, or None."""
     for key in ("participant", "task"):
@@ -125,9 +132,25 @@ def cost_per_accepted_check(
     missing = [f"{key} missing" for key in COST_INPUTS if not inputs.get(key)]
     if accepted <= 0:
         missing.append("no human-accepted chat checks to divide by")
-    price, usage = inputs.get("price_source") or {}, inputs.get("usage") or {}
-    missing += [f"price_source.{key} missing" for key in PRICE_KEYS if price.get(key) is None]
-    missing += [f"usage.{key} missing" for key in USAGE_KEYS if usage.get(key) is None]
+    sections: dict[str, Mapping[str, Any]] = {}
+    for name, keys in (("price_source", PRICE_KEYS), ("usage", USAGE_KEYS)):
+        raw = inputs.get(name)
+        section: Mapping[str, Any] = {}
+        if isinstance(raw, Mapping):
+            section = raw
+        elif raw:
+            missing.append(f"{name} not a mapping")
+        sections[name] = section
+        missing += [f"{name}.{key} missing" for key in keys if section.get(key) is None]
+    price, usage = sections["price_source"], sections["usage"]
+    if not missing:
+        numeric = ("input_per_million", "output_per_million"), USAGE_KEYS
+        missing += [
+            f"{name}.{key} not a non-negative number"
+            for name, keys in zip(("price_source", "usage"), numeric, strict=True)
+            for key in keys
+            if not _non_negative(sections[name][key])
+        ]
     cost: float | None = None
     if not missing:
         try:
@@ -135,8 +158,11 @@ def cost_per_accepted_check(
                 usage["input_tokens"] * price["input_per_million"]
                 + usage["output_tokens"] * price["output_per_million"]
             ) / 1_000_000
-        except TypeError:
-            missing.append("price or usage values not numeric")
+        except OverflowError:
+            missing.append("price or usage values too large to cost")
+        if cost is not None and not isfinite(cost):
+            cost = None
+            missing.append("price or usage values too large to cost")
     result: dict[str, Any] = dict(
         cost="Unknown",
         ai_cost_per_accepted_check="Unknown",

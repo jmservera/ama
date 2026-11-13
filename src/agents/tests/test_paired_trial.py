@@ -138,6 +138,57 @@ class PairedTrial(unittest.TestCase):
             cost_per_accepted_check(0, COST, NOW)["missing_inputs"],
         )
 
+    def assert_unknown(self, cost_inputs: dict[str, Any], expected: str) -> None:
+        out = cost_per_accepted_check(3, cost_inputs, NOW)
+        self.assertEqual(out["ai_cost_per_accepted_check"], "Unknown")
+        self.assertEqual(out["cost"], "Unknown")
+        self.assertIn(expected, out["missing_inputs"])
+        self.assertNotIn("authority_decision", out)
+
+    def test_cost_non_mapping_sections_are_unknown_and_named(self) -> None:
+        for name in ("price_source", "usage"):
+            for bad in ("text", ["x"], 5, True):
+                with self.subTest(name=name, bad=bad):
+                    broken = copy.deepcopy(COST)
+                    broken[name] = bad
+                    self.assert_unknown(broken, f"{name} not a mapping")
+            falsy_values: list[Any] = [0, "", [], False]
+            for falsy in falsy_values:
+                with self.subTest(name=name, falsy=falsy):
+                    broken = copy.deepcopy(COST)
+                    broken[name] = falsy
+                    self.assert_unknown(broken, f"{name} missing")
+
+    def test_cost_missing_nested_keys_are_named(self) -> None:
+        for name, keys in (
+            ("price_source", ("id", "currency", "input_per_million", "output_per_million")),
+            ("usage", ("model_calls", "input_tokens", "output_tokens")),
+        ):
+            for key in keys:
+                with self.subTest(name=name, key=key):
+                    broken = copy.deepcopy(COST)
+                    del broken[name][key]
+                    self.assert_unknown(broken, f"{name}.{key} missing")
+
+    def test_cost_non_numeric_negative_or_huge_values_are_unknown(self) -> None:
+        bad_values = ("2.0", True, float("nan"), float("inf"), -1, 10**400)
+        for name, keys in (
+            ("price_source", ("input_per_million", "output_per_million")),
+            ("usage", ("model_calls", "input_tokens", "output_tokens")),
+        ):
+            for key in keys:
+                for bad in bad_values:
+                    with self.subTest(name=name, key=key, bad=bad):
+                        broken = copy.deepcopy(COST)
+                        broken[name][key] = bad
+                        self.assert_unknown(broken, f"{name}.{key} not a non-negative number")
+
+    def test_cost_overflowing_product_is_unknown(self) -> None:
+        broken = copy.deepcopy(COST)
+        broken["price_source"]["input_per_million"] = 1e308
+        broken["usage"]["input_tokens"] = 10**6
+        self.assert_unknown(broken, "price or usage values too large to cost")
+
     def test_cost_stays_unknown_outside_owner_authority(self) -> None:
         over = copy.deepcopy(COST)
         over["authority"]["budget_limit"] = 0.1
