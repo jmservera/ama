@@ -161,6 +161,7 @@ resource queueDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-prev
   name: 'to-log-analytics'
   properties: {
     workspaceId: workspaceId
+    logAnalyticsDestinationType: 'Dedicated'
     logs: [{ categoryGroup: 'audit', enabled: true }]
     metrics: [{ category: 'Transaction', enabled: true }]
   }

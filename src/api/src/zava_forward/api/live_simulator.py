@@ -23,6 +23,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Protocol
 
+from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 from zava_forward.core.synthetic import live_readings as lr
 from zava_forward.core.synthetic.run_plan import (
     B1_DAILY_MESSAGES,
@@ -526,6 +527,7 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
     parser.add_argument("--batch-size", type=int, default=Limits.batch_size)
     args = parser.parse_args(list(argv))
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(message)s")
+    install_diagnostic_redaction()
     limits = Limits(max_per_second=args.max_per_second, batch_size=args.batch_size)
     try:
         sink = _sink(args, env)

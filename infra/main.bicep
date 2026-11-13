@@ -28,6 +28,10 @@ param budgetStartDate string = utcNow('yyyy-MM-01')
 param enableCandidateMonitoringAlerts bool = false
 @description('Non-secret reference to separate monitoring activation approval. Empty or whitespace keeps candidates disabled; a string is not approval evidence by itself.')
 param monitoringApprovalReference string = ''
+@description('Also enable the agent-tasks poison-queue arrival candidate. Needs enableCandidateMonitoringAlerts and monitoringApprovalReference; defaults disabled until the StorageQueueLogs signal is verified.')
+param enablePoisonQueueAlertCandidate bool = false
+@description('Also enable the AI limit-breach candidate. Needs enableCandidateMonitoringAlerts and monitoringApprovalReference; defaults disabled until owners and limits are approved (OD-51).')
+param enableAiLimitAlertCandidate bool = false
 @description('IoT Hub tier for simulated in-use monitoring (ADR 0003 decision 6, issue 140).')
 @allowed(['B1'])
 param iotHubSku string = 'B1'
@@ -659,6 +663,9 @@ module operationalMonitoring 'modules/operationalMonitoring.bicep' = {
     ] : []) : []
     monthlyBudget: monthlyBudget
     budgetName: budget.name
+    storageAccountId: storage.outputs.id
+    enablePoisonQueueAlerts: enablePoisonQueueAlertCandidate
+    enableAiLimitAlerts: enableAiLimitAlertCandidate
     enableCandidateAlerts: enableCandidateMonitoringAlerts
     approvalReference: monitoringApprovalReference
   }

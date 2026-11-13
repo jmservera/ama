@@ -1,4 +1,9 @@
-"""Content-free consumption and financial evidence in the existing assistant ledger."""
+"""Content-free consumption and financial evidence in the existing assistant ledger.
+
+`AI_LIMIT_BREACH` and `AI_USAGE` console lines are a non-authoritative operational signal for
+monitoring: they carry only closed identifiers and counts, and may include work a caller's outer
+transaction later rolls back. The ledger remains the financial source.
+"""
 
 from __future__ import annotations
 
@@ -11,10 +16,11 @@ from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 from decimal import Decimal, localcontext
 from typing import Any, Protocol
 
+LOG = logging.getLogger(__name__)
 SCHEMA = "ai-consumption-v1"
 PARTITION = "ai-consumption"
 MAX_EVENTS = 10000
@@ -373,6 +379,7 @@ class Consumption:
     def _event(self, db: Any, kind: str, **fields: Any) -> None:
         if kind == "alert":
             fields["at"] = self.port.now(db)
+            LOG.warning("AI_LIMIT_BREACH reason=%s route=%s", fields["reason"], fields["route"])
         self.port.event(db, PARTITION, schema=SCHEMA, kind=kind, **fields)
 
     @staticmethod
@@ -778,6 +785,7 @@ class Consumption:
         if outcome not in ("returned", "timeout", "provider-unavailable"):
             raise ValueError("Closed provider outcome required.")
         opaque(rid)
+        meter: tuple[str, str, int, str, str] | None = None
         with self._scope(db) as db:
             records = self._read(db)
             reservation = next(
@@ -818,6 +826,13 @@ class Consumption:
                 held=reason is not None,
                 returned_model=reference(safe_model) if safe_model is not None else None,
             )
+            meter = (
+                reservation["capability"],
+                datetime.fromtimestamp(self.port.now(db), UTC).strftime("%Y-%m"),
+                (used["total_tokens"] or 0) if used else 0,
+                "known" if used else "unknown",
+                outcome,
+            )
             if reason:
                 self._event(
                     db,
@@ -828,6 +843,10 @@ class Consumption:
                     reason=reason,
                     route="workflow-only",
                 )
+        if meter:
+            LOG.info(
+                "AI_USAGE capability=%s period=%s calls=1 tokens=%d usage=%s outcome=%s", *meter
+            )
 
     def publish_output(
         self, root: str, output: str, *, eligible: bool, db: Any = None

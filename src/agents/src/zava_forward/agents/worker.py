@@ -18,6 +18,8 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
+from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
+
 from zava_forward.agents.dispatch import AgentWorker, ResultSink, TaskQueue, run_once
 from zava_forward.agents.runtime import (
     HEARTBEAT_MAX_AGE_SECONDS,
@@ -78,6 +80,7 @@ def main(argv: list[str] | None = None) -> int:
     """`serve` runs the queue worker, `health` checks it, no argument prints the version."""
     import sys
 
+    install_diagnostic_redaction()
     args = sys.argv[1:] if argv is None else argv
     heartbeat = Path(os.environ.get("ZF_STATE", "/state")) / HEARTBEAT_NAME
     if args[:1] == ["health"]:

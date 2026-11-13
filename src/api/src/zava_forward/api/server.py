@@ -14,6 +14,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
+from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, controls, form_export, form_review, forms, profile
 
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
@@ -1613,6 +1614,7 @@ class _Server(ThreadingHTTPServer):
 
 
 def main() -> None:
+    install_diagnostic_redaction()
     password = os.environ.get("ZF_PASSWORD") or secrets.token_urlsafe(9)
     try:
         store = open_store()
