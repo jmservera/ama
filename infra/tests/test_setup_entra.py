@@ -1552,6 +1552,78 @@ class SetupTests(unittest.TestCase):
                 self.assertEqual(self.fake.auth["login"]["tokenStore"], token_store)
                 self.assertNotIn("FICTIONAL-RESOLVED-KV", self.output.getvalue())
 
+    def test_expired_keyvault_credential_is_never_reused_and_azure_guard_blocks_app_store(self):
+        stored = {"name": "entra-" + CLIENT.replace("-", "") + "-kv",
+                  "keyVaultUrl": "https://fictional-vault.vault.azure.net/secrets/entra-kv",
+                  "identity": "managed-identity"}
+        app = {**self.fake.app, "tags": {
+            SETUP.STORE_TAG: "keyvault", "zava-forward-credential-name": stored["name"]},
+            "properties": {**self.fake.app["properties"], "configuration": {"secrets": [stored]}}}
+        auth = {"identityProviders": {"azureActiveDirectory": {"registration": {
+            "clientId": CLIENT, "clientSecretSettingName": stored["name"]}}}}
+        args = SETUP.parser().parse_args(["--yes"])
+        now = datetime(2030, 1, 1, tzinfo=timezone.utc)
+        for expiry, reusable in (("2029-12-31T23:59:59Z", False), ("2030-01-01T00:00:00Z", False),
+                                 ("2030-01-01T00:00:01Z", True)):
+            with self.subTest(expiry=expiry):
+                registration = {"appId": CLIENT, "passwordCredentials": [
+                    {"displayName": stored["name"], "endDateTime": expiry}]}
+                with patch.object(SETUP, "datetime", wraps=datetime) as clock:
+                    clock.now.return_value = now
+                    name, needed = SETUP.secret_reference(
+                        self.fake, self.fake, app, registration, auth, args, True)
+                self.assertEqual(name, stored["name"] if reusable else None)
+                self.assertEqual(needed, not reusable)
+        self.assertFalse(self.fake.writes)
+        azure = SETUP.parser().parse_args(["--yes", "--run-in-azure"])
+        for tags, secrets, selected, store in (
+                ({SETUP.STORE_TAG: "app"}, [stored], None, None),
+                ({}, [{"name": stored["name"], "value": "x"}], None, None),
+                ({}, [stored], {"name": "plain", "value": "x"}, None),
+                ({}, [stored], None, "app")):
+            with self.subTest(tags=tags, store=store, selected=selected):
+                guarded = SETUP.parser().parse_args(["--yes", "--run-in-azure"] + (
+                    ["--secret-store", store] if store else []))
+                candidate = {"tags": tags, "properties": {"configuration": {"secrets": secrets}}}
+                with self.assertRaisesRegex(SETUP.SetupError, "requires Key Vault storage"):
+                    SETUP.azure_credential_guard(candidate, auth, guarded, selected)
+        SETUP.azure_credential_guard(app, auth, azure, stored)
+        self.assertEqual(azure.secret_store, "keyvault")
+
+    def test_new_keyvault_credential_preserves_mixed_secret_references_in_patch(self):
+        for shape in ("full", "names-only", "omitted-kv"):
+            with self.subTest(shape=shape):
+                self.fake = FakeAzure()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                references, listed = self.mixed_secret_inventory()
+                if shape == "names-only":
+                    listed[:2] = [{"name": r["name"]} for r in references]
+                elif shape == "omitted-kv":
+                    del listed[:2]
+                with self.secret_response({"value": listed}):
+                    self.assertEqual(self.invoke("--create-secret", "--vault-identity", "managed-identity"), 0,
+                                     self.output.getvalue())
+                patches = [body for method, url, body in self.fake.writes if method == "PATCH"
+                           and url == ARM_APP and "configuration" in body.get("properties", {})]
+                self.assertEqual(len(patches), 1)
+                payload = patches[0]["properties"]["configuration"]["secrets"]
+                for inventory in (payload, self.fake.app["properties"]["configuration"]["secrets"]):
+                    for reference in references:
+                        self.assertIn(reference, inventory)
+                    self.assertIn({"name": "preserved", "value": "preserved-private-value"}, inventory)
+                    self.assertIn({"name": "empty", "value": ""}, inventory)
+                    created = inventory[-1]
+                    self.assertEqual(created["identity"], "managed-identity")
+                    self.assertTrue(created["keyVaultUrl"].startswith("https://fictional-vault.vault.azure.net/"))
+                    self.assertNotIn("value", created)
+                    self.assertEqual(len(inventory), 5)
+                    for entry in inventory:
+                        self.assertEqual("keyVaultUrl" in entry, "identity" in entry)
+                        self.assertEqual("keyVaultUrl" in entry, "value" not in entry)
+                self.assertEqual(self.fake.auth["login"]["tokenStore"]["azureBlobStorage"],
+                                 {"sasUrlSettingName": "token-sas"})
+                self.assertEqual(self.invoke("--check"), 0, self.output.getvalue())
+
     def test_unsafe_secret_inventory_fails_before_password_or_auth_write(self):
         for shape in ("missing-array", "null-array", "not-array", "invalid-item",
                       "duplicate", "missing-name", "missing-app", "missing-value",
