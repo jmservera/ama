@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench WCAG 2.2 Conformance Baseline
 description: Proposed target level and scope, first audit, automated check coverage, manual check record template and accessibility statement draft for the workbench (issue #151)
-ms.date: 2026-11-11
+ms.date: 2026-11-13
 ms.topic: reference
 ---
 
@@ -214,6 +214,18 @@ To ask for another format or report a problem, contact: owner to supply (O-4).
 ## Programme screens status (2026-11-04, #230)
 
 Criteria 1, 2, 3 and 5 of #230 are ticked on merged PRs #662, #781, #818, #854, #931 and #969. Criterion 4 (WCAG 2.2 baseline, textual state meaning, keyboard navigation) stays unmet: the automated keyboard and axe checks are merged, but manual WCAG 2.2 review and assistive-technology testing by named people are not done (#151, #155). Automated checks are not conformance evidence. No code slice can supply this.
+
+## Resident engagement screens status (2026-11-13, #232)
+
+Audit of the resident choice and update queue (`resident-choice`) and the resident service issue queue (`resident-service-issues`) for #232 criterion 4. Source read and rendered at 1280 and 320 px in Chromium; no screen-reader, voice-control or human testing.
+
+* Fixed (1.3.1): the first column of every resident-screen table (home, measure, request, issue) is now a `th scope="row"` row header. Before, only column headers existed. Other screens' tables are unchanged.
+* Fixed (textual state meaning): the service request table on the resident choice screen now shows "State and meaning" with the same plain-language meaning as the service issue screen, not a bare status word.
+* Added checks: rendered header, caption and row-header assertions; a pinned axe 4.10.3 scan of the queue state with no home selected (previously only the selected-home state); Tab reach of every table region at 320 px for both screens. Unit tests assert the same table structure.
+* Observed, no change needed: native links and no write or contact controls; skip link and focus on `main`; visible two-tone focus; captions and scoped column headers; status text for pause, withdrawal and commitment; no `aria-invalid` site added.
+* Not tested: screen-reader output, table navigation by assistive technology, comprehension of the wording, other browsers. Axe `color-contrast` stays incomplete at 320 px on some states because axe cannot resolve the background; element overlap was checked and not found. The shared sidebar and panel headings use flat `h2` levels and are unchanged.
+
+Automated results are engineering evidence on constructed data, not WCAG 2.2 conformance, assistive-technology acceptance or a tick of the #232 criterion, which only the owner can give. Human validation belongs to #155.
 
 ## UX epic status (2026-11-04, #149)
 

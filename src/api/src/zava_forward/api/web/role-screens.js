@@ -23,15 +23,17 @@ const screenUnknown = (reason, owner, action) => h("div", { class: "blocked" },
 const screenWithheld = (items) => screenPanel("Not shown for this role",
   h("p", {}, "These items exist in the wider case but are not displayed on this screen. They are listed so that their absence is not read as nothing recorded. Withholding is not authorisation: your access is unchanged and no record changes."),
   h("ul", {}, items.map((item) => h("li", {}, item))));
-function screenTable(label, headings, rows, limit = 50, cell = (value) => screenValue(value)) {
+function screenTable(label, headings, rows, limit = 50, cell = (value) => screenValue(value), rowHeader = false) {
   return h("div", {},
     rows.length > limit && h("p", { role: "status" }, `Showing the first ${limit} of ${rows.length} records. Open the case workspace to inspect the remaining evidence. This is not a complete readiness check.`),
     rows.length ? h("div", { class: "table-scroll", role: "region", "aria-label": label, tabindex: 0 },
       h("table", {}, h("caption", {}, label),
         h("thead", {}, h("tr", {}, headings.map((title) => h("th", { scope: "col" }, title)))),
-        h("tbody", {}, rows.slice(0, limit).map((row) => h("tr", {}, row.map((value, column) => h("td", {}, cell(value, column))))))))
+        h("tbody", {}, rows.slice(0, limit).map((row) => h("tr", {}, row.map((value, column) => h(rowHeader && column === 0 ? "th" : "td", rowHeader && column === 0 ? { scope: "row" } : {}, cell(value, column))))))))
       : h("p", { class: "empty" }, "No records supplied. This does not establish readiness."));
 }
+// Resident screens name each record in the first column, so it is a row header for table navigation.
+const screenRecordTable = (label, headings, rows, limit = 50) => screenTable(label, headings, rows, limit, undefined, true);
 function registerRoleScreen(screen) {
   if (roleScreens.has(screen.id)) throw new Error(`Duplicate specialist screen: ${screen.id}`);
   roleScreens.set(screen.id, screen);
@@ -755,7 +757,7 @@ registerRoleScreen({
           ? h("div", {},
             h("p", {}, `Read-only. Shows ${items.length} of ${screenValue(queue.total)} open homes, in home ID order, as your role may see them. A paused or withdrawn measure is listed separately from contact and access. Open a home for the full version history.`),
             choiceDownload(queue),
-            screenTable("Choice and update commitments by home",
+            screenRecordTable("Choice and update commitments by home",
               ["Home", "Measure choices (latest version)", "Paused or withdrawn", "Update commitment"],
               items.map(choiceQueueRow), Infinity))
           : screenUnknown("The cross-home queue could not be loaded.", "Resident liaison officer or programme manager", "Reload, or open each home from the case queue")),
@@ -773,12 +775,12 @@ registerRoleScreen({
         h("p", {}, `Home scope: ${c.id} only.`)),
       screenPanel("Choice for each measure",
         h("p", {}, "Each answer belongs to one measure and one scope version. Not recorded means no answer is known. Contact or access is never read as a yes."),
-        screenTable("Measure choices by version",
+        screenRecordTable("Measure choices by version",
           ["Measure", "Scope version", "Current answer", "Latest recorded answer", "Readiness"],
           measures.map(choiceMeasure))),
       screenPanel("Paused or withdrawn by the resident",
         h("p", {}, "A pause or withdrawal is the resident's decision about one measure. It is not a contact attempt, a missed visit or an access need."),
-        stopped.length ? screenTable("Measures paused or withdrawn",
+        stopped.length ? screenRecordTable("Measures paused or withdrawn",
           ["Measure", "State and scope answered", "In their words", "Restart needs"],
           stopped.map((m) => {
             const v = choiceStopVersion(m) || choiceLatest(m);
@@ -794,9 +796,9 @@ registerRoleScreen({
           ["Version", update.version], ["Meaning", "A commitment is not a message. Nothing is sent or marked received here."]])
           : screenUnknown("No update commitment is recorded for this home.", "Case owner or resident-workflow manager", "Record a commitment in the case workspace")),
       screenPanel("Service requests and access needs (separate from choice)",
-        screenTable("Service requests and contact needs",
-          ["Request", "Route", "Status", "Contact needs", "Next update"],
-          requests.map((r) => [r.id, r.route, r.status, (r.accessibility || ["Unknown"]).join(", "), r.next_update]))),
+        screenRecordTable("Service requests and contact needs",
+          ["Request", "Route", "State and meaning", "Contact needs", "Next update"],
+          requests.map((r) => [r.id, r.route, serviceStatus(r), serviceNeeds(r), r.next_update]))),
       screenPanel("Choice comes before offered capacity",
         h("p", {}, "A recorded choice, pause or withdrawal takes precedence over any offered contractor slot. An offered slot is not a booking and not a promise to the resident. Offered capacity is shown on the Package queue screen, not here.")),
       screenWithheld(["Resident phone, email and postal contact history (shown only as a safe route reference)",
@@ -1580,7 +1582,7 @@ registerRoleScreen({
   summary(entries) {
     return screenPanel("Open service issues across this page of homes",
       h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Contact needs are shown with each issue. Open a home for the full record."),
-      screenTable("Open service issues by home",
+      screenRecordTable("Open service issues by home",
         ["Home", "Open issues and next update", "Contact needs", "Update commitment"],
         entries.map(serviceQueueRow), Infinity));
   },
@@ -1593,13 +1595,13 @@ registerRoleScreen({
         h("p", {}, `Home scope: ${c.id} only.`)),
       screenPanel("Service issues",
         h("p", {}, "Each issue shows the route, the named owners, the contact needs the resident gave and the next update date. A complaint or independent review has a different service owner and redress owner. A pause or withdrawal of a measure is shown on the resident choice screen, not here."),
-        requests.length ? screenTable("Service issues and contact needs",
+        requests.length ? screenRecordTable("Service issues and contact needs",
           ["Issue", "Route", "Summary and outcome wanted", "State and meaning", "Owners", "Contact needs", "Representative reference", "Next update", "Review link"],
           requests.map((r) => [r.id, r.route, `${screenValue(r.summary)}. Wanted: ${screenValue(r.desired_outcome)}`, serviceStatus(r), serviceOwner(r),
             serviceNeeds(r), r.representative_ref, screenStamp(r.next_update), serviceReview(r)]))
           : h("p", { class: "empty" }, "No service issue recorded. This does not establish that the resident has none.")),
       requests.some((r) => (r.history || []).length) ? screenPanel("Response history",
-        screenTable("Recorded response steps",
+        screenRecordTable("Recorded response steps",
           ["Issue", "State", "Recorded by", "Recorded", "Note"],
           requests.flatMap((r) => (r.history || []).map((x) => [r.id, x.status, x.by, screenStamp(x.at), x.note])))) : null,
       screenPanel("Linked update commitment",
