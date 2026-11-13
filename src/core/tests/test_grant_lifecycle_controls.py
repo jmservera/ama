@@ -17,8 +17,6 @@ from zava_forward.core.grants import GRANT_STATES, require_authority
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, Store
 
-ELIGIBLE = dict(eligibility="Eligible", eligibility_source="SYN eligibility")
-
 
 def designate(user: dict[str, Any]) -> dict[str, Any]:
     """Explicit fixture authority only, never a production staff default."""
@@ -56,6 +54,9 @@ class GrantFixture:
         self.b = designate(person("PM-B", "Retrofit Programme Manager", oid="syn-b"))
         self.alias = designate(person("PM-ALIAS", "Retrofit Programme Manager", oid="syn-a"))
         self.same_code = designate(dict(self.b, email="same-code@example.test"))
+        self.a_identity = {k: self.a[k] for k in ("email", "code", "oid")}
+        self.b_identity = {k: self.b[k] for k in ("email", "code", "oid")}
+        self.geo = person("GEO-V", "Grants and Evidence Officer", oid="syn-geo")
         self.plain = person("PM-PLAIN", "Retrofit Programme Manager", oid="syn-plain")
         data["staff"] = [
             *copy.deepcopy(STAFF),
@@ -63,6 +64,7 @@ class GrantFixture:
             self.b,
             self.alias,
             self.same_code,
+            self.geo,
             self.plain,
         ]
         self.seed.write_text(json.dumps(data))
@@ -80,6 +82,11 @@ class GrantFixture:
 
     def grant(self: Any, user: dict[str, Any], action: str, **body: Any) -> None:
         self.store.grant_action(user, "ZF-1", dict(action=action, **body))
+
+    def verify(self: Any, outcome: str = "Eligible", source: str = "SYN eligibility") -> None:
+        self.grant(
+            self.geo, "grant_eligibility", id="GR-1", eligibility=outcome, eligibility_source=source
+        )
 
     def opportunity(self: Any) -> None:
         self.grant(
@@ -216,6 +223,8 @@ class GrantChecks:
                 )
         self.assertEqual(self.record(), before)
         for target in ("Award", "Claimable", "Submitted", "Accepted", "Cash received"):
+            if target == "Submitted":
+                self.verify()
             self.grant(
                 self.a,
                 "grant_propose",
@@ -223,7 +232,6 @@ class GrantChecks:
                 to=target,
                 source="SYN " + target,
                 amount=1 if target == "Cash received" else None,
-                **(ELIGIBLE if target == "Submitted" else {}),
             )
             self.grant(self.b, "grant_approve", id="GR-1")
         grant = self.record(self.open())["grants"][0]
@@ -361,67 +369,110 @@ class GrantChecks:
             self.grant(self.a, "grant_propose", id="GR-1", to=target, source="SYN " + target)
             self.grant(self.b, "grant_approve", id="GR-1")
 
-    def propose_submit(self: Any, **eligibility: Any) -> None:
-        self.grant(
-            self.a, "grant_propose", id="GR-1", to="Submitted", source="SYN submit", **eligibility
-        )
+    def propose_submit(self: Any) -> None:
+        self.grant(self.a, "grant_propose", id="GR-1", to="Submitted", source="SYN submit")
 
     def grant_state(self: Any) -> str:
         with self.store.lock:
             return str(self.store._case("ZF-1")["grants"][0]["state"])
 
+    def refused_submit(self: Any) -> None:
+        self.propose_submit()
+        with self.assertRaises(ValueError):
+            self.grant(self.b, "grant_approve", id="GR-1")
+        self.assertEqual(self.grant_state(), "Claimable")
+        self.grant(self.a, "grant_withdraw", id="GR-1")
+
     def test_submission_needs_recorded_eligibility_pass(self: Any) -> None:
         self.to_claimable()
-        self.propose_submit(eligibility="Eligible", eligibility_source="SYN eligibility check")
-        self.grant(self.b, "grant_approve", id="GR-1")
-        self.assertEqual(self.grant_state(), "Submitted")
-        recorded = self.record()["grants"][0]["history"][-1]["eligibility"]
-        self.assertEqual(recorded["outcome"], "Eligible")
-
-    def test_not_eligible_and_unknown_never_submit_and_can_be_corrected(self: Any) -> None:
-        self.to_claimable()
-        cases: list[dict[str, Any]] = [
-            {},
-            dict(eligibility="Not assessed"),
-            dict(eligibility="Not eligible", eligibility_source="SYN check"),
-        ]
-        for evidence in cases:
-            with self.subTest(evidence=evidence):
-                if self.record()["grants"][0]["pending"]:
-                    self.grant(self.a, "grant_withdraw", id="GR-1")
-                self.propose_submit(**evidence)
-                with self.assertRaises(ValueError):
-                    self.grant(self.b, "grant_approve", id="GR-1")
-                self.assertEqual(self.grant_state(), "Claimable")
-        self.grant(self.a, "grant_withdraw", id="GR-1")
-        self.propose_submit(eligibility="Eligible", eligibility_source="SYN corrected check")
-        self.grant(self.b, "grant_approve", id="GR-1")
-        self.assertEqual(self.grant_state(), "Submitted")
-
-    def test_malformed_pending_eligibility_is_unknown_not_a_fallback(self: Any) -> None:
-        self.to_claimable()
-        self.propose_submit(eligibility="Eligible", eligibility_source="SYN check")
-        for bad in (None, {}, dict(outcome="Eligible", source=""), dict(outcome="Eligible")):
-            with self.subTest(bad=bad):
-                with self.store.lock:
-                    self.store._case("ZF-1")["grants"][0]["pending"]["eligibility"] = bad
-                    self.store.save()
-                with self.assertRaises(ValueError):
-                    self.grant(self.b, "grant_approve", id="GR-1")
-        with self.assertRaises(ValueError):
-            self.propose_submit(eligibility="Eligible")
-
-    def test_pre_field_legacy_grant_is_not_gated(self: Any) -> None:
-        self.to_claimable()
-        with self.store.lock:
-            self.store._case("ZF-1")["grants"][0].pop("eligibility", None)
-            self.store.save()
+        self.verify()
         self.propose_submit()
         self.grant(self.b, "grant_approve", id="GR-1")
         self.assertEqual(self.grant_state(), "Submitted")
+        recorded = self.record()["grants"][0]["history"][-1]["eligibility"]
         self.assertEqual(
-            self.record()["grants"][0]["history"][-1]["eligibility"], "Not assessed (legacy record)"
+            (recorded["outcome"], recorded["role"]), ("Eligible", "Grants and Evidence Officer")
         )
+
+    def test_missing_not_eligible_and_unassessed_never_submit(self: Any) -> None:
+        self.to_claimable()
+        self.refused_submit()
+        with self.store.lock:
+            self.store._case("ZF-1")["grants"][0].pop("eligibility", None)
+            self.store.save()
+        self.refused_submit()
+        for outcome in ("Not assessed", "Not eligible"):
+            with self.subTest(outcome=outcome):
+                self.verify(outcome, "SYN check")
+                self.refused_submit()
+        self.verify()
+        self.propose_submit()
+        self.grant(self.b, "grant_approve", id="GR-1")
+        self.assertEqual(self.grant_state(), "Submitted")
+
+    def test_proposer_text_and_non_officers_cannot_assert_eligibility(self: Any) -> None:
+        self.to_claimable()
+        with self.assertRaises(PermissionError):
+            self.grant(
+                self.a,
+                "grant_eligibility",
+                id="GR-1",
+                eligibility="Eligible",
+                eligibility_source="x",
+            )
+        self.grant(
+            self.a,
+            "grant_propose",
+            id="GR-1",
+            to="Submitted",
+            source="SYN submit",
+            eligibility="Eligible",
+            eligibility_source="self asserted",
+        )
+        with self.assertRaises(ValueError):
+            self.grant(self.b, "grant_approve", id="GR-1")
+        with self.store.lock:
+            grant = self.store._case("ZF-1")["grants"][0]
+            grant["pending"]["eligibility"] = dict(
+                outcome="Eligible", source="forged", role="Grants and Evidence Officer"
+            )
+            self.store.save()
+        with self.assertRaises(ValueError):
+            self.grant(self.b, "grant_approve", id="GR-1")
+
+    def set_recorder(self: Any, identity: dict[str, Any]) -> None:
+        with self.store.lock:
+            self.store._case("ZF-1")["grants"][0]["eligibility"]["identity"] = identity
+            self.store.save()
+
+    def test_recorder_must_differ_from_proposer_and_approver(self: Any) -> None:
+        self.to_claimable()
+        self.verify()
+        for identity in (self.a_identity, self.b_identity, dict(email="geo@example.test")):
+            with self.subTest(identity=identity):
+                self.set_recorder(dict(identity))
+                self.refused_submit()
+
+    def test_rejection_requires_fresh_eligibility_before_resubmission(self: Any) -> None:
+        self.to_claimable()
+        self.verify()
+        self.propose_submit()
+        self.grant(self.b, "grant_approve", id="GR-1")
+        self.grant(self.a, "grant_propose", id="GR-1", to="Rejected", source="SYN rejected")
+        self.grant(self.b, "grant_approve", id="GR-1")
+        self.assertIsNone(self.record()["grants"][0]["eligibility"])
+        self.grant(self.a, "grant_propose", id="GR-1", to="Claimable", source="SYN again")
+        self.grant(self.b, "grant_approve", id="GR-1")
+        self.refused_submit()
+        self.verify(source="SYN fresh check")
+        self.propose_submit()
+        self.grant(self.b, "grant_approve", id="GR-1")
+        self.assertEqual(self.grant_state(), "Submitted")
+
+    def test_eligibility_is_only_recorded_while_claimable(self: Any) -> None:
+        self.opportunity()
+        with self.assertRaises(ValueError):
+            self.verify()
 
 
 class JsonGrantChecks(GrantFixture, GrantChecks, unittest.TestCase):

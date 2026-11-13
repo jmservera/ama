@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
-from test_grant_lifecycle_controls import ELIGIBLE, GrantFixture
+from test_grant_lifecycle_controls import GrantFixture
 from zava_forward.core.finance import FINANCE_ACTIONS
 from zava_forward.core.grants import GRANT_ACTIONS, GRANT_FLOW, GRANT_STATES
 
@@ -120,6 +120,8 @@ class BoundaryProbes(GrantFixture, unittest.TestCase):
         while GRANT_FLOW[state]:
             target = GRANT_FLOW[state][0]
             if state != "Not recorded":
+                if target == "Submitted":
+                    self.verify()
                 self.grant(
                     proposer,
                     "grant_propose",
@@ -127,7 +129,6 @@ class BoundaryProbes(GrantFixture, unittest.TestCase):
                     to=target,
                     source="SYN " + target,
                     amount=1,
-                    **(ELIGIBLE if target == "Submitted" else {}),
                 )
             before = self.record()
             self.denied(self.plain, "grant_approve", id=gid)

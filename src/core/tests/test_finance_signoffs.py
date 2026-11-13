@@ -170,8 +170,10 @@ class Flows:
         path = [("Award", None), ("Claimable", None), ("Submitted", None), ("Rejected", None), ("Claimable", None), ("Submitted", None),
                 ("Accepted", None), ("Cash received", 5000)]
         for to, amount in path:
-            check = dict(eligibility="Eligible", eligibility_source="SYN check") if to == "Submitted" else {}
-            self.grant(self.geo, "grant_propose", id="GR-1", to=to, source=f"Evidence for {to}", amount=amount, **check)
+            if to == "Submitted":
+                self.grant(self.geo, "grant_eligibility", id="GR-1", eligibility="Eligible", eligibility_source="SYN check")
+            proposer = self.pm1 if to == "Submitted" else self.geo
+            self.grant(proposer, "grant_propose", id="GR-1", to=to, source=f"Evidence for {to}", amount=amount)
             self.grant(self.pm2, "grant_approve", id="GR-1")
         g = self.store.detail("ZF-1")["grants"][0]
         self.assertEqual(g["state"], "Cash received")

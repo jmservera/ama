@@ -13,13 +13,14 @@ from datetime import UTC, datetime
 from . import controls as k
 from . import gates
 from .change_provenance import _actor
-from .finance import _identity
+from .finance import _identity, _norm
 
 GRANT_FLOW = {"Not recorded": ("Opportunity",), "Opportunity": ("Award",), "Award": ("Claimable",), "Claimable": ("Submitted",),
               "Submitted": ("Accepted", "Rejected"), "Accepted": ("Cash received",), "Rejected": ("Claimable",), "Cash received": ()}
 GRANT_STATES = tuple(GRANT_FLOW)
 ELIGIBILITY_OUTCOMES = ("Eligible", "Not eligible", "Not assessed")
-GRANT_ACTIONS = ("grant_open", "grant_propose", "grant_approve", "grant_withdraw")
+GRANT_ACTIONS = ("grant_open", "grant_propose", "grant_approve", "grant_withdraw", "grant_eligibility")
+ELIGIBILITY_VERIFIER = "Grants and Evidence Officer"
 
 
 def authority_now():
@@ -73,18 +74,33 @@ def require_authority(store, user, action, case_id, route):
     return deepcopy(authority)
 
 
-def grant_eligibility_verdict(recorded, on=None):
-    """Gate a submission on recorded eligibility; only an explicit Eligible with evidence passes."""
-    outcome = recorded.get("outcome") if isinstance(recorded, dict) else None
-    source = recorded.get("source") if isinstance(recorded, dict) else None
+def _same_person(a, b):
+    return any(_norm(a.get(key)) and _norm(a.get(key)) == _norm(b.get(key)) for key in ("email", "code", "oid"))
+
+
+def _complete(identity):
+    return isinstance(identity, dict) and all(_norm(identity.get(key)) for key in ("email", "code"))
+
+
+def grant_eligibility_verdict(recorded, proposer=None, approver=None, on=None):
+    """Only an evidenced Eligible outcome from the Grants Officer, distinct from proposer and approver, passes."""
+    rec = recorded if isinstance(recorded, dict) else {}
+    outcome, source = rec.get("outcome"), rec.get("source")
     evidenced = isinstance(source, str) and bool(source.strip())
+    identity = rec.get("identity")
     state = None
-    if outcome == "Eligible" and evidenced:
-        state = True
-    elif outcome == "Not eligible" and evidenced:
-        state = False
-    reason = {True: "Eligibility confirmed: met.", False: "The grant is recorded as not eligible."}.get(
-        state, "Eligibility is not assessed, so the grant cannot be submitted.")
+    reason = "Eligibility is not assessed, so the grant cannot be submitted."
+    if outcome == "Not eligible" and evidenced:
+        state, reason = False, "The grant is recorded as not eligible."
+    elif outcome == "Eligible" and evidenced:
+        if rec.get("role") != ELIGIBILITY_VERIFIER:
+            reason = "Eligibility was not recorded by the Grants Officer, so it is unverified."
+        elif not (_complete(identity) and _complete(proposer) and _complete(approver)):
+            reason = "Eligibility recorder or approver identity is unknown, so independence is unverified."
+        elif _same_person(identity, proposer) or _same_person(identity, approver):
+            reason = "The eligibility check must be recorded by someone other than the proposer and approver."
+        else:
+            state, reason = True, "Eligibility confirmed: met."
     return gates.eligibility_gate(state, reason, "Grants Officer", on)
 
 
@@ -103,7 +119,7 @@ class GrantMixin:
             grants = c.setdefault("grants", [])
             if action == "grant_open":
                 g = dict(id=k.next_id(grants, "GR"), scheme=k.text(body.get("scheme"), "the scheme or funder", 80), state="Not recorded",
-                         pending=None, history=[], eligibility=dict(outcome="Not assessed", source=None, by=None, at=None))
+                         pending=None, history=[], eligibility=None)
                 grants.append(g)
                 self._grant_set_pending(user, g, "Opportunity", body)
                 detail = f"{g['id']} opened"
@@ -123,18 +139,20 @@ class GrantMixin:
         if not isinstance(source, str) or not source.strip() or len(source) > 200:
             raise ValueError("Add the exact evidence reference, from 1 to 200 characters.")
         amount = k.money(body.get("amount"), "the amount") if (to == "Cash received" or body.get("amount") not in (None, "")) else None
-        eligibility = None
-        if body.get("eligibility") not in (None, ""):
-            outcome = k.choice(body["eligibility"], ELIGIBILITY_OUTCOMES, "the eligibility outcome")
-            ref = body.get("eligibility_source")
-            if outcome != "Not assessed" and (not isinstance(ref, str) or not ref.strip() or len(ref) > 200):
-                raise ValueError("Add the exact eligibility evidence reference, from 1 to 200 characters.")
-            eligibility = dict(outcome=outcome, source=ref.strip() if isinstance(ref, str) and ref.strip() else None,
-                               by=user["email"], at=k.now())
         g["pending"] = dict(to=to, source=source.strip(), amount=amount, currency="GBP",
                             by=user["email"], name=user["name"], at=k.now(), identity=_identity(user))
-        if eligibility is not None:
-            g["pending"]["eligibility"] = eligibility
+
+    def _grant_eligibility(self, user, g, body, case_id):
+        k.require_role(user, (ELIGIBILITY_VERIFIER,), "the Grants and Evidence Officer")
+        if g["state"] != "Claimable":
+            raise ValueError("Eligibility is checked while the grant is Claimable, just before submission.")
+        outcome = k.choice(body.get("eligibility"), ELIGIBILITY_OUTCOMES, "the eligibility outcome")
+        ref = body.get("eligibility_source")
+        if outcome != "Not assessed" and (not isinstance(ref, str) or not ref.strip() or len(ref) > 200):
+            raise ValueError("Add the exact eligibility evidence reference, from 1 to 200 characters.")
+        g["eligibility"] = dict(outcome=outcome, source=ref.strip() if isinstance(ref, str) and ref.strip() else None,
+                                by=user["email"], role=user["role"], identity=_identity(user), at=k.now())
+        return f"{g['id']} eligibility recorded: {outcome}"
 
     def _grant_propose(self, user, g, body, case_id):
         self._grant_set_pending(user, g, body.get("to"), body)
@@ -148,9 +166,9 @@ class GrantMixin:
         identity = self._fin_independent(user, p["by"], p.get("identity"), "approve this grant change")
         if p.get("currency") != "GBP":
             raise ValueError("Legacy proposal currency is unknown. Withdraw and re-propose with GBP evidence.")
-        recorded = p["eligibility"] if "eligibility" in p else g.get("eligibility", "legacy")
-        if p["to"] == "Submitted" and recorded != "legacy":
-            verdict = grant_eligibility_verdict(recorded)
+        recorded = g.get("eligibility")
+        if p["to"] == "Submitted":
+            verdict = grant_eligibility_verdict(recorded, p.get("identity"), _identity(user))
             if not gates.transition_allowed([verdict]):
                 raise ValueError(f"{verdict.reason} Owner: {verdict.owner}. Next action: {verdict.correction}")
         authority = self._financial_authority(user, "grant:" + p["to"], case_id, g["scheme"])
@@ -158,9 +176,9 @@ class GrantMixin:
                                  approved_by=user["name"], approved_at=k.now(), case_id=case_id, scheme=g["scheme"], currency=p["currency"],
                                  proposed_identity=deepcopy(identity), approved_identity=_identity(user), authority=authority,
                                  source_status="Supplied, unverified",
-                                 eligibility="Not assessed (legacy record)" if recorded == "legacy" else deepcopy(recorded)))
-        if "eligibility" in p:
-            g["eligibility"] = p["eligibility"]
+                                 eligibility=deepcopy(recorded) if p["to"] == "Submitted" else None))
+        if p["to"] == "Rejected":
+            g["eligibility"] = None
         g.update(state=p["to"], pending=None)
         return f"{g['id']} now {g['state']}"
 
