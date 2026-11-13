@@ -1,6 +1,8 @@
 """Copy audit: banned internal terms absent from visible web copy, labels and blocked messages follow the content standard."""
 
+import json
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -233,7 +235,113 @@ class CopyAudit(unittest.TestCase):
             self.assertIn(text, chat)
         self.assertIn("Your role cannot do this. Owner:", aftercare)
         self.assertIn("cannot record one. Owner:", aftercare)
-        self.assertIn("Next action: change the filters or try again.", (WEB / "progress.js").read_text())
+        self.assertIn(
+            "Next action: change the filters or try again.", (WEB / "progress.js").read_text()
+        )
+
+    OWNED_FILES = {
+        "ops.js": "opsOwned",
+        "assistants.js": "assistantOwned",
+        "simulator-control.js": "simControlOwned",
+        "staff-intake.js": "intakeOwned",
+        "panels.js": "panelOwned",
+    }
+    BLOCKED_WORDS = re.compile(
+        r"cannot|could not|not available|unavailable|failed|not valid|switched off"
+        r"|does not include|refused|not writable",
+        re.I,
+    )
+    # Literals that describe a state or a label, not an error or blocked notice, or that feed an owned message.
+    NOT_NOTICES = (
+        "Resident not available",
+        "Sending is permitted until the expiry time. This screen cannot see",
+        "Review due date (authority unavailable",
+        "AI assistance unavailable. Work continues manually.",
+        "These are synthetic exercise rules.",
+        "A challenge never means consent, refusal or a sanction.",
+        "The existing limits apply:",
+    )
+
+    def literals(self, name):
+        js = (WEB / name).read_text()
+        for line in js.splitlines():
+            for lit in re.findall(r'"(?:[^"\\]|\\.)*"|`[^`]*`', line):
+                yield line, lit
+
+    def test_remaining_error_and_blocked_notices_state_owner_then_next_action(self):
+        for name, helper in self.OWNED_FILES.items():
+            js = (WEB / name).read_text()
+            self.assertIn(f"const {helper} = (message, owner, next, status) =>", js, name)
+            self.assertNotIn("Something went wrong", js, name)
+            for line, lit in self.literals(name):
+                if not self.BLOCKED_WORDS.search(lit) or lit in (
+                    '"unavailable"',
+                    '"Unavailable"',
+                    '"Not valid"',
+                ):
+                    continue
+                if any(skip in lit for skip in self.NOT_NOTICES) or f"{helper}(" in line:
+                    continue
+                with self.subTest(name=name, literal=lit[:80]):
+                    self.assertIn("Owner:", lit)
+                    self.assertIn("Next action:", lit)
+                    self.assertLess(lit.index("Owner:"), lit.index("Next action:"))
+                    self.assertIsNone(BANNED.search(lit))
+
+    def test_dynamic_error_messages_always_go_through_the_owner_helper(self):
+        sink = re.compile(
+            r"\b(?:e|error|d\.error)\.message\b|\bvalidationMessage\b|\.(?:blocker|not_ready_reason)\b"
+        )
+        for name, helper in self.OWNED_FILES.items():
+            for n, line in enumerate((WEB / name).read_text().splitlines(), 1):
+                if not sink.search(line) or line.lstrip().startswith("const " + helper):
+                    continue
+                if (
+                    re.search(
+                        r"\.message\s*=\s*`|const (reason|detail)\b|e\.generic|error\.message \|\||\.message,",
+                        line,
+                    )
+                    and "Owned(" not in line
+                ):
+                    continue
+                with self.subTest(file=name, line=n):
+                    self.assertTrue(helper + "(" in line or "Owner:" in line, line.strip()[:160])
+
+    def test_owner_helpers_keep_complete_messages_and_complete_partial_ones(self):
+        for name, helper in self.OWNED_FILES.items():
+            js = (WEB / name).read_text()
+            fn = re.search(rf"const {helper} = .*?\n}};", js, re.S).group(0)
+            script = (
+                fn
+                + f"""
+const full = "It failed. Owner: app support. Next action: retry.";
+const out = [
+  {helper}(full, "X", "Y"),
+  {helper}("It failed", "X", "Y"),
+  {helper}("It failed. Owner: someone.", "X", "Y"),
+  {helper}("Next action: retry. Owner: someone.", "X", "Y"),
+  {helper}(undefined, "X", "Y"),
+  {helper}("Ask the contract manager.", "X", "Y", 403),
+  {helper}("Server fault", "X", "Y", 500),
+];
+console.log(JSON.stringify(out));
+"""
+            )
+            result = subprocess.run(
+                ["node", "-e", script], text=True, capture_output=True, timeout=30
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            got = json.loads(result.stdout)
+            self.assertEqual(got[0], "It failed. Owner: app support. Next action: retry.", name)
+            for text in got[1:4]:
+                self.assertRegex(text, r"Owner: [^.]+\. Next action: ", name)
+            self.assertEqual(got[1], "It failed. Owner: X. Next action: Y", name)
+            self.assertIn("Owner: X. Next action: Y", got[4], name)
+            self.assertIn(
+                "Owner: your team manager. Next action: follow the advice above", got[5], name
+            )
+            self.assertNotIn("Owner: X", got[5], name)
+            self.assertEqual(got[6], "Server fault. Owner: X. Next action: Y", name)
 
     def test_standard_documents_glossary_and_review(self):
         for text in (
