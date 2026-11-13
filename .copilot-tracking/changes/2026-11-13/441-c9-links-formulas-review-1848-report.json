@@ -1,9 +1,8 @@
 {
   "freshness": {
-    "origin_main": "dab0b089341dc8ef4818b454f6443109258c8458",
-    "head": "4f5b81db2fe189786e6941f4b1cc019e43ca9824",
+    "origin_main": "c13d077d299a570f3908439072e7b49f8f55cf4f",
+    "head": "da21a2536f50fb61eb19abe84c220db83b2a3e43",
     "docs_src_diff_vs_origin_main": [
-      "docs/architecture/cutover-reference-inventory.tsv",
       "docs/capstone/pitch/README.md",
       "docs/capstone/pitch/capstone-assessment-challenge.md",
       "docs/capstone/pitch/tokenomics-rehearsal-notes.md",
