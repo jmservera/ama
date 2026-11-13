@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 
 from .sensor_analysis import INSUFFICIENT, AnalysisPolicy, Signal, derive_signal
 from .sensor_consumer import ConsumerError, SensorConsumer
-from .synthetic.live_readings import SCHEMA_VERSION as LIVE_SCHEMA_VERSION
+from .synthetic.live_readings import LIVE_VERSIONS
 from .synthetic.sensor_scenarios import Window
 
 UNAVAILABLE = "RETAINED_READINGS_UNAVAILABLE"
@@ -37,7 +37,7 @@ def analyse_retained(
             empty, sufficiency=INSUFFICIENT, outcome=INSUFFICIENT, reasons=(UNAVAILABLE,)
         )
     # Live-sim rows are climate-shaped outdoor readings, not indoor measurements.
-    rows = [row for row in envelopes if row["schema_version"] != LIVE_SCHEMA_VERSION]
+    rows = [row for row in envelopes if row["schema_version"] not in LIVE_VERSIONS]
     if consent == "granted" and len(rows) < len(envelopes) and not rows:
         empty = derive_signal(home_id, [], window, as_of, consent, policy)
         return replace(

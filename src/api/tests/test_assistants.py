@@ -152,6 +152,178 @@ class Base(unittest.TestCase):
             db.execute("UPDATE assistant_attempts SET active_until=0 WHERE task_id=?", (tid,))
 
 
+QUALITY = "quality-evidence"
+DEMO = ("ZF-1", "ZF-2", "ZF-3", "ZF-4", "ZF-9")
+
+
+class QualityDemoScope(Base):
+    """The opt-in exact-five Quality scope: operator-triggered only, fail closed, other agents unchanged."""
+
+    def scoped(self, homes=",".join(DEMO)):
+        service = self.other(quality_demo_homes=homes)
+        return service
+
+    def tasks(self, service):
+        with service.transaction() as db:
+            return db.execute("SELECT capability,case_id FROM assistant_tasks ORDER BY id").fetchall()
+
+    def test_background_scan_never_starts_quality_but_other_agents_keep_their_scan(self):
+        self.case(lambda c: c["home"].update(epc=None))
+        service = self.scoped()
+        service.scan()
+        capabilities = {cap for cap, _ in self.tasks(service)}
+        self.assertNotIn(QUALITY, capabilities)
+        self.assertTrue(capabilities & (set(REGISTRY) - {QUALITY}))
+        self.assertEqual(self.provider.calls, 0)
+
+    def test_manual_request_is_admitted_for_the_five_and_refused_outside_them(self):
+        service = self.scoped()
+        task = service.invoke(self.pm, QUALITY, "ZF-1")
+        self.assertEqual((task["capability"], task["case_id"]), (QUALITY, "ZF-1"))
+        with self.assertRaisesRegex(ValueError, "five-home"):
+            service.invoke(self.pm, QUALITY, "ZF-5")
+        self.assertEqual(self.tasks(service), [(QUALITY, "ZF-1")])
+        self.assertTrue(service.invoke(self.pm, "stock-prioritisation", "ZF-5")["id"])
+        self.assertEqual(self.provider.calls, 0)
+
+    def test_invalid_explicit_scope_refuses_every_quality_case_with_no_fallback(self):
+        bad = ("ZF-1,ZF-2,ZF-3,ZF-4", ",".join(DEMO) + ",ZF-5", "ZF-1,ZF-1,ZF-2,ZF-3,ZF-4",
+               "ZF-1,ZF-2,ZF-3,ZF-4,", "ZF-1, ZF-2,ZF-3,ZF-4,ZF-9")
+        for value in bad:
+            with self.subTest(value):
+                service = self.scoped(value)
+                for case_id in ("ZF-1", "ZF-5"):
+                    with self.assertRaisesRegex(ValueError, "five-home"):
+                        service.invoke(self.pm, QUALITY, case_id)
+                service.scan()
+                self.assertNotIn(QUALITY, {cap for cap, _ in self.tasks(service)})
+                self.assertTrue(service.invoke(self.pm, "stock-prioritisation", "ZF-1")["id"])
+
+    def test_an_existing_outside_task_is_not_dispatched_after_the_scope_is_set(self):
+        pending = self.service.invoke(self.pm, QUALITY, "ZF-5")
+        service = self.scoped()
+        self.assertFalse(service.execute(pending["id"]))
+        self.assertEqual(self.provider.calls, 0)
+        self.assertEqual(service.detail(self.pm, pending["id"])["state"], "disabled")
+
+    def test_unset_scope_keeps_the_legacy_every_case_behaviour(self):
+        self.assertTrue(self.service.invoke(self.pm, QUALITY, "ZF-5")["id"])
+
+    def proactive(self, service, capability=QUALITY, case_id="ZF-1"):
+        with service.transaction() as db:
+            c = json.loads(
+                db.execute("SELECT body FROM cases WHERE id=?", (case_id,)).fetchone()[0]
+            )
+            return service._enqueue(db, capability, c, "proactive", PURPOSE)
+
+    def counts(self, service):
+        with service.transaction() as db:
+            return [
+                db.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
+                for t in ("assistant_tasks", "assistant_schedule")
+            ]
+
+    def row(self, service, tid):
+        with service.transaction() as db:
+            return service._row(db, tid)
+
+    def test_explicitly_empty_scope_is_invalid_and_never_unrestricted(self):
+        for value in ("", " "):
+            with self.subTest(value):
+                service = self.scoped(value)
+                self.assertTrue(service.limits.quality_scope_error)
+                with self.assertRaisesRegex(ValueError, "five-home"):
+                    service.invoke(self.pm, QUALITY, "ZF-1")
+                service.scan()
+                self.assertNotIn(QUALITY, {cap for cap, _ in self.tasks(service)})
+
+    def test_proactive_quality_enqueue_is_refused_in_scope_with_no_write(self):
+        service = self.scoped()
+        before = self.counts(service)
+        with self.assertRaisesRegex(ValueError, "five-home"):
+            self.proactive(service)
+        self.assertEqual(self.counts(service), before)
+        self.assertTrue(self.proactive(service, "stock-prioritisation"))
+
+    def test_unset_scope_still_enqueues_proactive_quality(self):
+        self.assertTrue(self.proactive(self.service))
+
+    def test_pending_proactive_in_cohort_task_is_not_claimed_or_called(self):
+        tid = self.proactive(self.service)
+        service = self.scoped()
+        self.assertFalse(service.execute(tid))
+        self.assertEqual(self.provider.calls, 0)
+        task = self.row(service, tid)
+        self.assertEqual(
+            (task["attempts"] if "attempts" in task else 0, task["state"]), (0, "disabled")
+        )
+        with service.transaction() as db:
+            self.assertEqual(
+                db.execute("SELECT attempts FROM assistant_tasks WHERE id=?", (tid,)).fetchone()[0],
+                0,
+            )
+            self.assertEqual(db.execute("SELECT COUNT(*) FROM assistant_attempts").fetchone()[0], 0)
+
+    def test_retryable_proactive_in_cohort_task_is_not_redispatched(self):
+        tid = self.proactive(self.service)
+        with self.service.transaction() as db:
+            db.execute("UPDATE assistant_tasks SET attempts=1 WHERE id=?", (tid,))
+        service = self.scoped()
+        self.assertFalse(service.execute(tid))
+        self.assertEqual(self.provider.calls, 0)
+        with service.transaction() as db:
+            self.assertEqual(
+                db.execute(
+                    "SELECT attempts,state FROM assistant_tasks WHERE id=?", (tid,)
+                ).fetchone(),
+                (1, "disabled"),
+            )
+
+    def test_stale_proactive_task_is_fenced_before_replacement(self):
+        tid = self.proactive(self.service)
+        self.case(lambda c: c["home"].update(epc=None))
+        service = self.scoped()
+        before = self.counts(service)
+        self.assertFalse(service.execute(tid))
+        self.assertEqual((self.provider.calls, self.counts(service)), (0, before))
+
+    def test_exhausted_proactive_task_stays_failed_without_a_call(self):
+        tid = self.proactive(self.service)
+        with self.service.transaction() as db:
+            db.execute(
+                "UPDATE assistant_tasks SET attempts=? WHERE id=?",
+                (self.service.limits.attempts, tid),
+            )
+        service = self.scoped()
+        self.assertFalse(service.execute(tid))
+        self.assertEqual(self.provider.calls, 0)
+        with service.transaction() as db:
+            self.assertEqual(
+                db.execute("SELECT state FROM assistant_tasks WHERE id=?", (tid,)).fetchone()[0],
+                "failed",
+            )
+
+    def test_pre_scope_proactive_lease_gets_no_permit(self):
+        tid = self.proactive(self.service)
+        leased = self.service.claim(tid, "owner-1")
+        self.assertEqual(leased["dispatch"]["trigger"], "proactive")
+        service = self.scoped()
+        verdict = service.issue_permit(tid, "owner-1", leased["fence"], {})
+        self.assertEqual(verdict, dict(permit=False, reason="demo-scope"))
+        self.assertEqual(self.provider.calls, 0)
+
+    def test_explicit_request_revives_and_reuses_the_fenced_task_as_requested(self):
+        tid = self.proactive(self.service)
+        service = self.scoped()
+        self.assertFalse(service.execute(tid))
+        self.assertEqual(service.invoke(self.pm, QUALITY, "ZF-1")["id"], tid)
+        task = self.row(service, tid)
+        self.assertEqual((task["state"], task["manual_requested"]), ("pending", True))
+        service.execute(tid)
+        self.assertEqual(self.provider.calls, 1)
+        self.assertEqual(self.row(service, tid)["dispatch"]["trigger"], "requested")
+
+
 class WorkerFailureReporting(unittest.TestCase):
     def test_worker_and_scanner_log_safe_failure_without_private_exception(self):
         for target in ("_worker", "_scanner"):

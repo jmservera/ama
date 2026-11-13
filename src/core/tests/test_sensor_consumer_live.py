@@ -23,6 +23,21 @@ def live(slot: datetime = SLOT, **changes: str) -> Observation:
     return {**reading.row(), **changes}
 
 
+def minute(slot: datetime = SLOT, **changes: str) -> Observation:
+    reading = Reading(
+        "ZF-1",
+        "SENS-SYN-1",
+        "SYN-SENS-SYN-1",
+        slot,
+        12.34,
+        66.5,
+        301.25,
+        184,
+        schema_version="live-sim-reading-v2",
+    )
+    return {**reading.row(), **changes}
+
+
 class LiveReadingTests(unittest.TestCase):
     def setUp(self) -> None:
         self.tmp = tempfile.TemporaryDirectory()
@@ -97,6 +112,34 @@ class LiveReadingTests(unittest.TestCase):
         self.assertNotIn("calibrated", envelope)
         again = self.consumer.process(Observation(envelope), RECEIVED)
         self.assertEqual((again.status, again.reason, again.replay), ("accepted", "ACCEPTED", True))
+        self.assertEqual(self.count(), 1)
+
+    def test_v2_minute_slots_are_admitted_replayed_and_round_trip(self) -> None:
+        stamps = [SLOT + timedelta(minutes=m) for m in (1, 2, 3)]
+        for stamp in stamps:
+            receipt = self.consumer.process(minute(stamp), RECEIVED)
+            self.assertEqual((receipt.status, receipt.reason), ("accepted", "ACCEPTED"), stamp)
+        again = self.consumer.process(minute(stamps[1]), RECEIVED)
+        self.assertTrue(again.replay)
+        self.assertEqual(self.count(), 3)
+        rows = self.consumer.retained_envelopes(["ZF-1"])
+        self.assertEqual({r["schema_version"] for r in rows}, {"live-sim-reading-v2"})
+        self.assertEqual(rows[1], minute(stamps[1]))
+
+    def test_v1_stays_five_minute_and_v2_still_needs_whole_minutes(self) -> None:
+        old = self.consumer.process(live(SLOT + timedelta(minutes=1)), RECEIVED)
+        self.assertEqual((old.status, old.reason), ("rejected", "UTC_TIME"))
+        for observed in ("2024-10-01T01:02:30Z", "2024-10-01T01:02:00+01:00"):
+            receipt = self.consumer.process(minute(SLOT, observed_at=observed), RECEIVED)
+            self.assertEqual((receipt.status, receipt.reason), ("rejected", "UTC_TIME"), observed)
+        mismatch = minute(SLOT + timedelta(minutes=1), reading_id="LIVE-SENS-SYN-1-20241001T0102Z")
+        self.assertEqual(self.consumer.process(mismatch, RECEIVED).reason, "IDENTITY")
+        self.assertEqual(self.count(), 0)
+
+    def test_an_old_sample_id_is_not_reinterpreted_by_the_new_version(self) -> None:
+        self.consumer.process(live(), RECEIVED)
+        clash = self.consumer.process(minute(SLOT), RECEIVED)
+        self.assertEqual((clash.status, clash.reason), ("rejected", "IDENTITY_CONFLICT"))
         self.assertEqual(self.count(), 1)
 
     def test_reset_clears_retained_state_but_reopen_preserves_it(self) -> None:

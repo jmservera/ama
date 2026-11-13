@@ -2288,6 +2288,22 @@ A start must expire in the future and within 14 days. The file holds no credenti
 control is Azure RBAC: only holders of write access to the certificate file share (and of the
 job) can start, stop or change the cohort; the job mounts the share read-only.
 
+One-minute five-home demo configuration (#184, source only, offline-tested): `--cadence-minutes 1`
+(or `ZF_SIM_CADENCE_MINUTES=1`; default 5) sends one reading per home per minute as
+`live-sim-reading-v2` (same 16 fields and `LIVE-<sensor>-<UTC minute>Z` identity; v1 stays
+strictly five-minute and is never reinterpreted, so a v1 and a v2 row for the same minute are an
+`IDENTITY_CONFLICT`). With `ZF_ASSIST_QUALITY_DEMO_HOMES` set to exactly five unique home ids, the
+simulator sends for exactly that set and refuses a different control cohort or store
+(`DEMO_COHORT_MISMATCH`, `DEMO_HOMES_INVALID`); the same variable limits Quality to those cases,
+operator-requested only (the background scan skips Quality, proactive Quality work is neither
+enqueued, claimed nor permitted, and an invalid value, including an empty one, refuses Quality
+for every case, never all open cases). The control cohort must itself be exactly the five, and all
+five must be in the store. The per-attempt stop, expiry and cohort fence still
+applies at the one-minute cadence. The weather-continuity check stays a v1 five-minute check.
+This does not lift the stop on real-model captured-sensor analysis; a mock provider output is
+not evidence that real AI works. Deployment presence of the five homes, sensor consent and any
+live run remain separate approvals.
+
 An application-administrator-only screen (`#/simulator`, API `/api/admin/simulator-control`
 status, `/start`, `/stop`) edits this same control file when `ZF_SIM_CONTROL_FILE` names a
 writable file (Refs #189). It reuses `live_control` parsing, the 14-day window, the 100-home

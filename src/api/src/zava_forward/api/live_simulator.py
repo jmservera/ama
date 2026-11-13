@@ -29,6 +29,7 @@ from zava_forward.core.synthetic.run_plan import (
     B1_MONTHLY_USD,
     RESERVED_HEADROOM,
 )
+from zava_forward.core.synthetic.sensor_identity import demo_homes
 from zava_forward.core.synthetic.sensor_stream import StreamError
 
 from . import live_control
@@ -188,15 +189,17 @@ class Limits:
             raise StreamError("INVALID_RUN_LIMIT")
 
 
-def check_capacity(homes: int, limits: Limits) -> dict[str, float | int]:
+def check_capacity(
+    homes: int, limits: Limits, cadence_seconds: int = lr.SLOT_SECONDS
+) -> dict[str, float | int]:
     """Refuse a fleet that would exceed the B1 daily message budget or overrun its own slot."""
     limits.validate()
     if type(homes) is not int or homes < 1:
         raise StreamError("NO_HOMES")
-    per_day = homes * lr.SLOTS_PER_DAY
+    per_day = homes * (86400 // cadence_seconds)
     if per_day > DAILY_MESSAGE_BUDGET:
         raise StreamError("B1_QUOTA_HEADROOM")
-    if homes / limits.max_per_second > lr.SLOT_SECONDS * 0.8:
+    if homes / limits.max_per_second > cadence_seconds * 0.8:
         raise StreamError("RATE_TOO_LOW_FOR_HOMES")
     return {
         "homes": homes,
@@ -242,10 +245,17 @@ class Pacer:
                 await self._sleep(wait)
 
 
-def attempt_permitted(control_path: Path, home: str, moment: datetime) -> bool:
-    """Fresh control read: sending, unexpired and the home still in the cohort; else False."""
+def attempt_permitted(
+    control_path: Path, home: str, moment: datetime, demo: Sequence[str] | None = None
+) -> bool:
+    """Fresh control read: sending, unexpired and the home still in the cohort; else False.
+
+    With `demo`, the control cohort must still be exactly that set.
+    """
     try:
         control = live_control.load(control_path)
+        if demo is not None and set(control.homes) != set(demo):
+            return False
         return live_control.decide(control, moment) == live_control.SEND and home in control.homes
     except StreamError:
         return False
@@ -276,10 +286,10 @@ async def send_slot(
     included. A False or an error stops that home with `RUN_CONTROL_FENCED`; a send already handed
     to the sink is not recalled.
     """
-    check_capacity(len(homes), limits)
+    check_capacity(len(homes), limits, generator.cadence_seconds)
     jitter = rng or random.Random(generator.seed)
     pacer = Pacer(limits.max_per_second, sleep, clock)
-    summary = Summary(lr.slot_floor(slot), len(homes))
+    summary = Summary(lr.slot_floor(slot, generator.cadence_seconds), len(homes))
 
     async def one(home: str) -> None:
         try:
@@ -365,6 +375,17 @@ def store_home_ids(env: Mapping[str, str] | None = None) -> list[str]:
     return sorted(cid for cid, case in store.cases.items() if not case.get("closed"))
 
 
+def _demo_cohort(homes: Sequence[str], demo: Sequence[str], exact: bool = False) -> list[str]:
+    """Exactly the configured five homes, or a refusal; never a subset or another home.
+
+    `exact` also refuses extra homes (the control cohort must be the demo set itself).
+    """
+    present = set(homes)
+    if not set(demo) <= present or (exact and present != set(demo)):
+        raise StreamError("DEMO_COHORT_MISMATCH")
+    return list(demo)
+
+
 def cohort_homes(control: live_control.Control, existing: Sequence[str]) -> list[str]:
     """The control cohort present in the store, in control order; never the whole fleet."""
     present = set(existing)
@@ -390,7 +411,7 @@ async def run(
     gate: Callable[[datetime], bool] | None = None,
     attempt_gate: Callable[[str], bool] | None = None,
 ) -> list[Summary]:
-    """Send the current slot, then (unless `once`) one every 5 minutes; missed slots are skipped.
+    """Send the current slot, then (unless `once`) one per cadence; missed slots are skipped.
 
     `gate` is asked before every slot and a False ends the run, so a stop or an expiry is final.
     `attempt_gate` is also asked before every send attempt; a slot it fenced ends the run.
@@ -399,14 +420,16 @@ async def run(
     homes: Sequence[str] = []
     try:
         while True:
-            slot = lr.slot_floor(now())
+            slot = lr.slot_floor(now(), generator.cadence_seconds)
             if gate is not None and not gate(now()):
                 LOG.warning("run control: stopped or expired; nothing sent")
                 return summaries
             try:
                 if not homes or len(summaries) % refresh_slots == 0:
                     homes = list_homes() or homes
-            except StreamError:
+            except StreamError as error:
+                if str(error) == "DEMO_COHORT_MISMATCH":
+                    raise
                 LOG.error("run control refused the current cohort; nothing sent")
                 return summaries
             except Exception:
@@ -432,7 +455,9 @@ async def run(
                 LOG.error("no homes available for slot %s", slot.isoformat())
             if once or (max_slots is not None and len(summaries) >= max_slots):
                 return summaries
-            await sleep(max(0.0, (lr.next_slot(slot) - now()).total_seconds()))
+            await sleep(
+                max(0.0, (lr.next_slot(slot, generator.cadence_seconds) - now()).total_seconds())
+            )
     finally:
         await sink.close()
 
@@ -477,9 +502,14 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
     except ValueError:
         print("Cannot run: SIM_CONFIG_INVALID", file=sys.stderr)
         return 2
+    try:
+        default_cadence = int(env.get("ZF_SIM_CADENCE_MINUTES", "5"))
+    except ValueError:
+        default_cadence = 0
     parser.add_argument("--seed", type=int, default=default_seed)
     parser.add_argument("--max-homes", type=int, default=0, help="0 means every home (stdout only)")
     parser.add_argument("--control-file", default=env.get("ZF_SIM_CONTROL_FILE", ""))
+    parser.add_argument("--cadence-minutes", type=int, choices=(1, 5), default=default_cadence)
     parser.add_argument("--max-per-second", type=float, default=Limits.max_per_second)
     parser.add_argument("--batch-size", type=int, default=Limits.batch_size)
     args = parser.parse_args(list(argv))
@@ -487,7 +517,15 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
     limits = Limits(max_per_second=args.max_per_second, batch_size=args.batch_size)
     try:
         sink = _sink(args, env)
-        generator = lr.Generator(args.seed)
+        if args.cadence_minutes not in (1, 5):
+            raise StreamError("SIM_CONFIG_INVALID")
+        generator = lr.Generator(args.seed, cadence_seconds=args.cadence_minutes * 60)
+        try:
+            demo = demo_homes(env.get("ZF_ASSIST_QUALITY_DEMO_HOMES"))
+        except ValueError:
+            raise StreamError("DEMO_HOMES_INVALID") from None
+        if demo is not None and args.max_homes > 0:
+            raise StreamError("SIM_CONFIG_INVALID")
 
         control_path = Path(args.control_file) if args.control_file else None
         if args.sink == "iothub" and control_path is None:
@@ -498,8 +536,13 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
         def homes() -> list[str]:
             if control_path is None:
                 ids = store_home_ids(env)
+                if demo is not None:
+                    return _demo_cohort(ids, demo)
                 return ids[: args.max_homes] if args.max_homes > 0 else ids
             control = live_control.load(control_path)
+            if demo is not None:
+                # The control itself must be exactly the five, before any store intersection.
+                _demo_cohort(control.homes, demo, exact=True)
             try:
                 result = cohort_homes(control, store_home_ids(env))
             except HomeListError:
@@ -507,6 +550,8 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
                 result = [h for h in cached if h in control.homes]
                 if not result:
                     raise
+            if demo is not None:
+                result = _demo_cohort(result, demo)
             cached[:] = result
             return result
 
@@ -522,13 +567,13 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
                 return False
 
         def permit(home: str) -> bool:
-            return attempt_permitted(Path(args.control_file), home, datetime.now(UTC))
+            return attempt_permitted(Path(args.control_file), home, datetime.now(UTC), demo)
 
         if not gate(datetime.now(UTC)):
             LOG.warning("run control: stopped or expired; nothing sent")
             return 0
         first = homes()
-        LOG.info("capacity %s", check_capacity(len(first), limits))
+        LOG.info("capacity %s", check_capacity(len(first), limits, generator.cadence_seconds))
         asyncio.run(
             run(
                 lambda: homes(),

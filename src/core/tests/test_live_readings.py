@@ -196,5 +196,35 @@ class ScenarioTests(unittest.TestCase):
             lr.Generator(184, scenario="indoor-damp")
 
 
+class MinuteCadenceTests(unittest.TestCase):
+    def test_default_cadence_is_unchanged_five_minutes_and_v1(self) -> None:
+        gen = lr.Generator(184)
+        self.assertEqual(gen.cadence_seconds, 300)
+        row = gen.reading("ZF-1", START + timedelta(minutes=7, seconds=5)).row()
+        self.assertEqual(row["observed_at"], "2026-11-04T00:05:00Z")
+        self.assertEqual(row["schema_version"], "live-sim-reading-v1")
+
+    def test_minute_cadence_gives_distinct_readings_identity_and_v2(self) -> None:
+        gen = lr.Generator(184, cadence_seconds=60)
+        readings = [gen.reading("ZF-1", START + timedelta(minutes=30 + i)) for i in range(5)]
+        self.assertEqual(len({r.reading_id for r in readings}), 5)
+        self.assertEqual([r.observed_at.minute for r in readings], [30, 31, 32, 33, 34])
+        self.assertEqual({r.row()["schema_version"] for r in readings}, {"live-sim-reading-v2"})
+        self.assertGreater(len({r.temperature_c for r in readings}), 1)
+        self.assertGreater(len({r.humidity_pct for r in readings}), 1)
+        self.assertTrue(readings[1].reading_id.endswith("T0031Z"))
+
+    def test_slot_functions_take_an_explicit_cadence(self) -> None:
+        moment = datetime(2026, 11, 4, 1, 7, 42, tzinfo=UTC)
+        self.assertEqual(lr.slot_floor(moment, 60), datetime(2026, 11, 4, 1, 7, tzinfo=UTC))
+        self.assertEqual(lr.next_slot(moment, 60), datetime(2026, 11, 4, 1, 8, tzinfo=UTC))
+        self.assertEqual(lr.slot_floor(moment), datetime(2026, 11, 4, 1, 5, tzinfo=UTC))
+
+    def test_unsupported_cadence_is_refused(self) -> None:
+        for bad in (0, 30, 120, 600, "60", None):
+            with self.subTest(bad), self.assertRaisesRegex(lr.LiveReadingError, "INVALID_CADENCE"):
+                lr.Generator(184, cadence_seconds=bad)  # type: ignore[arg-type]
+
+
 if __name__ == "__main__":
     unittest.main()
