@@ -1,0 +1,41 @@
+PASS owned server is running and responsive on loopback
+PASS specialist navigation does not inherit white header text
+PASS no automatic selection or detail fetch
+PASS 232s queue lists ZF-1 issue, contact needs and safe route
+PASS 232s queue has no contact links or controls
+PASS story 232s exact evidence: SYN-REQUEST-232
+PASS story 232s exact evidence: SYN large-print explanation
+PASS story 232s exact evidence: Accessible explanation before a decision
+PASS story 232s exact evidence: Large print
+PASS story 232s exact evidence: SYN-SAFE-232
+PASS story 232s exact evidence: A commitment is not a message. Nothing is sent or marked received here.
+PASS story 232s exact evidence: is shown on the resident choice screen, not here
+PASS same home remains ZF-1
+PASS 232s reader view has no write controls
+PASS 232s renders some design-system classes: ['alt', 'btn', 'card', 'danger', 'flag', 'item', 'layout', 'list', 'main', 'row', 'screen-evidence', 'screen-links', 'screen-record', 'side', 'table-scroll']
+PASS 232s uses only documented design-system classes: []
+PASS 232s has no custom elements or role simulator in the user view
+PASS 232s choice, issue and commitment state is stated in text
+PASS 232s states that nothing is sent and the screen is read-only
+PASS 232s every table is a labelled focusable region
+PASS 232s keyboard Tab reaches every table region: ['Service issues and contact needs']
+SKIP 232s axe scan: set ZF_AXE_JS to the pinned axe 4.10.3 file
+PASS no contact actions
+PASS story 232s reflow 320px
+PASS story 232s reflow 390px
+PASS story 232s reflow 1280px
+PASS existing reduced motion retained
+PASS native keyboard focus visible
+PASS reset removes selection without writes
+PASS failed list is not an empty success
+PASS denied detail is explicit and clears old evidence
+PASS delayed detail intercepted
+PASS late response cannot restore prior selected home
+PASS empty page is distinct from failed request
+PASS actual other identity cannot open specialist module
+PASS unknown or uninstalled screen not exposed
+PASS malformed pagination refused explicitly
+PASS specialist reads made no POSTs: []
+PASS expired session clears authenticated evidence and navigation
+PASS no uncaught JavaScript errors: []
+Chromium 156.0.8078.4; synthetic loopback only; selector=232s

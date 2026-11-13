@@ -11686,3 +11686,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Appended a [draft checkpoint](../architecture/cutover-evidence-pack.md#post-1507-metadata-provenance-checkpoint-2026-11-13-refs-440-176) after PR 1507 merged as `5cedff3f4` (tree equal to source candidate `294da8ee0`). Documentation only: separates historical identical-source validation, static Git identity, unverified operational refresh and deferred private-input approval; existing fixtures stay legacy Unknown.
 * No source change, new run, tick or closure; #176 and #440 stay open. Evidence under `.copilot-tracking/` (demo-provenance-checkpoint-440-0750).
+
+## [2026-11-13] add | Qualified role-screen evidence record (Refs #149, #231, #232, #151, #440)
+
+* Appended a [compact record](../architecture/cutover-evidence-pack.md#qualified-role-screen-evidence-record-2026-11-13-refs-149-231-232-151-440) and an index row. Merged two frozen local children unchanged: #231 review `32fd2163` and #232 validation `eeb8ec15` (original `fbd12ac9` plus recovery). Adverse verdicts and origin, resource and coverage limits are kept; WCAG, human and AT gates stay unmet.
+* Documentation only. No source change, rerun, tick, closure or approval; #149, #151, #231 and #232 stay open. Evidence under `.copilot-tracking/` (demo-role-evidence-parent-149-0847).
