@@ -13,7 +13,7 @@ from datetime import UTC, datetime
 from . import controls as k
 from . import gates
 from .change_provenance import _actor
-from .finance import _identity, _norm
+from .finance import _identity
 
 GRANT_FLOW = {"Not recorded": ("Opportunity",), "Opportunity": ("Award",), "Award": ("Claimable",), "Claimable": ("Submitted",),
               "Submitted": ("Accepted", "Rejected"), "Accepted": ("Cash received",), "Rejected": ("Claimable",), "Cash received": ()}
@@ -74,12 +74,17 @@ def require_authority(store, user, action, case_id, route):
     return deepcopy(authority)
 
 
+def _norm(value):
+    return value.strip().lower() if isinstance(value, str) else ""
+
+
 def _same_person(a, b):
     return any(_norm(a.get(key)) and _norm(a.get(key)) == _norm(b.get(key)) for key in ("email", "code", "oid"))
 
 
 def _complete(identity):
-    return isinstance(identity, dict) and all(_norm(identity.get(key)) for key in ("email", "code"))
+    return (isinstance(identity, dict) and all(_norm(identity.get(key)) for key in ("email", "code"))
+            and isinstance(identity.get("oid") or "", str))
 
 
 def grant_eligibility_verdict(recorded, proposer=None, approver=None, on=None):

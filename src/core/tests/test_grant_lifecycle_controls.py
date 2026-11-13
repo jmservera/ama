@@ -13,7 +13,7 @@ from unittest.mock import patch
 
 import dataset
 from test_finance_signoffs import STAFF, person
-from zava_forward.core.grants import GRANT_STATES, require_authority
+from zava_forward.core.grants import GRANT_STATES, grant_eligibility_verdict, require_authority
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, Store
 
@@ -409,6 +409,28 @@ class GrantChecks:
         self.propose_submit()
         self.grant(self.b, "grant_approve", id="GR-1")
         self.assertEqual(self.grant_state(), "Submitted")
+
+    def test_malformed_identity_fields_return_unknown_not_error(self: Any) -> None:
+        good: dict[str, Any] = {"email": "a@x.test", "code": "A1", "oid": "o1"}
+        others: list[dict[str, Any]] = [
+            {"email": "b@x.test", "code": "B1", "oid": "o2"},
+            {"email": "c@x.test", "code": "C1", "oid": "o3"},
+        ]
+        bad = [("code", 123), ("oid", 456), ("email", ["bad"])]
+        for who in range(3):
+            for key, value in bad:
+                with self.subTest(who=who, key=key):
+                    people = [dict(good), *(dict(o) for o in others)]
+                    people[who][key] = value
+                    recorded = {
+                        "outcome": "Eligible",
+                        "source": "SYN",
+                        "role": "Grants and Evidence Officer",
+                        "identity": people[0],
+                    }
+                    verdict = grant_eligibility_verdict(recorded, people[1], people[2])
+                    self.assertEqual(verdict.outcome, "unknown")
+                    self.assertTrue(verdict.reason)
 
     def test_proposer_text_and_non_officers_cannot_assert_eligibility(self: Any) -> None:
         self.to_claimable()
