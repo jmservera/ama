@@ -11721,3 +11721,12 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Appended a [section](../architecture/cutover-evidence-pack.md#owner-sign-offs-for-cut-over-staff-mediated-capture-and-tokenomics-2026-11-13-refs-203) recording the owner decisions for #201, #202, #198, #228 AC3 and #435 AC1/AC4, updated the pitch [placement draft](../capstone/pitch/tokenomics-placement-draft.md) and README for the 55-slide deck, and regenerated the cut-over reference inventory.
 * Documentation only. Live parity, backup, the USD 5 token batch and rehearsal timing remain unperformed; no tick or closure.
+
+## [2026-11-13] update | Azure demo preflight pack and expiry observation (Refs #521, #133, #152, #360, #440)
+
+* Integrated the reviewed Wave-1416/1433 RPI evidence packages for the #521 Azure sync preflight, the #133 aftercare acceptance-criteria audit and the #152 aftercare navigation root cause, and updated the [live state check](../../infra/README.md) to record the read-only 2026-11-13 observation that `ca-resident-demo` carries `ZF_DEMO_EXPIRES_AT` `2028-01-01T00:00:00Z`.
+* Documentation only. Live SQL constraint and row verification remains pending; no tick or closure.
+## [2026-11-13] add | Tokenomics presenter Q&A brief (Refs #435)
+
+* Added [tokenomics-qa-brief.md](../capstone/tokenomics-qa-brief.md) and linked it from the [capstone README](../capstone/README.md). It separates the labelled USD 0.44 per home scenario, the live ledger (Unknown until settled and approved) and the authorised, unrun held-out batch (up to USD 5.00; `heldout_batch` module absent in this checkout).
+* Documentation only. No deck, manifest or validation-hashed file changed; no rehearsal, measurement, tick or closure.

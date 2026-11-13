@@ -15,7 +15,7 @@ choice between the older executive and Cowork routes.
 | Present or review | [PowerPoint](./deck/zava-forward-cowork-v2-draft.pptx) and [matching PDF](./deck/zava-forward-cowork-v2-draft.pdf) |
 | Edit and rebuild | [Source guide](./source/README.md), [55-slide manifest](./source/slides.json) and [immutable 54-slide native baseline](./source/baseline.pptx) |
 | Find image inputs and provenance | [Asset catalog](./source/assets/catalog.json), [retained media](./source/assets/media/) and [official Fabric/Power BI sources](./source/assets/official/README.md) |
-| Prepare the pitch | [Speaker notes](./pitch/speaker-script.md), [question bank](./pitch/questions-and-answers.md) and [pitch folder](./pitch/) |
+| Prepare the pitch | [Speaker notes](./pitch/speaker-script.md), [question bank](./pitch/questions-and-answers.md), [Tokenomics Q&A brief](./tokenomics-qa-brief.md) and [pitch folder](./pitch/) |
 | Prepare the demo | [Ten-minute runbook](./demo/runbook.md), including the under-two-minute executive hook and recovery route |
 | Understand the discovery and journey | [DT Coach method, pain/gain and decision trace](./source/diagrams/discovery-journey/text-equivalent.md), [editable Excalidraw](./source/diagrams/discovery-journey/resident-journey.excalidraw) and [PNG](./source/diagrams/discovery-journey/resident-journey.png); main pages 8 and 14 |
 | Understand what comes next | [Future roadmap and proposal crosswalk](./source/roadmap-recommendations.md); future Fabric/Power BI and agent-context proposal only near the close on pages 24-25 |
