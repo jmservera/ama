@@ -327,20 +327,27 @@ class DispatchHeld(RuntimeError):
 UNVERIFIED_IDENTITY = "unverified-identity"
 OFFLINE_IDENTITY = "offline-extractive; zero model calls"
 _IDENTITY = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:/@+-]*")
-_SECRET = re.compile(r"(?<![A-Za-z0-9])sk-|sk-[A-Za-z0-9_-]{16}", re.IGNORECASE)
+IDENTITY_CHARS = 80
+_SECRET = re.compile(
+    r"(?<![A-Za-z0-9])(?i:sk-)"
+    r"|^(?:gh[pousr]_|github_pat_|AKIA[0-9A-Z]{12,}|eyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,})"
+    r"|[0-9A-Fa-f]{32,}|[A-Za-z0-9_]{32,}"
+)
 
 
-def safe_identity(value: object, limit: int) -> str | None:
-    """Bounded identifier; free text and secret-shaped values never survive."""
-    if type(value) is not str or len(value) > limit:
+def safe_identity(value: object, limit: int = IDENTITY_CHARS) -> str | None:
+    """Bounded identifier; free text, oversized and secret-shaped values never survive."""
+    if type(value) is not str:
         return None
+    if len(value) > limit:
+        return UNVERIFIED_IDENTITY
     if value == OFFLINE_IDENTITY or (_IDENTITY.fullmatch(value) and not _SECRET.search(value)):
         return value
     return UNVERIFIED_IDENTITY
 
 
 def bounded_model(value: object) -> str | None:
-    return safe_identity(value, 512)
+    return safe_identity(value)
 
 
 class Consumption:
@@ -405,7 +412,7 @@ class Consumption:
         """Rates per million tokens; retrieval is supplied evidence, never inferred."""
         if not re.fullmatch(r"https://(?:azure\.microsoft\.com|prices\.azure\.com)/\S+", source):
             raise ValueError("An official Azure price source URL is required.")
-        if not re.fullmatch(r"[a-z0-9][a-z0-9.-]{0,119}", model):
+        if not re.fullmatch(r"[a-z0-9][a-z0-9.-]{0,79}", model) or _SECRET.search(model):
             raise ValueError("A configured model identifier is required.")
         if currency not in ("USD", "GBP", "EUR") or type(synthetic) is not bool:
             raise ValueError("Explicit currency/evidence class required.")

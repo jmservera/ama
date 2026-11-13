@@ -14,7 +14,12 @@ LIMITS = assistants.Limits({})
 UNVERIFIED = "unverified-identity"
 SECRETS = (
     "sk-SENTINEL0123456789",
-    "abcsk-SENTINEL0123456789",
+    "0123456789abcdef0123456789abcdef",
+    "eyJhbGciOiJIUzI1.eyJzdWIiOiIxMjM0.c2lnbmF0dXJl",
+    "AKIAIOSFODNN7EXAMPLE",
+    "ghp_abc",
+    "github_pat_11ABC",
+    "A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6",
     "SK-SENTINEL0123456789",
     "line one\nsk-SENTINEL0123456789",
     "Bearer SENTINEL0123456789",
@@ -48,6 +53,12 @@ ACCEPTED = (
     "task-fast",
     "risk-model",
     "gpt-4o-mask-v1",
+    "gpt-4.1-nano",
+    "gpt-4.1-mini",
+    "resident-mini",
+    "task-summarisation-v1",
+    "offline-fixture",
+    "m-" * 40,
 )
 
 
@@ -86,16 +97,16 @@ class IdentityFields(unittest.TestCase):
             self.assertIsNone(shaped(**{field: Sub("m")})[field])
             self.assertIsNone(shaped(**{field: 7})[field])
             self.assertIsNone(shaped(**{field: None})[field])
-        for field in ("provider", "deployment"):
-            self.assertEqual(shaped(**{field: "a" * 120})[field], "a" * 120)
-            self.assertEqual(shaped(**{field: "a" * 121})[field], "a" * 120)
-        self.assertEqual(shaped(model="a" * 512)["model"], "a" * 512)
-        self.assertIsNone(shaped(model="a" * 513)["model"])
+        for field in ("provider", "deployment", "model"):
+            self.assertEqual(shaped(**{field: "m-" * 40})[field], "m-" * 40)
+            self.assertEqual(shaped(**{field: "m-" * 41})[field], UNVERIFIED)
+            self.assertEqual(shaped(**{field: "sk-" + "a" * 200})[field], UNVERIFIED)
 
     def test_bounded_model_is_the_shared_ledger_boundary(self) -> None:
         self.assertEqual(ai_consumption.bounded_model("sk-SENTINEL0123456789"), UNVERIFIED)
         self.assertEqual(ai_consumption.bounded_model("a\nb"), UNVERIFIED)
         self.assertEqual(ai_consumption.bounded_model("m-1"), "m-1")
+        self.assertEqual(ai_consumption.bounded_model("m-" * 41), UNVERIFIED)
 
     def test_post_back_envelope_is_sanitised(self) -> None:
         raw = dict(

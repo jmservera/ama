@@ -12,8 +12,10 @@ import os
 import threading
 import time
 import uuid
+from collections.abc import Mapping
 from contextlib import contextmanager
 from datetime import datetime, timezone
+from typing import Any
 
 from . import assistant_release as rel
 from .ai import may_carry_captured_readings
@@ -362,7 +364,7 @@ class Limits:
     DEFAULTS = dict(scan_interval=60, scan_size=20, input_chars=12000, output_chars=8000,
                     output_tokens=600, timeout=20, active_calls=2, attempts=2, backoff=30, lease=60)
 
-    def __init__(self, env=None):
+    def __init__(self, env: Mapping[str, str] | None = None) -> None:
         env = os.environ if env is None else env
         self.authority = env.get("ZF_ASSIST_AUTHORITY", "")
         self.proactive = env.get("ZF_ASSIST_PROACTIVE", "0") == "1"
@@ -438,17 +440,15 @@ def build_request(task):
                                   evidence=evidence))
 
 
-def sanitize_identity(envelope):
+def sanitize_identity(envelope: dict[str, Any]) -> dict[str, Any]:
     """A copy whose provider, deployment and model are safe identifiers, whatever path produced the envelope."""
     clean = dict(envelope)
-    for key in ("provider", "deployment"):
-        value = clean.get(key)
-        clean[key] = ai_consumption.safe_identity(value[:120] if type(value) is str else value, 120)
-    clean["model"] = ai_consumption.bounded_model(clean.get("model"))
+    for key in ("provider", "deployment", "model"):
+        clean[key] = ai_consumption.safe_identity(clean.get(key))
     return clean
 
 
-def shape_result(task, result, limits):
+def shape_result(task: dict[str, Any], result: Any, limits: Limits) -> tuple[dict[str, Any], Any, Any]:
     """Reduce a raw provider result to (envelope, output, failure). Only safe, known fields survive; text is never saved on failure."""
     if not isinstance(result, dict):
         result = dict(outcome="malformed-provider-envelope", usage=None, source="unverified", text=None)

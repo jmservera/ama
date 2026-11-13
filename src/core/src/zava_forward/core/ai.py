@@ -217,7 +217,7 @@ class Ai:
 
     def evidence(self, system, user, max_tokens=600, timeout=20):
         """No fallback, raw output or exception text in the durable usage envelope."""
-        envelope = dict(provider="azure-openai", deployment=ai_consumption.safe_identity(self.fast, 120), model=None,
+        envelope = dict(provider="azure-openai", deployment=ai_consumption.safe_identity(self.fast), model=None,
                         usage=None, outcome="disabled", source="unverified", text=None)
         witness = DISPATCH.get()
         if witness is not None and not witness.closed:
