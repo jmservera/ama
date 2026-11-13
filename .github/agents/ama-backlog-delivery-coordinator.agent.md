@@ -94,26 +94,25 @@ without inventing, duplicating or no-op issues to look busy:
 
 * Start independent `ready` issues, each as its own RPI session in its own
   worktree. Admission rule (single source; other sections cross-reference it):
-  eight (owner, 2026-10-31; overrides the Inputs default of three) is the
-  TOTAL number of active issue assignments, counted once per issue across its
-  workers, repair, correction, validation and gate continuations and any
-  retained unpublished candidate (never eight new plus repairs). An exited
-  worker is not a free slot: its slot is released only when the issue is
-  published and merged, the owner releases it, or it is in an approved
-  published-only dependency-gated pause. That pause needs all of: local head
-  equal to the published head, or reviewed squash-tree or GitHub merge proof;
-  no live native worker; no outstanding unpublished implementation; and
-  preserved artifacts, ledger and disposition. Keep monitoring the published
-  PR and its parent. A missing upstream or failed Git evidence is Unknown,
-  never zero unpublished work, and keeps the slot. Before
-  admitting any new issue and after each launch, publication, pause or merge,
-  recount assignments from the SQL ledger, `gh pr list --state open` and live
-  `rpi-*` tmux sessions; a PR
+  eight (owner, 2026-10-31) is the
+  maximum number of live, useful native `rpi-*` tmux sessions, not eight
+  issues: independent workers may share a coherent parent scope or issue, and
+  repair, correction, validation and gate continuations each count only while
+  their session is live. A finished session frees its slot at once; its issue
+  stays in the ledger until published and merged, and a retained unpublished
+  candidate, failed test or setup with a bounded authorised recovery, or
+  outstanding gate is `ready` work that gets a concrete handoff session, never
+  a success claim or a global stop. A missing upstream or failed Git evidence
+  is Unknown, never zero unpublished work. An explicit lower owner limit still
+  governs. Before
+  admitting any new work and after each launch, completion, publication or
+  merge, recount live sessions from `tmux list-sessions`, plus the SQL ledger
+  and `gh pr list --state open`; a PR
   queued for auto-merge stays open until the merge is confirmed. Respect the
   caps by counting each unit once: the open-PR thresholds apply to open PRs
-  and the total-of-eight applies to assignments, checked separately. An open
-  PR with a live repair session is one open PR and one assignment, never
-  extra open work; never sum assignments and PRs against each other. Admit new
+  and the total-of-eight applies to live sessions, checked separately. An open
+  PR with a live repair session is one open PR and one session, never
+  extra open work; never sum sessions and PRs against each other. Admit new
   issues at 20 or fewer open PRs unless a drain is in progress. Above 20 open
   PRs admit no new issues and enter a drain: record it in the session ledger
   on the first confirmed count above 20, read it before every admission, and
@@ -122,11 +121,11 @@ without inventing, duplicating or no-op issues to look busy:
   unavailable, rebuild it from evidence and admit none while a confirmed count
   is above 15. While draining, admit none even at 16 to 20, and repair, review
   and merge existing PRs one PR per merge step (rebasing only under step 8;
-  sessions still count against the eight-assignment cap) until a confirmed
+  sessions still count against the eight-session cap) until a confirmed
   count of 15 or fewer (the target is 10 to 15) clears the drain and admission
   resumes. Admission never relaxes dependency, validation, publication, review
   or human gates. Existing-PR repair, correction and review continuations stay
-  permitted at every count within the eight-assignment cap. Idle slots with
+  permitted at every count within the eight-session cap. Idle slots with
   independent `ready` issues are a defect.
 * Closure review: take a rotating batch of up to five `unassessed` items from
   the `python3 tools/backlog-sync.py` queue, compare each issue's criteria with
@@ -251,8 +250,8 @@ work. Follow the
 
 * The issue set: issue numbers, a label, a milestone or a parent issue. Ask one
   focused question when the set is not identifiable.
-* Optional limits: maximum parallel loops (default 3, overridden by the
-  owner's current session limit), the base branch
+* Optional limits: maximum parallel sessions (the Liveness admission
+  rule sets eight; an explicit lower owner limit governs), the base branch
   (default `origin/main`), maximum waves (default 10) and a wall-clock budget.
   A limit pauses the run, it does not complete it: report the remaining
   issues, the ledger and the exact command to resume.
@@ -597,7 +596,7 @@ remains subject to the tracking retention policy.
    substantive search, `plan-done`, `implement-start` (changes record
    persisted before any source edit), `implement-done`, `review-done`, and
    `commit-complete --claim-commit {sha}` only after the commit exists. Then run:
-   `tmux new-session -d -s rpi-{number} -c ../ama-wt/issue-{number} "echo --- launch {timestamp} >> /tmp/rpi-{number}.log; copilot --agent hve-core-all:rpi-agent --model claude-sonnet-5.5 --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' -p \"\$(cat /tmp/brief-{number}-{timestamp}.md)\" 2>&1 | tee -a /tmp/rpi-{number}.log; echo exit=\$? >> /tmp/rpi-{number}.log"`.
+   `tmux new-session -d -s rpi-{number} -c ../ama-wt/issue-{number} "echo --- launch {timestamp} >> /tmp/rpi-{number}.log; copilot --agent hve-core-all:rpi-agent --model claude-sonnet-5.5 --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' -p \"\$(cat /tmp/brief-{number}-{timestamp}.md)\" 2>&1 | tee -a /tmp/rpi-{number}.log; echo exit=\${PIPESTATUS[0]} >> /tmp/rpi-{number}.log"`.
    Logs are preserved across retries: each launch appends a
    `--- launch {timestamp}` line and never truncates or deletes an earlier log.
    Use Sonnet 5.5 for all coordinator-launched RPI issue sessions, including
@@ -615,8 +614,8 @@ remains subject to the tracking retention policy.
    `tmux has-session -t rpi-{number}` and `tmux capture-pane -p -t rpi-{number}`
    and read its log; stop a hung one with `tmux kill-session -t rpi-{number}`.
    Session names are unique per issue and a retry reuses the name only after
-   the old session is gone. Each launch is one assignment under the Liveness
-   admission rule, which alone defines counting, release and pause.
+   the old session is gone. Each launch is one session under the Liveness
+   admission rule, which alone defines counting.
    The brief carries the issue text, acceptance criteria, branch, worktree path,
    repository conventions, selected validation tier and rationale, test plan,
    target branch and dependency (a child of a parent stack names the parent
@@ -676,9 +675,28 @@ remains subject to the tracking retention policy.
    in the same worktree, then diagnosed and ledgered as a blocked lane with its
    log path (a human blocker only when a credential, permission or decision is
    missing; otherwise it is route repair work). Do not hold a long
-   blocking loop or sleep while sessions run. After launching a wave, make sure
-   the delivery and cleanup recurrences in Recurring schedules are active; do
-   not register a second one. The delivery check lists `tmux ls`,
+   blocking loop or sleep while sessions run. Completion protocol: after each
+   launch, arm one background (async) completion watch over the explicit
+   run-owned session names with
+   `python3 tools/ama-worker-watch.py <names> --timeout 600` (read-only; its
+   exit 2 names a session absent at start: inspect that session's log and
+   exit at once, since a very short worker may already be finished, and never
+   treat the error itself as a completion; exit 3 is a timeout, not a
+   completion). Extra workers for one issue use unique names
+   `rpi-{number}-{role}` and their own worktree and log. On each finished
+   session, before any optional PR prose: read its actual exit, head and
+   evidence; classify it; recount live sessions; start independent `ready`
+   work up to the cap (zero live sessions with ready work is a defect, and
+   "fully blocked" needs evidenced per-item dispositions, never exhaustion of
+   the selected wave); then re-arm the watch for the remaining and new
+   sessions. Thin reviewers get their input contract (diff, head, base,
+   evidence paths) verified present before launch; a missing input is a
+   blocker to supply, not a reason to skip dispatch. The watcher notifies
+   only; it grants no authority beyond the finite authorisations, review and
+   human gates, correction, model and cloud limits already stated. The
+   recurring delivery check below stays as the fallback, reusing the existing
+   schedules: do not register a second one per launch, and keep the hourly
+   cleanup. The delivery check lists `tmux ls`,
    reads each `/tmp/rpi-{number}.log` tail, and for every finished session runs
    the verify, review and gate steps below, starts newly unblocked issues, and
    reports the blocker ledger. Name the schedule id in the
