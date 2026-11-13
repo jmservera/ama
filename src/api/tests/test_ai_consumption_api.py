@@ -1154,7 +1154,7 @@ class ConsumptionApi(unittest.TestCase):
         self.assertEqual(len(self.requests), 2)
 
     def test_model_mismatch_survives_worker_roundtrip_and_suspends_release(self) -> None:
-        for returned in ("other-model", "m" * 121, "m" * 512, "m" * 513, {"private": "canary"}):
+        for returned in ("other-model", "m-" * 40, "m-" * 41, "m" * 513, {"private": "canary"}):
             with self.subTest(model=type(returned).__name__, length=len(returned)):
                 fixture = self.fresh()
                 fixture.authority("assessment-preparation")
@@ -1167,7 +1167,13 @@ class ConsumptionApi(unittest.TestCase):
                 )
                 assert result is not None
                 result = ResultMessage.from_json(result.to_json())
-                expected = returned if isinstance(returned, str) and len(returned) <= 512 else None
+                expected = (
+                    None
+                    if not isinstance(returned, str)
+                    else returned
+                    if len(returned) <= 80
+                    else "unverified-identity"
+                )
                 self.assertEqual(result.envelope["outcome"], "model-mismatch")
                 self.assertEqual(result.envelope["model"], expected)
                 self.assertEqual(result.envelope["usage"]["total_tokens"], 120)

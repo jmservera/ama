@@ -12,8 +12,10 @@ import os
 import threading
 import time
 import uuid
+from collections.abc import Mapping
 from contextlib import contextmanager
 from datetime import datetime, timezone
+from typing import Any
 
 from . import assistant_release as rel
 from .ai import may_carry_captured_readings
@@ -363,7 +365,7 @@ class Limits:
     DEFAULTS = dict(scan_interval=60, scan_size=20, input_chars=12000, output_chars=8000,
                     output_tokens=600, timeout=20, active_calls=2, attempts=2, backoff=30, lease=60)
 
-    def __init__(self, env=None):
+    def __init__(self, env: Mapping[str, str] | None = None) -> None:
         env = os.environ if env is None else env
         self.authority = env.get("ZF_ASSIST_AUTHORITY", "")
         self.proactive = env.get("ZF_ASSIST_PROACTIVE", "0") == "1"
@@ -446,7 +448,15 @@ def build_request(task):
                                   evidence=evidence))
 
 
-def shape_result(task, result, limits):
+def sanitize_identity(envelope: dict[str, Any]) -> dict[str, Any]:
+    """A copy whose provider, deployment and model are safe identifiers, whatever path produced the envelope."""
+    clean = dict(envelope)
+    for key in ("provider", "deployment", "model"):
+        clean[key] = ai_consumption.safe_identity(clean.get(key))
+    return clean
+
+
+def shape_result(task: dict[str, Any], result: Any, limits: Limits) -> tuple[dict[str, Any], Any, Any]:
     """Reduce a raw provider result to (envelope, output, failure). Only safe, known fields survive; text is never saved on failure."""
     if not isinstance(result, dict):
         result = dict(outcome="malformed-provider-envelope", usage=None, source="unverified", text=None)
@@ -454,9 +464,9 @@ def shape_result(task, result, limits):
     envelope["usage"] = result.get("usage")
     envelope.update(task=task["capability"], task_version=task["version"], case_id=task["case_id"],
                     source_signature=task["source_signature"], approved=False)
-    envelope["model"] = ai_consumption.bounded_model(envelope.get("model"))
-    for key in ("provider", "deployment", "outcome", "source"):
+    for key in ("outcome", "source"):
         envelope[key] = envelope[key][:120] if isinstance(envelope[key], str) else None
+    envelope = sanitize_identity(envelope)
     usage = envelope["usage"]
     valid = ai_consumption.usage(usage)
     envelope["usage"] = valid if valid and valid["prompt_tokens"] > 0 else None
@@ -1598,7 +1608,9 @@ class Assistants:
     def _settle_meter(self, db, marker, envelope):
         usage, outcome = envelope.get("usage"), envelope.get("outcome")
         if outcome in ("returned", "model-mismatch") and ai_consumption.usage(usage):
-            self.consumption.complete_in(db, marker["meter_id"], usage, envelope.get("model"), "returned")
+            model = envelope.get("model")
+            # A rewritten or oversized identity cannot match the reservation, so the spend stays held.
+            self.consumption.complete_in(db, marker["meter_id"], usage, model if ai_consumption.bounded_model(model) == model else None, "returned")
         else:
             self.consumption.complete_in(db, marker["meter_id"], None, None,
                                          "timeout" if outcome == "timeout" else "provider-unavailable")
@@ -1706,6 +1718,7 @@ class Assistants:
                         dispatch_within_ms=window)
 
     def complete(self, task, envelope, output, failure=None):
+        envelope = sanitize_identity(envelope)
         if output is not None:
             try:
                 if envelope.get("source") != "ai" or envelope.get("outcome") != "returned":
@@ -1728,7 +1741,8 @@ class Assistants:
                 # it is a returned-model check, not authoritative attestation of what served the call.
                 released = [r for r in rel.releases(db, current["capability"])
                             if r["id"] == current["release"]["id"]]
-                if envelope.get("outcome") == "model-mismatch" or not any(r.get("serving_model") == envelope.get("model") for r in released):
+                if envelope.get("outcome") == "model-mismatch" or envelope.get("model") in (None, ai_consumption.UNVERIFIED_IDENTITY) or not any(
+                        r.get("serving_model") == envelope.get("model") for r in released):
                     quarantined = True
                     for r in released:
                         if r["status"] == "active":
