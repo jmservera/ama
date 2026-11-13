@@ -1,0 +1,88 @@
+{
+ "start": {
+  "label": "start",
+  "status": "Showing cases 1 to 50 of 120 permitted cases. The scope filter applies to this page only; open the other pages to see the rest. Not a portfolio total.",
+  "prev": {
+   "attrs": {
+    "class": "btn alt",
+    "type": "button",
+    "id": "programme-prev"
+   },
+   "hasDisabled": false,
+   "hasAriaDisabled": false,
+   "label": "Previous page"
+  },
+  "next": {
+   "attrs": {
+    "class": "btn alt",
+    "type": "button",
+    "id": "programme-next"
+   },
+   "hasDisabled": false,
+   "hasAriaDisabled": false,
+   "label": "Next page"
+  }
+ },
+ "prevAtStartCalls": 0,
+ "middle": {
+  "label": "middle",
+  "status": "Showing cases 51 to 100 of 120 permitted cases. The scope filter applies to this page only; open the other pages to see the rest. Not a portfolio total.",
+  "prev": {
+   "attrs": {
+    "class": "btn alt",
+    "type": "button",
+    "id": "programme-prev"
+   },
+   "hasDisabled": false,
+   "hasAriaDisabled": false,
+   "label": "Previous page"
+  },
+  "next": {
+   "attrs": {
+    "class": "btn alt",
+    "type": "button",
+    "id": "programme-next"
+   },
+   "hasDisabled": false,
+   "hasAriaDisabled": false,
+   "label": "Next page"
+  }
+ },
+ "last": {
+  "label": "last",
+  "status": "Showing cases 101 to 120 of 120 permitted cases. The scope filter applies to this page only; open the other pages to see the rest. Not a portfolio total.",
+  "prev": {
+   "attrs": {
+    "class": "btn alt",
+    "type": "button",
+    "id": "programme-prev"
+   },
+   "hasDisabled": false,
+   "hasAriaDisabled": false,
+   "label": "Previous page"
+  },
+  "next": {
+   "attrs": {
+    "class": "btn alt",
+    "type": "button",
+    "id": "programme-next"
+   },
+   "hasDisabled": false,
+   "hasAriaDisabled": false,
+   "label": "Next page"
+  }
+ },
+ "nextAtEndCalls": 0,
+ "total0": {
+  "status": "Showing cases 0 to 0 of 0 permitted cases. The scope filter applies to this page only; open the other pages to see the rest. Not a portfolio total.",
+  "prev": null,
+  "next": null,
+  "rows": 0
+ },
+ "total50": {
+  "status": "Showing cases 1 to 50 of 50 permitted cases. The scope filter applies to this page only; open the other pages to see the rest. Not a portfolio total.",
+  "prev": null,
+  "next": null,
+  "rows": 50
+ }
+}
