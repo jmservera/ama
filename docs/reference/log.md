@@ -11696,3 +11696,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Appended a [short section](../architecture/cutover-evidence-pack.md#qualified-local-chat-validation-observation-2026-11-13-refs-891) and an index row. Integrated 15 frozen local files from `b05d92788b19` (original failed candidate `e01ae7796fc5`) byte-identically: original 36 of 37 failure (exit 1) with retrospective reject critique, and the later prospective recovery with 37 of 37, 0 skips (exit 0).
 * Documentation only. No rerun, source change, tick, closure or approval; #891 stays open. Not provider, Azure, UI or whole-issue acceptance. Evidence under `.copilot-tracking/` (demo-chat-validation-parent-891-0945).
+
+## [2026-11-13] add | Wave-1045 multi-surface local demo verification (Refs #440)
+
+* Appended a [short section](../architecture/cutover-evidence-pack.md#wave-1045-multi-surface-local-demo-verification-2026-11-13-refs-440) and an index row. Integrated eight reviewed child candidates (86 files under `.copilot-tracking/`, byte-identical) onto base `3b05143179f83235c5b4e80e70aad99bdc44d83f`.
+* Documentation only. No rerun, source change, tick, closure or approval. Adverse and partial results kept: MSSQL skips, deferred API and infra tests, UX advisories.
