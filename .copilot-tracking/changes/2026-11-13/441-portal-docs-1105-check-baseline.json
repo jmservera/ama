@@ -1,0 +1,241 @@
+{
+ "blobs": {
+  "docs/adrs/0007-contractor-intake-staff-mediated-proposal.md": "abb21088a9bb9771234a305b8052c3bcdd181b33",
+  "docs/architecture/README.md": "1093ef0cdea18ffe15bb19fa942723dac6893e7c",
+  "docs/brds/agentic-retrofit-programme-brd.md": "34d88395de861e9799eb9e24121a21c92c7a5adc",
+  "docs/prds/zava-forward-retrofit-programme-demonstrator.md": "c788b917bafaede215f326f0efc71e071a687f1c"
+ },
+ "results": [
+  {
+   "detail": "51 relative links; 0 unresolved: []",
+   "id": "links:docs/brds/agentic-retrofit-programme-brd.md",
+   "status": "PASS"
+  },
+  {
+   "detail": "45 relative links; 1 unresolved: ['609: anchor #agents-in-the-retrofit-process-2026-10-13 missing in docs/capstone/README.md']",
+   "id": "links:docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+   "status": "FAIL"
+  },
+  {
+   "detail": "0 relative links; 0 unresolved: []",
+   "id": "links:docs/adrs/0007-contractor-intake-staff-mediated-proposal.md",
+   "status": "PASS"
+  },
+  {
+   "detail": "73 relative links; 0 unresolved: []",
+   "id": "links:docs/architecture/README.md",
+   "status": "PASS"
+  },
+  {
+   "detail": "BRD frontmatter status draft: [8] in docs/brds/agentic-retrofit-programme-brd.md",
+   "id": "brd:status-draft",
+   "status": "PASS"
+  },
+  {
+   "detail": "PRD exercise_status unsigned: [9] in docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+   "id": "prd:status-unsigned",
+   "status": "PASS"
+  },
+  {
+   "detail": "PRD status in-review: [8] in docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+   "id": "prd:status-in-review",
+   "status": "PASS"
+  },
+  {
+   "detail": "definition row at [2170]",
+   "id": "brd:OD-52-defined",
+   "status": "PASS"
+  },
+  {
+   "detail": "row has no closure marker (closed rows []); decision-register headings at [2115, 2255]",
+   "id": "brd:OD-52-open",
+   "status": "PASS"
+  },
+  {
+   "detail": "PRD mention",
+   "id": "prd:OD-52-visible",
+   "status": "PASS"
+  },
+  {
+   "detail": "definition row at [2171]",
+   "id": "brd:OD-53-defined",
+   "status": "PASS"
+  },
+  {
+   "detail": "row has no closure marker (closed rows []); decision-register headings at [2115, 2255]",
+   "id": "brd:OD-53-open",
+   "status": "PASS"
+  },
+  {
+   "detail": "PRD mention",
+   "id": "prd:OD-53-visible",
+   "status": "PASS"
+  },
+  {
+   "detail": "definition row at [2172]",
+   "id": "brd:OD-54-defined",
+   "status": "PASS"
+  },
+  {
+   "detail": "row has no closure marker (closed rows []); decision-register headings at [2115, 2255]",
+   "id": "brd:OD-54-open",
+   "status": "PASS"
+  },
+  {
+   "detail": "PRD mention",
+   "id": "prd:OD-54-visible",
+   "status": "PASS"
+  },
+  {
+   "detail": "definition row at [2173]",
+   "id": "brd:OD-55-defined",
+   "status": "PASS"
+  },
+  {
+   "detail": "row has no closure marker (closed rows []); decision-register headings at [2115, 2255]",
+   "id": "brd:OD-55-open",
+   "status": "PASS"
+  },
+  {
+   "detail": "PRD mention",
+   "id": "prd:OD-55-visible",
+   "status": "PASS"
+  },
+  {
+   "detail": "FR-044 per-message review default with bounded exception: [1602] in docs/brds/agentic-retrofit-programme-brd.md",
+   "id": "brd:FR-044-default",
+   "status": "PASS"
+  },
+  {
+   "detail": "AC-084 no fabricated review: [1602] in docs/brds/agentic-retrofit-programme-brd.md",
+   "id": "brd:AC-084-no-fabrication",
+   "status": "PASS"
+  },
+  {
+   "detail": "OD-53 activation gate: [2171] in docs/brds/agentic-retrofit-programme-brd.md",
+   "id": "brd:OD-53-all-individually-approved",
+   "status": "PASS"
+  },
+  {
+   "detail": "resident AC rows with a Not run cell: 30 (rows may use another status column)",
+   "id": "prd:not-run-resident",
+   "status": "PASS"
+  },
+  {
+   "detail": "Not run lines: 147",
+   "id": "prd:not-run-any",
+   "status": "PASS"
+  },
+  {
+   "detail": "ADR 0007 title/status: 'title: ADR 0007 Contractor Job Pack and Evidence Intake Delivery (Proposed)'; status text starts ['## Status', 'Proposed on 2026-11-04. Not accepted. This record does not close criterion 6 of']",
+   "id": "adr:0007-status-as-written",
+   "status": "INFO"
+  },
+  {
+   "detail": "resident-portal ADR file in docs/adrs/: none; ADR 0007 is contractor intake",
+   "id": "adr:resident-portal-adr-present",
+   "status": "INFO"
+  },
+  {
+   "detail": "ADR 0007 'Proposed' status lines: [11]; 'Accepted' lines: []",
+   "id": "adr:0007-accepted-marker",
+   "status": "INFO"
+  },
+  {
+   "detail": "64 defined; duplicates {}",
+   "id": "brd:FR-defs",
+   "status": "PASS"
+  },
+  {
+   "detail": "14 defined; duplicates {}",
+   "id": "brd:NFR-defs",
+   "status": "PASS"
+  },
+  {
+   "detail": "28 defined; duplicates {}",
+   "id": "brd:RULE-defs",
+   "status": "PASS"
+  },
+  {
+   "detail": "73 defined; duplicates {}",
+   "id": "prd:FR-defs",
+   "status": "PASS"
+  },
+  {
+   "detail": "2 defined; duplicates {}",
+   "id": "prd:NFR-defs",
+   "status": "PASS"
+  },
+  {
+   "detail": "0 defined; duplicates {}",
+   "id": "prd:RULE-defs",
+   "status": "PASS"
+  },
+  {
+   "detail": "missing []",
+   "id": "brd:FR-053..062",
+   "status": "PASS"
+  },
+  {
+   "detail": "missing []",
+   "id": "prd:FR-062..071",
+   "status": "PASS"
+  },
+  {
+   "detail": "missing []",
+   "id": "brd:AC-104..126",
+   "status": "PASS"
+  },
+  {
+   "detail": "missing []",
+   "id": "prd:AC-111..140-rows",
+   "status": "PASS"
+  },
+  {
+   "detail": "15 rows; issues []",
+   "id": "trace:PRD-to-BRD-resident",
+   "status": "PASS"
+  },
+  {
+   "detail": "PRD/BRD refs to a resident portal ADR: [(829, '| Resident and representative: own-case question, requested upload and appointment response | Separate proposed increment, not staff chat | New resident-answer task requires its own FR-036 registry entry; not one of the five staff assistants | Optional resident portal | Draft FR-062 to FR-071; live use gated | Sourced answer/draft with policy-gated routine communication only | BRD OD-47/52 to OD-55 remain operational gates; login/upload/slot response is not works consent. Resident memory remains excluded; FR-055 to FR-059 and ADR 0004 stay staff-only |'), (2438, '| 2026-10-13: replacing accepted quality evidence invalidates independent handover; later #58 binds evidence/milestones to current work-order/scope versions | FR-009/010/013/016-019/043, AC-012/013/016/019-022/042/051; invalidate affected dependent approvals, not historical payments or unrelated resident decisions; [ADR regression learning](../adrs/0002-pilot-readiness-architecture.md#retained-draft-architecture-learning-2026-10-13) | Source-tested/report evidence is not proof that current delivered code enforces all controls; completion counts require renewed independent acceptance |'), (2947, '| OQ-023 | What operational authority/evidence permits resident/representative conversation, distinct from owner-directed synthetic scope, and could providers ever be included? (BRD OD-47) | Resident Engagement, DPO, Legal, Owner | Resident draft FR-062 to FR-071 is in proposed scope; live use remains blocked. Provider chat/resident memory remain excluded; no closure inferred from staff ADR acceptance |'), (935, '| 0. Readiness | Indicative 6 to 8 weeks; validate pilot-area stock and building data, twelve-month throughput, delay causes, resident journeys, competence, suppliers, funding, headroom and platform options; after the frozen protocol and the OD-36 DPIA and lawful measurement basis are approved, switch on identical event capture for the proposed pilot locality and matched locality before resident contact | Sponsor and Finance authorise a capped discovery envelope; relevant control owners accept the baseline, options appraisal, Comparison 1 and Comparison 2 evaluation protocol, guardrails and data-protection gates before any Phase 0 pilot or comparison event capture. Shadow testing additionally requires the shadow-mode entry evidence listed for Phase 1 |'), (1421, '| Portfolio investment, performance and scale decisions. The executive question is whether retrofit produces safe, resident-accepted outcomes within real capital, cash, covenant, quality and capacity limits; estimates in the case study are not a validated investment case. | Reconcile stock trajectory, approved cohorts, accepted outcomes, grant states, programme and technology costs, cash exposure, risks and resident outcomes; compare against an agreed baseline; decide whether to pause, change or release the next investment tranche. Asset and Finance prepare the decision; the Board or delegated authority approves the envelope and scale. | Generate traceable summaries and scenario packs from controlled data after the underlying records are validated. Forecast assumptions, risk appetite, investment choice, tolerances and scale decisions remain human-owned. | Homes reaching intended outcomes and accepted handover; quality-adjusted cost per home; grant and cash reconciled by state; peak cash/liquidity/covenant headroom; resident outcomes and guardrails; attributable value versus the non-agent alternative. Supports BG-001 through BG-009 and BG-012. |'), (1701, '| NFR-013 | None | The portal shall offer a lean mobile-responsive, accessible username/password-style resident experience without requiring a staff account or withdrawing assisted access. | BG-005, BG-009 | Residents, Engagement, Digital | AC-120: Given the core resident tasks, when tested at 320/390/1280px with keyboard, screen reader, text resize and reflow, then navigation, status, errors, upload and help are operable against the existing EXA-011 WCAG 2.2 AA engineering target; failures block the affected demo task and no achieved conformance or real-user validation is inferred. Managed identity choice and proportionate extra verification/recovery controls are deferred to ADR, not homegrown password storage or emailed passwords. | Must |')]",
+   "id": "trace:ADR-linkage",
+   "status": "INFO"
+  },
+  {
+   "detail": "11 measures x 3 scenarios recomputed from inputs; mismatches []",
+   "id": "formula:BRD-capacity-table",
+   "status": "PASS"
+  },
+  {
+   "detail": "recomputed F low/base/high [-1.594, 14.74, 94.333] vs quoted -1.594/14.74/94.333; PRD line(s) [1316]",
+   "id": "formula:F-quoted-figures",
+   "status": "PASS"
+  },
+  {
+   "detail": "slope 35.400 (quoted 35.4), const -2.960 (quoted -2.96), break-even 8.362% (quoted 8.36%)",
+   "id": "formula:break-even",
+   "status": "PASS"
+  },
+  {
+   "detail": "F at 25/50/75% [5.89, 14.74, 23.59] vs quoted 5.89/14.74/23.59",
+   "id": "formula:F(U)",
+   "status": "PASS"
+  },
+  {
+   "detail": "V break-even 29.905% vs quoted 29.90%",
+   "id": "formula:V-break-even",
+   "status": "PASS"
+  },
+  {
+   "detail": "PRD quotes 48 one-off and 14.74",
+   "id": "formula:PRD-addendum-quotes",
+   "status": "PASS"
+  },
+  {
+   "detail": "no BRD text records a requirements-owner disposition of FR-044/AC-084",
+   "id": "hygiene:no-FR044-signoff",
+   "status": "PASS"
+  }
+ ],
+ "rev": "9172939caf935a1a03346767737da9c2de564fa8"
+}
