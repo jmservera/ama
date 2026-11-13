@@ -11752,3 +11752,14 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added a safety issue card row to the component inventory in [design-system.md](research/ux/design-system.md) for the reworked case safety panel: labelled per-action forms, hints, a next-step callout and compact key facts.
 * No backend rule changed. Browser, screen-reader and housing-officer comprehension checks remain unperformed.
+
+## [2026-11-13] add | Issue #435 capstone assessment challenge (Refs #435)
+
+* Added a [20-criterion assessment challenge](../capstone/pitch/capstone-assessment-challenge.md) of the existing 55-slide deck with Slide 22, B25 and B27, covering evidence, gaps, assumptions, section floors and individual floors. Linked from the pitch README.
+* Offline and content-only. No score, floor pass, rehearsal, deck or receipt-hashed file change; held-out batch not run. Criterion 5 stays partial pending owner review.
+
+## [2026-11-13] update | Tokenomics rehearsal notes and held-out module status (Refs #435)
+
+* Recorded [tokenomics-rehearsal-notes.md](../capstone/pitch/tokenomics-rehearsal-notes.md) (page-by-page timing table, Slide 22 cue and figures table) and stated its arithmetic result directly: the 24:30 column sums to 1,470 s and the 15-minute column to 840 s plus 60 s.
+* Corrected the earlier claim, in the entries above and in the [Q&A brief](../capstone/tokenomics-qa-brief.md), the rehearsal notes and the [assessment challenge](../capstone/pitch/capstone-assessment-challenge.md), that `zava_forward.agents.heldout_batch` is absent: it is implemented on main (merged in #1525 and #1531) and not yet run live, awaiting owner-authorised live provider execution. The earlier entries are unchanged.
+* Documentation only. No live run, measurement, deck change, tick or closure.
