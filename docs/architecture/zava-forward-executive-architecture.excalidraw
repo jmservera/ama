@@ -339,7 +339,7 @@
           {
             "path": "infra/modules/containerapps.bicep",
             "line": 1,
-            "sha256": "15324c2326ca7c0b8f902ffca2e488cfa9f9708a1de97af8bed8d1d069625d3a",
+            "sha256": "cfc8d557b4320e3572c22c0fbf3c44d4170b7a69d77e40cb573ee1510bceea85",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           },
           {
@@ -768,19 +768,19 @@
           {
             "path": "infra/modules/containerapps.bicep",
             "line": 1,
-            "sha256": "15324c2326ca7c0b8f902ffca2e488cfa9f9708a1de97af8bed8d1d069625d3a",
+            "sha256": "cfc8d557b4320e3572c22c0fbf3c44d4170b7a69d77e40cb573ee1510bceea85",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           },
           {
             "path": "src/api/src/zava_forward/api/server.py",
             "line": 1,
-            "sha256": "b2ebe1452a69cb3b8bae71c2b97327d6db19f2e50beec3a460ad3783da7bac39",
+            "sha256": "67fc5ce04d661774b46d0bafba5748880aab87d3b62d663d20f7df21fde102ab",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           },
           {
             "path": "src/core/src/zava_forward/core/assistants.py",
             "line": 1,
-            "sha256": "80fb9a5fdb4061581d2977cd48619be039507cb68d7c52cd5646db7278c41acc",
+            "sha256": "14a3cb43ceeef93c656b653ebc4f962c97026d3be9585a479900ff4a5477f4d6",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           },
           {
@@ -1035,19 +1035,19 @@
           {
             "path": "infra/main.bicep",
             "line": 1,
-            "sha256": "c3010ba3b6ef5c53cb744d79a0b66f37042062cbe5ad84ddb63548a69b8c2bc6",
+            "sha256": "427b06171904ee1cb714274cc4a42b9075d06146e2ca7deef98cf1021b20dc96",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           },
           {
             "path": "src/core/src/zava_forward/core/ai.py",
             "line": 1,
-            "sha256": "3593be1ea5cdb4e091712a205fcab4983e96139cb9b3077d2e82210e5b47c6e9",
+            "sha256": "db9fda8161dfd529acbf574398845354a68b88fddb7cfce9ffebf9904e2287da",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           },
           {
             "path": "infra/README.md",
             "line": 1,
-            "sha256": "be99190c627ea3678eabf9e33637e3c34be5695d01e8fbd0c7d8c87a3159399c",
+            "sha256": "a53080961ba729bd02a04363022a1e2e49619c35dda411a7311139679544fe6a",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           }
         ]
@@ -1498,13 +1498,13 @@
           {
             "path": "src/core/src/zava_forward/core/mssqlstore.py",
             "line": 1,
-            "sha256": "dca3b3f0276b39384520fb518849445f68af5c97df5e335f7e7a1fe82662babd",
+            "sha256": "1825dc5f2c6dd7b9b62870b47ea85be5dcd649169d2019ac06a0928514b7cce7",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           },
           {
             "path": "infra/README.md",
             "line": 1,
-            "sha256": "be99190c627ea3678eabf9e33637e3c34be5695d01e8fbd0c7d8c87a3159399c",
+            "sha256": "a53080961ba729bd02a04363022a1e2e49619c35dda411a7311139679544fe6a",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           }
         ]
@@ -1745,7 +1745,7 @@
           {
             "path": "infra/modules/storage.bicep",
             "line": 1,
-            "sha256": "fa08533e606f2c5c7a3a13d3f7e0544f8f94554691bd4c2e26cce7b1effa65db",
+            "sha256": "612c218c2321490c296a67a37a37340fd3108e2495b57db72261e3f5eb1391e1",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           },
           {
@@ -2007,13 +2007,13 @@
           {
             "path": "infra/modules/containerapps.bicep",
             "line": 1,
-            "sha256": "15324c2326ca7c0b8f902ffca2e488cfa9f9708a1de97af8bed8d1d069625d3a",
+            "sha256": "cfc8d557b4320e3572c22c0fbf3c44d4170b7a69d77e40cb573ee1510bceea85",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           },
           {
             "path": "src/api/src/zava_forward/api/server.py",
             "line": 1,
-            "sha256": "b2ebe1452a69cb3b8bae71c2b97327d6db19f2e50beec3a460ad3783da7bac39",
+            "sha256": "67fc5ce04d661774b46d0bafba5748880aab87d3b62d663d20f7df21fde102ab",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           }
         ]
@@ -2082,7 +2082,7 @@
           {
             "path": "infra/modules/containerapps.bicep",
             "line": 1,
-            "sha256": "15324c2326ca7c0b8f902ffca2e488cfa9f9708a1de97af8bed8d1d069625d3a",
+            "sha256": "cfc8d557b4320e3572c22c0fbf3c44d4170b7a69d77e40cb573ee1510bceea85",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           },
           {
@@ -2165,7 +2165,7 @@
           {
             "path": "src/core/src/zava_forward/core/assistants.py",
             "line": 1,
-            "sha256": "80fb9a5fdb4061581d2977cd48619be039507cb68d7c52cd5646db7278c41acc",
+            "sha256": "14a3cb43ceeef93c656b653ebc4f962c97026d3be9585a479900ff4a5477f4d6",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           },
           {
@@ -2183,13 +2183,13 @@
           {
             "path": "infra/main.bicep",
             "line": 1,
-            "sha256": "c3010ba3b6ef5c53cb744d79a0b66f37042062cbe5ad84ddb63548a69b8c2bc6",
+            "sha256": "427b06171904ee1cb714274cc4a42b9075d06146e2ca7deef98cf1021b20dc96",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           },
           {
             "path": "src/core/src/zava_forward/core/ai.py",
             "line": 1,
-            "sha256": "3593be1ea5cdb4e091712a205fcab4983e96139cb9b3077d2e82210e5b47c6e9",
+            "sha256": "db9fda8161dfd529acbf574398845354a68b88fddb7cfce9ffebf9904e2287da",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           }
         ]
@@ -2263,7 +2263,7 @@
           {
             "path": "src/core/src/zava_forward/core/mssqlstore.py",
             "line": 1,
-            "sha256": "dca3b3f0276b39384520fb518849445f68af5c97df5e335f7e7a1fe82662babd",
+            "sha256": "1825dc5f2c6dd7b9b62870b47ea85be5dcd649169d2019ac06a0928514b7cce7",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           }
         ]
@@ -2331,7 +2331,7 @@
           {
             "path": "infra/modules/storage.bicep",
             "line": 1,
-            "sha256": "fa08533e606f2c5c7a3a13d3f7e0544f8f94554691bd4c2e26cce7b1effa65db",
+            "sha256": "612c218c2321490c296a67a37a37340fd3108e2495b57db72261e3f5eb1391e1",
             "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
           },
           {
@@ -3007,7 +3007,7 @@
             "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
             "line": 31,
             "anchor": "## Bounded streaming engineering",
-            "sha256": "243efdda03d31315d9417fe68ccda5d4d86c6b9d6489aff4f45a332ec493eaeb",
+            "sha256": "65f3648901092b351141318a3f26a144d91c9f1f978cbe2140605c308cc99570",
             "classification": "Source/dated synthetic exercise; live device/consent/analysis acceptance separate"
           }
         ]
@@ -3046,7 +3046,7 @@
             "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
             "line": 31,
             "anchor": "## Bounded streaming engineering",
-            "sha256": "243efdda03d31315d9417fe68ccda5d4d86c6b9d6489aff4f45a332ec493eaeb",
+            "sha256": "65f3648901092b351141318a3f26a144d91c9f1f978cbe2140605c308cc99570",
             "classification": "Source/dated synthetic exercise; live device/consent/analysis acceptance separate"
           }
         ],
@@ -3095,7 +3095,7 @@
             "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
             "line": 31,
             "anchor": "## Bounded streaming engineering",
-            "sha256": "243efdda03d31315d9417fe68ccda5d4d86c6b9d6489aff4f45a332ec493eaeb",
+            "sha256": "65f3648901092b351141318a3f26a144d91c9f1f978cbe2140605c308cc99570",
             "classification": "Source/dated synthetic exercise; live device/consent/analysis acceptance separate"
           }
         ],
@@ -3483,9 +3483,9 @@
           {
             "key": "consumer",
             "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-            "line": 219,
+            "line": 410,
             "anchor": "class SensorConsumer:",
-            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+            "sha256": "b8f3ac1a8550423af3252a6262e631ab5772f49938f07e7eaaf1a8f84d49048b",
             "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
           },
           {
@@ -3546,9 +3546,9 @@
           {
             "key": "consumer",
             "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-            "line": 219,
+            "line": 410,
             "anchor": "class SensorConsumer:",
-            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+            "sha256": "b8f3ac1a8550423af3252a6262e631ab5772f49938f07e7eaaf1a8f84d49048b",
             "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
           },
           {
@@ -3619,9 +3619,9 @@
           {
             "key": "consumer",
             "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-            "line": 219,
+            "line": 410,
             "anchor": "class SensorConsumer:",
-            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+            "sha256": "b8f3ac1a8550423af3252a6262e631ab5772f49938f07e7eaaf1a8f84d49048b",
             "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
           },
           {
@@ -3693,9 +3693,9 @@
           {
             "key": "consumer",
             "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-            "line": 219,
+            "line": 410,
             "anchor": "class SensorConsumer:",
-            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+            "sha256": "b8f3ac1a8550423af3252a6262e631ab5772f49938f07e7eaaf1a8f84d49048b",
             "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
           },
           {
@@ -3740,9 +3740,9 @@
           {
             "key": "consumer",
             "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-            "line": 219,
+            "line": 410,
             "anchor": "class SensorConsumer:",
-            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+            "sha256": "b8f3ac1a8550423af3252a6262e631ab5772f49938f07e7eaaf1a8f84d49048b",
             "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
           },
           {
@@ -3797,9 +3797,9 @@
           {
             "key": "consumer",
             "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-            "line": 219,
+            "line": 410,
             "anchor": "class SensorConsumer:",
-            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+            "sha256": "b8f3ac1a8550423af3252a6262e631ab5772f49938f07e7eaaf1a8f84d49048b",
             "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
           },
           {
@@ -3875,9 +3875,9 @@
           {
             "key": "qualityHelper",
             "path": "src/core/src/zava_forward/core/assistants.py",
-            "line": 47,
+            "line": 48,
             "anchor": "    \"quality-evidence\": dict(",
-            "sha256": "80fb9a5fdb4061581d2977cd48619be039507cb68d7c52cd5646db7278c41acc",
+            "sha256": "14a3cb43ceeef93c656b653ebc4f962c97026d3be9585a479900ff4a5477f4d6",
             "classification": "Current quality helper uses measure/checklist/document evidence; telemetry linkage is a gated proposal"
           }
         ]
@@ -3930,9 +3930,9 @@
           {
             "key": "qualityHelper",
             "path": "src/core/src/zava_forward/core/assistants.py",
-            "line": 47,
+            "line": 48,
             "anchor": "    \"quality-evidence\": dict(",
-            "sha256": "80fb9a5fdb4061581d2977cd48619be039507cb68d7c52cd5646db7278c41acc",
+            "sha256": "14a3cb43ceeef93c656b653ebc4f962c97026d3be9585a479900ff4a5477f4d6",
             "classification": "Current quality helper uses measure/checklist/document evidence; telemetry linkage is a gated proposal"
           }
         ],
@@ -3995,9 +3995,9 @@
           {
             "key": "qualityHelper",
             "path": "src/core/src/zava_forward/core/assistants.py",
-            "line": 47,
+            "line": 48,
             "anchor": "    \"quality-evidence\": dict(",
-            "sha256": "80fb9a5fdb4061581d2977cd48619be039507cb68d7c52cd5646db7278c41acc",
+            "sha256": "14a3cb43ceeef93c656b653ebc4f962c97026d3be9585a479900ff4a5477f4d6",
             "classification": "Current quality helper uses measure/checklist/document evidence; telemetry linkage is a gated proposal"
           }
         ],
@@ -4687,9 +4687,9 @@
           {
             "key": "consumer",
             "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-            "line": 219,
+            "line": 410,
             "anchor": "class SensorConsumer:",
-            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+            "sha256": "b8f3ac1a8550423af3252a6262e631ab5772f49938f07e7eaaf1a8f84d49048b",
             "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
           }
         ]
@@ -5042,9 +5042,9 @@
           {
             "key": "consumer",
             "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-            "line": 219,
+            "line": 410,
             "anchor": "class SensorConsumer:",
-            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+            "sha256": "b8f3ac1a8550423af3252a6262e631ab5772f49938f07e7eaaf1a8f84d49048b",
             "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
           },
           {
@@ -5285,42 +5285,42 @@
         "path": "src/core/src/zava_forward/core/gates.py",
         "line": 105,
         "anchor": "def transition_allowed(",
-        "sha256": "00929abc74254296291f229871360d9ee50430676735ab5977cfa0dd92504059",
+        "sha256": "acd9cd1ba8d4a505dc69523d68c5bf240543bad05224ffa01dc8fca1bf230a1d",
         "classification": "Explicit coded state-flow; unknown gates do not pass"
       },
       "transition": {
         "path": "src/core/src/zava_forward/core/store.py",
-        "line": 635,
+        "line": 667,
         "anchor": "    def advance(",
-        "sha256": "6b2236eb171e889c2ed652b86541740388ef8d3d08dd6db7c1b61a18af7c0b05",
+        "sha256": "d1d20cfeaa2e0e82b2cdf3338561f7fa1161da8e09afbe5165459245e59ec19d",
         "classification": "Controlled human case transition, not an AI action"
       },
       "advice": {
         "path": "src/agents/README.md",
-        "line": 692,
+        "line": 755,
         "anchor": "### Five retrofit assistants",
-        "sha256": "41de4d35f6d40a2c58733aef143254d84744e26dc953469f614e340f9c6242d5",
+        "sha256": "895b14bb9698c1df56f4eb0f91af21f57b1e2761bf839e1107f904547c6e65d9",
         "classification": "Five source-coded proposal helpers; activation/benefit acceptance separate"
       },
       "chat": {
         "path": "src/api/README.md",
-        "line": 707,
+        "line": 750,
         "anchor": "## Employee chat with bounded skills",
-        "sha256": "d3e815ae45704ac2860eccff072ebb9dcaeebcd697f4d83b1944865b02e980cc",
+        "sha256": "65af217b9957d54f3850b9f80801afe4695410c16e8957e530d9659896511333",
         "classification": "One selected skill and bounded call; no tools or case writes"
       },
       "files": {
         "path": "src/importer/README.md",
         "line": 13,
         "anchor": "* Excel transition",
-        "sha256": "2a734d5800ae22526fdb6c1f2894737414cf90181e5b358c66ffd98316c26244",
+        "sha256": "45a6c58cde567214c0a2faf98a713e83a49210a05d8bb567ff46794f4049386c",
         "classification": "Read-only file tooling; live OneDrive connector not established"
       },
       "sensors": {
         "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
         "line": 31,
         "anchor": "## Bounded streaming engineering",
-        "sha256": "243efdda03d31315d9417fe68ccda5d4d86c6b9d6489aff4f45a332ec493eaeb",
+        "sha256": "65f3648901092b351141318a3f26a144d91c9f1f978cbe2140605c308cc99570",
         "classification": "Source/dated synthetic exercise; live device/consent/analysis acceptance separate"
       },
       "intake": {
@@ -5332,9 +5332,9 @@
       },
       "consumer": {
         "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-        "line": 219,
+        "line": 410,
         "anchor": "class SensorConsumer:",
-        "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+        "sha256": "b8f3ac1a8550423af3252a6262e631ab5772f49938f07e7eaaf1a8f84d49048b",
         "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
       },
       "analysis": {
@@ -5353,9 +5353,9 @@
       },
       "qualityHelper": {
         "path": "src/core/src/zava_forward/core/assistants.py",
-        "line": 47,
+        "line": 48,
         "anchor": "    \"quality-evidence\": dict(",
-        "sha256": "80fb9a5fdb4061581d2977cd48619be039507cb68d7c52cd5646db7278c41acc",
+        "sha256": "14a3cb43ceeef93c656b653ebc4f962c97026d3be9585a479900ff4a5477f4d6",
         "classification": "Current quality helper uses measure/checklist/document evidence; telemetry linkage is a gated proposal"
       },
       "stream": {
@@ -5376,7 +5376,7 @@
         "path": "infra/main.bicep",
         "line": 70,
         "anchor": "@description('Enable direct model calls from the existing MVP API. Leave false for the proposed separate agent-runner topology; true grants the API model invocation rights and configures AI_ENDPOINT.')",
-        "sha256": "c3010ba3b6ef5c53cb744d79a0b66f37042062cbe5ad84ddb63548a69b8c2bc6",
+        "sha256": "427b06171904ee1cb714274cc4a42b9075d06146e2ca7deef98cf1021b20dc96",
         "classification": "Selected shared-API source realization; enableApiAi and background workloads have independent conditions"
       },
       "network": {
@@ -5389,8 +5389,8 @@
       "compute": {
         "path": "infra/modules/containerapps.bicep",
         "line": 119,
-        "anchor": "resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {",
-        "sha256": "15324c2326ca7c0b8f902ffca2e488cfa9f9708a1de97af8bed8d1d069625d3a",
+        "anchor": "import os, sys",
+        "sha256": "cfc8d557b4320e3572c22c0fbf3c44d4170b7a69d77e40cb573ee1510bceea85",
         "classification": "Shared API/EasyAuth and conditional workloads; direct-demo and internal profiles are distinct"
       },
       "sql": {
@@ -5403,8 +5403,8 @@
       "storage": {
         "path": "infra/modules/storage.bicep",
         "line": 58,
-        "anchor": "var containers = ['evidence', 'imports', 'quarantine', 'exports', 'audit-archive', 'ledger-digests', 'staff-results']",
-        "sha256": "fa08533e606f2c5c7a3a13d3f7e0544f8f94554691bd4c2e26cce7b1effa65db",
+        "anchor": "deleteRetentionPolicy: { enabled: true, days: 30 }",
+        "sha256": "612c218c2321490c296a67a37a37340fd3108e2495b57db72261e3f5eb1391e1",
         "classification": "Authored Blob containers and queues; quarantine/retention configuration is not accepted scanner or erasure proof"
       },
       "model": {

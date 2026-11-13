@@ -110,6 +110,22 @@ def test_given_current_native_deck_when_checked_then_cost_comparison_preserved(p
     assert "Cost comparison checked" in result.stdout
 
 
+@pytest.mark.parametrize("qualifier", ["Planning", "Assumed workload"])
+def test_given_deck_slide_52_without_scenario_label_when_checked_then_fails(package, tmp_path, qualifier):
+    root = Path(__file__).resolve().parents[4]
+    deck = root / "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx"
+    edited = tmp_path / "edited.pptx"
+    with ZipFile(deck) as source, ZipFile(edited, "w") as target:
+        for item in source.infolist():
+            data = source.read(item.filename)
+            if item.filename == "ppt/slides/slide52.xml":
+                data = data.decode().replace(qualifier, "Removed").replace(qualifier.lower(), "removed").encode()
+            target.writestr(item, data)
+
+    with pytest.raises(subprocess.CalledProcessError):
+        rebuild(package, "--check-only", "--check-pptx", str(edited))
+
+
 @pytest.mark.parametrize("ident,qualifier", [
     ("S09", "Historical"), ("S11", "Planning scenario"),
     ("B05", "non-inference"), ("B09", "Conditional"), ("B25", "unknown"),
