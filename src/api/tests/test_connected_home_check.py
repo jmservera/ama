@@ -247,6 +247,16 @@ class ConnectedHomeCheck(unittest.TestCase):
         self.assertEqual(Path(receipt[1]).resolve(), api / "tests/test_dependency_rule.py")
         self.assertIn("FAILED []", run.stdout)
 
+    def test_walk_keeps_its_own_home_and_does_not_relabel_the_design_example(self) -> None:
+        source = Path(walk.__file__).read_text(encoding="utf-8")
+        self.assertEqual((walk.HOME_ID, walk.SIBLING_ID), ("ZF-1", "ZF-2"))
+        self.assertNotIn("EX-HOME-901", source)
+        deferred = " ".join(walk.DEFERRED)
+        for kept in ("entry by report or nomination", "eight-stage screen consistency"):
+            self.assertIn(kept, deferred)
+        self.assertIn("user validation", deferred)
+        self.assertIn("assistive-technology output", deferred)
+
     def test_portfolio_panels_with_other_homes_data_are_not_rejected(self) -> None:
         seen = observed_from(list(self.own["asset-board"]), "ZF-2")
         for title in (
