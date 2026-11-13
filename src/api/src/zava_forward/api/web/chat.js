@@ -289,9 +289,15 @@ function regulatoryPlainMode(root, id) {
   return h("label", { class: "regulatory-mode", for: id }, input, " Plain-language explanations");
 }
 
+const regulatoryStates = new Set(["breach risk", "attention", "unknown", "clear", "not applicable", "answer", "refused", "conflict"]);
+const regulatoryStateClass = (value) => `regulatory-state state-${regulatoryStates.has(value) ? value.replace(" ", "-") : "unknown"}`;
+
 function regulatorySources(citations) {
   const list = h("ul", { "aria-label": "Provision and fact citations" });
-  if (!citations?.length) list.append(h("li", {}, "No source held for this answer. Do not infer a duty or terms; ask the named human owner."));
+  if (!citations?.length) {
+    list.append(h("li", { class: "regulatory-state state-no-source" }, "No source held for this answer. Do not infer a duty or terms; ask the named human owner."),
+      h("li", { class: "plain-explanation" }, "In plain words: the lookup found nothing it can show. Treat the question as open and ask the named owner what to do next."));
+  }
   for (const source of citations || []) {
     const link = `/api/law/provisions/${encodeURIComponent(source.id)}`;
     list.append(h("li", {},
@@ -312,7 +318,7 @@ function regulatoryAlertsPanel(caseId) {
   const meanings = {
     "breach risk": "A recorded check needs urgent human review. This is not a legal finding.",
     attention: "A recorded trigger needs human attention.",
-    unknown: "Evidence is missing or cannot be relied on. Do not treat this as clear.",
+    unknown: "Evidence is missing or cannot be relied on. Do not treat this as clear. Ask the decision owner what to check next.",
     clear: "This bounded check is clear; it does not establish compliance.",
     "not applicable": "This check did not apply to the recorded evidence; it is not a legal decision.",
   };
@@ -334,6 +340,7 @@ function regulatoryAlertsPanel(caseId) {
   }
   async function showAlerts() {
     status.textContent = "Loading role-scoped alerts. Coverage is unknown.";
+    status.className = "regulatory-state state-unknown";
     if (me.services?.law_alerts === false) {
       list.replaceChildren();
       status.textContent = "Alert coverage unknown: the law store is not loaded, so no rule checks have run. Use the existing human emergency or hazard service; do not wait for checks.";
@@ -343,7 +350,7 @@ function regulatoryAlertsPanel(caseId) {
       const data = await api(`/api/law/alerts?case=${encodeURIComponent(caseId)}`);
       const alerts = (data.homes || []).flatMap((home) => home.alerts);
       list.replaceChildren(...alerts.map((alert) => h("article", { class: "regulatory-alert" },
-        h("h3", {}, `Status: ${alert.result}`),
+        h("h3", { class: regulatoryStateClass(alert.result) }, `Status: ${alert.result}`),
         h("p", { class: "plain-explanation" }, meanings[alert.result] || meanings.unknown),
         alert.exercise && h("p", {}, "synthetic-demo: fictional exercise control, not law or operational approval."),
         h("dl", {},
@@ -357,6 +364,7 @@ function regulatoryAlertsPanel(caseId) {
         h("p", {}, alert.usage ? "Model calls per check and alert: 0. Inference is disabled for every role. Service cost: Unknown; price and billing allocation are not held." : "Historical model usage was not recorded. Service cost: Unknown."),
         h("h4", {}, "Source and status"), regulatorySources(alert.citations),
         h("p", {}, `Owner acknowledgement: ${alert.requires_acknowledgement ? "required" : "not outstanding"}. Owner outcome: ${alert.requires_outcome ? "required" : "not outstanding"}. This panel cannot acknowledge, decide compliance or restart stopped retrofit work.`))));
+      status.className = data.coverage_status && data.coverage_status !== "unknown" ? "" : "regulatory-state state-unknown";
       status.textContent = `${alerts.length} visible alerts. Coverage: ${data.coverage_status || "unknown"}. ${alerts.length ? "Only alerts permitted for your role are shown." : "No visible alerts does not mean no risk, complete coverage or compliance."}`;
     } catch (e) {
       list.replaceChildren();
@@ -371,9 +379,21 @@ function regulatoryAlertsPanel(caseId) {
   return root;
 }
 
+const lookupMeanings = {
+  answer: "In plain words: sources were found and quoted below. This is not a decision about which duty applies.",
+  refused: "In plain words: the lookup cannot answer this question. Ask the named owner, who decides what to do next.",
+  conflict: "In plain words: the sources disagree. Do not pick one. The named owner compares them and decides.",
+};
+
 function regulatoryChatPanel(caseId) {
-  const root = h("details", { id: "regulatory-chat" },
-    h("summary", {}, "Cited regulatory lookup (synthetic-demo)"));
+  const summary = h("summary", {}, "Cited regulatory lookup (synthetic-demo)");
+  const root = h("details", { id: "regulatory-chat" }, summary);
+  root.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || !root.open) return;
+    event.preventDefault();
+    root.open = false;
+    summary.focus();
+  });
   const status = h("p", { role: "status" });
   const privacy = h("p", { id: "regulatory-privacy", class: "muted" },
     "Synthetic data only. Do not enter resident personal or special-category details. DPIA and retention review remain incomplete.");
@@ -397,7 +417,8 @@ function regulatoryChatPanel(caseId) {
   const show = (answer, thread) => {
     const sections = answer.sections;
     const item = h("li", { class: "regulatory-turn" },
-      h("h3", {}, `Lookup status: ${answer.kind}`),
+      h("h3", { class: regulatoryStateClass(answer.kind) }, `Lookup status: ${answer.kind}`),
+      h("p", { class: "plain-explanation" }, lookupMeanings[answer.kind] || lookupMeanings.refused),
       h("p", {}, answer.label || "synthetic-demo: not legal advice or approval"),
       h("p", {}, answer.usage ? "Model calls for this question: 0. Inference is disabled. Service cost: Unknown, not zero." : "Historical model usage was not recorded. Service cost: Unknown."));
     if (sections) {
@@ -425,6 +446,7 @@ function regulatoryChatPanel(caseId) {
         const receipt = await api(`/api/chat/regulatory/threads/${encodeURIComponent(thread)}/doubt`, { turn: answer.turn });
         status.textContent = `${receipt.label}: sent to ${receipt.owner}'s exercise inbox. No legal approval or resident message.`;
         doubt.textContent = "Sent to exercise owner; awaiting human review";
+        doubt.classList.add("regulatory-state", "state-sent");
       } catch (e) {
         status.textContent = `Doubt route failed: ${e.message} Owner: application support. Next action: try again, or ask Juan Manuel Servera directly.`;
         doubt.removeAttribute("aria-disabled");
@@ -433,9 +455,12 @@ function regulatoryChatPanel(caseId) {
     if (answer.escalation) {
       doubt.setAttribute("aria-disabled", "true");
       doubt.textContent = "Sent to exercise owner; awaiting human review";
+      doubt.classList.add("regulatory-state", "state-sent");
       item.append(h("p", {}, `Turn sent to ${answer.escalation.owner}'s exercise inbox. No legal decision recorded.`));
     }
-    item.append(citations, doubt);
+    item.append(citations,
+      h("p", { class: "plain-explanation" }, "In plain words: sending this to the named owner asks a person to check it. Sending does not approve or decide anything, and no resident is contacted."),
+      doubt);
     log.append(item);
   };
   root.append(h("p", {}, "synthetic-demo only. Exact source excerpts and recorded facts, not legal interpretation. Ask about hazard sources or automated decisions. Safety routes and deterministic alerts remain independent."),
