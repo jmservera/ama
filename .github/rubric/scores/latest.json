@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-13T18:58:03+00:00",
-  "commit": "b630279b411736fb3067fc0747f346baeb81f291",
+  "scored_at": "2026-11-13T19:12:42+00:00",
+  "commit": "fa494a7aef30ad50a31af9da9cd5c398795bf669",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43485684341",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43488646435",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "11fe0160a47c2ee2ac0fbab89e659a3867d928531b08367b03329afbcf02e8d8",
     "adr": "a0004921843db2b041b1e8a0c28a107f22d55d544d06084f2cdaa628ccbcc8e1",
-    "solution-code": "48e516514f6065c3afaba76bff33f71fe6c03ed0431a1e6b0ae01cfd84b76f67",
+    "solution-code": "9552a47512be8acaf66d01e5510e672aaf9b6cb9f40e928b4831e1bcd1ac5d2a",
     "infrastructure": "f9ab88c245639aba9a15ec5c43edc8876ecc33d16fb8c3683f2916de9b09728e",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "3b1ad575bcb303c981844fd6c915f3059a8f06ac5b939af8e64c6687924ae121",
@@ -43,25 +43,26 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/ai_consumption.py:324-350",
-        "src/core/tests/test_assistants_identity.py:1-127"
+        "src/agents/src/zava_forward/agents/chat_eval.py:592-650",
+        "src/agents/tests/test_chat_eval.py:461-479"
       ],
-      "rationale": "Diff adds safe_identity/_SECRET redaction applied uniformly to provider/deployment/model fields with new dedicated test coverage; reinforces existing fail-closed identity handling at the same ceiling (5)."
+      "rationale": "call_authorization now rejects malformed/non-finite spend, owner and expiry fields plus timezone-naive timestamps, with new negative tests; reinforces fail-closed control at ceiling (5)."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/assistants.py:448-472",
-        "src/core/tests/test_assistants_identity.py:1-127"
+        "src/agents/src/zava_forward/agents/chat_eval.py:770-795",
+        "src/agents/tests/test_chat_eval.py:506-548"
       ],
-      "rationale": "shape_result/sanitize_identity now consistently bound provider, deployment and model via one helper, closing an inconsistency; reinforces completeness, ceiling 5 unchanged."
+      "rationale": "AuthorizedModel/_gated complete the previously-declared actual-model dispatch gate (ledger reservation, reconciliation, refusal of unauthorised models) with tests; completeness reinforced at ceiling (5)."
     },
     "A5": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/heldout_batch.py:1-374"
+        "src/agents/src/zava_forward/agents/chat_eval.py:770-868",
+        "src/agents/src/zava_forward/agents/paired_trial.py:135-168"
       ],
-      "rationale": "New held-out token/cost-cap measurement harness is strong evaluation evidence, but baseline already at ceiling (5), unchanged."
+      "rationale": "Spend is now reconciled per call against a shared ledger and cost inputs reject non-finite/overflowing numbers; strengthens cost measurement at existing ceiling (5), unchanged."
     },
     "A6": {
       "score": 5,
@@ -107,9 +108,9 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "src/agents/README.md:607-626"
+        "src/agents/README.md:137-145"
       ],
-      "rationale": "Diff is code/tests only, no README or deck documentation changes beyond baseline; Good (4) retained."
+      "rationale": "README documents the new AuthorizedModel/ledger behaviour and names its open gap (#\u200b164); code-level documentation only, no deck change. Good (4) retained."
     },
     "B7": {
       "score": 5,
