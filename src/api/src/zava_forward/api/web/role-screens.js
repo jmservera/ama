@@ -63,7 +63,7 @@ async function roleScreensView() {
   }
   if (id && !screen) {
     return show(h("h1", {}, "Screen unavailable"),
-      h("p", { role: "alert" }, "This screen is not installed for your signed-in role. Your access has not changed."),
+      h("p", { role: "alert" }, "This screen is not installed for your signed-in role. Your access has not changed. Owner: your team manager. Next action: go back to specialist screens and open one that is listed for you."),
       h("a", { href: "#/screens" }, "Back to specialist screens"));
   }
   const menu = h("nav", { "aria-label": "Specialist screens", class: "screen-links" },
@@ -354,7 +354,7 @@ function programmeQueue(first, total, loadPage, start = 0) {
       paging.textContent = pageText();
       syncPager();
     } catch (error) {
-      paging.textContent = "That page could not be loaded. The rows shown are unchanged. Try again, or open a case from the case list.";
+      paging.textContent = "That page could not be loaded. The rows shown are unchanged. Owner: application support. Next action: Try again, or open a case from the case list.";
     }
   };
   const saved = screenScopeQuery().get("scope");
@@ -520,7 +520,7 @@ function journeyStageMap(c) {
       // Link text carries the stage name so stages sharing a screen stay distinct in link lists (WCAG 2.4.4).
       id !== null && open(id) ? h("a", { href: screenHref(id, c.id) }, `${stage}: ${roleScreens.get(id).title}`)
         : `${stage}: ${id === null ? "no screen yet (recorded deferral)."
-          : `${roleScreens.get(id)?.title || id} is not installed for your role. Your access has not changed.`}`,
+          : `${roleScreens.get(id)?.title || id} is not installed for your role. Your access has not changed. Owner: your team manager. Next action: ask them to add it for your role.`}`,
       ` ${boundary}`))));
 }
 registerRoleScreen({
@@ -1359,7 +1359,7 @@ registerRoleScreen({
       screenPanel("Invoices waiting for Finance (all homes your role can see)",
         queue ? screenTable("Invoices with exceptions, pauses or not yet checked",
           ["Home", "Invoice", "Supplier and reference", "Status", "Exceptions", "Pause", "Invoice total"], financeQueueRows(queue))
-          : h("p", { class: "empty" }, "Unknown. The queue could not be read for your role.")),
+          : h("p", { class: "empty" }, "Unknown. The queue could not be read for your role. Owner: your team manager. Next action: ask them to check your access.")),
       financeInvoicePanel(c),
       financeEconomicsPanel(extra?.report));
   }
@@ -1387,7 +1387,7 @@ const heldCheckNames = (value) => Array.isArray(value) && value.every((v) => typ
 function heldCheckResult(data) {
   if (!data || data.reviewed !== false) return null;
   if (data.status === "Current") return "Current. The details checked in this file match the working review now. The check compares information the file itself supplies, so it does not show that the whole file is genuine or who made it. It is still Held and unreviewed. This is not an approval, review, eligibility result or submission.";
-  if (data.status === "Invalid") return "Invalid. This file is incomplete or was changed after download. Next action: download a new Held copy.";
+  if (data.status === "Invalid") return "Invalid. This file is incomplete or was changed after download. Owner: document owner. Next action: download a new Held copy.";
   if (data.status === "Unavailable") return "Unavailable. The working review for this file is missing or belongs to another home. Owner: document owner. Next action: ask them to recover the evidence.";
   if (data.status !== "Stale") return null;
   const stale = heldCheckNames(data.stale_fields);

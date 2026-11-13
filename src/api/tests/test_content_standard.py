@@ -403,6 +403,26 @@ console.log(JSON.stringify(out));
             self.assertIn(part, str(ctx.exception))
         self.assertNotIn("snapshot", str(ctx.exception).lower())
 
+    def test_role_screen_law_and_server_notices_state_reason_owner_then_next_action(self):
+        role = (WEB / "role-screens.js").read_text()
+        law = (WEB / "law.js").read_text()
+        server = (ROOT / "src" / "api" / "src" / "zava_forward" / "api" / "server.py").read_text()
+        notices = [
+            (role, "This screen is not installed for your signed-in role. Your access has not changed."),
+            (role, "That page could not be loaded. The rows shown are unchanged."),
+            (role, "is not installed for your role. Your access has not changed."),
+            (role, "Unknown. The queue could not be read for your role."),
+            (role, "This file is incomplete or was changed after download."),
+            (law, "Required law viewer file did not load: /async-action.js."),
+            (server, "The service hit an unexpected error."),
+        ]
+        for source, start in notices:
+            with self.subTest(notice=start):
+                self.assertEqual(source.count(start), 1)
+                text = source[source.index(start):].split('"')[0].split("`")[0]
+                self.assertRegex(text, r"Owner: [^.]+\. Next action: ")
+        self.assertIn("/Owner:/.test(e.message) ? e.message :", law)
+
     def test_role_screens_use_phase_check_wording(self):
         js = (WEB / "role-screens.js").read_text()
         self.assertIn("Benefits and phase check", js)

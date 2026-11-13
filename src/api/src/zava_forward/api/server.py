@@ -391,7 +391,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             if not sent:
                 self._headers_buffer = []
                 try:
-                    self._json(500, {"error": "The service hit an unexpected error. Try again; if it continues, report the time of the failure."})
+                    self._json(500, {"error": "The service hit an unexpected error. Owner: application support. Next action: try again, and if it continues report the time of the failure to application support."})
                 except Exception:
                     logging.getLogger(__name__).warning("http-error %s %s 500 response not delivered", method, _printable(path))
 
