@@ -11711,3 +11711,13 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Appended a [section](../architecture/cutover-evidence-pack.md#waves-1105-and-1143-multi-package-local-demo-verification-2026-11-13-refs-440) and an index row. Integrated 14 reviewed, path-disjoint child candidates (112 `.copilot-tracking/` files, byte-identical to their child commits) onto `74a93a137a`; no change under `src/`, `infra/`, `tools/` or `.github/`.
 * Documentation only. No rerun, source change, tick, closure or approval. Adverse and partial results kept: 163 skips in #79, 36 in #96, MSSQL and Chromium exclusions, #107 `src/` edit HELD, #229/#230 range-end `disabled` gap, open human gates. Evidence under `.copilot-tracking/` (`440-wave23-parent-integration-1222`).
+
+## [2026-11-13] add | Wave-1222 epic and tooling local verification and anchor fix (Refs #440, #441)
+
+* Appended a [section](../architecture/cutover-evidence-pack.md#wave-1222-epic-and-tooling-local-verification-2026-11-13-refs-440) and an index row. Integrated 7 reviewed, path-disjoint child candidates (48 `.copilot-tracking/` files, byte-identical). Repointed the PRD and addendum links to the archived process-map heading and fixed one `whitespace-fix` typo.
+* Documentation only. No rerun, source change, tick, closure or approval. Adverse results kept: 235 skips in #89, 8 in #218, 23 SQL skips in #123, `azure` import gaps in #89 and #113, Playwright exclusion in #531, three stale-derivative failures and one `build_assets.py` failure routed from #435.
+
+## [2026-11-13] add | Owner sign-offs and cut-over inventory refresh (Refs #203)
+
+* Appended a [section](../architecture/cutover-evidence-pack.md#owner-sign-offs-for-cut-over-staff-mediated-capture-and-tokenomics-2026-11-13-refs-203) recording the owner decisions for #201, #202, #198, #228 AC3 and #435 AC1/AC4, updated the pitch [placement draft](../capstone/pitch/tokenomics-placement-draft.md) and README for the 55-slide deck, and regenerated the cut-over reference inventory.
+* Documentation only. Live parity, backup, the USD 5 token batch and rehearsal timing remain unperformed; no tick or closure.

@@ -8201,7 +8201,7 @@ Classes: `local observed` is a child-recorded local run; `held` is a recorded sp
 | `6334017082bc` | #136, #137, #360 | Full-dependency offline rerun of the four environmental `infra/tests` gaps: `test_staff_azure` 74, `test_identity_rbac` 12, `test_private_cutover_proof` 20, `test_bicep_policy` 61, all exit 0, 0 skips | local observed | Offline only; no Azure what-if, deployment or live proof | [Review](../../.copilot-tracking/reviews/2026-11-13/136-bicep-policy-1105-review.md), [changes](../../.copilot-tracking/changes/2026-11-13/136-bicep-policy-1105-changes.md) |
 | `5ab12d36933e` | #107, #159, #432 | Loopback fake-provider `Assistants.execute`, verify and accept across all 5 `REGISTRY` assistants on a SQLite `SqlStore`; synthetic-tariff `ChatPanel` `meter_root` with 30 ledger and 5 audit rows, 0 sentinel hits | local observed | Loopback provider, synthetic prices and a single run only; no live model, MSSQL or real tariff | [Review](../../.copilot-tracking/reviews/2026-11-13/107-e2e-execute-1105-review.md), [changes](../../.copilot-tracking/changes/2026-11-13/107-e2e-execute-1105-changes.md) |
 | `c28b8a198216` | #229, #230, #149 | 112 API tests OK, 0 skips; Node VM pager harness exit 0 | local observed | `#programme-prev` and `#programme-next` lack `disabled` or `aria-disabled` at range ends and rely on an onclick no-op plus status text; manual assistive-technology and WCAG AC4 review open | [Review](../../.copilot-tracking/reviews/2026-11-13/229-230-renderer-verify-1105-review.md), [changes](../../.copilot-tracking/changes/2026-11-13/229-230-renderer-verify-1105-changes.md) |
-| `d824e59e12db` | #165, #188, #1288, #134 | 77 synthetic, sensor and stock tests OK; fixture `TEST-*` seed `20260901` trace maps 41 seeded `stock_epc.conflict_type` cases, 18 open including 7 `Quality check` IDs | local observed | Sensor backfill is separate and proposals are unseeded by design; one later workspace-fix record is included | [Review](../../.copilot-tracking/reviews/2026-11-13/165-sensor-seed-trace-1105-review.md), [changes](../../.copilot-tracking/changes/2026-11-13/165-sensor-seed-trace-1105-changes.md) |
+| `d824e59e12db` | #165, #188, #1288, #134 | 77 synthetic, sensor and stock tests OK; fixture `TEST-*` seed `20260901` trace maps 41 seeded `stock_epc.conflict_type` cases, 18 open including 7 `Quality check` IDs | local observed | Sensor backfill is separate and proposals are unseeded by design; one later whitespace-fix record is included | [Review](../../.copilot-tracking/reviews/2026-11-13/165-sensor-seed-trace-1105-review.md), [changes](../../.copilot-tracking/changes/2026-11-13/165-sensor-seed-trace-1105-changes.md) |
 | `d89141c0f296` | #164, #162, #157 | 441 offline chat safety, grounding, injection, isolation and memory tests OK (core 194, agents 90, api 157) | local observed | 1 Chromium skip; SQLite, not MSSQL; the memory-poisoning probe is component-only with 2 scenarios; live and human held-out gates unperformed | [Review](../../.copilot-tracking/reviews/2026-11-13/164-chat-safety-1105-review.md), [changes](../../.copilot-tracking/changes/2026-11-13/164-chat-safety-1105-changes.md) |
 | `0eab0943aa1c` | #441 | Stdlib checker verified BRD 51, ADR 4 and architecture README 73 links, 11 x 3 BRD formulas, traceability and status markers | local observed | Inherited broken `PRD:609` anchor and `ADR 0007` contractor-versus-portal premise mismatch recorded, not fixed; C5 human gate and C9 hosted and byte review open | [Review](../../.copilot-tracking/reviews/2026-11-13/441-portal-docs-1105-review.md), [changes](../../.copilot-tracking/changes/2026-11-13/441-portal-docs-1105-changes.md) |
 | `953e52435e19` | #115, #117, #148 | `src/orchestrator` discover 115 tests OK | local observed | 1 MSSQL driver skip (driver-error sanitisation not exercised); no dedicated `#144` dispatch module in `src/orchestrator/tests` | [Review](../../.copilot-tracking/reviews/2026-11-13/115-orchestrator-verify-1143-review.md), [changes](../../.copilot-tracking/changes/2026-11-13/115-orchestrator-verify-1143-changes.md) |
@@ -8217,4 +8217,40 @@ Limits:
 * Local synthetic evidence only. No provider, Azure, Docker, MSSQL, browser or live model call is claimed, and this integration made no run.
 * The #521 API tests and the full-dependency #136 `infra/tests` rows resolve two items the Wave-1045 section deferred; that earlier text is unchanged, and the MSSQL-gated tests remain outstanding.
 * Refs only for #440, #521, #136, #137, #360, #107, #159, #432, #229, #230, #149, #165, #188, #1288, #134, #164, #162, #157, #441, #115, #117, #148, #80, #176, #135, #79, #76, #82, #83, #86, #216, #215, #208, #96, #98, #99 and #93. No issue acceptance, criterion tick, closure, approval or conformance claim; the issues stay open.
+* Independent exact-head review, human approvals and applicable hosted CI remain required before merge.
+
+## Wave-1222 Epic and Tooling Local Verification (2026-11-13, Refs #440)
+
+Documentation integration of seven reviewed, path-disjoint child candidates onto `dafed6a270bdcc1f1be16cb0d2bca5550f8fcdaa`. The merge adds 48 unique files under `.copilot-tracking/`, each byte-identical to its child commit, with no overlaps. Child worktrees were not modified.
+
+Classes: `local observed` is a child-recorded local run.
+
+| Child commit | Issues | Recorded outcome | Class | Qualification | Records |
+| --- | --- | --- | --- | --- | --- |
+| `02b1c98c3cdd` | #89 | 16 modules, 989 ran, 754 executed, 235 explicit skips, 0 failures | local observed | `test_resident_callbacks_page` was skipped on import because `azure.core` is missing | [Review](../../.copilot-tracking/reviews/2026-11-13/89-delivery-quality-verify-1222-review.md) |
+| `552fd8454f1d` | #218 | 11 modules, 239 tests OK, 8 explicit skips | local observed | Skips are kept; no responsible-AI acceptance is claimed | [Review](../../.copilot-tracking/reviews/2026-11-13/218-rai-controls-verify-1222-review.md) |
+| `a2c585dbf430` | #123 | 33 modules, 551 tests OK, 23 explicit SQL skips | local observed | SQL-backed tests did not run | [Review](../../.copilot-tracking/reviews/2026-11-13/123-governance-learning-verify-1222-review.md) |
+| `e6632be1514a` | #113 | 561 first-pass tests and a 240-test `test_mssqlstore` rerun OK | local observed | `test_resident_ledger_meter` recorded an `azure` import error | [Review](../../.copilot-tracking/reviews/2026-11-13/113-platform-auth-verify-1222-review.md) |
+| `f642bbd12ef0` | #531 | 23 of 24 workbench and briefing modules exit 0 | local observed | The Playwright browser module was excluded | [Review](../../.copilot-tracking/reviews/2026-11-13/531-workbench-ui-verify-1222-review.md) |
+| `37fc4bee1ad7` | #435 | All 10 `validation.json` SHA-256 fields matched; the reviewer recomputed only the five raw-byte hashes and the rest are worker-recorded | local observed | Three `test-architecture.mjs` stale-derivative failures and one `test_build_assets.py` failure were found and routed to `rpi-435-diagrams` | [Review](../../.copilot-tracking/reviews/2026-11-13/435-capstone-deck-tooling-verify-1222-review.md) |
+| `344ca9bd69eb` | #470 | `tools/` 13 suites, 393 tests OK, 0 skips | local observed | Tooling only; no deployment claim | [Review](../../.copilot-tracking/reviews/2026-11-13/470-delivery-tools-verify-1222-review.md) |
+
+* Local synthetic evidence only. No provider, Azure, Docker, MSSQL, browser or live model call is claimed, and this integration made no run.
+* The same change repoints two broken links (PRD and addendum) to the archived process-map heading and corrects one `whitespace-fix` typo in the Waves 1105 and 1143 rows (#441, #203).
+* Refs only for #440, #441, #203, #89, #218, #123, #113, #531, #435 and #470. No issue acceptance, criterion tick, closure, approval or conformance claim; the issues stay open.
+* Independent exact-head review, human approvals and applicable hosted CI remain required before merge.
+
+## Owner Sign-Offs for Cut-Over, Staff-Mediated Capture and Tokenomics (2026-11-13, Refs #203)
+
+Documentation only. The owner gave these decisions on 2026-11-13; this section records them and ticks nothing.
+
+| Issue | Owner decision (2026-11-13) | Still pending or distinct |
+| --- | --- | --- |
+| #201, #202, #198 | Approved the `prototype/` 10-item parity mapping, the `v0.21.0` archive retirement of `mvp/` and `prototype/`, and the current `src-ci` and `rubric-score` workflow check set | Live deployed parity and the private-data backup criteria stay pending the live redeploy; no live result is claimed |
+| #228 AC3 | Staff-mediated fieldwork capture, acknowledgement and independent QA (`staff_intake.py`) satisfies AC3 for demo scope | The external supplier login portal (`OD-47`) is deferred to production |
+| #435 AC1, AC4 | Slide 22 plus the B25 and B27 question cards on the 55-slide v2 deck; USD 0.44 per home kept as an explicitly labelled scenario; a finite held-out token batch of up to USD 5 authorised | The batch has not run and waits for the live Azure OpenAI step in the authorised Azure sync; rehearsal timing is unperformed; see the [placement draft](../capstone/pitch/tokenomics-placement-draft.md) |
+
+The [reference inventory](./cutover-reference-inventory.tsv) was regenerated against this tree with the existing `cutover_audit.py` and its check mode passes.
+
+* Refs only for #203, #201, #202, #198, #228, #435, #441 and #440. No criterion tick, closure or approval is made here.
 * Independent exact-head review, human approvals and applicable hosted CI remain required before merge.
