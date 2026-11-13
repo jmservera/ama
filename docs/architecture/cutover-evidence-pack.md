@@ -8054,3 +8054,58 @@ The earlier reading of PR 1504 as 18 successful entries plus one empty entry was
 #### Original Review coverage
 
 The one plan Review covered commit range `5c2b63364..b1e01f79e` only (the annex, log entry, index row and changes record). It did not cover this clarification or the final Review and state files; independent root assessment of the full frozen head is still required. Not repeated.
+
+## Post-1507 metadata-provenance checkpoint (2026-11-13, Refs #440, #176)
+
+Draft, documentation only. It follows the merge of PR 1507 and applies the #440 checkpoint (covered issue and PR, main SHA, scoped breadth, continue/fix/pivot). It is not a new issue, a campaign repeat or a refresh of any observation. All prior records and outcomes above are preserved unchanged.
+
+### Identity pins (static Git observations in this checkout)
+
+| Item | Observed value |
+| --- | --- |
+| Main | `5cedff3f468b5f8d56c86107f791e0311765b5cd`, previous main `a17d5fe57a98e8672ffcd8d40d6bd6b8e0b15186` |
+| Main tree | `425ba043788ca6e51ad884d51f840183ceb3465f`, equal to the tree of source candidate `294da8ee0129576a50020c10adba9b86d4cd496e` |
+| Covered PR | 1507, merged 2026-11-13T07:49:44Z, no closing references (Refs #176) |
+| Covered issues | #176 (stays OPEN, no tick), #440 (stays OPEN) |
+| Validated source | `25a7135b1b6046b960e5993e7f7333bfb7055347`, local validation commit `1ea31c689` |
+| Tree equality | `src` `d6a78d52e9e3`, `support` `ebf79c452e97` and `tools` `432a4e8f7d74` are identical at main and at `1ea31c689` |
+
+Root merge observation (reported, not re-run here): clean candidate, main `a17d5fe57` base, MERGEABLE/CLEAN, all 19 reported contexts SUCCESS, including API 19m03s, MSSQL and rubric 79. Tree equality justifies reusing identical-source results only as the historical evidence below; it does not make them current-main executions. Sources, kept separate by scope: the root merge-gate observation, the external root publication assessment and the independent specialist review (approve_with_comments), the public PR 1507 comments (6846951285, 6846951730) and the 14 validation blobs already in main under `.copilot-tracking/evidence/2026-11-13-provenance-validation-176-0702/`. Subtree equality does not prove a fresh run or an equivalent validation environment.
+
+### Evidence classes, kept separate
+
+| Class | What it is | Status |
+| --- | --- | --- |
+| Local-observed, historical, identical source | Validation at source `25a7135b1` (commit `1ea31c689`): 8 importer tests OK with 0 skips; helper bytes matched the Git blob; fresh minimized outputs passed the JSON store and the privacy consumers, with a negative control reporting `missing_synthetic_label`; 2 generator `--help` checks exit 0; 1 API selector (`ScanTests.test_synthetic_stock_fixtures_scan_as_labelled`) over the unchanged committed fixture, supplementary and not new-key proof; configured importer-test Ruff, format and mypy passed | Source- and date-qualified; not executed on current main by this task |
+| Static current Git identity | The tree and blob equalities above, read now | Observed now |
+| Implemented, unverified operationally | New document and control generator output carries `generator_revision` from Core `source_revision`; no operational refresh has been run | Unverified |
+| Deferred or private input, human approval | Refresh against the private register and the human refresh approval | Not done, not approved |
+| Unobserved | Deployed build and source identity, live Core `source_revision` in any environment, private-input refresh, real model, Azure, SQL, browser, assistive-technology, consent and live demo acceptance | Not claimed |
+
+### Document-qualified #176 requirement trace
+
+| Document-qualified requirement | Supported by | Not supported |
+| --- | --- | --- |
+| #176 "Output manifests record seed, version and generator revision" (unticked) | New document and control generator headers record `generator_revision`, derived through Core `source_revision`, read by fresh-output consumers in the historical validation | Existing committed fixtures stay legacy Unknown and are not retro-stamped; other generators' 16-hex fingerprints are not upgraded; private originals are unavailable; no operational run. The criterion stays unmet |
+| #176 refresh policy criterion (ticked earlier) | Unchanged | No refresh approval or run claimed |
+| API and runtime boundaries | The unchanged fixture still scans as labelled in the historical selector | No runtime behaviour change, no new API or UI claim |
+
+BRD and PRD identifiers are not asserted for this metadata change; none was mapped in this bounded checkpoint.
+
+### Preserved limits and disclosures
+
+* Optional unconfigured-support E501: ad hoc Ruff over `support/` is not a configured check; the added `generator_revision` line is over 100 characters (5 over-long lines in the controls generator versus 4 at baseline). Not labelled Pass and not a configured blocker; owner silence on formatting is not permission to change it.
+* The validation record says the identity check ran from `/tmp`; the raw log shows the validation worktree. The unsupported "setuptools fetched" and "status showed only the evidence directory" narrative is not relied on.
+* Retained failed attempts (`06`, `09`, `10-c408`) and the pre-existing C408 finding stay as disclosed; none is a passing check.
+* The integration critique was retrospective, and the independent Review covered the candidate with the coverage limits in its return (approve_with_comments, 0 blocker and major, 5 minor, 5 note). Original RPI records are not upgraded or replaced.
+* Unpublished #130, #231 and #232 findings are not adopted as merged functionality.
+
+### Recommendation
+
+CONTINUE, bounded (a scoped proposal, not an owner decision or approval). Metadata integration established no new product defect, and no policy relaxation is approved. Independent demo lanes may proceed. Whole-issue #176 closure and any actual refresh or activation wait for their literal evidence and approvals. The existing #176 owns the provenance scope evidenced here; individual review findings were not separately assigned and no new issue was opened (open issues inspected by title for provenance, fingerprint, revision and refresh).
+
+Exact resume point: with #176 still open, the next step is an owner-approved refresh plan that stamps or regenerates the private-input outputs with `generator_revision` and verifies fresh output through the consumers on the then-current main head, plus a decision on whether legacy fixtures stay Unknown. That needs private input and human approval, which this checkpoint does not have.
+
+### Process limits (post-1507 checkpoint)
+
+Documentation only. Checked by `git diff --check`, an ASCII scan of added lines and link review. None refreshes an observation. No install, source, test, helper, fixture or policy change; no cloud, model, SQL, Docker, browser, `--changed` or complete-gate run, and no private dataset regeneration. Not a complete-gate receipt. Original records: `.copilot-tracking/{research,plans,changes,reviews}/2026-11-13-demo-provenance-checkpoint-440-0750-*` and state `demo-provenance-checkpoint-440-0750-state.json`.

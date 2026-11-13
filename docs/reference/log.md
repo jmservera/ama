@@ -11681,3 +11681,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a narrow note to the [document fixtures synthesis](./research/retrofit-synthetic-data/README.md#document-and-form-fixtures-2026-10-15) and its [index](./README.md) row: the unmerged candidate records `generator_revision` for newly constructed output only and needs a pip-installed `src/core`. Committed fixtures stay historically unrecorded, private originals are unavailable and whole #176 stays open.
 * Copied the bounded frozen-source validation evidence byte-for-byte from local commit 1ea31c689 (its Review was wording-nonconformant; corrections were not re-reviewed). Merged main a17d5fe57 (docs checkpoint 1506), keeping both log sides. No source change, no tick or approval.
 * Evidence under `.copilot-tracking/changes/2026-11-13-demo-provenance-parent-176-0702-integration-changes.md`.
+
+## [2026-11-13] add | Post-1507 metadata-provenance checkpoint (Refs #440, #176)
+
+* Appended a [draft checkpoint](../architecture/cutover-evidence-pack.md#post-1507-metadata-provenance-checkpoint-2026-11-13-refs-440-176) after PR 1507 merged as `5cedff3f4` (tree equal to source candidate `294da8ee0`). Documentation only: separates historical identical-source validation, static Git identity, unverified operational refresh and deferred private-input approval; existing fixtures stay legacy Unknown.
+* No source change, new run, tick or closure; #176 and #440 stay open. Evidence under `.copilot-tracking/` (demo-provenance-checkpoint-440-0750).
