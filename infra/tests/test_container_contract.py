@@ -97,6 +97,26 @@ class ContainerContractTests(unittest.TestCase):
         self.assertIn("args: ['serve']", agents)
         self.assertNotIn("ZF_AGENT_RESULT_ROUTE", bicep)
 
+    def test_agents_app_has_no_hosted_probe_and_keeps_scale_limits_and_single_revision(self):
+        bicep = (ROOT / "infra/modules/containerapps.bicep").read_text()
+        agents = bicep.split("resource agents ", 1)[1].split("resource orchestrator ", 1)[0]
+        api = bicep.split("resource api ", 1)[1].split("resource agents ", 1)[0]
+        # Container Apps probes are HTTP or TCP only and the worker has no listener, so the
+        # heartbeat `health` command is a local diagnostic, not a hosted probe.
+        self.assertNotIn("probes:", agents)
+        self.assertNotIn("port:", agents)
+        for kind in ("Startup", "Readiness", "Liveness"):
+            self.assertRegex(api, rf"type: '{kind}', httpGet: \{{ path: '/healthz', port: 8088 \}}")
+        for expected in (
+            "activeRevisionsMode: 'Single'",
+            "resources: { cpu: json('0.5'), memory: '1Gi' }",
+            "minReplicas: 0",
+            "maxReplicas: 5",
+            "type: 'azure-queue'",
+            "queueLength: '5'",
+        ):
+            self.assertIn(expected, agents)
+
     def test_runtime_controls_are_external_and_application_is_tested_both_ways(self):
         self.assertEqual(
             HARNESS.CONTROLS,

@@ -8,15 +8,23 @@ import tempfile
 import threading
 import time
 import unittest
+from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
 from unittest.mock import patch
 
 from test_dispatch import Sink, good_text, limits, message, returned
 from zava_forward.agents.dispatch import AgentWorker, InMemoryQueue, TaskMessage
-from zava_forward.agents.runtime import HEARTBEAT_NAME
+from zava_forward.agents.runtime import HEARTBEAT_MAX_AGE_SECONDS, HEARTBEAT_NAME, healthy
 from zava_forward.agents.version import __version__
-from zava_forward.agents.worker import EXPIRED, NOT_CONFIGURED, main, serve
+from zava_forward.agents.worker import (
+    ERROR_BACKOFF_SECONDS,
+    EXPIRED,
+    IDLE_SECONDS,
+    NOT_CONFIGURED,
+    main,
+    serve,
+)
 
 
 def provider(*_: Any) -> dict[str, Any]:
@@ -191,6 +199,96 @@ class MainTests(unittest.TestCase):
             self.assertEqual(main(["health"]), 0)
         with patch("zava_forward.agents.worker.healthy", return_value=False):
             self.assertEqual(main(["health"]), 1)
+
+
+class Crash(BaseException):
+    """Models a replica killed mid-task; `serve` only catches Exception, so this ends it."""
+
+
+class HeartbeatMarginTests(unittest.TestCase):
+    def test_idle_loop_pulses_once_per_iteration(self) -> None:
+        stop = threading.Event()
+        pulses: list[int] = []
+
+        def pulse() -> None:
+            pulses.append(1)
+            if len(pulses) == 3:
+                stop.set()
+
+        serve(
+            InMemoryQueue(), AgentWorker(provider), Sink(), limits(), stop, idle=0.01, pulse=pulse
+        )
+        self.assertEqual(len(pulses), 3)
+
+    def test_max_age_covers_the_provider_call_bound_and_idle_cadence(self) -> None:
+        # Only the provider-call bound (timeout at most 40 s), the fault backoff and the
+        # idle wait are covered. Queue, token, post and ack calls are not bounded here.
+        self.assertLessEqual(message().timeout, 40)
+        margin = 40 + ERROR_BACKOFF_SECONDS + IDLE_SECONDS
+        self.assertGreaterEqual(HEARTBEAT_MAX_AGE_SECONDS, 2 * margin)
+
+    def test_age_equal_to_the_limit_is_healthy_and_just_over_is_not(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            beat_file = Path(tmp) / HEARTBEAT_NAME
+            beat_file.write_text("1000.0", encoding="utf-8")
+            at_limit = 1000.0 + HEARTBEAT_MAX_AGE_SECONDS
+            self.assertTrue(healthy(beat_file, HEARTBEAT_MAX_AGE_SECONDS, now=at_limit))
+            self.assertFalse(healthy(beat_file, HEARTBEAT_MAX_AGE_SECONDS, now=at_limit + 0.1))
+
+
+class ReplicaRestartTests(unittest.TestCase):
+    def replace_worker(self, queue: InMemoryQueue) -> Sink:
+        """A fresh replica drains the queue after the lease of the dead one has expired."""
+        for receipt in list(queue.leased):
+            queue.release(receipt)
+        stop = threading.Event()
+        sink = Sink()
+        original_ack = queue.ack
+
+        def ack_then_stop(receipt: str) -> None:
+            original_ack(receipt)
+            stop.set()
+
+        queue.ack = ack_then_stop  # type: ignore[method-assign]
+        serve(queue, AgentWorker(provider), sink, limits(), stop, idle=0.01)
+        return sink
+
+    def test_crash_before_post_is_redelivered_and_handled_once(self) -> None:
+        queue = InMemoryQueue([message()])
+
+        class DyingSink(Sink):
+            def post(self, result: Any) -> None:
+                raise Crash
+
+        first = DyingSink()
+        with self.assertRaises(Crash):
+            serve(queue, AgentWorker(provider), first, limits(), threading.Event(), idle=0.01)
+        self.assertEqual((first.results, queue.acked, len(queue.leased)), ([], [], 1))
+        replacement = self.replace_worker(queue)
+        self.assertEqual(len(replacement.results), 1)
+        self.assertEqual(queue.acked, ["0"])
+        self.assertEqual((queue.pending, queue.leased), ([], {}))
+
+    def test_crash_between_post_and_ack_redelivers_and_reposts(self) -> None:
+        queue = InMemoryQueue([message()])
+        first = Sink()
+
+        def dying_ack(receipt: str) -> None:
+            raise Crash
+
+        queue.ack = dying_ack  # type: ignore[method-assign]
+        with self.assertRaises(Crash):
+            serve(queue, AgentWorker(provider), first, limits(), threading.Event(), idle=0.01)
+        self.assertEqual(len(first.results), 1)
+        del queue.ack
+        replacement = self.replace_worker(queue)
+        # At-least-once: the result is posted again; any dedupe belongs to the receiver.
+        self.assertEqual(len(replacement.results), 1)
+        self.assertEqual(
+            (replacement.results[0].task_id, replacement.results[0].fence),
+            (first.results[0].task_id, first.results[0].fence),
+        )
+        self.assertEqual(queue.acked, ["0"])
 
 
 if __name__ == "__main__":
