@@ -1,0 +1,8 @@
+cwd=/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702/src/api argv: PYTHONPATH=tests:../core/tests:../agents/tests python -B -m unittest test_document_controls.ScanTests.test_synthetic_stock_fixtures_scan_as_labelled -v
+test_synthetic_stock_fixtures_scan_as_labelled (test_document_controls.ScanTests.test_synthetic_stock_fixtures_scan_as_labelled) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 65.464s
+
+OK
+exit=0

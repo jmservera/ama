@@ -1,0 +1,15 @@
+test_runbook_five_home_cohort_is_reproduced_by_seed_and_as_of (tests.test_generated_dataset.GeneratedDatasetTests.test_runbook_five_home_cohort_is_reproduced_by_seed_and_as_of) ... ok
+test_same_seed_date_and_register_are_byte_deterministic (tests.test_generated_dataset.GeneratedDatasetTests.test_same_seed_date_and_register_are_byte_deterministic) ... ok
+test_stock_fabric_is_seeded_labelled_and_reproducible (tests.test_generated_dataset.GeneratedDatasetTests.test_stock_fabric_is_seeded_labelled_and_reproducible) ... ok
+test_mvp_output_and_receipt_record_seed_version_and_revision (tests.test_generated_dataset.GeneratedDatasetTests.test_mvp_output_and_receipt_record_seed_version_and_revision) ... ok
+test_pack_generator_is_byte_deterministic_with_manifest (tests.test_generated_dataset.GeneratedDatasetTests.test_pack_generator_is_byte_deterministic_with_manifest) ... ok
+test_stock_fabric_and_epc_generators_are_byte_deterministic_with_revision (tests.test_generated_dataset.GeneratedDatasetTests.test_stock_fabric_and_epc_generators_are_byte_deterministic_with_revision) ... wrote 6000 fabric rows
+wrote 6000 EPC rows
+wrote 6000 fabric rows
+wrote 6000 EPC rows
+ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 4.287s
+
+OK

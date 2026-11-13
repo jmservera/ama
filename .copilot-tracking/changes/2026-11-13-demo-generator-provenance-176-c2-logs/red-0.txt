@@ -1,0 +1,23 @@
+======================================================================
+ERROR: test_fresh_controls_output_records_both_source_revision_with_unchanged_payload (tests.test_document_form_fixtures.DocumentControlGeneratorRevisionTests.test_fresh_controls_output_records_both_source_revision_with_unchanged_payload)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/demo-document-provenance-176-0649/src/importer/tests/test_document_form_fixtures.py", line 166, in test_fresh_controls_output_records_both_source_revision_with_unchanged_payload
+    self.assertEqual(first["generator_revision"], expected)
+                     ~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'generator_revision'
+
+======================================================================
+ERROR: test_fresh_documents_output_records_source_revision_with_unchanged_payload (tests.test_document_form_fixtures.DocumentFormFixtureTests.test_fresh_documents_output_records_source_revision_with_unchanged_payload)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/demo-document-provenance-176-0649/src/importer/tests/test_document_form_fixtures.py", line 156, in test_fresh_documents_output_records_source_revision_with_unchanged_payload
+    self.assertEqual(first["generator_revision"], expected)
+                     ~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'generator_revision'
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.049s
+
+FAILED (errors=2)
+exit=1

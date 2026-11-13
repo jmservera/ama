@@ -1,0 +1,42 @@
+cwd=/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702
+== HEAD25 (--isolated --select C408)
+support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:165:24: C408 Unnecessary `dict()` call (rewrite as a literal)
+Found 1 error.
+1 unsafe fix available with `--fix --unsafe-fixes`.
+exit=1
+== baseline 472b3261a2e213e62dd3b194d0ba18661cd4711b
+/home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/base/zf_documents.py:161:24: C408 Unnecessary `dict()` call (rewrite as a literal)
+Found 1 error.
+1 unsafe fix available with `--fix --unsafe-fixes`.
+exit=1
+== HEAD25 default rules, importer config (cwd src/importer)
+/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702/support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:161:101: E501 Line too long (119 > 100)
+/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702/support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:165:101: E501 Line too long (119 > 100)
+/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702/support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:167:101: E501 Line too long (116 > 100)
+/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702/support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:169:101: E501 Line too long (117 > 100)
+/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702/support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:171:101: E501 Line too long (103 > 100)
+/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702/support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:172:101: E501 Line too long (106 > 100)
+/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702/support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:190:101: E501 Line too long (118 > 100)
+/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702/support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:192:101: E501 Line too long (103 > 100)
+/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702/support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:194:101: E501 Line too long (112 > 100)
+/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702/support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:196:101: E501 Line too long (116 > 100)
+/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702/support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:198:101: E501 Line too long (101 > 100)
+Found 32 errors.
+exit=1
+== baseline default rules, importer config
+/home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/base/zf_documents.py:157:101: E501 Line too long (119 > 100)
+/home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/base/zf_documents.py:161:101: E501 Line too long (119 > 100)
+/home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/base/zf_documents.py:163:101: E501 Line too long (116 > 100)
+/home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/base/zf_documents.py:165:101: E501 Line too long (117 > 100)
+/home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/base/zf_documents.py:167:101: E501 Line too long (103 > 100)
+/home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/base/zf_documents.py:168:101: E501 Line too long (106 > 100)
+/home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/base/zf_documents.py:186:101: E501 Line too long (118 > 100)
+/home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/base/zf_documents.py:188:101: E501 Line too long (103 > 100)
+/home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/base/zf_documents.py:190:101: E501 Line too long (112 > 100)
+/home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/base/zf_documents.py:191:101: E501 Line too long (114 > 100)
+/home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/base/zf_documents.py:193:101: E501 Line too long (101 > 100)
+Found 31 errors.
+exit=1
+== mypy importer tests
+Success: no issues found in 1 source file
+exit=0

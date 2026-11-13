@@ -7,7 +7,8 @@ descriptor (no image bytes, no real personal data, no street addresses), the
 approved synthetic form schema, twelve gold field values, an optional seeded
 defect with a fixture-owned expected result, and a dependency manifest.
 
-Same seed and register give byte-identical output.
+Same seed and register give byte-identical output. New output records generator_revision (source
+fingerprint); requires the src/core distribution installed.
 
 Usage:
     python3 zf_documents.py --seed 20260901 --out ../../../../src/importer/evals/document_form_fixtures.json
@@ -18,6 +19,9 @@ import hashlib
 import json
 import os
 import random
+from pathlib import Path
+
+from zava_forward.core.synthetic import provenance
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REGISTER = os.path.join(HERE, "..", "stock-geography", "private-north-east-stock-register.csv")
@@ -188,7 +192,8 @@ def build(register, seed):
                 "local_authority": row["local_authority"], "gold_fields": gold, "observed_fields": obs,
                 "currency": currency, "documents": _documents(fid, obs, currency, gold),
                 "seeded_defect": _expected(kind, fid) if kind else None, "dependency_manifest": _manifest(fid)})
-    out = {"is_synthetic": True, "generator_version": VERSION, "seed": seed, "stock_register_rows": len(register),
+    out = {"is_synthetic": True, "generator_version": VERSION, "seed": seed,
+           "generator_revision": provenance.source_revision([Path(__file__)]), "stock_register_rows": len(register),
            "split_counts": dict(SPLITS), "form_schema": schema(), "families": families}
     out["content_sha256"] = hashlib.sha256(json.dumps(families, sort_keys=True).encode()).hexdigest()
     return out

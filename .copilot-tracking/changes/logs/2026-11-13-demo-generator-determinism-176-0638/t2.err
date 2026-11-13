@@ -1,0 +1,32 @@
+test_descriptor_records_seed_version_and_full_generator_revision (tests.test_sensor_stream.ReplayTests.test_descriptor_records_seed_version_and_full_generator_revision) ... ok
+test_generator_revision_changes_with_each_source_and_composition (tests.test_sensor_stream.ReplayTests.test_generator_revision_changes_with_each_source_and_composition) ... ok
+test_bad_parameters_fail_before_creating_output (tests.test_sensor_scenarios.SensorScenarioTests.test_bad_parameters_fail_before_creating_output) ... ok
+test_confusion_miss_false_alert_abstention_and_wrong_sufficiency (tests.test_sensor_scenarios.SensorScenarioTests.test_confusion_miss_false_alert_abstention_and_wrong_sufficiency) ... ok
+test_confusion_population_and_sensitivity_use_fixed_truth (tests.test_sensor_scenarios.SensorScenarioTests.test_confusion_population_and_sensitivity_use_fixed_truth) ... ok
+test_fault_missing_and_invalid_observations_never_reassure (tests.test_sensor_scenarios.SensorScenarioTests.test_fault_missing_and_invalid_observations_never_reassure) ... ok
+test_gap_distribution_changes_sufficiency_not_just_overall_coverage (tests.test_sensor_scenarios.SensorScenarioTests.test_gap_distribution_changes_sufficiency_not_just_overall_coverage) ... ok
+test_installed_cli_success_failure_and_check_failure_exit (tests.test_sensor_scenarios.SensorScenarioTests.test_installed_cli_success_failure_and_check_failure_exit) ... ok
+test_inventory_seeds_labels_and_outcomes (tests.test_sensor_scenarios.SensorScenarioTests.test_inventory_seeds_labels_and_outcomes) ... ok
+test_observation_contract_and_truth_independence (tests.test_sensor_scenarios.SensorScenarioTests.test_observation_contract_and_truth_independence) ... ok
+test_output_refuses_repositories_worktrees_files_nonempty_and_symlinks (tests.test_sensor_scenarios.SensorScenarioTests.test_output_refuses_repositories_worktrees_files_nonempty_and_symlinks) ... ok
+test_overnight_utc_boundaries_and_repeat_count (tests.test_sensor_scenarios.SensorScenarioTests.test_overnight_utc_boundaries_and_repeat_count) ... ok
+test_persistence_exact_boundary_and_gap_breaks_run (tests.test_sensor_scenarios.SensorScenarioTests.test_persistence_exact_boundary_and_gap_breaks_run) ... ok
+test_retrofit_deltas_exact_activation_delay_and_no_change (tests.test_sensor_scenarios.SensorScenarioTests.test_retrofit_deltas_exact_activation_delay_and_no_change) ... ok
+test_retrofit_exercise_scenarios_cover_outcomes_and_label_values (tests.test_sensor_scenarios.SensorScenarioTests.test_retrofit_exercise_scenarios_cover_outcomes_and_label_values) ... ok
+test_retrofit_insufficient_week_has_null_deltas (tests.test_sensor_scenarios.SensorScenarioTests.test_retrofit_insufficient_week_has_null_deltas) ... ok
+test_same_seed_repeats_and_different_seed_changes_observations (tests.test_sensor_scenarios.SensorScenarioTests.test_same_seed_repeats_and_different_seed_changes_observations) ... ok
+test_snapshot_bytes_hashes_schema_and_no_truth_leakage (tests.test_sensor_scenarios.SensorScenarioTests.test_snapshot_bytes_hashes_schema_and_no_truth_leakage) ... ok
+test_baseline_hits_hour_anchors_and_blends_between_them (tests.test_live_readings.GeneratorTests.test_baseline_hits_hour_anchors_and_blends_between_them) ... ok
+test_custom_anchor_source_is_used (tests.test_live_readings.GeneratorTests.test_custom_anchor_source_is_used) ... ok
+test_hour_23_blends_into_next_day_and_noise_is_continuous (tests.test_live_readings.GeneratorTests.test_hour_23_blends_into_next_day_and_noise_is_continuous) ... ok
+test_invalid_inputs_use_fixed_codes (tests.test_live_readings.GeneratorTests.test_invalid_inputs_use_fixed_codes) ... ok
+test_noise_and_offset_stay_within_documented_bounds (tests.test_live_readings.GeneratorTests.test_noise_and_offset_stay_within_documented_bounds) ... ok
+test_physical_ranges_hold_all_year (tests.test_live_readings.GeneratorTests.test_physical_ranges_hold_all_year) ... ok
+test_same_seed_home_and_slot_is_reproducible (tests.test_live_readings.GeneratorTests.test_same_seed_home_and_slot_is_reproducible) ... ok
+test_seed_and_home_change_values (tests.test_live_readings.GeneratorTests.test_seed_and_home_change_values) ... ok
+test_series_is_smooth_between_slots (tests.test_live_readings.GeneratorTests.test_series_is_smooth_between_slots) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 3.285s
+
+OK

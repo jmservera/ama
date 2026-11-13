@@ -11658,6 +11658,15 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Documentation only: the independent REVISE review is preserved byte-for-byte; counts, passes and open adverse items are unchanged; no source, test, check or configuration change, no tick, closure or approval. Independent changed-line reassessment is pending.
 * Evidence under `.copilot-tracking/` (2026-11-13 issue-74-evidence-integration-0424).
 
+## [2026-11-13] update | Document generators emit generator_revision (Refs #176)
+
+* `zf_documents.py` and `zf_document_controls.py` now record `generator_revision` (source fingerprint) in new output. Committed document fixtures were not regenerated; their generator revision remains historically unrecorded (#176 criterion unmet for them).
+
+## [2026-11-13] update | Compact publication parent for the #176 local provenance child (Refs #176)
+
+* Packaged the three changed source/test blobs and the original research, plan, critique, Review and small-log records of local child 25a7135b1 byte-unchanged into a new parent. Two raw `before-*.json` snapshots, byte-identical to the public fixtures at main 33c261a63, are omitted; the manifest records both blobs and the restoration pointer. Nothing was deleted, moved or rewritten.
+* Source equivalence is a blob comparison, not a new runtime result; legacy fixtures remain unrecorded and whole #176 stays open. Frozen-source validation, base refresh and independent exact-head assessment are pending. Docs checkpoint PR1506 also appends this file; keep both entries when reconciled.
+* Evidence under `.copilot-tracking/changes/2026-11-13-demo-provenance-parent-176-0702-changes.md`.
 ## [2026-11-13] add | Post-1504 merged-main home-scope checkpoint (Refs #440 #74)
 
 * Appended a [draft checkpoint](../architecture/cutover-evidence-pack.md#post-1504-merged-main-home-scope-checkpoint-2026-11-13-refs-440-74) after PR 1504 merged as `33c261a63` (tree equal to the frozen head). Documentation only: records identities, source and document blobs, inherited focused source observations, hosted state (merged-head checks running or absent, not success) and unknowns.
@@ -11666,3 +11675,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-13] update | Post-1504 checkpoint requirement mapping and rollup clarification (Refs #440 #74)
 
 * Added a dated [clarification](../architecture/cutover-evidence-pack.md#dated-clarification-of-the-post-1504-checkpoint-2026-11-13-requirement-mapping-and-rollup-projection) mapping the home-scope display to PRD FR-002 and AC-002 (PRD FR-001 as context), recording a BRD traceability gap, and correcting the PR 1504 rollup reading (the nineteenth entry is a passing status context). Earlier text unchanged; documentation only; no tick, approval or closure.
+
+## [2026-11-13] update | Document generator revision note and validation evidence for the #176 candidate (Refs #176)
+
+* Added a narrow note to the [document fixtures synthesis](./research/retrofit-synthetic-data/README.md#document-and-form-fixtures-2026-10-15) and its [index](./README.md) row: the unmerged candidate records `generator_revision` for newly constructed output only and needs a pip-installed `src/core`. Committed fixtures stay historically unrecorded, private originals are unavailable and whole #176 stays open.
+* Copied the bounded frozen-source validation evidence byte-for-byte from local commit 1ea31c689 (its Review was wording-nonconformant; corrections were not re-reviewed). Merged main a17d5fe57 (docs checkpoint 1506), keeping both log sides. No source change, no tick or approval.
+* Evidence under `.copilot-tracking/changes/2026-11-13-demo-provenance-parent-176-0702-integration-changes.md`.

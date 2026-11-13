@@ -1,0 +1,10 @@
+argv: pip install -e src/core ruff==0.17.1 mypy==2.4.0 ; cwd=/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702
+Building wheels for collected packages: zava-forward-core
+  Building editable for zava-forward-core (pyproject.toml): started
+  Building editable for zava-forward-core (pyproject.toml): finished with status 'done'
+  Created wheel for zava-forward-core: filename=zava_forward_core-0.1.0-0.editable-py3-none-any.whl size=1531 sha256=180d671da5b65b1659cb2d39dd79f57f8df27f21ad2e83ea62110765e57bdbf5
+  Stored in directory: /tmp/pip-ephem-wheel-cache-i4mxdlys/wheels/88/eb/d6/fb8de18e01093fcf73a04db7c7dd9eac0d4ed66b82d0cef47b
+Successfully built zava-forward-core
+Installing collected packages: zava-forward-core, typing_extensions, ruff, pathspec, mypy_extensions, librt, ast-serialize, mypy
+Successfully installed ast-serialize-0.13.1 librt-0.16.0 mypy-2.4.0 mypy_extensions-1.2.0 pathspec-1.1.1 ruff-0.17.1 typing_extensions-4.16.0 zava-forward-core-0.1.0
+exit=0

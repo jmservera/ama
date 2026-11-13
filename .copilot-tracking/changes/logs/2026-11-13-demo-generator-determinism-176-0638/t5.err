@@ -1,0 +1,6 @@
+test_deterministic_and_labelled_synthetic (tests.test_document_form_fixtures.DocumentFormFixtureTests.test_deterministic_and_labelled_synthetic) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.024s
+
+OK

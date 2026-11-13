@@ -1,0 +1,9 @@
+cwd=/home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702 argv: /home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/venv/bin/python -B /home/azureuser/ext-validation/demo-provenance-validation-176-0702-0708/consumer_check.py /home/azureuser/source/ama-demo-wt/demo-provenance-validation-176-0702
+docs_revision sha256:a1fa4da51452728975fd0e8c2ba9fb8dd5223a239ba90f646c53dcfc226b0c9c
+ctrl_revision sha256:611f06f3a6d82fc4c58a77de8eb709fdee42cc58974298fbe4ff645f992b7a2c
+baseline_public_issues []
+fresh_public_issues []
+negative_control_issues ['src/core/evals/document_control_fixtures.json:row-1:missing_synthetic_label']
+cases 120 clean_accepted 229 refused 131 classes ['clean', 'test-marker', 'type-mismatch']
+all_clean True
+exit=0

@@ -1,0 +1,18 @@
+======================================================================
+ERROR: test_document_controls (unittest.loader._FailedTest.test_document_controls)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_document_controls
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/demo-document-provenance-176-0649/src/api/tests/test_document_controls.py", line 12, in <module>
+    import test_mvp
+ModuleNotFoundError: No module named 'test_mvp'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)
+exit=1

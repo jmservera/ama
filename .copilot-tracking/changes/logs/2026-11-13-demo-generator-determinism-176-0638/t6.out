@@ -1,0 +1,115 @@
+{
+  "all_available_pass": true,
+  "as_of": "2026-10-15",
+  "as_of_applies_to": "results with window.basis as_of; others report their own window",
+  "results": [
+    {
+      "byte_identical": true,
+      "generator": "scale-fixture",
+      "generator_revision": "sha256:d43d3361eabcfc7da6c160783d0f67ddfc0bcaf6e63cfba1f2998cb1f60e73af",
+      "manifest_missing": [],
+      "status": "PASS",
+      "version": "1.3.0",
+      "window": {
+        "as_of": "2026-10-15",
+        "basis": "as_of"
+      }
+    },
+    {
+      "byte_identical": true,
+      "generator": "sensor-backfill",
+      "generator_revision": "sha256:a21187cd8afc53ff7cf29075a84e7c259518bc208303d0191309278de92029b1",
+      "manifest_missing": [],
+      "status": "PASS",
+      "version": "sensor-backfill-v3",
+      "window": {
+        "as_of": "2026-10-15",
+        "basis": "as_of"
+      }
+    },
+    {
+      "byte_identical": true,
+      "generator": "sensor-scenarios",
+      "generator_revision": "sha256:e764873c2adb981ab943a8c470ffae12332215ab51c6e0439a447598becf2640",
+      "manifest_missing": [],
+      "status": "PASS",
+      "version": "sensor-scenarios-exercise-v1",
+      "window": {
+        "basis": "intrinsic",
+        "end": "2024-01-29",
+        "start": "2024-01-01"
+      }
+    },
+    {
+      "byte_identical": true,
+      "generator": "sensor-stream",
+      "generator_revision": "sha256:6bfc7177c107ba804890f8965833dfe5d93d49613612293fdad32f6664b168b6",
+      "manifest_missing": [],
+      "status": "PASS",
+      "version": "synthetic-stream-v2",
+      "window": {
+        "as_of": "2026-10-15",
+        "basis": "as_of"
+      }
+    },
+    {
+      "byte_identical": true,
+      "generator": "stock-fabric",
+      "generator_revision": "sha256:d99129aecc15bf3136d82f86ff5a2c376656e4732d604488788bc90f29d46da2",
+      "manifest_missing": [],
+      "status": "PASS",
+      "version": "stock-fabric-v1",
+      "window": {
+        "as_of": "2026-10-15",
+        "basis": "as_of"
+      }
+    },
+    {
+      "byte_identical": true,
+      "generator": "stock-register-fictional",
+      "generator_revision": "sha256:20ae76cd3eb311d9393a1d3e671bab6c88e7498c96751e50f8c1b7edbbe92fd3",
+      "manifest_missing": [],
+      "status": "PASS",
+      "version": "1.0.0",
+      "window": {
+        "as_of": "2026-10-15",
+        "basis": "as_of"
+      }
+    },
+    {
+      "byte_identical": true,
+      "generator": "public-pack",
+      "generator_revision": "sha256:5d6374ffe2f7bcd1",
+      "manifest_missing": [],
+      "status": "PASS",
+      "version": "2.0.0",
+      "window": {
+        "basis": "intrinsic",
+        "end": "2026-09-30",
+        "generation_label_as_of": "2026-10-15",
+        "start": "2025-07-01"
+      }
+    },
+    {
+      "byte_identical": true,
+      "generator": "stock-epc",
+      "generator_revision": "sha256:5d6374ffe2f7bcd1",
+      "manifest_missing": [],
+      "status": "PASS",
+      "version": "stock-epc-v1",
+      "window": {
+        "basis": "intrinsic",
+        "end": "2026-09-30",
+        "epc_validity_as_of": "2026-10-15",
+        "start": "2010-01-01"
+      }
+    }
+  ],
+  "seed": 7,
+  "seed_overrides": {
+    "public-pack": 1341953496
+  },
+  "unavailable": {
+    "stock-register": "Original private stock register generator and pinned OSM inputs are not in the repository; no receipt can be produced. The fictional stock-register generator replaces its shape only, not its content."
+  }
+}

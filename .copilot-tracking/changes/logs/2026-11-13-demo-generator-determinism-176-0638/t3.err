@@ -1,0 +1,8 @@
+test_legacy_seeded_draws_are_unchanged (tests.test_stock_fabric.StockFabricTests.test_legacy_seeded_draws_are_unchanged) ... ok
+test_cli_determinism_hashes_defaults_and_explicit_failures (tests.test_stock_fabric.StockFabricTests.test_cli_determinism_hashes_defaults_and_explicit_failures) ... ok
+test_revisions_cover_moved_dependency_and_ignore_physical_roots (tests.test_stock_fabric.StockFabricTests.test_revisions_cover_moved_dependency_and_ignore_physical_roots) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.397s
+
+OK
