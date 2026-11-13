@@ -79,8 +79,22 @@ stages" list for any home an operator selects. It names the eight stages, links
 each to the registered screen that shows that stage's own state for the same
 case (navigation only, no state is derived or cleared), lists stage 1 as a
 recorded deferral, and states in text when a screen is not installed for the
-signed-in role. It is static and does not render EX-HOME-901 data, so the walk
-across screens with one connected fixture home stays open. The offline checker (`src/core`) now also fails when the on-screen stage map and the table below name different stages or screens, so the two cannot drift apart silently.
+signed-in role. It is static and does not render EX-HOME-901 data, so the eight-stage
+walk of EX-HOME-901 across screens stays open. A separate, narrower walk of one
+real-store home, ZF-1, is described after this paragraph. The offline checker (`src/core`) now also fails when the on-screen stage map and the table below name different stages or screens, so the two cannot drift apart silently.
+
+Since 2026-11-13 the record also names an executed engineering walk that is not
+the EX-HOME-901 walk. `src/api/checks/connected_home_browser_check.py` reads one
+Store-written home, ZF-1, with five constructed logins across six screens
+(`asset-board`, `programme-queue`, `technical-queue`, `resident-choice`,
+`quality-queue`, `finance-invoices`), with ZF-2 as a sibling control; it made no
+write requests (exit 0 on 2026-11-13 from `src/api` with
+`python -m checks.connected_home_browser_check`). The Asset view is read through the
+Programme Manager login as a proxy; an actual Asset sign-in stays deferred. ZF-1 is not EX-HOME-901 and none of the
+eight separate examples is relabelled as a stage of it. The check is DOM evidence
+on constructed data. Entry by report or nomination, aftercare, event order,
+assistive-technology output, user validation and human acceptance stay deferred,
+and no criterion is ticked.
 
 | Stage | Role screen | What the screen shows for EX-HOME-901 | Boundary |
 | --- | --- | --- | --- |

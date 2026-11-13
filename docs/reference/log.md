@@ -11730,3 +11730,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [tokenomics-qa-brief.md](../capstone/tokenomics-qa-brief.md) and linked it from the [capstone README](../capstone/README.md). It separates the labelled USD 0.44 per home scenario, the live ledger (Unknown until settled and approved) and the authorised, unrun held-out batch (up to USD 5.00; `heldout_batch` module absent in this checkout).
 * Documentation only. No deck, manifest or validation-hashed file changed; no rehearsal, measurement, tick or closure.
+
+## [2026-11-13] update | Atlas trace records the executed ZF-1 connected walk (Refs #233)
+
+* Audited issue #233 criteria on tensions and the connected same-home walk: both already have rendered Chromium checks (`atlas_tensions_browser_check`, `connected_home_browser_check`) that exited 0 at this head (`python -m checks.<name>` from `src/api`); no screen change was needed.
+* Updated [atlas-screen-trace.md](./research/ux/atlas-screen-trace.md) to describe the ZF-1 walk separately from the design-level EX-HOME-901 walk, and added a unit guard that the checker does not relabel it. Engineering evidence only; no tick or closure.
