@@ -1,0 +1,64 @@
+{
+  "task_id": "epic104-criteria-3-5-2244",
+  "task_slug": "epic104-ai-nonmutation-limits",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-13/epic104-ai-nonmutation-limits-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-13/epic104-ai-nonmutation-limits-plan.md",
+    "details": ".copilot-tracking/details/2026-11-13/epic104-ai-nonmutation-limits-details.md",
+    "critique": ".copilot-tracking/critiques/2026-11-13/epic104-ai-nonmutation-limits-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-13/epic104-ai-nonmutation-limits-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-13/epic104-ai-nonmutation-limits-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Focused validation tier; pip venv, never uv; venv removed at end",
+      "status": "confirmed",
+      "evidence": "Owner task brief 2026-11-13"
+    },
+    {
+      "decision": "No edit to infra/, ai_consumption.py, monitoring_coverage.py, worker.py, server.py (#146)",
+      "status": "confirmed",
+      "evidence": "git diff shows only a new test file and tracking artifacts"
+    },
+    {
+      "decision": "Critique executed once, verdict Revise, findings applied",
+      "status": "done",
+      "evidence": ".copilot-tracking/critiques/2026-11-13/epic104-ai-nonmutation-limits-critique.md"
+    },
+    {
+      "decision": "Review executed once, outcome conformant for the suite; criteria 3 and 5 not ticked",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/2026-11-13/epic104-ai-nonmutation-limits-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Owner selects a ranked follow-up, stops, or switches to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Add alert owner and threshold to held-out and chat-eval authorisations",
+      "rationale": "Closes the NFR-012 owned-alert gap for those adapters",
+      "evidence": "heldout_batch.authorization_problems; chat_eval.call_authorization"
+    },
+    {
+      "rank": 2,
+      "task": "Filter approval claims in assistant output like chat ACTION_CLAIM",
+      "rationale": "Assistant prose may claim approval though no state changes",
+      "evidence": "validate_output accepts 'I have approved the grant'"
+    },
+    {
+      "rank": 3,
+      "task": "Re-run suite and re-assess criteria 3 and 5 after #146 merges",
+      "rationale": "Ledger files are owned by an active worker",
+      "evidence": "Owner brief 2026-11-13"
+    }
+  ]
+}
