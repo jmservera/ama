@@ -1,0 +1,111 @@
+{
+  "schema": "rpi-149-provenance-core-0122-result/v1",
+  "role": "distinct missing-evidence provenance complement; read-only; not a repeated source review, not a replacement of the original or adverse Review, not source correction, not publication authorization",
+  "agent": "hve-core-all:rpi-agent, model claude-sonnet-5.5, no nested agents, one pass",
+  "identity": {
+    "worktree": "/home/azureuser/source/ama-demo-wt/issue-149-c3-integration-0101",
+    "head": "288b6a37665602718122ed0ab35b9bbdcca963ed",
+    "srcTree": "6915b96c8ededf363b76c8fb4700153eb18ff588",
+    "mainBase": "c401e5d56446b5752e8d91af6a45f3f06269c4bd",
+    "headVerifiedByGitRevParse": true
+  },
+  "originalReview": {
+    "preserved_unchanged": true,
+    "files": ["rpi-149-original-review-0104-result.json", "rpi-149-original-review-0104-review.md"],
+    "executionStatus": "PARTIAL",
+    "limitationPreservedExactly": "Full source/test/check diff was read, but relevant original RPI evidence bodies were sampled (about 150 tracked evidence files) and long public table cells were truncated.",
+    "findings": "no Critical, High or Medium; five Low (RV-L1..RV-L5)",
+    "notes": ["Outcome is bounded and is not publication approval.", "A separately handled private operational warning exists in that Review; it is intentionally not reproduced here. No source or adverse finding is hidden by that omission."]
+  },
+  "newExecutionEvidence": {
+    "file": "rpi-216-integrated-validation-0117-result.json",
+    "gitBlobSha": "90905e818471a9fe4d11abfb851463c993f8f5f0",
+    "result": "test_regulatory_chat_api 12 of 12 OK, 0 failures, 0 errors, 0 skipped, exit 0",
+    "environment": "fresh git archive of exact head 288b6a37 (src tree 6915b96c), pip-only venv, sanitized env -i; worktree clean before and after; no corrections or skips",
+    "declaredLimits": "this module only; no full gate, browser, hosted CI, independent review or human approval",
+    "relationToProvenance": "Consistent with the #216 changes record (12 tests OK) and independently re-establishes the executed outcome at the exact head. It is recorded as NEW evidence not present in the 0104 original Review; originalReview is not rewritten. It was consumed, not rerun by this pass.",
+    "caveat": "It does not by itself prove #216 acceptance criteria; see #216 scope finding."
+  },
+  "scopeAndSelection": {
+    "method": "git diff --name-only c401e5d..288b6a3 -- .copilot-tracking, then per-issue artifact sets, plus parent plan lineage",
+    "selected": {
+      "#74 home isolation": "issue-74-home-case-regression-2300: research, plan, critique, details, changes, review, state",
+      "#82 strict funding gate (original)": "server-gate-readiness-82-1112: research, plan, critique, details, changes, review, state, evidence",
+      "#82 readers + membership revision": "funding-readers-82-2250 (RV01): research, plan, critique, details, changes, review, state, evidence",
+      "#82 combined": "combined-1490-funding-2310: plan, critique, changes, review, state, evidence (no research or details exist; state records research as satisfied-and-skipped)",
+      "#176 five-home replay": "issue-176-demo-cohort-replay-2236: research, plan, details, changes, review, state (no standalone critique; embedded in plan)",
+      "#216 law-link regression": "issue-216-link-resolution-2236: research, plan, details, changes, review, state (no standalone critique; embedded in details)",
+      "parent lineage": "parent-plan-2333 research, plan, details, state, critique, policy-amendment (A1/A2/A5, read in full); partial-plan-0048 plan and critique (incl. amendment 0055); independent-ux-0042 changes (integration0101 handoff) and state check"
+    },
+    "boundaryFinding_216": "The six #216 tracking artifacts are NOT in the main-relative tracking diff: they and the test (test_emitted_links_resolve_to_the_cited_content_and_forgeries_fail, test_regulatory_chat_api.py) are already in main (e05606413 / e44de171e, #1495); the test file is identical between main and head. They were read as main-baseline provenance for the 216 law-link regression, not as a change introduced by this branch. The only 216-adjacent diff content (#215 regulatory-refresh and regulatory_ux_check.py) belongs to excluded #215 scope.",
+    "exclusions": ["Not every historical tracking file is relevant; ~150 files in the diff were not read here (other issues, UX 96/215/134/156 which another complement covers, rubric/log/index records).", "24 source files not re-reviewed.", "No tests rerun.", "ROOT/rpi-149-final-ai-0104.log not read.", "New checkpoint text not reviewed."],
+    "readVsGrepOnly": "All listed artifact bodies were read in full. Large raw runner logs (tests-core-focused, tests-api-focused, tests-before/after-core, server-gate core-tests-after and api-tests-after) were summarised by targeted grep/tail only, NOT read in full."
+  },
+  "readManifest": {
+    "root": ".copilot-tracking/ (worktree, head 288b6a37)",
+    "fullBodies": [
+      "research/plans/details/changes/reviews/rpi-sessions/critique files for #74 (2300), #82 (1112, 2250, 1490c-2310), #176 (2236), #216 (2236) as selected above",
+      "plans/2026-11-12/issue-149-parent-plan-2333-{plan,critique,policy-amendment}.md; details/...2333-details.md; research/...2333-research.md; rpi-sessions/...2333-state.json (decisions section)",
+      "plans/2026-11-13/issue-149-partial-plan-0048-{plan,critique}.md",
+      "changes/2026-11-13/issue-149-independent-ux-0042-changes.md (first ~9 of 11 KB read; trailing module-tree/blob list not read, see remainder)",
+      "evidence/2026-11-12/{server-gate-readiness-82-1112,funding-readers-82-2250,combined-1490-funding-2310}/ small files (before/after, negative-control, repro, core-skip-classes)"
+    ],
+    "grepSummarisedOnly": ["tests-core-focused.out", "tests-api-focused.out", "tests-before-core.out", "tests-before-api.out (partly full)", "tests-after-core.out", "core-tests-after.out", "api-tests-after.out"],
+    "notRead": ["ROOT/rpi-74-2300-evidence/ (named adverse/mutation outputs; existence per changes file only)", "partial-plan-0048 state and 0042 state JSON (pointers only; not read in full)", "rpi-149-partial-plan-0048-result.json", "rpi-149-independent-ux-0042-result.json"],
+    "ROOT_files_consumed": ["rpi-149-original-review-0104-result.json", "rpi-216-integrated-validation-0117-result.json (+ unittest.log tail)"]
+  },
+  "chronology": {
+    "summary": "Commit order is provable for only two of the child tasks; for the rest 'critique before implementation' rests on artifact self-report.",
+    "provableProspective": [
+      "#82 RV01: c4fe717ef (22:53, research/plan/details/critique) precedes 4ce5bae61 (23:00, source/tests/changes/review)",
+      "#82 combined: 808fcf4d4 (23:13, prospective) precedes 1c2c3eea2 (23:33)"
+    ],
+    "selfReportedOnly": [
+      "#74 467a0cf5d (23:10), #176 da436be3e (22:43), #216 e4aac8b72 (22:44) landed artifacts and source in one commit each",
+      "#82 original dc9fb68e0 (22:03) already contains research..review plus source/tests; artifact states critique 'executed before any code'",
+      "#82 pre-squash commits exist locally but head history shows them as the single squash 318465aae (#1490)"
+    ],
+    "headAncestryNote": "#216 child commit e4aac8b72 is not an ancestor of head or main; its content arrived through merge e05606413 and squash e44de171e."
+  },
+  "critiqueInventory": [
+    {"task": "#74", "location": "separate file", "verdict": "Revise", "findings": "CR-001..006 all applied (001-003 blocking)"},
+    {"task": "#82 original", "location": "separate file", "verdict": "conformant after fixes", "findings": "CR-01..04"},
+    {"task": "#82 RV01", "location": "separate file", "verdict": "needs changes", "findings": "CR-01 blocking MEMBERSHIP_REVISION 2->3; CR-02 absent-key API test"},
+    {"task": "#82 combined", "location": "separate file", "verdict": "needs changes", "findings": "PC-01 High, PC-02/03 Medium"},
+    {"task": "#176", "location": "embedded in plan; no standalone file", "verdict": "revise", "findings": "applied directly"},
+    {"task": "#216", "location": "embedded in details; state points critique path at details", "verdict": "revise", "findings": "PC-001..003"}
+  ],
+  "findings": [
+    {"id": "PV-1", "severity": "Low", "type": "provenance/chronology", "text": "For #74, #176, #216 and original #82 the commit history cannot prove prospective critique or failing-first ordering; it is self-reported in artifacts committed together with source. RV01 and the combined 1490c amendment do show prospective-first commit order."},
+    {"id": "PV-2", "severity": "Low", "type": "evidence gap", "text": "#176 and #216 have no standalone critique file (embedded). #176 and #74 negative/mutation controls are not tracked as reproducible output: #176 used 'temporary scripts, deleted'; #74 mutation controls M1-M8/A1-A4 are text-only, with named adverse outputs held under ROOT rpi-74-2300-evidence (not read here)."},
+    {"id": "PV-3", "severity": "Low", "type": "wording/divergence", "text": "#176 plan promised a 'changed as-of' control; the artifacts record it did not fail for 2026-12-01 (cohort does not move), yet the changes file states 'No divergence from the plan'. The test name contains 'as_of' while as-of is pinned by builder args. Wording discrepancy, not a source defect."},
+    {"id": "PV-4", "severity": "Low", "type": "plan-marker drift", "text": "Plan checkboxes disagree with state/changes: 82-2250 all four unchecked, 82-1112 Phase 4 unchecked, combined phases 2-4 unchecked, #176 all unchecked, #216 all unchecked while changes say P01/P02 done; #74 all checked. Consistent with the original Review treating markers as maintained-by-state."},
+    {"id": "PV-5", "severity": "Low", "type": "review independence", "text": "#176's Review states it did not read tracking files; #82-1112 RV-01 Low was routed to later work and closed only by RV01; RV-02 whitespace was corrected after Review without re-review; combined F6 evidence gap was closed post-Review by adding core-skip-classes.out."},
+    {"id": "PV-6", "severity": "Informational", "type": "consistent with original RV-L5", "text": "Bare assert in the #176 runbook_five_homes helper (core test_generated_dataset.py ~lines 42-49) is relied on by the malformed-table test via AssertionError. Matches the original Low finding; not a new severity or a new source claim."},
+    {"id": "PV-7", "severity": "Informational", "type": "tier classification", "text": "Parent research (2333) said the union takes the FULL tier. Policy amendment A1 (AC-02/A2C-02, critique rejected as conflicting with the confirmed owner decision) set FOCUSED, with escalation on further persisted-SQL, security-control, workflow, manifest, Dockerfile or gate change, and 'doubt takes the full tier'. Child artifacts consistently claim focused tier only: no full gate, hosted CI, SQL Server, API mypy or independent human review. Real SQL Server acceptance of #82 is not claimed (skips are opt-in SQL Server: core 735 run/165 skipped, api 519/268 skipped)."},
+    {"id": "PV-8", "severity": "Informational", "type": "verified recorded claims", "text": "core-tests-after.out (3137 tests, 34 failures + 16 errors): all 50 are test_device_registry_azure (ModuleNotFoundError azure.iot.hub); api-tests-after.out (2825 tests): 10 import errors for playwright. Both match the changes records (environment-only, pre-existing at base)."},
+    {"id": "PV-9", "severity": "Informational", "type": "acceptance limits", "text": "Recorded as unmet or unproven by the artifacts and preserved: #74 criterion 2 (outcome tuple/G5 untouched; isolation proven for sentinel records only), #176 criteria 1 and 2 unmet, whole-issue #82 and #216 criteria unproven; tests/test_mvp.py fails ruff format --check at base (pre-existing). #74/#82 overlap on test_home_case_api.py is path-level only with disjoint hunks."},
+    {"id": "PV-10", "severity": "Informational", "type": "parent lineage", "text": "Parent research claims 'independent exact-head Pass bounded' for 74/176; those Passes are per-input and bounded, and the partial plan 0048/0055 and the 0042 handoff explicitly state no earlier Pass is reused as acceptance of the new head. The integration0101 handoff (M0 C3 ec25487e2, M1 main c401e5d56) touches test files only for C3 and no #74/#82/#176/#216 scope; no contradiction with the child artifacts was found."}
+  ],
+  "failingFirstEvidence": {
+    "present": ["#82 original: tests-before.out (absent-key KeyError, 'yes' and 1, HTTP 404 != 409) and repro-before.out", "#82 RV01: tests-before-core.out 13 failures + 2 errors; tests-before-api.out 404 != 200; negative-control-revision.out ([] != ['ZF-00001'] at revision 2)", "#82 combined: isolated /tmp/wt2310 reproduction, 72 tests 13 failures + 2 errors, api 1 failure; restored revision 3 passes 15 OK"],
+    "absentOrNotTracked": ["#74 test-only addition (no failing-first applicable; mutation controls text-only)", "#176 negative controls were temporary scripts, deleted", "#216 negative controls are inside the test; research probes scratch and removed"]
+  },
+  "unresolvedAndRoutedLimits": [
+    "Original Review partial-execution limitation stands; this pass closes only the sampled-evidence portion for the four issues and does not alter the original outcome.",
+    "No human, hosted CI, SQL Server, full-gate, assistive-technology, Finance or legal acceptance is evidenced by these artifacts.",
+    "Held: 233 (neither admitted nor deferred), full A2 cut line unsatisfied, partial-plan 0048/0055 forward publication conditions (final Review, checkpoint, fresh exact-head assessment, CI, Refs-only closing hygiene) remain gates not shown satisfied here."
+  ],
+  "assessment": {
+    "thisPortionOnly": true,
+    "status": "Partial",
+    "summary": "All relevant original child research/plan/details/changes/Review/critique/state bodies for #74, #82 (three tasks), #176 and #216 were read in full, and the parent lineage was read. No Critical/High/Medium provenance finding. Findings are Low or informational and consistent with, and do not contradict, the original Review's five Low findings. No Pass is prescribed and publication is not authorized.",
+    "exactRemainder": [
+      "Raw runner logs were grep-summarised, not read line by line.",
+      "ROOT/rpi-74-2300-evidence/ adverse and mutation output files were not opened (existence taken from the changes file).",
+      "State JSON for partial-plan-0048 and independent-ux-0042, and ROOT results rpi-149-partial-plan-0048 and rpi-149-independent-ux-0042, were not read in full; trailing ~2 KB of the 0042 changes (module-tree and blob list) was not read.",
+      "The roughly 150 other tracking files in the diff (including UX 96/215/134/156, handled by a separate complement) are outside this portion."
+    ]
+  },
+  "constraintsObserved": ["no source/state/other-worker writes", "no tests, installs, browsers, provider/cloud/spend, deploy, push, PR, merge or cleanup", "no env/credential printing", "rpi-149-final-ai-0104.log not read", "no issues/ticks created", "private operational warning not reproduced"]
+}

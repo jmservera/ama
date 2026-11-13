@@ -81,6 +81,20 @@ class CitationBoundTests(unittest.TestCase):
         )
         self._assert_supported_prefix("Why is funding not started yet?", detail)
 
+    def test_only_explicit_true_reads_as_confirmed_funding(self) -> None:
+        for value, expected in (
+            (True, "confirmed"),
+            (False, "not confirmed"),
+            (None, "not confirmed"),
+            ("yes", "not confirmed"),
+            ("false", "not confirmed"),
+            (1, "not confirmed"),
+        ):
+            with self.subTest(value=value):
+                facts = case_facts({"funding_ok": value}, reason_visible=False)
+                self.assertEqual(facts["funding_ok"], expected)
+        self.assertNotIn("funding_ok", case_facts({}, reason_visible=False))
+
 
 if __name__ == "__main__":
     unittest.main()

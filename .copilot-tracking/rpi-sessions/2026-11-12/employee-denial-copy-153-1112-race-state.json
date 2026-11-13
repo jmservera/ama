@@ -1,0 +1,28 @@
+{
+  "task_id": "153-blocked-copy-readiness-1112",
+  "task_slug": "employee-denial-copy-153-1112",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-12-employee-denial-copy-153-1112-race-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-12-employee-denial-copy-153-1112-race-plan.instructions.md",
+    "details": ".copilot-tracking/details/2026-11-12-employee-denial-copy-153-1112-race-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-12-employee-denial-copy-153-1112-race-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-12-employee-denial-copy-153-1112-race-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-12-employee-denial-copy-153-1112-race-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Continuation supersedes the earlier NOT_READY reasoning for the stale-stage refusal only; original research and state records preserved", "status": "recorded", "evidence": "Race reproduced: 400 'This case is not at the final checks.' with no owner or next action"},
+    {"decision": "Critique executed once; verdict one blocking plus two non-blocking, all applied directly", "status": "recorded", "evidence": ".copilot-tracking/plans/2026-11-12-employee-denial-copy-153-1112-race-critique.md"},
+    {"decision": "Review executed once; outcome approve, zero blocking findings", "status": "recorded", "evidence": ".copilot-tracking/reviews/2026-11-12-employee-denial-copy-153-1112-race-review.md"},
+    {"decision": "Unpublished child targets feat/demo-ux-integration-1112 (43b2187b9); no rebase or move; main-target notes historical", "status": "recorded", "evidence": "Owner direction 2026-11-12"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Independent coordinator assessment of the frozen local head; no push, PR, merge or tick"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Decide whether the stale Final checks card should refresh after a stale-stage refusal (client change)", "rationale": "Card and button stay rendered after the refusal", "evidence": "/tmp/i153/race-out-after.txt"}
+  ]
+}

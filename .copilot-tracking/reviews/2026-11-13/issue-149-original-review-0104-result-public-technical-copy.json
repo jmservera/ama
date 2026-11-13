@@ -1,0 +1,76 @@
+{
+  "review": "rpi-149-original-review-0104",
+  "date": "2026-11-13",
+  "executions": 1,
+  "scope": "bounded partial independent UX release (0048 plan, A55, executed critiques); not entire issue 149, not A2 cut line",
+  "source_head": "288b6a37665602718122ed0ab35b9bbdcca963ed",
+  "src_tree": "6915b96c8ededf363b76c8fb4700153eb18ff588",
+  "main_base": "c401e5d56446b5752e8d91af6a45f3f06269c4bd",
+  "execution": "Partial",
+  "outcome": "Conformant within the bounded partial source, test and check scope; no Critical, High or Medium finding; NOT publication approval and NOT acceptance of any issue criterion",
+  "metadata_checkpoint": "pending",
+  "whole_issue_acceptance": "unproven (human, AT, Finance, live, actual SQL Server, full tier)",
+  "entire_233": "excluded and held, not deferred; d790 and adverse Review 0031 immutable",
+  "validation_lanes": {
+    "types": "PASS",
+    "forms_74": "PASS after environment-only PATH correction (original failure preserved)",
+    "home_28": "PASS after environment-only PATH correction (original failure preserved)",
+    "roles_21": "PASS",
+    "browser_5": "PASS (programme_paging invocation-artefact failure preserved, one rerun passed; engineering evidence only)",
+    "synthetic_51": "PASS",
+    "ai_core": "PASS (28 tests, scripted harness: 6 exercised, 7 not evaluated)",
+    "core_72": "REUSED from d790 with input identity proven; SQLite and mocked MSSQL only"
+  },
+  "findings": [
+    {
+      "id": "RV-L1",
+      "severity": "Low",
+      "location": "src/api/src/zava_forward/api/web/role-screens.js:1380-1385",
+      "summary": "Flagged message written to both role=status and field-error element"
+    },
+    {
+      "id": "RV-L2",
+      "severity": "Low",
+      "location": "src/api/src/zava_forward/api/web/role-screens.js:1385,1418",
+      "summary": "No focus move to the file input on the no-file error"
+    },
+    {
+      "id": "RV-L3",
+      "severity": "Low",
+      "location": "src/api/src/zava_forward/api/web/role-screens.js:1347",
+      "summary": "403 copy always names the Retrofit Programme Manager"
+    },
+    {
+      "id": "RV-L4",
+      "severity": "Low",
+      "location": "src/api/tests/test_role_screens.py:32; src/api/tests/test_role_screens_conformance.py:25",
+      "summary": "Textual guard limits L1-L3 from the C3 Review"
+    },
+    {
+      "id": "RV-L5",
+      "severity": "Low",
+      "location": "src/core/tests/test_generated_dataset.py:42-49",
+      "summary": "Bare assert in runbook_five_homes helper"
+    }
+  ],
+  "web_guidelines": "command.md fetched in full from current main; chat.js and role-screens.js read against all rules; no CSS or HTML changed",
+  "operational_warning": "[Omitted: private operational handling text. No source, test, check, finding or outcome content is removed.]",
+  "read_manifest": {
+    "read_in_full": "30 non-tracking changed-file diffs vs main, relevant unchanged context, eight 0104 result JSONs, 0048 plan and critique, C3 Review",
+    "not_fully_read": "about 150 tracked .copilot-tracking evidence files (sampled), long doc table cells beyond truncation, rest of unchanged api/core, hosted CI; main ref not freshly fetched"
+  },
+  "pending_gates": [
+    "original final checkpoint in existing cut-over pack",
+    "state update",
+    "independent exact-HEAD assessment",
+    "real hosted gates for exact head",
+    "Refs-only PR and squash with empty closingIssuesReferences; #83 OPEN (verified OPEN now)",
+    "owner approvals"
+  ],
+  "public_technical_copy": {
+    "derivative_of": "rpi-149-original-review-0104-result.json",
+    "sha256_of_privately_retained_original": "c20ed63138a1e1c99ebdcb7935d64e6ba3aefdbd87d48d6a8a805e1ed784814d",
+    "change": "only the operational_warning value and this field differ from the original",
+    "not_a_new_review": true
+  }
+}

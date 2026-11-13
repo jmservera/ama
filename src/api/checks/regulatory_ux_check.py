@@ -156,6 +156,8 @@ def open_home(page: Page, base: str) -> None:
     page.reload()
     expect(page.locator("#regulatory-alerts")).to_be_visible()
     expect(page.locator("#regulatory-alerts [role=status]")).not_to_contain_text("Loading")
+    # The initial load must not take focus.
+    expect(page.get_by_role("button", name="Refresh alerts", exact=True)).not_to_be_focused()
 
 
 def keyboard_activate(page: Page, selector: str, key: str = "Enter") -> None:
@@ -172,6 +174,79 @@ def keyboard_activate(page: Page, selector: str, key: str = "Enter") -> None:
         }"""
     ), f"Visible focus or target size: {selector}"
     page.keyboard.press(key)
+
+
+def check_refresh_focus(page: Page, fixture: RegulatoryApi) -> None:
+    """Keyboard Refresh alerts keeps the person's place, and never steals it back."""
+    from playwright.sync_api import expect
+
+    alerts = page.locator("#regulatory-alerts")
+    refresh = page.get_by_role("button", name="Refresh alerts", exact=True)
+    status = alerts.locator(":scope > p[role=status]")
+    toggle = page.locator("#alerts-plain-mode")
+
+    def settled() -> None:
+        expect(refresh).to_be_enabled()
+        expect(refresh).not_to_have_attribute("aria-busy", "true")
+
+    def press_refresh() -> None:
+        refresh.focus()
+        expect(refresh).to_be_focused()
+        page.keyboard.press("Enter")
+
+    law = fixture.app.law
+    fixture.app.law = None
+    try:
+        press_refresh()
+        expect(status).to_contain_text("Alert coverage unknown")
+        settled()
+        expect(refresh).to_be_focused()
+    finally:
+        fixture.app.law = law
+
+    shown = page.evaluate("me.services.law_alerts")
+    page.evaluate("me.services.law_alerts = false")
+    try:
+        press_refresh()
+        expect(status).to_contain_text("the law store is not loaded")
+        settled()
+        expect(refresh).to_be_focused()
+    finally:
+        page.evaluate("flag => { me.services.law_alerts = flag; }", shown)
+
+    held: list[Any] = []
+    pattern = "**/api/law/alerts*"
+    page.route(pattern, lambda route: held.append(route))
+    try:
+        for moved_to in ("toggle", "text"):
+            press_refresh()
+            for _ in range(100):
+                if held:
+                    break
+                page.wait_for_timeout(50)
+            assert held, "Refresh alerts request was not issued"
+            expect(status).to_contain_text("Loading role-scoped alerts")
+            expect(refresh).to_be_disabled()
+            if moved_to == "toggle":
+                toggle.focus()
+            else:
+                page.locator("#regulatory-alerts-title").click()
+            held.pop().continue_()
+            expect(status).to_contain_text("visible alerts")
+            settled()
+            if moved_to == "toggle":
+                expect(toggle).to_be_focused()
+            else:
+                expect(refresh).not_to_be_focused()
+    finally:
+        page.unroute(pattern)
+        while held:
+            held.pop().continue_()
+
+    press_refresh()
+    expect(status).to_contain_text("visible alerts")
+    settled()
+    expect(refresh).to_be_focused()
 
 
 def keyboard_walk(page: Page, selector: str) -> None:
@@ -433,6 +508,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             expect(alerts).to_contain_text("Not active or source uncertain")
             expect(alerts).to_contain_text("Status: breach risk")
             scan(page, axe, reports, "source-changed-retained-risk", strict_contrast=True)
+            check_refresh_focus(page, fixture)
             page.get_by_role("tab", name="AI assistance", exact=False).press("Enter")
             question.fill("What do the hazard sources say for this home?")
             question.press("Tab")

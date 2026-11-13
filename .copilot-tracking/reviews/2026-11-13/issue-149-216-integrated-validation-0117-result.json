@@ -1,0 +1,56 @@
+{
+ "lane": "integrated12 test_regulatory_chat_api",
+ "input": {
+  "worktree": "/home/azureuser/source/ama-demo-wt/issue-149-c3-integration-0101",
+  "head": "288b6a37665602718122ed0ab35b9bbdcca963ed",
+  "src_tree": "6915b96c8ededf363b76c8fb4700153eb18ff588",
+  "child_216": "e4aac8b72802f583f19eabf88e14742f68f4f653",
+  "clean_before_after": "git status --porcelain empty before and after; HEAD unchanged"
+ },
+ "environment": {
+  "scratch": "rpi-216-integrated-validation-0117-scratch (git archive of exact HEAD in archive/)",
+  "python": "3.12.3 venv, pip only",
+  "install_argv": "pip install -q -e archive/src/core[sql,blob] -e archive/src/agents -e archive/src/api",
+  "install_exit": 0,
+  "install_log": "rpi-216-integrated-validation-0117-pip.log",
+  "sanitized": "env -i; PATH=venv/bin:node24.21.0:/usr/bin:/bin; HOME and ZF_DATA isolated in scratch; PYTHONPATH=tests:../core/tests:../agents/tests (test helpers only, no source packages); PYTHONDONTWRITEBYTECODE=1; no credentials"
+ },
+ "argv": "cd archive/src/api && python -m unittest -v test_regulatory_chat_api",
+ "selectors_confirmed": "12 tests, single class RegulatoryApi; matches original12 count",
+ "result": {
+  "log": "rpi-216-integrated-validation-0117-unittest.log",
+  "exit_file": "rpi-216-integrated-validation-0117.exit",
+  "exit": 0,
+  "ran": 12,
+  "ok": 12,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "duration_s": 16.827,
+  "tests": [
+   "test_conflict_auto_referral_and_content_free_usage_http",
+   "test_conflict_links_resolve_for_both_provision_versions",
+   "test_denied_disabled_missing_owner_forgery_and_generic_bypass",
+   "test_emitted_links_resolve_to_the_cited_content_and_forgeries_fail",
+   "test_local_app_full_turn_resume_doubt_and_owner_inbox",
+   "test_panel_wiring_uses_real_routes_and_safe_dom",
+   "test_privacy_status_warning_and_injected_question_preserve_alerts_and_cards",
+   "test_role_change_blocks_direct_and_generic_history",
+   "test_stale_card_labels_agree_on_http_history_and_chat_without_suppression",
+   "test_truncated_excerpt_links_resolve_to_the_full_provision",
+   "test_trusted_chat_capability_denial_covers_direct_generic_and_list_paths",
+   "test_trusted_role_projection_cannot_regain_staff_register_hazard_rights"
+  ]
+ },
+ "diagnostics_or_correction": "none; single pass",
+ "other_files": [
+  "-input-before.txt",
+  "-input-after.txt",
+  "-pip.exit",
+  "-start.txt",
+  "-unittest-start.txt",
+  "-unittest-end.txt"
+ ],
+ "limitations": "Only this module; no full gate, browser, hosted CI, independent review or human approval; no duplicate of home/forms/role/AI tests. The pre-existing rpi-216-integrated-validation-0117.log is a non-test agent transcript, untouched. No source/test change, commits or push.",
+ "verdict": "PASS 12/12"
+}

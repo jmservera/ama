@@ -133,6 +133,25 @@ class HomeCaseTests(unittest.TestCase):
             with self.assertRaises(KeyError):
                 store.home_case_view(sam, "ZF-NOPE")
 
+    def test_funding_confirmed_is_true_only_for_explicit_true(self) -> None:
+        for store in self.each_store():
+            sam = store.data["staff"][0]
+            for value, expected in (
+                (True, True),
+                (False, False),
+                (None, False),
+                ("yes", False),
+                (1, False),
+                ("absent", False),
+            ):
+                with self.subTest(value=value):
+                    if value == "absent":
+                        store.cases["ZF-2"].pop("funding_ok")
+                    else:
+                        store.cases["ZF-2"]["funding_ok"] = value
+                    shown = store.home_case_view(sam, "ZF-2")["home"]["funding_confirmed"]
+                    self.assertIs(shown, expected)
+
     def test_scheme_registry_validation(self) -> None:
         self.assertEqual(home_case.schemes({}), {})
         with self.assertRaises(ValueError):

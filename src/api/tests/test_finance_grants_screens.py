@@ -260,8 +260,10 @@ class FinanceGrantsScreens(unittest.TestCase):
         text = node_text(funding)
         self.assertIn("Not submitted; eligibility Not assessed.", text)
         self.assertIn("may be newer than input version", text)
-        for control in CONTROLS:
-            self.assertNotIn(control, tags(funding))
+        found = tags(funding)
+        self.assertEqual((found.count("input"), found.count("button")), (1, 1))
+        for control in ("form", "select", "textarea"):
+            self.assertNotIn(control, found)
         offs = (
             REVIEW,
             {**REVIEW, "held_download_enabled": False},
@@ -269,8 +271,10 @@ class FinanceGrantsScreens(unittest.TestCase):
         )
         for off in offs:
             with self.subTest(review=off):
-                tree = json.dumps(run(review=off)["finance-funding"]["tree"])
-                self.assertNotIn("held-export", tree)
+                funding_off = run(review=off)["finance-funding"]["tree"]
+                self.assertNotIn("held-export", json.dumps(funding_off))
+                for control in CONTROLS:
+                    self.assertNotIn(control, tags(funding_off))
         unavailable = {
             **enabled,
             "drafts": [

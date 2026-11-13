@@ -1,0 +1,273 @@
+{
+  "task": "issue-149 provenance and public-documentation complement 0122",
+  "kind": "distinct missing-evidence complement; not a repeated source review, not a replacement of the original or adverse Review, not a source correction, not publication authorization",
+  "agent": "hve-core-all:rpi-agent (launcher-asserted model claude-sonnet-5.5; no host attestation), no nested agents, one pass",
+  "identity": {
+    "frozenHead": "288b6a37665602718122ed0ab35b9bbdcca963ed",
+    "srcTree": "6915b96c8ededf363b76c8fb4700153eb18ff588",
+    "actualMain": "c401e5d56446b5752e8d91af6a45f3f06269c4bd",
+    "worktreeClean": true,
+    "diffVsMain": "182 files, 13153 insertions, 39 deletions: 30 non-tracking, 152 under .copilot-tracking",
+    "oldPin43b": "43b2187b9 is historical (read-time) and is not current main"
+  },
+  "originalReview": {
+    "files": ["rpi-149-original-review-0104-result.json", "rpi-149-original-review-0104-review.md"],
+    "executionPreserved": "PARTIAL as recorded: it read the full source, test and check diff, found no Critical/High/Medium and five Low, but sampled relevant original RPI evidence bodies and truncated long public table cells (about 700-900 characters). This complement does not change, replace or upgrade that outcome and must not be cited as a complete original Review.",
+    "privateWarning": "The original 0104 Review carries a separately handled private operational warning. It is not reproduced or paraphrased here; the restricted log was not read. No source or adverse finding is hidden by this omission."
+  },
+  "assessmentOfThisPortion": {
+    "status": "Partial",
+    "summary": "The five original RPI families (#96 backend, #96 UI, #96 C3, #215, #134 two tasks, #156) and all seven changed non-RPI documentation hunks were read in full, with complete table cells. The parent 0048 and 0055 plan, its critique, the independent-ux-0042 changes and the two state files were read in full, and the A5 section and A5 correction note of the parent policy amendment were read. The rest of the parent 2333 chain was not read in full (see remainder). No Critical, High or Medium finding. Seven Low or informational provenance findings and two documentation findings are recorded. Nothing here approves publication, an epic or whole issue, a deferral or any acceptance."
+  },
+  "limits": [
+    "Documentary and provenance reading only. No source re-review, no tests, browsers, web fetch, GitHub reads or hosted CI. Issue states (#83 open, #85/#90 closed, #187 closed, #189 open) were NOT re-read from GitHub; they are repeated as recorded in the artifacts.",
+    "Git timestamps of the form 'author date' are commit metadata, which can be set by the author; chronology below is therefore consistent evidence, not tamper-proof proof. Several adjacent commits share an identical second.",
+    "The model label claude-sonnet-5.5 in artifacts is launcher-asserted with no host attestation.",
+    "I did not independently verify the numeric claims in the documentation (browser PASS counts, test counts, the replay-regression claim about the as-of date, line numbers cited in the pack). They were read for internal consistency and traceability only.",
+    "External result files named by artifacts (for example rpi-134-evidence-correction-0012-result.json, rpi-215-readiness-2255-result.json) were not opened except those listed in the manifest."
+  ],
+  "exactRemainder": [
+    "Parent 2333 chain read only in part: plan (12016 bytes), details (8847), research (8132), critique (6814) and state (6582) were not read in full here; policy amendment (37274 bytes) was read only for the A5 section, the A5 correction notes and the section headings, so A1 to A4 bodies and their critiques were not re-read in this pass.",
+    "ROOT rpi-149-partial-plan-0048-result.json, rpi-149-plan-clarification-0055 .log and the brief files were not read; the 0055 result JSON was read.",
+    ".copilot-tracking evidence attachments, review logs other than the #156 review, and the 74/82/176/216/153 families (assigned to a separate complement) were not read.",
+    "Hosted CI, human acceptance and the current checkpoint (owned by another author) are outside this portion."
+  ],
+  "manifest": {
+    "readInFull": {
+      "nonRpiDocs": [
+        "docs/architecture/cutover-evidence-pack.md|5bb0897b370b|+43 lines at 7556-7598|13833 diff bytes",
+        "docs/capstone/demo/runbook.md|c131e41bd6e2|+8|1300",
+        "docs/reference/README.md|095c03ab6f96|+7 (one long index row, one paragraph)|5696",
+        "docs/reference/log.md|043f5a6644ac|+27 in two hunks|6242",
+        "docs/reference/research/retrofit-synthetic-data/README.md|705cfc253569|+17/-1 (ms.date 2026-10-18 to 2026-11-12)|1948",
+        "docs/reference/research/ux/zava-forward-prototype-profile-review.md|1aa08997029a|+27 including the five-row trace table with complete cells|6242",
+        "src/api/README.md|4b662ffdc947|+48 (two hunks, #96 and #215 notes)|4572"
+      ],
+      "parentAndPartialPlan": [
+        "plans/2026-11-13/issue-149-partial-plan-0048-plan.md|30f2ef14bea3|20307 (includes amendment 0055 and A55C-01..04)",
+        "plans/2026-11-13/issue-149-partial-plan-0048-critique.md|74a24ebb792c|2885",
+        "rpi-sessions/2026-11-13/issue-149-partial-plan-0048-state.json|87d36ef0b509|3296",
+        "changes/2026-11-13/issue-149-independent-ux-0042-changes.md|d3e798d87e25|10963",
+        "rpi-sessions/2026-11-13/issue-149-independent-ux-0042-state.json|3a40198ddd73|3583",
+        "ROOT rpi-149-plan-clarification-0055-result.json (read in full)"
+      ],
+      "familyArtifactsPathBlob12Bytes": [
+        "changes/2026-11-12-regulatory-refresh-focus-215-2305-changes.md|723a831402d7|3016",
+        "changes/2026-11-12/ac-dispositions-134-1112-changes.md|e375a1bfdb37|2555",
+        "changes/2026-11-12/ac-dispositions-134-1112-correction1-changes.md|557f7b38e4f6|939",
+        "changes/2026-11-12/iot-trace-docs-156-1112-changes.md|8bedf63c08ef|1307",
+        "changes/2026-11-12/issue-96-saved-export-check-2236-changes.md|bef3d880164d|2556",
+        "changes/2026-11-12/issue-96-saved-export-check-amendment-2255-changes.md|3bb4ff92a8bf|2852",
+        "changes/2026-11-12/issue-96-saved-export-check-amendment-2312-m1-changes.md|78541e779cea|3729",
+        "changes/2026-11-12/issue-96-ui-implementation-2333-changes.md|06d410f0964d|2382",
+        "changes/2026-11-12/main-alignment-134-2358-changes.md|ef7b64006a49|4689",
+        "changes/2026-11-13/issue-96-impact-c3-0052-changes.md|f52c9ca04406|2511",
+        "details/2026-11-12-regulatory-refresh-focus-215-2305-details.md|ce627dd90b78|2290",
+        "details/2026-11-12/ac-dispositions-134-1112-details.md|4b8c50f70b93|1428",
+        "details/2026-11-12/iot-trace-docs-156-1112-phase-details.md|879a8856fad3|3357",
+        "details/2026-11-12/issue-96-saved-export-check-2236-details.md|9f0a2b6cbbb6|1426",
+        "details/2026-11-12/issue-96-ui-plan-2323-details.md|13a6bddd358a|6744",
+        "details/2026-11-13/issue-96-impact-c3-0052-details.md|dd802146a1dc|2192",
+        "plans/2026-11-12-regulatory-refresh-focus-215-2305-plan.md|f2668004801f|1423",
+        "plans/2026-11-12/ac-dispositions-134-1112-correction1-amendment.md|c8a943821207|2105",
+        "plans/2026-11-12/ac-dispositions-134-1112-correction2-amendment.md|fbda76330f89|1010",
+        "plans/2026-11-12/ac-dispositions-134-1112-critique.md|68807f81bba1|2597",
+        "plans/2026-11-12/ac-dispositions-134-1112-plan.md|99f324231788|5213",
+        "plans/2026-11-12/iot-trace-docs-156-1112-critique.md|644995ed4430|1792",
+        "plans/2026-11-12/iot-trace-docs-156-1112-plan.md|0d8206af042d|3834",
+        "plans/2026-11-12/issue-96-saved-export-check-2236-critique.md|c7c1893a978f|1280",
+        "plans/2026-11-12/issue-96-saved-export-check-2236-plan.md|fd95f9dfe99f|1586",
+        "plans/2026-11-12/issue-96-saved-export-check-amendment-2255-critique.md|1f162d5bbae2|2557",
+        "plans/2026-11-12/issue-96-saved-export-check-amendment-2255-plan.md|853fa19c1c92|4812",
+        "plans/2026-11-12/issue-96-saved-export-check-amendment-2312-m1-critique.md|5921c1693d8f|2528",
+        "plans/2026-11-12/issue-96-saved-export-check-amendment-2312-m1-plan.md|bb6ed7965bbb|3847",
+        "plans/2026-11-12/issue-96-ui-implementation-2333-critique.md|2165f6369292|1761",
+        "plans/2026-11-12/issue-96-ui-implementation-2333-plan.md|09efa595f91b|8845",
+        "plans/2026-11-12/issue-96-ui-plan-2323-critique.md|ad5f23359432|4017",
+        "plans/2026-11-12/issue-96-ui-plan-2323-plan.md|95e35ed4f23f|12009",
+        "plans/2026-11-12/main-alignment-134-2358-correction-amendment.md|5315d4e085e5|3935",
+        "plans/2026-11-12/main-alignment-134-2358-correction-critique.md|90de37ab83ce|1576",
+        "plans/2026-11-12/main-alignment-134-2358-critique.md|03517c09d93d|2536",
+        "plans/2026-11-12/main-alignment-134-2358-plan.md|44d2a3870860|2985",
+        "plans/2026-11-13/issue-96-impact-c3-0052-critique.md|20e0062ff50c|1591",
+        "plans/2026-11-13/issue-96-impact-c3-0052-plan.md|8c40f823b39b|1445",
+        "plans/critiques/2026-11-12-regulatory-refresh-focus-215-2305-plan-critique.md|068d79c7c78e|1697",
+        "research/2026-11-12-regulatory-refresh-focus-215-2305-research.md|037ff4b1adb1|3011",
+        "research/2026-11-12/ac-dispositions-134-1112-research.md|c6da8c363736|10481",
+        "research/2026-11-12/iot-trace-docs-156-1112-research.md|abd972881bec|5525",
+        "research/2026-11-12/issue-96-saved-export-check-2236-research.md|bd8ffbbd259f|4628",
+        "research/2026-11-12/issue-96-ui-plan-2323-research.md|bb4c45c3f3d0|10988",
+        "research/2026-11-12/main-alignment-134-2358-research.md|66bd8ae1d01e|3593",
+        "research/2026-11-13/issue-96-impact-c3-0052-research.md|8207e7066eeb|4571",
+        "reviews/2026-11-12-regulatory-refresh-focus-215-2305-review.md|0740206fb91b|1305",
+        "reviews/2026-11-12/ac-dispositions-134-1112-correction1-closure.md|be43beca1ffb|1318",
+        "reviews/2026-11-12/ac-dispositions-134-1112-review.md|b52ff8de599d|3259",
+        "reviews/2026-11-12/issue-96-saved-export-check-2236-review.md|9bab399cd48f|1995",
+        "reviews/2026-11-12/issue-96-saved-export-check-amendment-2255-review.md|f7e32bcb7b4e|2312",
+        "reviews/2026-11-12/issue-96-saved-export-check-amendment-2312-m1-review.md|16a0d2e73699|2549",
+        "reviews/2026-11-12/issue-96-ui-implementation-2333-review.md|5bbffa723089|942",
+        "reviews/2026-11-12/main-alignment-134-2358-review.md|10542e357688|1501",
+        "reviews/2026-11-13/issue-96-impact-c3-0052-review.md|c46b648f4314|1493",
+        "reviews/logs/2026-11-12/iot-trace-docs-156-1112-review.md|0ce187c1c135|1395",
+        "rpi-sessions/2026-11-12/ac-dispositions-134-1112-state.json|2075fc93a3a9|3911",
+        "rpi-sessions/2026-11-12/iot-trace-docs-156-1112-state.json|1f3c6220fed4|2386",
+        "rpi-sessions/2026-11-12/issue-96-saved-export-check-2236-state.json|345da44154a6|4740",
+        "rpi-sessions/2026-11-12/issue-96-ui-implementation-2333-state.json|1ea2ecd29435|3132",
+        "rpi-sessions/2026-11-12/issue-96-ui-plan-2323-state.json|1112bc154fe2|3461",
+        "rpi-sessions/2026-11-12/main-alignment-134-2358-state.json|62e7fe925c0f|3852",
+        "rpi-sessions/2026-11-12/regulatory-refresh-focus-215-2305-state.json|981790b9405e|2217",
+        "rpi-sessions/2026-11-13/issue-96-impact-c3-0052-state.json|cee49ec99a39|2763"
+      ],
+      "familyNote": "All paths are under .copilot-tracking/. Blob ids are git blob prefixes at HEAD 288b6a37. No amendment-2255 or amendment-2312 state file, no 215 critique-stage state and no correction-2 closure review exist as tracked files."
+    },
+    "partiallyRead": [
+      "plans/2026-11-12/issue-149-parent-plan-2333-policy-amendment.md|a8a63d84b6f6|37274 bytes: headings plus A5 section and A5 correction notes only"
+    ],
+    "notRead": [
+      "ROOT rpi-149-final-ai-0104.log (prohibited, sensitive)",
+      "parent 2333 plan, details, research, critique, state (identities: b6c3b6819838, 25361980926f, 8afb9c19c5bf, 9f61ece9c84d, 5d831eada85a)"
+    ],
+    "narrowCodeAnchors": [
+      "src/api/src/zava_forward/api/web/role-screens.js:1403 TextDecoder(utf-8, fatal:true) with no ignoreBOM option (grep for ignoreBOM: none)",
+      "git log/commit metadata for the chronology table"
+    ]
+  },
+  "chronology": {
+    "note": "commit author timestamps, UTC 2026-11-12/13",
+    "96_backend_2236": "Implementation commit bbe80e563 and the evidence commit 05fa255dc (plan, critique, review, changes, state, research, details all added together) share 22:45:36. Plan, critique and review therefore were not committed before the code. The artifacts themselves disclose that the plan, critique and review were author-only and written after implementation.",
+    "96_amendment_2255": "plan 656581e7a 22:54:57 precedes the independent critique and fix, which were committed together in ad37cb113 23:01:12; review 7f3386ddd 23:03:06. Plan before critique and fix: genuine prospective order (critique and code share a commit, so critique-before-code is attested by the artifact text, not by separate commits).",
+    "96_amendment_2312_m1": "plan 6fdbc3c9f 23:14:54, critique bad131ff2 23:16:39, fix 626b7dbea 23:22:27, review 94760af7d 23:26:08: plan, then critique, then fix, then review in separate commits.",
+    "96_ui_plan_2323": "research, plan, details cc5c9894d 23:26:59 then critique 7f7a31ce6 23:29:07 (plan-only task).",
+    "96_ui_implementation_2333": "plan 38ea41f18 23:38:15, critique 705663d96 23:40:11, code ab9706c74 23:47:04, changes in the same commit, review 423517a71 23:47:44: prospective plan and critique before code; the review follows the code by 40 seconds.",
+    "96_c3_0052": "research, plan, details, state 876fd74a8 00:54:11; tests and critique ecef489b5 00:56:22 (critique and code in one commit); review ec25487e2 00:56:54.",
+    "215": "research, plan, details and plan-critique 4492d9f59 23:12:53 before the fix fc377bb2a 23:18:23; review with state 6eacb4953 23:19:19.",
+    "134_dispositions_1112": "everything (research, plan, critique, details, changes, review, state) is one commit c13799007 22:02:45; the plan and critique were written after the edits (disclosed 'ordering disclosure'). Correction 1 artifacts are one commit 8307d2580 22:40:22 (amendment written after the edits, disclosed); correction 2 amendment cc7e3c3a9 22:49:53 (amendment written after the fix, disclosed).",
+    "134_main_alignment_2358": "plan 931409436 23:57:25, critique 84ba86c8b 23:58:09, merge f8aad2889 23:58:43, changes, review and state follow by 23:59:48. Correction plan and critique ca14b1523 00:10:20 (author time) with commit time 00:11:20; the correction was applied by amending an unpushed commit after its Review.",
+    "156": "research, plan, details, critique, state c5efaeb44 23:30:56, docs d5e310738 23:31:39, review d8fe60017 23:32:24: evidence first, then docs, then review, but only 43 and 45 seconds apart.",
+    "parent_0048_0055": "plan 75747f147 00:48:43, critique and state f1281c4b1 00:50:37, amendment 598dd2714 00:56:22, amendment critique dispositions 3862d97b3 00:58:46 (the parent plan 3862d97b3 is an ancestor of the frozen head; C3 ec25487e2 merged at d4f0c92fc and main c401e5d56 at b705b61f1, then record 288b6a376 01:02:41).",
+    "verdict": "Prospective critique and plan precede the code for 2255, 2312-M1, UI 2333, C3, 215, 134 main alignment and the 0048/0055 plan. They do not for 2236 and 134-dispositions (and corrections 1 and 2), which the artifacts themselves disclose. Critique executions are labelled independent in all but the 2236 backend self-review, which is labelled author-only."
+  },
+  "dispositionsVsParentPlan": {
+    "0048_0055_conditions_checked_against_frozen_artifacts": [
+      "Partial scope: members 74, 176, 215, 96 combined, 156, 134 and UX parent (82) with C3 and current main; 233 entirely excluded (ancestry of aebd381d9 and 837da4fde recorded as not an ancestor in the changes record), neither admitted nor deferred. Matches.",
+      "#96 budget: three of five corrections spent (backend correction 1, M1 correction 2, C3 correction 3), two left, older whole-96 history unknown and preserved. Matches the changes record, the C3 state and the 0055 amendment text.",
+      "233: five spent, the typing-only extension unavailable, unavailability is no approval. Matches the plan, the amendment and the state.",
+      "#134: six partial (AC-034, 037, 039, 040, 042, 043), four deferred (AC-035, 036, 038, 041), no row passes, #83 open, amend-after-edit qualification kept. Matches the pack section, log entries and 134 artifacts.",
+      "No epic or whole-issue acceptance, no approved deferral inferred: the plan, state and changes records all state this and tick nothing.",
+      "Old pin 43b2187b9 appears in the pack and log only as a read-time pin. The pack labels it historical; the log entry does not repeat the label (see D-L2).",
+      "Not satisfied, as the plan itself states: the 0048 plan lists the validators, the original final Review, checkpoint, independent exact-head assessment and hosted CI as pending. Nothing in the frozen artifacts claims them done."
+    ],
+    "ownershipNote": "The 0048 plan treats the A55 amendment as plan-only. The later C3 merge, main merge and the roles lane count (19 in the plan, 21 now) are updated in the changes record, not the plan, which is acceptable because the changes record states the supersession."
+  },
+  "findings": [
+    {
+      "id": "PV-L1",
+      "severity": "Low",
+      "title": "Early #96 backend plan, critique and review were written after implementation and are author-only",
+      "evidence": "Commit bbe80e563 and 05fa255dc are 22:45:36; issue-96-saved-export-check-2236-{plan,critique,review}.md; later disclosed in the 2255 plan. The 2236 changes file also records two files written via shell scripts and a narrowed plan test expectation.",
+      "impact": "Those three files are not independent prospective evidence. The amendments 2255 and 2312-M1 supply independent critique and review for later changes, but the original code body has an independent review only through them.",
+      "route": "Keep as disclosed history; do not cite 2236 as an independent critique or Review."
+    },
+    {
+      "id": "PV-L2",
+      "severity": "Low",
+      "title": "Plan phase checkboxes are still unticked after completed work",
+      "evidence": "Plan Phase boxes remain [ ] in issue-96-ui-implementation-2333-plan.md (Phases 1-5), issue-96-impact-c3-0052-plan.md, regulatory-refresh-focus-215-2305-plan.md, iot-trace-docs-156-1112-plan.md and the 2312-M1 plan Phase 4 although the changes and review artifacts exist. The 2255 Phase 4 marker was ticked later with an annotation.",
+      "impact": "A reader cannot use plan markers as completion evidence; completion is shown only in the changes and review files and state.",
+      "route": "Treat the changes, review and state files as authoritative; a later reconciliation task may tick or annotate markers."
+    },
+    {
+      "id": "PV-L3",
+      "severity": "Low",
+      "title": "Post-Review fixes were applied without re-review (one-pass rule), disclosed",
+      "evidence": "134 dispositions RV-001..004 applied after the review; correction 1 R-3 fixed after its closure review; 134 main-alignment correction fixed F1 and F2 by amending the unpushed commit after the Review; 2255 Phase 4 marker annotated under M1; the 134 correction 2 closure review is recorded as pending in the state and no closure review file exists.",
+      "impact": "The fixes themselves are small documentation edits, but the final content of those hunks has no independent read in the frozen record other than the original 0104 Review and this complement.",
+      "route": "Cover in the independent exact-head assessment; do not claim these hunks were re-reviewed in their own tasks."
+    },
+    {
+      "id": "PV-L4",
+      "severity": "Low",
+      "title": "#96 UI Review follow-up: a saved file with a byte-order mark is not posted literally",
+      "evidence": "role-screens.js:1403 decodes with TextDecoder('utf-8', {fatal:true}) and no ignoreBOM, which strips a leading BOM; the UI review and the pack/README wording say the file text is posted unchanged. No ignoreBOM option exists at the frozen head.",
+      "impact": "README sentence 'posts the original file text unchanged' is true only for files without a BOM. A BOM file would be answered by the server from altered text. The review recorded this as a Low follow-up, and it remains open (source is frozen and not corrected here).",
+      "route": "Later owner-admitted fix or a wording qualification; consumes the remaining #96 allowance only if the owner chooses a source change (two remain)."
+    },
+    {
+      "id": "PV-L5",
+      "severity": "Low",
+      "title": "#96 reviews were reviewer-limited",
+      "evidence": "2255 review did not run tests against pre-fix code or open the changes file; C3 review did not independently check browser 88/47 or failing-first; UI review follow-ups include the 401 note and axe evidence conditional on ZF_AXE_JS; 215 review did not run the browser harness; WCAG 2.4.3 source was fetched only partially in 215.",
+      "impact": "Passing statements in the artifacts are author-run results with independent reading, not independent execution.",
+      "route": "Validators on the final head remain required; none are claimed here."
+    },
+    {
+      "id": "PV-L6",
+      "severity": "Low",
+      "title": "0048 state file is stale after the C3 and main integration",
+      "evidence": "issue-149-partial-plan-0048-state.json (blob 87d36ef0b509) still lists blocker c3-candidate 'no reviewed clean C3 candidate; 9085 not publishable' and next_action 'root awaits C3 candidate', although the C3 candidate (ec25487e2) was reviewed and merged at d4f0c92fc. The independent-ux-0042 state and changes record the integration correctly.",
+      "impact": "Two state files disagree on whether C3 is integrated; the later changes record and 0042 state are the current ones. No decision depends on the stale blocker.",
+      "route": "Reconcile by a later append-only state note; historical content should not be rewritten."
+    },
+    {
+      "id": "PV-I1",
+      "severity": "Informational",
+      "title": "Model attribution and independence are launcher-asserted",
+      "evidence": "134 pack bullet and several artifacts: the model label claude-sonnet-5.5 is asserted by the launcher; no witness or host attestation.",
+      "impact": "Independence of 'independent' critiques rests on recorded fresh-context launches, not on attestation.",
+      "route": "None."
+    },
+    {
+      "id": "D-L1",
+      "severity": "Low",
+      "title": "log.md lacks a blank line before two newly appended entries",
+      "evidence": "docs/reference/log.md line 11625 (the preceding Bicep entry's last bullet) is followed directly by the heading at 11626 'Demo cohort replay regression'; the line before the heading at 11631 'Demo IoT-to-UI source trace rows' is also not blank (line 11630). The file ends with a single newline.",
+      "impact": "Markdown still renders, but the repository's heading separation convention and the earlier 134 fix for the same defect are not applied to these two entries. The log is append-only, so the fix is a later separator or an owner-approved edit.",
+      "route": "Later documentation cleanup."
+    },
+    {
+      "id": "D-L2",
+      "severity": "Low",
+      "title": "log entry names origin/main 43b2187b9 without the historical qualifier",
+      "evidence": "docs/reference/log.md entry 'AC-034 to AC-043 disposition reconciliation': 'Documentation only at origin/main 43b2187b9'. The pack section says the pin is historical because origin/main has advanced.",
+      "impact": "A reader of only the log could take 43b2187b9 as current main. Correction 1 entry does state the earlier identity was qualified as read-time history, so the information exists but the first entry is not edited (append-only).",
+      "route": "None needed beyond the existing correction 1 entry; optional later pointer."
+    },
+    {
+      "id": "D-I1",
+      "severity": "Informational",
+      "title": "Public documentation claims are properly bounded",
+      "evidence": "Cutover pack section 7556-7598: 10 table rows with complete cells read; every row states Register status partial or deferred, 'Not shown', owner and resume check. '#83 open' and '#85, #90 closed 2026-10-17 historical'. 'Criterion 2 is not claimed met', 'not an owner-approved deferral', 'BRD 0.21.0 is draft'. README index paragraph repeats six partial and four deferred. The profile review IoT trace table (5 rows) marks every finding as static source, design Not supplied, #187 closed-with-ticks versus partial source unreconciled, #189 criterion 3 unticked, five-home Quality AI scope Not verified. The runbook and synthetic README additions state what the new test does not check. src/api/README states the freshness check is demo-only, default OFF, read-only, and 'does not ... prove the issue criterion for dependent-only invalidation'; the #215 note says 'engineering check, not WCAG conformance'.",
+      "impact": "No acceptance, tick, epic or deferral is inferred by any hunk.",
+      "route": "None."
+    },
+    {
+      "id": "D-I2",
+      "severity": "Informational",
+      "title": "The pack text 'one Review' means only the original Review",
+      "evidence": "Pack bullet: 'one independent critique ..., changes, state and one Review.' Corrections 1 and 2 and their closure review are described in the preceding bullet.",
+      "impact": "Slightly easy to misread as the only Review of the section, but corrections are disclosed in the adjacent bullet and the log.",
+      "route": "None."
+    },
+    {
+      "id": "D-I3",
+      "severity": "Informational",
+      "title": "AC-040 owner cell names #233",
+      "evidence": "Pack disposition table AC-040: 'Work owner and resume check: #134 and #233'.",
+      "impact": "An issue pointer only, preserved verbatim per the 0042 record; it is not a delivery or admission claim for #233, which remains excluded, five cycles spent, extension unavailable, no approval.",
+      "route": "None."
+    }
+  ],
+  "verifications": {
+    "fullTableCellsRead": "All cells of the 10-row pack table, the five-row profile review table, the long #156 index row in docs/reference/README.md and every table in the hunks, without character truncation.",
+    "anchorsChecked": "runbook anchors #the-five-homes (line 69) and #demo-operating-mode-and-five-homes-owner-selected-target-2026-11-12 (heading at line 48), the pack heading anchor (line 7556) and the profile review anchor (line 542) exist.",
+    "noWorkflowManifestDockerfileInfraSqlChange": "The 0042 changes record asserts this for the non-RPI set; this review saw only seven doc-like paths changed outside src code in this portion and did not recompute the full path list.",
+    "noCredentialOrSecretInPublicDocs": "No secret-like content in the seven doc hunks (visual read)."
+  },
+  "doesNotApprove": [
+    "publication, push, PR, merge, hosted CI or exact-head assessment",
+    "any acceptance criterion tick, epic or whole-issue completion, approved deferral",
+    "#233 admission or deferral, or any new correction allowance",
+    "that the original 0104 Review was complete"
+  ],
+  "writes": "Only this result and the paired review.md under ROOT. No source, checkpoint, state or report was modified."
+}

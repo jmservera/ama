@@ -1,0 +1,9 @@
+absent KeyError KeyError('funding_ok')
+  gate_reasons KeyError 'funding_ok'
+none GateError ['Funding has not been confirmed. Owner: Sam Example. Next action: check the funding and record it.']
+  gate_reasons ['Funding has not been confirmed. Owner: Sam Example. Next action: check the funding and record it.']
+yes GateError ['Funding confirmed: no evidence recorded, so this cannot pass. Owner: Sam Example. Next action: Check the funding and record it.']
+  gate_reasons []
+false GateError ['Funding has not been confirmed. Owner: Sam Example. Next action: check the funding and record it.']
+  gate_reasons ['Funding has not been confirmed. Owner: Sam Example. Next action: check the funding and record it.']
+exit=0

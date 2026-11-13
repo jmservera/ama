@@ -153,7 +153,7 @@ def view(store: Any, user: Record, case_id: str) -> Record:
                 "decision": deepcopy(case["decision"]),
                 "stage": case["stage"],
                 "closed": case["closed"],
-                "funding_confirmed": case["funding_ok"],
+                "funding_confirmed": case.get("funding_ok") is True,
                 "documents": [
                     {k: d.get(k) for k in ("id", "name", "kind")} for d in case.get("documents", [])
                 ],

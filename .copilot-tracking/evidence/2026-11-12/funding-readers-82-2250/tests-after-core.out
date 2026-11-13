@@ -1,0 +1,157 @@
+..................................................................[timing] queue=new, 60,000 synthetic cases: first=950.4 ms (50 contexts), repeat_ms=[161.0, 159.3, 160.7], repeat_contexts=150, matches=19375
+[timing] queue=priority, 60,000 synthetic cases: first=0.9 ms (0 contexts), repeat_ms=[0.2, 0.1, 0.1], repeat_contexts=0, matches=0
+[timing] queue=stale, 60,000 synthetic cases: first=36.3 ms (50 contexts), repeat_ms=[117.5, 124.0, 115.1], repeat_contexts=150, matches=14539
+[timing] queue=blocked, 60,000 synthetic cases: first=22.8 ms (50 contexts), repeat_ms=[36.6, 36.6, 37.7], repeat_contexts=150, matches=4333
+[timing] queue=overdue, 60,000 synthetic cases: first=58.0 ms (50 contexts), repeat_ms=[157.7, 153.2, 152.7], repeat_contexts=150, matches=18326
+[timing] queue=unowned, 60,000 synthetic cases: first=33.4 ms (50 contexts), repeat_ms=[92.5, 100.7, 96.2], repeat_contexts=150, matches=11675
+.....................................................................................................................................................................Stock/technical SQL recovery failed
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/stock.py", line 31, in decision_scope
+    yield case, actor
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/quality.py", line 145, in _quality_operation
+    yield c, actor
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/quality.py", line 325, in accept_quality
+    self.save()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_quality_procurement.py", line 1573, in concurrent_save
+    save()
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/sqlstore.py", line 1262, in save
+    self._sync()
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/sqlstore.py", line 999, in _sync
+    seq = self._db_seq()
+          ^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/sqlstore.py", line 988, in _db_seq
+    row = self.db.execute("SELECT value FROM meta WHERE key='seq'").fetchone()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_quality_procurement.py", line 1558, in execute
+    raise OSError("SYN post-commit refresh read")
+OSError: SYN post-commit refresh read
+Stock/technical recovery failed; reload to establish the outcome.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/stock.py", line 34, in decision_scope
+    store._discard()
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/sqlstore.py", line 1345, in _discard
+    self._proc_sync()
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/sqlstore.py", line 1354, in _proc_sync
+    row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_quality_procurement.py", line 1558, in execute
+    raise OSError("SYN post-commit refresh read")
+OSError: SYN post-commit refresh read
+Stock/technical SQL recovery failed
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/stock.py", line 31, in decision_scope
+    yield case, actor
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/quality.py", line 145, in _quality_operation
+    yield c, actor
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/quality.py", line 325, in accept_quality
+    self.save()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_quality_procurement.py", line 1573, in concurrent_save
+    save()
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/sqlstore.py", line 1262, in save
+    self._sync()
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/sqlstore.py", line 999, in _sync
+    seq = self._db_seq()
+          ^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/sqlstore.py", line 988, in _db_seq
+    row = self.db.execute("SELECT value FROM meta WHERE key='seq'").fetchone()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_quality_procurement.py", line 1558, in execute
+    raise OSError("SYN post-commit refresh read")
+OSError: SYN post-commit refresh read
+Stock/technical recovery failed; reload to establish the outcome.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/stock.py", line 34, in decision_scope
+    store._discard()
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/sqlstore.py", line 1345, in _discard
+    self._proc_sync()
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/sqlstore.py", line 1354, in _proc_sync
+    row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_quality_procurement.py", line 1558, in execute
+    raise OSError("SYN post-commit refresh read")
+OSError: SYN post-commit refresh read
+.............s..................................Formal-route receiver failed: RuntimeError
+.........Formal-route receiver failed: RuntimeError
+...........................................................s......................ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss..............................................Formal-route receiver failed: RuntimeError
+.........Formal-route receiver failed: RuntimeError
+....................................s.....................................................................ssssssssssssssss........................................SQL lock-exit recovery failed; original operation failure retained
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/bulk_edits.py", line 251, in _execute
+    _apply(store, user, actor, body, before)
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/bulk_edits.py", line 406, in _apply
+    _save(
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/bulk_edits.py", line 218, in _save
+    store.save()
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/sqlstore.py", line 1199, in save
+    self._append_audit(pending)
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_bulk_edits.py", line 492, in fail
+    raise RuntimeError("Synthetic write failure")
+RuntimeError: Synthetic write failure
+SQL lock-exit recovery failed (RuntimeError); original operation failure retained. Reload persisted records before retrying.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/sqlstore.py", line 138, in __exit__
+    self.store._finish()
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/sqlstore.py", line 1116, in _finish
+    self._append_audit(pending)
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_bulk_edits.py", line 492, in fail
+    raise RuntimeError("Synthetic write failure")
+RuntimeError: Synthetic write failure
+..............
+----------------------------------------------------------------------
+Ran 747 tests in 206.157s
+
+OK (skipped=165)
+[timing] SQL first page, default order, 60,000 cases: 67 ms (58224 matches; load1=2.42 load5=1.64 cpus=4)
+[timing] SQL keyset page after 50 pages, 60,000 cases: 70 ms (58224 matches; load1=2.42 load5=1.64 cpus=4)
+[timing] SQL filtered page (area, long wait), 60,000 cases: 117 ms (8577 matches; load1=2.42 load5=1.64 cpus=4)
+[timing] SQL my cases, 60,000 cases: 65 ms (29098 matches; load1=2.42 load5=1.64 cpus=4)
+[timing] SQL search 'smith', 60,000 cases: 166 ms (8299 matches; load1=2.42 load5=1.64 cpus=4)
+[timing] SQL sort by waiting, 60,000 cases: 68 ms (58224 matches; load1=2.42 load5=1.64 cpus=4)
+[timing] SQL contractor list, 60,000 cases: 63 ms (29004 matches; load1=2.42 load5=1.64 cpus=4)
+[timing] SQL header counts, 60,000 cases: 55 ms
+core exit 0

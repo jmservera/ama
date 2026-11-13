@@ -11581,6 +11581,23 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Constructed fixture only: `fairness_evidence` and `activation_allowed` stay false; no ranking policy or threshold change; no criterion ticked.
 * Evidence under `.copilot-tracking/` (2026-11-12 issue-128-cohort-trace-1112).
 
+## [2026-11-12] update | AC-034 to AC-043 disposition reconciliation (Refs #134)
+
+* Appended a dated section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#ac-034-to-ac-043-disposition-reconciliation-2026-11-12-refs-134) that reconciles the ten PRD 0.21.0 (in-review) criteria of the second #134 criterion against the existing register and the pack's scattered traces: register status, qualified evidence with its source and date, the unproven remainder, work owner and a resume check. It adds candidate source evidence for AC-035 and AC-038 labelled implemented but unverified. No row passes (six partial, four deferred).
+* Documentation only at `origin/main` `43b2187b9`: the register source is unchanged, and only the register check and 15 existing Core tests were run, as register integrity. It is not an owner-approved deferral, an epic acceptance or a pivot; no keyboard, assistive-technology, human, resident or live acceptance, no tick and no issue or board change. Original A4 and E1 to E4 stay spent, E5 and E6 unadmitted.
+* Evidence under `.copilot-tracking/` (2026-11-12 ac-dispositions-134-1112).
+
+## [2026-11-12] update | AC-034 to AC-043 disposition correction 1 (Refs #134)
+
+* Corrected the [AC-034 to AC-043 section](../architecture/cutover-evidence-pack.md#ac-034-to-ac-043-disposition-reconciliation-2026-11-12-refs-134) after an independent review: closed #83, #85 and #90 are historical evidence and not live owners (#134 is the only open owner recorded); the #85 closing review and PR 388 and the JSON-only skip are reconciled; the AC-043 probe is cited and the #1029 and #1152 tests are labelled related isolation, not manifest coverage; the unanchored fixture count is dropped and the 231, 231q, 231p and 231qp selector names are no longer a story count; the earlier `origin/main` identity is qualified as read-time history.
+* Documentation only. Six partial and four deferred are unchanged, no criterion passes, and there is no owner approval, tick or acceptance. The original `43b2187b9` entry above is not edited.
+* Evidence under `.copilot-tracking/` (2026-11-12 ac-dispositions-134-1112, correction 1 files).
+
+## [2026-11-12] update | AC-034 to AC-043 disposition correction 2 (Refs #134)
+
+* Fixed an error in correction 1 above: #83 is open, not closed. The [AC-034 to AC-043 section](../architecture/cutover-evidence-pack.md#ac-034-to-ac-043-disposition-reconciliation-2026-11-12-refs-134) restores #83 and #134 as the open owners for AC-036; only #85 and #90 (closed 2026-10-17) are historical evidence and not live owners. The correction 1 entry is not edited.
+* Documentation only. Six partial and four deferred are unchanged; no tick, acceptance or approval.
+
 ## [2026-11-12] update | Post-fix-wave checkpoint (Refs #440 #128 #98 #115)
 
 * Added a dated post-fix-wave checkpoint to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#post-fix-wave-checkpoint-2026-11-12-refs-440-128-98-115) for merged PRs 1481, 1483 and 1482 on `main` `e155c88ed`, with an index paragraph in the [index](./README.md).
@@ -11606,3 +11623,19 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * The [direct Entra setup section](../../infra/README.md#direct-entra-setup-and-acceptance) of `infra/README.md` now names `entraClientSecretName` and the `zava-forward-credential-name` tag for retaining the generated Key Vault secret name on later Bicep redeploys; the default would revert it.
 * Evidence class: source-derived only (`main.bicep`, `containerapps.bicep`, `setup-entra.py`); no live redeploy, Graph, Key Vault or cloud action, no sign-in claim, no criterion tick or closure. The earlier readiness result stays research-only `NOT_READY`, and its 278-test run with one missing-distribution error is not recorded as a pass.
 * Evidence under `.copilot-tracking/` (2026-11-12 secret-name-redeploy-358-2236).
+## [2026-11-12] update | Demo cohort replay regression (Refs #176)
+
+* Added a local test that reads the [demo runbook](../capstone/demo/runbook.md#the-five-homes) five-home table and checks the seed 20260901, as-of 2026-10-13 synthetic build with the tests' fictional register reproduces each id (open, no hazard record, published property type and stage). Added a provenance bullet to the runbook and a section to the [synthetic data README](research/retrofit-synthetic-data/README.md#demo-cohort-replay-regression-2026-11-12-refs-176).
+* Test-only: no generator, manifest or scenario recipe source changed. Fictional inputs only; deployed-store, sensor, simulator and AI-scope checks are not covered. Criteria 1 and 2 of #176 stay unmet and unticked (original private register boundary).
+* Evidence under `.copilot-tracking/` (2026-11-12 issue-176-demo-cohort-replay-2236).
+## [2026-11-12] update | Demo IoT-to-UI source trace rows (Refs #156 #184 #187 #189 #134)
+
+* Added a dated, additive section to the [prototype profile review](research/ux/zava-forward-prototype-profile-review.md#demo-iot-to-ui-source-trace-update-2026-11-12-refs-156-184-187-189-134) and an index row in the [index](./README.md): #189 now has a source screen `#/simulator` with a local browser check, #187 is a partial control surface, the employee Quality sensor panel design is Not supplied, source cadence is five minutes against the owner one-minute target, and the five-home scope of Quality AI is not verified by a bounded, nonexhaustive trace.
+* Documentation only; earlier rows and the executable register (74 screen issues, 0 designs supplied, blocked) are unchanged; no approval, tick, source or Bicep change, model call or live run; criterion 1 stays unticked.
+* Evidence under `.copilot-tracking/` (2026-11-12 iot-trace-docs-156-1112).
+
+## [2026-11-13] update | WCAG baseline eighth invalid-field site, saved Held copy (Refs #96)
+
+* Added a dated 2026-11-13 entry to the Error identification row of the [WCAG 2.2 conformance baseline](research/ux/wcag-conformance-baseline.md): the static inventory of `aria-invalid` sites is now eight after a hosted `8 != 7` test failure. The new site, the saved Held copy checker, was read from source (visible label, `aria-describedby` message, text with glyph and next step) and gained a focused static association test.
+* Source-read and static-test evidence only: no screen reader, assistive technology, manual acceptance or conformance claim; the existing browser check was not re-run for this entry.
+* Evidence under `.copilot-tracking/` (2026-11-13 issue-96-c4-ci-baseline-0208).

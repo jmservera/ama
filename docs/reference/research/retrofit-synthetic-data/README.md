@@ -1,7 +1,7 @@
 ---
 title: Retrofit Synthetic Evidence Pack - Zava Forward Year One
 description: Fifteen months of synthetic operating records from a professional retrofit delivery team that knows it has bottlenecks but not where they are
-ms.date: 2026-10-18
+ms.date: 2026-11-12
 ms.topic: reference
 ---
 
@@ -309,6 +309,22 @@ private stock register generator and its pinned inputs are missing, and no
 engineering change can recreate them. The owner must either supply them
 under the private-input rules or decide that the fictional register replaces
 them and amend the criteria. No code, data or live record was changed.
+
+### Demo cohort replay regression (2026-11-12, Refs #176)
+
+The determinism tests compare a build with itself, so a seed or generator
+change could stale the five demo homes published in the
+[demo runbook](../../../capstone/demo/runbook.md#the-five-homes) while every
+byte-identity test still passed. `test_generated_dataset.py` now reads that
+table and checks that the seed 20260901, as-of 2026-10-13 build with the
+tests' fictional register contains each id once, open, with no hazard record
+and the published property type and stage. Changing the seed fails it;
+changing only the as-of date to 2026-12-01 does not move these five homes. It
+verifies source replay with fictional inputs only, not the archetype rule,
+direct links, sensors, the simulator cohort, AI scope or the private deployed
+store. It is test-only, so manifests and scenario recipe hashes are unchanged,
+and criteria 1 and 2 remain unmet and unticked for the original register
+boundary.
 
 ### Offline acceptance audit (2026-10-16, Refs #176)
 

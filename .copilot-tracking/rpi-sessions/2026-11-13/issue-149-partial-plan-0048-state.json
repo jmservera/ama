@@ -1,0 +1,79 @@
+{
+  "task_id": "issue-149-partial-plan-0048",
+  "task_slug": "issue-149-partial-plan-0048",
+  "parent_task": {
+    "task_id": "issue-149-independent-ux-0042",
+    "task_slug": "issue-149-independent-ux-0042"
+  },
+  "mode": "manual",
+  "active_phase": "Plan",
+  "status": "active",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-12/issue-149-parent-plan-2333-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-13/issue-149-partial-plan-0048-plan.md",
+    "details": null,
+    "critique": ".copilot-tracking/plans/2026-11-13/issue-149-partial-plan-0048-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Bounded partial independent UX release scope selected by coordinator; not the complete A2 release; Wave B rule unsatisfied; 233 held, neither admitted nor deferred; no approval inferred",
+      "status": "recorded (coordinator decision)",
+      "evidence": "plan Coordinator scope decision"
+    },
+    {
+      "decision": "Critique executed once: Revise (P48C-01..07), plan-only dispositions applied; not repeated",
+      "status": "recorded",
+      "evidence": "critique file"
+    },
+    {
+      "decision": "Research disposition reused (A5 critique and source record, original and adverse records); Planning Readiness Ready",
+      "status": "recorded",
+      "evidence": "plan Status section"
+    },
+    {
+      "decision": "Source identity unchanged: head 9085e85c6 src tree 1f4ac07f3985a99e7c71af8d24fd84c20dea7028; this task changes only .copilot-tracking",
+      "status": "recorded",
+      "evidence": "result json srcProof"
+    },
+    {
+      "decision": "Amendment 0055: full-API requirement corrected to the full local ApiTests class (6 methods), whole-api-suite gate withdrawn, focused impact tier",
+      "status": "recorded (caller clarification)",
+      "evidence": "plan A55-01..02"
+    },
+    {
+      "decision": "Amendment critique executed once: Revise (A55C-01..04), plan-only dispositions applied; not repeated",
+      "status": "recorded",
+      "evidence": "critique file, plan A55-06"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "roles-failures",
+      "summary": "2 role-screen unit failures on 9085e85c6 (source-attributable, 0045 roles lane)",
+      "resolution": "owner route; no waiver; rerun"
+    },
+    {
+      "id": "validators-incomplete",
+      "summary": "impact-selected validators on final identity pending: core72 reuse needs input-identity re-proof, forms74 documented input, home/ApiTests, role19, synthetic51, browser, lint/types",
+      "resolution": "after reviewed clean C3 candidate, integration and fresh source freeze"
+    },
+    {
+      "id": "publication-gates",
+      "summary": "original Review, checkpoint, fresh exact-head assessment, hosted checks, human approvals pending; 233 held",
+      "resolution": "owner and root; none inferred"
+    },
+    {
+      "id": "c3-candidate",
+      "summary": "no reviewed clean C3 candidate; 9085 not publishable",
+      "resolution": "native 96-impact-c3-0052 then integration"
+    }
+  ],
+  "next_action": {
+    "phase": "Plan",
+    "action": "Stop. Root awaits C3 candidate, integrates, freezes source and dispatches impact validators"
+  },
+  "prioritized_follow_ups": null
+}

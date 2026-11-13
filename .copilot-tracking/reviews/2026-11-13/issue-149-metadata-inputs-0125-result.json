@@ -1,0 +1,186 @@
+{
+  "assessment": "rpi-149-metadata-inputs-0125",
+  "verdict": "PARTIAL-SUPPORTED: for every observed lane, no actually-read test/lint/type input differs between 288b and 37e. The only differing exported files are the 3 metadata files, and no lane's selectors, imports, helpers or configs name or scan them. Residual: non-executed/unselected readers of the changed doc exist (listed) and were never part of any lane. Not a final-head or publication approval.",
+  "performed": "Read-only: git object inspection, blob-hash comparison of each lane's actual exported tree against both commits, grep/read of selected tests, helpers, configs. No test/check re-run, no edits, no install, no push.",
+  "identities": {
+    "candidate": {
+      "path": "/home/azureuser/source/ama-demo-wt/issue-149-checkpoint-0117",
+      "head": "37e2715b5175cce0c5470904817fd69ea5eea5eb",
+      "src_tree": "6915b96c8ededf363b76c8fb4700153eb18ff588",
+      "state": "git status --porcelain empty; no non-__pycache__ ignored files; one commit ahead of 288b (docs(rpi): prepare partial UX release affected-integration checkpoint, Refs #149); no submodules"
+    },
+    "validated_source_predecessor": {
+      "head": "288b6a37665602718122ed0ab35b9bbdcca963ed",
+      "src_tree": "6915b96c8ededf363b76c8fb4700153eb18ff588",
+      "is_ancestor_of_candidate": true
+    },
+    "actual_main": {
+      "sha": "c401e5d56446b5752e8d91af6a45f3f06269c4bd",
+      "src_tree": "0c23ed1fcbdad8a967fda5f70efbc012207cb28d",
+      "is_ancestor_of_candidate": true,
+      "note": "main src differs from candidate src by design (partial UX source); not re-analysed here"
+    }
+  },
+  "actual_changed_paths_288b_to_37e": [
+    {"path": ".copilot-tracking/changes/2026-11-13/issue-149-independent-ux-0042-changes.md", "status": "M", "numstat": "+12/-0"},
+    {"path": ".copilot-tracking/rpi-sessions/2026-11-13/issue-149-independent-ux-0042-state.json", "status": "M", "numstat": "+27/-2"},
+    {"path": "docs/architecture/cutover-evidence-pack.md", "status": "M", "numstat": "+103/-1"}
+  ],
+  "diff_totals": "3 files, 142 insertions, 3 deletions; zero changes under src/, tools/, .github/, infra/, requirements.txt, skills-lock.json, .gitignore, .gitattributes (verified by empty diff and equal src tree)",
+  "method_of_equality_proof": {
+    "export_comparison": "For each lane, the actual scratch input tree was extracted from ROOT and every file was hashed with git hash-object and compared with git ls-tree of 288b and of 37e (excluding venv, home, data, pip, zfdata, __pycache__, egg-info, .pyc).",
+    "result_for_all_full_archive_lanes": "13497 files each; 0 files absent from 37e; 0 content mismatches versus 288b; exactly 3 mismatches versus 37e, namely the three changed metadata paths (old versions present in the lane inputs).",
+    "why_source_tree_equality_alone_is_not_used": "The lane inputs were full git archives that included docs/ and .copilot-tracking/, so the stale metadata files WERE present in the lane inputs. Safety therefore rests on proving the lanes do not read them (below), not on src equality."
+  },
+  "metadata_dependency_search": {
+    "literal_references_to_changed_paths": "grep over src/, tools/, .github/ for 'cutover-evidence-pack' and for the 0042 changes/state names: only prose links in src/README.md, src/api/README.md, .github/agents/ama-backlog-delivery-coordinator.agent.md and .github/rubric/README.md. No test, helper, check script, fixture or config opens these paths. The 0042 changes and state files have no references at all in src/ or tools/.",
+    "wholesale_scanners_in_src_tests_and_src": "rglob/os.walk/glob users: core tests test_live_doc_links, test_cutover_audit, test_dependency_rule, test_resident_preview, test_synthetic_*, test_sensor_*, test_monitoring_coverage, test_recovery, test_historical_backfill, test_seed_merge, test_funding_automation_boundary; api tests test_quality_simulation_lane, test_ai_call_site_inventory, test_ranking_policy, test_specialist_keyboard_check, test_dependency_rule, test_content_standard, test_iot_credential_hygiene, test_accessibility_baseline; agents test_dependency_rule. NONE of those modules is in any lane selector. In-lane scanners only: test_generated_dataset and determinism_audit.py rglob a temporary generated output dir; test_eval_registry globs src/*/evals and reads src/agents/evals/registry.json and .gitignore; privacy.py globs docs/reference/research/retrofit-synthetic-data pack plus src/*/evals; server.py rglobs api web assets. None walk docs/ or .copilot-tracking/.",
+    "git_dependence": "Lane trees were git archive exports with no .git directory, so no lane could depend on HEAD identity, history or tracked-file listing."
+  },
+  "lanes": [
+    {
+      "lane": "core72",
+      "evidence_kind": "HISTORICAL REUSE from d790 (rpi-149-core-validation-0025-result.json); NOT a fresh observation at 288b or 37e. Reuse was established by the 0104 trace lane and independently re-verified here.",
+      "recorded_observation": "Ran 72 tests, OK, 72 ok lines, 0 failures, 0 errors, 0 skips, exit 0; Python 3.12.3; editable core only, no extras; HOME and ZF_DATA scratch; PYTHONPATH=tests only.",
+      "selectors": "cd tree/src/core; PYTHONPATH=tests python -m unittest -v test_home_case.HomeCaseTests test_chat_case_answers.CitationBoundTests test_gates.GateTests test_gates.FundingReadinessTests test_gates.QualityGateTests test_sqlqueues.SqlQueueMembership test_sqlqueues.SqlQueueMigration test_sqlqueues.QueueSqlPortability test_taskqueues.QueueDefinitions test_taskqueues.StoreQueueParity",
+      "historic_input_manifest_all_three": [
+        {"path": "src/core", "git_object": "tree 93de8839f422d3d502f7f6197bedaf68e45f12a7", "d790_export_vs_37e": "307 files; per-file blob hash list of the actual 0025 export (rpi-149-core-validation-0025-scratch/tree/src/core) is identical to git ls-tree of 37e/src/core; also identical at 288b", "equal": true},
+        {"path": "src/README.md", "blob": "b6e13012a836b53d1d04ae9ce6c021c331cbfb82", "export_blob_equal_to_37e": true, "equal": true},
+        {"path": "README.md", "blob": "f47c6be00a06ffaa54b561d89fb8bff1fe792434", "export_blob_equal_to_37e": true, "equal": true}
+      ],
+      "actual_export_shape": "scratch/tree contained exactly README.md, src/README.md and src/core (no docs/, no .copilot-tracking/). The 72 tests passed with no docs/ or metadata present, which independently shows they do not read the changed paths.",
+      "read_path_review": "Five test modules plus helpers test_quality_procurement, test_sqlreads, test_stock_reconciliation, dataset, building_fixture: only temp-dir files, in-package imports and python -c subprocesses (import zava_forward.core.*). docs/ strings in gates.py and test_gates.py are citation text, not reads.",
+      "equal_input_conclusion": "PROVEN identical input at 37e for all three historic inputs. The d790 whole-src tree differs from 37e, but only the three exported paths were inputs.",
+      "limit": "The 72 are historical reuse (d790), not a fresh run. Real MSSQL not observed. Literal MEMBERSHIP_REVISION==3 assertion is absent (indirect coverage only)."
+    },
+    {
+      "lane": "forms74",
+      "evidence_kind": "FRESH actual observation at 288b (0104), same source tree as 37e",
+      "result": "PASS 74/74 after one environment-only PATH correction (original failure retained)",
+      "selectors": "cd archive/src/api; python -m unittest -v test_form_held_download_api.HeldDownload test_form_staging_api.FormApi test_finance_grants_screens.FinanceGrantsScreens test_role_endpoint_inventory.RoleEndpointInventory",
+      "input_manifest": "full git archive of 288b (13497 files); editable core[sql,blob], agents and api; PYTHONPATH helper only tests:../core/tests:../agents/tests",
+      "equality": "0 mismatches versus 288b; only the 3 metadata paths differ versus 37e",
+      "read_paths": "api web assets (finance grants screens reads web/role-screens.js), server source, core tests dataset and test_form_staging, test_mvp DATA, test_role_matrix. No docs/ or tracking reads found.",
+      "metadata_dependency": "none found"
+    },
+    {
+      "lane": "home28",
+      "evidence_kind": "FRESH actual observation at 288b (0104)",
+      "result": "PASS after env-only correction (missing node on PATH, original failure retained): HomeCaseApiTests 6 + ProgrammeScreen 16 + test_mvp.ApiTests 6 = 28",
+      "selectors": "single combined unittest of test_home_case_api.HomeCaseApiTests, test_programme_screen.ProgrammeScreen and test_mvp.ApiTests (see lane result for exact argv)",
+      "input_manifest": "full git archive of 288b (13497 files, src-archive); editable installs",
+      "equality": "0 mismatches versus 288b; only the 3 metadata paths differ versus 37e",
+      "read_paths": "web/app.js, server module path for logo, building_fixture, dataset helpers. test_mvp.py:185 only requests a traversal URL and expects 404. No docs/ or tracking reads.",
+      "metadata_dependency": "none found"
+    },
+    {
+      "lane": "role21",
+      "evidence_kind": "FRESH actual observation at 288b (0104)",
+      "result": "21 ran, 21 ok, 0 failures, 0 skips, exit 0, no correction; both negative-variant guard tests passed",
+      "selectors": "cd head/src/api; python -m unittest -v tests.test_role_screens.RoleScreens tests.test_role_screens_conformance.RoleScreenConformance",
+      "input_manifest": "full git archive of 288b (13497 files, dir head); editable installs; no PYTHONPATH",
+      "equality": "0 mismatches versus 288b; only the 3 metadata paths differ versus 37e",
+      "non_src_inputs_actually_read": [
+        {"path": "docs/reference/research/ux/design-system.md", "reader": "test_role_screens.py:12", "unchanged_288b_to_37e": true},
+        {"path": "docs/reference/research/ux/atlas-screen-trace.md", "reader": "test_role_screens_conformance.py:15", "unchanged_288b_to_37e": true}
+      ],
+      "metadata_dependency": "none; the only docs inputs are not among the 3 changed paths. The 3 role test files were separately confirmed present identically in src."
+    },
+    {
+      "lane": "synthetic51",
+      "evidence_kind": "FRESH actual observation at 288b (0104)",
+      "result": "51 ran, OK, 0 failures, 0 errors, 0 skips; all_available_pass=false printed inside a passing negative case with constructed fictional stock (not a real stock pass)",
+      "selectors": "cd archive/src/core; PYTHONPATH=tests:../agents/tests:../api/tests python -m unittest test_generated_dataset.GeneratedDatasetTests test_needs_inventory.NeedsInventoryTests test_scenario_manifest.ScenarioManifestTests test_determinism_audit.DeterminismAuditTests -v",
+      "input_manifest": "PARTIAL git archive of 288b: README.md, docs, src, tools, .github, .gitignore plus 15 tracked generator .py (1232 files). The 3 metadata docs: docs/architecture/cutover-evidence-pack.md present (old version); the two .copilot-tracking files absent.",
+      "equality": "0 mismatches versus 288b; versus 37e only docs/architecture/cutover-evidence-pack.md differs (the two tracking files were not in this archive)",
+      "non_src_inputs_actually_read": [
+        {"path": "docs/capstone/demo/runbook.md", "reader": "test_generated_dataset.py:39", "unchanged": true, "note": "it prose-mentions the evidence pack but is itself not in the diff"},
+        {"path": "docs/prds/zava-forward-retrofit-programme-demonstrator.md", "reader": "test_scenario_manifest.py:48", "unchanged": true},
+        {"path": "docs/reference/research/retrofit-synthetic-data/ pack, incl. scenario-manifest.json", "reader": "test_needs_inventory and test_scenario_manifest via validate_manifest(MANIFEST, ROOT) with sha256 per source", "unchanged": true},
+        {"path": "src/agents/tests/chat_fixture.py", "reader": "test_scenario_manifest.py:36", "unchanged": true},
+        {"path": "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator (tracked generator .py only; no private stock/cohort)", "reader": "test_generated_dataset.py:16", "unchanged": true}
+      ],
+      "metadata_dependency": "none. validate_manifest SOURCES do not include docs/architecture/cutover-evidence-pack.md (no occurrence in src/). This is the lane with the most docs exposure, so a final assessor should keep it as the first re-verification target."
+    },
+    {
+      "lane": "types",
+      "evidence_kind": "FRESH actual observation at 288b (0104)",
+      "result": "PASS: core ruff check, ruff format --check (245 files), mypy (298 source files); api ruff check, ruff format --check (152 files), mypy (236 source files); ruff 0.17.1, mypy 2.4.0; 0 skips; 0 corrections",
+      "invocation_scope": "Each command ran with cwd src/core or src/api. There is no repo-root pyproject.toml, ruff.toml or mypy.ini. Ruff discovers src/<project>/pyproject.toml; ruff `.` is confined to that project directory. mypy files = [src, tests] for core and [src, tests, checks] for api, mypy_path src/tests plus ../core/src and ../core/tests for api; core and api per-file ignores/excludes unchanged. No config references docs/ or .copilot-tracking. Agents ruff/mypy were run in the ai lane, not types.",
+      "input_manifest": "full git archive of 288b (13497 files); editable core, agents, api[dev]",
+      "equality": "0 mismatches versus 288b; only the 3 metadata paths differ versus 37e; all of them lie outside every configured lint/type scope",
+      "metadata_dependency": "none; no .py file changed, and Markdown/JSON are not linted or typed"
+    },
+    {
+      "lane": "ai28",
+      "evidence_kind": "FRESH actual observation at 288b (0104)",
+      "result": "unittest tests.test_ai_eval tests.test_eval_registry 28 ok, 0 skips; ai_eval --json passed (11 scenarios, 0 critical misses); agents ruff check on ai_eval.py and tests/test_ai_eval.py exit 0; ruff format --check src tests (42 files) exit 0; mypy 48 files exit 0 with pyproject ignore_errors overrides for ai_eval and five test modules",
+      "invocation_scope": "cwd src/agents; src/agents/pyproject.toml; mypy files [src, tests]; ZF_AI_GOLDEN set to the archive's src/agents/evals/ai_priority_golden.json",
+      "input_manifest": "full git archive of 288b (13497 files); editable core and agents",
+      "equality": "0 mismatches versus 288b; only the 3 metadata paths differ versus 37e",
+      "non_src_inputs_actually_read": [
+        {"path": ".gitignore", "reader": "test_eval_registry.py:37", "unchanged": true},
+        {"path": "src/*/evals/*.json and src/agents/evals/registry.json", "unchanged": true}
+      ],
+      "metadata_dependency": "none"
+    },
+    {
+      "lane": "browser5",
+      "evidence_kind": "FRESH actual observation at 288b (0104); focused engineering evidence only, not AT/WCAG",
+      "result": "held_form 88 pass; programme_paging 89 pass after a retained original failure and one diagnostic rerun; home_case 24 pass with axe; regulatory_ux 21 states, axe 21 scans, 0 violations; role_screens 47 pass; all exit 0",
+      "selectors": "src/api/checks held_form_download_browser_check, programme_paging_browser_check, home_case_browser_check, regulatory_ux_check, role_screens_browser_check (role_screens default selector)",
+      "input_manifest": "full git archive of 288b (13497 files); editable installs; Playwright 1.64.0 and Chromium; axe 4.10.3 sha256 880970c0...a68bb from outside the repo",
+      "equality": "0 mismatches versus 288b; only the 3 metadata paths differ versus 37e",
+      "non_src_inputs_actually_read": [
+        {"path": "docs/reference/research/ux/design-system.md", "reader": "role_screens_browser_check.py:138", "unchanged": true}
+      ],
+      "metadata_dependency": "none found by grep of the five scripts and their direct helpers (role_screens_fixtures, script_retry, asset_urls). Transitive imports from core/tests helpers were checked by name for dataset, building_fixture and regulatory_fixture only."
+    },
+    {
+      "lane": "integrated2161",
+      "evidence_kind": "FRESH actual observation at 288b (0117)",
+      "result": "PASS 12/12, exit 0, 0 skips, single class RegulatoryApi, no correction",
+      "selectors": "cd archive/src/api; python -m unittest -v test_regulatory_chat_api",
+      "input_manifest": "full git archive of 288b (13497 files); editable core[sql,blob], agents, api; PYTHONPATH helper only",
+      "equality": "0 mismatches versus 288b; only the 3 metadata paths differ versus 37e",
+      "read_paths": "web assets (test_regulatory_chat_api.py:272), regulatory_fixture, rule_engine and rulecards in src. No docs/ or tracking reads found.",
+      "metadata_dependency": "none found"
+    },
+    {
+      "lane": "trace",
+      "evidence_kind": "STATIC proof lane (no test execution); it is the carrier of the core72 reuse proof",
+      "note": "No tests were executed. Its identity claims for core, README.md and src/README.md were independently re-verified here (see core72)."
+    }
+  ],
+  "historical_reuse_vs_fresh": {
+    "historical_reuse": ["core72 (d790 observation reused by input equality)"],
+    "fresh_observations_at_288b": ["forms74", "home28", "role21", "synthetic51", "types (core and api ruff/mypy)", "ai28 (plus agents ruff/mypy)", "browser5", "integrated2161"],
+    "fresh_observations_at_37e": "NONE. No test, lint or type check was run on 37e itself."
+  },
+  "untraceable_or_unknown": [
+    "Transitive Python imports of every helper were not exhaustively AST-walked. Dynamic-path reads inside the pip-installed dependency set (aiohttp, playwright, ruff, mypy) cannot be traced; they cannot see repo docs by design, and none are keyed to the 3 changed paths.",
+    "Browser lane: transitive helper reads were checked by grep for docs and tracking references only on the named helpers; unnamed deep imports are UNKNOWN in the strict sense, though the grep for all three changed path names across src/ is empty.",
+    "Dependency versions in lane venvs were resolved by pip at run time (ai lane re-pinned ruff and mypy); the environment is a historical fact and independent of the candidate diff.",
+    "Not covered by any lane, and not a claim of safety: tests that DO scan docs/ and could read the changed evidence pack (test_live_doc_links, test_cutover_audit, test_content_standard, tools/rpi-checks.py doc and link checks, and the rpi-checks gate itself, which treats docs/ and .copilot-tracking/ as inert prefixes). These were never in the validation set, so their outcome on the 103 added lines of the pack is UNKNOWN. The same applies to doc link, ASCII/Markdown style and tracking-retention checks.",
+    "The full archive is NOT unchanged: 288b to 37e differs in 3 files, and no whole-archive claim is made."
+  ],
+  "applicability_to_this_candidate": {
+    "core72_reuse": "Applicable: all three historic inputs are byte-identical at 37e.",
+    "forms74_home28_role21_synthetic51_types_ai28_browser5_integrated2161": "Applicable by input equivalence: every file those runs actually read is identical at 37e. The 3 metadata files were present in their inputs but are unreferenced by their selectors, helpers, configs and scanners. They are observations of 288b and apply to 37e only through that equivalence, not as fresh 37e runs.",
+    "not_applicable_or_unproven": "Anything about the content of the changed metadata (checkpoint content correctness, original RPI evidence coverage, doc link/style validity), hosted CI, independent review, human approval and publication readiness. Per owner rules, a partial or --changed receipt does not satisfy the full tier and hosted CI is separate."
+  },
+  "future_head_conditions_for_final_assessor": {
+    "no_preapproval": "This result binds only head 37e2715b5175cce0c5470904817fd69ea5eea5eb. It does not preapprove any later head.",
+    "must_reverify": [
+      "git rev-parse HEAD^{tree}:src still equals 6915b96c8ededf363b76c8fb4700153eb18ff588 and the clean worktree status is re-observed",
+      "git diff --name-only 288b6a37665602718122ed0ab35b9bbdcca963ed <final-head> lists only paths under .copilot-tracking/ and docs/ and equals the manifest the assessor reviews; any path in src/, tools/, .github/, infra/, requirements.txt, skills-lock.json, .gitignore, .gitattributes, or root README.md, or a mode change, symlink, rename or deletion, voids the equivalence",
+      "none of the changed docs/ paths is one of: docs/reference/research/ux/design-system.md, docs/reference/research/ux/atlas-screen-trace.md, docs/capstone/demo/runbook.md, docs/prds/zava-forward-retrofit-programme-demonstrator.md, anything under docs/reference/research/retrofit-synthetic-data/, docs/brds/agentic-retrofit-programme-brd.md or any docs/ path cited by validate_manifest SOURCES; these are actual lane reads (role21, synthetic51, browser5) and a change would void the matching lane",
+      "re-run grep of src/, tools/ and .github/ for each changed path name and confirm no test, helper or config reads it; re-run the wholesale-scanner list against the selectors",
+      "core72 specifically: README.md blob f47c6be0...fe792434, src/README.md blob b6e13012a836b53d1d04ae9ce6c021c331cbfb82, and src/core tree 93de8839f422d3d502f7f6197bedaf68e45f12a7 are all unchanged at the final head",
+      "later metadata that adds content which doc-scanning tests (test_live_doc_links, test_content_standard, rpi-checks doc/link rules) would read needs those checks run directly on the final head, because they are outside every lane observed here",
+      "if the final head is rebased onto a newer main or merges main, all equivalence is void and fresh lanes are required, because src or tool inputs would change"
+    ]
+  },
+  "not_done": "No test or check re-run, no edit, no install, no browser run, no full gate, no issue or tick changes, no push, PR, merge, cloud, deploy, spend or cleanup. ROOT/rpi-149-final-ai-0104.log was not read. support/cohort and private stock were not used.",
+  "scope_distinction": "This is an input-equivalence assessment only. It is not the final checkpoint content review, the original-RPI evidence coverage review, a source bug hunt, an independent final-head publication assessment or an approval."
+}

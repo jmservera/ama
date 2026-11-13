@@ -1343,6 +1343,94 @@ const fundingFieldRows = (draft) => Object.entries(draft.fields || {}).map(([id,
     source ? `${screenValue(source.id)} v${screenValue(source.version)} (${screenValue(source.kind)})` : "Unknown. No reviewed evidence bound.",
     issue.length ? issue.map((i) => `${i.status}: ${i.reason}`).join(" ") : "None recorded"];
 });
+const HELD_CHECK_LIMIT = 8000000;
+const HELD_CHECK_ERRORS = {
+  400: "Choose the saved Held file for this draft (held-form-draft-export.json). Next action: pick the file you downloaded for this draft.",
+  403: "Your role cannot run this check. Owner: the Retrofit Programme Manager. Next action: ask them, or compare the version and hash in the file by hand.",
+  404: "This check is not available here. Next action: compare the version and hash in the file by hand.",
+  409: "The form or source changed. Next action: reload the page, then check again.",
+  502: "The document store is unavailable. Nothing was approved or submitted. Next action: reload and try again."
+};
+const HELD_CHECK_NOT_RUN = "The check could not run, so nothing is judged about your file. Nothing was approved or submitted. Owner: application support. Next action: reload and try once more, then contact application support.";
+const HELD_CHECK_UNREADABLE = "We could not read that file as a saved Held draft (JSON). Next action: choose the held-form-draft-export.json file you downloaded for this draft.";
+const HELD_CHECK_NO_FILE = "Choose the saved Held file first. Next action: pick the held-form-draft-export.json you downloaded for this draft.";
+const heldCheckNames = (value) => Array.isArray(value) && value.every((v) => typeof v === "string") ? value : null;
+function heldCheckResult(data) {
+  if (!data || data.reviewed !== false) return null;
+  if (data.status === "Current") return "Current. The details checked in this file match the working review now. The check compares information the file itself supplies, so it does not show that the whole file is genuine or who made it. It is still Held and unreviewed. This is not an approval, review, eligibility result or submission.";
+  if (data.status === "Invalid") return "Invalid. This file is incomplete or was changed after download. Next action: download a new Held copy.";
+  if (data.status === "Unavailable") return "Unavailable. The working review for this file is missing or belongs to another home. Owner: document owner. Next action: ask them to recover the evidence.";
+  if (data.status !== "Stale") return null;
+  const stale = heldCheckNames(data.stale_fields);
+  const same = data.unaffected_fields === undefined ? [] : heldCheckNames(data.unaffected_fields);
+  const reasons = heldCheckNames(data.reasons);
+  if (!stale || !same || !reasons) return null;
+  const action = typeof data.action === "string" && data.action ? data.action.replace(/\.$/, "") : "Re-review the named fields and download a new Held copy";
+  return `Stale. This file no longer matches the working review. ${stale.length ? `Changed fields: ${stale.join(", ")}. ` : ""}${same.length ? `Fields not affected: ${same.join(", ")}. ` : ""}${reasons.join(" ")} Next action: ${action}. A person decides.`;
+}
+// Panel-local raw-text transport (root decision G4): the saved file text is posted unchanged, because
+// JSON.stringify would rewrite 12.0 and large integers and falsely report Invalid. Same CSRF header,
+// same-origin session, route abort and pending-duplicate safeguards as api(); no shared helper changes.
+function fundingSavedCopyCheck(draft, caseId) {
+  const id = `held-check-${String(draft.draft_id).replace(/[^A-Za-z0-9_-]/g, "-")}`;
+  const path = `/api/cases/${encodeURIComponent(caseId)}/form-review/${encodeURIComponent(draft.draft_id)}/held-export/freshness`;
+  let token = {};
+  const error = h("div", { class: "field-error", id: `${id}-error`, hidden: true });
+  const result = h("div", { "data-held-check": "result", role: "status", "aria-live": "polite", "aria-atomic": "true" });
+  const show = (text, flagged) => {
+    result.textContent = text;
+    result.classList.toggle("status-line", Boolean(text));
+    error.textContent = flagged ? text : "";
+    error.hidden = !flagged;
+    if (flagged) input.setAttribute("aria-invalid", "true"); else input.removeAttribute("aria-invalid");
+  };
+  const input = h("input", { type: "file", id, accept: ".json,application/json", "aria-describedby": `${id}-error`,
+    onchange: () => { token = {}; show(""); } });
+  const check = async () => {
+    const file = input.files[0];
+    if (!file) return show(HELD_CHECK_NO_FILE, true);
+    const key = mutationKey(path, {});
+    if (pendingMutations.has(key)) return;
+    pendingMutations.add(key);
+    const sent = token, signal = routeController.signal, session = me;
+    const hadFocus = document.activeElement === button;
+    const current = () => token === sent && result.isConnected && !signal.aborted;
+    try {
+      show("Checking the saved copy…");
+      let text;
+      try {
+        if (file.size > HELD_CHECK_LIMIT) throw new Error("size");
+        text = new TextDecoder("utf-8", { fatal: true }).decode(await file.arrayBuffer());
+        const parsed = JSON.parse(text);
+        if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("shape");
+        if (new TextEncoder().encode(text).length > HELD_CHECK_LIMIT) throw new Error("size");
+      } catch { if (current()) show(HELD_CHECK_UNREADABLE, true); return; }
+      if (!current()) return;
+      let res, data;
+      try {
+        res = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: text, signal });
+        if (res.status === 401 && me === session && !signal.aborted) {
+          me = null; login("Your session has ended. Sign in again."); return;
+        }
+        data = await res.json().catch(() => null);
+      } catch { if (current()) show(HELD_CHECK_NOT_RUN); return; }
+      if (!current()) return;
+      show(res.ok ? heldCheckResult(data) || HELD_CHECK_NOT_RUN : HELD_CHECK_ERRORS[res.status] || HELD_CHECK_NOT_RUN);
+    } finally {
+      pendingMutations.delete(key);
+      // The wrapper disables the button while the check runs and the browser then drops focus to body.
+      // After the wrapper has re-enabled it, give focus back only if the person has not moved it elsewhere.
+      if (hadFocus) setTimeout(() => { if (button.isConnected && !button.disabled && document.activeElement === document.body) button.focus(); }, 0);
+    }
+  };
+  const button = h("button", { type: "button", class: "btn alt", onclick: check }, "Check saved Held copy (read-only)");
+  return h("div", { role: "group", "aria-label": "Check a saved Held copy" },
+    h("h3", {}, "Check a saved Held copy"),
+    h("p", {}, "Choose a Held draft file you saved earlier to see whether it still matches this working review. Read-only: the file is read in your browser, sent once when you press the button and not kept. Nothing is recorded, approved or submitted. You can also compare the version and hash inside the file by hand."),
+    h("p", {}, h("label", { for: id }, "Saved Held draft file"), " ", input, error),
+    h("p", {}, button),
+    result);
+}
 function fundingDraftPanel(draft, caseId, downloadEnabled) {
   if (draft.status === "Unavailable") return screenPanel(`Field draft ${screenValue(draft.draft_id)}`,
     screenUnknown(draft.notice, "Document owner", "Recover the source document before reading this draft"));
@@ -1361,7 +1449,8 @@ function fundingDraftPanel(draft, caseId, downloadEnabled) {
     h("p", {}, screenValue(draft.notice)),
     downloadEnabled && draft.draft_id ? h("p", {},
       h("a", { class: "btn alt", href: `/api/cases/${encodeURIComponent(caseId)}/form-review/${encodeURIComponent(draft.draft_id)}/held-export`, download: "held-form-draft-export.json" }, "Download Held draft (unreviewed)"),
-      ` Not submitted; eligibility Not assessed. The file is built when you ask for it and may be newer than input version ${screenValue(draft.input_version)} shown here. Check the version and hash inside the file. A read-only copy for reading, not a reviewed pack.`) : null);
+      ` Not submitted; eligibility Not assessed. The file is built when you ask for it and may be newer than input version ${screenValue(draft.input_version)} shown here. Check the version and hash inside the file. A read-only copy for reading, not a reviewed pack.`) : null,
+    downloadEnabled && draft.draft_id ? fundingSavedCopyCheck(draft, caseId) : null);
 }
 registerRoleScreen({
   id: "finance-funding",

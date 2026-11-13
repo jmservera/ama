@@ -1,0 +1,7 @@
+drop describedby -> FAILS (good)
+error id changed -> FAILS (good)
+error class removed -> FAILS (good)
+never unhidden -> FAILS (good)
+no aria-invalid -> FAILS (good)
+label for removed -> FAILS (good)
+error not rendered -> FAILS (good)
