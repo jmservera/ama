@@ -84,7 +84,9 @@ next action. Rules for the classes:
   legal or compliance approval, resident consent, financial commitment, missing
   credential) recorded in the ledger.
 * A missing selected-tier gate or receipt, a failing check the loop can fix or
-  a missing review is `ready` work to schedule. Green hosted checks and
+  a missing review is `ready` work to schedule when the same eligibility
+  holds for the next action (assessment is authorised; repair or publication
+  also needs its permission). Green hosted checks and
   `MERGEABLE` never replace missing selected-tier evidence.
 * A candidate unpublished by design (local-only or awaiting the coordinator's
   gate) is `ready` for assessment.
@@ -100,9 +102,12 @@ without inventing, duplicating or no-op issues to look busy:
   repair, correction, validation and gate continuations each count only while
   their session is live. A finished session frees its slot at once; its issue
   stays in the ledger until published and merged, and a retained unpublished
-  candidate, failed test or setup with a bounded authorised recovery, or
-  outstanding gate is `ready` work that gets a concrete handoff session, never
-  a success claim or a global stop. A missing upstream or failed Git evidence
+  candidate, failed test or setup, or outstanding gate gets a concrete
+  handoff session, never a success claim or a global stop, only when it is
+  eligible: its dependencies are met, a finite permission covers the action,
+  the selected validation is defined and the source is run-owned. A missing
+  approval is `human-blocked` and an unmet dependency `dependency-blocked`,
+  however many slots are free; `unknown` stays bounded investigation. A missing upstream or failed Git evidence
   is Unknown, never zero unpublished work. An explicit lower owner limit still
   governs. Before
   admitting any new work and after each launch, completion, publication or
@@ -577,13 +582,14 @@ remains subject to the tracking retention policy.
    file, `.github/copilot-instructions.md`, the issue and the selected tier)
    and the explicit target branch and dependency. Never copy an earlier brief
    or a stale `/tmp` template. Write it to a unique
-   `/tmp/brief-{number}-{timestamp}.md`, record its path and sha256 in
+   `/tmp/brief-{number}-{timestamp}.md` (a role worker uses
+   `/tmp/brief-{number}-{role}-{timestamp}.md`; call it `{brief-path}`), record its path and sha256 in
    session SQL, then record the launch with the local phase witness, run from the root of
    this checkout (the worker gets its absolute path) with the absolute worktree path and
    an absolute evidence directory outside every worktree that you own and create for this
    launch (`{evidence-dir}`, for example under `~/.local/share/ama/phase-witness/`), so the
    runtime log and lock never dirty the candidate:
-   `python3 tools/rpi_phase_witness.py record launch --repo {worktree} --issue {number} --evidence-dir {evidence-dir} --brief /tmp/brief-{number}-{timestamp}.md --session rpi-{number} --actor coordinator --claim-model claude-sonnet-5.5`.
+   `python3 tools/rpi_phase_witness.py record launch --repo {worktree} --issue {number} --evidence-dir {evidence-dir} --brief {brief-path} --session {name} --actor coordinator --claim-model claude-sonnet-5.5`.
    A refusal (exit 2) blocks that launch until its reason is fixed. The
    witness observes its own UTC clock, Git HEAD and tree, dirty source and,
    at later boundaries, the canonical artifacts; it accepts no caller-supplied times, and its record is
@@ -596,7 +602,29 @@ remains subject to the tracking retention policy.
    substantive search, `plan-done`, `implement-start` (changes record
    persisted before any source edit), `implement-done`, `review-done`, and
    `commit-complete --claim-commit {sha}` only after the commit exists. Then run:
-   `tmux new-session -d -s rpi-{number} -c ../ama-wt/issue-{number} "echo --- launch {timestamp} >> /tmp/rpi-{number}.log; copilot --agent hve-core-all:rpi-agent --model claude-sonnet-5.5 --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' -p \"\$(cat /tmp/brief-{number}-{timestamp}.md)\" 2>&1 | tee -a /tmp/rpi-{number}.log; echo exit=\${PIPESTATUS[0]} >> /tmp/rpi-{number}.log"`.
+   Write a unique launcher with a quoted heredoc (no expansion, no `eval`),
+   `/tmp/launch-{name}-{timestamp}.sh`, where `{name}` is the session name
+   `rpi-{number}` or `rpi-{number}-{role}` (also the witness `--session`):
+
+   ```bash
+   #!/usr/bin/env bash
+   name=$1 stamp=$2 brief=$3
+   log=/tmp/$name.log
+   echo "--- launch $stamp" >> "$log"
+   copilot --agent hve-core-all:rpi-agent --model claude-sonnet-5.5 \
+     --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' \
+     -p "$(cat "$brief")" 2>&1 | tee -a "$log"
+   status=${PIPESTATUS[0]}
+   echo "exit=$status" >> "$log"
+   exit "$status"
+   ```
+
+   Run it as
+   `tmux new-session -d -s {name} -c {worktree} "bash /tmp/launch-{name}-{timestamp}.sh {name} {timestamp} {brief-path}"`
+   so it does not depend on tmux's default shell. `status` is the Copilot
+   exit, captured immediately after `tee`. Each attempt owns the
+   `--- launch` line and the `exit=` line that follows it; a missing `exit=`
+   line for the current attempt is unknown, never success.
    Logs are preserved across retries: each launch appends a
    `--- launch {timestamp}` line and never truncates or deletes an earlier log.
    Use Sonnet 5.5 for all coordinator-launched RPI issue sessions, including
@@ -611,8 +639,8 @@ remains subject to the tracking retention policy.
    bare `rpi-agent` does not resolve. This tmux plus Copilot CLI route is the
    only allowed execution route: never implement an issue in the coordinator's
    session or through a general-purpose subagent. Monitor a session with
-   `tmux has-session -t rpi-{number}` and `tmux capture-pane -p -t rpi-{number}`
-   and read its log; stop a hung one with `tmux kill-session -t rpi-{number}`.
+   `tmux has-session -t {name}` and `tmux capture-pane -p -t {name}`
+   and read its log; stop a hung one with `tmux kill-session -t {name}`.
    Session names are unique per issue and a retry reuses the name only after
    the old session is gone. Each launch is one session under the Liveness
    admission rule, which alone defines counting.
@@ -679,9 +707,11 @@ remains subject to the tracking retention policy.
    launch, arm one background (async) completion watch over the explicit
    run-owned session names with
    `python3 tools/ama-worker-watch.py <names> --timeout 600` (read-only; its
-   exit 2 names a session absent at start: inspect that session's log and
-   exit at once, since a very short worker may already be finished, and never
-   treat the error itself as a completion; exit 3 is a timeout, not a
+   exit 2 reports sessions absent at start or bad input: inspect each
+   reported session's log and recorded exit status immediately, since a very
+   short worker may already be finished, classify finished versus failed
+   start, then refill and re-arm over the valid live names without ending
+   the delivery run, and never treat the error itself as a completion; exit 3 is a timeout, not a
    completion). Extra workers for one issue use unique names
    `rpi-{number}-{role}` and their own worktree and log. On each finished
    session, before any optional PR prose: read its actual exit, head and
@@ -697,7 +727,7 @@ remains subject to the tracking retention policy.
    recurring delivery check below stays as the fallback, reusing the existing
    schedules: do not register a second one per launch, and keep the hourly
    cleanup. The delivery check lists `tmux ls`,
-   reads each `/tmp/rpi-{number}.log` tail, and for every finished session runs
+   reads each `/tmp/{name}.log` tail, and for every finished session runs
    the verify, review and gate steps below, starts newly unblocked issues, and
    reports the blocker ledger. Name the schedule id in the
    report. Between checks, continue with independent work.
@@ -860,7 +890,7 @@ remains subject to the tracking retention policy.
    classification, or a limit is reached; report unfinished checkpoint scope and resume conditions.
 10. **Clean up.** Cleanup acts through the finite per-run path manifest in the
     Cleanup contract, not automatically after a merge. For a merged run-owned PR
-    whose paths are in the manifest: `tmux kill-session -t rpi-{number}` only if
+    whose paths are in the manifest: `tmux kill-session -t {name}` only if
     it exists and has exited or its PR's loop is complete (never one holding an
     active gate, receipt or running phase; defer instead), then `git worktree remove` (never `--force`) once its
     upstream and merge lifecycle are verified; otherwise defer. Delete the remote branch only
