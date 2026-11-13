@@ -1,0 +1,58 @@
+{
+  "task_id": "issue-227-228-safety-supplier-readiness-0630",
+  "task_slug": "227-228-safety-supplier-readiness-0630",
+  "parent_task": {"task_id": "feat/demo-home-parent-0555", "task_slug": "demo-home-parent-0555"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {"research": null, "plan": null, "details": null, "critique": null, "changes": null, "review": null},
+  "pins": {
+    "head": "b9d7db29b (child of frozen PR1504 parent)",
+    "main_baseline": "15bfee2d7",
+    "prior_pins_reused": ["e691255ff (227 Nov 12 reconcile)", "7880b95b1 (228 intake reconciliation)", "43b2187b9 (228 C3 readiness, rpi-228-readiness-2220-result.json)"]
+  },
+  "read_manifest": [
+    "demo-run-ledger.md: grep of 227/228 records plus lines 324-345, 1887-1917, 14046-14075 (partial read of 14427 lines; not a full read)",
+    "ledger-side files: rpi-228-readiness-2220-result.json (first 3.5KB, complete verdict), demo-source-admissions-226-227-230-1110.md (matched lines 13, 34-44, 104)",
+    "gh issue 227 and 228 bodies and all comments",
+    "git diff of role-screens.js, safety/procurement tests and browser check from 7880b95b1 to HEAD (hunk headers only)"
+  ],
+  "phases": {
+    "research": "executed, bounded; reused prior same-pin/same-AC dispositions",
+    "plan": "not run: no initial slice admitted",
+    "critique": "not run: no plan; no independent critique executed (no fake Pass)",
+    "implement": "documentary only, this record",
+    "review": "no independent Review executed within the five-minute budget; not a Pass"
+  },
+  "ac_dispositions": {
+    "227": {
+      "ac1_ac2_ac3_ac4_ac6": "ticked; delivered by merged PRs 653, 776, 806, 831, 866, 934, 962 (issue comments of 2026-11-03/04). Source: src/api/tests/test_safety_screens.py:118-300 and src/api/checks/safety_screens_browser_check.py:18-58 per demo-source-admissions-226-227-230-1110.md; not re-run here.",
+      "ac5": "WCAG 2.2 baseline: unticked. Native-control, keyboard and axe engineering exists; the criterion needs direct AT and user acceptance under #151/#155 (human-owned). Not an engineering gap; no local slice.",
+      "drift": "role-screens.js since 7880b95b1 changed only exception-CSV (hunks ~907-984) and funding-draft (~1343-1449) areas, not safety screens."
+    },
+    "228": {
+      "ac1_ac2_ac4_ac6": "ticked; PRs 655, 782, 820, 867, 930, 967. AC6 tick vs comment inconsistency is preserved, not resolved.",
+      "ac3": "unticked. Staff capture, correction and acknowledgement exist (staff_intake.py, quality._independent, test_staff_intake_api/browser, test_procurement_screens). Whether OD-47 or supplier-scoped access applies to the staff-only route is an unresolved criterion-owner interpretation. Prior adverse ff16188319520073afbebd6dbb9cc23bbbd07bd8 preserved. #132 E5 spent; no reset.",
+      "ac5": "WCAG/AT acceptance under #151/#155, human-owned; unticked.",
+      "drift": "procurement and contractor panels untouched since 7880b95b1 pin."
+    }
+  },
+  "mandatory_action_note": "No 'mandatory action' source-gap term or missing implementation was found in role-screens.js or the in-scope tests. Not invented as a policy or requirement here. Safety approvals and supplier contracts untouched.",
+  "initial_slice": null,
+  "slice_disposition": "exact-slice disposition: no independent local engineering increment is required by the literal ACs of #227/#228 at this pin. Source already delivered; remaining items are human, owner or AT items, which do not block other local engineering.",
+  "resume_condition": "Resume #228 only after the criterion owner posts the C3 interpretation on the existing thread (staff-recorded submission plus staff acknowledgement plus independent QA satisfies C3, and OD-47/supplier access do not apply), or the existing OD-47 decision is recorded. Resume #227 only when #151/#155 AT/user acceptance evidence exists. Any future work needs actual authority, ready inputs, no shared-file overlap with other role-screens.js writers, an independent exact-head assessment, and (after PR1504 merges) a re-pin to the merged main. Parent-G5 read-only display is not main acceptance.",
+  "not_done": ["no tests, gates, SQL, browser, Azure or model calls", "no AC ticks, issues, push or PR", "no source, infrastructure, web or script changes"],
+  "confirmed_decisions": [
+    {"decision": "Research disposition", "status": "reused-and-bounded", "evidence": "rpi-228-readiness-2220-result.json; 227 and 228 issue comments"},
+    {"decision": "Independent critique and Review", "status": "not-executed", "evidence": "five-minute budget; no plan produced; no Pass claimed"}
+  ],
+  "blockers": [
+    {"id": "c3-owner-interpretation", "summary": "228 AC3 scope owner decision", "resolution": "criterion owner comment on #228"},
+    {"id": "at-acceptance", "summary": "227/228 WCAG AT acceptance", "resolution": "#151/#155 human evidence"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Root consumes this disposition; no author admitted for 227/228."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Criterion-owner C3 interpretation on #228", "rationale": "smallest missing proof", "evidence": "rpi-228-readiness-2220-result.json"}
+  ]
+}

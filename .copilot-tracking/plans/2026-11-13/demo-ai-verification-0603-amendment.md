@@ -1,0 +1,19 @@
+---
+title: Demo AI verification 0603 plan amendment and execution evidence
+description: Dated amendment admitting public-index build prerequisites, observed results for four selectors
+ms.date: 2026-11-13
+---
+
+* Amendment 2026-11-13T06:04Z: the offline-only rule was a plan choice, not an owner ban. After the recorded `dist_info` failure in `6cee2534` (setuptools 68.1.2, no wheel; no user-site setuptools/wheel exist under `/home/azureuser/.local`, so `env -i` was not hiding any), the owner admitted public pip download of only `setuptools>=77` and `wheel` into the owned venv. Source pin, no-source-change and the zero-tests BLOCKED record at `6cee2534` (including the `tail`-masked probe status) are preserved unchanged.
+* Acquisition: fresh `/tmp/ai-verif-0603/venv`; `env -i pip install 'setuptools>=77' wheel` exit 0 (setuptools 84.2.1, wheel 0.48.0, packaging 26.3). No code or data uploaded. Then `pip install --no-index --no-build-isolation --no-deps .` from the `git archive HEAD` snapshot: core exit 0, agents exit 0, non-editable.
+* Provenance: all 142 core and 20 agents `.py` files in site-packages match `git show HEAD:` blob sha256 (0 mismatches); `chat_panel.py` and `chat.py` import from the venv. Snapshot copies of the four test files are byte-identical to HEAD. Source sha256 over `src/core` and `src/agents` unchanged (`0f83416e...0138`); worktree clean.
+* Execution: `env -i HOME ZF_DATA PATH PYTHONPATH=<snapshot core/tests>:<snapshot agents/tests>`, `python -m unittest -v <module>` from the snapshot project dir, true exits recorded without `tail`. test_ai_consumption 34 tests OK exit 0; test_chat_panel (core) 45 OK exit 0; test_candidate_comparison 19 OK exit 0; test_chat_model 13 OK exit 0. Total 111, skips 0, failures 0.
+* Tool block, disclosed: no network-denial capability (`unshare -n` and `-rn` Operation not permitted; no bwrap/firejail). Network was therefore not denied during test runs and no isolation is claimed. The public index was reachable only for the setuptools/wheel step. Provider paths are mock/offline by reading: `test_chat_model` patches `urlopen`, `Ai._token`, `dispatch_hold`; synthetic endpoint `.invalid`. Reading boundary: `test_chat_model` and `test_candidate_comparison` read in full; `test_ai_consumption` and `test_chat_panel` bodies read only via grep scans and the `Port` header, not line by line.
+* Not established: #891 failure-root attribution remains an owner hold, not fixed or addressed by these unit checks; #531 live acceptance, AT, human, provider and outcome proof are not established. These passes are unit evidence only, not demo acceptance and not a full gate. No hosted CI observed.
+* Raw outputs and `SHA256SUMS2`: `/tmp/ai-verif-0603/out` (`run-*.out/err`, `pip-acq.*`, `pip2-*`, `hash-compare.txt`, `acq-status.txt`).
+
+## Review disposition (one independent Review, Pass-with-comments)
+
+* Execution: one independent code-review pass of raw outputs; outcome Pass-with-comments. No second Review.
+* Medium findings applied with a same-pin rerun (06:06Z): per-module status files `rerun-*.status` all `exit=0` (first run exits are inferred from `OK`; the rerun is the recorded proof), same counts 34/45/19/13, skips 0; `import-origin2.txt` shows core chat_panel, ai_consumption and agents chat, candidate_comparison resolving to the venv site-packages with `PYTHONPATH` limited to the two snapshot test directories; `hash-compare2.txt` records core compared=142 and agents compared=20, 0 mismatches. Manifest `SHA256SUMS3` covers all files.
+* Low: worktree was clean except this untracked record; `test_chat_model` stderr carries the expected "dispatch count is unverified; assuming one call" warning from the mocked non-core provider test. Review read only the last 25 lines of each stderr; the rerun grep for `skipped` over the full stderr found 0.

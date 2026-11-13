@@ -1,0 +1,5 @@
+# Independent plan critique: 1288-iot-ui-verify-1045
+
+* Reviewer: rubber-duck subagent (read-only), before any install or test. Verdict: Revise.
+* Findings: (1) `--no-deps` omits aiohttp, azure-identity, azure-eventhub, azure-iot-device needed by live API modules; use an offline wheelhouse or report a blocker. (2) test_quality_sensors_c7/_e2 use loopback sockets; loopback is not cloud, record it explicitly rather than claim zero sockets. (3) Test imports need `PYTHONPATH=tests` (core) and `tests:../core/tests:../agents/tests` (api), run per directory with module names, unsetting ZF_DATA, ZF_TEST_MSSQL, ZF_SENSOR_MSSQL. (4) Namespace packages lack `__file__`; verify `__path__`. (5) Record `$?` immediately; report OpenSSL skips separately from MSSQL skips.
+* Dispositions: (1) accepted: project `--no-deps` install, then use a venv with `--system-site-packages` or pip-cache offline for the four SDKs; if unavailable, record blocker (no live network install of unreviewed packages beyond pinned declared versions). (2) accepted, loopback-only recorded. (3)-(5) accepted.
