@@ -204,6 +204,81 @@ def fallback_cases(browser: Browser, base: str) -> list[dict[str, Any]]:
     return records
 
 
+def populated_hazards(route: Route) -> None:
+    case = route.fetch().json()
+    hold = {"scope": "Home", "case_id": "ZF-1", "status": "Active", "decision": None}
+    base = {
+        "category": "Damp and mould",
+        "priority": "Significant",
+        "released": False,
+        "source": "Resident phone call to the repairs desk",
+        "aware_at": "2026-11-13T09:15:00Z",
+        "job": "RJ-700047",
+    }
+    case["hazards"] = [
+        {
+            **base,
+            "referral_version": 1,
+            "sent_at": "2026-11-13T10:00:00Z",
+            "destination": {"code": "BS-1", "name": "Bea Safe", "role": "Building Safety Liaison"},
+            "hold": {**hold, "accountable_role": "Building Safety Liaison", "legacy": False},
+        },
+        {
+            **base,
+            "referred": "2026-01-02",
+            "repaired": "2026-02-01",
+            "repair_evidence": None,
+            "hold": {**hold, "accountable_role": None, "legacy": True},
+        },
+    ]
+    route.fulfill(json=case)
+
+
+def populated_safety_panel(
+    browser: Browser, base: str, out: Path, axe: str, reports: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Issue 1530: scan open and legacy hazards at 1280, 390, 320 px and 200% browser zoom."""
+    states = (
+        ("1280", 1280, 1, 1.0),
+        ("390", 390, 1, 1.0),
+        ("320", 320, 1, 1.0),
+        ("zoom-200", 640, 2, 1.0),
+    )
+    records: list[dict[str, Any]] = []
+    for name, width, scale, root in states:
+        context = browser.new_context(
+            viewport={"width": width, "height": 800}, device_scale_factor=scale
+        )
+        context.route(
+            "**/*",
+            lambda route: (
+                route.continue_() if route.request.url.startswith(base + "/") else route.abort()
+            ),
+        )
+        page = context.new_page()
+        errors: list[str] = []
+        page.on("pageerror", lambda error: errors.append(str(error)))
+        page.route("**/api/cases/ZF-1", populated_hazards)
+        try:
+            sign_in(page, base)
+            page.evaluate(f"document.documentElement.style.fontSize = '{root * 100}%'")
+            panel = page.locator("#case-safety")
+            expect(panel.locator("li.safety-item")).to_have_count(2)
+            expect(panel.locator("#hz-aware-hint")).to_contain_text("Example:")
+            scan(page, axe, reports, f"populated-safety/{name}")
+            check(f"axe no violations: populated-safety/{name}", not reports[-1]["violations"])
+            overflow = page.evaluate(
+                "() => document.documentElement.scrollWidth > document.documentElement.clientWidth"
+            )
+            check(f"no horizontal overflow: populated-safety/{name}", not overflow)
+            check(f"no JavaScript errors: populated-safety/{name}", not errors)
+            page.screenshot(path=str(out / f"populated-safety-{name}.png"), full_page=True)
+            records.append({"state": name, "width": width, "scale": scale, "root_scale": root})
+        finally:
+            context.close()
+    return records
+
+
 def run_browser(base: str, out: Path, baseline: bool, axe: str | None = None) -> None:
     if not baseline and axe is None:
         raise ValueError("Normal verification requires pinned axe-core via --axe")
@@ -428,6 +503,9 @@ def run_browser(base: str, out: Path, baseline: bool, axe: str | None = None) ->
             )
             results["touch"] = touch_disclosure(browser, base, out)
             results["fallbacks"] = fallback_cases(browser, base)
+            if axe is None:
+                raise ValueError("Cannot scan without pinned axe-core")
+            results["populated_safety"] = populated_safety_panel(browser, base, out, axe, reports)
             check("no unexpected JavaScript errors", not errors)
             results["errors"] = errors
             results["completed"] = True

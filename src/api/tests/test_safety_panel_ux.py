@@ -234,6 +234,7 @@ for (const id of ["hz-cat", "hz-pri", "hz-source", "hz-aware"]) assert.ok(text(l
 for (const id of ["hz-note", "hz-source", "hz-aware"]) assert.ok(text(byId(panel, id + "-hint")).length > 60, id);
 assert.ok(text(byId(panel, "hz-note-hint")).includes("Example:"));
 assert.ok(text(byId(panel, "hz-source-hint")).includes("Example:"));
+assert.ok(text(byId(panel, "hz-aware-hint")).includes("Example:"));
 assert.ok(byId(panel, "hz-source").hasAttribute("required") && byId(panel, "hz-aware").hasAttribute("required"));
 const form = formWith(panel, "hz-source");
 await submit(form);
