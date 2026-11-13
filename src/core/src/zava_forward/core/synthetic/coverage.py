@@ -32,6 +32,26 @@ def _texts(value: object, field: str) -> list[str]:
     return [_text(item, field) for item in value]
 
 
+def coverage_evidence_issues(need: dict[str, object]) -> list[str]:
+    """Return fixed codes for a need lacking a valid status, rationale or dataset evidence."""
+    need_id = str(need.get("id"))
+    issues = []
+    if need.get("coverage") not in COVERAGE:
+        issues.append(f"{need_id}:invalid_coverage_status")
+    for field in ("note", "volume", "owner"):
+        value = need.get(field)
+        if not isinstance(value, str) or not value.strip():
+            issues.append(f"{need_id}:missing_{field}")
+    datasets = need.get("dataset_ids")
+    if (
+        not isinstance(datasets, list)
+        or not datasets
+        or any(not isinstance(item, str) or not item.strip() for item in datasets)
+    ):
+        issues.append(f"{need_id}:missing_dataset_ids")
+    return issues
+
+
 def build_baseline(value: object) -> dict[str, object]:
     """Check route shape and consistency, not issue existence or acceptance.
 
@@ -62,6 +82,9 @@ def build_baseline(value: object) -> dict[str, object]:
             raise ValueError(f"{need_id}: duplicate need identifier")
         seen.add(need_id)
         label = _text(need.get("need"), f"{need_id}.need")
+        evidence = coverage_evidence_issues(need)
+        if evidence:
+            raise ValueError(f"{evidence[0]}: coverage needs a status, rationale and evidence")
         coverage = _text(need.get("coverage"), f"{need_id}.coverage")
         if coverage not in COVERAGE:
             raise ValueError(f"{need_id}: coverage must be one of {COVERAGE}")
@@ -97,6 +120,7 @@ def build_baseline(value: object) -> dict[str, object]:
         "review_date": review_date,
         "inventory_status": status,
         "routing_shape_validated": True,
+        "coverage_evidence_validated": True,
         "issue_existence": "not-assessed",
         "open_gaps": sorted(open_gaps),
         "generator_output_conformance": "not-assessed",
