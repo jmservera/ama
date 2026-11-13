@@ -1,0 +1,83 @@
+{
+  "cold_start_ready_seconds": 5.61,
+  "declared_limits": {
+    "max_replicas": 4,
+    "memory_gib": 1.0,
+    "vcpu": 0.5
+  },
+  "declared_workload": {
+    "duration_seconds": 1800,
+    "events": 600000,
+    "homes": 60000,
+    "inference_per_home": false,
+    "requests_per_second": 5.0,
+    "sessions": 20
+  },
+  "environment": {
+    "cpus": 4,
+    "machine": "x86_64",
+    "python": "3.12.3"
+  },
+  "executed_workload": {
+    "events_in_fixture": 53821,
+    "fixture_seed": 11,
+    "homes": 60000,
+    "meets_declared_workload": false,
+    "model": "closed loop (each client sends its next request when the last returns)",
+    "reason": "Declared 1,800 s open-loop run at 5 requests/s with 600,000 events was not executed.",
+    "request_mix": {
+      "dashboard": 1,
+      "detail": 3,
+      "list": 6
+    }
+  },
+  "fixture_setup_seconds": 45.1,
+  "load": {
+    "concurrency": 20,
+    "error_rate": 0.0,
+    "errors": 0,
+    "p50_ms": 4829.0,
+    "p95_ms": 9477.5,
+    "requests": 236,
+    "requests_per_second": 3.78,
+    "routes": {
+      "dashboard": {
+        "errors": 0,
+        "p50_ms": 6509.6,
+        "p95_ms": 9349.5,
+        "requests": 19
+      },
+      "detail": {
+        "errors": 0,
+        "p50_ms": 4829.0,
+        "p95_ms": 9702.0,
+        "requests": 74
+      },
+      "list": {
+        "errors": 0,
+        "p50_ms": 4464.1,
+        "p95_ms": 9477.3,
+        "requests": 143
+      }
+    },
+    "server_rss_peak_mib_sampled": 620.8,
+    "wall_seconds": 62.4
+  },
+  "restart": {
+    "acknowledged_call_after_restart": 1,
+    "acknowledged_calls_before_kill": 3,
+    "chain_intact_after_new_write": true,
+    "chain_intact_after_restart": true,
+    "entries_after_new_write": 4,
+    "entries_after_restart": 3,
+    "entries_at_first_check": 3,
+    "entries_before_kill": 3,
+    "kill": "SIGKILL, no graceful shutdown",
+    "restart_ready_seconds": 4.06
+  },
+  "scope": "Local loopback, one API OS process on a SQLite SQL store, fictional homes only, no inference. Not production scale, not Azure, not autoscaling or availability evidence. The load client runs on the same machine.",
+  "server_rss": {
+    "after_load_mib": 614.2,
+    "high_water_mib": 622.5
+  }
+}

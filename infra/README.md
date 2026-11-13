@@ -1336,10 +1336,10 @@ or deployment approval is inferred.
 | Criterion | Status | Evidence |
 | --- | --- | --- |
 | Worker and job images real, versioned, deployed through the pipeline | Unmet | Images and the `src-deploy.yml` digest pipeline are real. The agents entrypoint has a tested run loop (`zava_forward.agents.worker`), a stdlib Azure Queue adapter (`zava_forward.agents.queue_azure`, scripted transport only, not run against Azure) and, since #1523, a Managed Identity token source (`runtime.identity_token`), an API post-back (`ApiResultSink`) and the wiring (`build_runtime`), all unit-tested locally. Per the Bicep configuration and current code, `serve` runs the queue loop only when `ZF_AGENT_RESULT_ROUTE=enabled`, which the Bicep deliberately omits, so a deployed worker would run a standby loop that keeps the heartbeat and processes no tasks. No live deployed pipeline receipt, live queue run or API post-back run exists, so the criterion stays Unmet. The orchestrator entrypoint still only prints a version |
-| Scale rules, probes, limits, rollback | Defined and compile-tested | `test_api_replicas_probes_and_private_edge_contract` asserts the API http rule (50 concurrent, 0 to 4 replicas), Startup, Liveness and Readiness probes, 0.5 vCPU/1 GiB limits, Single revision mode, the agents queue rule and job limits. `test_agents_app_has_no_hosted_probe_and_keeps_scale_limits_and_single_revision` pins the agents app: the worker has no listener and Container Apps probes are HTTP or TCP only, so it has no hosted probe (the `health` heartbeat command is a local diagnostic; its 120 s limit is checked arithmetically in `HeartbeatMarginTests` for one provider call at the largest accepted task timeout (read from the `TaskMessage.from_json` bound) plus the larger of the fault backoff and the idle wait, with a 2x margin; the pulse runs once per loop iteration, so a task with several provider calls and queue, token, post and ack latency are not bounded). No executable rollback test and no live rollout were run |
+| Scale rules, probes, limits, rollback | Defined and compile-tested | `test_api_replicas_probes_and_private_edge_contract` asserts the API http rule (50 concurrent, 0 to 4 replicas), Startup, Liveness and Readiness probes, 0.5 vCPU/1 GiB limits, Single revision mode, the agents queue rule and job limits. `test_agents_app_has_no_hosted_probe_and_keeps_scale_limits_and_single_revision` pins the agents app: the worker has no listener and Container Apps probes are HTTP or TCP only, so it has no hosted probe (the `health` heartbeat command is a local diagnostic; its 120 s limit is checked arithmetically in `HeartbeatMarginTests` for one provider call at the largest accepted task timeout (read from the `TaskMessage.from_json` bound) plus the larger of the fault backoff and the idle wait, with a 2x margin; the pulse runs once per loop iteration, so a task with several provider calls and queue, token, post and ack latency are not bounded). No executable rollback test and no live rollout were run. Since 2026-11-13 `infra/tests/test_container_hosting_completeness.py` pins, for every declared app and job in the Bicep sources, bounded CPU and memory, bounded replicas and a scale rule, job timeout and retry limits, all three probes on the ingress port, single revision mode, and the documented rollback path. It reads the templates as text: a source contract, not a deployed scale, probe or rollback receipt |
 | Hardening enforced in the deployed app | Partial, platform-blocked | See the hosted hardening note above; CI Docker checks only |
-| Load test on the declared fixture | Run locally, not at declared scale | [`scale-load-2026-11-01.json`](../docs/architecture/scale-load-2026-11-01.json) |
-| Single-replica restart with audit persistence | Verified on the SQL store | `src/api/tests/test_restart_audit.py` reopens the SQL store (not an API replica restart); ledger entries, chain and digest persist. `src/agents/tests/test_worker.py` `ReplicaRestartTests` simulates a worker killed before the post and between post and ack: after a manual lease release a replacement worker handles the redelivered task, and a post that was already made is repeated (at-least-once delivery; the duplicate carries the same task id and fence, but API-side dedupe is not built or tested). No hosted single-replica restart receipt and no Azure restore proof |
+| Load test on the declared fixture | Run locally, not at declared scale | [`scale-load-2026-11-01.json`](../docs/architecture/scale-load-2026-11-01.json); separate-process closed-loop run [`scale-restart-2026-11-13.json`](../docs/architecture/scale-restart-2026-11-13.json) (see [Separate-process load and restart run](#separate-process-load-and-restart-run-issue-144-2026-11-13)) |
+| Single-replica restart with audit persistence | Verified on the SQL store | `src/api/tests/test_restart_audit.py` reopens the SQL store (not an API replica restart); ledger entries, chain and digest persist. `src/agents/tests/test_worker.py` `ReplicaRestartTests` simulates a worker killed before the post and between post and ack: after a manual lease release a replacement worker handles the redelivered task, and a post that was already made is repeated (at-least-once delivery; the duplicate carries the same task id and fence, but API-side dedupe is not built or tested). `src/api/tests/test_scale_fixture_load_and_restart.py` adds a real API process killed with SIGKILL and restarted on the same SQLite store, checked through `/api/audit-check` (local, one process; not a hosted replica). No hosted single-replica restart receipt and no Azure restore proof |
 
 Revision rollback: apps use `activeRevisionsMode: Single`, and a failed Startup
 or Readiness probe keeps the previous revision serving. There is no historical
@@ -1353,6 +1353,28 @@ so the rebuilt images pass scanning and admission, the environment approvals
 apply and what-if runs first. Confirm `/healthz` and the ledger-verify job
 afterwards. No traffic splitting is used, and a guarded redeploy of an earlier
 release identity would be a separate, tested change.
+
+### Separate-process load and restart run (issue 144, 2026-11-13)
+
+Local loopback run of `src/api/tests/test_scale_fixture_load_and_restart.py`
+(`--homes 60000 --concurrency 20 --seconds 60`; record
+[`scale-restart-2026-11-13.json`](../docs/architecture/scale-restart-2026-11-13.json)).
+The API ran as its own OS process on a SQLite SQL store, so its memory is measured
+apart from the load client. The fixture was the declared 60,000 fictional homes with
+53,821 contact and appointment events (not the declared 600,000). The load was a
+closed loop of 20 concurrent clients for 62 s on a 4-CPU machine, not the declared
+1,800 s at 5 requests/s, no inference.
+
+* Throughput 3.78 requests/s, 236 requests, error rate 0.
+* Latency (ms) p50 and p95: all 4,829 and 9,478; list 4,464 and 9,477; detail 4,829 and 9,702; dashboard 6,510 and 9,350. All routes exceed the NFR-002 staff thresholds (1 s, 1 s and 3 s), as in the 2026-11-01 run, and 20 saturating clients queue behind one process.
+* Server RSS 614 MiB after load, high-water 622 MiB, against the declared 1 GiB limit. This process has no Azure SDK, Easy Auth sidecar or SQL Server client, so a hosted replica would differ.
+* Cold start to `/healthz` 200: 5.6 s; after the kill, 4.1 s.
+* Restart: three acknowledged `call` audit writes, then `SIGKILL` (no graceful shutdown). After restart on the same file the ledger had the same 3 entries with an intact chain, a new write was acknowledged, and the chain was intact with 4 entries.
+
+This is a single local process. It is not production scale, not an Azure or Container
+Apps measurement, not autoscaling or multi-replica evidence, and it does not satisfy
+the hosted criteria. The unit tests in the same file run a 150-home version of the
+same sequence.
 
 Load run, from `src/api` with installed distributions and
 `PYTHONPATH=../core/tests:../agents/tests`:
