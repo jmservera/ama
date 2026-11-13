@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-13T22:51:27+00:00",
-  "commit": "9c8c89890ce783cf78761af0698e42c928dbca2f",
+  "scored_at": "2026-11-13T23:28:14+00:00",
+  "commit": "3033dc9c21e57c7f86eca3882fffaf7e9a025033",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43521387667",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43526051326",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "11fe0160a47c2ee2ac0fbab89e659a3867d928531b08367b03329afbcf02e8d8",
     "adr": "a0004921843db2b041b1e8a0c28a107f22d55d544d06084f2cdaa628ccbcc8e1",
-    "solution-code": "ae51711ed7bba9d36d3fdada9cfad287ed16e52209cbc9702ca6a2395bebf61c",
-    "infrastructure": "f9ab88c245639aba9a15ec5c43edc8876ecc33d16fb8c3683f2916de9b09728e",
+    "solution-code": "d51aad6d3de8864d9785ec4f1d022fd0e9d8f98d07c9dd3d5cfef16fee5a6bea",
+    "infrastructure": "ed22a570aabe432bc49120e61136468291dd3380ca5ef88e99cf6e23238ed922",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "687ae0ad2df52516882908bf45ecca662c52802d59a5116a4fe119ec3ae97840",
     "thought-leadership": "f7f2adc273905a84d848d54be0a77abc3550013fd1c9ea9e2fedb743bdacf70a"
@@ -46,7 +46,7 @@
         "src/core/src/zava_forward/core/finance.py:37-68",
         "src/core/src/zava_forward/core/gates.py:128-205"
       ],
-      "rationale": "Diff adds fail-closed handling of malformed/non-string identity and reason fields across finance and gates (never raises TypeError, falls back to Unknown), tightening existing RAI/security control surface. Reinforces ceiling (5), unchanged."
+      "rationale": "Diff adds fail-closed handling of malformed/non-string identity and reason fields across finance and gates, tightening existing RAI/security control surface. Reinforces ceiling (5), unchanged."
     },
     "A4": {
       "score": 5,
@@ -111,7 +111,7 @@
       "evidence": [
         "src/agents/README.md:401-421"
       ],
-      "rationale": "README adds a clear, well-organised section documenting the new beside_cost/eligibility behaviour, its scope and open gaps (#\u200b216); code-level documentation only, no deck change. Good (4) retained."
+      "rationale": "README adds a clear, well-organised section documenting the new beside_cost/eligibility behaviour, its scope and open gaps; code-level documentation only, no deck change. Good (4) retained."
     },
     "B7": {
       "score": 5,
