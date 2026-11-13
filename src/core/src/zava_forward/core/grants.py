@@ -11,6 +11,7 @@ from copy import deepcopy
 from datetime import UTC, datetime
 
 from . import controls as k
+from . import gates
 from .change_provenance import _actor
 from .finance import _identity
 
@@ -29,32 +30,45 @@ def require_authority(store, user, action, case_id, route):
     actor = _actor(store, user)
     authority = actor.get("financial_authority")
     denied = "Current scoped human financial designation is required. Ask the Finance authority owner."
-    if (os.environ.get("ZF_ENV", "").lower() == "production"
-            or not isinstance(authority, dict)
-            or set(authority) != {"kind", "status", "human", "subject", "evidence_ref",
-                                  "effective_from", "expires_at", "permissions"}
-            or authority["kind"] != "Synthetic exercise" or authority["status"] != "Active"
+
+    def refuse(state):
+        raise gates.AuthorityGateError(denied, state)
+
+    readable = (isinstance(authority, dict)
+                and set(authority) == {"kind", "status", "human", "subject", "evidence_ref",
+                                       "effective_from", "expires_at", "permissions"})
+    if os.environ.get("ZF_ENV", "").lower() == "production":
+        refuse(False)
+    if not readable:
+        refuse(None)
+    if (authority["kind"] != "Synthetic exercise" or authority["status"] != "Active"
             or authority["human"] is not True or authority["subject"] != _identity(actor)
             or any(not isinstance(actor.get(key), str) or not actor[key].strip()
                    for key in ("email", "code"))
             or not isinstance(authority["evidence_ref"], str) or not authority["evidence_ref"].strip()
             or not isinstance(route, str) or not route.strip()
             or route in ("Not decided", "Unknown")):
-        raise PermissionError(denied)
+        refuse(False)
     try:
         start = datetime.fromisoformat(authority["effective_from"])
         end = datetime.fromisoformat(authority["expires_at"])
-        if start.utcoffset() is None or end.utcoffset() is None or not start <= authority_now() < end:
-            raise ValueError("Designation is not effective.")
+        if start.utcoffset() is None or end.utcoffset() is None:
+            refuse(None)
+        if not start <= authority_now() < end:
+            refuse(False)
     except (ValueError, TypeError):
-        raise PermissionError(denied) from None
+        refuse(None)
     permissions = authority["permissions"]
     if (not isinstance(permissions, list) or not permissions
             or any(not isinstance(p, dict) or set(p) != {"action", "case_id", "route"}
                    or any(not isinstance(v, str) or not v.strip() or v == "*" for v in p.values())
-                   for p in permissions)
-            or dict(action=action, case_id=case_id, route=route) not in permissions):
-        raise PermissionError(denied)
+                   for p in permissions)):
+        refuse(None)
+    if dict(action=action, case_id=case_id, route=route) not in permissions:
+        refuse(False)
+    verdict = gates.authority_gate(True, "Current scoped financial designation: met.")
+    if not gates.transition_allowed([verdict]):
+        refuse(None)
     return deepcopy(authority)
 
 

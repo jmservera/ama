@@ -2,12 +2,15 @@ import copy
 import json
 import tempfile
 import unittest
+from datetime import date
 from pathlib import Path
 from typing import Any
 
 from dataset import DATA, supplied_resident_fixture
 from test_quality_procurement import EVIDENCE, QUIL, QUIN, SAM, STAFF
 from zava_forward.core import gates
+from zava_forward.core.finance import _fin
+from zava_forward.core.grants import require_authority
 from zava_forward.core.quality import CHECKLISTS, evidence_gaps, handover_blockers
 from zava_forward.core.store import GateError, Store
 
@@ -378,6 +381,134 @@ class QualityGateTests(unittest.TestCase):
         rec["items"] = None
         reasons = [b["reason"] for b in handover_blockers(store.cases["ZF-1"])]  # type: ignore[no-untyped-call]
         self.assertTrue(any("no evidence recorded" in r for r in reasons), reasons)
+
+
+class ControlledRuleRegistryTests(unittest.TestCase):
+    def test_every_gate_kind_has_a_rule_with_full_metadata(self) -> None:
+        self.assertEqual({r.gate for r in gates.CONTROLLED_RULES}, set(gates.GATE_KINDS))
+        for rule in gates.CONTROLLED_RULES:
+            record = rule.as_record()
+            with self.subTest(gate=rule.gate, source=rule.source):
+                self.assertTrue(all(isinstance(v, str) and v.strip() for v in record.values()))
+                self.assertEqual(
+                    date.fromisoformat(rule.effective_date).isoformat(), rule.effective_date
+                )
+
+    def test_unreviewed_rules_are_reported_until_a_reviewer_is_named(self) -> None:
+        self.assertEqual(set(gates.unreviewed_rules()), set(gates.CONTROLLED_RULES))
+
+    def test_new_gates_never_pass_without_explicit_evidence(self) -> None:
+        results = [
+            gates.eligibility_gate(None, "No eligibility check is recorded.", "Grants Officer"),
+            gates.authority_gate(None, "Designation unreadable."),
+            gates.finance_gate(None, "Budget unreadable."),
+        ]
+        self.assertTrue(all(r.outcome == gates.UNKNOWN and r.reason for r in results))
+        self.assertFalse(gates.transition_allowed(results))
+        self.assertEqual(gates.finance_gate(False, "Over budget.").outcome, gates.FAIL)
+        for gate in (
+            gates.eligibility_gate(True, "x", "Grants Officer"),
+            gates.authority_gate(True, "x"),
+            gates.finance_gate(True, "x"),
+        ):
+            self.assertEqual(gate.outcome, gates.PASS)
+        early = gates.finance_gate(True, "x", on="2026-11-12")
+        self.assertEqual(early.outcome, gates.UNKNOWN)
+
+
+Store_any: Any = Store
+fin_any: Any = _fin
+require_authority_any: Any = require_authority
+
+
+class FinanceAuthorityWiringTests(unittest.TestCase):
+    def setUp(self) -> None:
+        from test_grant_lifecycle_controls import designate
+
+        self.tmp = tempfile.TemporaryDirectory()
+        data = copy.deepcopy(DATA)
+        data["staff"] = [
+            designate(
+                dict(
+                    code="GEO-1",
+                    name="G",
+                    email="geo@example.test",
+                    role="Grants and Evidence Officer",
+                )
+            ),
+            dict(code="PM-1", name="P", email="pm@example.test", role="Retrofit Programme Manager"),
+        ]
+        path = Path(self.tmp.name) / "zavaforward.json"
+        path.write_text(json.dumps(data))
+        self.store: Any = Store_any(str(path))
+        self.geo, self.pm = data["staff"]
+        self.raise_args = dict(
+            action="commit_raise",
+            supplier="S",
+            contract="C",
+            work_order="W",
+            measure="Loft insulation",
+            amount=100,
+            quantity=1,
+        )
+
+    def tearDown(self) -> None:
+        self.tmp.cleanup()
+
+    def raise_commit(self) -> None:
+        self.store.finance_action(self.geo, "ZF-1", self.raise_args)
+
+    def budget(self, status: Any, amount: Any = 1000) -> None:
+        with self.store.lock:
+            fin_any(self.store.cases["ZF-1"])["budget"] = (
+                status if not isinstance(status, str) else dict(amount=amount, status=status)
+            )
+
+    def test_commitment_gate_distinguishes_fail_from_unknown_and_never_mutates(self) -> None:
+        cases = [
+            (None, gates.FAIL, "A commitment needs an approved budget first."),
+            ("Proposed", gates.FAIL, "A commitment needs an approved budget first."),
+            ("Approved", gates.FAIL, "That is more than the budget left"),
+            (["unreadable"], gates.UNKNOWN, "cannot be read"),
+        ]
+        for budget, outcome, text in cases:
+            amount = 50 if text.startswith("That") else 1000
+            with self.subTest(budget=budget, text=text):
+                self.budget(budget, amount)
+                with self.assertRaises(gates.FinanceGateError) as caught:
+                    self.raise_commit()
+                self.assertEqual(caught.exception.result.outcome, outcome)
+                self.assertIn(text, str(caught.exception))
+                self.assertEqual(fin_any(self.store.cases["ZF-1"])["commitments"], [])
+        self.budget("Approved", "not a number")
+        with self.assertRaises(gates.FinanceGateError) as caught:
+            self.raise_commit()
+        self.assertEqual(caught.exception.result.outcome, gates.UNKNOWN)
+
+    def test_commitment_within_an_approved_budget_still_passes(self) -> None:
+        self.budget("Approved")
+        self.raise_commit()
+        self.assertEqual(len(fin_any(self.store.cases["ZF-1"])["commitments"]), 1)
+
+    def test_authority_refusals_are_gate_results(self) -> None:
+        args = (self.store, self.geo, "grant:Opportunity", "ZF-1", "SYN-95")
+        self.assertEqual(require_authority_any(*args)["status"], "Active")
+        for field, value, outcome in (
+            ("status", "Revoked", gates.FAIL),
+            ("expires_at", "not-a-date", gates.UNKNOWN),
+            ("permissions", [], gates.UNKNOWN),
+        ):
+            user = copy.deepcopy(self.geo)
+            user["financial_authority"][field] = value
+            self.store.staff[user["email"]] = user
+            with self.subTest(field=field), self.assertRaises(gates.AuthorityGateError) as caught:
+                require_authority_any(self.store, user, "grant:Opportunity", "ZF-1", "SYN-95")
+            self.assertEqual(caught.exception.result.outcome, outcome)
+            self.assertIn("Current scoped human financial designation", str(caught.exception))
+        self.store.staff[self.pm["email"]] = self.pm
+        with self.assertRaises(gates.AuthorityGateError) as caught:
+            require_authority_any(self.store, self.pm, "grant:Opportunity", "ZF-1", "SYN-95")
+        self.assertEqual(caught.exception.result.outcome, gates.UNKNOWN)
 
 
 if __name__ == "__main__":
