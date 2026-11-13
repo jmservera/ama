@@ -606,7 +606,7 @@ are the evidence basis, not performance results.
 ### Five Reactive and Proactive Assistants (2026-10-13)
 
 The owner requested these five capabilities in the existing application after
-the [capstone process map](../capstone/README.md#agents-in-the-retrofit-process-2026-10-13).
+the [capstone process map](../capstone/history/storage-map-before-reorganization.md#agents-in-the-retrofit-process-2026-10-13).
 FR-047 refines FR-025 to FR-028/036/044; it does not authorize the original
 case's higher autonomy levels or imply production acceptance. They share one
 proposal service, not five applications. Each has a stable capability ID,
