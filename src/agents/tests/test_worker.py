@@ -1,5 +1,6 @@
 import contextlib
 import io
+import json
 import os
 import signal
 import subprocess
@@ -220,12 +221,23 @@ class HeartbeatMarginTests(unittest.TestCase):
         )
         self.assertEqual(len(pulses), 3)
 
-    def test_max_age_covers_the_provider_call_bound_and_idle_cadence(self) -> None:
-        # Only the provider-call bound (timeout at most 40 s), the fault backoff and the
-        # idle wait are covered. Queue, token, post and ack calls are not bounded here.
-        self.assertLessEqual(message().timeout, 40)
-        margin = 40 + ERROR_BACKOFF_SECONDS + IDLE_SECONDS
-        self.assertGreaterEqual(HEARTBEAT_MAX_AGE_SECONDS, 2 * margin)
+    def test_max_age_covers_one_provider_call_at_the_largest_accepted_timeout(self) -> None:
+        # One-call arithmetic only: the pulse runs once per iteration, so several provider
+        # calls in one task and queue, token, post and ack latency are not bounded here.
+        def accepted(timeout: int) -> bool:
+            raw = dict(json.loads(message().to_json()), timeout=timeout)
+            try:
+                TaskMessage.from_json(json.dumps(raw))
+            except ValueError:
+                return False
+            return True
+
+        ceiling = 1000
+        largest = max(t for t in range(1, ceiling) if accepted(t))
+        self.assertLess(largest, ceiling - 1)
+        self.assertFalse(accepted(largest + 1))
+        gap = largest + max(ERROR_BACKOFF_SECONDS, IDLE_SECONDS)
+        self.assertGreaterEqual(HEARTBEAT_MAX_AGE_SECONDS, 2 * gap)
 
     def test_age_equal_to_the_limit_is_healthy_and_just_over_is_not(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -244,13 +256,22 @@ class ReplicaRestartTests(unittest.TestCase):
         stop = threading.Event()
         sink = Sink()
         original_ack = queue.ack
+        acked: list[str] = []
+        loops = 0
 
         def ack_then_stop(receipt: str) -> None:
             original_ack(receipt)
+            acked.append(receipt)
             stop.set()
 
+        def bounded() -> bool:
+            nonlocal loops
+            loops += 1
+            return loops <= 20
+
         queue.ack = ack_then_stop  # type: ignore[method-assign]
-        serve(queue, AgentWorker(provider), sink, limits(), stop, idle=0.01)
+        serve(queue, AgentWorker(provider), sink, limits(), stop, idle=0.01, alive=bounded)
+        self.assertTrue(acked, "replacement worker did not acknowledge within 20 iterations")
         return sink
 
     def test_crash_before_post_is_redelivered_and_handled_once(self) -> None:
