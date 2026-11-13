@@ -6,7 +6,7 @@
     "task_slug": "issue-149-parent-plan-2333"
   },
   "mode": "manual",
-  "active_phase": "Plan",
+  "active_phase": "Implement",
   "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
@@ -34,9 +34,9 @@
       "evidence": "A5 section of the policy amendment"
     },
     {
-      "decision": "A5 independent critique",
-      "status": "pending, to execute once before any merge",
-      "evidence": null
+      "decision": "A5 independent critique executed once: Revise (A5C-01..03), applied; not repeated",
+      "status": "recorded",
+      "evidence": "critique file A5 section"
     }
   ],
   "blockers": [
@@ -47,8 +47,8 @@
     }
   ],
   "next_action": {
-    "phase": "Plan",
-    "action": "Run one independent critique of A5, apply dispositions, then Implement the source-only assembly"
+    "phase": "Implement",
+    "action": "Source-only assembly M0..M7 on this branch, then source-frozen record and STOP"
   },
   "prioritized_follow_ups": null
 }

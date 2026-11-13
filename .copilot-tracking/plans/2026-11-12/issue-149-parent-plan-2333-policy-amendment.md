@@ -217,3 +217,11 @@ STOP at a clean, new SOURCE-FROZEN tree with an original source-assembly record 
 ### Pending genuine independent critique
 
 A5 changes the cut line and routing, so one genuine independent read-only critique executes once before any merge. It must challenge: the dependency claim (no real 233 dependency), the exclusion completeness, the merge order and the single 134 conflict rule, the no-test-evidence boundary and the non-claim of 233 status. A verdict and dispositions are recorded in the critique file; it is not repeated.
+
+### A5 correction notes (after the independent critique, 2026-11-13)
+
+The A5 text above is preserved unedited; these notes supersede it where they differ. PLAN ONLY until the merges run.
+
+* Scope rule (A5-01). The A2 and A1 rule needs every wave B member admitted or named in a recorded coordinator deferral. The root explicitly selected this subset as the scope of this task but did NOT record a 233 deferral and does not approve one. So 233 is neither admitted nor deferred: the rule is NOT satisfied for 233, the result is a source-frozen subset candidate only, and it cannot be described as the complete A2 cut line, as the epic delivery, or as publishable until the root records the scope or deferral decision and the validators and Review pass. G2 and per-member G6 admission for the retained members remain the root's.
+* Pre-merge rebinding (A5-02). Immediately before the first merge, fetch main and re-verify that `aebd381d9` and `837da4fde` are not ancestors of main, the parent or any input; re-run the sequential read-only merge matrix at the then-current main; stop and record proof on any unexpected conflict, any 233 ancestry or any real 233 dependency. After the merges, verify the same ancestry on the final head with `git merge-base --is-ancestor`, in addition to the symbol search.
+* Source record (A5-03). It records the ordered merge commits with their parents, the full head and `src` tree hashes, the module tree hashes, the M7 conflict-resolution outcome and the diff relative to fresh main.

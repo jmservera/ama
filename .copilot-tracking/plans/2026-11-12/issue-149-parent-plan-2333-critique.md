@@ -54,3 +54,15 @@ The pending note above is now closed by this execution. One independent read-onl
 | A2C-04 | G3 cannot inspect an assembled diff before assembly; names alone cannot show control changes | Applied: two-stage inspection of pinned input diffs and hunks at G3, then of the actual candidate before publication |
 
 No finding was left open. Assembly is still not authorised: G1, G2, per-member G6 and the G3 rebinding at the then-current main remain.
+
+## A5 critique (2026-11-13, executed once)
+
+One independent read-only rubber-duck critique ran in fresh context on commit `e2b452946`, no writes, no nested agents. Verdict: Revise (two blocking, one non-blocking). The critic found the sequential simulation clean through M6 with only the known 134 `cutover-evidence-pack.md` conflict at M7, and found no 233 dependency or false 233 delivery claim; no tests were run. Not repeated.
+
+| Id | Finding | Disposition |
+| --- | --- | --- |
+| A5C-01 | A5 called its scope an admitted-members-only selection while A2 requires admission or a recorded coordinator deferral for every wave B member | Applied: A5 correction notes state that 233 is neither admitted nor deferred, the rule is not satisfied for 233, and the result is a source-frozen subset only |
+| A5C-02 | Main may advance and a symbol search cannot prove 233 ancestry is absent | Applied: pre-merge rebinding and final-head `merge-base --is-ancestor` checks, stop with proof on any 233 dependency |
+| A5C-03 | Source record lacked merge identities and the M7 resolution evidence | Applied: the record lists ordered merges, parents, tree hashes and the resolution outcome |
+
+No finding conflicted with a confirmed root decision. Assembly (source only) may proceed; no publication is authorised.
