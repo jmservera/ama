@@ -125,7 +125,7 @@ class WorkflowMixin:
     # ---- return and reopen
     def _disposition(self, c, user, was, to, reason, metadata, reopened=False):
         metadata = metadata if metadata is not None else {}
-        source = controls.text(metadata.get("source"), "the source reference")
+        source = controls.evidence_text(metadata.get("source"), "the source reference")
         next_action = controls.text(metadata.get("next_action"), "the next action")
         return dict(version=len(c.get("returns", [])) + 1, at=_now("microseconds"), by=user["name"],
                     from_stage=was, to_stage=to, reason=reason, reopened=reopened,
@@ -380,7 +380,7 @@ class WorkflowMixin:
         if category not in HAZARD_CATEGORIES or priority not in HAZARD_PRIORITIES:
             raise ValueError("Choose the reported observation and urgency from the lists.")
         metadata = metadata or {}
-        source = controls.text(metadata.get("source"), "the report source")
+        source = controls.evidence_text(metadata.get("source"), "the report source")
         aware = _hazard_time(metadata.get("aware_at"), "the awareness time", actual=True)
         with hazard.decision_scope(self, user, case_id) as (c, user):
             h = dict(category=category, priority=priority, noticed=aware[:10], aware_at=aware,
@@ -398,7 +398,7 @@ class WorkflowMixin:
     def refer_hazard(self, user, case_id, idx, to_email, job, metadata=None):
         controls.require_role(user, projection.STAFF_ROLES, "authorised staff")
         job = controls.text(job, "the external hazard or repair case reference", 40)
-        evidence = controls.text((metadata or {}).get("evidence"), "evidence of sending the referral")
+        evidence = controls.evidence_text((metadata or {}).get("evidence"), "evidence of sending the referral")
         with hazard.decision_scope(self, user, case_id) as (c, user):
             to = hazard.subject(self, self._staff_person(to_email))
             if to["role"] not in SAFETY_ROLES:
@@ -428,7 +428,7 @@ class WorkflowMixin:
         return h
 
     def receive_hazard(self, user, case_id, idx, evidence):
-        evidence = controls.text(evidence, "the external receipt evidence")
+        evidence = controls.evidence_text(evidence, "the external receipt evidence")
         with hazard.decision_scope(self, user, case_id) as (c, user):
             h = self._hazard_receiver(c, idx, user)
             if h.get("received_at"):
@@ -437,7 +437,7 @@ class WorkflowMixin:
             self._hazard_event(c, h, user, "safety_received", evidence)
 
     def accept_hazard(self, user, case_id, idx, evidence):
-        evidence = controls.text(evidence, "the external acceptance evidence")
+        evidence = controls.evidence_text(evidence, "the external acceptance evidence")
         with hazard.decision_scope(self, user, case_id) as (c, user):
             h = self._hazard_receiver(c, idx, user)
             if not h.get("received_at") or h.get("accepted_at"):
@@ -447,7 +447,7 @@ class WorkflowMixin:
             self._hazard_event(c, h, user, "safety_accepted", evidence)
 
     def observe_hazard_times(self, user, case_id, idx, metadata):
-        evidence = controls.text(metadata.get("evidence"), "the external service timing evidence")
+        evidence = controls.evidence_text(metadata.get("evidence"), "the external service timing evidence")
         fields = ("response_due_at", "responded_at", "resident_update_due_at", "resident_updated_at")
         times = {k: _hazard_time(metadata[k], k, actual=k in ("responded_at", "resident_updated_at"))
                  for k in fields if metadata.get(k) not in (None, "")}
@@ -465,7 +465,7 @@ class WorkflowMixin:
             self._hazard_event(c, h, user, "safety_times_observed", evidence)
 
     def record_repair(self, user, case_id, idx, evidence=None):
-        evidence = controls.text(evidence, "the external repair evidence")
+        evidence = controls.evidence_text(evidence, "the external repair evidence")
         with hazard.decision_scope(self, user, case_id) as (c, user):
             h = self._hazard_receiver(c, idx, user)
             if h["released"] or h.get("repaired"):
@@ -481,11 +481,13 @@ class WorkflowMixin:
         if user["role"] not in SAFETY_ROLES:
             raise PermissionError("Only the Building Safety Liaison or a manager can restart stopped retrofit work. Ask one of them to record the restart.")
         note = controls.text(note, "the reason for restarting retrofit work")
-        evidence = controls.text(evidence, "the external evidence supporting the restart")
+        evidence = controls.evidence_text(evidence, "the external evidence supporting the restart")
         with hazard.decision_scope(self, user, case_id) as (c, user):
             h = self._hazard(c, idx)
             if h["released"]:
                 raise ValueError("Retrofit work on this safety issue has already been restarted. Nothing more to do.")
+            if any(controls.is_memory_reference(h.get(k)) for k in ("receipt_evidence", "acceptance_evidence", "repair_evidence")):
+                raise ValueError(controls.MEMORY_REFUSAL)
             if not h.get("repair_evidence") or not h.get("accepted_at"):
                 raise ValueError(
                     "Retrofit work cannot restart yet. Receipt, acceptance and external repair "

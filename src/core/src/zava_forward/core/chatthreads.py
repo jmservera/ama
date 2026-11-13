@@ -13,6 +13,8 @@ import uuid
 from contextlib import contextmanager
 from datetime import datetime, timezone
 
+from . import controls
+
 MAX_CONTENT = 8000
 MAX_EVIDENCE = 20
 ROLES = ("user", "assistant")
@@ -280,8 +282,8 @@ def _clean_evidence(evidence):
     refs = [str(r).strip() for r in (evidence or ()) if str(r).strip()]
     if len(refs) > MAX_EVIDENCE or any(len(r) > 200 for r in refs):
         raise ValueError(f"At most {MAX_EVIDENCE} evidence references of 200 characters.")
-    if any(r.upper().startswith(MEMORY_ID_PREFIX) for r in refs):
-        raise ValueError("Memory is never evidence and cannot be cited.")
+    if any(r.upper().startswith(MEMORY_ID_PREFIX) or controls.is_memory_reference(r) for r in refs):
+        raise ValueError(controls.MEMORY_REFUSAL)
     return refs
 
 

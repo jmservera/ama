@@ -5,7 +5,8 @@ from pathlib import Path
 
 import dataset
 import test_sqlstore as base
-from zava_forward.core import chat_privacy as cp
+from zava_forward.core import chat_privacy as cp, controls
+from zava_forward.core.chat_isolation import ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved, ChatPrivacy
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
@@ -120,6 +121,36 @@ class MemoryLifecycle:
         t = self.store.chat_create_thread(U1)
         with self.assertRaises(ValueError):
             self.store.chat_add_message(U1, t["id"], "assistant", "x", evidence=[mid])
+
+    def test_memory_references_never_pass_as_evidence(self):
+        t = self.store.chat_create_thread(U1)
+        for ref in ("CM-1", "cm-1a2b3c4d", "memory:CM-1", "Memory:x", "chat-memory/1", "ref-CM-18f1a2b3c4d5e6f71a2b"):
+            with self.subTest(ref=ref), self.assertRaises(ValueError):
+                self.store.chat_add_message(U1, t["id"], "assistant", "x", evidence=["CASE-1", ref])
+        self.store.chat_add_message(U1, t["id"], "assistant", "x", evidence=["CASE-1", "chat-memory-dpia.md"])
+        self.assertTrue(controls.is_memory_reference("see CM-18f1a2b3c4d5e6f71a2b"))
+        for ok in ("5 cm-thick insulation", "Work order CM-2024", "CM-0001", "photo memory: card"):
+            self.assertFalse(controls.is_memory_reference(ok))
+        with self.assertRaises(ValueError):
+            controls.evidence_text("memory:x", "evidence")
+
+    def test_prompt_marks_memory_as_non_authoritative_non_evidence(self):
+        self.c.opt_in(U1, True)
+        self.c.add_memory(U1, "tables", task=TASK)
+        t = self.store.chat_create_thread(U1, task=TASK)
+        _, _, prompt = ChatIsolation(self.store, env=APPROVED).build_prompt(U1, t["id"], "q")
+        block = prompt.split("<<UNTRUSTED memory\n", 1)[1].split("\nUNTRUSTED>>", 1)[0]
+        self.assertEqual(json.loads(block), [dict(preference="tables", authority="none", evidence=False, item_class="working_preference")])
+
+    def test_memory_cannot_satisfy_a_gate_or_checklist(self):
+        from zava_forward.core import gates, quality
+        self.assertFalse(gates.evidence_gate(["CM-18f1a2b3c4d5e6f71a2b"], "owner").passed)
+        rec = dict(measure="Loft insulation", items=[dict(label=lab, evidence="memory:CM-18f1a2b3c4d5e6f71a2b")
+                                                      for lab in quality.checklist_for("Loft insulation")["items"]])
+        self.assertTrue(quality.evidence_gaps(rec))
+        with self.assertRaises(ValueError):
+            self.store.add_document(U1, "ZF-1", "a.pdf", "EPC", b"%PDF-x", metadata=dict(
+                source="CM-18f1a2b3c4d5e6f71a2b", source_version="1", reason="from memory", handoff_version=0))
 
     def test_opt_out_deletes_items_and_ledger_has_no_content(self):
         self.c.opt_in(U1, True)
