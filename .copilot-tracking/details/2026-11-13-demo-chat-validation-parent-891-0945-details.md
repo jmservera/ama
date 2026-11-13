@@ -1,3 +1,7 @@
+---
+description: First-pass RPI record for the chat validation parent integration
+date: 2026-11-13
+---
 # Details: demo-chat-validation-parent-891-0945 (2026-11-13)
 
 * Phase 1: `git checkout b05d927 -- .copilot-tracking` then compare `git rev-parse :path` with the source blob for each of the 15 paths; expect 15 equal.

@@ -1,3 +1,7 @@
+---
+description: First-pass RPI record for the chat validation parent integration
+date: 2026-11-13
+---
 # Plan: demo-chat-validation-parent-891-0945 (2026-11-13)
 
 Details: `.copilot-tracking/details/2026-11-13-demo-chat-validation-parent-891-0945-details.md`.

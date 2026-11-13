@@ -1,3 +1,7 @@
+---
+description: First-pass RPI record for the chat validation parent integration
+date: 2026-11-13
+---
 # Critique: demo-chat-validation-parent-891-0945 (2026-11-13, prospective)
 
 * Executed: one independent read-only rubber-duck pass BEFORE any docs edit (the 15 byte copy had been staged and unstaged only; no docs change existed).

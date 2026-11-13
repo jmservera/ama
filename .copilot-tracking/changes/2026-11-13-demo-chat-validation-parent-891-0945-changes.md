@@ -1,3 +1,7 @@
+---
+description: First-pass RPI record for the chat validation parent integration
+date: 2026-11-13
+---
 # Changes: demo-chat-validation-parent-891-0945 (2026-11-13)
 
 * Added 15 files from `b05d92788b198c3b53efd54ac873fbf6cf2f3dac` byte-identically (all 15 working-tree `cmp` equal and staged blob ids equal to the source blobs).

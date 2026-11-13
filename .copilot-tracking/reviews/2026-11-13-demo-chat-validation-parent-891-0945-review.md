@@ -1,3 +1,7 @@
+---
+description: First-pass RPI record for the chat validation parent integration
+date: 2026-11-13
+---
 # Review: demo-chat-validation-parent-891-0945 (2026-11-13)
 
 * Executed: one independent read-only rubber-duck Review of the staged diff. Outcome: conformant, no findings.

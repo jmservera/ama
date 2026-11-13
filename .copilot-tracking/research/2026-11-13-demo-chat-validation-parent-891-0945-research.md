@@ -1,3 +1,7 @@
+---
+description: First-pass RPI record for the chat validation parent integration
+date: 2026-11-13
+---
 # Research: demo-chat-validation-parent-891-0945 (2026-11-13)
 
 * Disposition: executed (bounded, read-only). Planning Readiness: Ready.
