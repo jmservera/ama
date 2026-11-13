@@ -7840,3 +7840,66 @@ Added after the checkpoint candidate `37e2715b5` and applied to the same `src` t
 Open and disclosed, none repaired here: the five Low observations of the original Review; the provenance Lows (commit history cannot prove prospective critique order for 74, 176, 216 and original 82, although the actual native phase logs show independent critic and reviewer launches, which is not tamper-proof attestation; byte-order-mark handling in `role-screens.js`; the unverified 176 as-of mutation; stale plan markers and a stale 0048 state marker; author-only original 96 backend records; the 134 ordering and amend-after-Review observations). The 74 adverse and mutation outputs M1 to M8 and A1 to A4 failed the intended assertions, A2 rejected a missing restriction key and is not a pure amount-only control, the first M8 run used invalid JavaScript and timed out at login (not a valid result) and the later M8 run failed the intended assertion; the final 74 browser check passed 24. Historical blockers in the 0048 and 0042 state files are superseded by the current 0042 state; the original critique and child state history are not rewritten.
 
 Remaining gates, unchanged and not claimed: a final independent exact-head assessment that rechecks the new metadata paths against the input manifest, a clean final head and current main; current-main applicability; publication authority with `Refs`-only closing hygiene; and actual hosted checks for the exact head (an absent, skipped or path-filtered workflow is not success). Human, assistive-technology, Finance, legal, live, actual SQL Server, whole 149, A2 and epic evidence stay unproven, and no acceptance box is ticked. The entire 233 feature stays excluded and held, neither admitted nor deferred; its five spent cycles and the unavailable extension are no approval, and no deferral, requirement relaxation or pivot is approved. Original Review execution remains Partial; source conformance and documentation coverage are separate.
+
+## Post-1500 merged-main provenance checkpoint (2026-11-13, Refs #440 #149 #96)
+
+Draft, local-only, not approved. This is a new bounded recurring checkpoint after PR 1500 reached `main`. It is documentation only: not a source repair, not a correction cycle, not a renewal of any correction pool and not a Review of the product. It reconciles the partial independent UX checkpoint above with the C4 correction, the hosted observations and the actual merge. Earlier sections stay unchanged. It is not whole-product, human, assistive-technology, Azure, model or actual-SQL acceptance. The original final UX Review stays Partial, and the C4 independent assessment was a bounded publication Pass only. Records: dated `issue-440-post1500-0240` research, plan, details, critique, admission, changes, review and state files under `.copilot-tracking`.
+
+### Merged-main identities
+
+| Item | Identity (read 2026-11-13) |
+| --- | --- |
+| PR 1500 | Merged 2026-11-13T02:38:22Z as `ad1a1722965e7943166e5d0018089b8d2dcd0316`; head `4961acbeca952f9e3f60a1c09905d4b7f8acce34`; closing references empty; #83 and #440 OPEN |
+| Main tree | `f650b1ba936c7cd65442a4613eb43e071fb825df`, equal to the tree of the independently assessed candidate `4961acbec` and of the hosted merge ref |
+| Hosted merge ref | `f1a5ebccd271b600ec9fe6ed53ef19d79930130e` with parents `c401e5d56446b5752e8d91af6a45f3f06269c4bd` and `4961acbeca95`, tree equal to main |
+| Change against `c401e5d56` | 32 files outside `.copilot-tracking` (product `role-screens.js`, API and core tests, four core source files, runbook, READMEs, the WCAG record, the log and this pack); the C4 increment over `9f1da5a31` changed only one API test, the WCAG record, the log and tracking |
+
+### Four evidence classes, kept separate
+
+| Class | What it is | What it supports | What it does not |
+| --- | --- | --- | --- |
+| A parent-source observations | Eight lanes on `288b6a376` (types, forms 74, home 28, roles 21, synthetic 51, AI 28 with 11 scripted scenarios, regulatory 12, five browser checks) in the section above | Only where a lane's own named inputs are unchanged at main: product bytes are unchanged by C4, so these remain input-equivalent per lane. Core 72 stays HISTORICAL REUSE (SQLite and static; not fresh, not SQL Server) | The types lane is not equivalent for the API: C4 changed an API test that lint covers. Browser counts are not rerun and are not AT acceptance |
+| B fresh final C4 checks | At `4961`: baseline test module 13 OK, role guards 21 OK, production-UX protocol 4 OK (independent assessor); canonical API Ruff 0.17.1 lint and format (152 files) and mypy 2.4.0 (236 files) pass (root); seven scratch mutation checks failed the new test (author evidence, not rerun) | The one corrected invalid-field audit (saved Held copy file input, the eighth `aria-invalid` site) and its record | The baseline test stays an existing format exclusion and mypy ignore override, so no typing acceptance is inferred; author Ruff 0.17.3 and mypy 2.4.1 and the explicit-file format failure are preserved; no browser or AT rerun |
+| C hosted observations | Source CI run `43351173623` (pull_request) | See next table | Not local executed results; not human, legal, Azure, model or acceptance evidence |
+| D merged-main provenance | Merge, tree equality, document blobs and closing references above | That the integrated tree reached main without a closing reference | Merge is not closure of any issue or criterion |
+
+### Hosted observations
+
+The Source CI checkout was the merge ref `refs/remotes/pull/1500/merge` (`f1a5ebccd271`, tree equal to main). Counts below were re-read from the job logs as counts and named lines only. The earlier API failure of run `43347366743` (job `131630021882`, `8 != 7`) is preserved as a genuine failure, not reclassified as flaky.
+
+| Job | Observed | Qualification |
+| --- | --- | --- |
+| `src-core` | `unittest discover`: 3148 tests, `OK`, 403 skipped | Aggregate only. The funding-membership regression `test_non_boolean_funding_refreshes_stale_revision_two_memberships` and `test_live_docs_have_no_unresolved_relative_links` each printed `ok`. No claim is made that all 72 historical-reuse selectors were individually observed; core 72 stays HISTORICAL REUSE |
+| `src-api` | `unittest discover`: 2966 tests, `OK`, 629 skipped; lint, type check, design-system browser harness check, 3 synthetic design-system browser tests, image build, container and startup contract, vulnerability gate and SBOM steps success | The two C4 tests `test_every_invalid_field_is_tied_to_a_message` and `test_saved_held_copy_field_is_tied_to_its_visible_message` each printed `ok`. The SQL Server twin of the funding-membership test printed `skipped` with the SQL Server message in this job. The generic harness is not the five named role, Held-copy, programme, home and regulatory browser checks |
+| `src-agents` | 336 tests, success | Whole-suite hosted observation; scripted offline, no actual model run |
+| `mssql` | `ZF_TEST_MSSQL=1` selectors from the workflow (`test_mssqlstore`, `test_lawstore.MssqlStoreTests`, five `test_assistants` Mssql classes, `test_resident_aoai_sql.AccountingSqlTests`) against a disposable `mcr.microsoft.com/mssql/server:2022-latest` service: 321 tests reported, `OK`, one skipped | An actual hosted disposable SQL Server module observation. The step is non-verbose, so which test skipped and the per-test outcomes, including the SQL Server twin of the funding-membership test, are not identified; the image tag is mutable and no immutable image id is claimed. It is not Azure SQL, operational or fresh local SQL Server evidence |
+
+Other contexts of the 19-context pull-request rollup (the remaining Source CI jobs, the eight Capstone Rubric Scorer jobs and `rubric/score`) all reported SUCCESS; they are rollup observations only. Scorer run `43351173644` is a pull_request run at the candidate head. The post-merge push run of Capstone Rubric Scorer `43353567759` on `ad1a1722` was `in_progress` with no conclusion when read, so its result is pending, not success. No Source CI push-event run was listed for the merge commit; absence is not success, and no workflow was dispatched.
+
+### Document-qualified status
+
+The BRD (0.21.0, draft), PRD (0.21.0, in-review), the proper-warm PRD (0.13.0, in-review) and ADRs 0001 to 0007 have the same blobs at main as in the section above (`34d88395de86`, `c788b917bafa`, `f7f9b7675e60`, `d42fa5c4615f`, `cbe21530043f`, `d60645397b20`, `9406c2e747ce`, `4d610335a5a1`, `956da1a3b804`, `541e0f72dd2c`), so no status changed: ADR 0001, 0002 (except the owner-accepted bounded Entra identity decision) and 0007 stay Proposed, ADR 0003 to 0006 stay Accepted within their stated scope. No requirement or ADR is approved by this record.
+
+Traceability delta: only the WCAG baseline tied-field row changes. It maps to the existing PRD accessibility engineering row (NFR-001 and NFR-012 with AC-034 and AC-037, as the PRD row itself states); the mapping is an interpretive join, not owner-confirmed and not approved, and the row asserts markup and intent only. All other rows of the section above are unchanged by C4.
+
+### Statements of the section above, reconciled by appending
+
+* "No pull request exists" and "hosted CI not observed": true when written; PR 1500 now exists and merged, and the hosted observations above apply to exact `4961` through its merge ref.
+* "`test_live_doc_links` was not run": the independent final-head assessment ran it locally (2 tests OK) and the hosted core job printed it `ok`; the later implementation check of this annex is a direct check of a changed input, not a wave count.
+* Core 72 and the actual SQL Server qualifiers: unchanged as written; the hosted counts above neither upgrade core 72 nor identify the named SQL Server twin outcome.
+
+### Boundaries and holds
+
+* Data is constructed or synthetic. No resident consent, named human approval, Finance numeric-fidelity decision, legal review, live check, assistive-technology result, WCAG conformance or actual Azure SQL result is established. The saved Held copy check remains a human-assisted comparison, unavailable-service paths remain manual, and the AI evidence is a scripted offline harness.
+* Recorded Low observations stay open: duplicate saved-copy error announcement, no focus move on the no-file error, BOM handling and source-text guard brittleness.
+* Entire 233 is excluded and held, neither admitted nor deferred; its five spent cycles and the unavailable typing extension are no approval. Scoped 96 C4 is 4 of 5 spent, older whole-96 history is unknown and no C5 is admitted. No allowance of 135, 132, 184, 144 or 146 is borrowed. The 203 retained candidate and the 184 candidate stay held and are not touched. #83 stays OPEN and the two final acceptance criteria of #440 stay unticked.
+
+### Gap assessment and recommendation (proposed, not a decision)
+
+No genuinely missing focused observation is needed to record this checkpoint: the only inputs changed after the eight lanes (baseline test, WCAG record, log) have fresh covering results and hosted `ok` lines on the merged tree. The unresolved item is per-test attribution of the hosted SQL Server module run; it is a recorded limit, owned by the existing SQL evidence issues, and a local container selector would need its own named admission.
+
+CONTINUE, bounded. Affected closures stay held: whole #149, the A2 cut line, the epic, whole #96, #233, the unproven #153 criteria and the final two #440 criteria. Dependent gates are independent exact-head review, named human approvals, the owner merge decision, and hosted CI for the head that publishes this record (an absent or path-filtered workflow is not success). Independent lanes are #203, #184, the remaining scoped 96 allowance and #233, none changed here. No pivot, deferral or requirement relaxation is proposed or approved.
+
+### Process limits
+
+Documentation only; checked locally by `git diff --check`, an ASCII scan of added lines, a link review and `tests.test_live_doc_links`. None refreshes a wave count. No browser, SQL, Docker, scanner, model, provider, Azure, whole-suite, `--changed` or complete-gate run was made here. Focused documentation tier: no workflow, gate-tool, manifest, Dockerfile, permission, SQL, deployment or security-control change. The model label (Claude Sonnet 5.5) is asserted; no host attestation exists.

@@ -1,29 +1,65 @@
 {
   "task_id": "issue-440-post1500-0240",
   "task_slug": "issue-440-post1500-0240",
-  "parent_task": {"task_id": "issue-440-stabilization", "task_slug": "issue-440-stabilization"},
+  "parent_task": {
+    "task_id": "issue-440-stabilization",
+    "task_slug": "issue-440-stabilization"
+  },
   "mode": "manual",
-  "active_phase": "Plan",
-  "status": "completed",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-13/issue-440-post1500-0240-research.md",
     "plan": ".copilot-tracking/plans/2026-11-13/issue-440-post1500-0240-plan.md",
     "details": ".copilot-tracking/details/2026-11-13/issue-440-post1500-0240-details.md",
     "critique": ".copilot-tracking/plans/2026-11-13/issue-440-post1500-0240-critique.md",
-    "changes": null,
+    "changes": ".copilot-tracking/changes/2026-11-13/issue-440-post1500-0240-changes.md",
     "review": null
   },
   "confirmed_decisions": [
-    {"decision": "Admission is research, plan and one independent critique only; no implementation, canonical edit, runtime check or publication", "status": "confirmed", "evidence": "root brief 2026-11-13"},
-    {"decision": "Research executed; Planning Readiness Ready; no genuinely missing focused observation; docs-only annex in existing pack recommended (proposal, not decision)", "status": "done", "evidence": ".copilot-tracking/research/2026-11-13/issue-440-post1500-0240-research.md"},
-    {"decision": "Independent critique executed once: Revise, CR-1 to CR-4 Medium, all applied, none rejected; not repeated", "status": "done", "evidence": ".copilot-tracking/plans/2026-11-13/issue-440-post1500-0240-critique.md"},
-    {"decision": "Implement and Review not executed in this admission; original Review will occur once after a later explicit admission", "status": "pending", "evidence": "plan resume conditions"},
-    {"decision": "Holds preserved: 233 excluded, scoped 96 C4 of 5 spent no C5, 203 candidate 2543 held, 184 held, no borrowed allowances, #440 final two criteria unticked", "status": "confirmed", "evidence": "root brief; issue 440 body read 2026-11-13"}
+    {
+      "decision": "Admission is research, plan and one independent critique only; no implementation, canonical edit, runtime check or publication",
+      "status": "confirmed",
+      "evidence": "root brief 2026-11-13"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready; no genuinely missing focused observation; docs-only annex in existing pack recommended (proposal, not decision)",
+      "status": "done",
+      "evidence": ".copilot-tracking/research/2026-11-13/issue-440-post1500-0240-research.md"
+    },
+    {
+      "decision": "Independent critique executed once: Revise, CR-1 to CR-4 Medium, all applied, none rejected; not repeated",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/2026-11-13/issue-440-post1500-0240-critique.md"
+    },
+    {
+      "decision": "Implement and Review not executed in this admission; original Review will occur once after a later explicit admission",
+      "status": "pending",
+      "evidence": "plan resume conditions"
+    },
+    {
+      "decision": "Holds preserved: 233 excluded, scoped 96 C4 of 5 spent no C5, 203 candidate 2543 held, 184 held, no borrowed allowances, #440 final two criteria unticked",
+      "status": "confirmed",
+      "evidence": "root brief; issue 440 body read 2026-11-13"
+    },
+    {
+      "decision": "Root named Implement admission with clarifications A1-A4 recorded before canonical edits; annex and log entry implemented; index unchanged; doc checks pass",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/2026-11-13/issue-440-post1500-0240-admission.md; .copilot-tracking/changes/2026-11-13/issue-440-post1500-0240-changes.md"
+    }
   ],
   "blockers": [],
-  "next_action": {"phase": "Implement", "action": "Root admits Implement by name on a clean topic branch from current origin/main after re-pin; append-only annex to docs/architecture/cutover-evidence-pack.md plus log entry; focused checks only; then one original Review"},
+  "next_action": {
+    "phase": "Review",
+    "action": "Execute one original independent Review of the frozen candidate; return actionable findings, no second Review or correction"
+  },
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Implement the docs-only post-1500 provenance annex in the existing pack", "rationale": "Pack is stale on C4, hosted observations and the merge; smallest closing step with no source change", "evidence": "research gaps G1 to G4"}
+    {
+      "rank": 1,
+      "task": "Implement the docs-only post-1500 provenance annex in the existing pack",
+      "rationale": "Pack is stale on C4, hosted observations and the merge; smallest closing step with no source change",
+      "evidence": "research gaps G1 to G4"
+    }
   ]
 }

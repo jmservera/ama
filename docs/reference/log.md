@@ -11639,3 +11639,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a dated 2026-11-13 entry to the Error identification row of the [WCAG 2.2 conformance baseline](research/ux/wcag-conformance-baseline.md): the static inventory of `aria-invalid` sites is now eight after a hosted `8 != 7` test failure. The new site, the saved Held copy checker, was read from source (visible label, `aria-describedby` message, text with glyph and next step) and gained a focused static association test.
 * Source-read and static-test evidence only: no screen reader, assistive technology, manual acceptance or conformance claim; the existing browser check was not re-run for this entry.
 * Evidence under `.copilot-tracking/` (2026-11-13 issue-96-c4-ci-baseline-0208).
+
+## [2026-11-13] add | Post-1500 merged-main provenance checkpoint (Refs #440 #149 #96)
+
+* Appended a dated, draft section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#post-1500-merged-main-provenance-checkpoint-2026-11-13-refs-440-149-96) that separates parent-source observations, fresh C4 checks, hosted observations of Source CI run 43351173623 on the merge ref and actual merged-main provenance, with document-qualified status and the remaining holds.
+* Documentation only: no source, test, workflow or index change; core 72 stays historical reuse; the hosted SQL Server module outcome is a limited observation; the post-merge push scorer was pending when read; no acceptance tick, pivot or approval.
+* Evidence under `.copilot-tracking/` (2026-11-13 issue-440-post1500-0240).
