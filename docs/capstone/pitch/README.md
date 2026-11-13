@@ -78,6 +78,7 @@ proposed only near the end of the main presentation, before optional Q&A.
 | Page 38 / B10 | Readable core projection of the full Bicep-grounded Azure reference; private endpoints versus managed services, conditional AI and separate full-view options |
 | Page 47 / B19 | Source-only synthetic IoT flow, private Event Hub, SQL readings/derived averages and independent human safety route |
 | Page 48 / B20 | When Fabric adds value beyond SQL: compare conditional analytics against SQL/history plus Power BI |
+| Page 22 / S18 | Tokenomics on the main route of the 55-slide v2 deck. The USD 0.44 per home figure is a labelled scenario, not a measured result; owner decision of 2026-11-13 for #435 AC1 and AC4, see the [placement draft](./tokenomics-placement-draft.md). Pages 53 and 55 (B25, B27) are the question cards |
 | Page 55 / B27 | One chosen skill/one bounded call; source-coded financial admission and durable request bounds versus still-unproved whole-journey cost acceptance |
 | Pages 26-27 | State the demo evidence route before showing it; close on the next accountable decision |
 

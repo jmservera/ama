@@ -8239,3 +8239,18 @@ Classes: `local observed` is a child-recorded local run.
 * The same change repoints two broken links (PRD and addendum) to the archived process-map heading and corrects one `whitespace-fix` typo in the Waves 1105 and 1143 rows (#441, #203).
 * Refs only for #440, #441, #203, #89, #218, #123, #113, #531, #435 and #470. No issue acceptance, criterion tick, closure, approval or conformance claim; the issues stay open.
 * Independent exact-head review, human approvals and applicable hosted CI remain required before merge.
+
+## Owner Sign-Offs for Cut-Over, Staff-Mediated Capture and Tokenomics (2026-11-13, Refs #203)
+
+Documentation only. The owner gave these decisions on 2026-11-13; this section records them and ticks nothing.
+
+| Issue | Owner decision (2026-11-13) | Still pending or distinct |
+| --- | --- | --- |
+| #201, #202, #198 | Approved the `prototype/` 10-item parity mapping, the `v0.21.0` archive retirement of `mvp/` and `prototype/`, and the current `src-ci` and `rubric-score` workflow check set | Live deployed parity and the private-data backup criteria stay pending the live redeploy; no live result is claimed |
+| #228 AC3 | Staff-mediated fieldwork capture, acknowledgement and independent QA (`staff_intake.py`) satisfies AC3 for demo scope | The external supplier login portal (`OD-47`) is deferred to production |
+| #435 AC1, AC4 | Slide 22 plus the B25 and B27 question cards on the 55-slide v2 deck; USD 0.44 per home kept as an explicitly labelled scenario; a finite held-out token batch of up to USD 5 authorised | The batch has not run and waits for the live Azure OpenAI step in the authorised Azure sync; rehearsal timing is unperformed; see the [placement draft](../capstone/pitch/tokenomics-placement-draft.md) |
+
+The [reference inventory](./cutover-reference-inventory.tsv) was regenerated against this tree with the existing `cutover_audit.py` and its check mode passes.
+
+* Refs only for #203, #201, #202, #198, #228, #435, #441 and #440. No criterion tick, closure or approval is made here.
+* Independent exact-head review, human approvals and applicable hosted CI remain required before merge.

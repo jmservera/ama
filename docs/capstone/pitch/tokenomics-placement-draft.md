@@ -1,21 +1,24 @@
 ---
 title: DRAFT Tokenomics Placement and Rehearsal Outline for the Capstone Pitch
-description: Draft for owner review of where AI Tokenomics sits in the current deck, the segment wording and a rehearsal outline; no decision, rehearsal or assessment is recorded
+description: Draft of where AI Tokenomics sits in the current deck, the segment wording and a rehearsal outline; records the owner placement and batch decisions of 2026-11-13 for #435 AC1 and AC4; no rehearsal, measurement or assessment is recorded
 author: AMA programme
-ms.date: 2026-11-03
+ms.date: 2026-11-13
 ms.topic: how-to
 ---
 
 ## Status
 
-DRAFT for owner review. Nothing here is a decision, a rehearsal result, a
-rebuilt deck or an assessment. Issue #435 stays open and every acceptance
-criterion is unmet by this draft except where the table below says
-"drafted for review".
+DRAFT. Nothing here is a rehearsal result, a measurement, a rebuilt deck or an
+assessment. Issue #435 stays open. The owner decided on 2026-11-13 that Slide
+22 (S18) stays on the main route with the B25 and B27 appendix question cards
+on the 55-slide v2 deck, that the USD 0.44 per home figure stays as an
+explicitly labelled scenario, and that a finite held-out token measurement
+batch of up to USD 5 is authorised. Those decisions are recorded under
+criteria 1 and 4 below; no other criterion is met.
 
 The deck has moved since the
 [2026-10-22 brief](../history/tokenomics-pitch-brief.md) was written. The
-current candidate is the 54-slide
+current candidate is the 55-slide
 [Cowork v2 deck](../deck/zava-forward-cowork-v2-draft.pptx), generated notes
 list a 23:45 narration route inside a 30-minute slot, and the issue text still
 refers to slide 16 and a 15-minute route. The owner should confirm which
@@ -25,9 +28,9 @@ format applies to the capstone before timing is judged.
 
 | Where | Content | Source |
 | --- | --- | --- |
-| Page 21, S18 (50 s, 18:40-19:30) | Model inference, "Measure accepted value". Gives a modelled inference figure of about USD 0.44 per home and about USD 6,873 across 15,600 homes, labelled a planning calculation on a dated secondary-source rate | [speaker script](./speaker-script.md) |
-| Pages 32, 52-54 (B05, B25, B26, B27) | Optional appendix answers on technology cost, the Tokenomics unit, cache and cheapest-model routing | [question bank](./questions-and-answers.md) |
-| Page 20, S17 (60 s) | Bounded call with finite allowance and expiry as one of seven checkpoints | [speaker script](./speaker-script.md) |
+| Page 22, S18 (50 s, 18:40-19:30) | Model inference, "Measure accepted value". Gives a modelled inference figure of about USD 0.44 per home and about USD 6,873 across 15,600 homes, labelled a planning calculation on a dated secondary-source rate | [speaker script](./speaker-script.md) |
+| Pages 32, 52-55 (B05, B25, B26, B27) | Optional appendix answers on technology cost, the Tokenomics unit, cache and cheapest-model routing | [question bank](./questions-and-answers.md) |
+| Page 21, S17 (60 s) | Bounded call with finite allowance and expiry as one of seven checkpoints | [speaker script](./speaker-script.md) |
 
 So the placement question is no longer "add to slide 16". Slide S18 already
 carries the Tokenomics segment, and B25 already carries the CFO answer.
@@ -101,19 +104,21 @@ rehearsal happens. Do not fill them in beforehand.
 
 | Criterion | Status after this draft |
 | --- | --- |
-| 1 Owner decides placement; deck rebuilt if changed | Unmet. Options and a recommendation are drafted for review; no decision, no rebuild |
+| 1 Owner decides placement; deck rebuilt if changed | Owner decision recorded 2026-11-13: Slide 22 on the main route plus B25 (page 53) and B27 (page 55) question cards on the 55-slide v2 deck, USD 0.44 per home kept as a labelled scenario. Criterion not ticked: no deck rebuild is claimed here |
 | 2 Mentor confirms meaning of Tokenomics and figure or method | Unmet. Needs the mentor; the meaning stays owner-reported |
 | 3 Segment rehearsed inside the timed route; notes stored | Unmet. Outline drafted; nothing performed or timed |
-| 4 Owner decides on a finite measured token batch, spend authority recorded | Unmet. No spend authority is assumed or recorded |
+| 4 Owner decides on a finite measured token batch, spend authority recorded | Owner decision recorded 2026-11-13: a held-out batch of up to USD 5 is authorised. Not run: it waits for the live Azure OpenAI step during the authorised Azure sync, and no result is claimed. Criterion not ticked |
 | 5 Revised deck challenged against the complete assessment guide | Unmet. No revised deck exists; no assessment is claimed. Apply the full [assessment guide](../../reference/method/ama-capstone-assessment-guide.md), including section and individual floors, to the final deck |
 | 6 Every Tokenomics statement sourced and labelled, no price, saving or payback claim | Unmet. Segment wording is drafted with sources; the S18 modelled figure conflicts and the existing deck and notes have not been audited statement by statement |
 
 ## Decisions Needed From the Owner
 
 * Which format and time limit apply.
-* Placement option A, B or C, and whether the S18 modelled figure stays.
-* Whether to authorise a finite measured batch, with who holds spend authority.
-  None is assumed here.
+* Decided 2026-11-13: placement is Slide 22 plus B25 and B27 cards, and the
+  USD 0.44 per home figure stays as a labelled scenario.
+* Decided 2026-11-13: a finite measured batch of up to USD 5 is authorised.
+  Run it only in the authorised Azure step and report actual results; rehearsal
+  timing is still unperformed and must never be fabricated.
 * Who asks the mentor, and when.
 
 Resident consent, professional review and Finance authority boundaries are
