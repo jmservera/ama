@@ -54,6 +54,9 @@ const adversarial = {...real.receipt, original: {statement: "<img src=x onerror=
     fracScalar: s.evaluatorView(fraction(1)),
     fracMissing: s.evaluatorView(fraction(undefined)),
     fracOver: s.evaluatorView(fraction({count: 3, denominator: 2})),
+    badTotals: s.evaluatorView({...real.evaluator, windows: null, totals: {
+      ...real.evaluator.totals, households_raising_concern: {count: 5, denominator: 2},
+      concerns_outside_stated_scope: "x", unresolved_with_handover_or_financial_closure: null}}),
     outcomesMixed: s.evaluatorView({...real.evaluator, rows: [
       {home_ref: "HM-A", comparison: {}, unresolved_count: 0, concerns: [
         {outcome: "advice_given"}, {outcome: "advice_given"}, {outcome: "no_outcome_yet"},
@@ -213,6 +216,28 @@ class AftercareScreens(unittest.TestCase):
         self.assertTrue(any(n["tag"] == "caption" for n in nodes))
         self.assertIn("do not show what caused a concern", text)
         self.assertNotIn("blame", text.lower())
+
+    def test_evaluator_states_baseline_households_scope_closure_and_unknowns(self) -> None:
+        text = self.text("evaluator")
+        self.assertIn("How the baseline is measured", text)
+        self.assertIn("Baseline: Observed means for the 7 days", text)
+        self.assertRegex(text, r"\d+ of \d+ homes raised a concern\.")
+        self.assertRegex(text, r"\d+ of \d+ homes have a usable comparison")
+        self.assertIn("Unresolved concerns in homes with a handover or financial closure: 0.", text)
+        self.assertIn("Concerns outside the stated homes: 0.", text)
+        self.assertIn("What is not known", text)
+        self.assertIn("The data protection position on outcome data is Unknown.", text)
+        self.assertIn("1 of 1", self.text("evaluator"))
+        broken = self.text("outcomesMixed")
+        self.assertIn("Unknown", broken)
+
+    def test_malformed_household_scope_and_closure_figures_read_unknown(self) -> None:
+        text = self.text("badTotals")
+        self.assertIn("Homes with a concern raised: Unknown", text)
+        self.assertIn("Concerns outside the stated homes: Unknown.", text)
+        self.assertIn("closure: Unknown.", text)
+        self.assertNotIn("undefined", text)
+        self.assertNotIn("[object Object]", text)
 
     def test_unresolved_fraction_zero_unknown_and_malformed_denominators(self) -> None:
         zero = "0 of 0 concerns unresolved. No proportion is stated"
