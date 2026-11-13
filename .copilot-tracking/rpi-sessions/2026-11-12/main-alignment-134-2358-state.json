@@ -1,0 +1,35 @@
+{
+  "task_id": "main-alignment-134-2358",
+  "task_slug": "main-alignment-134-2358",
+  "parent_task": {"task_id": "ac-dispositions-134-1112", "task_slug": "ac-dispositions-134-1112"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-12/main-alignment-134-2358-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-12/main-alignment-134-2358-plan.md",
+    "details": null,
+    "critique": ".copilot-tracking/plans/2026-11-12/main-alignment-134-2358-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-12/main-alignment-134-2358-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-12/main-alignment-134-2358-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Local docs-only alignment merge of origin/main 774a91e5f into frozen cc7e3c3a9; no push, PR, merge, tick, source edit, PR 1495 merge or acceptance upgrade", "status": "confirmed", "evidence": "Task instruction 2026-11-12"},
+    {"decision": "Research executed; Planning Readiness Ready", "status": "done", "evidence": "research artifact"},
+    {"decision": "Critique executed once before the merge, independent rubber-duck, claude-sonnet-5.5 (asserted); verdict Revise; AC-01..08 applied directly", "status": "done", "evidence": "critique artifact"},
+    {"decision": "Review executed once on the frozen merge, independent code-review, claude-sonnet-5.5 (asserted); outcome Clean", "status": "done", "evidence": "review artifact"},
+    {"decision": "Order deviation recorded: #134 section first, main second; both kept", "status": "accepted", "evidence": "changes artifact, review artifact"},
+    {"decision": "Original #134 process defect and corrections 1 and 2 preserved; alignment correction unused; #83 OPEN, #134 partial/deferred", "status": "confirmed", "evidence": "changes artifact"},
+    {"decision": "Alignment correction 2026-11-13 used (the one reserved): log blank separator at docs/reference/log.md 11599/11600 and qualified 'identical to main' wording (content-equal except one EOF newline, not byte identical); supersedes 'alignment correction unused' above; external 0004 result JSON preserved unedited", "status": "done", "evidence": "plan correction-amendment, changes artifact correction section"},
+    {"decision": "Correction critique executed once before editing, independent rubber-duck, claude-sonnet-5.5 (asserted); verdict Revise; CC-01..04 applied directly", "status": "done", "evidence": ".copilot-tracking/plans/2026-11-12/main-alignment-134-2358-correction-critique.md"},
+    {"decision": "Correction Review executed once on correction commit f859e35c7 (independent code-review, claude-sonnet-5.5 asserted); outcome Findings: F1 Medium insertion count 66 vs 67 after the log blank line, F2 Low unescaped pipe; both fixed in the tracking text by amending the unpushed correction commit after the Review. The amended head is not re-reviewed (one-pass rule); full result in the external result only", "status": "done", "evidence": "/home/azureuser/.copilot/session-state/38e61c82-3c44-4b97-af59-9eed5c151ac7/files/rpi-134-evidence-correction-0012-result.json"}
+  ],
+  "blockers": [
+    {"id": "coordinator-exact-head-review", "summary": "Coordinator exact-head independent review, human approval and hosted CI not performed; candidate is for UX parent integration only", "resolution": "Coordinator before any publication"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "UX parent integration of the local candidate by the coordinator"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Integrate this candidate into the UX parent and re-run merge-tree against the then-current main", "rationale": "Intended consumer; main may advance again", "evidence": "changes artifact"}
+  ]
+}
