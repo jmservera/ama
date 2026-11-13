@@ -8146,3 +8146,21 @@ Not a final pass, whole-WCAG, assistive-technology, named-human, live or product
 CONTINUE, bounded (a scoped proposal, not an owner decision). Safe existing demo lanes may proceed; this record is not global acceptance. No requirement is relaxed and no new bug issue is opened. The existing issues own the remaining work. No HTTP, SQL, browser, install or full-gate run was added by this integration.
 
 Original records: `.copilot-tracking/{research,plans,changes,reviews}/2026-11-13-demo-role231-web-review-0835-*`, `.copilot-tracking/evidence/2026-11-13-role232-keyboard-browser/`, `.copilot-tracking/evidence/2026-11-13-role232-keyboard-browser-recovery/` and this integration under `2026-11-13-demo-role-evidence-parent-149-0847-*`.
+
+## Qualified local chat validation observation (2026-11-13, Refs #891)
+
+Documentation integration of a previously recorded, frozen local candidate. Evidence commit `b05d92788b198c3b53efd54ac873fbf6cf2f3dac` adds 15 files under `.copilot-tracking/` to base `347962dace94171724cc8db4044c8d783335fecf` and is copied here byte-identically (blob for blob). The original failed candidate is `e01ae7796fc56663e19fa3b3a8a7a4acbab9d9f4`. This section reruns nothing and adds no source change.
+
+| Record | Previously recorded outcome | Qualification |
+| --- | --- | --- |
+| [Original run](../../.copilot-tracking/validation/chat-clean-validation-891-0901/run891.out), [exit](../../.copilot-tracking/validation/chat-clean-validation-891-0901/run891.exit) | `test_ai_consumption_api`: Ran 37, FAILED (errors=1), exit 1; the report test returned HTTP 500 with FileNotFoundError in the evaluation run | Failed run kept verbatim. The [critique](../../.copilot-tracking/plans/2026-11-13-chat-clean-validation-891-0901-critique.md) ran after the run, so it is retrospective, verdict reject. The [review](../../.copilot-tracking/reviews/2026-11-13-chat-clean-validation-891-0901-review.md) passed the record with comments, not the validation |
+| [Recovery run](../../.copilot-tracking/validation/chat-clean-validation-891-0901/recovery-run.out), [exit](../../.copilot-tracking/validation/chat-clean-validation-891-0901/recovery-run.exit) | After the documented editable local install ([install](../../.copilot-tracking/validation/chat-clean-validation-891-0901/recovery-install.out), [probe](../../.copilot-tracking/validation/chat-clean-validation-891-0901/recovery-probe.out)): Ran 37, OK, 0 skips, exit 0 | The [recovery critique](../../.copilot-tracking/plans/2026-11-13-chat-clean-validation-891-0901-recovery-critique.md) was prospective (approve with comments); the [recovery review](../../.copilot-tracking/reviews/2026-11-13-chat-clean-validation-891-0901-recovery-review.md) is pass with comments |
+
+Observation: the noneditable install resolved the golden fixture path under the environment's site-packages, where the file was absent; after the editable install the preflight resolved it to the worktree fixture and the report test passed. The cause is supported but unconfirmed, because the probe is separate from the test process and the original run's path was not observed; it is a local environment observation, not a new code defect or fix. Related records: [research](../../.copilot-tracking/research/2026-11-13-chat-clean-validation-891-0901-research.md), [plan](../../.copilot-tracking/plans/2026-11-13-chat-clean-validation-891-0901-plan.md), [recovery plan](../../.copilot-tracking/plans/2026-11-13-chat-clean-validation-891-0901-recovery-plan.md), [changes](../../.copilot-tracking/changes/2026-11-13-chat-clean-validation-891-0901-changes.md) and [state](../../.copilot-tracking/rpi-sessions/2026-11-13/chat-clean-validation-891-0901-state.json). This integration's own records are `2026-11-13-demo-chat-validation-parent-891-0945-*`.
+
+Limits:
+
+* Local synthetic unit evidence in a temporary virtual environment only. Not bitwise historical replay: current dependencies differ from the earlier pin `8c735ae`.
+* Not actual-provider, live Azure, UI, privacy or per-call acceptance. No whole-issue or AI acceptance is claimed; #891 stays open, its criteria unmet and unticked, Refs only.
+* The original run's source-before-critique order stays historical and is not made prospective by the recovery.
+* No test, install, SQL, browser or provider run was added by this integration.
