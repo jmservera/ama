@@ -97,6 +97,14 @@ Provenance and limits:
   paused, on hold or in aftercare, then the lowest id for each of the archetypes
   ARC-01, ARC-02, ARC-04, ARC-05 and ARC-06 (ARC-03 had none). Home 5 is at
   Funding check, the weakest Quality fit, kept to avoid hand curation.
+* A local regression, `test_runbook_five_home_cohort_is_reproduced_by_seed_and_as_of`
+  in `src/core/tests/test_generated_dataset.py`, reads the table above and
+  checks that the seed 20260901, as-of 2026-10-13 build with the tests'
+  fictional register contains each id once, open, with no hazard record and
+  the stated property type and stage. A seed, generator or table change that
+  breaks that match now fails the test. It does not check the archetype rule,
+  damp-report history, direct links, sensors, the simulator cohort, AI scope or
+  the private deployed store, so the preflight below is unchanged.
 * The deployed store is a private seed output. These ids, their open state and
   their sensor readings may differ there. Source selection is not deployed
   acceptance, and it does not show that any sensor exists for a home.
