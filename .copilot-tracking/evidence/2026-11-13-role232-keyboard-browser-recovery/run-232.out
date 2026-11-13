@@ -1,0 +1,45 @@
+cgroup=/user.slice/user-1000.slice/user@1000.service/app.slice/run-rfae48e6ea73442fcacc99fae4ca16c7b.scope memory.max=2147483648 swap.max=0
+PASS owned server is running and responsive on loopback
+PASS specialist navigation does not inherit white header text
+PASS no automatic selection or detail fetch
+PASS 232 queue summary lists ZF-1 choice, pause and update commitment
+PASS 232 queue summary has no contact links
+PASS 232 download link names the fixed page
+PASS 232 download is a CSV attachment with the page summary only
+PASS story 232 exact evidence: Loft insulation
+PASS story 232 exact evidence: Paused or withdrawn by the resident
+PASS story 232 exact evidence: SYN resident requested time
+PASS story 232 exact evidence: SYN-SAFE-232
+PASS story 232 exact evidence: SYN-REQUEST-232
+PASS story 232 exact evidence: Large print
+PASS same home remains ZF-1
+PASS 232 reader view has no write controls
+PASS 232 renders some design-system classes: ['alt', 'btn', 'card', 'danger', 'flag', 'item', 'layout', 'list', 'main', 'row', 'screen-evidence', 'screen-links', 'screen-record', 'side', 'table-scroll']
+PASS 232 uses only documented design-system classes: []
+PASS 232 has no custom elements or role simulator in the user view
+PASS 232 choice, issue and commitment state is stated in text
+PASS 232 states that nothing is sent and the screen is read-only
+PASS 232 every table is a labelled focusable region
+PASS 232 keyboard Tab reaches every table region: ['Measure choices by version', 'Measures paused or withdrawn', 'Service requests and contact needs']
+PASS axe file is the pinned 4.10.3 build
+PASS 232 axe finds no violations: []
+INFO 232 axe incomplete: []
+PASS no contact actions
+PASS story 232 reflow 320px
+PASS story 232 reflow 390px
+PASS story 232 reflow 1280px
+PASS existing reduced motion retained
+PASS native keyboard focus visible
+PASS reset removes selection without writes
+PASS failed list is not an empty success
+PASS denied detail is explicit and clears old evidence
+PASS delayed detail intercepted
+PASS late response cannot restore prior selected home
+PASS empty page is distinct from failed request
+PASS actual other identity cannot open specialist module
+PASS unknown or uninstalled screen not exposed
+PASS malformed pagination refused explicitly
+PASS specialist reads made no POSTs: []
+PASS expired session clears authenticated evidence and navigation
+PASS no uncaught JavaScript errors: []
+Chromium 156.0.8078.4; synthetic loopback only; selector=232
