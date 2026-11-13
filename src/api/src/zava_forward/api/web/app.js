@@ -42,6 +42,14 @@ function ownedNotice(reason, nextAction) {
   if (/\bOwner:/.test(text)) return text;
   return `${text}${/[.!?]$/.test(text) ? "" : "."} ${SUPPORT_OWNER} Next action: ${nextAction}`;
 }
+// Names only the briefing control that is on screen in the current state.
+function briefingRetryAction(painted, hidden) {
+  const button = painted ? "Refresh briefing" : "Try loading briefing again";
+  return hidden ? `choose Show briefing, then use ${button}` : `use ${button}`;
+}
+function startupRetryAction(error) {
+  return error.reloadWorkspace ? "choose Reload workspace" : "choose Try again";
+}
 function mutationNeedsHistory(error) {
   return error.outcome === "committed" || error.outcome === "uncertain" || !error.status;
 }
@@ -626,7 +634,9 @@ function aiBox() {
     return id
       ? h("a", { href: `#/case/${encodeURIComponent(id)}` }, cite) : cite;
   };
+  let painted = false;
   const paint = b => {
+    painted = true;
     const ai = b.source === "ai";
     const refreshed = b.generated_at ? new Date(b.generated_at) : null;
     content.replaceChildren(h("h3", {}, b.scope_label),
@@ -675,8 +685,8 @@ function aiBox() {
       paint(b); status.textContent = "Briefing ready. Check the sources, then choose how to review the draft.";
     } catch (error) {
       if (signal.aborted || own !== sequence) return;
-      status.textContent = ownedNotice(`Briefing unavailable: ${error.message}`, "use Try loading briefing again or Refresh briefing, then contact application support if it continues.");
-      if (!content.childElementCount) {
+      status.textContent = ownedNotice(`Briefing unavailable: ${error.message}`, `${briefingRetryAction(painted, content.hidden)}, then contact application support if it continues.`);
+      if (!painted) {
         content.replaceChildren(h("button", { type: "button", onclick: () => load() }, "Try loading briefing again"));
       }
     } finally {
@@ -1964,7 +1974,7 @@ function startupFailed(error) {
   if (error.status === 401) return;
   workspaceStatus.textContent = `Workspace unavailable: ${error.message}`;
   show(h("h1", {}, "Workspace unavailable"),
-    h("p", { class: "err", role: "alert" }, ownedNotice(`Could not start the workspace: ${error.message}`, "choose Try again or Reload workspace, then contact application support if it continues.")),
+    h("p", { class: "err", role: "alert" }, ownedNotice(`Could not start the workspace: ${error.message}`, `${startupRetryAction(error)}, then contact application support if it continues.`)),
     error.reloadWorkspace
       ? h("button", { type: "button", onclick: () => location.reload() }, "Reload workspace")
       : h("button", { type: "button", onclick: () => start().catch(startupFailed) }, "Try again"));
