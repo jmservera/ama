@@ -357,11 +357,12 @@ core/agents test paths.
 so an operator can read the existing `evaluate_paired_trial` result for a prepared
 comparison dataset. The file is bounded local JSON,
 `{"schema": "constructed-paired-observations-v1", "observations": [...]}` with exactly those
-two keys, at most 262144 bytes and 1000 observations. Each observation has exactly the nine
+two keys, at most 262144 bytes and 1000 observations. Each observation has exactly the ten
 scorer fields (`participant`, `task`, `role`, `arm`, `completed`, `comprehension_correct`,
 `accepted`, `hazard_missed`, `elapsed_seconds`, `review_seconds`); `participant` and `task`
-are pseudonymous ids (letters, digits, `.`, `_`, `-`, at most 64 characters) and seconds are
-finite, non-negative and at most one year. Malformed, oversize, non-finite, duplicate-key,
+are caller-declared pseudonymous ids of 1 to 64 characters that start with a letter or digit
+and then use letters, digits, `.`, `_` or `-` (the format is checked, not whether the id is
+truly pseudonymous), and seconds are finite, non-negative and at most one year. Malformed, oversize, non-finite, duplicate-key,
 unknown-schema or invalid input, and a result whose derived values are not finite (a
 near-zero cards duration against a large chat duration), exits 1 with the reason on stderr
 before the report is generated or `--record` writes anything, so `invalid_observations` is
