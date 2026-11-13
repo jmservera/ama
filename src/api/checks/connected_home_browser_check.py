@@ -441,7 +441,7 @@ EXCLUDED: dict[str, dict[str, Excluded]] = {
     "programme-queue": {
         "Evidence boundary": EVIDENCE_CONSTANT,
         "Shared queue": Excluded(
-            "portfolio-call", "loadPage(0)", "paged queue of all homes the role may see"
+            "portfolio-call", "loadPage(start)", "paged queue of all homes the role may see"
         ),
         "Lifecycle and funnel": Excluded(
             "portfolio-call", "/api/coordinator?view=all", "all-homes coordinator report"
