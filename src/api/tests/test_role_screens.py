@@ -19,6 +19,41 @@ def inventory_classes() -> set[str]:
     return set(re.findall(r"`\.([A-Za-z0-9_-]+)", section))
 
 
+SAVED_COPY_PATH = (
+    "const path = `/api/cases/${encodeURIComponent(caseId)}/form-review/"
+    "${encodeURIComponent(draft.draft_id)}/held-export/freshness`;"
+)
+SAVED_COPY_FETCH = (
+    'fetch(path, { method: "POST", headers: { "Content-Type": "application/json", '
+    '"X-ZF-CSRF": "1" }, body: text, signal })'
+)
+
+
+def request_findings(source: str) -> list[str]:
+    """Reasons the host sends anything beyond GET reads and the one read-only freshness POST."""
+    start = source.find("function fundingSavedCopyCheck(")
+    end = source.find("\n}\n", start)
+    block = source[start:end] if 0 <= start < end else ""
+    found = []
+    if not block:
+        found.append("saved-copy check function not found")
+    if (
+        block.count(SAVED_COPY_PATH) != 1
+        or len(re.findall(r"\bpath\s*(?:=(?!=)|[-+*/]=)", block)) != 1
+    ):
+        found.append("freshness path is not the single exact assignment")
+    if block.count(SAVED_COPY_FETCH) != 1:
+        found.append("the freshness POST is not the exact raw-text request inside the check")
+    if len(re.findall(r"\bfetch\b", source)) != 1 or len(re.findall(r"\bmethod\b", source)) != 1:
+        found.append("a second fetch or method token exists")
+    if re.search(r"XMLHttpRequest|sendBeacon|WebSocket|EventSource|\.submit\(", source):
+        found.append("another request transport exists")
+    called = len(re.findall(r"\bapi\([^)\n]", source))
+    if called != len(re.findall(r"\bapi\((?:`[^`]*`|\"[^\"]*\"), undefined, ", source)):
+        found.append("an api() call passes options")
+    return found
+
+
 class RoleScreens(unittest.TestCase):
     def test_closed_queue_retains_projected_safety_without_work(self) -> None:
         result = subprocess.run(
@@ -276,12 +311,33 @@ console.log(JSON.stringify(homes.map(home => {
             self.assertTrue(links[-1]["scope"])
         self.assertEqual(navigation({"role": "Asset Executive"}), [])
 
-    def test_host_reads_existing_scoped_endpoints_without_post(self) -> None:
+    def test_host_posts_only_the_read_only_saved_copy_check(self) -> None:
         source = (WEB / "role-screens.js").read_text()
         self.assertIn("/api/cases?view=all&limit=20&offset=", source)
         self.assertIn("encodeURIComponent(caseId)", source)
-        self.assertNotIn('"POST"', source)
+        self.assertEqual(request_findings(source), [])
         self.assertNotIn("innerHTML", source)
+
+    def test_request_guard_rejects_broadened_requests(self) -> None:
+        source = (WEB / "role-screens.js").read_text()
+        broadened = {
+            "single-quoted method": source.replace('method: "POST"', "method: 'POST'"),
+            "variable method": source.replace('method: "POST"', "method: verb"),
+            "options spread": source.replace("signal })", "signal, ...extra })", 1),
+            "other path": source.replace("/held-export/freshness`", "/held-export/record`"),
+            "reassigned path": source.replace(
+                '      show("Checking', '      path += "/x";\n      show("Checking', 1
+            ),
+            "second fetch": source + '\nfetch("/api/cases", { method: "PUT" });',
+            "other transport": source + "\nnew XMLHttpRequest();",
+            "api with options": source.replace(
+                'api("/api/exceptions", undefined, signal)',
+                'api("/api/exceptions", { method: "POST" }, signal)',
+            ),
+        }
+        for name, changed in broadened.items():
+            self.assertNotEqual(changed, source, name)
+            self.assertNotEqual(request_findings(changed), [], name)
 
     def test_route_supports_contractor_screens_before_contractor_case_dispatch(self) -> None:
         source = (WEB / "app.js").read_text()
