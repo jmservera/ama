@@ -68,3 +68,7 @@ Python 3.12.3, node, docker 29.9.0, az, actionlint, shellcheck, trivy and bicep 
 * Which inputs form the cut line for the one assembly (wave A fixed; wave B conditional).
 * Merge method of the assembly PR into the parent (merge commit recommended) and of the final parent to main PR (owner choice).
 * Whether the 96 backend plus UI must travel together in the UX parent (recommended).
+
+## A2 evidence update (2026-11-13)
+
+Read-only re-check: origin/main `774a91e5f` (rubric delta only against `8e6e55457`); PR 1490 open at `ff40e50c8`, `src-api` in progress; `94760af7d` is an ancestor of `423517a71`; `aebd381d9` is an ancestor of `837da4fde`; merge-tree matrix recorded in the A2 section of the [policy amendment](../../plans/2026-11-12/issue-149-parent-plan-2333-policy-amendment.md). The earlier "233 page-context not accepted" and "96 UI unfrozen" facts above are superseded by the root-accepted final inputs; spent correction history carries unchanged.

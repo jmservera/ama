@@ -37,3 +37,7 @@ Executed once: one independent read-only rubber-duck critique in fresh context o
 | AC-05 | Stale admission facts | Applied: 96 UI frozen but unassessed; 233 replay 99 and 70 with queued-lock deviation retained, not a compliant-admission claim |
 
 No finding conflicted with a confirmed decision. No new correction pool. The plan is plan-ready for assembly only after G1, G2, per-member G6 and G3 re-binding; no assembly is authorised by this critique.
+
+## A2 pending critique (2026-11-13)
+
+The A2 amendment (final inputs 96 combined `423517a71` and 233 final `837da4fde`, revised cut line, order and checks) changes decisions and requires a genuine independent read-only critique before any assembly. It has NOT been run here and no verdict is claimed. The scope is listed in the A2 section of the [policy amendment](issue-149-parent-plan-2333-policy-amendment.md). The Revise results above (PC-01 to PC-05, AC-01 to AC-05) are preserved and not repeated.

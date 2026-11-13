@@ -17,6 +17,8 @@ ms.date: 2026-11-12
 | 96 backend | `94760af7d` | `server.py`, `src/api/README.md`, `test_form_held_download_api.py`, `test_role_endpoint_inventory.py`, depends on main `form_export` (#98) | the ten Held-download methods named in the research file, `test_form_export`, `test_role_endpoint_inventory` |
 | 96 UI | not frozen | `role-screens.js` (`fundingDraftPanel`, about line 1346), Held download browser check | defined by its own plan; accepted frozen head required |
 
+Amendment A2 (2026-11-13) pin note: the 233 and 96 UI rows above are superseded for planning by 233 final `837da4fde4af955769f42b5e5fce4608a1ce8845` and 96 combined `423517a71f2acb41baaa292cff08d3be7d32d995` (contains `94760af7d`; merge once, never separately), with the revised merge order M1 74, M2 176, M3 134, M4 215, M5 233, M6 96 and the revised checks in the A2 section of the [policy amendment](../../plans/2026-11-12/issue-149-parent-plan-2333-policy-amendment.md). Original rows are history.
+
 ## 2. Dependency graph (actual)
 
 * main (`8e6e55457`) is merged first; every input is based on an older main commit and needs no content from siblings except as listed.

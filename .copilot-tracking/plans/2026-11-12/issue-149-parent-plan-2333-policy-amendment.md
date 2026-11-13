@@ -1,7 +1,7 @@
 ---
 title: Issue 149 UX parent integration plan, policy amendment A1 (2347)
 description: Prospective PLAN-ONLY amendment correcting the validation tier and merge-authority wording, recording the input cut line, wave A and B admission, valid dependencies and the pending amended critique; no assembly, source, pack or publication
-ms.date: 2026-11-12
+ms.date: 2026-11-13
 ---
 
 ## Status and honesty record
@@ -91,3 +91,73 @@ The A1 text above is preserved unedited. These notes supersede it where they dif
 * 96 UI checks (adds to the table). When admitted: `test_finance_grants_screens.py` (changed enabled and disabled control assertions), `held_form_download_browser_check`, the 16 backend Held-download methods, `test_form_export`, `test_role_endpoint_inventory`. UI is frozen at `423517a71` (parent of its review commit chain on `94760af7d`); independent assessment and execution are pending, so it is not admitted.
 * Cut line (supersedes "wave B members that individually reach G6"). Every intended wave B member (215, 233, 96 backend, 96 UI) must be admitted, or named in a recorded coordinator deferral that states the remainder for a later assembly. No silent omission.
 * Admission facts. 233: canonical Playwright 1.64.0 replay passed `programme_paging_browser_check` 99 and `role_screens_browser_check 230` 70; the queued heavy-lock deviation is retained and is not a compliant-admission claim; coordinator admission is still pending. 1490: PR open at `ff40e50c8`, hosted CI partly in progress, not merged, so G1 holds. 233 page-context stays not accepted. 156 docs stays optional later docs input; bounded Pass only, no 233 page context.
+
+## Amendment A2 final-input plan (2026-11-13, root-accepted final inputs)
+
+PLAN ONLY. A1 and its correction notes above are preserved unedited; A2 supersedes them only where stated. No assembly, source, cutover pack, ref, PR, issue, tick, approval or publication is changed. G1 holds, so DO NOT ASSEMBLE. The root approves preparing the revised cut line and phase checks now; that is not a bypass of any gate and is not coordinator admission of any member.
+
+### Final inputs accepted by the root (supersede the 233 and 96 UI rows of the A1 table)
+
+| Input | Final pin | Acceptance evidence (all external, read-only, qualified native RPI) |
+| --- | --- | --- |
+| 96 combined (backend plus UI) | `423517a71f2acb41baaa292cff08d3be7d32d995` / tree `0a28fe0e88302a756266538a043cbd52d95ca03e` | Fresh independent source/RPI Pass `96-ui-independent-2353` (bounded, no blocking or material defect; Low follow-ups: leading BOM wording, silent duplicate pending press, panel-local progress sentence). Separate canonical reproduction `96-ui-validation-2353`: Held-download API 16, form staging API 14, role endpoint inventory 24, finance screens 20, design system 8, content standard 19, browser check 88 PASS with pinned axe 4.10.3 (hash `880970c0...a68bb`), Playwright 1.64.0, non-queued heavy-lock admission. Reproduces the recorded 2333 results exactly. |
+| 233 final (navigation plus queue page context) | `837da4fde4af955769f42b5e5fce4608a1ce8845` / tree `b12301ec54a81267998f55e20f0622a192084dae` | Fresh independent `rpi-233-page-independent-2358`: CONFORMANT for the bounded local boundary (IA-003), no Blocker, Major or Minor. 42 units across `test_programme_screen`, `test_role_screens_conformance`, `test_role_screens`; `programme_paging_browser_check` 107 PASS, 0 FAIL/SKIP, Playwright 1.64.0 manifest pin, pip only, non-queued `flock -n`. Fifth and final correction exhausted; no fresh pool. |
+
+Facts verified read-only now: `94760af7d` is an ancestor of `423517a71` (six commits, no server or core change; the 96 UI diff touches only `role-screens.js`, `held_form_download_browser_check.py`, `test_finance_grants_screens.py`, `src/api/README.md` and RPI records); `aebd381d9` is an ancestor of `837da4fde` (diff touches only `role-screens.js`, `test_programme_screen.py`, `programme_paging_browser_check.py`, `atlas-screen-trace.md`, `log.md` and RPI records). Neither head changes a workflow, manifest, Dockerfile, infra, SQL, migration or gate tool. The 423 head CONTAINS the 947 backend: the assembly merges `423517a71` once and NEVER merges `94760af7d` separately (no double merge).
+
+Disclosures kept, not rewritten:
+
+* The original 96 UI missing green unit log stays disclosed; it is closed by the new independent execution (`96-ui-validation-2353`), not by editing the old record.
+* The 233 `aebd381d9` replay's queued heavy-lock deviation stays recorded; for the final head it is superseded by the non-queued 2358 execution. The earlier 99 and 70 results belong to `aebd381d9` and are not carried as results for `837da4fde`.
+* 233 `837da4fde` NOT done and not claimed: axe on page 2, 320 px scoped view (IA-002), assistive technology or WCAG acceptance, hosted CI, the role-screens 47-story run. The independent run reproduced the paging check only; `role_screens_browser_check 230` was not re-executed on the final head and must run at assembly. Carried Low RV-001: page-size literal duplicated.
+* 233 page-context is now INCLUDED as part of the 233 final pin (supersedes "233 page-context not added"). Coordinator admission of 233 and 96 is still pending; root acceptance of the final inputs is not G2.
+
+### Other pins (unchanged or deliberately not moved)
+
+| Input | Pin | State |
+| --- | --- | --- |
+| 1490c | `ff40e50c884b6ac85cecb99a71755e713b2be7d8` | PR 1490 still OPEN, MERGEABLE; checks read now: `mssql`, `src-core` and eight others SUCCESS, `src-api` IN_PROGRESS. Not merged; G1 holds. |
+| 74 | `467a0cf5d` | original accepted head, unchanged |
+| 176 | `da436be3e` | original accepted head, unchanged |
+| 134 | `cc7e3c3a9` | original accepted head, unchanged. A main-alignment candidate (`81c8bfae1c064f247fbb1472e9cda44bed53c8d4`, merge of main `774a91e5f`, task `rpi-134-main-alignment-2358`, own critique Revise applied and own Review Clean, asserted by that task) exists but is NOT auto-accepted and not an input. If the coordinator later accepts it after independent exact-head assessment, it replaces `cc7e3c3a9` as a recorded plan amendment and the M3 union resolution is already done inside it; read-only merge-tree of it against main is clean. Until then the union rule below applies. |
+| 215 | `6eacb4953` | original accepted head, unchanged |
+| 156 docs | `d8fe60017407f3f7df4b339dfa0bfaff06dfacbd` | optional, bounded accepted, later docs input only; no 233 page context claimed |
+| 203 refresh | none recorded here | pending, EXCLUDED until independently accepted; no pin is invented; if accepted it is a new input needing its own plan amendment and critique scope |
+
+### Rebinding to current main (rubric delta only)
+
+`origin/main` is `774a91e5f09fa9db4f537494424efbd99be81826` (`chore(rubric): record score 79/100`), unchanged since A1. Against the originally planned `8e6e55457` the only difference is `.github/rubric/scores/latest.json`, a rubric-score bot file. No content, test, workflow or gate change; no plan binding other than the main SHA moves. G3 still re-fetches main and re-runs the matrix at assembly time.
+
+Read-only `git merge-tree --write-tree` at these pins (no ref, worktree or index written):
+
+* Against main `774a91e5f`: clean for `423517a71`, `837da4fde`, `467a0cf5d`, `da436be3e`, `6eacb4953`, `d8fe60017`, `81c8bfae1`; conflict only for `cc7e3c3a9` in `docs/architecture/cutover-evidence-pack.md` and `docs/reference/README.md` (the known union files).
+* Pairwise clean: `837da4fde` with `423517a71` (both edit `role-screens.js`, hunk-disjoint), `837da4fde` with `6eacb4953`, `423517a71` with `6eacb4953`, `467a0cf5d` and `cc7e3c3a9`, `ff40e50c8` with each of `423517a71` and `837da4fde`, `d8fe60017` with `837da4fde`.
+* Conflict only in the same two known union files: `cc7e3c3a9` with `837da4fde`, and `cc7e3c3a9` with `d8fe60017` (resolved by keeping both sides verbatim, main's #1492 section first; the 156 README index row must survive once). This is pairwise evidence, not a sequential assembly result; the sequential result is a G3 and Phase 2 to 3 check.
+* `log.md` is touched by 176, 134, 233 final, 96 UI and 156; append-only, zero deleted lines.
+
+### Revised cut line and merge order (supersedes details Section 4 and A1 "Input cut line", plan only)
+
+Wave A: 1490c (after G1 merge into the parent), 74, 176, 134 (`cc7e3c3a9`). Wave B: 215, 233 final `837da4fde`, 96 combined `423517a71`. All three wave B members are intended; each needs recorded coordinator admission at G6, or a named deferral listing the remainder for a later assembly. No silent omission; 156 docs optional, 203 excluded.
+
+Order after M0 (fetched main merged into the assembly): M1 `467a0cf5d`, M2 `da436be3e`, M3 `cc7e3c3a9` (union), M4 `6eacb4953`, M5 `837da4fde`, M6 `423517a71`. Each is `git merge --no-ff`; no cherry-pick, squash or history rewrite; `94760af7d` is never merged separately. After every merge: `git diff --check`, no conflict markers, method-count assertions for touched tests, `role-screens.js` must contain both the 233 programme-page-context code and the 96 `fundingDraftPanel` Held-check code once each.
+
+### Revised phase checks (focused impacted tier, A1 classification retained)
+
+Dev checks are run on the assembled committed candidate from isolated pip-only venvs outside the repository; no uv; only the documented test-helper `PYTHONPATH` directories; ruff 0.17.1, mypy 2.4.0, Playwright 1.64.0, pinned axe 4.10.3 hash recorded; non-queued `flock -n` heavy-lock admission; results external with the candidate SHA.
+
+| Input | Checks (supersede the A1 233 and 96 rows) |
+| --- | --- |
+| 233 final | `test_programme_screen`, `test_role_screens_conformance`, `test_role_screens` (42 units at the pin), `programme_paging_browser_check` (107 PASS at the pin), `role_screens_browser_check 230` (not independently re-run on the final head; run it, record the number observed) |
+| 96 combined | Held-download API 16, form staging API 14, `test_role_endpoint_inventory` 24, `test_finance_grants_screens` 20, `test_design_system` 8, `test_content_standard` 19, `held_form_download_browser_check` (88 PASS at the pin), `test_form_export` |
+| Combined web | `role-screens.js` is edited by both 233 and 96: both browser checks and both unit groups must also pass on the assembled head, because separate passes at separate heads do not prove the union. `node --check`, fresh web-interface-guidelines fetch before any web review of `role-screens.js` |
+| Others | unchanged from A1 (1490c, 74, 176, 134, 215, 156 rows) |
+
+Phase 0 G3 also verifies by `git diff --name-only` that the actual assembled diff touches none of the escalation paths of A1 (workflow, manifest, Dockerfile, infra, SQL DDL, migration, gate tool, existing authorisation, CSRF or consent control); the recorded pins do not. SQL evidence stays separate (probe, UNOBSERVED if absent; no cloud fallback; real SQL acceptance of 82 is later live acceptance). No default full gate and no receipt are required; hosted CI is read separately for the assembly PR head and the parent to main PR head, and absent, skipped or path-filtered is not success. Exact-head independent assessment, the final independent Review (Phase 6), human exact-head review, consent, Finance, assistive-technology and legal approvals remain required and unrecorded. Nothing here is product behaviour change and no other correction allowance exists.
+
+### Pending genuine independent critique (not run here, not claimed)
+
+A2 changes the cut line, merge order, pins and checks, so a genuine independent read-only critique of A2 MUST execute once, with its verdict and dispositions recorded, before any future assembly. It must challenge: the double-merge prevention (423 contains 947), the both-files `role-screens.js` union evidence, the unreproduced `role_screens_browser_check 230` on the final 233 head, the 233 page-context inclusion, the unaccepted 134 alignment candidate and 156 and 203 boundaries, the unchanged focused classification, and whether root acceptance versus coordinator admission is stated correctly. The original adverse critique (Revise PC-01 to PC-05) and the A1 critique (Revise AC-01 to AC-05) stay preserved and are not repeated.
+
+### Gates after A2
+
+G1 HOLDS (1490c not merged; `src-api` in progress). G2 open (coordinator or root cut-line and authorisation; A2 only prepares it). G3 to G5 at assembly time. G6: 233 and 96 have independent acceptance at frozen final heads but coordinator admission is open, as is 215. R-UI-1 contract stays a root contract decision, not Finance approval. G4 SQL probe at assembly time. Resume at Phase 0 only after G1 and G2 and the A2 critique. DO NOT ASSEMBLE.

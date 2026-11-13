@@ -10,6 +10,8 @@ Prospective PLAN ONLY, written before the independent critique. No source, publi
 
 Amendment A1 (2026-11-12, after the critique): the FULL tier, the full receipt and merge-to-owner wording below are historical and incorrect against the actual current owner policy. See [policy amendment](issue-149-parent-plan-2333-policy-amendment.md), which supersedes the Objective gate sentence, G4 SQL Server blocker, Phases 7 and 8 gate text and "Validation tier". Original text is kept unedited as history.
 
+Amendment A2 (2026-11-13, plan only): the root-accepted final inputs 96 combined `423517a71f2acb41baaa292cff08d3be7d32d995` (contains the `94760af7d` backend, never merged twice) and 233 final `837da4fde4af955769f42b5e5fce4608a1ce8845` replace the earlier 233 and 96 UI pins, with a revised cut line, merge order and phase checks. G1 still holds and nothing is assembled; a genuine independent critique of A2 is pending. See the A2 section of the [policy amendment](issue-149-parent-plan-2333-policy-amendment.md). Original text stays unedited as history.
+
 ## Objective
 
 Adopt the independently passed inputs 74 (`467a0cf5`), 176 (`da436be3`) and 134 (`cc7e3c3a`) together with the combined 1490 funding correction (`ff40e50c`), plus the later-accepted 215, 233 and 96 UI when ready, as ONE coherent UX integration: one assembly into the declared parent `feat/demo-ux-integration-1112`, one independent final Review, one native #440 checkpoint, one full-tier gate on the final tip, and ONE parent to main PR. No per-input main PR.
