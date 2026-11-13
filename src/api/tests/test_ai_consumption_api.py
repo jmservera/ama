@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import sqlite3
 import threading
 import unittest
@@ -11,6 +12,7 @@ import urllib.request
 from contextlib import ExitStack, contextmanager, nullcontext
 from dataclasses import replace
 from datetime import UTC, datetime
+from decimal import Decimal
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -35,7 +37,13 @@ from zava_forward.core.ai_consumption import (
     call_context,
     reference,
 )
-from zava_forward.core.assistants import REGISTRY, build_request, canonical, runtime_binding
+from zava_forward.core.assistants import (
+    PURPOSE,
+    REGISTRY,
+    build_request,
+    canonical,
+    runtime_binding,
+)
 from zava_forward.core.chat_isolation import ChatIsolation
 from zava_forward.core.chat_panel import FALLBACK, SYSTEM, TASK, ChatPanel
 from zava_forward.core.store import ConflictError, Store
@@ -1896,6 +1904,146 @@ class ConsumptionApi(unittest.TestCase):
         self.assertEqual(sum(r["kind"] == "output" for r in records), 1)
         self.assertEqual(sum(r["kind"] == "review" for r in records), 1)
         self.assertFalse(any(r["kind"] == "review-unresolved" for r in records))
+
+    def test_usage_per_assistant_and_accepted_proposal_is_attributable_and_content_free(
+        self,
+    ) -> None:
+        """Criterion 7: usage per assistant and accepted proposal joins the ledger content-free."""
+        sentinels = dict(
+            address="SENTINEL-ADDRESS-4F2A Hollow Lane",
+            name="SENTINEL-RESIDENT-NAME-9C1B",
+            reason="SENTINEL-CASE-TEXT-77D0",
+        )
+
+        def seed(c: dict[str, Any]) -> None:
+            c["home"]["address"] = sentinels["address"]
+            c["resident"]["name"] = sentinels["name"]
+            c["resident"]["adjustment"] = sentinels["reason"]
+
+        self.fixture.case(seed)
+        usage_by_capability = {
+            cap: dict(prompt_tokens=100 + 30 * i, completion_tokens=20 + 7 * i)
+            for i, cap in enumerate(sorted(REGISTRY))
+        }
+        self.assertEqual(len(usage_by_capability), 5)
+        for cap, usage in usage_by_capability.items():
+            usage["total_tokens"] = usage["prompt_tokens"] + usage["completion_tokens"]
+            usage["cached_tokens"] = 10
+            self.authority(cap)
+
+        class Capture(logging.Handler):
+            def __init__(self) -> None:
+                super().__init__(logging.DEBUG)
+                self.lines: list[str] = []
+
+            def emit(self, record: logging.LogRecord) -> None:
+                self.lines.append(record.getMessage())
+
+        capture = Capture()
+        root_logger = logging.getLogger()
+        previous = root_logger.level
+        root_logger.setLevel(logging.DEBUG)
+        root_logger.addHandler(capture)
+        self.addCleanup(root_logger.setLevel, previous)
+        self.addCleanup(root_logger.removeHandler, capture)
+
+        accepted_tasks: dict[str, dict[str, Any]] = {}
+        proactive_tasks: dict[str, str] = {}
+        for cap in sorted(REGISTRY):
+            self.response_usage = usage_by_capability[cap]
+            task = self.fixture.run_ready(cap)
+            self.assertEqual(task["dispatch"]["trigger"], "requested")
+            verified = self.fixture.verify(task)
+            accepted_tasks[cap] = self.service.review(
+                self.pm, task["id"], "accept", verified["revision"], "Constructed acceptance."
+            )
+        # A changed case gives each non-demo-scoped assistant a fresh proactive proposal.
+        self.fixture.case(lambda c: c["home"].update(address=sentinels["address"] + " Annex"))
+        for cap in sorted(REGISTRY):
+            if cap == "quality-evidence":
+                continue
+            self.response_usage = usage_by_capability[cap]
+            with self.service.transaction() as db:
+                case = json.loads(
+                    db.execute("SELECT body FROM cases WHERE id='ZF-1'").fetchone()[0]
+                )
+                tid = self.service._enqueue(db, cap, case, "proactive", PURPOSE)
+            self.assertTrue(self.service.execute(tid))
+            self.assertEqual(self.service.detail(self.pm, tid)["dispatch"]["trigger"], "proactive")
+            proactive_tasks[cap] = tid
+
+        sent = json.dumps(self.requests)
+        self.assertIn(sentinels["address"], sent)  # positive control: the sentinel is real input
+        self.assertEqual(len(self.requests), 9)
+
+        records = self.records()
+        report = self.service.consumption.report(start=START, end=END, as_of=END)
+        by_capability = report["by_capability"]
+        self.assertEqual(sorted(by_capability), sorted(REGISTRY))
+        reserved = {r["id"]: r for r in records if r["kind"] == "reserved"}
+        completed = {r["id"]: r for r in records if r["kind"] == "completed"}
+        outputs = {r["root"]: r for r in records if r["kind"] == "output"}
+        reviews = {r["output"]: r for r in records if r["kind"] == "review"}
+
+        def expected_charge(usage: dict[str, int]) -> Decimal:
+            cached = usage["cached_tokens"]
+            return (
+                Decimal(usage["prompt_tokens"] - cached) * 1
+                + Decimal(cached) * Decimal("0.5")
+                + Decimal(usage["completion_tokens"]) * 2
+            ) / Decimal(1000000)
+
+        total_charge = Decimal(0)
+        for cap, usage in usage_by_capability.items():
+            calls = [r for r in reserved.values() if r["capability"] == cap]
+            roots = {r["root"] for r in calls}
+            runs = 1 if cap == "quality-evidence" else 2
+            self.assertEqual((len(calls), len(roots)), (runs, runs))
+            for call in calls:
+                done = completed[call["id"]]
+                self.assertEqual(
+                    {k: done["tokens"][k] for k in ("prompt_tokens", "completion_tokens")},
+                    {k: usage[k] for k in ("prompt_tokens", "completion_tokens")},
+                )
+                self.assertEqual(Decimal(done["charge"]), expected_charge(usage))
+                total_charge += Decimal(done["charge"])
+            accepted_root = reference(accepted_tasks[cap]["id"])
+            self.assertEqual(outputs[accepted_root]["output"], accepted_root)
+            self.assertEqual(reviews[accepted_root]["action"], "accept")
+            if cap in proactive_tasks:
+                self.assertNotIn(reference(proactive_tasks[cap]), reviews)
+            self.assertEqual(
+                dict(
+                    calls=by_capability[cap]["calls"],
+                    proposals=by_capability[cap]["proposals"],
+                    accepted=by_capability[cap]["accepted_proposals"],
+                    total=by_capability[cap]["total_tokens"],
+                    per_accepted=by_capability[cap]["tokens_per_accepted_proposal"],
+                ),
+                dict(
+                    calls=runs,
+                    proposals=runs,
+                    accepted=1,
+                    total=runs * usage["total_tokens"],
+                    per_accepted=format(Decimal(usage["total_tokens"]), "f"),
+                ),
+            )
+            envelope = accepted_tasks[cap]["envelope"]
+            self.assertEqual(envelope["usage"]["total_tokens"], usage["total_tokens"])
+            self.assertEqual(reserved[envelope["meter_id"]]["capability"], cap)
+        self.assertEqual(report["accepted_proposals"], 5)
+        self.assertEqual(Decimal(report["projected_token_charge"]), total_charge)
+
+        telemetry = "\n".join(
+            [
+                json.dumps(records, sort_keys=True),
+                json.dumps(report, sort_keys=True),
+                *capture.lines,
+            ]
+        )
+        for name, sentinel in sentinels.items():
+            self.assertNotIn(sentinel, telemetry, name)
+        self.assertNotIn("Hollow Lane", telemetry)
 
     def test_manager_report_local_http_and_bad_period(self) -> None:
         test = self

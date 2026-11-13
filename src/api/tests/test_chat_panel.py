@@ -10,16 +10,24 @@ import re
 import unittest
 import urllib.request
 from collections.abc import Callable
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 from unittest.mock import MagicMock, patch
 
 import test_role_matrix as roles
+from test_assistants import Base, config
+
+# The installed agents distribution lacks a py.typed marker.
+from zava_forward.agents.chat import ChatModel  # type: ignore[import-untyped]
+from zava_forward.agents.dispatch import AgentWorker  # type: ignore[import-untyped]
 from zava_forward.api import auth
 from zava_forward.api.server import chat_admission
-from zava_forward.core import chat_panel
-from zava_forward.core.chat_panel import ABSTAIN, FALLBACK, LABEL
-from zava_forward.core.assistants import REGISTRY
+from zava_forward.core import ai_registry, chat_demo_meter, chat_panel
+from zava_forward.core.ai_consumption import CallContext, call_context, reference
+from zava_forward.core.chat_isolation import ChatIsolation
+from zava_forward.core.chat_panel import ABSTAIN, FALLBACK, LABEL, ChatPanel
+from zava_forward.core.assistants import REGISTRY, Assistants
 from zava_forward.core import projection
 from zava_forward.core.chat_privacy import redact
 from zava_forward.core.chatthreads import MAX_CONTENT
@@ -1048,6 +1056,274 @@ class PanelTests(roles.Matrix):
             expect(question).to_be_visible()
             self.assertEqual(self.prompts, [])
             browser.close()
+
+
+class DemoActivationGuardrailPersistenceTests(Base):
+    """#891 criterion 2: with the demo switch on, the per-call gate, token and cost admission, privacy
+    references, retention and refusals stay in force. Real chat_admission, SQL ledger and Ai client; only the
+    HTTP transport is a fake. Synthetic data only; no real AI, Azure, DPO, Legal or RAI approval is claimed."""
+
+    ENV = {
+        "AI_ENDPOINT": "https://ai.invalid",
+        "ZF_DEPLOYMENT_PROFILE": "demo",
+        "ZF_CHAT_DEMO_ACTIVATION": "approved-2026-11-03",
+    }
+    REFS = dict(APPROVED, CHAT_RETENTION_REF="SYNTH-RETENTION-1", CHAT_RETENTION_DAYS="30")
+    MEMORY_SENTINEL = "SENTINEL-MEMORY-PREFERENCE-891"
+    NAME_SENTINEL = "SENTINEL-RESIDENT-NAME-891"
+    PHONE_SENTINEL = "07700900891"
+    EMAIL_SENTINEL = "sentinel891@example.test"
+
+    def setUp(self) -> None:
+        env = patch.dict(os.environ, self.ENV)
+        env.start()
+        self.addCleanup(env.stop)
+        super().setUp()
+        self.case(
+            lambda c: c["resident"].update(name=self.NAME_SENTINEL, phone=self.PHONE_SENTINEL)
+        )
+        self.live = self.open_store()
+        self.addCleanup(self.live.db.close)
+        self.assistants = Assistants(self.live, config())
+        self.addCleanup(self.assistants.stop)
+        self.live.ai.token, self.live.ai.expires = "synthetic-token", 4e9
+        self.sent: list[bytes] = []
+        self.reply: Callable[[str], str] = self.cited_reply
+        opened = patch("urllib.request.urlopen", side_effect=self.transport)
+        opened.start()
+        self.addCleanup(opened.stop)
+        self.build_panel(self.REFS)
+
+    def build_panel(self, refs: dict[str, str]) -> None:
+        self.iso = ChatIsolation(self.live, env=refs)
+        self.panel = ChatPanel(
+            self.iso,
+            ChatModel(
+                AgentWorker(lambda *args: self.live.ai.evidence(*args)),
+                admission=lambda: chat_admission(self.live),
+            ),
+        )
+
+    @staticmethod
+    def cited_reply(prompt: str) -> str:
+        first = re.search(r'"(ZF-1/[^"]+)"', prompt)
+        assert first
+        return json.dumps(dict(answer="From the case card.", citations=[first.group(1)]))
+
+    def transport(self, request: Any, timeout: float | None = None) -> Any:
+        self.sent.append(request.data)
+        prompt = json.loads(request.data)["messages"][1]["content"]
+        body = json.dumps(
+            dict(
+                model="unattested",
+                choices=[dict(message=dict(content=self.reply(prompt)))],
+                usage=dict(
+                    prompt_tokens=10,
+                    completion_tokens=2,
+                    total_tokens=12,
+                    prompt_tokens_details=dict(cached_tokens=0),
+                ),
+            )
+        ).encode()
+        response = MagicMock()
+        response.__enter__.return_value = response
+        response.read.return_value = body
+        return response
+
+    def events(self) -> list[dict[str, Any]]:
+        with self.assistants.transaction() as db:
+            return [dict(r) for r in self.assistants.consumption._read(db)]
+
+    def kinds(self) -> list[str]:
+        return [e["kind"] for e in self.events()]
+
+    def thread_id(self) -> str:
+        return str(self.live.chat_create_thread(self.pm, "ZF-1")["id"])
+
+    def ask(self, text: str = "What stage is it?", tid: str | None = None) -> dict[str, Any]:
+        return self.panel.ask(self.pm, tid or self.thread_id(), text)
+
+    def assert_model_answered(self, reply: dict[str, Any]) -> None:
+        self.assertEqual((reply["kind"], reply["model"]), ("answer", "azure-openai"), reply)
+        self.assertEqual(reply["answer_source"], "generative-grounded")
+        self.assertTrue(reply["citations"])
+        self.assertEqual(reply["consumption"]["model_calls"], 1)
+
+    def assert_no_dispatch(self, reply: dict[str, Any]) -> None:
+        self.assertEqual(self.sent, [])
+        self.assertEqual(reply["model"], "workflow-only")
+        self.assertEqual(reply["consumption"]["model_calls"], 0)
+        self.assertNotIn("reserved", self.kinds())
+
+    def test_switch_is_honoured_and_a_cited_model_answer_is_metered(self) -> None:
+        self.assertTrue(ai_registry.demo_activation_honoured(chat_panel.TASK))
+        self.assertIsNone(chat_admission(self.live))
+        reply = self.ask()
+        self.assert_model_answered(reply)
+        self.assertEqual(len(self.sent), 1)
+        self.assertEqual(reply["consumption"]["tokens"]["total_tokens"], 12)
+        self.assertEqual(self.kinds().count("reserved"), 1)
+        self.assertEqual(self.kinds().count("completed"), 1)
+        output = next(e for e in self.events() if e["kind"] == "output")
+        self.assertFalse(output["eligible"])
+        entry = ai_registry.get(chat_panel.TASK)
+        self.assertFalse(entry["enabled"])
+        self.assertEqual(entry["accountable_individual"], ai_registry.UNKNOWN)
+
+    def test_a_per_call_gate_stays_in_force(self) -> None:
+        tid = self.thread_id()
+        self.assert_model_answered(self.ask(tid=tid))
+        # The authority allows one call per request root: a second dispatch is held before the transport.
+        root = reference("one-request")
+        outcomes = [self.chat_dispatch(a, root)["outcome"] for a in ("first", "second")]
+        self.assertEqual(outcomes, ["returned", "financial-held"])
+        self.assertEqual(self.kinds().count("reserved"), 2)
+        self.assertEqual(len(self.sent), 2)
+        # The thread-turn limit is enforced before dispatch.
+        before = len(self.sent)
+        with patch.object(chat_panel, "MAX_THREAD_TURNS", 1):
+            limited = self.ask(tid=tid)
+        self.assertEqual(limited["kind"], "fallback")
+        self.assertEqual(
+            (limited["reply"], limited["consumption"]["model_calls"]),
+            (chat_panel.THREAD_LIMIT_REACHED, 0),
+        )
+        self.assertEqual(len(self.sent), before)
+        # A role with no chat calls reaches neither a thread answer nor the provider.
+        with self.assertRaises(PermissionError):
+            self.panel.ask(self.people["Contractor"], tid, "What stage is it?")
+        self.assertEqual(chat_panel.role_limits("Contractor")["calls_per_request"], 0)
+        self.assertEqual(len(self.sent), before)
+        # Admission is rechecked after dispatch: a suspension during the call withholds the model answer.
+        with patch.object(
+            self.live, "continuity_block", side_effect=[None, "AI work is suspended"]
+        ):
+            revoked = self.ask()
+        self.assertEqual(revoked["consumption"]["provider_outcome"], "activation-revoked")
+        self.assertEqual(revoked["model"], "workflow-only")
+        self.assertNotEqual(revoked.get("answer_source"), "generative-grounded")
+
+    def chat_dispatch(self, attempt: str = "first", root: str | None = None) -> dict[str, Any]:
+        """One direct provider dispatch bound to the chat task, as ChatPanel makes it."""
+        self.reply = lambda _p: "ok"
+        context = CallContext(
+            root or reference("one-request"),
+            reference(attempt),
+            chat_panel.TASK,
+            "retrofit-case",
+            reference(chat_panel.TASK),
+            reference("system"),
+        )
+        try:
+            with call_context(context):
+                return self.live.ai.evidence("system", "question", 600)  # type: ignore[no-any-return]
+        finally:
+            self.reply = self.cited_reply
+
+    def assert_budget_holds_before_dispatch(self, budget: str, limit: object, hold: str) -> None:
+        with patch.object(chat_demo_meter, budget, limit):
+            reply = self.ask()
+            self.assert_no_dispatch(reply)
+            self.assertEqual(reply["consumption"]["provider_outcome"], "provider-unavailable")
+            self.assertTrue(reply["citations"])
+            held = self.chat_dispatch()
+        self.assertEqual((held["outcome"], held["reason"]), ("financial-held", hold))
+        self.assertEqual(self.sent, [])
+        self.assertNotIn("reserved", self.kinds())
+
+    def test_b_token_budget_holds_before_live_dispatch(self) -> None:
+        self.assert_budget_holds_before_dispatch("TOKENS", 10, "token-budget-limit")
+
+    def test_b_money_budget_holds_before_live_dispatch(self) -> None:
+        self.assert_budget_holds_before_dispatch("AMOUNT", "0.0000001", "money-budget-limit")
+
+    def test_b_call_budget_holds_before_live_dispatch(self) -> None:
+        self.assert_budget_holds_before_dispatch("CALLS", 0, "call-budget-limit")
+
+    def test_c_privacy_refs_and_personal_data_safeguards_stay_in_force(self) -> None:
+        for missing in sorted(APPROVED):
+            with self.subTest(missing=missing):
+                self.build_panel({k: v for k, v in self.REFS.items() if k != missing})
+                with self.assertRaises(PermissionError):
+                    self.ask()
+        self.assertEqual(self.sent, [])
+        self.build_panel(self.REFS)
+        question = f"What stage is it? Resident {self.EMAIL_SENTINEL} phone {self.PHONE_SENTINEL}"
+        reply = self.ask(question)
+        self.assert_model_answered(reply)
+        provider_bytes = b"".join(self.sent).decode()
+        self.assertIn("ZF-1/", provider_bytes)
+        for sentinel in (self.EMAIL_SENTINEL, self.PHONE_SENTINEL, self.NAME_SENTINEL):
+            self.assertNotIn(sentinel, provider_bytes)
+        self.assertIn("[email removed]", provider_bytes)
+        stored = self.live.chat_resume(self.pm, self.live.chat_list_threads(self.pm)[0]["id"])
+        self.assertNotIn(self.EMAIL_SENTINEL, json.dumps(stored))
+        ledger = json.dumps(self.events())
+        for sentinel in (
+            self.EMAIL_SENTINEL,
+            self.PHONE_SENTINEL,
+            self.NAME_SENTINEL,
+            "What stage",
+        ):
+            self.assertNotIn(sentinel, ledger)
+
+    def test_d_retention_policy_is_unchanged_by_the_demo_switch(self) -> None:
+        tid = self.thread_id()
+        self.assert_model_answered(self.ask(tid=tid))
+        decision = self.iso.privacy.decision()
+        self.assertEqual((decision["retention_days"], decision["retention"]), (30, "30 days"))
+        now = datetime.now(UTC)
+        # Age-based: later model activity does not extend the period, and the switch does not skip it.
+        kept = self.iso.privacy.purge_retention((now + timedelta(days=1)).isoformat())
+        self.assertEqual((kept["applied"], kept["threads"]), (True, 0))
+        self.assertTrue(self.live.chat_resume(self.pm, tid)["messages"])
+        purged = self.iso.privacy.purge_retention((now + timedelta(days=31)).isoformat())
+        self.assertEqual((purged["threads"], purged["messages"]), (1, 2))
+        with self.assertRaises(LookupError):
+            self.live.chat_resume(self.pm, tid)
+        # Without a recorded period nothing is purged, and the switch does not invent one.
+        unset = ChatIsolation(self.live, env=APPROVED)
+        self.assertIsNone(unset.privacy.decision()["retention_days"])
+        self.assertIn("Unknown", unset.privacy.decision()["retention"])
+        future = (now + timedelta(days=9999)).isoformat()
+        self.assertFalse(unset.privacy.purge_retention(future)["applied"])
+
+    def test_e_refusals_and_citation_checks_stay_in_force(self) -> None:
+        self.assert_model_answered(self.ask())
+        self.sent.clear()
+        tid = self.thread_id()
+        for text in (
+            "Approve the quality check.",
+            "Record the resident's consent.",
+            "Email the resident.",
+        ):
+            refused = self.ask(text, tid)
+            self.assertEqual((refused["kind"], refused["citations"]), ("refused", []))
+            self.assertEqual(refused["consumption"]["model_calls"], 0)
+        self.assertEqual(self.sent, [])
+        # Memory is context, not evidence: it never reaches the provider or the sources.
+        self.iso.privacy.opt_in(self.pm, True)
+        self.iso.privacy.add_memory(self.pm, self.MEMORY_SENTINEL, task="stock-prioritisation")
+        self.assertTrue(self.iso.privacy.prompt_memory(self.pm, "stock-prioritisation"))
+        self.assert_model_answered(self.ask(tid=self.thread_id()))
+        self.assertNotIn(self.MEMORY_SENTINEL, b"".join(self.sent).decode())
+        # Unsupported claims and uncited replies are withheld or replaced by cited rules, never passed on.
+        for model_reply, fragment in (
+            (json.dumps(dict(answer="Probably fine.", citations=[])), "Probably fine"),
+            (json.dumps(dict(answer="Fine.", citations=["ZF-2/stage"])), "Fine."),
+            ("not json at all", "not json"),
+        ):
+            self.reply = lambda _p, r=model_reply: r
+            fallback = self.ask()
+            self.assertEqual(fallback["answer_source"], "decision-rules-fallback")
+            self.assertTrue(fallback["citations"])
+            self.assertNotIn(fragment, fallback["reply"])
+        self.reply = lambda _p: json.dumps(
+            dict(answer="The status is Completed with 9999 measures.", citations=["ZF-1/stage"])
+        )
+        ungrounded = self.ask()
+        self.assertNotIn("9999", ungrounded["reply"])
+        self.assertNotEqual(ungrounded.get("answer_source"), "generative-grounded")
 
 
 class AttributionRenderTests(unittest.TestCase):
