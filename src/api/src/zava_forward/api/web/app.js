@@ -636,7 +636,6 @@ function aiBox() {
   };
   let painted = false;
   const paint = b => {
-    painted = true;
     const ai = b.source === "ai";
     const refreshed = b.generated_at ? new Date(b.generated_at) : null;
     content.replaceChildren(h("h3", {}, b.scope_label),
@@ -655,6 +654,7 @@ function aiBox() {
       h("p", {}, "References show what was cited, not whether the statement is correct. Correct the draft or explain why you will not use it below. Recorded reviews cannot be undone."),
       h("p", { class: "muted", "data-briefing-feedback": "" }, "Something wrong or missing? If review controls are shown, choose Edit this draft to correct it, or Do not use this draft and give a reason. Your reason is kept in the audit log as feedback. If Edit this draft is unavailable, or the review is already recorded, Refresh briefing may reuse the cached draft for an unverified briefing with unchanged records. If the sources still do not match, choose Use rules and templates, without AI, or continue with ordinary case work."),
       aiNotes(b), h("button", { type: "button", class: "alt", onclick: () => load() }, "Refresh briefing"));
+    painted = true;
   };
   let sequence = 0, loading = false;
   const load = async () => {

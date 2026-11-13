@@ -88,6 +88,40 @@ class AppJsNoticesContentTests(unittest.TestCase):
         self.assertEqual(out["b"][3], f"choose Show briefing, then use {refresh}")
         self.assertEqual(out["s"], ["choose Reload workspace", "choose Try again"])
 
+    @unittest.skipUnless(shutil.which("node"), "node is required")
+    def test_throwing_first_paint_renders_the_named_retry_button(self) -> None:
+        helper = re.search(
+            r"// Names only the briefing.*?\nfunction briefingRetryAction.*?\n}\n", APP, re.S
+        )
+        paint = re.search(r"  let painted = false;\n.*?\n  };\n(?=  let sequence)", APP, re.S)
+        catch = re.search(r"    } catch \(error\) \{\n.*?\n    \} finally", APP, re.S)
+        assert helper and paint and catch
+        script = (
+            helper.group(0)
+            + "const ownedNotice = (a, b) => `${a}. ${b}`;"
+            + "const number = new Intl.NumberFormat('en-GB');"
+            + "const aiNotes = () => null;"
+            + "const h = (tag, props, ...kids) => ({ tag, text: kids.join('') });"
+            + "const content = { hidden: false, shown: [],"
+            + " replaceChildren(...a) { this.shown = a; } };"
+            + "const status = {}; const load = () => {};"
+            + "const signal = { aborted: false }, own = 1, sequence = 1;"
+            + paint.group(0)
+            + "(() => { try { paint(null); } catch (error) {"
+            + catch.group(0).split("\n", 1)[1].rsplit("\n", 1)[0]
+            + "} })();"
+            + "console.log(JSON.stringify({ status: status.textContent,"
+            + " shown: content.shown.map(c => c.text) }));"
+        )
+        out = json.loads(
+            subprocess.run(
+                ["node", "-e", script], capture_output=True, text=True, check=True
+            ).stdout
+        )
+        self.assertEqual(out["shown"], ["Try loading briefing again"])
+        self.assertIn("use Try loading briefing again", out["status"])
+        self.assertNotIn("Refresh briefing", out["status"])
+
     def test_notices_use_state_helpers_and_never_name_both_buttons(self) -> None:
         self.assertIn("briefingRetryAction(painted, content.hidden)", APP)
         self.assertIn("${startupRetryAction(error)}", APP)
