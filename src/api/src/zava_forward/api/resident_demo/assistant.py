@@ -105,7 +105,11 @@ class AzureTopicProvider:
         try:
             if not self.reserve(envelope):
                 raise AssistantUnavailable("budget_unavailable")
-            token = self.token()
+            try:
+                token = self.token()
+            except Exception:
+                self._close("provider-unavailable")
+                raise
             if not token or "\r" in token or "\n" in token:
                 self._close("provider-unavailable")
                 raise AssistantUnavailable("credential_unavailable")
@@ -122,7 +126,7 @@ class AzureTopicProvider:
             ).encode("ascii")
             try:
                 raw = self.transport(self.url, payload, token)
-            except OSError as error:
+            except Exception as error:
                 self._close(
                     "timeout" if isinstance(error, TimeoutError) else "provider-unavailable"
                 )

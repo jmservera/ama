@@ -9,15 +9,18 @@ workflow-only path.
 
 from __future__ import annotations
 
+import logging
 import threading
 import uuid
 from collections.abc import Callable
+from dataclasses import dataclass
 
 from zava_forward.core import ai_consumption
 from zava_forward.core.ai_consumption import CallContext, Consumption, DispatchHeld
 
 from .assistant import RequestEnvelope
 
+LOG = logging.getLogger(__name__)
 CAPABILITY = "resident-topic"
 CASE_TYPE = "resident-chat"
 # Chat framing adds tokens beyond the ASCII prompt bytes; an overrun is held, not hidden.
@@ -41,9 +44,16 @@ class LedgerTopicMeter:
         self.capability, self.case_type = capability, case_type
         self._open = threading.local()
 
+    @property
+    def last_output(self) -> str | None:
+        """Opaque reference of this thread's latest ineligible output record, if any."""
+        return getattr(self._open, "output", None)
+
     def reserve(self, envelope: RequestEnvelope) -> bool:
         self._open.rid = None
+        self._open.output = None
         root = ai_consumption.reference(self.new_id())
+        self._open.root = root
         context = CallContext(
             root,
             ai_consumption.reference(self.new_id()),
@@ -84,9 +94,32 @@ class LedgerTopicMeter:
             return
         self._open.rid = None
         self.consumption.complete(rid, counts, model, outcome)
+        if outcome == "returned":
+            self._link_output()
+
+    def _link_output(self) -> None:
+        # Never eligible here: no human has accepted the reply. A hold never changes the outcome.
+        output = ai_consumption.reference(self.new_id())
+        try:
+            held = self.consumption.publish_output(self._open.root, output, eligible=False)
+        except Exception:
+            LOG.warning("resident_assistant output_link_failed")
+            return
+        if held is None:
+            self._open.output = output
 
 
 ADVISOR_CAPABILITIES = {"guidance": "resident-guidance", "question": "resident-question"}
+
+
+@dataclass(frozen=True)
+class AdvisorLedger:
+    """Caller-supplied ledger join; the authority and price are the ledger's, not this module's."""
+
+    consumption: Consumption
+    model: str
+    configuration: str
+    prompts: dict[str, str]
 
 
 def advisor_meters(

@@ -29,6 +29,7 @@ from zava_forward.api.resident_demo.assistant import EXPIRES, AzureTopicProvider
 from zava_forward.api.resident_demo.ledger_meter import (
     ADVISOR_CAPABILITIES,
     CAPABILITY,
+    AdvisorLedger,
     LedgerTopicMeter,
     advisor_meters,
 )
@@ -247,6 +248,40 @@ class ResidentLedgerJoinTests(unittest.TestCase):
         alerts = [r for r in self.kinds() if r["kind"] == "alert"]
         self.assertEqual(alerts[0]["reason"], "call-budget-limit")
         self.assertEqual(alerts[0]["owner"], reference("constructed-finance-owner"))
+
+    def test_returned_call_links_an_ineligible_content_free_output(self) -> None:
+        self.authorize()
+        provider = self.provider()
+        self.assertEqual(provider.select(Topic.STATUS), Topic.STATUS)
+        outputs = [r for r in self.kinds() if r["kind"] == "output"]
+        reserved = [r for r in self.kinds() if r["kind"] == "reserved"]
+        self.assertEqual(len(outputs), 1)
+        self.assertIs(outputs[0]["eligible"], False)
+        self.assertEqual(outputs[0]["root"], reserved[0]["root"])
+        self.assertNotIn("status", json.dumps(outputs))
+
+    def test_unexpected_credential_error_closes_the_reservation_without_output(self) -> None:
+        self.authorize()
+        meter = LedgerTopicMeter(self.ledger, model=MODEL, configuration=CONFIG, prompt=PROMPT)
+
+        def broken() -> str:
+            raise RuntimeError("synthetic credential failure")
+
+        provider = AzureTopicProvider(
+            ENDPOINT,
+            MODEL,
+            enabled=True,
+            token=meter.token(broken),
+            reserve=meter.reserve,
+            record_call=meter.close,
+            transport=lambda url, payload, token: self.fail("sent"),
+            clock=lambda: EXPIRES - 10,
+        )
+        with self.assertRaises(RuntimeError):
+            provider.select(Topic.STATUS)
+        records = self.kinds()
+        call_join(self, records, CAPABILITY, outcome="provider-unavailable", held=True)
+        self.assertEqual([r for r in records if r["kind"] == "output"], [])
 
     def test_transport_failure_is_closed_as_unknown_liability(self) -> None:
         self.authorize()
@@ -540,6 +575,49 @@ class ResidentAdvisorLedgerJoinTests(unittest.TestCase):
             advisor.answer(Topic.STATUS, CASE, resident_key("C-1"))
             if advisor is unmetered:
                 self.assertEqual(self.records("reserved"), [])
+        call_join(self, self.everything(), "resident-guidance", outcome="returned", held=False)
+
+    def test_returned_advisor_call_links_an_ineligible_output(self) -> None:
+        self.authorize("resident-guidance")
+        self.advisor().answer(Topic.STATUS, CASE, resident_key("C-1"))
+        outputs = self.records("output")
+        self.assertEqual(len(outputs), 1)
+        self.assertIs(outputs[0]["eligible"], False)
+        self.assertEqual(outputs[0]["root"], self.records("reserved")[0]["root"])
+        self.assertNotIn("Ada Example", json.dumps(self.everything()))
+
+    def test_unexpected_credential_error_closes_the_reservation(self) -> None:
+        self.authorize("resident-guidance")
+        with patch.object(self, "credential", side_effect=RuntimeError("synthetic")):
+            with self.assertRaises(RuntimeError):
+                self.advisor().answer(Topic.STATUS, CASE, resident_key("C-1"))
+        self.assertEqual(self.sent, 0)
+        call_join(
+            self, self.everything(), "resident-guidance", outcome="provider-unavailable", held=True
+        )
+        self.assertEqual(self.records("output"), [])
+
+    def test_configured_advisor_builds_meters_from_a_supplied_ledger(self) -> None:
+        self.authorize("resident-guidance")
+        env = {
+            "ZF_DEMO_ASSISTANT_ENABLED": "true",
+            "ZF_DEMO_ASSISTANT_ENDPOINT": ENDPOINT,
+            "ZF_SQL_CLIENT_ID": "synthetic-client",
+        }
+        ledger = AdvisorLedger(
+            self.ledger, MODEL, CONFIG, {kind: PROMPT for kind in ADVISOR_CAPABILITIES}
+        )
+        with patch("zava_forward.api.resident_demo.aoai.ManagedIdentityCredential") as identity:
+            identity.return_value.get_token.return_value.token = "FAKE-TOKEN"
+            advisor = configured_advisor(env, Mock(), ledger=ledger)
+            with self.assertRaises(ValueError):
+                configured_advisor(env, Mock(), ledger=ledger, meters={})
+        assert advisor is not None
+        self.assertEqual(set(advisor.meters or {}), set(ADVISOR_CAPABILITIES))
+        advisor.accounting = self.accounting
+        advisor.clock = lambda: EXPIRES - 10
+        advisor.transport = lambda url, payload, token: advisor_reply(dict(COUNTS, **CACHED))
+        advisor.answer(Topic.STATUS, CASE, resident_key("C-1"))
         call_join(self, self.everything(), "resident-guidance", outcome="returned", held=False)
 
     def test_each_request_kind_needs_a_prompt_version(self) -> None:
