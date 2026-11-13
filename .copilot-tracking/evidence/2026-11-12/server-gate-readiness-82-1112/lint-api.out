@@ -1,0 +1,71 @@
+All checks passed!
+ruff-check-exit=0
+unformatted: File would be reformatted
+   --> tests/test_mvp.py:46:1
+    |
+45  |         from zava_forward.core.store import GateError
+46  +
+47  |         with self.assertRaises(GateError) as ctx:
+48  |             self.store.advance(self.sam, "ZF-2")
+49  |         self.assertEqual(len(ctx.exception.reasons), 2)
+50  |         from dataset import RESIDENT_BINDINGS, supplied_contract_fixture
+    -         pid = self.store.create_package(self.pam, "SYN", "2026-01-01", "2099-12-31", "Loft", "SYN", "SYN-1")
+51  +
+52  +         pid = self.store.create_package(
+53  +             self.pam, "SYN", "2026-01-01", "2099-12-31", "Loft", "SYN", "SYN-1"
+54  +         )
+55  |         details = supplied_contract_fixture(self.store, pid, self.pam)
+56  |         self.store.set_capacity(self.pam, pid, "Test Ltd", 1, 1, "SYN-CAPACITY", details)
+    -         wid = self.store.issue_work_order(self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS)
+57  +         wid = self.store.issue_work_order(
+58  +             self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS
+59  +         )
+60  |         supplied_appointment_fixture(self.store, self.pam, wid)
+--------------------------------------------------------------------------------
+79  |     def test_import_check_maps_columns_and_reports_rows(self):
+    -         r = self.store.import_check("Tenant Name,Address,Post Code,Mobile\nA B,1 X St,TE1 1ST,07\n,2 Y St,bad,07\n")
+80  +         r = self.store.import_check(
+81  +             "Tenant Name,Address,Post Code,Mobile\nA B,1 X St,TE1 1ST,07\n,2 Y St,bad,07\n"
+82  +         )
+83  |         self.assertEqual(r["ready"], 1)
+--------------------------------------------------------------------------------
+90  |     def test_csv_export_has_header(self):
+    -         self.assertTrue(self.store.export_csv(self.store.list_cases(self.sam)).startswith("Reference,"))
+91  +         self.assertTrue(
+92  +             self.store.export_csv(self.store.list_cases(self.sam)).startswith("Reference,")
+93  +         )
+94  |
+--------------------------------------------------------------------------------
+100 |         p.write_text(json.dumps(DATA))
+    -         self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(Store(str(p)), "zf-test")))
+101 +         self.httpd = ThreadingHTTPServer(
+102 +             ("127.0.0.1", 0), make_handler(App(Store(str(p)), "zf-test"))
+103 +         )
+104 |         self.base = f"http://127.0.0.1:{self.httpd.server_address[1]}"
+--------------------------------------------------------------------------------
+112 |     def call(self, path, body=None, cookie=None):
+    -         req = urllib.request.Request(self.base + path, data=None if body is None else json.dumps(body).encode(),
+    -                                      headers={"Content-Type": "application/json", **({"Cookie": cookie} if cookie else {})})
+113 +         req = urllib.request.Request(
+114 +             self.base + path,
+115 +             data=None if body is None else json.dumps(body).encode(),
+116 +             headers={"Content-Type": "application/json", **({"Cookie": cookie} if cookie else {})},
+117 +         )
+118 |         try:
+--------------------------------------------------------------------------------
+130 |     def test_login_flow_and_gate_conflict(self):
+    -         self.assertEqual(self.call("/api/login", {"email": "sam@example.test", "password": "wrong"})[0], 401)
+131 +         self.assertEqual(
+132 +             self.call("/api/login", {"email": "sam@example.test", "password": "wrong"})[0], 401
+133 +         )
+134 |         code, _, hdr = self.call("/api/login", {"email": "sam@example.test", "password": "zf-test"})
+--------------------------------------------------------------------------------
+145 |         import copy
+146 +
+147 |         data = copy.deepcopy(DATA)
+    |
+
+1 file would be reformatted
+ruff-format-exit=1
+Success: no issues found in 1 source file
+mypy-exit=0

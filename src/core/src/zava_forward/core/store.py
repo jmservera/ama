@@ -168,7 +168,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     @staticmethod
     def gate_reasons(c):
         why = []
-        if not c["funding_ok"]:
+        if c.get("funding_ok") is not True:
             why.append(f"Funding has not been confirmed. Owner: {c['owner']}. Next action: check the funding and record it.")
         open_h = [h for h in c["hazards"] if not h["released"]]
         if open_h:

@@ -39,6 +39,25 @@ class QueueDefinitions(unittest.TestCase):
         self.case = copy.deepcopy(DATA["cases"][0])
         self.case["funding_ok"] = True
 
+    def test_only_explicit_true_funding_clears_the_final_checks_blocker(self) -> None:
+        self.case["stage"] = "Final checks before ordering"
+        for value in (True, False, None, "yes", "false", 1, "absent"):
+            with self.subTest(value=value):
+                if value == "absent":
+                    self.case.pop("funding_ok", None)
+                else:
+                    self.case["funding_ok"] = value
+                blockers = [
+                    b
+                    for b in evaluate(self.case)["blockers"]
+                    if b["step"] == "Final checks: funding"
+                ]
+                if value is True:
+                    self.assertEqual(blockers, [])
+                else:
+                    self.assertEqual(len(blockers), 1)
+                    self.assertTrue(blockers[0]["current_stop"])
+
     def test_stage_window_and_unknown_observations(self) -> None:
         for date, expected in (
             ("2026-10-16", True),

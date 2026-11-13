@@ -1,0 +1,7 @@
+    146  'opt-in owned loopback SQL Server'
+     15  'needs task-owned SQL Server'
+      1 =165)
+      1  'SQL writer dependency checks'
+      1  'SQL replay only'
+      1  'JSON file rollback only'
+      1  'Explicit isolated synthetic Azure SQL database required'
