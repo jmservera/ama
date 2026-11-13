@@ -1,0 +1,25 @@
+test_audit_record_names_target_gaps_and_makes_no_conformance_claim (tests.test_accessibility_baseline.Wcag22Baseline.test_audit_record_names_target_gaps_and_makes_no_conformance_claim) ... ok
+test_charts_and_map_have_accessible_equivalents (tests.test_accessibility_baseline.Wcag22Baseline.test_charts_and_map_have_accessible_equivalents) ... ok
+test_every_invalid_field_is_tied_to_a_message (tests.test_accessibility_baseline.Wcag22Baseline.test_every_invalid_field_is_tied_to_a_message) ... FAIL
+test_every_table_has_a_caption_and_column_headers (tests.test_accessibility_baseline.Wcag22Baseline.test_every_table_has_a_caption_and_column_headers) ... ok
+test_fixed_launcher_cannot_hide_the_focused_control (tests.test_accessibility_baseline.Wcag22Baseline.test_fixed_launcher_cannot_hide_the_focused_control) ... ok
+test_focus_indicator_is_two_tone_and_never_removed (tests.test_accessibility_baseline.Wcag22Baseline.test_focus_indicator_is_two_tone_and_never_removed) ... ok
+test_non_text_contrast_meets_aa (tests.test_accessibility_baseline.Wcag22Baseline.test_non_text_contrast_meets_aa) ... ok
+test_pages_declare_language_and_allow_zoom (tests.test_accessibility_baseline.Wcag22Baseline.test_pages_declare_language_and_allow_zoom) ... ok
+test_pages_offer_no_drag_only_interaction (tests.test_accessibility_baseline.Wcag22Baseline.test_pages_offer_no_drag_only_interaction) ... ok
+test_pointer_targets_have_a_24px_minimum_height (tests.test_accessibility_baseline.Wcag22Baseline.test_pointer_targets_have_a_24px_minimum_height) ... ok
+test_status_regions_exist (tests.test_accessibility_baseline.Wcag22Baseline.test_status_regions_exist) ... ok
+test_text_contrast_meets_aa (tests.test_accessibility_baseline.Wcag22Baseline.test_text_contrast_meets_aa) ... ok
+
+======================================================================
+FAIL: test_every_invalid_field_is_tied_to_a_message (tests.test_accessibility_baseline.Wcag22Baseline.test_every_invalid_field_is_tied_to_a_message)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-149-checkpoint-0117/src/api/tests/test_accessibility_baseline.py", line 100, in test_every_invalid_field_is_tied_to_a_message
+    self.assertEqual(sites, 7, "new aria-invalid site: audit it and update this check and the record")
+AssertionError: 8 != 7 : new aria-invalid site: audit it and update this check and the record
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.055s
+
+FAILED (failures=1)

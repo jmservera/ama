@@ -97,7 +97,22 @@ class Wcag22Baseline(unittest.TestCase):
                 window = "\n".join(lines[max(number - 4, 0):number + 3])
                 built_with_describedby = re.search(r'"aria-describedby":|setAttribute\("aria-describedby"', text)
                 self.assertTrue("aria-describedby" in window or built_with_describedby, f"{path.name}:{number}")
-        self.assertEqual(sites, 7, "new aria-invalid site: audit it and update this check and the record")
+        self.assertEqual(sites, 8, "new aria-invalid site: audit it and update this check and the record")
+
+    def test_saved_held_copy_field_is_tied_to_its_visible_message(self):
+        # The eighth site (96): the saved Held copy file input must name the same element the
+        # script fills and reveals as its visible message, and keep its visible label.
+        text = (WEB / "role-screens.js").read_text()
+        start = text.index("function fundingSavedCopyCheck(")
+        body = text[start:text.index("function fundingDraftPanel(", start)]
+        self.assertIn('id: `${id}-error`', body)
+        self.assertRegex(body, r'h\("div", \{[^}]*class: "field-error"[^}]*id: `\$\{id\}-error`')
+        self.assertIn('"aria-describedby": `${id}-error`', body)
+        show = body[body.index("const show = "):body.index("const input = ")]
+        for step in ("error.textContent = flagged ? text", "error.hidden = !flagged",
+                     'input.setAttribute("aria-invalid", "true")', 'input.removeAttribute("aria-invalid")'):
+            self.assertIn(step, show)
+        self.assertRegex(body, r'h\("p", \{\}, h\("label", \{ for: id \}, "[^"]+"\), " ", input, error\)')
 
     def test_fixed_launcher_cannot_hide_the_focused_control(self):
         # WCAG 2.4.11: the fixed chat launcher is 3.5rem tall plus its inset, so the page keeps

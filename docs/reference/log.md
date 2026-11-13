@@ -11633,3 +11633,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a dated, additive section to the [prototype profile review](research/ux/zava-forward-prototype-profile-review.md#demo-iot-to-ui-source-trace-update-2026-11-12-refs-156-184-187-189-134) and an index row in the [index](./README.md): #189 now has a source screen `#/simulator` with a local browser check, #187 is a partial control surface, the employee Quality sensor panel design is Not supplied, source cadence is five minutes against the owner one-minute target, and the five-home scope of Quality AI is not verified by a bounded, nonexhaustive trace.
 * Documentation only; earlier rows and the executable register (74 screen issues, 0 designs supplied, blocked) are unchanged; no approval, tick, source or Bicep change, model call or live run; criterion 1 stays unticked.
 * Evidence under `.copilot-tracking/` (2026-11-12 iot-trace-docs-156-1112).
+
+## [2026-11-13] update | WCAG baseline eighth invalid-field site, saved Held copy (Refs #96)
+
+* Added a dated 2026-11-13 entry to the Error identification row of the [WCAG 2.2 conformance baseline](research/ux/wcag-conformance-baseline.md): the static inventory of `aria-invalid` sites is now eight after a hosted `8 != 7` test failure. The new site, the saved Held copy checker, was read from source (visible label, `aria-describedby` message, text with glyph and next step) and gained a focused static association test.
+* Source-read and static-test evidence only: no screen reader, assistive technology, manual acceptance or conformance claim; the existing browser check was not re-run for this entry.
+* Evidence under `.copilot-tracking/` (2026-11-13 issue-96-c4-ci-baseline-0208).
