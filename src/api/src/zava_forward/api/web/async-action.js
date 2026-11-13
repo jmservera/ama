@@ -32,7 +32,10 @@ const AsyncAction = (() => {
         status.querySelector(".async-spinner")?.remove();
         if (error && error.name !== "AbortError") {
           status.classList.add("err");
-          status.textContent = `${label}: ${String(error.message).replace(/[.\s]+$/, "")}. Owner: application support. Next action: check the recorded history before repeating a change. Try again if nothing changed; if it continues, contact application support.`;
+          const message = String(error.message).trim();
+          const owned = /Owner:/.test(message) && /Next (action|step):/.test(message);
+          status.textContent = owned ? `${label}: ${message}`
+            : `${label}: ${message.replace(/[.\s]+$/, "")}. Owner: application support. Next action: check the recorded history before repeating anything. Try again if nothing changed; if it continues, contact application support.`;
         } else remove();
       },
     };

@@ -85,6 +85,16 @@ function tick(ms) {
   await helper.run(control, () => Promise.reject(new Error("Synthetic failure")), "Saving");
   assert.equal(control.disabled, false);
   assert.match(control.children.at(-1).textContent, /Synthetic failure.*Try again/);
+  const owned = "Server fault. Owner: finance team. Next action: ask them to retry.";
+  const stepped = "Server fault. Owner: finance team. Next step: ask them to retry.";
+  for (const [message, exact] of [[owned, true], [stepped, true], ["Plain failure", false]]) {
+    await helper.run(control, () => Promise.reject(new Error(message)), "Loading");
+    const text = control.children.at(-1).textContent;
+    assert.equal((text.match(/Owner:/g) || []).length, 1, text);
+    assert.equal((text.match(/Next (action|step):/g) || []).length, 1, text);
+    if (exact) assert.equal(text, `Loading: ${message}`);
+    else assert.ok(!text.includes("repeating a change"), text);
+  }
   await helper.run(control, async () => {await Promise.resolve(); control.disabled = true;});
   assert.equal(control.disabled, true, "never override action-owned permanent refusal");
   const guarded = new Node();
