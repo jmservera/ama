@@ -449,7 +449,7 @@ def check_costs(data, pptx=None):
             36: ([exact(name) for name in ("works_gbp_per_home", "works_cohort", "grant_home", "grant_cohort")],
                  ["benchmark", "conditional", "fictional", "not eligibility"]),
             52: ([exact(name) for name in ("mean_tokens", "task_tokens", "home_tokens", "home_inference", "cohort_inference")],
-                 ["secondary price", "unknown", "proposed", "not run"]),
+                 ["secondary price", "unknown", "planning", "assumed workload", "not run"]),
         }
         with ZipFile(pptx) as archive:
             for number, (figures, qualifiers) in requirements.items():
@@ -497,7 +497,7 @@ if __name__ == "__main__":
         help="Destructively reset native and SVG diagrams from hard-coded templates; not an export of edited drawings.",
     )
     parser.add_argument("--check-only", action="store_true", help="Validate without rewriting generated assets.")
-    parser.add_argument("--check-pptx", type=Path, help="Also check restored costs in the built 54-slide v2 deck.")
+    parser.add_argument("--check-pptx", type=Path, help="Also check restored costs in the built 55-slide v2 deck.")
     arguments = parser.parse_args()
     content = json.loads((ROOT / "slides.json").read_text())
     check_costs(content, arguments.check_pptx)
