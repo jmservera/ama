@@ -35,6 +35,13 @@ function h(tag, attrs, ...kids) {
   return el;
 }
 
+const SUPPORT_OWNER = "Owner: application support.";
+// Keeps a server message that already names an owner; otherwise adds the owner and next action.
+function ownedNotice(reason, nextAction) {
+  const text = String(reason || "").trim();
+  if (/\bOwner:/.test(text)) return text;
+  return `${text}${/[.!?]$/.test(text) ? "" : "."} ${SUPPORT_OWNER} Next action: ${nextAction}`;
+}
 function mutationNeedsHistory(error) {
   return error.outcome === "committed" || error.outcome === "uncertain" || !error.status;
 }
@@ -668,7 +675,7 @@ function aiBox() {
       paint(b); status.textContent = "Briefing ready. Check the sources, then choose how to review the draft.";
     } catch (error) {
       if (signal.aborted || own !== sequence) return;
-      status.textContent = `Briefing unavailable: ${error.message}. Try loading the briefing again.`;
+      status.textContent = ownedNotice(`Briefing unavailable: ${error.message}`, "use Try loading briefing again or Refresh briefing, then contact application support if it continues.");
       if (!content.childElementCount) {
         content.replaceChildren(h("button", { type: "button", onclick: () => load() }, "Try loading briefing again"));
       }
@@ -746,7 +753,7 @@ function priorityPanel() {
   };
   box.append(h("p", { role: "status" }, "Loading priority suggestions..."));
   api("/api/ai/priority").then((d) => paint(d.recommendation && (d.recommendation.status === "Proposed" || d.recommendation.order_note) ? d.recommendation : null)).catch(error => {
-    if (error.name !== "AbortError") paint(null, `Priority suggestions unavailable: ${error.message}. Try requesting a suggestion again.`);
+    if (error.name !== "AbortError") paint(null, ownedNotice(`Priority suggestions unavailable: ${error.message}`, "request a suggestion again, then contact application support if it continues."));
   });
   return box;
 }
@@ -903,8 +910,8 @@ async function listView(view) {
     try { d = await api(`/api/cases?view=${view}&${qs(listState)}&limit=${PAGE}&${paging}`, undefined, signal); }
     catch (error) {
       if (signal.aborted || my !== seq || !me) return;
-      workspaceStatus.textContent = `Cases unavailable: ${error.message}`;
-      results.replaceChildren(h("p", { class: "err", role: "alert" }, error.message),
+      workspaceStatus.textContent = ownedNotice(`Cases unavailable: ${error.message}`, "choose Try loading cases again, then contact application support if it continues.");
+      results.replaceChildren(h("p", { class: "err", role: "alert" }, ownedNotice(error.message, "choose Try loading cases again, then contact application support if it continues.")),
         h("button", { onclick: () => load(false) }, "Try loading cases again"));
       return;
     }
@@ -1365,7 +1372,7 @@ async function homeCaseView(id) {
   } catch (e) {
     if (e.name === "AbortError" || !me) return;
     show(back, h("h1", {}, "Home case view unavailable"),
-      h("p", { class: "err", role: "alert" }, `${e.message} Use the case and building screens instead.`));
+      h("p", { class: "err", role: "alert" }, `${ownedNotice(e.message, "contact application support if it continues.")} Use the case and building screens instead.`));
   }
 }
 
@@ -1402,7 +1409,7 @@ async function buildingView(id) {
     if (e.name === "AbortError" || !me) return;
     show(h("a", { class: "back", href: "#/" }, "Back to the list"),
       h("h1", {}, "Shared building context unavailable"),
-      h("p", { class: "err", role: "alert" }, e.message));
+      h("p", { class: "err", role: "alert" }, ownedNotice(e.message, "go back to the list and open the case, then contact application support if it continues.")));
   }
 }
 
@@ -1957,7 +1964,7 @@ function startupFailed(error) {
   if (error.status === 401) return;
   workspaceStatus.textContent = `Workspace unavailable: ${error.message}`;
   show(h("h1", {}, "Workspace unavailable"),
-    h("p", { class: "err", role: "alert" }, `Could not start the workspace: ${error.message}. Try again. If this continues, contact application support.`),
+    h("p", { class: "err", role: "alert" }, ownedNotice(`Could not start the workspace: ${error.message}`, "choose Try again or Reload workspace, then contact application support if it continues.")),
     error.reloadWorkspace
       ? h("button", { type: "button", onclick: () => location.reload() }, "Reload workspace")
       : h("button", { type: "button", onclick: () => start().catch(startupFailed) }, "Try again"));
@@ -2201,7 +2208,7 @@ function mapPanel(coordinator = null, filters = null) {
       if (restore) el.focus({ preventScroll: true });
       listUl.replaceChildren();
       info.setAttribute("role", "alert");
-      info.textContent = `Map unavailable: ${error.message}. Use the case list or try changing the map filter.`;
+      info.textContent = ownedNotice(`Map unavailable: ${error.message}`, "use the case list or change the map filter, then contact application support if it continues.");
       return;
     } finally {
       progress.finish();
