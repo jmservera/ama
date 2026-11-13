@@ -1,0 +1,47 @@
+{
+  "task_id": "432-heldout-cost-runner-1426",
+  "task_slug": "432-heldout-cost-runner-1426",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-13/432-heldout-cost-runner-1426-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-13/432-heldout-cost-runner-1426-plan.md",
+    "details": ".copilot-tracking/details/2026-11-13/432-heldout-cost-runner-1426-details.md",
+    "critique": ".copilot-tracking/reviews/2026-11-13/432-heldout-cost-runner-1426-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-13/432-heldout-cost-runner-1426-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-13/432-heldout-cost-runner-1426-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready",
+      "status": "recorded",
+      "evidence": "research artifact"
+    },
+    {
+      "decision": "Critique executed once (rubber-duck), verdict Revise, PC-001..005 applied directly",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/2026-11-13/432-heldout-cost-runner-1426-critique.md"
+    },
+    {
+      "decision": "Review executed once (code-review), outcome Approve",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/2026-11-13/432-heldout-cost-runner-1426-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await owner selection; live run needs separate owner action"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Refuse non-dict proposal items with a report instead of a traceback",
+      "rationale": "low-severity review note",
+      "evidence": ".copilot-tracking/reviews/2026-11-13/432-heldout-cost-runner-1426-review.md"
+    }
+  ]
+}

@@ -604,6 +604,29 @@ or threshold approval, or authority for actual calls, and constructed fixtures
 are not held-out evidence. No runner supplies a real manifest yet. Tests:
 `tests/test_heldout_freeze.py` (synthetic fixtures).
 
+### Held-out token measurement and cost-cap runner (#432 AC3, #435 AC4)
+
+`python -m zava_forward.agents.heldout_batch` (`--authorization`, `--manifest`,
+`--proposals`, then exactly one of `--dry-run` or `--execute-live`) measures
+tokens per held-out proposal under a finite owner authorization. It refuses
+before any call unless the authorization names `approved_by`, `authority_ref`,
+an unexpired `expires_utc`, `max_calls` (1 to 50), `max_total_tokens`,
+`max_prompt_tokens`, `max_completion_tokens`, `max_budget_usd` (above 0 and at
+most USD 5.00, `currency` USD), the `model` frozen in the manifest, and dated
+per-1M `input_usd_per_1m`, `output_usd_per_1m` and optional
+`cached_input_usd_per_1m` rates; the manifest must pass `check_freeze` and every
+proposal id must be in the frozen held-out set. Before each call it reserves the
+worst-case cost and tokens and stops first if the call, token or budget limit
+would be crossed; a failed or out-of-bound usage record is charged at the worst
+case and stops the batch. The report (JSON, or Markdown with `--markdown`)
+gives count, min, p50, mean, p90 and max tokens per proposal, token and USD
+totals, the spend-authority reference and an evidence label: `measured held-out
+batch` only for live calls, otherwise `dry-run simulation - not measured
+evidence`. The command line wires no provider, so `--execute-live` exits 2; a
+live run needs a caller to inject `AgentWorker.provider_call` and requires
+separate owner action. No live call has been made. Tests:
+`tests/test_heldout_batch.py` (synthetic fixtures).
+
 ### Meaningful human-review protocol (#223; proposed, Not run)
 
 Status: PROPOSED preparation for owner review, written 2026-10-21 under the
