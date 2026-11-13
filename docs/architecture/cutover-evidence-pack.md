@@ -7903,3 +7903,63 @@ CONTINUE, bounded. Affected closures stay held: whole #149, the A2 cut line, the
 ### Process limits
 
 Documentation only; checked locally by `git diff --check`, an ASCII scan of added lines, a link review and `tests.test_live_doc_links`. None refreshes a wave count. No browser, SQL, Docker, scanner, model, provider, Azure, whole-suite, `--changed` or complete-gate run was made here. Focused documentation tier: no workflow, gate-tool, manifest, Dockerfile, permission, SQL, deployment or security-control change. The model label (Claude Sonnet 5.5) is asserted; no host attestation exists.
+
+## Issue 74 home and building separation evidence integration (2026-11-13, Refs #74 #440)
+
+Draft, local-only, not approved. Documentation only: it integrates three completed, source-unchanged observations of the home and building separation (#74) and adds no new run, fix, tick or acceptance. Original issue-specific RPI files from two frozen branches are preserved beside this section; raw logs, venvs and receipts stay outside the repository.
+
+### Identities
+
+| Item | Identity |
+| --- | --- |
+| Source under test | `origin/main` `6f2918011d55d63ffc52865073ef45bd7ea9197c`, tree `3d573c20311d43be2a1c6f3ef8601b638f8e4508`; all three runs used source unchanged from it (each frozen head differs from the pin only by `.copilot-tracking` files) |
+| Unit lane | Branch `research/demo-building-separation-74-0400`: `5676f9025` plan, `74daa587e` V1 units, `232e09aa5` V2 documentary mapping |
+| Browser lane | Branch head `b0c308c8fab63705d3464b9ca2140deb3ca7b34d`: `e8dec941d` home-case run, `b0c308c8f` building-route observation |
+| Timing | The lanes overlapped in separate worktrees (UTC commits 04:00:58 plan, 04:06:51 units, 04:11:24 mapping, 04:11:38 home run, 04:17:58 observation); the mapping did not read the browser worker's files |
+
+### Instruments kept separate
+
+The three results are different instruments and are not summed into a suite count.
+
+| Instrument | Actual result | Standing |
+| --- | --- | --- |
+| Unit tests | 8 core and 6 API named tests passed, zero skips | Maintained tests; payload and served script text only, no rendering |
+| Home-case browser check | 24 `PASS` lines = 1 server line + 23 browser and axe assertions, exit 0, zero skips, 0 `FAIL` | Maintained regression check; opens only `#/case-home/ZF-2` and `#/case-home/ZF-3` |
+| Building-route observation | One read-only run through one route | One-off operational observation; not permanent regression coverage and no maintained assertion |
+
+### Commands and actual results
+
+* Units (owned Python 3.12.3 venv; editable installs of `src/core`, `src/agents`, `src/api` from the checkout; no `PYTHONPATH` legacy hack): `PYTHONPATH=tests python -m unittest -v test_home_case` in `src/core`, `Ran 8 tests ... OK`; `PYTHONPATH=../core/tests:../agents/tests python -m unittest discover -s tests -p test_home_case_api.py -v` in `src/api`, `Ran 6 tests ... OK`. The core tests cover funding true only for explicit true, retained and conflict-refused versions, roles and finance restriction, scheme registry validation, no evidence transfer by shared building ID, closed case and missing source refusal, explicit version links and versions surviving reopen. The API tests (owned loopback HTTP, synthetic fixtures) cover absent funding read as not confirmed, finance and non-finance cost views, wired screen with manual path, recorded versions retained, and separated view with denial of the unauthorised.
+* Home browser check: `python -m checks.home_case_browser_check` from `src/api` with the pinned axe 4.10.3 file in `ZF_AXE_JS`, in an owned venv with `playwright==1.64.0` and Chromium 156.0.8078.4 from the read-only cache. Result: exit 0, 24 `PASS`, zero skips, `COMPLETE: all checks ran, including axe 4.10.3`, ZF-2 and ZF-3 only, no JavaScript errors and no non-GET/HEAD/OPTIONS request after sign-in. The final log is a byte-identical copy of the single successful run, not a second run.
+* Building observation: one run under `env -i` with the frozen interpreter: Programme Manager sign-in, `#/case-home/ZF-2`, the existing `Open full building context` link, `#/building/SYN-B1`, building API status 200 once. One h1 and six distinct visible sections, each present once (Shared systems, Dependencies, Work stopped pending review, Shared works, Shared building costs, Linked home cases), with `SYS-1`, `DEP-1`, `HOLD-1`, `WORK-1`, `COST-1` with `GBP 12000.00` in the expected sections and ZF-2 and ZF-3 in Linked home cases. The home-only sentinels (own document, own quality, decision, allocation source) were first seen on the ZF-2 home view and none appeared in the building main. Zero controls in `main`, zero non-safe requests, zero non-loopback requests, zero page JavaScript errors.
+
+### Chronology, failures and disclosures preserved
+
+* Units: the first selected runs failed `ModuleNotFoundError: zava_forward` (core and API attempt 1); only then the editable install. A later first API invocation failed to find `test_home_case_api` through a wrong selector (command error, not a product failure), and the documented `discover -s tests` form passed. Neither failure is described as a pass.
+* Home browser: run 1 failed `ModuleNotFoundError: playwright` before any server started; the declared install and the same command then produced the single successful run. The inherited prospective plan and critique were reused, and the browser plan file was written after the run (disclosed in that record). Lock `/tmp/ama-rpi-heavy.lock` held 04:09:42Z to 04:10:11Z, MemAvailable 4.95 GiB.
+* Building observation: the owner did not admit the V2-proposed check edit, so a narrower owned observation ran with its own prospective plan and one independent critique (PC-001 to PC-007 applied, PC-008 port-release race left as a residual). Lock held 04:17:28Z to 04:17:32Z, MemAvailable 4.87 GiB. `observe.py` was an unexecuted draft and not a second run.
+
+### Cleanup and isolation
+
+Home run: the harness terminated its own server, closed its browser and removed its scratch directory; no server, Chromium or check process of the task remained; no name-based kill. Building run: the exact process group had zero members afterwards, no other server or Chromium process, owned scratch empty, no name-based kill. Units used loopback only. None used private data, SQL, Docker, cloud or a model.
+
+### Original critiques and adverse outcomes, unchanged
+
+The original [plan critique](../../.copilot-tracking/plans/2026-11-13/issue-74-building-separation-0400-critique.md) (verdict Revise) and the [observation plan critique](../../.copilot-tracking/plans/2026-11-13/issue-74-building-observation-0420-critique.md) (verdict Revise) are preserved. Still open and not repaired: CR-001 and the G5 per-item applicability gap (a ZF-2-only shared item also shows in ZF-3's home-case building panel without scope; the building observation did not change this); CR-002 missing or null funding displayed as no (the passing funding tests confirm the current mapping, not a fix); CR-003 `buildingView` unobserved by the author-reported 24 and heading assertions that count headings, not levels (one route now observed once); no approved outcome definition; no assistive technology or human acceptance; unknown source-history budget (neither zero nor exhausted).
+
+### Limits
+
+* Unit passes show payload and script behaviour, not rendering. The home check's axe scan covered the `main` element of the ZF-2 route only, its axe tarball origin is evidenced only by hash equality with the check's pin, and it is not WCAG, assistive-technology or full-page accessibility evidence.
+* The building observation covers one synthetic fixture, one role and one building. Finance-restricted and non-finance cost views, a ZF-3 origin and unknown or null items were not observed. Sibling-home sentinels were already absent from the ZF-2 home view, so their absence on the building screen proves nothing.
+* All reviews of these runs are bounded self-reviews by the executing agents, not independent. The only independent steps are the critiques named above. No hosted CI, independent exact-head review, human approval, whole criterion 2, outcome acceptance, issue tick or closure, or broad #74 or #440 acceptance is established here.
+
+### Original issue 74 RPI artifacts
+
+* Unit lane: [research](../../.copilot-tracking/research/2026-11-13/issue-74-building-separation-0400-research.md), [plan](../../.copilot-tracking/plans/2026-11-13/issue-74-building-separation-0400-plan.md), [details](../../.copilot-tracking/details/2026-11-13/issue-74-building-separation-0400-details.md), [changes](../../.copilot-tracking/changes/2026-11-13/issue-74-building-separation-0400-changes.md), [V1 unit changes](../../.copilot-tracking/changes/2026-11-13/issue-74-building-separation-0400-v1-unit-changes.md), [V2 mapping changes](../../.copilot-tracking/changes/2026-11-13/issue-74-building-separation-0400-v2-mapping-changes.md), [review](../../.copilot-tracking/reviews/2026-11-13/issue-74-building-separation-0400-review.md), [V1 review](../../.copilot-tracking/reviews/2026-11-13/issue-74-building-separation-0400-v1-unit-review.md), [V2 review](../../.copilot-tracking/reviews/2026-11-13/issue-74-building-separation-0400-v2-mapping-review.md), [state](../../.copilot-tracking/rpi-sessions/2026-11-13/issue-74-building-separation-0400-state.json).
+* Home browser lane: [research](../../.copilot-tracking/research/2026-11-13/issue-74-browser-verification-0410-research.md), [plan](../../.copilot-tracking/plans/2026-11-13/issue-74-browser-verification-0410-plan.md), [details](../../.copilot-tracking/details/2026-11-13/issue-74-browser-verification-0410-details.md), [changes](../../.copilot-tracking/changes/2026-11-13/issue-74-browser-verification-0410-changes.md), [review](../../.copilot-tracking/reviews/2026-11-13/issue-74-browser-verification-0410-review.md), [state](../../.copilot-tracking/rpi-sessions/2026-11-13/issue-74-browser-verification-0410-state.json).
+* Building observation: [research](../../.copilot-tracking/research/2026-11-13/issue-74-building-observation-0420-research.md), [plan](../../.copilot-tracking/plans/2026-11-13/issue-74-building-observation-0420-plan.md), [details](../../.copilot-tracking/details/2026-11-13/issue-74-building-observation-0420-details.md), [changes](../../.copilot-tracking/changes/2026-11-13/issue-74-building-observation-0420-changes.md), [review](../../.copilot-tracking/reviews/2026-11-13/issue-74-building-observation-0420-review.md), [state](../../.copilot-tracking/rpi-sessions/2026-11-13/issue-74-building-observation-0420-state.json).
+* This integration: [research](../../.copilot-tracking/research/2026-11-13/issue-74-evidence-integration-0424-research.md), [plan](../../.copilot-tracking/plans/2026-11-13/issue-74-evidence-integration-0424-plan.md), [critique](../../.copilot-tracking/plans/2026-11-13/issue-74-evidence-integration-0424-critique.md), [changes](../../.copilot-tracking/changes/2026-11-13/issue-74-evidence-integration-0424-changes.md), [review](../../.copilot-tracking/reviews/2026-11-13/issue-74-evidence-integration-0424-review.md).
+
+### Process limits (issue 74 integration)
+
+Documentation only, checked by link review and Git diff review. No `rpi-checks`, browser, SQL, Docker, install, cloud or other executable gate was run for this integration, and no source, test, check, configuration or helper changed. Not a complete-gate receipt.
