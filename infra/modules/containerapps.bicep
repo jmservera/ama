@@ -346,6 +346,8 @@ resource agents 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads &
         {
           name: 'agents'
           image: agentImage
+          command: ['python', '-m', 'zava_forward.agents']
+          args: ['serve']
           resources: { cpu: json('0.5'), memory: '1Gi' }
           env: concat(commonEnv, [
             { name: 'AZURE_CLIENT_ID', value: identityClientIds.agents }
