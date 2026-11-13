@@ -88,6 +88,15 @@ class ContainerContractTests(unittest.TestCase):
                         self.assertRegex(line, r"^FROM python@sha256:[a-f0-9]{64}( AS build)?$")
         self.assertFalse((ROOT / "src/container-entrypoint.py").exists())
 
+    def test_agents_container_app_serves_the_queue_while_image_default_stays_version(self):
+        dockerfile = (ROOT / "src/agents/Dockerfile").read_text()
+        self.assertIn('CMD ["python", "-m", "zava_forward.agents"]', dockerfile)
+        bicep = (ROOT / "infra/modules/containerapps.bicep").read_text()
+        agents = bicep.split("resource agents ", 1)[1].split("resource orchestrator ", 1)[0]
+        self.assertIn("command: ['python', '-m', 'zava_forward.agents']", agents)
+        self.assertIn("args: ['serve']", agents)
+        self.assertNotIn("ZF_AGENT_RESULT_ROUTE", bicep)
+
     def test_runtime_controls_are_external_and_application_is_tested_both_ways(self):
         self.assertEqual(
             HARNESS.CONTROLS,

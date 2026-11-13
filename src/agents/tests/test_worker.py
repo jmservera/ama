@@ -1,13 +1,16 @@
 import contextlib
 import io
+import os
 import threading
 import unittest
+from types import SimpleNamespace
 from typing import Any
+from unittest.mock import patch
 
 from test_dispatch import Sink, good_text, limits, message, returned
 from zava_forward.agents.dispatch import AgentWorker, InMemoryQueue, TaskMessage
 from zava_forward.agents.version import __version__
-from zava_forward.agents.worker import NOT_CONFIGURED, main, serve
+from zava_forward.agents.worker import EXPIRED, NOT_CONFIGURED, main, serve
 
 
 def provider(*_: Any) -> dict[str, Any]:
@@ -77,11 +80,52 @@ class MainTests(unittest.TestCase):
             self.assertEqual(main([]), 0)
         self.assertEqual(out.getvalue().strip(), f"zava-forward-agents {__version__}")
 
-    def test_serve_refuses_without_transport(self) -> None:
+    def test_serve_refuses_naming_missing_settings_only(self) -> None:
         err = io.StringIO()
-        with contextlib.redirect_stderr(err):
+        with (
+            patch.dict(os.environ, {"IDENTITY_HEADER": "sentinel-secret-value"}, clear=True),
+            contextlib.redirect_stderr(err),
+        ):
             self.assertEqual(main(["serve"]), NOT_CONFIGURED)
-        self.assertIn("no tasks will be processed", err.getvalue())
+        self.assertIn("QUEUE_ENDPOINT", err.getvalue())
+        self.assertIn("No tasks will be processed", err.getvalue())
+        self.assertNotIn("sentinel-secret-value", err.getvalue())
+
+    def test_serve_runs_built_runtime_until_stopped(self) -> None:
+        runtime = SimpleNamespace(
+            queue=InMemoryQueue([message()]),
+            worker=AgentWorker(provider),
+            sink=Sink(),
+            limits=limits(),
+        )
+        with (
+            patch("zava_forward.agents.worker.build_runtime", return_value=runtime),
+            patch("zava_forward.agents.worker.install_signal_handlers") as handlers,
+            patch("zava_forward.agents.worker.beat") as heartbeat,
+            patch("zava_forward.agents.worker.IDLE_SECONDS", 0.01),
+        ):
+            stop = threading.Timer(0.3, lambda: handlers.call_args.args[0].set())
+            stop.start()
+            self.assertEqual(main(["serve"]), 0)
+            stop.cancel()
+        self.assertEqual(runtime.queue.acked, ["0"])
+        self.assertTrue(heartbeat.called)
+
+    def test_expired_allowance_stops_the_loop(self) -> None:
+        stop = threading.Event()
+        queue = InMemoryQueue([message()])
+        done = serve(
+            queue, AgentWorker(provider), Sink(), limits(), stop, idle=0.01, alive=lambda: False
+        )
+        self.assertEqual(done, 0)
+        self.assertEqual(queue.acked, [])
+        self.assertEqual(EXPIRED, 3)
+
+    def test_health_command_follows_heartbeat(self) -> None:
+        with patch("zava_forward.agents.worker.healthy", return_value=True):
+            self.assertEqual(main(["health"]), 0)
+        with patch("zava_forward.agents.worker.healthy", return_value=False):
+            self.assertEqual(main(["health"]), 1)
 
 
 if __name__ == "__main__":

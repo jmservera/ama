@@ -1,23 +1,36 @@
 """Run loop for the agents worker: poll, stop on signal, never crash on one bad task.
 
-The loop drives the `dispatch` ports. It adds no transport: the `agent-tasks`
-queue adapter and the API post-back are still to be built, so `serve` exits with
-a clear refusal until both are supplied. Stopping is cooperative: an in-flight
+The loop drives the `dispatch` ports. `serve` builds the queue adapter, API
+post-back and provider from the environment (`runtime`) and refuses, naming the
+missing settings, until they are complete. Stopping is cooperative: an in-flight
 task finishes or is released for redelivery, and nothing is acknowledged before
 its result is posted.
 """
 
 from __future__ import annotations
 
+import os
 import signal
 import threading
+from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 
 from zava_forward.agents.dispatch import AgentWorker, ResultSink, TaskQueue, run_once
+from zava_forward.agents.runtime import (
+    HEARTBEAT_MAX_AGE_SECONDS,
+    HEARTBEAT_NAME,
+    ConfigError,
+    beat,
+    build_runtime,
+    healthy,
+    limits_active,
+)
 
 IDLE_SECONDS = 2.0
 ERROR_BACKOFF_SECONDS = 5.0
 NOT_CONFIGURED = 2
+EXPIRED = 3
 
 
 def serve(
@@ -28,10 +41,17 @@ def serve(
     stop: threading.Event,
     idle: float = IDLE_SECONDS,
     backoff: float = ERROR_BACKOFF_SECONDS,
+    alive: Callable[[], bool] | None = None,
+    pulse: Callable[[], None] | None = None,
 ) -> int:
-    """Process tasks until `stop` is set; returns the number of tasks completed."""
+    """Process tasks until `stop` is set or `alive` turns false; returns tasks completed."""
     done = 0
     while not stop.is_set():
+        if alive is not None and not alive():
+            stop.set()
+            break
+        if pulse is not None:
+            pulse()
         try:
             handled = run_once(queue, worker, sink, limits)
         except Exception:
@@ -52,17 +72,35 @@ def install_signal_handlers(stop: threading.Event) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """`serve` is refused until a queue adapter and API post-back exist."""
+    """`serve` runs the queue worker, `health` checks it, no argument prints the version."""
     import sys
 
     args = sys.argv[1:] if argv is None else argv
+    heartbeat = Path(os.environ.get("ZF_STATE", "/state")) / HEARTBEAT_NAME
+    if args[:1] == ["health"]:
+        return 0 if healthy(heartbeat, HEARTBEAT_MAX_AGE_SECONDS) else 1
     if args[:1] == ["serve"]:
-        print(
-            "zava-forward-agents serve: no task queue or result post-back is configured; "
-            "no tasks will be processed.",
-            file=sys.stderr,
+        try:
+            runtime = build_runtime(os.environ)
+        except ConfigError as error:
+            print(
+                f"zava-forward-agents serve: {error} No tasks will be processed.",
+                file=sys.stderr,
+            )
+            return NOT_CONFIGURED
+        stop = threading.Event()
+        install_signal_handlers(stop)
+        serve(
+            runtime.queue,
+            runtime.worker,
+            runtime.sink,
+            runtime.limits,
+            stop,
+            idle=IDLE_SECONDS,
+            alive=lambda: limits_active(runtime.limits),
+            pulse=lambda: beat(heartbeat),
         )
-        return NOT_CONFIGURED
+        return EXPIRED if not limits_active(runtime.limits) else 0
     from zava_forward.agents.version import __version__
 
     print(f"zava-forward-agents {__version__}")
