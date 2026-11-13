@@ -194,6 +194,7 @@ def check_capacity(
 ) -> dict[str, float | int]:
     """Refuse a fleet that would exceed the B1 daily message budget or overrun its own slot."""
     limits.validate()
+    lr.require_cadence(cadence_seconds)
     if type(homes) is not int or homes < 1:
         raise StreamError("NO_HOMES")
     per_day = homes * (86400 // cadence_seconds)
@@ -246,15 +247,22 @@ class Pacer:
 
 
 def attempt_permitted(
-    control_path: Path, home: str, moment: datetime, demo: Sequence[str] | None = None
+    control_path: Path,
+    home: str,
+    moment: datetime,
+    demo: Sequence[str] | None = None,
+    refusals: list[str] | None = None,
 ) -> bool:
     """Fresh control read: sending, unexpired and the home still in the cohort; else False.
 
-    With `demo`, the control cohort must still be exactly that set.
+    With `demo`, the control cohort must still be exactly that set; a differing cohort is also
+    appended to `refusals` as DEMO_COHORT_MISMATCH so the caller can tell it from a stop.
     """
     try:
         control = live_control.load(control_path)
         if demo is not None and set(control.homes) != set(demo):
+            if refusals is not None:
+                refusals.append("DEMO_COHORT_MISMATCH")
             return False
         return live_control.decide(control, moment) == live_control.SEND and home in control.homes
     except StreamError:
@@ -410,11 +418,13 @@ async def run(
     report: Callable[[Summary], None] | None = None,
     gate: Callable[[datetime], bool] | None = None,
     attempt_gate: Callable[[str], bool] | None = None,
+    fence_error: Callable[[], str | None] | None = None,
 ) -> list[Summary]:
     """Send the current slot, then (unless `once`) one per cadence; missed slots are skipped.
 
     `gate` is asked before every slot and a False ends the run, so a stop or an expiry is final.
-    `attempt_gate` is also asked before every send attempt; a slot it fenced ends the run.
+    `attempt_gate` is also asked before every send attempt; a slot it fenced ends the run, and
+    `fence_error` then names a DEMO_COHORT_MISMATCH refusal to raise instead of ending cleanly.
     """
     summaries: list[Summary] = []
     homes: Sequence[str] = []
@@ -449,6 +459,8 @@ async def run(
                 if report:
                     report(summary)
                 if FENCED in summary.codes:
+                    if fence_error is not None and fence_error() == "DEMO_COHORT_MISMATCH":
+                        raise StreamError("DEMO_COHORT_MISMATCH")
                     LOG.warning("run control: stopped or expired during the slot")
                     return summaries
             else:
@@ -566,8 +578,12 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
             except StreamError:
                 return False
 
+        refusals: list[str] = []
+
         def permit(home: str) -> bool:
-            return attempt_permitted(Path(args.control_file), home, datetime.now(UTC), demo)
+            return attempt_permitted(
+                Path(args.control_file), home, datetime.now(UTC), demo, refusals
+            )
 
         if not gate(datetime.now(UTC)):
             LOG.warning("run control: stopped or expired; nothing sent")
@@ -584,6 +600,7 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
                 report=_report,
                 gate=gate,
                 attempt_gate=permit if control_path is not None else None,
+                fence_error=lambda: refusals[0] if refusals else None,
                 refresh_slots=1,
             )
         )

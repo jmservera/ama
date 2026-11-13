@@ -288,6 +288,11 @@ class AttemptGateTests(unittest.TestCase):
 
 
 class CapacityTests(unittest.TestCase):
+    def test_unsupported_cadence_is_refused(self) -> None:
+        for bad in (0, -60, 30, 60.0, True):
+            with self.subTest(bad), self.assertRaisesRegex(lr.LiveReadingError, "INVALID_CADENCE"):
+                ls.check_capacity(5, ls.Limits(), bad)  # type: ignore[arg-type]
+
     def test_within_b1_budget(self) -> None:
         plan = ls.check_capacity(1000, ls.Limits(max_per_second=10.0))
         self.assertEqual(plan["messages_per_day"], 288_000)

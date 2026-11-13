@@ -136,8 +136,16 @@ def seasonal_anchors(day: date) -> HourlyAnchors:
     return anchors_from_averages(seasonal_averages(day), day)
 
 
+def require_cadence(seconds: object) -> int:
+    """The exact integer cadence in seconds (60 or 300), or INVALID_CADENCE."""
+    if type(seconds) is not int or seconds not in CADENCES:
+        raise LiveReadingError("INVALID_CADENCE")
+    return seconds
+
+
 def slot_floor(moment: datetime, seconds: int = SLOT_SECONDS) -> datetime:
     """Align an aware instant to the start of its UTC slot (5 minutes unless 60 is given)."""
+    require_cadence(seconds)
     if moment.tzinfo is None or moment.utcoffset() is None:
         raise LiveReadingError("UTC_TIME_REQUIRED")
     utc = moment.astimezone(UTC)
@@ -145,6 +153,7 @@ def slot_floor(moment: datetime, seconds: int = SLOT_SECONDS) -> datetime:
 
 
 def next_slot(moment: datetime, seconds: int = SLOT_SECONDS) -> datetime:
+    require_cadence(seconds)
     return slot_floor(moment, seconds) + timedelta(seconds=seconds)
 
 
@@ -219,8 +228,7 @@ class Generator:
             raise LiveReadingError("INVALID_SEED")
         if scenario not in (SCENARIO, WEATHER_REFERENCE_SCENARIO):
             raise LiveReadingError("INVALID_SCENARIO")
-        if type(cadence_seconds) is not int or cadence_seconds not in CADENCES:
-            raise LiveReadingError("INVALID_CADENCE")
+        require_cadence(cadence_seconds)
         self.seed = seed
         self.scenario = scenario
         self.cadence_seconds = cadence_seconds

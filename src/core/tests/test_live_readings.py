@@ -220,6 +220,14 @@ class MinuteCadenceTests(unittest.TestCase):
         self.assertEqual(lr.next_slot(moment, 60), datetime(2026, 11, 4, 1, 8, tzinfo=UTC))
         self.assertEqual(lr.slot_floor(moment), datetime(2026, 11, 4, 1, 5, tzinfo=UTC))
 
+    def test_slot_helpers_refuse_unsupported_cadence(self) -> None:
+        moment = datetime(2026, 11, 4, 1, 7, 42, tzinfo=UTC)
+        for bad in (0, -60, 30, 60.0, True, "60"):
+            with self.subTest(bad):
+                for helper in (lr.slot_floor, lr.next_slot):
+                    with self.assertRaisesRegex(lr.LiveReadingError, "INVALID_CADENCE"):
+                        helper(moment, bad)  # type: ignore[arg-type]
+
     def test_unsupported_cadence_is_refused(self) -> None:
         for bad in (0, 30, 120, 600, "60", None):
             with self.subTest(bad), self.assertRaisesRegex(lr.LiveReadingError, "INVALID_CADENCE"):

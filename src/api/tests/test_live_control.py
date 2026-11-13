@@ -463,6 +463,85 @@ class DemoControlCohortTests(unittest.TestCase):
             self._write(directory, self.DEMO + ["HOME-900"])
             self.assertFalse(ls.attempt_permitted(path, self.DEMO[0], moment, demo))
 
+    def test_attempt_permitted_reports_the_cohort_mismatch_it_refuses(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = self._write(directory, self.DEMO + ["HOME-900"])
+            refusals: list[str] = []
+            moment = datetime.now(UTC)
+            self.assertFalse(
+                ls.attempt_permitted(path, self.DEMO[0], moment, tuple(self.DEMO), refusals)
+            )
+            self.assertEqual(refusals, ["DEMO_COHORT_MISMATCH"])
+            self.assertFalse(ls.attempt_permitted(path, "HOME-X", moment, None, refusals))
+            self.assertEqual(refusals, ["DEMO_COHORT_MISMATCH"])
+
+    def _mid_slot_main(self, directory: str, restore: bool) -> tuple[int, Any]:
+        path = self._write(directory, self.DEMO)
+        sink = ls.MemorySink()
+        real_send = sink.send
+        sent = {"n": 0}
+
+        async def send(device_id: str, message_id: str, body: bytes) -> None:
+            await real_send(device_id, message_id, body)
+            sent["n"] += 1
+            if sent["n"] == 1:
+                self._write(directory, self.DEMO + ["HOME-900"])
+            elif restore and sent["n"] == 2:
+                self._write(directory, self.DEMO)
+
+        sink.send = send  # type: ignore[method-assign]
+        env = self._env(directory, ",".join(self.DEMO))
+        with (
+            patch.object(ls, "_sink", lambda args, env: sink),
+            patch.object(ls, "store_home_ids", lambda env=None: HOMES),
+            patch("sys.stderr", io.StringIO()),
+        ):
+            code = ls.main(["--once", "--control-file", str(path), "--batch-size", "1"], env)
+        return code, sink
+
+    def test_mid_slot_cohort_mutation_exits_non_zero_after_fencing(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            code, sink = self._mid_slot_main(directory, restore=False)
+        self.assertEqual(code, 2)
+        self.assertLess(len(sink.messages), 5)
+
+    def test_mid_slot_cohort_mutation_restored_before_the_slot_ends_still_exits_non_zero(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            code, _ = self._mid_slot_main(directory, restore=True)
+        self.assertEqual(code, 2)
+
+    def test_fence_error_is_raised_by_run_after_a_fenced_slot(self) -> None:
+        gen = lr.Generator(184, cadence_seconds=60)
+        with self.assertRaisesRegex(StreamError, "DEMO_COHORT_MISMATCH"):
+            asyncio.run(
+                ls.run(
+                    lambda: HOMES[:2],
+                    gen,
+                    ls.MemorySink(),
+                    ls.Limits(max_per_second=100.0),
+                    once=True,
+                    attempt_gate=lambda home: False,
+                    fence_error=lambda: "DEMO_COHORT_MISMATCH",
+                )
+            )
+
+    def test_plain_fence_without_a_cohort_refusal_keeps_a_clean_end(self) -> None:
+        gen = lr.Generator(184, cadence_seconds=60)
+        summaries = asyncio.run(
+            ls.run(
+                lambda: HOMES[:2],
+                gen,
+                ls.MemorySink(),
+                ls.Limits(max_per_second=100.0),
+                once=True,
+                attempt_gate=lambda home: False,
+                fence_error=lambda: None,
+            )
+        )
+        self.assertEqual(summaries[0].codes, {"RUN_CONTROL_FENCED": 2})
+
     def test_cohort_mismatch_during_a_run_is_raised_not_swallowed(self) -> None:
         def refuse() -> list[str]:
             raise StreamError("DEMO_COHORT_MISMATCH")
