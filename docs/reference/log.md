@@ -11657,3 +11657,12 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Corrected the unit-failure narrative in the [issue 74 integration section](../architecture/cutover-evidence-pack.md#issue-74-home-and-building-separation-evidence-integration-2026-11-13-refs-74-440): only the core attempt shows the missing package; the two byte-identical API error files show a wrong selector and the distinct attempt count is not claimed. Added the axe scope beside the browser row and a note on the unreconciled observation plan, and updated the existing [index](./README.md) row. The earlier log entry is unchanged.
 * Documentation only: the independent REVISE review is preserved byte-for-byte; counts, passes and open adverse items are unchanged; no source, test, check or configuration change, no tick, closure or approval. Independent changed-line reassessment is pending.
 * Evidence under `.copilot-tracking/` (2026-11-13 issue-74-evidence-integration-0424).
+
+## [2026-11-13] add | Post-1504 merged-main home-scope checkpoint (Refs #440 #74)
+
+* Appended a [draft checkpoint](../architecture/cutover-evidence-pack.md#post-1504-merged-main-home-scope-checkpoint-2026-11-13-refs-440-74) after PR 1504 merged as `33c261a63` (tree equal to the frozen head). Documentation only: records identities, source and document blobs, inherited focused source observations, hosted state (merged-head checks running or absent, not success) and unknowns.
+* No source change, new observation, tick, closure, approval or owner decision; #74 and #440 stay open. Held lanes are not reopened. Evidence under `.copilot-tracking/` (issue-440-post1504-impl-0638).
+
+## [2026-11-13] update | Post-1504 checkpoint requirement mapping and rollup clarification (Refs #440 #74)
+
+* Added a dated [clarification](../architecture/cutover-evidence-pack.md#dated-clarification-of-the-post-1504-checkpoint-2026-11-13-requirement-mapping-and-rollup-projection) mapping the home-scope display to PRD FR-002 and AC-002 (PRD FR-001 as context), recording a BRD traceability gap, and correcting the PR 1504 rollup reading (the nineteenth entry is a passing status context). Earlier text unchanged; documentation only; no tick, approval or closure.
