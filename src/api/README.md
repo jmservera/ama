@@ -4421,8 +4421,9 @@ human-review paths; shared free text and costs are not added to prompts.
 
 `python -m checks.home_case_browser_check` (from `src/api`) opens the screen on
 synthetic data and checks that building dependencies, holds, works and costs
-appear only in the building panel, a sibling home's evidence never appears,
-the screen is read-only, reflows at 320 px and, with `ZF_AXE_JS` set to the
+appear only in the building panel, their recorded home and package scopes are
+shown as listed, unknown or none without implying eligibility or approval, a
+sibling home's evidence never appears, the screen is read-only, reflows at 320 px and, with `ZF_AXE_JS` set to the
 pinned axe 4.10.3 file, has no automated WCAG 2.2 AA violations. Automated
 checks do not replace manual accessibility review.
 
