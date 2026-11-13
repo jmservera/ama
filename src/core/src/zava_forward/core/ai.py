@@ -217,7 +217,7 @@ class Ai:
 
     def evidence(self, system, user, max_tokens=600, timeout=20):
         """No fallback, raw output or exception text in the durable usage envelope."""
-        envelope = dict(provider="azure-openai", deployment=self.fast, model=None,
+        envelope = dict(provider="azure-openai", deployment=ai_consumption.safe_identity(self.fast, 120), model=None,
                         usage=None, outcome="disabled", source="unverified", text=None)
         witness = DISPATCH.get()
         if witness is not None and not witness.closed:
@@ -226,7 +226,7 @@ class Ai:
             return envelope
         try:
             result = self._request(self.fast, system, user, max_tokens, timeout, 0, envelope)
-            envelope.update(model=result.get("model"), outcome="returned", source="ai",
+            envelope.update(model=ai_consumption.bounded_model(result.get("model")), outcome="returned", source="ai",
                             text=result["choices"][0]["message"]["content"])
         except InputRefused as error:
             envelope.update(outcome="input-refused", reason=str(error))
@@ -254,6 +254,7 @@ class Ai:
         receipt = {}
 
         def out(**kw):
+            kw["model"] = ai_consumption.bounded_model(kw.get("model"))
             return dict(kw, **receipt, task=task, release=selected,
                         prompt_version=ai_prompts.version(task) if task in ai_prompts.PROMPTS else None,
                         latency_ms=round((time.perf_counter() - t0) * 1000, 1))

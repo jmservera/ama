@@ -324,8 +324,23 @@ class DispatchHeld(RuntimeError):
     """Safe code only; never provider content."""
 
 
+UNVERIFIED_IDENTITY = "unverified-identity"
+OFFLINE_IDENTITY = "offline-extractive; zero model calls"
+_IDENTITY = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:/@+-]*")
+_SECRET = re.compile(r"(?<![A-Za-z0-9])sk-|sk-[A-Za-z0-9_-]{16}", re.IGNORECASE)
+
+
+def safe_identity(value: object, limit: int) -> str | None:
+    """Bounded identifier; free text and secret-shaped values never survive."""
+    if type(value) is not str or len(value) > limit:
+        return None
+    if value == OFFLINE_IDENTITY or (_IDENTITY.fullmatch(value) and not _SECRET.search(value)):
+        return value
+    return UNVERIFIED_IDENTITY
+
+
 def bounded_model(value: object) -> str | None:
-    return value if isinstance(value, str) and len(value) <= 512 else None
+    return safe_identity(value, 512)
 
 
 class Consumption:

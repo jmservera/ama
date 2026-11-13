@@ -438,6 +438,16 @@ def build_request(task):
                                   evidence=evidence))
 
 
+def sanitize_identity(envelope):
+    """A copy whose provider, deployment and model are safe identifiers, whatever path produced the envelope."""
+    clean = dict(envelope)
+    for key in ("provider", "deployment"):
+        value = clean.get(key)
+        clean[key] = ai_consumption.safe_identity(value[:120] if type(value) is str else value, 120)
+    clean["model"] = ai_consumption.bounded_model(clean.get("model"))
+    return clean
+
+
 def shape_result(task, result, limits):
     """Reduce a raw provider result to (envelope, output, failure). Only safe, known fields survive; text is never saved on failure."""
     if not isinstance(result, dict):
@@ -446,9 +456,9 @@ def shape_result(task, result, limits):
     envelope["usage"] = result.get("usage")
     envelope.update(task=task["capability"], task_version=task["version"], case_id=task["case_id"],
                     source_signature=task["source_signature"], approved=False)
-    envelope["model"] = ai_consumption.bounded_model(envelope.get("model"))
-    for key in ("provider", "deployment", "outcome", "source"):
+    for key in ("outcome", "source"):
         envelope[key] = envelope[key][:120] if isinstance(envelope[key], str) else None
+    envelope = sanitize_identity(envelope)
     usage = envelope["usage"]
     valid = ai_consumption.usage(usage)
     envelope["usage"] = valid if valid and valid["prompt_tokens"] > 0 else None
@@ -1573,7 +1583,9 @@ class Assistants:
     def _settle_meter(self, db, marker, envelope):
         usage, outcome = envelope.get("usage"), envelope.get("outcome")
         if outcome in ("returned", "model-mismatch") and ai_consumption.usage(usage):
-            self.consumption.complete_in(db, marker["meter_id"], usage, envelope.get("model"), "returned")
+            model = envelope.get("model")
+            # A rewritten or oversized identity cannot match the reservation, so the spend stays held.
+            self.consumption.complete_in(db, marker["meter_id"], usage, model if ai_consumption.bounded_model(model) == model else None, "returned")
         else:
             self.consumption.complete_in(db, marker["meter_id"], None, None,
                                          "timeout" if outcome == "timeout" else "provider-unavailable")
@@ -1679,6 +1691,7 @@ class Assistants:
                         dispatch_within_ms=window)
 
     def complete(self, task, envelope, output, failure=None):
+        envelope = sanitize_identity(envelope)
         if output is not None:
             try:
                 if envelope.get("source") != "ai" or envelope.get("outcome") != "returned":
@@ -1701,7 +1714,8 @@ class Assistants:
                 # it is a returned-model check, not authoritative attestation of what served the call.
                 released = [r for r in rel.releases(db, current["capability"])
                             if r["id"] == current["release"]["id"]]
-                if envelope.get("outcome") == "model-mismatch" or not any(r.get("serving_model") == envelope.get("model") for r in released):
+                if envelope.get("outcome") == "model-mismatch" or envelope.get("model") in (None, ai_consumption.UNVERIFIED_IDENTITY) or not any(
+                        r.get("serving_model") == envelope.get("model") for r in released):
                     quarantined = True
                     for r in released:
                         if r["status"] == "active":
