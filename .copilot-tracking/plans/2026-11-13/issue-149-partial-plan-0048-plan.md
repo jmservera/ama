@@ -117,3 +117,14 @@ PR 1498 actually merged 2026-11-13T00:53:04Z; main is `c5bfac6eeca7f6180588a3ffd
 * Before the respective publication gates: actual final original RPI Review, a fresh independent exact-head assessment, the checkpoint, hosted checks all green and MERGEABLE, a clean candidate, the four RPI areas and the log proof.
 * Standing coordinator guarded merge authority is unchanged. No new human merge approval gate is invented for run-owned PRs; the named human acceptance ACs stay open.
 * Final ADR status is read per blob, with no blanket draft claim. PR and squash message are Refs-only with empty `closingIssuesReferences`, and #83 stays OPEN; no history rewrite.
+
+### A55-06 Critique dispositions for Amendment 0055 (one independent critique, 2026-11-13, verdict Revise)
+
+Plan-only dispositions; they supersede earlier text only where they differ. The critique is not repeated.
+
+* A55C-01 (blocking) Tier escalation. A55-04's "only" wording is withdrawn. The complete P48C-05 triggers stay in force: any workflow, gate-tool, Dockerfile, dependency-manifest, permission, secret, deployment, SQL, security-control or unresolved-impact change takes the full tier. This is distinct from the withdrawn default whole-api-suite gate, which is not a trigger by itself.
+* A55C-02 (blocking) Role contract. The C3 candidate may change the role contract tests only through an owner-reviewed correction that permits exactly the approved read-only freshness POST and keeps every prohibition on mutating POSTs; the single-timer expectation is handled likewise for accessible focus restoration. Tests are not rewritten merely to pass, none are deleted, and the correction is reviewed against the original role contract before any role lane Pass is recorded.
+* A55C-03 (non-blocking) Post-merge check. Superseding P48 condition 7 retains its current-main compatibility check: at final integration, compare every input changed on main since `bb9f450f` and record the result.
+* A55C-04 (non-blocking) Count wording. The `ApiTests` class has six methods; the 28 tests are the combined home, baseline programme and ApiTests lane of the 0045 run. Both counts are actual and neither replaces the other.
+
+No finding conflicted with a confirmed decision, and none needs a user decision. This approves nothing; all A55-05 gates remain.
