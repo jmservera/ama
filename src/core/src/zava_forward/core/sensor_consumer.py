@@ -16,8 +16,8 @@ from .mssqlstore import MssqlStore
 from .sensor_sql import SensorMssqlConnector
 from .sensor_view import home_digest
 from .sqlstore import SqlStore
+from .synthetic.live_readings import LIVE_VERSIONS, SUNLIGHT_UNIT
 from .synthetic.live_readings import SCHEMA_VERSION as LIVE_SCHEMA_VERSION
-from .synthetic.live_readings import SUNLIGHT_UNIT
 from .synthetic.sensor_faults import READING_FIELDS, SCHEMA_VERSION
 from .synthetic.sensor_identity import home_key
 
@@ -715,7 +715,7 @@ class SensorConsumer:
 
     @staticmethod
     def _shape(row: Observation) -> str | None:
-        if row.get("schema_version") == LIVE_SCHEMA_VERSION:
+        if row.get("schema_version") in LIVE_VERSIONS:
             return SensorConsumer._live_shape(row)
         if set(row) != set(READING_FIELDS) or any(type(v) is not str for v in row.values()):
             return "SCHEMA"
@@ -744,7 +744,7 @@ class SensorConsumer:
 
     @staticmethod
     def _live_shape(row: Observation) -> str | None:
-        """live-sim-reading-v1: one reading per sensor and 5-minute UTC slot, no calibrated flag."""
+        """live-sim-reading-v1 (5-minute) and -v2 (one-minute) UTC slots, no calibrated flag."""
         if set(row) != set(LIVE_FIELDS) or any(type(v) is not str for v in row.values()):
             return "SCHEMA"
         if row["source_type"] != "SYNTHETIC" or row["injected_fault"] != "none":
@@ -765,7 +765,8 @@ class SensorConsumer:
             observed = utc(str(row["observed_at"]))
         except ValueError:
             return "UTC_TIME"
-        if observed.minute % 5 or observed.second:
+        five_minute = row["schema_version"] == LIVE_SCHEMA_VERSION
+        if observed.second or (five_minute and observed.minute % 5):
             return "UTC_TIME"
         if row["reading_id"] != f"LIVE-{row['sensor_id']}-{observed:%Y%m%dT%H%M}Z":
             return "IDENTITY"
@@ -934,7 +935,7 @@ class SensorConsumer:
             control.humidity_unit,
         ):
             return "UNIT"
-        live = row["schema_version"] == LIVE_SCHEMA_VERSION
+        live = row["schema_version"] in LIVE_VERSIONS
         if live and row["sunlight_unit"] != SUNLIGHT_UNIT:
             return "UNIT"
         if (
@@ -1060,7 +1061,7 @@ class SensorConsumer:
         return [
             row
             for row in self.retained_envelopes(home_ids, windows)
-            if row["schema_version"] != LIVE_SCHEMA_VERSION
+            if row["schema_version"] not in LIVE_VERSIONS
         ]
 
     def retained_envelopes(
@@ -1129,7 +1130,7 @@ class SensorConsumer:
                     if witness is None:
                         raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
                     self._retained_reading(record, witness)
-                    if witness["schema_version"] == LIVE_SCHEMA_VERSION:
+                    if witness["schema_version"] in LIVE_VERSIONS:
                         rows.append({k: str(witness[k]) for k in LIVE_FIELDS})
                         continue
                     rows.append({key: str(witness[key]) for key in READING_FIELDS})

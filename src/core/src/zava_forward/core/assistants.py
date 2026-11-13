@@ -20,6 +20,7 @@ from .ai import may_carry_captured_readings
 from . import ai_consumption, continuity, projection, quality, ranking, rai_release, sensor_view
 from zava_forward.core.ai import FORBIDDEN, Ai
 from .store import ConflictError
+from .synthetic.sensor_identity import demo_homes
 
 LOG = logging.getLogger(__name__)
 
@@ -391,6 +392,13 @@ class Limits:
             for key, default in self.DEFAULTS.items():
                 setattr(self, key, default)
             self.calls, self.tokens = 0, 0
+        # Opt-in exact-five Quality scope; an invalid value refuses Quality, it never widens the scope.
+        self.quality_homes: tuple[str, ...] | None = None
+        self.quality_scope_error = False
+        try:
+            self.quality_homes = demo_homes(env.get("ZF_ASSIST_QUALITY_DEMO_HOMES"))
+        except ValueError:
+            self.quality_scope_error = True
 
     @property
     def reservation(self):
@@ -885,7 +893,20 @@ class Assistants:
         return digest([capability, VERSION, c["id"], signature, proposal_identity(capability),
                        self.release_reference(db, capability), self.continuity(db)["epoch"]])
 
+    def quality_scope_denial(self, capability, case_id, requested=True):
+        """The reason Quality may not work on this case under the demo scope, or None.
+
+        Unset scope allows everything; a configured scope allows only the five homes and only on a person's request."""
+        l = self.limits
+        if capability != "quality-evidence":
+            return None
+        if l.quality_scope_error or (l.quality_homes is not None and (case_id not in l.quality_homes or not requested)):
+            return "Quality analysis is limited to the configured five-home demo set and a person's request; use the manual route."
+        return None
+
     def _enqueue(self, db, capability, c, mode, actor, replaced=None):
+        if denial := self.quality_scope_denial(capability, c["id"], mode != "proactive"):
+            raise ValueError(denial)
         snapshot = self.snapshot(db, capability, c)
         signature_ = signature(snapshot)
         identity = proposal_identity(capability)
@@ -1326,6 +1347,9 @@ class Assistants:
                     for cap in REGISTRY:
                         if self.suspended(db, cap):
                             continue
+                        # Demo scope: Quality runs only when a person requests it, never from the background scan.
+                        if cap == "quality-evidence" and (self.limits.quality_homes is not None or self.limits.quality_scope_error):
+                            continue
                         s = self.snapshot(db, cap, c)
                         if self._due(db, cap, c, s, today):
                             result.append(self._enqueue(db, cap, c, "proactive", PURPOSE))
@@ -1350,7 +1374,8 @@ class Assistants:
                 db.execute("UPDATE assistant_tasks SET state='failed',body=?,revision=revision+1 WHERE id=?", (canonical(task), tid))
                 self.event(db, tid, kind="exhausted", outcome="attempts-exhausted")
                 return None
-            reason = self.disabled(db, task["capability"])
+            reason = self.disabled(db, task["capability"]) or self.quality_scope_denial(
+                task["capability"], task["case_id"], task.get("manual_requested") is True)
             if not reason and not continuity.epoch_current(task, self.continuity(db)):
                 reason = "Proposal epoch changed or is unavailable; request fresh work or use the manual route."
             if not reason and task.get("release") != self.release_reference(db, task["capability"]):
@@ -1590,6 +1615,8 @@ class Assistants:
         """Why a permit must not be issued now; every unresolved or unreadable condition fails closed to manual."""
         capability = task["capability"]
         epoch = self.continuity(db)
+        if self.quality_scope_denial(capability, task["case_id"], (task.get("dispatch") or {}).get("trigger") == "requested"):
+            return "demo-scope"
         if self.suspended(db, capability):
             return "suspended"
         if self.admission(db, capability):

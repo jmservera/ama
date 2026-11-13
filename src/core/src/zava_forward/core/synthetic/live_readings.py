@@ -19,10 +19,14 @@ from . import sensor_identity
 
 VERSION = "live-sim-generator-v1"
 SCHEMA_VERSION = "live-sim-reading-v1"
+SCHEMA_VERSION_V2 = "live-sim-reading-v2"
+LIVE_VERSIONS = (SCHEMA_VERSION, SCHEMA_VERSION_V2)
 SCENARIO = "live-simulator"
 WEATHER_REFERENCE_SCENARIO = "weather-backfill-v1"  # synthetic like-for-like history
 SLOT_SECONDS = 300
 SLOTS_PER_DAY = 86400 // SLOT_SECONDS
+MINUTE_SECONDS = 60
+CADENCES = (SLOT_SECONDS, MINUTE_SECONDS)
 SUNLIGHT_UNIT = "W/m2"  # global horizontal irradiance, watts per square metre
 NOISE_TEMPERATURE_C = 0.4
 NOISE_HUMIDITY_PCT = 2.0
@@ -132,18 +136,16 @@ def seasonal_anchors(day: date) -> HourlyAnchors:
     return anchors_from_averages(seasonal_averages(day), day)
 
 
-def slot_floor(moment: datetime) -> datetime:
-    """Align an aware instant to the start of its 5-minute UTC slot."""
+def slot_floor(moment: datetime, seconds: int = SLOT_SECONDS) -> datetime:
+    """Align an aware instant to the start of its UTC slot (5 minutes unless 60 is given)."""
     if moment.tzinfo is None or moment.utcoffset() is None:
         raise LiveReadingError("UTC_TIME_REQUIRED")
     utc = moment.astimezone(UTC)
-    return utc.replace(
-        minute=utc.minute - utc.minute % (SLOT_SECONDS // 60), second=0, microsecond=0
-    )
+    return utc.replace(minute=utc.minute - utc.minute % (seconds // 60), second=0, microsecond=0)
 
 
-def next_slot(moment: datetime) -> datetime:
-    return slot_floor(moment) + timedelta(seconds=SLOT_SECONDS)
+def next_slot(moment: datetime, seconds: int = SLOT_SECONDS) -> datetime:
+    return slot_floor(moment, seconds) + timedelta(seconds=seconds)
 
 
 def _unit(*parts: object) -> float:
@@ -171,6 +173,7 @@ class Reading:
     sunlight_wm2: float
     seed: int
     scenario: str = SCENARIO
+    schema_version: str = SCHEMA_VERSION
 
     @property
     def reading_id(self) -> str:
@@ -191,7 +194,7 @@ class Reading:
             "source_type": "SYNTHETIC",
             "scenario": self.scenario,
             "seed": str(self.seed),
-            "schema_version": SCHEMA_VERSION,
+            "schema_version": self.schema_version,
             "injected_fault": "none",
             "label": LABEL,
         }
@@ -206,14 +209,21 @@ class Reading:
 
 class Generator:
     def __init__(
-        self, seed: int = 184, anchors: AnchorSource = seasonal_anchors, scenario: str = SCENARIO
+        self,
+        seed: int = 184,
+        anchors: AnchorSource = seasonal_anchors,
+        scenario: str = SCENARIO,
+        cadence_seconds: int = SLOT_SECONDS,
     ) -> None:
         if type(seed) is not int or abs(seed) > 2**63 - 1:
             raise LiveReadingError("INVALID_SEED")
         if scenario not in (SCENARIO, WEATHER_REFERENCE_SCENARIO):
             raise LiveReadingError("INVALID_SCENARIO")
+        if type(cadence_seconds) is not int or cadence_seconds not in CADENCES:
+            raise LiveReadingError("INVALID_CADENCE")
         self.seed = seed
         self.scenario = scenario
+        self.cadence_seconds = cadence_seconds
         self._anchors = anchors
         self._cache: dict[date, HourlyAnchors] = {}
 
@@ -229,7 +239,7 @@ class Generator:
 
     def baseline(self, moment: datetime) -> tuple[float, float, float]:
         """Interpolated anchors for a slot start; hour 23 blends toward the next day's 00:00."""
-        slot = slot_floor(moment)
+        slot = slot_floor(moment, self.cadence_seconds)
         minutes = slot.hour * 60 + slot.minute
         hour, minute = divmod(minutes, 60)
         fraction = minute / 60
@@ -254,7 +264,7 @@ class Generator:
 
     def noise(self, home_id: str, channel: str, moment: datetime) -> float:
         """Smoothed noise in [-1, 1]: seeded knots every 30 minutes, eased between them."""
-        slot = slot_floor(moment)
+        slot = slot_floor(moment, self.cadence_seconds)
         minutes = slot.hour * 60 + slot.minute
         index, rest = divmod(minutes, NOISE_KNOT_MINUTES)
         low = self._knot(home_id, channel, slot.date(), index)
@@ -272,7 +282,7 @@ class Generator:
     def reading(self, home_id: str, moment: datetime) -> Reading:
         if not sensor_identity.home_key(home_id):
             raise LiveReadingError("INVALID_HOME_ID")
-        slot = slot_floor(moment)
+        slot = slot_floor(moment, self.cadence_seconds)
         base_t, base_h, base_s = self.baseline(slot)
         off_t, off_h, off_s = self.offsets(home_id)
         temperature = (
@@ -293,4 +303,5 @@ class Generator:
             max(0.0, sunlight),
             self.seed,
             self.scenario,
+            SCHEMA_VERSION if self.cadence_seconds == SLOT_SECONDS else SCHEMA_VERSION_V2,
         )

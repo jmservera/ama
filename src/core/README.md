@@ -998,7 +998,9 @@ rows/evaluator truth: the 13-field indoor `sensor-fault-input-v1` shape from
 `synthetic.sensor_faults.READING_FIELDS`, and the 16-field synthetic-weather
 `live-sim-reading-v1` envelope from `sensor_consumer.LIVE_FIELDS` (version in
 `synthetic/live_readings.py`; no `calibrated` field; outdoor weather, not indoor
-evidence, authenticated provenance or calibrated continuity). The field rules
+evidence, authenticated provenance or calibrated continuity). `live-sim-reading-v2` is the
+same record shape for one-minute UTC slots (`Generator(cadence_seconds=60)`); v1 keeps the
+five-minute rule, and both are retained and excluded from indoor projections alike. The field rules
 below describe the indoor branch; the live branch keeps sunlight and the original
 fields in the lossless `retained_envelopes` witness, not a new reading column.
 The [shared field reference and measured daily accounting](../../docs/reference/research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186)

@@ -572,5 +572,20 @@ class RotationTests(unittest.TestCase):
             di.rotate(manifest, registry, store)
 
 
+class DemoHomesParserTests(unittest.TestCase):
+    FIVE = "ZF-2025-0355,ZF-2025-0382,ZF-2025-0286,ZF-2026-0829,ZF-2026-0892"
+
+    def test_only_an_absent_value_is_unset(self) -> None:
+        self.assertIsNone(sensor_identity.demo_homes(None))
+        self.assertEqual(sensor_identity.demo_homes(self.FIVE), tuple(self.FIVE.split(",")))
+
+    def test_every_explicit_malformed_value_is_invalid_including_empty(self) -> None:
+        padded = self.FIVE.replace(",", ", ", 1)
+        for value in ("", " ", "\t", self.FIVE + ",", " " + self.FIVE, padded):
+            with self.subTest(value=value):
+                with self.assertRaisesRegex(ValueError, "DEMO_HOMES_INVALID"):
+                    sensor_identity.demo_homes(value)
+
+
 if __name__ == "__main__":
     unittest.main()

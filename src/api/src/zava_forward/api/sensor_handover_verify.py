@@ -21,8 +21,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from zava_forward.core.mssqlstore import MssqlStore
-from zava_forward.core.sensor_consumer import LIVE_SCHEMA_VERSION, ConsumerError, SensorConsumer
+from zava_forward.core.sensor_consumer import ConsumerError, SensorConsumer
 from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.synthetic.live_readings import LIVE_VERSIONS
 from zava_forward.core.synthetic.sensor_consistency import (
     ZERO_TOLERANCE,
     Tolerance,
@@ -100,7 +101,7 @@ def run(
     observed = consumer.retained_envelopes(homes, windows)
 
     def kinds(rows: Sequence[Mapping[str, str]]) -> set[bool]:
-        return {row.get("schema_version") == LIVE_SCHEMA_VERSION for row in rows}
+        return {row.get("schema_version") in LIVE_VERSIONS for row in rows}
 
     seen, wanted = kinds(observed), kinds(reference)
     if seen | wanted == {False}:
@@ -171,6 +172,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
     except (ValueError, KeyError, OSError, ConsumerError, BatchStopped) as error:
         print(json.dumps({"passed": False, "refused": str(error)}))
+        return 2
+    if not isinstance(result, Mapping) or type(result.get("passed")) is not bool:
+        print(json.dumps({"passed": False, "refused": "HANDOVER_RESULT_INVALID"}))
         return 2
     print(json.dumps(result, indent=2))
     return 0 if result["passed"] else 1

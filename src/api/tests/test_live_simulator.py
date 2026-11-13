@@ -638,5 +638,112 @@ class CliTests(unittest.TestCase):
         self.assertEqual((code, out.getvalue()), (2, ""))
 
 
+FIVE = ["ZF-2025-0355", "ZF-2025-0382", "ZF-2025-0286", "ZF-2026-0829", "ZF-2026-0892"]
+
+
+class MinuteCadenceTests(unittest.TestCase):
+    def test_capacity_is_cadence_aware_and_five_homes_fit_one_a_minute(self) -> None:
+        plan = ls.check_capacity(5, FAST, 60)
+        self.assertEqual(plan["messages_per_day"], 5 * 1440)
+        self.assertEqual(ls.check_capacity(5, FAST)["messages_per_day"], 5 * 288)
+        with self.assertRaisesRegex(StreamError, "B1_QUOTA_HEADROOM"):
+            ls.check_capacity(6000, FAST, 60)
+        with self.assertRaisesRegex(StreamError, "RATE_TOO_LOW_FOR_HOMES"):
+            ls.check_capacity(5, ls.Limits(max_per_second=0.1, batch_size=1, attempts=1), 60)
+
+    def test_loop_sends_a_distinct_reading_each_minute_and_sleeps_to_the_minute(self) -> None:
+        sink, clock = ls.MemorySink(), Clock()
+        times = [datetime(2026, 11, 4, 15, 55, 20, tzinfo=UTC)]
+
+        async def sleep(seconds: float) -> None:
+            if seconds >= 1:
+                times.append(times[-1] + timedelta(seconds=seconds))
+            await clock.sleep(seconds)
+
+        summaries = run_async(
+            ls.run(
+                lambda: FIVE,
+                lr.Generator(184, cadence_seconds=60),
+                sink,
+                FAST,
+                max_slots=3,
+                now=lambda: times[-1],
+                sleep=sleep,
+                clock=clock.monotonic,
+            )
+        )
+        self.assertEqual([s.slot.strftime("%H:%M") for s in summaries], ["15:55", "15:56", "15:57"])
+        self.assertEqual(len({m[1] for m in sink.messages}), 15)
+        self.assertEqual([round(x) for x in clock.sleeps if x >= 1], [40, 60])
+
+    def test_retry_is_fenced_after_backoff_at_minute_cadence(self) -> None:
+        gen, clock, state = lr.Generator(184, cadence_seconds=60), Clock(), {"open": True}
+        sink = ls.MemorySink({gen.reading(FIVE[0], SLOT).device_id: 1})
+        real_send = sink.send
+
+        async def send(device_id: str, message_id: str, body: bytes) -> None:
+            try:
+                await real_send(device_id, message_id, body)
+            finally:
+                state["open"] = False
+
+        sink.send = send  # type: ignore[method-assign]
+        summary = run_async(
+            ls.send_slot(
+                FIVE[:1],
+                SLOT,
+                gen,
+                sink,
+                FAST,
+                sleep=clock.sleep,
+                clock=clock.monotonic,
+                attempt_gate=lambda h: state["open"],
+            )
+        )
+        self.assertEqual(
+            (sink.attempts, sink.messages, summary.codes),
+            (1, [], {"FAKE_TRANSIENT": 1, "RUN_CONTROL_FENCED": 1}),
+        )
+
+
+class DemoCohortCliTests(unittest.TestCase):
+    def _main(self, env: dict[str, str], homes: list[str], *args: str) -> tuple[int, str]:
+        out = io.StringIO()
+        with (
+            patch.object(ls, "store_home_ids", lambda env=None: homes),
+            redirect_stdout(out),
+            patch("sys.stderr", io.StringIO()),
+        ):
+            return ls.main(["--once", *args], env), out.getvalue()
+
+    def test_unset_demo_homes_and_default_cadence_keep_legacy_behaviour(self) -> None:
+        code, out = self._main({}, HOMES[:3])
+        self.assertEqual((code, len(out.strip().splitlines())), (0, 3))
+
+    def test_exact_five_homes_send_one_minute_readings(self) -> None:
+        env = {"ZF_ASSIST_QUALITY_DEMO_HOMES": ",".join(FIVE)}
+        code, out = self._main(env, FIVE + ["ZF-OTHER"], "--cadence-minutes", "1")
+        self.assertEqual((code, len(out.strip().splitlines())), (0, 5))
+        self.assertNotIn("ZF-OTHER", out)
+
+    def test_mismatched_or_invalid_demo_homes_send_nothing(self) -> None:
+        good = ",".join(FIVE)
+        cases = {
+            "four": (",".join(FIVE[:4]), FIVE),
+            "six": (good + ",ZF-OTHER", FIVE + ["ZF-OTHER"]),
+            "duplicate": (",".join(FIVE[:4] + [FIVE[0]]), FIVE),
+            "blank": (good + ",", FIVE),
+            "absent": (good, FIVE[:4]),
+        }
+        for name, (value, store) in cases.items():
+            with self.subTest(name):
+                code, out = self._main({"ZF_ASSIST_QUALITY_DEMO_HOMES": value}, store)
+                self.assertEqual((code, out), (2, ""))
+
+    def test_bad_cadence_is_refused(self) -> None:
+        code, out = self._main({"ZF_SIM_CADENCE_MINUTES": "2"}, HOMES[:3])
+        self.assertEqual((code, out), (2, ""))
+
+
 if __name__ == "__main__":
     unittest.main()

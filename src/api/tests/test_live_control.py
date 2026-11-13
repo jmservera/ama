@@ -1,4 +1,5 @@
 import asyncio
+import io
 import json
 import tempfile
 import unittest
@@ -286,7 +287,14 @@ def _rewriter(**changes: Any) -> Any:
 class MainAttemptFenceTests(unittest.TestCase):
     """Through `main`: the real control file is rewritten by the sink during the run."""
 
-    def _run(self, directory: str, rewrite: Any, homes: list[str], fail_first: bool = False) -> Any:
+    def _run(
+        self,
+        directory: str,
+        rewrite: Any,
+        homes: list[str],
+        fail_first: bool = False,
+        extra: tuple[str, ...] = (),
+    ) -> Any:
         far = (datetime.now(UTC) + timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
         path = Path(directory) / "control.json"
         lc.write(path, lc.parse(document(homes=homes, expires_at=far)))
@@ -307,7 +315,7 @@ class MainAttemptFenceTests(unittest.TestCase):
             patch.object(ls, "_sink", lambda args, env: sink),
             patch.object(ls, "store_home_ids", lambda env=None: HOMES),
         ):
-            code = ls.main(["--once", "--control-file", str(path)], env)
+            code = ls.main(["--once", "--control-file", str(path), *extra], env)
         return code, sink
 
     def test_unchanged_control_sends_every_cohort_home(self) -> None:
@@ -324,6 +332,21 @@ class MainAttemptFenceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             code, sink = self._run(directory, _rewriter(enabled=False), HOMES[:1], fail_first=True)
         self.assertEqual((code, sink.attempts, sink.messages), (0, 1, []))
+
+    def test_minute_cadence_keeps_the_per_attempt_stop_and_retry_fence(self) -> None:
+        minute = ("--cadence-minutes", "1")
+        with tempfile.TemporaryDirectory() as directory:
+            code, sink = self._run(directory, None, HOMES[:3], extra=minute)
+            self.assertEqual((code, len(sink.messages)), (0, 3))
+            self.assertEqual(
+                {json.loads(m[2])["schema_version"] for m in sink.messages}, {"live-sim-reading-v2"}
+            )
+        with tempfile.TemporaryDirectory() as directory:
+            code, sink = self._run(directory, _rewriter(enabled=False), HOMES[:1], True, minute)
+            self.assertEqual((code, sink.attempts, sink.messages), (0, 1, []))
+        with tempfile.TemporaryDirectory() as directory:
+            code, sink = self._run(directory, _rewriter(homes=HOMES[1:2]), HOMES[:1], True, minute)
+            self.assertEqual((sink.attempts, sink.messages), (1, []))
 
     def test_cohort_removal_during_the_slot_stops_the_removed_homes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -343,6 +366,125 @@ class MainAttemptFenceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             code, sink = self._run(directory, corrupt, HOMES[:3])
         self.assertEqual((code, sink.attempts, len(sink.messages)), (0, 1, 1))
+
+
+class DemoControlCohortTests(unittest.TestCase):
+    """The control cohort must itself be the exact demo five, whatever the store holds."""
+
+    DEMO = HOMES[:5]
+
+    def _env(self, directory: str, demo: str) -> dict[str, str]:
+        return {
+            "ZF_STORE": "json",
+            "ZF_DATA": str(Path(directory) / "none.json"),
+            "ZF_ASSIST_QUALITY_DEMO_HOMES": demo,
+        }
+
+    def _write(self, directory: str, homes: list[str]) -> Path:
+        far = (datetime.now(UTC) + timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        path = Path(directory) / "control.json"
+        lc.write(path, lc.parse(document(homes=homes, expires_at=far)))
+        return path
+
+    def _main(self, directory: str, homes: list[str], store: list[str], demo: str) -> Any:
+        path = self._write(directory, homes)
+        sink = ls.MemorySink()
+        with (
+            patch.object(ls, "_sink", lambda args, env: sink),
+            patch.object(ls, "store_home_ids", lambda env=None: store),
+            patch("sys.stderr", io.StringIO()),
+        ):
+            code = ls.main(["--once", "--control-file", str(path)], self._env(directory, demo))
+        return code, sink
+
+    def test_exact_control_cohort_sends_the_five(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            code, sink = self._main(directory, self.DEMO, HOMES, ",".join(self.DEMO))
+        self.assertEqual((code, len(sink.messages)), (0, 5))
+
+    def test_extra_control_home_absent_from_the_store_is_refused(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            code, sink = self._main(directory, self.DEMO + ["HOME-900"], HOMES, ",".join(self.DEMO))
+        self.assertEqual((code, sink.messages), (2, []))
+
+    def test_control_cohort_missing_a_home_or_a_store_home_is_refused(self) -> None:
+        demo = ",".join(self.DEMO)
+        with tempfile.TemporaryDirectory() as directory:
+            code, sink = self._main(directory, self.DEMO[:4], HOMES, demo)
+        self.assertEqual((code, sink.messages), (2, []))
+        with tempfile.TemporaryDirectory() as directory:
+            code, sink = self._main(directory, self.DEMO, HOMES[:4], demo)
+        self.assertEqual((code, sink.messages), (2, []))
+
+    def test_explicitly_empty_demo_homes_sends_nothing(self) -> None:
+        for value in ("", " "):
+            with self.subTest(value=value), tempfile.TemporaryDirectory() as directory:
+                code, sink = self._main(directory, self.DEMO, HOMES, value)
+                self.assertEqual((code, sink.messages), (2, []))
+
+    def test_cached_fallback_cannot_hide_an_extra_control_home(self) -> None:
+        captured: dict[str, Any] = {}
+
+        async def fake_run(list_homes: Any, *args: Any, **kwargs: Any) -> list[Any]:
+            captured["homes"] = list_homes
+            return []
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = self._write(directory, self.DEMO)
+            state: dict[str, Any] = {"fail": False}
+
+            def store(env: Any = None) -> list[str]:
+                if state["fail"]:
+                    raise ls.HomeListError("STORE_DOWN")
+                return HOMES
+
+            with (
+                patch.object(ls, "_sink", lambda args, env: ls.MemorySink()),
+                patch.object(ls, "store_home_ids", store),
+                patch.object(ls, "run", fake_run),
+            ):
+                code = ls.main(
+                    ["--control-file", str(path)], self._env(directory, ",".join(self.DEMO))
+                )
+                self.assertEqual(code, 0)
+                self.assertEqual(captured["homes"](), self.DEMO)
+                state["fail"] = True
+                self.assertEqual(captured["homes"](), self.DEMO)
+                self._write(directory, self.DEMO + ["HOME-900"])
+                with self.assertRaises(StreamError):
+                    captured["homes"]()
+
+    def test_sixth_home_added_mid_slot_fences_the_next_attempt(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = self._write(directory, self.DEMO)
+            demo = tuple(self.DEMO)
+            moment = datetime.now(UTC)
+            self.assertTrue(ls.attempt_permitted(path, self.DEMO[0], moment, demo))
+            self._write(directory, self.DEMO + ["HOME-900"])
+            self.assertFalse(ls.attempt_permitted(path, self.DEMO[0], moment, demo))
+
+    def test_cohort_mismatch_during_a_run_is_raised_not_swallowed(self) -> None:
+        def refuse() -> list[str]:
+            raise StreamError("DEMO_COHORT_MISMATCH")
+
+        gen = lr.Generator(184, cadence_seconds=60)
+        with self.assertRaises(StreamError):
+            asyncio.run(ls.run(refuse, gen, ls.MemorySink(), ls.Limits(), once=True))
+
+    def test_max_homes_conflicting_with_the_demo_five_is_refused(self) -> None:
+        sink = ls.MemorySink()
+        env = {
+            "ZF_STORE": "json",
+            "ZF_DATA": "/nonexistent/none.json",
+            "ZF_ASSIST_QUALITY_DEMO_HOMES": ",".join(self.DEMO),
+        }
+        with (
+            patch.object(ls, "_sink", lambda args, env: sink),
+            patch.object(ls, "store_home_ids", lambda env=None: HOMES),
+            patch("sys.stderr", io.StringIO()),
+        ):
+            code = ls.main(["--once", "--max-homes", "2"], env)
+        self.assertEqual((code, sink.messages), (2, []))
 
 
 class RefreshRegressionTests(unittest.TestCase):
