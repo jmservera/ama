@@ -32,7 +32,7 @@ const AsyncAction = (() => {
         status.querySelector(".async-spinner")?.remove();
         if (error && error.name !== "AbortError") {
           status.classList.add("err");
-          status.textContent = `${label}: ${error.message}. Try again.`;
+          status.textContent = `${label}: ${String(error.message).replace(/[.\s]+$/, "")}. Owner: application support. Next action: check the recorded history before repeating a change. Try again if nothing changed; if it continues, contact application support.`;
         } else remove();
       },
     };

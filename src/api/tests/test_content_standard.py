@@ -24,6 +24,12 @@ AUDITED_FILES = (
     "law.html",
     "index.html",
     "welcome.html",
+    "aftercare.js",
+    "case-workspace.js",
+    "chat-widget.js",
+    "async-action.js",
+    "progress.js",
+    "workspace-shell.js",
 )
 # Exact identifiers, raw technical JSON key and legacy stored finance value only.
 ALLOWED = (
@@ -56,6 +62,11 @@ class CopyAudit(unittest.TestCase):
     def test_no_internal_terms_in_web_copy(self):
         for f in AUDITED_FILES:
             self.assertEqual(list(copy_violations((WEB / f).read_text())), [], f)
+
+    def test_every_served_script_and_page_is_audited(self):
+        served = {p.name for p in (*WEB.glob("*.js"), *WEB.glob("*.html"))}
+        self.assertEqual(sorted(served - set(AUDITED_FILES)), [])
+        self.assertEqual(sorted(set(AUDITED_FILES) - served), [])
 
     def test_all_standard_vocabulary_families_are_guarded(self):
         for word in (
@@ -187,6 +198,42 @@ class CopyAudit(unittest.TestCase):
         self.assertRegex(text, r"Owner: [^.]+\.")
         self.assertLess(text.index("Owner:"), text.index("Next action:"))
         self.assertIsNone(BANNED.search(text))
+
+    def test_chat_aftercare_and_shared_failure_messages_state_reason_owner_and_next_action(self):
+        def ordered(text, label):
+            self.assertIn("Owner:", text, label)
+            self.assertIn("Next action:", text, label)
+            self.assertLess(text.index("Owner:"), text.index("Next action:"), label)
+
+        for name in ("chat.js", "aftercare.js", "async-action.js", "progress.js"):
+            js = (WEB / name).read_text()
+            literals = (
+                lit
+                for line in js.splitlines()
+                if line.count("`") % 2 == 0
+                for lit in re.findall(r"`[^`]*\.message[^`]*`", line)
+            )
+            for literal in literals:
+                if "Owner:" in literal or "error.message ||" in literal:
+                    continue
+                if name == "chat.js" and "${feature}" in literal:
+                    continue
+                with self.subTest(name=name, literal=literal):
+                    ordered(literal, literal)
+        aftercare = (WEB / "aftercare.js").read_text()
+        for const in ("AC_UNCONFIRMED", "AC_EARLIER"):
+            literal = re.search(rf'const {const} = "(.*)";', aftercare).group(1)
+            ordered(literal, const)
+        chat = (WEB / "chat.js").read_text()
+        for text in (
+            "Chat could not load. Owner: application support. Next action:",
+            "is not available for your role. Owner: your team manager. Next action:",
+            "is not available right now: ${error.message} Owner: application support. Next action:",
+        ):
+            self.assertIn(text, chat)
+        self.assertIn("Your role cannot do this. Owner:", aftercare)
+        self.assertIn("cannot record one. Owner:", aftercare)
+        self.assertIn("Next action: change the filters or try again.", (WEB / "progress.js").read_text())
 
     def test_standard_documents_glossary_and_review(self):
         for text in (

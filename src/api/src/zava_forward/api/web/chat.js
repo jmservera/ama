@@ -12,8 +12,8 @@ const chatProposalNames = {
 const chatAdministratorRole = "Application Administrator";
 
 function unavailableNote(feature, error, manual) {
-  if (error && error.roleDenied) return `${feature} is not available for your role. ${manual}`;
-  return `${feature} is not available right now: ${error.message} ${manual}`;
+  if (error && error.roleDenied) return `${feature} is not available for your role. Owner: your team manager. Next action: ask them for access. ${manual}`;
+  return `${feature} is not available right now: ${error.message} Owner: application support. Next action: ${manual}`;
 }
 
 const employeeChat = (() => {
@@ -40,7 +40,7 @@ const employeeChat = (() => {
       retryWorkspaceScript("/chat-widget.js").then(() => {
         if (me !== session) return;
         if (typeof window.ChatWidget?.create === "function") install();
-        else workspaceStatus.textContent = "Chat could not load. Reload the page to try again, or continue with the ordinary workflow.";
+        else workspaceStatus.textContent = "Chat could not load. Owner: application support. Next action: reload the page to try again, or continue with the ordinary workflow.";
       });
       return;
     }
@@ -174,7 +174,7 @@ const employeeChat = (() => {
       } catch (error) {
         if (!current()) return;
         if ([401, 403, 404].includes(error.status)) { deny(); return; }
-        ui.fail(`Chat unavailable: ${error.message} Try again or continue with the ordinary workflow.`);
+        ui.fail(`Chat unavailable: ${error.message} Owner: application support. Next action: try again or continue with the ordinary workflow.`);
       } finally {
         if (current()) ui.busy(false);
       }
@@ -213,7 +213,7 @@ const employeeChat = (() => {
       }
       ui.busy(false);
       send.disabled = true;
-      ui.fail(`Chat unavailable: ${error.message} Reload the page to try again, or continue with the ordinary workflow.`);
+      ui.fail(`Chat unavailable: ${error.message} Owner: application support. Next action: reload the page to try again, or continue with the ordinary workflow.`);
     }
   }
   return { install, reset, open };
@@ -241,7 +241,7 @@ function chatCasePanel(id) {
       const tid = await ensureThread();
       await api(`/api/chat/threads/${encodeURIComponent(tid)}/proposals`, { capability });
       say("Proposal requested. Find it in the proposals panel and the review queue.");
-    } catch (e) { say(`Proposal not requested: ${e.message}`); }
+    } catch (e) { say(`Proposal not requested: ${e.message} Owner: application support. Next action: check the proposals panel before asking again, or continue ordinary case work manually.`); }
   };
   const manualNote = "Continue ordinary case work manually.";
   if (me.user.role === chatAdministratorRole || me.user.contractor) {
@@ -356,7 +356,7 @@ function regulatoryAlertsPanel(caseId) {
       status.textContent = `${alerts.length} visible alerts. Coverage: ${data.coverage_status || "unknown"}. ${alerts.length ? "Only alerts permitted for your role are shown." : "No visible alerts does not mean no risk, complete coverage or compliance."}`;
     } catch (e) {
       list.replaceChildren();
-      status.textContent = `Alert coverage unknown: ${e.message} Use the existing human emergency or hazard service; do not wait for checks.`;
+      status.textContent = `Alert coverage unknown: ${e.message} Use the existing human emergency or hazard service; do not wait for checks. Owner: application support. Next action: reload to check again.`;
     }
   }
   root.append(h("h2", { id: "regulatory-alerts-title" }, "Regulatory alerts for this home"),
@@ -383,7 +383,7 @@ function regulatoryChatPanel(caseId) {
   };
   const refreshUsage = async () => {
     try { showUsage(await api("/api/chat/regulatory/usage")); }
-    catch (e) { usageStatus.textContent = `Recorded usage unavailable: ${e.message} No model calls are permitted; use the human owner route.`; }
+    catch (e) { usageStatus.textContent = `Recorded usage unavailable: ${e.message} No model calls are permitted; use the human owner route. Owner: application support. Next action: reload to check again.`; }
   };
   const log = h("ol", { "aria-label": "Cited regulatory turns" });
   const liveLog = h("div", { role: "log", "aria-live": "polite", "aria-label": "Cited regulatory updates" }, log);
@@ -422,7 +422,7 @@ function regulatoryChatPanel(caseId) {
         status.textContent = `${receipt.label}: sent to ${receipt.owner}'s exercise inbox. No legal approval or resident message.`;
         doubt.textContent = "Sent to exercise owner; awaiting human review";
       } catch (e) {
-        status.textContent = `Doubt route failed: ${e.message}`;
+        status.textContent = `Doubt route failed: ${e.message} Owner: application support. Next action: try again, or ask Juan Manuel Servera directly.`;
         doubt.removeAttribute("aria-disabled");
       }
     } }, "In doubt: send this turn to Juan Manuel Servera");
@@ -455,7 +455,7 @@ function regulatoryChatPanel(caseId) {
         status.textContent = `${answer.kind}: synthetic-demo turn stored with its sources.${answer.escalation ? " Conflict sent to the exercise owner for human review." : ""}`;
         clearSubmittedQuestion(sent);
         void refreshUsage();
-      } catch (e) { status.textContent = `Cited lookup unavailable: ${e.message} Use the ordinary human route.`; }
+      } catch (e) { status.textContent = `Cited lookup unavailable: ${e.message} Use the ordinary human route. Owner: application support. Next action: try the lookup again later.`; }
       finally { button.disabled = false; input.focus(); }
     } }, h("label", { for: "regulatory-question" }, "Cited source question"), input, button),
     h("button", { type: "button", class: "alt", onclick: async () => {
@@ -469,7 +469,7 @@ function regulatoryChatPanel(caseId) {
             h("p", {}, thread.messages[0].content), h("p", { class: "regulatory-excerpt" }, answer.reply)));
         }
         status.textContent = `${here.length} synthetic-demo referrals for this home. No decision recorded.`;
-      } catch (e) { status.textContent = `Exercise inbox unavailable: ${e.message}`; }
+      } catch (e) { status.textContent = `Exercise inbox unavailable: ${e.message} Owner: application support. Next action: reload, or ask Juan Manuel Servera directly.`; }
     } }, "Open my exercise doubt inbox (named owner only)"), status);
   const regulatoryRoleMissing = me.user.auth_provider === "trusted-proxy"
     && !(me.user.rule_roles || []).includes("regulatory_chat");
@@ -499,7 +499,7 @@ function regulatoryChatPanel(caseId) {
         }
       }
       status.textContent = "Stored synthetic-demo excerpts restored. These are historical records; ask again for a fresh lookup.";
-    } catch (e) { status.textContent = `Stored regulatory chat unavailable: ${e.message}`; }
+    } catch (e) { status.textContent = `Stored regulatory chat unavailable: ${e.message} Owner: application support. Next action: reload, or use the ordinary human route.`; }
   }).catch((e) => {
     input.disabled = true;
     button.disabled = true;
