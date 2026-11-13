@@ -225,6 +225,15 @@ def populated_hazards(route: Route) -> None:
         },
         {
             **base,
+            "referral_version": 1,
+            "sent_at": "2026-11-13T10:00:00Z",
+            "received_at": "2026-11-13T10:05:00Z",
+            "accepted_at": "2026-11-13T10:30:00Z",
+            "destination": {"code": "PM-01", "name": "Pam Lead", "role": "Retrofit Programme Manager"},
+            "hold": {**hold, "accountable_role": "Retrofit Programme Manager", "legacy": False},
+        },
+        {
+            **base,
             "referred": "2026-01-02",
             "repaired": "2026-02-01",
             "repair_evidence": None,
@@ -260,11 +269,16 @@ def populated_safety_panel(
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.route("**/api/cases/ZF-1", populated_hazards)
         try:
-            sign_in(page, base)
+            sign_in(page, base, "pam@example.test")
             page.evaluate(f"document.documentElement.style.fontSize = '{root * 100}%'")
             panel = page.locator("#case-safety")
-            expect(panel.locator("li.safety-item")).to_have_count(2)
+            expect(panel.locator("li.safety-item")).to_have_count(3)
             expect(panel.locator("#hz-aware-hint")).to_contain_text("Example:")
+            for selector in (".safety-details", ".safety-optional"):
+                disclosures = panel.locator(selector)
+                check(f"disclosure rendered {selector}: populated-safety/{name}", disclosures.count() > 0)
+                disclosures.evaluate_all("els => els.forEach(el => { el.open = true; })")
+                expect(disclosures.first).to_have_attribute("open", "")
             scan(page, axe, reports, f"populated-safety/{name}")
             check(f"axe no violations: populated-safety/{name}", not reports[-1]["violations"])
             overflow = page.evaluate(

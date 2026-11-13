@@ -239,7 +239,8 @@ panel scrolling are checked at all three widths. Axe scans the overview, open
 blocker and scrolled Resident panel at each width, rejects every violation,
 and retains full findings and incomplete checks in `results.json`, including
 on a failed run. Incomplete axe checks still need human assessment.
-It also scans a case with an open and a legacy safety observation at 1280px,
+It also scans a case with open, accepted and legacy safety observations, with the
+evidence and optional-date disclosures expanded, at 1280px,
 390px, 320px and 200% browser zoom (640px at scale 2), rejecting any axe
 violation or horizontal overflow (issue 1530).
 `--baseline` captures geometry without requiring axe and is not acceptance
