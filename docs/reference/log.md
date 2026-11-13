@@ -11645,3 +11645,15 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Appended a dated, draft section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#post-1500-merged-main-provenance-checkpoint-2026-11-13-refs-440-149-96) that separates parent-source observations, fresh C4 checks, hosted observations of Source CI run 43351173623 on the merge ref and actual merged-main provenance, with document-qualified status and the remaining holds.
 * Documentation only: no source, test, workflow or index change; core 72 stays historical reuse; the hosted SQL Server module outcome is a limited observation; the post-merge push scorer was pending when read; no acceptance tick, pivot or approval.
 * Evidence under `.copilot-tracking/` (2026-11-13 issue-440-post1500-0240).
+
+## [2026-11-13] add | Issue 74 home and building separation evidence integration (Refs #74 #440)
+
+* Appended a dated, draft section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#issue-74-home-and-building-separation-evidence-integration-2026-11-13-refs-74-440) and an index row in the [index](./README.md): source `6f2918011` (tree `3d573c203`), 8 core and 6 API named unit tests (zero skips), the home-case browser check 24 PASS lines (1 server + 23 browser and axe, ZF-2 and ZF-3 only) and one one-off building-route observation, kept as separate instruments with no combined count, with exact commands, chronology, preserved failures, cleanup and limits.
+* Documentation only: no source, test, check, configuration or helper change; no raw bundle copied. G5 applicability, missing or null funding shown as no, outcome definition, assistive technology and human acceptance and the unknown source-history budget stay open; reviews of the runs are self-reviews; no tick, closure or acceptance.
+* Evidence under `.copilot-tracking/` (2026-11-13 issue-74-building-separation-0400, issue-74-browser-verification-0410, issue-74-building-observation-0420 and issue-74-evidence-integration-0424).
+
+## [2026-11-13] update | Issue 74 integration correction after independent review (Refs #74 #440)
+
+* Corrected the unit-failure narrative in the [issue 74 integration section](../architecture/cutover-evidence-pack.md#issue-74-home-and-building-separation-evidence-integration-2026-11-13-refs-74-440): only the core attempt shows the missing package; the two byte-identical API error files show a wrong selector and the distinct attempt count is not claimed. Added the axe scope beside the browser row and a note on the unreconciled observation plan, and updated the existing [index](./README.md) row. The earlier log entry is unchanged.
+* Documentation only: the independent REVISE review is preserved byte-for-byte; counts, passes and open adverse items are unchanged; no source, test, check or configuration change, no tick, closure or approval. Independent changed-line reassessment is pending.
+* Evidence under `.copilot-tracking/` (2026-11-13 issue-74-evidence-integration-0424).

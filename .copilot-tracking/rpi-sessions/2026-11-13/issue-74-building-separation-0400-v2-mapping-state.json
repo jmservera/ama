@@ -1,0 +1,37 @@
+{
+  "task_id": "issue-74-building-separation-0400-v2-mapping",
+  "task_slug": "issue-74-building-separation-0400-v2-mapping",
+  "parent_task": {"task_id": "issue-74-building-separation-0400-v1-unit", "task_slug": "issue-74-building-separation-0400-v1-unit"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "head_before": "74daa587e500bc440d31ad5c2241a6513b70dd35",
+  "origin_main": "6f2918011d55d63ffc52865073ef45bd7ea9197c",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-13/issue-74-building-separation-0400-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-13/issue-74-building-separation-0400-plan.md",
+    "details": ".copilot-tracking/details/2026-11-13/issue-74-building-separation-0400-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-13/issue-74-building-separation-0400-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-13/issue-74-building-separation-0400-v2-mapping-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-13/issue-74-building-separation-0400-v2-mapping-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Original research, plan and critique reused; V1 unit records consumed", "status": "done", "evidence": "v1-unit changes and unit logs in /home/azureuser/.copilot/session-state/2cbb371d-27a6-4609-9dc4-d25e657ce8fc/files/74-unit-verification-0408/"},
+    {"decision": "V2 documentary mapping recorded; nothing executed; browser worker outputs not read or inferred", "status": "done", "evidence": "v2-mapping changes"},
+    {"decision": "Review executed as self-review; not independent", "status": "done", "evidence": "v2-mapping review"},
+    {"decision": "No criterion 2 tick, closure, outcome definition or source grant", "status": "confirmed", "evidence": "changes Limits"}
+  ],
+  "blockers": [
+    {"id": "G5-admission", "summary": "Applicability display (CR-001) decision-gated", "resolution": null},
+    {"id": "unknown-funding", "summary": "Unknown-funding representation (CR-002) decision-gated", "resolution": null},
+    {"id": "outcome-definition", "summary": "Outcome tuple lacks approved authority", "resolution": null},
+    {"id": "buildingview-check-admission", "summary": "Proposed buildingView navigation needs new check source and a source grant", "resolution": null}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Root decides admission of the buildingView check after the browser worker finishes, then integrates evidence into one docs candidate"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Integrate browser result with V1 and V2 evidence", "rationale": "Browser pending", "evidence": "v2-mapping changes"},
+    {"rank": 2, "task": "Decide buildingView check admission", "rationale": "Only route for rendered building terms", "evidence": "v2-mapping proposal"},
+    {"rank": 3, "task": "Decide G5 and unknown-funding representation", "rationale": "Decision-gated", "evidence": "critique CR-001, CR-002"}
+  ]
+}

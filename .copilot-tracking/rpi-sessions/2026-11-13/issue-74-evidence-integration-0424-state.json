@@ -1,0 +1,72 @@
+{
+  "task_id": "issue-74-evidence-integration-0424",
+  "task_slug": "issue-74-evidence-integration-0424",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-13/issue-74-evidence-integration-0424-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-13/issue-74-evidence-integration-0424-plan.md",
+    "details": ".copilot-tracking/details/2026-11-13/issue-74-evidence-integration-0424-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-13/issue-74-evidence-integration-0424-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-13/issue-74-evidence-integration-0424-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-13/issue-74-evidence-integration-0424-review.md",
+    "correction_amendment": ".copilot-tracking/changes/2026-11-13/issue-74-evidence-integration-0424-correction-amendment.md",
+    "independent_review": ".copilot-tracking/reviews/2026-11-13/issue-74-evidence-independent-review-0435-review.md",
+    "correction_self_review": ".copilot-tracking/reviews/2026-11-13/issue-74-evidence-integration-0424-correction-self-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "done",
+      "evidence": "research artifact"
+    },
+    {
+      "decision": "Critique executed once by independent rubber-duck, verdict Revise, IC-001..IC-003 applied directly",
+      "status": "done",
+      "evidence": "critique artifact"
+    },
+    {
+      "decision": "Documentation-only tier; no executable gates; no push, PR or merge",
+      "status": "confirmed",
+      "evidence": "owner brief"
+    },
+    {
+      "decision": "Review executed once as self-review, conformant with limits; not independent",
+      "status": "done",
+      "evidence": "review artifact"
+    },
+    {
+      "decision": "Independent review REVISE (IR-001 Medium, IR-002/003 Low) preserved; documentation correction applied; self-review only",
+      "status": "done",
+      "evidence": "correction amendment"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Independent changed-line reassessment of the corrected head; no push, PR or merge"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Independent exact-head review of the local commit",
+      "rationale": "Reviews here are self-reviews",
+      "evidence": "review artifact"
+    },
+    {
+      "rank": 2,
+      "task": "Decide G5 applicability, unknown-funding representation and outcome definition",
+      "rationale": "Decision-gated adverse items unchanged",
+      "evidence": "original critiques"
+    },
+    {
+      "rank": 3,
+      "task": "Decide whether a maintained building-route check is admitted",
+      "rationale": "Observation is not regression coverage",
+      "evidence": "building observation review"
+    }
+  ]
+}
