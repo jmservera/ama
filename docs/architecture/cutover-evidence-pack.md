@@ -8128,7 +8128,7 @@ Draft, documentation only. It records two frozen local children as inputs. It is
 | #232 original attempt | None | Selectors `232` and `232s` exited 0 with no FAIL; Tab reached table regions; page-only CSV download | Axe SKIP twice, critique NOTRUN, independent Review Partial; kept verbatim |
 | #232 recovery | None | Pinned axe 4.10.3 (sha256 `880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb`): both selectors exit 0, no axe violations or incompletes, Tab in the table region at 1280 px only, no POST, reflow markers at 320, 390 and 1280 px | Plan and critique were genuinely before execution, independent Review Partial |
 
-The recovery log birth (08:41:52.547) and exit file (08:44:42.440) imply under 2m50s wall time as an upper bound only. It is not an independent timing proof and not the reported CLI session lifetime as active work.
+No durable active-duration measurement is established for the recovery. The reported CLI session lifetime must not be interpreted as active work.
 
 ### Limits
 
