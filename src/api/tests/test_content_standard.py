@@ -180,6 +180,14 @@ class CopyAudit(unittest.TestCase):
             self.assertLess(text.index("Owner:"), text.index("Next action:"), status)
             self.assertIsNone(BANNED.search(text), status)
 
+    def test_unreadable_saved_file_message_states_reason_owner_and_next_action(self):
+        js = (WEB / "role-screens.js").read_text()
+        text = re.search(r'const HELD_CHECK_UNREADABLE = "(.*)";', js).group(1)
+        self.assertGreater(len(text.split("Owner:")[0].strip()), 20)
+        self.assertRegex(text, r"Owner: [^.]+\.")
+        self.assertLess(text.index("Owner:"), text.index("Next action:"))
+        self.assertIsNone(BANNED.search(text))
+
     def test_standard_documents_glossary_and_review(self):
         for text in (
             "## Glossary",

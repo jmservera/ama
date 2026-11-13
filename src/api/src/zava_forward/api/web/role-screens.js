@@ -1381,7 +1381,7 @@ const HELD_CHECK_ERRORS = {
   502: "The document store is unavailable. Nothing was approved or submitted. Owner: application support. Next action: reload and try again."
 };
 const HELD_CHECK_NOT_RUN = "The check could not run, so nothing is judged about your file. Nothing was approved or submitted. Owner: application support. Next action: reload and try once more, then contact application support.";
-const HELD_CHECK_UNREADABLE = "We could not read that file as a saved Held draft (JSON). Next action: choose the held-form-draft-export.json file you downloaded for this draft.";
+const HELD_CHECK_UNREADABLE = "We could not read that file as a saved Held draft (JSON). Owner: you, the signed-in reviewer. Next action: choose the held-form-draft-export.json file you downloaded for this draft.";
 const HELD_CHECK_NO_FILE = "Choose the saved Held file first. Next action: pick the held-form-draft-export.json you downloaded for this draft.";
 const heldCheckNames = (value) => Array.isArray(value) && value.every((v) => typeof v === "string") ? value : null;
 function heldCheckResult(data) {

@@ -276,9 +276,13 @@ def check_width(browser: Browser, base: str, width: int) -> None:
         no_overflow(page, "second page", width)
 
         requests_at_end = len(paging_gets)
-        page.keyboard.press("Enter")
+        expect(page.locator("#programme-next")).to_be_disabled()
+        check(
+            f"{tag} Next is disabled on the last page and focus moved to Previous",
+            focused(page) == "programme-prev",
+        )
         page.wait_for_timeout(300)
-        check(f"{tag} Next on the last page requests nothing", len(paging_gets) == requests_at_end)
+        check(f"{tag} the last page requests nothing more", len(paging_gets) == requests_at_end)
         press_until(page, "Tab", "Reset to default view", 4)
         page.keyboard.press("Space")
         expect(scope_status).to_contain_text(
@@ -306,12 +310,19 @@ def check_width(browser: Browser, base: str, width: int) -> None:
 
         check(f"{tag} paging GET sequence: {paging_gets}", paging_gets == ["50", "50", "0"])
 
-        press_until(page, "Tab", "programme-next", 8)
+        expect(page.locator("#programme-prev")).to_be_disabled()
+        check(
+            f"{tag} focus moved to Next when Previous became disabled",
+            focused(page) == "programme-next",
+        )
         page.keyboard.press("Enter")
         expect(paging).to_contain_text("Showing cases 51 to 60 of 60 permitted cases.")
         expect(page.locator("#programme-next")).to_be_disabled()
         expect(page.locator("#programme-prev")).to_be_enabled()
-        check(f"{tag} focus moved to Previous when Next became disabled", focused(page) == "programme-prev")
+        check(
+            f"{tag} focus moved to Previous when Next became disabled",
+            focused(page) == "programme-prev",
+        )
         page.locator("#programme-scope").select_option("all")
         page.get_by_role("button", name="Apply filter").click()
         expect(scope_status).to_contain_text(
@@ -384,7 +395,6 @@ def check_width(browser: Browser, base: str, width: int) -> None:
         page.get_by_role("region", name=f"Evidence for {SELECTED}", exact=True).wait_for()
         expect(paging).to_contain_text("Showing cases 1 to 50 of 60 permitted cases.")
         expect(sidebar_row).to_contain_text(SELECTED)
-        check(f"{tag} a direct link without a page keeps the first queue page", True)
         after = {cid: get_json(page, base, f"/api/cases/{cid}") for cid in watched}
         check(f"{tag} no case record changed", before == after)
         check(f"{tag} no post-sign-in writes: {writes}", not writes)
