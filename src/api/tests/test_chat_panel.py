@@ -17,6 +17,7 @@ from unittest.mock import MagicMock, patch
 import test_role_matrix as roles
 from zava_forward.api import auth
 from zava_forward.api.server import chat_admission
+from zava_forward.core import chat_panel
 from zava_forward.core.chat_panel import ABSTAIN, FALLBACK, LABEL
 from zava_forward.core.assistants import REGISTRY
 from zava_forward.core import projection
@@ -455,6 +456,51 @@ class PanelTests(roles.Matrix):
         self.assertIs(self.api(ROLE, "/api/chat/status")[1]["storage_approved"], True)
         with patch.dict(os.environ, {k: "" for k in APPROVED}):
             self.assertIs(self.api(ROLE, "/api/chat/status")[1]["storage_approved"], False)
+
+    def test_status_reports_role_limits_and_bounds(self) -> None:
+        status = self.api(ROLE, "/api/chat/status")[1]
+        limits = status["limits"]
+        self.assertEqual((limits["calls_per_request"], limits["memory_used"]), (1, False))
+        self.assertEqual(
+            (limits["context_chars"], limits["history_chars"]),
+            (chat_panel.MAX_INPUT_CHARS, chat_panel.MAX_HISTORY_CHARS),
+        )
+        roles_report = status["role_limits"]
+        self.assertEqual(roles_report[ROLE]["calls_per_request"], 1)
+        self.assertEqual(status["your_role_limits"], roles_report[ROLE])
+        for role in ("Contractor", "Application Administrator"):
+            self.assertEqual(
+                (roles_report[role]["access"], roles_report[role]["calls_per_request"]),
+                (False, 0),
+            )
+            self.assertEqual(roles_report[role]["turns_per_thread"], 0)
+        self.assertIn("questions in one conversation", (WEB / "chat.js").read_text())
+
+    def test_receipt_reports_usage_and_thread_limit_falls_back(self) -> None:
+        tid = self.thread()
+        first = self.ask(tid)[1]
+        receipt = first["consumption"]
+        self.assertEqual(first["kind"], "answer")
+        self.assertEqual((receipt["calls_per_request"], receipt["memory_used"]), (1, False))
+        self.assertEqual(receipt["thread_turns_used"], 1)
+        self.assertTrue(0 < receipt["context_chars"] <= receipt["context_limit_chars"])
+        self.assertLessEqual(receipt["history_chars"], receipt["history_limit_chars"])
+        self.assertEqual(receipt["role_limits"]["calls_per_request"], 1)
+        with patch.object(chat_panel, "MAX_THREAD_TURNS", 2):
+            self.assertEqual(self.ask(tid)[1]["kind"], "answer")
+            self.prompts.clear()
+            over = self.ask(tid)[1]
+            self.assertEqual((over["kind"], over["workflow_only"]), ("fallback", True))
+            self.assertEqual(over["reply"], chat_panel.THREAD_LIMIT_REACHED)
+            self.assertEqual(over["consumption"]["model_calls"], 0)
+            self.assertEqual(over["consumption"]["thread_turns_used"], 2)
+            self.assertEqual(self.prompts, [])
+
+    def test_role_with_no_model_calls_gets_zero_bound_and_no_access(self) -> None:
+        self.assertEqual(chat_panel.role_limits("Contractor")["calls_per_request"], 0)
+        self.assertEqual(chat_panel.role_limits(None)["access"], False)
+        self.assertEqual(self.api("Contractor", "/api/chat/threads", {"case_id": "ZF-1"})[0], 403)
+        self.assertEqual(self.prompts, [])
 
     def test_unstored_ask_is_rules_only_without_storage_or_model(self) -> None:
         with patch.dict(os.environ, {k: "" for k in APPROVED}):

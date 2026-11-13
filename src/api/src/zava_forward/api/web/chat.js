@@ -51,7 +51,7 @@ const employeeChat = (() => {
   }
   function limitsNote(limits) {
     return `Limits for each question: ${limits.calls_per_turn} model call, ${limits.retries} retries, `
-      + `up to ${limits.context_chars} characters of context and ${limits.history_chars} characters of your earlier questions. `
+      + `up to ${limits.context_chars} characters of context and ${limits.history_chars} characters of your earlier questions, and ${limits.turns_per_thread} questions in one conversation. `
       + "Earlier assistant replies are not sent back. These are engineering caps, not spend authorization. "
       + "A question over a cap gets workflow-only help; continue with the ordinary case workflow.";
   }
@@ -92,7 +92,8 @@ const employeeChat = (() => {
   function usageNote(receipt) {
     if (!receipt) return "";
     const tokens = receipt.tokens && Number.isInteger(receipt.tokens.total_tokens) ? receipt.tokens.total_tokens : "Unknown";
-    return `Model calls: ${receipt.model_calls}. Tokens: ${tokens}. Outcome: ${receipt.outcome}. Cost: ${receipt.cost}. `;
+    return `Model calls: ${receipt.model_calls}. Tokens: ${tokens}. Outcome: ${receipt.outcome}. Cost: ${receipt.cost}. `
+      + (Number.isInteger(receipt.thread_turns_used) ? `Questions in this conversation: ${receipt.thread_turns_used} of ${receipt.thread_turn_limit}. ` : "");
   }
   async function open() {
     if (widget) { widget.open(); return; }

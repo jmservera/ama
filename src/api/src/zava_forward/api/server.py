@@ -28,7 +28,7 @@ from zava_forward.core.ai import Ai, may_carry_captured_readings
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARNING
-from zava_forward.core.chat_panel import ChatPanel, chat_skills, TASK as CHAT_TASK, MAX_INPUT_CHARS, MAX_HISTORY_CHARS
+from zava_forward.core.chat_panel import ChatPanel, chat_skills, TASK as CHAT_TASK, MAX_INPUT_CHARS, MAX_HISTORY_CHARS, MAX_THREAD_TURNS, all_role_limits, role_limits
 from zava_forward.core.regulatory_chat import RegulatoryChat, TASK as REGULATORY_TASK
 from zava_forward.agents import regulatory_chat
 from zava_forward.core.source_monitor import dated_card
@@ -1050,7 +1050,9 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         "activation": "demo-only" if demo else "disabled; approval evidence required",
                         "demo_activation": demo,
                         "demo_disclaimer": ai_registry.DEMO_ACTIVATION["disclaimer"] if demo else None,
-                        "limits": {"calls_per_turn": 1, "retries": 0, "output_tokens": 600,
+                        "role_limits": all_role_limits(), "your_role_limits": role_limits(c.current_user(user).get("role")),
+                        "limits": {"calls_per_turn": 1, "calls_per_request": 1, "retries": 0, "output_tokens": 600,
+                                   "turns_per_thread": MAX_THREAD_TURNS,
                                    "context_chars": MAX_INPUT_CHARS, "history_chars": MAX_HISTORY_CHARS,
                                    "memory_used": False, "authority": "engineering caps, not spend authorization"}})
                 if parts and parts[0] == "regulatory":
