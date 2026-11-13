@@ -248,6 +248,70 @@ class ChatModelTests(unittest.TestCase):
         self.assertEqual((transport.call_count, caught.exception.calls), (1, 1))
         self.assertNotIn("PRIVATE", str(caught.exception))
 
+    def test_post_dispatch_failures_carry_the_meter_reference(self) -> None:
+        for outcome in ("timeout", "disabled", "provider-unavailable", "returned"):
+            envelope = dict(outcome=outcome, text=" ", meter_id="rid-1", meter_root="root-1")
+            with self.subTest(outcome), self.assertRaises(ModelUnavailable) as caught:
+                ChatModel(worker(envelope), admission=lambda: None)("s", "p")
+            self.assertEqual(
+                (getattr(caught.exception, "meter_id", "missing"), caught.exception.meter_root),
+                ("rid-1", "root-1"),
+            )
+
+    def test_completion_check_failures_carry_the_meter_reference(self) -> None:
+        envelope = dict(outcome="returned", text="x", meter_id="rid-2", meter_root="root-2")
+
+        def second_check(result: str | Exception) -> Any:
+            calls = iter([None, result])
+
+            def admission() -> str | None:
+                value = next(calls)
+                if isinstance(value, Exception):
+                    raise value
+                return value
+
+            return admission
+
+        for label, result in (("revoked", "revoked"), ("raises", RuntimeError("down"))):
+            with self.subTest(label), self.assertRaises(ModelUnavailable) as caught:
+                ChatModel(worker(envelope), admission=second_check(result))("s", "p")
+            self.assertEqual(
+                (caught.exception.calls, caught.exception.meter_id, caught.exception.meter_root),
+                (1, "rid-2", "root-2"),
+            )
+
+    def test_unusable_meter_values_and_pre_dispatch_denials_carry_none(self) -> None:
+        bad = dict(outcome="timeout", meter_id=7, meter_root=["x"])
+        with self.assertRaises(ModelUnavailable) as caught:
+            ChatModel(worker(bad), admission=lambda: None)("s", "p")
+        self.assertEqual((caught.exception.meter_id, caught.exception.meter_root), (None, None))
+
+        def boom() -> None:
+            raise RuntimeError("x")
+
+        for admission in (None, lambda: "not approved", boom):
+            with self.assertRaises(ModelUnavailable) as caught:
+                ChatModel(worker(dict(outcome="returned", text="x")), admission=admission)("s", "p")
+            self.assertEqual(
+                (caught.exception.calls, caught.exception.meter_id, caught.exception.meter_root),
+                (0, None, None),
+            )
+
+    def test_real_ai_failures_keep_the_reference_only_once_reserved(self) -> None:
+        for label, ledger, fail, reserved in (
+            ("transport failure", Ledger(), True, True),
+            ("hold after response", Ledger(complete="meter-capacity-reached"), False, True),
+            ("check hold before transport", Ledger(check="meter-capacity-reached"), False, True),
+            ("hold at reserve", Ledger(reserve="meter-capacity-reached"), False, False),
+        ):
+            model, _ = metered_model(ledger, fail)
+            with self.subTest(label), self.assertRaises(ModelUnavailable) as caught:
+                model("s", "p")
+            self.assertEqual(
+                caught.exception.meter_id, "synthetic-reservation" if reserved else None
+            )
+            self.assertEqual(isinstance(caught.exception.meter_root, str), reserved)
+
     def test_a_provider_that_is_not_core_ai_is_an_explicit_unverified_count(self) -> None:
         spoofed = dict(outcome="disabled", text=None, usage=None, meter_id=None, dispatches=0)
         model = ChatModel(worker(spoofed), admission=lambda: None)
