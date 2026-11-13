@@ -13,9 +13,25 @@ import time
 import traceback
 from typing import Any
 
+from zava_forward.core import assistants
 from zava_forward.core.assistants import Assistants
 
 shared: Any = importlib.import_module("test_assistants")
+
+# Constructed runtime-binding differences for one capability, confined to this process. They are
+# not an old image or a real serving change; each moves that capability's own bound versions only.
+VARIATIONS = ("rule", "purpose", "roles")
+
+
+def vary(kind: str, capability: str) -> None:
+    if kind == "rule":
+        assistants.RULES[capability] += " (constructed variation)"
+    elif kind == "purpose":
+        assistants.REGISTRY[capability]["purpose"] += " (constructed variation)"
+    elif kind == "roles":
+        assistants.REGISTRY[capability]["roles"] = (assistants.RC,)
+    else:
+        raise ValueError(f"unknown variation {kind!r}; expected one of {VARIATIONS}")
 
 
 def wait_for(path: str, deadline: float) -> None:
@@ -33,6 +49,8 @@ def touch(path: str) -> None:
 def main(spec: dict[str, Any]) -> None:
     barrier: str = spec["barrier"]
     deadline = time.monotonic() + spec["deadline"]
+    if spec.get("variation"):
+        vary(*spec["variation"])
     if spec["kind"] == "mssql":
         from zava_forward.core.mssqlstore import MssqlStore
 

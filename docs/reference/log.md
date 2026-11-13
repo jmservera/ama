@@ -11580,3 +11580,25 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * `paired_equity` now checks a constructed source-completeness pair (`source_record` complete versus missing) as a fourth required dimension, and reports a ranker that leaves the subject out as an `excluded` failure instead of raising. Updated the [core README](../../src/core/README.md) and the [equity journey test plan](research/ux/equity-journey-test-plan.md).
 * Constructed fixture only: `fairness_evidence` and `activation_allowed` stay false; no ranking policy or threshold change; no criterion ticked.
 * Evidence under `.copilot-tracking/` (2026-11-12 issue-128-cohort-trace-1112).
+
+## [2026-11-12] update | Post-fix-wave checkpoint (Refs #440 #128 #98 #115)
+
+* Added a dated post-fix-wave checkpoint to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#post-fix-wave-checkpoint-2026-11-12-refs-440-128-98-115) for merged PRs 1481, 1483 and 1482 on `main` `e155c88ed`, with an index paragraph in the [index](./README.md).
+* Local focused evidence only (151 tests executed, 0 skipped; lint and mypy clean; one invocation error retained); no source change, no new issue, no criterion ticked, no approval; recommendation is a bounded CONTINUE.
+* Evidence under `.copilot-tracking/` (2026-11-12 post-fix-wave-440-1112).
+
+## [2026-11-12] update | Post-fix-wave checkpoint correction (Refs #440)
+
+* Corrected wording in the post-fix-wave section of the [cutover evidence pack](../architecture/cutover-evidence-pack.md#post-fix-wave-checkpoint-2026-11-12-refs-440-128-98-115): pin time qualification, test-helper PYTHONPATH, ADR 0002 Audit row, AC-051 and AC-073 Not run. Documentation only; nothing rerun; no approval or tick.
+* Evidence under `.copilot-tracking/` (2026-11-12 post-fix-wave-440-1112-correction).
+
+## [2026-11-12] add | Current capstone deck assessment and Tokenomics statement audit (Refs #435)
+
+* Added an [offline, content-only assessment](../capstone/pitch/current-deck-assessment-2026-11-12.md) of the delivered 55-slide capstone deck and notes (PPTX blob `3da73fd2dd`, main `cd81888e4`) against every Capstone Assessment Guide criterion, with a statement-by-statement Tokenomics source, label and class register. It is not an assessor score, floor pass or approval; it flags the unresolved criterion 6 price-figure tension, price and model basis, control wording and stale page-count text for owner decision. Issue #435 criteria 1-4 stay unmet and no deck, source or placement file changed.
+* Evidence under `.copilot-tracking/` (2026-11-12 current-capstone-assessment-435-1112).
+
+## [2026-11-12] update | Name the Bicep secret parameter for redeploys (Refs #358)
+
+* The [direct Entra setup section](../../infra/README.md#direct-entra-setup-and-acceptance) of `infra/README.md` now names `entraClientSecretName` and the `zava-forward-credential-name` tag for retaining the generated Key Vault secret name on later Bicep redeploys; the default would revert it.
+* Evidence class: source-derived only (`main.bicep`, `containerapps.bicep`, `setup-entra.py`); no live redeploy, Graph, Key Vault or cloud action, no sign-in claim, no criterion tick or closure. The earlier readiness result stays research-only `NOT_READY`, and its 278-test run with one missing-distribution error is not recorded as a pass.
+* Evidence under `.copilot-tracking/` (2026-11-12 secret-name-redeploy-358-2236).

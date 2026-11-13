@@ -1422,3 +1422,11 @@ It covers merged PR 1470 (proposal cards) and PR 1475 (five-home runbook) on `ma
 (both merged after its tested pin and before its publication, see the accuracy note in the section): 145 focused tests executed, 92 SQL Server skips (not passes), a string-level runbook link check, no confirmed defect,
 one static accessibility concern and two omissions routed to existing owners, and a bounded CONTINUE. It is local only and is
 not browser, live, resident or approval evidence.
+
+A post-fix-wave checkpoint (2026-11-12) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#post-fix-wave-checkpoint-2026-11-12-refs-440-128-98-115).
+It covers merged PRs 1481 (#128 paired source-completeness), 1483 (#115 ledger verifier failure marker) and 1482 (#98 held-export
+open-issue freshness) on `main` `e155c88ed`: 90 focused unit and local HTTP tests plus the 61-test infra policy module executed,
+0 skipped, lint and configured mypy clean, an invocation error retained, the original adverse qualifications preserved, no
+confirmed defect, remaining risks routed to existing owners, and a bounded CONTINUE. It is local and synthetic only and is not
+SQL Server, browser, hosted, Azure, retention-lock or approval evidence.

@@ -1,0 +1,30 @@
+{
+  "task_id": "post-fix-wave-440-1112",
+  "task_slug": "post-fix-wave-440-1112",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-12/post-fix-wave-440-1112-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-12/post-fix-wave-440-1112-plan.md",
+    "details": ".copilot-tracking/details/2026-11-12/post-fix-wave-440-1112-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-12/post-fix-wave-440-1112-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-12/post-fix-wave-440-1112-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-12/post-fix-wave-440-1112-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed, Planning Readiness Ready", "status": "recorded", "evidence": "research artifact"},
+    {"decision": "Critique executed once by a fresh read-only worker; verdict Revise; four findings applied directly; no user decision needed", "status": "recorded", "evidence": ".copilot-tracking/plans/2026-11-12/post-fix-wave-440-1112-critique.md"},
+    {"decision": "Implement executed; focused local ladder passed (151 tests, 0 skipped); one invocation error retained", "status": "recorded", "evidence": ".copilot-tracking/changes/2026-11-12/post-fix-wave-440-1112-changes.md"},
+    {"decision": "Review executed once after implementation; outcome findings (3, all documentation-level, two applied, one verified); no repeat", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-11-12/post-fix-wave-440-1112-review.md"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator exact-head independent review and hosted checks before any publication; user selects a follow-up"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Run SQL Server and hosted evidence for #98 form freshness when admitted", "rationale": "Only SQLite exercised the fix", "evidence": "pack section R5"},
+    {"rank": 2, "task": "Check whether the absence alert covers SystemExit in #115", "rationale": "Residual R1 unknown", "evidence": "digest_blob.py main, operationalMonitoring.bicep"},
+    {"rank": 3, "task": "Appoint owner for ledger alerts and prove retention lock in a hosted lane", "rationale": "#115 criteria unmet", "evidence": "pack section risks"}
+  ]
+}
