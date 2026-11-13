@@ -11701,3 +11701,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Appended a [short section](../architecture/cutover-evidence-pack.md#wave-1045-multi-surface-local-demo-verification-2026-11-13-refs-440) and an index row. Integrated eight reviewed child candidates (86 files under `.copilot-tracking/`, byte-identical) onto base `3b05143179f83235c5b4e80e70aad99bdc44d83f`.
 * Documentation only. No rerun, source change, tick, closure or approval. Adverse and partial results kept: MSSQL skips, deferred API and infra tests, UX advisories.
+
+## [2026-11-13] correct | Wave-1045 summary precision (Refs #440)
+
+* Correction to the Wave-1045 entry above (append-only; earlier lines unchanged): #136's minimal-venv `infra/tests` run hit the 400 s timeout (exit 124, `test_bicep_policy` unverified) and the other 23 modules recorded 49 failures and 31 errors (exit 1); not a pass, full-deps rerun deferred to Wave 2. The #229 and #230 renderers were not directly exercised.
+* The #107 qualification now states what the sentinel probe covered and that `provider` and `model` identity fields passed free strings through. The cutover-pack section now cites the parent tracking records. Documentation only; Refs only, no tick or closure. Evidence under `.copilot-tracking/` (`440-wave1-parent-integration-1105`, `440-wave1-parent-correction1-1143`).
