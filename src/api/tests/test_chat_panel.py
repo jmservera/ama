@@ -955,5 +955,117 @@ class PanelTests(roles.Matrix):
             browser.close()
 
 
+class AttributionRenderTests(unittest.TestCase):
+    SCRIPT = r"""
+(async () => {
+  const cases = JSON.parse(process.env.CASES);
+  const out = [];
+  for (const c of cases) {
+    const h = harness();
+    h.employee.install();
+    const opening = h.launcher.onclick();
+    h.resolve("/api/chat/skills", {skills: []});
+    h.resolve("/api/chat/status", {warning: "Synthetic only.", retention: "Local.", storage_approved: true});
+    await turn();
+    await opening;
+    const ui = h.nodes();
+    ui.input.value = "Question";
+    const task = ui.form.onsubmit({preventDefault() {}});
+    await turn();
+    h.resolve("/api/chat/threads", {id: "t1"});
+    await turn();
+    h.resolve("/api/chat/threads/t1/ask", Object.assign({reply: "R", skill: "general", citations: []}, c));
+    await task;
+    const texts = el => [el.textContent || "", ...el.children.flatMap(texts)];
+    out.push({text: texts(ui.log).join(" | "), status: ui.root.children.find(el => el.attrs.role === "status").textContent});
+    h.employee.reset();
+  }
+  console.log("RESULT" + JSON.stringify(out));
+})().catch(error => { console.error(error); process.exitCode = 1; });
+"""
+
+    def render(self, *cases: dict[str, Any]) -> list[dict[str, str]]:
+        import subprocess
+
+        from test_chat_widget_focus import HARNESS
+
+        result = subprocess.run(
+            ["node", "-e", HARNESS + self.SCRIPT, str(WEB)],
+            capture_output=True,
+            text=True,
+            timeout=60,
+            env={**os.environ, "CASES": json.dumps(cases)},
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        line = next(x for x in result.stdout.splitlines() if x.startswith("RESULT"))
+        return json.loads(line[len("RESULT") :])
+
+    def test_attribution_labels_details_sources_and_status(self) -> None:
+        cite = [
+            {"id": "workflow/step", "text": "A"},
+            {"id": "ZF-1/gate.x", "text": "B"},
+            {"id": "ZF-1/stage", "text": "C"},
+            {"id": "ZF-1/anything", "text": "D", "source_kind": "decision-rule"},
+        ]
+        called = {"model_calls": 1}
+        got = self.render(
+            {
+                "kind": "answer",
+                "model": "workflow-only",
+                "answer_source": "decision-rules",
+                "citations": cite,
+            },
+            {
+                "kind": "answer",
+                "model": "workflow-only",
+                "answer_source": "decision-rules-fallback",
+            },
+            {"kind": "answer", "model": "m-1", "answer_source": "generative-grounded"},
+            {"kind": "answer", "model": "m-1"},
+            {"kind": "answer", "model": "workflow-only"},
+            {"kind": "withheld", "model": "m-1", "consumption": called, "label": "Workflow-only"},
+            {"kind": "abstain", "model": "workflow-only", "workflow_only": True, "label": "L"},
+            {"kind": "refused", "model": "workflow-only", "workflow_only": True},
+        )
+        rules, fallback, gen, legacy_gen, legacy_rules, withheld, abstain, refused = (
+            g["text"] for g in got
+        )
+        self.assertIn("Decision model (case rules), no record changed", rules)
+        self.assertIn(
+            "Source: deterministic decision rules from recorded case facts (0 generative calls). "
+            "Check the sources.",
+            rules,
+        )
+        for tag in (
+            "[Workflow rule] workflow/step: A",
+            "[Decision rule] ZF-1/gate.x: B",
+            "[Case record] ZF-1/stage: C",
+            "[Decision rule] ZF-1/anything: D",
+        ):
+            self.assertIn(tag, rules)
+        self.assertIn(
+            "Decision model (case rules; generative draft withheld), no record changed", fallback
+        )
+        self.assertIn("generative draft did not pass source check. Check the sources.", fallback)
+        self.assertIn("Model-generated, not approved. Demo only.", gen)
+        self.assertIn("generative AI model (m-1) grounded on case rules and records", gen)
+        self.assertIn("Model-generated, not approved. Demo only.", legacy_gen)
+        self.assertIn("Decision model (case rules), no record changed", legacy_rules)
+        self.assertIn("Generative draft withheld by source check. No record changed.", withheld)
+        self.assertNotIn("Workflow-only", withheld)
+        self.assertIn("Workflow-only help, no record changed", abstain)
+        self.assertEqual(got[0]["status"], "Answer added. Check the sources before relying on it.")
+        self.assertEqual(
+            got[5]["status"], "Reply withheld. Check the case card for recorded facts."
+        )
+        self.assertEqual(
+            got[6]["status"], "Reply withheld. Check the case card for recorded facts."
+        )
+        self.assertEqual(
+            got[7]["status"], "Request refused. A person must take that action in the workflow."
+        )
+        self.assertIn("Workflow-only or unverified help. No record changed.", refused)
+
+
 if __name__ == "__main__":
     unittest.main()
