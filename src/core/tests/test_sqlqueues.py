@@ -95,6 +95,43 @@ class SqlQueueMembership(unittest.TestCase):
         self.assertEqual(reopened.ledger_head(), head)
         self.assert_flags(reopened)
 
+    def test_non_boolean_funding_refreshes_stale_revision_two_memberships(self) -> None:
+        with self.store.lock:
+            for cid in self.store.cases:
+                case = self.store._case(cid)
+                supplied = copy.deepcopy(DATA["cases"][2])
+                supplied["funding"] = copy.deepcopy(case["funding"])
+                supplied.update(id=cid, closed=cid != "ZF-00001")
+                case.clear()
+                case.update(supplied)
+            self.store.cases["ZF-00001"].update(
+                stage="Final checks before ordering", funding_ok="yes"
+            )
+            self.store.save()
+        before = self.store.db.execute(
+            "SELECT id, body, rowversion, seq FROM cases ORDER BY id"
+        ).fetchall()
+        head = self.store.ledger_head()
+        old = json.dumps(
+            [taskqueues.VERSION, self.store.as_of, controls.today(), ranking.CURRENT, 2],
+            sort_keys=True,
+        )
+        self.store.db.execute("UPDATE cases SET queue_blocked=0 WHERE id='ZF-00001'")
+        self.store._meta_set("queue_context", old)
+        self.seed.unlink()
+        reopened = self.make_store(self.seed)
+        self.addCleanup(reopened.db.close)
+        blocked = reopened.list_cases(STAFF[1], "all", filters={"queue": "blocked"})
+        self.assertEqual([row["id"] for row in blocked], ["ZF-00001"])
+        self.assertEqual(
+            reopened.db.execute(
+                "SELECT id, body, rowversion, seq FROM cases ORDER BY id"
+            ).fetchall(),
+            before,
+        )
+        self.assertEqual(reopened.ledger_head(), head)
+        self.assert_flags(reopened)
+
     def test_prerequisite_clearing_refreshes_other_process_and_restart(self) -> None:
         other = self.make_store(self.seed)
         self.addCleanup(other.db.close)

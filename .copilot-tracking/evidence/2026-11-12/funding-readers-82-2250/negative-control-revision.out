@@ -1,0 +1,21 @@
+F
+======================================================================
+FAIL: test_non_boolean_funding_refreshes_stale_revision_two_memberships (test_sqlqueues.SqlQueueMembership.test_non_boolean_funding_refreshes_stale_revision_two_memberships)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_sqlqueues.py", line 125, in test_non_boolean_funding_refreshes_stale_revision_two_memberships
+    self.assertEqual([row["id"] for row in blocked], ["ZF-00001"])
+AssertionError: Lists differ: [] != ['ZF-00001']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'ZF-00001'
+
+- []
++ ['ZF-00001']
+
+----------------------------------------------------------------------
+Ran 1 test in 1.109s
+
+FAILED (failures=1)
+exit 1

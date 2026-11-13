@@ -138,6 +138,63 @@ class GateTests(unittest.TestCase):
                     self.assertIn(expected, reasons)
 
 
+class FundingReadinessTests(unittest.TestCase):
+    """Missing or non-boolean funding is denied with a funding reason, not a lookup error."""
+
+    def make(self, funding: Any, *, absent: bool = False) -> Any:
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        data = copy.deepcopy(DATA)
+        data["staff"] = STAFF
+        for c in data["cases"]:
+            if c["id"] == "ZF-3":
+                supplied_resident_fixture(c)
+                if absent:
+                    del c["funding_ok"]
+                else:
+                    c["funding_ok"] = funding
+        path = Path(tmp.name) / "zavaforward.json"
+        path.write_text(json.dumps(data))
+        return Store(str(path))  # type: ignore[no-untyped-call]
+
+    def funding_reasons(self, store: Any) -> list[str]:
+        reasons = Store.gate_reasons(store.cases["ZF-3"])  # type: ignore[no-untyped-call]
+        return [r for r in reasons if "Funding" in r]
+
+    def test_only_explicit_true_reads_as_ready(self) -> None:
+        store = self.make(True)
+        self.assertEqual(self.funding_reasons(store), [])
+        self.assertEqual(
+            Store.status_line(store.cases["ZF-3"]),  # type: ignore[no-untyped-call]
+            "Ready",
+        )
+
+    def test_unconfirmed_funding_reads_as_denied_with_reason(self) -> None:
+        for funding, absent in (
+            (None, False),
+            (False, False),
+            ("yes", False),
+            (1, False),
+            (None, True),
+        ):
+            with self.subTest(funding=funding, absent=absent):
+                store = self.make(funding, absent=absent)
+                case = store.cases["ZF-3"]
+                self.assertEqual(len(self.funding_reasons(store)), 1)
+                self.assertNotEqual(
+                    Store.status_line(case),  # type: ignore[no-untyped-call]
+                    "Ready",
+                )
+                self.assertEqual(
+                    [r for r in store.detail("ZF-3")["gate"] if "Funding" in r],
+                    self.funding_reasons(store),
+                )
+                with self.assertRaises(GateError) as ctx:
+                    store.advance(STAFF[0], "ZF-3")
+                self.assertIn("Funding", str(ctx.exception))
+                self.assertEqual(store.cases["ZF-3"]["stage"], "Final checks before ordering")
+
+
 class QualityGateTests(unittest.TestCase):
     def test_quality_gate_outcomes_and_rule(self) -> None:
         ok = gates.quality_gate([], "Quality Inspector", on="2026-11-05")

@@ -1,0 +1,159 @@
+....FFF......FFF...............FFFEFFFE............F.........
+======================================================================
+ERROR: test_funding_confirmed_is_true_only_for_explicit_true (test_home_case.HomeCaseTests.test_funding_confirmed_is_true_only_for_explicit_true) (value='absent')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_home_case.py", line 152, in test_funding_confirmed_is_true_only_for_explicit_true
+    shown = store.home_case_view(sam, "ZF-2")["home"]["funding_confirmed"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/store.py", line 520, in home_case_view
+    return home_case.view(self, user, case_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/home_case.py", line 156, in view
+    "funding_confirmed": case["funding_ok"],
+                         ~~~~^^^^^^^^^^^^^^
+KeyError: 'funding_ok'
+
+======================================================================
+ERROR: test_funding_confirmed_is_true_only_for_explicit_true (test_home_case.HomeCaseTests.test_funding_confirmed_is_true_only_for_explicit_true) (value='absent')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_home_case.py", line 152, in test_funding_confirmed_is_true_only_for_explicit_true
+    shown = store.home_case_view(sam, "ZF-2")["home"]["funding_confirmed"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/store.py", line 520, in home_case_view
+    return home_case.view(self, user, case_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/src/zava_forward/core/home_case.py", line 156, in view
+    "funding_confirmed": case["funding_ok"],
+                         ~~~~^^^^^^^^^^^^^^
+KeyError: 'funding_ok'
+
+======================================================================
+FAIL: test_only_explicit_true_reads_as_confirmed_funding (test_chat_case_answers.CitationBoundTests.test_only_explicit_true_reads_as_confirmed_funding) (value='yes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_chat_case_answers.py", line 95, in test_only_explicit_true_reads_as_confirmed_funding
+    self.assertEqual(facts["funding_ok"], expected)
+AssertionError: 'confirmed' != 'not confirmed'
+- confirmed
++ not confirmed
+? ++++
+
+
+======================================================================
+FAIL: test_only_explicit_true_reads_as_confirmed_funding (test_chat_case_answers.CitationBoundTests.test_only_explicit_true_reads_as_confirmed_funding) (value='false')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_chat_case_answers.py", line 95, in test_only_explicit_true_reads_as_confirmed_funding
+    self.assertEqual(facts["funding_ok"], expected)
+AssertionError: 'confirmed' != 'not confirmed'
+- confirmed
++ not confirmed
+? ++++
+
+
+======================================================================
+FAIL: test_only_explicit_true_reads_as_confirmed_funding (test_chat_case_answers.CitationBoundTests.test_only_explicit_true_reads_as_confirmed_funding) (value=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_chat_case_answers.py", line 95, in test_only_explicit_true_reads_as_confirmed_funding
+    self.assertEqual(facts["funding_ok"], expected)
+AssertionError: 'confirmed' != 'not confirmed'
+- confirmed
++ not confirmed
+? ++++
+
+
+======================================================================
+FAIL: test_only_explicit_true_funding_clears_the_final_checks_blocker (test_taskqueues.QueueDefinitions.test_only_explicit_true_funding_clears_the_final_checks_blocker) (value='yes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_taskqueues.py", line 58, in test_only_explicit_true_funding_clears_the_final_checks_blocker
+    self.assertEqual(len(blockers), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_only_explicit_true_funding_clears_the_final_checks_blocker (test_taskqueues.QueueDefinitions.test_only_explicit_true_funding_clears_the_final_checks_blocker) (value='false')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_taskqueues.py", line 58, in test_only_explicit_true_funding_clears_the_final_checks_blocker
+    self.assertEqual(len(blockers), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_only_explicit_true_funding_clears_the_final_checks_blocker (test_taskqueues.QueueDefinitions.test_only_explicit_true_funding_clears_the_final_checks_blocker) (value=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_taskqueues.py", line 58, in test_only_explicit_true_funding_clears_the_final_checks_blocker
+    self.assertEqual(len(blockers), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_funding_confirmed_is_true_only_for_explicit_true (test_home_case.HomeCaseTests.test_funding_confirmed_is_true_only_for_explicit_true) (value=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_home_case.py", line 153, in test_funding_confirmed_is_true_only_for_explicit_true
+    self.assertIs(shown, expected)
+AssertionError: None is not False
+
+======================================================================
+FAIL: test_funding_confirmed_is_true_only_for_explicit_true (test_home_case.HomeCaseTests.test_funding_confirmed_is_true_only_for_explicit_true) (value='yes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_home_case.py", line 153, in test_funding_confirmed_is_true_only_for_explicit_true
+    self.assertIs(shown, expected)
+AssertionError: 'yes' is not False
+
+======================================================================
+FAIL: test_funding_confirmed_is_true_only_for_explicit_true (test_home_case.HomeCaseTests.test_funding_confirmed_is_true_only_for_explicit_true) (value=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_home_case.py", line 153, in test_funding_confirmed_is_true_only_for_explicit_true
+    self.assertIs(shown, expected)
+AssertionError: 1 is not False
+
+======================================================================
+FAIL: test_funding_confirmed_is_true_only_for_explicit_true (test_home_case.HomeCaseTests.test_funding_confirmed_is_true_only_for_explicit_true) (value=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_home_case.py", line 153, in test_funding_confirmed_is_true_only_for_explicit_true
+    self.assertIs(shown, expected)
+AssertionError: None is not False
+
+======================================================================
+FAIL: test_funding_confirmed_is_true_only_for_explicit_true (test_home_case.HomeCaseTests.test_funding_confirmed_is_true_only_for_explicit_true) (value='yes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_home_case.py", line 153, in test_funding_confirmed_is_true_only_for_explicit_true
+    self.assertIs(shown, expected)
+AssertionError: 'yes' is not False
+
+======================================================================
+FAIL: test_funding_confirmed_is_true_only_for_explicit_true (test_home_case.HomeCaseTests.test_funding_confirmed_is_true_only_for_explicit_true) (value=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_home_case.py", line 153, in test_funding_confirmed_is_true_only_for_explicit_true
+    self.assertIs(shown, expected)
+AssertionError: 1 is not False
+
+======================================================================
+FAIL: test_non_boolean_funding_refreshes_stale_revision_two_memberships (test_sqlqueues.SqlQueueMembership.test_non_boolean_funding_refreshes_stale_revision_two_memberships)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-funding-readers-2250/src/core/tests/test_sqlqueues.py", line 125, in test_non_boolean_funding_refreshes_stale_revision_two_memberships
+    self.assertEqual([row["id"] for row in blocked], ["ZF-00001"])
+AssertionError: Lists differ: [] != ['ZF-00001']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'ZF-00001'
+
+- []
++ ['ZF-00001']
+
+----------------------------------------------------------------------
+Ran 50 tests in 11.998s
+
+FAILED (failures=13, errors=2)
+core exit 1

@@ -1,0 +1,609 @@
+test_ai_cannot_run_for_an_unregistered_task_or_without_review_authority (test_ai_boundary.AiBoundaryTests.test_ai_cannot_run_for_an_unregistered_task_or_without_review_authority) ... ok
+test_document_reading_files_a_note_and_changes_nothing_else (test_ai_boundary.AiBoundaryTests.test_document_reading_files_a_note_and_changes_nothing_else) ... ok
+test_every_retained_task_leaves_controlled_records_unchanged (test_ai_boundary.AiBoundaryTests.test_every_retained_task_leaves_controlled_records_unchanged) ... ok
+test_funding_draft_never_reaches_approval (test_ai_boundary.AiBoundaryTests.test_funding_draft_never_reaches_approval) ... ok
+test_human_review_of_ai_records_changes_no_controlled_record (test_ai_boundary.AiBoundaryTests.test_human_review_of_ai_records_changes_no_controlled_record) ... ok
+test_priority_accept_records_a_decision_but_does_not_rank (test_ai_boundary.AiBoundaryTests.test_priority_accept_records_a_decision_but_does_not_rank) ... ok
+test_api_role_projection_has_no_sibling_evidence_or_unauthorized_amounts (test_buildings.BuildingHttpTests.test_api_role_projection_has_no_sibling_evidence_or_unauthorized_amounts) ... ok
+test_local_app_and_bidirectional_navigation (test_buildings.BuildingHttpTests.test_local_app_and_bidirectional_navigation) ... ok
+test_shared_hold_blocks_advance_and_retains_ai_and_safety_intake (test_buildings.BuildingHttpTests.test_shared_hold_blocks_advance_and_retains_ai_and_safety_intake) ... Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-2
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+test_all_proposal_accept_controls_share_readiness_and_own_verification (test_case_journey.CaseJourney.test_all_proposal_accept_controls_share_readiness_and_own_verification) ... ok
+test_all_stages_mapped_once_in_shipped_module (test_case_journey.CaseJourney.test_all_stages_mapped_once_in_shipped_module) ... ok
+test_api_preserves_outcome_before_http_status_classification (test_case_journey.CaseJourney.test_api_preserves_outcome_before_http_status_classification) ... ok
+test_blocker_mapping_current_and_unknown (test_case_journey.CaseJourney.test_blocker_mapping_current_and_unknown) ... ok
+test_blocker_popovers_keep_full_safe_reasons_and_separate_controls (test_case_journey.CaseJourney.test_blocker_popovers_keep_full_safe_reasons_and_separate_controls) ... ok
+test_both_chat_submissions_clear_only_successful_unchanged_raw_questions (test_case_journey.CaseJourney.test_both_chat_submissions_clear_only_successful_unchanged_raw_questions) ... ok
+test_closed_overrides_blockers_unknown_stage_does_not_invent_step (test_case_journey.CaseJourney.test_closed_overrides_blockers_unknown_stage_does_not_invent_step) ... ok
+test_count_live_text_is_atomic_and_only_mutates_for_changed_counts (test_case_journey.CaseJourney.test_count_live_text_is_atomic_and_only_mutates_for_changed_counts) ... ok
+test_file_recovery_and_other_session_are_not_confused_with_submitted_values (test_case_journey.CaseJourney.test_file_recovery_and_other_session_are_not_confused_with_submitted_values) ... ok
+test_fixed_slide_order_and_evidence_exceptions (test_case_journey.CaseJourney.test_fixed_slide_order_and_evidence_exceptions) ... ok
+test_journey_icons_are_declared_as_package_data (test_case_journey.CaseJourney.test_journey_icons_are_declared_as_package_data) ... ok
+test_journey_icons_are_exact_six_step_presentation_assets (test_case_journey.CaseJourney.test_journey_icons_are_exact_six_step_presentation_assets) ... ok
+test_journey_links_keep_non_tab_query_values_when_resynchronized (test_case_journey.CaseJourney.test_journey_links_keep_non_tab_query_values_when_resynchronized) ... ok
+test_live_field_identity_wins_over_stale_recovery_in_either_dom_order (test_case_journey.CaseJourney.test_live_field_identity_wins_over_stale_recovery_in_either_dom_order) ... ok
+test_panels_mounted_once_and_tab_only_navigation_precedes_guard (test_case_journey.CaseJourney.test_panels_mounted_once_and_tab_only_navigation_precedes_guard) ... ok
+test_priority_creation_after_a_real_committed_outcome_offers_no_repeat (test_case_journey.CaseJourney.test_priority_creation_after_a_real_committed_outcome_offers_no_repeat) ... ok
+test_priority_invocation_and_procurement_preserve_history_barriers (test_case_journey.CaseJourney.test_priority_invocation_and_procurement_preserve_history_barriers) ... ok
+test_proposal_validation_pending_refresh_and_success_reload_failure (test_case_journey.CaseJourney.test_proposal_validation_pending_refresh_and_success_reload_failure) ... ok
+test_quality_errors_and_manual_action_pending_siblings (test_case_journey.CaseJourney.test_quality_errors_and_manual_action_pending_siblings) ... ok
+test_queue_drafts_survive_old_failed_and_changed_revision_listings (test_case_journey.CaseJourney.test_queue_drafts_survive_old_failed_and_changed_revision_listings) ... ok
+test_raw_resident_and_challenge_outcomes_exclude_repeat_posts (test_case_journey.CaseJourney.test_raw_resident_and_challenge_outcomes_exclude_repeat_posts) ... ok
+test_refresh_clears_only_explicit_submission_after_success (test_case_journey.CaseJourney.test_refresh_clears_only_explicit_submission_after_success) ... ok
+test_regulatory_answer_releases_form_before_usage_refresh_settles (test_case_journey.CaseJourney.test_regulatory_answer_releases_form_before_usage_refresh_settles) ... ok
+test_review_dispatch_preserves_newer_values_and_completes_only_once (test_case_journey.CaseJourney.test_review_dispatch_preserves_newer_values_and_completes_only_once) ... ok
+test_reviewable_count_states (test_case_journey.CaseJourney.test_reviewable_count_states) ... ok
+test_shared_dirty_guard_reconciles_pending_and_unload (test_case_journey.CaseJourney.test_shared_dirty_guard_reconciles_pending_and_unload) ... ok
+test_shared_mutation_lock_survives_reconstruction_and_response_parsing (test_case_journey.CaseJourney.test_shared_mutation_lock_survives_reconstruction_and_response_parsing) ... ok
+test_submission_reconciles_semantic_live_recovery_and_cached_values (test_case_journey.CaseJourney.test_submission_reconciles_semantic_live_recovery_and_cached_values) ... ok
+test_summary_empty_values_handoff_and_overdue (test_case_journey.CaseJourney.test_summary_empty_values_handoff_and_overdue) ... ok
+test_summary_jump_targets_record_actions (test_case_journey.CaseJourney.test_summary_jump_targets_record_actions) ... ok
+test_upload_preparation_and_guarded_dispatch_outcomes (test_case_journey.CaseJourney.test_upload_preparation_and_guarded_dispatch_outcomes) ... ok
+test_ai_label_is_exact_and_never_implies_approval (test_content_standard.CopyAudit.test_ai_label_is_exact_and_never_implies_approval) ... ok
+test_all_standard_vocabulary_families_are_guarded (test_content_standard.CopyAudit.test_all_standard_vocabulary_families_are_guarded) ... ok
+test_blocked_reasons_have_reason_owner_and_next_action (test_content_standard.CopyAudit.test_blocked_reasons_have_reason_owner_and_next_action) ... ok
+test_chat_safety_and_copy_contract (test_content_standard.CopyAudit.test_chat_safety_and_copy_contract) ... ok
+test_consultation_and_restart_gate_refusals_use_plain_wording (test_content_standard.CopyAudit.test_consultation_and_restart_gate_refusals_use_plain_wording) ... ok
+test_document_control_refusals_use_plain_wording (test_content_standard.CopyAudit.test_document_control_refusals_use_plain_wording) ... ok
+test_finance_and_ai_review_refusals_use_plain_wording (test_content_standard.CopyAudit.test_finance_and_ai_review_refusals_use_plain_wording) ... ok
+test_finance_decision_sources_contain_display_mapping (test_content_standard.CopyAudit.test_finance_decision_sources_contain_display_mapping) ... ok
+test_generic_error_and_ranking_error_state_reason_owner_next_action (test_content_standard.CopyAudit.test_generic_error_and_ranking_error_state_reason_owner_next_action) ... ok
+test_identifier_exceptions_do_not_hide_adjacent_bad_copy (test_content_standard.CopyAudit.test_identifier_exceptions_do_not_hide_adjacent_bad_copy) ... ok
+test_no_internal_terms_in_web_copy (test_content_standard.CopyAudit.test_no_internal_terms_in_web_copy) ... ok
+test_proposal_card_keeps_technical_evidence_in_one_labelled_disclosure (test_content_standard.CopyAudit.test_proposal_card_keeps_technical_evidence_in_one_labelled_disclosure) ... ok
+test_proposal_review_copy_is_not_decision_approval (test_content_standard.CopyAudit.test_proposal_review_copy_is_not_decision_approval) ... ok
+test_resident_draft_and_representative_copy_boundaries (test_content_standard.CopyAudit.test_resident_draft_and_representative_copy_boundaries) ... ok
+test_restored_bad_chat_labels_fail_the_actual_guard (test_content_standard.CopyAudit.test_restored_bad_chat_labels_fail_the_actual_guard) ... ok
+test_role_screens_use_phase_check_wording (test_content_standard.CopyAudit.test_role_screens_use_phase_check_wording) ... ok
+test_safety_restart_refusals_use_plain_wording (test_content_standard.CopyAudit.test_safety_restart_refusals_use_plain_wording) ... ok
+test_standard_documents_glossary_and_review (test_content_standard.CopyAudit.test_standard_documents_glossary_and_review) ... ok
+test_time_capture_copy_is_guarded (test_content_standard.CopyAudit.test_time_capture_copy_is_guarded) ... ok
+test_inflight_completion_overlaps_suspend_restart_and_keeps_unknown_liability (test_continuity_epoch_export.EpochTests.test_inflight_completion_overlaps_suspend_restart_and_keeps_unknown_liability) ... ok
+test_missing_historical_epoch_and_export_collection_race_fail_closed (test_continuity_epoch_export.EpochTests.test_missing_historical_epoch_and_export_collection_race_fail_closed) ... ok
+test_old_process_epoch_reads_persisted_restart (test_continuity_epoch_export.EpochTests.test_old_process_epoch_reads_persisted_restart) ... ok
+test_old_queued_leased_and_missing_epoch_cannot_be_claimed (test_continuity_epoch_export.EpochTests.test_old_queued_leased_and_missing_epoch_cannot_be_claimed) ... ok
+test_overlapping_review_suspend_restart_retains_noncurrent_disposition (test_continuity_epoch_export.EpochTests.test_overlapping_review_suspend_restart_retains_noncurrent_disposition) ... ok
+test_proactive_scan_creates_epoch_distinct_work (test_continuity_epoch_export.EpochTests.test_proactive_scan_creates_epoch_distinct_work) ... ok
+test_ready_and_accepted_history_never_revives (test_continuity_epoch_export.EpochTests.test_ready_and_accepted_history_never_revives) ... ok
+test_restart_between_claim_and_dispatch_prevents_provider_call (test_continuity_epoch_export.EpochTests.test_restart_between_claim_and_dispatch_prevents_provider_call) ... ok
+test_continuity_http_audiences_and_offline_export (test_continuity_epoch_export.HttpTests.test_continuity_http_audiences_and_offline_export) ... ok
+test_export_preserves_programme_support_reason_redaction (test_continuity_epoch_export.HttpTests.test_export_preserves_programme_support_reason_redaction) ... ok
+test_forecast_http_is_read_only_and_bounded (test_continuity_epoch_export.HttpTests.test_forecast_http_is_read_only_and_bounded) ... ok
+test_http_epoch_read_review_export_and_manual_actions (test_continuity_epoch_export.HttpTests.test_http_epoch_read_review_export_and_manual_actions) ... Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+test_http_migration_failure_reports_incomplete_without_driver_details (test_continuity_epoch_export.HttpTests.test_http_migration_failure_reports_incomplete_without_driver_details) ... ok
+test_invalid_payload_and_store_failure_leave_manual_api_available (test_continuity_epoch_export.HttpTests.test_invalid_payload_and_store_failure_leave_manual_api_available) ... http-response GET /api/assistants/proposals status=503
+ok
+test_limited_mutation_responses_preserve_human_controls_without_text (test_continuity_epoch_export.HttpTests.test_limited_mutation_responses_preserve_human_controls_without_text) ... ok
+test_nested_evidence_projection_and_full_manager_proof (test_continuity_epoch_export.HttpTests.test_nested_evidence_projection_and_full_manager_proof) ... ok
+test_register_recorded_need_canaries_and_canonical_nonmutation (test_continuity_epoch_export.HttpTests.test_register_recorded_need_canaries_and_canonical_nonmutation) ... ok
+test_registry_invoke_list_detail_separate_review_and_denials (test_continuity_epoch_export.HttpTests.test_registry_invoke_list_detail_separate_review_and_denials) ... ok
+test_release_record_local_http (test_continuity_epoch_export.HttpTests.test_release_record_local_http) ... ok
+test_legacy_priority_ready_accepted_missing_epoch_and_cache (test_continuity_epoch_export.LegacyTests.test_legacy_priority_ready_accepted_missing_epoch_and_cache) ... ok
+test_legacy_review_and_priority_reliance_do_not_revive (test_continuity_epoch_export.LegacyTests.test_legacy_review_and_priority_reliance_do_not_revive) ... ok
+test_legacy_text_document_priority_publication_race (test_continuity_epoch_export.LegacyTests.test_legacy_text_document_priority_publication_race) ... ok
+test_inflight_completion_overlaps_suspend_restart_and_keeps_unknown_liability (test_continuity_epoch_export.MssqlEpochTests.test_inflight_completion_overlaps_suspend_restart_and_keeps_unknown_liability) ... skipped 'owned local MSSQL opt-in'
+test_missing_historical_epoch_and_export_collection_race_fail_closed (test_continuity_epoch_export.MssqlEpochTests.test_missing_historical_epoch_and_export_collection_race_fail_closed) ... skipped 'owned local MSSQL opt-in'
+test_old_process_epoch_reads_persisted_restart (test_continuity_epoch_export.MssqlEpochTests.test_old_process_epoch_reads_persisted_restart) ... skipped 'owned local MSSQL opt-in'
+test_old_queued_leased_and_missing_epoch_cannot_be_claimed (test_continuity_epoch_export.MssqlEpochTests.test_old_queued_leased_and_missing_epoch_cannot_be_claimed) ... skipped 'owned local MSSQL opt-in'
+test_overlapping_review_suspend_restart_retains_noncurrent_disposition (test_continuity_epoch_export.MssqlEpochTests.test_overlapping_review_suspend_restart_retains_noncurrent_disposition) ... skipped 'owned local MSSQL opt-in'
+test_proactive_scan_creates_epoch_distinct_work (test_continuity_epoch_export.MssqlEpochTests.test_proactive_scan_creates_epoch_distinct_work) ... skipped 'owned local MSSQL opt-in'
+test_ready_and_accepted_history_never_revives (test_continuity_epoch_export.MssqlEpochTests.test_ready_and_accepted_history_never_revives) ... skipped 'owned local MSSQL opt-in'
+test_restart_between_claim_and_dispatch_prevents_provider_call (test_continuity_epoch_export.MssqlEpochTests.test_restart_between_claim_and_dispatch_prevents_provider_call) ... skipped 'owned local MSSQL opt-in'
+test_continuity_http_audiences_and_offline_export (test_continuity_epoch_export.MssqlHttpTests.test_continuity_http_audiences_and_offline_export) ... skipped 'owned local MSSQL opt-in'
+test_export_preserves_programme_support_reason_redaction (test_continuity_epoch_export.MssqlHttpTests.test_export_preserves_programme_support_reason_redaction) ... skipped 'owned local MSSQL opt-in'
+test_forecast_http_is_read_only_and_bounded (test_continuity_epoch_export.MssqlHttpTests.test_forecast_http_is_read_only_and_bounded) ... skipped 'owned local MSSQL opt-in'
+test_http_epoch_read_review_export_and_manual_actions (test_continuity_epoch_export.MssqlHttpTests.test_http_epoch_read_review_export_and_manual_actions) ... skipped 'owned local MSSQL opt-in'
+test_http_migration_failure_reports_incomplete_without_driver_details (test_continuity_epoch_export.MssqlHttpTests.test_http_migration_failure_reports_incomplete_without_driver_details) ... skipped 'owned local MSSQL opt-in'
+test_invalid_payload_and_store_failure_leave_manual_api_available (test_continuity_epoch_export.MssqlHttpTests.test_invalid_payload_and_store_failure_leave_manual_api_available) ... skipped 'owned local MSSQL opt-in'
+test_limited_mutation_responses_preserve_human_controls_without_text (test_continuity_epoch_export.MssqlHttpTests.test_limited_mutation_responses_preserve_human_controls_without_text) ... skipped 'owned local MSSQL opt-in'
+test_nested_evidence_projection_and_full_manager_proof (test_continuity_epoch_export.MssqlHttpTests.test_nested_evidence_projection_and_full_manager_proof) ... skipped 'owned local MSSQL opt-in'
+test_register_recorded_need_canaries_and_canonical_nonmutation (test_continuity_epoch_export.MssqlHttpTests.test_register_recorded_need_canaries_and_canonical_nonmutation) ... skipped 'owned local MSSQL opt-in'
+test_registry_invoke_list_detail_separate_review_and_denials (test_continuity_epoch_export.MssqlHttpTests.test_registry_invoke_list_detail_separate_review_and_denials) ... skipped 'owned local MSSQL opt-in'
+test_release_record_local_http (test_continuity_epoch_export.MssqlHttpTests.test_release_record_local_http) ... skipped 'owned local MSSQL opt-in'
+test_legacy_priority_ready_accepted_missing_epoch_and_cache (test_continuity_epoch_export.MssqlLegacyTests.test_legacy_priority_ready_accepted_missing_epoch_and_cache) ... skipped 'owned local MSSQL opt-in'
+test_legacy_review_and_priority_reliance_do_not_revive (test_continuity_epoch_export.MssqlLegacyTests.test_legacy_review_and_priority_reliance_do_not_revive) ... skipped 'owned local MSSQL opt-in'
+test_legacy_text_document_priority_publication_race (test_continuity_epoch_export.MssqlLegacyTests.test_legacy_text_document_priority_publication_race) ... skipped 'owned local MSSQL opt-in'
+test_actual_invalid_ledger_migration_retains_unavailable_evidence (test_continuity_epoch_export.MssqlOfflineTests.test_actual_invalid_ledger_migration_retains_unavailable_evidence) ... skipped 'owned local MSSQL opt-in'
+test_actual_json_unsupported_and_available_sql_full_empty_sources (test_continuity_epoch_export.MssqlOfflineTests.test_actual_json_unsupported_and_available_sql_full_empty_sources) ... skipped 'owned local MSSQL opt-in'
+test_constructor_migration_failure_cannot_omit_retained_sql_evidence (test_continuity_epoch_export.MssqlOfflineTests.test_constructor_migration_failure_cannot_omit_retained_sql_evidence) ... skipped 'owned local MSSQL opt-in'
+test_empty_legacy_and_explicit_unsupported_sources_are_distinct (test_continuity_epoch_export.MssqlOfflineTests.test_empty_legacy_and_explicit_unsupported_sources_are_distinct) ... skipped 'owned local MSSQL opt-in'
+test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.MssqlOfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) ... skipped 'owned local MSSQL opt-in'
+test_legacy_top_level_release_and_collection_restart_are_retained (test_continuity_epoch_export.MssqlOfflineTests.test_legacy_top_level_release_and_collection_restart_are_retained) ... skipped 'owned local MSSQL opt-in'
+test_malformed_release_sources_fail_producer_and_verifier_without_exceptions (test_continuity_epoch_export.MssqlOfflineTests.test_malformed_release_sources_fail_producer_and_verifier_without_exceptions) ... skipped 'owned local MSSQL opt-in'
+test_original_review_missing_and_truncated_proposals_with_unchanged_head (test_continuity_epoch_export.MssqlOfflineTests.test_original_review_missing_and_truncated_proposals_with_unchanged_head) ... skipped 'owned local MSSQL opt-in'
+test_producer_marks_missing_and_bounded_release_evidence_incomplete (test_continuity_epoch_export.MssqlOfflineTests.test_producer_marks_missing_and_bounded_release_evidence_incomplete) ... skipped 'owned local MSSQL opt-in'
+test_proposal_metadata_shapes_counts_and_source_status_fail_closed (test_continuity_epoch_export.MssqlOfflineTests.test_proposal_metadata_shapes_counts_and_source_status_fail_closed) ... skipped 'owned local MSSQL opt-in'
+test_recomputed_digest_cannot_mask_missing_mismatched_or_truncated_releases (test_continuity_epoch_export.MssqlOfflineTests.test_recomputed_digest_cannot_mask_missing_mismatched_or_truncated_releases) ... skipped 'owned local MSSQL opt-in'
+test_release_snapshot_and_lifecycle_verify_offline_after_revocation (test_continuity_epoch_export.MssqlOfflineTests.test_release_snapshot_and_lifecycle_verify_offline_after_revocation) ... skipped 'owned local MSSQL opt-in'
+test_release_source_absence_and_unsupported_are_not_full_evidence (test_continuity_epoch_export.MssqlOfflineTests.test_release_source_absence_and_unsupported_are_not_full_evidence) ... skipped 'owned local MSSQL opt-in'
+test_unreferenced_lifecycle_transitions_and_timestamp_ties (test_continuity_epoch_export.MssqlOfflineTests.test_unreferenced_lifecycle_transitions_and_timestamp_ties) ... skipped 'owned local MSSQL opt-in'
+test_unreferenced_retained_release_lifecycle_is_required (test_continuity_epoch_export.MssqlOfflineTests.test_unreferenced_retained_release_lifecycle_is_required) ... skipped 'owned local MSSQL opt-in'
+test_actual_json_unsupported_and_available_sql_full_empty_sources (test_continuity_epoch_export.OfflineTests.test_actual_json_unsupported_and_available_sql_full_empty_sources) ... ok
+test_constructor_migration_failure_cannot_omit_retained_sql_evidence (test_continuity_epoch_export.OfflineTests.test_constructor_migration_failure_cannot_omit_retained_sql_evidence) ... ok
+test_empty_legacy_and_explicit_unsupported_sources_are_distinct (test_continuity_epoch_export.OfflineTests.test_empty_legacy_and_explicit_unsupported_sources_are_distinct) ... ok
+test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) ... ok
+test_legacy_top_level_release_and_collection_restart_are_retained (test_continuity_epoch_export.OfflineTests.test_legacy_top_level_release_and_collection_restart_are_retained) ... ok
+test_malformed_release_sources_fail_producer_and_verifier_without_exceptions (test_continuity_epoch_export.OfflineTests.test_malformed_release_sources_fail_producer_and_verifier_without_exceptions) ... ok
+test_original_review_missing_and_truncated_proposals_with_unchanged_head (test_continuity_epoch_export.OfflineTests.test_original_review_missing_and_truncated_proposals_with_unchanged_head) ... ok
+test_producer_marks_missing_and_bounded_release_evidence_incomplete (test_continuity_epoch_export.OfflineTests.test_producer_marks_missing_and_bounded_release_evidence_incomplete) ... ok
+test_proposal_metadata_shapes_counts_and_source_status_fail_closed (test_continuity_epoch_export.OfflineTests.test_proposal_metadata_shapes_counts_and_source_status_fail_closed) ... ok
+test_recomputed_digest_cannot_mask_missing_mismatched_or_truncated_releases (test_continuity_epoch_export.OfflineTests.test_recomputed_digest_cannot_mask_missing_mismatched_or_truncated_releases) ... ok
+test_release_snapshot_and_lifecycle_verify_offline_after_revocation (test_continuity_epoch_export.OfflineTests.test_release_snapshot_and_lifecycle_verify_offline_after_revocation) ... ok
+test_release_source_absence_and_unsupported_are_not_full_evidence (test_continuity_epoch_export.OfflineTests.test_release_source_absence_and_unsupported_are_not_full_evidence) ... ok
+test_unreferenced_lifecycle_transitions_and_timestamp_ties (test_continuity_epoch_export.OfflineTests.test_unreferenced_lifecycle_transitions_and_timestamp_ties) ... ok
+test_unreferenced_retained_release_lifecycle_is_required (test_continuity_epoch_export.OfflineTests.test_unreferenced_retained_release_lifecycle_is_required) ... ok
+test_absent_funding_reads_as_not_confirmed_not_missing_case (test_home_case_api.HomeCaseApiTests.test_absent_funding_reads_as_not_confirmed_not_missing_case) ... ok
+test_screen_is_wired_with_manual_path (test_home_case_api.HomeCaseApiTests.test_screen_is_wired_with_manual_path) ... ok
+test_version_recorded_through_http_and_retained (test_home_case_api.HomeCaseApiTests.test_version_recorded_through_http_and_retained) ... ok
+test_view_separates_home_and_building_and_denies_unauthorised (test_home_case_api.HomeCaseApiTests.test_view_separates_home_and_building_and_denies_unauthorised) ... ok
+test_every_added_case_column_has_a_ledger_type (test_mssqlstore.LedgerAddColumnStatements.test_every_added_case_column_has_a_ledger_type) ... ok
+test_ledger_table_adds_nullable_backfills_then_constrains (test_mssqlstore.LedgerAddColumnStatements.test_ledger_table_adds_nullable_backfills_then_constrains) ... ok
+test_ordinary_table_keeps_not_null_default (test_mssqlstore.LedgerAddColumnStatements.test_ordinary_table_keeps_not_null_default) ... ok
+test_sqlite_statement_is_unchanged (test_mssqlstore.LedgerAddColumnStatements.test_sqlite_statement_is_unchanged) ... ok
+test_unmapped_text_column_on_a_ledger_table_is_refused (test_mssqlstore.LedgerAddColumnStatements.test_unmapped_text_column_on_a_ledger_table_is_refused) ... ok
+test_api_role_projection_has_no_sibling_evidence_or_unauthorized_amounts (test_mssqlstore.MssqlBuildingHttp.test_api_role_projection_has_no_sibling_evidence_or_unauthorized_amounts) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_local_app_and_bidirectional_navigation (test_mssqlstore.MssqlBuildingHttp.test_local_app_and_bidirectional_navigation) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_shared_hold_blocks_advance_and_retains_ai_and_safety_intake (test_mssqlstore.MssqlBuildingHttp.test_shared_hold_blocks_advance_and_retains_ai_and_safety_intake) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_clear_building_does_not_supply_independent_home_approvals (test_mssqlstore.MssqlBuildings.test_clear_building_does_not_supply_independent_home_approvals) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_clear_building_does_not_supply_sibling_qa_or_handover (test_mssqlstore.MssqlBuildings.test_clear_building_does_not_supply_sibling_qa_or_handover) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_hold_scopes_refuse_matching_work_but_keep_orthogonal_controls_usable (test_mssqlstore.MssqlBuildings.test_hold_scopes_refuse_matching_work_but_keep_orthogonal_controls_usable) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_independent_hold_visibility_and_stale_document_conflict (test_mssqlstore.MssqlBuildings.test_independent_hold_visibility_and_stale_document_conflict) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_record_and_home_allocations_reopen_without_seed (test_mssqlstore.MssqlBuildings.test_record_and_home_allocations_reopen_without_seed) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_demo_path_holds_a_second_call_in_the_same_request (test_mssqlstore.MssqlChatDemoMeter.test_demo_path_holds_a_second_call_in_the_same_request) ... skipped 'needs disposable SQL Server (ZF_TEST_MSSQL=1)'
+test_demo_path_seeds_synthetic_records_and_admits_exactly_one_call (test_mssqlstore.MssqlChatDemoMeter.test_demo_path_seeds_synthetic_records_and_admits_exactly_one_call) ... skipped 'needs disposable SQL Server (ZF_TEST_MSSQL=1)'
+test_synthetic_price_still_holds_a_live_call_outside_the_demo (test_mssqlstore.MssqlChatDemoMeter.test_synthetic_price_still_holds_a_live_call_outside_the_demo) ... skipped 'needs disposable SQL Server (ZF_TEST_MSSQL=1)'
+test_without_the_switch_nothing_is_seeded_and_the_call_is_refused (test_mssqlstore.MssqlChatDemoMeter.test_without_the_switch_nothing_is_seeded_and_the_call_is_refused) ... skipped 'needs disposable SQL Server (ZF_TEST_MSSQL=1)'
+test_cannot_write_to_another_users_thread (test_mssqlstore.MssqlChatPrivacy.test_cannot_write_to_another_users_thread) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_data_map_covers_required_classes (test_mssqlstore.MssqlChatPrivacy.test_data_map_covers_required_classes) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_diagnostics_exclude_content (test_mssqlstore.MssqlChatPrivacy.test_diagnostics_exclude_content) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_expiry_set_and_purged_when_retention_approved (test_mssqlstore.MssqlChatPrivacy.test_expiry_set_and_purged_when_retention_approved) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_message_stored_redacted_and_memory_rejects_special_category (test_mssqlstore.MssqlChatPrivacy.test_message_stored_redacted_and_memory_rejects_special_category) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_no_expiry_without_retention (test_mssqlstore.MssqlChatPrivacy.test_no_expiry_without_retention) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_no_retention_period_before_approval (test_mssqlstore.MssqlChatPrivacy.test_no_retention_period_before_approval) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_provider_position_is_documented_but_not_accepted (test_mssqlstore.MssqlChatPrivacy.test_provider_position_is_documented_but_not_accepted) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_redaction_masks_identifiers_and_cues (test_mssqlstore.MssqlChatPrivacy.test_redaction_masks_identifiers_and_cues) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_retention_purge_does_nothing_without_a_recorded_period (test_mssqlstore.MssqlChatPrivacy.test_retention_purge_does_nothing_without_a_recorded_period) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_retention_purge_is_age_based_and_ignores_later_activity (test_mssqlstore.MssqlChatPrivacy.test_retention_purge_is_age_based_and_ignores_later_activity) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_rights_run_through_the_160_chat_repository (test_mssqlstore.MssqlChatPrivacy.test_rights_run_through_the_160_chat_repository) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_storage_refused_without_dpo_legal_references (test_mssqlstore.MssqlChatPrivacy.test_storage_refused_without_dpo_legal_references) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_another_user_cannot_resume_or_ask_in_the_thread (test_mssqlstore.MssqlChatRoleProjection.test_another_user_cannot_resume_or_ask_in_the_thread) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_prompt_withholds_reason_by_role_and_phone_from_all (test_mssqlstore.MssqlChatRoleProjection.test_prompt_withholds_reason_by_role_and_phone_from_all) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_revoked_roster_denies_a_stale_actor_before_dispatch (test_mssqlstore.MssqlChatRoleProjection.test_revoked_roster_denies_a_stale_actor_before_dispatch) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_role_demoted_during_inference_withholds_the_answer (test_mssqlstore.MssqlChatRoleProjection.test_role_demoted_during_inference_withholds_the_answer) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_concurrent_appends_get_distinct_sequences (test_mssqlstore.MssqlChatThreads.test_concurrent_appends_get_distinct_sequences) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_employee_general_sources_fallback_and_foreign_owner_denial (test_mssqlstore.MssqlChatThreads.test_employee_general_sources_fallback_and_foreign_owner_denial) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_employee_skills_persist_cited_answers_and_minimal_audit (test_mssqlstore.MssqlChatThreads.test_employee_skills_persist_cited_answers_and_minimal_audit) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_ledger_records_metadata_only_and_survives_deletion (test_mssqlstore.MssqlChatThreads.test_ledger_records_metadata_only_and_survives_deletion) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_list_archive_and_delete_own_threads (test_mssqlstore.MssqlChatThreads.test_list_archive_and_delete_own_threads) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_messages_keep_order_evidence_and_model_identity (test_mssqlstore.MssqlChatThreads.test_messages_keep_order_evidence_and_model_identity) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_messages_persist_the_role_of_the_asking_actor_after_restart (test_mssqlstore.MssqlChatThreads.test_messages_persist_the_role_of_the_asking_actor_after_restart) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_other_users_cannot_see_or_change_a_thread (test_mssqlstore.MssqlChatThreads.test_other_users_cannot_see_or_change_a_thread) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_row_version_refuses_stale_writes (test_mssqlstore.MssqlChatThreads.test_row_version_refuses_stale_writes) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_thread_records_owner_case_task_version_and_model (test_mssqlstore.MssqlChatThreads.test_thread_records_owner_case_task_version_and_model) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_validation (test_mssqlstore.MssqlChatThreads.test_validation) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_budget_and_commitment_need_a_different_approver (test_mssqlstore.MssqlFinanceSignoffs.test_budget_and_commitment_need_a_different_approver) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_chain_intact_and_audited (test_mssqlstore.MssqlFinanceSignoffs.test_chain_intact_and_audited) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_clean_invoice_matches_but_payment_is_never_executed (test_mssqlstore.MssqlFinanceSignoffs.test_clean_invoice_matches_but_payment_is_never_executed) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_complaint_route_has_distinct_owners_and_closure (test_mssqlstore.MssqlFinanceSignoffs.test_complaint_route_has_distinct_owners_and_closure) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_contractor_and_other_roles_cannot_see_finance (test_mssqlstore.MssqlFinanceSignoffs.test_contractor_and_other_roles_cannot_see_finance) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_decisions_are_never_inferred_and_are_per_measure (test_mssqlstore.MssqlFinanceSignoffs.test_decisions_are_never_inferred_and_are_per_measure) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_design_change_invalidates_only_affected_signoffs (test_mssqlstore.MssqlFinanceSignoffs.test_design_change_invalidates_only_affected_signoffs) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_duplicate_reference_and_holds (test_mssqlstore.MssqlFinanceSignoffs.test_duplicate_reference_and_holds) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_grant_states_are_distinct_and_need_a_second_person (test_mssqlstore.MssqlFinanceSignoffs.test_grant_states_are_distinct_and_need_a_second_person) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_grants_never_touch_invoices_and_show_in_funding_list (test_mssqlstore.MssqlFinanceSignoffs.test_grants_never_touch_invoices_and_show_in_funding_list) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_inputs_and_bulk_are_refused (test_mssqlstore.MssqlFinanceSignoffs.test_inputs_and_bulk_are_refused) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_line_exceptions_and_unknowns_block_a_match (test_mssqlstore.MssqlFinanceSignoffs.test_line_exceptions_and_unknowns_block_a_match) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_return_and_reapproval (test_mssqlstore.MssqlFinanceSignoffs.test_return_and_reapproval) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_survives_a_restart (test_mssqlstore.MssqlFinanceSignoffs.test_survives_a_restart) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_technical_stage_lists_missing_items_for_competent_roles (test_mssqlstore.MssqlFinanceSignoffs.test_technical_stage_lists_missing_items_for_competent_roles) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_explicit_change_sources_are_required_and_reopen_from_http (test_mssqlstore.MssqlHandoffApi.test_explicit_change_sources_are_required_and_reopen_from_http) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_new_actions_are_denied_to_contractors_and_wrong_staff (test_mssqlstore.MssqlHandoffApi.test_new_actions_are_denied_to_contractors_and_wrong_staff) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_queue_and_detail_hold_notes_for_roles_without_need (test_mssqlstore.MssqlHandoffApi.test_queue_and_detail_hold_notes_for_roles_without_need) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_rejection_withdrawal_and_escalation_permissions_over_http (test_mssqlstore.MssqlHandoffApi.test_rejection_withdrawal_and_escalation_permissions_over_http) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_return_reopen_require_provenance_and_use_authenticated_authority (test_mssqlstore.MssqlHandoffApi.test_return_reopen_require_provenance_and_use_authenticated_authority) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_synthetic_app_states_sender_receiver_manager_views (test_mssqlstore.MssqlHandoffApi.test_synthetic_app_states_sender_receiver_manager_views) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_unaccepted_handoff_ageing_route_is_scoped_read_only_and_never_defaults_a_limit (test_mssqlstore.MssqlHandoffApi.test_unaccepted_handoff_ageing_route_is_scoped_read_only_and_never_defaults_a_limit) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_authority_changes_rechecked_at_transaction_for_caller_and_destination (test_mssqlstore.MssqlHazardReferral.test_authority_changes_rechecked_at_transaction_for_caller_and_destination) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_closed_record_and_ai_outage_do_not_block_intake_or_reopen_retrofit (test_mssqlstore.MssqlHazardReferral.test_closed_record_and_ai_outage_do_not_block_intake_or_reopen_retrofit) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_current_registered_actors_and_destinations_are_required (test_mssqlstore.MssqlHazardReferral.test_current_registered_actors_and_destinations_are_required) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_distinct_events_times_hold_and_restart_without_case_transfer (test_mssqlstore.MssqlHazardReferral.test_distinct_events_times_hold_and_restart_without_case_transfer) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_external_updates_remain_recordable_after_retrofit_restart (test_mssqlstore.MssqlHazardReferral.test_external_updates_remain_recordable_after_retrofit_restart) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_failed_save_has_no_success_audit_or_ghost_hazard (test_mssqlstore.MssqlHazardReferral.test_failed_save_has_no_success_audit_or_ghost_hazard) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_failed_writes_preserve_prior_pending_audit_and_original_error (test_mssqlstore.MssqlHazardReferral.test_failed_writes_preserve_prior_pending_audit_and_original_error) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_home_hold_blocks_all_controlled_progression_but_not_sibling_or_referral (test_mssqlstore.MssqlHazardReferral.test_home_hold_blocks_all_controlled_progression_but_not_sibling_or_referral) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_invalid_provenance_actor_index_timing_and_replays_are_atomic (test_mssqlstore.MssqlHazardReferral.test_invalid_provenance_actor_index_timing_and_replays_are_atomic) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_json_postsave_audit_failure_reports_persisted_uncertainty (test_mssqlstore.MssqlHazardReferral.test_json_postsave_audit_failure_reports_persisted_uncertainty) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_legacy_states_have_prospective_path_without_inventing_history (test_mssqlstore.MssqlHazardReferral.test_legacy_states_have_prospective_path_without_inventing_history) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_receiver_binding_rejects_recycled_code (test_mssqlstore.MssqlHazardReferral.test_receiver_binding_rejects_recycled_code) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_receiver_error_names_the_failing_condition (test_mssqlstore.MssqlHazardReferral.test_receiver_error_names_the_failing_condition) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_recovery_read_failure_quarantines_hazard_and_keeps_prior_audit (test_mssqlstore.MssqlHazardReferral.test_recovery_read_failure_quarantines_hazard_and_keeps_prior_audit) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_release_independence_uses_recorded_email_code_and_oid (test_mssqlstore.MssqlHazardReferral.test_release_independence_uses_recorded_email_code_and_oid) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_release_needs_the_named_accountable_role (test_mssqlstore.MssqlHazardReferral.test_release_needs_the_named_accountable_role) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_restart_refusals_name_the_next_action_in_plain_words (test_mssqlstore.MssqlHazardReferral.test_restart_refusals_name_the_next_action_in_plain_words) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_same_person_restart_refusals_name_who_to_ask (test_mssqlstore.MssqlHazardReferral.test_same_person_restart_refusals_name_who_to_ask) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_sensitive_evidence_is_withheld_and_never_added_to_model_sources (test_mssqlstore.MssqlHazardReferral.test_sensitive_evidence_is_withheld_and_never_added_to_model_sources) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_stale_actor_is_refused_for_every_hazard_event (test_mssqlstore.MssqlHazardReferral.test_stale_actor_is_refused_for_every_hazard_event) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_ai_falls_back_to_template_and_is_audited (test_mssqlstore.MssqlImproveTests.test_ai_falls_back_to_template_and_is_audited) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_ai_output_claiming_sent_is_rejected (test_mssqlstore.MssqlImproveTests.test_ai_output_claiming_sent_is_rejected) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_briefing_cached_until_data_changes (test_mssqlstore.MssqlImproveTests.test_briefing_cached_until_data_changes) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_filter_and_sort (test_mssqlstore.MssqlImproveTests.test_filter_and_sort) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_funding_in_progress_filter (test_mssqlstore.MssqlImproveTests.test_funding_in_progress_filter) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_funding_needs_evidence_and_role (test_mssqlstore.MssqlImproveTests.test_funding_needs_evidence_and_role) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_handover_suggestions_have_reasons (test_mssqlstore.MssqlImproveTests.test_handover_suggestions_have_reasons) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_stats_and_map (test_mssqlstore.MssqlImproveTests.test_stats_and_map) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_upload_rejects_bad_type_and_lists_document (test_mssqlstore.MssqlImproveTests.test_upload_rejects_bad_type_and_lists_document) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_failure_after_backfill_leaves_no_partial_schema_and_can_be_retried (test_mssqlstore.MssqlLedgerMigration.test_failure_after_backfill_leaves_no_partial_schema_and_can_be_retried) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_fresh_ledger_database_initialises (test_mssqlstore.MssqlLedgerMigration.test_fresh_ledger_database_initialises) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_populated_chat_memory_failure_rolls_back_and_retries (test_mssqlstore.MssqlLedgerMigration.test_populated_chat_memory_failure_rolls_back_and_retries) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_previous_schema_migrates_in_a_ledger_database (test_mssqlstore.MssqlLedgerMigration.test_previous_schema_migrates_in_a_ledger_database) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_previous_schema_still_migrates_in_an_ordinary_database (test_mssqlstore.MssqlLedgerMigration.test_previous_schema_still_migrates_in_an_ordinary_database) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_seed_merge_on_ledger_database (test_mssqlstore.MssqlLedgerMigration.test_seed_merge_on_ledger_database) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_seed_merge_on_plain_database (test_mssqlstore.MssqlLedgerMigration.test_seed_merge_on_plain_database) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_remote_server_is_refused_before_any_connection_or_cleanup (test_mssqlstore.MssqlLedgerMigrationGuard.test_remote_server_is_refused_before_any_connection_or_cleanup) ... ok
+test_closed_list_and_full_export_still_work (test_mssqlstore.MssqlParity.test_closed_list_and_full_export_still_work) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_contractor_rows_have_no_reason_or_rank_ordering_leak (test_mssqlstore.MssqlParity.test_contractor_rows_have_no_reason_or_rank_ordering_leak) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_contractor_search_still_cannot_use_the_resident_name (test_mssqlstore.MssqlParity.test_contractor_search_still_cannot_use_the_resident_name) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_counts_match (test_mssqlstore.MssqlParity.test_counts_match) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_default_order_matches_ranking_exactly (test_mssqlstore.MssqlParity.test_default_order_matches_ranking_exactly) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_every_view_filter_sort_and_search_matches_the_in_memory_store (test_mssqlstore.MssqlParity.test_every_view_filter_sort_and_search_matches_the_in_memory_store) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_keyset_is_stable_when_a_case_changes_between_pages (test_mssqlstore.MssqlParity.test_keyset_is_stable_when_a_case_changes_between_pages) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_keyset_walk_equals_offset_walk_and_never_repeats (test_mssqlstore.MssqlParity.test_keyset_walk_equals_offset_walk_and_never_repeats) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_ranks_are_global_not_page_local (test_mssqlstore.MssqlParity.test_ranks_are_global_not_page_local) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_absent_measure_keeps_legacy_general_fallback (test_mssqlstore.MssqlProcurement.test_absent_measure_keeps_legacy_general_fallback) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_advance_dependency_races_restore_case_and_never_confirm (test_mssqlstore.MssqlProcurement.test_advance_dependency_races_restore_case_and_never_confirm) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_advance_without_evidenced_booked_order_is_refused (test_mssqlstore.MssqlProcurement.test_advance_without_evidenced_booked_order_is_refused) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_appointment_commit_time_source_scope_authority_invalidation (test_mssqlstore.MssqlProcurement.test_appointment_commit_time_source_scope_authority_invalidation) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_appointment_concurrent_confirmations_and_outcomes_are_not_lost (test_mssqlstore.MssqlProcurement.test_appointment_concurrent_confirmations_and_outcomes_are_not_lost) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_appointment_configuration_and_inactive_case_never_reset_or_replay (test_mssqlstore.MssqlProcurement.test_appointment_configuration_and_inactive_case_never_reset_or_replay) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_appointment_exclusions_and_independent_cause_owner_fact_counts (test_mssqlstore.MssqlProcurement.test_appointment_exclusions_and_independent_cause_owner_fact_counts) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_appointment_inactive_case_race_and_reopen_consumed_ref_fail_closed (test_mssqlstore.MssqlProcurement.test_appointment_inactive_case_race_and_reopen_consumed_ref_fail_closed) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_appointment_pending_audit_rollback_and_postcommit_truthful_retry (test_mssqlstore.MssqlProcurement.test_appointment_pending_audit_rollback_and_postcommit_truthful_retry) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_appointment_reads_apply_existing_resident_evidence_roles (test_mssqlstore.MssqlProcurement.test_appointment_reads_apply_existing_resident_evidence_roles) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_appointment_representative_is_explicit_bounded_and_revocable (test_mssqlstore.MssqlProcurement.test_appointment_representative_is_explicit_bounded_and_revocable) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_appointment_scope_capacity_invalidation_and_household_history (test_mssqlstore.MssqlProcurement.test_appointment_scope_capacity_invalidation_and_household_history) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_appointment_separate_confirmations_legacy_and_server_status (test_mssqlstore.MssqlProcurement.test_appointment_separate_confirmations_legacy_and_server_status) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_appointment_sixth_event_human_only_dedup_and_task_disposition_no_reset (test_mssqlstore.MssqlProcurement.test_appointment_sixth_event_human_only_dedup_and_task_disposition_no_reset) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_booking_capacity_known_violation_is_fail_and_changes_nothing (test_mssqlstore.MssqlProcurement.test_booking_capacity_known_violation_is_fail_and_changes_nothing) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_booking_capacity_pass_carries_unreviewed_rule_provenance (test_mssqlstore.MssqlProcurement.test_booking_capacity_pass_carries_unreviewed_rule_provenance) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_booking_capacity_unreadable_evidence_is_unknown_and_changes_nothing (test_mssqlstore.MssqlProcurement.test_booking_capacity_unreadable_evidence_is_unknown_and_changes_nothing) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_booking_outside_package_period_is_refused (test_mssqlstore.MssqlProcurement.test_booking_outside_package_period_is_refused) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_booking_with_unbooked_work_order_is_unknown_and_changes_nothing (test_mssqlstore.MssqlProcurement.test_booking_with_unbooked_work_order_is_unknown_and_changes_nothing) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_booking_without_any_work_order_is_unknown_and_changes_nothing (test_mssqlstore.MssqlProcurement.test_booking_without_any_work_order_is_unknown_and_changes_nothing) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_bundle_needs_explicit_agreement_and_scoped_competence (test_mssqlstore.MssqlProcurement.test_bundle_needs_explicit_agreement_and_scoped_competence) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_cannot_skip_states (test_mssqlstore.MssqlProcurement.test_cannot_skip_states) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_capacity_dates_scope_source_and_deficit_invalidate_progression (test_mssqlstore.MssqlProcurement.test_capacity_dates_scope_source_and_deficit_invalidate_progression) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_commit_authority_revocation_is_rechecked (test_mssqlstore.MssqlProcurement.test_commit_authority_revocation_is_rechecked) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_committed_capacity_needs_evidence_and_limits_work_orders (test_mssqlstore.MssqlProcurement.test_committed_capacity_needs_evidence_and_limits_work_orders) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_concurrent_last_slot_keeps_only_winning_order_and_audit (test_mssqlstore.MssqlProcurement.test_concurrent_last_slot_keeps_only_winning_order_and_audit) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_configuration_evaluates_existing_active_counts_once (test_mssqlstore.MssqlProcurement.test_configuration_evaluates_existing_active_counts_once) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_configuration_rechecks_other_eligible_home_lifecycle (test_mssqlstore.MssqlProcurement.test_configuration_rechecks_other_eligible_home_lifecycle) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_configuration_wins_human_closure_race (test_mssqlstore.MssqlProcurement.test_configuration_wins_human_closure_race) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_configuration_wins_outcome_race (test_mssqlstore.MssqlProcurement.test_configuration_wins_outcome_race) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_contractor_sees_only_own_work_orders_without_reason (test_mssqlstore.MssqlProcurement.test_contractor_sees_only_own_work_orders_without_reason) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_drafts_and_draft_review_never_issue_instructions (test_mssqlstore.MssqlProcurement.test_drafts_and_draft_review_never_issue_instructions) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_event_wins_against_stale_human_closure_then_fresh_closure_preserves_event (test_mssqlstore.MssqlProcurement.test_event_wins_against_stale_human_closure_then_fresh_closure_preserves_event) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_every_order_change_has_a_version (test_mssqlstore.MssqlProcurement.test_every_order_change_has_a_version) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_evidence_matrix_fails_closed_without_success_events (test_mssqlstore.MssqlProcurement.test_evidence_matrix_fails_closed_without_success_events) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_failed_save_restores_order_versions_and_no_success_audit (test_mssqlstore.MssqlProcurement.test_failed_save_restores_order_versions_and_no_success_audit) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_full_quota_progression_snapshots_and_detached_reads (test_mssqlstore.MssqlProcurement.test_full_quota_progression_snapshots_and_detached_reads) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_higher_configuration_wins_version_race (test_mssqlstore.MssqlProcurement.test_higher_configuration_wins_version_race) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_human_closure_failed_save_rolls_back_case_boundary_and_history (test_mssqlstore.MssqlProcurement.test_human_closure_failed_save_rolls_back_case_boundary_and_history) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_human_closure_pending_audit_rollback_and_postcommit_truthful_retry (test_mssqlstore.MssqlProcurement.test_human_closure_pending_audit_rollback_and_postcommit_truthful_retry) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_human_closure_resets_only_active_count_preserves_history_and_reopen_replay (test_mssqlstore.MssqlProcurement.test_human_closure_resets_only_active_count_preserves_history_and_reopen_replay) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_human_closure_wins_against_stale_event_without_count_or_history_loss (test_mssqlstore.MssqlProcurement.test_human_closure_wins_against_stale_event_without_count_or_history_loss) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_human_closure_wins_configuration_race (test_mssqlstore.MssqlProcurement.test_human_closure_wins_configuration_race) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_human_home_case_closure_requires_current_actor_evidence_and_version (test_mssqlstore.MssqlProcurement.test_human_home_case_closure_requires_current_actor_evidence_and_version) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_imported_numeric_capacity_is_not_evidenced (test_mssqlstore.MssqlProcurement.test_imported_numeric_capacity_is_not_evidenced) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_inclusive_review_and_delivery_boundaries (test_mssqlstore.MssqlProcurement.test_inclusive_review_and_delivery_boundaries) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_installer_name_blocks_acceptance (test_mssqlstore.MssqlProcurement.test_installer_name_blocks_acceptance) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_lower_configuration_wins_version_race (test_mssqlstore.MssqlProcurement.test_lower_configuration_wins_version_race) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_mixed_missing_confirmations_stay_ordinary_refusals (test_mssqlstore.MssqlProcurement.test_mixed_missing_confirmations_stay_ordinary_refusals) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_named_authority_is_not_a_role_or_caller_claim (test_mssqlstore.MssqlProcurement.test_named_authority_is_not_a_role_or_caller_claim) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_never_auto_accepts_and_accepter_must_be_independent (test_mssqlstore.MssqlProcurement.test_never_auto_accepts_and_accepter_must_be_independent) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_non_string_measure_is_not_needed_for_a_known_checklist (test_mssqlstore.MssqlProcurement.test_non_string_measure_is_not_needed_for_a_known_checklist) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_non_string_measure_with_unrecognised_checklist_is_unknown (test_mssqlstore.MssqlProcurement.test_non_string_measure_with_unrecognised_checklist_is_unknown) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_outcome_wins_configuration_race (test_mssqlstore.MssqlProcurement.test_outcome_wins_configuration_race) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_package_requires_contract_version_before_creation (test_mssqlstore.MssqlProcurement.test_package_requires_contract_version_before_creation) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_package_validation_and_roles (test_mssqlstore.MssqlProcurement.test_package_validation_and_roles) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_quality_current_actor_all_writes (test_mssqlstore.MssqlProcurement.test_quality_current_actor_all_writes) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_quality_identity_history (test_mssqlstore.MssqlProcurement.test_quality_identity_history) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_quality_indices (test_mssqlstore.MssqlProcurement.test_quality_indices) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_quality_legacy_repeated_recorders (test_mssqlstore.MssqlProcurement.test_quality_legacy_repeated_recorders) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_quality_remediation_and_reinspection (test_mssqlstore.MssqlProcurement.test_quality_remediation_and_reinspection) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_quality_replacement_dependencies (test_mssqlstore.MssqlProcurement.test_quality_replacement_dependencies) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_quality_resident_and_safety (test_mssqlstore.MssqlProcurement.test_quality_resident_and_safety) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_quality_sql_actor_and_stale (test_mssqlstore.MssqlProcurement.test_quality_sql_actor_and_stale) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_quality_sql_failures (test_mssqlstore.MssqlProcurement.test_quality_sql_failures) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_quality_sql_postcommit_refresh (test_mssqlstore.MssqlProcurement.test_quality_sql_postcommit_refresh) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_recovery_read_failure_keeps_original_error_and_disarms_failed_work (test_mssqlstore.MssqlProcurement.test_recovery_read_failure_keeps_original_error_and_disarms_failed_work) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_return_fix_reinspect_handover_aftercare (test_mssqlstore.MssqlProcurement.test_return_fix_reinspect_handover_aftercare) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_sole_missing_capacity_confirmation_is_unknown_and_changes_nothing (test_mssqlstore.MssqlProcurement.test_sole_missing_capacity_confirmation_is_unknown_and_changes_nothing) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_source_change_at_commit_and_audit_failure_roll_back (test_mssqlstore.MssqlProcurement.test_source_change_at_commit_and_audit_failure_roll_back) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_state_survives_reload (test_mssqlstore.MssqlProcurement.test_state_survives_reload) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_submit_needs_positive_evidence_for_every_check (test_mssqlstore.MssqlProcurement.test_submit_needs_positive_evidence_for_every_check) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_two_processes_see_procurement_changes (test_mssqlstore.MssqlProcurement.test_two_processes_see_procurement_changes) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_unhashable_checklist_name_is_unknown_and_replaceable (test_mssqlstore.MssqlProcurement.test_unhashable_checklist_name_is_unknown_and_replaceable) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_unhashable_item_label_is_unknown_and_replaceable (test_mssqlstore.MssqlProcurement.test_unhashable_item_label_is_unknown_and_replaceable) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_unrecognised_checklist_name_keeps_measure_fallback (test_mssqlstore.MssqlProcurement.test_unrecognised_checklist_name_keeps_measure_fallback) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_withdrawn_appointment_is_ended_and_history_retained (test_mssqlstore.MssqlProcurement.test_withdrawn_appointment_is_ended_and_history_retained) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_work_order_lifecycle_versions_and_audit (test_mssqlstore.MssqlProcurement.test_work_order_lifecycle_versions_and_audit) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_appointment_controls_http_provenance_denials_and_committed_response (test_mssqlstore.MssqlProcurementApi.test_appointment_controls_http_provenance_denials_and_committed_response) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_appointment_http_serialized_canaries_follow_existing_roles (test_mssqlstore.MssqlProcurementApi.test_appointment_http_serialized_canaries_follow_existing_roles) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_bundle_competence_http_requires_bounded_text_and_exact_scope (test_mssqlstore.MssqlProcurementApi.test_bundle_competence_http_requires_bounded_text_and_exact_scope) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_capacity_http_exact_threshold_and_source_inputs (test_mssqlstore.MssqlProcurementApi.test_capacity_http_exact_threshold_and_source_inputs) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_contractors_own_orders_only_and_all_writes_denied (test_mssqlstore.MssqlProcurementApi.test_contractors_own_orders_only_and_all_writes_denied) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_empty_procurement_reads_are_known_empty (test_mssqlstore.MssqlProcurementApi.test_empty_procurement_reads_are_known_empty) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_human_home_case_closure_http_evidence_denials_reset_and_committed_retry (test_mssqlstore.MssqlProcurementApi.test_human_home_case_closure_http_evidence_denials_reset_and_committed_retry) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_job_pack_is_staff_read_only_and_leaks_no_resident_reason (test_mssqlstore.MssqlProcurementApi.test_job_pack_is_staff_read_only_and_leaks_no_resident_reason) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_legacy_capacity_reads_survive_store_reopen_without_inventing_authority (test_mssqlstore.MssqlProcurementApi.test_legacy_capacity_reads_survive_store_reopen_without_inventing_authority) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_legacy_package_without_contract_version_remains_readable (test_mssqlstore.MssqlProcurementApi.test_legacy_package_without_contract_version_remains_readable) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_lifecycle_http_has_issuer_for_every_change (test_mssqlstore.MssqlProcurementApi.test_lifecycle_http_has_issuer_for_every_change) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_package_creation_requires_contract_version (test_mssqlstore.MssqlProcurementApi.test_package_creation_requires_contract_version) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_response_only_encoder_failure_is_truthful_for_confirmation_and_closure (test_mssqlstore.MssqlProcurementApi.test_response_only_encoder_failure_is_truthful_for_confirmation_and_closure) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_withdrawal_http_ends_current_appointment_for_staff_and_provider (test_mssqlstore.MssqlProcurementApi.test_withdrawal_http_ends_current_appointment_for_staff_and_provider) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_cold_and_hot_lookup_never_evaluate_nonreturned_cases (test_mssqlstore.MssqlQueueMembership.test_cold_and_hot_lookup_never_evaluate_nonreturned_cases) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_failed_case_evaluation_rolls_back_body_flags_generation_and_sequence (test_mssqlstore.MssqlQueueMembership.test_failed_case_evaluation_rolls_back_body_flags_generation_and_sequence) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_non_boolean_funding_refreshes_stale_revision_two_memberships (test_mssqlstore.MssqlQueueMembership.test_non_boolean_funding_refreshes_stale_revision_two_memberships) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_old_certified_memberships_refresh_without_case_or_audit_writes (test_mssqlstore.MssqlQueueMembership.test_old_certified_memberships_refresh_without_case_or_audit_writes) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_prerequisite_clearing_refreshes_other_process_and_restart (test_mssqlstore.MssqlQueueMembership.test_prerequisite_clearing_refreshes_other_process_and_restart) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_refresh_failure_does_not_certify_partial_backfill (test_mssqlstore.MssqlQueueMembership.test_refresh_failure_does_not_certify_partial_backfill) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_refresh_only_generations_invalidate_other_process_hot_ids (test_mssqlstore.MssqlQueueMembership.test_refresh_only_generations_invalidate_other_process_hot_ids) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_seed_and_every_case_write_maintain_physical_flags (test_mssqlstore.MssqlQueueMembership.test_seed_and_every_case_write_maintain_physical_flags) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_shared_write_uses_authoritative_state_not_stale_process_documents (test_mssqlstore.MssqlQueueMembership.test_shared_write_uses_authoritative_state_not_stale_process_documents) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_write_between_initial_sync_and_lookup_keeps_ranks_and_context_consistent (test_mssqlstore.MssqlQueueMembership.test_write_between_initial_sync_and_lookup_keeps_ranks_and_context_consistent) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_four_human_signoffs_and_only_affected_reassessment (test_mssqlstore.MssqlStockDecisions.test_four_human_signoffs_and_only_affected_reassessment) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_sql_authority_rechecked_inside_writer_transaction (test_mssqlstore.MssqlStockDecisions.test_sql_authority_rechecked_inside_writer_transaction) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_sql_case_write_failure_restores_decision (test_mssqlstore.MssqlStockDecisions.test_sql_case_write_failure_restores_decision) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_sql_current_actor_denial_for_all_decisions (test_mssqlstore.MssqlStockDecisions.test_sql_current_actor_denial_for_all_decisions) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_sql_decision_scope_restored_on_every_exit (test_mssqlstore.MssqlStockDecisions.test_sql_decision_scope_restored_on_every_exit) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_sql_early_and_persistent_recovery_reads_cannot_flush_failed_work (test_mssqlstore.MssqlStockDecisions.test_sql_early_and_persistent_recovery_reads_cannot_flush_failed_work) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_sql_failed_decisions_do_not_commit_or_flush_success_audit (test_mssqlstore.MssqlStockDecisions.test_sql_failed_decisions_do_not_commit_or_flush_success_audit) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_sql_transaction_refusal_keeps_original_error_when_reload_fails (test_mssqlstore.MssqlStockDecisions.test_sql_transaction_refusal_keeps_original_error_when_reload_fails) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_sql_transactional_audit_failure_restores_decision (test_mssqlstore.MssqlStockDecisions.test_sql_transactional_audit_failure_restores_decision) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_withdraw_unblocks_all_signoffs_without_editing_history (test_mssqlstore.MssqlStockDecisions.test_withdraw_unblocks_all_signoffs_without_editing_history) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_gate_error_leaves_no_partial_change (test_mssqlstore.MssqlStoreTests.test_gate_error_leaves_no_partial_change) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_health_checks_database (test_mssqlstore.MssqlStoreTests.test_health_checks_database) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_initial_seed_retains_procurement_and_date_without_reseeding_restart (test_mssqlstore.MssqlStoreTests.test_initial_seed_retains_procurement_and_date_without_reseeding_restart) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_ledger_is_append_only_and_detects_tampering (test_mssqlstore.MssqlStoreTests.test_ledger_is_append_only_and_detects_tampering) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_recommendation_persists_across_instances (test_mssqlstore.MssqlStoreTests.test_recommendation_persists_across_instances) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_second_process_sees_changes_without_restart (test_mssqlstore.MssqlStoreTests.test_second_process_sees_changes_without_restart) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_stale_write_is_refused_not_overwritten (test_mssqlstore.MssqlStoreTests.test_stale_write_is_refused_not_overwritten) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_state_survives_restart (test_mssqlstore.MssqlStoreTests.test_state_survives_restart) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_enabling_entries_and_acknowledgements_use_the_shared_store (test_mssqlstore.MssqlTimeCapture.test_enabling_entries_and_acknowledgements_use_the_shared_store) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_invalid_dpia_flags_cannot_write_to_shared_store (test_mssqlstore.MssqlTimeCapture.test_invalid_dpia_flags_cannot_write_to_shared_store) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_invalid_historical_dpia_controls_cannot_enable_after_restart (test_mssqlstore.MssqlTimeCapture.test_invalid_historical_dpia_controls_cannot_enable_after_restart) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_a_write_moves_the_case_in_the_sql_order_and_another_process_sees_it (test_mssqlstore.MssqlWrites.test_a_write_moves_the_case_in_the_sql_order_and_another_process_sees_it) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'
+test_save_paths_use_dialect_hooks_for_upserts (test_mssqlstore.SharedSqlIsPortableTests.test_save_paths_use_dialect_hooks_for_upserts) ... ok
+test_sqlite_only_syntax_confined_to_dialect_hooks (test_mssqlstore.SharedSqlIsPortableTests.test_sqlite_only_syntax_confined_to_dialect_hooks) ... ok
+test_time_capture_sql_is_portable (test_mssqlstore.SharedSqlIsPortableTests.test_time_capture_sql_is_portable) ... ok
+test_advance_with_missing_funding_is_a_funding_conflict_not_a_missing_case (test_mvp.ApiTests.test_advance_with_missing_funding_is_a_funding_conflict_not_a_missing_case) ... ok
+test_header_logo_is_served_as_the_packaged_png (test_mvp.ApiTests.test_header_logo_is_served_as_the_packaged_png) ... ok
+test_login_flow_and_gate_conflict (test_mvp.ApiTests.test_login_flow_and_gate_conflict) ... ok
+test_requires_sign_in_and_headers (test_mvp.ApiTests.test_requires_sign_in_and_headers) ... ok
+test_stale_advance_refusal_names_case_owner_and_next_action (test_mvp.ApiTests.test_stale_advance_refusal_names_case_owner_and_next_action) ... Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+test_static_path_traversal_blocked (test_mvp.ApiTests.test_static_path_traversal_blocked) ... ok
+test_ai_falls_back_to_template_and_is_audited (dataset.ImproveTests.test_ai_falls_back_to_template_and_is_audited) ... ok
+test_ai_output_claiming_sent_is_rejected (dataset.ImproveTests.test_ai_output_claiming_sent_is_rejected) ... ok
+test_briefing_cached_until_data_changes (dataset.ImproveTests.test_briefing_cached_until_data_changes) ... ok
+test_filter_and_sort (dataset.ImproveTests.test_filter_and_sort) ... ok
+test_funding_in_progress_filter (dataset.ImproveTests.test_funding_in_progress_filter) ... ok
+test_funding_needs_evidence_and_role (dataset.ImproveTests.test_funding_needs_evidence_and_role) ... ok
+test_handover_suggestions_have_reasons (dataset.ImproveTests.test_handover_suggestions_have_reasons) ... ok
+test_stats_and_map (dataset.ImproveTests.test_stats_and_map) ... ok
+test_upload_rejects_bad_type_and_lists_document (dataset.ImproveTests.test_upload_rejects_bad_type_and_lists_document) ... ok
+test_all_cases_open_to_everyone_mine_is_scoped_with_role_focus (test_mvp.StoreTests.test_all_cases_open_to_everyone_mine_is_scoped_with_role_focus) ... ok
+test_call_log_and_audit_chain_detects_tampering (test_mvp.StoreTests.test_call_log_and_audit_chain_detects_tampering) ... ok
+test_csv_export_has_header (test_mvp.StoreTests.test_csv_export_has_header) ... ok
+test_draft_never_claims_it_was_sent (test_mvp.StoreTests.test_draft_never_claims_it_was_sent) ... ok
+test_gate_blocks_until_everything_confirmed (test_mvp.StoreTests.test_gate_blocks_until_everything_confirmed) ... ok
+test_import_check_maps_columns_and_reports_rows (test_mvp.StoreTests.test_import_check_maps_columns_and_reports_rows) ... ok
+test_my_cases_hazard_first_and_scoped (test_mvp.StoreTests.test_my_cases_hazard_first_and_scoped) ... ok
+test_unknown_decision_is_rejected_and_never_inferred (test_mvp.StoreTests.test_unknown_decision_is_rejected_and_never_inferred) ... ok
+test_consultation_route_rejects_actor_and_claimed_authority (test_procurement_api.ConsultationApi.test_consultation_route_rejects_actor_and_claimed_authority) ... ok
+test_consultation_version_conflict_and_source_failure (test_procurement_api.ConsultationApi.test_consultation_version_conflict_and_source_failure) ... ok
+test_explicit_held_scope_is_not_released_by_a_supplied_decision (test_procurement_api.ConsultationApi.test_explicit_held_scope_is_not_released_by_a_supplied_decision) ... ok
+test_supplied_decisions_do_not_hold_unrelated_service_orders (test_procurement_api.ConsultationApi.test_supplied_decisions_do_not_hold_unrelated_service_orders) ... ok
+test_consultation_route_rejects_actor_and_claimed_authority (test_procurement_api.JsonConsultationApi.test_consultation_route_rejects_actor_and_claimed_authority) ... ok
+test_consultation_version_conflict_and_source_failure (test_procurement_api.JsonConsultationApi.test_consultation_version_conflict_and_source_failure) ... ok
+test_explicit_held_scope_is_not_released_by_a_supplied_decision (test_procurement_api.JsonConsultationApi.test_explicit_held_scope_is_not_released_by_a_supplied_decision) ... ok
+test_supplied_decisions_do_not_hold_unrelated_service_orders (test_procurement_api.JsonConsultationApi.test_supplied_decisions_do_not_hold_unrelated_service_orders) ... ok
+test_appointment_controls_http_provenance_denials_and_committed_response (test_procurement_api.JsonProcurementApi.test_appointment_controls_http_provenance_denials_and_committed_response) ... ok
+test_appointment_http_serialized_canaries_follow_existing_roles (test_procurement_api.JsonProcurementApi.test_appointment_http_serialized_canaries_follow_existing_roles) ... ok
+test_bundle_competence_http_requires_bounded_text_and_exact_scope (test_procurement_api.JsonProcurementApi.test_bundle_competence_http_requires_bounded_text_and_exact_scope) ... ok
+test_capacity_http_exact_threshold_and_source_inputs (test_procurement_api.JsonProcurementApi.test_capacity_http_exact_threshold_and_source_inputs) ... ok
+test_contractors_own_orders_only_and_all_writes_denied (test_procurement_api.JsonProcurementApi.test_contractors_own_orders_only_and_all_writes_denied) ... ok
+test_empty_procurement_reads_are_known_empty (test_procurement_api.JsonProcurementApi.test_empty_procurement_reads_are_known_empty) ... ok
+test_human_home_case_closure_http_evidence_denials_reset_and_committed_retry (test_procurement_api.JsonProcurementApi.test_human_home_case_closure_http_evidence_denials_reset_and_committed_retry) ... ok
+test_job_pack_is_staff_read_only_and_leaks_no_resident_reason (test_procurement_api.JsonProcurementApi.test_job_pack_is_staff_read_only_and_leaks_no_resident_reason) ... ok
+test_legacy_capacity_reads_survive_store_reopen_without_inventing_authority (test_procurement_api.JsonProcurementApi.test_legacy_capacity_reads_survive_store_reopen_without_inventing_authority) ... http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/checks/ZF-1 status=503
+ok
+test_legacy_package_without_contract_version_remains_readable (test_procurement_api.JsonProcurementApi.test_legacy_package_without_contract_version_remains_readable) ... ok
+test_lifecycle_http_has_issuer_for_every_change (test_procurement_api.JsonProcurementApi.test_lifecycle_http_has_issuer_for_every_change) ... ok
+test_package_creation_requires_contract_version (test_procurement_api.JsonProcurementApi.test_package_creation_requires_contract_version) ... ok
+test_response_only_encoder_failure_is_truthful_for_confirmation_and_closure (test_procurement_api.JsonProcurementApi.test_response_only_encoder_failure_is_truthful_for_confirmation_and_closure) ... ok
+test_withdrawal_http_ends_current_appointment_for_staff_and_provider (test_procurement_api.JsonProcurementApi.test_withdrawal_http_ends_current_appointment_for_staff_and_provider) ... ok
+test_appointment_controls_http_provenance_denials_and_committed_response (test_procurement_api.ProcurementApi.test_appointment_controls_http_provenance_denials_and_committed_response) ... ok
+test_appointment_http_serialized_canaries_follow_existing_roles (test_procurement_api.ProcurementApi.test_appointment_http_serialized_canaries_follow_existing_roles) ... ok
+test_bundle_competence_http_requires_bounded_text_and_exact_scope (test_procurement_api.ProcurementApi.test_bundle_competence_http_requires_bounded_text_and_exact_scope) ... ok
+test_capacity_http_exact_threshold_and_source_inputs (test_procurement_api.ProcurementApi.test_capacity_http_exact_threshold_and_source_inputs) ... ok
+test_contractors_own_orders_only_and_all_writes_denied (test_procurement_api.ProcurementApi.test_contractors_own_orders_only_and_all_writes_denied) ... ok
+test_empty_procurement_reads_are_known_empty (test_procurement_api.ProcurementApi.test_empty_procurement_reads_are_known_empty) ... ok
+test_human_home_case_closure_http_evidence_denials_reset_and_committed_retry (test_procurement_api.ProcurementApi.test_human_home_case_closure_http_evidence_denials_reset_and_committed_retry) ... ok
+test_job_pack_is_staff_read_only_and_leaks_no_resident_reason (test_procurement_api.ProcurementApi.test_job_pack_is_staff_read_only_and_leaks_no_resident_reason) ... ok
+test_legacy_capacity_reads_survive_store_reopen_without_inventing_authority (test_procurement_api.ProcurementApi.test_legacy_capacity_reads_survive_store_reopen_without_inventing_authority) ... http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/checks/ZF-1 status=503
+ok
+test_legacy_package_without_contract_version_remains_readable (test_procurement_api.ProcurementApi.test_legacy_package_without_contract_version_remains_readable) ... ok
+test_lifecycle_http_has_issuer_for_every_change (test_procurement_api.ProcurementApi.test_lifecycle_http_has_issuer_for_every_change) ... ok
+test_package_creation_requires_contract_version (test_procurement_api.ProcurementApi.test_package_creation_requires_contract_version) ... ok
+test_response_only_encoder_failure_is_truthful_for_confirmation_and_closure (test_procurement_api.ProcurementApi.test_response_only_encoder_failure_is_truthful_for_confirmation_and_closure) ... ok
+test_withdrawal_http_ends_current_appointment_for_staff_and_provider (test_procurement_api.ProcurementApi.test_withdrawal_http_ends_current_appointment_for_staff_and_provider) ... ok
+test_applied_scope_persists_in_route_until_reset (test_programme_screen.ProgrammeScreen.test_applied_scope_persists_in_route_until_reset) ... ok
+test_blocker_roles_returned_quality_and_kept_hold_are_preserved (test_programme_screen.ProgrammeScreen.test_blocker_roles_returned_quality_and_kept_hold_are_preserved) ... ok
+test_delivery_and_finance_use_current_orders_holds_and_budget_status (test_programme_screen.ProgrammeScreen.test_delivery_and_finance_use_current_orders_holds_and_budget_status) ... ok
+test_every_stage_link_has_distinct_accessible_text (test_programme_screen.ProgrammeScreen.test_every_stage_link_has_distinct_accessible_text) ... ok
+test_filter_and_reset_change_view_only (test_programme_screen.ProgrammeScreen.test_filter_and_reset_change_view_only) ... ok
+test_finance_projects_match_against_accepted_invoices (test_programme_screen.ProgrammeScreen.test_finance_projects_match_against_accepted_invoices) ... ok
+test_funnel_unknown_when_coordinator_unavailable (test_programme_screen.ProgrammeScreen.test_funnel_unknown_when_coordinator_unavailable) ... ok
+test_missing_gates_are_blocked_in_text_and_no_role_switcher (test_programme_screen.ProgrammeScreen.test_missing_gates_are_blocked_in_text_and_no_role_switcher) ... ok
+test_overview_lists_withheld_items_as_text (test_programme_screen.ProgrammeScreen.test_overview_lists_withheld_items_as_text) ... ok
+test_quality_gate_stays_blocked_until_every_measure_is_accepted (test_programme_screen.ProgrammeScreen.test_quality_gate_stays_blocked_until_every_measure_is_accepted) ... ok
+test_queue_page_failure_keeps_rows_and_says_so (test_programme_screen.ProgrammeScreen.test_queue_page_failure_keeps_rows_and_says_so) ... ok
+test_queue_pages_reach_all_permitted_cases_with_get_only (test_programme_screen.ProgrammeScreen.test_queue_pages_reach_all_permitted_cases_with_get_only) ... ok
+test_queue_shows_return_sender_owner_receiver_and_separate_responsibilities (test_programme_screen.ProgrammeScreen.test_queue_shows_return_sender_owner_receiver_and_separate_responsibilities) ... ok
+test_roles_exclude_other_roles (test_programme_screen.ProgrammeScreen.test_roles_exclude_other_roles) ... ok
+test_same_home_stage_map_links_by_role_and_states_deferral (test_programme_screen.ProgrammeScreen.test_same_home_stage_map_links_by_role_and_states_deferral) ... ok
+test_stale_resident_scope_blocks_quality_and_delivery (test_programme_screen.ProgrammeScreen.test_stale_resident_scope_blocks_quality_and_delivery) ... ok
+test_absent_empty_and_dictionary_auxiliary_evidence_preserves_valid_replay (test_progress_dashboard.ProgressDashboard.test_absent_empty_and_dictionary_auxiliary_evidence_preserves_valid_replay) ... ok
+test_ai_review_date_cohort_provenance_and_no_private_fields (test_progress_dashboard.ProgressDashboard.test_ai_review_date_cohort_provenance_and_no_private_fields) ... ok
+test_archive_latest_closure_unknown_dates_and_combined_filters (test_progress_dashboard.ProgressDashboard.test_archive_latest_closure_unknown_dates_and_combined_filters) ... ok
+test_closed_csv_equals_the_json_current_page (test_progress_dashboard.ProgressDashboard.test_closed_csv_equals_the_json_current_page) ... ok
+test_closed_csv_neutralises_formulas_and_keeps_awkward_text (test_progress_dashboard.ProgressDashboard.test_closed_csv_neutralises_formulas_and_keeps_awkward_text) ... ok
+test_closed_csv_pages_limits_and_empty_header (test_progress_dashboard.ProgressDashboard.test_closed_csv_pages_limits_and_empty_header) ... ok
+test_closed_csv_read_does_not_mutate_cases_or_audit (test_progress_dashboard.ProgressDashboard.test_closed_csv_read_does_not_mutate_cases_or_audit) ... ok
+test_closed_csv_refuses_non_primitive_cells (test_progress_dashboard.ProgressDashboard.test_closed_csv_refuses_non_primitive_cells) ... ok
+test_controlled_reopen_and_human_closure_no_current_stage_date_inference (test_progress_dashboard.ProgressDashboard.test_controlled_reopen_and_human_closure_no_current_stage_date_inference) ... ok
+test_exact_daily_weekly_backlog_and_episode_percentiles (test_progress_dashboard.ProgressDashboard.test_exact_daily_weekly_backlog_and_episode_percentiles) ... ok
+test_existing_60000_home_fixture_progress_and_filtered_page_boundaries (test_progress_dashboard.ProgressDashboard.test_existing_60000_home_fixture_progress_and_filtered_page_boundaries) ... ok
+test_filtered_custom_limit_pages_partition_the_matching_cohort (test_progress_dashboard.ProgressDashboard.test_filtered_custom_limit_pages_partition_the_matching_cohort) ... ok
+test_http_closed_csv_roles_attachment_and_rejection_parity (test_progress_dashboard.ProgressDashboard.test_http_closed_csv_roles_attachment_and_rejection_parity) ... ok
+test_http_endpoint_permissions_validation_and_values (test_progress_dashboard.ProgressDashboard.test_http_endpoint_permissions_validation_and_values) ... ok
+test_ignored_history_dictionaries_preserve_valid_replay (test_progress_dashboard.ProgressDashboard.test_ignored_history_dictionaries_preserve_valid_replay) ... ok
+test_invalid_queries_and_roles_are_explicit (test_progress_dashboard.ProgressDashboard.test_invalid_queries_and_roles_are_explicit) ... ok
+test_lifecycle_duplicate_and_same_instant_episode_controls (test_progress_dashboard.ProgressDashboard.test_lifecycle_duplicate_and_same_instant_episode_controls) ... ok
+test_lifecycle_event_representations_ordering_and_final_state (test_progress_dashboard.ProgressDashboard.test_lifecycle_event_representations_ordering_and_final_state) ... ok
+test_lifecycle_full_initial_and_pair_transition_table (test_progress_dashboard.ProgressDashboard.test_lifecycle_full_initial_and_pair_transition_table) ... ok
+test_lifecycle_review_counterexamples_are_unknown (test_progress_dashboard.ProgressDashboard.test_lifecycle_review_counterexamples_are_unknown) ... ok
+test_malformed_lifecycles_persist_as_unknown_without_aborting_reads (test_progress_dashboard.ProgressDashboard.test_malformed_lifecycles_persist_as_unknown_without_aborting_reads) ... ok
+test_non_list_history_is_unknown_without_failing_either_read (test_progress_dashboard.ProgressDashboard.test_non_list_history_is_unknown_without_failing_either_read) ... ok
+test_overdue_matches_previous_context_without_building_or_context_evaluation (test_progress_dashboard.ProgressDashboard.test_overdue_matches_previous_context_without_building_or_context_evaluation) ... ok
+test_paging_zero_one_exact_full_last_and_beyond_boundaries (test_progress_dashboard.ProgressDashboard.test_paging_zero_one_exact_full_last_and_beyond_boundaries) ... ok
+test_partial_weeks_initial_backlog_and_zero_sample_are_not_fabricated (test_progress_dashboard.ProgressDashboard.test_partial_weeks_initial_backlog_and_zero_sample_are_not_fabricated) ... ok
+test_range_validation_preserves_inclusive_limit_and_archive_semantics (test_progress_dashboard.ProgressDashboard.test_range_validation_preserves_inclusive_limit_and_archive_semantics) ... ok
+test_reads_do_not_mutate_cases_or_audit (test_progress_dashboard.ProgressDashboard.test_reads_do_not_mutate_cases_or_audit) ... ok
+test_synthetic_admission_is_case_local_and_fail_closed (test_progress_dashboard.ProgressDashboard.test_synthetic_admission_is_case_local_and_fail_closed) ... ok
+test_absent_empty_and_dictionary_auxiliary_evidence_preserves_valid_replay (test_progress_dashboard.SqliteProgressDashboard.test_absent_empty_and_dictionary_auxiliary_evidence_preserves_valid_replay) ... ok
+test_ai_review_date_cohort_provenance_and_no_private_fields (test_progress_dashboard.SqliteProgressDashboard.test_ai_review_date_cohort_provenance_and_no_private_fields) ... ok
+test_archive_latest_closure_unknown_dates_and_combined_filters (test_progress_dashboard.SqliteProgressDashboard.test_archive_latest_closure_unknown_dates_and_combined_filters) ... ok
+test_closed_csv_equals_the_json_current_page (test_progress_dashboard.SqliteProgressDashboard.test_closed_csv_equals_the_json_current_page) ... ok
+test_closed_csv_neutralises_formulas_and_keeps_awkward_text (test_progress_dashboard.SqliteProgressDashboard.test_closed_csv_neutralises_formulas_and_keeps_awkward_text) ... ok
+test_closed_csv_pages_limits_and_empty_header (test_progress_dashboard.SqliteProgressDashboard.test_closed_csv_pages_limits_and_empty_header) ... ok
+test_closed_csv_read_does_not_mutate_cases_or_audit (test_progress_dashboard.SqliteProgressDashboard.test_closed_csv_read_does_not_mutate_cases_or_audit) ... ok
+test_closed_csv_refuses_non_primitive_cells (test_progress_dashboard.SqliteProgressDashboard.test_closed_csv_refuses_non_primitive_cells) ... ok
+test_controlled_reopen_and_human_closure_no_current_stage_date_inference (test_progress_dashboard.SqliteProgressDashboard.test_controlled_reopen_and_human_closure_no_current_stage_date_inference) ... ok
+test_exact_daily_weekly_backlog_and_episode_percentiles (test_progress_dashboard.SqliteProgressDashboard.test_exact_daily_weekly_backlog_and_episode_percentiles) ... ok
+test_existing_60000_home_fixture_progress_and_filtered_page_boundaries (test_progress_dashboard.SqliteProgressDashboard.test_existing_60000_home_fixture_progress_and_filtered_page_boundaries) ... ok
+test_external_writer_refreshes_read_model (test_progress_dashboard.SqliteProgressDashboard.test_external_writer_refreshes_read_model) ... ok
+test_filtered_custom_limit_pages_partition_the_matching_cohort (test_progress_dashboard.SqliteProgressDashboard.test_filtered_custom_limit_pages_partition_the_matching_cohort) ... ok
+test_http_closed_csv_roles_attachment_and_rejection_parity (test_progress_dashboard.SqliteProgressDashboard.test_http_closed_csv_roles_attachment_and_rejection_parity) ... ok
+test_http_endpoint_permissions_validation_and_values (test_progress_dashboard.SqliteProgressDashboard.test_http_endpoint_permissions_validation_and_values) ... ok
+test_ignored_history_dictionaries_preserve_valid_replay (test_progress_dashboard.SqliteProgressDashboard.test_ignored_history_dictionaries_preserve_valid_replay) ... ok
+test_invalid_queries_and_roles_are_explicit (test_progress_dashboard.SqliteProgressDashboard.test_invalid_queries_and_roles_are_explicit) ... ok
+test_lifecycle_duplicate_and_same_instant_episode_controls (test_progress_dashboard.SqliteProgressDashboard.test_lifecycle_duplicate_and_same_instant_episode_controls) ... ok
+test_lifecycle_event_representations_ordering_and_final_state (test_progress_dashboard.SqliteProgressDashboard.test_lifecycle_event_representations_ordering_and_final_state) ... ok
+test_lifecycle_full_initial_and_pair_transition_table (test_progress_dashboard.SqliteProgressDashboard.test_lifecycle_full_initial_and_pair_transition_table) ... ok
+test_lifecycle_review_counterexamples_are_unknown (test_progress_dashboard.SqliteProgressDashboard.test_lifecycle_review_counterexamples_are_unknown) ... ok
+test_malformed_lifecycles_persist_as_unknown_without_aborting_reads (test_progress_dashboard.SqliteProgressDashboard.test_malformed_lifecycles_persist_as_unknown_without_aborting_reads) ... ok
+test_non_list_history_is_unknown_without_failing_either_read (test_progress_dashboard.SqliteProgressDashboard.test_non_list_history_is_unknown_without_failing_either_read) ... ok
+test_overdue_matches_previous_context_without_building_or_context_evaluation (test_progress_dashboard.SqliteProgressDashboard.test_overdue_matches_previous_context_without_building_or_context_evaluation) ... ok
+test_paging_zero_one_exact_full_last_and_beyond_boundaries (test_progress_dashboard.SqliteProgressDashboard.test_paging_zero_one_exact_full_last_and_beyond_boundaries) ... ok
+test_partial_weeks_initial_backlog_and_zero_sample_are_not_fabricated (test_progress_dashboard.SqliteProgressDashboard.test_partial_weeks_initial_backlog_and_zero_sample_are_not_fabricated) ... ok
+test_range_validation_preserves_inclusive_limit_and_archive_semantics (test_progress_dashboard.SqliteProgressDashboard.test_range_validation_preserves_inclusive_limit_and_archive_semantics) ... ok
+test_reads_do_not_mutate_cases_or_audit (test_progress_dashboard.SqliteProgressDashboard.test_reads_do_not_mutate_cases_or_audit) ... ok
+test_synthetic_admission_is_case_local_and_fail_closed (test_progress_dashboard.SqliteProgressDashboard.test_synthetic_admission_is_case_local_and_fail_closed) ... ok
+test_all_cases_scope_never_uses_coverage_wording (test_queue_empty_state.EmptyQueueExplanation.test_all_cases_scope_never_uses_coverage_wording) ... ok
+test_empty_coordinator_default_without_declaration_is_unknown (test_queue_empty_state.EmptyQueueExplanation.test_empty_coordinator_default_without_declaration_is_unknown) ... ok
+test_list_view_passes_only_the_row_count_and_scope_to_the_helper (test_queue_empty_state.EmptyQueueExplanation.test_list_view_passes_only_the_row_count_and_scope_to_the_helper) ... ok
+test_no_match_is_a_search_result_even_when_a_coverage_payload_is_supplied (test_queue_empty_state.EmptyQueueExplanation.test_no_match_is_a_search_result_even_when_a_coverage_payload_is_supplied) ... ok
+test_no_server_produces_a_coverage_declaration_yet (test_queue_empty_state.EmptyQueueExplanation.test_no_server_produces_a_coverage_declaration_yet) ... ok
+test_populated_queue_such_as_programme_manager_zf5_has_no_explanation (test_queue_empty_state.EmptyQueueExplanation.test_populated_queue_such_as_programme_manager_zf5_has_no_explanation) ... ok
+test_unverified_provenance_never_becomes_a_declared_gap (test_queue_empty_state.EmptyQueueExplanation.test_unverified_provenance_never_becomes_a_declared_gap) ... ok
+test_current_stage_membership_detail_csv_and_role_projection (test_task_queue_api.TaskQueueApi.test_current_stage_membership_detail_csv_and_role_projection) ... ok
+test_http_queue_filter_precedes_count_cursor_sort_and_export (test_task_queue_api.TaskQueueApi.test_http_queue_filter_precedes_count_cursor_sort_and_export) ... ok
+test_metadata_filters_csv_and_consistent_context (test_task_queue_api.TaskQueueApi.test_metadata_filters_csv_and_consistent_context) ... ok
+test_projection_and_direct_action_permissions_cannot_be_changed_by_view (test_task_queue_api.TaskQueueApi.test_projection_and_direct_action_permissions_cannot_be_changed_by_view) ... ok
+
+----------------------------------------------------------------------
+Ran 519 tests in 314.401s
+
+OK (skipped=268)

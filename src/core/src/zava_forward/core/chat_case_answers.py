@@ -76,7 +76,7 @@ def case_facts(detail: Mapping[str, Any], *, reason_visible: bool) -> dict[str, 
         for key in ("status", "route", "reference"):
             put(f"funding.{key}", funding.get(key))
     if "funding_ok" in detail:
-        put("funding_ok", "confirmed" if detail["funding_ok"] else "not confirmed")
+        put("funding_ok", "confirmed" if detail["funding_ok"] is True else "not confirmed")
     put("closed", "yes" if detail.get("closed") else None)
     work = detail.get("work")
     if isinstance(work, Mapping):

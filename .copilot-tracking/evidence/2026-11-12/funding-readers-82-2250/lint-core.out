@@ -1,0 +1,5 @@
+All checks passed!
+ruff check exit 0
+7 files already formatted
+ruff format exit 0
+Success: no issues found in 298 source files

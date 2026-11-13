@@ -1,0 +1,21 @@
+F.......Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/tmp/wt2310/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/tmp/wt2310/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+...................
+======================================================================
+FAIL: test_absent_funding_reads_as_not_confirmed_not_missing_case (test_home_case_api.HomeCaseApiTests.test_absent_funding_reads_as_not_confirmed_not_missing_case)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/wt2310/src/api/tests/test_home_case_api.py", line 94, in test_absent_funding_reads_as_not_confirmed_not_missing_case
+    self.assertEqual(code, 200)
+AssertionError: 404 != 200
+
+----------------------------------------------------------------------
+Ran 27 tests in 9.624s
+
+FAILED (failures=1)
