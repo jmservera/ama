@@ -967,16 +967,27 @@ class ConsumptionApi(unittest.TestCase):
                         receipt["provider_outcome"],
                         "activation-revoked" if mode == "revoked" else "provider-unavailable",
                     )
+                    outputs = [
+                        r
+                        for r in self.records()
+                        if r["kind"] == "output" and r["root"] == latest["root"]
+                    ]
+                    self.assertEqual(len(outputs), 1)
+                    self.assertFalse(outputs[0]["eligible"])
+                    messages = self.store.chat_resume(self.pm, thread["id"])["messages"]
                     self.assertEqual(
-                        report["unjoined_outputs"], report_before["unjoined_outputs"] + 1
+                        outputs[0]["output"],
+                        reference(f"chat:{thread['id']}:{messages[-1]['seq']}"),
                     )
-                    self.assertEqual(report["coverage"], "incomplete")
+                    self.assertEqual(report["unjoined_outputs"], report_before["unjoined_outputs"])
                     self.assertEqual(report["cost_per_accepted_proposal"], "Unknown")
                     if mode == "revoked":
                         self.assertEqual(receipt["tokens"]["cached_tokens"], 10)
+                        self.assertEqual(report["coverage"], "recorded-ledger-only")
                     else:
                         self.assertIsNone(receipt["tokens"])
                         self.assertEqual(report["unknown_liabilities"], 1)
+                        self.assertEqual(report["coverage"], "incomplete")
         self.assertEqual(before[:3], self.fixture.domain()[:3])
 
     def test_actual_worker_thread_settlement_survives_failure_revocation_and_fence(self) -> None:

@@ -475,7 +475,7 @@ class NegativeControlTests(unittest.TestCase):
     def test_uncited_model_reply_that_is_expected_to_answer_is_a_failure(self) -> None:
         sc = scenario("grounding-cited-follow-ups")
         sc["turns"][0]["script"]["citations"] = []
-        self.failing(sc, "kind")
+        self.failing(sc, "cites")
 
     def test_a_refusal_that_calls_the_model_is_a_failure(self) -> None:
         sc = scenario("out-of-scope-approve")

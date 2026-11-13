@@ -825,6 +825,13 @@ intercepted answer-rendering cases and pinned axe on the open dialog. It also
 intercepts `/api/chat/status` and the answer to prove the demo disclaimer is
 visible inside the panel (a bordered note, not colour alone) and a model answer
 is labelled "Model-generated, not approved. Demo only." (#891).
+The panel also names the source of each reply: "Decision model (case rules)"
+for deterministic answers, the same label with "generative draft withheld" after
+a failed source check, and "Generative draft withheld by source check" when a
+model was called but no answer was shown. Each source line is tagged
+`[Decision rule]`, `[Case record]` or `[Workflow rule]`, and the live status
+says "Reply withheld" or "Request refused" instead of "Answer added" when no
+answer was given (#159).
 It requires ask arrival before navigation in the transport test, then separately
 settles controlled successful API promises after hide, navigation and session
 change. Hide retains current reads without moving focus; navigation/session

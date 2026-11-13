@@ -21,6 +21,12 @@ INTENTS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
     for name, pattern in (
         ("funding", r"\b(fund\w*|grants?|claims?|money|financ\w*|budget|invoic\w*|paid)\b"),
         (
+            "unblock",
+            r"\b(unblock\w*|how\s+(?:can|do|to)\s+(?:i|we)\s+(?:fix|resolve|clear)|"
+            r"fix\w*\s+(?:this\s+|the\s+)?safety|"
+            r"should\s+(?:i|we)\s+(?:schedule|book|arrange))\b",
+        ),
+        (
             "blocked",
             r"\b(block\w*|stuck|stall\w*|paus\w*|stop\w*|held\s+up|delay\w*|"
             r"why|not\s+moving|reason|problem|hazard\w*)\b",
@@ -248,6 +254,30 @@ def _blocked(r: Reply) -> None:
         r.say("The case record does not say why this case is stopped. " + _who_to_ask(r))
 
 
+def _unblock(r: Reply) -> None:
+    r.say(
+        "A person schedules visits and completes the safety step in the case workflow. "
+        "This chat cannot book a visit or approve a safety step.",
+        [],
+    )
+    hazards = _indexes(r.facts, "hazards")
+    if hazards:
+        r.say("Open safety items on the record:")
+        for i in hazards:
+            line, cites = r.cited(partial(_hazard_line, r, i))
+            r.say(f"* {line}", cites)
+    _blocked(r)
+
+
+def _hazard_line(r: Reply, i: int) -> str:
+    parts = [r.fact(f"hazards.{i}.{k}") for k in ("category", "state", "owner")]
+    category, state, owner = parts
+    text = category or "Safety item"
+    if state:
+        text += f", {state}"
+    return text + (f". Owner: {owner}." if owner else ". No owner is recorded for this.")
+
+
 def _funding_missing(r: Reply) -> list[tuple[str, list[str]]]:
     missing: list[tuple[str, list[str]]] = []
     blockers = [
@@ -368,6 +398,7 @@ def _status(r: Reply) -> None:
 
 
 ANSWERS = {
+    "unblock": _unblock,
     "funding": _funding,
     "blocked": _blocked,
     "missing": _missing,
