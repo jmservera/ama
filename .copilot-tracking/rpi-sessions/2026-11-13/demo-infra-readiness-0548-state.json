@@ -1,0 +1,29 @@
+{
+  "task_id": "demo-infra-readiness-0548",
+  "task_slug": "demo-infra-readiness-0548",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-13/demo-infra-readiness-0548-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-13/demo-infra-readiness-0548-plan.instructions.md",
+    "details": ".copilot-tracking/details/2026-11-13/demo-infra-readiness-0548-details.md",
+    "critique": ".copilot-tracking/critiques/2026-11-13/demo-infra-readiness-0548-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-13/demo-infra-readiness-0548-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-13/demo-infra-readiness-0548-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research disposition", "status": "executed; Planning Readiness Ready", "evidence": "research artifact"},
+    {"decision": "Critique executed once", "status": "verdict Revise; findings applied", "evidence": "critique artifact"},
+    {"decision": "Review executed once", "status": "Partial; Medium/Low fixed in task", "evidence": "review artifact"},
+    {"decision": "Zero ready INITIAL tasks for #137,#144,#146,#148,#189", "status": "documentary, scoped, no global block", "evidence": "research table at main 15bfee2d7"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Owner decisions: #144 worker scope, #146 diagnostic-routing tradeoff, #137 SQL region/subscription binding/dated checks; live #148/#189 need separate cloud and spend authority"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Owner decision on #144 API-hosted AI vs new bounded worker slice", "rationale": "Unblocks or retires a whole AC group without spend", "evidence": "#144 comment 2026-11-13"},
+    {"rank": 2, "task": "Owner decision on #146 routing tradeoff preserving severity-1 ledger alerts", "rationale": "Enables the sanitiser-wiring gap", "evidence": "#146 comment 2026-11-09; runbooks 350-353"}
+  ]
+}
