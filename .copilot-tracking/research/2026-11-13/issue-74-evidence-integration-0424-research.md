@@ -11,7 +11,7 @@ Date 2026-11-13. Research disposition: executed (read-only). Planning Readiness:
 
 ## Raw outputs re-read (outside the repository, not copied)
 
-* Units (`.../2cbb371d-.../74-unit-verification-0408/`): `core.log` `Ran 8 tests ... OK`; `api.log` `Ran 6 tests ... OK`; zero "skip" matches in either. `core-attempt1.log`/`api-attempt1.log` (missing package) and `api-attempt2-invocation-error.log` (`_FailedTest` for `test_home_case_api`, a command error) are failures preserved, not passes.
+* Units (`.../2cbb371d-.../74-unit-verification-0408/`): `core.log` `Ran 8 tests ... OK`; `api.log` `Ran 6 tests ... OK`; zero "skip" matches in either. `core-attempt1.log` (missing `zava_forward` package) and the byte-identical `api-attempt1.log` and `api-attempt2-invocation-error.log` (both `No module named 'test_home_case_api'`, a wrong-selector command error; distinct execution count unclaimed). Corrected 2026-11-13 after independent finding IR-001; the earlier text here grouped API attempt 1 with the missing package. The original text is superseded, see the correction amendment. These failures are preserved, not passes.
 * Home browser (`.../b0e0aec9-.../74-browser-verification-0410/`): `run2.log` and `run-final.log` are byte-identical (`cmp`), 24 `PASS` lines, final `exit=0`; `run1.log` is the earlier missing-`playwright` failure.
 * Building observation (`.../38e61c82-.../74-building-observation-0420/`): `observation.json` (building API status `[200]`, one h1, six h2 sections each count 1 and visible), `preflight.txt` (lock inode 77057, MemAvailable 5106268 KiB = 4.87 GiB, window 04:17:28Z to 04:17:32Z, `group_members_left=0`), `run.log` (`OBSERVATION RECORDED`, `exit=0`). `observe.py` is the superseded never-run draft.
 
@@ -20,7 +20,7 @@ Date 2026-11-13. Research disposition: executed (read-only). Planning Readiness:
 The unit and browser lanes overlapped in time, in separate worktrees. Commit times (UTC): `5676f9025` 04:00:58, `74daa587e` 04:06:51, `232e09aa5` 04:11:24 (V2 mapping, after the home run ended at 04:10:11), `e8dec941d` 04:11:38, `b0c308c8f` 04:17:58. The V2 mapping did not read the browser worker's files.
 
 1. Planning freeze `5676f9025` (original prospective plan, one independent rubber-duck critique CR-001..CR-005, verdict Revise, applied).
-2. V1 units executed in an owned venv: first `ModuleNotFoundError: zava_forward`, then editable install of core, agents and api, then 8 core and 6 API named tests pass (`74daa587e`). V2 documentary mapping `232e09aa5`.
+2. V1 units executed in an owned venv: first core `ModuleNotFoundError: zava_forward` (API error files were wrong-selector errors), then editable install of core, agents and api, then 8 core and 6 API named tests pass (`74daa587e`). V2 documentary mapping `232e09aa5`.
 3. Home browser: inherited prospective plan and critique reused; the browser plan file was written retrospectively (disclosed); run 1 failed `ModuleNotFoundError: playwright`, declared install, run 2 same command 24 PASS; lock held 04:09:42Z to 04:10:11Z.
 4. Building observation: owner did not admit the V2-proposed check edit; narrower owned operational observation with its own prospective plan and one independent critique PC-001..PC-008 (Revise, PC-008 residual); one run 04:17:28Z to 04:17:32Z.
 
