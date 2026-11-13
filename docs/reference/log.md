@@ -11597,6 +11597,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Fixed an error in correction 1 above: #83 is open, not closed. The [AC-034 to AC-043 section](../architecture/cutover-evidence-pack.md#ac-034-to-ac-043-disposition-reconciliation-2026-11-12-refs-134) restores #83 and #134 as the open owners for AC-036; only #85 and #90 (closed 2026-10-17) are historical evidence and not live owners. The correction 1 entry is not edited.
 * Documentation only. Six partial and four deferred are unchanged; no tick, acceptance or approval.
+
 ## [2026-11-12] update | Post-fix-wave checkpoint (Refs #440 #128 #98 #115)
 
 * Added a dated post-fix-wave checkpoint to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#post-fix-wave-checkpoint-2026-11-12-refs-440-128-98-115) for merged PRs 1481, 1483 and 1482 on `main` `e155c88ed`, with an index paragraph in the [index](./README.md).
