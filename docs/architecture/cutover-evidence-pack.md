@@ -7967,3 +7967,63 @@ The original prospective [building observation plan](../../.copilot-tracking/pla
 ### Process limits (issue 74 integration)
 
 Documentation only, checked by link review and Git diff review. No `rpi-checks`, browser, SQL, Docker, install, cloud or other executable gate was run for this integration, and no source, test, check, configuration or helper changed. Not a complete-gate receipt.
+
+## Post-1504 merged-main home-scope checkpoint (2026-11-13, Refs #440 #74)
+
+Draft, local-only, not approved. This is the bounded checkpoint planned before PR 1504 merged (plan `issue-440-post1504-plan-0630`, critique CR-1 to CR-5 applied, one plan-only Review Conformant with limits, all unchanged under `.copilot-tracking/`). It is documentation only: no source, test, workflow or configuration change, no new observation, and it is not main acceptance of issue 74, not cutover evidence and not a Review of the product. Earlier sections stay unchanged.
+
+### Identities (read 2026-11-13)
+
+| Item | Identity |
+| --- | --- |
+| PR 1504 | MERGED 2026-11-13T06:33:00Z by squash as `33c261a639b768e06bbd7fe0bd8840d71e3f05bd`; frozen head `b9d7db29bd7f55474f075b29a7d890df4cab3b92` |
+| Main tree | `5626e500605d82775ddbf5abf548da3a844bcdf3`, equal to the tree of the frozen head, so source and tracking bytes are identical to what the PR assessed; the previous main was `15bfee2d7f6ae9b73d24c51d3dbbea7c7b78f626` |
+| Issues | #74 and #440 OPEN; no criterion ticked here |
+| Scope | The delta over the previous main is three source files (below) plus 24 tracking files |
+
+### Source and document blobs at main
+
+| Path | Blob | Status |
+| --- | --- | --- |
+| `src/api/README.md` | `1b9fb02d3c0942c81c74fbeceebd9bde60f9c3dc` | equal to the frozen head |
+| `src/api/checks/home_case_browser_check.py` | `57db4756f858016c48ae19aa2c43c8e5241e3459` | equal to the frozen head |
+| `src/api/src/zava_forward/api/web/app.js` | `2fdf48045002460698f5c730b3f6aa83d0ed3572` | equal to the frozen head |
+| BRD `docs/brds/agentic-retrofit-programme-brd.md` | `34d88395de861e9799eb9e24121a21c92c7a5adc` | draft, 0.21.0 |
+| PRD `docs/prds/zava-forward-retrofit-programme-demonstrator.md` | `c788b917bafaede215f326f0efc71e071a687f1c` | in-review, 0.21.0 |
+| ADR 0001 `d42fa5c4615f` | | Proposed (non-production design) |
+| ADR 0002 `cbe21530043f` | | Proposed overall; scoped owner acceptance for staff identity 2026-10-24 |
+| ADR 0003 `d60645397b20`, 0004 `9406c2e747ce`, 0006 `956da1a3b804` | | Accepted by the owner (0003 with amendment) |
+| ADR 0005 `4d610335a5a1` | | Accepted for synthetic development only; operational use proposed |
+| ADR 0007 `541e0f72dd2c` | | Proposed as a whole |
+
+Status is document-qualified. None of this is owner, legal or compliance approval.
+
+### Evidence classes, kept separate
+
+| Class | Observation | Boundary |
+| --- | --- | --- |
+| Inherited focused source observations | On source `f50c5c7fd` (home display): node check, Ruff check and format, mypy and six existing API tests exit 0; one bounded browser run, 24 PASS markers and 0 FAIL (1 server plus 23 browser markers, not 24 independent tests). Main source bytes equal the frozen head and the three named files are the only source in the delta | Source-equivalent only for those named inputs. Inputs not named (API tests, core and agents dependencies, manifests) were not re-diffed against the original run, so equivalence beyond the three blobs and the identical tree is not asserted and no source test was rerun here |
+| PR 1504 hosted observation | Rollup read at the end of this task: 19 entries, 18 completed SUCCESS (Source projects CI: src-changes, src-no-working-data, image-paths, src-namespace, mssql, src-core, src-api, src-agents, src-orchestrator, src-importer; Capstone Rubric Scorer jobs) and 1 entry with no status or conclusion | Observed on the PR merge ref before squash, not on the main head. Job logs and per-test counts were not read, so no test count is claimed. The one empty entry is unknown, not green |
+| Merged-head hosted observation | `33c261a63` check runs read: 4 listed (`agent` in progress, `rubric_prepare`, `activation`, `pre_activation` success); commit status pending with 0 contexts | Running or absent. No Source projects CI result for the main head is claimed. Not success |
+| Main observation | None run in this task | Fixture-based assessments of the 74 pack are fixtures, not real approvals; no real resident, owner, DPO or legal approval exists in this delta |
+
+### Requirement and journey reconciliation
+
+| Item | State | Class |
+| --- | --- | --- |
+| #74 criterion 2 (compound) | Optional G5 shows each building's recorded `case_ids` and `package_ids` read-only (listed, Unknown for null, None for empty). It is not literal criterion 2 acceptance; criterion 2 stays open | implemented, locally observed on the source at source scope; unverified on main |
+| Home case view journey | No eligibility, rule, API, filter, approval or consent change; a disclaimer says scopes do not establish eligibility, approval or coverage | boundaries unchanged by the delta |
+| BRD and PRD requirement IDs for the home case view | Not mapped line by line here; the exact requirement IDs touched were not read from the BRD or PRD in this task | UNKNOWN, not asserted from titles |
+| AI failure and manual paths | No AI, provider or model change in the delta | unchanged |
+
+### Not established (stays unknown or open)
+
+axe (SKIPPED in the browser check), a valid base-red (unverified), human and assistive-technology testing, WCAG conformance, owner confirmation of the G5 display and label, any Azure residual, whole #74 criteria and the unknown #74 source-history budget. Held and excluded, not reopened: 184 (candidate `e904`, partly new format FAIL, SQL unrun), 891 (failure-root owner hold), 531 (criteria 1 to 6 delivered, live only), 144 (E1 to E5 exhausted), 146 (paused, owner trade-off), 189 (C5 exhausted), 96 (saved copy C1 to C3 spent, older whole history unknown, no C4) and 153 (no budget laundering). Preserved unchanged: the original independent assessments of the 74 pack and their adverse and qualified outcomes.
+
+### Recommendation
+
+CONTINUE, bounded: a scoped proposal for further local engineering work only. It is not an owner decision, pivot, deferral, approval, epic closure or closure of #440 or #74. Remaining before any stronger claim: read the Source CI result for the exact main head, human and assistive-technology review, owner confirmation of the display, and a requirement-ID mapping read from the BRD and PRD.
+
+### Process limits (post-1504 checkpoint)
+
+Documentation only. Checked by `git diff --check`, an ASCII scan of added lines and `tests.test_live_doc_links` from `src/core`. None of these refreshes any observation. No browser, SQL, Docker, install, scanner, model, provider, Azure, whole-suite, `--changed` or complete-gate run. Not a complete-gate receipt. Original plan artifacts: research, plan, critique, changes, Review and state `issue-440-post1504-plan-0630` under `.copilot-tracking/`; the implementation records are `issue-440-post1504-impl-0638`.
