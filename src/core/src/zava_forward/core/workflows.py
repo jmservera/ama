@@ -12,7 +12,7 @@ from . import change_provenance, controls, gates, hazard, identity, insights, pr
 
 MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
 HAZARD_PRIORITIES = ("Emergency", "Significant", "Routine")
-HAZARD_CATEGORIES = ("Damp and mould", "Structural", "Electrical", "Other")
+HAZARD_CATEGORIES = ("Damp and mould", "Structural", "Electrical", "Safeguarding", "Other")
 SAFETY_ROLES = ("Building Safety Liaison",) + MANAGER_ROLES
 HANDOFF_OPEN = "Offered"
 HANDOFF_PENDING = (HANDOFF_OPEN, "Received", "Escalated")

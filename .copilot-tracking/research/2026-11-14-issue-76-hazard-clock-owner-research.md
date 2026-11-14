@@ -11,3 +11,11 @@ Task: deliver the last unticked criterion of issue #76, "Hazard and safeguarding
 * Existing tests assert `owner == "Unknown"` and existing UI phrases, so new fields are additive.
 
 Planning readiness: Ready.
+
+## Cycle 1 follow-up (independent-direct finding triage, 2026-11-14)
+
+* Finding 1 confirmed: `HAZARD_CATEGORIES` in `src/core/src/zava_forward/core/workflows.py` had no safeguarding value, so the Safeguarding clock label in `taskqueues.context` was unreachable from `raise_hazard` and the `HAZ_CATEGORIES` list in `app.js`.
+* Finding 2 not reproducible at this HEAD: `src/api/.../views/taskqueues.py` and `_build_hazard_escalation_items` do not exist; the queue payload exposes no free-text hazard summary (the clock text uses only category-derived kind, hours and due timestamps).
+* Finding 3 not reproducible at this HEAD: the invented title "Head of Housing & Building Safety" is absent; `ESCALATION_OWNER` is `Building Safety lead (escalation owner)`, and no `role_catalog.py` exists. The finding report file itself is not in the worktree.
+
+Planning readiness: Ready.

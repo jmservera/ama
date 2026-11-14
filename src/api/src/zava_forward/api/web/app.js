@@ -1436,7 +1436,7 @@ async function buildingView(id) {
 
 const STAGES_ORDER = ["Home identified", "Checking lease", "Rescheduled", "Contacting resident", "Contact paused", "Survey being booked", "Survey booked", "Survey write-up", "Design starting", "Design in progress", "Design awaiting approval", "Design being corrected", "Waiting on other works", "Waiting for resident decision", "Resident paused works", "Funding check", "Final checks before ordering", "Waiting for block programme", "With contractor", "Install booked", "Works under way", "Handover to arrange", "Quality check", "Closing down", "Aftercare issue"];
 const SAFETY_ROLES = ["Building Safety Liaison", "Retrofit Programme Manager", "Programme Support Officer"];
-const HAZ_CATEGORIES = ["Damp and mould", "Structural", "Electrical", "Other"];
+const HAZ_CATEGORIES = ["Damp and mould", "Structural", "Electrical", "Safeguarding", "Other"];
 const HAZ_PRIORITIES = ["Emergency", "Significant", "Routine"];
 const post = (id, act, body) => api(`/api/cases/${encodeURIComponent(id)}/${act}`, body);
 

@@ -8,3 +8,11 @@ Research: [.copilot-tracking/research/2026-11-14-issue-76-hazard-clock-owner-res
 * [x] Focused validation: new and neighbouring tests, mypy and ruff with /tmp caches in `src/core` and `src/api`.
 
 Critique (single pass, final candidate): compatible with confirmed decisions; existing `owner` semantics retained; no significant divergence.
+
+## Cycle 1 follow-up plan
+
+* [x] Add `Safeguarding` to `HAZARD_CATEGORIES` (core) and `HAZ_CATEGORIES` (app.js); existing categories unchanged.
+* [x] Add `test_safeguarding_concern_can_be_recorded` to `src/core/tests/test_hazard_referral.py`.
+* [x] Findings 2 and 3: no code change, targets absent (see research); record as not applicable.
+
+Critique (single pass): compatible; no invented files or role titles added to chase findings 2 and 3.

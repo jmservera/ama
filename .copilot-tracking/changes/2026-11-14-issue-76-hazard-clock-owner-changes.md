@@ -7,3 +7,10 @@ Plan: [.copilot-tracking/plans/2026-11-14-issue-76-hazard-clock-owner-plan.md](.
 * `src/api/tests/test_workbench_hazard_clock_owner.py`: five tests covering the core payload and the real JS render.
 
 No divergence from plan. Validation (focused tier): core `test_taskqueues` (22 ok); API targeted tests (46 ok, including accessibility baseline and role screens); mypy and ruff check/format clean in `src/core` and `src/api` with /tmp caches. The full API discover run was stopped for time; `tools/rpi-checks.py --all` not run by instruction. Local import needed PYTHONPATH to the worktree `src` dirs because the installed distributions point at another checkout.
+
+## Cycle 1 follow-up changes
+
+* `src/core/src/zava_forward/core/workflows.py` and `src/api/src/zava_forward/api/web/app.js`: `Safeguarding` is now a recordable hazard category, so the Safeguarding clock is reachable.
+* `src/core/tests/test_hazard_referral.py`: one test for recording a safeguarding concern.
+* Findings 2 and 3: no change; the referenced function, module and title do not exist at this HEAD.
+* Validation: core `test_hazard_referral` and `test_taskqueues` (69 ok, 1 skipped); API targeted workbench, hazard, safety and workflow tests ok; mypy, ruff check and ruff format clean in `src/core`; ruff/mypy in `src/api` not re-run after change beyond the earlier run. The full unittest discover runs exceed practical time and were stopped; PYTHONPATH pointed at the worktree `src` dirs.
