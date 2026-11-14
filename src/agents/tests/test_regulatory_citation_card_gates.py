@@ -61,6 +61,9 @@ class CitationCardGates(unittest.TestCase):
         self.assertGreater(report["completeness_lift"], 0)
         self.assertGreaterEqual(report["grounding_lift"], 0)
         self.assertEqual(report["ship_mode"], "chat_with_cards")
+        self.assertEqual(report["recommendation"], "ship_chat_beside_cards")
+        self.assertFalse(report["cards_alone"])
+        self.assertTrue(all(r["card_links"] for r in report["rows"]))
 
     def test_no_lift_ships_cards_only(self) -> None:
         cases = copy.deepcopy(self.cases)
@@ -70,6 +73,21 @@ class CitationCardGates(unittest.TestCase):
         report = gates.compare_chat_to_cards(cases, paired, {"all_passed": True})
         self.assertLessEqual(report["grounding_lift"] + report["completeness_lift"], 0)
         self.assertEqual(report["ship_mode"], "cards_only")
+        self.assertEqual(report["recommendation"], "ship_cards_only")
+        self.assertTrue(report["cards_alone"])
+
+    def test_unmatched_pair_or_missing_link_ships_cards_only(self) -> None:
+        extra = self.paired + [dict(self.paired[0], id="no-such-case")]
+        report = gates.compare_chat_to_cards(self.cases, extra, {"all_passed": True})
+        self.assertEqual(report["unmatched_case_ids"], ["no-such-case"])
+        self.assertEqual(report["recommendation"], "ship_cards_only")
+        paired = copy.deepcopy(self.paired)
+        for pair in paired:
+            for card in pair["baseline_cards"]:
+                card["provisions"] = []
+        linkless = gates.compare_chat_to_cards(self.cases, paired, {"all_passed": True})
+        self.assertTrue(linkless["cards_alone"])
+        self.assertTrue(any("card link" in r for r in linkless["reasons"]))
 
     def test_failed_gate_or_no_pairs_ships_cards_only(self) -> None:
         failed = gates.compare_chat_to_cards(self.cases, self.paired, {"all_passed": False})

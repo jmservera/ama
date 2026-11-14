@@ -111,6 +111,8 @@ def _row(case: Mapping[str, Any], pair: Mapping[str, Any]) -> dict[str, Any]:
     cards_grounded = bool(source_ids) and all(provisions.get(i) for i in source_ids)
     return dict(
         id=case["id"],
+        card_links=[provisions[i] for i in source_ids if provisions.get(i)],
+        missing_card_links=[i for i in source_ids if not provisions.get(i)],
         chat_grounding=float(chat_grounded),
         cards_grounding=float(cards_grounded),
         chat_completeness=_ratio(len(cited & set(source_ids + fact_ids)), wanted),
@@ -126,6 +128,7 @@ def compare_chat_to_cards(
     """Chat ships beside cards only on a positive net lift with no regression and all gates met."""
     by_id = {c["id"]: c for c in cases}
     rows = [_row(by_id[p["id"]], p) for p in paired if p["id"] in by_id]
+    unmatched = [p["id"] for p in paired if p["id"] not in by_id]
     n = len(rows)
 
     def mean(key: str) -> float:
@@ -140,6 +143,10 @@ def compare_chat_to_cards(
         reasons.append("chat regresses grounding or completeness against cards")
     if grounding_lift + completeness_lift <= MIN_LIFT:
         reasons.append("no positive measured grounding or completeness lift over cards")
+    if unmatched:
+        reasons.append("paired cases without a graded chat answer: " + ", ".join(unmatched))
+    if any(r["missing_card_links"] for r in rows):
+        reasons.append("a cited source has no deterministic card link to compare against")
     if not gates.get("all_passed"):
         reasons.append("citation or refusal gate not met")
     ship = "cards_only" if reasons else "chat_with_cards"
@@ -151,6 +158,9 @@ def compare_chat_to_cards(
         grounding_lift=grounding_lift,
         completeness_lift=completeness_lift,
         ship_mode=ship,
+        recommendation="ship_cards_only" if reasons else "ship_chat_beside_cards",
+        cards_alone=bool(reasons),
+        unmatched_case_ids=unmatched,
         reasons=reasons,
         scope="structural benchmark, not measured staff time, comprehension or cost",
         approval="Recommendation only; shipment stays with the named owner.",
