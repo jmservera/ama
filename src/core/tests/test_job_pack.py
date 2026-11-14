@@ -146,6 +146,7 @@ class JobPackTests(unittest.TestCase):
             "Retrofit Programme Manager",
         )
         self.assertIs(e["contract_instruction"], False)
+        self.assertIs(e["is_contract_instruction"], False)
         self.assertEqual(e["owner"]["name"], "Pam Lead")
         self.assertIn("new version", e["contract_notice"])
         with self.assertRaises(ValueError):
@@ -154,6 +155,12 @@ class JobPackTests(unittest.TestCase):
             job_pack.escalation("variation", "x", "Kim", "WO-1", "Kim", "Contractor")
         with self.assertRaises(ValueError):
             job_pack.escalation("order", "x", "Kim", "WO-1", "Pam", "Retrofit Programme Manager")
+
+    def test_instruction_claims_are_rejected(self) -> None:
+        job_pack.reject_instruction_claim(dict(kind="variation", is_contract_instruction=False))
+        for key in ("is_contract_instruction", "contract_instruction", "issue_variation"):
+            with self.assertRaises(ValueError):
+                job_pack.reject_instruction_claim({key: True})
 
 
 if __name__ == "__main__":

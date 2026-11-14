@@ -33,6 +33,7 @@ NON_INSTRUCTION_NOTICE = (
 INSTRUCTION_CLAIMS = (
     "acts_as_contract_instruction",
     "contract_instruction",
+    "is_contract_instruction",
     "binding",
     "approved",
     "instruct",
@@ -236,6 +237,7 @@ def escalation(
         owner=dict(name=_text(owner_name, "the named owner"), role=owner_role),
         status="Raised - awaiting owner",
         contract_instruction=False,
+        is_contract_instruction=False,
         acts_as_contract_instruction=False,
         contract_notice=NON_INSTRUCTION_NOTICE,
     )
