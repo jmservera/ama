@@ -533,6 +533,8 @@ function affectedChallengePanel(c, id, refresh) {
     h("p", {}, "A challenge never means consent, refusal or a sanction. It does not close another request, change priority or delay safety work. A recorded human correction makes only suggestions and reviews that used that version need a fresh review. It does not change source information or policy automatically."),
     (c.challenge_guarantees || []).length ? h("ul", { id: "challenge-guarantees", "aria-label": "What a challenge never changes" },
       c.challenge_guarantees.map((text) => h("li", {}, text))) : null,
+    c.challenge_assurance && c.challenge_assurance.no_retaliation && !c.challenge_assurance.inferred_refusal && !c.challenge_assurance.hazard_response_delayed
+      ? h("p", { id: "challenge-assurance", role: "note" }, `Assurance: ${c.challenge_assurance.text}`) : null,
     h("h3", {}, "Suggestion details"),
     h("p", {}, "Browse older suggestions or enter an exact recorded suggestion reference. Suggestions without a source version can still be challenged by suggestion reference."),
     historyFor("challenge-target-history", "suggestions", targets, (target) => h("details", {}, h("summary", {}, `Suggestion ${target.proposal_id}: ${target.stale ? "Needs a fresh review" : "No recorded correction"}`),

@@ -1180,7 +1180,7 @@ class ResidentDecisionMixin:
             review.setdefault("stale_from_version", correction["version"])
         record.update(version=correction["version"], next_update=next_update,
                       review_status="Re-review required; no priority or consent change")
-        challenges.assert_no_retaliation(guard, c)
+        challenges.stamp_assurance(guard, c, record)
         return f"{record['id']} correction version {record['version']} recorded"
 
     def _res_nomination_review(self, user, c, body):
@@ -1529,7 +1529,7 @@ class ResidentDecisionMixin:
                       ai_details={key: deepcopy(rec.get(key)) for key in ("source", "model", "prompt_version", "policy_version", "source_versions")},
                       resolution=None)
         c.setdefault("affected_challenges", []).append(record)
-        challenges.assert_no_retaliation(guard, c)
+        challenges.stamp_assurance(guard, c, record)
         return f"{record['id']} supplied challenge recorded"
 
     def _res_challenge_resolve(self, user, c, body):
@@ -1549,7 +1549,7 @@ class ResidentDecisionMixin:
                           explanation=k.text(body["explanation"], "the permitted resolution explanation", 300),
                           next_update=_day(body["next_update"]), recorded_by=_identity(user), at=_time())
         record.update(status="Resolved", version=2, resolution=resolution)
-        challenges.assert_no_retaliation(guard, c)
+        challenges.stamp_assurance(guard, c, record)
         return f"{record['id']} supplied resolution recorded"
 
     def _res_scope_record(self, user, c, body):
