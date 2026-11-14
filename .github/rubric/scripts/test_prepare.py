@@ -11,8 +11,8 @@ from pathlib import Path
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import gate  # noqa: E402
-import prepare  # noqa: E402
+import gate
+import prepare
 
 RUBRIC_DIR = Path(__file__).resolve().parent.parent
 SEED = json.loads((RUBRIC_DIR / "scores" / "latest.json").read_text(encoding="utf-8"))
@@ -430,7 +430,8 @@ def test_given_pr_deleting_scored_file_when_gated_then_drop_counts(tmp_path):
     )
 
     # Assert
-    assert (state["removed_files"], result["passed"], result["total"]) == ([REMOVED], False, 64)
+    expected_total = SEED["total"] - (SEED["criteria"]["A2"]["score"] - 3)
+    assert (state["removed_files"], result["passed"], result["total"]) == ([REMOVED], False, expected_total)
 
 
 def test_given_direct_push_deleting_scored_file_when_computed_then_removed_detected(tmp_path):
