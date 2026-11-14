@@ -11794,3 +11794,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added plain-language "Tension: continuity versus disclosure" and "Tension: utilisation versus choice" callouts to `programme-queue`, `resident-choice` and `procurement-packages`, labelled atlas hypotheses pending #155 with a text status line and no role simulator.
 * The programme-queue journey stage map now states that every link carries the one selected home and that separate example homes are never stages of it. Updated [atlas-screen-trace.md](research/ux/atlas-screen-trace.md); new test `src/api/tests/test_role_screens_tensions_same_home.py`. Engineering trace only: no browser, assistive-technology or user evidence; the criteria are not ticked.
+
+## [2026-11-14] update | Issue #233 same-home stage map on every role screen (Refs #233)
+
+* The eight-stage "Journey stages for <home>" map, previously only on the `programme-queue` home view, now follows the evidence on every other role screen once a home is selected. Links carry the one selected case reference; the current screen is written as text, a screen outside the stages says so, and stage screens not installed for the role stay text with owner and next action. Updated [atlas-screen-trace.md](research/ux/atlas-screen-trace.md); new test `src/api/tests/test_role_screens_connected_journey.py`. Node render evidence only: no browser, assistive-technology or user evidence; Criterion 2 stays unticked.
