@@ -25,6 +25,11 @@ const screenPanel = (title, ...children) => {
     ? h("section", { class: "card screen-record", id, "aria-labelledby": `${id}-heading` }, h("h2", { id: `${id}-heading`, tabindex: -1 }, title), ...children)
     : h("section", { class: "card screen-record" }, h("h2", {}, title), ...children);
 };
+const screenJumpTarget = (id, panel) => h("div", { id, tabindex: "-1" }, panel);
+function screenJumpNav(label, jumps) {
+  return h("nav", { class: "row", "aria-label": label },
+    jumps.map(([id, text]) => h("a", { href: `#${id}`, class: "btn alt", "data-jump": id, "data-jump-target": id }, `Go to ${text}`)));
+}
 const screenUnknown = (reason, owner, action) => h("div", { class: "blocked" },
   h("p", { class: "blocked-title" }, "Cannot confirm readiness"),
   screenFields([["Why it is blocked", reason], ["Owner", owner], ["Next action", action]]));
@@ -834,7 +839,7 @@ const stateCue = (table, status, detail = status) => `${Object.hasOwn(table, sta
 const choiceCues = { Accepted: "Confirmed", Declined: "Confirmed", Paused: "Confirmed", Withdrawn: "Confirmed", Waiting: "Waiting for resident", "Not recorded": "Waiting for resident" };
 const updateCues = { Outstanding: "Action needed", Proposed: "Action needed" };
 const serviceCues = { Open: "Action needed", "In progress": "Action needed", Resolved: "Action needed", Closed: "Confirmed" };
-const screenJumpNav = (sections) => h("nav", { "aria-label": "Sections of this view", class: "screen-links" },
+const residentJumpNav = (sections) => h("nav", { "aria-label": "Sections of this view", class: "screen-links" },
   sections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading` }, title)));
 const choiceSections = [["choice-measures", "Choice for each measure"], ["choice-stopped", "Paused or withdrawn"], ["choice-update", "Update commitment"], ["choice-service", "Service requests"]];
 const serviceSections = [["service-issues", "Service issues"], ["service-update", "Update commitment"]];
@@ -915,7 +920,7 @@ registerRoleScreen({
     const update = c.resident_update;
     const requests = c.service_requests || [];
     return h("div", {},
-      screenJumpNav(choiceSections),
+      residentJumpNav(choiceSections),
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only view. No message, call or letter is sent and no record changes here. Record supplied answers in the case workspace. Resident-facing screens are designed separately. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
@@ -1545,33 +1550,35 @@ function financeExceptionPanel(inv) {
 function financeInvoicePanel(c) {
   const f = c.finance || {};
   const invoices = f.invoices || [];
-  if (!invoices.length) return screenPanel("Invoice line comparison",
-    h("p", { class: "empty" }, "No invoices recorded for this home. This does not establish that nothing is owed."));
-  return screenPanel("Invoice line comparison", ...invoices.map((inv) => h("div", {},
+  if (!invoices.length) return screenJumpTarget("finance-lines", screenPanel("Invoice line comparison",
+    h("p", { class: "empty" }, "No invoices recorded for this home. This does not establish that nothing is owed.")));
+  return screenJumpTarget("finance-lines", screenPanel("Invoice line comparison", ...invoices.map((inv) => h("div", {},
     h("h3", {}, `${inv.id}: ${screenValue(inv.kind)} ${screenValue(inv.ref)} from ${screenValue(inv.supplier)}`),
     screenFields([["Version and record", `${inv.id}, work order ${screenValue(inv.work_order)}, match status: ${screenValue(inv.status)}`],
-      ["Payment pause", inv.hold ? `Paused by ${screenValue(inv.hold.name)}: ${screenValue(inv.hold.reason)}` : "No pause recorded"],
+      ["Payment pause", inv.hold ? `State: Paused by ${screenValue(inv.hold.name)}: ${screenValue(inv.hold.reason)}` : "State: No pause recorded"],
       ["Finance decision", inv.disposition ? `${screenFinanceDecision(inv.disposition)}, recorded by ${screenValue(inv.disposition_by)}` : "No Finance decision recorded"],
       ["Payment status (a note of what Finance did elsewhere)", `${screenValue(inv.payment_status)}. This system never makes or releases a payment.`]]),
     screenTable(`Line comparison for ${inv.id}`,
       ["Invoice line", "Quantity and line total", "Commitment", "Scope", "Quantity check", "Budget", "Supplied milestone reference", "Exception or unknown"],
       financeLineRows(f, inv)),
-    financeExceptionPanel(inv))));
+    financeExceptionPanel(inv)))));
 }
 const financeQueueRows = (queue) => queue.map((q) => [q.case_id, q.invoice, `${screenValue(q.supplier)}, ref ${screenValue(q.ref)}`,
-  stateCue(invoiceCues, q.status), financeChecked(q) ? `${q.exceptions ?? "Unknown"} exceptions` : "Unknown. Not checked yet", q.on_hold ? "Paused" : "Not paused", financeMoney(q.total)]);
+  stateCue(invoiceCues, q.status), financeChecked(q) ? `${q.exceptions ?? "Unknown"} exceptions` : "Unknown. Not checked yet", q.on_hold ? "State: Paused" : "State: Not paused", financeMoney(q.total)]);
+const financeInvoiceJumps = [["finance-queue", "invoices waiting for Finance"], ["finance-lines", "invoice line comparison"], ["finance-economics", "AI economics"]];
+const financeFundingJumps = [["grant-pack", "funding route and grant stages"], ["funding-summary", "funding state summary and readiness export"], ["finance-economics", "AI economics"]];
 const financeTcaComponents = ["Token and API usage", "Platform and hosting", "Software and licences", "People and process change", "Rework and review effort"];
 const financeValueDestinations = "new revenue won, revenue retained, spend removed, spend avoided or capital freed";
 function financeEconomicsPanel(report) {
   const missing = (what) => `Unknown. ${what}`;
-  return screenPanel("AI economics (ledger-wide, all homes)",
+  return screenJumpTarget("finance-economics", screenPanel("AI economics (ledger-wide, all homes)",
     h("p", {}, "Design only. Usage must be reconciled to billing before any cost is read. Total Cost of AI is the sum of its components, and any missing component keeps it Unknown. Booked-value status stays Unknown until Finance records a defensible value. No price, budget or target is set here (BRD OD-51 open). This is read-only and nothing here depends on AI: Finance decisions and invoice checks work the same when AI is unavailable."),
     screenFields([
       ["Usage reconciled to billing", missing("No billing source is recorded, so usage cannot be reconciled.")],
       ...financeTcaComponents.map((name) => [`Total Cost of AI component: ${name}`, missing("No priced source is recorded.")]),
       ["Total Cost of AI components", missing("Components are missing, so no total is shown.")],
       ["Booked-value status", missing(`No value is booked. A booked value needs one destination: ${financeValueDestinations}.`)]]),
-    assetCost(report));
+    assetCost(report)));
 }
 registerRoleScreen({
   id: "finance-invoices",
@@ -1589,10 +1596,11 @@ registerRoleScreen({
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only reader view for the approver and payment officer. It makes no payment, approval or decision and changes no record. Use the existing case workspace to act. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only, except the queue below.`)),
-      screenPanel("Invoices waiting for Finance (all homes your role can see)",
+      screenJumpNav("Finance invoice sections", financeInvoiceJumps),
+      screenJumpTarget("finance-queue", screenPanel("Invoices waiting for Finance (all homes your role can see)",
         queue ? screenTable("Invoices with exceptions, pauses or not yet checked",
           ["Home", "Invoice", "Supplier and reference", "Status", "Exceptions", "Pause", "Invoice total"], financeQueueRows(queue))
-          : h("p", { class: "empty" }, "Unknown. The queue could not be read for your role. Owner: your team manager. Next action: ask them to check your access.")),
+          : h("p", { class: "empty" }, "Unknown. The queue could not be read for your role. Owner: your team manager. Next action: ask them to check your access."))),
       financeInvoicePanel(c),
       financeEconomicsPanel(extra?.report));
   }
@@ -1769,9 +1777,10 @@ registerRoleScreen({
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only reader view for the capital and grant preparer. It is a reviewed export or readiness view only. No submission, award, eligibility decision or payment is made or inferred. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
-      screenPanel("Funding route",
-        screenFields([["Route", funding.route], ["Status", funding.status], ["Reference", funding.reference],
-          ["Eligibility", "State: Unknown. This page cannot confirm eligibility."]])),
+      screenJumpNav("Funding sections", financeFundingJumps),
+      screenJumpTarget("grant-pack", screenPanel("Funding route",
+        screenFields([["Route", funding.route], ["Status", `Status: ${screenValue(funding.status)}`], ["Reference", funding.reference],
+          ["Eligibility", "State: Unknown. This page cannot confirm eligibility."]]))),
       screenPanel("Grant stages",
         grants.length ? screenTable("Grant stages and approved evidence", ["Grant", "Scheme", "Stage now", "Waiting for approval", "Approved evidence"],
           grants.map((g) => [g.id, g.scheme, g.state,
@@ -1784,10 +1793,10 @@ registerRoleScreen({
       readable && screenPanel("Form schema catalogue",
         h("p", {}, "The catalogue covers all forms, not only this home. Each row is one recorded version of a form definition, with its reviewer, evidence, recorder and time. A version shows Unapproved when no approval is recorded."),
         h("p", {}, h("a", { class: "btn alt", href: "/api/form-schemas.csv", download: "form-schemas.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back. It is not an approval and not a reviewed pack.")),
-      screenPanel("Funding state summary",
+      screenJumpTarget("funding-summary", screenPanel("Funding state summary",
         h("p", {}, "Each state is written as words with a State prefix, so it never relies on colour. Unknown means nothing is recorded or readable here; it is not a pass."),
         screenRecordTable("Funding indicators and their state",
-          ["Indicator", "State", "What it means"], fundingStateRows(grants, drafts, readable), Infinity)),
+          ["Indicator", "State", "What it means"], fundingStateRows(grants, drafts, readable), Infinity))),
       screenPanel("Readiness export",
         screenFields([["Claim pack readiness", !readable ? "State: Unknown. The field review could not be read." : drafts && drafts.some((d) => d.reviewed_ready) ? "State: Ready as recorded by a reviewer. A reviewer recorded ready on at least one draft. A person must still check and submit it outside this system." : "State: Not ready. No reviewed export exists."],
           ["Open decision pauses", !pauses ? "Unknown. The field review could not be read." : pauses.length ? `${pauses.length} recorded` : "None recorded"],
@@ -1859,7 +1868,7 @@ registerRoleScreen({
     const requests = c.service_requests || [];
     const update = c.resident_update;
     return h("div", {},
-      screenJumpNav(serviceSections),
+      residentJumpNav(serviceSections),
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only view. No message, call or letter is sent and no record changes here. Resident-facing screens are designed separately. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),

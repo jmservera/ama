@@ -89,8 +89,9 @@ class FinanceGrantsScreenWcagTests(unittest.TestCase):
             self.assertEqual(attrs["role"], "region")
             self.assertTrue(attrs["aria-label"])
         for node in walk(tree):
-            tabindex = (node.get("attrs") or {}).get("tabindex")
-            self.assertIn(tabindex, (None, 0), "positive or -1 tabindex removes content from order")
+            attrs = node.get("attrs") or {}
+            allowed = (None, 0, "-1") if attrs.get("id") else (None, 0)
+            self.assertIn(attrs.get("tabindex"), allowed, "only jump targets may take -1")
 
     def test_scroll_region_focus_is_visible_and_not_clipped(self) -> None:
         self.assertRegex(CSS, r"\.table-scroll:focus-visible\{[^}]*outline:var\(--focus-w\) solid")
