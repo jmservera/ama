@@ -257,6 +257,7 @@ nav a:hover{border-bottom-color:#fff}
 .map-marker{background:none;border:0}
 table{width:100%;border-collapse:collapse;background:var(--surface)}
 .table-scroll{max-width:100%;overflow-x:auto}
+.table-scroll:focus-visible{outline:var(--focus-w) solid var(--focus-ink);outline-offset:calc(var(--focus-w) * -1);box-shadow:inset 0 0 0 calc(var(--focus-w) + var(--focus-off)) var(--focus)}
 th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);font-size:.95rem}
 .pre{white-space:pre-wrap}
 @media(max-width:600px){.item{grid-template-columns:1fr}.item .meta{text-align:left}dl{grid-template-columns:1fr}}

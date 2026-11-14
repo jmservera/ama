@@ -49,6 +49,7 @@ EXPECTED_REGIONS: dict[str, tuple[str, ...]] = {
     "safety-lead": ("Hazard referrals for this home", "Scoped pause and release evidence"),
     "data-operator": ("Open exceptions and prerequisites",),
     "contractor-job-pack": ("Evidence checklist for this job pack",),
+    "finance-funding": ("Funding indicators and their state",),
 }
 # Legitimate no-table states on this fixture. They are gaps, not passes and not invented tables.
 NO_REGION_GAPS: dict[str, str] = {
@@ -58,7 +59,6 @@ NO_REGION_GAPS: dict[str, str] = {
         "quality-queue",
         "procurement-packages",
         "finance-invoices",
-        "finance-funding",
         "staff-job-pack-intake",
     )
 }

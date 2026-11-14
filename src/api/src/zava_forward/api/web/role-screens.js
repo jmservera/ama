@@ -1559,6 +1559,21 @@ function fundingDraftPanel(draft, caseId, downloadEnabled) {
       ` Not submitted; eligibility Not assessed. The file is built when you ask for it and may be newer than input version ${screenValue(draft.input_version)} shown here. Check the version and hash inside the file. A read-only copy for reading, not a reviewed pack.`) : null,
     downloadEnabled && draft.draft_id ? fundingSavedCopyCheck(draft, caseId) : null);
 }
+const fundingEligibility = (g) => {
+  const e = g.eligibility;
+  if (!e?.outcome) return "Not assessed";
+  const verified = e.verified === true || String(e.status || "").toLowerCase() === "verified";
+  return verified ? `Verified: ${e.outcome}` : `${e.outcome} (recorded, not verified)`;
+};
+function fundingStateRows(grants, drafts, readable) {
+  const eligibility = grants.length ? grants.map((g) => `${screenValue(g.id)}: ${fundingEligibility(g)}`).join("; ") : "Unknown";
+  const ready = !readable ? "Unknown" : drafts.some((d) => d.reviewed_ready) ? "Ready as recorded by a reviewer" : "Not ready";
+  return [
+    ["Grant eligibility", `State: ${eligibility}`, "A recorded check outcome only. This page never decides eligibility."],
+    ["Co-funding cap", "State: Unknown", "No co-funding cap is recorded here. A person checks the funder's cap by hand."],
+    ["Claim pack readiness", `State: ${ready}`, "A reviewer's record. A person still checks and submits outside this system."],
+    ["Cost variance", "State: Unknown", "No dated variance statement is recorded here. Finance owns the variance reading."]];
+}
 registerRoleScreen({
   id: "finance-funding",
   title: "Funding route and claim pack",
@@ -1586,7 +1601,7 @@ registerRoleScreen({
         h("p", {}, `Home scope: ${c.id} only.`)),
       screenPanel("Funding route",
         screenFields([["Route", funding.route], ["Status", funding.status], ["Reference", funding.reference],
-          ["Eligibility", "Unknown. This page cannot confirm eligibility."]])),
+          ["Eligibility", "State: Unknown. This page cannot confirm eligibility."]])),
       screenPanel("Grant stages",
         grants.length ? screenTable("Grant stages and approved evidence", ["Grant", "Scheme", "Stage now", "Waiting for approval", "Approved evidence"],
           grants.map((g) => [g.id, g.scheme, g.state,
@@ -1599,8 +1614,12 @@ registerRoleScreen({
       readable && screenPanel("Form schema catalogue",
         h("p", {}, "The catalogue covers all forms, not only this home. Each row is one recorded version of a form definition, with its reviewer, evidence, recorder and time. A version shows Unapproved when no approval is recorded."),
         h("p", {}, h("a", { class: "btn alt", href: "/api/form-schemas.csv", download: "form-schemas.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back. It is not an approval and not a reviewed pack.")),
+      screenPanel("Funding state summary",
+        h("p", {}, "Each state is written as words with a State prefix, so it never relies on colour. Unknown means nothing is recorded or readable here; it is not a pass."),
+        screenRecordTable("Funding indicators and their state",
+          ["Indicator", "State", "What it means"], fundingStateRows(grants, drafts, readable), Infinity)),
       screenPanel("Readiness export",
-        screenFields([["Claim pack readiness", !readable ? "Unknown. The field review could not be read." : drafts && drafts.some((d) => d.reviewed_ready) ? "A reviewer recorded ready on at least one draft. A person must still check and submit it outside this system." : "Not ready. No reviewed export exists."],
+        screenFields([["Claim pack readiness", !readable ? "State: Unknown. The field review could not be read." : drafts && drafts.some((d) => d.reviewed_ready) ? "State: Ready as recorded by a reviewer. A reviewer recorded ready on at least one draft. A person must still check and submit it outside this system." : "State: Not ready. No reviewed export exists."],
           ["Open decision pauses", !pauses ? "Unknown. The field review could not be read." : pauses.length ? `${pauses.length} recorded` : "None recorded"],
           ["Submission, award and payment", "Not recorded here. This screen never infers them."]])),
       financeEconomicsPanel(extra?.report));
