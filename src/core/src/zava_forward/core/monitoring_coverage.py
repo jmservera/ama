@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import math
 import re
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
@@ -390,19 +390,41 @@ def evaluate_ai_limits(
 
 
 def reconcile_events(
-    events: Sequence[Mapping[str, Any]], *, window_start: Any, window_end: Any
+    events: Sequence[Mapping[str, Any]],
+    *,
+    window_start: Any,
+    window_end: Any,
+    prior_event_ids: Iterable[str] | None = None,
 ) -> dict[str, Any]:
     """Count distinct events in a half-open window so replays after a restart do not double count.
 
     Events need a bounded `event_id` token and an aware ISO `observed_at`; others are counted as
-    invalid, and an invalid window yields no count.
+    invalid, and an invalid window yields no count. `prior_event_ids` is the `checkpoint` saved by
+    an earlier pass over the same window (opaque ids only); ids already in it count as duplicates,
+    so `count` stays the distinct total, `new` is this pass's addition and an unusable or oversized
+    checkpoint blocks rather than guesses.
     """
     start, end = _aware(window_start), _aware(window_end)
-    out: dict[str, Any] = {"count": None, "duplicates": 0, "outside_window": 0, "invalid": 0}
-    if start is None or end is None or end <= start:
+    out: dict[str, Any] = {
+        "count": None,
+        "new": None,
+        "duplicates": 0,
+        "outside_window": 0,
+        "invalid": 0,
+        "checkpoint": [],
+    }
+    prior = list(prior_event_ids) if prior_event_ids is not None else []
+    if (
+        start is None
+        or end is None
+        or end <= start
+        or len(prior) > MAX_CHECKPOINT
+        or not all(isinstance(i, str) and _TOKEN.fullmatch(i) for i in prior)
+    ):
         out["status"] = BLOCKED
         return out
-    seen: set[str] = set()
+    seen: set[str] = set(prior)
+    before = len(seen)
     for event in events:
         event_id, at = event.get("event_id"), _aware(event.get("observed_at"))
         if not isinstance(event_id, str) or _TOKEN.fullmatch(event_id) is None or at is None:
@@ -413,9 +435,41 @@ def reconcile_events(
             out["outside_window"] += 1
         else:
             seen.add(event_id)
+    if len(seen) > MAX_CHECKPOINT:
+        out["status"] = BLOCKED
+        return out
     out["count"] = len(seen)
+    out["new"] = len(seen) - before
+    out["checkpoint"] = sorted(seen)
     out["status"] = BLOCKED if out["invalid"] else COUNTED if seen else INSUFFICIENT
     return out
+
+
+def disabled_task_status(task: Mapping[str, Any]) -> dict[str, Any]:
+    """Content-free status row for a disabled task: named owner and a bounded static reason.
+
+    Only registry-authored fields are read; an unnamed owner is reported as a gap, never inferred,
+    and a reason that is oversized or looks like an identity or token is withheld (RAI-6).
+    """
+    role, person, reason = (
+        task.get("accountable_function"),
+        task.get("accountable_individual"),
+        task.get("activation"),
+    )
+    task_id = task.get("id")
+    safe = (
+        isinstance(reason, str)
+        and 0 < len(reason) <= MAX_REASON
+        and _SENSITIVE.search(reason) is None
+    )
+    return {
+        "task": task_id if isinstance(task_id, str) and _TOKEN.fullmatch(task_id) else None,
+        "state": "disabled" if task.get("enabled") is False else "enabled",
+        "owner_role": role if isinstance(role, str) and named(role) else None,
+        "owner_individual": person if isinstance(person, str) and named(person) else None,
+        "owner_gap": not named(person),
+        "reason": reason if safe else "reason withheld; use the manual route",
+    }
 
 
 ALLOWED_FIELDS = frozenset(
@@ -445,6 +499,8 @@ _STATUSES = frozenset({INSTALLED, CANDIDATE, GAP, INSUFFICIENT, BLOCKED, WITHIN,
 _SEVERITIES = frozenset({"0", "1", "2", "3", "4", "info", "low", "medium", "high", "critical"})
 MAX_COUNT = 10**9
 MAX_TEXT = 64
+MAX_CHECKPOINT = 10000
+MAX_REASON = 400
 
 
 def _parses(value: str) -> bool:

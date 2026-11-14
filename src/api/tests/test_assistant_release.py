@@ -259,6 +259,10 @@ class Release(Base):
         self.assertIsNone(chat["binding"])
         self.assertIsNone(chat["release"])
         self.assertTrue(chat["release_denial"]["missing"])
+        self.assertEqual(chat["status"]["state"], "disabled")
+        self.assertEqual(chat["status"]["owner_role"], "Retrofit Programme Manager")
+        self.assertTrue(chat["status"]["owner_gap"])
+        self.assertIn("disabled", chat["status"]["reason"])
 
     def test_scan_is_denied_without_release(self):
         self.drop()
