@@ -13,6 +13,7 @@ import json
 import math
 from collections.abc import Iterable, Mapping, Sequence
 from datetime import UTC, datetime, timedelta
+from math import isfinite
 from typing import Any, Protocol
 
 VERSION = "retained-reading-view-v2"
@@ -64,6 +65,8 @@ AS_OF_RULE = (
     f"request, so they may be older than {WINDOW_DAYS} days. Later-dated readings are "
     "excluded and are never treated as recent. Current freshness is not asserted by this evidence."
 )
+PLAUSIBLE_HUMIDITY_PCT = (0.0, 100.0)
+PLAUSIBLE_TEMPERATURE_C = (-40.0, 60.0)
 WATCH_HUMIDITY_PCT = 75.0
 WATCH_TEMPERATURE_C = 16.0
 WATCH_LABEL = "Sensor watch"
@@ -537,6 +540,7 @@ def view(
         freshness_text="No reading is available.",
         manual_route=MANUAL,
         advisory=advisory(out),
+        health=reading_health(out),
     )
     if out["state"] in ("consent-withheld", "unavailable"):
         out["freshness_text"] = out["detail"]
@@ -564,6 +568,36 @@ def view(
             ),
         )
     return out
+
+
+def reading_health(sensors: Mapping[str, Any] | None) -> dict[str, str]:
+    """Whether the latest retained reading can be read and is physically possible.
+
+    Read-only and clock-free. ``fault`` means a value is missing or not a finite number;
+    ``out_of_range`` means a value is outside the physical limits for a home sensor. Neither
+    changes a case, hazard or gate.
+    """
+    latest = (sensors or {}).get("latest")
+    if not latest:
+        return dict(state="none", text="No reading is available to check.")
+    try:
+        humidity = float(latest["humidity_pct"])
+        temperature = float(latest["temperature_c"])
+    except (KeyError, TypeError, ValueError):
+        humidity = temperature = float("nan")
+    if not (isfinite(humidity) and isfinite(temperature)):
+        return dict(state="fault", text="The latest reading is missing a value or cannot be read.")
+    low_h, high_h = PLAUSIBLE_HUMIDITY_PCT
+    low_t, high_t = PLAUSIBLE_TEMPERATURE_C
+    if not (low_h <= humidity <= high_h and low_t <= temperature <= high_t):
+        return dict(
+            state="out_of_range",
+            text=(
+                f"The latest reading is outside the possible range ({low_h:g} to {high_h:g} %RH, "
+                f"{low_t:g} to {high_t:g} degC). Do not rely on it."
+            ),
+        )
+    return dict(state="ok", text="The latest reading is within the possible range.")
 
 
 def advisory(sensors: Mapping[str, Any] | None) -> dict[str, Any]:

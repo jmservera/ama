@@ -54,6 +54,50 @@ class Annotate(unittest.TestCase):
         self.assertIn("sensor_badges.annotate(app.assistants.sensors(", src)
 
 
+class FaultGuidance(unittest.TestCase):
+    def view(self, state: str, **extra: Any) -> dict[str, Any]:
+        base: dict[str, Any] = dict(state="ok", latest={"x": 1}, freshness="fresh")
+        return sensor_badges.annotate(dict(base, health=dict(state=state), **extra))
+
+    def test_fault_and_out_of_range_get_text_badges_and_next_action(self) -> None:
+        for state, label in (("fault", "Sensor fault"), ("out_of_range", "Out of range")):
+            with self.subTest(state=state):
+                out = self.view(state)
+                badge = out["badges"][1]
+                self.assertEqual(
+                    (badge["kind"], badge["state"], badge["label"]), ("health", state, label)
+                )
+                self.assertIn("Do not use this reading", out["next_action"])
+
+    def test_states_are_distinct_with_one_next_action_each(self) -> None:
+        views: dict[str, dict[str, Any]] = {
+            "withheld": dict(state="consent-withheld", latest=None),
+            "offline": dict(state="no-readings", latest=None),
+            "stale": dict(state="ok", latest={"x": 1}, freshness="stale"),
+        }
+        actions = {k: sensor_badges.annotate(v)["next_action"] for k, v in views.items()}
+        self.assertEqual(
+            sensor_badges.annotate(views["withheld"])["badges"][0]["label"], "Withheld"
+        )
+        self.assertEqual(len(set(actions.values())), 3)
+
+    def test_usable_reading_has_no_action_and_withheld_hides_health(self) -> None:
+        self.assertIsNone(self.view("ok")["next_action"])
+        hidden = sensor_badges.annotate(
+            dict(state="consent-withheld", latest=None, health=dict(state="fault"))
+        )
+        self.assertEqual([b["kind"] for b in hidden["badges"]], ["freshness", "calibration"])
+
+    def test_fault_outranks_stale(self) -> None:
+        out = self.view("fault", freshness="stale")
+        self.assertIn("sensor fault", out["next_action"])
+
+    def test_panel_renders_next_action_as_text(self) -> None:
+        panel = OPS.read_text(encoding="utf-8")
+        self.assertIn("data-sensor-next-action", panel)
+        self.assertIn("Next action:", panel)
+
+
 class UiSource(unittest.TestCase):
     def test_panel_renders_text_badges_without_new_invalid_state(self) -> None:
         src = OPS.read_text(encoding="utf-8")

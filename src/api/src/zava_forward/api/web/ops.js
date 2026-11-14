@@ -82,6 +82,7 @@ function sensorPanel(id) {
     const kids = [
       h("p", { role: "status" }, `${v.freshness_text} Generated ${v.generated_at}.`),
       h("ul", { class: "muted", "data-sensor-badges": "" }, (v.badges || []).map((b) => h("li", {}, h("strong", {}, `${b.label}:`), ` ${b.text}`))),
+      ...(v.next_action ? [h("p", { "data-sensor-next-action": "" }, h("strong", {}, "Next action:"), ` ${v.next_action}`)] : []),
       h("p", { "data-sensor-advisory": "" }, v.advisory || "Advisory telemetry \u2014 officer review required"),
       h("p", { class: "muted" }, "Synthetic temperature and relative humidity retained for this home only. They are not calibrated, not a measure of comfort or hazard, and live demonstration readings are weather-derived rather than measured indoors. This is the current authorised capture. A suggestion shows the readings it cited when it ran, which may be older."),
     ];
