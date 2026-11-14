@@ -317,8 +317,8 @@ open; no invented price, tolerance, budget or appointee.
 
 #### AI limit calls
 
-Anchor: `ai-limit-calls`. Marker reasons `call-budget-limit` and
-`request-call-limit`. Accountable role: competent task owner, with Digital
+Anchor: `ai-limit-calls`. Marker reasons `call-budget-limit`,
+`request-call-limit`, `request-depth-limit` and `duplicate-attempt`. Accountable role: competent task owner, with Digital
 service owner; appointment pending. Response and recovery as [AI limits](#ai-limits);
 do not raise the call allowance without owner approval.
 
