@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-14T01:49:53+00:00",
-  "commit": "50ff1a02a8a3fc5a4d534436bc8f7891621ca278",
+  "scored_at": "2026-11-14T02:21:30+00:00",
+  "commit": "ac70acafac6d215a87f25b68c5d8e14f7658ca30",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43542249266",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43545351452",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "ad995cdbac1abc98ae5a53234cf2d627837ef5faef39947b874deaed9da3707c",
     "adr": "a5d94c6e67f2ef35c8e152e782f8356dc01f1ca5fd620bbd98ebfb85870975bc",
-    "solution-code": "00c67e25ccec02d74a51a151a4033ceb9a3dac641cf73b96c02839d7281992df",
+    "solution-code": "84bca6313c4a94a23caf5700435b44f5419458d0cb92a70b287573e452b91164",
     "infrastructure": "ee644cb0ed5b653adb614d01e56682c839a2c054851c397e91a4f56e47147f5f",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "687ae0ad2df52516882908bf45ecca662c52802d59a5116a4fe119ec3ae97840",
@@ -75,9 +75,10 @@
     "A7": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/worker.py:60-121"
+        "src/agents/src/zava_forward/agents/worker.py:60-121",
+        "src/api/tests/test_assistant_restart_non_replenishment.py:1-308"
       ],
-      "rationale": "No orchestration-specific change in this diff beyond identity sanitization shared helpers; baseline reliability behavior retained at ceiling (5)."
+      "rationale": "New restart/multi-worker non-replenishment tests reinforce existing orchestration-adjacent reliability guarantees (revocation, allowance ceilings persist across workers) but add no new orchestration pattern. Baseline reliability behavior retained at ceiling (5)."
     },
     "B1": {
       "score": 3,
