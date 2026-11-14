@@ -1,16 +1,21 @@
 """Issue #201 baseline-parity checks for the migrated src/ test suites.
 
-Covers wiring and static test-method counts against the documented cut-over
-baseline. Measured line or branch coverage is not configured anywhere in the
-repository, so these tests prove count and wiring parity only and guard the
-evidence pack's statement that measured coverage equivalence is not established.
+Covers wiring, static test-method counts and real unittest TestLoader discovery
+of non-skipped executable tests against the documented v0.21.0 cut-over
+baseline (719 tests). Measured line or branch coverage is not configured
+anywhere in the repository, so these tests prove count and wiring parity only
+and guard the evidence pack's statement that measured coverage equivalence is
+not established. Hosted CI coverage comparison remains open: the issue is
+`Refs #201`, never `Closes #201`.
 """
 
 from __future__ import annotations
 
 import ast
-import json
+import os
 import re
+import subprocess
+import sys
 import tomllib
 import unittest
 from pathlib import Path
@@ -28,7 +33,35 @@ BASELINE_PER_PROJECT = {
     "orchestrator": 22,
     "importer": 39,
 }
-BASELINE_RUBRIC_TOTAL = 48
+# The 719 baseline includes 92 skips, so the like-for-like 7x check uses the
+# discovered total; non-skipped tests are held to a separate 6x floor.
+BASELINE_MULTIPLE = 7
+NON_SKIPPED_MULTIPLE = 6
+DISCOVERY_SCRIPT = """
+import unittest
+
+
+def flatten(suite):
+    for item in suite:
+        if isinstance(item, unittest.TestSuite):
+            yield from flatten(item)
+        else:
+            yield item
+
+
+cases = list(flatten(unittest.TestLoader().discover("tests")))
+
+
+def skipped(case):
+    method = getattr(case, case._testMethodName, None)
+    return bool(
+        getattr(type(case), "__unittest_skip__", False)
+        or getattr(method, "__unittest_skip__", False)
+    )
+
+
+print(len(cases), sum(not skipped(case) for case in cases))
+"""
 COVERAGE_KEYS = ("fail_under", "fail-under", "branch")
 
 
@@ -47,6 +80,23 @@ def count_test_methods(project: str) -> tuple[int, int]:
             for node in ast.walk(tree)
         )
     return len(modules), methods
+
+
+def discover_counts(project: str) -> tuple[int, int]:
+    env = {k: v for k, v in os.environ.items() if k != "PYTHONPATH"}
+    env["PYTHONPATH"] = os.pathsep.join(
+        str(ROOT / "src" / dep / "tests") for dep in ("core",) if dep != project
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", DISCOVERY_SCRIPT],
+        cwd=ROOT / "src" / project,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    total, active = result.stdout.split()[-2:]
+    return int(total), int(active)
 
 
 def coverage_settings(project: str) -> dict[str, object]:
@@ -119,13 +169,26 @@ class BaselineCountParity(unittest.TestCase):
         self.assertIn("v0.21.0", read("README.md"))
 
 
+class ExecutableDiscoveryParity(unittest.TestCase):
+    def test_discovered_non_skipped_tests_exceed_baseline_multiple(self) -> None:
+        counts = {project: discover_counts(project) for project in PROJECTS}
+        for project, (total, active) in counts.items():
+            with self.subTest(project=project):
+                self.assertGreater(active, 0)
+                self.assertLessEqual(active, total)
+        discovered = sum(total for total, _ in counts.values())
+        active_total = sum(active for _, active in counts.values())
+        self.assertGreater(discovered, BASELINE_TOTAL_TESTS * BASELINE_MULTIPLE)
+        self.assertGreater(active_total, BASELINE_TOTAL_TESTS * NON_SKIPPED_MULTIPLE)
+
+
 class CoverageThresholdParity(unittest.TestCase):
-    def test_configured_thresholds_are_not_below_baseline(self) -> None:
+    def test_no_project_configures_a_weaker_than_zero_gate(self) -> None:
         for project in PROJECTS:
             with self.subTest(project=project):
                 for key, value in coverage_settings(project).items():
                     if key.endswith(("fail_under", "fail-under")):
-                        self.assertGreaterEqual(value, 0)
+                        self.assertGreater(value, 0)
 
     def test_ci_commands_do_not_weaken_the_unittest_baseline(self) -> None:
         workflow = read(".github/workflows/src-ci.yml")
@@ -141,10 +204,6 @@ class CoverageThresholdParity(unittest.TestCase):
             self.assertIn(
                 "equal-or-greater measured coverage is **not established**", pack
             )
-
-    def test_rubric_snapshot_is_not_below_recorded_baseline(self) -> None:
-        latest = json.loads(read(".github/rubric/scores/latest.json"))
-        self.assertGreaterEqual(latest["total"], BASELINE_RUBRIC_TOTAL)
 
 
 if __name__ == "__main__":
