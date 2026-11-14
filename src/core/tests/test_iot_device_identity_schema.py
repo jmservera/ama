@@ -60,6 +60,10 @@ class DeviceIdentitySchemaTests(unittest.TestCase):
             ({"observed_at": "bad"}, "READING_ID_MISMATCH"),
             ({"observed_at": 20261114}, "READING_ID_MISMATCH"),
             ({"observed_at": "2026-11-14T09:07:00Z"}, "READING_ID_MISMATCH"),
+            ({"observed_at": "2026-11-14T9:5:00Z"}, "READING_ID_MISMATCH"),
+            ({"observed_at": "２０２６-11-14T09:05:00Z"}, "READING_ID_MISMATCH"),
+            ({"observed_at": "2026-11-14T09:05:00z"}, "READING_ID_MISMATCH"),
+            ({"schema_version": None}, "SCHEMA_VERSION_REQUIRED"),
         )
         for change, code in cases:
             with self.assertRaises(device_identity.DeviceIdentityError) as ctx:
