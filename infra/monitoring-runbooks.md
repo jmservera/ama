@@ -315,6 +315,35 @@ Recovery: owner-approved finite limits, dated versioned price and billing record
 per-request termination, delivered notification and expiry checks. OD-51 remains
 open; no invented price, tolerance, budget or appointee.
 
+#### AI limit calls
+
+Anchor: `ai-limit-calls`. Marker reasons `call-budget-limit` and
+`request-call-limit`. Accountable role: competent task owner, with Digital
+service owner; appointment pending. Response and recovery as [AI limits](#ai-limits);
+do not raise the call allowance without owner approval.
+
+#### AI limit tokens
+
+Anchor: `ai-limit-tokens`. Marker reason `token-budget-limit`. Accountable role:
+competent task owner, with Digital service owner; appointment pending. Response
+and recovery as [AI limits](#ai-limits); do not raise the token allowance
+without owner approval.
+
+#### AI limit budget
+
+Anchor: `ai-limit-budget`. Marker reasons `money-budget-limit`, `price-unknown`,
+`liability-unknown`, `liability-overrun` and the `budget-currency-*` holds.
+Accountable role: Finance budget owner, with the competent task owner; appointment
+pending. Response and recovery as [AI limits](#ai-limits); no invented price or
+budget, and OD-51 stays open.
+
+#### AI limit expiry
+
+Anchor: `ai-limit-expiry`. Marker reasons `authority-expired`,
+`authority-expiring` and `authority-unknown`. Accountable role: competent task
+owner, with Digital service owner; appointment pending. Response and recovery
+as [AI limits](#ai-limits); never reinterpret an expired authority.
+
 ## Explicit Missing-Signal Procedures
 
 These are not installed alerts. Appointments, signal production and safe
