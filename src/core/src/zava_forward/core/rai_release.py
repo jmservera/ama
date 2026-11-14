@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import re
 from collections.abc import Mapping, Sequence
 from typing import Any
 
@@ -52,6 +53,30 @@ def named(value: object) -> bool:
         and 0 < len(value.strip()) <= 400
         and value.strip().casefold() not in {"unknown", "unavailable", "none", "unapproved"}
     )
+
+
+NON_HUMAN_TOKENS = frozenset(
+    {
+        "system",
+        "agent",
+        "bot",
+        "automation",
+        "automated",
+        "copilot",
+        "assistant",
+        "ai",
+        "llm",
+        "service",
+    }
+)
+
+
+def named_human(value: object) -> bool:
+    """A named approver that is not a system, agent or automation attribution."""
+    if not named(value):
+        return False
+    assert isinstance(value, str)
+    return not NON_HUMAN_TOKENS & set(re.split(r"[^a-z0-9]+", value.casefold()))
 
 
 def strings(value: object) -> bool:
@@ -154,6 +179,13 @@ def missing_binding(
         missing.append("unexpired release")
     if not named(record.get("serving_model")):
         missing.append("serving_model")
+    approver = record.get("approver")
+    if live and not (
+        isinstance(approver, Mapping)
+        and named_human(approver.get("email"))
+        and (approver.get("name") is None or named_human(approver.get("name")))
+    ):
+        missing.append("named human release approver")
     if live and (
         record.get("evidence_class") != "actual"
         or binding.get("model_version") in (None, "", "unattested")
