@@ -110,6 +110,30 @@ class JourneyRegisterTests(unittest.TestCase):
         backward = {r["case_id"]: r for r in jr.route_cases(cases[::-1])["routes"]}
         self.assertEqual(forward, backward)
 
+    def test_routed_cases_name_a_human_and_none_are_dropped(self) -> None:
+        cases: list[dict[str, Any]] = [{"id": "m"}, {"id": "n", "appointment_history": None}]
+        out = jr.route_cases(cases, "Housing officer (fictional)")
+        self.assertEqual(out["tested"], len(out["routes"]))
+        self.assertEqual(out["dropped"], 0)
+        self.assertTrue(all(r["reviewer"] == "Housing officer (fictional)" for r in out["routes"]))
+        self.assertIn("appointment_incomplete", out["routes"][1]["reasons"])
+        blocked = jr.route_cases(cases, "AI agent")
+        self.assertEqual(blocked["unassigned"], 2)
+        self.assertEqual(blocked["routed_to_human"], 2)
+        self.assertTrue(all(r["rank_effect"] == "none" for r in blocked["routes"]))
+
+    def test_usability_reports_aggregates_and_rejects_staff_level_data(self) -> None:
+        obs = [{"measure": "appointment_recovery", "value": v} for v in (2, 4, 6)]
+        ok = jr.aggregate_usability(obs, 3)
+        self.assertEqual(ok["measures"]["appointment_recovery"]["mean"], 4)
+        small = jr.aggregate_usability(obs, 4)
+        self.assertTrue(small["measures"]["appointment_recovery"]["suppressed"])
+        self.assertEqual(jr.aggregate_usability(obs)["blockers"], ["min_cell_unapproved"])
+        bad = jr.aggregate_usability([*obs, {"measure": "hazard_action", "staff_id": "s1"}], 3)
+        self.assertEqual(bad["status"], "blocked")
+        self.assertEqual((bad["measures"], bad["rejected_fields"]), ({}, ["staff_id"]))
+        self.assertFalse(bad["staff_surveillance"])
+
 
 if __name__ == "__main__":
     unittest.main()
