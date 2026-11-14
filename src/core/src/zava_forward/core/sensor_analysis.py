@@ -126,10 +126,17 @@ def _stamp(value: datetime) -> str:
     return value.isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
+def _canonical_row(row: Mapping[str, str]) -> str:
+    return json.dumps(dict(sorted(row.items())), ensure_ascii=True, sort_keys=True)
+
+
+def _by_observation(rows: Sequence[Mapping[str, str]]) -> list[Mapping[str, str]]:
+    """Canonical order so the result is a function of the reading set, not of arrival order."""
+    return sorted(rows, key=lambda r: (str(r.get("observed_at", "")), _canonical_row(r)))
+
+
 def _digest(home_id: str, rows: Sequence[Mapping[str, str]]) -> str:
-    canonical = sorted(
-        json.dumps(dict(sorted(r.items())), ensure_ascii=True, sort_keys=True) for r in rows
-    )
+    canonical = sorted(_canonical_row(r) for r in rows)
     body = json.dumps([home_id, canonical], ensure_ascii=True)
     return hashlib.sha256(body.encode("ascii")).hexdigest()
 
@@ -162,7 +169,7 @@ def derive_signal(
     if not isinstance(as_of, datetime) or as_of.utcoffset() != timedelta(0):
         raise ValueError("AS_OF_UTC_REQUIRED")
     as_of = as_of.astimezone(UTC).replace(microsecond=0)
-    home_rows = [r for r in rows if r.get("home_id") == home_id]
+    home_rows = _by_observation([r for r in rows if r.get("home_id") == home_id])
     digest = _digest(home_id, home_rows)
 
     def signal(
