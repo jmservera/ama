@@ -1,9 +1,10 @@
 import unittest
+from typing import Any
 
 from zava_forward.core import resident_access as ra
 
 
-def authority(**kw):
+def authority(**kw: Any) -> dict[str, Any]:
     base = dict(
         status="Confirmed",
         tasks=["Communicate", "Attend"],

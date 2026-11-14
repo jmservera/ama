@@ -63,7 +63,7 @@ def representative_view(
 ) -> dict[str, Any]:
     """Show only the current version's tasks while confirmed and before its review date."""
     today = today or date.today().isoformat()
-    current = (versions or [None])[-1]
+    current = versions[-1] if versions else None
     if not current or current.get("status") != "Confirmed":
         return dict(allowed=False, tasks=[], message=DENIED)
     start, review = current.get("authority_date"), current.get("review_date")

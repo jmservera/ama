@@ -7,3 +7,8 @@ Date: 2026-11-14. Planning Readiness: Ready. Research disposition: executed.
 * Gap: no read-side, reusable projection of a representative's task-limited, expiring authority, and no machine-checkable per-step alternative with needs and a no-incapacity rule.
 * Constraint: do not edit `src/api/.../web/role-screens.js` (in-flight UX PRs).
 * Not proven: usability or accessibility with residents (pending #155).
+
+## Cycle 2 (PR #1719 CI: src-core bare mypy)
+
+* Evidence: `resident_access.py:66` list-item (`[None]` literal inferred as `list[None]` against `dict[str, Any]`); `tests/test_resident_access.py:6` no-untyped-def and `:29,32,40,46` no-untyped-call on `authority`.
+* Planning Readiness: Ready. Research disposition: executed (CI log and source read).
