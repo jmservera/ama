@@ -8,7 +8,7 @@ import secrets
 import sys
 import threading
 import traceback
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -687,6 +687,10 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(200, app.assistants.registry(u))
                     if url.path == "/api/assistants/forecast":
                         return self._json(200, app.assistants.forecast(u, num(q, "period_seconds", 86400, 60, 2592000)))
+                    if url.path == "/api/assistants/rai-metrics":
+                        now = datetime.now(UTC)
+                        return self._json(200, app.assistants.rai_metrics(
+                            u, q.get("from", [(now - timedelta(days=1)).isoformat()])[0], q.get("to", [now.isoformat()])[0]))
                     if url.path == "/api/assistants/proposals":
                         return self._json(200, app.assistants.listing(u, q.get("case_id", [None])[0], q.get("after", [""])[0]))
                     if url.path == "/api/assistants/proposals.csv":
