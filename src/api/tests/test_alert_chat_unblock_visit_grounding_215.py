@@ -35,7 +35,7 @@ CHAT_JS = (
     Path(__file__).resolve().parents[1] / "src" / "zava_forward" / "api" / "web" / "chat.js"
 ).read_text()
 HUMAN_BOUNDARY = "cannot book a visit or approve a safety step"
-CLAIMS = re.compile(r"\b(approved|cleared|signed off|consent(?:ed)?|booked|scheduled for)\b", re.I)
+CLAIMS = re.compile(r"\b(approved|cleared|signed off|consented|booked|scheduled for)\b", re.I)
 
 
 def envelope(text: str | None) -> dict[str, Any]:

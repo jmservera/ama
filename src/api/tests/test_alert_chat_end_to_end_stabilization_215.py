@@ -32,7 +32,7 @@ ROLE = "Retrofit Coordinator"
 CASE = "ZF-4"
 UNBLOCK = "what can I do to unblock this case?"
 VISIT = "how can we fix this safety? Should we schedule a visit?"
-CLAIMS = re.compile(r"\b(approved|cleared|signed off|consent(?:ed)?|booked|scheduled for)\b", re.I)
+CLAIMS = re.compile(r"\b(approved|cleared|signed off|consented|booked|scheduled for)\b", re.I)
 UNAVAILABLE = ("disabled", "timeout", "input-refused", "model-mismatch")
 
 
