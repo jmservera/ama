@@ -11798,3 +11798,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-14] update | Issue #233 same-home stage map on every role screen (Refs #233)
 
 * The eight-stage "Journey stages for <home>" map, previously only on the `programme-queue` home view, now follows the evidence on every other role screen once a home is selected. Links carry the one selected case reference; the current screen is written as text, a screen outside the stages says so, and stage screens not installed for the role stay text with owner and next action. Updated [atlas-screen-trace.md](research/ux/atlas-screen-trace.md); new test `src/api/tests/test_role_screens_connected_journey.py`. Node render evidence only: no browser, assistive-technology or user evidence; Criterion 2 stays unticked.
+
+## [2026-11-14] update | Issue #233 stage map names and current-step announcement (Refs #233)
+
+* The role-screen journey stage list is now named "Eight journey stages for <home>" and marks the current stage with `aria-current="step"` once (resident-choice serves two stages), alongside the existing text cue. New test `src/api/tests/test_role_screens_stage_map_focus.py` also pins no added tab stops or nested headings and the text status line on tension callouts. Node render evidence only: no browser, assistive-technology or user evidence; Criterion 2 stays unticked.
