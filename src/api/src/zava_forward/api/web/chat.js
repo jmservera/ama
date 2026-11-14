@@ -289,13 +289,14 @@ function regulatoryGuidance(role) {
     h("p", {}, "In doubt: Juan Manuel Servera is the exercise Legal, Compliance and DPO owner, for synthetic-demo review only. Real safety, consent, finance and legal decisions remain with the relevant authorised humans. No operational approval is claimed."));
 }
 
-function regulatoryPlainMode(root, id) {
+function regulatoryPlainMode(root, id, status) {
   const input = h("input", { type: "checkbox", id, checked: true });
-  const state = h("span", { class: "regulatory-mode-state", role: "status" }, "Plain-language explanations are shown.");
+  const state = h("span", { class: "regulatory-mode-state" }, "Plain-language explanations are shown.");
   root.classList.add("regulatory", "plain-language");
   input.addEventListener("change", () => {
     root.classList.toggle("plain-language", input.checked);
     state.textContent = input.checked ? "Plain-language explanations are shown." : "Plain-language explanations are hidden.";
+    status.textContent = state.textContent;
   });
   return h("div", { class: "regulatory-mode" },
     h("label", { for: id }, input, " Plain-language explanations"), state);
@@ -385,7 +386,7 @@ function regulatoryAlertsPanel(caseId) {
   }
   root.append(h("h2", { id: "regulatory-alerts-title" }, "Regulatory alerts for this home"),
     h("p", { class: "notice" }, "Possible emergency or hazard? Use the existing human emergency or hazard service now. Do not wait for alerts, chat or this application. No resident message is sent."),
-    regulatoryPlainMode(root, "alerts-plain-mode"),
+    regulatoryPlainMode(root, "alerts-plain-mode", status),
     regulatoryGuidance(me.user.role), status, list, refresh);
   load();
   return root;
@@ -477,7 +478,7 @@ function regulatoryChatPanel(caseId) {
   };
   root.append(h("p", {}, "synthetic-demo only. Exact source excerpts and recorded facts, not legal interpretation. Ask about hazard sources or automated decisions. Safety routes and deterministic alerts remain independent."),
     privacy, usageStatus,
-    regulatoryPlainMode(root, "chat-plain-mode"),
+    regulatoryPlainMode(root, "chat-plain-mode", status),
     h("p", { class: "plain-explanation" }, "Use short questions to find sources. Missing, conflicting, stale or future sources are not proof of a duty. For lease, grant or contract terms, obtain the actual document and ask the named human owner."),
     regulatoryGuidance(me.user.role),
     liveLog, h("form", { onsubmit: async (event) => {

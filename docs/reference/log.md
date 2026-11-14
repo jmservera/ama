@@ -11795,3 +11795,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * `chat.js`: the plain-language checkbox now has a visible status text ("shown" or "hidden") in a `role="status"` region; three always-visible technical phrases in alert and lookup copy were replaced with plain wording.
 * Updated the WCAG baseline status-messages row and the content-standard `chat.js` row. Added static tests in `test_regulatory_a11y_cues.py`; adjusted the pinned toggle markup test.
 * Static local evidence only. No screen-reader, assistive-technology, conformance or staff comprehension claim; criteria 3 and 5 of #215 stay unticked. Stacked on #1641.
+
+## [2026-11-14] update | Issue #215 plain-language mode announcement correction (Refs #215)
+
+* Corrected the preceding #215 plain-language entry: the visible mode text in `chat.js` is no longer its own `role="status"` node (it duplicated the live region inside `#regulatory-alerts` and broke a status lookup in `test_case_journey` and the browser check). A mode change is now announced through the single existing status paragraph of the alerts panel or lookup disclosure, and the visible text stays.
+* Evidence: the 2026-11-14 RPI correction cycle 1 artifacts under `.copilot-tracking/`. Static local evidence only; criteria 3 and 5 of #215 stay unticked.
