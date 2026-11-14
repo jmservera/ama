@@ -8,6 +8,7 @@ supplied approval the result is blocked. It performs no store, clock or network 
 
 from __future__ import annotations
 
+import math
 from collections.abc import Mapping, Sequence
 from typing import Any
 
@@ -35,6 +36,8 @@ JOURNEYS = {
 }
 DESIGN_DOC = "docs/reference/research/ux/customer-journeys/residents.md"
 REVIEW_REASONS = ("source_missing", "sensor_missing", "support_unknown", "appointment_incomplete")
+OBSERVATION_FIELDS = frozenset({"measure", "value"})
+MIN_CELL_FLOOR = 5
 INCOMPLETE_APPOINTMENT = {"unconfirmed", "no_response", "prior_no_access", "unknown", "missed"}
 IDENTITY_FIELDS = frozenset(
     {"staff_id", "staff", "user_id", "user", "employee", "operator", "handler", "officer", "name"}
@@ -130,7 +133,11 @@ def human_review_route(case: Mapping[str, Any], reviewer: str | None = None) -> 
     if not isinstance(resident, Mapping) or resident.get("priority_support") is None:
         reasons.append("support_unknown")
     history = case.get("appointment_history", "unknown")
-    if not isinstance(history, str) or history in INCOMPLETE_APPOINTMENT:
+    if (
+        not isinstance(history, str)
+        or not history.strip()
+        or history.strip().lower() in INCOMPLETE_APPOINTMENT
+    ):
         reasons.append("appointment_incomplete")
     assigned = bool(reasons) and named_human(reviewer)
     return {
@@ -157,6 +164,10 @@ def route_cases(cases: Sequence[Mapping[str, Any]], reviewer: str | None = None)
     }
 
 
+def _finite_number(v: Any) -> bool:
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+
+
 def aggregate_usability(
     observations: Sequence[Mapping[str, Any]], min_cell: int | None = None
 ) -> dict[str, Any]:
@@ -175,10 +186,16 @@ def aggregate_usability(
             if str(k).casefold() in IDENTITY_FIELDS
         }
     )
-    malformed = any(
-        not isinstance(o, Mapping) or o.get("measure") not in MEASURES for o in observations
+    malformed = not observations or any(
+        not isinstance(o, Mapping)
+        or o.get("measure") not in MEASURES
+        or not set(o) <= OBSERVATION_FIELDS
+        or not _finite_number(o.get("value"))
+        for o in observations
     )
-    approved = isinstance(min_cell, int) and not isinstance(min_cell, bool) and min_cell > 0
+    approved = (
+        isinstance(min_cell, int) and not isinstance(min_cell, bool) and min_cell >= MIN_CELL_FLOOR
+    )
     blockers = []
     if rejected:
         blockers.append("individual_identifiers_rejected")
@@ -189,13 +206,7 @@ def aggregate_usability(
     cells: dict[str, dict[str, Any]] = {}
     if not blockers:
         for measure in MEASURES:
-            values = [
-                o["value"]
-                for o in observations
-                if o["measure"] == measure
-                and isinstance(o.get("value"), (int, float))
-                and not isinstance(o.get("value"), bool)
-            ]
+            values = [o["value"] for o in observations if o["measure"] == measure]
             if not values:
                 continue
             if len(values) < (min_cell or 0):

@@ -124,15 +124,38 @@ class JourneyRegisterTests(unittest.TestCase):
 
     def test_usability_reports_aggregates_and_rejects_staff_level_data(self) -> None:
         obs = [{"measure": "appointment_recovery", "value": v} for v in (2, 4, 6)]
-        ok = jr.aggregate_usability(obs, 3)
+        obs = obs * 2
+        ok = jr.aggregate_usability(obs, 5)
         self.assertEqual(ok["measures"]["appointment_recovery"]["mean"], 4)
-        small = jr.aggregate_usability(obs, 4)
+        small = jr.aggregate_usability(obs, 7)
         self.assertTrue(small["measures"]["appointment_recovery"]["suppressed"])
         self.assertEqual(jr.aggregate_usability(obs)["blockers"], ["min_cell_unapproved"])
-        bad = jr.aggregate_usability([*obs, {"measure": "hazard_action", "staff_id": "s1"}], 3)
+        bad = jr.aggregate_usability([*obs, {"measure": "hazard_action", "staff_id": "s1"}], 5)
         self.assertEqual(bad["status"], "blocked")
         self.assertEqual((bad["measures"], bad["rejected_fields"]), ({}, ["staff_id"]))
         self.assertFalse(bad["staff_surveillance"])
+
+    def test_usability_rejects_small_cells_extra_keys_and_bad_values(self) -> None:
+        obs = [{"measure": "appointment_recovery", "value": v} for v in (2, 4, 6, 8, 10)]
+        self.assertEqual(jr.aggregate_usability(obs, 1)["blockers"], ["min_cell_unapproved"])
+        self.assertEqual(jr.aggregate_usability(obs, 4)["status"], "blocked")
+        self.assertEqual(
+            jr.aggregate_usability([], 5)["blockers"], ["unknown_measure_or_malformed"]
+        )
+        extras = [*obs, {"measure": "appointment_recovery", "value": 1, "note": "Jo"}]
+        bad_values = (None, True, float("nan"), float("inf"), "3")
+        for bad in [
+            extras,
+            *([*obs, {"measure": "appointment_recovery", "value": v}] for v in bad_values),
+        ]:
+            out = jr.aggregate_usability(bad, 5)
+            self.assertEqual(out["blockers"], ["unknown_measure_or_malformed"])
+            self.assertEqual(out["measures"], {})
+
+    def test_appointment_history_is_normalised(self) -> None:
+        for h in ("", "  ", "NO_RESPONSE", " Missed "):
+            out = jr.human_review_route({"appointment_history": h})
+            self.assertIn("appointment_incomplete", out["reasons"], h)
 
 
 if __name__ == "__main__":
