@@ -879,6 +879,76 @@ class OperatorIncident(Base):
         self.assertTrue(reopened.cases["ZF-1"]["hazards"])
         self.assertIn("Synthetic manual fallback", json.dumps(reopened.cases["ZF-1"]))
 
+    def test_seeded_breach_suspends_only_the_affected_task_until_human_clearance(self) -> None:
+        from zava_forward.core import monitoring_coverage as mc
+
+        seeded = [
+            dict(event_id=f"harm-{n}", observed_at="2026-11-05T10:00:00Z") for n in range(10)
+        ] + [dict(event_id="harm-0", observed_at="2026-11-05T10:00:00Z")]
+        counted = mc.reconcile_events(
+            seeded, window_start="2026-11-05T00:00:00Z", window_end="2026-11-06T00:00:00Z"
+        )
+        self.assertEqual((counted["count"], counted["duplicates"]), (10, 1))
+        threshold = dict(limit=0.1, min_sample=20, approved_by="Named Assurance Lead")
+        owner = "Safety and Assurance appointee"
+        verdict = mc.evaluate_indicator(
+            events=counted["count"],
+            denominator=50,
+            window_complete=True,
+            threshold=threshold,
+            incident_owner=owner,
+        )
+        self.assertEqual(verdict["status"], mc.BREACH)
+        self.assertTrue(verdict["incident_required"])
+        ownerless = mc.evaluate_indicator(
+            events=10, denominator=50, window_complete=True, threshold=threshold, incident_owner=""
+        )
+        self.assertIsNone(ownerless["incident_owner"])
+        with self.assertRaises(ValueError):
+            self.store.suspend(
+                self.people["Quality Inspector"],
+                dict(incident(), incident_owner=ownerless["incident_owner"]),
+            )
+        self.assertEqual(self.store.continuity_view(self.pm)["suspensions"], [])
+
+        self.store.suspend(
+            self.people["Quality Inspector"],
+            dict(incident(), incident_owner=verdict["incident_owner"], trigger="critical incident"),
+        )
+        record = self.store.continuity_view(self.pm)["suspensions"][0]
+        self.assertEqual(
+            (record["status"], record["scope"], record["scope_kind"]),
+            ("Suspended", CAP, "task"),
+        )
+        self.assertEqual(record["incident_owner"], owner)
+        self.assertTrue(record["actual_hold"])
+        with self.service.transaction() as db:
+            self.assertTrue(self.service.suspended(db, CAP))
+            self.assertFalse(self.service.suspended(db, "assessment-preparation"))
+        self.store.log_call(self.pm, "ZF-1", "Spoke", "Synthetic manual workflow")
+        self.assertIn("Synthetic manual workflow", json.dumps(self.store.cases["ZF-1"]))
+
+        clean = mc.evaluate_indicator(
+            events=0,
+            denominator=50,
+            window_complete=True,
+            threshold=threshold,
+            incident_owner=owner,
+        )
+        self.assertNotEqual(clean["status"], mc.BREACH)
+        reopened = self.other()
+        with reopened.transaction() as db:
+            self.assertTrue(reopened.suspended(db, CAP))
+        with self.assertRaises(PermissionError):
+            self.store.restart_decide(
+                self.people["Quality Inspector"], dict(id=record["id"], decision="Restart")
+            )
+        with self.assertRaises(PermissionError):
+            self.store.restart_decide(self.pm, dict(id=record["id"], decision="Restart"))
+        self.assertEqual(
+            self.store.continuity_view(self.pm)["suspensions"][0]["status"], "Suspended"
+        )
+
     def test_breach_record_names_authority_and_drill_sequence(self) -> None:
         body = incident("all")
         self.store.suspend(self.people["Quality Inspector"], body)
