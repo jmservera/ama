@@ -96,8 +96,14 @@ def safeguarding_clocks(
     for index, item in enumerate(case.get("safeguarding_items") or []):
         if item.get("closed"):
             continue
-        named = (item.get("owner") or {}).get("name") or UNKNOWN
-        role = (item.get("owner") or {}).get("role") or UNKNOWN
+        raw_owner = item.get("owner")
+        if isinstance(raw_owner, str):
+            raw_owner = dict(name=raw_owner)
+        owner = raw_owner if isinstance(raw_owner, dict) else {}
+        named = _text(owner.get("name")) or UNKNOWN
+        role = _text(owner.get("role")) or UNKNOWN
+        due = item.get("response_due_at")
+        due = due if isinstance(due, str) and instant(due) else None
         referred = instant(item.get("referred_at"))
         clocks.append(
             dict(
@@ -111,12 +117,12 @@ def safeguarding_clocks(
                     else "No named accountable owner is recorded. Ask the safeguarding "
                     "lead to record one."
                 ),
-                response_state=timing(item.get("response_due_at"), item.get("responded_at"), now),
+                response_state=timing(due, item.get("responded_at"), now),
                 referred_at=item.get("referred_at") if referred and referred <= now else UNKNOWN,
                 elapsed_hours=int((now - referred).total_seconds() // 3600)
                 if referred and referred <= now
                 else None,
-                response_due_at=item.get("response_due_at") or UNKNOWN,
+                response_due_at=due or UNKNOWN,
                 authority="Safeguarding lead",
                 case_id=case["id"],
                 source=f"case:{case['id']}/safeguarding_items/{index}",
@@ -125,6 +131,10 @@ def safeguarding_clocks(
             )
         )
     return clocks
+
+
+def _text(value: object) -> str:
+    return value.strip() if isinstance(value, str) else ""
 
 
 def validate_queue(value: str) -> None:

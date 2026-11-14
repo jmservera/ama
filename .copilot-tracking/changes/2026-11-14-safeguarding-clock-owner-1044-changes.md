@@ -22,3 +22,10 @@ ms.date: 2026-11-14
 * Data feed: no importer or API writes `safeguarding_items` yet; the display is dormant until the owner records the safeguarding policy (duration, lead role, DPIA, visibility). Issue criterion NOT ticked; this PR should use `Refs #76`.
 * Visibility reuses the existing need-to-know roles (`can_see_reason`); the owner may change that set.
 * Validation tier: focused (non-gate UI/core display), strictest applicable not triggered as no infra, SQL, deployment or security-control change; however safeguarding visibility is privacy-sensitive, so an independent exact-head review is still required.
+
+## Cycle 1 of 5 fixes (independent review of 1411c83a4, Refs #76)
+
+* Critical: `Store.detail()` (inherited by `SqlStore`), `projection.redact_staff_detail()` and `hold_notes()` now strip raw `safeguarding_items`; only the allowlisted `work.safeguarding_clocks` leaves the store, so free-text notes never leak to any role.
+* Medium: `taskqueues.safeguarding_clocks()` accepts a string or dict owner (trimmed) and ignores non-string or unparseable `response_due_at` without raising.
+* Tests: `src/api/tests/test_safeguarding_detail_boundary.py` (HTTP `/api/cases/<id>` and `SqlStore.detail()` role matrix with canaries) and `SafeguardingClockInputs` in `src/core/tests/test_taskqueues.py`.
+* Validation: test_taskqueues, test_safeguarding_detail_boundary, test_safeguarding_clock_a11y, test_accessibility_baseline, test_role_screens pass; ruff check, ruff format --check and mypy clean in src/core and src/api (run with worktree PYTHONPATH because editable installs point at another checkout). Focused tier; full gate not run. Not pushed.

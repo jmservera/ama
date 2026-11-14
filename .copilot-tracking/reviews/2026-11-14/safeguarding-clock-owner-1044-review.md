@@ -19,3 +19,7 @@ Review executed once, self-review by the implementing agent (not independent). O
 1. Policy decisions (duration, lead role, DPIA, visibility) are owner decisions; criterion stays unticked.
 2. No producer populates `safeguarding_items`; follow-up slice after the policy.
 3. Full discovery suites and browser check were not run.
+
+## Cycle 1 of 5 addendum
+
+Independent review findings (1 Critical, 2 Medium) addressed in the follow-up commit; Refs #76 only, criteria not claimed closed.

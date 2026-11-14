@@ -811,3 +811,18 @@ class StoreQueueParity(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SafeguardingClockInputs(unittest.TestCase):
+    def test_string_owner_and_invalid_due_date_do_not_raise(self) -> None:
+        case = copy.deepcopy(DATA["cases"][0])
+        case["funding_ok"] = True
+        case["safeguarding_items"] = [
+            dict(owner="  Sam Guard  ", response_due_at=12345),
+            dict(owner=dict(name="  ", role=7), response_due_at="not-a-date"),
+        ]
+        first, second = evaluate(case)["safeguarding_clocks"]
+        self.assertEqual(first["owner"], "Sam Guard")
+        self.assertEqual(first["response_due_at"], "Unknown")
+        self.assertFalse(second["owner_named"])
+        self.assertEqual(second["response_state"], "Unknown")
