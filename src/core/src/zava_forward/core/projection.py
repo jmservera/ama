@@ -129,6 +129,8 @@ def hold_notes(c):
             for key in ("reason", "source"):
                 if c.get(key):
                     c[key] = NOTE_HELD
+        if "acts_as_contract_instruction" in c and c.get("summary"):
+            c["summary"] = NOTE_HELD
         for k, v in c.items():
             private_hazard = (
                 ("category" in c and "released" in c and k in ("source", "job"))

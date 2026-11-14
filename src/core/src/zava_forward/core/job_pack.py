@@ -26,6 +26,19 @@ ACKNOWLEDGED = "Receipt acknowledged - not accepted"
 
 ESCALATION_KINDS = ("variation", "safety", "access", "scope question", "other")
 ESCALATION_OWNER_ROLES = MANAGER_ROLES + ("Building Safety Liaison",)
+NON_INSTRUCTION_NOTICE = (
+    "This is a concern for the named owner. It is not a contract instruction or variation. "
+    "The work order does not change until the contract manager issues a new version."
+)
+INSTRUCTION_CLAIMS = (
+    "acts_as_contract_instruction",
+    "contract_instruction",
+    "binding",
+    "approved",
+    "instruct",
+    "issue_variation",
+    "new_version",
+)
 NO_SHOW_EVENTS = {
     "provider no-show": ("Rebooking needed", "The provider did not attend"),
     "provider cancelled": ("Rebooking needed", "The provider cancelled"),
@@ -223,5 +236,18 @@ def escalation(
         owner=dict(name=_text(owner_name, "the named owner"), role=owner_role),
         status="Raised - awaiting owner",
         contract_instruction=False,
-        note="The work order does not change until the contract manager issues a new version.",
+        acts_as_contract_instruction=False,
+        contract_notice=NON_INSTRUCTION_NOTICE,
     )
+
+
+def reject_instruction_claim(body: Mapping[str, Any]) -> None:
+    """Refuse a submission that tries to act as a binding variation or instruction."""
+    for key in INSTRUCTION_CLAIMS:
+        val = body.get(key)
+        if val is not None and val is not False and val != "":
+            raise ValueError(
+                "A variation or escalation cannot be a contract instruction. "
+                "Only a contract manager can issue a new work order version, "
+                "through separate procurement approval."
+            )

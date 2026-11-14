@@ -5224,7 +5224,12 @@ member, corrector and acknowledger join the record participants, so the existing
 from accepting. A repeated `capture_ref` replays without a second record, and a changed pack digest is
 rejected as stale. The configured escalation destination comes from `ZF_STAFF_INTAKE_ESCALATION_OWNER`,
 `_ROLE` and `_CONTACT`; anything missing shows "Unknown - not configured". Nothing here is a contract
-instruction, resident consent or acceptance, and there is no escalation write path (gap kept). Persistence
+instruction, resident consent or acceptance. `escalate` (`field-escalate`) routes a fieldwork variation or
+concern to a named staff owner holding a contract manager or building safety liaison role, as text-only
+`kind` and `summary`, stamped `acts_as_contract_instruction=False` with the notice under `contract_notice`
+(a key the no-need projection never overwrites). Any instruction or binding claim, a closed case or a
+withdrawn order is refused. Free text (`summary`) is held for roles without a recorded need on the intake
+view and on the case detail. Persistence
 reuses the case body, so there is no schema change. Tests: `src/api/tests/test_staff_intake_api.py`.
 C4 changes: `capture` passes the work order's bound, still-current resident scope revision as
 `context_revision` (409 if missing or changed, never waived); new evidence needs an explicit valid
