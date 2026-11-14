@@ -7,6 +7,7 @@ labelled advisory, never enters the captured Quality source or snapshot digest, 
 import copy
 import dataclasses
 import json
+import random
 import shutil
 import tempfile
 import time
@@ -198,6 +199,71 @@ class Trend(unittest.TestCase):
         self.assertEqual(
             json.dumps(self.store._case("ZF-1").get("stage"), default=str), stage_before
         )
+
+    def rows(self, order: Sequence[int], count: int = 30) -> None:
+        """Insert the same retained readings in the given arrival order, with fixed timestamps."""
+        base = 1_700_000_000
+        with self.service.transaction() as db:
+            db.execute("DELETE FROM sensor_reading")
+            for i in order:
+                row = dict(
+                    sensor_id=DEFAULT,
+                    reading_id=f"R-{i:04d}",
+                    home_id="ZF-1",
+                    observed_at=stamp(base - (count - i) * 4 * 3600),
+                    temperature_c=str(18 + i * 0.1),
+                    humidity_pct=str(60 + i % 7),
+                    source_type="SYNTHETIC",
+                    scenario="BACKFILL_2Y",
+                    seed="1",
+                    schema_version="reading-v1",
+                    injected_fault="none",
+                )
+                db.execute(
+                    f"INSERT INTO sensor_reading VALUES ({','.join('?' * len(READING_COLUMNS))})",
+                    tuple(row[c] for c in READING_COLUMNS),
+                )
+
+    def digests(self, as_of: int = 1_700_000_000) -> dict[str, Any]:
+        with self.service.transaction() as db:
+            out = sensor_view.view(db, "ZF-1", None, as_of, self.service.mssql)
+        digests: dict[str, Any] = out["reproducibility"]
+        return digests
+
+    def test_digests_identical_across_shuffled_arrival_and_repeats(self) -> None:
+        self.put(0)
+        order = list(range(30))
+        self.rows(order)
+        first = self.digests()
+        self.assertEqual(first["analysis_version"], sensor_view.ANALYSIS_VERSION)
+        self.assertEqual(first["as_of"], stamp(1_700_000_000))
+        self.assertEqual(first, self.digests())
+        random.Random(111).shuffle(order)
+        self.rows(order)
+        self.assertEqual(first, self.digests())
+        self.rows(order[::-1])
+        self.assertEqual(first, self.digests())
+
+    def test_digests_change_with_retained_readings_and_as_of(self) -> None:
+        self.put(0)
+        self.rows(range(30))
+        base = self.digests()
+        self.rows(range(29))
+        changed = self.digests()
+        self.assertNotEqual(base["input_digest"], changed["input_digest"])
+        self.assertNotEqual(base["output_digest"], changed["output_digest"])
+        self.rows(range(30))
+        later = self.digests(1_700_000_000 + 7200)
+        self.assertEqual(base["input_digest"], later["input_digest"])
+        self.assertNotEqual(base["output_digest"], later["output_digest"])
+
+    def test_api_payload_exposes_versioned_digests(self) -> None:
+        self.put(0)
+        self.series([18 + i * 0.1 for i in range(12)], [60] * 12)
+        out = self.view()["reproducibility"]
+        self.assertEqual(out["analysis_version"], sensor_view.ANALYSIS_VERSION)
+        for key in ("input_digest", "output_digest"):
+            self.assertRegex(out[key], r"^[0-9a-f]{64}$")
 
 
 if __name__ == "__main__":

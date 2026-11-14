@@ -16,6 +16,7 @@ from datetime import UTC, datetime, timedelta
 from typing import Any, Protocol
 
 VERSION = "retained-reading-view-v2"
+ANALYSIS_VERSION = "sensor-view-analysis-exercise-v1"
 KIND = "synthetic-retained-readings"
 UNITS = dict(temperature_c="degC", humidity_pct="%RH")
 WINDOW_MAX = 12
@@ -429,6 +430,42 @@ def signature(sensors: Mapping[str, Any] | None) -> dict[str, Any]:
     )
 
 
+def _canonical(value: object) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=str)
+
+
+def rows_digest(rows: Iterable[Mapping[str, Any]]) -> str:
+    """Digest of readings keyed (sensor_id, reading_id); row order and repeats never matter."""
+    keyed = {(str(r["sensor_id"]), str(r["reading_id"])): r for r in rows}
+    body = [_canonical(keyed[k]) for k in sorted(keyed)]
+    return hashlib.sha256(_canonical(body).encode("ascii")).hexdigest()
+
+
+def reproducibility(out: Mapping[str, Any]) -> dict[str, Any]:
+    """Versioned canonical digests of the retained inputs and the derived outputs for one `as_of`.
+
+    The same retained readings and `as_of` always give the same digests, whatever order the rows
+    were stored or read in. Exercise values only; not a calibrated or operational rule.
+    """
+    rows = [r for key in ("readings", "before", "after") for r in out.get(key, [])]
+    trend = out.get("trend") or {}
+    inputs = _canonical(
+        [out.get("home_id"), out.get("state"), rows_digest(rows), trend.get("input_digest")]
+    )
+    ordered = {
+        k: sorted(out[k], key=lambda r: (r["observed_at"], r["sensor_id"], r["reading_id"]))
+        for k in ("readings", "before", "after")
+        if k in out
+    }
+    return dict(
+        analysis_version=ANALYSIS_VERSION,
+        as_of=out.get("generated_at"),
+        input_digest=hashlib.sha256(inputs.encode("ascii")).hexdigest(),
+        output_digest=hashlib.sha256(_canonical(dict(out, **ordered)).encode("ascii")).hexdigest(),
+        reading_count=len({(r["sensor_id"], r["reading_id"]) for r in rows}),
+    )
+
+
 def _number(value: object) -> float | None:
     try:
         number = float(str(value))
@@ -489,7 +526,7 @@ def trend_summary(
         return _trend_base("Retained readings could not be read for the trend.")
     ordered = sorted(rows.values(), key=lambda r: (r["observed_at"], r["reading_id"]))
     out = _trend_base("Fewer than 6 readings, or under 24 hours of readings, in the last 7 days.")
-    out.update(sensor_id=sensor_id, readings_used=len(ordered))
+    out.update(sensor_id=sensor_id, readings_used=len(ordered), input_digest=rows_digest(ordered))
     if len(ordered) < 2 * TREND_MIN_SIDE:
         return out
     first, last = (
@@ -529,7 +566,16 @@ def trend_summary(
 def view(
     db: Connection, home_id: str, reference: datetime | None, now: float, mssql: bool = False
 ) -> dict[str, Any]:
-    """Employee read model: the captured source plus freshness from the capture's own latest."""
+    """Employee read model with versioned input and output digests for the request `as_of`."""
+    out = _view(db, home_id, reference, now, mssql)
+    out["reproducibility"] = reproducibility(out)
+    return out
+
+
+def _view(
+    db: Connection, home_id: str, reference: datetime | None, now: float, mssql: bool = False
+) -> dict[str, Any]:
+    """The captured source plus freshness from the capture's own latest."""
     out = capture_source(db, home_id, reference, now, mssql)
     out.update(
         generated_at=_text(_utc(int(now))),
