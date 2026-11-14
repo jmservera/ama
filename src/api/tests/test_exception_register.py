@@ -179,6 +179,69 @@ class Register(SqlStoreCase):
         )
         self.assertTrue(any("No named digital operator" in u for u in view["unrouted"]))
 
+    def _key(self, user: dict[str, str], kind: str) -> str:
+        view = self.store.exception_register(user, STAFF)
+        return next(i["recovery_key"] for i in view["items"] if i["kind"] == kind)
+
+    def test_recovery_is_audited_and_changes_nothing_else(self) -> None:
+        key = self._key(self.steward, "source_conflict")
+        data = json.dumps(self.store.data, sort_keys=True, default=str)
+        done = self.store.request_exception_recovery(
+            self.steward, STAFF, key, "resolve_by_owner", "Checked both sources with the owner."
+        )
+        self.assertEqual(done["status"], "closed")
+        self.assertFalse(done["recovery"]["replayed"] or done["recovery"]["released"])
+        self.assertTrue(done["unresolved_eligibility"])
+        self.assertEqual(done["original_source"]["case_id"], self.reg_case["id"])
+        self.assertEqual(json.dumps(self.store.data, sort_keys=True, default=str), data)
+        entry = [
+            e for e in self.store.audit_entries() if e["action"] == "exception_recovery_requested"
+        ]
+        self.assertEqual((len(entry), entry[0]["case"]), (1, key))
+        again = self.store.exception_register(self.steward, STAFF)["items"][0]
+        self.assertEqual(
+            (again["status"], again["recovery"]["by"]), ("closed", self.steward["email"])
+        )
+        with self.assertRaises(ValueError):
+            self.store.request_exception_recovery(self.steward, STAFF, key, "hold", "Again.")
+
+    def test_recovery_refuses_scope_owner_action_and_missing_reason(self) -> None:
+        conflict = self._key(self.steward, "source_conflict")
+        failed = self._key(self.operator, "failed_ai_run")
+        steward2 = {
+            "human0@example.test": ("data_steward",),
+            "human2@example.test": ("data_steward",),
+        }
+        other = dict(self.steward, email="human2@example.test")
+        for who, key, action in (
+            (self.operator, conflict, "hold"),
+            (self.steward, failed, "hold"),
+            (other, conflict, "resolve_by_owner"),
+        ):
+            with self.assertRaises(PermissionError):
+                self.store.request_exception_recovery(who, steward2 | STAFF, key, action, "Why.")
+        with self.assertRaises(ValueError):
+            self.store.request_exception_recovery(self.steward, STAFF, conflict, "replay", "Why.")
+        with self.assertRaises(ValueError):
+            self.store.request_exception_recovery(self.steward, STAFF, conflict, "hold", " ")
+        with self.assertRaises(PermissionError):
+            self.store.request_exception_recovery(self.pm, STAFF, conflict, "hold", "Why.")
+        done = [
+            e for e in self.store.audit_entries() if e["action"] == "exception_recovery_requested"
+        ]
+        self.assertEqual(done, [])
+        self.assertTrue(any(e["action"] == "denied" for e in self.store.audit_entries()))
+
+    def test_failed_run_rerun_is_a_request_not_a_replay(self) -> None:
+        key = self._key(self.operator, "failed_ai_run")
+        done = self.store.request_exception_recovery(
+            self.operator, STAFF, key, "request_rerun", "Model timed out."
+        )
+        self.assertEqual(done["status"], "rerun_requested")
+        self.assertFalse(done["recovery"]["automatic_replay"])
+        rec = next(r for r in self.store.data["recommendations"] if r["id"] == "R-AI")
+        self.assertEqual(rec["source"], "template")
+
 
 class Config(unittest.TestCase):
     def test_parses_valid_staff(self) -> None:
