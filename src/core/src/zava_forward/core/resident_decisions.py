@@ -1739,7 +1739,17 @@ class ResidentDecisionMixin:
             attempts[attempt - 1]["not_sent"] = True
         if body["status"] == "Acknowledged":
             attempts[attempt - 1].update(receipt_ref=body["receipt_ref"], received_at=body.get("received_at"))
+            self._supersede_stale_pending(c, req, attempts, attempt)
         return f"{req['id']} formal-route attempt {attempt}: {body['status']}"
+
+    def _supersede_stale_pending(self, c, req, attempts, acknowledged):
+        """An acknowledged attempt makes an earlier idle Pending one moot; keep its receipt, key and history."""
+        busy = in_flight(self, c.get("id"), req["id"])
+        at = _time()
+        for earlier in attempts[:acknowledged - 1]:
+            if earlier["status"] == "Pending" and earlier["attempt"] not in busy:
+                earlier.update(status="Superseded", superseded_from="Pending", superseded_at=at,
+                               superseded_by=acknowledged)
 
     def _res_service_supersede_authorize(self, user, c, body):
         """Owner-approved manual_verified step (issue 1238 Q6): two explicitly bound people, never age, never a resend."""

@@ -4025,10 +4025,51 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertEqual(len(receiver.envelopes), 1)
         self.forward(retry_unresolved=True)
         self.assertEqual(
-            [a["status"] for a in self.route()["attempts"]], ["Pending", "Acknowledged"]
+            [a["status"] for a in self.route()["attempts"]], ["Superseded", "Acknowledged"]
         )
         self.assertEqual(
             receiver.envelopes[0]["idempotency_key"], receiver.envelopes[1]["idempotency_key"]
+        )
+
+    def test_acknowledged_retry_supersedes_stale_pending_attempt(self) -> None:
+        self.pending_attempt()
+        self.forward(retry_unresolved=True)
+        first, second = self.route()["attempts"]
+        self.assertEqual(second["status"], "Acknowledged")
+        self.assertEqual(first["status"], "Superseded")
+        self.assertEqual(first["superseded_from"], "Pending")
+        self.assertEqual(first["superseded_by"], 2)
+        self.assertTrue(first["superseded_at"])
+        self.assertNotIn("receipt_ref", first)
+        reopened = self.open_store().cases["ZF-1"]["service_requests"][0]
+        self.assertEqual(reopened["formal_route"]["attempts"][0]["status"], "Superseded")
+
+    def test_non_acknowledged_retry_leaves_pending_attempt_pending(self) -> None:
+        self.pending_attempt()
+        self.store.complaints_receiver = SyntheticReceiver("raise")
+        self.forward(retry_unresolved=True)
+        self.assertEqual(
+            [a["status"] for a in self.route()["attempts"]], ["Pending", "Unconfirmed"]
+        )
+
+    def test_acknowledgement_does_not_supersede_an_attempt_still_in_flight(self) -> None:
+        self.pending_attempt()
+        attempts = self.route()["attempts"]
+        attempts.append(dict(attempt=2, status="Pending", reservation_id="SYN-R2"))
+        resident_decisions._IN_FLIGHT.setdefault(self.store, set()).add(("ZF-1", "SR-1", 1))
+        try:
+            with self.store.lock:
+                req = self.store._case("ZF-1")["service_requests"][0]
+                self.store._res_service_forward_outcome(
+                    self.rae,
+                    self.store._case("ZF-1"),
+                    dict(id="SR-1", attempt=2, reservation_id="SYN-R2", status="Acknowledged",
+                         reason="SYN", receipt_ref="SYN-RCPT-2"),
+                )
+        finally:
+            resident_decisions._IN_FLIGHT[self.store].discard(("ZF-1", "SR-1", 1))
+        self.assertEqual(
+            [a["status"] for a in req["formal_route"]["attempts"]], ["Pending", "Acknowledged"]
         )
 
     @contextmanager
