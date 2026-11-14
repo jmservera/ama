@@ -181,7 +181,8 @@ class ResidentDemo:
             return None
         view: dict[str, Any] = rs.showcase_view(row, self.now())
         view["account"] = {"email": self.identity.email_for(row.case_id)}
-        view["callbacks_available"] = self.agenda is not None
+        view["agenda_available"] = self.agenda is not None
+        view["callbacks_available"] = view["agenda_available"]
         return view
 
     def row_for(self, token: str | None) -> rs.ShowcaseRow | None:

@@ -93,8 +93,9 @@ class CallbacksPageTests(DemoTestCase):
         self.assertEqual(c.login("one@example.com"), 200)
         status, view, _ = c.call("GET", "/demo/view")
         self.assertEqual(status, 200)
+        self.assertFalse(view["agenda_available"])
         self.assertFalse(view["callbacks_available"])
-        view["callbacks_available"] = callbacks_available
+        view["agenda_available"] = callbacks_available
         html = (WEB / "index.html").read_text(encoding="utf-8")
         match = re.search(r'<p id="lede"[^>]*>(.*?)</p>', html, re.S)
         self.assertIsNotNone(match)
@@ -113,7 +114,8 @@ class CallbacksPageTests(DemoTestCase):
 
     def test_unconfigured_agenda_hides_callback_form_and_lede(self) -> None:
         page = self.render(False)
-        self.assertNotIn("callback booking", page["lede"])
+        self.assertNotIn("You can try", page["lede"])
+        self.assertIn("not connected in this showcase environment", page["lede"])
         self.assertIn("read-only", page["lede"])
         self.assertEqual(page["mounts"], 0)
         self.assertEqual(page["callbackSections"], 0)

@@ -33,6 +33,7 @@
   }
 
   var signedInLede = lede.textContent;
+  var callbackUnavailableLede = " Synthetic callback booking is not connected in this showcase environment. Nobody will call you.";
   var callbackLede = " You can try synthetic callback booking below. Nobody will call you.";
   var signedOutLede = "Sign in to see how your home improvement is going. Your home and works records are read-only.";
 
@@ -554,7 +555,7 @@
       needed.forEach(function (item) { withIcon(ul.appendChild(el("li")), "alert", ""); ul.lastChild.lastChild.textContent = ""; ul.lastChild.appendChild(el("span", item.text)); });
       box.appendChild(ul);
     }
-    if (view.callbacks_available) {
+    if (view.agenda_available) {
       var optional = el("p", "Optional: ");
       var link = el("a", "Book a synthetic callback");
       link.href = "#sec-help";
@@ -642,7 +643,7 @@
       strip.appendChild(badge("info", "Synthetic showcase record - read-only"));
       content.appendChild(strip);
     }
-    content.appendChild(sectionNav(view.callbacks_available));
+    content.appendChild(sectionNav(view.agenda_available));
     content.appendChild(summarySection(view));
     var grid = el("div", null, "status-grid");
     grid.appendChild(statusSection(view));
@@ -658,7 +659,7 @@
     help.appendChild(hl);
     help.appendChild(el("p", view.help.note));
     content.appendChild(help);
-    if (view.callbacks_available) {
+    if (view.agenda_available) {
       var callbacks = el("section", null, "card callbacks");
       callbacks.setAttribute("aria-labelledby", "callback-title");
       content.appendChild(callbacks);
@@ -681,7 +682,7 @@
       b.disabled = true;
       b.setAttribute("aria-disabled", "true");
       li.appendChild(b);
-      li.appendChild(el("span", appointment ? "You cannot change live works appointments here." + (view.callbacks_available ? " Use the form above for local synthetic callbacks only." : "") : u.reason, "why"));
+      li.appendChild(el("span", appointment ? "You cannot change live works appointments here." + (view.agenda_available ? " Use the form above for local synthetic callbacks only." : "") : u.reason, "why"));
       ul.appendChild(li);
     });
     unavailable.appendChild(ul);
@@ -689,7 +690,7 @@
 
     errorEl.hidden = true;
     signin.hidden = true;
-    lede.textContent = signedInLede + (view.callbacks_available ? callbackLede : "");
+    lede.textContent = signedInLede + (view.agenda_available ? callbackLede : callbackUnavailableLede);
     content.hidden = false;
     accountEmail.textContent = view.account.email;
     account.hidden = false;
