@@ -1,6 +1,9 @@
 """Region and quota parameter-set contract and preflight checks (issue 137)."""
 
+import contextlib
 import importlib.util
+import io
+import json
 import re
 import sys
 import unittest
@@ -106,6 +109,38 @@ class PreflightTests(unittest.TestCase):
         p = params("dev") | {"aiModelFallbackLocation": "uksouth"}
         self.assertEqual(statuses(PREFLIGHT.evaluate(p))["fallback-differs"], "fail")
         self.assertEqual(PREFLIGHT.evaluate(p), PREFLIGHT.evaluate(p))
+
+    def test_parameterised_capacity_is_parsed_and_checked(self) -> None:
+        text = (
+            "param modelDeployments = [\n  { name: 'a', capacity: 40 }\n"
+            "  {\n    capacity: 5\n  }\n]\n"
+        )
+        self.assertEqual(PREFLIGHT.read_capacity(text), [40, 5])
+        self.assertEqual(PREFLIGHT.read_capacity("param chatModelCapacity = 7\n"), [7])
+        self.assertEqual(
+            PREFLIGHT.read_capacity("param modelDeployments = [{ capacity: x }]"), None
+        )
+        p = params("test") | {"regionCheckReference": "r", "quotaCheckReference": "q"}
+        s = statuses(PREFLIGHT.evaluate(p, self.record, [40, 5]))
+        self.assertEqual(s["parameter-capacity-budget"], "fail")
+        self.assertEqual(s["record-covers-parameter-capacity"], "fail")
+        s = statuses(PREFLIGHT.evaluate(p, self.record, [1]))
+        self.assertEqual(s["record-covers-parameter-capacity"], "pass")
+
+    def test_cli_reads_capacity_from_bicepparam(self) -> None:
+        stdout = io.StringIO()
+        with contextlib.redirect_stdout(stdout):
+            PREFLIGHT.main(["--bicepparam", str(ROOT / "main.test.bicepparam")])
+        checks = {r["check"]: r["status"] for r in json.loads(stdout.getvalue())}
+        self.assertEqual(checks["parameter-capacity-budget"], "pass")
+
+
+class EndpointLocationTests(unittest.TestCase):
+    def test_private_endpoint_stays_in_vnet_region(self) -> None:
+        foundry = (ROOT / "modules" / "foundry.bicep").read_text(encoding="utf-8")
+        self.assertRegex(foundry, r"param endpointLocation string = location")
+        self.assertRegex(foundry, r"name: 'pe-\$\{name\}'[\s\S]*?location: endpointLocation")
+        self.assertRegex(MAIN, r"location: aiModelLocation\n\s+endpointLocation: location")
 
 
 class GuardTests(unittest.TestCase):

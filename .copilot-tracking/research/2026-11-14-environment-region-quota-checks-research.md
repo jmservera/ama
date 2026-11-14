@@ -14,3 +14,11 @@ Date: 2026-11-14. Base: origin/main 61e1917dd075a8307f0fd436c42cc41f47906846.
 ## Planning Readiness
 
 Ready. Research disposition: executed.
+
+## Cycle 1 findings
+
+* Cross-region `aiModelLocation` also moved the Foundry private endpoint away from the VNet region.
+* `pipeline.py` requires `DEPLOY_PARAMETERS` keys to equal `OVERRIDES` exactly, so `aiModelLocation` must be listed. `OVERRIDES` is a set; no `AZURE_AI_MODEL_LOCATION` mapping exists.
+* Preflight checked only `modelCapacityBudget` against the record, not the parameterised capacity. Request paths `infra/init/...` are `infra/scripts/...` in this tree.
+
+Research disposition: executed. Planning Readiness: Ready.

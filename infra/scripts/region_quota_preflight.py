@@ -44,7 +44,29 @@ def read_params(text: str) -> dict[str, str | int | bool]:
     return params
 
 
-def evaluate(params: dict[str, str | int | bool], record: dict | None = None) -> list[dict]:
+def read_capacity(text: str) -> list[int] | None:
+    """Capacity units the parameter file requests: modelDeployments entries, else chatModelCapacity.
+
+    Returns None when modelDeployments is set but a capacity is not an integer literal.
+    """
+    match = re.search(r"^param\s+modelDeployments\s*=\s*\[", text, re.MULTILINE)
+    if match:
+        depth, end = 1, match.end()
+        while end < len(text) and depth:
+            depth += {"[": 1, "]": -1}.get(text[end], 0)
+            end += 1
+        block = text[match.end() : end - 1]
+        capacities = [int(c) for c in re.findall(r"\bcapacity\s*[:=]\s*(\d+)\s*(?=[,}\n])", block)]
+        return capacities if capacities and len(capacities) == block.count("{") else None
+    chat = re.search(r"^param\s+chatModelCapacity\s*=\s*(\d+)", text, re.MULTILINE)
+    return [int(chat.group(1)) if chat else 1]
+
+
+def evaluate(
+    params: dict[str, str | int | bool],
+    record: dict | None = None,
+    capacities: list[int] | None = None,
+) -> list[dict]:
     """Return an ordered list of {check, status, detail}; status is pass, fail or blocked."""
     results: list[dict] = []
 
@@ -72,6 +94,14 @@ def evaluate(params: dict[str, str | int | bool], record: dict | None = None) ->
             f"{name}-recorded",
             "pass" if params.get(name) else "blocked",
             "reference present" if params.get(name) else f"{name} is empty; deployment is blocked",
+        )
+    budget = params.get("modelCapacityBudget")
+    param_total = sum(capacities) if capacities else 0
+    if capacities is not None and isinstance(budget, int):
+        add(
+            "parameter-capacity-budget",
+            "fail" if param_total > budget else "pass",
+            f"parameterised capacity {param_total} vs modelCapacityBudget {budget}",
         )
     if record is None:
         add("check-record", "blocked", "no check record supplied")
@@ -102,7 +132,6 @@ def evaluate(params: dict[str, str | int | bool], record: dict | None = None) ->
         )
     if not record.get("quotas"):
         add("quota-records", "fail", "record has no quota entries")
-    budget = params.get("modelCapacityBudget")
     requested = sum(
         int(q.get("requested", 0))
         for q in record.get("quotas", [])
@@ -110,17 +139,37 @@ def evaluate(params: dict[str, str | int | bool], record: dict | None = None) ->
     )
     if isinstance(budget, int) and requested > budget:
         add("model-budget", "fail", f"requested {requested} exceeds modelCapacityBudget {budget}")
+    if capacities is not None:
+        add(
+            "record-covers-parameter-capacity",
+            "pass" if requested >= param_total else "fail",
+            f"recorded model requests {requested} vs parameterised capacity {param_total}",
+        )
     return results
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("param_file", type=Path)
+    parser.add_argument("param_file", type=Path, nargs="?", help=".bicepparam file")
+    parser.add_argument("--bicepparam", type=Path, help="same as the positional .bicepparam file")
     parser.add_argument("--record", type=Path, help="JSON check record")
     args = parser.parse_args(argv)
-    params = read_params(args.param_file.read_text(encoding="utf-8"))
+    param_file = args.bicepparam or args.param_file
+    if param_file is None:
+        parser.error("a .bicepparam file is required")
+    text = param_file.read_text(encoding="utf-8")
+    params = read_params(text)
+    capacities = read_capacity(text)
     record = json.loads(args.record.read_text(encoding="utf-8")) if args.record else None
-    results = evaluate(params, record)
+    results = evaluate(params, record, capacities)
+    if capacities is None:
+        results.append(
+            {
+                "check": "parameter-capacity-parsed",
+                "status": "fail",
+                "detail": "modelDeployments capacity is not an integer literal in the file",
+            }
+        )
     print(json.dumps(results, indent=2, sort_keys=True))
     return 0 if all(r["status"] == "pass" for r in results) else 1
 

@@ -361,6 +361,7 @@ module foundry 'modules/foundry.bicep' = {
     name: 'aif-${prefix}-${unique}'
     projectName: 'zava-forward-agents'
     location: aiModelLocation
+    endpointLocation: location
     tags: allTags
     workspaceId: monitoring.outputs.workspaceId
     peSubnetId: network.outputs.peSubnetId

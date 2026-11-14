@@ -349,7 +349,7 @@ Set these **GitHub environment variables**, never committed values:
 | `AZURE_REGISTRY_NAME` | Release and target environments; existing registry in ama |
 | `DEPLOY_PARAMETERS` | Plan and target environments; JSON override contract below |
 
-`DEPLOY_PARAMETERS` must contain exactly `location`, `sqlLocation`,
+`DEPLOY_PARAMETERS` must contain exactly `location`, `sqlLocation`, `aiModelLocation`,
 `regionCheckReference`, `quotaCheckReference`, `alertEmail`,
 `sqlAdminGroupName`, `sqlAdminGroupObjectId`, `entraClientId` (all nonempty
 strings), and `entraBearerOnly` (an explicit JSON boolean). Use approved values
@@ -1035,12 +1035,13 @@ defaults to `location`), optional `aiModelFallbackLocation` (recorded only,
 never deployed automatically, must differ from `aiModelLocation`) and
 `modelCapacityBudget` (approved model capacity units; `chatModelCapacity` must
 fit it, enforced by the `modelCapacityMustFitBudget` guard). The deterministic
-offline helper `infra/scripts/region_quota_preflight.py <param-file> [--record
-check.json]` reports whether every region is selected, the references are
+offline helper `infra/scripts/region_quota_preflight.py <param-file> [--bicepparam <file>] [--record
+check.json]` also parses `chatModelCapacity`/`modelDeployments`
+capacities from the file and checks them against the budget and the record; it reports whether every region is selected, the references are
 recorded, the dated record covers each selected region and every quota has
 headroom (limit - used - requested) within the budget. It never calls Azure and
 never approves a deployment; committed sets report `blocked` until a real dated
-record exists. `infra/tests/test_environment_region_quota_checks.py` pins this
+record exists. `infra/tests/test_region_quota_137.py` pins this
 contract for dev, test and pilot.
 
 Recorded region and quota checks (re-run before each deployment; a check in another subscription or on another date proves nothing):
