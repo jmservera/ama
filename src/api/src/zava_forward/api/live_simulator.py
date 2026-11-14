@@ -81,10 +81,11 @@ class MemorySink:
 
 
 class StdoutSink:
-    """Dry run: prints the message and sends nothing."""
+    """Dry run: prints identifiers and size only (never the readings) and sends nothing."""
 
     async def send(self, device_id: str, message_id: str, body: bytes) -> None:
-        print(f"DRY-RUN {device_id} {message_id} {body.decode('ascii')}", flush=True)
+        label = "SYNTHETIC" if b"SYNTHETIC" in body else "UNLABELLED"
+        print(f"DRY-RUN {device_id} {message_id} {label} bytes={len(body)}", flush=True)
 
     async def close(self) -> None:
         return None
