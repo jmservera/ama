@@ -245,6 +245,9 @@ class AgentWorker:
             failure: str | None = "Input exceeds limit; manual review required."
         else:
             raw = self._bounded(system, prompt, message.max_tokens, message.timeout, task)
+            if self.stop_event.is_set() and raw.get("outcome") == "timeout":
+                # The drain window ended mid-call: redeliver instead of recording a failure.
+                return None
             envelope, output, failure = assistants.shape_result(task, raw, limits)
         return ResultMessage(task["id"], task["fence"], task["owner"], envelope, output, failure)
 

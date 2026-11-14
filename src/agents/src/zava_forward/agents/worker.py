@@ -5,7 +5,8 @@ post-back and provider from the environment (`runtime`) and refuses, naming the
 missing settings, until they are complete. While `ZF_AGENT_RESULT_ROUTE` is not
 `enabled` it stays in standby: alive and healthy, consuming no messages, exit 0 on
 SIGTERM. Stopping is cooperative: an in-flight
-task finishes or is released for redelivery, and nothing is acknowledged before
+task has `DRAIN_SECONDS` to finish and post, then it is released for redelivery
+rather than recorded as a timeout failure, and nothing is acknowledged before
 its result is posted.
 """
 
@@ -32,6 +33,7 @@ from zava_forward.agents.runtime import (
 
 IDLE_SECONDS = 2.0
 ERROR_BACKOFF_SECONDS = 5.0
+DRAIN_SECONDS = 20.0
 NOT_CONFIGURED = 2
 EXPIRED = 3
 
@@ -69,9 +71,22 @@ def serve(
     return done
 
 
-def install_signal_handlers(stop: threading.Event) -> None:
+def install_signal_handlers(
+    stop: threading.Event,
+    worker: AgentWorker | None = None,
+    drain: float = DRAIN_SECONDS,
+) -> None:
+    """Stop on SIGTERM or SIGINT; an in-flight task gets `drain` seconds, then is released."""
+
+    def request_stop(*_: object) -> None:
+        if worker is not None and not stop.is_set():
+            timer = threading.Timer(drain, worker.stop_event.set)
+            timer.daemon = True
+            timer.start()
+        stop.set()
+
     for signum in (signal.SIGTERM, signal.SIGINT):
-        signal.signal(signum, lambda *_: stop.set())
+        signal.signal(signum, request_stop)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -104,7 +119,7 @@ def main(argv: list[str] | None = None) -> int:
             )
             return NOT_CONFIGURED
         stop = threading.Event()
-        install_signal_handlers(stop)
+        install_signal_handlers(stop, runtime.worker)
         serve(
             runtime.queue,
             runtime.worker,
