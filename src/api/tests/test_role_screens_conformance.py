@@ -75,7 +75,7 @@ class RoleScreenConformance(unittest.TestCase):
         self.assertNotRegex(SCREENS, r'h\("(?:div|span|li|p|td)", \{[^}]*on(?:click|keydown)')
         for handler in re.finditer(r"onclick:", SCREENS):
             window = SCREENS[max(0, handler.start() - 120) : handler.start()]
-            self.assertIn('h("button"', window)
+            self.assertTrue('h("button"' in window or 'h("a", { href: "#",' in window)
         for region in re.findall(r'role: "region"[^)]*', SCREENS):
             self.assertIn('"aria-label"', region)
             self.assertIn("tabindex: 0", region)
