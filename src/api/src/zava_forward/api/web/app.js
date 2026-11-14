@@ -781,6 +781,17 @@ function priorityPanel() {
 
 const HANDOFF_READ_ERROR = "The handoffs waiting for you could not load, so we cannot tell whether any are waiting. Owner: application support. Next action: refresh to try again, then contact application support if it continues.";
 const HANDOFF_DENIED = "Your account cannot see the handoffs waiting for you, so we cannot tell whether any are waiting. Refreshing will not change this. Owner: your Retrofit Programme Manager or Programme Support Officer. Next action: ask them to check your role. Until then, ask the sender or open a case you already know, because the case list may not show every handoff waiting for you.";
+const MANAGER_TARGET = "a Retrofit Programme Manager or Programme Support Officer";
+// Plain-language state for an unaccepted handoff; the words carry the meaning, not colour.
+function handoffAttention(hd, now = Date.now()) {
+  const waited = Number.isFinite(Date.parse(hd.offered_at)) ? Math.max(0, Math.round((now - Date.parse(hd.offered_at)) / 36e5)) : null;
+  const elapsed = waited === null ? "Waiting time unknown" : `Waiting ${waited} ${waited === 1 ? "hour" : "hours"}`;
+  const target = `${hd.proposed_receiver || hd.to_name || "Unassigned"} (${hd.destination || hd.to_role || "role unknown"})`;
+  if (hd.state === "Escalated") return `State: Escalated: unaccepted handoff. ${elapsed}. Waiting for ${target}. Escalated to ${hd.escalation_owner || "a named manager"}.`;
+  const due = Date.parse(hd.due_at);
+  const overdue = Number.isFinite(due) && due < now;
+  return `State: Action needed. ${elapsed}. Waiting for ${target}. Due: ${hd.due_at || "no due time set"}${overdue ? " (overdue)" : ""}.${overdue ? ` Escalation target: ${MANAGER_TARGET}.` : ""}`;
+}
 function pendingHandoffs() {
   const box = h("section", { class: "card", "aria-label": "Handoffs waiting for you" },
     h("p", { role: "status" }, "Loading handoffs..."));
@@ -794,6 +805,7 @@ function pendingHandoffs() {
         " This file is not the list on this card. It has every handoff you can see that has not been accepted yet, with how long each has waited. It has no resident contact details. It is a read-only copy; changes in it are not imported back. No waiting-time limit is set for the whole queue, so a handoff is marked as needing escalation only when its own due time has passed. An empty file has no column names."),
       h("ul", { class: "list" }, rows.map((x) => h("li", {},
       h("a", { href: `#/case/${encodeURIComponent(x.case_id)}` }, `${x.resident}, ${x.address}`),
+      h("div", {}, handoffAttention(x)),
       h("div", { class: "muted" }, `${x.status}. Current owner: ${x.accountable_owner}; proposed receiver: ${x.proposed_receiver || "Unassigned"}; confirmed receiver: ${x.confirmed_receiver || "Unconfirmed"}; destination: ${x.destination || "Unknown"}; chase: ${x.chase_owner || "Unassigned"}.`),
       h("div", { class: "muted" }, `Urgency: ${x.urgency || "Unknown"}; due: ${x.due_at || "Unknown"}; next action: ${x.next_action || "Unknown"}. Resident update: ${x.resident_update_owner || "Unassigned"}, ${x.resident_update_due_at || "Unknown"}.`),
       h("div", {}, x.to_code === me.user.code ? "Open to record receipt, accept or decline." : "Open to chase, escalate or withdraw.")))));
@@ -872,7 +884,7 @@ async function handoffWaitingView() {
     h("p", {}, "No approved waiting-time limit is set for the whole queue (OD-09 is not decided). A long wait alone does not mean a handoff is late, and nothing is escalated automatically. A handoff is marked as needing escalation only when its own due time has passed. Open the case to chase, escalate or withdraw."));
   if (!rows.length) return show(back, title, scope,
     h("p", { role: "status" }, "No unaccepted handoffs are visible to your role."), recheck);
-  const heads = ["Case", "Status", "Waiting", "Due", "Chase owner", "Proposed receiver", "Escalation"];
+  const heads = ["Case", "State", "Status", "Waiting", "Due", "Chase owner", "Proposed receiver", "Escalation"];
   const escalation = (x) => [x.escalated ? "Already escalated." : x.needs_escalation ? "Needs escalation." : "No escalation reason recorded.",
     x.reasons.length ? ` Reason: ${x.reasons.join("; ")}.` : ""].join("");
   show(back, title, scope,
@@ -883,6 +895,7 @@ async function handoffWaitingView() {
           h("thead", {}, h("tr", {}, heads.map((x) => h("th", { scope: "col" }, x)))),
           h("tbody", {}, rows.map((x) => h("tr", {},
             h("th", { scope: "row" }, h("a", { href: `#/case/${encodeURIComponent(x.case_id)}` }, x.case_id)),
+            h("td", {}, x.escalated ? "Escalated: unaccepted handoff" : "Action needed"),
             h("td", {}, x.status),
             h("td", {}, waitingHours(x.age_hours)),
             h("td", {}, waitingTime(x.due_at)),
@@ -1524,6 +1537,7 @@ function handoffPanel(c, id, refresh) {
   const open = hd && ["Offered", "Received", "Escalated"].includes(hd.state);
   const kids = [h("h2", {}, "Handoff to a colleague")];
   if (hd) kids.push(
+    ["Offered", "Received", "Escalated"].includes(hd.state) && h("p", { role: "status" }, handoffAttention(hd)),
     h("p", { role: "status" }, `${hd.status}. Current accountable owner: ${hd.accountable_owner}. Destination: ${hd.destination || "Unknown"}. Proposed receiver: ${hd.proposed_receiver || "Unassigned"}. Confirmed receiver: ${hd.confirmed_receiver || "Unconfirmed"}. Chase owner: ${hd.chase_owner || "Unassigned"}.`),
     h("p", {}, `Urgency: ${hd.urgency || "Unknown"}. Due: ${hd.due_at || "Unknown"}. Next action: ${hd.next_action || "Unknown"}.`),
     h("p", {}, `Resident update owner: ${hd.resident_update_owner || "Unassigned"}; commitment: ${hd.resident_update_due_at || "Unknown"}. No message is sent automatically.`),
