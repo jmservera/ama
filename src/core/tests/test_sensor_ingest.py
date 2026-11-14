@@ -2,11 +2,13 @@
 
 import tempfile
 import unittest
+from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime, timedelta
+from typing import Any, cast
 
 from sensor_consumer_fixture import CONTROL, POLICY, RECEIVED, observations, store_at
 from test_sensor_consumer_live import live
-from zava_forward.core.sensor_consumer import ConsumerError, SensorConsumer
+from zava_forward.core.sensor_consumer import ConsumerError, Observation, SensorConsumer
 from zava_forward.core.sensor_ingest import (
     WindowReceipt,
     handover_continuity,
@@ -21,15 +23,19 @@ LOOSE = Tolerance(point=2.0, mean_step=2.0)
 TIGHT = Tolerance(point=0.01, mean_step=0.01)
 
 
-def live_rows(temperature: str = "17.20", humidity: str = "58.00") -> list[dict[str, object]]:
+def live_rows(temperature: str = "17.20", humidity: str = "58.00") -> list[Observation]:
     return [
         live(START + timedelta(minutes=5 * i), temperature_c=temperature, humidity_pct=humidity)
         for i in range(2)
     ]
 
 
-def indoor_live(temperature: str = "17.20", humidity: str = "58.00") -> list[dict[str, object]]:
-    rows = []
+def live_series() -> list[dict[str, str]]:
+    return [{k: str(v) for k, v in row.items()} for row in live_rows()]
+
+
+def indoor_live(temperature: str = "17.20", humidity: str = "58.00") -> list[Observation]:
+    rows: list[Observation] = []
     for i in range(2):
         slot = START + timedelta(minutes=5 * i)
         row = dict(observations()[0])
@@ -103,7 +109,8 @@ class IngestTests(unittest.TestCase):
             rows, handover=HANDOVER, window_minutes=120, temperature=LOOSE, humidity=LOOSE
         )
         self.assertFalse(report["passed"])
-        self.assertFalse(report["metrics"]["temperature_c"]["checks"]["point"])
+        metrics = cast(dict[str, Any], report["metrics"])
+        self.assertFalse(metrics["temperature_c"]["checks"]["point"])
         exact = handover_continuity(
             rows,
             handover=HANDOVER,
@@ -127,30 +134,35 @@ class IngestTests(unittest.TestCase):
 
     def test_mixed_schema_or_malformed_series_is_refused(self) -> None:
         ingest_window(self.consumer, observations() + indoor_live(), RECEIVED)
-        kwargs = {"handover": HANDOVER, "window_minutes": 120, "temperature": LOOSE}
-        with self.assertRaisesRegex(ValueError, "INVALID_HANDOVER_OBSERVATION"):
-            handover_continuity(
-                home_series(self.consumer, "ZF-1") + live_rows()[:1], humidity=LOOSE, **kwargs
+
+        def check(rows: Sequence[Mapping[str, str]], humidity: Tolerance) -> dict[str, object]:
+            return handover_continuity(
+                rows,
+                handover=HANDOVER,
+                window_minutes=120,
+                temperature=LOOSE,
+                humidity=humidity,
             )
+
+        with self.assertRaisesRegex(ValueError, "INVALID_HANDOVER_OBSERVATION"):
+            check(home_series(self.consumer, "ZF-1") + live_series()[:1], LOOSE)
         rows = home_series(self.consumer, "ZF-1")
-        self.assertTrue(handover_continuity(rows, humidity=Tolerance(2.0, 5.0), **kwargs)["passed"])
+        self.assertTrue(check(rows, Tolerance(2.0, 5.0))["passed"])
         with self.assertRaisesRegex(ValueError, "HANDOVER_SCHEMA_UNSUPPORTED"):
-            handover_continuity(live_rows(), humidity=LOOSE, **kwargs)
+            check(live_series(), LOOSE)
         with self.assertRaisesRegex(ValueError, "INVALID_HANDOVER_OBSERVATION"):
-            handover_continuity(rows + rows[:1], humidity=LOOSE, **kwargs)
+            check(rows + rows[:1], LOOSE)
         with self.assertRaisesRegex(ValueError, "INVALID_HANDOVER_OBSERVATION"):
-            handover_continuity(
-                [rows[0], {**rows[1], "sensor_id": "SENS-SYN-2"}], humidity=LOOSE, **kwargs
-            )
+            check([rows[0], {**rows[1], "sensor_id": "SENS-SYN-2"}], LOOSE)
         with self.assertRaisesRegex(ValueError, "INVALID_HANDOVER_CONFIGURATION"):
-            handover_continuity(rows, humidity=(2.0, 5.0), **kwargs)
+            check(rows, (2.0, 5.0))  # type: ignore[arg-type]
 
     def test_window_validates_receipt_time_and_batch(self) -> None:
         with self.assertRaises(ValueError):
             ingest_window(self.consumer, [], "not-a-time")
         self.assertEqual(ingest_window(self.consumer, [], RECEIVED), WindowReceipt())
         with self.assertRaisesRegex(ConsumerError, "INVALID_BATCH"):
-            ingest_window(self.consumer, [{"k": object()}], RECEIVED)
+            ingest_window(self.consumer, [{"k": object()}], RECEIVED)  # type: ignore[dict-item]
 
 
 if __name__ == "__main__":
