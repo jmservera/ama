@@ -385,6 +385,69 @@ class QueueDefinitions(unittest.TestCase):
         self.assertNotIn("SENTINEL", json.dumps(evaluate(second)))
 
 
+class SafeguardingClock(unittest.TestCase):
+    def setUp(self) -> None:
+        self.case = copy.deepcopy(DATA["cases"][0])
+        self.case["funding_ok"] = True
+        self.case["safeguarding_items"] = [
+            dict(
+                referred_at="2026-10-15T12:00Z",
+                response_due_at="2026-10-17",
+                owner=dict(name="Sam Guard", role="Safeguarding lead"),
+                note="SYN-PRIVATE-NOTE",
+            )
+        ]
+
+    def test_authorised_role_sees_clock_and_named_owner_without_free_text(self) -> None:
+        work = evaluate(self.case)
+        clock = work["safeguarding_clocks"][0]
+        self.assertEqual(clock["owner"], "Sam Guard")
+        self.assertEqual(clock["owner_role"], "Safeguarding lead")
+        self.assertTrue(clock["owner_named"])
+        self.assertEqual(clock["elapsed_hours"], 12)
+        self.assertEqual(clock["response_state"], "Open")
+        self.assertNotIn("SYN-PRIVATE-NOTE", json.dumps(work))
+
+    def test_unauthorised_role_gets_nothing_about_the_item(self) -> None:
+        work = evaluate(self.case, reason_ok=False)
+        self.assertEqual(work["safeguarding_clocks"], [])
+        self.assertNotIn("Sam Guard", json.dumps(work))
+        self.assertNotIn("SYN-PRIVATE-NOTE", json.dumps(work))
+        self.assertEqual(work["safeguarding_visibility"], taskqueues.SAFEGUARDING_HELD)
+        self.assertEqual(
+            work["safeguarding_visibility"],
+            evaluate(
+                {k: v for k, v in self.case.items() if k != "safeguarding_items"}, reason_ok=False
+            )["safeguarding_visibility"],
+        )
+
+    def test_missing_owner_is_unknown_and_never_invented(self) -> None:
+        item = self.case["safeguarding_items"][0]
+        item.pop("owner")
+        item.pop("response_due_at")
+        clock = evaluate(self.case)["safeguarding_clocks"][0]
+        self.assertEqual(clock["owner"], "Unknown")
+        self.assertFalse(clock["owner_named"])
+        self.assertIn("No named accountable owner", clock["owner_status"])
+        self.assertEqual(clock["response_due_at"], "Unknown")
+        self.assertEqual(clock["response_state"], "Unknown")
+
+    def test_overdue_completed_and_closed_items(self) -> None:
+        item = self.case["safeguarding_items"][0]
+        item["response_due_at"] = "2026-10-15T23:00Z"
+        self.assertEqual(evaluate(self.case)["safeguarding_clocks"][0]["response_state"], "Overdue")
+        item["responded_at"] = "2026-10-15T20:00Z"
+        self.assertEqual(
+            evaluate(self.case)["safeguarding_clocks"][0]["response_state"], "Completed"
+        )
+        item["closed"] = True
+        self.assertEqual(evaluate(self.case)["safeguarding_clocks"], [])
+
+    def test_safeguarding_does_not_change_queue_membership(self) -> None:
+        plain = {k: v for k, v in self.case.items() if k != "safeguarding_items"}
+        self.assertEqual(evaluate(self.case)["queues"], evaluate(plain)["queues"])
+
+
 class StoreQueueParity(unittest.TestCase):
     def test_current_stage_requirements_through_real_stores(self) -> None:
         data: dict[str, Any] = copy.deepcopy(DATA)
