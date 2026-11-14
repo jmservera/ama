@@ -11,9 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 UX = ROOT / "docs" / "reference" / "research" / "ux"
 DOC = (UX / "screen-design-traceability.md").read_text()
-SCREENS = (
-    ROOT / "src/api/src/zava_forward/api/web/role-screens.js"
-).read_text()
+SCREENS = (ROOT / "src/api/src/zava_forward/api/web/role-screens.js").read_text()
 ISSUES = {225, 226, 227, 228, 229, 230, 231, 232, 233, 159, 215}
 LINK = re.compile(r"\]\((\./[^)#]+\.md)(?:#([^)]+))?\)")
 
@@ -24,10 +22,7 @@ def slug(heading: str) -> str:
 
 
 def anchors(path: Path) -> set[str]:
-    return {
-        slug(m.group(1))
-        for m in re.finditer(r"^#{1,6} (.+)$", path.read_text(), re.M)
-    }
+    return {slug(m.group(1)) for m in re.finditer(r"^#{1,6} (.+)$", path.read_text(), re.M)}
 
 
 def rows() -> list[list[str]]:
@@ -46,9 +41,7 @@ class ScreenDesignTraceability(unittest.TestCase):
         self.assertEqual(ISSUES - seen, set())
 
     def test_every_registered_role_screen_has_a_row(self) -> None:
-        registered = set(
-            re.findall(r'^registerRoleScreen\(\{\n  id: "([\w-]+)"', SCREENS, re.M)
-        )
+        registered = set(re.findall(r'^registerRoleScreen\(\{\n  id: "([\w-]+)"', SCREENS, re.M))
         traced = {t for r in rows() for t in re.findall(r"`([\w-]+)`", r[1])}
         self.assertGreaterEqual(len(registered), 13)
         self.assertEqual(registered - traced, set())
@@ -68,17 +61,17 @@ class ScreenDesignTraceability(unittest.TestCase):
 
     def test_tests_exist(self) -> None:
         for row in rows():
-            path, _, target = row[5].strip("`").partition("::")
+            parts = row[5].strip("`").split("::")
+            self.assertEqual(len(parts), 3, f"{row[5]} must be path::Class::method")
+            path, klass, method = parts
             self.assertTrue((ROOT / path).is_file(), path)
-            if target:
-                klass, method = target.split("::")
-                tree = ast.parse((ROOT / path).read_text())
-                node = next(
-                    n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == klass
-                )
-                self.assertIn(
-                    method, {n.name for n in node.body if isinstance(n, ast.FunctionDef)}
-                )
+            tree = ast.parse((ROOT / path).read_text())
+            node = next(
+                (n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == klass),
+                None,
+            )
+            self.assertIsNotNone(node, f"{klass} not found in {path}")
+            self.assertIn(method, {n.name for n in node.body if isinstance(n, ast.FunctionDef)})
 
     def test_no_human_acceptance_is_claimed(self) -> None:
         self.assertIn("ticks no acceptance criterion", DOC)
