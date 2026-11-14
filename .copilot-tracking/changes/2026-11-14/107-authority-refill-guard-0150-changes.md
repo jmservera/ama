@@ -12,3 +12,10 @@
 * Not run: full local gate, hosted CI, independent exact-head review, human approvals.
 
 `docs/reference/log.md` deliberately not edited.
+
+## C1 correction (hosted src-api lint)
+
+* Hosted `ruff format --check .` failed only at `src/api/tests/test_assistant_restart_non_replenishment.py:228` (one extra blank line). `ruff format` in `src/api` removed it; no other file changed.
+* Fresh focused-tier validation in `src/api`: `ruff check .` pass; `ruff format --check .` 160 files already formatted; `mypy` no issues in 244 source files.
+* `python3 -m unittest tests.test_assistant_restart_non_replenishment -v`: 14 tests OK. The editable installs in this environment point at another checkout, so the run used this worktree's `src` paths on `PYTHONPATH` (`src:../core/src:../agents/src:../core/tests:../agents/tests:tests`).
+* Not run: full local gate, hosted CI re-run, independent exact-head review, human approvals.

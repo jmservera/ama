@@ -225,7 +225,6 @@ class Allowance(Restart):
         self.assertEqual(self.provider.calls, 2)
         self.assertEqual(self.pool(self.worker(**LARGER))[:3], (2, 2000000, 2))
 
-
     def test_rotating_the_authority_token_cannot_replenish_consumed_calls(self) -> None:
         caps = list(assistants.REGISTRY)[:3]
         self.spend(self.worker(call_allowance=1), caps[0])
