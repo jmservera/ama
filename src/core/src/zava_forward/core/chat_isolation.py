@@ -88,6 +88,14 @@ class ChatIsolation:
             export_fields.status_inputs(self.store._case(case_id))
             return export_fields.chat_case(d)
 
+    def ai_consent_state(self, case_id):
+        """The recorded resident AI and data-use consent: None when no state is recorded, else the raw value."""
+        with self.store.lock:
+            resident = self.store._case(case_id).get("resident") or {}
+        if "ai_data_use_consent" not in resident:
+            return None
+        return resident["ai_data_use_consent"] or ""
+
     def case_facts(self, user, case_id):
         """Recorded facts for the stateless rules reply, from the user's own projection. None when out of scope."""
         from zava_forward.core.chat_case_answers import case_facts

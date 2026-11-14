@@ -19,11 +19,17 @@ CONTROL = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]")
 SAFETY_SEQUENCE = "workflow/safety-sequence"
 VISIT_CONSENT = "workflow/visit-consent"
 CHAT_BOUNDARY = "workflow/chat-boundary"
+AI_CONSENT = "workflow/ai-consent-boundary"
 # Fixed workflow rules, citable by id. They are rules, not recorded facts about any case.
 RULES: dict[str, str] = {
     CHAT_BOUNDARY: (
         "A person schedules visits and completes safety steps in the case workflow. "
         "This chat cannot book a visit or approve a safety step, record consent or change a record."
+    ),
+    AI_CONSENT: (
+        "Resident consent to AI and data use is not recorded as given for this case. "
+        "Use the manual case-card path: open the case card, check the consent record with the "
+        "named officer and carry on by hand. Chat cannot record or assume consent."
     ),
     SAFETY_SEQUENCE: (
         "Safety stop sequence: hazard referral, then receipt by the responsible owner, then "

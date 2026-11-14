@@ -37,6 +37,7 @@ from typing import Any
 
 from zava_forward.core.ai_consumption import CallContext, call_context, reference, usage
 from zava_forward.core.assistants import REGISTRY
+from zava_forward.core.chat_case_answers import AI_CONSENT
 from zava_forward.core.chat_case_answers import RULES as WORKFLOW_RULES
 from zava_forward.core.chat_case_answers import answer as grounded_answer
 from zava_forward.core.chat_case_answers import intent as case_intent
@@ -344,6 +345,20 @@ BOUNDARY = (
     "Explain and draft only. A person reviews decisions, funding, quality and communications. "
     "Resident consent stays with the resident. No approval, sending, booking or record changes."
 )
+
+
+CONSENT_STATES = ("Not requested", "Pending", "Declined", "Withdrawn")
+
+
+def consent_guidance(state: object) -> str | None:
+    """Deterministic guidance when a recorded resident AI consent state is not Given, else None.
+
+    A case with no recorded state is unchanged. Only listed states are echoed back.
+    """
+    if state is None or (isinstance(state, str) and state.strip().casefold() == "given"):
+        return None
+    shown = state.strip() if isinstance(state, str) and state.strip() in CONSENT_STATES else "Not recorded"
+    return f"Recorded AI and data-use consent: {shown}. " + WORKFLOW_RULES[AI_CONSENT]
 
 
 def chat_skills() -> list[dict[str, str]]:
@@ -663,8 +678,11 @@ class ChatPanel:
         sources = {f"{case_id}/{path}": value for path, value in facts.items()}
         refusal = out_of_scope(question[:MAX_CONTENT])
         cites: list[str]
+        blocked = consent_guidance(self.iso.ai_consent_state(case_id)) if case_id else None
         if refusal:
             kind, text, cites = "refused", REFUSED + refusal[1], []
+        elif blocked:
+            kind, text, cites = "answer", blocked + "\n" + UNSTORED_NOTE, [AI_CONSENT]
         else:
             kind, body, cites = grounded_answer(
                 case_id, normalise_policy_text(question[:MAX_CONTENT]), facts
@@ -784,6 +802,10 @@ class ChatPanel:
         if refusal:
             text = REFUSED + refusal[1]
             return finish("refused", text, [], model_name)
+        blocked = consent_guidance(iso.ai_consent_state(case_id)) if case_id else None
+        if blocked:
+            sources = {**sources, AI_CONSENT: WORKFLOW_RULES[AI_CONSENT]}
+            return finish("answer", blocked, [AI_CONSENT], model_name, "decision-rules")
         kind, text, cites = "abstain", ABSTAIN, []
         rules_first = bool(
             case_id
