@@ -481,6 +481,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             d.pop("form_staging", None)
             d.pop("form_reviews", None)
             d.pop("finance_decision_holds", None)
+            if user is not None:
+                d.pop("safeguarding_items", None)  # Only the allowlisted work.safeguarding_clocks leaves the store.
             d["support_status"] = stock.support_status(c["resident"])
             d["support_coverage"] = stock.support_coverage(c["resident"])
             d["resident"].setdefault("priority_support", None)
