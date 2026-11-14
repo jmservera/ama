@@ -562,6 +562,15 @@ function journeyStageMap(c, current = null) {
           : `${roleScreens.get(id)?.title || id} is not installed for your role. Your access has not changed. Owner: your team manager. Next action: ask them to add it for your role.`}`,
       ` ${boundary}`))));
 }
+// Text prefix for each step state (WCAG 1.4.1). Unrecognised states fall back to Warning, never Pass: no state here is a pass.
+const programmeStatePrefix = { "Blocked": "Action needed", "Blocked: evidence missing": "Action needed", "No recorded blocker": "Warning" };
+const programmeStateLabel = (state) => `${Object.hasOwn(programmeStatePrefix, state) ? programmeStatePrefix[state] : "Warning"}: ${state}`;
+const programmeSections = [["programme-summary", "State summary"], ["programme-steps", "Step states table"],
+  ["programme-journey", "Journey stages"], ["programme-withheld", "Not shown for this role"]];
+const programmeJump = (id) => (event) => {
+  const target = document.getElementById(id);
+  if (target) { target.focus(); target.scrollIntoView?.({ block: "start" }); }
+};
 registerRoleScreen({
   id: "programme-queue",
   ownsStageMap: true,
@@ -589,15 +598,24 @@ registerRoleScreen({
   render(c, extra) {
     const rows = programmeGates(c, extra?.orders);
     const blocked = rows.filter((r) => r[1].startsWith("Blocked"));
-    return screenPanel(`Connected view for ${c.id}`,
-      h("p", {}, "Technical, resident, delivery, quality and finance states are shown independently. One clear state never clears another."),
-      blocked.length ? screenUnknown(`${blocked.length} of 5 steps are blocked: ${blocked.map((r) => r[0]).join(", ")}.`,
-        blocked[0][3], blocked[0][4]) : h("p", {}, "No blocker is recorded, which does not confirm readiness."),
-      screenTable("Same-home step states", ["Step", "State", "Meaning", "Owner", "Next action"], rows),
-      journeyStageMap(c),
+    const section = (id, node) => h("div", { id, tabindex: "-1" }, node);
+    return h("div", {},
+      screenPanel(`Connected view for ${c.id}`,
+        h("p", {}, "Technical, resident, delivery, quality and finance states are shown independently. One clear state never clears another."),
+        h("div", { class: "row", role: "group", "aria-label": "Jump to a section of this screen" },
+          programmeSections.map(([id, text]) => h("button", { class: "btn alt", type: "button", onclick: programmeJump(id) }, text))),
+        blocked.length ? screenUnknown(`${blocked.length} of 5 steps are blocked: ${blocked.map((r) => r[0]).join(", ")}.`,
+          blocked[0][3], blocked[0][4]) : h("p", {}, "No blocker is recorded, which does not confirm readiness."),
+        section("programme-summary", h("div", {},
+          h("h3", {}, "State summary in words"),
+          h("p", {}, "Each state starts with a word so it does not depend on colour. A step with no recorded blocker is a warning, not a pass."),
+          h("ul", {}, rows.map(([name, state, meaning, owner, action]) => h("li", {},
+            `${programmeStateLabel(state)}: ${name} step. ${meaning} Owner: ${owner}. Next action: ${action}.`))))),
+        section("programme-steps", screenTable("Same-home step states", ["Step", "State", "Meaning", "Owner", "Next action"], rows))),
+      section("programme-journey", journeyStageMap(c)),
       screenTension("disclosure"),
-      screenWithheld(["Resident contact details and access history (use the safe route reference in the case workspace)",
-        "Household and vulnerability details beyond what a step state needs", "Funding amounts and claim values"]));
+      section("programme-withheld", screenWithheld(["Resident contact details and access history (use the safe route reference in the case workspace)",
+        "Household and vulnerability details beyond what a step state needs", "Funding amounts and claim values"])));
   }
 });
 const technicalRoles = ["Retrofit Coordinator", "Quality Inspector", "Building Safety Liaison", ...screenManagers];
