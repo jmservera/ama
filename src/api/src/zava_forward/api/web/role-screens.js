@@ -819,6 +819,10 @@ const stateCue = (table, status, detail = status) => `${Object.hasOwn(table, sta
 const choiceCues = { Accepted: "Confirmed", Declined: "Confirmed", Paused: "Confirmed", Withdrawn: "Confirmed", Waiting: "Waiting for resident", "Not recorded": "Waiting for resident" };
 const updateCues = { Outstanding: "Action needed", Proposed: "Action needed" };
 const serviceCues = { Open: "Action needed", "In progress": "Action needed", Resolved: "Action needed", Closed: "Confirmed" };
+const screenJumpNav = (sections) => h("nav", { "aria-label": "Sections of this view", class: "screen-links" },
+  sections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading` }, title)));
+const choiceSections = [["choice-measures", "Choice for each measure"], ["choice-stopped", "Paused or withdrawn"], ["choice-update", "Update commitment"], ["choice-service", "Service requests"]];
+const serviceSections = [["service-issues", "Service issues"], ["service-update", "Update commitment"]];
 const choiceRoles = ["Resident Liaison Officer", "Retrofit Coordinator", "Retrofit Programme Manager", "Programme Support Officer"];
 const choiceStop = new Set(["Paused", "Withdrawn"]);
 const choiceLatest = (m) => (m.versions || []).at(-1);
@@ -896,15 +900,17 @@ registerRoleScreen({
     const update = c.resident_update;
     const requests = c.service_requests || [];
     return h("div", {},
+      screenJumpNav(choiceSections),
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only view. No message, call or letter is sent and no record changes here. Record supplied answers in the case workspace. Resident-facing screens are designed separately. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
-      screenPanel("Choice for each measure",
+      screenPanel("Choice for each measure", { anchor: "choice-measures" },
+        h("p", {}, "Every state is written as words first: Confirmed, Waiting for resident or Action needed. Colour is never the only signal."),
         h("p", {}, "Each answer belongs to one measure and one scope version. Not recorded means no answer is known. Contact or access is never read as a yes."),
         screenRecordTable("Measure choices by version",
           ["Measure", "Scope version", "Current answer", "Latest recorded answer", "Readiness"],
           measures.map(choiceMeasure))),
-      screenPanel("Paused or withdrawn by the resident",
+      screenPanel("Paused or withdrawn by the resident", { anchor: "choice-stopped" },
         h("p", {}, "A pause or withdrawal is the resident's decision about one measure. It is not a contact attempt, a missed visit or an access need."),
         stopped.length ? screenRecordTable("Measures paused or withdrawn",
           ["Measure", "State and scope answered", "In their words", "Restart needs"],
@@ -914,14 +920,14 @@ registerRoleScreen({
             return [m.measure, v ? `${state}, ${choiceBinding(v)}` : state, v?.note, "Action needed: Human review before any restart"];
           }))
           : h("p", { class: "empty" }, "No measure is currently paused or withdrawn in the recorded answers.")),
-      screenPanel("Linked update commitment",
+      screenPanel("Linked update commitment", { anchor: "choice-update" },
         update ? screenFields([
           ["Status", stateCue(updateCues, update.status)], ["Purpose or linked issue", update.purpose],
           ["Owner", screenPerson(update.owner_identity || update.owner)], ["Due", screenStamp(update.due_at)],
           ["Basis for due date", update.basis], ["Safe route reference", update.safe_contact_ref],
           ["Version", update.version], ["Meaning", "A commitment is not a message. Nothing is sent or marked received here."]])
           : screenUnknown("No update commitment is recorded for this home.", "Case owner or resident-workflow manager", "Record a commitment in the case workspace")),
-      screenPanel("Service requests and access needs (separate from choice)",
+      screenPanel("Service requests and access needs (separate from choice)", { anchor: "choice-service" },
         screenRecordTable("Service requests and contact needs",
           ["Request", "Route", "State and meaning", "Contact needs", "Next update"],
           requests.map((r) => [r.id, r.route, serviceStatus(r), serviceNeeds(r), r.next_update]))),
@@ -1809,10 +1815,12 @@ registerRoleScreen({
     const requests = c.service_requests || [];
     const update = c.resident_update;
     return h("div", {},
+      screenJumpNav(serviceSections),
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only view. No message, call or letter is sent and no record changes here. Resident-facing screens are designed separately. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
-      screenPanel("Service issues",
+      screenPanel("Service issues", { anchor: "service-issues" },
+        h("p", {}, "Every state is written as words first: Confirmed or Action needed. Colour is never the only signal."),
         h("p", {}, "Each issue shows the route, the named owners, the contact needs the resident gave and the next update date. A complaint or independent review has a different service owner and redress owner. A pause or withdrawal of a measure is shown on the resident choice screen, not here."),
         requests.length ? screenRecordTable("Service issues and contact needs",
           ["Issue", "Route", "Summary and outcome wanted", "State and meaning", "Owners", "Contact needs", "Representative reference", "Next update", "Review link"],
@@ -1823,7 +1831,7 @@ registerRoleScreen({
         screenRecordTable("Recorded response steps",
           ["Issue", "State", "Recorded by", "Recorded", "Note"],
           requests.flatMap((r) => (r.history || []).map((x) => [r.id, x.status, x.by, screenStamp(x.at), x.note])))) : null,
-      screenPanel("Linked update commitment",
+      screenPanel("Linked update commitment", { anchor: "service-update" },
         update ? screenFields([
           ["Status", stateCue(updateCues, update.status)], ["Purpose or linked issue", update.purpose],
           ["Owner", screenPerson(update.owner_identity || update.owner)], ["Due", screenStamp(update.due_at)],
