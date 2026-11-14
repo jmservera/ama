@@ -14,3 +14,7 @@ Execution: executed once. Outcome: finding 1 resolved; findings 2 and 3 not appl
 ## Cycle 2 follow-up review
 
 Execution: executed once. Outcome: independent findings 1 to 3 addressed; released items with open deadlines now show a clock, the owner fallback is consistent, and safeguarding labels are redacted without reason visibility. Limits: the redaction covers the case detail, AI source labels, queue clocks and card focus only; independent human and hosted review remain required.
+
+## Cycle 3 follow-up review
+
+Execution: executed once. Outcome: Cycle 2 Medium and Low findings addressed (`as_of` clock, nested safeguarding redaction, `owner` access, due-time parsing); the rebase regression in the legacy-row test is fixed. The statutory-column names in the request do not exist in the repository and were not added. Independent human and hosted review remain required.

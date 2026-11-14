@@ -160,7 +160,8 @@ const options = byId(panel, "hz-0-refer-to").querySelectorAll("option").map((o) 
 assert.equal(options[0], "bo@example.test");
 assert.equal(options[options.length - 1], "pm@example.test");
 const facts = panel.querySelector(".safety-facts");
-assert.equal(facts.querySelectorAll("dt").length, 4);
+assert.equal(facts.querySelectorAll("dt").length, 6);
+assert.ok(text(facts).includes("Safety clock") && text(facts).includes("Accountable owner"));
 assert.ok(text(facts).includes("Not assigned yet"));
 assert.ok(!text(facts).includes("Unknown"));
 byId(panel, "hz-0-refer-to").value = "bea@example.test";

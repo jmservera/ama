@@ -172,7 +172,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             why.append(f"Funding has not been confirmed. Owner: {c['owner']}. Next action: check the funding and record it.")
         open_h = [h for h in c["hazards"] if not h["released"]]
         if open_h:
-            why.append(f"Home retrofit work is stopped for safety review. Owner: {taskqueues.accountable_owner(open_h[0]['owner'])} (referral follow-up). Next action: obtain external service evidence and an independent decision to restart retrofit work.")
+            why.append(f"Home retrofit work is stopped for safety review. Owner: {taskqueues.accountable_owner(open_h[0].get('owner'))} (referral follow-up). Next action: obtain external service evidence and an independent decision to restart retrofit work.")
         return why + resident_gate(c) + technical_gate(c)
 
     @staticmethod
@@ -181,7 +181,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             return "Completed"
         open_h = [h for h in c["hazards"] if not h["released"]]
         if open_h:
-            return f"Stopped until {taskqueues.accountable_owner(open_h[0]['owner'])} obtains evidence and an independent decision to restart retrofit work"
+            return f"Stopped until {taskqueues.accountable_owner(open_h[0].get('owner'))} obtains evidence and an independent decision to restart retrofit work"
         if c["stage"] == READY_STAGE and not Store.gate_reasons(c):
             return "Ready"
         return f"Waiting on {c['waiting_on']} {c['reason']}"
@@ -441,7 +441,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             return [("Contractor", c["contractor"]["name"]), ("Works", c["measures"]),
                     ("Next visit", nxt["date"] if nxt else "None booked")]
         if role == "Building Safety Liaison":
-            return [("Open safety issues", "; ".join(f"{taskqueues.safe_category(h['category'], reason_ok)} ({taskqueues.accountable_owner(h['owner'])})" for h in open_h) or "None"),
+            return [("Open safety issues", "; ".join(f"{taskqueues.safe_category(h['category'], reason_ok)} ({taskqueues.accountable_owner(h.get('owner'))})" for h in open_h) or "None"),
                     ("Works", c["measures"])]
         if role == "Grants and Evidence Officer":
             return [("Funding", f"{c['funding']['route']}, {c['funding']['status']}"),
@@ -492,7 +492,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             d.setdefault("stock_reconciliation_events", [])
             for row in d["stock_reconciliation"]:
                 row["status"] = stock.query_status(c, row["id"])
-            d["hazards"] = [hazard_view(h, case_id) for h in c["hazards"]]
+            d["hazards"] = [hazard_view(h, case_id, self.as_of) for h in c["hazards"]]
             if user is None or not projection.is_contractor(user):
                 d["work"] = self.work_context(c, user)
             if c.get("handoff"):
@@ -610,7 +610,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     def require_safety_clear(self, c):
         active = next((h for h in c["hazards"] if not h["released"]), None)
         if active:
-            raise GateError([f"Home retrofit work is stopped for safety review. Owner: {taskqueues.accountable_owner(active['owner'])} (referral follow-up). Next action: obtain external evidence and an independent decision to restart retrofit work."])
+            raise GateError([f"Home retrofit work is stopped for safety review. Owner: {taskqueues.accountable_owner(active.get('owner'))} (referral follow-up). Next action: obtain external evidence and an independent decision to restart retrofit work."])
 
     def require_resident_clear(self, c, bindings=None):
         reasons = resident_gate(c, bindings)

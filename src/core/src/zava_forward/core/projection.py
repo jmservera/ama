@@ -181,6 +181,10 @@ def redact_staff_detail(user, d):
                 item["category"] = "Safety review"
                 item["clock_text"] = str(item.get("clock_text", "")).replace(
                     "Safeguarding clock", "Safety clock")
+            for entry in (*item.get("history", []), item.get("legacy_record")):
+                for node in (entry, (entry or {}).get("snapshot")):
+                    if isinstance(node, dict) and taskqueues.is_safeguarding(node.get("category")):
+                        node["category"] = "Safety review"
         if work is not None:
             d["work"] = work
         if d.get("status", "").startswith("Waiting on "):

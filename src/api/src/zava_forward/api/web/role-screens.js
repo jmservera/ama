@@ -881,7 +881,9 @@ const hazardEscalationState = (h) => `Escalation state: ${screenValue(h.state)}`
 function hazardClock(h) {
   if (h.responded_at) return `Service responded ${screenStamp(h.responded_at)}`;
   if (!h.response_due_at) return "Service response clock: no due time recorded";
-  const late = new Date(h.response_due_at).getTime() < Date.now();
+  const due = new Date(h.response_due_at).getTime();
+  if (Number.isNaN(due)) return `Service response clock: due time not readable (${screenValue(h.response_due_at)})`;
+  const late = due < Date.now();
   return `${late ? "Overdue" : "Awaiting"} service response. Due ${screenStamp(h.response_due_at)}. Recorded by the service, not set here`;
 }
 function hazardHold(h) {

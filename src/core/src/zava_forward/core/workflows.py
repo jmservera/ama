@@ -98,7 +98,7 @@ def hazard_state(h):
     return "Raised"
 
 
-def hazard_view(h, case_id):
+def hazard_view(h, case_id, as_of=None):
     out = deepcopy(h)
     out["state"] = hazard_state(h)
     out["service_authority"] = "Existing hazard and repairs service"
@@ -109,7 +109,7 @@ def hazard_view(h, case_id):
     out.setdefault("hold", dict(scope="Home", case_id=case_id, status="Released" if h["released"] else "Active",
                                 accountable_role=None, legacy=True))
     out["follow_up"] = deepcopy(h.get("accepted_by") or h.get("sender"))
-    clock = taskqueues.hazard_clock(h, datetime.now(UTC))
+    clock = taskqueues.hazard_clock(h, taskqueues.instant(as_of) or datetime.now(UTC))
     out["accountable_owner"] = clock["accountable_owner"]
     out["clock_text"] = clock["clock_text"]
     return out
@@ -507,4 +507,4 @@ class WorkflowMixin:
 
     def hazard_states(self, case_id):
         with self.lock:
-            return [dict(index=i, **hazard_view(h, case_id)) for i, h in enumerate(self._case(case_id)["hazards"])]
+            return [dict(index=i, **hazard_view(h, case_id, self.as_of)) for i, h in enumerate(self._case(case_id)["hazards"])]

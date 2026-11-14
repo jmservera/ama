@@ -130,7 +130,11 @@ def hazard_clock(
     if is_safeguarding(hazard.get("category")):
         kind = "Safeguarding" if reason_ok else "Safety"
     elapsed = "elapsed time unknown" if hours is None else f"{hours} hours elapsed"
-    window = f"service response due {due}" if due else "no response target window recorded"
+    window = (
+        f"service response due {due}"
+        if instant(due) is not None
+        else "no response target window recorded"
+    )
     states = (
         response,
         timing(hazard.get("resident_update_due_at"), hazard.get("resident_updated_at"), now),
