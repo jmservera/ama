@@ -50,7 +50,12 @@ INTENTS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
             "unblock",
             r"\b(unblock\w*|how\s+(?:can|do|to)\s+(?:i|we)\s+(?:fix|resolve|clear)|"
             r"fix\w*\s+(?:this\s+|the\s+)?safety|"
-            r"should\s+(?:i|we)\s+(?:schedule|book|arrange))\b",
+            r"should\s+(?:i|we)\s+(?:schedule|book|arrange)|"
+            r"(?:can|could|may)\s+(?:i|we)\s+(?:schedule|book|arrange|go\s+ahead\s+with)\s+"
+            r"(?:a\s+|the\s+)?visit|"
+            r"what\s+(?:can|could|should|must)\s+(?:i|we)\s+do\s+(?:to|about)\s+"
+            r"(?:get|move|clear|restart|resolve|fix)|"
+            r"get\s+(?:this|it|the\s+case)\s+moving)\b",
         ),
         (
             "blocked",

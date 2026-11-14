@@ -170,6 +170,36 @@ class PanelTests(roles.Matrix):
                 self.assertNotIn("3 March", d["reply"])
                 self.assertIn("not generative AI", d["answer_source_label"])
 
+    def test_unblock_variants_fall_back_to_cited_rules_when_the_draft_is_withheld(self) -> None:
+        self.model = lambda _p: envelope(
+            json.dumps(dict(answer="I have scheduled the visit.", citations=["ZF-4/stage"]))
+        )
+        for question in (
+            "what can I do to unblock this case?",
+            "how can we fix this safety? Should we schedule a visit?",
+            "can we book a visit?",
+            "what should we do to get this moving?",
+        ):
+            with self.subTest(question=question):
+                tid = self.thread(case="ZF-4")
+                code, d = self.ask(tid, question)
+                self.assertEqual((code, d["kind"]), (200, "answer"), d)
+                self.assertEqual(d["answer_origin"], "decision_rule", d)
+                self.assertTrue(d["citations"] and all(c["text"] for c in d["citations"]))
+                self.assertIn("independent restart decision", d["reply"])
+                self.assertIn("cannot book a visit", d["reply"])
+                self.assertNotIn("scheduled the visit", d["reply"])
+                self.assertIn("not generative AI", d["answer_source_label"])
+
+    def test_generative_answer_is_labelled_generative_model(self) -> None:
+        self.model = lambda _p: envelope(
+            json.dumps(dict(answer="From the case card.", citations=["ZF-4/stage"]))
+        )
+        code, d = self.ask(self.thread(case="ZF-4"), "Please summarise this case")
+        self.assertEqual((code, d["kind"]), (200, "answer"), d)
+        self.assertEqual(d["answer_origin"], "generative_model")
+        self.assertTrue(d["citations"])
+
     def test_post_dispatch_provider_failure_settles_the_meter_as_ineligible(self) -> None:
         meter = MagicMock()
         meter.publish_output.return_value = None

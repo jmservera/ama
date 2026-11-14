@@ -78,13 +78,13 @@ const employeeChat = (() => {
     const check = " Check the sources.";
     if (source === "decision-rules-fallback") return {
       label: RULE_LABEL,
-      detail: "Source: deterministic decision rules from recorded case facts. The generative draft did not pass the source check and was not shown." + check };
+      detail: "Origin: decision_rule. Source: deterministic decision rules from recorded case facts. The generative draft did not pass the source check and was not shown." + check };
     if (source === "decision-rules") return {
       label: RULE_LABEL,
-      detail: "Source: deterministic decision rules from recorded case facts (0 generative calls)." + check };
+      detail: "Origin: decision_rule. Source: deterministic decision rules from recorded case facts (0 generative calls)." + check };
     if (source === "generative-grounded") return {
       label: MODEL_LABEL,
-      detail: `Source: generative AI model (${answer.model}) grounded on case rules and records. AI-generated content may be incorrect.${check}` };
+      detail: `Origin: generative_model. Source: generative AI model (${answer.model}) grounded on case rules and records. AI-generated content may be incorrect.${check}` };
     if (source === "withheld" || source === "abstain" || (calls && !isAnswer)) return {
       label: source === "abstain" ? ORIGIN + "Withheld. The permitted sources do not cover the question (no record changed)" : WITHHELD_LABEL,
       detail: "Source: no answer was shown. The reply checks stopped the draft. No record changed." };
