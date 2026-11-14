@@ -1010,7 +1010,7 @@ function exceptionSummaryControl(rows) {
 }
 const indicatorStates = { fresh: "Fresh", stale: "Stale", enabled: "Enabled", disabled: "Disabled", healthy: "Healthy", degraded: "Degraded", down: "Down", quarantined: "Quarantined" };
 const indicatorState = (value) => typeof value === "string" && Object.hasOwn(indicatorStates, value.toLowerCase()) ? indicatorStates[value.toLowerCase()] : "Unknown";
-function indicatorRows(data, items) {
+function indicatorRows(data, items, unreadable = 0) {
   const given = exceptionRecord(data.indicators) ? data.indicators : {};
   const when = (entry) => exceptionRecord(entry) && typeof entry.as_of === "string" && entry.as_of ? `As of ${entry.as_of}` : "Time not supplied";
   const quarantined = items.filter((item) => exceptionRecord(item.original_source) && typeof item.original_source.status === "string"
@@ -1021,10 +1021,12 @@ function indicatorRows(data, items) {
   const stale = items.filter((item) => exceptionRecord(item.original_source) && typeof item.original_source.status === "string"
     && item.original_source.status.toLowerCase() === "stale").length + list(data.sources);
   const suppressed = items.filter((item) => typeof item.eligibility === "string" && /suppress/i.test(item.eligibility)).length;
+  const blocked = data.state === "roles_not_named" || unreadable > 0 || list(data.unrouted) > 0;
+  const none = blocked ? "Action needed" : "Needs review";
   const rows = [
-    ["Open exceptions", `State: ${items.length ? "Attention" : "Pass"}. ${count(items.length, "item", "items")} returned for you. Read-only; none is changed here.`],
-    ["Sources not connected", `State: ${stale ? "Warning" : "Pass"}. ${count(stale, "source or stale record", "sources or stale records")} listed. Read-only.`],
-    ["Suppressed records", `State: ${suppressed ? "Attention" : "Pass"}. ${count(suppressed, "item", "items")} marked suppressed. Read-only.`],
+    ["Open exceptions", `State: ${items.length ? "Attention" : none}. ${count(items.length, "item", "items")} returned for you. Read-only; none is changed here.`],
+    ["Sources not connected", `State: ${stale ? "Warning" : none}. ${count(stale, "source or stale record", "sources or stale records")} listed. Read-only.`],
+    ["Suppressed records", `State: ${suppressed ? "Attention" : none}. ${count(suppressed, "item", "items")} marked suppressed. Read-only.`],
     ["Lineage freshness", `State: ${indicatorState(given.lineage?.state)}. ${when(given.lineage)}. Read-only; Unknown is not proof the lineage is current.`],
     ["Ingestion quarantine", `State: ${quarantined ? `Quarantined (${quarantined} ${quarantined === 1 ? "item" : "items"} listed below)` : "None returned, which is not an all clear"}. Records stay as received; nothing is released or replayed here.`],
     ["Sensor feed health", `State: ${indicatorState(given.sensor_feed?.state)}. ${when(given.sensor_feed)}. Read-only; open a home for its sensor readings.`]
@@ -1066,7 +1068,7 @@ function exceptionRegisterPanel(data) {
       ["Your access", roles.length ? roles.map(([name, held]) => `${exceptionText(name)}: ${Array.isArray(held) ? held.map(exceptionText).join(", ") : "Unknown"}`).join("; ") : "No role named for you"],
       ["Role scope", scope.length ? scope.map(([kind, role]) => `${exceptionKinds[kind] || exceptionText(kind)}: ${exceptionText(role)}`).join("; ") : "Unknown"]]),
     exceptionHeading("exception-state", "State at a glance"),
-    screenFields(indicatorRows(data, items)),
+    screenFields(indicatorRows(data, items, unreadable)),
     exceptionHeading("exception-sources", "Sources not connected and records not routed"),
     list("Sources", data.sources),
     list("Unrouted", data.unrouted),

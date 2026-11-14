@@ -23,6 +23,30 @@ vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('data-operator');", 
 context.__s.overview(controller.signal, [], null).then(out => console.log(JSON.stringify(out)));
 """
 
+CLICK_SCRIPT = (
+    SCRIPT.replace(
+        "location:", "document: {getElementById: (id) => targets[id] || null}, location:"
+    )
+    .replace("const controller", "const calls = []; const targets = {};\nconst controller")
+    .replace(
+        "context.__s.overview(controller.signal, [], null)"
+        ".then(out => console.log(JSON.stringify(out)));",
+        """const find = (n, f, o = []) => {
+  if (n && typeof n === "object") { if (f(n)) o.push(n); (n.kids || []).forEach(k => find(k, f, o)); }
+  return o;
+};
+context.__s.overview(controller.signal, [], null).then(out => {
+  const hs = find(out, n => n.tag === "h3" && n.attrs.id);
+  hs.forEach(n => { targets[n.attrs.id] = {focus: () => calls.push(["focus", n.attrs.id]),
+    scrollIntoView: (o) => calls.push(["scroll", n.attrs.id, o.block])}; });
+  const bs = find(out, n => n.tag === "button" && n.attrs["data-jump-target"]);
+  bs.forEach(b => b.attrs.onclick());
+  const missing = bs[0].attrs.onclick; delete targets["exception-state"]; missing();
+  console.log(JSON.stringify(calls));
+});""",
+    )
+)
+
 BASE: dict[str, Any] = {
     "state": "ok",
     "items": [
@@ -129,6 +153,31 @@ class DataStewardScreenWcag(unittest.TestCase):
         for button in buttons:
             self.assertEqual(button["attrs"]["type"], "button")
             self.assertEqual(headings.get(button["attrs"]["data-jump-target"]), "-1")
+
+    def test_jump_handlers_focus_then_scroll_to_start(self) -> None:
+        result = subprocess.run(
+            ["node", "-e", CLICK_SCRIPT, str(WEB), json.dumps(BASE)],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        calls = json.loads(result.stdout)
+        ids = ["exception-state", "exception-sources", "exception-items", "exception-conflicts"]
+        expected = [step for i in ids for step in (["focus", i], ["scroll", i, "start"])]
+        self.assertEqual(calls, expected)
+
+    def test_empty_or_blocked_register_is_never_pass(self) -> None:
+        for contract, label in (
+            ({**BASE, "items": []}, "Needs review"),
+            ({**BASE, "items": [], "state": "roles_not_named"}, "Action needed"),
+            ({**BASE, "unrouted": ["R-1"]}, "Action needed"),
+            ({**BASE, "items": [{}]}, "Action needed"),
+        ):
+            page = glance(render(contract))
+            self.assertNotIn("State: Pass", page)
+            self.assertIn(f"Suppressed records State: {label}", page)
+        self.assertIn("Open exceptions State: Attention", glance(render(BASE)))
 
     def test_no_quarantine_is_not_an_all_clear(self) -> None:
         page = glance(render({**BASE, "items": []}))
