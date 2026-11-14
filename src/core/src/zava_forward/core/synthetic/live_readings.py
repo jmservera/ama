@@ -171,6 +171,11 @@ def _blend(low: float, high: float, fraction: float) -> float:
     return low + (high - low) * _ease(fraction)
 
 
+def reading_id_for(sensor_id: str, observed_at: datetime) -> str:
+    """Stable idempotency key: a pure function of sensor and UTC slot, never of delivery."""
+    return f"LIVE-{sensor_id}-{observed_at:%Y%m%dT%H%M}Z"
+
+
 @dataclass(frozen=True)
 class Reading:
     home_id: str
@@ -186,7 +191,7 @@ class Reading:
 
     @property
     def reading_id(self) -> str:
-        return f"LIVE-{self.sensor_id}-{self.observed_at:%Y%m%dT%H%M}Z"
+        return reading_id_for(self.sensor_id, self.observed_at)
 
     def row(self) -> dict[str, str]:
         return {
