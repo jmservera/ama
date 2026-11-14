@@ -91,6 +91,26 @@ class DeployTests(unittest.TestCase):
                 calls = calls[1:]
         return result, calls
 
+    def test_dry_run_is_deterministic_and_makes_no_az_calls(self):
+        options = ("--dry-run", "--parameter", "a=b", "--orchestrator-image", CURRENT)
+        first, calls = self.run_deploy([], *options, apps=[])
+        second, _ = self.run_deploy([], *options, apps=[])
+        self.assertEqual(first.returncode, 0, first.stderr)
+        self.assertEqual(calls, [])
+        self.assertEqual(first.stdout, second.stdout)
+        self.assertIn("DRY RUN", first.stdout)
+        self.assertIn(f"orchestratorImage={CURRENT}", first.stdout)
+        self.assertIn("what-if", first.stdout)
+
+    def test_dry_run_without_image_defers_resolution_and_rejects_apply(self):
+        result, calls = self.run_deploy([], "--dry-run", apps=[])
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(calls, [])
+        self.assertIn("<resolved-at-run-time>", result.stdout)
+        result, calls = self.run_deploy([], "--dry-run", "--apply", apps=[])
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(calls, [])
+
     def test_app_local_credential_and_authentication_lock_block_full_deployment(self):
         for tags in (
             {"zava-forward-auth-lock": "another-session"},

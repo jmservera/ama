@@ -552,6 +552,8 @@ Compiled profile/staging/auth-mode checks run in the existing infra suite.
 
 Example from the repository root: `python3 infra/scripts/deploy.py --resource-group ama --registry <registry-name> --environment dev --parameters <private-completed-parameters.bicepparam>` (what-if; complete the recorded checks below and add `--apply` only after review).
 
+Add `--dry-run` to print the deterministic plan and what-if command with no `az`, network or file access (it cannot be combined with `--apply`; without `--orchestrator-image` the image shows as `<resolved-at-run-time>`). Issue #148 criterion 4 (disposable Azure from-empty rebuild) stays unmet.
+
 ## Direct demo ingress migration proposal (2026-10-16, #360)
 
 Refs #360. The owner selects direct Container Apps HTTPS with Entra browser
