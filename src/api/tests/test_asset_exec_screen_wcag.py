@@ -4,6 +4,8 @@ import json
 import unittest
 from typing import Any
 
+from checks import specialist_keyboard_browser_check as keyboard_check
+
 from test_asset_board_screen import WEB, run, tags, walk
 
 
@@ -78,6 +80,17 @@ class AssetExecScreenWcag(unittest.TestCase):
             self.assertNotIn("aria-invalid", attrs)
             self.assertNotEqual(attrs.get("role"), "status")
             self.assertNotEqual(attrs.get("id"), "regulatory-alerts")
+
+    def test_asset_board_expected_regions_match_table_labels(self) -> None:
+        found = [
+            {"label": label, "role": "region", "tabindex": "0"}
+            for label in (
+                "Investment inputs",
+                "Phase checks and benefits",
+                "Portfolio summary in words",
+            )
+        ]
+        self.assertEqual(keyboard_check.region_failures("asset-board", found), [])
 
 
 if __name__ == "__main__":
