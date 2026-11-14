@@ -8338,6 +8338,54 @@ Classes: `local observed` is a recorded local run on the stated head; `implement
 
 Documentation only. Checks run for this record: the cut-over audit check, `test_cutover_audit`, `git diff --check` and an ASCII scan of added lines. No install, source, test, Azure, SQL, browser, model or complete-gate run, and not a complete-gate receipt. Independent exact-head review, human approvals and applicable hosted CI remain required before merge. Original records: `.copilot-tracking/{research,plans,details,changes,reviews}/2026-11-13/440-demo-feature-wave-checkpoint-1531-*` and its state file.
 
+## Post-1586 cut-over verification reconciliation (2026-11-14, Refs #201)
+
+Draft, documentation only, not approved. This reconciles the cut-over verification links and the local project test counts against current `origin/main` after PR 1586. It ticks no #201 criterion, closes nothing, makes no live Azure, deployment or sign-off claim and does not widen any earlier admission. PR 1584 has since merged; the [current-main local verification](#current-main-cut-over-local-verification-2026-11-13-refs-201) section below holds its pin and tool-level checks, and this section does not repeat them.
+
+### Pins (static Git observations, read 2026-11-14)
+
+| Item | Observed value |
+| --- | --- |
+| Source commit | `38b13ec9e44e8be47d9817eaf4412b15b0626d4a` (merge of PR 1586), the counts below were observed at this head; the section was rebased on 2026-11-14 onto `origin/main` `ac70acafac6d215a87f25b68c5d8e14f7658ca30` without rerunning them |
+| Source tree | `962a3a80ed2d666443ae0f0c7ead976d0c8c3ea1` |
+| Old paths | `git ls-files mvp prototype` returns no files; `src/` holds `core`, `agents`, `api`, `orchestrator` and `importer` |
+| PR 1584 | Merged as `0e39043cc` and rebased onto here; its section is pinned to `3033dc9c2` and covers lint, dependency-rule and old-path checks. This section adds only link reconciliation and full-suite counts at the later pin |
+
+### Link reconciliation
+
+All relative file links and in-page anchors in this pack resolve at the source commit (scripted check, zero unresolved). No link to this pack from `docs/` or `src/README.md` is broken. Link resolution does not show that the linked claim is current.
+
+### Local project test counts
+
+Environment: Linux, Python 3.12.3, isolated pip venv, editable installs of the five `src` projects, run from each project directory with the CI `PYTHONPATH` fixtures (core tests for agents and orchestrator; core and agents tests for api). No Azure, SQL Server, Docker, provider or private data. The machine was shared and loaded, so durations are not meaningful.
+
+| Project | Command | Result |
+| --- | --- | --- |
+| core, manifest | `python -m pytest -q tests/test_scenario_manifest.py` | 8 passed, 57 subtests passed |
+| core, full | `python -m unittest discover -s tests` | 3262 run, 414 skipped; 50 failures and errors, all in `test_device_registry_azure`, caused by the optional `azure-iot-hub` and `six` dev packages not being installed. After installing the pinned dev packages, that module alone: 39 run, OK |
+| agents | `python -m pytest -q tests` | 448 passed, 271 subtests passed |
+| orchestrator | `python -m pytest -q tests` | 115 passed, 373 subtests passed |
+| importer | `python -m pytest -q tests` | 85 passed, 16 subtests passed |
+| api, full | `python -m unittest discover -s tests` | 3086 run, 623 skipped, 1 failure and 9 errors, all browser tests (`test_browser_asset_urls`, `test_employee_acceptance_check`, `test_resident_summary_ai_ui`, `test_workbench_live_defaults`, `test_chat_widget_layout`); the Playwright driver cannot start here (`libatomic.so.1` missing). No Chromium run is claimed |
+| tools | `python3 tools/rename-zava-tests.py` | 25 tests OK |
+
+Counts are one local run on this head. They are not a CI result, not a coverage measurement and not a comparison with the baseline, so the #201 criterion "equal or greater coverage than the baseline" stays unproven. The core and api counts are unittest case counts and the others are pytest counts, which treat subtests differently; do not compare them across runners. Earlier counts in this pack describe earlier heads.
+
+### Skips, deferrals and blocks
+
+* local observed: the rows above, on the stated head only; skips are mostly SQL Server and browser paths.
+* deferred: browser runs, SQL Server paths, hosted CI equivalence, a deployed and healthy `src/` build, relocation and backup of private `mvp/data/`, and the dependent epics' old-path check.
+* blocked: owner sign-off in #201 and the soak-period decision.
+* unknown: behaviour of unmerged PRs, including 1584.
+
+### Recommendation (proposed, not an owner decision)
+
+CONTINUE, bounded. #201 stays open: its unticked criteria are not proven by local synthetic evidence. Resume point: re-read `origin/main`, repeat these pins and merge this section with the current-main verification section into one.
+
+### Process limits
+
+Documentation only. Local focused tier; not a complete-gate receipt. Independent exact-head review, human approvals and applicable hosted CI remain required. Original records: `.copilot-tracking/{research,plans,details,changes,reviews}/2026-11-14/201-post-1586-sync-0018-*` and its state file.
+
 ## Post-wave stabilization checkpoint (2026-11-13, Refs #440 #228 #358 #232 #165)
 
 Draft, documentation only, not approved. This is the bounded recurring #440 checkpoint for the wave merged after the previous [demo feature-wave checkpoint](#demo-feature-wave-stabilization-checkpoint-2026-11-13-refs-440-1288-184-432-144-133-435-216). It changes no source, test, tool, workflow, requirement or ADR, opens or edits no issue, ticks no criterion and approves nothing. Unlike the previous checkpoint, the local checks below were run in this session on the pinned head.
