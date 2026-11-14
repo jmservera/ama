@@ -4,6 +4,7 @@ import json
 import random
 import tempfile
 import unittest
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -20,7 +21,7 @@ def non_empty(records: gp.Records) -> list[str]:
     return [] if records["rows.jsonl"] else ["rows.jsonl is empty"]
 
 
-def clock_at(hour: int):
+def clock_at(hour: int) -> Callable[[], datetime]:
     return lambda: datetime(2026, 11, 14, hour, tzinfo=UTC)
 
 
