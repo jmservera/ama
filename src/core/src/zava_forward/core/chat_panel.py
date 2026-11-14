@@ -37,7 +37,7 @@ from typing import Any
 
 from zava_forward.core.ai_consumption import CallContext, call_context, reference, usage
 from zava_forward.core.assistants import REGISTRY
-from zava_forward.core.chat_case_answers import AI_CONSENT
+from zava_forward.core.chat_case_answers import AI_CONSENT, RULES_FIRST
 from zava_forward.core.chat_case_answers import RULES as WORKFLOW_RULES
 from zava_forward.core.chat_case_answers import answer as grounded_answer
 from zava_forward.core.chat_case_answers import intent as case_intent
@@ -379,7 +379,17 @@ SENSOR_RULE_PATHS = (
 def skill_sources(skill: str, sources: dict[str, str]) -> dict[str, str]:
     if skill != GENERAL:
         categories = REGISTRY[skill]["categories"]
-        common = ("id", "stage", "status", "needs_notice", "named_contact", "waiting_on", "owner")
+        common = (
+            "id",
+            "stage",
+            "status",
+            "needs_notice",
+            "named_contact",
+            "waiting_on",
+            "owner",
+            "pas2035",
+            "sensor",
+        )
         sources = {
             key: value
             for key, value in sources.items()
@@ -439,10 +449,39 @@ def valid_usage(value: object) -> dict[str, int] | None:
     return result
 
 
+RULES_SOURCE_ROOTS = {
+    "unblock": ("hazards",),
+    "sensor": ("hazards",),
+    "claim": ("grants", "funding", "funding_ok", "technical_missing"),
+    "pas2035": ("grants", "funding", "funding_ok", "technical_missing"),
+}
+INFORMATIONAL_LEAD = re.compile(
+    r"^\W*(?:who|whose|what|when|where|which|why|status|has|have|is|are|was|were|does|did)\b",
+    re.I,
+)
+ACTION_REQUEST = re.compile(
+    r"\b(?:for\s+me|on\s+my\s+behalf|please|i\s+(?:want|need)\s+you"
+    r"|you\s+(?:to\s+|should\s+|can\s+|could\s+)?(?:approve|sign|certify|authori[sz]e))\b",
+    re.I,
+)
+APPROVAL_COMMAND = re.compile(
+    r"(?:^|[.!?;:]\s+)(?:(?:just|now|then|also|go\s+ahead\s+and)\s+)*"
+    r"(?:approve|certify|authori[sz]e|sign[\s-]off)\b",
+    re.I,
+)
+
+
 def out_of_scope(question: str) -> tuple[str, str] | None:
     """The kind and workflow route when the question asks the assistant to act, else None."""
     question = normalise_policy_text(question)
+    informational = (
+        bool(INFORMATIONAL_LEAD.match(question))
+        and not ACTION_REQUEST.search(question)
+        and not APPROVAL_COMMAND.search(question)
+    )
     for name, pattern, route in OUT_OF_SCOPE:
+        if name == "approve" and informational:
+            continue
         if pattern.search(question):
             return name, route
     return None
@@ -561,11 +600,18 @@ class ChatPanel:
         found = self.iso.case_facts(self.iso.current_user(user), case_id)
         if not found:
             return None
+        question = normalise_policy_text(question)
         scoped = {f"{case_id}/{path}": value for path, value in found.items()}
         if isinstance(skill, str):
-            scoped = {k: v for k, v in skill_sources(skill, scoped).items() if k in scoped}
+            kept = skill_sources(skill, scoped)
+            extra = RULES_SOURCE_ROOTS.get(case_intent(question) or "", ())
+            scoped = {
+                k: v
+                for k, v in scoped.items()
+                if k in kept or k.split("/", 1)[1].split(".", 1)[0] in extra
+            }
         allowed = {k.split("/", 1)[1]: v for k, v in scoped.items()}
-        g_kind, body, g_cites = grounded_answer(case_id, normalise_policy_text(question), allowed)
+        g_kind, body, g_cites = grounded_answer(case_id, question, allowed)
         if g_kind != "answer" or not g_cites:
             return None
         pool = {**scoped, **WORKFLOW_RULES}
@@ -823,7 +869,7 @@ class ChatPanel:
             and not over_limit
             and len(str(question or "")) <= MAX_QUESTION_CHARS
             and len(masked) <= MAX_QUESTION_CHARS
-            and case_intent(normalise_policy_text(masked)) in ("unblock", "sensor")
+            and case_intent(normalise_policy_text(masked)) in RULES_FIRST
         )
         if over_limit:
             kind, text = "fallback", THREAD_LIMIT_REACHED

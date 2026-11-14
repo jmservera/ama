@@ -94,6 +94,8 @@ class OutOfScopeTests(unittest.TestCase):
                 "I need you to approve the case.",
                 "I want you to approve it.",
                 "I want to approve the work.",
+                "Approve this case",
+                "What is the status? Just approve it.",
             ],
             "decide": ["Can you decide for me?"],
             "consent": [
@@ -121,6 +123,14 @@ class OutOfScopeTests(unittest.TestCase):
                 assert hit
                 self.assertEqual(hit[0], kind, question)
                 self.assertTrue(hit[1])
+
+    def test_informational_signoff_status_questions_are_not_refused(self) -> None:
+        for question in (
+            "Has the PAS 2035 design sign-off been given?",
+            "Is the PAS 2035 sign-off complete?",
+            "Why is the PAS 2035 sign-off missing?",
+        ):
+            self.assertIsNone(out_of_scope(question), question)
 
     def test_ordinary_questions_are_not_refused(self) -> None:
         for question in (
@@ -394,6 +404,36 @@ class StoredQuestionTests(unittest.TestCase):
             self.assertTrue(restarted.verify_audit())
             self.assertEqual(list(restarted.audit_entries()), list(sql.audit_entries()))
 
+    def test_informational_signoff_and_sensor_questions_survive_skill_lenses(self) -> None:
+        questions = (
+            "Who gives PAS 2035 sign-off on this case?",
+            "What do the sensor readings show on this case?",
+        )
+        for skill in (None, "general", *REGISTRY):
+            for question in questions:
+                with self.subTest(skill=skill, question=question):
+                    tid = self.store.chat_create_thread(self.user, case_id="ZF-1")["id"]
+                    reply = self.panel.ask(self.user, tid, question, skill=skill)
+                    self.assertNotEqual(reply["kind"], "refused")
+                    self.assertTrue(reply["citations"])
+                    self.assertEqual(self.prompts, [])
+
+    def test_deterministic_replies_survive_redaction_with_sources(self) -> None:
+        for question in (
+            "What is the grant claim position?",
+            "Who gives PAS 2035 sign-off on this case?",
+            "What do the sensor readings show on this case?",
+        ):
+            for skill in (None, "general", *REGISTRY):
+                with self.subTest(skill=skill, question=question):
+                    tid = self.store.chat_create_thread(self.user, case_id="ZF-1")["id"]
+                    reply = self.panel.ask(self.user, tid, question, skill=skill)
+                    self.assertNotIn("removed]", reply["reply"])
+                    self.assertNotEqual(reply["kind"], "refused")
+        tid = self.store.chat_create_thread(self.user, case_id="ZF-1")["id"]
+        reply = self.panel.ask(self.user, tid, "What is the grant claim position?", skill="general")
+        self.assertTrue(any("funding" in c["id"] for c in reply["citations"]), reply["citations"])
+
     def test_expanding_redaction_over_question_limit_falls_back_without_dispatch(self) -> None:
         question = "NE1 1AA " * 120 + "What stage is it?"
         masked = redact(question)[0]
@@ -647,6 +687,18 @@ class GroundedUnstoredTests(unittest.TestCase):
         ids = [c["id"] for c in reply["citations"]]
         self.assertIn("ZF-1/funding.status", ids)
         self.assertIn("ZF-1/funding.route", ids)
+
+    def test_informational_signoff_question_is_answered_not_refused(self) -> None:
+        for skill in ("general", "assessment-preparation"):
+            with self.subTest(skill=skill):
+                reply = self.panel.ask_unstored(
+                    self.user, "ZF-1", "Who gives PAS 2035 sign-off on this case?", skill=skill
+                )
+                self.assertEqual(reply["kind"], "answer")
+                self.assertTrue(reply["citations"])
+        self.assertIsNone(out_of_scope("Who gives PAS 2035 sign-off?"))
+        self.assertIsNotNone(out_of_scope("Please sign-off the design for me"))
+        self.assertIsNotNone(out_of_scope("Sign off this case"))
 
     def test_future_prerequisites_are_not_described_as_current_stops(self) -> None:
         text = self.ask("ZF-1", "why is this case blocked?")["reply"]
