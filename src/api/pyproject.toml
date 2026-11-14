@@ -70,7 +70,8 @@ follow_imports = "skip"
 [[tool.mypy.overrides]]
 module = ["test_continuity_epoch_export", "tests.test_continuity_epoch_export",
           "test_operator_suspension", "tests.test_operator_suspension",
-          "test_assistant_restart_non_replenishment", "tests.test_assistant_restart_non_replenishment"]
+          "test_assistant_restart_non_replenishment", "tests.test_assistant_restart_non_replenishment",
+          "test_auth_branch_floor", "tests.test_auth_branch_floor"]
 disallow_untyped_calls = false
 
 [tool.setuptools.package-data]
