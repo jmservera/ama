@@ -18,3 +18,8 @@ Execution: executed once (self-review, not independent). Outcome: conformant for
 1. Wire notice and withdrawal into the API and resident UI (web guidelines apply).
 2. Resident-engagement and legal review of the notice wording and reading level.
 3. Independent exact-head review, hosted CI; use `Refs #151`, not `Closes`.
+
+## Cycle 2 review
+
+* Review executed once. Outcome: conformant for the stated scope (test-only typing fix; no behavior change; checks above pass).
+* Open item: install `src/core` with pip to run the bare unittest command; human review and hosted CI remain required.

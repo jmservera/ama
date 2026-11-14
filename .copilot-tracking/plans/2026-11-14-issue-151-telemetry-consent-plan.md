@@ -12,3 +12,9 @@ ms.date: 2026-11-14
 ## Critique
 
 One pass, self-applied: reuse existing consent enforcement instead of a new store; no API or UI changes in this slice.
+
+## Cycle 2 plan
+
+* Annotate `WithdrawalTests.process` as `(self, row: Mapping[str, object]) -> Receipt`; `Mapping` is needed because `dict` is invariant and `observations()` returns `dict[str, str | int | float | bool | None]`.
+* Import `Mapping` from `collections.abc` and `Receipt` from `zava_forward.core.sensor_consumer`.
+* Critique: executed once; no conflicts with confirmed decisions. No production code changes.

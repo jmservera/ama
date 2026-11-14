@@ -18,3 +18,9 @@ Issue #151: resident-facing telemetry notice and withdrawal. Research dispositio
 ## Planning Readiness
 
 Ready. Assumption: notice wording is a proposal needing resident-engagement and legal review; not evidence of approved text.
+
+## Cycle 2: mypy errors in the consent test (PR #1729)
+
+* `python3 -m mypy` in `src/core` reported 5 errors in `tests/test_telemetry_consent.py`: bare `dict` at line 22 (`type-arg`) and `object` attribute access at lines 39, 46 and 52 (`attr-defined`).
+* Cause: `process` was annotated `-> object` with a bare `dict` parameter; the real return type is `Receipt` in `zava_forward.core.sensor_consumer`.
+* Research disposition: executed (local mypy output and source read). Planning Readiness: Ready.

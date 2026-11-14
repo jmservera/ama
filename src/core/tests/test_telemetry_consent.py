@@ -2,11 +2,12 @@
 
 import tempfile
 import unittest
+from collections.abc import Mapping
 from dataclasses import replace
 
 from sensor_consumer_fixture import CONTROL, POLICY, RECEIVED, observations, store_at
 from zava_forward.core import sensor_view, telemetry_consent
-from zava_forward.core.sensor_consumer import SensorConsumer, preflight
+from zava_forward.core.sensor_consumer import Receipt, SensorConsumer, preflight
 
 
 class WithdrawalTests(unittest.TestCase):
@@ -19,7 +20,7 @@ class WithdrawalTests(unittest.TestCase):
         self.consumer.configure(POLICY, [CONTROL])
         self.rows = observations()
 
-    def process(self, row: dict) -> object:
+    def process(self, row: Mapping[str, object]) -> Receipt:
         return self.consumer.process(next(iter(preflight([row]))), RECEIVED)
 
     def cases(self) -> tuple[object, ...]:
