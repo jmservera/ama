@@ -143,6 +143,24 @@ class SensorAnalysisTests(unittest.TestCase):
                 sa.AnalysisPolicy(max_staleness_hours=0),
             )
 
+    def test_reproduce_tolerates_malformed_observed_at(self) -> None:
+        rows = [dict(r) for r in self.cases[next(iter(self.cases))].rows]
+        clean = sa.reproduce_sensor_analysis(rows)
+        rows.append({**rows[0], "observed_at": "not-a-time"})
+        rows.append({k: v for k, v in rows[0].items() if k != "observed_at"})
+        result = sa.reproduce_sensor_analysis(rows)
+        self.assertEqual(result["analysis_version"], clean["analysis_version"])
+        self.assertIsInstance(result["signal"], dict)
+        with self.assertRaisesRegex(ValueError, "NO_VALID_OBSERVATIONS"):
+            sa.reproduce_sensor_analysis([{**rows[0], "observed_at": "bad"}])
+
+    def test_digest_changes_with_calibration_flag(self) -> None:
+        rows = [dict(r) for r in self.cases[next(iter(self.cases))].rows]
+        base = sa.derive_signal(rows[0]["home_id"], rows, WINDOW, AS_OF, "granted")
+        rows[0]["calibrated"] = "false"
+        flipped = sa.derive_signal(rows[0]["home_id"], rows, WINDOW, AS_OF, "granted")
+        self.assertNotEqual(base.input_digest, flipped.input_digest)
+
 
 if __name__ == "__main__":
     unittest.main()
