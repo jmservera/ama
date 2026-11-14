@@ -25,6 +25,11 @@ reviewed or accepted. All journeys are desk-based hypotheses until validated in
 human design, content, accessibility or user-test acceptance, so this matrix
 ticks no acceptance criterion and the design review gate stays Blocked.
 
+Requirement traceability: the journey-level requirement mapping (for example
+`SA-001`, `SA-003`, `AC-035` and `AC-040`) stays in the
+[design system matrix](./design-system.md#journey-to-requirement-to-design-to-test-traceability).
+Each screen row below inherits the requirements of the journey it names.
+
 Terms used in the columns:
 
 * Journey: the role journey section the screen serves.
