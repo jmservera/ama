@@ -11802,3 +11802,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-14] update | Issue #233 stage map names and current-step announcement (Refs #233)
 
 * The role-screen journey stage list is now named "Eight journey stages for <home>" and marks the current stage with `aria-current="step"` once (resident-choice serves two stages), alongside the existing text cue. New test `src/api/tests/test_role_screens_stage_map_focus.py` also pins no added tab stops or nested headings and the text status line on tension callouts. Node render evidence only: no browser, assistive-technology or user evidence; Criterion 2 stays unticked.
+
+## [2026-11-14] update | Issue #156 screen design traceability matrix (Refs #156)
+
+* Added [screen-design-traceability.md](research/ux/screen-design-traceability.md): one row per role screen, the chat panel and the alert surface for #225 to #233, #159 and #215, linking journey, task flow, design artefact, a test and the named design gap. Indexed in the knowledge base README.
+* New test `src/api/tests/test_screen_design_traceability.py` checks that every registered role screen has a row and that links, anchors and tests exist. It asserts no human, accessibility or content acceptance; criterion 1 of #156 stays unmet and the design review gate Blocked.
