@@ -13,3 +13,8 @@
 * Validation: `ruff check` and `ruff format --check` pass on both files; `python3 -m unittest discover -s infra/tests -p 'test_deploy*.py'` 21 OK; `mypy infra/scripts/deploy.py` clean.
 * Scope note: directory-wide `ruff check infra/scripts infra/tests` still reports 110 pre-existing findings in unrelated files (not touched here).
 * Review: single-pass self-review of the diff found no further issues. Not pushed.
+
+## Cycle 2 (Refs #148)
+
+* Reformatted `infra/scripts/deploy.py` and `infra/tests/test_deploy.py` with `ruff format --isolated --line-length 100`, matching `src-ci.yml` and `tools/rpi-checks.py`; `deploy.py` stays mode `100755`.
+* Verified exit 0: isolated `ruff check` (E,F,I,B,UP, py312, 100), isolated `ruff format --check`, and `unittest discover -s infra/tests -p 'test_deploy*.py'` (21 tests OK).

@@ -9,3 +9,7 @@ Execution: once. Outcome: conformant for the scoped change, with open items rout
 ## Cycle 1 correction review
 
 * Outcome: conformant for the `EXE001` finding. Diff limited to mode change, formatting and tracking notes. Directory-wide ruff findings in unrelated files are pre-existing and routed to later work.
+
+## Cycle 2 Correction (Refs #148)
+
+* Independent Cycle 1 Finding 1 (88-column format breaks the 100-column gate) and Finding 2 (no green focused ruff receipt) addressed by 100-column reformat; both isolated ruff commands and focused tests exit 0.

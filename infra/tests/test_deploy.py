@@ -140,9 +140,7 @@ class DeployTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(len(calls), 2)
 
-    def assert_selection(
-        self, responses: list[dict], image: str, *options: str, **kwargs
-    ):
+    def assert_selection(self, responses: list[dict], image: str, *options: str, **kwargs):
         result, calls = self.run_deploy(
             [*responses, reply("deployment group what-if")], *options, **kwargs
         )
@@ -263,9 +261,7 @@ class DeployTests(unittest.TestCase):
                         [], image, "--orchestrator-image", explicit
                     )
                     self.assertEqual(len(calls), 1)
-                    self.assertIn(
-                        "source: explicit --orchestrator-image", result.stdout
-                    )
+                    self.assertIn("source: explicit --orchestrator-image", result.stdout)
 
     def test_blank_explicit_image_resolves_normally_for_both_actions(self):
         for explicit in ("", "  ", "\t\n "):
@@ -287,9 +283,7 @@ class DeployTests(unittest.TestCase):
                         self.assertEqual(
                             [
                                 call[: len(response["command"])]
-                                for call, response in zip(
-                                    calls[:-1], responses, strict=True
-                                )
+                                for call, response in zip(calls[:-1], responses, strict=True)
                             ],
                             [response["command"] for response in responses],
                         )
@@ -309,9 +303,7 @@ class DeployTests(unittest.TestCase):
                             result.stdout,
                         )
                         if image == PLACEHOLDER:
-                            self.assertIn(
-                                "WARNING: placeholder image selected", result.stderr
-                            )
+                            self.assertIn("WARNING: placeholder image selected", result.stderr)
                         else:
                             self.assertNotIn("WARNING:", result.stderr)
 
@@ -355,9 +347,7 @@ class DeployTests(unittest.TestCase):
                 "(ResourceNotFound)",
             ):
                 with self.subTest(command=command, error=error):
-                    result, calls = self.run_deploy(
-                        [*prefix, reply(command, error=error, code=1)]
-                    )
+                    result, calls = self.run_deploy([*prefix, reply(command, error=error, code=1)])
                     self.assertNotEqual(result.returncode, 0)
                     self.assertIn(error, result.stderr)
                     self.assertNotIn("orchestratorImage=", result.stdout)
@@ -366,11 +356,7 @@ class DeployTests(unittest.TestCase):
     def test_invalid_discovery_data_stops_deployment(self):
         scenarios = [
             [reply("containerapp job list", {})],
-            [
-                reply(
-                    "containerapp job list", [{"name": "job-forward-test-orchestrator"}]
-                )
-            ],
+            [reply("containerapp job list", [{"name": "job-forward-test-orchestrator"}])],
             [reply("containerapp job list", [job("orchestrator", "")])],
             [reply("containerapp job list", []), reply("acr list", {})],
             [
