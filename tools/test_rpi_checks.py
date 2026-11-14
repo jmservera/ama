@@ -484,6 +484,12 @@ class GateTests(unittest.TestCase):
             "test_reopened_store_reproduces_signal_without_writes)",
             gate.SENSOR_MSSQL_REQUIRED_TESTS,
         )
+        self.assertIn(
+            "test_reproduce_retained_matches_pure_reproduction_and_fails_closed_read_only "
+            "(test_sensor_analysis_mssql.MssqlRetainedAnalysisTests."
+            "test_reproduce_retained_matches_pure_reproduction_and_fails_closed_read_only)",
+            gate.SENSOR_MSSQL_REQUIRED_TESTS,
+        )
 
     def test_sensor_mssql_is_a_required_flagged_command_after_the_existing_sql_suites(
         self,
