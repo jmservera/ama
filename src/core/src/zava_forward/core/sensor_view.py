@@ -57,6 +57,17 @@ AS_OF_RULE = (
     f"request, so they may be older than {WINDOW_DAYS} days. Later-dated readings are "
     "excluded and are never treated as recent. Current freshness is not asserted by this evidence."
 )
+WATCH_HUMIDITY_PCT = 75.0
+WATCH_TEMPERATURE_C = 16.0
+WATCH_LABEL = "Sensor watch"
+WATCH_FRAMING = (
+    "Sensor watch - inspection required before changing case status. "
+    "Advisory only: sensor readings never approve or change a case or hazard."
+)
+WATCH_THRESHOLDS = (
+    "EXERCISE VALUE, not a sourced standard: humidity at or above 75 %RH or "
+    "temperature at or below 16 degC."
+)
 ANCHOR_NAME = "quality_record_anchor"
 ANCHOR_MEANING = (
     "Time of the first active quality evidence record. It is not an installation date and "
@@ -417,6 +428,7 @@ def view(
         freshness="unknown",
         freshness_text="No reading is available.",
         manual_route=MANUAL,
+        advisory=advisory(out),
     )
     if out["state"] in ("consent-withheld", "unavailable"):
         out["freshness_text"] = out["detail"]
@@ -441,6 +453,48 @@ def view(
                 else "Latest reading is older than 15 minutes. Treat it as out of date."
             ),
         )
+    return out
+
+
+def advisory(sensors: Mapping[str, Any] | None) -> dict[str, Any]:
+    """Plain-language damp and mould watch from the latest retained reading.
+
+    Deterministic and advisory only. The text label states the outcome, so colour is never the
+    only signal. It reads no clock and changes no case or hazard state.
+    """
+    latest = (sensors or {}).get("latest")
+    out: dict[str, Any] = dict(
+        label="No watch",
+        watch=False,
+        reasons=[],
+        text="No reading is available, so no sensor watch is raised.",
+        thresholds=WATCH_THRESHOLDS,
+        framing=WATCH_FRAMING,
+    )
+    if not latest:
+        return out
+    reasons: list[str] = []
+    try:
+        humidity = float(latest["humidity_pct"])
+        temperature = float(latest["temperature_c"])
+    except (KeyError, TypeError, ValueError):
+        out["text"] = "The latest reading could not be read, so no sensor watch is raised."
+        return out
+    if humidity >= WATCH_HUMIDITY_PCT:
+        reasons.append(f"Humidity {humidity:g} %RH is at or above {WATCH_HUMIDITY_PCT:g} %RH.")
+    if temperature <= WATCH_TEMPERATURE_C:
+        reasons.append(
+            f"Temperature {temperature:g} degC is at or below {WATCH_TEMPERATURE_C:g} degC."
+        )
+    if reasons:
+        out.update(
+            label=WATCH_LABEL,
+            watch=True,
+            reasons=reasons,
+            text=f"{WATCH_LABEL}: " + " ".join(reasons) + " " + WATCH_FRAMING,
+        )
+    else:
+        out["text"] = "Latest reading is within the watch values. " + WATCH_FRAMING
     return out
 
 
