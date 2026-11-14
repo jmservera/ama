@@ -317,8 +317,7 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
 
 def require_registered(task):
     from . import ai_registry
-    if ai_registry.get(task) is None:
-        raise ValueError("This AI task is not registered. Use the manual route.")
+    ai_registry.require_registered(task)
 
 
 def run_text_task(store, user, task, cases, sysmsg, prompt, template, template_cites, strong=False, check=None, mode=None,

@@ -130,7 +130,7 @@ class DispatchWiring(unittest.TestCase):
             mock.patch.dict(os.environ, {MODE_ENV: "actual"}),
             mock.patch("urllib.request.urlopen") as sent,
         ):
-            out = ai.run("summarise", "sys", "prompt", "template text")
+            out = ai.run("summary", "sys", "prompt", "template text")
         sent.assert_not_called()
         self.assertEqual(out["text"], "template text")
         self.assertEqual(out["source"], "template")
@@ -156,7 +156,7 @@ class DispatchWiring(unittest.TestCase):
             mock.patch.object(ai_module.Ai, "_chat", return_value="drafted") as chat,
         ):
             os.environ.pop(MODE_ENV, None)
-            out = ai.run("summarise", "sys", "prompt", "template text")
+            out = ai.run("summary", "sys", "prompt", "template text")
         chat.assert_called_once()
         self.assertEqual(out["source"], "ai")
 
