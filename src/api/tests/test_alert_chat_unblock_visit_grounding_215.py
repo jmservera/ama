@@ -43,6 +43,9 @@ def envelope(text: str | None) -> dict[str, Any]:
 
 
 class UnblockVisitGroundingTests(roles.Matrix):  # type: ignore[misc]
+    admission: Any
+    saved: dict[str, str | None]
+
     @classmethod
     def setUpClass(cls) -> None:
         cls.admission = patch("zava_forward.api.server.chat_admission", return_value=None)
