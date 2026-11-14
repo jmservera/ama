@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Prototype Profile Review
 description: Company-role critique, dated owner usability feedback and proposed next-prototype acceptance checks
-ms.date: 2026-11-10
+ms.date: 2026-11-14
 ms.topic: reference
 ---
 
@@ -582,7 +582,7 @@ supplied" for the versioned design and carries its exact gap.
 | Screen (source id or route) | Journey (hypothesis) | Task flow | Design artefact (nearest written record) | Gap that remains |
 | --- | --- | --- | --- | --- |
 | `asset-board` | [Asset executive][bc-asset], [Board][bc-board] | [Asset flow][bc-eleven] T01 | [Asset and board delivery status](./customer-journeys/asset.md#asset-and-board-screen-delivery-status-2026-11-04-226) | Versioned design Not supplied; conflict and unknown-input states |
-| `programme-queue` and connected home view | [Programme planner][bc-programme], [connected journey][bc-connected] | [Profile flow][bc-profile] Programme coordinator; [lifecycle][bc-lifecycle] | [Programme queue proposal](./atlas-screen-trace.md#perspectives-to-screens) (PROPOSED, NOT APPROVED) | Versioned design Not supplied; empty-page versus empty-set state unresolved |
+| `programme-queue` and connected home view | [Programme planner][bc-programme], [connected journey][bc-connected] | [Profile flow][bc-profile] Programme coordinator; [lifecycle][bc-lifecycle] | [programme-queue-paging-v1](./customer-journeys/programme.md#programme-case-queue-and-paging-proposed-v1-state-and-recovery-design-2026-11-10-refs-156-230-149) (PROPOSED, partial to `programme-queue`, NOT APPROVED) | Versioned design Not supplied; empty-page versus empty-set state unresolved |
 | `technical-queue` | [Assessor][bc-assessor], [designer][bc-technical] | [Technical flow][bc-eleven] T04 | [Technical and quality delivery status](./customer-journeys/programme.md#technical-and-quality-screens-delivery-status-2026-11-04-231) | Versioned design Not supplied; separate sign-off wording |
 | `quality-queue` | [Independent QA][bc-quality] | [Quality flow][bc-eleven] T09 | [Technical and quality delivery status](./customer-journeys/programme.md#technical-and-quality-screens-delivery-status-2026-11-04-231) | Versioned design Not supplied; reinspection thresholds |
 | `resident-choice` | [Household][bc-household], [representative][bc-representative] | [Resident task designs J1 to J4](./customer-journeys/residents.md#resident-and-representative-task-designs-2026-10-27-154) | [Resident and representative task designs](./customer-journeys/residents.md#resident-and-representative-task-designs-2026-10-27-154) | Versioned design Not supplied; resident-facing wording unreviewed |
@@ -598,8 +598,9 @@ supplied" for the versioned design and carries its exact gap.
 | Employee and resident chat widgets | [Connected service journey][bc-connected], [household][bc-household] | Gap: no detailed flow; manual route kept | [Case workspace note](./employee-case-workspace-redesign.md) and [chat learning record](./resident-chat-learning-record.md) | Versioned design Not supplied; AI-unavailable manual path |
 | Administrator `#/simulator` | Operator, per the [IoT trace update](#demo-iot-to-ui-source-trace-update-2026-11-12-refs-156-184-187-189-134) | Gap: no detailed flow | Not supplied | Written design record and versioned design Not supplied |
 
-All seventeen rows link a journey and name a task flow or an explicit gap, and
-fourteen link the nearest written design record. Two rows (`procurement-packages`,
+All sixteen rows (thirteen employee screens and routes plus three resident
+screens) link a journey and name a task flow or an explicit gap, and thirteen
+link the nearest written design record. Two rows (`procurement-packages`,
 `contractor-job-pack`) and the simulator have no design record beyond the
 atlas trace or none at all, and no row has a versioned reviewable design.
 Criterion 1 is therefore advanced, not proven: the links requested exist, but

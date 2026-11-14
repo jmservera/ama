@@ -11966,3 +11966,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added a dated, additive map to the [Prototype Profile Review](research/ux/zava-forward-prototype-profile-review.md#registered-screen-to-journey-task-flow-and-design-artefact-map-2026-11-14-refs-156): sixteen registered screens and routes, each with a journey link and a task flow or named gap; twelve link a written design record.
 * No versioned reviewable design is supplied, the 74-row register and Blocked gate are unchanged, and #156 criterion 1 stays unticked. No design, accessibility, content or user acceptance is claimed.
+
+## [2026-11-14] fix | Correct registered screen map counts (Refs #156)
+
+* Corrected the screen map prose to sixteen rows (thirteen employee plus three resident) with thirteen linking a written design record, and linked the `programme-queue-paging-v1` proposal for `programme-queue`. No acceptance or human gate is claimed.
