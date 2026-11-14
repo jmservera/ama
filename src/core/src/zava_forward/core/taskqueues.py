@@ -6,6 +6,7 @@ from typing import Any
 VERSION = "work-queues-1"
 MEMBERSHIP_REVISION = 3
 UNKNOWN = "Unknown"
+ESCALATION_OWNER = "Building Safety lead (escalation owner)"
 HELD = "Held for roles with a recorded need"
 PENDING = ("Offered", "Received", "Escalated")
 DEFAULT = dict(
@@ -246,8 +247,22 @@ def context(
                 path,
             )
             awareness = instant(hazard.get("aware_at"))
+            known = awareness is not None and awareness <= now
+            hours = int((now - awareness).total_seconds() // 3600) if known and awareness else None
+            due = hazard.get("response_due_at")
+            response = timing(due, hazard.get("responded_at"), now)
+            kind = (
+                "Safeguarding"
+                if "safeguard" in str(hazard.get("category", "")).lower()
+                else "Hazard"
+            )
+            elapsed = "elapsed time unknown" if hours is None else f"{hours} hours elapsed"
+            window = f"service response due {due}" if due else "no response target window recorded"
             clocks.append(
                 dict(
+                    kind=kind,
+                    accountable_owner=named if named != UNKNOWN else ESCALATION_OWNER,
+                    clock_text=f"{kind} clock: {elapsed}; {window}; response {response.lower()}.",
                     owner=named,
                     owner_named=named != UNKNOWN,
                     owner_status=(
