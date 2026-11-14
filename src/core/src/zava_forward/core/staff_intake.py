@@ -163,6 +163,7 @@ def escalation_destination() -> dict[str, Any]:
         contact=contact or UNKNOWN,
         configured=bool(owner and role and contact),
         contract_instruction=False,
+        is_contract_instruction=False,
         acts_as_contract_instruction=False,
         note=job_pack.NON_INSTRUCTION_NOTICE,
     )
@@ -254,6 +255,7 @@ def view(store: Any, user: Any, wid: str) -> dict[str, Any]:
             ],
             boundaries=dict(
                 contract_instruction=False,
+                is_contract_instruction=False,
                 acts_as_contract_instruction=False,
                 instruction_notice=job_pack.NON_INSTRUCTION_NOTICE,
                 acceptance=(
