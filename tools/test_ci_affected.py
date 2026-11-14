@@ -49,6 +49,38 @@ class SelectTests(unittest.TestCase):
         self.assertFalse(s["namespace"])
         self.assertFalse(s["mssql"])
 
+    def test_tracking_and_inert_docs_select_nothing(self) -> None:
+        s = ci.select(
+            [
+                ".copilot-tracking/research/2026-11-14-x.md",
+                ".copilot-tracking/reviews/2026-11-14-x.md",
+                "docs/reference/log.md",
+                "docs/case_study_48_addendum.md",
+            ]
+        )
+        self.assertEqual(s["projects"], set())
+        self.assertFalse(s["namespace"])
+        self.assertFalse(s["mssql"])
+
+    def test_tracking_does_not_mask_src_change(self) -> None:
+        s = ci.select([".copilot-tracking/plans/p.md", "src/importer/tests/test_a.py"])
+        self.assertEqual(s["projects"], {"importer"})
+
+    def test_watched_and_non_markdown_docs_select_all(self) -> None:
+        for path in [
+            "docs/reference/research/retrofit-synthetic-data/a.md",
+            "docs/reference/research/chat-memory-dpia.md",
+            "docs/reference/research/ux/customer-journeys/residents.md",
+            "docs/presentations/deck.pptx",
+            "support/synthetic-data/a.md",
+            "unknown/file.txt",
+        ]:
+            with self.subTest(path=path):
+                s = ci.select([".copilot-tracking/plans/p.md", path])
+                self.assertEqual(s["projects"], ALL)
+                self.assertTrue(s["namespace"])
+                self.assertTrue(s["mssql"])
+
     def test_infra_workflow_and_top_level_src_select_all(self) -> None:
         for path in [
             "infra/main.bicep",
@@ -179,6 +211,25 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(self.jobs["namespace"]["name"], "src-namespace")
         self.assertEqual(self.jobs["no-working-data"]["name"], "src-no-working-data")
         self.assertEqual(self.jobs["project"]["name"], "src-${{ matrix.project }}")
+
+
+class ChangedFilesTests(unittest.TestCase):
+    def test_uses_merge_base_range(self) -> None:
+        done = mock.Mock(returncode=0, stdout="a.py\n\nb.md\n")
+        with mock.patch.object(ci.subprocess, "run", return_value=done) as run:
+            self.assertEqual(ci.changed_files("abc", "def"), ["a.py", "b.md"])
+        self.assertEqual(run.call_args.args[0], ["git", "diff", "--name-only", "abc...def"])
+
+    def test_git_failure_returns_none(self) -> None:
+        done = mock.Mock(returncode=128, stdout="")
+        with mock.patch.object(ci.subprocess, "run", return_value=done):
+            self.assertIsNone(ci.changed_files("abc", "def"))
+
+    def test_missing_or_zero_base_skips_git(self) -> None:
+        with mock.patch.object(ci.subprocess, "run") as run:
+            self.assertIsNone(ci.changed_files("", "def"))
+            self.assertIsNone(ci.changed_files("0" * 40, "def"))
+        run.assert_not_called()
 
 
 if __name__ == "__main__":
