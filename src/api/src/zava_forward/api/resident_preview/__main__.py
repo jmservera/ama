@@ -3,6 +3,7 @@
 import argparse
 import os
 import sys
+from datetime import date
 from pathlib import Path
 
 from zava_forward.core import resident_preview as rp
@@ -14,6 +15,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="zava-resident-preview", description=__doc__)
     parser.add_argument(
         "--build-fixture", metavar="NEW_DIR", help="build a synthetic fixture, then exit"
+    )
+    parser.add_argument(
+        "--as-of",
+        type=date.fromisoformat,
+        help="fixture date (YYYY-MM-DD); defaults to today so the capacity review stays fresh",
     )
     parser.add_argument("--data-dir", help="directory holding dataset.json and grants.json")
     parser.add_argument("--subject", help="fixture subject this server process represents")
@@ -28,7 +34,7 @@ def main(argv: list[str] | None = None) -> int:
                 raise rp.PreviewConfigError(
                     "Build from a clean environment (no ZF_, AI_ or cloud settings)."
                 )
-            dataset, fixture = build(args.build_fixture)
+            dataset, fixture = build(args.build_fixture, as_of=args.as_of or date.today())
             print(f"Built synthetic fixture:\n  {dataset}\n  {fixture}")
             return 0
         if not args.data_dir or not args.subject:
