@@ -16,6 +16,26 @@ FUNDING_DOCUMENTS = ("EPC", "Survey", "Design", "Funding evidence")
 OTHER_CASE = re.compile(r"\bZF-\d+\b", re.I)
 CONTROL = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]")
 
+SAFETY_SEQUENCE = "workflow/safety-sequence"
+VISIT_CONSENT = "workflow/visit-consent"
+CHAT_BOUNDARY = "workflow/chat-boundary"
+# Fixed workflow rules, citable by id. They are rules, not recorded facts about any case.
+RULES: dict[str, str] = {
+    CHAT_BOUNDARY: (
+        "A person schedules visits and completes safety steps in the case workflow. "
+        "This chat cannot book a visit or approve a safety step, record consent or change a record."
+    ),
+    SAFETY_SEQUENCE: (
+        "Safety stop sequence: hazard referral, then receipt by the responsible owner, then "
+        "acceptance, then repair evidence, then an independent restart decision by a different "
+        "person. The chat takes none of these steps."
+    ),
+    VISIT_CONSENT: (
+        "Before a non-emergency visit to a home, the resident's consent is recorded by the "
+        "named officer using the case consent control. Chat cannot record or assume it."
+    ),
+}
+
 INTENTS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
     (name, re.compile(pattern, re.I))
     for name, pattern in (
@@ -255,18 +275,18 @@ def _blocked(r: Reply) -> None:
 
 
 def _unblock(r: Reply) -> None:
-    r.say(
-        "A person schedules visits and completes the safety step in the case workflow. "
-        "This chat cannot book a visit or approve a safety step.",
-        [],
-    )
+    r.say(RULES[CHAT_BOUNDARY], [CHAT_BOUNDARY])
     hazards = _indexes(r.facts, "hazards")
     if hazards:
         r.say("Open safety items on the record:")
         for i in hazards:
             line, cites = r.cited(partial(_hazard_line, r, i))
             r.say(f"* {line}", cites)
+    r.say(RULES[SAFETY_SEQUENCE], [SAFETY_SEQUENCE])
+    r.say(RULES[VISIT_CONSENT], [VISIT_CONSENT])
     _blocked(r)
+    if r.fact("work.next_action") and not _indexes(r.facts, "work.blockers"):
+        _next(r)
 
 
 def _hazard_line(r: Reply, i: int) -> str:

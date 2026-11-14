@@ -285,7 +285,9 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             question.fill("Explain the next check")
             page.get_by_role("dialog").get_by_role("button", name="Send", exact=True).click()
             log = page.get_by_role("log", name="Employee assistant conversation")
-            expect(log).to_contain_text("Model-generated, not approved. Demo only.")
+            expect(log).to_contain_text(
+                "Generative model suggestion (unapproved; check cited sources; no record changed)"
+            )
             expect(log).to_contain_text("AI-generated content may be incorrect")
             reports.append(scan(page, axe, "demo-disclaimer-model-answer"))
             page.keyboard.press("Escape")

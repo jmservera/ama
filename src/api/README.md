@@ -828,11 +828,17 @@ explicit synthetic privacy references, actual unavailable-model fallback,
 intercepted answer-rendering cases and pinned axe on the open dialog. It also
 intercepts `/api/chat/status` and the answer to prove the demo disclaimer is
 visible inside the panel (a bordered note, not colour alone) and a model answer
-is labelled "Model-generated, not approved. Demo only." (#891).
-The panel also names the source of each reply: "Decision model (case rules)"
-for deterministic answers, the same label with "generative draft withheld" after
-a failed source check, and "Generative draft withheld by source check" when a
-model was called but no answer was shown. Each source line is tagged
+is labelled "Generative model suggestion (unapproved; check cited sources; no
+record changed)" (#891). Every reply carries `answer_source` and a plain
+`answer_origin` (`decision_rule`, `generative_model`, `withheld`, `refused` or
+`workflow_message`). The panel shows "Answer origin:" text, never colour alone:
+"Deterministic decision or workflow rule (not generative AI; no record
+changed)", "Generative model suggestion (unapproved; ...)" or "Withheld. Cited
+sources did not support a stated status or figure (no record changed)".
+Case-unblock and next-step visit questions are answered from the case rules
+first, citing the case record and the fixed `workflow/` rules (safety stop
+sequence, visit consent, chat boundary), so they are not withheld with no
+sources (#164). Each source line is tagged
 `[Decision rule]`, `[Case record]` or `[Workflow rule]`, and the live status
 says "Reply withheld" or "Request refused" instead of "Answer added" when no
 answer was given (#159).

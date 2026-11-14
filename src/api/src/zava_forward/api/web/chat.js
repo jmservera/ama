@@ -66,6 +66,10 @@ const employeeChat = (() => {
     const tag = kind === "workflow-rule" ? "[Workflow rule]" : kind === "decision-rule" ? "[Decision rule]" : "[Case record]";
     return `${tag} ${id}: ${source.text}`;
   }
+  const ORIGIN = "Answer origin: ";
+  const RULE_LABEL = ORIGIN + "Deterministic decision or workflow rule (not generative AI; no record changed)";
+  const MODEL_LABEL = ORIGIN + "Generative model suggestion (unapproved; check cited sources; no record changed)";
+  const WITHHELD_LABEL = ORIGIN + "Withheld. Cited sources did not support a stated status or figure (no record changed)";
   function attribution(answer) {
     const isAnswer = answer.kind === "answer";
     const calls = answer.consumption && answer.consumption.model_calls > 0;
@@ -73,17 +77,17 @@ const employeeChat = (() => {
       : isAnswer && answer.model ? "generative-grounded" : "");
     const check = " Check the sources.";
     if (source === "decision-rules-fallback") return {
-      label: "Decision model (case rules; generative draft withheld), no record changed",
-      detail: "Source: deterministic decision rules from recorded case facts; generative draft did not pass source check." + check };
+      label: RULE_LABEL,
+      detail: "Source: deterministic decision rules from recorded case facts. The generative draft did not pass the source check and was not shown." + check };
     if (source === "decision-rules") return {
-      label: "Decision model (case rules), no record changed",
+      label: RULE_LABEL,
       detail: "Source: deterministic decision rules from recorded case facts (0 generative calls)." + check };
     if (source === "generative-grounded") return {
-      label: "Model-generated, not approved. Demo only.",
+      label: MODEL_LABEL,
       detail: `Source: generative AI model (${answer.model}) grounded on case rules and records. AI-generated content may be incorrect.${check}` };
-    if (calls && !isAnswer) return {
-      label: "Generative draft withheld by source check. No record changed.",
-      detail: "Source: generative draft did not pass the source check. No record changed." };
+    if (source === "withheld" || source === "abstain" || (calls && !isAnswer)) return {
+      label: source === "abstain" ? ORIGIN + "Withheld. The permitted sources do not cover the question (no record changed)" : WITHHELD_LABEL,
+      detail: "Source: no answer was shown. The reply checks stopped the draft. No record changed." };
     return { label: answer.workflow_only ? "Workflow-only help, no record changed" : answer.label,
       detail: "Workflow-only or unverified help. No record changed." };
   }
