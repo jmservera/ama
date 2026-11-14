@@ -11962,3 +11962,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
   No experiment, paid call, VM mutation, scoring/registration change, commit,
   push or external publication occurred; hosted CI and independent exact-head
   review remain unperformed.
+## [2026-11-14] update | Registered screen to journey, task flow and design artefact map (Refs #156)
+
+* Added a dated, additive map to the [Prototype Profile Review](research/ux/zava-forward-prototype-profile-review.md#registered-screen-to-journey-task-flow-and-design-artefact-map-2026-11-14-refs-156): sixteen registered screens and routes, each with a journey link and a task flow or named gap; twelve link a written design record.
+* No versioned reviewable design is supplied, the 74-row register and Blocked gate are unchanged, and #156 criterion 1 stays unticked. No design, accessibility, content or user acceptance is claimed.
