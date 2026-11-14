@@ -49,7 +49,7 @@ def _humidity(
 
 def _sensor_factors(
     valid: list[tuple[datetime, float]], as_of: datetime
-) -> tuple[str, str, list[dict]]:
+) -> tuple[str, str, list[dict[str, Any]]]:
     if len(valid) < MIN_READINGS:
         return "insufficient", f"fewer than {MIN_READINGS} valid retained readings", []
     if as_of - max(when for when, _ in valid) > STALE_AFTER:

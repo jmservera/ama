@@ -9,7 +9,7 @@ from zava_forward.agents.quality_sensor_risk import explain_inspection_risk, ran
 AS_OF = "2026-11-14T09:00:00+00:00"
 
 
-def series(rh: float, n: int = 12) -> list[dict]:
+def series(rh: float, n: int = 12) -> list[dict[str, object]]:
     return [
         dict(observed_at=f"2026-11-14T{h:02d}:00:00+00:00", relative_humidity=rh) for h in range(n)
     ]
