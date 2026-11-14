@@ -15,7 +15,7 @@ class FinanceScreenWcagTests(unittest.TestCase):
     def tree(self, screen: str) -> Any:
         return run()[screen]["tree"]
 
-    def test_jump_buttons_are_native_buttons_with_matching_targets(self) -> None:
+    def test_jump_links_are_native_anchors_with_matching_targets(self) -> None:
         for screen, ids in JUMP_IDS.items():
             tree = self.tree(screen)
             buttons = [n for n in walk(tree) if (n.get("attrs") or {}).get("data-jump-target")]
@@ -23,11 +23,11 @@ class FinanceScreenWcagTests(unittest.TestCase):
             targets = {
                 n["attrs"]["id"]: n
                 for n in walk(tree)
-                if (n.get("attrs") or {}).get("id") and n["tag"] == "h2"
+                if (n.get("attrs") or {}).get("id") and n["tag"] == "div"
             }
             for button in buttons:
-                self.assertEqual(button["tag"], "button")
-                self.assertEqual(button["attrs"]["type"], "button")
+                self.assertEqual(button["tag"], "a")
+                self.assertEqual(button["attrs"]["href"], "#" + button["attrs"]["data-jump-target"])
                 self.assertTrue(node_text(button).startswith("Go to "))
                 target = targets[button["attrs"]["data-jump-target"]]
                 self.assertEqual(target["attrs"]["tabindex"], "-1")

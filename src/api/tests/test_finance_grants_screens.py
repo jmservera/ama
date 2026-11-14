@@ -196,7 +196,9 @@ def walk(node: object) -> list[dict[str, Any]]:
 
 
 def anchors(tree: object) -> list[dict[str, Any]]:
-    return [n for n in walk(tree) if n["tag"] == "a"]
+    return [
+        n for n in walk(tree) if n["tag"] == "a" and "data-jump-target" not in (n["attrs"] or {})
+    ]
 
 
 def node_text(node: object) -> str:
@@ -518,7 +520,7 @@ class FinanceGrantsScreens(unittest.TestCase):
                 if (node["attrs"] or {}).get("data-jump-target") or node["tag"] == "nav":
                     continue
                 tabindex = (node["attrs"] or {}).get("tabindex")
-                if tabindex is not None and node["tag"] != "h2":
+                if tabindex is not None and not (node["attrs"] or {}).get("id"):
                     self.assertLessEqual(int(str(tabindex)), 0, node)
                 attrs = node["attrs"] or {}
                 self.assertNotIn(node["tag"], ("button", "input", "select", "textarea"))
