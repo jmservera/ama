@@ -226,6 +226,37 @@ class Allowance(Restart):
         self.assertEqual(self.pool(self.worker(**LARGER))[:3], (2, 2000000, 2))
 
 
+    def test_rotating_the_authority_token_cannot_replenish_consumed_calls(self) -> None:
+        caps = list(assistants.REGISTRY)[:3]
+        self.spend(self.worker(call_allowance=1), caps[0])
+        rotated = self.worker(authority="rotated-authority-token", **LARGER)
+        blocked = rotated.invoke(self.pm, caps[1], "ZF-1")
+        self.assertFalse(rotated.execute(blocked["id"]))
+        self.assertEqual(self.provider.calls, 1)
+        for service in (rotated, self.worker(authority="third-authority-token")):
+            self.assertEqual(self.pool(service)[0], 1)
+            self.assertFalse(service.execute(blocked["id"]))
+        self.assertEqual(self.provider.calls, 1)
+
+    def test_rotating_the_authority_token_cannot_replenish_token_allowance(self) -> None:
+        reservation = assistants.Limits(config()).reservation
+        self.spend(self.worker(token_allowance=reservation + 10), CAP)
+        rotated = self.worker(authority="rotated-authority-token", **LARGER)
+        blocked = rotated.invoke(self.pm, "assessment-preparation", "ZF-1")
+        self.assertFalse(rotated.execute(blocked["id"]))
+        self.assertEqual(self.provider.calls, 1)
+
+    def test_rotated_authority_spends_only_the_remaining_allowance_once(self) -> None:
+        caps = list(assistants.REGISTRY)[:3]
+        self.spend(self.worker(call_allowance=2), caps[0])
+        rotated = self.worker(authority="rotated-authority-token", call_allowance=5)
+        self.spend(rotated, caps[1])
+        again = rotated.invoke(self.pm, caps[2], "ZF-1")
+        again_worker = self.worker(authority="rotated-authority-token", call_allowance=5)
+        self.assertFalse(again_worker.execute(again["id"]))
+        self.assertEqual(self.provider.calls, 2)
+
+
 class MaterialMismatch(Restart):
     def invoke_state(self, service: Assistants) -> str:
         try:
