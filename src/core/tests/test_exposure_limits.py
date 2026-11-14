@@ -28,6 +28,37 @@ class ExposureLimits(unittest.TestCase):
     def record(self) -> dict[str, object]:
         return limits.record_limits(APPROVAL, ENVELOPE, TOLERANCES)
 
+    def test_attribution_is_required_and_never_defaulted(self) -> None:
+        for missing in ("approved_by", "approved_at"):
+            approval = {k: v for k, v in APPROVAL.items() if k not in ("approver", "approved_on")}
+            approval.update(approved_by="Test approver", approved_at="2026-01-01")
+            del approval[missing]
+            with self.assertRaises(limits.LimitsError):
+                limits.record_limits(approval, ENVELOPE, TOLERANCES)
+        record = limits.record_limits(
+            dict(APPROVAL, approved_by="Named person", approved_at="2026-01-01T10:00:00Z"),
+            ENVELOPE,
+            TOLERANCES,
+        )
+        self.assertEqual(record["approval"]["approved_by"], "Named person")
+        self.assertEqual(record["approval"]["approved_at"], "2026-01-01T10:00:00Z")
+
+    def test_pause_signal_requires_named_human_and_never_cuts(self) -> None:
+        held = limits.assess(None, dict(committed=1))["pause_signal"]
+        self.assertEqual((held["paused"], held["automatic_cut"]), (True, False))
+        breach = limits.assess(
+            self.record(), dict(committed=101, currency="GBP", tolerances=dict(capital=1, safety=0))
+        )["pause_signal"]
+        self.assertEqual(
+            (breach["paused"], breach["decision_required"], breach["automatic_cut"]),
+            (True, True, False),
+        )
+        self.assertEqual(breach["decision_owner"], "Test control owner")
+        within = limits.assess(
+            self.record(), dict(committed=1, currency="GBP", tolerances=dict(capital=1, safety=0))
+        )["pause_signal"]
+        self.assertEqual((within["paused"], within["automatic_cut"]), (False, False))
+
     def test_unrecorded_limits_hold_and_pause(self) -> None:
         result = limits.assess(None, dict(committed=1))
         self.assertEqual((result["status"], result["signal"]), ("Held", limits.UNAPPROVED))

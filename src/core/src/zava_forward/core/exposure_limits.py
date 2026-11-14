@@ -51,15 +51,20 @@ def _finite_observation(value: object) -> TypeGuard[int | float]:
 def _approval(value: object) -> Record:
     if not isinstance(value, dict):
         raise LimitsError("An approval record is required.")
-    approved_on = _text(value.get("approved_on"), "approved_on")
-    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", approved_on) is None:
-        raise LimitsError("approved_on must be an ISO date.")
+    # approved_by / approved_at are the canonical names; approver / approved_on remain accepted.
+    approved_at = _text(value.get("approved_at", value.get("approved_on")), "approved_at")
+    approved_on = approved_at[:10]
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}(T[0-9:.+\-Z]+)?", approved_at) is None:
+        raise LimitsError("approved_at must be an ISO date or timestamp.")
     try:
         date.fromisoformat(approved_on)
     except ValueError as exc:
-        raise LimitsError("approved_on must be an ISO date.") from exc
+        raise LimitsError("approved_at must be an ISO date or timestamp.") from exc
+    approved_by = _text(value.get("approved_by", value.get("approver")), "approved_by")
     return dict(
-        approver=_text(value.get("approver"), "approver"),
+        approved_by=approved_by,
+        approved_at=approved_at,
+        approver=approved_by,
         role=_text(value.get("role"), "role"),
         approved_on=approved_on,
         evidence_ref=_text(value.get("evidence_ref"), "evidence_ref"),
@@ -96,8 +101,29 @@ def record_limits(approval: object, envelope: object, tolerances: object) -> Rec
     )
 
 
-def _held(reason: str) -> Record:
-    return dict(status="Held", signal=UNAPPROVED, reason=reason, findings=[], notice=NOTICE)
+def pause_signal(paused: bool, reason: str, decision_owner: str | None = None) -> Record:
+    """Deterministic signal for a named human decision; it never cuts or restarts anything."""
+    return dict(
+        paused=paused,
+        decision_required=paused,
+        decision_owner=decision_owner,
+        automatic_cut=False,
+        reason=reason,
+    )
+
+
+def held(reason: str) -> Record:
+    return dict(
+        status="Held",
+        signal=UNAPPROVED,
+        reason=reason,
+        findings=[],
+        notice=NOTICE,
+        pause_signal=pause_signal(True, reason),
+    )
+
+
+_held = held
 
 
 def stale_reason(limits: Record, today: date | None = None) -> str | None:
@@ -121,13 +147,7 @@ def assess(limits: Record | None, exposure: Record | None, today: date | None = 
     mismatched observation is Unknown, never treated as within limits.
     """
     if limits is None:
-        return dict(
-            status="Held",
-            signal=UNAPPROVED,
-            reason="No person-approved envelope or tolerances are recorded.",
-            findings=[],
-            notice=NOTICE,
-        )
+        return held("No person-approved envelope or tolerances are recorded.")
     try:
         stale = stale_reason(limits, today)
     except (KeyError, TypeError, ValueError):
@@ -187,6 +207,9 @@ def assess(limits: Record | None, exposure: Record | None, today: date | None = 
         approval=deepcopy(limits["approval"]),
         action=BREACH_ACTION if status != "Within limits" else None,
         notice=NOTICE,
+        pause_signal=pause_signal(
+            signal == UNAPPROVED, reason, limits["approval"]["restart_owner"]
+        ),
     )
 
 
