@@ -181,7 +181,7 @@ class Register(SqlStoreCase):
 
     def _key(self, user: dict[str, str], kind: str) -> str:
         view = self.store.exception_register(user, STAFF)
-        return next(i["recovery_key"] for i in view["items"] if i["kind"] == kind)
+        return str(next(i["recovery_key"] for i in view["items"] if i["kind"] == kind))
 
     def test_recovery_is_audited_and_changes_nothing_else(self) -> None:
         key = self._key(self.steward, "source_conflict")

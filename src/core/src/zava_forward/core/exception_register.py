@@ -212,7 +212,8 @@ class ExceptionRegisterMixin:
     def _recovery_requests(self) -> dict[str, dict[str, Any]]:
         """Latest recorded request per item key, read from the tamper-evident audit ledger."""
         latest: dict[str, dict[str, Any]] = {}
-        for entry in self.audit_entries():  # type: ignore[attr-defined]
+        audit_entries = getattr(self, "audit_entries", None)
+        for entry in audit_entries() if callable(audit_entries) else ():
             if entry.get("action") != RECOVERY_AUDIT:
                 continue
             try:
