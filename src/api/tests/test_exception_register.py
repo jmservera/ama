@@ -69,6 +69,9 @@ class Register(SqlStoreCase):
         self.assertEqual({v["value"] for v in item["values"]}, {"D", "C"})
         self.assertEqual(item["owner"], "human0@example.test")
         self.assertEqual(item["eligibility"], "Unknown")
+        self.assertTrue(item["unresolved_eligibility"])
+        self.assertFalse(item["recovery_policy"]["automatic_replay"])
+        self.assertFalse(item["recovery_policy"]["automatic_release"])
         self.assertEqual(item["original_source"]["case_id"], self.reg_case["id"])
 
     def test_operator_sees_failed_ai_run_not_conflicts(self) -> None:
