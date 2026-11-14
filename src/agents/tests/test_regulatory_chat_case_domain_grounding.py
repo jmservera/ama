@@ -81,7 +81,7 @@ class CaseDomainGroundingTests(unittest.TestCase):
         self.assertIn("Damp and mould, Open. Owner: Hazard Owner", text)
         self.assertIn("Sensor review draft damp-1: draft, manual review only", text)
         self.assertIn("ZF-1/sensor.0.state", cites)
-        self.assertIn("not a diagnosis", text)
+        self.assertIn("do not establish a root cause", text)
 
     def test_missing_domain_records_say_so_and_invent_nothing(self) -> None:
         facts = case_facts(dict(stage="Survey"), reason_visible=True)
