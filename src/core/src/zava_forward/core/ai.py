@@ -21,7 +21,17 @@ from dataclasses import replace
 from . import ai_consumption, ai_prompts, ai_transport, data_protection, export_fields
 
 SCOPE = "https://cognitiveservices.azure.com"
-FORBIDDEN = re.compile(r"\b(i have sent|has been sent|we have sent|i've sent|email sent|message sent)\b", re.I)
+_ACTIONS = (r"sent|approved|authori[sz]ed|signed off|rejected|declined|updated|changed|amended|edited|"
+            r"modified|re-?ranked|ranked|recorded|submitted|released|closed|reopened|assigned|escalated|"
+            r"booked|cancelled|canceled|deleted|saved|published|awarded|paid|committed")
+# Claims that the assistant, or an unnamed actor, has just approved, sent or changed something.
+# Plain past-tense status of an already recorded field ("was approved on 3 March") is not matched.
+FORBIDDEN = re.compile(
+    r"\b(?:email sent|message sent"
+    rf"|(?:i|we)(?:\s+have|\s+had|'ve|\s+just|\s+now)(?:\s+(?:just|now|already|successfully))*\s+(?:{_ACTIONS})"
+    rf"|(?:has|have)(?:\s+(?:now|just|already|successfully))*\s+been\s+(?:{_ACTIONS}))\b",
+    re.I,
+)
 
 
 class DispatchDenied(RuntimeError):
