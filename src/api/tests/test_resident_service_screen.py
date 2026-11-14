@@ -55,9 +55,9 @@ CASE = {
 CONTROLS = ("button", "form", "input", "select", "textarea")
 
 
-def run() -> dict[str, Any]:
+def run(case: dict[str, Any] = CASE) -> dict[str, Any]:
     result = subprocess.run(
-        ["node", "-e", SCRIPT, str(WEB), json.dumps(CASE)],
+        ["node", "-e", SCRIPT, str(WEB), json.dumps(case)],
         capture_output=True,
         text=True,
         timeout=30,
@@ -130,6 +130,39 @@ class ResidentServiceScreen(unittest.TestCase):
         self.assertNotIn("SR-2", text)
         self.assertIn("Unavailable", text)
         self.assertIn("not a portfolio total", text)
+
+    def test_redress_route_states_non_detriment_and_send_status(self) -> None:
+        route = {
+            "commitments": ["Programme place: kept.", "Repairs: continue."],
+            "routes": [
+                {"route": "Independent review", "who": "Resident", "how": "Pick a decision"}
+            ],
+            "reviewable_decisions": [{"measure": "Loft", "version": 2, "status": "Paused"}],
+            "formal_requests": [
+                {
+                    "id": "SR-1",
+                    "route": "Complaint",
+                    "status": "Open",
+                    "formal_route_status": "Unconfigured",
+                }
+            ],
+            "send_note": "Nothing has reached the formal complaints route unless Acknowledged.",
+        }
+        out = run(dict(CASE, redress_route=route))
+        text = json.dumps(out["tree"])
+        for expected in (
+            "without detriment",
+            "Programme place: kept.",
+            "Pick a decision",
+            "Loft",
+            "v2",
+            "Unconfigured",
+            "unless Acknowledged",
+        ):
+            self.assertIn(expected, text)
+        self.assertNotIn("<script", text)
+        self.assertNotIn("button", tags(out["tree"]))
+        self.assertIn("not available on this record", json.dumps(run()["tree"]))
 
     def test_empty_case_is_unknown_not_clear(self) -> None:
         text = json.dumps(run()["empty"])

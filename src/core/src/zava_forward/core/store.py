@@ -19,7 +19,7 @@ from .list_export import safe_cell
 from .continuity import ContinuityMixin
 from .governance import GovernanceMixin
 from .grants import GrantMixin, grant_summary
-from .resident_decisions import ResidentDecisionMixin, measure_decision_view, remember_first_contact, retention_schedule, resident_gate, resident_status
+from .resident_decisions import ResidentDecisionMixin, measure_decision_view, redress_route_view, remember_first_contact, retention_schedule, resident_gate, resident_status
 from .signoffs import SignoffMixin, missing_items, technical_gate
 from zava_forward.core.ai import Ai
 from .chatthreads import ChatMixin
@@ -506,6 +506,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         d["can_advance"] = c["stage"] == READY_STAGE
         d["suggestions"] = insights.recommend_handover(c, list(self.cases.values()), self.data["staff"] + identity.people(self))
         d["measure_decisions"] = measure_decision_view(c)
+        d["redress_route"] = redress_route_view(c)
         d["resident_retention"] = retention_schedule(c)
         d["can_record_resident"] = bool(user and user.get("role") in projection.RESIDENT_RECORD_ROLES)
         d["contacts"] = list(reversed(d["contacts"]))[:40]
