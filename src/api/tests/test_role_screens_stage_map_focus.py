@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 from typing import Any, ClassVar
 
-from tests.test_role_screens_connected_journey import ROLES, SKIP, WEB
+from test_role_screens_connected_journey import ROLES, SKIP, WEB
 
 SCRIPT = r"""
 const fs = require("node:fs");
