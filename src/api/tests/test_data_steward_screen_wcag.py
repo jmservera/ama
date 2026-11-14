@@ -32,7 +32,10 @@ CLICK_SCRIPT = (
         "context.__s.overview(controller.signal, [], null)"
         ".then(out => console.log(JSON.stringify(out)));",
         """const find = (n, f, o = []) => {
-  if (n && typeof n === "object") { if (f(n)) o.push(n); (n.kids || []).forEach(k => find(k, f, o)); }
+  if (n && typeof n === "object") {
+    if (f(n)) o.push(n);
+    (n.kids || []).forEach(k => find(k, f, o));
+  }
   return o;
 };
 context.__s.overview(controller.signal, [], null).then(out => {
