@@ -600,6 +600,7 @@ class ChatPanel:
         found = self.iso.case_facts(self.iso.current_user(user), case_id)
         if not found:
             return None
+        question = normalise_policy_text(question)
         scoped = {f"{case_id}/{path}": value for path, value in found.items()}
         if isinstance(skill, str):
             kept = skill_sources(skill, scoped)
@@ -610,7 +611,7 @@ class ChatPanel:
                 if k in kept or k.split("/", 1)[1].split(".", 1)[0] in extra
             }
         allowed = {k.split("/", 1)[1]: v for k, v in scoped.items()}
-        g_kind, body, g_cites = grounded_answer(case_id, normalise_policy_text(question), allowed)
+        g_kind, body, g_cites = grounded_answer(case_id, question, allowed)
         if g_kind != "answer" or not g_cites:
             return None
         pool = {**scoped, **WORKFLOW_RULES}

@@ -388,6 +388,9 @@ def _hazard_line(r: Reply, i: int) -> str:
 def _sensor(r: Reply) -> None:
     cite = r.fact("sensor.latest.citation")
     if not cite:
+        detail = r.fact("sensor.detail")
+        if detail:
+            r.say(f"No retained sensor reading is shown for this case. {detail}")
         return _damp(r)
     temperature = r.fact("sensor.latest.temperature_c")
     humidity = r.fact("sensor.latest.humidity_pct")
