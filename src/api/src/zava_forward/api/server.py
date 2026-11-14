@@ -20,7 +20,7 @@ from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, cont
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
 from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine, staff_intake
-from zava_forward.api import auth, simulator_admin
+from zava_forward.api import auth, sensor_badges, simulator_admin
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
@@ -942,7 +942,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 if len(parts) != 4:
                     return self._json(404, {"error": "Case not found."})
                 try:
-                    return self._json(200, app.assistants.sensors(u, unquote(parts[2])))
+                    return self._json(200, sensor_badges.annotate(app.assistants.sensors(u, unquote(parts[2]))))
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
                 except KeyError:
