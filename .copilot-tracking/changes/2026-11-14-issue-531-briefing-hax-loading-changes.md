@@ -16,3 +16,9 @@
 * High: loading status text now starts with `Reading case summaries...` (initial and refresh), keeping `workbench_browser_check.py` and `loading_briefing_browser_check.py` assertions valid.
 * Tests: `test_briefing_loading_provenance.py` renamed to `test_briefing_hax_states.py` and updated for both invariants.
 * Validation: targeted modules, `ruff check`, `ruff format --check`, `mypy` run in `src/api`; browser checks not run.
+
+## Cycle 3 correction (independent review of e244b31da)
+
+* High: `workbench_browser_check.py` uses `get_by_text("Reading case summaries...", exact=True)`, which needs an element with exactly that text. `app.js` now renders the loading status as two child spans (exact lead text, then guidance) so the exact match works and `status.textContent` still reads as one message. Refresh guidance reworded to two sentences.
+* Tests: `test_briefing_hax_states.py` asserts the lead span and both guidance strings.
+* Validation: targeted modules, `ruff check`, `ruff format --check`, `mypy` in `src/api`; browser checks not run.

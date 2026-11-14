@@ -19,10 +19,11 @@ class BriefingLoadingProvenanceTests(unittest.TestCase):
         self.assertIn("box.append(status, dismiss, mode, content);", APP)
 
     def test_loading_status_is_plain_language_and_polite(self) -> None:
-        self.assertIn("Reading case summaries... Your case list is still available.", APP)
+        self.assertIn('h("span", {}, "Reading case summaries...")', APP)
+        self.assertIn('"Your case list is still available."', APP)
         self.assertIn(
-            "Reading case summaries... Refreshing today's briefing; "
-            "the current text stays visible until the new one is ready.",
+            "Refreshing today's briefing. "
+            "The current text stays visible until the new one is ready.",
             APP,
         )
         self.assertIn('role: "status", "aria-live": "polite", class: "briefing-status"', APP)
