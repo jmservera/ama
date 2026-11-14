@@ -1,6 +1,7 @@
 import copy
 import unittest
 from pathlib import Path
+from typing import Any
 
 from zava_forward.core import perspective_walkthroughs as pw
 from zava_forward.core import profile_journey_contract as pjc
@@ -8,7 +9,7 @@ from zava_forward.core import profile_journey_contract as pjc
 ROOT = Path(__file__).resolve().parents[3]
 
 
-def good() -> dict:
+def good() -> dict[str, Any]:
     step = dict(
         record_ids=["EX-HOME-646"],
         state_text="Unknown: eligibility needs an owner",
