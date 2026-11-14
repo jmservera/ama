@@ -12,10 +12,11 @@ import sys
 import time
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
+from decimal import Decimal
 from pathlib import Path
 
-from .run_governance import RunGovernance, RunMeter
-from .sensor_stream import Pacer, RunBudget, StreamError, accountable_text
+from .run_governance import RunGovernance, RunMeter, _gbp, governed_text
+from .sensor_stream import Pacer, RunBudget, StreamError
 
 TIER = "B1"
 UNITS = 1
@@ -66,10 +67,15 @@ class RunPlan:
     planned_cost_gbp: str = "0"
 
     def governance(self) -> RunGovernance | None:
-        """GBP governance is optional, but alert and cap must be declared together."""
+        """GBP governance is optional, but alert and cap must be declared together as strings."""
+        if not isinstance(self.planned_cost_gbp, str):
+            raise StreamError("INVALID_BUDGET")
+        planned = _gbp(self.planned_cost_gbp, allow_zero=True)
         if self.budget_alert_gbp is None and self.budget_cap_gbp is None:
+            if planned != 0:
+                raise StreamError("INVALID_BUDGET")
             return None
-        if self.budget_alert_gbp is None or self.budget_cap_gbp is None:
+        if not isinstance(self.budget_alert_gbp, str) or not isinstance(self.budget_cap_gbp, str):
             raise StreamError("INVALID_BUDGET")
         return RunGovernance(
             run_owner=self.owner,
@@ -80,7 +86,7 @@ class RunPlan:
 
     def validate(self) -> None:
         for text in (self.owner, self.alert_reference):
-            if not accountable_text(text):
+            if not governed_text(text):
                 raise StreamError("RUN_OWNER_COST_ALERT_REQUIRED")
         numbers = (
             self.max_seconds,
@@ -184,14 +190,22 @@ class RunController:
     """One run at a time with a hard deadline; no resume after stop."""
 
     def __init__(self, plan: RunPlan, *, clock: Callable[[], float] = time.monotonic) -> None:
+        plan.validate()
+        governance = plan.governance()
+        self._configured_alert_gbp: str | None = (
+            str(governance.validate()[0]) if governance is not None else None
+        )
         self.plan = plan
         self.clock = clock
         self.state = "idle"
         self.active_homes = plan.homes
         self.pacer: Pacer | None = None
         self.meter: RunMeter | None = None
+        self.halt_reason: str | None = None
+        self._started_at: float | None = None
+        self._stopped_at: float | None = None
 
-    def admit(self, cost_gbp: str | int) -> None:
+    def admit(self, cost_gbp: Decimal | int | str) -> None:
         """Record declared spend; alerts at the threshold and halts the run before the cap."""
         if self.state != "running" or self.meter is None:
             raise StreamError("RUN_NOT_RUNNING")
@@ -199,8 +213,60 @@ class RunController:
             self.meter.admit(cost_gbp)
         except StreamError:
             if self.meter.status == "halted":
+                self.halt_reason = self.meter.halt_reason
+                self._stopped_at = self.meter.ended
                 self.stop()
             raise
+
+    def check_time_limit(self) -> None:
+        """Enforce the bounded run duration; stops the run and raises RUN_DEADLINE on expiry."""
+        if self.state != "running":
+            if self.halt_reason is not None:
+                raise StreamError(self.halt_reason)
+            raise StreamError("RUN_NOT_RUNNING")
+        if self.meter is not None:
+            try:
+                self.meter.check_time_limit()
+            except StreamError:
+                self.halt_reason = self.meter.halt_reason
+                self._stopped_at = self.meter.ended
+                self.stop()
+                raise
+            return
+        assert self._started_at is not None
+        now = self.clock()
+        if now - self._started_at >= self.plan.max_seconds:
+            self.halt_reason = "RUN_DEADLINE"
+            self._stopped_at = now
+            self.stop()
+            raise StreamError("RUN_DEADLINE")
+
+    def _elapsed_seconds(self) -> float:
+        if self._started_at is None:
+            return 0.0
+        end = self._stopped_at if self._stopped_at is not None else self.clock()
+        return round(max(0.0, end - self._started_at), 3)
+
+    def status(self) -> dict[str, object]:
+        """Run state with its owner, time limit and budget alert position (USD + optional GBP)."""
+        elapsed = self._elapsed_seconds()
+        remaining = round(max(0.0, self.plan.max_seconds - elapsed), 3)
+        base: dict[str, object] = {
+            "state": self.state,
+            "run_owner": self.plan.owner,
+            "time_limit_seconds": self.plan.max_seconds,
+            "elapsed_seconds": elapsed,
+            "remaining_seconds": remaining,
+            "active_homes": self.active_homes,
+            "alert_reference": self.plan.alert_reference,
+            "alert_fires_at_usd": round(self.plan.budget_usd * self.plan.alert_threshold, 2),
+            "budget_alert_gbp": self._configured_alert_gbp,
+            "alert_raised": False,
+            "halt_reason": self.halt_reason,
+        }
+        if self.meter is not None:
+            base.update(self.meter.summary())
+        return base
 
     def start(self, estimate_path: Path) -> Pacer:
         if self.state != "idle":
@@ -219,10 +285,15 @@ class RunController:
         if governance is not None:
             self.meter = RunMeter(governance, self.clock, self.plan.planned_cost_gbp)
         self.pacer = Pacer(self.plan.budget(), speed=self.plan.replay_speed, clock=self.clock)
+        self._started_at = self.meter.started if self.meter is not None else self.clock()
         self.state = "running"
         return self.pacer
 
     def stop(self) -> None:
+        if self.state == "running" and self._stopped_at is None:
+            self._stopped_at = self.clock()
+        if self.meter is not None:
+            self.meter.stop()
         if self.pacer is not None:
             self.pacer.stopped = True
         self.state = "stopped"
