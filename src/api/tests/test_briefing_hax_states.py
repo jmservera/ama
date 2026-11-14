@@ -9,13 +9,22 @@ CSS = (WEB / "style.css").read_text()
 
 
 class BriefingLoadingProvenanceTests(unittest.TestCase):
-    def test_busy_is_set_and_cleared_on_the_briefing_section(self) -> None:
-        self.assertIn('box.setAttribute("aria-busy", "true");', APP)
-        self.assertIn('box.removeAttribute("aria-busy");', APP)
+    def test_busy_is_on_the_body_not_an_ancestor_of_the_status(self) -> None:
+        self.assertIn('content.setAttribute("aria-busy", "true");', APP)
+        self.assertIn('content.removeAttribute("aria-busy");', APP)
+        self.assertNotIn(
+            'box.setAttribute("aria-busy"',
+            APP.split("const load = async")[1].split("box.append(status")[0],
+        )
+        self.assertIn("box.append(status, dismiss, mode, content);", APP)
 
     def test_loading_status_is_plain_language_and_polite(self) -> None:
-        self.assertIn("Loading today's briefing. Your case list is still available.", APP)
-        self.assertIn("The current text stays visible until the new one is ready.", APP)
+        self.assertIn("Reading case summaries... Your case list is still available.", APP)
+        self.assertIn(
+            "Reading case summaries... Refreshing today's briefing; "
+            "the current text stays visible until the new one is ready.",
+            APP,
+        )
         self.assertIn('role: "status", "aria-live": "polite", class: "briefing-status"', APP)
 
     def test_status_space_is_reserved_to_avoid_layout_shift(self) -> None:

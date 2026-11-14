@@ -683,10 +683,9 @@ function aiBox() {
     const cancel = () => { if (briefingBox === box) briefingBox = null; };
     signal.addEventListener("abort", cancel, { once: true });
     content.setAttribute("aria-busy", "true");
-    box.setAttribute("aria-busy", "true");
     status.textContent = painted
-      ? "Refreshing today's briefing. The current text stays visible until the new one is ready."
-      : "Loading today's briefing. Your case list is still available.";
+      ? "Reading case summaries... Refreshing today's briefing; the current text stays visible until the new one is ready."
+      : "Reading case summaries... Your case list is still available.";
     try {
       const b = await api(`/api/briefing${aiMode.workflow ? "?mode=workflow" : ""}`, undefined, signal);
       if (signal.aborted || own !== sequence) return;
@@ -701,7 +700,6 @@ function aiBox() {
       signal.removeEventListener("abort", cancel);
       if (own === sequence) {
         content.removeAttribute("aria-busy");
-        box.removeAttribute("aria-busy");
         content.inert = false;
         toggle.disabled = false;
         loading = false;
