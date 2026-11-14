@@ -37,7 +37,7 @@ from typing import Any
 
 from zava_forward.core.ai_consumption import CallContext, call_context, reference, usage
 from zava_forward.core.assistants import REGISTRY
-from zava_forward.core.chat_case_answers import AI_CONSENT
+from zava_forward.core.chat_case_answers import AI_CONSENT, RULES_FIRST
 from zava_forward.core.chat_case_answers import RULES as WORKFLOW_RULES
 from zava_forward.core.chat_case_answers import answer as grounded_answer
 from zava_forward.core.chat_case_answers import intent as case_intent
@@ -823,7 +823,7 @@ class ChatPanel:
             and not over_limit
             and len(str(question or "")) <= MAX_QUESTION_CHARS
             and len(masked) <= MAX_QUESTION_CHARS
-            and case_intent(normalise_policy_text(masked)) in ("unblock", "sensor")
+            and case_intent(normalise_policy_text(masked)) in RULES_FIRST
         )
         if over_limit:
             kind, text = "fallback", THREAD_LIMIT_REACHED
