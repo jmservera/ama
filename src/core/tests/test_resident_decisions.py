@@ -4059,8 +4059,14 @@ class JsonResidentDecisions(unittest.TestCase):
                 self.store._res_service_forward_outcome(
                     self.rae,
                     self.store._case("ZF-1"),
-                    dict(id="SR-1", attempt=2, reservation_id="SYN-R2", status="Acknowledged",
-                         reason="SYN", receipt_ref="SYN-RCPT-2"),
+                    dict(
+                        id="SR-1",
+                        attempt=2,
+                        reservation_id="SYN-R2",
+                        status="Acknowledged",
+                        reason="SYN",
+                        receipt_ref="SYN-RCPT-2",
+                    ),
                 )
         finally:
             resident_decisions._IN_FLIGHT[self.store].discard(("ZF-1", "SR-1", 1))

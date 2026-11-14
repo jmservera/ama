@@ -15,3 +15,7 @@ Execution: one pass, self-review of the diff. Outcome: conformant for the F3 cri
 
 * Independent exact-head review, human approval and hosted CI remain required.
 * Tick F3 on #1238 only after review; PR should use `Closes #1238` only if reviewers agree all criteria are proven.
+
+## Cycle 3 formatting correction
+
+* The format finding at `src/core/tests/test_resident_decisions.py:4062` is fixed; `ruff format` and `ruff check` on `src/core` pass. The review outcome is unchanged and no further Review ran.
