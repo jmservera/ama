@@ -12,7 +12,7 @@
   "historical_inputs_retained_in_git": true,
   "files": {
     "anc/additional-evidence.tex": {
-      "content_sha256": "3193b1b9780098db65501b4c40c2481799bca96015c60edb58ca8c049c598a30"
+      "content_sha256": "8c0978c03be4a8b5901d79667f91c5651e459a90fc100e75024eb7d18d5b966e"
     },
     "anc/case-audits.tex": {
       "content_sha256": "a99caa560f0ca38c26587ab7c77f7f347b52f04eb631db20b1f9ff75389aa1c0"
@@ -21,7 +21,7 @@
       "content_sha256": "c8608e6fe586fa252099e566a859d01350c5709fd79c9bc40c72595d19f25ccc"
     },
     "anc/measurement-provenance.tex": {
-      "content_sha256": "744973da456158b572ba49726af780c1682a1ea0e560bcf640d6ce0473bacd08"
+      "content_sha256": "12fd8fd51d27888eb985b935e928a29f738e716e8024b07b148a2e417581315f"
     }
   },
   "author_review_revision": {
@@ -100,6 +100,114 @@
       "svg_sha256": "90eefa122bea04e67371ff94912351c822d97c82300867c0adde30c7f76796b7",
       "png_sha256": "f9d4a5c30cbd4617cf4f1a6ab995db678f84771e52e7091226683adeac4f5798",
       "export_manifest": "diagram-exports.json"
+    }
+  },
+  "study_results_revision": {
+    "date": "2026-11-13",
+    "scope": "Integrated 315-trajectory exploratory S1 study results, 14 implementation epochs, 630-endpoint workflow replay, 1252-call blinded gpt-6-luna judging, S01..S08 human calibration and 5357-journal SDK intervention audit from WHITEPAPER_REPORT.md.",
+    "results_main_commit": "7943e40347862e76e3bc04490040ad5904487c86",
+    "results_branch_commit": "8591630c556f9f87c952f5d44ca7ce58b2bf1a83",
+    "results_tree": "cb542312d8bde5d26bc716f2c8f7a5e8eaef7037",
+    "whitepaper_report_git_blob": "3e44ae10547b6376864089e605e946f74a378d56",
+    "whitepaper_report_sha256": "2180679ce9fe18d77e3107ed5cdc01edd32749a4a15114bf23f647c516d83af4",
+    "final_execution_commit": "a9d76bb6dbb118c43315fb2a13b7bcdb732d946d",
+    "judging_v3_commit": "c10e6d6f62785a5028406a9963acdd499f6bd6b6",
+    "prior_active_content_sha256": {
+      "anc/measurement-provenance.tex": "744973da456158b572ba49726af780c1682a1ea0e560bcf640d6ce0473bacd08"
+    },
+    "delivery_sha256": "ab687b49b89a696ba83f00a668d018fec32ffd5d7d132e2d5c5aaa076ca9e354",
+    "delivery_pages": 56,
+    "supplement_start_page": 46,
+    "source_sha256": {
+      "main.tex": "9d4f8ab003eedf8666761ea446d27b4b4197e7d6a5741ba6558d3e55c4bd8c66",
+      "anc/experiment-protocol.tex": "867b213560b4b63e2a7c843f49c6bc74865ff303e88dcc21a85681c6fbc2e2ee",
+      "anc/measurement-provenance.tex": "8cd19eb900ad7924e0a5f7819689d2662fbed1b66e4b57f05572d2a6ff51fa89"
+    }
+  },
+  "readability_revision": {
+    "date": "2026-11-14",
+    "scope": "Interpretation-led abstract, results, discussion and conclusion; readable split tables; completed judging methods; detailed distributions, calibration and execution ledger retained in the existing Supplement. No experiment or scoring changes.",
+    "prior_delivery_revision": "study_results_revision",
+    "prior_active_content_sha256": {
+      "anc/measurement-provenance.tex": "7be488cdcc5498673d6eb9cdb7bd875b664f8ee7d8407b924c50c0b1e38d1fdf"
+    },
+    "table_field_preservation_checks": 618,
+    "delivery_sha256": "5f2bf7f61a76adcd8a0384dc768c13990cbfdcdc9b2c9c7f8c13c41504b2e9df",
+    "delivery_pages": 60,
+    "supplement_start_page": 44,
+    "source_sha256": {
+      "main.tex": "2c8cc80d34bace9d6015b55bdc44823c88a92040dc1888f386e44a7bfa83f729",
+      "anc/experiment-protocol.tex": "4d21dc365321aea663b573dc75f2188fc248236cd536b67d38682582ae5c02ab",
+      "anc/measurement-provenance.tex": "75c40c37519b62365c6d311166d06e0a9fd15e6f6eebb90494942109217e90ac"
+    }
+  },
+  "attested_report_revision": {
+    "date": "2026-11-14",
+    "scope": "Updated owner-attested intervention coverage, exploratory complete-pair intervals, full-allocation bounds and observed-scenario judge contrasts from the matching local/online report. Strict whole-study gate, original observations and all earlier delivery records preserved.",
+    "prior_delivery_revision": "readability_revision",
+    "results_main_commit": "bd75c1c2104d001d62f9fb2bb4feab438b86f763",
+    "whitepaper_report_file_commit": "fa34bb91a74e47d5e2cb12430c01a873540e1ef2",
+    "whitepaper_report_git_blob": "f416316985c8dca20ad8955fe3c596db995c6276",
+    "whitepaper_report_sha256": "ffde7266c3379446b5cdcc8fa695ee387c99a8a6c31fbd227b62291fd33c200c",
+    "companion_git_blob": "f1aef11e7094ca284c25594459aecb180212c9cb",
+    "companion_schema": "extracted-complete-pair-and-judging-contrasts/v1",
+    "intervention_coverage": {
+      "status": "owner-attested",
+      "manifest_sha256": "66b098851800522d9d5117177aac34525cb1e9a17c0c4bd7d924d512c1ea6b06",
+      "scope_state_sha256": "fb39a46fc36f33f62f3286fd517b63bb09787e9c7bcd7d276c4a362f256f2de1",
+      "attested_at": "2026-11-14T02:48:20.351742+00:00",
+      "covered_trajectories": 313,
+      "assisted_trajectories": 0
+    },
+    "primary_estimates_available": false,
+    "prior_active_content_sha256": {
+      "anc/measurement-provenance.tex": "751499d6911fcc27a4287d389907c46436da63b5259f2f1dfae203a3bce17fa8"
+    },
+    "numeric_transcription_checks": 241,
+    "table_field_preservation_checks": 886,
+    "delivery_sha256": "6928c5920f5b4607d92f750c204c49cd422fecbe70953f108c16d1e9d2f99b44",
+    "delivery_pages": 64,
+    "supplement_start_page": 45,
+    "source_sha256": {
+      "main.tex": "950e81d2b740a9fa3b93cbcd86263301fc427ce5295a9aee9bcf4c66f150106a",
+      "anc/experiment-protocol.tex": "1448e3e2ed3e6df15142a59c01383907bcc1e25769de3693643d0465392becd6",
+      "anc/measurement-provenance.tex": "4b602518b7c5d69e36ca4904e7a3720f016ce8e106b35e48d5c3939ca0d4d9d5"
+    }
+  },
+  "finalization_revision": {
+    "date": "2026-11-14",
+    "scope": "Exact Coach inference assessment, original-source checks, active narrative/figure name audit, retained read-only VM metadata, owner-reported approval status and selected experiment GitHub deposit. No new estimator, experiment, judging, registration or remote publication.",
+    "prior_delivery_revision": "attested_report_revision",
+    "selected_deposit": "https://github.com/jmservera/ama-thought-mve",
+    "publication_status": {
+      "manager_approval": "owner-reported",
+      "cela_draft_submitted": "2026-10-27",
+      "cela_no_objection": "owner-reported",
+      "final_version_clearance": "not-confirmed-by-inspected-evidence"
+    },
+    "historical_metadata": {
+      "study_state_sha256": "fb39a46fc36f33f62f3286fd517b63bb09787e9c7bcd7d276c4a362f256f2de1",
+      "attempts_with_starts_durations_ids_source_commits": 5357,
+      "judging_source_commit": "c10e6d6f62785a5028406a9963acdd499f6bd6b6",
+      "judging_config_sha256": "efb0516ec2f2b28ff3cb7880baf42398e16867e65830abe5eb82babd9958dfec",
+      "judge_config_file_sha256": "5da1116ec0b34750f3094ffd79cce4b4fe61a8814ca555f053f0b37e1e33ce37",
+      "instrument_freeze_file_sha256": "514fa31dbe1c6c182cc733675ead8cddc85c5d90fa8a33c53329688f181932ab",
+      "scope": "Allowlisted existing metadata only; not raw packets, provider-service independence or hidden build recovery"
+    },
+    "prior_active_content_sha256": {
+      "anc/additional-evidence.tex": "3193b1b9780098db65501b4c40c2481799bca96015c60edb58ca8c049c598a30",
+      "anc/measurement-provenance.tex": "c2413faf49071aa8a3486882bee498cf02819a7e781a8f3f0b1f8b90457c9351"
+    },
+    "table_field_preservation_checks": 1378,
+    "delivery_sha256": "3d8a48e26f0f889edb691acdd1904f6283c2853109b3b15fb4adb23055809100",
+    "delivery_pages": 64,
+    "supplement_start_page": 45,
+    "source_sha256": {
+      "main.tex": "5b2afa84d187eb29534b7a62042a8227dd7350e9f89e5f3ff789488014e47d33",
+      "references.bib": "9f1591d786ac533d3d0216ec8105acf6f7d0593422247ddaf46860ef7991e76e",
+      "anc/experiment-protocol.tex": "916f1bc836995638c13d8e9168d219cc79f1286a733a8705d89db50a75ad5528",
+      "anc/additional-evidence.tex": "9194a87c35bb31dd9242ac96da5c1b005e23af13ecd7f0aa2be187cfd47fd384",
+      "anc/measurement-provenance.tex": "791582b67d5f0f283f2806eeba7a5edc61212afda96ca4f943ae2405525fdc92"
     }
   },
   "restored_citation_keys": [

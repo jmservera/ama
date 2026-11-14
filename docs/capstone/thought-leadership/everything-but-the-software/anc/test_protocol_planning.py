@@ -156,11 +156,13 @@ class ProtocolPlanningTests(unittest.TestCase):
         self.assertNotEqual(len(b), len(d))
         self.assertIn("D also has fewer fresh sessions", self.protocol)
 
-    def test_given_selected_allocation_when_rendered_then_abstract_and_native_labels_agree(self) -> None:
+    def test_given_selected_allocation_when_rendered_then_current_sample_and_historical_labels_agree(self) -> None:
         abstract = self.manuscript.split(r"\begin{abstract}", 1)[1].split(
             r"\end{abstract}", 1
         )[0]
-        self.assertIn("12 (default), 21 or 33", " ".join(abstract.split()))
+        abstract_prose = " ".join(abstract.split())
+        self.assertIn("21 repository trajectories per condition", abstract_prose)
+        self.assertIn("313 of 315", abstract_prose)
         labels = {}
         for stem in ("fig-pilot-design", "fig-experiment-measures"):
             scene = json.loads((PACKAGE / f"{stem}.excalidraw").read_text())

@@ -38,7 +38,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         )
         for name, (sha256, _) in PROMPTS.items():
             self.assertEqual(bindings["literal_inputs"][f"anc/{name}"], sha256)
-        for name, sha256 in bindings["runtime_flow_revision"]["source_sha256"].items():
+        for name, sha256 in bindings["finalization_revision"]["source_sha256"].items():
             with self.subTest(source=name):
                 self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), sha256)
 
@@ -77,7 +77,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("not interchangeable instruments", text)
         self.assertIn("not a remeasurement", text)
 
-    def test_judging_is_a_prospective_supplement_not_a_treatment_change(self):
+    def test_given_completed_judging_when_described_then_original_endpoints_remain_distinct(self):
         protocol = (ANC / "experiment-protocol.tex").read_text()
         text = (ANC / "measurement-provenance.tex").read_text()
 
@@ -88,7 +88,13 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("not a replacement for", text)
         self.assertIn("b7973e200a6edbb1d19355badae3b7e03a066b09", text)
         self.assertIn("6cc0c236e4ca093198d38909dceb80f850196faa", text)
-        self.assertIn(r"\resultsfalse", (PACKAGE / "main.tex").read_text())
+        self.assertIn(r"\resultstrue", (PACKAGE / "main.tex").read_text())
+        methods = protocol.split(r"\label{sec:postrunjudging}", 1)[1].split(
+            r"\subsection{Replication and uncertainty}", 1
+        )[0]
+        self.assertIn("designed and run after", methods)
+        self.assertNotIn("will receive", methods)
+        self.assertNotIn("will replay", methods)
 
     def test_judging_preserves_witnessed_risk_sets_and_undefined_density(self):
         text = (ANC / "measurement-provenance.tex").read_text()
@@ -143,21 +149,237 @@ class MeasurementProvenanceTests(unittest.TestCase):
 
     def test_judging_delivery_binding_preserves_the_historical_measurement_record(self):
         bindings = json.loads((ANC / "supplement-integration.json").read_text())
-        current = bindings["runtime_flow_revision"]
+        current = bindings["finalization_revision"]
+        runtime_flow = bindings["runtime_flow_revision"]
         historical = bindings["measurement_provenance_revision"]
 
         self.assertEqual(
             hashlib.sha256((PACKAGE / "main.pdf").read_bytes()).hexdigest(),
             current["delivery_sha256"],
         )
-        self.assertEqual(current["delivery_pages"], 49)
-        self.assertEqual(current["supplement_start_page"], 39)
+        self.assertEqual(current["delivery_pages"], 64)
+        self.assertEqual(current["supplement_start_page"], 45)
+        self.assertEqual(bindings["attested_report_revision"]["delivery_pages"], 64)
+        self.assertEqual(bindings["attested_report_revision"]["supplement_start_page"], 45)
+        self.assertEqual(bindings["readability_revision"]["delivery_pages"], 60)
+        self.assertEqual(bindings["readability_revision"]["supplement_start_page"], 44)
+        self.assertEqual(bindings["study_results_revision"]["delivery_pages"], 56)
+        self.assertEqual(bindings["study_results_revision"]["supplement_start_page"], 46)
+        self.assertEqual(runtime_flow["delivery_pages"], 49)
+        self.assertEqual(runtime_flow["supplement_start_page"], 39)
         self.assertEqual(bindings["blind_judging_revision"]["delivery_pages"], 47)
         self.assertEqual(historical["delivery_pages"], 45)
         self.assertEqual(
             historical["delivery_sha256"],
             "58287cefefb4d0b10b6db6bac086a23c329597fe356211a88cda3ac144fea52f",
         )
+
+    def test_study_results_tables_and_mandatory_guardrails_are_present(self):
+        from check_paper import expand_inputs
+
+        manuscript = (PACKAGE / "main.tex").read_text()
+        source = expand_inputs(manuscript)
+        supplement = (ANC / "measurement-provenance.tex").read_text()
+
+        for label in (
+            r"\label{sec:resultsledger}",
+            r"\label{sec:resultscorrectness}",
+            r"\label{sec:resultsstructural}",
+            r"\label{sec:resultsjudging}",
+            r"\label{tab:resultsbenchmark}",
+            r"\label{tab:resultsadaptation}",
+            r"\label{tab:resultsstructural}",
+            r"\label{tab:resultscosts}",
+            r"\label{tab:resultsjudgecontrasts}",
+            r"\label{tab:resultsjudgemeans}",
+            r"\label{tab:resultsjudgemeanscr1}",
+            r"\label{tab:resultscalibration}",
+            r"\label{tab:executionepochs}",
+        ):
+            with self.subTest(label=label):
+                self.assertIn(label, source)
+
+        for marker in (
+            "primary_estimates_available=false",
+            "intervention-coverage/v1",
+            "pilot-estimation-gemini-4-argon-E-15",
+            "pilot-estimation-gpt-6.1-sol-C-20",
+            "62,052.61",
+            "18,900.0",
+            "783.16",
+            "418.64",
+            "human-calibration-guidance/v3",
+            "review_status=in_progress",
+            "42,594",
+            "5,357",
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, source)
+
+        for commit in (
+            "7943e40347862e76e3bc04490040ad5904487c86",
+            "a9d76bb6dbb118c43315fb2a13b7bcdb732d946d",
+            "3e44ae10547b6376864089e605e946f74a378d56",
+        ):
+            with self.subTest(commit=commit):
+                self.assertIn(commit, manuscript)
+
+        self.assertIn("fb39a46fc36f33f62f3286fd517b63bb09787e9c7bcd7d276c4a362f256f2de1", supplement)
+        self.assertIn("c10e6d6f62785a5028406a9963acdd499f6bd6b6", supplement)
+
+    def test_given_readable_results_when_checked_then_tables_preserve_allocations_and_outcomes(self):
+        from test_protocol_planning import table_rows
+
+        protocol = (ANC / "experiment-protocol.tex").read_text()
+        tables = {
+            label: {
+                (row[0].removeprefix(r"\midrule").strip(), row[1]): row[2:]
+                for row in table_rows(protocol, label)
+            }
+            for label in (
+                "tab:resultsbenchmark", "tab:resultsadaptation",
+                "tab:resultsstructural", "tab:resultscosts",
+            )
+        }
+        expected_cells = {
+            (model, arm)
+            for model in ("Sonnet 5.5", "Gemini 4 Argon", "GPT 6.1 Sol")
+            for arm in "ABCDE"
+        }
+
+        for label, rows in tables.items():
+            with self.subTest(table=label):
+                self.assertEqual(set(rows), expected_cells)
+        coverage = tables["tab:resultsbenchmark"]
+        adaptation = tables["tab:resultsadaptation"]
+        self.assertEqual(sum(int(row[0].split("/")[0]) for row in coverage.values()), 313)
+        self.assertEqual(coverage[("Gemini 4 Argon", "E")][0], "20/21")
+        self.assertEqual(coverage[("GPT 6.1 Sol", "C")][0], "20/21")
+        self.assertEqual(
+            [coverage[("GPT 6.1 Sol", arm)][2] for arm in "ABDE"],
+            ["5", "12", "6", "12"],
+        )
+        for identity, row in adaptation.items():
+            with self.subTest(cell=identity):
+                self.assertEqual(sum(int(value) for value in row[:3]), 21)
+        self.assertEqual(adaptation[("Gemini 4 Argon", "B")][0], "8")
+        self.assertEqual(adaptation[("Gemini 4 Argon", "C")][0], "16")
+        results = protocol.split(r"\ifresults", 1)[1].split(r"\else", 1)[0]
+        self.assertNotIn(r"\scriptsize", results)
+
+    def test_given_structural_summary_when_read_then_target_shortfalls_are_explicit(self):
+        manuscript = " ".join((PACKAGE / "main.tex").read_text().split())
+        protocol = " ".join((ANC / "experiment-protocol.tex").read_text().split())
+
+        self.assertIn("not uniformly achieved", protocol)
+        self.assertIn("2.26 lint warnings", protocol)
+        self.assertIn("did not satisfy every B target", protocol)
+        self.assertIn("50\\% more time and twice the credit allowance", manuscript)
+        self.assertNotIn("baseline code already satisfied", manuscript)
+        self.assertNotIn("enforced its structural stopping targets", protocol)
+
+    def test_given_report_refresh_when_read_then_attestation_and_gates_remain_distinct(self):
+        manuscript = " ".join((PACKAGE / "main.tex").read_text().split())
+        protocol = " ".join((ANC / "experiment-protocol.tex").read_text().split())
+        supplement = " ".join((ANC / "measurement-provenance.tex").read_text().split())
+
+        self.assertIn("all 313 completed trajectories", protocol)
+        self.assertIn("operator account of intervention", protocol)
+        self.assertIn("primary_estimates_available=false", protocol)
+        self.assertIn("five-arm frame is incomplete", protocol)
+        self.assertIn("63 versus 63", protocol)
+        self.assertIn("post-collection exploratory", protocol)
+        self.assertNotIn("attestation remains absent", protocol)
+        self.assertNotIn("missing intervention attestation", manuscript)
+        self.assertIn("not an independent verification", supplement)
+        self.assertIn("not mean paired statistical resampling", supplement)
+        self.assertIn("not multiplicity-adjusted", supplement)
+
+    def test_given_report_refresh_when_coverage_compared_then_intervals_and_bounds_stay_separate(self):
+        from test_protocol_planning import table_rows
+
+        supplement = (ANC / "measurement-provenance.tex").read_text()
+        pooled = {
+            row[0]: row[1:] for row in table_rows(supplement, "tab:resultsh1contrasts")
+        }
+        model_rows = table_rows(supplement, "tab:resultsh1modelintervals")
+        cr_rows = table_rows(supplement, "tab:resultscrintervals")
+
+        self.assertEqual(pooled, {
+            "B -- D": ["63/63", "+1.1874", "[+0.1000, +2.2247]", "[+1.1874, +1.1874]"],
+            "B -- A": ["63/63", "+1.4123", "[+0.3250, +2.4497]", "[+1.4123, +1.4123]"],
+            "B -- C": ["63/62", "---", "---", "[+0.6624, +2.2497]"],
+            "E -- B": ["62/63", "---", "---", "[-1.5498, +0.0375]"],
+        })
+        self.assertEqual(len(model_rows), 12)
+        self.assertEqual(sum(row[2] == "---" and row[3] == "---" for row in model_rows), 2)
+        self.assertEqual(len(cr_rows), 7)
+        self.assertFalse(any(row[0].startswith("GPT") for row in cr_rows))
+        for row in cr_rows:
+            with self.subTest(model=row[0], contrast=row[1]):
+                lower, upper = [float(value) for value in row[-1].strip("[]").split(",")]
+                self.assertLessEqual(lower, 0)
+                self.assertGreaterEqual(upper, 0)
+        self.assertIn("not simultaneous coverage over all comparisons", supplement)
+
+    def test_given_report_refresh_when_judging_summarised_then_abstentions_remain_visible(self):
+        from test_protocol_planning import table_rows
+
+        supplement = (ANC / "measurement-provenance.tex").read_text()
+        observed = table_rows(supplement, "tab:judgeobservedcontrasts")
+        partial_counts = {
+            "tab:judgepartialp10": ["0/0", "2/5", "9/13", "0/0", "0/0", "2/2", "11/9", "0/0"],
+            "tab:judgepartialcr1": ["0/0", "2/1", "8/13", "0/0", "0/0", "1/2", "9/8", "0/0"],
+        }
+
+        self.assertEqual(len(observed), 8)
+        self.assertEqual([row[-1] for row in observed], ["2/8", "9/16", "2/4", "9/17", "2/1", "8/16", "2/0", "8/18"])
+        for label, expected in partial_counts.items():
+            with self.subTest(table=label):
+                self.assertEqual([row[-1] for row in table_rows(supplement, label)], expected)
+        normalised = " ".join(supplement.split())
+        self.assertIn("not the complete-scenario estimand", normalised)
+        self.assertIn("not the unrated dimensions within observed trajectories", normalised)
+        self.assertIn("not substituted for the full-allocation bounds", normalised)
+
+    def test_given_finalization_when_approval_recorded_then_cela_clearance_is_not_invented(self):
+        manuscript = (PACKAGE / "main.tex").read_text()
+        approval_note = next(
+            line for line in manuscript.splitlines()
+            if line.startswith("% TODO(author)") and "CELA" in line
+        )
+
+        self.assertIn("owner-reported manager approval", approval_note)
+        self.assertIn("27 October 2026 CELA submission", approval_note)
+        self.assertIn("confirm that the applicable clearance process covers the final draft", approval_note)
+        self.assertIn("not a separately inspected final-version clearance", approval_note)
+        self.assertNotIn("CELA approved", approval_note)
+
+    def test_given_finalization_when_metadata_recovered_then_history_is_not_rerun(self):
+        supplement = " ".join((ANC / "measurement-provenance.tex").read_text().split())
+        protocol = " ".join((ANC / "experiment-protocol.tex").read_text().split())
+
+        self.assertIn("all 5,357 attempts", supplement)
+        self.assertIn(".study/pilot-estimation/state.json", supplement)
+        self.assertIn("no separate finish or boot/launch IDs", supplement)
+        self.assertIn("human-calibration completion flag remains false", supplement)
+        self.assertIn("recover an unlogged historical version", supplement)
+        self.assertIn("retain the analysis actually performed", protocol)
+        self.assertIn("separately disclosed post-collection analysis", protocol)
+
+    def test_given_finalization_when_deposit_selected_then_lineage_and_privacy_remain_explicit(self):
+        manuscript = " ".join((PACKAGE / "main.tex").read_text().split())
+        source_review = " ".join((ANC / "additional-evidence.tex").read_text().split())
+
+        self.assertIn("select the experiment GitHub repository as the deposit", manuscript)
+        self.assertIn("v4, v6 and v7 releases retain separate protocol archives", manuscript)
+        self.assertIn("verify the registered-protocol archive correspondence", manuscript)
+        self.assertIn("historical/raw records and any newly published extracts require their own confidentiality review", manuscript)
+        self.assertNotIn("azureuser@", manuscript)
+        self.assertNotIn("4.165.128.254", manuscript)
+        self.assertIn("39\\% relative", source_review)
+        self.assertIn("caption says 35\\%", source_review)
+        self.assertIn("institutional-abstract support", source_review)
 
     def test_runtime_flow_separates_development_commands_from_tool_free_judging(self):
         protocol = (ANC / "experiment-protocol.tex").read_text()

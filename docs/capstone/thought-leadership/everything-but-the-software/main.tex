@@ -1,6 +1,6 @@
 % !TEX program = pdflatex
 % ---------------------------------------------------------------------------
-% Everything but the Software -- LaTeX source (draft v13, integrated Supplement)
+% Everything but the Software -- LaTeX source (draft v18, integrated Supplement)
 % Figures use PNG for LaTeX; conceptual editing authority is .excalidraw.
 % anc/make_figures.py regenerates only case and published-evidence figures.
 % anc/export_diagrams.mjs exports native Excalidraw sources to SVG and PNG.
@@ -8,7 +8,7 @@
 % embedded below, so arXiv's automatic TeX processing works without a .bbl.
 % references.bib in the same folder holds the same entries for reuse.
 % Before submission: disposition every TODO(author) and update \date.
-% A protocol submission need not include the deferred experimental results.
+% Exploratory study and post-collection judging results are included below.
 % ---------------------------------------------------------------------------
 \newcommand{\DoNotLoadEpstopdf}{}
 \documentclass[11pt,a4paper]{article}
@@ -43,8 +43,8 @@
 \renewcommand{\textfraction}{0.08}
 \renewcommand{\floatpagefraction}{0.85}
 \newif\ifresults
-\resultsfalse
-% TODO(author): set to \resultstrue only after checked runs and analysis support an authorized results update; retain base registration, unregistered amendments and implementation epochs.
+\resultstrue
+% Authorized exploratory results update from committed results/WHITEPAPER_REPORT.md; retains base registration, unregistered amendments and 14 implementation epochs.
 
 \title{Everything but the Software:\\[4pt]
 \large Feature-Driven Decay in an Agentic Coding Loop.\\
@@ -56,7 +56,7 @@ authors' own and do not necessarily reflect those of Microsoft.}\\[4pt]
 \large Isabel Cabezas Martin\\[4pt]
 \small Software Engineer, Frontier Company at Microsoft}
 
-\date{Draft of 8 November 2026}
+\date{Draft of 14 November 2026}
 % TODO(author): replace with the submission date.
 
 \begin{document}
@@ -64,32 +64,35 @@ authors' own and do not necessarily reflect those of Microsoft.}\\[4pt]
 
 \begin{abstract}
 Each feature changes the starting point for the next. In agentic software
-development, that starting point includes code, tests and the instructions
-guiding later work. This paper examines how faults and corrective rules
-accumulate in that inherited state. Maintenance literature and agent
-benchmarks distinguish conversational errors from repository-carried failures.
-A practitioner-led demonstrator supplies a motivating case: agent-assisted
-research, business and product requirements, architecture decisions,
-Design Thinking critique and disposable prototypes informed epics and user
-stories. Despite preparation intended to improve delivery speed and quality,
-extended autonomous work left the replacement unusable for the participant
-and prompted renewed feedback and refactoring. Five candidate mechanisms
-organise this transition: specification inflation, proxy capture, learning
-evaporation, process-gate inflation and feedback starvation. Migration and
-deployment dependencies remain central to the observed failure.
-A three-model, five-arm exploratory experiment is now running. It compares
-feature-only delivery, consolidation, read-only review, matched-resource
-delivery and visible regression repair, measuring final coverage,
-retained-contract loss, an unforeseen change request and resource cost.
-The selected 21 trajectories per model per arm give 315 planned trajectories,
-from the historical 12 (default), 21 or 33 options.
-The owner confirms an OSF-registered base dated 7 November 2026; current
-execution includes disclosed unregistered amendments. A coauthor conducts
-execution and data collection separately from study design and manuscript
-preparation to minimise potential experimenter bias. The study asks whether
-consolidation improves the system inherited by later feature work.
+development, code, tests and instructions carry decisions forward.
+This paper examines whether scheduled consolidation improves that state.
+A practitioner-led case traces agent-assisted research,
+challenged requirements and prototypes into autonomous backlog delivery,
+an unusable replacement and renewed product feedback. Five candidate
+mechanisms organise the account; migration and deployment dependencies
+remain rival explanations.
+A separate exploratory study compared feature-only delivery, consolidation,
+read-only review, longer feature sessions and visible-specification repair.
+Three models each received 21 repository trajectories per condition, with
+ten sequential features and one withheld change request: 313 of 315
+trajectories completed, with little loss of acquired behaviour.
+Sonnet~5.5 and Gemini~4 Argon averaged 99.18\%--99.74\% final hidden-test
+coverage; one completed trajectory had an open contract regression.
+Consolidation removed functions above cyclomatic complexity 10 from all
+63 treated endpoints. Its pooled coverage advantage over longer sessions
+was 1.19 percentage points (95\% bootstrap interval [0.10, 2.22]).
+On GPT~6.1 Sol, complete feature delivery increased
+from 5/21 baseline trajectories to 12/21 with consolidation. On Gemini~4
+Argon, read-only review achieved 16/21 change-request successes versus
+8/21 with consolidation, revealing a permission-boundary defect despite
+low structural metrics. Consolidation used roughly twice the settled
+delivery credits, with no consistent reduction in change-request cost.
+Owner-attested completed trajectories support exploratory intervals;
+unregistered amendments, incomplete observations and billing limit inference.
+The findings distinguish structural improvement, behavioural correctness
+and their resource costs on this short synthetic task.
 \end{abstract}
-% TODO(author): report experimental outcomes only after checked analysis, preserving amendment and implementation-epoch provenance.
+% Companion complete-pair intervals retain the incomplete automated whole-study gate, owner-attestation boundary and 14-epoch provenance.
 
 \noindent\textbf{Keywords:} agentic software engineering; coding agents;
 spec-driven development; software evolution; technical debt; refactoring;
@@ -175,8 +178,9 @@ examines how they interact with completion proxies, review capacity and
 product-use feedback.
 
 Here \emph{feature-driven decay} describes loss of retained behaviour or
-increasing change burden across feature steps. Whether feature-driven decay
-occurs remains a question for the ongoing exploratory study.
+increasing change burden across feature steps. The completed exploratory
+study tests whether that decay appears across ten sequential features and
+how model-specific failure modes respond to consolidation, review and repair.
 
 Three questions guide the investigation:
 
@@ -202,9 +206,10 @@ and challenged requirements to coordinated feature delivery and corrective
 product feedback. Five candidate mechanisms and within-case contrasts connect
 the interruption of usability to competing explanations
 (Sections~\ref{sec:method}--\ref{sec:mechanisms}).
-\item A consolidation harness and an evolving five-arm exploratory protocol
-to estimate retained behaviour, future changeability and resource cost.
-Its earlier planning drew on the registered-report example of
+\item A consolidation harness and an executed 315-trajectory, five-arm
+exploratory study with post-collection workflow replay and blinded AI
+judging, estimating retained behaviour, future changeability and resource
+cost. Its earlier planning drew on the registered-report example of
 Lulla et~al.~\cite{lulla2026protocol} and HVE Core's Minimum Viable Experiment method
 (Sections~\ref{sec:harness} and~\ref{sec:experiment}).
 \end{enumerate}
@@ -216,8 +221,11 @@ against matched time and nominal-credit ceilings. The extra-allowance B--A
 comparison is secondary. Equal ceilings need not produce equal spending,
 and the design does not isolate refactoring or validate the five case
 mechanisms individually. An owner-confirmed registered base and disclosed
-unregistered amendments frame ongoing collection
-(Section~\ref{sec:studyexecution}). The case's validity and the pilot's
+unregistered amendments frame the completed exploratory collection.
+Owner attestation now covers all 313 completed trajectories. Companion
+intervals describe the complete B--D and B--A comparisons; two
+transport-quarantined C/E trajectories still block the automated
+whole-study primary (Section~\ref{sec:resultsledger}). The case's validity and the pilot's
 identification limits are consolidated in Sections~\ref{sec:threats}
 and~\ref{sec:protocollimits}.
 
@@ -236,7 +244,7 @@ required research, requirements, architecture, a delivery plan and a working
 demonstrator. These interdependencies made preservation of a complete user
 journey consequential even in a non-production system. No operational
 service or real resident data is evaluated here.
-% TODO(author): confirm the applicable Microsoft external-publication process and obtain the required leadership, privacy and other approvals before external submission; approval is pending.
+% TODO(author): retain the owner-reported manager approval and 27 October 2026 CELA submission record; confirm that the applicable clearance process covers the final draft. The owner reports no CELA objection, not a separately inspected final-version clearance.
 
 Agents performed most research synthesis, drafting and coding, with the
 practitioner steering scope and decisions. Several weeks of discovery and
@@ -288,7 +296,7 @@ updated the project board and, under owner delegation, merged changes.
 Interactive and CLI model configurations changed during the project;
 recorded selectors and recalled interface labels are distinguished in the
 source package. The delivery record is consequently an evolving workflow.
-% TODO(author): recover historical CLI versions, reviewer models and actual session/provider build identifiers where retained records expose them; distinguish records from author recollection.
+% TODO(author): recover remaining historical case CLI/reviewer/build identifiers from retained records where exposed, or mark them unavailable. Current versions and new sessions cannot reconstruct historical identifiers.
 
 Early worker sessions implemented directly, prompting the author to make
 the full RPI sequence and committed tracking artefacts mandatory. Further
@@ -786,17 +794,29 @@ the package will be evaluated.
 \FloatBarrier
 \section{Discussion}\label{sec:discussion}
 
-\subsection{Projected cost of omitting consolidation}\label{sec:costprojection}
+\subsection{Observed costs and possible payback}\label{sec:costprojection}
 
-The experiment measures costs over ten features and one final change. It
-does not yet estimate the price of maintaining a larger system without
-refactoring. Figure~\ref{fig:refactoringeconomics} and
-Table~\ref{tab:costscenario} therefore give an explanatory sensitivity
-scenario, not results, an empirical forecast or an addition to the frozen
-analysis. The economic hypothesis is that early investment can reduce the
-implementation and repair burden inherited by later features. It can fail:
-refactoring may consume credits without reducing that burden or may damage
-behaviour. Cost must always be read beside coverage, retention and adaptation.
+On the measured ten-feature task, consolidation used 1.84 to 2.25 times
+the delivery credits of feature-only work. The settled means rose from
+54.52 to 115.02 on Sonnet~5.5, 112.66 to 253.03 on Gemini~4 Argon and
+155.93 to 286.78 on GPT~6.1 Sol. These are means over completely billed
+trajectories, whose counts differ across cells; unresolved charges prevent
+a complete all-allocation cost comparison. The resource table in
+Section~\ref{sec:resultsstructural} retains those denominators.
+
+There was no consistent reduction in the cost of the final change request.
+Consolidation therefore showed no short-horizon credit payback in the
+accounted observations. It sometimes delivered more complete software,
+however, so the additional spend must be read alongside the outcomes.
+Giving the feature-only builder 50\% more time and twice the credit allowance
+in D produced similar spending to A. Matching allowances with consolidation
+in B did not match realised resource use.
+
+Longer-term payback remains a separate question. The economic hypothesis is
+that early consolidation can reduce the burden inherited by later features.
+Figure~\ref{fig:refactoringeconomics} and Table~\ref{tab:costscenario} retain
+the earlier illustrative sensitivity model. Its assumed cost growth was
+not fitted to the experiment, and the model adds no endpoint to the study.
 
 Let $N\geq1$ be an integer number of feature cycles, $k$ the assumed average consolidation
 investment in AI credits per cycle, and $\delta\cdot(t-1)$ the assumed excess
@@ -852,21 +872,15 @@ Assumed premium increase $\delta$ & 10 cycles & 20 cycles & 40 cycles \\
 \end{tabular}
 \end{table}
 
-The study can report actual B consolidation consumption and all-attempt
-CR1 cost by model. Calibration can anchor $k$ once billed spend exists.
-Because feature budgets are capped, harder work can instead reduce coverage:
-$\delta$ is an uncapped, quality-matched counterfactual, not a directly
-identified endpoint of this design. Even the enlarged replication over
-ten features does not identify a stable long-run $\delta$ or justify extrapolation
-to 40 features. A future forecast would require longer replicated sequences,
-matched delivered quality, measured residual repair work and independently
-checked billing. Human review, operational failures, opportunity costs and
-currency prices are not measured by this kit and cannot be monetized from
-its credits or code-size proxies. Thus the current projected cost of
-inaction is conditional and unestimated, not a claimed business saving.
-For comparison, assumed $k=100$ and $\delta=1$ yield break-even at 201
-cycles, not eleven. No observed consolidation spend supports a preferred
-$k$ yet.
+Measured consolidation-session spend is recorded in the Supplement
+(Section~\ref{app:measurementprovenance}). It does not identify the model's
+long-run $\delta$: capped feature budgets can turn harder work into lower
+coverage rather than higher spending. Estimating payback would require
+longer sequences, comparable delivered quality, residual repair costs and
+resolved billing. Human effort, opportunity costs and currency prices also
+remain outside the measurements. The table therefore illustrates how
+assumptions change payback, while the experiment reports the observed
+short-horizon trade-off.
 
 \subsection{What worked}
 
@@ -927,12 +941,30 @@ it curates prior transcripts into persistent context
 ~\cite{beamnxw2026memorytalk}, whereas this study changes retained code,
 tests and the handover. Memory updates can carry an incorrect lesson forward
 just as code updates can retain a defect. A self-improvement label therefore
-cannot replace the retention and adaptation measures. The study asks what
-remains after a fixed repository-consolidation step, with CR1 as one
-future-change probe. It does not test choosing when to interrupt delivery,
-changing product goals or restoring a deployment. Those questions, and
-matched human/agent steering, belong to the separate research agenda in the
-ancillary supplement.
+cannot replace the retention and adaptation measures.
+
+The experiment provides two useful contrasts. On GPT~6.1 Sol, some earlier
+tests encoded a closed list of permitted view methods. A later feature
+needed to extend that list, but the harness protected accepted test files
+from edits. Consolidation and visible-specification repair were associated
+with more complete feature delivery in that setting. This concerns the
+interaction between generated tests and harness rules as well as code
+structure.
+
+On Gemini~4 Argon, the problem was a view that rejected named write methods
+but forwarded newly added ones. Read-only review had more successful final
+extensions than consolidation, despite consolidation's cleaner structural
+metrics. Baseline metrics were low, but did not satisfy every stopping
+target. The cell summaries establish neither why a session stopped nor
+that a particular review action caused the difference. They illustrate
+the distinction between structural hygiene and a rule such as ``every
+write through a read-only view must be refused.'' A small function can
+still violate that rule.
+
+These observations support testing structural cleanup and checks of intended
+behaviour together. Choosing when to interrupt delivery, changing product
+goals, restoring a deployment and comparing human with agent steering
+remain separate questions in the ancillary research agenda.
 
 \subsection{Implications for practice}\label{sec:feedbackfirst}
 
@@ -955,44 +987,41 @@ cadence or the preservation of expertise. Those remain separate questions.
 \FloatBarrier
 \section{Conclusion}\label{sec:conclusion}
 
-The unit of progress in cumulative development is the system left for the
-next change. Knight Capital shows how a new deployment can activate an old
-fault. WyCash makes consolidation part of continued growth. Agent research
-adds a direct cross-feature test: in SWE-Maintain, earlier changes affect
-later tasks even when conversation history is discarded. Its clean-history
-results make preserving behaviour a more precise target than treating all
-agent-written code as structurally deficient.
+On this clean, synthetic ten-feature task, previously acquired behaviour
+was largely retained. The experiment did not reproduce a broad decline
+in working functionality. Its most informative shortcomings concerned
+features that were never completed and a permission-boundary defect
+exposed by the final extension. Stable retention can therefore coexist
+with incomplete or unsafe-to-extend behaviour.
 
-The instructions governing development need maintenance too. Repository
-studies show repeated additions and revisions, alongside pruning; controlled
-context-file comparisons show that more guidance can increase work without
-improving task resolution. Code, tests and instructions are all inherited
-state, but they require different measures of correctness and burden.
+Scheduled consolidation improved structural metrics and was associated
+with more complete feature delivery on GPT~6.1 Sol. Its complete-pair
+coverage advantage over longer sessions was small: 1.19 percentage points
+(95\% bootstrap interval [0.10, 2.22]). It offered no consistent
+advantage on the final change request: read-only review achieved 16/21
+successes on Gemini~4 Argon versus 8/21 with consolidation. Structural
+cleanliness and checks of intended behaviour address different risks.
+Consolidation also used roughly twice the settled delivery credits, with
+no consistent reduction in change-request cost. The observed benefit was
+selective improvement at additional expense, rather than a general
+short-horizon saving.
 
-The motivating case traces a fuller process: agent-assisted research and
-challenge shaped requirements, prototypes and a hierarchical backlog;
-autonomous issue delivery then failed to preserve the participant's usable
-workflow. Renewed feedback, refinement and refactoring redirected subsequent
-work. The five candidate mechanisms frame possible links among accumulated
-obligations, lost lessons, completion proxies and insufficient product-use
-feedback. Migration and deployment dependencies remain central to that
-particular failure. The versioned repository retains the evolving record
-and the distinction between local engineering evidence and accepted journeys
-(Section~\ref{sec:currentstatus}).
+The motivating case concerns a different scale and failure: a migration
+interrupted a usable workflow after extensive agent-assisted preparation.
+Its five candidate mechanisms connect inherited obligations, lessons and
+completion signals to opportunities for correction; the experiment does
+not test those mechanisms individually. Together with the literature,
+the two accounts motivate evaluating the system left for the next change,
+including code, tests, instructions and operational dependencies.
 
-The ongoing five-arm exploratory study asks what scheduled consolidation leaves
-for later work. It separates final behavioural coverage from retained-contract
-loss, probes an unforeseen change and reports the resources consumed.
-Secondary metrics provide descriptive evidence; testing the proposed mechanisms
-would require further work.
-Collection follows an owner-confirmed OSF-registered base with disclosed
-unregistered amendments, including changes to calibration and execution.
-The retained record must distinguish implementation epochs and their
-potential temporal, arm and model confounding
-(Section~\ref{sec:studyexecution}). The cost-of-inaction scenario makes the
-break-even assumptions explicit.
-What matters is whether the agents' combined work preserves the behaviour and
-options needed by subsequent features.
+These are exploratory findings from one suite and one final change request.
+Owner attestation covers completed trajectories; unregistered amendments,
+two incomplete trajectories, partial ratings, billing gaps and changing
+execution sources limit inference.
+The practical implication is to check retained behaviour and future-change
+requirements alongside structural metrics, and to measure the cost of each
+correction strategy. More produced or cleaner code is useful only insofar
+as it supports the tasks the resulting system must perform.
 
 \section*{Acknowledgements}
 % TODO(author): thank reviewers once they have commented.
@@ -1000,11 +1029,11 @@ The authors thank the colleagues and partners whose questions shaped this report
 
 \section*{Author contributions}
 Juan Manuel Servera Bondroit conceived the study, designed the methodology,
-defined the evaluation criteria, analysed the historical exploratory case
-and wrote the manuscript. Experimental analysis remains his responsibility
-as collection proceeds. Isabel Cabezas Martin is conducting the ongoing
-experiment and collecting its data independently under the predefined
-exploratory protocol and disclosed amendments.
+defined the evaluation criteria, analysed the historical exploratory case,
+conducted the post-collection analysis and human-calibration spot-check,
+and wrote the manuscript. Isabel Cabezas Martin conducted the experiment and
+collected its data independently across the 315 allocated trajectories under
+the predefined exploratory protocol and disclosed amendments.
 Separating execution and data collection from study conception, design and
 manuscript preparation is intended to minimise potential experimenter bias.
 Both authors are Microsoft employees: this operational separation establishes
@@ -1066,6 +1095,28 @@ skills cited above. The launcher exposed a general-purpose agent rather
 than the named Coach. This assisted assessment informed prospective
 workflow, rating and missingness descriptions; it supplied no experimental
 judgments, human calibration or independent scientific acceptance.
+The 13 November revision integrated the committed empirical study results,
+post-collection workflow replay, blinded \texttt{gpt-6-luna} judging
+(1,252 Assessment~v3 sessions plus halted v1/v2 attempts), the 90-row
+human-calibration spot-check (where Servera Bondroit disclosed using AI
+assistance to triage failure and mismatch cases rather than inspecting every
+passing row individually) and the 5,357-journal SDK intervention audit from
+\nolinkurl{results/WHITEPAPER_REPORT.md}, with Copilot-assisted table,
+rational-arithmetic and PDF verification.
+The 14 November readability revision used Copilot-assisted editing to
+separate findings from provenance, simplify tables and distinguish
+descriptive associations from mechanism explanations. It changed no
+experimental data, scoring, treatment, registration or collection record.
+The subsequent 14 November report refresh used Copilot-assisted comparison
+of local and online report identities, reconstruction of complete-pair
+coverage intervals, and checks of companion bounds and abstention counts
+against retained summaries. It added no candidate or judge sessions and
+did not establish independent verification of the operator attestation.
+The finalization follow-up used the Data Science and Engineering Coach for
+a source-bound inference assessment and Copilot-assisted original-source
+checks, participant-name review and read-only retrieval of retained timing
+and version metadata. It added no candidate or judge sessions and changed
+neither the estimator nor registration.
 
 Servera Bondroit supplied the case observations, selected the case and made the analytical
 judgements, and reports checking the repository figures and Azure expenditure
@@ -1078,9 +1129,8 @@ source comparison does not independently validate a source's experiments.
 The human authors retain responsibility for the content and final approval.
 Further disclosure must follow the
 actual submission venue's policy, which has not been assessed here.
-% TODO(author): record underlying model/build identifiers and historical runtime or reviewer versions where exposed; do not infer hidden versions from interface labels or claim exhaustive manual review.
-% TODO(author): verify numerical findings attributed to cited studies against the original papers, including SlopCodeBench and METR; author verification is pending.
-% TODO(author): prepare the authorised provenance excerpts from retained exchanges, redacting partner identities and internal reviewer names/contact suggestions; AI assertions of source checking are not independent evidence.
+% TODO(author): author-confirm the scoped original-source checks and remaining abstract-only/full-text limits recorded in anc/revision-report.md; metadata and assisted checking do not establish independent validation of cited studies.
+% TODO(author): approve the selected provenance excerpts before publication. The active narrative and checked figures name no other case participants; historical/raw records and any newly published extracts require their own confidentiality review.
 
 \section*{Competing interests}
 Both authors are Microsoft employees. The study concerns Microsoft and
@@ -1132,7 +1182,7 @@ prospective OSF update and left collection unauthorized. These are
 5 November findings, not current OSF metadata or a freeze of the ongoing run.
 Historical v4, v6 and v7 records remain distinct from current execution.
 
-The active source is commit
+The 8 November active-source inspection pinned commit
 \href{https://github.com/jmservera/ama-thought-mve/tree/e71037d961cb80fc5c659437796de7736820f6c9}
 {\nolinkurl{e71037d961cb80fc5c659437796de7736820f6c9}},
 tree \nolinkurl{e7ec1561d4ecee921e7c9eba3711a1ab7e9f4058}, without a tag.
@@ -1143,42 +1193,68 @@ hypotheses. Its file default is 12; the owner-supplied runtime selection is
 The source's false/null current-registration object concerns the uncompleted
 amendment, rather than absence of the base study.
 
-The owner confirms the registered base at \url{https://osf.io/xcpt4},
-dated 7 November 2026. Supplied access checks returned only an OSF app shell
+The earlier three-arm protocol was registered at \url{https://osf.io/ywsrv/overview},
+and the owner confirms the 7 November 2026 registered base at
+\url{https://osf.io/xcpt4}. Supplied access checks returned only an OSF app shell
 and HTTP 401 from \url{https://api.osf.io/v2/registrations/xcpt4/};
-the registration identity and date remain owner-confirmed rather than
-independently verified OSF metadata. The current run includes disclosed
-unregistered amendments for short calibration, parallel execution and VM
-restarts. The pinned public README and contributor instructions disclose
-these departures from the earlier registration. Public disclosure does not
-make the amended run a single preregistered confirmatory dataset.
+that registration identity and date remain owner-confirmed rather than
+independently verified OSF metadata. Because the OSF registration could not
+be amended in place, the executed five-arm model-stratified design and
+mid-study resilience recoveries (short calibration, parallel execution,
+WebSocket/HTTP retry handling and VM restarts) were publicly committed in Git,
+culminating in execution commit
+\href{https://github.com/jmservera/ama-thought-mve/commit/a9d76bb6dbb118c43315fb2a13b7bcdb732d946d}
+{\nolinkurl{a9d76bb6dbb118c43315fb2a13b7bcdb732d946d}}
+(disclosed 12 November 2026, manifest SHA-256
+\nolinkurl{0a7bc8fd073e6029ea6c573c1096a0e8dee5dbf7f602809eb3caeca1ef4f35f9},
+inputs SHA-256
+\nolinkurl{bc5d9ce04e5b255bf589d0068a902145bd25cfc384fe0110e2f9ad5ce4319305}).
+Public version-control disclosure does not make the amended run a
+preregistered confirmatory dataset.
 
-\begin{table}[!htbp]
-\centering\small
-\caption{Implementation epochs and owner-reported completed steps as of
-8 November 2026. Steps can include nonpasses; they are neither independent
-replicates nor completed trajectories. Source identifiers describe
-implementations, not collection times.}\label{tab:executionepochs}
-\begin{tabularx}{\textwidth}{@{}L{1cm}YL{2.1cm}@{}}
-\toprule
-Epoch & Execution source and correction & Reported steps \\
-\midrule
-E1 & \nolinkurl{99a1ed170d7c71acb428b52e0e24be8856cc3ea3};
-pinned CLI fix & 651 \\
-E2 & \nolinkurl{3c2ce89b00fe583c1f0715e8ccd3510419d5e734};
-source-bound estimation recovery & 227 \\
-E3 & \nolinkurl{e71037d961cb80fc5c659437796de7736820f6c9};
-failed-request charging fix & 369 \\
-\bottomrule
-\end{tabularx}
-\end{table}
+The initial 13 November integration pinned the empirical results,
+supplementary workflow-replay and blinded
+judging outputs, human-calibration comparison and SDK event-journal audit
+published in \url{https://github.com/jmservera/ama-thought-mve} at
+\texttt{main} commit
+\href{https://github.com/jmservera/ama-thought-mve/commit/7943e40347862e76e3bc04490040ad5904487c86}
+{\nolinkurl{7943e40347862e76e3bc04490040ad5904487c86}}
+(branch commit \nolinkurl{8591630c556f9f87c952f5d44ca7ce58b2bf1a83}, tree
+\nolinkurl{cb542312d8bde5d26bc716f2c8f7a5e8eaef7037}), under
+\nolinkurl{results/WHITEPAPER_REPORT.md} (Git blob
+\nolinkurl{3e44ae10547b6376864089e605e946f74a378d56}),
+\nolinkurl{results/pilot-estimation/} and
+\nolinkurl{results/pilot-estimation-judging/}.
+The 14 November refresh uses commit
+\href{https://github.com/jmservera/ama-thought-mve/commit/bd75c1c2104d001d62f9fb2bb4feab438b86f763}
+{\nolinkurl{bd75c1c2104d001d62f9fb2bb4feab438b86f763}}, with report Git blob
+\nolinkurl{f416316985c8dca20ad8955fe3c596db995c6276}, verified against the
+online \texttt{main} file. Its companion
+\nolinkurl{results/pilot-estimation-judging/extracted-contrasts.json}
+has Git blob \nolinkurl{f1aef11e7094ca284c25594459aecb180212c9cb}.
+The report digest, intervention-attestation binding and analysis limits
+are retained in the Supplement and ancillary revision record.
+Supplement Table~\ref{tab:executionepochs} records all fourteen source commits across
+which the 5,357 study attempts (5,341 returned steps, 15 recovery-interrupted
+attempts and one infrastructure-failed attempt) were collected. Historical
+interim counts remain in that record, separate from final trajectory outcomes.
 
-The owner-reported total is 1,247 completed steps. This revision did not
-inspect the private dataset, collection timestamps, completed-trajectory
-counts or reconciled costs. Epoch labels, failures, unknowns and actual
-arm/model/time assignments must remain available for analysis; temporal,
-arm and model confounding limits homogeneous pooling. No post-hoc
-sensitivity result is asserted.
+The authors select the experiment GitHub repository as the deposit for
+protocol materials, source and sanitized study outputs. Its dated v4, v6
+and v7 releases retain separate protocol archives and checksum files.
+The amended collection and post-collection analysis remain identified by
+the source commits above; their publication does not retroactively amend
+the registrations. A final deposit manifest must bind the released
+materials and preserve their access and confidentiality limits.
+
+Raw execution packets, private specimen-to-trajectory mappings and per-call
+runtime workspaces remain stored off-Git in the local evidence vault
+(\nolinkurl{.study/evidence-vault-2026-11-13/}) to preserve blinding for
+future independent human reviewers. Epoch labels, failures, unknowns and
+actual arm/model/time assignments are retained in
+\nolinkurl{results/pilot-estimation/attempts.csv} and
+\nolinkurl{results/pilot-estimation/provenance.json}; temporal, arm and model
+confounding across recovery epochs limits homogeneous pooling.
 Exact commit metadata, supplied execution status and source-access limits
 are retained in \nolinkurl{anc/revision-report.md}.
 The earlier protected-workspace and post-collection-release plans remain
@@ -1186,9 +1262,8 @@ historical intentions; current access, prior exposure and release permissions
 require their own records. OSF status and GitHub visibility are distinct.
 This paper revision changes neither experiment sources, configuration,
 registration, repository visibility nor collection.
-Sanitized pilot data and exact execution provenance still require a later
-authorized deposit; no completed independent replication is claimed.
-% TODO(author): archive the exact registered protocol and study materials at an authorised destination, preserving prior proposals and excluding credentials, partner identifiers, DLP sidecars and unapproved internal material.
+No completed independent external replication is claimed.
+% TODO(author): complete the selected experiment GitHub deposit manifest and verify the registered-protocol archive correspondence and released file hashes. Preserve dated v4/v6/v7 archives and disclose later amendments; exclude credentials, confidential identifiers, raw mappings and unapproved internal material.
 
 % ===========================================================================
 \begingroup
@@ -1650,6 +1725,9 @@ Emerson Murphy-Hill, Jenna Butler, and Alexandra Savelieva.
 \newblock Adoption and impact of command-line {AI} coding agents: A study of
   {Microsoft}'s early 2026 rollout of {Claude Code} and {GitHub Copilot CLI},
   2026.
+\newblock arXiv:2607.01418v1. \url{https://arxiv.org/abs/2607.01418v1}.
+\newblock Sections 5.1 and 6 inspected 14 November 2026; observational
+merged-PR output, not a direct delivered-value measure.
 
 \bibitem{naur1985theory}
 P.~Naur.

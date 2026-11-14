@@ -11748,3 +11748,90 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Audit only, no tick or closure. The cut-over audit test passes (9 tests) and the inventory has no unclassified row. A relative-link scan of tracked Markdown found broken targets under `docs/reference/` only in earlier, immutable entries of this log; none in the index, research, regulatory, method or resources files.
 * Criteria 1 and 2 stay pending owner review. Criterion 3 is unproven: the last Source projects CI run on `main` is a green manual dispatch of 2026-11-08, the workflow is path-filtered with no run on the current head, no deployment workflow run exists on `main`, and the `ca-cutover-test-demo-api` status could not be read (Azure authorization denied). Not a failure, not a pass.
+
+## [2026-11-13] update | Whitepaper integration of completed 315-trajectory S1 study and post-collection judging results
+
+* Integrated the committed empirical handoff from `jmservera/ama-thought-mve` (`main` commit `7943e40347862e76e3bc04490040ad5904487c86`, branch commit `8591630c556f9f87c952f5d44ca7ce58b2bf1a83`, tree `cb542312d8bde5d26bc716f2c8f7a5e8eaef7037`, `results/WHITEPAPER_REPORT.md` blob `3e44ae10547b6376864089e605e946f74a378d56`) into the [thought-leadership paper](../capstone/thought-leadership/everything-but-the-software/main.tex), [experiment protocol slice](../capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex), [measurement provenance supplement](../capstone/thought-leadership/everything-but-the-software/anc/measurement-provenance.tex), [package README](../capstone/thought-leadership/everything-but-the-software/README.md) and [revision report](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md).
+* Enabled `\resultstrue` and added five audited results tables plus the 14-epoch execution table (313/315 completed trajectories, 5,341/5,355 measured steps across 5,357 attempts; two quarantined runs retained in all denominators; 5,303 complete-billing attempts totalling `62,052.61` settled AI credits and 54 holds reserving `18,900.0` credits with `783.16` partial lower-bound credits; 12-workflow replay across 3,457 commits with zero witnessed losses across 626 evaluable endpoints; 1,252-call blinded `gpt-6-luna` Assessment v3 for `418.64` settled credits; 90-row `S01..S08` human calibration spot-check; and 5,357-journal SDK intervention audit).
+* Preserved all four mandatory reporting guardrails: unregistered five-arm Git amendment over the earlier OSF registrations (`ywsrv` and `xcpt4`), withheld primary bootstrap intervals (`primary_estimates_available = false` without an external `intervention-coverage/v1` operator attestation), separate reporting of incomplete billing holds without currency conversion, and post-collection exploratory posture for `gpt-6-luna` judging and AI-triaged `in_progress` human calibration.
+* Local validation: all 58 authoring unit tests and `anc/check_paper.py` pass; Tectonic 0.17.0 compiles the 56-page `main.pdf` (Supplement page 46) with zero errors, zero unresolved references and zero overfull or underfull boxes.
+
+## [2026-11-14] update | Whitepaper readability and interpretation revision
+
+* Applied the owner's coherence review to the existing
+  [paper](../capstone/thought-leadership/everything-but-the-software/main.tex):
+  findings-led abstract/conclusion, completed judging methods, explicit
+  acquisition-versus-retention and CR1 definitions, corrected metric-target
+  claims and observed costs before the unchanged payback scenario.
+* Split the wide result tables into readable coverage, CR1, structural and
+  resource views. Detailed distributions, contrast bounds, size measures,
+  ratings, calibration and the fourteen-source ledger remain in the existing
+  Supplement. The original source pins, adverse records, result frame,
+  registration/amendment and missing-billing/assistance limits are preserved.
+* Numerical preservation passed 618 field, denominator, ledger and exact
+  CR1-bound checks against the staged results draft. All 60 authoring tests
+  and structural checks pass. The single rebuilt PDF has 60 pages,
+  Supplement page 44; all-page text bounds/nonblank checks and selected
+  rendered-page inspections pass. The inherited Tectonic `inputenc` notice
+  remains, with no unresolved references or overfull/underfull boxes.
+* The [dated revision](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#readability-and-interpretation-14-november)
+  records focused-tier validation and the new delivery binding, preserving
+  the prior results/PDF hashes. Local editorial work only: no experiment,
+  scoring, budget, registration, commit, push or approval action; hosted and
+  independent exact-head review remain unperformed.
+
+## [2026-11-14] update | Whitepaper attestation and companion-estimate refresh
+
+* Updated the existing
+  [paper](../capstone/thought-leadership/everything-but-the-software/main.tex)
+  and additive Supplement from matching local/online report blob
+  `f416316985c8dca20ad8955fe3c596db995c6276` at experiment commit
+  `bd75c1c2104d001d62f9fb2bb4feab438b86f763`. Owner attestation now covers
+  all 313 completed trajectories as unassisted; two partial C/E trajectories
+  still block the strict automated whole-study primary.
+* Added exploratory complete-pair coverage intervals (B-D `+1.1874` points,
+  95% interval `[+0.1000, +2.2247]`; B-A `+1.4123`, `[+0.3250, +2.4497]`),
+  model-specific coverage/CR1 intervals, allocation bounds and judge
+  contrasts with scenario-abstention counts. Kept finite-allocation bounds,
+  sampling intervals and observed-scenario estimands distinct; no source
+  overclaims, revised registration or independent attestation are adopted.
+* All 63 authoring tests and structural checks pass. Source verification
+  reproduces two pooled coverage and seven CR1 intervals, checks 128 judge
+  summaries within published precision, matches 241 new fields and preserves
+  all 886 v16 table fields. The single 64-page PDF starts its Supplement on
+  page 45; all-page bounds/nonblank and selected visual checks pass. Only
+  the inherited Tectonic `inputenc` notice remains.
+* The [dated revision](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#attested-report-refresh-14-november)
+  records sources, the rounding limit, focused-tier validation and the new
+  delivery binding without overwriting prior evidence. Local refresh only:
+  no experiment, scoring, candidate/judge sessions, commit, push or approval;
+  hosted CI and independent exact-head review remain unperformed.
+
+## [2026-11-14] update | Whitepaper finalization evidence and decision follow-up
+
+* Continued the owner-authorized [paper](../capstone/thought-leadership/everything-but-the-software/main.tex)
+  on the existing topic branch with exact Data Science and Engineering Coach
+  assessment, original-source research and scoped participant-name review.
+  Implemented resampling is explicit; dependence justification and actual
+  amendment chronology remain author decisions, without a new estimator.
+* Recorded original support and limits, including Laban v1's 39%/35% display
+  difference, institutional-abstract Besker support and unverified full Echoes
+  details. Active narrative/figure review found no additional named case
+  partners, customers or coworkers; credited public-source authors remain.
+* Read only allowlisted metadata in the author-named VM working copies. All
+  5,357 starts/durations/IDs/source commits and the matching v3 state/config
+  lineage are retained; no restart or new session was needed. This does not
+  establish service independence or recover unlogged historical build IDs.
+* Recorded owner-reported manager approval and 27 October CELA submission with
+  no reported objection, without claiming inspected final-version clearance.
+  The experiment GitHub repository is the selected deposit; dated v4/v6/v7
+  protocol assets remain, with final manifest/correspondence review outstanding.
+* All 66 authoring tests and structural checks pass; all 1,378 existing table
+  fields are preserved. The single 64-page PDF retains Supplement page 45,
+  in-page/nonblank checks and inspected changed/ledger/prompt pages. Only the
+  inherited `inputenc` notice remains. The
+  [dated record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#finalization-follow-up-14-november)
+  retains sources, dispositions, validation and separate v18 bindings. No
+  experiment, paid candidate/judge session, registration, remote mutation,
+  commit, push, publication or scientific/employer approval was performed;
+  hosted CI and independent exact-head review remain unperformed.

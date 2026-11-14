@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-13
+ms.date: 2026-11-14
 ms.topic: overview
 ---
 
@@ -47,9 +47,33 @@ production acceptance or a higher score.
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
-The current coauthored delivery has 49 pages, with the additive Supplement
-starting on page 39. This is a draft with unreported experimental outcomes,
-not a completed confirmatory report.
+The current v18 coauthored delivery has 64 pages, with the additive Supplement
+starting on page 45. The
+[14 November finalization follow-up](../capstone/thought-leadership/everything-but-the-software/README.md#finalization-follow-up-14-november)
+records the exact Coach assessment, original-source qualifications, scoped
+participant-name review, retained timing/version metadata and the selected
+experiment GitHub deposit. Manager approval and the earlier CELA submission
+are owner-reported; final-version clearance remains unconfirmed. The
+[14 November report refresh](../capstone/thought-leadership/everything-but-the-software/README.md#attested-report-refresh-14-november)
+adds owner-attested coverage of 313 completed trajectories, exploratory
+complete-pair intervals, allocation bounds and observed-scenario judge
+contrasts with abstention counts. It preserves the
+[14 November readability revision](../capstone/thought-leadership/everything-but-the-software/README.md#readability-and-interpretation-14-november)
+and its findings-led structure, split tables, corrected structural-target
+interpretation and detailed Supplement. The completed
+315-trajectory five-arm S1 results, workflow replay, blinded AI judging,
+human calibration spot-check and SDK audit remain grounded in
+[`results/WHITEPAPER_REPORT.md`](https://github.com/jmservera/ama-thought-mve/blob/main/results/WHITEPAPER_REPORT.md)
+(`jmservera/ama-thought-mve` `main` commit `bd75c1c2`), following the original
+[13 November study results update](../capstone/thought-leadership/everything-but-the-software/README.md#study-results-and-post-collection-judging-13-november).
+The automated whole-study primary remains unavailable
+(`primary_estimates_available = false`) because two transport-quarantined
+trajectories are incomplete. Separate B-D/B-A intervals cover complete
+63-versus-63 comparisons, not a restored whole-study frame or confirmatory
+verdict. The 54 incomplete-billing holds, scenario abstentions and scheduling
+dependence remain explicit. The v16 60-page readability delivery (Supplement
+page 44), v15 56-page results delivery (Supplement page 46) and earlier v14
+49-page pre-results delivery (Supplement page 39) remain in the revision record.
 
 The later [8 November study update](../capstone/source/review-2026-11-08.md#later-8-november-study-and-coauthor-update)
 records owner-confirmed OSF base `xcpt4` (7 November; public API returned 401),
