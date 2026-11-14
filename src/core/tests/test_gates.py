@@ -385,7 +385,10 @@ class QualityGateTests(unittest.TestCase):
 
 class ControlledRuleRegistryTests(unittest.TestCase):
     def test_every_gate_kind_has_a_rule_with_full_metadata(self) -> None:
-        self.assertEqual({r.gate for r in gates.CONTROLLED_RULES}, set(gates.GATE_KINDS))
+        self.assertEqual(
+            {r.gate for r in gates.CONTROLLED_RULES},
+            set(gates.GATE_KINDS) | {r.gate for r in gates.TRANSITION_RULES},
+        )
         for rule in gates.CONTROLLED_RULES:
             record = rule.as_record()
             with self.subTest(gate=rule.gate, source=rule.source):
@@ -594,6 +597,31 @@ class GateBoundaryTests(unittest.TestCase):
                     gates.safety_release_gate(hold, who, ["b@x.test"]), (gates.UNKNOWN,)
                 )
         self.assertSafe(gates.safety_release_gate(hold, actor, ["b@x.test"]), (gates.PASS,))
+
+
+class TransitionRuleAttachmentTests(unittest.TestCase):
+    def test_pre_transition_rules_are_registered_and_honestly_unreviewed(self) -> None:
+        for rule in gates.TRANSITION_RULES:
+            with self.subTest(gate=rule.gate):
+                self.assertIn(rule, gates.CONTROLLED_RULES)
+                self.assertIn(rule, gates.unreviewed_rules())
+
+    def test_refusals_keep_the_gate_result_rule(self) -> None:
+        result = gates.finance_gate(False, "Over budget.")
+        errors = (gates.GateResultError("x", result), gates.GateResultPermissionError("x", result))
+        for error in errors:
+            self.assertEqual(error.record["rule"], gates.FINANCE_RULE.as_record())
+        paused = gates.RuleGatedPermissionError("paused", gates.PAUSE_RULE)
+        self.assertIs(paused.rule, gates.PAUSE_RULE)
+
+    def test_gate_error_carries_rule_records(self) -> None:
+        from zava_forward.core.store import GateError as _GateError
+
+        GateError: Any = _GateError
+        error = GateError(["Not ready."], [gates.STOCK_RULE])
+        self.assertEqual(error.reasons, ["Not ready."])
+        self.assertEqual(error.rules, [gates.STOCK_RULE.as_record()])
+        self.assertEqual(GateError(["x"]).rules, [])
 
 
 if __name__ == "__main__":

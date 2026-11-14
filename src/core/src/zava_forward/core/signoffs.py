@@ -7,7 +7,7 @@ anything for them. The role mapping is a proposal for the programme to confirm.
 """
 from typing import Any
 
-from . import controls as k, stock
+from . import controls as k, gates, stock
 
 SIGNOFFS = {
     "assessment": dict(label="Retrofit assessment", roles=("Quality Inspector",), design_dependent=False),
@@ -118,7 +118,7 @@ class SignoffMixin:
             why += [f"Evidence is missing: {kind}. Owner: {EVIDENCE_OWNER}. Next action: add it to the case." for kind in _missing_evidence(c)]
             if why:
                 from .store import GateError
-                raise GateError(why)
+                raise GateError(why, [gates.TECHNICAL_RULE])
         note = k.text(body.get("note"), "a note", 300, False)
         s = t["signoffs"].setdefault(key, dict(status="Not given", history=[]))
         again = s["status"] in ("Returned", "Needs reassessment")
