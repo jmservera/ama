@@ -194,9 +194,10 @@ def compare_candidates(
     A candidate states the single lever it changes (model, routing, caching or
     prompt) in ``changes``; several levers are comparable only when the
     candidate is explicitly flagged ``composite``. Each verdict carries ``passed``
-    (False with named ``blocking_reasons`` on any regression) and per-lever deltas. With a ``freeze``
-    manifest the report records whether the held-out freeze check passed, and a
-    baseline and candidates are comparable only on exactly the frozen held-out cases.
+    (False with named ``blocking_reasons`` on any regression) and per-lever
+    deltas. With a ``freeze`` manifest the report records whether the held-out freeze
+    check passed, and a baseline and candidates are comparable only on exactly the
+    frozen held-out cases.
     A missing or insufficient freeze leaves the result a same-case comparison,
     not a held-out one.
     """
