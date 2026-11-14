@@ -24,6 +24,7 @@ from . import (
     continuity,
     monitoring_coverage,
     projection,
+    rai_metrics,
     quality,
     ranking,
     rai_release,
@@ -1149,6 +1150,26 @@ class Assistants:
                         continue
             return dict(proposals=results, disabled=self.disabled(db), manual="Open the case for ordinary human work.",
                         next_after=rows[-1][0] if len(rows) == 50 else None)
+
+    def rai_metrics(self, user, window_start, window_end, replay=None):
+        """RAI metric counts rebuilt from the persisted audit events, so a restart needs no in-memory state.
+
+        Persisted event ids are the prior ids of the window; a replayed telemetry batch is deduplicated
+        against them. Content-free: counts and opaque event ids only."""
+        if user.get("role") not in {r for v in REGISTRY.values() for r in v["roles"]}:
+            raise PermissionError("Staff assistance only.")
+        if not self.sql:
+            raise ValueError(self.disabled())
+        bounds = rai_metrics.parse_window(window_start, window_end)
+        if bounds is None:
+            return rai_metrics.reconstruct([], window_start=window_start, window_end=window_end)
+        with self.transaction() as db:
+            rows = db.execute("SELECT id,task_id,at,body FROM assistant_events WHERE at>=? AND at<? ORDER BY at,id",
+                              (bounds[0].timestamp(), bounds[1].timestamp())).fetchall()
+        persisted = [dict(json.loads(body), event_id=eid, task_id=tid,
+                          observed_at=datetime.fromtimestamp(at, timezone.utc).isoformat())
+                     for eid, tid, at, body in rows]
+        return rai_metrics.reconstruct(persisted, window_start=window_start, window_end=window_end, replay=replay)
 
     def forecast(self, user, period_seconds=86400):
         """Read-only per-period call forecast for each proactive predicate; enqueues nothing and holds no case content."""
