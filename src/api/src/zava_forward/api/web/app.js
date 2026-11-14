@@ -642,7 +642,7 @@ function aiBox() {
       h("p", { class: "muted" }, `${number.format(b.case_count)} permitted open ${b.case_count === 1 ? "case" : "cases"}. ${number.format(b.summary_count)} included in this summary (up to 8).`),
       h("p", { class: "ai-label" }, ai ? "AI suggestion, not approved. Not an instruction." : "Summary by rules. Not an instruction."),
       h("p", {}, "Why these cases: the fixed case ranking selects the first permitted open cases, with safety first. This briefing does not change that order. Check the linked records before using the text."),
-      h("dl", { class: "briefing-provenance", "data-briefing-provenance": ai ? "ai" : "rules" },
+      h("dl", { class: "briefing-basis" },
         h("dt", {}, "Priority"), h("dd", {}, "Set by fixed rules, not by AI."),
         h("dt", {}, "Wording"), h("dd", {}, ai ? "Summarised by AI. Check it against the sources." : "Written by rules and templates. No AI was used."),
         h("dt", {}, "Your control"), h("dd", {}, "Open any case from the list or the sources below. Use rules and templates, without AI, to turn AI off.")),

@@ -4,3 +4,8 @@
 * `src/api/src/zava_forward/api/web/style.css`: `.briefing-status` min-height, `.briefing-provenance` layout.
 * `src/api/tests/test_briefing_loading_provenance.py`: four focused source-level tests.
 * Validation: mypy, `ruff check .`, `ruff format --check .` pass. 50 listed unittests pass except `test_connected_home_check` discovery test, which fails identically on the base because the shell `PYTHONPATH` needed for imports leaks `core/tests`. Browser render not run.
+
+## Cycle 1 correction (CI src-api failure on 183a00c36)
+
+* `app.js` line 645: removed the unused `data-briefing-provenance` attribute and renamed class `briefing-provenance` to `briefing-basis` (JS and CSS); `test_content_standard.CopyAudit.test_no_internal_terms_in_web_copy` banned the word `provenance` in it. No test referenced the attribute.
+* Review: single-line removal, no behaviour or accessibility impact (the audit also flags the class name, so it was renamed).
