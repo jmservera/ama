@@ -40,7 +40,7 @@ class FinanceScreenWcagTests(unittest.TestCase):
 
     def test_queue_and_invoice_states_have_text_prefixes(self) -> None:
         text = node_text(self.tree("finance-invoices"))
-        self.assertIn("Status: Exception, with Finance", text)
+        self.assertIn("Action needed: Exception, with Finance", text)
         self.assertRegex(text, r"State: (Not paused|Paused)")
         self.assertIn("State: No pause recorded", text)
 
