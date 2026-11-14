@@ -304,3 +304,59 @@ class ProjectionTests(unittest.TestCase):
             self.assertIn("exercise", str(parameters["classification"]).lower())
             self.assertEqual(parameters["noise"], ip.NOISE_PARAMETERS)
             self.assertEqual(parameters["output_bounds"], ip.OUTPUT_BOUNDS)
+
+
+class PortfolioProfileTests(unittest.TestCase):
+    HOMES = [{"id": f"ZF-{n:04d}"} for n in range(1, 25)]
+    START = datetime(2025, 1, 1, tzinfo=UTC)
+
+    def sensors(self, seed: int = 186) -> list[dict[str, object]]:
+        return [{**sb.sensor_for(h, seed), "fault_profile": "none"} for h in self.HOMES]
+
+    def rows(self, s: dict[str, object], seed: int = 186, outdoor=None):
+        outdoor = outdoor or sb.outdoor_series(seed, 3, 60, self.START)
+        return outdoor, list(sb.readings(s, seed, 3, 60, outdoor, self.START))
+
+    def test_all_24_homes_are_deterministic_for_seed_and_config(self) -> None:
+        self.assertEqual(self.sensors(), self.sensors())
+        self.assertNotEqual(self.sensors(186), self.sensors(187))
+        for s in self.sensors():
+            self.assertEqual(self.rows(s)[1], self.rows(s)[1])
+        first = self.sensors()[0]
+        self.assertNotEqual(self.rows(first, 186)[1], self.rows(first, 187)[1])
+
+    def test_all_24_homes_stay_in_archetype_and_weather_envelope(self) -> None:
+        for s in self.sensors():
+            outdoor, rows = self.rows(s)
+            self.assertEqual(len(rows), len(outdoor))
+            for row, (t_out, rh_out) in zip(rows, outdoor, strict=True):
+                at = datetime.fromisoformat(str(row["observed_at"]).replace("Z", "+00:00"))
+                (t_lo, t_hi), (h_lo, h_hi) = envelope(
+                    *model({**s, "retrofitted": s["retrofitted"]}, at, t_out, rh_out)
+                )
+                self.assertTrue(t_lo - 0.005 <= float(row["temperature_c"]) <= t_hi + 0.005)
+                self.assertTrue(h_lo - 0.005 <= float(row["humidity_pct"]) <= h_hi + 0.005)
+                self.assertTrue(0.0 <= float(row["humidity_pct"]) <= 100.0)
+
+    def test_archetype_and_weather_change_the_profile(self) -> None:
+        at = datetime(2025, 1, 1, 18, tzinfo=UTC)
+        leaky = {**sensor(), "dwelling_type": "detached", "age_band": "pre-1919"}
+        tight = {**sensor(), "dwelling_type": "apartments", "age_band": "2003+"}
+        cold = (model(leaky, at, -5.0, 85.0)[0], model(tight, at, -5.0, 85.0)[0])
+        self.assertLess(cold[0], cold[1])
+        self.assertLess(model(leaky, at, -5.0, 85.0)[0], model(leaky, at, 10.0, 85.0)[0])
+        self.assertGreater(model(leaky, at, 5.0, 90.0)[1], model(tight, at, 5.0, 90.0)[1])
+
+    def test_out_of_domain_weather_and_naive_time_rejected_for_every_home(self) -> None:
+        for s in self.sensors():
+            for t, rh in (
+                (-80.1, 50.0),
+                (60.1, 50.0),
+                (10.0, -0.1),
+                (10.0, 100.1),
+                (float("nan"), 50.0),
+            ):
+                with self.assertRaises(ValueError):
+                    ip.project(s, random.Random(1), self.START, t, rh)
+            with self.assertRaises(ValueError):
+                ip.project(s, random.Random(1), datetime(2025, 1, 1), 10.0, 50.0)
