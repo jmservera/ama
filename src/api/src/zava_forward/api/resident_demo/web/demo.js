@@ -738,6 +738,8 @@
     errorTitle.focus();
   }
 
+  var BUSY_FALLBACK = "The showcase is busy because several people are viewing it at once. Nothing is wrong with your case. Please try again in a few seconds.";
+
   function api(path, options) {
     options = options || {};
     var current = transition;
@@ -749,29 +751,72 @@
     }
     return fetch(path, { method: options.method || "GET", headers: headers, body: options.body, cache: "no-store", credentials: "same-origin" })
       .then(function (r) {
-        return r.json().then(function (body) {
-          if (current === transition && body.session_changed) showSignin(body.error);
-          return { ok: r.ok, status: r.status, body: body, retryAfter: Number(r.headers && r.headers.get && r.headers.get("Retry-After")) };
+        var rawRetry = r.headers && r.headers.get ? r.headers.get("Retry-After") : null;
+        var hasRetryAfter = rawRetry !== null && String(rawRetry).trim() !== "";
+        return r.json().catch(function (err) {
+          if (r.ok) throw err;
+          return {};
+        }).then(function (body) {
+          var safeBody = body && typeof body === "object" ? body : {};
+          if (current === transition && safeBody.session_changed) showSignin(safeBody.error);
+          return {
+            ok: r.ok,
+            status: r.status,
+            body: safeBody,
+            retryAfter: hasRetryAfter ? Number(rawRetry) : NaN,
+            hasRetryAfter: hasRetryAfter
+          };
         });
       });
   }
 
+  function retryWaitSeconds(res) {
+    if (!res || res.status !== 503) return 0;
+    var rawBody = res.body ? res.body.retry_after_seconds : undefined;
+    var hasBodyHint = rawBody !== undefined && rawBody !== null && typeof rawBody !== "boolean";
+    if (!res.hasRetryAfter && !hasBodyHint) return 0;
+    var bodyNum = hasBodyHint ? Number(rawBody) : NaN;
+    if (Number.isFinite(bodyNum) && bodyNum > 0) {
+      return Math.min(10, Math.max(1, Math.round(bodyNum)));
+    }
+    if (Number.isFinite(res.retryAfter) && res.retryAfter > 0) {
+      return Math.min(10, Math.max(1, Math.round(res.retryAfter)));
+    }
+    return 3;
+  }
+
+  function busyErrorCopy(res, fallback) {
+    var errText = res && res.body && typeof res.body.error === "string" ? res.body.error.trim() : "";
+    if (retryWaitSeconds(res) > 0) {
+      if (!errText) return BUSY_FALLBACK;
+      if (/try again in a few seconds/i.test(errText)) return errText;
+      return errText + (/[.!?]$/.test(errText) ? "" : ".") + " Please try again in a few seconds.";
+    }
+    return errText || fallback;
+  }
+
   function loadView(announce, retried) {
     var current = transition;
+    mainEl.setAttribute("aria-busy", "true");
     if (!loading) statusEl.textContent = "Loading your progress\u2026";
     return api("/demo/view").then(function (res) {
       if (current !== transition) return;
-      if (res.status === 503 && !retried) {
-        var hinted = Number(res.body && res.body.retry_after_seconds) || res.retryAfter;
-        var wait = hinted > 0 && hinted <= 10 ? hinted : 2;
-        statusEl.textContent = "The showcase is busy because several people are viewing it. Trying again in " + wait + " seconds\u2026";
+      var wait = retryWaitSeconds(res);
+      if (wait > 0 && !retried) {
+        if (loadingTimer !== null) {
+          clearTimeout(loadingTimer);
+          loadingTimer = null;
+        }
+        loading = false;
+        mainEl.setAttribute("aria-busy", "true");
+        statusEl.textContent = "The showcase is busy because several people are viewing it at once. Retrying automatically in " + wait + (wait === 1 ? " second" : " seconds") + ". If it stays busy, try again in a few seconds\u2026";
         return new Promise(function (resolve) { setTimeout(resolve, wait * 1000); }).then(function () {
           if (current === transition) return loadView(announce, true);
         });
       }
       if (res.ok) render(res.body, announce);
       else if (res.status === 401) showSignin("Please sign in again.");
-      else fail(res.body.error || "Something went wrong.");
+      else fail(busyErrorCopy(res, "Something went wrong."));
     });
   }
 
@@ -792,7 +837,7 @@
       .then(function (res) {
         clearTimeout(slow);
         if (current !== transition) return;
-        if (!res.ok) { fail(res.body.error || "The showcase is not available right now."); return; }
+        if (!res.ok) { fail(busyErrorCopy(res, "The showcase is not available right now.")); return; }
         csrf = res.body.csrf;
         if (res.body.signed_in) {
           sessionId = res.body.session_id;
@@ -851,7 +896,7 @@
           start();
           return;
         }
-        showSignin(res.body.error || "We could not sign you in.");
+        showSignin(busyErrorCopy(res, "We could not sign you in."));
       })
       .catch(function () {
         if (current === transition) showSignin("We could not reach the showcase. Check your connection, then select Sign in to try again.");

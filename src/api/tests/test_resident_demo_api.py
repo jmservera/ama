@@ -754,6 +754,67 @@ class AbuseAndHardeningTests(DemoTestCase):
             for _ in owned:
                 self.app.slots.release()
 
+    def test_retry_after_seconds_is_configurable_and_bounded(self) -> None:
+        self.assertEqual(demo.RETRY_AFTER_SECONDS, 3)
+        self.assertEqual(demo.clamp_retry_after(0), demo.MIN_RETRY_AFTER_SECONDS)
+        self.assertEqual(demo.clamp_retry_after(-4), demo.MIN_RETRY_AFTER_SECONDS)
+        self.assertEqual(demo.clamp_retry_after(5), 5)
+        self.assertEqual(demo.clamp_retry_after(99), demo.MAX_RETRY_AFTER_SECONDS)
+        for invalid in (True, False, "3", 2.5, None):
+            with self.assertRaises(ValueError):
+                demo.clamp_retry_after(invalid)
+        bad_arg: Any = True
+        with self.assertRaises(ValueError):
+            demo.ResidentDemo(
+                self.reader,
+                self.app.identity,
+                self.app.verifier,
+                self.codec,
+                self.limiter,
+                (HOST,),
+                NOW + timedelta(hours=6),
+                retry_after_seconds=bad_arg,
+            )
+        custom = demo.ResidentDemo(
+            self.reader,
+            self.app.identity,
+            self.app.verifier,
+            self.codec,
+            self.limiter,
+            (HOST,),
+            NOW + timedelta(hours=6),
+            "127.0.0.1",
+            0,
+            self.clock,
+            retry_after_seconds=99,
+        )
+        server = demo.serve(custom)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        self.addCleanup(server.server_close)
+        self.addCleanup(server.shutdown)
+        client = Client(custom.port)
+        self.assertEqual(client.login("one@example.com"), 200)
+        held = [custom.slots.acquire(timeout=SLOT_WAIT_SECONDS) for _ in range(demo.MAX_CONCURRENT)]
+        self.assertTrue(all(held))
+        try:
+            status, body, response = client.call("GET", "/demo/view")
+            self.assertEqual(status, 503)
+            self.assertEqual(body["retry_after_seconds"], 10)
+            self.assertEqual(response.getheader("Retry-After"), "10")
+            self.assertIn("Try again in a few seconds", body["error"])
+        finally:
+            for _ in held:
+                custom.slots.release()
+
+    def test_expired_503_omits_retry_after_header(self) -> None:
+        client = self.client()
+        self.assertEqual(client.login("one@example.com"), 200)
+        self.clock.now = (NOW + timedelta(hours=7)).timestamp()
+        status, body, response = client.call("GET", "/demo/view")
+        self.assertEqual(status, 503)
+        self.assertIsNone(response.getheader("Retry-After"))
+        self.assertNotIn("retry_after_seconds", body)
+
     def test_shed_view_owns_every_slot_despite_delayed_login_release(self) -> None:
         slots = DelayedReleaseSlots(demo.MAX_CONCURRENT)
         self.app.slots = slots
