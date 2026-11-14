@@ -9,7 +9,16 @@ review route stays available.
 from dataclasses import replace
 from datetime import datetime, timedelta
 
-from .sensor_analysis import INSUFFICIENT, AnalysisPolicy, Signal, derive_signal
+from .sensor_analysis import (
+    INSUFFICIENT,
+    AnalysisPolicy,
+    ReproducedReviewTask,
+    Signal,
+    derive_signal,
+    format_reproduced_review_task,
+    review_task_candidate,
+    version_provenance,
+)
 from .sensor_consumer import ConsumerError, SensorConsumer
 from .synthetic.live_readings import LIVE_VERSIONS
 from .synthetic.sensor_scenarios import Window
@@ -44,3 +53,19 @@ def analyse_retained(
             empty, sufficiency=INSUFFICIENT, outcome=INSUFFICIENT, reasons=(WEATHER_NOT_INDOOR,)
         )
     return derive_signal(home_id, rows, window, as_of, consent, policy)
+
+
+def reproduce_retained(
+    consumer: SensorConsumer,
+    home_id: str,
+    window: Window,
+    as_of: datetime,
+    policy: AnalysisPolicy | None = None,
+) -> ReproducedReviewTask:
+    """Re-derive signal, review-task candidate, and version provenance read-only from SQL."""
+    effective = policy or AnalysisPolicy()
+    effective.validate()
+    signal = analyse_retained(consumer, home_id, window, as_of, effective)
+    candidate = review_task_candidate(signal, effective)
+    provenance = version_provenance(signal, effective, candidate)
+    return format_reproduced_review_task(provenance, signal, candidate)

@@ -1102,14 +1102,25 @@ sourced`).
 
 `review_task_candidate` proposes a `SENSOR_REVIEW_DUE` condition-review task
 only for a sufficient review signal under a named `RuleApproval` for the
-current policy version. The default policy has no approval, so no task is
-proposed. It creates nothing: no store, task, ranking, hazard, clock, hold,
-resident-report or AI write, and no raw reading or sensor identifier in its
-output. Not yet built: store or scheduler wiring, an approved rule, and the R2
-method sign-off and R3 limits that gate any measure beyond an exercise rule.
+current analysis version, policy version and threshold label. The default policy
+has no approval, so no task is proposed. `version_provenance` builds an
+explicit `VersionProvenance` record (`analysis_version`, `comparator_version`,
+`schema_version`, `policy_version`, `policy_digest`, `threshold_label`,
+`humidity_threshold_pct`, `max_staleness_hours`, `rule_id`, `rule_approved`,
+`approver_role` and `approval_reference` only when approved, window/as-of
+timestamps, `input_digest`, and `output_digest`), and `reproduce_review_task`
+and `reproduce_sensor_analysis` deterministically re-derive provenance, signal
+and candidate from retained rows alone regardless of arrival order. Nothing here
+creates a store write, operational task, ranking change, hazard diagnosis,
+clock, hold, resident-report mutation or AI call, and no raw reading,
+`reading_id` or `sensor_id` appears in any output. Not yet built: store or
+scheduler task wiring, an approved non-exercise rule, and the R1-R3 research
+sign-off and limits that gate any measure beyond an exercise rule.
 
-`sensor_analysis_store.analyse_retained(consumer, home_id, window, as_of)` runs
-the derivation over readings retained in the SQL store. It uses only read-only
+`sensor_analysis_store.analyse_retained(consumer, home_id, window, as_of)` and
+`sensor_analysis_store.reproduce_retained(consumer, home_id, window, as_of,
+policy)` run the derivation and full provenance/review-task reproduction over
+window-bounded readings retained in the SQL store. They use only read-only
 `SensorConsumer` methods: `retained_envelopes` for the window and `home_consent`
 for trusted consent. `live-sim-reading-v1` rows are climate-shaped outdoor
 readings, not indoor measurements: they are never passed to the indoor
@@ -1118,8 +1129,8 @@ derivation, and a window holding only such rows is `INSUFFICIENT` with reason
 versioned and approved scope (any declined control declines the home; anything other
 than all-granted is unknown). If the store cannot be read, the result is
 `INSUFFICIENT` with reason `RETAINED_READINGS_UNAVAILABLE` and priority effect
-`NONE`; the manual review route is unchanged. It writes nothing and creates no
-task.
+`NONE` (`review_task` is `None`); the manual review route is unchanged. Both
+entry points write nothing and create no task.
 
 `sensor_status_text.status_text(signal)` gives the plain-language status for a
 signal, and `map_and_list(signals)` returns the map statuses and the accessible

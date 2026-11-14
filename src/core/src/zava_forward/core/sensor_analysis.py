@@ -13,10 +13,14 @@ import re
 from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime, timedelta
+from typing import TypedDict
 
+from .synthetic import sensor_faults
 from .synthetic import sensor_scenarios as comparator
 
 ANALYSIS_VERSION = "sensor-analysis-exercise-v1"
+COMPARATOR_VERSION = comparator.METHOD_VERSION
+SCHEMA_VERSION = sensor_faults.SCHEMA_VERSION
 EXERCISE_LABEL = "EXERCISE VALUE: fictional, not sourced"
 RULE_ID = "SENSOR-RH-PERSISTENCE-EXERCISE"
 TASK_TYPE = "SENSOR_REVIEW_DUE"
@@ -29,6 +33,26 @@ STALE = "STALE"
 DECLINED = "DECLINED"
 CONSENTS = ("granted", "unknown", "declined")
 _LABEL = re.compile(r"[A-Za-z0-9][A-Za-z0-9 ._-]{0,79}\Z")
+_READING_FIELD_SET = frozenset(sensor_faults.READING_FIELDS)
+_ROW_BOUND_FIELDS = (
+    "sensor_id",
+    "observed_at",
+    "reading_id",
+    "temperature_c",
+    "temperature_unit",
+    "humidity_pct",
+    "humidity_unit",
+    "calibrated",
+    "source_type",
+    "schema_version",
+)
+
+
+class _Unset:
+    pass
+
+
+_UNSET = _Unset()
 
 
 @dataclass(frozen=True)
@@ -122,6 +146,107 @@ class ReviewTaskCandidate:
     diagnoses_hazard: bool = False
 
 
+@dataclass(frozen=True)
+class VersionProvenance:
+    """Explicit version, policy, approval, window, and digest provenance; carries no raw data."""
+
+    home_id: str
+    analysis_version: str
+    comparator_version: str
+    schema_version: str
+    policy_version: str
+    policy_digest: str
+    threshold_label: str
+    humidity_threshold_pct: float
+    max_staleness_hours: int
+    rule_id: str
+    rule_approved: bool
+    approver_role: str | None
+    approval_reference: str | None
+    window_start: str
+    window_end: str
+    as_of: str
+    input_digest: str
+    output_digest: str
+
+
+class ProvenanceDict(TypedDict):
+    home_id: str
+    analysis_version: str
+    comparator_version: str
+    schema_version: str
+    policy_version: str
+    policy_digest: str
+    threshold_label: str
+    humidity_threshold_pct: float
+    max_staleness_hours: int
+    rule_id: str
+    rule_approved: bool
+    approver_role: str | None
+    approval_reference: str | None
+    window_start: str
+    window_end: str
+    as_of: str
+    input_digest: str
+    output_digest: str
+
+
+class SignalDict(TypedDict):
+    home_id: str
+    analysis_version: str
+    policy_version: str
+    threshold_label: str
+    window_start: str
+    window_end: str
+    as_of: str
+    sufficiency: str
+    outcome: str
+    reasons: tuple[str, ...]
+    expected: int
+    valid: int
+    coverage: float
+    longest_high_hours: int
+    high_nights: int
+    input_digest: str
+    priority_effect: str
+    diagnoses_hazard: bool
+
+
+class ReviewTaskDict(TypedDict):
+    task_key: str
+    task_type: str
+    queue: str
+    home_id: str
+    status: str
+    rule_id: str
+    approval_reference: str
+    policy_version: str
+    analysis_version: str
+    input_digest: str
+    summary: str
+    resident_report_unaffected: bool
+    changes_ranking: bool
+    starts_clock: bool
+    releases_hold: bool
+    diagnoses_hazard: bool
+
+
+class ReproducedReviewTask(TypedDict):
+    provenance: ProvenanceDict
+    signal: SignalDict
+    review_task: ReviewTaskDict | None
+
+
+class ReproducedSensorAnalysis(TypedDict):
+    analysis_version: str
+    policy_version: str
+    input_digest: str
+    output_digest: str
+    provenance: ProvenanceDict
+    signal: SignalDict
+    review_task: ReviewTaskDict | None
+
+
 def _stamp(value: datetime) -> str:
     return value.isoformat(timespec="seconds").replace("+00:00", "Z")
 
@@ -153,20 +278,33 @@ def reading_tuples(rows: Sequence[Mapping[str, str]]) -> list[tuple[str, str, st
     )
 
 
-_QUALITY_FIELDS = ("calibrated", "source_type", "schema_version")
+def _norm_float(value: float) -> float:
+    out = float(value)
+    return 0.0 if out == 0.0 else out
 
 
-def _quality_tuples(rows: Sequence[Mapping[str, str]]) -> list[tuple[str, ...]]:
-    """Per-row fields that comparator.analyse() checks but reading_tuples() omits."""
+def _schema_marker(row: Mapping[str, str]) -> str:
+    raw: Mapping[str, object] = row
+    if set(raw) == _READING_FIELD_SET and all(isinstance(v, str) for v in raw.values()):
+        return "1"
+    items = sorted(
+        (str(k), "str" if isinstance(v, str) else type(v).__qualname__, str(v))
+        for k, v in raw.items()
+        if k != "home_id"
+    )
+    return "0:" + hashlib.sha256(json.dumps(items, ensure_ascii=True).encode("ascii")).hexdigest()
+
+
+def _row_digest_tuples(rows: Sequence[Mapping[str, str]]) -> list[tuple[str, ...]]:
+    """Per-row canonical tuples binding metrics, units, identity, quality, and schema validity."""
     return sorted(
-        (str(row.get("sensor_id", "")), str(row.get("observed_at", "")))
-        + tuple(str(row.get(f, "")) for f in _QUALITY_FIELDS)
+        tuple(str(row.get(f, "")) for f in _ROW_BOUND_FIELDS) + (_schema_marker(row),)
         for row in rows
     )
 
 
 def _digest(home_id: str, rows: Sequence[Mapping[str, str]]) -> str:
-    body = json.dumps([home_id, reading_tuples(rows), _quality_tuples(rows)], ensure_ascii=True)
+    body = json.dumps([home_id, _row_digest_tuples(rows)], ensure_ascii=True)
     return hashlib.sha256(body.encode("ascii")).hexdigest()
 
 
@@ -243,23 +381,27 @@ def derive_signal(
     return signal(SUFFICIENT, metrics.status, [], metrics)
 
 
-def reproduce_sensor_analysis(
-    retained_readings: Sequence[Mapping[str, str]],
-    thresholds: AnalysisPolicy | None = None,
-    *,
-    window: comparator.Window | None = None,
-    as_of: datetime | None = None,
-    consent: str = "granted",
-) -> dict[str, object]:
-    """Pure: re-derive the versioned output of one home from retained readings alone.
-
-    The window defaults to the whole UTC days spanned by the readings and as_of to the window end,
-    so the result depends only on the reading set, never on arrival order or the wall clock.
-    """
-    homes = {str(r.get("home_id", "")) for r in retained_readings}
-    if len(homes) != 1 or "" in homes:
+def _valid_home_id(value: object) -> str:
+    if not isinstance(value, str) or not value or value != value.strip():
         raise ValueError("SINGLE_HOME_REQUIRED")
-    (home_id,) = homes
+    return value
+
+
+def _home_and_window(
+    retained_readings: Sequence[Mapping[str, str]],
+    window: comparator.Window | None,
+    home_id: str | None = None,
+) -> tuple[str, comparator.Window]:
+    explicit_home = _valid_home_id(home_id) if home_id is not None else None
+    row_homes = {_valid_home_id(r.get("home_id")) for r in retained_readings}
+    if explicit_home is not None:
+        if row_homes and row_homes != {explicit_home}:
+            raise ValueError("SINGLE_HOME_REQUIRED")
+        resolved_home = explicit_home
+    else:
+        if len(row_homes) != 1:
+            raise ValueError("SINGLE_HOME_REQUIRED")
+        (resolved_home,) = row_homes
     if window is None:
         times = []
         for r in retained_readings:
@@ -272,15 +414,49 @@ def reproduce_sensor_analysis(
         start = min(times).replace(hour=0, minute=0, second=0, microsecond=0)
         days = (max(times) - start).days + 1
         window = comparator.Window(start, start + timedelta(days=days))
-    signal = derive_signal(
-        home_id, retained_readings, window, as_of or window.end, consent, thresholds
+    return resolved_home, window
+
+
+def policy_digest(policy: AnalysisPolicy) -> str:
+    """Canonical SHA-256 digest of policy parameters and effective rule-approval state."""
+    policy.validate()
+    approved = (
+        {
+            "rule_id": policy.approval.rule_id,
+            "policy_version": policy.approval.policy_version,
+            "approver_role": policy.approval.approver_role,
+            "approval_reference": policy.approval.approval_reference,
+        }
+        if policy.rule_approved and policy.approval is not None
+        else None
     )
-    return {
-        "analysis_version": signal.analysis_version,
-        "policy_version": signal.policy_version,
-        "input_digest": signal.input_digest,
-        "signal": asdict(signal),
-    }
+    body = json.dumps(
+        {
+            "policy_version": policy.version,
+            "humidity_threshold_pct": _norm_float(policy.humidity_threshold_pct),
+            "max_staleness_hours": policy.max_staleness_hours,
+            "threshold_label": policy.threshold_label,
+            "rule_id": RULE_ID,
+            "rule_approved": policy.rule_approved,
+            "approval": approved,
+        },
+        ensure_ascii=True,
+        sort_keys=True,
+    )
+    return hashlib.sha256(body.encode("ascii")).hexdigest()
+
+
+def output_digest(signal: Signal, candidate: ReviewTaskCandidate | None = None) -> str:
+    """Canonical SHA-256 digest committing to the derived signal and review-task decision."""
+    body = json.dumps(
+        {
+            "signal": asdict(signal),
+            "review_task": asdict(candidate) if candidate is not None else None,
+        },
+        ensure_ascii=True,
+        sort_keys=True,
+    )
+    return hashlib.sha256(body.encode("ascii")).hexdigest()
 
 
 def review_task_candidate(
@@ -294,7 +470,9 @@ def review_task_candidate(
         or policy.approval is None
         or signal.sufficiency != SUFFICIENT
         or signal.outcome != REVIEW
+        or signal.analysis_version != ANALYSIS_VERSION
         or signal.policy_version != policy.version
+        or signal.threshold_label != policy.threshold_label
     ):
         return None
     key = hashlib.sha256(
@@ -327,5 +505,193 @@ def review_task_candidate(
     )
 
 
-def as_dict(value: Signal | ReviewTaskCandidate) -> dict[str, object]:
+def version_provenance(
+    signal: Signal,
+    policy: AnalysisPolicy | None = None,
+    candidate: ReviewTaskCandidate | None | _Unset = _UNSET,
+) -> VersionProvenance:
+    """Build explicit version, policy, approval, window, and digest provenance for a signal."""
+    effective = policy or AnalysisPolicy()
+    effective.validate()
+    if (
+        signal.analysis_version != ANALYSIS_VERSION
+        or signal.policy_version != effective.version
+        or signal.threshold_label != effective.threshold_label
+    ):
+        raise ValueError("SIGNAL_POLICY_MISMATCH")
+    expected = review_task_candidate(signal, effective)
+    if isinstance(candidate, _Unset):
+        resolved = expected
+    else:
+        if candidate != expected:
+            raise ValueError("CANDIDATE_MISMATCH")
+        resolved = candidate
+    approval = effective.approval if effective.rule_approved else None
+    return VersionProvenance(
+        home_id=signal.home_id,
+        analysis_version=signal.analysis_version,
+        comparator_version=COMPARATOR_VERSION,
+        schema_version=SCHEMA_VERSION,
+        policy_version=signal.policy_version,
+        policy_digest=policy_digest(effective),
+        threshold_label=signal.threshold_label,
+        humidity_threshold_pct=_norm_float(effective.humidity_threshold_pct),
+        max_staleness_hours=effective.max_staleness_hours,
+        rule_id=RULE_ID,
+        rule_approved=effective.rule_approved,
+        approver_role=approval.approver_role if approval is not None else None,
+        approval_reference=approval.approval_reference if approval is not None else None,
+        window_start=signal.window_start,
+        window_end=signal.window_end,
+        as_of=signal.as_of,
+        input_digest=signal.input_digest,
+        output_digest=output_digest(signal, resolved),
+    )
+
+
+def _provenance_dict(value: VersionProvenance) -> ProvenanceDict:
+    return {
+        "home_id": value.home_id,
+        "analysis_version": value.analysis_version,
+        "comparator_version": value.comparator_version,
+        "schema_version": value.schema_version,
+        "policy_version": value.policy_version,
+        "policy_digest": value.policy_digest,
+        "threshold_label": value.threshold_label,
+        "humidity_threshold_pct": value.humidity_threshold_pct,
+        "max_staleness_hours": value.max_staleness_hours,
+        "rule_id": value.rule_id,
+        "rule_approved": value.rule_approved,
+        "approver_role": value.approver_role,
+        "approval_reference": value.approval_reference,
+        "window_start": value.window_start,
+        "window_end": value.window_end,
+        "as_of": value.as_of,
+        "input_digest": value.input_digest,
+        "output_digest": value.output_digest,
+    }
+
+
+def _signal_dict(value: Signal) -> SignalDict:
+    return {
+        "home_id": value.home_id,
+        "analysis_version": value.analysis_version,
+        "policy_version": value.policy_version,
+        "threshold_label": value.threshold_label,
+        "window_start": value.window_start,
+        "window_end": value.window_end,
+        "as_of": value.as_of,
+        "sufficiency": value.sufficiency,
+        "outcome": value.outcome,
+        "reasons": value.reasons,
+        "expected": value.expected,
+        "valid": value.valid,
+        "coverage": value.coverage,
+        "longest_high_hours": value.longest_high_hours,
+        "high_nights": value.high_nights,
+        "input_digest": value.input_digest,
+        "priority_effect": value.priority_effect,
+        "diagnoses_hazard": value.diagnoses_hazard,
+    }
+
+
+def _review_task_dict(value: ReviewTaskCandidate) -> ReviewTaskDict:
+    return {
+        "task_key": value.task_key,
+        "task_type": value.task_type,
+        "queue": value.queue,
+        "home_id": value.home_id,
+        "status": value.status,
+        "rule_id": value.rule_id,
+        "approval_reference": value.approval_reference,
+        "policy_version": value.policy_version,
+        "analysis_version": value.analysis_version,
+        "input_digest": value.input_digest,
+        "summary": value.summary,
+        "resident_report_unaffected": value.resident_report_unaffected,
+        "changes_ranking": value.changes_ranking,
+        "starts_clock": value.starts_clock,
+        "releases_hold": value.releases_hold,
+        "diagnoses_hazard": value.diagnoses_hazard,
+    }
+
+
+def format_reproduced_review_task(
+    provenance: VersionProvenance,
+    signal: Signal,
+    candidate: ReviewTaskCandidate | None,
+) -> ReproducedReviewTask:
+    """Format canonical serialized provenance, signal, and optional review-task candidate."""
+    return {
+        "provenance": _provenance_dict(provenance),
+        "signal": _signal_dict(signal),
+        "review_task": _review_task_dict(candidate) if candidate is not None else None,
+    }
+
+
+def reproduce_sensor_analysis(
+    retained_readings: Sequence[Mapping[str, str]],
+    thresholds: AnalysisPolicy | None = None,
+    *,
+    home_id: str | None = None,
+    window: comparator.Window | None = None,
+    as_of: datetime | None = None,
+    consent: str = "granted",
+) -> ReproducedSensorAnalysis:
+    """Pure: re-derive the versioned output of one home from retained readings alone.
+
+    The window defaults to the whole UTC days spanned by the readings and as_of to the window end,
+    so the result depends only on the reading set, never on arrival order or the wall clock.
+    """
+    effective = thresholds or AnalysisPolicy()
+    effective.validate()
+    resolved_home, resolved_window = _home_and_window(retained_readings, window, home_id)
+    signal = derive_signal(
+        resolved_home,
+        retained_readings,
+        resolved_window,
+        as_of or resolved_window.end,
+        consent,
+        effective,
+    )
+    candidate = review_task_candidate(signal, effective)
+    provenance = version_provenance(signal, effective, candidate)
+    return {
+        "analysis_version": signal.analysis_version,
+        "policy_version": signal.policy_version,
+        "input_digest": signal.input_digest,
+        "output_digest": provenance.output_digest,
+        "provenance": _provenance_dict(provenance),
+        "signal": _signal_dict(signal),
+        "review_task": _review_task_dict(candidate) if candidate is not None else None,
+    }
+
+
+def reproduce_review_task(
+    retained_readings: Sequence[Mapping[str, str]],
+    policy: AnalysisPolicy | None = None,
+    *,
+    home_id: str | None = None,
+    window: comparator.Window | None = None,
+    as_of: datetime | None = None,
+    consent: str = "granted",
+) -> ReproducedReviewTask:
+    """Pure: re-derive signal and review-task candidate with explicit version provenance."""
+    effective = policy or AnalysisPolicy()
+    effective.validate()
+    resolved_home, resolved_window = _home_and_window(retained_readings, window, home_id)
+    signal = derive_signal(
+        resolved_home,
+        retained_readings,
+        resolved_window,
+        as_of or resolved_window.end,
+        consent,
+        effective,
+    )
+    candidate = review_task_candidate(signal, effective)
+    provenance = version_provenance(signal, effective, candidate)
+    return format_reproduced_review_task(provenance, signal, candidate)
+
+
+def as_dict(value: Signal | ReviewTaskCandidate | VersionProvenance) -> dict[str, object]:
     return asdict(value)
