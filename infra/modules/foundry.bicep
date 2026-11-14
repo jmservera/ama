@@ -1,6 +1,8 @@
 param name string
 param projectName string
 param location string
+@description('Region of the model account private endpoint. Keep it in the VNet region when location places the account elsewhere.')
+param endpointLocation string = location
 param tags object
 param workspaceId string
 param peSubnetId string
@@ -98,7 +100,7 @@ module endpoint 'privateEndpoint.bicep' = {
   name: 'pe-${name}'
   params: {
     name: name
-    location: location
+    location: endpointLocation
     tags: tags
     subnetId: peSubnetId
     targetResourceId: account.id
