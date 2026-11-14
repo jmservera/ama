@@ -11783,7 +11783,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added a journey, requirement, design artefact, web surface and automated test matrix to [design-system.md](research/ux/design-system.md), refreshed its [index](README.md) row, and added the guard test `src/api/tests/test_ux_design_traceability.py` that resolves every cited file, screen, panel, route, test and requirement ID.
 * Local engineering evidence on synthetic data only. Every human-evidence cell stays `pending human test` (#155, #151 and the usability programme). No tick, acceptance or closure: criteria on accessibility, content and usability evidence and child feature acceptance remain open.
-## [2026-11-13] update | Issue #215 alert and chat non-colour cues, Escape and plain language (Refs #215)
+
+## [2026-11-14] update | Issue #215 alert and chat non-colour cues, Escape, plain language and keyboard provenance (Refs #215)
 
 * Added a dated note to the [WCAG baseline](research/ux/wcag-conformance-baseline.md) status-messages row and to the API README criterion audit: regulatory alert and cited-lookup states carry a glyph and border shape, plain-language explanations cover outcomes, no-source, doubt and unknown coverage, and Escape restores focus to the lookup summary.
 * Local engineering evidence only (static tests and the browser check with axe 4.10.3). No screen-reader, assistive-technology, conformance or staff comprehension claim; criterion 5 stays unmet.
+* Added the #1611 static regression `src/api/tests/test_home_chat_regulatory_keyboard_provenance.py` (native controls, launcher aria state, Escape and Close focus return, live regions, provenance, source count and a persistent per-reply outcome line), recorded under the 2026-11-14 RPI artifacts. Static local evidence only; no tick or closure.

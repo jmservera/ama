@@ -5,14 +5,28 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
+import tempfile
 from datetime import timedelta
 from pathlib import Path
 from threading import Event
 from typing import TYPE_CHECKING, Any
 from unittest.mock import patch
 
-from regulatory_fixture import NOW
-from test_regulatory_chat_api import RegulatoryApi
+_ROOT = Path(__file__).resolve().parents[3]
+for _p in (
+    "src/core/tests",
+    "src/core/src",
+    "src/agents/src",
+    "src/api/src",
+    "src/api/tests",
+):
+    _full = str(_ROOT / _p)
+    if _full not in sys.path:
+        sys.path.insert(0, _full)
+
+from regulatory_fixture import NOW  # noqa: E402
+from test_regulatory_chat_api import RegulatoryApi  # noqa: E402
 
 if TYPE_CHECKING:
     from playwright.sync_api import Page
@@ -653,10 +667,17 @@ def main() -> None:
     parser.add_argument(
         "--axe", type=Path, help="Pinned local axe 4.10.3 script; omit for non-axe checks"
     )
-    parser.add_argument("--out", type=Path, required=True, help="Local JSON evidence output")
+    parser.add_argument(
+        "--out",
+        type=Path,
+        help="Local JSON evidence output; defaults to a temporary directory",
+    )
     args = parser.parse_args()
     result = run(args.axe)
+    if args.out is None:
+        args.out = Path(tempfile.mkdtemp(prefix="reg-ux-check-")) / "regulatory-ux.json"
     args.out.write_text(json.dumps(result, indent=2) + "\n")
+    print(f"Evidence: {args.out}")
     print(
         f"PASS: {len(result['scans'])} browser states, target sizes, keyboard, reflow, "
         f"roles and real local API; axe {result['axe_status']}"
