@@ -18,7 +18,7 @@ from contextlib import contextmanager
 from copy import deepcopy
 from datetime import UTC, date, datetime
 
-from . import complaints_route, identity
+from . import challenges, complaints_route, identity
 from . import controls as k
 
 DECISION_STATUSES = ("Waiting", "Accepted", "Declined", "Paused", "Withdrawn")
@@ -30,7 +30,8 @@ ACCESS_CODES = ("None", "Unknown", "Large print", "Phone only", "Plain language"
 RESIDENT_ACTIONS = ("scope_record", "safe_contact_record", "representative_record", "disclosure_check",
                     "decision_record", "service_open", "service_update", "service_close",
                     "service_reopen", "service_reassign", "update_record", "remedy_confirm", "remedy_update",
-                    "challenge_open", "challenge_resolve", "service_forward", "service_supersede_authorize",
+                    "challenge_open", "challenge_update", "challenge_escalate", "challenge_resolve",
+                    "service_forward", "service_supersede_authorize",
                     "nomination_record", "nomination_correct", "nomination_review", "tenure_intake",
                     "tenure_legal_position", "tenure_verify", "tenure_question_pack",
                     "tenure_question_pack_review",
@@ -81,7 +82,8 @@ UNSET_TENURE_REASON = (
 MANAGERS = ("Retrofit Programme Manager", "Programme Support Officer")
 FORMAL_ROUTES = ("Complaint", "Independent review")
 FOLLOWUP_ACTIONS = ("service_open", "service_update", "service_close", "service_reopen", "service_reassign",
-                    "update_record", "remedy_confirm", "remedy_update", "challenge_open", "challenge_resolve",
+                    "update_record", "remedy_confirm", "remedy_update", "challenge_open",
+                    "challenge_update", "challenge_escalate", "challenge_resolve",
                     "service_supersede_authorize")
 
 
@@ -598,6 +600,10 @@ def _priority_record(store, rec_id):
 def _dependency(rec, kind, case_id):
     if kind == "proposal":
         return dict(kind=kind, id=rec["id"], version=priority_binding(rec)[0])
+    if kind == "human_decision":
+        if not rec.get("resolved_by"):
+            raise ValueError("This suggestion has no recorded human decision yet. Challenge the suggestion instead.")
+        return dict(kind=kind, id=rec["id"], version=priority_binding(rec)[1])
     if kind == "source":
         version = (rec.get("source_versions") or {}).get(case_id)
         if not version:
@@ -607,7 +613,7 @@ def _dependency(rec, kind, case_id):
         if not rec.get("policy_version"):
             raise ValueError("This suggestion has no recorded policy version. Challenge the suggestion instead.")
         return dict(kind=kind, id="priority-ranking", version=rec["policy_version"])
-    raise ValueError("Choose proposal, source or policy.")
+    raise ValueError("Choose proposal, source, policy or human_decision.")
 
 
 def priority_correction_lookup(store, sql_current=False):
@@ -655,6 +661,8 @@ def priority_challenge_state(store, rec, corrections=None):
                      for cid, version in (rec.get("source_versions") or {}).items()]
     if rec.get("policy_version"):
         dependencies.append(_dependency(rec, "policy", None))
+    if rec.get("resolved_by"):
+        dependencies.append(_dependency(rec, "human_decision", None))
     if corrections is None:
         corrections = priority_correction_lookup(store)
     causes = set().union(*(corrections.get((d["kind"], d["id"], d["version"]), set())
@@ -1499,10 +1507,12 @@ class ResidentDecisionMixin:
         from . import projection
         if not projection.appointment_evidence_visible(user):
             raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
+        challenges.reject_adverse_mapping(body, "Challenge open request")
         fields = {"action", "proposal_id", "proposal_version", "decision_version", "target_kind",
                   "channel", "source", "request", "explanation", "owner", "non_digital_route", "next_update"}
         if set(body) != fields:
             raise ValueError("Supply only the challenge fields. Identity, time, decisions and dependencies are recorded by the server.")
+        before = deepcopy(c)
         rec = _priority_record(self, body.get("proposal_id"))
         if not _priority_includes_case(rec, c["id"]):
             raise ValueError("Choose a priority suggestion that includes this case.")
@@ -1526,24 +1536,84 @@ class ResidentDecisionMixin:
                       ai_details={key: deepcopy(rec.get(key)) for key in ("source", "model", "prompt_version", "policy_version", "source_versions")},
                       resolution=None)
         c.setdefault("affected_challenges", []).append(record)
+        challenges.assert_no_adverse_challenge_effects(before, c)
         return f"{record['id']} supplied challenge recorded"
+
+    def _res_challenge_update(self, user, c, body):
+        from . import projection
+        if not projection.appointment_evidence_visible(user):
+            raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
+        challenges.reject_adverse_mapping(body, "Challenge update request")
+        fields = {"action", "id", "expected_version", "channel", "source", "request", "explanation", "next_update"}
+        if set(body) != fields:
+            raise ValueError("Supply only the challenge update fields. Identity, time and original submissions stay preserved.")
+        before = deepcopy(c)
+        record = k.find(c.get("affected_challenges", []), body["id"], "challenge")
+        _version(body, record)
+        if record["status"] not in ("Open", "Escalated"):
+            raise ValueError("This challenge already has its recorded resolution. Open a new challenge if fresh evidence arises.")
+        next_version = record["version"] + 1
+        next_due = _day(body["next_update"])
+        entry = dict(version=next_version,
+                     channel=k.choice(body["channel"], ("Digital", "Phone", "Letter", "In person"), "the supplied challenge channel"),
+                     source=k.text(body["source"], "the supplied challenge update reference", 300),
+                     request=k.text(body["request"], "the person's supplied challenge update", 300),
+                     explanation=k.text(body["explanation"], "the permitted plain-language explanation", 300),
+                     next_update=next_due, recorded_by=_identity(user), at=_time())
+        record.setdefault("updates", []).append(entry)
+        record.update(version=next_version, next_update=next_due)
+        challenges.assert_no_adverse_challenge_effects(before, c)
+        return f"{record['id']} supplied challenge update recorded"
+
+    def _res_challenge_escalate(self, user, c, body):
+        from . import projection
+        if not projection.appointment_evidence_visible(user):
+            raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
+        challenges.reject_adverse_mapping(body, "Challenge escalation request")
+        fields = {"action", "id", "expected_version", "owner", "reason", "next_update"}
+        if set(body) != fields:
+            raise ValueError("Supply only the challenge escalation fields. A named human owner and reason are required.")
+        before = deepcopy(c)
+        record = k.find(c.get("affected_challenges", []), body["id"], "challenge")
+        _version(body, record)
+        if record["status"] not in ("Open", "Escalated"):
+            raise ValueError("This challenge already has its recorded resolution and cannot be escalated.")
+        owner = _person(self, body["owner"])
+        if not projection.appointment_evidence_visible(owner):
+            raise ValueError("Choose a named owner with resident-workflow and recorded-reason rights.")
+        if _same_person(owner, record["owner"]):
+            raise ValueError("Choose a different named human owner to escalate this challenge.")
+        next_version = record["version"] + 1
+        next_due = _day(body["next_update"])
+        new_owner = _identity(owner)
+        previous_owner = deepcopy(record["owner"])
+        entry = dict(version=next_version, previous_owner=previous_owner, owner=new_owner,
+                     reason=k.text(body["reason"], "the supplied escalation reason", 300),
+                     next_update=next_due, recorded_by=_identity(user), at=_time())
+        record.setdefault("escalations", []).append(entry)
+        record.update(status="Escalated", version=next_version, owner=new_owner, next_update=next_due)
+        challenges.assert_no_adverse_challenge_effects(before, c)
+        return f"{record['id']} supplied challenge escalated"
 
     def _res_challenge_resolve(self, user, c, body):
         from . import projection
         if not projection.appointment_evidence_visible(user):
             raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
+        challenges.reject_adverse_mapping(body, "Challenge resolution request")
         if set(body) != {"action", "id", "expected_version", "resolution", "resolution_ref", "explanation", "next_update"}:
             raise ValueError("Supply only the resolution fields. A person must supply the resolution evidence.")
+        before = deepcopy(c)
         record = k.find(c.get("affected_challenges", []), body["id"], "challenge")
         _version(body, record)
-        if record["status"] != "Open":
+        if record["status"] not in ("Open", "Escalated"):
             raise ValueError("This challenge already has its recorded resolution. Its evidence cannot be replaced.")
         _owner_rights(self, user, record["owner"])
         resolution = dict(outcome=k.choice(body["resolution"], ("Correction recorded", "Explanation recorded"), "the supplied resolution"),
                           reference=k.text(body["resolution_ref"], "the supplied human resolution evidence", 300),
                           explanation=k.text(body["explanation"], "the permitted resolution explanation", 300),
                           next_update=_day(body["next_update"]), recorded_by=_identity(user), at=_time())
-        record.update(status="Resolved", version=2, resolution=resolution)
+        record.update(status="Resolved", version=record["version"] + 1, resolution=resolution)
+        challenges.assert_no_adverse_challenge_effects(before, c)
         return f"{record['id']} supplied resolution recorded"
 
     def _res_scope_record(self, user, c, body):
