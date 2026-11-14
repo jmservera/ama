@@ -135,9 +135,26 @@ def _by_observation(rows: Sequence[Mapping[str, str]]) -> list[Mapping[str, str]
     return sorted(rows, key=lambda r: (str(r.get("observed_at", "")), _canonical_row(r)))
 
 
+_METRICS = (("temperature_c", "temperature_unit"), ("humidity_pct", "humidity_unit"))
+
+
+def reading_tuples(rows: Sequence[Mapping[str, str]]) -> list[tuple[str, str, str, str, str]]:
+    """Canonical (sensor_id, metric, timestamp, value, unit) tuples, sorted independent of order."""
+    return sorted(
+        (
+            str(row.get("sensor_id", "")),
+            metric,
+            str(row.get("observed_at", "")),
+            str(row.get(metric, "")),
+            str(row.get(unit, "")),
+        )
+        for row in rows
+        for metric, unit in _METRICS
+    )
+
+
 def _digest(home_id: str, rows: Sequence[Mapping[str, str]]) -> str:
-    canonical = sorted(_canonical_row(r) for r in rows)
-    body = json.dumps([home_id, canonical], ensure_ascii=True)
+    body = json.dumps([home_id, reading_tuples(rows)], ensure_ascii=True)
     return hashlib.sha256(body.encode("ascii")).hexdigest()
 
 
@@ -212,6 +229,39 @@ def derive_signal(
     if metrics.status == INSUFFICIENT:
         return signal(INSUFFICIENT, INSUFFICIENT, metrics.reasons, metrics)
     return signal(SUFFICIENT, metrics.status, [], metrics)
+
+
+def reproduce_sensor_analysis(
+    retained_readings: Sequence[Mapping[str, str]],
+    thresholds: AnalysisPolicy | None = None,
+    *,
+    window: comparator.Window | None = None,
+    as_of: datetime | None = None,
+    consent: str = "granted",
+) -> dict[str, object]:
+    """Pure: re-derive the versioned output of one home from retained readings alone.
+
+    The window defaults to the whole UTC days spanned by the readings and as_of to the window end,
+    so the result depends only on the reading set, never on arrival order or the wall clock.
+    """
+    homes = {str(r.get("home_id", "")) for r in retained_readings}
+    if len(homes) != 1 or "" in homes:
+        raise ValueError("SINGLE_HOME_REQUIRED")
+    (home_id,) = homes
+    if window is None:
+        times = [comparator._time(str(r["observed_at"])) for r in retained_readings]
+        start = min(times).replace(hour=0, minute=0, second=0, microsecond=0)
+        days = (max(times) - start).days + 1
+        window = comparator.Window(start, start + timedelta(days=days))
+    signal = derive_signal(
+        home_id, retained_readings, window, as_of or window.end, consent, thresholds
+    )
+    return {
+        "analysis_version": signal.analysis_version,
+        "policy_version": signal.policy_version,
+        "input_digest": signal.input_digest,
+        "signal": asdict(signal),
+    }
 
 
 def review_task_candidate(
