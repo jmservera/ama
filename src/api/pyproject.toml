@@ -103,6 +103,10 @@ module = ["test_coordinator_api", "tests.test_coordinator_api"]
 disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
+module = ["test_ranking_tiebreak_read", "tests.test_ranking_tiebreak_read"]
+disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
 module = ["test_ai_consumption_api", "tests.test_ai_consumption_api"]
 disallow_untyped_calls = false
 
