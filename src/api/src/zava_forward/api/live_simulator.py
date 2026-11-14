@@ -297,6 +297,8 @@ async def send_slot(
     to the sink is not recalled.
     """
     check_capacity(len(homes), limits, generator.cadence_seconds)
+    if len(set(homes)) != len(homes):
+        raise lr.LiveReadingError("DEVICE_ID_COLLISION")
     jitter = rng or random.Random(generator.seed)
     pacer = Pacer(limits.max_per_second, sleep, clock)
     summary = Summary(lr.slot_floor(slot, generator.cadence_seconds), len(homes))
@@ -304,6 +306,7 @@ async def send_slot(
     async def one(home: str) -> None:
         try:
             reading = generator.reading(home, slot)
+            lr.validate_row(reading.row())
         except lr.LiveReadingError as error:
             summary.codes[str(error)] = summary.codes.get(str(error), 0) + 1
             summary.failed += 1
