@@ -8494,3 +8494,62 @@ The [parity matrix](./mvp-to-src-parity-matrix.md) and [parity audit](./cutover-
 * Recommendation, proposed and not an owner decision: keep #201 open. The local cut-over criteria hold at this head; the remaining gates are the live Azure non-prod deploy and rollback with a healthy `src/` build, coverage equivalence, the dependent-epic disposition, the private-data backup and the owner sign-off in the issue.
 * Refs only for #201. Independent exact-head review, human approvals and applicable hosted CI remain required before merge.
 * Original records: `.copilot-tracking/{research,plans,details,changes,reviews}/2026-11-13/201-cutover-evidence-current-main-2333-*` and its state file.
+
+## Stabilization checkpoint (2026-11-14, Refs #440 #104 #149 #165)
+
+Draft, documentation only, not approved. This is the bounded recurring #440 checkpoint for the bounded-AI, UX and synthetic-data epics at the pinned head. It changes no source, test, tool, workflow, requirement or ADR, edits no issue, ticks no criterion, edits no knowledge-base log and approves nothing. The local checks below were run in this session at the pin.
+
+### Identity pins (static Git observations, read 2026-11-14)
+
+| Item | Observed value |
+| --- | --- |
+| Source commit | `ac70acafac6d215a87f25b68c5d8e14f7658ca30` (PR 1599), equal to the worktree HEAD and to `origin/main` at the start of the session; tree `b6d86d72e7e0fb2af8fd3d665fc33cb35a26f919` |
+| Later `origin/main` | `034af8d8891719093a53a8c25a80e29187398dd9`; `git diff --stat` against the pin shows only `.github/rubric/scores/latest.json`, so no source, test or document input differs |
+| Documents (blob at pin) | BRD `34d88395de86` `draft`; PRD zava-forward `a385d27481f8` `in-review`; ADR 0002 `96d6db897809` Proposed. Draft, in-review and proposed status is not approval |
+| Issues (read live) | #440, #104, #149, #165, #155 and #215 are OPEN. Nothing here ticks or changes any of them |
+
+### Document-qualified traceability
+
+Class meanings: local observed means a test run in this session at the pin; Azure observed means a live Azure result, and none is claimed here; blocked means waiting on a named human or owner approval.
+
+| Epic and boundary | Document-qualified requirement | Code and tests (exact paths) | Class | Not supported |
+| --- | --- | --- | --- | --- |
+| #104 AI cannot approve, execute, rank or mutate controlled records | BRD RULE-018 and RULE-004, PRD FR-025 to FR-028 (all unapproved); ADR 0002 decision 4 (Proposed) | `src/agents/tests/test_epic104_bounded_ai_invariants.py`, `src/api/tests/test_ai_boundary.py`, `src/api/tests/test_ai_call_site_inventory.py`, `src/api/tests/test_ai_tasks.py`, `src/agents/tests/test_ai_claim_filter.py` | local observed | Behaviour of a live model; independent human review of the boundary |
+| #104 Source-class and status labels (AI suggestion, Unverified, chat panel label, statement citations) | BRD NFR-004 and PRD FR-036 and FR-037 (unapproved) | `src/agents/tests/test_ai_eval.py`, `src/agents/tests/test_chat_eval.py`, `src/core/tests/test_ai_statement_sources.py`, `src/api/tests/test_chat_panel.py` | local observed | The opt-in Chromium test in `test_chat_panel.py` was skipped; no browser rendering of the labels |
+| #104 Finite call, token and budget allowances with an owner | BRD NFR-012 and PRD NFR-017 (draft proposals; BRD OD-51 open, no price set) | `src/agents/tests/test_epic104_bounded_ai_invariants.py`, `src/core/tests/test_ai_consumption_safety.py`, `src/api/tests/test_ai_consumption_api.py` | local observed (synthetic price, offline) | No owner-approved limit or alert exists; Azure consumption is unmeasured; no capability is approved live |
+| #149 Fluent 2 design system | PRD SA-001 to SA-010 and design system note `docs/reference/research/ux/design-system.md` | `src/api/tests/test_design_system.py` | local observed (unit and static) | `src/api/checks/design_system_browser_check.py` not run: Playwright is absent |
+| #149 WCAG 2.2 AA baseline | PRD NFR-001 and BRD NFR-008; [WCAG baseline](../reference/research/ux/wcag-conformance-baseline.md) | `src/api/tests/test_accessibility_baseline.py`, `src/api/tests/test_role_screens.py`, `src/api/tests/test_role_screens_conformance.py`, `src/api/tests/test_role_endpoint_inventory.py` | local observed (engineering checks); human assistive-technology acceptance blocked on #155 | No browser or axe run here, no conformance claim, no participant evidence |
+| #149 Plain-language content | BRD NFR-009; [content standard](../reference/research/ux/content-standard.md) | `src/api/tests/test_content_standard.py`, `src/api/tests/test_regulatory_ux_check.py`, `src/api/tests/test_production_ux_acceptance_protocol.py` | local observed (static); staff comprehension blocked on #215 | No comprehension result from representative staff. `src/api/tests/test_production_config_a11y_check.py` fails collection without Playwright and is not counted |
+| #165 Synthetic provenance and labels | PRD NFR-002 and PR-005, BRD FR-048 and CON-007 (unapproved); ADR 0003 Accepted | `src/core/tests/test_synthetic_provenance.py`, `src/core/tests/test_synthetic_output_audit.py`, `src/core/tests/test_synthetic_determinism.py`, `src/core/tests/test_generated_dataset.py` | local observed | No private dataset read, so no claim about private data |
+| #165 Non-PII data and OpenStreetMap map anchors | PRD CON-009; epic criterion allows documented OpenStreetMap anchors only | `src/core/tests/test_stock_fabric.py` and `src/core/tests/test_generated_dataset.py` (`building_form_osm` and stock-anchor links), `src/core/tests/test_synthetic_output_audit.py` (personal-owner refusal), `src/api/tests/test_auth.py` and `src/api/tests/test_ui_support.py` (tile source and CSP) | local observed | No test asserts that every OSM anchor is non-personal; that rests on the audit and on the documented map-address policy, so it is partially evidenced |
+| #165 Generator coverage and needs inventory | PRD FR-035 and FR-050 | `src/core/tests/test_scenario_manifest.py`, `src/core/tests/test_needs_inventory.py`, `src/core/tests/test_generator_coverage.py` | local observed; owner needs-inventory sign-off blocked on owner (#165) | Owner approval of the inventory and phase gate |
+| #165 Sensor generator and simulator | PRD AC-066 to AC-068 | `src/core/tests/test_sensor_stream.py`, `src/core/tests/test_historical_backfill.py`, `src/core/tests/test_device_provision.py`, `src/api/tests/test_live_simulator.py`, `src/api/tests/test_iot_stream.py` | local observed (offline) | No live Azure IoT Hub or SQL Server run; Azure observed none |
+| All three epics, live Azure behaviour | BRD and PRD deployment goals | None | blocked on owner and live Azure residuals | Live demo sync and deployed behaviour |
+
+### Commands and exits
+
+Environment: Linux, Python 3.12.3, isolated venv `/tmp/venv-440-0252` with `src/core`, `src/agents` and `src/api` installed editable (a non-editable install first failed 21 agents tests and one invariant test on golden-file paths located relative to `site-packages`; the editable install removes that environmental defect). No Azure, SQL Server, browser, Docker or model provider.
+
+| Command | Result | Exit |
+| --- | --- | --- |
+| in `src/core`: `python -m pytest -q` on `tests/test_scenario_manifest.py`, `test_needs_inventory.py`, `test_generator_coverage.py`, `test_synthetic_output_audit.py`, `test_synthetic_provenance.py`, `test_synthetic_determinism.py`, `test_generated_dataset.py`, `test_stock_fabric.py`, `test_sensor_stream.py`, `test_historical_backfill.py`, `test_device_provision.py`, `test_ai_statement_sources.py`, `test_ai_consumption_safety.py` | 134 passed, 1369 subtests passed | 0 |
+| in `src/agents`: `PYTHONPATH=../core/tests python -m pytest -q` on `tests/test_epic104_bounded_ai_invariants.py`, `test_ai_claim_filter.py`, `test_ai_eval.py`, `test_chat_eval.py` | 104 passed, 214 subtests passed | 0 |
+| in `src/api`: `PYTHONPATH=../core/tests:../agents/tests python -m pytest -q` on the `src/api/tests` modules named in the table above, excluding `test_production_config_a11y_check.py` | 382 passed, 1 skipped (opt-in Chromium, `test_chat_panel.py:1041`), 1249 subtests passed | 0 |
+| `python -m pytest -q infra/tests/test_bicep_policy.py` | 62 passed, 216 subtests passed | 0 |
+
+### Skips, deferrals and blocks
+
+* local observed: the rows above, on the stated head only. Not a full suite, and no coverage figure is claimed.
+* deferred: browser and axe checks under `src/api/checks/`, SQL Server paths, live Azure IoT Hub and consumption, hosted CI for the exact head.
+* blocked: human assistive-technology acceptance and the usability programme (#155), staff comprehension of the regulatory alerts and home chat (#215), owner sign-off of the needs inventory and phase gate (#165), owner-approved AI limits and alerts (#104), live Azure residuals.
+* unknown: behaviour of any open PR not merged at the pin.
+
+### Findings and recommendation (proposed, not an owner decision)
+
+* No new cross-feature regression is observed in the checks run. The failures seen were the documented golden-file path fragility under a non-editable install, a low-severity observation already noted at the previous checkpoint. No new issue is filed; a later checkpoint or the owner should decide on a behaviour-preserving correction.
+* Recommendation: CONTINUE the independent demo lanes (unrelated issue delivery, open PRs through their own review and hosted checks, documentation and test work). Keep epic completion gated for #104, #149 and #165 on human assistive-technology evidence (#155), staff comprehension (#215), the owner needs-inventory sign-off (#165), owner-approved AI limits, the hosted CI read for the exact head and the live Azure residuals. Merged children alone do not meet the #440 checkpoint criterion in the epics.
+* Resume point: after the next feature wave or before any epic completion step, pin the then-current `origin/main`, rerun this ladder including the Playwright browser and axe checks, and read hosted CI.
+
+### Process limits
+
+Documentation only. Local focused tier; not a complete-gate receipt. Independent exact-head review, human approvals and applicable hosted CI remain required. Original records: `.copilot-tracking/{research,plans,details,changes,reviews}/2026-11-14/440-checkpoint-evidence-sync-0252-*`.
