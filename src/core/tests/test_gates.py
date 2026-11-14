@@ -416,6 +416,47 @@ class ControlledRuleRegistryTests(unittest.TestCase):
         self.assertEqual(early.outcome, gates.UNKNOWN)
 
 
+class RuleProvenanceExposureTests(unittest.TestCase):
+    META = {"source", "effective_date", "version", "reviewer"}
+
+    def emitted(self) -> list[gates.GateResult]:
+        hold = {"accountable_role": "Building Safety Liaison"}
+        actor = {"role": "Building Safety Liaison", "email": "b@x.test"}
+        return [
+            gates.safety_release_gate(hold, actor, [], on="2026-11-03"),
+            *gates.booking_gates({}, None, on="2026-11-30"),
+            gates.evidence_gate(None, "Owner", on="2026-11-30"),
+            gates.quality_gate(None, "Owner", on="2026-11-30"),
+            gates.capacity_gate(None, "No capacity record.", on="2026-11-30"),
+            gates.eligibility_gate(None, "x", "Grants Officer", on="2026-11-30"),
+            gates.authority_gate(None, "x", on="2026-11-30"),
+            gates.finance_gate(None, "x", on="2026-11-30"),
+        ]
+
+    def test_every_emitted_gate_result_exposes_a_registered_rule(self) -> None:
+        results = self.emitted()
+        self.assertEqual({r.gate for r in results}, set(gates.GATE_KINDS))
+        for result in results:
+            with self.subTest(gate=result.gate):
+                rule = result.as_record()["rule"]
+                self.assertTrue(self.META <= set(rule))
+                self.assertTrue(all(str(rule[k]).strip() for k in self.META))
+                self.assertIn(result.rule, gates.CONTROLLED_RULES)
+
+    def test_no_rule_is_defined_outside_the_registry(self) -> None:
+        defined = [v for v in vars(gates).values() if isinstance(v, gates.GateRule)]
+        defined += list(gates.BOOKING_RULES.values())
+        self.assertTrue(set(defined) <= set(gates.CONTROLLED_RULES))
+
+    def test_rule_without_a_reviewer_or_version_is_refused(self) -> None:
+        for kw in ({"reviewer": " "}, {"version": ""}, {"source": ""}):
+            args = dict(gate="g", source="s", effective_date="2026-01-01", version="1")
+            args.update(reviewer="R")
+            args.update(kw)
+            with self.subTest(kw=kw), self.assertRaises(ValueError):
+                gates.GateRule(**args)
+
+
 Store_any: Any = Store
 fin_any: Any = _fin
 require_authority_any: Any = require_authority
