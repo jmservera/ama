@@ -302,6 +302,27 @@ def workflow_only(spec: dict[str, Any], workdir: str) -> dict[str, Any]:
     )
 
 
+def comparison(panels: dict[str, dict[str, Any]], wf: dict[str, Any]) -> dict[str, Any]:
+    """Detection, corrections and effort per panel against the workflow-only comparator.
+
+    Workflow-only output carries no seeded defects, so it has no detection rate; it only sets
+    the effort baseline for the same case and workload.
+    """
+    return {
+        name: dict(
+            detection_rate=p["detection_rate"],
+            detected=p["detected"],
+            defects=p["defects"],
+            corrections=p["corrections"],
+            effort_units=p["effort_units"],
+            workflow_only_effort_units=wf["effort_units"],
+            effort_delta_units=p["effort_units"] - wf["effort_units"],
+            gate_passed=p["gate_passed"],
+        )
+        for name, p in panels.items()
+    }
+
+
 def load_spec(golden: Path = GOLDEN) -> dict[str, Any]:
     """Load the golden spec; reviewer codes resolve to staff emails (none stored publicly)."""
     spec: dict[str, Any] = json.loads(golden.read_text(encoding="utf-8"))
@@ -357,6 +378,7 @@ def run_review_test(golden: Path = GOLDEN) -> dict[str, Any]:
         panels=panels,
         unauthorised_reviewer_control=unauthorised,
         workflow_only=wf,
+        comparison=comparison(panels, wf),
         checks=checks,
         passed=all(checks.values()),
         effort_note="scripted comparison units, same case and workload (one review per "
@@ -605,6 +627,11 @@ def main(argv: list[str] | None = None) -> int:
         )
     wf = rep["workflow_only"]
     print(f"workflow-only, same case: effort {wf['effort_units']}, defects {wf['seeded_defects']}")
+    for name, c in rep["comparison"].items():
+        print(
+            f"vs workflow-only, {name}: detection rate {c['detection_rate']}, "
+            f"corrections {c['corrections']}, effort delta {c['effort_delta_units']:+d} units"
+        )
     for k, v in rep["checks"].items():
         print(("PASS " if v else "FAIL ") + k)
     print(f"human effectiveness: {rep['evidence']['human_effectiveness']}")

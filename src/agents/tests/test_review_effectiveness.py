@@ -42,6 +42,15 @@ class ReviewEffectivenessTests(unittest.TestCase):
             if r["defect"]:
                 self.assertIn(re_.SOURCE_TAG, r["reason"])
 
+    def test_comparison_reports_detection_corrections_and_effort_delta(self) -> None:
+        cmp = self.report["comparison"]
+        wf = self.report["workflow_only"]["effort_units"]
+        self.assertEqual(cmp["competent"]["detection_rate"], 1.0)
+        self.assertLess(cmp["default_accept"]["detection_rate"], 1.0)
+        self.assertFalse(cmp["default_accept"]["gate_passed"])
+        for c in cmp.values():
+            self.assertEqual(c["effort_delta_units"], c["effort_units"] - wf)
+
     def test_effort_is_reported_against_workflow_only_on_same_case(self) -> None:
         self.assertGreater(self.report["panels"]["competent"]["effort_units"], 0)
         wf = self.report["workflow_only"]
