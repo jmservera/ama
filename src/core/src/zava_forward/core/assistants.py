@@ -861,7 +861,7 @@ class Assistants:
         if not self.store.ai.configured:
             return "AI is not configured; use the manual owner route."
         if db is not None:
-            pool = db.execute("SELECT calls,tokens,expires,used_calls,reserved_tokens FROM assistant_allowance WHERE id=?", (l.pool,)).fetchone()
+            pool = self._pool(db)
             if pool and (pool[2] <= self.now(db) or capacity and (
                     pool[3] >= min(pool[0], l.calls) or pool[4] + l.reservation > min(pool[1], l.tokens))):
                 return "Shared durable allowance exhausted/expired; use the manual owner route."
@@ -1471,6 +1471,19 @@ class Assistants:
                        authority_reference=l.authority, trigger=task["dispatch"]["trigger"])
             return self._row(db, tid)
 
+    def _pool(self, db):
+        """The allowance row for the current authority. A changed or rotated authority token has no row of its own, so
+        it inherits the most constrained persisted ledger (lowest ceilings, highest consumption) instead of a fresh pool.
+        Returns None only when no authority has ever been admitted."""
+        l = self.limits
+        pool = db.execute("SELECT calls,tokens,expires,used_calls,reserved_tokens FROM assistant_allowance WHERE id=?", (l.pool,)).fetchone()
+        if pool is not None:
+            return tuple(pool)
+        prior = db.execute("SELECT MIN(calls),MIN(tokens),MIN(expires),MAX(used_calls),MAX(reserved_tokens) FROM assistant_allowance").fetchone()
+        if prior[0] is None:
+            return None
+        return (min(prior[0], l.calls), min(prior[1], l.tokens), min(prior[2], l.expiry), prior[3], prior[4])
+
     def _reserve(self, db, now, attempt, tid, fence):
         """Inside the caller's transaction: take one durable active-call slot and debit one call plus its token
         reservation from the shared allowance. Returns None on success, else "active" or "pool"."""
@@ -1478,11 +1491,12 @@ class Assistants:
         active = db.execute("SELECT COUNT(*) FROM assistant_attempts WHERE active_until>?", (now,)).fetchone()[0]
         if active >= l.active_calls:
             return "active"
-        pool = db.execute("SELECT calls,tokens,expires,used_calls,reserved_tokens FROM assistant_allowance WHERE id=?", (l.pool,)).fetchone()
+        pool = self._pool(db)
         if pool is None:
-            db.execute("INSERT INTO assistant_allowance (id,calls,tokens,expires,used_calls,reserved_tokens) VALUES (?,?,?,?,0,0)",
-                       (l.pool, l.calls, l.tokens, l.expiry))
             pool = (l.calls, l.tokens, l.expiry, 0, 0)
+        if db.execute("SELECT 1 FROM assistant_allowance WHERE id=?", (l.pool,)).fetchone() is None:
+            db.execute("INSERT INTO assistant_allowance (id,calls,tokens,expires,used_calls,reserved_tokens) VALUES (?,?,?,?,?,?)",
+                       (l.pool, *pool))
         # Same authority cannot extend expiry or increase allowance by restarting/config changes.
         calls, tokens, expiry = min(pool[0], l.calls), min(pool[1], l.tokens), min(pool[2], l.expiry)
         db.execute("UPDATE assistant_allowance SET calls=?,tokens=?,expires=? WHERE id=?", (calls, tokens, expiry, l.pool))
