@@ -14,6 +14,7 @@ import sys
 import tempfile
 import types
 import uuid as _uuid
+from collections.abc import Iterator
 from contextlib import contextmanager
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -402,7 +403,7 @@ def revision_sources() -> tuple[Path, ...]:
 
 
 @contextmanager
-def _frozen(as_of: date, seed: int):
+def _frozen(as_of: date, seed: int) -> Iterator[None]:
     """Pin the clock and id sources the store reads, so a build depends only on (seed, as_of)."""
 
     ticks = iter(range(0, 1 << 30, 1000))

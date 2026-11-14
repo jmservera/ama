@@ -20,3 +20,10 @@
 * `mypy .`: no issues in 308 files. `ruff check .`: passed. `ruff format --check .`: passed.
 * Guard sanity: injecting `date.today()` into the guarded script made the replay fail as intended.
 * Not run: the full `src/core` unittest discovery (exceeded practical time here); hosted CI must cover it. No other package touched.
+
+## Cycle 2 of 5
+
+* Bare `mypy` in `src/core` failed on `resident_preview_fixture.py:405` (`_frozen` missing return type). Annotated it `-> Iterator[None]` (import from `collections.abc`).
+* No committed `scenario-manifest.json` hashes this file; revisions are computed at runtime from `revision_sources()`, so nothing to refresh.
+* Validation: core `mypy` (308 files), `ruff check`, `ruff format --check`, and the four focused test modules (60 tests) passed; api `ruff`, format, scoped `mypy` and `test_resident_preview_api.py` (15 tests) passed.
+* Not run: full unittest discovery and `tools/rpi-checks.py --all`; hosted CI must cover them. Not pushed.
