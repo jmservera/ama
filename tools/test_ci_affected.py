@@ -36,9 +36,7 @@ class SelectTests(unittest.TestCase):
         self.assertTrue(s["mssql"])
 
     def test_agents_selects_api(self) -> None:
-        self.assertEqual(
-            ci.select(["src/agents/src/a.py"])["projects"], {"agents", "api"}
-        )
+        self.assertEqual(ci.select(["src/agents/src/a.py"])["projects"], {"agents", "api"})
 
     def test_importer_only_skips_mssql(self) -> None:
         s = ci.select(["src/importer/tests/test_a.py"])
@@ -191,9 +189,7 @@ class WorkflowTests(unittest.TestCase):
 
         import yaml
 
-        path = (
-            pathlib.Path(__file__).resolve().parents[1] / ".github/workflows/src-ci.yml"
-        )
+        path = pathlib.Path(__file__).resolve().parents[1] / ".github/workflows/src-ci.yml"
         self.jobs = yaml.safe_load(path.read_text(encoding="utf-8"))["jobs"]
 
     def test_dependents_run_when_changes_job_fails(self) -> None:
@@ -222,9 +218,7 @@ class ChangedFilesTests(unittest.TestCase):
         done = mock.Mock(returncode=0, stdout="a.py\n\nb.md\n")
         with mock.patch.object(ci.subprocess, "run", return_value=done) as run:
             self.assertEqual(ci.changed_files("abc", "def"), ["a.py", "b.md"])
-        self.assertEqual(
-            run.call_args.args[0], ["git", "diff", "--name-only", "abc...def"]
-        )
+        self.assertEqual(run.call_args.args[0], ["git", "diff", "--name-only", "abc...def"])
 
     def test_git_failure_returns_none(self) -> None:
         done = mock.Mock(returncode=128, stdout="")

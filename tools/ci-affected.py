@@ -103,9 +103,7 @@ def select(files: list[str] | None) -> dict[str, object]:
             if is_dependency_manifest(path):
                 return everything
             parts = path.split("/")
-            if path.endswith(DOC_SUFFIXES) and (
-                len(parts) == 2 or parts[1] in PROJECTS
-            ):
+            if path.endswith(DOC_SUFFIXES) and (len(parts) == 2 or parts[1] in PROJECTS):
                 continue
             if len(parts) > 2 and parts[1] in PROJECTS:
                 projects |= DEPENDENTS[parts[1]]
@@ -126,8 +124,7 @@ def select(files: list[str] | None) -> dict[str, object]:
 def matrix(projects: set[str]) -> dict[str, list[dict[str, object]]]:
     return {
         "include": [
-            {"project": name, **info, "run": name in projects}
-            for name, info in PROJECTS.items()
+            {"project": name, **info, "run": name in projects} for name, info in PROJECTS.items()
         ]
     }
 
@@ -150,9 +147,7 @@ def main() -> int:
     event = os.environ.get("EVENT_NAME", "")
     files = None
     if event == "pull_request":
-        files = changed_files(
-            os.environ.get("BASE_SHA", ""), os.environ.get("HEAD_SHA", "")
-        )
+        files = changed_files(os.environ.get("BASE_SHA", ""), os.environ.get("HEAD_SHA", ""))
     selection = select(files)
     projects = selection["projects"]
     assert isinstance(projects, set)
