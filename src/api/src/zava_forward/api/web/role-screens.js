@@ -1016,7 +1016,15 @@ function indicatorRows(data, items) {
   const quarantined = items.filter((item) => exceptionRecord(item.original_source) && typeof item.original_source.status === "string"
     && item.original_source.status.toLowerCase() === "quarantined").length;
   const tasks = Array.isArray(given.ai_tasks) ? given.ai_tasks.filter((task) => exceptionRecord(task) && typeof task.task === "string") : [];
+  const count = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+  const list = (value) => Array.isArray(value) ? value.length : 0;
+  const stale = items.filter((item) => exceptionRecord(item.original_source) && typeof item.original_source.status === "string"
+    && item.original_source.status.toLowerCase() === "stale").length + list(data.sources);
+  const suppressed = items.filter((item) => typeof item.eligibility === "string" && /suppress/i.test(item.eligibility)).length;
   const rows = [
+    ["Open exceptions", `State: ${items.length ? "Attention" : "Pass"}. ${count(items.length, "item", "items")} returned for you. Read-only; none is changed here.`],
+    ["Sources not connected", `State: ${stale ? "Warning" : "Pass"}. ${count(stale, "source or stale record", "sources or stale records")} listed. Read-only.`],
+    ["Suppressed records", `State: ${suppressed ? "Attention" : "Pass"}. ${count(suppressed, "item", "items")} marked suppressed. Read-only.`],
     ["Lineage freshness", `State: ${indicatorState(given.lineage?.state)}. ${when(given.lineage)}. Read-only; Unknown is not proof the lineage is current.`],
     ["Ingestion quarantine", `State: ${quarantined ? `Quarantined (${quarantined} ${quarantined === 1 ? "item" : "items"} listed below)` : "None returned, which is not an all clear"}. Records stay as received; nothing is released or replayed here.`],
     ["Sensor feed health", `State: ${indicatorState(given.sensor_feed?.state)}. ${when(given.sensor_feed)}. Read-only; open a home for its sensor readings.`]
@@ -1030,7 +1038,7 @@ const exceptionJumps = [["exception-state", "State at a glance"], ["exception-so
   ["exception-items", "Open exception items"], ["exception-conflicts", "Source conflicts"]];
 const exceptionHeading = (id, text) => h("h3", { id, tabindex: "-1" }, text);
 function exceptionJumpNav() {
-  return h("nav", { class: "screen-section-jump", "aria-label": "Data stewardship sections" },
+  return h("nav", { class: "row", "aria-label": "Data stewardship sections" },
     exceptionJumps.map(([id, text]) => h("button", { type: "button", "data-jump-target": id, onclick: () => {
       const target = document.getElementById(id);
       if (!target) return;

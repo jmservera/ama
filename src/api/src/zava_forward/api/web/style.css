@@ -364,4 +364,3 @@ input[aria-invalid=true],select[aria-invalid=true],textarea[aria-invalid=true]{b
 .screen-evidence h2, .screen-evidence h3 { text-wrap: balance; }
 .screen-record { content-visibility: auto; contain-intrinsic-size: auto 20rem; }
 .screen-evidence td { font-variant-numeric: tabular-nums; }
-.screen-section-jump { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.75rem 0; }
