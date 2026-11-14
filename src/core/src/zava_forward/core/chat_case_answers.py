@@ -45,6 +45,11 @@ RULES: dict[str, str] = {
 INTENTS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
     (name, re.compile(pattern, re.I))
     for name, pattern in (
+        (
+            "sensor",
+            r"\b(sensors?|readings?|dew\s*points?|mou?ld\s+risk|iot|"
+            r"(?:fault|sensor)\s+flags?)\b",
+        ),
         ("funding", r"\b(fund\w*|grants?|claims?|money|financ\w*|budget|invoic\w*|paid)\b"),
         (
             "unblock",
@@ -72,6 +77,7 @@ INTENTS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
             r"\b(next|what\s+now|what\s+should|do\s+now|action|happens?\s+now|move\s+(it\s+)?on)\b",
         ),
         ("owner", r"\b(who|owner\w*|owns?|responsible|assigned|in\s+charge)\b"),
+        ("sensor", r"\b(temperatures?|humidity|moisture|thresholds?)\b"),
         (
             "status",
             r"\b(status|stage|where|progress|update|state|how\s+is|how\s+far|going\s+on)\b",
@@ -136,6 +142,30 @@ def case_facts(detail: Mapping[str, Any], *, reason_visible: bool) -> dict[str, 
         put(f"technical_missing.{i}", item if isinstance(item, str) else item.get("item"))
     kinds = sorted({str(d.get("kind")) for d in _rows(detail.get("documents")) if d.get("kind")})
     put("documents", ", ".join(kinds) if kinds else "none recorded")
+    return facts
+
+
+def sensor_facts(view: Mapping[str, Any]) -> dict[str, str]:
+    """Facts from the retained-reading view the user is already authorised to see."""
+    facts: dict[str, str] = {}
+
+    def put(path: str, value: Any) -> None:
+        if value not in (None, "", [], {}):
+            facts[path] = _text(value)
+
+    grounding = view.get("grounding") or {}
+    values = grounding.get("values") or {}
+    put("sensor.state", view.get("state"))
+    put("sensor.detail", view.get("detail"))
+    put("sensor.latest.citation", grounding.get("citation"))
+    for key in ("temperature_c", "humidity_pct", "observed_at"):
+        put(f"sensor.latest.{key}", values.get(key))
+    if values:
+        put("sensor.freshness", view.get("freshness_text"))
+        put("sensor.health", (view.get("health") or {}).get("text"))
+        put("sensor.watch", (view.get("advisory") or {}).get("text"))
+        put("sensor.thresholds", (view.get("advisory") or {}).get("thresholds"))
+    put("sensor.not_retained", grounding.get("not_retained_text"))
     return facts
 
 
@@ -309,6 +339,32 @@ def _hazard_line(r: Reply, i: int) -> str:
     return text + (f". Owner: {owner}." if owner else ". No owner is recorded for this.")
 
 
+def _sensor(r: Reply) -> None:
+    cite = r.fact("sensor.latest.citation")
+    if not cite:
+        r.say(
+            "No retained sensor reading is shown for this case. "
+            + (r.fact("sensor.detail") or "Your role may not include indoor readings.")
+        )
+        r.say("Use the ordinary quality check, or ask the quality team for the readings.")
+        if r.fact("stage"):
+            r.say(f"Case stage: {r.facts['stage']}.")
+        return
+    temperature = r.fact("sensor.latest.temperature_c")
+    humidity = r.fact("sensor.latest.humidity_pct")
+    observed = r.fact("sensor.latest.observed_at")
+    r.say(
+        f"Latest retained reading [{cite}]: temperature_c {temperature} degC, "
+        f"humidity_pct {humidity} %RH (relative humidity), observed {observed}."
+    )
+    for path in ("sensor.freshness", "sensor.health", "sensor.watch", "sensor.thresholds"):
+        if r.fact(path):
+            r.say(r.facts[path])
+    if r.fact("sensor.not_retained"):
+        r.say(r.facts["sensor.not_retained"])
+    r.say("These readings are synthetic and not calibrated. A person decides any action.")
+
+
 def _funding_missing(r: Reply) -> list[tuple[str, list[str]]]:
     missing: list[tuple[str, list[str]]] = []
     blockers = [
@@ -429,6 +485,7 @@ def _status(r: Reply) -> None:
 
 
 ANSWERS = {
+    "sensor": _sensor,
     "unblock": _unblock,
     "funding": _funding,
     "blocked": _blocked,

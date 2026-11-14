@@ -109,6 +109,7 @@ class App:
 
         self.assistants = Assistants(store, provider=AgentWorker(fenced).provider_call, transport=lambda: store.ai)
         self.chat = ChatIsolation(store)
+        self.chat.sensors = self.assistants.sensors
         self.panel = ChatPanel(self.chat, ChatModel(
             AgentWorker(lambda *args: store.ai.evidence(*args)),
             admission=lambda: chat_admission(store)))

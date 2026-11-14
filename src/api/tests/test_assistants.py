@@ -512,7 +512,9 @@ class ContractTests(Base):
                 self.assertEqual({r["code"] for r in p["snapshot"]["sources"]["ranking"]["reasons"]},
                                  {"waiting_days", "stage_order"})
                 self.assertNotIn("source:preferences", stored)
-            self.assertEqual(set(p["snapshot"]["sources"]), set(spec["categories"]))
+            # The "sensor" category is stored under the plural "sensors" source key.
+            self.assertEqual(set(p["snapshot"]["sources"]),
+                             {"sensors" if c == "sensor" else c for c in spec["categories"]})
             for role, user in self.people.items():
                 with self.subTest(cap=cap, role=role):
                     if role in spec["roles"]:

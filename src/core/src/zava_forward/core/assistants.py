@@ -59,7 +59,7 @@ REGISTRY = {
                                        categories=("home", "measures", "preferences", "appointments", "handoff", "capacity", "requests"),
                                        purpose="Draft an update or committed-capacity option"),
     "quality-evidence": dict(roles=("Quality Inspector", PM),
-                            categories=("home", "measures", "quality", "checklists", "documents", "sensors"),
+                            categories=("home", "measures", "quality", "checklists", "documents", "sensor"),
                             purpose="Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings"),
 }
 RULES = {
@@ -331,7 +331,12 @@ def review_flag(task, provenance=(), actionable=True, withheld=False, newer_read
                 model=dict(provider=envelope.get("provider"), deployment=envelope.get("deployment"), model=envelope.get("model"),
                            task_version=envelope.get("task_version"), release=task.get("release")),
                 cited_ids=cited, sensor_cited_ids=sensor_cited,
-                readings=[dict(sensor_id=known[k]["sensor_id"], reading_id=known[k]["reading_id"]) for k in sensor_cited],
+                readings=[dict(sensor_id=known[k]["sensor_id"], reading_id=known[k]["reading_id"], citation=k,
+                               observed_at=known[k]["observed_at"], temperature_c=known[k]["temperature_c"],
+                               humidity_pct=known[k]["humidity_pct"], text=sensor_view.reading_text(known[k]))
+                          for k in sensor_cited],
+                origin="generative_model", origin_text="Origin: generative_model. The finding is model-written; the cited retained values are decision_rule evidence.",
+                not_retained=list(sensor_view.NOT_RETAINED),
                 sensor_grounded=bool(sensor_cited), provenance_classes=sorted(sensors.get("provenance") or {}),
                 source_time=datetime.fromtimestamp(task["created_at"], timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ") if isinstance(task.get("created_at"), (int, float)) else None,
                 delivery="No named recipient or delivery of a request is recorded.",

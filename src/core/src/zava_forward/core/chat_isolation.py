@@ -56,6 +56,7 @@ def block(label, text, limit=2000):
 class ChatIsolation:
     def __init__(self, store, env=None, model=None, clock=None):
         self.store = store
+        self.sensors = None
         self.env = os.environ if env is None else env
         self.privacy = ChatPrivacy(store, env=self.env)
         self.model = model
@@ -104,7 +105,18 @@ class ChatIsolation:
             if d is None:
                 return None
             export_fields.status_inputs(self.store._case(case_id))
-            return case_facts(d, reason_visible=projection.can_see_reason(user))
+            facts = case_facts(d, reason_visible=projection.can_see_reason(user))
+        return {**facts, **self._sensor_facts(user, case_id)}
+
+    def _sensor_facts(self, user, case_id):
+        """Retained-reading facts through the injected authorised view; empty when absent or not permitted."""
+        if self.sensors is None:
+            return {}
+        from zava_forward.core.chat_case_answers import sensor_facts
+        try:
+            return sensor_facts(self.sensors(user, case_id))
+        except (PermissionError, ValueError, LookupError):
+            return {}
 
     def memory_for(self, user, task=""):
         """Opt-in, switch-gated and labelled non-authoritative items from the #285 lifecycle; empty unless active."""

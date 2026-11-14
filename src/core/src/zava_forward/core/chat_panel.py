@@ -367,6 +367,15 @@ def chat_skills() -> list[dict[str, str]]:
     return [dict(id=key, purpose=str(value["purpose"])) for key, value in REGISTRY.items()]
 
 
+SENSOR_RULE_PATHS = (
+    "sensor.watch",
+    "sensor.thresholds",
+    "sensor.health",
+    "sensor.freshness",
+    "sensor.not_retained",
+)
+
+
 def skill_sources(skill: str, sources: dict[str, str]) -> dict[str, str]:
     if skill != GENERAL:
         categories = REGISTRY[skill]["categories"]
@@ -512,7 +521,7 @@ class ChatPanel:
         if cite.startswith("workflow/"):
             return "workflow-rule"
         path = cite.split("/", 1)[-1]
-        if path.startswith(("gate.", "work.", "waiting_on", "hazards.")):
+        if path.startswith(("gate.", "work.", "waiting_on", "hazards.", *SENSOR_RULE_PATHS)):
             return "decision-rule"
         return "case-record"
 
@@ -814,7 +823,7 @@ class ChatPanel:
             and not over_limit
             and len(str(question or "")) <= MAX_QUESTION_CHARS
             and len(masked) <= MAX_QUESTION_CHARS
-            and case_intent(normalise_policy_text(masked)) == "unblock"
+            and case_intent(normalise_policy_text(masked)) in ("unblock", "sensor")
         )
         if over_limit:
             kind, text = "fallback", THREAD_LIMIT_REACHED
