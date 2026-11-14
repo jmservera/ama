@@ -136,7 +136,9 @@ class JourneyRegisterTests(unittest.TestCase):
         self.assertFalse(bad["staff_surveillance"])
 
     def test_usability_rejects_small_cells_extra_keys_and_bad_values(self) -> None:
-        obs = [{"measure": "appointment_recovery", "value": v} for v in (2, 4, 6, 8, 10)]
+        obs: list[dict[str, Any]] = [
+            {"measure": "appointment_recovery", "value": v} for v in (2, 4, 6, 8, 10)
+        ]
         self.assertEqual(jr.aggregate_usability(obs, 1)["blockers"], ["min_cell_unapproved"])
         self.assertEqual(jr.aggregate_usability(obs, 4)["status"], "blocked")
         self.assertEqual(
