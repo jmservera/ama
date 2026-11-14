@@ -13,7 +13,7 @@ from copy import deepcopy
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, gates, identity, insights, ledger, projection, ranking, ranking_archive_blob, ranking_publication, stock, taskqueues
+from . import challenges, ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, gates, identity, insights, ledger, projection, ranking, ranking_archive_blob, ranking_publication, stock, taskqueues
 from .finance import FinanceMixin
 from .list_export import safe_cell
 from .continuity import ContinuityMixin
@@ -473,11 +473,13 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if user is not None and challenge_references_visible(self, user):
                 from .resident_decisions import challenge_catalog
                 d["challenge_targets"] = challenge_catalog(self, case_id)
+                d["challenge_guarantees"] = list(challenges.GUARANTEES)
             elif user is not None:
                 for field in INTAKE_FIELDS:
                     d.pop(field, None)
                 d.pop("affected_challenges", None)
                 d.pop("challenge_targets", None)
+                d.pop("challenge_guarantees", None)
             d.pop("form_staging", None)
             d.pop("form_reviews", None)
             d.pop("finance_decision_holds", None)

@@ -189,6 +189,7 @@ def redact_staff_detail(user, d):
             d.pop(key, None)
         d.pop("affected_challenges", None)
         d.pop("challenge_targets", None)
+        d.pop("challenge_guarantees", None)
     if user.get("role") not in FINANCE_VIEW:
         d.pop("finance", None)
         d.pop("grants", None)
