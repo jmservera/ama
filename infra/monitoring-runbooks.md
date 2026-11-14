@@ -495,7 +495,7 @@ B/R/T IDs below label the issue's criteria positionally, not new requirements.
 | --- | --- | --- |
 | B1 job/poison/ledger/IoT alerts | Disabled job/IoT candidates; agent-tasks poison arrival candidate; existing ledger rules, 26h correction; import poison gap | Verified `StorageQueueLogs` signal and drill, an import poison producer, owned notification drill; #110/#115 actual acceptance |
 | B2 availability/errors/latency/cost vs budget dashboard | Workbook aggregate query sources, cost-vs-budget table with Unknown actual and Unreconciled variance | Actual instrumentation/tests, KQL/portal execution and financial cost feed/reconciliation |
-| B3 each alert runbook with owner | All eight existing rules/four budget notices and eight candidates catalogued; proposed roles | Named actual primary/backup appointments and response/escalation limits |
+| B3 each alert runbook with owner | All eight existing rules/four budget notices and eight candidates catalogued; proposed roles; each rule description names its proposed owner and links its anchor, test-enforced | Named actual primary/backup appointments and response/escalation limits |
 | B4 diagnostic exclusion | Fail-closed redaction of every application log record, canary tests, no new log categories, metrics-only IoT | Platform diagnostic categories (Container Apps `allLogs`, SQL, Key Vault, storage) and DPO/privacy approval |
 | R1 indicators/denominators/window/thresholds/owners/response | RAI procedure and blocked workbook panel | Per-task/release approved declaration and real appointments |
 | R2 unsupported claims/critical misses/stale review/challenges/cohort errors/effort | Explicit indicator list in RAI procedure | Applicable producer coverage and complete review-effort evidence |
