@@ -120,7 +120,47 @@ def usage(value: object) -> dict[str, int | None] | None:
         type(cached) is not int or not 0 <= cached <= value["prompt_tokens"]
     ):
         return None
-    return {**{k: value[k] for k in keys}, "cached_tokens": cached}
+    reasoning = value.get("reasoning_tokens")
+    if reasoning is None:
+        details = value.get("completion_tokens_details")
+        reasoning = details.get("reasoning_tokens") if isinstance(details, dict) else None
+    if reasoning is not None and (
+        type(reasoning) is not int or not 0 <= reasoning <= value["completion_tokens"]
+    ):
+        return None
+    extra = {} if reasoning is None else {"reasoning_tokens": reasoning}
+    return {**{k: value[k] for k in keys}, "cached_tokens": cached, **extra}
+
+
+def tariff_basis(synthetic_flags: set[bool]) -> str:
+    """Name the tariff basis so offline/demo and live evidence are never blended silently."""
+    if not synthetic_flags:
+        return UNKNOWN
+    if synthetic_flags == {True}:
+        return "offline-demo-tariff"
+    if synthetic_flags == {False}:
+        return "live-tariff-supplied-unverified"
+    return "mixed-demo-and-live-tariff"
+
+
+def token_breakdown(tokens: list[Mapping[str, Any] | None]) -> dict[str, Any]:
+    """Cached, uncached, completion and reasoning totals; Unknown if any call lacks one."""
+
+    def total(derive: Callable[[Mapping[str, Any]], int | None]) -> Any:
+        values = [None if t is None else derive(t) for t in tokens]
+        return UNKNOWN if not values or None in values else sum(v for v in values if v is not None)
+
+    return dict(
+        input_tokens=total(lambda t: t["prompt_tokens"]),
+        cached_input_tokens=total(lambda t: t.get("cached_tokens")),
+        uncached_input_tokens=total(
+            lambda t: (
+                None if t.get("cached_tokens") is None else t["prompt_tokens"] - t["cached_tokens"]
+            ),
+        ),
+        completion_tokens=total(lambda t: t["completion_tokens"]),
+        reasoning_tokens=total(lambda t: t.get("reasoning_tokens")),
+    )
 
 
 def capability_usage(
@@ -129,8 +169,9 @@ def capability_usage(
     outputs: Mapping[str, Any],
     reviews: Mapping[str, Any],
     unresolved: set[str],
+    prices: Mapping[str, Any],
 ) -> dict[str, dict[str, Any]]:
-    """Per-assistant call, token and accepted-proposal attribution; opaque fields only."""
+    """Per-assistant call, token, tariff-basis and accepted-proposal attribution; opaque only."""
     groups: dict[str, dict[str, list[dict[str, Any]]]] = {}
     for call in calls:
         groups.setdefault(call["capability"], {}).setdefault(call["root"], []).append(call)
@@ -154,6 +195,16 @@ def capability_usage(
         known = bool(accepted) and all(root in measured for root in accepted)
         result[capability] = dict(
             calls=sum(len(v) for v in roots.values()),
+            tariff_basis=tariff_basis(
+                {prices[a["price"]]["synthetic"] for v in roots.values() for a in v}
+            ),
+            token_breakdown=token_breakdown(
+                [
+                    completions[a["id"]]["tokens"] if a["id"] in completions else None
+                    for v in roots.values()
+                    for a in v
+                ]
+            ),
             proposals=len(roots),
             proposals_with_known_tokens=len(measured),
             total_tokens=sum(measured.values()) if measured else UNKNOWN,
@@ -1291,7 +1342,7 @@ class Consumption:
             if all(r["id"] in completions and completions[r["id"]]["tokens"] for r in attempts):
                 totals.append(sum(completions[r["id"]]["tokens"]["total_tokens"] for r in attempts))
         spread = batch_spread(totals, batch, len(roots))
-        by_capability = capability_usage(calls, completions, outputs, reviews, unresolved)
+        by_capability = capability_usage(calls, completions, outputs, reviews, unresolved, prices)
         alerts = [r for r in records if r["kind"] == "alert" and begin <= r["at"] < finish]
         return dict(
             schema=SCHEMA,
@@ -1321,6 +1372,7 @@ class Consumption:
                 **spread,
             ),
             by_capability=by_capability,
+            tariff_basis=tariff_basis({prices[r["price"]]["synthetic"] for r in calls}),
             unjoined_outputs=unjoined,
             unjoined_reviews=unjoined_reviews,
             accepted_proposals=accepted,
