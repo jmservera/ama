@@ -43,6 +43,7 @@ COLUMNS = (
     "scenario",
     "schema_version",
 )
+NOT_RETAINED = ("dew_point_c", "mould_risk_index")
 STATES = ("ok", "no-readings", "consent-withheld", "unavailable")
 MANUAL = "Use the ordinary quality check; no one is waiting on sensor values."
 CALIBRATION = "Not calibrated. These values are not a verified indoor measurement."
@@ -294,6 +295,40 @@ def _select(
 def key_of(reading: Mapping[str, Any]) -> str:
     """Citation key over the retained composite key (sensor_id, reading_id)."""
     return f"sensor:{reading['sensor_id']}:{reading['reading_id']}"
+
+
+def reading_text(reading: Mapping[str, Any]) -> str:
+    """The exact retained values of one reading, led by its `[sensor:...]` citation."""
+    return (
+        f"[{key_of(reading)}] temperature_c {reading['temperature_c']} {UNITS['temperature_c']}, "
+        f"humidity_pct {reading['humidity_pct']} {UNITS['humidity_pct']} (relative humidity), "
+        f"observed {reading['observed_at']}."
+    )
+
+
+def grounding(sensors: Mapping[str, Any] | None) -> dict[str, Any]:
+    """Decision-rule text for the latest retained reading, naming what is not retained."""
+    latest = (sensors or {}).get("latest")
+    out: dict[str, Any] = dict(
+        origin="decision_rule",
+        not_retained=list(NOT_RETAINED),
+        not_retained_text=(
+            "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained "
+            "for this home and are not shown or estimated."
+        ),
+    )
+    if not latest:
+        return dict(out, citation=None, values=None, text="No retained reading is available.")
+    return dict(
+        out,
+        citation=key_of(latest),
+        values=dict(
+            temperature_c=latest["temperature_c"],
+            humidity_pct=latest["humidity_pct"],
+            observed_at=latest["observed_at"],
+        ),
+        text=reading_text(latest),
+    )
 
 
 def citations(source: Mapping[str, Any]) -> dict[str, Any]:
@@ -587,6 +622,7 @@ def _view(
         manual_route=MANUAL,
         advisory=advisory(out),
         health=reading_health(out),
+        grounding=grounding(out),
     )
     if out["state"] in ("consent-withheld", "unavailable"):
         out["freshness_text"] = out["detail"]

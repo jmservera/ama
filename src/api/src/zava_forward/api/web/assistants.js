@@ -37,6 +37,8 @@ function reviewFlagBlock(f) {
     kids.push(h("p", {}, `Model: ${model}. Raised ${f.source_time || "at an unknown time"} (${f.trigger}). Not approved.`),
       h("p", {}, `${asOf} ${change}`),
       h("p", {}, `Cited IDs: ${(f.cited_ids || []).join(", ") || "none"}. Readings cited: ${(f.readings || []).map((r) => `sensor ${r.sensor_id}, reading ${r.reading_id}`).join("; ") || "none"}.`),
+      h("ul", { "data-flag-readings": "" }, (f.readings || []).map((r) => h("li", {}, r.text || `[${r.citation}] temperature_c ${r.temperature_c} degC, humidity_pct ${r.humidity_pct} %RH, observed ${r.observed_at}.`))),
+      h("p", { class: "muted", "data-flag-origin": "" }, f.origin_text || "Origin: generative_model."),
       h("p", {}, `Reading source: ${(f.provenance_classes || []).join(", ") || "none"}. Not calibrated.`),
       h("p", { class: "muted" }, f.delivery));
   }
