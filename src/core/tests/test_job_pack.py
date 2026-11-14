@@ -160,6 +160,7 @@ class JobPackTests(unittest.TestCase):
             "   ", "Unknown - not configured", "TBC", "unassigned", "N/A", "unassigned-team",
             "owner-placeholder", "pending_assignment", "queue/triage", "shared@example.org",
             "Retrofit Programme Manager", "Building Safety Liaison", "Not configured", "?",
+            "T.B.C.", "N.A.",
         ):  # fmt: skip
             with self.assertRaises(ValueError, msg=name):
                 job_pack.escalation(

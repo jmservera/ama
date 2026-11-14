@@ -15,7 +15,7 @@
 
 ## AC proof map for #132
 
-AC1-AC5 remain proven by existing tests in `test_job_pack.py` and `test_staff_intake_api.py` (pack, receipt, independent QA, no-show recovery, no self-approval). AC6 (named owner, never a contract instruction) is proven by the new tests above.
+AC1-AC4 remain proven by existing tests in `test_job_pack.py` and `test_staff_intake_api.py` (pack, receipt, independent QA, no-show recovery, no self-approval). AC5 (named owner, never a contract instruction) is proven by the new tests above.
 
 ## Cycle 1 correction (1 of 5)
 
@@ -26,3 +26,7 @@ AC1-AC5 remain proven by existing tests in `test_job_pack.py` and `test_staff_in
 * `test_job_pack.py`: 10 more placeholder and role-only names, plus `test_real_names_are_accepted`.
 
 Corrected counts: the original slice added 2 API tests and 3 core tests (not 13 total new). Validation, `PYTHONDONTWRITEBYTECODE=1`, no `uv`: core `tests.test_job_pack` 14 OK; api `test_staff_intake_api` + `test_role_endpoint_inventory` 135 tests OK (41 opt-in skips, including the loopback SQL Server class, so SQL readback is covered only by shared code path and not exercised); `ruff check .`, `ruff format --check .`, `mypy` clean in `src/core` and `src/api` (the earlier 2 api `unused-ignore` errors did not recur). Full discover suites, `rpi-checks.py --all`, hosted CI and browser checks were not run. No push.
+
+## Cycle 2 correction (2 of 5)
+
+Fixed independent cycle 1 findings: escalation summary held for roles without a recorded need (advisory note kept), staff-intake.js escalation form, readback and computed contract-instruction text, non-string and dotted-initial owner rejection, README and AC5 numbering. Focused core/api tests, ruff and mypy pass. Browser, SQL Server, human AT and hosted CI not run. Refs #132.

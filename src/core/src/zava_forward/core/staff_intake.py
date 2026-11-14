@@ -280,7 +280,16 @@ def view(store: Any, user: Any, wid: str) -> dict[str, Any]:
             receipts=[_view_receipt(i, r, user) for i, r in _records(c, wid)],
             recovery=[job_pack.visit_recovery(e) for e in job_pack.NO_SHOW_EVENTS],
             escalation=escalation_destination(),
-            escalations=[dict(e) for e in c.get("escalations") or [] if e.get("order") == wid],
+            escalations=[
+                dict(
+                    e,
+                    summary=e["summary"]
+                    if projection.can_see_reason(user)
+                    else projection.NOTE_HELD,
+                )
+                for e in c.get("escalations") or []
+                if e.get("order") == wid
+            ],
             boundaries=dict(
                 contract_instruction=False,
                 advisory_only=True,
@@ -505,6 +514,9 @@ def escalate(store: Any, user: Any, wid: str, body: dict[str, Any]) -> dict[str,
     _staff_only(store, user)
     if not isinstance(body, dict):
         raise ValueError("Send the escalation as a JSON object.")
+    for key in ("named_owner", "owner_role"):
+        if body.get(key) is not None and not isinstance(body[key], str):
+            raise ValueError("Enter the named owner and role as text.")
     _pack(store, user, wid)
     w, _ = _find(store, wid)
     with store._quality_operation(user, w["case_id"]) as (c, actor):
@@ -513,8 +525,8 @@ def escalate(store: Any, user: Any, wid: str, body: dict[str, Any]) -> dict[str,
             body.get("summary"),  # type: ignore[arg-type]
             actor["email"],
             wid,
-            str(body.get("named_owner") or ""),
-            str(body.get("owner_role") or ""),
+            body.get("named_owner") or "",
+            body.get("owner_role") or "",
         )
         rows = c.setdefault("escalations", [])
         rec = dict(

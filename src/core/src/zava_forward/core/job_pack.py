@@ -225,7 +225,7 @@ def named_owner(name: Any, role: Any) -> dict[str, str]:
     if role not in ESCALATION_OWNER_ROLES:
         raise ValueError("Choose a contract manager or the building safety liaison as owner.")
     who = _text(name, "the named owner")
-    words = re.findall(r"[a-z]+", who.lower().replace("/", " "))
+    words = re.findall(r"[a-z]+", re.sub(r"\b([a-z])\.", r"\1", who.lower()).replace("/", " "))
     if (
         len(who) > 80
         or not _NAME_ALLOWED.fullmatch(who)

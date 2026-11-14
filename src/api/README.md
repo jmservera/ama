@@ -5890,7 +5890,7 @@ and escalation are still pure rules in the core with no route or persistence.
 
 Existing authenticated staff only; contractor identities get 403. `GET /api/workorders/{id}/field-intake`
 returns the job pack, receipts, independent-review state, visit recovery rows and the escalation destination.
-`POST /api/workorders/{id}/field-capture`, `/field-correct` and `/field-acknowledge` are handled by
+`POST /api/workorders/{id}/field-capture`, `/field-correct`, `/field-acknowledge` and `/field-escalate` (advice only, never a contract instruction) are handled by
 `zava_forward.core.staff_intake` (409 for a stale pack, duplicate acknowledgement or late correction).
 The screen `staff-job-pack-intake` (`web/staff-intake.js`) is registered through `registerRoleScreen`.
 Browser capture (opt-in, `ZF_STAFF_INTAKE_BROWSER=1` and the pinned `ZF_AXE_PATH`) ran axe on four states;

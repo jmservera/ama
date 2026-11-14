@@ -16,3 +16,7 @@ Execution: one self-review, executed. Outcome: findings 1, 2, 3 and 4 addressed 
 * Finding 3: HTTP fail-closed and restart tests added; no state or audit mutation on rejection.
 * Finding 4: counts corrected (see changes).
 * Routed, not done: `staff-intake.js` still shows a static advisory line and has no escalation form or readback (review finding 3), so `Closes #132` is not claimed; the commit uses `Refs #132`.
+
+## Cycle 2 correction (2 of 5)
+
+Fixed independent cycle 1 findings: escalation summary held for roles without a recorded need (advisory note kept), staff-intake.js escalation form, readback and computed contract-instruction text, non-string and dotted-initial owner rejection, README and AC5 numbering. Focused core/api tests, ruff and mypy pass. Browser, SQL Server, human AT and hosted CI not run. Refs #132.

@@ -289,6 +289,27 @@ class StaffIntakeApi(ProcurementApiFixture):
             self.assertEqual(view["owner"], "Unknown - not configured")
             self.assertEqual(self.escalate()[0], 400)
 
+    def test_non_string_and_dotted_owners_are_refused(self) -> None:
+        role = "Retrofit Programme Manager"
+        for name in (True, 1, ["Pam Lead"], "T.B.C.", "N.A."):
+            code, out = self.escalate(named_owner=name, owner_role=role)
+            self.assertEqual(code, 400, (name, out))
+        self.assertEqual(self.escalate(named_owner="Pam Lead", owner_role=True)[0], 400)
+        self.assertNotIn("escalations", self.store.cases["ZF-3"])
+
+    def test_escalation_summary_is_held_without_recorded_need(self) -> None:
+        from zava_forward.core import projection
+
+        named = dict(named_owner="Pam Lead", owner_role="Retrofit Programme Manager")
+        self.assertEqual(self.escalate(**named, summary="Resident is unwell")[0], 200)
+        rows = self.view()["escalations"]
+        self.assertEqual(rows[0]["summary"], "Resident is unwell")
+        case = dict(self.store.cases["ZF-3"])
+        held = projection.hold_notes(dict(escalations=[dict(case["escalations"][0])]))
+        rec = held["escalations"][0]
+        self.assertEqual(rec["summary"], projection.NOTE_HELD)
+        self.assertIn("work order does not change", rec["note"])
+
     def test_escalation_is_staff_only_and_validates_input(self) -> None:
         named = dict(named_owner="Pam Lead", owner_role="Retrofit Programme Manager")
         self.assertEqual(self.escalate("sam", **named, kind="invented")[0], 400)

@@ -16,3 +16,7 @@ Critique: one pass, executed; compatible with the confirmed decisions (advisory 
 * [x] C2: `job_pack.named_owner` now requires person-name characters and rejects placeholder words in any position, role-only titles, and slash, underscore, digit and email forms; configured contact is validated and placeholder config reports no owner.
 * [x] C3: HTTP tests for fail-closed (400, no state or audit change), staff-only (403), persistence across restart and configured routing; core name tests.
 * [x] C4: counts and evidence corrected in the changes and review artifacts.
+
+## Cycle 2 correction (2 of 5)
+
+Fixed independent cycle 1 findings: escalation summary held for roles without a recorded need (advisory note kept), staff-intake.js escalation form, readback and computed contract-instruction text, non-string and dotted-initial owner rejection, README and AC5 numbering. Focused core/api tests, ruff and mypy pass. Browser, SQL Server, human AT and hosted CI not run. Refs #132.

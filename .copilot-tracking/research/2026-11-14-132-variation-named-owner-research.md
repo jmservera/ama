@@ -26,3 +26,7 @@ Source: independent exact-head review of `6a603370e` (verdict `request_changes`;
 * Not addressed here (out of the four listed items, routed): the staff-intake.js hardcoded advisory text, the escalation form and readback table, and browser coverage.
 * Environment note: editable installs resolve to `/home/azureuser/source/ama`; tests need `PYTHONPATH` set to this worktree's `src/*/src`.
 Disposition: executed. Planning Readiness: Ready.
+
+## Cycle 2 correction (2 of 5)
+
+Fixed independent cycle 1 findings: escalation summary held for roles without a recorded need (advisory note kept), staff-intake.js escalation form, readback and computed contract-instruction text, non-string and dotted-initial owner rejection, README and AC5 numbering. Focused core/api tests, ruff and mypy pass. Browser, SQL Server, human AT and hosted CI not run. Refs #132.
