@@ -247,7 +247,7 @@ const assetSections = [
   ["asset-queue", "Stock conflict queue"],
   ["asset-comparison", "Stock conflict comparison"],
   ["asset-inputs", "Missing investment inputs"],
-  ["asset-gates", "Benefits and phase check"],
+  ["asset-checks", "Benefits and phase check"],
   ["asset-portfolio", "Portfolio scope"],
   ["asset-ai", "AI cohort and usage"]
 ];
@@ -328,7 +328,7 @@ registerRoleScreen({
       screenPanel("Missing investment inputs", { anchor: "asset-inputs" },
         screenTable("Investment inputs", ["Input", "State", "Resolution owner and action"],
           assetInputs.map(([name, action]) => [name, assetState("Unknown", assetUnknownState), action]))),
-      screenPanel("Benefits and phase check", { anchor: "asset-gates" },
+      screenPanel("Benefits and phase check", { anchor: "asset-checks" },
         screenUnknown("No measured benefit or phase check evidence is supplied for this home.", "Programme manager to name an owner", "Supply dated evidence before any phase check is read as passed"),
         h("p", {}, "Each check below stays Unknown until a named owner supplies dated evidence. This view does not pass a check, release a tranche or pause or restart work. The Board or its delegated owners decide."),
         screenTable("Phase checks and benefits",
