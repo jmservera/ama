@@ -39,7 +39,7 @@ window.ChatWidget = (() => {
     header.append(heading, close);
     const intro = node("details", "", { class: "chat-widget-intro" });
     intro.append(node("summary", "About this chat"));
-    const log = node("div", "", { class: "chat-widget-log", role: "log", "aria-live": "polite", "aria-relevant": "additions text", "aria-label": `${title} conversation`, tabindex: "0" });
+    const log = node("div", "", { class: "chat-widget-log", role: "log", "aria-live": "polite", "aria-relevant": "additions text", "aria-atomic": "false", "aria-label": `${title} conversation`, tabindex: "0" });
     const form = node("form", "", { class: "chat-widget-composer" });
     const beforeInput = node("div");
     const input = node("textarea", "", { id: `${id}-question`, name: "question", autocomplete: "off", rows: "2", maxlength: String(maxLength), "aria-label": questionLabel });
