@@ -1,24 +1,23 @@
 """Issue 1288: stale, offline and uncalibrated telemetry gets a text badge and advisory text."""
 
-import importlib.util
 import unittest
 from pathlib import Path
+from typing import Any
+
+from zava_forward.api import sensor_badges
 
 API = Path(__file__).resolve().parents[1] / "src/zava_forward/api"
-_spec = importlib.util.spec_from_file_location("sensor_badges", API / "sensor_badges.py")
-sensor_badges = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(sensor_badges)
 OPS = API / "web/ops.js"
 SERVER = API / "server.py"
 ADVISORY = "Advisory telemetry \u2014 officer review required"
 
 
 class BadgeModel(unittest.TestCase):
-    def kinds(self, **view: object) -> dict[str, dict[str, str]]:
+    def kinds(self, **view: Any) -> dict[str, dict[str, str]]:
         return {b["kind"]: b for b in sensor_badges.badges(view)}
 
     def test_each_state_has_a_plain_text_label(self) -> None:
-        cases = [
+        cases: list[tuple[dict[str, Any], str, str]] = [
             (dict(state="ok", latest={"x": 1}, freshness="fresh"), "fresh", "Fresh"),
             (dict(state="ok", latest={"x": 1}, freshness="stale"), "stale", "Stale"),
             (
@@ -39,7 +38,7 @@ class BadgeModel(unittest.TestCase):
 
 class Annotate(unittest.TestCase):
     def test_response_keeps_fields_and_adds_advisory_and_badges(self) -> None:
-        stale = dict(state="ok", latest={"reading_id": "R-1"}, freshness="stale")
+        stale: dict[str, Any] = dict(state="ok", latest={"reading_id": "R-1"}, freshness="stale")
         out = sensor_badges.annotate(stale)
         self.assertEqual(out["latest"], stale["latest"])
         self.assertEqual(out["advisory"], ADVISORY)

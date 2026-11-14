@@ -23,7 +23,8 @@ def freshness_state(view: Mapping[str, Any]) -> str:
         return "unavailable"
     if view.get("state") == "no-readings" or not view.get("latest"):
         return "offline"
-    return view.get("freshness") if view.get("freshness") in ("fresh", "stale") else "unknown"
+    freshness = view.get("freshness")
+    return str(freshness) if freshness in ("fresh", "stale") else "unknown"
 
 
 def badges(view: Mapping[str, Any]) -> list[dict[str, str]]:
