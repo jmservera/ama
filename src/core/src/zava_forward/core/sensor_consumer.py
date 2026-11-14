@@ -16,7 +16,7 @@ from .mssqlstore import MssqlStore
 from .sensor_sql import SensorMssqlConnector
 from .sensor_view import home_digest
 from .sqlstore import SqlStore
-from .synthetic.live_readings import LIVE_VERSIONS, SUNLIGHT_UNIT
+from .synthetic.live_readings import LIVE_VERSIONS, SUNLIGHT_UNIT, reading_id_for
 from .synthetic.live_readings import SCHEMA_VERSION as LIVE_SCHEMA_VERSION
 from .synthetic.sensor_faults import READING_FIELDS, SCHEMA_VERSION
 from .synthetic.sensor_identity import home_key
@@ -768,7 +768,7 @@ class SensorConsumer:
         five_minute = row["schema_version"] == LIVE_SCHEMA_VERSION
         if observed.second or (five_minute and observed.minute % 5):
             return "UTC_TIME"
-        if row["reading_id"] != f"LIVE-{row['sensor_id']}-{observed:%Y%m%dT%H%M}Z":
+        if row["reading_id"] != reading_id_for(str(row["sensor_id"]), observed):
             return "IDENTITY"
         for name in ("temperature_c", "humidity_pct"):
             if not NUMBER.fullmatch(str(row[name])) or abs(Decimal(str(row[name]))) > 999.99:

@@ -98,10 +98,15 @@ def verify_envelope(device_id: str, row: Mapping[str, object]) -> None:
     if row.get("schema_version") not in live_readings.LIVE_VERSIONS:
         raise DeviceIdentityError("SCHEMA_VERSION_REQUIRED")
     observed = row.get("observed_at")
+    if not isinstance(observed, str):
+        raise DeviceIdentityError("READING_ID_MISMATCH")
     try:
-        slot = datetime.strptime(str(observed), "%Y-%m-%dT%H:%M:%SZ")
+        slot = datetime.strptime(observed, "%Y-%m-%dT%H:%M:%SZ")
     except ValueError:
         raise DeviceIdentityError("READING_ID_MISMATCH") from None
+    grid = 5 if row.get("schema_version") == live_readings.SCHEMA_VERSION else 1
+    if slot.second or slot.microsecond or slot.minute % grid:
+        raise DeviceIdentityError("READING_ID_MISMATCH")
     if row.get("reading_id") != live_readings.reading_id_for(sensor_id, slot):
         raise DeviceIdentityError("READING_ID_MISMATCH")
 
