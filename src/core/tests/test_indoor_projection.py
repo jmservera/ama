@@ -313,7 +313,12 @@ class PortfolioProfileTests(unittest.TestCase):
     def sensors(self, seed: int = 186) -> list[dict[str, object]]:
         return [{**sb.sensor_for(h, seed), "fault_profile": "none"} for h in self.HOMES]
 
-    def rows(self, s: dict[str, object], seed: int = 186, outdoor=None):
+    def rows(
+        self,
+        s: dict[str, object],
+        seed: int = 186,
+        outdoor: list[tuple[float, float]] | None = None,
+    ) -> tuple[list[tuple[float, float]], list[dict[str, object]]]:
         outdoor = outdoor or sb.outdoor_series(seed, 3, 60, self.START)
         return outdoor, list(sb.readings(s, seed, 3, 60, outdoor, self.START))
 
@@ -334,9 +339,9 @@ class PortfolioProfileTests(unittest.TestCase):
                 (t_lo, t_hi), (h_lo, h_hi) = envelope(
                     *model({**s, "retrofitted": s["retrofitted"]}, at, t_out, rh_out)
                 )
-                self.assertTrue(t_lo - 0.005 <= float(row["temperature_c"]) <= t_hi + 0.005)
-                self.assertTrue(h_lo - 0.005 <= float(row["humidity_pct"]) <= h_hi + 0.005)
-                self.assertTrue(0.0 <= float(row["humidity_pct"]) <= 100.0)
+                self.assertTrue(t_lo - 0.005 <= float(str(row["temperature_c"])) <= t_hi + 0.005)
+                self.assertTrue(h_lo - 0.005 <= float(str(row["humidity_pct"])) <= h_hi + 0.005)
+                self.assertTrue(0.0 <= float(str(row["humidity_pct"])) <= 100.0)
 
     def test_archetype_and_weather_change_the_profile(self) -> None:
         at = datetime(2025, 1, 1, 18, tzinfo=UTC)
