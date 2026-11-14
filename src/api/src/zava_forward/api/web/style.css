@@ -32,6 +32,10 @@
 .briefing fieldset{min-width:0;border:1px solid var(--line);border-radius:var(--radius);padding:var(--sp-3)}
 .briefing textarea,.aimeta textarea{min-height:9rem}
 .briefing-statements>li{margin-block:var(--sp-4)}
+.briefing-status{min-height:3em;margin-block:var(--sp-2)}
+.briefing-basis{display:grid;grid-template-columns:max-content 1fr;gap:var(--sp-1) var(--sp-3);margin-block:var(--sp-3)}
+.briefing-basis dt{font-weight:600}
+.briefing-basis dd{margin:0}
 .briefing-content{border-left:3px solid var(--brand);padding-left:var(--sp-4)}
 .briefing .review-choices{margin-block:var(--sp-3)}
 .aimeta .field-error:empty:before{content:none}
