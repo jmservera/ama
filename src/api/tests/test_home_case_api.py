@@ -10,7 +10,7 @@ from typing import Any
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
-from building_fixture import fixture, open_store
+from building_fixture import fixture, hold, open_store
 
 from zava_forward.api.server import App, make_handler
 
@@ -126,6 +126,68 @@ class HomeCaseApiTests(unittest.TestCase):
         self.assertIn("Use the case and building screens instead", script)
         self.assertIn("This home's share of shared cost", script)
         self.assertNotIn("JSON.stringify(x)", script)
+
+    def test_payload_keeps_building_and_home_records_in_separate_regions(self) -> None:
+        building = self.store.data["buildings"][0]
+        building["holds"] = [hold()]
+        building["dependencies"] = [
+            {
+                "id": "DEP-1",
+                "label": "Roof access needed before loft works",
+                "status": "Open",
+                "owner": "Synthetic coordinator",
+                "source": "SYN-DEPENDENCY",
+                "case_ids": ["ZF-2"],
+                "package_ids": ["PKG-SHARED"],
+            }
+        ]
+        pam = self.login("pam@example.test")
+        home_keys = {"documents", "quality", "decision", "stage", "cost_allocation", "closed"}
+        building_keys = {"systems", "dependencies", "holds", "works", "costs"}
+        views = {c: self.call(f"/api/cases/{c}/home-case", pam)[1] for c in ("ZF-2", "ZF-3")}
+        for case_id, view in views.items():
+            with self.subTest(case=case_id):
+                self.assertFalse(home_keys & set(view["building"]), "home data in building region")
+                self.assertFalse(building_keys & set(view["home"]), "building data in home region")
+                self.assertEqual(view["building"]["dependencies"][0]["id"], "DEP-1")
+                self.assertEqual(view["building"]["holds"][0]["id"], hold()["id"])
+                self.assertTrue(view["building"]["works"])
+                self.assertEqual(view["building"]["costs"][0]["id"], "COST-1")
+                home_body = json.dumps(view["home"])
+                for token in ("DEP-1", hold()["id"], "WORK-1", "COST-1: ", "12000.00"):
+                    self.assertNotIn(token, home_body)
+                building_body = json.dumps(view["building"])
+                for doc in view["home"]["documents"]:
+                    self.assertNotIn(doc["name"], building_body)
+                for item in view["home"]["quality"]:
+                    self.assertNotIn(item["measure"], building_body)
+                self.assertNotIn("6000.00", building_body)
+        own_body = json.dumps(views["ZF-2"]["home"])
+        sibling_body = json.dumps(views["ZF-3"]["home"])
+        for token in ("SIBLING-EVIDENCE", "Loft insulation"):
+            self.assertIn(token, sibling_body)
+            self.assertNotIn(token, own_body)
+        self.assertEqual(views["ZF-2"]["building"], views["ZF-3"]["building"])
+
+    def test_screen_source_renders_each_record_type_in_one_region_only(self) -> None:
+        script = (WEB / "app.js").read_text()
+        start = script.index("async function homeCaseView")
+        body = script[start : script.index("async function buildingView", start)]
+        home_start = body.index('"aria-labelledby": "hc-home"')
+        building_start = body.index('"aria-labelledby": "hc-building"')
+        versions_start = body.index('"aria-labelledby": "hc-versions"')
+        self.assertLess(home_start, building_start)
+        self.assertLess(building_start, versions_start)
+        home_region = body[home_start:building_start]
+        building_region = body[building_start:versions_start]
+        for token in ("home.documents", "home.quality", "home.decision", "home.cost_allocation"):
+            self.assertIn(token, home_region)
+            self.assertNotIn(token, building_region)
+        for token in ('shared("dependencies"', 'shared("holds"', 'shared("works"', "b.costs"):
+            self.assertIn(token, building_region)
+            self.assertNotIn(token, home_region)
+        self.assertNotIn("b.", home_region.replace("b.costs", ""))
+        self.assertNotRegex(building_region, r"home\.")
 
     def test_non_finance_staff_get_no_cost_amounts_over_http(self) -> None:
         sam = self.login("sam@example.test")
