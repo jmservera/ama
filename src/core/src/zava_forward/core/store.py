@@ -955,15 +955,17 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if reason is not None:
                 r["reason"] = reason
                 r["cites"] = cites or []
+                r["reason_origin"] = origin
             return r
+        origin = ai_tasks.origin_of(rec["source"])
         denied = rec["source"] == "ai" and not self.release_current("priority", rec.get("release"), rec.get("model"))
         current = rec["source"] != "ai" or (self.ai_epoch_current(rec) and not self.continuity_suspension("priority"))
-        view = dict(rec, label=self.REC_LABEL, actionable=current and not denied and not challenge["stale"], release_denied=denied,
+        view = dict(rec, label=self.REC_LABEL, origin=origin, ordering_origin=ai_tasks.DECISION_RULE, actionable=current and not denied and not challenge["stale"], release_denied=denied,
                     **challenge,
                     epoch_current=current, relied_on=current and not denied and not challenge["stale"] and rec["status"] in ("Accepted", "Edited"),
                     items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["items"]],
                     final_items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["final_items"]] if rec.get("final_items") is not None else None,
-                    deterministic=[row(cid) for cid in rec["deterministic"]])
+                    deterministic=[dict(row(cid), origin=ai_tasks.DECISION_RULE) for cid in rec["deterministic"]])
         if self._order_unresolved(rec):
             view.update(order_confirmed=False, actionable=False, relied_on=False, order_note=self.ORDER_NOTE)
         return view
