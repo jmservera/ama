@@ -616,7 +616,7 @@ function aiBox() {
   const number = new Intl.NumberFormat("en-GB");
   const box = h("section", { class: "card ai briefing" }, h("h2", {}, "Today's briefing"));
   const content = h("div", { class: "briefing-content" });
-  const status = h("p", { role: "status", "aria-live": "polite" });
+  const status = h("p", { role: "status", "aria-live": "polite", class: "briefing-status" });
   const toggle = h("select", { id: "wf-mode", name: "assistance-mode", onchange: () => load() },
     h("option", { value: "ai" }, "Allow AI suggestions"),
     h("option", { value: "workflow" }, "Use rules and templates, without AI"));
@@ -642,12 +642,17 @@ function aiBox() {
       h("p", { class: "muted" }, `${number.format(b.case_count)} permitted open ${b.case_count === 1 ? "case" : "cases"}. ${number.format(b.summary_count)} included in this summary (up to 8).`),
       h("p", { class: "ai-label" }, ai ? "AI suggestion, not approved. Not an instruction." : "Summary by rules. Not an instruction."),
       h("p", {}, "Why these cases: the fixed case ranking selects the first permitted open cases, with safety first. This briefing does not change that order. Check the linked records before using the text."),
+      h("dl", { class: "briefing-provenance", "data-briefing-provenance": ai ? "ai" : "rules" },
+        h("dt", {}, "Priority"), h("dd", {}, "Set by fixed rules, not by AI."),
+        h("dt", {}, "Wording"), h("dd", {}, ai ? "Summarised by AI. Check it against the sources." : "Written by rules and templates. No AI was used."),
+        h("dt", {}, "Your control"), h("dd", {}, "Open any case from the list or the sources below. Use rules and templates, without AI, to turn AI off.")),
       h("p", { class: "muted" }, "Prepared at: ", refreshed && !Number.isNaN(refreshed.valueOf())
         ? h("time", { datetime: b.generated_at }, new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "long" }).format(refreshed))
         : "Not provided. Refresh to request current records."),
       h("h3", {}, ai ? "Generated briefing and its sources" : "Rules-derived summary and its sources"),
       h("ol", { class: "briefing-statements" }, (b.statements || [{ text: b.text, citations: [], unresolved: [] }]).map(statement => h("li", {},
         h("p", {}, statement.text),
+        h("p", { class: "muted", "data-statement-basis": "" }, `Why listed: one of the first permitted open cases in the fixed ranking. ${ai ? "Wording by AI." : "Wording by rules."}`),
         h("details", {}, h("summary", {}, `Sources used (${statement.citations.length})`),
           statement.citations.length ? h("ul", {}, statement.citations.map(cite => h("li", {}, source(cite, b.source_case_ids || [])))) : h("p", {}, "No statement references were provided. Check the case record."),
           statement.unresolved?.length ? h("p", { class: "err" }, `These references do not match the record: ${statement.unresolved.join("; ")}. Do not rely on this statement.`) : null)))),
@@ -678,7 +683,10 @@ function aiBox() {
     const cancel = () => { if (briefingBox === box) briefingBox = null; };
     signal.addEventListener("abort", cancel, { once: true });
     content.setAttribute("aria-busy", "true");
-    status.textContent = "Reading case summaries...";
+    box.setAttribute("aria-busy", "true");
+    status.textContent = painted
+      ? "Refreshing today's briefing. The current text stays visible until the new one is ready."
+      : "Loading today's briefing. Your case list is still available.";
     try {
       const b = await api(`/api/briefing${aiMode.workflow ? "?mode=workflow" : ""}`, undefined, signal);
       if (signal.aborted || own !== sequence) return;
@@ -693,6 +701,7 @@ function aiBox() {
       signal.removeEventListener("abort", cancel);
       if (own === sequence) {
         content.removeAttribute("aria-busy");
+        box.removeAttribute("aria-busy");
         content.inert = false;
         toggle.disabled = false;
         loading = false;
