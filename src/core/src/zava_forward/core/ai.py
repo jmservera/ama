@@ -268,6 +268,10 @@ class Ai:
             return dict(kw, **receipt, task=task, release=selected,
                         prompt_version=ai_prompts.version(task) if task in ai_prompts.PROMPTS else None,
                         latency_ms=round((time.perf_counter() - t0) * 1000, 1))
+        from . import ai_registry
+        if not ai_registry.is_registered(task):
+            return out(text=template, source="template", model=None, validated=True, registered=False,
+                       reason="AI feature is not registered; use the manual route")
         if off:
             return out(text=template, source="template", model=None, validated=True, reason="workflow-only mode selected")
         dep = self.strong if strong else self.fast

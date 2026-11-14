@@ -50,6 +50,19 @@ APPROVAL_EVIDENCE = (
 # Recorded separately; none is granted by constructed fixtures or role-agent output.
 AUTHORITY_STATES = ("owner_report_acceptance", "prd_acceptance", "task_control_acceptance", "operational_release")
 
+REQUIRED_FIELDS = ("purpose", "inputs", "prohibited_uses", "limits", "owner")
+LIMITS = (
+    "constructed synthetic exercise only; no live resident, safety or financial processing",
+    "proposal or draft text only; no write, send, approve or rank",
+    "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+    "needs registration, an activation release and the owner's review before any reliance",
+)
+
+
+class UnregisteredFeature(ValueError):
+    """An AI or automated feature that is not in the register, or whose entry is incomplete."""
+
+
 LEGACY = {
     "briefing": dict(route="fast", purpose="Draft a morning briefing for a housing officer", roles=("Retrofit Coordinator", "Resident Liaison Officer"),
                      categories=("stage", "waiting", "safety"), influence="Draft text a person reads; no ranking input",
@@ -107,6 +120,7 @@ def _entry(task_id, kind, version, purpose, roles, categories, influence, affect
         scope="constructed synthetic exercise only; no live resident, safety or financial processing",
         permitted_capability="draft or propose text for a person to review; no write, send, approve or rank",
         intended_use=purpose, prohibited_uses=list(PROHIBITED_PURPOSES), influence=influence,
+        inputs=list(categories), limits=list(LIMITS), owner=reviewer,
         affected=list(affected), roles=list(roles), source_permissions=list(categories),
         accountable_function=reviewer, accountable_individual=UNKNOWN, delegation=UNKNOWN,
         approval_state=UNAPPROVED, activation="denied for live use; constructed offline scaffolding permitted",
@@ -166,8 +180,25 @@ def registry():
                 note="Constructed offline scaffolding. Unknown individuals or delegations cannot authorize activation.")
 
 
+def missing_fields(entry):
+    """Required register fields that are absent or empty."""
+    return [f for f in REQUIRED_FIELDS if not (entry or {}).get(f)]
+
+
 def get(task_id):
     return tasks().get(task_id)
+
+
+def is_registered(task_id):
+    """True only for a known task whose entry carries purpose, inputs, prohibited uses, limits and owner."""
+    entry = get(task_id) if isinstance(task_id, str) else None
+    return entry is not None and not missing_fields(entry)
+
+
+def require_registered(task_id):
+    """Fail closed: raise unless the feature is registered with a complete entry."""
+    if not is_registered(task_id):
+        raise UnregisteredFeature("This AI feature is not registered. Use the manual route.")
 
 
 def demo_activation_honoured(task_id, env=None):
