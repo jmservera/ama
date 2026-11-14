@@ -215,11 +215,11 @@
     "scope": "Applied hypothesis-falsifiability critique: separated decay premise (P1) from consolidation efficacy (P2, P3) and structural treatment fidelity with explicit criteria and verdicts (tab:predictionverdicts); surfaced the per-model coverage split in the abstract, main results and conclusion; added a 30-to-40-cycle factorial follow-up experiment design (sec:futureexperiment). No experimental observations, estimators or registrations changed.",
     "prior_delivery_revision": "finalization_revision",
     "table_field_preservation_checks": 1378,
-    "delivery_sha256": "bb54e60fd5a53fd43d6248bf5a275f8daffdaede5db3a03d1d6ea61ce3d377f7",
+    "delivery_sha256": "6b00bc227ccd56b89c352d1cea57871a85fd55aa6bf000eb75385b0a64a45977",
     "delivery_pages": 66,
     "supplement_start_page": 47,
     "source_sha256": {
-      "main.tex": "759800a5e8ea8e1fb23304fb795ff716db7baa0d1069446403fbd907454780f2",
+      "main.tex": "da3fca6efb64dee05a740dccff744dd96bf864d18d64b55fee897947a3612a4e",
       "references.bib": "9f1591d786ac533d3d0216ec8105acf6f7d0593422247ddaf46860ef7991e76e",
       "anc/experiment-protocol.tex": "80be451cc5522d152f3de259a888d91933fde92c31c3f5599068fb370e224df6",
       "anc/additional-evidence.tex": "9194a87c35bb31dd9242ac96da5c1b005e23af13ecd7f0aa2be187cfd47fd384",

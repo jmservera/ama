@@ -143,7 +143,7 @@ to finish the two incomplete trajectories before the active study deadline
   with zero errors, zero unresolved references, zero overfull boxes and no
   blank pages; the inherited `inputenc` warning remains. Rendered pages
   1, 2, 3, 32, 35, 36, 47, 65 and 66 were visually inspected. Current PDF
-  SHA-256 is `bb54e60fd5a53fd43d6248bf5a275f8daffdaede5db3a03d1d6ea61ce3d377f7`,
+  SHA-256 is `6b00bc227ccd56b89c352d1cea57871a85fd55aa6bf000eb75385b0a64a45977`,
   bound under `falsifiability_revision` in
   [supplement-integration.json](./supplement-integration.json).
 
