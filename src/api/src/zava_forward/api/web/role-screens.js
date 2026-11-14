@@ -42,6 +42,20 @@ function screenTable(label, headings, rows, limit = 50, cell = (value) => screen
         h("tbody", {}, rows.slice(0, limit).map((row) => h("tr", {}, row.map((value, column) => h(rowHeader && column === 0 ? "th" : "td", rowHeader && column === 0 ? { scope: "row" } : {}, cell(value, column))))))))
       : h("p", { class: "empty" }, "No records supplied. This does not establish readiness."));
 }
+// Non-colour state meaning: every state is led by a plain-text prefix so it is not conveyed by colour or position alone.
+const screenCapacityState = (cap) => {
+  const headroom = cap?.headroom;
+  if (typeof headroom !== "number" || !Number.isFinite(headroom)) return "Unknown: headroom not supplied";
+  if (headroom < 0) return `Over-committed: ${headroom}`;
+  return headroom === 0 ? "Fully committed: 0" : `Offered capacity remaining: ${headroom}`;
+};
+const screenExpiryState = (value) => {
+  const due = value ? new Date(value) : null;
+  if (!due || Number.isNaN(due.getTime())) return "Unknown: expiry date not supplied";
+  const days = Math.floor((due.getTime() - Date.now()) / 86400000);
+  if (days < 0) return `Expired: ${value}`;
+  return days <= 30 ? `Expires within 30 days: ${value}` : `In date until: ${value}`;
+};
 // Resident screens name each record in the first column, so it is a row header for table navigation.
 const screenRecordTable = (label, headings, rows, limit = 50) => screenTable(label, headings, rows, limit, undefined, true);
 function registerRoleScreen(screen) {
@@ -677,6 +691,16 @@ function qualityNext(r) {
   if (r.state === "Accepted") return "Handover to be recorded by a person";
   return "None recorded";
 }
+function qualityDefectState(r) {
+  if (r.state === "Returned") return "Open: awaiting a fix by the defect owner";
+  if (r.state === "Fixed, awaiting reinspection") return "Fixed: awaiting independent reinspection";
+  return r.state === "Accepted" || r.state === "Handed over" ? "Closed: reinspection passed" : "Unknown: no defect state recorded";
+}
+function qualityHandoverState(r) {
+  if (r.state === "Handed over" || r.handover) return "Signed off: handover recorded by a person";
+  if (r.state === "Accepted") return "Awaiting sign-off: accepted, handover not yet recorded";
+  return "Not ready: handover sign-off cannot be recorded until the work is accepted";
+}
 registerRoleScreen({
   id: "quality-queue",
   title: "Quality queue",
@@ -702,7 +726,7 @@ registerRoleScreen({
         h("p", {}, `Home scope: ${c.id} only.`)),
       screenPanel("Handover readiness",
         blockers.length ? screenUnknown(blockers.join(" "), "Quality Inspector or defect owner named per measure", "Record the missing evidence, fix or reinspection; handover stays blocked until then")
-          : h("p", { class: "ok", role: "status" }, "Every measure has accepted evidence and no open defect. This screen does not record the handover.")),
+          : h("p", { class: "ok", role: "status" }, "Ready on record. Every measure has accepted evidence and no open defect. This screen does not record the handover.")),
       ...(records.length ? records.map((r) => screenPanel(`${r.measure}: ${r.state}`,
         screenFields([["Checklist", `${screenValue(r.checklist)} ${screenValue(r.checklist_version)}`], ["Evidence version", r.evidence_version],
           ["Evidence source", r.source], ["Submitted by", r.submitted_by], ["Accepted by", r.accepted_by || "Nobody yet"], ["Next action", qualityNext(r)]]),
@@ -710,8 +734,10 @@ registerRoleScreen({
           (r.items || []).map((i) => [i.label, i.evidence, String(i.evidence || "").trim() ? "Evidence noted" : "No evidence"])),
         r.defect ? screenFields([["Defect", r.defect.description], ["Why returned", r.defect.reason], ["Defect owner", r.defect.owner],
           ["Raised by", r.defect.raised_by], ["Fixed by", r.defect.fixed_by || "Not yet fixed"], ["Remediation evidence", r.defect.remediation_evidence || "Not supplied"],
+          ["Defect status", qualityDefectState(r)],
           ["Reinspection", r.state === "Fixed, awaiting reinspection" ? "Awaiting independent reinspection" : r.state === "Accepted" || r.state === "Handed over" ? "Passed" : "Not yet possible"]])
-          : h("p", { class: "empty" }, "No defect recorded."),
+          : h("div", {}, h("p", { class: "empty" }, "No defect recorded."), screenFields([["Defect status", qualityDefectState(r)]])),
+        screenFields([["Handover sign-off state", qualityHandoverState(r)]]),
         r.handover ? screenFields([["Handed over by", r.handover.by], ["Handed over at", screenStamp(r.handover.at)]]) : null))
         : [screenPanel("Quality evidence", h("p", { class: "empty" }, "No quality records supplied. This does not establish readiness."))]),
       screenWithheld(["Resident contact details and access history (use the safe route reference in the case workspace)",
@@ -1204,7 +1230,13 @@ registerRoleScreen({
           [...packages].sort((x, y) => String(x.id).localeCompare(String(y.id))).flatMap((p) => (p.capacity?.length ? p.capacity : [{}]).map((cap) => [
             `${wording(p.id)}: ${wording(p.name)}`, `${wording(p.period_from)} to ${wording(p.period_to)}`,
             `${wording(p.scope)} (v${wording(p.scope_version)})`, `${wording(p.contract_ref)} v${wording(p.contract_version)}`,
-            cap.contractor, cap.offered, cap.committed, cap.in_use, cap.headroom, wording(cap.evidence_status)])))),
+            cap.contractor, cap.offered, cap.committed, cap.in_use, screenCapacityState(cap), wording(cap.evidence_status)])))),
+      screenPanel("Contractor insurance and certification expiry",
+        h("p", {}, "Expiry is shown from supplied dates only. It does not confirm that cover or certification is valid, and nothing is renewed or approved here."),
+        ...packages.flatMap((p) => (p.capacity || []).map((cap) => screenFields([
+          [`${wording(p.id)}: ${screenValue(cap.contractor)} insurance`, screenExpiryState(cap.insurance_expiry)],
+          [`${wording(p.id)}: ${screenValue(cap.contractor)} certification`, screenExpiryState(cap.certification_expiry)]]))),
+        !packages.some((p) => p.capacity?.length) ? h("p", { class: "empty" }, "No contractors supplied. This does not establish that cover is in date.") : null),
       screenPanel("Work orders for this home",
         screenTable("Work-order references for the selected home",
           ["Work order", "Package", "Contractor", "State", "Scope"],
