@@ -8,3 +8,5 @@ ms.date: 2026-11-14
 * Follow-up: wire real co-funding cap and variance data when a source exists; #225 criterion stays unchecked (`Refs #225`, not Closes).
 * [ ] Independent exact-head review
 * [ ] Human accessibility approval
+
+* Correction cycle 1: both independent-direct findings addressed locally; the browser check was run only if recorded below. Independent exact-head review and human approval remain unchecked.

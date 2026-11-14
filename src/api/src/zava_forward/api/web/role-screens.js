@@ -1521,7 +1521,12 @@ function fundingDraftPanel(draft, caseId, downloadEnabled) {
       ` Not submitted; eligibility Not assessed. The file is built when you ask for it and may be newer than input version ${screenValue(draft.input_version)} shown here. Check the version and hash inside the file. A read-only copy for reading, not a reviewed pack.`) : null,
     downloadEnabled && draft.draft_id ? fundingSavedCopyCheck(draft, caseId) : null);
 }
-const fundingEligibility = (g) => g.eligibility?.outcome || "Not assessed";
+const fundingEligibility = (g) => {
+  const e = g.eligibility;
+  if (!e?.outcome) return "Not assessed";
+  const verified = e.verified === true || String(e.status || "").toLowerCase() === "verified";
+  return verified ? `Verified: ${e.outcome}` : `${e.outcome} (recorded, not verified)`;
+};
 function fundingStateRows(grants, drafts, readable) {
   const eligibility = grants.length ? grants.map((g) => `${screenValue(g.id)}: ${fundingEligibility(g)}`).join("; ") : "Unknown";
   const ready = !readable ? "Unknown" : drafts.some((d) => d.reviewed_ready) ? "Ready as recorded by a reviewer" : "Not ready";

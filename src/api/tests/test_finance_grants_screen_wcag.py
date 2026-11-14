@@ -48,6 +48,18 @@ class FinanceGrantsScreenWcagTests(unittest.TestCase):
         with_grant = run(case={**CASE, "grants": grants})["finance-funding"]["tree"]
         self.assertIn("G-1: Not assessed", node_text(with_grant))
 
+    def test_verified_label_needs_a_verified_flag_not_just_a_source(self) -> None:
+        def text_for(elig: dict[str, object]) -> str:
+            grant = {"id": "G-1", "scheme": "S", "state": "Claimable", "eligibility": elig}
+            return node_text(run(case={**CASE, "grants": [grant]})["finance-funding"]["tree"])
+
+        unverified = text_for({"outcome": "Ready to claim", "source": "EV-1"})
+        self.assertIn("Ready to claim (recorded, not verified)", unverified)
+        self.assertNotIn("Verified: Ready to claim", unverified)
+        self.assertIn(
+            "Verified: Ready to claim", text_for({"outcome": "Ready to claim", "verified": True})
+        )
+
     def test_tables_have_captions_and_scoped_headers(self) -> None:
         for screen in ("finance-invoices", "finance-funding"):
             tree = run()[screen]["tree"]
