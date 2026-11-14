@@ -845,7 +845,7 @@ const stateCue = (table, status, detail = status) => `${Object.hasOwn(table, sta
 const choiceCues = { Accepted: "Confirmed", Declined: "Confirmed", Paused: "Confirmed", Withdrawn: "Confirmed", Waiting: "Waiting for resident", "Not recorded": "Waiting for resident" };
 const updateCues = { Outstanding: "Action needed", Proposed: "Action needed" };
 const serviceCues = { Open: "Action needed", "In progress": "Action needed", Resolved: "Action needed", Closed: "Confirmed" };
-const screenJumpNav = (sections) => h("nav", { "aria-label": "Sections of this view", class: "screen-links" },
+const residentJumpNav = (sections) => h("nav", { "aria-label": "Sections of this view", class: "screen-links" },
   sections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading` }, title)));
 const choiceSections = [["choice-measures", "Choice for each measure"], ["choice-stopped", "Paused or withdrawn"], ["choice-update", "Update commitment"], ["choice-service", "Service requests"]];
 const serviceSections = [["service-issues", "Service issues"], ["service-update", "Update commitment"]];
@@ -926,7 +926,7 @@ registerRoleScreen({
     const update = c.resident_update;
     const requests = c.service_requests || [];
     return h("div", {},
-      screenJumpNav(choiceSections),
+      residentJumpNav(choiceSections),
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only view. No message, call or letter is sent and no record changes here. Record supplied answers in the case workspace. Resident-facing screens are designed separately. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
@@ -1874,7 +1874,7 @@ registerRoleScreen({
     const requests = c.service_requests || [];
     const update = c.resident_update;
     return h("div", {},
-      screenJumpNav(serviceSections),
+      residentJumpNav(serviceSections),
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only view. No message, call or letter is sent and no record changes here. Resident-facing screens are designed separately. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
