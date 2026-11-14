@@ -3,7 +3,9 @@
 import json
 import unittest
 from copy import deepcopy
+from pathlib import Path
 
+from aftercare_fixture import CORE_SRC
 from zava_forward.core import aftercare as af
 from zava_forward.core.aftercare import AftercareRegister
 
@@ -282,8 +284,48 @@ class EvaluatorTests(unittest.TestCase):
             "Cannot determine whether the resident caused it",
             "Unknown whether the tenant was at fault",
             "Unknown whether savings of any size were seen",
+            "We do not guarantee or promise savings.",
         ):
             self.assertEqual(af.neutral_text(good), good)
+
+    def test_invisible_fullwidth_hyphen_and_newline_evasions_are_rejected_without_echo(
+        self,
+    ) -> None:
+        for bad, probe in (
+            ("You will save\u200b money.", "save"),
+            ("It was tenant\xad fault.", "tenant"),
+            ("\uff53\uff41\uff56\uff45 \uff4d\uff4f\uff4e\uff45\uff59 now", "\uff53\uff41"),
+            ("Reported mis-use of heating controls.", "mis-use"),
+            ("Logged as resident-error on visit.", "resident-error"),
+            ("You will\nsave money on heating.", "save money"),
+            ("Damp caused\nby the insulation.", "insulation"),
+        ):
+            with self.subTest(bad=bad):
+                with self.assertRaises(ValueError) as ctx:
+                    af.neutral_text(bad)
+                self.assertNotIn(probe, str(ctx.exception))
+
+    def test_second_clause_bypasses_and_additional_paraphrases_are_blocked(self) -> None:
+        for bad in (
+            "Unknown whether it relates to heating\nYour bills will drop.",
+            "Cannot determine: the damp is due to the ventilation.",
+            "Not a promise of savings - you will pay less on bills.",
+            "Unknown? The household failed to ventilate.",
+            "Cannot determine! Bills are guaranteed to fall.",
+            "Resulting from the new insulation.",
+            "Triggered by the resident.",
+            "Because the tenant closed the vents.",
+            "Guaranteed lower heating bills.",
+            "Expect £200 off your bills.",
+        ):
+            with self.subTest(bad=bad):
+                with self.assertRaises(ValueError):
+                    af.neutral_text(bad)
+        multiline = "A person will visit.\nYour bills will drop.\nWe will call you."
+        self.assertEqual(
+            af.strip_unsafe_sentences(multiline),
+            "A person will visit. We will call you.",
+        )
 
 
 class TemplateGuardTests(unittest.TestCase):
@@ -333,6 +375,28 @@ class TemplateGuardTests(unittest.TestCase):
             self.assertEqual((rec["route"], rec["channel"]), ("staff_recorded", channel))
             self.assertEqual(rec["representative_basis"], "Written note")
             self.assertEqual(rec["accessible_route"], af.ACCESSIBLE_ROUTE)
+
+    def test_owner_sensor_and_restored_records_enforce_neutral_text(self) -> None:
+        reg = AftercareRegister()
+        with self.assertRaises(ValueError):
+            raised(reg, owner="Guaranteed Savings Team")
+        with self.assertRaises(ValueError):
+            raised(reg, sensor_context={"guaranteed savings": "normal"})
+        with self.assertRaises(ValueError):
+            reg.record_closure("H1", "handover", "2026-12-10", "Bills Will Fall Lead")
+        cid = raised(reg)
+        bad = reg.to_state()
+        bad["concerns"][cid]["owner"] = "Bills Will Drop Team"
+        with self.assertRaises(ValueError):
+            AftercareRegister.from_state(bad)
+        af.assert_templates_neutral(
+            af.INTAKE_ERROR_MESSAGES,
+            af.EVALUATOR_UNKNOWNS,
+            af.PACK_APPROVAL_LABELS,
+            af.PACK_QUESTIONS,
+            af.SUPPORT_OPTIONS,
+            af.SUPPORT_NOTE,
+        )
 
 
 class ConcernPackTests(unittest.TestCase):
@@ -429,6 +493,30 @@ class IntakeFormTests(unittest.TestCase):
         rep = dict(ok, raised_by="representative")
         self.assertEqual(set(af.intake_errors(rep)), {"representative_basis"})
         self.assertEqual(af.intake_errors(dict(rep, representative_basis="Power of attorney")), {})
+
+    def test_support_adjustments_error_summary_and_legacy_snapshot(self) -> None:
+        assert af.__file__ is not None
+        self.assertTrue(Path(af.__file__).resolve().is_relative_to(CORE_SRC))
+        form = af.intake_form()
+        self.assertEqual(
+            [opt["value"] for opt in form["support_options"]], list(af.SUPPORT_OPTION_CODES)
+        )
+        self.assertEqual(af.neutral_text(form["support_note"]), form["support_note"])
+        ok = dict(raised_by="household", home_ref="H1", kind="other", statement="Too cold")
+        self.assertEqual(af.intake_errors(dict(ok, support_needed="interpreter, large_print")), {})
+        bad_errors = af.intake_errors(dict(ok, support_needed=["unknown_code"]))
+        self.assertEqual(set(bad_errors), {"support_needed"})
+        summary = af.intake_error_summary(af.intake_errors({}))
+        self.assertTrue(summary)
+        self.assertEqual(af.neutral_text(summary), summary)
+        self.assertEqual(af.intake_error_summary({}), "")
+        reg = AftercareRegister()
+        cid = raised(reg, support_needed=["interpreter", "large_print", "interpreter"])
+        self.assertEqual(reg.view(cid)["support_needed"], ["interpreter", "large_print"])
+        legacy = reg.to_state()
+        legacy["concerns"][cid].pop("support_needed")
+        restored = AftercareRegister.from_state(legacy)
+        self.assertEqual(restored.view(cid)["support_needed"], [])
 
 
 class SnapshotTests(unittest.TestCase):

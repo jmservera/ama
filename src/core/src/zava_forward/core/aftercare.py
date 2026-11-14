@@ -8,9 +8,11 @@ only and never dismisses a resident report. It reads or writes no consent, sanct
 """
 
 import re
+import unicodedata
 from collections.abc import Iterable, Mapping
 from copy import deepcopy
 from datetime import date
+from functools import lru_cache
 from typing import Any
 
 Record = dict[str, Any]
@@ -33,6 +35,46 @@ PACK_MANUAL_ROUTE = (
 ACCESSIBLE_ROUTE = (
     "You can also raise this by phone, in person or on paper, and a member of staff will "
     "record it for you. No digital access is needed."
+)
+SUPPORT_OPTIONS = (
+    ("large_print", "Large print"),
+    ("easy_read", "Easy read"),
+    ("interpreter", "Language interpreter"),
+    ("bsl", "British Sign Language (BSL)"),
+    ("callback_window", "Agreed phone call-back time"),
+    ("paper_letter", "Paper letter or form by post"),
+    ("support_person", "A visit where someone you trust can be with you"),
+)
+SUPPORT_OPTION_CODES: tuple[str, ...] = tuple(code for code, _ in SUPPORT_OPTIONS)
+SUPPORT_NOTE = (
+    "Tell the member of staff what would help and they will arrange it. You do not need to "
+    "explain why, and you can bring or send a person to speak for you."
+)
+FORM_TITLE = "Raise a concern about your home"
+FORM_INTRO = (
+    "Tell us if your home feels uncomfortable, your bills are higher than you "
+    "expected, or you are unsure how to use your controls."
+)
+INTAKE_ERROR_MESSAGES = {
+    "raised_by": "Say whether you live in the home or act for the household.",
+    "representative_basis": "Say how you are authorised to act for the household.",
+    "home_ref": "Enter the home reference from your handover pack.",
+    "kind": "Choose what your concern is about.",
+    "statement": "Tell us your concern in your own words.",
+    "support_needed": "Choose from the listed support options, or leave this blank.",
+}
+EVALUATOR_UNKNOWNS = (
+    "Baseline coverage is unknown.",
+    "Households that did not raise a concern may still have one.",
+)
+PACK_APPROVAL_LABELS = {
+    "accept": "Accepted for reference",
+    "reject": "Rejected",
+}
+PACK_QUESTIONS = (
+    "What did the household describe, in their own words?",
+    "What does a visit or conversation with the household show?",
+    "What remedy, if any, does the household need, and who owns it?",
 )
 PROTECTION = (
     "Raising a concern will not change your tenancy, repairs or services. A named person looks "
@@ -58,6 +100,7 @@ BANNED_PHRASES = (
 
 
 _HOUSEHOLD = r"(?:tenant|resident|household|occupant)"
+_RETROFIT = r"(?:retrofit|works|insulation|measures|installation|upgrade|heating|ventilation)"
 PARAPHRASE_PATTERNS = tuple(
     re.compile(p)
     for p in (
@@ -72,34 +115,66 @@ PARAPHRASE_PATTERNS = tuple(
         r"(?:energy )?(?:bills?|costs?)\b",
         r"\b(?:lower|smaller|cheaper) (?:energy )?bills?\b",
         r"\bbills? (?:will|would) be (?:cheaper|lower|smaller)\b",
-        r"\b(?:retrofit|works|insulation|measures|installation|upgrade|heating|ventilation)"
-        r" (?:has |have |had )?made (?:the home|your home|it|things|the house)?\s*"
+        rf"\b{_RETROFIT} (?:has |have |had )?made (?:the home|your home|it|things|the house)?\s*"
         r"(?:colder|warmer|damper|worse|better)\b",
         r"\b(?:saves?|saving) (?:you |the household )?(?:money|energy|costs?)\b",
         r"\byou (?:could|can|may|should) (?:save|pay less)\b",
         r"\b(?:bills?|costs?) (?:should|are expected to|is expected to|are likely to) "
         r"(?:fall|drop|go down|reduce)\b",
         r"\bsavings? (?:is|are) (?:likely|expected|certain|assured)\b",
-        rf"\b(?:due|owing|down) to (?:the )?{_HOUSEHOLD}s?\b",
+        rf"\b(?:due|owing|down) to (?:the )?(?:{_HOUSEHOLD}s?|{_RETROFIT})\b",
         rf"\b{_HOUSEHOLD}s?'?s? (?:own )?fault\b",
+        rf"\b{_HOUSEHOLD}s? (?:has |have |had )?failed to\b",
         rf"\b{_HOUSEHOLD}s? (?:waste|wastes|wasted|overuse|overuses|overused)\b",
         r"\b(?:over-?use|overconsumption)\b",
-        r"\b(?:result|consequence) of the (?:retrofit|works|installation|measures|upgrade)\b",
-        r"\b(?:retrofit|works|insulation|measures|installation|upgrade|heating|ventilation)"
-        r" (?:has |have |had )?(?:led to|leads to|resulted in|results in|caused|causes)\b",
+        rf"\b(?:result|consequence) of (?:the )?(?:new |recent )?{_RETROFIT}\b",
+        (
+            r"\b(?:resulting|arising|stemming) from (?:the )?(?:new |recent )?"
+            rf"(?:{_RETROFIT}|{_HOUSEHOLD}s?)\b"
+        ),
+        (
+            r"\b(?:triggered|provoked|created|produced|induced|driven) by "
+            rf"(?:the )?(?:new |recent )?(?:{_HOUSEHOLD}s?|{_RETROFIT})\b"
+        ),
+        (
+            rf"\b{_RETROFIT} (?:has |have |had )?"
+            r"(?:led to|leads to|resulted in|results in|caused|causes)\b"
+        ),
+        rf"\bbecause (?:of )?(?:the |your |their )?(?:{_HOUSEHOLD}s?|{_RETROFIT})\b",
+        r"\b(?:attributable|attributed) to\b",
+        rf"\b(?:fault|error|mistake|negligence) of (?:the )?{_HOUSEHOLD}s?\b",
+        r"\bblam(?:e|ed|es|ing)\b",
+        r"\bmis[-_ ]?us(?:e|ed|es|ing)\b",
+        r"\bwast(?:e|ed|es|ing) (?:heat|energy|power|money)\b",
+        r"\b(?:guarantees?|guaranteeing|promis(?:e|es|ed|ing)) "
+        r"(?:any |you |that )?(?:energy |bill |cost )?(?:savings?|lower|cheaper|smaller|reduced)\b",
+        r"\b(?:save|saving|pay less) on (?:your |the |their |household )?"
+        r"(?:energy |heating )?(?:bills?|costs?)\b",
+        r"(?:[£$€]\s*\d+|\b\d+\s*(?:pounds?|percent|%))\s+off\s+"
+        r"(?:your |the |their |household )?(?:energy |heating )?(?:bills?|costs?)\b",
+        r"\bwill (?:cost less|be cheaper|cut costs?|reduce costs?)\b",
     )
 )
-# Only a "whether/if" phrase stating uncertainty is exempt; it ends at a comma, conjunction or stop.
+_CLAUSE_STOP = (
+    r"(?=\s(?:and|but|or|while|yet|though|although|because|so|whereas)\s|"
+    r"--|[.!?;,:\n\u2013\u2014()]|$)"
+)
+# Only a single-clause "whether/if" phrase stating uncertainty is exempt; it stops at any break.
 _UNCERTAIN = re.compile(
     r"\b(?:cannot determine|can ?not determine|unknown|not known|no evidence)\s+(?:whether|if)\b"
-    r"[^.;,]*?(?=\s(?:and|but|or)\s|[.;,]|$)"
+    r"[^.!?;,:\n\u2013\u2014()]*?" + _CLAUSE_STOP
 )
 
 
-# A plain statement that no claim or promise is made is a caveat, not a claim.
+# A plain statement that no claim or promise is made is a caveat, never a mask for a second clause.
 _NEGATED_CLAIM = re.compile(
-    r"\b(?:no|not a|never a)\s+(?:claim|promise|guarantee)s?\s+(?:of|about)\b"
-    r"[^.;,]*?(?=\s(?:and|but|or)\s|[.;,]|$)"
+    r"(?:\b(?:no|not a|never a)\s+(?:claim|promise|guarantee|finding|attribution)s?\s+"
+    r"(?:of|about)\b[^.!?;,:\n\u2013\u2014()]*?" + _CLAUSE_STOP + r"|"
+    r"\b(?:(?:do|does|did|can|will)\s+not|cannot|never)\s+"
+    r"(?:(?:show|assign|attribute|prove|find|make)\s+"
+    r"(?:a\s+|any\s+)?(?:cause|fault|blame|claim)(?:,\s*|\s+or\s+))*"
+    r"(?:(?:claim|promise|guarantee)(?:\s+or\s+|\s*,\s*)?)+\s+"
+    r"(?:any\s+)?(?:energy\s+|bill\s+|cost\s+)?savings?\b)"
 )
 
 
@@ -109,23 +184,54 @@ def _text(value: object, label: str) -> str:
     return value.strip()
 
 
+_INVISIBLE = dict.fromkeys([*range(0x200B, 0x2010), 0x2060, 0xFEFF, 0x00AD])
+_NEUTRAL_ERROR = "Generated text must not state causation, blame or a savings promise."
+
+
+def _squash_lines(value: str) -> str:
+    return "\n".join(" ".join(line.split()) for line in re.split(r"[\r\n]+", value))
+
+
+def _variants(text: str) -> list[str]:
+    """Lower-cased forms preserving line breaks while folding width, spacing and hidden chars."""
+    folded = unicodedata.normalize("NFKC", text).lower().replace("\u2019", "'")
+    joined = _squash_lines(folded.translate(_INVISIBLE))
+    spaced = _squash_lines(folded.translate(dict.fromkeys(_INVISIBLE, " ")))
+    dehyphen = _squash_lines(re.sub(r"(?<=\w)[-_]+(?=\w)", " ", joined))
+    out: list[str] = []
+    for candidate in (joined, spaced, dehyphen):
+        if candidate not in out:
+            out.append(candidate)
+    return out
+
+
+@lru_cache(maxsize=512)
+def _check_neutral(text: str) -> None:
+    for lowered in _variants(text):
+        collapsed = " ".join(lowered.split())
+        unhyphen = re.sub(r"(?<=\w)[-_]+(?=\w)", "", collapsed)
+        for phrase in BANNED_PHRASES:
+            if phrase in collapsed or phrase in unhyphen:
+                raise ValueError(_NEUTRAL_ERROR)
+        stripped = _NEGATED_CLAIM.sub(" ; ", _UNCERTAIN.sub(" ; ", lowered))
+        stripped_collapsed = " ".join(stripped.split())
+        for pattern in PARAPHRASE_PATTERNS:
+            if pattern.search(stripped) or pattern.search(stripped_collapsed):
+                raise ValueError(_NEUTRAL_ERROR)
+
+
 def neutral_text(text: str) -> str:
     """Return the text, or raise if it states causation, blame or a savings promise."""
-    lowered = text.lower()
-    for phrase in BANNED_PHRASES:
-        if phrase in lowered:
-            raise ValueError(f"Generated text must not contain '{phrase}'.")
-    folded = _NEGATED_CLAIM.sub(" ", _UNCERTAIN.sub(" ", lowered.replace("\u2019", "'")))
-    for pattern in PARAPHRASE_PATTERNS:
-        if pattern.search(folded):
-            raise ValueError("Generated text must not state causation, blame or a savings promise.")
+    _check_neutral(text)
     return text
 
 
 def strip_unsafe_sentences(text: str) -> str:
-    """Drop every sentence that states causation, blame or a savings promise; keep the rest."""
+    """Drop every sentence or line stating causation, blame or a savings promise; keep the rest."""
     kept = []
-    for sentence in re.split(r"(?<=[.!?])\s+", text.strip()):
+    for sentence in re.split(r"(?<=[.!?])\s+|\s*\n+\s*", text.strip()):
+        if not sentence:
+            continue
         try:
             neutral_text(sentence)
         except ValueError:
@@ -145,7 +251,21 @@ def assert_templates_neutral(*templates: object) -> None:
             assert_templates_neutral(*item)
 
 
-assert_templates_neutral(ACCESSIBLE_ROUTE, PROTECTION, EVALUATOR_NOTICE, PACK_MANUAL_ROUTE)
+assert_templates_neutral(
+    ACCESSIBLE_ROUTE,
+    PROTECTION,
+    EVALUATOR_NOTICE,
+    PACK_MANUAL_ROUTE,
+    PACK_NOT_REVIEWED,
+    PACK_APPROVAL_LABELS,
+    PACK_QUESTIONS,
+    SUPPORT_OPTIONS,
+    SUPPORT_NOTE,
+    FORM_TITLE,
+    FORM_INTRO,
+    INTAKE_ERROR_MESSAGES,
+    EVALUATOR_UNKNOWNS,
+)
 
 
 def _context(value: Mapping[str, str] | None) -> dict[str, str] | None:
@@ -156,7 +276,7 @@ def _context(value: Mapping[str, str] | None) -> dict[str, str] | None:
     for key, item in value.items():
         if not isinstance(key, str) or not isinstance(item, str):
             raise ValueError("Sensor context must be short text.")
-        out[key] = neutral_text(item)
+        out[neutral_text(key)] = neutral_text(item)
     return out
 
 
@@ -164,14 +284,38 @@ def _labelled(pairs: Iterable[tuple[str, str]]) -> list[dict[str, str]]:
     return [{"value": v, "label": neutral_text(label)} for v, label in pairs]
 
 
+def normalize_support_needed(value: object) -> list[str]:
+    """Validate optional communication/accessibility support codes without requiring a reason."""
+    if value is None:
+        return []
+    if isinstance(value, str):
+        parts = [part.strip() for part in value.split(",") if part.strip()]
+        if not parts:
+            return []
+        value = parts
+    if isinstance(value, (bytes, bytearray, Mapping)) or not isinstance(value, Iterable):
+        raise ValueError("Support needed must be chosen from SUPPORT_OPTIONS.")
+    out: list[str] = []
+    for item in value:
+        if not isinstance(item, str):
+            raise ValueError("Support needed must be chosen from SUPPORT_OPTIONS.")
+        code = item.strip()
+        if code not in SUPPORT_OPTION_CODES:
+            raise ValueError("Support needed must be chosen from SUPPORT_OPTIONS.")
+        if code not in out:
+            out.append(code)
+    return out
+
+
 def intake_form() -> Record:
     """Plain-language household route definition for any screen or paper form to follow."""
     form: Record = {
-        "title": "Raise a concern about your home",
-        "intro": "Tell us if your home feels uncomfortable, your bills are higher than you "
-        "expected, or you are unsure how to use your controls.",
-        "accessible_route": ACCESSIBLE_ROUTE,
-        "protection": PROTECTION,
+        "title": neutral_text(FORM_TITLE),
+        "intro": neutral_text(FORM_INTRO),
+        "accessible_route": neutral_text(ACCESSIBLE_ROUTE),
+        "support_note": neutral_text(SUPPORT_NOTE),
+        "support_options": _labelled(SUPPORT_OPTIONS),
+        "protection": neutral_text(PROTECTION),
         "fields": [
             {
                 "name": "raised_by",
@@ -209,6 +353,12 @@ def intake_form() -> Record:
                 ),
             },
             {"name": "statement", "label": "Tell us in your own words", "required": True},
+            {
+                "name": "support_needed",
+                "label": "Would any of these help us communicate with you?",
+                "required": False,
+                "options": _labelled(SUPPORT_OPTIONS),
+            },
         ],
         "non_digital_channels": _labelled(
             [
@@ -221,7 +371,6 @@ def intake_form() -> Record:
     }
     for field in form["fields"]:
         neutral_text(field["label"])
-    neutral_text(form["intro"])
     return form
 
 
@@ -230,16 +379,31 @@ def intake_errors(values: Mapping[str, object]) -> dict[str, str]:
     errors: dict[str, str] = {}
     raised_by = values.get("raised_by")
     if raised_by not in RAISED_BY:
-        errors["raised_by"] = "Say whether you live in the home or act for the household."
+        errors["raised_by"] = neutral_text(INTAKE_ERROR_MESSAGES["raised_by"])
     if raised_by == "representative" and not _present(values.get("representative_basis")):
-        errors["representative_basis"] = "Say how you are authorised to act for the household."
+        errors["representative_basis"] = neutral_text(INTAKE_ERROR_MESSAGES["representative_basis"])
     if not _present(values.get("home_ref")):
-        errors["home_ref"] = "Enter the home reference from your handover pack."
+        errors["home_ref"] = neutral_text(INTAKE_ERROR_MESSAGES["home_ref"])
     if values.get("kind") not in CONCERN_KINDS:
-        errors["kind"] = "Choose what your concern is about."
+        errors["kind"] = neutral_text(INTAKE_ERROR_MESSAGES["kind"])
     if not _present(values.get("statement")):
-        errors["statement"] = "Tell us your concern in your own words."
+        errors["statement"] = neutral_text(INTAKE_ERROR_MESSAGES["statement"])
+    try:
+        normalize_support_needed(values.get("support_needed"))
+    except ValueError:
+        errors["support_needed"] = neutral_text(INTAKE_ERROR_MESSAGES["support_needed"])
     return errors
+
+
+def intake_error_summary(errors: Mapping[str, str]) -> str:
+    """One plain sentence that leads an error list, so no one has to scan a form to find it."""
+    if not errors:
+        return ""
+    count = len(errors)
+    return neutral_text(
+        f"There {'is 1 thing' if count == 1 else f'are {count} things'} to fix before we can "
+        "record this. If it is easier, tell a member of staff and they will do it with you."
+    )
 
 
 def _present(value: object) -> bool:
@@ -280,6 +444,13 @@ class AftercareRegister:
         reg.concerns = dict(sorted(stored.items(), key=lambda item: _concern_number(item[0])))
         for n, (cid, rec) in enumerate(reg.concerns.items(), start=1):
             outcome = rec.get("outcome")
+            has_support = "support_needed" in rec
+            support = rec.get("support_needed", [])
+            valid_support = (
+                isinstance(support, list)
+                and all(isinstance(s, str) and s in SUPPORT_OPTION_CODES for s in support)
+                and len(set(support)) == len(support)
+            )
             if (
                 cid != f"AC-{n:03d}"
                 or rec.get("id") != cid
@@ -289,6 +460,7 @@ class AftercareRegister:
                 or rec.get("investigation") not in INVESTIGATION
                 or rec.get("dismissed_by_sensor") is not False
                 or not _present(rec.get("owner"))
+                or not valid_support
                 or rec.get("remedy", {}).get("status") not in REMEDY_STATUSES
                 or (rec["investigation"] == "outcome_recorded") != (outcome is not None)
                 or (outcome is not None and outcome.get("basis") not in HUMAN_BASES)
@@ -298,8 +470,17 @@ class AftercareRegister:
                 )
             ):
                 raise ValueError(f"Snapshot concern {cid} is not valid.")
-        if any(i.get("kind") not in CLOSURE_KINDS for i in reg.closures):
-            raise ValueError("Snapshot closure is not valid.")
+            neutral_text(rec["owner"])
+            if rec.get("sensor_context") is not None:
+                if not isinstance(rec["sensor_context"], Mapping):
+                    raise ValueError(f"Snapshot concern {cid} is not valid.")
+                _context(rec["sensor_context"])
+            if not has_support:
+                rec["support_needed"] = []
+        for closure in reg.closures:
+            if closure.get("kind") not in CLOSURE_KINDS or not _present(closure.get("owner")):
+                raise ValueError("Snapshot closure is not valid.")
+            neutral_text(closure["owner"])
         if any(p.get("concern_id") not in reg.concerns for p in reg.packs.values()):
             raise ValueError("Snapshot pack has no concern.")
         return reg
@@ -326,6 +507,7 @@ class AftercareRegister:
         recorded_by: str | None = None,
         channel: str | None = None,
         sensor_context: Mapping[str, str] | None = None,
+        support_needed: object = None,
     ) -> Record:
         if route not in ROUTES:
             raise ValueError("Route must be digital or staff_recorded.")
@@ -333,6 +515,7 @@ class AftercareRegister:
             raise ValueError("Raised by must be household or representative.")
         if kind not in CONCERN_KINDS:
             raise ValueError("Concern kind must be discomfort, higher_bill, control_use or other.")
+        support = normalize_support_needed(support_needed)
         extra: Record = {}
         if route == "staff_recorded":
             if channel not in NON_DIGITAL_CHANNELS:
@@ -352,9 +535,10 @@ class AftercareRegister:
             "home_ref": _text(home_ref, "Home reference"),
             "kind": kind,
             "statement": _text(statement, "Concern statement"),
-            "owner": _text(owner, "Human owner"),
+            "owner": neutral_text(_text(owner, "Human owner")),
             "next_update": date.fromisoformat(next_update).isoformat(),
             "accessible_route": ACCESSIBLE_ROUTE,
+            "support_needed": support,
             "investigation": "received",
             "outcome": None,
             "remedy": {"status": "not_assessed", "evidence": None},
@@ -430,7 +614,7 @@ class AftercareRegister:
             "home_ref": _text(home_ref, "Home reference"),
             "kind": kind,
             "closed_on": date.fromisoformat(closed_on).isoformat(),
-            "owner": _text(owner, "Closure owner"),
+            "owner": neutral_text(_text(owner, "Closure owner")),
         }
         self.closures.append(item)
         return dict(item)
@@ -487,9 +671,9 @@ class AftercareRegister:
             if c["id"] in unresolved_ids
             and c["home_ref"] in closed["handover"] | closed["financial"]
         )
-        unknowns = ["Households that did not raise a concern may still have one."]
+        unknowns = [neutral_text(EVALUATOR_UNKNOWNS[1])]
         if baseline is None:
-            unknowns.insert(0, "Baseline coverage is unknown.")
+            unknowns.insert(0, neutral_text(EVALUATOR_UNKNOWNS[0]))
         return {
             "homes_handed_over": total,
             "homes_with_baseline": _fraction(len(baseline), total)
@@ -522,11 +706,7 @@ class AftercareRegister:
             f"Investigation: {rec['investigation']}.",
             f"Remedy status: {rec['remedy']['status']}.",
         ]
-        questions = [
-            "What did the household describe, in their own words?",
-            "What does a visit or conversation with the household show?",
-            "What remedy, if any, does the household need, and who owns it?",
-        ]
+        questions = list(PACK_QUESTIONS)
         summary = None if ai_summary is None else neutral_text(_text(ai_summary, "AI summary"))
         pack: Record = {
             "id": f"PK-{len(self.packs) + 1:03d}",
@@ -537,11 +717,11 @@ class AftercareRegister:
             "questions_for_investigator": [neutral_text(q) for q in questions],
             "ai_summary": summary,
             "source": "ai" if summary else "template",
-            "approval": PACK_NOT_REVIEWED,
+            "approval": neutral_text(PACK_NOT_REVIEWED),
             "approved": False,
             "reviewer_function": rec["owner"],
             "review": None,
-            "manual_route": PACK_MANUAL_ROUTE,
+            "manual_route": neutral_text(PACK_MANUAL_ROUTE),
             "notice": neutral_text(EVALUATOR_NOTICE),
         }
         self.packs[pack["id"]] = pack
@@ -562,6 +742,6 @@ class AftercareRegister:
             "action": action,
             "reason": _text(reason, "Reason"),
         }
-        pack["approval"] = "Accepted for reference" if action == "accept" else "Rejected"
+        pack["approval"] = neutral_text(PACK_APPROVAL_LABELS[action])
         pack["approved"] = action == "accept"
         return deepcopy(pack)

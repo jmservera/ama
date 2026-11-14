@@ -16,9 +16,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 from unittest.mock import patch
 
+from aftercare_fixture import CORE_SRC
 from dataset import DATA
 from sqlguard import require_task_owned_loopback
+from zava_forward.core import aftercare as af
 from zava_forward.core import aftercare_intake as ai
+from zava_forward.core import aftercare_store as ast
 from zava_forward.core.aftercare_store import DocumentStateStore, UnconfirmedWriteError
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
@@ -386,6 +389,55 @@ class MssqlAdapter(SqliteAdapter):
         store = MssqlStore(str(self.path), state_dir=self.tmp.name)
         self.addCleanup(store.db.close)
         return store
+
+
+class StoreNeutralityTests(unittest.TestCase):
+    def test_store_messages_are_neutral_and_digital_concern_round_trips_in_json_store(
+        self,
+    ) -> None:
+        assert ast.__file__ is not None
+        self.assertTrue(Path(ast.__file__).resolve().is_relative_to(CORE_SRC))
+        af.assert_templates_neutral(
+            ast.UNCONFIRMED, ast.STORE_CONFLICT_MESSAGE, ast.STORE_PERSISTENCE_MESSAGE
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "seed.json"
+            path.write_text(json.dumps(copy.deepcopy(DATA)))
+            svc = ai.AftercareService(
+                DocumentStateStore(Store(str(path))), homes=HOMES, now=lambda: NOW
+            )
+            digital, replay = svc.submit_household_concern(
+                {
+                    "request_id": "req-store-hh-1",
+                    "raised_by": "household",
+                    "home_ref": HOMES[0],
+                    "kind": "discomfort",
+                    "statement": "Cold bedroom after work finished.",
+                    "support_needed": ["large_print"],
+                }
+            )
+            self.assertFalse(replay)
+            assisted, _ = svc.record_concern(
+                LIAISON, {**body("req-store-st-1"), "channel": "paper"}
+            )
+            reopened = ai.AftercareService(
+                DocumentStateStore(Store(str(path))), homes=HOMES, now=lambda: NOW
+            )
+            replayed, is_replay = reopened.submit_household_concern(
+                {
+                    "request_id": "req-store-hh-1",
+                    "raised_by": "household",
+                    "home_ref": HOMES[0],
+                    "kind": "discomfort",
+                    "statement": "Cold bedroom after work finished.",
+                    "support_needed": ["large_print"],
+                }
+            )
+            self.assertTrue(is_replay)
+            self.assertEqual(replayed["receipt_id"], digital["receipt_id"])
+            shown = reopened.household_receipt(str(digital["concern_id"]), "req-store-hh-1")
+            self.assertEqual(shown["support_needed"], ["large_print"])
+            self.assertEqual(assisted["channel"], "paper")
 
 
 if __name__ == "__main__":
