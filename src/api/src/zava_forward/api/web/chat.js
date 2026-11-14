@@ -134,6 +134,8 @@ const employeeChat = (() => {
     ui.beforeInput.append(ui.node("small",
       "Do not enter personal or sensitive resident information. Chat cannot approve or change records.",
       { id: "employee-chat-entry-warning", class: "chat-widget-meta" }));
+    const plainMode = h("input", { type: "checkbox", id: "employee-chat-plain-mode" });
+    ui.beforeInput.append(h("label", { class: "chat-widget-meta", for: "employee-chat-plain-mode" }, plainMode, " Plain-language answers"));
     input.addEventListener("input", () => {
       if (input.value) {
         input.dataset.caseDirty = "true";
@@ -164,13 +166,13 @@ const employeeChat = (() => {
             if (!current()) return;
             tid = thread.id;
           }
-          answer = await api(`/api/chat/threads/${encodeURIComponent(tid)}/ask`, { content: question, skill }, signal);
+          answer = await api(`/api/chat/threads/${encodeURIComponent(tid)}/ask`, { content: question, skill, plain_language: plainMode.checked }, signal);
         } else {
-          answer = await api("/api/chat/unstored-ask", { content: question, skill, case_id: caseId }, signal);
+          answer = await api("/api/chat/unstored-ask", { content: question, skill, case_id: caseId, plain_language: plainMode.checked }, signal);
         }
         if (!current()) return;
         const view = attribution(answer);
-        ui.message("assistant", answer.reply, {
+        ui.message("assistant", answer.plain_summary ? `Plain-language summary: ${answer.plain_summary}\n\n${answer.reply}` : answer.reply, {
           label: view.label,
           outcome: outcomeNames[answer.kind] || "unknown",
           detail: `Skill: ${answer.skill}. ${usageNote(answer.consumption)}${view.detail}`,
@@ -291,9 +293,14 @@ function regulatoryGuidance(role) {
 
 function regulatoryPlainMode(root, id) {
   const input = h("input", { type: "checkbox", id, checked: true });
+  const state = h("span", { class: "regulatory-mode-state", "aria-live": "polite", "aria-atomic": "true" }, "Plain-language explanations are shown.");
   root.classList.add("regulatory", "plain-language");
-  input.addEventListener("change", () => root.classList.toggle("plain-language", input.checked));
-  return h("label", { class: "regulatory-mode", for: id }, input, " Plain-language explanations");
+  input.addEventListener("change", () => {
+    root.classList.toggle("plain-language", input.checked);
+    state.textContent = input.checked ? "Plain-language explanations are shown." : "Plain-language explanations are hidden.";
+  });
+  return h("div", { class: "regulatory-mode" },
+    h("label", { for: id }, input, " Plain-language explanations"), state);
 }
 
 const regulatoryStates = new Set(["breach risk", "attention", "unknown", "clear", "not applicable", "answer", "refused", "conflict"]);
@@ -366,9 +373,9 @@ function regulatoryAlertsPanel(caseId) {
           h("dt", {}, "Decision owner"), h("dd", {}, `${alert.decision_owner || "Unassigned"}; route: ${alert.escalation_role || "unknown"}`),
           h("dt", {}, "Clock"), h("dd", {}, `${alert.clock || "No approved clock held"}; due: ${alert.due_at || "unknown, not calculated here"}`),
           h("dt", {}, "Check recorded at"), h("dd", {}, `${alert.at || "unknown"}; step: ${alert.step || "unknown"}; card: ${alert.card_id}@${alert.card_version}`),
-          h("dt", {}, "Current control"), h("dd", {}, alert.active_control ? "Active bounded control" : "Not active or source uncertain; retained risk still needs human review"),
+          h("dt", {}, "Current control"), h("dd", {}, alert.active_control ? "Active: a limited, recorded check" : "Not active or source uncertain; retained risk still needs human review"),
           h("dt", {}, "Latest check"), h("dd", {}, `${alert.latest_result || "unknown"} at ${alert.latest_evaluated_at || "unknown"}`)),
-        h("p", {}, alert.usage ? "Model calls per check and alert: 0. Inference is disabled for every role. Service cost: Unknown; price and billing allocation are not held." : "Historical model usage was not recorded. Service cost: Unknown."),
+        h("p", {}, alert.usage ? "Model calls per check and alert: 0. No AI model is used for any role. Service cost: Unknown; price and billing allocation are not held." : "Historical model usage was not recorded. Service cost: Unknown."),
         h("h4", {}, "Source and status"), regulatorySources(alert.citations),
         h("p", {}, `Owner acknowledgement: ${alert.requires_acknowledgement ? "required" : "not outstanding"}. Owner outcome: ${alert.requires_outcome ? "required" : "not outstanding"}. This panel cannot acknowledge, decide compliance or restart stopped retrofit work.`))));
       status.className = data.coverage_status && data.coverage_status !== "unknown" ? "" : "regulatory-state state-unknown";
@@ -410,7 +417,7 @@ function regulatoryChatPanel(caseId) {
     const n = new Intl.NumberFormat();
     const day = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeZone: "UTC" })
       .format(new Date(`${usage.period}T00:00:00Z`));
-    usageStatus.textContent = `Your current role: ${usage.role}. Recorded usage for ${day} (UTC): ${n.format(usage.recorded_turns)} turns; ${n.format(usage.outcomes.answer)} answers, ${n.format(usage.outcomes.refused)} refusals, ${n.format(usage.outcomes.conflict)} conflicts. ${usage.coverage === "bounded_partial" ? "Partial audit window." : "Audit records only."} This is not an exact turn total. Model-call limit per role and UTC day: 0. Service cost: Unknown; accepted-check counts, prices, billing allocation and review effort are not held.`;
+    usageStatus.textContent = `Your current role: ${usage.role}. Recorded usage for ${day} (UTC): ${n.format(usage.recorded_turns)} turns; ${n.format(usage.outcomes.answer)} answers, ${n.format(usage.outcomes.refused)} refusals, ${n.format(usage.outcomes.conflict)} conflicts. ${usage.coverage === "bounded_partial" ? "Counts cover part of the audit period only." : "Counts come from audit records only."} This is not an exact turn total. Model-call limit per role and UTC day: 0. Service cost: Unknown; accepted-check counts, prices, billing allocation and review effort are not held.`;
   };
   const refreshUsage = async () => {
     try { showUsage(await api("/api/chat/regulatory/usage")); }
@@ -421,13 +428,15 @@ function regulatoryChatPanel(caseId) {
   const input = h("textarea", { id: "regulatory-question", name: "regulatory-question", autocomplete: "off", maxlength: "1000", rows: "3", "aria-describedby": "regulatory-privacy" });
   const button = h("button", { type: "submit" }, "Look up cited sources");
   let tid = null;
+  const plainMode = regulatoryPlainMode(root, "chat-plain-mode");
   const show = (answer, thread) => {
     const sections = answer.sections;
     const item = h("li", { class: "regulatory-turn" },
       h("h3", { class: regulatoryStateClass(answer.kind) }, `Lookup status: ${answer.kind}`),
       h("p", { class: "plain-explanation" }, lookupMeanings[answer.kind] || lookupMeanings.refused),
+      answer.plain_summary ? h("p", { class: "regulatory-plain-summary" }, h("strong", {}, "Plain-language summary: "), answer.plain_summary) :null,
       h("p", {}, answer.label || "synthetic-demo: not legal advice or approval"),
-      h("p", {}, answer.usage ? "Model calls for this question: 0. Inference is disabled. Service cost: Unknown, not zero." : "Historical model usage was not recorded. Service cost: Unknown."));
+      h("p", {}, answer.usage ? "Model calls for this question: 0. No AI model is used. Service cost: Unknown, not zero." : "Historical model usage was not recorded. Service cost: Unknown."));
     if (sections) {
       item.append(h("h4", {}, "What the sources say"),
         h("p", { class: "plain-explanation" }, "These are exact excerpts, not a decision about which duty applies. Check the source status and dates."),
@@ -472,7 +481,7 @@ function regulatoryChatPanel(caseId) {
   };
   root.append(h("p", {}, "synthetic-demo only. Exact source excerpts and recorded facts, not legal interpretation. Ask about hazard sources or automated decisions. Safety routes and deterministic alerts remain independent."),
     privacy, usageStatus,
-    regulatoryPlainMode(root, "chat-plain-mode"),
+    plainMode,
     h("p", { class: "plain-explanation" }, "Use short questions to find sources. Missing, conflicting, stale or future sources are not proof of a duty. For lease, grant or contract terms, obtain the actual document and ask the named human owner."),
     regulatoryGuidance(me.user.role),
     liveLog, h("form", { onsubmit: async (event) => {
@@ -485,7 +494,7 @@ function regulatoryChatPanel(caseId) {
       status.textContent = "Looking up cited sources. Human safety routes remain available.";
       try {
         if (!tid) tid = (await api("/api/chat/regulatory/threads", { case_id: caseId })).id;
-        const answer = await api(`/api/chat/regulatory/threads/${encodeURIComponent(tid)}/ask`, { content: question });
+        const answer = await api(`/api/chat/regulatory/threads/${encodeURIComponent(tid)}/ask`, { content: question, plain_language: plainMode.querySelector("input").checked === true });
         log.append(h("li", {}, h("strong", {}, "You"), " ", question));
         show(answer, tid);
         status.textContent = `${answer.kind}: synthetic-demo turn stored with its sources.${answer.escalation ? " Conflict sent to the exercise owner for human review." : ""}`;

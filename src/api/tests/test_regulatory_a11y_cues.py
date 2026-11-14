@@ -80,6 +80,27 @@ class RegulatoryCueTests(unittest.TestCase):
                 self.assertTrue(text.isascii())
                 self.assertNotIn("\u2014", text)
 
+    def test_plain_mode_change_is_announced_with_visible_text(self) -> None:
+        body = JS[JS.index("function regulatoryPlainMode") : JS.index("const regulatoryStates")]
+        self.assertIn('class: "regulatory-mode-state"', body)
+        self.assertNotIn("role", body)
+        self.assertIn('"aria-live": "polite", "aria-atomic": "true"', body)
+        self.assertNotIn("status", body)
+        self.assertIn('regulatoryPlainMode(root, "alerts-plain-mode")', JS)
+        self.assertIn('const plainMode = regulatoryPlainMode(root, "chat-plain-mode")', JS)
+        self.assertIn("Plain-language explanations are shown.", body)
+        self.assertIn("Plain-language explanations are hidden.", body)
+        self.assertIn("state.textContent = input.checked", body)
+
+    def test_always_visible_status_copy_avoids_technical_terms(self) -> None:
+        technical = re.compile(r"\b(inference|bounded|audit window)\b", re.I)
+        shown = re.findall(r'"([^"\n]*(?:model|control|audit)[^"\n]*)"', JS)
+        self.assertGreater(len(shown), 3)
+        for text in shown:
+            with self.subTest(text=text[:50]):
+                self.assertIsNone(technical.search(text))
+        self.assertIn("No AI model is used", JS)
+
     def test_no_new_invalid_field_site_in_chat_script(self) -> None:
         self.assertNotIn("aria-invalid", JS)
 
