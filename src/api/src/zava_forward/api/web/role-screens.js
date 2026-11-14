@@ -15,11 +15,14 @@ const screenStamp = (value) => {
 const screenFields = (rows) => h("dl", {}, rows.flatMap(([label, value]) => [
   h("dt", {}, label), h("dd", {}, screenValue(value))
 ]));
-// A leading { anchor } child makes the panel a named jump target; its heading takes focus programmatically only.
+// A leading { anchor } child makes the panel a named jump target; listed titles get one too. Headings take focus programmatically only.
+const screenPanelIds = { "Technical readiness": "technical-readiness", "Source facts": "technical-source-facts", "Design version": "technical-design",
+  "Separate sign-offs": "technical-signoffs", "Returns and routing": "technical-returns", "Missing references": "technical-missing" };
 const screenPanel = (title, ...children) => {
-  const anchor = children[0]?.anchor ? children.shift().anchor : null;
-  return anchor
-    ? h("section", { class: "card screen-record", id: anchor }, h("h2", { id: `${anchor}-heading`, tabindex: -1 }, title), ...children)
+  const explicit = children[0]?.anchor ? children.shift().anchor : null;
+  const id = explicit || (Object.hasOwn(screenPanelIds, title) ? screenPanelIds[title] : null);
+  return id
+    ? h("section", { class: "card screen-record", id, "aria-labelledby": `${id}-heading` }, h("h2", { id: `${id}-heading`, tabindex: -1 }, title), ...children)
     : h("section", { class: "card screen-record" }, h("h2", {}, title), ...children);
 };
 const screenUnknown = (reason, owner, action) => h("div", { class: "blocked" },
@@ -690,6 +693,16 @@ function signoffState(s) {
   }
   return { text: s.status === "Returned" ? "Returned" : s.status === "Needs reassessment" ? "Needs reassessment" : screenValue(s.status), ok: false };
 }
+// WCAG 1.4.1: every sign-off state starts with a text prefix so colour is never the only cue.
+const evidencePrefixes = { "Signed off": "Verified", "Returned": "Action needed", "Needs reassessment": "Action needed", "Not given": "Pending review" };
+function evidenceLabel(x) {
+  const key = x.s?.status ?? "Not given";
+  if (key === "Signed off" && !x.ok) return `Action needed: ${x.text}`;
+  return `${Object.hasOwn(evidencePrefixes, key) ? evidencePrefixes[key] : "Pending review"}: ${x.text}`;
+}
+const technicalSections = [["technical-readiness", "Technical readiness"], ["technical-source-facts", "Source facts"],
+  ["technical-design", "Design version"], ["technical-signoffs", "Separate sign-offs"], ["technical-returns", "Returns and routing"],
+  ["technical-missing", "Missing references"]];
 registerRoleScreen({
   id: "technical-queue",
   title: "Technical queue",
@@ -707,6 +720,8 @@ registerRoleScreen({
     for (const x of states) if (t && !x.ok && !(missing || []).some((m) => m.item.startsWith(x.label))) reasons.push(`${x.label}: ${x.text}.`);
     const returned = states.filter((x) => x.s?.status === "Returned" || x.s?.status === "Needs reassessment");
     return h("div", {},
+      h("nav", { "aria-label": "Sections on this screen", class: "screen-links" },
+        h("ul", {}, technicalSections.map(([id, label]) => h("li", {}, h("a", { href: `#${id}` }, label))))),
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only reader view. It gives no sign-off and changes no record. Sign-offs are named human professional decisions; role membership alone does not attest competence. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
@@ -726,7 +741,7 @@ registerRoleScreen({
           : screenUnknown("No design is recorded for this home.", "Retrofit Coordinator", "Record the design")),
       screenPanel("Separate sign-offs",
         screenTable("Sign-off validity after design changes", ["Sign-off", "Competent role", "State", "By", "Note or reason"],
-          states.map((x) => [x.label, x.role, x.text, x.s?.by || "Nobody yet", x.s?.reason || x.s?.note]))),
+          states.map((x) => [x.label, x.role, evidenceLabel(x), x.s?.by || "Nobody yet", x.s?.reason || x.s?.note]))),
       screenPanel("Returns and routing",
         returned.length ? screenTable("Returned or reassessment sign-offs", ["Sign-off", "Route to", "Why", "Returned by"],
           returned.map((x) => {
@@ -800,7 +815,7 @@ registerRoleScreen({
         screenFields([["Checklist", `${screenValue(r.checklist)} ${screenValue(r.checklist_version)}`], ["Evidence version", r.evidence_version],
           ["Evidence source", r.source], ["Submitted by", r.submitted_by], ["Accepted by", r.accepted_by || "Nobody yet"], ["Next action", qualityNext(r)]]),
         screenTable(`Per-check evidence for ${r.measure}`, ["Check", "Evidence seen", "State"],
-          (r.items || []).map((i) => [i.label, i.evidence, String(i.evidence || "").trim() ? "Evidence noted" : "No evidence"])),
+          (r.items || []).map((i) => [i.label, i.evidence, String(i.evidence || "").trim() ? `${r.state === "Accepted" || r.state === "Handed over" ? "Verified" : "Pending review"}: Evidence noted` : "Action needed: No evidence"])),
         r.defect ? screenFields([["Defect", r.defect.description], ["Why returned", r.defect.reason], ["Defect owner", r.defect.owner],
           ["Raised by", r.defect.raised_by], ["Fixed by", r.defect.fixed_by || "Not yet fixed"], ["Remediation evidence", r.defect.remediation_evidence || "Not supplied"],
           ["Defect status", qualityDefectState(r)],
