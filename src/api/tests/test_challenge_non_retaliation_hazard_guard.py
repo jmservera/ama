@@ -46,6 +46,20 @@ class NonRetaliationGuard(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "Nothing was saved"):
                     challenges.assert_no_retaliation(before, case)
 
+    def test_assurance_is_stamped_only_when_nothing_protected_changed(self) -> None:
+        case = self.case()
+        before = challenges.protected_snapshot(case)
+        record: dict[str, Any] = {}
+        challenges.stamp_assurance(before, case, record)
+        self.assertIs(record["assurance"]["no_retaliation"], True)
+        self.assertIs(record["assurance"]["inferred_refusal"], False)
+        self.assertIs(record["assurance"]["hazard_response_delayed"], False)
+        case["hazards"][0]["response_due_at"] = "2026-03-01T10:00:00Z"
+        late: dict[str, Any] = {}
+        with self.assertRaises(ValueError):
+            challenges.stamp_assurance(before, case, late)
+        self.assertNotIn("assurance", late)
+
     def test_unrelated_changes_pass(self) -> None:
         case = self.case()
         before = challenges.protected_snapshot(case)
@@ -122,6 +136,19 @@ class NonRetaliationApi(test_resident_api.ResidentApi):
         ]
         self.assertEqual(statuses, ["Accepted"])
 
+    def test_raised_challenge_carries_explicit_assurance(self) -> None:
+        self.seed_hazard_and_consent()
+        hazards = copy.deepcopy(self.store.cases["ZF-1"]["hazards"])
+        code, detail = self.call("/api/cases/ZF-1/resident", "sam", self.challenge_payload())
+        self.assertEqual(code, 200, detail)
+        self.assertEqual(self.store.cases["ZF-1"]["hazards"], hazards)
+        record = self.store.cases["ZF-1"]["affected_challenges"][0]
+        flags = ("no_retaliation", "inferred_refusal", "hazard_response_delayed")
+        self.assertEqual(
+            {k: record["assurance"][k] for k in flags},
+            dict(no_retaliation=True, inferred_refusal=False, hazard_response_delayed=False),
+        )
+
     def test_retaliating_writer_is_refused_and_nothing_saved(self) -> None:
         self.seed_hazard_and_consent()
         payload = self.challenge_payload()
@@ -147,7 +174,10 @@ class NonRetaliationApi(test_resident_api.ResidentApi):
         for actor in ("rex", "bea", "kim"):
             denied = self.call("/api/cases/ZF-1", actor)[1]
             self.assertNotIn("challenge_guarantees", denied)
+        self.assertEqual(detail["challenge_assurance"], challenges.assurance())
+        self.assertNotIn("challenge_assurance", self.call("/api/cases/ZF-1", "rex")[1])
         script = self.call("/panels.js")[1]
+        self.assertIn('id: "challenge-assurance"', script)
         self.assertIn("challenge_guarantees", script)
         self.assertIn('id: "challenge-guarantees"', script)
         self.assertNotIn("aria-invalid", script.split("challenge-guarantees")[1][:200])

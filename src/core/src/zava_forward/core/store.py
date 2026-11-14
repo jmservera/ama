@@ -474,12 +474,14 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 from .resident_decisions import challenge_catalog
                 d["challenge_targets"] = challenge_catalog(self, case_id)
                 d["challenge_guarantees"] = list(challenges.GUARANTEES)
+                d["challenge_assurance"] = challenges.assurance()
             elif user is not None:
                 for field in INTAKE_FIELDS:
                     d.pop(field, None)
                 d.pop("affected_challenges", None)
                 d.pop("challenge_targets", None)
                 d.pop("challenge_guarantees", None)
+                d.pop("challenge_assurance", None)
             d.pop("form_staging", None)
             d.pop("form_reviews", None)
             d.pop("finance_decision_holds", None)

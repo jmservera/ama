@@ -52,6 +52,10 @@ GUARANTEES = (
     "It never records you as refusing or withdrawing, or changes your consent.",
     "It never pauses, holds or extends the clock on any hazard or safeguarding response.",
 )
+ASSURANCE_TEXT = (
+    "Raising this challenge or correction will not be held against you. We have not recorded you "
+    "as refusing, and no safety or hazard response has been paused or delayed."
+)
 RETALIATION_REFUSAL = (
     "Refused: recording a challenge or correction request must not change priority, eligibility, "
     "queue rank, consent or participation, or any hazard or safeguarding response clock. "
@@ -74,6 +78,23 @@ def assert_no_retaliation(before: Mapping[str, Any], case: Mapping[str, Any]) ->
     """Raise when any protected state changed; the caller's writer then rolls the action back."""
     if protected_changes(before, case):
         raise ValueError(RETALIATION_REFUSAL)
+
+
+def assurance() -> Record:
+    """Fresh explicit assurance flags, stamped only after the protected-state check passed."""
+    return {
+        "no_retaliation": True,
+        "inferred_refusal": False,
+        "hazard_response_delayed": False,
+        "text": ASSURANCE_TEXT,
+    }
+
+
+def stamp_assurance(before: Mapping[str, Any], case: Mapping[str, Any], record: Record) -> Record:
+    """Verify nothing protected changed, then attach the assurance to the challenge record."""
+    assert_no_retaliation(before, case)
+    record["assurance"] = assurance()
+    return record
 
 
 def _text(value: object, label: str) -> str:
@@ -317,4 +338,5 @@ class ChallengeRegister:
         rec["explanations"] = [e for e in rec["explanations"] if e["permitted"]]
         rec["not_inferred"] = list(NOT_INFERRED)
         rec["protection"] = PROTECTION
+        rec["assurance"] = assurance()
         return rec
