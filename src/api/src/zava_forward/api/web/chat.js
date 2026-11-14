@@ -90,8 +90,10 @@ const employeeChat = (() => {
   function statusFor(kind) {
     if (kind === "withheld" || kind === "abstain") return "Reply withheld. Check the case card for recorded facts.";
     if (kind === "refused") return "Request refused. A person must take that action in the workflow.";
+    if (kind === "fallback") return "Workflow-only help added. No assistant answer was given. Check the case card for recorded facts.";
     return "Answer added. Check the sources before relying on it.";
   }
+  const outcomeNames = { answer: "answer", withheld: "withheld", abstain: "withheld", refused: "refused", fallback: "workflow-only help" };
   function usageNote(receipt) {
     if (!receipt) return "";
     const tokens = receipt.tokens && Number.isInteger(receipt.tokens.total_tokens) ? receipt.tokens.total_tokens : "Unknown";
@@ -166,6 +168,7 @@ const employeeChat = (() => {
         const view = attribution(answer);
         ui.message("assistant", answer.reply, {
           label: view.label,
+          outcome: outcomeNames[answer.kind] || "unknown",
           detail: `Skill: ${answer.skill}. ${usageNote(answer.consumption)}${view.detail}`,
           sources: (answer.citations || []).map(sourceLine),
         });

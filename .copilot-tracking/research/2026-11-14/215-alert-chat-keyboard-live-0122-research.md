@@ -1,0 +1,10 @@
+# 215 keyboard, focus and provenance regression research
+
+* Disposition: executed (focused). Branch test/demo-215-alert-chat-keyboard-live-0122, stacked on feat/demo-215-alert-chat-wcag-plain-2220 at 00951511d (PR #1576, Issue #215).
+* Inspected: web/chat.js, web/chat-widget.js, web/chat-widget.css, src/api/checks/regulatory_ux_check.py, tests/test_accessibility_baseline.py, tests/test_regulatory_a11y_cues.py.
+* Alerts panel: refresh is a native `button` that restores focus after the disabled reload; status is `role="status"`; source links are native `a` with "opens new tab" text; each alert shows `Status: <result>` text plus glyph classes.
+* Regulatory lookup: native `details`/`summary` disclosure (implicit expanded state); Escape closes it and focuses the summary; status, usage and log are live regions; the doubt route is a native `button` using `aria-disabled` (stays focusable); lookup status text names `answer` or `refused`; plain text says sending approves nothing.
+* Employee chat widget: launcher `button` with `aria-expanded`, `aria-controls`, `aria-haspopup`; dialog with `aria-labelledby`; Close button and Escape both call `hide()`, which unhides the launcher before focusing it (docked case safe); textarea Enter submits, Shift+Enter keeps newline; Send is a submit button; `role="log"`, `role="status"` and `role="alert"` regions; each assistant reply has a `Sources (n)` `details`, a no-source warning, a label and a detail line (model or decision rules, calls, tokens, outcome); withheld and refused text differ from answer text; entry warning says chat cannot approve or change records.
+* Gap search: no genuine focus-return, ARIA or provenance gap found, so no web change is planned. Existing tests cover the regulatory chat Escape and glyphs but not the widget keyboard wiring, `aria-controls`, reply provenance, sources count or withheld text.
+* `aria-invalid` sites stay at 8; scenario-manifest hashes untouched because no tracked file changes.
+* Planning Readiness: Ready. Limits: static source checks only, not assistive-technology or comprehension evidence.
