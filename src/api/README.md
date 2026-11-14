@@ -5135,6 +5135,8 @@ cd src/api && PYTHONPATH=../core/tests:../agents/tests python3 -m unittest disco
 The tests also cover the SQL store (including `test_sqlreads.py`), documents, ledger, role matrix, workflows, auth and time capture. They use small fixtures and a generated 60,000-case dataset, and need no
 private data. The AI tests use a scripted model or the template path (no network).
 
+`tests/test_scale_fixture_load_and_restart.py` starts the API as a separate OS process on a SQLite store, runs a concurrent closed-loop load, kills it with SIGKILL, restarts it on the same file and checks `/api/audit-check` (entries kept, chain intact, chain continues). With `--homes 60000 --out report.json` it is the local benchmark recorded in [`docs/architecture/scale-restart-2026-11-13.json`](../../docs/architecture/scale-restart-2026-11-13.json) (issue 144). One local process; not production, Azure or autoscaling evidence.
+
 Browser check (needs python3 playwright and chromium, and the built dataset):
 `python3 src/api/checks/browser_check.py` (the dataset at `ZF_DATA`).
 
