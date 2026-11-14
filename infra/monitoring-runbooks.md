@@ -25,7 +25,8 @@ are disabled by default. `enableCandidateMonitoringAlerts=true` only enables
 them when `monitoringApprovalReference` is nonempty after trimming; this is a
 source guard, not verification of the referenced approval. Do not enable them
 until actual approval and a separately authorized signal/notification drill are
-reviewed. Their proposed thresholds are exercise candidates, not live limits.
+reviewed. The poison-queue and AI-limit rules also need their own switches (see
+[New Disabled Queue and AI Candidates](#new-disabled-queue-and-ai-candidates)). Their proposed thresholds are exercise candidates, not live limits.
 Existing rules/notifications retain their source enablement; the new switch
 does not disable, reapprove or attest to any of them.
 
@@ -270,41 +271,64 @@ fallback. Response: keep route activation separately approved, reconcile gaps;
 do not enable blanket routing to clear an alert. Recovery: approved routing
 contract plus exact window/source/destination reconciliation.
 
+## New Disabled Queue and AI Candidates
+
+Two scheduled-query rules in [operationalMonitoring.bicep](./modules/operationalMonitoring.bicep)
+are disabled by default. Each needs three conditions: `enableCandidateMonitoringAlerts`,
+a nonempty `monitoringApprovalReference`, and its own switch
+(`enablePoisonQueueAlertCandidate` or `enableAiLimitAlertCandidate`). Each runs
+every 15 minutes over a 15 minute window at severity 2 and notifies the existing
+Action Group. A no-result query is not proof of a healthy queue or of held limits.
+
+### Agent tasks poison
+
+Rule `alert-${prefix}-agent-tasks-poison` counts successful `PutMessage` rows in
+`StorageQueueLogs` for the `agent-tasks-poison` queue on this storage account.
+The queue diagnostic setting now uses the resource-specific (`Dedicated`)
+destination so that table exists; this moves queue audit rows out of
+`AzureDiagnostics`, and no existing alert reads them. The `ObjectKey` and
+`PutMessage` field values are unverified against a deployed workspace and need a
+synthetic arrival drill before activation. Proposed owner: Digital service owner,
+with competent task owner, appointment pending. Triage under separate
+authorization: inspect aggregate queue properties only; avoid peek/export of
+message bodies. Response: contain affected dispatch and record restricted
+task/version evidence; never purge/replay blindly. Recovery: owner-disposed failed
+items, authorized idempotent retry and reconciled queue counts without duplicate
+decisions. The rule detects arrival, not queue depth or oldest age.
+
+### AI limits
+
+Rule `alert-${prefix}-ai-limits` fires on the console marker `AI_LIMIT_BREACH`
+written by the assistant consumption ledger whenever it records an owned hold
+(call, token or money budget, authority expiry or expiring, unknown price or
+liability). The marker carries only a closed reason and route, no owner,
+identifiers or content. A sibling `AI_USAGE` marker (capability, month, calls,
+tokens, usage known or unknown, outcome) feeds the workbook. Both are
+non-authoritative console signals and can include work that a caller's outer
+transaction later rolls back; the ledger and the Azure billing record stay the
+sources. Proposed owner: competent task owner and Digital service owner; Finance
+owns budget/price approval; appointments and OD-51 limits are pending.
+Response: use the existing runtime disable/manual path when authority, usage,
+price or liability is unknown; no extra inference or raised limits. The alert
+suspends nothing and approves nothing. Hazard work continues independently.
+Recovery: owner-approved finite limits, dated versioned price and billing record,
+per-request termination, delivered notification and expiry checks. OD-51 remains
+open; no invented price, tolerance, budget or appointee.
+
 ## Explicit Missing-Signal Procedures
 
 These are not installed alerts. Appointments, signal production and safe
 notification drills remain required. Do not substitute service-wide queue depth
 for either poison queue or infer a zero from no samples.
 
-### Agent tasks poison
-
-Queue `agent-tasks-poison`. Proposed owner: Digital service owner, with competent
-task owner. Gap: no safe queue-specific depth/oldest-age producer or owned
-arrival alert. Triage under separate authorization: inspect aggregate queue
-properties only; avoid peek/export of message bodies. Response: contain affected
-dispatch and record restricted task/version evidence; never purge/replay blindly.
-Recovery: owner-disposed failed items, authorized idempotent retry and reconciled
-queue counts without duplicate decisions.
-
 ### Import jobs poison
 
 Queue `import-jobs-poison`. Proposed owner: Digital service owner, with Data and
-Performance. Same missing depth/age signal; audit-category storage diagnostics
-do not establish successful enqueue monitoring. Triage: aggregate queue/batch
+Performance. No producer writes to this queue in source, so an arrival alert would never
+fire; add one only with a producer. Audit-category storage diagnostics do not
+establish successful enqueue monitoring. Triage: aggregate queue/batch
 status only. Response: hold affected import and retain manual correction.
 Recovery: batch/schema disposition, controlled retry and count reconciliation.
-
-### AI limits
-
-Proposed owner: competent task owner and Digital; Finance owns budget/price
-approval. Gap: no installed capability/period call/token/budget/expiry aggregate
-breach alert. The existing bounded assistant allowances and protected usage
-records are partial, not complete NFR-017 delivery.
-Response: use existing runtime disable/manual path when authority, usage, price
-or liability is unknown; no extra inference or raised limits. Hazard work
-continues independently. Recovery: owner-approved finite limits, dated versioned
-price and billing record, per-request termination, owned notification and expiry
-checks. OD-51 remains open; no invented price, tolerance, budget or appointee.
 
 ### RAI harm
 
@@ -348,9 +372,10 @@ incident owners and a response. It reports Blocked with the missing items, or
 Declared (never approved or green), and it exposes ownership and manual-route status
 for a disabled task. No declaration is recorded for any real task.
 It also provides
-an allowlist sanitiser for diagnostic events so prompts, readings, chat content,
-tokens and identities are dropped. It is not wired into platform log collection,
-so the diagnostic-exclusion criterion stays unmet as described below.
+an allowlist sanitiser for aggregate diagnostic events. Separately,
+[diagnostic_logging.py](../src/core/src/zava_forward/core/diagnostic_logging.py)
+makes every Python log record fail closed (see the privacy boundary below), and the
+register test requires each alert to name an owner role and a runbook heading.
 
 ## Workbook and Privacy Boundary
 
@@ -371,15 +396,33 @@ tokenomics dashboard acceptance criterion. Finance must compare matching period,
 scope and currency, retaining the Azure billing record as financial source.
 Token cost alone is not Total Cost of AI or value above a quality floor.
 
-New candidates consume platform metrics only; no new diagnostic categories or
-raw-content exporter is enabled. Existing IoT diagnostics are metrics-only.
-However, existing Container Apps `allLogs`, Foundry/SQL/Key Vault/storage audit
-collection and application instrumentation are not proven personal-data-free.
-Storage/Insights schemas can include identity/IP/URI fields; console logs can
-contain arbitrary application output. Workbook projections do not redact
-ingested records. The privacy criterion remains unmet until source-side
-allowlisting/redaction and restricted evidence retention/access are tested and
-approved by the DPO/Compliance owners. Do not enable content tracing, prompt/
+The workbook also holds a cost-against-budget table (configured budget beside
+Unknown Azure actual/forecast and Unreconciled variance), metered AI usage by
+capability and month beside the Azure cost record column and unreconciled
+variance, and AI limit holds by reason. The usage and hold panels read the
+non-authoritative `AI_USAGE` and `AI_LIMIT_BREACH` console markers and show
+Insufficient, never zero, when they are absent.
+
+Application log lines are now redacted in the process before they reach the
+console: every service entrypoint installs
+[diagnostic_logging.py](../src/core/src/zava_forward/core/diagnostic_logging.py),
+which patches `Logger.makeRecord` so `extra` fields, exception messages and stack
+text are dropped, query strings are removed, string arguments survive only as short
+token-like values (anything with an email, address or token pattern is withheld),
+payload-like `key=value` pairs (prompt, message, content, chat, reading, body,
+text, answer, completion, question) are redacted, and a redaction failure withholds
+the line. `print` output is not logging and is unchanged, so the ledger markers
+still work. This reduces console exposure; it does not prove the platform
+categories below are personal-data-free.
+
+New candidates consume platform metrics, or the closed console markers above; no
+new diagnostic categories or raw-content exporter is enabled. Existing IoT
+diagnostics are metrics-only. However, existing Container Apps `allLogs`,
+Foundry/SQL/Key Vault/storage audit collection and application instrumentation
+are not proven personal-data-free. Storage/Insights schemas can include
+identity/IP/URI fields. Workbook projections do not redact ingested records.
+The privacy criterion needs DPO/Compliance approval and restricted evidence
+retention/access review in addition to the source-side redaction. Do not enable content tracing, prompt/
 completion capture, raw readings/chat or raw exception/source text to make a
 dashboard populate. Existing collection settings are not silently changed here.
 
@@ -402,10 +445,10 @@ checks only: no deployment, cloud read, Portal rendering or privacy acceptance.
 
 | Criterion | Source proof | Status |
 | --- | --- | --- |
-| AC1 alerts for job failures, poison queue, ledger digest, IoT ingestion | Ledger: `main.bicep:587-640`, markers `digest_blob.py:23-24`, test `test_bicep_policy.py:1141-1171`. Job and IoT candidates: `modules/operationalMonitoring.bicep:25-82`, default disabled (`:12-16`). Poison queue: no alert, gap in [Explicit Missing-Signal Procedures](#explicit-missing-signal-procedures) | Partial; poison queue unmet, candidates disabled |
-| AC2 dashboard for availability, errors, latency, cost against budget | `modules/operationalMonitoring.bicep:84-104`, `monitoring-workbook.json:37-67` | Unmet overall; partial source evidence, actual cost Unknown, rendering unproved |
-| AC3 each alert has a runbook entry with an owner | Entries in this file, runbook links at `modules/operationalMonitoring.bicep:30,60` | Unmet overall; partial source evidence, owners proposed not appointed |
-| AC4 diagnostic logs exclude personal data, raw readings, chat content | `modules/containerapps.bicep:93-101` exports `allLogs` including console output | Unmet; accepted demo exposure, production privacy approval required |
+| AC1 alerts for job failures, poison queue, ledger digest, IoT ingestion | Ledger: `main.bicep` ledger rules, markers `digest_blob.py:23-24`, test `test_bicep_policy.py`. Job, IoT and agent-tasks poison candidates in `modules/operationalMonitoring.bicep`, default disabled. `import-jobs-poison`: no producer in source, gap in [Explicit Missing-Signal Procedures](#explicit-missing-signal-procedures) | Source authored; candidates disabled, signal drills and import poison producer outstanding |
+| AC2 dashboard for availability, errors, latency, cost against budget | `modules/operationalMonitoring.bicep` workbook, `monitoring-workbook.json` request, availability and cost-vs-budget panels | Source authored; actual cost Unknown, rendering unproved |
+| AC3 each alert has a runbook entry with an owner | Entries in this file with proposed owner roles; `infra/tests/test_monitoring_alerts.py` and the register test check every candidate | Source authored; owners proposed not appointed |
+| AC4 diagnostic logs exclude personal data, raw readings, chat content | Process-wide log redaction (`diagnostic_logging.py`); `modules/containerapps.bicep:93-101` still exports `allLogs` including console output | Application lines redacted in source; platform categories and DPO approval outstanding |
 | AC5 budget notification documented as a notification, not a hard cap | `main.bicep:24`, `main.bicep:667-692`, `monitoring-workbook.json:67` | Documented in source; delivery untested |
 
 Deferred to production: merge or rework of `9c2a59f6` once a non-console ledger
@@ -421,10 +464,10 @@ B/R/T IDs below label the issue's criteria positionally, not new requirements.
 
 | Criterion | Authored evidence | Remaining evidence or human decision |
 | --- | --- | --- |
-| B1 job/poison/ledger/IoT alerts | Disabled job/IoT candidates; existing ledger rules, 26h correction; queue gap procedures | Safe poison-specific producer, signal checks and owned notification drill; #110/#115 actual acceptance |
-| B2 availability/errors/latency/cost vs budget dashboard | Workbook aggregate query sources, configured budget and Unknown cost | Actual instrumentation/tests, KQL/portal execution and financial cost feed/reconciliation |
+| B1 job/poison/ledger/IoT alerts | Disabled job/IoT candidates; agent-tasks poison arrival candidate; existing ledger rules, 26h correction; import poison gap | Verified `StorageQueueLogs` signal and drill, an import poison producer, owned notification drill; #110/#115 actual acceptance |
+| B2 availability/errors/latency/cost vs budget dashboard | Workbook aggregate query sources, cost-vs-budget table with Unknown actual and Unreconciled variance | Actual instrumentation/tests, KQL/portal execution and financial cost feed/reconciliation |
 | B3 each alert runbook with owner | All eight existing rules/four budget notices and eight candidates catalogued; proposed roles | Named actual primary/backup appointments and response/escalation limits |
-| B4 diagnostic exclusion | No new log categories, aggregate query projections, metrics-only IoT | Existing diagnostic source exclusion/redaction tests and DPO/privacy approval |
+| B4 diagnostic exclusion | Fail-closed redaction of every application log record, canary tests, no new log categories, metrics-only IoT | Platform diagnostic categories (Container Apps `allLogs`, SQL, Key Vault, storage) and DPO/privacy approval |
 | R1 indicators/denominators/window/thresholds/owners/response | RAI procedure and blocked workbook panel | Per-task/release approved declaration and real appointments |
 | R2 unsupported claims/critical misses/stale review/challenges/cohort errors/effort | Explicit indicator list in RAI procedure | Applicable producer coverage and complete review-effort evidence |
 | R3 missing samples/usage/approvals/thresholds not green | Typed empty query sources, null measurements, static Blocked/Unknown panels | Actual query/error/serving behavior; approved sufficiency and threshold evidence |
@@ -433,8 +476,8 @@ B/R/T IDs below label the issue's criteria positionally, not new requirements.
 | R6 no raw prompts/source/sensitive reasons/tokens/identities | No new content logging; protected audit separation documented | Source-level exclusion/retention/access tests on existing telemetry |
 | R7 offline constructed vs named-human live thresholds | Disabled candidates labelled proposed, approval-reference boundary | Named actual human approvals, not a nonempty string or fixture |
 | R8 existing audit/report/UI, no new platform/future-IoT dependency | Reuse existing Azure Monitor and SQL audit/continuity paths; IoT rules independent | Actual runtime/report integration without adding a separate platform |
-| T1 calls/tokens/budget/expiry breach alerts owned/runbook | AI-limit gap procedure, no invented producer; offline limit evaluator with owner and runbook link | OD-51 owners/limits, complete metering, durable breach notification and test |
-| T2 capability/period usage beside Azure cost/variance | Explicit missing usage, Azure actual cost Unknown and unreconciled variance panel | Complete same-period usage/billing/dated-price feed and approved tolerance |
+| T1 calls/tokens/budget/expiry breach alerts owned/runbook | Disabled `ai-limits` candidate on the ledger `AI_LIMIT_BREACH` marker, owner and runbook link in the rule description; offline limit evaluator | OD-51 owners/limits, activation approval, delivered notification drill |
+| T2 capability/period usage beside Azure cost/variance | Workbook usage-by-capability-and-month panel from `AI_USAGE`, Azure cost record column and Unreconciled variance | Same-period billing feed, dated price and approved tolerance; console marker is non-authoritative |
 | T3 budget80 actual/100 forecast notification not cap | Budget runbooks, workbook and corrected parameter description | Source semantics documented; delivery/receipt not tested |
 
 Linked requirements: [ADR 0001 operational targets](../docs/adrs/0001-azure-architecture.md#operational-targets-and-cost-model),

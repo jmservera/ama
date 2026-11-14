@@ -130,9 +130,23 @@ ALERTS: tuple[AlertEntry, ...] = (
         "modules/operationalMonitoring.bicep",
         "iot-routing-orphaned",
     ),
-    _a("agent-tasks-poison", GAP, DIGITAL, "poison"),
+    _a(
+        "agent-tasks-poison",
+        CANDIDATE,
+        DIGITAL,
+        "poison",
+        "modules/operationalMonitoring.bicep",
+        "agent-tasks-poison",
+    ),
     _a("import-jobs-poison", GAP, DIGITAL, "poison"),
-    _a("ai-limits", GAP, TASK_OWNER, "ai-limits"),
+    _a(
+        "ai-limits",
+        CANDIDATE,
+        TASK_OWNER,
+        "ai-limits",
+        "modules/operationalMonitoring.bicep",
+        "ai-limits",
+    ),
     _a("rai-harm", GAP, TASK_OWNER, "harm"),
 )
 REQUIRED_CRITERIA = ("jobs", "poison", "ledger", "ingestion", "ai-limits", "harm", "budget")

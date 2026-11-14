@@ -68,10 +68,54 @@
       }
     },
     {
+      "type": 3,
+      "name": "cost-vs-budget",
+      "content": {
+        "version": "KqlItem/1.0",
+        "title": "Azure cost record against the configured budget",
+        "query": "print ConfiguredMonthlyBudget=__MONTHLY_BUDGET__, BudgetResource='__BUDGET_NAME__', AzureActualCost='Unknown', AzureForecast='Unknown', VarianceAgainstBudget='Unreconciled', Basis='Template budget; the Azure billing record for the same month, scope and currency is the financial source and is not connected', WindowStart={TimeRange:start}, WindowEnd={TimeRange:end}, AsOfUtc=now()",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "resourceIds": ["__WORKSPACE_ID__"],
+        "timeContextFromParameter": "TimeRange",
+        "visualization": "table"
+      }
+    },
+    {
+      "type": 3,
+      "name": "ai-usage-by-capability",
+      "content": {
+        "version": "KqlItem/1.0",
+        "title": "Metered AI usage by capability and month beside the Azure cost record",
+        "query": "ContainerAppConsoleLogs | where TimeGenerated between ({TimeRange:start} .. {TimeRange:end}) and Log has 'AI_USAGE' | parse Log with * 'AI_USAGE capability=' Capability ' period=' Period ' calls=' Calls:long ' tokens=' Tokens:long ' usage=' UsageState ' outcome=' Outcome | where isnotempty(Capability) and isnotempty(Period) | summarize MeteredCalls=sum(Calls), MeteredTokens=sumif(Tokens, UsageState == 'known'), CallsWithUnknownUsage=sumif(Calls, UsageState != 'known'), NonReturnedCalls=sumif(Calls, Outcome != 'returned') by Capability, Period | extend MeteredCharge='Unknown (no dated price in the console signal)', AzureCostRecord='Unknown (billing record not connected)', UnreconciledVariance='Unreconciled, not zero', ConfiguredMonthlyBudget=__MONTHLY_BUDGET__, Basis='Non-authoritative console aggregate; may include work later rolled back; the assistant ledger and Azure billing record are the sources', AsOfUtc=now() | order by Period asc, Capability asc",
+        "noDataMessage": "Insufficient: no AI_USAGE telemetry in the selected window. This is not zero usage or zero cost.",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "resourceIds": ["__WORKSPACE_ID__"],
+        "timeContextFromParameter": "TimeRange",
+        "visualization": "table"
+      }
+    },
+    {
+      "type": 3,
+      "name": "ai-limit-breaches",
+      "content": {
+        "version": "KqlItem/1.0",
+        "title": "AI limit holds by reason and month",
+        "query": "ContainerAppConsoleLogs | where TimeGenerated between ({TimeRange:start} .. {TimeRange:end}) and Log has 'AI_LIMIT_BREACH' | parse Log with * 'AI_LIMIT_BREACH reason=' Reason ' route=' Route | where isnotempty(Reason) | summarize Holds=count() by Reason, Period=format_datetime(TimeGenerated, 'yyyy-MM') | extend Owner='Competent task owner and Digital service owner, appointment pending', Runbook='infra/monitoring-runbooks.md#ai-limits', AsOfUtc=now() | order by Period asc, Reason asc",
+        "noDataMessage": "Insufficient: no AI_LIMIT_BREACH telemetry in the selected window. This is not proof that limits held.",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "resourceIds": ["__WORKSPACE_ID__"],
+        "timeContextFromParameter": "TimeRange",
+        "visualization": "table"
+      }
+    },
+    {
       "type": 1,
       "name": "ai-usage-and-harm",
       "content": {
-        "json": "## AI consumption and harm: Blocked / insufficient\n| Surface | Capability and period | Current evidence |\n| --- | --- | --- |\n| Calls; input/output/cached tokens; retries/failures | Not connected | Insufficient; partial protected assistant audit is not a complete metered feed |\n| Azure cost record / dated versioned price | Not connected | Unknown; no consumption-to-currency conversion |\n| Metered-to-billing variance | Same scope/month/currency not established | Unknown / unreconciled, not zero |\n| Calls/tokens/budget/expiry alerts | Owner and approved limits not established | Blocked; no installed aggregate breach signal |\n| Harm/quality/disparity/review burden | Task/release/cohort/window/denominator not supplied | Insufficient; approval rate is not safety evidence |\n| Disabled task monitoring | Named owner/manual route not verified | Blocked; inspect existing audit/continuity surfaces |\n\nUse the existing protected SQL audit/report and incident-control paths, not a new telemetry store. Do not copy prompts, source text, sensitive reasons, tokens, identities, readings or chat here. Human threshold/owner approval, repeat-event/window reconciliation and an owned suspension drill remain required. Constructed fixtures are synthetic, not actual approval. [AI limit gap](https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md#ai-limits) and [incident response](https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md#rai-harm)."
+        "json": "## AI consumption and harm: Blocked / insufficient\n| Surface | Capability and period | Current evidence |\n| --- | --- | --- |\n| Calls and tokens by capability and month | Panel above, from the console `AI_USAGE` marker | Insufficient when absent; a non-authoritative aggregate, not the ledger |\n| Azure cost record / dated versioned price | Not connected | Unknown; no consumption-to-currency conversion |\n| Metered-to-billing variance | Same scope/month/currency not established | Unknown / unreconciled, not zero |\n| Calls/tokens/budget/expiry alerts | Candidate rule and holds panel above | Blocked until owner, limits and signal are approved; the rule is disabled by default |\n| Harm/quality/disparity/review burden | Task/release/cohort/window/denominator not supplied | Insufficient; approval rate is not safety evidence |\n| Disabled task monitoring | Named owner/manual route not verified | Blocked; inspect existing audit/continuity surfaces |\n\nUse the existing protected SQL audit/report and incident-control paths, not a new telemetry store. Do not copy prompts, source text, sensitive reasons, tokens, identities, readings or chat here. Human threshold/owner approval, repeat-event/window reconciliation and an owned suspension drill remain required. Constructed fixtures are synthetic, not actual approval. [AI limit gap](https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md#ai-limits) and [incident response](https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md#rai-harm)."
       }
     }
   ],

@@ -57,11 +57,12 @@ class RegisterTests(unittest.TestCase):
         problems = mc.coverage_gaps("### ai-limits", {}, bad)
         self.assertTrue(any("unknown status" in p for p in problems))
 
-    def test_poison_and_ai_limits_stay_explicit_gaps(self) -> None:
-        gaps = {e.anchor for e in mc.ALERTS if e.status == mc.GAP}
-        self.assertTrue(
-            {"agent-tasks-poison", "import-jobs-poison", "ai-limits", "rai-harm"} <= gaps
-        )
+    def test_poison_and_ai_limits_are_disabled_candidates(self) -> None:
+        by_anchor = {e.anchor: e.status for e in mc.ALERTS}
+        self.assertEqual(by_anchor["agent-tasks-poison"], mc.CANDIDATE)
+        self.assertEqual(by_anchor["ai-limits"], mc.CANDIDATE)
+        self.assertEqual(by_anchor["import-jobs-poison"], mc.GAP)
+        self.assertEqual(by_anchor["rai-harm"], mc.GAP)
 
 
 class IndicatorTests(unittest.TestCase):

@@ -15,6 +15,7 @@ from collections.abc import Callable, Mapping, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 
+from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 from zava_forward.core.synthetic import sensor_identity
 from zava_forward.core.synthetic.sensor_stream import StreamError
 
@@ -122,6 +123,7 @@ async def run_window(
 
 
 def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
+    install_diagnostic_redaction()
     env = os.environ if env is None else env
     parser = argparse.ArgumentParser(prog="zava_forward.api.live_receiver")
     parser.add_argument("--control-file", default=env.get("ZF_SIM_CONTROL_FILE", ""))

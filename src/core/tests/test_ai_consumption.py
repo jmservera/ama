@@ -542,6 +542,46 @@ class ConsumptionTests(unittest.TestCase):
             any(r["kind"] == "alert" and r["reason"] == "liability-overrun" for r in self.records())
         )
 
+    def test_usage_and_breach_console_markers_are_content_free(self) -> None:
+        self.authorize()
+        ticket = self.ledger.reserve(self.context(), MODEL, 100, 20)
+        with self.assertLogs("zava_forward.core.ai_consumption", "INFO") as logs:
+            self.complete(ticket, prompt_tokens=200, total_tokens=220)
+            self.complete(ticket)
+        usage = [line for line in logs.output if "AI_USAGE" in line]
+        self.assertEqual(len(usage), 1)
+        self.assertIn(
+            "AI_USAGE capability=assessment period=2026-10 calls=1 tokens=220 usage=known"
+            " outcome=returned",
+            usage[0],
+        )
+        self.assertTrue(any("AI_LIMIT_BREACH reason=liability-overrun" in x for x in logs.output))
+        for line in logs.output:
+            for private in ("constructed-finance-owner", reference("root"), CONFIG):
+                self.assertNotIn(private, line)
+
+    def test_unknown_usage_is_marked_unknown_not_zero_spend(self) -> None:
+        self.authorize()
+        ticket = self.ledger.reserve(self.context(), MODEL, 100, 20)
+        with self.assertLogs("zava_forward.core.ai_consumption", "INFO") as logs:
+            self.ledger.complete(ticket, None, MODEL, "timeout")
+        self.assertTrue(any("usage=unknown outcome=timeout" in x for x in logs.output))
+
+    def test_denial_alert_emits_breach_marker_without_owner(self) -> None:
+        self.authorize(price=self.add_price(retrieved="2026-10-31T13:00:00Z"))
+        with (
+            self.assertLogs("zava_forward.core.ai_consumption", "WARNING") as logs,
+            self.assertRaises(DispatchHeld),
+        ):
+            self.ledger.reserve(self.context(), MODEL, 1, 1)
+        self.assertEqual(
+            logs.output,
+            [
+                "WARNING:zava_forward.core.ai_consumption:AI_LIMIT_BREACH "
+                "reason=price-unknown route=workflow-only"
+            ],
+        )
+
     def test_metadata_canaries_and_historical_output_not_exported(self) -> None:
         self.accepted()
         with self.port.transaction() as db:
