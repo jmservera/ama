@@ -113,6 +113,25 @@ def scheduling_signature(snapshot):
     return digest(coarse)
 
 
+def _sensor_bucket_key(snapshot):
+    """Six-hour sensor bucket ignoring provenance-class additions so same-bucket conflicts stay visible."""
+    if not isinstance(snapshot, Mapping):
+        return None
+    sources = snapshot.get("sources") or {}
+    sensors = sources.get("sensors")
+    if not isinstance(sensors, Mapping):
+        return None
+    sig = sensor_view.signature(sensors)
+    if not isinstance(sig, dict):
+        return None
+    coarse_sig = dict(sig, classes=[])
+    citations = snapshot.get("citations") or {}
+    coarse = dict(snapshot, sources=dict(sources, sensors=coarse_sig),
+                  citations={k: v for k, v in citations.items()
+                           if not k.startswith("sensor:") and k != "source:sensors"})
+    return digest(coarse)
+
+
 def proposal_identity(capability):
     return dict(capability=capability, purpose=REGISTRY[capability]["purpose"])
 
@@ -272,7 +291,13 @@ def eligible(capability, snapshot, now_date, changed=False, known=False):
         if any(len({i["evidence"] for i in q["items"] if i["label"] == label}) > 1 for label in labels):
             return True
     sensors = s.get("sensors") or {}
-    return changed or bool(sensors.get("state") == "ok" and sensors.get("readings") and s["quality"] and not known)
+    return changed or bool(
+        sensors.get("state") == "ok"
+        and sensors.get("readings")
+        and not sensors.get("conflicting_readings")
+        and s["quality"]
+        and not known
+    )
 
 
 def review_flag(task, provenance=(), actionable=True, withheld=False, newer_readings=False, current=None):
@@ -285,15 +310,32 @@ def review_flag(task, provenance=(), actionable=True, withheld=False, newer_read
         return dict(level=None, status="withheld", autonomous=False, unapproved=True, task_state=task.get("state"),
                     effect="Monitoring consent is not granted now, so retained readings, citations and findings built on them are withheld. "
                            "The stored record is kept.")
-    known = sensor_view.citations(task["snapshot"]["sources"].get("sensors") or {})
+    snap = task.get("snapshot") or {}
+    snap_sources = snap.get("sources") or {}
+    snap_citations = snap.get("citations") or {}
+    sensors = snap_sources.get("sensors") or {}
+    prov_map = sensors.get("provenance") or {}
+    known = sensor_view.citations(sensors)
     cited = sorted({x for finding in output["findings"] for x in finding["citations"]})
     sensor_cited = [x for x in cited if x in known]
     proactive = (task.get("dispatch") or {}).get("trigger") == "proactive"
     state = task.get("state")
+    now_sensors = ((current or {}).get("sources") or {}).get("sensors") or {}
+    # Only a successful observation may call a cited reading missing; an unavailable or consent-withheld
+    # capture is unknown, never an empty one.
+    observed = current is not None and now_sensors.get("state") in ("ok", "no-readings")
+    captured_conflicts = list(sensors.get("conflicting_readings") or [])
+    current_conflicts = list(now_sensors.get("conflicting_readings") or []) if observed else []
+    same_bucket_conflict = bool(
+        current_conflicts and (actionable or _sensor_bucket_key(current) == _sensor_bucket_key(snap))
+    )
+    clashes = captured_conflicts if (actionable and captured_conflicts) else (current_conflicts if same_bucket_conflict else [])
     if state == "rejected":
         status = "rejected"
     elif state == "accepted":
         status = "reviewed"
+    elif state == "ready" and clashes:
+        status = "conflicting-readings"
     elif not actionable or state != "ready":
         status = "not-current"
     elif not proactive:
@@ -303,14 +345,9 @@ def review_flag(task, provenance=(), actionable=True, withheld=False, newer_read
     else:
         status = "review-suggested"
     autonomous = status == "review-suggested"
-    sensors = task["snapshot"]["sources"].get("sensors") or {}
     as_of = (task.get("dispatch") or {}).get("as_of")
     timing = sensor_view.as_of_state(sensors, as_of) if isinstance(as_of, (int, float)) else {}
     newer = bool(newer_readings and autonomous)
-    now_sensors = ((current or {}).get("sources") or {}).get("sensors") or {}
-    # Only a successful observation may call a cited reading missing; an unavailable or consent-withheld
-    # capture is unknown, never an empty one.
-    observed = current is not None and now_sensors.get("state") in ("ok", "no-readings")
     now_rows = sensor_view.citations(now_sensors) if observed else None
     # missing_ids means absent from the current bounded capture (a newest-window selection). Rotation out of
     # that window is not a deletion; the stored rows may still exist.
@@ -322,27 +359,69 @@ def review_flag(task, provenance=(), actionable=True, withheld=False, newer_read
         comparison["missing_ids"] = sorted(k for k in sensor_cited if k not in now_rows)
         comparison["state"] = "changed" if comparison["changed_ids"] or comparison["missing_ids"] else "match"
     changed = {"match": False, "changed": True}.get(comparison["state"])
-    return dict(changed_since_capture=changed, cited_comparison=comparison,
-                newer_reading_count=None if now_rows is None else len(set(now_rows) - set(known)),
-                level="L4" if autonomous else None, status=status, autonomous=autonomous, unapproved=True,
-                newer_readings=newer, evidence_as_of=timing.get("request_as_of"), freshness=timing.get("freshness"),
-                age_minutes=timing.get("age_minutes"),
-                task_state=state, trigger="proactive" if proactive else "requested",
-                model=dict(provider=envelope.get("provider"), deployment=envelope.get("deployment"), model=envelope.get("model"),
-                           task_version=envelope.get("task_version"), release=task.get("release")),
-                cited_ids=cited, sensor_cited_ids=sensor_cited,
-                readings=[dict(sensor_id=known[k]["sensor_id"], reading_id=known[k]["reading_id"], citation=k,
-                               observed_at=known[k]["observed_at"], temperature_c=known[k]["temperature_c"],
-                               humidity_pct=known[k]["humidity_pct"], text=sensor_view.reading_text(known[k]))
-                          for k in sensor_cited],
-                origin="generative_model", origin_text="Origin: generative_model. The finding is model-written; the cited retained values are decision_rule evidence.",
-                not_retained=list(sensor_view.NOT_RETAINED),
-                sensor_grounded=bool(sensor_cited), provenance_classes=sorted(sensors.get("provenance") or {}),
-                source_time=datetime.fromtimestamp(task["created_at"], timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ") if isinstance(task.get("created_at"), (int, float)) else None,
-                delivery="No named recipient or delivery of a request is recorded.",
-                effect="Suggests a person review the cited readings. It does not accept work, close a defect, authorise payment or consent, "
-                       "diagnose a hazard or change any ranking."
-                       + (" Retained readings changed after this finding was captured; review the current readings and request a new proposal if needed." if newer else ""))
+
+    def _reading_entry(k):
+        row = known[k]
+        pclass = str(row.get("provenance_class") or "synthetic-unclassified")
+        stext = str(prov_map.get(pclass) or sensor_view.CLASSES.get(pclass, sensor_view.CLASSES["synthetic-unclassified"]))
+        meta = snap_citations.get(k) or {}
+        return dict(sensor_id=row["sensor_id"], reading_id=row["reading_id"], citation=k,
+                    observed_at=row["observed_at"], temperature_c=row["temperature_c"],
+                    humidity_pct=row["humidity_pct"], provenance_class=pclass, source_text=stext,
+                    locator=meta.get("locator"), content_hash=meta.get("content_hash"),
+                    text=sensor_view.reading_text(row))
+
+    def _source_entry(k):
+        meta = snap_citations.get(k) or {}
+        if k in known:
+            row = known[k]
+            pclass = str(row.get("provenance_class") or "synthetic-unclassified")
+            stext = str(prov_map.get(pclass) or sensor_view.CLASSES.get(pclass, sensor_view.CLASSES["synthetic-unclassified"]))
+            return dict(citation=k, kind="sensor-reading", locator=meta.get("locator"),
+                        content_hash=meta.get("content_hash"), sensor_id=row["sensor_id"],
+                        reading_id=row["reading_id"], observed_at=row["observed_at"],
+                        provenance_class=pclass, source_text=stext)
+        return dict(citation=k, kind="case-evidence", locator=meta.get("locator"),
+                    content_hash=meta.get("content_hash"))
+
+    conflict_notice = (
+        sensors.get("conflict_notice")
+        or (now_sensors.get("conflict_notice") if observed else None)
+    ) if clashes else None
+    effect = (
+        "Retained sensor readings conflict for the same sensor and time, so no automatic review flag is raised. "
+        "Do not choose between conflicting readings; use the ordinary quality check."
+        if status == "conflicting-readings"
+        else "Suggests a person review the cited readings. It does not accept work, close a defect, authorise payment or consent, "
+             "diagnose a hazard or change any ranking."
+             + (" Retained readings changed after this finding was captured; review the current readings and request a new proposal if needed." if newer else "")
+    )
+    out = dict(changed_since_capture=changed, cited_comparison=comparison,
+               newer_reading_count=None if now_rows is None else len(set(now_rows) - set(known)),
+               level="L4" if autonomous else None, status=status, autonomous=autonomous, unapproved=True,
+               newer_readings=newer, evidence_as_of=timing.get("request_as_of"), freshness=timing.get("freshness"),
+               age_minutes=timing.get("age_minutes"),
+               task_state=state, trigger="proactive" if proactive else "requested",
+               invocation_modes=[str(e.get("mode")) for e in (provenance or ())
+                                 if isinstance(e, Mapping) and e.get("kind") == "invocation" and e.get("mode")],
+               model=dict(provider=envelope.get("provider"), deployment=envelope.get("deployment"), model=envelope.get("model"),
+                          task_version=envelope.get("task_version"), release=task.get("release")),
+               cited_ids=cited, sensor_cited_ids=sensor_cited,
+               readings=[_reading_entry(k) for k in sensor_cited],
+               source_provenance=[_source_entry(k) for k in cited],
+               origin="generative_model", origin_text="Origin: generative_model. The finding is model-written; the cited retained values are decision_rule evidence.",
+               not_retained=list(sensor_view.NOT_RETAINED),
+               sensor_grounded=bool(sensor_cited),
+               provenance_classes=sorted(prov_map),
+               cited_provenance_classes=sorted({str(known[k]["provenance_class"]) for k in sensor_cited if known[k].get("provenance_class")}),
+               source_time=datetime.fromtimestamp(task["created_at"], timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ") if isinstance(task.get("created_at"), (int, float)) else None,
+               delivery="No named recipient or delivery of a request is recorded.",
+               effect=effect)
+    if clashes:
+        out["conflicting_readings"] = clashes
+        if conflict_notice:
+            out["conflict_notice"] = conflict_notice
+    return out
 
 
 def validate_output(value, snapshot, max_chars):
@@ -1045,7 +1124,17 @@ class Assistants:
         if withheld:
             body["provenance"] = self._scrub_events(body["provenance"])
         keeps = newer and (body.get("dispatch") or {}).get("trigger") == "proactive" and body["epoch_current"] and held is None and body["state"] == "ready" and not body["release_denial"]
-        body["review_flag"] = review_flag(body, body["provenance"], body["actionable"] or keeps, withheld, newer_readings=newer, current=current)
+        live_conflicts = bool((((current or {}).get("sources") or {}).get("sensors") or {}).get("conflicting_readings"))
+        conflict_current = (
+            body["stale"]
+            and live_conflicts
+            and _sensor_bucket_key(current) == _sensor_bucket_key(body["snapshot"])
+            and body["epoch_current"]
+            and held is None
+            and body["state"] == "ready"
+            and not body["release_denial"]
+        )
+        body["review_flag"] = review_flag(body, body["provenance"], body["actionable"] or keeps or conflict_current, withheld, newer_readings=newer, current=current)
         return body
 
     @staticmethod

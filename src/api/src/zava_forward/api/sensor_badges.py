@@ -20,6 +20,10 @@ _FRESHNESS = {
 
 
 _HEALTH = {
+    "conflict": (
+        "Conflicting readings",
+        "Retained readings disagree for the same sensor and time.",
+    ),
     "fault": ("Sensor fault", "The latest reading is missing a value or cannot be read."),
     "out_of_range": ("Out of range", "The latest reading is outside the possible range."),
 }
@@ -27,6 +31,10 @@ _HEALTH = {
 _NEXT_ACTION = {
     "withheld": "Use the ordinary quality check. Do not ask for the readings without consent.",
     "unavailable": "Use the ordinary quality check. Ask the quality team if you need the readings.",
+    "conflict": (
+        "Do not choose between conflicting readings. "
+        "Use the ordinary quality check and ask the quality team to check the sensor."
+    ),
     "offline": "Use the ordinary quality check, then ask the quality team to check the sensor.",
     "fault": "Do not use this reading. Use the ordinary quality check and report the sensor fault.",
     "out_of_range": "Do not use this reading. Use the ordinary quality check and ask for a check.",
@@ -46,10 +54,15 @@ def freshness_state(view: Mapping[str, Any]) -> str:
 
 
 def health_state(view: Mapping[str, Any]) -> str:
-    """fault or out_of_range only when a reading is shown; withheld or empty views have none."""
-    if freshness_state(view) in ("withheld", "unavailable", "offline"):
+    """conflict when retained rows clash; fault or out_of_range only when a reading is shown."""
+    fresh = freshness_state(view)
+    if fresh in ("withheld", "unavailable"):
         return "ok"
     state = (view.get("health") or {}).get("state")
+    if view.get("conflicting_readings") or state == "conflict":
+        return "conflict"
+    if fresh == "offline":
+        return "ok"
     return str(state) if state in _HEALTH else "ok"
 
 
@@ -58,7 +71,9 @@ def next_action(view: Mapping[str, Any]) -> str | None:
     freshness = freshness_state(view)
     health = health_state(view)
     for key in (
-        freshness if freshness in ("withheld", "unavailable", "offline") else None,
+        freshness if freshness in ("withheld", "unavailable") else None,
+        health if health == "conflict" else None,
+        freshness if freshness == "offline" else None,
         health,
         freshness,
     ):

@@ -368,6 +368,8 @@ def chat_skills() -> list[dict[str, str]]:
 
 
 SENSOR_RULE_PATHS = (
+    "sensor.source",
+    "sensor.conflict",
     "sensor.watch",
     "sensor.thresholds",
     "sensor.health",

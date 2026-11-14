@@ -1,0 +1,58 @@
+{
+  "task_id": "quality-1288-sensor-ai-2142",
+  "task_slug": "quality-1288-sensor-ai-2142",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14/quality-1288-sensor-ai-2142-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14/quality-1288-sensor-ai-2142-plan.md",
+    "details": ".copilot-tracking/details/2026-11-14/quality-1288-sensor-ai-2142-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-14/quality-1288-sensor-ai-2142-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-14/quality-1288-sensor-ai-2142-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-14/quality-1288-sensor-ai-2142-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Automatic RPI loop confirmed by caller prompt for Issue #1288 on branch feat/quality-1288-sensor-ai-2142",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-14/quality-1288-sensor-ai-2142-research.md"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready; Selected Option A (end-to-end conflict propagation and Quality AI review_flag source provenance grounding across src/core and src/api)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-14/quality-1288-sensor-ai-2142-research.md"
+    },
+    {
+      "decision": "Critique execution: Complete; Verdict: Revise; Direct dispositions applied for PC-001 through PC-006 (no divergent user decision needed); Plan finalized as Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-14/quality-1288-sensor-ai-2142-plan-critique.md"
+    },
+    {
+      "decision": "Review execution: Complete; Outcome: Conformant; Assessed boundary: full task P01-P03 across src/core and src/api (focused validation tier; hosted CI unobserved on unpushed branch); Routed non-blocking follow-ups RV-001 and RV-002",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-14/quality-1288-sensor-ai-2142-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked post-Review follow-up item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Adjust #employee-chat vertical flex/max-height spacing in src/api/src/zava_forward/api/web/styles.css to resolve pre-existing #employee-chat-question target-size (partiallyObscured) axe failure at 720px height (RV-001)",
+      "rationale": "Small, surgical CSS layout adjustment with high engineering and browser-gate value across main (#1690/#1718 header growth).",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-14/quality-1288-sensor-ai-2142-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Add seeded conflicting-reading browser state to src/api/checks/quality_sensors_browser_check.py under pinned axe-core 4.10.3 (RV-002)",
+      "rationale": "Low-effort harness extension adding live Chromium + axe-core verification for data-sensor-conflict, data-flag-conflict, and data-flag-sources alongside existing unit and API correlation suites.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-14/quality-1288-sensor-ai-2142-review.md"
+    }
+  ]
+}

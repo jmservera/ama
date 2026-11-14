@@ -202,11 +202,13 @@ def sensor_facts(view: Mapping[str, Any]) -> dict[str, str]:
     grounding = view.get("grounding") or {}
     values = grounding.get("values") or {}
     put("sensor.state", view.get("state"))
-    put("sensor.detail", view.get("detail"))
+    put("sensor.detail", view.get("detail") or view.get("conflict_notice"))
+    put("sensor.conflict", view.get("conflict_notice"))
     put("sensor.latest.citation", grounding.get("citation"))
     for key in ("temperature_c", "humidity_pct", "observed_at"):
         put(f"sensor.latest.{key}", values.get(key))
     if values:
+        put("sensor.source", grounding.get("source_text"))
         put("sensor.freshness", view.get("freshness_text"))
         put("sensor.health", (view.get("health") or {}).get("text"))
         put("sensor.watch", (view.get("advisory") or {}).get("text"))
@@ -388,6 +390,18 @@ def _hazard_line(r: Reply, i: int) -> str:
 def _sensor(r: Reply) -> None:
     cite = r.fact("sensor.latest.citation")
     if not cite:
+        conflict = r.fact("sensor.conflict")
+        if conflict:
+            r.say(
+                "Retained sensor readings conflict, so no single value is selected. "
+                + conflict
+                + " Use the ordinary quality check, or ask the quality team to inspect the home."
+            )
+            if r.fact("sensor.not_retained"):
+                r.say(r.facts["sensor.not_retained"])
+            if r.fact("stage"):
+                r.say(f"Case stage: {r.facts['stage']}.")
+            return
         detail = r.fact("sensor.detail")
         if detail:
             r.say(f"No retained sensor reading is shown for this case. {detail}")
@@ -399,6 +413,8 @@ def _sensor(r: Reply) -> None:
         f"Latest retained reading [{cite}]: temperature_c {temperature} degC, "
         f"humidity_pct {humidity} %RH (relative humidity), observed {observed}."
     )
+    if r.fact("sensor.source"):
+        r.say(f"Reading source: {r.facts['sensor.source']}")
     for path in ("sensor.freshness", "sensor.health", "sensor.watch", "sensor.thresholds"):
         if r.fact(path):
             r.say(r.facts[path])
