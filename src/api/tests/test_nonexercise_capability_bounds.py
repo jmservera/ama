@@ -2,21 +2,66 @@
 
 from __future__ import annotations
 
+import json
+import sqlite3
 import tempfile
 import unittest
+import uuid
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
-from test_ai_consumption import CONFIG, END, MODEL, START, Port
 from zava_forward.core.ai_consumption import (
     SCHEMA,
     CallContext,
     Consumption,
     DispatchHeld,
     reference,
+    timestamp,
 )
 
+START = "2026-10-31T00:00:00Z"
+END = "2026-11-01T00:00:00Z"
+CONFIG = reference("constructed-config-v1")
+MODEL = "test-model"
 OWNER = "approving-owner-fixture"
+
+
+class Port:
+    sql = True
+    mssql = False
+
+    def __init__(self, path: Path) -> None:
+        self.path = path
+        self.clock: float = timestamp(START)
+        with self.transaction() as db:
+            db.execute(
+                "CREATE TABLE assistant_events "
+                "(id TEXT PRIMARY KEY, task_id TEXT, at REAL, body TEXT)"
+            )
+
+    @contextmanager
+    def transaction(self) -> Iterator[sqlite3.Connection]:
+        db = sqlite3.connect(self.path, timeout=10, isolation_level=None)
+        try:
+            db.execute("BEGIN IMMEDIATE")
+            yield db
+            db.commit()
+        except BaseException:
+            db.rollback()
+            raise
+        finally:
+            db.close()
+
+    def now(self, db: Any) -> float:
+        return self.clock
+
+    def event(self, db: Any, tid: str, **body: Any) -> None:
+        db.execute(
+            "INSERT INTO assistant_events VALUES (?,?,?,?)",
+            (uuid.uuid4().hex, tid, self.clock, json.dumps(body)),
+        )
 
 
 class NonExerciseBounds(unittest.TestCase):
