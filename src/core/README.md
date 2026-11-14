@@ -4994,28 +4994,41 @@ investigation state, outcome or remedy, never marks the concern dismissed, and t
 `raise_concern`) passes the neutral-text guard. The household view still omits sensor context.
 
 `intake_form()` returns the plain-language household route (who is raising it, representative
-basis, concern kind, own-words statement, and the phone, in-person, paper and assisted-visit
-channels) for a screen or paper form to follow, and `intake_errors(values)` returns plain,
-per-field problems. `to_state()` and `AftercareRegister.from_state()` give a JSON-safe snapshot for
-a later store; a restore is refused if it would mark a concern sensor-dismissed, give an outcome a
-non-human basis, or orphan a pack.
+basis, concern kind, own-words statement, optional `support_needed` communication or visit
+adjustments from `SUPPORT_OPTION_CODES`, and the phone, in-person, paper and assisted-visit
+channels) for a screen or paper form to follow; `intake_errors(values)` returns plain, per-field
+problems and `intake_error_summary(errors)` builds a plain-language summary. `to_state()` and
+`AftercareRegister.from_state()` give a JSON-safe snapshot (backward-compatible with earlier
+records without `support_needed`); a restore is refused if it would mark a concern sensor-dismissed,
+give an outcome a non-human basis, orphan a pack, or introduce causation, blame or savings wording.
+`assert_templates_neutral` checks every fixed module template at import time, and `neutral_text`
+blocks literal phrases, Unicode/hyphen/newline evasions, causal/blame/savings paraphrases, and
+second-clause injections after uncertainty or negation clauses without echoing rejected text.
 
-Not delivered: persistence in the stores, API and UI wiring (Fluent 2, WCAG), evaluator role access
-and the DPO position on outcome data (both open), a model route for the pack summary (needs
-release evidence and owner approval), and a pack screen. Tests: `src/core/tests/test_aftercare.py`.
+Not delivered: served resident and staff UI screens and WCAG 2.2 AA assistive-technology acceptance
+evidence, named operational owners in live deployment, evaluator role access and the DPO position on
+outcome data (both open), a model route for the pack summary (needs release evidence and owner
+approval), and a pack screen. Tests: `src/core/tests/test_aftercare.py`.
 
 Stage A of the connected slice (#133, Refs only, unwired) adds
-`zava_forward.core.aftercare_intake.AftercareService`, a synthetic staff-assisted layer over the
-register above. It does not reimplement the register. It adds a role-gated intake (existing staff
-roles only), a durable receipt that keeps the raw statement and representative basis, an idempotent
-`request_id`, owner actions limited to the named synthetic scenario owner (a missing owner is
-`Unknown`, and only a manager can name one afterwards), manager-only closure that never alters a
-concern, and a joined baseline, outcome and unresolved view with denominators and Unknowns. State is
-one validated JSON document behind an atomic `StateStore.update`; `FileStateStore` is a
-demonstration store only. `handle(method, path, user, body, query)` is the route contract for a later
-thin hook. Not delivered: server, store, UI route or endpoint-inventory wiring; served, persistence,
-restart and browser evidence; evaluator role; DPO or lawful-basis position. The unwired screen module
-is `src/api/src/zava_forward/api/web/aftercare.js`. Tests: `src/core/tests/test_aftercare_intake.py`
+`zava_forward.core.aftercare_intake.AftercareService`, a synthetic service layer over the register
+above. It does not reimplement the register. Alongside role-gated staff-recorded non-digital intake
+(`form`, `record_concern` on `/api/aftercare/form` and `/api/aftercare/concerns` for phone,
+in-person, paper and assisted-visit channels), it exposes accessible self-service digital intake for
+households and representatives (`household_form`, `submit_household_concern`, and `request_id`-bound
+`household_receipt` on `/api/aftercare/household-form` and `/api/aftercare/household-concerns`
+omitting staff sensor context and audit history), preserving optional `support_needed` adjustments,
+verbatim household statements and representative basis, idempotent `request_id` replay across UTC
+days (preserving legacy `staff_recorded` SHA-256 request fingerprints), owner actions limited to the
+named synthetic scenario owner (a missing owner is `Unknown`, and only a manager can name one
+afterwards), manager-only closure that never alters a concern, import-time and runtime
+neutral-text checks across service and store messages, and a joined baseline, outcome and unresolved
+view with denominators and Unknowns. State is one validated JSON document behind an atomic
+`StateStore.update`; `FileStateStore` is a demonstration store only. `handle(method, path, user,
+body, query)` is the route contract for a later thin hook. Not delivered: server, UI route or
+endpoint-inventory wiring; served, restart and browser accessibility evidence; evaluator role; DPO
+or lawful-basis position. The unwired screen module is
+`src/api/src/zava_forward/api/web/aftercare.js`. Tests: `src/core/tests/test_aftercare_intake.py`
 and `src/api/tests/test_aftercare_screen.py`. Corrective cycle C2: an exact replay returns the
 original receipt even after `next_update` has passed (the time check applies to new records only),
 sensor-context keys and values pass the same best-effort synthetic privacy guard and length limits
