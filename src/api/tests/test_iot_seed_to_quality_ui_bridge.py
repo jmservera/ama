@@ -42,7 +42,7 @@ def seeded(seed: int = SEED) -> list[Reading]:
     return [generator.reading(HOME, NOW - timedelta(minutes=5 * i)) for i in range(SLOTS, 0, -1)]
 
 
-class IotSeedToQualityBridge(ta.Base):  # type: ignore[misc]
+class IotSeedToQualityBridge(ta.Base):  # type: ignore[misc,unused-ignore]
     def setUp(self) -> None:
         base_set_up: Callable[[], None] = super().setUp
         base_set_up()
@@ -55,7 +55,8 @@ class IotSeedToQualityBridge(ta.Base):  # type: ignore[misc]
                 "sensor_consumer_policy",
             ):
                 db.execute(f"DROP TABLE IF EXISTS {table}")
-        self.provider = ta.Provider()
+        provider_factory: Callable[[], Any] = ta.Provider
+        self.provider = provider_factory()
         self.store.ai = self.provider
         release_support.install(self.store)
         self.readings: list[Reading] = seeded()
