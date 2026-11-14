@@ -4162,6 +4162,51 @@ class JsonResidentDecisions(unittest.TestCase):
             receiver.envelopes[0]["idempotency_key"], receiver.envelopes[1]["idempotency_key"]
         )
 
+    def test_acknowledged_retry_flags_stale_pending_without_superseding(self) -> None:
+        self.pending_attempt()
+        self.forward(retry_unresolved=True)
+        route = self.route()
+        self.assertEqual([a["status"] for a in route["attempts"]], ["Pending", "Acknowledged"])
+        self.assertIs(route["stale_pending_supersession_required"], True)
+        self.assertEqual(route["supersession_eligible_attempts"], [1])
+        self.assertEqual(route["supersession_evidence_ref"], route["attempts"][1]["receipt_ref"])
+
+    def test_non_acknowledged_retry_leaves_pending_attempt_pending(self) -> None:
+        self.pending_attempt()
+        self.store.complaints_receiver = SyntheticReceiver("raise")
+        self.forward(retry_unresolved=True)
+        self.assertEqual(
+            [a["status"] for a in self.route()["attempts"]], ["Pending", "Unconfirmed"]
+        )
+
+    def test_acknowledgement_does_not_supersede_an_attempt_still_in_flight(self) -> None:
+        self.pending_attempt()
+        attempts = self.route()["attempts"]
+        attempts.append(dict(attempt=2, status="Pending", reservation_id="SYN-R2"))
+        resident_decisions._IN_FLIGHT.setdefault(self.store, set()).add(("ZF-1", "SR-1", 1))
+        try:
+            with self.store.lock:
+                req = self.store._case("ZF-1")["service_requests"][0]
+                self.store._res_service_forward_outcome(
+                    self.rae,
+                    self.store._case("ZF-1"),
+                    dict(
+                        id="SR-1",
+                        attempt=2,
+                        reservation_id="SYN-R2",
+                        status="Acknowledged",
+                        reason="SYN",
+                        receipt_ref="SYN-RCPT-2",
+                    ),
+                )
+        finally:
+            resident_decisions._IN_FLIGHT[self.store].discard(("ZF-1", "SR-1", 1))
+        self.assertEqual(
+            [a["status"] for a in req["formal_route"]["attempts"]], ["Pending", "Acknowledged"]
+        )
+        self.assertEqual(req["formal_route"]["supersession_eligible_attempts"], [])
+        self.assertIs(req["formal_route"]["stale_pending_supersession_required"], False)
+
     @contextmanager
     def outcome_save_fault(self, *, committed: bool) -> Iterator[list[int]]:
         """Fail the first outcome save only; a committed fault loses just its acknowledgement."""
