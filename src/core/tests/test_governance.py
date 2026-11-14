@@ -85,7 +85,13 @@ class Gov:
             self.assertEqual(line["cost_per_accepted_outcome"], "Unknown", extra)
         line = s.benefits_record(self.pm1, dict(base, ai_price_source=price, ai_total_cost="12.50", ai_accepted_outcomes=5))["ai_running_cost"]
         self.assertEqual((line["total_cost_of_ai"], line["cost_per_accepted_outcome"]), ("12.50", "2.5000"))
-        for bad in (dict(ai_total_cost="-1"), dict(ai_total_cost="abc"), dict(ai_accepted_outcomes="-2")):
+        for zero in ("0", 0, "0.00"):
+            line = s.benefits_record(self.pm1, dict(base, ai_price_source=price, ai_total_cost=zero, ai_accepted_outcomes=5))["ai_running_cost"]
+            self.assertEqual((line["total_cost_of_ai"], line["cost_per_accepted_outcome"]), ("Unknown", "Unknown"), zero)
+        line = s.benefits_record(self.pm1, dict(base, ai_total_cost="   ", ai_accepted_outcomes="  "))["ai_running_cost"]
+        self.assertEqual(line["total_cost_of_ai"], "Unknown")
+        for bad in (dict(ai_total_cost="-1"), dict(ai_total_cost="abc"), dict(ai_accepted_outcomes="-2"), dict(ai_accepted_outcomes="\u00b2"),
+                    dict(ai_total_cost="1e9999999"), dict(ai_total_cost=True)):
             with self.assertRaises(ValueError):
                 s.benefits_record(self.pm1, dict(base, **bad))
 

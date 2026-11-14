@@ -27,7 +27,7 @@ import os
 import re
 from copy import copy, deepcopy
 from datetime import UTC, datetime
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 
 from . import controls as k
 from .change_provenance import _actor
@@ -219,22 +219,25 @@ UNKNOWN = "Unknown"
 def _ai_cost_figures(price, total, accepted):
     """Total Cost of AI and cost per accepted outcome; Unknown, never 0, without a price source, a recorded total or an accepted outcome."""
     total_cost = count = None
-    if total not in (None, ""):
-        try:
-            total_cost = Decimal(str(total).strip())
-        except InvalidOperation:
+    raw_total = "" if total is None else str(total).strip()
+    if raw_total:
+        if isinstance(total, bool) or not re.fullmatch(r"[0-9]{1,12}(?:\.[0-9]{1,6})?", raw_total):
             raise ValueError("Enter the Total Cost of AI as a number or leave it blank.")
-        if not total_cost.is_finite() or total_cost < 0:
-            raise ValueError("Enter the Total Cost of AI as a number or leave it blank.")
-    if accepted not in (None, ""):
-        if isinstance(accepted, bool) or not str(accepted).strip().isdigit():
+        total_cost = Decimal(raw_total)
+    raw_accepted = "" if accepted is None else str(accepted).strip()
+    if raw_accepted:
+        if isinstance(accepted, bool) or not re.fullmatch(r"[0-9]{1,12}", raw_accepted):
             raise ValueError("Enter the accepted-outcome count as a whole number or leave it blank.")
-        count = int(str(accepted).strip())
-    priced = bool(price) and total_cost is not None
+        count = int(raw_accepted)
+    priced = bool(price) and total_cost is not None and total_cost > 0
     per_outcome = total_cost / count if priced and count else None
     return dict(total_cost_of_ai=f"{total_cost:f}" if priced else UNKNOWN,
                 accepted_outcome_count=count if count else UNKNOWN,
                 cost_per_accepted_outcome=f"{per_outcome:.4f}" if per_outcome is not None else UNKNOWN)
+
+
+def _ai_line_complete(line):
+    return isinstance(line, dict) and all(str(line.get(key) or "").strip() for key in ("named_denominator", "quality_floor", "total_cost_of_ai", "cost_per_accepted_outcome"))
 
 
 def _need_manager(user, what):
@@ -485,7 +488,7 @@ class GovernanceMixin:
         e = g["benefits"].get("BG-011")
         if not e or e["status"] != "Approved":
             why.append("The benefits register (BG-011 definitions and MDE) is not approved. Owner: programme manager.")
-        elif not e.get("ai_running_cost"):
+        elif not _ai_line_complete(e.get("ai_running_cost")):
             why.append("The benefits register has no AI running-cost line (denominator and quality floor). Owner: programme manager.")
         return why
 
@@ -537,15 +540,15 @@ class GovernanceMixin:
             if approver.lower() in proposer:
                 raise ValueError("The breach decision needs an approver other than the person recording the release.")
             rec["economics_breach_approver"] = approver
-        ai_line = (self._gov()["benefits"].get("BG-011") or {}).get("ai_running_cost") or {}
-        rec["ai_running_cost"] = {key: ai_line.get(key, UNKNOWN) for key in ("named_denominator", "quality_floor", "total_cost_of_ai", "cost_per_accepted_outcome")}
-        if decision == "Release" and scope == "Phase 0 capture":
-            self.require_capture_open()
-        if decision == "Release" and scope in ("Shadow testing", "Live pilot") and not self.is_released("Phase 0 capture"):
-            raise PermissionError(f"{scope} cannot be released until Phase 0 capture is released. Owner: programme manager.")
         if decision == "Release" and scope == "Shadow testing":
             rec["shadow_entry_evidence"] = k.text(body.get("shadow_entry_evidence"), "the shadow-mode entry evidence", 400)
         with self.lock:
+            if decision == "Release" and scope == "Phase 0 capture":
+                self.require_capture_open()
+            if decision == "Release" and scope in ("Shadow testing", "Live pilot") and not self.is_released("Phase 0 capture"):
+                raise PermissionError(f"{scope} cannot be released until Phase 0 capture is released. Owner: programme manager.")
+            ai_line = (self._gov()["benefits"].get("BG-011") or {}).get("ai_running_cost") or {}
+            rec["ai_running_cost"] = {key: ai_line.get(key) or UNKNOWN for key in ("named_denominator", "quality_floor", "total_cost_of_ai", "cost_per_accepted_outcome")}
             rel = self._gov()["releases"]
             rec["id"] = self._next_id("REL", rel)
             rel.append(rec)
