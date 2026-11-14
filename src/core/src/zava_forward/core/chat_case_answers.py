@@ -47,8 +47,8 @@ INTENTS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
     for name, pattern in (
         (
             "sensor",
-            r"\b(sensors?|readings?|temperatures?|humidity|moisture|dew\s*points?|"
-            r"mou?ld\s+risk|iot|(?:fault|sensor)\s+flags?|thresholds?)\b",
+            r"\b(sensors?|readings?|dew\s*points?|mou?ld\s+risk|iot|"
+            r"(?:fault|sensor)\s+flags?)\b",
         ),
         ("funding", r"\b(fund\w*|grants?|claims?|money|financ\w*|budget|invoic\w*|paid)\b"),
         (
@@ -77,6 +77,7 @@ INTENTS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
             r"\b(next|what\s+now|what\s+should|do\s+now|action|happens?\s+now|move\s+(it\s+)?on)\b",
         ),
         ("owner", r"\b(who|owner\w*|owns?|responsible|assigned|in\s+charge)\b"),
+        ("sensor", r"\b(temperatures?|humidity|moisture|thresholds?)\b"),
         (
             "status",
             r"\b(status|stage|where|progress|update|state|how\s+is|how\s+far|going\s+on)\b",
@@ -346,6 +347,8 @@ def _sensor(r: Reply) -> None:
             + (r.fact("sensor.detail") or "Your role may not include indoor readings.")
         )
         r.say("Use the ordinary quality check, or ask the quality team for the readings.")
+        if r.fact("stage"):
+            r.say(f"Case stage: {r.facts['stage']}.")
         return
     temperature = r.fact("sensor.latest.temperature_c")
     humidity = r.fact("sensor.latest.humidity_pct")

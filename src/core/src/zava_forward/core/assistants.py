@@ -59,7 +59,7 @@ REGISTRY = {
                                        categories=("home", "measures", "preferences", "appointments", "handoff", "capacity", "requests"),
                                        purpose="Draft an update or committed-capacity option"),
     "quality-evidence": dict(roles=("Quality Inspector", PM),
-                            categories=("home", "measures", "quality", "checklists", "documents", "sensors"),
+                            categories=("home", "measures", "quality", "checklists", "documents", "sensor"),
                             purpose="Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings"),
 }
 RULES = {

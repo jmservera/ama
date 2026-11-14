@@ -8,13 +8,17 @@ import re
 import unittest
 from collections.abc import Callable
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
+from unittest.mock import patch
 
-import test_assistants as ta
-import test_quality_sensors as qs
 from zava_forward.core import sensor_view
 from zava_forward.core.chat_case_answers import answer, sensor_facts
 from zava_forward.core.chat_isolation import ChatIsolation
+from zava_forward.core.chat_panel import ChatPanel
+
+import test_assistants as ta
+import test_quality_sensors as qs
 
 WEB = Path(sensor_view.__file__).parents[4] / "api/src/zava_forward/api/web"
 CITATION = re.compile(r"\[(sensor:[^\]]+)\]")
@@ -87,6 +91,56 @@ class Grounding(qs.Seed, ta.ApiTests):
         denied = self.people["Programme Support Officer"]
         facts = iso.case_facts(iso.current_user(denied), "ZF-1") or {}
         self.assertFalse([k for k in facts if k.startswith("sensor.")])
+
+    def test_panel_ask_answers_sensor_questions_from_rules_with_a_model_configured(self) -> None:
+        self.ready()
+        latest = self.request("/api/cases/ZF-1/sensors")[1]["latest"]
+        prompts: list[str] = []
+
+        def model(system: str, prompt: str) -> str:
+            prompts.append(prompt)
+            return "{}"
+
+        refs = dict(
+            CHAT_DPIA_REF="SYN-DPIA",
+            CHAT_LAWFUL_BASIS_REF="SYN-BASIS",
+            CHAT_NOTICE_REF="SYN-NOTICE",
+        )
+        iso = ChatIsolation(self.store, env=refs)
+        iso.sensors = self.service.sensors
+        panel = ChatPanel(iso, model)
+        with patch.object(self.store, "ai", SimpleNamespace(consumption=None), create=True):
+            self.assert_panel_rules_answers(panel, latest, prompts)
+
+    def assert_panel_rules_answers(
+        self, panel: ChatPanel, latest: dict[str, Any], prompts: list[str]
+    ) -> None:
+        for skill in ("general", "quality-evidence"):
+            tid = self.store.chat_create_thread(self.pm, case_id="ZF-1")["id"]
+            reply = panel.ask(self.pm, tid, "What are the sensor readings?", skill=skill)
+            self.assertEqual(reply["kind"], "answer", skill)
+            self.assertIn(f"temperature_c {latest['temperature_c']} degC", reply["reply"])
+            self.assertTrue(
+                any(c["id"].endswith("sensor.latest.temperature_c") for c in reply["citations"])
+            )
+            sources = {c["id"]: c["source_kind"] for c in reply["citations"]}
+            self.assertEqual(sources["ZF-1/sensor.watch"], "decision-rule")
+            self.assertEqual(sources["ZF-1/sensor.latest.temperature_c"], "case-record")
+        self.assertEqual(prompts, [])
+        denied = self.people["Programme Support Officer"]
+        tid = self.store.chat_create_thread(denied, case_id="ZF-1")["id"]
+        reply = panel.ask(denied, tid, "What are the sensor readings?")
+        self.assertEqual(reply["kind"], "answer")
+        self.assertTrue(reply["citations"])
+        self.assertNotRegex(reply["reply"], r"temperature_c \d")
+        self.assertEqual(prompts, [])
+
+    def test_workflow_questions_naming_moisture_keep_their_intent(self) -> None:
+        from zava_forward.core.chat_case_answers import intent
+
+        self.assertEqual(intent("Who owns the moisture hazard?"), "blocked")
+        self.assertEqual(intent("Why is this case blocked by moisture?"), "blocked")
+        self.assertEqual(intent("Is the moisture above the threshold?"), "sensor")
 
     def test_quality_review_flag_carries_cited_values_and_generative_origin(self) -> None:
         self.ready()

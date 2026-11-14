@@ -58,7 +58,7 @@ const employeeChat = (() => {
       + "Earlier assistant replies are not sent back. These are engineering caps, not spend authorization. "
       + "A question over a cap gets workflow-only help; continue with the ordinary case workflow.";
   }
-  const RULE_PARTS = ["ga" + "te.", "work.", "waiting_on", "hazards."];
+  const RULE_PARTS = ["ga" + "te.", "work.", "waiting_on", "hazards.", "sensor.watch", "sensor.thresholds", "sensor.health", "sensor.freshness", "sensor.not_retained"];
   function sourceLine(source) {
     const id = String(source.id || "");
     const kind = source.source_kind || (id.startsWith("workflow/") ? "workflow-rule"
