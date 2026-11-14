@@ -91,6 +91,10 @@ async function roleScreensView() {
   show(h("h1", {}, screen.title), h("p", { role: "status", "aria-busy": "true" }, "Loading recorded evidence."));
   const data = await api(`/api/cases?view=all&limit=20&offset=${page * 20}`, undefined, signal);
   const c = caseId ? await api(`/api/cases/${encodeURIComponent(caseId)}`, undefined, signal) : null;
+  if (c && c.id !== caseId) {
+    return show(h("h1", {}, screen.title), h("p", { role: "alert" }, `The record returned does not match the requested home ${caseId}, so nothing is shown for it. Your access has not changed. Owner: your team manager. Next action: choose the home again from the queue.`),
+      h("a", { "data-reset": "true", href: screenHref(id, null, 0, false) }, "Reset screen view"));
+  }
   const extra = c && screen.load ? await screen.load(c) : null;
   const overview = screen.overview ? await screen.overview(signal, data.items, c, page)
     : !c && screen.summarise && data.items.length ? await screen.summarise(data.items, signal) : null;
@@ -113,6 +117,8 @@ async function roleScreensView() {
       h("a", { class: "btn alt", "data-reset": "true", href: screenHref(id, null, 0, false) }, "Reset screen view")));
   const selected = c ? h("section", { class: "screen-evidence", "aria-label": `Evidence for ${c.id}` },
     h("h2", {}, `Selected home ${c.id}`),
+    h("p", { "data-same-home": c.id }, h("span", { class: "flag" }, `Same home: case ${c.id}`),
+      " Links to other role screens keep this case reference. A different home is never shown here as another stage of it."),
     h("p", {}, "Recorded evidence only. Missing, stale or withheld information cannot establish readiness. No message, approval or record change is made from this screen."),
     await screen.render(c, extra),
     !screen.ownsStageMap && journeyStageMap(c, screen.id),
