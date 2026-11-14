@@ -138,7 +138,11 @@ function intakeOrder(data, orderId, rerender) {
       data.recovery.map((r) => [r.event, r.outcome, r.resident_effect, r.next_step])),
     screenFields([["Escalation owner", data.escalation.owner], ["Escalation role", data.escalation.role],
       ["Escalation contact", data.escalation.contact],
-      ["Effect", "A concern does not change the work order. Only the contract manager issues a new version."]]),
+      ["Acts as a contract instruction", data.escalation.acts_as_contract_instruction === false ? "No" : "Unknown"],
+      ["Effect", data.escalation.note]]),
+    (data.escalations || []).length ? screenTable("Variations and escalations raised", ["Kind", "What needs deciding", "Named owner", "Status", "Contract instruction"],
+      data.escalations.map((e) => [e.kind, e.summary, `${e.owner.name} (${e.owner.role})`, e.status, "No - not a contract instruction"]))
+      : h("p", { class: "empty" }, "No variation or escalation raised for this order. Each one needs a named staff owner."),
     h("p", {}, data.boundaries.acceptance), h("p", {}, data.boundaries.consent));
 }
 

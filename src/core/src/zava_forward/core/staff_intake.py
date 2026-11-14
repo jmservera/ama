@@ -163,10 +163,8 @@ def escalation_destination() -> dict[str, Any]:
         contact=contact or UNKNOWN,
         configured=bool(owner and role and contact),
         contract_instruction=False,
-        note=(
-            "A concern raised here does not change the work order. "
-            "Only the contract manager issues a new version."
-        ),
+        acts_as_contract_instruction=False,
+        note=job_pack.NON_INSTRUCTION_NOTICE,
     )
 
 
@@ -238,8 +236,11 @@ def view(store: Any, user: Any, wid: str) -> dict[str, Any]:
             receipts=[_view_receipt(i, r, user) for i, r in _records(c, wid)],
             recovery=[job_pack.visit_recovery(e) for e in job_pack.NO_SHOW_EVENTS],
             escalation=escalation_destination(),
+            escalations=[deepcopy(e) for e in c.get("field_escalations", []) if e["order"] == wid],
             boundaries=dict(
                 contract_instruction=False,
+                acts_as_contract_instruction=False,
+                instruction_notice=job_pack.NON_INSTRUCTION_NOTICE,
                 acceptance=(
                     "Acceptance needs independent review by a named quality role. "
                     "This screen never accepts work."
@@ -456,7 +457,58 @@ def acknowledge(store: Any, user: Any, wid: str, body: dict[str, Any]) -> dict[s
         return dict(outcome="acknowledged", receipt=_view_receipt(idx, rec, actor))
 
 
-ACTIONS = {"field-capture": capture, "field-correct": correct, "field-acknowledge": acknowledge}
+def _owner(store: Any, name: Any, role: Any) -> tuple[str, str]:
+    if not isinstance(name, str) or not name.strip():
+        raise ValueError("Name the staff owner who will decide this (named_owner).")
+    if role not in job_pack.ESCALATION_OWNER_ROLES:
+        raise ValueError("Choose a contract manager or the building safety liaison as owner_role.")
+    match = [
+        p
+        for p in store._quality_staff()
+        if _norm(p.get("name")) == _norm(name) and p.get("role") == role
+    ]
+    if not match:
+        raise ValueError("The named owner must be a staff member holding that owner_role.")
+    return str(match[0]["name"]), str(role)
+
+
+def escalate(store: Any, user: Any, wid: str, body: dict[str, Any]) -> dict[str, Any]:
+    """Route a fieldwork variation or concern to a named staff owner. Never an instruction."""
+    _staff_only(store, user)
+    if not isinstance(body, dict):
+        raise ValueError("Send the escalation as a JSON object.")
+    job_pack.reject_instruction_claim(body)
+    _pack(store, user, wid)
+    w, _ = _find(store, wid)
+    owner, role = _owner(store, body.get("named_owner"), body.get("owner_role"))
+    with store._quality_operation(user, w["case_id"]) as (c, actor):
+        raised_by = actor.get("name") or actor["email"]
+        item = job_pack.escalation(
+            str(body.get("kind", "")),
+            str(body.get("summary", "")),
+            raised_by,
+            wid,
+            owner,
+            role,
+        )
+        item.update(raised_at=_now(), raised_by_email=actor["email"])
+        c.setdefault("field_escalations", []).append(item)
+        store.audit(
+            actor["email"],
+            "field_escalation_raised",
+            w["case_id"],
+            f"{wid} {item['kind']} owner={owner} ({role}) acts_as_contract_instruction=False",
+        )
+        store.save()
+        return dict(outcome="escalated", escalation=deepcopy(item))
+
+
+ACTIONS = {
+    "field-capture": capture,
+    "field-correct": correct,
+    "field-acknowledge": acknowledge,
+    "field-escalate": escalate,
+}
 
 
 def handle(
