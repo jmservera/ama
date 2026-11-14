@@ -17,6 +17,7 @@ from collections import Counter
 from html.parser import HTMLParser
 from http.server import ThreadingHTTPServer
 from pathlib import Path
+from typing import Any
 
 import dataset
 from test_quality_procurement import STAFF
@@ -79,9 +80,10 @@ class Rendered(unittest.TestCase):
         path = Path(cls.tmp.name) / "synthetic.json"
         path.write_text(json.dumps(data))
         cls.store = SqlStore(str(path), str(path.with_suffix(".sqlite")))
+        app_factory: Any = App
         cls.httpd = ThreadingHTTPServer(
             ("127.0.0.1", 0),
-            make_handler(App(cls.store, "SYN-landmarks-test")),
+            make_handler(app_factory(cls.store, "SYN-landmarks-test")),
         )
         cls.thread = threading.Thread(target=cls.httpd.serve_forever, daemon=True)
         cls.thread.start()
