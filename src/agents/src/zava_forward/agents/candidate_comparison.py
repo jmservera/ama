@@ -163,7 +163,24 @@ def _verdict(measure: dict[str, Any], base: dict[str, Any]) -> dict[str, Any]:
     else:
         outcome = "not cheaper"
         note = "cost per accepted proposal is not below the baseline"
-    return dict(outcome=outcome, regressions=worse, cheaper_per_accepted=cheaper, note=note)
+    blocking = [f"{key} increased from {base[key]} to {measure[key]}" for key in worse]
+    return dict(
+        outcome=outcome,
+        passed=not worse,
+        blocking_reasons=blocking,
+        regressions=worse,
+        cheaper_per_accepted=cheaper,
+        note=note,
+    )
+
+
+def _lever_valid(candidate: Mapping[str, Any]) -> bool:
+    changes = candidate.get("changes")
+    if not isinstance(changes, list) or not changes:
+        return False
+    if any(lever not in LEVERS for lever in changes) or len(set(changes)) != len(changes):
+        return False
+    return len(changes) == 1 or candidate.get("composite") is True
 
 
 def compare_candidates(
@@ -175,7 +192,9 @@ def compare_candidates(
     """Compare each candidate with the recorded baseline on the same case ids.
 
     A candidate states the single lever it changes (model, routing, caching or
-    prompt) in ``changes``; any other shape is not comparable. With a ``freeze``
+    prompt) in ``changes``; several levers are comparable only when the
+    candidate is explicitly flagged ``composite``. Each verdict carries ``passed``
+    (False with named ``blocking_reasons`` on any regression) and per-lever deltas. With a ``freeze``
     manifest the report records whether the held-out freeze check passed, and a
     baseline and candidates are comparable only on exactly the frozen held-out cases.
     A missing or insufficient freeze leaves the result a same-case comparison,
@@ -232,11 +251,10 @@ def compare_candidates(
     base_accepted = {row["case_id"] for row in baseline["observations"] if row["accepted"]}
     for candidate in candidates:
         reason = _screen(candidate)
-        changes = candidate.get("changes")
-        if reason is None and not (
-            isinstance(changes, list) and len(changes) == 1 and changes[0] in LEVERS
-        ):
-            reason = "changes must name exactly one lever: " + ", ".join(LEVERS)
+        if reason is None and not _lever_valid(candidate):
+            reason = "changes must name exactly one lever unless flagged composite: " + ", ".join(
+                LEVERS
+            )
         if reason is None and {row["case_id"] for row in candidate["observations"]} != base_cases:
             reason = "not measured on the same cases as the baseline"
         if reason:
@@ -250,6 +268,12 @@ def compare_candidates(
             if row["case_id"] in base_accepted and not row["accepted"]
         )
         measure["lever"] = candidate["changes"][0]
+        measure["levers"] = list(candidate["changes"])
+        measure["composite"] = len(candidate["changes"]) > 1
+        measure["lever_deltas"] = {
+            lever: {key: measure[key] - base[key] for key in REGRESSIONS}
+            for lever in candidate["changes"]
+        }
         measure["verdict"] = _verdict(measure, base)
         report["candidates"].append(measure)
     return report
