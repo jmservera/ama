@@ -4,3 +4,7 @@
 * `infra/scripts/deploy.py` had `--apply` versus default what-if, but no dry-run; every path called `az containerapp list` first.
 * `infra/tests/test_deploy.py` already uses a real subprocess with a fake `az` on PATH in a TemporaryDirectory (disposable environment), recording calls.
 * Planning Readiness: Ready. Disposition: executed.
+
+## Cycle 1 correction
+
+* `EXE001` on `deploy.py:1`: shebang present, file mode 100644. Sibling scripts with shebangs use 100755. Fix is the executable bit.

@@ -64,7 +64,8 @@ class DeployTests(unittest.TestCase):
             az.chmod(0o755)
             (root / "calls.json").write_text("[]", encoding="utf-8")
             (root / "responses.json").write_text(
-                json.dumps([reply("containerapp list", apps or []), *responses]), encoding="utf-8"
+                json.dumps([reply("containerapp list", apps or []), *responses]),
+                encoding="utf-8",
             )
             env = {**os.environ, "PATH": str(root), "FAKE_AZ_ROOT": str(root)}
             result = subprocess.run(
@@ -139,7 +140,9 @@ class DeployTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(len(calls), 2)
 
-    def assert_selection(self, responses: list[dict], image: str, *options: str, **kwargs):
+    def assert_selection(
+        self, responses: list[dict], image: str, *options: str, **kwargs
+    ):
         result, calls = self.run_deploy(
             [*responses, reply("deployment group what-if")], *options, **kwargs
         )
@@ -225,7 +228,10 @@ class DeployTests(unittest.TestCase):
         self.assert_selection(
             [
                 reply("containerapp job list", []),
-                reply("acr list", [{"name": "unrelated", "loginServer": "other.azurecr.io"}]),
+                reply(
+                    "acr list",
+                    [{"name": "unrelated", "loginServer": "other.azurecr.io"}],
+                ),
             ],
             PLACEHOLDER,
         )
@@ -241,7 +247,11 @@ class DeployTests(unittest.TestCase):
         ):
             with self.subTest(responses=responses):
                 self.assert_selection(
-                    [reply("containerapp job list", []), reply("acr list", REGISTRY), *responses],
+                    [
+                        reply("containerapp job list", []),
+                        reply("acr list", REGISTRY),
+                        *responses,
+                    ],
                     PLACEHOLDER,
                 )
 
@@ -253,7 +263,9 @@ class DeployTests(unittest.TestCase):
                         [], image, "--orchestrator-image", explicit
                     )
                     self.assertEqual(len(calls), 1)
-                    self.assertIn("source: explicit --orchestrator-image", result.stdout)
+                    self.assertIn(
+                        "source: explicit --orchestrator-image", result.stdout
+                    )
 
     def test_blank_explicit_image_resolves_normally_for_both_actions(self):
         for explicit in ("", "  ", "\t\n "):
@@ -275,14 +287,17 @@ class DeployTests(unittest.TestCase):
                         self.assertEqual(
                             [
                                 call[: len(response["command"])]
-                                for call, response in zip(calls[:-1], responses, strict=True)
+                                for call, response in zip(
+                                    calls[:-1], responses, strict=True
+                                )
                             ],
                             [response["command"] for response in responses],
                         )
                         self.assertEqual(len(calls), len(responses) + 1)
                         self.assertEqual(calls[-1][:3], ["deployment", "group", action])
                         self.assertEqual(
-                            calls[-1][-2:], ["--parameters", f"orchestratorImage={image}"]
+                            calls[-1][-2:],
+                            ["--parameters", f"orchestratorImage={image}"],
                         )
                         source = (
                             "existing job"
@@ -290,10 +305,13 @@ class DeployTests(unittest.TestCase):
                             else "no existing job image or registry"
                         )
                         self.assertIn(
-                            f"orchestratorImage={image} (source: {source})", result.stdout
+                            f"orchestratorImage={image} (source: {source})",
+                            result.stdout,
                         )
                         if image == PLACEHOLDER:
-                            self.assertIn("WARNING: placeholder image selected", result.stderr)
+                            self.assertIn(
+                                "WARNING: placeholder image selected", result.stderr
+                            )
                         else:
                             self.assertNotIn("WARNING:", result.stderr)
 
@@ -302,7 +320,10 @@ class DeployTests(unittest.TestCase):
             [
                 reply(
                     "containerapp job list",
-                    [job("orchestrator", CURRENT), job("ledger-verify", "registry/image:other")],
+                    [
+                        job("orchestrator", CURRENT),
+                        job("ledger-verify", "registry/image:other"),
+                    ],
                 )
             ]
         )
@@ -328,9 +349,15 @@ class DeployTests(unittest.TestCase):
             "acr repository show-tags",
         ]
         for prefix, command in zip(stages, commands, strict=True):
-            for error in ("AuthorizationFailed", "network unavailable", "(ResourceNotFound)"):
+            for error in (
+                "AuthorizationFailed",
+                "network unavailable",
+                "(ResourceNotFound)",
+            ):
                 with self.subTest(command=command, error=error):
-                    result, calls = self.run_deploy([*prefix, reply(command, error=error, code=1)])
+                    result, calls = self.run_deploy(
+                        [*prefix, reply(command, error=error, code=1)]
+                    )
                     self.assertNotEqual(result.returncode, 0)
                     self.assertIn(error, result.stderr)
                     self.assertNotIn("orchestratorImage=", result.stdout)
@@ -339,10 +366,17 @@ class DeployTests(unittest.TestCase):
     def test_invalid_discovery_data_stops_deployment(self):
         scenarios = [
             [reply("containerapp job list", {})],
-            [reply("containerapp job list", [{"name": "job-forward-test-orchestrator"}])],
+            [
+                reply(
+                    "containerapp job list", [{"name": "job-forward-test-orchestrator"}]
+                )
+            ],
             [reply("containerapp job list", [job("orchestrator", "")])],
             [reply("containerapp job list", []), reply("acr list", {})],
-            [reply("containerapp job list", []), reply("acr list", [{"name": "example"}])],
+            [
+                reply("containerapp job list", []),
+                reply("acr list", [{"name": "example"}]),
+            ],
             [
                 reply("containerapp job list", []),
                 reply("acr list", REGISTRY),
@@ -375,7 +409,8 @@ class DeployTests(unittest.TestCase):
         result, calls = self.run_deploy(
             [
                 reply(
-                    "containerapp job list", [job("orchestrator", CURRENT, prefix="custom-pilot")]
+                    "containerapp job list",
+                    [job("orchestrator", CURRENT, prefix="custom-pilot")],
                 ),
                 reply("deployment group what-if"),
             ],
