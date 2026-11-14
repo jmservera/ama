@@ -6,6 +6,7 @@ from dataclasses import replace
 from decimal import Decimal
 from pathlib import Path
 
+from zava_forward.core.synthetic import run_plan
 from zava_forward.core.synthetic.run_governance import RunGovernance, RunMeter
 from zava_forward.core.synthetic.run_plan import RunController, RunPlan, record
 from zava_forward.core.synthetic.sensor_stream import StreamError
@@ -24,7 +25,7 @@ def gov(**changes: object) -> RunGovernance:
 
 class GovernanceValidation(unittest.TestCase):
     def test_owner_required(self) -> None:
-        for owner in ("", "  ", "TBD", None, "<owner>"):
+        for owner in ("", "  ", "TBD", "TBC", "pending", "a" * 161, None, "<owner>"):
             with self.subTest(owner=owner), self.assertRaisesRegex(StreamError, "RUN_OWNER"):
                 gov(run_owner=owner).validate()
 
@@ -109,6 +110,37 @@ class BudgetMeter(unittest.TestCase):
             runs.append(meter.events)
         self.assertEqual(runs[0], runs[1])
 
+    def test_stop_and_halt_freeze_elapsed_and_remaining_seconds(self) -> None:
+        now = [10.0]
+        meter = self.meter(now)
+        meter.check_time_limit()
+        now[0] = 35.5
+        meter.stop()
+        now[0] = 200.0
+        meter.stop()
+        stopped = meter.summary()
+        self.assertEqual(stopped["status"], "stopped")
+        self.assertEqual(stopped["elapsed_seconds"], 25.5)
+        self.assertEqual(stopped["remaining_seconds"], 574.5)
+        self.assertEqual(stopped["budget_alert_gbp"], "4.00")
+        with self.assertRaisesRegex(StreamError, "RUN_STOPPED"):
+            meter.admit("0.01")
+        with self.assertRaisesRegex(StreamError, "RUN_STOPPED"):
+            meter.check_time_limit()
+
+        halt_clock = [0.0]
+        halted = self.meter(halt_clock)
+        halt_clock[0] = 700.0
+        with self.assertRaisesRegex(StreamError, "RUN_DEADLINE"):
+            halted.check_time_limit()
+        halt_clock[0] = 950.0
+        halted.stop()
+        summary = halted.summary()
+        self.assertEqual(summary["status"], "halted")
+        self.assertEqual(summary["halt_reason"], "RUN_DEADLINE")
+        self.assertEqual(summary["elapsed_seconds"], 700.0)
+        self.assertEqual(summary["remaining_seconds"], 0.0)
+
 
 class RunPlanWiring(unittest.TestCase):
     def controller(self, now: list[float], **changes: object) -> RunController:
@@ -152,8 +184,162 @@ class RunPlanWiring(unittest.TestCase):
     def test_invalid_or_partial_governance_refused(self) -> None:
         with self.assertRaisesRegex(StreamError, "INVALID_BUDGET"):
             self.controller([0.0], budget_cap_gbp=None)
+        with self.assertRaisesRegex(StreamError, "INVALID_BUDGET"):
+            self.controller(
+                [0.0], budget_alert_gbp=None, budget_cap_gbp=None, planned_cost_gbp="1.00"
+            )
+        for bad_planned in ("nan", "-0.01", 0):
+            with (
+                self.subTest(bad_planned=bad_planned),
+                self.assertRaisesRegex(StreamError, "INVALID_BUDGET"),
+            ):
+                self.controller([0.0], planned_cost_gbp=bad_planned)
+        with self.assertRaisesRegex(StreamError, "INVALID_BUDGET"):
+            self.controller([0.0], budget_alert_gbp=4)
         with self.assertRaisesRegex(StreamError, "RUN_BUDGET_HALT"):
             self.controller([0.0], planned_cost_gbp="5.00")
+        for placeholder in ("TBC", "pending"):
+            with (
+                self.subTest(placeholder=placeholder),
+                self.assertRaisesRegex(StreamError, "RUN_OWNER_COST_ALERT_REQUIRED"),
+            ):
+                RunController(
+                    RunPlan(
+                        owner=placeholder,
+                        homes=10,
+                        max_seconds=600,
+                        max_per_second=10,
+                        budget_usd=5,
+                        alert_threshold=0.8,
+                        alert_reference="budget-iot-hub-80pct",
+                    )
+                )
+
+    def test_status_reports_owner_time_limit_and_alert_position(self) -> None:
+        now = [0.0]
+        run = self.controller(now)
+        run.admit(Decimal("4.00"))
+        now[0] = 12.5
+        status = run.status()
+        self.assertEqual(status["state"], "running")
+        self.assertEqual(status["run_owner"], "Juan Manuel Servera")
+        self.assertEqual(status["time_limit_seconds"], 600)
+        self.assertEqual(status["elapsed_seconds"], 12.5)
+        self.assertEqual(status["remaining_seconds"], 587.5)
+        self.assertEqual(status["budget_alert_gbp"], "4.00")
+        self.assertEqual(status["alert_fires_at_usd"], 4.0)
+        self.assertEqual(status["alert_raised"], True)
+        self.assertEqual(status["accumulated_gbp"], "4.00")
+        with self.assertRaisesRegex(StreamError, "RUN_BUDGET_HALT"):
+            run.admit("1.00")
+        now[0] = 99.0
+        self.assertEqual(run.status()["state"], "stopped")
+        self.assertEqual(run.status()["halt_reason"], "RUN_BUDGET_HALT")
+        self.assertEqual(run.status()["elapsed_seconds"], 12.5)
+
+    def test_status_schema_consistent_across_idle_running_and_stopped(self) -> None:
+        plan = RunPlan(
+            owner="Juan Manuel Servera",
+            homes=10,
+            max_seconds=600,
+            max_per_second=10,
+            budget_usd=5,
+            alert_threshold=0.8,
+            alert_reference="budget-iot-hub-80pct",
+            budget_alert_gbp=" 4.00 ",
+            budget_cap_gbp="5.00",
+        )
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        path = Path(directory.name) / "estimate.json"
+        record(plan, path)
+        now = [10.0]
+        run = RunController(plan, clock=lambda: now[0])
+        idle = run.status()
+        self.assertEqual(idle["state"], "idle")
+        self.assertEqual(idle["elapsed_seconds"], 0.0)
+        self.assertEqual(idle["remaining_seconds"], 600)
+        self.assertEqual(idle["budget_alert_gbp"], "4.00")
+        self.assertEqual(idle["alert_reference"], "budget-iot-hub-80pct")
+        self.assertEqual(idle["alert_fires_at_usd"], 4.0)
+        self.assertFalse(idle["alert_raised"])
+        self.assertIsNone(idle["halt_reason"])
+
+        run.start(path)
+        now[0] = 30.0
+        run.stop()
+        now[0] = 500.0
+        run.stop()
+        stopped = run.status()
+        self.assertEqual(stopped["state"], "stopped")
+        self.assertEqual(stopped["status"], "stopped")
+        self.assertEqual(stopped["elapsed_seconds"], 20.0)
+        self.assertEqual(stopped["remaining_seconds"], 580.0)
+        self.assertIsNone(stopped["halt_reason"])
+        with self.assertRaisesRegex(StreamError, "RUN_NOT_RUNNING"):
+            run.check_time_limit()
+
+        never_started = RunController(plan, clock=lambda: now[0])
+        never_started.stop()
+        self.assertEqual(never_started.status()["elapsed_seconds"], 0.0)
+
+    def test_check_time_limit_enforces_deadline_with_and_without_gbp_meter(self) -> None:
+        now = [0.0]
+        usd_only = self.controller(now, budget_alert_gbp=None, budget_cap_gbp=None)
+        now[0] = 120.0
+        usd_only.check_time_limit()
+        now[0] = 605.0
+        with self.assertRaisesRegex(StreamError, "RUN_DEADLINE"):
+            usd_only.check_time_limit()
+        assert usd_only.pacer is not None
+        self.assertTrue(usd_only.pacer.stopped)
+        now[0] = 900.0
+        status = usd_only.status()
+        self.assertEqual(status["state"], "stopped")
+        self.assertEqual(status["halt_reason"], "RUN_DEADLINE")
+        self.assertEqual(status["elapsed_seconds"], 605.0)
+        self.assertEqual(status["remaining_seconds"], 0.0)
+        with self.assertRaisesRegex(StreamError, "RUN_DEADLINE"):
+            usd_only.check_time_limit()
+
+        gbp_clock = [0.0]
+        gbp_run = self.controller(gbp_clock)
+        gbp_clock[0] = 600.0
+        with self.assertRaisesRegex(StreamError, "RUN_DEADLINE"):
+            gbp_run.check_time_limit()
+        self.assertEqual(gbp_run.status()["halt_reason"], "RUN_DEADLINE")
+        with self.assertRaisesRegex(StreamError, "RUN_DEADLINE"):
+            gbp_run.check_time_limit()
+
+    def test_status_without_gbp_governance_has_no_budget_alert(self) -> None:
+        status = self.controller([0.0], budget_alert_gbp=None, budget_cap_gbp=None).status()
+        self.assertIsNone(status["budget_alert_gbp"])
+        self.assertEqual(status["alert_fires_at_usd"], 4.0)
+        self.assertEqual(status["run_owner"], "Juan Manuel Servera")
+
+    def test_cli_records_gbp_alert_and_refuses_alert_at_cap(self) -> None:
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        out = str(Path(directory.name) / "e.json")
+        args = [
+            "--homes",
+            "10",
+            "--owner",
+            "Juan",
+            "--budget-usd",
+            "5",
+            "--alert-reference",
+            "budget-iot-hub-80pct",
+            "--out",
+            out,
+        ]
+        self.assertEqual(
+            run_plan.main([*args, "--budget-alert-gbp", "4", "--budget-cap-gbp", "5"]), 0
+        )
+        self.assertEqual(
+            run_plan.main([*args, "--budget-alert-gbp", "5", "--budget-cap-gbp", "5"]), 2
+        )
+        self.assertEqual(run_plan.main([*args, "--planned-cost-gbp", "1.00"]), 2)
 
     def test_admit_requires_governance_and_running(self) -> None:
         run = self.controller([0.0], budget_alert_gbp=None, budget_cap_gbp=None)

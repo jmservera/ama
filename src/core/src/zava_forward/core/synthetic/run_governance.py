@@ -12,6 +12,14 @@ from typing import Any
 from .sensor_stream import StreamError, accountable_text
 
 MAX_TIME_LIMIT_SECONDS = 3600.0
+_EXTRA_PLACEHOLDERS = frozenset({"tbc", "pending"})
+
+
+def governed_text(value: object) -> bool:
+    """Reject blank, template, overlong, and placeholder owner or alert identifiers."""
+    if not isinstance(value, str) or not accountable_text(value):
+        return False
+    return value.strip().casefold() not in _EXTRA_PLACEHOLDERS
 
 
 def _gbp(value: object, *, allow_zero: bool = False) -> Decimal:
@@ -34,7 +42,7 @@ class RunGovernance:
     budget_cap_gbp: Decimal | int | str
 
     def validate(self) -> tuple[Decimal, Decimal]:
-        if not accountable_text(self.run_owner):
+        if not governed_text(self.run_owner):
             raise StreamError("RUN_OWNER_REQUIRED")
         limit = self.time_limit_seconds
         if (
@@ -60,6 +68,7 @@ class RunMeter:
     accumulated_gbp: Decimal = Decimal(0)
     status: str = "running"
     halt_reason: str | None = None
+    ended: float | None = None
 
     def __post_init__(self) -> None:
         self.alert, self.cap = self.governance.validate()
@@ -90,17 +99,57 @@ class RunMeter:
     def _halt(self, basis: str, amount: Decimal) -> None:
         self.status = "halted"
         self.halt_reason = "RUN_BUDGET_HALT"
+        if self.ended is None:
+            self.ended = self.clock()
         self._event("budget_halt", basis, amount)
+
+    def _ensure_running(self) -> None:
+        if self.status == "stopped":
+            raise StreamError("RUN_STOPPED")
+        if self.status != "running":
+            raise StreamError(self.halt_reason or "RUN_BUDGET_HALT")
+
+    def check_time_limit(self) -> None:
+        """Enforce the bounded run duration even before a positive spend increment."""
+        self._ensure_running()
+        now = self.clock()
+        if now - self.started >= self.governance.time_limit_seconds:
+            self.status = "halted"
+            self.halt_reason = "RUN_DEADLINE"
+            self.ended = now
+            self._event("time_limit_halt", "elapsed", self.accumulated_gbp)
+            raise StreamError("RUN_DEADLINE")
+
+    def stop(self) -> None:
+        """Freeze elapsed runtime on manual operator stop without overwriting a halt."""
+        if self.status == "running":
+            self.status = "stopped"
+            if self.ended is None:
+                self.ended = self.clock()
+
+    def summary(self) -> dict[str, Any]:
+        """Owner-facing status: who owns the run, its time limit and where the budget stands."""
+        end = self.ended if self.ended is not None else self.clock()
+        elapsed = round(max(0.0, end - self.started), 3)
+        remaining = round(max(0.0, self.governance.time_limit_seconds - elapsed), 3)
+        alert = str(self.alert)
+        return {
+            "run_owner": self.governance.run_owner,
+            "time_limit_seconds": self.governance.time_limit_seconds,
+            "elapsed_seconds": elapsed,
+            "remaining_seconds": remaining,
+            "status": self.status,
+            "halt_reason": self.halt_reason,
+            "accumulated_gbp": str(self.accumulated_gbp),
+            "budget_alert_gbp": alert,
+            "alert_gbp": alert,
+            "cap_gbp": str(self.cap),
+            "alert_raised": any(e["event"] == "budget_alert" for e in self.events),
+        }
 
     def admit(self, cost_gbp: Decimal | int | str) -> None:
         """Record the next spend; raises before it would breach the cap or the time limit."""
-        if self.status != "running":
-            raise StreamError(self.halt_reason or "RUN_BUDGET_HALT")
-        if self.clock() - self.started >= self.governance.time_limit_seconds:
-            self.status = "halted"
-            self.halt_reason = "RUN_DEADLINE"
-            self._event("time_limit_halt", "elapsed", self.accumulated_gbp)
-            raise StreamError("RUN_DEADLINE")
+        self.check_time_limit()
         cost = _gbp(cost_gbp, allow_zero=True)
         total = self.accumulated_gbp + cost
         if total >= self.cap:
