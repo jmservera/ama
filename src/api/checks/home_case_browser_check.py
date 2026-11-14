@@ -28,6 +28,48 @@ OWN_ONLY = ("Synthetic own-home survey", "Ventilation extract")
 SYSTEM_ITEM = "SYS-1: Shared ventilation Source: SYN-SURVEY"
 
 
+BUILDING_ONLY = ("DEP-1", "HOLD-1", "WORK-1", "WORK-M", "SYS-1", "COST-1: GBP 12000.00")
+HOME_HEADINGS = ("Evidence documents", "Quality outcomes", "Cost allocation")
+BUILDING_HEADINGS = (
+    "Shared systems",
+    "Dependencies",
+    "Work stopped pending review",
+    "Shared works",
+)
+
+
+def check_regions_apart(label: str, home: Any, shared: Any, own_tokens: tuple[str, ...]) -> None:
+    """Each record type sits in exactly one region; neither region carries the other's records."""
+    home_text, shared_text = home.inner_text(), shared.inner_text()
+    home_h3 = home.locator("h3").all_inner_texts()
+    shared_h3 = shared.locator("h3").all_inner_texts()
+    check(
+        f"{label}: building dependency, hold, works, system and shared cost never enter the home region",
+        all(token in shared_text and token not in home_text for token in BUILDING_ONLY),
+    )
+    check(
+        f"{label}: own evidence, decision, allocation and outcome never enter the building region",
+        all(token in home_text and token not in shared_text for token in own_tokens)
+        and "Decision:" not in shared_text
+        and "This home's share" not in shared_text
+        and "GBP 6000.00" not in shared_text,
+    )
+    check(
+        f"{label}: sub-headings stay in their own region: {home_h3} / {shared_h3}",
+        all(t in home_h3 for t in HOME_HEADINGS)
+        and not any(t in shared_h3 for t in HOME_HEADINGS)
+        and all(t in shared_h3 for t in BUILDING_HEADINGS)
+        and not any(t in home_h3 for t in BUILDING_HEADINGS),
+    )
+    check(
+        f"{label}: the two regions do not nest or overlap",
+        home.locator("section").count() == 0
+        and shared.locator("[aria-labelledby=hc-home]").count() == 0
+        and home.locator("[aria-labelledby=hc-building]").count() == 0
+        and home.evaluate("(a, b) => !a.contains(b) && !b.contains(a)", shared.element_handle()),
+    )
+
+
 def home_case_data() -> dict[str, Any]:
     """Two fictional homes sharing a building that lists a dependency, a hold, works and a cost."""
     from building_fixture import fixture, hold
@@ -146,6 +188,9 @@ def run_browser(base: str) -> None:
                 "shared system item is in the building panel only on ZF-2",
                 SYSTEM_ITEM in shared_text and "SYS-1" not in home_text,
             )
+            check_regions_apart(
+                "ZF-2", home, shared, ("Synthetic own-home survey", "Ventilation extract")
+            )
             check(
                 "version status and no-transfer notice are shown",
                 "No version recorded yet" in main_text and "does not transfer" in main_text,
@@ -215,6 +260,9 @@ def run_browser(base: str) -> None:
                 "GBP 6000.00" in home_text
                 and "GBP 12000.00" in shared_text
                 and "GBP 12000.00" not in home_text,
+            )
+            check_regions_apart(
+                "ZF-3", home, shared, ("Synthetic survey metadata only", "Loft insulation")
             )
             check(
                 "ZF-3 has one h1 then four h2 panels",
