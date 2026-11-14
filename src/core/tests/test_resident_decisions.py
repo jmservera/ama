@@ -2606,8 +2606,14 @@ class JsonResidentDecisions(unittest.TestCase):
             self.assertIn(duty, text)
         self.assertEqual(
             view["reviewable_decisions"],
-            [dict(measure=MEASURES[0], version=1, status="Withdrawn",
-                  recorder_identity_status="Known")],
+            [
+                dict(
+                    measure=MEASURES[0],
+                    version=1,
+                    status="Withdrawn",
+                    recorder_identity_status="Known",
+                )
+            ],
         )
         self.assertEqual(view["formal_requests"], [])
         before = copy.deepcopy(self.store.cases["ZF-1"])
