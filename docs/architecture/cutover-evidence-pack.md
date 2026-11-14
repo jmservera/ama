@@ -8410,3 +8410,39 @@ Requested names with no file at this commit: `test_synthetic_test_data_guard` an
 ### Process limits
 
 Documentation only. Local focused tier; not a complete-gate receipt. Independent exact-head review, human approvals and applicable hosted CI remain required. Original records: `.copilot-tracking/{research,plans,details,changes,reviews}/2026-11-13/440-post-wave-stabilization-2354-*` and its state file.
+
+## Current-main cut-over local verification (2026-11-13, Refs #201)
+
+Documentation only, focused tier, not approved. This section reruns the local cut-over checks on current `main` and separates what they prove from the live Azure and owner gates that remain. It changes no source, test, tool, workflow, requirement or ADR, ticks no criterion, closes nothing and records no live deployment or owner sign-off. It does not edit the knowledge-base log or the WCAG baseline, which open PRs 1575 and 1576 touch.
+
+Pin: `3033dc9c21e57c7f86eca3882fffaf7e9a025033` (`origin/main`, merge of PR 1572), clean worktree. Environment: Python 3.12.3 in a pip venv outside the repository (removed afterwards), `ruff==0.17.1` as pinned by `src-ci`, `src/core`, `src/agents` and `src/api` pip-installed, plus Pillow, python-pptx and PyYAML for the tool tests. A first run without those three packages failed 7 of 25 tool tests with `ModuleNotFoundError`; that was a missing-dependency environment defect, and the table records the rerun. Local, synthetic, no Azure, SQL, browser, Docker or model call.
+
+### Local observations at the pin
+
+| Check | Result | Class |
+| --- | --- | --- |
+| `python3 tools/rename-zava-tests.py` | 25 tests OK, exit 0 | local observed |
+| `src/core` `tests.test_scenario_manifest` | 8 tests OK | local observed |
+| `src/core` `tests.test_needs_inventory` | 11 tests OK | local observed |
+| `ruff check .` and `ruff format --check .` in each of `src/core`, `agents`, `api`, `orchestrator`, `importer` | All checks passed; 247, 50, 155, 13 and 13 files already formatted | local observed |
+| `tests.test_dependency_rule` in each of the five `src` projects | 2, 4, 2, 2 and 2 tests OK | local observed |
+| `git ls-files mvp prototype` | 0 paths; neither directory exists in the worktree | static observation |
+| Search for `import` or `from` of `mvp`, `prototype` or `zavaforward_mvp` in `src`, `infra` and `tools` Python files | 0 matches | static observation |
+
+Limits: a repository-root `ruff check` is not the CI scope (`src-ci` lints per project with each project's configuration) and is not recorded as a result. The full isolated suites of the five projects were started but not run to completion (the `src/core` suite was stopped after about 15 minutes), so no total test count, skip count or coverage figure is claimed for the current head.
+
+### Issue #201 criteria against this evidence
+
+| Criterion | What this section adds | Still not proven |
+| --- | --- | --- |
+| Tests migrated and passing in CI with equal or greater coverage than the baseline | Targeted local suites above pass at the pin | Measured coverage equivalence against the baseline, the full suites at this head and the exact-head hosted `src-ci` result |
+| CI, Docker, Bicep image paths and scripts repointed; a build from `src/` is deployed and healthy | Local lint, dependency-rule and zero old-path import evidence | Any deployed, healthy build from `src/`: the Azure non-prod deploy and rollback, and the live demo sync, are unperformed |
+| Dependent epics #113, #136, #165, #157 and #149 have no open work on the old paths | No tracked `mvp/` or `prototype/` path or import remains at the pin | A per-epic old-path disposition; the epics themselves stay open |
+| Private `mvp/data/` relocated and backed up outside git | None; no private data was read | The owner copy and encrypted backup outside git, which the 2026-11-13 sign-off keeps pending the live redeploy |
+| Owner signs off in this issue | None | The issue-local owner sign-off; the 2026-11-13 [owner sign-offs](#owner-sign-offs-for-cut-over-staff-mediated-capture-and-tokenomics-2026-11-13-refs-203) are recorded above and are not re-asked or widened here |
+
+The [parity matrix](./mvp-to-src-parity-matrix.md) and [parity audit](./cutover-parity-audit.tsv) are unchanged.
+
+* Recommendation, proposed and not an owner decision: keep #201 open. The local cut-over criteria hold at this head; the remaining gates are the live Azure non-prod deploy and rollback with a healthy `src/` build, coverage equivalence, the dependent-epic disposition, the private-data backup and the owner sign-off in the issue.
+* Refs only for #201. Independent exact-head review, human approvals and applicable hosted CI remain required before merge.
+* Original records: `.copilot-tracking/{research,plans,details,changes,reviews}/2026-11-13/201-cutover-evidence-current-main-2333-*` and its state file.
