@@ -14,14 +14,14 @@ from .sensor_stream import StreamError, accountable_text
 MAX_TIME_LIMIT_SECONDS = 3600.0
 
 
-def _gbp(value: object) -> Decimal:
+def _gbp(value: object, *, allow_zero: bool = False) -> Decimal:
     if type(value) is bool or not isinstance(value, (int, str, Decimal)):
         raise StreamError("INVALID_BUDGET")
     try:
         amount = Decimal(value)
     except InvalidOperation:
         raise StreamError("INVALID_BUDGET") from None
-    if not amount.is_finite() or amount <= 0:
+    if not amount.is_finite() or amount < 0 or (amount == 0 and not allow_zero):
         raise StreamError("INVALID_BUDGET")
     return amount
 
@@ -59,14 +59,13 @@ class RunMeter:
     events: list[dict[str, Any]] = field(default_factory=list)
     accumulated_gbp: Decimal = Decimal(0)
     status: str = "running"
+    halt_reason: str | None = None
 
     def __post_init__(self) -> None:
         self.alert, self.cap = self.governance.validate()
         self.started = self.clock()
-        projected = Decimal(self.projected_cost_gbp)
-        if projected < 0:
-            raise StreamError("INVALID_BUDGET")
-        if projected > self.cap:
+        projected = _gbp(self.projected_cost_gbp, allow_zero=True)
+        if projected >= self.cap:
             self._halt("projected", projected)
             raise StreamError("RUN_BUDGET_HALT")
         if projected >= self.alert:
@@ -90,19 +89,19 @@ class RunMeter:
 
     def _halt(self, basis: str, amount: Decimal) -> None:
         self.status = "halted"
+        self.halt_reason = "RUN_BUDGET_HALT"
         self._event("budget_halt", basis, amount)
 
     def admit(self, cost_gbp: Decimal | int | str) -> None:
         """Record the next spend; raises before it would breach the cap or the time limit."""
         if self.status != "running":
-            raise StreamError("RUN_BUDGET_HALT")
+            raise StreamError(self.halt_reason or "RUN_BUDGET_HALT")
         if self.clock() - self.started >= self.governance.time_limit_seconds:
             self.status = "halted"
+            self.halt_reason = "RUN_DEADLINE"
             self._event("time_limit_halt", "elapsed", self.accumulated_gbp)
             raise StreamError("RUN_DEADLINE")
-        cost = Decimal(cost_gbp)
-        if cost < 0:
-            raise StreamError("INVALID_BUDGET")
+        cost = _gbp(cost_gbp, allow_zero=True)
         total = self.accumulated_gbp + cost
         if total >= self.cap:
             self._halt("accumulated", total)

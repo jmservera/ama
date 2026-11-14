@@ -1,9 +1,13 @@
 """Run owner, bounded time limit and GBP budget alert for the simulator."""
 
+import tempfile
 import unittest
+from dataclasses import replace
 from decimal import Decimal
+from pathlib import Path
 
 from zava_forward.core.synthetic.run_governance import RunGovernance, RunMeter
+from zava_forward.core.synthetic.run_plan import RunController, RunPlan, record
 from zava_forward.core.synthetic.sensor_stream import StreamError
 
 
@@ -66,6 +70,28 @@ class BudgetMeter(unittest.TestCase):
         with self.assertRaisesRegex(StreamError, "RUN_BUDGET_HALT"):
             self.meter([0.0], projected_cost_gbp="5.01")
 
+    def test_projected_cost_at_cap_or_invalid_is_refused(self) -> None:
+        with self.assertRaisesRegex(StreamError, "RUN_BUDGET_HALT"):
+            self.meter([0.0], projected_cost_gbp="5.00")
+        for bad in (True, "nan", "Infinity", "abc", -1, None):
+            with self.subTest(bad=bad), self.assertRaisesRegex(StreamError, "INVALID_BUDGET"):
+                self.meter([0.0], projected_cost_gbp=bad)
+
+    def test_admit_rejects_invalid_cost(self) -> None:
+        meter = self.meter([0.0])
+        for bad in (True, "nan", "Infinity", "x", -1):
+            with self.subTest(bad=bad), self.assertRaisesRegex(StreamError, "INVALID_BUDGET"):
+                meter.admit(bad)
+        meter.admit(0)
+
+    def test_deadline_halt_is_not_misreported_as_budget(self) -> None:
+        now = [0.0]
+        meter = self.meter(now)
+        now[0] = 700.0
+        for _ in range(2):
+            with self.assertRaisesRegex(StreamError, "RUN_DEADLINE"):
+                meter.admit("0.10")
+
     def test_time_limit_halts_run(self) -> None:
         now = [0.0]
         meter = self.meter(now)
@@ -82,6 +108,57 @@ class BudgetMeter(unittest.TestCase):
             meter.admit("4.10")
             runs.append(meter.events)
         self.assertEqual(runs[0], runs[1])
+
+
+class RunPlanWiring(unittest.TestCase):
+    def controller(self, now: list[float], **changes: object) -> RunController:
+        base = RunPlan(
+            owner="Juan Manuel Servera",
+            homes=10,
+            max_seconds=600,
+            max_per_second=10,
+            budget_usd=5,
+            alert_threshold=0.8,
+            alert_reference="budget-iot-hub-80pct",
+            budget_alert_gbp="4.00",
+            budget_cap_gbp="5.00",
+        )
+        plan = replace(base, **changes)  # type: ignore[arg-type]
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        path = Path(directory.name) / "estimate.json"
+        record(plan, path)
+        controller = RunController(plan, clock=lambda: now[0])
+        controller.start(path)
+        return controller
+
+    def test_real_run_alerts_then_halts_and_stops(self) -> None:
+        run = self.controller([0.0])
+        assert run.meter is not None
+        run.admit("4.00")
+        self.assertEqual(run.meter.events[0]["event"], "budget_alert")
+        with self.assertRaisesRegex(StreamError, "RUN_BUDGET_HALT"):
+            run.admit("1.00")
+        self.assertEqual(run.state, "stopped")
+
+    def test_run_deadline_stops_controller(self) -> None:
+        now = [0.0]
+        run = self.controller(now)
+        now[0] = 600.0
+        with self.assertRaisesRegex(StreamError, "RUN_DEADLINE"):
+            run.admit("0.01")
+        self.assertEqual(run.state, "stopped")
+
+    def test_invalid_or_partial_governance_refused(self) -> None:
+        with self.assertRaisesRegex(StreamError, "INVALID_BUDGET"):
+            self.controller([0.0], budget_cap_gbp=None)
+        with self.assertRaisesRegex(StreamError, "RUN_BUDGET_HALT"):
+            self.controller([0.0], planned_cost_gbp="5.00")
+
+    def test_admit_requires_governance_and_running(self) -> None:
+        run = self.controller([0.0], budget_alert_gbp=None, budget_cap_gbp=None)
+        with self.assertRaisesRegex(StreamError, "RUN_NOT_RUNNING"):
+            run.admit("1")
 
 
 if __name__ == "__main__":
