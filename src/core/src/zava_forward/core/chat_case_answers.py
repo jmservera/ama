@@ -22,7 +22,7 @@ CHAT_BOUNDARY = "workflow/chat-boundary"
 AI_CONSENT = "workflow/ai-consent-boundary"
 DOMAIN_BOUNDARY = "workflow/domain-boundary"
 ORIGIN_RULE = "[Origin: decision_rule]"
-RULES_FIRST = frozenset({"unblock", "claim", "pas2035", "sensor", "damp"})
+RULES_FIRST = frozenset({"unblock", "claim", "pas2035", "sensor"})
 HAZARD_WORDS = re.compile(r"damp|mould|mold|ventil|moisture|condens", re.I)
 # Fixed workflow rules, citable by id. They are rules, not recorded facts about any case.
 RULES: dict[str, str] = {
@@ -57,21 +57,17 @@ INTENTS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
     for name, pattern in (
         (
             "sensor",
-            r"\b(sensors?|readings?|dew\s*points?|mou?ld\s+risk|iot|"
+            r"\b(sensors?|readings?|dew\s*points?|mou?ld\s+risk|iot|ventilat\w*|"
             r"(?:fault|sensor)\s+flags?)\b",
         ),
         (
             "pas2035",
-            r"\b(pas\s*-?\s*2035|sign\s*-?\s*offs?|signed\s+off|coordinator\w*|"
+            r"^(?!.*\b(?:ignore|disregard)\b).*\b(pas\s*-?\s*2035|sign\s*-?\s*offs?|signed\s+off|coordinator\w*|"
             r"retrofit\s+(?:coordinator|assess\w*|design\w*)|design\s+version)\b",
         ),
         (
-            "damp",
-            r"\b(damp\w*|mou?ld\w*|ventilat\w*|humidity|moisture|condensation)\b",
-        ),
-        (
             "claim",
-            r"\b(grants?|claims?|claimable|eligib\w*|ready\s+to\s+(?:claim|submit)|"
+            r"\b(claimable|eligib\w*|ready\s+to\s+(?:claim|submit)|claims?\s+(?:ready|position|status)|grants?\s+claims?|"
             r"funding\s+(?:ready|readiness))\b",
         ),
         ("funding", r"\b(fund\w*|grants?|claims?|money|financ\w*|budget|invoic\w*|paid)\b"),
@@ -392,14 +388,7 @@ def _hazard_line(r: Reply, i: int) -> str:
 def _sensor(r: Reply) -> None:
     cite = r.fact("sensor.latest.citation")
     if not cite:
-        r.say(
-            "No retained sensor reading is shown for this case. "
-            + (r.fact("sensor.detail") or "Your role may not include indoor readings.")
-        )
-        r.say("Use the ordinary quality check, or ask the quality team for the readings.")
-        if r.fact("stage"):
-            r.say(f"Case stage: {r.facts['stage']}.")
-        return
+        return _damp(r)
     temperature = r.fact("sensor.latest.temperature_c")
     humidity = r.fact("sensor.latest.humidity_pct")
     observed = r.fact("sensor.latest.observed_at")
@@ -643,7 +632,6 @@ def _damp(r: Reply) -> None:
 ANSWERS = {
     "claim": _claim,
     "pas2035": _pas2035,
-    "damp": _damp,
     "sensor": _sensor,
     "unblock": _unblock,
     "funding": _funding,
