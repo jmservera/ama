@@ -53,6 +53,10 @@ def _issues_by_field(issues: object) -> dict[str, list[Record]]:
 def draft_export(store: Any, user: Record, case_id: str, draft_id: str) -> Record:
     """Return field values, evidence links and versions with a fixed Held status.
 
+    Each field carries the input version of its own last review (0 when never
+    reviewed) so an unrelated review does not stale it; attachments carry the
+    pack input version. All carry the template version.
+
     The export holds no submission, eligibility or readiness claim, changes no
     record and has no reviewed state; the manual path is the working review itself.
     """
@@ -69,6 +73,7 @@ def draft_export(store: Any, user: Record, case_id: str, draft_id: str) -> Recor
                 reviewed=False,
                 notice="Working evidence is unavailable. Ask the document owner to recover it.",
             )
+        template_version = report["template"]["version"]
         fields = []
         for field in draft["schema"]["fields"]:
             row = report["fields"][field["id"]]
@@ -84,6 +89,15 @@ def draft_export(store: Any, user: Record, case_id: str, draft_id: str) -> Recor
                     if evidence is None
                     else evidence["source"]["content_sha256"],
                     locator=None if evidence is None else deepcopy(evidence["locator"]),
+                    template_version=template_version,
+                    input_version=max(
+                        (
+                            e["input_version"]
+                            for e in report["history"]
+                            if e["field_id"] == field["id"]
+                        ),
+                        default=0,
+                    ),
                 )
             )
         body = dict(
