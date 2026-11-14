@@ -1009,7 +1009,7 @@ function exceptionSummaryControl(rows) {
     status);
 }
 const indicatorStates = { fresh: "Fresh", stale: "Stale", enabled: "Enabled", disabled: "Disabled", healthy: "Healthy", degraded: "Degraded", down: "Down", quarantined: "Quarantined" };
-const indicatorState = (value) => typeof value === "string" && indicatorStates[value.toLowerCase()] || "Unknown";
+const indicatorState = (value) => typeof value === "string" && Object.hasOwn(indicatorStates, value.toLowerCase()) ? indicatorStates[value.toLowerCase()] : "Unknown";
 function indicatorRows(data, items) {
   const given = exceptionRecord(data.indicators) ? data.indicators : {};
   const when = (entry) => exceptionRecord(entry) && typeof entry.as_of === "string" && entry.as_of ? `As of ${entry.as_of}` : "Time not supplied";
@@ -1026,6 +1026,18 @@ function indicatorRows(data, items) {
   if (!tasks.length) rows.push(["AI tasks", "State: Unknown. No task settings were returned. Read-only; enabling or disabling a task is a controlled change outside this screen."]);
   return rows;
 }
+const exceptionJumps = [["exception-state", "State at a glance"], ["exception-sources", "Sources and unrouted records"],
+  ["exception-items", "Open exception items"], ["exception-conflicts", "Source conflicts"]];
+const exceptionHeading = (id, text) => h("h3", { id, tabindex: "-1" }, text);
+function exceptionJumpNav() {
+  return h("nav", { class: "screen-section-jump", "aria-label": "Data stewardship sections" },
+    exceptionJumps.map(([id, text]) => h("button", { type: "button", "data-jump-target": id, onclick: () => {
+      const target = document.getElementById(id);
+      if (!target) return;
+      target.focus();
+      target.scrollIntoView({ block: "start" });
+    } }, `Go to ${text}`)));
+}
 function exceptionRegisterPanel(data) {
   const items = data.items.filter(exceptionItem);
   const unreadable = data.items.length - items.length;
@@ -1040,23 +1052,24 @@ function exceptionRegisterPanel(data) {
     h("p", { role: "status" }, `${exceptionBannerLabel[banner.state] || "Service state Unknown"}. ${exceptionText(banner.text)}`),
     h("p", {}, "Read-only list returned by the server for your signed-in access. Nothing is replayed, re-run, released, corrected or assigned here, and no AI call is made. Recovery guidance below is placeholder text, not an approved runbook."),
     h("p", {}, exceptionText(data.note)),
+    exceptionJumpNav(),
     h("p", {}, "Deliberate rules-and-template processing (workflow-only) is not a failure and is not a model result. It is never listed here, so an empty list does not show that a model succeeded or that nothing failed."),
     screenFields([["Register state", data.state],
       ["Your access", roles.length ? roles.map(([name, held]) => `${exceptionText(name)}: ${Array.isArray(held) ? held.map(exceptionText).join(", ") : "Unknown"}`).join("; ") : "No role named for you"],
       ["Role scope", scope.length ? scope.map(([kind, role]) => `${exceptionKinds[kind] || exceptionText(kind)}: ${exceptionText(role)}`).join("; ") : "Unknown"]]),
-    h("h3", {}, "State at a glance"),
+    exceptionHeading("exception-state", "State at a glance"),
     screenFields(indicatorRows(data, items)),
-    h("h3", {}, "Sources not connected and records not routed"),
+    exceptionHeading("exception-sources", "Sources not connected and records not routed"),
     list("Sources", data.sources),
     list("Unrouted", data.unrouted),
-    h("h3", {}, "Open exception items"),
+    exceptionHeading("exception-items", "Open exception items"),
     unreadable ? h("p", { role: "status" }, `${unreadable} returned entries could not be read and are not shown. This list is not complete.`) : null,
     items.length ? [summary && exceptionSummaryControl(summary), screenTable("Exception items returned for you",
       ["Reference", "Kind", "State", "Configured owner", "What happened and reason", "Manual next step", "Source or run reference", "Eligibility"],
       items.map((item) => [item.id, exceptionKinds[item.kind] || exceptionText(item.kind), exceptionText(item.status), exceptionOwner(item),
         exceptionHappened(item), `Placeholder guidance, not an approved runbook: ${exceptionText(item.runbook)}`, exceptionReference(item), exceptionText(item.eligibility)]), Infinity)]
       : h("p", { class: "empty" }, "No exception items were returned. This is not an all clear: the Sources list shows which sources are not connected, service health is Unknown and unrouted records are listed above."),
-    h("h3", {}, "Source conflicts: both values"),
+    exceptionHeading("exception-conflicts", "Source conflicts: both values"),
     conflicts.length ? screenTable("Source conflicts with every returned value",
       ["Reference", "First value, source, version, date", "Second value, source, version, date", "Further values", "Resolution owner", "Eligibility"],
       conflicts.map((item) => [item.id, exceptionSide(item.values[0]), exceptionSide(item.values[1]),

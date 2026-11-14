@@ -110,6 +110,26 @@ class DataStewardScreenWcag(unittest.TestCase):
         self.assertIn("Lineage freshness State: Unknown", page)
         self.assertIn("Sensor feed health State: Unknown", page)
 
+    def test_inherited_object_keys_are_unknown(self) -> None:
+        bad = {"lineage": {"state": "constructor"}, "sensor_feed": {"state": "toString"}}
+        page = glance(render({**BASE, "indicators": bad}))
+        self.assertIn("Lineage freshness State: Unknown", page)
+        self.assertIn("Sensor feed health State: Unknown", page)
+
+    def test_section_jump_buttons_target_focusable_headings(self) -> None:
+        nodes = walk(render(BASE))
+        navs = [n for n in nodes if n.get("tag") == "nav"]
+        self.assertEqual(len(navs), 1)
+        self.assertEqual(navs[0]["attrs"]["aria-label"], "Data stewardship sections")
+        buttons = [n for n in walk(navs[0]) if n.get("tag") == "button"]
+        self.assertEqual(len(buttons), 4)
+        headings = {
+            n["attrs"].get("id"): n["attrs"].get("tabindex") for n in nodes if n.get("tag") == "h3"
+        }
+        for button in buttons:
+            self.assertEqual(button["attrs"]["type"], "button")
+            self.assertEqual(headings.get(button["attrs"]["data-jump-target"]), "-1")
+
     def test_no_quarantine_is_not_an_all_clear(self) -> None:
         page = glance(render({**BASE, "items": []}))
         self.assertIn("None returned, which is not an all clear", page)
