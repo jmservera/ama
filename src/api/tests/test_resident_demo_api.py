@@ -7,16 +7,19 @@ fake test constant; nothing here touches SQL, Azure or a real credential.
 import base64
 import http.client
 import json
+import tempfile
 import threading
 import unittest
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from http.server import ThreadingHTTPServer
+from pathlib import Path
 from typing import Any
 
 from zava_forward.core import resident_showcase as rs
 
 from zava_forward.api.resident_demo import app as demo
+from zava_forward.api.resident_demo.agenda import Agenda
 
 FAKE_PASSWORD = "FAKE-TEST-FIXTURE-ONLY-not-a-real-demo-password"
 NOW = datetime(2026, 10, 25, 12, 0, tzinfo=UTC)
@@ -274,6 +277,44 @@ class SignInTests(DemoTestCase):
             )
         for client in (self.client(), one, two):
             self.assertNotIn("@example.com", json.dumps(client.call("GET", "/demo/session")[1]))
+
+    def test_session_and_view_surface_agenda_availability_and_agenda_endpoint_fails_closed(
+        self,
+    ) -> None:
+        anon = self.client()
+        status, session_body, _ = anon.call("GET", "/demo/session")
+        self.assertEqual(status, 200)
+        self.assertIs(session_body["agenda_available"], False)
+        self.assertIs(session_body["callbacks_available"], False)
+
+        signed = self.client()
+        self.assertEqual(signed.login("one@example.com"), 200)
+        signed_session = signed.call("GET", "/demo/session")[1]
+        self.assertIs(signed_session["agenda_available"], False)
+        self.assertIs(signed_session["callbacks_available"], False)
+        view_body = signed.call("GET", "/demo/view")[1]
+        self.assertIs(view_body["agenda_available"], False)
+        self.assertIs(view_body["callbacks_available"], False)
+        agenda_status, agenda_err, _ = signed.call(
+            "POST", "/demo/agenda", {"action": "list", "use_record": True}
+        )
+        self.assertEqual(agenda_status, 503)
+        self.assertIn("The local callback agenda is not connected.", agenda_err["error"])
+
+        with tempfile.TemporaryDirectory() as tmp:
+            self.app.agenda = Agenda.create(
+                Path(tmp) / "agenda.sqlite",
+                [(NOW + timedelta(hours=1), NOW + timedelta(hours=1, minutes=30))],
+            )
+            try:
+                connected_session = signed.call("GET", "/demo/session")[1]
+                connected_view = signed.call("GET", "/demo/view")[1]
+            finally:
+                self.app.agenda = None
+        self.assertIs(connected_session["agenda_available"], True)
+        self.assertIs(connected_session["callbacks_available"], True)
+        self.assertIs(connected_view["agenda_available"], True)
+        self.assertIs(connected_view["callbacks_available"], True)
 
     def test_account_identity_is_not_disclosed_after_authority_loss(self) -> None:
         c = self.client()
