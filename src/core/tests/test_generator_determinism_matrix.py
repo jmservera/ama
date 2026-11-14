@@ -33,6 +33,13 @@ time.time = time.time_ns = time.localtime = time.gmtime = _banned
 uuid.uuid1 = uuid.uuid4 = _banned
 print(da.GENERATORS[sys.argv[1]](Path(sys.argv[2])))
 """
+PREVIEW_RUN = (
+    GUARDED_RUN.rsplit("print(", 1)[0]
+    + """
+from zava_forward.core.synthetic import resident_preview_fixture as rpf
+print(rpf.build(Path(sys.argv[1]))[0])
+"""
+)
 CORE_REVISION = re.compile(r"^sha256:[0-9a-f]{64}$")
 
 
@@ -46,8 +53,11 @@ def tree_digest(root: Path) -> str:
 
 def replay(name: str, out: Path, hash_seed: str) -> Path:
     env = {**os.environ, "PYTHONHASHSEED": hash_seed, "PYTHONDONTWRITEBYTECODE": "1"}
+    script, args = (
+        (PREVIEW_RUN, [str(out)]) if name == "preview" else (GUARDED_RUN, [name, str(out)])
+    )
     done = subprocess.run(
-        [sys.executable, "-c", GUARDED_RUN, name, str(out)],
+        [sys.executable, "-c", script, *args],
         capture_output=True,
         text=True,
         env=env,
@@ -76,6 +86,18 @@ class GeneratorDeterminismMatrixTests(unittest.TestCase):
                 self.assertTrue(manifest["version"])
                 self.assertRegex(manifest["generator_revision"], CORE_REVISION)
 
+    def test_resident_preview_is_clock_free_and_records_provenance(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            datasets = [
+                replay("preview", root / label, seed) for label, seed in (("a", "1"), ("b", "2"))
+            ]
+            self.assertEqual(tree_digest(root / "a"), tree_digest(root / "b"))
+            meta = json.loads(datasets[0].read_text(encoding="utf-8"))["synthetic_preview"]
+            self.assertEqual((meta["seed"], meta["as_of"]), (444, "2026-10-24"))
+            self.assertTrue(meta["version"])
+            self.assertRegex(meta["generator_revision"], CORE_REVISION)
+
     def test_stock_register_and_sensor_data_honour_as_of_without_wall_clock(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -100,6 +122,24 @@ class GeneratorDeterminismMatrixTests(unittest.TestCase):
                 (root / "s2026-10-15/readings-0000.csv").read_bytes(),
                 (root / "s2026-10-16/readings-0000.csv").read_bytes(),
             )
+
+    def test_custom_fault_rates_truth_manifest_records_revision(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "f"
+            sensor_backfill.write(
+                out,
+                homes=2,
+                seed=11,
+                days=1,
+                cadence=720,
+                as_of=da.AS_OF,
+                fault_rates={"outlier": 0.05},
+            )
+            analysis = json.loads((out / "analysis/manifest.json").read_text())
+            truth = json.loads((out / "truth/manifest.json").read_text())
+            self.assertEqual(truth["seed"], 11)
+            self.assertRegex(truth["generator_revision"], CORE_REVISION)
+            self.assertEqual(truth["generator_revision"], analysis["generator_revision"])
 
     def test_manifests_record_seed_version_and_revision_for_every_seed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

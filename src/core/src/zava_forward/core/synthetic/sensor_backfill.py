@@ -381,7 +381,7 @@ def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int
         [out / "estimate.json", out / "sensors.csv", *extra_files, *(out / shard["file"] for shard in shards)])
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
     if truth_dir is not None:
-        truth_manifest = dict(version=sensor_faults.VERSION, seed=seed, source_type=SOURCE_TYPE,
+        truth_manifest = dict(version=sensor_faults.VERSION, seed=seed, generator_revision=revision, source_type=SOURCE_TYPE,
                               fault_rates=dict(faults.rates), rate_basis="exclusive two-observation packets; remainder valid",
                               exercise_values=sensor_faults.EXERCISE_VALUES,
                               clean="Nominal observations before injected corruption; evaluator-only",

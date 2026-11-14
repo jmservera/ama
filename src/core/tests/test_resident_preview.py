@@ -29,7 +29,7 @@ class Base(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.tmp = tempfile.TemporaryDirectory(prefix="ama444-test-")
         cls.root = Path(cls.tmp.name) / "fixture"
-        build(cls.root)
+        build(cls.root, as_of=date.today())
         cls.dataset = cls.root / "dataset.json"
         cls.grants = cls.root / "grants.json"
         cls.store, cls.work = rp.open_store(cls.dataset)
@@ -386,7 +386,7 @@ class SafeStart(Base):
 
     def test_builder_refuses_an_existing_directory(self) -> None:
         with self.assertRaises(FileExistsError):
-            build(self.root)
+            build(self.root, as_of=date.today())
 
     def test_open_store_works_on_a_private_copy(self) -> None:
         before = self.dataset.read_bytes()
