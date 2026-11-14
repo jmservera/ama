@@ -55,7 +55,7 @@ class UxDesignTraceability(unittest.TestCase):
                 elif kind == "panel":
                     self.assertIn(f"function {name}(", PANELS, token)
                 elif kind == "route":
-                    self.assertIn(f'"{name}', SERVER, token)
+                    self.assertIn(f'"{name}"', SERVER, token)
                 elif kind == "web":
                     self.assertTrue((WEB / name).is_file(), token)
                 else:
