@@ -23,10 +23,22 @@
   var transition = 0;
   var sessionChannel = new BroadcastChannel("resident-demo-session");
   var callbackController = null;
+  var agendaAvailable = false;
+  function isAgendaAvailable(payload) {
+    if (!payload) return false;
+    if (typeof payload.agenda_available === "boolean") return payload.agenda_available;
+    return Boolean(payload.callbacks_available);
+  }
   var assistant = window.mountResidentAssistant(document.body, api, showSignin, function (search) {
     if (callbackController) callbackController.searchFromChat(search);
   });
-  assistant.setSession(false);
+  function syncAssistant(signedIn, available) {
+    assistant.setSession(signedIn, available);
+    if (typeof assistant.setAgendaAvailable === "function") {
+      assistant.setAgendaAvailable(available);
+    }
+  }
+  syncAssistant(false, agendaAvailable);
   function removeAppointments() {
     if (callbackController) callbackController.dispose();
     callbackController = null;
@@ -73,7 +85,7 @@
     transition += 1;
     sessionId = "";
     removeAppointments();
-    assistant.setSession(false);
+    syncAssistant(false, agendaAvailable);
     content.textContent = "";
     content.hidden = true;
     hideAccount();
@@ -85,6 +97,9 @@
     var held = sessionId;
     api("/demo/session").then(function (res) {
       if (current !== transition) return;
+      if (res.ok && (typeof res.body.agenda_available === "boolean" || typeof res.body.callbacks_available === "boolean")) {
+        agendaAvailable = isAgendaAvailable(res.body);
+      }
       if (!res.ok || res.body.session_id !== held) {
         showSignin("Your sign-in changed in another tab. Please sign in again.");
       }
@@ -555,7 +570,7 @@
       needed.forEach(function (item) { withIcon(ul.appendChild(el("li")), "alert", ""); ul.lastChild.lastChild.textContent = ""; ul.lastChild.appendChild(el("span", item.text)); });
       box.appendChild(ul);
     }
-    if (view.agenda_available) {
+    if (isAgendaAvailable(view)) {
       var optional = el("p", "Optional: ");
       var link = el("a", "Book a synthetic callback");
       link.href = "#sec-help";
@@ -635,7 +650,8 @@
   function render(view, announce) {
     removeAppointments();
     endLoading();
-    assistant.setSession(true);
+    agendaAvailable = isAgendaAvailable(view);
+    syncAssistant(true, agendaAvailable);
     content.textContent = "";
     if (view.home) {
       var strip = el("div", null, "home-strip");
@@ -643,7 +659,7 @@
       strip.appendChild(badge("info", "Synthetic showcase record - read-only"));
       content.appendChild(strip);
     }
-    content.appendChild(sectionNav(view.agenda_available));
+    content.appendChild(sectionNav(agendaAvailable));
     content.appendChild(summarySection(view));
     var grid = el("div", null, "status-grid");
     grid.appendChild(statusSection(view));
@@ -659,7 +675,7 @@
     help.appendChild(hl);
     help.appendChild(el("p", view.help.note));
     content.appendChild(help);
-    if (view.agenda_available) {
+    if (agendaAvailable) {
       var callbacks = el("section", null, "card callbacks");
       callbacks.setAttribute("aria-labelledby", "callback-title");
       content.appendChild(callbacks);
@@ -682,15 +698,25 @@
       b.disabled = true;
       b.setAttribute("aria-disabled", "true");
       li.appendChild(b);
-      li.appendChild(el("span", appointment ? "You cannot change live works appointments here." + (view.agenda_available ? " Use the form above for local synthetic callbacks only." : "") : u.reason, "why"));
+      li.appendChild(el("span", appointment ? "You cannot change live works appointments here." + (agendaAvailable ? " Use the form above for local synthetic callbacks only." : "") : u.reason, "why"));
       ul.appendChild(li);
     });
+    if (!agendaAvailable) {
+      var cbLi = el("li");
+      var cbBtn = el("button", "Synthetic callbacks");
+      cbBtn.type = "button";
+      cbBtn.disabled = true;
+      cbBtn.setAttribute("aria-disabled", "true");
+      cbLi.appendChild(cbBtn);
+      cbLi.appendChild(el("span", "The local callback agenda is not connected in this showcase. Use the contact routes above.", "why"));
+      ul.appendChild(cbLi);
+    }
     unavailable.appendChild(ul);
     content.appendChild(unavailable);
 
     errorEl.hidden = true;
     signin.hidden = true;
-    lede.textContent = signedInLede + (view.agenda_available ? callbackLede : callbackUnavailableLede);
+    lede.textContent = signedInLede + (agendaAvailable ? callbackLede : callbackUnavailableLede);
     content.hidden = false;
     accountEmail.textContent = view.account.email;
     account.hidden = false;
@@ -794,6 +820,10 @@
         if (current !== transition) return;
         if (!res.ok) { fail(res.body.error || "The showcase is not available right now."); return; }
         csrf = res.body.csrf;
+        if (typeof res.body.agenda_available === "boolean" || typeof res.body.callbacks_available === "boolean") {
+          agendaAvailable = isAgendaAvailable(res.body);
+          syncAssistant(Boolean(res.body.signed_in), agendaAvailable);
+        }
         if (res.body.signed_in) {
           sessionId = res.body.session_id;
           return loadView();

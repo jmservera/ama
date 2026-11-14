@@ -350,6 +350,7 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 token, cookie = self._csrf_cookie()
                 signed = app.codec.verify(_cookies(self.headers.get("Cookie")).get(SESSION_COOKIE))
                 signed_in = signed is not None and signed[0] in app.by_handle
+                agenda_available = app.agenda is not None
                 self._json(
                     200,
                     dict(
@@ -357,6 +358,8 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                         signed_in=signed_in,
                         session_id=signed[1] if signed_in and signed else None,
                         banner=rs.BANNER,
+                        agenda_available=agenda_available,
+                        callbacks_available=agenda_available,
                     ),
                     (cookie,),
                 )
@@ -471,7 +474,9 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                     base = (
                         advise(topic, case, FakeProvider())
                         if isinstance(topic, Topic)
-                        else chat.answer(topic, view, value)
+                        else chat.answer(
+                            topic, view, value, callbacks_available=app.agenda is not None
+                        )
                     )
                     advice = (
                         app.assistant_advisor.answer_question(
@@ -488,7 +493,12 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                             else advise(topic, case, app.assistant_provider)
                         )
                         if isinstance(topic, Topic)
-                        else chat.answer(topic, view, value if "question" in body else "")
+                        else chat.answer(
+                            topic,
+                            view,
+                            value if "question" in body else "",
+                            callbacks_available=app.agenda is not None,
+                        )
                     )
                     if (
                         "question" in body
