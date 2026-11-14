@@ -77,6 +77,28 @@ class ExceptionQueueTests(unittest.TestCase):
         last = q.access_report("Olive Operator")["audit"][-2]
         self.assertEqual((last["actor"], last["action"]), ("Olive Operator", "request_rerun"))
 
+    def test_every_failure_kind_is_owned_audited_and_keeps_source_and_eligibility(self) -> None:
+        q = make()
+        for kind, owner in (
+            ("failed_import", "Sam Steward"),
+            ("failed_ai_run", "Olive Operator"),
+            ("stranded_task", "Olive Operator"),
+        ):
+            item = q.raise_failure(kind, owner, "x", ORIGINAL, "boom")
+            self.assertEqual(item["owner"], owner)
+            self.assertEqual(item["original_source"], ORIGINAL)
+            self.assertTrue(item["unresolved_eligibility"])
+            self.assertEqual(item["eligibility"], "Unknown")
+            policy = item["recovery_policy"]
+            self.assertIs(policy["automatic_replay"], False)
+            self.assertIs(policy["automatic_release"], False)
+            self.assertNotIn("resolve_by_owner", policy["allowed_actions"])
+            out = q.request_recovery(owner, item["id"], "hold", "checking")
+            self.assertIs(out["recovery"]["automatic_replay"], False)
+            self.assertIs(out["recovery"]["automatic_release"], False)
+            self.assertTrue(out["unresolved_eligibility"])
+            self.assertEqual(out["original_source"], ORIGINAL)
+
     def test_action_must_match_item_kind(self) -> None:
         q = make()
         failure = q.raise_failure("failed_ai_run", "Olive Operator", "x", ORIGINAL, "timeout")

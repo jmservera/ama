@@ -105,6 +105,13 @@ class ExceptionQueue:
             "status": "open",
             "original_source": deepcopy(original),
             "eligibility": UNKNOWN,
+            "unresolved_eligibility": True,
+            "recovery_policy": {
+                "allowed_actions": list(ALLOWED_ACTIONS[kind]),
+                "automatic_replay": False,
+                "automatic_release": False,
+                "note": NO_AUTOMATION,
+            },
             "runbook": RUNBOOK[kind],
             "recovery": None,
             **extra,
@@ -221,6 +228,8 @@ class ExceptionQueue:
             "reason": why,
             "replayed": False,
             "released": False,
+            "automatic_replay": False,
+            "automatic_release": False,
             "note": NO_AUTOMATION,
         }
         self._log(actor, action, item_id, why)
