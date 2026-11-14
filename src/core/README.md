@@ -645,6 +645,38 @@ rule reference in a newer schema version stales every field; other schema
 changes stale only dependent fields (see dependency propagation below). It
 never marks anything reviewed.
 
+`form_validation.validate(store, user, case_id, draft_id, rules)` evaluates
+deterministic closed-vocabulary rule sets (`min`, `max`, `max_length`,
+`pattern`, `equals`, `one_of`, and `sum` using exact `Decimal` arithmetic)
+over reviewer-confirmed inputs only. Structural errors or rules targeting
+human-only categories (`declaration`, `signature`, `attestation`, `consent`,
+`approval`) raise `ValueError`. Validation is `Not evaluated` unless the
+registered schema and source policy are approved, `funding` forms carry an
+`Evidenced` route, the draft's `schema_digest` matches the registered version,
+`(rules["id"], rules["version"])` appears in `schema["rule_refs"]`, and
+`rules["approval"]` and `rules["bound"]` match the exact schema and template
+versions. Unreviewed, rejected, stale or blank-string fields are never passed to
+rules (`Unknown`), tampered or unregistered reviewer history fails (`Fail`),
+approved `sum` rules resolve matching `calculation_ref` placeholders, and
+overall status aggregates with `Fail > Conflict > Unknown > Pass`.
+
+`form_validation.review_pack(store, user, case_id, draft_id, rules)` runs one
+read-only `_report` pass (hashing each distinct document at most once) to build
+a version-linked pack containing `fields`, deduplicated `evidence` linked by
+`attachment_id` (`{id}:v{version}`), `attachments`, `history`, `validation` and
+`stale_fields`, stamped with `template_version`, per-field/per-evidence
+`input_version` and `content_sha256`. `pack_status` is `Ready for Finance review`
+only when `validation["status"] == "Pass"` and `stale_fields` is empty (otherwise
+`Held`); `reviewed` stays `False`, `submission` stays `Not submitted` and
+`eligibility` stays `Not assessed`. `form_validation.pack_freshness(store, user,
+case_id, saved_pack, rules)` verifies `content_sha256` and case identity
+(`Invalid` on tamper or cross-case copy, `Unavailable` when retained evidence
+or the working draft is unavailable) and returns `Current` or `Stale` with
+exact `stale_fields`, `unaffected_fields` and `reasons`, propagating staleness
+only through `required_when` (`field_id`) and `sum` (`addends` to target)
+dependencies across source, input, schema and rule changes (including
+Pass-preserving parameter or message edits).
+
 `view` and `diagnose` provide field-specific Unknown/Conflict/Fail draft
 diagnostics and source-linked diagnostic manifests. Conditions use confirmed,
 valid, current values only, combine predicates with OR and compare types
@@ -674,7 +706,10 @@ returns `diagnostic_freshness`, one entry per saved manifest: `Stale` when
 reviewed inputs changed after it (`changed_fields` lists only the fields whose
 reviewed value or state differ from the manifest), a bound source changed
 (`stale_fields` lists only those fields) or a newer schema version exists, with a re-run action; otherwise
-`Current`. Approved rules, calculations and reviewed packs still do not exist.
+`Current`. In `form_review` alone, approved rules and calculations remain Not
+evaluated; `form_validation` evaluates deterministic approved rule sets when
+supplied, while live approved schemas, live rule sets and reviewed packs remain
+gated on external human Finance and template-owner authority (FD-01 to FD-14).
 
 Dependency propagation (#96, FR-043 part) is derived on read from the immutable
 schema registry; nothing is written and history is kept. `forms.schema_impact`
@@ -699,8 +734,10 @@ are never created here: a draft-scoped hold that carries approval fields is
 `field_ids`) whose listed fields are not stale, removed, unknown or reviewed
 after that input version; otherwise `Review required`. A plain Held record stays
 `Held`, other drafts' records are ignored and a malformed ledger entry is
-`Review required`. Approved schemas, rules, Finance review and reviewed exports
-remain unmet.
+`Review required`. `forms.register_schema` still registers unapproved schemas
+only; live approved schemas, live approved rule sets, Finance review and
+reviewed exports (`reviewed=True`) remain gated on external human Finance,
+Legal and template-owner decisions (FD-01 to FD-14).
 Already-clean evidence is required: reads/reviews never scan or save a source.
 Missing, pending, quarantined or deleted retained evidence blocks disclosure of
 the entire affected draft/history, including recorded diagnostics. On `view`,
@@ -731,7 +768,7 @@ figures, approved thresholds or restart authority are invented.
 From `src/core`, after pip editable installation:
 
 ```bash
-PYTHONPATH=tests python3 -m unittest test_form_review test_form_staging test_form_dependencies -q
+PYTHONPATH=tests python3 -m unittest test_form_review test_form_staging test_form_dependencies test_form_export test_issue_98_field_validation -q
 ```
 
 Tests use the public tiny synthetic fixture with temporary JSON/SQLite storage.
