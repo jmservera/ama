@@ -262,6 +262,37 @@ class JsonResidentDecisions(unittest.TestCase):
             **changes,
         )
 
+    def test_nomination_review_refused_until_route_and_owner_recorded(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.nomination())
+        with self.store.lock:
+            record = self.store._case("ZF-1")["nomination_records"][0]
+            record["owner"] = None
+            record["acknowledgement"] = None
+            record["non_digital_route"] = ""
+            self.store.save()
+        record_id = self.store.cases["ZF-1"]["nomination_records"][0]["id"]
+        self.unchanged_failure(
+            partial(self.store.resident_action, self.rae, "ZF-1", self.review(record_id, 1))
+        )
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            dict(
+                action="nomination_acknowledge",
+                case_id="ZF-1",
+                id=record_id,
+                expected_version=1,
+                owner=self.sam["email"],
+                acknowledgement_ref="SYN-ACK-REPAIRED",
+                non_digital_route="SYN Phone Sam or staffed desk.",
+                next_update="2099-01-10",
+            ),
+        )
+        self.store.resident_action(self.rae, "ZF-1", self.review(record_id, 2))
+        reviewed = self.open_store().detail("ZF-1", self.sam)["nomination_records"][0]
+        self.assertTrue(reviewed["follow_up"]["route_ready"])
+        self.assertTrue(reviewed["follow_up"]["review_current"])
+
     def test_nomination_review_retains_reviewer_and_correction_stales_it(self) -> None:
         self.store.resident_action(self.sam, "ZF-1", self.nomination())
         record = self.store.cases["ZF-1"]["nomination_records"][0]
@@ -450,18 +481,24 @@ class JsonResidentDecisions(unittest.TestCase):
         proposal = self.priority_fixture()
         for body in (
             self.nomination(hazard_concern=True),
+            self.nomination(hazard_concern=None),
             self.correction(record_id, 1, hazard_concern=True),
+            self.correction(record_id, 1, hazard_concern=None),
+            self.review(record_id, 1, hazard_concern=True),
+            self.review(record_id, 1, hazard_concern=None),
             dict(self.challenge_body(proposal), hazard_concern=True),
+            dict(self.challenge_body(proposal), hazard_concern=None),
             self.correction(record_id, 1, hazard_concern=0),
             self.correction(record_id, 1, hazard_concern=""),
             dict(self.challenge_body(proposal), hazard_concern=1),
         ):
-            with self.subTest(action=body["action"]):
+            with self.subTest(action=body["action"], flag=body["hazard_concern"]):
                 before = copy.deepcopy(self.store.cases["ZF-1"])
                 audit = list(self.store.audit_entries())
                 with self.assertRaises(resident_decisions.HazardRouted) as caught:
                     self.store.resident_action(self.sam, "ZF-1", body)
                 self.assertEqual(caught.exception.route["issue"], "#85")
+                self.assertEqual(caught.exception.route["action"], "/api/cases/ZF-1/hazard-raise")
                 self.assertIs(caught.exception.route["queue_item_created"], False)
                 self.assertIn("hazard-raise", str(caught.exception))
                 self.assertEqual(self.store.cases["ZF-1"], before)
