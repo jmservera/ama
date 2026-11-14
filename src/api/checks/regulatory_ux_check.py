@@ -250,7 +250,7 @@ def check_refresh_focus(page: Page, fixture: RegulatoryApi) -> None:
 
 
 def assert_state_cue(target: Any, border_style: str) -> None:
-    """A status cue must survive without colour: a glyph in ::before and a non-colour border shape."""
+    """A status cue must survive without colour: a ::before glyph and a non-colour border."""
     style = target.evaluate(
         """el => {
           const before = getComputedStyle(el, '::before');
