@@ -115,6 +115,7 @@ async function roleScreensView() {
     h("h2", {}, `Selected home ${c.id}`),
     h("p", {}, "Recorded evidence only. Missing, stale or withheld information cannot establish readiness. No message, approval or record change is made from this screen."),
     await screen.render(c, extra),
+    !screen.ownsStageMap && journeyStageMap(c, screen.id),
     h("p", {}, h("a", { href: `#/case/${encodeURIComponent(c.id)}` }, "Open existing case workspace")))
     : h("div", {}, h("p", { class: "empty" }, "No home selected. Choose a home from this queue."), overview);
   signal.throwIfAborted();
@@ -524,19 +525,24 @@ const journeyStages = [
   ["7. Handover and live with measures", "resident-choice", "Open remedies are not closed by handover."],
   ["8. Reconcile and learn", "finance-invoices", "No award is inferred from an invoice."]
 ];
-function journeyStageMap(c) {
+// current is the screen showing the map; its stages render as text so the walker sees where they are, and a screen outside the eight stages says so.
+function journeyStageMap(c, current = null) {
   const open = (id) => roleScreens.has(id) && roleScreens.get(id).roles.includes(me.user.role);
   return screenPanel(`Journey stages for ${c.id}`,
     h("p", {}, "One home, eight stages. Each stage opens the screen that shows its own state for this same home. Every link carries this one home's case reference. Separate example homes are never shown as stages of this home. Stages are separate states: no stage clears another, and a link is navigation only. This map is a design hypothesis, not observed behaviour."),
+    current && !journeyStages.some(([, id]) => id === current)
+      && h("p", {}, `This screen is not one of the eight stages. It shows the same home ${c.id}.`),
     h("ol", {}, journeyStages.map(([stage, id, boundary]) => h("li", {},
       // Link text carries the stage name so stages sharing a screen stay distinct in link lists (WCAG 2.4.4).
-      id !== null && open(id) ? h("a", { href: screenHref(id, c.id) }, `${stage}: ${roleScreens.get(id).title}`)
+      id !== null && id === current ? `${stage}: ${roleScreens.get(id).title}. You are on this screen, showing home ${c.id}.`
+      : id !== null && open(id) ? h("a", { href: screenHref(id, c.id) }, `${stage}: ${roleScreens.get(id).title}`)
         : `${stage}: ${id === null ? "no screen yet (recorded deferral)."
           : `${roleScreens.get(id)?.title || id} is not installed for your role. Your access has not changed. Owner: your team manager. Next action: ask them to add it for your role.`}`,
       ` ${boundary}`))));
 }
 registerRoleScreen({
   id: "programme-queue",
+  ownsStageMap: true,
   title: "Programme queue and connected home view",
   roles: [...screenManagers, "Retrofit Coordinator"],
   async overview(signal, items, c, page = 0) {
