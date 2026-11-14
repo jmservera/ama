@@ -761,8 +761,9 @@
     return api("/demo/view").then(function (res) {
       if (current !== transition) return;
       if (res.status === 503 && !retried) {
-        var wait = res.retryAfter > 0 && res.retryAfter <= 10 ? res.retryAfter : 3;
-        statusEl.textContent = "The showcase is busy. Trying again in a few seconds\u2026";
+        var hinted = Number(res.body && res.body.retry_after_seconds) || res.retryAfter;
+        var wait = hinted > 0 && hinted <= 10 ? hinted : 2;
+        statusEl.textContent = "The showcase is busy because several people are viewing it. Trying again in " + wait + " seconds\u2026";
         return new Promise(function (resolve) { setTimeout(resolve, wait * 1000); }).then(function () {
           if (current === transition) return loadView(announce, true);
         });

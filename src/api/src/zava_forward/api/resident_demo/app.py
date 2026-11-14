@@ -78,8 +78,11 @@ HEADERS = {
 }
 GENERIC_DENIAL = "We could not sign you in with those details."
 UNAVAILABLE = "The showcase is not available right now."
-BUSY = "The showcase is busy right now. Try again in a few seconds."
-RETRY_AFTER_SECONDS = 3
+BUSY = (
+    "The showcase is busy because several people are viewing it at once. "
+    "Nothing is wrong with your case. Try again in a few seconds."
+)
+RETRY_AFTER_SECONDS = 2
 
 
 class Reader(Protocol):
@@ -303,7 +306,7 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             if not app.slots.acquire(blocking=False):
                 self._send(
                     503,
-                    json.dumps(dict(error=BUSY, retry_after=RETRY_AFTER_SECONDS)).encode(),
+                    json.dumps(dict(error=BUSY, retry_after_seconds=RETRY_AFTER_SECONDS)).encode(),
                     "application/json; charset=utf-8",
                     extra={"Retry-After": str(RETRY_AFTER_SECONDS)},
                 )
