@@ -1423,7 +1423,8 @@ class ConsumptionApi(unittest.TestCase):
                 self.assertEqual(detail["state"], "quarantined")
                 self.assertIsNone(detail["output"])
                 self.assertEqual(
-                    detail["serving_attestation"], dict(returned=expected, outcome="mismatch")
+                    {k: detail["serving_attestation"][k] for k in ("returned", "outcome")},
+                    dict(returned=expected, outcome="mismatch" if expected else "unattested"),
                 )
                 with fixture.service.transaction() as db:
                     release = db.execute(
@@ -1622,10 +1623,12 @@ class ConsumptionApi(unittest.TestCase):
                         if expected_state != "ready":
                             self.assertIsNone(detail["output"])
                         if mismatch:
+                            attestation = detail["serving_attestation"]
                             self.assertEqual(
-                                detail["serving_attestation"],
-                                dict(returned=model, outcome="mismatch"),
+                                (attestation["returned"], attestation["outcome"]),
+                                (model, "mismatch"),
                             )
+                            self.assertEqual(attestation["expected"], "test-model")
                         with fixture.service.transaction() as db:
                             status = db.execute(
                                 "SELECT status FROM assistant_releases "

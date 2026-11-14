@@ -2835,6 +2835,24 @@ deployment; `AI_MODEL_VERSION_STRONG` supplies it for strong requests (defaults
 to the fast value). Unattested configured models deny actual dispatch. A
 returned model comparison is not independent serving-version attestation.
 
+A record also persists the registry `scope`, a frozen `evaluation_summary`
+(`evaluation_version`, `decision: Pass`, a named `summary` and an
+`evidence_digest` equal to the digest of the recorded `evidence` list) and a
+`consumption` configuration (`max_calls`, `max_tokens`,
+`alert_threshold_percent`, named `alert_contact`). A changed registry scope is a
+material `intended_use` change. Existing records without these fields deny
+dispatch until a human records a replacement.
+
+On completion the provider-returned model is compared exactly with the released
+`serving_model` (`rai_release.attest_serving`) and the outcome (`matched`,
+`mismatch` or `unattested`) is stored on the proposal as `serving_attestation`.
+A non-match quarantines the proposal, suspends the release, appends a
+`serving-attestation` event and sets an explicit `fallback` (manual route,
+release suspended). A suspended or revoked release is terminal across restarts
+and old images; only a new human release record re-enables the task. The
+returned model is the only signal the provider supplies, so this remains a
+returned-model attestation and not independent control-plane evidence.
+
 Approval supersedes every active record for that task, including old routing
 configurations, while preserving events. One record approves one deployment;
 changing the task's fast/strong route requires renewed approval. A rollback

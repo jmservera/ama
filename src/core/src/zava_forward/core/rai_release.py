@@ -84,7 +84,56 @@ def missing_contract(record: Mapping[str, Any], task: Mapping[str, Any]) -> list
         missing.append("named release approver")
     if record.get("evidence_class") not in ("constructed-fixture", "actual"):
         missing.append("evidence_class")
+    if record.get("scope") != task.get("scope"):
+        missing.append("scope")
+    if not frozen_evaluation(record):
+        missing.append("frozen evaluation summary")
+    if not valid_consumption(record.get("consumption")):
+        missing.append("consumption configuration")
     return missing
+
+
+def frozen_evaluation(record: Mapping[str, Any]) -> bool:
+    """The summary must be frozen to the exact evidence list the approver recorded."""
+    summary = record.get("evaluation_summary")
+    return (
+        isinstance(summary, dict)
+        and summary.get("evaluation_version") == EVALUATION_VERSION
+        and summary.get("decision") == "Pass"
+        and named(summary.get("summary"))
+        and summary.get("evidence_digest") == digest(record.get("evidence"))
+    )
+
+
+def valid_consumption(value: object) -> bool:
+    """Budget and alert configuration: bounded positive limits and a named alert contact."""
+    if not isinstance(value, dict):
+        return False
+
+    def whole(key: str, low: int, high: int) -> bool:
+        number = value.get(key)
+        return isinstance(number, int) and not isinstance(number, bool) and low <= number <= high
+
+    return (
+        whole("max_calls", 1, 10**9)
+        and whole("max_tokens", 1, 10**12)
+        and whole("alert_threshold_percent", 1, 100)
+        and named(value.get("alert_contact"))
+    )
+
+
+def attest_serving(record: Mapping[str, Any], returned: object) -> dict[str, Any]:
+    """Exact comparison of the returned model with the released serving model."""
+    expected = record.get("serving_model")
+    if not named(returned):
+        outcome = "unattested"
+    else:
+        outcome = "matched" if returned == expected else "mismatch"
+    return {
+        "expected": expected,
+        "returned": returned if named(returned) else None,
+        "outcome": outcome,
+    }
 
 
 def missing_binding(
@@ -144,6 +193,7 @@ def changed_triggers(
             ("intended_use", "intended_use"),
             ("prohibited_uses", "prohibited_uses"),
             ("affected_stakeholders", "affected"),
+            ("scope", "scope"),
         )
     ):
         changed.append("intended_use")
