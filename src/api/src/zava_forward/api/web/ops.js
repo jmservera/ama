@@ -81,6 +81,8 @@ function sensorPanel(id) {
   api(`/api/cases/${encodeURIComponent(id)}/sensors`).then((v) => {
     const kids = [
       h("p", { role: "status" }, `${v.freshness_text} Generated ${v.generated_at}.`),
+      h("ul", { class: "muted", "data-sensor-badges": "" }, (v.badges || []).map((b) => h("li", {}, h("strong", {}, `${b.label}:`), ` ${b.text}`))),
+      h("p", { "data-sensor-advisory": "" }, v.advisory || "Advisory telemetry \u2014 officer review required"),
       h("p", { class: "muted" }, "Synthetic temperature and relative humidity retained for this home only. They are not calibrated, not a measure of comfort or hazard, and live demonstration readings are weather-derived rather than measured indoors. This is the current authorised capture. A suggestion shows the readings it cited when it ran, which may be older."),
     ];
     if (v.latest) kids.push(h("p", {}, `Latest: ${v.latest.temperature_c} degC and ${v.latest.humidity_pct} %RH at ${v.latest.observed_at} (sensor ${v.latest.sensor_id}, reading ${v.latest.reading_id}). Freshness: ${v.freshness}. Source: ${(v.provenance || {})[v.latest.provenance_class] || "synthetic, not calibrated"}`));
