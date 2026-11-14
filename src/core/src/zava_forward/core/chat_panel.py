@@ -357,7 +357,8 @@ def consent_guidance(state: object) -> str | None:
     """
     if state is None or (isinstance(state, str) and state.strip().casefold() == "given"):
         return None
-    shown = state.strip() if isinstance(state, str) and state.strip() in CONSENT_STATES else "Not recorded"
+    text = state.strip() if isinstance(state, str) else ""
+    shown = text if text in CONSENT_STATES else "Not recorded"
     return f"Recorded AI and data-use consent: {shown}. " + WORKFLOW_RULES[AI_CONSENT]
 
 

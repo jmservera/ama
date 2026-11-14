@@ -6,3 +6,7 @@
 * Add `src/api/tests/test_chat_consent_boundary.py`: zero model calls, withdrawn and missing states, given unchanged, absent unchanged, plain-language limits, UI label and accessibility source checks, no case mutation.
 * Validation (focused tier): unittest, ruff check, ruff format --check, mypy.
 * Critique (once): risk is changing behaviour for existing cases; mitigated by treating an absent field as legacy. Applied directly.
+
+## Cycle 1 correction
+
+Plan: split the line, rerun ruff, mypy and focused tests, correct the changes record. Refs #164.

@@ -7,3 +7,7 @@ Disposition: executed. Planning readiness: Ready. Refs #164, Refs #215.
 * Gap: no case-level resident AI/data-use consent state exists (only per-home sensor consent and the resident decision status). A consent-missing case still reaches the model path. Seed cases carry no such field.
 * Decision: an explicit `resident.ai_data_use_consent` state other than `Given` (Not requested, Pending, Declined, Withdrawn, or an empty value) blocks model calls. An absent field is legacy and unchanged, so existing behaviour is preserved. Open owner decision: whether absent should also block once the field is captured for all cases.
 * Not evidenced: live model, rendered browser, screen reader, staff comprehension.
+
+## Cycle 1 correction
+
+Research: review finding is a single E501 line in chat_panel.py:360; no scope change. Refs #164.
