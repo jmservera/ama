@@ -51,6 +51,8 @@ EVENT_FIELDS = {
     "billing": "id allocation budget start end currency billed tolerance complete synthetic",
 }
 
+OPTIONAL = {"authority": {"alert", "alert_owner"}}
+
 
 def reference(value: str) -> str:
     if not isinstance(value, str) or not 1 <= len(value) <= 1000000:
@@ -370,7 +372,8 @@ class Consumption:
         if any(
             r.get("schema") != SCHEMA
             or r.get("kind") not in EVENT_FIELDS
-            or set(r) != {"schema", "kind", *EVENT_FIELDS.get(r.get("kind"), "").split()}
+            or set(r) - OPTIONAL.get(r.get("kind"), set())
+            != {"schema", "kind", *EVENT_FIELDS.get(r.get("kind"), "").split()}
             for r in records
         ):
             raise DispatchHeld("meter-evidence-invalid")
@@ -471,8 +474,14 @@ class Consumption:
         budgets: list[Mapping[str, Any]],
         max_calls: int,
         max_depth: int,
+        alert: str | None = None,
+        alert_owner: str | None = None,
     ) -> str:
-        """Record operator-supplied authority, not an approval by this software."""
+        """Record operator-supplied authority, not an approval by this software.
+
+        An authority whose price is not recorded as synthetic lies beyond the exercise: it needs
+        a named approving owner, finite positive call, token and money limits and an owned alert.
+        """
         if not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", capability):
             raise ValueError("A capability identifier is required.")
         begin, finish = timestamp(start), timestamp(end)
@@ -510,6 +519,10 @@ class Consumption:
         )
         with self.port.transaction() as db:
             records = self._read(db)
+            known = next((r for r in records if r["kind"] == "price" and r["id"] == price), None)
+            if known is not None and not known["synthetic"]:
+                self._require_bounds(owner, selected, alert, alert_owner)
+                body.update(alert=reference(alert or ""), alert_owner=reference(alert_owner or ""))
             previous = next((r for r in records if r.get("id") == aid), None)
             if previous:
                 if previous != dict(schema=SCHEMA, kind="authority", **body):
@@ -536,6 +549,19 @@ class Consumption:
                 raise ValueError("Overlapping authority for one configuration is ambiguous.")
             self._event(db, "authority", **body)
         return aid
+
+    @staticmethod
+    def _require_bounds(
+        owner: str, budgets: list[dict[str, Any]], alert: str | None, alert_owner: str | None
+    ) -> None:
+        if not all(isinstance(v, str) and v.strip() for v in (owner, alert, alert_owner)):
+            raise ValueError(
+                "Beyond the exercise an approving owner and an owned alert are required."
+            )
+        if any(not b["calls"] or not b["tokens"] or not amount(b["amount"]) for b in budgets):
+            raise ValueError(
+                "Beyond the exercise finite positive call, token and money limits are required."
+            )
 
     @staticmethod
     def _charge(price: Mapping[str, Any], used: Mapping[str, Any]) -> Decimal | None:
@@ -604,7 +630,7 @@ class Consumption:
                 (r for r in reversed(authorities) if r["start"] <= now < r["end"]), None
             )
             owner = (
-                authority["owner"]
+                authority.get("alert_owner", authority["owner"])
                 if authority
                 else (
                     authorities[-1]["owner"] if authorities else reference("unassigned-owner-OD-51")
@@ -630,6 +656,14 @@ class Consumption:
                 held = "authority-expired" if authorities else "authority-unknown"
             elif not price or (live and price["synthetic"]):
                 held = "price-unknown"
+            elif not price["synthetic"] and not (
+                authority.get("alert")
+                and authority.get("alert_owner")
+                and all(
+                    b["calls"] and b["tokens"] and amount(b["amount"]) for b in authority["budgets"]
+                )
+            ):
+                held = "alert-unowned"
             elif min_window and now >= min(authority["end"], price["end"]) - min_window:
                 held = "authority-expiring"
             elif input_bound is None:

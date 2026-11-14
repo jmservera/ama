@@ -285,6 +285,8 @@ class Nfr012Limits(unittest.TestCase):
             max_calls=2,
             max_depth=1,
             budgets=[dict(id=reference("period"), calls=2, tokens=5000, amount="1")],
+            alert="alert-rule-ai-limits",
+            alert_owner="alert-owner",
         )
         fields.update(over)
         self.ledger.authorize(**fields)

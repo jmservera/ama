@@ -159,6 +159,8 @@ class ResidentLedgerJoinTests(unittest.TestCase):
             max_calls=5,
             max_depth=1,
             budgets=[dict(id=reference("period"), calls=budget_calls, tokens=10000, amount="10")],
+            alert="constructed-alert",
+            alert_owner="constructed-finance-owner",
         )
 
     def provider(self) -> AzureTopicProvider:
@@ -389,6 +391,8 @@ class ResidentAdvisorLedgerJoinTests(unittest.TestCase):
             max_calls=5,
             max_depth=1,
             budgets=[dict(id=reference(capability), calls=10, tokens=100000, amount="100")],
+            alert="constructed-alert",
+            alert_owner="constructed-finance-owner",
         )
 
     def credential(self) -> str:
