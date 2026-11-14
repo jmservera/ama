@@ -98,6 +98,36 @@
     },
     {
       "type": 3,
+      "name": "ai-variance-by-period",
+      "content": {
+        "version": "KqlItem/1.0",
+        "title": "Unreconciled AI cost variance by period (metered minus billed)",
+        "query": "ContainerAppConsoleLogs | where TimeGenerated between ({TimeRange:start} .. {TimeRange:end}) and Log has 'AI_USAGE' | parse Log with * 'AI_USAGE capability=' Capability ' period=' Period ' calls=' Calls:long ' tokens=' Tokens:long ' usage=' UsageState ' outcome=' Outcome | extend Attributed = isnotempty(Capability) and isnotempty(Period) | summarize CapabilitiesSeen=dcountif(Capability, Attributed), AttributedCalls=sumif(Calls, Attributed), UnattributedUsageRows=countif(not(Attributed)), CallsWithUnknownUsage=sumif(Calls, Attributed and UsageState != 'known') by Period | extend AzureCostRows=long(0), MeteredCost=real(null), BilledCost=real(null), Variance=real(null), UnreconciledVariance=iff(UnattributedUsageRows > 0 or AzureCostRows == 0, 'Unreconciled, not zero', 'Compare metered and billed cost'), Basis='Metered minus billed is unknown until a dated price and the Azure billing record for the same scope, month and currency are connected; missing cost rows are shown, not zero', AsOfUtc=now() | order by Period asc",
+        "noDataMessage": "Insufficient: no AI_USAGE telemetry in the selected window. This is not zero usage, zero cost or reconciled variance.",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "resourceIds": ["__WORKSPACE_ID__"],
+        "timeContextFromParameter": "TimeRange",
+        "visualization": "table"
+      }
+    },
+    {
+      "type": 3,
+      "name": "operation-errors-latency",
+      "content": {
+        "version": "KqlItem/1.0",
+        "title": "HTTP and job operation errors and p95 latency (ms) by operation",
+        "query": "let samples = union isfuzzy=true (datatable(TimeGenerated:datetime, _ResourceId:string, ItemCount:int, Success:bool, DurationMs:real, OperationName:string)[]), AppRequests | project TimeGenerated, _ResourceId, ItemCount, Success, DurationMs, OperationName; samples | where _ResourceId =~ '__APP_INSIGHTS_ID__' and TimeGenerated between ({TimeRange:start} .. {TimeRange:end}) | where isnotnull(ItemCount) and ItemCount > 0 and isnotnull(Success) and isnotnull(DurationMs) and DurationMs >= 0 | summarize WeightedOperations=sum(ItemCount), WeightedErrors=sumif(ItemCount, Success == false), P95Ms=percentilew(DurationMs, ItemCount, 95) by OperationName | extend ErrorPercent=100.0 * WeightedErrors / WeightedOperations, Status='Observed samples; not SLO acceptance', AsOfUtc=now() | order by ErrorPercent desc",
+        "noDataMessage": "Insufficient: no request telemetry in the selected window. This is not zero errors.",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "resourceIds": ["__WORKSPACE_ID__"],
+        "timeContextFromParameter": "TimeRange",
+        "visualization": "table"
+      }
+    },
+    {
+      "type": 3,
       "name": "ai-limit-breaches",
       "content": {
         "version": "KqlItem/1.0",
