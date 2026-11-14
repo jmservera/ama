@@ -46,7 +46,7 @@ REGISTER_EXPECTED = (
     "Read-only list returned by the server for your signed-in access.",
     "no AI call is made",
     "Recovery guidance below is placeholder text, not an approved runbook.",
-    "Recovery is a recorded human request made elsewhere; nothing is replayed.",
+    "Recovery is a recorded, audited human request; nothing is replayed, corrected, re-sent or released automatically.",
     "Deliberate rules-and-template processing (workflow-only) is not a failure and is not a model result.",
     "It is never listed here, so an empty list does not show that a model succeeded",
     "Service state Unknown",

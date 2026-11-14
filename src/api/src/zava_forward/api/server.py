@@ -1416,6 +1416,15 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     except DurabilityUnconfirmedError:
                         return self._json(409, {"error": "The ranking record was written but its archive folder could not be confirmed as durable. It has been audited as unconfirmed; ask a named owner to check the archive before relying on it.",
                                                 "outcome": "committed_unconfirmed"})
+                if url.path == "/api/exceptions/recovery":
+                    try:
+                        return self._json(200, s.request_exception_recovery(
+                            u, exception_register.staff_from_env(os.environ),
+                            body.get("key"), body.get("action"), body.get("reason")))
+                    except PermissionError as e:
+                        return self._json(403, {"error": str(e)})
+                    except ValueError as e:
+                        return self._json(400, {"error": str(e)})
                 if url.path == "/api/bulk-edits/preview":
                     return self._json(200, s.bulk_edit_preview(u, body))
                 if url.path == "/api/bulk-edits/apply":

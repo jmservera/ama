@@ -19,7 +19,14 @@ from .exception_feeds import (
     feed_stranded_tasks,
     feed_unaccepted_handoffs,
 )
-from .exception_queue import OPERATOR, ROLES, STEWARD, ExceptionQueue
+from .exception_queue import (
+    ALLOWED_ACTIONS,
+    NO_AUTOMATION,
+    OPERATOR,
+    ROLES,
+    STEWARD,
+    ExceptionQueue,
+)
 
 STAFF_ENV = "ZF_EXCEPTION_STAFF"
 NOT_CONNECTED = (
@@ -37,7 +44,16 @@ ROLES_NOT_NAMED = (
     "No data steward or digital operator is named yet. The queue stays empty until the "
     "programme owner names them; nothing is assigned by default."
 )
-NOTE = "Read-only. Recovery is a recorded human request made elsewhere; nothing is replayed."
+NOTE = (
+    "Viewing changes nothing. Recovery is a recorded, audited human request; nothing is "
+    "replayed, corrected, re-sent or released automatically."
+)
+RECOVERY_AUDIT = "exception_recovery_requested"
+RECOVERY_STATUS = {
+    "hold": "held",
+    "request_rerun": "rerun_requested",
+    "resolve_by_owner": "closed",
+}
 
 
 def staff_from_env(env: Mapping[str, str]) -> dict[str, tuple[str, ...]]:
@@ -80,7 +96,7 @@ class ExceptionRegisterMixin:
         as_of: str | None = None,
     ) -> dict[str, Any]:
         """The viewer's exception queue, access report and outage banner. Viewing is audited."""
-        from .workflows import MANAGER_ROLES, handoff_ageing, handoff_view
+        from .workflows import MANAGER_ROLES
 
         email = str(user.get("email", "")).lower()
         if not staff:
@@ -106,6 +122,30 @@ class ExceptionRegisterMixin:
                 email, "denied", "Exception register: not a named steward or operator."
             )
             raise PermissionError("Only a named data steward or digital operator can see this.")
+
+        queue, unrouted, stored = self._build_exception_queue(staff, as_of)
+        items = self._with_recoveries(queue.queue(email))
+        shown = sum(1 for item in items if item.get("kind") == "failed_import")
+        report = queue.access_report(email)
+        with self.lock:
+            self._audit_register(email, "viewed_exception_register", f"items={len(items)}")
+        return {
+            "state": "ok",
+            "items": items,
+            "unrouted": unrouted,
+            "sources": self._exception_sources(stored, shown),
+            "banner": queue.outage_banner(None),
+            "access": {
+                "roles": {email: list(report["roles"].get(email, []))},
+                "scope": report["scope"],
+            },
+            "note": NOTE,
+        }
+
+    def _build_exception_queue(
+        self, staff: Mapping[str, tuple[str, ...]], as_of: str | None
+    ) -> tuple[ExceptionQueue, list[str], int | None]:
+        from .workflows import handoff_ageing, handoff_view
 
         as_of = as_of or datetime.now(UTC).isoformat(timespec="seconds")
         queue = ExceptionQueue(staff)
@@ -161,23 +201,91 @@ class ExceptionRegisterMixin:
                         )
             else:
                 unrouted.append("No named digital operator: failed runs and tasks are not routed.")
-        items = queue.queue(email)
-        shown = sum(1 for item in items if item.get("kind") == "failed_import")
-        report = queue.access_report(email)
-        with self.lock:
-            self._audit_register(email, "viewed_exception_register", f"items={len(items)}")
-        return {
-            "state": "ok",
-            "items": items,
-            "unrouted": unrouted,
-            "sources": self._exception_sources(stored, shown),
-            "banner": queue.outage_banner(None),
-            "access": {
-                "roles": {email: list(report["roles"].get(email, []))},
-                "scope": report["scope"],
-            },
-            "note": NOTE,
-        }
+        return queue, unrouted, stored
+
+    @staticmethod
+    def recovery_key(item: Mapping[str, Any]) -> str | None:
+        """Stable key for an item across rebuilds; None when its feed gave it no ref."""
+        ref = item.get("ref")
+        return f"{item['kind']}:{ref}" if ref else None
+
+    def _recovery_requests(self) -> dict[str, dict[str, Any]]:
+        """Latest recorded request per item key, read from the tamper-evident audit ledger."""
+        latest: dict[str, dict[str, Any]] = {}
+        audit_entries = getattr(self, "audit_entries", None)
+        for entry in audit_entries() if callable(audit_entries) else ():
+            if entry.get("action") != RECOVERY_AUDIT:
+                continue
+            try:
+                detail = json.loads(entry["detail"])
+                latest[str(entry["case"])] = {
+                    "action": detail["action"],
+                    "reason": detail["reason"],
+                    "by": entry["who"],
+                    "at": entry["at"],
+                }
+            except (KeyError, TypeError, ValueError):
+                continue
+        return latest
+
+    def _with_recoveries(self, items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        requests = self._recovery_requests()
+        for item in items:
+            key = self.recovery_key(item)
+            item["recovery_key"] = key
+            request = requests.get(key) if key else None
+            if request and request["action"] in ALLOWED_ACTIONS[item["kind"]]:
+                item["status"] = RECOVERY_STATUS[request["action"]]
+                item["recovery"] = {
+                    **request,
+                    "replayed": False,
+                    "released": False,
+                    "automatic_replay": False,
+                    "automatic_release": False,
+                    "note": NO_AUTOMATION,
+                }
+        return items
+
+    def request_exception_recovery(
+        self,
+        user: Mapping[str, str],
+        staff: Mapping[str, tuple[str, ...]],
+        key: object,
+        action: object,
+        reason: object,
+    ) -> dict[str, Any]:
+        """Record one human recovery request for an item in the actor's scope.
+
+        It writes only an audit entry. It never replays, corrects, re-sends or releases, and
+        the original source and unresolved eligibility on the item stay as they were.
+        """
+        email = str(user.get("email", "")).lower()
+        if email not in staff:
+            self._audit_register(email, "denied", "Exception recovery: not named staff.")
+            raise PermissionError("Only a named data steward or digital operator can do this.")
+        if not isinstance(key, str) or not isinstance(action, str):
+            raise ValueError("An item and an action are required.")
+        why = reason.strip() if isinstance(reason, str) else ""
+        if not why or len(why) > 400:
+            raise ValueError("A reason of up to 400 characters is required.")
+        queue, _, _ = self._build_exception_queue(staff, None)
+        scoped = self._with_recoveries(queue.queue(email))
+        item = next((i for i in scoped if i["recovery_key"] == key), None)
+        if item is None:
+            self._audit_register(email, "denied", f"Exception recovery: {key[:80]} out of scope.")
+            raise PermissionError("This item is outside your role scope or no longer exists.")
+        if item["status"] == "closed":
+            raise ValueError("This item is already closed.")
+        if action not in ALLOWED_ACTIONS[item["kind"]]:
+            raise ValueError(
+                "Action for this item must be one of: " + ", ".join(ALLOWED_ACTIONS[item["kind"]])
+            )
+        if action == "resolve_by_owner" and email != item["owner"]:
+            self._audit_register(email, "denied", f"Exception recovery: {key[:80]} not owner.")
+            raise PermissionError("Only the named resolution owner can resolve this item.")
+        detail = json.dumps({"action": action, "reason": why}, sort_keys=True)
+        self.audit(email, RECOVERY_AUDIT, key, detail)  # type: ignore[attr-defined]
+        return self._with_recoveries([item])[0]
 
     def _audit_register(self, email: str, action: str, detail: str) -> None:
         self.audit(email, action, "-", detail)  # type: ignore[attr-defined]
