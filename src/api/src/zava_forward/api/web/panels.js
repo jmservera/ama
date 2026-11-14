@@ -531,6 +531,8 @@ function affectedChallengePanel(c, id, refresh) {
     h("h2", {}, "Challenge a suggestion or ask for a correction"),
     h("p", {}, "Record only what the person supplied, including digital, phone, letter or in-person requests. A person owns the response. Nothing is sent here. Ask the named officer for accessible human help without using this screen. Urgent hazard response continues separately."),
     h("p", {}, "A challenge never means consent, refusal or a sanction. It does not close another request, change priority or delay safety work. A recorded human correction makes only suggestions and reviews that used that version need a fresh review. It does not change source information or policy automatically."),
+    (c.challenge_guarantees || []).length ? h("ul", { id: "challenge-guarantees", "aria-label": "What a challenge never changes" },
+      c.challenge_guarantees.map((text) => h("li", {}, text))) : null,
     h("h3", {}, "Suggestion details"),
     h("p", {}, "Browse older suggestions or enter an exact recorded suggestion reference. Suggestions without a source version can still be challenged by suggestion reference."),
     historyFor("challenge-target-history", "suggestions", targets, (target) => h("details", {}, h("summary", {}, `Suggestion ${target.proposal_id}: ${target.stale ? "Needs a fresh review" : "No recorded correction"}`),

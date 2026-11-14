@@ -18,7 +18,7 @@ from contextlib import contextmanager
 from copy import deepcopy
 from datetime import UTC, date, datetime
 
-from . import complaints_route, identity
+from . import challenges, complaints_route, identity
 from . import controls as k
 
 DECISION_STATUSES = ("Waiting", "Accepted", "Declined", "Paused", "Withdrawn")
@@ -1158,6 +1158,7 @@ class ResidentDecisionMixin:
             "case_id", "id", "expected_version", "reported_subject_ref", "account",
             "source", "channel", "next_update", "challenge_id",
         })
+        guard = challenges.protected_snapshot(c)
         record = k.find(c.get("nomination_records", []), body["id"], "nomination")
         _version(body, record)
         _owner_rights(self, user, record["owner"])
@@ -1179,6 +1180,7 @@ class ResidentDecisionMixin:
             review.setdefault("stale_from_version", correction["version"])
         record.update(version=correction["version"], next_update=next_update,
                       review_status="Re-review required; no priority or consent change")
+        challenges.assert_no_retaliation(guard, c)
         return f"{record['id']} correction version {record['version']} recorded"
 
     def _res_nomination_review(self, user, c, body):
@@ -1503,6 +1505,7 @@ class ResidentDecisionMixin:
                   "channel", "source", "request", "explanation", "owner", "non_digital_route", "next_update"}
         if set(body) != fields:
             raise ValueError("Supply only the challenge fields. Identity, time, decisions and dependencies are recorded by the server.")
+        guard = challenges.protected_snapshot(c)
         rec = _priority_record(self, body.get("proposal_id"))
         if not _priority_includes_case(rec, c["id"]):
             raise ValueError("Choose a priority suggestion that includes this case.")
@@ -1526,6 +1529,7 @@ class ResidentDecisionMixin:
                       ai_details={key: deepcopy(rec.get(key)) for key in ("source", "model", "prompt_version", "policy_version", "source_versions")},
                       resolution=None)
         c.setdefault("affected_challenges", []).append(record)
+        challenges.assert_no_retaliation(guard, c)
         return f"{record['id']} supplied challenge recorded"
 
     def _res_challenge_resolve(self, user, c, body):
@@ -1534,6 +1538,7 @@ class ResidentDecisionMixin:
             raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
         if set(body) != {"action", "id", "expected_version", "resolution", "resolution_ref", "explanation", "next_update"}:
             raise ValueError("Supply only the resolution fields. A person must supply the resolution evidence.")
+        guard = challenges.protected_snapshot(c)
         record = k.find(c.get("affected_challenges", []), body["id"], "challenge")
         _version(body, record)
         if record["status"] != "Open":
@@ -1544,6 +1549,7 @@ class ResidentDecisionMixin:
                           explanation=k.text(body["explanation"], "the permitted resolution explanation", 300),
                           next_update=_day(body["next_update"]), recorded_by=_identity(user), at=_time())
         record.update(status="Resolved", version=2, resolution=resolution)
+        challenges.assert_no_retaliation(guard, c)
         return f"{record['id']} supplied resolution recorded"
 
     def _res_scope_record(self, user, c, body):

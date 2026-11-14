@@ -4815,6 +4815,16 @@ Case detail applies the same current-reader check to both challenge narratives
 and the target catalog, including when a cookie or populated store cache still
 holds a downgraded or removed staff identity. Denial removes both fields without
 removing the ordinary case card; trusted internal `user=None` remains unchanged.
+Non-retaliation guard (#220): `challenge_open`, `challenge_resolve` and
+`nomination_correct` snapshot the protected case state (ranking inputs, stage,
+tenure/eligibility state, measure decisions and reviews, resident update
+commitment, and hazard records with response clocks) before the write and refuse
+with `Nothing was saved` if any of it differs afterwards, so a challenge or
+correction cannot lower priority, eligibility or queue rank, infer a refused or
+withdrawn state, or pause, hold or extend a hazard or safeguarding clock. Case
+detail returns `challenge_guarantees` to readers with challenge rights and the
+case screen lists them. Proof: `src/api/tests/test_challenge_non_retaliation_hazard_guard.py`.
+
 Release/model-route denial audit survives a failed accept/edit; failed human
 disposition changes and their acceptance/edit audit entries are rolled back.
 
