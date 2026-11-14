@@ -812,7 +812,7 @@ function workSummary(work) {
     h("p", { class: "muted" }, `Source: ${work.source}; evidence: ${work.evidence}; version: ${work.version}; recorded: ${work.recorded_at}; recorded as of: ${work.as_of}.`),
     work.handoff && h("p", {}, `Destination: ${work.handoff.destination}; proposed receiver: ${work.handoff.proposed_receiver}; confirmed receiver: ${work.handoff.confirmed_receiver}; chase owner: ${work.handoff.chase_owner}; resident-update owner: ${work.handoff.resident_update_owner}.`),
     work.hazard_clocks.map((clock) => h("p", { class: "safety-clock" },
-      `Safety clock in this recorded view: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; awareness: ${clock.aware_at}; named follow-up owner: ${clock.owner}; service response due: ${clock.response_due_at}; resident update due: ${clock.resident_update_due_at}. ${clock.authority} owns timing. ${clock.owner_status} Service response: ${clock.response_state}; resident update: ${clock.resident_update_state}.`)));
+      `${clock.clock_text || "Safety clock: elapsed time and target window not supplied."} Accountable owner: ${clock.accountable_owner || "Building Safety lead (escalation owner)"}. Safety clock in this recorded view: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; awareness: ${clock.aware_at}; named follow-up owner: ${clock.owner}; service response due: ${clock.response_due_at}; resident update due: ${clock.resident_update_due_at}. ${clock.authority} owns timing. ${clock.owner_status} Service response: ${clock.response_state}; resident update: ${clock.resident_update_state}.`)));
 }
 
 function workSteps(work) {
@@ -1436,7 +1436,7 @@ async function buildingView(id) {
 
 const STAGES_ORDER = ["Home identified", "Checking lease", "Rescheduled", "Contacting resident", "Contact paused", "Survey being booked", "Survey booked", "Survey write-up", "Design starting", "Design in progress", "Design awaiting approval", "Design being corrected", "Waiting on other works", "Waiting for resident decision", "Resident paused works", "Funding check", "Final checks before ordering", "Waiting for block programme", "With contractor", "Install booked", "Works under way", "Handover to arrange", "Quality check", "Closing down", "Aftercare issue"];
 const SAFETY_ROLES = ["Building Safety Liaison", "Retrofit Programme Manager", "Programme Support Officer"];
-const HAZ_CATEGORIES = ["Damp and mould", "Structural", "Electrical", "Other"];
+const HAZ_CATEGORIES = ["Damp and mould", "Structural", "Electrical", "Safeguarding", "Other"];
 const HAZ_PRIORITIES = ["Emergency", "Significant", "Routine"];
 const post = (id, act, body) => api(`/api/cases/${encodeURIComponent(id)}/${act}`, body);
 
@@ -1748,6 +1748,8 @@ function safetyPanel(c, id, refresh) {
       h("dl", { class: "safety-facts" },
         h("dt", {}, "External case"), h("dd", {}, x.job || "Not recorded yet"),
         h("dt", {}, "Zava coordinator"), h("dd", {}, coordinator || "Not assigned yet"),
+        h("dt", {}, "Safety clock"), h("dd", {}, x.clock_text || x.escalation_clock || "Safety clock: elapsed time and target window not supplied."),
+        h("dt", {}, "Accountable owner"), h("dd", {}, x.accountable_owner || "Building Safety lead (escalation owner)"),
         h("dt", {}, "Evidence progress"), h("dd", {}, progress),
         h("dt", {}, "Restart decision"), h("dd", {}, decision
           ? `Restarted by ${decision.actor.name} (${decision.actor.role}). Reason: ${decision.reason}. Evidence: ${decision.evidence}`

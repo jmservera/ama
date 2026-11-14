@@ -19,6 +19,7 @@ import os
 from copy import deepcopy
 from typing import Any
 
+from . import taskqueues
 from .controls import RESIDENT_ROLES, RESIDENT_VIEW_ROLES
 from .resident_decisions import INTAKE_FIELDS, RESIDENT_FIELDS, case_measures, current_context, resident_gate
 from .stock import support_status
@@ -175,6 +176,15 @@ def redact_staff_detail(user, d):
     if not can_see_reason(user):
         work = d.pop("work", None)  # Already projected by the shared queue read model.
         hold_notes(d)
+        for item in d.get("hazards", []):
+            if taskqueues.is_safeguarding(item.get("category")):
+                item["category"] = "Safety review"
+                item["clock_text"] = str(item.get("clock_text", "")).replace(
+                    "Safeguarding clock", "Safety clock")
+            for entry in (*item.get("history", []), item.get("legacy_record")):
+                for node in (entry, (entry or {}).get("snapshot")):
+                    if isinstance(node, dict) and taskqueues.is_safeguarding(node.get("category")):
+                        node["category"] = "Safety review"
         if work is not None:
             d["work"] = work
         if d.get("status", "").startswith("Waiting on "):

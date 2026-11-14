@@ -6,6 +6,7 @@ from typing import Any
 VERSION = "work-queues-1"
 MEMBERSHIP_REVISION = 3
 UNKNOWN = "Unknown"
+ESCALATION_OWNER = "Building Safety lead (escalation owner)"
 HELD = "Held for roles with a recorded need"
 PENDING = ("Offered", "Received", "Escalated")
 DEFAULT = dict(
@@ -95,6 +96,61 @@ def instant(value: object) -> datetime | None:
     if len(value) == 10:
         return datetime.combine(parsed.date(), time(), UTC)
     return parsed.astimezone(UTC) if parsed.tzinfo is not None else None
+
+
+def accountable_owner(value: object) -> str:
+    """The recorded owner, or the escalation owner when it is blank or unknown."""
+    named = str(value or "").strip()
+    return named if named and named != UNKNOWN else ESCALATION_OWNER
+
+
+def is_safeguarding(category: object) -> bool:
+    return "safeguard" in str(category or "").lower()
+
+
+def safe_category(category: object, reason_ok: bool) -> str:
+    """Never expose a safeguarding category label without the reason-visibility right."""
+    if is_safeguarding(category) and not reason_ok:
+        return "Safety review"
+    return str(category or UNKNOWN)
+
+
+def hazard_clock(
+    hazard: dict[str, Any], now: datetime, *, reason_ok: bool = True
+) -> dict[str, Any]:
+    """Per-item clock text, fallback accountable owner and pending external deadlines."""
+    follow = hazard.get("accepted_by") or hazard.get("sender") or {}
+    named = follow.get("name") or hazard.get("owner") or UNKNOWN
+    awareness = instant(hazard.get("aware_at"))
+    known = awareness is not None and awareness <= now
+    hours = int((now - awareness).total_seconds() // 3600) if known and awareness else None
+    due = hazard.get("response_due_at")
+    response = timing(due, hazard.get("responded_at"), now)
+    kind = "Hazard"
+    if is_safeguarding(hazard.get("category")):
+        kind = "Safeguarding" if reason_ok else "Safety"
+    elapsed = "elapsed time unknown" if hours is None else f"{hours} hours elapsed"
+    window = (
+        f"service response due {due}"
+        if instant(due) is not None
+        else "no response target window recorded"
+    )
+    states = (
+        response,
+        timing(hazard.get("resident_update_due_at"), hazard.get("resident_updated_at"), now),
+        timing(hazard.get("external_service_due_at"), hazard.get("external_service_confirmed"), now)
+        if instant(hazard.get("external_service_due_at")) is not None
+        else "Completed",
+    )
+    return dict(
+        kind=kind,
+        accountable_owner=accountable_owner(named),
+        clock_text=f"{kind} clock: {elapsed}; {window}; response {response.lower()}.",
+        named=named,
+        hours=hours,
+        known=known,
+        pending=any(state in ("Open", "Overdue") for state in states),
+    )
 
 
 def timing(due: object, done: object, now: datetime) -> str:
@@ -236,6 +292,7 @@ def context(
         follow = hazard.get("accepted_by") or hazard.get("sender") or {}
         named = follow.get("name") or hazard.get("owner") or UNKNOWN
         path = f"hazards/{index}"
+        item = hazard_clock(hazard, now, reason_ok=reason_ok)
         if not hazard.get("released"):
             block(
                 "Safety review",
@@ -245,9 +302,12 @@ def context(
                 "retrofit work.",
                 path,
             )
-            awareness = instant(hazard.get("aware_at"))
+        if not hazard.get("released") or item["pending"]:
             clocks.append(
                 dict(
+                    kind=item["kind"],
+                    accountable_owner=item["accountable_owner"],
+                    clock_text=item["clock_text"],
                     owner=named,
                     owner_named=named != UNKNOWN,
                     owner_status=(
@@ -264,10 +324,8 @@ def context(
                         hazard.get("resident_updated_at"),
                         now,
                     ),
-                    aware_at=hazard.get("aware_at") if awareness and awareness <= now else UNKNOWN,
-                    elapsed_hours=int((now - awareness).total_seconds() // 3600)
-                    if awareness and awareness <= now
-                    else None,
+                    aware_at=hazard.get("aware_at") if item["known"] else UNKNOWN,
+                    elapsed_hours=item["hours"],
                     response_due_at=hazard.get("response_due_at") or UNKNOWN,
                     resident_update_due_at=hazard.get("resident_update_due_at") or UNKNOWN,
                     authority="Existing hazard and repairs service",

@@ -868,6 +868,8 @@ const hazardTriageRoles = ["Retrofit Coordinator", "Resident Liaison Officer", "
 const hazardActor = (value) => value && (value.name || value.role)
   ? [value.name, value.role].filter(Boolean).join(", ") : "Unknown";
 const hazardStep = (stamp) => stamp ? `Recorded ${screenStamp(stamp)}` : "Not recorded";
+const hazardSafetyClock = (h) => h.clock_text || h.escalation_clock || "Clock not supplied";
+const hazardOwner = (h) => h.accountable_owner || "Building Safety lead (escalation owner)";
 function hazardFollowUp(h) {
   if (h.accepted_at) return `${hazardActor(h.accepted_by || h.destination)} owns the accepted scope`;
   if (h.received_at) return `Pending acceptance. Follow-up owner: ${hazardActor(h.follow_up || h.sender)}`;
@@ -879,7 +881,9 @@ const hazardEscalationState = (h) => `Escalation state: ${screenValue(h.state)}`
 function hazardClock(h) {
   if (h.responded_at) return `Service responded ${screenStamp(h.responded_at)}`;
   if (!h.response_due_at) return "Service response clock: no due time recorded";
-  const late = new Date(h.response_due_at).getTime() < Date.now();
+  const due = new Date(h.response_due_at).getTime();
+  if (Number.isNaN(due)) return `Service response clock: due time not readable (${screenValue(h.response_due_at)})`;
+  const late = due < Date.now();
   return `${late ? "Overdue" : "Awaiting"} service response. Due ${screenStamp(h.response_due_at)}. Recorded by the service, not set here`;
 }
 function hazardHold(h) {
@@ -919,8 +923,8 @@ function hazardScreen(intro) {
             hazardEscalationState(x), hazardFollowUp(x)]), Infinity)),
       hazardPanel("restart", "Retrofit pause and restart decision",
         screenTable("Scoped pause and release evidence",
-          ["Item", "Pause and release evidence", "Service response clock", "Service responded"],
-          items.map((x, i) => [`H-${i + 1}`, hazardHold(x), hazardClock(x), hazardStep(x.responded_at)]), Infinity)),
+          ["Item", "Pause and release evidence", "Service response clock", "Clock", "Accountable owner", "Service responded"],
+          items.map((x, i) => [`H-${i + 1}`, hazardHold(x), hazardClock(x), hazardSafetyClock(x), hazardOwner(x), hazardStep(x.responded_at)]), Infinity)),
       hazardPanel("act", "Where to act",
         h("p", {}, "Referral, receipt, acceptance and release are recorded in the existing case workspace by the named authorised person. Emergency concerns follow the existing human emergency procedure now, not this screen.")));
   };
@@ -940,7 +944,7 @@ const hazardQueue = {
       return status === "Released" && !(x.hold || {}).decision
         ? "Released. Release decision evidence: open the home" : status;
     };
-    const flag = (cells) => [...cells, ...Array(9).fill("Unavailable")];
+    const flag = (cells) => [...cells, ...Array(11).fill("Unavailable")];
     const rows = entries.flatMap(([row, c]) => {
       if (!c) return [flag([row.id, "Unavailable. Open the home to check."])];
       if (!Array.isArray(c.hazards)) return [flag([row.id, "Unknown. Hazard list not supplied. Open the home to check."])];
@@ -948,12 +952,12 @@ const hazardQueue = {
       return c.hazards.map((x, i) => [`${row.id} H-${i + 1}`, `${screenValue(x.category)}, ${screenValue(x.priority)}`,
         screenStamp(x.aware_at), x.source, hazardActor(x.destination),
         hazardStep(x.sent_at), hazardStep(x.received_at), hazardStep(x.accepted_at),
-        hazardEscalationState(x), hazardFollowUp(x), pause(x)]);
+        hazardEscalationState(x), hazardFollowUp(x), pause(x), hazardSafetyClock(x), hazardOwner(x)]);
     });
     return screenPanel("Hazard referrals across this page of homes",
       h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Every recorded hazard and safeguarding item is listed, including released ones. A home with no row has no hazard list entry on this page; this does not establish that no hazard exists. Unavailable, unknown and mismatched homes are listed so they are not read as clear. Open a home for pause and release decision evidence."),
       screenTable("Hazard referrals by home",
-        ["Home and item", "Reported observation and urgency", "Aware at", "Source", "Destination", "Sent", "Received", "Accepted", "State", "Follow-up", "Pause status"],
+        ["Home and item", "Reported observation and urgency", "Aware at", "Source", "Destination", "Sent", "Received", "Accepted", "State", "Follow-up", "Pause status", "Clock", "Accountable owner"],
         rows, Infinity));
   }
 };
