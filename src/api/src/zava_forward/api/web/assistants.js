@@ -252,6 +252,7 @@ function assistantCasePanel(id, session) {
       }
       if (reviewed.childElementCount > 1) panel.append(reviewed);
       if (!proposals.length) panel.append(h("p", {}, "No AI suggestions yet. Ordinary case work is not affected."));
+      else panel.append(h("p", {}, h("a", { class: "btn alt", href: `/api/assistants/proposals.csv?case_id=${encodeURIComponent(id)}`, download: "assistant-proposals.csv" }, "Download suggestions for Excel"), " The file is a read-only copy; changes in it are not imported back."));
       restoreBoundFields([...session.pendingFields.values()], panel, "proposal", session);
     } catch (e) {
       if (current()) {
@@ -300,6 +301,7 @@ async function assistantQueueView(after = "", append = false) {
       h("p", { role: "status" }, queue.disabled || "Unreviewed proposals require a separate source check and role review."),
       h("button", { onclick: () => assistantQueueView() }, "Refresh queue"),
       ...cards, more,
+      h("p", {}, h("a", { class: "btn alt", href: "/api/assistants/proposals.csv", download: "assistant-proposals.csv" }, "Download all proposals for Excel"), " The file is a read-only copy; changes in it are not imported back."),
       !queue.proposals.length && h("p", {}, "No proposals in your current role and case scope. Use the ordinary case controls."));
     show(panel);
     restoreBoundFields([...session.pendingFields.values()], panel, "proposal", session);
