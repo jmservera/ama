@@ -153,8 +153,20 @@ def reading_tuples(rows: Sequence[Mapping[str, str]]) -> list[tuple[str, str, st
     )
 
 
+_QUALITY_FIELDS = ("calibrated", "source_type", "schema_version")
+
+
+def _quality_tuples(rows: Sequence[Mapping[str, str]]) -> list[tuple[str, ...]]:
+    """Per-row fields that comparator.analyse() checks but reading_tuples() omits."""
+    return sorted(
+        (str(row.get("sensor_id", "")), str(row.get("observed_at", "")))
+        + tuple(str(row.get(f, "")) for f in _QUALITY_FIELDS)
+        for row in rows
+    )
+
+
 def _digest(home_id: str, rows: Sequence[Mapping[str, str]]) -> str:
-    body = json.dumps([home_id, reading_tuples(rows)], ensure_ascii=True)
+    body = json.dumps([home_id, reading_tuples(rows), _quality_tuples(rows)], ensure_ascii=True)
     return hashlib.sha256(body.encode("ascii")).hexdigest()
 
 
@@ -249,7 +261,14 @@ def reproduce_sensor_analysis(
         raise ValueError("SINGLE_HOME_REQUIRED")
     (home_id,) = homes
     if window is None:
-        times = [comparator._time(str(r["observed_at"])) for r in retained_readings]
+        times = []
+        for r in retained_readings:
+            try:
+                times.append(comparator._time(str(r["observed_at"])))
+            except (KeyError, ValueError):
+                continue
+        if not times:
+            raise ValueError("NO_VALID_OBSERVATIONS")
         start = min(times).replace(hour=0, minute=0, second=0, microsecond=0)
         days = (max(times) - start).days + 1
         window = comparator.Window(start, start + timedelta(days=days))
