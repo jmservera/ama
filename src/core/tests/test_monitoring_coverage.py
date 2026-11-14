@@ -208,6 +208,62 @@ class ReconcileTests(unittest.TestCase):
         self.assertEqual(swapped["status"], mc.BLOCKED)
 
 
+class RestartReconcileTests(unittest.TestCase):
+    START, END = ReconcileTests.START, ReconcileTests.END
+
+    def _run(self, events: list[dict[str, str]], prior: list[str] | None = None) -> dict[str, Any]:
+        return mc.reconcile_events(
+            events, window_start=self.START, window_end=self.END, prior_event_ids=prior
+        )
+
+    def test_checkpoint_dedupes_replay_across_reload(self) -> None:
+        first = self._run([{"event_id": "e1", "observed_at": "2026-11-04T00:10:00Z"}])
+        reloaded = self._run(
+            [
+                {"event_id": "e1", "observed_at": "2026-11-04T00:10:00Z"},
+                {"event_id": "e2", "observed_at": "2026-11-04T00:20:00Z"},
+            ],
+            first["checkpoint"],
+        )
+        self.assertEqual((reloaded["count"], reloaded["new"], reloaded["duplicates"]), (2, 1, 1))
+        self.assertEqual(reloaded["checkpoint"], ["e1", "e2"])
+        again = self._run([{"event_id": "e2", "observed_at": "2026-11-04T00:20:00Z"}], ["e1", "e2"])
+        self.assertEqual((again["count"], again["new"]), (2, 0))
+
+    def test_unusable_or_oversized_checkpoint_blocks(self) -> None:
+        for prior in (["a b"], [3], [f"x{i}" for i in range(mc.MAX_CHECKPOINT + 1)]):
+            result = self._run([], prior)  # type: ignore[arg-type]
+            self.assertEqual(result["status"], mc.BLOCKED)
+            self.assertIsNone(result["count"])
+
+
+class DisabledTaskStatusTests(unittest.TestCase):
+    def test_names_role_and_reason_and_flags_unnamed_individual(self) -> None:
+        row = mc.disabled_task_status(
+            {
+                "id": "chat-case-conversation",
+                "enabled": False,
+                "accountable_function": "Retrofit Programme Manager",
+                "accountable_individual": "Unknown",
+                "activation": "disabled; needs approved thresholds",
+                "prompt": "raw resident text",
+            }
+        )
+        self.assertEqual(row["state"], "disabled")
+        self.assertEqual(row["owner_role"], "Retrofit Programme Manager")
+        self.assertIsNone(row["owner_individual"])
+        self.assertTrue(row["owner_gap"])
+        self.assertEqual(row["reason"], "disabled; needs approved thresholds")
+        self.assertNotIn("prompt", row)
+
+    def test_sensitive_or_oversized_reason_is_withheld(self) -> None:
+        for reason in ("contact jo@example.org", "x" * 401, None):
+            row = mc.disabled_task_status(
+                {"id": "t1", "enabled": False, "accountable_function": "A", "activation": reason}
+            )
+            self.assertIn("withheld", row["reason"])
+
+
 class SanitiserTests(unittest.TestCase):
     def test_only_allowlisted_aggregate_fields_survive(self) -> None:
         event = {

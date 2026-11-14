@@ -19,7 +19,16 @@ from typing import Any
 
 from . import assistant_release as rel
 from .ai import may_carry_captured_readings
-from . import ai_consumption, continuity, projection, quality, ranking, rai_release, sensor_view
+from . import (
+    ai_consumption,
+    continuity,
+    monitoring_coverage,
+    projection,
+    quality,
+    ranking,
+    rai_release,
+    sensor_view,
+)
 from zava_forward.core.ai import FORBIDDEN, Ai
 from .store import ConflictError
 from .synthetic.sensor_identity import demo_homes
@@ -881,7 +890,8 @@ class Assistants:
                 if spec.get("enabled") is False:
                     registered.append(dict(spec, binding=None,
                                            release_denial=dict(missing=["Task is disabled and has no runtime binding or release evidence."]),
-                                           release=None, authority_gap=rai_release.AUTHORITY_GAP))
+                                           release=None, authority_gap=rai_release.AUTHORITY_GAP,
+                                           status=monitoring_coverage.disabled_task_status(spec)))
                     continue
                 if task in REGISTRY:
                     binding = runtime_binding(task, self.store.ai)
