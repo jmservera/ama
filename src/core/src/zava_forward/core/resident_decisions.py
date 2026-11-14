@@ -1119,6 +1119,44 @@ def measure_decision_view(c):
     return out
 
 
+NON_DETRIMENT_COMMITMENTS = (
+    "Programme place: asking for a review or making a complaint does not remove or delay the household's place in the programme.",
+    "Repairs: repairs and defect work continue and are not held back because of a review or complaint.",
+    "Safety duties: hazard and safety duties stay in force and are never waived or paused by a review or complaint.",
+    "Measures: a pause or withdrawal stays limited to its own measure.",
+)
+REDRESS_ROUTES = (
+    dict(route="Independent review",
+         who="The resident, their representative, or frontline staff on their behalf.",
+         how="Choose the recorded measure decision to review. A named reviewer who did not record that decision does the review."),
+    dict(route="Complaint",
+         who="The resident, their representative, or frontline staff on their behalf.",
+         how="Record the complaint and the outcome wanted. A different named person owns the redress."),
+)
+
+
+def redress_route_view(c):
+    """Read-only route to independent human review and the formal complaints route, with what is preserved."""
+    formal = []
+    for req in c.get("service_requests", []):
+        if req.get("route") not in FORMAL_ROUTES:
+            continue
+        attempts = (req.get("formal_route") or {}).get("attempts", [])
+        sent = attempts[-1]["status"] if attempts else "Not sent"
+        formal.append(dict(id=req["id"], route=req["route"], status=req.get("status"),
+                           next_update=req.get("next_update"), formal_route_status=sent,
+                           review_measure=req.get("review_measure"),
+                           review_decision_version=req.get("review_decision_version")))
+    recorded = c.get("measure_decisions") or {}
+    reviewable = [dict(measure=m, version=n, status=v.get("status"),
+                       recorder_identity_status=_identity_status(v.get("recorder_identity")))
+                  for m in case_measures(c) for n, v in enumerate(recorded.get(m, []), 1)
+                  if _identity_status(v.get("recorder_identity")) != "Unknown"]
+    return dict(commitments=list(NON_DETRIMENT_COMMITMENTS), routes=deepcopy(list(REDRESS_ROUTES)),
+                reviewable_decisions=reviewable, formal_requests=formal,
+                send_note="Recording a request here does not send it. Nothing has reached the formal complaints route unless its status is Acknowledged.")
+
+
 class ResidentDecisionMixin:
     def resident_recorder(self, user, service=False):
         roles = k.RESIDENT_VIEW_ROLES if service else k.RESIDENT_ROLES

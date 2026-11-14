@@ -2727,6 +2727,40 @@ class JsonResidentDecisions(unittest.TestCase):
         )
         self.assertTrue(self.store.cases["ZF-1"]["closed"])
 
+    def test_redress_route_view_names_routes_preserved_duties_and_send_status(self) -> None:
+        self.scope()
+        self.answer(status="Withdrawn", note="SYN in their words")
+        view = self.store.detail("ZF-1", self.pam)["redress_route"]
+        self.assertEqual([r["route"] for r in view["routes"]], ["Independent review", "Complaint"])
+        text = " ".join(view["commitments"])
+        for duty in ("Programme place", "Repairs", "Safety duties", "own measure"):
+            self.assertIn(duty, text)
+        self.assertEqual(
+            view["reviewable_decisions"],
+            [
+                dict(
+                    measure=MEASURES[0],
+                    version=1,
+                    status="Withdrawn",
+                    recorder_identity_status="Known",
+                )
+            ],
+        )
+        self.assertEqual(view["formal_requests"], [])
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        body = self.review_body()
+        body.pop("action")
+        self.action("service_open", **body)
+        opened = self.store.detail("ZF-1", self.pam)["redress_route"]["formal_requests"]
+        self.assertEqual(
+            [(r["route"], r["formal_route_status"]) for r in opened],
+            [("Independent review", "Not sent")],
+        )
+        for key in ("measure_decisions", "resident_reviews", "decision", "hazards", "stage"):
+            self.assertEqual(self.store.cases["ZF-1"][key], before[key])
+        staff = self.store.detail("ZF-1", dict(self.sam, role="Quality Inspector"))
+        self.assertNotIn("redress_route", staff)
+
     def test_complaint_and_independent_review_stay_open_under_every_hold(self) -> None:
         self.scope()
         self.action("safe_contact_record", safe_contact_ref="SYN-SAFE-CANARY", source="SYN")

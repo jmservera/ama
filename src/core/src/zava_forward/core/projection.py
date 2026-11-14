@@ -156,6 +156,7 @@ def redact_staff_detail(user, d):
     if not resident_view:
         d.pop("resident_update", None)
         d.pop("service_requests", None)
+        d.pop("redress_route", None)
         for event in d.get("handoff_history", []):
             if isinstance(event.get("changes"), dict):
                 event["changes"].pop("resident_update", None)

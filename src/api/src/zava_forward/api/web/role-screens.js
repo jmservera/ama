@@ -1783,6 +1783,25 @@ const serviceOwner = (r) => `Service: ${screenPerson(r.service_identity || r.ser
 const serviceReview = (r) => r.route === "Independent review"
   ? `Independent review of ${screenValue(r.review_reference)}; ${screenValue(r.review_measure)} v${screenValue(r.review_decision_version)}`
   : "Not an independent review";
+function redressRoutePanel(route) {
+  if (!route) return screenUnknown("The independent review and complaints route is not available on this record.", "Resident-workflow manager", "Reload the home");
+  return screenPanel("Independent human review and formal complaints, without detriment",
+    h("p", {}, "A resident, their representative or frontline staff on their behalf can ask for an independent human review or make a formal complaint at any time."),
+    h("ul", {}, (route.commitments || []).map((x) => h("li", {}, x))),
+    screenRecordTable("Routes to ask",
+      ["Route", "Who can ask", "How"],
+      (route.routes || []).map((x) => [x.route, x.who, x.how])),
+    screenRecordTable("Decisions open to independent review",
+      ["Measure", "Decision version", "Recorded answer"],
+      (route.reviewable_decisions || []).map((x) => [x.measure, `v${screenValue(x.version)}`, stateCue(choiceCues, x.status)])),
+    (route.reviewable_decisions || []).length ? null
+      : h("p", { class: "empty" }, "No recorded decision with a known recorder is open to independent review. This does not establish that none can be reviewed."),
+    (route.formal_requests || []).length ? screenRecordTable("Formal requests and whether they were sent",
+      ["Issue", "Route", "State", "Formal route status", "Next update", "Measure reviewed", "Decision version"],
+      route.formal_requests.map((x) => [x.id, x.route, stateCue(serviceCues, x.status), screenValue(x.formal_route_status), screenStamp(x.next_update), screenValue(x.review_measure), x.review_decision_version == null ? "Not applicable" : `v${screenValue(x.review_decision_version)}`]))
+      : h("p", { class: "empty" }, "No formal request recorded. This does not establish that the resident has none."),
+    h("p", {}, route.send_note));
+}
 function serviceQueueRow([row, c]) {
   if (!c) return [row.id, "Unavailable. Open the home to check.", "Unavailable", "Unavailable"];
   const open = (c.service_requests || []).filter((r) => r.status !== "Closed");
@@ -1827,6 +1846,7 @@ registerRoleScreen({
           requests.map((r) => [r.id, r.route, `${screenValue(r.summary)}. Wanted: ${screenValue(r.desired_outcome)}`, serviceStatus(r), serviceOwner(r),
             serviceNeeds(r), r.representative_ref, screenStamp(r.next_update), serviceReview(r)]))
           : h("p", { class: "empty" }, "No service issue recorded. This does not establish that the resident has none.")),
+      redressRoutePanel(c.redress_route),
       requests.some((r) => (r.history || []).length) ? screenPanel("Response history",
         screenRecordTable("Recorded response steps",
           ["Issue", "State", "Recorded by", "Recorded", "Note"],

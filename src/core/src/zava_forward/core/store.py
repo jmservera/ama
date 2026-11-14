@@ -19,7 +19,7 @@ from .list_export import safe_cell
 from .continuity import ContinuityMixin
 from .governance import GovernanceMixin
 from .grants import GrantMixin, grant_summary
-from .resident_decisions import ResidentDecisionMixin, measure_decision_view, remember_first_contact, retention_schedule, resident_gate, resident_status
+from .resident_decisions import ResidentDecisionMixin, measure_decision_view, redress_route_view, remember_first_contact, retention_schedule, resident_gate, resident_status
 from .signoffs import SignoffMixin, missing_items, technical_gate
 from zava_forward.core.ai import Ai
 from .chatthreads import ChatMixin
@@ -499,6 +499,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 d["work"] = self.work_context(c, user)
             if c.get("handoff"):
                 d["handoff"] = handoff_view(c)
+            d["redress_route"] = redress_route_view(c)
             d["status"] = self.status_line(c)
             d["gate"] = self.gate_reasons(c) + buildings.blockers(self.data, self.cases, c)
             if d["status"] == "Ready" and d["gate"]:
