@@ -838,7 +838,7 @@ function hazardFollowUp(h) {
   if (h.referred) return `Legacy referral with no recorded send time. Recorded owner (unverified): ${screenValue(h.owner)}. Retrofit Coordinator to confirm ownership and check the external service record`;
   return `No referral sent. Owner: ${screenValue(h.owner)} to send or record a manual route`;
 }
-const hazardState = (h) => `Escalation state: ${screenValue(h.state)}`;
+const hazardEscalationState = (h) => `Escalation state: ${screenValue(h.state)}`;
 function hazardClock(h) {
   if (h.responded_at) return `Service responded ${screenStamp(h.responded_at)}`;
   if (!h.response_due_at) return "Service response clock: no due time recorded";
@@ -861,8 +861,8 @@ const hazardJump = (sections) => h("nav", { "aria-label": "Sections on this scre
     onclick: (event) => {
       event.preventDefault();
       const heading = document.getElementById(`hazard-${key}-heading`);
-      heading.focus();
-      heading.scrollIntoView({ block: "start" });
+      heading?.focus?.();
+      heading?.scrollIntoView?.({ block: "start" });
     } }, `Go to ${title}`)));
 function hazardScreen(intro) {
   return (c) => {
@@ -879,7 +879,7 @@ function hazardScreen(intro) {
           items.map((x, i) => [`H-${i + 1}`, `${screenValue(x.category)}, ${screenValue(x.priority)}`,
             screenStamp(x.aware_at), x.source, hazardActor(x.destination),
             hazardStep(x.sent_at), hazardStep(x.received_at), hazardStep(x.accepted_at),
-            hazardState(x), hazardFollowUp(x)]), Infinity)),
+            hazardEscalationState(x), hazardFollowUp(x)]), Infinity)),
       hazardPanel("restart", "Retrofit pause and restart decision",
         screenTable("Scoped pause and release evidence",
           ["Item", "Pause and release evidence", "Service response clock", "Service responded"],
@@ -911,7 +911,7 @@ const hazardQueue = {
       return c.hazards.map((x, i) => [`${row.id} H-${i + 1}`, `${screenValue(x.category)}, ${screenValue(x.priority)}`,
         screenStamp(x.aware_at), x.source, hazardActor(x.destination),
         hazardStep(x.sent_at), hazardStep(x.received_at), hazardStep(x.accepted_at),
-        hazardState(x), hazardFollowUp(x), pause(x)]);
+        hazardEscalationState(x), hazardFollowUp(x), pause(x)]);
     });
     return screenPanel("Hazard referrals across this page of homes",
       h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Every recorded hazard and safeguarding item is listed, including released ones. A home with no row has no hazard list entry on this page; this does not establish that no hazard exists. Unavailable, unknown and mismatched homes are listed so they are not read as clear. Open a home for pause and release decision evidence."),
