@@ -61,6 +61,52 @@ class RedactionTests(unittest.TestCase):
         self.assertIn("exc=RuntimeError", out)
         self.assertIn("body=<redacted>", out)
 
+    def test_secrets_contact_details_and_identifiers_are_redacted(self) -> None:
+        leaks = (
+            "sv=2022-11-02&se=2026-12-01T00:00:00Z&sig=Zm9vYmFy%2Bsecret",
+            "api-key: 0123456789abcdef0123456789abcdef",
+            "sk-proj-abcdefghijklmnop1234",
+            "Authorization: Basic dXNlcjpwYXNzd29yZA==",
+            "AccountKey=AbCdEfGhIjKlMnOpQrStUvWxYz0123456789+/AbCdEfGhIjKlMnOpQrStUvWx==",
+            "SW1A 1AA",
+            "07700 900123",
+            "+44 7700 900123",
+            "AB 12 34 56 C",
+            "resident_ref=RES-77-SECRET",
+            "uprn: 100023336956",
+            "Bearer abc.def.ghi",
+        )
+        for leak in leaks:
+            with self.subTest(leak=leak):
+                self.stream.truncate(0)
+                self.stream.seek(0)
+                self.logger.warning(f"failed {leak} end")
+                self.logger.warning("failed %s end", leak)
+                self.logger.warning("failed " + leak + " with %s", "x")
+                out = self.output()
+                for part in leak.replace("=", " ").replace(":", " ").split():
+                    if len(part) > 6:
+                        self.assertNotIn(part, out)
+
+    def test_formatted_exception_text_and_tracebacks_are_redacted(self) -> None:
+        text = "Traceback (most recent call last):\n  File x\nValueError: CHAT-CANARY-boiler"
+        self.logger.error("worker failed: %s", RuntimeError(CANARIES[1]))
+        self.logger.error(f"worker failed: {RuntimeError(CANARIES[1])!r} KeyError: {CANARIES[2]}")
+        self.logger.error("failed ValueError: %s next", CANARIES[1])
+        self.logger.error(text)
+        out = self.output()
+        self.assertNotIn("CANARY", out)
+        self.assertNotIn("Traceback", out)
+        self.assertIn("worker failed: RuntimeError", out)
+        self.assertIn("KeyError: <redacted>", out)
+
+    def test_operational_markers_and_counts_survive_the_wider_patterns(self) -> None:
+        self.logger.warning("AI_LIMIT_BREACH reason=%s route=%s", "liability-overrun", "chat")
+        self.logger.info("sent %s of %s at %s", 3, 5, "2026-11-05T10:00:00Z")
+        out = self.output()
+        self.assertIn("AI_LIMIT_BREACH reason=liability-overrun route=chat", out)
+        self.assertIn("sent 3 of 5", out)
+
     def test_extra_fields_never_reach_the_record(self) -> None:
         records: list[logging.LogRecord] = []
 

@@ -15,6 +15,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
+from zava_forward.core.diagnostic_logging import SENSITIVE
 from zava_forward.core.rai_release import named
 
 INSTALLED = "installed"
@@ -501,10 +502,7 @@ ALLOWED_FIELDS = frozenset(
         "offline_only",
     }
 )
-_SENSITIVE = re.compile(
-    r"[\w.+-]+@[\w-]+\.[\w.]+|eyJ[\w-]{8,}\.[\w-]+|bearer\s+\S+|\b\d{1,3}(?:\.\d{1,3}){3}\b",
-    re.IGNORECASE,
-)
+_SENSITIVE = SENSITIVE
 _TOKEN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,63}")
 _TIMESTAMP = re.compile(
     r"\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?)?"
