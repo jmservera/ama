@@ -157,17 +157,38 @@ def escalation_destination() -> dict[str, Any]:
         os.environ.get(f"ZF_STAFF_INTAKE_ESCALATION_{k}", "").strip()
         for k in ("OWNER", "ROLE", "CONTACT")
     )
+    try:
+        job_pack.named_owner(owner, role)
+        assigned = bool(contact)
+    except ValueError:
+        assigned = False
     return dict(
         owner=owner or UNKNOWN,
         role=role or UNKNOWN,
         contact=contact or UNKNOWN,
-        configured=bool(owner and role and contact),
+        configured=assigned,
+        owner_assigned=assigned,
+        owner_status=(
+            "Named owner assigned"
+            if assigned
+            else "No named owner yet. Owner needed: the contract manager names a person, "
+            "their role and contact before a variation or concern can be routed."
+        ),
+        advisory_only=True,
         contract_instruction=False,
         note=(
             "A concern raised here does not change the work order. "
             "Only the contract manager issues a new version."
         ),
     )
+
+
+def route_escalation(kind: str, summary: str, raised_by: str, order: str) -> dict[str, Any]:
+    """Route a variation or concern to the configured named owner; refuse if none is assigned."""
+    dest = escalation_destination()
+    if not dest["owner_assigned"]:
+        raise ValueError(dest["owner_status"])
+    return job_pack.escalation(kind, summary, raised_by, order, dest["owner"], dest["role"])
 
 
 def _view_receipt(idx: int, rec: dict[str, Any], user: Any) -> dict[str, Any]:
@@ -240,6 +261,7 @@ def view(store: Any, user: Any, wid: str) -> dict[str, Any]:
             escalation=escalation_destination(),
             boundaries=dict(
                 contract_instruction=False,
+                advisory_only=True,
                 acceptance=(
                     "Acceptance needs independent review by a named quality role. "
                     "This screen never accepts work."

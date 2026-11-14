@@ -155,6 +155,24 @@ class JobPackTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             job_pack.escalation("order", "x", "Kim", "WO-1", "Pam", "Retrofit Programme Manager")
 
+    def test_placeholder_owner_names_are_rejected(self) -> None:
+        for name in ("   ", "Unknown - not configured", "TBC", "unassigned", "N/A"):
+            with self.assertRaises(ValueError, msg=name):
+                job_pack.escalation(
+                    "variation", "x", "Kim", "WO-1", name, "Retrofit Programme Manager"
+                )
+
+    def test_every_kind_routes_to_named_owner_and_stays_advisory(self) -> None:
+        for kind in job_pack.ESCALATION_KINDS:
+            e = job_pack.escalation(kind, "x", "Kim", "WO-1", "Sam Safe", "Building Safety Liaison")
+            self.assertEqual(e["owner"], dict(name="Sam Safe", role="Building Safety Liaison"))
+            job_pack.assert_advisory(e)
+
+    def test_assert_advisory_refuses_instruction_records(self) -> None:
+        for bad in (dict(contract_instruction=True), dict(), dict(contract_instruction=None)):
+            with self.assertRaises(ValueError):
+                job_pack.assert_advisory(bad)
+
 
 if __name__ == "__main__":
     unittest.main()

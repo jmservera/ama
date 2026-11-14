@@ -26,6 +26,8 @@ ACKNOWLEDGED = "Receipt acknowledged - not accepted"
 
 ESCALATION_KINDS = ("variation", "safety", "access", "scope question", "other")
 ESCALATION_OWNER_ROLES = MANAGER_ROLES + ("Building Safety Liaison",)
+UNNAMED_OWNERS = frozenset({"unknown", "unassigned", "tbc", "tbd", "n/a", "none", "nobody", "team"})
+ADVISORY_NOTE = "The work order does not change until the contract manager issues a new version."
 NO_SHOW_EVENTS = {
     "provider no-show": ("Rebooking needed", "The provider did not attend"),
     "provider cancelled": ("Rebooking needed", "The provider cancelled"),
@@ -207,21 +209,38 @@ def visit_recovery(event: str) -> dict[str, Any]:
     )
 
 
+def named_owner(name: Any, role: Any) -> dict[str, str]:
+    """A named accountable human in an allowed role. Blank or placeholder names are rejected."""
+    if role not in ESCALATION_OWNER_ROLES:
+        raise ValueError("Choose a contract manager or the building safety liaison as owner.")
+    who = _text(name, "the named owner")
+    if who.lower().startswith("unknown") or who.lower().rstrip(".") in UNNAMED_OWNERS:
+        raise ValueError("Enter the name of a person as owner, not a placeholder.")
+    return dict(name=who, role=str(role))
+
+
+def assert_advisory(record: Mapping[str, Any]) -> None:
+    """Refuse any variation or escalation record that could act as a contract instruction."""
+    if record.get("contract_instruction") is not False:
+        raise ValueError("A variation or escalation is advice only, never a contract instruction.")
+
+
 def escalation(
     kind: str, summary: str, raised_by: str, order: str, owner_name: str, owner_role: str
 ) -> dict[str, Any]:
     """Route a variation or concern to a named owner. It is never a contract instruction."""
     if kind not in ESCALATION_KINDS:
         raise ValueError("Choose one of: " + ", ".join(ESCALATION_KINDS) + ".")
-    if owner_role not in ESCALATION_OWNER_ROLES:
-        raise ValueError("Choose a contract manager or the building safety liaison as owner.")
-    return dict(
+    owner = named_owner(owner_name, owner_role)
+    out = dict(
         kind=kind,
         summary=_text(summary, "what needs deciding")[:500],
         raised_by=_text(raised_by, "who is raising this"),
         order=_text(order, "the work order"),
-        owner=dict(name=_text(owner_name, "the named owner"), role=owner_role),
+        owner=owner,
         status="Raised - awaiting owner",
         contract_instruction=False,
-        note="The work order does not change until the contract manager issues a new version.",
+        note=ADVISORY_NOTE,
     )
+    assert_advisory(out)
+    return out

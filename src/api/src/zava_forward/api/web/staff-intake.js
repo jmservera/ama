@@ -138,6 +138,8 @@ function intakeOrder(data, orderId, rerender) {
       data.recovery.map((r) => [r.event, r.outcome, r.resident_effect, r.next_step])),
     screenFields([["Escalation owner", data.escalation.owner], ["Escalation role", data.escalation.role],
       ["Escalation contact", data.escalation.contact],
+      ["Owner status", data.escalation.owner_status],
+      ["Contract instruction", "No. Variations and concerns are advice only."],
       ["Effect", "A concern does not change the work order. Only the contract manager issues a new version."]]),
     h("p", {}, data.boundaries.acceptance), h("p", {}, data.boundaries.consent));
 }

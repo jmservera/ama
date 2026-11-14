@@ -245,6 +245,33 @@ class StaffIntakeApi(ProcurementApiFixture):
         self.assertEqual(esc["owner"], "Pam Lead")
         self.assertFalse(esc["contract_instruction"])
 
+    def test_unassigned_owner_is_explicit_and_blocks_routing(self) -> None:
+        esc = self.view()["escalation"]
+        self.assertFalse(esc["owner_assigned"])
+        self.assertIn("Owner needed", esc["owner_status"])
+        self.assertTrue(esc["advisory_only"])
+        self.assertTrue(self.view()["boundaries"]["advisory_only"])
+        with self.assertRaises(ValueError):
+            staff_intake.route_escalation("variation", "Extra loft", "Kim", "WO-1")
+        env = {
+            "ZF_STAFF_INTAKE_ESCALATION_OWNER": "Unknown",
+            "ZF_STAFF_INTAKE_ESCALATION_ROLE": "Retrofit Programme Manager",
+            "ZF_STAFF_INTAKE_ESCALATION_CONTACT": "x@example.test",
+        }
+        with mock.patch.dict(os.environ, env):
+            self.assertFalse(self.view()["escalation"]["owner_assigned"])
+
+    def test_variation_routes_to_configured_named_owner_without_instruction(self) -> None:
+        env = {
+            "ZF_STAFF_INTAKE_ESCALATION_OWNER": "Pam Lead",
+            "ZF_STAFF_INTAKE_ESCALATION_ROLE": "Retrofit Programme Manager",
+            "ZF_STAFF_INTAKE_ESCALATION_CONTACT": "pam@example.test",
+        }
+        with mock.patch.dict(os.environ, env):
+            out = staff_intake.route_escalation("variation", "Extra loft", "Kim", "WO-1")
+        self.assertEqual(out["owner"]["name"], "Pam Lead")
+        self.assertIs(out["contract_instruction"], False)
+
     def test_injected_failure_leaves_no_partial_receipt(self) -> None:
         self.view()
         with mock.patch.object(type(self.store), "audit", side_effect=RuntimeError("boom")):
