@@ -10,6 +10,7 @@ digest. Values are withheld unless the sensors' recorded monitoring consent is g
 
 import hashlib
 import json
+import math
 from collections.abc import Iterable, Mapping, Sequence
 from datetime import UTC, datetime, timedelta
 from typing import Any, Protocol
@@ -24,6 +25,12 @@ CONTROL_MAX = 100
 WINDOW_DAYS = 366
 CONTEXT_DAYS = 30
 FRESH_SECONDS = 900
+TREND_DAYS = 7
+TREND_SIDE_MAX = 12
+TREND_MIN_SIDE = 3
+TREND_MIN_SPAN_SECONDS = 86400
+TREND_STEADY = dict(temperature_c=0.5, humidity_pct=2.0)
+TREND_LABELS = dict(temperature_c="Temperature", humidity_pct="Moisture (relative humidity)")
 STAMP = "%Y-%m-%dT%H:%M:%SZ"
 COLUMNS = (
     "reading_id",
@@ -245,10 +252,14 @@ def _select(
     newest: bool,
     lower: datetime | None = None,
     upper: datetime | None = None,
+    sensor_id: str | None = None,
 ) -> list[dict[str, Any]]:
     """At most `limit` retained synthetic readings for one home, bounded by count and time."""
     where: list[str] = ["home_id=?", "source_type='SYNTHETIC'"]
     args: list[object] = [home_id]
+    if sensor_id is not None:
+        where.append("sensor_id=?")
+        args.append(sensor_id)
     if lower is not None:
         where.append("observed_at>=?")
         args.append(_bound(lower, mssql))
@@ -407,6 +418,103 @@ def signature(sensors: Mapping[str, Any] | None) -> dict[str, Any]:
     )
 
 
+def _number(value: object) -> float | None:
+    try:
+        number = float(str(value))
+    except ValueError:
+        return None
+    return number if math.isfinite(number) else None
+
+
+def _trend_base(reason: str | None) -> dict[str, Any]:
+    insufficient = {
+        key: dict(
+            direction="insufficient",
+            text=f"{label}: not enough retained readings to show a 7-day direction.",
+        )
+        for key, label in TREND_LABELS.items()
+    }
+    return dict(
+        version=VERSION,
+        window_days=TREND_DAYS,
+        advisory_only=True,
+        provenance=dict(
+            advisory_only=True,
+            affects_stage_gates=False,
+            basis="Deterministic comparison of earlier and later retained synthetic readings.",
+            calibrated=False,
+            note="Directionality only. It is not a verified indoor measurement, a hazard "
+            "decision or quality acceptance.",
+        ),
+        steady_within=dict(TREND_STEADY),
+        sensor_id=None,
+        readings_used=0,
+        reason=reason,
+        variables=insufficient,
+        summary="Insufficient readings for a 7-day trend. " + MANUAL,
+    )
+
+
+def trend_summary(
+    db: Connection, home_id: str, sensor_id: str | None, now: float, mssql: bool = False
+) -> dict[str, Any]:
+    """Advisory 7-day direction for one sensor from at most 2 x TREND_SIDE_MAX retained readings.
+
+    Compares the mean of the earlier half with the later half. Read only; it never enters the
+    captured source, its digest or any stage gate.
+    """
+    if not sensor_id:
+        return _trend_base("No retained readings for this home.")
+    try:
+        as_of = _utc(int(now)).replace(microsecond=0)
+        edge = as_of + timedelta(seconds=1)
+        lower = as_of - timedelta(days=TREND_DAYS)
+        rows = {
+            (r["sensor_id"], r["reading_id"]): r
+            for newest in (False, True)
+            for r in _select(db, mssql, home_id, TREND_SIDE_MAX, newest, lower, edge, sensor_id)
+        }
+    except Exception:
+        return _trend_base("Retained readings could not be read for the trend.")
+    ordered = sorted(rows.values(), key=lambda r: (r["observed_at"], r["reading_id"]))
+    out = _trend_base("Fewer than 6 readings, or under 24 hours of readings, in the last 7 days.")
+    out.update(sensor_id=sensor_id, readings_used=len(ordered))
+    if len(ordered) < 2 * TREND_MIN_SIDE:
+        return out
+    first, last = (
+        datetime.strptime(ordered[i]["observed_at"], STAMP).replace(tzinfo=UTC) for i in (0, -1)
+    )
+    if (last - first).total_seconds() < TREND_MIN_SPAN_SECONDS:
+        return out
+    half = len(ordered) // 2
+    parts: list[str] = []
+    for key, label in TREND_LABELS.items():
+        sides = [
+            [n for r in part if (n := _number(r[key])) is not None]
+            for part in (ordered[:half], ordered[half:])
+        ]
+        if min(map(len, sides)) < TREND_MIN_SIDE:
+            continue
+        change = sum(sides[1]) / len(sides[1]) - sum(sides[0]) / len(sides[0])
+        direction = (
+            "steady" if abs(change) < TREND_STEADY[key] else "rising" if change > 0 else "falling"
+        )
+        unit = UNITS[key]
+        out["variables"][key] = dict(
+            direction=direction,
+            change=round(change, 2),
+            unit=unit,
+            text=f"{label} is {direction} over the last 7 days ({change:+.1f} {unit}).",
+        )
+        parts.append(out["variables"][key]["text"])
+    if parts:
+        out.update(
+            reason=None,
+            summary=" ".join(parts) + " Advisory only; synthetic and not calibrated.",
+        )
+    return out
+
+
 def view(
     db: Connection, home_id: str, reference: datetime | None, now: float, mssql: bool = False
 ) -> dict[str, Any]:
@@ -420,8 +528,10 @@ def view(
     )
     if out["state"] in ("consent-withheld", "unavailable"):
         out["freshness_text"] = out["detail"]
+        out["trend"] = _trend_base(out["detail"])
         return out
     latest = out["latest"]
+    out["trend"] = trend_summary(db, home_id, latest["sensor_id"] if latest else None, now, mssql)
     if latest:
         age = _age(latest, now)
         if age < 0:
