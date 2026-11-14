@@ -117,6 +117,22 @@ function intakeCapture(order, pack, rerender) {
   }, rerender);
 }
 
+const intakeNotInstruction = (e) => e.acts_as_contract_instruction === false && e.contract_instruction === false;
+
+function intakeEscalate(order, options, rerender) {
+  return intakeForm("Raise a variation or concern", [
+    h("p", {}, "This goes to a named staff owner. It is never a contract instruction and does not change the work order."),
+    intakeField("esc-kind", "Kind", h("select", { id: "esc-kind", name: "kind", required: true },
+      (options.kinds || []).map((k) => h("option", { value: k }, k)))),
+    intakeField("esc-summary", "What needs deciding", h("textarea", { id: "esc-summary", name: "summary", rows: 3, maxlength: 500, required: true })),
+    intakeField("esc-owner", "Named owner", h("input", { id: "esc-owner", name: "named_owner", maxlength: 80, autocomplete: "off", required: true }),
+      "A staff member who will decide this."),
+    intakeField("esc-role", "Owner's role", h("select", { id: "esc-role", name: "owner_role", required: true },
+      (options.owner_roles || []).map((r) => h("option", { value: r }, r)))),
+  ], "Route to named owner", (data) => api(`/api/workorders/${encodeURIComponent(order)}/field-escalate`, {
+    kind: data.get("kind"), summary: data.get("summary"), named_owner: data.get("named_owner"), owner_role: data.get("owner_role") }), rerender);
+}
+
 function intakeOrder(data, orderId, rerender) {
   const pack = data.pack;
   const status = h("p", { role: "status", "aria-live": "polite" });
@@ -141,8 +157,10 @@ function intakeOrder(data, orderId, rerender) {
       ["Acts as a contract instruction", data.escalation.acts_as_contract_instruction === false ? "No" : "Unknown"],
       ["Effect", data.escalation.note]]),
     (data.escalations || []).length ? screenTable("Variations and escalations raised", ["Kind", "What needs deciding", "Named owner", "Status", "Contract instruction"],
-      data.escalations.map((e) => [e.kind, e.summary, `${e.owner.name} (${e.owner.role})`, e.status, "No - not a contract instruction"]))
+      data.escalations.map((e) => [e.kind, e.summary, `${e.owner.name} (${e.owner.role})`, e.status,
+        intakeNotInstruction(e) ? "No - not a contract instruction" : "Unknown - check with the contract manager"]))
       : h("p", { class: "empty" }, "No variation or escalation raised for this order. Each one needs a named staff owner."),
+    intakeEscalate(orderId, data.escalation_options || {}, rerender),
     h("p", {}, data.boundaries.acceptance), h("p", {}, data.boundaries.consent));
 }
 

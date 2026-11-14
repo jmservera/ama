@@ -147,7 +147,7 @@ class JobPackTests(unittest.TestCase):
         )
         self.assertIs(e["contract_instruction"], False)
         self.assertEqual(e["owner"]["name"], "Pam Lead")
-        self.assertIn("new version", e["note"])
+        self.assertIn("new version", e["contract_notice"])
         with self.assertRaises(ValueError):
             job_pack.escalation("variation", "x", "Kim", "WO-1", "", "Retrofit Programme Manager")
         with self.assertRaises(ValueError):

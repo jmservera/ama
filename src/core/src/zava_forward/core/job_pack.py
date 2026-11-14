@@ -237,14 +237,15 @@ def escalation(
         status="Raised - awaiting owner",
         contract_instruction=False,
         acts_as_contract_instruction=False,
-        note=NON_INSTRUCTION_NOTICE,
+        contract_notice=NON_INSTRUCTION_NOTICE,
     )
 
 
 def reject_instruction_claim(body: Mapping[str, Any]) -> None:
     """Refuse a submission that tries to act as a binding variation or instruction."""
     for key in INSTRUCTION_CLAIMS:
-        if body.get(key) not in (None, False, ""):
+        val = body.get(key)
+        if val is not None and val is not False and val != "":
             raise ValueError(
                 "A variation or escalation cannot be a contract instruction. "
                 "Only a contract manager can issue a new work order version, "
