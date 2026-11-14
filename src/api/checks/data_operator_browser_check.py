@@ -206,7 +206,7 @@ def check_register(page: Page) -> None:
               "not an appointment" in row and "Unknown" in row and "Placeholder guidance" in row)
     check("workflow-only record is not listed as a failure", ai.WORKFLOW_ID not in text)
     check("the only control in the register panel is the summary download button",
-          panel.locator("button, form, input, select, textarea").count() == 1
+          panel.locator("button:not([data-jump-target]), form, input, select, textarea").count() == 1
           and panel.get_by_role("button", name=SUMMARY_BUTTON, exact=True).count() == 1)
     # The running app records its own "AI is not configured" fallback, so other rows may exist.
     cells = panel.get_by_role("region", name=ai.REGISTER_TABLES[0], exact=True).locator("tbody tr").evaluate_all(
@@ -367,7 +367,7 @@ def intercepted_register(page: Page, status: int, body: dict[str, Any]) -> str:
         panel = open_register_by_keyboard(page)
         panel.locator("p").first.wait_for()
         check("intercepted register shows no controls",
-              panel.locator("button, form, input, select, textarea").count() == 0)
+              panel.locator("button:not([data-jump-target]), form, input, select, textarea").count() == 0)
         return panel.text_content() or ""
     finally:
         page.unroute("**/api/exceptions")

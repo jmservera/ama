@@ -1063,6 +1063,46 @@ function exceptionSummaryControl(rows) {
     h("p", { id: "exception-summary-note" }, "Demonstrator feature only: no operational or real-record use is approved. The file copies four columns for the items listed here, within your role scope, as they were when this page loaded. It changes nothing. It is not a complete exception list, and an empty or short file would not mean all clear. The reference is valid only in this view and is not a stable identity. Owners, free text, record, source, case, batch and query identifiers and conflict values are not included. How a downloaded copy is kept or handled is not decided or managed here."),
     status);
 }
+const indicatorStates = { fresh: "Fresh", stale: "Stale", enabled: "Enabled", disabled: "Disabled", healthy: "Healthy", degraded: "Degraded", down: "Down", quarantined: "Quarantined" };
+const indicatorState = (value) => typeof value === "string" && Object.hasOwn(indicatorStates, value.toLowerCase()) ? indicatorStates[value.toLowerCase()] : "Unknown";
+function indicatorRows(data, items, unreadable = 0) {
+  const given = exceptionRecord(data.indicators) ? data.indicators : {};
+  const when = (entry) => exceptionRecord(entry) && typeof entry.as_of === "string" && entry.as_of ? `As of ${entry.as_of}` : "Time not supplied";
+  const quarantined = items.filter((item) => exceptionRecord(item.original_source) && typeof item.original_source.status === "string"
+    && item.original_source.status.toLowerCase() === "quarantined").length;
+  const tasks = Array.isArray(given.ai_tasks) ? given.ai_tasks.filter((task) => exceptionRecord(task) && typeof task.task === "string") : [];
+  const count = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+  const list = (value) => Array.isArray(value) ? value.length : 0;
+  const stale = items.filter((item) => exceptionRecord(item.original_source) && typeof item.original_source.status === "string"
+    && item.original_source.status.toLowerCase() === "stale").length + list(data.sources);
+  const suppressed = items.filter((item) => typeof item.eligibility === "string" && /suppress/i.test(item.eligibility)).length;
+  const blocked = data.state === "roles_not_named" || unreadable > 0 || list(data.unrouted) > 0;
+  const none = blocked ? "Action needed" : "Needs review";
+  const rows = [
+    ["Open exceptions", `State: ${items.length ? "Attention" : none}. ${count(items.length, "item", "items")} returned for you. Read-only; none is changed here.`],
+    ["Sources not connected", `State: ${stale ? "Warning" : none}. ${count(stale, "source or stale record", "sources or stale records")} listed. Read-only.`],
+    ["Suppressed records", `State: ${suppressed ? "Attention" : none}. ${count(suppressed, "item", "items")} marked suppressed. Read-only.`],
+    ["Lineage freshness", `State: ${indicatorState(given.lineage?.state)}. ${when(given.lineage)}. Read-only; Unknown is not proof the lineage is current.`],
+    ["Ingestion quarantine", `State: ${quarantined ? `Quarantined (${quarantined} ${quarantined === 1 ? "item" : "items"} listed below)` : "None returned, which is not an all clear"}. Records stay as received; nothing is released or replayed here.`],
+    ["Sensor feed health", `State: ${indicatorState(given.sensor_feed?.state)}. ${when(given.sensor_feed)}. Read-only; open a home for its sensor readings.`]
+  ];
+  tasks.forEach((task) => rows.push([`AI task: ${exceptionText(task.task)}`,
+    `State: ${indicatorState(task.enabled === true ? "enabled" : task.enabled === false ? "disabled" : null)}. ${when(task)}. Read-only; enabling or disabling a task is a controlled change outside this screen.`]));
+  if (!tasks.length) rows.push(["AI tasks", "State: Unknown. No task settings were returned. Read-only; enabling or disabling a task is a controlled change outside this screen."]);
+  return rows;
+}
+const exceptionJumps = [["exception-state", "State at a glance"], ["exception-sources", "Sources and unrouted records"],
+  ["exception-items", "Open exception items"], ["exception-conflicts", "Source conflicts"]];
+const exceptionHeading = (id, text) => h("h3", { id, tabindex: "-1" }, text);
+function exceptionJumpNav() {
+  return h("nav", { class: "row", "aria-label": "Data stewardship sections" },
+    exceptionJumps.map(([id, text]) => h("button", { type: "button", "data-jump-target": id, onclick: () => {
+      const target = document.getElementById(id);
+      if (!target) return;
+      target.focus();
+      target.scrollIntoView({ block: "start" });
+    } }, `Go to ${text}`)));
+}
 function exceptionRegisterPanel(data) {
   const items = data.items.filter(exceptionItem);
   const unreadable = data.items.length - items.length;
@@ -1077,21 +1117,24 @@ function exceptionRegisterPanel(data) {
     h("p", { role: "status" }, `${exceptionBannerLabel[banner.state] || "Service state Unknown"}. ${exceptionText(banner.text)}`),
     h("p", {}, "Read-only list returned by the server for your signed-in access. Nothing is replayed, re-run, released, corrected or assigned here, and no AI call is made. Recovery guidance below is placeholder text, not an approved runbook."),
     h("p", {}, exceptionText(data.note)),
+    exceptionJumpNav(),
     h("p", {}, "Deliberate rules-and-template processing (workflow-only) is not a failure and is not a model result. It is never listed here, so an empty list does not show that a model succeeded or that nothing failed."),
     screenFields([["Register state", data.state],
       ["Your access", roles.length ? roles.map(([name, held]) => `${exceptionText(name)}: ${Array.isArray(held) ? held.map(exceptionText).join(", ") : "Unknown"}`).join("; ") : "No role named for you"],
       ["Role scope", scope.length ? scope.map(([kind, role]) => `${exceptionKinds[kind] || exceptionText(kind)}: ${exceptionText(role)}`).join("; ") : "Unknown"]]),
-    h("h3", {}, "Sources not connected and records not routed"),
+    exceptionHeading("exception-state", "State at a glance"),
+    screenFields(indicatorRows(data, items, unreadable)),
+    exceptionHeading("exception-sources", "Sources not connected and records not routed"),
     list("Sources", data.sources),
     list("Unrouted", data.unrouted),
-    h("h3", {}, "Open exception items"),
+    exceptionHeading("exception-items", "Open exception items"),
     unreadable ? h("p", { role: "status" }, `${unreadable} returned entries could not be read and are not shown. This list is not complete.`) : null,
     items.length ? [summary && exceptionSummaryControl(summary), screenTable("Exception items returned for you",
       ["Reference", "Kind", "State", "Configured owner", "What happened and reason", "Manual next step", "Source or run reference", "Eligibility"],
       items.map((item) => [item.id, exceptionKinds[item.kind] || exceptionText(item.kind), exceptionText(item.status), exceptionOwner(item),
         exceptionHappened(item), `Placeholder guidance, not an approved runbook: ${exceptionText(item.runbook)}`, exceptionReference(item), exceptionText(item.eligibility)]), Infinity)]
       : h("p", { class: "empty" }, "No exception items were returned. This is not an all clear: the Sources list shows which sources are not connected, service health is Unknown and unrouted records are listed above."),
-    h("h3", {}, "Source conflicts: both values"),
+    exceptionHeading("exception-conflicts", "Source conflicts: both values"),
     conflicts.length ? screenTable("Source conflicts with every returned value",
       ["Reference", "First value, source, version, date", "Second value, source, version, date", "Further values", "Resolution owner", "Eligibility"],
       conflicts.map((item) => [item.id, exceptionSide(item.values[0]), exceptionSide(item.values[1]),
