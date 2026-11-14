@@ -379,7 +379,18 @@ SENSOR_RULE_PATHS = (
 def skill_sources(skill: str, sources: dict[str, str]) -> dict[str, str]:
     if skill != GENERAL:
         categories = REGISTRY[skill]["categories"]
-        common = ("id", "stage", "status", "needs_notice", "named_contact", "waiting_on", "owner")
+        common = (
+            "id",
+            "stage",
+            "status",
+            "needs_notice",
+            "named_contact",
+            "waiting_on",
+            "owner",
+            "pas2035",
+            "sensor",
+            "hazards",
+        )
         sources = {
             key: value
             for key, value in sources.items()
@@ -439,10 +450,19 @@ def valid_usage(value: object) -> dict[str, int] | None:
     return result
 
 
+INFORMATIONAL_LEAD = re.compile(r"^\W*(?:who|whose|what|when|where|which|status)\b", re.I)
+ACTION_REQUEST = re.compile(
+    r"\b(?:for\s+me|on\s+my\s+behalf|please|i\s+(?:want|need)\s+you)\b", re.I
+)
+
+
 def out_of_scope(question: str) -> tuple[str, str] | None:
     """The kind and workflow route when the question asks the assistant to act, else None."""
     question = normalise_policy_text(question)
+    informational = bool(INFORMATIONAL_LEAD.match(question)) and not ACTION_REQUEST.search(question)
     for name, pattern, route in OUT_OF_SCOPE:
+        if name == "approve" and informational:
+            continue
         if pattern.search(question):
             return name, route
     return None

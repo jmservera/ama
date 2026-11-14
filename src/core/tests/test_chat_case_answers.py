@@ -130,3 +130,17 @@ class UnblockTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DomainAnswerTests(unittest.TestCase):
+    def test_sensor_answer_cites_documents_only_when_survey_is_listed(self) -> None:
+        for documents, cited in (("EPC", False), ("EPC, Survey", True)):
+            with self.subTest(documents=documents):
+                facts = {"stage": "Survey", "documents": documents}
+                _, _, cites = answer("ZF-1", "Is there any damp or sensor evidence?", facts)
+                self.assertEqual("ZF-1/documents" in cites, cited)
+
+    def test_claim_without_grants_keeps_the_domain_footer(self) -> None:
+        _, text, cites = answer("ZF-1", "What is the grant claim position?", {"stage": "Survey"})
+        self.assertIn("A person decides.", text)
+        self.assertIn(cca.DOMAIN_BOUNDARY, cites)

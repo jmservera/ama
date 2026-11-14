@@ -575,6 +575,7 @@ def _claim(r: Reply) -> None:
     if not grants:
         r.say("No grant record is shown on this case card for your role.")
         _funding(r)
+        _domain_close(r, "This chat cannot submit, claim or approve a grant. " + _who_to_ask(r))
         return
     for i in grants:
         line, cites = r.cited(partial(_grant_line, r, f"grants.{i}"))
@@ -629,8 +630,8 @@ def _damp(r: Reply) -> None:
         line, cites = r.cited(partial(_sensor_line, r, i))
         r.say(f"* {line}", cites)
         shown = True
-    docs = r.fact("documents")
-    if docs and "Survey" in docs:
+    if "Survey" in r.facts.get("documents", ""):
+        r.fact("documents")
         r.say("A survey document is on the record.")
         shown = True
     if not shown:
