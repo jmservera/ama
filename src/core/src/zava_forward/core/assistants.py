@@ -1737,18 +1737,26 @@ class Assistants:
                 dict(capability=current["capability"], continuity_epoch=current.get("claim_epoch")), self.continuity(db)) or bool(self.suspended(db, current["capability"])) or bool(
                 denied) or binding != current.get("claim_binding", binding) or current.get("release") != self.release_reference(db, current["capability"])
             if envelope.get("outcome") in ("returned", "model-mismatch"):
-                # A deployment alias is not immutable. This only compares the model name the provider returned with the released one;
-                # it is a returned-model check, not authoritative attestation of what served the call.
+                # A deployment alias is not immutable, so the model the provider returned is compared with the released
+                # serving model and the result is kept on the task. Only an exact match leaves a proposal eligible.
                 released = [r for r in rel.releases(db, current["capability"])
                             if r["id"] == current["release"]["id"]]
-                if envelope.get("outcome") == "model-mismatch" or envelope.get("model") in (None, ai_consumption.UNVERIFIED_IDENTITY) or not any(
-                        r.get("serving_model") == envelope.get("model") for r in released):
+                attestation = (rai_release.attest_serving(released[0], envelope.get("model")) if released else
+                               dict(expected=None, returned=None, outcome="unattested"))
+                if envelope.get("outcome") == "model-mismatch" and attestation["outcome"] == "matched":
+                    attestation["outcome"] = "mismatch"
+                current["serving_attestation"] = dict(attestation, at=now)
+                if attestation["outcome"] != "matched":
                     quarantined = True
                     for r in released:
                         if r["status"] == "active":
                             rel.change(db, now, None, r["id"], "suspended",
-                                       "Returned model name differs from the released one (returned-model check, not attestation); results quarantined.", system=True)
-                    current["serving_attestation"] = dict(returned=envelope.get("model"), outcome="mismatch")
+                                       f"Serving-version attestation {attestation['outcome']}; results quarantined and release suspended.", system=True)
+                    current["fallback"] = dict(route="manual", release="suspended", reason=f"Serving-version attestation {attestation['outcome']}; use manual work.")
+                    detail = dict(kind="serving-attestation", outcome=attestation["outcome"], expected=attestation["expected"],
+                                  returned=ai_consumption.bounded_model(attestation["returned"]))
+                    rel.event(db, now, current["release"]["id"], task=task["id"], **detail)
+                    self.event(db, task["id"], **detail)
             held_output = output
             if quarantined:
                 # The call may have been charged; its result is kept as a digest only and never becomes a proposal.

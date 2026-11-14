@@ -13,7 +13,7 @@ from unittest.mock import patch
 import release_support
 from test_assistants import Assistants, Base, MssqlFixture, config
 from zava_forward.core import assistant_release as rel
-from zava_forward.core import ai_registry, assistants, quality, ranking
+from zava_forward.core import ai_registry, assistants, quality, rai_release, ranking
 from zava_forward.core.ai import Ai
 
 CAP = "stock-prioritisation"
@@ -229,6 +229,8 @@ def body(service, **over):
              evidence=["constructed-fixture:synthetic-demo"], residual_risk_decision="Accept",
              residual_risk_note="Constructed fixture only.", serving_model="test-model", expires="2099-01-01T00:00:00Z")
     b.update(over)
+    if "evidence" in over and "evaluation_summary" not in over:
+        b["evaluation_summary"] = dict(b["evaluation_summary"], evidence_digest=rai_release.digest(b["evidence"]))
     return b
 
 
@@ -438,6 +440,115 @@ class Release(Base):
         self.assertEqual(self.service.invoke(self.pm, CAP, "ZF-1")["state"], "disabled")
         self.assertEqual(self.service.detail(self.pm, p["id"])["state"], "quarantined")
 
+    def test_recorded_release_persists_the_full_binding_and_revocation(self):
+        self.service.approvers = {self.pm["email"].lower()}
+        rid = self.service.record_release(self.pm, body(self.service, release_version="v2"))["id"]
+        self.service.change_release(self.pm, rid, "revoked", "withdrawn")
+        with self.other().transaction() as db:
+            rec = next(r for r in rel.releases(db, CAP) if r["id"] == rid)
+            kinds = [json.loads(e[0])["kind"] for e in db.execute("SELECT body FROM assistant_events WHERE task_id=?", (rid,)).fetchall()]
+        spec = ai_registry.get(CAP)
+        for key in rel.BOUND + ("serving_model", "approver", "expires", "evidence", "evidence_class", "residual_risk_decision"):
+            self.assertTrue(rec[key], key)
+        self.assertEqual(rec["status"], "revoked")
+        self.assertEqual(rec["scope"], spec["scope"])
+        self.assertEqual(rec["evaluation_summary"]["evidence_digest"], rai_release.digest(rec["evidence"]))
+        self.assertEqual(rec["consumption"]["alert_threshold_percent"], 80)
+        self.assertEqual(rec["approver"]["email"], self.pm["email"])
+        self.assertEqual(kinds, ["release-recorded", "release-revoked"])
+
+    def test_unfrozen_summary_or_unbounded_consumption_is_refused(self):
+        self.service.approvers = {self.pm["email"].lower()}
+        good = body(self.service)
+        for key, value in (("evaluation_summary", dict(good["evaluation_summary"], evidence_digest="0" * 64)),
+                           ("consumption", dict(good["consumption"], max_calls=0)),
+                           ("scope", "live resident processing")):
+            with self.subTest(field=key), self.assertRaises(ValueError):
+                self.service.record_release(self.pm, body(self.service, **{key: value}))
+
+    def test_matching_serving_version_is_attested_on_the_proposal(self):
+        v = self.run_ready(CAP)
+        self.assertEqual(v["serving_attestation"]["outcome"], "matched")
+        self.assertEqual(v["serving_attestation"]["expected"], v["serving_attestation"]["returned"])
+        self.assertNotIn("fallback", v)
+
+    def test_unattested_serving_version_quarantines_with_a_visible_fallback_that_survives_restart(self):
+        original = self.provider.evidence
+
+        def no_model(*a, **k):
+            r = original(*a, **k)
+            r["model"] = None
+            return r
+        self.provider.evidence = no_model
+        p = self.service.invoke(self.pm, CAP, "ZF-1")
+        self.assertTrue(self.service.execute(p["id"]))
+        for service in (self.service, self.other()):
+            v = service.detail(self.pm, p["id"])
+            self.assertEqual((v["state"], v["output"]), ("quarantined", None))
+            self.assertEqual(v["serving_attestation"]["outcome"], "unattested")
+            self.assertEqual(v["fallback"]["route"], "manual")
+            self.assertEqual(v["fallback"]["release"], "suspended")
+            self.assertTrue(any(e.get("kind") == "serving-attestation" and e["outcome"] == "unattested" for e in v["provenance"]))
+        restarted, calls = self.other(), self.provider.calls
+        self.assertEqual(restarted.invoke(self.pm, CAP, "ZF-1")["state"], "disabled")
+        self.assertFalse(restarted.execute(p["id"]))
+        self.assertEqual(self.provider.calls, calls)
+        with restarted.transaction() as db:
+            self.assertEqual([r["status"] for r in rel.releases(db, CAP)], ["suspended"])
+        restarted.approvers = {self.pm["email"].lower()}
+        self.provider.evidence = original
+        restarted.record_release(self.pm, body(restarted, release_version="v2"))
+        fresh = restarted.invoke(self.pm, CAP, "ZF-1")
+        self.assertNotEqual(fresh["id"], p["id"])
+        self.assertNotEqual(fresh["state"], "disabled")
+        self.assertEqual(restarted.detail(self.pm, p["id"])["state"], "quarantined")
+
+    def test_revocation_during_blocked_generation_quarantines_and_only_a_new_record_reenables(self):
+        original = self.provider.evidence
+        started, proceed = threading.Event(), threading.Event()
+
+        def blocked(*a, **k):
+            started.set()
+            proceed.wait(30)
+            return original(*a, **k)
+        self.provider.evidence = blocked
+        p = self.service.invoke(self.pm, CAP, "ZF-1")
+        results = []
+
+        def worker():
+            store = self.open_store()
+            store.ai = self.provider
+            svc = Assistants(store, config())
+            try:
+                results.append(svc.execute(p["id"]))
+            finally:
+                svc.stop()
+                store.db.close()
+        thread = threading.Thread(target=worker)
+        thread.start()
+        try:
+            self.assertTrue(started.wait(30))
+            revoker = self.other()
+            revoker.approvers = {self.pm["email"].lower()}
+            revoker.change_release(self.pm, f"fx-{CAP}", "revoked", "withdrawn while generating")
+        finally:
+            proceed.set()
+            thread.join(30)
+        self.assertEqual(results, [True])
+        restarted = self.other()
+        v = restarted.detail(self.pm, p["id"])
+        self.assertEqual((v["state"], v["output"]), ("quarantined", None))
+        self.assertFalse(v["actionable"])
+        self.assertEqual(restarted.invoke(self.pm, CAP, "ZF-1")["state"], "disabled")
+        with restarted.transaction() as db:
+            self.assertEqual([r["status"] for r in rel.releases(db, CAP)], ["revoked"])
+        restarted.approvers = {self.pm["email"].lower()}
+        restarted.record_release(self.pm, body(restarted, release_version="v2"))
+        fresh = restarted.invoke(self.pm, CAP, "ZF-1")
+        self.assertNotIn(fresh["state"], ("disabled", "quarantined"))
+        self.assertNotEqual(fresh["id"], p["id"])
+        self.assertEqual(restarted.detail(self.pm, p["id"])["state"], "quarantined")
+
     def test_live_provider_needs_actual_release_with_serving_proof(self):
         binding = assistants.runtime_binding(CAP, self.provider)
         fx = release_support.fixture(CAP, binding)
@@ -586,7 +697,8 @@ class TaskReleaseRecord(Base):
 
     def test_contract_fields_required_on_authenticated_record_route(self):
         for key in ("release_version", "intended_use", "prohibited_uses", "affected_stakeholders",
-                    "accountable_owner", "impact_assessment", "material_change_triggers", "evaluation_decision"):
+                    "accountable_owner", "impact_assessment", "material_change_triggers", "evaluation_decision",
+                    "scope", "evaluation_summary", "consumption"):
             b = body(self.service)
             del b[key]
             with self.subTest(field=key), self.assertRaises(ValueError):

@@ -166,7 +166,7 @@ def record(db, now, user, body, approvers, task_ids):
         rec[k] = text(body.get(k), k, 200)
     from . import ai_registry
     spec = ai_registry.get(task.removeprefix("legacy:"))
-    for k in ("release_version", "intended_use", "prohibited_uses", "affected_stakeholders",
+    for k in ("scope", "evaluation_summary", "consumption", "release_version", "intended_use", "prohibited_uses", "affected_stakeholders",
               "accountable_owner", "impact_assessment", "material_change_triggers", "evaluation_decision"):
         rec[k] = body.get(k)
     missing = rai_release.missing_contract(rec, spec)
