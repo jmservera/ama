@@ -6,10 +6,11 @@ declared tolerance. It is not sensor calibration, physical accuracy or live acce
 
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
-from datetime import timedelta
+from datetime import datetime, timedelta
 from decimal import Decimal
 
-from .sensor_consumer import ConsumerError, Observation, SensorConsumer, utc
+from .sensor_consumer import ConsumerError, Observation, SensorConsumer, preflight, utc
+from .synthetic.live_readings import LIVE_VERSIONS
 from .synthetic.sensor_consistency import CHANNELS, Tolerance
 
 VERSION = "sensor-ingest-handover-v1"
@@ -34,9 +35,13 @@ def ingest_window(
     Idempotence comes from the consumer's per-sensor reading identity: an identical row is a
     replay, a changed value in an existing slot is an IDENTITY_CONFLICT rejection.
     """
+    utc(received_at)
+    batch = list(rows)
+    if not batch:
+        return WindowReceipt()
     accepted = replayed = 0
     rejected: dict[str, int] = {}
-    for row in rows:
+    for row in preflight(batch):
         receipt = consumer.process(row, received_at)
         if receipt.status == "accepted":
             if receipt.replay:
@@ -69,6 +74,33 @@ def _mean(rows: Sequence[Mapping[str, str]], channel: str) -> Decimal:
     return sum((Decimal(row[channel]) for row in rows), Decimal(0)) / len(rows)
 
 
+def _indoor_series(rows: Sequence[Mapping[str, str]]) -> list[tuple[datetime, Mapping[str, str]]]:
+    """One home, one sensor, one indoor calibrated schema and unit set, unique slots, sorted."""
+    if not rows:
+        raise ValueError("INSUFFICIENT_HANDOVER_SAMPLES")
+    first = rows[0]
+    if first.get("schema_version") in LIVE_VERSIONS:
+        raise ValueError("HANDOVER_SCHEMA_UNSUPPORTED")
+    identity = ("home_id", "sensor_id", "schema_version", "temperature_unit", "humidity_unit")
+    stamped: list[tuple[datetime, Mapping[str, str]]] = []
+    slots: set[datetime] = set()
+    for row in rows:
+        if row.get("calibrated") != "true" or any(
+            row.get(key) is None or row.get(key) != first.get(key) for key in identity
+        ):
+            raise ValueError("INVALID_HANDOVER_OBSERVATION")
+        try:
+            moment = utc(row["observed_at"])
+        except (KeyError, ValueError):
+            raise ValueError("INVALID_HANDOVER_OBSERVATION") from None
+        if moment in slots:
+            raise ValueError("INVALID_HANDOVER_OBSERVATION")
+        slots.add(moment)
+        stamped.append((moment, row))
+    stamped.sort(key=lambda item: item[0])
+    return stamped
+
+
 def handover_continuity(
     rows: Sequence[Mapping[str, str]],
     *,
@@ -86,9 +118,11 @@ def handover_continuity(
     """
     if type(window_minutes) is not int or window_minutes <= 0:
         raise ValueError("INVALID_HANDOVER_CONFIGURATION")
+    if not isinstance(temperature, Tolerance) or not isinstance(humidity, Tolerance):
+        raise ValueError("INVALID_HANDOVER_CONFIGURATION")
     boundary = utc(handover)
     span = timedelta(minutes=window_minutes)
-    stamped = [(utc(row["observed_at"]), row) for row in rows]
+    stamped = _indoor_series(rows)
     before = [r for t, r in stamped if boundary - span <= t < boundary]
     after = [r for t, r in stamped if boundary <= t < boundary + span]
     if not before or not after:

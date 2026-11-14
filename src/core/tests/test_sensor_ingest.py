@@ -6,8 +6,13 @@ from datetime import UTC, datetime, timedelta
 
 from sensor_consumer_fixture import CONTROL, POLICY, RECEIVED, observations, store_at
 from test_sensor_consumer_live import live
-from zava_forward.core.sensor_consumer import SensorConsumer
-from zava_forward.core.sensor_ingest import handover_continuity, home_series, ingest_window
+from zava_forward.core.sensor_consumer import ConsumerError, SensorConsumer
+from zava_forward.core.sensor_ingest import (
+    WindowReceipt,
+    handover_continuity,
+    home_series,
+    ingest_window,
+)
 from zava_forward.core.synthetic.sensor_consistency import Tolerance
 
 HANDOVER = "2024-10-01T01:30:00Z"
@@ -21,6 +26,21 @@ def live_rows(temperature: str = "17.20", humidity: str = "58.00") -> list[dict[
         live(START + timedelta(minutes=5 * i), temperature_c=temperature, humidity_pct=humidity)
         for i in range(2)
     ]
+
+
+def indoor_live(temperature: str = "17.20", humidity: str = "58.00") -> list[dict[str, object]]:
+    rows = []
+    for i in range(2):
+        slot = START + timedelta(minutes=5 * i)
+        row = dict(observations()[0])
+        row.update(
+            observed_at=slot.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            reading_id=f"SENS-SYN-1-{int(slot.timestamp())}",
+            temperature_c=temperature,
+            humidity_pct=humidity,
+        )
+        rows.append(row)
+    return rows
 
 
 class IngestTests(unittest.TestCase):
@@ -65,7 +85,7 @@ class IngestTests(unittest.TestCase):
         self.assertEqual(len(bounded), 2)
 
     def test_handover_within_declared_tolerance_passes(self) -> None:
-        ingest_window(self.consumer, observations() + live_rows(), RECEIVED)
+        ingest_window(self.consumer, observations() + indoor_live(), RECEIVED)
         report = handover_continuity(
             home_series(self.consumer, "ZF-1"),
             handover=HANDOVER,
@@ -77,7 +97,7 @@ class IngestTests(unittest.TestCase):
         self.assertTrue(report["passed"], report)
 
     def test_discontinuity_beyond_tolerance_fails_and_tolerance_is_inclusive(self) -> None:
-        ingest_window(self.consumer, observations() + live_rows(temperature="25.00"), RECEIVED)
+        ingest_window(self.consumer, observations() + indoor_live(temperature="25.00"), RECEIVED)
         rows = home_series(self.consumer, "ZF-1")
         report = handover_continuity(
             rows, handover=HANDOVER, window_minutes=120, temperature=LOOSE, humidity=LOOSE
@@ -104,6 +124,33 @@ class IngestTests(unittest.TestCase):
             handover_continuity(
                 rows, handover=HANDOVER, window_minutes=0, temperature=TIGHT, humidity=TIGHT
             )
+
+    def test_mixed_schema_or_malformed_series_is_refused(self) -> None:
+        ingest_window(self.consumer, observations() + indoor_live(), RECEIVED)
+        kwargs = {"handover": HANDOVER, "window_minutes": 120, "temperature": LOOSE}
+        with self.assertRaisesRegex(ValueError, "INVALID_HANDOVER_OBSERVATION"):
+            handover_continuity(
+                home_series(self.consumer, "ZF-1") + live_rows()[:1], humidity=LOOSE, **kwargs
+            )
+        rows = home_series(self.consumer, "ZF-1")
+        self.assertTrue(handover_continuity(rows, humidity=Tolerance(2.0, 5.0), **kwargs)["passed"])
+        with self.assertRaisesRegex(ValueError, "HANDOVER_SCHEMA_UNSUPPORTED"):
+            handover_continuity(live_rows(), humidity=LOOSE, **kwargs)
+        with self.assertRaisesRegex(ValueError, "INVALID_HANDOVER_OBSERVATION"):
+            handover_continuity(rows + rows[:1], humidity=LOOSE, **kwargs)
+        with self.assertRaisesRegex(ValueError, "INVALID_HANDOVER_OBSERVATION"):
+            handover_continuity(
+                [rows[0], {**rows[1], "sensor_id": "SENS-SYN-2"}], humidity=LOOSE, **kwargs
+            )
+        with self.assertRaisesRegex(ValueError, "INVALID_HANDOVER_CONFIGURATION"):
+            handover_continuity(rows, humidity=(2.0, 5.0), **kwargs)
+
+    def test_window_validates_receipt_time_and_batch(self) -> None:
+        with self.assertRaises(ValueError):
+            ingest_window(self.consumer, [], "not-a-time")
+        self.assertEqual(ingest_window(self.consumer, [], RECEIVED), WindowReceipt())
+        with self.assertRaisesRegex(ConsumerError, "INVALID_BATCH"):
+            ingest_window(self.consumer, [{"k": object()}], RECEIVED)
 
 
 if __name__ == "__main__":
