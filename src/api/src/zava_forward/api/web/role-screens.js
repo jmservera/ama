@@ -1334,6 +1334,13 @@ registerRoleScreen({
 const reviewerRole = "Contracts manager, independent of the person who issued or submitted the pack";
 const wording = (value, fallback = "Unknown") => value === null || value === undefined || value === "" ? fallback : String(value);
 const reference = (order) => `${wording(order.id)} v${wording(order.version)}`;
+// Keyboard jump links reuse the shared a[data-jump] click handler, so they never change the hash route.
+const procurementJumpNav = (sections) => h("nav", { "aria-label": "Sections of this view", class: "screen-links" },
+  sections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading` }, title)));
+const workOrderCues = { Completed: "Completed on record, not accepted", Withdrawn: "Withdrawn", Issued: "Open", Appointed: "Open", Acknowledged: "Open" };
+const invoiceCues = { Matched: "Checked", Received: "Waiting for check", "Not checked": "Waiting for check" };
+const packageDraftAnchor = (p, i) => `package-draft-${String(wording(p.id)).replace(/[^A-Za-z0-9_-]/g, "-")}-${i + 1}`;
+const evidenceCues = { Recorded: "Recorded", Unknown: "Unknown" };
 const completionMove = (order) => (order.history || []).filter((step) => step.to_state === "Completed").pop();
 function workOrderRecordRows(orders) {
   return orders.map((o) => {
@@ -1378,34 +1385,36 @@ registerRoleScreen({
     const packages = extra?.packages || [];
     const orders = extra?.orders || [];
     return h("div", {},
+      procurementJumpNav([["package-capacity", "Offered capacity"], ["package-queue", "Package queue"], ["package-expiry", "Insurance and certification expiry"],
+        ["package-orders", "Work orders"], ["package-records", "Corrections and completion"], ...packages.map((p, i) => [packageDraftAnchor(p, i), `Draft readiness ${wording(p.id)}`])]),
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only reader view. It records no approval, issues no work order and books no visit. Readiness here is a draft only. Contract terms, capacity and delegations are Unknown unless a fixture or recorded evidence says so. Source: desk research, not observed behaviour."),
         h("p", {}, `Work orders shown are for home ${c.id} only.`)),
-      screenPanel("Offered capacity and resident choice",
+      screenPanel("Offered capacity and resident choice", { anchor: "package-capacity" },
         h("p", {}, "Offered capacity is not a booking and not a promise to any resident. A resident's measure-specific choice, pause or withdrawal is recorded and shown on the Resident choice screen, and it takes precedence over any offered slot. Packages are listed in reference order, never ranked by utilisation or headroom.")),
       screenTension("choice"),
-      screenPanel("Package queue",
+      screenPanel("Package queue", { anchor: "package-queue" },
         screenTable("Packages with period, scope, version and capacity",
           ["Package", "Period", "Scope and version", "Contract or call-off reference", "Contractor", "Offered", "Recorded committed", "In use", "Recorded headroom", "Capacity evidence status"],
           [...packages].sort((x, y) => String(x.id).localeCompare(String(y.id))).flatMap((p) => (p.capacity?.length ? p.capacity : [{}]).map((cap) => [
             `${wording(p.id)}: ${wording(p.name)}`, `${wording(p.period_from)} to ${wording(p.period_to)}`,
             `${wording(p.scope)} (v${wording(p.scope_version)})`, `${wording(p.contract_ref)} v${wording(p.contract_version)}`,
             cap.contractor, cap.offered, cap.committed, cap.in_use, screenCapacityState(cap), wording(cap.evidence_status)])))),
-      screenPanel("Contractor insurance and certification expiry",
+      screenPanel("Contractor insurance and certification expiry", { anchor: "package-expiry" },
         h("p", {}, "Expiry is shown from supplied dates only. It does not confirm that cover or certification is valid, and nothing is renewed or approved here."),
         ...packages.flatMap((p) => (p.capacity || []).map((cap) => screenFields([
           [`${wording(p.id)}: ${screenValue(cap.contractor)} insurance`, screenExpiryState(cap.insurance_expiry)],
           [`${wording(p.id)}: ${screenValue(cap.contractor)} certification`, screenExpiryState(cap.certification_expiry)]]))),
         !packages.some((p) => p.capacity?.length) ? h("p", { class: "empty" }, "No contractors supplied. This does not establish that cover is in date.") : null),
-      screenPanel("Work orders for this home",
+      screenPanel("Work orders for this home", { anchor: "package-orders" },
         screenTable("Work-order references for the selected home",
           ["Work order", "Package", "Contractor", "State", "Scope"],
-          orders.map((o) => [reference(o), o.package, o.contractor, o.state, o.scope]))),
-      screenPanel("Corrections and completion on record",
+          orders.map((o) => [reference(o), o.package, o.contractor, stateCue(workOrderCues, o.state), o.scope]))),
+      screenPanel("Corrections and completion on record", { anchor: "package-records" },
         screenTable("Work-order corrections, recorded completion and review for the selected home",
           ["Work order", "Corrections recorded", "Completion recorded", "Independent review and acceptance"],
           workOrderRecordRows(orders))),
-      ...packages.map((p) => screenPanel(`Draft readiness: ${wording(p.id)}`,
+      ...packages.map((p, i) => screenPanel(`Draft readiness: ${wording(p.id)}`, { anchor: packageDraftAnchor(p, i) },
         h("p", { role: "status" }, "Draft readiness only. This is not a release or approval."),
         screenTable(`Unmet prerequisites for ${wording(p.id)}`, ["Prerequisite", "State", "Next reviewer (role)"],
           packagePrerequisites(p, orders.filter((o) => o.package === p.id))),
@@ -1438,20 +1447,21 @@ registerRoleScreen({
   render(c, extra) {
     const orders = extra?.orders || [];
     return h("div", {},
-      screenPanel("What this screen does",
+      procurementJumpNav([["jobpack-purpose", "What this screen does"], ["jobpack-orders", "Your job pack"], ["jobpack-evidence", "Evidence checklist"], ["jobpack-review", "Submission and review"]]),
+      screenPanel("What this screen does", { anchor: "jobpack-purpose" },
         h("p", {}, "Read-only job pack view. Nothing is submitted, accepted or booked from here, and it is not a provider portal. To submit or correct evidence, send it to your named contact."),
         h("p", {}, "Source: desk research hypothesis, not observed behaviour.")),
-      screenPanel("Your job pack",
+      screenPanel("Your job pack", { anchor: "jobpack-orders" },
         screenTable("Your work orders for this home", ["Work order and version", "State", "Works", "Scope"],
-          orders.map((o) => [reference(o), o.state, o.measures, o.scope])),
+          orders.map((o) => [reference(o), stateCue(workOrderCues, o.state), o.measures, o.scope])),
         screenFields([["Notice before visit", c.needs_notice ? "Needs notice" : "No extra notice needed"],
           ["Named contact", c.named_contact]]),
         h("p", {}, "The reason for any notice is not shared with contractors.")),
-      screenPanel("Evidence checklist",
+      screenPanel("Evidence checklist", { anchor: "jobpack-evidence" },
         screenTable("Evidence checklist for this job pack", ["Evidence item", "State on record"],
           jobPackChecklist.map((item) => [item, item === "Appointment outcome recorded" && orders.some((o) => (o.appointments || []).length)
-            ? "Recorded on a work order" : "Unknown. Not assessed on this screen."]))),
-      screenPanel("Submission and review are separate",
+            ? stateCue(evidenceCues, "Recorded", "Recorded on a work order") : stateCue(evidenceCues, "Unknown", "Not assessed on this screen")]))),
+      screenPanel("Submission and review are separate", { anchor: "jobpack-review" },
         screenFields([["Your submission", "Not recorded on this screen"],
           ["Completion on the work order", orders.some((o) => o.state === "Completed")
             ? "Marked Completed on the work order by staff. This is a record, not acceptance." : "Not marked Completed"],
@@ -1549,7 +1559,7 @@ function financeInvoicePanel(c) {
     financeExceptionPanel(inv))));
 }
 const financeQueueRows = (queue) => queue.map((q) => [q.case_id, q.invoice, `${screenValue(q.supplier)}, ref ${screenValue(q.ref)}`,
-  screenValue(q.status), financeChecked(q) ? `${q.exceptions ?? "Unknown"} exceptions` : "Unknown. Not checked yet", q.on_hold ? "Paused" : "Not paused", financeMoney(q.total)]);
+  stateCue(invoiceCues, q.status), financeChecked(q) ? `${q.exceptions ?? "Unknown"} exceptions` : "Unknown. Not checked yet", q.on_hold ? "Paused" : "Not paused", financeMoney(q.total)]);
 const financeTcaComponents = ["Token and API usage", "Platform and hosting", "Software and licences", "People and process change", "Rework and review effort"];
 const financeValueDestinations = "new revenue won, revenue retained, spend removed, spend avoided or capital freed";
 function financeEconomicsPanel(report) {
