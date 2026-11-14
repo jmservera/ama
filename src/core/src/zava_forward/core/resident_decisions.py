@@ -245,7 +245,8 @@ class HazardRouted(ValueError):
 
 
 def _refuse_hazard(c, body):
-    if body.get("hazard_concern") not in (None, False):
+    flag = body.get("hazard_concern")
+    if flag is not None and flag is not False:
         raise HazardRouted(HAZARD_ROUTING_MESSAGE)
 
 
@@ -264,9 +265,10 @@ def _raiser(c, extras):
         return dict(raised_by=raised_by, representative_ref=None)
     versions = c.get("representative_authorities", {}).get(ref, []) if isinstance(ref, str) else []
     a = versions[-1] if versions else None
-    if (not a or a["status"] != "Confirmed" or "Communicate" not in a["tasks"]
-            or not a["authority_date"] <= k.today() < a["review_date"]):
+    context = current_context(c, a["measure"]) if a else None
+    if not context:
         raise ValueError("Representative authority needs human confirmation through the safe contact route.")
+    authority_for(c, ref, "Communicate", a["measure"], context)
     return dict(raised_by=raised_by, representative_ref=ref)
 
 
@@ -1199,13 +1201,13 @@ class ResidentDecisionMixin:
         return f"{record['id']} unverified intake recorded"
 
     def _res_nomination_correct(self, user, c, body):
-        _refuse_hazard(c, body)
         body, extras = _split_optional(body, ("hazard_concern", "raised_by", "representative_ref"))
-        raiser = _raiser(c, extras)
         _intake_fields(user, c, body, {
             "case_id", "id", "expected_version", "reported_subject_ref", "account",
             "source", "channel", "next_update", "challenge_id",
         })
+        _refuse_hazard(c, extras)
+        raiser = _raiser(c, extras)
         guard = challenges.protected_snapshot(c)
         record = k.find(c.get("nomination_records", []), body["id"], "nomination")
         _version(body, record)
@@ -1553,14 +1555,14 @@ class ResidentDecisionMixin:
 
     def _res_challenge_open(self, user, c, body):
         from . import projection
-        _refuse_hazard(c, body)
-        body = _split_optional(body, ("hazard_concern",))[0]
+        body, extras = _split_optional(body, ("hazard_concern",))
         if not projection.appointment_evidence_visible(user):
             raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
         fields = {"action", "proposal_id", "proposal_version", "decision_version", "target_kind",
                   "channel", "source", "request", "explanation", "owner", "non_digital_route", "next_update"}
         if set(body) != fields:
             raise ValueError("Supply only the challenge fields. Identity, time, decisions and dependencies are recorded by the server.")
+        _refuse_hazard(c, extras)
         guard = challenges.protected_snapshot(c)
         rec = _priority_record(self, body.get("proposal_id"))
         if not _priority_includes_case(rec, c["id"]):

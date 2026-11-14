@@ -429,6 +429,17 @@ class JsonResidentDecisions(unittest.TestCase):
                 record_id, 1, raised_by="Representative", representative_ref="SYN-REP-A"
             ),
         )
+        self.action("safe_contact_record", safe_contact_ref="SYN-SAFE-CHANGED", source="SYN")
+        self.unchanged_failure(
+            partial(
+                self.store.resident_action,
+                self.sam,
+                "ZF-1",
+                self.correction(
+                    record_id, 2, raised_by="Representative", representative_ref="SYN-REP-A"
+                ),
+            )
+        )
         saved = self.store.cases["ZF-1"]["nomination_records"][0]["corrections"][0]
         self.assertEqual(saved["raised_by"], "Representative")
         self.assertEqual(saved["representative_ref"], "SYN-REP-A")
@@ -441,6 +452,9 @@ class JsonResidentDecisions(unittest.TestCase):
             self.nomination(hazard_concern=True),
             self.correction(record_id, 1, hazard_concern=True),
             dict(self.challenge_body(proposal), hazard_concern=True),
+            self.correction(record_id, 1, hazard_concern=0),
+            self.correction(record_id, 1, hazard_concern=""),
+            dict(self.challenge_body(proposal), hazard_concern=1),
         ):
             with self.subTest(action=body["action"]):
                 before = copy.deepcopy(self.store.cases["ZF-1"])
