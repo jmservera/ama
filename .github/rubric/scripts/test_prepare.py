@@ -778,3 +778,64 @@ def test_given_instrument_only_change_on_push_when_computed_then_scoring_trigger
     # Assert
     assert state["instrument_changed"] is True
     assert state["should_score"] is True
+
+
+def lag_baseline_behind_main(root: Path) -> None:
+    """Merge an in-scope solution-code file to main after the baseline commit, so latest.json lags."""
+    path = root / "src" / "core" / "src" / "zava_forward" / "core" / "lagged.py"
+    path.parent.mkdir(parents=True)
+    path.write_text("merged = True\n", encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "merge solution code ahead of baseline")
+
+
+def test_given_lagging_baseline_when_pr_edits_other_files_then_artifact_not_opened(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    lag_baseline_behind_main(root)
+    git(root, "checkout", "-b", "feature")
+    (root / "tools").mkdir()
+    (root / "tools" / "foo.py").write_text("x = 1\n", encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "tools change")
+
+    # Act
+    state = prepare.compute_state(root, "main", "pull_request")
+
+    # Assert
+    assert state["should_score"] is False
+    assert "solution-code" not in state["changed_artifacts"]
+    assert state["changed_files"] == []
+    assert not any("solution-code" in reason for reason in state["reasons"])
+
+
+def test_given_lagging_baseline_when_pr_edits_solution_code_then_artifact_opened(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    lag_baseline_behind_main(root)
+    git(root, "checkout", "-b", "feature")
+    edited = "src/core/src/zava_forward/core/lagged.py"
+    (root / edited).write_text("merged = False\n", encoding="utf-8")
+    git(root, "commit", "-am", "edit solution code")
+
+    # Act
+    state = prepare.compute_state(root, "main", "pull_request")
+
+    # Assert
+    assert state["should_score"] is True
+    assert state["changed_artifacts"] == ["solution-code"]
+    assert state["changed_files"] == [edited]
+    assert "changed artifacts: solution-code" in state["reasons"]
+
+
+def test_given_lagging_baseline_when_pushed_to_main_then_artifact_still_scored(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    lag_baseline_behind_main(root)
+
+    # Act
+    state = prepare.compute_state(root, "HEAD", "push")
+
+    # Assert
+    assert state["should_score"] is True
+    assert "solution-code" in state["changed_artifacts"]
