@@ -585,7 +585,11 @@ entries are kept. Age is never an input and no timeout exists: an aged
 `Pending` attempt stays `Pending`. Supersession sends nothing and does not
 authorize a resend: a later send still needs `retry_unresolved` and the usual
 owner or named-reviewer rights, and a `Superseded` attempt still counts as
-unresolved. A late outcome for a superseded attempt is refused and its
+unresolved. A later `Acknowledged` attempt never supersedes an earlier one; it
+only sets `stale_pending_supersession_required` and
+`supersession_eligible_attempts` (idle `Pending` attempts, not in flight) on the
+route, with `supersession_evidence_ref` set to its `receipt_ref` for the two
+authorizers to cite. A late outcome for a superseded attempt is refused and its
 `receipt_ref` logged. Limits: the in-flight check is per store instance;
 a receipt found by verification has no manual recording path (do not
 supersede, reconcile with the receiver); the evidence reference is kept

@@ -1739,17 +1739,17 @@ class ResidentDecisionMixin:
             attempts[attempt - 1]["not_sent"] = True
         if body["status"] == "Acknowledged":
             attempts[attempt - 1].update(receipt_ref=body["receipt_ref"], received_at=body.get("received_at"))
-            self._supersede_stale_pending(c, req, attempts, attempt)
+            self._flag_stale_pending(c, req, attempts, attempt)
         return f"{req['id']} formal-route attempt {attempt}: {body['status']}"
 
-    def _supersede_stale_pending(self, c, req, attempts, acknowledged):
-        """An acknowledged attempt makes an earlier idle Pending one moot; keep its receipt, key and history."""
+    def _flag_stale_pending(self, c, req, attempts, acknowledged):
+        """Flag earlier idle Pending attempts for the manual_verified review; never change their status."""
         busy = in_flight(self, c.get("id"), req["id"])
-        at = _time()
-        for earlier in attempts[:acknowledged - 1]:
-            if earlier["status"] == "Pending" and earlier["attempt"] not in busy:
-                earlier.update(status="Superseded", superseded_from="Pending", superseded_at=at,
-                               superseded_by=acknowledged)
+        route = req["formal_route"]
+        route["supersession_eligible_attempts"] = [
+            a["attempt"] for a in attempts[:acknowledged - 1] if a["status"] == "Pending" and a["attempt"] not in busy]
+        route["stale_pending_supersession_required"] = bool(route["supersession_eligible_attempts"])
+        route["supersession_evidence_ref"] = attempts[acknowledged - 1]["receipt_ref"]
 
     def _res_service_supersede_authorize(self, user, c, body):
         """Owner-approved manual_verified step (issue 1238 Q6): two explicitly bound people, never age, never a resend."""
@@ -1791,6 +1791,10 @@ class ResidentDecisionMixin:
                                              binding_id=binding.binding_id, binding_digest=binding.digest))
         if len(record["authorizations"]) == 2:
             attempt.update(status="Superseded", superseded_from="Pending", superseded_at=_time())
+            route = req["formal_route"]
+            if number in route.get("supersession_eligible_attempts", []):
+                route["supersession_eligible_attempts"].remove(number)
+                route["stale_pending_supersession_required"] = bool(route["supersession_eligible_attempts"])
             detail = _approval_detail(binding, c.get("id"), req["id"], attempt.get("reservation_id"), number, role, evidence)
             return f"{detail}; attempt superseded, receipt, key and history kept"
         return _approval_detail(binding, c.get("id"), req["id"], attempt.get("reservation_id"), number, role, evidence)
