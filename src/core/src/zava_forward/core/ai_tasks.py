@@ -38,12 +38,12 @@ NOT_REVIEWED = "Not reviewed"
 HOLD = "Hold"
 DECISION_RULE = "decision_rule"
 GENERATIVE_MODEL = "generative_model"
+QUARANTINED = "Quarantined"
 
 
-def origin_of(source):
+def origin_of(source: str | None) -> str:
     """Provenance of recommendation wording: only a model-sourced run is generative; every template is a rule."""
     return GENERATIVE_MODEL if source == "ai" else DECISION_RULE
-QUARANTINED = "Quarantined"
 
 
 def workflow_only(mode=None):
