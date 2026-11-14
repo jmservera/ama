@@ -128,10 +128,6 @@ class UnblockTests(unittest.TestCase):
         self.assertNotIn("cannot book a visit", text)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class DomainAnswerTests(unittest.TestCase):
     def test_sensor_answer_cites_documents_only_when_survey_is_listed(self) -> None:
         for documents, cited in (("EPC", False), ("EPC, Survey", True)):
@@ -144,3 +140,7 @@ class DomainAnswerTests(unittest.TestCase):
         _, text, cites = answer("ZF-1", "What is the grant claim position?", {"stage": "Survey"})
         self.assertIn("A person decides.", text)
         self.assertIn(cca.DOMAIN_BOUNDARY, cites)
+
+
+if __name__ == "__main__":
+    unittest.main()

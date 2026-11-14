@@ -389,7 +389,6 @@ def skill_sources(skill: str, sources: dict[str, str]) -> dict[str, str]:
             "owner",
             "pas2035",
             "sensor",
-            "hazards",
         )
         sources = {
             key: value
@@ -450,16 +449,36 @@ def valid_usage(value: object) -> dict[str, int] | None:
     return result
 
 
-INFORMATIONAL_LEAD = re.compile(r"^\W*(?:who|whose|what|when|where|which|status)\b", re.I)
+RULES_SOURCE_ROOTS = {
+    "unblock": ("hazards",),
+    "sensor": ("hazards",),
+    "claim": ("grants", "funding", "funding_ok", "technical_missing"),
+    "pas2035": ("grants", "funding", "funding_ok", "technical_missing"),
+}
+INFORMATIONAL_LEAD = re.compile(
+    r"^\W*(?:who|whose|what|when|where|which|why|status|has|have|is|are|was|were|does|did)\b",
+    re.I,
+)
 ACTION_REQUEST = re.compile(
-    r"\b(?:for\s+me|on\s+my\s+behalf|please|i\s+(?:want|need)\s+you)\b", re.I
+    r"\b(?:for\s+me|on\s+my\s+behalf|please|i\s+(?:want|need)\s+you"
+    r"|you\s+(?:to\s+|should\s+|can\s+|could\s+)?(?:approve|sign|certify|authori[sz]e))\b",
+    re.I,
+)
+APPROVAL_COMMAND = re.compile(
+    r"(?:^|[.!?;:]\s+)(?:(?:just|now|then|also|go\s+ahead\s+and)\s+)*"
+    r"(?:approve|certify|authori[sz]e|sign[\s-]off)\b",
+    re.I,
 )
 
 
 def out_of_scope(question: str) -> tuple[str, str] | None:
     """The kind and workflow route when the question asks the assistant to act, else None."""
     question = normalise_policy_text(question)
-    informational = bool(INFORMATIONAL_LEAD.match(question)) and not ACTION_REQUEST.search(question)
+    informational = (
+        bool(INFORMATIONAL_LEAD.match(question))
+        and not ACTION_REQUEST.search(question)
+        and not APPROVAL_COMMAND.search(question)
+    )
     for name, pattern, route in OUT_OF_SCOPE:
         if name == "approve" and informational:
             continue
@@ -583,7 +602,13 @@ class ChatPanel:
             return None
         scoped = {f"{case_id}/{path}": value for path, value in found.items()}
         if isinstance(skill, str):
-            scoped = {k: v for k, v in skill_sources(skill, scoped).items() if k in scoped}
+            kept = skill_sources(skill, scoped)
+            extra = RULES_SOURCE_ROOTS.get(case_intent(question) or "", ())
+            scoped = {
+                k: v
+                for k, v in scoped.items()
+                if k in kept or k.split("/", 1)[1].split(".", 1)[0] in extra
+            }
         allowed = {k.split("/", 1)[1]: v for k, v in scoped.items()}
         g_kind, body, g_cites = grounded_answer(case_id, normalise_policy_text(question), allowed)
         if g_kind != "answer" or not g_cites:

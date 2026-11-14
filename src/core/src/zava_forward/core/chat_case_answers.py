@@ -47,7 +47,8 @@ RULES: dict[str, str] = {
     DOMAIN_BOUNDARY: (
         "Grant eligibility, PAS 2035 sign-off and sensor or damp findings are decided by the "
         "named roles in the case workflow. This chat only restates what the case record shows. "
-        "It does not confirm a legal duty, approve a claim or sign-off, or diagnose a cause."
+        "It does not confirm a legal duty, approve a claim or sign-off, "
+        "or determine a technical cause."
     ),
 }
 
@@ -636,7 +637,7 @@ def _damp(r: Reply) -> None:
         shown = True
     if not shown:
         r.say("No damp, ventilation or sensor evidence is recorded on this case card.")
-    _domain_close(r, "Sensor readings are not a diagnosis. " + _who_to_ask(r))
+    _domain_close(r, "Sensor readings do not establish a root cause. " + _who_to_ask(r))
 
 
 ANSWERS = {
