@@ -28,13 +28,7 @@ const screenPanel = (title, ...children) => {
 const screenJumpTarget = (id, panel) => h("div", { id, tabindex: "-1" }, panel);
 function screenJumpNav(label, jumps) {
   return h("nav", { class: "row", "aria-label": label },
-    jumps.map(([id, text]) => h("a", { href: `#${id}`, class: "btn alt", "data-jump-target": id, onclick: (event) => {
-      event.preventDefault();
-      const target = document.getElementById(id);
-      if (!target) return;
-      target.focus();
-      target.scrollIntoView({ block: "start" });
-    } }, `Go to ${text}`)));
+    jumps.map(([id, text]) => h("a", { href: `#${id}`, class: "btn alt", "data-jump": id, "data-jump-target": id }, `Go to ${text}`)));
 }
 const screenUnknown = (reason, owner, action) => h("div", { class: "blocked" },
   h("p", { class: "blocked-title" }, "Cannot confirm readiness"),

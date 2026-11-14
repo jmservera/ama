@@ -1,9 +1,24 @@
 """Finance and grants screens: written state meaning and keyboard section jumps (#225, WCAG 2.2)."""
 
-import unittest
-from typing import Any
+from __future__ import annotations
 
-from test_finance_grants_screens import CASE, node_text, run, walk
+import importlib
+import sys
+import unittest
+from pathlib import Path
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from test_finance_grants_screens import CASE, node_text, run, walk
+else:
+    _tests_dir = str(Path(__file__).resolve().parent)
+    if _tests_dir not in sys.path:
+        sys.path.insert(0, _tests_dir)
+    _screens = importlib.import_module("test_finance_grants_screens")
+    CASE = _screens.CASE
+    node_text = _screens.node_text
+    run = _screens.run
+    walk = _screens.walk
 
 JUMP_IDS = {
     "finance-invoices": {"finance-queue", "finance-lines", "finance-economics"},
