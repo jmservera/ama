@@ -11807,3 +11807,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * `chat.js`: the employee chat has a "Plain-language answers" checkbox (off by default) and both chat panels send the flag. `regulatoryPlainMode` no longer writes to the panel status paragraph: only the `.regulatory-mode-state` text changes, in an `aria-live="polite"` region without `role="status"`, so `#regulatory-alerts` keeps one `[role="status"]` and its coverage or outage banner is not erased.
 * Corrected the WCAG baseline sentence that called the mode text a `role="status"` region. The two earlier #215 entries above are kept as written; this stack's base is `eb1c3f35e` (#1661 on #1641).
 * Tests: new `test_home_chat_api.py`; additions in `test_regulatory_chat_api.py` and `test_accessibility_baseline.py`. Static and local API evidence only; no screen-reader, browser or staff comprehension claim; criteria 3 and 5 of #215 stay unticked.
+
+## 2026-11-14 provenance register hardening (#159)
+
+* `retrofit-synthetic-data/provenance-register.json` v1.3.0: every source now records `permitted_use` and `contains_real_resident_data: false`; added `SRC-OPEN-METEO-ERA5` (retrieved 2026-10-27, CC BY 4.0, synthetic-demo-only) and linked it from DS-SENSOR; NASA POWER logged as an open item (licence not retrieved).
+* `privacy.source_issues` enforces the new fields and `dataset_source_issues` cross-checks dataset sources. Refs #159.
