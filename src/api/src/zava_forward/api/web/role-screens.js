@@ -719,6 +719,11 @@ registerRoleScreen({
   }
 });
 
+// Text prefixes carry the state so colour is never the only signal (WCAG 1.4.1). Lookups use Object.hasOwn so inherited names never match.
+const stateCue = (table, status, detail = status) => `${Object.hasOwn(table, status) ? table[status] : "Action needed"}: ${screenValue(detail)}`;
+const choiceCues = { Accepted: "Confirmed", Declined: "Confirmed", Paused: "Confirmed", Withdrawn: "Confirmed", Waiting: "Waiting for resident", "Not recorded": "Waiting for resident" };
+const updateCues = { Outstanding: "Action needed", Proposed: "Action needed" };
+const serviceCues = { Open: "Action needed", "In progress": "Action needed", Resolved: "Action needed", Closed: "Confirmed" };
 const choiceRoles = ["Resident Liaison Officer", "Retrofit Coordinator", "Retrofit Programme Manager", "Programme Support Officer"];
 const choiceStop = new Set(["Paused", "Withdrawn"]);
 const choiceLatest = (m) => (m.versions || []).at(-1);
@@ -732,7 +737,7 @@ const choiceStopped = (m) => choiceStop.has(m.status) || choiceStopVersion(m) !=
 function choiceMeasure(m) {
   const v = choiceLatest(m);
   const ctx = m.context ? `scope ${screenValue(m.context.scope)}, revision ${screenValue(m.context.revision)}, design ${screenValue(m.context.design_version)}` : "Current scope not recorded";
-  return [m.measure, ctx, m.status,
+  return [m.measure, ctx, stateCue(choiceCues, m.status),
     v ? `v${v.version} ${v.status} (${choiceBinding(v)}), answered by ${screenValue(v.answered_by)}, recorded ${screenStamp(v.at)}${v.note ? `: ${v.note}` : ""}` : "None recorded",
     screenValue(m.readiness)];
 }
@@ -740,16 +745,16 @@ function choiceStoppedSummary(m) {
   const v = choiceStopVersion(m) || choiceLatest(m);
   const state = v && v.status !== m.status ? `${v.status} (current answer ${m.status})` : m.status;
   const review = m.review?.status === "Needs human review" ? ", needs human review before any restart" : "";
-  return `${m.measure}: ${state}${v ? ` (v${v.version}, ${choiceBinding(v)})` : ""}${review}`;
+  return stateCue(choiceCues, v ? v.status : m.status, `${m.measure}: ${state}${v ? ` (v${v.version}, ${choiceBinding(v)})` : ""}${review}`);
 }
 function choiceQueueRow(c) {
   const measures = c.measure_decisions || [];
   const stopped = measures.filter(choiceStopped).map(choiceStoppedSummary);
   const u = c.resident_update;
   return [`${c.id}, ${screenValue(c.address)}, ${screenValue(c.town)}`,
-    measures.length ? measures.map((m) => { const v = choiceLatest(m); return `${m.measure}: current ${m.status}${v ? `; latest recorded v${v.version} ${v.status} (${choiceBinding(v)})` : ""}`; }).join("; ") : "No measure choices recorded",
+    measures.length ? measures.map((m) => { const v = choiceLatest(m); return stateCue(choiceCues, m.status, `${m.measure}: current ${m.status}${v ? `; latest recorded v${v.version} ${v.status} (${choiceBinding(v)})` : ""}`); }).join("; ") : "No measure choices recorded",
     stopped.length ? stopped.join("; ") : "None recorded",
-    u ? `${screenValue(u.status)}: ${screenValue(u.purpose)}. Owner ${screenPerson(u.owner_identity || u.owner)}, due ${screenStamp(u.due_at)}, safe route ${screenValue(u.safe_contact_ref)}` : "No commitment recorded"];
+    u ? `${stateCue(updateCues, u.status)}: ${screenValue(u.purpose)}. Owner ${screenPerson(u.owner_identity || u.owner)}, due ${screenStamp(u.due_at)}, safe route ${screenValue(u.safe_contact_ref)}` : "No commitment recorded"];
 }
 function choiceDownload(queue) {
   const { limit, offset } = queue;
@@ -810,13 +815,13 @@ registerRoleScreen({
           ["Measure", "State and scope answered", "In their words", "Restart needs"],
           stopped.map((m) => {
             const v = choiceStopVersion(m) || choiceLatest(m);
-            const state = choiceStop.has(m.status) && v === choiceLatest(m) ? m.status : `${v.status} (current answer ${m.status})`;
-            return [m.measure, v ? `${state}, ${choiceBinding(v)}` : state, v?.note, "Human review before any restart"];
+            const state = stateCue(choiceCues, v ? v.status : m.status, choiceStop.has(m.status) && v === choiceLatest(m) ? m.status : `${v.status} (current answer ${m.status})`);
+            return [m.measure, v ? `${state}, ${choiceBinding(v)}` : state, v?.note, "Action needed: Human review before any restart"];
           }))
           : h("p", { class: "empty" }, "No measure is currently paused or withdrawn in the recorded answers.")),
       screenPanel("Linked update commitment",
         update ? screenFields([
-          ["Status", update.status], ["Purpose or linked issue", update.purpose],
+          ["Status", stateCue(updateCues, update.status)], ["Purpose or linked issue", update.purpose],
           ["Owner", screenPerson(update.owner_identity || update.owner)], ["Due", screenStamp(update.due_at)],
           ["Basis for due date", update.basis], ["Safe route reference", update.safe_contact_ref],
           ["Version", update.version], ["Meaning", "A commitment is not a message. Nothing is sent or marked received here."]])
@@ -1581,8 +1586,8 @@ const serviceMeaning = {
   "Resolved": "The owner says it is dealt with. It is not closed until the outcome is recorded.",
   "Closed": "Closed with an outcome recorded for the resident."
 };
-const serviceStatus = (r) => `${screenValue(r.status)}. ${serviceMeaning[r.status] || "Meaning not recorded."}`;
-const serviceNeeds = (r) => Array.isArray(r.accessibility) && r.accessibility.length ? r.accessibility.join(", ") : "Unknown";
+const serviceStatus = (r) => `${stateCue(serviceCues, r.status)}. ${Object.hasOwn(serviceMeaning, r.status) ? serviceMeaning[r.status] : "Meaning not recorded."}`;
+const serviceNeeds = (r) => Array.isArray(r.accessibility) && r.accessibility.length ? `Confirmed: ${r.accessibility.join(", ")}` : "Waiting for resident: Unknown";
 const serviceOwner = (r) => `Service: ${screenPerson(r.service_identity || r.service_owner)}. Redress: ${screenPerson(r.redress_identity || r.redress_owner)}`;
 const serviceReview = (r) => r.route === "Independent review"
   ? `Independent review of ${screenValue(r.review_reference)}; ${screenValue(r.review_measure)} v${screenValue(r.review_decision_version)}`
@@ -1592,9 +1597,9 @@ function serviceQueueRow([row, c]) {
   const open = (c.service_requests || []).filter((r) => r.status !== "Closed");
   const u = c.resident_update;
   return [row.id,
-    open.length ? open.map((r) => `${r.id} ${screenValue(r.route)}: ${screenValue(r.status)}, next update ${screenStamp(r.next_update)}`).join("; ") : "No open request recorded",
+    open.length ? open.map((r) => stateCue(serviceCues, r.status, `${r.id} ${screenValue(r.route)}: ${screenValue(r.status)}, next update ${screenStamp(r.next_update)}`)).join("; ") : "No open request recorded",
     open.length ? [...new Set(open.map(serviceNeeds))].join("; ") : "None recorded",
-    u ? `${screenValue(u.status)}, owner ${screenPerson(u.owner_identity || u.owner)}, safe route ${screenValue(u.safe_contact_ref)}` : "No commitment recorded"];
+    u ? `${stateCue(updateCues, u.status)}, owner ${screenPerson(u.owner_identity || u.owner)}, safe route ${screenValue(u.safe_contact_ref)}` : "No commitment recorded"];
 }
 registerRoleScreen({
   id: "resident-service-issues",
@@ -1635,7 +1640,7 @@ registerRoleScreen({
           requests.flatMap((r) => (r.history || []).map((x) => [r.id, x.status, x.by, screenStamp(x.at), x.note])))) : null,
       screenPanel("Linked update commitment",
         update ? screenFields([
-          ["Status", update.status], ["Purpose or linked issue", update.purpose],
+          ["Status", stateCue(updateCues, update.status)], ["Purpose or linked issue", update.purpose],
           ["Owner", screenPerson(update.owner_identity || update.owner)], ["Due", screenStamp(update.due_at)],
           ["Safe route reference", update.safe_contact_ref],
           ["Meaning", "A commitment is not a message. Nothing is sent or marked received here."]])
