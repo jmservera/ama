@@ -27,6 +27,7 @@ import os
 import re
 from copy import copy, deepcopy
 from datetime import UTC, datetime
+from decimal import Decimal, InvalidOperation
 
 from . import controls as k
 from .change_provenance import _actor
@@ -212,6 +213,30 @@ def _pct(value, label):
     return n
 
 
+UNKNOWN = "Unknown"
+
+
+def _ai_cost_figures(price, total, accepted):
+    """Total Cost of AI and cost per accepted outcome; Unknown, never 0, without a price source, a recorded total or an accepted outcome."""
+    total_cost = count = None
+    if total not in (None, ""):
+        try:
+            total_cost = Decimal(str(total).strip())
+        except InvalidOperation:
+            raise ValueError("Enter the Total Cost of AI as a number or leave it blank.")
+        if not total_cost.is_finite() or total_cost < 0:
+            raise ValueError("Enter the Total Cost of AI as a number or leave it blank.")
+    if accepted not in (None, ""):
+        if isinstance(accepted, bool) or not str(accepted).strip().isdigit():
+            raise ValueError("Enter the accepted-outcome count as a whole number or leave it blank.")
+        count = int(str(accepted).strip())
+    priced = bool(price) and total_cost is not None
+    per_outcome = total_cost / count if priced and count else None
+    return dict(total_cost_of_ai=f"{total_cost:f}" if priced else UNKNOWN,
+                accepted_outcome_count=count if count else UNKNOWN,
+                cost_per_accepted_outcome=f"{per_outcome:.4f}" if per_outcome is not None else UNKNOWN)
+
+
 def _need_manager(user, what):
     k.require_role(user, MANAGER_ROLES, f"a manager can {what}")
 
@@ -375,10 +400,11 @@ class GovernanceMixin:
         if denominator not in AI_DENOMINATORS:
             raise ValueError("Choose the AI cost denominator: " + ", ".join(AI_DENOMINATORS) + ".")
         price = k.text(body.get("ai_price_source"), "the dated price source", 300, required=False)
-        ai_cost = dict(denominator=denominator, quality_floor=k.text(body.get("ai_quality_floor"), "the quality floor the outcome must clear", 600),
+        ai_cost = dict(denominator=denominator, named_denominator=denominator, quality_floor=k.text(body.get("ai_quality_floor"), "the quality floor the outcome must clear", 600),
                        cost_components=k.text(body.get("ai_cost_components"), "the Total Cost of AI components beyond token cost", 600),
                        price_source=price or None,
-                       cost_status="Priced from the named source" if price else "Unknown: no dated price source is recorded")
+                       cost_status="Priced from the named source" if price else "Unknown: no dated price source is recorded",
+                       **_ai_cost_figures(price, body.get("ai_total_cost"), body.get("ai_accepted_outcomes")))
         with self.lock:
             g = self._gov()
             entry = dict(goal="BG-011", definitions=defs, ai_running_cost=ai_cost, mde_pct=mde, targets_pct=dict(BG011_TARGETS), recorded_by=user["email"],
@@ -511,6 +537,8 @@ class GovernanceMixin:
             if approver.lower() in proposer:
                 raise ValueError("The breach decision needs an approver other than the person recording the release.")
             rec["economics_breach_approver"] = approver
+        ai_line = (self._gov()["benefits"].get("BG-011") or {}).get("ai_running_cost") or {}
+        rec["ai_running_cost"] = {key: ai_line.get(key, UNKNOWN) for key in ("named_denominator", "quality_floor", "total_cost_of_ai", "cost_per_accepted_outcome")}
         if decision == "Release" and scope == "Phase 0 capture":
             self.require_capture_open()
         if decision == "Release" and scope in ("Shadow testing", "Live pilot") and not self.is_released("Phase 0 capture"):
