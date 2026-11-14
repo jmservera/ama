@@ -11789,3 +11789,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a dated note to the [WCAG baseline](research/ux/wcag-conformance-baseline.md) status-messages row and to the API README criterion audit: regulatory alert and cited-lookup states carry a glyph and border shape, plain-language explanations cover outcomes, no-source, doubt and unknown coverage, and Escape restores focus to the lookup summary.
 * Local engineering evidence only (static tests and the browser check with axe 4.10.3). No screen-reader, assistive-technology, conformance or staff comprehension claim; criterion 5 stays unmet.
 * Added the #1611 static regression `src/api/tests/test_home_chat_regulatory_keyboard_provenance.py` (native controls, launcher aria state, Escape and Close focus return, live regions, provenance, source count and a persistent per-reply outcome line), recorded under the 2026-11-14 RPI artifacts. Static local evidence only; no tick or closure.
+
+## [2026-11-14] update | Issue #233 tension callouts and same-home stage statement (Refs #233)
+
+* Added plain-language "Tension: continuity versus disclosure" and "Tension: utilisation versus choice" callouts to `programme-queue`, `resident-choice` and `procurement-packages`, labelled atlas hypotheses pending #155 with a text status line and no role simulator.
+* The programme-queue journey stage map now states that every link carries the one selected home and that separate example homes are never stages of it. Updated [atlas-screen-trace.md](research/ux/atlas-screen-trace.md); new test `src/api/tests/test_role_screens_tensions_same_home.py`. Engineering trace only: no browser, assistive-technology or user evidence; the criteria are not ticked.

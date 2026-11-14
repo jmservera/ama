@@ -1,7 +1,7 @@
 ---
 title: Atlas findings and role journeys traced to screens
 description: Cross-role trace of the eleven profile perspectives, five atlas design themes, two tensions and one same-home walkthrough to role screens or recorded deferrals (issue #233)
-ms.date: 2026-11-12
+ms.date: 2026-11-14
 ms.topic: reference
 ---
 
@@ -65,6 +65,8 @@ Source: [five design themes](./customer-journeys/customer-journey-atlas.md#five-
 | Continuity versus disclosure | `programme-queue` and `resident-choice` | Each screen shows the minimum fields its role needs; withheld items are listed as text under a "Not shown for this role" panel (on the per-home view of both screens, on the `programme-queue` overview and on the `resident-choice` page summary; since 2026-11-04 also on the `technical-queue` and `quality-queue` per-home views, source-level test only; rendered in Chromium for those two views on the same synthetic home since 2026-11-10 by the same checker, at 1280 px and 320 px, as the Programme Manager only) rather than silently omitted; contact and access appear as a route reference, not sensitive history | Proposed rule; rendered in Chromium for `programme-queue` and `resident-choice` on one synthetic home since 2026-11-05 (engineering check only; conformance, AT and user validation not assessed) |
 | Utilisation versus choice | `resident-choice` and `procurement-packages` | Resident options and withdrawal render first; capacity is labelled offered or committed and never ordered by utilisation; an offered slot is never worded as a promise | Rule stated in text on `procurement-packages` since 2026-11-03 (offer is not a booking or promise, resident choice takes precedence, packages in reference order not ranked by utilisation) and, from 2026-11-04, restated on the per-home `resident-choice` view after the choice and withdrawal panels ("Choice comes before offered capacity"; node render test of panel order on that one screen; no assistive-technology evidence); resident-first ordering across screens rendered in Chromium on one synthetic home since 2026-11-05 (headings and table rows in order at 1280 px and 320 px; `checks/atlas_tensions_browser_check.py`); conformance, assistive-technology and user evidence not assessed |
 
+Since 2026-11-14 each tension is also stated as its own plain-language callout, titled "Tension: continuity versus disclosure" or "Tension: utilisation versus choice", with a text status line ("proposed design rule", atlas hypothesis pending validation in #155, not observed behaviour) and no colour, icon or role-selector meaning. Continuity versus disclosure appears on the `programme-queue` overview and connected home view and on the `resident-choice` home view; utilisation versus choice appears on the `resident-choice` home view (after the choice precedence panel) and on `procurement-packages`. Source-level and node render tests only (`src/api/tests/test_role_screens_tensions_same_home.py`); no browser, assistive-technology or user evidence, so the criterion stays an engineering trace, not acceptance.
+
 ## Same-home walkthrough
 
 One constructed fixture home, EX-HOME-901, is walked through the eight atlas
@@ -79,7 +81,7 @@ stages" list for any home an operator selects. It names the eight stages, links
 each to the registered screen that shows that stage's own state for the same
 case (navigation only, no state is derived or cleared), lists stage 1 as a
 recorded deferral, and states in text when a screen is not installed for the
-signed-in role. It is static and does not render EX-HOME-901 data, so the eight-stage
+signed-in role. Since 2026-11-14 the map also states that every link carries the one selected home's case reference and that separate example homes are never shown as stages of it; a node render test checks that all stage links carry that one case id. It is static and does not render EX-HOME-901 data, so the eight-stage
 walk of EX-HOME-901 across screens stays open. A separate, narrower walk of one
 real-store home, ZF-1, is described after this paragraph. The offline checker (`src/core`) now also fails when the on-screen stage map and the table below name different stages or screens, so the two cannot drift apart silently.
 
