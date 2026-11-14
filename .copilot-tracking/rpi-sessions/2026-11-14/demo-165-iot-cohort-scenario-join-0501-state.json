@@ -1,0 +1,56 @@
+{
+  "task_id": "demo-165-iot-cohort-scenario-join-0501",
+  "task_slug": "demo-165-iot-cohort-scenario-join-0501",
+  "parent_task": {
+    "task_id": "demo-165-importer-seed-roundtrip-0443",
+    "task_slug": "demo-165-importer-seed-roundtrip-0443"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14-demo-165-iot-cohort-scenario-join-0501-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14/demo-165-iot-cohort-scenario-join-0501-plan.instructions.md",
+    "details": ".copilot-tracking/details/2026-11-14/demo-165-iot-cohort-scenario-join-0501-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-11-14/demo-165-iot-cohort-scenario-join-0501-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-14/demo-165-iot-cohort-scenario-join-0501-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Use Refs #165 only; commit, do not push",
+      "status": "confirmed",
+      "evidence": "user request"
+    },
+    {
+      "decision": "Critique executed once, no blocking findings",
+      "status": "executed",
+      "evidence": "plan Critique section"
+    },
+    {
+      "decision": "Review executed once, conformant with caveats",
+      "status": "executed",
+      "evidence": "review artifact"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Owner selects a follow-up, Stop, or manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Fix editable install to resolve to the active worktree",
+      "rationale": "Easiest; removes PYTHONPATH workaround",
+      "evidence": "review artifact"
+    },
+    {
+      "rank": 2,
+      "task": "Commit a stock-to-case link and upgrade disjointness to a join",
+      "rationale": "Higher value, larger scope",
+      "evidence": "research; README stock-to-case gap"
+    }
+  ]
+}
