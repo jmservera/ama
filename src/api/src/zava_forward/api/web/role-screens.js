@@ -1316,8 +1316,9 @@ const reference = (order) => `${wording(order.id)} v${wording(order.version)}`;
 // Keyboard jump links reuse the shared a[data-jump] click handler, so they never change the hash route.
 const procurementJumpNav = (sections) => h("nav", { "aria-label": "Sections of this view", class: "screen-links" },
   sections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading` }, title)));
-const workOrderCues = { Completed: "Completed on record, not accepted", Withdrawn: "Withdrawn", Issued: "Open", Acknowledged: "Open" };
-const invoiceCues = { Received: "Waiting for check", "Not checked": "Waiting for check" };
+const workOrderCues = { Completed: "Completed on record, not accepted", Withdrawn: "Withdrawn", Issued: "Open", Appointed: "Open", Acknowledged: "Open" };
+const invoiceCues = { Matched: "Checked", Received: "Waiting for check", "Not checked": "Waiting for check" };
+const packageDraftAnchor = (p, i) => `package-draft-${String(wording(p.id)).replace(/[^A-Za-z0-9_-]/g, "-")}-${i + 1}`;
 const evidenceCues = { Recorded: "Recorded", Unknown: "Unknown" };
 const completionMove = (order) => (order.history || []).filter((step) => step.to_state === "Completed").pop();
 function workOrderRecordRows(orders) {
@@ -1364,7 +1365,7 @@ registerRoleScreen({
     const orders = extra?.orders || [];
     return h("div", {},
       procurementJumpNav([["package-capacity", "Offered capacity"], ["package-queue", "Package queue"], ["package-expiry", "Insurance and certification expiry"],
-        ["package-orders", "Work orders"], ["package-records", "Corrections and completion"], ...packages.map((p) => [`package-draft-${wording(p.id)}`, `Draft readiness ${wording(p.id)}`])]),
+        ["package-orders", "Work orders"], ["package-records", "Corrections and completion"], ...packages.map((p, i) => [packageDraftAnchor(p, i), `Draft readiness ${wording(p.id)}`])]),
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only reader view. It records no approval, issues no work order and books no visit. Readiness here is a draft only. Contract terms, capacity and delegations are Unknown unless a fixture or recorded evidence says so. Source: desk research, not observed behaviour."),
         h("p", {}, `Work orders shown are for home ${c.id} only.`)),
@@ -1392,7 +1393,7 @@ registerRoleScreen({
         screenTable("Work-order corrections, recorded completion and review for the selected home",
           ["Work order", "Corrections recorded", "Completion recorded", "Independent review and acceptance"],
           workOrderRecordRows(orders))),
-      ...packages.map((p) => screenPanel(`Draft readiness: ${wording(p.id)}`, { anchor: `package-draft-${wording(p.id)}` },
+      ...packages.map((p, i) => screenPanel(`Draft readiness: ${wording(p.id)}`, { anchor: packageDraftAnchor(p, i) },
         h("p", { role: "status" }, "Draft readiness only. This is not a release or approval."),
         screenTable(`Unmet prerequisites for ${wording(p.id)}`, ["Prerequisite", "State", "Next reviewer (role)"],
           packagePrerequisites(p, orders.filter((o) => o.package === p.id))),
@@ -1523,11 +1524,11 @@ function financeExceptionPanel(inv) {
 function financeInvoicePanel(c) {
   const f = c.finance || {};
   const invoices = f.invoices || [];
-  if (!invoices.length) return screenPanel("Invoice line comparison", { anchor: "finance-invoices" },
+  if (!invoices.length) return screenPanel("Invoice line comparison",
     h("p", { class: "empty" }, "No invoices recorded for this home. This does not establish that nothing is owed."));
-  return screenPanel("Invoice line comparison", { anchor: "finance-invoices" }, ...invoices.map((inv) => h("div", {},
+  return screenPanel("Invoice line comparison", ...invoices.map((inv) => h("div", {},
     h("h3", {}, `${inv.id}: ${screenValue(inv.kind)} ${screenValue(inv.ref)} from ${screenValue(inv.supplier)}`),
-    screenFields([["Version and record", `${inv.id}, work order ${screenValue(inv.work_order)}, match status: ${stateCue(invoiceCues, inv.status)}`],
+    screenFields([["Version and record", `${inv.id}, work order ${screenValue(inv.work_order)}, match status: ${screenValue(inv.status)}`],
       ["Payment pause", inv.hold ? `Paused by ${screenValue(inv.hold.name)}: ${screenValue(inv.hold.reason)}` : "No pause recorded"],
       ["Finance decision", inv.disposition ? `${screenFinanceDecision(inv.disposition)}, recorded by ${screenValue(inv.disposition_by)}` : "No Finance decision recorded"],
       ["Payment status (a note of what Finance did elsewhere)", `${screenValue(inv.payment_status)}. This system never makes or releases a payment.`]]),
@@ -1542,7 +1543,7 @@ const financeTcaComponents = ["Token and API usage", "Platform and hosting", "So
 const financeValueDestinations = "new revenue won, revenue retained, spend removed, spend avoided or capital freed";
 function financeEconomicsPanel(report) {
   const missing = (what) => `Unknown. ${what}`;
-  return screenPanel("AI economics (ledger-wide, all homes)", { anchor: "finance-economics" },
+  return screenPanel("AI economics (ledger-wide, all homes)",
     h("p", {}, "Design only. Usage must be reconciled to billing before any cost is read. Total Cost of AI is the sum of its components, and any missing component keeps it Unknown. Booked-value status stays Unknown until Finance records a defensible value. No price, budget or target is set here (BRD OD-51 open). This is read-only and nothing here depends on AI: Finance decisions and invoice checks work the same when AI is unavailable."),
     screenFields([
       ["Usage reconciled to billing", missing("No billing source is recorded, so usage cannot be reconciled.")],
@@ -1564,11 +1565,10 @@ registerRoleScreen({
   render(c, extra) {
     const queue = Array.isArray(extra?.queue) ? extra.queue : null;
     return h("div", {},
-      procurementJumpNav([["finance-queue", "Invoice queue"], ["finance-invoices", "Invoice line comparison"], ["finance-economics", "AI economics"]]),
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only reader view for the approver and payment officer. It makes no payment, approval or decision and changes no record. Use the existing case workspace to act. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only, except the queue below.`)),
-      screenPanel("Invoices waiting for Finance (all homes your role can see)", { anchor: "finance-queue" },
+      screenPanel("Invoices waiting for Finance (all homes your role can see)",
         queue ? screenTable("Invoices with exceptions, pauses or not yet checked",
           ["Home", "Invoice", "Supplier and reference", "Status", "Exceptions", "Pause", "Invoice total"], financeQueueRows(queue))
           : h("p", { class: "empty" }, "Unknown. The queue could not be read for your role. Owner: your team manager. Next action: ask them to check your access.")),

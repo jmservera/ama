@@ -4,7 +4,6 @@ Engineering checks only, not conformance acceptance.
 """
 
 import json
-import re
 import subprocess
 import unittest
 from typing import Any
@@ -59,14 +58,22 @@ class JumpLinks(unittest.TestCase):
                     self.assertTrue(link["attrs"]["href"].startswith("#"))
                 self.assertNotIn("button", [n.get("tag") for n in nodes])
 
-    def test_finance_screen_has_jump_links_to_present_panels(self) -> None:
+    def test_finance_screens_are_left_to_their_own_slice(self) -> None:
         source = (WEB / "role-screens.js").read_text(encoding="utf-8")
-        start = source.index('id: "finance-invoices"')
-        block = source[start : source.index("registerRoleScreen({", start + 10)]
-        links = re.findall(r'\["(finance-[a-z]+)", "', block)
-        self.assertEqual(len(links), 3)
-        for anchor in links:
-            self.assertIn(f'{{ anchor: "{anchor}" }}', source)
+        for anchor in ("finance-invoices", "finance-economics", "finance-queue"):
+            self.assertNotIn(f'{{ anchor: "{anchor}" }}', source)
+
+    def test_draft_anchor_ids_are_sanitised_and_unique(self) -> None:
+        odd = [PACKAGE | {"id": "PKG 1/x"}, PACKAGE | {"id": "PKG 1/x"}]
+        tree = render("procurement-packages", CASE, odd, [ORDER])
+        ids = [
+            n["attrs"]["id"]
+            for n in walk(tree)
+            if n.get("tag") == "h2" and n.get("attrs", {}).get("id", "").startswith("package-draft")
+        ]
+        self.assertEqual(len(ids), 2)
+        self.assertEqual(len(set(ids)), 2)
+        self.assertTrue(all(" " not in i and "/" not in i for i in ids))
 
 
 class TextualState(unittest.TestCase):
@@ -76,6 +83,10 @@ class TextualState(unittest.TestCase):
             with self.subTest(screen=screen):
                 out = json.dumps(render(screen, CASE, [PACKAGE], [done]))
                 self.assertIn("Completed on record, not accepted: Completed", out)
+
+    def test_appointed_work_order_is_open(self) -> None:
+        out = json.dumps(render("contractor-job-pack", CASE, [], [ORDER | {"state": "Appointed"}]))
+        self.assertIn("Open: Appointed", out)
 
     def test_unrecognised_state_is_action_needed_not_blank(self) -> None:
         odd = ORDER | {"state": "Strange"}
