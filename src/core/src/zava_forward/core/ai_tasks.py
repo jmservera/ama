@@ -20,7 +20,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any
 
-from . import projection, ai_prompts, export_fields
+from . import projection, ai_prompts, export_fields, taskqueues
 from .resident_decisions import resident_status
 from .stock import support_status
 
@@ -65,7 +65,7 @@ def source_labels(c, reason_ok=False):
         out += [f"Funding: {f['route']} ({f['status']})", f"Funding route: {f['route']}"]
     open_h = [x for x in c.get("hazards", []) if not x["released"]]
     out.append(f"Open safety issues: {len(open_h)}")
-    out += [f"Safety issue: {x['category']}" for x in c.get("hazards", [])]
+    out += [f"Safety issue: {taskqueues.safe_category(x['category'], reason_ok)}" for x in c.get("hazards", [])]
     has_adjustment = bool(r.get("adjustment")) and r["adjustment"] not in ("None", "Unknown")
     if support_status(r) == "Yes":
         out.append("Extra support: needed")

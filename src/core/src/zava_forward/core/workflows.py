@@ -8,7 +8,7 @@ skip a state.
 from copy import deepcopy
 from datetime import UTC, date, datetime
 
-from . import change_provenance, controls, gates, hazard, identity, insights, projection
+from . import change_provenance, controls, gates, hazard, identity, insights, projection, taskqueues
 
 MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
 HAZARD_PRIORITIES = ("Emergency", "Significant", "Routine")
@@ -109,6 +109,9 @@ def hazard_view(h, case_id):
     out.setdefault("hold", dict(scope="Home", case_id=case_id, status="Released" if h["released"] else "Active",
                                 accountable_role=None, legacy=True))
     out["follow_up"] = deepcopy(h.get("accepted_by") or h.get("sender"))
+    clock = taskqueues.hazard_clock(h, datetime.now(UTC))
+    out["accountable_owner"] = clock["accountable_owner"]
+    out["clock_text"] = clock["clock_text"]
     return out
 
 

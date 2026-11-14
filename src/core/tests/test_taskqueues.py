@@ -181,7 +181,7 @@ class QueueDefinitions(unittest.TestCase):
         self.assertNotIn("overdue", work["queues"])
         hazard.update(released=True, resident_updated_at=None)
         work = evaluate(self.case)
-        self.assertEqual(work["hazard_clocks"], [])
+        self.assertEqual(work["hazard_clocks"][0]["resident_update_state"], "Overdue")
         self.assertIn("overdue", work["queues"])
 
     def test_unnamed_clock_owner_is_stated_plainly_and_never_invented(self) -> None:
@@ -197,6 +197,28 @@ class QueueDefinitions(unittest.TestCase):
         self.assertIn(self.case["owner"], clock["owner_status"])
         self.assertEqual(clock["response_state"], "Open")
         self.assertEqual(clock["resident_update_state"], "Unknown")
+
+    def test_released_item_with_open_deadline_keeps_its_clock_and_blank_owner_falls_back(
+        self,
+    ) -> None:
+        hazard = copy.deepcopy(DATA["cases"][3]["hazards"][0])
+        for key in ("accepted_by", "sender"):
+            hazard.pop(key, None)
+        hazard.update(
+            released=True,
+            owner="   ",
+            category="Safeguarding",
+            response_due_at="2026-12-20",
+            responded_at=None,
+        )
+        self.case["hazards"] = [hazard]
+        clock = evaluate(self.case)["hazard_clocks"][0]
+        self.assertEqual(clock["accountable_owner"], taskqueues.ESCALATION_OWNER)
+        self.assertTrue(clock["clock_text"].startswith("Safeguarding clock"))
+        held = evaluate(self.case, reason_ok=False)["hazard_clocks"][0]
+        self.assertNotIn("afeguard", held["clock_text"])
+        hazard.update(responded_at="2026-10-01", resident_update_due_at=None)
+        self.assertEqual(evaluate(self.case)["hazard_clocks"], [])
 
     def test_structured_blockers_never_invent_person_from_role(self) -> None:
         work = evaluate(

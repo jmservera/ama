@@ -1748,6 +1748,8 @@ function safetyPanel(c, id, refresh) {
       h("dl", { class: "safety-facts" },
         h("dt", {}, "External case"), h("dd", {}, x.job || "Not recorded yet"),
         h("dt", {}, "Zava coordinator"), h("dd", {}, coordinator || "Not assigned yet"),
+        h("dt", {}, "Safety clock"), h("dd", {}, x.clock_text || x.escalation_clock || "Safety clock: elapsed time and target window not supplied."),
+        h("dt", {}, "Accountable owner"), h("dd", {}, x.accountable_owner || "Building Safety lead (escalation owner)"),
         h("dt", {}, "Evidence progress"), h("dd", {}, progress),
         h("dt", {}, "Restart decision"), h("dd", {}, decision
           ? `Restarted by ${decision.actor.name} (${decision.actor.role}). Reason: ${decision.reason}. Evidence: ${decision.evidence}`
