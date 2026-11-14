@@ -594,7 +594,7 @@ resource ledgerDigestMismatch 'Microsoft.Insights/scheduledQueryRules@2023-03-15
   tags: allTags
   properties: {
     displayName: 'Ledger does not match the immutable digests'
-    description: 'The scheduled ledger verification job reported LEDGER_DIGEST_ALERT, or the job run failed.'
+    description: 'The scheduled ledger verification job reported LEDGER_DIGEST_ALERT, or the job run failed. Proposed owner: Digital service owner, actual appointment pending. Runbook: https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md#ledger-digest-mismatch.'
     severity: 1
     enabled: true
     scopes: [monitoring.outputs.workspaceId]
@@ -621,7 +621,7 @@ resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-
   tags: allTags
   properties: {
     displayName: 'Ledger verification did not report success'
-    description: 'No LEDGER_DIGEST_OK line from the daily verification job in 26 hours: the job failed to start or run, or logs are missing. Table names are unconfirmed until checked in the deployed workspace.'
+    description: 'No LEDGER_DIGEST_OK line from the daily verification job in 26 hours: the job failed to start or run, or logs are missing. Table names are unconfirmed until checked in the deployed workspace. Proposed owner: Digital service owner, actual appointment pending. Runbook: https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md#ledger-verify-missing.'
     severity: 1
     enabled: true
     scopes: [monitoring.outputs.workspaceId]
