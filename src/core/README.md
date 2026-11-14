@@ -738,6 +738,33 @@ Tests use the public tiny synthetic fixture with temporary JSON/SQLite storage.
 Full #96/#98 approved readiness/export and #99 envelope/breach acceptance remain
 blocked on human decisions. No issue closure or production acceptance is implied.
 
+## Investment envelope, liquidity and downside tolerance controls (#99)
+
+`exposure_limits.record_limits(approval, envelope, tolerances, *, liquidity=None)`
+and `exposure_limits.load_limits(path)` record human-approved capital envelope
+limits (`amount`, `currency`, `period` and optional `annual_plan`), optional
+liquidity and covenant minimum headroom floors (`minimum`, `currency` and
+optional paired `covenant_minimum` plus `covenant_unit`), and downside maximum
+tolerances across `safety`, `resident`, `quality`, `capital`, `grant` and
+`capacity`. The module holds zero Zava North Homes figures (`OD-12`, `OD-15`):
+every control requires attributed human approval (`approved_by`/`approver`,
+`YYYY-MM-DD` ISO date or `T` timestamp `approved_at`/`approved_on`, `role`,
+`evidence_ref` and `restart_owner`), and missing, blank, conflicting, stale or
+unrecognised fields raise `LimitsError` or return `Held`.
+
+`exposure_limits.assess(limits, exposure, today=None)` re-validates the supplied
+record, checks non-negative finite observations against upper ceilings and
+signed finite observations against minimum floors (including negative cash or
+covenant deficits), and returns `pause_signal` (`paused=True`,
+`decision_required=True`, `decision_owner=restart_owner`, `automatic_cut=False`)
+whenever any limit is breached, unknown, missing or stale. A within-limits
+result returns `No pause signal` and explicitly states it is not approval to
+accelerate; nothing automatically cuts, contains or restarts live delivery.
+
+```bash
+python3 -m unittest discover -s tests -p 'test_*99*.py' -v
+```
+
 ## Resident advisory assistant (#469)
 
 `resident_assistant.advise(topic, CaseProgress(...), provider)` builds bounded
