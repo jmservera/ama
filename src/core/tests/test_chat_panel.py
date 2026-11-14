@@ -958,13 +958,35 @@ class HybridAttributionTests(unittest.TestCase):
         reply = self.ask(lambda s, p: draft)
         self.assertEqual(reply["kind"], "answer")
         self.assertEqual(reply["answer_source"], "generative-grounded")
-        self.assertIn("generative", reply["answer_source_label"])
+        self.assertIn("Generative model suggestion", reply["answer_source_label"])
         self.assertEqual(reply["citations"][0]["source_kind"], "case-record")
+
+    def test_unsupported_figure_with_no_rule_answer_stays_withheld(self) -> None:
+        draft = json.dumps(dict(answer="Funding of 40.5m is secured.", citations=["ZF-4/stage"]))
+        reply = self.ask(lambda s, p: draft, "Please summarise this")
+        self.assertEqual((reply["kind"], reply["answer_source"]), ("withheld", "withheld"))
+        self.assertEqual(reply["answer_origin"], "withheld")
+        self.assertNotIn("40.5m", reply["reply"])
+        self.assertIn("did not support a stated status or figure", reply["answer_source_label"])
+        self.assertEqual(reply["citations"], [])
+
+    def test_origin_separates_rules_model_and_withheld(self) -> None:
+        ctx = ChatIsolation(self.store, env=self.ENV).case_context(self.user, "ZF-4")
+        assert ctx is not None
+        draft = json.dumps(dict(answer=f"Stage: {ctx['stage']}", citations=["ZF-4/stage"]))
+        self.assertEqual(self.ask(lambda s, p: draft)["answer_origin"], "generative_model")
+        self.assertEqual(self.ask(None)["answer_origin"], "decision_rule")
+        for question in ("what can I do to unblock this case?", "how can we fix this safety?"):
+            reply = self.ask(lambda s, p: draft, question)
+            self.assertEqual(
+                (reply["answer_origin"], reply["consumption"]["model_calls"]), ("decision_rule", 0)
+            )
 
     def test_workflow_only_answers_are_attributed_to_decision_rules(self) -> None:
         reply = self.ask(None)
         self.assertEqual(reply["answer_source"], "decision-rules")
-        self.assertIn("No generative AI model", reply["answer_source_label"])
+        self.assertIn("not generative AI", reply["answer_source_label"])
+        self.assertEqual(reply["answer_origin"], "decision_rule")
 
     def test_failed_dispatch_settles_meter_as_ineligible(self) -> None:
         def failing(system: str, prompt: str) -> str:
