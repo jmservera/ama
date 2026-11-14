@@ -4,21 +4,72 @@ Local engineering evidence on synthetic rows. The trend is deterministic directi
 labelled advisory, never enters the captured Quality source or snapshot digest, and changes no gate.
 """
 
+import copy
+import dataclasses
 import json
+import shutil
+import tempfile
 import time
 import unittest
 from collections.abc import Sequence
+from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 
-from zava_forward.core import sensor_view
-from zava_forward.core.sensor_consumer import READING_COLUMNS
-
-import test_quality_sensors as tqs
+import release_support
+from sensor_consumer_fixture import CONTROL, POLICY
+from tests import test_mvp
+from zava_forward.core import projection, sensor_view
+from zava_forward.core.assistants import Assistants
+from zava_forward.core.sensor_consumer import READING_COLUMNS, SensorConsumer
+from zava_forward.core.sqlstore import SqlStore
 
 DAY = 86400
+DEFAULT = "SENS-SYN-1"
+ASSIST_CONFIG = {
+    "ZF_ASSIST_AUTHORITY": "local-nonbillable-test-authority",
+    "ZF_ASSIST_EXPIRES": "2099-01-01T00:00:00Z",
+    "ZF_ASSIST_CALL_ALLOWANCE": "100",
+    "ZF_ASSIST_TOKEN_ALLOWANCE": "2000000",
+    "ZF_ASSIST_PROACTIVE": "1",
+}
 
 
-class Trend(tqs.Seed):
+def stamp(seconds: float) -> str:
+    return datetime.fromtimestamp(seconds, UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+class Trend(unittest.TestCase):
+    def setUp(self) -> None:
+        root = Path(tempfile.mkdtemp(prefix="sensor-trend-test-"))
+        self.addCleanup(shutil.rmtree, root, ignore_errors=True)
+        data = copy.deepcopy(test_mvp.DATA)
+        people = [
+            dict(code=f"ROLE-{i}", name=f"Human {i}", email=f"human{i}@example.test", role=role)
+            for i, role in enumerate(projection.STAFF_ROLES + ("Contractor", "Unknown"))
+        ]
+        data["staff"] = people
+        self.pm = next(p for p in people if p["role"] == "Retrofit Programme Manager")
+        (root / "seed.json").write_text(json.dumps(data))
+        self.store = SqlStore(str(root / "seed.json"), str(root / "cases.sqlite"))
+        self.service = Assistants(self.store, ASSIST_CONFIG)
+        release_support.install(self.store)
+        self.addCleanup(self.store.db.close)
+        self.addCleanup(self.service.stop)
+        with self.service.transaction() as db:
+            for table in (
+                "sensor_reading",
+                "sensor_consumer_control",
+                "sensor_consumer_control_home",
+                "sensor_consumer_index_state",
+                "sensor_consumer_policy",
+            ):
+                db.execute(f"DROP TABLE IF EXISTS {table}")
+
+    def put(self, count: int = 0, consent: str = "granted") -> None:
+        control = dataclasses.replace(CONTROL, sensor_id=DEFAULT, home_id="ZF-1", consent=consent)
+        SensorConsumer(self.store).configure(POLICY, [control])
+
     def view(self) -> Any:
         return self.service.sensors(self.pm, "ZF-1")
 
@@ -27,7 +78,7 @@ class Trend(tqs.Seed):
         temps: Sequence[float | str],
         humid: Sequence[float | str],
         days: float = 6.0,
-        sensor: str = tqs.DEFAULT,
+        sensor: str = DEFAULT,
     ) -> None:
         """Evenly spaced readings from `days` ago to one hour ago."""
         end = int(time.time()) - 3600
@@ -38,7 +89,7 @@ class Trend(tqs.Seed):
                     sensor_id=sensor,
                     reading_id=f"T-{i:04d}",
                     home_id="ZF-1",
-                    observed_at=tqs.stamp(end - (len(temps) - 1 - i) * step),
+                    observed_at=stamp(end - (len(temps) - 1 - i) * step),
                     temperature_c=str(t),
                     humidity_pct=str(h),
                     source_type="SYNTHETIC",
@@ -66,7 +117,7 @@ class Trend(tqs.Seed):
         self.assertIn("Moisture (relative humidity) is falling", humid["text"])
         self.assertEqual(temp["unit"], "degC")
         self.assertIsNone(trend["reason"])
-        self.assertEqual(trend["sensor_id"], tqs.DEFAULT)
+        self.assertEqual(trend["sensor_id"], DEFAULT)
         self.assertLessEqual(trend["readings_used"], 2 * sensor_view.TREND_SIDE_MAX)
 
     def test_steady_within_thresholds(self) -> None:
