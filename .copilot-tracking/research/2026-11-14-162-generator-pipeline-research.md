@@ -1,0 +1,8 @@
+# Research: #162 reproducible generator pipeline and seed manifest
+
+Disposition: executed. Planning Readiness: Ready.
+
+* Existing generators (`scale_fixture`, `sensor_backfill`, `sensor_scenarios`) use seeded `random.Random`, record seed, `as_of`, source revision and file hashes via `provenance.py`, and `determinism_audit.py` replays them twice.
+* Gaps against #162: no common config version, no generation timestamp, no output digest independent of timestamp, and no validation gate before the output directory is created.
+* Decision: add one generic `synthetic/generator_pipeline.py` rather than change each generator; existing manifests stay untouched.
+* Reuse `provenance.prepare_output` (non-destructive output) and `provenance.file_hashes`.
