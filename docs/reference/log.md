@@ -11789,3 +11789,16 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a dated note to the [WCAG baseline](research/ux/wcag-conformance-baseline.md) status-messages row and to the API README criterion audit: regulatory alert and cited-lookup states carry a glyph and border shape, plain-language explanations cover outcomes, no-source, doubt and unknown coverage, and Escape restores focus to the lookup summary.
 * Local engineering evidence only (static tests and the browser check with axe 4.10.3). No screen-reader, assistive-technology, conformance or staff comprehension claim; criterion 5 stays unmet.
 * Added the #1611 static regression `src/api/tests/test_home_chat_regulatory_keyboard_provenance.py` (native controls, launcher aria state, Escape and Close focus return, live regions, provenance, source count and a persistent per-reply outcome line), recorded under the 2026-11-14 RPI artifacts. Static local evidence only; no tick or closure.
+
+## [2026-11-14] update | Issue #233 tension callouts and same-home stage statement (Refs #233)
+
+* Added plain-language "Tension: continuity versus disclosure" and "Tension: utilisation versus choice" callouts to `programme-queue`, `resident-choice` and `procurement-packages`, labelled atlas hypotheses pending #155 with a text status line and no role simulator.
+* The programme-queue journey stage map now states that every link carries the one selected home and that separate example homes are never stages of it. Updated [atlas-screen-trace.md](research/ux/atlas-screen-trace.md); new test `src/api/tests/test_role_screens_tensions_same_home.py`. Engineering trace only: no browser, assistive-technology or user evidence; the criteria are not ticked.
+
+## [2026-11-14] update | Issue #233 same-home stage map on every role screen (Refs #233)
+
+* The eight-stage "Journey stages for <home>" map, previously only on the `programme-queue` home view, now follows the evidence on every other role screen once a home is selected. Links carry the one selected case reference; the current screen is written as text, a screen outside the stages says so, and stage screens not installed for the role stay text with owner and next action. Updated [atlas-screen-trace.md](research/ux/atlas-screen-trace.md); new test `src/api/tests/test_role_screens_connected_journey.py`. Node render evidence only: no browser, assistive-technology or user evidence; Criterion 2 stays unticked.
+
+## [2026-11-14] update | Issue #233 stage map names and current-step announcement (Refs #233)
+
+* The role-screen journey stage list is now named "Eight journey stages for <home>" and marks the current stage with `aria-current="step"` once (resident-choice serves two stages), alongside the existing text cue. New test `src/api/tests/test_role_screens_stage_map_focus.py` also pins no added tab stops or nested headings and the text status line on tension callouts. Node render evidence only: no browser, assistive-technology or user evidence; Criterion 2 stays unticked.

@@ -23,6 +23,16 @@ const screenUnknown = (reason, owner, action) => h("div", { class: "blocked" },
 const screenWithheld = (items) => screenPanel("Not shown for this role",
   h("p", {}, "These items exist in the wider case but are not displayed on this screen. They are listed so that their absence is not read as nothing recorded. Withholding is not authorisation: your access is unchanged and no record changes."),
   h("ul", {}, items.map((item) => h("li", {}, item))));
+// Tension callouts: plain text status, no colour or icon meaning. Atlas hypotheses until validated in #155.
+const screenTensionText = {
+  disclosure: ["Tension: continuity versus disclosure",
+    "This screen carries the home and its owner forward so the resident is not asked again, and shows only the fields this role needs. Anything held back is listed under \"Not shown for this role\" instead of being left out silently. Withholding is not authorisation."],
+  choice: ["Tension: utilisation versus choice",
+    "A recorded resident choice, pause or withdrawal comes first. Contractor capacity is only offered or committed, never a booking or a promise, and packages are never ranked by utilisation or headroom."]
+};
+const screenTension = (kind) => screenPanel(screenTensionText[kind][0],
+  h("p", {}, "Status: proposed design rule. Atlas hypothesis, pending validation in #155; not observed behaviour."),
+  h("p", {}, screenTensionText[kind][1]));
 function screenTable(label, headings, rows, limit = 50, cell = (value) => screenValue(value), rowHeader = false) {
   return h("div", {},
     rows.length > limit && h("p", { role: "status" }, `Showing the first ${limit} of ${rows.length} records. Open the case workspace to inspect the remaining evidence. This is not a complete readiness check.`),
@@ -105,6 +115,7 @@ async function roleScreensView() {
     h("h2", {}, `Selected home ${c.id}`),
     h("p", {}, "Recorded evidence only. Missing, stale or withheld information cannot establish readiness. No message, approval or record change is made from this screen."),
     await screen.render(c, extra),
+    !screen.ownsStageMap && journeyStageMap(c, screen.id),
     h("p", {}, h("a", { href: `#/case/${encodeURIComponent(c.id)}` }, "Open existing case workspace")))
     : h("div", {}, h("p", { class: "empty" }, "No home selected. Choose a home from this queue."), overview);
   signal.throwIfAborted();
@@ -514,19 +525,26 @@ const journeyStages = [
   ["7. Handover and live with measures", "resident-choice", "Open remedies are not closed by handover."],
   ["8. Reconcile and learn", "finance-invoices", "No award is inferred from an invoice."]
 ];
-function journeyStageMap(c) {
+// current is the screen showing the map; its stages render as text so the walker sees where they are, and a screen outside the eight stages says so.
+function journeyStageMap(c, current = null) {
   const open = (id) => roleScreens.has(id) && roleScreens.get(id).roles.includes(me.user.role);
   return screenPanel(`Journey stages for ${c.id}`,
-    h("p", {}, "One home, eight stages. Each stage opens the screen that shows its own state for this same home. Stages are separate states: no stage clears another, and a link is navigation only. This map is a design hypothesis, not observed behaviour."),
-    h("ol", {}, journeyStages.map(([stage, id, boundary]) => h("li", {},
+    h("p", {}, "One home, eight stages. Each stage opens the screen that shows its own state for this same home. Every link carries this one home's case reference. Separate example homes are never shown as stages of this home. Stages are separate states: no stage clears another, and a link is navigation only. This map is a design hypothesis, not observed behaviour."),
+    current && !journeyStages.some(([, id]) => id === current)
+      && h("p", {}, `This screen is not one of the eight stages. It shows the same home ${c.id}.`),
+    h("ol", { "aria-label": `Eight journey stages for ${c.id}` }, journeyStages.map(([stage, id, boundary], index) => h("li",
+      // The text "You are on this screen" stays the cue; aria-current adds the native step announcement once, as resident-choice serves two stages.
+      { "aria-current": id !== null && id === current && journeyStages.findIndex(([, other]) => other === current) === index ? "step" : null },
       // Link text carries the stage name so stages sharing a screen stay distinct in link lists (WCAG 2.4.4).
-      id !== null && open(id) ? h("a", { href: screenHref(id, c.id) }, `${stage}: ${roleScreens.get(id).title}`)
+      id !== null && id === current ? `${stage}: ${roleScreens.get(id).title}. You are on this screen, showing home ${c.id}.`
+      : id !== null && open(id) ? h("a", { href: screenHref(id, c.id) }, `${stage}: ${roleScreens.get(id).title}`)
         : `${stage}: ${id === null ? "no screen yet (recorded deferral)."
           : `${roleScreens.get(id)?.title || id} is not installed for your role. Your access has not changed. Owner: your team manager. Next action: ask them to add it for your role.`}`,
       ` ${boundary}`))));
 }
 registerRoleScreen({
   id: "programme-queue",
+  ownsStageMap: true,
   title: "Programme queue and connected home view",
   roles: [...screenManagers, "Retrofit Coordinator"],
   async overview(signal, items, c, page = 0) {
@@ -540,6 +558,7 @@ registerRoleScreen({
         h("p", {}, "Read-only view of recorded work. Chase and update responsibility are shown separately. Nothing here sends, assigns or changes a record. Source: desk research, not observed behaviour; validation remains open.")),
       screenPanel("Shared queue", programmeQueue(first.items || [], first.total, loadPage, start)),
       screenPanel("Lifecycle and funnel", programmeFunnel(report)),
+      screenTension("disclosure"),
       screenWithheld(["Resident contact details and access history (open the case workspace for the safe route reference)",
         "Household and vulnerability details beyond what a queue row needs", "Funding amounts and claim values"]));
   },
@@ -556,6 +575,7 @@ registerRoleScreen({
         blocked[0][3], blocked[0][4]) : h("p", {}, "No blocker is recorded, which does not confirm readiness."),
       screenTable("Same-home step states", ["Step", "State", "Meaning", "Owner", "Next action"], rows),
       journeyStageMap(c),
+      screenTension("disclosure"),
       screenWithheld(["Resident contact details and access history (use the safe route reference in the case workspace)",
         "Household and vulnerability details beyond what a step state needs", "Funding amounts and claim values"]));
   }
@@ -801,6 +821,8 @@ registerRoleScreen({
           requests.map((r) => [r.id, r.route, serviceStatus(r), serviceNeeds(r), r.next_update]))),
       screenPanel("Choice comes before offered capacity",
         h("p", {}, "A recorded choice, pause or withdrawal takes precedence over any offered contractor slot. An offered slot is not a booking and not a promise to the resident. Offered capacity is shown on the Package queue screen, not here.")),
+      screenTension("choice"),
+      screenTension("disclosure"),
       screenWithheld(["Resident phone, email and postal contact history (shown only as a safe route reference)",
         "Detailed access and household history beyond the contact needs above", "Contractor capacity and offered slots"]));
   }
@@ -1169,6 +1191,7 @@ registerRoleScreen({
         h("p", {}, `Work orders shown are for home ${c.id} only.`)),
       screenPanel("Offered capacity and resident choice",
         h("p", {}, "Offered capacity is not a booking and not a promise to any resident. A resident's measure-specific choice, pause or withdrawal is recorded and shown on the Resident choice screen, and it takes precedence over any offered slot. Packages are listed in reference order, never ranked by utilisation or headroom.")),
+      screenTension("choice"),
       screenPanel("Package queue",
         screenTable("Packages with period, scope, version and capacity",
           ["Package", "Period", "Scope and version", "Contract or call-off reference", "Contractor", "Offered", "Recorded committed", "In use", "Recorded headroom", "Capacity evidence status"],
