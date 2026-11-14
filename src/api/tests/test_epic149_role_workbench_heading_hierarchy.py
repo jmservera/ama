@@ -107,6 +107,8 @@ class RoleWorkbenchStructure(MatrixServer):
 
     @classmethod
     def render(cls, page: Any, role: str, view: str) -> None:
+        # A hash-only change keeps the previous view's DOM, so reset the page to read this view.
+        page.goto("about:blank")
         page.goto(cls.base + "/app" + view)
         page.wait_for_selector("#app h1")
         page.wait_for_load_state("networkidle")

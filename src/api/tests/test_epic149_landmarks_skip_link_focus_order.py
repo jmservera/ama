@@ -80,7 +80,8 @@ class Rendered(unittest.TestCase):
         path.write_text(json.dumps(data))
         cls.store = SqlStore(str(path), str(path.with_suffix(".sqlite")))
         cls.httpd = ThreadingHTTPServer(
-            ("127.0.0.1", 0), make_handler(App(cls.store, "SYN-landmarks-test"))
+            ("127.0.0.1", 0),
+            make_handler(App(cls.store, "SYN-landmarks-test")),  # type: ignore[no-untyped-call]
         )
         cls.thread = threading.Thread(target=cls.httpd.serve_forever, daemon=True)
         cls.thread.start()
