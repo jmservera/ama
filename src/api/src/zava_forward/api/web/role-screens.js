@@ -15,8 +15,13 @@ const screenStamp = (value) => {
 const screenFields = (rows) => h("dl", {}, rows.flatMap(([label, value]) => [
   h("dt", {}, label), h("dd", {}, screenValue(value))
 ]));
-const screenPanel = (title, ...children) => h("section", { class: "card screen-record" },
-  h("h2", {}, title), ...children);
+// A leading { anchor } child makes the panel a named jump target; its heading takes focus programmatically only.
+const screenPanel = (title, ...children) => {
+  const anchor = children[0]?.anchor ? children.shift().anchor : null;
+  return anchor
+    ? h("section", { class: "card screen-record", id: anchor }, h("h2", { id: `${anchor}-heading`, tabindex: -1 }, title), ...children)
+    : h("section", { class: "card screen-record" }, h("h2", {}, title), ...children);
+};
 const screenUnknown = (reason, owner, action) => h("div", { class: "blocked" },
   h("p", { class: "blocked-title" }, "Cannot confirm readiness"),
   screenFields([["Why it is blocked", reason], ["Owner", owner], ["Next action", action]]));
@@ -237,6 +242,50 @@ function assetUsage(report) {
         components.map(([name, value]) => [name, value === "Unknown" ? "Unknown" : `${value}${unit}`]))
       : null);
 }
+const assetSections = [
+  ["asset-summary", "Summary in words"],
+  ["asset-queue", "Stock conflict queue"],
+  ["asset-comparison", "Stock conflict comparison"],
+  ["asset-inputs", "Missing investment inputs"],
+  ["asset-checks", "Benefits and phase check"],
+  ["asset-portfolio", "Portfolio scope"],
+  ["asset-ai", "AI cohort and usage"]
+];
+const assetJumpNav = () => h("nav", { "aria-label": "Sections of this view", class: "screen-links" },
+  assetSections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading` }, title)));
+const assetNote = (text) => h("p", { class: "empty" }, text);
+// State is always words first, so colour, icons or position never carry the meaning alone.
+const assetState = (state, meaning) => `State: ${state}. ${meaning}`;
+const assetUnknownState = "Not evidenced for this home or portfolio";
+if (typeof document !== "undefined" && typeof document.addEventListener === "function") {
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest?.("a[data-jump]");
+    if (!link) return;
+    event.preventDefault();
+    document.getElementById(link.getAttribute("data-jump"))?.focus();
+  });
+}
+function assetSummary(extra, report) {
+  const m = report?.consumption;
+  const queue = extra?.queue;
+  const conflicts = queue ? `${queue.items.length} homes with an open stock conflict` : "Unknown (the cross-home queue could not be loaded)";
+  const rows = [
+    ["Permitted cases (role-scoped count)", Number.isInteger(extra?.portfolio?.total) ? `State: Counted. ${extra.portfolio.total} cases` : assetState("Unknown", "The count could not be loaded"),
+      "A count of cases your role may read, not a stock, budget or programme total."],
+    ["Stock conflicts across homes", queue ? `State: ${queue.items.length ? "Open" : "None recorded"}. ${conflicts}` : assetState("Unknown", conflicts),
+      "Ordered by source age only. Not an investment priority."],
+    ["Risk band", assetState("Unknown", "No risk band is recorded or calculated here"), "Nothing on this view ranks homes by risk."],
+    ["Delivery milestones (phase checks)", assetState("Unknown", `${assetGates.length} of ${assetGates.length} checks have no dated evidence`), "A named owner must supply dated evidence before a check is read as passed."],
+    ["Investment inputs", assetState("Unknown", `${assetInputs.length} of ${assetInputs.length} inputs missing`), "Budgets, priorities and forecasts stay Unknown unless a constructed fixture says so."],
+    ["AI cohort quality floor", assetState(screenValue(m?.quality_status), m ? "As reported for all homes" : "The AI report could not be loaded"), "Ledger-wide, not this home."],
+    ["AI cost per accepted outcome", assetState("Unknown", "Other cost components are not complete and quality-qualified"), "A token count is never shown as the cost of AI."]
+  ];
+  return [
+    h("p", {}, "Every figure below is stated in words. Status never depends on colour. Use the section links to move between sections, or the heading list of your screen reader."),
+    assetNote("The summary table has three columns: measure, state in words, and what the state means."),
+    screenTable("Portfolio summary in words", ["Measure", "State in words", "What it means"], rows, 100, undefined, true)
+  ];
+}
 registerRoleScreen({
   id: "asset-board",
   title: "Asset and board view",
@@ -252,10 +301,12 @@ registerRoleScreen({
     const queries = c.stock_reconciliation || [];
     const owner = queries.find((q) => assetStatus(c, q) === "Unresolved")?.query_owner;
     return h("div", {},
+      assetJumpNav(),
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only reader view. It records no investment approval and changes no record. Budgets, priorities, forecasts and eligibility are Unknown unless a constructed fixture says so, and this page cannot confirm them. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
-      screenPanel("Stock conflict queue across homes (portfolio scope, not this home)",
+      screenPanel("Summary in words", { anchor: "asset-summary" }, ...assetSummary(extra, extra?.report)),
+      screenPanel("Stock conflict queue across homes (portfolio scope, not this home)", { anchor: "asset-queue" },
         h("p", {}, "Homes with an open stock conflict, oldest source first. The order is source age only. It is not an investment priority, and no source is chosen as correct."),
         extra?.queue ? h("p", {}, h("a", { class: "btn alt", href: "/api/asset/stock-queue.csv", download: "stock-queue.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back.") : null,
         extra?.queue
@@ -263,7 +314,7 @@ registerRoleScreen({
             extra.queue.items.map((r) => [`${r.id}, ${r.address}, ${r.town}`, r.open_queries, (r.fields || []).join(", "), `${r.oldest_source_date}, ${assetAgeDays(r.oldest_source_date)}`,
               (r.owners || []).join(", ") || "Unassigned", "Unknown. See missing investment inputs."]), 100)
           : screenUnknown("The cross-home queue could not be loaded.", "Programme manager", "Reload, or open each home from the case queue")),
-      screenPanel("Stock conflict comparison",
+      screenPanel("Stock conflict comparison", { anchor: "asset-comparison" },
         screenTable("Stock source conflicts and source age",
           ["Query", "Field", "First source (value, ID, version, age)", "Compared source (value, ID, version, age)", "Status", "Resolution owner"],
           queries.map((q) => [q.id, q.field,
@@ -274,19 +325,19 @@ registerRoleScreen({
         screenFields([["Eligibility", "Unknown"],
           ["Resolution owner", owner ? screenPerson(owner) : "Unassigned. Programme manager to name an owner."],
           ["Next action", "Obtain source-authority review. Nothing here selects a winning source."]])),
-      screenPanel("Missing investment inputs",
+      screenPanel("Missing investment inputs", { anchor: "asset-inputs" },
         screenTable("Investment inputs", ["Input", "State", "Resolution owner and action"],
-          assetInputs.map(([name, action]) => [name, "Unknown", action]))),
-      screenPanel("Benefits and phase check",
+          assetInputs.map(([name, action]) => [name, assetState("Unknown", assetUnknownState), action]))),
+      screenPanel("Benefits and phase check", { anchor: "asset-checks" },
         screenUnknown("No measured benefit or phase check evidence is supplied for this home.", "Programme manager to name an owner", "Supply dated evidence before any phase check is read as passed"),
         h("p", {}, "Each check below stays Unknown until a named owner supplies dated evidence. This view does not pass a check, release a tranche or pause or restart work. The Board or its delegated owners decide."),
         screenTable("Phase checks and benefits",
           ["Check", "State", "Evidence needed", "Evidence owner", "Who decides"],
-          assetGates.map(([name, need, owner, decider]) => [name, "Unknown", need, owner, decider]))),
-      screenPanel("Portfolio scope (separate from this home)",
+          assetGates.map(([name, need, owner, decider]) => [name, assetState("Unknown", assetUnknownState), need, owner, decider]))),
+      screenPanel("Portfolio scope (separate from this home)", { anchor: "asset-portfolio" },
         screenFields([["Cases permitted to your role", extra?.portfolio?.total],
           ["Meaning", "A role-scoped count, not a stock, budget or programme total"]])),
-      screenPanel("Ledger-wide AI cohort (all homes, not this home)", assetCost(extra?.report)),
+      screenPanel("Ledger-wide AI cohort (all homes, not this home)", { anchor: "asset-ai" }, assetCost(extra?.report)),
       screenPanel("Ledger-wide AI usage, alerts and cost components (all homes, not this home)", assetUsage(extra?.report)));
   }
 });
