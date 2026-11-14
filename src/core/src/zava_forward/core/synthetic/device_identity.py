@@ -8,9 +8,10 @@ import re
 import threading
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
+from datetime import datetime
 from typing import Protocol
 
-from zava_forward.core.synthetic import sensor_identity
+from zava_forward.core.synthetic import live_readings, sensor_identity
 
 VERSION = "simulated-device-identity-v1"
 RUN_ID = re.compile(r"[a-z0-9][a-z0-9-]{2,31}")
@@ -81,6 +82,28 @@ class DeviceIdentity:
             or self.sensor_id != sensor_identity.sensor_key(self.home_id)
         ):
             raise DeviceIdentityError("INVALID_DEVICE_IDENTITY")
+
+
+def verify_envelope(device_id: str, row: Mapping[str, object]) -> None:
+    """Bind a message to its own per-home Hub identity, schema version and stable reading ID."""
+    sensor_id, home_id = row.get("sensor_id"), row.get("home_id")
+    if (
+        not isinstance(sensor_id, str)
+        or not isinstance(home_id, str)
+        or device_id != "SYN-" + sensor_id
+        or not sensor_identity.home_key(home_id)
+        or sensor_id != sensor_identity.sensor_key(home_id)
+    ):
+        raise DeviceIdentityError("DEVICE_ENVELOPE_MISMATCH")
+    if row.get("schema_version") not in live_readings.LIVE_VERSIONS:
+        raise DeviceIdentityError("SCHEMA_VERSION_REQUIRED")
+    observed = row.get("observed_at")
+    try:
+        slot = datetime.strptime(str(observed), "%Y-%m-%dT%H:%M:%SZ")
+    except ValueError:
+        raise DeviceIdentityError("READING_ID_MISMATCH") from None
+    if row.get("reading_id") != live_readings.reading_id_for(sensor_id, slot):
+        raise DeviceIdentityError("READING_ID_MISMATCH")
 
 
 @dataclass(frozen=True)
