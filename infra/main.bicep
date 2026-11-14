@@ -174,6 +174,7 @@ var publicAccess = isDev && allowPublicNetworkAccess
 var purgeProtection = !isDev || keyVaultPurgeProtection
 
 var prefix = '${workload}-${environmentName}'
+var runbookBase = 'https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md'
 var applicationPrefix = demoDirectIngress ? '${prefix}-demo' : prefix
 var ledgerJobName = demoDirectIngress ? 'job-${applicationPrefix}-audit' : 'job-${applicationPrefix}-ledger-verify'
 var unique = take(uniqueString(resourceGroup().id, location, 'v2'), 5)
@@ -483,6 +484,7 @@ resource agentThrottle 'Microsoft.Insights/metricAlerts@2018-03-01' = {
   location: 'global'
   tags: allTags
   properties: {
+    description: 'Foundry client errors above threshold. Owner: Digital service owner (proposed role, actual appointment pending). Runbook: ${runbookBase}#foundry-client-errors.'
     severity: 2
     enabled: true
     scopes: [foundry.outputs.id]
@@ -510,6 +512,7 @@ resource sqlCpu 'Microsoft.Insights/metricAlerts@2018-03-01' = {
   location: 'global'
   tags: allTags
   properties: {
+    description: 'SQL CPU above threshold. Owner: Digital service owner (proposed role, actual appointment pending). Runbook: ${runbookBase}#sql-cpu.'
     severity: 3
     enabled: true
     scopes: [resourceId('Microsoft.Sql/servers/databases', 'sql-${prefix}-${unique}', 'retrofit')]
@@ -538,6 +541,7 @@ resource apiErrors 'Microsoft.Insights/metricAlerts@2018-03-01' = if (deployAppl
   location: 'global'
   tags: allTags
   properties: {
+    description: 'API 5xx responses above threshold. Owner: Digital service owner (proposed role, actual appointment pending). Runbook: ${runbookBase}#api-errors.'
     severity: 2
     enabled: true
     scopes: [apps!.outputs.apiId]
@@ -566,6 +570,7 @@ resource apiRestarts 'Microsoft.Insights/metricAlerts@2018-03-01' = if (deployAp
   location: 'global'
   tags: allTags
   properties: {
+    description: 'API container restarts above threshold. Owner: Digital service owner (proposed role, actual appointment pending). Runbook: ${runbookBase}#api-restarts.'
     severity: 3
     enabled: true
     scopes: [apps!.outputs.apiId]
@@ -594,7 +599,7 @@ resource ledgerDigestMismatch 'Microsoft.Insights/scheduledQueryRules@2023-03-15
   tags: allTags
   properties: {
     displayName: 'Ledger does not match the immutable digests'
-    description: 'The scheduled ledger verification job reported LEDGER_DIGEST_ALERT, or the job run failed.'
+    description: 'The scheduled ledger verification job reported LEDGER_DIGEST_ALERT. Owner: Digital service owner with Compliance/Legal for integrity decisions (proposed roles, appointment pending). Runbook: ${runbookBase}#ledger-digest-mismatch.'
     severity: 1
     enabled: true
     scopes: [monitoring.outputs.workspaceId]
@@ -621,7 +626,7 @@ resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-
   tags: allTags
   properties: {
     displayName: 'Ledger verification did not report success'
-    description: 'No LEDGER_DIGEST_OK line from the daily verification job in 26 hours: the job failed to start or run, or logs are missing. Table names are unconfirmed until checked in the deployed workspace.'
+    description: 'No LEDGER_DIGEST_OK line from the daily verification job in 26 hours: the job failed to start or run, or logs are missing. Table names are unconfirmed until checked in the deployed workspace. Owner: Digital service owner (proposed role, appointment pending). Runbook: ${runbookBase}#ledger-verify-missing.'
     severity: 1
     enabled: true
     scopes: [monitoring.outputs.workspaceId]
