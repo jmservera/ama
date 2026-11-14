@@ -11789,3 +11789,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a dated note to the [WCAG baseline](research/ux/wcag-conformance-baseline.md) status-messages row and to the API README criterion audit: regulatory alert and cited-lookup states carry a glyph and border shape, plain-language explanations cover outcomes, no-source, doubt and unknown coverage, and Escape restores focus to the lookup summary.
 * Local engineering evidence only (static tests and the browser check with axe 4.10.3). No screen-reader, assistive-technology, conformance or staff comprehension claim; criterion 5 stays unmet.
 * Added the #1611 static regression `src/api/tests/test_home_chat_regulatory_keyboard_provenance.py` (native controls, launcher aria state, Escape and Close focus return, live regions, provenance, source count and a persistent per-reply outcome line), recorded under the 2026-11-14 RPI artifacts. Static local evidence only; no tick or closure.
+
+## [2026-11-14] update | Issue #215 plain-language mode announcement and wording (Refs #215)
+
+* `chat.js`: the plain-language checkbox now has a visible status text ("shown" or "hidden") in a `role="status"` region; three always-visible technical phrases in alert and lookup copy were replaced with plain wording.
+* Updated the WCAG baseline status-messages row and the content-standard `chat.js` row. Added static tests in `test_regulatory_a11y_cues.py`; adjusted the pinned toggle markup test.
+* Static local evidence only. No screen-reader, assistive-technology, conformance or staff comprehension claim; criteria 3 and 5 of #215 stay unticked. Stacked on #1641.

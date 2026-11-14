@@ -291,9 +291,14 @@ function regulatoryGuidance(role) {
 
 function regulatoryPlainMode(root, id) {
   const input = h("input", { type: "checkbox", id, checked: true });
+  const state = h("span", { class: "regulatory-mode-state", role: "status" }, "Plain-language explanations are shown.");
   root.classList.add("regulatory", "plain-language");
-  input.addEventListener("change", () => root.classList.toggle("plain-language", input.checked));
-  return h("label", { class: "regulatory-mode", for: id }, input, " Plain-language explanations");
+  input.addEventListener("change", () => {
+    root.classList.toggle("plain-language", input.checked);
+    state.textContent = input.checked ? "Plain-language explanations are shown." : "Plain-language explanations are hidden.";
+  });
+  return h("div", { class: "regulatory-mode" },
+    h("label", { for: id }, input, " Plain-language explanations"), state);
 }
 
 const regulatoryStates = new Set(["breach risk", "attention", "unknown", "clear", "not applicable", "answer", "refused", "conflict"]);
@@ -366,9 +371,9 @@ function regulatoryAlertsPanel(caseId) {
           h("dt", {}, "Decision owner"), h("dd", {}, `${alert.decision_owner || "Unassigned"}; route: ${alert.escalation_role || "unknown"}`),
           h("dt", {}, "Clock"), h("dd", {}, `${alert.clock || "No approved clock held"}; due: ${alert.due_at || "unknown, not calculated here"}`),
           h("dt", {}, "Check recorded at"), h("dd", {}, `${alert.at || "unknown"}; step: ${alert.step || "unknown"}; card: ${alert.card_id}@${alert.card_version}`),
-          h("dt", {}, "Current control"), h("dd", {}, alert.active_control ? "Active bounded control" : "Not active or source uncertain; retained risk still needs human review"),
+          h("dt", {}, "Current control"), h("dd", {}, alert.active_control ? "Active: a limited, recorded check" : "Not active or source uncertain; retained risk still needs human review"),
           h("dt", {}, "Latest check"), h("dd", {}, `${alert.latest_result || "unknown"} at ${alert.latest_evaluated_at || "unknown"}`)),
-        h("p", {}, alert.usage ? "Model calls per check and alert: 0. Inference is disabled for every role. Service cost: Unknown; price and billing allocation are not held." : "Historical model usage was not recorded. Service cost: Unknown."),
+        h("p", {}, alert.usage ? "Model calls per check and alert: 0. No AI model is used for any role. Service cost: Unknown; price and billing allocation are not held." : "Historical model usage was not recorded. Service cost: Unknown."),
         h("h4", {}, "Source and status"), regulatorySources(alert.citations),
         h("p", {}, `Owner acknowledgement: ${alert.requires_acknowledgement ? "required" : "not outstanding"}. Owner outcome: ${alert.requires_outcome ? "required" : "not outstanding"}. This panel cannot acknowledge, decide compliance or restart stopped retrofit work.`))));
       status.className = data.coverage_status && data.coverage_status !== "unknown" ? "" : "regulatory-state state-unknown";
@@ -410,7 +415,7 @@ function regulatoryChatPanel(caseId) {
     const n = new Intl.NumberFormat();
     const day = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeZone: "UTC" })
       .format(new Date(`${usage.period}T00:00:00Z`));
-    usageStatus.textContent = `Your current role: ${usage.role}. Recorded usage for ${day} (UTC): ${n.format(usage.recorded_turns)} turns; ${n.format(usage.outcomes.answer)} answers, ${n.format(usage.outcomes.refused)} refusals, ${n.format(usage.outcomes.conflict)} conflicts. ${usage.coverage === "bounded_partial" ? "Partial audit window." : "Audit records only."} This is not an exact turn total. Model-call limit per role and UTC day: 0. Service cost: Unknown; accepted-check counts, prices, billing allocation and review effort are not held.`;
+    usageStatus.textContent = `Your current role: ${usage.role}. Recorded usage for ${day} (UTC): ${n.format(usage.recorded_turns)} turns; ${n.format(usage.outcomes.answer)} answers, ${n.format(usage.outcomes.refused)} refusals, ${n.format(usage.outcomes.conflict)} conflicts. ${usage.coverage === "bounded_partial" ? "Counts cover part of the audit period only." : "Counts come from audit records only."} This is not an exact turn total. Model-call limit per role and UTC day: 0. Service cost: Unknown; accepted-check counts, prices, billing allocation and review effort are not held.`;
   };
   const refreshUsage = async () => {
     try { showUsage(await api("/api/chat/regulatory/usage")); }
@@ -427,7 +432,7 @@ function regulatoryChatPanel(caseId) {
       h("h3", { class: regulatoryStateClass(answer.kind) }, `Lookup status: ${answer.kind}`),
       h("p", { class: "plain-explanation" }, lookupMeanings[answer.kind] || lookupMeanings.refused),
       h("p", {}, answer.label || "synthetic-demo: not legal advice or approval"),
-      h("p", {}, answer.usage ? "Model calls for this question: 0. Inference is disabled. Service cost: Unknown, not zero." : "Historical model usage was not recorded. Service cost: Unknown."));
+      h("p", {}, answer.usage ? "Model calls for this question: 0. No AI model is used. Service cost: Unknown, not zero." : "Historical model usage was not recorded. Service cost: Unknown."));
     if (sections) {
       item.append(h("h4", {}, "What the sources say"),
         h("p", { class: "plain-explanation" }, "These are exact excerpts, not a decision about which duty applies. Check the source status and dates."),
