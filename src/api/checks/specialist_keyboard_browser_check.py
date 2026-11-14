@@ -43,7 +43,7 @@ STATUS_ATTRS = {"role": "status", "aria-live": "polite", "aria-atomic": "true"}
 EXPECTED_REGIONS: dict[str, tuple[str, ...]] = {
     "resident-choice": ("Measure choices by version",),
     "hazard-triage": ("Hazard referrals for this home", "Scoped pause and release evidence"),
-    "asset-board": ("Investment inputs", "Phase checks and benefits"),
+    "asset-board": ("Summary in words", "Investment inputs", "Phase checks and benefits"),
     "programme-queue": ("Same-home step states",),
     "technical-queue": ("Sign-off validity after design changes",),
     "safety-lead": ("Hazard referrals for this home", "Scoped pause and release evidence"),

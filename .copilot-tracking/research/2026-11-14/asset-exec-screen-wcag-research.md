@@ -18,3 +18,8 @@ Issue #226 criterion: Accessible per the WCAG 2.2 baseline (#151) with textual s
 ## Planning readiness
 
 Ready. Research is desk-based, not observed behaviour; validation remains in #155.
+
+## Cycle 1 correction (independent-direct-226-exec-068fc41c7)
+
+* `test_connected_home_check.py` locates panels by the literal `screenPanel("Title"` in `role-screens.js`, so a renamed helper hides panels from the dependency manifest.
+* `connected_home_browser_check.py` `EXCLUDED["asset-board"]` and `specialist_keyboard_browser_check.py` `EXPECTED_REGIONS["asset-board"]` must name the new "Summary in words" panel.

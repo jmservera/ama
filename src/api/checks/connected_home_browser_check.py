@@ -423,6 +423,9 @@ EVIDENCE_CONSTANT = Excluded("constant", "Read-only", "literal text only; no cas
 EXCLUDED: dict[str, dict[str, Excluded]] = {
     "asset-board": {
         "Evidence boundary": EVIDENCE_ID_ONLY,
+        "Summary in words": Excluded(
+            "portfolio-call", "/api/asset/stock-queue", "portfolio-level summary of the all-homes calls"
+        ),
         "Stock conflict queue across homes (portfolio scope, not this home)": Excluded(
             "portfolio-call", "/api/asset/stock-queue", "built from the all-homes stock queue call"
         ),

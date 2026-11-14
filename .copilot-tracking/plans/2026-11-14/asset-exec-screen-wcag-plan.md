@@ -14,3 +14,9 @@ ms.date: 2026-11-14
 ## Critique
 
 One pass: no new controls, no `aria-invalid`, no `role="status"`; existing assertions on section structure and read-only behaviour are kept.
+
+## Cycle 1 correction
+
+* [x] Remove `assetPanel`; `screenPanel` accepts an optional leading `{ anchor }` child so call sites keep the literal `screenPanel("Title"`.
+* [x] Add "Summary in words" to `EXCLUDED["asset-board"]` (portfolio-level summary) and to `EXPECTED_REGIONS["asset-board"]`.
+* [x] Critique: one pass, no new controls or ARIA; DOM output of the asset panels is unchanged.
