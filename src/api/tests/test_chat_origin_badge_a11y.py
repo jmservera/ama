@@ -78,7 +78,7 @@ class OriginBadgeAnnouncementTests(unittest.TestCase):
 class LiveRegionAndDisclosureTests(unittest.TestCase):
     def test_log_and_status_are_polite_live_regions_and_not_assertive(self) -> None:
         self.assertRegex(
-            WIDGET, r'role: "log", "aria-live": "polite", "aria-relevant": "additions"'
+            WIDGET, r'role: "log", "aria-live": "polite", "aria-relevant": "additions text"'
         )
         self.assertRegex(WIDGET, r'role: "status", "aria-live": "polite", "aria-atomic": "true"')
         self.assertNotIn('"aria-live": "assertive"', WIDGET)
