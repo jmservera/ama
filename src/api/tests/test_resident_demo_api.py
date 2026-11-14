@@ -745,7 +745,8 @@ class AbuseAndHardeningTests(DemoTestCase):
             self.own_every_slot(owned)
             status, body, response = client.call("GET", "/demo/view")
             self.assertEqual(status, 503)
-            self.assertEqual(body["retry_after"], demo.RETRY_AFTER_SECONDS)
+            self.assertEqual(body["retry_after_seconds"], demo.RETRY_AFTER_SECONDS)
+            self.assertEqual(body["error"], demo.BUSY)
             self.assertEqual(response.getheader("Retry-After"), str(demo.RETRY_AFTER_SECONDS))
         finally:
             for _ in owned:
