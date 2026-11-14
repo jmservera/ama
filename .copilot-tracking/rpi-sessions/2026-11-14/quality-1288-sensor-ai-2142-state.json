@@ -38,8 +38,8 @@
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "Await user selection of a ranked post-Review follow-up item, Stop automatic session, or Switch to manual mode"
+    "phase": "Research",
+    "action": "Spawn child automatic RPI loop quality-1288-sensor-ai-2142-c2 for PR #1745 Cycle-2 rebase onto origin/feat/demo-164-chat-grounding-provenance-0900 (5f50fc238)"
   },
   "prioritized_follow_ups": [
     {
