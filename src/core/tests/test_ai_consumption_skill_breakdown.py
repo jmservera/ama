@@ -4,9 +4,14 @@ from __future__ import annotations
 
 import unittest
 
-from tests import test_ai_consumption as base
-
-from zava_forward.core.ai_consumption import UNKNOWN, tariff_basis, token_breakdown, usage
+import test_ai_consumption as base
+from zava_forward.core.ai_consumption import (
+    UNKNOWN,
+    reference,
+    tariff_basis,
+    token_breakdown,
+    usage,
+)
 
 
 class SkillBreakdownTests(unittest.TestCase):
@@ -21,7 +26,7 @@ class SkillBreakdownTests(unittest.TestCase):
     def run_call(self, root: str, capability: str, **tokens: int | dict[str, int]) -> None:
         self.authorize(capability=capability, authority=f"auth-{capability}")
         ticket = self.ledger.reserve(
-            self.context(capability, root=base.reference(root), capability=capability),
+            self.context(capability, root=reference(root), capability=capability),
             base.MODEL,
             1000,
             100,
