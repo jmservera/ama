@@ -744,9 +744,16 @@ estimates, not a replacement for the unavailable automated whole-study
 primary or a resolution of scheduling/service dependence.
 
 Both estimated gains are small relative to the earlier ten-point practical
-benchmark. Missing-outcome bounds for B--C and E--B retain all allocated
-trajectories instead of selecting completed survivors; their derivation
-and the model-specific intervals are in the Supplement.
+benchmark ($\Delta_*=10$ percentage points). Model-specific contrasts in
+Supplement Table~\ref{tab:resultsh1modelintervals} show that the pooled
+$+1.19$-point B--D gain comes almost entirely from GPT~6.1 Sol acquiring
+the ninth feature ($+3.15$ points, 95\% interval $[0.00,+6.30]$; B--A
+$+3.67$ points, $[+0.52,+6.82]$), whereas the B--D intervals for
+Sonnet~5.5 ($+0.26$ points, $[-0.15,+0.75]$) and Gemini~4 Argon ($+0.15$
+points, $[-0.15,+0.52]$) span zero. Missing-outcome bounds for B--C and
+E--B retain all allocated trajectories instead of selecting completed
+survivors; their derivation and the model-specific intervals are in the
+Supplement.
 
 \paragraph{The final extension exposed a different weakness.}
 Table~\ref{tab:resultsadaptation} reports CR1 success: all fifteen new
@@ -973,6 +980,26 @@ eighteen were Sonnet sessions encountering tool or shell limitations.
 This is evidence about recorded requests, not a complete measure of human
 help supplied. Owner attestation for the 313 completed trajectories is now
 recorded separately (Section~\ref{sec:resultsledger}).
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Summary of testable predictions, evaluation criteria, observed
+ten-feature outcomes and exploratory verdicts across the 315 allocated
+trajectories. Only the $\Delta_*=10$ percentage-point B--D threshold was
+pre-specified in the planning calculation; P1 and P3 structure the
+post-collection evaluation of the two-part conjecture.}
+\label{tab:predictionverdicts}
+\begin{tabularx}{\textwidth}{@{}L{0.22\textwidth}L{0.24\textwidth}YL{0.20\textwidth}@{}}
+\toprule
+Prediction & Falsification / target criterion & Observed ten-feature result & Exploratory verdict \\
+\midrule
+P1: Short-horizon decay premise & Unconsolidated delivery (Arms~A, D) exhibits open regressions ($L^P_{r,10}>0$) or witnessed workflow losses by $P_{10}$ & 0/126 completed A and D runs with open loss at $P_{10}$ (1/313 overall, in Gemini~E); 99.18\%--99.74\% Arm~A coverage on Sonnet and Gemini; 0/626 workflow-replay losses & Not supported (evidence against decay at $N=10$) \\
+P2: Primary consolidation coverage gain & Arm~B exceeds Arm~D in equal-model-weight $P_{10}$ coverage by $\Delta_*\geq10$ percentage points & $+1.19$ pp (95\% CI $[+0.10,+2.22]$; B--A $+1.41$ pp, $[+0.33,+2.45]$); GPT $+3.15$ pp $[0.00,+6.30]$ (F9 acquisition: 12/21 vs 6/21), while Sonnet $+0.26$ pp and Gemini $+0.15$ pp CIs span zero & Below threshold (far below 10-point bar; single-model acquisition effect) \\
+P3: Change-request adaptability and cost payback & Arm~B raises CR1 success and reduces CR1 or net credit spend relative to Arms~A, C and D & Equal-model CR1 B--D and B--A bounds $[0.00,+1.59]$ pp; Gemini review 16/21 vs Arm~B 8/21; settled delivery credits $1.84\times$--$2.25\times$ Arm~A with no CR1 saving & Not supported (no CR1 advantage; no short-horizon payback) \\
+Manipulation check: Structural hygiene & Arm~B reduces functions above complexity 10, duplication and lint toward stopping targets & 0.00\% functions $>10$ complexity across all 63 Arm~B endpoints; lint $-92\%$ on Sonnet (to 2.26/kloc) and $-100\%$ on GPT (to 0.00/kloc) & Supported as treatment fidelity (does not establish P2 or P3) \\
+\bottomrule
+\end{tabularx}
+\end{table}
 \else
 % TODO(author): PF1 requires actual F/P checkpoint vectors, eligibility and missingness.
 % TODO(author): PF2 requires actual CR1 vectors, prerequisites, assistance and all-attempt costs.

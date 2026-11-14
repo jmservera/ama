@@ -38,7 +38,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         )
         for name, (sha256, _) in PROMPTS.items():
             self.assertEqual(bindings["literal_inputs"][f"anc/{name}"], sha256)
-        for name, sha256 in bindings["finalization_revision"]["source_sha256"].items():
+        for name, sha256 in bindings["falsifiability_revision"]["source_sha256"].items():
             with self.subTest(source=name):
                 self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), sha256)
 
@@ -149,7 +149,8 @@ class MeasurementProvenanceTests(unittest.TestCase):
 
     def test_judging_delivery_binding_preserves_the_historical_measurement_record(self):
         bindings = json.loads((ANC / "supplement-integration.json").read_text())
-        current = bindings["finalization_revision"]
+        current = bindings["falsifiability_revision"]
+        finalization = bindings["finalization_revision"]
         runtime_flow = bindings["runtime_flow_revision"]
         historical = bindings["measurement_provenance_revision"]
 
@@ -157,8 +158,10 @@ class MeasurementProvenanceTests(unittest.TestCase):
             hashlib.sha256((PACKAGE / "main.pdf").read_bytes()).hexdigest(),
             current["delivery_sha256"],
         )
-        self.assertEqual(current["delivery_pages"], 64)
-        self.assertEqual(current["supplement_start_page"], 45)
+        self.assertEqual(current["delivery_pages"], 66)
+        self.assertEqual(current["supplement_start_page"], 47)
+        self.assertEqual(finalization["delivery_pages"], 64)
+        self.assertEqual(finalization["supplement_start_page"], 45)
         self.assertEqual(bindings["attested_report_revision"]["delivery_pages"], 64)
         self.assertEqual(bindings["attested_report_revision"]["supplement_start_page"], 45)
         self.assertEqual(bindings["readability_revision"]["delivery_pages"], 60)
@@ -380,6 +383,33 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("39\\% relative", source_review)
         self.assertIn("caption says 35\\%", source_review)
         self.assertIn("institutional-abstract support", source_review)
+
+    def test_given_falsifiable_predictions_when_read_then_verdicts_and_future_design_are_explicit(self):
+        from test_protocol_planning import table_rows
+
+        manuscript = " ".join((PACKAGE / "main.tex").read_text().split())
+        protocol = " ".join((ANC / "experiment-protocol.tex").read_text().split())
+        rows = table_rows((ANC / "experiment-protocol.tex").read_text(), "tab:predictionverdicts")
+
+        self.assertEqual(len(rows), 4)
+        self.assertEqual(
+            [row[0].split(":", 1)[0] for row in rows],
+            ["P1", "P2", "P3", "Manipulation check"],
+        )
+        for marker in (
+            "P1 (Short-horizon decay premise)",
+            "P2 (Primary coverage gain threshold)",
+            "P3 (Change-request adaptability and short-horizon payback)",
+            "Manipulation check (Structural treatment fidelity)",
+            r"\label{sec:futureexperiment}",
+            "N=30",
+            "Latin-square",
+            r"2\times2",
+            "Sonnet +0.26 and Gemini +0.15 intervals span zero",
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, manuscript)
+        self.assertIn("comes almost entirely from GPT~6.1 Sol acquiring the ninth feature", protocol)
 
     def test_runtime_flow_separates_development_commands_from_tool_free_judging(self):
         protocol = (ANC / "experiment-protocol.tex").read_text()

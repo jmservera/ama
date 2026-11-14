@@ -1,8 +1,17 @@
 ---
 title: Everything but the Software - Revision Record
-description: Finalization follow-up with original-source, scoped confidentiality, historical metadata and approval/deposit dispositions
+description: Hypothesis-falsifiability revision, longer-horizon factorial experiment design and quarantine-unblock analysis alongside preserved finalization records
 ms.date: 2026-11-14
 ---
+
+The 14 November critique and falsifiability revision applies the external
+review of hypothesis refutability: it separates the short-horizon decay
+premise (P1) from the consolidation remedy (P2 coverage threshold
+$\Delta_*=10$ percentage points; P3 CR1 adaptability and cost payback) and
+the structural manipulation check, surfaces the per-model coverage split in
+the abstract, main results and conclusion, and adds a 30-to-40-cycle
+factorial follow-up design (`sec:futureexperiment`). It preserves all
+existing numerical tables and earlier dated records.
 
 The 14 November finalization follow-up records the exact Coach assessment,
 original-source checks, active participant-name audit, allowlisted historical VM
@@ -40,6 +49,103 @@ The 5 November recovery/source check, 2 November allocation record and
 from Scope and Outcome through Title Assessment retain the original
 24 October report, and the 25 October addendum remains historical. Their
 earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Critique and Falsifiability Revision 14 November
+
+### Applied Critique and Prediction Verdicts
+
+The user-supplied review observed that the ten-feature S1 study neither
+confirmed the initial conjecture nor could formally falsify an elastic
+"can carry ... unless" phrasing, and recommended stating explicit testable
+predictions with thresholds, labelling each verdict honestly, naming the
+per-model split alongside the $+1.19$-point pooled B-D coverage estimate,
+and designing a deeper follow-up experiment.
+
+| Critique item | Manuscript change | Locator |
+| --- | --- | --- |
+| Replace elastic "can carry ... unless" phrasing with falsifiable predictions and explicit verdicts | Separated the conjecture into P1 (short-horizon decay premise), P2 (primary B-D coverage gain $\Delta_*\geq10$ percentage points), P3 (CR1 adaptability and credit payback) and a structural manipulation check, keeping pre-specified $\Delta_*=10$ distinct from post-collection evaluation structure | `main.tex` Abstract, Section 1 (`sec:intro`), Section 9 (`sec:conclusion`); `anc/experiment-protocol.tex` Table 15 (`tab:predictionverdicts`) |
+| Surface per-model heterogeneity next to the pooled $+1.19$ pp B-D figure | Reported GPT 6.1 Sol $+3.15$ pp ($[0.00,+6.30]$, F9 ranking acquisition 12/21 vs 6/21) alongside Sonnet 5.5 $+0.26$ pp ($[-0.15,+0.75]$) and Gemini 4 Argon $+0.15$ pp ($[-0.15,+0.52]$), whose intervals span zero | `main.tex` Abstract, Section 1, Section 9; `anc/experiment-protocol.tex` Section 7.9 (`sec:resultscorrectness`) |
+| Propose a future experiment with sufficient depth for conclusive results | Added Section 8.5 (`sec:futureexperiment`): $N=30$--$40$ sequential cycles on a $3\text{k}$--$10\text{k}$ NLOC brownfield service repository spanning $N_{\mathrm{BE}}=\lceil 1+2k/\delta\rceil$, $K\geq4$ branch-isolated Latin-square change requests at $P_{10}..P_{40}$, a $2\times2$ factorial crossing refactoring and invariant review plus test mutability, and preregistered block-level falsification rules | `main.tex` Section 8.5 (`sec:futureexperiment`) |
+
+### Unblocking the Two Quarantined Trajectories
+
+Read-only inspection of `/home/jmservera/source/ama-thought-mve` (`harness/study.py`,
+`harness/prepare_estimation_recovery.py`, `harness/pilot_analysis.py`) and
+allowlisted metadata in `ama-thought-mve-fallback-recovery/.study/pilot-estimation/state.json`
+identifies why `primary_estimates_available` is `false` and what is required
+to finish the two incomplete trajectories before the active study deadline
+(`1795318710.65`, `2026-11-22T03:38:30Z`):
+
+1. **Exact state of the two quarantined cells:**
+   * `pilot-estimation-gemini-4-argon-E-15` (`completed_steps = 10` of 21,
+     checkpoint `f06-feature` at Git HEAD `763a9a36eb7191d023601c35fcfa049e1c1894b5`)
+     stopped on `pilot-estimation-gemini-4-argon-E-15-f06-feature-1`
+     (`status = infra_failed`, `failure_kind = transport`, `failure_stage = session_send`,
+     `accounting = unknown`, 300 reserved credits in `quarantine_hold`,
+     `supervision.action = quarantine_cell`). Eleven steps remain
+     (`f06-feature` through `f10-repair` plus `cr1-change`).
+   * `pilot-estimation-gpt-6.1-sol-C-20` (`completed_steps = 18` of 21,
+     checkpoint `f10-feature` at Git HEAD `81e23369f6125314bab89ac52361b44da8339f60`)
+     stopped on `pilot-estimation-gpt-6.1-sol-C-20-f10-feature-1`
+     (`status = recovery_interrupted`, `credits_status = recovery_hold`,
+     300 reserved credits) under incident `FALLBACK_RECOVERY_STATE_SHA256`
+     (`kind = fallback_metadata_quarantine`). Three steps remain
+     (`f10-feature`, `f10-review`, `cr1-change`).
+2. **Code gates preventing in-place replay:**
+   * `StudyController.go()` (`harness/study.py` line 2096) skips cells with
+     `status == "quarantined"`, and `new_attempt()` (line 1819) raises
+     `StudyError("Quarantined cell cannot replay an unresolved request")`.
+   * `validate_supervisor_state()` (`harness/study.py` lines 572--575)
+     requires `cell["status"] == "quarantined"` whenever a ledger entry has
+     `status == "quarantine_hold"`, and `validate_recovery_state()`
+     (lines 1084--1096) requires `cell["status"] == "quarantined"` and
+     `cell["attempts"][-1] in quarantine_only` for `fallback_metadata_quarantine`.
+3. **Controlled recovery path to complete the 315/315 frame:**
+   * Never mutate `ama-thought-mve-fallback-recovery` in place; preserve
+     stopped state `fb39a46fc36f33f62f3286fd517b63bb09787e9c7bcd7d276c4a362f256f2de1`
+     as the immutable 13--14 November baseline.
+   * Add a fifteenth disclosed recovery transition in `harness/study.py` and
+     `harness/prepare_estimation_recovery.py` keyed to `fb39a46f...` that
+     copies `.study/pilot-estimation` into a new working directory, keeps
+     the two 300-credit unknown-charge holds permanently in `recovery_hold`
+     (so unknown usage is never zero-imputed), resets both cells from
+     `"quarantined"` to `"partial"` at their verified checkpoint HEADs
+     (`763a9a36...` and `81e23369...`), and authorises fresh retry
+     reservations for the remaining 14 steps (11 in `gemini-4-argon-E-15`
+     and 3 in `gpt-6.1-sol-C-20`).
+   * Run `study.py` to finish only those 14 steps, update
+     `intervention-coverage/v1` to attest all 315 completed trajectories,
+     and re-export `results/pilot-estimation/`. That flips
+     `primary_unassisted_frame_complete` and `primary_estimates_available`
+     to `true`, completing all five-arm H1 coverage contrasts (`B-D`,
+     `B-A`, `B-C`, `E-B`). Note that two already-completed trajectories
+     (`pilot-estimation-gpt-6.1-sol-B-08` and `C-14`) have `cr_success = null`
+     because their CR1 hidden-test runs ended with non-binary collection
+     outcomes (`agent_returned`); those are genuine task outcomes and must
+     not be rerun, so GPT CR1 contrasts will rightly remain identification
+     bounds even after all 315 trajectories complete.
+   * Replay the four newly completed endpoint packets ($P_{10}$ and CR1 for
+     `gemini-4-argon-E-15` and `gpt-6.1-sol-C-20`) through `judging/execute.py`
+     and run 8 `gpt-6-luna` calls ($4\text{ packets}\times2\text{ repeats}$)
+     to complete all 630/630 packets while preserving the existing 1,252
+     Assessment v3 ratings.
+
+### Validation
+
+* All 67 authoring tests pass, including the new falsifiability and
+  future-design regression test.
+* All 1,378 existing numerical and protocol table fields match the prior
+  v18/v17 sources; the new 4-row `tab:predictionverdicts` table is additive.
+* The structural checker passes: 1,811-character abstract ($<1,920$), 94
+  cited/embedded entries, 105 BibTeX entries, and approximately 15,979
+  main-body words.
+* Tectonic compiles a single 66-page PDF (Supplement starting on page 47)
+  with zero errors, zero unresolved references, zero overfull boxes and no
+  blank pages; the inherited `inputenc` warning remains. Rendered pages
+  1, 2, 3, 32, 35, 36, 47, 65 and 66 were visually inspected. Current PDF
+  SHA-256 is `bb54e60fd5a53fd43d6248bf5a275f8daffdaede5db3a03d1d6ea61ce3d377f7`,
+  bound under `falsifiability_revision` in
+  [supplement-integration.json](./supplement-integration.json).
 
 ## Finalization Follow-up 14 November
 

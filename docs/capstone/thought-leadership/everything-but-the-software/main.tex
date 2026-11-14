@@ -1,6 +1,6 @@
 % !TEX program = pdflatex
 % ---------------------------------------------------------------------------
-% Everything but the Software -- LaTeX source (draft v18, integrated Supplement)
+% Everything but the Software -- LaTeX source (draft v19, integrated Supplement)
 % Figures use PNG for LaTeX; conceptual editing authority is .excalidraw.
 % anc/make_figures.py regenerates only case and published-evidence figures.
 % anc/export_diagrams.mjs exports native Excalidraw sources to SVG and PNG.
@@ -65,32 +65,32 @@ authors' own and do not necessarily reflect those of Microsoft.}\\[4pt]
 \begin{abstract}
 Each feature changes the starting point for the next. In agentic software
 development, code, tests and instructions carry decisions forward.
-This paper examines whether scheduled consolidation improves that state.
 A practitioner-led case traces agent-assisted research,
 challenged requirements and prototypes into autonomous backlog delivery,
 an unusable replacement and renewed product feedback. Five candidate
 mechanisms organise the account; migration and deployment dependencies
 remain rival explanations.
-A separate exploratory study compared feature-only delivery, consolidation,
-read-only review, longer feature sessions and visible-specification repair.
-Three models each received 21 repository trajectories per condition, with
-ten sequential features and one withheld change request: 313 of 315
-trajectories completed, with little loss of acquired behaviour.
-Sonnet~5.5 and Gemini~4 Argon averaged 99.18\%--99.74\% final hidden-test
-coverage; one completed trajectory had an open contract regression.
+A separate exploratory study tested a two-part hypothesis: whether ten
+sequential features induce behavioural decay, and whether scheduled
+consolidation raises final coverage by at least 10 percentage points and
+aids a withheld change request.
+Three models each received 21 repository trajectories per condition across
+feature-only delivery, consolidation, read-only review, longer sessions and
+visible-specification repair: 313 of 315 trajectories completed.
+Neither prediction held on this task. Short-horizon decay did not appear:
+Sonnet~5.5 and Gemini~4 Argon averaged 99.18\%--99.74\% hidden-test
+coverage, one completed trajectory had an open regression, and workflow
+replay found zero witnessed losses.
 Consolidation removed functions above cyclomatic complexity 10 from all
-63 treated endpoints. Its pooled coverage advantage over longer sessions
-was 1.19 percentage points (95\% bootstrap interval [0.10, 2.22]).
-On GPT~6.1 Sol, complete feature delivery increased
-from 5/21 baseline trajectories to 12/21 with consolidation. On Gemini~4
-Argon, read-only review achieved 16/21 change-request successes versus
-8/21 with consolidation, revealing a permission-boundary defect despite
-low structural metrics. Consolidation used roughly twice the settled
-delivery credits, with no consistent reduction in change-request cost.
-Owner-attested completed trajectories support exploratory intervals;
-unregistered amendments, incomplete observations and billing limit inference.
-The findings distinguish structural improvement, behavioural correctness
-and their resource costs on this short synthetic task.
+63 treated endpoints, but its pooled coverage gain over longer sessions
+was 1.19 percentage points (95\% bootstrap interval [0.10, 2.22]), well
+below the 10-point threshold and driven by GPT~6.1 Sol (+3.15 points;
+Sonnet +0.26 and Gemini +0.15 intervals span zero), where consolidation
+raised complete feature delivery from 5/21 to 12/21.
+On Gemini~4 Argon, read-only review achieved 16/21 change-request
+successes versus 8/21 with consolidation. Consolidation used roughly twice
+the settled delivery credits without reducing change-request cost,
+motivating a longer-horizon factorial design.
 \end{abstract}
 % Companion complete-pair intervals retain the incomplete automated whole-study gate, owner-attestation boundary and 14-epoch provenance.
 
@@ -167,20 +167,67 @@ a browser interface discussed separately in the supplement, and the PhotoCraft
 inspection selected after the motivating-case analysis have separate provenance in
 the ancillary \nolinkurl{anc/supplementary-context.md}.
 
-The working hypothesis is that feature-driven delivery can carry unresolved
-errors and avoidable change burden forward unless it includes cumulative
-verification and consolidation. Two kinds of state matter: the software
-being changed, and the instructions used to change it. Adding a corrective
-rule after every failure can leave prompts, skills and handover notes with
-their own maintenance burden. A fresh agent inherits both kinds of state.
-Section~\ref{sec:background} distinguishes these pathways; the case then
-examines how they interact with completion proxies, review capacity and
-product-use feedback.
+The initial conjecture was that feature-driven delivery can carry
+unresolved errors and avoidable change burden forward unless it includes
+cumulative verification and consolidation. Two kinds of state matter:
+the software being changed, and the instructions used to change it. Adding
+a corrective rule after every failure can leave prompts, skills and
+handover notes with their own maintenance burden. A fresh agent inherits
+both kinds of state. Section~\ref{sec:background} distinguishes these
+pathways; the case then examines how they interact with completion proxies,
+review capacity and product-use feedback.
 
-Here \emph{feature-driven decay} describes loss of retained behaviour or
-increasing change burden across feature steps. The completed exploratory
-study tests whether that decay appears across ten sequential features and
-how model-specific failure modes respond to consolidation, review and repair.
+Stated as ``can carry \dots\ unless,'' however, that conjecture is too
+elastic to refute: a single regression would appear to confirm it, while
+clean completion could be dismissed as an easy task. Here
+\emph{feature-driven decay} means a measurable loss of previously passing
+behaviour or a rising cost and failure burden across sequential changes.
+To make the conjecture falsifiable on the ten-feature S1 task and its
+withheld change request (CR1), the analysis separates the \emph{decay
+premise} from the \emph{consolidation remedy} and evaluates three
+testable predictions alongside a treatment-fidelity check:
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{P1 (Short-horizon decay premise).} Without a dedicated
+post-feature pause (Arms~A and~D), sequential delivery across ten features
+induces progressive behavioural loss by $P_{10}$, evidenced by open
+retained-contract regressions ($L^P_{r,10}>0$), accumulated loss cycles or
+witnessed workflow-replay losses. \emph{Outcome: not supported on this
+task} (0/126 completed A and D endpoints had an open regression at
+$P_{10}$; 1/313 across all arms; 0/626 in workflow replay).
+\item \textbf{P2 (Primary coverage gain threshold).} Scheduled
+consolidation (Arm~B) exceeds the matched-allowance longer-session control
+(Arm~D) in equal-model-weight final hidden-test coverage at $P_{10}$ by at
+least the pre-specified minimum useful effect of $\Delta_*=10$ percentage
+points (Section~\ref{sec:protocollimits}). \emph{Outcome: below threshold}
+($+1.19$ percentage points, 95\% bootstrap interval $[0.10,2.22]$; $+1.41$
+points versus Arm~A, $[0.33,2.45]$), with the gain concentrated in
+GPT~6.1 Sol ($+3.15$ points, $[0.00,6.30]$) while Sonnet~5.5 ($+0.26$
+points, $[-0.15,0.75]$) and Gemini~4 Argon ($+0.15$ points,
+$[-0.15,0.52]$) intervals span zero.
+\item \textbf{P3 (Change-request adaptability and short-horizon payback).}
+Consolidation (Arm~B) raises held-out CR1 success and reduces CR1 or net
+credit expenditure relative to feature-only delivery (Arm~A), read-only
+review (Arm~C) and longer sessions (Arm~D). \emph{Outcome: not supported}
+(equal-model CR1 B--D and B--A bounds $[0.00,+1.59]$ percentage points;
+Gemini~4 Argon review achieved 16/21 successes versus 8/21 with
+consolidation; settled delivery credits rose by $1.84\times$ to
+$2.25\times$ with no CR1 cost reduction).
+\item \textbf{Manipulation check (Structural treatment fidelity).}
+Consolidation reduces functions above cyclomatic complexity 10, duplication
+and lint density toward its stopping targets. \emph{Outcome: supported as
+treatment fidelity} (0.00\% functions above complexity 10 across all 63
+Arm~B endpoints; lint reduced by 92\% on Sonnet and 100\% on GPT),
+showing that the structural intervention executed without producing the
+predicted ten-point behavioural or CR1 advantage.
+\end{itemize}
+
+Only $\Delta_*=10$ percentage points was fixed in the pre-collection
+planning calculation; the public execution manifest
+(\nolinkurl{protocol/pilot-estimation.json}) left its formal hypothesis
+array empty, and the operational criteria in P1 and P3 structure the
+post-collection evaluation rather than claiming a preregistered
+confirmatory test.
 
 Three questions guide the investigation:
 
@@ -966,6 +1013,64 @@ behaviour together. Choosing when to interrupt delivery, changing product
 goals, restoring a deployment and comparing human with agent steering
 remain separate questions in the ancillary research agenda.
 
+\subsection{Designing a conclusive long-horizon experiment}\label{sec:futureexperiment}
+
+Four design properties explain why the ten-feature S1 pilot yielded
+negative evidence on short-horizon decay and inconclusive evidence on
+consolidation's long-run value:
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Horizon depth below the economic break-even regime.}
+Under Equation~\ref{eq:costprojection}, a per-cycle consolidation investment
+$k$ against a per-cycle degradation slope $\delta$ cannot break even before
+$N_{\mathrm{BE}}=\lceil 1+2k/\delta\rceil$ cycles (21 cycles even at
+illustrative $k=5,\delta=0.5$, and longer when settled consolidation
+sessions cost $5.82$--$12.59$ credits). Ten greenfield features producing
+roughly 440--780 Python source lines stop before cross-module coupling and
+context-window saturation accumulate. A conclusive follow-up should extend
+trajectories to $N=30$--$40$ sequential feature and schema-evolution cycles
+on a multi-module brownfield service repository ($3{,}000$--$10{,}000$
+source lines) with persistent storage, cross-cutting permission invariants
+and scheduled interface migrations, recording retention and cost slopes at
+$P_{10},P_{20},P_{30}$ and $P_{40}$.
+\item \textbf{Single terminal change request with prerequisite confounding.}
+Evaluating adaptation on one held-out CR1 after $P_{10}$ produced wide
+binomial intervals ($\pm18.8$ to $\pm48.0$ percentage points within models)
+and coupled retention obligations to whether F9 ranking had been acquired.
+A follow-up protocol should schedule $K\geq4$ orthogonal change requests in
+a Latin-square design across checkpoints $P_{10},P_{20},P_{30}$ and $P_{40}$.
+Each change request should execute on an isolated branch forked from $P_t$
+so adaptation measurement does not alter the main delivery trajectory, and
+should be scored both unconditionally and on a core contract set whose
+prerequisites are verified before the fork.
+\item \textbf{Bundled package treatments.}
+Arm~B combined behaviour-preserving code refactoring, new agent-authored
+tests under an immutable test-file rule and \texttt{DESIGN.md} replacement,
+while Arm~C changed both editing rights and checklist content. A $2\times2$
+factorial core crossing \emph{behaviour-preserving code refactoring} (with
+test files locked) against \emph{explicit invariant and boundary review}
+(\texttt{REVIEW.md} targeting authorization, state transitions and
+cross-module contracts), paired with a controlled factor comparing
+\emph{immutable versus specification-revisable agent tests}, would isolate
+whether GPT~6.1 Sol's F9 gain came from test-suite revision rather than
+refactoring and whether Gemini~4 Argon's CR1 gain came from boundary review.
+\item \textbf{Preregistered falsification criteria, blocked inference and
+gate resilience.}
+Before data collection, the registered manifest should freeze a non-empty
+hypothesis array with explicit refutation thresholds: P1 (decay premise)
+confirmed only if feature-only open-regression loss reaches $\geq5\%$ of
+acquired contracts by $P_{30}$ or if per-cycle implementation credits grow
+with slope $\delta\geq0.5$ credits per cycle; P2 (coverage efficacy)
+confirmed only if B--D coverage exceeds a pre-specified $\Delta_*$
+calibrated to the task's ceiling-free dynamic range; and P3 (economic
+payback) confirmed only if cumulative net credits $\Delta C(N)>0$ at
+matched behavioural coverage. Randomisation and variance estimation should
+align on completed $(\mathrm{model},\mathrm{replicate})$ execution blocks via a
+block bootstrap or linear mixed model, with a pre-specified bounded
+transport-retry and missing-data rule so isolated provider drops do not
+disable the whole-study primary estimator.
+\end{enumerate}
+
 \subsection{Implications for practice}\label{sec:feedbackfirst}
 
 The case motivates protecting a usable increment, bounding the delivery horizon
@@ -987,32 +1092,45 @@ cadence or the preservation of expertise. Those remain separate questions.
 \FloatBarrier
 \section{Conclusion}\label{sec:conclusion}
 
-On this clean, synthetic ten-feature task, previously acquired behaviour
-was largely retained. The experiment did not reproduce a broad decline
-in working functionality. Its most informative shortcomings concerned
-features that were never completed and a permission-boundary defect
-exposed by the final extension. Stable retention can therefore coexist
-with incomplete or unsafe-to-extend behaviour.
+Evaluated against explicit falsification criteria, the ten-feature S1
+experiment confirmed neither half of its initial conjecture. First, the
+short-horizon decay premise (P1) was not supported on this clean synthetic
+task: previously acquired behaviour was largely retained across 313
+completed trajectories, with zero open regressions at $P_{10}$ in all 126
+feature-only and longer-session runs, one open regression overall (Gemini~4
+Argon~E), and zero witnessed capability losses across 626 workflow-replay
+packets. The most informative failures were unacquired features and a
+permission-boundary hole exposed by the final extension, showing that stable
+retention can coexist with incomplete or unsafe-to-extend software.
 
-Scheduled consolidation improved structural metrics and was associated
-with more complete feature delivery on GPT~6.1 Sol. Its complete-pair
-coverage advantage over longer sessions was small: 1.19 percentage points
-(95\% bootstrap interval [0.10, 2.22]). It offered no consistent
-advantage on the final change request: read-only review achieved 16/21
-successes on Gemini~4 Argon versus 8/21 with consolidation. Structural
-cleanliness and checks of intended behaviour address different risks.
-Consolidation also used roughly twice the settled delivery credits, with
-no consistent reduction in change-request cost. The observed benefit was
-selective improvement at additional expense, rather than a general
-short-horizon saving.
+Second, the consolidation remedy passed its structural manipulation check
+(0.00\% functions above complexity 10 across all 63 Arm~B endpoints and
+92\%--100\% lint reductions on Sonnet~5.5 and GPT~6.1 Sol) but failed its
+primary behavioural and economic predictions (P2 and P3). Its pooled
+complete-pair coverage gain over matched-allowance longer sessions was
+1.19 percentage points (95\% bootstrap interval [0.10, 2.22]; $+1.41$
+points over feature-only delivery, [0.33, 2.45]), well below the
+pre-specified 10-point minimum useful threshold. That pooled gain came
+almost entirely from GPT~6.1 Sol overcoming an F8 test-allowlist lock to
+finish the ninth feature ($+3.15$ points, [0.00, 6.30]), whereas the B--D
+coverage intervals for Sonnet~5.5 ($+0.26$ points, $[-0.15, 0.75]$) and
+Gemini~4 Argon ($+0.15$ points, $[-0.15, 0.52]$) spanned zero.
+Consolidation offered no consistent advantage on the final change request:
+read-only review achieved 16/21 successes on Gemini~4 Argon versus 8/21
+with consolidation. Consolidation also used roughly twice the settled
+delivery credits without reducing change-request cost, yielding selective
+structural and test-lock mitigation at additional expense rather than a
+general short-horizon saving.
 
 The motivating case concerns a different scale and failure: a migration
 interrupted a usable workflow after extensive agent-assisted preparation.
 Its five candidate mechanisms connect inherited obligations, lessons and
 completion signals to opportunities for correction; the experiment does
 not test those mechanisms individually. Together with the literature,
-the two accounts motivate evaluating the system left for the next change,
-including code, tests, instructions and operational dependencies.
+the two accounts motivate evaluating the system left for the next change
+and testing longer, higher-coupling horizons ($N=30$--$40$ cycles) with
+branch-isolated change requests and factorial separation of refactoring,
+invariant review and test mutability (Section~\ref{sec:futureexperiment}).
 
 These are exploratory findings from one suite and one final change request.
 Owner attestation covers completed trajectories; unregistered amendments,
@@ -1103,7 +1221,13 @@ assistance to triage failure and mismatch cases rather than inspecting every
 passing row individually) and the 5,357-journal SDK intervention audit from
 \nolinkurl{results/WHITEPAPER_REPORT.md}, with Copilot-assisted table,
 rational-arithmetic and PDF verification.
-The 14 November readability revision used Copilot-assisted editing to
+The 14 November readability revision us
+The subsequent critique-and-falsifiability revision used Copilot-assisted
+editing and the experimental-design, statistical-analysis and
+scientific-critical-thinking skills to state explicit testable predictions
+and verdicts, surface the per-model coverage split alongside the pooled
+estimate, and specify a longer-horizon factorial follow-up protocol,
+without altering experimental observations, scoring or registration.ed Copilot-assisted editing to
 separate findings from provenance, simplify tables and distinguish
 descriptive associations from mechanism explanations. It changed no
 experimental data, scoring, treatment, registration or collection record.

@@ -47,9 +47,15 @@ production acceptance or a higher score.
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
-The current v18 coauthored delivery has 64 pages, with the additive Supplement
-starting on page 45. The
-[14 November finalization follow-up](../capstone/thought-leadership/everything-but-the-software/README.md#finalization-follow-up-14-november)
+The current v19 coauthored delivery has 66 pages, with the additive Supplement
+starting on page 47. The
+[14 November critique and falsifiability revision](../capstone/thought-leadership/everything-but-the-software/README.md#critique-and-falsifiability-revision-14-november)
+separates the short-horizon decay premise (P1) from the consolidation remedy
+(P2 10-point coverage threshold and P3 CR1/cost payback) and the structural
+manipulation check (`tab:predictionverdicts`), surfaces the per-model
+coverage split in the abstract, main results and conclusion, and specifies a
+30-to-40-cycle brownfield factorial follow-up experiment (`sec:futureexperiment`).
+The [14 November finalization follow-up](../capstone/thought-leadership/everything-but-the-software/README.md#finalization-follow-up-14-november)
 records the exact Coach assessment, original-source qualifications, scoped
 participant-name review, retained timing/version metadata and the selected
 experiment GitHub deposit. Manager approval and the earlier CELA submission

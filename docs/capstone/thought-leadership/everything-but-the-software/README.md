@@ -1,6 +1,6 @@
 ---
-title: Everything but the Software - source package (draft v18)
-description: Source verification, scoped confidentiality review and evidence-bound finalization decisions in one article and additive Supplement
+title: Everything but the Software - source package (draft v19)
+description: Falsifiable predictions, per-model coverage split, longer-horizon factorial design and evidence-bound finalization in one article and additive Supplement
 ms.date: 2026-11-14
 ---
 
@@ -12,8 +12,8 @@ The title is unchanged at the owner's request. The current
 [paper](./main.pdf) and [source](./main.tex) explain the completed exploratory
 study through its principal findings: largely stable retention, selective
 benefits from consolidation or review, and additional resource cost.
-The [Supplement](./main.pdf#page=45) retains the detailed results, uncertainty,
-calibration and execution record in the same 64-page document.
+The [Supplement](./main.pdf#page=47) retains the detailed results, uncertainty,
+calibration and execution record in the same 66-page document.
 The supplement is additive: source-specific qualifications, detailed
 method/rival checks, the frozen prompt, deferred rates and provenance.
 Repeated Background text, figures and case narratives are excluded from
@@ -22,8 +22,10 @@ The standalone supplement PDF/TeX/bibliography were removed at the owner's
 request after exact archive readback and restore checks; their original
 committed versions remain in Git at `80656f32`. No source evidence was discarded.
 
-The [14 November finalization follow-up](./anc/revision-report.md#finalization-follow-up-14-november)
-records the current v18 delivery. The
+The [14 November critique and falsifiability revision](./anc/revision-report.md#critique-and-falsifiability-revision-14-november)
+records the current v19 delivery. The
+[finalization follow-up](./anc/revision-report.md#finalization-follow-up-14-november)
+retains the preceding v18 record. The
 [report refresh](./anc/revision-report.md#attested-report-refresh-14-november)
 retains the preceding v17 record. The
 [readability revision](./anc/revision-report.md#readability-and-interpretation-14-november)
@@ -42,6 +44,37 @@ calendar dates no longer lead the argument. The supplied
 [project-insights export](./anc/project-insights-2026-11-01.csv) supports the
 backlog handoff; its provenance and missing export metadata are in the
 [evidence index](./anc/case-evidence-matrix.json).
+
+### Critique and Falsifiability Revision 14 November
+
+Following the external hypothesis-falsifiability critique, the elastic
+conjecture ("can carry ... unless") is replaced by a two-part falsifiable
+formulation separating the short-horizon decay premise (P1) from the
+consolidation remedy (P2 coverage gain threshold $\Delta_*=10$ percentage
+points; P3 change-request adaptability and credit payback) alongside the
+structural treatment-fidelity check. Table 15 (`tab:predictionverdicts`)
+summarises each criterion, observed result and exploratory verdict: P1 is
+not supported on the ten-feature task, P2 is below the 10-point threshold
+($+1.19$ percentage points, $[0.10,2.22]$), and P3 is not supported, while
+structural fidelity succeeded.
+
+The abstract, main coverage section and conclusion now state the per-model
+coverage split alongside the pooled $+1.19$-point B-D figure: GPT 6.1 Sol
+gained $+3.15$ points ($[0.00,6.30]$) by overcoming F8's protected-test
+allowlist lock on F9 ranking (12/21 vs 6/21 complete delivery), whereas
+Sonnet 5.5 ($+0.26$ points, $[-0.15,0.75]$) and Gemini 4 Argon ($+0.15$
+points, $[-0.15,0.52]$) B-D intervals span zero. Section 8.5 specifies a
+30-to-40-cycle brownfield follow-up design matching the break-even regime
+$N_{\mathrm{BE}}=\lceil 1+2k/\delta\rceil$, with $K\geq4$ branch-isolated
+Latin-square change requests, a $2\times2$ factorial crossing refactoring
+and invariant review (plus test-suite mutability), and preregistered
+block-level falsification rules.
+
+All 67 authoring tests pass, all 1,378 existing numerical table fields are
+preserved, and the 66-page PDF (Supplement page 47) has zero overfull boxes
+and visually verified pages. The new `falsifiability_revision` in
+[supplement-integration.json](./anc/supplement-integration.json) preserves
+v18 and earlier bindings.
 
 ### Finalization Follow-up 14 November
 

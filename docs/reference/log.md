@@ -11835,3 +11835,36 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
   experiment, paid candidate/judge session, registration, remote mutation,
   commit, push, publication or scientific/employer approval was performed;
   hosted CI and independent exact-head review remain unperformed.
+
+## [2026-11-14] update | Whitepaper falsifiability critique and long-horizon experiment design
+
+* Applied the hypothesis-falsifiability critique to the
+  [paper](../capstone/thought-leadership/everything-but-the-software/main.tex)
+  and [protocol slice](../capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex)
+  on `docs/whitepaper-study-results`: replaced the elastic "can carry ... unless"
+  formulation with explicit testable predictions separating the short-horizon
+  decay premise (P1: not supported), the primary B-D coverage threshold
+  ($\Delta_*\geq10$ percentage points, P2: below threshold at $+1.19$ points,
+  $[0.10,2.22]$), and CR1/credit payback (P3: not supported) from the
+  structural manipulation check (`tab:predictionverdicts`).
+* Surfaced the per-model coverage split in the abstract, Section 7.9 and
+  Conclusion alongside the pooled estimate: GPT 6.1 Sol gained $+3.15$ points
+  ($[0.00,6.30]$, F9 ranking acquisition 12/21 vs 6/21), while Sonnet 5.5
+  ($+0.26$ points, $[-0.15,0.75]$) and Gemini 4 Argon ($+0.15$ points,
+  $[-0.15,0.52]$) B-D intervals span zero.
+* Added Section 8.5 (`sec:futureexperiment`) specifying a 30-to-40-cycle
+  brownfield service benchmark matched to the $N_{\mathrm{BE}}=\lceil 1+2k/\delta\rceil$
+  break-even horizon, $K\geq4$ branch-isolated Latin-square change requests,
+  a $2\times2$ factorial crossing behaviour-preserving refactoring and
+  explicit invariant review (plus test-suite mutability), and preregistered
+  block-bootstrap/mixed-effects falsification rules.
+* Documented the exact code and state mechanics blocking the two quarantined
+  trajectories (`pilot-estimation-gemini-4-argon-E-15` at 10/21 steps and
+  `pilot-estimation-gpt-6.1-sol-C-20` at 18/21 steps) and the non-destructive
+  14-step recovery and 8-call judging path in the
+  [revision record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#critique-and-falsifiability-revision-14-november).
+* All 67 authoring tests and structural checks pass; all 1,378 prior table
+  fields remain unchanged. The single 66-page v19 PDF (Supplement page 47)
+  has zero overfull boxes and visually inspected pages, with only the
+  inherited `inputenc` notice remaining. No experiment, VM mutation, paid
+  session, commit, push or publication occurred.
