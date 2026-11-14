@@ -1,5 +1,6 @@
 """Synthetic test values only; they are not company figures or Board approvals."""
 
+import importlib
 import json
 import math
 import sys
@@ -12,12 +13,31 @@ from types import SimpleNamespace
 from typing import Any
 
 _CORE_SRC = Path(__file__).resolve().parents[1] / "src"
-if sys.path[:1] != [str(_CORE_SRC)]:
-    sys.path[:] = [str(_CORE_SRC), *(p for p in sys.path if p != str(_CORE_SRC))]
-_loaded = sys.modules.get("zava_forward.core.exposure_limits")
-if _loaded is None or not Path(_loaded.__file__ or "").resolve().is_relative_to(_CORE_SRC):
-    for _mod in [m for m in sys.modules if m == "zava_forward" or m.startswith("zava_forward.")]:
-        del sys.modules[_mod]
+
+
+def _ensure_local_exposure_limits() -> None:
+    if sys.path[:1] != [str(_CORE_SRC)]:
+        sys.path[:] = [str(_CORE_SRC), *(p for p in sys.path if p != str(_CORE_SRC))]
+        importlib.invalidate_caches()
+    for pkg_name, pkg_dir in (
+        ("zava_forward", str(_CORE_SRC / "zava_forward")),
+        ("zava_forward.core", str(_CORE_SRC / "zava_forward" / "core")),
+    ):
+        pkg = sys.modules.get(pkg_name)
+        if pkg is not None and hasattr(pkg, "__path__") and list(pkg.__path__)[:1] != [pkg_dir]:
+            pkg.__path__ = [pkg_dir, *(p for p in pkg.__path__ if p != pkg_dir)]
+    loaded = sys.modules.get("zava_forward.core.exposure_limits")
+    if loaded is not None:
+        loaded_file = loaded.__file__
+        if not (loaded_file and Path(loaded_file).resolve().is_relative_to(_CORE_SRC)):
+            sys.modules.pop("zava_forward.core.exposure_limits", None)
+            core_pkg: Any = sys.modules.get("zava_forward.core")
+            if core_pkg is not None and hasattr(core_pkg, "exposure_limits"):
+                del core_pkg.exposure_limits
+            importlib.invalidate_caches()
+
+
+_ensure_local_exposure_limits()
 
 from zava_forward.core import exposure_limits as limits  # noqa: E402
 from zava_forward.core.finance import FinanceMixin  # noqa: E402
