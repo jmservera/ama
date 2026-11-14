@@ -60,6 +60,22 @@ cand = sa.review_task_candidate(signal, policy)
 body = dict(signal=sa.as_dict(signal), candidate=cand and sa.as_dict(cand))
 print(json.dumps(body, sort_keys=True))
 """
+FRESH_PROVENANCE = """
+import json, sys
+from datetime import timedelta
+from zava_forward.core import sensor_analysis as sa
+from zava_forward.core import sensor_analysis_store as sas
+from zava_forward.core.sensor_consumer import SensorConsumer
+from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.synthetic import sensor_scenarios as ss
+seed, db, home = sys.argv[1:4]
+policy = sa.AnalysisPolicy(approval=sa.RuleApproval(
+    sa.RULE_ID, sa.ANALYSIS_VERSION, "SYNTHETIC TEST ONLY", "SYNTHETIC-TEST-SENTINEL"))
+window = ss.Window(ss.START, ss.START + timedelta(days=ss.DAYS))
+consumer = SensorConsumer(SqlStore(seed, db))
+out = sas.reproduce_retained(consumer, home, window, window.end, policy)
+print(json.dumps(out, sort_keys=True))
+"""
 
 
 def scenario_rows(label: str) -> list[dict[str, object]]:
@@ -207,6 +223,37 @@ class Reproducibility(unittest.TestCase):
                 text=True,
             )
             self.assertEqual(done.stdout.strip().encode(), expected)
+
+    def test_reproduce_retained_and_pure_match_across_batches_and_fresh_processes(self) -> None:
+        reference = self.consumer("sustained_high_humidity")
+        small = self.consumer("sustained_high_humidity", size=37)
+        retained_out = sas.reproduce_retained(reference, HOME, WINDOW, AS_OF, APPROVED)
+        self.assertEqual(retained_out, sas.reproduce_retained(small, HOME, WINDOW, AS_OF, APPROVED))
+        first_stamp = WINDOW.start.strftime("%Y-%m-%dT%H:%M:%SZ")
+        last_stamp = (WINDOW.end - timedelta(seconds=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        window_rows = reference.observed_series([HOME], {HOME: (first_stamp, last_stamp)})
+        pure_out = sa.reproduce_review_task(
+            window_rows, APPROVED, home_id=HOME, window=WINDOW, as_of=AS_OF
+        )
+        self.assertEqual(retained_out, pure_out)
+        assert retained_out["review_task"] is not None
+        self.assertEqual(retained_out["review_task"]["task_type"], sa.TASK_TYPE)
+        self.assertEqual(retained_out["provenance"]["analysis_version"], sa.ANALYSIS_VERSION)
+        self.assertEqual(retained_out["provenance"]["comparator_version"], sa.COMPARATOR_VERSION)
+        self.assertEqual(retained_out["provenance"]["schema_version"], sa.SCHEMA_VERSION)
+        serialized = json.dumps(retained_out, sort_keys=True).encode()
+        folder = Path(self.tmp.name) / "sustained_high_humidity-ordered-100"
+        seed, db = folder / "constructed.json", folder / "constructed.sqlite"
+        for env_hash in ("0", "1", "random"):
+            env = dict(os.environ, PYTHONHASHSEED=env_hash, PYTHONDONTWRITEBYTECODE="1")
+            done = subprocess.run(
+                [sys.executable, "-B", "-c", FRESH_PROVENANCE, str(seed), str(db), HOME],
+                capture_output=True,
+                check=True,
+                env=env,
+                text=True,
+            )
+            self.assertEqual(done.stdout.strip().encode(), serialized)
 
 
 if __name__ == "__main__":

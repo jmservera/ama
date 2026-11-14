@@ -193,6 +193,7 @@ SENSOR_MSSQL_REQUIRED_TESTS = _sql_tests(
     "test_matches_pure_derivation_over_retained_rows_and_is_reproducible",
     "test_read_only_and_no_task_without_approved_rule",
     "test_reopened_store_reproduces_signal_without_writes",
+    "test_reproduce_retained_matches_pure_reproduction_and_fails_closed_read_only",
     "test_stale_and_missing_readings_are_insufficient",
     "test_unmapped_or_invalid_home_is_insufficient",
     "test_unreadable_store_is_insufficient_with_no_priority_effect",
