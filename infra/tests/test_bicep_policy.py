@@ -434,13 +434,15 @@ class BicepPolicyTests(unittest.TestCase):
             ("import", "importImage"),
             ("auth-renewal", "orchestratorImage"),
             ("ledger-verify", "orchestratorImage"),
+            ("ranking-publish", "orchestratorImage"),
         ):
             with self.subTest(container=name):
                 self.assertEqual(containers[name]["image"], f"[parameters('{parameter}')]")
-        self.assertEqual(len(containers), 6)
+        self.assertEqual(len(containers), 7)
         for name, module, args in (
             ("auth-renewal", "token_store", []),
             ("ledger-verify", "digest_blob", ["--publish"]),
+            ("ranking-publish", "ranking_publish", []),
         ):
             self.assertEqual(containers[name]["image"], "[parameters('orchestratorImage')]")
             self.assertEqual(
@@ -1425,6 +1427,7 @@ class BicepPolicyTests(unittest.TestCase):
             "job-forward-dev-auth-renewal",
             "job-forward-dev-orchestrator",
             "job-forward-dev-ledger-verify",
+            "job-forward-dev-rank-publish",
             "job-forward-dev-import",
         }
         expected = {
@@ -1434,6 +1437,7 @@ class BicepPolicyTests(unittest.TestCase):
             "job-forward-dev-demo-auth",
             "job-forward-dev-demo-orch",
             "job-forward-dev-demo-audit",
+            "job-forward-dev-demo-rank",
             "job-forward-dev-demo-load",
         }
         for demo in (False, True):
@@ -1462,9 +1466,11 @@ class BicepPolicyTests(unittest.TestCase):
                     for key in identity["userAssignedIdentities"]
                 ]
                 role = item["properties"]["template"]["containers"][0]["name"]
-                expected_role = {"auth-renewal": "token-maintenance", "ledger-verify": "api"}.get(
-                    role, role
-                )
+                expected_role = {
+                    "auth-renewal": "token-maintenance",
+                    "ledger-verify": "api",
+                    "ranking-publish": "api",
+                }.get(role, role)
                 self.assertEqual(keys, ["existing-" + expected_role])
 
     def test_demo_names_fit_platform_bounds_and_ledger_alerts_match(self) -> None:
@@ -1484,7 +1490,7 @@ class BicepPolicyTests(unittest.TestCase):
                 prefix = evaluate(naming, values, self.main["variables"])["value"]
                 nested = {"prefix": prefix, "demoDirectIngress": True}
                 names = [evaluate(job["name"], nested, {}) for job in jobs]
-                self.assertEqual(len(set(names)), 4)
+                self.assertEqual(len(set(names)), 5)
                 for name in names:
                     self.assertLess(len(name), 32, name)
                     self.assertRegex(name, r"^[a-z][a-z0-9-]*[a-z0-9]$")
@@ -1626,7 +1632,7 @@ class BicepPolicyTests(unittest.TestCase):
             for item in template["resources"]
             if item["type"] in ("Microsoft.App/containerApps", "Microsoft.App/jobs")
         ]
-        self.assertEqual(len(consumers), 6)
+        self.assertEqual(len(consumers), 7)
         for demo, apps, env_only, background, maintenance in product((False, True), repeat=5):
             values = {
                 **self.defaults,
@@ -1645,6 +1651,7 @@ class BicepPolicyTests(unittest.TestCase):
                 "tokenMaintenanceIdentityId": "existing-token-maintenance" if maintenance else "",
                 "prefix": "fixture",
                 "demoDirectIngress": demo,
+                "rankingArchiveContainer": "ranking-archive",
             }
             self.assertEqual(
                 evaluate(module_resource["condition"], values, main["variables"]), apps or env_only
@@ -2074,6 +2081,53 @@ class BicepPolicyTests(unittest.TestCase):
         ):
             self.assertNotIn(forbidden, text)
         self.assertIs(self.main["parameters"]["allowPublicNetworkAccess"]["defaultValue"], False)
+
+    def test_ranking_publication_job_is_scheduled_only_with_the_blob_archive(self) -> None:
+        apps = module_template(self.main, "containerapps")
+        job = next(
+            r
+            for r in resources(apps)
+            if r["type"] == "Microsoft.App/jobs"
+            and r["properties"]["template"]["containers"][0]["name"] == "ranking-publish"
+        )
+        config = job["properties"]["configuration"]
+        self.assertEqual(config["triggerType"], "Schedule")
+        self.assertEqual(config["scheduleTriggerConfig"]["cronExpression"], "30 2 * * *")
+        self.assertEqual(config["scheduleTriggerConfig"]["parallelism"], 1)
+        container = job["properties"]["template"]["containers"][0]
+        self.assertEqual(
+            container["command"], ["python", "-m", "zava_forward.orchestrator.ranking_publish"]
+        )
+        env = container["env"]
+        for fragment in (
+            "'ZF_RANKING_ARCHIVE', 'value', 'azure-blob'",
+            "'ZF_RANKING_BLOB_CONTAINER', 'value', parameters('rankingArchiveContainer')",
+            "'ZF_STORE', 'value', 'mssql'",
+            "'ZF_BLOB_CLIENT_ID'",
+        ):
+            self.assertIn(fragment, env)
+        for forbidden in ("ZF_BLOB_SAS", "connectionString", "AccountKey", "--exercise"):
+            self.assertNotIn(forbidden, json.dumps(job))
+        base = {"deployWorkloads": True, "deployBackgroundWorkloads": True, "prefix": "fixture"}
+        for container_name, workloads, background, expected in (
+            ("ranking-archive", True, True, True),
+            ("", True, True, False),
+            ("ranking-archive", False, True, False),
+            ("ranking-archive", True, False, False),
+        ):
+            with self.subTest(container=container_name, workloads=workloads, bg=background):
+                values = {
+                    **base,
+                    "rankingArchiveContainer": container_name,
+                    "deployWorkloads": workloads,
+                    "deployBackgroundWorkloads": background,
+                }
+                self.assertIs(evaluate(job["condition"], values, apps["variables"]), expected)
+        monitoring = module(self.main, "operational-monitoring")["properties"]["parameters"][
+            "jobNames"
+        ]
+        self.assertIn("parameters('enableRankingArchiveBlob')", monitoring)
+        self.assertIn("-rank-publish", monitoring)
 
     def test_pilot_ranking_archive_requires_a_configured_retention_duration(self) -> None:
         guard = "pilotRankingArchiveRequiresConfiguredRetention"

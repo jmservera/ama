@@ -3882,9 +3882,17 @@ approval. No Azure call, what-if or deployment was made.
 * The API already has `ZF_BLOB_ACCOUNT_URL` and `ZF_BLOB_CLIENT_ID` (managed identity). The wiring adds no key, SAS, connection string, secret or public access, and no role: the existing API storage-account `Storage Blob Data Contributor` assignment covers the adapter's create, read and list. Residual: that role also permits delete at account scope; the adapter has no delete path, but a container-scoped assignment is a later platform decision, not made here.
 * No retention duration is approved for ranking records, so none is chosen. Until the owner sets and approves a duration and locks the policy, nothing may claim immutable or durable release of ranking records. The existing 365-day audit and digest values are not an approved schedule either.
 * `environmentName=pilot` with the flag on and a zero duration fails the named guard `pilotRankingArchiveRequiresConfiguredRetention`. It checks only that a duration is set, not that it is approved or locked.
-* Existing folder records are not migrated, deleted or read: Blob starts empty. The runner (`ranking_publication_runner --blob`) is an operator CLI and needs the same variables; no job is deployed for it.
+* Existing folder records are not migrated, deleted or read: Blob starts empty. The runner (`ranking_publication_runner --blob`) remains an operator CLI. Since 2026-11-13 (Refs #79 criterion 4) the same flag also adds the scheduled `rankingPublish` job below.
 * `main.test.bicepparam` records both parameters explicitly as `false` and `0`. Set the flag in the private parameter copy to wire the demo.
 * Offline checks: `az bicep build` of `main.bicep`, `tests.test_bicep_policy` (flag-off identity, container privacy, optional policy, compiled output-to-env chain, provider constant match, pilot guard) and `tests.test_identity_rbac`. Real-account, emulator and role behaviour are not established.
+
+### Scheduled ranking publication job (Refs #79, 2026-11-13)
+
+With `enableRankingArchiveBlob=true` (and the usual workload and background flags) the compiled template adds a Container Apps `Schedule` job (`job-{prefix}-rank-publish`, demo `job-{prefix}-rank`) that runs `python -m zava_forward.orchestrator.ranking_publish` daily at 02:30 UTC on the `orchestratorImage`, with the API identity, the `mssql` store settings and the ranking Blob settings. It is also added to the existing job-failure alerts. With the flag off no job, container or setting is added.
+
+* The job reads open cases from the store and writes one create-only record to the private Blob container; a repeat is reported as already published and nothing is overwritten or deleted. Retention is the container immutability policy above: unlocked, owner-set, default none.
+* The shipped ranking policy is an unsigned draft, so the job refuses (`RANKING_PUBLISH_BLOCKED`, exit 1) until a named owner signs a new policy version. #79 criterion 3 stays open and no signature is recorded here. A data `as_of` that is not the run date also exits 1 (`RANKING_PUBLISH_ALERT`).
+* Evidence is the compiled template, `tests.test_bicep_policy` and the mock Blob tests in `src/orchestrator/tests/test_ranking_publish.py`. No Azure what-if, deployment, job execution, approved retention duration or locked policy is established, and no log-query missing-run alert was added.
 
 ## Public simulation lane startup binding (Refs #136, #1288, 2026-11-10)
 
