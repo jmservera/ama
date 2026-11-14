@@ -8,6 +8,7 @@ import copy
 import json
 import os
 import re
+import sys
 import unittest
 from collections.abc import Callable
 from pathlib import Path
@@ -17,7 +18,8 @@ from unittest.mock import patch
 from zava_forward.core.chat_case_answers import answer, case_facts
 from zava_forward.core.chat_panel import SOURCE_LABELS
 
-import test_role_matrix as roles
+sys.path.append(str(Path(__file__).resolve().parent))
+import test_role_matrix as roles  # noqa: E402
 
 APPROVED = dict(
     CHAT_DPIA_REF="SYNTH-DPIA-1",
@@ -42,7 +44,7 @@ def envelope(text: str | None) -> dict[str, Any]:
     return dict(outcome="returned", text=text, usage=None, source="ai", model="synthetic")
 
 
-class UnblockVisitGroundingTests(roles.Matrix):  # type: ignore[misc]
+class UnblockVisitGroundingTests(roles.Matrix):
     admission: Any
     saved: dict[str, str | None]
 

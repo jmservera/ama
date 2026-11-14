@@ -9,6 +9,7 @@ live-environment steps (Refs #215).
 import json
 import os
 import re
+import sys
 import unittest
 from collections.abc import Callable
 from functools import partial
@@ -18,7 +19,8 @@ from unittest.mock import patch
 
 from zava_forward.core.chat_panel import SOURCE_LABELS
 
-import test_role_matrix as roles
+sys.path.append(str(Path(__file__).resolve().parent))
+import test_role_matrix as roles  # noqa: E402
 
 WEB = Path(__file__).resolve().parents[1] / "src" / "zava_forward" / "api" / "web"
 CHAT_JS = (WEB / "chat.js").read_text()
@@ -44,7 +46,7 @@ def unavailable(outcome: str, _prompt: str) -> dict[str, Any]:
     return envelope(None, outcome)
 
 
-class AlertToChatMatrix(roles.Matrix):  # type: ignore[misc]
+class AlertToChatMatrix(roles.Matrix):
     admission: Any
     saved: dict[str, str | None]
 
