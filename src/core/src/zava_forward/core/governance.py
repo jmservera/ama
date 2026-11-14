@@ -548,6 +548,7 @@ class GovernanceMixin:
                    resident_impact=k.text(body.get("resident_impact"), "the resident impact", 400),
                    remediation=k.text(body.get("remediation"), "the remediation", 400),
                    restart_authority=k.text(body.get("restart_authority"), "the restart authority (OD-35)", 200),
+                   restart_rule="RULE-024", automatic_restart=False,
                    recorded_by=user["email"], recorded_at=k.now(), status="Paused", restart=None, synthetic=bool(body.get("synthetic")))
         with self.lock:
             br = self._gov()["breaches"]
@@ -560,6 +561,8 @@ class GovernanceMixin:
     def breach_restart(self, user, body):
         k.refuse_bulk(body)
         _need_manager(user, "authorise a restart")
+        if body.get("automatic"):
+            raise PermissionError("RULE-024: a guardrail breach restart is never automatic; the named restart authority must authorise it.")
         with self.lock:
             g = self._gov()
             b = next((x for x in g["breaches"] if x["id"] == body.get("id")), None)
@@ -571,7 +574,10 @@ class GovernanceMixin:
             rel = next((r for r in g["releases"] if r["id"] == body.get("release_id")), None)
             if not rel or rel["decision"] != "Release" or rel["recorded_at"] < b["recorded_at"]:
                 raise PermissionError("Restart needs a Release decision recorded after the breach. Owner: programme manager.")
-            b["restart"] = dict(by=user["email"], at=k.now(), release_id=rel["id"], authority_ref=k.text(body.get("authority_ref"), "the OD-35 authority reference", 200),
+            authority = k.text(body.get("authority_ref"), "the OD-35 authority reference", 200)
+            if authority != b.get("restart_authority"):
+                raise PermissionError("The restart must cite the restart authority named on the breach record (RULE-024).")
+            b["restart"] = dict(by=user["email"], at=k.now(), release_id=rel["id"], authority_ref=authority,
                                 remediation_evidence=k.text(body.get("remediation_evidence"), "the accepted remediation evidence", 600))
             b["status"] = "Restart authorised"
             self.audit(user["email"], "breach_restart", "-", f"{b['id']} restart authorised")

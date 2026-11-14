@@ -237,6 +237,21 @@ class Gov:
         self.assertIn("breach_restart", self.actions())
         self.assertTrue(s.verify_audit())
 
+    def test_breach_names_restart_authority_and_blocks_automatic_restart(self):
+        self.approve_all()
+        s = self.store
+        b = s.breach_record(tf.U["QI-1"], BREACH)
+        self.assertEqual((b["restart_authority"], b["restart_rule"], b["automatic_restart"]), ("OD-35 demo", "RULE-024", False))
+        with self.assertRaises(ValueError):
+            s.breach_record(tf.U["QI-1"], dict(BREACH, restart_authority=""))
+        rel = s.release_record(self.pm1, dict(RELEASE, scope="Phase 0 capture"))
+        ok = dict(id=b["id"], release_id=rel["id"], authority_ref="OD-35 demo", remediation_evidence="r")
+        with self.assertRaises(PermissionError):
+            s.breach_restart(self.pm2, dict(ok, automatic=True))
+        with self.assertRaises(PermissionError):
+            s.breach_restart(self.pm2, dict(ok, authority_ref="Someone else"))
+        self.assertTrue(s.is_paused("archetype", "Solid wall"))
+
     def test_view_is_manager_only(self):
         with self.assertRaises(PermissionError):
             self.store.governance_view(tf.U["RLO-1"])

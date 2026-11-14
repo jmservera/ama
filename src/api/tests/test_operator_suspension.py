@@ -696,6 +696,15 @@ class OperatorIncident(Base):
             reopened_json.continuity_view(self.pm)["suspensions"][0]["status"], "Suspended"
         )
 
+    def test_nfr_014_suspension_and_manual_fallback_drill(self) -> None:
+        drill(self)
+        s = self.store.continuity_view(self.pm)["suspensions"][-1]
+        held = (s["status"], s["restart_rule"], s["automatic_restart"])
+        self.assertEqual(held, ("Suspended", "RULE-024", False))
+        self.assertTrue(self.store.continuity_block(CAP))
+        cases = json.dumps(self.store.cases["ZF-1"])
+        self.assertIn("Synthetic manual fallback", cases)
+
     def test_incident_snapshot_and_reopen(self) -> None:
         drill(self)
         from zava_forward.core.store import Store
@@ -956,6 +965,11 @@ class OperatorIncident(Base):
         self.assertEqual(s["restart_authority"], AUTHORITY)
         self.assertIn("OD-35", s["actual_authority"])
         self.assertEqual(s["trigger"], "guardrail breach")
+        self.assertEqual((s["restart_rule"], s["automatic_restart"]), ("RULE-024", False))
+        with self.assertRaises(PermissionError):
+            self.store.restart_decide(
+                provision(self), dict(id=s["id"], decision="Restart", automatic=True)
+            )
         self.store.log_call(self.pm, "ZF-1", "Spoke", "Synthetic drill call")
         with self.assertRaises(PermissionError):
             self.store.restart_decide(provision(self), dict(id=s["id"], decision="Restart"))
