@@ -2,7 +2,7 @@
 """Select which src-ci jobs a change needs, from the changed file list.
 
 Reads EVENT_NAME, BASE_SHA and HEAD_SHA from the environment, diffs
-BASE_SHA..HEAD_SHA and writes the matrix, namespace and mssql outputs to
+BASE_SHA...HEAD_SHA (merge base) and writes the matrix, namespace and mssql outputs to
 GITHUB_OUTPUT. Any doubt (non pull request event, git failure, unknown path)
 selects everything, so filtering can only remove work that is provably
 unaffected.
@@ -54,6 +54,26 @@ NAMESPACE_ONLY = (
 
 DOC_SUFFIXES = (".md", ".mdx")
 
+TRACKING_PREFIX = ".copilot-tracking/"
+
+# Markdown under docs/ that src-ci.yml still watches (synthetic data, DPIA, UX journeys).
+WATCHED_DOCS = (
+    "docs/reference/research/retrofit-synthetic-data/",
+    "docs/reference/research/chat-memory-dpia.md",
+    "docs/reference/research/ux/customer-journeys/residents.md",
+)
+
+
+def is_inert_path(path: str) -> bool:
+    """RPI tracking files and unwatched docs Markdown cannot affect any CI job."""
+    if path.startswith(TRACKING_PREFIX):
+        return True
+    return (
+        path.startswith("docs/")
+        and path.endswith(DOC_SUFFIXES)
+        and not path.startswith(WATCHED_DOCS)
+    )
+
 
 def is_dependency_manifest(path: str) -> bool:
     """Packaging and pinned requirement files affect every project, so never filter them."""
@@ -77,11 +97,15 @@ def select(files: list[str] | None) -> dict[str, object]:
     projects: set[str] = set()
     namespace = False
     for path in files:
+        if is_inert_path(path):
+            continue
         if path.startswith("src/"):
             if is_dependency_manifest(path):
                 return everything
             parts = path.split("/")
-            if path.endswith(DOC_SUFFIXES) and (len(parts) == 2 or parts[1] in PROJECTS):
+            if path.endswith(DOC_SUFFIXES) and (
+                len(parts) == 2 or parts[1] in PROJECTS
+            ):
                 continue
             if len(parts) > 2 and parts[1] in PROJECTS:
                 projects |= DEPENDENTS[parts[1]]
@@ -102,7 +126,8 @@ def select(files: list[str] | None) -> dict[str, object]:
 def matrix(projects: set[str]) -> dict[str, list[dict[str, object]]]:
     return {
         "include": [
-            {"project": name, **info, "run": name in projects} for name, info in PROJECTS.items()
+            {"project": name, **info, "run": name in projects}
+            for name, info in PROJECTS.items()
         ]
     }
 
@@ -111,7 +136,7 @@ def changed_files(base: str, head: str) -> list[str] | None:
     if not base or not head or set(base) == {"0"}:
         return None
     result = subprocess.run(
-        ["git", "diff", "--name-only", f"{base}..{head}"],
+        ["git", "diff", "--name-only", f"{base}...{head}"],
         capture_output=True,
         text=True,
         check=False,
@@ -125,7 +150,9 @@ def main() -> int:
     event = os.environ.get("EVENT_NAME", "")
     files = None
     if event == "pull_request":
-        files = changed_files(os.environ.get("BASE_SHA", ""), os.environ.get("HEAD_SHA", ""))
+        files = changed_files(
+            os.environ.get("BASE_SHA", ""), os.environ.get("HEAD_SHA", "")
+        )
     selection = select(files)
     projects = selection["projects"]
     assert isinstance(projects, set)
