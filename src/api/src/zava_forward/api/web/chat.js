@@ -304,6 +304,7 @@ function regulatoryPlainMode(root, id) {
 }
 
 const regulatoryStates = new Set(["breach risk", "attention", "unknown", "clear", "not applicable", "answer", "refused", "conflict"]);
+const regulatoryStateLabel = (value) => (regulatoryStates.has(value) ? value : "unknown");
 const regulatoryStateClass = (value) => `regulatory-state state-${regulatoryStates.has(value) ? value.replace(" ", "-") : "unknown"}`;
 
 function regulatorySources(citations) {
@@ -363,8 +364,10 @@ function regulatoryAlertsPanel(caseId) {
     try {
       const data = await api(`/api/law/alerts?case=${encodeURIComponent(caseId)}`);
       const alerts = (data.homes || []).flatMap((home) => home.alerts);
-      list.replaceChildren(...alerts.map((alert) => h("article", { class: "regulatory-alert" },
-        h("h3", { class: regulatoryStateClass(alert.result) }, `Status: ${alert.result}`),
+      list.replaceChildren(...alerts.map((alert, index) => h("article", { class: "regulatory-alert", "aria-labelledby": `regulatory-alert-${index}` },
+        h("h3", { id: `regulatory-alert-${index}`, class: regulatoryStateClass(alert.result) }, `Status: ${regulatoryStateLabel(alert.result)}`),
+        h("p", { class: "regulatory-plain-summary" }, h("strong", {}, "Plain-language summary: "),
+          `status ${regulatoryStateLabel(alert.result)}. Safe action: ${alert.safe_action || "use the human owner route; do not infer an action"}. Decision owner: ${alert.decision_owner || "unassigned"}.`),
         h("p", { class: "plain-explanation" }, meanings[alert.result] || meanings.unknown),
         alert.exercise && h("p", {}, "synthetic-demo: fictional exercise control, not law or operational approval."),
         h("dl", {},

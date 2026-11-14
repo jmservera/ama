@@ -106,7 +106,7 @@ class NonColourSignalTests(unittest.TestCase):
         self.assertTrue(all(contents))
 
     def test_alert_and_lookup_headings_carry_a_visible_text_label(self) -> None:
-        self.assertIn("`Status: ${alert.result}`", CHAT)
+        self.assertIn("`Status: ${regulatoryStateLabel(alert.result)}`", CHAT)
         self.assertIn("`Lookup status: ${answer.kind}`", CHAT)
         self.assertIn("No source held for this answer.", CHAT)
 
