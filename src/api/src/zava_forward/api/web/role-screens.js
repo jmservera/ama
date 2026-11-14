@@ -1339,7 +1339,7 @@ function packagePrerequisites(pkg, orders) {
     ["Scope recorded with a version", pkg.scope && pkg.scope_version ? `Met on record (scope v${pkg.scope_version})` : "Unmet", "Programme manager"],
     ["Contract or call-off reference recorded", pkg.contract_ref ? `Met on record (${pkg.contract_ref} v${wording(pkg.contract_version)})` : "Unmet", "Contracts manager"],
     ["Committed capacity evidenced for every contractor", evidenced ? "Met on record" : "Unmet or Unknown", "Contracts manager"],
-    ["Consultation status confirmed", pkg.consultation_status === "complete" || pkg.consultation_status === "not_applicable" ? "Met on record" : "Unmet. Status is Unknown or applies.", "Legal or procurement authority"],
+    ["Leaseholder consultation status", `Blocked: letting or renewal held. Status: ${String(pkg.leaseholder_consultation_status || "unknown").replace("_", " ")}. ${pkg.letting_renewal_reason || "Unknown blocks letting or renewal until Legal verifies it."}`, "Legal or procurement authority"],
     ["Work order issued for the selected home with resident scope", binding, "Contracts manager"]
   ];
 }
