@@ -1008,6 +1008,24 @@ function exceptionSummaryControl(rows) {
     h("p", { id: "exception-summary-note" }, "Demonstrator feature only: no operational or real-record use is approved. The file copies four columns for the items listed here, within your role scope, as they were when this page loaded. It changes nothing. It is not a complete exception list, and an empty or short file would not mean all clear. The reference is valid only in this view and is not a stable identity. Owners, free text, record, source, case, batch and query identifiers and conflict values are not included. How a downloaded copy is kept or handled is not decided or managed here."),
     status);
 }
+const indicatorStates = { fresh: "Fresh", stale: "Stale", enabled: "Enabled", disabled: "Disabled", healthy: "Healthy", degraded: "Degraded", down: "Down", quarantined: "Quarantined" };
+const indicatorState = (value) => typeof value === "string" && indicatorStates[value.toLowerCase()] || "Unknown";
+function indicatorRows(data, items) {
+  const given = exceptionRecord(data.indicators) ? data.indicators : {};
+  const when = (entry) => exceptionRecord(entry) && typeof entry.as_of === "string" && entry.as_of ? `As of ${entry.as_of}` : "Time not supplied";
+  const quarantined = items.filter((item) => exceptionRecord(item.original_source) && typeof item.original_source.status === "string"
+    && item.original_source.status.toLowerCase() === "quarantined").length;
+  const tasks = Array.isArray(given.ai_tasks) ? given.ai_tasks.filter((task) => exceptionRecord(task) && typeof task.task === "string") : [];
+  const rows = [
+    ["Lineage freshness", `State: ${indicatorState(given.lineage?.state)}. ${when(given.lineage)}. Read-only; Unknown is not proof the lineage is current.`],
+    ["Ingestion quarantine", `State: ${quarantined ? `Quarantined (${quarantined} ${quarantined === 1 ? "item" : "items"} listed below)` : "None returned, which is not an all clear"}. Records stay as received; nothing is released or replayed here.`],
+    ["Sensor feed health", `State: ${indicatorState(given.sensor_feed?.state)}. ${when(given.sensor_feed)}. Read-only; open a home for its sensor readings.`]
+  ];
+  tasks.forEach((task) => rows.push([`AI task: ${exceptionText(task.task)}`,
+    `State: ${indicatorState(task.enabled === true ? "enabled" : task.enabled === false ? "disabled" : null)}. ${when(task)}. Read-only; enabling or disabling a task is a controlled change outside this screen.`]));
+  if (!tasks.length) rows.push(["AI tasks", "State: Unknown. No task settings were returned. Read-only; enabling or disabling a task is a controlled change outside this screen."]);
+  return rows;
+}
 function exceptionRegisterPanel(data) {
   const items = data.items.filter(exceptionItem);
   const unreadable = data.items.length - items.length;
@@ -1026,6 +1044,8 @@ function exceptionRegisterPanel(data) {
     screenFields([["Register state", data.state],
       ["Your access", roles.length ? roles.map(([name, held]) => `${exceptionText(name)}: ${Array.isArray(held) ? held.map(exceptionText).join(", ") : "Unknown"}`).join("; ") : "No role named for you"],
       ["Role scope", scope.length ? scope.map(([kind, role]) => `${exceptionKinds[kind] || exceptionText(kind)}: ${exceptionText(role)}`).join("; ") : "Unknown"]]),
+    h("h3", {}, "State at a glance"),
+    screenFields(indicatorRows(data, items)),
     h("h3", {}, "Sources not connected and records not routed"),
     list("Sources", data.sources),
     list("Unrouted", data.unrouted),
