@@ -121,7 +121,7 @@ resource aiLimitBreach 'Microsoft.Insights/scheduledQueryRules@2023-03-15-previe
   tags: tags
   properties: {
     displayName: 'AI call, token, budget or expiry limit held'
-    description: 'Candidate AI limit breach (calls, tokens, budget, authority expiry); proposed owner: competent task owner and Digital service owner, Finance for budget and price, actual appointment pending. Runbook: ${runbookBase}#ai-limits. Console marker is a non-authoritative signal; the assistant ledger is the record. Does not suspend a task or approve limits.'
+    description: 'Candidate AI limit breach (calls, tokens, budget, authority expiry); proposed owner: competent task owner and Digital service owner, Finance for budget and price, actual appointment pending. Runbook: ${runbookBase}#ai-limits. Class anchors: ${runbookBase}#ai-limit-calls, ${runbookBase}#ai-limit-tokens, ${runbookBase}#ai-limit-budget, ${runbookBase}#ai-limit-expiry. Console marker is a non-authoritative signal; the assistant ledger is the record. Does not suspend a task or approve limits.'
     severity: 2
     enabled: candidateAlertsEnabled && enableAiLimitAlerts
     scopes: [workspaceId]
