@@ -1,4 +1,4 @@
-"""Shared constructed dataset and store behaviour cases (moved from mvp/tests/test_mvp.py in M2 of #199)."""
+"""Shared constructed dataset and store behaviour cases (moved from mvp/tests/test_mvp.py, archive v0.21.0, in M2 of #199)."""
 import json
 import hashlib
 import tempfile

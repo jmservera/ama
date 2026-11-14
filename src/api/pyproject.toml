@@ -34,7 +34,7 @@ src = ["src", "tests"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
 
-# Moved unchanged from mvp/ in M2 and M5 of #199; exemptions are a follow-up to #199 (see src/README.md).
+# Moved unchanged from mvp/ (archive v0.21.0) in M2 and M5 of #199; exemptions are a follow-up to #199 (see src/README.md).
 [tool.ruff.lint.per-file-ignores]
 "tests/test_content_standard.py" = ["E501"]
 # Builds on the untyped role-matrix harness; line length and import order follow its conventions.

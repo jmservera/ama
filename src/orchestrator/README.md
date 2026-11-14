@@ -16,7 +16,7 @@ pass the versioned registry tag as `orchestratorImage` with the matching API tag
 New-tag deployment and healthy job executions remain cut-over evidence, not
 established by changing the template. Tests are in `src/orchestrator/tests/` and run with
 `PYTHONPATH=../core/tests python3 -m unittest discover -s tests`. The section below is moved
-unchanged from the former `mvp/README.md` (M6 of #199).
+unchanged from the former `mvp/README.md` (archive `v0.21.0`; M6 of #199).
 
 ## Source-only rebuild rehearsal (#148)
 

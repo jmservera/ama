@@ -3821,7 +3821,7 @@ It follows the simplicity requirements SA-001 to SA-010 in the
 [PRD](../../docs/prds/zava-forward-retrofit-programme-demonstrator.md) and the
 [prototype learnings review](../../docs/reference/research/ux/prototype-learnings-and-simplicity-review.md).
 
-This file is the former `mvp/README.md` (ADR 0006, issue #199, M6), split by owning project. It keeps
+This file is the former `mvp/README.md` (archive `v0.21.0`; ADR 0006, issue #199, M6), split by owning project. It keeps
 the staff-facing behaviour, configuration, sign-in, local run, honest limits and container checks of
 the `api` project. Domain modules are documented in [core](../core/README.md) (law store, rule cards,
 SQL stores, governance, ledger, chat storage, continuity and synthetic tools), the ledger digest job in

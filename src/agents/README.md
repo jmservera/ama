@@ -510,7 +510,7 @@ The agents project (`zava_forward.agents`) holds the AI evaluation harness and i
 (`evals/`). The five retrofit assistants and the AI task registry still live in `zava_forward.core`
 (`assistants`, `assistant_release`, `ai_registry`, divergence A1 of the parity matrix) and are exposed by
 the [api](../api/README.md) routes. The sections below are moved unchanged from the former
-`mvp/README.md` (M6 of #199) and keep the dated 2026-10-13 and 2026-10-14 validation record. Commands in
+`mvp/README.md` (archive `v0.21.0`; M6 of #199) and keep the dated 2026-10-13 and 2026-10-14 validation record. Commands in
 them that start with `cd src/api` run from the api project.
 
 ## AI evaluation harness

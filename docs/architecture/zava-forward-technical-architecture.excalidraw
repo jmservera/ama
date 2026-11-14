@@ -13054,7 +13054,7 @@
         "status": "configured",
         "sources": [
           "infra/modules/containerapps.bicep",
-          "mvp/zavaforward_mvp/auth.py",
+          "src/api/src/zava_forward/api/auth.py",
           "infra/scripts/initialize-workbench-staff.py"
         ]
       },
@@ -13066,7 +13066,7 @@
         "status": "observed",
         "sources": [
           "infra/modules/containerapps.bicep",
-          "mvp/zavaforward_mvp/server.py"
+          "src/api/src/zava_forward/api/server.py"
         ]
       },
       {
@@ -13077,7 +13077,7 @@
         "status": "configured",
         "sources": [
           "infra/modules/containerapps.bicep",
-          "mvp/zavaforward_mvp/auth.py",
+          "src/api/src/zava_forward/api/auth.py",
           "infra/scripts/initialize-workbench-staff.py"
         ]
       },
@@ -13089,7 +13089,7 @@
         "status": "configured",
         "sources": [
           "infra/modules/containerapps.bicep",
-          "mvp/zavaforward_mvp/auth.py",
+          "src/api/src/zava_forward/api/auth.py",
           "infra/scripts/initialize-workbench-staff.py"
         ]
       },
@@ -13101,7 +13101,7 @@
         "status": "observed",
         "sources": [
           "infra/modules/sql.bicep",
-          "mvp/zavaforward_mvp/mssqlstore.py"
+          "src/core/src/zava_forward/core/mssqlstore.py"
         ]
       },
       {
@@ -13112,7 +13112,7 @@
         "status": "configured",
         "sources": [
           "infra/modules/storage.bicep",
-          "mvp/zavaforward_mvp/documents.py"
+          "src/core/src/zava_forward/core/documents.py"
         ]
       },
       {
@@ -13124,8 +13124,8 @@
         "sources": [
           "infra/modules/foundry.bicep",
           "infra/main.bicep",
-          "mvp/zavaforward_mvp/ai.py",
-          "mvp/zavaforward_mvp/assistants.py",
+          "src/core/src/zava_forward/core/ai.py",
+          "src/core/src/zava_forward/core/assistants.py",
           "docs/adrs/0002-pilot-readiness-architecture.md#five-assistant-exercise-runtime-2026-10-13"
         ]
       },
@@ -13137,10 +13137,10 @@
         "status": "configured",
         "sources": [
           "infra/modules/containerapps.bicep",
-          "mvp/zavaforward_mvp/auth.py",
+          "src/api/src/zava_forward/api/auth.py",
           "infra/scripts/initialize-workbench-staff.py",
           "infra/modules/authTokenStore.bicep",
-          "mvp/zavaforward_mvp/token_store.py"
+          "src/orchestrator/src/zava_forward/orchestrator/token_store.py"
         ]
       },
       {
@@ -13150,8 +13150,8 @@
         "label": "Delegated own-photo\nrequest / image",
         "status": "configured",
         "sources": [
-          "mvp/zavaforward_mvp/profile.py",
-          "mvp/zavaforward_mvp/server.py"
+          "src/core/src/zava_forward/core/profile.py",
+          "src/api/src/zava_forward/api/server.py"
         ]
       },
       {
@@ -13161,7 +13161,7 @@
         "label": "Tile images",
         "status": "configured",
         "sources": [
-          "mvp/web/app.js"
+          "src/api/src/zava_forward/api/web/app.js"
         ]
       },
       {
@@ -13172,7 +13172,7 @@
         "status": "configured",
         "sources": [
           "infra/modules/authTokenStore.bicep",
-          "mvp/zavaforward_mvp/token_store.py"
+          "src/orchestrator/src/zava_forward/orchestrator/token_store.py"
         ]
       },
       {
@@ -13183,7 +13183,7 @@
         "status": "configured",
         "sources": [
           "infra/modules/authTokenStore.bicep",
-          "mvp/zavaforward_mvp/token_store.py"
+          "src/orchestrator/src/zava_forward/orchestrator/token_store.py"
         ]
       },
       {
@@ -13194,9 +13194,9 @@
         "status": "configured",
         "sources": [
           "infra/modules/authTokenStore.bicep",
-          "mvp/zavaforward_mvp/token_store.py",
+          "src/orchestrator/src/zava_forward/orchestrator/token_store.py",
           "infra/modules/containerapps.bicep",
-          "mvp/zavaforward_mvp/auth.py",
+          "src/api/src/zava_forward/api/auth.py",
           "infra/scripts/initialize-workbench-staff.py"
         ]
       },
@@ -13232,7 +13232,7 @@
           "infra/modules/monitoring.bicep",
           "infra/main.bicep",
           "infra/modules/sql.bicep",
-          "mvp/zavaforward_mvp/mssqlstore.py"
+          "src/core/src/zava_forward/core/mssqlstore.py"
         ]
       },
       {
@@ -13323,7 +13323,7 @@
           "docs/adrs/0001-azure-architecture.md#decisions",
           "infra/modules/foundry.bicep",
           "infra/main.bicep",
-          "mvp/zavaforward_mvp/ai.py"
+          "src/core/src/zava_forward/core/ai.py"
         ]
       },
       {

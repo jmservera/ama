@@ -118,7 +118,7 @@ issues #90, #94, #95, #85 and #86 that may own those states.
 Reproducibility (issue #176, parent #165). Historical pack generators are in
 `support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/`;
 migrated scale and sensor tools are in `src/core/src/zava_forward/core/synthetic/`
-under accepted ADR 0006. New executable work belongs in `src/`, not `mvp/`.
+under accepted ADR 0006. New executable work belongs in `src/`, not the retired `mvp/` (archive `v0.21.0`).
 
 | Generator | Reproducibility inputs | Manifest or receipt fields | Byte-identical test |
 | --- | --- | --- | --- |

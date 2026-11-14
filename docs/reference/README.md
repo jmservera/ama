@@ -1154,7 +1154,9 @@ update this index when a page is added, and log it as a `query` entry.
 Run a lint pass before a major deliverable, submission or regulatory
 commencement date. Check for:
 
-* Broken relative links and files missing from this index
+* Broken relative links and files missing from this index. Run
+  `python3 tools/check-legacy-references.py` to check changed Markdown links and
+  that retired `mvp/` and `prototype/` paths name archive `v0.21.0` (Refs #203)
 * Contradictions between syntheses, project documents and sources
 * Stale claims superseded by a newer source or a regulatory change
 * Snapshots past their monitoring cadence in the register

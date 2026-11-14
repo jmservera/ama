@@ -300,7 +300,7 @@ resource group.
 This is a worked illustration of the PRD Options Gate, not an approved
 decision. The weights below are architect proposals pending sponsor approval,
 and the scores are architect judgements on a 1 to 5 scale (5 is best). The
-only measured evidence at that comparison date is the `warm-test` deployment and the `prototype/`
+only measured evidence at that comparison date is the `warm-test` deployment and the retired `prototype/` (archive `v0.21.0`)
 tests, so every score for cost, support and company fit stays provisional.
 A high aggregate cannot offset a failed mandatory control gate.
 

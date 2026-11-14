@@ -836,7 +836,7 @@ working sign-in reports are historical, not evidence that the new tenant
 registration exists or direct src sign-in works. The new explicit demo mode
 reuses the useful FQDN/browser pattern without copying obsolete public-data
 configuration, old image names, datasets or tenant identifiers. No code was
-restored from `mvp/`.
+restored from `mvp/` (archive `v0.21.0`).
 
 ## Public browser continuation (2026-10-16, #344)
 
@@ -1499,7 +1499,7 @@ local Docker checks or authorize subscription/tenant changes.
 Where Docker is available, build and run locally before registry publication.
 The 2026-10-16 owner direction instead permits ACR Tasks with no local Docker;
 its observed contracts are separately labelled in the pack. ADR 0006 uses `src/` as
-context so named workload packages can include sibling core; never use `mvp/`
+context so named workload packages can include sibling core; never use the retired `mvp/` (archive `v0.21.0`)
 or the repository root as context. The API starts with `python -m zava_forward.api`.
 The token-store and ledger jobs use `orchestratorImage` with commands
 `python -m zava_forward.orchestrator.token_store` and
@@ -3329,7 +3329,7 @@ The current-main integration keeps the installed `src/` namespace,
 main's IoT sender/receiver scopes and release controls, and the private Blob
 transport from this branch. Helpers remain in `infra/scripts`; the worker
 imports `zava_forward.core.mssqlstore` from the installed core distribution.
-No retired `mvp/` code or old tag permission is restored. The preceding
+No retired `mvp/` code (archive `v0.21.0`) or old tag permission is restored. The preceding
 DN1-DN5 decisions and historical failures remain unchanged.
 
 | Claim | evidence | rationale | change_reason |

@@ -571,7 +571,9 @@ On 2026-10-08 the owner directed that the MVP replaces the earlier prototype as
 the scored solution code. `solution-code` now includes `mvp/zavaforward_mvp/`,
 `mvp/web/` (without `vendor/`), `mvp/tests/`, `mvp/Dockerfile`, `mvp/README.md`
 and the data generator scripts under `support/synthetic-data/`. The private
-`mvp/data/` is excluded. The registry no longer reads `prototype/`. The prototype
+`mvp/data/` is excluded. The registry no longer reads `prototype/`. The retired `mvp/` and
+`prototype/` paths named in these dated entries are preserved in archive
+`v0.21.0`. The prototype
 was removed in #202 step 1, together with its validation workflow and the dead
 `prototype/deploy/**/*.bicep` infrastructure glob; the registry edit takes
 effect only after that pull request merges.
@@ -590,7 +592,8 @@ and `mvp/Dockerfile` globs were removed; only `mvp/README.md` remains.
 On 2026-10-15 (#199 M6) `mvp/README.md` was split into the per-project READMEs
 (`src/api`, `src/core`, `src/agents`, `src/orchestrator`, `src/importer`), which
 `src/**/*` already counts, so the `mvp/README.md` glob was removed. The dated
-evidence sections moved unchanged; only the `mvp/` pointer README is left, and
+evidence sections moved unchanged; only the `mvp/` pointer README (archive
+`v0.21.0`) is left, and
 it is not scored.
 
 On 2026-11-01 (#198) the registry state was re-checked. `artifacts.json` has no
