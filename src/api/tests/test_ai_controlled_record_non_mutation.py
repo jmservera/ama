@@ -15,6 +15,7 @@ import unittest
 import urllib.error
 import urllib.request
 from http.server import ThreadingHTTPServer
+from typing import Any, cast
 from unittest.mock import patch
 
 import release_support
@@ -67,18 +68,25 @@ class ScriptedProvider(ta.Provider):
     consumption = None
     chat_text: str | None = None
 
-    def evidence(self, system, prompt, max_tokens, timeout):
+    def evidence(self, system: str, prompt: str, max_tokens: int, timeout: float) -> dict[str, Any]:
         if self.chat_text is None:
-            return super().evidence(system, prompt, max_tokens, timeout)
+            return cast(
+                dict[str, Any],
+                super().evidence(system, prompt, max_tokens, timeout),  # type: ignore[no-untyped-call]
+            )
         self.calls += 1
         answer = dict(answer=self.chat_text, citations=["ZF-1/stage"])
         return dict(outcome="returned", text=json.dumps(answer))
 
 
 class NonMutationBase(ta.Base):
-    def setUp(self):
-        super().setUp()
-        self.provider = ScriptedProvider()
+    provider: ScriptedProvider
+    baseline: str
+    baseline_audit: int
+
+    def setUp(self) -> None:
+        super().setUp()  # type: ignore[no-untyped-call]
+        self.provider = ScriptedProvider()  # type: ignore[no-untyped-call]
         self.store.ai = self.provider
         release_support.install(self.store)
         for patcher in (
@@ -87,22 +95,22 @@ class NonMutationBase(ta.Base):
         ):
             patcher.start()
             self.addCleanup(patcher.stop)
-        self.app = App(self.store, PASSWORD)
+        self.app = App(self.store, PASSWORD)  # type: ignore[no-untyped-call]
         self.app.assistants = self.service
         self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(self.app))
         self.server_thread = threading.Thread(target=self.httpd.serve_forever, daemon=True)
         self.server_thread.start()
         self.addCleanup(self.shutdown)
         self.base = f"http://127.0.0.1:{self.httpd.server_port}"
-        self.cookies = {}
+        self.cookies: dict[str, str] = {}
         self.seed_controlled_records()
 
-    def shutdown(self):
+    def shutdown(self) -> None:
         self.httpd.shutdown()
         self.httpd.server_close()
         self.server_thread.join(timeout=5)
 
-    def call(self, who, path, body=None):
+    def call(self, who: str, path: str, body: dict[str, Any] | None = None) -> tuple[int, Any]:
         person = self.people[ROLE_FOR.get(who, who)]
         if who not in self.cookies:
             login = urllib.request.Request(
@@ -122,9 +130,9 @@ class NonMutationBase(ta.Base):
         except urllib.error.HTTPError as error:
             return error.code, json.loads(error.read() or b"{}")
 
-    def seed_controlled_records(self):
+    def seed_controlled_records(self) -> None:
         """Every controlled record below is written by an authorised human route, never by AI."""
-        steps = (
+        steps: tuple[tuple[str, str, dict[str, Any]], ...] = (
             (
                 "coordinator",
                 "/api/cases/ZF-1/technical",
@@ -160,7 +168,7 @@ class NonMutationBase(ta.Base):
         self.baseline = self.snapshot()
         self.baseline_audit = len(list(self.store.audit_entries()))
 
-    def snapshot(self):
+    def snapshot(self) -> str:
         """Raw rows, field extracts, ranking and archive bytes. Excludes meta.seq and audit."""
         with self.service.transaction() as db:
             rows = [
@@ -191,7 +199,7 @@ class NonMutationBase(ta.Base):
             for cid, c in cases.items()
         }
         ranks = {cid: r["rank"] for cid, r in self.store._ranking().items()}
-        archive = {}
+        archive: dict[str, str] = {}
         folder = self.store._ranking_archive()
         for root, _, names in os.walk(folder):
             for name in names:
@@ -204,22 +212,22 @@ class NonMutationBase(ta.Base):
             default=str,
         )
 
-    def assert_unchanged(self, label=""):
+    def assert_unchanged(self, label: str = "") -> None:
         self.assertEqual(self.baseline, self.snapshot(), label)
         hold = self.store.cases["ZF-1"]["hazards"][0]["hold"]
         self.assertEqual(hold["status"], "Active", label)
 
-    def new_audit_actions(self):
+    def new_audit_actions(self) -> set[str]:
         return {e["action"] for e in list(self.store.audit_entries())[self.baseline_audit :]}
 
 
 class ChatNonMutation(NonMutationBase):
-    def thread(self, who="manager"):
+    def thread(self, who: str = "manager") -> str:
         status, made = self.call(who, "/api/chat/threads", dict(case_id="ZF-1"))
         self.assertEqual(status, 200, made)
-        return made["id"]
+        return str(made["id"])
 
-    def test_seeded_records_are_real_controlled_state(self):
+    def test_seeded_records_are_real_controlled_state(self) -> None:
         zf1 = self.store.cases["ZF-1"]
         self.assertEqual(zf1["hazards"][0]["hold"]["status"], "Active")
         self.assertEqual(zf1["decision"]["status"], "Accepted")
@@ -227,7 +235,7 @@ class ChatNonMutation(NonMutationBase):
         self.assertEqual(zf1["grants"][0]["state"], "Not recorded")
         self.assertTrue(json.loads(self.baseline)["archive"])
 
-    def test_adversarial_chat_turns_never_change_controlled_records(self):
+    def test_adversarial_chat_turns_never_change_controlled_records(self) -> None:
         for reply in (HOSTILE_REPLY, SUPPORTED_REPLY):
             self.provider.chat_text = reply
             for who in ("manager", "safety", "coordinator"):
@@ -247,7 +255,7 @@ class ChatNonMutation(NonMutationBase):
         )
         self.assertTrue(self.store.verify_audit())
 
-    def test_chat_has_no_approve_execute_or_rank_route(self):
+    def test_chat_has_no_approve_execute_or_rank_route(self) -> None:
         self.provider.chat_text = HOSTILE_REPLY
         tid = self.thread()
         status, proposal = self.call(
@@ -262,7 +270,7 @@ class ChatNonMutation(NonMutationBase):
                     self.assertIn(status, (400, 404, 405), path)
         self.assert_unchanged()
 
-    def test_chat_refused_for_a_role_without_access_makes_no_change(self):
+    def test_chat_refused_for_a_role_without_access_makes_no_change(self) -> None:
         self.provider.chat_text = HOSTILE_REPLY
         status, _ = self.call("Contractor", "/api/chat/threads", dict(case_id="ZF-1"))
         self.assertIn(status, (401, 403, 404))
@@ -270,7 +278,7 @@ class ChatNonMutation(NonMutationBase):
 
 
 class AssistantNonMutation(NonMutationBase):
-    def invoke_ready(self, cap, who="manager"):
+    def invoke_ready(self, cap: str, who: str = "manager") -> dict[str, Any]:
         status, made = self.call(who, f"/api/assistants/{cap}/invoke", dict(case_id="ZF-1"))
         self.assertEqual(status, 202, made)
         self.assert_unchanged(f"{cap} queued")
@@ -281,9 +289,11 @@ class AssistantNonMutation(NonMutationBase):
         self.assertEqual(status, 200)
         self.assertEqual(ready["state"], "ready")
         self.assertIs(ready["envelope"]["approved"], False)
-        return ready
+        return cast(dict[str, Any], ready)
 
-    def review(self, proposal, action, who="manager", **extra):
+    def review(
+        self, proposal: dict[str, Any], action: str, who: str = "manager", **extra: Any
+    ) -> dict[str, Any]:
         body = dict(
             action=action, revision=proposal["revision"], note="Human review of supplied sources."
         )
@@ -291,9 +301,9 @@ class AssistantNonMutation(NonMutationBase):
             who, f"/api/assistants/proposals/{proposal['id']}/review", dict(body, **extra)
         )
         self.assertEqual(status, 200, result)
-        return result
+        return cast(dict[str, Any], result)
 
-    def test_every_assistant_proposal_lifecycle_leaves_controlled_records_unchanged(self):
+    def test_every_assistant_proposal_lifecycle_leaves_controlled_records_unchanged(self) -> None:
         actions = ("accept", "edit-accept", "reject")
         for index, cap in enumerate(REGISTRY):
             with self.subTest(cap=cap):
@@ -308,18 +318,16 @@ class AssistantNonMutation(NonMutationBase):
                 verified = self.review(ready, "verify", source_verified=True)
                 self.assert_unchanged("verified")
                 action = actions[index % 3]
-                extra = (
-                    dict(output=ta.proposal(verified["snapshot"]))
-                    if action == "edit-accept"
-                    else {}
-                )
+                extra: dict[str, Any] = {}
+                if action == "edit-accept":
+                    extra = dict(output=ta.proposal(verified["snapshot"]))  # type: ignore[no-untyped-call]
                 done = self.review(verified, action, **extra)
                 self.assertEqual(done["state"], "rejected" if action == "reject" else "accepted")
                 self.assertIs(done["envelope"]["approved"], False)
                 self.assert_unchanged(f"{cap} {action}")
                 self.assertEqual(self.store.cases["ZF-1"]["hazards"][0]["hold"]["status"], "Active")
 
-    def test_dismissal_without_verification_and_failed_proposals_change_nothing(self):
+    def test_dismissal_without_verification_and_failed_proposals_change_nothing(self) -> None:
         for cap in REGISTRY:
             with self.subTest(cap=cap):
                 ready = self.invoke_ready(cap)
@@ -336,7 +344,7 @@ class AssistantNonMutation(NonMutationBase):
             self.call("manager", f"/api/assistants/proposals/{failed_id}")[1]["state"], "accepted"
         )
 
-    def test_proactive_scan_proposals_are_separate_advisory_records(self):
+    def test_proactive_scan_proposals_are_separate_advisory_records(self) -> None:
         scanned = self.service.scan()
         queued = scanned["enqueued"]
         self.assertTrue(queued, scanned)
@@ -351,7 +359,7 @@ class AssistantNonMutation(NonMutationBase):
             self.assertNotIn(item["state"], ("accepted", "approved", "executed"))
         self.assertTrue(self.store.verify_audit())
 
-    def test_unauthorised_invocation_is_refused_without_change(self):
+    def test_unauthorised_invocation_is_refused_without_change(self) -> None:
         for who in ("Contractor", "Unknown"):
             status, _ = self.call(
                 who, "/api/assistants/stock-prioritisation/invoke", dict(case_id="ZF-1")
@@ -361,7 +369,7 @@ class AssistantNonMutation(NonMutationBase):
 
 
 class PositiveControl(NonMutationBase):
-    def test_an_authorised_human_action_does_change_the_snapshot(self):
+    def test_an_authorised_human_action_does_change_the_snapshot(self) -> None:
         refer = dict(
             index=0,
             to=self.people[ROLE_FOR["safety"]]["email"],
