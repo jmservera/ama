@@ -868,8 +868,8 @@ function hazardScreen(intro) {
   return (c) => {
     const items = c.hazards || [];
     return h("div", {},
-      hazardJump([["boundary", "Evidence boundary"], ["queue", "Referral queue"], ["hold", "Retrofit pause and release decision"], ["act", "Where to act"]]),
-      hazardPanel("boundary", "Evidence boundary",
+      hazardJump([["boundary", "Evidence and checks"], ["queue", "Referral queue"], ["restart", "Retrofit pause and restart decision"], ["act", "Where to act"]]),
+      hazardPanel("boundary", "Evidence and checks",
         h("p", {}, intro),
         h("p", {}, "This screen does not classify hazards, set clocks, close hazards or authorise work. Categories and priorities are the recorded report, not a service categorisation. Sent, received and accepted are separate: a sent referral is not receipt, and receipt is not ownership. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only. Every recorded hazard and safeguarding item is listed, including released ones.`)),
@@ -880,7 +880,7 @@ function hazardScreen(intro) {
             screenStamp(x.aware_at), x.source, hazardActor(x.destination),
             hazardStep(x.sent_at), hazardStep(x.received_at), hazardStep(x.accepted_at),
             hazardState(x), hazardFollowUp(x)]), Infinity)),
-      hazardPanel("hold", "Retrofit pause and release decision",
+      hazardPanel("restart", "Retrofit pause and restart decision",
         screenTable("Scoped pause and release evidence",
           ["Item", "Pause and release evidence", "Service response clock", "Service responded"],
           items.map((x, i) => [`H-${i + 1}`, hazardHold(x), hazardClock(x), hazardStep(x.responded_at)]), Infinity)),
