@@ -37,7 +37,10 @@ class ScreenDesignTraceability(unittest.TestCase):
         for row in rows():
             self.assertEqual(len(row), 7, row[0])
             self.assertTrue(all(row), row)
-            seen.add(int(re.search(r"#(\d+)\]", row[0]).group(1)))
+            match = re.search(r"#(\d+)\]", row[0])
+            self.assertIsNotNone(match, row[0])
+            assert match is not None
+            seen.add(int(match.group(1)))
         self.assertEqual(ISSUES - seen, set())
 
     def test_every_registered_role_screen_has_a_row(self) -> None:
@@ -66,12 +69,15 @@ class ScreenDesignTraceability(unittest.TestCase):
             path, klass, method = parts
             self.assertTrue((ROOT / path).is_file(), path)
             tree = ast.parse((ROOT / path).read_text())
-            node = next(
+            target_cls = next(
                 (n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == klass),
                 None,
             )
-            self.assertIsNotNone(node, f"{klass} not found in {path}")
-            self.assertIn(method, {n.name for n in node.body if isinstance(n, ast.FunctionDef)})
+            self.assertIsNotNone(target_cls, f"{klass} not found in {path}")
+            assert target_cls is not None
+            self.assertIn(
+                method, {n.name for n in target_cls.body if isinstance(n, ast.FunctionDef)}
+            )
 
     def test_no_human_acceptance_is_claimed(self) -> None:
         self.assertIn("ticks no acceptance criterion", DOC)
