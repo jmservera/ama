@@ -11800,3 +11800,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Corrected the preceding #215 plain-language entry: the visible mode text in `chat.js` is no longer its own `role="status"` node (it duplicated the live region inside `#regulatory-alerts` and broke a status lookup in `test_case_journey` and the browser check). A mode change is now announced through the single existing status paragraph of the alerts panel or lookup disclosure, and the visible text stays.
 * Evidence: the 2026-11-14 RPI correction cycle 1 artifacts under `.copilot-tracking/`. Static local evidence only; criteria 3 and 5 of #215 stay unticked.
+
+## [2026-11-14] update | Issue #215 plain-language mode reaches the chat API (Refs #215)
+
+* Plain-language mode is now sent to the API and answered there: `plain_language` (boolean, default false) is accepted on `/api/chat/unstored-ask`, `/api/chat/threads/{id}/ask` and `/api/chat/regulatory/threads/{id}/ask`; a non-boolean value is refused. A plain-language reply adds `plain_summary` while `reply`, citations and provenance fields stay as produced; stored thread content is unchanged. New module `api/plain_language.py`.
+* `chat.js`: the employee chat has a "Plain-language answers" checkbox (off by default) and both chat panels send the flag. `regulatoryPlainMode` no longer writes to the panel status paragraph: only the `.regulatory-mode-state` text changes, in an `aria-live="polite"` region without `role="status"`, so `#regulatory-alerts` keeps one `[role="status"]` and its coverage or outage banner is not erased.
+* Corrected the WCAG baseline sentence that called the mode text a `role="status"` region. The two earlier #215 entries above are kept as written; this stack's base is `eb1c3f35e` (#1661 on #1641).
+* Tests: new `test_home_chat_api.py`; additions in `test_regulatory_chat_api.py` and `test_accessibility_baseline.py`. Static and local API evidence only; no screen-reader, browser or staff comprehension claim; criteria 3 and 5 of #215 stay unticked.

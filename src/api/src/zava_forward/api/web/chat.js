@@ -134,6 +134,8 @@ const employeeChat = (() => {
     ui.beforeInput.append(ui.node("small",
       "Do not enter personal or sensitive resident information. Chat cannot approve or change records.",
       { id: "employee-chat-entry-warning", class: "chat-widget-meta" }));
+    const plainMode = h("input", { type: "checkbox", id: "employee-chat-plain-mode" });
+    ui.beforeInput.append(h("label", { class: "chat-widget-meta", for: "employee-chat-plain-mode" }, plainMode, " Plain-language answers"));
     input.addEventListener("input", () => {
       if (input.value) {
         input.dataset.caseDirty = "true";
@@ -164,13 +166,13 @@ const employeeChat = (() => {
             if (!current()) return;
             tid = thread.id;
           }
-          answer = await api(`/api/chat/threads/${encodeURIComponent(tid)}/ask`, { content: question, skill }, signal);
+          answer = await api(`/api/chat/threads/${encodeURIComponent(tid)}/ask`, { content: question, skill, plain_language: plainMode.checked }, signal);
         } else {
-          answer = await api("/api/chat/unstored-ask", { content: question, skill, case_id: caseId }, signal);
+          answer = await api("/api/chat/unstored-ask", { content: question, skill, case_id: caseId, plain_language: plainMode.checked }, signal);
         }
         if (!current()) return;
         const view = attribution(answer);
-        ui.message("assistant", answer.reply, {
+        ui.message("assistant", answer.plain_summary ? `Plain-language summary: ${answer.plain_summary}\n\n${answer.reply}` : answer.reply, {
           label: view.label,
           outcome: outcomeNames[answer.kind] || "unknown",
           detail: `Skill: ${answer.skill}. ${usageNote(answer.consumption)}${view.detail}`,
@@ -289,14 +291,13 @@ function regulatoryGuidance(role) {
     h("p", {}, "In doubt: Juan Manuel Servera is the exercise Legal, Compliance and DPO owner, for synthetic-demo review only. Real safety, consent, finance and legal decisions remain with the relevant authorised humans. No operational approval is claimed."));
 }
 
-function regulatoryPlainMode(root, id, status) {
+function regulatoryPlainMode(root, id) {
   const input = h("input", { type: "checkbox", id, checked: true });
-  const state = h("span", { class: "regulatory-mode-state" }, "Plain-language explanations are shown.");
+  const state = h("span", { class: "regulatory-mode-state", "aria-live": "polite", "aria-atomic": "true" }, "Plain-language explanations are shown.");
   root.classList.add("regulatory", "plain-language");
   input.addEventListener("change", () => {
     root.classList.toggle("plain-language", input.checked);
     state.textContent = input.checked ? "Plain-language explanations are shown." : "Plain-language explanations are hidden.";
-    status.textContent = state.textContent;
   });
   return h("div", { class: "regulatory-mode" },
     h("label", { for: id }, input, " Plain-language explanations"), state);
@@ -386,7 +387,7 @@ function regulatoryAlertsPanel(caseId) {
   }
   root.append(h("h2", { id: "regulatory-alerts-title" }, "Regulatory alerts for this home"),
     h("p", { class: "notice" }, "Possible emergency or hazard? Use the existing human emergency or hazard service now. Do not wait for alerts, chat or this application. No resident message is sent."),
-    regulatoryPlainMode(root, "alerts-plain-mode", status),
+    regulatoryPlainMode(root, "alerts-plain-mode"),
     regulatoryGuidance(me.user.role), status, list, refresh);
   load();
   return root;
@@ -427,11 +428,13 @@ function regulatoryChatPanel(caseId) {
   const input = h("textarea", { id: "regulatory-question", name: "regulatory-question", autocomplete: "off", maxlength: "1000", rows: "3", "aria-describedby": "regulatory-privacy" });
   const button = h("button", { type: "submit" }, "Look up cited sources");
   let tid = null;
+  const plainMode = regulatoryPlainMode(root, "chat-plain-mode");
   const show = (answer, thread) => {
     const sections = answer.sections;
     const item = h("li", { class: "regulatory-turn" },
       h("h3", { class: regulatoryStateClass(answer.kind) }, `Lookup status: ${answer.kind}`),
       h("p", { class: "plain-explanation" }, lookupMeanings[answer.kind] || lookupMeanings.refused),
+      answer.plain_summary ? h("p", { class: "regulatory-plain-summary" }, h("strong", {}, "Plain-language summary: "), answer.plain_summary) :null,
       h("p", {}, answer.label || "synthetic-demo: not legal advice or approval"),
       h("p", {}, answer.usage ? "Model calls for this question: 0. No AI model is used. Service cost: Unknown, not zero." : "Historical model usage was not recorded. Service cost: Unknown."));
     if (sections) {
@@ -478,7 +481,7 @@ function regulatoryChatPanel(caseId) {
   };
   root.append(h("p", {}, "synthetic-demo only. Exact source excerpts and recorded facts, not legal interpretation. Ask about hazard sources or automated decisions. Safety routes and deterministic alerts remain independent."),
     privacy, usageStatus,
-    regulatoryPlainMode(root, "chat-plain-mode", status),
+    plainMode,
     h("p", { class: "plain-explanation" }, "Use short questions to find sources. Missing, conflicting, stale or future sources are not proof of a duty. For lease, grant or contract terms, obtain the actual document and ask the named human owner."),
     regulatoryGuidance(me.user.role),
     liveLog, h("form", { onsubmit: async (event) => {
@@ -491,7 +494,7 @@ function regulatoryChatPanel(caseId) {
       status.textContent = "Looking up cited sources. Human safety routes remain available.";
       try {
         if (!tid) tid = (await api("/api/chat/regulatory/threads", { case_id: caseId })).id;
-        const answer = await api(`/api/chat/regulatory/threads/${encodeURIComponent(tid)}/ask`, { content: question });
+        const answer = await api(`/api/chat/regulatory/threads/${encodeURIComponent(tid)}/ask`, { content: question, plain_language: plainMode.querySelector("input").checked === true });
         log.append(h("li", {}, h("strong", {}, "You"), " ", question));
         show(answer, tid);
         status.textContent = `${answer.kind}: synthetic-demo turn stored with its sources.${answer.escalation ? " Conflict sent to the exercise owner for human review." : ""}`;

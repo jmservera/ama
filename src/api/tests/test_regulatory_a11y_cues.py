@@ -82,11 +82,12 @@ class RegulatoryCueTests(unittest.TestCase):
 
     def test_plain_mode_change_is_announced_with_visible_text(self) -> None:
         body = JS[JS.index("function regulatoryPlainMode") : JS.index("const regulatoryStates")]
-        self.assertIn('class: "regulatory-mode-state" }', body)
+        self.assertIn('class: "regulatory-mode-state"', body)
         self.assertNotIn("role", body)
-        self.assertIn("status.textContent = state.textContent", body)
-        self.assertIn('regulatoryPlainMode(root, "alerts-plain-mode", status)', JS)
-        self.assertIn('regulatoryPlainMode(root, "chat-plain-mode", status)', JS)
+        self.assertIn('"aria-live": "polite", "aria-atomic": "true"', body)
+        self.assertNotIn("status", body)
+        self.assertIn('regulatoryPlainMode(root, "alerts-plain-mode")', JS)
+        self.assertIn('const plainMode = regulatoryPlainMode(root, "chat-plain-mode")', JS)
         self.assertIn("Plain-language explanations are shown.", body)
         self.assertIn("Plain-language explanations are hidden.", body)
         self.assertIn("state.textContent = input.checked", body)

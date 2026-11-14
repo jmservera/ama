@@ -20,7 +20,7 @@ from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, cont
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
 from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine, staff_intake
-from zava_forward.api import auth, sensor_badges, simulator_admin
+from zava_forward.api import auth, plain_language, sensor_badges, simulator_admin
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
@@ -1144,9 +1144,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     if len(parts) == 3 and parts[1] == "threads" and not post:
                         return self._json(200, app.regulatory.history(user, parts[2]))
                     if len(parts) == 4 and parts[1] == "threads" and post:
-                        if parts[3] == "ask" and set(body) == {"content"}:
+                        if parts[3] == "ask" and set(body) - {plain_language.FIELD} == {"content"}:
+                            plain, body = plain_language.split_flag(body)
                             with app.law_lock:
-                                return self._json(200, app.regulatory.ask(user, parts[2], body["content"]))
+                                return self._json(200, plain_language.apply(
+                                    app.regulatory.ask(user, parts[2], body["content"]), plain))
                         if parts[3] == "doubt" and set(body) == {"turn"}:
                             return self._json(200, app.regulatory.doubt(user, parts[2], body["turn"]))
                         raise ValueError("Only content for ask or turn for doubt is accepted.")
@@ -1171,14 +1173,19 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 if not post and parts == ["memory", "status"]:
                     return self._json(200, c.privacy.memory_status(c.current_user(user), (parse_qs(urlparse(self.path).query).get("task") or [""])[0]))
                 if post and parts == ["unstored-ask"]:
-                    if set(body) - {"content", "skill", "case_id"}:
+                    if set(body) - {"content", "skill", "case_id", plain_language.FIELD}:
                         app.panel.record_validation_refused(user)
                         raise ValueError("Only content, skill and case_id are accepted.")
+                    try:
+                        plain, body = plain_language.split_flag(body)
+                    except ValueError:
+                        app.panel.record_validation_refused(user)
+                        raise
                     u = c.current_user(user)
                     if c.privacy.decision()["approved"]:
                         raise ValueError("Chat storage is approved. Use a chat thread.")
-                    return self._json(200, app.panel.ask_unstored(
-                        u, str(body.get("case_id") or ""), body.get("content"), skill=body.get("skill")))
+                    return self._json(200, plain_language.apply(app.panel.ask_unstored(
+                        u, str(body.get("case_id") or ""), body.get("content"), skill=body.get("skill")), plain))
                 if post and parts == ["threads"]:
                     u = c.current_user(user)
                     if body.get("case_id") and s.detail(body["case_id"], u) is None:
@@ -1207,13 +1214,19 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         answer = app.panel.ask(u, tid, body.get("content"))
                         return self._json(200, dict(answer, withheld=answer["kind"] == "withheld"))
                     if parts[2] == "ask":
-                        if set(body) - {"content", "skill"}:
+                        if set(body) - {"content", "skill", plain_language.FIELD}:
                             app.panel.record_validation_refused(u, tid)
                             raise ValueError("Only content and skill are accepted.")
+                        try:
+                            plain, body = plain_language.split_flag(body)
+                        except ValueError:
+                            app.panel.record_validation_refused(u, tid)
+                            raise
                         if "skill" in body and body["skill"] is None:
                             app.panel.record_validation_refused(u, tid)
                             raise ValueError("Choose a listed skill or omit skill for legacy chat.")
-                        return self._json(200, app.panel.ask(u, tid, body.get("content"), skill=body.get("skill")))
+                        return self._json(200, plain_language.apply(
+                            app.panel.ask(u, tid, body.get("content"), skill=body.get("skill")), plain))
                     if parts[2] == "proposals":
                         # Proposal-only: the existing assistants path queues it for the independent review.
                         t = s.chat_resume(u, tid)

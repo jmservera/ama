@@ -131,8 +131,8 @@ class PlainLanguageToggleTests(unittest.TestCase):
         self.assertNotIn("onclick", body)
 
     def test_alerts_and_lookup_each_get_a_distinct_toggle_id(self) -> None:
-        self.assertIn('regulatoryPlainMode(root, "alerts-plain-mode", status)', CHAT)
-        self.assertIn('regulatoryPlainMode(root, "chat-plain-mode", status)', CHAT)
+        self.assertIn('regulatoryPlainMode(root, "alerts-plain-mode")', CHAT)
+        self.assertIn('regulatoryPlainMode(root, "chat-plain-mode")', CHAT)
 
     def test_css_hides_plain_copy_only_when_the_mode_is_off(self) -> None:
         self.assertIn(".regulatory .plain-explanation{display:none}", CSS)

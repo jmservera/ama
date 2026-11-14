@@ -154,5 +154,33 @@ class Wcag22Baseline(unittest.TestCase):
         self.assertNotRegex(DOC, r"(?i)\bfully conforms\b|\bis WCAG 2\.2 (AA )?compliant\b")
 
 
+class PlainLanguageModeRegions(unittest.TestCase):
+    CHAT = (WEB / "chat.js").read_text()
+
+    def toggle(self):
+        start = self.CHAT.index("function regulatoryPlainMode")
+        return self.CHAT[start : self.CHAT.index("\n}\n", start)]
+
+    def test_toggle_announces_in_its_own_polite_region_not_the_status_banner(self):
+        body = self.toggle()
+        self.assertIn('"aria-live": "polite", "aria-atomic": "true"', body)
+        self.assertNotIn("role", body)
+        self.assertNotIn("status", body)
+
+    def test_alerts_panel_keeps_exactly_one_role_status_node(self):
+        panel = self.CHAT[self.CHAT.index("function regulatoryAlertsPanel") : self.CHAT.index("const lookupMeanings")]
+        self.assertEqual(panel.count('role: "status"'), 1)
+        self.assertEqual(self.CHAT.count('regulatoryPlainMode(root, "alerts-plain-mode")'), 1)
+        self.assertEqual(self.CHAT.count('regulatoryPlainMode(root, "chat-plain-mode")'), 1)
+
+    def test_plain_language_flag_is_sent_to_each_chat_endpoint(self):
+        self.assertEqual(self.CHAT.count("plain_language: plainMode.checked"), 2)
+        self.assertIn('plain_language: plainMode.querySelector("input").checked === true', self.CHAT)
+        self.assertIn("answer.plain_summary", self.CHAT)
+
+    def test_record_does_not_call_the_mode_text_a_status_region(self):
+        self.assertNotIn('in a `role="status"` region', DOC)
+
+
 if __name__ == "__main__":
     unittest.main()
