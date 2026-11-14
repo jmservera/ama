@@ -336,6 +336,123 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertEqual(self.store._ranking(), ranking)
         self.assertTrue(self.open_store().verify_audit())
 
+    def correction(self, record_id: str, version: int, **changes: Any) -> dict[str, Any]:
+        return dict(
+            dict(
+                action="nomination_correct",
+                case_id="ZF-1",
+                id=record_id,
+                expected_version=version,
+                reported_subject_ref="SYN-CORRECTED",
+                account="SYN competing evidence",
+                source="SYN correction evidence",
+                channel="Letter",
+                next_update="2099-01-02",
+                challenge_id=None,
+            ),
+            **changes,
+        )
+
+    def test_nomination_correction_retains_challenged_review_and_blocks_automatic_outcomes(
+        self,
+    ) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.nomination())
+        record_id = self.store.cases["ZF-1"]["nomination_records"][0]["id"]
+        self.store.resident_action(
+            self.rae,
+            "ZF-1",
+            self.review(record_id, 1, outcome="Not progressed; resident may challenge"),
+        )
+        ranking = self.store._ranking()
+        self.store.resident_action(
+            self.sam, "ZF-1", self.correction(record_id, 1, raised_by="Resident")
+        )
+        record = self.open_store().detail("ZF-1", self.sam)["nomination_records"][0]
+        correction = record["corrections"][0]
+        self.assertEqual(correction["raised_by"], "Resident")
+        self.assertEqual(correction["challenged_review"]["reviewer"]["code"], self.rae["code"])
+        self.assertEqual(
+            correction["challenged_review"]["outcome"], "Not progressed; resident may challenge"
+        )
+        self.assertEqual(
+            correction["re_review"],
+            dict(
+                required=True,
+                automatic_acceptance=False,
+                automatic_sanction=False,
+                dependent_review_versions=[1],
+            ),
+        )
+        view = record["follow_up"]
+        self.assertEqual(view["dependent_review_versions_stale"], [1])
+        self.assertIs(view["automatic_acceptance"], False)
+        self.assertIs(view["automatic_sanction"], False)
+        self.assertEqual(record["reviews"][0]["outcome"], "Not progressed; resident may challenge")
+        self.assertEqual(self.store._ranking(), ranking)
+
+    def test_nomination_correction_representative_needs_confirmed_authority(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.nomination())
+        record_id = self.store.cases["ZF-1"]["nomination_records"][0]["id"]
+        for changes in (
+            dict(raised_by="Representative"),
+            dict(raised_by="Representative", representative_ref="SYN-REP-A"),
+            dict(raised_by="Resident", representative_ref="SYN-REP-A"),
+            dict(raised_by="Stranger"),
+        ):
+            with self.subTest(changes=changes):
+                self.unchanged_failure(
+                    partial(
+                        self.store.resident_action,
+                        self.sam,
+                        "ZF-1",
+                        self.correction(record_id, 1, **changes),
+                    )
+                )
+        self.scope()
+        self.action("safe_contact_record", safe_contact_ref="SYN-SAFE-CANARY", source="SYN")
+        self.authority(tasks=["Receive information"])
+        self.unchanged_failure(
+            partial(
+                self.store.resident_action,
+                self.sam,
+                "ZF-1",
+                self.correction(
+                    record_id, 1, raised_by="Representative", representative_ref="SYN-REP-A"
+                ),
+            )
+        )
+        self.authority(tasks=["Communicate"])
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            self.correction(
+                record_id, 1, raised_by="Representative", representative_ref="SYN-REP-A"
+            ),
+        )
+        saved = self.store.cases["ZF-1"]["nomination_records"][0]["corrections"][0]
+        self.assertEqual(saved["raised_by"], "Representative")
+        self.assertEqual(saved["representative_ref"], "SYN-REP-A")
+
+    def test_hazard_concern_in_correction_or_challenge_routes_to_hazard_intake(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.nomination())
+        record_id = self.store.cases["ZF-1"]["nomination_records"][0]["id"]
+        proposal = self.priority_fixture()
+        for body in (
+            self.nomination(hazard_concern=True),
+            self.correction(record_id, 1, hazard_concern=True),
+            dict(self.challenge_body(proposal), hazard_concern=True),
+        ):
+            with self.subTest(action=body["action"]):
+                before = copy.deepcopy(self.store.cases["ZF-1"])
+                audit = list(self.store.audit_entries())
+                with self.assertRaises(resident_decisions.HazardRouted) as caught:
+                    self.store.resident_action(self.sam, "ZF-1", body)
+                self.assertEqual(caught.exception.route["issue"], "#85")
+                self.assertIs(caught.exception.route["queue_item_created"], False)
+                self.assertIn("hazard-raise", str(caught.exception))
+                self.assertEqual(self.store.cases["ZF-1"], before)
+                self.assertEqual(list(self.store.audit_entries()), audit)
+
     def test_intake_wrong_identity_hazard_and_closed_input_no_mutation(self) -> None:
         for invalid in (
             self.nomination(case_id="ZF-2"),

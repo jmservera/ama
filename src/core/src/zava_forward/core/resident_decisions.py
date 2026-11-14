@@ -67,6 +67,15 @@ INVENTORY_QUALIFICATION = (
     "Caller supplied. Completeness, household identity and authority are not verified here; "
     "this is not a roster, an approval or a release."
 )
+HAZARD_INTAKE_ROUTE = dict(
+    route="independent_hazard_intake", issue="#85", endpoint="/api/cases/{case_id}/hazard-raise",
+    queue_item_created=False,
+)
+HAZARD_ROUTING_MESSAGE = (
+    "Use the independent hazard intake now (/api/cases/{case_id}/hazard-raise), not the nomination "
+    "queue. Existing hazard service owns emergency response and clocks. Nothing was saved here."
+)
+CORRECTION_RAISERS = ("Resident", "Representative", "Officer")
 INTAKE_CHANNELS = ("Digital", "Phone", "Letter", "In person", "Trusted intermediary")
 TENURE_HOLD = (
     "Tenure and lease identity are unverified. Owner: Home Ownership data owner and Legal "
@@ -227,6 +236,38 @@ def _intake_text(value, label, limit=500):
     if not isinstance(value, str) or not value.strip() or len(value) > limit:
         raise ValueError(f"Supply {label}, at most {limit} characters; the original is never truncated.")
     return value
+
+
+class HazardRouted(ValueError):
+    """An emergency or hazard concern was refused here and routed to the independent hazard intake."""
+
+    route = HAZARD_INTAKE_ROUTE
+
+
+def _refuse_hazard(c, body):
+    if body.get("hazard_concern") not in (None, False):
+        raise HazardRouted(HAZARD_ROUTING_MESSAGE)
+
+
+def _split_optional(body, optional):
+    return ({key: value for key, value in body.items() if key not in optional},
+            {key: body[key] for key in optional if key in body})
+
+
+def _raiser(c, extras):
+    """Who raised a correction; a representative needs current confirmed authority to communicate."""
+    raised_by = k.choice(extras.get("raised_by", "Officer"), CORRECTION_RAISERS, "who raised the correction")
+    ref = extras.get("representative_ref")
+    if raised_by != "Representative":
+        if ref is not None:
+            raise ValueError("A representative reference applies only when a representative raised the correction.")
+        return dict(raised_by=raised_by, representative_ref=None)
+    versions = c.get("representative_authorities", {}).get(ref, []) if isinstance(ref, str) else []
+    a = versions[-1] if versions else None
+    if (not a or a["status"] != "Confirmed" or "Communicate" not in a["tasks"]
+            or not a["authority_date"] <= k.today() < a["review_date"]):
+        raise ValueError("Representative authority needs human confirmation through the safe contact route.")
+    return dict(raised_by=raised_by, representative_ref=ref)
 
 
 def _intake_fields(user, c, body, fields):
@@ -503,6 +544,10 @@ def nomination_follow_up(record, today=None):
         missing=missing or [],
         next_update_overdue=overdue,
         re_review_pending=bool(record.get("corrections")) and not _review_current(record),
+        dependent_review_versions_stale=[r["record_version"] for r in record.get("reviews") or []
+                                         if r.get("stale_from_version")],
+        automatic_acceptance=False,
+        automatic_sanction=False,
         review_current=_review_current(record),
         review_owner="Human identity and eligibility review; policy owner not yet appointed (OD-41/42)",
         not_inferred=["priority change", "consent or refusal", "vulnerability", "sanction",
@@ -1128,7 +1173,7 @@ class ResidentDecisionMixin:
             "owner", "acknowledgement_ref", "next_update", "non_digital_route", "hazard_concern",
         })
         if body["hazard_concern"] is not False:
-            raise ValueError("Use the independent hazard intake now (/api/cases/{case_id}/hazard-raise), not the nomination queue. Existing hazard service owns emergency response and clocks.")
+            raise HazardRouted(HAZARD_ROUTING_MESSAGE)
         record = dict(
             id=f"NOM-{uuid.uuid4().hex}", version=1,
             case_id=c["id"], kind=k.choice(body["kind"], ("Officer nomination", "Self-referral"), "the referral kind"),
@@ -1154,6 +1199,9 @@ class ResidentDecisionMixin:
         return f"{record['id']} unverified intake recorded"
 
     def _res_nomination_correct(self, user, c, body):
+        _refuse_hazard(c, body)
+        body, extras = _split_optional(body, ("hazard_concern", "raised_by", "representative_ref"))
+        raiser = _raiser(c, extras)
         _intake_fields(user, c, body, {
             "case_id", "id", "expected_version", "reported_subject_ref", "account",
             "source", "channel", "next_update", "challenge_id",
@@ -1172,12 +1220,18 @@ class ResidentDecisionMixin:
             source=_intake_text(body["source"], "the supplied correction evidence"),
             channel=k.choice(body["channel"], INTAKE_CHANNELS, "the supplied channel"),
             recorded_by=_identity(user), at=_time(),
-            challenge=challenge,
+            challenge=challenge, **raiser,
         )
         next_update = _day(body["next_update"])
+        reviews = record.get("reviews", [])
+        correction["challenged_review"] = deepcopy(reviews[-1]) if reviews else None
         record["corrections"].append(correction)
-        for review in record.get("reviews", []):
+        for review in reviews:
             review.setdefault("stale_from_version", correction["version"])
+        correction["re_review"] = dict(
+            required=True, automatic_acceptance=False, automatic_sanction=False,
+            dependent_review_versions=[r["record_version"] for r in reviews],
+        )
         record.update(version=correction["version"], next_update=next_update,
                       review_status="Re-review required; no priority or consent change")
         challenges.stamp_assurance(guard, c, record)
@@ -1499,6 +1553,8 @@ class ResidentDecisionMixin:
 
     def _res_challenge_open(self, user, c, body):
         from . import projection
+        _refuse_hazard(c, body)
+        body = _split_optional(body, ("hazard_concern",))[0]
         if not projection.appointment_evidence_visible(user):
             raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
         fields = {"action", "proposal_id", "proposal_version", "decision_version", "target_kind",
