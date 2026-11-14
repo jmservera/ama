@@ -18,4 +18,4 @@ Executed once. Verdict: proceed. Compatible findings applied directly: allow the
 ## Decisions
 
 * Focused validation tier: test-only tooling, no workflow, permission, package or gate change.
-* Use `Refs #201`, never `Closes #201`.
+* Use `Refs #201 only`.
