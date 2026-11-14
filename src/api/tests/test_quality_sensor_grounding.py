@@ -10,12 +10,11 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
+import test_assistants as ta
+import test_quality_sensors as qs
 from zava_forward.core import sensor_view
 from zava_forward.core.chat_case_answers import answer, sensor_facts
 from zava_forward.core.chat_isolation import ChatIsolation
-
-import test_assistants as ta
-import test_quality_sensors as qs
 
 WEB = Path(sensor_view.__file__).parents[4] / "api/src/zava_forward/api/web"
 CITATION = re.compile(r"\[(sensor:[^\]]+)\]")
