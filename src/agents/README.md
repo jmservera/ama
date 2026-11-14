@@ -837,7 +837,7 @@ library, so the image keeps its no-third-party contract.
 
 * `serve` reads `QUEUE_ENDPOINT`, `TASK_QUEUE`, `POISON_QUEUE`, `API_BASE_URL`, `API_AUDIENCE`, `FOUNDRY_ENDPOINT`, the managed identity variables set by Container Apps and the operator allowance `ZF_ASSIST_*`. It refuses with exit 2, naming settings but never values, when any is missing, and stops with exit 3 when the allowance expires.
 * The result post-back goes to `API_BASE_URL/api/agent-results`. That API route does not exist yet, so `serve` also requires `ZF_AGENT_RESULT_ROUTE=enabled`, which no deployment sets. Until the route, the allowance setting in Bicep and the model financial meter are delivered, the worker refuses to start (or, if the meter is missing, records a stopped outcome with no model call). Nothing is acknowledged before a successful post.
-* SIGTERM or SIGINT stops the loop; an in-flight task finishes or is released for redelivery.
+* SIGTERM or SIGINT stops the loop; an in-flight task has 20 seconds (`DRAIN_SECONDS`) to finish and post, then it is released for redelivery, never recorded as a timeout failure.
 * Validated by unit tests and the container contract test only; no image build, queue or model call was run for this change.
 
 ## Validation record
