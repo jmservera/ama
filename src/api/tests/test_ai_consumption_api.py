@@ -905,6 +905,7 @@ class ConsumptionApi(unittest.TestCase):
                                     report["accepted_proposals"], before["accepted_proposals"]
                                 )
                                 self.assertEqual(report["cost_per_accepted_proposal"], "Unknown")
+                                self.assertIsNone(report["cost_per_accepted_outcome"]["cost"])
                                 # An unsaved in-memory status is not authoritative.
                                 if rec["status"] in ("Accepted", "Edited", "Rejected"):
                                     with self.assertRaisesRegex(ValueError, "already"):
@@ -2095,6 +2096,11 @@ class ConsumptionApi(unittest.TestCase):
                         coverage="unavailable",
                         token_cost="Unknown",
                         cost_per_accepted_proposal="Unknown",
+                        cost_per_accepted_outcome=dict(
+                            cost=None,
+                            quality_floor="not-met-or-unknown",
+                            reason="unpriced: reconciled billing record absent",
+                        ),
                         reason=hold,
                     ),
                 )

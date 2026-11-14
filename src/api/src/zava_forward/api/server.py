@@ -915,6 +915,9 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     ai_consumption.report_period(start, end, as_of)
                     consumption = dict(coverage="unavailable", token_cost="Unknown",
                                        cost_per_accepted_proposal="Unknown",
+                                       cost_per_accepted_outcome=dict(
+                                           cost=None, quality_floor="not-met-or-unknown",
+                                           reason="unpriced: reconciled billing record absent"),
                                        reason="Durable SQL consumption ledger unavailable.")
                     if app.assistants.sql:
                         try:

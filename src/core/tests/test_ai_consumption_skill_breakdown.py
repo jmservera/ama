@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import unittest
+from typing import Any
 
 import test_ai_consumption as base
 from zava_forward.core.ai_consumption import (
     UNKNOWN,
+    cost_per_accepted_outcome,
     reference,
     tariff_basis,
     token_breakdown,
@@ -85,3 +87,44 @@ class SkillBreakdownTests(unittest.TestCase):
         self.assertEqual(
             report["by_capability"]["assessment"]["tariff_basis"], "offline-demo-tariff"
         )
+
+
+class CostPerAcceptedOutcomeTests(unittest.TestCase):
+    ok: dict[str, Any] = dict(
+        price_retrieved=[1793491200.0],
+        financial_source="bill-1",
+        reconciliation="reconciled",
+        token_cost="0.0004",
+        accepted=2,
+        quality_status="Pass",
+    )
+
+    def test_priced_only_with_dated_price_and_reconciled_bill(self) -> None:
+        got = cost_per_accepted_outcome(**self.ok)
+        self.assertEqual((got["cost"], got["reason"]), ("0.0002", "priced"))
+        self.assertEqual(got["quality_floor"], "met")
+
+    def test_missing_evidence_is_unpriced_never_a_number(self) -> None:
+        for change, reason in (
+            (dict(price_retrieved=[]), "dated price"),
+            (dict(price_retrieved=[None]), "dated price"),
+            (dict(financial_source=None), "reconciled billing"),
+            (dict(reconciliation="variance-alert"), "reconciled billing"),
+            (dict(token_cost=UNKNOWN), "reconciled billing"),
+            (dict(accepted=0), "no accepted"),
+        ):
+            with self.subTest(change=change):
+                got = cost_per_accepted_outcome(**(self.ok | change))
+                self.assertIsNone(got["cost"])
+                self.assertIn(reason, got["reason"])
+
+    def test_report_states_cost_only_when_billing_reconciles(self) -> None:
+        helper = base.ConsumptionTests("report")
+        helper.setUp()
+        self.addCleanup(helper.doCleanups)
+        helper.accepted()
+        self.assertIsNone(helper.report()["cost_per_accepted_outcome"]["cost"])
+        helper.bill()
+        got = helper.report()["cost_per_accepted_outcome"]
+        self.assertEqual(got["reason"], "priced")
+        self.assertEqual(got["cost"], "0.000135")

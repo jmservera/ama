@@ -12,7 +12,7 @@ import json
 import logging
 import re
 import uuid
-from collections.abc import Callable, Iterator, Mapping
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
@@ -141,6 +141,39 @@ def tariff_basis(synthetic_flags: set[bool]) -> str:
     if synthetic_flags == {False}:
         return "live-tariff-supplied-unverified"
     return "mixed-demo-and-live-tariff"
+
+
+def _day(value: Any) -> str:
+    return datetime.fromtimestamp(value, UTC).date().isoformat()
+
+
+def cost_per_accepted_outcome(
+    *,
+    price_retrieved: Iterable[object],
+    financial_source: object,
+    reconciliation: object,
+    token_cost: object,
+    accepted: int,
+    quality_status: object,
+) -> dict[str, Any]:
+    """Cost per accepted proposal only from a dated price and a reconciled bill; else unpriced."""
+    base: dict[str, Any] = dict(
+        cost=None,
+        quality_floor="met" if quality_status == "Pass" else "not-met-or-unknown",
+    )
+    dates = list(price_retrieved)
+    if not dates or not all(
+        isinstance(d, int | float) and not isinstance(d, bool) and d > 0 for d in dates
+    ):
+        return base | dict(reason="unpriced: dated price source absent")
+    if not financial_source or reconciliation != "reconciled" or token_cost == UNKNOWN:
+        return base | dict(reason="unpriced: reconciled billing record absent")
+    if accepted <= 0:
+        return base | dict(reason="unpriced: no accepted outcome")
+    with localcontext() as ctx:
+        ctx.prec = 80
+        cost = format(amount(str(token_cost)) / accepted, "f")
+    return base | dict(cost=cost, reason="priced", price_retrieved=sorted({_day(d) for d in dates}))
 
 
 def token_breakdown(tokens: list[Mapping[str, Any] | None]) -> dict[str, Any]:
@@ -1380,6 +1413,14 @@ class Consumption:
             token_cost=cost,
             projected_token_charge=format(projected, "f") if projected is not None else UNKNOWN,
             cost_per_accepted_proposal=ratio,
+            cost_per_accepted_outcome=cost_per_accepted_outcome(
+                price_retrieved=[prices[r["price"]].get("retrieved") for r in calls],
+                financial_source=bill["id"] if bill else None,
+                reconciliation=status,
+                token_cost=cost,
+                accepted=accepted,
+                quality_status=quality_status,
+            ),
             reconciliation=status,
             variance_fraction=variance,
             currency=next(iter(currencies)) if len(currencies) == 1 else UNKNOWN,
