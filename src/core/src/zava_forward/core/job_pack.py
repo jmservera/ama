@@ -9,6 +9,7 @@ staff-mediated design proposal until the owner decides otherwise.
 
 import hashlib
 import json
+import re
 from collections.abc import Iterable, Mapping
 from typing import Any
 
@@ -26,7 +27,17 @@ ACKNOWLEDGED = "Receipt acknowledged - not accepted"
 
 ESCALATION_KINDS = ("variation", "safety", "access", "scope question", "other")
 ESCALATION_OWNER_ROLES = MANAGER_ROLES + ("Building Safety Liaison",)
-UNNAMED_OWNERS = frozenset({"unknown", "unassigned", "tbc", "tbd", "n/a", "none", "nobody", "team"})
+_PLACEHOLDER_WORDS = frozenset(
+    "unknown unassigned unnamed tbc tbd tba todo na none nobody anyone someone team queue group "
+    "desk mailbox inbox department dept pending placeholder owner vacant shared generic triage "
+    "example not configured assigned".split()
+)
+_ROLE_WORDS = frozenset(
+    w.lower()
+    for role in MANAGER_ROLES + ("Building Safety Liaison", "Contract Manager")
+    for w in role.split()
+) | {"lead", "officer", "director", "head", "role"}
+_NAME_ALLOWED = re.compile(r"[^\W\d_]+(?:[ .'-][^\W\d_]+)*\.?")
 ADVISORY_NOTE = "The work order does not change until the contract manager issues a new version."
 NO_SHOW_EVENTS = {
     "provider no-show": ("Rebooking needed", "The provider did not attend"),
@@ -214,8 +225,15 @@ def named_owner(name: Any, role: Any) -> dict[str, str]:
     if role not in ESCALATION_OWNER_ROLES:
         raise ValueError("Choose a contract manager or the building safety liaison as owner.")
     who = _text(name, "the named owner")
-    if who.lower().startswith("unknown") or who.lower().rstrip(".") in UNNAMED_OWNERS:
-        raise ValueError("Enter the name of a person as owner, not a placeholder.")
+    words = re.findall(r"[a-z]+", who.lower().replace("/", " "))
+    if (
+        len(who) > 80
+        or not _NAME_ALLOWED.fullmatch(who)
+        or not words
+        or any(w in _PLACEHOLDER_WORDS or w.startswith("unknown") for w in words)
+        or all(w in _ROLE_WORDS for w in words)
+    ):
+        raise ValueError("Enter the name of a person as owner, not a placeholder or a role.")
     return dict(name=who, role=str(role))
 
 

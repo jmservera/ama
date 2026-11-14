@@ -15,3 +15,14 @@ Disposition: executed. Planning Readiness: Ready.
 2. No enforcement that a variation record is never a contract instruction.
 3. No routing helper that refuses when no named owner is configured.
 4. UI/API lacked an explicit owner-assignment status and advisory-only guard.
+
+## Cycle 1 correction research (1 of 5, 2026-11-14)
+
+Source: independent exact-head review of `6a603370e` (verdict `request_changes`; Critical 1, High 2, Medium 1).
+
+* Critical: `route_escalation` had no caller; `ACTIONS` and the generic `/api/workorders/{id}/{action}` POST route in `server.py` did not expose it, and nothing persisted. Case bodies (JSON store and SQL `cases.body`) persist the whole case record, and `_quality_operation` provides the existing rollback plus audit pattern used by `correct` and `acknowledge`.
+* High: `named_owner` matched only a short placeholder list and the `unknown` prefix. The review cites `governance._looks_placeholder` and `_PLACEHOLDER_RE`; neither exists in this checkout (grep over `src/`), so the nearest comparators are the `_PLACEHOLDERS` sets in `synthetic/device_provision.py` and `synthetic/sensor_stream.py`.
+* High (tests): only direct-Python calls existed; no HTTP, restart or fail-closed state checks.
+* Not addressed here (out of the four listed items, routed): the staff-intake.js hardcoded advisory text, the escalation form and readback table, and browser coverage.
+* Environment note: editable installs resolve to `/home/azureuser/source/ama`; tests need `PYTHONPATH` set to this worktree's `src/*/src`.
+Disposition: executed. Planning Readiness: Ready.

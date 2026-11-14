@@ -196,7 +196,7 @@ class StaffIntakeApi(ProcurementApiFixture):
     def test_contractor_and_unknown_routes_denied(self) -> None:
         for actor in ("kim", "kai"):
             self.assertEqual(self.call(ROUTE + "field-intake", actor=actor)[0], 403, actor)
-            for action in ("field-capture", "field-correct", "field-acknowledge"):
+            for action in ("field-capture", "field-correct", "field-acknowledge", "field-escalate"):
                 self.assertEqual(
                     self.call(ROUTE + action, self.body(), actor)[0], 403, (actor, action)
                 )
@@ -245,32 +245,96 @@ class StaffIntakeApi(ProcurementApiFixture):
         self.assertEqual(esc["owner"], "Pam Lead")
         self.assertFalse(esc["contract_instruction"])
 
+    def escalate(self, actor: str = "sam", **over: Any) -> tuple[int, Any]:
+        body: dict[str, Any] = dict(kind="variation", summary="Extra loft hatch")
+        body.update(over)
+        return self.call(ROUTE + "field-escalate", body, actor)
+
+    def audit_count(self) -> int:
+        return sum(
+            1 for e in self.store.audit_entries() if e["action"] == "field_escalation_routed"
+        )
+
     def test_unassigned_owner_is_explicit_and_blocks_routing(self) -> None:
         esc = self.view()["escalation"]
         self.assertFalse(esc["owner_assigned"])
         self.assertIn("Owner needed", esc["owner_status"])
-        self.assertTrue(esc["advisory_only"])
         self.assertTrue(self.view()["boundaries"]["advisory_only"])
-        with self.assertRaises(ValueError):
-            staff_intake.route_escalation("variation", "Extra loft", "Kim", "WO-1")
+        code, out = self.escalate()
+        self.assertEqual(code, 400, out)
+        self.assertIn("Owner needed", out["error"])
+        self.assertNotIn("escalations", self.store.cases["ZF-3"])
+        self.assertEqual(self.audit_count(), 0)
+
+    def test_placeholder_owners_fail_closed_over_http_and_config(self) -> None:
+        role = "Retrofit Programme Manager"
+        for name in (
+            "Unknown", "unassigned-team", "owner-placeholder", "pending_assignment",
+            "queue/triage", "shared@example.org", role, "TBC - pending", "-", "No owner",
+        ):  # fmt: skip
+            code, out = self.escalate(named_owner=name, owner_role=role)
+            self.assertEqual(code, 400, (name, out))
+        code, out = self.escalate(named_owner="Pam Lead", owner_role="Contractor")
+        self.assertEqual(code, 400, out)
+        self.assertNotIn("escalations", self.store.cases["ZF-3"])
+        self.assertEqual(self.audit_count(), 0)
         env = {
-            "ZF_STAFF_INTAKE_ESCALATION_OWNER": "Unknown",
-            "ZF_STAFF_INTAKE_ESCALATION_ROLE": "Retrofit Programme Manager",
-            "ZF_STAFF_INTAKE_ESCALATION_CONTACT": "x@example.test",
+            "ZF_STAFF_INTAKE_ESCALATION_OWNER": "Pam Lead",
+            "ZF_STAFF_INTAKE_ESCALATION_ROLE": role,
+            "ZF_STAFF_INTAKE_ESCALATION_CONTACT": "Unknown - not configured",
         }
         with mock.patch.dict(os.environ, env):
-            self.assertFalse(self.view()["escalation"]["owner_assigned"])
+            view = self.view()["escalation"]
+            self.assertFalse(view["owner_assigned"])
+            self.assertEqual(view["owner"], "Unknown - not configured")
+            self.assertEqual(self.escalate()[0], 400)
 
-    def test_variation_routes_to_configured_named_owner_without_instruction(self) -> None:
+    def test_escalation_is_staff_only_and_validates_input(self) -> None:
+        named = dict(named_owner="Pam Lead", owner_role="Retrofit Programme Manager")
+        self.assertEqual(self.escalate("sam", **named, kind="invented")[0], 400)
+        self.assertEqual(self.escalate("sam", **named, summary=" ")[0], 400)
+        for actor in ("kim", "kai"):
+            self.assertEqual(self.escalate(actor, **named)[0], 403, actor)
+        self.assertNotIn("escalations", self.store.cases["ZF-3"])
+
+    def test_variation_persists_across_restart_without_changing_work_order(self) -> None:
+        named = dict(named_owner="Pam Lead", owner_role="Retrofit Programme Manager")
+        keys = ("id", "version", "scope", "scope_version", "state")
+
+        def order() -> dict[str, Any]:
+            return {k: self.call("/api/workorders")[1][0].get(k) for k in keys}
+
+        before = order()
+        code, out = self.escalate(**named)
+        self.assertEqual(code, 200, out)
+        rec = out["escalation"]
+        self.assertFalse(rec["contract_instruction"])
+        self.assertEqual(
+            (rec["named_owner"], rec["owner_role"], rec["escalation_kind"], rec["summary"]),
+            ("Pam Lead", "Retrofit Programme Manager", "variation", "Extra loft hatch"),
+        )
+        self.assertTrue(rec["routed_by"] and rec["routed_at"])
+        self.assertEqual(order(), before)
+        self.assertEqual(self.audit_count(), 1)
+        self.restart()
+        saved = self.view()["escalations"]
+        self.assertEqual([e["named_owner"] for e in saved], ["Pam Lead"])
+        self.assertEqual(saved[0]["routed_at"], rec["routed_at"])
+        self.assertEqual(self.audit_count(), 1)
+        self.assertTrue(self.store.verify_audit())
+
+    def test_variation_routes_to_configured_named_owner(self) -> None:
         env = {
             "ZF_STAFF_INTAKE_ESCALATION_OWNER": "Pam Lead",
             "ZF_STAFF_INTAKE_ESCALATION_ROLE": "Retrofit Programme Manager",
             "ZF_STAFF_INTAKE_ESCALATION_CONTACT": "pam@example.test",
         }
         with mock.patch.dict(os.environ, env):
-            out = staff_intake.route_escalation("variation", "Extra loft", "Kim", "WO-1")
-        self.assertEqual(out["owner"]["name"], "Pam Lead")
-        self.assertIs(out["contract_instruction"], False)
+            code, out = self.escalate(kind="safety")
+        self.assertEqual(code, 200, out)
+        self.assertEqual(out["escalation"]["owner"]["contact"], "pam@example.test")
+        self.restart()
+        self.assertEqual(self.view()["escalations"][0]["escalation_kind"], "safety")
 
     def test_injected_failure_leaves_no_partial_receipt(self) -> None:
         self.view()

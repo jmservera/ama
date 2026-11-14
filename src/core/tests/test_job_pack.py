@@ -156,11 +156,19 @@ class JobPackTests(unittest.TestCase):
             job_pack.escalation("order", "x", "Kim", "WO-1", "Pam", "Retrofit Programme Manager")
 
     def test_placeholder_owner_names_are_rejected(self) -> None:
-        for name in ("   ", "Unknown - not configured", "TBC", "unassigned", "N/A"):
+        for name in (
+            "   ", "Unknown - not configured", "TBC", "unassigned", "N/A", "unassigned-team",
+            "owner-placeholder", "pending_assignment", "queue/triage", "shared@example.org",
+            "Retrofit Programme Manager", "Building Safety Liaison", "Not configured", "?",
+        ):  # fmt: skip
             with self.assertRaises(ValueError, msg=name):
                 job_pack.escalation(
                     "variation", "x", "Kim", "WO-1", name, "Retrofit Programme Manager"
                 )
+
+    def test_real_names_are_accepted(self) -> None:
+        for name in ("Pam Lead", "Mary-Jane O'Neil", "Sam Safe"):
+            self.assertEqual(job_pack.named_owner(name, "Retrofit Programme Manager")["name"], name)
 
     def test_every_kind_routes_to_named_owner_and_stays_advisory(self) -> None:
         for kind in job_pack.ESCALATION_KINDS:

@@ -16,3 +16,13 @@
 ## AC proof map for #132
 
 AC1-AC5 remain proven by existing tests in `test_job_pack.py` and `test_staff_intake_api.py` (pack, receipt, independent QA, no-show recovery, no self-approval). AC6 (named owner, never a contract instruction) is proven by the new tests above.
+
+## Cycle 1 correction (1 of 5)
+
+* `job_pack.py`: `UNNAMED_OWNERS` replaced by `_PLACEHOLDER_WORDS`, `_ROLE_WORDS` and a person-name pattern in `named_owner`.
+* `staff_intake.py`: `_configured_owner` and `_valid_contact` (placeholder config yields no owner and `UNKNOWN` display fields); `route_escalation` takes optional owner and role and keeps the contact; new `escalate` action registered as `field-escalate`; `view()` adds `escalations`.
+* `test_staff_intake_api.py`: replaced the two direct-call tests with five HTTP tests (unassigned, placeholder fail-closed, staff-only and validation, restart persistence with audit and work-order fields unchanged, configured routing); contractor 403 loop covers `field-escalate`.
+* `test_role_endpoint_inventory.py`: `field-escalate` added to POST endpoints.
+* `test_job_pack.py`: 10 more placeholder and role-only names, plus `test_real_names_are_accepted`.
+
+Corrected counts: the original slice added 2 API tests and 3 core tests (not 13 total new). Validation, `PYTHONDONTWRITEBYTECODE=1`, no `uv`: core `tests.test_job_pack` 14 OK; api `test_staff_intake_api` + `test_role_endpoint_inventory` 135 tests OK (41 opt-in skips, including the loopback SQL Server class, so SQL readback is covered only by shared code path and not exercised); `ruff check .`, `ruff format --check .`, `mypy` clean in `src/core` and `src/api` (the earlier 2 api `unused-ignore` errors did not recur). Full discover suites, `rpi-checks.py --all`, hosted CI and browser checks were not run. No push.
