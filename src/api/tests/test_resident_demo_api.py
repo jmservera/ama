@@ -196,6 +196,7 @@ class SignInTests(DemoTestCase):
                 "banner",
                 "viewer",
                 "account",
+                "agenda_available",
                 "callbacks_available",
                 "read_only",
                 "home",
@@ -217,6 +218,7 @@ class SignInTests(DemoTestCase):
         self.assertEqual(len(view["timeline"]), 6)
         text = json.dumps(view)
         self.assertEqual(view["account"], {"email": "one@example.com"})
+        self.assertFalse(view["agenda_available"])
         self.assertFalse(view["callbacks_available"])
         for hidden in ("two@example.com", "case_id", "C-2", "provenance"):
             self.assertNotIn(hidden, text)
