@@ -50,6 +50,34 @@ class FormExport(unittest.TestCase):
                 if before is not None:
                     self.assertEqual(store.audit_log, before)
 
+    def test_pack_links_fields_and_attachments_with_template_and_input_versions(self) -> None:
+        for store in self.stores:
+            draft, epc, _area = self.prepare(store)
+            out = self.export(store, self.review(store, draft, epc))
+            with self.subTest(store=type(store).__name__):
+                self.assertTrue(out["attachments"])
+                for row in [*out["fields"], *out["attachments"]]:
+                    self.assertEqual(row["template_version"], out["template"]["version"])
+                fields = {f["field_id"]: f["input_version"] for f in out["fields"]}
+                self.assertEqual(fields["epc"], out["input_version"])
+                self.assertEqual(fields["area"], 0)
+                for row in out["attachments"]:
+                    self.assertEqual(row["input_version"], out["input_version"])
+
+    def test_unconfirmed_draft_value_is_not_validated_input(self) -> None:
+        store = self.stores[0]
+        draft, epc, _area = self.prepare(store)
+        draft = self.review(store, draft, epc)
+        stored = next(
+            d for d in store._case("ZF-1")["form_reviews"] if d["id"] == draft["draft_id"]
+        )
+        stored["history"].clear()
+        out = self.export(store, draft)
+        self.assertIn(("epc", "Fail"), {(i["field_id"], i["status"]) for i in out["open_issues"]})
+        self.assertIn(
+            "Value lacks reviewer confirmation.", {i["reason"] for i in out["open_issues"]}
+        )
+
     def test_export_digest_is_deterministic_and_tracks_changes(self) -> None:
         for store in self.stores:
             draft, epc, area = self.prepare(store)
