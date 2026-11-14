@@ -499,6 +499,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 d["work"] = self.work_context(c, user)
             if c.get("handoff"):
                 d["handoff"] = handoff_view(c)
+            d["redress_route"] = redress_route_view(c)
             d["status"] = self.status_line(c)
             d["gate"] = self.gate_reasons(c) + buildings.blockers(self.data, self.cases, c)
             if d["status"] == "Ready" and d["gate"]:
@@ -506,7 +507,6 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         d["can_advance"] = c["stage"] == READY_STAGE
         d["suggestions"] = insights.recommend_handover(c, list(self.cases.values()), self.data["staff"] + identity.people(self))
         d["measure_decisions"] = measure_decision_view(c)
-        d["redress_route"] = redress_route_view(c)
         d["resident_retention"] = retention_schedule(c)
         d["can_record_resident"] = bool(user and user.get("role") in projection.RESIDENT_RECORD_ROLES)
         d["contacts"] = list(reversed(d["contacts"]))[:40]

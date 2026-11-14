@@ -1101,8 +1101,10 @@ def redress_route_view(c):
                            review_measure=req.get("review_measure"),
                            review_decision_version=req.get("review_decision_version")))
     recorded = c.get("measure_decisions") or {}
-    reviewable = [dict(measure=m, version=v["version"], status=v["status"])
-                  for m in case_measures(c) for v in recorded.get(m, [])[-1:]]
+    reviewable = [dict(measure=m, version=n, status=v.get("status"),
+                       recorder_identity_status=_identity_status(v.get("recorder_identity")))
+                  for m in case_measures(c) for n, v in enumerate(recorded.get(m, []), 1)
+                  if _identity_status(v.get("recorder_identity")) != "Unknown"]
     return dict(commitments=list(NON_DETRIMENT_COMMITMENTS), routes=deepcopy(list(REDRESS_ROUTES)),
                 reviewable_decisions=reviewable, formal_requests=formal,
                 send_note="Recording a request here does not send it. Nothing has reached the formal complaints route unless its status is Acknowledged.")

@@ -2605,7 +2605,9 @@ class JsonResidentDecisions(unittest.TestCase):
         for duty in ("Programme place", "Repairs", "Safety duties", "own measure"):
             self.assertIn(duty, text)
         self.assertEqual(
-            view["reviewable_decisions"], [dict(measure=MEASURES[0], version=1, status="Withdrawn")]
+            view["reviewable_decisions"],
+            [dict(measure=MEASURES[0], version=1, status="Withdrawn",
+                  recorder_identity_status="Known")],
         )
         self.assertEqual(view["formal_requests"], [])
         before = copy.deepcopy(self.store.cases["ZF-1"])
@@ -2619,6 +2621,8 @@ class JsonResidentDecisions(unittest.TestCase):
         )
         for key in ("measure_decisions", "resident_reviews", "decision", "hazards", "stage"):
             self.assertEqual(self.store.cases["ZF-1"][key], before[key])
+        staff = self.store.detail("ZF-1", dict(self.sam, role="Quality Inspector"))
+        self.assertNotIn("redress_route", staff)
 
     def test_complaint_and_independent_review_stay_open_under_every_hold(self) -> None:
         self.scope()

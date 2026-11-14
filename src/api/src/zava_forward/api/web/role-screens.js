@@ -1786,11 +1786,13 @@ function redressRoutePanel(route) {
       ["Route", "Who can ask", "How"],
       (route.routes || []).map((x) => [x.route, x.who, x.how])),
     screenRecordTable("Decisions open to independent review",
-      ["Measure", "Decision version", "Latest answer"],
-      (route.reviewable_decisions || []).map((x) => [x.measure, `v${screenValue(x.version)}`, x.status])),
+      ["Measure", "Decision version", "Recorded answer"],
+      (route.reviewable_decisions || []).map((x) => [x.measure, `v${screenValue(x.version)}`, stateCue(choiceCues, x.status)])),
+    (route.reviewable_decisions || []).length ? null
+      : h("p", { class: "empty" }, "No recorded decision with a known recorder is open to independent review. This does not establish that none can be reviewed."),
     (route.formal_requests || []).length ? screenRecordTable("Formal requests and whether they were sent",
-      ["Issue", "Route", "State", "Formal route status", "Next update"],
-      route.formal_requests.map((x) => [x.id, x.route, screenValue(x.status), screenValue(x.formal_route_status), screenStamp(x.next_update)]))
+      ["Issue", "Route", "State", "Formal route status", "Next update", "Measure reviewed", "Decision version"],
+      route.formal_requests.map((x) => [x.id, x.route, stateCue(serviceCues, x.status), screenValue(x.formal_route_status), screenStamp(x.next_update), screenValue(x.review_measure), x.review_decision_version == null ? "Not applicable" : `v${screenValue(x.review_decision_version)}`]))
       : h("p", { class: "empty" }, "No formal request recorded. This does not establish that the resident has none."),
     h("p", {}, route.send_note));
 }
