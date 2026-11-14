@@ -122,6 +122,32 @@ def neutral_text(text: str) -> str:
     return text
 
 
+def strip_unsafe_sentences(text: str) -> str:
+    """Drop every sentence that states causation, blame or a savings promise; keep the rest."""
+    kept = []
+    for sentence in re.split(r"(?<=[.!?])\s+", text.strip()):
+        try:
+            neutral_text(sentence)
+        except ValueError:
+            continue
+        kept.append(sentence)
+    return " ".join(kept)
+
+
+def assert_templates_neutral(*templates: object) -> None:
+    """Fail fast when a fixed template, label or note (str, list, tuple, dict) is not neutral."""
+    for item in templates:
+        if isinstance(item, str):
+            neutral_text(item)
+        elif isinstance(item, Mapping):
+            assert_templates_neutral(*item.keys(), *item.values())
+        elif isinstance(item, (list, tuple)):
+            assert_templates_neutral(*item)
+
+
+assert_templates_neutral(ACCESSIBLE_ROUTE, PROTECTION, EVALUATOR_NOTICE, PACK_MANUAL_ROUTE)
+
+
 def _context(value: Mapping[str, str] | None) -> dict[str, str] | None:
     """Sensor context is short descriptive text only; it passes the same neutral-text guard."""
     if not value:

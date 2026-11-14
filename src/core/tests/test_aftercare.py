@@ -286,6 +286,55 @@ class EvaluatorTests(unittest.TestCase):
             self.assertEqual(af.neutral_text(good), good)
 
 
+class TemplateGuardTests(unittest.TestCase):
+    def test_strip_drops_only_unsafe_sentences(self) -> None:
+        text = "A person will visit. You will save money. It is your fault. We will call you."
+        self.assertEqual(af.strip_unsafe_sentences(text), "A person will visit. We will call you.")
+        self.assertEqual(af.strip_unsafe_sentences("Heating was caused by the tenant."), "")
+
+    def test_template_assertion_checks_nested_values(self) -> None:
+        af.assert_templates_neutral(("A person will visit.",), {"a": "By phone"})
+        with self.assertRaises(ValueError):
+            af.assert_templates_neutral({"x": ["Bills will fall."]})
+
+    def test_every_fixed_aftercare_template_is_neutral(self) -> None:
+        from zava_forward.core import aftercare_intake as ai
+
+        form = af.intake_form()
+        af.assert_templates_neutral(
+            af.ACCESSIBLE_ROUTE,
+            af.PROTECTION,
+            af.EVALUATOR_NOTICE,
+            af.PACK_MANUAL_ROUTE,
+            ai.CHANNEL_LABELS,
+            ai.SYNTHETIC_NOTICE,
+            ai.CLOSURE_NOTE,
+            ai.SENSOR_NOTE,
+            ai.FIXED_UNKNOWNS,
+            ai.WINDOWS,
+            form,
+        )
+
+    def test_every_route_and_channel_is_recorded_on_the_concern(self) -> None:
+        reg = AftercareRegister()
+        for channel in af.NON_DIGITAL_CHANNELS:
+            rec = reg.raise_concern(
+                "staff_recorded",
+                "representative",
+                "H1",
+                "other",
+                "Cold room.",
+                OWNER,
+                "2026-12-01",
+                representative_basis="Written note",
+                recorded_by="Officer",
+                channel=channel,
+            )
+            self.assertEqual((rec["route"], rec["channel"]), ("staff_recorded", channel))
+            self.assertEqual(rec["representative_basis"], "Written note")
+            self.assertEqual(rec["accessible_route"], af.ACCESSIBLE_ROUTE)
+
+
 class ConcernPackTests(unittest.TestCase):
     def test_pack_exists_without_ai_and_is_unreviewed(self) -> None:
         reg = AftercareRegister()

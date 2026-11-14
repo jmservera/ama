@@ -33,6 +33,7 @@ from .aftercare import (
     NON_DIGITAL_CHANNELS,
     PROTECTION,
     AftercareRegister,
+    assert_templates_neutral,
     intake_errors,
     intake_form,
     neutral_text,
@@ -96,6 +97,11 @@ _PRIVACY_LABELS = {
     "postcode": "a postcode",
     "special_category": "health or other sensitive detail",
 }
+
+
+assert_templates_neutral(
+    CHANNEL_LABELS, SYNTHETIC_NOTICE, CLOSURE_NOTE, SENSOR_NOTE, FIXED_UNKNOWNS, WINDOWS
+)
 
 
 class StateInvalid(RuntimeError):
@@ -418,12 +424,16 @@ class AftercareService:
             **form,
             "assisted": True,
             "staff_fields": staff_fields,
-            "owner_note": "A new concern has no named owner. A manager names one afterwards.",
+            "owner_note": neutral_text(
+                "A new concern has no named owner. A manager names one afterwards."
+            ),
             "owner_choices": [{"value": r, "label": owner_label(r)} for r in VIEW_ROLES],
             "homes": None if self.homes is None else sorted(self.homes),
             "synthetic_notice": SYNTHETIC_NOTICE,
-            "manual_route": "If this screen is unavailable, write the concern on paper with the "
-            "channel, your name and the home reference, and give it to the named owner.",
+            "manual_route": neutral_text(
+                "If this screen is unavailable, write the concern on paper with the "
+                "channel, your name and the home reference, and give it to the named owner."
+            ),
         }
 
     def record_concern(
