@@ -1,0 +1,62 @@
+{
+  "task_id": "issue-128-pr1735-cycle2",
+  "task_slug": "gov-128-missing-data-review-c2",
+  "parent_task": {
+    "task_id": "issue-128",
+    "task_slug": "gov-128-missing-data-review"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14-gov-128-missing-data-review-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14-gov-128-missing-data-review-plan.instructions.md",
+    "details": null,
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-11-14-gov-128-missing-data-review-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-14-gov-128-missing-data-review-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research reused from 2026-11-14-gov-128-missing-data-review-research.md and CI mypy failure reproduction",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-14-gov-128-missing-data-review-research.md"
+    },
+    {
+      "decision": "Critique reused from 2026-11-14-gov-128-missing-data-review-plan.instructions.md; Cycle 2 scoped to mypy arg-type fix in test_journey_register.py",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-14-gov-128-missing-data-review-plan.instructions.md"
+    },
+    {
+      "decision": "Review execution: Complete; Outcome: Conformant for Cycle 2 strict mypy test-annotation fix on src/core/tests/test_journey_register.py",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-14-gov-128-missing-data-review-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Select a ranked follow-up work item, Stop automatic session, or Switch to manual mode after coordinator push of PR #1735"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Push branch feat/gov-128-missing-data-review-1848 (coordinator-gated), observe hosted src-core CI on PR #1735, and complete independent exact-head review",
+      "rationale": "Immediate publication and CI verification step; zero code churn and unblocks PR #1735 review",
+      "evidence": ".copilot-tracking/reviews/2026-11-14-gov-128-missing-data-review-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Wire journey_register.route_cases and aggregate_usability into API/queue projection endpoints for #128",
+      "rationale": "High product value connecting validated pure core guards to operator-facing workflows while preserving single-source core validation",
+      "evidence": ".copilot-tracking/reviews/2026-11-14-gov-128-missing-data-review-review.md"
+    },
+    {
+      "rank": 3,
+      "task": "Record owner-approved minimum cell threshold and AC3 user-research protocol decisions (OD-09, OD-25)",
+      "rationale": "Human governance prerequisite before aggregate usability figures or journey readiness can move from blocked to approved evidence",
+      "evidence": "src/core/src/zava_forward/core/journey_register.py"
+    }
+  ]
+}
