@@ -32,6 +32,19 @@ class LearningTestBundles(unittest.TestCase):
         for bundle in ltb.BUNDLES.values():
             self.assertFalse(ltb.OUT_OF_SCOPE & set(bundle.atlas_ids))
 
+    def test_ac1_bundles_each_have_a_non_ai_comparator_and_zero_measure(self) -> None:
+        keys = ("story-once", "pre-visit-pack", "change-impact", "handover-aftercare")
+        for key in keys:
+            bundle = ltb.BUNDLES[key]
+            self.assertTrue(bundle.comparator)
+            self.assertNotRegex(bundle.comparator.lower(), r"\b(ai|agent|assistant|model)\b")
+            self.assertTrue(bundle.zero_measures)
+            report = ltb.compare_bundle(
+                key, [case("a", counts=dict.fromkeys(bundle.zero_measures, 0))]
+            )
+            self.assertEqual(report["comparator_description"], bundle.comparator)
+            self.assertFalse(report["stop"])
+
     def test_net_effort_sums_six_components(self) -> None:
         self.assertEqual(ltb.case_net_effort(EFFORT), 12.0)
 
