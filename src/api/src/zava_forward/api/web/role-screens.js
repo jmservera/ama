@@ -532,7 +532,9 @@ function journeyStageMap(c, current = null) {
     h("p", {}, "One home, eight stages. Each stage opens the screen that shows its own state for this same home. Every link carries this one home's case reference. Separate example homes are never shown as stages of this home. Stages are separate states: no stage clears another, and a link is navigation only. This map is a design hypothesis, not observed behaviour."),
     current && !journeyStages.some(([, id]) => id === current)
       && h("p", {}, `This screen is not one of the eight stages. It shows the same home ${c.id}.`),
-    h("ol", {}, journeyStages.map(([stage, id, boundary]) => h("li", {},
+    h("ol", { "aria-label": `Eight journey stages for ${c.id}` }, journeyStages.map(([stage, id, boundary], index) => h("li",
+      // The text "You are on this screen" stays the cue; aria-current adds the native step announcement once, as resident-choice serves two stages.
+      { "aria-current": id !== null && id === current && journeyStages.findIndex(([, other]) => other === current) === index ? "step" : null },
       // Link text carries the stage name so stages sharing a screen stay distinct in link lists (WCAG 2.4.4).
       id !== null && id === current ? `${stage}: ${roleScreens.get(id).title}. You are on this screen, showing home ${c.id}.`
       : id !== null && open(id) ? h("a", { href: screenHref(id, c.id) }, `${stage}: ${roleScreens.get(id).title}`)
