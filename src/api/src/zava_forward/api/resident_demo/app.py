@@ -82,7 +82,15 @@ BUSY = (
     "The showcase is busy because several people are viewing it at once. "
     "Nothing is wrong with your case. Try again in a few seconds."
 )
-RETRY_AFTER_SECONDS = 2
+MIN_RETRY_AFTER_SECONDS = 1
+MAX_RETRY_AFTER_SECONDS = 10
+RETRY_AFTER_SECONDS = 3
+
+
+def clamp_retry_after(seconds: object) -> int:
+    if isinstance(seconds, bool) or not isinstance(seconds, int):
+        raise ValueError("retry_after_seconds must be an integer")
+    return max(MIN_RETRY_AFTER_SECONDS, min(MAX_RETRY_AFTER_SECONDS, seconds))
 
 
 class Reader(Protocol):
@@ -126,12 +134,14 @@ class ResidentDemo:
         assistant_advisor: Advisor | None = None,
         agenda: Agenda | None = None,
         chat_log: ChatLog | None = None,
+        retry_after_seconds: int = RETRY_AFTER_SECONDS,
     ):
         self.client_address = client_address
         self.reader, self.identity, self.verifier = reader, identity, verifier
         self.codec, self.limiter, self.allowed_hosts = codec, limiter, allowed_hosts
         self.expires_at = min(expires_at, rs.AUTHORITY_END)
         self.host, self.port, self.clock = host, port, clock
+        self.retry_after_seconds = clamp_retry_after(retry_after_seconds)
         self.slots = threading.BoundedSemaphore(MAX_CONCURRENT)
         self.by_handle = {codec.handle(case): case for case in identity.cases.values()}
         self.assistant_provider = (
@@ -305,11 +315,12 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
 
         def _route(self) -> None:
             if not app.slots.acquire(blocking=False):
+                wait = app.retry_after_seconds
                 self._send(
                     503,
-                    json.dumps(dict(error=BUSY, retry_after_seconds=RETRY_AFTER_SECONDS)).encode(),
+                    json.dumps(dict(error=BUSY, retry_after_seconds=wait)).encode(),
                     "application/json; charset=utf-8",
-                    extra={"Retry-After": str(RETRY_AFTER_SECONDS)},
+                    extra={"Retry-After": str(wait)},
                 )
                 return
             try:
