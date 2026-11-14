@@ -40,7 +40,7 @@ class RegulatoryCueTests(unittest.TestCase):
         self.assertNotEqual(by_state["refused"], by_state["answer"])
 
     def test_state_text_is_still_visible_and_classes_are_applied(self) -> None:
-        alert = 'h("h3", { class: regulatoryStateClass(alert.result) }, `Status: ${alert.result}`)'
+        alert = "`Status: ${regulatoryStateLabel(alert.result)}`"
         lookup = (
             'h("h3", { class: regulatoryStateClass(answer.kind) }, `Lookup status: ${answer.kind}`)'
         )
@@ -53,6 +53,18 @@ class RegulatoryCueTests(unittest.TestCase):
     def test_unrecognised_state_falls_back_to_unknown_not_unmarked(self) -> None:
         fallback = 'regulatoryStates.has(value) ? value.replace(" ", "-") : "unknown"'
         self.assertIn(fallback, JS)
+
+    def test_alert_state_label_is_always_a_known_word_and_has_a_plain_summary(self) -> None:
+        self.assertIn("const regulatoryStateLabel = (value) =>", JS)
+        self.assertIn('(regulatoryStates.has(value) ? value : "unknown")', JS)
+        self.assertNotIn("Status: ${alert.result}", JS)
+        alert = JS[JS.index("function regulatoryAlertsPanel") : JS.index("const lookupMeanings")]
+        self.assertIn('"aria-labelledby": `regulatory-alert-${index}`', alert)
+        summary = alert[alert.index('class: "regulatory-plain-summary"') :]
+        summary = summary[: summary.index("Decision owner")]
+        self.assertIn("Plain-language summary: ", summary)
+        self.assertIn("Safe action:", summary)
+        self.assertNotIn("plain-explanation", summary)
 
     def test_escape_closes_chat_disclosure_and_restores_summary_focus(self) -> None:
         start = JS.index('root.addEventListener("keydown"')
