@@ -71,7 +71,8 @@ module = ["zava_forward.core.chat_panel", "test_chat_panel", "tests.test_chat_pa
           "zava_forward.core.source_monitor", "zava_forward.core.forms",
           "zava_forward.core.ranking_publication_runner",
           "zava_forward.core.simulation_lane",
-          "test_ranking_publication_runner", "tests.test_ranking_publication_runner"]
+          "test_ranking_publication_runner", "tests.test_ranking_publication_runner",
+          "test_ranking_tiebreak_audit", "tests.test_ranking_tiebreak_audit"]
 disallow_untyped_calls = false
 
 # Optional SQL driver (the sql extra); core CI and the isolated gate venv install core without it.
