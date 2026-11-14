@@ -437,6 +437,7 @@ class ContinuityMixin:
                    resident_impact=k.text(body.get("resident_impact", "Unavailable"), "resident impact", 400),
                    remediation=k.text(body.get("remediation", "Unavailable"), "remediation", 400),
                    restart_authority=k.text(body.get("restart_authority", "Unavailable: OD-35 authority unappointed"), "restart authority", 200),
+                   restart_rule="RULE-024", automatic_restart=False,
                    actor={key: user.get(key) for key in ("email", "code", "oid")},
                    actual_authority="Unavailable: OD-35 and RULE-020 acceptance not established.",
                    actual_hold=True, proposals=[], snapshot_complete=False,
@@ -505,6 +506,8 @@ class ContinuityMixin:
         if trusted_route is False:
             raise PermissionError("Restart decisions need the OID-bound trusted sign-in route.")
         k.require_role(user, MANAGER_ROLES, "a manager can decide a restart")
+        if body.get("automatic"):
+            raise PermissionError("RULE-024: a guardrail breach restart is never automatic; the named restart authority must decide it.")
         with self.lock:
             doc = self._cont()
             if not history_valid(doc):
