@@ -30,17 +30,13 @@ class ReferenceTests(unittest.TestCase):
         line = "See mvp/zavaforward_mvp/a.py (archive v0.21.0).\n"
         self.assertEqual(len(checker.reference_violations("docs/live.md", line)), 1)
         self.assertEqual(
-            checker.reference_violations(
-                "docs/adrs/0002-pilot-readiness-architecture.md", line
-            ),
+            checker.reference_violations("docs/adrs/0002-pilot-readiness-architecture.md", line),
             [],
         )
 
     def test_records_and_guards_are_exempt(self):
         line = "mvp/zavaforward_mvp/a.py\n"
-        self.assertEqual(
-            checker.reference_violations("docs/reference/log.md", line), []
-        )
+        self.assertEqual(checker.reference_violations("docs/reference/log.md", line), [])
         self.assertEqual(checker.reference_violations("tools/rpi-checks.py", line), [])
 
     def test_repository_has_no_violations(self):
@@ -68,9 +64,7 @@ class LinkTests(unittest.TestCase):
             root = Path(tmp)
 
             def git(*args):
-                subprocess.run(
-                    ["git", *args], cwd=root, check=True, capture_output=True
-                )
+                subprocess.run(["git", *args], cwd=root, check=True, capture_output=True)
 
             git("init", "-q", "-b", "main")
             git("config", "user.email", "t@example.test")
@@ -83,16 +77,12 @@ class LinkTests(unittest.TestCase):
             git("add", ".")
             git("commit", "-qm", "topic")
             (root / "loose.md").write_text("loose\n", encoding="utf-8")
-            self.assertEqual(
-                checker.changed_markdown(root, "main"), ["loose.md", "new.md"]
-            )
+            self.assertEqual(checker.changed_markdown(root, "main"), ["loose.md", "new.md"])
             self.assertEqual(len(checker.check_links(root, ["new.md"])), 1)
             self.assertEqual(len(checker.check_links(root, ["new.md"], "main")), 1)
             (root / "old.md").write_text("old\n[gone](nope.md)\n", encoding="utf-8")
             self.assertEqual(checker.added_lines(root, "main", "old.md"), {2})
-            (root / "old.md").write_text(
-                "[old](nope.md)\nold\n[gone](nope.md)\n", encoding="utf-8"
-            )
+            (root / "old.md").write_text("[old](nope.md)\nold\n[gone](nope.md)\n", encoding="utf-8")
             self.assertEqual(len(checker.check_links(root, ["old.md"], "main")), 2)
 
 

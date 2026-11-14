@@ -86,9 +86,7 @@ def reference_violations(path: str, text: str) -> list[str]:
         if PATH_TOKEN.search(line):
             lo, hi = max(0, number - 1 - WINDOW), number + WINDOW
             if not (header_tag or any(ARCHIVE_TAG in near for near in lines[lo:hi])):
-                found.append(
-                    f"{path}:{number}: retired path without archive tag {ARCHIVE_TAG}"
-                )
+                found.append(f"{path}:{number}: retired path without archive tag {ARCHIVE_TAG}")
     return found
 
 
@@ -132,9 +130,7 @@ def link_violations(
     for number, target in link_targets(text):
         if only_lines is not None and number not in only_lines:
             continue
-        if target.startswith(EXTERNAL) or re.match(
-            r"[a-z][a-z0-9+.-]*:", target, re.IGNORECASE
-        ):
+        if target.startswith(EXTERNAL) or re.match(r"[a-z][a-z0-9+.-]*:", target, re.IGNORECASE):
             continue
         clean = re.split(r"[#?]", target, maxsplit=1)[0]
         if not clean:
@@ -146,9 +142,7 @@ def link_violations(
 
 
 def changed_markdown(root: Path, base: str) -> list[str]:
-    names = set(
-        run_git(root, "diff", "--name-only", "--diff-filter=d", f"{base}...HEAD")
-    )
+    names = set(run_git(root, "diff", "--name-only", "--diff-filter=d", f"{base}...HEAD"))
     names.update(run_git(root, "diff", "--name-only", "--diff-filter=d", "HEAD"))
     names.update(run_git(root, "ls-files", "--others", "--exclude-standard"))
     return sorted(n for n in names if n.endswith(".md") and (root / n).is_file())
@@ -184,12 +178,8 @@ def check_links(root: Path, paths: list[str], base: str | None = None) -> list[s
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument(
-        "--root", type=Path, default=Path(__file__).resolve().parents[1]
-    )
-    parser.add_argument(
-        "--base", default="origin/main", help="base ref for changed documents"
-    )
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument("--base", default="origin/main", help="base ref for changed documents")
     parser.add_argument(
         "--files",
         nargs="*",
