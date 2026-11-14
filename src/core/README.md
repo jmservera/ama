@@ -877,6 +877,11 @@ passed to the `Pacer`; the replay span (days x 86,400 s / speed) must fit
 complete body matches the current plan, estimate and alert amount, allows one run, stops it, scales homes and rate down (never up) and
 inherits the `Pacer` hard deadline. Prices are public list estimates, not a quote.
 Owner and alert names must be real: blank, `TBD`/`none`/`n/a` style placeholders and `<template>` values are refused.
+`RunPlan` optionally takes `budget_alert_gbp`, `budget_cap_gbp` (declared together) and
+`planned_cost_gbp`; `synthetic.run_governance` then applies the run owner, `max_seconds` time
+limit and a GBP budget alert, and `RunController.admit(cost_gbp)` halts and stops the run before
+the cap (`RUN_BUDGET_HALT`) or at the deadline (`RUN_DEADLINE`). Costs are caller-declared
+planning figures, not billing data (CLI: `--budget-alert-gbp`, `--budget-cap-gbp`, `--planned-cost-gbp`).
 Nothing here sends traffic or verifies the live Azure budget alert (#146).
 A static test (`InfraAlignmentTests`) keeps the plan's tier, units, price and 80 percent alert
 threshold aligned with `infra/main.bicep` and the budget in `infra/modules/iothub.bicep`; it

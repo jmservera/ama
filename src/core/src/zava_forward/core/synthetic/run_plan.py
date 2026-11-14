@@ -14,6 +14,7 @@ from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from .run_governance import RunGovernance, RunMeter
 from .sensor_stream import Pacer, RunBudget, StreamError, accountable_text
 
 TIER = "B1"
@@ -60,6 +61,22 @@ class RunPlan:
     message_bytes: int = 512
     replay_speed: float = 1000.0
     daily_used_units: int = 0
+    budget_alert_gbp: str | None = None
+    budget_cap_gbp: str | None = None
+    planned_cost_gbp: str = "0"
+
+    def governance(self) -> RunGovernance | None:
+        """GBP governance is optional, but alert and cap must be declared together."""
+        if self.budget_alert_gbp is None and self.budget_cap_gbp is None:
+            return None
+        if self.budget_alert_gbp is None or self.budget_cap_gbp is None:
+            raise StreamError("INVALID_BUDGET")
+        return RunGovernance(
+            run_owner=self.owner,
+            time_limit_seconds=self.max_seconds,
+            budget_alert_gbp=self.budget_alert_gbp,
+            budget_cap_gbp=self.budget_cap_gbp,
+        )
 
     def validate(self) -> None:
         for text in (self.owner, self.alert_reference):
@@ -90,6 +107,9 @@ class RunPlan:
                 raise StreamError("INVALID_SCALE")
         if type(self.daily_used_units) is not int or not 0 <= self.daily_used_units <= 10_000_000:
             raise StreamError("INVALID_DAILY_USAGE")
+        governance = self.governance()
+        if governance is not None:
+            RunMeter(governance, time.monotonic, self.planned_cost_gbp)
 
     def estimate(self) -> Estimate:
         self.validate()
@@ -169,6 +189,18 @@ class RunController:
         self.state = "idle"
         self.active_homes = plan.homes
         self.pacer: Pacer | None = None
+        self.meter: RunMeter | None = None
+
+    def admit(self, cost_gbp: str | int) -> None:
+        """Record declared spend; alerts at the threshold and halts the run before the cap."""
+        if self.state != "running" or self.meter is None:
+            raise StreamError("RUN_NOT_RUNNING")
+        try:
+            self.meter.admit(cost_gbp)
+        except StreamError:
+            if self.meter.status == "halted":
+                self.stop()
+            raise
 
     def start(self, estimate_path: Path) -> Pacer:
         if self.state != "idle":
@@ -183,6 +215,9 @@ class RunController:
         expected = _body(self.plan)
         if claimed != _digest(body) or body != expected:
             raise StreamError("ESTIMATE_MISMATCH")
+        governance = self.plan.governance()
+        if governance is not None:
+            self.meter = RunMeter(governance, self.clock, self.plan.planned_cost_gbp)
         self.pacer = Pacer(self.plan.budget(), speed=self.plan.replay_speed, clock=self.clock)
         self.state = "running"
         return self.pacer
@@ -214,6 +249,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--budget-usd", type=float, required=True)
     parser.add_argument("--alert-threshold", type=float, default=0.8)
     parser.add_argument("--alert-reference", required=True)
+    parser.add_argument("--budget-alert-gbp")
+    parser.add_argument("--budget-cap-gbp")
+    parser.add_argument("--planned-cost-gbp", default="0")
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
     plan = RunPlan(
@@ -226,6 +264,9 @@ def main(argv: list[str] | None = None) -> int:
         alert_reference=args.alert_reference,
         replay_speed=args.replay_speed,
         daily_used_units=args.daily_used_units,
+        budget_alert_gbp=args.budget_alert_gbp,
+        budget_cap_gbp=args.budget_cap_gbp,
+        planned_cost_gbp=args.planned_cost_gbp,
     )
     try:
         body = record(plan, args.out)
