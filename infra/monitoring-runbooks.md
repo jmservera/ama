@@ -332,10 +332,14 @@ without owner approval.
 #### AI limit budget
 
 Anchor: `ai-limit-budget`. Marker reasons `money-budget-limit`, `price-unknown`,
-`liability-unknown`, `liability-overrun` and the `budget-currency-*` holds.
-Accountable role: Finance budget owner, with the competent task owner; appointment
-pending. Response and recovery as [AI limits](#ai-limits); no invented price or
-budget, and OD-51 stays open.
+`liability-unknown`, `liability-overrun`, `alert-unowned` and the `budget-currency-*`
+holds. `alert-unowned` means a non-synthetic price is in force but the authority
+lacks a named alert or alert owner, or a budget lacks calls, tokens or an amount,
+so the ledger holds the call. Accountable role: Finance budget owner, with the
+competent task owner; appointment pending. Response and recovery as
+[AI limits](#ai-limits); keep the runtime disable/manual path, do not name an
+owner or add a budget on anyone's behalf, and leave the authority for the
+approved owner to complete. No invented price or budget, and OD-51 stays open.
 
 #### AI limit expiry
 
