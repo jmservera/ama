@@ -8337,3 +8337,76 @@ Classes: `local observed` is a recorded local run on the stated head; `implement
 ### Process limits
 
 Documentation only. Checks run for this record: the cut-over audit check, `test_cutover_audit`, `git diff --check` and an ASCII scan of added lines. No install, source, test, Azure, SQL, browser, model or complete-gate run, and not a complete-gate receipt. Independent exact-head review, human approvals and applicable hosted CI remain required before merge. Original records: `.copilot-tracking/{research,plans,details,changes,reviews}/2026-11-13/440-demo-feature-wave-checkpoint-1531-*` and its state file.
+
+## Post-wave stabilization checkpoint (2026-11-13, Refs #440 #228 #358 #232 #165)
+
+Draft, documentation only, not approved. This is the bounded recurring #440 checkpoint for the wave merged after the previous [demo feature-wave checkpoint](#demo-feature-wave-stabilization-checkpoint-2026-11-13-refs-440-1288-184-432-144-133-435-216). It changes no source, test, tool, workflow, requirement or ADR, opens or edits no issue, ticks no criterion and approves nothing. Unlike the previous checkpoint, the local checks below were run in this session on the pinned head.
+
+### Identity pins (static Git observations, read 2026-11-13)
+
+| Item | Observed value |
+| --- | --- |
+| Source commit | `839774883641e54c33cc37a8f34df1bf08d51ffe` (merge of PR 1578), equal to this worktree HEAD |
+| Source tree | `ced1bfc08c1f0fe919902c543b022f35a2257ca3` |
+| `origin/main` after fetch | `8924b501c6a24bacbf0f429b9e54f3e62fa5b223`; `git diff --stat` against the source commit shows only `.github/rubric/scores/latest.json`, so no source, test or document input differs |
+| Previous checkpoint | `34b11967b` (PR 1527) |
+| Documents (blob at source commit) | BRD 0.21.0 `draft` `34d88395de86`; PRD zava-forward 0.21.0 `in-review` `a385d27481f8`; ADR 0003 `d60645397b20` and ADR 0006 `956da1a3b804` Accepted; ADR 0007 `541e0f72dd2c` Proposed. Blobs match the previous checkpoint; draft, in-review and proposed status is not approval |
+| Issues (read live) | #440, #228, #358, #232, #165, #155, #521 and #203 are OPEN. Nothing here closes or ticks any of them |
+| Excluded | Open PRs 1574, 1576, 1579, 1580 and 1581 (unmerged); their functionality is not assessed |
+
+### Covered merged PRs
+
+The covered span is `34b11967b..839774883`: 35 non-rubric commits. The four newest are the named wave; earlier commits are covered by their own recorded PR evidence and by the shared regression run below, not individually reassessed.
+
+| PR (merge) | Issue | Actual content (merge file list) | Source change |
+| --- | --- | --- | --- |
+| 1571 (`3aaf348ac`) | #228 | `procurement_screens_browser_check.py` and `src/api/README.md`: textual state cues, keyboard path at 1280 and 320 px, axe 4.10.3 scans, contractor redaction | Browser check only |
+| 1572 (`3033dc9c2`) | #358 | `infra/tests/test_setup_entra.py`: expired, boundary and future `endDateTime`; Key Vault reference preservation (offline) | Test only |
+| 1575 (`e5cb78fb6`) | #232 | `role-screens.js`, `role_screens_browser_check.py`, two api unit tests, WCAG baseline note | Yes, with tests |
+| 1578 (`839774883`) | #165 | Synthetic `coverage.py`, `privacy.py`, `device_provision.py`, `sensor_stream.py` and two core tests | Yes, with tests |
+| Earlier commits since 1527 | Various | Including 1531, 1534 (#131 tenure stop), 1543, 1545, 1552, 1559, 1567, 1568 and 1569; each recorded in its own PR | Various |
+
+### Traceability
+
+| Boundary | Document-qualified requirement or decision | Code and tests | Evidence class | Not supported |
+| --- | --- | --- | --- | --- |
+| Synthetic needs coverage and scenario manifest (#165) | BRD and PRD synthetic-data requirements (both unapproved); ADR 0003 Accepted | `test_scenario_manifest`, `test_needs_inventory`, `test_generator_coverage`, `test_synthetic_output_audit`, `test_synthetic_provenance`, `test_synthetic_determinism` | local observed | No private dataset read, so no claim about private data |
+| Procurement, housing-officer and resident-engagement screen accessibility (#228, #232) | PRD accessibility requirements; WCAG baseline | `test_accessibility_baseline`, `test_resident_choice_screen`, `test_resident_service_screen`, `test_procurement_screens`, `test_role_endpoint_inventory` | local observed for unit and static checks | Browser and axe runs of PRs 1571 and 1575 not rerun (no browser here): implemented-unverified for this head. No assistive-technology result |
+| Bicep policy (#358 area) | ADR 0006 Accepted | `infra/tests/test_bicep_policy.py` | local observed | `test_setup_entra.py` not rerun; no live non-production secret check |
+| Role access and consent boundaries | PRD role and consent requirements | `test_role_endpoint_inventory` (every role against every endpoint, no 500) | local observed | Fixture roles are not real approvals |
+| Live Azure behaviour | BRD and PRD deployment goals | None | deferred | Live deployment (#521, #358), branch protection (#203) |
+| Human assistive-technology acceptance | PRD accessibility acceptance | None | blocked on #155 | No participant evidence exists |
+
+### Commands and exits
+
+Environment: Linux, Python 3.12.3, isolated pip venv `/tmp/venv-440-2354` (`python3 -m venv`, `pip`), packages installed non-editable from `src/core`, `src/agents`, `src/api`, `src/orchestrator` and `src/importer`. No Azure, SQL Server, browser, Docker or provider. Source commit `839774883641e54c33cc37a8f34df1bf08d51ffe`.
+
+| Command (from repository root unless stated) | Result | Exit |
+| --- | --- | --- |
+| `pip install ./src/core ./src/agents ./src/api ./src/orchestrator ./src/importer pytest` | installed | 0 |
+| in `src/core`: `python -m pytest -q tests/test_scenario_manifest.py tests/test_needs_inventory.py tests/test_synthetic_output_audit.py tests/test_generator_coverage.py tests/test_synthetic_provenance.py tests/test_synthetic_determinism.py` | 60 passed, 158 subtests passed | 0 |
+| in `src/api`: `python -m pytest -q tests/test_accessibility_baseline.py tests/test_resident_choice_screen.py tests/test_resident_service_screen.py tests/test_procurement_screens.py tests/test_role_endpoint_inventory.py` | collection error: `dataset` module not found (test path not set) | 2 |
+| same with `PYTHONPATH=../core/tests:../agents/tests` | 66 passed, 1 failed: `test_role_endpoint_inventory` got HTTP 500 for `GET /api/ai/report` (`FileNotFoundError` in `ai_eval.run_eval`) | 1 |
+| same with `PYTHONPATH=../core/tests:../agents/tests ZF_AI_GOLDEN=<repo>/src/agents/evals/ai_priority_golden.json` | 67 passed | 0 |
+| `python -m pytest -q infra/tests/test_bicep_policy.py` | 61 passed, 210 subtests passed | 0 |
+
+The two failing api runs are environmental, not regressions. `ai_eval.GOLDEN` resolves `evals/ai_priority_golden.json` relative to the source tree (`Path(__file__).resolve().parents[3]`); a non-editable install puts the module in `site-packages`, where that file does not exist. The `ZF_AI_GOLDEN` override removes the error.
+
+Requested names with no file at this commit: `test_synthetic_test_data_guard` and `test_web_shell`. The nearest existing checks stand in: the synthetic output audit, provenance, coverage and determinism tests for the first, and the role-screen unit tests and endpoint inventory for the second. This substitution is a scope limit, not a pass of the missing names.
+
+### Skips, deferrals and blocks
+
+* local observed: the rows above, on the stated head only.
+* deferred: live Azure deployment (#521, #358 Request 2 live verification), the browser and axe checks of PRs 1571 and 1575, SQL Server paths, the held-out token batch.
+* blocked: human assistive-technology acceptance (#155), branch protection (#203).
+* unknown: behaviour of unmerged PRs 1574, 1576, 1579, 1580 and 1581.
+
+### Findings and recommendation (proposed, not an owner decision)
+
+* No new cross-feature regression is observed in the checks run. The one failure traced to the environment (non-editable install, golden file path) and passes with the documented override.
+* No new bug or refactor issue is filed. The golden-path fragility is a low-severity observation. The open-issue list was not searched for an existing owner, so the owner or a later checkpoint should decide whether to file a behaviour-preserving fix (package the golden file or fail with a named configuration error) with a test that imports the installed package.
+* Recommendation: CONTINUE. Gated: closure of #440, #228, #232, #165 and #358 (criteria not proven by local synthetic evidence), any WCAG conformance claim (#155) and the live Azure sync (#521). Independent lanes stay allowed: unrelated issue delivery, open PRs 1574 to 1581 through their own review and hosted checks, and documentation work. Resume point: after the next feature wave or before any epic closure, pin the then-current `origin/main`, rerun this ladder including the browser checks, and read hosted CI for the exact head.
+
+### Process limits
+
+Documentation only. Local focused tier; not a complete-gate receipt. Independent exact-head review, human approvals and applicable hosted CI remain required. Original records: `.copilot-tracking/{research,plans,details,changes,reviews}/2026-11-13/440-post-wave-stabilization-2354-*` and its state file.
