@@ -16,6 +16,7 @@ from zava_forward.core.synthetic import live_readings, sensor_identity
 VERSION = "simulated-device-identity-v1"
 RUN_ID = re.compile(r"[a-z0-9][a-z0-9-]{2,31}")
 SENSOR_ID = re.compile(r"[A-Z0-9][A-Z0-9_-]{0,19}")
+CANONICAL_SLOT = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z")
 MAX_DEVICES = 100
 _LOCKS: dict[str, threading.RLock] = {}
 _LOCKS_GUARD = threading.Lock()
@@ -98,7 +99,7 @@ def verify_envelope(device_id: str, row: Mapping[str, object]) -> None:
     if row.get("schema_version") not in live_readings.LIVE_VERSIONS:
         raise DeviceIdentityError("SCHEMA_VERSION_REQUIRED")
     observed = row.get("observed_at")
-    if not isinstance(observed, str):
+    if not isinstance(observed, str) or not CANONICAL_SLOT.fullmatch(observed):
         raise DeviceIdentityError("READING_ID_MISMATCH")
     try:
         slot = datetime.strptime(observed, "%Y-%m-%dT%H:%M:%SZ")
