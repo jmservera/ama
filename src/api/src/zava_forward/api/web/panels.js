@@ -336,17 +336,32 @@ function restoreChallengeDrafts(drafts) {
       draft.form.updateMutationState?.();
     } else {
       const containerId = draft.form.id.startsWith("challenge-resolve-")
-        ? "challenge-record-history-content" : "affected-challenges";
+        ? "challenge-record-history-content"
+        : draft.form.id.startsWith("nomination-")
+          ? "nominations"
+          : "affected-challenges";
       document.getElementById(containerId)?.append(draft.details);
       draft.form.updateMutationState?.();
     }
   }
 }
 
-// Read-only view of recorded nominations. It renders only fields the server supplied and never writes.
-function nominationPanel(c) {
+// View and dual-route staff intake forms for recorded nominations, acknowledgements and corrections.
+function nominationPanel(c, id, refresh) {
   if (!c.challenge_targets && !Array.isArray(c.nomination_records)) return null;
   const records = Array.isArray(c.nomination_records) ? c.nomination_records : [];
+  const perms = c.nomination_permissions && typeof c.nomination_permissions === "object"
+    ? c.nomination_permissions : null;
+  const interactive = Boolean(id && typeof refresh === "function" && perms && perms.can_write);
+  const ackIds = interactive && Array.isArray(perms.acknowledgeable_nomination_ids)
+    ? perms.acknowledgeable_nomination_ids : [];
+  const corrIds = interactive && Array.isArray(perms.correctable_nomination_ids)
+    ? perms.correctable_nomination_ids : [];
+  const staffOwners = interactive && Array.isArray(perms.staff_owners) ? perms.staff_owners : [];
+  const repRefs = interactive && Array.isArray(perms.representative_authorities)
+    ? perms.representative_authorities : [];
+  const challengeIds = Array.isArray(c.affected_challenges)
+    ? c.affected_challenges.map((ch) => ch && ch.id).filter(Boolean) : [];
   const text = (value) => (typeof value === "string" && value.trim() ? value : "Not recorded");
   const unknown = (value) => {
     const shown = Array.isArray(value) ? value.filter((item) => typeof item === "string" && item.trim()).join(", ") : value;
@@ -372,7 +387,9 @@ function nominationPanel(c) {
       ["Unverified subject reference", text(item.reported_subject_ref)],
       ["Account as supplied", text(item.account)],
       ["Source", text(item.source)],
-      ["Channel", text(item.channel)],
+      ["Channel", item.assisted_channel
+        ? `${text(item.channel)} (${item.assisted_channel.replaceAll("_", " ")})`
+        : text(item.channel)],
       ["Recorded by", person(item.recorded_by)],
       ["Recorded at", stamp(item.at)],
     ]));
@@ -391,10 +408,77 @@ function nominationPanel(c) {
     const reviews = Array.isArray(record.reviews) ? record.reviews : [];
     const original = record.original && typeof record.original === "object" ? record.original : {};
     const missing = follow && Array.isArray(follow.missing) ? follow.missing : null;
+    const explanation = record.plain_language_explanation
+      || (follow && follow.plain_language_explanation) || null;
+    const ownerOptions = staffOwners.map((p) => [p.email, p.role ? `${p.name} (${p.role})` : p.name]);
+    const currentOwnerEmail = record.owner && typeof record.owner.email === "string"
+      ? record.owner.email : (staffOwners.length === 1 ? staffOwners[0].email : "");
+    const assistedMediums = [
+      ["", "Select assisted non-digital medium"], ["phone", "Phone"], ["paper", "Paper"],
+      ["letter", "Letter"], ["in_person", "In person"], ["trusted_intermediary", "Trusted intermediary"],
+    ];
+    const nonDigitalRule = {
+      showWhen: (v) => v.channel === "staff_recorded_non_digital",
+      requiredWhen: (v) => v.channel === "staff_recorded_non_digital",
+    };
+    const ackForm = interactive && ackIds.includes(record.id)
+      ? nominationPanel._routeForm({
+        caseId: id, key: `nomination-ack-${record.id}`, title: `Record acknowledgement for ${record.id}`,
+        submitLabel: "Record acknowledgement", actionWord: "acknowledgement", refresh,
+        fields: [
+          ["channel", "Acknowledgement intake route", [["", "Select intake route"], ["digital", "Digital route"], ["staff_recorded_non_digital", "Staff-recorded non-digital route"]]],
+          ["assisted_channel", "Assisted non-digital medium", assistedMediums, nonDigitalRule],
+          ["owner", "Named follow-up owner", [["", "Select named follow-up owner"], ...ownerOptions], { initial: currentOwnerEmail }],
+          ...(perms.can_reassign_owner ? [["owner_reassignment_reason", "Owner reassignment reason (optional)", null, { maxlength: 500, requiredWhen: () => false }]] : []),
+          ["acknowledgement_ref", "Staff-recorded acknowledgement evidence reference", null, { maxlength: 500 }],
+          ["non_digital_route", "Staffed phone, paper, letter or in-person contact route", null, { maxlength: 500, initial: typeof record.non_digital_route === "string" ? record.non_digital_route : "" }],
+          ["next_update", "Next update date", null, { initial: typeof record.next_update === "string" ? record.next_update : "" }],
+        ],
+        build: (body) => {
+          const payload = {
+            action: "nomination_acknowledge", case_id: id, id: record.id, expected_version: record.version,
+            channel: body.channel, owner: body.owner, acknowledgement_ref: body.acknowledgement_ref,
+            non_digital_route: body.non_digital_route, next_update: body.next_update,
+          };
+          if (body.channel === "staff_recorded_non_digital") payload.assisted_channel = body.assisted_channel;
+          if (perms.can_reassign_owner && body.owner_reassignment_reason && body.owner_reassignment_reason.trim()) {
+            payload.owner_reassignment_reason = body.owner_reassignment_reason;
+          }
+          return payload;
+        },
+      }) : null;
+    const corrForm = interactive && corrIds.includes(record.id)
+      ? nominationPanel._routeForm({
+        caseId: id, key: `nomination-correct-${record.id}`, title: `Record competing correction for ${record.id}`,
+        submitLabel: "Record competing correction", actionWord: "correction", refresh,
+        fields: [
+          ["channel", "Correction intake route", [["", "Select correction intake route"], ["digital", "Digital route"], ["staff_recorded_non_digital", "Staff-recorded non-digital route"]]],
+          ["assisted_channel", "Assisted non-digital medium", assistedMediums, nonDigitalRule],
+          ["raised_by", "Who supplied the correction", [["Resident", "Resident"], ["Officer", "Officer"], ...(repRefs.length ? [["Representative", "Representative"]] : [])], { initial: "Resident" }],
+          ...(repRefs.length ? [["representative_ref", "Confirmed representative reference", [["", "Select confirmed representative"], ...repRefs.map((ref) => [ref, ref])], { showWhen: (v) => v.raised_by === "Representative", requiredWhen: (v) => v.raised_by === "Representative" }]] : []),
+          ["reported_subject_ref", "Corrected unverified subject reference", null, { maxlength: 100, initial: typeof original.reported_subject_ref === "string" ? original.reported_subject_ref : "" }],
+          ["account", "Competing corrected account", null, { multiline: true, maxlength: 4000 }],
+          ["source", "Supplied correction evidence reference", null, { maxlength: 500 }],
+          ["challenge_id", "Linked challenge reference (optional)", [["", "No linked challenge"], ...challengeIds.map((cid) => [cid, cid])], { requiredWhen: () => false }],
+          ["next_update", "Correction next update date"],
+        ],
+        build: (body) => {
+          const payload = {
+            action: "nomination_correct", case_id: id, id: record.id, expected_version: record.version,
+            reported_subject_ref: body.reported_subject_ref, account: body.account, source: body.source,
+            channel: body.channel, next_update: body.next_update,
+            challenge_id: body.challenge_id ? body.challenge_id : null, raised_by: body.raised_by || "Resident",
+          };
+          if (body.channel === "staff_recorded_non_digital") payload.assisted_channel = body.assisted_channel;
+          if (body.raised_by === "Representative" && body.representative_ref) payload.representative_ref = body.representative_ref;
+          return payload;
+        },
+      }) : null;
     return h("details", { class: "nomination-record", open: index < 5, "data-nomination": text(record.id) },
       h("summary", {}, `${text(record.kind)} ${text(record.id)}, version ${record.version ?? "Unknown"}. ${unknown(record.review_status)}`),
       supplied("Original supplied account", original),
       corrections.map((item) => supplied(`Corrected account, version ${item.version ?? "Unknown"} (competing evidence; the original is kept)`, item)),
+      nominationPanel._explanationView(explanation),
       h("div", {}, h("h4", {}, "Follow-up"), fields([
         ["Named owner", person(record.owner)],
         ["Next update", `${day(record.next_update)}. ${overdue(follow ? follow.next_update_overdue : undefined)}`],
@@ -423,13 +507,182 @@ function nominationPanel(c) {
             ["Reviewer", person(review.reviewer)],
             ["Reviewed at", stamp(review.at)],
           ]))) : h("p", {}, "No human review recorded."),
-        h("p", { class: "muted" }, "A recorded review is a staff record, not an approval or an eligibility decision.")));
+        h("p", { class: "muted" }, "A recorded review is a staff record, not an approval or an eligibility decision.")),
+      ackForm,
+      corrForm);
   };
   return h("section", { id: "nominations", class: "card nominations", "aria-labelledby": "nominations-title" },
     h("h2", { id: "nominations-title" }, "Nominations and self-referrals"),
-    h("p", {}, "Read only. This view shows what was supplied and recorded. It does not contact a resident, decide eligibility, change priority or assign an owner."),
+    h("p", {}, interactive
+      ? "Record supplied digital or staff-recorded non-digital acknowledgements and competing corrections. Urgent hazards use the hazard reporting route immediately. A named person owns every review and response."
+      : "Read only. This view shows what was supplied and recorded. It does not contact a resident, decide eligibility, change priority or assign an owner."),
     records.length ? records.map(card) : h("p", {}, "No nomination or self-referral is recorded for this home."));
 }
+
+nominationPanel._explanationView = function (expl, heading = "How decisions, sources and AI apply") {
+  if (!expl || typeof expl !== "object" || expl.permitted !== true) return null;
+  const clean = (val) => (typeof val === "string" && val.trim() ? val : "Unknown");
+  const listText = (arr, sep) => {
+    const items = Array.isArray(arr) ? arr.filter((item) => typeof item === "string" && item.trim()) : [];
+    return items.length ? items.join(sep) : "Unknown";
+  };
+  const row = (label, val) => h("div", {}, h("dt", {}, label), h("dd", {}, val));
+  return h("div", { class: "plain-language-explanation" },
+    h("h4", {}, heading),
+    h("dl", {}, [
+      row("Human decision owner", clean(expl.human_decision_owner)),
+      row("AI involvement", clean(expl.ai_involvement_explanation)),
+      row("Sources recorded", listText(expl.sources, "; ")),
+      row("Policy reasons", listText(expl.policy_reasons, " ")),
+      row("Uncertainty and unverified items", clean(expl.uncertainty_note)),
+    ]));
+};
+
+nominationPanel._routeForm = function ({
+  caseId, key, title, submitLabel, resetLabel, fields, build, refresh,
+  actionWord = "challenge", confirmSubmit = null,
+}) {
+  const session = typeof caseSession !== "undefined" ? caseSession : null;
+  const status = h("p", { id: `${key}-feedback`, role: "status", "aria-live": "polite", tabindex: -1 });
+  if (!status.id) status.id = `${key}-feedback`;
+  const inputs = fields.map((spec) => {
+    const [name, label, options, config = {}] = spec;
+    const attrs = { id: `${key}-${name}`, name, autocomplete: "off", "aria-describedby": status.id, ...(config.attrs || {}) };
+    let input;
+    if (options) {
+      input = h("select", attrs, options.map((option) => {
+        const [val, optionLabel] = Array.isArray(option) ? option : [option, option];
+        return h("option", { value: val, ...(config.initial === val ? { selected: true } : {}) }, optionLabel);
+      }));
+    } else if (config.multiline) {
+      input = h("textarea", { ...attrs, maxlength: config.maxlength || 4000 }, config.initial || "");
+    } else {
+      input = h("input", { ...attrs, type: name === "next_update" ? "date" : "text", maxlength: config.maxlength || 300, ...(config.initial ? { value: config.initial } : {}) });
+    }
+    if (config.initial !== undefined && "value" in input) input.value = config.initial;
+    const labelNode = h("label", { for: attrs.id }, label);
+    return { name, label, labelNode, input, isSelect: Boolean(options), requiredWhen: config.requiredWhen || null, showWhen: config.showWhen || null };
+  });
+  const currentValues = () => Object.fromEntries(inputs.map(({ name, input }) => [name, input.value || ""]));
+  const setHidden = (node, flag) => {
+    if ("hidden" in node) node.hidden = flag;
+    else if (node && node.attrs) node.attrs.hidden = flag;
+  };
+  const syncVisibility = () => {
+    const vals = currentValues();
+    for (const entry of inputs) {
+      if (!entry.showWhen) continue;
+      const visible = Boolean(entry.showWhen(vals));
+      setHidden(entry.labelNode, !visible);
+      setHidden(entry.input, !visible);
+      if (!visible && typeof entry.input.removeAttribute === "function") entry.input.removeAttribute("aria-invalid");
+    }
+  };
+  let mutation = { pending: false, message: "", recordedForm: null, checkHistory: false, focus: false, update: () => {} };
+  for (const { input, isSelect } of inputs) {
+    if (typeof input.addEventListener === "function") {
+      const clearInvalid = () => {
+        input.removeAttribute("aria-invalid");
+        syncVisibility();
+        if (!mutation.pending && !session?.historyBarrier) mutation.message = "";
+        mutation.update();
+      };
+      input.addEventListener("input", clearInvalid);
+      if (isSelect) input.addEventListener("change", clearInvalid);
+    }
+  }
+  syncVisibility();
+  const button = h("button", { type: "submit" }, submitLabel || title);
+  const form = h("form", {
+    id: key,
+    "data-challenge-case": caseId,
+    novalidate: true,
+    oninput: () => {
+      if (form.dataset) form.dataset.unsaved = "true";
+      syncVisibility();
+    },
+    onreset: (event) => {
+      if (typeof window !== "undefined" && typeof window.confirm === "function"
+          && !window.confirm(`Discard only this unsaved ${actionWord} draft?`)) {
+        event.preventDefault();
+        return;
+      }
+      if (form.dataset) delete form.dataset.unsaved;
+      inputs.forEach(({ input }) => {
+        if (typeof input.removeAttribute === "function") input.removeAttribute("aria-invalid");
+      });
+      syncVisibility();
+      if (!mutation.pending && !session?.historyBarrier) {
+        mutation.message = "";
+        mutation.recordedForm = null;
+      }
+      mutation.update();
+    },
+    onsubmit: async (event) => {
+      event.preventDefault();
+      if (button.disabled || session?.historyBarrier) { mutation.update(); return; }
+      const vals = currentValues();
+      for (const { input, label, requiredWhen, showWhen } of inputs) {
+        if (typeof input.removeAttribute === "function") input.removeAttribute("aria-invalid");
+        if (showWhen && !showWhen(vals)) continue;
+        const mustHave = requiredWhen ? requiredWhen(vals) : true;
+        const valid = input.validity ? input.validity.valid : true;
+        if ((mustHave && !String(input.value || "").trim()) || !valid) {
+          input.setAttribute("aria-invalid", "true");
+          status.textContent = actionWord === "challenge" ? `Enter ${label.toLowerCase()} before recording this challenge.` : `Enter ${label.toLowerCase()} before recording this ${actionWord}.`;
+          input.focus();
+          return;
+        }
+      }
+      const body = currentValues();
+      if (confirmSubmit && !confirmSubmit(body)) return;
+      mutation.pending = true;
+      mutation.update();
+      let dispatched = false;
+      const dispatchSignal = typeof routeController !== "undefined" && routeController ? routeController.signal : null;
+      try {
+        const payload = build(body);
+        dispatched = true;
+        await api(`/api/cases/${encodeURIComponent(caseId)}/resident`, payload, new AbortController().signal);
+        const latest = currentValues();
+        const changed = inputs.some(({ name }) => latest[name] !== body[name]);
+        mutation.recordedForm = changed ? form : null;
+        if (changed) {
+          if (form.dataset) form.dataset.unsaved = "true";
+          mutation.message = typeof panelOwned === "function"
+            ? panelOwned("Only the submitted values were recorded. Your later edits remain an unsaved draft; they were not submitted. Check the history before another action.", "the person recording the evidence", "check the case history, then submit your later edits again if they are still needed")
+            : "Only the submitted values were recorded.";
+        } else if (form.dataset) {
+          delete form.dataset.unsaved;
+        }
+        if (dispatchSignal && dispatchSignal.aborted) return;
+        const result = await refresh(async () => {});
+        mutation.checkHistory = result === "check-history";
+        if (mutation.checkHistory) mutation.message = typeof panelOwned === "function"
+          ? panelOwned("The evidence was recorded, but case history could not be reloaded. Reload and check the history before another action. Your unsubmitted edits are retained.", PANEL_SUPPORT, "reload and check the case history before another action")
+          : "Reload and check the case history before another action.";
+        else if (!changed) mutation.message = "Supplied evidence recorded.";
+      } catch (error) {
+        const checkHistory = dispatched && typeof mutationNeedsHistory === "function" && mutationNeedsHistory(error);
+        if (checkHistory && typeof requireCaseHistory === "function") requireCaseHistory(session);
+        mutation.checkHistory = checkHistory;
+        mutation.message = checkHistory
+          ? panelOwned("Confirmation is unavailable. Reload and check the history before recording another action.", PANEL_SUPPORT, "reload and check the case history before recording another action")
+          : panelOwned(error.message, PANEL_SUPPORT, "correct the entries or refresh, then try again", error.status);
+        mutation.focus = true;
+      } finally {
+        mutation.pending = false;
+        mutation.update();
+      }
+    },
+  },
+  inputs.flatMap(({ labelNode, input }) => [labelNode, input]),
+  status, button, h("button", { type: "reset", class: "alt" }, resetLabel || `Discard ${actionWord} draft`));
+  if (typeof bindCaseMutationForm === "function" && session) {
+    mutation = bindCaseMutationForm(session, key, form, button, status);
+  }
+  return h("details", {}, h("summary", {}, title), form);
+};
 
 function affectedChallengePanel(c, id, refresh) {
   if (!c.challenge_targets) return null;
@@ -476,91 +729,34 @@ function affectedChallengePanel(c, id, refresh) {
     return h("section", { id: key, "aria-label": `${label} history` }, status,
       h("div", { class: "row" }, newer, older), content);
   };
-  const formFor = (key, title, fields, build, correction = false) => {
-    const session = caseSession;
-    const status = h("p", { id: `${key}-feedback`, role: "status", "aria-live": "polite", tabindex: -1 });
-    const inputs = fields.map(([name, label, options]) => {
-      const attrs = { id: `${key}-${name}`, name, autocomplete: "off", "aria-describedby": status.id };
-      const input = options ? h("select", attrs, options.map((option) => h("option", { value: option }, option)))
-        : h("input", { ...attrs, type: name === "next_update" ? "date" : "text", maxlength: 300,
-          ...(name === "proposal_id" ? { list: targetOptions.id, spellcheck: "false" } : {}) });
-      input.addEventListener("input", () => {
-        input.removeAttribute("aria-invalid");
-        if (!mutation.pending && !session.historyBarrier) mutation.message = "";
-        mutation.update();
-      });
-      return { name, label, input };
-    });
-    const button = h("button", { type: "submit" }, title);
-    const form = h("form", { id: key, "data-challenge-case": id, novalidate: true,
-      oninput: () => { form.dataset.unsaved = "true"; },
-      onreset: (event) => {
-        if (!window.confirm("Discard only this unsaved challenge draft?")) { event.preventDefault(); return; }
-        delete form.dataset.unsaved;
-        inputs.forEach(({ input }) => input.removeAttribute("aria-invalid"));
-        if (!mutation.pending && !session.historyBarrier) {
-          mutation.message = "";
-          mutation.recordedForm = null;
-        }
-        mutation.update();
-      },
-      onsubmit: async (event) => {
-        event.preventDefault();
-        if (button.disabled || session?.historyBarrier) { mutation.update(); return; }
-        for (const { input, label } of inputs) {
-          input.removeAttribute("aria-invalid");
-          if (!input.value.trim() || !input.validity.valid) {
-            input.setAttribute("aria-invalid", "true");
-            status.textContent = `Enter ${label.toLowerCase()} before recording this challenge.`;
-            input.focus();
-            return;
-          }
-        }
-        const body = Object.fromEntries(inputs.map(({ name, input }) => [name, input.value]));
-        if (correction && body.resolution === "Correction recorded"
-            && !window.confirm("Record this supplied human correction? Only suggestions and reviews that use the challenged version will need a fresh review. No works choice or safety response changes.")) return;
-        mutation.pending = true;
-        mutation.update();
-        let dispatched = false;
-        const dispatchSignal = routeController.signal;
-        try {
-          const payload = build(body);
-          dispatched = true;
-          await api(`/api/cases/${encodeURIComponent(id)}/resident`, payload, new AbortController().signal);
-          const changed = inputs.some(({ name, input }) => input.value !== body[name]);
-          mutation.recordedForm = changed ? form : null;
-          if (changed) {
-            form.dataset.unsaved = "true";
-            mutation.message = panelOwned("Only the submitted values were recorded. Your later edits remain an unsaved draft; they were not submitted. Check the history before another action.", "the person recording the evidence", "check the case history, then submit your later edits again if they are still needed");
-          } else {
-            delete form.dataset.unsaved;
-          }
-          if (dispatchSignal.aborted) return;
-          const result = await refresh(async () => {});
-          mutation.checkHistory = result === "check-history";
-          if (mutation.checkHistory) mutation.message = panelOwned("The evidence was recorded, but case history could not be reloaded. Reload and check the history before another action. Your unsubmitted edits are retained.", PANEL_SUPPORT, "reload and check the case history before another action");
-          else if (!changed) mutation.message = "Supplied evidence recorded.";
-        } catch (error) {
-          const checkHistory = dispatched && mutationNeedsHistory(error);
-          if (checkHistory) requireCaseHistory(session);
-          mutation.checkHistory = checkHistory;
-          mutation.message = checkHistory
-            ? panelOwned("Confirmation is unavailable. Reload and check the history before recording another action.", PANEL_SUPPORT, "reload and check the case history before recording another action")
-            : panelOwned(error.message, PANEL_SUPPORT, "correct the entries or refresh, then try again", error.status);
-          mutation.focus = true;
-        } finally {
-          mutation.pending = false;
-          mutation.update();
-        }
-      } },
-    inputs.flatMap(({ label, input }) => [h("label", { for: input.id }, label), input]),
-    status, button, h("button", { type: "reset", class: "alt" }, "Discard challenge draft"));
-    const mutation = bindCaseMutationForm(session, key, form, button, status);
-    return h("details", {}, h("summary", {}, title), form);
-  };
+  const formFor = (key, title, fields, build, correction = false) => nominationPanel._routeForm({
+    caseId: id,
+    key,
+    title,
+    resetLabel: "Discard challenge draft",
+    actionWord: "challenge",
+    refresh,
+    fields: fields.map((spec) => {
+      const [name, label, options, config = {}] = spec;
+      const mergedConfig = name === "proposal_id"
+        ? { ...config, attrs: { ...(config.attrs || {}), list: targetOptions.id, spellcheck: "false" } }
+        : config;
+      return [name, label, options, mergedConfig];
+    }),
+    build,
+    confirmSubmit: correction
+      ? (body) => !(body.resolution === "Correction recorded"
+          && !window.confirm("Record this supplied human correction? Only suggestions and reviews that use the challenged version will need a fresh review. No works choice or safety response changes."))
+      : null,
+  });
   const staff = (me.staff || []).filter((person) => [
     "Resident Liaison Officer", "Retrofit Coordinator", "Retrofit Programme Manager", "Programme Support Officer"
   ].includes(person.role));
+  const caseRecord = typeof c !== "undefined" && c ? c : null;
+  const perms = caseRecord && caseRecord.nomination_permissions && typeof caseRecord.nomination_permissions === "object"
+    ? caseRecord.nomination_permissions : null;
+  const repRefs = perms && Array.isArray(perms.representative_authorities)
+    ? perms.representative_authorities : [];
   return h("section", { id: "affected-challenges", class: "card" },
     h("h2", {}, "Challenge a suggestion or ask for a correction"),
     h("p", {}, "Record only what the person supplied, including digital, phone, letter or in-person requests. A person owns the response. Nothing is sent here. Ask the named officer for accessible human help without using this screen. Urgent hazard response continues separately."),
@@ -573,27 +769,81 @@ function affectedChallengePanel(c, id, refresh) {
     h("p", {}, "Browse older suggestions or enter an exact recorded suggestion reference. Suggestions without a source version can still be challenged by suggestion reference."),
     historyFor("challenge-target-history", "suggestions", targets, (target) => h("details", {}, h("summary", {}, `Suggestion ${target.proposal_id}: ${target.stale ? "Needs a fresh review" : "No recorded correction"}`),
       h("p", {}, `Written by ${target.source === "ai" ? "AI" : "rules or template"}. Model: ${target.model || "Unknown"}. Prompt version: ${target.prompt_version || "Unknown"}. Source version for this case: ${target.source_version || "Unknown"}. Policy version: ${target.policy_version || "Unknown"}.`),
-      h("p", {}, `Human draft decision: ${target.human_decision?.status || "Unknown"}. Recorded by ${target.human_decision?.resolved_by || "Unknown"}. ${target.review_stale ? "Historical decision only; needs a fresh review." : "Not a works, consent or safety approval."}`)),
+      h("p", {}, `Human draft decision: ${target.human_decision?.status || "Unknown"}. Recorded by ${target.human_decision?.resolved_by || "Unknown"}. ${target.review_stale ? "Historical decision only; needs a fresh review." : "Not a works, consent or safety approval."}`),
+      nominationPanel._explanationView(target.plain_language_explanation, "How AI, sources and policy rules apply")),
     "No recorded priority suggestions."),
     targetOptions,
     targets.length ? formFor("challenge-open", "Record supplied challenge", [
       ["proposal_id", "Suggestion reference"],
       ["target_kind", "Challenged information", ["", "proposal", "source", "policy"]],
-      ["channel", "Supplied challenge channel", ["", "Digital", "Phone", "Letter", "In person"]],
+      ["channel", "Supplied challenge channel", [
+        ["", ""],
+        ["digital", "Digital route"],
+        ["staff_recorded_non_digital", "Staff-recorded non-digital route"],
+        "Digital",
+        "Phone",
+        "Letter",
+        "In person",
+      ]],
+      ["assisted_channel", "Assisted non-digital medium", [
+        ["", "Select assisted non-digital medium"],
+        ["phone", "Phone"],
+        ["paper", "Paper"],
+        ["letter", "Letter"],
+        ["in_person", "In person"],
+      ], {
+        showWhen: (v) => v.channel === "staff_recorded_non_digital",
+        requiredWhen: (v) => v.channel === "staff_recorded_non_digital",
+      }],
+      ["raised_by", "Who raised the challenge", [
+        ["Officer", "Officer"],
+        ["Resident", "Resident"],
+        ...(repRefs.length ? [["Representative", "Representative"]] : []),
+      ], { initial: "Officer" }],
+      ...(repRefs.length ? [[
+        "representative_ref",
+        "Confirmed representative reference",
+        [["", "Select confirmed representative"], ...repRefs.map((ref) => [ref, ref])],
+        {
+          showWhen: (v) => v.raised_by === "Representative",
+          requiredWhen: (v) => v.raised_by === "Representative",
+        },
+      ]] : []),
       ["source", "Supplied challenge evidence reference"], ["request", "The person's supplied request"],
       ["explanation", "Permitted plain-language explanation"], ["owner", "Named challenge owner", ["", ...staff.map((person) => person.email)]],
       ["non_digital_route", "Accessible phone, letter or in-person route"], ["next_update", "Challenge next update date"]
     ], (body) => {
       const target = targets.find((item) => item.proposal_id === body.proposal_id);
       if (!target) throw new Error("Enter an exact recorded suggestion reference from the suggestion history.");
-      return { action: "challenge_open", ...body, proposal_version: target.proposal_version,
-        decision_version: target.decision_version };
+      const payload = {
+        action: "challenge_open",
+        proposal_id: body.proposal_id,
+        proposal_version: target.proposal_version,
+        decision_version: target.decision_version,
+        target_kind: body.target_kind,
+        channel: body.channel,
+        source: body.source,
+        request: body.request,
+        explanation: body.explanation,
+        owner: body.owner,
+        non_digital_route: body.non_digital_route,
+        next_update: body.next_update,
+        raised_by: body.raised_by || "Officer",
+      };
+      if (body.channel === "staff_recorded_non_digital") {
+        payload.assisted_channel = body.assisted_channel;
+      }
+      if (body.raised_by === "Representative" && body.representative_ref) {
+        payload.representative_ref = body.representative_ref;
+      }
+      return payload;
     }) : h("p", {}, "No recorded priority suggestion for this case. Ordinary human review and complaints remain available through the named officer."),
     h("h3", {}, "Recorded challenges and resolutions"),
     historyFor("challenge-record-history", "challenges", records, (record) => h("div", {},
-      h("p", {}, `${record.id}: ${record.status}. ${record.channel}. ${record.request}`),
+      h("p", {}, `${record.id}: ${record.status}. ${record.assisted_channel ? `${record.channel} (${record.assisted_channel.replaceAll("_", " ")})` : record.channel}. ${record.request}`),
       h("p", {}, `Explanation: ${record.explanation}. Owner: ${named(record.owner)}. Manual route: ${record.non_digital_route}. Next update: ${fmtDate(record.next_update)}.`),
       h("p", {}, `Challenged ${record.target.kind}: ${record.target.id}, version ${record.target.version}. Supplied reference: ${record.source}. Human draft decision at opening: ${record.human_decision?.status || "Unknown"}.`),
+      nominationPanel._explanationView(record.plain_language_explanation, "How AI and human ownership apply"),
       record.resolution ? h("p", {}, `${record.resolution.outcome}: ${record.resolution.explanation}. Evidence: ${record.resolution.reference}. Recorded by ${named(record.resolution.recorded_by)}. Next update: ${fmtDate(record.resolution.next_update)}.`)
         : formFor(`challenge-resolve-${record.id}`, `Record supplied resolution for ${record.id}`, [
           ["resolution", "Supplied human resolution", ["", "Explanation recorded", "Correction recorded"]],

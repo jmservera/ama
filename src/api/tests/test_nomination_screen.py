@@ -163,6 +163,245 @@ class NominationScreen(unittest.TestCase):
         self.assertIn("No nomination or self-referral is recorded for this home.", empty["text"])
         self.assertIsNone(render(dict(id="ZF-1")))
 
+    def test_plain_language_explanation_renders_owner_ai_policy_and_uncertainty(self) -> None:
+        explained = record(
+            plain_language_explanation=dict(
+                permitted=True,
+                ai_involved=True,
+                human_decision_owner="Sam Officer (Resident Liaison Officer) owns every decision.",
+                ai_involvement_explanation=(
+                    "Advisory priority suggestion PRIO-1 used workflow fields only."
+                ),
+                sources=["Referral recorded via staff-recorded non-digital route (Phone)"],
+                policy_reasons=["Staffed nomination and self-referral route (FR-037)."],
+                uncertainty_note="Support needs: Unknown; Risk flags: Unknown.",
+            )
+        )
+        out = self.shown(explained)
+        text = out["text"]
+        self.assertIn("Human decision owner: Sam Officer", text)
+        self.assertIn("AI involvement: Advisory priority suggestion PRIO-1", text)
+        self.assertIn("Staffed nomination and self-referral route (FR-037).", text)
+        self.assertIn("Uncertainty and unverified items: Support needs: Unknown", text)
+
+    def test_interactive_workbench_mode_renders_labelled_dual_route_forms(self) -> None:
+        interactive_script = r"""
+const fs = require("node:fs");
+const src = fs.readFileSync(process.argv[1] + "/panels.js", "utf8");
+const start = src.indexOf("function nominationPanel");
+const end = src.indexOf("\nfunction affectedChallengePanel");
+const c = JSON.parse(process.argv[2]);
+const h = (tag, attrs, ...kids) => ({tag, attrs: attrs || {}, kids: kids.flat(Infinity)
+  .filter((k) => k !== null && k !== undefined && k !== false)});
+const collect = (n, tag, out = []) => {
+  if (n && typeof n === "object" && Array.isArray(n.kids)) {
+    if (n.tag === tag) out.push(n);
+    n.kids.forEach((k) => collect(k, tag, out));
+  }
+  return out;
+};
+eval(src.slice(start, end) + "\nglobalThis.__panel = nominationPanel(c, 'ZF-1', () => {});");
+const p = globalThis.__panel;
+const forms = collect(p, "form");
+const labels = collect(p, "label").map((l) => l.attrs.for);
+const controls = ["input", "select", "textarea"].flatMap((t) => collect(p, t));
+const selects = collect(p, "select").map((s) => ({
+  id: s.attrs.id,
+  options: collect(s, "option").map((o) => o.attrs.value),
+}));
+console.log(JSON.stringify({
+  formCount: forms.length,
+  labels,
+  controlIds: controls.map((el) => el.attrs.id),
+  describedByCount: controls.filter((el) => Boolean(el.attrs["aria-describedby"])).length,
+  selects,
+}));
+"""
+        case_payload = dict(
+            id="ZF-1",
+            challenge_targets=[],
+            nomination_records=[record()],
+            nomination_permissions=dict(
+                can_view=True,
+                can_write=True,
+                can_reassign_owner=False,
+                acknowledgeable_nomination_ids=["NOM-1"],
+                correctable_nomination_ids=["NOM-1"],
+                editable_nomination_ids=["NOM-1"],
+                staff_owners=[
+                    dict(
+                        email="sam@example.test",
+                        name="Sam Officer",
+                        role="Resident Liaison Officer",
+                    )
+                ],
+                representative_authorities=[
+                    dict(representative_ref="SYN-REP-1", label="SYN-REP-1 (Loft insulation)")
+                ],
+            ),
+        )
+        res = subprocess.run(
+            ["node", "-e", interactive_script, str(WEB), json.dumps(case_payload)],
+            text=True,
+            capture_output=True,
+            timeout=30,
+        )
+        self.assertEqual(res.returncode, 0, res.stderr)
+        parsed = json.loads(res.stdout)
+        self.assertEqual(parsed["formCount"], 2)
+        self.assertEqual(set(parsed["labels"]), set(parsed["controlIds"]))
+        self.assertEqual(parsed["describedByCount"], len(parsed["controlIds"]))
+        channel_selects = [s for s in parsed["selects"] if s["id"].endswith("-channel")]
+        self.assertEqual(len(channel_selects), 2)
+        for sel in channel_selects:
+            self.assertIn("digital", sel["options"])
+            self.assertIn("staff_recorded_non_digital", sel["options"])
+
+    def test_route_form_blur_change_preserves_refusal_message_while_input_and_select_clear(
+        self,
+    ) -> None:
+        blur_script = r"""
+const fs = require("node:fs");
+const src = fs.readFileSync(process.argv[1] + "/panels.js", "utf8");
+const header = src.slice(src.indexOf("const panelOwned = "), src.indexOf("\nfunction actForm"));
+const body = src.slice(
+  src.indexOf("function nominationPanel"),
+  src.indexOf("\nfunction affectedChallengePanel"),
+);
+let active = null;
+let rejectPending = null;
+globalThis.caseSession = {};
+globalThis.api = () => new Promise((_, reject) => { rejectPending = reject; });
+const h = (tag, attrs, ...kids) => {
+  const cleanAttrs = { ...(attrs || {}) };
+  const listeners = {};
+  for (const [k, v] of Object.entries(cleanAttrs)) {
+    if (k.startsWith("on") && typeof v === "function") {
+      listeners[k.slice(2)] = [v];
+      delete cleanAttrs[k];
+    }
+  }
+  const flatKids = kids.flat(Infinity).filter((k) => k !== null && k !== undefined && k !== false);
+  const node = {
+    tag,
+    tagName: tag.toUpperCase(),
+    attrs: cleanAttrs,
+    dataset: {},
+    listeners,
+    kids: flatKids,
+    value: cleanAttrs.value || "",
+    disabled: false,
+    hidden: Boolean(cleanAttrs.hidden),
+    textContent: flatKids.filter((k) => typeof k === "string").join(""),
+    validity: { valid: true },
+    get id() { return this.attrs.id || ""; },
+    set id(v) { this.attrs.id = String(v); },
+    setAttribute(k, v) { this.attrs[k] = String(v); },
+    removeAttribute(k) { delete this.attrs[k]; },
+    getAttribute(k) { return this.attrs[k] ?? null; },
+    addEventListener(type, fn) { (this.listeners[type] ||= []).push(fn); },
+    dispatch(type) {
+      for (const fn of this.listeners[type] || []) {
+        fn({ target: this, preventDefault() {} });
+      }
+    },
+    focus() {
+      const prev = active;
+      active = this;
+      if (prev && prev !== this && prev._dirtySinceFocus) {
+        prev._dirtySinceFocus = false;
+        prev.dispatch("change");
+      }
+    },
+  };
+  return node;
+};
+const findById = (n, target) => {
+  if (!n || typeof n !== "object") return null;
+  if (n.id === target) return n;
+  for (const k of n.kids || []) {
+    const hit = findById(k, target);
+    if (hit) return hit;
+  }
+  return null;
+};
+eval(header + "\n" + body);
+const details = nominationPanel._routeForm({
+  caseId: "ZF-1",
+  key: "challenge-open",
+  title: "Record challenge",
+  actionWord: "challenge",
+  refresh: async () => {},
+  fields: [
+    ["channel", "Route", [["digital", "Digital"], ["staff_recorded_non_digital", "Assisted"]], {
+      initial: "digital",
+    }],
+    ["assisted_channel", "Assisted channel", ["phone", "letter"], {
+      initial: "phone",
+      showWhen: (vals) => vals.channel === "staff_recorded_non_digital",
+    }],
+    ["request", "Supplied challenge details", null, { initial: "Initial supplied note" }],
+  ],
+  build: (vals) => vals,
+});
+(async () => {
+  const form = findById(details, "challenge-open");
+  const channel = findById(details, "challenge-open-channel");
+  const assisted = findById(details, "challenge-open-assisted_channel");
+  const request = findById(details, "challenge-open-request");
+  const feedback = findById(details, "challenge-open-feedback");
+  const submitPromise = form.listeners.submit[0]({ preventDefault() {} });
+  request.focus();
+  request.value = "Later evidence";
+  request._dirtySinceFocus = true;
+  request.dispatch("input");
+  const pendingFeedback = feedback.textContent;
+  rejectPending(Object.assign(new Error("Synthetic mutation result"), { status: 409 }));
+  await submitPromise;
+  const afterRefusalBlurFeedback = feedback.textContent;
+  const focusedAfterRefusal = active ? active.id : "";
+  request.setAttribute("aria-invalid", "true");
+  request.dispatch("input");
+  const afterGenuineInputFeedback = feedback.textContent;
+  const requestInvalidAfterInput = request.getAttribute("aria-invalid");
+  const assistedHiddenBeforeSelect = assisted.hidden;
+  channel.setAttribute("aria-invalid", "true");
+  globalThis.caseSession.rawFormStates.get("challenge-open").message = "Stale select error";
+  form.updateMutationState();
+  channel.value = "staff_recorded_non_digital";
+  channel.dispatch("change");
+  console.log(JSON.stringify({
+    pendingFeedback,
+    afterRefusalBlurFeedback,
+    focusedAfterRefusal,
+    afterGenuineInputFeedback,
+    requestInvalidAfterInput,
+    assistedHiddenBeforeSelect,
+    assistedHiddenAfterSelect: assisted.hidden,
+    channelInvalidAfterChange: channel.getAttribute("aria-invalid"),
+    feedbackAfterSelectChange: feedback.textContent,
+  }));
+})();
+"""
+        res = subprocess.run(
+            ["node", "-e", blur_script, str(WEB)],
+            text=True,
+            capture_output=True,
+            timeout=30,
+        )
+        self.assertEqual(res.returncode, 0, res.stderr)
+        out = json.loads(res.stdout)
+        self.assertIn("Recording the supplied evidence", out["pendingFeedback"])
+        self.assertEqual(out["focusedAfterRefusal"], "challenge-open-feedback")
+        self.assertIn("Synthetic mutation result", out["afterRefusalBlurFeedback"])
+        self.assertIn("Owner: your team manager", out["afterRefusalBlurFeedback"])
+        self.assertEqual(out["afterGenuineInputFeedback"], "")
+        self.assertIsNone(out["requestInvalidAfterInput"])
+        self.assertTrue(out["assistedHiddenBeforeSelect"])
+        self.assertFalse(out["assistedHiddenAfterSelect"])
+        self.assertIsNone(out["channelInvalidAfterChange"])
+        self.assertEqual(out["feedbackAfterSelectChange"], "")
+
 
 if __name__ == "__main__":
     unittest.main()

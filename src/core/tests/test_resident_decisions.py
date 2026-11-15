@@ -4763,6 +4763,27 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertNotIn("requested_by", attempt)
         self.assertEqual(attempt["receipt_ref"], "SYN-RCPT-1")
 
+    def test_nomination_permissions_and_redaction_match_intake_role_matrix(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.nomination())
+        sam_detail = self.store.detail("ZF-1", self.sam)
+        pam_detail = self.store.detail("ZF-1", self.pam)
+        rex_detail = self.store.detail("ZF-1", self.rex)
+        kim_detail = self.store.detail("ZF-1", self.kim)
+        self.assertTrue(sam_detail["nomination_permissions"]["can_submit_digital"])
+        self.assertTrue(
+            sam_detail["nomination_permissions"]["can_submit_staff_recorded_non_digital"]
+        )
+        self.assertFalse(sam_detail["nomination_permissions"]["can_assign_third_party_owner"])
+        self.assertTrue(pam_detail["nomination_permissions"]["can_view"])
+        self.assertTrue(pam_detail["nomination_permissions"]["can_submit_digital"])
+        self.assertTrue(pam_detail["nomination_permissions"]["can_assign_third_party_owner"])
+        self.assertNotIn("nomination_permissions", rex_detail)
+        self.assertNotIn("nomination_permissions", kim_detail)
+        self.assertIn(
+            "plain_language_explanation",
+            sam_detail["nomination_records"][0],
+        )
+
 
 class SyntheticReceiver:
     """Constructed receiver: records envelopes, never touches a network."""
