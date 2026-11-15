@@ -351,6 +351,36 @@ class DeployTests(unittest.TestCase):
         self.assertIn("apiImage=registry/api:release", calls[-1])
         self.assertIn(CURRENT, result.stdout)
 
+    def test_apply_rejects_placeholder_and_latest_explicit_image_overrides(self):
+        for flags in (
+            ("--apply", "--orchestrator-image", PLACEHOLDER),
+            (
+                "--apply",
+                "--orchestrator-image",
+                "example.azurecr.io/zava-forward-orchestrator:latest",
+            ),
+            ("--orchestrator-image", "example.azurecr.io/bad image:tag"),
+            (
+                "--apply",
+                "--orchestrator-image",
+                CURRENT,
+                "--parameter",
+                f"importImage={PLACEHOLDER}",
+            ),
+            (
+                "--apply",
+                "--orchestrator-image",
+                CURRENT,
+                "--parameter",
+                "apiImage=example.azurecr.io/zava-forward-api:latest",
+            ),
+        ):
+            with self.subTest(flags=flags):
+                result, calls = self.run_deploy([], *flags)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("Deployment stopped:", result.stderr)
+                self.assertEqual(calls, [])
+
     def test_lookup_identity_and_deployed_identity_match(self):
         result, calls = self.run_deploy(
             [

@@ -150,8 +150,13 @@ def authentication_guard(apps: list[dict[str, Any]], parameters: list[str]) -> N
             )
 
 
-def validate_parameter_overrides(parameters: list[str]) -> None:
-    """Reject placeholder, assumed, UUID-bearing, or invalid region/check CLI overrides."""
+def _is_disallowed_apply_image(image: str) -> bool:
+    lowered = image.lower()
+    return image == PLACEHOLDER or "quickstart" in lowered or lowered.endswith(":latest")
+
+
+def validate_parameter_overrides(parameters: list[str], *, apply: bool = False) -> None:
+    """Reject placeholder, assumed, UUID-bearing, or invalid region/check/image CLI overrides."""
     for entry in parameters:
         name, _, raw_value = entry.partition("=")
         if name in {"regionCheckReference", "quotaCheckReference"}:
@@ -180,6 +185,16 @@ def validate_parameter_overrides(parameters: list[str]) -> None:
                     "Invalid sqlLocation override: supply a lowercase Azure region slug, "
                     "not a placeholder or assumption."
                 )
+        elif name in {"apiImage", "agentImage", "agentsImage", "importImage"}:
+            candidate = raw_value.strip()
+            if not candidate or re.search(r"\s", candidate):
+                raise DeploymentError(
+                    f"Invalid {name} override: image reference must be non-empty."
+                )
+            if apply and _is_disallowed_apply_image(candidate):
+                raise DeploymentError(
+                    f"Refusing --apply with placeholder or :latest {name} ({candidate})."
+                )
 
 
 def main() -> int:
@@ -207,7 +222,20 @@ def main() -> int:
         ):
             parser.error("Use named options for image/workload/environment; others need NAME=VALUE")
     try:
-        validate_parameter_overrides(args.parameter)
+        if args.orchestrator_image and re.search(r"\s", args.orchestrator_image):
+            raise DeploymentError(
+                "Invalid --orchestrator-image: image reference must not contain whitespace."
+            )
+        if (
+            args.apply
+            and args.orchestrator_image
+            and _is_disallowed_apply_image(args.orchestrator_image)
+        ):
+            raise DeploymentError(
+                "Refusing --apply with placeholder or :latest --orchestrator-image "
+                f"({args.orchestrator_image})."
+            )
+        validate_parameter_overrides(args.parameter, apply=args.apply)
         authentication_guard(
             az_json("containerapp", "list", "--resource-group", args.resource_group),
             args.parameter,

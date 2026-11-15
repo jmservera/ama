@@ -61,6 +61,7 @@ scale_load = importlib.import_module("scale_load")
 scale_restart = importlib.import_module("test_scale_fixture_load_and_restart")
 _bicep_policy = importlib.import_module("test_bicep_policy")
 compile_bicep = _bicep_policy.compile_bicep
+evaluate_arm = _bicep_policy.evaluate
 module_template = _bicep_policy.module_template
 render_api_container = _bicep_policy.render_api_container
 resources = _bicep_policy.resources
@@ -150,11 +151,80 @@ class WorkerAndJobPipelineTests(unittest.TestCase):
                 self.assertGreaterEqual(len(from_lines), 2)
                 base_digests.update(from_lines)
                 self.assertIn("PYTHONDONTWRITEBYTECODE=1", dockerfile)
+                self.assertIn("TMPDIR=/tmp", dockerfile)
                 self.assertIn("USER 10001:10001", dockerfile)
                 self.assertIn("/app /data /state", dockerfile)
                 self.assertIn(cmd_line, dockerfile)
                 self.assertNotIn("quickstart", dockerfile.lower())
         self.assertEqual(len(base_digests), 1, "All four Dockerfiles must share one pinned base")
+
+    def test_all_six_src_dockerfiles_enforce_tmpdir_non_root_and_immutable_app_dir(self) -> None:
+        dockerfiles = (
+            ("src/api/Dockerfile", True),
+            ("src/agents/Dockerfile", True),
+            ("src/orchestrator/Dockerfile", True),
+            ("src/importer/Dockerfile", True),
+            ("src/api/Dockerfile.resident-demo", False),
+            ("src/api/live-simulator.Dockerfile", True),
+        )
+        for rel_path, has_state in dockerfiles:
+            content = (ROOT / rel_path).read_text(encoding="utf-8")
+            with self.subTest(dockerfile=rel_path):
+                self.assertIn("USER 10001:10001", content)
+                self.assertIn("PYTHONDONTWRITEBYTECODE=1", content)
+                self.assertIn("TMPDIR=/tmp", content)
+                self.assertNotRegex(
+                    content,
+                    r"chown\s+(-R\s+)?10001(?::10001)?\s+[^\n]*/app(?:\s|$)",
+                    f"{rel_path} must keep /app root-owned (immutable to UID 10001)",
+                )
+                if has_state:
+                    self.assertIn("chown 10001:10001 /state", content)
+
+    def test_importer_supports_bare_version_check_and_bounded_run_mode(self) -> None:
+        bare = subprocess.run(
+            [sys.executable, "-m", "zava_forward.importer"],
+            env=_child_env(),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=15,
+        )
+        self.assertEqual(bare.returncode, 0, bare.stderr)
+        self.assertIn("zava-forward-import", bare.stdout)
+
+        missing_cfg = subprocess.run(
+            [sys.executable, "-m", "zava_forward.importer", "run"],
+            env=_child_env(IMPORT_QUEUE="", ZF_STORE="mssql", SQL_SERVER="", SQL_DATABASE=""),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=15,
+        )
+        self.assertEqual(missing_cfg.returncode, 2)
+        self.assertIn("IMPORT_QUEUE", missing_cfg.stderr)
+
+        standby = subprocess.run(
+            [sys.executable, "-m", "zava_forward.importer", "run"],
+            env=_child_env(
+                IMPORT_QUEUE="import-jobs",
+                QUEUE_ENDPOINT="https://stforwarddev.queue.core.windows.net",
+                BLOB_ENDPOINT="https://stforwarddev.blob.core.windows.net",
+                ZF_STORE="mssql",
+                SQL_SERVER="sql-forward-dev.database.windows.net",
+                SQL_DATABASE="sqldb-forward-dev",
+            ),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=15,
+        )
+        self.assertEqual(standby.returncode, 0, standby.stderr)
+        payload = json.loads(standby.stdout.strip())
+        self.assertEqual(payload["job"], "importer")
+        self.assertEqual(payload["mode"], "standby")
+        self.assertEqual(payload["status"], "ok")
+        self.assertEqual(payload["importQueue"], "import-jobs")
 
     def test_orchestrator_supports_bare_version_check_and_bounded_run_mode(self) -> None:
         bare = subprocess.run(
@@ -241,6 +311,28 @@ class WorkerAndJobPipelineTests(unittest.TestCase):
                     {"apiImage", "agentImage", "orchestratorImage", "importImage"},
                 )
                 self.assertEqual(len(pulled), 4)
+                manifest_path = digest_dir / pipeline.RELEASE_MANIFEST_FILE
+                self.assertTrue(manifest_path.is_file())
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                self.assertEqual(manifest["hardening"], pipeline.HARDENING_CONTRACT)
+                self.assertEqual(
+                    set(manifest["workloads"]),
+                    {
+                        "api",
+                        "agents",
+                        "orchestrator",
+                        "auth-renewal",
+                        "ledger-verify",
+                        "rank-publish",
+                        "import",
+                    },
+                )
+                tampered = json.loads(manifest_path.read_text(encoding="utf-8"))
+                tampered["workloads"]["import"]["image"] = (
+                    "mcr.microsoft.com/k8se/quickstart:latest"
+                )
+                with self.assertRaises(pipeline.PipelineError):
+                    pipeline.verify_release_manifest(tampered, server)
 
                 # Mutable tag (non-digest) must fail closed.
                 (digest_dir / "agents.json").write_text(
@@ -370,6 +462,7 @@ class WorkerAndJobPipelineTests(unittest.TestCase):
         for param_name in ("apiImage", "agentImage", "orchestratorImage", "importImage"):
             self.assertIn(param_name, apps["parameters"])
             self.assertEqual(apps["parameters"][param_name]["type"], "string")
+            self.assertEqual(apps["parameters"][param_name].get("minLength"), 1)
 
         expected = {
             "api": ("[parameters('apiImage')]", None, None),
@@ -398,7 +491,11 @@ class WorkerAndJobPipelineTests(unittest.TestCase):
                 ["python", "-m", "zava_forward.orchestrator.ranking_publish"],
                 None,
             ),
-            "import": ("[parameters('importImage')]", None, None),
+            "import": (
+                "[parameters('importImage')]",
+                ["python", "-m", "zava_forward.importer"],
+                ["run"],
+            ),
         }
         seen: set[str] = set()
         for res in resources(apps):
@@ -415,7 +512,86 @@ class WorkerAndJobPipelineTests(unittest.TestCase):
                 self.assertEqual(container.get("command"), exp_cmd)
             if exp_args is not None:
                 self.assertEqual(container.get("args"), exp_args)
+            if cname == "import":
+                env_expr = str(container.get("env"))
+                self.assertIn("ZF_STORE", env_expr)
+                self.assertIn("mssql", env_expr)
         self.assertEqual(seen, set(expected))
+
+    @_requires_az_bicep()
+    def test_compiled_bicep_enforces_demo_direct_ingress_names_and_job_schedules(self) -> None:
+        apps = module_template(_compiled("main.bicep"), "containerapps")
+        variables = apps.get("variables", {})
+        base_params = {
+            name: spec.get("defaultValue", "fixture") for name, spec in apps["parameters"].items()
+        }
+        for demo_mode, prefix, expected_names in (
+            (
+                False,
+                "forward-dev",
+                {
+                    "api": "ca-forward-dev-api",
+                    "agents": "ca-forward-dev-agents",
+                    "orchestrator": "job-forward-dev-orchestrator",
+                    "auth-renewal": "job-forward-dev-auth-renewal",
+                    "ledger-verify": "job-forward-dev-ledger-verify",
+                    "ranking-publish": "job-forward-dev-rank-publish",
+                    "import": "job-forward-dev-import",
+                },
+            ),
+            (
+                True,
+                "forward-dev-demo",
+                {
+                    "api": "ca-forward-dev-demo-api",
+                    "agents": "ca-forward-dev-demo-agents",
+                    "orchestrator": "job-forward-dev-demo-orch",
+                    "auth-renewal": "job-forward-dev-demo-auth",
+                    "ledger-verify": "job-forward-dev-demo-audit",
+                    "ranking-publish": "job-forward-dev-demo-rank",
+                    "import": "job-forward-dev-demo-load",
+                },
+            ),
+        ):
+            params = {
+                **base_params,
+                "prefix": prefix,
+                "demoDirectIngress": demo_mode,
+                "tokenStoreReady": True,
+                "rankingArchiveContainer": "ranking-archive",
+            }
+            actual_names: dict[str, str] = {}
+            for res in resources(apps):
+                if res["type"] not in ("Microsoft.App/containerApps", "Microsoft.App/jobs"):
+                    continue
+                cname = res["properties"]["template"]["containers"][0]["name"]
+                actual_names[cname] = evaluate_arm(res["name"], params, variables)
+            self.assertEqual(actual_names, expected_names)
+
+        by_job = {
+            res["properties"]["template"]["containers"][0]["name"]: res["properties"][
+                "configuration"
+            ]
+            for res in resources(apps)
+            if res["type"] == "Microsoft.App/jobs"
+        }
+        import_scale = by_job["import"]["eventTriggerConfig"]["scale"]
+        self.assertEqual((import_scale["minExecutions"], import_scale["maxExecutions"]), (0, 2))
+        import_rule = import_scale["rules"][0]
+        self.assertEqual(import_rule["type"], "azure-queue")
+        self.assertEqual(import_rule["metadata"]["queueName"], "import-jobs")
+        self.assertEqual(import_rule["metadata"]["queueLength"], "1")
+        for job_name, expected_cron in (
+            ("orchestrator", "*/5 * * * *"),
+            ("auth-renewal", "0 3 * * *"),
+            ("ledger-verify", "0 2 * * *"),
+            ("ranking-publish", "30 2 * * *"),
+        ):
+            with self.subTest(job=job_name):
+                self.assertEqual(by_job[job_name]["triggerType"], "Schedule")
+                self.assertEqual(
+                    by_job[job_name]["scheduleTriggerConfig"]["cronExpression"], expected_cron
+                )
 
 
 class DeployedContainerHardeningTests(unittest.TestCase):
@@ -698,6 +874,7 @@ with tempfile.TemporaryDirectory() as tmp:
                 [sys.executable, "-m", "zava_forward.orchestrator.ranking_publish"],
             ),
             ("importer", [sys.executable, "-m", "zava_forward.importer"]),
+            ("importer_run", [sys.executable, "-m", "zava_forward.importer", "run"]),
         )
         for label, cmd in commands:
             with self.subTest(entrypoint=label):
@@ -712,6 +889,18 @@ with tempfile.TemporaryDirectory() as tmp:
                 self.assertEqual(proc.returncode, 2, f"{label} stderr: {proc.stderr}")
                 self.assertIn("Refusing to start:", proc.stderr)
                 self.assertNotIn("Traceback", proc.stderr)
+
+    def test_security_context_and_capability_drop_contract_matches_runtime_guard(self) -> None:
+        check_container = (ROOT / "src/check-container.py").read_text(encoding="utf-8")
+        acr_cutover = (ROOT / "src/acr-cutover.yaml").read_text(encoding="utf-8")
+        self.assertIn("--read-only", check_container)
+        self.assertIn("--cap-drop=ALL", check_container)
+        self.assertIn("no-new-privileges", check_container)
+        self.assertIn("--read-only", acr_cutover)
+        self.assertIn("--cap-drop ALL", acr_cutover)
+        self.assertIn("no-new-privileges", acr_cutover)
+        self.assertEqual((EXPECTED_UID, EXPECTED_GID), (10001, 10001))
+        self.assertEqual(_hardening._ZERO_CAPABILITY_KEYS, ("CapInh", "CapPrm", "CapEff", "CapAmb"))
 
 
 class DeclaredScaleLoadFixtureTests(unittest.TestCase):

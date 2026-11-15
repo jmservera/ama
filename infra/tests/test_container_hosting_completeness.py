@@ -38,9 +38,13 @@ class WorkloadContracts(unittest.TestCase):
             "modules/containerapps.bicep:api",
             "modules/containerapps.bicep:agents",
             "modules/containerapps.bicep:orchestrator",
+            "modules/containerapps.bicep:tokenRenewal",
             "modules/containerapps.bicep:ledgerVerify",
+            "modules/containerapps.bicep:rankingPublish",
             "modules/containerapps.bicep:importJob",
             "resident-demo.bicep:app",
+            "live-receiver-job.bicep:job",
+            "live-simulator-job.bicep:job",
         ):
             self.assertIn(expected, names)
 
@@ -109,25 +113,21 @@ class CrossChecks(unittest.TestCase):
         self.assertEqual(LIMITS.findall(api), [("0.5", "1")])
         self.assertIn("concurrentRequests: '50'", api)
         harness = (ROOT / "src/api/tests/scale_load.py").read_text()
-        self.assertIn(
-            'API_LIMITS = {"vcpu": 0.5, "memory_gib": 1.0, "max_replicas": 4}', harness
-        )
+        self.assertIn('API_LIMITS = {"vcpu": 0.5, "memory_gib": 1.0, "max_replicas": 4}', harness)
         self.assertIn("maxReplicas: enablePublicSimulationLane ? 1 : 4", api)
 
     def test_probe_path_is_the_store_readiness_handler(self) -> None:
         server = (ROOT / "src/api/src/zava_forward/api/server.py").read_text()
-        handler = server.split('if url.path == "/healthz":', 1)[1].split(
-            "\n            if not", 1
-        )[0]
+        handler = server.split('if url.path == "/healthz":', 1)[1].split("\n            if not", 1)[
+            0
+        ]
         self.assertIn("app.store.ready()", handler)
         self.assertIn("503", handler)
         self.assertIn("200", handler)
 
     def test_worker_has_no_listener_so_no_hosted_probe(self) -> None:
         text = (INFRA / "modules/containerapps.bicep").read_text()
-        agents = text.split("resource agents ", 1)[1].split(
-            "resource orchestrator ", 1
-        )[0]
+        agents = text.split("resource agents ", 1)[1].split("resource orchestrator ", 1)[0]
         self.assertNotIn("probes:", agents)
         self.assertNotIn("ingress:", agents)
 
