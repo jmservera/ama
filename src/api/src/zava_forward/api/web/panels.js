@@ -147,8 +147,9 @@ function technicalPanel(c, id, refresh) {
     !t ? h("p", { class: "muted" }, "No design recorded yet.") : [
       h("p", {}, `Design version ${t.design_version}, recorded by ${t.design_name}. The person who recorded the design cannot sign it off. Owner: a different technical reviewer. Next action: ask a different technical reviewer to sign off this design version.`),
       h("p", {}, "Technical sign-off is a named human professional decision, never an AI approval. Role membership alone does not attest competence."),
-      h("table", {}, h("caption", { class: "sr-only" }, "Technical sign-offs"), h("thead", {}, h("tr", {}, ["Sign-off", "State", "Design version", "By", "Note"].map((x) => h("th", { scope: "col" }, x)))),
-        h("tbody", {}, TYPES.map(([k, label]) => { const s = t.signoffs[k]; return h("tr", {}, h("td", {}, label), h("td", {}, s ? s.status : "Not given"), h("td", {}, s && s.version ? String(s.version) : "Not given"), h("td", {}, s && s.by ? s.by : ""), h("td", {}, s ? (s.reason || s.note || "") : "")); }))),
+      h("div", { class: "table-scroll", role: "region", tabindex: 0, "aria-label": "Technical sign-offs table" },
+        h("table", {}, h("caption", { class: "sr-only" }, "Technical sign-offs"), h("thead", {}, h("tr", {}, ["Sign-off", "State", "Design version", "By", "Note"].map((x) => h("th", { scope: "col" }, x)))),
+          h("tbody", {}, TYPES.map(([k, label]) => { const s = t.signoffs[k]; return h("tr", {}, h("th", { scope: "row" }, label), h("td", {}, s ? s.status : "Not given"), h("td", {}, s && s.version ? String(s.version) : "Not given"), h("td", {}, s && s.by ? s.by : ""), h("td", {}, s ? (s.reason || s.note || "") : "")); })))),
       c.technical_missing.length ? [h("p", {}, "Still needed before this stage can pass:"), h("ul", {}, c.technical_missing.map((m) => h("li", {}, `${m.item}. For the ${m.assigned_to}.`)))] : h("p", {}, "Every sign-off and piece of evidence is in place."),
     ],
     !t ? actForm("Record the design", [["note", "What the design covers"]], (b, submitted) => go("design_submit", b, submitted), "Record design")
@@ -871,7 +872,8 @@ async function financeQueueView() {
     exposureNotice(exposure),
     h("p", { class: "muted" }, "Invoices with exceptions, paused payments or no check yet. A person decides each one. Nothing is paid from here."),
     h("p", {}, h("a", { class: "btn alt", href: "/api/finance.csv", download: "finance-queue.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back."),
-    rows.length ? h("table", {}, h("caption", { class: "sr-only" }, "Invoices waiting for a decision"), h("thead", {}, h("tr", {}, ["Home", "Invoice", "Supplier", "Status", "Exceptions", "Total"].map((x) => h("th", { scope: "col" }, x)))),
-      h("tbody", {}, rows.map((r) => h("tr", {}, h("td", {}, h("a", { href: `#/case/${encodeURIComponent(r.case_id)}` }, r.address)), h("td", {}, `${r.invoice} ${r.ref}`),
-        h("td", {}, r.supplier), h("td", {}, r.on_hold ? `${r.status}, payment paused` : r.status), h("td", {}, r.exceptions), h("td", {}, money(r.total)))))) : h("p", {}, "Nothing is waiting."));
+    rows.length ? h("div", { class: "table-scroll", role: "region", tabindex: 0, "aria-label": "Invoices waiting for a decision table" },
+      h("table", {}, h("caption", { class: "sr-only" }, "Invoices waiting for a decision"), h("thead", {}, h("tr", {}, ["Home", "Invoice", "Supplier", "Status", "Exceptions", "Total"].map((x) => h("th", { scope: "col" }, x)))),
+        h("tbody", {}, rows.map((r) => h("tr", {}, h("th", { scope: "row" }, h("a", { href: `#/case/${encodeURIComponent(r.case_id)}` }, r.address)), h("td", {}, `${r.invoice} ${r.ref}`),
+          h("td", {}, r.supplier), h("td", {}, r.on_hold ? `${r.status}, payment paused` : r.status), h("td", {}, r.exceptions), h("td", {}, money(r.total))))))) : h("p", {}, "Nothing is waiting."));
 }

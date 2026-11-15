@@ -2435,9 +2435,12 @@ function bars(title, data, link) {
         svg("text", { x: 190 + (d.n / max) * 240 + 6, y: i * rowH + 16, class: "lbl" }, String(d.n)));
       return bar;
     }));
-  const table = h("details", { class: "chart-data" }, h("summary", {}, "Show this chart as a table"),
-    h("table", {}, h("caption", { class: "sr-only" }, title), h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Group"), h("th", { scope: "col" }, "Cases"))),
-      h("tbody", {}, data.map((d) => h("tr", {}, h("th", { scope: "row" }, d.label), h("td", {}, String(d.n)))))));
+  const table = h("details", { class: "chart-data" },
+    h("summary", {}, "Show this chart as a table", h("span", { class: "sr-only" }, `: ${title}`)),
+    h("div", { class: "table-scroll", role: "region", tabindex: "0", "aria-label": `${title} table` },
+      h("table", {}, h("caption", { class: "sr-only" }, title), h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Group"), h("th", { scope: "col" }, "Cases"))),
+        h("tbody", {}, data.length ? data.map((d) => h("tr", {}, h("th", { scope: "row" }, d.label), h("td", {}, String(d.n))))
+          : h("tr", {}, h("td", { colspan: "2" }, "No cases recorded."))))));
   return h("section", { class: "card" }, h("h2", {}, title), g, table, link);
 }
 
@@ -2519,8 +2522,9 @@ function mapPanel(coordinator = null, filters = null) {
     if (focus) title.focus();
   };
   const listHead = h("summary", { id: "maplist-h" }, "Show the map areas as a list (keyboard and screen reader friendly)");
+  const listEmpty = h("p", { class: "muted", "data-maplist-empty": "", hidden: true }, "No mapped homes in this view. Choose Show these as a list for all selected cases.");
   const listUl = h("ul", { "aria-labelledby": "maplist-h", class: "plainlist" });
-  const listBox = h("details", { class: "maplist" }, listHead, listUl);
+  const listBox = h("details", { class: "maplist" }, listHead, listEmpty, listUl);
   const sidebar = h("aside", { class: "map-info", "aria-label": "Map information and home summary" },
     h("p", {}, "Select a home for a summary, then choose Open home. Escape closes the summary first."),
     h("p", {}, Object.entries(MAP_SIGNALS).map(([kind, signal]) => h("span", { class: `key ${kind}` }, mapSymbol(kind), signal.label))),
@@ -2583,6 +2587,10 @@ function mapPanel(coordinator = null, filters = null) {
   disposeMapPanel = dispose;
   signal.addEventListener("abort", dispose, { once: true });
   const renderList = (d) => {
+    const empty = !d.items.length;
+    listEmpty.hidden = !empty;
+    if (empty) listEmpty.removeAttribute("hidden");
+    else listEmpty.setAttribute("hidden", "");
     listUl.replaceChildren(...d.items.map((p) => {
       if (d.mode === "clusters") {
         const label = `${p.count} homes, ${p.hazards} with a safety issue open`;
@@ -2898,11 +2906,11 @@ async function overviewView() {
       h("section", { class: "card" }, h("h2", {}, "Contractors"),
         h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Contractors table" },
           h("table", {}, h("caption", { class: "sr-only" }, "Contractors and their open work"), h("thead", {}, h("tr", {}, ["Contractor", "Open", "On site or booked", "Stuck 60+ days"].map((x) => h("th", { scope: "col" }, x)))),
-            h("tbody", {}, st.contractors.map((c) => h("tr", {}, h("td", {}, c.name), h("td", {}, c.open), h("td", {}, c.booked), h("td", {}, c.long)))))))),
+            h("tbody", {}, st.contractors.map((c) => h("tr", {}, h("th", { scope: "row" }, c.name), h("td", {}, c.open), h("td", {}, c.booked), h("td", {}, c.long)))))))),
     h("section", { class: "card" }, h("h2", {}, "Team workload"),
       h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Team workload table" },
         h("table", {}, h("caption", { class: "sr-only" }, "Team workload by person"), h("thead", {}, h("tr", {}, ["Name", "Role", "Open cases", "With a safety issue"].map((x) => h("th", { scope: "col" }, x)))),
-          h("tbody", {}, st.team.map((t) => h("tr", {}, h("td", {}, t.name), h("td", {}, t.role), h("td", {}, t.open), h("td", {}, t.hazards))))))));
+          h("tbody", {}, st.team.map((t) => h("tr", {}, h("th", { scope: "row" }, t.name), h("td", {}, t.role), h("td", {}, t.open), h("td", {}, t.hazards))))))));
   mp.size();
   await mp.draw(true);
 }
@@ -2925,7 +2933,8 @@ async function fundingView() {
   show(h("h1", {}, "Funding applications"),
     h("p", { class: "muted" }, "Homes where funding is not yet confirmed. Open one to draft the application with AI, add evidence, and have it approved."),
     h("p", {}, h("a", { class: "btn alt", href: "/api/funding.csv", download: "funding.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back."),
-    h("table", {}, h("caption", { class: "sr-only" }, "Homes where funding is not yet confirmed"), h("thead", {}, h("tr", {}, ["Resident", "Area", "Route", "Status", "Evidence", "Owner"].map((x) => h("th", { scope: "col" }, x)))),
-      h("tbody", {}, rows.slice(0, 150).map((r) => h("tr", {}, h("td", {}, h("a", { href: `#/case/${encodeURIComponent(r.id)}` }, r.resident)),
-        h("td", {}, r.area), h("td", {}, r.route), h("td", {}, r.status), h("td", {}, `${r.have} of ${r.need}`), h("td", {}, r.owner))))));
+    h("div", { class: "table-scroll", role: "region", tabindex: 0, "aria-label": "Homes where funding is not yet confirmed table" },
+      h("table", {}, h("caption", { class: "sr-only" }, "Homes where funding is not yet confirmed"), h("thead", {}, h("tr", {}, ["Resident", "Area", "Route", "Status", "Evidence", "Owner"].map((x) => h("th", { scope: "col" }, x)))),
+        h("tbody", {}, rows.slice(0, 150).map((r) => h("tr", {}, h("th", { scope: "row" }, h("a", { href: `#/case/${encodeURIComponent(r.id)}` }, r.resident)),
+          h("td", {}, r.area), h("td", {}, r.route), h("td", {}, r.status), h("td", {}, `${r.have} of ${r.need}`), h("td", {}, r.owner)))))));
 }

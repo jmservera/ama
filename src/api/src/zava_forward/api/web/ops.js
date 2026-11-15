@@ -35,11 +35,12 @@ function sensorTable(title, rows, absent, labels = {}) {
   const box = h("div", {}, h("h3", {}, title));
   if (!rows || !rows.length) return box.append(h("p", {}, absent || "No retained readings.")), box;
   const head = ["Reading ID", "Sensor ID", "Observed (UTC)", "Temperature (degC)", "Relative humidity (%RH)", "Source"];
-  box.append(h("table", { "aria-label": title },
-    h("thead", {}, h("tr", {}, head.map((t) => h("th", { scope: "col" }, t)))),
-    h("tbody", {}, rows.map((r) => h("tr", {}, h("th", { scope: "row" }, r.reading_id), h("td", {}, r.sensor_id),
-      h("td", {}, h("time", { datetime: r.observed_at }, r.observed_at)), h("td", {}, r.temperature_c), h("td", {}, r.humidity_pct),
-      h("td", {}, labels[r.provenance_class] || "Synthetic reading, not calibrated"))))));
+  box.append(h("div", { class: "table-scroll", role: "region", tabindex: 0, "aria-label": `${title} table` },
+    h("table", {}, h("caption", { class: "sr-only" }, title),
+      h("thead", {}, h("tr", {}, head.map((t) => h("th", { scope: "col" }, t)))),
+      h("tbody", {}, rows.map((r) => h("tr", {}, h("th", { scope: "row" }, r.reading_id), h("td", {}, r.sensor_id),
+        h("td", {}, h("time", { datetime: r.observed_at }, r.observed_at)), h("td", {}, r.temperature_c), h("td", {}, r.humidity_pct),
+        h("td", {}, labels[r.provenance_class] || "Synthetic reading, not calibrated")))))));
   return box;
 }
 
@@ -474,7 +475,7 @@ async function capacityView() {
       h("div", { class: "table-scroll", role: "region", "aria-label": `Capacity for ${p.id}`, tabindex: 0 },
         h("table", {}, h("caption", { class: "muted" }, "One unit is one home work order for this package period, not a crew or weekly slot. Only evidenced commitment can confirm work."),
           h("thead", {}, h("tr", {}, ["Contractor", "Offered", "Committed", "In use", "Room left", "Evidence"].map((x) => h("th", { scope: "col" }, x)))),
-          h("tbody", {}, p.capacity.map((k) => h("tr", {}, h("td", {}, k.contractor), h("td", {}, k.offered), h("td", {}, k.committed), h("td", {}, k.in_use), h("td", {}, k.headroom),
+          h("tbody", {}, p.capacity.map((k) => h("tr", {}, h("th", { scope: "row" }, k.contractor), h("td", {}, k.offered), h("td", {}, k.committed), h("td", {}, k.in_use), h("td", {}, k.headroom),
             h("td", {}, `${k.evidence || "None"}. ${k.evidence_status}.`, k.details && h("div", {}, `Source ${k.details.document_id}, version ${k.details.source_version}. Reviewed ${fmtDate(k.details.reviewed_on)}. Capacity version ${k.version}.`))))))),
       h("h3", {}, "Record capacity"), ...[con, off, com, evi, sourceCase, document, sourceVersion, sourceDate, reviewed, validFrom, validTo, covered].flat(),
       h("p", { class: "muted" }, "Only a named manager with recorded contract authority can accept this commitment. Check the original document, current scope and covered homes. A review is current for 7 days. Record 0 if capacity is lost; existing orders will show a deficit."),

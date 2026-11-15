@@ -38,7 +38,7 @@ def ratio(a, b):
 
 class Wcag22Baseline(unittest.TestCase):
     def test_pages_declare_language_and_allow_zoom(self):
-        for page in ("index.html", "welcome.html"):
+        for page in ("index.html", "welcome.html", "law.html"):
             html = (WEB / page).read_text()
             self.assertIn('lang="en-GB"', html, page)
             self.assertIn("width=device-width", html, page)
@@ -71,7 +71,17 @@ class Wcag22Baseline(unittest.TestCase):
     def test_pointer_targets_have_a_24px_minimum_height(self):
         # WCAG 2.5.8: rule-level static check; rendered measurement is a manual or browser check.
         rem = 16
-        for selector in (r"button,\.btn", r"\.linkbtn", r"\.maplist summary", r"\.regulatory summary"):
+        selectors = (
+            r"button,\.btn",
+            r"details>summary",
+            r"\.chart-data summary",
+            r"input\[type=checkbox\],input\[type=radio\]",
+            r"\.leafmap \.leaflet-bar a,\.leafmap\.leaflet-touch \.leaflet-bar a",
+            r"\.linkbtn",
+            r"\.maplist summary",
+            r"\.regulatory summary",
+        )
+        for selector in selectors:
             rule = re.search(r"(?:^|\})" + selector + r"\{([^}]*)\}", CSS, re.M)
             self.assertIsNotNone(rule, selector)
             height = re.search(r"min-height:([\d.]+)rem", rule.group(1))
@@ -155,6 +165,7 @@ class Wcag22Baseline(unittest.TestCase):
         # declares its scope. The count forces a new table to be audited and added here.
         # 13 on 2026-11-11: the handoff waiting table (#83) was audited from source and added.
         # 14 on 2026-11-15: the exception queue competing-values table (#135) was audited and added.
+        # 15 on 2026-11-15: sensorTable in ops.js (#151) gained a caption and scroll region.
         tables = 0
         for path in sorted(WEB.glob("*.js")):
             text = path.read_text()
@@ -162,7 +173,7 @@ class Wcag22Baseline(unittest.TestCase):
             for match in re.finditer(r'h\("table", \{\},\s*(.{0,60})', text):
                 tables += 1
                 self.assertIn('h("caption"', match.group(1), f"{path.name}: {match.group(1)}")
-        self.assertEqual(tables, 14, "new table: audit it and update this check and the record")
+        self.assertEqual(tables, 15, "new table: audit it and update this check and the record")
 
     def test_audit_record_names_target_gaps_and_makes_no_conformance_claim(self):
         self.assertIn("WCAG 2.2", DOC)
