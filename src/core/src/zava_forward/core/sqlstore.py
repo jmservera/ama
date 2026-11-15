@@ -34,7 +34,7 @@ from zava_forward.core.ai import Ai
 from .chatthreads import SQLITE_DDL as CHAT_DDL, MEMORY_ADDED as CHAT_MEMORY_ADDED
 from .doc_controls import open_scanner
 from .documents import open_document_store
-from .store import ConflictError, GateError, Store
+from .store import ConflictError, GateError, LedgerRelianceError as LedgerRelianceError, Store
 from .resident_decisions import resident_status
 
 SCHEMA = """
@@ -1476,6 +1476,91 @@ class SqlStore(Store):
     def ledger_head(self):
         with self.dblock:
             return tuple(self.db.execute("SELECT count, hash FROM audit_head WHERE id=1").fetchone())
+
+    def _reliance_lock(self):
+        return self.dblock
+
+    def write_year_digests(self, *, before=None):
+        """Seal every year before `before` (default: current year) under `dblock` without `_SyncLock`."""
+        cutoff = (
+            f"{datetime.now().year:04d}"
+            if before is None
+            else (f"{before:04d}" if type(before) is int else str(before))
+        )
+        with self.dblock:
+            return [
+                ledger.write_year_digest(self.digest_dir, d)
+                for d in ledger.year_digests(list(self.audit_entries()), before=cutoff)
+            ]
+
+    def _reliance_audit_snapshot(self):
+        with self.dblock:
+            for _ in range(5):
+                head_row = self.db.execute("SELECT count, hash FROM audit_head WHERE id=1").fetchone()
+                if head_row is None:
+                    return [], False, [
+                        dict(code="audit_head_missing", year=None, reason="the audit ledger has no head")
+                    ]
+                rows = self.db.execute(
+                    "SELECT seq, at, who, action, case_id, detail, prev, hash FROM audit ORDER BY seq"
+                ).fetchall()
+                after_row = self.db.execute("SELECT count, hash FROM audit_head WHERE id=1").fetchone()
+                if after_row is not None and tuple(head_row) == tuple(after_row):
+                    break
+            else:
+                return [], False, [
+                    dict(
+                        code="audit_unreadable",
+                        year=None,
+                        reason="the audit ledger kept changing while read",
+                    )
+                ]
+            raw_count, raw_hash = head_row[0], head_row[1]
+            problems = []
+            head_valid = (
+                type(raw_count) is int
+                and raw_count >= 0
+                and isinstance(raw_hash, str)
+                and bool(ledger.HEX64_RE.fullmatch(raw_hash))
+                and (raw_count != 0 or raw_hash == ledger.GENESIS)
+            )
+            if not head_valid:
+                problems.append(
+                    dict(
+                        code="audit_head_malformed",
+                        year=None,
+                        reason="audit_head has malformed count or hash",
+                    )
+                )
+            entries, prev_seq = [], 0
+            for idx, row in enumerate(rows, start=1):
+                seq, at, who, action, case_id, detail, prev, h = row
+                if type(seq) is not int or seq < 1 or seq <= prev_seq:
+                    return [], False, [
+                        dict(
+                            code="audit_entry_malformed",
+                            entry=idx,
+                            year=None,
+                            reason="audit entry sequence is malformed",
+                        )
+                    ]
+                prev_seq = seq
+                entry = dict(at=at, who=who, action=action, case=case_id, detail=detail, prev=prev, hash=h)
+                bad = self._validate_audit_entry_shape(entry, idx)
+                if bad is not None:
+                    return [], False, [bad]
+                entries.append(entry)
+            actual_head = entries[-1]["hash"] if entries else ledger.GENESIS
+            head_ok = head_valid and (len(entries), actual_head) == (raw_count, raw_hash)
+            if head_valid and not head_ok:
+                problems.append(
+                    dict(
+                        code="audit_head_mismatch",
+                        year=None,
+                        reason="the chain differs from audit_head",
+                    )
+                )
+            return entries, head_ok, problems
 
     def ready(self):
         try:
