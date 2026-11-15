@@ -35,6 +35,14 @@ from functools import wraps
 
 from . import controls as k
 from .change_provenance import _actor
+from .restart_authority import (
+    RULE_024,
+    UNAPPOINTED_RESTART_AUTHORITY,
+    actors_for_store,
+    ensure_distinct_restart_actor,
+    reject_automatic_restart,
+    validate_restart_authority,
+)
 
 MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
 SUSPEND_ROLES = MANAGER_ROLES + ("Quality Inspector", "Building Safety Liaison")
@@ -418,6 +426,7 @@ class ContinuityMixin:
     def suspend(self, user, body, assistant_affected=None):
         k.refuse_bulk(body)
         k.require_role(user, SUSPEND_ROLES, "a manager, quality inspector or building safety liaison can suspend AI work")
+        reject_automatic_restart(body)
         from . import ai_registry
         scope = body.get("scope")
         if scope != ALL and ai_registry.get(scope) is None:
@@ -432,13 +441,22 @@ class ContinuityMixin:
                    in_flight_note="A provider call already in flight may complete and stay charged or unknown; its result is quarantined. "
                                   "Remote cancellation and exactly-once billing are not claimed.",
                    synthetic=bool(body.get("synthetic")))
+        raw_authority = body.get("restart_authority")
+        restart_authority = validate_restart_authority(
+            UNAPPOINTED_RESTART_AUTHORITY if raw_authority is None else raw_authority,
+            label="restart authority",
+            limit=200,
+            allow_unappointed_default=True,
+            disallowed_actors=actors_for_store(self, user),
+            authority_error=ValueError,
+        )
         rec.update(trigger=k.choice(body.get("trigger", "critical incident"), ("critical incident", "guardrail breach"), "the incident trigger"),
-                   evidence=k.text(body.get("evidence", "Unavailable"), "incident evidence", 600),
-                   resident_impact=k.text(body.get("resident_impact", "Unavailable"), "resident impact", 400),
-                   remediation=k.text(body.get("remediation", "Unavailable"), "remediation", 400),
-                   restart_authority=k.text(body.get("restart_authority", "Unavailable: OD-35 authority unappointed"), "restart authority", 200),
-                   restart_rule="RULE-024", automatic_restart=False,
-                   actor={key: user.get(key) for key in ("email", "code", "oid")},
+                   evidence=k.evidence_text(body.get("evidence", "Unavailable"), "incident evidence", 600),
+                   resident_impact=k.evidence_text(body.get("resident_impact", "Unavailable"), "resident impact", 400),
+                   remediation=k.evidence_text(body.get("remediation", "Unavailable"), "remediation", 400),
+                   restart_authority=restart_authority,
+                   restart_rule=RULE_024, automatic_restart=False,
+                   actor={key: user.get(key) for key in ("email", "name", "code", "oid")},
                    actual_authority="Unavailable: OD-35 and RULE-020 acceptance not established.",
                    actual_hold=True, proposals=[], snapshot_complete=False,
                    incident_versions=dict(complete=False, reason="SQL snapshot unavailable.", versions=[]))
@@ -475,6 +493,7 @@ class ContinuityMixin:
     def restart_propose(self, user, body):
         k.refuse_bulk(body)
         k.require_role(user, MANAGER_ROLES, "a manager can propose a restart")
+        reject_automatic_restart(body)
         with self.lock:
             if not history_valid(self._cont()):
                 raise PermissionError("Continuity history is incomplete or malformed; keep the affected scope suspended.")
@@ -489,10 +508,27 @@ class ContinuityMixin:
                     not isinstance(s.get(key), str) or s[key].startswith("Unavailable")
                     for key in ("evidence", "resident_impact", "remediation", "restart_authority")):
                 raise PermissionError("Incident evidence, impacted versions and restart authority are incomplete; keep the affected scope suspended.")
-            s["proposal"] = dict(by=user["email"], actor={key: user.get(key) for key in ("email", "code", "oid")},
+            try:
+                validate_restart_authority(
+                    s.get("restart_authority"),
+                    label="the restart authority (OD-35)",
+                    limit=200,
+                    allow_unappointed_default=False,
+                    disallowed_actors=(
+                        s.get("actor"),
+                        s.get("recorded_by"),
+                        *actors_for_store(self, user),
+                    ),
+                    authority_error=PermissionError,
+                )
+            except ValueError as err:
+                raise PermissionError(
+                    "Incident evidence, impacted versions and restart authority are incomplete; keep the affected scope suspended."
+                ) from err
+            s["proposal"] = dict(by=user["email"], actor={key: user.get(key) for key in ("email", "name", "code", "oid")},
                                  at=k.now(), epoch=self._cont()["epoch"], incident=s["id"], scope=s["scope"],
-                                 corrective_evidence=k.text(body.get("corrective_evidence"), "the corrective evidence", 600),
-                                 test_id=k.text(body.get("test_id"), "the corrective test identifier", 200),
+                                 corrective_evidence=k.evidence_text(body.get("corrective_evidence"), "the corrective evidence", 600),
+                                 test_id=k.evidence_text(body.get("test_id"), "the corrective test identifier", 200),
                                  evidence_class="constructed-fixture", result="Pass")
             s.setdefault("proposals", []).append(s["proposal"])
             self.audit(user["email"], "ai_restart_propose", "-", s["id"])
@@ -506,8 +542,7 @@ class ContinuityMixin:
         if trusted_route is False:
             raise PermissionError("Restart decisions need the OID-bound trusted sign-in route.")
         k.require_role(user, MANAGER_ROLES, "a manager can decide a restart")
-        if body.get("automatic"):
-            raise PermissionError("RULE-024: a guardrail breach restart is never automatic; the named restart authority must decide it.")
+        reject_automatic_restart(body)
         with self.lock:
             doc = self._cont()
             if not history_valid(doc):
@@ -522,20 +557,50 @@ class ContinuityMixin:
                 raise PermissionError("This restart decision is stale: the suspension epoch has changed.")
             if body.get("proposal_digest") != p.get("digest") or p.get("digest") != sha({key: value for key, value in p.items() if key != "digest"}):
                 raise PermissionError("Corrective evidence is missing or changed; record fresh tests.")
-            k.different_person(user, s["recorded_by"], "decide the restart")
-            k.different_person(user, p["by"], "decide the restart")
+            for caller in actors_for_store(self, user):
+                ensure_distinct_restart_actor(
+                    caller,
+                    s.get("actor"),
+                    s.get("recorded_by"),
+                    prior_role_description="recorded the suspension",
+                )
+                ensure_distinct_restart_actor(
+                    caller,
+                    p.get("actor"),
+                    p.get("by"),
+                    prior_role_description="proposed the restart",
+                )
             if (user.get("auth_provider") != "trusted-proxy" or not user.get("oid")
                     or "ai_restart" not in user.get("rule_roles", [])):
                 raise PermissionError("A separately provisioned OID-bound trusted AI restart capability is required; OD-35 remains unappointed.")
-            for prior in (s.get("actor", {}), p.get("actor", {})):
-                if any(user.get(key) and user.get(key) == prior.get(key) for key in ("code", "oid")):
-                    raise PermissionError("A distinct registered human must decide the restart.")
             decision = k.choice(body.get("decision"), ("Restart", "Keep suspended"), "the decision")
-            authority = k.text(body.get("authority_ref"), "the named restart authority reference", 200)
-            if authority != s.get("restart_authority") or authority.startswith("Unavailable"):
+            prior_actors = (s.get("actor"), s.get("recorded_by"), p.get("actor"), p.get("by"))
+            authority = validate_restart_authority(
+                body.get("authority_ref"),
+                label="the named restart authority reference",
+                limit=200,
+                allow_unappointed_default=False,
+                disallowed_actors=prior_actors,
+                authority_error=PermissionError,
+            )
+            try:
+                expected_authority = validate_restart_authority(
+                    s.get("restart_authority"),
+                    label="the restart authority (OD-35)",
+                    limit=200,
+                    allow_unappointed_default=False,
+                    disallowed_actors=prior_actors,
+                    authority_error=PermissionError,
+                )
+            except ValueError as err:
+                raise PermissionError(
+                    "The declared restart authority is unavailable or mismatched; actual OD-35 authority is not established."
+                ) from err
+            if authority != expected_authority:
                 raise PermissionError("The declared restart authority is unavailable or mismatched; actual OD-35 authority is not established.")
             rec = dict(decision=decision, by=user["email"], at=k.now(), epoch=doc["epoch"], proposal=p,
-                       authority_ref=authority, evidence_class="constructed-fixture",
+                       authority_ref=authority, restart_rule=RULE_024, automatic_restart=False,
+                       evidence_class="constructed-fixture",
                        note="Constructed permission/test drill only; actual OD-35/RULE-020 restart remains blocked.")
             if decision == "Keep suspended":
                 s.setdefault("decisions", []).append(rec)

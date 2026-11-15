@@ -242,14 +242,19 @@ class Gov:
         s = self.store
         b = s.breach_record(tf.U["QI-1"], BREACH)
         self.assertEqual((b["restart_authority"], b["restart_rule"], b["automatic_restart"]), ("OD-35 demo", "RULE-024", False))
-        with self.assertRaises(ValueError):
-            s.breach_record(tf.U["QI-1"], dict(BREACH, restart_authority=""))
+        for bad_authority in ("", "TBD", "none", "automatic", "Unavailable: OD-35 authority unappointed", "CM-0123456789abcdef"):
+            with self.assertRaises(ValueError):
+                s.breach_record(tf.U["QI-1"], dict(BREACH, restart_authority=bad_authority))
+        with self.assertRaises(PermissionError):
+            s.breach_record(tf.U["QI-1"], dict(BREACH, restart_authority=tf.U["QI-1"]["email"]))
         rel = s.release_record(self.pm1, dict(RELEASE, scope="Phase 0 capture"))
         ok = dict(id=b["id"], release_id=rel["id"], authority_ref="OD-35 demo", remediation_evidence="r")
         with self.assertRaises(PermissionError):
             s.breach_restart(self.pm2, dict(ok, automatic=True))
         with self.assertRaises(PermissionError):
             s.breach_restart(self.pm2, dict(ok, authority_ref="Someone else"))
+        with self.assertRaises(PermissionError):
+            s.breach_restart(self.pm1, ok)
         self.assertTrue(s.is_paused("archetype", "Solid wall"))
 
     def test_view_is_manager_only(self):
