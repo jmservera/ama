@@ -1,7 +1,7 @@
 \subsection{Measurement fields and provenance}\label{app:measurementprovenance}
 
 The following inventory is a read-only account of public source
-\nolinkurl{e71037d961cb80fc5c659437796de7736820f6c9} in
+\sourceref{R05} in
 \url{https://github.com/jmservera/ama-thought-mve}, not a remeasurement of
 private experimental data. The collection path is
 \nolinkurl{harness/runner.py} $\rightarrow$
@@ -113,10 +113,8 @@ the scoring algorithm is programmatic.
 \subsection{Supplementary judging instrument and interpretation}\label{app:postrunjudging}
 
 The historical 9 November proposal is documented in
-\href{https://github.com/jmservera/ama-thought-mve/blob/b7973e200a6edbb1d19355badae3b7e03a066b09/judging/README.md}{\nolinkurl{judging/README.md}} at
-\nolinkurl{b7973e200a6edbb1d19355badae3b7e03a066b09} in the experiment
-repository. The README's Git blob is
-\nolinkurl{6cc0c236e4ca093198d38909dceb80f850196faa}.
+\nolinkurl{judging/README.md} (source \sourceref{R36}, file \sourceref{R37})
+in the experiment repository.
 That pin identifies the proposal, not a replacement for the development
 experiment. The completed post-collection assessment used the v3 source
 and runtime identified below. Preparation used a stopped local archive,
@@ -286,26 +284,20 @@ remain private.
 \raggedright
 \paragraph{Executed post-collection assessment provenance.}
 The completed supplementary evaluation (Section~\ref{sec:resultsjudging})
-operated on frozen study state SHA-256
-\nolinkurl{fb39a46fc36f33f62f3286fd517b63bb09787e9c7bcd7d276c4a362f256f2de1}
+operated on the pre-recovery 313-trajectory study state (\sourceref{R38})
 across 630 scheduled endpoint packets (626 evaluable, four unavailable from
 two transport-quarantined trajectories). Judge configuration
 \nolinkurl{gpt6-luna-judge-v3} (\nolinkurl{gpt-6-luna} at \texttt{medium} reasoning
 effort, adapter \nolinkurl{sdk1.0.28-cli1.0.105-judge3}, $J=1$, $R=2$ fresh
 repeats) executed under a 3,000-credit combined admission envelope:
-Assessment~v1 (\nolinkurl{3637817e7821dbfdeffb577725b4428f71d511f8}, ledger
-SHA-256
-\nolinkurl{37db622597ca3c02ca74abbebb681c629d3a0a1c7c1110f3e447b15f827caa28})
+Assessment~v1 (source \sourceref{R39}, ledger \sourceref{R40})
 stopped on call~1 before prompt dispatch because of a CommonJS/ESM SDK
 tool-filter mismatch, with zero settled and 30 reserved credits held;
-Assessment~v2 (\nolinkurl{e44eaed7ad7e9bea254e7e77c1bb63957b39e68a}, ledger
-SHA-256
-\nolinkurl{6fe5de37ea428cbe51ce5e4e6a95b96e483913ace24a50483d44afc842f6f068})
+Assessment~v2 (source \sourceref{R41}, ledger \sourceref{R42})
 completed 15 calls (5.282763 settled credits, 30 reserved credits held and
 0.3196095 diagnostic credits) before stopping on call~16 for a response
 missing \nolinkurl{evidence_ids}; and Assessment~v3
-(\nolinkurl{c10e6d6f62785a5028406a9963acdd499f6bd6b6}, ledger SHA-256
-\nolinkurl{cf8b71037a68b5cc08863cbabc65f3645416ba026cca45e0b007ac6a3d3d999b})
+(source \sourceref{R43}, ledger \sourceref{R44})
 completed all 1,252 scheduled calls for 418.635894 settled AI credits and
 zero held credits within the 2,934-credit remaining ceiling. Human
 calibration (\texttt{S01..S08}, 90 rows, 79 scorable rows across 16 distinct
@@ -792,8 +784,7 @@ region-scoped users and manager-approved cross-region handoffs.
 The handoff records SDK 1.0.28, CLI 1.0.105 (protocol 3), medium reasoning
 effort, disabled configuration/skill/MCP discovery, excluded built-in/MCP
 tools and the single \nolinkurl{isolated_exec} tool. The reported runtime
-image digest is
-\nolinkurl{sha256:61a8adc8e9764d1746e0277c4fb39b27512f972ece2a9c5696246c027e9fe4fb}.
+image is identified by \sourceref{R45} in the end register.
 The external evaluator supplied 127 feature tests and fifteen new CR1
 tests, alongside Lizard 1.24.3, jscpd 5.4.1 and Ruff 0.17.3
 (\texttt{--isolated --select E,F,W,C90,B,SIM}). These are supplied source
@@ -809,8 +800,7 @@ than replaying uncertain state:
 \nolinkurl{pilot-estimation-gpt-6.1-sol-C-20} had measured 18/21 steps
 (three unattempted after the feature-ten WebSocket fallback interruption).
 Both trajectories were subsequently completed via audited source-pinned
-recovery transitions (\nolinkurl{075102667af7b2e8aac926163cd0bcd726b40190}
-and \nolinkurl{5481fd8a47aa0bad660e7c0ab68f7fcfeea4137f}, where
+recovery transitions (\sourceref{R22}, \sourceref{R23};
 \nolinkurl{E-15} experienced one further HTTP stream timeout on
 \nolinkurl{f09-feature-1} at 16/21 steps before completing), yielding
 all 315/315 completed trajectories and 5,355/5,355 measured steps while
@@ -818,7 +808,7 @@ retaining all historical attempt holds in the study ledger.
 
 \paragraph{Adjudication and unknown outcomes.}
 Read-only re-evaluation under \nolinkurl{analysis-adjudications/v1}, at
-source \nolinkurl{fb1a90a0347609b1b1c33f4cd1147433a25cab96}, reclassified
+source \sourceref{R50}, reclassified
 proven candidate exceptions from error to failure in 87 step records
 (98 individual test outcomes). Original metrics were preserved and
 development agents were not rerun. Two CR1 outcomes remain unknown:
@@ -871,27 +861,17 @@ coverage.
 The final \nolinkurl{results/pilot-estimation/provenance.json} records
 \nolinkurl{intervention-coverage/v1} as \texttt{owner-attested} at
 \nolinkurl{2026-11-15T09:08:12.811511+00:00}: all 315 covered trajectories,
-zero assisted, with manifest SHA-256
-\nolinkurl{d26ebe733e50256184c2d5e4d3d66dda55233c14d54a434a037cde6f4cd64879}
-scoped to study-state SHA-256
-\nolinkurl{7992b0e21cbacde39b48bb6223d5b663b7013630b265ae64a37223414ab05e4a}
+zero assisted, with manifest \sourceref{R27} scoped to final state \sourceref{R26}
 (superseding the 14 November 313-trajectory attestation at
-\nolinkurl{2026-11-14T02:48:20.351742+00:00} with manifest SHA-256
-\nolinkurl{66b098851800522d9d5117177aac34525cb1e9a17c0c4bd7d924d512c1ea6b06}
-and pre-recovery study-state SHA-256
-\nolinkurl{fb39a46fc36f33f62f3286fd517b63bb09787e9c7bcd7d276c4a362f256f2de1}).
+\nolinkurl{2026-11-14T02:48:20.351742+00:00}, manifest \sourceref{R46},
+pre-recovery state \sourceref{R38}).
 These are bindings supplied in the published provenance, not an independent
 verification of every intervention or of the private manifest's contents.
 
-The 14 November report refresh was pinned to source commit
-\nolinkurl{bd75c1c2104d001d62f9fb2bb4feab438b86f763} (report SHA-256
-\nolinkurl{ffde7266c3379446b5cdcc8fa695ee387c99a8a6c31fbd227b62291fd33c200c}).
-The 15 November final results are pinned to \texttt{main} commit
-\nolinkurl{d097a10b090baefadf995ecd910eb96c324f0234}, where
-\nolinkurl{results/EXPERIMENT_RESULTS.md} has SHA-256
-\nolinkurl{e4680e66ba6791c7a23bd484954767bc7d580f881db939cf4fb113d28af10f15}
-and \nolinkurl{results/pilot-estimation-judging/extracted-contrasts.json}
-has Git blob \nolinkurl{0ab114c5f02596baa5a6a25939f652dac6f30569}.
+The 14 November report refresh (\sourceref{R14}, \sourceref{R47}) and
+15 November completed report (\sourceref{R17}--\sourceref{R21}) retain
+separate identities in the register. Final development results and the
+earlier judging snapshot must be read on their respective observation frames.
 Scheduling/epoch dependence, scenario abstention and multiplicity remain
 interpretation limits.
 
@@ -899,13 +879,11 @@ interpretation limits.
 Read-only inspection of the operator archive on 14 November found
 numeric start times, controller durations, attempt IDs and source commits
 for all 5,357 attempts in the pre-recovery
-\nolinkurl{.study/pilot-estimation/state.json} (SHA-256
-\nolinkurl{fb39a46fc36f33f62f3286fd517b63bb09787e9c7bcd7d276c4a362f256f2de1},
-matching Assessment~v3), and the committed
+\nolinkurl{.study/pilot-estimation/state.json} (\sourceref{R38}, matching
+Assessment~v3), and the committed
 \nolinkurl{results/pilot-estimation/attempts.csv} and
-\nolinkurl{provenance.json} at \nolinkurl{d097a10b} record all 5,372
-attempts and all fifteen source transitions through final state SHA-256
-\nolinkurl{7992b0e21cbacde39b48bb6223d5b663b7013630b265ae64a37223414ab05e4a}.
+\nolinkurl{provenance.json} at \sourceref{R17} record all 5,372 attempts
+and all fifteen source transitions through final state \sourceref{R26}.
 These records support reconstruction of execution order and source epochs
 without rerunning candidates; they contain no separate finish or
 boot/launch IDs in the inspected attempt objects and do not establish
@@ -927,28 +905,29 @@ remaining infrastructure-failed or quarantine-held attempts; the 13 November
 handoff through E14 had 5,341 returned steps and 5,357 attempts across
 313 completed trajectories). At the historical 8 November checkpoint, E1--E3
 had 651, 227 and 369 reported steps (1,247 total). Source identifiers do
-not establish collection times or independent replicate counts.}
+not establish collection times or independent replicate counts. Record
+links resolve to full identifiers in the end register.}
 \label{tab:executionepochs}
 \begin{tabularx}{\textwidth}{@{}L{0.9cm}YL{1.6cm}L{1.6cm}@{}}
 \toprule
 Epoch & Execution source and operational correction & Returned steps & Total attempts \\
 \midrule
-E1 & \nolinkurl{99a1ed170d7c71acb428b52e0e24be8856cc3ea3}; pinned CLI runtime fix & 651 & 652 \\
-E2 & \nolinkurl{3c2ce89b00fe583c1f0715e8ccd3510419d5e734}; source-bound estimation recovery & 227 & 228 \\
-E3 & \nolinkurl{e71037d961cb80fc5c659437796de7736820f6c9}; failed-request turn-charge binding (369 at 8 Nov) & 604 & 605 \\
-E4 & \nolinkurl{fb1a90a0347609b1b1c33f4cd1147433a25cab96}; sandbox-rejection recovery and audited evidence & 600 & 601 \\
-E5 & \nolinkurl{355d33389441b325da72363a9c3028dbdefa2b4b}; correlated HTTP 503 same-turn retry handling & 207 & 208 \\
-E6 & \nolinkurl{1d663f08af117332773feb22efc8e182734780a3}; correlated WebSocket reset and recovery holds & 113 & 114 \\
-E7 & \nolinkurl{958d75bc386964edfe6d211117ce53cf5fd53a82}; usage-unknown WebSocket closure accounting & 124 & 125 \\
-E8 & \nolinkurl{03ac696b382e539cad5f8153b91d144bb4c1990b}; mixed-boundary retry history and provenance export & 165 & 166 \\
-E9 & \nolinkurl{732c4896da7c0a5b0db0f60c02348743a5b2c54e}; unaccounted native-retry source recovery & 31 & 33 \\
-E10 & \nolinkurl{fc8dd5995cde046b4c2de1f2eb25a0df32ff39eb}; unbilled provider-reset continuation and paired halts & 143 & 145 \\
-E11 & \nolinkurl{29e5f0834717b3c8a58a248858782174e775b6b8}; correlated Gemini 503 retries and halted charges & 608 & 609 \\
-E12 & \nolinkurl{73712f7834ca520df543b6a58315bb299ffd38a8}; Gemini HTTP stream-timeout reporting and holds & 54 & 55 \\
-E13 & \nolinkurl{0c35eff0e345d04c41722a43420d19b892c7fb8c}; audited bootstrap for retained study state & 1,388 & 1,390 \\
-E14 & \nolinkurl{a9d76bb6dbb118c43315fb2a13b7bcdb732d946d}; WebSocket fallback validation and halt quarantine & 426 & 426 \\
-E15 & \nolinkurl{075102667af7b2e8aac926163cd0bcd726b40190}; quarantine-completion recovery for E-15 and C-20 & 9 & 10 \\
-E16 & \nolinkurl{5481fd8a47aa0bad660e7c0ab68f7fcfeea4137f}; 5,350-step recovery completing E-15 after F9 HTTP timeout & 5 & 5 \\
+E1 & \sourceref{R48}; pinned CLI runtime fix & 651 & 652 \\
+E2 & \sourceref{R49}; source-bound estimation recovery & 227 & 228 \\
+E3 & \sourceref{R05}; failed-request turn-charge binding (369 at 8 Nov) & 604 & 605 \\
+E4 & \sourceref{R50}; sandbox-rejection recovery and audited evidence & 600 & 601 \\
+E5 & \sourceref{R51}; correlated HTTP 503 same-turn retry handling & 207 & 208 \\
+E6 & \sourceref{R52}; correlated WebSocket reset and recovery holds & 113 & 114 \\
+E7 & \sourceref{R53}; usage-unknown WebSocket closure accounting & 124 & 125 \\
+E8 & \sourceref{R54}; mixed-boundary retry history and provenance export & 165 & 166 \\
+E9 & \sourceref{R55}; unaccounted native-retry source recovery & 31 & 33 \\
+E10 & \sourceref{R56}; unbilled provider-reset continuation and paired halts & 143 & 145 \\
+E11 & \sourceref{R57}; correlated Gemini 503 retries and halted charges & 608 & 609 \\
+E12 & \sourceref{R58}; Gemini HTTP stream-timeout reporting and holds & 54 & 55 \\
+E13 & \sourceref{R59}; audited bootstrap for retained study state & 1,388 & 1,390 \\
+E14 & \sourceref{R07}; WebSocket fallback validation and halt quarantine & 426 & 426 \\
+E15 & \sourceref{R22}; quarantine-completion recovery for E-15 and C-20 & 9 & 10 \\
+E16 & \sourceref{R23}; 5,350-step recovery completing E-15 after F9 HTTP timeout & 5 & 5 \\
 \midrule
 Total & Sixteen execution sources; 315 allocated trajectories, 315 complete & 5,355 & 5,372 \\
 \bottomrule
@@ -981,9 +960,8 @@ The historical v4 prompt in Section~\ref{app:prompt} remains a separate
 unchanged source record.
 
 \paragraph{Arm B: consolidation.}
-Source \nolinkurl{harness/prompts/consolidation-step.prompt.md};
-SHA-256
-\nolinkurl{1ee3da712fcb787a7843d1270aabf61b55abb7c8b7df2534d4adc078b0241494}.
+Source \nolinkurl{harness/prompts/consolidation-step.prompt.md}
+(\sourceref{R60}).
 Display wrapping does not change the retained template bytes.
 
 \lstinputlisting[basicstyle=\footnotesize\ttfamily,
@@ -992,9 +970,8 @@ Display wrapping does not change the retained template bytes.
 
 \noindent\begin{minipage}{\linewidth}
 \paragraph{Arm C: read-only review.}
-Source \nolinkurl{harness/prompts/review-only-step.prompt.md};
-SHA-256
-\nolinkurl{06a8dfcaee30ab52c243c771844619cf08f23854ef866f1bfde5277362391725}.
+Source \nolinkurl{harness/prompts/review-only-step.prompt.md}
+(\sourceref{R61}).
 This is a qualitative treatment instruction, not an outcome-grading rubric.
 
 \lstinputlisting[basicstyle=\footnotesize\ttfamily,

@@ -15,13 +15,13 @@
       "content_sha256": "8c0978c03be4a8b5901d79667f91c5651e459a90fc100e75024eb7d18d5b966e"
     },
     "anc/case-audits.tex": {
-      "content_sha256": "a99caa560f0ca38c26587ab7c77f7f347b52f04eb631db20b1f9ff75389aa1c0"
+      "content_sha256": "d730539a0559c902566aa45f8a97a0f2bf21696bb32b8eeadf240a76401a5ce2"
     },
     "anc/deferred-measures.tex": {
-      "content_sha256": "c8608e6fe586fa252099e566a859d01350c5709fd79c9bc40c72595d19f25ccc"
+      "content_sha256": "686eceb8f7d5e62cb0db4537cb43c02d78701cfd136f16c9d2d45894fa9c85e1"
     },
     "anc/measurement-provenance.tex": {
-      "content_sha256": "d6b98eccbadeb10990fd37fdd75ade5bbad05ae8ef0f84d3129fe727364cb11d"
+      "content_sha256": "84a146925fc67399f8c4828f963b5bdc0c60f64e0d9f4d97edef0e8369be7d1e"
     }
   },
   "author_review_revision": {
@@ -300,6 +300,51 @@
       "svg_sha256": "99bc176403332eb884cd35448e75abdd6795a57230e25c067f5e74ae64fe937e",
       "png_sha256": "7449ceac5c8cfbc657a590bba76796238e76e7e91044c2192bff3e76ff602b00"
     }
+  },
+  "provenance_readability_revision": {
+    "date": "2026-11-15",
+    "scope": "Editorial readability review: unique end-of-paper source/digest register, concise source and AI-assistance histories, local arm/checkpoint/uncertainty explanations and shorter repeated summaries. All data tables, displayed equations, literal prompts, figures, experimental scoring and publication gates preserved.",
+    "prior_delivery_revision": "chart_interpretation_revision",
+    "reviewed_baseline_commit": "c3d08d0631151ce022d073f6d10ffc1d6504b1ba",
+    "results_main_commit": "d097a10b090baefadf995ecd910eb96c324f0234",
+    "source_register": {
+      "label": "tab:source-register",
+      "first_page": 68,
+      "last_page": 70,
+      "unique_identifiers": 61,
+      "sha256_digests": 19,
+      "git_identifiers": 42
+    },
+    "preservation_checks": {
+      "existing_tables": 34,
+      "table_fields": 1454,
+      "displayed_equations": 7,
+      "literal_prompts": 3,
+      "author_todos_unchanged": true
+    },
+    "prior_active_content_sha256": {
+      "anc/case-audits.tex": "a99caa560f0ca38c26587ab7c77f7f347b52f04eb631db20b1f9ff75389aa1c0",
+      "anc/deferred-measures.tex": "c8608e6fe586fa252099e566a859d01350c5709fd79c9bc40c72595d19f25ccc",
+      "anc/measurement-provenance.tex": "d6b98eccbadeb10990fd37fdd75ade5bbad05ae8ef0f84d3129fe727364cb11d"
+    },
+    "delivery_sha256": "442439cc34d8cd382f795cf6eaf7faba2098265c58efa78ab70962d600780c50",
+    "delivery_pages": 70,
+    "supplement_start_page": 48,
+    "reviewed_pages": [1, 2, 4, 28, 29, 31, 37, 38, 40, 48, 53, 68, 69, 70],
+    "source_sha256": {
+      "main.tex": "0f756c95fcd1014383ab812ac759a5bac868a86ba77e24a051815434d2ed7d61",
+      "anc/background.tex": "b44c0bce3676771daa5695a07271f86c9ed7e34481a3625719303d3bd89f2ead",
+      "anc/experiment-protocol.tex": "29e2352ab5eeca00dcaa1ffda91720ef8c333b0e6ad1b88903e6dead64ec4b78",
+      "anc/supplement-section.tex": "317c3b53731e9e57889a20179bfff083dcf57dc4cd538d342fb0b9f963eec21b",
+      "anc/additional-evidence.tex": "9194a87c35bb31dd9242ac96da5c1b005e23af13ecd7f0aa2be187cfd47fd384",
+      "anc/case-audits.tex": "402c95707035d2ef64587c3ee12867063e00da640760bfbbcccb7c9b241d4e64",
+      "anc/deferred-measures.tex": "98e854941e7d9280588ff622da470e038f7ad6d883792136018a3bfb6dd0f831",
+      "anc/measurement-provenance.tex": "faff6183c0fab83e2b8fd5f35aaaec740c7a30da6905a56f55fe79eefb4f641d",
+      "references.bib": "9f1591d786ac533d3d0216ec8105acf6f7d0593422247ddaf46860ef7991e76e",
+      "anc/export_results_charts.mjs": "cb028b8170069980f8a1878c005536cb5ab0c9576dab4fbe366cd68b46efb480",
+      "anc/study-results-2026-11-15.json": "98c1ddcc3f9f52928c7227689bb25c2083dd142aa6d95375e24a5e6f04cabc91"
+    },
+    "unchanged_figure_revision": "chart_interpretation_revision"
   },
   "restored_citation_keys": [
     "bacchelli2013review",

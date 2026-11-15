@@ -40,8 +40,8 @@ whose effects require measurement.}\label{fig:stateinheritance}
 
 \subsection{Evidence within and between features}\label{sec:empirical}
 
-Conversational benchmarks identify dependence on erroneous histories,
-not merely context length. Zhang et~al. study false justifications after
+Conversational benchmarks identify dependence on erroneous histories.
+Zhang et~al. study false justifications after
 wrong answers~\cite{zhang2023snowball}; Sinha et~al. vary erroneous prior
 state updates in a controlled execution task
 ~\cite[Secs.~2.2--3, Figs.~5--6]{sinha2025illusion}.
@@ -92,7 +92,7 @@ Instruction files themselves require
 maintenance~\cite{nigh2025agentsmd,rajasekaran2025context}.
 Mohsenimofidi et~al.'s 169 commits have 242 overlapping assignments
 across nine categories; 78 instruction additions, 59 modifications
-and 23 removals are three categories, not a partition
+and 23 removals are three overlapping categories
 ~\cite[Sec.~4.3, Table~2]{mohsenimofidi2026context}.
 Chatlatanagulchai et~al.'s sampled maintenance labels likewise include
 addition and pruning~\cite{chatlatanagulchai2026readmes}.
@@ -119,7 +119,7 @@ help, while retrieval and downstream success remain distinct
 ~\cite{microsoft2026skillopt,jiang2026skills}.
 
 \paragraph{Tests and review.}\label{sec:evaluationwork}
-RefactorBench studies refactoring, not between-feature consolidation
+RefactorBench evaluates refactoring tasks
 ~\cite{gautam2025refactorbench}; developer-agent collaboration studies
 are observational~\cite{kumar2025agents}.
 SWE-Sharp-Bench supplies reproducible repository evaluation
@@ -141,8 +141,8 @@ Neither isolates the present intervention and later change probe.
 
 \paragraph{Reflection and self-improvement.}
 Ng's reflection design-pattern letter explicitly recommends Self-Refine,
-Reflexion and CRITIC~\cite{ng2024reflection}; he is not a coauthor of those
-papers. Self-Refine iterates feedback and revision with the same model
+Reflexion and CRITIC~\cite{ng2024reflection}, attributing methods developed
+by their respective authors. Self-Refine iterates feedback and revision with the same model
 without training~\cite[Sec.~2]{madaan2023selfrefine}. Reflexion retains
 linguistic feedback in episodic memory for subsequent trials rather than
 updating model weights~\cite[Sec.~3]{shinn2023reflexion}. CRITIC uses
@@ -167,7 +167,8 @@ Anthropic staff describes persistent memory and asynchronous
 transcript-driven curation, with human review of proposed updates
 ~\cite{beamnxw2026memorytalk}. Both sources are third-party uploads
 checked through automatic captions, not audio-verified research reports.
-Neither supplies a controlled cross-feature consolidation result.
+Their role here is to illustrate proposed practices; the study below
+tests the narrower between-feature intervention.
 
 \paragraph{Engineering rationale.}\label{sec:practitioners}\label{sec:theory}
 Beck's alternation of features and tidying aims to restore future

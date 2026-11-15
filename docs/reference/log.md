@@ -11939,3 +11939,26 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-14] update | Issue #110 distinct device identity, schema version and stable reading ID
 
 * Added producer-side validation (`Reading.validate`, `require_distinct`, `validate_row`) in core, refusal of duplicate homes and invalid rows in the API live simulator, and cohort tests. Local offline evidence only; no live IoT Hub run. RPI artifacts are under `.copilot-tracking/*/2026-11-14-iot-distinct-device-identity-*`.
+
+## [2026-11-15] update | White-paper provenance register and readable context
+
+* Revised the [paper package](../capstone/thought-leadership/everything-but-the-software/README.md#provenance-and-readability-15-november)
+  to move all 61 distinct printed provenance identifiers into one linked end
+  register: 19 SHA-256 digests and 42 Git commit/tree/blob IDs. Each retains its
+  original value, object type and historical/final scope.
+* Added local arm keys and checkpoint, acquisition/retention and uncertainty
+  explanations; shortened repeated summaries and the source/AI-assistance
+  history. Detailed results, original disclosures, frozen prompts and author
+  TODOs remain intact. Future designs and the hybrid practice package remain
+  proposed, with approval and publication boundaries explicit.
+* All 72 authoring tests and structural checks pass. Comparison preserves
+  1,454 fields across 34 tables, seven displayed equations and three prompt
+  files. The single PDF remains 70 pages: Supplement page 48, end register
+  pages 68-70, with all destinations/in-page/nonblank checks and selected
+  renders inspected. Only the inherited `inputenc` notice remains.
+* The [dated review](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#provenance-and-readability-15-november)
+  records scope, checks, the wording-assertion repair and unchanged scientific
+  limits. The separate v21 binding preserves v20 and every earlier record.
+  No experiment, paid call, VM mutation, scoring/registration change, commit,
+  push or external publication occurred; hosted CI and independent exact-head
+  review remain unperformed.

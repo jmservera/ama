@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import re
 import struct
 import unittest
 import xml.etree.ElementTree as ET
@@ -19,6 +20,20 @@ PROMPTS = {
         "706d15d3c7e1615d58c0902a050b0e80d163e929",
     ),
 }
+
+
+def read_source_register() -> dict[str, str]:
+    """Read the end register's record identifiers and full digests.
+
+    Returns:
+        Record-to-digest bindings from the active manuscript register.
+    """
+    manuscript = (PACKAGE / "main.tex").read_text()
+    register = manuscript.split(r"\section{Source and digest register}", 1)[1]
+    return dict(re.findall(
+        r"\\label\{prov:(R\d+)\}.*?\\nolinkurl\{([0-9a-f]{64}|[0-9a-f]{40})\}",
+        register, re.DOTALL,
+    ))
 
 
 class MeasurementProvenanceTests(unittest.TestCase):
@@ -40,7 +55,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         )
         for name, (sha256, _) in PROMPTS.items():
             self.assertEqual(bindings["literal_inputs"][f"anc/{name}"], sha256)
-        for name, sha256 in bindings["chart_interpretation_revision"]["source_sha256"].items():
+        for name, sha256 in bindings["provenance_readability_revision"]["source_sha256"].items():
             with self.subTest(source=name):
                 self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), sha256)
 
@@ -88,8 +103,11 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("original coverage, retained-contract-loss", protocol)
         self.assertIn("supplementary exploratory evidence", protocol)
         self.assertIn("not a replacement for", text)
-        self.assertIn("b7973e200a6edbb1d19355badae3b7e03a066b09", text)
-        self.assertIn("6cc0c236e4ca093198d38909dceb80f850196faa", text)
+        records = read_source_register()
+        self.assertIn(r"\sourceref{R36}", text)
+        self.assertIn(r"\sourceref{R37}", text)
+        self.assertEqual(records["R36"], "b7973e200a6edbb1d19355badae3b7e03a066b09")
+        self.assertEqual(records["R37"], "6cc0c236e4ca093198d38909dceb80f850196faa")
         self.assertIn(r"\resultstrue", (PACKAGE / "main.tex").read_text())
         methods = protocol.split(r"\label{sec:postrunjudging}", 1)[1].split(
             r"\subsection{Replication and uncertainty}", 1
@@ -151,7 +169,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
 
     def test_judging_delivery_binding_preserves_the_historical_measurement_record(self):
         bindings = json.loads((ANC / "supplement-integration.json").read_text())
-        current = bindings["chart_interpretation_revision"]
+        current = bindings["provenance_readability_revision"]
         finalization = bindings["finalization_revision"]
         runtime_flow = bindings["runtime_flow_revision"]
         historical = bindings["measurement_provenance_revision"]
@@ -161,7 +179,10 @@ class MeasurementProvenanceTests(unittest.TestCase):
             current["delivery_sha256"],
         )
         self.assertEqual(current["delivery_pages"], 70)
-        self.assertEqual(current["supplement_start_page"], 51)
+        self.assertLessEqual(current["delivery_pages"], bindings["chart_interpretation_revision"]["delivery_pages"])
+        self.assertEqual(current["prior_delivery_revision"], "chart_interpretation_revision")
+        self.assertEqual(bindings["chart_interpretation_revision"]["delivery_pages"], 70)
+        self.assertEqual(bindings["chart_interpretation_revision"]["supplement_start_page"], 51)
         self.assertEqual(bindings["final_results_revision"]["delivery_pages"], 69)
         self.assertEqual(bindings["final_results_revision"]["supplement_start_page"], 50)
         self.assertEqual(bindings["falsifiability_revision"]["delivery_pages"], 66)
@@ -233,8 +254,11 @@ class MeasurementProvenanceTests(unittest.TestCase):
             with self.subTest(commit=commit):
                 self.assertIn(commit, manuscript)
 
-        self.assertIn("fb39a46fc36f33f62f3286fd517b63bb09787e9c7bcd7d276c4a362f256f2de1", supplement)
-        self.assertIn("c10e6d6f62785a5028406a9963acdd499f6bd6b6", supplement)
+        records = read_source_register()
+        self.assertIn(r"\sourceref{R38}", supplement)
+        self.assertIn(r"\sourceref{R43}", supplement)
+        self.assertEqual(records["R38"], "fb39a46fc36f33f62f3286fd517b63bb09787e9c7bcd7d276c4a362f256f2de1")
+        self.assertEqual(records["R43"], "c10e6d6f62785a5028406a9963acdd499f6bd6b6")
 
     def test_given_readable_results_when_checked_then_tables_preserve_allocations_and_outcomes(self):
         from test_protocol_planning import table_rows
@@ -283,7 +307,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("not uniformly achieved", protocol)
         self.assertIn("2.26 lint warnings", protocol)
         self.assertIn("did not satisfy every B target", protocol)
-        self.assertIn("50\\% more time and twice the credit allowance", manuscript)
+        self.assertIn("50\\% more time and twice A's credit allowance", manuscript)
         self.assertNotIn("baseline code already satisfied", manuscript)
         self.assertNotIn("enforced its structural stopping targets", protocol)
 
@@ -295,7 +319,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("all 315 completed trajectories", protocol)
         self.assertIn("operator account of intervention", protocol)
         self.assertIn("primary_estimates_available=true", protocol)
-        self.assertIn("two completed trajectories", protocol)
+        self.assertIn("two completed GPT trajectories", protocol)
         self.assertIn("63 versus 63", protocol)
         self.assertIn("exploratory pilot/estimation study", protocol)
         self.assertNotIn("attestation remains absent", protocol)
@@ -381,7 +405,10 @@ class MeasurementProvenanceTests(unittest.TestCase):
         source_review = " ".join((ANC / "additional-evidence.tex").read_text().split())
 
         self.assertIn("select the experiment GitHub repository as the deposit", manuscript)
-        self.assertIn("v4, v6 and v7 releases retain separate protocol archives", manuscript)
+        for version in ("v4", "v6", "v7"):
+            with self.subTest(version=version):
+                self.assertIn(f"protocol-frozen-{version}", manuscript)
+        self.assertIn("releases retain separate protocol archives", manuscript)
         self.assertIn("verify the registered-protocol archive correspondence", manuscript)
         self.assertIn("historical/raw records and any newly published extracts require their own confidentiality review", manuscript)
         self.assertNotIn("azureuser@", manuscript)
@@ -504,6 +531,55 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("contract sets expand across cycles", protocol)
         self.assertIn("cheap failure is not efficiency", protocol)
         self.assertIn("not statistical significance", protocol)
+
+    def test_given_full_identifiers_when_read_then_register_is_unique_linked_and_last(self):
+        from check_paper import expand_inputs
+
+        source = expand_inputs((PACKAGE / "main.tex").read_text())
+        narrative, register = source.split(r"\section{Source and digest register}", 1)
+        records = read_source_register()
+        labels = re.findall(r"\\label\{prov:(R\d+)\}", register)
+        digests = re.findall(r"(?<![0-9a-f])(?:[0-9a-f]{64}|[0-9a-f]{40})(?![0-9a-f])", register)
+        targets = set(re.findall(r"\\sourceref\{(R\d+)\}", source))
+        bindings = json.loads((ANC / "supplement-integration.json").read_text())
+        final_results = bindings["final_results_revision"]
+
+        self.assertEqual(set(labels), {f"R{index:02}" for index in range(1, 62)})
+        self.assertEqual(len(labels), len(records))
+        self.assertEqual(len(digests), len(set(digests)))
+        self.assertEqual(set(digests), set(records.values()))
+        self.assertFalse(targets - records.keys())
+        self.assertNotRegex(narrative, r"(?<![0-9a-f])(?:[0-9a-f]{64}|[0-9a-f]{40})(?![0-9a-f])")
+        self.assertRegex(register, r"\\end\{longtable\}\s*\\endgroup\s*\\end\{document\}")
+        for record, expected in {
+            "R17": final_results["results_main_commit"],
+            "R19": final_results["experiment_results_report_git_blob"],
+            "R20": final_results["experiment_results_report_sha256"],
+            "R26": final_results["study_state_sha256"],
+            "R27": final_results["intervention_manifest_sha256"],
+            "R35": bindings["literal_inputs"]["anc/consolidation-frozen-v4.prompt.txt"],
+            "R60": PROMPTS["consolidation-active-e71037d9.prompt.txt"][0],
+            "R61": PROMPTS["review-only-active-e71037d9.prompt.txt"][0],
+        }.items():
+            with self.subTest(record=record):
+                self.assertEqual(records[record], expected)
+
+    def test_given_results_when_read_then_arm_checkpoint_and_uncertainty_context_is_local(self):
+        protocol = (ANC / "experiment-protocol.tex").read_text()
+        manuscript = " ".join((PACKAGE / "main.tex").read_text().split())
+        prose = " ".join(protocol.split())
+        tables = re.findall(r"\\begin\{table\}.*?\\end\{table\}", protocol, re.DOTALL)
+
+        for label in ("tab:resultsbenchmark", "tab:resultsadaptation", "tab:resultsstructural", "tab:resultscosts"):
+            table = next(table for table in tables if f"\\label{{{label}}}" in table)
+            with self.subTest(table=label):
+                self.assertIn(r"\armlegend", table)
+        self.assertIn("final ten-feature repository before the withheld extension", prose)
+        self.assertIn("acquisition means implementing a required capability", prose)
+        self.assertIn("identification bounds instead span the possible success rates", prose)
+        self.assertIn("sampling uncertainty", prose)
+        self.assertIn("proposed for a separately registered follow-up", manuscript)
+        self.assertNotIn("those options execution", manuscript)
 
 if __name__ == "__main__":
     unittest.main()

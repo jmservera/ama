@@ -19,7 +19,8 @@ rate unknown. Observed human intervention rate would be
 \end{equation}
 Event counts and active human minutes are separate; repeated help in one
 cycle counts once for incidence. Let $d_{rj}\in\{0,1\}$ indicate an explicit
-help request or a block needing corrective human action. Then
+help request or a block needing corrective human action. The
+intervention-demand rate (IDR) is the fraction of cycles requiring that help:
 \begin{equation}
 \mathrm{IDR}_r=\frac{1}{n_r}\sum_{j=1}^{n_r}d_{rj}.
 \label{eq:intervention-demand}
@@ -34,21 +35,12 @@ silent failure or discourage necessary human judgement.
 \subsection{Historical freeze provenance}\label{app:freezeprovenance}
 
 The reported case-tool snapshot is HVE Core \texttt{plugins-v3.3.106},
-snapshot commit
-\nolinkurl{2df5013e29ebfd2ce61bcd0cf021d8c8186482eb},
-generated from source
-\nolinkurl{e9af018fe5ffbfbc72321a8bca21fb987359af08}.
+snapshot \sourceref{R29}, generated from source \sourceref{R30}.
 These are reported provenance identifiers, not verification of installation
 date or every session's runtime.
 
-The historical v4 execution source was
-\nolinkurl{e8707ecc8965d3f81f5142a2603042bfca1aab15}, with
-manifest-only commit
-\nolinkurl{03c50856838b539780d57216af2a4cf6744187d7}.
-Its attached \nolinkurl{osf-v4-2026-10-31.tar.gz} checksum was
-\nolinkurl{1a42fac40a4f1aa82df59c8c3f7f8d6dce37d22502c5952c398362ac63d6bd65}.
-The runtime image was
-\nolinkurl{sha256:090220b0b172ec205f1ea473d7c3a223eec5d7d619eb21acdcf15c9289287fa3}.
+The historical v4 execution source, manifest-only revision, archive and
+runtime image are \sourceref{R31}--\sourceref{R34}, respectively.
 These identify historical inputs, not a freeze or approval of the
 five-arm amendment. The original registration at
 \url{https://osf.io/ywsrv/} is owner-reported approved after submission

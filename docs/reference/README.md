@@ -47,8 +47,15 @@ production acceptance or a higher score.
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
-The current v20 coauthored delivery has 70 pages, with the additive Supplement
-starting on page 51. The
+The current v21 coauthored delivery has 70 pages, with the additive Supplement
+starting on page 48 and the source/digest register on pages 68-70. The
+[15 November provenance and readability revision](../capstone/thought-leadership/everything-but-the-software/README.md#provenance-and-readability-15-november)
+moves 61 unique identifiers out of prose, adds local arm/checkpoint/uncertainty
+explanations and shortens repeated result and assistance histories. All
+existing table fields, displayed equations, prompts and prior records are
+preserved; 72 authoring tests and structural checks pass. The overall page
+count has not grown. The preceding v20 70-page delivery (Supplement page 51)
+remains in the binding and dated record. The
 [15 November final-results and chart interpretation record](../capstone/thought-leadership/everything-but-the-software/README.md#final-results-and-chart-interpretation-15-november)
 incorporates all 315 completed trajectories, sixteen execution sources, updated
 contrasts and billing, and source-bound empirical charts with explicit

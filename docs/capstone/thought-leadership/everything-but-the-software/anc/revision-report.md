@@ -1,8 +1,13 @@
 ---
 title: Everything but the Software - Revision Record
-description: Complete final study results, chart reading cues and validation alongside preserved dated source records
+description: Readability review, deduplicated end register and validation alongside preserved dated result and source records
 ms.date: 2026-11-15
 ---
+
+The later 15 November readability revision centralizes exact provenance in
+one end register, adds local result explanations and shortens repeated prose
+without changing observations or expanding the 70-page delivery. The v20
+and earlier source, review and delivery records below remain historical.
 
 The 15 November final-results update incorporates the completed source-bound
 315-trajectory dataset and adds human-readable direction and uncertainty cues
@@ -54,6 +59,87 @@ The 5 November recovery/source check, 2 November allocation record and
 from Scope and Outcome through Title Assessment retain the original
 24 October report, and the 25 October addendum remains historical. Their
 earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Provenance and Readability 15 November
+
+### Scope and Applied Findings
+
+The owner requested a readability review and authorized revision of the white
+paper, specifically moving repeated SHA digests into an end table and reducing
+reader backtracking without adding length. The revision uses the current
+article, active Supplement inputs and retained package evidence. No external
+source was newly retrieved or independently revalidated. The existing topic
+branch and open PR 1790 continue the same paper workstream; no remote write
+was performed.
+
+* Full identifiers interrupted Data Availability, execution history, judging,
+  attestation and prompt explanations. Table 35 (`tab:source-register`) now
+  contains each of the original 61 identifiers once, with a linked R01-R61
+  record, object type, purpose and historical/final scope. The 19 SHA-256
+  digests remain distinct from the 42 Git commit/tree/blob IDs. No source pin
+  or digest value changed.
+* Result letters and checkpoints required backtracking. Tables 10-13 now have
+  a local arm key; the design and result prose explain S1, final feature
+  checkpoint P10, regional-access extension CR1, acquisition/retention and
+  sampling intervals versus bounds for unknown outcomes. Complexity and the
+  deferred intervention-demand rate have local plain-language explanations.
+* Repeated comparisons and revision chronology obscured the argument. The
+  introduction, conclusion, Data Availability and AI-assistance account are
+  shorter; all detailed data tables, original disclosures, literal prompts,
+  prior reviews and author TODOs remain in their existing records. The
+  allowance comparison explicitly names Arm A as D's comparator.
+* Follow-up wording implied more certainty than the task supports. The
+  longer-horizon design is presented as a proposal, with an assumed economic
+  model and unmeasured long-run cost slope. The hybrid/practice package remains
+  untested; safety, privacy, approval and publication gates remain explicit.
+
+The preserved final-results source and prior checks retain their original
+evidence status. This editorial pass establishes source/number preservation
+and local presentation checks, not new empirical support or a measured gain
+in reader comprehension.
+
+### Validation and Delivery
+
+The focused tier applies to editorial TeX, non-gate authoring tests, bindings
+and documentation. The tests follow relocated identifiers and add unique-
+register/local-context checks; experimental scoring, estimator, dependencies,
+security controls and required publication-gate semantics are unchanged.
+
+* All 72 authoring tests pass. The initial full-suite run found one obsolete
+  phrase assertion about D's allowance; it now checks the explicit Arm A
+  wording, and the exact test and full suite pass. A dangling editorial
+  transition was also corrected and rechecked before the final build.
+* Baseline comparison at `c3d08d0631151ce022d073f6d10ffc1d6504b1ba`
+  preserves all 61 unique identifiers, 1,454 fields across 34 existing tables,
+  seven displayed equations, three literal prompt files and every author TODO.
+  All historical binding entries are unchanged; prior active Supplement
+  digests are retained in the new revision entry.
+* The structural checker passes: 1,836 abstract source characters, 94 cited/
+  embedded entries, 105 reusable bibliography entries and approximately 16,737
+  introduction-through-conclusion words. Historical baseline `0d5dcb02`
+  remains unavailable; these counts are not outcomes or readability scores.
+* Tectonic builds one 70-page PDF: Supplement page 48, final source register
+  pages 68-70. The preceding v20 Supplement began on page 51. All 30,868
+  extracted words are within page bounds, no page is blank and all 61 register
+  destinations resolve. There are no errors, undefined references, overfull
+  or underfull boxes; the inherited `inputenc` notice remains.
+* Selected pages 1, 2, 4, 28, 29, 31, 37, 38, 40, 48, 53 and 68-70 were
+  inspected directly or were pixel-identical to inspected candidate renders.
+  Figure files and raw chart inputs are unchanged. The installed PDF matches
+  the final external build in
+  `/tmp/ama-paper-readability-20261115-final-AN4no9/`.
+* The `provenance_readability_revision` in
+  [supplement-integration.json](./supplement-integration.json) binds the final
+  PDF, sources, register and reviewed pages. Earlier candidates and revision
+  records remain intact; no cleanup was authorized or performed.
+
+Local requested revision is complete. Assessment is a scoped assisted
+readability and preservation review; scientific evidence limitations,
+unregistered amendments, two CR1 unknowns, 55 billing holds, the incomplete
+judging/calibration frame and author decisions remain unchanged. Human,
+employer/venue approval, hosted CI and independent exact-head review are not
+established. No paid run, VM change, experiment, scoring, registration,
+commit, push or external publication occurred.
 
 ## Final Results and Chart Interpretation 15 November
 

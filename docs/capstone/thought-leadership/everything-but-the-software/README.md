@@ -1,6 +1,6 @@
 ---
-title: Everything but the Software - source package (draft v20)
-description: Complete final study results and human-readable chart interpretation in one article and additive Supplement
+title: Everything but the Software - source package (draft v21)
+description: Readable narrative and deduplicated provenance register with preserved results in one article and additive Supplement
 ms.date: 2026-11-15
 ---
 
@@ -12,8 +12,10 @@ The title is unchanged at the owner's request. The current
 [paper](./main.pdf) and [source](./main.tex) explain the completed exploratory
 study through its principal findings: largely stable retention, selective
 benefits from consolidation or review, and additional resource cost.
-The [Supplement](./main.pdf#page=51) retains the detailed results, uncertainty,
+The [Supplement](./main.pdf#page=48) retains the detailed results, uncertainty,
 calibration and execution record in the same 70-page document.
+The [source and digest register](./main.pdf#page=68) occupies the final
+three pages; full identifiers no longer interrupt the narrative.
 The supplement is additive: source-specific qualifications, detailed
 method/rival checks, the frozen prompt, deferred rates and provenance.
 Repeated Background text, figures and case narratives are excluded from
@@ -22,8 +24,10 @@ The standalone supplement PDF/TeX/bibliography were removed at the owner's
 request after exact archive readback and restore checks; their original
 committed versions remain in Git at `80656f32`. No source evidence was discarded.
 
-The [15 November final-results and chart interpretation record](./anc/revision-report.md#final-results-and-chart-interpretation-15-november)
-records the current v20 delivery. The
+The [15 November provenance and readability record](./anc/revision-report.md#provenance-and-readability-15-november)
+records the current v21 delivery. The
+[final-results and chart interpretation record](./anc/revision-report.md#final-results-and-chart-interpretation-15-november)
+preserves the preceding v20 delivery. The
 [14 November critique and falsifiability revision](./anc/revision-report.md#critique-and-falsifiability-revision-14-november)
 retains the preceding v19 record. The
 [finalization follow-up](./anc/revision-report.md#finalization-follow-up-14-november)
@@ -46,6 +50,38 @@ calendar dates no longer lead the argument. The supplied
 [project-insights export](./anc/project-insights-2026-11-01.csv) supports the
 backlog handoff; its provenance and missing export metadata are in the
 [evidence index](./anc/case-evidence-matrix.json).
+
+### Provenance and Readability 15 November
+
+The readability revision consolidates all 61 distinct identifiers previously
+printed in the active paper into Table 35 at the end: 19 SHA-256 digests and
+42 Git commit, tree or blob IDs. Short linked record labels replace full
+hashes in Data Availability, execution history, judging and prompt provenance.
+The register explains the identifier types and preserves historical/final
+scopes; a matching digest establishes retained content, not claim support.
+
+Result tables now include a local arm key. The task and checkpoint notation,
+acquisition versus retention, sampling intervals versus missing-outcome bounds,
+complexity and deferred intervention-demand rate are explained near their use.
+Repeated numerical summaries and the long source/AI-assistance revision history
+are shortened; their detailed tables and original dated records remain intact.
+Follow-up designs and practice suggestions remain proposed, not demonstrated.
+
+The full PDF remains 70 pages. The Supplement starts three pages earlier,
+on page 48 rather than 51, making room for the three-page end register without
+length growth. All 72 authoring tests and structural checks pass. Direct
+comparisons preserve 1,454 fields in 34 existing tables, all seven displayed
+equations, three literal prompts and every author TODO. All 61 PDF destinations
+resolve, all pages are nonblank and text is in bounds; fourteen selected pages
+were inspected directly or matched to inspected renders. The inherited
+`inputenc` notice remains the only compiler warning.
+
+The separate `provenance_readability_revision` in the
+[binding](./anc/supplement-integration.json) preserves the v20 and earlier
+deliveries. This is an assisted readability revision, not independent scientific
+review or venue compliance. Remaining evidence/approval limits are unchanged;
+no experiment, scoring, registration, paid call, commit or remote publication
+was performed.
 
 ### Final Results and Chart Interpretation 15 November
 

@@ -26,9 +26,8 @@ place, the executed five-arm model-stratified design and mid-study resilience
 recoveries (short calibration, parallel execution, WebSocket/HTTP retry
 handling, VM restarts and quarantine-completion transitions) were publicly
 disclosed in version control, culminating in initial handoff commit
-\nolinkurl{a9d76bb6dbb118c43315fb2a13b7bcdb732d946d} and final quarantine-recovery
-commits \nolinkurl{075102667af7b2e8aac926163cd0bcd726b40190} and
-\nolinkurl{5481fd8a47aa0bad660e7c0ab68f7fcfeea4137f}.
+\sourceref{R07} and final quarantine-recovery sources
+\sourceref{R22} and \sourceref{R23} in the end register.
 The run is an exploratory pilot/estimation study, rather than a single
 preregistered confirmatory evaluation. The public protocol's empty formal
 hypothesis list and false/null current-amendment registration fields do
@@ -43,18 +42,14 @@ file default of 12: $3\times5\times21=315$ planned trajectories.
 Feature steps, sessions and completion counters do not supply an
 independent sample size or a completed-trajectory count.
 
-Collection began across the three implementation epochs inspected on
-8 November (ending at \nolinkurl{e71037d961cb80fc5c659437796de7736820f6c9}),
-reached 313 completed trajectories across fourteen source commits ending at
-\nolinkurl{a9d76bb6dbb118c43315fb2a13b7bcdb732d946d}, and completed all 315
-trajectories across sixteen source commits ending at
-\nolinkurl{5481fd8a47aa0bad660e7c0ab68f7fcfeea4137f}, without a freeze tag.
-Data availability (Table~\ref{tab:executionepochs}) identifies all sixteen
-sources and their step counts. Failures, unknowns and epoch labels remain
-part of the record; implementation changes and execution scheduling can be
-confounded with time, arm and model. The dataset cannot be treated as one
-homogeneous frozen implementation. Commit times locate source changes, not
-collection events.
+Collection used sixteen successive execution-source versions, rather than
+one frozen implementation. The first three were inspected on 8 November;
+the 13--14 November snapshot had 313 completed trajectories, and audited
+recovery completed all 315. Table~\ref{tab:executionepochs} links each version
+to its operational correction and step counts; the end register supplies
+the full identifiers. Failures and unknowns remain in the record.
+Implementation changes and scheduling can be confounded with time, arm
+and model; source-commit times alone do not establish collection times.
 
 The 1 November five-arm amendment, 2 November allocation revision and
 5 November v6 source findings below remain dated planning and inspection
@@ -62,14 +57,18 @@ records. Historical v4/v6/v7 freezes and diagnostics retain their own
 scope. Earlier power/resource scenarios, including full ten-feature
 calibration, are preserved unchanged; they do not establish power or
 expenditure for the active F10/$n=21$ amendment.
-Section~\ref{sec:resultsledger}--Section~\ref{sec:resultsjudging} report the
-completed exploratory outcomes, retaining all 315 allocated trajectories,
-quarantined runs, credit holds and epoch boundaries.
+The results below retain all 315 allocated trajectories, historical
+quarantines, credit holds and execution-version boundaries.
 
 \subsection{Design and estimands}\label{sec:protocolsummary}
 
 One independent replicate is a fresh repository trajectory through S1's
 ten ordered features and a final held-out change request, CR1.
+S1 is a standard-library Python workbench covering lifecycle, handoffs,
+consent, permissions, ranking and audit. CR1 adds regional access control.
+The notation $F_t$ denotes the state after feature $t$, and $P_t$ the state
+after its assigned post-step; these coincide in feature-only arms A and D.
+Thus $P_{10}$ is the final ten-feature repository before the withheld extension.
 Every selected model, GPT~6.1 Sol, Sonnet~5.5 and Gemini~4 Argon,
 runs every arm. Randomised interleaving within model/replicate blocks
 uses seed 2027. Feature steps, tests and checkpoints are repeated
@@ -99,17 +98,10 @@ specifications and examples & 30 + 15 min; 300 + 300 credits \\
 \end{tabularx}
 \end{table}
 
-The 5 November source check identified all five arms and an immutable
-\texttt{--replicates} selection of 12, 21 or 33 (default 12) in the
-source-published v6 kit. D uses the longer feature session without a
-post-step; E implements visible-specification repair. Data availability
-lists the inspected execution and manifest commits.
-These source findings supersede the earlier A/B/C-only capability account.
-The v6 release records that historical implementation; its then-uncompleted
-registration and collection gates are distinct from the later registered
-base and unregistered execution path. Its source-declared runtime
-qualification was not reproduced by this review. The historical v4
-freeze remains unchanged.
+The source-published v6 kit implemented all five arms and an immutable
+replicate selector, superseding an earlier A/B/C-only capability account.
+The source inspection, historical gate status and unchanged v4 freeze are
+retained in the dated revision record and source register.
 
 B--D is the primary practical comparison: consolidation versus giving
 the builder the same total time and nominal credits. Equal ceilings do
@@ -192,7 +184,8 @@ integrity proof or verification of every archived execution epoch.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth,height=0.68\textheight,keepaspectratio]{fig-runtime-boundaries.png}
-\caption{Source-described execution paths at \texttt{b7973e20}.
+\caption{Source-described execution paths from the historical judging
+proposal (\sourceref{R36}).
 Development agents request isolated commands against a writable repository;
 post-run judging follows read-only workflow replay and receives evidence
 without tools. Python orchestration and JavaScript model transport remain
@@ -213,7 +206,7 @@ HIR/IDR definitions are in the supplementary appendices;
 comprehension is not measured.
 
 \paragraph{Who measures, and what ``quality'' means.}
-The development evaluator at \texttt{e71037d9} does not call a separate LLM-as-judge
+The development evaluator (\sourceref{R05}) does not call a separate LLM-as-judge
 to assign numerical outcome scores. The experiment models produce features, consolidation,
 review notes or repairs; these are treatments, not independent measurement
 instruments. The host evaluator runs fixed hidden test contracts and
@@ -228,7 +221,7 @@ metric dictionary contains no maintainability-index score.
 \begin{table}[!htbp]
 \small
 \centering
-\caption{Measurements in the active kit inspected at \texttt{e71037d9}.
+\caption{Measurements in the active kit (\sourceref{R05}).
 Programmatic scoring is distinct from model-generated treatment text.
 Deterministic means repeatable for fixed source, inputs, tools and environment,
 not identical across different generated repositories or runtime sessions.}
@@ -325,8 +318,8 @@ acquisition or any unobserved eligible result makes its loss count and
 density unavailable, with completeness flags. Its standard export does
 not emit the observed-subset counts, missing-count fields and bounds
 specified above. Those are prospective reporting requirements retained
-from the earlier design. The 8 November read-only inspection of active
-\texttt{e71037d9} confirms that the conservative rule remains in
+from the earlier design. The 8 November read-only source inspection
+(\sourceref{R05}) confirms that the conservative rule remains in
 \texttt{pilot\_analysis.retention}; it does not establish the planned
 observed-subset export or amend the reporting rule.
 The source-bound reporting decision remains to be documented without
@@ -392,7 +385,7 @@ S1 checkpoints. This supplementary assessment was designed and run after
 development; it left the treatment budgets and original coverage, retained-contract-loss
 and CR1 endpoints unchanged. Development agents were neither rerun nor
 allowed to repair their repositories. The 9 November proposal at
-\texttt{b7973e20} remains a historical source record; the completed instrument,
+\sourceref{R36} remains a historical source record; the completed instrument,
 runtime and assessment lineage are recorded in Supplement
 Section~\ref{app:postrunjudging}.
 
@@ -650,18 +643,13 @@ without replacements or success-conditioned primary analyses.
 The study completed all 315 of 315 (100.0\%) allocated repository
 trajectories. Each started from the same Python skeleton and received ten
 features, followed by regional access control as a withheld extension.
-Two trajectories that were initially quarantined at the 13--14 November
-snapshot (313 of 315 complete; 5,341 of 5,355 steps across 5,357 attempts)
-after provider transport interruptions---\nolinkurl{pilot-estimation-gpt-6.1-sol-C-20}
-at 18/21 steps after a WebSocket fallback interruption, and
-\nolinkurl{pilot-estimation-gemini-4-argon-E-15} at 10/21 steps and then
-16/21 steps after HTTP stream timeouts---were completed by the independent
-researcher via audited source-pinned recovery transitions
-(\nolinkurl{075102667af7b2e8aac926163cd0bcd726b40190} and
-\nolinkurl{5481fd8a47aa0bad660e7c0ab68f7fcfeea4137f}) while preserving all
-prior attempt holds in the study ledger. Both finished with 100.0\%
+The independent researcher completed two previously transport-quarantined
+trajectories through audited recovery (\sourceref{R22}, \sourceref{R23}),
+preserving prior unknown-charge holds. They were
+\nolinkurl{pilot-estimation-gpt-6.1-sol-C-20} and
+\nolinkurl{pilot-estimation-gemini-4-argon-E-15}. Both finished with 100.0\%
 (127/127) $P_{10}$ and 100.0\% (142/142) CR1 hidden pass rates.
-The task roster and runtime record are in Supplement
+The interruption history, task roster and runtime record are in Supplement
 Section~\ref{app:executiondetail}.
 
 Collection produced all 5,355 of 5,355 (100.0\%) scheduled steps across
@@ -678,24 +666,20 @@ corroborated by the 5,372-journal in-band SDK audit rather than an
 independent audit of out-of-band edits or hints.
 
 With all 315 allocated trajectories complete and owner-attested unassisted,
-the automated whole-study gate unlocks the primary and secondary estimates
-(\nolinkurl{primary_estimates_available=true}, replacing the pre-recovery
-313/315 snapshot's \nolinkurl{primary_estimates_available=false}). Every
-pooled 63-versus-63 and within-model 21-versus-21 $P_{10}$ coverage
-comparison (\texttt{H1}) and retained-regression comparison (\texttt{H2}) is
-directly estimated, while \texttt{H6} (CR1 adaptation) supplies exact
-Clopper--Pearson intervals for Sonnet~5.5 and Gemini~4 Argon and exact
-Manski identification bounds for GPT~6.1 Sol (where two completed
-trajectories, \nolinkurl{gpt-6.1-sol-B-08} and \nolinkurl{gpt-6.1-sol-C-14},
-retained an unadjudicated test error).
+the primary and secondary coverage estimates are available
+(\nolinkurl{primary_estimates_available=true}). Pooled comparisons use
+63 versus 63 trajectories, and within-model comparisons use 21 versus 21.
+Retained-regression counts are also complete. CR1 has a different limit:
+two completed GPT trajectories retain an unadjudicated test error. Exact
+binomial intervals describe sampling uncertainty for fully observed Sonnet
+and Gemini outcomes; GPT's identification bounds instead span the possible
+success rates when its unknown outcomes are assigned to failure or success.
+The detailed tables retain the method names and both uncertainties separately.
 
 Billing remains partly held for interrupted provider calls. Across 5,372
-attempts, 5,317 settled with complete billing totaling 62,299.76 AI credits
-(exact 62,299.75904; up from 5,303 attempts and 62,052.61 credits at the
-313/315 snapshot). The remaining 55 attempts (38 native-retry holds and
-17 recovery-interrupted holds, with zero remaining quarantine holds) retain
-19,200.0 reserved credits against unknown final charges (18,900.0 prior to
-the E-15 feature-nine recovery), with 783.16 credits (exact 783.16186)
+attempts, 5,317 settled with complete billing totaling 62,299.76 AI credits.
+The remaining 55 attempts retain 19,200.0 reserved credits against unknown
+final charges, with 783.16 credits
 certified as a partial lower bound. Reservations are not measured spending,
 and missing charges are not zero. The Supplement retains the exact amounts,
 hold categories and failure-adjudication record; no currency conversion is made.
@@ -703,7 +687,9 @@ hold categories and failure-adjudication record; no currency conversion is made.
 \subsection{End-of-delivery coverage, retention and CR1 adaptation}\label{sec:resultscorrectness}
 
 Earlier working behaviour was largely retained, but some required behaviour
-was never acquired. Table~\ref{tab:resultsbenchmark} and
+was never acquired. Here acquisition means implementing a required
+capability; retention means preserving one that previously passed.
+Table~\ref{tab:resultsbenchmark} and
 Figure~\ref{fig:studytrajectories} separate final coverage and
 cycle-by-cycle progression from the number of trajectories with a
 retained-contract loss. At the end of feature delivery ($P_{10}$),
@@ -720,7 +706,7 @@ Arms~A, B, C and D.
 trajectories per cell (315/315 total). ``All 127'' counts complete
 test-suite passes; ``With loss'' counts trajectories with a previously
 passing unchanged contract failing at $P_{10}$. Additional distribution and
-loss statistics are in the Supplement.}
+loss statistics are in the Supplement. \armlegend}
 \label{tab:resultsbenchmark}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcrrrr@{}}
 \toprule
@@ -764,7 +750,7 @@ a falling pass rate alone does not identify loss of acquired behaviour.}\label{f
 \end{figure}
 
 GPT~6.1 Sol showed a different pattern. Many trajectories retained earlier
-functionality through $k=8$ (100.00\% mean pass rate in every arm) but
+functionality through the eighth feature (100.00\% mean pass rate in every arm) but
 failed to deliver priority ranking, the ninth feature.
 The handoff's exploratory inspection traced the common 88.98\% plateau to
 all fourteen ranking tests failing. Earlier tests had asserted that view
@@ -772,8 +758,8 @@ methods outside a fixed list must be rejected; the new ranking method
 conflicted with that assertion while accepted test files were immutable.
 Complete feature delivery occurred in 5/21 baseline trajectories, 6/21
 longer-session trajectories, 8/21 review-only trajectories and 12/21 with
-either consolidation or repair. This is principally an acquisition
-difference, not a reduction in losses of previously working features.
+either consolidation or repair. The main difference was acquisition of
+ranking, while previously working features remained largely intact.
 
 Across all 63 versus 63 completed unassisted trajectories, the unlocked
 primary equal-model-weight coverage gain for consolidation over the
@@ -810,7 +796,7 @@ summaries do not establish which review actions produced the difference.
 \caption{CR1 outcomes across all 21 completed trajectories per cell.
 Bounds assign the two unadjudicated GPT~6.1 Sol test errors (\texttt{B-08}
 and \texttt{C-14}) first to failure and then to success. They describe
-missing-outcome uncertainty, not sampling confidence intervals.}
+missing-outcome uncertainty, not sampling confidence intervals. \armlegend}
 \label{tab:resultsadaptation}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcrrrl@{}}
 \toprule
@@ -849,7 +835,9 @@ including the two unadjudicated errors rather than imputing them.
 \subsection{Structural quality, code volume and resource consumption}\label{sec:resultsstructural}
 
 Consolidation's clearest advantage was structural cleanup
-(Table~\ref{tab:resultsstructural}). No functions exceeded cyclomatic
+(Table~\ref{tab:resultsstructural}). Cyclomatic complexity counts independent
+control-flow paths through a function; the threshold applies to each function.
+No functions exceeded cyclomatic
 complexity 10 at any of the 63 B endpoints. Relative to A, lint density
 fell by about 92\% on Sonnet and reached zero on GPT. The targets were
 not uniformly achieved: Sonnet B still averaged 2.26 lint warnings per
@@ -866,7 +854,7 @@ structural measures can improve while a semantic permission defect remains.
 \centering\small
 \caption{Mean structural metrics at $P_{10}$, over all 21 observed endpoints
 per cell (315/315 total). The complexity threshold applies to individual
-functions, not the mean complexity of a repository.}
+functions, not the mean complexity of a repository. \armlegend}
 \label{tab:resultsstructural}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcrrr@{}}
 \toprule
@@ -912,7 +900,7 @@ reported in Supplement Section~\ref{app:resultsdetail}.
 Credit means use only trajectories with complete billing for that phase;
 counts are in parentheses. Duration means describe all 21 completed
 trajectories per cell (315/315 total), not human effort or total calendar
-time. Outstanding charges remain outside settled means.}
+time. Outstanding charges remain outside settled means. \armlegend}
 \label{tab:resultscosts}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcrrrr@{}}
 \toprule
@@ -968,7 +956,7 @@ packets. Its failures mainly concerned ranking and the delivery journey
 where ranking had never been completed. The 630 allocated packets covered
 both $P_{10}$ and CR1; four were unavailable because the supplementary
 replay and Assessment~v3 judging batch were frozen at the 313/315
-pre-quarantine-completion snapshot (\nolinkurl{fb39a46f...}) before
+pre-recovery snapshot (\sourceref{R38}) before
 \nolinkurl{gpt-6.1-sol-C-20} and \nolinkurl{gemini-4-argon-E-15} were
 completed. Replay used 3,457 recorded checkpoints and the twelve-scenario
 panel described in Section~\ref{sec:postrunjudging}.
@@ -991,7 +979,8 @@ ranking completion. These are small descriptive ordinal differences.
 The updated companion supplies exploratory bootstrap intervals. At CR1,
 all four intervals for these two dimensions include zero. No
 practical-importance threshold was established, and the intervals are
-not adjusted for multiplicity. The Supplement retains the detailed
+not adjusted for multiplicity: their stated coverage applies to each
+comparison, not to all comparisons jointly. The Supplement retains the detailed
 contrasts, all cell means and the separate v1/v2/v3 accounting.
 
 \begin{table}[!htbp]
@@ -1040,19 +1029,15 @@ Table~\ref{tab:resultscalibration} retains the raw and context-weighted
 agreement figures and abstentions.
 
 The SDK audit found no interactive user-input RPCs across all 5,372 retained
-study-attempt journals (5,357 prior to the quarantine-completion recovery),
-with those interfaces disabled and 99.83\% \texttt{isolated\_exec} tool
-discipline (42,878 of 42,952 tool invocations in the journal audit, 42,590
-of 42,664 in the report summary, and 42,520 of 42,594 pre-recovery; all 74
-non-\texttt{isolated\_exec} calls were rejected Sonnet \texttt{create}/\texttt{edit}
-attempts). However, 36 sessions (0.67\%) across 29 trajectories (9.21\%)
-ended with a permission or environment question, leaving \texttt{src/}
-unchanged in 35/36 cases. Eighteen were GPT feature-nine sessions (18/1,795)
-facing the protected earlier test; eighteen were Sonnet sessions (18/1,786)
-encountering tool or shell limitations; none occurred in Gemini (0/1,791).
-This is evidence about recorded requests, not a complete measure of human
-help supplied. Owner attestation for all 315 completed trajectories is
-recorded separately (Section~\ref{sec:resultsledger}).
+study-attempt journals, with those interfaces disabled. Of 42,952 tool
+requests, 42,878 (99.83\%) used \texttt{isolated\_exec}; all 74 other
+requests were rejected Sonnet \texttt{create}/\texttt{edit} attempts.
+Thirty-six sessions (0.67\%) across 29 trajectories (9.21\%) ended with a
+permission or environment question, leaving \texttt{src/} unchanged in
+35/36 cases. The Supplement retains the per-model breakdown and distinguishes
+the journal audit's invocation counts from the report summary and earlier
+snapshot. These observations describe recorded requests; owner attestation,
+including out-of-band intervention, remains a separate evidence source.
 
 \begin{table}[!htbp]
 \centering\small
