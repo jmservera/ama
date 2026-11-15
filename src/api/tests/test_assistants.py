@@ -4,6 +4,7 @@ import json
 import os
 import re
 import shutil
+import sqlite3
 import tempfile
 import threading
 import time
@@ -19,7 +20,7 @@ from unittest.mock import Mock
 
 import release_support
 import test_mvp
-from zava_forward.core import projection, quality
+from zava_forward.core import continuity, mssqlstore, projection, quality
 from zava_forward.core.ai import Ai
 from zava_forward.core.assistants import (
     Assistants, Limits, MSSQL_DDL, PURPOSE, REGISTRY, RULES, VERSION, canonical, capture, digest, eligible,
@@ -1291,25 +1292,32 @@ class DurabilityTests(Base):
 
 class DialectConnection:
     """T-SQL shape emulation, not real MSSQL/platform evidence."""
-    def __init__(self, raw, statements):
-        self.raw, self.statements = raw, statements
+    def __init__(self, raw, statements, ledger=False):
+        self.raw, self.statements, self.ledger = raw, statements, ledger
 
     def execute(self, sql, args=()):
         self.statements.append(sql)
         if "SELECT is_ledger_on" in sql:
-            return self.raw.execute("SELECT 0")
+            return self.raw.execute(f"SELECT {1 if self.ledger else 0}")
+        if "SELECT ledger_type_desc" in sql:
+            return self.raw.execute("SELECT 'APPEND_ONLY_LEDGER_TABLE'")
         if sql.startswith("SET TRANSACTION ISOLATION LEVEL"):
             return self.raw.execute("SELECT 1")
         if "FROM sys.tables" in sql:
             return self.raw.execute("SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?", args)
+        if self.ledger and "CREATE TRIGGER" in sql:
+            raise sqlite3.OperationalError("Cannot create a trigger on a system-versioned ledger table")
         if "N'TR'" in sql or "sys.indexes" in sql or "COL_LENGTH" in sql:
             return self.raw.execute("SELECT 1")
         if sql.startswith("IF OBJECT_ID"):
             sql = sql[sql.index("CREATE TABLE"):]
+            sql = sql.replace(" WITH (LEDGER = ON (APPEND_ONLY = ON))", "")
+            sql = sql.replace(" IDENTITY(1,1)", "")
             sql = sql.replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS", 1)
             sql = re.sub(r"\s+COLLATE\s+\w+", "", sql)
             sql = re.sub(r"N?VARCHAR\((?:MAX|\d+)\)", "TEXT", sql)
             sql = sql.replace("BIGINT", "INTEGER")
+            sql = re.sub(r"\bN'", "'", sql)
         if "DATEDIFF_BIG" in sql:
             sql = "SELECT (julianday('now')-2440587.5)*86400.0"
         if " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY" in sql:
@@ -1338,11 +1346,81 @@ class DialectTests(Base):
             sql.review(self.pm, p["id"], "accept", p["revision"], "Proposal only.")
         sql.scan()
         self.assertEqual(before, self.domain())
+        self.assertTrue(any("CREATE TRIGGER" in s for s in statements))
         self.assertTrue(any("DATEDIFF_BIG" in s for s in statements))
         self.assertIn("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE", statements)
         self.assertTrue(any("OFFSET 0 ROWS FETCH NEXT" in s for s in statements))
         self.assertTrue(any("fence=?" in s and "lease_until>?" in s for s in statements))
         self.assertEqual(len(MSSQL_DDL), 9)
+
+    def test_mssql_ledger_mode_skips_triggers_and_syncs_continuity_gate(self):
+        qi = self.people["Quality Inspector"]
+        suspension = self.store.suspend(qi, dict(
+            scope="stock-prioritisation",
+            reason="Synthetic ledger-mode trigger guard verification",
+            incident_owner=qi["name"],
+            containment="Hold stock-prioritisation proposals while manual casework continues",
+            comms_owner=qi["name"],
+            comms_audience="Synthetic retrofit staff",
+            trigger="guardrail breach",
+            evidence="SYN-LEDGER-122",
+            resident_impact="Manual liaison continuity active; statutory safety unaffected",
+            remediation="Verify ledger-mode schema sync without DML triggers",
+            restart_authority="Building Safety Lead and Executive Sponsor (OD-35 synthetic fixture; not live authority)",
+            synthetic=True,
+        ))
+        self.assertEqual(suspension["epoch"], 1)
+
+        raw_ms = sqlite3.connect(":memory:", isolation_level=None)
+        self.addCleanup(raw_ms.close)
+        ms_statements: list[str] = []
+        ms_conn = DialectConnection(raw_ms, ms_statements, ledger=True)
+        ms: Any = object.__new__(mssqlstore.MssqlStore)
+        ms.db = ms_conn
+        ms.dblock = threading.RLock()
+        ms._env = {}
+        ms._create_schema_serialized()
+        raw_ms.execute("INSERT INTO meta ([key], value) VALUES ('continuity', ?)",
+                       (continuity.dump_sql(self.store.data["continuity"]),))
+        continuity.sync_sql_gate(ms_conn, read_meta=True, mssql=True)
+        self.assertFalse(any("CREATE TRIGGER" in s for s in ms_statements))
+        self.assertTrue(any("SELECT ledger_type_desc" in s for s in ms_statements))
+        self.assertEqual(
+            raw_ms.execute("SELECT id, gate_version, epoch FROM continuity_gate_state").fetchone(),
+            (1, continuity.GATE_VERSION, 1),
+        )
+        self.assertEqual(
+            raw_ms.execute("SELECT scope, incident_id, epoch FROM continuity_open_holds").fetchall(),
+            [("stock-prioritisation", suspension["id"], 1)],
+        )
+
+        inspect_conn = sqlite3.connect(self.dbpath, isolation_level=None)
+        self.addCleanup(inspect_conn.close)
+        for (trig_name,) in inspect_conn.execute("SELECT name FROM sqlite_master WHERE type='trigger'").fetchall():
+            inspect_conn.execute(f"DROP TRIGGER IF EXISTS {trig_name}")
+        inspect_conn.execute("UPDATE continuity_gate_state SET epoch = 0 WHERE id = 1")
+        inspect_conn.execute("DELETE FROM continuity_open_holds")
+
+        assist_statements: list[str] = []
+        store_any: Any = self.store
+        store_any._env = {}
+        original = store_any.assistant_connection
+        store_any.assistant_connection = lambda: DialectConnection(original(), assist_statements, ledger=True)
+        svc = Assistants(self.store, config())
+        self.addCleanup(svc.stop)
+        self.assertTrue(svc.sql)
+        self.assertFalse(any("CREATE TRIGGER" in s for s in assist_statements))
+        self.assertTrue(any("SELECT ledger_type_desc" in s for s in assist_statements))
+        self.assertEqual(
+            inspect_conn.execute("SELECT id, gate_version, epoch FROM continuity_gate_state").fetchone(),
+            (1, continuity.GATE_VERSION, 1),
+        )
+        self.assertEqual(
+            inspect_conn.execute("SELECT scope, incident_id, epoch FROM continuity_open_holds").fetchall(),
+            [("stock-prioritisation", suspension["id"], 1)],
+        )
+        with svc.transaction() as db:
+            self.assertIsNotNone(svc.suspended(db, "stock-prioritisation"))
 
 
 class ConfigurationTests(unittest.TestCase):

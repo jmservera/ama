@@ -317,8 +317,8 @@ class MssqlStore(SqlStore):
                     raise SystemExit(f"audit is a {kind}, not an append-only ledger table; drop and recreate it before starting.")
             else:
                 self.db.execute(APPEND_ONLY)
-            for trigger in GATE_TRIGGERS:
-                self.db.execute(trigger)
+                for trigger in GATE_TRIGGERS:
+                    self.db.execute(trigger)
 
     def _has_rec_order(self):
         return self.db.execute("SELECT COL_LENGTH(N'recommendations', N'created_ord')").fetchone()[0] is not None

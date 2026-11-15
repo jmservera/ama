@@ -1203,6 +1203,7 @@ class Assistants:
 
     def migrate(self):
         with self.transaction() as db:
+            ledger = False
             if self.mssql:
                 ledger = bool(
                     db.execute(
@@ -1240,8 +1241,9 @@ class Assistants:
                         f"CREATE TRIGGER IF NOT EXISTS assistant_events_no_{action.lower()} BEFORE {action} ON assistant_events BEGIN SELECT RAISE(ABORT, 'assistant evidence is append-only'); END"
                     )
             self._upgrade(db)
-            for trigger in (MSSQL_ATTEMPT_TRIGGERS if self.mssql else SQLITE_ATTEMPT_TRIGGERS):
-                db.execute(trigger)
+            if not (self.mssql and ledger):
+                for trigger in (MSSQL_ATTEMPT_TRIGGERS if self.mssql else SQLITE_ATTEMPT_TRIGGERS):
+                    db.execute(trigger)
             continuity.sync_sql_gate(db, read_meta=True, mssql=self.mssql)
             try:
                 from .sensor_consumer import ensure_control_home

@@ -4666,10 +4666,13 @@ change register and a supplier-independent evidence export. Synthetic demonstrat
 * Enforcement: the epoch is read on the caller's own SQL connection at invoke, scan, claim, dispatch, complete and
   review, and shown in list and detail views; it does not depend on disabled buttons. On SQLite and SQL Server,
   `continuity` writes also store a versioned SQL envelope (`gate_version = continuity-gate-v1`) and synchronise normalized
-  `continuity_gate_state` (`gate_version = continuity-gate-v1`, monotonic `epoch`, delete/rollback refused by trigger) and
-  `continuity_open_holds` rows, while `assistant_attempts` and `assistant_tasks` triggers refuse `'reserved'`/`'sending'`
+  `continuity_gate_state` (`gate_version = continuity-gate-v1`, monotonic `epoch`) and
+  `continuity_open_holds` rows; SQLite and non-ledger SQL Server databases also install `continuity_gate_state`,
+  `assistant_attempts` and `assistant_tasks` DML triggers refusing delete/rollback, `'reserved'`/`'sending'`
   attempts or `ready` verification/acceptance updates lacking the active `gate_version` or matching an open `all`/task
-  hold so pre-gate or gate-mismatched worker images fail closed across queued, leased, ready and export views. In-flight provider calls may
+  hold (SQL Server `WITH LEDGER = ON` databases omit DML triggers on system-versioned updatable ledger tables while
+  retaining `continuity_gate_state` / `continuity_open_holds` synchronisation and Python fail-closed fences) so pre-gate
+  or gate-mismatched worker images fail closed across queued, leased, ready and export views. In-flight provider calls may
   finish and stay charged or unknown; late results are quarantined and never actionable. No remote cancellation or
   exactly-once billing is claimed.
 * Manual fallback: suspended AI paths return the workflow template with the reason; case work, accessible resident
