@@ -1,10 +1,11 @@
 import json
 import os
+import re
 import sqlite3
 import tempfile
 import unittest
-from unittest.mock import patch
 from pathlib import Path
+from unittest.mock import patch
 
 import dataset
 from zava_forward.core import ledger
@@ -131,6 +132,13 @@ class SqlStoreTests(unittest.TestCase):
     def test_health_checks_database(self):
         self.assertTrue(SqlStore(self.data, self.db).ready())
 
+    def _drop_audit_triggers(self, store):
+        if isinstance(store, MssqlStore):
+            store.db.execute("IF OBJECT_ID(N'audit_append_only', N'TR') IS NOT NULL DROP TRIGGER audit_append_only")
+        else:
+            store.db.execute("DROP TRIGGER IF EXISTS audit_no_update")
+            store.db.execute("DROP TRIGGER IF EXISTS audit_no_delete")
+
     def _seed_multi_year_sql(self, store):
         rows = [
             ("sam", "log_contact", "ZF-1", "y2024-1", "2024-03-10T09:00:00"),
@@ -158,45 +166,32 @@ class SqlStoreTests(unittest.TestCase):
         self.assertFalse(rep["years"]["2026"]["sealed"])
         self.assertEqual(rep["problems"], [])
 
-        # Tamper a sealed 2025 row by dropping the append-only trigger
-        raw = sqlite3.connect(self.db)
-        self.addCleanup(raw.close)
-        raw.execute("DROP TRIGGER audit_no_update")
-        raw.execute("UPDATE audit SET detail='tampered-2025' WHERE seq=3")
-        raw.commit()
+        # Tamper a sealed 2025 row after dropping the backend append-only trigger
+        self._drop_audit_triggers(s)
+        s.db.execute("UPDATE audit SET detail=? WHERE at=?", ("tampered-2025", "2025-02-15T11:00:00"))
         tampered = s.verify_ledger_before_reliance(current_year=2026)
         self.assertFalse(tampered["reliance_allowed"])
         with self.assertRaises(LedgerRelianceError):
             s.require_verified_ledger_for_reliance(current_year=2026)
 
-        # Fresh store: seal 2024+2025, then drop 2024 rows and rebuild chain + audit_head
-        db2 = os.path.join(self.tmp.name, "pw2.sqlite")
-        s2 = SqlStore(self.data, db2)
-        self.addCleanup(s2.db.close)
-        self._seed_multi_year_sql(s2)
-        s2.require_verified_ledger_for_reliance(current_year=2026)
-        raw2 = sqlite3.connect(db2)
-        self.addCleanup(raw2.close)
-        raw2.execute("DROP TRIGGER audit_no_delete")
-        raw2.execute("DROP TRIGGER audit_no_update")
-        raw2.execute("DELETE FROM audit")
+        # Reuse s (2024 and 2025 are sealed in s.digest_dir and triggers are dropped): drop 2024 rows and rebuild chain + audit_head
+        s.db.execute("DELETE FROM audit")
         prev = ledger.GENESIS
         kept = [
-            (1, "2025-02-15T11:00:00", "sam", "log_contact", "ZF-1", "y2025-1"),
-            (2, "2025-09-05T16:45:00", "sam", "log_contact", "ZF-1", "y2025-2"),
-            (3, "2026-01-12T08:15:00", "sam", "log_contact", "ZF-1", "y2026-1"),
+            ("2025-02-15T11:00:00", "sam", "log_contact", "ZF-1", "y2025-1"),
+            ("2025-09-05T16:45:00", "sam", "log_contact", "ZF-1", "y2025-2"),
+            ("2026-01-12T08:15:00", "sam", "log_contact", "ZF-1", "y2026-1"),
         ]
-        for seq, at, who, action, cid, detail in kept:
+        for at, who, action, cid, detail in kept:
             entry = ledger.make_entry(who, action, cid, detail, prev, at)
-            raw2.execute(
-                "INSERT INTO audit VALUES (?,?,?,?,?,?,?,?)",
-                (seq, at, who, action, cid, detail, prev, entry["hash"]),
+            s.db.execute(
+                "INSERT INTO audit (at, who, action, case_id, detail, prev, hash) VALUES (?,?,?,?,?,?,?)",
+                (at, who, action, cid, detail, prev, entry["hash"]),
             )
             prev = entry["hash"]
-        raw2.execute("UPDATE audit_head SET count=?, hash=? WHERE id=1", (len(kept), prev))
-        raw2.commit()
-        self.assertTrue(s2.verify_audit())
-        dropped = s2.verify_ledger_before_reliance(current_year=2026)
+        s.db.execute("UPDATE audit_head SET count=?, hash=? WHERE id=1", (len(kept), prev))
+        self.assertTrue(s.verify_audit())
+        dropped = s.verify_ledger_before_reliance(current_year=2026)
         self.assertFalse(dropped["reliance_allowed"])
         self.assertEqual(dropped["missing_years"], ["2024"])
         self.assertIn("missing_audit_year", {p["code"] for p in dropped["problems"]})
@@ -206,27 +201,119 @@ class SqlStoreTests(unittest.TestCase):
         self.addCleanup(s.db.close)
         self._seed_multi_year_sql(s)
         s.require_verified_ledger_for_reliance(current_year=2026)
-        raw = sqlite3.connect(self.db)
-        self.addCleanup(raw.close)
-        raw.execute("DROP TRIGGER audit_no_delete")
+        self._drop_audit_triggers(s)
         # Delete the unsealed tail 2026 entry without updating audit_head
-        raw.execute("DELETE FROM audit WHERE seq=6")
-        raw.commit()
+        s.db.execute("DELETE FROM audit WHERE at=?", ("2026-06-01T10:00:00",))
         mismatch = s.verify_ledger_before_reliance(current_year=2026)
         self.assertFalse(mismatch["reliance_allowed"])
         self.assertFalse(mismatch["audit_head_matches"])
         self.assertIn("audit_head_mismatch", {p["code"] for p in mismatch["problems"]})
 
-        raw.execute("DELETE FROM audit_head WHERE id=1")
-        raw.commit()
+        s.db.execute("DELETE FROM audit_head WHERE id=1")
         missing = s.verify_ledger_before_reliance(current_year=2026)
         self.assertFalse(missing["reliance_allowed"])
         self.assertIn("audit_head_missing", {p["code"] for p in missing["problems"]})
 
+    def _verify_mssqlstore_factory_hook(self, base_sql_cls):
+        tsql_drop = "IF OBJECT_ID(N'audit_append_only', N'TR') IS NOT NULL DROP TRIGGER audit_append_only"
+
+        class _MssqlSqlGuard:
+            def __init__(self, raw, stats):
+                self._raw = raw
+                self._stats = stats
+
+            def execute(self, sql, *args):
+                if sql.strip() == tsql_drop:
+                    self._stats["dropped_triggers"] += 1
+                    self._raw.execute("DROP TRIGGER IF EXISTS audit_no_update")
+                    return self._raw.execute("DROP TRIGGER IF EXISTS audit_no_delete")
+                if "audit_no_update" in sql or "audit_no_delete" in sql:
+                    raise AssertionError(f"SQLite trigger DDL issued against MssqlStore: {sql}")
+                norm = " ".join(sql.split()).upper()
+                if norm.startswith("INSERT INTO AUDIT"):
+                    if norm.startswith("INSERT INTO AUDIT VALUES"):
+                        raise AssertionError(f"Columnless INSERT INTO audit targets IDENTITY seq: {sql}")
+                    m = re.match(r"^INSERT INTO AUDIT\s*\(([^)]*)\)", norm)
+                    if m and "SEQ" in {c.strip().strip('[]"') for c in m.group(1).split(",")}:
+                        raise AssertionError(f"Explicit seq column in INSERT INTO audit violates IDENTITY: {sql}")
+                return self._raw.execute(sql, *args)
+
+            def __getattr__(self, name):
+                return getattr(self._raw, name)
+
+        class _SimulatedMssqlStore(MssqlStore):
+            _priority_correction_rows = base_sql_cls._priority_correction_rows
+            dberror = base_sql_cls.dberror
+            _open = base_sql_cls._open
+            _epoch_sql = base_sql_cls._epoch_sql
+            _add_column_default = base_sql_cls._add_column_default
+            assistant_connection = base_sql_cls.assistant_connection
+            _create_schema = base_sql_cls._create_schema
+            _has_rec_order = base_sql_cls._has_rec_order
+            _create_rec_order_index = base_sql_cls._create_rec_order_index
+            _create_indexes = base_sql_cls._create_indexes
+            _columns = base_sql_cls._columns
+            _meta_set = base_sql_cls._meta_set
+            _insert_ignore = base_sql_cls._insert_ignore
+            _contains = staticmethod(base_sql_cls._contains)
+            _limit = staticmethod(base_sql_cls._limit)
+
+            def __init__(self, data_path, backing_db, state_dir, stats):
+                base_sql_cls.__init__(
+                    self,
+                    data_path,
+                    backing_db,
+                    digest_dir=os.path.join(state_dir, "digests"),
+                )
+                self.db = _MssqlSqlGuard(self.db, stats)
+
+        overridden_on_mssql = {
+            "test_ledger_is_append_only_and_detects_tampering",
+            "test_list_filters_use_indexes",
+        }
+        expected_trigger_drops = {
+            "test_pre_reliance_multi_year_verification_passes_and_blocks_tampering_and_dropped_years": 1,
+            "test_pre_reliance_detects_sql_audit_head_mismatch_and_missing_head": 1,
+        }
+        inherited_methods = sorted(
+            name
+            for name in dir(SqlStoreTests)
+            if name.startswith("test_") and name not in overridden_on_mssql
+        )
+        self.assertEqual(len(inherited_methods), 10)
+
+        with tempfile.TemporaryDirectory() as server_dir:
+            for idx, method_name in enumerate(inherited_methods):
+                backing_db = os.path.join(server_dir, f"mssql-sim-{idx}.sqlite")
+                stats = {"dropped_triggers": 0}
+                case = SqlStoreTests(method_name)
+                case._running_factory_hook = True
+
+                def factory(data, db, *_a, _backing=backing_db, _stats=stats, _case=case, **_k):
+                    store = _SimulatedMssqlStore(data, _backing, state_dir=os.path.dirname(db), stats=_stats)
+                    _case.addCleanup(store.db.close)
+                    return store
+
+                with patch.dict(globals(), {"SqlStore": factory}):
+                    case.setUp()
+                    try:
+                        getattr(case, method_name)()
+                        self.assertFalse(os.path.exists(case.db), method_name)
+                        self.assertEqual(
+                            stats["dropped_triggers"],
+                            expected_trigger_drops.get(method_name, 0),
+                            method_name,
+                        )
+                    finally:
+                        case.doCleanups()
+                        case.tearDown()
+
     def test_pre_reliance_scrubs_driver_secrets_and_is_inherited_by_mssqlstore(self):
-        self.assertTrue(issubclass(MssqlStore, SqlStore))
+        from zava_forward.core.sqlstore import SqlStore as BaseSqlStore
+
+        self.assertTrue(issubclass(MssqlStore, BaseSqlStore))
         mssql_db = os.path.join(self.tmp.name, "mssql-double.sqlite")
-        base = SqlStore(self.data, mssql_db)
+        base = BaseSqlStore(self.data, mssql_db)
         self.addCleanup(base.db.close)
         self._seed_multi_year_sql(base)
         ms = MssqlStore.__new__(MssqlStore)
@@ -256,6 +343,9 @@ class SqlStoreTests(unittest.TestCase):
                 ms.require_verified_ledger_for_reliance(current_year=2026)
             self.assertNotIn(sentinel, str(cm.exception))
             self.assertIsNone(cm.exception.__cause__)
+
+        if not getattr(self, "_running_factory_hook", False):
+            self._verify_mssqlstore_factory_hook(BaseSqlStore)
 
 
 if __name__ == "__main__":
