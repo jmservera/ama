@@ -5,6 +5,7 @@ each is written to the audit ledger. None of them decides anything for a
 person: the system records, enforces who may do what, and refuses steps that
 skip a state.
 """
+from collections.abc import Mapping
 from copy import deepcopy
 from datetime import UTC, date, datetime, time, timedelta
 import math
@@ -19,12 +20,60 @@ from . import (
     projection,
     taskqueues,
 )
+from .sensor_analysis import ReviewTaskCandidate, Signal
 
 MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
 DEFAULT_ESCALATION_ROLE = "Retrofit Programme Manager"
 HAZARD_PRIORITIES = ("Emergency", "Significant", "Routine")
 HAZARD_CATEGORIES = ("Damp and mould", "Structural", "Electrical", "Safeguarding", "Other")
 SAFETY_ROLES = ("Building Safety Liaison",) + MANAGER_ROLES
+_SENSOR_PAYLOAD_KEYS = (
+    "sensor_signal",
+    "sensor_reading",
+    "sensor_readings",
+    "sensor_review_draft",
+    "sensor_review_drafts",
+    "sensor_candidate",
+    "sensor_id",
+    "reading_id",
+)
+_SENSOR_SOURCE_TYPES = ("SENSOR", "IOT_HUB", "TELEMETRY")
+
+
+def _forbid_sensor_actor(user):
+    if isinstance(user, Mapping) and (
+        any(k in user for k in _SENSOR_PAYLOAD_KEYS)
+        or str(user.get("source_type") or "").upper() in _SENSOR_SOURCE_TYPES
+        or any(controls.is_sensor_reference(user.get(k)) for k in ("email", "name", "code"))
+    ):
+        raise PermissionError(controls.SENSOR_REFUSAL)
+
+
+def _forbid_sensor_authority(*values):
+    stack = list(values)
+    while stack:
+        cur = stack.pop()
+        if isinstance(cur, (Signal, ReviewTaskCandidate)) or all(
+            hasattr(cur, f)
+            for f in ("diagnoses_hazard", "starts_clock", "releases_hold", "changes_ranking")
+        ):
+            raise ValueError(controls.SENSOR_REFUSAL)
+        if isinstance(cur, str):
+            if controls.is_sensor_reference(cur):
+                raise ValueError(controls.SENSOR_REFUSAL)
+        elif isinstance(cur, Mapping):
+            if (
+                any(k in cur for k in _SENSOR_PAYLOAD_KEYS)
+                or cur.get("task_type") == "SENSOR_REVIEW_DUE"
+                or str(cur.get("source_type") or "").upper() in _SENSOR_SOURCE_TYPES
+            ):
+                raise ValueError(controls.SENSOR_REFUSAL)
+            for k, v in cur.items():
+                if isinstance(k, str) and controls.is_sensor_reference(k):
+                    raise ValueError(controls.SENSOR_REFUSAL)
+                stack.append(v)
+        elif isinstance(cur, (list, tuple, set, frozenset)):
+            stack.extend(cur)
 HANDOFF_OPEN = "Offered"
 HANDOFF_PENDING = (HANDOFF_OPEN, "Received", "Escalated")
 HANDOFF_ACTIVE = HANDOFF_PENDING + ("Accepted",)
@@ -1002,7 +1051,9 @@ class WorkflowMixin:
                              emergency=action == "safety_raised" and h["priority"] == "Emergency")
 
     def raise_hazard(self, user, case_id, category, priority, note="", metadata=None):
+        _forbid_sensor_actor(user)
         controls.require_role(user, projection.STAFF_ROLES, "authorised staff")
+        _forbid_sensor_authority(note, metadata)
         if category not in HAZARD_CATEGORIES or priority not in HAZARD_PRIORITIES:
             raise ValueError("Choose the reported observation and urgency from the lists.")
         metadata = metadata or {}
@@ -1022,7 +1073,9 @@ class WorkflowMixin:
             return len(c["hazards"]) - 1
 
     def refer_hazard(self, user, case_id, idx, to_email, job, metadata=None):
+        _forbid_sensor_actor(user)
         controls.require_role(user, projection.STAFF_ROLES, "authorised staff")
+        _forbid_sensor_authority(job, metadata)
         job = controls.text(job, "the external hazard or repair case reference", 40)
         evidence = controls.evidence_text((metadata or {}).get("evidence"), "evidence of sending the referral")
         with hazard.decision_scope(self, user, case_id) as (c, user):
@@ -1054,6 +1107,8 @@ class WorkflowMixin:
         return h
 
     def receive_hazard(self, user, case_id, idx, evidence):
+        _forbid_sensor_actor(user)
+        _forbid_sensor_authority(evidence)
         evidence = controls.evidence_text(evidence, "the external receipt evidence")
         with hazard.decision_scope(self, user, case_id) as (c, user):
             h = self._hazard_receiver(c, idx, user)
@@ -1063,6 +1118,8 @@ class WorkflowMixin:
             self._hazard_event(c, h, user, "safety_received", evidence)
 
     def accept_hazard(self, user, case_id, idx, evidence):
+        _forbid_sensor_actor(user)
+        _forbid_sensor_authority(evidence)
         evidence = controls.evidence_text(evidence, "the external acceptance evidence")
         with hazard.decision_scope(self, user, case_id) as (c, user):
             h = self._hazard_receiver(c, idx, user)
@@ -1073,6 +1130,9 @@ class WorkflowMixin:
             self._hazard_event(c, h, user, "safety_accepted", evidence)
 
     def observe_hazard_times(self, user, case_id, idx, metadata):
+        _forbid_sensor_actor(user)
+        metadata = metadata or {}
+        _forbid_sensor_authority(metadata)
         evidence = controls.evidence_text(metadata.get("evidence"), "the external service timing evidence")
         fields = ("response_due_at", "responded_at", "resident_update_due_at", "resident_updated_at")
         times = {k: _hazard_time(metadata[k], k, actual=k in ("responded_at", "resident_updated_at"))
@@ -1091,6 +1151,8 @@ class WorkflowMixin:
             self._hazard_event(c, h, user, "safety_times_observed", evidence)
 
     def record_repair(self, user, case_id, idx, evidence=None):
+        _forbid_sensor_actor(user)
+        _forbid_sensor_authority(evidence)
         evidence = controls.evidence_text(evidence, "the external repair evidence")
         with hazard.decision_scope(self, user, case_id) as (c, user):
             h = self._hazard_receiver(c, idx, user)
@@ -1104,8 +1166,10 @@ class WorkflowMixin:
             self._hazard_event(c, h, user, "safety_repaired", evidence)
 
     def release_hazard(self, user, case_id, idx, note="", evidence=None):
+        _forbid_sensor_actor(user)
         if user["role"] not in SAFETY_ROLES:
             raise PermissionError("Only the Building Safety Liaison or a manager can restart stopped retrofit work. Ask one of them to record the restart.")
+        _forbid_sensor_authority(note, evidence)
         note = controls.text(note, "the reason for restarting retrofit work")
         evidence = controls.evidence_text(evidence, "the external evidence supporting the restart")
         with hazard.decision_scope(self, user, case_id) as (c, user):
@@ -1114,6 +1178,8 @@ class WorkflowMixin:
                 raise ValueError("Retrofit work on this safety issue has already been restarted. Nothing more to do.")
             if any(controls.is_memory_reference(h.get(k)) for k in ("receipt_evidence", "acceptance_evidence", "repair_evidence")):
                 raise ValueError(controls.MEMORY_REFUSAL)
+            if any(controls.is_sensor_reference(h.get(k)) for k in ("source", "note", "job", "sent_evidence", "receipt_evidence", "acceptance_evidence", "repair_evidence")):
+                raise ValueError(controls.SENSOR_REFUSAL)
             if not h.get("repair_evidence") or not h.get("accepted_at"):
                 raise ValueError(
                     "Retrofit work cannot restart yet. Receipt, acceptance and external repair "

@@ -108,6 +108,9 @@ def sql_key(c, policy=CURRENT):
         "case_id": lambda: c["id"],
     }
     codes = [r["code"] for r in policy["rules"]]
+    unknown = [k for k in codes if k not in seg]
+    if unknown:
+        raise ValueError(f"Unknown ranking rule: {', '.join(unknown)}")
     if "case_id" not in codes:
         codes.append("case_id")
     return "".join(seg[k]() for k in codes)

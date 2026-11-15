@@ -25,6 +25,7 @@ EXERCISE_LABEL = "EXERCISE VALUE: fictional, not sourced"
 RULE_ID = "SENSOR-RH-PERSISTENCE-EXERCISE"
 TASK_TYPE = "SENSOR_REVIEW_DUE"
 TASK_QUEUE = "condition-assessment"
+SENSOR_NON_AUTHORITY_ERROR = "SENSOR_NON_AUTHORITY_VIOLATION"
 NO_SIGNAL = comparator.NO_SIGNAL
 REVIEW = comparator.REVIEW
 INSUFFICIENT = comparator.INSUFFICIENT
@@ -102,6 +103,15 @@ class AnalysisPolicy:
         )
 
 
+def _strict_bool(value: object, expected: bool) -> bool:
+    return type(value) is bool and value is expected
+
+
+_AUTHORITY_FALSE_FLAGS = ("diagnoses_hazard", "starts_clock", "releases_hold", "changes_ranking")
+_AUTHORITY_TRUE_FLAGS = ("resident_report_unaffected",)
+_AUTHORITY_STR_VALUES = (("priority_effect", "NONE"),)
+
+
 @dataclass(frozen=True)
 class Signal:
     home_id: str
@@ -122,6 +132,10 @@ class Signal:
     input_digest: str
     priority_effect: str = "NONE"
     diagnoses_hazard: bool = False
+
+    def __post_init__(self) -> None:
+        if self.priority_effect != "NONE" or not _strict_bool(self.diagnoses_hazard, False):
+            raise ValueError(SENSOR_NON_AUTHORITY_ERROR)
 
 
 @dataclass(frozen=True)
@@ -144,6 +158,64 @@ class ReviewTaskCandidate:
     starts_clock: bool = False
     releases_hold: bool = False
     diagnoses_hazard: bool = False
+
+    def __post_init__(self) -> None:
+        if (
+            self.task_type != TASK_TYPE
+            or self.queue != TASK_QUEUE
+            or self.status != "PROPOSED"
+            or not _strict_bool(self.resident_report_unaffected, True)
+            or any(not _strict_bool(getattr(self, f), False) for f in _AUTHORITY_FALSE_FLAGS)
+        ):
+            raise ValueError(SENSOR_NON_AUTHORITY_ERROR)
+
+
+def enforce_sensor_non_authority(value: object) -> None:
+    """Fail closed if a sensor value object, receipt, or serialized payload claims authority."""
+    if isinstance(value, (Signal, ReviewTaskCandidate)):
+        value.__post_init__()
+        return
+    if not isinstance(value, Mapping):
+        if all(hasattr(value, f) for f in _AUTHORITY_FALSE_FLAGS):
+            if any(not _strict_bool(getattr(value, f), False) for f in _AUTHORITY_FALSE_FLAGS):
+                raise ValueError(SENSOR_NON_AUTHORITY_ERROR)
+            for str_field, expected in _AUTHORITY_STR_VALUES:
+                if hasattr(value, str_field) and getattr(value, str_field) != expected:
+                    raise ValueError(SENSOR_NON_AUTHORITY_ERROR)
+            for true_field in _AUTHORITY_TRUE_FLAGS:
+                if hasattr(value, true_field) and not _strict_bool(
+                    getattr(value, true_field), True
+                ):
+                    raise ValueError(SENSOR_NON_AUTHORITY_ERROR)
+            return
+        raise ValueError(SENSOR_NON_AUTHORITY_ERROR)
+    is_candidate = any(k in value for k in ("task_type", "queue", "resident_report_unaffected"))
+    is_signal = "priority_effect" in value and "diagnoses_hazard" in value
+    has_all_flags = all(f in value for f in _AUTHORITY_FALSE_FLAGS)
+    if not (is_candidate or is_signal or has_all_flags):
+        raise ValueError(SENSOR_NON_AUTHORITY_ERROR)
+    if is_candidate and (
+        value.get("task_type") != TASK_TYPE
+        or value.get("queue") != TASK_QUEUE
+        or ("status" in value and value.get("status") != "PROPOSED")
+        or not _strict_bool(value.get("resident_report_unaffected"), True)
+        or any(not _strict_bool(value.get(f), False) for f in _AUTHORITY_FALSE_FLAGS)
+    ):
+        raise ValueError(SENSOR_NON_AUTHORITY_ERROR)
+    if is_signal and (
+        value.get("priority_effect") != "NONE"
+        or not _strict_bool(value.get("diagnoses_hazard"), False)
+    ):
+        raise ValueError(SENSOR_NON_AUTHORITY_ERROR)
+    for flag in _AUTHORITY_FALSE_FLAGS:
+        if flag in value and not _strict_bool(value.get(flag), False):
+            raise ValueError(SENSOR_NON_AUTHORITY_ERROR)
+    if "priority_effect" in value and value.get("priority_effect") != "NONE":
+        raise ValueError(SENSOR_NON_AUTHORITY_ERROR)
+    if "resident_report_unaffected" in value and not _strict_bool(
+        value.get("resident_report_unaffected"), True
+    ):
+        raise ValueError(SENSOR_NON_AUTHORITY_ERROR)
 
 
 @dataclass(frozen=True)
@@ -463,6 +535,7 @@ def review_task_candidate(
     signal: Signal, policy: AnalysisPolicy | None = None
 ) -> ReviewTaskCandidate | None:
     """Propose a human review task only for a sufficient review signal under an approved rule."""
+    enforce_sensor_non_authority(signal)
     policy = policy or AnalysisPolicy()
     policy.validate()
     if (
@@ -511,6 +584,9 @@ def version_provenance(
     candidate: ReviewTaskCandidate | None | _Unset = _UNSET,
 ) -> VersionProvenance:
     """Build explicit version, policy, approval, window, and digest provenance for a signal."""
+    enforce_sensor_non_authority(signal)
+    if not isinstance(candidate, _Unset) and candidate is not None:
+        enforce_sensor_non_authority(candidate)
     effective = policy or AnalysisPolicy()
     effective.validate()
     if (

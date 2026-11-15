@@ -29,6 +29,7 @@ import urllib.parse
 import xml.etree.ElementTree as ET
 from datetime import date, datetime, timedelta
 
+from . import controls
 from .documents import AzureBlobDocumentStore, DocumentStoreError
 
 SYNTHETIC = "synthetic-demo"
@@ -140,6 +141,12 @@ class DocControlsMixin:
     """Mixed into Store. Needs self.docstore, self.scanner, self.audit, self.save, self.lock and self._case."""
 
     def _manager(self, user, what):
+        if isinstance(user, dict) and (
+            any(k in user for k in ("sensor_id", "reading_id", "sensor_signal", "sensor_review_draft"))
+            or str(user.get("source_type") or "").upper() in ("SENSOR", "IOT_HUB", "TELEMETRY")
+            or any(controls.is_sensor_reference(user.get(k)) for k in ("email", "name", "code"))
+        ):
+            raise PermissionError(controls.SENSOR_REFUSAL)
         if user is None or user.get("role") not in MANAGER_ROLES:
             raise PermissionError(f"Only a programme manager can {what}.")
 
@@ -218,7 +225,11 @@ class DocControlsMixin:
     # ---- legal hold
     def place_legal_hold(self, user, case_id, reference):
         self._manager(user, "place a legal hold")
+        if not isinstance(reference, str) and reference is not None:
+            raise ValueError(controls.SENSOR_REFUSAL)
         ref = (reference or "").strip()
+        if controls.is_sensor_reference(ref):
+            raise ValueError(controls.SENSOR_REFUSAL)
         if not HOLD_REF.match(ref):
             raise ValueError("Give a short reference (letters, numbers and simple punctuation), not case details.")
         with self.lock:
@@ -235,6 +246,8 @@ class DocControlsMixin:
             c = self._case(case_id)
             if not (c.get("legal_hold") or {}).get("active"):
                 raise ValueError("There is no legal hold on this case.")
+            if controls.is_sensor_reference((c.get("legal_hold") or {}).get("reference")):
+                raise ValueError(controls.SENSOR_REFUSAL)
             c["legal_hold"] = dict(c["legal_hold"], active=False, released_by=user["name"], released_at=date.today().isoformat())
             self.audit(user["email"], "legal_hold_released", case_id, c["legal_hold"]["reference"])
             self.save()
