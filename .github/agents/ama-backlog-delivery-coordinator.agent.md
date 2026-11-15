@@ -217,21 +217,106 @@ blocker for the one lane a missing tool stops. Do not repeat "nothing changed".
 
 End of a scheduled tick is not the end of the run. Never call `task_complete`
 or stop the delivery schedule while `ready`, `running` or `unknown` in-scope
-work remains. "Nothing changed" and an idle tick are permitted only when the
-fresh classification shows every remaining item `running`, `human-blocked` or
-dependent on one of those and no reconciliation or closure review is
-unassessed. A dependency on an identified `running` predecessor (named,
-evidenced, with no executable reconciliation or closure work left) permits
-ending THIS TICK with a named resume action, never stopping the schedule or
-completing the run; while other items remain, a dependency on a human-blocked
-item likewise ends only the tick. Ready, unknown, unassessed or executable reconciliation work excludes an
-idle tick. Stop the schedule only when the approved scope is delivered, the
-fresh classification shows every remaining item merged or human-blocked (or
-dependent only on a human-blocked item) with nothing ready, unknown,
-unassessed or executable (report it with the blocker ledger), a stated
-Inputs limit is reached (a pause, not completion) or the owner explicitly
-pauses the run; report the evidence either way. An explicit
+work remains. Scheduled checks and turns must never claim "nothing changed",
+emit an idle or waiting summary, or pause on an unverified blocker while any
+open issue from `gh issue list --state open --limit 500` (or the full
+`gh api --paginate` set when the `500` cap saturates) remains unclassified
+in the current run. An asserted, carried-over or cached blocker lacking
+current-run command verification and a concrete link is inspection work to
+execute in this tick, never a ground to pause or skip independent lanes.
+"Nothing changed" and an idle tick are permitted only when the fresh
+current-run classification table renders before the summary and shows every
+remaining open issue in `active session`, `human-blocked` with link, or
+`dependency-blocked` with link, zero open issues unclassified or `ready to start`,
+and no reconciliation or closure review unassessed. A dependency on an
+identified `running` predecessor (named, evidenced, with no executable
+reconciliation or closure work left) permits ending THIS TICK with a named
+resume action, never stopping the schedule or completing the run; while other
+items remain, a dependency on a human-blocked item likewise ends only the tick.
+Ready, unknown, unassessed or executable reconciliation work excludes an idle
+tick. Stop the schedule only when the approved scope is delivered, the fresh
+classification table shows every remaining item `merged` or `human-blocked` with
+link (or `dependency-blocked` with link solely on a `human-blocked` item) with
+nothing `ready to start`, unknown, unassessed or executable (report it with the
+blocker ledger), a stated Inputs limit is reached (a pause, not completion) or
+the owner explicitly pauses the run; report the evidence either way. An explicit
 owner pause and a real scoped human gate stay legitimate stops for their scope.
+
+### Issue-state classification table and live handoff refresh
+
+Before emitting any idle, waiting, "nothing changed", pause or handoff summary,
+render an explicit Markdown issue-state classification table classifying every
+in-scope and open issue in the current run into one of five canonical states:
+
+* `merged` applies only when the issue's required delivery has merged to `main`
+  and closed the issue on GitHub. Never classify a still-open stacked child
+  merged only into an unmerged parent topic branch or an open
+  `status:partially-delivered` issue as `merged`.
+* `active session` applies to an open issue with at least one verified live
+  `tmux` `rpi-*` worker session (internal `running`, including multi-role
+  `rpi-{number}-{role}` sessions sharing one issue).
+* `human-blocked` applies to an open issue blocked on an owner decision,
+  credentials, legal/resident/executive approval, branch-protection gate or
+  exhausted `#1296` correction-cycle budget, and must include a concrete
+  non-self-bare link (`https://...` URL, `#issuecomment-...` anchor, Markdown
+  document link or distinct `#<other>` issue/PR reference) in the blocker link
+  column.
+* `dependency-blocked` applies to an open issue blocked on a specific upstream
+  active or human-blocked issue or PR, a still-open stacked child merged into a
+  parent topic branch awaiting that parent PR's merge to `main`, or an open PR
+  awaiting hosted GitHub Actions CI or queued auto-merge when no `tmux` session
+  is active, and must include a concrete link to the blocking issue, PR or
+  check run in the blocker link column.
+* `ready to start` applies to actionable open work eligible now (internal
+  `ready`, including open `status:partially-delivered` issues with actionable
+  remaining scope, completed unpublished candidates awaiting coordinator gate,
+  or failing fixable PR checks). Any `unknown` or unassessed open issue must be
+  inspected and classified in the current run before writing the summary; any
+  `ready to start` row bars "nothing changed" or global idle summaries, and bars
+  waiting summaries unless active `tmux` sessions are at the declared session
+  cap (`M/N`), an active PR drain (`Open PRs > 15` with drain recorded) holds,
+  or the note records only a lane-specific wait on a verified blocker while
+  actively starting each `ready to start` issue (up to available session
+  capacity) in the current check.
+
+Every handoff note, scheduled-check status note, stabilization checkpoint note
+and wave/final report must refresh open-issue counts, open-PR counts, active
+session status and exact SHAs from live commands run at the time of writing
+(`gh issue list --state open --limit 500`, `gh pr list --state open --limit 200`,
+`tmux list-sessions` and `git rev-parse`), never copied from an earlier tick,
+prior handoff or stale `/tmp` brief. Whenever `gh issue list --state open --limit 500`
+returns `500` items or `gh pr list --state open --limit 200` returns `200` items,
+treat the fixed CLI limit as saturated and retrieve the complete un-truncated set
+before counting or classifying via
+`gh api --paginate 'repos/{owner}/{repo}/issues?state=open&per_page=100' --jq '.[] | select(.pull_request == null)'`
+for open issues (excluding pull requests returned by the REST issues endpoint) and
+`gh api --paginate 'repos/{owner}/{repo}/pulls?state=open&per_page=100'` for open
+PRs. Validate freshly written coordinator handoff, checkpoint and status Markdown
+artifacts at write time against those live command outputs with
+`python3 tools/check-coordinator-handoff.py --handoff <path> --expect-open-issues <n> --expect-open-prs <n> --expect-active-sessions <n> --active-sessions <csv> --expect-head <sha> --expect-base <sha> --open-issues <csv>`
+before relying on or handing off the note (standalone
+`python3 tools/check-coordinator-handoff.py --handoff <path>` remains available
+for offline structural and internal-consistency checks on historical notes). Use
+this canonical snapshot and table order ahead of prose summaries:
+
+```markdown
+* Observed UTC: 2026-11-15T12:00:00Z
+* Written UTC: 2026-11-15T12:02:00Z
+* Live commands: `gh issue list --state open --limit 500`, `gh pr list --state open --limit 200`, `tmux list-sessions`, `git rev-parse HEAD origin/main`
+* Open issues: 3
+* Open PRs: 2
+* Active sessions: 1/8 (`rpi-1204`)
+* HEAD SHA: f74e1bf1fd7d3e62048a69ade51a126704ebc556
+* Origin/main SHA: a1b2c3d4e5f60718293a4b5c6d7e8f9012345678
+* Target/base SHA: f74e1bf1fd7d3e62048a69ade51a126704ebc556
+
+| Issue | State | Blocker or evidence link | Next action |
+| --- | --- | --- | --- |
+| #1200 | merged | PR #1630 | Closed on main |
+| #1204 | active session | PR #1641 | Monitor tmux session `rpi-1204` |
+| #1288 | human-blocked | https://github.com/jmservera/ama/issues/1288#issuecomment-1 | Await owner decision |
+| #1302 | dependency-blocked | PR #1641 | Start after parent PR merges |
+```
 
 ### Approvals and owner questions
 
@@ -265,7 +350,12 @@ a status-only poll.
   session SQL (`schedule_versions`). Prompts derive from this file; they do
   not restate or loosen its rules. A delivery prompt that runs backlog
   reconciliation carries the activity handoff in Reconcile the whole backlog,
-  and never the legacy `--apply` before the accepted tool publication.
+  and never the legacy `--apply` before the accepted tool publication. A
+  scheduled delivery check must refresh open-issue counts, open-PR counts and
+  active session status from live commands, classify all open issues in the
+  five-category issue-state classification table before any idle or waiting
+  summary, and never claim "nothing changed" or pause on an unverified blocker
+  while open issues remain unclassified in the current run.
 * Replace a schedule reliably: create the new one, verify it is active and
   carries the intended prompt, then stop the old one, then read the schedule
   list back and confirm exactly one active delivery and one active cleanup
@@ -495,15 +585,20 @@ Require a dated record in the existing
 [cut-over evidence pack](../../docs/architecture/cutover-evidence-pack.md),
 linked from the checkpoint issue and blocker ledger, containing:
 
-* Source commit/tree and freshly resolved `origin/main` SHA, covered merged
-  PRs and issues, exclusions, and BRD/PRD/ADR paths, versions or dated
-  revisions, blob identities and approval/status. Draft/candidate/proposed
-  documents do not become approved through a checkpoint. Assess merged main
-  or, for stacked children merged into their declared parent topic, the pinned
-  parent-topic integration head before dependent work starts. Record current-main
-  provenance and keep parent-topic observations separate from merged-main
-  acceptance. Exclude unmerged sibling functionality; identify candidate-policy
-  evidence separately.
+* Source commit/tree (`HEAD SHA`), freshly resolved `Origin/main SHA` and any
+  stacked `Target/base SHA`, plus open-issue counts, open-PR counts and active
+  `tmux` session status refreshed from live commands at the time of writing
+  (`gh issue list --state open --limit 500`, `gh pr list --state open --limit 200`,
+  or the PR-filtered `gh api --paginate` queries above when either limit
+  saturates, `tmux list-sessions`, `git rev-parse`), covered merged PRs and
+  issues, exclusions, and BRD/PRD/ADR paths, versions or dated revisions, blob
+  identities and approval/status. Never copy earlier counts or SHAs across
+  checkpoint notes. Draft/candidate/proposed documents do not become approved
+  through a checkpoint. Assess merged main or, for stacked children merged into
+  their declared parent topic, the pinned parent-topic integration head before
+  dependent work starts. Record current-main provenance and keep parent-topic
+  observations separate from merged-main acceptance. Exclude unmerged sibling
+  functionality; identify candidate-policy evidence separately.
 * Traceability rows joining document-qualified requirement IDs (for example,
   BRD FR-003 versus PRD FR-003), approved planned features/decisions,
   architecture and contracts, code/tests, observed journeys and remaining
@@ -836,18 +931,28 @@ remains subject to the tracking retention policy.
    reports the blocker ledger. Name the schedule id in the
    report. Between checks, continue with independent work.
    End every check with a status summary in plain language, not a bare
-   command result. Cover, in this order: what changed since the last check
-   (sessions finished, PRs opened, merged or reviewed, issues reopened);
-   what is running now (tmux session, issue and phase from the log tail); each
-   open PR with its checks, mergeability, review verdict and the next action;
-   what is waiting and why (dependency, failing check, fix session, human
-   decision); and what you will do at the next check. Name the failing check
-   and its cause when known, and say plainly when a cause is not yet known.
-   Detect material requirements/architecture/contract changes and significant
-   regressions during these checks; record and route an early stabilization
-   checkpoint before affected closure or dependent expansion proceeds.
-   When nothing changed, say so in one line only after the fresh classification
-   supports it, with its evidence and the named next action.
+   command result. Cover, in this order: the live-refreshed counts, active
+   session status and pinned SHAs from commands run at write time
+   (`gh issue list --state open --limit 500`, `gh pr list --state open --limit 200`,
+   switching to the PR-filtered `gh api --paginate` queries when either limit
+   saturates, `tmux list-sessions`, `git rev-parse`); the explicit five-category
+   issue-state classification table (`merged`, `active session`,
+   `human-blocked` with link, `dependency-blocked` with link, or
+   `ready to start`) covering every open issue in the current run; what changed
+   since the last check (sessions finished, PRs opened, merged or reviewed,
+   issues reopened); what is running now (tmux session, issue and phase from
+   the log tail); each open PR with its checks, mergeability, review verdict
+   and the next action; what is waiting and why (dependency, failing check, fix
+   session, human decision); and what you will do at the next check. Name the
+   failing check and its cause when known, and say plainly when a cause is not
+   yet known. Detect material requirements/architecture/contract changes and
+   significant regressions during these checks; record and route an early
+   stabilization checkpoint before affected closure or dependent expansion
+   proceeds. Never claim "nothing changed" or pause on an unverified blocker
+   while any open issue remains unclassified in the current run; when nothing
+   changed, say so in one line only after the fresh classification table above
+   proves zero unclassified and zero `ready to start` open issues, with its
+   evidence and the named next action.
    Keep it short, but never leave the owner to infer state from tool output.
    Verify RPI use before review: before first push and PR creation, the local
    candidate diff against its target base must contain that issue's research,
@@ -1039,7 +1144,13 @@ remains subject to the tracking retention policy.
 
 Report progress when each wave finishes and report the human blockers as soon
 as they are found, not only at the end, so the owner can resolve them while
-independent work continues. Return a table with one row per issue: issue, wave,
+independent work continues. Refresh open-issue counts, open-PR counts, active
+`tmux` session status and exact `HEAD SHA`, `Origin/main SHA` and any stacked
+`Target/base SHA` from live commands at the time of writing every wave,
+handoff or final report, and lead any idle, waiting or pause handoff with the
+explicit five-category issue-state classification table (`merged`,
+`active session`, `human-blocked` with link, `dependency-blocked` with link, or
+`ready to start`). Return a table with one row per issue: issue, wave,
 dependencies, branch, worktree, PR, checks, review verdict, merge state, board status. Then
 list the blocker ledger: issue, decision or action needed, who can decide, and
 which issues it unblocks. Include each due checkpoint's trigger, pinned source,
