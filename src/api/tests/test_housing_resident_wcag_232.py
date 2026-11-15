@@ -162,6 +162,22 @@ async function verifyRouter() {
       'isRoleScreensDestination("#/role/resident_engagement?case=C-1")',
       context
     ),
+    programmeBare: vm.runInContext(
+      'isRoleScreensDestination("#/role/programme_manager")',
+      context
+    ),
+    programmeQuery: vm.runInContext(
+      'isRoleScreensDestination("#/role/programme_manager?case=C-1&page=1")',
+      context
+    ),
+    coordinatorBare: vm.runInContext(
+      'isRoleScreensDestination("#/role/retrofit_coordinator")',
+      context
+    ),
+    coordinatorQuery: vm.runInContext(
+      'isRoleScreensDestination("#/role/retrofit_coordinator?case=C-1")',
+      context
+    ),
     unknownRole: vm.runInContext('isRoleScreensDestination("#/role/unknown")', context),
     protoRole: vm.runInContext('isRoleScreensDestination("#/role/toString")', context),
   };
@@ -281,7 +297,19 @@ async function runHostScenario(opts) {
       shownSnapshots.push(nodes);
     },
   });
-  vm.runInContext(roleSource + "\n;globalThis.__screens = roleScreens;", context);
+  vm.runInContext(
+    roleSource +
+      "\n;globalThis.__screens = roleScreens;" +
+      "globalThis.__roleHashScreens = ROLE_HASH_SCREENS;" +
+      "globalThis.__programmeOverviewSections = programmeOverviewSections;",
+    context
+  );
+  const registeredScreenIds = Array.from(context.__screens.keys());
+  const roleHashScreens = Object.assign({}, context.__roleHashScreens);
+  const programmeOverviewSectionIds = Array.from(
+    context.__programmeOverviewSections,
+    ([sectionId]) => sectionId
+  );
   if (opts.clearScreens) {
     vm.runInContext("roleScreens.clear();", context);
   }
@@ -361,6 +389,9 @@ async function runHostScenario(opts) {
     jumpTests,
     abortedError,
     truncatedTable,
+    registeredScreenIds,
+    roleHashScreens,
+    programmeOverviewSectionIds,
   };
 }
 
@@ -884,10 +915,26 @@ class HousingResidentWcag232Tests(unittest.TestCase):
             "contactQuery",
             "engagementBare",
             "engagementQuery",
+            "programmeBare",
+            "programmeQuery",
+            "coordinatorBare",
+            "coordinatorQuery",
         ):
             self.assertTrue(checks[key], key)
         self.assertFalse(checks["unknownRole"])
         self.assertFalse(checks["protoRole"])
+
+        coexistence = self.data["contactUnselected"]
+        for screen_id in ("programme-queue", "resident-choice", "resident-service-issues"):
+            self.assertIn(screen_id, coexistence["registeredScreenIds"])
+        role_hash_screens = coexistence["roleHashScreens"]
+        self.assertEqual(role_hash_screens.get("#/role/housing_officer"), "resident-service-issues")
+        self.assertEqual(role_hash_screens.get("#/role/contact_centre"), "resident-service-issues")
+        self.assertEqual(role_hash_screens.get("#/role/resident_engagement"), "resident-choice")
+        self.assertEqual(role_hash_screens.get("#/role/programme_manager"), "programme-queue")
+        self.assertEqual(role_hash_screens.get("#/role/retrofit_coordinator"), "programme-queue")
+        for overview_id in ("programme-shared-queue", "programme-funnel"):
+            self.assertIn(overview_id, coexistence["programmeOverviewSectionIds"])
 
         for group in (router["staffScripts"], router["contractorScripts"]):
             for route_key, scripts in group.items():

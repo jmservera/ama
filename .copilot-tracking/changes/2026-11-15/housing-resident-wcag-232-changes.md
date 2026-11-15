@@ -94,3 +94,8 @@ Completed full-plan implementation for GitHub Issue #232 (*Housing officer and r
 * Follow-up items: Human AT/mobile walkthrough (#151/#155) and full-tier `specialist_keyboard_browser_check.py` update (#1294)
 * Review readiness or no-handoff reason: Ready for single-pass `rpi-review`
 * Continuation owner: parent (confirmed automatic RPI Agent)
+
+## Post-Rebase Verification Addendum (Cycle 1 `housing-resident-wcag-232-c1`)
+
+* Rebased `feat/ux-232-resident-wcag` (`e2528cc63` and `af9fcb891`) onto `origin/feat/demo-233-same-home-tensions-0825` (`6510b6fbc`, including merged `PR #1784` for Issue #230), resolving `isRoleScreensDestination` in `src/api/src/zava_forward/api/web/app.js` across `#/screens` and all nine `#/role/*` routes while preserving 100% of `#230` (`programme-shared-queue`, `programme-funnel` ["Lifecycle and funnel"], `programme-queue`) and `#232` (`resident-choice`, `resident-service-issues`, `residentPanel`, `#/role/contact_centre`, `#workspace-status`, `section#screen-evidence` landmarks/cues).
+* Combined verification passed (`64` Focused unit tests across `test_housing_resident_wcag_232.py`, `test_programme_coordinator_wcag_230.py`, `test_accessibility_baseline.py`, `test_content_standard.py`, and `test_procurement_contractor_screen_wcag.py`; `65` coupled specialist WCAG tests; `ruff check`; `ruff format --check`; strict `mypy` across `294` files; and `25` `rename-zava-tests.py` tests). Full Cycle 1 artifacts are recorded under `.copilot-tracking/*/*/housing-resident-wcag-232-c1-*`.
