@@ -415,8 +415,13 @@ class ChallengeNoRetaliationApi220Tests(unittest.TestCase):
             ch2["non_retaliation_assurance"],
             build_non_retaliation_assurance(hazard_concern=True, independent_hazard_routed=True),
         )
-        self.assertEqual(len(res2["hazards"]), 3)
-        self.assertEqual(res2["hazards"][:2], hazards_before)
+        base_hazards = [h for h in hazards_before if not h.get("standalone_safeguarding")]
+        base_sg_views = [h for h in hazards_before if h.get("standalone_safeguarding")]
+        after_hazards = [h for h in res2["hazards"] if not h.get("standalone_safeguarding")]
+        after_sg_views = [h for h in res2["hazards"] if h.get("standalone_safeguarding")]
+        self.assertEqual(len(after_hazards), len(base_hazards) + 1)
+        self.assertEqual(after_hazards[: len(base_hazards)], base_hazards)
+        self.assertEqual(after_sg_views, base_sg_views)
         self.assertEqual(res2["safeguarding"], safeguarding_before)
         self.assertEqual(res2["tasks"], tasks_before)
         self.assertEqual(res2["service_requests"], service_before)
@@ -570,8 +575,13 @@ class ChallengeNoRetaliationApi220Tests(unittest.TestCase):
 
         code, case_after = self.call("/api/cases/ZF-1", "sam")
         self.assertEqual(code, 200)
-        self.assertEqual(len(case_after["hazards"]), 3)
-        self.assertEqual(case_after["hazards"][:2], hazards_before)
+        base_hazards = [h for h in hazards_before if not h.get("standalone_safeguarding")]
+        base_sg_views = [h for h in hazards_before if h.get("standalone_safeguarding")]
+        after_hazards = [h for h in case_after["hazards"] if not h.get("standalone_safeguarding")]
+        after_sg_views = [h for h in case_after["hazards"] if h.get("standalone_safeguarding")]
+        self.assertEqual(len(after_hazards), len(base_hazards) + 1)
+        self.assertEqual(after_hazards[: len(base_hazards)], base_hazards)
+        self.assertEqual(after_sg_views, base_sg_views)
 
         # Resolve as Correction recorded -> 200, proposal becomes stale & non-actionable;
         # stale revision -> 409; unauthorized role -> 403; reopen -> 200 keeping stale=True!
