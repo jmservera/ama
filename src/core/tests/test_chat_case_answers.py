@@ -1,7 +1,10 @@
 import unittest
+from unittest.mock import MagicMock
 
 from zava_forward.core import chat_case_answers as cca
-from zava_forward.core.chat_case_answers import answer, case_facts, intent
+from zava_forward.core.chat_case_answers import answer, case_facts, intent, sensor_facts
+from zava_forward.core.chat_isolation import ChatIsolation
+from zava_forward.core.chat_panel import ChatPanel
 
 
 def _detail(count: int) -> dict[str, object]:
@@ -140,6 +143,150 @@ class DomainAnswerTests(unittest.TestCase):
         _, text, cites = answer("ZF-1", "What is the grant claim position?", {"stage": "Survey"})
         self.assertIn("A person decides.", text)
         self.assertIn(cca.DOMAIN_BOUNDARY, cites)
+
+    def test_sensor_conflict_preempts_damp_fallback_while_missing_reading_delegates_to_damp(
+        self,
+    ) -> None:
+        detail: dict[str, object] = dict(
+            stage="Quality",
+            hazards=[dict(category="Damp and mould", owner="Safety lead", state="open")],
+            sensor_review_drafts=[dict(task_key="quality.sensor_review", state="pending")],
+        )
+        base = case_facts(detail, reason_visible=True)
+        conflict_facts = {
+            **base,
+            **sensor_facts(
+                dict(
+                    state="ok",
+                    conflict_notice="Two retained readings at 2026-11-14T10:00:00Z disagree.",
+                    grounding=dict(
+                        not_retained_text="mould_risk_index is not retained on the case record."
+                    ),
+                )
+            ),
+        }
+        kind, text, cites = answer("ZF-1", "What are the sensor readings?", conflict_facts)
+        self.assertEqual(kind, "answer")
+        self.assertIn("Retained sensor readings conflict, so no single value is selected.", text)
+        self.assertNotIn("No retained sensor reading is shown", text)
+        self.assertNotIn("[Origin: decision_rule]", text)
+        self.assertIn("ZF-1/sensor.conflict", cites)
+        self.assertIn("ZF-1/sensor.not_retained", cites)
+        self.assertNotIn("ZF-1/sensor.detail", cites)
+        self.assertNotIn(cca.DOMAIN_BOUNDARY, cites)
+
+        declined_facts = {
+            **base,
+            **sensor_facts(
+                dict(
+                    state="withheld",
+                    detail="Monitoring consent is declined; no values are shown.",
+                    grounding={},
+                )
+            ),
+        }
+        kind2, text2, cites2 = answer("ZF-1", "What are the sensor readings?", declined_facts)
+        self.assertEqual(kind2, "answer")
+        self.assertIn(
+            "No retained sensor reading is shown for this case. "
+            "Monitoring consent is declined; no values are shown.",
+            text2,
+        )
+        self.assertIn("[Origin: decision_rule]", text2)
+        self.assertIn("ZF-1/sensor.detail", cites2)
+        self.assertIn("ZF-1/hazards.0.category", cites2)
+        self.assertIn("ZF-1/sensor.0.state", cites2)
+        self.assertIn(cca.DOMAIN_BOUNDARY, cites2)
+
+    def test_sensor_rules_answer_preserves_skill_lens_and_citation_kinds(self) -> None:
+        detail: dict[str, object] = dict(
+            stage="Quality",
+            hazards=[dict(category="Damp and mould", owner="Safety lead", state="open")],
+            sensor_review_drafts=[dict(task_key="quality.sensor_review", state="pending")],
+        )
+        base = case_facts(detail, reason_visible=True)
+        user: dict[str, object] = {"id": "emp-1", "role": "quality"}
+        iso = MagicMock(spec=ChatIsolation)
+        iso.current_user.return_value = user
+        panel = ChatPanel(iso)
+
+        iso.case_facts.return_value = {
+            **base,
+            **sensor_facts(
+                dict(
+                    state="ok",
+                    conflict_notice="Two retained readings at 2026-11-14T10:00:00Z disagree.",
+                    grounding=dict(
+                        not_retained_text="mould_risk_index is not retained on the case record."
+                    ),
+                )
+            ),
+        }
+        conflict_res = panel._rules_answer(
+            user, "ZF-1", "What are the sensor readings?", "funding-evidence"
+        )
+        assert conflict_res is not None
+        c_body, c_cites, c_pool = conflict_res
+        self.assertIn("Retained sensor readings conflict, so no single value is selected.", c_body)
+        self.assertIn("ZF-1/sensor.conflict", c_cites)
+        self.assertNotIn("ZF-1/sensor.detail", c_cites)
+        self.assertEqual(set(c_cites), set(c_pool))
+        self.assertEqual(ChatPanel._source_kind("ZF-1/sensor.conflict"), "decision-rule")
+
+        iso.case_facts.return_value = {
+            **base,
+            **sensor_facts(
+                dict(
+                    state="withheld",
+                    detail="Monitoring consent is declined; no values are shown.",
+                    grounding={},
+                )
+            ),
+        }
+        fallback_res = panel._rules_answer(
+            user, "ZF-1", "What are the sensor readings?", "funding-evidence"
+        )
+        assert fallback_res is not None
+        f_body, f_cites, f_pool = fallback_res
+        self.assertIn("No retained sensor reading is shown for this case.", f_body)
+        self.assertIn("ZF-1/sensor.detail", f_cites)
+        self.assertIn("ZF-1/hazards.0.category", f_cites)
+        self.assertIn("ZF-1/sensor.0.state", f_cites)
+        self.assertIn(cca.DOMAIN_BOUNDARY, f_cites)
+        self.assertEqual(set(f_cites), set(f_pool))
+        self.assertEqual(ChatPanel._source_kind("ZF-1/sensor.detail"), "case-record")
+        self.assertEqual(ChatPanel._source_kind("ZF-1/sensor.0.state"), "case-record")
+        self.assertEqual(ChatPanel._source_kind("ZF-1/hazards.0.category"), "decision-rule")
+        self.assertEqual(ChatPanel._source_kind(cca.DOMAIN_BOUNDARY), "workflow-rule")
+
+        iso.case_facts.return_value = {
+            **base,
+            **sensor_facts(
+                dict(
+                    state="ok",
+                    grounding=dict(
+                        citation="sensor:ZF-1:r1",
+                        values=dict(
+                            temperature_c="17.4",
+                            humidity_pct="72",
+                            observed_at="2026-11-14T10:00:00Z",
+                        ),
+                        source_text="Synthetic living-room logger (uncalibrated).",
+                        not_retained_text="mould_risk_index is not retained on the case record.",
+                    ),
+                )
+            ),
+        }
+        clean_res = panel._rules_answer(
+            user, "ZF-1", "What are the sensor readings?", "funding-evidence"
+        )
+        assert clean_res is not None
+        ok_body, ok_cites, ok_pool = clean_res
+        self.assertIn("Reading source: Synthetic living-room logger (uncalibrated).", ok_body)
+        self.assertIn("ZF-1/sensor.source", ok_cites)
+        self.assertEqual(set(ok_cites), set(ok_pool))
+        self.assertEqual(ChatPanel._source_kind("ZF-1/sensor.source"), "decision-rule")
+        self.assertEqual(ChatPanel._source_kind("ZF-1/sensor.latest.citation"), "case-record")
 
 
 if __name__ == "__main__":

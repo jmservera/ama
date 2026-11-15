@@ -308,6 +308,7 @@ def reading_text(reading: Mapping[str, Any]) -> str:
 
 def grounding(sensors: Mapping[str, Any] | None) -> dict[str, Any]:
     """Decision-rule text for the latest retained reading, naming what is not retained."""
+    clashes = list((sensors or {}).get("conflicting_readings") or [])
     latest = (sensors or {}).get("latest")
     out: dict[str, Any] = dict(
         origin="decision_rule",
@@ -317,11 +318,34 @@ def grounding(sensors: Mapping[str, Any] | None) -> dict[str, Any]:
             "for this home and are not shown or estimated."
         ),
     )
+    if clashes:
+        conflicting_citations = [
+            str(key) for clash in clashes for key in (clash.get("citation_keys") or [])
+        ]
+        joined = ", ".join(conflicting_citations)
+        return dict(
+            out,
+            citation=None,
+            values=None,
+            conflicting_citations=conflicting_citations,
+            text=(
+                "Retained readings disagree for the same sensor and time"
+                + (f" ({joined})" if joined else "")
+                + ". Do not pick one; use the ordinary quality check."
+            ),
+        )
     if not latest:
         return dict(out, citation=None, values=None, text="No retained reading is available.")
+    prov_class = str(latest.get("provenance_class") or "synthetic-unclassified")
+    prov_map = (sensors or {}).get("provenance") or {}
+    source_text = str(
+        prov_map.get(prov_class) or CLASSES.get(prov_class, CLASSES["synthetic-unclassified"])
+    )
     return dict(
         out,
         citation=key_of(latest),
+        provenance_class=prov_class,
+        source_text=source_text,
         values=dict(
             temperature_c=latest["temperature_c"],
             humidity_pct=latest["humidity_pct"],
@@ -329,6 +353,23 @@ def grounding(sensors: Mapping[str, Any] | None) -> dict[str, Any]:
         ),
         text=reading_text(latest),
     )
+
+
+def conflicts(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """Retained readings sharing a sensor and observation time but disagreeing on values."""
+    groups: dict[tuple[object, object], dict[tuple[object, object], Mapping[str, Any]]] = {}
+    for r in rows:
+        group = groups.setdefault((r["sensor_id"], r["observed_at"]), {})
+        group[(r["temperature_c"], r["humidity_pct"])] = r
+    return [
+        dict(
+            sensor_id=sensor_id,
+            observed_at=observed_at,
+            citation_keys=sorted(key_of(r) for r in group.values()),
+        )
+        for (sensor_id, observed_at), group in sorted(groups.items(), key=str)
+        if len(group) > 1
+    ]
 
 
 def citations(source: Mapping[str, Any]) -> dict[str, Any]:
@@ -445,6 +486,13 @@ def capture_source(
     rows = window + before + after
     out["provenance"] = {c: CLASSES[c] for c in _classes(rows)}
     out["citation_keys"] = sorted(citations(out))
+    clashes = conflicts(rows)
+    if clashes:
+        out["conflicting_readings"] = clashes
+        out["conflict_notice"] = (
+            "Retained readings disagree for the same sensor and time. Do not pick one; "
+            "route to a person."
+        )
     return {k: v for k, v in out.items() if v is not None or k == "latest"}
 
 
@@ -563,6 +611,12 @@ def trend_summary(
     except Exception:
         return _trend_base("Retained readings could not be read for the trend.")
     ordered = sorted(rows.values(), key=lambda r: (r["observed_at"], r["reading_id"]))
+    if conflicts(ordered):
+        clashed = _trend_base("Retained readings disagree for the same sensor and time.")
+        clashed.update(
+            sensor_id=sensor_id, readings_used=len(ordered), input_digest=rows_digest(ordered)
+        )
+        return clashed
     out = _trend_base("Fewer than 6 readings, or under 24 hours of readings, in the last 7 days.")
     out.update(sensor_id=sensor_id, readings_used=len(ordered), input_digest=rows_digest(ordered))
     if len(ordered) < 2 * TREND_MIN_SIDE:
@@ -629,7 +683,11 @@ def _view(
         out["trend"] = _trend_base(out["detail"])
         return out
     latest = out["latest"]
-    out["trend"] = trend_summary(db, home_id, latest["sensor_id"] if latest else None, now, mssql)
+    out["trend"] = (
+        _trend_base(str(out["conflict_notice"]))
+        if out.get("conflicting_readings")
+        else trend_summary(db, home_id, latest["sensor_id"] if latest else None, now, mssql)
+    )
     if latest:
         age = _age(latest, now)
         if age < 0:
@@ -656,9 +714,18 @@ def reading_health(sensors: Mapping[str, Any] | None) -> dict[str, str]:
     """Whether the latest retained reading can be read and is physically possible.
 
     Read-only and clock-free. ``fault`` means a value is missing or not a finite number;
-    ``out_of_range`` means a value is outside the physical limits for a home sensor. Neither
-    changes a case, hazard or gate.
+    ``out_of_range`` means a value is outside the physical limits for a home sensor;
+    ``conflict`` means retained rows disagree for the same sensor and timestamp. None of these
+    states change a case, hazard or gate.
     """
+    if (sensors or {}).get("conflicting_readings"):
+        return dict(
+            state="conflict",
+            text=(
+                "Retained readings disagree for the same sensor and time. "
+                "Do not rely on them; use the ordinary quality check."
+            ),
+        )
     latest = (sensors or {}).get("latest")
     if not latest:
         return dict(state="none", text="No reading is available to check.")
@@ -697,6 +764,12 @@ def advisory(sensors: Mapping[str, Any] | None) -> dict[str, Any]:
         thresholds=WATCH_THRESHOLDS,
         framing=WATCH_FRAMING,
     )
+    if (sensors or {}).get("conflicting_readings"):
+        out["text"] = (
+            "Retained readings disagree for the same sensor and time, "
+            "so no sensor watch is raised. " + WATCH_FRAMING
+        )
+        return out
     if not latest:
         return out
     reasons: list[str] = []

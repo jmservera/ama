@@ -92,6 +92,40 @@ class FaultGuidance(unittest.TestCase):
         out = self.view("fault", freshness="stale")
         self.assertIn("sensor fault", out["next_action"])
 
+    def test_conflict_gets_badge_and_action_ahead_of_stale_and_context_only_offline(self) -> None:
+        stale_clash = self.view("conflict", freshness="stale")
+        badge = stale_clash["badges"][1]
+        self.assertEqual(
+            (badge["kind"], badge["state"], badge["label"]),
+            ("health", "conflict", "Conflicting readings"),
+        )
+        self.assertIn("Do not choose between conflicting readings", stale_clash["next_action"])
+
+        context_only_clash = sensor_badges.annotate(
+            dict(
+                state="ok",
+                latest=None,
+                freshness="unknown",
+                conflicting_readings=[dict(sensor_id="s1", observed_at="2026-11-01T10:00:00Z")],
+            )
+        )
+        self.assertEqual(
+            [b["state"] for b in context_only_clash["badges"]],
+            ["offline", "conflict", "uncalibrated"],
+        )
+        self.assertIn(
+            "Do not choose between conflicting readings", context_only_clash["next_action"]
+        )
+
+        withheld = sensor_badges.annotate(
+            dict(
+                state="consent-withheld",
+                latest=None,
+                conflicting_readings=[dict(sensor_id="s1", observed_at="2026-11-01T10:00:00Z")],
+            )
+        )
+        self.assertEqual([b["kind"] for b in withheld["badges"]], ["freshness", "calibration"])
+
     def test_panel_renders_next_action_as_text(self) -> None:
         panel = OPS.read_text(encoding="utf-8")
         self.assertIn("data-sensor-next-action", panel)

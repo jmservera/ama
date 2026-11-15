@@ -218,6 +218,7 @@ class Correlation(qs.Seed, ta.ApiTests):
         for token in (
             "review_flag",
             "f.readings",
+            "f.source_provenance",
             "f.cited_ids",
             "f.model",
             "f.effect",
@@ -226,6 +227,52 @@ class Correlation(qs.Seed, ta.ApiTests):
         ):
             self.assertIn(token, js)
         self.assertTrue(re.search(r"review-suggested", js))
+
+    def test_review_flag_source_provenance_and_conflict_badge_correlate_with_api(self) -> None:
+        from zava_forward.core.sensor_consumer import READING_COLUMNS
+
+        self.ready()
+        api = self.request("/api/cases/ZF-1/sensors")[1]
+        _, task = self.flag()
+        flag = task["review_flag"]
+        api_rows = {sensor_view.key_of(r): r for r in api["readings"]}
+        for entry in flag["readings"]:
+            row = api_rows[entry["citation"]]
+            self.assertEqual(entry["provenance_class"], row["provenance_class"])
+            self.assertEqual(entry["source_text"], api["provenance"][row["provenance_class"]])
+            self.assertEqual(
+                entry["locator"], f"sensor_reading/{row['sensor_id']}/{row['reading_id']}"
+            )
+            self.assertTrue(entry["content_hash"])
+
+        clash_row = dict(
+            sensor_id=api["latest"]["sensor_id"],
+            reading_id="R-CORR-CLASH",
+            home_id="ZF-1",
+            observed_at=api["latest"]["observed_at"],
+            temperature_c="26.4",
+            humidity_pct="82.0",
+            source_type="SYNTHETIC",
+            scenario="SYNTHETIC_LIVE_WEATHER",
+            seed="1",
+            schema_version="reading-v1",
+            injected_fault="none",
+        )
+        with self.service.transaction() as db:
+            db.execute(
+                f"INSERT INTO sensor_reading VALUES ({','.join('?' * len(READING_COLUMNS))})",
+                tuple(clash_row[c] for c in READING_COLUMNS),
+            )
+        conflicted = self.request("/api/cases/ZF-1/sensors")[1]
+        self.assertEqual(conflicted["health"]["state"], "conflict")
+        self.assertIn("conflict", [b["state"] for b in conflicted["badges"]])
+        self.assertIn("Do not choose between conflicting readings", conflicted["next_action"])
+        self.assertIsNone(conflicted["grounding"]["values"])
+        self.assertEqual(
+            conflicted["trend"]["variables"]["temperature_c"]["direction"], "insufficient"
+        )
+        ops = (WEB / "ops.js").read_text(encoding="utf-8")
+        self.assertIn("!(v.conflicting_readings || []).length && !v.conflict_notice", ops)
 
 
 if __name__ == "__main__":
