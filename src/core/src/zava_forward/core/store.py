@@ -232,9 +232,42 @@ class Store(
 
     @staticmethod
     def _open_safety_items(c, staff=None):
+        unverified = [("Unverified safety evidence", "Building Safety Liaison")]
+        if not isinstance(c, dict) or "hazards" not in c:
+            return unverified
+        hazards = c.get("hazards")
+        if not isinstance(hazards, list):
+            return unverified
+        for h in hazards:
+            if not isinstance(h, dict):
+                return unverified
+            rel = h.get("released")
+            if rel is not None and type(rel) is not bool:
+                return unverified
+        if "safeguarding_items" in c:
+            sg_items = c.get("safeguarding_items")
+            if not isinstance(sg_items, list):
+                return unverified
+            for sg in sg_items:
+                if gates._safeguarding_item_closed(sg) is None:
+                    return unverified
+        if "safeguarding" in c and c.get("safeguarding") is not None:
+            legacy = c.get("safeguarding")
+            if isinstance(legacy, list):
+                for sg in legacy:
+                    if gates._safeguarding_item_closed(sg) is None:
+                        return unverified
+            elif isinstance(legacy, dict):
+                if (
+                    set(legacy.keys()) & taskqueues.SAFEGUARDING_ITEM_KEYS
+                    and gates._safeguarding_item_closed(legacy) is None
+                ):
+                    return unverified
+            else:
+                return unverified
         entries = []
-        for h in c.get("hazards", []):
-            if taskqueues.is_open_safety_item(h):
+        for h in hazards:
+            if h.get("released") is not True:
                 projected = taskqueues.project_safety_clock_and_owner(
                     h, case=c, staff=staff, default_kind="hazard"
                 )
@@ -245,7 +278,7 @@ class Store(
                     )
                 )
         for sg in taskqueues.raw_safeguarding_items(c):
-            if taskqueues.is_open_safety_item(sg):
+            if gates._safeguarding_item_closed(sg) is not True:
                 projected = taskqueues.project_safety_clock_and_owner(
                     sg, case=c, staff=staff, default_kind="safeguarding"
                 )
@@ -284,7 +317,10 @@ class Store(
 
     def summary(self, c):
         last = c["contacts"][-1]["at"] if c["contacts"] else None
-        nxt = next((a for a in c["appointments"] if a["outcome"] == "Booked"), None)
+        nxt = next(
+            (a for a in c["appointments"] if isinstance(a, dict) and a.get("outcome") == "Booked"),
+            None,
+        )
         status = self.status_line(c)
         if status == "Ready" and buildings.blockers(self.data, self.cases, c):
             status = "Waiting on shared building review"

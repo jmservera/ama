@@ -180,22 +180,55 @@ def is_safeguarding_item(item: Mapping[str, Any], *, default_kind: str = "hazard
     return kind == "safeguarding" or category.startswith("safeguard")
 
 
+def _raw_hazard_dicts(case: Mapping[str, Any]) -> list[Mapping[str, Any]]:
+    raw = case.get("hazards")
+    if not isinstance(raw, list):
+        return []
+    return [h for h in raw if isinstance(h, Mapping)]
+
+
+def _has_malformed_safety_containers(case: Mapping[str, Any]) -> bool:
+    if "hazards" in case:
+        raw_hazards = case.get("hazards")
+        if not isinstance(raw_hazards, list) or any(
+            not isinstance(h, Mapping) for h in raw_hazards
+        ):
+            return True
+    explicit_sg = case.get("safeguarding_items")
+    if explicit_sg is not None and (
+        not isinstance(explicit_sg, list) or any(not isinstance(x, Mapping) for x in explicit_sg)
+    ):
+        return True
+    legacy_sg = case.get("safeguarding")
+    if legacy_sg is not None:
+        if isinstance(legacy_sg, list):
+            if any(not isinstance(x, Mapping) for x in legacy_sg):
+                return True
+        elif not isinstance(legacy_sg, Mapping):
+            return True
+    return False
+
+
 def is_open_safety_item(item: Mapping[str, Any]) -> bool:
-    if bool(item.get("released")):
+    if "released" in item and not isinstance(item.get("released"), bool):
+        return True
+    if item.get("released") is True:
         return False
     status = str(item.get("status") or "").strip().lower()
     return status not in {"closed", "released", "resolved"}
 
 
 def has_open_safety(case: Mapping[str, Any]) -> bool:
-    return any(is_open_safety_item(h) for h in case.get("hazards", [])) or any(
+    if _has_malformed_safety_containers(case):
+        return True
+    return any(is_open_safety_item(h) for h in _raw_hazard_dicts(case)) or any(
         is_open_safety_item(s) for s in raw_safeguarding_items(case)
     )
 
 
 def has_open_safeguarding(case: Mapping[str, Any]) -> bool:
     return any(
-        is_open_safety_item(h) and is_safeguarding_item(h) for h in case.get("hazards", [])
+        is_open_safety_item(h) and is_safeguarding_item(h) for h in _raw_hazard_dicts(case)
     ) or any(is_open_safety_item(s) for s in raw_safeguarding_items(case))
 
 
@@ -546,7 +579,7 @@ def overdue_tasks(
                 )
             )
 
-    for index, hazard in enumerate(case.get("hazards", [])):
+    for index, hazard in enumerate(_raw_hazard_dicts(case)):
         follow = (
             hazard.get("accepted_by")
             or (hazard.get("destination") if hazard.get("accepted_at") else None)
@@ -739,7 +772,7 @@ def context(
         if is_sg:
             safeguarding_clocks.append(dict(entry))
 
-    for index, hazard in enumerate(case.get("hazards", [])):
+    for index, hazard in enumerate(_raw_hazard_dicts(case)):
         _append_safety_item(hazard, f"hazards/{index}", default_kind="hazard")
     for index, sg in enumerate(raw_safeguarding_items(case)):
         _append_safety_item(sg, f"safeguarding/{index}", default_kind="safeguarding")

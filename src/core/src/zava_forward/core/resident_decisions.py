@@ -12,11 +12,13 @@ import json
 import hashlib
 import logging
 import os
+import re
 import uuid
 import weakref
 from contextlib import contextmanager
 from copy import deepcopy
 from datetime import UTC, date, datetime
+from typing import Any
 
 from . import challenges, complaints_route, identity
 from . import controls as k
@@ -42,8 +44,25 @@ AUTHORITY_STATUSES = ("Confirmed", "Unclear", "Disputed", "Revoked")
 RESIDENT_RETENTION_YEARS = 5
 RESIDENT_RETENTION_ID = "resident-decisions"
 RESIDENT_FIELDS = ("resident_scopes", "measure_decisions", "representative_authorities",
+                   "authorised_works_exceptions",
                    "resident_safe_contact", "resident_contact_history", "resident_reviews",
                    "nomination_records", "tenure_reports", "tenure_household_inventories")
+AUTHORISED_EXCEPTION_ROLES = frozenset({"Building Safety Liaison", "Retrofit Programme Manager"})
+AUTHORISED_EXCEPTION_RULE_ID = "RULE-002; BRD FR-008; BRD FR-011; BRD FR-014"
+_AUTOMATED_APPROVER_TOKENS = frozenset(
+    {
+        "ai",
+        "agent",
+        "assistant",
+        "auto",
+        "automated",
+        "bot",
+        "copilot",
+        "llm",
+        "model",
+        "system",
+    }
+)
 INTAKE_ACTIONS = ("nomination_record", "nomination_correct", "nomination_review", "tenure_intake", "tenure_legal_position",
                   "tenure_verify", "tenure_question_pack", "tenure_question_pack_review",
                   "tenure_review_trigger", "tenure_trigger_resolve", "tenure_inventory_record")
@@ -1170,24 +1189,145 @@ def require_context(c, body):
     return measure, context
 
 
+def _resolve_gate_clock(now: Any) -> tuple[datetime, str, str | None]:
+    from . import resident_journey_design
+
+    if now is None:
+        return datetime.now(UTC), k.today(), None
+    if isinstance(now, datetime):
+        parsed_dt = resident_journey_design.parse_iso_utc(now)
+        if parsed_dt is None:
+            raise ValueError("Invalid naive datetime reference clock.")
+        return parsed_dt, parsed_dt.date().isoformat(), parsed_dt.isoformat()
+    if not isinstance(now, str) or not now.strip():
+        raise ValueError("Invalid reference clock.")
+    raw = now.strip()
+    if len(raw) == 10:
+        day = date.fromisoformat(raw)
+        if day.isoformat() != raw:
+            raise ValueError("Invalid ISO reference date.")
+        dt = datetime(day.year, day.month, day.day, 12, 0, 0, tzinfo=UTC)
+        return dt, day.isoformat(), dt.isoformat()
+    parsed = resident_journey_design.parse_iso_utc(raw)
+    if parsed is None:
+        raise ValueError("Invalid ISO UTC reference timestamp.")
+    return parsed, parsed.date().isoformat(), parsed.isoformat()
+
+
+def _iso_day(value: object) -> str | None:
+    if not isinstance(value, str) or len(value) != 10:
+        return None
+    try:
+        parsed = date.fromisoformat(value)
+    except ValueError:
+        return None
+    return value if parsed.isoformat() == value else None
+
+
+def _clean_exception_field(value: object, *, limit: int = 300) -> str | None:
+    if not isinstance(value, str):
+        return None
+    cleaned = value.strip()
+    if not cleaned or len(cleaned) > limit:
+        return None
+    if k.is_memory_reference(cleaned) or k.is_sensor_reference(cleaned):
+        return None
+    return cleaned
+
+
+def validate_authorised_works_exception(
+    c: Any,
+    measure: Any,
+    context: Any,
+    *,
+    now: str | None = None,
+) -> dict[str, Any]:
+    """Fail-closed validator for an explicitly authorised works exception (RULE-002, FR-008, FR-014)."""
+    from . import resident_journey_design
+
+    def deny(reason: str) -> dict[str, Any]:
+        return dict(
+            permitted=False,
+            reason=reason,
+            rule_id=AUTHORISED_EXCEPTION_RULE_ID,
+            exception=None,
+        )
+
+    if not isinstance(c, dict):
+        return deny("Case record is missing or malformed.")
+    if not isinstance(measure, str) or measure not in case_measures(c):
+        return deny("Exception measure does not belong to this home.")
+    if (
+        not isinstance(context, dict)
+        or type(context.get("revision")) is not int
+        or type(context.get("design_version")) is not int
+    ):
+        return deny("Current measure scope and design context are unverified.")
+    try:
+        now_utc, check_day, _ = _resolve_gate_clock(now)
+    except ValueError:
+        return deny("Reference clock is missing or malformed.")
+    raw_map = c.get("authorised_works_exceptions")
+    if not isinstance(raw_map, dict):
+        return deny("No authorised works exception is recorded for this measure.")
+    versions = raw_map.get(measure)
+    if not isinstance(versions, list) or not versions or any(not isinstance(v, dict) for v in versions):
+        return deny("No valid authorised works exception list is recorded for this measure.")
+    exc = versions[-1]
+    if exc.get("status") != "Authorised":
+        return deny("Latest works exception is not in 'Authorised' status.")
+    if (
+        exc.get("measure") != measure
+        or type(exc.get("context_revision")) is not int
+        or exc["context_revision"] != context["revision"]
+        or type(exc.get("design_version")) is not int
+        or exc["design_version"] != context["design_version"]
+    ):
+        return deny("Works exception does not match the active scope revision and design version.")
+    for field_name in ("reference", "rule_source", "reason", "notification_ref"):
+        if _clean_exception_field(exc.get(field_name)) is None:
+            return deny(f"Works exception {field_name} is missing, out of bounds, or cites prohibited telemetry/memory.")
+    approver = _clean_exception_field(exc.get("approved_by"), limit=120)
+    if approver is None:
+        return deny("Works exception requires a named human approver.")
+    tokens = [tok for tok in re.split(r"[^a-z0-9]+", approver.casefold()) if tok]
+    if not tokens or any(tok in _AUTOMATED_APPROVER_TOKENS for tok in tokens):
+        return deny("Works exception cannot be approved by an automated or AI actor.")
+    role = exc.get("approved_by_role")
+    if not isinstance(role, str) or role.strip() not in AUTHORISED_EXCEPTION_ROLES:
+        return deny("Works exception requires Building Safety Liaison or Retrofit Programme Manager authority.")
+    effective_day = _iso_day(exc.get("effective_date"))
+    review_day = _iso_day(exc.get("review_date"))
+    if effective_day is None or review_day is None or not (effective_day <= check_day < review_day):
+        return deny("Works exception is outside its effective/review date window.")
+    if "expires_at" in exc and exc.get("expires_at") is not None:
+        parsed_exp = resident_journey_design.parse_iso_utc(exc.get("expires_at"))
+        if parsed_exp is None or now_utc >= parsed_exp:
+            return deny("Works exception has expired or has a malformed expiry timestamp.")
+    if type(exc.get("resident_notified")) is not bool or exc.get("resident_notified") is not True:
+        return deny("Works exception requires confirmed resident notification before work starts.")
+    return dict(
+        permitted=True,
+        reason="Valid human-authorised, resident-notified works exception is active for the current scope and design.",
+        rule_id=AUTHORISED_EXCEPTION_RULE_ID,
+        exception=deepcopy(exc),
+    )
+
+
 def authority_for(c, ref, task, measure, context, version=None, *, now=None):
     from . import resident_journey_design
 
-    if retention_schedule(c)["expired"]:
+    try:
+        now_utc, check_day, _ = _resolve_gate_clock(now)
+    except ValueError as err:
+        raise ValueError("Representative authority needs human confirmation through the safe contact route.") from err
+    if retention_schedule(c, today=check_day)["expired"]:
         raise ValueError("Resident records are past retention. Obtain current human-reviewed evidence.")
     clean_ref = resident_journey_design.valid_representative_ref(ref)
     versions = c.get("representative_authorities", {}).get(clean_ref, []) if clean_ref else []
     a = versions[-1] if versions else None
     if not a or (version is not None and a["version"] != version):
         raise ValueError("Representative authority needs human confirmation through the safe contact route.")
-    if now is not None:
-        now_utc = resident_journey_design.parse_iso_utc(now)
-        if now_utc is None:
-            raise ValueError("Representative authority needs human confirmation through the safe contact route.")
-        check_day = now_utc.date().isoformat()
-    else:
-        now_utc = datetime.now(UTC)
-        check_day = k.today()
     if (a["status"] != "Confirmed" or task not in a["tasks"]
             or a["measure"] != measure or a["context_revision"] != context["revision"]
             or a["safe_contact_ref"] != c.get("resident_safe_contact")
@@ -1201,13 +1341,13 @@ def authority_for(c, ref, task, measure, context, version=None, *, now=None):
     return a
 
 
-def resident_gate(c, bindings=None):
+def resident_gate(c, bindings=None, *, now=None):
     """Case advance checks all measures; scoped work checks only explicit bindings."""
     if _inventory_managed(c):
         return [*_inventory_refusal(c), TENURE_HOLD]
     if not _home_tenure_recorded(c):
         return [UNSET_TENURE_REASON]
-    return _resident_decision_gate(c, bindings)
+    return _resident_decision_gate(c, bindings, now=now)
 
 
 def _home_tenure_recorded(c):
@@ -1216,8 +1356,13 @@ def _home_tenure_recorded(c):
     return isinstance(tenure, str) and tenure.strip().casefold() not in ("", "unknown")
 
 
-def _resident_decision_gate(c, bindings=None):
-    if retention_schedule(c)["expired"]:
+def _resident_decision_gate(c, bindings=None, *, now=None):
+    try:
+        _, check_day, now_iso = _resolve_gate_clock(now)
+    except ValueError:
+        return ["Resident decision or authority needs confirmation. Owner: Resident Liaison Officer. "
+                "Next action: review the affected measure's current scope, supplied answer and authority."]
+    if retention_schedule(c, today=check_day)["expired"]:
         return ["Resident records are past retention. Owner: Resident Liaison Officer. Next action: obtain current human-reviewed evidence."]
     if bindings is None:
         bindings = [dict(measure=m, context_revision=(current_context(c, m) or {}).get("revision"))
@@ -1233,15 +1378,18 @@ def _resident_decision_gate(c, bindings=None):
             if measure in seen:
                 raise ValueError("Choose each measure once.")
             seen.add(measure)
-            versions = c.get("measure_decisions", {}).get(measure, [])
-            answer = versions[-1] if versions else {}
-            if answer.get("context_revision") != context["revision"] or answer.get("status") != "Accepted":
-                raise ValueError("A current supplied resident acceptance is needed.")
             if c.get("resident_reviews", {}).get(measure, {}).get("status") == "Needs human review":
                 raise ValueError("Human review is needed.")
-            if answer.get("answered_by") == ANSWERED_BY[1]:
-                authority_for(c, answer.get("representative_ref"), "Works decision", measure, context,
-                              answer.get("authority_version"))
+            versions = c.get("measure_decisions", {}).get(measure, [])
+            answer = versions[-1] if versions else {}
+            if answer.get("context_revision") == context["revision"] and answer.get("status") == "Accepted":
+                if answer.get("answered_by") == ANSWERED_BY[1]:
+                    authority_for(c, answer.get("representative_ref"), "Works decision", measure, context,
+                                  answer.get("authority_version"), now=now_iso)
+            else:
+                exc_check = validate_authorised_works_exception(c, measure, context, now=now_iso)
+                if not exc_check["permitted"]:
+                    raise ValueError("A current supplied resident acceptance is needed.")
         except ValueError:
             why.append("Resident decision or authority needs confirmation. Owner: Resident Liaison Officer. "
                        "Next action: review the affected measure's current scope, supplied answer and authority.")
