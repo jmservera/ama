@@ -45,10 +45,49 @@ const adversarial = {...real.receipt, original: {statement: "<img src=x onerror=
     formClean: s.formView(real.form, {values: {raised_by: "household"}, requestId: "req-1"}),
     formRep: s.formView(real.form, {values: {raised_by: "representative"}}),
     formErr: s.formView(real.form, {errors: {home_ref: "Choose a home."}, values: {}}),
+    formHousehold: s.formView(real.householdForm, {values: {raised_by: "household",
+      support_needed: ["bsl", "large_print"]}, requestId: "req-hh-1"}),
     receipt: s.receiptView(real.receipt), replay: s.receiptView(real.receipt, true),
+    receiptRepChannel: s.receiptView(real.receiptRepChannel),
+    receiptDigital: s.receiptView(real.receiptDigital),
     adversarial: s.receiptView(adversarial),
-    concern: s.concernView(real.concern), evaluator: s.evaluatorView(real.evaluator),
+    concern: s.concernView(real.concern),
+    concernRepChannel: s.concernView(real.concernRepChannel),
+    evaluator: s.evaluatorView(real.evaluator),
     emptyEval: s.evaluatorView(real.evaluatorEmpty),
+    evalRowsUnknown: s.evaluatorView({
+      ...real.evaluator,
+      rows: "unknown",
+      totals: {
+        ...real.evaluator.totals,
+        homes_with_usable_comparison: "unknown",
+        concerns_raised: "unknown",
+      },
+    }),
+    evalRowConcernsUnknown: s.evaluatorView({...real.evaluator, rows: [
+      {home_ref: "HM-UNK", comparison: {status: "unknown"}, concerns: "unknown",
+       unresolved_count: "unknown"},
+      {home_ref: "HM-NULL", comparison: {status: "sufficient", baseline: null, late: null},
+       concerns: null, unresolved_count: null}]}),
+    readMulti: s.readValues({elements: [
+      {name: "home_ref", value: "HM-1", multiple: false},
+      {name: "support_needed", multiple: true, selectedOptions: [
+        {value: "bsl"}, {value: "large_print"}]}]}),
+    sentHouseholdPath: await (async () => {
+      let seen = "";
+      const fakeApi = async (p) => {
+        seen = p;
+        return {receipt: real.receiptDigital, replayed: false};
+      };
+      await s.submit(
+        fakeApi,
+        {home_ref: "HM-1"},
+        real.receiptDigital.request_id,
+        undefined,
+        {household: true},
+      );
+      return seen;
+    })(),
     fracZero: s.evaluatorView(fraction({count: 0, denominator: 0})),
     fracNull: s.evaluatorView(fraction({count: 1, denominator: null})),
     fracScalar: s.evaluatorView(fraction(1)),
@@ -110,11 +149,38 @@ def real_payloads() -> dict[str, Any]:
                 "next_update": "2026-11-20",
             },
         )
+        eval_one = svc.evaluator_view(MANAGER)
         return {
             "form": svc.form(LIAISON),
+            "householdForm": svc.household_form(),
             "receipt": receipt,
+            "receiptRepChannel": svc.record_concern(
+                LIAISON,
+                {
+                    "request_id": "req-0000002",
+                    "raised_by": "representative",
+                    "representative_basis": "Signed letter from the tenant",
+                    "home_ref": homes[0],
+                    "kind": "control_use",
+                    "statement": "Controls question passed through representative.",
+                    "channel": "representative",
+                    "support_needed": ["call_back"],
+                    "next_update": "2026-11-20",
+                },
+            )[0],
+            "receiptDigital": svc.submit_household_concern(
+                {
+                    "request_id": "req-0000003",
+                    "raised_by": "household",
+                    "home_ref": homes[0],
+                    "kind": "higher_bill",
+                    "statement": "Bill was higher than expected.",
+                    "support_needed": ["bsl", "callback_window"],
+                }
+            )[0],
             "concern": svc.concern(MANAGER, "AC-001"),
-            "evaluator": svc.evaluator_view(MANAGER),
+            "concernRepChannel": svc.concern(MANAGER, "AC-002"),
+            "evaluator": eval_one,
             "evaluatorEmpty": empty,
         }
 
@@ -342,6 +408,53 @@ class AftercareScreens(unittest.TestCase):
                 self.assertTrue(result["unresolved"])
                 self.assertIn("earlier attempt may have been saved", result["message"])
                 self.assertIn("original details", result["message"])
+
+    def test_channel_and_support_labels_and_digital_form_without_spurious_unknowns(self) -> None:
+        hh_form_text = self.text("formHousehold")
+        self.assertNotIn("Unknown", hh_form_text)
+        rep_receipt = self.text("receiptRepChannel")
+        self.assertIn("Through a representative", rep_receipt)
+        self.assertIn("Agreed phone call-back time", rep_receipt)
+        rep_concern = self.text("concernRepChannel")
+        self.assertIn("A person acting for the household via Through a representative", rep_concern)
+        digital_receipt = self.text("receiptDigital")
+        self.assertIn("Submitted online", digital_receipt)
+        self.assertIn("Online self-service", digital_receipt)
+        self.assertIn("British Sign Language (BSL), Agreed phone call-back time", digital_receipt)
+
+    def test_support_needed_renders_multi_select_and_reads_array_values(self) -> None:
+        nodes = walk(self.out["formHousehold"])
+        select = next(n for n in nodes if n["attrs"].get("id") == "ac-support_needed")
+        self.assertEqual(select["tag"], "select")
+        self.assertIn("multiple", select["attrs"])
+        chosen = [
+            opt["attrs"]["value"]
+            for opt in select["kids"]
+            if opt["tag"] == "option" and opt["attrs"].get("selected") == ""
+        ]
+        self.assertEqual(chosen, ["large_print", "bsl"])
+        self.assertEqual(
+            self.out["readMulti"],
+            {"home_ref": "HM-1", "support_needed": ["bsl", "large_print"]},
+        )
+        self.assertEqual(self.out["sentHouseholdPath"], "/api/aftercare/household-concerns")
+
+    def test_evaluator_preserves_unknown_rows_and_concerns_and_renders_fr036_pack_note(
+        self,
+    ) -> None:
+        eval_text = self.text("evaluator")
+        self.assertIn("Optional AI concern pack (FR-036): not active (unapproved).", eval_text)
+        self.assertIn("stays a proposal for the named owner to review", eval_text)
+        unknown_rows = self.text("evalRowsUnknown")
+        self.assertIn("Homes with a usable comparison: Unknown.", unknown_rows)
+        self.assertIn("Concerns raised: Unknown.", unknown_rows)
+        self.assertIn("Cohort homes: Unknown.", unknown_rows)
+        self.assertNotIn("No homes are in the synthetic cohort.", unknown_rows)
+        row_nodes = [n for n in walk(self.out["evalRowConcernsUnknown"]) if n["tag"] == "tr"]
+        self.assertEqual(len(row_nodes), 3)
+        for tr in row_nodes[1:]:
+            cells = [visible(td) for td in tr["kids"] if td["tag"] == "td"]
+            self.assertEqual(cells, ["Unknown"] * 6)
 
 
 if __name__ == "__main__":

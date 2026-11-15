@@ -1322,8 +1322,13 @@ same actor signing in again sees the original draft and request id, and a differ
 Because the draft lives only in memory, an aftercare `beforeunload` guard warns on reload, full
 navigation or tab close while the draft is edited or its save is unconfirmed; safe hash-route changes
 do not prompt, and the guard clears on a confirmed receipt, sign-out or actor change. Nothing is
-written to browser storage. No evaluator or resident account, portal or closure is
+written to browser storage. `aftercare.js` renders dedicated channel and `support_needed` labels
+(including multi-select communication adjustments and the `representative` channel), preserves
+`Unknown` without coercing missing rows or concern lists to `0` or `No concerns raised`, and shows
+the `FR-036` proposal-only `aftercare-concern-pack` status on the evaluator view. No evaluator or
+resident account, portal or closure is
 added; the quality-note action is not offered as concern intake. Tests: `tests/test_aftercare_served.py`,
+`tests/test_aftercare_screen.py`,
 `tests/test_role_endpoint_inventory.py`; browser check `checks/aftercare_browser_check.py` (constructed
 keyboard and axe observations, not assistive-technology or WCAG acceptance).
 
