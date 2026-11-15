@@ -322,9 +322,8 @@ if (typeof document !== "undefined" && typeof document.addEventListener === "fun
     const link = event.target?.closest?.("a[data-jump]");
     if (!link) return;
     event.preventDefault();
-    const target = document.getElementById(link.getAttribute("data-jump"));
-    target?.focus?.();
-    target?.scrollIntoView?.({ block: "start" });
+    document.getElementById(link.getAttribute("data-jump"))?.focus?.();
+    document.getElementById(link.getAttribute("data-jump"))?.scrollIntoView?.({ block: "start" });
   });
 }
 function assetSummary(extra, report) {

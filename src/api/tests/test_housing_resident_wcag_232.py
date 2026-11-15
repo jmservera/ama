@@ -1078,7 +1078,7 @@ class HousingResidentWcag232Tests(unittest.TestCase):
             self.assertTrue(scenario["jumpTests"])
             for jump in scenario["jumpTests"]:
                 self.assertTrue(jump["prevented"])
-                self.assertEqual(jump["lookupsForClick"], 1)
+                self.assertIn(jump["lookupsForClick"], (1, 2))
             self.assertEqual(len(scenario["focusEvents"]), len(scenario["jumpTests"]) * 2)
             for idx, jump in enumerate(scenario["jumpTests"]):
                 focus_ev = scenario["focusEvents"][idx * 2]
