@@ -52,6 +52,16 @@ _PLACEHOLDER_PATTERNS: tuple[re.Pattern[str], ...] = (
     ),
 )
 
+_EVIDENCE_PLACEHOLDER_PATTERNS: tuple[re.Pattern[str], ...] = (
+    re.compile(r"^(?:pending|tbd|todo|tbc|placeholder|unavailable)\b", re.I),
+    re.compile(r"\bsame\s+(?:operator|person|user|approver)\b", re.I),
+    re.compile(
+        r"\bself[-\s]+(?:approved|approval|authorised|authorized|designated|signoff|sign-off)\b",
+        re.I,
+    ),
+    re.compile(r"\bauto(?:matic|mated)?[-\s]+(?:restart|approval|approved)\b", re.I),
+)
+
 _WORD_SPLIT = re.compile(r"[^a-z0-9]+")
 
 _EXACT_NON_HUMAN: frozenset[str] = frozenset(
@@ -230,6 +240,30 @@ def validate_restart_authority(
                 "RULE-024 requires a distinct human restart authority; "
                 "an operator who recorded or proposed the incident cannot self-designate."
             )
+    return text
+
+
+def validate_corrective_evidence(
+    value: object,
+    *,
+    label: str = "corrective evidence",
+    limit: int = 240,
+    min_len: int = 4,
+) -> str:
+    """Validate substantive corrective evidence or test ID without echoing raw input."""
+    text = _clean(value)
+    if len(text) < min_len or len(text) > limit:
+        raise ValueError(f"Enter {label} ({min_len} to {limit} characters).")
+    if controls.MEMORY_REF.search(text):
+        raise ValueError(f"Do not cite chat memory as {label}; record case or governance evidence.")
+    text_cf = text.casefold()
+    if text_cf in _EXACT_PLACEHOLDERS or any(
+        pattern.search(text) for pattern in _EVIDENCE_PLACEHOLDER_PATTERNS
+    ):
+        raise ValueError(
+            f"RULE-024 requires substantive, verifiable evidence for {label}; "
+            "placeholder or unavailable values cannot gate restart."
+        )
     return text
 
 

@@ -4703,14 +4703,26 @@ change register and a supplier-independent evidence export. Synthetic demonstrat
 * Suspend: `POST /api/continuity/suspend` records scope, incident owner, containment, constructed communication
   (never sent), and the affected queued, leased and ready proposals, and raises an epoch.
 * Enforcement: the epoch is read on the caller's own SQL connection at invoke, scan, claim, dispatch, complete and
-  review, and shown in list and detail views; it does not depend on disabled buttons. In-flight provider calls may
+  review, and shown in list and detail views; it does not depend on disabled buttons. On SQLite and SQL Server,
+  `continuity` writes also store a versioned SQL envelope (`gate_version = continuity-gate-v1`) and synchronise normalized
+  `continuity_gate_state` (`gate_version = continuity-gate-v1`, monotonic `epoch`) and
+  `continuity_open_holds` rows; SQLite and non-ledger SQL Server databases also install `continuity_gate_state`,
+  `assistant_attempts` and `assistant_tasks` DML triggers refusing delete/rollback, `'reserved'`/`'sending'`
+  attempts or `ready` verification/acceptance updates lacking the active `gate_version` or matching an open `all`/task
+  hold (SQL Server `WITH LEDGER = ON` databases omit DML triggers on system-versioned updatable ledger tables while
+  retaining `continuity_gate_state` / `continuity_open_holds` synchronisation and Python fail-closed fences) so pre-gate
+  or gate-mismatched worker images fail closed across queued, leased, ready and export views. In-flight provider calls may
   finish and stay charged or unknown; late results are quarantined and never actionable. No remote cancellation or
   exactly-once billing is claimed.
-* Manual fallback: suspended AI paths return the workflow template with the reason; case work, resident challenge
-  and hazard response are unaffected. Reject stays available.
-* Restart: `restart-propose` (corrective evidence) then `restart-decide` by a different manager, with the current
-  epoch and a named authority reference. Self-approved, stale, replayed or unauthorised restarts fail. The authority
-  reference is recorded, not verified.
+* Manual fallback: suspended AI paths return the workflow template with the reason; case work, accessible resident
+  challenge (intake, triage, resolution and priority correction) and independent statutory hazard response remain
+  available during whole-release suspension and gate-version mismatch. Reject stays available.
+* Restart: `restart-propose` (substantive non-placeholder `corrective_evidence` and `test_id`, bound with monotonic
+  `proposal_seq`) then `restart-decide` by a distinct OID-bound manager (`ZavaForward.AIRestart`), with the current
+  epoch and a named authority reference; `view_only` principals are refused across suspend, propose and decide.
+  Self-approved, stale, placeholder, digest-replayed, Keep-suspended claim-replayed, candidate-consumed claim-replayed
+  or unauthorised restarts fail and record full approver `actor` provenance. The authority reference is recorded, not
+  externally verified; OD-35 / OQ-017 human appointment, witnessed drills and external ledger-head custody remain open.
 * Changes: `POST /api/continuity/change` and `change-reverse` version model, rule and configuration changes with an
   evaluation result (a failed evaluation is Blocked); reversal is a superseding record.
 * Export: `GET /api/continuity/export` returns `zf-evidence-export/1` with a digest and ledger chain checked offline by

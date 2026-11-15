@@ -48,6 +48,8 @@ TABLES = {
   seq BIGINT IDENTITY(1,1) PRIMARY KEY, at {_t(40)}, who {_t(200)}, action {_t(200)}, case_id {_t(64)},
   detail NVARCHAR(MAX) NOT NULL, prev {_t(100)}, hash {_t(100)} UNIQUE)""",
     "audit_head": f"CREATE TABLE audit_head (id INT PRIMARY KEY CHECK (id = 1), count BIGINT NOT NULL, hash {_t(100)})",
+    "continuity_gate_state": f"CREATE TABLE continuity_gate_state (id INT PRIMARY KEY CHECK (id = 1), gate_version VARCHAR(64) {COLLATE} NOT NULL, epoch BIGINT NOT NULL DEFAULT 0)",
+    "continuity_open_holds": f"CREATE TABLE continuity_open_holds (scope VARCHAR(64) {COLLATE} PRIMARY KEY, incident_id VARCHAR(64) {COLLATE} NOT NULL, epoch BIGINT NOT NULL)",
     "chat_thread": CHAT_DDL[0],
     "chat_message": CHAT_DDL[1],
     "chat_memory": CHAT_DDL[2],
@@ -69,6 +71,14 @@ LEDGER_TYPES = {
 
 APPEND_ONLY = ("IF OBJECT_ID(N'audit_append_only', N'TR') IS NULL EXEC(N'CREATE TRIGGER audit_append_only ON audit "
                "INSTEAD OF UPDATE, DELETE AS THROW 50001, ''audit ledger is append-only'', 1')")
+
+GATE_TRIGGERS = (
+    "IF OBJECT_ID(N'continuity_gate_no_delete', N'TR') IS NULL EXEC(N'CREATE TRIGGER continuity_gate_no_delete ON continuity_gate_state "
+    "INSTEAD OF DELETE AS IF EXISTS (SELECT 1 FROM deleted) THROW 50004, ''continuity gate state cannot be deleted'', 1')",
+    "IF OBJECT_ID(N'continuity_gate_monotonic', N'TR') IS NULL EXEC(N'CREATE TRIGGER continuity_gate_monotonic ON continuity_gate_state "
+    "AFTER UPDATE AS IF EXISTS (SELECT 1 FROM inserted i JOIN deleted d ON d.id = i.id WHERE i.epoch < d.epoch) "
+    "THROW 50004, ''continuity gate epoch is monotonic'', 1')",
+)
 
 BEGIN = ("BEGIN TRAN; DECLARE @r INT; EXEC @r = sp_getapplock @Resource = N'zavaforward_write', @LockMode = N'Exclusive', "
          "@LockOwner = N'Transaction', @LockTimeout = 15000; IF @r < 0 THROW 50002, 'could not take the write lock', 1;")
@@ -309,6 +319,8 @@ class MssqlStore(SqlStore):
                     raise SystemExit(f"audit is a {kind}, not an append-only ledger table; drop and recreate it before starting.")
             else:
                 self.db.execute(APPEND_ONLY)
+                for trigger in GATE_TRIGGERS:
+                    self.db.execute(trigger)
 
     def _has_rec_order(self):
         return self.db.execute("SELECT COL_LENGTH(N'recommendations', N'created_ord')").fetchone()[0] is not None
