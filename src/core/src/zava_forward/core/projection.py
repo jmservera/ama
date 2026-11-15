@@ -249,7 +249,11 @@ def hold_notes(c):
                 if c.get(key):
                     c[key] = NOTE_HELD
         for k, v in c.items():
-            private_hazard = ("category" in c and "released" in c and k in ("source", "job")) or (
+            is_safety_dict = ("category" in c and "released" in c) or c.get("item_kind") in (
+                "hazard",
+                "safeguarding",
+            )
+            private_hazard = (is_safety_dict and k in ("source", "job", "summary", "reason")) or (
                 "actor" in c and k in ("reason", "evidence")
             )
             if (k in NOTE_KEYS or private_hazard) and v:

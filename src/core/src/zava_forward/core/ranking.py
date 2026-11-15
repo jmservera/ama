@@ -66,7 +66,9 @@ POLICY_V1 = POLICIES["1.0.0"]
 
 
 def _hazard(c):
-    return any(not h["released"] for h in c["hazards"])
+    from . import taskqueues
+
+    return taskqueues.has_open_safety(c)
 
 
 def _support(c):

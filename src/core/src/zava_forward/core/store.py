@@ -54,7 +54,7 @@ from .import_refusals import ImportRefusalsMixin
 from .documents import ACCEPTED, MAX_BYTES, open_document_store
 from .procurement import ProcurementMixin
 from .quality import QualityMixin, handover_blockers, quality_evidence_gate
-from .workflows import MANAGER_ROLES, WorkflowMixin, handoff_view, hazard_view
+from .workflows import MANAGER_ROLES, WorkflowMixin, handoff_view, hazard_view, safeguarding_view
 
 if TYPE_CHECKING:
     from .complaints_route import ComplaintsReceiver
@@ -230,16 +230,43 @@ class Store(
         """Hook for stores that track which cases a request changed."""
 
     @staticmethod
+    def _open_safety_items(c, staff=None):
+        entries = []
+        for h in c.get("hazards", []):
+            if taskqueues.is_open_safety_item(h):
+                projected = taskqueues.project_safety_clock_and_owner(
+                    h, case=c, staff=staff, default_kind="hazard"
+                )
+                entries.append(
+                    (
+                        h.get("category") or projected["category"],
+                        projected["named_owner"],
+                    )
+                )
+        for sg in taskqueues.raw_safeguarding_items(c):
+            if taskqueues.is_open_safety_item(sg):
+                projected = taskqueues.project_safety_clock_and_owner(
+                    sg, case=c, staff=staff, default_kind="safeguarding"
+                )
+                entries.append(
+                    (
+                        sg.get("category") or "Safeguarding",
+                        projected["named_owner"],
+                    )
+                )
+        return entries
+
+    @staticmethod
     def gate_reasons(c):
         why = []
         if c.get("funding_ok") is not True:
             why.append(
                 f"Funding has not been confirmed. Owner: {c['owner']}. Next action: check the funding and record it."
             )
-        open_h = [h for h in c["hazards"] if not h["released"]]
+        open_h = Store._open_safety_items(c)
         if open_h:
             why.append(
-                f"Home retrofit work is stopped for safety review. Owner: {open_h[0]['owner']} (referral follow-up). Next action: obtain external service evidence and an independent decision to restart retrofit work."
+                f"Home retrofit work is stopped for safety review. Owner: {open_h[0][1]} (referral follow-up). Next action: obtain external service evidence and an independent decision to restart retrofit work."
             )
         return why + resident_gate(c) + technical_gate(c)
 
@@ -247,9 +274,9 @@ class Store(
     def status_line(c):
         if c["closed"]:
             return "Completed"
-        open_h = [h for h in c["hazards"] if not h["released"]]
+        open_h = Store._open_safety_items(c)
         if open_h:
-            return f"Stopped until {open_h[0]['owner']} obtains evidence and an independent decision to restart retrofit work"
+            return f"Stopped until {open_h[0][1]} obtains evidence and an independent decision to restart retrofit work"
         if c["stage"] == READY_STAGE and not Store.gate_reasons(c):
             return "Ready"
         return f"Waiting on {c['waiting_on']} {c['reason']}"
@@ -277,7 +304,8 @@ class Store(
             wave=c["wave"],
             funding=c["funding"]["status"],
             owner_code=c["owner_code"],
-            hazard=any(not h["released"] for h in c["hazards"]),
+            hazard=insights.has_hazard(c),
+            safeguarding=taskqueues.has_open_safeguarding(c),
             support=stock.support_status(c["resident"]) == "Yes",
             support_status=stock.support_status(c["resident"]),
             support_coverage=stock.support_coverage(c["resident"]),
@@ -606,6 +634,7 @@ class Store(
 
     def _work_context(self, c, user, data, cases):
         """Evaluate against either the live copy or a transaction-local SQL snapshot."""
+        staff_list = data.get("staff") or list(self.staff.values())
         return taskqueues.context(
             c,
             as_of=self.as_of,
@@ -622,12 +651,14 @@ class Store(
             handoff=handoff_view(
                 c, as_of=self.as_of, policy=data.get("handoff_policy"), staff=data.get("staff")
             ),
+            staff=staff_list,
         )
 
     def focus(self, c, role, reason_ok=True):
         """Role-specific facts for the card, as label/value pairs."""
         nxt = next((a for a in c["appointments"] if a["outcome"] == "Booked"), None)
-        open_h = [h for h in c["hazards"] if not h["released"]]
+        staff_list = self.data.get("staff") or list(self.staff.values())
+        open_h = self._open_safety_items(c, staff=staff_list)
         ev = {d["kind"] for d in c["documents"]}
         missing = [k for k in self.EVIDENCE if k not in ev]
         rs = c["resident"]
@@ -648,7 +679,7 @@ class Store(
             return [
                 (
                     "Open safety issues",
-                    "; ".join(f"{h['category']} ({h['owner']})" for h in open_h) or "None",
+                    "; ".join(f"{cat} ({own})" for cat, own in open_h) or "None",
                 ),
                 ("Works", c["measures"]),
             ]
@@ -679,7 +710,7 @@ class Store(
             ]
             return dict(
                 mine=len(mine),
-                hazards=sum(any(not h["released"] for h in c["hazards"]) for c in mine),
+                hazards=sum(taskqueues.has_open_safety(c) for c in mine),
                 open=sum(not c["closed"] for c in self.cases.values()),
             )
 
@@ -725,7 +756,16 @@ class Store(
             d.setdefault("stock_reconciliation_events", [])
             for row in d["stock_reconciliation"]:
                 row["status"] = stock.query_status(c, row["id"])
-            d["hazards"] = [hazard_view(h, case_id) for h in c["hazards"]]
+            staff_list = self.data.get("staff") or list(self.staff.values())
+            sg_views = [
+                safeguarding_view(s, case_id, index=i, case=c, as_of=self.as_of, staff=staff_list)
+                for i, s in enumerate(taskqueues.raw_safeguarding_items(c))
+            ]
+            d["safeguarding_items"] = sg_views
+            d["hazards"] = [
+                hazard_view(h, case_id, case=c, as_of=self.as_of, staff=staff_list)
+                for h in c["hazards"]
+            ] + [deepcopy(s) for s in sg_views]
             if user is None or not projection.is_contractor(user):
                 d["work"] = self.work_context(c, user)
             if c.get("handoff"):
@@ -897,11 +937,12 @@ class Store(
             raise GateError(reasons)
 
     def require_safety_clear(self, c):
-        active = next((h for h in c["hazards"] if not h["released"]), None)
+        staff_list = self.data.get("staff") or list(self.staff.values())
+        active = self._open_safety_items(c, staff=staff_list)
         if active:
             raise GateError(
                 [
-                    f"Home retrofit work is stopped for safety review. Owner: {active['owner']} (referral follow-up). Next action: obtain external evidence and an independent decision to restart retrofit work."
+                    f"Home retrofit work is stopped for safety review. Owner: {active[0][1]} (referral follow-up). Next action: obtain external evidence and an independent decision to restart retrofit work."
                 ]
             )
 

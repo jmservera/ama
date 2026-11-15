@@ -6,6 +6,20 @@ ms.date: 2026-11-15
 ms.topic: reference
 ---
 
+## Hazard and safeguarding clock and named owner in queues and case cards (2026-11-15, Refs #76)
+
+`workSummary` and `safetyPanel` in `web/app.js` render the projected operational
+reference clock (`clock_label`, `clock_status`, remaining hours and UTC target,
+or explicit fail-closed missing-timestamp state) and the named accountable owner
+(`named_owner`, `owner_role`, `owner_id`, plus unassigned escalation-owner
+notice when unallocated) across `My cases today`, `All open cases`, all
+specialist role queues rendered through `web/role-screens.js`, and case cards.
+`HAZ_CATEGORIES` includes `Safeguarding`, and standalone safeguarding records
+render in `safetyPanel` without modifying `web/role-screens.js` or altering
+counted accessibility and export baselines. Focused engineering coverage lives
+in `src/core/tests/test_hazard_safeguarding_clock_owner_76.py` and
+`src/api/tests/test_hazard_safeguarding_clock_owner_api_76.py`.
+
 ## Offline RAI held-out evaluation and candidate comparison API (2026-11-15, Refs #108)
 
 Manager-only `GET /api/ai/heldout-evaluation` returns the side-effect-free
