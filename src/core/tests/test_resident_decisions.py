@@ -2520,7 +2520,13 @@ class JsonResidentDecisions(unittest.TestCase):
                 for key in ("assessment", "design", "building", "coordination")
             }
             c["documents"] = [
-                dict(id=f"SYN-{kind}", kind=kind, generated=False) for kind in self.store.EVIDENCE
+                dict(
+                    id=f"SYN-{kind}",
+                    kind=kind,
+                    generated=False,
+                    scan=dict(status="clean", scanner="Synthetic metadata fixture"),
+                )
+                for kind in self.store.EVIDENCE
             ]
             self.store.save()
         self.assertEqual(self.store.detail("ZF-1")["gate"], [])
