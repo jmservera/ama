@@ -19,7 +19,7 @@ GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api
                  "/api/facets", "/api/stats", "/api/progress", "/api/closed-cases", "/api/closed-cases.csv",
                  "/api/map", "/api/visits?view=all", "/api/funding", "/api/briefing",
                  "/api/audit-check",
-                 "/api/handoffs", "/api/handoffs/unaccepted", "/api/handoffs/unaccepted.csv", "/api/packages", "/api/workorders", "/api/workorders/WO-0001/job-pack", "/api/workorders/WO-0001/field-intake", "/api/handoffs.csv", "/api/packages.csv", "/api/workorders.csv", "/api/visits.csv", "/api/funding.csv", "/api/finance.csv", "/api/asset/stock-queue.csv", "/api/checklists.csv", "/api/form-schemas.csv", "/api/checklists", "/api/ai/report", "/api/finance", "/api/finance/exposure", "/api/asset/stock-queue", "/api/resident/choice-queue",
+                 "/api/handoffs", "/api/handoffs/unaccepted", "/api/handoffs/unaccepted.csv", "/api/packages", "/api/workorders", "/api/workorders/WO-0001/job-pack", "/api/workorders/WO-0001/field-intake", "/api/handoffs.csv", "/api/packages.csv", "/api/workorders.csv", "/api/visits.csv", "/api/funding.csv", "/api/finance.csv", "/api/asset/stock-queue.csv", "/api/checklists.csv", "/api/form-schemas.csv", "/api/checklists", "/api/ai/report", "/api/ai/cohort-evaluation", "/api/finance", "/api/finance/exposure", "/api/asset/stock-queue", "/api/resident/choice-queue",
                  "/api/governance", "/api/continuity", "/api/continuity/export", "/api/exceptions", "/api/retention", "/api/data-protection", "/api/docs/ZF-1/none",
                  "/api/resident/choice-queue.csv?limit=2",
                  "/api/time/status", "/api/time/mine", "/api/time/mine.csv", "/api/time/report", "/api/time/report.csv", "/api/law/sources", "/api/law/sources.csv", "/api/law/search?q=x",
@@ -188,7 +188,7 @@ class RoleEndpointInventory(Matrix):
 
     def test_contractor_audit_view_and_export_are_denied(self):
         ck = self.session("u7@example.test")
-        for path in ("/api/audit-check", "/api/cases.csv?view=all", "/api/continuity/export", "/api/ai/report", "/api/assistants/proposals"):
+        for path in ("/api/audit-check", "/api/cases.csv?view=all", "/api/continuity/export", "/api/ai/report", "/api/ai/cohort-evaluation", "/api/assistants/proposals"):
             self.assertEqual(self.call(ck, path)[0], 403, path)
 
     def test_staff_without_need_see_notes_held_but_need_roles_see_them(self):

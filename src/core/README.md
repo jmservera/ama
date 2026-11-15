@@ -2,7 +2,7 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-31
+ms.date: 2026-11-14
 ms.topic: reference
 ---
 
@@ -379,9 +379,21 @@ controlled domain approval. Actual reviewer detection, corrections and total
 preparation/review effort against paired workflow-only scenarios remain
 unmeasured; #223 is not satisfied by these tests.
 
-The #222 cohort manifest in open PR #421 still needs owner approval before
-evaluator implementation. Cohorts, lawful fields, sample sufficiency and
-thresholds remain unapproved, and synthetic results cannot prove fairness.
+The #222 cohort evaluator (`cohort_eval.evaluate`, `cohort_eval.export_record`)
+enforces the OQ-018 pre-live owner-approval boundary fail-closed. Every record
+carries `owner_approval_status` (`unapproved`, `pending_owner_approval`, or
+`approved`), `lawful_analysis_fields`, `lawful_analysis_fields_approved`,
+`live_activation_allowed`, `synthetic_not_fairness_evidence: True`, and
+`non_fairness_provenance_notice`. `owner_approval_status` reaches `approved` and
+`lawful_analysis_fields_approved` reaches `True` only when non-fictional named
+human approvals for cohorts, lawful analysis fields (exact-set matched to the
+manifest dimensions), and thresholds carry valid ISO dates and a matching
+`manifest_digest`. Synthetic runs never set `fairness_evidence: True` or
+`live_activation_allowed: True`, and `export_record` rejects tampered hashes,
+missing non-fairness disclaimers, or live-activation claims on synthetic or
+unapproved records. Cohorts, lawful fields, sample sufficiency and thresholds
+remain owner-unapproved in the repository (OQ-018), and synthetic results
+cannot prove fairness.
 Actual release/residual-risk/review/restart holders remain unknown under
 OQ-017; every denial built by `assistant_release.denial()` now carries
 `authority_holders` (the disabled-task path in `assistants.py` does not), listing the release,

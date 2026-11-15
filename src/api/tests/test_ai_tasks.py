@@ -647,6 +647,39 @@ class Endpoints(unittest.TestCase):
             summary["recommendation_runs"], summary["ai_runs"] + summary["template_runs"]
         )
         self.assertIn("tasks", body["live"])
+        co = body["evaluation"]["cohorts"]
+        self.assertEqual(co["owner_approval_status"], "unapproved")
+        self.assertFalse(co["lawful_analysis_fields_approved"])
+        self.assertFalse(co["live_activation_allowed"])
+        self.assertTrue(co["synthetic_not_fairness_evidence"])
+        self.assertIn("OQ-018", co["non_fairness_provenance_notice"])
+
+    def test_cohort_evaluation_route_is_manager_only_read_only_and_enforces_oq018(self):
+        self.assertEqual(self.call("sam@example.test", "/api/ai/cohort-evaluation")[0], 403)
+        self.assertEqual(self.call("pam@example.test", "/api/ai/cohort-evaluation?live=1")[0], 400)
+        self.assertEqual(self.call("pam@example.test", "/api/ai/cohort-evaluation", {})[0], 404)
+        code, body = self.call("pam@example.test", "/api/ai/cohort-evaluation")
+        self.assertEqual(code, 200)
+        self.assertEqual(body["owner_approval_status"], "unapproved")
+        self.assertFalse(body["lawful_analysis_fields_approved"])
+        self.assertFalse(body["live_activation_allowed"])
+        self.assertTrue(body["synthetic_not_fairness_evidence"])
+        self.assertIn("OQ-018", body["non_fairness_provenance_notice"])
+        for key, expected_task in (("ranking", "ranking-policy"), ("ai_priority", "ai-priority-recommendation")):
+            rec = body[key]
+            self.assertEqual(rec["task_id"], expected_task)
+            self.assertEqual(rec["owner_approval_status"], "unapproved")
+            self.assertFalse(rec["lawful_analysis_fields_approved"])
+            self.assertFalse(rec["activation_allowed"])
+            self.assertFalse(rec["live_activation_allowed"])
+            self.assertTrue(rec["synthetic"])
+            self.assertFalse(rec["fairness_evidence"])
+            self.assertTrue(rec["synthetic_not_fairness_evidence"])
+            self.assertIn("OQ-018", rec["non_fairness_provenance_notice"])
+            self.assertEqual(len(rec["record_hash"]), 64)
+            self.assertIn("unapproved_thresholds", {b["code"] for b in rec["blockers"]})
+            for dim in rec["dimensions"].values():
+                self.assertEqual(sum(r["n"] + r["missing"] for r in dim["cohorts"].values()), rec["total_cases"])
 
     def test_mode_flag_and_review_over_http(self):
         code, r = self.call("sam@example.test", "/api/cases/ZF-1/ai", {"task": "message", "mode": "workflow"})

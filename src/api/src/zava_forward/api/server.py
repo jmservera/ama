@@ -308,7 +308,7 @@ def get_kind(path):
     return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ranking/publication": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
             "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/handoffs/unaccepted": "handoffs", "/api/packages": "packages",
-            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/resident/choice-queue": "resident_choice_queue", "/api/finance": "finance_queue", "/api/finance/exposure": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/exceptions": "exceptions", "/api/continuity/export": "continuity_export", "/api/retention": "retention", "/api/data-protection": "data_protection"}.get(path, "unknown")
+            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/ai/cohort-evaluation": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/resident/choice-queue": "resident_choice_queue", "/api/finance": "finance_queue", "/api/finance/exposure": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/exceptions": "exceptions", "/api/continuity/export": "continuity_export", "/api/retention": "retention", "/api/data-protection": "data_protection"}.get(path, "unknown")
 
 
 GOVERNANCE_ACTIONS = {"protocol-freeze": "protocol_freeze", "protocol-approve": "protocol_approve", "benefits-record": "benefits_record",
@@ -929,6 +929,13 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                                             "registry": ai_registry.registry(), "consumption": consumption})
                 except ValueError as error:
                     return self._json(400, {"error": str(error)})
+            if url.path == "/api/ai/cohort-evaluation":
+                if u["role"] not in MANAGER_ROLES:
+                    return self._json(403, {"error": "Only a manager can see the cohort evaluation record."})
+                if url.query:
+                    return self._json(400, {"error": "Unknown cohort evaluation parameter."})
+                from zava_forward.agents import ai_eval
+                return self._json(200, ai_eval.cohort_evaluation_export())
             if url.path.startswith("/api/docs/"):
                 try:
                     _, _, _, cid, did = url.path.split("/")
