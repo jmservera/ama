@@ -4,8 +4,8 @@ Enforces and verifies the two programme-wide engineering invariants across every
 registered AI capability in `zava_forward.core.ai_registry`:
 
 1. AI never approves, executes, ranks, or mutates controlled records.
-2. No registered AI capability is enabled beyond the exercise without finite,
-   named-human-approved call, token, and budget limits (and an owned alert).
+2. No registered AI capability is enabled beyond the exercise without finite
+   call, token, and budget limits approved by a named human (and an owned alert).
 """
 
 from __future__ import annotations
@@ -289,6 +289,18 @@ def _iter_strings(value: object) -> list[str]:
     return found
 
 
+def _iter_mapping_keys(value: object) -> set[str]:
+    found: set[str] = set()
+    if isinstance(value, Mapping):
+        for k, v in value.items():
+            found.add(str(k))
+            found.update(_iter_mapping_keys(v))
+    elif isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
+        for item in value:
+            found.update(_iter_mapping_keys(item))
+    return found
+
+
 def enforce_proposal_only(task_id: str, payload: Mapping[str, Any]) -> None:
     """Verify an AI capability envelope or proposal output remains strictly propose-only."""
     if not ai_registry.is_registered(task_id):
@@ -310,7 +322,7 @@ def enforce_proposal_only(task_id: str, payload: Mapping[str, Any]) -> None:
         "signed_off",
     }:
         raise BoundedAiViolation(f"Capability {task_id!r} emitted controlled status {status!r}.")
-    bad_keys = FORBIDDEN_MUTATION_KEYS & set(payload.keys())
+    bad_keys = FORBIDDEN_MUTATION_KEYS & _iter_mapping_keys(payload)
     if bad_keys:
         raise BoundedAiViolation(
             f"Capability {task_id!r} injected controlled mutation keys: {sorted(bad_keys)}"

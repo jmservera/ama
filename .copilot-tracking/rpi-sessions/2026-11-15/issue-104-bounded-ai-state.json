@@ -34,6 +34,11 @@
       "decision": "Single-pass post-implementation Review executed (execution: Complete; outcome: Conformant; assessed boundary: full task P01-P03, FR-1 through FR-4, NFR-1 through NFR-3, AC-1 through AC-4, PC-001 through PC-005); routed low-severity non-blocking follow-ups RV-001 and RV-002 to prioritized_follow_ups",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-104-bounded-ai-review.md"
+    },
+    {
+      "decision": "Resolved independent code-review-functional findings F-001 (replaced named-human-approved with approved by a named human to satisfy src/api/tests/test_content_standard.py) and F-003 (recursive FORBIDDEN_MUTATION_KEYS scan across nested mappings/sequences in bounded_ai.enforce_proposal_only + unit test)",
+      "status": "confirmed",
+      "evidence": "/tmp/independent-review-104-757cd9b2a.md; .copilot-tracking/changes/2026-11-15/issue-104-bounded-ai-changes.md; .copilot-tracking/reviews/logs/2026-11-15/issue-104-bounded-ai-review.md"
     }
   ],
   "blockers": [],
@@ -44,12 +49,18 @@
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Tighten bounded_ai standalone helper defaults (RV-001: explicit approval_state allowlist, default TRIGGER_KEYS bound_keys, mandatory configuration/model in verify_non_exercise_enablement, and recursive nested-key scan in enforce_proposal_only)",
-      "rationale": "Highest ease and KISS defensive leverage in a single module (bounded_ai.py) with immediate reuse by downstream packages",
+      "task": "Tighten bounded_ai.verify_non_exercise_enablement standalone helper defaults (RV-001: explicit approval_state allowlist, default TRIGGER_KEYS bound_keys, and mandatory configuration/model)",
+      "rationale": "Highest ease and KISS defensive leverage in a single module (bounded_ai.py) now that nested-key recursion in enforce_proposal_only is delivered",
       "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-104-bounded-ai-review.md (RV-001)"
     },
     {
       "rank": 2,
+      "task": "Validate raw owner with rai_release.named_human unconditionally in Consumption.authorize before reference() hashing and check stored digest presence in Consumption.price (F-002)",
+      "rationale": "Small single-module cleanup in ai_consumption.py eliminating misleading named_human calls on SHA-256 hex digests during pre-registered price swaps",
+      "evidence": "/tmp/independent-review-104-757cd9b2a.md (F-002); .copilot-tracking/reviews/logs/2026-11-15/issue-104-bounded-ai-review.md"
+    },
+    {
+      "rank": 3,
       "task": "Expose remaining dynamic call/token/budget capacity in Consumption.non_exercise_status and wire bounded_ai.audit_registered_capabilities into an operator readiness surface in src/api (RV-002 + plan follow-up)",
       "rationale": "High operator observability value pairing RV-002 capacity reporting with the deferred src/api diagnostic surface",
       "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-104-bounded-ai-review.md (RV-002); .copilot-tracking/plans/2026-11-15/issue-104-bounded-ai-plan.md (Follow-Up Items)"

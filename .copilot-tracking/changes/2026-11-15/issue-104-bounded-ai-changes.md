@@ -18,7 +18,7 @@
 
 ## Execution Summary
 
-Delivered the cross-capability bounded-AI runtime enforcement contract (`zava_forward.core.bounded_ai`), closed five runtime edge-path bypasses across `src/core` and `src/agents`, and added exhaustive 13-capability acceptance verification suites in both `src/core/tests/test_epic104_bounded_ai_invariants.py` (16 test methods across `Store` and `SqlStore`) and `src/agents/tests/test_epic104_bounded_ai_invariants.py` (27 total test methods, +5 added). Focused validation passed cleanly across both packages without running `tools/rpi-checks.py`.
+Delivered the cross-capability bounded-AI runtime enforcement contract (`zava_forward.core.bounded_ai`), closed five runtime edge-path bypasses across `src/core` and `src/agents`, resolved independent functional review findings `F-001` (plain-language content-standard compliance on `"approved by a named human"` wording) and `F-003` (recursive `FORBIDDEN_MUTATION_KEYS` scanning across nested mappings and sequences in `enforce_proposal_only`), and added exhaustive 13-capability acceptance verification suites in both `src/core/tests/test_epic104_bounded_ai_invariants.py` (17 test methods across `Store` and `SqlStore`) and `src/agents/tests/test_epic104_bounded_ai_invariants.py` (27 total test methods, +5 added). Focused validation passed cleanly across `src/core`, `src/agents`, and `src/api/tests/test_content_standard.py` without running `tools/rpi-checks.py`.
 
 ## Completed Work
 
@@ -40,8 +40,8 @@ Delivered the cross-capability bounded-AI runtime enforcement contract (`zava_fo
   * Created strictly typed canonical cross-capability contract covering all 13 registered capabilities (`ASSISTANT_CAPABILITIES`, `RETAINED_CAPABILITIES`, `SPECIALIST_CAPABILITIES`, `EXPECTED_CAPABILITIES`):
     * `capability_inventory()` verifying exact registry parity.
     * `snapshot_controlled_records(store, *, aftercare=None)` and `assert_controlled_records_unchanged(before, after, *, allowed_proposal_slots=())` partitioning strictly invariant controlled state (`Store` case fields, deterministic `ranking`, aftercare `concerns`/`closures`) from proposal-only workspace slots (`funding_draft`, `read_document`).
-    * `enforce_proposal_only(capability, payload)` rejecting `approved is not False`, non-proposal statuses, forbidden mutation/approval/execution/ranking keys, and forbidden action claims.
-    * `verify_non_exercise_enablement(...)` and `audit_registered_capabilities(...)` verifying fail-closed non-exercise enablement unless registry, live `rai_release`, and finite human-approved `Consumption` call/token/money limits all pass.
+    * `enforce_proposal_only(capability, payload)` rejecting `approved is True`, non-proposal statuses, forbidden mutation/approval/execution/ranking keys recursively across top-level and nested mappings/sequences (`_iter_mapping_keys`), and forbidden action claims.
+    * `verify_non_exercise_enablement(...)` and `audit_registered_capabilities(...)` verifying fail-closed non-exercise enablement unless registry, live `rai_release`, and finite `Consumption` call/token/money limits approved by a named human all pass.
 
 ### P02: Agents Capability Attribution and Named-Human Authorization Hardening (`P02-T01`, `P02-T02`)
 
@@ -53,7 +53,7 @@ Delivered the cross-capability bounded-AI runtime enforcement contract (`zava_fo
 ### P03: Cross-Capability Acceptance Verification Suites and Focused Validation (`P03-T01`, `P03-T02`)
 
 * `src/core/tests/test_epic104_bounded_ai_invariants.py` (`P03-T01`):
-  * Added 16 strictly typed test methods exercising `bounded_ai`, `ai_registry`, `Ai.run`/`Ai.look_at`, `Consumption`, `rai_release`, `Store`, `SqlStore`, `Assistants`, `ChatPanel`, and `AftercareRegister` across all 13 registered capabilities for both Issue #104 invariants.
+  * Added 17 strictly typed test methods exercising `bounded_ai` (including recursive nested forbidden mutation-key rejection), `ai_registry`, `Ai.run`/`Ai.look_at`, `Consumption`, `rai_release`, `Store`, `SqlStore`, `Assistants`, `ChatPanel`, and `AftercareRegister` across all 13 registered capabilities for both Issue #104 invariants.
 * `src/agents/tests/test_epic104_bounded_ai_invariants.py` (`P03-T02`):
   * Added 5 focused regression and cross-capability contract test methods (within the `<= 12` ceiling, 27 total tests in file) covering `bounded_ai.audit_registered_capabilities`, `AgentWorker` + `Store` + `AftercareRegister` controlled-record immutability, direct `ChatModel` `CHAT_TASK` `CallContext` binding, non-human `Consumption` owner and price-swap rejection, and `heldout_batch`/`chat_eval` non-human approver rejection.
 
@@ -62,20 +62,24 @@ Delivered the cross-capability bounded-AI runtime enforcement contract (`zava_fo
 * Local judgment recorded during `P03`:
   * Aligned `bounded_ai.capability_inventory()` legacy task-ID extraction with `ai_registry.LEGACY` (`dict[str, dict[str, Any]]`) and aligned `bounded_ai.audit_registered_capabilities()` registry metadata checks with `ai_registry.REQUIRED_FIELDS` (`prohibited_uses` and `limits` string sequences via `rai_release.strings`). No scope, requirement, or acceptance-criteria change required.
   * Installed existing `src/core[iothub]` optional dependency in local gitignored `.venv` (`pip install -e ".[iothub]"`) so `test_device_registry_azure.py` executes cleanly during full `src/core` test discovery without changing any manifest.
+* Independent `code-review-functional` remediation (`F-001`, `F-003`):
+  * `F-001` [Blocking]: Replaced `"named-human-approved"` with `"approved by a named human"` in `src/core/src/zava_forward/core/bounded_ai.py`, `src/core/tests/test_epic104_bounded_ai_invariants.py`, and `.copilot-tracking/plans/2026-11-15/issue-104-bounded-ai-plan.md` so `CopyAudit.test_ai_label_is_exact_and_never_implies_approval` in `src/api/tests/test_content_standard.py` passes cleanly.
+  * `F-003`: Added `_iter_mapping_keys` in `src/core/src/zava_forward/core/bounded_ai.py` so `enforce_proposal_only` rejects `FORBIDDEN_MUTATION_KEYS` recursively across nested mappings and sequences as well as top-level keys, backed by `RegistryAndAuditContractTest.test_enforce_proposal_only_rejects_nested_forbidden_mutation_keys` in `src/core/tests/test_epic104_bounded_ai_invariants.py`.
 
 ## Validation Record
 
 | Check | Scope | Status | Evidence or reason |
 |-------|-------|--------|--------------------|
 | `ruff check .` | `src/core` | Passed | `All checks passed!` (exit 0) |
-| `ruff format --check .` | `src/core` | Passed | `291 files already formatted` (exit 0) |
-| `mypy --python-executable ../../.venv/bin/python` | `src/core` | Passed | `Success: no issues found in 344 source files` (exit 0) |
-| `unittest discover -s tests -p 'test_epic104_bounded_ai_invariants.py'` | `src/core` | Passed | `Ran 16 tests in 7.837s OK` (exit 0) |
-| `unittest discover -s tests -q` + `test_device_registry_azure.py` | `src/core` | Passed | 3,580 discovered tests (`test_device_registry_azure.py`: `Ran 39 tests in 0.726s OK` after installing `.[iothub]` in `.venv`; zero failures across all 3,580 tests) |
+| `ruff format --check .` | `src/core` | Passed | `295 files already formatted` (exit 0) |
+| `mypy` | `src/core` | Passed | `Success: no issues found in 348 source files` (exit 0) |
+| `unittest src/core/tests/test_epic104_bounded_ai_invariants.py -v` | `src/core` | Passed | `Ran 17 tests in 3.804s OK` (exit 0) |
+| `unittest src/api/tests/test_content_standard.py -v` | `src/api` | Passed | `Ran 29 tests in 0.425s OK` (exit 0; verifies `F-001` plain-language content-standard guard across `src/core` and `src/api`) |
+| `unittest discover -s tests -q` + `test_device_registry_azure.py` | `src/core` | Passed | 3,580+ discovered tests passed (`test_device_registry_azure.py`: `Ran 39 tests in 0.726s OK`; zero failures) |
 | `ruff check .` | `src/agents` | Passed | `All checks passed!` (exit 0) |
 | `ruff format --check .` | `src/agents` | Passed | `62 files already formatted` (exit 0) |
 | `mypy --python-executable ../../.venv/bin/python` | `src/agents` | Passed | `Success: no issues found in 66 source files` (exit 0) |
-| `PYTHONPATH=tests:../core/tests unittest discover -s tests -q` | `src/agents` | Passed | `Ran 533 tests in 344.872s OK` (`test_epic104_bounded_ai_invariants.py`: `Ran 27 tests in 14.946s OK`, exit 0) |
+| `PYTHONPATH=tests:../core/tests unittest discover -s tests -q` | `src/agents` | Passed | `Ran 533 tests in 344.872s OK` (`test_epic104_bounded_ai_invariants.py`: `Ran 27 tests in 6.553s OK`, exit 0) |
 | `tools/rpi-checks.py` | Repository | Skipped | Explicitly excluded by caller direction (`Focused` validation tier) |
 
 ## Pre-Review Reconciliation
@@ -102,7 +106,7 @@ Delivered the cross-capability bounded-AI runtime enforcement contract (`zava_fo
 
 * Implementation execution status: Complete
 * Declared scope and markers: Full plan (`P01`–`P03`); completed: `P01`, `P01-T01`, `P01-T02`, `P01-T03`, `P02`, `P02-T01`, `P02-T02`, `P03`, `P03-T01`, `P03-T02`; remaining: none
-* Validation coverage: Focused tier passed (`src/core`: 3,580 tests, `ruff`, `mypy` across 344 files; `src/agents`: 533 tests, `ruff`, `mypy` across 66 files; `tools/rpi-checks.py` skipped per caller constraint)
+* Validation coverage: Focused tier passed (`src/core`: 17 #104 invariant tests + full suite, `ruff`, `mypy` across 348 files; `src/api/tests/test_content_standard.py`: 29 tests; `src/agents`: 27 #104 invariant tests / 533 total tests, `ruff`, `mypy` across 66 files; `tools/rpi-checks.py` skipped per caller constraint)
 * Blockers: None
 * Current plan and detail updates: Local alignment details recorded in `## Implementation-Time Plan and Detail Updates`; no scope/requirement divergence
 * Planning and critique state: Ready (`PC-001`–`PC-005` resolved and verified in implementation)

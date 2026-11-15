@@ -2,8 +2,8 @@
 
 Covers all 13 registered capabilities across `Store` and `SqlStore`:
 1. AI never approves, executes, ranks, or mutates controlled records.
-2. No registered AI capability is enabled beyond the exercise without finite,
-   named-human-approved call, token, and budget limits (and an owned alert).
+2. No registered AI capability is enabled beyond the exercise without finite
+   call, token, and budget limits approved by a named human (and an owned alert).
 """
 
 from __future__ import annotations
@@ -125,6 +125,43 @@ class RegistryAndAuditContractTest(unittest.TestCase):
             },
         ]
         for payload in bad_payloads:
+            with self.subTest(payload=payload), self.assertRaises(bounded_ai.BoundedAiViolation):
+                bounded_ai.enforce_proposal_only("briefing", payload)
+
+    def test_enforce_proposal_only_rejects_nested_forbidden_mutation_keys(self) -> None:
+        clean_nested: dict[str, Any] = {
+            "approved": False,
+            "approval": "Not reviewed",
+            "result": {
+                "summary": "Draft note for review.",
+                "findings": [{"text": "EPC band D recorded.", "citations": ["home.epc"]}],
+            },
+        }
+        bounded_ai.enforce_proposal_only("briefing", clean_nested)
+
+        nested_bad_payloads: list[dict[str, Any]] = [
+            {
+                "approved": False,
+                "approval": "Not reviewed",
+                "result": {"rank_override": 1},
+            },
+            {
+                "approved": False,
+                "approval": "Not reviewed",
+                "output": {"meta": {"approved_by": "Named Officer"}},
+            },
+            {
+                "approved": False,
+                "approval": "Not reviewed",
+                "findings": [{"text": "Draft item", "mutation": {"stage_transition": "Complete"}}],
+            },
+            {
+                "approved": False,
+                "approval": "Not reviewed",
+                "steps": ({"consent_granted": True},),
+            },
+        ]
+        for payload in nested_bad_payloads:
             with self.subTest(payload=payload), self.assertRaises(bounded_ai.BoundedAiViolation):
                 bounded_ai.enforce_proposal_only("briefing", payload)
 
