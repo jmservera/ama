@@ -49,11 +49,14 @@ it. Independent issues continue. Blockers are:
   access.
 * A missing credential, permission or tool the run cannot obtain.
 * A blocking review finding (including a safety, privacy or accessibility
-  defect) still open after two correction cycles, a check that keeps
+  defect) still open after five total review-correction cycles (preserving
+  spent history and any separately authorized finite extension, and authorizing
+  at least three scoped diagnostic RPI cycles with validation before stopping
+  solely because of the cycle limit), a check that keeps
   failing for a reason the loop cannot fix, or a conflict whose intent cannot
-  be reconciled. Non-blocking Copilot threads raised after two correction
+  be reconciled. Non-blocking Copilot threads raised after the correction
   cycles are not blockers; they become follow-up issues (step 6, owner
-  decision D5, 2026-11-01).
+  decision D5, 2026-11-01; default five-cycle allowance, 2026-11-11).
 * An issue that stays unclear after one backlog-manager refinement. An issue
   never refined or assessed is refinement work, not a blocker.
 
@@ -98,7 +101,8 @@ without inventing, duplicating or no-op issues to look busy:
   worktree. Admission rule (single source; other sections cross-reference it):
   eight (owner, 2026-10-31) is the
   maximum number of live, useful native `rpi-*` tmux sessions, not eight
-  issues: independent workers may share a coherent parent scope or issue, and
+  issues (there is no numerical active-issue cap when work is organized into
+  coherent parent stacks): independent workers may share a coherent parent scope or issue, and
   repair, correction, validation and gate continuations each count only while
   their session is live. A finished session frees its slot at once; its issue
   stays in the ledger until published and merged, and a retained unpublished
@@ -191,8 +195,13 @@ owner pause and a real scoped human gate stay legitimate stops for their scope.
 
 Two recurring checks run the loop; the coordinator manages them with its live
 schedule tool (`manage_schedule`), and no repository setting changes. A
-delivery check runs every 10 minutes and applies this file. A cleanup check
-runs hourly and applies the Cleanup contract. Neither is a status-only poll.
+delivery check runs on an adaptive 10 to 30 minute cadence (default 10 minutes
+when short focused tasks are finishing, or 15 to 20 minutes when longer RPI
+waves are running alongside `ama-worker-watch.py` completion notifications) and
+applies this file. A cleanup check runs hourly and applies the Cleanup contract
+(including keeping `/mnt/tmp` available for `TMPDIR=/mnt/tmp` and pruning
+eligible stale caches, temporary directories, and merged worktrees). Neither is
+a status-only poll.
 
 * Keep each approved prompt as a versioned snapshot in the run's approved
   evidence and record its version, schedule id, interval and creation time in
@@ -363,13 +372,27 @@ treated as delivery failure.
 ## CI economy and PR backlog cap (owner rules, 2026-11-03)
 
 Hosted-runner capacity, not code, is the delivery bottleneck: every push
-restarts that PR's Source CI and Scorer runs (`cancel-in-progress`).
+restarts that PR's Source CI and Scorer runs (`cancel-in-progress`). `Source
+projects CI` (`src-ci.yml`) runs on pull requests targeting any branch, whereas
+`Capstone Rubric Scorer` (`rubric-score.lock.yml`) runs only on pull requests
+and pushes targeting `main`; stacking child PRs onto a coherent parent
+integration branch validates each child in `Source projects CI` without
+triggering rubric scoring runs on `main`.
 
 * Automatic Copilot Code Review is disabled. The local `code-review-*` verdict,
   recorded in `.copilot-tracking/reviews/`, is the review gate.
 * Push less. Batch fixes into one push, stack small PRs under a parent branch,
   and rebase a run-owned PR only under the step 8 conditions. Never rebase a
   PR just to refresh a green or pending head.
+* Prevent avoidable `Source projects CI` reruns by running local `src-ci.yml`
+  parity checks before pushing: run bare `python3 -m mypy` inside each modified
+  `src/<project>` directory (for `src/api`, `PYTHONPATH=../core/src:../agents/src python3 -m mypy`),
+  run `python3 -m ruff format --isolated --line-length 100 --check` on modified
+  `infra/` Python files, include `src/api/tests` on `PYTHONPATH` when running
+  `src/api` tests from the repository root, update `scenario-manifest.json`
+  recipe SHAs when `src/api/checks/*_browser_check.py` changes, and run
+  `test_accessibility_baseline.py` and `test_content_standard.py` when web UI
+  files change.
 * Even an append-only docs conflict rebase creates a new head and invalidates
   head-bound evidence; the new head needs step 7/8 final exact-head
   selected-tier evidence, independent exact-head assessment and hosted checks
@@ -589,7 +612,7 @@ remains subject to the tracking retention policy.
    an absolute evidence directory outside every worktree that you own and create for this
    launch (`{evidence-dir}`, for example under `~/.local/share/ama/phase-witness/`), so the
    runtime log and lock never dirty the candidate:
-   `python3 tools/rpi_phase_witness.py record launch --repo {worktree} --issue {number} --evidence-dir {evidence-dir} --brief {brief-path} --session {name} --actor coordinator --claim-model claude-sonnet-5.5`.
+   `python3 tools/rpi_phase_witness.py record launch --repo {worktree} --issue {number} --evidence-dir {evidence-dir} --brief {brief-path} --session {name} --actor coordinator --claim-model gemini-4-carbon`.
    A refusal (exit 2) blocks that launch until its reason is fixed. The
    witness observes its own UTC clock, Git HEAD and tree, dirty source and,
    at later boundaries, the canonical artifacts; it accepts no caller-supplied times, and its record is
@@ -610,10 +633,12 @@ remains subject to the tracking retention policy.
    #!/usr/bin/env bash
    name=$1 stamp=$2 brief=$3
    log=/tmp/$name.log
+   mkdir -p /mnt/tmp 2>/dev/null || true
+   export TMPDIR=/mnt/tmp
    echo "--- launch $stamp" >> "$log"
-   copilot --agent hve-core-all:rpi-agent --model claude-sonnet-5.5 \
+   copilot --agent hve-core-all:rpi-agent --model gemini-4-carbon \
      --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' \
-     -p "$(cat "$brief")" 2>&1 | tee -a "$log"
+     -p "$(cat "$brief")" < /dev/null 2>&1 | tee -a "$log"
    status=${PIPESTATUS[0]}
    echo "exit=$status" >> "$log"
    exit "$status"
@@ -627,9 +652,9 @@ remains subject to the tracking retention policy.
    line for the current attempt is unknown, never success.
    Logs are preserved across retries: each launch appends a
    `--- launch {timestamp}` line and never truncates or deletes an earlier log.
-   Use Sonnet 5.5 for all coordinator-launched RPI issue sessions, including
+   Use Gemini 4 Carbon (`--model gemini-4-carbon`) for all coordinator-launched RPI issue sessions, including
    retries, corrections and validation continuations, by passing
-   `--model claude-sonnet-5.5` on every launch. The coordinator's own session
+   `--model gemini-4-carbon` on every launch. The coordinator's own session
    stays on Automatic; this does not change independent reviewer selection.
    If the requested model or launch tool is unavailable, report the specific
    model/tool blocker for the affected loop only; do not silently fall back
@@ -794,10 +819,14 @@ remains subject to the tracking retention policy.
    agents against each PR diff without rerunning or replacing the loop's
    original RPI Review, and also review the open PRs of a wave
    together for contradictions between them. Send findings back to that
-   issue's loop as commits on the same branch, up to two correction cycles.
-   After two correction cycles, new non-blocking Copilot threads become
+   issue's loop as commits on the same branch, up to five total review-correction
+   cycles per issue (preserving spent cycles and any separately authorized
+   finite extension, and authorizing at least three scoped diagnostic RPI
+   cycles with validation before stopping solely because of the cycle limit).
+   After the allowed correction cycles, new non-blocking Copilot threads become
    follow-up issues and do not hold the PR; a blocking safety, privacy or
-   accessibility defect still stops the PR (owner decision D5, 2026-11-01).
+   accessibility defect still stops the PR (owner decision D5, 2026-11-01;
+   five-cycle default, 2026-11-11).
    Do not mark review checkboxes.
 7. **Automerge through the gate.** Merge a PR only when all of these hold,
    verified by commands run now: every implementation dependency is merged
