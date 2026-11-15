@@ -5,8 +5,8 @@
 
 * Task ID: issue-154-rep-expiry-views
 * Review date: 2026-11-15
-* Rebased base commit: `0c1fa1da4` (`origin/feat/demo-164-chat-grounding-provenance-0900`, after PR #1761 `7f83f4749` and PR #1769 `0c1fa1da4` merged)
-* Assessed feature commit: `3ed0c7deb` (rebased from `99a596629` with zero correction cycles spent; child rebase-continuation review recorded in `.copilot-tracking/reviews/logs/2026-11-15/issue-154-rep-expiry-views-rebase-0c1fa1da4-review.md`)
+* Rebased base commit: `d8cb35d25` (`origin/feat/demo-164-chat-grounding-provenance-0900`, incorporating PR #1761 `7f83f4749`, PR #1769 `0c1fa1da4`, and PR #1770 `d8cb35d25`)
+* Assessed feature commit: `1b9c023f0` (cleanly rebased from `3ed0c7deb` / `99a596629` with zero conflicts onto `d8cb35d25` and zero correction cycles spent; prior `0c1fa1da4` rebase-continuation review recorded in `.copilot-tracking/reviews/logs/2026-11-15/issue-154-rep-expiry-views-rebase-0c1fa1da4-review.md`)
 * Review scope: Full task (`P01`, `P02`, `P03`)
 * Assessed boundary: Issue #154 Criterion 3 (`Representative views show only task-limited authority and expire as recorded`) covering `FR-045`, `FR-046`, `NFR-008`, `NFR-009`, `FR-REP-01` through `FR-REP-03`, `NFR-REP-01` through `NFR-REP-03`, `AC1` through `AC5`, and resolved plan critique findings `PC-001` through `PC-006` across `src/core` and `src/api` without editing `src/api/src/zava_forward/api/web/role-screens.js`.
 * Plan: .copilot-tracking/plans/2026-11-15/issue-154-rep-expiry-views-plan.md
@@ -110,6 +110,7 @@ Later implementation of a routed finding does not require another Review.
 | `mypy` | `src/api` | Passed | `Success: no issues found in 281 source files` (exit `0`) |
 | `PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest discover` (`test_representative_expiry_api.py`, `test_role_endpoint_inventory.py`, `test_resident_*.py`, `test_dependency_rule.py`) | `src/api/tests` | Passed | `3` tests in `test_representative_expiry_api.py`, `24` tests in `test_role_endpoint_inventory.py`, `275` tests in `test_resident_*.py` (`skipped=9`), and `2` tests in `test_dependency_rule.py` passed (exit `0`) |
 | Post-rebase (`0c1fa1da4` -> `3ed0c7deb`) focused validation (`unittest`, `ruff`, `mypy`, `tools/rename-zava-tests.py`) | `src/core`, `src/api`, `tools/` | Passed | `518` tests (`skipped=154`) across `test_role_endpoint_inventory.py` + `#154` suites, `2` `#83` handoff escalation API tests, `src/core` `ruff check`/`format --check` (`285` files)/`mypy` (`338` files), `src/api` `ruff check`/`format --check` (`198` files) + targeted `#154` `mypy` (`2` files), and `rename-zava-tests.py` (`25` tests) all passed (exit `0`) |
+| Finalized rebase (`d8cb35d25` -> `1b9c023f0`) focused validation (`test_resident_journey_design.py`, `test_representative_expiry_api.py`, `test_role_endpoint_inventory.py`, `ruff`, `mypy`) | `src/core`, `src/api` | Passed | `16` tests in `test_resident_journey_design.py` (`0.030s`), `3` tests in `test_representative_expiry_api.py` (`4.242s`), `24` tests in `test_role_endpoint_inventory.py` (`14.008s`), `ruff check` + `ruff format --check` (`483` files), `src/core` `mypy` (`338` source files, `0` issues), and `src/api` `mypy` (`282` source files, `0` issues) all passed (exit `0`) |
 
 ## Outcome
 
