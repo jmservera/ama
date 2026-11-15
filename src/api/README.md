@@ -31,6 +31,23 @@ explicit integer denominators (`proposal_count`, `accepted_outcome_count`,
 Focused HTTP endpoint coverage lives in
 `src/api/tests/test_management_tokenomics_api_100.py` (`Refs #100`).
 
+## Responsible AI exercise acceptance versus real-AI delivery gate in readiness endpoints (2026-11-15, Refs #218)
+
+`GET /api/assistants`, manager-only `GET /api/governance` (with or without
+`?assessment=...`), and `live` inside manager-only `GET /api/ai/report` forward
+the active `Assistants` service into `zava_forward.core.rai_control_plane` and
+surface two explicitly separated readiness sections: `rai_exercise_acceptance`
+and `real_ai_delivery_gate`. Operators and assessors can verify offline RAI
+exercise controls (`OQ-017` live activation rejection with audit emission,
+suspension/quarantine, manual fallback, synthetic non-fairness boundaries, and
+15-identifier requirement traceability) independently of `real_ai_delivery_gate`,
+which remains blocked until a live Azure OpenAI provider, serving-version
+attestation, and named human live approvals (`OQ-017` to `OQ-019`) are in force.
+`POST /api/assistants/releases` returns HTTP `403` citing `OQ-017` and records
+`rai_live_activation_rejected` whenever an `actual` or `live=true` release lacks
+a named human `approved_by` and `named_approval_id`. Focused API coverage lives
+in `src/api/tests/test_rai_release_readiness_api_218.py`.
+
 ## Hazard and safeguarding clock and named owner in queues and case cards (2026-11-15, Refs #76)
 
 `workSummary` and `safetyPanel` in `web/app.js` render the projected operational

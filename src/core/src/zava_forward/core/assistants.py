@@ -1577,20 +1577,51 @@ class Assistants:
         return rai_release.reference(selected) if selected else None
 
     def record_release(self, user, body):
-        if not self.sql:
-            raise ValueError(self.disabled())
-        with self.transaction() as db:
-            self.authorize(db, user, "funding-evidence")
-            from .ai_registry import LEGACY
+        from . import rai_control_plane
 
-            rid = rel.record(
-                db,
-                self.now(db),
-                user,
-                body,
-                self.approvers,
-                set(REGISTRY) | {f"legacy:{t}" for t in LEGACY},
-            )
+        live_intent = rai_control_plane.is_live_release_intent(body)
+        try:
+            if not self.sql:
+                if live_intent:
+                    task_candidate = body.get("task") if isinstance(body, dict) else None
+                    check = rai_control_plane.validate_live_task_approval(
+                        task_candidate,
+                        body if isinstance(body, dict) else None,
+                    )
+                    if not check["valid"]:
+                        raise rai_control_plane.LiveActivationApprovalError(
+                            check["task_id"],
+                            check["reasons"],
+                        )
+                raise ValueError(self.disabled())
+            with self.transaction() as db:
+                self.authorize(db, user, "funding-evidence")
+                from .ai_registry import LEGACY
+
+                rid = rel.record(
+                    db,
+                    self.now(db),
+                    user,
+                    body,
+                    self.approvers,
+                    set(REGISTRY) | {f"legacy:{t}" for t in LEGACY},
+                )
+        except (PermissionError, ValueError) as exc:
+            if live_intent:
+                task_candidate = body.get("task") if isinstance(body, dict) else None
+                reasons = (
+                    list(exc.reasons)
+                    if isinstance(exc, rai_control_plane.LiveActivationApprovalError)
+                    else [str(exc)]
+                )
+                rai_control_plane.emit_live_activation_rejection_audit(
+                    self.store,
+                    actor=user,
+                    task_id=task_candidate,
+                    reasons=reasons,
+                    assistants_service=self,
+                )
+            raise
         return dict(
             id=rid,
             status="active",
@@ -1760,9 +1791,16 @@ class Assistants:
         return None
 
     def registry(self, user):
+        from . import rai_control_plane
+
         if user.get("role") not in projection.STAFF_ROLES:
             raise PermissionError("Staff assistance only.")
         if not self.sql:
+            readiness = rai_control_plane.exercise_acceptance_report(
+                self.store,
+                user=user,
+                assistants_service=self,
+            )
             return dict(
                 assistants=[
                     dict(id=k, version=VERSION, model_bounds=model_bounds(), **v)
@@ -1772,6 +1810,7 @@ class Assistants:
                 disabled=self.disabled(),
                 proactive=False,
                 manual="Use the ordinary case controls.",
+                **readiness,
             )
         with self.transaction() as db:
             from . import ai_registry
@@ -1848,6 +1887,12 @@ class Assistants:
                         ),
                     )
                 )
+            readiness = rai_control_plane.exercise_acceptance_report(
+                self.store,
+                user=user,
+                assistants_service=self,
+                db=db,
+            )
             return dict(
                 assistants=result,
                 registered_tasks=registered,
@@ -1859,6 +1904,7 @@ class Assistants:
                 if not self.limits.valid
                 else {k: getattr(self.limits, k) for k in Limits.DEFAULTS},
                 manual="Use the ordinary case controls; proposals never approve or change the case.",
+                **readiness,
             )
 
     def _task_id(self, db, capability, c, signature):

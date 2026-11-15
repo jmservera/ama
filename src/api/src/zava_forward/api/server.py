@@ -47,7 +47,7 @@ from zava_forward.core.ranking_publication import ArchiveStorageError
 from zava_forward.core.factory import open_store
 from zava_forward.api.timecapture import TimeCapture
 from zava_forward.api.static_assets import StaticAssets
-from zava_forward.core.store import MANAGER_ROLES, ConflictError, GateError
+from zava_forward.core.store import MANAGER_ROLES, ConflictError, GateError, Store
 from zava_forward.core.aftercare_intake import AftercareService
 from zava_forward.core.aftercare_store import DocumentStateStore
 from zava_forward.core.synthetic import sensor_scenarios
@@ -912,7 +912,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(*simulator_admin.handle(s, u, "GET", url.path))
             if url.path == "/api/governance":
                 try:
-                    result = s.governance_view(u)
+                    result = (
+                        s.governance_view(u, assistants_service=app.assistants)
+                        if isinstance(s, Store)
+                        else s.governance_view(u)
+                    )
                     values = parse_qs(url.query, keep_blank_values=True)
                     if values.keys() - {"assessment"} or any(len(v) != 1 for v in values.values()):
                         raise ValueError("Supply only one optional declared assessment parameter.")
@@ -920,7 +924,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         assessment = json.loads(values["assessment"][0])
                         if assessment is None:
                             raise ValueError("An explicit assessment must be an object, not null.")
-                        result = s.governance_view(u, assessment)
+                        result = (
+                            s.governance_view(u, assessment, assistants_service=app.assistants)
+                            if isinstance(s, Store)
+                            else s.governance_view(u, assessment)
+                        )
                     return self._json(200, result)
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
@@ -1331,7 +1339,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         {
                             "evaluation": evaluation,
                             "chat_evaluation": chat_eval.run_eval(),
-                            "live": s.ai_live_report(u, **live_bounds),
+                            "live": (
+                                s.ai_live_report(u, assistants_service=app.assistants, **live_bounds)
+                                if isinstance(s, Store)
+                                else s.ai_live_report(u, **live_bounds)
+                            ),
                             "registry": ai_registry.registry(),
                             "consumption": consumption,
                         },

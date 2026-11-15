@@ -35,6 +35,9 @@ def fixture(task, binding, model="test-model", cls="constructed-fixture", expire
     rec["evaluation_summary"] = dict(evaluation_version=rai_release.EVALUATION_VERSION, decision="Pass",
                                      summary="Constructed synthetic evaluation summary; no real evaluation.",
                                      evidence_digest=rai_release.digest(rec["evidence"]))
+    if cls == "actual":
+        rec["approved_by"] = "Amina Okafor, RAI Assurance Lead"
+        rec["named_approval_id"] = "OQ017-APPROVAL-2026-01"
     rec.update(over)
     return rec
 

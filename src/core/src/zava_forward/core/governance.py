@@ -972,14 +972,16 @@ class GovernanceMixin:
                 f"This {scope_kind} is paused after a guardrail breach until restart is authorised. {EMERGENCY_NOTE}"
             )
 
-    def governance_view(self, user, assessment=None):
+    def governance_view(self, user, assessment=None, *, assistants_service=None):
+        from . import rai_control_plane
+
         with self.lock:
             actor = _actor(self, user)
             _need_manager(actor, "see the governance register")
             detached = copy(self)
             detached.data = dict(self.data, governance=deepcopy(self.data.get("governance", {})))
             g = detached._gov()
-            return dict(
+            payload = dict(
                 protocol=g["protocol_versions"],
                 benefits=g["benefits"],
                 verdicts=detached.benefit_verdicts(),
@@ -993,3 +995,9 @@ class GovernanceMixin:
                 note=EMERGENCY_NOTE,
                 rai_evidence=_rai_view(g, assessment),
             )
+        readiness = rai_control_plane.exercise_acceptance_report(
+            self,
+            user=actor,
+            assistants_service=assistants_service,
+        )
+        return dict(payload, **readiness)
