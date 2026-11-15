@@ -1,0 +1,74 @@
+{
+  "task_id": "2026-11-15-wcag-baseline-151",
+  "task_slug": "wcag-baseline-151",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/wcag-baseline-151-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/wcag-baseline-151-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/wcag-baseline-151-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/wcag-baseline-151-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/wcag-baseline-151-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/wcag-baseline-151-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Caller explicitly requested an automatic full RPI loop (Research, Plan, Implement, Review) for GitHub issue #151 on branch feat/ux-151-wcag-baseline targeting feat/demo-233-same-home-tensions-0825 (6510b6fbc38533a16b9492cacd3ab7e7331c1610) under the Focused validation tier, committing all code, documentation, tests, and .copilot-tracking/ artifacts without pushing to main.",
+      "status": "confirmed",
+      "evidence": "User prompt in non-interactive CLI execution"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready. Converged on surgical web remediation, structured 8-dimension WCAG 2.2 AA audit + complete widget/table inventory in wcag-conformance-baseline.md (+ KB index/log), updated test_accessibility_baseline.py, and new deterministic unskipped test_wcag_workbench_baseline_151.py while preserving .maplist li and sites==9 guards.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/wcag-baseline-151-research.md (C1-C24, W1, W2)"
+    },
+    {
+      "decision": "Plan critique executed once (status: Complete, verdict: Revise). Applied all 5 planner-owned corrections directly (PC-001 progress.js ProgressViews/row[0]/columns[index+1], PC-002 role-screens.js screenTable rowHeader=true default, PC-003 exact r.resident/r.reading_id and 5 missing .table-scroll targets, PC-004 P02 tests before P03 UX doc citations, PC-005 .leafmap.leaflet-touch .leaflet-bar a specificity + hidden:true sync); zero user escalation required.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/wcag-baseline-151-plan-critique.md; .copilot-tracking/plans/2026-11-15/wcag-baseline-151-plan.md"
+    },
+    {
+      "decision": "Implementation complete across full plan (P01, P02, P03) including immediately relevant welcome.html .skip-link alignment; all focused validation gates passed and artifacts reconciled for Review.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-15/wcag-baseline-151-changes.md"
+    },
+    {
+      "decision": "Post-implementation Review executed once (execution status: Complete). Assessed boundary: full P01-P03 implementation, deterministic tests, KB baseline audit, Focused validation, and refreshed Web Interface Guidelines across all 7 changed web files.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/wcag-baseline-151-review.md"
+    },
+    {
+      "decision": "Post-implementation Review outcome: Conformant (0 defects; 1 Low non-blocking pre-existing Web Interface Guidelines polish note RV-001 routed to follow-up; human AT/zoom walkthroughs and owner confirmation O-1 preserved as open gates under Refs #151, #119).",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/wcag-baseline-151-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Select a ranked follow-up work item to start a child RPI loop, Stop automatic session, or Switch to manual mode."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Add a .skip-link bypass anchor and polite status region to standalone /law.html if brought into workbench conformance scope",
+      "rationale": "Highest ease of implementation (single HTML file) and closes the recorded standalone legal-viewer gap in wcag-conformance-baseline.md without touching regulatory snapshots.",
+      "evidence": "docs/reference/research/ux/wcag-conformance-baseline.md (## Recorded gaps); src/api/src/zava_forward/api/web/law.html"
+    },
+    {
+      "rank": 2,
+      "task": "Apply Web Interface Guidelines typography and locale polish (RV-001: tabular-nums on numeric columns, Intl.NumberFormat in bars(), and <meta name=\"theme-color\"> on HTML entrypoints)",
+      "rationale": "Low implementation effort with clean CSS/Intl engineering-quality leverage across all 15 workbench tables and Overview charts.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/wcag-baseline-151-review.md (RV-001)"
+    },
+    {
+      "rank": 3,
+      "task": "Author a11y-runtime.config.json and integrate rendered Playwright / axe-core regression probes into hosted CI (#155)",
+      "rationale": "High assurance value complementing static and Node-VM checks with rendered bounding-box target-size, focus-obscured, and computed-contrast checks across workbench states.",
+      "evidence": "docs/reference/research/ux/wcag-conformance-baseline.md; .copilot-tracking/research/2026-11-15/wcag-baseline-151-research.md (C22, C24)"
+    }
+  ]
+}

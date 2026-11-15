@@ -47,7 +47,7 @@ const screenTensionText = {
 const screenTension = (kind, anchor = null) => screenPanel(screenTensionText[kind][0], ...(anchor ? [{ anchor }] : []),
   h("p", {}, "Status: proposed design rule. Atlas hypothesis, pending validation in #155; not observed behaviour."),
   h("p", {}, screenTensionText[kind][1]));
-function screenTable(label, headings, rows, limit = 50, cell = (value) => screenNodeValue(value), rowHeader = false) {
+function screenTable(label, headings, rows, limit = 50, cell = (value) => screenNodeValue(value), rowHeader = true) {
   return h("div", {},
     rows.length > limit && h("p", { role: "status", "aria-live": "polite" }, `Showing the first ${limit} of ${rows.length} records. Open the case workspace to inspect the remaining evidence. This is not a complete readiness check.`),
     rows.length ? h("div", { class: "table-scroll", role: "region", "aria-label": label, tabindex: 0 },
