@@ -53,6 +53,12 @@ for the compiled `dev`, `test`, and `pilot` `.bicepparam` matrix, bounded region
 and service quota parameters, mechanical Bicep and CLI recorded-check guards,
 and the `R1` through `R17` capability and quota evidence boundary.
 
+For network posture, private endpoints, private DNS zones, and managed-identity
+Key Vault secret bindings (Refs #119, #143, #142), use the
+[network posture, private endpoints, and managed-identity secret store specification](./network-posture.md)
+and its machine-checked [`infra/network-posture-inventory.json`](../../infra/network-posture-inventory.json)
+contract.
+
 These are two views of the same solution, not two alternative architectures.
 Their retained core layout describes the sources on
 [PR #68](https://github.com/jmservera/ama/pull/68) at
@@ -280,8 +286,13 @@ review signal and proposed map overlay design is in
   infrastructure for the five capabilities.
 * These drawings retain the historical exercise hosting and its documented
   development network exceptions, not the proposed #360 direct-demo rollout.
-  Bicep declares VNet integration, two subnets, NSGs, private endpoints and DNS.
-  Public access is also allowed in development. The default production
+  Bicep declares VNet integration, two unconditional subnets (`snet-aca` and
+  `snet-pe`) plus conditional `snet-aca-demo` when `demoDirectIngress` is
+  enabled (see [network-posture.md](./network-posture.md)), NSGs, private
+  endpoints and DNS.
+  Public access is an opt-in development parameter (`allowPublicNetworkAccess = false`
+  by default across committed `.bicepparam` files, and unconditionally disabled
+  on Azure SQL and the telemetry Event Hub). The default production
   profile and intended Front Door public edge/private backend are not the
   observed exercise.
   Network ranges in the drawing are IaC defaults, not newly measured routes.
