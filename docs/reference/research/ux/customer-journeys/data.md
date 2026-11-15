@@ -111,6 +111,15 @@ with no replay or silent correction, and event metadata is not presented as an
 operational audit trail. The research remains desk-based hypothesis, not
 observed behaviour.
 
+Local engineering update (2026-11-15, Refs #229): added keyboard jump
+navigation (`nav[aria-label]` with `a[data-jump]` links) and focusable
+`section[tabindex="-1"]` targets across the selected-home steward and operator
+view, the overview register entry and unavailable panels, and the page-level
+conflict and return queue, plus fail-closed `State:` and `Source state:`
+textual state labels across conflicts, returns, handoff, blockers, event
+dispositions, recovery context and the exception register, pinned by
+`src/api/tests/test_data_steward_screen_wcag.py`.
+
 Unmet: the WCAG 2.2 baseline criterion (#151). Conformance needs assistive
 technology testing and human review under #151 and #155, which are open.
 Engineering checks do not establish accessibility acceptance.

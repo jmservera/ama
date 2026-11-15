@@ -1173,14 +1173,137 @@ registerRoleScreen({
   roles: hazardTriageRoles,
   render: hazardScreen("Read-only view for repairs and hazard triage: awareness time and source, referral progress and the person who chases an unanswered referral.")
 });
-const operatorSide = (a) => a ? `${screenValue(a.value)}; source ${screenValue(a.source_id)} v${screenValue(a.version)}; dated ${screenValue(a.date)}; ${screenValue(a.validation_state)}` : "Unknown";
-const operatorStatus = (c, q) => (c.stock_reconciliation_events || []).filter((e) => e.query_id === q.id).at(-1)?.status || "Unresolved";
+const operatorPanel = (id, title, ...children) => h("section", { class: "card screen-record", id, tabindex: "-1" }, h("h2", {}, title), ...children);
+const operatorJumps = [
+  ["operator-boundary", "Evidence boundary"],
+  ["operator-conflicts", "Conflict queue"],
+  ["operator-eligibility", "Eligibility and original source"],
+  ["operator-returns", "Returns and reopens"],
+  ["operator-handoff", "Handoff and exception queue"],
+  ["operator-events", "Event metadata and recovery context"]
+];
+const operatorLookup = (map, value, fallback) => {
+  if (typeof value !== "string") return fallback;
+  const key = value.trim().toLowerCase();
+  return Object.hasOwn(map, key) ? map[key] : fallback;
+};
+const operatorSourceStates = {
+  validated: "Source state: Validated on record (not a winning source)",
+  verified: "Source state: Verified on record (not a winning source)",
+  unvalidated: "Source state: Unvalidated (needs steward check)",
+  unverified: "Source state: Unverified (needs steward check)",
+  disputed: "Source state: Disputed (action needed; sources disagree)",
+  quarantined: "Source state: Quarantined (not cleared for use)",
+  stale: "Source state: Stale (needs refresh check)",
+  unknown: "Source state: Unknown"
+};
+const operatorSourceState = (value) => operatorLookup(operatorSourceStates, value, "Source state: Unknown");
+const operatorEventStates = {
+  unresolved: "State: Unresolved (action needed; both source values kept)",
+  open: "State: Open (action needed; waiting for steward review)",
+  withdrawn: "State: Withdrawn (recorded disposition; not a winning source)",
+  reconciled: "State: Reconciled on record",
+  resolved: "State: Resolved on record (recorded disposition only)",
+  returned: "State: Returned (action needed)",
+  quarantined: "State: Quarantined (not cleared for use)"
+};
+const operatorEventState = (value) => operatorLookup(operatorEventStates, value, "State: Unknown");
+const exceptionRecord = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+const operatorReturnState = (r) => {
+  if (!exceptionRecord(r)) return "State: Unknown";
+  const hasReopened = Object.hasOwn(r, "reopened");
+  if (hasReopened && typeof r.reopened !== "boolean") return "State: Unknown";
+  const hasKind = Object.hasOwn(r, "event_type");
+  if (hasKind && typeof r.event_type !== "string") return "State: Unknown";
+  const kind = hasKind ? r.event_type.trim().toLowerCase() : "";
+  if (hasKind && kind !== "return" && kind !== "reopen") return "State: Unknown";
+  if (hasReopened && hasKind && ((kind === "reopen") !== r.reopened)) return "State: Unknown";
+  if (hasReopened) return r.reopened ? "State: Reopened (action needed)" : "State: Returned (action needed)";
+  if (kind === "reopen") return "State: Reopened (action needed)";
+  if (kind === "return") return "State: Returned (action needed)";
+  return typeof r.from_stage === "string" && typeof r.to_stage === "string"
+    ? "State: Returned (action needed)"
+    : "State: Unknown";
+};
+const operatorHandoffStates = {
+  offered: "State: Offered, awaiting acceptance (action needed)",
+  sent: "State: Sent, awaiting acceptance (action needed)",
+  received: "State: Received, awaiting acceptance (ownership unchanged; action needed)",
+  pending: "State: Pending acceptance (action needed)",
+  escalated: "State: Escalated (unaccepted handoff; action needed)",
+  declined: "State: Declined by receiver (action needed)",
+  rejected: "State: Rejected by receiver (action needed)",
+  returned: "State: Returned (action needed)",
+  accepted: "State: Accepted by receiver",
+  confirmed: "State: Confirmed by receiver",
+  withdrawn: "State: Withdrawn on record",
+  completed: "State: Completed on record",
+  blocked: "State: Blocked (action needed)"
+};
+const operatorHandoffState = (value) => operatorLookup(operatorHandoffStates, value, "State: Unknown (handoff not confirmed)");
+const operatorBlockerStates = {
+  open: "State: Open prerequisite (action needed)",
+  blocked: "State: Blocked (action needed)",
+  resolved: "State: Resolved on record"
+};
+const operatorBlockerState = (blocker) => {
+  if (!exceptionRecord(blocker)) return "State: Unknown";
+  const hasStatus = Object.hasOwn(blocker, "status");
+  const hasStop = Object.hasOwn(blocker, "current_stop");
+  if (!hasStatus && !hasStop) return "State: Open prerequisite (action needed)";
+  const status = hasStatus ? operatorLookup(operatorBlockerStates, blocker.status, null) : null;
+  if (hasStatus && !status) return "State: Unknown";
+  if (!hasStop) return status;
+  if (typeof blocker.current_stop !== "boolean") return "State: Unknown";
+  if (!hasStatus) {
+    return blocker.current_stop
+      ? "State: Active stop on current stage (action needed)"
+      : "State: Open prerequisite (does not stop current stage; action needed)";
+  }
+  const key = blocker.status.trim().toLowerCase();
+  if (blocker.current_stop) {
+    if (key === "resolved") return "State: Unknown";
+    return key === "blocked"
+      ? "State: Active stop on current stage (blocked; action needed)"
+      : "State: Active stop on current stage (open prerequisite; action needed)";
+  }
+  if (key === "resolved") return "State: Resolved on record (does not stop current stage)";
+  return key === "blocked"
+    ? "State: Blocked prerequisite (does not stop current stage; action needed)"
+    : "State: Open prerequisite (does not stop current stage; action needed)";
+};
+const exceptionRegisterStates = {
+  ok: "State: Loaded (ok; not an all clear)",
+  roles_not_named: "State: Action needed (roles_not_named)"
+};
+const exceptionRegisterState = (value) => operatorLookup(exceptionRegisterStates, value, "State: Unknown");
+const exceptionItemStates = {
+  open: "State: Open (action needed)",
+  quarantined: "State: Quarantined (not cleared for use)",
+  held: "State: Paused for human review (held; action needed)",
+  rerun_requested: "State: Re-run requested (human action needed; not replayed)",
+  closed: "State: Closed on record"
+};
+const exceptionItemState = (value) => operatorLookup(exceptionItemStates, value, "State: Unknown");
+const exceptionEligibilityStates = {
+  unknown: "Unknown",
+  "not assessed": "Not assessed",
+  not_assessed: "Not assessed",
+  suppressed: "Suppressed"
+};
+const exceptionEligibilityState = (value) => operatorLookup(exceptionEligibilityStates, value, "Unknown");
+const operatorSide = (a) => a && typeof a === "object" && !Array.isArray(a)
+  ? `${screenValue(a.value)}; source ${screenValue(a.source_id)} v${screenValue(a.version)}; dated ${screenValue(a.date)}; ${operatorSourceState(a.validation_state)}`
+  : "Source state: Unknown";
+const operatorStatus = (c, q) => {
+  const last = (c.stock_reconciliation_events || []).filter((e) => e.query_id === q.id).at(-1);
+  return last ? operatorEventState(last.status) : operatorEventStates.unresolved;
+};
 const exceptionKinds = {
   source_conflict: "Source conflict", identity_conflict: "Identity conflict", failed_import: "Failed import",
   failed_ai_run: "Requested AI help did not deliver a model result", failed_integration: "Failed integration run",
   stranded_task: "Stranded work"
 };
-const exceptionRecord = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 const exceptionText = (value) => typeof value === "string" || typeof value === "number" ? screenValue(value) : "Unknown";
 const exceptionBannerLabel = { unknown: "Service state Unknown", outage: "Outage recorded", no_known_outage: "No outage recorded. This is not proof of health." };
 function validExceptionRegister(data) {
@@ -1207,7 +1330,7 @@ const exceptionSide = (side) => exceptionRecord(side)
   ? `${exceptionText(side.value)}; source ${exceptionText(side.source)} v${exceptionText(side.version)}; dated ${exceptionText(side.date)}` : "Unknown";
 function exceptionUnavailable(error) {
   const denied = error && error.status === 403;
-  return screenPanel("Exception register",
+  return operatorPanel("operator-register", "Exception register",
     h("p", { role: "alert" }, denied
       ? `Access denied. ${typeof error.message === "string" && error.message ? error.message : "Only a named data steward or digital operator can see this."} Your access has not changed.`
       : "The exception register could not be shown, so nothing is known about open exceptions. Do not read this as all clear."),
@@ -1315,15 +1438,15 @@ function exceptionRegisterPanel(data) {
   const scope = exceptionRecord(data.access.scope) ? Object.entries(data.access.scope) : [];
   const list = (label, values) => values.length ? h("ul", {}, values.map((value) => h("li", {}, exceptionText(value))))
     : h("p", {}, `${label}: none returned. This does not establish that nothing is missing.`);
-  return screenPanel("Exception register",
-    h("p", { role: "status" }, `${exceptionBannerLabel[banner.state] || "Service state Unknown"}. ${exceptionText(banner.text)}`),
+  return operatorPanel("operator-register", "Exception register",
+    h("p", { role: "status" }, `${operatorLookup(exceptionBannerLabel, banner.state, "Service state Unknown")}. ${exceptionText(banner.text)}`),
     h("p", {}, "Read-only list returned by the server for your signed-in access. Nothing is replayed, re-run, released, corrected or assigned here, and no AI call is made. Recovery guidance below is placeholder text, not an approved runbook."),
     h("p", {}, exceptionText(data.note)),
     exceptionJumpNav(),
     h("p", {}, "Deliberate rules-and-template processing (workflow-only) is not a failure and is not a model result. It is never listed here, so an empty list does not show that a model succeeded or that nothing failed."),
-    screenFields([["Register state", data.state],
+    screenFields([["Register state", exceptionRegisterState(data.state)],
       ["Your access", roles.length ? roles.map(([name, held]) => `${exceptionText(name)}: ${Array.isArray(held) ? held.map(exceptionText).join(", ") : "Unknown"}`).join("; ") : "No role named for you"],
-      ["Role scope", scope.length ? scope.map(([kind, role]) => `${exceptionKinds[kind] || exceptionText(kind)}: ${exceptionText(role)}`).join("; ") : "Unknown"]]),
+      ["Role scope", scope.length ? scope.map(([kind, role]) => `${operatorLookup(exceptionKinds, kind, "Unknown")}: ${exceptionText(role)}`).join("; ") : "Unknown"]]),
     exceptionHeading("exception-state", "State at a glance"),
     screenFields(indicatorRows(data, items, unreadable)),
     exceptionHeading("exception-sources", "Sources not connected and records not routed"),
@@ -1333,15 +1456,15 @@ function exceptionRegisterPanel(data) {
     unreadable ? h("p", { role: "status" }, `${unreadable} returned entries could not be read and are not shown. This list is not complete.`) : null,
     items.length ? [summary && exceptionSummaryControl(summary), screenTable("Exception items returned for you",
       ["Reference", "Kind", "State", "Configured owner", "What happened and reason", "Manual next step", "Source or run reference", "Eligibility"],
-      items.map((item) => [item.id, exceptionKinds[item.kind] || exceptionText(item.kind), exceptionText(item.status), exceptionOwner(item),
-        exceptionHappened(item), `Placeholder guidance, not an approved runbook: ${exceptionText(item.runbook)}`, exceptionReference(item), exceptionText(item.eligibility)]), Infinity)]
+      items.map((item) => [item.id, operatorLookup(exceptionKinds, item.kind, "Unknown"), exceptionItemState(item.status), exceptionOwner(item),
+        exceptionHappened(item), `Placeholder guidance, not an approved runbook: ${exceptionText(item.runbook)}`, exceptionReference(item), `State: ${exceptionEligibilityState(item.eligibility)}`]), Infinity)]
       : h("p", { class: "empty" }, "No exception items were returned. This is not an all clear: the Sources list shows which sources are not connected, service health is Unknown and unrouted records are listed above."),
     exceptionHeading("exception-conflicts", "Source conflicts: both values"),
     conflicts.length ? screenTable("Source conflicts with every returned value",
       ["Reference", "First value, source, version, date", "Second value, source, version, date", "Further values", "Resolution owner", "Eligibility"],
       conflicts.map((item) => [item.id, exceptionSide(item.values[0]), exceptionSide(item.values[1]),
         item.values.length > 2 ? item.values.slice(2).map(exceptionSide).join(" | ") : "None",
-        exceptionOwner(item), `${exceptionText(item.eligibility)}. No winning source is selected.`]), Infinity)
+        exceptionOwner(item), `State: ${exceptionEligibilityState(item.eligibility)}. No winning source is selected.`]), Infinity)
       : h("p", { class: "empty" }, "No source conflicts were returned. This does not establish that none exist."));
 }
 async function exceptionRegisterView(signal) {
@@ -1356,7 +1479,7 @@ async function exceptionRegisterView(signal) {
   signal.throwIfAborted();
   return validExceptionRegister(data) ? exceptionRegisterPanel(data) : exceptionUnavailable(null);
 }
-const exceptionRegisterEntry = () => screenPanel("Exception register",
+const exceptionRegisterEntry = () => operatorPanel("operator-register-entry", "Exception register",
   h("p", {}, "Failed or quarantined AI requests, unowned overdue work and source conflicts for named data stewards and digital operators. Opening it is a read-only request and is recorded in the audit log."),
   h("a", { href: `${screenHref("data-operator", null)}&exceptions=1` }, "Open the exception register"));
 registerRoleScreen({
@@ -1364,10 +1487,14 @@ registerRoleScreen({
   title: "Data steward and operator view",
   roles: screenManagers,
   async overview(signal, rows, c) {
+    const isExceptions = screenScopeQuery().get("exceptions") === "1";
     const [register, summary] = await Promise.all([
-      screenScopeQuery().get("exceptions") === "1" ? exceptionRegisterView(signal) : exceptionRegisterEntry(),
+      isExceptions ? exceptionRegisterView(signal) : exceptionRegisterEntry(),
       !c && rows.length ? this.summarise(rows, signal) : null]);
-    return h("div", {}, register, summary);
+    const jumps = summary ? screenJumpNav("Data steward overview sections", [
+      [isExceptions ? "operator-register" : "operator-register-entry", "Exception register"],
+      ["operator-page-queue", "Conflict and return queue"]]) : null;
+    return h("div", {}, jumps, register, summary);
   },
   async summarise(rows, signal) {
     const entries = await Promise.all(rows.map((row) =>
@@ -1379,16 +1506,22 @@ registerRoleScreen({
   },
   summary(entries) {
     const conflicts = entries.flatMap(([row, c]) => {
-      if (!c) return [[row.id, "Unavailable", "Open the home to check.", "Unavailable", "Unavailable", "Unavailable"]];
+      if (!c) {
+        return [[row.id, "State: Unavailable (action needed; not clear)", "Open the home to check.",
+          "Source state: Unknown (Unavailable)", "Source state: Unknown (Unavailable)", "State: Unavailable (action needed; not clear)"]];
+      }
       return (c.stock_reconciliation || []).map((q) => [c.id, q.id, q.field, operatorSide(q.left), operatorSide(q.right), operatorStatus(c, q)]);
     });
     const returns = entries.flatMap(([row, c]) => {
-      if (!c) return [[row.id, "Unavailable", "Unavailable", "Unavailable", "Unavailable", "Open the home to check."]];
-      return (c.returns || []).filter((r) => r.event_type !== "advance").map((r) => [c.id, r.reopened ? "Reopened" : "Returned",
+      if (!c) {
+        return [[row.id, "State: Unavailable (action needed; not clear)", "Unavailable",
+          "Source state: Unknown (Unavailable)", "Unavailable", "Open the home to check."]];
+      }
+      return (c.returns || []).filter((r) => r.event_type !== "advance").map((r) => [c.id, operatorReturnState(r),
         `${screenValue(r.from_stage)} to ${screenValue(r.to_stage)}`, `${screenValue(r.source)} v${screenValue(r.source_version)}`, r.reason, r.next_action]);
     });
-    return screenPanel("Conflict and return queue across this page of homes",
-      h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Both source values stay as recorded; no winning source is selected and nothing is replayed, corrected or retried. A home with no row has no conflict or return recorded on this page; this does not establish that none exists. Unavailable homes are listed so they are not read as clear. Open a home for events and recovery context."),
+    return operatorPanel("operator-page-queue", "Conflict and return queue across this page of homes",
+      h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Every state is written in words with a State or Source state label, so meaning never relies on colour alone. Both source values stay as recorded; no winning source is selected and nothing is replayed, corrected or retried. A home with no row has no conflict or return recorded on this page; this does not establish that none exists. Unavailable homes are listed so they are not read as clear. Open a home for events and recovery context."),
       screenTable("Source conflicts by home with both values",
         ["Home", "Query", "Field", "First source (value, source, version, date, validation)", "Compared source (value, source, version, date, validation)", "State"],
         conflicts, Infinity),
@@ -1404,39 +1537,40 @@ registerRoleScreen({
     const handoff = work?.handoff;
     const returns = (c.returns || []).filter((r) => r.event_type !== "advance");
     return h("div", {},
-      screenPanel("Evidence boundary",
-        h("p", {}, "Read-only view for data stewards, performance analysts and digital operators. It does not replay, correct, resolve or retry anything, and it keeps the original source values. Source: desk research, not observed behaviour."),
+      screenJumpNav("Data steward and operator sections", operatorJumps),
+      operatorPanel("operator-boundary", "Evidence boundary",
+        h("p", {}, "Read-only view for data stewards, performance analysts and digital operators. It does not replay, correct, resolve or retry anything, and it keeps the original source values. Every state is written in words with a State or Source state label, so meaning never relies on colour alone. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
-      screenPanel("Conflict queue: both source values",
+      operatorPanel("operator-conflicts", "Conflict queue: both source values",
         screenTable("Source conflicts with both values and source details",
           ["Query", "Field", "First source (value, source, version, date, validation)", "Compared source (value, source, version, date, validation)", "State", "Resolution owner"],
           queries.map((q) => [q.id, q.field, operatorSide(q.left), operatorSide(q.right),
             operatorStatus(c, q), screenPerson(q.query_owner)]))),
-      screenPanel("Eligibility and original source",
-        screenFields([["Eligibility", "Unknown"],
-          ["Original source values", queries.length ? "Preserved unchanged in the table above" : "None supplied"],
-          ["Winning source", "Not selected. No latest-wins or silent correction is applied."]])),
-      screenPanel("Returns and reopens",
+      operatorPanel("operator-eligibility", "Eligibility and original source",
+        screenFields([["Eligibility", "State: Unknown. Unresolved on this screen; not confirmed or cleared."],
+          ["Original source values", queries.length ? "State: Preserved unchanged in the table above" : "State: Unknown (none supplied)"],
+          ["Winning source", "State: Not selected. No latest-wins or silent correction is applied."]])),
+      operatorPanel("operator-returns", "Returns and reopens",
         returns.length ? screenTable("Recorded returns and reopens",
           ["Recorded", "Type", "From", "To", "Reason", "Source", "Next action", "Receiving owner"],
-          returns.map((r) => [screenStamp(r.at), r.reopened ? "Reopened" : "Returned", r.from_stage, r.to_stage, r.reason,
+          returns.map((r) => [screenStamp(r.at), operatorReturnState(r), r.from_stage, r.to_stage, r.reason,
             `${screenValue(r.source)} v${screenValue(r.source_version)}`, r.next_action, screenPerson(r.receiving_owner)]))
           : screenUnknown("No return or reopen is recorded for this home.", "Programme manager to name an owner", "Confirm whether a return is expected")),
-      screenPanel("Handoff and exception queue",
+      operatorPanel("operator-handoff", "Handoff and exception queue",
         handoff ? screenFields([["Handoff destination", handoff.destination], ["Proposed receiver", handoff.proposed_receiver],
           ["Confirmed receiver", handoff.confirmed_receiver], ["Chase owner", handoff.chase_owner],
-          ["Handoff state", handoff.state], ["Work reason", work.reason], ["Next action", work.next_action]])
+          ["Handoff state", operatorHandoffState(handoff.state)], ["Work reason", work.reason], ["Next action", work.next_action]])
           : screenUnknown("No handoff is recorded for this home.", "Programme manager to name an owner", "Confirm whether a handoff is expected"),
         screenTable("Open exceptions and prerequisites",
-          ["Step", "Reason", "Owner", "Next action", "Source and version"],
-          blockers.map((b) => [b.step, b.reason, b.owner, b.next_action, `${screenValue(b.source)} v${screenValue(b.version)}`]))),
-      screenPanel("Event metadata and recovery context",
+          ["Step", "State", "Reason", "Owner", "Next action", "Source and version"],
+          blockers.map((b) => [b.step, operatorBlockerState(b), b.reason, b.owner, b.next_action, `${screenValue(b.source)} v${screenValue(b.version)}`]))),
+      operatorPanel("operator-events", "Event metadata and recovery context",
         h("p", {}, "Illustrative event metadata only. These are recorded dispositions with a narrative reason. They are not an operational audit trail and cannot prove that nothing else happened."),
         screenTable("Recorded stock query events",
           ["Event", "Query", "State", "Recorded", "Recorded by", "Reason", "Evidence"],
-          events.map((e) => [e.id, e.query_id, e.status, screenStamp(e.at), screenPerson(e.recorded_by), e.reason, e.evidence])),
-        screenFields([["Recovery context", work ? `Next action: ${screenValue(work.next_action)}. Owner: ${screenValue(work.owner)}. Recorded as of ${screenValue(work.as_of)}.` : "Unknown. No recovery context is recorded."],
-          ["Integration run and queue state", "Unknown. No interface run record is supplied to this screen."]])));
+          events.map((e) => [e.id, e.query_id, operatorEventState(e.status), screenStamp(e.at), screenPerson(e.recorded_by), e.reason, e.evidence])),
+        screenFields([["Recovery context", work ? `State: Action needed. Next action: ${screenValue(work.next_action)}. Owner: ${screenValue(work.owner)}. Recorded as of ${screenValue(work.as_of)}.` : "State: Unknown. No recovery context is recorded."],
+          ["Integration run and queue state", "State: Unknown. No interface run record is supplied to this screen."]])));
   }
 });
 const reviewerRole = "Contracts manager, independent of the person who issued or submitted the pack";
