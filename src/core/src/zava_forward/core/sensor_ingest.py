@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from decimal import Decimal
 
+from .sensor_analysis import SENSOR_NON_AUTHORITY_ERROR
 from .sensor_consumer import ConsumerError, Observation, SensorConsumer, preflight, utc
 from .synthetic.live_readings import LIVE_VERSIONS
 from .synthetic.sensor_consistency import CHANNELS, Tolerance
@@ -21,6 +22,20 @@ class WindowReceipt:
     accepted: int = 0
     replayed: int = 0
     rejected: Mapping[str, int] = field(default_factory=dict)
+    diagnoses_hazard: bool = field(default=False, kw_only=True)
+    starts_clock: bool = field(default=False, kw_only=True)
+    releases_hold: bool = field(default=False, kw_only=True)
+    changes_ranking: bool = field(default=False, kw_only=True)
+
+    def __post_init__(self) -> None:
+        for flag in (
+            self.diagnoses_hazard,
+            self.starts_clock,
+            self.releases_hold,
+            self.changes_ranking,
+        ):
+            if type(flag) is not bool or flag is not False:
+                raise ValueError(SENSOR_NON_AUTHORITY_ERROR)
 
     @property
     def clean(self) -> bool:
@@ -153,4 +168,8 @@ def handover_continuity(
         "after_count": len(after),
         "passed": passed,
         "metrics": metrics,
+        "diagnoses_hazard": False,
+        "starts_clock": False,
+        "releases_hold": False,
+        "changes_ranking": False,
     }

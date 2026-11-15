@@ -22,6 +22,7 @@ from .sensor_analysis import (
     ReviewTaskCandidate,
     Signal,
     as_dict,
+    enforce_sensor_non_authority,
     review_task_candidate,
 )
 from .sensor_analysis_store import analyse_retained
@@ -176,9 +177,40 @@ def _digest(record: Json) -> str:
     return hashlib.sha256(raw.encode("ascii")).hexdigest()
 
 
+def _record_non_authoritative(record: Mapping[str, object]) -> bool:
+    manual = record.get("manual_review_only")
+    verified = record.get("approval_verified")
+    cand = record.get("candidate")
+    task_key = record.get("task_key")
+    if (
+        record.get("schema") != SCHEMA
+        or record.get("state") != STATE
+        or type(manual) is not bool
+        or manual is not True
+        or type(verified) is not bool
+        or verified is not False
+        or record.get("activation") is not None
+        or not isinstance(task_key, str)
+        or not task_key
+        or not isinstance(cand, Mapping)
+        or "status" not in cand
+        or cand.get("task_key") != task_key
+    ):
+        return False
+    try:
+        enforce_sensor_non_authority(cand)
+    except ValueError:
+        return False
+    return True
+
+
 def _view(record: object) -> Json:
-    """Allowlisted projection; a draft that fails its digest is withheld except for its key."""
-    if not isinstance(record, dict) or record.get("draft_digest") != _digest(record):
+    """Allowlisted projection; a draft that fails its digest or invariants is withheld."""
+    if (
+        not isinstance(record, dict)
+        or record.get("draft_digest") != _digest(record)
+        or not _record_non_authoritative(record)
+    ):
         key = record.get("task_key") if isinstance(record, dict) else None
         return {"state": "INTEGRITY_MISMATCH", "task_key": key if isinstance(key, str) else None}
     cand, lineage = record.get("candidate") or {}, record.get("lineage") or {}
@@ -228,6 +260,7 @@ def _refusal(code: str, signal: Signal | None = None) -> Json:
 def _propose(
     store: DraftStore, user: User, case_id: str, signal: Signal, policy: AnalysisPolicy, at: str
 ) -> Json:
+    enforce_sensor_non_authority(signal)
     if signal.home_id != case_id:
         return _refusal("SIGNAL_HOME_MISMATCH", signal)
     if signal.sufficiency != SUFFICIENT:
@@ -239,6 +272,7 @@ def _propose(
     candidate = review_task_candidate(signal, policy)
     if candidate is None:
         return _refusal("NO_APPROVED_RULE", signal)
+    enforce_sensor_non_authority(candidate)
     return _persist(store, user, case_id, signal, candidate, at)
 
 
