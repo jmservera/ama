@@ -43,12 +43,18 @@ STATES = (
     "no-source",
     "sent",
 )
-# Provenance variants of attribution() in chat.js: visible label prefix per answer source.
+# Provenance variants of attribution() in chat.js: visible label text per answer source.
 PROVENANCE = {
-    "decision-model": "Decision model (case rules), no record changed",
-    "decision-model-fallback": "Decision model (case rules; generative draft withheld)",
-    "generative-model": "Model-generated, not approved. Demo only.",
-    "withheld": "Generative draft withheld by source check. No record changed.",
+    "decision-model": (
+        "Deterministic decision or workflow rule (not generative AI; no record changed)"
+    ),
+    "generative-model": (
+        "Generative model suggestion (unapproved; check cited sources; no record changed)"
+    ),
+    "withheld": (
+        "Withheld. Cited sources did not support a stated status or figure (no record changed)"
+    ),
+    "abstain": ("Withheld. The permitted sources do not cover the question (no record changed)"),
     "workflow-only": "Workflow-only help, no record changed",
 }
 
@@ -139,7 +145,7 @@ class SeverityChipContrastTests(unittest.TestCase):
         glyphs = dict(re.findall(r"\.state-([\w-]+):before\{content:\"([^\"]+)\" / \"\"\}", CSS))
         self.assertEqual(set(STATES) - set(glyphs), set())
         self.assertRegex(CSS, r"\.regulatory-state\{border-left:4px solid currentColor")
-        self.assertIn("`Status: ${alert.result}`", CHAT)
+        self.assertIn("`Status: ${regulatoryStateLabel(alert.result)}`", CHAT)
         self.assertIn("`Lookup status: ${answer.kind}`", CHAT)
 
 
@@ -165,11 +171,13 @@ class ProvenanceBadgeContrastTests(unittest.TestCase):
         for variant, label in PROVENANCE.items():
             with self.subTest(variant=variant):
                 self.assertIn(label, CHAT)
-        # Decision-model, generative-model and withheld/workflow-only never share a label.
-        self.assertTrue(PROVENANCE["decision-model"].startswith("Decision model"))
-        self.assertTrue(PROVENANCE["generative-model"].startswith("Model-generated"))
-        self.assertIn("withheld", PROVENANCE["withheld"])
+        # Decision-model, generative-model and withheld/workflow-only never share a label,
+        # and fallback keeps explicit withheld-draft detail text.
+        self.assertTrue(PROVENANCE["decision-model"].startswith("Deterministic decision"))
+        self.assertTrue(PROVENANCE["generative-model"].startswith("Generative model suggestion"))
+        self.assertTrue(PROVENANCE["withheld"].startswith("Withheld."))
         self.assertIn("Workflow-only", PROVENANCE["workflow-only"])
+        self.assertIn("The generative draft did not pass the source check and was not shown.", CHAT)
 
     def test_badge_is_rendered_as_text_with_an_outcome_cue(self) -> None:
         self.assertIn('node("small", label, { class: "chat-widget-meta" })', WIDGET_JS)

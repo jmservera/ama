@@ -80,9 +80,9 @@ class RegulatoryPanelControlTests(unittest.TestCase):
 
     def test_alert_controls_are_named_and_the_alert_panel_states_the_boundary(self) -> None:
         mode = _block(CHAT, "function regulatoryPlainMode", "const regulatoryStates")
+        self.assertIn('h("div", { class: "regulatory-mode" },', mode)
         self.assertIn(
-            'h("label", { class: "regulatory-mode", for: id }, input, '
-            '" Plain-language explanations")',
+            'h("label", { for: id }, input, " Plain-language explanations")',
             mode,
         )
         self.assertIn('type: "checkbox", id', mode)

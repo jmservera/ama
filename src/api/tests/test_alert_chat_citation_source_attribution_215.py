@@ -13,30 +13,45 @@ WIDGET = (WEB / "chat-widget.js").read_text()
 
 
 def _attribution() -> str:
-    start = CHAT.index("function attribution(")
+    start = CHAT.index('const ORIGIN = "Answer origin: ";')
     return CHAT[start : CHAT.index("function statusFor(", start)]
 
 
 class SourceOriginAttributionTests(unittest.TestCase):
     def test_each_origin_has_its_own_visible_label_and_source_sentence(self) -> None:
         body = _attribution()
+        self.assertIn(
+            'const RULE_LABEL = ORIGIN + "Deterministic decision or workflow rule '
+            '(not generative AI; no record changed)";',
+            body,
+        )
+        self.assertIn(
+            'const MODEL_LABEL = ORIGIN + "Generative model suggestion '
+            '(unapproved; check cited sources; no record changed)";',
+            body,
+        )
         expected = {
-            "decision-rules": ("Decision model (case rules), no record changed", "deterministic"),
+            "decision-rules": (
+                "label: RULE_LABEL",
+                "Origin: decision_rule. Source: deterministic decision rules "
+                "from recorded case facts (0 generative calls).",
+            ),
             "decision-rules-fallback": (
-                "Decision model (case rules; generative draft withheld), no record changed",
-                "did not pass source check",
+                "label: RULE_LABEL",
+                "The generative draft did not pass the source check and was not shown.",
             ),
             "generative-grounded": (
-                "Model-generated, not approved. Demo only.",
-                "generative AI model",
+                "label: MODEL_LABEL",
+                "Origin: generative_model. Source: generative AI model",
             ),
         }
-        for origin, (label, phrase) in expected.items():
+        for origin, (label_ref, phrase) in expected.items():
             with self.subTest(origin=origin):
-                self.assertIn(f'source === "{origin}"', body)
-                self.assertIn(label, body)
-                self.assertIn(phrase, body)
-        self.assertEqual(len({label for label, _ in expected.values()}), 3)
+                branch = body[body.index(f'source === "{origin}"') :]
+                branch = branch[: branch.index("};") + 2]
+                self.assertIn(label_ref, branch)
+                self.assertIn(phrase, branch)
+        self.assertEqual(len({phrase for _, phrase in expected.values()}), 3)
 
     def test_generative_origin_warns_it_may_be_wrong_and_asks_for_a_source_check(self) -> None:
         body = _attribution()
@@ -54,9 +69,16 @@ class SourceOriginAttributionTests(unittest.TestCase):
 
     def test_withheld_and_unverified_guidance_is_separate_from_both_answer_origins(self) -> None:
         body = _attribution()
-        self.assertIn("if (calls && !isAnswer) return {", body)
-        self.assertIn("Generative draft withheld by source check. No record changed.", body)
-        tail = body[body.index("if (calls && !isAnswer)") :]
+        self.assertIn(
+            'if (source === "withheld" || source === "abstain" || (calls && !isAnswer)) return {',
+            body,
+        )
+        self.assertIn(
+            "Withheld. Cited sources did not support a stated status or figure (no record changed)",
+            body,
+        )
+        self.assertIn("The reply checks stopped the draft. No record changed.", body)
+        tail = body[body.index('if (source === "withheld"') :]
         self.assertIn("Workflow-only help, no record changed", tail)
         self.assertIn("Workflow-only or unverified help. No record changed.", tail)
         # Only a real answer can claim a generative or rule origin.
@@ -85,7 +107,7 @@ class SourceOriginAttributionTests(unittest.TestCase):
         start = CHAT.index("async function showAlerts")
         alert = CHAT[start : start + 4200]
         self.assertIn("Model calls per check and alert: 0.", alert)
-        self.assertIn("Inference is disabled for every role.", alert)
+        self.assertIn("No AI model is used for any role.", alert)
         self.assertIn('h("h4", {}, "Source and status"), regulatorySources(alert.citations)', alert)
 
 
@@ -174,7 +196,7 @@ class WarningBannerTests(unittest.TestCase):
             CHAT,
         )
         # Answer, withheld, abstain, refused and fallback all use the same message call.
-        self.assertEqual(CHAT.count('ui.message("assistant", answer.reply, {'), 1)
+        self.assertEqual(CHAT.count('ui.message("assistant", '), 1)
         self.assertIn("ui.setStatus(statusFor(answer.kind));", CHAT)
 
     def test_non_mutation_statement_is_repeated_in_privacy_intro_and_attribution(self) -> None:

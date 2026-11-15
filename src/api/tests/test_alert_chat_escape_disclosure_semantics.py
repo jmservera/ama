@@ -85,7 +85,7 @@ class RegulatoryDisclosureEscapeTests(unittest.TestCase):
         self,
     ) -> None:
         alert = CHAT[CHAT.index("async function showAlerts") :][:3800]
-        self.assertIn('h("article", { class: "regulatory-alert" }', alert)
+        self.assertIn('h("article", { class: "regulatory-alert", "aria-labelledby":', alert)
         self.assertIn("regulatorySources(alert.citations)", alert)
         sources = CHAT[CHAT.index("function regulatorySources") :][:1800]
         self.assertIn('h("ul", { "aria-label": "Provision and fact citations" })', sources)

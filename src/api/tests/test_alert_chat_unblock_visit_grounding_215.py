@@ -96,29 +96,41 @@ class UnblockVisitGroundingTests(roles.Matrix):
 
     def test_rules_only_turns_are_actionable_cited_and_disclosed_as_decision_model(self) -> None:
         self.model = lambda _p: envelope("not json at all")
+        expected_sources = {
+            QUESTIONS[0]: "decision-rules",
+            QUESTIONS[1]: "decision-rules-fallback",
+            QUESTIONS[2]: "decision-rules",
+        }
         for question in QUESTIONS:
             with self.subTest(question=question):
                 reply = self.ask(question)
+                expected = expected_sources[question]
                 self.assertEqual(reply["kind"], "answer", reply)
-                self.assertEqual(reply["answer_source"], "decision-rules-fallback")
+                self.assertEqual(reply["answer_source"], expected)
                 self.assertEqual(reply["model"], "workflow-only")
-                self.assertEqual(
-                    reply["answer_source_label"], SOURCE_LABELS["decision-rules-fallback"]
-                )
-                self.assertNotIn("Written by a generative AI model", reply["answer_source_label"])
+                self.assertEqual(reply["answer_source_label"], SOURCE_LABELS[expected])
+                self.assertNotIn("Generative model suggestion", reply["answer_source_label"])
                 self.assertTrue(reply["citations"], reply)
-                self.assertTrue(all(c["id"].startswith(f"{CASE}/") for c in reply["citations"]))
+                self.assertTrue(
+                    all(c["id"].startswith((f"{CASE}/", "workflow/")) for c in reply["citations"])
+                )
+                self.assertTrue(any(c["id"].startswith(f"{CASE}/") for c in reply["citations"]))
                 self.assertIn("No record was changed", reply["reply"])
                 self.assertIn("A person decides next steps", reply["reply"])
                 self.assertNotRegex(reply["reply"], CLAIMS)
 
     def test_generative_turns_are_labelled_generative_and_cite_permitted_sources(self) -> None:
-        for question in QUESTIONS:
+        generative = self.ask(QUESTIONS[1])
+        self.assertEqual(generative["answer_source"], "generative-grounded")
+        self.assertEqual(generative["label"], "AI suggestion, not approved")
+        self.assertEqual(generative["answer_source_label"], SOURCE_LABELS["generative-grounded"])
+        self.assertIn("Generative model suggestion", generative["answer_source_label"])
+        self.assertTrue(generative["citations"], generative)
+        for question in (QUESTIONS[0], QUESTIONS[2]):
             with self.subTest(question=question):
                 reply = self.ask(question)
-                self.assertEqual(reply["answer_source"], "generative-grounded")
-                self.assertEqual(reply["label"], "AI suggestion, not approved")
-                self.assertIn("generative AI model", reply["answer_source_label"])
+                self.assertEqual(reply["answer_source"], "decision-rules")
+                self.assertEqual(reply["consumption"]["model_calls"], 0)
                 self.assertTrue(reply["citations"], reply)
 
     def test_unsupported_generative_claim_is_replaced_by_cited_rules_not_shown(self) -> None:
@@ -126,10 +138,14 @@ class UnblockVisitGroundingTests(roles.Matrix):
         self.model = lambda p: envelope(
             json.dumps(dict(answer=draft, citations=[self.cite_first_id(p)]))
         )
-        reply = self.ask(QUESTIONS[2])
-        self.assertNotIn(draft, reply["reply"])
-        self.assertEqual(reply["answer_source"], "decision-rules-fallback")
-        self.assertTrue(reply["citations"])
+        blocking = self.ask(QUESTIONS[1])
+        self.assertNotIn(draft, blocking["reply"])
+        self.assertEqual(blocking["answer_source"], "decision-rules-fallback")
+        self.assertTrue(blocking["citations"])
+        visit = self.ask(QUESTIONS[2])
+        self.assertNotIn(draft, visit["reply"])
+        self.assertEqual(visit["answer_source"], "decision-rules")
+        self.assertTrue(visit["citations"])
 
     @staticmethod
     def cite_first_id(prompt: str) -> str:
@@ -202,12 +218,13 @@ class DeterministicContractTests(unittest.TestCase):
             self.assertIn("Safety check", text)
             self.assertIn("Open damp hazard", text)
             self.assertIn("Safety lead", text)
-            self.assertTrue(cites and all(c.startswith("ZF-9/") for c in cites))
+            self.assertTrue(cites and all(c.startswith(("ZF-9/", "workflow/")) for c in cites))
+            self.assertTrue(any(c.startswith("ZF-9/") for c in cites))
             self.assertNotRegex(text, CLAIMS)
 
     def test_unblock_and_visit_turns_say_a_person_decides_and_chat_cannot_act(self) -> None:
         for text, _ in (self._answers()[0], self._answers()[2]):
-            self.assertIn("A person schedules visits and completes the safety step", text)
+            self.assertIn("A person schedules visits and completes safety steps", text)
             self.assertIn(HUMAN_BOUNDARY, text)
 
     def test_blocking_review_turn_does_not_offer_to_act(self) -> None:
@@ -218,18 +235,27 @@ class DeterministicContractTests(unittest.TestCase):
 
 class RenderedCopyContractTests(unittest.TestCase):
     def _attribution(self) -> str:
-        start = CHAT_JS.index("function attribution(")
+        start = CHAT_JS.index('const ORIGIN = "Answer origin: ";')
         return CHAT_JS[start : CHAT_JS.index("function statusFor(", start)]
 
     def test_rendered_labels_separate_decision_model_from_generative_model(self) -> None:
         body = self._attribution()
-        for origin, label in (
-            ("decision-rules", "Decision model (case rules), no record changed"),
-            ("decision-rules-fallback", "Decision model (case rules; generative draft withheld)"),
-            ("generative-grounded", "Model-generated, not approved. Demo only."),
+        for origin, snippet in (
+            (
+                "decision-rules",
+                "Deterministic decision or workflow rule (not generative AI; no record changed)",
+            ),
+            (
+                "decision-rules-fallback",
+                "The generative draft did not pass the source check and was not shown.",
+            ),
+            (
+                "generative-grounded",
+                "Generative model suggestion (unapproved; check cited sources; no record changed)",
+            ),
         ):
             self.assertIn(f'source === "{origin}"', body)
-            self.assertIn(label, body)
+            self.assertIn(snippet, body)
         self.assertIn("deterministic decision rules", body)
         self.assertIn("generative AI model (${answer.model})", body)
 

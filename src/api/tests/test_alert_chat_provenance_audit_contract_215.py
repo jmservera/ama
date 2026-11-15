@@ -32,10 +32,12 @@ APPROVED = dict(
 ROLE = "Retrofit Coordinator"
 CASE = "ZF-4"
 UNBLOCK = "what can I do to unblock this case?"
+BLOCKING = "review what is blocking it"
 VISIT = "how can we fix this safety? Should we schedule a visit?"
 HELD = "zzz quantum bananas"
 UNSUPPORTED = "The safety stop is cleared and the visit is booked."
 GENERATIVE = "generative-grounded"
+RULES_DIRECT = "decision-rules"
 RULES = "decision-rules-fallback"
 
 
@@ -111,33 +113,47 @@ class CaseChatProvenanceTests(roles.Matrix):
         ids = [c["id"] for c in reply["citations"]]
         self.assertTrue(ids, reply)
         self.assertEqual(len(ids), len(set(ids)), ids)
-        self.assertTrue(all(i.startswith(f"{CASE}/") for i in ids), ids)
+        self.assertTrue(all(i.startswith((f"{CASE}/", "workflow/")) for i in ids), ids)
+        self.assertTrue(any(i.startswith(f"{CASE}/") for i in ids), ids)
 
     def test_generative_turns_disclose_the_model_and_record_the_same_citations(self) -> None:
+        thread, reply = self.ask(BLOCKING)
+        self.assertEqual(reply["kind"], "answer", reply)
+        self.assertEqual(reply["answer_source"], GENERATIVE)
+        self.assertNotEqual(reply["model"], "workflow-only")
+        self.assertIn("Generative model suggestion", reply["answer_source_label"])
+        self.check_citations(reply)
+        saved = self.stored(thread["id"])[-1]
+        self.assertEqual((saved["role"], saved["model"]), ("assistant", reply["model"]))
+        self.assertEqual(saved["evidence"], [c["id"] for c in reply["citations"]])
+        audit = self.answer_audits(thread["id"])
+        self.assertEqual([a["outcome"] for a in audit], ["answer"])
         for question in (UNBLOCK, VISIT):
             with self.subTest(question=question):
-                thread, reply = self.ask(question)
-                self.assertEqual(reply["kind"], "answer", reply)
-                self.assertEqual(reply["answer_source"], GENERATIVE)
-                self.assertNotEqual(reply["model"], "workflow-only")
-                self.assertIn("generative AI model", reply["answer_source_label"])
-                self.check_citations(reply)
-                saved = self.stored(thread["id"])[-1]
-                self.assertEqual((saved["role"], saved["model"]), ("assistant", reply["model"]))
-                self.assertEqual(saved["evidence"], [c["id"] for c in reply["citations"]])
-                audit = self.answer_audits(thread["id"])
-                self.assertEqual([a["outcome"] for a in audit], ["answer"])
+                direct_thread, direct = self.ask(question)
+                self.assertEqual(direct["answer_source"], RULES_DIRECT)
+                self.assertEqual(direct["model"], "workflow-only")
+                self.check_citations(direct)
+                self.assertEqual(
+                    self.stored(direct_thread["id"])[-1]["evidence"],
+                    [c["id"] for c in direct["citations"]],
+                )
 
     def test_decision_model_turns_never_claim_a_generative_origin(self) -> None:
         self.model = lambda _p: envelope("not json")
-        for question in (UNBLOCK, VISIT):
+        expected_sources = {
+            UNBLOCK: RULES_DIRECT,
+            BLOCKING: RULES,
+            VISIT: RULES_DIRECT,
+        }
+        for question, expected in expected_sources.items():
             with self.subTest(question=question):
                 thread, reply = self.ask(question)
                 self.assertEqual(reply["kind"], "answer", reply)
-                self.assertEqual(reply["answer_source"], RULES)
+                self.assertEqual(reply["answer_source"], expected)
                 self.assertEqual(reply["model"], "workflow-only")
-                self.assertEqual(reply["answer_source_label"], SOURCE_LABELS[RULES])
-                self.assertNotIn("generative AI model", reply["answer_source_label"])
+                self.assertEqual(reply["answer_source_label"], SOURCE_LABELS[expected])
+                self.assertNotIn("Generative model suggestion", reply["answer_source_label"])
                 self.check_citations(reply)
                 saved = self.stored(thread["id"])[-1]
                 self.assertEqual(saved["model"], "workflow-only")
@@ -147,7 +163,7 @@ class CaseChatProvenanceTests(roles.Matrix):
         self.model = lambda p: envelope(
             json.dumps(dict(answer=UNSUPPORTED, citations=[self.first_id(p)]))
         )
-        thread, reply = self.ask(VISIT)
+        thread, reply = self.ask(BLOCKING)
         self.assertNotIn(UNSUPPORTED, reply["reply"])
         self.assertEqual(reply["answer_source"], RULES)
         self.assertEqual(reply["model"], "workflow-only")
@@ -162,7 +178,7 @@ class CaseChatProvenanceTests(roles.Matrix):
         self.assertNotEqual(reply["kind"], "answer", reply)
         self.assertEqual(reply["citations"], [])
         self.assertNotEqual(reply["answer_source"], GENERATIVE)
-        self.assertNotIn("generative AI model", reply.get("answer_source_label", ""))
+        self.assertNotIn("Generative model suggestion", reply.get("answer_source_label", ""))
         saved = self.stored(thread["id"])[-1]
         self.assertEqual((saved["model"], saved["evidence"]), (reply["model"], []))
         audit = self.answer_audits(thread["id"])

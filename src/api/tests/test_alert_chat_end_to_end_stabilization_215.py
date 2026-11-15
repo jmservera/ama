@@ -33,6 +33,7 @@ APPROVED = dict(
 ROLE = "Retrofit Coordinator"
 CASE = "ZF-4"
 UNBLOCK = "what can I do to unblock this case?"
+BLOCKING = "review what is blocking it"
 VISIT = "how can we fix this safety? Should we schedule a visit?"
 CLAIMS = re.compile(r"\b(approved|cleared|signed off|consented|booked|scheduled for)\b", re.I)
 UNAVAILABLE = ("disabled", "timeout", "input-refused", "model-mismatch")
@@ -108,28 +109,46 @@ class AlertToChatMatrix(roles.Matrix):
 
 class ContextAndProvenanceTests(AlertToChatMatrix):
     def test_case_context_is_injected_and_cited_ids_belong_to_that_case(self) -> None:
-        reply = self.ask(UNBLOCK)
+        reply = self.ask(BLOCKING)
         self.assertEqual(len(self.prompts), 1)
         self.assertIn(f'"{CASE}/', self.prompts[0])
         self.assertTrue(reply["citations"], reply)
         self.assertTrue(all(c["id"].startswith(f"{CASE}/") for c in reply["citations"]))
+        rules_reply = self.ask(UNBLOCK)
+        self.assertEqual(len(self.prompts), 1)
+        self.assertTrue(rules_reply["citations"], rules_reply)
+        self.assertTrue(
+            all(c["id"].startswith((f"{CASE}/", "workflow/")) for c in rules_reply["citations"])
+        )
+        self.assertTrue(any(c["id"].startswith(f"{CASE}/") for c in rules_reply["citations"]))
 
     def test_generative_and_decision_model_turns_carry_distinct_provenance(self) -> None:
-        generative = self.ask(VISIT)
+        generative = self.ask(BLOCKING)
+        rules_first = self.ask(VISIT)
         self.model = lambda _p: envelope("not json at all")
-        rules = self.ask(VISIT)
+        rules = self.ask(BLOCKING)
         self.assertEqual(generative["answer_source"], "generative-grounded")
+        self.assertEqual(rules_first["answer_source"], "decision-rules")
         self.assertEqual(rules["answer_source"], "decision-rules-fallback")
         self.assertEqual(rules["model"], "workflow-only")
-        self.assertNotEqual(generative["answer_source_label"], rules["answer_source_label"])
-        self.assertIn("generative AI model", generative["answer_source_label"])
-        self.assertNotIn("generative AI model written", rules["answer_source_label"].casefold())
+        self.assertEqual(
+            len(
+                {
+                    generative["answer_source_label"],
+                    rules_first["answer_source_label"],
+                    rules["answer_source_label"],
+                }
+            ),
+            3,
+        )
+        self.assertIn("Generative model suggestion", generative["answer_source_label"])
+        self.assertNotIn("generative model suggestion", rules["answer_source_label"].casefold())
         self.assertEqual(rules["answer_source_label"], SOURCE_LABELS["decision-rules-fallback"])
         self.assertTrue(rules["citations"])
 
     def test_unblock_and_visit_get_grounded_guidance_not_a_withheld_reply(self) -> None:
         self.model = lambda _p: envelope("not json at all")
-        for question in (UNBLOCK, VISIT):
+        for question in (UNBLOCK, BLOCKING, VISIT):
             with self.subTest(question=question):
                 reply = self.ask(question)
                 self.assertEqual(reply["kind"], "answer", reply)
@@ -142,7 +161,7 @@ class UnavailableAndNonMutationTests(AlertToChatMatrix):
     def test_model_unavailable_keeps_cited_workflow_help_and_no_model_text(self) -> None:
         for outcome in UNAVAILABLE:
             self.model = partial(unavailable, outcome)
-            for question in (UNBLOCK, VISIT):
+            for question in (UNBLOCK, BLOCKING, VISIT):
                 with self.subTest(outcome=outcome, question=question):
                     reply = self.ask(question)
                     self.assertNotEqual(reply["answer_source"], "generative-grounded")
@@ -156,9 +175,10 @@ class UnavailableAndNonMutationTests(AlertToChatMatrix):
             raise RuntimeError("provider down")
 
         self.model = boom
-        reply = self.ask(UNBLOCK)
-        self.assertNotEqual(reply["answer_source"], "generative-grounded")
-        self.assertIn("No record was changed", reply["reply"])
+        for question in (BLOCKING, UNBLOCK):
+            reply = self.ask(question)
+            self.assertNotEqual(reply["answer_source"], "generative-grounded")
+            self.assertIn("No record was changed", reply["reply"])
 
     def test_unsupported_claim_is_withheld_for_cited_rules_and_record_is_unchanged(self) -> None:
         draft = "The safety stop is cleared and the visit is booked."
@@ -166,9 +186,12 @@ class UnavailableAndNonMutationTests(AlertToChatMatrix):
         self.model = lambda p: envelope(
             json.dumps(dict(answer=draft, citations=[self.first_source(p)]))
         )
-        reply = self.ask(VISIT)
-        self.assertNotIn(draft, reply["reply"])
-        self.assertEqual(reply["answer_source"], "decision-rules-fallback")
+        blocking = self.ask(BLOCKING)
+        self.assertNotIn(draft, blocking["reply"])
+        self.assertEqual(blocking["answer_source"], "decision-rules-fallback")
+        visit = self.ask(VISIT)
+        self.assertNotIn(draft, visit["reply"])
+        self.assertEqual(visit["answer_source"], "decision-rules")
         self.assertEqual(self.record(), before)
 
     def test_no_chat_outcome_mutates_the_controlled_record(self) -> None:
@@ -207,14 +230,16 @@ class WorkbenchSourceTests(unittest.TestCase):
         self.assertIn('api("/api/chat/threads", { case_id: caseId }', CHAT_JS)
         self.assertIn("Context: case ${caseId}. Only facts your role may see are used.", CHAT_JS)
         self.assertIn(
-            'api("/api/chat/unstored-ask", { content: question, skill, case_id: caseId }', CHAT_JS
+            'api("/api/chat/unstored-ask", '
+            "{ content: question, skill, case_id: caseId, plain_language: plainMode.checked }",
+            CHAT_JS,
         )
 
     def test_provenance_badges_and_citation_links_are_rendered_as_text(self) -> None:
         for label in (
-            "Decision model (case rules), no record changed",
-            "Decision model (case rules; generative draft withheld), no record changed",
-            "Model-generated, not approved. Demo only.",
+            "Deterministic decision or workflow rule (not generative AI; no record changed)",
+            "The generative draft did not pass the source check and was not shown.",
+            "Generative model suggestion (unapproved; check cited sources; no record changed)",
         ):
             self.assertIn(label, CHAT_JS)
         for tag in ("[Workflow rule]", "[Decision rule]", "[Case record]"):

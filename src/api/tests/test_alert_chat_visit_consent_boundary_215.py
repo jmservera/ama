@@ -28,8 +28,9 @@ APPROVED = dict(
 ROLE = "Retrofit Coordinator"
 CASE = "ZF-4"
 QUESTION = "how can we fix this safety? Should we schedule a visit?"
+GENERATIVE_QUESTION = "review what is blocking it"
 CONSENT_STEP = "confirm the resident's consent and access with the resident"
-SIGN_OFF_STEP = "independent safety sign-off"
+SIGN_OFF_STEP = "independent restart decision by a different person"
 BOUNDARY = "cannot book a visit or approve a safety step"
 UNSUPPORTED_DRAFTS = (
     "The resident has given consent so the visit is booked for Tuesday.",
@@ -95,21 +96,29 @@ class VisitConsentBoundaryTests(roles.Matrix):
     ) -> None:
         reply = self.ask(QUESTION)
         self.assertEqual(reply["kind"], "answer", reply)
-        self.assertEqual(reply["answer_source"], "decision-rules-fallback")
+        self.assertEqual(reply["answer_source"], "decision-rules")
+        self.assertEqual(reply["consumption"]["model_calls"], 0)
         text = reply["reply"]
         self.assertIn(CONSENT_STEP, text)
         self.assertIn(SIGN_OFF_STEP, text)
         self.assertIn(BOUNDARY, text)
-        self.assertIn("does not assume either", text)
+        self.assertIn("cannot record or assume either", text)
         self.assertTrue(reply["citations"], reply)
-        self.assertTrue(all(c["id"].startswith(f"{CASE}/") for c in reply["citations"]))
-        self.assertTrue(any("hazards" in c["id"] for c in reply["citations"]), reply)
+        ids = [c["id"] for c in reply["citations"]]
+        self.assertTrue(all(i.startswith((f"{CASE}/", "workflow/")) for i in ids), ids)
+        self.assertTrue(any("hazards" in i for i in ids), reply)
+        self.assertIn("workflow/visit-consent", ids)
+        self.assertIn("workflow/safety-sequence", ids)
 
     def test_generative_drafts_that_book_assume_consent_or_sign_off_are_withheld(self) -> None:
         for draft in UNSUPPORTED_DRAFTS:
             with self.subTest(draft=draft):
                 self.model = self.drafting(draft)
-                reply = self.ask(QUESTION)
+                direct = self.ask(QUESTION)
+                self.assertNotIn(draft, direct["reply"])
+                self.assertEqual(direct["answer_source"], "decision-rules")
+                self.assertEqual(direct["consumption"]["model_calls"], 0)
+                reply = self.ask(GENERATIVE_QUESTION)
                 self.assertNotIn(draft, reply["reply"])
                 self.assertEqual(reply["kind"], "withheld", reply)
                 self.assertEqual(reply["answer_source"], "withheld")
@@ -197,7 +206,9 @@ class AccessPendingContractTests(unittest.TestCase):
             self.assertIn(expected, text)
         self.assertIn(SIGN_OFF_STEP, text)
         self.assertIn(BOUNDARY, text)
-        self.assertTrue(cites and all(c.startswith("ZF-9/") for c in cites))
+        self.assertTrue(cites and all(c.startswith(("ZF-9/", "workflow/")) for c in cites))
+        self.assertTrue(any(c.startswith("ZF-9/") for c in cites))
+        self.assertIn("workflow/visit-consent", cites)
         self.assertNotRegex(text, r"\b(booked|consented|signed off|approved|cleared)\b")
 
     def test_unblock_question_carries_the_same_boundary(self) -> None:

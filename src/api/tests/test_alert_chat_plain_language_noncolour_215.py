@@ -74,7 +74,7 @@ class PlainAlertStatusTests(unittest.TestCase):
 
     def test_plain_copy_is_added_to_the_card_not_swapped_for_the_status_label(self) -> None:
         body = block("const alerts = ", '"Safe action"')
-        self.assertIn("`Status: ${alert.result}`", body)
+        self.assertIn("`Status: ${regulatoryStateLabel(alert.result)}`", body)
         self.assertLess(body.index("Status: "), body.index("plain-explanation"))
 
 
@@ -113,15 +113,22 @@ class PlainChatOutcomeTests(unittest.TestCase):
 
     def test_home_chat_keeps_ai_disclosure_and_missing_source_warning(self) -> None:
         self.assertIn("AI-generated content may be incorrect.", CHAT)
-        self.assertIn("Model-generated, not approved. Demo only.", CHAT)
+        self.assertIn(
+            "Generative model suggestion (unapproved; check cited sources; no record changed)",
+            CHAT,
+        )
         self.assertIn("No supporting source was provided. Check with a person", WIDGET)
         self.assertIn('node("summary", `Sources (${sources.length})`)', WIDGET)
 
     def test_withheld_draft_is_disclosed_as_withheld_not_as_an_answer(self) -> None:
-        body = block("function attribution(", "function statusFor(")
-        tail = body[body.index("if (calls && !isAnswer)") :]
-        self.assertIn("Generative draft withheld by source check. No record changed.", tail)
-        self.assertNotIn("Model-generated", tail.split("return {", 2)[1])
+        body = block('const ORIGIN = "Answer origin: ";', "function statusFor(")
+        tail = body[body.index('if (source === "withheld"') :]
+        self.assertIn(
+            "Withheld. Cited sources did not support a stated status or figure (no record changed)",
+            body,
+        )
+        self.assertIn("The reply checks stopped the draft. No record changed.", tail)
+        self.assertNotIn("Generative model suggestion", tail.split("return {", 2)[1])
 
 
 class NonColourStatusTests(unittest.TestCase):

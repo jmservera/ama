@@ -49,7 +49,7 @@ HAZARD_CARD = "synthetic-hazard"
 
 
 def alert_template() -> str:
-    start = CHAT.index('h("article", { class: "regulatory-alert" }')
+    start = CHAT.index('h("article", { class: "regulatory-alert",')
     return CHAT[start : CHAT.index("status.className", start)]
 
 
@@ -87,7 +87,12 @@ class RenderedAlertContractTests(unittest.TestCase):
         self.assertIn('source.status || "unknown"', body)
 
     def test_every_result_has_text_status_glyph_and_a_non_colour_border_style(self) -> None:
-        self.assertIn("`Status: ${alert.result}`", alert_template())
+        self.assertIn("`Status: ${regulatoryStateLabel(alert.result)}`", alert_template())
+        self.assertIn(
+            "const regulatoryStateLabel = (value) => "
+            '(regulatoryStates.has(value) ? value : "unknown");',
+            CHAT,
+        )
         for result in RESULTS:
             slug = result.replace(" ", "-")
             with self.subTest(result=result):
