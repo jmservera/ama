@@ -15,7 +15,7 @@ from contextlib import contextmanager
 from copy import deepcopy
 from typing import Any
 
-from . import change_provenance, gates, rai_release
+from . import change_provenance, controls, gates, rai_release
 from .stock import decision_scope
 from .workflows import MANAGER_ROLES, _now
 from .resident_decisions import require_context, resident_gate
@@ -74,7 +74,8 @@ def evidence_gaps(rec):
         return None
     if name not in CHECKLISTS and rec.get("measure") is not None and not isinstance(rec["measure"], str):
         return None
-    have = {i["label"]: isinstance(i.get("evidence"), str) and bool(i["evidence"].strip()) for i in items}
+    have = {i["label"]: isinstance(i.get("evidence"), str) and bool(i["evidence"].strip())
+            and not controls.is_memory_reference(i["evidence"]) for i in items}
     required = CHECKLISTS.get(name) or checklist_for(rec.get("measure"))
     return [lab for lab in required["items"] if not have.get(lab)]
 
@@ -269,6 +270,8 @@ class QualityMixin:
                 self._need_quality_role(user, "replace corrupted quality evidence")
             cl = checklist_for(measure)
             items = items if isinstance(items, dict) else {}
+            if any(controls.is_memory_reference(items.get(lab)) for lab in cl["items"]):
+                raise ValueError(controls.MEMORY_REFUSAL)
             missing = [lab for lab in cl["items"] if not _clean(items.get(lab), 200)]
             if missing:
                 raise ValueError("Each check needs a note of what was seen. Missing: " + "; ".join(missing))
@@ -317,7 +320,8 @@ class QualityMixin:
                 raise ValueError(f"This work is '{rec['state']}'. It can only be accepted after it is submitted or reinspected.")
             self.require_quality_evidence(rec)
             self._independent(rec, user, "accept this work")
-            if rec["state"] == FIXED and not _clean((rec.get("defect") or {}).get("remediation_evidence")):
+            fix_evidence = _clean((rec.get("defect") or {}).get("remediation_evidence"))
+            if rec["state"] == FIXED and (not fix_evidence or controls.is_memory_reference(fix_evidence)):
                 raise ValueError("Remediation evidence is missing. Record the correction evidence before independent reinspection.")
             self._qmove(c, rec, ACCEPTED, user, _clean(note))
             rec.update(accepted_by=user["name"], accepted_at=_now(), accepted_identity=_identity(user))
@@ -343,6 +347,8 @@ class QualityMixin:
             raise ValueError("Say who put the defect right.")
         with self._quality_operation(user, case_id) as (c, user):
             note = _clean(note)
+            if controls.is_memory_reference(note):
+                raise ValueError(controls.MEMORY_REFUSAL)
             if not note:
                 raise ValueError("Record the remediation evidence: what was corrected and the photo, document or inspection reference.")
             rec = self._qrec(c, idx)

@@ -408,6 +408,8 @@ def sql_baseline() -> dict[str, Any]:
 
 def run(count: int = 60000) -> dict[str, Any]:
     cases, paired, stale = answer_cases()
+    answers = regulatory_gates.evaluate_answers(cases)
+    rules = regulatory_gates.evaluate_rules(rule_rows(count))
     return dict(
         version="regulatory-evaluation-gates-v1",
         label="synthetic-demo; no operational approval",
@@ -425,11 +427,11 @@ def run(count: int = 60000) -> dict[str, Any]:
             source_scope="wholly fictional provisions and simulated approvals; not live law",
             provider="offline-extractive; zero model calls",
         ),
-        answers=regulatory_gates.evaluate_answers(cases),
-        deterministic_baseline=regulatory_gates.evaluate_rules(rule_rows(count)),
+        answers=answers,
+        deterministic_baseline=rules,
         sql_integration=sql_baseline(),
         stale_source_labelling=stale,
-        comparison=regulatory_gates.comparison(paired),
+        comparison=regulatory_gates.comparison(paired, answers, rules),
         not_evaluated={
             name: dict(status="not_evaluated", reason=reason)
             for name, reason in (

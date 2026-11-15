@@ -27,6 +27,10 @@
       li.append(b, meta(s), ...caveats(s));
       ul.append(li);
     });
+    const csv = el("a", "Download sources for Excel", "btn alt");
+    csv.href = "/api/law/sources.csv";
+    csv.download = "law-sources.csv";
+    nodes.push(csv, el("p", "The file is a read-only copy; changes in it are not imported back.", "muted"));
     nodes.push(ul, el("h2", "No source held"));
     const gl = el("ul");
     d.gaps.forEach((g) => { const li = el("li"); li.append(el("strong", g.topic), el("p", g.answer + " " + g.reason)); gl.append(li); });
@@ -69,10 +73,10 @@
     nodes.push(ul);
     show(nodes, d.results.length + " results.");
   }
-  const fail = (e) => { ready(); status.textContent = `${e.message}. Owner: application support. Next action: try All sources or search again.`; };
+  const fail = (e) => { ready(); status.textContent = /Owner:/.test(e.message) ? e.message : `${e.message}. Owner: application support. Next action: try All sources or search again.`; };
   if (typeof AsyncAction === "undefined" || !AsyncAction
       || !["handler", "run"].every(method => typeof AsyncAction[method] === "function")) {
-    const message = "Required law viewer file did not load: /async-action.js. Reload this page to try again. If this continues, contact application support.";
+    const message = "Required law viewer file did not load: /async-action.js. Owner: application support. Next action: reload this page to try again, and contact application support if it continues.";
     const reload = el("button", "Reload law viewer");
     reload.type = "button";
     reload.addEventListener("click", () => location.reload());

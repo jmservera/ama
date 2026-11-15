@@ -1,0 +1,64 @@
+{
+  "task_id": "146-monitoring-bicep-2136",
+  "task_slug": "146-monitoring-bicep-2136",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-13/146-monitoring-bicep-2136-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-13/146-monitoring-bicep-2136-plan.md",
+    "details": null,
+    "critique": ".copilot-tracking/critiques/2026-11-13/146-monitoring-bicep-2136-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-13/146-monitoring-bicep-2136-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-13/146-monitoring-bicep-2136-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Focused tier; no web JS, no cutover pack, no push",
+      "status": "owner-directed",
+      "evidence": "task prompt"
+    },
+    {
+      "decision": "Research executed; Ready",
+      "status": "recorded",
+      "evidence": "research artifact"
+    },
+    {
+      "decision": "Critique executed once, verdict proceed with changes, all applied",
+      "status": "recorded",
+      "evidence": "critique artifact"
+    },
+    {
+      "decision": "Review executed once; outcome conformant with routed findings F1-F5",
+      "status": "recorded",
+      "evidence": "review artifact"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "User selects a ranked follow-up, Stop, or manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Run hosted CI or complete local gate for exact head",
+      "rationale": "Easiest, gates publication",
+      "evidence": "review F1"
+    },
+    {
+      "rank": 2,
+      "task": "Synthetic drill of StorageQueueLogs poison alert and AI markers",
+      "rationale": "Verifies unverified signals",
+      "evidence": "review F2"
+    },
+    {
+      "rank": 3,
+      "task": "Add an import-jobs-poison producer then an alert",
+      "rationale": "Closes remaining poison gap",
+      "evidence": "review F3"
+    }
+  ]
+}

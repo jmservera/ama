@@ -474,6 +474,53 @@ resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && d
   }
 }
 
+resource rankingPublish 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && deployBackgroundWorkloads && !empty(rankingArchiveContainer)) {
+  name: demoDirectIngress ? 'job-${prefix}-rank' : 'job-${prefix}-rank-publish'
+  location: location
+  tags: union(tags, { workload: 'ranking-publish' })
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: { '${identityIds.api}': {} }
+  }
+  properties: {
+    environmentId: environmentResource.id
+    workloadProfileName: 'Consumption'
+    configuration: {
+      triggerType: 'Schedule'
+      replicaTimeout: 900
+      replicaRetryLimit: 0
+      scheduleTriggerConfig: {
+        cronExpression: '30 2 * * *'
+        parallelism: 1
+        replicaCompletionCount: 1
+      }
+      registries: [{ server: registryServer, identity: identityIds.api }]
+    }
+    template: {
+      containers: [
+        {
+          name: 'ranking-publish'
+          image: orchestratorImage
+          command: ['python', '-m', 'zava_forward.orchestrator.ranking_publish']
+          resources: { cpu: json('0.5'), memory: '1Gi' }
+          env: concat(commonEnv, [
+            { name: 'AZURE_CLIENT_ID', value: identityClientIds.api }
+            { name: 'ZF_STORE', value: 'mssql' }
+            { name: 'ZF_SQL_SERVER', value: sqlServerFqdn }
+            { name: 'ZF_SQL_DATABASE', value: sqlDatabaseName }
+            { name: 'ZF_SQL_AUTH', value: 'msi' }
+            { name: 'ZF_SQL_CLIENT_ID', value: identityClientIds.api }
+            { name: 'ZF_BLOB_ACCOUNT_URL', value: blobEndpoint }
+            { name: 'ZF_BLOB_CLIENT_ID', value: identityClientIds.api }
+            { name: 'ZF_RANKING_ARCHIVE', value: 'azure-blob' }
+            { name: 'ZF_RANKING_BLOB_CONTAINER', value: rankingArchiveContainer }
+          ])
+        }
+      ]
+    }
+  }
+}
+
 resource importJob 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && deployBackgroundWorkloads) {
   name: demoDirectIngress ? 'job-${prefix}-load' : 'job-${prefix}-import'
   location: location

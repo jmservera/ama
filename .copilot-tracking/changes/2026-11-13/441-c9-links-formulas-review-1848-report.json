@@ -1,0 +1,382 @@
+{
+  "freshness": {
+    "origin_main": "c13d077d299a570f3908439072e7b49f8f55cf4f",
+    "head": "da21a2536f50fb61eb19abe84c220db83b2a3e43",
+    "docs_src_diff_vs_origin_main": [
+      "docs/capstone/pitch/README.md",
+      "docs/capstone/pitch/capstone-assessment-challenge.md",
+      "docs/capstone/pitch/tokenomics-rehearsal-notes.md",
+      "docs/reference/log.md"
+    ],
+    "dirty_outside_tracking": [],
+    "ok": false
+  },
+  "hashes": {
+    "files": {
+      "docs/brds/agentic-retrofit-programme-brd.md": {
+        "bytes": 302699,
+        "sha256": "e6dee8e2d56a78115a824b74fc6ff6230640f8bee1922d12cac6371bd929368e"
+      },
+      "docs/prds/zava-forward-retrofit-programme-demonstrator.md": {
+        "bytes": 348456,
+        "sha256": "2c7221a04edad4d82706fb3dd537d1c7b9e18f4aaba4e1acc072aa7cab24e058"
+      },
+      "docs/case_study_48_addendum.md": {
+        "bytes": 157997,
+        "sha256": "72ee82245d01d67b539ca88c338bab8aea7a5ccfb0ae369050997bc3d34ead05"
+      },
+      "docs/reference/README.md": {
+        "bytes": 199513,
+        "sha256": "f290ccc540da4f72c9d1ed8bf9946fb7714b525e13e01dc07a58f0cd82b1678c"
+      },
+      ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md": {
+        "bytes": 60906,
+        "sha256": "45d335fafa4ee346405ac085233ae1e8fb9f092f6b5a61f5da6eb28e7061075a"
+      },
+      ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-boundary.excalidraw": {
+        "bytes": 43454,
+        "sha256": "27600e4581f3d7c440adee3d009f2b71099e85991b4dc2dcfa4130003af78d07"
+      },
+      ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-boundary.svg": {
+        "bytes": 8573,
+        "sha256": "281d291273e87372eb9efd817c1fe54b4adebb53fbd3a87b46d83c846317bdeb"
+      },
+      ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-boundary.png": {
+        "bytes": 178186,
+        "sha256": "118b6cb363ea5686e5f744d5cc3f48b4820d56df14f27825e2d31b3e9f739fcc"
+      }
+    },
+    "ok": true
+  },
+  "custody": {
+    "declared": 30,
+    "base": "140d8f494482c78e84d15f3d46b9223d3c487af0",
+    "matched": 20,
+    "mismatched": [],
+    "not_archived": [
+      "brd/.markdownlint.json",
+      "brd/render-amendment.py",
+      "brd/state.json",
+      "brd/validate-package.py",
+      "prd/.markdownlint.json",
+      "prd/state.json",
+      "prd/validate-package.py",
+      "adr/resident-service-boundary.excalidraw",
+      "adr/resident-service-boundary.svg",
+      "adr/resident-service-boundary.png"
+    ],
+    "ok": true
+  },
+  "traceability": {
+    "brd_fr_definition_rows": 64,
+    "prd_fr_definition_rows": 73,
+    "brd_ac_definitions": 132,
+    "prd_ac_definition_rows": 130,
+    "duplicates": {
+      "brd_fr": [],
+      "brd_ac": [],
+      "prd_fr": [],
+      "prd_ac": []
+    },
+    "brd_missing": [],
+    "prd_missing": [],
+    "base_fr_preserved": {
+      "brd": true,
+      "prd": true
+    },
+    "prd_ac_without_requirement": [],
+    "prd_matrix_rows": 10,
+    "prd_matrix_missing": [],
+    "prd_matrix_brd_refs_unresolved": [],
+    "ok": true
+  },
+  "formulas": {
+    "table_rows_x_scenarios": "12x3",
+    "table_ok": true,
+    "prd_combined_sensitivities": {
+      "stated": [
+        -1.594,
+        14.74,
+        94.333
+      ],
+      "recomputed": [
+        -1.594,
+        14.74,
+        94.333
+      ],
+      "ok": true
+    },
+    "slope_intercept": [
+      35.4,
+      -2.96
+    ],
+    "slope_text_present": true,
+    "break_even_uptake": 8.36,
+    "break_even_uptake_text_present": true,
+    "break_even_v": 29.9,
+    "break_even_v_text_present": true,
+    "uptake_25_50_75": [
+      5.89,
+      14.74,
+      23.59
+    ],
+    "uptake_text_present": true,
+    "prd_one_off_48_present": true,
+    "prd_not_forecast_wording": true,
+    "rows": {
+      "W": {
+        "published": [
+          324.0,
+          720.0,
+          1200.0
+        ],
+        "recomputed": [
+          324.0,
+          720.0,
+          1200.0
+        ],
+        "ok": true
+      },
+      "calls": {
+        "published": [
+          97.2,
+          360.0,
+          840.0
+        ],
+        "recomputed": [
+          97.2,
+          360.0,
+          840.0
+        ],
+        "ok": true
+      },
+      "email": {
+        "published": [
+          81.0,
+          288.0,
+          720.0
+        ],
+        "recomputed": [
+          81.0,
+          288.0,
+          720.0
+        ],
+        "ok": true
+      },
+      "B": {
+        "published": [
+          18.36,
+          84.0,
+          240.0
+        ],
+        "recomputed": [
+          18.36,
+          84.0,
+          240.0
+        ],
+        "ok": true
+      },
+      "G": {
+        "published": [
+          2.75,
+          27.3,
+          126.0
+        ],
+        "recomputed": [
+          2.754,
+          27.3,
+          126.0
+        ],
+        "ok": true
+      },
+      "H": {
+        "published": [
+          0.65,
+          3.6,
+          14.0
+        ],
+        "recomputed": [
+          0.648,
+          3.6,
+          14.0
+        ],
+        "ok": true
+      },
+      "J": {
+        "published": [
+          0.27,
+          0.96,
+          2.0
+        ],
+        "recomputed": [
+          0.27,
+          0.96,
+          2.0
+        ],
+        "ok": true
+      },
+      "S": {
+        "published": [
+          1.0,
+          2.0,
+          4.0
+        ],
+        "recomputed": [
+          1.0,
+          2.0,
+          4.0
+        ],
+        "ok": true
+      },
+      "N": {
+        "published": [
+          0.84,
+          20.74,
+          106.0
+        ],
+        "recomputed": [
+          0.836,
+          20.74,
+          106.0
+        ],
+        "ok": true
+      },
+      "O": {
+        "published": [
+          2.43,
+          6.0,
+          11.67
+        ],
+        "recomputed": [
+          2.43,
+          6.0,
+          11.6667
+        ],
+        "ok": true
+      },
+      "F": {
+        "published": [
+          -1.59,
+          14.74,
+          94.33
+        ],
+        "recomputed": [
+          -1.594,
+          14.74,
+          94.3333
+        ],
+        "ok": true
+      },
+      "I": {
+        "published": [
+          9.72,
+          48.0,
+          140.0
+        ],
+        "recomputed": [
+          9.72,
+          48.0,
+          140.0
+        ],
+        "ok": true
+      }
+    },
+    "ok": true
+  },
+  "policy": {
+    "fr044_named_per_output_review": true,
+    "fr044_exception_conditional_on_rule028": true,
+    "rule028_requires_od53": true,
+    "rule028_absent_gate_per_message": true,
+    "brd_od52_55": true,
+    "prd_od52_55": true,
+    "prd_per_message_default": true,
+    "log_has_no_closes_441": true,
+    "ok": true
+  },
+  "adr": {
+    "docs_adrs_registry": [
+      "0001-azure-architecture.md",
+      "0002-pilot-readiness-architecture.md",
+      "0003-journey-derived-capabilities-runtime-fit.md",
+      "0004-per-user-agent-chat-and-memory.md",
+      "0005-regulatory-compliance-assistant.md",
+      "0006-src-layout-and-cutover.md",
+      "0007-contractor-intake-staff-mediated-proposal.md"
+    ],
+    "proposal_unregistered_and_proposed": true,
+    "no_resident_adr_id": true,
+    "no_adr_config_or_competing_registry": true,
+    "png_chrome_wording": true,
+    "figures": [
+      "resident-service-boundary.excalidraw",
+      "resident-service-boundary.png",
+      "resident-service-boundary.svg"
+    ],
+    "ok": true
+  },
+  "links": {
+    "current": {
+      "checked_files": [
+        "docs/brds/agentic-retrofit-programme-brd.md",
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "docs/case_study_48_addendum.md",
+        "docs/reference/README.md",
+        ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md"
+      ],
+      "relative_links": 764,
+      "external_links_not_fetched": 24,
+      "broken": [
+        "docs/reference/README.md:907 -> ./research/retrofit-synthetic-data/data-dictionary.md#issue-175-acceptance-audit-2026-10-16 (missing anchor)",
+        "docs/reference/README.md:1231 -> ../architecture/cutover-evidence-pack.md#correction-1-and-currency-observed-2026-11-08t1155z-after-independent-assessment-review-440-c96a (missing anchor)"
+      ],
+      "unsupported_constructs_not_checked": {}
+    },
+    "pre_1519_same_method": {
+      "broken": [
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:609 -> ../capstone/README.md#agents-in-the-retrofit-process-2026-10-13 (missing anchor)",
+        "docs/case_study_48_addendum.md:1510 -> ./capstone/README.md#agents-in-the-retrofit-process-2026-10-13 (missing anchor)",
+        "docs/reference/README.md:904 -> ./research/retrofit-synthetic-data/data-dictionary.md#issue-175-acceptance-audit-2026-10-16 (missing anchor)",
+        "docs/reference/README.md:1226 -> ../architecture/cutover-evidence-pack.md#correction-1-and-currency-observed-2026-11-08t1155z-after-independent-assessment-review-440-c96a (missing anchor)"
+      ],
+      "relative_links": 762
+    },
+    "new_since_pre_1519": [],
+    "repaired_since_pre_1519": [
+      "docs/case_study_48_addendum.md -> ./capstone/README.md#agents-in-the-retrofit-process-2026-10-13 (missing anchor)",
+      "docs/prds/zava-forward-retrofit-programme-demonstrator.md -> ../capstone/README.md#agents-in-the-retrofit-process-2026-10-13 (missing anchor)"
+    ],
+    "owned_scope_broken": [],
+    "ok": true
+  },
+  "targeted_anchors": {
+    "docs/prds/zava-forward-retrofit-programme-demonstrator.md:609": {
+      "targets": [
+        "../capstone/history/storage-map-before-reorganization.md#agents-in-the-retrofit-process-2026-10-13"
+      ],
+      "file_has_broken_links": []
+    },
+    "docs/case_study_48_addendum.md:1510": {
+      "targets": [
+        "./capstone/history/storage-map-before-reorganization.md#agents-in-the-retrofit-process-2026-10-13"
+      ],
+      "file_has_broken_links": []
+    },
+    "ok": true
+  },
+  "lint": {
+    "tool": "npx markdownlint-cli2 with the retained 2026-10-23 config",
+    "exit_current": 1,
+    "current_diagnostics": 6,
+    "baseline_rev": "b605f78a3^",
+    "baseline_diagnostics": 6,
+    "baseline_exit": 1,
+    "new_vs_baseline": [],
+    "by_rule_current": {
+      "MD018": 3,
+      "MD056": 3
+    },
+    "ok": true
+  },
+  "overall_ok": false
+}

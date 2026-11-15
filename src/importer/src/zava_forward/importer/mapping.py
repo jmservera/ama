@@ -17,6 +17,12 @@ from .xlsx import WorkbookError, read_workbook
 POSTCODE = re.compile(r"[A-Za-z]{1,2}\d[A-Za-z\d]? ?\d[A-Za-z]{2}")
 SYNTHETIC = "synthetic-demo"
 MAX_SOURCE_BYTES = 10 * 1024 * 1024
+READ_ME_SHEET = "Read me"
+READ_ONLY_COPY_NOTICE = "Read-only copy exported from Zava Forward"
+READ_ONLY_COPY_REFUSAL = (
+    "This file is a read-only copy exported from Zava Forward. "
+    "Changes in it are not imported back, so it cannot be staged as a new list"
+)
 
 
 @dataclass(frozen=True)
@@ -127,9 +133,24 @@ def match_columns(
     return matches, conflicts, unmapped
 
 
+def is_read_only_copy(sheets: dict[str, list[list[str]]]) -> bool:
+    """True for a workbook this application exported: its Read me sheet carries the copy notice."""
+    first = (sheets.get(READ_ME_SHEET) or [[""]])[0]
+    return bool(first) and first[0].startswith(READ_ONLY_COPY_NOTICE)
+
+
 def build_preview(
     structure: Structure, source_name: str, source_sha256: str, sheets: dict[str, list[list[str]]]
 ) -> Preview:
+    if is_read_only_copy(sheets):
+        return Preview(
+            structure.name,
+            source_name,
+            source_sha256,
+            "",
+            [],
+            [READ_ONLY_COPY_REFUSAL],
+        )
     sheet = structure.sheet if structure.sheet in sheets else next(iter(sheets), "")
     rows = sheets.get(sheet, [])
     if not rows:

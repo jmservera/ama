@@ -19,7 +19,17 @@ from typing import Any
 
 from . import assistant_release as rel
 from .ai import may_carry_captured_readings
-from . import ai_consumption, continuity, projection, quality, ranking, rai_release, sensor_view
+from . import (
+    ai_consumption,
+    continuity,
+    monitoring_coverage,
+    projection,
+    rai_metrics,
+    quality,
+    ranking,
+    rai_release,
+    sensor_view,
+)
 from zava_forward.core.ai import FORBIDDEN, Ai
 from .store import ConflictError
 from .synthetic.sensor_identity import demo_homes
@@ -851,7 +861,7 @@ class Assistants:
         if not self.store.ai.configured:
             return "AI is not configured; use the manual owner route."
         if db is not None:
-            pool = db.execute("SELECT calls,tokens,expires,used_calls,reserved_tokens FROM assistant_allowance WHERE id=?", (l.pool,)).fetchone()
+            pool = self._pool(db)
             if pool and (pool[2] <= self.now(db) or capacity and (
                     pool[3] >= min(pool[0], l.calls) or pool[4] + l.reservation > min(pool[1], l.tokens))):
                 return "Shared durable allowance exhausted/expired; use the manual owner route."
@@ -881,7 +891,8 @@ class Assistants:
                 if spec.get("enabled") is False:
                     registered.append(dict(spec, binding=None,
                                            release_denial=dict(missing=["Task is disabled and has no runtime binding or release evidence."]),
-                                           release=None, authority_gap=rai_release.AUTHORITY_GAP))
+                                           release=None, authority_gap=rai_release.AUTHORITY_GAP,
+                                           status=monitoring_coverage.disabled_task_status(spec)))
                     continue
                 if task in REGISTRY:
                     binding = runtime_binding(task, self.store.ai)
@@ -1139,6 +1150,26 @@ class Assistants:
                         continue
             return dict(proposals=results, disabled=self.disabled(db), manual="Open the case for ordinary human work.",
                         next_after=rows[-1][0] if len(rows) == 50 else None)
+
+    def rai_metrics(self, user, window_start, window_end, replay=None):
+        """RAI metric counts rebuilt from the persisted audit events, so a restart needs no in-memory state.
+
+        Persisted event ids are the prior ids of the window; a replayed telemetry batch is deduplicated
+        against them. Content-free: counts and opaque event ids only."""
+        if user.get("role") not in {r for v in REGISTRY.values() for r in v["roles"]}:
+            raise PermissionError("Staff assistance only.")
+        if not self.sql:
+            raise ValueError(self.disabled())
+        bounds = rai_metrics.parse_window(window_start, window_end)
+        if bounds is None:
+            return rai_metrics.reconstruct([], window_start=window_start, window_end=window_end)
+        with self.transaction() as db:
+            rows = db.execute("SELECT id,task_id,at,body FROM assistant_events WHERE at>=? AND at<? ORDER BY at,id",
+                              (bounds[0].timestamp(), bounds[1].timestamp())).fetchall()
+        persisted = [dict(json.loads(body), event_id=eid, task_id=tid,
+                          observed_at=datetime.fromtimestamp(at, timezone.utc).isoformat())
+                     for eid, tid, at, body in rows]
+        return rai_metrics.reconstruct(persisted, window_start=window_start, window_end=window_end, replay=replay)
 
     def forecast(self, user, period_seconds=86400):
         """Read-only per-period call forecast for each proactive predicate; enqueues nothing and holds no case content."""
@@ -1440,6 +1471,19 @@ class Assistants:
                        authority_reference=l.authority, trigger=task["dispatch"]["trigger"])
             return self._row(db, tid)
 
+    def _pool(self, db):
+        """The allowance row for the current authority. A changed or rotated authority token has no row of its own, so
+        it inherits the most constrained persisted ledger (lowest ceilings, highest consumption) instead of a fresh pool.
+        Returns None only when no authority has ever been admitted."""
+        l = self.limits
+        pool = db.execute("SELECT calls,tokens,expires,used_calls,reserved_tokens FROM assistant_allowance WHERE id=?", (l.pool,)).fetchone()
+        if pool is not None:
+            return tuple(pool)
+        prior = db.execute("SELECT MIN(calls),MIN(tokens),MIN(expires),MAX(used_calls),MAX(reserved_tokens) FROM assistant_allowance").fetchone()
+        if prior[0] is None:
+            return None
+        return (min(prior[0], l.calls), min(prior[1], l.tokens), min(prior[2], l.expiry), prior[3], prior[4])
+
     def _reserve(self, db, now, attempt, tid, fence):
         """Inside the caller's transaction: take one durable active-call slot and debit one call plus its token
         reservation from the shared allowance. Returns None on success, else "active" or "pool"."""
@@ -1447,11 +1491,12 @@ class Assistants:
         active = db.execute("SELECT COUNT(*) FROM assistant_attempts WHERE active_until>?", (now,)).fetchone()[0]
         if active >= l.active_calls:
             return "active"
-        pool = db.execute("SELECT calls,tokens,expires,used_calls,reserved_tokens FROM assistant_allowance WHERE id=?", (l.pool,)).fetchone()
+        pool = self._pool(db)
         if pool is None:
-            db.execute("INSERT INTO assistant_allowance (id,calls,tokens,expires,used_calls,reserved_tokens) VALUES (?,?,?,?,0,0)",
-                       (l.pool, l.calls, l.tokens, l.expiry))
             pool = (l.calls, l.tokens, l.expiry, 0, 0)
+        if db.execute("SELECT 1 FROM assistant_allowance WHERE id=?", (l.pool,)).fetchone() is None:
+            db.execute("INSERT INTO assistant_allowance (id,calls,tokens,expires,used_calls,reserved_tokens) VALUES (?,?,?,?,?,?)",
+                       (l.pool, *pool))
         # Same authority cannot extend expiry or increase allowance by restarting/config changes.
         calls, tokens, expiry = min(pool[0], l.calls), min(pool[1], l.tokens), min(pool[2], l.expiry)
         db.execute("UPDATE assistant_allowance SET calls=?,tokens=?,expires=? WHERE id=?", (calls, tokens, expiry, l.pool))
@@ -1737,18 +1782,26 @@ class Assistants:
                 dict(capability=current["capability"], continuity_epoch=current.get("claim_epoch")), self.continuity(db)) or bool(self.suspended(db, current["capability"])) or bool(
                 denied) or binding != current.get("claim_binding", binding) or current.get("release") != self.release_reference(db, current["capability"])
             if envelope.get("outcome") in ("returned", "model-mismatch"):
-                # A deployment alias is not immutable. This only compares the model name the provider returned with the released one;
-                # it is a returned-model check, not authoritative attestation of what served the call.
+                # A deployment alias is not immutable, so the model the provider returned is compared with the released
+                # serving model and the result is kept on the task. Only an exact match leaves a proposal eligible.
                 released = [r for r in rel.releases(db, current["capability"])
                             if r["id"] == current["release"]["id"]]
-                if envelope.get("outcome") == "model-mismatch" or envelope.get("model") in (None, ai_consumption.UNVERIFIED_IDENTITY) or not any(
-                        r.get("serving_model") == envelope.get("model") for r in released):
+                attestation = (rai_release.attest_serving(released[0], envelope.get("model")) if released else
+                               dict(expected=None, returned=None, outcome="unattested"))
+                if envelope.get("outcome") == "model-mismatch" and attestation["outcome"] == "matched":
+                    attestation["outcome"] = "mismatch"
+                current["serving_attestation"] = dict(attestation, at=now)
+                if attestation["outcome"] != "matched":
                     quarantined = True
                     for r in released:
                         if r["status"] == "active":
                             rel.change(db, now, None, r["id"], "suspended",
-                                       "Returned model name differs from the released one (returned-model check, not attestation); results quarantined.", system=True)
-                    current["serving_attestation"] = dict(returned=envelope.get("model"), outcome="mismatch")
+                                       f"Serving-version attestation {attestation['outcome']}; results quarantined and release suspended.", system=True)
+                    current["fallback"] = dict(route="manual", release="suspended", reason=f"Serving-version attestation {attestation['outcome']}; use manual work.")
+                    detail = dict(kind="serving-attestation", outcome=attestation["outcome"], expected=attestation["expected"],
+                                  returned=ai_consumption.bounded_model(attestation["returned"]))
+                    rel.event(db, now, current["release"]["id"], task=task["id"], **detail)
+                    self.event(db, task["id"], **detail)
             held_output = output
             if quarantined:
                 # The call may have been charged; its result is kept as a digest only and never becomes a proposal.

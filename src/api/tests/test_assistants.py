@@ -1422,6 +1422,15 @@ class ApiTests(Base):
         self.assertEqual(self.provider.calls, 0)
         self.assertEqual(before, self.domain())
 
+    def test_rai_metrics_http_reads_sql_and_is_staff_only(self):
+        # An explicit window before any fixture event keeps this independent of events inheriting suites seed.
+        status, m = self.request("/api/assistants/rai-metrics?from=2000-01-01T00:00:00Z&to=2000-01-02T00:00:00Z")
+        self.assertEqual((status, m["status"]), (200, "insufficient"))
+        self.assertEqual(self.request("/api/assistants/rai-metrics")[0], 200)
+        self.assertEqual(self.request("/api/assistants/rai-metrics?from=bad")[1]["status"], "blocked")
+        self.user = self.people["Contractor"]
+        self.assertEqual(self.request("/api/assistants/rai-metrics")[0], 403)
+
     def test_release_record_local_http(self):
         cap = "stock-prioritisation"
         self.service.approvers = {self.pm["email"].lower()}

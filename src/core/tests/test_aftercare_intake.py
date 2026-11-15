@@ -411,6 +411,34 @@ class OwnerLifecycleTests(Base):
         view = self.svc.evaluator_view(MANAGER)
         self.assertEqual(view["totals"]["unresolved_with_handover_or_financial_closure"], 1)
 
+    def test_closure_keeps_owner_outcome_and_remedy_across_a_restart_and_evaluator(self) -> None:
+        self.record()
+        self.svc.assign_owner(MANAGER, "AC-001", "Resident Liaison Officer")
+        self.svc.record_outcome(LIAISON, "AC-001", "remedy_needed", "home_visit", "Visited.")
+        self.svc.set_remedy(LIAISON, "AC-001", "in_progress", None)
+        before = self.svc.concern(MANAGER, "AC-001")
+        for kind in ("handover", "financial"):
+            self.svc.record_closure(MANAGER, HOME, kind, "2026-11-01")
+        reopened = self.service()
+        after = reopened.concern(MANAGER, "AC-001")
+        for key in ("owner", "outcome", "remedy", "investigation", "history", "unresolved"):
+            self.assertEqual(after[key], before[key], key)
+        row = next(r for r in reopened.evaluator_view(MANAGER)["rows"] if r["home_ref"] == HOME)
+        self.assertEqual(row["concerns"][0]["remedy"], "in_progress")
+        self.assertEqual(row["unresolved_count"], 1)
+        reopened.set_remedy(LIAISON, "AC-001", "completed", "Fitted and checked.")
+        self.assertFalse(reopened.concern(MANAGER, "AC-001")["unresolved"])
+
+    def test_there_is_no_route_to_propose_or_accept_a_pack_so_no_record_can_change(self) -> None:
+        self.record()
+        before = self.svc.concern(MANAGER, "AC-001")
+        for action in ("pack", "packs", "concern-pack"):
+            status, _ = self.svc.handle(
+                "POST", f"/api/aftercare/concerns/AC-001/{action}", MANAGER, {}, {}
+            )
+            self.assertIn(status, (404, 405), action)
+        self.assertEqual(self.svc.concern(MANAGER, "AC-001"), before)
+
     def test_normal_sensor_context_never_dismisses_and_stays_staff_only(self) -> None:
         shown = self.svc.add_sensor_context(
             COORDINATOR, "AC-001", {"signal": "NO_EXERCISE_SIGNAL", "label": "Normal reading"}

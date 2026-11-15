@@ -43,15 +43,36 @@ function acNumber(value, digits = 1) {
     : "Unknown";
 }
 
+const AC_WINDOW_LABELS = { baseline: "Baseline", early: "Early", late: "Late" };
 const AC_TABLE_CAPTION = "Observed baseline and late means, with concerns and recorded outcomes by home";
 
+const acWhole = (n) => typeof n === "number" && Number.isInteger(n) && n >= 0;
+
 function acFraction(value) {
-  const ok = (n) => typeof n === "number" && Number.isInteger(n) && n >= 0;
-  if (!value || typeof value !== "object" || !ok(value.count) || !ok(value.denominator) || value.count > value.denominator) {
+  if (!value || typeof value !== "object" || !acWhole(value.count) || !acWhole(value.denominator) || value.count > value.denominator) {
     return "Unresolved concerns: Unknown";
   }
   const base = `${value.count} of ${value.denominator} concerns unresolved.`;
   return value.denominator === 0 ? `${base} No proportion is stated.` : base;
+}
+
+function acHouseholds(value) {
+  if (!value || typeof value !== "object" || !acWhole(value.count) || !acWhole(value.denominator) || value.count > value.denominator) {
+    return "Homes with a concern raised: Unknown";
+  }
+  const base = `${value.count} of ${value.denominator} homes raised a concern.`;
+  return value.denominator === 0 ? `${base} No proportion is stated.` : base;
+}
+
+function acRowUnresolved(row) {
+  const total = (row.concerns || []).length;
+  const n = row.unresolved_count;
+  if (!acWhole(n) || n > total) return "Unknown";
+  return `${n} of ${total}`;
+}
+
+function acCountLine(label, n) {
+  return `${label}: ${acWhole(n) ? n : "Unknown"}.`;
 }
 
 function acOwner(owner) {
@@ -191,14 +212,19 @@ function aftercareEvaluatorView(v) {
       h("td", {}, ok ? `${acNumber(cmp.late.temperature_c)} °C` : "Unknown"),
       h("td", {}, String((row.concerns || []).length)),
       h("td", {}, acOutcomes(row.concerns || [])),
-      h("td", {}, String(row.unresolved_count ?? "Unknown")));
+      h("td", {}, acRowUnresolved(row)));
   });
   return h("section", { "aria-labelledby": "ac-eval-title" },
     h("h1", { id: "ac-eval-title", tabindex: "-1" }, "Aftercare view for a synthetic cohort"),
     h("p", {}, acText(v.synthetic_notice)),
     h("p", {}, acText(v.notice)),
     h("p", {}, `${acText(usable.count)} of ${acText(usable.denominator)} homes have a usable comparison. Concerns raised: ${acText(totals.concerns_raised)}.`),
+    h("p", {}, acHouseholds(totals.households_raising_concern)),
     h("p", {}, acFraction(totals.concerns_unresolved)),
+    h("p", {}, acCountLine("Unresolved concerns in homes with a handover or financial closure", totals.unresolved_with_handover_or_financial_closure)),
+    h("p", {}, acCountLine("Concerns outside the stated homes", totals.concerns_outside_stated_scope)),
+    h("h2", {}, "How the baseline is measured"),
+    h("ul", {}, ...Object.entries(v.windows && typeof v.windows === "object" ? v.windows : {}).map(([k, w]) => h("li", {}, `${Object.hasOwn(AC_WINDOW_LABELS, k) ? AC_WINDOW_LABELS[k] : "Other period"}: ${acText(w)}`))),
     rows.length
       ? h("div", { class: "table-scroll", role: "region", tabindex: "0", "aria-label": AC_TABLE_CAPTION },
         h("table", {},
@@ -212,14 +238,15 @@ function aftercareEvaluatorView(v) {
     h("p", {}, acText(v.sensor_note)));
 }
 
-const AC_UNCONFIRMED = "Saving could not be confirmed. The concern may or may not have been saved. Do not start another record or use the paper route yet. Send again with the same details, which is safe because the same request reference is kept, or ask a colleague to check. Check the concerns list for a receipt first.";
-const AC_EARLIER = "An earlier attempt may have been saved. Send the original details again without changes, or check the concerns list for a receipt, before starting another record or using the paper route.";
+const AC_UNCONFIRMED = "Saving could not be confirmed. The concern may or may not have been saved. Check the concerns list for a receipt first. Do not start another record or use the paper route yet. Owner: you, the person recording. Next action: if there is no receipt, send again with the same details, which is safe because the same request reference is kept, or ask a colleague to check.";
+const AC_EARLIER = "An earlier attempt may have been saved. Send the original details again without changes, or check the concerns list for a receipt, before starting another record or using the paper route. Owner: you, the person recording. Next action: send again or check the receipt now.";
 
 function acRefusal(error, unresolved) {
   const own = error.status === 403
-    ? "Your role cannot do this. Ask a colleague who can, or use the paper route."
+    ? "Your role cannot do this. Owner: a colleague whose role can record concerns. Next action: ask them, or use the paper route."
     : (error.message || "Some details need fixing.");
-  return unresolved ? `${own} ${AC_EARLIER}` : own;
+  const message = error.status === 403 || /Next action:/.test(own) ? own : `${own} Owner: you, the person recording. Next action: correct the fields marked with a problem, then send again.`;
+  return unresolved ? `${message} ${AC_EARLIER}` : message;
 }
 
 function acValidReceipt(receipt, requestId) {
@@ -347,13 +374,15 @@ async function aftercareWorkspaceView() {
     else {
       parts.push(h("h1", { id: "ac-title", tabindex: "-1" }, "Aftercare concerns"),
         h("p", { class: "notice" }, acText(concerns.synthetic_notice)),
-        h("p", { role: "status" }, "Your role can read these concerns but cannot record one. Ask a colleague who can."));
+        h("p", { role: "status" }, "Your role can read these concerns but cannot record one. Owner: a colleague whose role can record concerns. Next action: ask them."));
     }
     parts.push(h("section", { "aria-labelledby": "ac-list-title" },
       h("h2", { id: "ac-list-title" }, `Recorded concerns (${acText(concerns.count)})`),
       concerns.items.length
         ? concerns.items.map((c) => aftercareConcernView(c))
-        : h("p", {}, "No concerns have been recorded yet.")));
+        : h("p", {}, "No concerns have been recorded yet."),
+      h("p", {}, h("a", { class: "btn alt", href: `${AFTERCARE_API}/concerns.csv`, download: "aftercare-concerns.csv" }, "Download concerns for Excel"),
+        " The file is a read-only copy without the resident's own words; changes in it are not imported back.")));
     parts.push(acSecondaryHeading(aftercareEvaluatorView(evaluator)));
     show(...parts);
     wire();

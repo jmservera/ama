@@ -1,0 +1,3 @@
+# Review: issue 153 copy audit close
+
+Executed once by the code-review agent on the full diff. Outcome: no significant issues. Reviewer confirmed aftercare test substrings and request-id safeguards are preserved. The reviewer could not run some tests in its own environment (missing modules); the author ran them in a fresh venv: content_standard, programme_screen, aftercare_screen, aftercare_served, chat_panel, loading_feedback, employee_live_responses, case_journey, workspace_scripts all OK; ruff, ruff format and mypy clean. `test_cutover_audit` not needed (docs/reference untouched). Browser checks (Playwright) were not run; assertions on changed substrings were preserved by inspection.

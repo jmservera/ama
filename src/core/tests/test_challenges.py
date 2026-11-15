@@ -209,6 +209,8 @@ class HazardConcern(unittest.TestCase):
             reg.confirm_hazard_handoff(rec["id"], "Pat Owner", " ")
         self.assertEqual(len(reg.hazard_referrals()), 1)
         self.assertEqual(reg.view(rec["id"])["hazard_referral"]["status"], "referred_on_receipt")
+        with self.assertRaises(ValueError):
+            reg.confirm_hazard_handoff(rec["id"], "Pat Owner", "memory:CM-18f1a2b3c4d5e6f71a2b")
         reg.confirm_hazard_handoff(rec["id"], "Pat Owner", "Engineer called out 09:10.")
         self.assertEqual(reg.hazard_referrals(), [])
         before = reg.view(rec["id"])

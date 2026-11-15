@@ -14,7 +14,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from zava_forward.core.synthetic import device_identity as di
-from zava_forward.core.synthetic import sensor_stock
+from zava_forward.core.synthetic import privacy, sensor_stock
 
 VERSION = "simulated-device-provision-v1"
 _PLACEHOLDERS = frozenset({"tbc", "tbd", "todo", "n/a", "na", "none", "unknown", "unassigned"})
@@ -45,7 +45,11 @@ def build_manifest(register: Path, homes: int, run_id: str, owner: str, seed: in
 
 
 def report(manifest: di.Manifest, action: str, mode: str) -> dict[str, object]:
+    if privacy.pattern_issues(manifest.credential_owner):
+        raise ProvisionError("CREDENTIAL_OWNER_PERSONAL_DATA")
     return {
+        "source_type": "SYNTHETIC",
+        "contains_real_data": False,
         "version": VERSION,
         "mode": mode,
         "action": action,

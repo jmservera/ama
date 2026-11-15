@@ -7,9 +7,11 @@ call it reserves the worst-case cost and tokens of that call, stopping first if 
 be crossed.
 
 ``dry-run`` uses an offline deterministic estimator and is never measured evidence. ``live``
-needs an explicit ``--execute-live`` plus an injected provider (``AgentWorker.provider_call``);
-the command line wires none, so no live call can happen by accident. The prompt bound uses UTF-8
-byte length, an upper bound on token count, so an accepted request cannot exceed
+needs an explicit ``--execute-live`` plus either an injected provider
+(``AgentWorker.provider_call``) or an explicit ``--endpoint``, ``--deployment`` and ``--model``
+for the opt-in Azure OpenAI adapter in ``heldout_aoai``; without them, no live call can happen
+by accident, and an invalid authorization refuses before any token or call. The prompt bound
+uses UTF-8 byte length, an upper bound on token count, so an accepted request cannot exceed
 ``max_prompt_tokens``. The runner never retries, and a missing, malformed or out-of-bound usage
 record is charged at the worst case and stops the batch. This is a measurement tool, not an
 approval of a model or of any later spend.
@@ -399,15 +401,51 @@ def main(
     parser.add_argument("--proposals", required=True)
     parser.add_argument("--json-out")
     parser.add_argument("--markdown", action="store_true")
+    parser.add_argument("--endpoint", help="Azure OpenAI endpoint, with --execute-live")
+    parser.add_argument("--deployment", help="Azure OpenAI deployment name, with --execute-live")
+    parser.add_argument(
+        "--model", help="authorized model the deployment serves, with --execute-live"
+    )
+    parser.add_argument("--auth", choices=("az-cli", "managed-identity"), default="az-cli")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--dry-run", action="store_true")
     group.add_argument("--execute-live", action="store_true")
     args = parser.parse_args(sys.argv[1:] if argv is None else argv)
+    authorization = _load(args.authorization)
     if args.execute_live and provider is None:
-        print("heldout_batch: no provider is configured; no live call was made.", file=sys.stderr)
-        return NOT_CONFIGURED
+        from zava_forward.agents import heldout_aoai
+
+        if not (args.endpoint and args.deployment and args.model) or not heldout_aoai.valid_target(
+            args.endpoint, args.deployment
+        ):
+            print(
+                "heldout_batch: no provider is configured (needs a valid --endpoint, "
+                "--deployment and --model); no live call was made.",
+                file=sys.stderr,
+            )
+            return NOT_CONFIGURED
+        provider_model = args.model
+        if authorization_problems(authorization) or args.model != authorization.get("model"):
+            provider = dry_run_call  # the gate refuses before any dispatch
+        elif (
+            str(authorization.get("endpoint", "")).rstrip("/") != args.endpoint.rstrip("/")
+            or authorization.get("deployment") != args.deployment
+        ):
+            print(
+                "heldout_batch: --endpoint and --deployment must equal the authorization's "
+                "endpoint and deployment; no live call was made.",
+                file=sys.stderr,
+            )
+            return NOT_CONFIGURED
+        else:
+            try:
+                token = heldout_aoai.get_token(args.auth)
+            except heldout_aoai.AdapterError as error:
+                print(f"heldout_batch: {error}; no live call was made.", file=sys.stderr)
+                return NOT_CONFIGURED
+            provider = heldout_aoai.make_provider(args.endpoint, args.deployment, args.model, token)
     report = run_batch(
-        _load(args.authorization),
+        authorization,
         _load(args.manifest),
         _load(args.proposals),
         provider if args.execute_live and provider else dry_run_call,

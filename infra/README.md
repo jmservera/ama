@@ -349,7 +349,7 @@ Set these **GitHub environment variables**, never committed values:
 | `AZURE_REGISTRY_NAME` | Release and target environments; existing registry in ama |
 | `DEPLOY_PARAMETERS` | Plan and target environments; JSON override contract below |
 
-`DEPLOY_PARAMETERS` must contain exactly `location`, `sqlLocation`,
+`DEPLOY_PARAMETERS` must contain exactly `location`, `sqlLocation`, `aiModelLocation`,
 `regionCheckReference`, `quotaCheckReference`, `alertEmail`,
 `sqlAdminGroupName`, `sqlAdminGroupObjectId`, `entraClientId` (all nonempty
 strings), and `entraBearerOnly` (an explicit JSON boolean). Use approved values
@@ -551,6 +551,8 @@ Runner unit tests use installed source packages:
 Compiled profile/staging/auth-mode checks run in the existing infra suite.
 
 Example from the repository root: `python3 infra/scripts/deploy.py --resource-group ama --registry <registry-name> --environment dev --parameters <private-completed-parameters.bicepparam>` (what-if; complete the recorded checks below and add `--apply` only after review).
+
+Add `--dry-run` to print the deterministic plan and what-if command with no `az`, network or file access (it cannot be combined with `--apply`; without `--orchestrator-image` the image shows as `<resolved-at-run-time>`). Issue #148 criterion 4 (disposable Azure from-empty rebuild) stays unmet.
 
 ## Direct demo ingress migration proposal (2026-10-16, #360)
 
@@ -836,7 +838,7 @@ working sign-in reports are historical, not evidence that the new tenant
 registration exists or direct src sign-in works. The new explicit demo mode
 reuses the useful FQDN/browser pattern without copying obsolete public-data
 configuration, old image names, datasets or tenant identifiers. No code was
-restored from `mvp/`.
+restored from `mvp/` (archive `v0.21.0`).
 
 ## Public browser continuation (2026-10-16, #344)
 
@@ -1000,6 +1002,7 @@ remain an owner design decision, not an executable instruction here.
 | Model SKU/quota inputs (`modelDeployments`) | `standard`: gpt-4.1-mini; `capable`: gpt-4.1; both version 2025-04-14, `GlobalStandard`, capacity 30 | same defaults, subject to checks | same defaults; catalog checked below, quota and approved subscription binding unknown |
 | Retention (fixed unless a documented module input exists) | Log Analytics 90 days; SQL PITR 14 days; blob/container soft delete 30 days; ACR 30 days; audit/digest immutability 365 days unlocked; IoT 1 day | same | same; not a legally approved retention schedule |
 | `location` and `sqlLocation` | `uksouth` candidate, recheck | `uksouth` candidate, recheck | empty PLACEHOLDERs retained; pilot `uksouth` selected, separate SQL region unselected |
+| `aiModelLocation`, `aiModelFallbackLocation`, `modelCapacityBudget` | `uksouth`, no fallback, budget 30 | `uksouth`, no fallback, budget 30 | empty model region PLACEHOLDER, no fallback, budget 30 |
 | `regionCheckReference`, `quotaCheckReference` | empty PLACEHOLDERs | empty PLACEHOLDERs | empty PLACEHOLDERs |
 | Deployable as committed | No: complete placeholders/checks privately | No: complete placeholders/checks privately | No: additionally requires pilot decisions |
 
@@ -1027,6 +1030,21 @@ Rules:
   records, not approval tokens. Any nonempty string satisfies the mechanical
   gate, so a human must verify contents, freshness and exact configuration.
   Do not enter placeholder text to pass it.
+
+Region and quota choices are explicit parameters in every parameter set:
+`location`, `sqlLocation`, `aiModelLocation` (model account and deployments,
+defaults to `location`), optional `aiModelFallbackLocation` (recorded only,
+never deployed automatically, must differ from `aiModelLocation`) and
+`modelCapacityBudget` (approved model capacity units; `chatModelCapacity` must
+fit it, enforced by the `modelCapacityMustFitBudget` guard). The deterministic
+offline helper `infra/scripts/region_quota_preflight.py <param-file> [--bicepparam <file>] [--record
+check.json]` also parses `chatModelCapacity`/`modelDeployments`
+capacities from the file and checks them against the budget and the record; it reports whether every region is selected, the references are
+recorded, the dated record covers each selected region and every quota has
+headroom (limit - used - requested) within the budget. It never calls Azure and
+never approves a deployment; committed sets report `blocked` until a real dated
+record exists. `infra/tests/test_region_quota_137.py` pins this
+contract for dev, test and pilot.
 
 Recorded region and quota checks (re-run before each deployment; a check in another subscription or on another date proves nothing):
 
@@ -1336,10 +1354,10 @@ or deployment approval is inferred.
 | Criterion | Status | Evidence |
 | --- | --- | --- |
 | Worker and job images real, versioned, deployed through the pipeline | Unmet | Images and the `src-deploy.yml` digest pipeline are real. The agents entrypoint has a tested run loop (`zava_forward.agents.worker`), a stdlib Azure Queue adapter (`zava_forward.agents.queue_azure`, scripted transport only, not run against Azure) and, since #1523, a Managed Identity token source (`runtime.identity_token`), an API post-back (`ApiResultSink`) and the wiring (`build_runtime`), all unit-tested locally. Per the Bicep configuration and current code, `serve` runs the queue loop only when `ZF_AGENT_RESULT_ROUTE=enabled`, which the Bicep deliberately omits, so a deployed worker would run a standby loop that keeps the heartbeat and processes no tasks. No live deployed pipeline receipt, live queue run or API post-back run exists, so the criterion stays Unmet. The orchestrator entrypoint still only prints a version |
-| Scale rules, probes, limits, rollback | Defined and compile-tested | `test_api_replicas_probes_and_private_edge_contract` asserts the API http rule (50 concurrent, 0 to 4 replicas), Startup, Liveness and Readiness probes, 0.5 vCPU/1 GiB limits, Single revision mode, the agents queue rule and job limits. `test_agents_app_has_no_hosted_probe_and_keeps_scale_limits_and_single_revision` pins the agents app: the worker has no listener and Container Apps probes are HTTP or TCP only, so it has no hosted probe (the `health` heartbeat command is a local diagnostic; its 120 s limit is checked arithmetically in `HeartbeatMarginTests` for one provider call at the largest accepted task timeout (read from the `TaskMessage.from_json` bound) plus the larger of the fault backoff and the idle wait, with a 2x margin; the pulse runs once per loop iteration, so a task with several provider calls and queue, token, post and ack latency are not bounded). No executable rollback test and no live rollout were run |
+| Scale rules, probes, limits, rollback | Defined and compile-tested | `test_api_replicas_probes_and_private_edge_contract` asserts the API http rule (50 concurrent, 0 to 4 replicas), Startup, Liveness and Readiness probes, 0.5 vCPU/1 GiB limits, Single revision mode, the agents queue rule and job limits. `test_agents_app_has_no_hosted_probe_and_keeps_scale_limits_and_single_revision` pins the agents app: the worker has no listener and Container Apps probes are HTTP or TCP only, so it has no hosted probe (the `health` heartbeat command is a local diagnostic; its 120 s limit is checked arithmetically in `HeartbeatMarginTests` for one provider call at the largest accepted task timeout (read from the `TaskMessage.from_json` bound) plus the larger of the fault backoff and the idle wait, with a 2x margin; the pulse runs once per loop iteration, so a task with several provider calls and queue, token, post and ack latency are not bounded). No executable rollback test and no live rollout were run. Since 2026-11-13 `infra/tests/test_container_hosting_completeness.py` pins, for every declared app and job in the Bicep sources, bounded CPU and memory, bounded replicas and a scale rule, job timeout and retry limits, all three probes on the ingress port, single revision mode, and the documented rollback path. It reads the templates as text: a source contract, not a deployed scale, probe or rollback receipt |
 | Hardening enforced in the deployed app | Partial, platform-blocked | See the hosted hardening note above; CI Docker checks only |
-| Load test on the declared fixture | Run locally, not at declared scale | [`scale-load-2026-11-01.json`](../docs/architecture/scale-load-2026-11-01.json) |
-| Single-replica restart with audit persistence | Verified on the SQL store | `src/api/tests/test_restart_audit.py` reopens the SQL store (not an API replica restart); ledger entries, chain and digest persist. `src/agents/tests/test_worker.py` `ReplicaRestartTests` simulates a worker killed before the post and between post and ack: after a manual lease release a replacement worker handles the redelivered task, and a post that was already made is repeated (at-least-once delivery; the duplicate carries the same task id and fence, but API-side dedupe is not built or tested). No hosted single-replica restart receipt and no Azure restore proof |
+| Load test on the declared fixture | Run locally, not at declared scale | [`scale-load-2026-11-01.json`](../docs/architecture/scale-load-2026-11-01.json); separate-process closed-loop run [`scale-restart-2026-11-13.json`](../docs/architecture/scale-restart-2026-11-13.json) (see [Separate-process load and restart run](#separate-process-load-and-restart-run-issue-144-2026-11-13)) |
+| Single-replica restart with audit persistence | Verified on the SQL store | `src/api/tests/test_restart_audit.py` reopens the SQL store (not an API replica restart); ledger entries, chain and digest persist. `src/agents/tests/test_worker.py` `ReplicaRestartTests` simulates a worker killed before the post and between post and ack: after a manual lease release a replacement worker handles the redelivered task, and a post that was already made is repeated (at-least-once delivery; the duplicate carries the same task id and fence, but API-side dedupe is not built or tested). `src/api/tests/test_scale_fixture_load_and_restart.py` adds a real API process killed with SIGKILL and restarted on the same SQLite store, checked through `/api/audit-check` (local, one process; not a hosted replica). No hosted single-replica restart receipt and no Azure restore proof |
 
 Revision rollback: apps use `activeRevisionsMode: Single`, and a failed Startup
 or Readiness probe keeps the previous revision serving. There is no historical
@@ -1353,6 +1371,28 @@ so the rebuilt images pass scanning and admission, the environment approvals
 apply and what-if runs first. Confirm `/healthz` and the ledger-verify job
 afterwards. No traffic splitting is used, and a guarded redeploy of an earlier
 release identity would be a separate, tested change.
+
+### Separate-process load and restart run (issue 144, 2026-11-13)
+
+Local loopback run of `src/api/tests/test_scale_fixture_load_and_restart.py`
+(`--homes 60000 --concurrency 20 --seconds 60`; record
+[`scale-restart-2026-11-13.json`](../docs/architecture/scale-restart-2026-11-13.json)).
+The API ran as its own OS process on a SQLite SQL store, so its memory is measured
+apart from the load client. The fixture was the declared 60,000 fictional homes with
+53,821 contact and appointment events (not the declared 600,000). The load was a
+closed loop of 20 concurrent clients for 62 s on a 4-CPU machine, not the declared
+1,800 s at 5 requests/s, no inference.
+
+* Throughput 3.78 requests/s, 236 requests, error rate 0.
+* Latency (ms) p50 and p95: all 4,829 and 9,478; list 4,464 and 9,477; detail 4,829 and 9,702; dashboard 6,510 and 9,350. All routes exceed the NFR-002 staff thresholds (1 s, 1 s and 3 s), as in the 2026-11-01 run, and 20 saturating clients queue behind one process.
+* Server RSS 614 MiB after load, high-water 622 MiB, against the declared 1 GiB limit. This process has no Azure SDK, Easy Auth sidecar or SQL Server client, so a hosted replica would differ.
+* Cold start to `/healthz` 200: 5.6 s; after the kill, 4.1 s.
+* Restart: three acknowledged `call` audit writes, then `SIGKILL` (no graceful shutdown). After restart on the same file the ledger had the same 3 entries with an intact chain, a new write was acknowledged, and the chain was intact with 4 entries.
+
+This is a single local process. It is not production scale, not an Azure or Container
+Apps measurement, not autoscaling or multi-replica evidence, and it does not satisfy
+the hosted criteria. The unit tests in the same file run a 150-home version of the
+same sequence.
 
 Load run, from `src/api` with installed distributions and
 `PYTHONPATH=../core/tests:../agents/tests`:
@@ -1499,7 +1539,7 @@ local Docker checks or authorize subscription/tenant changes.
 Where Docker is available, build and run locally before registry publication.
 The 2026-10-16 owner direction instead permits ACR Tasks with no local Docker;
 its observed contracts are separately labelled in the pack. ADR 0006 uses `src/` as
-context so named workload packages can include sibling core; never use `mvp/`
+context so named workload packages can include sibling core; never use the retired `mvp/` (archive `v0.21.0`)
 or the repository root as context. The API starts with `python -m zava_forward.api`.
 The token-store and ledger jobs use `orchestratorImage` with commands
 `python -m zava_forward.orchestrator.token_store` and
@@ -3329,7 +3369,7 @@ The current-main integration keeps the installed `src/` namespace,
 main's IoT sender/receiver scopes and release controls, and the private Blob
 transport from this branch. Helpers remain in `infra/scripts`; the worker
 imports `zava_forward.core.mssqlstore` from the installed core distribution.
-No retired `mvp/` code or old tag permission is restored. The preceding
+No retired `mvp/` code (archive `v0.21.0`) or old tag permission is restored. The preceding
 DN1-DN5 decisions and historical failures remain unchanged.
 
 | Claim | evidence | rationale | change_reason |
@@ -3882,9 +3922,17 @@ approval. No Azure call, what-if or deployment was made.
 * The API already has `ZF_BLOB_ACCOUNT_URL` and `ZF_BLOB_CLIENT_ID` (managed identity). The wiring adds no key, SAS, connection string, secret or public access, and no role: the existing API storage-account `Storage Blob Data Contributor` assignment covers the adapter's create, read and list. Residual: that role also permits delete at account scope; the adapter has no delete path, but a container-scoped assignment is a later platform decision, not made here.
 * No retention duration is approved for ranking records, so none is chosen. Until the owner sets and approves a duration and locks the policy, nothing may claim immutable or durable release of ranking records. The existing 365-day audit and digest values are not an approved schedule either.
 * `environmentName=pilot` with the flag on and a zero duration fails the named guard `pilotRankingArchiveRequiresConfiguredRetention`. It checks only that a duration is set, not that it is approved or locked.
-* Existing folder records are not migrated, deleted or read: Blob starts empty. The runner (`ranking_publication_runner --blob`) is an operator CLI and needs the same variables; no job is deployed for it.
+* Existing folder records are not migrated, deleted or read: Blob starts empty. The runner (`ranking_publication_runner --blob`) remains an operator CLI. Since 2026-11-13 (Refs #79 criterion 4) the same flag also adds the scheduled `rankingPublish` job below.
 * `main.test.bicepparam` records both parameters explicitly as `false` and `0`. Set the flag in the private parameter copy to wire the demo.
 * Offline checks: `az bicep build` of `main.bicep`, `tests.test_bicep_policy` (flag-off identity, container privacy, optional policy, compiled output-to-env chain, provider constant match, pilot guard) and `tests.test_identity_rbac`. Real-account, emulator and role behaviour are not established.
+
+### Scheduled ranking publication job (Refs #79, 2026-11-13)
+
+With `enableRankingArchiveBlob=true` (and the usual workload and background flags) the compiled template adds a Container Apps `Schedule` job (`job-{prefix}-rank-publish`, demo `job-{prefix}-rank`) that runs `python -m zava_forward.orchestrator.ranking_publish` daily at 02:30 UTC on the `orchestratorImage`, with the API identity, the `mssql` store settings and the ranking Blob settings. It is also added to the existing job-failure alerts. With the flag off no job, container or setting is added.
+
+* The job reads open cases from the store and writes one create-only record to the private Blob container; a repeat is reported as already published and nothing is overwritten or deleted. Retention is the container immutability policy above: unlocked, owner-set, default none.
+* The shipped ranking policy is an unsigned draft, so the job refuses (`RANKING_PUBLISH_BLOCKED`, exit 1) until a named owner signs a new policy version. #79 criterion 3 stays open and no signature is recorded here. A data `as_of` that is not the run date also exits 1 (`RANKING_PUBLISH_ALERT`).
+* Evidence is the compiled template, `tests.test_bicep_policy` and the mock Blob tests in `src/orchestrator/tests/test_ranking_publish.py`. No Azure what-if, deployment, job execution, approved retention duration or locked policy is established, and no log-query missing-run alert was added.
 
 ## Public simulation lane startup binding (Refs #136, #1288, 2026-11-10)
 

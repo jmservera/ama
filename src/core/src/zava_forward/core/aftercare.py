@@ -68,11 +68,37 @@ PARAPHRASE_PATTERNS = tuple(
         rf"\b{_HOUSEHOLD}s? (?:has |have |had )?(?:caused|misunderstood)\b",
         rf"\b{_HOUSEHOLD}s? (?:is|was|were|are) at fault\b",
         rf"\b{_HOUSEHOLD}s?'?s? behaviou?r\b",
+        r"\b(?:reduces?|lowers?|cuts?|trims?) (?:your|the|household|energy) "
+        r"(?:energy )?(?:bills?|costs?)\b",
+        r"\b(?:lower|smaller|cheaper) (?:energy )?bills?\b",
+        r"\bbills? (?:will|would) be (?:cheaper|lower|smaller)\b",
+        r"\b(?:retrofit|works|insulation|measures|installation|upgrade|heating|ventilation)"
+        r" (?:has |have |had )?made (?:the home|your home|it|things|the house)?\s*"
+        r"(?:colder|warmer|damper|worse|better)\b",
+        r"\b(?:saves?|saving) (?:you |the household )?(?:money|energy|costs?)\b",
+        r"\byou (?:could|can|may|should) (?:save|pay less)\b",
+        r"\b(?:bills?|costs?) (?:should|are expected to|is expected to|are likely to) "
+        r"(?:fall|drop|go down|reduce)\b",
+        r"\bsavings? (?:is|are) (?:likely|expected|certain|assured)\b",
+        rf"\b(?:due|owing|down) to (?:the )?{_HOUSEHOLD}s?\b",
+        rf"\b{_HOUSEHOLD}s?'?s? (?:own )?fault\b",
+        rf"\b{_HOUSEHOLD}s? (?:waste|wastes|wasted|overuse|overuses|overused)\b",
+        r"\b(?:over-?use|overconsumption)\b",
+        r"\b(?:result|consequence) of the (?:retrofit|works|installation|measures|upgrade)\b",
+        r"\b(?:retrofit|works|insulation|measures|installation|upgrade|heating|ventilation)"
+        r" (?:has |have |had )?(?:led to|leads to|resulted in|results in|caused|causes)\b",
     )
 )
 # Only a "whether/if" phrase stating uncertainty is exempt; it ends at a comma, conjunction or stop.
 _UNCERTAIN = re.compile(
     r"\b(?:cannot determine|can ?not determine|unknown|not known|no evidence)\s+(?:whether|if)\b"
+    r"[^.;,]*?(?=\s(?:and|but|or)\s|[.;,]|$)"
+)
+
+
+# A plain statement that no claim or promise is made is a caveat, not a claim.
+_NEGATED_CLAIM = re.compile(
+    r"\b(?:no|not a|never a)\s+(?:claim|promise|guarantee)s?\s+(?:of|about)\b"
     r"[^.;,]*?(?=\s(?:and|but|or)\s|[.;,]|$)"
 )
 
@@ -89,7 +115,7 @@ def neutral_text(text: str) -> str:
     for phrase in BANNED_PHRASES:
         if phrase in lowered:
             raise ValueError(f"Generated text must not contain '{phrase}'.")
-    folded = _UNCERTAIN.sub(" ", lowered.replace("\u2019", "'"))
+    folded = _NEGATED_CLAIM.sub(" ", _UNCERTAIN.sub(" ", lowered.replace("\u2019", "'")))
     for pattern in PARAPHRASE_PATTERNS:
         if pattern.search(folded):
             raise ValueError("Generated text must not state causation, blame or a savings promise.")
@@ -240,6 +266,10 @@ class AftercareRegister:
                 or rec.get("remedy", {}).get("status") not in REMEDY_STATUSES
                 or (rec["investigation"] == "outcome_recorded") != (outcome is not None)
                 or (outcome is not None and outcome.get("basis") not in HUMAN_BASES)
+                or (
+                    rec["remedy"]["status"] in ("completed", "not_needed")
+                    and (outcome is None or not _present(rec["remedy"].get("evidence")))
+                )
             ):
                 raise ValueError(f"Snapshot concern {cid} is not valid.")
         if any(i.get("kind") not in CLOSURE_KINDS for i in reg.closures):
@@ -489,7 +519,6 @@ class AftercareRegister:
             "notice": neutral_text(EVALUATOR_NOTICE),
         }
         self.packs[pack["id"]] = pack
-        rec["history"].append({"event": f"pack_proposed_{pack['id']}"})
         return deepcopy(pack)
 
     def review_pack(self, pack_id: str, reviewer: str, action: str, reason: str) -> Record:

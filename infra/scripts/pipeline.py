@@ -34,6 +34,7 @@ PARAMETER_FILES = {
 OVERRIDES = {
     "location",
     "sqlLocation",
+    "aiModelLocation",
     "regionCheckReference",
     "quotaCheckReference",
     "alertEmail",
@@ -125,7 +126,7 @@ def parameters(infra: Path, environment: str) -> dict[str, Any]:
     for key in ("sqlAdminGroupObjectId", "entraClientId"):
         if UUID(overrides[key]).int == 0:
             raise PipelineError(f"Unresolved identity parameter: {key}")
-    for key in ("location", "sqlLocation"):
+    for key in ("location", "sqlLocation", "aiModelLocation"):
         if not re.fullmatch(r"[a-z][a-z0-9]+", overrides[key]):
             raise PipelineError(f"Invalid region parameter: {key}")
     values.update(

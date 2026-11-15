@@ -39,7 +39,7 @@ from zava_forward.core.ai_consumption import CallContext, call_context, referenc
 from zava_forward.core.assistants import REGISTRY
 from zava_forward.core.chat_case_answers import answer as grounded_answer
 from zava_forward.core.chat_isolation import CONTEXT_MESSAGES, ChatIsolation, block, neutralise
-from zava_forward.core.chat_privacy import redact
+from zava_forward.core.chat_privacy import MEMORY_LIMIT, MEMORY_MAX, redact
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
 
 LABEL = "AI suggestion, not approved"
@@ -244,7 +244,13 @@ ACTION_CLAIM = re.compile(
     r"|(?:record(?:ed)?|confirm(?:ed)?|log(?:ged)?|give|given|mark(?:ed)?)"
     r"\s+[^.;!?]{0,100}?\b(?:consent|consented))\b"
     r"|\b(?:consent\s+(?:has\s+been|is|was)\s+(?:recorded|confirmed|logged)"
-    r"|(?:case|work|proposal)\s+(?:has\s+been|is|was)\s+(?:approved|signed[\s-]off))\b",
+    r"|(?:case|work|proposal)\s+(?:has\s+been|is|was)\s+(?:approved|signed[\s-]off))\b"
+    r"|(?<!\bno\s)(?<!\bno\sresident\s)\bconsent\s+(?:(?:is|was|has\s+been)\s+)?"
+    r"(?:recorded|confirmed|logged|granted|given|on\s+file)\b"
+    r"|(?<!\bno\s)\b(?:approval|sign[\s-]off|authori[sz]ation)\s+(?:(?:is|was|has\s+been)\s+)?"
+    r"(?:recorded|granted|given|confirmed|logged|on\s+file)\b"
+    r"|\b(?:resident|tenant)\s+(?:has\s+|had\s+)?(?:gave|given|granted)\s+"
+    r"(?:(?:their|his|her)\s+)?consent\b",
     re.I,
 )
 STATUS_CLAIM = re.compile(
@@ -260,10 +266,49 @@ TASK = "chat-case-conversation"
 MAX_INPUT_CHARS = 16000
 MAX_HISTORY_CHARS = 4000
 MAX_QUESTION_CHARS = 1000
+MAX_THREAD_TURNS = 30
+OUTPUT_TOKENS = 600
+CHAT_ROLES = (
+    "Retrofit Coordinator",
+    "Resident Liaison Officer",
+    "Building Safety Liaison",
+    "Grants and Evidence Officer",
+    "Quality Inspector",
+    "Retrofit Programme Manager",
+    "Programme Support Officer",
+)
+NO_CHAT_ROLES = ("Contractor", "Application Administrator")
+THREAD_LIMIT_REACHED = (
+    "This conversation has reached its limit of questions for the assistant. "
+    "Start a new conversation or continue with the ordinary case workflow."
+)
 LIMIT_REACHED = (
     "This question or conversation exceeds the assistant's context limit. "
     "Use a shorter question or continue with the ordinary case workflow."
 )
+
+
+AGENT_DEPTH = 1
+CALLS_PER_REQUEST_BASIS = (
+    "Cap of one model call per question. A question refused before the model is called uses none. "
+    "When the provider reports no call count, one call is assumed."
+)
+MEMORY_CAPS = dict(max_items=MEMORY_LIMIT, max_item_chars=MEMORY_MAX, prompt_injection=False)
+
+
+def role_limits(role: object = None) -> dict[str, Any]:
+    """Bounds for one role. Any role not listed gets no model calls and no chat access."""
+    allowed = role in CHAT_ROLES
+    return dict(
+        access=allowed,
+        calls_per_request=1 if allowed else 0,
+        turns_per_thread=MAX_THREAD_TURNS if allowed else 0,
+        output_tokens=OUTPUT_TOKENS if allowed else 0,
+    )
+
+
+def all_role_limits() -> dict[str, dict[str, Any]]:
+    return {role: role_limits(role) for role in (*CHAT_ROLES, *NO_CHAT_ROLES)}
 
 
 @dataclass(frozen=True)
@@ -466,7 +511,7 @@ class ChatPanel:
         )
 
     @staticmethod
-    def _receipt(tid: str) -> dict[str, Any]:
+    def _receipt(tid: str, role: object = None) -> dict[str, Any]:
         return dict(
             thread_id=tid,
             task=TASK,
@@ -479,6 +524,12 @@ class ChatPanel:
             context_limit_chars=MAX_INPUT_CHARS,
             history_limit_chars=MAX_HISTORY_CHARS,
             memory_used=False,
+            calls_per_request=role_limits(role)["calls_per_request"],
+            role_limits=role_limits(role),
+            thread_turns_used=0,
+            thread_turn_limit=MAX_THREAD_TURNS,
+            context_chars=0,
+            history_chars=0,
         )
 
     def record_rejected(self, user: dict[str, Any], tid: str) -> None:
@@ -530,7 +581,7 @@ class ChatPanel:
         except (PermissionError, LookupError):
             self.record_rejected(user, tid)
             raise
-        receipt = self._receipt(tid)
+        receipt = self._receipt(tid, user.get("role"))
         try:
             reply = self._ask(user, tid, question, receipt, skill=skill)
             receipt["outcome"] = reply["kind"]
@@ -622,7 +673,12 @@ class ChatPanel:
         masked = masked[:MAX_CONTENT]
         iso.privacy._require()
         with store.lock:
+            limits = role_limits(user.get("role"))
+            current_thread = store.chat_resume(user, tid)
+            prior_turns = sum(1 for m in current_thread["messages"] if m["role"] == "user")
             question_seq = store.chat_add_message(user, tid, "user", masked)["seq"]
+        receipt["thread_turns_used"] = min(prior_turns + 1, limits["turns_per_thread"])
+        over_limit = limits["calls_per_request"] < 1 or prior_turns >= limits["turns_per_thread"]
 
         def finish(
             kind: str,
@@ -691,7 +747,9 @@ class ChatPanel:
             text = REFUSED + refusal[1]
             return finish("refused", text, [], model_name)
         kind, text, cites = "abstain", ABSTAIN, []
-        if len(str(question or "")) > MAX_QUESTION_CHARS or len(masked) > MAX_QUESTION_CHARS:
+        if over_limit:
+            kind, text = "fallback", THREAD_LIMIT_REACHED
+        elif len(str(question or "")) > MAX_QUESTION_CHARS or len(masked) > MAX_QUESTION_CHARS:
             kind, text = "fallback", LIMIT_REACHED
         elif sources and self.model is not None:
             kept = [
@@ -721,6 +779,7 @@ class ChatPanel:
                     "General work guidance" if skill == GENERAL else REGISTRY[skill]["purpose"]
                 )
                 system += f" Selected advisory skill: {skill}. Purpose: {purpose}. {BOUNDARY}"
+            receipt.update(context_chars=len(system) + len(prompt), history_chars=len(history))
             if len(system) + len(prompt) > MAX_INPUT_CHARS:
                 return finish("fallback", LIMIT_REACHED, [], model_name)
             try:
@@ -814,6 +873,8 @@ class ChatPanel:
 
 __all__ = [
     "ChatPanel",
+    "all_role_limits",
+    "role_limits",
     "ModelUnavailable",
     "LABEL",
     "out_of_scope",

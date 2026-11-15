@@ -27,12 +27,25 @@ INVENTORY = {
     "core/src/zava_forward/core/ai.py": ("ledger", "admission, call context, counts, outcome"),
     "api/src/zava_forward/api/resident_demo/aoai.py": (
         "own-accounting",
-        "reserved and closed token accounting for the resident demo; optional ledger join "
-        "via ledger_meter.advisor_meters when meters are supplied, which no host does yet",
+        "reserved and closed token accounting for the resident demo; ledger join via "
+        "ledger_meter.advisor_meters is proven by test_resident_ledger_meter when a caller "
+        "supplies meters, but no host supplies a ledger, price or authority, so it stays "
+        "own-accounting until the owner approves host wiring",
     ),
     "api/src/zava_forward/api/resident_demo/assistant.py": (
         "counts-only-sink",
-        "optional counts; ledger join only via ledger_meter.py when wired; disabled by default",
+        "optional counts; ledger join only via ledger_meter.py when a caller wires it "
+        "(proven in test_resident_ledger_meter); disabled by default, no host wires it",
+    ),
+    "agents/src/zava_forward/agents/heldout_aoai.py": (
+        "own-accounting",
+        "opt-in adapter for the held-out batch runner; heldout_batch.run_batch checks a "
+        "worst-case token and cost reserve before each call under a finite owner "
+        "authorization (USD and call caps), books measured usage, and charges the worst case "
+        "on any unmeasured reply; no core ledger, "
+        "price register or authority is wired, so it stays own-accounting until the owner "
+        "approves host wiring; construction sends nothing and the CLI runner needs explicit "
+        "live flags, but a direct call to the returned provider bypasses the runner accounting",
     ),
 }
 

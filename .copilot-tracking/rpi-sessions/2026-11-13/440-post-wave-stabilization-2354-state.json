@@ -1,0 +1,31 @@
+{
+  "task_id": "440-post-wave-stabilization-2354",
+  "task_slug": "440-post-wave-stabilization-2354",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-13/440-post-wave-stabilization-2354-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-13/440-post-wave-stabilization-2354-plan.md",
+    "details": ".copilot-tracking/details/2026-11-13/440-post-wave-stabilization-2354-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-11-13/440-post-wave-stabilization-2354-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-13/440-post-wave-stabilization-2354-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research disposition executed, Planning Readiness Ready", "status": "recorded", "evidence": "research artifact"},
+    {"decision": "Critique executed once in-line, verdict applied directly, no separate file", "status": "recorded", "evidence": "plan artifact Critique section"},
+    {"decision": "Review executed once, outcome conformant, self-review only", "status": "recorded", "evidence": "review artifact"},
+    {"decision": "Validation tier Focused", "status": "recorded", "evidence": "plan artifact"}
+  ],
+  "blockers": [
+    {"id": "human-gates", "summary": "Independent exact-head review, owner approval and hosted CI remain outstanding; no push performed", "resolution": null}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Owner pushes the branch and opens a PR; choose a follow-up or stop"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Decide whether to file a fix for ai_eval.GOLDEN under non-editable install", "rationale": "Low effort, removes a false 500 in role inventory", "evidence": "evidence pack command table"},
+    {"rank": 2, "task": "Rerun ladder with browser and axe checks after the next wave", "rationale": "Closes the implemented-unverified rows", "evidence": "evidence pack traceability table"}
+  ]
+}

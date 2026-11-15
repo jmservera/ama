@@ -692,6 +692,9 @@ const fetch = async () => {
   }};
 };
 """
+            + "const panelOwned = "
+            + source.split("const panelOwned = ", 1)[1].split("\nconst PANEL_SUPPORT", 1)[0]
+            + '\nconst PANEL_SUPPORT = "application support";\n'
             + "function bindCaseMutationForm"
             + source.split("function bindCaseMutationForm", 1)[1].split("function actForm", 1)[0]
             + "function captureChallengeDrafts"

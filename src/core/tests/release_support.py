@@ -19,6 +19,11 @@ def fixture(task, binding, model="test-model", cls="constructed-fixture", expire
                accountable_owner="Fixture Approver (not live authority)",
                impact_assessment="Constructed synthetic scenario only; no real resident reliance.",
                material_change_triggers=list(rai_release.CHANGE_TRIGGERS), evaluation_decision="Pass")
+    rec.update(scope=spec["scope"], consumption=dict(max_calls=100, max_tokens=2000000, alert_threshold_percent=80,
+                                                    alert_contact="Fixture Approver (not live authority)"))
+    rec["evaluation_summary"] = dict(evaluation_version=rai_release.EVALUATION_VERSION, decision="Pass",
+                                     summary="Constructed synthetic evaluation summary; no real evaluation.",
+                                     evidence_digest=rai_release.digest(rec["evidence"]))
     rec.update(over)
     return rec
 

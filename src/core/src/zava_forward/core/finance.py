@@ -34,7 +34,19 @@ def _committed(f):
 
 
 def _norm(s):
-    return (s or "").strip().lower()
+    return s.strip().lower() if isinstance(s, str) else ""
+
+
+def _same(a, b):
+    """Equal only when both are non-blank strings; malformed values never pair."""
+    return isinstance(a, str) and isinstance(b, str) and bool(_norm(a)) and _norm(a) == _norm(b)
+
+
+def identity_well_formed(identity):
+    """Email and code are non-blank strings; oid is absent, None or a string."""
+    return (isinstance(identity, dict)
+            and all(isinstance(identity.get(key), str) and identity[key].strip() for key in ("email", "code"))
+            and (identity.get("oid") is None or isinstance(identity["oid"], str)))
 
 
 def _identity(user):
@@ -42,7 +54,7 @@ def _identity(user):
 
 
 def _independent(store, user, other, identity, what):
-    if not identity:
+    if identity is None or identity == {}:
         if hasattr(store, "db"):
             with store.dblock:
                 row = store.db.execute("SELECT body FROM staff WHERE email=?", (_norm(other),)).fetchone()
@@ -50,8 +62,10 @@ def _independent(store, user, other, identity, what):
         else:
             person = store.staff.get(_norm(other))
             identity = _identity(person) if person else None
-    if not identity or not identity.get("email") or not identity.get("code"):
-        raise PermissionError("The preparer's identity is unknown. Resolve it before approval.")
+    if not identity_well_formed(identity):
+        raise PermissionError("The preparer's identity is unknown or malformed. Resolve it before approval.")
+    if any(not isinstance(user.get(key), (str, type(None))) for key in ("email", "code", "oid")):
+        raise PermissionError("Your identity is malformed. Ask an administrator to correct it before approval.")
     if any(_norm(user.get(key)) and _norm(user.get(key)) == _norm(identity.get(key))
            for key in ("email", "code", "oid")):
         raise PermissionError(f"A different person must {what}. You prepared this one.")
@@ -77,8 +91,8 @@ def match_invoice(c, inv):
     f = _fin(c)
     ex = []
     budget = f["budget"] if f["budget"] and f["budget"]["status"] == "Approved" else None
-    coms = [x for x in f["commitments"] if x["status"] == "Approved" and _norm(x["supplier"]) == _norm(inv["supplier"])
-            and _norm(x["work_order"]) == _norm(inv["work_order"])]
+    coms = [x for x in f["commitments"] if x["status"] == "Approved" and _same(x["supplier"], inv["supplier"])
+            and _same(x["work_order"], inv["work_order"])]
     com = coms[0] if len(coms) == 1 else None
     inv["commitment"] = com["id"] if com else None
     if len(coms) > 1:
@@ -87,7 +101,7 @@ def match_invoice(c, inv):
         ex.append(dict(line=None, code="no_commitment", message="No approved commitment for this supplier and work order."))
     others = [o for o in f["invoices"] if o["id"] != inv["id"]]
     for o in others:
-        if _norm(o["supplier"]) == _norm(inv["supplier"]) and _norm(o["ref"]) == _norm(inv["ref"]) and o["disposition"] != "Reject and return to provider":
+        if _same(o["supplier"], inv["supplier"]) and _same(o["ref"], inv["ref"]) and o["disposition"] != "Reject and return to provider":
             ex.append(dict(line=None, code="duplicate", message=f"Same supplier and reference as {o['id']}."))
     total = sum(ln["amount"] for ln in inv["lines"])
     paid_before = sum(sum(ln["amount"] for ln in o["lines"]) for o in others
@@ -103,7 +117,7 @@ def match_invoice(c, inv):
             ex.append(dict(line=None, code="over_budget",
                            message=f"Would take accepted invoices to £{accepted + total:,.2f}, above the approved budget of £{budget['amount']:,.2f}."))
     for i, ln in enumerate(inv["lines"]):
-        if com and _norm(ln["measure"]) != _norm(com["measure"]):
+        if com and not _same(ln["measure"], com["measure"]):
             ex.append(dict(line=i, code="not_in_scope", message=f"'{ln['measure']}' is not the authorised measure ('{com['measure']}')."))
         if com and ln["quantity"] > com["quantity"] + 1e-9:
             ex.append(dict(line=i, code="quantity", message=f"Quantity {ln['quantity']:g} is above the {com['quantity']:g} authorised."))

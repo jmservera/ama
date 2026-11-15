@@ -11,7 +11,7 @@ from collections import Counter
 from collections.abc import Mapping, Sequence
 from typing import Any
 
-from zava_forward.core.rai_release import digest, named
+from zava_forward.core.rai_release import digest, named, named_human
 
 RECORD_VERSION = "cohort-missing-data-evaluation-v1"
 OUTCOMES = ("ranked", "deprioritised", "excluded", "review")
@@ -53,7 +53,7 @@ def manifest_digest(manifest: Mapping[str, Any]) -> str:
     return digest({k: v for k, v in manifest.items() if k != "approval"})
 
 
-def approve(manifest: dict[str, Any], approval: Mapping[str, str]) -> dict[str, Any]:
+def approve(manifest: dict[str, Any], approval: Mapping[str, Any]) -> dict[str, Any]:
     """Record named owner approval bound to the manifest content; a later change voids it."""
     manifest["approval"] = {**approval, "manifest_digest": manifest_digest(manifest)}
     return manifest
@@ -85,6 +85,29 @@ def _thresholds_approved(manifest: Mapping[str, Any]) -> bool:
         and sample > 0
         and all(_limit(thresholds.get(k)) for k in THRESHOLD_KEYS[1:])
     )
+
+
+def _live_gaps(manifest: Mapping[str, Any], now: float | None) -> list[tuple[str, str]]:
+    gaps: list[tuple[str, str]] = []
+    if manifest.get("synthetic") is not False:
+        gaps.append(
+            ("constructed_thresholds_live", "constructed thresholds support offline tests only")
+        )
+    approval = manifest.get("approval")
+    approval = approval if isinstance(approval, Mapping) else {}
+    owners = ("cohorts_owner", "lawful_fields_owner", "thresholds_owner")
+    if not all(named_human(approval.get(k)) for k in owners):
+        gaps.append(("live_approval_not_named_human", "live thresholds need named-human owners"))
+    expires = approval.get("expires")
+    if (
+        now is None
+        or not isinstance(expires, int | float)
+        or isinstance(expires, bool)
+        or not math.isfinite(expires)
+        or expires <= now
+    ):
+        gaps.append(("live_approval_expired", "live approval is missing, expired or unverifiable"))
+    return gaps
 
 
 def _cohort_row(cases: Sequence[Mapping[str, Any]], min_sample: int) -> dict[str, Any]:
@@ -125,8 +148,16 @@ def evaluate(
     manifest: Mapping[str, Any],
     observed: Sequence[Mapping[str, Any]],
     disposition: Mapping[str, Any] | None = None,
+    *,
+    live: bool = False,
+    now: float | None = None,
 ) -> dict[str, Any]:
-    """Build the versioned evaluation record for one task or policy version."""
+    """Build the versioned evaluation record for one task or policy version.
+
+    Offline use (the default) accepts constructed thresholds. With `live=True` the thresholds must
+    come from a non-synthetic manifest whose owners are named humans and whose approval carries an
+    unexpired `expires` epoch later than the caller-supplied `now`.
+    """
     blockers: list[dict[str, str]] = []
 
     def block(code: str, detail: str) -> None:
@@ -251,6 +282,10 @@ def evaluate(
             "cohorts, lawful fields or thresholds lack named owner approval bound to this "
             "manifest digest (OQ-018)",
         )
+
+    if live:
+        for code, detail in _live_gaps(manifest, now):
+            block(code, detail)
 
     human = bool(
         disposition

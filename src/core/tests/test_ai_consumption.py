@@ -542,6 +542,46 @@ class ConsumptionTests(unittest.TestCase):
             any(r["kind"] == "alert" and r["reason"] == "liability-overrun" for r in self.records())
         )
 
+    def test_usage_and_breach_console_markers_are_content_free(self) -> None:
+        self.authorize()
+        ticket = self.ledger.reserve(self.context(), MODEL, 100, 20)
+        with self.assertLogs("zava_forward.core.ai_consumption", "INFO") as logs:
+            self.complete(ticket, prompt_tokens=200, total_tokens=220)
+            self.complete(ticket)
+        usage = [line for line in logs.output if "AI_USAGE" in line]
+        self.assertEqual(len(usage), 1)
+        self.assertIn(
+            "AI_USAGE capability=assessment period=2026-10 calls=1 tokens=220 usage=known"
+            " outcome=returned",
+            usage[0],
+        )
+        self.assertTrue(any("AI_LIMIT_BREACH reason=liability-overrun" in x for x in logs.output))
+        for line in logs.output:
+            for private in ("constructed-finance-owner", reference("root"), CONFIG):
+                self.assertNotIn(private, line)
+
+    def test_unknown_usage_is_marked_unknown_not_zero_spend(self) -> None:
+        self.authorize()
+        ticket = self.ledger.reserve(self.context(), MODEL, 100, 20)
+        with self.assertLogs("zava_forward.core.ai_consumption", "INFO") as logs:
+            self.ledger.complete(ticket, None, MODEL, "timeout")
+        self.assertTrue(any("usage=unknown outcome=timeout" in x for x in logs.output))
+
+    def test_denial_alert_emits_breach_marker_without_owner(self) -> None:
+        self.authorize(price=self.add_price(retrieved="2026-10-31T13:00:00Z"))
+        with (
+            self.assertLogs("zava_forward.core.ai_consumption", "WARNING") as logs,
+            self.assertRaises(DispatchHeld),
+        ):
+            self.ledger.reserve(self.context(), MODEL, 1, 1)
+        self.assertEqual(
+            logs.output,
+            [
+                "WARNING:zava_forward.core.ai_consumption:AI_LIMIT_BREACH "
+                "reason=price-unknown route=workflow-only"
+            ],
+        )
+
     def test_metadata_canaries_and_historical_output_not_exported(self) -> None:
         self.accepted()
         with self.port.transaction() as db:
@@ -618,6 +658,42 @@ class ConsumptionTests(unittest.TestCase):
         historical = self.ledger.report(start=START, end=historical_end, as_of=historical_end)
         self.assertEqual(historical["accepted_proposals"], 1)
         self.assertEqual(len([r for r in self.records() if r["kind"] == "review"]), 2)
+
+    def test_retried_failed_call_is_joined_to_every_field_and_its_output(self) -> None:
+        self.authorize()
+        retried = self.ledger.reserve(self.context("0", retry=0), MODEL, 1000, 100)
+        self.complete(retried)
+        failed = self.ledger.reserve(self.context("1", retry=1), MODEL, 1000, 100)
+        self.ledger.complete(failed, None, MODEL, "provider-unavailable")
+        self.ledger.output(reference("root"), "joined-output", eligible=True)
+        records = self.records()
+        for rid, retry, outcome, held, tokens in (
+            (failed, 1, "provider-unavailable", True, None),
+            (
+                retried,
+                0,
+                "returned",
+                False,
+                dict(prompt_tokens=100, completion_tokens=20, total_tokens=120, cached_tokens=10),
+            ),
+        ):
+            (reserved,) = [r for r in records if r["kind"] == "reserved" and r["id"] == rid]
+            (completed,) = [r for r in records if r["kind"] == "completed" and r["id"] == rid]
+            self.assertEqual(
+                [reserved[k] for k in ("capability", "case_type", "model", "retry", "prompt")],
+                ["assessment", "retrofit-case", MODEL, retry, reference("template-v1")],
+            )
+            self.assertEqual(reserved["configuration"], CONFIG)
+            self.assertEqual(
+                [completed["tokens"], completed["outcome"], completed["held"]],
+                [tokens, outcome, held],
+            )
+        (joined,) = [r for r in records if r["kind"] == "output"]
+        self.assertEqual(joined["root"], reference("root"))
+        self.assertEqual(joined["output"], reference("joined-output"))
+        result = self.report()
+        self.assertEqual((result["calls"], result["retries"], result["failures"]), (2, 1, 1))
+        self.assertEqual(result["unjoined_outputs"], 0)
 
     def test_unjoined_and_failed_review_are_not_accepted(self) -> None:
         self.authorize()

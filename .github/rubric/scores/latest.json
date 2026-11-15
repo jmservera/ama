@@ -2,18 +2,18 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-13T19:12:42+00:00",
-  "commit": "fa494a7aef30ad50a31af9da9cd5c398795bf669",
+  "scored_at": "2026-11-15T02:08:39+00:00",
+  "commit": "9e5efcc826f5d77bf806083d6a03b0c09642c1e2",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43488646435",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43665711975",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
-    "prd": "11fe0160a47c2ee2ac0fbab89e659a3867d928531b08367b03329afbcf02e8d8",
-    "adr": "a0004921843db2b041b1e8a0c28a107f22d55d544d06084f2cdaa628ccbcc8e1",
-    "solution-code": "9552a47512be8acaf66d01e5510e672aaf9b6cb9f40e928b4831e1bcd1ac5d2a",
-    "infrastructure": "f9ab88c245639aba9a15ec5c43edc8876ecc33d16fb8c3683f2916de9b09728e",
+    "prd": "ad995cdbac1abc98ae5a53234cf2d627837ef5faef39947b874deaed9da3707c",
+    "adr": "a5d94c6e67f2ef35c8e152e782f8356dc01f1ca5fd620bbd98ebfb85870975bc",
+    "solution-code": "0badc88390cd9e309a19ccbeab2b5affbf52ea9821de862bb62f032aa8786f78",
+    "infrastructure": "279e36d803276aa854eaf2f822cb2ea28eb5e37dbbe72841e50927e76caa5c1f",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
-    "pitch": "3b1ad575bcb303c981844fd6c915f3059a8f06ac5b939af8e64c6687924ae121",
+    "pitch": "687ae0ad2df52516882908bf45ecca662c52802d59a5116a4fe119ec3ae97840",
     "thought-leadership": "f7f2adc273905a84d848d54be0a77abc3550013fd1c9ea9e2fedb743bdacf70a"
   },
   "total": 79,
@@ -43,18 +43,18 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/chat_eval.py:592-650",
-        "src/agents/tests/test_chat_eval.py:461-479"
+        "src/core/src/zava_forward/core/finance.py:37-68",
+        "src/core/src/zava_forward/core/gates.py:128-205"
       ],
-      "rationale": "call_authorization now rejects malformed/non-finite spend, owner and expiry fields plus timezone-naive timestamps, with new negative tests; reinforces fail-closed control at ceiling (5)."
+      "rationale": "Diff adds fail-closed handling of malformed/non-string identity and reason fields across finance and gates, tightening existing RAI/security control surface. Reinforces ceiling (5), unchanged."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/chat_eval.py:770-795",
-        "src/agents/tests/test_chat_eval.py:506-548"
+        "src/agents/src/zava_forward/agents/chat_eval.py:456-480",
+        "src/core/src/zava_forward/core/grants.py:77-191"
       ],
-      "rationale": "AuthorizedModel/_gated complete the previously-declared actual-model dispatch gate (ledger reservation, reconciliation, refusal of unauthorised models) with tests; completeness reinforced at ceiling (5)."
+      "rationale": "Adds explicit criterion-3 memory-poisoning/prompt-injection flags with fail-closed enablement check, and a new grant eligibility separation-of-duties gate; both complete previously partial capability with tests. Completeness reinforced at ceiling (5)."
     },
     "A5": {
       "score": 5,
@@ -67,16 +67,18 @@
     "A6": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/ai.py:217-230"
+        "src/agents/src/zava_forward/agents/regulatory_gates.py:262-330",
+        "src/agents/src/zava_forward/agents/paired_trial.py:215-280"
       ],
-      "rationale": "Evidence/consumption paths route model identifiers through the shared safe_identity bound; reinforces AI design safety, does not exceed existing ceiling (5)."
+      "rationale": "New beside_cost reporting ties AI cost per accepted check to citation-validity, refusal-accuracy and hazard-miss gates in both arms, with cards-alone-unless-all-gates-pass logic and tests; strengthens evaluation rigor at ceiling (5), unchanged."
     },
     "A7": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/worker.py:60-121"
+        "src/core/src/zava_forward/core/assistants.py:1474-1494",
+        "src/api/tests/test_assistant_restart_non_replenishment.py:228-258"
       ],
-      "rationale": "No orchestration-specific change in this diff beyond identity sanitization shared helpers; baseline reliability behavior retained at ceiling (5)."
+      "rationale": "New _pool() inherits the most constrained persisted ledger across a rotated authority token, closing a replenishment-via-rotation gap with tests. Reinforces existing reliability guarantee at ceiling (5), unchanged."
     },
     "B1": {
       "score": 3,
@@ -108,9 +110,9 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "src/agents/README.md:137-145"
+        "src/agents/README.md:401-421"
       ],
-      "rationale": "README documents the new AuthorizedModel/ledger behaviour and names its open gap (#\u200b164); code-level documentation only, no deck change. Good (4) retained."
+      "rationale": "README adds a clear, well-organised section documenting the new beside_cost/eligibility behaviour, its scope and open gaps; code-level documentation only, no deck change. Good (4) retained."
     },
     "B7": {
       "score": 5,
@@ -154,7 +156,7 @@
         "docs/capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex:188-189",
         "docs/capstone/thought-leadership/everything-but-the-software/anc/measurement-provenance.tex:268-269"
       ],
-      "rationale": "Two new '% TODO(author)' markers were added alongside the supplementary judging section, and Microsoft publication approval remains pending; the draft version advanced (v13 to v14) but completeness did not improve. Satisfactory (3) retained."
+      "rationale": "Two new TODO(author) markers were added alongside the supplementary judging section, and Microsoft publication approval remains pending; draft version advanced v13 to v14 but completeness did not improve. Satisfactory (3) retained."
     },
     "D3": {
       "score": 2,

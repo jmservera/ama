@@ -14,6 +14,7 @@ from pathlib import Path
 
 from zava_forward.core import resident_showcase as rs
 from zava_forward.core import resident_showcase_sql as rsql
+from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 
 from .agenda import Agenda
 from .aoai import configured_advisor
@@ -23,6 +24,7 @@ from .chat_log import ChatLog
 
 def main() -> int:
     logging.basicConfig(level=logging.INFO)
+    install_diagnostic_redaction()
     try:
         config = rs.config_from_env(os.environ)
         reader = rsql.ShowcaseReader(rsql.connector(config.sql))

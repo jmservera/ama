@@ -4,6 +4,14 @@
 const intakeRoles = ["Retrofit Coordinator", "Resident Liaison Officer", "Building Safety Liaison", "Grants and Evidence Officer",
   "Quality Inspector", "Retrofit Programme Manager", "Programme Support Officer"];
 const intakeStamp = (value) => screenStamp(value);
+// Keeps a message that already names an owner and a next action; otherwise adds both.
+const intakeOwned = (message, owner, next, status) => {
+  const m = String(message ?? "").trim().replace(/([^.!?])$/, "$1.");
+  const o = m.indexOf("Owner:");
+  if (o >= 0 && m.indexOf("Next action:") > o) return m;
+  const refused = status >= 400 && status < 500;
+  return `${m} Owner: ${refused ? "your team manager" : owner}. Next action: ${refused ? "follow the advice above, or ask your team manager if you cannot" : next}`;
+};
 
 function intakeField(id, label, control, hint) {
   return h("div", { class: "field" }, h("label", { for: id }, label), control, hint && h("p", { id: `${id}-hint`, class: "hint" }, hint));
@@ -24,7 +32,7 @@ function intakeForm(label, fields, submitLabel, task, rerender) {
         await rerender();
       } catch (error) {
         send.disabled = false;
-        feedback.textContent = `${error.message || "This could not be saved."} Check the entries and try again.`;
+        feedback.textContent = intakeOwned(`${error.message || "This could not be saved."} Check the entries and try again.`, "application support", "check the entries and try again, then tell application support if it continues", error.status);
         feedback.hidden = false;
         feedback.scrollIntoView?.({ block: "nearest" });
       }
@@ -42,7 +50,7 @@ function intakeReceipt(order, receipt, rerender) {
     ["Acknowledged by", receipt.acknowledgement ? `${receipt.acknowledgement.by}, ${intakeStamp(receipt.acknowledgement.at)}` : "Not yet acknowledged"],
     ["Accepted", receipt.accepted ? "Accepted by an independent reviewer" : "No. Acknowledging a receipt is not acceptance."],
     ["Independent review", receipt.review.state],
-    ["You may review this", receipt.review.you_may_review ? "Yes, if you have a quality role" : receipt.review.blocker],
+    ["You may review this", receipt.review.you_may_review ? "Yes, if you have a quality role" : intakeOwned(receipt.review.blocker, "the independent quality inspector", "ask a quality inspector who did not record this evidence to review it")],
   ];
   const notes = Object.entries(receipt.original_notes).map(([label, text]) => [label, text]);
   const corrections = receipt.corrections.map((c) => [c.label, `${c.note} (worker ${c.confirmed_by}, ${intakeStamp(c.at)})`]);
@@ -109,6 +117,25 @@ function intakeCapture(order, pack, rerender) {
   }, rerender);
 }
 
+const intakeKinds = ["variation", "safety", "access", "scope question", "other"];
+const intakeOwnerRoles = ["Retrofit Programme Manager", "Programme Support Officer", "Building Safety Liaison"];
+
+function intakeEscalate(order, rerender) {
+  const id = `esc-${order}`;
+  return h("details", {}, h("summary", {}, "Route a variation or concern to a named owner"),
+    intakeForm("Route a variation or concern", [
+      h("p", {}, "This is advice only. It does not change the work order or instruct the contractor. Use the owner's own name, not a role."),
+      intakeField(`${id}-kind`, "Kind", h("select", { id: `${id}-kind`, name: "kind", required: true },
+        intakeKinds.map((k) => h("option", { value: k }, k)))),
+      intakeField(`${id}-summary`, "What needs deciding", h("textarea", { id: `${id}-summary`, name: "summary", maxlength: 500, rows: 3, required: true })),
+      intakeField(`${id}-owner`, "Named owner, if not the configured owner", h("input", { id: `${id}-owner`, name: "named_owner", maxlength: 80, autocomplete: "off", spellcheck: "false" })),
+      intakeField(`${id}-role`, "Owner role", h("select", { id: `${id}-role`, name: "owner_role" },
+        [h("option", { value: "" }, "Use the configured owner"), ...intakeOwnerRoles.map((r) => h("option", { value: r }, r))])),
+    ], "Route for decision", (data) => api(`/api/workorders/${encodeURIComponent(order)}/field-escalate`, {
+      kind: data.get("kind"), summary: data.get("summary"),
+      named_owner: data.get("named_owner") || undefined, owner_role: data.get("owner_role") || undefined }), rerender));
+}
+
 function intakeOrder(data, orderId, rerender) {
   const pack = data.pack;
   const status = h("p", { role: "status", "aria-live": "polite" });
@@ -120,9 +147,9 @@ function intakeOrder(data, orderId, rerender) {
     status,
     screenFields([["Scope", `${pack.scope} (version ${pack.scope_version})`], ["Design version", pack.design_version],
       ["Access", pack.access], ["Named contact", pack.named_contact], ["Appointment state", pack.state],
-      ["Ready to start", pack.ready ? "Yes" : pack.not_ready_reason]]),
+      ["Ready to start", pack.ready ? "Yes" : intakeOwned(pack.not_ready_reason, "the retrofit coordinator", "confirm the scope, design version and appointment, then reopen this pack")]]),
     pack.ready ? intakeCapture(orderId, pack, rerender)
-      : h("p", { role: "status" }, "Evidence cannot be recorded until the scope, design version and appointment are confirmed."),
+      : h("p", { role: "status" }, "Evidence cannot be recorded until the scope, design version and appointment are confirmed. Owner: the retrofit coordinator. Next action: confirm the scope, design version and appointment, then reopen this pack."),
     h("h4", {}, "Receipts and independent review"),
     data.receipts.length ? data.receipts.map((r) => intakeReceipt(orderId, r, rerender))
       : h("p", { class: "empty" }, "No worker evidence recorded for this order yet."),
@@ -130,7 +157,13 @@ function intakeOrder(data, orderId, rerender) {
       data.recovery.map((r) => [r.event, r.outcome, r.resident_effect, r.next_step])),
     screenFields([["Escalation owner", data.escalation.owner], ["Escalation role", data.escalation.role],
       ["Escalation contact", data.escalation.contact],
+      ["Owner status", data.escalation.owner_status],
+      ["Contract instruction", data.escalation.contract_instruction === false && data.escalation.advisory_only !== false && data.boundaries.advisory_only
+        ? "No. Variations and concerns are advice only." : "Not confirmed. Treat this as advice only and ask the contract manager."],
       ["Effect", "A concern does not change the work order. Only the contract manager issues a new version."]]),
+    screenTable("Variations and concerns routed for this order", ["Kind", "Summary", "Owner", "Status", "Contract instruction"],
+      (data.escalations || []).map((e) => [e.kind, e.summary, `${e.named_owner} (${e.owner_role})`, e.status, e.contract_instruction === false ? "No, advice only" : "Not confirmed"])),
+    intakeEscalate(orderId, rerender),
     h("p", {}, data.boundaries.acceptance), h("p", {}, data.boundaries.consent));
 }
 
@@ -153,7 +186,7 @@ registerRoleScreen({
         h("p", {}, "It records evidence only. It never accepts work, gives a contract instruction or records resident consent."),
         h("p", {}, "Synthetic demonstration data. Named quality, legal and accessibility review are separate.")),
       details.length ? details.map((d) => d.error
-        ? screenPanel(`Work order ${d.id}`, h("p", { role: "alert" }, `This order could not be read: ${d.error.message}`))
+        ? screenPanel(`Work order ${d.id}`, h("p", { role: "alert" }, intakeOwned(`This order could not be read: ${d.error.message}`, "application support", "refresh to try again, then tell application support if it continues", d.error.status)))
         : intakeOrder(d.data, d.id, rerender))
         : screenPanel("Work orders", h("p", { class: "empty" }, "No work order has been issued for this home.")));
   }

@@ -73,6 +73,16 @@ def record_issues(
     return issues
 
 
+def emission_issues(row: object) -> list[str]:
+    """Fixed codes for an emitted payload that is unlabelled or matches a personal-data pattern."""
+    if not isinstance(row, dict):
+        return ["record_not_object"]
+    issues = pattern_issues(row)
+    if row.get("source_type") != "SYNTHETIC" or row.get("contains_real_data", False) is not False:
+        issues.append("missing_synthetic_label")
+    return issues
+
+
 def _declared_labels(value: object) -> list[str]:
     if isinstance(value, dict):
         issues = []

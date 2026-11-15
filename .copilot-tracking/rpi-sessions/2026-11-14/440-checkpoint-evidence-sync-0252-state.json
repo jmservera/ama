@@ -1,0 +1,28 @@
+{
+  "task_id": "440-checkpoint-evidence-sync-0252",
+  "task_slug": "440-checkpoint-evidence-sync-0252",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14/440-checkpoint-evidence-sync-0252-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14/440-checkpoint-evidence-sync-0252-plan.md",
+    "details": ".copilot-tracking/details/2026-11-14/440-checkpoint-evidence-sync-0252-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-14/440-checkpoint-evidence-sync-0252-plan.md",
+    "changes": ".copilot-tracking/changes/2026-11-14/440-checkpoint-evidence-sync-0252-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-14/440-checkpoint-evidence-sync-0252-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed, Planning Readiness Ready", "status": "done", "evidence": "research artifact"},
+    {"decision": "Critique executed once, verdict proceed, findings applied directly", "status": "done", "evidence": "plan artifact"},
+    {"decision": "Review executed once, outcome Conformant with disclosed limits", "status": "done", "evidence": "review artifact"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Owner selects follow-up: golden-file path correction, or next checkpoint with browser and axe runs"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Package golden files or fail with a named configuration error", "rationale": "Low effort, removes a repeated environmental failure", "evidence": "research artifact"},
+    {"rank": 2, "task": "Next checkpoint with Playwright browser and axe runs and hosted CI read", "rationale": "Closes deferred browser evidence", "evidence": "pack section Skips"}
+  ]
+}

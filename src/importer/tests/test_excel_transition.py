@@ -8,7 +8,7 @@ from pathlib import Path
 from unittest import mock
 
 from zava_forward.importer.export import compare, history_rows, to_csv, to_xlsx
-from zava_forward.importer.mapping import CASE_LIST, build_preview, preview_file
+from zava_forward.importer.mapping import CASE_LIST, build_preview, preview_bytes, preview_file
 from zava_forward.importer.quarantine import ImportError_, QuarantineStore
 from zava_forward.importer.xlsx import WorkbookError, read_workbook, write_workbook
 
@@ -381,6 +381,17 @@ class ExportTests(unittest.TestCase):
         self.assertEqual(sheets["History"][1][3], "approved")
         self.assertEqual(sheets["History"][1][6], "Priya")
         self.assertNotIn("provider", " ".join(sheets["History"][0]).lower())
+
+    def test_an_exported_workbook_cannot_be_imported_back_or_staged(self) -> None:
+        data = to_xlsx("Cases", ["Ref", "Address", "Postcode"], [["ZF-1", "1 Row", "AB1 2CD"]], [])
+        prev = preview_bytes("copy.xlsx", data)
+        self.assertTrue(prev.blocking)
+        self.assertIn("read-only copy", prev.conflicts[0])
+        self.assertEqual(prev.rows, [])
+        store = QuarantineStore.in_memory()
+        with self.assertRaises(ImportError_):
+            store.stage(prev, "Sam")
+        self.assertEqual(store.history("case-list"), [])
 
     def test_compare_is_read_only(self) -> None:
         cur = {"1": {"stage": "Survey"}, "2": {"stage": "Design"}, "3": {"stage": "Install"}}

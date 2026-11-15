@@ -159,7 +159,9 @@ def _read_sheet(xml: bytes, shared: list[str]) -> list[list[str]]:
 def safe_cell(value: object) -> str:
     """Neutralise spreadsheet formula injection in exported text."""
     text = "" if value is None else str(value)
-    return "'" + text if text.startswith(FORMULA_PREFIXES) else text
+    if text.startswith(FORMULA_PREFIXES) or text.lstrip(" \t\r\n").startswith(FORMULA_PREFIXES):
+        return "'" + text
+    return text
 
 
 def _col(n: int) -> str:

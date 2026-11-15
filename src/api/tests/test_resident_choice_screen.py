@@ -156,7 +156,40 @@ def anchors_of(node: object) -> list[dict[str, Any]]:
     return found
 
 
+def table_nodes(node: object) -> list[dict[str, Any]]:
+    found: list[dict[str, Any]] = []
+    if isinstance(node, dict):
+        if node.get("tag") == "table":
+            found.append(node)
+        for kid in node.get("kids", []):
+            found += table_nodes(kid)
+    return found
+
+
+def assert_navigable_tables(test: unittest.TestCase, tree: object, expected: int) -> None:
+    tables = table_nodes(tree)
+    test.assertEqual(len(tables), expected)
+    for table in tables:
+        caption, head, body = table["kids"]
+        test.assertEqual(caption["tag"], "caption")
+        test.assertTrue(all(c["attrs"] == {"scope": "col"} for c in head["kids"][0]["kids"]))
+        test.assertTrue(body["kids"])
+        for row in body["kids"]:
+            first, *rest = row["kids"]
+            test.assertEqual((first["tag"], first["attrs"]), ("th", {"scope": "row"}))
+            test.assertTrue(rest and all(c["tag"] == "td" for c in rest))
+
+
 class ResidentChoiceScreen(unittest.TestCase):
+    def test_every_table_has_a_caption_column_headers_and_a_row_header(self) -> None:
+        assert_navigable_tables(self, run(CASE)["tree"], 3)
+        assert_navigable_tables(self, run_queue(page(CASE))["tree"], 1)
+
+    def test_service_request_state_is_stated_with_its_meaning(self) -> None:
+        text = json.dumps(run(CASE)["tree"])
+        self.assertIn("State and meaning", text)
+        self.assertIn("Open. Opened and waiting for the named owner to act.", text)
+
     def test_choice_pause_commitment_and_access_are_distinct(self) -> None:
         out = run(CASE)
         text = json.dumps(out["tree"])

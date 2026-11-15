@@ -71,7 +71,7 @@ files, and stage/commit the intended results before a new dry run.
   text and a contrasting background. No remote logo dependency or CSP change.
   Live targets are `src/api/src/zava_forward/api/web/` and the hash-checked
   ranking policy under `src/core/src/zava_forward/core/policies/`; applying
-  branding never recreates `mvp/web/`. Historical old-name assertions and
+  branding never recreates `mvp/web/` (archive `v0.21.0`). Historical old-name assertions and
   pinned/datetime records remain exact, not a request to rename Python packages.
 * Files are replaced atomically and existing permissions are retained. Newly
   created public assets use mode 0644; the MVP image also makes packaged web

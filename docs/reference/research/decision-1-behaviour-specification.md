@@ -11,7 +11,7 @@ ms.topic: reference
 This page records what the Decision 1 (Microsoft Decision 1, a "System One"
 typed-decision model) assist did in the `feat/exercise-poc-rebuild` branch
 ([PR 58](https://github.com/jmservera/ama/pull/58), head before the 2026-10-11
-rebase, code in `mvp/zavaforward_mvp/decision.py`, `mvp/evals/decision_tasks.json`
+rebase, code in the retired `mvp/zavaforward_mvp/decision.py` (archive `v0.21.0`), `mvp/evals/decision_tasks.json`
 and `mvp/tests/test_decision.py`). It is written so the behaviour can be rebuilt
 without that code.
 

@@ -1,0 +1,30 @@
+{
+  "task_id": "79-ranking-snapshot-retention-2122",
+  "task_slug": "79-ranking-snapshot-retention-2122",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-13/79-ranking-snapshot-retention-2122-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-13/79-ranking-snapshot-retention-2122-plan.md",
+    "details": null,
+    "critique": ".copilot-tracking/critiques/2026-11-13/79-ranking-snapshot-retention-2122-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-13/79-ranking-snapshot-retention-2122-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-13/79-ranking-snapshot-retention-2122-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research disposition executed; planning readiness Ready", "status": "recorded", "evidence": "research artifact"},
+    {"decision": "Critique executed once, verdict proceed with changes, findings PC-001 to PC-006 dispositioned", "status": "recorded", "evidence": "critique artifact"},
+    {"decision": "Review executed once, outcome conformant for software and template proof, boundary diff against origin/main ee068a4b5", "status": "recorded", "evidence": "review artifact"},
+    {"decision": "Criterion 3 stays open; policy remains unsigned draft; criterion 4 not ticked on mock and template evidence alone", "status": "confirmed", "evidence": "task instruction"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Owner reviews the branch and decides on push; no push performed"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Add a log-query missing-run alert for the ranking publication job", "rationale": "Small, closes critique PC-005", "evidence": "critique artifact"},
+    {"rank": 2, "task": "Owner approves and locks the ranking archive retention duration", "rationale": "Needed before any immutable release claim", "evidence": "infra/README.md ranking archive section"},
+    {"rank": 3, "task": "Named policy owner signs the rule order (criterion 3)", "rationale": "Human governance gate; job refuses until signed", "evidence": "ranking_publication_runner approval_missing"}
+  ]
+}

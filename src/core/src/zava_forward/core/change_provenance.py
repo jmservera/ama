@@ -9,7 +9,7 @@ from copy import deepcopy
 from datetime import UTC, datetime
 from typing import Any
 
-from . import identity, projection
+from . import controls, identity, projection
 
 Record = dict[str, Any]
 
@@ -193,6 +193,8 @@ def operation(
                     value = metadata.get(key)
                     if not isinstance(value, str) or not value.strip() or len(value) > limit:
                         raise ValueError(f"Enter the {label}, from 1 to {limit} characters.")
+                    if controls.is_memory_reference(value):
+                        raise ValueError(controls.MEMORY_REFUSAL)
                     supplied[key] = value.strip()
                 if history == "handoff_history":
                     version = metadata.get("handoff_version")

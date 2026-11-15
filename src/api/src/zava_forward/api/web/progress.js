@@ -87,7 +87,7 @@ const ProgressViews = (() => {
         h("p", { class: "flag" }, "Demonstration data"),
         controls, !invalidFields.length && [
           h("p", { class: "err", role: "alert" }, error.message),
-          h("p", {}, "Change the filters or try again. A failed read is not an empty result."),
+          h("p", {}, "Owner: you for the filters, application support if the read keeps failing. Next action: change the filters or try again. A failed read is not an empty result."),
           h("button", { type: "button", onclick: route }, "Try again")]));
       invalidFields[0]?.focus();
       return null;
@@ -189,7 +189,7 @@ const ProgressViews = (() => {
       h("p", {}, h("a", { class: "btn alt", id: "closed-download", href: `/api/closed-cases.csv?${download}`,
         "aria-describedby": "closed-download-note" }, "Download this page for Excel")),
       h("p", { id: "closed-download-note" },
-        `Constructed demonstration data. The file holds only this page, up to ${number(data.limit)} cases, ` +
+        `Constructed demonstration data. The file contains only this page, up to ${number(data.limit)} cases, ` +
         "not every page. It is a read-only copy: editing it changes no records in the application. " +
         "A blank Closed on means the closure date is unknown. Closed does not mean works are completed or approved. " +
         "The file is read again when you download, so it may differ from the rows shown."),

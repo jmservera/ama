@@ -5201,7 +5201,7 @@
         "status": "observed",
         "sources": [
           "infra/modules/containerapps.bicep",
-          "mvp/zavaforward_mvp/server.py"
+          "src/api/src/zava_forward/api/server.py"
         ]
       },
       {
@@ -5212,7 +5212,7 @@
         "status": "configured",
         "sources": [
           "infra/modules/containerapps.bicep",
-          "mvp/zavaforward_mvp/auth.py",
+          "src/api/src/zava_forward/api/auth.py",
           "infra/scripts/initialize-workbench-staff.py"
         ]
       },
@@ -5223,11 +5223,11 @@
         "label": "Scoped call\nDraft only",
         "status": "conditional",
         "sources": [
-          "mvp/zavaforward_mvp/assistants.py",
+          "src/core/src/zava_forward/core/assistants.py",
           "docs/adrs/0002-pilot-readiness-architecture.md#five-assistant-exercise-runtime-2026-10-13",
           "infra/modules/foundry.bicep",
           "infra/main.bicep",
-          "mvp/zavaforward_mvp/ai.py"
+          "src/core/src/zava_forward/core/ai.py"
         ]
       },
       {
@@ -5238,7 +5238,7 @@
         "status": "observed",
         "sources": [
           "infra/modules/sql.bicep",
-          "mvp/zavaforward_mvp/mssqlstore.py"
+          "src/core/src/zava_forward/core/mssqlstore.py"
         ]
       },
       {
@@ -5249,7 +5249,7 @@
         "status": "configured",
         "sources": [
           "infra/modules/storage.bicep",
-          "mvp/zavaforward_mvp/documents.py"
+          "src/core/src/zava_forward/core/documents.py"
         ]
       },
       {

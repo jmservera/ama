@@ -1,25 +1,33 @@
 "use strict";
 // Administrator screen for the finite simulator run control (issue 189). Shares h, api, show and me with app.js.
 // It only edits the control file through the server; it cannot see or start a simulator job.
+// Keeps a message that already names an owner and a next action; otherwise adds both.
+const simControlOwned = (message, owner, next, status) => {
+  const m = String(message ?? "").trim().replace(/([^.!?])$/, "$1.");
+  const o = m.indexOf("Owner:");
+  if (o >= 0 && m.indexOf("Next action:") > o) return m;
+  const refused = status >= 400 && status < 500;
+  return `${m} Owner: ${refused ? "your team manager" : owner}. Next action: ${refused ? "follow the advice above, or ask your team manager if you cannot" : next}`;
+};
 const SIMULATOR_CONTROL_API = "/api/admin/simulator-control";
 
 function simulatorControlState(status) {
   if (status.availability === "not_configured") {
-    return ["Not configured", "No run control file is configured for this service, so this screen cannot start or stop a run. Use the manual route below."];
+    return ["Not configured", "No run control file is configured for this service, so this screen cannot start or stop a run. Use the manual route below. Owner: application support. Next action: ask application support to configure the run control file."];
   }
   if (status.availability === "unavailable") {
-    return ["Unavailable", "The run control file cannot be read. The simulator sends nothing while it is missing or unreadable."];
+    return ["Unavailable", "The run control file cannot be read. The simulator sends nothing while it is missing or unreadable. Owner: application support. Next action: ask application support to restore the run control file, then refresh this status."];
   }
   if (status.availability === "invalid") {
-    return ["Not valid", "The run control file is not valid. The simulator sends nothing until a valid control is written."];
+    return ["Not valid", "The run control file is not valid. The simulator sends nothing until a valid control is written. Owner: the administrator who runs the simulator. Next action: write a valid control with Start, or ask application support if Start is not available."];
   }
   const states = {
     send: ["Permitted", "Sending is permitted until the expiry time. This screen cannot see whether a simulator job is running."],
     stopped: ["Stopped", "Nothing is sent. The cohort and expiry are kept for the record."],
-    expired: ["Expired", "The expiry time has passed. Nothing is sent."],
-    invalid: ["Not valid", "The expiry is beyond the 14-day maximum, so every reader refuses it. Nothing is sent."],
+    expired: ["Expired", "The expiry time has passed. Nothing is sent. Owner: the administrator who runs the simulator. Next action: use Start with a new expiry if more sending is needed."],
+    invalid: ["Not valid", "The expiry is beyond the 14-day maximum, so every reader refuses it. Nothing is sent. Owner: the administrator who runs the simulator. Next action: use Start with an expiry within 14 days."],
   };
-  return states[status.state] || ["Unknown", "The state could not be read. Treat sending as blocked and use the manual route."];
+  return states[status.state] || ["Unknown", "The state could not be read. Treat sending as blocked and use the manual route. Owner: application support. Next action: refresh this status, then ask application support if it stays unknown."];
 }
 
 function simulatorControlFacts(status) {
@@ -35,7 +43,7 @@ function simulatorControlFacts(status) {
     );
     const capacity = status.capacity || {};
     rows.push(["Quota headroom", capacity.refused
-      ? `Refused by the existing quota check: ${capacity.refused}.`
+      ? `Refused by the existing quota check: ${capacity.refused}. Owner: the administrator who runs the simulator. Next action: reduce the number of homes or the cadence, then check the budget again.`
       : `${new Intl.NumberFormat("en-GB").format(capacity.messages_per_day)} messages a day against a budget of ${new Intl.NumberFormat("en-GB").format(capacity.daily_budget)} on the current hub tier. This is arithmetic, not live usage.`]);
   }
   rows.push(["Budget alert", `Not recorded and not verified live. ${status.budget_alert.detail}`]);
@@ -51,7 +59,7 @@ async function simulatorControlView() {
     status = await api(SIMULATOR_CONTROL_API);
   } catch (error) {
     if (error.name === "AbortError" || !me) return;
-    show(heading, h("p", { role: "alert", class: "err" }, `${error.message} Nothing was changed. Use the manual route: an operator with access to the control file share can run python -m zava_forward.api.live_control status.`), refreshButton);
+    show(heading, h("p", { role: "alert", class: "err" }, `${simControlOwned(error.message, "application support", "use the manual route below", error.status)} Nothing was changed. Use the manual route: an operator with access to the control file share can run python -m zava_forward.api.live_control status.`), refreshButton);
     return;
   }
   const act = async (path, body, label) => {
@@ -64,7 +72,7 @@ async function simulatorControlView() {
       }
     } catch (error) {
       if (error.name === "AbortError" || !me) return;
-      notice.textContent = `${label} failed: ${error.message} If this repeats, refresh and check the status before you try again.`;
+      notice.textContent = simControlOwned(`${label} failed: ${error.message} If this repeats, refresh and check the status before you try again.`, "application support", "refresh and check the status before you try again, then tell application support if it repeats", error.status);
       notice.setAttribute("role", "alert");
       notice.className = "err";
     }
@@ -78,11 +86,11 @@ async function simulatorControlView() {
   ];
   const canWrite = status.writable && status.availability !== "not_configured";
   if (status.read_only) {
-    parts.push(h("p", { role: "status" }, "Start and Stop are switched off because administrator access without a staff role shows every option but changes nothing. A staff role is needed to act."));
+    parts.push(h("p", { role: "status" }, "Start and Stop are switched off because administrator access without a staff role shows every option but changes nothing. A staff role is needed to act. Owner: your team manager. Next action: ask your team manager for a staff role."));
   } else if (!canWrite) {
     parts.push(h("p", { role: "status" }, status.availability === "not_configured"
-      ? "Start and Stop are switched off because no control file is configured."
-      : "Start and Stop are switched off because the control file location is not writable from this service."));
+      ? "Start and Stop are switched off because no control file is configured. Owner: application support. Next action: ask application support to configure the run control file."
+      : "Start and Stop are switched off because the control file location is not writable from this service. Owner: application support. Next action: ask application support to make the control file location writable."));
   } else {
     if (status.state !== "send") {
       const owner = h("input", { id: "sim-owner", name: "owner", type: "text", maxlength: 160, required: true, autocomplete: "off", spellcheck: "false" });

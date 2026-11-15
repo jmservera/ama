@@ -1360,7 +1360,7 @@ operational authority, complete event capture or independent acceptance.
 
 The shared domain library (`zava_forward.core`): stores (JSON, SQLite, Azure SQL), ledger, law store,
 rule cards, governance, continuity, chat storage and isolation, and the synthetic tools. It imports no
-workload. The sections below are moved unchanged from the former `mvp/README.md` (ADR 0006, issue #199,
+workload. The sections below are moved unchanged from the former `mvp/README.md` (archive `v0.21.0`; ADR 0006, issue #199,
 M6); the staff-facing behaviour and configuration are in [api](../api/README.md).
 
 Test paths named `tests/...` are in `src/core/tests/` unless they name another project:
@@ -2835,6 +2835,24 @@ deployment; `AI_MODEL_VERSION_STRONG` supplies it for strong requests (defaults
 to the fast value). Unattested configured models deny actual dispatch. A
 returned model comparison is not independent serving-version attestation.
 
+A record also persists the registry `scope`, a frozen `evaluation_summary`
+(`evaluation_version`, `decision: Pass`, a named `summary` and an
+`evidence_digest` equal to the digest of the recorded `evidence` list) and a
+`consumption` configuration (`max_calls`, `max_tokens`,
+`alert_threshold_percent`, named `alert_contact`). A changed registry scope is a
+material `intended_use` change. Existing records without these fields deny
+dispatch until a human records a replacement.
+
+On completion the provider-returned model is compared exactly with the released
+`serving_model` (`rai_release.attest_serving`) and the outcome (`matched`,
+`mismatch` or `unattested`) is stored on the proposal as `serving_attestation`.
+A non-match quarantines the proposal, suspends the release, appends a
+`serving-attestation` event and sets an explicit `fallback` (manual route,
+release suspended). A suspended or revoked release is terminal across restarts
+and old images; only a new human release record re-enables the task. The
+returned model is the only signal the provider supplies, so this remains a
+returned-model attestation and not independent control-plane evidence.
+
 Approval supersedes every active record for that task, including old routing
 configurations, while preserving events. One record approves one deployment;
 changing the task's fast/strong route requires renewed approval. A rollback
@@ -3922,7 +3940,7 @@ legal advice or approval. Seed metadata is `src/core/src/zava_forward/core/law/l
 
 ## Rule cards (ADR 0005, phase 2)
 
-`src/core/src/zava_forward/core/rulecards.py` (moved from `mvp/` in M1 of #199) holds versioned rule cards in append-only tables
+`src/core/src/zava_forward/core/rulecards.py` (moved from `mvp/` in M1 of #199; archive `v0.21.0`) holds versioned rule cards in append-only tables
 (`rule_card_version`, `rule_card_event`, `rule_card_review`, `rule_card_review_event`,
 `rule_card_check`) with a draft, approved,
 active, held, retired lifecycle. A card is drafted by the `rule_author` role and only
@@ -5196,7 +5214,7 @@ member, corrector and acknowledger join the record participants, so the existing
 from accepting. A repeated `capture_ref` replays without a second record, and a changed pack digest is
 rejected as stale. The configured escalation destination comes from `ZF_STAFF_INTAKE_ESCALATION_OWNER`,
 `_ROLE` and `_CONTACT`; anything missing shows "Unknown - not configured". Nothing here is a contract
-instruction, resident consent or acceptance, and there is no escalation write path (gap kept). Persistence
+instruction, resident consent or acceptance, and `POST /api/workorders/{id}/field-escalate` records a variation or concern for a named owner as advice only (summary held for roles without a recorded need). Persistence
 reuses the case body, so there is no schema change. Tests: `src/api/tests/test_staff_intake_api.py`.
 C4 changes: `capture` passes the work order's bound, still-current resident scope revision as
 `context_revision` (409 if missing or changed, never waived); new evidence needs an explicit valid
@@ -5207,7 +5225,7 @@ oid (a name is still allowed and the real accept path denies that person); `capt
 under the existing procurement validation token, so on SQL a work order withdrawn or reissued by another
 store before the commit raises a conflict and no receipt is stored. An existing token is never replaced.
 Limits: receipts stored before C5 with a staff code as worker are not rewritten; the JSON store has no
-cross-process guard; escalation stays a gap; synthetic approvals are not QA, legal or resident consent.
+cross-process guard; an escalation names a person but is not verified against staff records; synthetic approvals are not QA, legal or resident consent.
 
 ## Constructed learning-test report command (#129, Refs #123)
 

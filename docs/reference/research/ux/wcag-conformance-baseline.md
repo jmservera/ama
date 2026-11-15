@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench WCAG 2.2 Conformance Baseline
 description: Proposed target level and scope, first audit, automated check coverage, manual check record template and accessibility statement draft for the workbench (issue #151)
-ms.date: 2026-11-11
+ms.date: 2026-11-13
 ms.topic: reference
 ---
 
@@ -44,7 +44,7 @@ change), Gap (known, not fixed), Not tested.
 | Keyboard | 2.1.1, 2.1.2, 2.4.3 | Not tested | Controls are native buttons, links, inputs and `details`; the map has a list alternative. Full keyboard walk-through by role is a manual check |
 | Focus visible | 2.4.7, 1.4.11 | Fixed | The amber outline had 2.01:1 against white. Focus is now a 3px dark outline (13.7:1 on white) with an amber ring, so it also shows on brand-coloured bars. Indicator on the brand header is not yet confirmed visually |
 | Name, role, value | 4.1.2 | Pass, partial | Form fields built in `app.js` and `ops.js` carry `aria-label`; tiles use `aria-pressed`; the chart has `role="img"`. Static check only; accessible names of every generated control are not tested |
-| Status messages | 4.1.3 | Pass, partial | `role="status"`, `role="alert"` and `aria-live="polite"` regions exist; announcement behaviour in a screen reader is not tested (AC-034) |
+| Status messages | 4.1.3 | Pass, partial | `role="status"`, `role="alert"` and `aria-live="polite"` regions exist; announcement behaviour in a screen reader is not tested (AC-034). 2026-11-13 (#215): regulatory alert and cited-lookup states now also carry a glyph and border shape beside their text, and Escape closes the lookup disclosure with focus on its summary; read from source and observed in the local browser check, not screen-reader or assistive-technology tested, no conformance claim |
 | Contrast, text | 1.4.3 | Pass | Computed for the token pairs in the table below. Disabled controls are exempt (1.4.3 inactive components) |
 | Contrast, non-text | 1.4.11 | Fixed, gap | Form field border was 2.51:1 and is now 3.77:1. The caution marker colour is 2.61:1 on its tint and the map marker shapes remain colour-only differences (design-system open item); recorded as gap G-2 |
 | Target size | 2.5.8 | Fixed, partial | Buttons are padded about 2.5rem tall. `.linkbtn` and the map list summary now set a 1.5rem (24 CSS px) minimum height, guarded by a static rule check (2026-11-03, #151). Rendered measurement of every generated control, including map controls, is not run |
@@ -214,6 +214,18 @@ To ask for another format or report a problem, contact: owner to supply (O-4).
 ## Programme screens status (2026-11-04, #230)
 
 Criteria 1, 2, 3 and 5 of #230 are ticked on merged PRs #662, #781, #818, #854, #931 and #969. Criterion 4 (WCAG 2.2 baseline, textual state meaning, keyboard navigation) stays unmet: the automated keyboard and axe checks are merged, but manual WCAG 2.2 review and assistive-technology testing by named people are not done (#151, #155). Automated checks are not conformance evidence. No code slice can supply this.
+
+## Resident engagement screens status (2026-11-13, #232)
+
+Audit of the resident choice and update queue (`resident-choice`) and the resident service issue queue (`resident-service-issues`) for #232 criterion 4. Source read and rendered at 1280 and 320 px in Chromium; no screen-reader, voice-control or human testing.
+
+* Fixed (1.3.1): the first column of every resident-screen table (home, measure, request, issue) is now a `th scope="row"` row header. Before, only column headers existed. Other screens' tables are unchanged.
+* Fixed (textual state meaning): the service request table on the resident choice screen now shows "State and meaning" with the same plain-language meaning as the service issue screen, not a bare status word.
+* Added checks: rendered header, caption and row-header assertions; a pinned axe 4.10.3 scan of the queue state with no home selected (previously only the selected-home state); Tab reach of every table region at 320 px for both screens. Unit tests assert the same table structure.
+* Observed, no change needed: native links and no write or contact controls; skip link and focus on `main`; visible two-tone focus; captions and scoped column headers; status text for pause, withdrawal and commitment; no `aria-invalid` site added.
+* Not tested: screen-reader output, table navigation by assistive technology, comprehension of the wording, other browsers. Axe `color-contrast` stays incomplete at 320 px on some states because axe cannot resolve the background; element overlap was checked and not found. The shared sidebar and panel headings use flat `h2` levels and are unchanged.
+
+Automated results are engineering evidence on constructed data, not WCAG 2.2 conformance, assistive-technology acceptance or a tick of the #232 criterion, which only the owner can give. Human validation belongs to #155.
 
 ## UX epic status (2026-11-04, #149)
 

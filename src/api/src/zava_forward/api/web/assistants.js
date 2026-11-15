@@ -1,5 +1,15 @@
 "use strict";
 
+// Keeps a message that already names an owner and a next action; otherwise adds both.
+const assistantOwned = (message, owner, next, status) => {
+  const m = String(message ?? "").trim().replace(/([^.!?])$/, "$1.");
+  const o = m.indexOf("Owner:");
+  if (o >= 0 && m.indexOf("Next action:") > o) return m;
+  const refused = status >= 400 && status < 500;
+  return `${m} Owner: ${refused ? "your team manager" : owner}. Next action: ${refused ? "follow the advice above, or ask your team manager if you cannot" : next}`;
+};
+const ASSISTANT_SUPPORT = "application support";
+
 const assistantNames = {
   "stock-prioritisation": "Stock facts and prioritisation",
   "assessment-preparation": "Assessment preparation",
@@ -92,8 +102,8 @@ function assistantProposal(p, reload, recoverable = new Map(), session = caseSes
     } catch (e) {
       const checkHistory = mutationNeedsHistory(e);
       const message = recorded
-        ? `Your review was recorded, but suggestions could not reload. Refresh before another review. ${e.message}`
-        : checkHistory ? `Confirmation is unavailable. Refresh and check the review history before another action. ${e.message}` : e.message;
+        ? assistantOwned(`Your review was recorded, but suggestions could not reload. Refresh before another review. ${e.message}`, ASSISTANT_SUPPORT, "refresh and check the review history before another review")
+        : checkHistory ? assistantOwned(`Confirmation is unavailable. Refresh and check the review history before another action. ${e.message}`, ASSISTANT_SUPPORT, "refresh and check the review history before another action") : assistantOwned(e.message, ASSISTANT_SUPPORT, "correct the entries or refresh, then try again", e.status);
       setReviewState(recorded ? "recorded" : checkHistory ? "uncertain" : null, message);
     }
   };
@@ -108,7 +118,7 @@ function assistantProposal(p, reload, recoverable = new Map(), session = caseSes
       history.append(document.createTextNode("\n" + JSON.stringify(earlier.provenance, null, 2)));
       offset = earlier.history_next_offset;
       moreHistory.hidden = offset == null;
-    } catch (e) { status.textContent = e.message; }
+    } catch (e) { status.textContent = assistantOwned(e.message, ASSISTANT_SUPPORT, "refresh to try again, then tell application support if it continues", e.status); }
   } }, "Earlier changes to this suggestion");
   const editBox = h("div", { hidden: true, "data-proposal-edit": "" }, h("p", { class: "muted" }, "This is the full proposal in a technical format. Change the values and keep the structure. A reason is required."),
     h("label", {}, "Edited proposal (technical JSON format)", editing),
@@ -138,7 +148,7 @@ function assistantProposal(p, reload, recoverable = new Map(), session = caseSes
       " I checked the cited sources, including unknowns and discrepancies."),
     h("button", { onclick: () => act("verify") }, "Record human source verification")),
     p.verification && h("p", {}, `Sources checked by ${p.verification.by}. ${p.verification.note}`),
-    (!ready || !ownVerification) && h("p", {}, "Accept unavailable: request fresh evidence and record your own source verification first."),
+    (!ready || !ownVerification) && h("p", {}, "Accept unavailable: request fresh evidence and record your own source verification first. Owner: the reviewer. Next action: request fresh evidence, record your own source verification, then accept."),
     h("p", {}, "Accept proposal only. This reviews a suggestion, not the case."),
     h("div", { class: "row" },
       h("button", { disabled: !ready || !ownVerification, onclick: () => act("accept") }, "Accept"),
@@ -161,7 +171,7 @@ function assistantProposal(p, reload, recoverable = new Map(), session = caseSes
   return card;
 }
 
-const ASSISTANTS_NOT_FOR_ROLE = "AI assistance is not available for your role. Use the ordinary case controls; no one is waiting on a suggestion.";
+const ASSISTANTS_NOT_FOR_ROLE = "AI assistance is not available for your role. Use the ordinary case controls; no one is waiting on a suggestion. Owner: your team manager. Next action: ask your team manager if you need AI assistance, and carry on with the ordinary case controls.";
 
 function assistantCasePanel(id, session) {
   const status = h("p", { role: "status" }, "Loading assistance. Ordinary case controls remain available.");
@@ -222,7 +232,7 @@ function assistantCasePanel(id, session) {
             app.querySelectorAll("[data-assistant-request]").forEach(button => {
               if (button.dataset.assistantRequest === a.id) button.disabled = checkHistory;
             });
-            const message = checkHistory ? `Refresh and check proposal history before requesting again. ${e.message}` : e.message;
+            const message = checkHistory ? assistantOwned(`Refresh and check proposal history before requesting again. ${e.message}`, ASSISTANT_SUPPORT, "refresh and check the proposal history before requesting again") : assistantOwned(e.message, ASSISTANT_SUPPORT, "refresh to try again, then tell application support if it continues", e.status);
             if (panel.isConnected) status.textContent = message;
             else workspaceStatus.textContent = message;
           }
@@ -231,7 +241,7 @@ function assistantCasePanel(id, session) {
       }
       panel.append(h("button", { class: "alt", onclick: async () => {
         try { await caseView(id); }
-        catch (error) { if (current()) status.textContent = `Could not refresh proposals. ${error.message}`; }
+        catch (error) { if (current()) status.textContent = assistantOwned(`Could not refresh proposals. ${error.message}`, ASSISTANT_SUPPORT, "refresh again, then tell application support if it continues", error.status); }
       } }, "Refresh proposals"),
         h("a", { href: "#/assistants" }, "Shared role-owned review queue"));
       const reviewed = h("details", {}, h("summary", {}, "Reviewed or stale suggestions"));
@@ -242,11 +252,12 @@ function assistantCasePanel(id, session) {
       }
       if (reviewed.childElementCount > 1) panel.append(reviewed);
       if (!proposals.length) panel.append(h("p", {}, "No AI suggestions yet. Ordinary case work is not affected."));
+      else panel.append(h("p", {}, h("a", { class: "btn alt", href: `/api/assistants/proposals.csv?case_id=${encodeURIComponent(id)}`, download: "assistant-proposals.csv" }, "Download suggestions for Excel"), " The file is a read-only copy; changes in it are not imported back."));
       restoreBoundFields([...session.pendingFields.values()], panel, "proposal", session);
     } catch (e) {
       if (current()) {
         const reason = controller.signal.aborted ? "Assistance request timed out" : e.message;
-        status.textContent = `Assistance unavailable: ${reason}. Continue ordinary case work manually.`;
+        status.textContent = assistantOwned(`Assistance unavailable: ${reason}. Continue ordinary case work manually.`, ASSISTANT_SUPPORT, "continue ordinary case work manually, and tell application support if it continues");
         panel.dataset.assistance = "AI assistance unavailable. Work continues manually.";
         panel.dataset.waiting = "0";
         restoreBoundFields([...session.pendingFields.values()], panel, "proposal", session);
@@ -290,12 +301,13 @@ async function assistantQueueView(after = "", append = false) {
       h("p", { role: "status" }, queue.disabled || "Unreviewed proposals require a separate source check and role review."),
       h("button", { onclick: () => assistantQueueView() }, "Refresh queue"),
       ...cards, more,
+      h("p", {}, h("a", { class: "btn alt", href: "/api/assistants/proposals.csv", download: "assistant-proposals.csv" }, "Download all proposals for Excel"), " The file is a read-only copy; changes in it are not imported back."),
       !queue.proposals.length && h("p", {}, "No proposals in your current role and case scope. Use the ordinary case controls."));
     show(panel);
     restoreBoundFields([...session.pendingFields.values()], panel, "proposal", session);
   } catch (e) {
     if (e.name === "AbortError" || signal.aborted || me !== owner || owner.assistantQueueDrafts !== session) return;
-    const failure = h("div", { "data-queue-error": "" }, h("p", { role: "alert" }, e.message),
+    const failure = h("div", { "data-queue-error": "" }, h("p", { role: "alert" }, assistantOwned(e.message, ASSISTANT_SUPPORT, "try loading proposals again, or continue manual case work and tell application support if it continues", e.status)),
       h("button", { type: "button", onclick: () => assistantQueueView() }, "Try loading proposals again"),
       h("a", { href: "#/" }, "Continue manual case work"));
     const existing = app.querySelector("[data-assistant-queue]");

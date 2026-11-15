@@ -398,7 +398,7 @@ Retention and data-handling baseline (proposed, 2026-10-08): the [addendum basel
 
 Owner direction, not DPO, Legal or Board approval. Each item records the
 decision and the requirement it creates. The MVP in `mvp/` is the build baseline
-and replaces `prototype/`.
+and replaces `prototype/` (both retired; archive `v0.21.0`).
 
 | ID | Requirement | Release | Trace |
 | --- | --- | --- | --- |

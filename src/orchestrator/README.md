@@ -16,7 +16,7 @@ pass the versioned registry tag as `orchestratorImage` with the matching API tag
 New-tag deployment and healthy job executions remain cut-over evidence, not
 established by changing the template. Tests are in `src/orchestrator/tests/` and run with
 `PYTHONPATH=../core/tests python3 -m unittest discover -s tests`. The section below is moved
-unchanged from the former `mvp/README.md` (M6 of #199).
+unchanged from the former `mvp/README.md` (archive `v0.21.0`; M6 of #199).
 
 ## Source-only rebuild rehearsal (#148)
 
@@ -242,6 +242,19 @@ removed. The built UID10001 image also ran the offline job with read-only root,
 dropped capabilities, NoNewPrivs and no network, persisting the same outcomes.
 These are bounded engineering receipts, not real Defender, recurring hosted
 schedule, Legal/DPO or owner approval acceptance.
+
+## Scheduled ranking publication (#79 criterion 4)
+
+`python -m zava_forward.orchestrator.ranking_publish [--today YYYY-MM-DD]` reads the open cases
+and `as_of` from the configured store (`ZF_STORE`), and publishes one create-only, hash-verified
+ranking record to the Blob archive (`ZF_RANKING_ARCHIVE=azure-blob`, `ZF_BLOB_ACCOUNT_URL`,
+`ZF_RANKING_BLOB_CONTAINER`; a folder is never a fallback). Verification, sign-off refusal and
+idempotency come from `core.ranking_publication_runner.run`. Exit 0 prints `RANKING_PUBLISH_OK`
+(published or already published, data dated the run date); exit 1 prints `RANKING_PUBLISH_BLOCKED`
+(for example `approval_missing` while the policy is an unsigned draft) or `RANKING_PUBLISH_ALERT`
+(failure, or data not dated the run date); exit 2 means the Blob archive is not configured.
+The infra README describes the scheduled job. Evidence is a mock Blob transport, not an account;
+criterion 3 (named policy owner signature) and the retention approval stay open.
 
 ## Ledger digests
 

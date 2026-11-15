@@ -1,0 +1,42 @@
+{
+  "task_id": "153-core-flow-copy-audit-close-1626",
+  "task_slug": "153-core-flow-copy-audit-close-1626",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-13/153-core-flow-copy-audit-close-1626-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-13/153-core-flow-copy-audit-close-1626-plan.md",
+    "details": ".copilot-tracking/details/2026-11-13/153-core-flow-copy-audit-close-1626-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-13/153-core-flow-copy-audit-close-1626-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-13/153-core-flow-copy-audit-close-1626-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-13/153-core-flow-copy-audit-close-1626-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Plan critique executed once (rubber-duck), verdict Revise; findings applied directly: add progress.js and remaining chat.js messages, aftercare 400 path, outcome-aware async-action text, broader tests",
+      "status": "applied",
+      "evidence": "critique file"
+    },
+    {
+      "decision": "Review executed once; outcome no significant issues",
+      "status": "complete",
+      "evidence": "review file"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "Commit locally"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Add Owner and Next action to remaining error notices in app.js, ops.js, assistants.js, simulator-control.js, staff-intake.js (not safetyPanel)",
+      "rationale": "Completes criterion B across the whole UI",
+      "evidence": "changes file"
+    }
+  ]
+}

@@ -23,6 +23,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Protocol
 
+from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 from zava_forward.core.synthetic import live_readings as lr
 from zava_forward.core.synthetic.run_plan import (
     B1_DAILY_MESSAGES,
@@ -80,10 +81,11 @@ class MemorySink:
 
 
 class StdoutSink:
-    """Dry run: prints the message and sends nothing."""
+    """Dry run: prints identifiers and size only (never the readings) and sends nothing."""
 
     async def send(self, device_id: str, message_id: str, body: bytes) -> None:
-        print(f"DRY-RUN {device_id} {message_id} {body.decode('ascii')}", flush=True)
+        label = "SYNTHETIC" if b"SYNTHETIC" in body else "UNLABELLED"
+        print(f"DRY-RUN {device_id} {message_id} {label} bytes={len(body)}", flush=True)
 
     async def close(self) -> None:
         return None
@@ -295,6 +297,8 @@ async def send_slot(
     to the sink is not recalled.
     """
     check_capacity(len(homes), limits, generator.cadence_seconds)
+    if len(set(homes)) != len(homes):
+        raise lr.LiveReadingError("DEVICE_ID_COLLISION")
     jitter = rng or random.Random(generator.seed)
     pacer = Pacer(limits.max_per_second, sleep, clock)
     summary = Summary(lr.slot_floor(slot, generator.cadence_seconds), len(homes))
@@ -302,6 +306,7 @@ async def send_slot(
     async def one(home: str) -> None:
         try:
             reading = generator.reading(home, slot)
+            lr.validate_row(reading.row())
         except lr.LiveReadingError as error:
             summary.codes[str(error)] = summary.codes.get(str(error), 0) + 1
             summary.failed += 1
@@ -526,6 +531,7 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
     parser.add_argument("--batch-size", type=int, default=Limits.batch_size)
     args = parser.parse_args(list(argv))
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(message)s")
+    install_diagnostic_redaction()
     limits = Limits(max_per_second=args.max_per_second, batch_size=args.batch_size)
     try:
         sink = _sink(args, env)

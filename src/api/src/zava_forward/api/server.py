@@ -8,12 +8,13 @@ import secrets
 import sys
 import threading
 import traceback
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
+from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, controls, form_export, form_review, forms, profile
 
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
@@ -28,7 +29,7 @@ from zava_forward.core.ai import Ai, may_carry_captured_readings
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARNING
-from zava_forward.core.chat_panel import ChatPanel, chat_skills, TASK as CHAT_TASK, MAX_INPUT_CHARS, MAX_HISTORY_CHARS
+from zava_forward.core.chat_panel import ChatPanel, chat_skills, TASK as CHAT_TASK, MAX_INPUT_CHARS, MAX_HISTORY_CHARS, MAX_THREAD_TURNS, all_role_limits, role_limits, AGENT_DEPTH, MEMORY_CAPS, CALLS_PER_REQUEST_BASIS
 from zava_forward.core.regulatory_chat import RegulatoryChat, TASK as REGULATORY_TASK
 from zava_forward.agents import regulatory_chat
 from zava_forward.core.source_monitor import dated_card
@@ -189,6 +190,51 @@ def _max_age_hours(url):
     if limit is not None and not 0 < limit < 1e6:
         raise ValueError
     return limit
+
+
+def concern_export_row(item):
+    """Tracking fields of an aftercare concern; the resident's own words and the history stay in the application."""
+    keep = ("id", "home_ref", "kind", "raised_by", "route", "channel", "recorded_by", "next_update", "unresolved", "overdue")
+    return {**{k: item.get(k) for k in keep}, "owner": item["owner"]["label"]}
+
+
+PROPOSAL_EXPORT_FIELDS = ("id", "case_id", "capability", "display_state", "state", "stale", "epoch_current", "relied_on")
+
+
+def proposal_export_row(item):
+    """State, source freshness and reviewer decision of a proposal; the draft, source snapshot, notes and reviewer names stay in the application."""
+    verified = item.get("verification") or {}
+    review = item.get("review") or {}
+    row = {k: item.get(k) for k in PROPOSAL_EXPORT_FIELDS}
+    row["source_state"] = "Source changed since drafted" if item.get("stale") else "Source unchanged"
+    row["source_verified"] = bool(verified) and verified.get("signature") == item.get("source_signature")
+    row["source_verified_at"] = verified.get("at")
+    row["review_decision"] = review.get("action")
+    row["reviewed_at"] = review.get("at")
+    return row
+
+
+def all_proposals(read_page, max_pages=200):
+    """Every proposal in the caller's scope, following the same page cursor as the screen."""
+    rows, after = [], ""
+    for _ in range(max_pages):
+        page = read_page(after)
+        rows.extend(page["proposals"])
+        after = page.get("next_after")
+        if not after:
+            return rows
+    raise ValueError("Too many proposals for one file; narrow the list to one case.")
+
+
+def law_source_rows(listing):
+    """The law viewer list as plain rows: sources held, then topics with no source held."""
+    held = [dict(kind="Source held", title=x["title"], status=x["status"], completeness=x["completeness"], effective=x["effective"],
+                 retrieved=x["retrieved"], version=x["version"], review_status=x.get("review_status"), reviewed=x.get("reviewed"),
+                 authority_type=x.get("authority_type"), official_url=x.get("official_url"),
+                 supersession="Superseded or historical, not the current authority" if x["status"] == "historical" else "Not superseded",
+                 note=" ".join(x["caveats"])) for x in listing["sources"]]
+    gaps = [dict(kind="No source held", title=g["topic"], note=f'{g["answer"]} {g["reason"]}') for g in listing["gaps"]]
+    return held + gaps
 
 
 SCHEMA_EXPORT_FIELDS = ("definition", "digest", "approval", "approval_evidence", "source_policy_status", "recorded_by", "recorded_at")
@@ -391,7 +437,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             if not sent:
                 self._headers_buffer = []
                 try:
-                    self._json(500, {"error": "The service hit an unexpected error. Try again; if it continues, report the time of the failure."})
+                    self._json(500, {"error": "The service hit an unexpected error. Owner: application support. Next action: try again, and if it continues report the time of the failure to application support."})
                 except Exception:
                     logging.getLogger(__name__).warning("http-error %s %s 500 response not delivered", method, _printable(path))
 
@@ -411,6 +457,10 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
 
         def _json(self, code, obj, extra=None):
             self._send(code, json.dumps(obj), extra=extra)
+
+        def _csv(self, filename, rows):
+            return self._send(200, list_export.to_csv(rows), "text/csv; charset=utf-8",
+                              {"Content-Disposition": f'attachment; filename="{filename}"'})
 
         def _cookie(self):
             m = SimpleCookie(self.headers.get("Cookie", "")).get("zf_session")
@@ -575,6 +625,12 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(400, {"error": str(error)})
                 except PermissionError as error:
                     return self._json(403, {"error": str(error)})
+            if url.path == "/api/aftercare/concerns.csv":
+                actor = {"name": u.get("name"), "role": u.get("role")}
+                status, payload = app.aftercare.handle("GET", "/api/aftercare/concerns", actor, None, {k: v[0] for k, v in q.items() if v})
+                if status != 200:
+                    return self._json(status, payload)
+                return self._csv("aftercare-concerns.csv", [concern_export_row(c) for c in payload["items"]])
             if url.path == "/api/aftercare" or url.path.startswith("/api/aftercare/"):
                 return self._aftercare("GET", u, url.path, None, {k: v[0] for k, v in q.items() if v})
             if url.path.startswith("/api/chat"):
@@ -584,7 +640,9 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     len(form_parts) == 4 and form_parts[:2] == ["api", "cases"]
                     and form_parts[3] in ("form-candidates", "form-review")) or (
                     len(form_parts) == 6 and form_parts[:2] == ["api", "cases"]
-                    and form_parts[3] == "form-review" and form_parts[5] == "held-export"):
+                    and form_parts[3] == "form-review" and form_parts[5] == "held-export") or (
+                    len(form_parts) == 6 and form_parts[:2] == ["api", "cases"]
+                    and form_parts[3] == "form-review" and form_parts[5] == "proposal-freshness"):
                 return self._forms(u, url.path, None)
             if url.path.startswith("/api/buildings/"):
                 try:
@@ -610,6 +668,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     with app.law_lock:
                         if parts == ["api", "law", "sources"]:
                             return self._json(200, app.law.sources())
+                        if parts == ["api", "law", "sources.csv"]:
+                            return self._csv("law-sources.csv", law_source_rows(app.law.sources()))
                         if len(parts) == 4 and parts[:3] == ["api", "law", "sources"]:
                             return self._json(200, app.law.source(parts[3]))
                         if len(parts) == 4 and parts[:3] == ["api", "law", "provisions"]:
@@ -627,8 +687,15 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(200, app.assistants.registry(u))
                     if url.path == "/api/assistants/forecast":
                         return self._json(200, app.assistants.forecast(u, num(q, "period_seconds", 86400, 60, 2592000)))
+                    if url.path == "/api/assistants/rai-metrics":
+                        now = datetime.now(UTC)
+                        return self._json(200, app.assistants.rai_metrics(
+                            u, q.get("from", [(now - timedelta(days=1)).isoformat()])[0], q.get("to", [now.isoformat()])[0]))
                     if url.path == "/api/assistants/proposals":
                         return self._json(200, app.assistants.listing(u, q.get("case_id", [None])[0], q.get("after", [""])[0]))
+                    if url.path == "/api/assistants/proposals.csv":
+                        every = all_proposals(lambda after: app.assistants.listing(u, q.get("case_id", [None])[0], after))
+                        return self._csv("assistant-proposals.csv", [proposal_export_row(p) for p in every])
                     parts = url.path.strip("/").split("/")
                     if len(parts) == 4 and parts[:3] == ["api", "assistants", "proposals"]:
                         return self._json(200, app.assistants.detail(u, parts[3], num(q, "history_offset", 0, 0, 1000000)))
@@ -701,13 +768,16 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(200, {"recommendation": s.latest_priority(u)})
             if url.path == "/api/time/status":
                 return self._json(200, app.time.status(u))
-            if url.path in ("/api/time/mine", "/api/time/report"):
+            if url.path in ("/api/time/mine", "/api/time/report", "/api/time/mine.csv", "/api/time/report.csv"):
                 try:
-                    if url.path.endswith("report"):
+                    as_csv = url.path.endswith(".csv")
+                    if url.path.removesuffix(".csv").endswith("report"):
                         if u["role"] not in MANAGER_ROLES:
                             raise PermissionError("Only a manager can see the time report.")
-                        return self._json(200, app.time.report())
-                    return self._json(200, app.time.mine(u))
+                        report = app.time.report()
+                        return self._csv("time-report.csv", report["by_activity"]) if as_csv else self._json(200, report)
+                    rows = app.time.mine(u)
+                    return self._csv("my-time-entries.csv", rows) if as_csv else self._json(200, rows)
                 except PermissionError as e:
                     return self._json(403, {"error": str(e), "enabled": app.time.status()["enabled"]})
             if url.path in ("/api/continuity", "/api/continuity/export"):
@@ -1050,9 +1120,12 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         "activation": "demo-only" if demo else "disabled; approval evidence required",
                         "demo_activation": demo,
                         "demo_disclaimer": ai_registry.DEMO_ACTIVATION["disclaimer"] if demo else None,
-                        "limits": {"calls_per_turn": 1, "retries": 0, "output_tokens": 600,
+                        "role_limits": all_role_limits(), "your_role_limits": role_limits(c.current_user(user).get("role")),
+                        "limits": {"calls_per_turn": 1, "calls_per_request": 1, "retries": 0, "output_tokens": 600,
+                                   "turns_per_thread": MAX_THREAD_TURNS,
                                    "context_chars": MAX_INPUT_CHARS, "history_chars": MAX_HISTORY_CHARS,
-                                   "memory_used": False, "authority": "engineering caps, not spend authorization"}})
+                                   "memory_used": False, "memory_caps": dict(MEMORY_CAPS), "agent_depth": AGENT_DEPTH,
+                                   "calls_per_request_basis": CALLS_PER_REQUEST_BASIS, "authority": "engineering caps, not spend authorization"}})
                 if parts and parts[0] == "regulatory":
                     self._regulatory_access(user)
                     if not post and parts == ["regulatory", "status"]:
@@ -1212,6 +1285,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     saved = body if saved_export_ids_are_text(body) else {}
                     checked = form_export.export_freshness(app.store, user, unquote(parts[2]), saved)
                     return self._send(200, json.dumps(checked), "application/json; charset=utf-8", {"Cache-Control": "private, no-store"})
+                if len(parts) == 6 and parts[5] == "proposal-freshness":
+                    return self._send(200, json.dumps(form_review.proposal_freshness(app.store, user, unquote(parts[2]), unquote(parts[4]))), "application/json; charset=utf-8", {"Cache-Control": "private, no-store"})
                 if len(parts) == 6:
                     if not held_download_enabled(app.provider.name):
                         return self._json(404, {"error": "Not found."})
@@ -1585,9 +1660,15 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(409, {"error": "Preview blocked, changed or already used. Request a fresh preview before applying."})
                 return self._json(409, {"error": "Someone else changed this at the same moment. Reload and try again."})
             except GateError as e:
-                return self._json(409, {"error": "Not ready yet.", "reasons": e.reasons})
+                refusal = {"error": "Not ready yet.", "reasons": e.reasons}
+                if e.rules:
+                    refusal["rules"] = e.rules
+                return self._json(409, refusal)
             except PermissionError as e:
-                return self._json(403, {"error": str(e)})
+                refusal = {"error": str(e)}
+                if getattr(e, "rule", None):
+                    refusal["rule"] = e.rule.as_record()
+                return self._json(403, refusal)
             except KeyError:
                 return self._json(404, {"error": "Case not found."})
             except ValueError as e:
@@ -1610,6 +1691,7 @@ class _Server(ThreadingHTTPServer):
 
 
 def main() -> None:
+    install_diagnostic_redaction()
     password = os.environ.get("ZF_PASSWORD") or secrets.token_urlsafe(9)
     try:
         store = open_store()

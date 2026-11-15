@@ -11894,3 +11894,48 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
   repair and remaining evidence/approval limits. No experiment, paid call,
   VM change, registration, commit, push or publication occurred; hosted CI
   and independent exact-head review remain unperformed.
+## [2026-11-13] update | Case safety panel usability (Closes #1530)
+
+* Added a safety issue card row to the component inventory in [design-system.md](research/ux/design-system.md) for the reworked case safety panel: labelled per-action forms, hints, a next-step callout and compact key facts.
+* No backend rule changed. Browser, screen-reader and housing-officer comprehension checks remain unperformed.
+
+## [2026-11-13] add | Issue #435 capstone assessment challenge (Refs #435)
+
+* Added a [20-criterion assessment challenge](../capstone/pitch/capstone-assessment-challenge.md) of the existing 55-slide deck with Slide 22, B25 and B27, covering evidence, gaps, assumptions, section floors and individual floors. Linked from the pitch README.
+* Offline and content-only. No score, floor pass, rehearsal, deck or receipt-hashed file change; held-out batch not run. Criterion 5 stays partial pending owner review.
+
+## [2026-11-13] update | Tokenomics rehearsal notes and held-out module status (Refs #435)
+
+* Recorded [tokenomics-rehearsal-notes.md](../capstone/pitch/tokenomics-rehearsal-notes.md) (page-by-page timing table, Slide 22 cue and figures table) and stated its arithmetic result directly: the 24:30 column sums to 1,470 s and the 15-minute column to 840 s plus 60 s.
+* Corrected the earlier claim, in the entries above and in the [Q&A brief](../capstone/tokenomics-qa-brief.md), the rehearsal notes and the [assessment challenge](../capstone/pitch/capstone-assessment-challenge.md), that `zava_forward.agents.heldout_batch` is absent: it is implemented on main (merged in #1525 and #1531) and not yet run live, awaiting owner-authorised live provider execution. The earlier entries are unchanged.
+* Documentation only. No live run, measurement, deck change, tick or closure.
+
+## [2026-11-13] update | Resident engagement screens accessibility audit (Refs #232)
+
+* Audited the resident choice and service issue screens and recorded the result in the [WCAG baseline](research/ux/wcag-conformance-baseline.md#resident-engagement-screens-status-2026-11-13-232): row headers added to resident tables, textual state meaning added to the choice screen's service request table, and new rendered checks for table headers, queue-state axe and 320 px keyboard reach.
+* Automated, synthetic-data evidence only. No screen-reader or human testing, no conformance claim, and the #232 criterion is not ticked.
+
+## [2026-11-13] update | Legacy reference and link verification for cleanup (Refs #203)
+
+* Added `tools/check-legacy-references.py` with tests: retired `mvp/` and `prototype/` paths must name archive `v0.21.0`, `zavaforward_mvp` and `properwarm_mvp` stay in dated records or guards, and changed Markdown relative links must resolve. Repointed the two architecture diagrams' source locators to `src/` and added the tag beside retained history in live pages, including the gap analysis, Decision 1 specification and synthetic data README.
+* Criteria 1 and 2 only, as a file-class check; not a line-by-line proof of the generated inventory, no all-link audit of historical debt, no tick or closure.
+## [2026-11-13] update | Issue 144 hosting scale, probe and restart local evidence (Refs #144)
+
+* Added `infra/tests/test_container_hosting_completeness.py` (source contract over every declared app and job: limits, replica bounds, scale rules, probes, single revision, rollback path) and `src/api/tests/test_scale_fixture_load_and_restart.py` (separate API process, concurrent load, SIGKILL restart, audit chain check).
+* Recorded a local 60,000-home loopback run in [scale-restart-2026-11-13.json](../architecture/scale-restart-2026-11-13.json) and in the [infra README](../../infra/README.md#separate-process-load-and-restart-run-issue-144-2026-11-13): 20 clients, 62 s, error rate 0, p95 9.5 s (over NFR-002), 622 MiB high-water RSS, audit chain intact after SIGKILL restart.
+* Local only: no Azure, hosted replica, autoscaling or production-scale claim, no criterion ticked, no Bicep change.
+
+## [2026-11-14] update | UX journey to requirement to design to test traceability (Refs #149)
+
+* Added a journey, requirement, design artefact, web surface and automated test matrix to [design-system.md](research/ux/design-system.md), refreshed its [index](README.md) row, and added the guard test `src/api/tests/test_ux_design_traceability.py` that resolves every cited file, screen, panel, route, test and requirement ID.
+* Local engineering evidence on synthetic data only. Every human-evidence cell stays `pending human test` (#155, #151 and the usability programme). No tick, acceptance or closure: criteria on accessibility, content and usability evidence and child feature acceptance remain open.
+
+## [2026-11-14] update | Issue #215 alert and chat non-colour cues, Escape, plain language and keyboard provenance (Refs #215)
+
+* Added a dated note to the [WCAG baseline](research/ux/wcag-conformance-baseline.md) status-messages row and to the API README criterion audit: regulatory alert and cited-lookup states carry a glyph and border shape, plain-language explanations cover outcomes, no-source, doubt and unknown coverage, and Escape restores focus to the lookup summary.
+* Local engineering evidence only (static tests and the browser check with axe 4.10.3). No screen-reader, assistive-technology, conformance or staff comprehension claim; criterion 5 stays unmet.
+* Added the #1611 static regression `src/api/tests/test_home_chat_regulatory_keyboard_provenance.py` (native controls, launcher aria state, Escape and Close focus return, live regions, provenance, source count and a persistent per-reply outcome line), recorded under the 2026-11-14 RPI artifacts. Static local evidence only; no tick or closure.
+
+## [2026-11-14] update | Issue #110 distinct device identity, schema version and stable reading ID
+
+* Added producer-side validation (`Reading.validate`, `require_distinct`, `validate_row`) in core, refusal of duplicate homes and invalid rows in the API live simulator, and cohort tests. Local offline evidence only; no live IoT Hub run. RPI artifacts are under `.copilot-tracking/*/2026-11-14-iot-distinct-device-identity-*`.

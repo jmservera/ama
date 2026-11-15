@@ -4,6 +4,7 @@ These helpers keep the rules in one place: one record at a time (FR-007), a
 different person for each approval (CON-007), plain-word refusals, and amounts
 and text that are cleaned before they are stored.
 """
+import re
 from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
 
@@ -42,6 +43,23 @@ def text(value, label, limit=300, required=True):
     value = (value or "").strip()[:limit] if isinstance(value, str) else ""
     if required and not value:
         raise ValueError(f"Add {label}.")
+    return value
+
+
+MEMORY_REF = re.compile(r"(?<![A-Za-z0-9])(?:CM-[0-9a-f]{12,}(?![0-9A-Za-z-])|memory:(?=\S)|chat-memory(?![-\w.]))", re.I)
+MEMORY_REFUSAL = "Memory is never evidence and cannot be cited."
+
+
+def is_memory_reference(value: object) -> bool:
+    """True when the text cites chat memory (a CM- id, a memory: reference or chat-memory)."""
+    return isinstance(value, str) and MEMORY_REF.search(value) is not None
+
+
+def evidence_text(value, label, limit=300, required=True):
+    """Text for a controlled decision's evidence or source; chat memory is refused."""
+    value = text(value, label, limit, required)
+    if is_memory_reference(value):
+        raise ValueError(MEMORY_REFUSAL)
     return value
 
 

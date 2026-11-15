@@ -23,6 +23,7 @@ from zava_forward.agents.worker import (
     EXPIRED,
     IDLE_SECONDS,
     NOT_CONFIGURED,
+    install_signal_handlers,
     main,
     serve,
 )
@@ -86,6 +87,66 @@ class ServeTests(unittest.TestCase):
         worker = AgentWorker(provider)
         serve(InMemoryQueue(), worker, Sink(), limits(), stop)
         self.assertTrue(worker.stop_event.is_set())
+
+
+class DrainTests(unittest.TestCase):
+    def run_serve(
+        self, hold: float, drain: float
+    ) -> tuple[InMemoryQueue, Sink, AgentWorker, threading.Event]:
+        entered, stop = threading.Event(), threading.Event()
+
+        def slow(*_: Any) -> dict[str, Any]:
+            entered.set()
+            time.sleep(hold)
+            return returned(good_text())
+
+        worker, queue, sink = AgentWorker(slow), InMemoryQueue([message()]), Sink()
+        handlers = {s: signal.getsignal(s) for s in (signal.SIGTERM, signal.SIGINT)}
+        install_signal_handlers(stop, worker, drain=drain)
+        try:
+            thread = threading.Thread(
+                target=serve, args=(queue, worker, sink, limits(), stop), kwargs={"idle": 0.01}
+            )
+            thread.start()
+            self.assertTrue(entered.wait(5))
+            signal.raise_signal(signal.SIGTERM)
+            thread.join(10)
+            self.assertFalse(thread.is_alive())
+        finally:
+            for signum, handler in handlers.items():
+                signal.signal(signum, handler)
+        return queue, sink, worker, stop
+
+    def test_in_flight_task_completes_within_drain_window(self) -> None:
+        queue, sink, _, stop = self.run_serve(hold=0.4, drain=5.0)
+        self.assertTrue(stop.is_set())
+        self.assertEqual(len(sink.results), 1)
+        self.assertIsNone(sink.results[0].failure)
+        self.assertEqual(queue.acked, ["0"])
+        self.assertEqual(queue.leased, {})
+
+    def test_task_outliving_drain_window_is_released_not_failed(self) -> None:
+        queue, sink, worker, _ = self.run_serve(hold=2.0, drain=0.2)
+        self.assertTrue(worker.stop_event.is_set())
+        self.assertEqual(sink.results, [])
+        self.assertEqual(queue.acked, [])
+        self.assertEqual(queue.leased, {})
+        self.assertEqual([receipt for receipt, _ in queue.pending], ["0"])
+
+    def test_release_failure_on_shutdown_does_not_escape_the_loop(self) -> None:
+        class Broken(InMemoryQueue):
+            def release(self, receipt: str) -> None:
+                raise OSError("queue unavailable")
+
+        stop = threading.Event()
+        worker = AgentWorker(provider)
+        queue, sink = Broken([message()]), Sink(fail=True)
+        timer = threading.Timer(0.2, stop.set)
+        timer.start()
+        done = serve(queue, worker, sink, limits(), stop, idle=0.01, backoff=0.01)
+        timer.cancel()
+        self.assertEqual(done, 0)
+        self.assertEqual(queue.acked, [])
 
 
 class MainTests(unittest.TestCase):

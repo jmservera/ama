@@ -1,6 +1,8 @@
 """Copy audit: banned internal terms absent from visible web copy, labels and blocked messages follow the content standard."""
 
+import json
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -24,6 +26,12 @@ AUDITED_FILES = (
     "law.html",
     "index.html",
     "welcome.html",
+    "aftercare.js",
+    "case-workspace.js",
+    "chat-widget.js",
+    "async-action.js",
+    "progress.js",
+    "workspace-shell.js",
 )
 # Exact identifiers, raw technical JSON key and legacy stored finance value only.
 ALLOWED = (
@@ -56,6 +64,11 @@ class CopyAudit(unittest.TestCase):
     def test_no_internal_terms_in_web_copy(self):
         for f in AUDITED_FILES:
             self.assertEqual(list(copy_violations((WEB / f).read_text())), [], f)
+
+    def test_every_served_script_and_page_is_audited(self):
+        served = {p.name for p in (*WEB.glob("*.js"), *WEB.glob("*.html"))}
+        self.assertEqual(sorted(served - set(AUDITED_FILES)), [])
+        self.assertEqual(sorted(set(AUDITED_FILES) - served), [])
 
     def test_all_standard_vocabulary_families_are_guarded(self):
         for word in (
@@ -188,6 +201,148 @@ class CopyAudit(unittest.TestCase):
         self.assertLess(text.index("Owner:"), text.index("Next action:"))
         self.assertIsNone(BANNED.search(text))
 
+    def test_chat_aftercare_and_shared_failure_messages_state_reason_owner_and_next_action(self):
+        def ordered(text, label):
+            self.assertIn("Owner:", text, label)
+            self.assertIn("Next action:", text, label)
+            self.assertLess(text.index("Owner:"), text.index("Next action:"), label)
+
+        for name in ("chat.js", "aftercare.js", "async-action.js", "progress.js"):
+            js = (WEB / name).read_text()
+            literals = (
+                lit
+                for line in js.splitlines()
+                if line.count("`") % 2 == 0
+                for lit in re.findall(r"`[^`]*\.message[^`]*`", line)
+            )
+            for literal in literals:
+                if "Owner:" in literal or "error.message ||" in literal:
+                    continue
+                if name == "chat.js" and "${feature}" in literal:
+                    continue
+                with self.subTest(name=name, literal=literal):
+                    ordered(literal, literal)
+        aftercare = (WEB / "aftercare.js").read_text()
+        for const in ("AC_UNCONFIRMED", "AC_EARLIER"):
+            literal = re.search(rf'const {const} = "(.*)";', aftercare).group(1)
+            ordered(literal, const)
+        chat = (WEB / "chat.js").read_text()
+        for text in (
+            "Chat could not load. Owner: application support. Next action:",
+            "is not available for your role. Owner: your team manager. Next action:",
+            "is not available right now: ${error.message} Owner: application support. Next action:",
+        ):
+            self.assertIn(text, chat)
+        self.assertIn("Your role cannot do this. Owner:", aftercare)
+        self.assertIn("cannot record one. Owner:", aftercare)
+        self.assertIn(
+            "Next action: change the filters or try again.", (WEB / "progress.js").read_text()
+        )
+
+    OWNED_FILES = {
+        "ops.js": "opsOwned",
+        "assistants.js": "assistantOwned",
+        "simulator-control.js": "simControlOwned",
+        "staff-intake.js": "intakeOwned",
+        "panels.js": "panelOwned",
+    }
+    BLOCKED_WORDS = re.compile(
+        r"cannot|could not|not available|unavailable|failed|not valid|switched off"
+        r"|does not include|refused|not writable",
+        re.I,
+    )
+    # Literals that describe a state or a label, not an error or blocked notice, or that feed an owned message.
+    NOT_NOTICES = (
+        "Resident not available",
+        "Sending is permitted until the expiry time. This screen cannot see",
+        "Review due date (authority unavailable",
+        "AI assistance unavailable. Work continues manually.",
+        "These are synthetic exercise rules.",
+        "A challenge never means consent, refusal or a sanction.",
+        "The existing limits apply:",
+    )
+
+    def literals(self, name):
+        js = (WEB / name).read_text()
+        for line in js.splitlines():
+            for lit in re.findall(r'"(?:[^"\\]|\\.)*"|`[^`]*`', line):
+                yield line, lit
+
+    def test_remaining_error_and_blocked_notices_state_owner_then_next_action(self):
+        for name, helper in self.OWNED_FILES.items():
+            js = (WEB / name).read_text()
+            self.assertIn(f"const {helper} = (message, owner, next, status) =>", js, name)
+            self.assertNotIn("Something went wrong", js, name)
+            for line, lit in self.literals(name):
+                if not self.BLOCKED_WORDS.search(lit) or lit in (
+                    '"unavailable"',
+                    '"Unavailable"',
+                    '"Not valid"',
+                ):
+                    continue
+                if any(skip in lit for skip in self.NOT_NOTICES) or f"{helper}(" in line:
+                    continue
+                with self.subTest(name=name, literal=lit[:80]):
+                    self.assertIn("Owner:", lit)
+                    self.assertIn("Next action:", lit)
+                    self.assertLess(lit.index("Owner:"), lit.index("Next action:"))
+                    self.assertIsNone(BANNED.search(lit))
+
+    def test_dynamic_error_messages_always_go_through_the_owner_helper(self):
+        sink = re.compile(
+            r"\b(?:e|error|d\.error)\.message\b|\bvalidationMessage\b|\.(?:blocker|not_ready_reason)\b"
+        )
+        for name, helper in self.OWNED_FILES.items():
+            for n, line in enumerate((WEB / name).read_text().splitlines(), 1):
+                if not sink.search(line) or line.lstrip().startswith("const " + helper):
+                    continue
+                if (
+                    re.search(
+                        r"\.message\s*=\s*`|const (reason|detail)\b|e\.generic|error\.message \|\||\.message,",
+                        line,
+                    )
+                    and "Owned(" not in line
+                ):
+                    continue
+                with self.subTest(file=name, line=n):
+                    self.assertTrue(helper + "(" in line or "Owner:" in line, line.strip()[:160])
+
+    def test_owner_helpers_keep_complete_messages_and_complete_partial_ones(self):
+        for name, helper in self.OWNED_FILES.items():
+            js = (WEB / name).read_text()
+            fn = re.search(rf"const {helper} = .*?\n}};", js, re.S).group(0)
+            script = (
+                fn
+                + f"""
+const full = "It failed. Owner: app support. Next action: retry.";
+const out = [
+  {helper}(full, "X", "Y"),
+  {helper}("It failed", "X", "Y"),
+  {helper}("It failed. Owner: someone.", "X", "Y"),
+  {helper}("Next action: retry. Owner: someone.", "X", "Y"),
+  {helper}(undefined, "X", "Y"),
+  {helper}("Ask the contract manager.", "X", "Y", 403),
+  {helper}("Server fault", "X", "Y", 500),
+];
+console.log(JSON.stringify(out));
+"""
+            )
+            result = subprocess.run(
+                ["node", "-e", script], text=True, capture_output=True, timeout=30
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            got = json.loads(result.stdout)
+            self.assertEqual(got[0], "It failed. Owner: app support. Next action: retry.", name)
+            for text in got[1:4]:
+                self.assertRegex(text, r"Owner: [^.]+\. Next action: ", name)
+            self.assertEqual(got[1], "It failed. Owner: X. Next action: Y", name)
+            self.assertIn("Owner: X. Next action: Y", got[4], name)
+            self.assertIn(
+                "Owner: your team manager. Next action: follow the advice above", got[5], name
+            )
+            self.assertNotIn("Owner: X", got[5], name)
+            self.assertEqual(got[6], "Server fault. Owner: X. Next action: Y", name)
+
     def test_standard_documents_glossary_and_review(self):
         for text in (
             "## Glossary",
@@ -248,6 +403,26 @@ class CopyAudit(unittest.TestCase):
             self.assertIn(part, str(ctx.exception))
         self.assertNotIn("snapshot", str(ctx.exception).lower())
 
+    def test_role_screen_law_and_server_notices_state_reason_owner_then_next_action(self):
+        role = (WEB / "role-screens.js").read_text()
+        law = (WEB / "law.js").read_text()
+        server = (ROOT / "src" / "api" / "src" / "zava_forward" / "api" / "server.py").read_text()
+        notices = [
+            (role, "This screen is not installed for your signed-in role. Your access has not changed."),
+            (role, "That page could not be loaded. The rows shown are unchanged."),
+            (role, "is not installed for your role. Your access has not changed."),
+            (role, "Unknown. The queue could not be read for your role."),
+            (role, "This file is incomplete or was changed after download."),
+            (law, "Required law viewer file did not load: /async-action.js."),
+            (server, "The service hit an unexpected error."),
+        ]
+        for source, start in notices:
+            with self.subTest(notice=start):
+                self.assertEqual(source.count(start), 1)
+                text = source[source.index(start):].split('"')[0].split("`")[0]
+                self.assertRegex(text, r"Owner: [^.]+\. Next action: ")
+        self.assertIn("/Owner:/.test(e.message) ? e.message :", law)
+
     def test_role_screens_use_phase_check_wording(self):
         js = (WEB / "role-screens.js").read_text()
         self.assertIn("Benefits and phase check", js)
@@ -286,6 +461,60 @@ class CopyAudit(unittest.TestCase):
                         ),
                         literal,
                     )
+
+    @staticmethod
+    def _server_message_text(source):
+        """Message text by category: raised, listed as blockers, or returned as reasons."""
+        import ast
+
+        def joined(node):
+            return "".join(
+                n.value for n in ast.walk(node) if isinstance(n, ast.Constant) and isinstance(n.value, str)
+            )
+
+        found = {"raise": [], "why": [], "reason": []}
+        tree = ast.parse(source)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Raise) and isinstance(node.exc, ast.Call):
+                for arg in node.exc.args:
+                    found["raise"].append(joined(arg))
+            elif isinstance(node, (ast.Assign, ast.AugAssign)):
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+                if any(isinstance(t, ast.Name) and t.id == "why" for t in targets):
+                    found["why"].append(joined(node.value))
+            elif isinstance(node, ast.FunctionDef) and node.name in ("missing_items", "technical_gate"):
+                found["reason"].append(
+                    "".join(joined(n) for n in node.body if not isinstance(n, ast.Expr))
+                )
+        return found
+
+    def test_server_refusals_in_signoffs_and_workflows_avoid_internal_terms(self):
+        core = ROOT / "src" / "core" / "src" / "zava_forward" / "core"
+        minimum = {
+            "signoffs.py": {"raise": 5, "why": 2, "reason": 2},
+            "workflows.py": {"raise": 20, "why": 0, "reason": 0},
+        }
+        for name, needs in minimum.items():
+            found = self._server_message_text((core / name).read_text())
+            for category, texts in found.items():
+                self.assertGreaterEqual(len(texts), needs[category], (name, category))
+                for text in texts:
+                    with self.subTest(name=name, category=category, text=text[:60]):
+                        self.assertIsNone(BANNED.search(text), text)
+
+    def test_server_message_guard_flags_banned_words_in_every_category(self):
+        source = (
+            "def missing_items(c):\n    return [dict(item='Provenance check')]\n"
+            "def technical_gate(c):\n    return ['Snapshot is stale']\n"
+            "def f(c):\n    why = ['The gate is closed']\n    why += ['Trace missing']\n"
+            "    raise ValueError(f'Envelope {c} on hold')\n"
+        )
+        found = self._server_message_text(source)
+        self.assertEqual({k: len(v) for k, v in found.items()}, {"raise": 1, "why": 2, "reason": 2})
+        for category, texts in found.items():
+            for text in texts:
+                with self.subTest(category=category, text=text):
+                    self.assertIsNotNone(BANNED.search(text))
 
     def test_consultation_and_restart_gate_refusals_use_plain_wording(self):
         core = ROOT / "src" / "core" / "src" / "zava_forward" / "core"

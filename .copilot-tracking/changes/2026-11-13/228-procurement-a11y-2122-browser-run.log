@@ -1,0 +1,325 @@
+PASS owned server is running and responsive on loopback
+PASS Package queue / Issued shows: Package queue
+PASS Package queue / Issued shows: Work orders for this home
+PASS Package queue / Issued shows: Contractor submission and review
+PASS Package queue / Issued shows: Contractor submission and review
+PASS Package queue / Issued shows: A contractor acknowledgement is not acceptance
+PASS Package queue / Issued shows: Separate step by a named reviewer; not available from this screen
+PASS Package queue / Issued shows: Not shown for this role
+PASS Package queue / Issued shows: Draft readiness only. This is not a release or approval.
+PASS Package queue / Issued shows: Contract or call-off reference
+PASS Package queue / Issued shows: SYN-CALL-OFF
+PASS Package queue / Issued shows: Offered
+PASS Package queue / Issued shows: Recorded committed
+PASS Package queue / Issued shows: Unmet prerequisites for PKG-001
+PASS Package queue / Issued shows: Next reviewer (role)
+PASS Package queue / Issued shows: Issued
+PASS Package queue / Issued shows: Unknown - not confirmed
+PASS Package queue / Issued shows: Unmet or Unknown
+PASS Package queue / Issued shows: Next reviewer
+PASS Package queue / Issued shows: Named reviewer
+PASS Package queue / Issued shows: Unassigned. Contracts manager to name a person.
+PASS Package queue / Issued row: PKG-001: SYN north wave | 2026-01-01 to 2099-12-31 | Loft insulation (
+PASS Package queue / Issued row: WO-0001 v1 | PKG-001 | Test Ltd | Issued | Loft insulation
+PASS Package queue / Issued row: WO-0001 v1 | None recorded | Not recorded | Unknown. No independent re
+PASS Package queue / Issued read-only: no write controls
+PASS Package queue / Issued no contact links
+PASS Package queue / Issued no approval, booking or vulnerability wording
+PASS Package queue / Issued every cell and field value carries text, so no state rests on colour or position
+PASS Package queue / Issued every table sits in a labelled focusable region
+PASS Package queue / Issued every table is a labelled focusable region with a caption and column headers
+PASS Package queue / Issued readiness statement is a status region (1)
+PASS Package queue / Issued empty tables say so in words (0)
+PASS Package queue / Issued made no non-GET/HEAD/OPTIONS requests: []
+PASS Package queue / Issued Tab visits the table regions in reading order: ['Packages with period, scope, version and capacity', 'Work-order references for the selected home', 'Work-order corrections, recorded completion and review for the selected home', 'Unmet prerequisites for PKG-001']
+PASS Package queue / Issued Tab ends on the case workspace link
+PASS Package queue / Issued every focus stop shows a visible indicator
+PASS Package queue / Issued no focus stop is covered by other content
+PASS Package queue / Issued Shift+Tab leaves the last stop (no keyboard trap)
+PASS Package queue / Issued at 320px Tab visits the table regions in reading order: ['Packages with period, scope, version and capacity', 'Work-order references for the selected home', 'Work-order corrections, recorded completion and review for the selected home', 'Unmet prerequisites for PKG-001']
+PASS Package queue / Issued at 320px Tab ends on the case workspace link
+PASS Package queue / Issued at 320px every focus stop shows a visible indicator
+PASS Package queue / Issued at 320px no focus stop is covered by other content
+PASS Package queue / Issued at 320px Shift+Tab leaves the last stop (no keyboard trap)
+PASS axe file is the pinned 4.10.3 build
+PASS Package queue / Issued axe 4.10.3 (main, 1280px) finds no violations: []
+INFO Package queue / Issued 1280px axe passes 20, incomplete (needs manual review): []
+PASS Package queue / Issued axe 4.10.3 (main, 320px) finds no violations: []
+INFO Package queue / Issued 320px axe passes 21, incomplete (needs manual review): []
+PASS Package queue / Issued reflow 320px
+PASS Package queue / Issued reflow 1280px
+PASS Package queue / Completed and corrected shows: Package queue
+PASS Package queue / Completed and corrected shows: Work orders for this home
+PASS Package queue / Completed and corrected shows: Contractor submission and review
+PASS Package queue / Completed and corrected shows: Contractor submission and review
+PASS Package queue / Completed and corrected shows: A contractor acknowledgement is not acceptance
+PASS Package queue / Completed and corrected shows: Separate step by a named reviewer; not available from this screen
+PASS Package queue / Completed and corrected shows: Not shown for this role
+PASS Package queue / Completed and corrected shows: Completed
+PASS Package queue / Completed and corrected shows: Evidenced: synthetic commitment record
+PASS Package queue / Completed and corrected shows: Met on record
+PASS Package queue / Completed and corrected shows: Next reviewer
+PASS Package queue / Completed and corrected shows: Named reviewer
+PASS Package queue / Completed and corrected shows: Unassigned. Contracts manager to name a person.
+PASS Package queue / Completed and corrected does not show: Unknown - not confirmed
+PASS Package queue / Completed and corrected row: WO-0001 v1 | Wrong depth (Pam Manager, 2026-05-01) | Recorded by Pam M
+PASS Package queue / Completed and corrected read-only: no write controls
+PASS Package queue / Completed and corrected no contact links
+PASS Package queue / Completed and corrected no approval, booking or vulnerability wording
+PASS Package queue / Completed and corrected every cell and field value carries text, so no state rests on colour or position
+PASS Package queue / Completed and corrected every table sits in a labelled focusable region
+PASS Package queue / Completed and corrected every table is a labelled focusable region with a caption and column headers
+PASS Package queue / Completed and corrected readiness statement is a status region (1)
+PASS Package queue / Completed and corrected empty tables say so in words (0)
+PASS Package queue / Completed and corrected made no non-GET/HEAD/OPTIONS requests: []
+PASS Package queue / Completed and corrected Tab visits the table regions in reading order: ['Packages with period, scope, version and capacity', 'Work-order references for the selected home', 'Work-order corrections, recorded completion and review for the selected home', 'Unmet prerequisites for PKG-001']
+PASS Package queue / Completed and corrected Tab ends on the case workspace link
+PASS Package queue / Completed and corrected every focus stop shows a visible indicator
+PASS Package queue / Completed and corrected no focus stop is covered by other content
+PASS Package queue / Completed and corrected Shift+Tab leaves the last stop (no keyboard trap)
+PASS Package queue / Completed and corrected at 320px Tab visits the table regions in reading order: ['Packages with period, scope, version and capacity', 'Work-order references for the selected home', 'Work-order corrections, recorded completion and review for the selected home', 'Unmet prerequisites for PKG-001']
+PASS Package queue / Completed and corrected at 320px Tab ends on the case workspace link
+PASS Package queue / Completed and corrected at 320px every focus stop shows a visible indicator
+PASS Package queue / Completed and corrected at 320px no focus stop is covered by other content
+PASS Package queue / Completed and corrected at 320px Shift+Tab leaves the last stop (no keyboard trap)
+PASS axe file is the pinned 4.10.3 build
+PASS Package queue / Completed and corrected axe 4.10.3 (main, 1280px) finds no violations: []
+INFO Package queue / Completed and corrected 1280px axe passes 20, incomplete (needs manual review): []
+PASS Package queue / Completed and corrected axe 4.10.3 (main, 320px) finds no violations: []
+INFO Package queue / Completed and corrected 320px axe passes 21, incomplete (needs manual review): []
+PASS Package queue / Completed and corrected reflow 320px
+PASS Package queue / Completed and corrected reflow 1280px
+PASS Package queue / Withdrawn shows: Package queue
+PASS Package queue / Withdrawn shows: Work orders for this home
+PASS Package queue / Withdrawn shows: Contractor submission and review
+PASS Package queue / Withdrawn shows: Contractor submission and review
+PASS Package queue / Withdrawn shows: A contractor acknowledgement is not acceptance
+PASS Package queue / Withdrawn shows: Separate step by a named reviewer; not available from this screen
+PASS Package queue / Withdrawn shows: Not shown for this role
+PASS Package queue / Withdrawn shows: Withdrawn
+PASS Package queue / Withdrawn shows: Unmet. Every work order for this home is withdrawn.
+PASS Package queue / Withdrawn shows: Next reviewer
+PASS Package queue / Withdrawn shows: Named reviewer
+PASS Package queue / Withdrawn shows: Unassigned. Contracts manager to name a person.
+PASS Package queue / Withdrawn read-only: no write controls
+PASS Package queue / Withdrawn no contact links
+PASS Package queue / Withdrawn no approval, booking or vulnerability wording
+PASS Package queue / Withdrawn every cell and field value carries text, so no state rests on colour or position
+PASS Package queue / Withdrawn every table sits in a labelled focusable region
+PASS Package queue / Withdrawn every table is a labelled focusable region with a caption and column headers
+PASS Package queue / Withdrawn readiness statement is a status region (1)
+PASS Package queue / Withdrawn empty tables say so in words (0)
+PASS Package queue / Withdrawn made no non-GET/HEAD/OPTIONS requests: []
+PASS Package queue / Withdrawn Tab visits the table regions in reading order: ['Packages with period, scope, version and capacity', 'Work-order references for the selected home', 'Work-order corrections, recorded completion and review for the selected home', 'Unmet prerequisites for PKG-001']
+PASS Package queue / Withdrawn Tab ends on the case workspace link
+PASS Package queue / Withdrawn every focus stop shows a visible indicator
+PASS Package queue / Withdrawn no focus stop is covered by other content
+PASS Package queue / Withdrawn Shift+Tab leaves the last stop (no keyboard trap)
+PASS Package queue / Withdrawn at 320px Tab visits the table regions in reading order: ['Packages with period, scope, version and capacity', 'Work-order references for the selected home', 'Work-order corrections, recorded completion and review for the selected home', 'Unmet prerequisites for PKG-001']
+PASS Package queue / Withdrawn at 320px Tab ends on the case workspace link
+PASS Package queue / Withdrawn at 320px every focus stop shows a visible indicator
+PASS Package queue / Withdrawn at 320px no focus stop is covered by other content
+PASS Package queue / Withdrawn at 320px Shift+Tab leaves the last stop (no keyboard trap)
+PASS axe file is the pinned 4.10.3 build
+PASS Package queue / Withdrawn axe 4.10.3 (main, 1280px) finds no violations: []
+INFO Package queue / Withdrawn 1280px axe passes 20, incomplete (needs manual review): []
+PASS Package queue / Withdrawn axe 4.10.3 (main, 320px) finds no violations: []
+INFO Package queue / Withdrawn 320px axe passes 21, incomplete (needs manual review): []
+PASS Package queue / Withdrawn reflow 320px
+PASS Package queue / Withdrawn reflow 1280px
+PASS Package queue / Empty shows: Package queue
+PASS Package queue / Empty shows: Work orders for this home
+PASS Package queue / Empty shows: Contractor submission and review
+PASS Package queue / Empty shows: Contractor submission and review
+PASS Package queue / Empty shows: A contractor acknowledgement is not acceptance
+PASS Package queue / Empty shows: Separate step by a named reviewer; not available from this screen
+PASS Package queue / Empty shows: Not shown for this role
+PASS Package queue / Empty shows: No records supplied. This does not establish readiness.
+PASS Package queue / Empty does not show: Draft readiness: PKG-001
+PASS Package queue / Empty read-only: no write controls
+PASS Package queue / Empty no contact links
+PASS Package queue / Empty no approval, booking or vulnerability wording
+PASS Package queue / Empty every cell and field value carries text, so no state rests on colour or position
+PASS Package queue / Empty every table sits in a labelled focusable region
+PASS Package queue / Empty every table is a labelled focusable region with a caption and column headers
+PASS Package queue / Empty readiness statement is a status region (0)
+PASS Package queue / Empty empty tables say so in words (3)
+PASS Package queue / Empty made no non-GET/HEAD/OPTIONS requests: []
+PASS Package queue / Empty Tab visits the table regions in reading order: []
+PASS Package queue / Empty Tab ends on the case workspace link
+PASS Package queue / Empty every focus stop shows a visible indicator
+PASS Package queue / Empty no focus stop is covered by other content
+PASS Package queue / Empty Shift+Tab leaves the last stop (no keyboard trap)
+PASS Package queue / Empty at 320px Tab visits the table regions in reading order: []
+PASS Package queue / Empty at 320px Tab ends on the case workspace link
+PASS Package queue / Empty at 320px every focus stop shows a visible indicator
+PASS Package queue / Empty at 320px no focus stop is covered by other content
+PASS Package queue / Empty at 320px Shift+Tab leaves the last stop (no keyboard trap)
+PASS axe file is the pinned 4.10.3 build
+PASS Package queue / Empty axe 4.10.3 (main, 1280px) finds no violations: []
+INFO Package queue / Empty 1280px axe passes 18, incomplete (needs manual review): []
+PASS Package queue / Empty axe 4.10.3 (main, 320px) finds no violations: []
+INFO Package queue / Empty 320px axe passes 18, incomplete (needs manual review): []
+PASS Package queue / Empty reflow 320px
+PASS Package queue / Empty reflow 1280px
+PASS Package queue has no JavaScript errors: []
+PASS Job pack and evidence checklist / Issued shows: Your job pack
+PASS Job pack and evidence checklist / Issued shows: Evidence checklist
+PASS Job pack and evidence checklist / Issued shows: Submission and review are separate
+PASS Job pack and evidence checklist / Issued shows: not a provider portal
+PASS Job pack and evidence checklist / Issued shows: Evidence checklist for this job pack
+PASS Job pack and evidence checklist / Issued shows: Your submission
+PASS Job pack and evidence checklist / Issued shows: Not recorded on this screen
+PASS Job pack and evidence checklist / Issued shows: Acknowledgement
+PASS Job pack and evidence checklist / Issued shows: Not recorded. An acknowledgement is not acceptance.
+PASS Job pack and evidence checklist / Issued shows: The reason for any notice is not shared with contractors.
+PASS Job pack and evidence checklist / Issued shows: Not shown for this role
+PASS Job pack and evidence checklist / Issued shows: Issued
+PASS Job pack and evidence checklist / Issued shows: Unknown. Not assessed on this screen.
+PASS Job pack and evidence checklist / Issued shows: Not marked Completed
+PASS Job pack and evidence checklist / Issued shows: Unknown. Review data is not available here. Done by someone other than you.
+PASS Job pack and evidence checklist / Issued does not show: Marked Completed on the work order
+PASS Job pack and evidence checklist / Issued row: Appointment outcome recorded | Unknown. Not assessed on this screen.
+PASS Job pack and evidence checklist / Issued read-only: no write controls
+PASS Job pack and evidence checklist / Issued no contact links
+PASS Job pack and evidence checklist / Issued no approval, booking or vulnerability wording
+PASS Job pack and evidence checklist / Issued every cell and field value carries text, so no state rests on colour or position
+PASS Job pack and evidence checklist / Issued every table sits in a labelled focusable region
+PASS Job pack and evidence checklist / Issued every table is a labelled focusable region with a caption and column headers
+PASS Job pack and evidence checklist / Issued empty tables say so in words (0)
+PASS Job pack and evidence checklist / Issued made no non-GET/HEAD/OPTIONS requests: []
+PASS Job pack and evidence checklist / Issued Tab visits the table regions in reading order: ['Your work orders for this home', 'Evidence checklist for this job pack']
+PASS Job pack and evidence checklist / Issued Tab ends on the case workspace link
+PASS Job pack and evidence checklist / Issued every focus stop shows a visible indicator
+PASS Job pack and evidence checklist / Issued no focus stop is covered by other content
+PASS Job pack and evidence checklist / Issued Shift+Tab leaves the last stop (no keyboard trap)
+PASS Job pack and evidence checklist / Issued at 320px Tab visits the table regions in reading order: ['Your work orders for this home', 'Evidence checklist for this job pack']
+PASS Job pack and evidence checklist / Issued at 320px Tab ends on the case workspace link
+PASS Job pack and evidence checklist / Issued at 320px every focus stop shows a visible indicator
+PASS Job pack and evidence checklist / Issued at 320px no focus stop is covered by other content
+PASS Job pack and evidence checklist / Issued at 320px Shift+Tab leaves the last stop (no keyboard trap)
+PASS axe file is the pinned 4.10.3 build
+PASS Job pack and evidence checklist / Issued axe 4.10.3 (main, 1280px) finds no violations: []
+INFO Job pack and evidence checklist / Issued 1280px axe passes 20, incomplete (needs manual review): []
+PASS Job pack and evidence checklist / Issued axe 4.10.3 (main, 320px) finds no violations: []
+INFO Job pack and evidence checklist / Issued 320px axe passes 21, incomplete (needs manual review): []
+PASS Job pack and evidence checklist / Issued reflow 320px
+PASS Job pack and evidence checklist / Issued reflow 1280px
+PASS Job pack and evidence checklist / Completed and corrected shows: Your job pack
+PASS Job pack and evidence checklist / Completed and corrected shows: Evidence checklist
+PASS Job pack and evidence checklist / Completed and corrected shows: Submission and review are separate
+PASS Job pack and evidence checklist / Completed and corrected shows: not a provider portal
+PASS Job pack and evidence checklist / Completed and corrected shows: Evidence checklist for this job pack
+PASS Job pack and evidence checklist / Completed and corrected shows: Your submission
+PASS Job pack and evidence checklist / Completed and corrected shows: Not recorded on this screen
+PASS Job pack and evidence checklist / Completed and corrected shows: Acknowledgement
+PASS Job pack and evidence checklist / Completed and corrected shows: Not recorded. An acknowledgement is not acceptance.
+PASS Job pack and evidence checklist / Completed and corrected shows: The reason for any notice is not shared with contractors.
+PASS Job pack and evidence checklist / Completed and corrected shows: Not shown for this role
+PASS Job pack and evidence checklist / Completed and corrected shows: Completed
+PASS Job pack and evidence checklist / Completed and corrected shows: Marked Completed on the work order by staff. This is a record, not acceptance.
+PASS Job pack and evidence checklist / Completed and corrected does not show: Not marked Completed
+PASS Job pack and evidence checklist / Completed and corrected row: Appointment outcome recorded | Recorded on a work order
+PASS Job pack and evidence checklist / Completed and corrected read-only: no write controls
+PASS Job pack and evidence checklist / Completed and corrected no contact links
+PASS Job pack and evidence checklist / Completed and corrected no approval, booking or vulnerability wording
+PASS Job pack and evidence checklist / Completed and corrected every cell and field value carries text, so no state rests on colour or position
+PASS Job pack and evidence checklist / Completed and corrected every table sits in a labelled focusable region
+PASS Job pack and evidence checklist / Completed and corrected every table is a labelled focusable region with a caption and column headers
+PASS Job pack and evidence checklist / Completed and corrected empty tables say so in words (0)
+PASS Job pack and evidence checklist / Completed and corrected made no non-GET/HEAD/OPTIONS requests: []
+PASS Job pack and evidence checklist / Completed and corrected Tab visits the table regions in reading order: ['Your work orders for this home', 'Evidence checklist for this job pack']
+PASS Job pack and evidence checklist / Completed and corrected Tab ends on the case workspace link
+PASS Job pack and evidence checklist / Completed and corrected every focus stop shows a visible indicator
+PASS Job pack and evidence checklist / Completed and corrected no focus stop is covered by other content
+PASS Job pack and evidence checklist / Completed and corrected Shift+Tab leaves the last stop (no keyboard trap)
+PASS Job pack and evidence checklist / Completed and corrected at 320px Tab visits the table regions in reading order: ['Your work orders for this home', 'Evidence checklist for this job pack']
+PASS Job pack and evidence checklist / Completed and corrected at 320px Tab ends on the case workspace link
+PASS Job pack and evidence checklist / Completed and corrected at 320px every focus stop shows a visible indicator
+PASS Job pack and evidence checklist / Completed and corrected at 320px no focus stop is covered by other content
+PASS Job pack and evidence checklist / Completed and corrected at 320px Shift+Tab leaves the last stop (no keyboard trap)
+PASS axe file is the pinned 4.10.3 build
+PASS Job pack and evidence checklist / Completed and corrected axe 4.10.3 (main, 1280px) finds no violations: []
+INFO Job pack and evidence checklist / Completed and corrected 1280px axe passes 20, incomplete (needs manual review): []
+PASS Job pack and evidence checklist / Completed and corrected axe 4.10.3 (main, 320px) finds no violations: []
+INFO Job pack and evidence checklist / Completed and corrected 320px axe passes 21, incomplete (needs manual review): []
+PASS Job pack and evidence checklist / Completed and corrected reflow 320px
+PASS Job pack and evidence checklist / Completed and corrected reflow 1280px
+PASS Job pack and evidence checklist / Withdrawn shows: Your job pack
+PASS Job pack and evidence checklist / Withdrawn shows: Evidence checklist
+PASS Job pack and evidence checklist / Withdrawn shows: Submission and review are separate
+PASS Job pack and evidence checklist / Withdrawn shows: not a provider portal
+PASS Job pack and evidence checklist / Withdrawn shows: Evidence checklist for this job pack
+PASS Job pack and evidence checklist / Withdrawn shows: Your submission
+PASS Job pack and evidence checklist / Withdrawn shows: Not recorded on this screen
+PASS Job pack and evidence checklist / Withdrawn shows: Acknowledgement
+PASS Job pack and evidence checklist / Withdrawn shows: Not recorded. An acknowledgement is not acceptance.
+PASS Job pack and evidence checklist / Withdrawn shows: The reason for any notice is not shared with contractors.
+PASS Job pack and evidence checklist / Withdrawn shows: Not shown for this role
+PASS Job pack and evidence checklist / Withdrawn shows: Withdrawn
+PASS Job pack and evidence checklist / Withdrawn shows: Not marked Completed
+PASS Job pack and evidence checklist / Withdrawn read-only: no write controls
+PASS Job pack and evidence checklist / Withdrawn no contact links
+PASS Job pack and evidence checklist / Withdrawn no approval, booking or vulnerability wording
+PASS Job pack and evidence checklist / Withdrawn every cell and field value carries text, so no state rests on colour or position
+PASS Job pack and evidence checklist / Withdrawn every table sits in a labelled focusable region
+PASS Job pack and evidence checklist / Withdrawn every table is a labelled focusable region with a caption and column headers
+PASS Job pack and evidence checklist / Withdrawn empty tables say so in words (0)
+PASS Job pack and evidence checklist / Withdrawn made no non-GET/HEAD/OPTIONS requests: []
+PASS Job pack and evidence checklist / Withdrawn Tab visits the table regions in reading order: ['Your work orders for this home', 'Evidence checklist for this job pack']
+PASS Job pack and evidence checklist / Withdrawn Tab ends on the case workspace link
+PASS Job pack and evidence checklist / Withdrawn every focus stop shows a visible indicator
+PASS Job pack and evidence checklist / Withdrawn no focus stop is covered by other content
+PASS Job pack and evidence checklist / Withdrawn Shift+Tab leaves the last stop (no keyboard trap)
+PASS Job pack and evidence checklist / Withdrawn at 320px Tab visits the table regions in reading order: ['Your work orders for this home', 'Evidence checklist for this job pack']
+PASS Job pack and evidence checklist / Withdrawn at 320px Tab ends on the case workspace link
+PASS Job pack and evidence checklist / Withdrawn at 320px every focus stop shows a visible indicator
+PASS Job pack and evidence checklist / Withdrawn at 320px no focus stop is covered by other content
+PASS Job pack and evidence checklist / Withdrawn at 320px Shift+Tab leaves the last stop (no keyboard trap)
+PASS axe file is the pinned 4.10.3 build
+PASS Job pack and evidence checklist / Withdrawn axe 4.10.3 (main, 1280px) finds no violations: []
+INFO Job pack and evidence checklist / Withdrawn 1280px axe passes 20, incomplete (needs manual review): []
+PASS Job pack and evidence checklist / Withdrawn axe 4.10.3 (main, 320px) finds no violations: []
+INFO Job pack and evidence checklist / Withdrawn 320px axe passes 21, incomplete (needs manual review): []
+PASS Job pack and evidence checklist / Withdrawn reflow 320px
+PASS Job pack and evidence checklist / Withdrawn reflow 1280px
+PASS Job pack and evidence checklist / Empty shows: Your job pack
+PASS Job pack and evidence checklist / Empty shows: Evidence checklist
+PASS Job pack and evidence checklist / Empty shows: Submission and review are separate
+PASS Job pack and evidence checklist / Empty shows: not a provider portal
+PASS Job pack and evidence checklist / Empty shows: Evidence checklist for this job pack
+PASS Job pack and evidence checklist / Empty shows: Your submission
+PASS Job pack and evidence checklist / Empty shows: Not recorded on this screen
+PASS Job pack and evidence checklist / Empty shows: Acknowledgement
+PASS Job pack and evidence checklist / Empty shows: Not recorded. An acknowledgement is not acceptance.
+PASS Job pack and evidence checklist / Empty shows: The reason for any notice is not shared with contractors.
+PASS Job pack and evidence checklist / Empty shows: Not shown for this role
+PASS Job pack and evidence checklist / Empty shows: No records supplied. This does not establish readiness.
+PASS Job pack and evidence checklist / Empty shows: Unknown. Not assessed on this screen.
+PASS Job pack and evidence checklist / Empty read-only: no write controls
+PASS Job pack and evidence checklist / Empty no contact links
+PASS Job pack and evidence checklist / Empty no approval, booking or vulnerability wording
+PASS Job pack and evidence checklist / Empty every cell and field value carries text, so no state rests on colour or position
+PASS Job pack and evidence checklist / Empty every table sits in a labelled focusable region
+PASS Job pack and evidence checklist / Empty every table is a labelled focusable region with a caption and column headers
+PASS Job pack and evidence checklist / Empty empty tables say so in words (1)
+PASS Job pack and evidence checklist / Empty made no non-GET/HEAD/OPTIONS requests: []
+PASS Job pack and evidence checklist / Empty Tab visits the table regions in reading order: ['Evidence checklist for this job pack']
+PASS Job pack and evidence checklist / Empty Tab ends on the case workspace link
+PASS Job pack and evidence checklist / Empty every focus stop shows a visible indicator
+PASS Job pack and evidence checklist / Empty no focus stop is covered by other content
+PASS Job pack and evidence checklist / Empty Shift+Tab leaves the last stop (no keyboard trap)
+PASS Job pack and evidence checklist / Empty at 320px Tab visits the table regions in reading order: ['Evidence checklist for this job pack']
+PASS Job pack and evidence checklist / Empty at 320px Tab ends on the case workspace link
+PASS Job pack and evidence checklist / Empty at 320px every focus stop shows a visible indicator
+PASS Job pack and evidence checklist / Empty at 320px no focus stop is covered by other content
+PASS Job pack and evidence checklist / Empty at 320px Shift+Tab leaves the last stop (no keyboard trap)
+PASS axe file is the pinned 4.10.3 build
+PASS Job pack and evidence checklist / Empty axe 4.10.3 (main, 1280px) finds no violations: []
+INFO Job pack and evidence checklist / Empty 1280px axe passes 20, incomplete (needs manual review): []
+PASS Job pack and evidence checklist / Empty axe 4.10.3 (main, 320px) finds no violations: []
+INFO Job pack and evidence checklist / Empty 320px axe passes 20, incomplete (needs manual review): []
+PASS Job pack and evidence checklist / Empty reflow 320px
+PASS Job pack and evidence checklist / Empty reflow 1280px
+PASS Job pack and evidence checklist has no JavaScript errors: []
+COMPLETE: all checks ran, including axe 4.10.3 (main, 1280 and 320 px, every state)

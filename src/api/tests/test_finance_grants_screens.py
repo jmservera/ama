@@ -19,6 +19,7 @@ const context = vm.createContext({
   api: async (path) => {
     if (path === "/api/finance") return data.queue;
     if (path.startsWith("/api/ai/report")) throw new Error("403");
+    if (path.endsWith("/proposal-freshness")) return data.freshness ?? {};
     if (path.endsWith("/form-review")) {
       if (data.review === null) throw new Error("403");
       return data.review;
@@ -162,9 +163,12 @@ CONTROLS = ("button", "form", "input", "select", "textarea")
 
 
 def run(
-    case: dict[str, object] = CASE, review: object = REVIEW, queue: object = QUEUE
+    case: dict[str, object] = CASE,
+    review: object = REVIEW,
+    queue: object = QUEUE,
+    freshness: object = None,
 ) -> dict[str, dict[str, object]]:
-    payload = json.dumps({"case": case, "review": review, "queue": queue})
+    payload = json.dumps({"case": case, "review": review, "queue": queue, "freshness": freshness})
     result = subprocess.run(
         ["node", "-e", SCRIPT, str(WEB), payload], capture_output=True, text=True, timeout=30
     )
@@ -348,6 +352,38 @@ class FinanceGrantsScreens(unittest.TestCase):
         ):
             self.assertIn(expected, text)
         self.assertNotIn("Submitted", text)
+
+    def test_funding_draft_names_only_dependent_proposals_and_approvals(self) -> None:
+        review = json.loads(json.dumps(REVIEW))
+        review["drafts"][0]["dependency_impact"] = {
+            "approvals": [
+                {"decision_id": "A-1", "state": "Review required", "fields": ["f2"]},
+                {"decision_id": "A-2", "state": "Current", "fields": []},
+                {"decision_id": None, "state": "Review required", "fields": []},
+            ]
+        }
+        fresh = {
+            "proposals": [
+                {"field_id": "f2", "state": "Stale"},
+                {"field_id": "f1", "state": "Current"},
+                {"field_id": None, "state": "Unknown"},
+            ]
+        }
+        text = node_text(run(review=review, freshness=fresh)["finance-funding"]["tree"])
+        self.assertIn("f2 (Stale), a proposal with no field named (Unknown)", text)
+        self.assertNotIn("f1 (Current)", text)
+        self.assertIn("A-1 (fields f2); an approval with no name (no field named)", text)
+        self.assertNotIn("A-2", text)
+        unread = node_text(run(review=review)["finance-funding"]["tree"])
+        self.assertIn("Unknown. The proposal check could not be read.", unread)
+        self.assertIn(
+            "Unknown. The approval check could not be read.",
+            node_text(run()["finance-funding"]["tree"]),
+        )
+        for control in CONTROLS:
+            self.assertNotIn(
+                control, tags(run(review=review, freshness=fresh)["finance-funding"]["tree"])
+            )
 
     def test_unchecked_queue_row_and_unreadable_review_stay_unknown(self) -> None:
         unchecked = [{**QUEUE[0], "status": "Received", "exceptions": 0}]

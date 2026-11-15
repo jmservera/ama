@@ -5,14 +5,28 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
+import tempfile
 from datetime import timedelta
 from pathlib import Path
 from threading import Event
 from typing import TYPE_CHECKING, Any
 from unittest.mock import patch
 
-from regulatory_fixture import NOW
-from test_regulatory_chat_api import RegulatoryApi
+_ROOT = Path(__file__).resolve().parents[3]
+for _p in (
+    "src/core/tests",
+    "src/core/src",
+    "src/agents/src",
+    "src/api/src",
+    "src/api/tests",
+):
+    _full = str(_ROOT / _p)
+    if _full not in sys.path:
+        sys.path.insert(0, _full)
+
+from regulatory_fixture import NOW  # noqa: E402
+from test_regulatory_chat_api import RegulatoryApi  # noqa: E402
 
 if TYPE_CHECKING:
     from playwright.sync_api import Page
@@ -249,6 +263,20 @@ def check_refresh_focus(page: Page, fixture: RegulatoryApi) -> None:
     expect(refresh).to_be_focused()
 
 
+def assert_state_cue(target: Any, border_style: str) -> None:
+    """A status cue must survive without colour: a ::before glyph and a non-colour border."""
+    style = target.evaluate(
+        """el => {
+          const before = getComputedStyle(el, '::before');
+          return { content: before.content, border: getComputedStyle(el).borderLeftStyle,
+                   text: el.textContent.trim() };
+        }"""
+    )
+    assert style["text"], "Status cue needs visible text"
+    assert style["content"] not in ("none", "normal", '""'), f"No glyph cue: {style}"
+    assert style["border"] == border_style, f"Unexpected border shape: {style}"
+
+
 def keyboard_walk(page: Page, selector: str) -> None:
     from playwright.sync_api import expect
 
@@ -349,6 +377,8 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             ):
                 expect(alerts).to_contain_text(field)
             expect(alerts).to_contain_text("Coverage: unknown")
+            assert_state_cue(alerts.locator("h3.state-breach-risk"), "double")
+            assert_state_cue(alerts.locator("p[role=status].state-unknown"), "dashed")
             expect(alerts).to_contain_text(
                 "This panel cannot acknowledge, decide compliance or restart stopped retrofit work."
             )
@@ -445,6 +475,8 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             expect(chat.locator(":scope > p[role=status]")).to_contain_text("exercise inbox")
             expect(doubt).to_be_focused()
             expect(doubt).to_have_attribute("aria-disabled", "true")
+            assert_state_cue(chat.locator(".regulatory-turn button.state-sent").first, "solid")
+            assert_state_cue(chat.locator(".regulatory-turn h3.state-answer").first, "solid")
             page.get_by_role("tab", name="Blockers and safety", exact=False).press("Enter")
             keyboard_walk(page, "#regulatory-alerts")
             page.get_by_role("tab", name="AI assistance", exact=False).press("Enter")
@@ -460,6 +492,15 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             expect(chat.locator(".regulatory-turn")).to_have_count(2)
             expect(chat.locator(".regulatory-turn").last).to_contain_text("No source held")
             scan(page, axe, reports, "no-source-refused", strict_contrast=True)
+            assert_state_cue(chat.locator("li.state-no-source").last, "dotted")
+            assert_state_cue(chat.locator("h3.state-refused").last, "dashed")
+            expect(chat.locator("li.plain-explanation").last).to_be_visible()
+            question.focus()
+            page.keyboard.press("Escape")
+            expect(chat).not_to_have_attribute("open", "")
+            expect(page.locator("#regulatory-chat > summary")).to_be_focused()
+            keyboard_activate(page, "#regulatory-chat > summary", "Space")
+            expect(chat).to_have_attribute("open", "")
             for width in (320, 390, 1280):
                 page.set_viewport_size({"width": width, "height": 900})
                 for selector in ("#regulatory-alerts", "#regulatory-chat"):
@@ -626,10 +667,17 @@ def main() -> None:
     parser.add_argument(
         "--axe", type=Path, help="Pinned local axe 4.10.3 script; omit for non-axe checks"
     )
-    parser.add_argument("--out", type=Path, required=True, help="Local JSON evidence output")
+    parser.add_argument(
+        "--out",
+        type=Path,
+        help="Local JSON evidence output; defaults to a temporary directory",
+    )
     args = parser.parse_args()
     result = run(args.axe)
+    if args.out is None:
+        args.out = Path(tempfile.mkdtemp(prefix="reg-ux-check-")) / "regulatory-ux.json"
     args.out.write_text(json.dumps(result, indent=2) + "\n")
+    print(f"Evidence: {args.out}")
     print(
         f"PASS: {len(result['scans'])} browser states, target sizes, keyboard, reflow, "
         f"roles and real local API; axe {result['axe_status']}"

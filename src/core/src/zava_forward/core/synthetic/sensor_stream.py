@@ -15,6 +15,7 @@ from typing import Protocol
 from . import (
     household_conditions,
     indoor_projection,
+    privacy,
     provenance,
     retrofit_effects,
     sensor_backfill,
@@ -52,6 +53,11 @@ def wire(row: Mapping[str, str]) -> bytes:
     body = json.dumps(dict(row), sort_keys=True, ensure_ascii=True).encode("utf-8")
     if len(body) > 4096:
         raise StreamError("STREAM_MESSAGE_TOO_LARGE")
+    issues = privacy.emission_issues(dict(row))
+    if "missing_synthetic_label" in issues:
+        raise StreamError("STREAM_ROW_NOT_SYNTHETIC")
+    if issues:
+        raise StreamError("STREAM_ROW_PERSONAL_DATA")
     return body
 
 

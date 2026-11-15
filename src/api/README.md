@@ -239,6 +239,10 @@ panel scrolling are checked at all three widths. Axe scans the overview, open
 blocker and scrolled Resident panel at each width, rejects every violation,
 and retains full findings and incomplete checks in `results.json`, including
 on a failed run. Incomplete axe checks still need human assessment.
+It also scans a case with open, accepted and legacy safety observations, with the
+evidence and optional-date disclosures expanded, at 1280px,
+390px, 320px and 200% browser zoom (640px at scale 2), rejecting any axe
+violation or horizontal overflow (issue 1530).
 `--baseline` captures geometry without requiring axe and is not acceptance
 verification. The UI was already delivered by PR #554; a later verification
 run is not a new before/after redesign.
@@ -1486,16 +1490,24 @@ the checkout sources.
 `python -m checks.procurement_screens_browser_check` (#228) builds a synthetic
 package, capacity record and issued work order through the real store, signs in
 as a Retrofit Programme Manager and as a Contractor, and opens the read-only
-Package queue and Job pack screens. It checks the package queue columns, draft
-readiness wording, separate submission, acknowledgement and review states, no
-write controls or contact links, no vulnerability reason, keyboard reach of
-every table region, 320 px reflow and no non-GET/HEAD/OPTIONS requests after
-sign-in. Set `ZF_AXE_JS` to the pinned axe 4.10.3 file to add the axe scan of
-the `main` region at 1280 px for each role and view; without it the run ends
-PARTIAL (or fails when `ZF_AXE_REQUIRED=1`). Zero violations in a run covers
-only those scans and is not a complete accessibility result. This is an engineering check, not
-assistive-technology or WCAG acceptance (#155, #151). Submission, correction
-and checklist capture are not built (OD-47).
+Package queue and Job pack screens with the keyboard only (Tab and Enter). It
+covers four states per role: Issued (the real store response), and Completed and
+corrected, Withdrawn and Empty (the same real responses rewritten by a test
+route, reads only). Per state it checks the package queue columns, draft
+readiness wording, separate submission, acknowledgement and review states, text
+in every cell and field so no state rests on colour, labelled and captioned
+table regions, the readiness status region, no write controls or contact links,
+no vulnerability reason, Tab order through every table region to the case
+workspace link at 1280 px and 320 px, a visible and uncovered focus indicator,
+one Shift+Tab step off the last stop, 320 px and 1280 px reflow and no non-GET/HEAD/OPTIONS requests after sign-in.
+Set `ZF_AXE_JS` to the pinned axe 4.10.3 file to add the axe scan of the `main`
+region at 1280 px and 320 px for every state; without it the run ends PARTIAL
+(or fails when `ZF_AXE_REQUIRED=1`). Panels use `content-visibility: auto`, so
+the check reads text from the DOM and renders every panel before the axe scan.
+Zero violations covers only those scans and is not a complete accessibility
+result. This is an engineering check, not assistive-technology or human
+usability acceptance (#155, #151). Submission, correction and checklist
+capture are not built (OD-47).
 
 `PYTHONDONTWRITEBYTECODE=1 python -m checks.atlas_tensions_browser_check`
 (#233) builds the shared synthetic home plus three packages through the real
@@ -3809,7 +3821,7 @@ It follows the simplicity requirements SA-001 to SA-010 in the
 [PRD](../../docs/prds/zava-forward-retrofit-programme-demonstrator.md) and the
 [prototype learnings review](../../docs/reference/research/ux/prototype-learnings-and-simplicity-review.md).
 
-This file is the former `mvp/README.md` (ADR 0006, issue #199, M6), split by owning project. It keeps
+This file is the former `mvp/README.md` (archive `v0.21.0`; ADR 0006, issue #199, M6), split by owning project. It keeps
 the staff-facing behaviour, configuration, sign-in, local run, honest limits and container checks of
 the `api` project. Domain modules are documented in [core](../core/README.md) (law store, rule cards,
 SQL stores, governance, ledger, chat storage, continuity and synthetic tools), the ledger digest job in
@@ -5123,6 +5135,8 @@ cd src/api && PYTHONPATH=../core/tests:../agents/tests python3 -m unittest disco
 The tests also cover the SQL store (including `test_sqlreads.py`), documents, ledger, role matrix, workflows, auth and time capture. They use small fixtures and a generated 60,000-case dataset, and need no
 private data. The AI tests use a scripted model or the template path (no network).
 
+`tests/test_scale_fixture_load_and_restart.py` starts the API as a separate OS process on a SQLite store, runs a concurrent closed-loop load, kills it with SIGKILL, restarts it on the same file and checks `/api/audit-check` (entries kept, chain intact, chain continues). With `--homes 60000 --out report.json` it is the local benchmark recorded in [`docs/architecture/scale-restart-2026-11-13.json`](../../docs/architecture/scale-restart-2026-11-13.json) (issue 144). One local process; not production, Azure or autoscaling evidence.
+
 Browser check (needs python3 playwright and chromium, and the built dataset):
 `python3 src/api/checks/browser_check.py` (the dataset at `ZF_DATA`).
 
@@ -5378,6 +5392,21 @@ chat-unavailable run. It judges nothing: complete records are not WCAG acceptanc
 | WCAG 2.2 AA, no colour-only status, keyboard, plain language | Partial; full criterion unmet | Automated axe (zero violations and zero incompletes in 21 states as of 2026-11-01) and keyboard checks cover changed surfaces, textual statuses, focus, toggles and reflow. Comprehensive manual/assistive-technology conformance remains unassessed. |
 | Doubt and no-source states explicitly designed | Met in bounded synthetic slice | Persisted exercise inbox receipt, visible unsupported/missing-source state, disabled/outage text and manual owner route. No real owner notification or approval claimed. |
 | Comprehension tested with repairs, housing and grants staff | Unmet / Not run | Protocol only. Actual staff testing is unavailable and remains required before use. |
+
+Update 2026-11-13 (#215, criterion 3 software and markup slice): every alert
+state (`breach risk`, `attention`, `unknown`, `clear`, `not applicable`), chat
+outcome (`answer`, `refused`, `conflict`), the no-source held item, the sent
+doubt route and the unknown-coverage notice now carry a text label plus a
+decorative glyph and a distinct left-border shape (double, dashed, dotted or
+solid), so no state relies on colour. Plain-language mode adds explanations for
+each chat outcome, the no-source state, the doubt route and unknown alert
+coverage. Escape closes the cited lookup disclosure and returns focus to its
+summary. Evidence: `tests/test_regulatory_a11y_cues.py` (static) and new
+assertions in the local browser check (computed glyph and border shape, Escape
+focus restoration; 21 states, axe 4.10.3 executed). This is engineering
+evidence only: screen reader behaviour, assistive technology and manual
+acceptance are not tested, WCAG conformance is not claimed, and criterion 5
+(staff comprehension) is unmet and not run.
 
 No issue checkboxes are changed by this implementation. Real delegates,
 verified applicable sources, operational acceptance and the ADR 0005 measured
@@ -5861,7 +5890,7 @@ and escalation are still pure rules in the core with no route or persistence.
 
 Existing authenticated staff only; contractor identities get 403. `GET /api/workorders/{id}/field-intake`
 returns the job pack, receipts, independent-review state, visit recovery rows and the escalation destination.
-`POST /api/workorders/{id}/field-capture`, `/field-correct` and `/field-acknowledge` are handled by
+`POST /api/workorders/{id}/field-capture`, `/field-correct`, `/field-acknowledge` and `/field-escalate` (advice only, never a contract instruction) are handled by
 `zava_forward.core.staff_intake` (409 for a stale pack, duplicate acknowledgement or late correction).
 The screen `staff-job-pack-intake` (`web/staff-intake.js`) is registered through `registerRoleScreen`.
 Browser capture (opt-in, `ZF_STAFF_INTAKE_BROWSER=1` and the pinned `ZF_AXE_PATH`) ran axe on four states;

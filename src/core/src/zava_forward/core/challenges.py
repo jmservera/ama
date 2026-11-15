@@ -11,6 +11,8 @@ from dataclasses import dataclass, field
 from datetime import date
 from typing import Any
 
+from . import controls
+
 Record = dict[str, Any]
 Node = tuple[str, str, str]
 
@@ -219,6 +221,8 @@ class ChallengeRegister:
         if _text(owner, "Handing-off owner") != rec["owner"]:
             raise PermissionError("Only the named human owner can confirm a hazard handoff.")
         proof = _text(evidence, "Hazard handoff evidence")
+        if controls.is_memory_reference(proof):
+            raise ValueError(controls.MEMORY_REFUSAL)
         referral["status"] = "handed_off"
         referral["handoff_evidence"] = proof
         rec["history"].append({"status": rec["status"], "note": "Hazard handoff evidenced."})

@@ -193,12 +193,15 @@ const fn = new Function(body + "; return unavailableNote;")();
 const manual = "Continue manually.";
 const err = (m, extra) => Object.assign(new Error(m), extra);
 assert.equal(fn("Cited lookup", err("Demo not configured.", {status: 403}), manual),
-  "Cited lookup is not available right now: Demo not configured. Continue manually.");
+  "Cited lookup is not available right now: Demo not configured. " +
+  "Owner: application support. Next action: Continue manually.");
 assert.equal(fn("Cited lookup", err("Law store off.", {status: 503}), manual),
-  "Cited lookup is not available right now: Law store off. Continue manually.");
+  "Cited lookup is not available right now: Law store off. " +
+  "Owner: application support. Next action: Continue manually.");
 const roleError = err("Not available for your role.", {status: 403, roleDenied: true});
 assert.equal(fn("Cited lookup", roleError, manual),
-  "Cited lookup is not available for your role. Continue manually.");
+  "Cited lookup is not available for your role. Owner: your team manager. " +
+  "Next action: ask them for access. Continue manually.");
 """
         )
 

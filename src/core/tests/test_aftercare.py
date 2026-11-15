@@ -122,6 +122,60 @@ class ClosureTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             reg.record_closure("H1", "package", "2026-11-30", "x")
 
+    def test_closure_leaves_owner_outcome_remedy_and_history_whole_through_a_restart(self) -> None:
+        reg = AftercareRegister()
+        first = raised(reg)
+        other = raised(reg, home="H2")
+        reg.record_outcome(first, OWNER, "remedy_needed", "home_visit", "Visit found draughts")
+        reg.set_remedy(first, OWNER, "in_progress")
+        before = {cid: deepcopy(reg.concerns[cid]) for cid in (first, other)}
+        for kind in af.CLOSURE_KINDS:
+            reg.record_closure("H1", kind, "2026-12-10", "Closure Owner")
+        restored = AftercareRegister.from_state(json.loads(json.dumps(reg.to_state())))
+        for register in (reg, restored):
+            self.assertEqual(register.concerns[first], before[first])
+            self.assertEqual(register.concerns[other], before[other])
+            self.assertEqual(register.concerns[first]["owner"], OWNER)
+            self.assertEqual(register.concerns[first]["remedy"]["status"], "in_progress")
+            self.assertEqual({r["id"] for r in register.unresolved()}, {first, other})
+
+    def test_closure_before_a_concern_does_not_pre_close_it(self) -> None:
+        reg = AftercareRegister()
+        reg.record_closure("H1", "handover", "2026-11-01", "Closure Owner")
+        reg.record_closure("H1", "financial", "2026-11-02", "Finance Owner")
+        cid = raised(reg)
+        rec = reg.concerns[cid]
+        self.assertEqual(rec["investigation"], "received")
+        self.assertEqual(rec["remedy"]["status"], "not_assessed")
+        self.assertEqual([r["id"] for r in reg.unresolved("H1")], [cid])
+
+    def test_owner_can_still_record_outcome_and_remedy_after_closure(self) -> None:
+        reg = AftercareRegister()
+        cid = raised(reg)
+        reg.record_closure("H1", "financial", "2026-11-02", "Finance Owner")
+        reg.record_outcome(cid, OWNER, "remedy_needed", "household_conversation", "Spoke to them")
+        self.assertEqual(reg.concerns[cid]["remedy"]["status"], "open")
+        reg.set_remedy(cid, OWNER, "completed", "Fitted and checked on 2026-11-20")
+        self.assertEqual(reg.unresolved("H1"), [])
+        self.assertEqual(reg.concerns[cid]["outcome"]["outcome"], "remedy_needed")
+
+    def test_restore_refuses_a_closed_remedy_without_an_outcome_or_evidence(self) -> None:
+        reg = AftercareRegister()
+        cid = raised(reg)
+        reg.record_outcome(cid, OWNER, "remedy_needed", "home_visit", "Visit")
+        reg.set_remedy(cid, OWNER, "completed", "Checked")
+        state = reg.to_state()
+        edits: list[dict[str, object]] = [
+            {"remedy": {"status": "completed", "evidence": None}},
+            {"remedy": {"status": "completed", "evidence": " "}},
+            {"investigation": "received", "outcome": None},
+        ]
+        for edit in edits:
+            bad = deepcopy(state)
+            bad["concerns"][cid].update(edit)
+            with self.subTest(edit=edit), self.assertRaises(ValueError):
+                AftercareRegister.from_state(bad)
+
     def test_remedy_completion_needs_outcome_and_evidence(self) -> None:
         reg = AftercareRegister()
         cid = raised(reg)
@@ -191,6 +245,35 @@ class EvaluatorTests(unittest.TestCase):
             with self.subTest(bad=bad), self.assertRaises(ValueError):
                 af.neutral_text(bad)
 
+    def test_further_savings_causation_and_household_blame_phrasings_are_rejected(self) -> None:
+        for text in (
+            "This reduces your bills.",
+            "Lower bills are expected.",
+            "This saves money.",
+            "You could save money.",
+            "Bills should fall.",
+            "Saving money is likely.",
+            "Higher use is due to the household.",
+            "The tenant's fault.",
+            "Overuse by the tenant.",
+            "The household wastes energy.",
+            "The result of the retrofit is lower use.",
+            "The retrofit led to higher use.",
+            "The insulation caused the change.",
+            "The retrofit made the home colder.",
+            "Your bills will be cheaper after the upgrade.",
+            "No claim of savings, but you could save money.",
+        ):
+            with self.subTest(text=text), self.assertRaises(ValueError):
+                af.neutral_text(text)
+        for text in (
+            "Cannot determine whether the retrofit caused it.",
+            "The household reports a cold room.",
+            "These figures are not a promise of savings.",
+            "No claim of lower energy bills is made.",
+        ):
+            self.assertEqual(af.neutral_text(text), text)
+
     def test_neutral_factual_and_uncertain_statements_are_accepted(self) -> None:
         for good in (
             "Higher bills reported",
@@ -233,7 +316,7 @@ class ConcernPackTests(unittest.TestCase):
         cid = raised(reg)
         before = reg.view(cid)
         pid = str(reg.propose_pack(cid)["id"])
-        before = reg.view(cid) | {"history": before["history"]}
+        self.assertEqual(reg.view(cid), before)
         with self.assertRaises(PermissionError):
             reg.review_pack(pid, "Someone Else", "accept", "Looks fine")
         with self.assertRaises(ValueError):
@@ -246,10 +329,19 @@ class ConcernPackTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             reg.review_pack(pid, OWNER, "accept", "Changed mind")
         after = reg.view(cid)
+        self.assertEqual(after, before)
         self.assertEqual(after["investigation"], "received")
         self.assertIsNone(after["outcome"])
-        self.assertEqual(after["remedy"], before["remedy"])
         self.assertIn(cid, [r["id"] for r in reg.unresolved()])
+
+    def test_proposing_a_pack_changes_nothing_on_the_record(self) -> None:
+        reg = AftercareRegister()
+        cid = raised(reg)
+        before = deepcopy(reg.concerns)
+        reg.propose_pack(cid, "Household reports a cold living room in the evening.")
+        reg.propose_pack(cid)
+        self.assertEqual(reg.concerns, before)
+        self.assertEqual(len(reg.packs), 2)
 
     def test_pack_is_a_registered_unapproved_task(self) -> None:
         from zava_forward.core import ai_registry

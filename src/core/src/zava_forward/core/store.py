@@ -40,9 +40,10 @@ BOOKED_STAGE = "Install booked"
 
 
 class GateError(Exception):
-    def __init__(self, reasons):
+    def __init__(self, reasons, rules=()):
         super().__init__("; ".join(reasons))
         self.reasons = reasons
+        self.rules = [r.as_record() if isinstance(r, gates.GateRule) else r for r in rules]
 
 
 class ConflictError(Exception):
@@ -174,6 +175,20 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         if open_h:
             why.append(f"Home retrofit work is stopped for safety review. Owner: {open_h[0]['owner']} (referral follow-up). Next action: obtain external service evidence and an independent decision to restart retrofit work.")
         return why + resident_gate(c) + technical_gate(c)
+
+    @staticmethod
+    def _transition_rules(c):
+        """Rules behind the pre-booking reasons, so a refusal names what it enforced."""
+        rules = []
+        if c.get("funding_ok") is not True:
+            rules.append(gates.BOOKING_RULES["funding"])
+        if any(not h["released"] for h in c["hazards"]):
+            rules.append(gates.BOOKING_RULES["safety"])
+        if resident_gate(c):
+            rules.append(gates.BOOKING_RULES["resident"])
+        if technical_gate(c):
+            rules.append(gates.TECHNICAL_RULE)
+        return rules
 
     @staticmethod
     def status_line(c):
@@ -481,6 +496,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             d.pop("form_staging", None)
             d.pop("form_reviews", None)
             d.pop("finance_decision_holds", None)
+            if user is not None:
+                d.pop("safeguarding_items", None)  # Only the allowlisted work.safeguarding_clocks leaves the store.
             d["support_status"] = stock.support_status(c["resident"])
             d["support_coverage"] = stock.support_coverage(c["resident"])
             d["resident"].setdefault("priority_support", None)
@@ -598,22 +615,22 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     def require_stock_clear(self, c):
         reasons = stock.blockers(c)
         if reasons:
-            raise GateError(reasons)
+            raise GateError(reasons, [gates.STOCK_RULE])
 
     def require_building_clear(self, c, package_id=None):
         reasons = buildings.blockers(self.data, self.cases, c, package_id)
         if reasons:
-            raise GateError(reasons)
+            raise GateError(reasons, [gates.BUILDING_RULE])
 
     def require_safety_clear(self, c):
         active = next((h for h in c["hazards"] if not h["released"]), None)
         if active:
-            raise GateError([f"Home retrofit work is stopped for safety review. Owner: {active['owner']} (referral follow-up). Next action: obtain external evidence and an independent decision to restart retrofit work."])
+            raise GateError([f"Home retrofit work is stopped for safety review. Owner: {active['owner']} (referral follow-up). Next action: obtain external evidence and an independent decision to restart retrofit work."], [gates.BOOKING_RULES["safety"]])
 
     def require_resident_clear(self, c, bindings=None):
         reasons = resident_gate(c, bindings)
         if reasons:
-            raise GateError(reasons)
+            raise GateError(reasons, [gates.BOOKING_RULES["resident"]])
 
     @staticmethod
     def _evidence_missing(c: dict[str, Any]) -> list[str] | None:
@@ -627,13 +644,14 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         results = gates.booking_gates(c, resident_gate(c))
         results.append(gates.evidence_gate(self._evidence_missing(c), "Grants and Evidence Officer"))
         if not gates.transition_allowed(results):
-            raise GateError([f"{r.reason} Owner: {r.owner}. Next action: {r.correction}" for r in gates.unmet(results)])
+            unmet = gates.unmet(results)
+            raise GateError([f"{r.reason} Owner: {r.owner}. Next action: {r.correction}" for r in unmet], [r.rule for r in unmet if r.rule])
 
     def require_quality_evidence(self, rec):
         """Fail closed: acceptance and handover need an explicit pass on the stored checklist evidence."""
         result = quality_evidence_gate(rec)
         if not result.passed:
-            raise GateError([f"{result.reason} Owner: {result.owner}. Next action: {result.correction}"])
+            raise GateError([f"{result.reason} Owner: {result.owner}. Next action: {result.correction}"], [result.rule] if result.rule else [])
 
     def log_call(self, user, case_id, outcome, note, channel="Phone"):
         outcome = (outcome or "").strip()[:80]
@@ -670,9 +688,13 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if c["stage"] != READY_STAGE:
                 raise ValueError(f"This case is not at the final checks. It may have changed since you opened it. Case owner: {c['owner']}. Next action: copy any unsaved notes, then reload the case and check its current stage before taking further action.")
             why = self.gate_reasons(c)
-            why += buildings.blockers(self.data, self.cases, c)
+            rules = self._transition_rules(c) if why else []
+            building = buildings.blockers(self.data, self.cases, c)
+            if building:
+                why += building
+                rules.append(gates.BUILDING_RULE)
             if why:
-                raise GateError(why)
+                raise GateError(why, rules)
             self.require_safety_clear(c)
             self.require_resident_clear(c)
             self.require_booking_gates(c)

@@ -1,4 +1,9 @@
-"""Content-free consumption and financial evidence in the existing assistant ledger."""
+"""Content-free consumption and financial evidence in the existing assistant ledger.
+
+`AI_LIMIT_BREACH` and `AI_USAGE` console lines are a non-authoritative operational signal for
+monitoring: they carry only closed identifiers and counts, and may include work a caller's outer
+transaction later rolls back. The ledger remains the financial source.
+"""
 
 from __future__ import annotations
 
@@ -11,10 +16,11 @@ from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 from decimal import Decimal, localcontext
 from typing import Any, Protocol
 
+LOG = logging.getLogger(__name__)
 SCHEMA = "ai-consumption-v1"
 PARTITION = "ai-consumption"
 MAX_EVENTS = 10000
@@ -44,6 +50,8 @@ EVENT_FIELDS = {
     "review-unresolved": "root output action at reason revision",
     "billing": "id allocation budget start end currency billed tolerance complete synthetic",
 }
+
+OPTIONAL = {"authority": {"alert", "alert_owner"}}
 
 
 def reference(value: str) -> str:
@@ -364,7 +372,8 @@ class Consumption:
         if any(
             r.get("schema") != SCHEMA
             or r.get("kind") not in EVENT_FIELDS
-            or set(r) != {"schema", "kind", *EVENT_FIELDS.get(r.get("kind"), "").split()}
+            or set(r) - OPTIONAL.get(r.get("kind"), set())
+            != {"schema", "kind", *EVENT_FIELDS.get(r.get("kind"), "").split()}
             for r in records
         ):
             raise DispatchHeld("meter-evidence-invalid")
@@ -373,6 +382,7 @@ class Consumption:
     def _event(self, db: Any, kind: str, **fields: Any) -> None:
         if kind == "alert":
             fields["at"] = self.port.now(db)
+            LOG.warning("AI_LIMIT_BREACH reason=%s route=%s", fields["reason"], fields["route"])
         self.port.event(db, PARTITION, schema=SCHEMA, kind=kind, **fields)
 
     @staticmethod
@@ -464,8 +474,14 @@ class Consumption:
         budgets: list[Mapping[str, Any]],
         max_calls: int,
         max_depth: int,
+        alert: str | None = None,
+        alert_owner: str | None = None,
     ) -> str:
-        """Record operator-supplied authority, not an approval by this software."""
+        """Record operator-supplied authority, not an approval by this software.
+
+        An authority whose price is not recorded as synthetic lies beyond the exercise: it needs
+        a named approving owner, finite positive call, token and money limits and an owned alert.
+        """
         if not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", capability):
             raise ValueError("A capability identifier is required.")
         begin, finish = timestamp(start), timestamp(end)
@@ -503,6 +519,10 @@ class Consumption:
         )
         with self.port.transaction() as db:
             records = self._read(db)
+            known = next((r for r in records if r["kind"] == "price" and r["id"] == price), None)
+            if known is not None and not known["synthetic"]:
+                self._require_bounds(owner, selected, alert, alert_owner)
+                body.update(alert=reference(alert or ""), alert_owner=reference(alert_owner or ""))
             previous = next((r for r in records if r.get("id") == aid), None)
             if previous:
                 if previous != dict(schema=SCHEMA, kind="authority", **body):
@@ -529,6 +549,19 @@ class Consumption:
                 raise ValueError("Overlapping authority for one configuration is ambiguous.")
             self._event(db, "authority", **body)
         return aid
+
+    @staticmethod
+    def _require_bounds(
+        owner: str, budgets: list[dict[str, Any]], alert: str | None, alert_owner: str | None
+    ) -> None:
+        if not all(isinstance(v, str) and v.strip() for v in (owner, alert, alert_owner)):
+            raise ValueError(
+                "Beyond the exercise an approving owner and an owned alert are required."
+            )
+        if any(not b["calls"] or not b["tokens"] or not amount(b["amount"]) for b in budgets):
+            raise ValueError(
+                "Beyond the exercise finite positive call, token and money limits are required."
+            )
 
     @staticmethod
     def _charge(price: Mapping[str, Any], used: Mapping[str, Any]) -> Decimal | None:
@@ -597,7 +630,7 @@ class Consumption:
                 (r for r in reversed(authorities) if r["start"] <= now < r["end"]), None
             )
             owner = (
-                authority["owner"]
+                authority.get("alert_owner", authority["owner"])
                 if authority
                 else (
                     authorities[-1]["owner"] if authorities else reference("unassigned-owner-OD-51")
@@ -623,6 +656,14 @@ class Consumption:
                 held = "authority-expired" if authorities else "authority-unknown"
             elif not price or (live and price["synthetic"]):
                 held = "price-unknown"
+            elif not price["synthetic"] and not (
+                authority.get("alert")
+                and authority.get("alert_owner")
+                and all(
+                    b["calls"] and b["tokens"] and amount(b["amount"]) for b in authority["budgets"]
+                )
+            ):
+                held = "alert-unowned"
             elif min_window and now >= min(authority["end"], price["end"]) - min_window:
                 held = "authority-expiring"
             elif input_bound is None:
@@ -778,6 +819,7 @@ class Consumption:
         if outcome not in ("returned", "timeout", "provider-unavailable"):
             raise ValueError("Closed provider outcome required.")
         opaque(rid)
+        meter: tuple[str, str, int, str, str] | None = None
         with self._scope(db) as db:
             records = self._read(db)
             reservation = next(
@@ -818,6 +860,13 @@ class Consumption:
                 held=reason is not None,
                 returned_model=reference(safe_model) if safe_model is not None else None,
             )
+            meter = (
+                reservation["capability"],
+                datetime.fromtimestamp(self.port.now(db), UTC).strftime("%Y-%m"),
+                (used["total_tokens"] or 0) if used else 0,
+                "known" if used else "unknown",
+                outcome,
+            )
             if reason:
                 self._event(
                     db,
@@ -828,6 +877,10 @@ class Consumption:
                     reason=reason,
                     route="workflow-only",
                 )
+        if meter:
+            LOG.info(
+                "AI_USAGE capability=%s period=%s calls=1 tokens=%d usage=%s outcome=%s", *meter
+            )
 
     def publish_output(
         self, root: str, output: str, *, eligible: bool, db: Any = None

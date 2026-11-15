@@ -4,6 +4,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
+from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 from zava_forward.core.exception_queue import STEWARD, ExceptionQueue
 from zava_forward.core.exception_register import staff_from_env
 from zava_forward.core.factory import open_store
@@ -174,6 +175,7 @@ def _transfer(args: argparse.Namespace) -> int:
 
 
 def main(argv: list[str]) -> int:
+    install_diagnostic_redaction()
     if not argv:
         print(f"zava-forward-import {__version__}")
         return 0

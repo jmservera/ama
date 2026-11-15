@@ -35,6 +35,7 @@ class GeneratorCoverageTests(unittest.TestCase):
         )
         self.assertNotIn("routing_validated", report)
         self.assertIs(report["routing_shape_validated"], True)
+        self.assertIs(report["coverage_evidence_validated"], True)
         self.assertEqual(report["issue_existence"], "not-assessed")
         self.assertEqual(report["open_gaps"], [])
         self.assertEqual(report["generator_output_conformance"], "not-assessed")
@@ -131,6 +132,13 @@ class GeneratorCoverageTests(unittest.TestCase):
             ("coverage", "approved"),
             ("coverage", None),
             ("gap_closure", None),
+            ("note", " "),
+            ("note", None),
+            ("volume", ""),
+            ("owner", None),
+            ("dataset_ids", []),
+            ("dataset_ids", [" "]),
+            ("dataset_ids", "DS-SENSOR"),
         )
         for field, value in mutations:
             with self.subTest(field=field, value=value):

@@ -164,6 +164,18 @@ class ActionClaimTests(unittest.TestCase):
         ):
             self.assertIsNotNone(ACTION_CLAIM.search(normalise_policy_text(answer)), answer)
 
+    def test_subjectless_and_elliptical_approval_or_consent_claims_are_detected(self) -> None:
+        for answer in (
+            "Consent recorded.",
+            "Resident consent confirmed per your saved note.",
+            "Consent is on file.",
+            "Approval granted.",
+            "Done: approval recorded.",
+            "Sign-off has been given.",
+            "The resident gave consent.",
+        ):
+            self.assertIsNotNone(ACTION_CLAIM.search(normalise_policy_text(answer)), answer)
+
     def test_non_action_answers_are_preserved(self) -> None:
         for answer in (
             "Survey booked.",
@@ -171,6 +183,9 @@ class ActionClaimTests(unittest.TestCase):
             "Consent has not been recorded.",
             "Ask the named reviewer for approval.",
             "The resident has not given consent.",
+            "No consent recorded.",
+            "No approval is recorded.",
+            "Approval is not on file.",
         ):
             self.assertIsNone(ACTION_CLAIM.search(normalise_policy_text(answer)), answer)
 

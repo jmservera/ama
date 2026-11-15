@@ -398,6 +398,28 @@ No model, network or data-store access is added. Tests:
 `tests/test_paired_report_command.py`. The staff trial, owner thresholds, graded set,
 tokenomics and live-run criteria of #216 remain unmet.
 
+### Paired comparison cost beside the gates, cards alone (2026-11-13)
+
+`regulatory_gates.beside_cost` puts AI cost per accepted check beside citation validity,
+refusal accuracy and hazard-miss results, in both the committed report
+(`comparison.beside_cost`, deterministic rule cards arm) and `evaluate_paired_trial`
+(`beside_cost`, chat arm; new optional `gates` argument takes the `answers.checks` result).
+Cost stays `Unknown` with each missing input named and is never estimated; a known cost also
+needs an identified, ISO-dated price that is not after the evaluation date, usage, allocation
+basis and an unexpired owner authority covering the usage.
+
+Cards ship alone unless, in every role, chat shows a strictly positive completion or
+comprehension gain that meets the owner thresholds, there is no chat hazard miss, cost per
+accepted check is known, and citation validity and refusal accuracy are met against an
+owner-agreed target (the repository's provisional targets never qualify). Ties and
+zero-gain thresholds therefore still ship cards alone. The outcome is only
+`chat_value_measured_owner_decision_required`; no spend, shipment or approval is implied.
+
+This closes the reporting and verdict mechanics with synthetic unit fixtures only. #216
+criteria 4 and 7 still need a real staff trial, owner thresholds and an owner-authorised,
+dated price and usage record before measured value can be claimed. Tests:
+`tests/test_paired_trial.py`, `tests/test_regulatory_gates.py`.
+
 ### Staff alert precision and acknowledgement scoring (2026-11-03)
 
 `alert_triage.evaluate_alert_triage` scores recorded staff classifications
@@ -488,7 +510,7 @@ The agents project (`zava_forward.agents`) holds the AI evaluation harness and i
 (`evals/`). The five retrofit assistants and the AI task registry still live in `zava_forward.core`
 (`assistants`, `assistant_release`, `ai_registry`, divergence A1 of the parity matrix) and are exposed by
 the [api](../api/README.md) routes. The sections below are moved unchanged from the former
-`mvp/README.md` (M6 of #199) and keep the dated 2026-10-13 and 2026-10-14 validation record. Commands in
+`mvp/README.md` (archive `v0.21.0`; M6 of #199) and keep the dated 2026-10-13 and 2026-10-14 validation record. Commands in
 them that start with `cd src/api` run from the api project.
 
 ## AI evaluation harness
@@ -498,7 +520,7 @@ them that start with `cd src/api` run from the api project.
 * Human-review effectiveness test (AC-070), offline and scripted: `python3 -m zava_forward.agents.review_effectiveness [--json]`. Seeded wrong, stale, unsupported and incomplete proposals with valid citations, plus correct controls, go through the real review path; a competent panel must detect all defects while default-accept and automation-bias panels must fail the gate. Reports detection, corrections and effort against the workflow-only run of the same case. A provisional reviewer-authority record (authorised reviewers and required evidence, in the golden file) is enforced by the gate, and an unauthorised-reviewer control must fail it. A manual path lets a person take part without AI help: `--worksheet` prints a blank answer sheet (proposal text only), and `--score <sheet.json>` runs the completed sheet through the same gate and reports measured seconds beside the optional workflow-only seconds, detection by defect class, any confident, cited defect the person accepted (automation-bias exposure) and the effort difference against the workflow-only run of the same scenario; `--score` with several sheets pools the sessions (each still gated alone, failed sessions and repeat reviewers shown, total human seconds against total workflow-only seconds, no approved sample size or threshold); it does not verify identity or competence. Scripted panels are not human evidence: authorised reviewers and OQ-017 reviewer authority remain open. Golden file `evals/review_effectiveness_golden.json`
 * Cohort and missing-data evaluation of the ranking policy (FR-054, AC-073, #222), offline: `python3 -m zava_forward.agents.cohort_ranking_eval [--json] [--defects]`. Forty-eight paired constructed cases (sensor completeness, accessibility need, source completeness, appointment history) go through the real ranker and `core.cohort_eval` against a hand-stated expected-rank manifest. `--defects` drops or demotes four cases, all of which must be detected; results are per cohort, never averaged. The manifest is an unapproved developer fixture: the runner never supplies approval, so the record always stays blocked on unapproved thresholds (only tests add a fictional approval to exercise mechanics). Cases carry the sensor, source and appointment fields, and negative controls (a ranker that excludes missing data, penalises appointments or ignores support) must each be detected. Approval is fail-closed and detects edits after approval (the digest does not authenticate the approvers): named cohorts, lawful-fields and thresholds owners plus a `manifest_digest` bound to the manifest content (`cohort_eval.approve`) are all required, so any later edit to the manifest voids it. OQ-018 owner approval of cohorts, lawful fields and thresholds is open, and synthetic results are not fairness evidence. Tests: `tests/test_cohort_ranking_eval.py`.
 * Cohort and missing-data evaluation of the AI priority recommendation (#222), offline: `python3 -m zava_forward.agents.cohort_ai_eval [--json] [--biased | --unavailable]`. The same 48 paired cases go through the real `Store.ai_priority` task with a scripted provider in groups of ten. `faithful` must show no defects; `--biased` is a negative control whose model drops three cases, all of which must be detected as unjustified exclusions; `--unavailable` uses the no-model fallback, which must record a reason and leave the deterministic ranking (the manual path) unchanged. The recommendation always stays Proposed. The runner never supplies approval, so the record stays blocked on unapproved thresholds (OQ-018) and synthetic results are not fairness evidence. Tests: `tests/test_cohort_ai_eval.py`.
-* Chat multi-turn evaluation, offline and synthetic (grounding, out-of-scope refusal, prompt injection, memory poisoning, non-AI comparison, recorded failures; never enables chat): `python3 -m zava_forward.agents.chat_eval [--json] [--record PATH]`. Golden file `evals/chat_golden.json`; thresholds, accountable reviewer and enablement remain owner decisions
+* Chat multi-turn evaluation, offline and synthetic (grounding, out-of-scope refusal, prompt injection, memory poisoning, non-AI comparison, recorded failures; never enables chat): `python3 -m zava_forward.agents.chat_eval [--json] [--record PATH]`. Golden file `evals/chat_golden.json`; the summary and enablement report `critical_errors`, `memory_poisoning_passed` and `prompt_injection_passed` (any failure, a non-zero critical-error count or missing/inconsistent fields fails enablement; scripted, component-scope evidence only); thresholds, accountable reviewer and enablement remain owner decisions
 
   Open known gaps never count as passes. Grounding, out-of-scope, injection,
   memory-poisoning and permission failures are critical, including known gaps.
@@ -631,10 +653,32 @@ case and stops the batch. The report (JSON, or Markdown with `--markdown`)
 gives count, min, p50, mean, p90 and max tokens per proposal, token and USD
 totals, the spend-authority reference and an evidence label: `measured held-out
 batch` only for live calls, otherwise `dry-run simulation - not measured
-evidence`. The command line wires no provider, so `--execute-live` exits 2; a
-live run needs a caller to inject `AgentWorker.provider_call` and requires
-separate owner action. No live call has been made. Tests:
-`tests/test_heldout_batch.py` (synthetic fixtures).
+evidence`. `--execute-live` is opt-in: it needs an explicit `--endpoint`
+(`https://<resource>.openai.azure.com` or `.cognitiveservices.azure.com`),
+`--deployment`, `--model` (the authorized model the deployment serves) and an
+authorization that passes validation (at most USD 5.00) and carries matching
+`endpoint` and `deployment` fields (the token is only sent to the authorized
+resource); otherwise it exits 2 or refuses before any token request or network
+call. The adapter
+(`heldout_aoai.py`, stdlib HTTP) takes a bearer token from
+`az account get-access-token` (default `--auth az-cli`) or a managed identity
+(`--auth managed-identity`, needs `azure-identity`), sends one non-streaming
+chat completion per proposal with `max_tokens` and `temperature` 0, never
+retries or follows redirects, and never logs or stores the token or response
+text. A failed call, a response `model` that is not `--model` (optionally with
+a `-YYYY-MM-DD` suffix), or
+a missing cached-token count is charged at the worst case and stops the batch.
+The proposals file is a JSON list of `{id, prompt, system?}` from the frozen
+held-out set; none is committed here. Before a run the owner confirms the
+dated per-1M rates for the deployment, that `max_tokens` is honoured on API
+version 2024-10-21, and runs one live batch per authorization (the spend
+counter is per process). No live call has been made. Tests:
+`tests/test_heldout_batch.py` and `tests/test_heldout_aoai.py` (synthetic
+fixtures, mocked HTTP). Example:
+`python -m zava_forward.agents.heldout_batch --authorization auth.json
+--manifest manifest.json --proposals proposals.json --execute-live --endpoint
+https://aif-cutover-test-rzsrg.openai.azure.com --deployment standard --model
+gpt-4.1-nano`.
 
 ### Meaningful human-review protocol (#223; proposed, Not run)
 
@@ -793,7 +837,7 @@ library, so the image keeps its no-third-party contract.
 
 * `serve` reads `QUEUE_ENDPOINT`, `TASK_QUEUE`, `POISON_QUEUE`, `API_BASE_URL`, `API_AUDIENCE`, `FOUNDRY_ENDPOINT`, the managed identity variables set by Container Apps and the operator allowance `ZF_ASSIST_*`. It refuses with exit 2, naming settings but never values, when any is missing, and stops with exit 3 when the allowance expires.
 * The result post-back goes to `API_BASE_URL/api/agent-results`. That API route does not exist yet, so `serve` also requires `ZF_AGENT_RESULT_ROUTE=enabled`, which no deployment sets. Until the route, the allowance setting in Bicep and the model financial meter are delivered, the worker refuses to start (or, if the meter is missing, records a stopped outcome with no model call). Nothing is acknowledged before a successful post.
-* SIGTERM or SIGINT stops the loop; an in-flight task finishes or is released for redelivery.
+* SIGTERM or SIGINT stops the loop; an in-flight task has 20 seconds (`DRAIN_SECONDS`) to finish and post, then it is released for redelivery, never recorded as a timeout failure.
 * Validated by unit tests and the container contract test only; no image build, queue or model call was run for this change.
 
 ## Validation record
