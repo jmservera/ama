@@ -53,6 +53,7 @@ None.
 | `tools/rpi-checks.py` | repository gate | Skipped | Explicitly excluded by caller prompt (`Focused` validation tier; do NOT run `tools/rpi-checks.py`) |
 | Post-rebase (`fa6f8d1dd` -> `e9c31f7fa`) `ruff` + `mypy` | `src/core` & `src/api` | Passed | `src/core` (293 formatted, 346 mypy files) & `src/api` (213 formatted, 297 mypy files) clean in isolated `PYTHONNOUSERSITE=1` worktree venv |
 | Post-rebase (`fa6f8d1dd` -> `e9c31f7fa`) focused unit + rename suites | `src/core`, `src/api`, `tools/` | Passed | `src/core` 64 tests OK (`skipped=20`), `src/api` 44 tests OK (`test_document_controls`, `test_role_endpoint_inventory`), `tools/rename-zava-tests.py` 25 tests OK |
+| Post-rebase (`ad005cd5f` atop `0358b9ad5` -> `058fcc3e8` + `3efbe346a`) `src-ci.yml` + full `src/core` validation | `src/core`, `src/api`, `tools/` | Passed | Fixed `test_resident_acceptance_never_clears_technical_or_hazard_gates` synthetic pre-gate fixture in `test_resident_decisions.py` (`3efbe346a`); `src/core` focused 484 tests OK (`skipped=174`) + full discovery 3,660 tests OK (`skipped=420`), `ruff` (298 files), `mypy` (351 files); `src/api` 44 tests OK (`test_document_controls`, `test_role_endpoint_inventory`), `ruff` (213 files), `mypy` (297 files); `tools/rename-zava-tests.py` 25 tests OK |
 
 ## Pre-Review Reconciliation
 

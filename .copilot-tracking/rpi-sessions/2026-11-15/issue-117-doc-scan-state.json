@@ -44,6 +44,11 @@
       "decision": "Child RPI continuation task issue-117-doc-scan-rebase-fa6f8d1dd rebased 4d91dae33 onto origin/feat/demo-164-chat-grounding-provenance-0900 (fa6f8d1dd) as e9c31f7fa051d5fd58795aa7feae7e404760433b and re-verified focused validation across src/core and src/api while preserving original parent Residual work (RV-001) Review outcome.",
       "status": "confirmed",
       "evidence": ".copilot-tracking/changes/2026-11-15/issue-117-doc-scan-rebase-fa6f8d1dd-changes.md"
+    },
+    {
+      "decision": "Child RPI continuation task issue-117-doc-scan-fix-rebase-0358b9ad5 rebased feat/demo-117-doc-scan onto origin/feat/demo-164-chat-grounding-provenance-0900 (ad005cd5f atop 0358b9ad5, #117 replayed as 058fcc3e8), fixed test_resident_acceptance_never_clears_technical_or_hazard_gates synthetic pre-gate scan metadata in test_resident_decisions.py (3efbe346a), and re-verified src/core and src/api src-ci.yml suites while preserving original parent Residual work (RV-001) Review outcome.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-15/issue-117-doc-scan-fix-rebase-0358b9ad5-changes.md"
     }
   ],
   "blockers": [],
