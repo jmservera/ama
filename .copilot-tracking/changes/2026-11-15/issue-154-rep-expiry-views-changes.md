@@ -7,6 +7,8 @@
 * Related plan: .copilot-tracking/plans/2026-11-15/issue-154-rep-expiry-views-plan.md
 * Phase details: .copilot-tracking/details/2026-11-15/issue-154-rep-expiry-views-phase-details.md
 * Implementation date: 2026-11-15
+* Rebased base commit: `0c1fa1da4` (`origin/feat/demo-164-chat-grounding-provenance-0900`, incorporating PR #1761 `7f83f4749` and PR #1769 `0c1fa1da4`)
+* Rebased feature commit: `3ed0c7deb` (replayed from `99a596629`, zero correction cycles spent)
 
 ## Execution Status
 
@@ -62,6 +64,13 @@ Implemented Issue #154 Criterion 3 (`Representative views show only task-limited
 | `ruff format --check .` | `src/api` | Passed | `197 files already formatted` (exit `0`) |
 | `mypy` | `src/api` | Passed | `Success: no issues found in 281 source files` (exit `0`) |
 | `unittest` (`test_representative_expiry_api.py`, `test_role_endpoint_inventory.py`, `test_resident_*.py`, `test_dependency_rule.py`) | `src/api/tests` | Passed | `3` tests in `test_representative_expiry_api.py` passed; `24` tests in `test_role_endpoint_inventory.py` passed; `275` tests across `test_resident_*.py` (`skipped=9`) and `2` tests in `test_dependency_rule.py` passed (exit `0`) |
+| Post-rebase (`0c1fa1da4` -> `3ed0c7deb`) focused `unittest` (`test_role_endpoint_inventory.py`, `test_representative_expiry_api.py`, `test_resident_journey_design.py`, `test_resident_decisions.py`, `test_resident_showcase.py`, `test_handoff_escalation_api_83.py`) | `src/core/tests` + `src/api/tests` | Passed | `518` tests (`skipped=154`) + `2` `#83` handoff escalation API tests passed with both `0c1fa1da4` handoff inventory entries and `#154` `representative-view` entries preserved (exit `0`) |
+| Post-rebase (`0c1fa1da4` -> `3ed0c7deb`) `ruff`, `mypy`, and `tools/rename-zava-tests.py` | `src/core`, `src/api`, `tools/` | Passed | `src/core` `ruff check`/`format --check` (`285` files)/`mypy` (`338` files), `src/api` `ruff check`/`format --check` (`198` files) + targeted `#154` `mypy` (`2` files), and `rename-zava-tests.py` (`25` tests) all passed (exit `0`) |
+
+## Rebase Continuation onto `0c1fa1da4` (No Correction Cycle Spent)
+
+* Rebased `feat/ux-154-rep-expiry-views` from `99a596629` (on `02ab20cac`) onto `origin/feat/demo-164-chat-grounding-provenance-0900` (`0c1fa1da4`, after PR #1761 and PR #1769 merged), producing rebased feature commit `3ed0c7deb`.
+* Resolved the single merge conflict in `src/api/tests/test_role_endpoint_inventory.py` by preserving both `0c1fa1da4`'s overdue/unowned/escalated handoff entries (`"/api/handoffs/unowned"`, `"/api/handoffs/escalated"`, `("/api/handoffs/escalate-overdue", {})`) and `99a596629`'s representative task-limited view / session-expiry entries (`"/api/cases/ZF-1/representative-view?representative_ref=SYN-REP"`, `("/api/cases/ZF-1/representative-view", {"representative_ref": "SYN-REP", "action": "view_task_briefing"})`, and `"representative-view"` in `test_inventory_covers_dynamic_case_actions_added_by_integration`). `src/api/src/zava_forward/api/server.py` auto-merged cleanly and `src/api/src/zava_forward/api/web/role-screens.js` remained untouched.
 
 ## Pre-Review Reconciliation
 
