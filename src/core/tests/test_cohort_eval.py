@@ -3,7 +3,7 @@ import unittest
 from typing import Any
 
 from cohort_eval_fixture import approved, clean_observed, manifest, seeded
-from zava_forward.core import cohort_eval
+from zava_forward.core import cohort_eval, rai_release
 
 
 def codes(record: dict[str, Any]) -> set[str]:
@@ -278,6 +278,115 @@ class CohortEvalTests(unittest.TestCase):
         m2["cases"][0]["id"] = "renamed"
         obs2[0]["id"] = "renamed"
         self.assertNotEqual(base["record_hash"], cohort_eval.evaluate(m2, obs2)["record_hash"])
+
+    def test_default_unapproved_and_fictional_offline_records_enforce_oq018_boundary(self) -> None:
+        raw = manifest()
+        raw.pop("approval", None)
+        unapproved = cohort_eval.evaluate(raw, clean_observed(raw))
+        self.assertEqual(unapproved["owner_approval_status"], "unapproved")
+        self.assertFalse(unapproved["lawful_analysis_fields_approved"])
+        self.assertFalse(unapproved["live_activation_allowed"])
+        self.assertTrue(unapproved["synthetic_not_fairness_evidence"])
+        self.assertIn("OQ-018", unapproved["non_fairness_provenance_notice"])
+
+        offline = cohort_eval.evaluate(manifest(), clean_observed(manifest()))
+        self.assertEqual(offline["owner_approval_status"], "pending_owner_approval")
+        self.assertFalse(offline["lawful_analysis_fields_approved"])
+        self.assertFalse(offline["live_activation_allowed"])
+        self.assertFalse(offline["fairness_evidence"])
+        self.assertTrue(offline["synthetic_not_fairness_evidence"])
+        self.assertEqual(
+            set(offline["lawful_analysis_fields"]),
+            set(manifest()["cohorts"]),
+        )
+
+    def test_dated_real_human_owner_approval_requires_non_synthetic_and_bound_lawful_fields(
+        self,
+    ) -> None:
+        dated_owners = {
+            "cohorts_owner": "Priya Shah, Data Lead",
+            "lawful_fields_owner": "Tom Reed, DPO",
+            "thresholds_owner": "Amina Okafor, RAI Owner",
+            "approved_at": "2026-11-14",
+        }
+        synth = manifest()
+        synth["lawful_analysis_fields"] = [
+            "sensor_completeness",
+            "support_need",
+            "appointment_history",
+        ]
+        cohort_eval.approve(synth, dated_owners)
+        synth_rec = cohort_eval.evaluate(synth, clean_observed(synth))
+        self.assertEqual(synth_rec["owner_approval_status"], "pending_owner_approval")
+        self.assertFalse(synth_rec["lawful_analysis_fields_approved"])
+        self.assertFalse(synth_rec["live_activation_allowed"])
+        self.assertFalse(synth_rec["fairness_evidence"])
+        self.assertTrue(synth_rec["synthetic_not_fairness_evidence"])
+
+        live_ready = copy.deepcopy(synth)
+        live_ready["synthetic"] = False
+        cohort_eval.approve(live_ready, dated_owners)
+        ok_rec = cohort_eval.evaluate(live_ready, clean_observed(live_ready), live=True)
+        self.assertEqual(ok_rec["owner_approval_status"], "approved")
+        self.assertTrue(ok_rec["lawful_analysis_fields_approved"])
+        self.assertTrue(ok_rec["live_activation_allowed"])
+        self.assertTrue(ok_rec["activation_allowed"])
+        self.assertTrue(ok_rec["fairness_evidence"])
+        self.assertTrue(ok_rec["synthetic_not_fairness_evidence"])
+
+        live_ready["lawful_analysis_fields"].append("contact_channel")
+        edited = cohort_eval.evaluate(live_ready, clean_observed(live_ready), live=True)
+        self.assertEqual(edited["owner_approval_status"], "unapproved")
+        self.assertFalse(edited["lawful_analysis_fields_approved"])
+        self.assertFalse(edited["live_activation_allowed"])
+        self.assertFalse(edited["activation_allowed"])
+
+    def test_invalid_lawful_analysis_fields_block_approval_and_fairness_evidence(self) -> None:
+        for bad_fields in ([], [""], "sensor_completeness", None):
+            m = manifest()
+            m["synthetic"] = False
+            m["lawful_analysis_fields"] = bad_fields
+            cohort_eval.approve(
+                m,
+                {
+                    "cohorts_owner": "Priya Shah, Data Lead",
+                    "lawful_fields_owner": "Tom Reed, DPO",
+                    "thresholds_owner": "Amina Okafor, RAI Owner",
+                    "approved_at": "2026-11-14",
+                },
+            )
+            rec = cohort_eval.evaluate(m, clean_observed(m))
+            self.assertIn("unapproved_lawful_analysis_fields", codes(rec))
+            self.assertEqual(rec["owner_approval_status"], "unapproved")
+            self.assertFalse(rec["lawful_analysis_fields_approved"])
+            self.assertFalse(rec["fairness_evidence"])
+            self.assertFalse(rec["activation_allowed"])
+
+    def test_export_record_enforces_hash_and_oq018_non_fairness_invariants(self) -> None:
+        rec = cohort_eval.evaluate(manifest(), clean_observed(manifest()))
+        exported = cohort_eval.export_record(rec)
+        self.assertEqual(exported["record_hash"], rec["record_hash"])
+        self.assertTrue(exported["synthetic_not_fairness_evidence"])
+        self.assertFalse(exported["live_activation_allowed"])
+
+        tampered_hash = dict(rec, owner_approval_status="approved")
+        with self.assertRaises(ValueError):
+            cohort_eval.export_record(tampered_hash)
+
+        forged_body = {
+            k: v
+            for k, v in dict(
+                rec,
+                fairness_evidence=True,
+                live_activation_allowed=True,
+                owner_approval_status="approved",
+                lawful_analysis_fields_approved=True,
+            ).items()
+            if k != "record_hash"
+        }
+        forged = {**forged_body, "record_hash": rai_release.digest(forged_body)}
+        with self.assertRaises(ValueError):
+            cohort_eval.export_record(forged)
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-31
+ms.date: 2026-11-14
 ms.topic: reference
 ---
 
@@ -41,7 +41,13 @@ Use the complete clean exact-head gate documented in the
 ## AI consumption report (#432)
 
 Manager-only `GET /api/ai/report` preserves evaluation/live/registry fields and
-adds `consumption`. Optional `start`, `end`, `as_of` are timezone-aware ISO
+adds `consumption`, with `evaluation.cohorts` exposing the OQ-018 approval and
+non-fairness boundary (`owner_approval_status`, `lawful_analysis_fields_approved`,
+`live_activation_allowed`, `synthetic_not_fairness_evidence`, and
+`non_fairness_provenance_notice`). Read-only manager endpoint
+`GET /api/ai/cohort-evaluation` exports the full `cohort_eval.export_record`-verified
+records for `ranking-policy` and `ai-priority-recommendation` (#222, OQ-018),
+rejecting non-managers (403), query parameters (400) and writes (404). Optional `start`, `end`, `as_of` on `GET /api/ai/report` are timezone-aware ISO
 timestamps with exclusive `[start,end)` call-time bounds. Defaults are today's
 UTC start through now. Invalid, empty, repeated or unknown parameters return an
 explicit error. The JSON report adds no UI or deployment changes.

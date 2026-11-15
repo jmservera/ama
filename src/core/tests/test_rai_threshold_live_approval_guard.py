@@ -88,6 +88,34 @@ class LiveCohortThresholds(unittest.TestCase):
         m["thresholds"]["max_error_rate"] = 0.9
         self.assertIn("unapproved_thresholds", codes(m))
 
+    def test_fictional_or_placeholder_owner_is_rejected_for_live_use(self) -> None:
+        for value in ("Data lead (fictional)", "DPO placeholder", "Mock RAI Owner", "TBD"):
+            m = live_manifest(dict(HUMAN, lawful_fields_owner=value))
+            rec = cohort_eval.evaluate(m, clean_observed(m), live=True, now=NOW)
+            self.assertIn("live_approval_not_named_human", {b["code"] for b in rec["blockers"]})
+            self.assertNotEqual(rec["owner_approval_status"], "approved")
+            self.assertFalse(rec["lawful_analysis_fields_approved"])
+            self.assertFalse(rec["live_activation_allowed"])
+            self.assertFalse(rec["fairness_evidence"])
+
+    def test_undated_or_malformed_approval_date_blocks_live_use(self) -> None:
+        undated_owners = {k: v for k, v in HUMAN.items() if k != "expires"}
+        m_undated = live_manifest(undated_owners)
+        rec_undated = cohort_eval.evaluate(m_undated, clean_observed(m_undated), live=True, now=NOW)
+        self.assertIn("live_approval_undated", {b["code"] for b in rec_undated["blockers"]})
+        self.assertEqual(rec_undated["owner_approval_status"], "pending_owner_approval")
+        self.assertFalse(rec_undated["lawful_analysis_fields_approved"])
+        self.assertFalse(rec_undated["activation_allowed"])
+        self.assertFalse(rec_undated["fairness_evidence"])
+
+        for bad_date in ("", "not-a-date", "20261114", NOW + 10):
+            m_bad = live_manifest(dict(HUMAN, approved_at=bad_date))
+            rec_bad = cohort_eval.evaluate(m_bad, clean_observed(m_bad), live=True, now=NOW)
+            self.assertIn("live_approval_undated", {b["code"] for b in rec_bad["blockers"]})
+            self.assertEqual(rec_bad["owner_approval_status"], "unapproved")
+            self.assertFalse(rec_bad["lawful_analysis_fields_approved"])
+            self.assertFalse(rec_bad["activation_allowed"])
+
 
 class LiveReleaseApprover(unittest.TestCase):
     def gaps(self, approver: Any) -> list[str]:

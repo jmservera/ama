@@ -6,9 +6,12 @@ per cohort and never averaged. Synthetic results are never fairness evidence (OQ
 
 from __future__ import annotations
 
+import copy
 import math
+import re
 from collections import Counter
 from collections.abc import Mapping, Sequence
+from datetime import date, datetime
 from typing import Any
 
 from zava_forward.core.rai_release import digest, named, named_human
@@ -16,11 +19,47 @@ from zava_forward.core.rai_release import digest, named, named_human
 RECORD_VERSION = "cohort-missing-data-evaluation-v1"
 OUTCOMES = ("ranked", "deprioritised", "excluded", "review")
 THRESHOLD_KEYS = ("min_sample", "max_error_rate", "max_exclusion_gap", "max_review_burden_gap")
+OWNER_KEYS = ("cohorts_owner", "lawful_fields_owner", "thresholds_owner")
+OWNER_APPROVAL_APPROVED = "approved"
+OWNER_APPROVAL_PENDING = "pending_owner_approval"
+OWNER_APPROVAL_UNAPPROVED = "unapproved"
+FICTIONAL_OWNER_TOKENS = frozenset(
+    {
+        "fictional",
+        "placeholder",
+        "mock",
+        "synthetic",
+        "example",
+        "todo",
+        "tbd",
+        "unapproved",
+        "unknown",
+    }
+)
 DISPOSABLE = {"seeded_defect_unexpected", "threshold_exceeded", "unjustified_exclusion"}
-MEASUREMENT_BLOCKERS = {"invalid_input", "reconciliation", "insufficient_sample"}
+MEASUREMENT_BLOCKERS = {
+    "invalid_input",
+    "reconciliation",
+    "insufficient_sample",
+    "unapproved_lawful_analysis_fields",
+}
 OQ_018_GAP = (
     "OQ-018: representative cohorts, lawful analysis fields, sample sufficiency and thresholds "
     "need owner approval before live use; synthetic results are not fairness evidence."
+)
+SYNTHETIC_NON_FAIRNESS_NOTICE = (
+    "Synthetic cohort evaluation results are constructed offline checks only and are never "
+    "fairness evidence or live fairness clearance; live prioritisation requires dated human "
+    "owner approval of cohorts, lawful analysis fields and thresholds (OQ-018)."
+)
+UNAPPROVED_NON_FAIRNESS_NOTICE = (
+    "Pending or unapproved cohort evaluation results are not live fairness clearance; live "
+    "prioritisation requires dated human owner approval of cohorts, lawful analysis fields and "
+    "thresholds, and synthetic results are never fairness evidence (OQ-018)."
+)
+APPROVED_PROVENANCE_NOTICE = (
+    "Dated human owner approval recorded for cohorts, lawful analysis fields and thresholds "
+    "(OQ-018); synthetic results remain excluded as fairness evidence."
 )
 
 
@@ -39,13 +78,116 @@ def _rate(count: int, n: int) -> float | None:
     return round(count / n, 4) if n else None
 
 
+def _finite_number(value: object) -> bool:
+    return isinstance(value, int | float) and not isinstance(value, bool) and math.isfinite(value)
+
+
 def _limit(value: Any) -> bool:
-    return (
-        isinstance(value, int | float)
-        and not isinstance(value, bool)
-        and math.isfinite(value)
-        and 0 <= value <= 1
-    )
+    return _finite_number(value) and 0 <= float(value) <= 1
+
+
+def _real_human_owner(value: object) -> bool:
+    if not named_human(value) or not isinstance(value, str):
+        return False
+    tokens = {tok for tok in re.split(r"[^a-z0-9]+", value.lower()) if tok}
+    return tokens.isdisjoint(FICTIONAL_OWNER_TOKENS)
+
+
+def _valid_lawful_fields(manifest: Mapping[str, Any]) -> tuple[list[str], bool]:
+    if "lawful_analysis_fields" in manifest:
+        raw = manifest.get("lawful_analysis_fields")
+        if (
+            isinstance(raw, Sequence)
+            and not isinstance(raw, str | bytes | bytearray)
+            and len(raw) > 0
+            and all(named(item) for item in raw)
+        ):
+            return [str(item).strip() for item in raw], True
+        return [], False
+    cohorts = manifest.get("cohorts")
+    if isinstance(cohorts, Mapping) and len(cohorts) > 0 and all(named(k) for k in cohorts):
+        return [str(k).strip() for k in cohorts], True
+    return [], False
+
+
+def _valid_approval_stamp(value: object, now: float | None) -> bool:
+    if _finite_number(value):
+        assert isinstance(value, int | float)
+        stamp = float(value)
+        if stamp <= 0:
+            return False
+        if _finite_number(now):
+            assert isinstance(now, int | float)
+            return stamp <= float(now)
+        return True
+    if isinstance(value, str):
+        text = value.strip()
+        if not re.match(r"^\d{4}-\d{2}-\d{2}($|[T ])", text):
+            return False
+        if len(text) == 10:
+            try:
+                date.fromisoformat(text)
+                return True
+            except ValueError:
+                return False
+        iso = text[:-1] + "+00:00" if text.endswith("Z") else text
+        try:
+            datetime.fromisoformat(iso)
+            return True
+        except ValueError:
+            return False
+    return False
+
+
+def _date_key_gaps(approval: Mapping[str, Any], now: float | None) -> list[tuple[str, str]]:
+    gaps: list[tuple[str, str]] = []
+    has_expires = "expires" in approval
+    has_stamp = "approved_at" in approval or "approved_on" in approval
+    if has_expires:
+        expires = approval.get("expires")
+        if not _finite_number(now) or not _finite_number(expires):
+            gaps.append(
+                ("live_approval_expired", "live approval is missing, expired or unverifiable")
+            )
+        else:
+            assert isinstance(now, int | float)
+            assert isinstance(expires, int | float)
+            if float(expires) <= float(now):
+                gaps.append(
+                    ("live_approval_expired", "live approval is missing, expired or unverifiable")
+                )
+    if has_stamp:
+        stamps_ok = all(
+            _valid_approval_stamp(approval.get(k), now)
+            for k in ("approved_at", "approved_on")
+            if k in approval
+        )
+        if not stamps_ok:
+            gaps.append(
+                ("live_approval_undated", "live owner approval needs a valid approval date")
+            )
+    if not has_expires and not has_stamp:
+        gaps.append(("live_approval_undated", "live owner approval needs a dated approval record"))
+    return gaps
+
+
+def _has_invalid_or_expired_date(approval: Mapping[str, Any], now: float | None) -> bool:
+    if any(
+        not _valid_approval_stamp(approval.get(k), now)
+        for k in ("approved_at", "approved_on")
+        if k in approval
+    ):
+        return True
+    if "expires" in approval:
+        expires = approval.get("expires")
+        if not _finite_number(expires):
+            return True
+        if _finite_number(now):
+            assert isinstance(expires, int | float)
+            assert isinstance(now, int | float)
+            if float(expires) <= float(now):
+                return True
+    return False
 
 
 def manifest_digest(manifest: Mapping[str, Any]) -> str:
@@ -71,9 +213,7 @@ def _thresholds_approved(manifest: Mapping[str, Any]) -> bool:
     thresholds = manifest.get("thresholds")
     if not (
         isinstance(approval, Mapping)
-        and named(approval.get("cohorts_owner"))
-        and named(approval.get("lawful_fields_owner"))
-        and named(approval.get("thresholds_owner"))
+        and all(named(approval.get(k)) for k in OWNER_KEYS)
         and _approval_bound(manifest)
         and isinstance(thresholds, Mapping)
     ):
@@ -87,26 +227,45 @@ def _thresholds_approved(manifest: Mapping[str, Any]) -> bool:
     )
 
 
+def _owner_approval_status(
+    manifest: Mapping[str, Any], fields_valid: bool, now: float | None
+) -> str:
+    synthetic = manifest.get("synthetic") is not False
+    approval = manifest.get("approval")
+    if not isinstance(approval, Mapping) or not _thresholds_approved(manifest) or not fields_valid:
+        return OWNER_APPROVAL_UNAPPROVED
+    if not all(named_human(approval.get(k)) for k in OWNER_KEYS):
+        return OWNER_APPROVAL_UNAPPROVED
+    if _has_invalid_or_expired_date(approval, now):
+        return OWNER_APPROVAL_UNAPPROVED
+    if (
+        not synthetic
+        and all(_real_human_owner(approval.get(k)) for k in OWNER_KEYS)
+        and not _date_key_gaps(approval, now)
+    ):
+        return OWNER_APPROVAL_APPROVED
+    return OWNER_APPROVAL_PENDING
+
+
 def _live_gaps(manifest: Mapping[str, Any], now: float | None) -> list[tuple[str, str]]:
     gaps: list[tuple[str, str]] = []
     if manifest.get("synthetic") is not False:
         gaps.append(
             ("constructed_thresholds_live", "constructed thresholds support offline tests only")
         )
+    _, fields_valid = _valid_lawful_fields(manifest)
+    if not fields_valid:
+        gaps.append(
+            (
+                "unapproved_lawful_analysis_fields",
+                "lawful analysis fields must be non-empty owner-approved field names",
+            )
+        )
     approval = manifest.get("approval")
     approval = approval if isinstance(approval, Mapping) else {}
-    owners = ("cohorts_owner", "lawful_fields_owner", "thresholds_owner")
-    if not all(named_human(approval.get(k)) for k in owners):
+    if not all(_real_human_owner(approval.get(k)) for k in OWNER_KEYS):
         gaps.append(("live_approval_not_named_human", "live thresholds need named-human owners"))
-    expires = approval.get("expires")
-    if (
-        now is None
-        or not isinstance(expires, int | float)
-        or isinstance(expires, bool)
-        or not math.isfinite(expires)
-        or expires <= now
-    ):
-        gaps.append(("live_approval_expired", "live approval is missing, expired or unverifiable"))
+    gaps.extend(_date_key_gaps(approval, now))
     return gaps
 
 
@@ -276,6 +435,13 @@ def evaluate(
             "unjustified_exclusion", f"{case_id} excluded or deprioritised without approved reason"
         )
 
+    lawful_fields, fields_valid = _valid_lawful_fields(manifest)
+    if "lawful_analysis_fields" in manifest and not fields_valid:
+        block(
+            "unapproved_lawful_analysis_fields",
+            "lawful analysis fields must be non-empty owner-approved field names",
+        )
+
     if not _thresholds_approved(manifest):
         block(
             "unapproved_thresholds",
@@ -308,14 +474,41 @@ def evaluate(
         blockers.append(open_blockers[-1])
     activation_allowed = not open_blockers
     synthetic = manifest.get("synthetic") is not False
+    owner_approval_status = _owner_approval_status(manifest, fields_valid, now)
+    lawful_analysis_fields_approved = owner_approval_status == OWNER_APPROVAL_APPROVED
+    live_activation_allowed = bool(
+        activation_allowed
+        and owner_approval_status == OWNER_APPROVAL_APPROVED
+        and lawful_analysis_fields_approved
+        and not _live_gaps(manifest, now)
+    )
+    provenance_notice = (
+        SYNTHETIC_NON_FAIRNESS_NOTICE
+        if synthetic
+        else (
+            APPROVED_PROVENANCE_NOTICE
+            if owner_approval_status == OWNER_APPROVAL_APPROVED
+            else UNAPPROVED_NON_FAIRNESS_NOTICE
+        )
+    )
     body = {
         "record_version": RECORD_VERSION,
         "task_id": manifest.get("task_id"),
         "policy_or_model_version": manifest.get("subject_version"),
         "synthetic": synthetic,
-        "fairness_evidence": not synthetic
-        and _thresholds_approved(manifest)
-        and not any(b["code"] in MEASUREMENT_BLOCKERS for b in blockers),
+        "synthetic_not_fairness_evidence": True,
+        "non_fairness_provenance_notice": provenance_notice,
+        "owner_approval_status": owner_approval_status,
+        "lawful_analysis_fields": lawful_fields,
+        "lawful_analysis_fields_approved": lawful_analysis_fields_approved,
+        "live_activation_allowed": live_activation_allowed,
+        "fairness_evidence": bool(
+            not synthetic
+            and _thresholds_approved(manifest)
+            and fields_valid
+            and not any(b["code"] in MEASUREMENT_BLOCKERS for b in blockers)
+            and (not live or owner_approval_status == OWNER_APPROVAL_APPROVED)
+        ),
         "missing_data_treatment": manifest.get("missing_data_treatment"),
         "input_digests": {"manifest": digest(manifest), "observed": digest(list(observed))},
         "thresholds": dict(thresholds) if isinstance(thresholds, Mapping) else {},
@@ -333,3 +526,43 @@ def evaluate(
         "authority_gap": OQ_018_GAP,
     }
     return {**body, "record_hash": digest(body)}
+
+
+def export_record(record: Mapping[str, Any]) -> dict[str, Any]:
+    """Verify hash integrity and OQ-018 pre-live/non-fairness invariants before export."""
+    if not isinstance(record, Mapping) or record.get("record_version") != RECORD_VERSION:
+        raise ValueError("cohort evaluation export requires a valid v1 evaluation record")
+    record_hash = record.get("record_hash")
+    body = copy.deepcopy({k: v for k, v in record.items() if k != "record_hash"})
+    if not isinstance(record_hash, str) or digest(body) != record_hash:
+        raise ValueError("cohort evaluation record_hash mismatch")
+    if body.get("synthetic_not_fairness_evidence") is not True:
+        raise ValueError("cohort evaluation export requires synthetic_not_fairness_evidence=True")
+    notice = body.get("non_fairness_provenance_notice")
+    if not named(notice) or "OQ-018" not in str(notice):
+        raise ValueError("cohort evaluation export requires OQ-018 non_fairness_provenance_notice")
+    approval_status = body.get("owner_approval_status")
+    if approval_status not in (
+        OWNER_APPROVAL_APPROVED,
+        OWNER_APPROVAL_PENDING,
+        OWNER_APPROVAL_UNAPPROVED,
+    ):
+        raise ValueError("cohort evaluation export requires explicit owner_approval_status")
+    fields_approved = body.get("lawful_analysis_fields_approved")
+    if not isinstance(fields_approved, bool):
+        raise ValueError("cohort evaluation export requires bool lawful_analysis_fields_approved")
+    synthetic = body.get("synthetic") is not False
+    if synthetic and (
+        body.get("fairness_evidence") is True
+        or approval_status == OWNER_APPROVAL_APPROVED
+        or fields_approved
+        or body.get("live_activation_allowed") is True
+    ):
+        raise ValueError(
+            "synthetic cohort evaluation cannot claim live approval or fairness evidence"
+        )
+    if (approval_status != OWNER_APPROVAL_APPROVED or not fields_approved) and body.get(
+        "live_activation_allowed"
+    ) is True:
+        raise ValueError("unapproved cohort evaluation cannot allow live activation")
+    return {**body, "record_hash": record_hash}
