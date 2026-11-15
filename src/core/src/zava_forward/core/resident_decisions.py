@@ -557,10 +557,114 @@ def nomination_follow_up(record, today=None):
     )
 
 
-def followup_view(case):
+def confirmed_communicate_representatives(c):
+    """Return sorted representative references with confirmed, in-date Communicate authority."""
+    if retention_schedule(c)["expired"]:
+        return []
+    today = k.today()
+    safe_ref = c.get("resident_safe_contact")
+    safe_rev = len(c.get("resident_contact_history", []))
+    measures = case_measures(c)
+    confirmed = []
+    for ref, versions in sorted((c.get("representative_authorities") or {}).items()):
+        if not isinstance(ref, str) or not ref.strip() or not isinstance(versions, list):
+            continue
+        for measure in measures:
+            for_measure = [v for v in versions if isinstance(v, dict) and v.get("measure") == measure]
+            if not for_measure:
+                continue
+            a = for_measure[-1]
+            context = current_context(c, measure)
+            if (context and a.get("status") == "Confirmed" and "Communicate" in (a.get("tasks") or ())
+                    and a.get("context_revision") == context["revision"]
+                    and a.get("safe_contact_ref") == safe_ref
+                    and a.get("safe_contact_revision") == safe_rev
+                    and a.get("authority_date", "") <= today < a.get("review_date", "")):
+                confirmed.append(ref.strip())
+                break
+    return confirmed
+
+
+def nomination_permissions(store, user, case):
+    """Describe role-gated field permissions for nomination, acknowledgement, correction and challenge forms."""
+    from . import projection
+    if user is None or not challenge_references_visible(store, user):
+        return None
+    can_write = bool(projection.appointment_evidence_visible(user))
+    is_manager = user.get("role") in MANAGERS
+    acknowledgeable_ids = []
+    correctable_ids = []
+    editable_ids = []
+    for rec in case.get("nomination_records", []):
+        rec_id = rec.get("id")
+        if not isinstance(rec_id, str) or not rec_id:
+            continue
+        known_owner = _identity_status(rec.get("owner")) == "Known"
+        owns_or_manager = is_manager or (known_owner and _same_person(user, rec.get("owner")))
+        can_ack = can_write and not _review_current(rec) and (not known_owner or owns_or_manager)
+        can_corr = can_write and owns_or_manager
+        if can_ack:
+            acknowledgeable_ids.append(rec_id)
+        if can_corr:
+            correctable_ids.append(rec_id)
+        if can_ack or can_corr:
+            editable_ids.append(rec_id)
+    staff_owners = []
+    for person in store.data.get("staff", ()):
+        if not isinstance(person, dict) or not person.get("code") or not projection.appointment_evidence_visible(person):
+            continue
+        if is_manager or _same_person(user, person):
+            staff_owners.append(dict(
+                email=person.get("email"),
+                name=person.get("name"),
+                role=person.get("role"),
+            ))
+    return dict(
+        can_view=True,
+        can_write=can_write,
+        can_submit_digital=can_write,
+        can_submit_staff_recorded_non_digital=can_write,
+        can_assign_third_party_owner=can_write and is_manager,
+        can_reassign_owner=is_manager,
+        acknowledgeable_nomination_ids=acknowledgeable_ids,
+        correctable_nomination_ids=correctable_ids,
+        editable_nomination_ids=editable_ids,
+        staff_owners=staff_owners,
+        representative_authorities=confirmed_communicate_representatives(case),
+        channels=["digital", "staff_recorded_non_digital", *INTAKE_CHANNELS],
+        challenge_channels=["digital", "staff_recorded_non_digital", "Digital", "Phone", "Letter", "In person"],
+        assisted_channels=[
+            dict(value="phone", label="Phone"),
+            dict(value="paper", label="Paper"),
+            dict(value="letter", label="Letter"),
+            dict(value="in_person", label="In person"),
+            dict(value="trusted_intermediary", label="Trusted intermediary"),
+        ],
+    )
+
+
+def followup_view(case, *, recommendations=(), can_view_intake=True, can_view_reason=True):
     """Expose missing legacy provenance without mutating or inventing it."""
     for record in case.get("nomination_records", []):
-        record["follow_up"] = nomination_follow_up(record)
+        cleaned = nomination_route.scrub_nomination_restricted_fields(record)
+        record.clear()
+        record.update(cleaned)
+        fu = nomination_follow_up(record)
+        expl = nomination_route.filter_explanation_for_viewer(
+            nomination_route.nomination_explanation(
+                record,
+                follow_up=fu,
+                recommendations=recommendations,
+                can_view_intake=can_view_intake,
+                can_view_reason=can_view_reason,
+            ),
+            can_view_intake=can_view_intake,
+            can_view_reason=can_view_reason,
+        )
+        if expl is not None:
+            fu["plain_language_explanation"] = expl
+            record["plain_language_explanation"] = deepcopy(expl)
+        record["follow_up"] = fu
         record["challenge_trail"] = nomination_route.challenge_trail(
             record, case.get("affected_challenges", ())
         )
@@ -718,19 +822,31 @@ def _priority_includes_case(rec, case_id):
             or any(item["case_id"] == case_id for item in rec.get("final_items") or []))
 
 
-def challenge_catalog(store, case_id):
+def challenge_catalog(store, case_id, *, can_view_intake=True, can_view_reason=True):
     out = []
     corrections = priority_correction_lookup(store)
     for rec in store.data["recommendations"]:
         if rec.get("kind") == "ai_task" or not _priority_includes_case(rec, case_id):
             continue
         original, decision_version, decision = priority_binding(rec)
-        out.append(dict(proposal_id=rec["id"], proposal_version=original,
-                        decision_version=decision_version, human_decision=decision,
-                        source_version=(rec.get("source_versions") or {}).get(case_id),
-                        policy_version=rec.get("policy_version"), model=rec.get("model"),
-                        prompt_version=rec.get("prompt_version"), source=rec.get("source"),
-                        **priority_challenge_state(store, rec, corrections)))
+        entry = dict(proposal_id=rec["id"], proposal_version=original,
+                     decision_version=decision_version, human_decision=decision,
+                     source_version=(rec.get("source_versions") or {}).get(case_id),
+                     policy_version=rec.get("policy_version"), model=rec.get("model"),
+                     prompt_version=rec.get("prompt_version"), source=rec.get("source"),
+                     **priority_challenge_state(store, rec, corrections))
+        expl = nomination_route.filter_explanation_for_viewer(
+            nomination_route.challenge_explanation(
+                entry,
+                can_view_intake=can_view_intake,
+                can_view_reason=can_view_reason,
+            ),
+            can_view_intake=can_view_intake,
+            can_view_reason=can_view_reason,
+        )
+        if expl is not None:
+            entry["plain_language_explanation"] = expl
+        out.append(entry)
     return out
 
 
@@ -1213,11 +1329,18 @@ class ResidentDecisionMixin:
             self.save()
 
     def _res_nomination_record(self, user, c, body):
+        body, extras = _split_optional(body, ("assisted_channel",))
         _intake_fields(user, c, body, {
             "case_id", "kind", "reported_subject_ref", "account", "source", "channel",
             "owner", "acknowledgement_ref", "next_update", "non_digital_route", "hazard_concern",
         })
         _refuse_hazard(c, body, required=True)
+        stored_channel, route_mode, assisted_channel = nomination_route.normalize_route_channel(
+            body["channel"],
+            assisted_channel=extras.get("assisted_channel"),
+            allow_intermediary=True,
+            label="the supplied channel",
+        )
         guard = challenges.protected_snapshot(c)
         record = dict(
             id=f"NOM-{uuid.uuid4().hex}", version=1,
@@ -1226,13 +1349,18 @@ class ResidentDecisionMixin:
                 reported_subject_ref=_intake_text(body["reported_subject_ref"], "the unverified subject reference", 100),
                 account=_intake_text(body["account"], "the original account", 4000),
                 source=_intake_text(body["source"], "the supplied source"),
-                channel=k.choice(body["channel"], INTAKE_CHANNELS, "the supplied channel"),
+                channel=stored_channel,
+                route_mode=route_mode,
+                assisted_channel=assisted_channel,
                 recorded_by=_identity(user), at=_time(),
             ),
             identity_status="Unknown", support_needs="Unknown", risk_flags="Unknown",
             owner=_intake_owner(self, body["owner"]),
             acknowledgement=dict(
                 reference=_intake_text(body["acknowledgement_ref"], "the staff-recorded acknowledgement evidence"),
+                channel=stored_channel,
+                route_mode=route_mode,
+                assisted_channel=assisted_channel,
                 recorded_by=_identity(user), at=_time(), delivery="Not verified by this system",
             ),
             next_update=_day(body["next_update"]),
@@ -1245,7 +1373,9 @@ class ResidentDecisionMixin:
         return f"{record['id']} unverified intake recorded"
 
     def _res_nomination_acknowledge(self, user, c, body):
-        body, extras = _split_optional(body, ("hazard_concern",))
+        body, extras = _split_optional(
+            body, ("hazard_concern", "channel", "assisted_channel", "owner_reassignment_reason")
+        )
         _intake_fields(user, c, body, {
             "case_id", "id", "expected_version", "owner",
             "acknowledgement_ref", "non_digital_route", "next_update",
@@ -1259,6 +1389,24 @@ class ResidentDecisionMixin:
         if _identity_status(record.get("owner")) == "Known":
             _owner_rights(self, user, record["owner"])
         owner = _intake_owner(self, body["owner"])
+        if user["role"] not in MANAGERS and not _same_person(user, owner):
+            raise PermissionError("Only a resident-workflow manager can assign another colleague as owner.")
+        reassignment_reason = (
+            _intake_text(extras["owner_reassignment_reason"], "the owner reassignment reason")
+            if extras.get("owner_reassignment_reason") is not None
+            else None
+        )
+        raw_channel = (
+            extras["channel"]
+            if "channel" in extras
+            else ((record.get("original") or {}).get("channel") or "digital")
+        )
+        stored_channel, route_mode, assisted_channel = nomination_route.normalize_route_channel(
+            raw_channel,
+            assisted_channel=extras.get("assisted_channel"),
+            allow_intermediary=True,
+            label="the acknowledgement channel",
+        )
         ack_ref = _intake_text(body["acknowledgement_ref"], "the staff-recorded acknowledgement evidence")
         route = _intake_text(body["non_digital_route"], "the staffed non-digital route")
         next_update = _day(body["next_update"])
@@ -1269,15 +1417,21 @@ class ResidentDecisionMixin:
                 acknowledgement=deepcopy(record.get("acknowledgement")),
                 non_digital_route=record.get("non_digital_route"),
             ))
+        ack_payload = dict(
+            reference=ack_ref,
+            channel=stored_channel,
+            route_mode=route_mode,
+            assisted_channel=assisted_channel,
+            recorded_by=_identity(user),
+            at=_time(),
+            delivery="Not verified by this system",
+        )
+        if reassignment_reason is not None:
+            ack_payload["reassignment_reason"] = reassignment_reason
         record.update(
             version=record["version"] + 1,
             owner=owner,
-            acknowledgement=dict(
-                reference=ack_ref,
-                recorded_by=_identity(user),
-                at=_time(),
-                delivery="Not verified by this system",
-            ),
+            acknowledgement=ack_payload,
             non_digital_route=route,
             next_update=next_update,
         )
@@ -1285,13 +1439,21 @@ class ResidentDecisionMixin:
         return f"{record['id']} route acknowledgement version {record['version']} recorded"
 
     def _res_nomination_correct(self, user, c, body):
-        body, extras = _split_optional(body, ("hazard_concern", "raised_by", "representative_ref", "dependencies"))
+        body, extras = _split_optional(
+            body, ("hazard_concern", "raised_by", "representative_ref", "dependencies", "assisted_channel")
+        )
         _intake_fields(user, c, body, {
             "case_id", "id", "expected_version", "reported_subject_ref", "account",
             "source", "channel", "next_update", "challenge_id",
         })
         _refuse_hazard(c, extras)
         raiser = _raiser(c, extras)
+        stored_channel, route_mode, assisted_channel = nomination_route.normalize_route_channel(
+            body["channel"],
+            assisted_channel=extras.get("assisted_channel"),
+            allow_intermediary=True,
+            label="the supplied channel",
+        )
         has_deps = "dependencies" in extras
         parsed_deps = nomination_route.parse_dependencies(extras["dependencies"]) if has_deps else {}
         guard = challenges.protected_snapshot(c)
@@ -1306,7 +1468,9 @@ class ResidentDecisionMixin:
             reported_subject_ref=_intake_text(body["reported_subject_ref"], "the corrected unverified subject reference", 100),
             account=_intake_text(body["account"], "the competing corrected account", 4000),
             source=_intake_text(body["source"], "the supplied correction evidence"),
-            channel=k.choice(body["channel"], INTAKE_CHANNELS, "the supplied channel"),
+            channel=stored_channel,
+            route_mode=route_mode,
+            assisted_channel=assisted_channel,
             recorded_by=_identity(user), at=_time(),
             challenge=challenge, **raiser,
         )
@@ -1658,7 +1822,9 @@ class ResidentDecisionMixin:
 
     def _res_challenge_open(self, user, c, body):
         from . import projection
-        body, extras = _split_optional(body, ("hazard_concern", "raised_by", "representative_ref"))
+        body, extras = _split_optional(
+            body, ("hazard_concern", "raised_by", "representative_ref", "assisted_channel")
+        )
         if not projection.appointment_evidence_visible(user):
             raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
         fields = {"action", "proposal_id", "proposal_version", "decision_version", "target_kind",
@@ -1667,6 +1833,12 @@ class ResidentDecisionMixin:
             raise ValueError("Supply only the challenge fields. Identity, time, decisions and dependencies are recorded by the server.")
         _refuse_hazard(c, extras)
         raiser = _raiser(c, extras)
+        stored_channel, route_mode, assisted_channel = nomination_route.normalize_route_channel(
+            body["channel"],
+            assisted_channel=extras.get("assisted_channel"),
+            allow_intermediary=False,
+            label="the supplied challenge channel",
+        )
         guard = challenges.protected_snapshot(c)
         rec = _priority_record(self, body.get("proposal_id"))
         if not _priority_includes_case(rec, c["id"]):
@@ -1678,11 +1850,13 @@ class ResidentDecisionMixin:
         owner = _person(self, body["owner"])
         if not projection.appointment_evidence_visible(owner):
             raise ValueError("Choose a named owner with resident-workflow and recorded-reason rights.")
+        if user["role"] not in MANAGERS and not _same_person(user, owner):
+            raise PermissionError("Only a resident-workflow manager can assign another colleague as owner.")
         record = dict(id=k.next_id(c.get("affected_challenges", []), "CH"),
                       version=1, status="Open", target=target, proposal_id=rec["id"],
                       proposal_version=original, human_decision=decision,
                       decision_version=decision_version, owner=_identity(owner),
-                      channel=k.choice(body["channel"], ("Digital", "Phone", "Letter", "In person"), "the supplied challenge channel"),
+                      channel=stored_channel, route_mode=route_mode, assisted_channel=assisted_channel,
                       source=k.text(body["source"], "the supplied challenge reference", 300),
                       request=k.text(body["request"], "the person's supplied request", 300),
                       explanation=k.text(body["explanation"], "the permitted plain-language explanation", 300),

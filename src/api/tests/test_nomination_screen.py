@@ -163,6 +163,100 @@ class NominationScreen(unittest.TestCase):
         self.assertIn("No nomination or self-referral is recorded for this home.", empty["text"])
         self.assertIsNone(render(dict(id="ZF-1")))
 
+    def test_plain_language_explanation_renders_owner_ai_policy_and_uncertainty(self) -> None:
+        explained = record(
+            plain_language_explanation=dict(
+                permitted=True,
+                ai_involved=True,
+                human_decision_owner="Sam Officer (Resident Liaison Officer) owns every decision.",
+                ai_involvement_explanation=(
+                    "Advisory priority suggestion PRIO-1 used workflow fields only."
+                ),
+                sources=["Referral recorded via staff-recorded non-digital route (Phone)"],
+                policy_reasons=["Staffed nomination and self-referral route (FR-037)."],
+                uncertainty_note="Support needs: Unknown; Risk flags: Unknown.",
+            )
+        )
+        out = self.shown(explained)
+        text = out["text"]
+        self.assertIn("Human decision owner: Sam Officer", text)
+        self.assertIn("AI involvement: Advisory priority suggestion PRIO-1", text)
+        self.assertIn("Staffed nomination and self-referral route (FR-037).", text)
+        self.assertIn("Uncertainty and unverified items: Support needs: Unknown", text)
+
+    def test_interactive_workbench_mode_renders_labelled_dual_route_forms(self) -> None:
+        interactive_script = r"""
+const fs = require("node:fs");
+const src = fs.readFileSync(process.argv[1] + "/panels.js", "utf8");
+const start = src.indexOf("function nominationPanel");
+const end = src.indexOf("\nfunction affectedChallengePanel");
+const c = JSON.parse(process.argv[2]);
+const h = (tag, attrs, ...kids) => ({tag, attrs: attrs || {}, kids: kids.flat(Infinity)
+  .filter((k) => k !== null && k !== undefined && k !== false)});
+const collect = (n, tag, out = []) => {
+  if (n && typeof n === "object" && Array.isArray(n.kids)) {
+    if (n.tag === tag) out.push(n);
+    n.kids.forEach((k) => collect(k, tag, out));
+  }
+  return out;
+};
+eval(src.slice(start, end) + "\nglobalThis.__panel = nominationPanel(c, 'ZF-1', () => {});");
+const p = globalThis.__panel;
+const forms = collect(p, "form");
+const labels = collect(p, "label").map((l) => l.attrs.for);
+const controls = ["input", "select", "textarea"].flatMap((t) => collect(p, t));
+const selects = collect(p, "select").map((s) => ({
+  id: s.attrs.id,
+  options: collect(s, "option").map((o) => o.attrs.value),
+}));
+console.log(JSON.stringify({
+  formCount: forms.length,
+  labels,
+  controlIds: controls.map((el) => el.attrs.id),
+  describedByCount: controls.filter((el) => Boolean(el.attrs["aria-describedby"])).length,
+  selects,
+}));
+"""
+        case_payload = dict(
+            id="ZF-1",
+            challenge_targets=[],
+            nomination_records=[record()],
+            nomination_permissions=dict(
+                can_view=True,
+                can_write=True,
+                can_reassign_owner=False,
+                acknowledgeable_nomination_ids=["NOM-1"],
+                correctable_nomination_ids=["NOM-1"],
+                editable_nomination_ids=["NOM-1"],
+                staff_owners=[
+                    dict(
+                        email="sam@example.test",
+                        name="Sam Officer",
+                        role="Resident Liaison Officer",
+                    )
+                ],
+                representative_authorities=[
+                    dict(representative_ref="SYN-REP-1", label="SYN-REP-1 (Loft insulation)")
+                ],
+            ),
+        )
+        res = subprocess.run(
+            ["node", "-e", interactive_script, str(WEB), json.dumps(case_payload)],
+            text=True,
+            capture_output=True,
+            timeout=30,
+        )
+        self.assertEqual(res.returncode, 0, res.stderr)
+        parsed = json.loads(res.stdout)
+        self.assertEqual(parsed["formCount"], 2)
+        self.assertEqual(set(parsed["labels"]), set(parsed["controlIds"]))
+        self.assertEqual(parsed["describedByCount"], len(parsed["controlIds"]))
+        channel_selects = [s for s in parsed["selects"] if s["id"].endswith("-channel")]
+        self.assertEqual(len(channel_selects), 2)
+        for sel in channel_selects:
+            self.assertIn("digital", sel["options"])
+            self.assertIn("staff_recorded_non_digital", sel["options"])
+
 
 if __name__ == "__main__":
     unittest.main()
