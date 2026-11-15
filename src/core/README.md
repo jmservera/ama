@@ -5296,3 +5296,37 @@ until Finance validates them. It stores nothing: no file, run record, database, 
 `ZF_DATA` access. Tests: `python -m unittest discover -s tests -p 'test_learning_test_bundles.py' -q`.
 This is not a real experiment, screen wiring, stored runs or multi-run aggregation; those stay held
 by the [protocol](../../docs/reference/research/ux/journey-learning-test-bundles.md).
+
+## Meaningful human-review effectiveness gate and automation-bias harness (Refs #223)
+
+`zava_forward.core.human_review_effectiveness` enforces a fail-closed `gates.GateResult`
+(`human_review_gate`, compatible with `gates.transition_allowed`) over `Store.ai_run` and
+`Store.review_ai` records (`AC-070`, `FR-026`, `FR-027`, `FR-028`, `NFR-009`, `OQ-017`).
+
+* Seeded critical defect coverage: eight constructed scenarios across `summary` and `message`
+  tasks pair AI proposals 1-to-1 against `Store.ai_run(..., mode="workflow")` on identical cases
+  (`ZF-223-A`, `ZF-223-B`), covering plausible-but-wrong (`wrong`), `stale`, `unsupported`, and
+  `incomplete` critical defects plus hedged and confident valid controls (`none`). Every seeded
+  defect carries resolving inline `[[...]]` citations (`verified == True`), proving that citation
+  validity alone and default acceptance cannot pass `human_review_gate`.
+* Retained provenance and freshness: passing the gate requires a registered, task-authorised
+  named human reviewer (refusing system, agent, and `TBD`/placeholder tokens), matching live
+  `ai_tasks.source_hashes`, retained `review_evidence.compared` (`ai` and `workflow`), hash-chain
+  audit verification (`Store.verify_audit()`), a substantive non-memory `reviewer_reason` citing a
+  resolving case `source_labels` key on all dispositions (`accept`, `edit`, and `reject`), and
+  clean discrepancy verification of `override_text` on `edit`.
+* Automation-bias harness and blind human worksheets: `run_automation_bias_harness` compares
+  `competent`, `default_accept`, `automation_bias` (accepting confident citation-valid proposals
+  while checking hedged ones), `citation_only`, and `unauthorised_competent` panels, reporting
+  overall and per-class detection, corrections, rejections, false rejects, zero gate leakage, and
+  total/net review effort against the workflow-only comparator. `blank_worksheet`,
+  `score_human_session`, and duplicate-rejecting `pool_human_sessions` prepare blind participant
+  scoring without claiming human-oversight closure: `PROVISIONAL_AUTHORITY` fails closed when
+  `live=True` until named human owners approve `OQ-017` delegations and complete participant trials.
+
+```bash
+cd src/core && python3 -m mypy && python3 -m ruff check . \
+  && python3 -m ruff format --check . \
+  && PYTHONPATH=src:tests python3 -m unittest discover -s tests -p 'test_*223*.py' -v
+```
+
