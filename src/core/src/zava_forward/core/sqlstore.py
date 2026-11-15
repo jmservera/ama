@@ -1008,7 +1008,7 @@ class SqlStore(Store):
 
     @staticmethod
     def _row(c):
-        nxt = next((a["date"] for a in c["appointments"] if a["outcome"] == "Booked"), None)
+        nxt = next((a["date"] for a in c["appointments"] if isinstance(a, dict) and a.get("outcome") == "Booked"), None)
         name, home = c["resident"]["name"], c["home"]
         return (c["id"], c["stage"], home["area"], c["wave"], c["owner_code"], int(bool(c["closed"])),
                 int(taskqueues.has_open_safety(c)), home["postcode"], home["address"], json.dumps(c),

@@ -40,6 +40,7 @@ any supplied `Store` or `SqlStore`. Run the focused `#93` invariant suite from
 ```bash
 PYTHONPATH=src:tests python3 -m unittest tests/test_finance_no_automated_path_93.py -v
 ```
+
 ## Management-view AI consumption economics and explicit denominators (2026-11-15, Refs #100)
 
 `tokenomics` (`summarize_ai_consumption_economics`, `store_ai_consumption_economics`,
@@ -79,6 +80,36 @@ audit state across `insights.stats` (`Store.stats`), `progress.report`
 `ai_tasks.live_report` (`Store.ai_live_report`). Offline synthetic coverage in
 `src/core/tests/test_management_tokenomics_invariant_100.py` does not close
 `OD-51` or establish live Azure billing reconciliation (`Refs #100`).
+
+## Exercise-scenario safety and resident consent gate verification (2026-11-15, Refs #81)
+
+`safety_consent_exercise_gate` (`verify_exercise_safety_and_consent_gates` and
+`verify_store_safety_and_consent_invariants`) runs deterministic offline gate
+verification across all six core exercise scenario suites (`constructed_workbench`,
+`resident_preview`, `sensor_retrofit`, `scale_matrix`,
+`authorised_exception_controls`, and `learning_bundles`) on both JSON `Store`
+(`use_sql=False`) and SQLite `SqlStore` (`use_sql=True`), plus any caller-supplied
+`extra_stores`:
+
+* Safety gate invariant (`RULE-001`, `PRD FR-008`, `BRD BG-003`): every controlled
+  progression attempt (`advance`, `signoff_give`, `issue_work_order`,
+  `reissue_work_order`, appointment confirmation activation, `Booked` appointment
+  recording, `complete_work_order`, `correct_work_order`, `accept_quality`, and
+  `hand_over_quality`) is refused fail-closed with zero case, work-order, or audit
+  mutation whenever safety evidence is unresolved, including active hazards,
+  repaired-but-unreleased referrals, same-person release attempts, open standalone
+  `safeguarding_items` or item-shaped `safeguarding` records, non-boolean
+  `released` flags, and missing or malformed safety containers, while emergency
+  referral (`BRD FR-002`) remains open and sensor telemetry cannot clear a hold.
+* Resident agreement and authorised-exception invariant (`RULE-002`, `BRD FR-011`,
+  `BRD FR-014`, `PRD FR-008`, `BRD BG-005`): every attempt to issue, activate,
+  advance, complete, accept, or hand over work without a valid current-scope
+  resident or confirmed-representative `Accepted` decision or a valid current-scope,
+  in-window, resident-notified `authorised_works_exceptions` record approved by a
+  named human (`validate_authorised_works_exception`) is refused fail-closed, and retention
+  deletion removes `authorised_works_exceptions` alongside other `RESIDENT_FIELDS`.
+  All rule records and scenarios in this module are unreviewed offline exercise
+  fixtures, never live legal sign-off or live resident consent evidence.
 
 ## Immutable Blob ledger digests and scheduled verification (2026-11-15, Refs #115)
 
