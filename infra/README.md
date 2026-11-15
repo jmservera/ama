@@ -996,8 +996,8 @@ remain an owner design decision, not an executable instruction here.
 | `enableLocks` | `false` | `false` | `true` |
 | `zoneRedundant` (storage ZRS, SQL zone, registry and Container Apps) | `false` | `false` | `false` PLACEHOLDER pending selected-region support and owner decision |
 | `apiMinReplicas` (API minimum, independent of security profile) | `0` | `0` | `0`; explicitly choose `2` for always-on production |
-| Service SKUs | IoT Hub `B1`/1 unit; SQL `GP_S_Gen5`/2 max vCores; Log Analytics `PerGB2018`; registry Premium; Foundry `S0`; Container Apps Consumption | same | same; not a pilot sizing approval |
-| Model SKU/quota inputs (`modelDeployments`) | `standard`: gpt-4.1-mini; `capable`: gpt-4.1; both version 2025-04-14, `GlobalStandard`, capacity 30 | same defaults, subject to checks | same defaults; catalog checked below, quota and approved subscription binding unknown |
+| Service SKUs | IoT Hub `B1`/1 unit; SQL serverless `GP_S_Gen5`/2 max vCores (`sqlAutoPauseDelayMinutes = 60`); Log Analytics `PerGB2018`; registry Premium; Foundry `S0`; Container Apps Consumption (`monthlyBudget = 300`, `iotHubMonthlyCost = 60`) | same (`serverless` `GP_S_Gen5`/2 max vCores) | IoT Hub `B1`/1 unit; SQL provisioned `GP_Gen5`/2 vCores PLACEHOLDER (`sqlTier = 'provisioned'`, ADR 0002 decision 1); Log Analytics `PerGB2018`; registry Premium; Foundry `S0`; Container Apps Consumption; not a pilot sizing approval |
+| Model SKU/quota inputs (`modelDeployments`) | `standard`: `gpt-4.1-nano`, version `2025-04-14`, `GlobalStandard`, capacity `1` | same (`gpt-4.1-nano`, `2025-04-14`, `GlobalStandard`, capacity `1`), subject to checks | same (`gpt-4.1-nano`, `2025-04-14`, `GlobalStandard`, capacity `1`); `gpt-4.1-nano` and `GP_Gen5` post-date the `2026-10-18` `R4`/`R8`/`R9` snapshot below and remain `Unknown` pending fresh target-subscription checks |
 | Retention (fixed unless a documented module input exists) | Log Analytics 90 days; SQL PITR 14 days; blob/container soft delete 30 days; ACR 30 days; audit/digest immutability 365 days unlocked; IoT 1 day | same | same; not a legally approved retention schedule |
 | `location` and `sqlLocation` | `uksouth` candidate, recheck | `uksouth` candidate, recheck | empty PLACEHOLDERs retained; pilot `uksouth` selected, separate SQL region unselected |
 | `regionCheckReference`, `quotaCheckReference` | empty PLACEHOLDERs | empty PLACEHOLDERs | empty PLACEHOLDERs |
@@ -1019,14 +1019,22 @@ Rules:
   default inputs retains all controls; SQL cannot opt out in any profile.
 * `environmentName=pilot` with the development profile or public access is rejected by the parameter guard (`pilotRequiresProductionProfile`).
 * Promotion is by the same template version and a different parameter file: validate in dev, deploy the same commit to test with `what-if`, then to pilot after the owner approves the `what-if` output. Images are promoted by digest through the registry, never rebuilt per environment.
-* `location`, `sqlLocation`, `modelDeployments` (model/version/SKU/capacity),
-  `iotHubSku` and `iotHubUnits` are parameters. Do not infer that fixed service
-  SKUs or every retention period are entry-point configurable.
-* Empty `regionCheckReference` or `quotaCheckReference` fails a named guard;
-  empty locations also fail. These references point to actual dated reviewed
-  records, not approval tokens. Any nonempty string satisfies the mechanical
-  gate, so a human must verify contents, freshness and exact configuration.
-  Do not enter placeholder text to pass it.
+* `location`, `sqlLocation`, `sqlTier`, `sqlVCores` (`1..80`), `modelDeployments`
+  (model/version/SKU/capacity), `iotHubSku`, `iotHubUnits`, `iotHubRetentionDays`,
+  `iotHubMonthlyCost` (`1..700`) and `monthlyBudget` (`>= 1`, default `300`) are
+  bounded parameters; see the canonical
+  [environment, region, and quota parameter strategy](../docs/architecture/environment-region-quota-strategy.md).
+  Do not infer that fixed service SKUs or every retention period are entry-point
+  configurable.
+* Empty, whitespace-only, placeholder, word-bounded assumption/skip (`todo`,
+  `tbd`, `assumed`, `assumption`, `unverified`, `pending`, `unknown`, `none`,
+  `n/a`, `na`, `skip`, `example.invalid`), or UUID `regionCheckReference` /
+  `quotaCheckReference` values fail named Bicep and CLI guards; empty,
+  placeholder/assumption, or malformed locations also fail. These references
+  point to actual dated reviewed records, not approval tokens. Because offline
+  guards validate format rather than live Azure state, a human must still verify
+  record contents, freshness and exact configuration. Do not enter placeholder
+  text or raw subscription/tenant UUIDs.
 
 Recorded region and quota checks (re-run before each deployment; a check in another subscription or on another date proves nothing):
 
@@ -1048,11 +1056,16 @@ the [pilot example](./main.pilot.example.bicepparam) and the
 [Container Apps](./modules/containerapps.bicep), [SQL](./modules/sql.bicep),
 [IoT](./modules/iothub.bicep), [Foundry](./modules/foundry.bicep),
 [storage](./modules/storage.bicep) and [registry](./modules/registry.bicep)
-modules. These request Consumption/internal VNet; SQL `GP_S_Gen5`, maximum
+modules. At historical commit `612cbed7`, those files requested Consumption/internal VNet; SQL `GP_S_Gen5`, maximum
 2 vCores, minimum 0.5, auto-pause 60 minutes; IoT `B1`, one unit; Foundry
 `AIServices`/`S0`, OpenAI `gpt-4.1-mini` and `gpt-4.1`, each version
 `2025-04-14`, `GlobalStandard`, capacity 30; StorageV2 LRS (ZRS if selected);
-registry Premium. These are template requests, not approved pilot sizing.
+registry Premium. Subsequent repository updates moved `main.pilot.example.bicepparam`
+to provisioned SQL (`sqlTier = 'provisioned'`, `GP_Gen5`) and changed the default
+`modelDeployments` entry to `gpt-4.1-nano` (version `2025-04-14`, `GlobalStandard`,
+capacity `1`); neither `GP_Gen5` nor `gpt-4.1-nano` was queried in the `2026-10-18`
+`R4`/`R8`/`R9` snapshot below, so both remain `Unknown` until fresh `R4`, `R8` and
+`R9` queries are recorded on the target subscription. These are template requests, not approved pilot sizing.
 
 Initial queries ran on 2026-10-18 with Azure CLI 2.91.0; identical commands
 were reproduced on 2026-10-19 at 06:43 UTC. The table below records the

@@ -22,6 +22,7 @@ param teamsWebhookUrl string = ''
 param evidenceStore string = 'blob'
 param sharePointSiteId string = ''
 @description('Monthly budget in the billing currency. Notifications above 80 percent actual and 100 percent forecast are not a hard cap.')
+@minValue(1)
 param monthlyBudget int = 300
 param budgetStartDate string = utcNow('yyyy-MM-01')
 @description('Enable new job/IoT alert candidates only after separate named-human signal, owner and threshold approval. Defaults disabled; see infra/monitoring-runbooks.md.')
@@ -100,8 +101,11 @@ param zoneRedundant bool = false
 @allowed(['serverless', 'provisioned'])
 param sqlTier string = 'serverless'
 @description('SQL vCores: serverless maximum or provisioned count.')
+@minValue(1)
+@maxValue(80)
 param sqlVCores int = 2
 @description('Serverless only. Auto-pause delay in minutes: -1 disables, otherwise 15 to 10080.')
+@minValue(-1)
 param sqlAutoPauseDelayMinutes int = 60
 @description('SQL backup storage redundancy. Empty derives Zone when zoneRedundant, otherwise Local.')
 @allowed(['', 'Local', 'Zone', 'Geo', 'GeoZone'])
@@ -195,6 +199,25 @@ var storageBlobDataContributor = 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
 var storageQueueDataContributor = '974c5e8b-45b9-4653-ba55-5f855dd0fb88'
 var storageQueueDataSender = 'c6a89b2d-59bc-44d0-9896-0f6e12d7b80a'
 
+var uuidHexCharacters = split('0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,-', ',')
+var regionSlugCharacters = split('a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,0,1,2,3,4,5,6,7,8,9,-', ',')
+
+var normalizedRegionCheck = toLower(trim(regionCheckReference))
+var regionCheckWords = split(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(normalizedRegionCheck, '-', ' '), '_', ' '), '/', ' '), '#', ' '), '.', ' '), ':', ' '), ',', ' '), ';', ' '), '(', ' '), ')', ' '), ' ')
+var regionCheckIsUuid = length(normalizedRegionCheck) == 36 && empty(reduce(uuidHexCharacters, normalizedRegionCheck, (remaining, digit) => replace(remaining, digit, ''))) && length(split(normalizedRegionCheck, '-')) == 5 && take(skip(normalizedRegionCheck, 8), 1) == '-' && take(skip(normalizedRegionCheck, 13), 1) == '-' && take(skip(normalizedRegionCheck, 18), 1) == '-' && take(skip(normalizedRegionCheck, 23), 1) == '-'
+var regionCheckRecorded = !empty(normalizedRegionCheck) && !regionCheckIsUuid && !contains(normalizedRegionCheck, 'placeholder') && !contains(normalizedRegionCheck, 'example.invalid') && !contains(normalizedRegionCheck, 'n/a') && !contains(normalizedRegionCheck, '00000000-0000-0000-0000-000000000000') && !contains(regionCheckWords, 'todo') && !contains(regionCheckWords, 'tbd') && !contains(regionCheckWords, 'assumed') && !contains(regionCheckWords, 'assumption') && !contains(regionCheckWords, 'unverified') && !contains(regionCheckWords, 'pending') && !contains(regionCheckWords, 'unknown') && !contains(regionCheckWords, 'none') && !contains(regionCheckWords, 'na') && !contains(regionCheckWords, 'skip')
+
+var normalizedQuotaCheck = toLower(trim(quotaCheckReference))
+var quotaCheckWords = split(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(normalizedQuotaCheck, '-', ' '), '_', ' '), '/', ' '), '#', ' '), '.', ' '), ':', ' '), ',', ' '), ';', ' '), '(', ' '), ')', ' '), ' ')
+var quotaCheckIsUuid = length(normalizedQuotaCheck) == 36 && empty(reduce(uuidHexCharacters, normalizedQuotaCheck, (remaining, digit) => replace(remaining, digit, ''))) && length(split(normalizedQuotaCheck, '-')) == 5 && take(skip(normalizedQuotaCheck, 8), 1) == '-' && take(skip(normalizedQuotaCheck, 13), 1) == '-' && take(skip(normalizedQuotaCheck, 18), 1) == '-' && take(skip(normalizedQuotaCheck, 23), 1) == '-'
+var quotaCheckRecorded = !empty(normalizedQuotaCheck) && !quotaCheckIsUuid && !contains(normalizedQuotaCheck, 'placeholder') && !contains(normalizedQuotaCheck, 'example.invalid') && !contains(normalizedQuotaCheck, 'n/a') && !contains(normalizedQuotaCheck, '00000000-0000-0000-0000-000000000000') && !contains(quotaCheckWords, 'todo') && !contains(quotaCheckWords, 'tbd') && !contains(quotaCheckWords, 'assumed') && !contains(quotaCheckWords, 'assumption') && !contains(quotaCheckWords, 'unverified') && !contains(quotaCheckWords, 'pending') && !contains(quotaCheckWords, 'unknown') && !contains(quotaCheckWords, 'none') && !contains(quotaCheckWords, 'na') && !contains(quotaCheckWords, 'skip')
+
+var normalizedLocation = toLower(trim(location))
+var normalizedSqlLocation = toLower(trim(sqlLocation))
+var sqlLocationSegments = split(normalizedSqlLocation, '-')
+var sqlLocationIsUuid = length(normalizedSqlLocation) == 36 && empty(reduce(uuidHexCharacters, normalizedSqlLocation, (remaining, digit) => replace(remaining, digit, ''))) && length(sqlLocationSegments) == 5 && take(skip(normalizedSqlLocation, 8), 1) == '-' && take(skip(normalizedSqlLocation, 13), 1) == '-' && take(skip(normalizedSqlLocation, 18), 1) == '-' && take(skip(normalizedSqlLocation, 23), 1) == '-'
+var sqlLocationSelected = !empty(normalizedSqlLocation) && sqlLocation == normalizedSqlLocation && length(normalizedSqlLocation) >= 3 && !sqlLocationIsUuid && contains('abcdefghijklmnopqrstuvwxyz', take(normalizedSqlLocation, 1)) && !contains(sqlLocationSegments, '') && empty(reduce(regionSlugCharacters, normalizedSqlLocation, (remaining, digit) => replace(remaining, digit, ''))) && !contains(normalizedSqlLocation, 'placeholder') && !contains(sqlLocationSegments, 'todo') && !contains(sqlLocationSegments, 'tbd') && !contains(sqlLocationSegments, 'assumed') && !contains(sqlLocationSegments, 'assumption') && !contains(sqlLocationSegments, 'unverified') && !contains(sqlLocationSegments, 'pending') && !contains(sqlLocationSegments, 'unknown') && !contains(sqlLocationSegments, 'none') && !contains(sqlLocationSegments, 'na') && !contains(sqlLocationSegments, 'skip')
+
 module guard 'modules/guard.bicep' = {
   name: 'parameter-guard'
   params: {
@@ -203,9 +226,9 @@ module guard 'modules/guard.bicep' = {
     productionProfileForbidsPublicNetworkAccess: isDev || !allowPublicNetworkAccess ? 'ok' : ''
     productionProfileRequiresKeyVaultPurgeProtection: isDev || keyVaultPurgeProtection ? 'ok' : ''
     productionProfileRequiresRegistryQuarantine: isDev || registryQuarantineEnabled ? 'ok' : ''
-    regionCheckMustBeRecorded: !empty(regionCheckReference) ? 'ok' : ''
-    quotaCheckMustBeRecorded: !empty(quotaCheckReference) ? 'ok' : ''
-    deploymentLocationsMustBeSelected: !empty(location) && !empty(sqlLocation) ? 'ok' : ''
+    regionCheckMustBeRecorded: regionCheckRecorded ? 'ok' : ''
+    quotaCheckMustBeRecorded: quotaCheckRecorded ? 'ok' : ''
+    deploymentLocationsMustBeSelected: !empty(normalizedLocation) && location == normalizedLocation && sqlLocationSelected ? 'ok' : ''
     publicEdgeRequiresProductionProfile: !enablePublicEdge || (!isDev && !allowPublicNetworkAccess) ? 'ok' : ''
     pilotRequiresProductionProfile: environmentName != 'pilot' || (!isDev && !allowPublicNetworkAccess) ? 'ok' : ''
     pilotRequiresLocks: environmentName != 'pilot' || enableLocks ? 'ok' : ''

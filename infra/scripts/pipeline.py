@@ -42,6 +42,30 @@ OVERRIDES = {
     "entraClientId",
     "entraBearerOnly",
 }
+FORBIDDEN_CHECK_PATTERN = re.compile(
+    r"(?:placeholder|example\.invalid|n/a"
+    r"|(?<![a-z0-9])(?:todo|tbd|assumed|assumption|unverified|pending|unknown|none|na|skip)(?![a-z0-9]))",
+    re.IGNORECASE,
+)
+EMBEDDED_UUID_PATTERN = re.compile(
+    r"(?<![0-9a-f])[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}(?![0-9a-f])",
+    re.IGNORECASE,
+)
+FORBIDDEN_REGION_SLUGS = frozenset(
+    {
+        "placeholder",
+        "todo",
+        "tbd",
+        "assumed",
+        "assumption",
+        "unverified",
+        "pending",
+        "unknown",
+        "none",
+        "na",
+        "skip",
+    }
+)
 
 
 class PipelineError(RuntimeError):
@@ -125,9 +149,24 @@ def parameters(infra: Path, environment: str) -> dict[str, Any]:
     for key in ("sqlAdminGroupObjectId", "entraClientId"):
         if UUID(overrides[key]).int == 0:
             raise PipelineError(f"Unresolved identity parameter: {key}")
+    for key in ("regionCheckReference", "quotaCheckReference"):
+        normalized_check = overrides[key].strip()
+        if (
+            not normalized_check
+            or FORBIDDEN_CHECK_PATTERN.search(normalized_check)
+            or EMBEDDED_UUID_PATTERN.search(normalized_check)
+        ):
+            raise PipelineError(f"Unresolved or invalid recorded check parameter: {key}")
     for key in ("location", "sqlLocation"):
-        if not re.fullmatch(r"[a-z][a-z0-9]+", overrides[key]):
+        region_slug = overrides[key]
+        if (
+            not re.fullmatch(r"[a-z][a-z0-9]+", region_slug)
+            or region_slug in FORBIDDEN_REGION_SLUGS
+            or "placeholder" in region_slug
+        ):
             raise PipelineError(f"Invalid region parameter: {key}")
+    if overrides["location"] != "uksouth":
+        raise PipelineError("Primary location parameter must be uksouth")
     values.update(
         {
             "workload": {"value": "forward"},

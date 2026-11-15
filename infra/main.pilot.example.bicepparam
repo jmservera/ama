@@ -15,10 +15,24 @@ param sqlAdminGroupName = 'sg-zava-forward-sql-admins' // PLACEHOLDER
 param sqlAdminGroupObjectId = '00000000-0000-0000-0000-000000000000' // PLACEHOLDER
 param entraClientId = '' // PLACEHOLDER: set after app registration
 param zoneRedundant = false // PLACEHOLDER: owner decides after selected-region service support checks
+param monthlyBudget = 300 // PLACEHOLDER: confirm pilot billing budget after subscription decision
+param iotHubSku = 'B1'
+param iotHubUnits = 1
+param iotHubRetentionDays = 1
+param iotHubMonthlyCost = 60 // PLACEHOLDER: confirm IoT allocation within verified subscription budget
 param sqlTier = 'provisioned' // ADR 0002 decision 1: no serverless auto-pause cold starts in pilot
 param sqlVCores = 2 // PLACEHOLDER: size from the pilot load result (not yet recorded)
 param sqlBackupStorageRedundancy = '' // PLACEHOLDER: owner decision; empty follows zoneRedundant
 param sqlBackupRetentionDays = 14 // PLACEHOLDER: PITR window only; legal retention is #121, undecided
+param modelDeployments = [
+  {
+    name: 'standard'
+    model: 'gpt-4.1-nano'
+    version: '2025-04-14'
+    skuName: 'GlobalStandard'
+    capacity: 1
+  }
+]
 param apiMinReplicas = 0
 param enableLocks = true
 param deploymentProfile = 'production'

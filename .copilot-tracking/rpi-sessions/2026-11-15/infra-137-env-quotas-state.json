@@ -1,0 +1,79 @@
+{
+  "task_id": "issue-137",
+  "task_slug": "infra-137-env-quotas",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/infra-137-env-quotas-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/infra-137-env-quotas-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/infra-137-env-quotas-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/infra-137-env-quotas-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/infra-137-env-quotas-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/infra-137-env-quotas-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run confirmed continuous automatic RPI loop (research, plan, critique, implement, review) for Issue #137 targeting region and quota parameterization, recorded checks, deterministic infra tests, and architecture documentation.",
+      "status": "confirmed",
+      "evidence": "User prompt instruction (2026-11-15)"
+    },
+    {
+      "decision": "Apply Focused validation tier (infra/tests/test_environment_quota_parameters.py + related infra tests + ruff check/format; avoid conflicts with test_monitoring_alerts.py) and commit locally without pushing.",
+      "status": "confirmed",
+      "evidence": "User prompt instruction (2026-11-15)"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready. Converged on hardening Bicep/CLI check-reference and SQL/budget bounds against whitespace, placeholders, assumptions, and UUID leakage, making quota parameters explicit across dev/test/pilot parameter sets, documenting the canonical region/quota parameter and recorded-check strategy in docs/architecture/, reconciling stale SKU/model rows in infra/README.md, and validating everything deterministically in infra/tests/test_environment_quota_parameters.py.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/infra-137-env-quotas-research.md"
+    },
+    {
+      "decision": "Single-pass plan critique execution: Complete.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/infra-137-env-quotas-plan-critique.md"
+    },
+    {
+      "decision": "Single-pass plan critique verdict: Revise (1 Critical, 4 High, 1 Medium, 0 Low; user response required: no). Applied direct planner dispositions PC-001 through PC-006 (explicit modelDeployments/sqlVCores/monthlyBudget=300/iotHub* without chat/AutoPause policy collisions, maxVCores bound in modules/sql.bicep, delimiter-tokenized word checks + 8-4-4-4-12 UUID checks avoiding spending/jtbd false positives, sqlLocation/location slug + assumption-word + value-redacted CLI checks, separated --isolated ruff + transient editable src/* venv for full infra/tests, and scoped .copilot-tracking/ + 2026-10-18 612cbed7 provenance honesty); Planning status finalized as Ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-15/infra-137-env-quotas-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Single-pass post-implementation Review execution: Complete.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/infra-137-env-quotas-review.md#execution-status"
+    },
+    {
+      "decision": "Single-pass post-implementation Review outcome: Defects found (1 High: RV-001 underscore-adjacent CLI regex boundary; 2 Medium: RV-002 operationalMonitoring.bicep/chatModel* doc attribution + sqlAutoPauseDelayMinutes @minValue(-1), RV-003 underscore/redaction/module-path/compiled-default test assertions; all routed to rpi-implement) across full task boundary P01-P03.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/infra-137-env-quotas-review.md#outcome"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Selected ranked follow-up #1 in child task issue-137-rv-fixes (infra-137-env-quotas-rv-fixes) to resolve RV-001, RV-002, and RV-003."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Resolve routed review defects RV-001, RV-002, and RV-003 across infra/scripts/deploy.py, infra/scripts/pipeline.py, infra/main.bicep, docs/architecture/environment-region-quota-strategy.md, and infra/tests/test_environment_quota_parameters.py.",
+      "rationale": "High-leverage, surgical 5-file fix that closes the underscore-delimited UUID/assumption regex bypass, fixes the operationalMonitoring.bicep module reference and sqlAutoPauseDelayMinutes @minValue(-1) bound, and locks regression coverage before local commit.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/infra-137-env-quotas-review.md#findings"
+    },
+    {
+      "rank": 2,
+      "task": "Execute fresh read-only Azure SQL (GP_Gen5), Foundry/OpenAI (gpt-4.1-nano), Container Apps, IoT Hub, and availability-zone queries (R4, R5, R7, R8, R9, R11, R14-R17) on the bound pilot subscription and record human sign-off before completing a private pilot .bicepparam copy.",
+      "rationale": "Required external cloud and human governance gate for live pilot deployment approval beyond offline deterministic template/ledger verification.",
+      "evidence": "infra/README.md#read-only-pilot-capability-and-quota-evidence-2026-10-18-refs-137"
+    },
+    {
+      "rank": 3,
+      "task": "Triage pre-existing non-isolated Ruff 0.17.3 notices (EXE001, SIM102, SIM117, FURB167) across older untouched infra/ scripts and tests in a standalone hygiene PR after stacked infrastructure branches merge.",
+      "rationale": "Low-risk maintainability cleanup kept out of Issue #137 to avoid cross-worktree conflicts across 30+ files.",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/infra-137-env-quotas-plan-critique.md#pc-005"
+    }
+  ]
+}
