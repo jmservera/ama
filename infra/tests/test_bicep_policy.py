@@ -155,6 +155,7 @@ def evaluate(expression, parameters: dict, variables: dict, context: dict | None
         "createObject": lambda *a: dict(zip(a[::2], a[1::2], strict=True)),
         "union": lambda *objects: {key: value for obj in objects for key, value in obj.items()},
         "true": lambda: True,
+        "false": lambda: False,
         "null": lambda: None,
         "format": lambda pattern, *args: pattern.format(*args),
         "replace": lambda value, old, new: value.replace(old, new),
@@ -1243,17 +1244,37 @@ class BicepPolicyTests(unittest.TestCase):
         self.assertEqual(env[core_digest.CONTAINER_VAR], core_digest.DEFAULT_CONTAINER)
         self.assertEqual(env[core_digest.CLIENT_ID_VAR], "api-client-id")
         self.assertEqual(env[core_digest.DIGEST_DIR_VAR], "/tmp/digests")
+        self.assertEqual(env[core_digest.REQUIRE_LOCK_VAR], "true")
+        self.assertEqual(env[core_digest.MIN_RETENTION_DAYS_VAR], "365")
         self.assertEqual(env["ZF_STORE"], "mssql")
         self.assertNotIn(core_digest.SAS_VAR, env)
 
+        main_lock_spec = template["parameters"]["ledgerDigestRequireRetentionLock"]
+        self.assertEqual(main_lock_spec.get("type"), "bool")
+        self.assertIs(main_lock_spec.get("defaultValue"), True)
+        apps_params = module(template, "containerapps")["properties"]["parameters"]
+        self.assertEqual(
+            apps_params["ledgerDigestRequireRetentionLock"],
+            {"value": "[parameters('ledgerDigestRequireRetentionLock')]"},
+        )
+        self.assertEqual(
+            apps_params["ledgerDigestMinRetentionDays"],
+            {"value": "[parameters('ledgerDigestImmutabilityDays')]"},
+        )
+
         rendered_custom = render_ledger_verify_job(
-            template, ledgerDigestContainer="custom-ledger-digests"
+            template,
+            ledgerDigestContainer="custom-ledger-digests",
+            ledgerDigestRequireRetentionLock=False,
+            ledgerDigestMinRetentionDays=730,
         )
         custom_env = {
             entry["name"]: entry["value"]
             for entry in rendered_custom["properties"]["template"]["containers"][0]["env"]
         }
         self.assertEqual(custom_env[core_digest.CONTAINER_VAR], "custom-ledger-digests")
+        self.assertEqual(custom_env[core_digest.REQUIRE_LOCK_VAR], "false")
+        self.assertEqual(custom_env[core_digest.MIN_RETENTION_DAYS_VAR], "730")
 
         alerts = [
             item
@@ -2129,14 +2150,11 @@ class BicepPolicyTests(unittest.TestCase):
         policies = [
             r
             for r in resources(storage)
-            if r["type"].endswith("/immutabilityPolicies")
-            and "condition" not in r
-            and "ranking-archive" not in r["name"]
+            if r["type"].endswith("/immutabilityPolicies") and "ranking-archive" not in r["name"]
         ]
         self.assertEqual(len(policies), 2)
         names = {}
         for policy in policies:
-            self.assertNotIn("condition", policy)
             name = evaluate(policy["name"], {"name": "fixture"}, storage["variables"])
             names[name] = policy
         for container, param, append in (
@@ -2145,6 +2163,29 @@ class BicepPolicyTests(unittest.TestCase):
         ):
             name = f"fixture/default/{container}/default"
             self.assertIn(name, names, f"missing policy on {container}")
+            if container == "audit-archive":
+                self.assertNotIn("condition", names[name])
+            else:
+                self.assertEqual(
+                    names[name].get("condition"),
+                    "[parameters('ledgerDigestImmutableStorage')]",
+                )
+                self.assertIs(
+                    evaluate(
+                        names[name]["condition"],
+                        {"ledgerDigestImmutableStorage": True},
+                        storage["variables"],
+                    ),
+                    True,
+                )
+                self.assertIs(
+                    evaluate(
+                        names[name]["condition"],
+                        {"ledgerDigestImmutableStorage": False},
+                        storage["variables"],
+                    ),
+                    False,
+                )
             props = names[name]["properties"]
             self.assertEqual(
                 props.get("immutabilityPeriodSinceCreationInDays"), f"[parameters('{param}')]"
@@ -2155,6 +2196,17 @@ class BicepPolicyTests(unittest.TestCase):
             spec = storage["parameters"][param]
             self.assertGreaterEqual(spec.get("minValue", 0), 1, param)
             self.assertGreaterEqual(spec["defaultValue"], spec["minValue"], param)
+
+        storage_immutable_spec = storage["parameters"]["ledgerDigestImmutableStorage"]
+        self.assertEqual(storage_immutable_spec.get("type"), "bool")
+        self.assertIs(storage_immutable_spec.get("defaultValue"), True)
+        main_immutable_spec = template["parameters"]["ledgerDigestImmutableStorage"]
+        self.assertEqual(main_immutable_spec.get("type"), "bool")
+        self.assertIs(main_immutable_spec.get("defaultValue"), True)
+        self.assertEqual(
+            module(template, "storage")["properties"]["parameters"]["ledgerDigestImmutableStorage"],
+            {"value": "[parameters('ledgerDigestImmutableStorage')]"},
+        )
 
         main_digest_spec = template["parameters"]["ledgerDigestImmutabilityDays"]
         self.assertEqual(main_digest_spec.get("type"), "int")
@@ -2186,7 +2238,39 @@ class BicepPolicyTests(unittest.TestCase):
             if r["type"] == "Microsoft.Storage/storageAccounts/blobServices/containers"
             and "copy" in r
         )
-        self.assertEqual(container_copy["properties"], {"publicAccess": "None"})
+        digest_container_props: dict | None = None
+        for idx, container_name in enumerate(containers_list):
+            evaluated_container_props = evaluate(
+                container_copy["properties"],
+                {"ledgerDigestImmutableStorage": True},
+                storage["variables"],
+                {"copyIndex": lambda *_, i=idx: i},
+            )
+            if container_name == core_digest.DEFAULT_CONTAINER:
+                self.assertEqual(
+                    evaluated_container_props,
+                    {
+                        "publicAccess": "None",
+                        "immutableStorageWithVersioning": {"enabled": True},
+                    },
+                )
+                digest_container_props = evaluated_container_props
+                disabled_container_props = evaluate(
+                    container_copy["properties"],
+                    {"ledgerDigestImmutableStorage": False},
+                    storage["variables"],
+                    {"copyIndex": lambda *_, i=idx: i},
+                )
+                self.assertEqual(
+                    disabled_container_props,
+                    {"publicAccess": "None", "immutableStorageWithVersioning": None},
+                )
+            else:
+                self.assertEqual(
+                    evaluated_container_props,
+                    {"publicAccess": "None", "immutableStorageWithVersioning": None},
+                )
+        self.assertIsNotNone(digest_container_props)
 
         lifecycle = next(
             r
@@ -2208,14 +2292,17 @@ class BicepPolicyTests(unittest.TestCase):
         )
         report = core_digest.verify_container_retention_lock(
             evaluated_digest_props,
-            container_properties=container_copy["properties"],
+            container_properties=digest_container_props,
             lifecycle_prefixes=lifecycle_prefixes,
             container_name=digest_container,
             require_locked=False,
+            require_immutable_versioning=True,
             min_retention_days=main_digest_spec["defaultValue"],
         )
         self.assertTrue(report["intact"], report["problems"])
         self.assertFalse(report["locked"])
+        self.assertEqual(report["immutability_policy_state"], "Unlocked")
+        self.assertEqual(report["retention_days"], main_digest_spec["defaultValue"])
 
     def test_ranking_archive_blob_wiring_is_opt_in_private_and_matches_the_provider(self) -> None:
         provider = (
@@ -2261,7 +2348,9 @@ class BicepPolicyTests(unittest.TestCase):
         policy = next(
             r
             for r in resources(storage)
-            if r["type"].endswith("/immutabilityPolicies") and "condition" in r
+            if r["type"].endswith("/immutabilityPolicies")
+            and "condition" in r
+            and "ranking-archive" in r["name"]
         )
         self.assertEqual(policy["properties"].get("allowProtectedAppendWrites"), False)
         self.assertNotIn("state", policy["properties"])
@@ -2701,6 +2790,29 @@ class BicepPolicyTests(unittest.TestCase):
             failures(deploymentProfile="development", keyVaultPurgeProtection=False), set()
         )
         self.assertEqual(
+            failures(ledgerDigestImmutableStorage=False),
+            {"productionProfileRequiresImmutableLedgerDigests"},
+        )
+        self.assertEqual(
+            failures(ledgerDigestRequireRetentionLock=False),
+            {"productionProfileRequiresImmutableLedgerDigests"},
+        )
+        self.assertEqual(
+            failures(
+                ledgerDigestImmutableStorage=False,
+                ledgerDigestRequireRetentionLock=False,
+            ),
+            {"productionProfileRequiresImmutableLedgerDigests"},
+        )
+        self.assertEqual(
+            failures(
+                deploymentProfile="development",
+                ledgerDigestImmutableStorage=False,
+                ledgerDigestRequireRetentionLock=False,
+            ),
+            set(),
+        )
+        self.assertEqual(
             failures(evidenceStore="sharepoint", sharePointSiteId=""),
             {"sharePointEvidenceStoreRequiresSiteId"},
         )
@@ -2985,7 +3097,28 @@ class BicepPolicyTests(unittest.TestCase):
                     for r in resources(s)
                     if r["type"] == "Microsoft.Storage/storageAccounts/blobServices/containers"
                     and "copy" in r
-                )["properties"].__setitem__("publicAccess", "Blob"),
+                ).__setitem__("properties", {"publicAccess": "Blob"}),
+            ),
+            (
+                "container-immutable-versioning-removed",
+                lambda _m, s, _p: next(
+                    r
+                    for r in resources(s)
+                    if r["type"] == "Microsoft.Storage/storageAccounts/blobServices/containers"
+                    and "copy" in r
+                ).__setitem__("properties", {"publicAccess": "None"}),
+            ),
+            (
+                "main-immutable-default-false",
+                lambda m, _s, _p: m["parameters"]["ledgerDigestImmutableStorage"].__setitem__(
+                    "defaultValue", False
+                ),
+            ),
+            (
+                "storage-immutable-param-forwarding-broken",
+                lambda m, _s, _p: module(m, "storage")["properties"]["parameters"][
+                    "ledgerDigestImmutableStorage"
+                ].__setitem__("value", True),
             ),
             (
                 "lifecycle-overlaps-ledger-digests",
@@ -3146,6 +3279,18 @@ class BicepPolicyTests(unittest.TestCase):
                     + ", createObject('name', 'ZF_DIGEST_SAS', 'value', 'sv=2024')))]",
                 ),
             ),
+            (
+                "require-lock-forwarding-broken",
+                lambda m: module(m, "containerapps")["properties"]["parameters"][
+                    "ledgerDigestRequireRetentionLock"
+                ].__setitem__("value", False),
+            ),
+            (
+                "min-retention-forwarding-broken",
+                lambda m: module(m, "containerapps")["properties"]["parameters"][
+                    "ledgerDigestMinRetentionDays"
+                ].__setitem__("value", 30),
+            ),
         )
         for label, mutate in mutations:
             with self.subTest(ledger_mutation=label):
@@ -3197,6 +3342,7 @@ class BicepPolicyTests(unittest.TestCase):
             "productionProfileForbidsPublicNetworkAccess",
             "productionProfileRequiresKeyVaultPurgeProtection",
             "productionProfileRequiresRegistryQuarantine",
+            "productionProfileRequiresImmutableLedgerDigests",
             "regionCheckMustBeRecorded",
             "quotaCheckMustBeRecorded",
             "deploymentLocationsMustBeSelected",
