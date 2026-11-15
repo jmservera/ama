@@ -41,14 +41,21 @@ function bindCaseMutationForm(session, key, form, button, status) {
 }
 
 function actForm(title, fields, run, label) {
+  const slug = (v) => String(v || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "field";
+  const formSlug = slug(title);
+  const seen = new Map();
   const inputs = fields.map(([name, text, opts]) => {
+    const base = `f-${formSlug}-${slug(name)}`;
+    const count = (seen.get(base) || 0) + 1;
+    seen.set(base, count);
+    const fieldId = count > 1 ? `${base}-${count}` : base;
     const el = opts && opts.options
-      ? h("select", { id: `f-${title}-${name}`, name, autocomplete: "off" }, opts.options.map((o) => (typeof o === "object" ? h("option", { value: o.value }, o.label) : h("option", { value: o }, o))))
-      : h("input", { id: `f-${title}-${name}`, name, autocomplete: "off", type: (opts && opts.type) || "text", maxlength: 300 });
+      ? h("select", { id: fieldId, name, autocomplete: "off" }, opts.options.map((o) => (typeof o === "object" ? h("option", { value: o.value }, o.label) : h("option", { value: o }, o))))
+      : h("input", { id: fieldId, name, autocomplete: "off", type: (opts && opts.type) || "text", maxlength: 300 });
     return [name, text, el];
   });
   const body = () => Object.fromEntries(inputs.map(([name, , el]) => [name, el.value]));
-  const button = h("button", { onclick: async () => {
+  const button = h("button", { type: "button", onclick: async () => {
     if (button.disabled) return;
     button.disabled = true;
     button.setAttribute("aria-busy", "true");
@@ -156,7 +163,13 @@ function technicalPanel(c, id, refresh) {
 function residentPanel(c, id, refresh) {
   if (c.resident_readiness) {
     return h("section", { class: "card" }, h("h2", {}, "Decision for each measure"),
-      c.resident_readiness.map((m) => h("p", {}, `${m.measure}: ${m.flag}`)));
+      c.resident_readiness.map((m) => {
+        const proceed = m.flag === "Proceed";
+        const flagText = m.flag === null || m.flag === undefined || m.flag === "" ? "Unknown" : String(m.flag);
+        const cue = proceed ? "Confirmed" : "Action needed";
+        return h("p", {}, `${m.measure}: `,
+          h("span", { class: proceed ? "flag" : "flag danger", "data-state-cue": "readiness" }, `${cue}: ${flagText}`));
+      }));
   }
   const recordForm = (...args) => c.can_record_resident ? actForm(...args) : null;
   const go = (action, extra, submitted) => refresh(() => {
@@ -179,6 +192,19 @@ function residentPanel(c, id, refresh) {
       : "Unknown";
   };
   const named = (owner) => owner?.name || "Unknown";
+  const panelChoiceCues = { Accepted: "Confirmed", Declined: "Confirmed", Paused: "Confirmed", Withdrawn: "Confirmed", Waiting: "Waiting for resident", "Not recorded": "Waiting for resident" };
+  const panelReadinessCues = { "Resident decision current": "Confirmed", "Needs human review": "Action needed" };
+  const panelUpdateCues = { Outstanding: "Action needed", Proposed: "Action needed" };
+  const panelServiceCues = { Open: "Action needed", "In progress": "Action needed", Resolved: "Action needed", Closed: "Confirmed" };
+  const panelCue = (table, value, fallback = "Action needed") => {
+    const text = value === null || value === undefined || value === "" ? "Unknown" : String(value);
+    return `${Object.hasOwn(table, text) ? table[text] : fallback}: ${text}`;
+  };
+  const panelReadiness = (value) => value === null || value === undefined || value === "" ? "Waiting for resident: Unknown" : panelCue(panelReadinessCues, value);
+  const panelServiceState = (value) => {
+    const text = value === null || value === undefined || value === "" ? "Unknown" : String(value);
+    return Object.hasOwn(panelServiceCues, text) ? panelServiceCues[text] : "Action needed";
+  };
   const residentForm = (key, title, fields, action, build = (body) => body, label = title) => {
     if (!residentRoles.includes(me.user.role)) return null;
     const session = caseSession;
@@ -229,9 +255,14 @@ function residentPanel(c, id, refresh) {
   return h("section", { class: "card" }, h("h2", {}, "Decision for each measure"),
     h("p", { class: "muted" }, "These start as not recorded. Only write what the resident told you. Contact or access is never treated as a yes."),
     !c.can_record_resident ? h("p", {}, "Read-only resident decisions. Neighbourhood, Resident Engagement and Retrofit coordination staff record supplied answers.") : null,
-    h("table", {}, h("caption", { class: "sr-only" }, "Resident decisions by measure"), h("thead", {}, h("tr", {}, ["Measure", "Their answer", "Versions"].map((x) => h("th", { scope: "col" }, x)))),
-      h("tbody", {}, measures.map((m) => h("tr", {}, h("td", {}, `${m.measure}: ${m.context ? `scope ${m.context.scope}, revision ${m.context.revision}, design ${m.context.design_version}` : "Current scope not recorded"}`), h("td", {}, `${m.status}. ${m.readiness}`),
-        h("td", {}, m.versions.map((v) => `v${v.version} ${v.status} (${v.answered_by}, recorded by ${v.recorded_by}${v.note ? `: ${v.note}` : ""})`).join("; ") || "None"))))),
+    h("div", { class: "table-scroll", role: "region", "aria-label": "Resident decisions by measure", tabindex: 0 },
+      h("table", {}, h("caption", { class: "sr-only" }, "Resident decisions by measure"), h("thead", {}, h("tr", {}, ["Measure", "Their answer", "Versions"].map((x) => h("th", { scope: "col" }, x)))),
+        h("tbody", {}, measures.map((m) => h("tr", {},
+          h("th", { scope: "row" }, `${m.measure}: ${m.context ? `scope ${m.context.scope}, revision ${m.context.revision}, design ${m.context.design_version}` : "Current scope not recorded"}`),
+          h("td", {}, `${panelCue(panelChoiceCues, m.status, "Action needed")}. ${panelReadiness(m.readiness)}`),
+          h("td", {}, (m.versions || []).length
+            ? m.versions.map((v) => `${panelCue(panelChoiceCues, v.status, "Action needed")}: v${v.version} (${v.answered_by}, recorded by ${v.recorded_by}${v.note ? `: ${v.note}` : ""})`).join("; ")
+            : "Waiting for resident: None")))))),
     recordForm("Record the measure scope", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["scope", "Exact scope reference"], ["design_version", "Current technical design version", { type: "number" }], ["source", "Supplied scope source reference"]], (b, submitted) => go("scope_record", b, submitted), "Record scope"),
     recordForm("Record what the resident said", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["context_revision", "Current scope revision", { type: "number" }], ["status", "Their supplied answer", { options: ["", "Waiting", "Accepted", "Declined", "Paused", "Withdrawn"] }], ["answered_by", "Who said it", { options: ["", "The resident", "Their representative"] }], ["source", "Supplied answer source reference"], ["representative_ref", "Reference for the representative, if any"], ["review_ref", "Human review evidence if restarting after a pause or withdrawal"], ["note", "In their words (needed for declined, paused or withdrawn)"]], (b, submitted) => go("decision_record", b, submitted), "Save supplied answer"),
     h("h3", {}, "Representative authority"),
@@ -242,7 +273,7 @@ function residentPanel(c, id, refresh) {
     recordForm("Check a representative task", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["context_revision", "Current scope revision", { type: "number" }], ["representative_ref", "Representative reference"], ["task", "Task", { options: ["", "Receive information", "Communicate", "Attend", "Works decision"] }]], (b, submitted) => go("disclosure_check", b, submitted), "Check only; nothing sent"),
     h("h2", {}, "Resident-update commitment"),
     h("p", {}, "A commitment is not a message. Nothing is sent or marked received here. Handoffs do not clear or reassign it."),
-    update ? h("p", {}, `${update.status || "Unknown"}: ${update.purpose || "Unknown purpose"}. Owner: ${named(update.owner_identity)}. Due: ${stamp(update.due_at)}. Basis: ${update.basis || "Unknown"}. Safe route reference: ${update.safe_contact_ref || "Unknown"}. Status date: ${stamp(update.at)}. Original date: ${stamp(update.opened_at)}. Version ${update.version || 0}.`) : h("p", {}, "No commitment recorded."),
+    update ? h("p", {}, `${panelCue(panelUpdateCues, update.status)}: ${update.purpose || "Unknown purpose"}. Owner: ${named(update.owner_identity)}. Due: ${stamp(update.due_at)}. Basis: ${update.basis || "Unknown"}. Safe route reference: ${update.safe_contact_ref || "Unknown"}. Status date: ${stamp(update.at)}. Original date: ${stamp(update.opened_at)}. Version ${update.version || 0}.`) : h("p", {}, "Action needed: No commitment recorded."),
     residentForm("ru-record", "Record or reassign update commitment", [
       ["purpose", "Update purpose or linked issue"], ["owner", "Named update owner", who],
       ["due_at", "Human-selected due date"], ["basis", "Basis for the due date"],
@@ -252,31 +283,34 @@ function residentPanel(c, id, refresh) {
       due_at: body.due_at ? new Date(body.due_at).toISOString() : "" })),
     h("h2", {}, "Service requests and complaints"),
     h("p", {}, "Response closure is separate from remedy completion, defects, charge queries, package completion, handover and finance."),
-    reqs.length ? reqs.map((r) => h("div", {}, h("strong", {}, `${r.id}: ${r.route}. ${r.status}.`),
-      h("div", { class: "muted" }, `${r.summary || "Unknown"}. They want: ${r.desired_outcome || "Unknown"}. Dealt with by ${r.service_owner}. Redress owner: ${r.redress_owner}. Contact needs: ${(r.accessibility || ["Unknown"]).join(", ")}. Representative: ${r.representative_ref || "Unknown"}. Next update ${r.next_update || "Unknown"}.`),
-      h("p", {}, `Response: ${r.status}. Owner: ${named(r.status_owner)}. Status date: ${stamp(r.status_at)}. Original date: ${stamp(r.opened_at)}.`),
-      (r.history || []).filter((event) => event.kind === "Response owner reassigned").map((event) =>
-        h("p", {}, `Response ${event.responsibility} owner changed from ${named(event.changes?.old)} to ${named(event.changes?.new)} by ${named(event.actor)} on ${stamp(event.at)}. Reason: ${event.note || "Unknown"}.`)),
-      ["Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role)
-        ? residentForm(`response-owner-${r.id}`, `Reassign response responsibility for ${r.id}`, [
-          ["responsibility", "Response responsibility", ["service", "redress"]],
-          ["owner", "New named response owner", ["", ...who]],
-          ["note", "Reason for response-owner reassignment"]
-        ], "service_reassign", (body) => ({ ...body, id: r.id, expected_version: r.version || 0 }))
-        : null,
-      h("p", {}, `Remedy: ${r.remedy?.status || "Unknown"}. Owner: ${named(r.remedy?.owner)}. Status date: ${stamp(r.remedy?.at)}. Original date: ${stamp(r.remedy?.opened_at)}. Age band: Unknown (Housing/Complaints have not configured bands).`),
-      r.remedy?.version ? residentForm(`remedy-${r.id}`, `Record remedy progress for ${r.id}`, [
-        ["status", "Remedy status", ["Open", "In progress", "Resolved", "Closed"]],
-        ["owner", "Reassign remedy owner (blank keeps current owner)", ["", ...who]],
-        ["note", "Supplied progress or reopening evidence"]
-      ], "remedy_update", (body) => ({ ...body, id: r.id, expected_version: r.remedy.version }))
-        : residentForm(`remedy-${r.id}`, `Confirm legacy remedy responsibility for ${r.id}`, [
-          ["owner", "Named remedy owner", who], ["basis", "Supplied responsibility basis"]
-        ], "remedy_confirm", (body) => ({ ...body, id: r.id, expected_version: 0 })),
-      r.status === "Closed" ? residentForm(`response-${r.id}`, `Reopen response for ${r.id}`, [
-        ["note", "Why the response is reopened"]
-      ], "service_reopen", (body) => ({ ...body, id: r.id, expected_version: r.version || 0 })) : null
-    )) : h("p", { class: "muted" }, "No requests recorded."),
+    reqs.length ? reqs.map((r) => {
+      const remedyStatus = r.remedy?.status || "Unknown";
+      return h("div", {}, h("strong", {}, `${r.id}: ${r.route}. ${panelCue(panelServiceCues, r.status)}.`),
+        h("div", { class: "muted" }, `${r.summary || "Unknown"}. They want: ${r.desired_outcome || "Unknown"}. Dealt with by ${r.service_owner}. Redress owner: ${r.redress_owner}. Contact needs: ${(r.accessibility || ["Unknown"]).join(", ")}. Representative: ${r.representative_ref || "Unknown"}. Next update ${r.next_update || "Unknown"}.`),
+        h("p", {}, `State: ${panelServiceState(r.status)}. Response: ${r.status}. Owner: ${named(r.status_owner)}. Status date: ${stamp(r.status_at)}. Original date: ${stamp(r.opened_at)}.`),
+        (r.history || []).filter((event) => event.kind === "Response owner reassigned").map((event) =>
+          h("p", {}, `Response ${event.responsibility} owner changed from ${named(event.changes?.old)} to ${named(event.changes?.new)} by ${named(event.actor)} on ${stamp(event.at)}. Reason: ${event.note || "Unknown"}.`)),
+        ["Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role)
+          ? residentForm(`response-owner-${r.id}`, `Reassign response responsibility for ${r.id}`, [
+            ["responsibility", "Response responsibility", ["service", "redress"]],
+            ["owner", "New named response owner", ["", ...who]],
+            ["note", "Reason for response-owner reassignment"]
+          ], "service_reassign", (body) => ({ ...body, id: r.id, expected_version: r.version || 0 }))
+          : null,
+        h("p", {}, `State: ${panelServiceState(remedyStatus)}. Remedy: ${remedyStatus}. Owner: ${named(r.remedy?.owner)}. Status date: ${stamp(r.remedy?.at)}. Original date: ${stamp(r.remedy?.opened_at)}. Age band: Unknown (Housing/Complaints have not configured bands).`),
+        r.remedy?.version ? residentForm(`remedy-${r.id}`, `Record remedy progress for ${r.id}`, [
+          ["status", "Remedy status", ["Open", "In progress", "Resolved", "Closed"]],
+          ["owner", "Reassign remedy owner (blank keeps current owner)", ["", ...who]],
+          ["note", "Supplied progress or reopening evidence"]
+        ], "remedy_update", (body) => ({ ...body, id: r.id, expected_version: r.remedy.version }))
+          : residentForm(`remedy-${r.id}`, `Confirm legacy remedy responsibility for ${r.id}`, [
+            ["owner", "Named remedy owner", who], ["basis", "Supplied responsibility basis"]
+          ], "remedy_confirm", (body) => ({ ...body, id: r.id, expected_version: 0 })),
+        r.status === "Closed" ? residentForm(`response-${r.id}`, `Reopen response for ${r.id}`, [
+          ["note", "Why the response is reopened"]
+        ], "service_reopen", (body) => ({ ...body, id: r.id, expected_version: r.version || 0 })) : null
+      );
+    }) : h("p", { class: "muted" }, "State: None recorded. No requests recorded."),
     serviceForm("request-open", "Open a request or complaint", [["route", "Type", { options: ["Service request", "Complaint", "Repair", "Defect", "Hazard", "Charge query", "Household dispute"] }], ["summary", "Short summary"], ["desired_outcome", "What the resident wants"], ["service_owner", "Who deals with it", { options: who }], ["redress_owner", "Who owns the redress", { options: who }], ["accessibility", "Contact need", { options: ["Unknown", "None", "Large print", "Phone only", "Plain language", "Interpreter", "Representative contact", "Safe route needed"] }], ["next_update", "Next update date", { type: "date" }]],
       "service_open", (b) => ({ ...b, accessibility: [b.accessibility] }), "Open"),
     h("p", { class: "muted" }, "Ask your named officer for independent human review or the association's formal complaints route, including by phone or an accessible non-digital route. Recording a request here does not send it to a live complaints service, change works choices, stop urgent repairs or sanction future engagement."),

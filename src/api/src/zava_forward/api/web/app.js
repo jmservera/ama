@@ -368,15 +368,17 @@ function missingWorkspaceScripts(hash, caseRoute) {
 }
 
 function isRoleScreensDestination(destination) {
-  return destination === "#/screens"
-    || destination === "#/role/building_safety_lead"
-    || destination === "#/role/repairs"
-    || destination === "#/role/housing_officer"
-    || destination === "#/role/resident_engagement"
-    || destination === "#/role/procurement"
-    || destination === "#/role/contractor"
-    || destination === "#/role/programme_manager"
-    || destination === "#/role/retrofit_coordinator";
+  const target = String(destination || "").split("?")[0];
+  return target === "#/screens"
+    || target === "#/role/building_safety_lead"
+    || target === "#/role/repairs"
+    || target === "#/role/housing_officer"
+    || target === "#/role/contact_centre"
+    || target === "#/role/resident_engagement"
+    || target === "#/role/procurement"
+    || target === "#/role/contractor"
+    || target === "#/role/programme_manager"
+    || target === "#/role/retrofit_coordinator";
 }
 
 async function requireWorkspaceScripts(hash, caseRoute) {

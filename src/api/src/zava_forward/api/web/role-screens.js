@@ -49,7 +49,7 @@ const screenTension = (kind, anchor = null) => screenPanel(screenTensionText[kin
   h("p", {}, screenTensionText[kind][1]));
 function screenTable(label, headings, rows, limit = 50, cell = (value) => screenNodeValue(value), rowHeader = false) {
   return h("div", {},
-    rows.length > limit && h("p", { role: "status" }, `Showing the first ${limit} of ${rows.length} records. Open the case workspace to inspect the remaining evidence. This is not a complete readiness check.`),
+    rows.length > limit && h("p", { role: "status", "aria-live": "polite" }, `Showing the first ${limit} of ${rows.length} records. Open the case workspace to inspect the remaining evidence. This is not a complete readiness check.`),
     rows.length ? h("div", { class: "table-scroll", role: "region", "aria-label": label, tabindex: 0 },
       h("table", {}, h("caption", {}, label),
         h("thead", {}, h("tr", {}, headings.map((title) => h("th", { scope: "col" }, title)))),
@@ -93,6 +93,7 @@ const ROLE_HASH_SCREENS = {
   "#/role/building_safety_lead": "safety-lead",
   "#/role/repairs": "hazard-triage",
   "#/role/housing_officer": "resident-service-issues",
+  "#/role/contact_centre": "resident-service-issues",
   "#/role/resident_engagement": "resident-choice",
   "#/role/procurement": "procurement-packages",
   "#/role/contractor": "contractor-job-pack",
@@ -103,6 +104,9 @@ const residentJumpNav = (sections, label = "Sections of this view") => h("nav", 
   sections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading`, "data-jump-target": `${id}-heading` }, `Go to ${title}`)));
 async function roleScreensView() {
   const signal = routeController.signal;
+  const announce = (text) => {
+    if (!signal.aborted && typeof workspaceStatus === "object" && workspaceStatus) workspaceStatus.textContent = text;
+  };
   const [routePath, rawQuery = ""] = (typeof location === "undefined" ? "#/screens" : location.hash || "#/screens").split("?");
   const query = new URLSearchParams(rawQuery);
   const aliasScreen = Object.hasOwn(ROLE_HASH_SCREENS, routePath) ? ROLE_HASH_SCREENS[routePath] : null;
@@ -113,10 +117,12 @@ async function roleScreensView() {
   const installed = [...roleScreens.values()].filter((screen) => screen.roles.includes(me.user.role));
   const screen = installed.find((item) => item.id === id);
   if (!/^\d+$/.test(rawPage) || !Number.isSafeInteger(page) || page > 100000) {
+    announce(`${me.user.role}. Invalid screen page.`);
     return show(h("h1", {}, "Invalid screen page"), h("p", { role: "alert" }, "Choose a page from the queue."),
       h("a", { "data-reset": "true", href: screenHref(id, caseId, 0, false) }, "Reset screen view"));
   }
   if (id && !screen) {
+    announce(`${me.user.role}. Screen unavailable.`);
     return show(h("h1", {}, "Screen unavailable"),
       h("p", { role: "alert" }, "This screen is not installed for your signed-in role. Your access has not changed. Owner: your team manager. Next action: go back to specialist screens and open one that is listed for you."),
       h("a", { href: "#/screens" }, "Back to specialist screens"));
@@ -125,16 +131,19 @@ async function roleScreensView() {
     installed.map((item) => h("a", { href: screenHref(item.id, caseId),
       "aria-current": item.id === id ? "page" : null }, item.title)));
   if (!screen) {
+    announce(`${me.user.role}. Specialist screens. ${installed.length ? "Choose a screen." : "No specialist screens installed."}`);
     return show(h("h1", {}, "Specialist screens"), menu,
       h("p", {}, installed.length
         ? "Choose a screen. Select a home explicitly; no case is selected automatically."
         : "No specialist screens are installed for your role on this branch. Use your existing work list."),
       h("a", { href: "#/" }, "Back to my work"));
   }
-  show(h("h1", {}, screen.title), h("p", { role: "status", "aria-busy": "true" }, "Loading recorded evidence."));
+  announce(`${me.user.role}. ${screen.title}. Loading recorded evidence.`);
+  show(h("h1", {}, screen.title), h("p", { role: "status", "aria-live": "polite", "aria-busy": "true" }, "Loading recorded evidence."));
   const data = await api(`/api/cases?view=all&limit=20&offset=${page * 20}`, undefined, signal);
   const c = caseId ? await api(`/api/cases/${encodeURIComponent(caseId)}`, undefined, signal) : null;
   if (c && c.id !== caseId) {
+    announce(`${me.user.role}. ${screen.title}. Record mismatch.`);
     return show(h("h1", {}, screen.title), h("p", { role: "alert" }, `The record returned does not match the requested home ${caseId}, so nothing is shown for it. Your access has not changed. Owner: your team manager. Next action: choose the home again from the queue.`),
       h("a", { "data-reset": "true", href: screenHref(id, null, 0, false) }, "Reset screen view"));
   }
@@ -147,7 +156,7 @@ async function roleScreensView() {
   const queue = h("section", { ...(isResidentRoleScreen ? { id: "screen-queue" } : {}), "aria-labelledby": "screen-queue-heading" },
     h("h2", { id: "screen-queue-heading", ...(isResidentRoleScreen ? { tabindex: -1 } : {}) }, "Choose a home"),
     h("p", {}, "All cases permitted to your signed-in role, including safety concerns. This is a bounded page, not a portfolio total."),
-    h("p", { role: "status" }, `${data.items.length} records on page ${page + 1}; ${data.total} permitted cases.`),
+    h("p", { role: "status", "aria-live": "polite" }, `${data.items.length} records on page ${page + 1}; ${data.total} permitted cases.`),
     data.items.length ? h("ul", { class: "list" }, data.items.map((row) => h("li", {},
       h("a", { class: "item", href: screenHref(id, row.id, page),
         "aria-current": row.id === caseId ? "true" : null },
@@ -160,9 +169,11 @@ async function roleScreensView() {
       page > 0 && h("a", { class: "btn alt", href: screenHref(id, caseId, page - 1) }, "Previous page"),
       (page + 1) * 20 < data.total && h("a", { class: "btn alt", href: screenHref(id, caseId, page + 1) }, "Next page"),
       h("a", { class: "btn alt", "data-reset": "true", href: screenHref(id, null, 0, false) }, "Reset screen view")));
-  const selected = c ? h("section", isResidentRoleScreen
-      ? { id: "screen-evidence", class: "screen-evidence", "aria-labelledby": "screen-evidence-heading" }
-      : { class: "screen-evidence", "aria-label": `Evidence for ${c.id}` },
+  const selected = c ? h("section", {
+      ...(isResidentRoleScreen ? { id: "screen-evidence" } : {}),
+      class: "screen-evidence",
+      "aria-label": `Evidence for ${c.id}`
+    },
     h("h2", isResidentRoleScreen ? { id: "screen-evidence-heading", tabindex: -1 } : {}, `Selected home ${c.id}`),
     h("p", { "data-same-home": c.id }, h("span", { class: "flag" }, `Same home: case ${c.id}`),
       isResidentRoleScreen && h("span", { "data-state-cue": "scope" }, " State: Confirmed - single-home record scope."),
@@ -311,8 +322,9 @@ if (typeof document !== "undefined" && typeof document.addEventListener === "fun
     const link = event.target?.closest?.("a[data-jump]");
     if (!link) return;
     event.preventDefault();
-    document.getElementById(link.getAttribute("data-jump"))?.focus?.();
-    document.getElementById(link.getAttribute("data-jump"))?.scrollIntoView?.({ block: "start" });
+    const target = document.getElementById(link.getAttribute("data-jump"));
+    target?.focus?.();
+    target?.scrollIntoView?.({ block: "start" });
   });
 }
 function assetSummary(extra, report) {
