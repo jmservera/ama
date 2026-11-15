@@ -8,8 +8,11 @@ only data permitted to reach a model until qualified owners record the approvals
 from __future__ import annotations
 
 import calendar
+import os
+import re
+from collections.abc import Mapping
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, date, datetime
 from typing import Any
 
 OWNER_ROLES = "DPO and Legal (named owners not yet recorded; issue #121 dependency)"
@@ -205,7 +208,179 @@ def register_report(env: Any) -> dict[str, Any]:
     )
 
 
-def model_dispatch(class_id: str, env: Any, derivative: str | None = None) -> dict[str, Any]:
+MODE_ENV = "ZF_DATA_PROCESSING"
+APPROVED_DERIVATIVE = "reviewed_redacted"
+CONSTRUCTED_DERIVATIVE = "synthetic_safe"
+_AUTOMATED_APPROVERS = frozenset(
+    {"ai", "model", "assistant", "system", "auto", "automated", "bot", "llm"}
+)
+
+
+def actual_mode(env: Any = None) -> bool:
+    mapping = os.environ if env is None else env
+    return str(mapping.get(MODE_ENV) or "constructed").strip().lower() != "constructed"
+
+
+def validate_necessity_exception(
+    exception: Any,
+    *,
+    task: str = "read_document",
+    case_id: str | None = None,
+    doc_id: str | None = None,
+    actual: bool = False,
+    as_of: str | date | datetime | None = None,
+) -> dict[str, Any]:
+    """Verify whether a human-authorized text-only derivative may be sent to an external model."""
+    if not isinstance(exception, Mapping):
+        return dict(
+            permitted=False,
+            reason="Scoped necessity exception must be a recorded object",
+            exception=None,
+        )
+
+    def _clean_str(key: str, label: str, limit: int) -> tuple[str | None, str | None]:
+        val = exception.get(key)
+        if not isinstance(val, str) or not val.strip():
+            return None, f"Scoped necessity exception requires {label}"
+        text = val.strip()
+        if len(text) > limit:
+            return None, f"Scoped necessity exception {label} exceeds {limit} characters"
+        return text, None
+
+    ref_key = "reference" if "reference" in exception else "id"
+    reference, err = _clean_str(ref_key, "a reference", 120)
+    if err or reference is None:
+        return dict(permitted=False, reason=err or "Invalid reference", exception=None)
+    if actual and reference.upper().startswith("SYNTH-"):
+        return dict(
+            permitted=False,
+            reason="Synthetic necessity exception reference is not valid for actual processing",
+            exception=None,
+        )
+    approved_by, err = _clean_str("approved_by", "a named human approver", 120)
+    if err or approved_by is None:
+        return dict(permitted=False, reason=err or "Invalid approver", exception=None)
+    approver_tokens = {tok for tok in re.split(r"[^a-z0-9]+", approved_by.casefold()) if tok}
+    if approved_by.casefold() in _AUTOMATED_APPROVERS or bool(
+        approver_tokens & _AUTOMATED_APPROVERS
+    ):
+        return dict(
+            permitted=False,
+            reason="Scoped necessity exception requires a named human approver",
+            exception=None,
+        )
+    reason, err = _clean_str("reason", "a necessity reason", 300)
+    if err or reason is None:
+        return dict(permitted=False, reason=err or "Invalid reason", exception=None)
+
+    raw_scope = exception.get("task") if "task" in exception else exception.get("scope")
+    if not isinstance(raw_scope, str) or not raw_scope.strip() or len(raw_scope.strip()) > 80:
+        return dict(
+            permitted=False,
+            reason=f"Scoped necessity exception must specify task {task}",
+            exception=None,
+        )
+    scope_task = raw_scope.strip()
+    if scope_task.casefold() in {"*", "all", "any"} or scope_task != task:
+        return dict(
+            permitted=False,
+            reason=f"Scoped necessity exception scope does not match {task}",
+            exception=None,
+        )
+
+    cleaned: dict[str, str] = dict(
+        reference=reference,
+        approved_by=approved_by,
+        reason=reason,
+        task=scope_task,
+    )
+
+    raw_case = exception.get("case_id")
+    if case_id is not None:
+        if not isinstance(raw_case, str) or raw_case.strip() != case_id:
+            return dict(
+                permitted=False,
+                reason="Scoped necessity exception does not match this case",
+                exception=None,
+            )
+        cleaned["case_id"] = raw_case.strip()
+    elif raw_case is not None:
+        if not isinstance(raw_case, str) or not (1 <= len(raw_case.strip()) <= 80):
+            return dict(
+                permitted=False,
+                reason="Scoped necessity exception case_id is invalid",
+                exception=None,
+            )
+        cleaned["case_id"] = raw_case.strip()
+
+    raw_doc = exception.get("doc_id")
+    if doc_id is not None:
+        if not isinstance(raw_doc, str) or raw_doc.strip() != doc_id:
+            return dict(
+                permitted=False,
+                reason="Scoped necessity exception does not match this document",
+                exception=None,
+            )
+        cleaned["doc_id"] = raw_doc.strip()
+    elif raw_doc is not None:
+        if not isinstance(raw_doc, str) or not (1 <= len(raw_doc.strip()) <= 80):
+            return dict(
+                permitted=False,
+                reason="Scoped necessity exception doc_id is invalid",
+                exception=None,
+            )
+        cleaned["doc_id"] = raw_doc.strip()
+
+    raw_exp = exception.get("expires_at")
+    if raw_exp is not None and raw_exp != "":
+        if not isinstance(raw_exp, str) or len(raw_exp.strip()) < 10 or len(raw_exp.strip()) > 40:
+            return dict(
+                permitted=False,
+                reason="Scoped necessity exception expires_at must be an ISO date",
+                exception=None,
+            )
+        try:
+            exp_date = date.fromisoformat(raw_exp.strip()[:10])
+            if isinstance(as_of, datetime):
+                ref_date = as_of.date()
+            elif isinstance(as_of, date):
+                ref_date = as_of
+            elif isinstance(as_of, str) and as_of.strip():
+                ref_date = date.fromisoformat(as_of.strip()[:10])
+            else:
+                ref_date = datetime.now(UTC).date()
+        except ValueError:
+            return dict(
+                permitted=False,
+                reason="Scoped necessity exception expires_at must be an ISO date",
+                exception=None,
+            )
+        if exp_date < ref_date:
+            return dict(
+                permitted=False,
+                reason="Scoped necessity exception has expired",
+                exception=None,
+            )
+        cleaned["expires_at"] = raw_exp.strip()
+
+    return dict(
+        permitted=True,
+        reason="Scoped necessity exception recorded; human approval is not verified by this check",
+        exception=cleaned,
+    )
+
+
+def model_dispatch(
+    class_id: str,
+    env: Any,
+    derivative: str | None = None,
+    *,
+    necessity_exception: Any = None,
+    task: str = "read_document",
+    case_id: str | None = None,
+    doc_id: str | None = None,
+    as_of: str | date | datetime | None = None,
+) -> dict[str, Any]:
     """Deny model dispatch for actual data until required references exist and none is synthetic."""
     c = BY_ID.get(class_id)
     if c is None:
@@ -228,7 +403,32 @@ def model_dispatch(class_id: str, env: Any, derivative: str | None = None) -> di
             reason="Approvals not recorded: " + ", ".join(bad),
             manual_path=MANUAL_PATH,
         )
-    if c.needs_derivative and derivative != "reviewed_redacted":
+    if c.needs_derivative and derivative != APPROVED_DERIVATIVE:
+        if derivative == CONSTRUCTED_DERIVATIVE:
+            return dict(
+                permitted=False,
+                reason=(
+                    "Synthetic derivative marker is not valid for actual processing; "
+                    "use a reviewed, redacted derivative"
+                ),
+                manual_path=MANUAL_PATH,
+            )
+        if necessity_exception is not None:
+            exc = validate_necessity_exception(
+                necessity_exception,
+                task=task,
+                case_id=case_id,
+                doc_id=doc_id,
+                actual=True,
+                as_of=as_of,
+            )
+            if exc["permitted"]:
+                return dict(
+                    permitted=True,
+                    reason=exc["reason"],
+                    manual_path=MANUAL_PATH,
+                )
+            return dict(permitted=False, reason=exc["reason"], manual_path=MANUAL_PATH)
         return dict(
             permitted=False,
             reason="Intact material is not sent; use a reviewed, redacted derivative",
@@ -241,20 +441,110 @@ def model_dispatch(class_id: str, env: Any, derivative: str | None = None) -> di
     )
 
 
-MODE_ENV = "ZF_DATA_PROCESSING"
-
-
-def dispatch_hold(class_id: str, env: Any, derivative: str | None = None) -> str | None:
+def dispatch_hold(
+    class_id: str,
+    env: Any,
+    derivative: str | None = None,
+    *,
+    necessity_exception: Any = None,
+    task: str = "read_document",
+    case_id: str | None = None,
+    doc_id: str | None = None,
+    as_of: str | date | datetime | None = None,
+) -> str | None:
     """Reason a model call must not happen, or None. Unset or "constructed" means constructed only.
 
     Any other value is treated as actual processing, so a typo fails closed.
     """
-    if str(env.get(MODE_ENV) or "constructed").strip().lower() == "constructed":
+    if not actual_mode(env):
         return None
-    d = model_dispatch(class_id, env, derivative)
+    d = model_dispatch(
+        class_id,
+        env,
+        derivative,
+        necessity_exception=necessity_exception,
+        task=task,
+        case_id=case_id,
+        doc_id=doc_id,
+        as_of=as_of,
+    )
     if d["permitted"]:
         return None
     return f"{d['reason']}. {d['manual_path']}"
+
+
+def document_model_hold(
+    doc: Mapping[str, Any] | None = None,
+    env: Any = None,
+    *,
+    case_id: str | None = None,
+    doc_id: str | None = None,
+    derivative: str | None = None,
+    necessity_exception: Any = None,
+    resident_consent: str | None = None,
+    as_of: str | date | datetime | None = None,
+) -> str | None:
+    """Reason document AI processing must not run, or None when permitted."""
+    mapping = os.environ if env is None else env
+    if resident_consent is not None:
+        if str(resident_consent).strip().lower() not in ("given", "granted"):
+            return f"Resident AI data-use consent is not granted. {MANUAL_PATH}"
+    doc_map = doc if isinstance(doc, Mapping) else {}
+    resolved_doc_id = (
+        doc_id if doc_id is not None else (str(doc_map["id"]) if doc_map.get("id") else None)
+    )
+    has_explicit_derivative = (
+        derivative is not None or "ai_derivative" in doc_map or "derivative" in doc_map
+    )
+    raw_deriv = (
+        derivative
+        if derivative is not None
+        else (
+            doc_map.get("ai_derivative")
+            if "ai_derivative" in doc_map
+            else doc_map.get("derivative")
+        )
+    )
+    deriv = str(raw_deriv).strip() if isinstance(raw_deriv, str) and raw_deriv.strip() else None
+    exc_obj = (
+        necessity_exception
+        if necessity_exception is not None
+        else doc_map.get("necessity_exception")
+    )
+    requires_deriv = bool(doc_map.get("requires_derivative"))
+    is_uploaded_doc = isinstance(doc, Mapping) and doc.get("generated") is False
+    is_actual = actual_mode(mapping)
+    if is_actual:
+        return dispatch_hold(
+            "raw_document",
+            mapping,
+            deriv,
+            necessity_exception=exc_obj,
+            task="read_document",
+            case_id=case_id,
+            doc_id=resolved_doc_id,
+            as_of=as_of,
+        )
+    if is_uploaded_doc or has_explicit_derivative or requires_deriv or exc_obj is not None:
+        if deriv in {APPROVED_DERIVATIVE, CONSTRUCTED_DERIVATIVE}:
+            return None
+        if exc_obj is not None:
+            exc = validate_necessity_exception(
+                exc_obj,
+                task="read_document",
+                case_id=case_id,
+                doc_id=resolved_doc_id,
+                actual=False,
+                as_of=as_of,
+            )
+            if exc["permitted"]:
+                return None
+            return f"{exc['reason']}. {MANUAL_PATH}"
+        return (
+            "Intact material is not sent; use a reviewed, redacted derivative or "
+            f"a scoped necessity exception. {MANUAL_PATH}"
+        )
+    return None
 
 
 def validate_task_payload(task: str, payload: dict[str, Any]) -> dict[str, Any]:

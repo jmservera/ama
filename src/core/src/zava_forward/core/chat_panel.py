@@ -41,7 +41,13 @@ from zava_forward.core.chat_case_answers import AI_CONSENT, RULES_FIRST
 from zava_forward.core.chat_case_answers import RULES as WORKFLOW_RULES
 from zava_forward.core.chat_case_answers import answer as grounded_answer
 from zava_forward.core.chat_case_answers import intent as case_intent
-from zava_forward.core.chat_isolation import CONTEXT_MESSAGES, ChatIsolation, block, neutralise
+from zava_forward.core.chat_isolation import (
+    CONTEXT_MESSAGES,
+    TOOLISH,
+    ChatIsolation,
+    block,
+    neutralise,
+)
 from zava_forward.core.chat_privacy import MEMORY_LIMIT, MEMORY_MAX, redact
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
 
@@ -955,13 +961,20 @@ class ChatPanel:
             if current["role"] != user["role"] or current_sources != sources:
                 raw, kind, text = "", "withheld", WITHHELD
             if kind != "fallback":
-                if iso._withheld(user, thread, raw):
+                if TOOLISH.search(raw):
                     kind, text = "withheld", WITHHELD
                 else:
                     parsed = parse_reply(raw, sources)
                     if parsed:
-                        if iso._withheld(user, thread, parsed[0]) or ACTION_CLAIM.search(
-                            normalise_policy_text(parsed[0])
+                        cite_withheld = any(
+                            iso._withheld(user, thread, c)
+                            or iso._withheld(user, thread, str(sources.get(c, "")))
+                            for c in parsed[1]
+                        )
+                        if (
+                            cite_withheld
+                            or iso._withheld(user, thread, parsed[0])
+                            or ACTION_CLAIM.search(normalise_policy_text(parsed[0]))
                         ):
                             kind, text = "withheld", WITHHELD
                         elif unsupported_claims(parsed[0], [sources[c] for c in parsed[1]]):

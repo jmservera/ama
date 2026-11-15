@@ -144,11 +144,31 @@ class ChatIsolation:
     def _withheld(self, user, thread, reply):
         if TOOLISH.search(reply):
             return True
-        if thread["case_id"] and not projection.can_see_reason(user):
-            c = self.store.cases.get(thread["case_id"])
-            secret = c and c["resident"].get("adjustment")
-            return bool(secret and secret != "None" and secret in reply)
-        return False
+        cid = thread.get("case_id") or ""
+        withheld = projection.withheld_scope_values(self.store, user, [cid] if cid else [])
+        return projection.contains_withheld_value(reply, withheld)
+
+    def scrub_thread(self, user, thread):
+        """Re-apply live case access and field-level visibility to a resumed chat thread."""
+        u = self.current_user(user)
+        cid = thread.get("case_id") or ""
+        cases_map = getattr(self.store, "cases", {}) or {}
+        if cid and (
+            projection.project_case_visibility(u, cases_map[cid]) is None
+            if cid in cases_map
+            else self.store.detail(cid, u) is None
+        ):
+            raise ChatNotFound(thread.get("id") or cid)
+        msgs = []
+        for m in thread.get("messages", ()):
+            if m.get("role") == "assistant" and (
+                self._withheld(u, thread, m.get("content") or "")
+                or any(self._withheld(u, thread, str(ev)) for ev in (m.get("evidence") or ()))
+            ):
+                msgs.append(dict(m, content=REFUSAL, evidence=[], withheld=True))
+            else:
+                msgs.append(dict(m))
+        return dict(thread, messages=msgs)
 
     def turn(self, user, tid, content):
         """One chat turn: store the user's message, ask the model with the owner-only prompt, store the checked reply."""

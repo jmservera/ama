@@ -391,7 +391,7 @@ def run_task_checks(workdir, observed=None):
 PUBLIC_DOCUMENT = dict(
     name="public-guidance-note.txt", kind="Other",
     data=b"Constructed public fixture: a short note on loft insulation depth for a mid terrace home. It names no person and holds no private data.",
-    metadata=dict(source="constructed public fixture", source_version="v1", reason="offline harness document"))
+    metadata=dict(source="constructed public fixture", source_version="v1", reason="offline harness document", ai_derivative="synthetic_safe"))
 UNREAD_DOCUMENT = dict(name="constructed-register.xlsx", kind="Other", data=b"PK\x03\x04 constructed placeholder",
                        metadata=dict(source="constructed public fixture", source_version="v1", reason="offline harness document"))
 
