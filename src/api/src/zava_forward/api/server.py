@@ -1859,7 +1859,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     elif act == "funding-draft":
                         return self._json(200, dict(s.detail(cid, u), ai=s.funding_draft(u, cid, body.get("mode"))))
                     elif act == "funding":
-                        s.funding_step(u, cid, body.get("action"), body.get("text", ""))
+                        s.funding_step(u, cid, body.get("action"), body.get("text", ""), body=body)
                     elif act == "draft":
                         s._case(cid)
                         return self._json(200, s.draft(cid, body.get("kind", "update"), user=u))
