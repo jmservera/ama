@@ -14,6 +14,7 @@ from urllib.parse import quote
 
 from zava_forward.core import identity, projection
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
+from zava_forward.core.chat_panel import REFUSED, consent_guidance, out_of_scope
 from zava_forward.core.chat_privacy import redact
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
 from zava_forward.core.regulatory_privacy import (
@@ -258,19 +259,34 @@ class RegulatoryChat:
             exercise=True,
         )
 
+    def _question_refusal(self, question: str) -> str | None:
+        reason = self.refuse(question)
+        if reason:
+            return reason
+        hit = out_of_scope(question)
+        return f"{REFUSED}{hit[1]}" if hit else None
+
     def bundle(self, user: dict[str, Any], cid: str, question: str) -> dict[str, Any]:
         """Minimise after the normal server projection; never retrieve memory or private notes."""
         at = self.clock().isoformat(timespec="seconds")
         day = at[:10]
         kind = self.classify(question)
         result: dict[str, Any] = dict(
-            sources=[], facts=[], cards=[], as_of=at, conflict=False, refusal=self.refuse(question)
+            sources=[],
+            facts=[],
+            cards=[],
+            as_of=at,
+            conflict=False,
+            refusal=self._question_refusal(question),
         )
         if result["refusal"] or self.law is None:
             return result
         detail = self.store.detail(cid, user)
         if detail is None:
             raise ChatNotFound(cid)
+        blocked = consent_guidance(self.iso.ai_consent_state(cid))
+        if blocked:
+            return dict(result, refusal=blocked)
         sources: dict[str, Any] = {}
         signatures = set()
         with self.law.sql.lock:
@@ -358,7 +374,7 @@ class RegulatoryChat:
         if not isinstance(question, str) or not 1 <= len(question.strip()) <= 1000:
             raise ValueError("Question must contain 1 to 1000 characters.")
         clean_q = question.strip()
-        refusal = self.refuse(clean_q)
+        refusal = self._question_refusal(clean_q)
         if refusal:
             self.store.audit(
                 user_key(user),
@@ -387,6 +403,32 @@ class RegulatoryChat:
         detail = self.store.detail(cid, user)
         if detail is None:
             raise ChatNotFound(cid)
+        blocked = consent_guidance(self.iso.ai_consent_state(cid))
+        if blocked:
+            self.store.audit(
+                user_key(user),
+                "chat.regulatory.foundry_query",
+                cid,
+                json.dumps(
+                    dict(
+                        permitted=False,
+                        role=user["role"],
+                        reason="ai_consent_not_given",
+                        label=MARKER,
+                    ),
+                    sort_keys=True,
+                ),
+            )
+            return dict(
+                permitted=False,
+                refusal=blocked,
+                fields={},
+                dropped=[],
+                unneeded_for_question=[],
+                special_category_dropped=[],
+                dpo_reviewed=False,
+                manual_path=MANUAL_PATH,
+            )
         day = self.clock().isoformat(timespec="seconds")[:10]
         kind = self.classify(clean_q)
         candidate: dict[str, Any] = dict(as_of=day, case_id=cid)
@@ -506,8 +548,16 @@ class RegulatoryChat:
         user, thread = self.thread(user, tid)
         if not isinstance(question, str) or not 1 <= len(question.strip()) <= 1000:
             raise ValueError("Question must contain 1 to 1000 characters.")
-        masked: str = redact(question.strip())[0]
-        reply = self.render(self.bundle(user, thread["case_id"], masked))
+        clean_q = question.strip()
+        refusal = self._question_refusal(clean_q)
+        masked: str = redact(clean_q)[0]
+        if refusal:
+            at = self.clock().isoformat(timespec="seconds")
+            reply = self.render(
+                dict(sources=[], facts=[], cards=[], as_of=at, conflict=False, refusal=refusal)
+            )
+        else:
+            reply = self.render(self.bundle(user, thread["case_id"], masked))
         outcome = reply["kind"]
         usage = offline_usage(TASK, SCHEMA, outcome, reply["as_of"])
         reply["usage"] = usage
@@ -520,6 +570,22 @@ class RegulatoryChat:
             try:
                 with repo.txn():
                     user, thread = self.thread(user, tid)
+                    blocked = consent_guidance(self.iso.ai_consent_state(thread["case_id"]))
+                    if blocked and reply.get("kind") != "refused":
+                        reply = self.render(
+                            dict(
+                                sources=[],
+                                facts=[],
+                                cards=[],
+                                as_of=reply["as_of"],
+                                conflict=False,
+                                refusal=blocked,
+                            )
+                        )
+                        outcome = reply["kind"]
+                        usage = offline_usage(TASK, SCHEMA, outcome, reply["as_of"])
+                        reply["usage"] = usage
+                        text = encode(reply)
                     owner = self._owner(user, thread["case_id"]) if outcome == "conflict" else None
                     fresh = repo.get(tid, user_key(user))
                     if (
@@ -706,6 +772,9 @@ class RegulatoryChat:
 
     def doubt(self, user: dict[str, Any], tid: str, seq: object) -> dict[str, Any]:
         user, thread = self.thread(user, tid)
+        blocked = consent_guidance(self.iso.ai_consent_state(thread["case_id"]))
+        if blocked:
+            raise ChatForbidden(blocked)
         if type(seq) is not int:
             raise ValueError("Select one stored assistant turn.")
         messages = thread["messages"]
@@ -725,6 +794,9 @@ class RegulatoryChat:
             try:
                 with repo.txn():
                     user, thread = self.thread(user, tid)
+                    blocked = consent_guidance(self.iso.ai_consent_state(thread["case_id"]))
+                    if blocked:
+                        raise ChatForbidden(blocked)
                     owner = self._owner(user, thread["case_id"])
                     fresh = repo.get(tid, user_key(user))
                     if (

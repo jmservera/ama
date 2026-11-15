@@ -681,6 +681,66 @@ class Endpoints(unittest.TestCase):
             for dim in rec["dimensions"].values():
                 self.assertEqual(sum(r["n"] + r["missing"] for r in dim["cohorts"].values()), rec["total_cases"])
 
+    def test_report_separates_chat_multi_turn_evaluation_from_single_turn_evaluation(self):
+        code, body = self.call("pam@example.test", "/api/ai/report")
+        self.assertEqual(code, 200)
+        single = body["evaluation"]
+        chat = body["chat_evaluation"]
+        self.assertTrue(single["passed"])
+        self.assertTrue(chat["passed"])
+        self.assertIn("recommendation_runs", single["summary"])
+        self.assertNotIn("recommendation_runs", chat.get("summary", {}))
+        self.assertGreaterEqual(chat["scenarios"], 13)
+        self.assertTrue(
+            chat["summary"]["chat_specific"]["revocation_no_retained_authority"]["passed"]
+        )
+        self.assertTrue(
+            chat["summary"]["chat_specific"]["no_manufactured_approval_or_consent"]["passed"]
+        )
+        self.assertTrue(
+            {
+                "task",
+                "model",
+                "prompt_version",
+                "policy_version",
+                "source_version",
+                "memory_version",
+            }
+            <= set(chat["bindings"])
+        )
+        self.assertEqual(len(chat["summary"]["review_effort"]["missing_inputs"]), 4)
+        self.assertEqual(chat["enablement"]["state"], "disabled")
+
+    def test_report_chat_failure_does_not_alter_single_turn_results_and_live_stays_disabled(self):
+        baseline_code, baseline = self.call("pam@example.test", "/api/ai/report")
+        self.assertEqual(baseline_code, 200)
+        injected_chat = dict(
+            baseline["chat_evaluation"],
+            passed=False,
+            failures=[{"scenario": "chat-revocation", "turn": 2, "check": "kind"}],
+        )
+        with mock.patch("zava_forward.agents.chat_eval.run_eval", return_value=injected_chat):
+            code, body = self.call("pam@example.test", "/api/ai/report")
+        self.assertEqual(code, 200)
+        self.assertEqual(body["evaluation"]["passed"], baseline["evaluation"]["passed"])
+        for key in ("recommendation_runs", "ai_runs", "template_runs"):
+            self.assertEqual(
+                body["evaluation"]["summary"][key], baseline["evaluation"]["summary"][key]
+            )
+        self.assertEqual(
+            [r["passed"] for r in body["evaluation"]["results"]],
+            [r["passed"] for r in baseline["evaluation"]["results"]],
+        )
+        self.assertTrue(body["evaluation"]["passed"])
+        self.assertFalse(body["chat_evaluation"]["passed"])
+        self.assertEqual(body["chat_evaluation"]["enablement"]["state"], "disabled")
+        self.assertFalse(body["live"].get("enabled", False))
+        self.assertTrue(
+            all(not t.get("enabled", False) for t in body["live"]["tasks"])
+            if isinstance(body["live"]["tasks"], list)
+            else all(not t.get("enabled", False) for t in body["live"]["tasks"].values())
+        )
+
     def test_mode_flag_and_review_over_http(self):
         code, r = self.call("sam@example.test", "/api/cases/ZF-1/ai", {"task": "message", "mode": "workflow"})
         self.assertEqual((code, r["mode"], r["approval"]), (200, "workflow-only", "Not reviewed"))
