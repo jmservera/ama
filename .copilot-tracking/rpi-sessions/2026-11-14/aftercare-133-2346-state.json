@@ -1,0 +1,64 @@
+{
+  "task_id": "aftercare-133-2346",
+  "task_slug": "aftercare-133-2346",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14/aftercare-133-2346-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14/aftercare-133-2346-plan.md",
+    "details": ".copilot-tracking/details/2026-11-14/aftercare-133-2346-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-11-14/aftercare-133-2346-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-14/aftercare-133-2346-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-14/aftercare-133-2346-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run automatic full RPI loop (Research, Plan, Critique, Implement, Review) for Issue #133 on feat/demo-133-aftercare-concern-2346 without pushing",
+      "status": "confirmed",
+      "evidence": "Caller prompt explicitly specifies full RPI workflow, dated artifact prefix aftercare-133-2346, validation commands, and local commit without push"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready for surgical src/core + src/api aftercare refinement without bulk sys.modules eviction",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-14/aftercare-133-2346-research.md"
+    },
+    {
+      "decision": "One-pass plan critique executed (Verdict: Revise); all 7 planner-direct findings (PC-001..PC-007) applied directly to finalize Ready plan and phase details",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/aftercare-133-2346-plan-critique.md; .copilot-tracking/plans/2026-11-14/aftercare-133-2346-plan.md"
+    },
+    {
+      "decision": "One-pass post-implementation Review executed (Execution: Complete; Outcome: Conformant) across full P01..P04 boundary with zero open defects",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/aftercare-133-2346-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of ranked post-Review follow-up item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Make aftercare._NEUTRAL_ERROR self-neutral in src/core/src/zava_forward/core/aftercare.py so aftercare_intake._safe_error_text fallback translation can be removed",
+      "rationale": "High ease (localized to core aftercare diagnostic string + matching test assertions), clear maintainability value, and strong KISS engineering leverage by removing fallback error-message translation",
+      "evidence": "src/core/src/zava_forward/core/aftercare.py; src/core/src/zava_forward/core/aftercare_intake.py; .copilot-tracking/reviews/2026-11-14/aftercare-133-2346-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Define and wire held-out quality and effort benchmark fixtures for aftercare-concern-pack under FR-036",
+      "rationale": "Moderate implementation effort, high governance/programme value toward live optional AI pack evaluation, and clean separation of benchmark harness from live runtime",
+      "evidence": "src/core/src/zava_forward/core/ai_registry.py; .copilot-tracking/plans/2026-11-14/aftercare-133-2346-plan.md"
+    },
+    {
+      "rank": 3,
+      "task": "Integrate digital household aftercare intake into resident_demo once PRD OD-54 resident portal write gates are approved",
+      "rationale": "Dependent on external OD-54 identity/session governance, high end-to-end showcase value once unblocked, and reuses AftercareService.household_form / submit_household_concern without duplicating domain logic",
+      "evidence": "docs/prds/zava-forward-retrofit-programme-demonstrator.md; .copilot-tracking/plans/2026-11-14/aftercare-133-2346-plan.md"
+    }
+  ]
+}

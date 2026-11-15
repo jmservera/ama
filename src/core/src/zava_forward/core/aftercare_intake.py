@@ -25,12 +25,14 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Protocol, TypeVar, cast
 
-from . import chat_privacy
+from . import ai_registry, chat_privacy
 from .aftercare import (
     ACCESSIBLE_ROUTE,
     CLOSURE_KINDS,
     EVALUATOR_NOTICE,
     NON_DIGITAL_CHANNELS,
+    PACK_MANUAL_ROUTE,
+    PACK_TASK,
     PROTECTION,
     AftercareRegister,
     assert_templates_neutral,
@@ -45,6 +47,10 @@ from .synthetic import sensor_scenarios as ss
 from .workflows import MANAGER_ROLES
 
 _redact = cast(Callable[[str], tuple[str, list[str]]], chat_privacy.redact)
+_registry_get = cast(Callable[[str], dict[str, Any] | None], ai_registry.get)
+_authorizes_live = cast(
+    Callable[[str, Mapping[str, str] | None], bool], ai_registry.authorizes_live
+)
 Doc = dict[str, Any]
 Record = dict[str, Any]
 T = TypeVar("T")
@@ -70,6 +76,7 @@ CHANNEL_LABELS = {
     "in_person": "In person",
     "paper": "On paper",
     "assisted_visit": "During an assisted visit",
+    "representative": "Through a representative",
 }
 SYNTHETIC_NOTICE = (
     "This is a demonstration with synthetic records only. Do not enter real names, contact "
@@ -88,8 +95,9 @@ ASSISTED_MANUAL_ROUTE = (
     "channel, your name and the home reference, and give it to the named owner."
 )
 HOUSEHOLD_MANUAL_ROUTE = (
-    "If you prefer not to use a screen, raise your concern by phone, in person, on paper "
-    "or with help at a visit, and a member of staff will record it with you."
+    "If you prefer not to use a screen, raise your concern by phone, in person, on paper, "
+    "with help at a visit or through a representative, and a member of staff will record it "
+    "with you."
 )
 HOUSEHOLD_UPDATE_NOTE = (
     "We set the first update date within 7 days and a manager names the person looking into "
@@ -114,6 +122,10 @@ NOT_FOUND_MESSAGE = "That concern was not found."
 NOT_AVAILABLE_MESSAGE = "That action is not available here."
 RECEIPT_ACCESS_DENIED_MESSAGE = (
     "Provide the matching request reference from your receipt to view this concern."
+)
+NEUTRAL_EVIDENCE_MESSAGE = (
+    "Write only factual notes on what was checked or done, with no claims about causes, "
+    "fault or future bills."
 )
 FIXED_UNKNOWNS = (
     "Values are synthetic exercise values, not measured homes or real households.",
@@ -179,6 +191,7 @@ assert_templates_neutral(
     NOT_FOUND_MESSAGE,
     NOT_AVAILABLE_MESSAGE,
     RECEIPT_ACCESS_DENIED_MESSAGE,
+    NEUTRAL_EVIDENCE_MESSAGE,
     FIXED_UNKNOWNS,
     WINDOWS,
     _PRIVACY_LABELS,
@@ -446,6 +459,11 @@ def _context_errors(context: object) -> dict[str, str]:
         kinds = _guard_kinds(key) + [k for k in _guard_kinds(value) if k not in _guard_kinds(key)]
         if kinds:
             return {"context": neutral_text(f"Note {position}: {_flagged(kinds)}")}
+        try:
+            neutral_text(key)
+            neutral_text(value)
+        except ValueError:
+            return {"context": neutral_text(f"Note {position}: {NEUTRAL_EVIDENCE_MESSAGE}")}
     return {}
 
 
@@ -459,6 +477,22 @@ def _free_text(value: object, field: str, label: str, cap: int, errors: dict[str
         if kinds:
             errors[field] = _flagged(kinds)
     return value
+
+
+def _staff_evidence(value: object, errors: dict[str, str]) -> None:
+    _free_text(value, "evidence", "The evidence", EVIDENCE_MAX, errors)
+    if "evidence" not in errors and isinstance(value, str) and value.strip():
+        try:
+            neutral_text(value)
+        except ValueError:
+            errors["evidence"] = neutral_text(NEUTRAL_EVIDENCE_MESSAGE)
+
+
+def _safe_error_text(exc: BaseException) -> str:
+    try:
+        return neutral_text(str(exc))
+    except ValueError:
+        return neutral_text(NEUTRAL_EVIDENCE_MESSAGE)
 
 
 def _date(value: object, field: str, floor: str, errors: dict[str, str]) -> str:
@@ -663,8 +697,13 @@ class AftercareService:
         reg = _register(doc)
         if cid not in reg.concerns or cid not in doc["receipts"]:
             raise KeyError(cid)
+        rec = reg.concerns[cid]
         receipt = doc["receipts"][cid]
-        if not isinstance(request_id, str) or receipt.get("request_id") != request_id:
+        if (
+            rec.get("route") != "digital"
+            or not isinstance(request_id, str)
+            or receipt.get("request_id") != request_id
+        ):
             raise PermissionError(neutral_text(RECEIPT_ACCESS_DENIED_MESSAGE))
         view = reg.view(cid)
         unresolved = {r["id"] for r in reg.unresolved()}
@@ -954,7 +993,7 @@ class AftercareService:
         self, user: Mapping[str, Any] | None, cid: str, outcome: str, basis: str, evidence: str
     ) -> Record:
         errors: dict[str, str] = {}
-        _free_text(evidence, "evidence", "The evidence", EVIDENCE_MAX, errors)
+        _staff_evidence(evidence, errors)
         if errors:
             raise ValidationError(errors)
         return self._owner_action(
@@ -968,7 +1007,7 @@ class AftercareService:
         self, user: Mapping[str, Any] | None, cid: str, status: str, evidence: str | None = None
     ) -> Record:
         errors: dict[str, str] = {}
-        _free_text(evidence, "evidence", "The evidence", EVIDENCE_MAX, errors)
+        _staff_evidence(evidence, errors)
         if errors:
             raise ValidationError(errors)
         return self._owner_action(
@@ -1083,6 +1122,39 @@ class AftercareService:
             )
         summary = reg.evaluator_view(self.cohort, baseline_homes=comparable)
         total = len(self.cohort)
+        task_entry = _registry_get(PACK_TASK) or {}
+        concern_pack_task: Record = {
+            "task_id": PACK_TASK,
+            "requirement": "FR-036",
+            "kind": neutral_text(str(task_entry.get("kind", "proposal-pack"))),
+            "state": neutral_text(str(task_entry.get("state", "disabled"))),
+            "approval_state": neutral_text(str(task_entry.get("approval_state", "unapproved"))),
+            "enabled": bool(task_entry.get("enabled", False)),
+            "live_authorized": _authorizes_live(PACK_TASK, None),
+            "requires_human_review": True,
+            "reviewer_role": neutral_text(
+                str(task_entry.get("reviewer_role", "Named human aftercare owner"))
+            ),
+            "purpose": neutral_text(
+                str(
+                    task_entry.get(
+                        "purpose",
+                        "Draft an optional structured summary of a resident aftercare concern "
+                        "for the named human owner to investigate.",
+                    )
+                )
+            ),
+            "influence": neutral_text(
+                str(
+                    task_entry.get(
+                        "influence",
+                        "Proposal pack only. It cannot alter, close, reclassify, or dismiss a "
+                        "concern or set a remedy status.",
+                    )
+                )
+            ),
+            "manual_route": neutral_text(PACK_MANUAL_ROUTE),
+        }
         return {
             "cohort_label": neutral_text(COHORT_LABEL),
             "rows": rows,
@@ -1099,6 +1171,7 @@ class AftercareService:
                 ],
             },
             "register_summary": summary,
+            "concern_pack_task": concern_pack_task,
             "unknowns": [*summary["unknowns"], *FIXED_UNKNOWNS],
             "notice": neutral_text(EVALUATOR_NOTICE),
             "sensor_note": SENSOR_NOTE,
@@ -1157,11 +1230,11 @@ class AftercareService:
         except KeyError:
             return 404, {"error": neutral_text(NOT_FOUND_MESSAGE)}
         except ConflictError as exc:
-            return 409, {"error": neutral_text(str(exc))}
+            return 409, {"error": _safe_error_text(exc)}
         except ValueError as exc:
-            return 400, {"error": neutral_text(str(exc)), "errors": {}}
+            return 400, {"error": _safe_error_text(exc), "errors": {}}
         except (StateInvalid, PersistenceError) as exc:
-            return 503, {"error": neutral_text(str(exc))}
+            return 503, {"error": _safe_error_text(exc)}
 
     def _route(
         self,

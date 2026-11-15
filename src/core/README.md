@@ -5033,11 +5033,13 @@ only wire these read-only helpers into a staff view, which needs owner direction
 `zava_forward.core.aftercare.AftercareRegister` is a store-independent register for constructed
 aftercare concerns (FR-049, AC-063). `raise_concern` records a discomfort, higher-bill, control-use
 or other concern from a household or a representative (a stated basis is required) by a `digital`
-route or a `staff_recorded` route (phone, in-person, paper or assisted-visit channel) with a named
-human owner, a next-update date and a fixed non-digital route statement. Only the owner records an
-investigation outcome, and the basis must be a human one (home visit, household conversation,
-specialist review or records review); a sensor reading is stored as context, is never a basis and
-never dismisses the report. The remedy status is separate and completion needs evidence.
+route or a `staff_recorded` route (phone, in-person, paper, assisted-visit or representative
+channel) with a named human owner, a next-update date and a fixed non-digital route statement. Only
+the owner records an investigation outcome, and the basis must be a human one (home visit,
+household conversation, specialist review or records review); a sensor reading is stored as context,
+is never a basis and never dismisses the report. Staff-authored outcome, remedy and pack-review
+notes pass `neutral_text`, while household verbatim statements and representative basis stay
+untouched. The remedy status is separate and completion needs evidence.
 `record_closure` records handover or financial closure separately and changes no concern or remedy;
 `unresolved()` keeps open concerns visible after closure. `evaluator_view(handed_over_homes,
 baseline_homes)` returns counts with stated denominators, unknown baseline coverage, outcomes
@@ -5051,7 +5053,8 @@ summary is attached only after the neutral-text guard. It is `Not reviewed` and 
 until the named owner calls `review_pack` with `accept` or `reject` and a reason; neither action
 changes the concern, its outcome or its remedy, and a sensor reading never appears in the pack. The
 task `aftercare-concern-pack` is registered in `ai_registry` as an unapproved, disabled proposal
-task with a manual route and no model binding (FR-036).
+task with a manual route and no model binding (FR-036), and both `propose_pack` and
+`AftercareService.evaluator_view` (`concern_pack_task`) attach that `FR-036` registry status.
 
 `add_sensor_context` attaches a later sensor signal to a concern as context only: it changes no
 investigation state, outcome or remedy, never marks the concern dismissed, and the text (also at
@@ -5078,10 +5081,11 @@ Stage A of the connected slice (#133, Refs only, unwired) adds
 `zava_forward.core.aftercare_intake.AftercareService`, a synthetic service layer over the register
 above. It does not reimplement the register. Alongside role-gated staff-recorded non-digital intake
 (`form`, `record_concern` on `/api/aftercare/form` and `/api/aftercare/concerns` for phone,
-in-person, paper and assisted-visit channels), it exposes accessible self-service digital intake for
-households and representatives (`household_form`, `submit_household_concern`, and `request_id`-bound
-`household_receipt` on `/api/aftercare/household-form` and `/api/aftercare/household-concerns`
-omitting staff sensor context and audit history), preserving optional `support_needed` adjustments,
+in-person, paper, assisted-visit and representative channels), it exposes accessible self-service
+digital intake for households and representatives (`household_form`, `submit_household_concern`, and
+digital-only `request_id`-bound `household_receipt` on `/api/aftercare/household-form` and
+`/api/aftercare/household-concerns` omitting staff sensor context and audit history), preserving
+optional `support_needed` adjustments (normalising legacy `call_back` to `callback_window`),
 verbatim household statements and representative basis, idempotent `request_id` replay across UTC
 days (preserving legacy `staff_recorded` SHA-256 request fingerprints), owner actions limited to the
 named synthetic scenario owner (a missing owner is `Unknown`, and only a manager can name one
