@@ -39,6 +39,11 @@
       "decision": "Post-implementation Review executed once (Execution status: Complete; Outcome: Residual work) over full P01-P03 boundary; zero production defects found; RV-001 [Low] (direct SqlStore.rescan_pending() reopen and blocked counter unit-test assertion) routed as non-blocking follow-up alongside Azure Storage Defender Bicep wiring",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-117-doc-scan-review.md"
+    },
+    {
+      "decision": "Child RPI continuation task issue-117-doc-scan-rebase-fa6f8d1dd rebased 4d91dae33 onto origin/feat/demo-164-chat-grounding-provenance-0900 (fa6f8d1dd) as e9c31f7fa051d5fd58795aa7feae7e404760433b and re-verified focused validation across src/core and src/api while preserving original parent Residual work (RV-001) Review outcome.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-15/issue-117-doc-scan-rebase-fa6f8d1dd-changes.md"
     }
   ],
   "blockers": [],

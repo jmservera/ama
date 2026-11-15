@@ -135,3 +135,8 @@ Later implementation of a routed finding does not require another Review.
 * Validation coverage: Focused tier complete (`src/core` and `src/api` `ruff`, `mypy`, 537 `src/core` unit tests, 452 `src/api` unit tests including `test_document_controls` and `test_role_endpoint_inventory`; `tools/rpi-checks.py` skipped per caller instruction)
 * Blockers: None
 
+## Post-Rebase Reconciliation (`fa6f8d1dd`)
+
+* Child RPI continuation task `issue-117-doc-scan-rebase-fa6f8d1dd` rebased candidate commit `4d91dae33` onto `origin/feat/demo-164-chat-grounding-provenance-0900` (`fa6f8d1dd`) as `e9c31f7fa051d5fd58795aa7feae7e404760433b`, resolving the single `Store.focus` adjacency conflict in `src/core/src/zava_forward/core/store.py` (`self._open_safety_items` + `is_available_case_document`) and passing worktree-isolated `ruff check .`, `ruff format --check .`, `mypy`, `#117` quarantine suites, `#76` `Store.focus` suite, `test_role_endpoint_inventory`, and `tools/rename-zava-tests.py`.
+* Original parent `#117` Review outcome (`Outcome: Residual work` with routed follow-up `RV-001` and Azure Storage Defender infrastructure wiring) is preserved unchanged; see `.copilot-tracking/reviews/logs/2026-11-15/issue-117-doc-scan-rebase-fa6f8d1dd-review.md` for the rebase-continuation Review record.
+
