@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-11-13
+ms.date: 2026-11-15
 ms.topic: reference
 ---
 
@@ -11812,3 +11812,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * `retrofit-synthetic-data/provenance-register.json` v1.3.0: every source now records `permitted_use` and `contains_real_resident_data: false`; added `SRC-OPEN-METEO-ERA5` (retrieved 2026-10-27, CC BY 4.0, synthetic-demo-only) and linked it from DS-SENSOR; NASA POWER logged as an open item (licence not retrieved).
 * `privacy.source_issues` enforces the new fields and `dataset_source_issues` cross-checks dataset sources. Refs #159.
+
+## [2026-11-15] update | Model provider data-handling and region position contract (Refs #163)
+
+* Added `src/core/src/zava_forward/core/chat_provider_position.py` and wired fail-closed evaluation into `chat_privacy.py`, `regulatory_privacy.py` (`readiness_report` and `build_foundry_query`), and `GET /api/chat/status`: primary domestic `uksouth` `Standard` residency, bounded EEA EU data-zone allowlist gated on `CHAT_TRANSFER_REF`, unconditional rejection of `GlobalStandard` and third-country regions, zero model training enforcement (`CHAT_PROVIDER_TRAINING`), separate synchronous content-filtering and conservative 30-day abuse-monitoring disclosures (`CHAT_ABUSE_MONITORING_MODIFIED_REF`), actual-mode synthetic/demo reference rejection plus `DPO_LEGAL_APPROVED = False` live-mode hold, and pre-approval ASCII `1..36500` retention blocking.
+* Updated [Chat and Memory Data Protection Analysis Record](./research/chat-memory-dpia.md), `src/core/README.md` and the [reference index](./README.md). Issue #163 criterion 5 (technical model provider and region position) is recorded and unit-tested locally; Issue #163 criterion 2 (lawful basis, staff notice, DPIA decision and approved retention period) stays gated on human DPO and Legal sign-off with decisions D1 to D8 kept as Not recorded. Refs #163.

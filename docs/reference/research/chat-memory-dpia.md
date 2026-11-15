@@ -2,7 +2,7 @@
 title: Chat and Memory Data Protection Analysis Record
 description: Draft DPIA for DPO review covering chat, memory and the synthetic regulatory assistant, with unresolved lawful basis, retention, rights and provider terms
 author: AMA programme
-ms.date: 2026-11-01
+ms.date: 2026-11-15
 ms.topic: reference
 ---
 
@@ -12,7 +12,8 @@ Draft working record, not an approved DPIA. The owner named Juan Manuel Servera
 as the Legal, Compliance and DPO owner on 2026-10-15. No lawful basis, staff
 notice or DPIA decision is recorded here, because none has been given. The
 demonstrator holds constructed, labelled synthetic data only (ADR 0005). Chat
-and memory controls are in `src/core/src/zava_forward/core/chat_privacy.py`.
+and memory controls are in `src/core/src/zava_forward/core/chat_privacy.py` and
+`src/core/src/zava_forward/core/chat_provider_position.py`.
 The subsequent synthetic regulatory lookup is built and requires explicitly
 simulated privacy references. Neither a configuration reference nor passing
 tests completes this DPIA or authorizes actual staff/resident processing.
@@ -93,6 +94,59 @@ acceptance. Mirrored in `chat_privacy.MODEL_PROVIDER_POSITION["documented_terms"
 | Previews | Preview models may use different practices | Confirm the deployed model is generally available |
 
 Transfer position outside the geography stays Unknown until the DPO records it.
+
+### Runtime residency and data-handling enforcement (2026-11-15, Refs #163)
+
+`chat_provider_position` (`evaluate_provider_position` and `require_provider_position`)
+records and enforces the technical model provider and region contract across
+`ChatPrivacy`, `regulatory_privacy.readiness_report`, `regulatory_privacy.build_foundry_query`
+and `GET /api/chat/status` without substituting for human DPO and Legal acceptance:
+
+| Posture | Regions | Deployment SKUs | Runtime rule |
+| --- | --- | --- | --- |
+| Primary domestic residency (`uk_south`) | `uksouth` | `Standard` only | Permitted default; `uksouth` with `DataZoneStandard` fails closed (`unapproved_deployment_residency`) because the UK is outside Microsoft's EU Data Zone |
+| Bounded EU data-zone residency (`eu_data_zone`) | `swedencentral`, `westeurope`, `northeurope`, `francecentral`, `germanywestcentral`, `italynorth`, `polandcentral`, `spaincentral` | `Standard`, `DataZoneStandard` | Classified as cross-border transfer outside the UK; fails closed (`cross_border_transfer_unapproved`) unless `CHAT_TRANSFER_REF` holds a recorded governance reference |
+| Prohibited regions and global routing (`unapproved`) | Any non-UK, non-EEA region (for example `eastus`) | `GlobalStandard`, `GlobalBatch`, `GlobalProvisionedManaged`, or blank/unknown SKU | Always fails closed (`unapproved_region`, `unapproved_deployment_residency`) |
+
+Additional enforced controls:
+
+* Zero model training: customer prompts, completions and opt-in memory are never
+  permitted for foundation-model training or improvement. Any enabled or
+  unrecognised `CHAT_PROVIDER_TRAINING` setting fails closed (`provider_training_prohibited`).
+* Content-filtering versus abuse-monitoring disclosure: `CONTENT_FILTERING_DISCLOSURE`
+  records synchronous stateless Azure AI Content Safety harm filtering (`stores_prompts = false`,
+  `trains_models = false`), separate from `ABUSE_MONITORING_DISCLOSURE` which
+  records platform-default up-to-30-day encrypted flagged-sample storage and
+  authorised Microsoft human review (`CHAT_ABUSE_MONITORING_MODIFIED_REF` records
+  `mode = "modified_recorded_unverified"` with `modified_abuse_monitoring_verified = false`,
+  retaining conservative `default_sample_retention_days = 30` and
+  `human_review_possible = true` defaults until DPO and Legal verify Microsoft's
+  subscription setting). Vendor documentation guarantees EEA reviewer location
+  for EEA resources only, so `uksouth` reviewer residency remains
+  `uk_reviewer_residency_verified = false`.
+* Cross-border transfer gate, deployment attestation and actual-mode guard:
+  explicit `CHAT_CROSS_BORDER_TRANSFER=true` or any EU data-zone configuration
+  requires a valid `CHAT_TRANSFER_REF`. Because `infra/main.bicep` currently
+  defaults `chatModelSku` to `GlobalStandard` and `infra/modules/containerapps.bicep`
+  does not inject `CHAT_PROVIDER_REGION` or `CHAT_DEPLOYMENT_TYPE`,
+  `constructed` synthetic evaluations fall back to `uksouth` / `Standard` with
+  `deployment_attested = false` (`true` only when both settings are explicitly
+  supplied and approved), whereas `ZF_DATA_PROCESSING=actual` requires explicit
+  `CHAT_PROVIDER_REGION` and `CHAT_DEPLOYMENT_TYPE` attestation
+  (`unattested_region_in_actual_mode`, `unattested_deployment_in_actual_mode`).
+  Bare boolean/placeholder tokens are rejected in every mode, synthetic or demo
+  reference strings (`SYNTH-*`, `SYN-*`, `SYNTHETIC-*`, demo approval files, or
+  this draft file) fail closed when `ZF_DATA_PROCESSING=actual`, and
+  `ZF_DATA_PROCESSING=actual` refuses chat, memory and provider readiness
+  (`actual_mode_unapproved = true` and `actual_mode_dpo_legal_unapproved`) while
+  repository-recorded `DPO_LEGAL_APPROVED` is `False`, even if non-synthetic
+  environment reference strings are supplied.
+* Pre-approval retention gate: `ChatPrivacy.decision()["retention_days"]` stays
+  `None` (`Unknown`) until `DPO_LEGAL_APPROVED` (in `actual` mode), `CHAT_DPIA_REF`,
+  `CHAT_LAWFUL_BASIS_REF`, `CHAT_NOTICE_REF` and `evaluate_provider_position`
+  all pass alongside `CHAT_RETENTION_REF` and ASCII `CHAT_RETENTION_DAYS` in
+  `1..36500`. Every payload carries `dpo_legal_approved = false` and
+  `documented_terms.dpo_accepted = false`.
 
 ## Free text warning and redaction
 
@@ -342,3 +396,18 @@ need a named person:
 | Metering follows DPIA scope | DPO | DPIA scope sign-off |
 
 This record ticks nothing and implies no approval.
+
+## Enforced model provider and region position 2026-11-15 (Refs #163)
+
+`src/core/src/zava_forward/core/chat_provider_position.py` now records and
+enforces the technical model provider data-handling and region position contract
+(Issue #163 criterion 5) across `chat_privacy.py`, `regulatory_privacy.py` and
+`GET /api/chat/status`: primary `uksouth` `Standard` residency, bounded EU
+data-zone allowlist gated on `CHAT_TRANSFER_REF`, unconditional rejection of
+`GlobalStandard` and third-country regions, zero-training enforcement, separate
+content-filtering and abuse-monitoring disclosures, and pre-approval retention
+blocking. Issue #163 criterion 2 remains unmet and human-gated: decisions D1 to
+D8 above remain "Not recorded", `ZF_DATA_PROCESSING=actual` remains refused while
+`DPO_LEGAL_APPROVED` is `False`, no retention period is approved for real or
+production personal data, and passing unit tests do not constitute DPO or Legal
+sign-off.

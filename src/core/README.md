@@ -6,6 +6,65 @@ ms.date: 2026-11-15
 ms.topic: reference
 ---
 
+## Model provider data-handling and region position contract (2026-11-15, Refs #163)
+
+`chat_provider_position` (`MODEL_PROVIDER_CONTRACT`, `evaluate_provider_position`,
+`require_provider_position`, `is_demo_or_synthetic_ref`, and
+`is_valid_governance_ref`) records and enforces the technical residency and
+data-handling posture for Azure OpenAI / Microsoft Foundry chat and memory
+without claiming human DPO or Legal approval:
+
+* Residency allowlist: primary domestic `uksouth` permits regional `Standard`
+  deployments only (`residency_zone="uk_south"`; `uksouth` + `DataZoneStandard`
+  fails closed because the UK is outside Microsoft's EU Data Zone). Allowlisted
+  EEA EU data-zone regions (`swedencentral`, `westeurope`, `northeurope`,
+  `francecentral`, `germanywestcentral`, `italynorth`, `polandcentral`,
+  `spaincentral`) permit `Standard` or `DataZoneStandard`
+  (`residency_zone="eu_data_zone"`) only when `CHAT_TRANSFER_REF` records valid
+  cross-border transfer sign-off. `GlobalStandard` and non-UK/non-EEA regions
+  fail closed unconditionally. Because `infra/main.bicep` currently defaults
+  `chatModelSku` to `GlobalStandard` and `infra/modules/containerapps.bicep`
+  does not inject `CHAT_PROVIDER_REGION` or `CHAT_DEPLOYMENT_TYPE`,
+  `constructed`-mode synthetic evaluations fall back to `uksouth` / `Standard`
+  with `deployment_attested=False` (`True` only when both settings are
+  explicitly supplied and approved), whereas `ZF_DATA_PROCESSING=actual` fails
+  closed (`unattested_region_in_actual_mode`,
+  `unattested_deployment_in_actual_mode`) if either setting is omitted.
+* Zero model training and disclosures: any enabled or unrecognised
+  `CHAT_PROVIDER_TRAINING` flag fails closed (`provider_training_prohibited`).
+  `CONTENT_FILTERING_DISCLOSURE` and `ABUSE_MONITORING_DISCLOSURE` separate
+  synchronous stateless Azure AI Content Safety harm filtering from
+  platform-default up-to-30-day flagged-sample storage and Microsoft human
+  review (`CHAT_ABUSE_MONITORING_MODIFIED_REF` records
+  `mode="modified_recorded_unverified"` with
+  `modified_abuse_monitoring_verified=False`, keeping conservative `30`-day and
+  `human_review_possible=True` defaults until DPO/Legal subscription
+  verification), while keeping `uksouth` reviewer residency marked unverified
+  (`uk_reviewer_residency_verified=False`).
+* Governance-reference hygiene, actual-mode human gate and pre-approval
+  retention boundary: bare placeholder tokens (`yes`, `true`, `1`, `approved`,
+  `tbd`) are rejected in all modes, synthetic/demo references (`SYNTH-*`,
+  `SYN-*`, `SYNTHETIC-*`, demo approval records, and `chat-memory-dpia.md`) are
+  rejected when `ZF_DATA_PROCESSING=actual`, and `ZF_DATA_PROCESSING=actual`
+  stays refused (`actual_mode_unapproved=True`,
+  `actual_mode_dpo_legal_unapproved` in `evaluate_provider_position`,
+  `retention_days=None`) while
+  `DPO_LEGAL_APPROVED` is `False` even if non-synthetic reference strings are
+  supplied. `ChatPrivacy.decision()`, `regulatory_privacy.readiness_report()`,
+  `regulatory_privacy.build_foundry_query()`, and `GET /api/chat/status` wire
+  this evaluation fail-closed (with `ChatPrivacy.provider_position()`,
+  `ChatPrivacy.decision()["provider_position"]`, `/api/chat/status`
+  `provider_position`, and `regulatory_privacy.readiness_report()` never echoing
+  raw reference strings or unallowlisted environment values), keeping
+  `retention_days=None` before approval (ASCII `1..36500` only when approved)
+  and `dpo_legal_approved=False` until named DPO and Legal sign-off (`Refs #163`).
+
+Run the focused `#163` provider-position suite from `src/core` with:
+
+```bash
+PYTHONPATH=src:tests python3 -m unittest tests/test_chat_provider_position.py tests/test_chat_privacy.py tests/test_chat_dpia_record.py -v
+```
+
 ## Responsible AI release control plane, traceability and separated readiness (2026-11-15, Refs #218)
 
 `rai_control_plane` enforces deterministic `OQ-017` rejection of any live AI

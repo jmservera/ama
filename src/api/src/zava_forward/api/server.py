@@ -1586,9 +1586,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 if not post and parts == ["status"]:
                     c.current_user(user)
                     demo = ai_registry.demo_activation_honoured(CHAT_TASK)
+                    dec = c.privacy.decision()
                     return self._json(200, {
-                        "warning": CHAT_WARNING, "retention": c.privacy.decision()["retention"],
-                        "storage_approved": c.privacy.decision()["approved"],
+                        "warning": CHAT_WARNING, "retention": dec["retention"],
+                        "storage_approved": dec["approved"],
+                        "provider_position": dec["provider_position"],
                         "activation": "demo-only" if demo else "disabled; approval evidence required",
                         "demo_activation": demo,
                         "demo_disclaimer": ai_registry.DEMO_ACTIVATION["disclaimer"] if demo else None,
@@ -1706,6 +1708,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                             app.panel.ask(u, tid, body.get("content"), skill=body.get("skill")), plain, telemetry=app.guard_telemetry))
                     if parts[2] == "proposals":
                         # Proposal-only: the existing assistants path queues it for the independent review.
+                        c.privacy._require()
                         t = s.chat_resume(u, tid)
                         if not t["case_id"]:
                             raise ValueError("Open the panel from a case to request a proposal.")

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from collections.abc import Callable, Mapping, Sequence
 from datetime import UTC, datetime, timedelta
 from typing import Any, cast
@@ -12,6 +13,7 @@ from zava_forward.core import chat_privacy as _chat_privacy
 from zava_forward.core import controls as _controls
 from zava_forward.core import data_protection, identity
 from zava_forward.core import projection as _projection
+from zava_forward.core.chat_provider_position import evaluate_provider_position
 
 _can_see_reason = cast(Callable[[dict[str, Any]], bool], _projection.can_see_reason)
 _redact = cast(Callable[[str], tuple[str, list[str]]], _chat_privacy.redact)
@@ -179,12 +181,24 @@ CRITERIA = (
 )
 
 
-def readiness_report(env: Any) -> dict[str, Any]:
+def _provider_env(env: Any) -> Mapping[str, str] | None:
+    if env is None:
+        return None
+    if isinstance(env, Mapping):
+        return env
+    return {"CHAT_PROVIDER_REGION": ""}
+
+
+def readiness_report(env: Any = None) -> dict[str, Any]:
     """Reference-only live-data gate; recorded references are not verified DPO or Legal approval."""
-    refs = {name: str(env.get(name) or "").strip() for name, _ in GATE_REFS}
+    mapping: Mapping[str, str] = (
+        os.environ if env is None else (env if isinstance(env, Mapping) else {})
+    )
+    refs = {name: str(mapping.get(name) or "").strip() for name, _ in GATE_REFS}
     missing = [name for name, ref in refs.items() if not ref]
     synthetic = [name for name, ref in refs.items() if ref.startswith("SYNTH-")]
-    permitted = not missing and not synthetic
+    provider_pos = evaluate_provider_position(_provider_env(env))
+    permitted = not missing and not synthetic and bool(provider_pos["valid"])
     return dict(
         label="synthetic-demo",
         owner=OWNER,
@@ -192,9 +206,13 @@ def readiness_report(env: Any) -> dict[str, Any]:
         dpo_reviewed=False,
         missing_refs=missing,
         synthetic_refs=synthetic,
+        provider_position=provider_pos,
         statement="References recorded, human approval not verified by this report."
         if permitted
-        else "Live data refused until every reference is recorded and none is synthetic.",
+        else (
+            "Live data refused until every reference is recorded, none is synthetic, "
+            "and model provider residency and data-handling posture are approved."
+        ),
         criteria=[
             dict(
                 id=cid,
@@ -439,6 +457,20 @@ def build_foundry_query(
         )
         if not gate["permitted"]:
             raise PermissionError(str(gate["reason"]))
+    provider_pos = evaluate_provider_position(_provider_env(env))
+    if not provider_pos["valid"]:
+        return dict(
+            permitted=False,
+            purpose=purpose,
+            question_topic=None,
+            fields={},
+            dropped=[],
+            unneeded_for_question=[],
+            special_category_dropped=[],
+            provider_violations=list(provider_pos["violations"]),
+            dpo_reviewed=False,
+            manual_path=MANUAL_PATH,
+        )
     if purpose not in QUERY_FIELDS:
         return dict(
             permitted=False,
