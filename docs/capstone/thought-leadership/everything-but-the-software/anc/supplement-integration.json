@@ -414,7 +414,8 @@
     "scope": "Plain-language editorial review of all 70 active sections/subsections for computer scientists and data scientists using LLMs in the SDLC. The 16 November abstract follow-up preserves the author's first paragraph and narrates the hidden-test design. No results, equations, table bodies, prompts, citations or study design changed.",
     "prior_delivery_revision": "style_revision",
     "delivery_status": "source-only; existing main.pdf excluded",
-    "validation_pdf_sha256": "0e5842ee3b4d4a3e77bfccae8617c89f54e313423cf982bc7aa01151333f5dd0",
+    "validation_pdf_sha256": "e708e941705523fc22870b33603913d7a0f0e00b5134c9a3c383ae679ea91cad",
+    "pre_question_validation_pdf_sha256": "0e5842ee3b4d4a3e77bfccae8617c89f54e313423cf982bc7aa01151333f5dd0",
     "pre_story_validation_pdf_sha256": "0485c6de0ea76ef1af8834a96d098dd70675198fffee19f3fdd47581998d62fc",
     "validation_pdf_pages": 73,
     "validation_supplement_start_page": 46,
@@ -427,7 +428,7 @@
       "anc/measurement-provenance.tex": "45ad9c93009ca135e9165cb0aaba8511baee60a9979ed489fd46d09dbabeb324"
     },
     "source_sha256": {
-      "main.tex": "6615b2fe31cd8b3365c0ecf29373a0b35e998523c8affb8b968656db6fb3769a",
+      "main.tex": "7047179d91c6f6c6c54e89557b9c8c3fee2193f834f38b81732e49887e4e791e",
       "anc/background.tex": "9e3b2f93159e833cc4ff876cca08bd2837d6b3132d50bf9736c424e607f58bfc",
       "anc/experiment-protocol.tex": "02b9481f2bd5d3207ab42d430f929079e876d78de32c5b9690527a7784491b18",
       "anc/supplement-section.tex": "28047e8d289fb250a6af9aa633d26c888aabf6c72b99868c8bd01170f9060fef",
