@@ -1605,6 +1605,51 @@ active-time and primary delay code rules, persistence and screens.
 python -m unittest discover -s tests -p 'test_discovery_flow.py' -q
 ```
 
+### Phase 0 unified retrofit-flow discovery contract and governance guard (Refs #124)
+
+`discovery_contract` unifies Phase 0 retrofit-flow discovery (`BG-011`,
+`RULE-019`, `OD-16`, `OD-18`) in pure standard-library Python without company
+data, network calls or AI dependencies, and aligns `discovery_register` and
+`discovery_flow` outputs under one fail-closed governance contract:
+
+* `NominatedDiscoveryOwner`, `nominate_discovery_owner`, and
+  `agree_discovery_endpoint` require distinct named human sponsor and owner
+  actors (rejecting blank, placeholder, self-nominated and AI/automated actors)
+  and explicit agreement on the `accepted handover` endpoint (`ENDPOINT_AGREED`).
+* `LifecycleDictionary` (`build_default_lifecycle_dictionary`) defines the 10
+  ordered PAS 2035 and retrofit flow stages through `accepted handover` plus
+  `paused`, `excluded`, `withdrawn`, `cancelled` and `reopened_aftercare`
+  states, 15 distinct lifecycle events, 8 timestamp specifications (keeping
+  `active_days=None` unless explicit active-work start and finish timestamps
+  exist), 7 wait states and 4 return-loop kinds (`return`, `rejection`,
+  `repeat visit`, `reopen`), each gated by owning-role human validation.
+* `evaluate_property_flow` retains zero-event and non-progressing baseline
+  candidates, computes both the `BG-011` `assessment-to-ready-to-install` leg
+  and end-to-end / post-installation `accepted handover` legs, verifies
+  `accepted handover` prerequisite events and unresolved post-handover `reopen`
+  blocks while keeping intended energy outcomes separate, preserves `UNKNOWN`,
+  `DISPUTED` and `Unattributed` waits, and flags missing or out-of-order
+  timestamps as explicit gaps without guessing.
+* `RankedConstraintRegister` (`build_seed_constraint_register`) enforces
+  contiguous `1..N` ranking across the five candidate hypotheses, requires both
+  non-empty `supporting_evidence` and non-empty `contradicting_evidence` tuples
+  plus all five `ConstraintTestAssessment` criteria for acceptance, enforces
+  proposer separation, and preserves `DISPUTED` hypotheses visibly inside
+  validated registers and packs as non-findings.
+* `enforce_governance_guard`, `validate_owner_finding` (`discovery_register`),
+  and dataclass `__post_init__` checks stamp `owner_validated=False` and
+  `finding_status="candidate_hypothesis_not_company_finding"` across all
+  discovery outputs until the nominated human discovery owner records formal
+  validation with `ENDPOINT_AGREED` and zero dictionary gaps, raising
+  `GovernanceViolationError` on any invalid promotion.
+
+See [Phase 0 Retrofit-Flow Discovery Contract](../../docs/reference/research/company/phase0-retrofit-flow-discovery-contract.md)
+for standards provenance and open Zava North Homes human governance gates.
+
+```bash
+PYTHONPATH=src:tests python3 -m unittest discover -s tests -p 'test_discovery*.py' -v
+```
+
 ## Appointment agreements and visit evidence (#87)
 
 `appointment_control(user, work_order_id, body)` records explicit offers, separate
