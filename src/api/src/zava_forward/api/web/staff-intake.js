@@ -117,22 +117,37 @@ function intakeCapture(order, pack, rerender) {
   }, rerender);
 }
 
+const intakeKinds = ["variation", "safety", "access", "scope question", "other"];
+const intakeOwnerRoles = ["Retrofit Programme Manager", "Programme Support Officer", "Building Safety Liaison"];
 const intakeNotInstruction = (e) => e.acts_as_contract_instruction === false && e.contract_instruction === false;
 
-function intakeEscalate(order, options, rerender) {
-  return intakeForm("Raise a variation or concern", [
-    h("p", {}, "This goes to a named staff owner. It is never a contract instruction and does not change the work order."),
-    intakeField("esc-kind", "Kind", h("select", { id: "esc-kind", name: "kind", required: true },
-      (options.kinds || []).map((k) => h("option", { value: k }, k)))),
-    intakeField("esc-summary", "What needs deciding", h("textarea", { id: "esc-summary", name: "summary", rows: 3, maxlength: 500, required: true })),
-    intakeField("esc-owner", "Named owner", h("input", { id: "esc-owner", name: "named_owner", maxlength: 80, autocomplete: "off", required: true }),
-      "A staff member who will decide this."),
-    intakeField("esc-role", "Owner's role", h("select", { id: "esc-role", name: "owner_role", required: true },
-      (options.owner_roles || []).map((r) => h("option", { value: r }, r)))),
-  ], "Route to named owner", (data) => api(`/api/workorders/${encodeURIComponent(order)}/field-escalate`, {
-    kind: data.get("kind"), summary: data.get("summary"), named_owner: data.get("named_owner"), owner_role: data.get("owner_role") }), rerender);
+function intakeEscalate(order, options, escalation, rerender) {
+  const id = `esc-${order}`;
+  const kinds = options?.kinds?.length ? options.kinds : intakeKinds;
+  const roles = options?.owner_roles?.length ? options.owner_roles : intakeOwnerRoles;
+  const configured = Boolean(escalation?.owner_assigned);
+  return h("details", {}, h("summary", {}, "Route a variation or concern to a named owner"),
+    intakeForm("Raise a variation or concern", [
+      h("p", {}, "This goes to a named staff owner as advice only. It is never a contract instruction and does not change the work order."),
+      intakeField(`${id}-kind`, "Kind", h("select", { id: `${id}-kind`, name: "kind", required: true },
+        kinds.map((k) => h("option", { value: k }, k)))),
+      intakeField(`${id}-summary`, "What needs deciding", h("textarea", { id: `${id}-summary`, name: "summary", maxlength: 500, rows: 3, required: true })),
+      intakeField(`${id}-owner`, configured ? "Named owner, if not the configured owner" : "Named owner",
+        h("input", { id: `${id}-owner`, name: "named_owner", maxlength: 80, autocomplete: "off", spellcheck: "false", required: !configured }),
+        "A named staff member who will decide this, not a role."),
+      intakeField(`${id}-role`, "Owner's role",
+        h("select", { id: `${id}-role`, name: "owner_role", required: !configured },
+          [...(configured ? [h("option", { value: "" }, "Use the configured owner")] : []),
+            ...roles.map((r) => h("option", { value: r }, r))])),
+    ], "Route to named owner", (data) => {
+      const namedOwner = data.get("named_owner");
+      const ownerRole = data.get("owner_role");
+      const payload = { kind: data.get("kind"), summary: data.get("summary") };
+      if (namedOwner) payload.named_owner = namedOwner;
+      if (ownerRole) payload.owner_role = ownerRole;
+      return api(`/api/workorders/${encodeURIComponent(order)}/field-escalate`, payload);
+    }, rerender));
 }
-
 function intakeOrder(data, orderId, rerender) {
   const pack = data.pack;
   const status = h("p", { role: "status", "aria-live": "polite" });
@@ -154,13 +169,19 @@ function intakeOrder(data, orderId, rerender) {
       data.recovery.map((r) => [r.event, r.outcome, r.resident_effect, r.next_step])),
     screenFields([["Escalation owner", data.escalation.owner], ["Escalation role", data.escalation.role],
       ["Escalation contact", data.escalation.contact],
-      ["Acts as a contract instruction", data.escalation.acts_as_contract_instruction === false ? "No" : "Unknown"],
-      ["Effect", data.escalation.note]]),
+      ...(data.escalation.owner_status ? [["Owner status", data.escalation.owner_status]] : []),
+      ["Contract instruction", data.escalation.contract_instruction === false || data.escalation.acts_as_contract_instruction === false
+        ? "No. Variations and concerns are advice only."
+        : "Not confirmed. Treat this as advice only and ask the contract manager."],
+      ["Effect", data.escalation.note || "A concern does not change the work order. Only the contract manager issues a new version."]]),
     (data.escalations || []).length ? screenTable("Variations and escalations raised", ["Kind", "What needs deciding", "Named owner", "Status", "Contract instruction"],
-      data.escalations.map((e) => [e.kind, e.summary, `${e.owner.name} (${e.owner.role})`, e.status,
-        intakeNotInstruction(e) ? "No - not a contract instruction" : "Unknown - check with the contract manager"]))
+      data.escalations.map((e) => {
+        const ownerLabel = e.owner?.name ? `${e.owner.name} (${e.owner.role})` : `${e.named_owner} (${e.owner_role})`;
+        return [e.kind, e.summary, ownerLabel, e.status,
+          intakeNotInstruction(e) ? "No - not a contract instruction" : "Unknown - check with the contract manager"];
+      }))
       : h("p", { class: "empty" }, "No variation or escalation raised for this order. Each one needs a named staff owner."),
-    intakeEscalate(orderId, data.escalation_options || {}, rerender),
+    intakeEscalate(orderId, data.escalation_options || {}, data.escalation, rerender),
     h("p", {}, data.boundaries.acceptance), h("p", {}, data.boundaries.consent));
 }
 

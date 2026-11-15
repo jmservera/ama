@@ -146,6 +146,13 @@ param modelDeployments array = [
 ]
 @description('Region for the Azure SQL server when the primary region is not accepting new SQL servers. The private endpoint stays in the primary VNet.')
 param sqlLocation string = location
+@description('Region for the model account and deployments. Model SKU availability and quota differ by region, so it is selectable independently of the primary region.')
+param aiModelLocation string = location
+@description('Optional recorded fallback model region, used only after a new dated region and quota check; it is never deployed automatically. Empty means none is recorded. Must differ from aiModelLocation.')
+param aiModelFallbackLocation string = ''
+@description('Approved total model capacity units for this environment, checked against the quota record. chatModelCapacity must not exceed it. Explicit modelDeployments overrides are checked against it by infra/scripts/region_quota_preflight.py before deployment.')
+@minValue(1)
+param modelCapacityBudget int = 30
 @description('Map tile URL template for the workbench map (https). Development may use https://tile.openstreetmap.org/{z}/{x}/{y}.png within its usage policy.')
 param tileUrl string = ''
 param tileAttribution string = ''
@@ -201,7 +208,9 @@ module guard 'modules/guard.bicep' = {
     productionProfileRequiresRegistryQuarantine: isDev || registryQuarantineEnabled ? 'ok' : ''
     regionCheckMustBeRecorded: !empty(regionCheckReference) ? 'ok' : ''
     quotaCheckMustBeRecorded: !empty(quotaCheckReference) ? 'ok' : ''
-    deploymentLocationsMustBeSelected: !empty(location) && !empty(sqlLocation) ? 'ok' : ''
+    deploymentLocationsMustBeSelected: !empty(location) && !empty(sqlLocation) && !empty(aiModelLocation) ? 'ok' : ''
+    aiFallbackLocationMustDiffer: empty(aiModelFallbackLocation) || aiModelFallbackLocation != aiModelLocation ? 'ok' : ''
+    modelCapacityMustFitBudget: chatModelCapacity <= modelCapacityBudget ? 'ok' : ''
     publicEdgeRequiresProductionProfile: !enablePublicEdge || (!isDev && !allowPublicNetworkAccess) ? 'ok' : ''
     pilotRequiresProductionProfile: environmentName != 'pilot' || (!isDev && !allowPublicNetworkAccess) ? 'ok' : ''
     pilotRequiresLocks: environmentName != 'pilot' || enableLocks ? 'ok' : ''
@@ -351,7 +360,8 @@ module foundry 'modules/foundry.bicep' = {
     allowPublicNetworkAccess: publicAccess
     name: 'aif-${prefix}-${unique}'
     projectName: 'zava-forward-agents'
-    location: location
+    location: aiModelLocation
+    endpointLocation: location
     tags: allTags
     workspaceId: monitoring.outputs.workspaceId
     peSubnetId: network.outputs.peSubnetId
@@ -594,7 +604,7 @@ resource ledgerDigestMismatch 'Microsoft.Insights/scheduledQueryRules@2023-03-15
   tags: allTags
   properties: {
     displayName: 'Ledger does not match the immutable digests'
-    description: 'The scheduled ledger verification job reported LEDGER_DIGEST_ALERT, or the job run failed.'
+    description: 'The scheduled ledger verification job reported LEDGER_DIGEST_ALERT, or the job run failed. Proposed owner: Digital service owner, actual appointment pending. Runbook: https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md#ledger-digest-mismatch.'
     severity: 1
     enabled: true
     scopes: [monitoring.outputs.workspaceId]
@@ -621,7 +631,7 @@ resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-
   tags: allTags
   properties: {
     displayName: 'Ledger verification did not report success'
-    description: 'No LEDGER_DIGEST_OK line from the daily verification job in 26 hours: the job failed to start or run, or logs are missing. Table names are unconfirmed until checked in the deployed workspace.'
+    description: 'No LEDGER_DIGEST_OK line from the daily verification job in 26 hours: the job failed to start or run, or logs are missing. Table names are unconfirmed until checked in the deployed workspace. Proposed owner: Digital service owner, actual appointment pending. Runbook: https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md#ledger-verify-missing.'
     severity: 1
     enabled: true
     scopes: [monitoring.outputs.workspaceId]

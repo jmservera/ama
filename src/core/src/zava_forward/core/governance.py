@@ -29,7 +29,7 @@ from copy import copy, deepcopy
 from datetime import UTC, datetime
 from decimal import Decimal
 
-from . import controls as k
+from . import controls as k, gates
 from .change_provenance import _actor
 
 MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
@@ -495,7 +495,7 @@ class GovernanceMixin:
     def require_capture_open(self):
         why = self.capture_gate()
         if why:
-            raise PermissionError("Phase 0 capture is closed. " + " ".join(why))
+            raise gates.RuleGatedPermissionError("Phase 0 capture is closed. " + " ".join(why), gates.CAPTURE_RULE)
 
     def guard_case_event(self, c):
         """Capture gate for pilot-cohort cases (c["pilot"]) and pause check for every case; hazard response is deliberately not routed here."""
@@ -617,7 +617,7 @@ class GovernanceMixin:
 
     def require_not_paused(self, scope_kind, scope):
         if self.is_paused(scope_kind, scope):
-            raise PermissionError(f"This {scope_kind} is paused after a guardrail breach until restart is authorised. {EMERGENCY_NOTE}")
+            raise gates.RuleGatedPermissionError(f"This {scope_kind} is paused after a guardrail breach until restart is authorised. {EMERGENCY_NOTE}", gates.PAUSE_RULE)
 
     def governance_view(self, user, assessment=None):
         with self.lock:

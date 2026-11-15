@@ -11,7 +11,7 @@ they never represent an installed real device.
 import hashlib
 import json
 import math
-from collections.abc import Callable
+from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta
 
@@ -188,6 +188,21 @@ class Reading:
     def reading_id(self) -> str:
         return f"LIVE-{self.sensor_id}-{self.observed_at:%Y%m%dT%H%M}Z"
 
+    def validate(self) -> None:
+        """Refuse a reading without an explicit schema version, stable ID or its own device."""
+        if not isinstance(self.schema_version, str) or not self.schema_version:
+            raise LiveReadingError("SCHEMA_VERSION_MISSING")
+        if self.schema_version not in LIVE_VERSIONS:
+            raise LiveReadingError("SCHEMA_VERSION_UNSUPPORTED")
+        if not sensor_identity.home_key(self.home_id):
+            raise LiveReadingError("INVALID_HOME_ID")
+        if self.sensor_id != sensor_identity.sensor_key(self.home_id):
+            raise LiveReadingError("SENSOR_ID_MISMATCH")
+        if self.device_id != "SYN-" + self.sensor_id:
+            raise LiveReadingError("DEVICE_ID_MISMATCH")
+        if not self.reading_id:
+            raise LiveReadingError("READING_ID_MISSING")
+
     def row(self) -> dict[str, str]:
         return {
             "sensor_id": self.sensor_id,
@@ -214,6 +229,37 @@ class Reading:
         if len(data) > MAX_BODY_BYTES:
             raise LiveReadingError("MESSAGE_TOO_LARGE")
         return data
+
+
+def require_distinct(readings: Iterable[Reading]) -> None:
+    """Each device maps to exactly one home and no reading ID repeats across a batch."""
+    homes: dict[str, str] = {}
+    ids: set[str] = set()
+    for reading in readings:
+        reading.validate()
+        if homes.setdefault(reading.device_id, reading.home_id) != reading.home_id:
+            raise LiveReadingError("DEVICE_ID_COLLISION")
+        if reading.reading_id in ids:
+            raise LiveReadingError("READING_ID_COLLISION")
+        ids.add(reading.reading_id)
+    if len(set(homes.values())) != len(homes):
+        raise LiveReadingError("DEVICE_ID_COLLISION")
+
+
+def validate_row(row: Mapping[str, str]) -> None:
+    """Wire-row check: schema_version and reading_id are required and match the device."""
+    if not row.get("schema_version"):
+        raise LiveReadingError("SCHEMA_VERSION_MISSING")
+    if row["schema_version"] not in LIVE_VERSIONS:
+        raise LiveReadingError("SCHEMA_VERSION_UNSUPPORTED")
+    if not row.get("reading_id"):
+        raise LiveReadingError("READING_ID_MISSING")
+    try:
+        observed = datetime.strptime(row["observed_at"], "%Y-%m-%dT%H:%M:%SZ")
+    except (KeyError, ValueError):
+        raise LiveReadingError("READING_ID_MISMATCH") from None
+    if row["reading_id"] != f"LIVE-{row.get('sensor_id')}-{observed:%Y%m%dT%H%M}Z":
+        raise LiveReadingError("READING_ID_MISMATCH")
 
 
 class Generator:
@@ -301,7 +347,7 @@ class Generator:
             base_s * off_s * (1 + NOISE_SUNLIGHT_FRACTION * self.noise(home_id, "sunlight", slot))
         )
         sensor_id = sensor_identity.sensor_key(home_id)
-        return Reading(
+        result = Reading(
             home_id,
             sensor_id,
             "SYN-" + sensor_id,
@@ -313,3 +359,5 @@ class Generator:
             self.scenario,
             SCHEMA_VERSION if self.cadence_seconds == SLOT_SECONDS else SCHEMA_VERSION_V2,
         )
+        result.validate()
+        return result

@@ -11,11 +11,15 @@ param enableLock bool
 param allowPublicNetworkAccess bool = false
 @description('Development only. False allows a 7 day soft delete and purge so disposable environments can reuse names. Once enabled on a vault, purge protection cannot be turned off.')
 param purgeProtection bool = true
+@description('Maximum secret age in days before rotation is due. Recorded as vault metadata for the secret lifecycle review in infra/README.md.')
+@minValue(1)
+@maxValue(365)
+param secretRotationDays int = 90
 
 resource vault 'Microsoft.KeyVault/vaults@2024-11-01' = {
   name: name
   location: location
-  tags: tags
+  tags: union(tags, { 'secret-rotation-days': string(secretRotationDays) })
   properties: {
     tenantId: tenant().tenantId
     sku: { family: 'A', name: 'standard' }

@@ -81,6 +81,63 @@ def contract(policy: dict[str, Any]) -> dict[str, Any]:
     )
 
 
+SAFEGUARDING_HELD = "Safeguarding items are shown only to roles with a recorded need."
+
+
+def safeguarding_clocks(
+    case: dict[str, Any], now: datetime, *, visible: bool, as_of: str
+) -> list[dict[str, Any]]:
+    """Recorded safeguarding deadlines and named owner; no duration is ever derived or invented.
+
+    Roles without a recorded need receive nothing, so neither presence nor detail is disclosed.
+    """
+    if not visible:
+        return []
+    clocks: list[dict[str, Any]] = []
+    for index, item in enumerate(case.get("safeguarding_items") or []):
+        if item.get("closed"):
+            continue
+        raw_owner = item.get("owner")
+        if isinstance(raw_owner, str):
+            raw_owner = dict(name=raw_owner)
+        owner = raw_owner if isinstance(raw_owner, dict) else {}
+        named = _text(owner.get("name")) or UNKNOWN
+        role = _text(owner.get("role")) or UNKNOWN
+        due = item.get("response_due_at")
+        due = due if isinstance(due, str) and instant(due) else None
+        referred = instant(item.get("referred_at"))
+        clocks.append(
+            dict(
+                kind="Safeguarding",
+                owner=named,
+                owner_role=role,
+                owner_named=named != UNKNOWN,
+                owner_status=(
+                    "Named accountable owner recorded."
+                    if named != UNKNOWN
+                    else "No named accountable owner is recorded. Ask the safeguarding "
+                    "lead to record one."
+                ),
+                response_state=timing(due, item.get("responded_at"), now),
+                referred_at=item.get("referred_at") if referred and referred <= now else UNKNOWN,
+                elapsed_hours=int((now - referred).total_seconds() // 3600)
+                if referred and referred <= now
+                else None,
+                response_due_at=due or UNKNOWN,
+                authority="Safeguarding lead",
+                case_id=case["id"],
+                source=f"case:{case['id']}/safeguarding_items/{index}",
+                version=item.get("version") or UNKNOWN,
+                as_of=as_of,
+            )
+        )
+    return clocks
+
+
+def _text(value: object) -> str:
+    return value.strip() if isinstance(value, str) else ""
+
+
 def validate_queue(value: str) -> None:
     if value and value not in {key for key, _, _ in DEFINITIONS}:
         raise ValueError("Choose one of the published work queues.")
@@ -475,6 +532,8 @@ def context(
         returned=returned_view,
         blockers=blockers,
         hazard_clocks=clocks,
+        safeguarding_clocks=safeguarding_clocks(case, now, visible=reason_ok, as_of=as_of),
+        safeguarding_visibility=SAFEGUARDING_HELD,
         overdue=overdue,
         evidence_freshness=freshness,
         technical_reassessment=reassess,

@@ -1669,9 +1669,15 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(409, {"error": "Preview blocked, changed or already used. Request a fresh preview before applying."})
                 return self._json(409, {"error": "Someone else changed this at the same moment. Reload and try again."})
             except GateError as e:
-                return self._json(409, {"error": "Not ready yet.", "reasons": e.reasons})
+                refusal = {"error": "Not ready yet.", "reasons": e.reasons}
+                if e.rules:
+                    refusal["rules"] = e.rules
+                return self._json(409, refusal)
             except PermissionError as e:
-                return self._json(403, {"error": str(e)})
+                refusal = {"error": str(e)}
+                if getattr(e, "rule", None):
+                    refusal["rule"] = e.rule.as_record()
+                return self._json(403, refusal)
             except KeyError:
                 return self._json(404, {"error": "Case not found."})
             except ValueError as e:

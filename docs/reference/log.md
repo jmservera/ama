@@ -11823,3 +11823,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Updated `data-operator` and `exceptionRegisterPanel` in `src/api/src/zava_forward/api/web/role-screens.js` with `nav[aria-label]` keyboard jump links (`a[data-jump]`), `section[tabindex="-1"]` targets across selected-home and overview compositions, `th[scope="row"]` record headers via `screenRecordTable` across all eight stewardship and exception-register tables, and fail-closed `State:` and `Source state:` textual labels across conflicts, returns, handoff, blockers, event dispositions, recovery context and the exception register.
 * Expanded `src/api/tests/test_data_steward_screen_wcag.py`, aligned `src/api/tests/test_exception_register_screen.py` row-header assertions, and recorded the engineering slice in [customer-journeys/data.md](research/ux/customer-journeys/data.md#data-screens-delivery-status-2026-11-04-229). Local automated evidence on synthetic data only: assistive-technology testing and human review under #151 and #155 remain open, so no WCAG conformance claim is made and the #229 accessibility criterion remains unticked.
+
+## [2026-11-14] update | Issue #110 distinct device identity, schema version and stable reading ID
+
+* Added producer-side validation (`Reading.validate`, `require_distinct`, `validate_row`) in core, refusal of duplicate homes and invalid rows in the API live simulator, and cohort tests. Local offline evidence only; no live IoT Hub run. RPI artifacts are under `.copilot-tracking/*/2026-11-14-iot-distinct-device-identity-*`.

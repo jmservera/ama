@@ -162,6 +162,33 @@ class JobPackTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 job_pack.reject_instruction_claim({key: True})
 
+    def test_placeholder_owner_names_are_rejected(self) -> None:
+        for name in (
+            "   ", "Unknown - not configured", "TBC", "unassigned", "N/A", "unassigned-team",
+            "owner-placeholder", "pending_assignment", "queue/triage", "shared@example.org",
+            "Retrofit Programme Manager", "Building Safety Liaison", "Not configured", "?",
+            "T.B.C.", "N.A.",
+        ):  # fmt: skip
+            with self.assertRaises(ValueError, msg=name):
+                job_pack.escalation(
+                    "variation", "x", "Kim", "WO-1", name, "Retrofit Programme Manager"
+                )
+
+    def test_real_names_are_accepted(self) -> None:
+        for name in ("Pam Lead", "Mary-Jane O'Neil", "Sam Safe"):
+            self.assertEqual(job_pack.named_owner(name, "Retrofit Programme Manager")["name"], name)
+
+    def test_every_kind_routes_to_named_owner_and_stays_advisory(self) -> None:
+        for kind in job_pack.ESCALATION_KINDS:
+            e = job_pack.escalation(kind, "x", "Kim", "WO-1", "Sam Safe", "Building Safety Liaison")
+            self.assertEqual(e["owner"], dict(name="Sam Safe", role="Building Safety Liaison"))
+            job_pack.assert_advisory(e)
+
+    def test_assert_advisory_refuses_instruction_records(self) -> None:
+        for bad in (dict(contract_instruction=True), dict(), dict(contract_instruction=None)):
+            with self.assertRaises(ValueError):
+                job_pack.assert_advisory(bad)
+
 
 if __name__ == "__main__":
     unittest.main()

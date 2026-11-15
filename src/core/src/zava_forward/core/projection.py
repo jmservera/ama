@@ -114,6 +114,7 @@ def hold_notes(c):
         for item in c:
             hold_notes(item)
     elif isinstance(c, dict):
+        c.pop("safeguarding_items", None)
         if "document_history" in c:
             c["document_history"] = [dict(version=event["version"], at=event["at"],
                                           actor=event["actor"], detail=NOTE_HELD)
@@ -130,9 +131,16 @@ def hold_notes(c):
             for key in ("reason", "source"):
                 if c.get(key):
                     c[key] = NOTE_HELD
-        if "acts_as_contract_instruction" in c and c.get("summary"):
+        advisory = (
+            (c.get("contract_instruction") is False or "acts_as_contract_instruction" in c)
+            and "summary" in c
+            and ("kind" in c or "escalation_kind" in c)
+        )
+        if advisory and c.get("summary"):
             c["summary"] = NOTE_HELD
         for k, v in c.items():
+            if advisory and k in ("note", "contract_notice"):
+                continue
             private_hazard = (
                 ("category" in c and "released" in c and k in ("source", "job"))
                 or ("actor" in c and k in ("reason", "evidence"))
@@ -150,6 +158,7 @@ def hold_notes(c):
 
 def redact_staff_detail(user, d):
     d.pop("sensor_review_drafts", None)
+    d.pop("safeguarding_items", None)
     resident_view = user.get("role") in RESIDENT_VIEW_ROLES
     resident_data = {key: deepcopy(d[key]) for key in RESIDENT_FIELDS + ("decision",)
                      if key in d} if resident_view else {}

@@ -836,8 +836,10 @@ function workSummary(work) {
     h("p", { class: "next-action" }, `Next action: ${work.next_action}`),
     h("p", { class: "muted" }, `Source: ${work.source}; evidence: ${work.evidence}; version: ${work.version}; recorded: ${work.recorded_at}; recorded as of: ${work.as_of}.`),
     work.handoff && h("p", {}, `Destination: ${work.handoff.destination}; proposed receiver: ${work.handoff.proposed_receiver}; confirmed receiver: ${work.handoff.confirmed_receiver}; chase owner: ${work.handoff.chase_owner}; resident-update owner: ${work.handoff.resident_update_owner}.`),
-    work.hazard_clocks.map((clock) => h("p", { class: "safety-clock" },
-      `${clock.clock_text || "Safety clock: elapsed time and target window not supplied."} Accountable owner: ${clock.accountable_owner || "Building Safety lead (escalation owner)"}. Safety clock in this recorded view: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; awareness: ${clock.aware_at}; named follow-up owner: ${clock.owner}; service response due: ${clock.response_due_at}; resident update due: ${clock.resident_update_due_at}. ${clock.authority} owns timing. ${clock.owner_status} Service response: ${clock.response_state}; resident update: ${clock.resident_update_state}.`)));
+    (work.hazard_clocks || []).map((clock) => h("p", { class: "safety-clock" },
+      `${clock.clock_text || "Safety clock: elapsed time and target window not supplied."} Accountable owner: ${clock.accountable_owner || "Building Safety lead (escalation owner)"}. Safety clock in this recorded view: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; awareness: ${clock.aware_at}; named follow-up owner: ${clock.owner}; service response due: ${clock.response_due_at}; resident update due: ${clock.resident_update_due_at}. ${clock.authority} owns timing. ${clock.owner_status} Service response: ${clock.response_state}; resident update: ${clock.resident_update_state}.`)),
+    (work.safeguarding_clocks || []).map((clock) => h("p", { class: "safeguarding-clock" },
+      `Safeguarding clock in this recorded view: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; referred: ${clock.referred_at}; named accountable owner: ${clock.owner} (${clock.owner_role}); response due: ${clock.response_due_at}. ${clock.authority} owns timing. ${clock.owner_status} Response: ${clock.response_state}.`)));
 }
 
 function workSteps(work) {

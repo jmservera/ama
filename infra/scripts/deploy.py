@@ -125,6 +125,49 @@ def authentication_guard(apps: list[dict[str, Any]], parameters: list[str]) -> N
             )
 
 
+def deployment_command(args: argparse.Namespace, image: str, verb: str) -> list[str]:
+    command = [
+        "az",
+        "deployment",
+        "group",
+        verb,
+        "--resource-group",
+        args.resource_group,
+        "--template-file",
+        str(INFRA / "main.bicep"),
+        "--parameters",
+        args.parameters,
+    ]
+    for parameter in [
+        *args.parameter,
+        f"workload={args.workload}",
+        f"environmentName={args.environment}",
+        f"orchestratorImage={image}",
+    ]:
+        command.extend(["--parameters", parameter])
+    return command
+
+
+def dry_run_plan(args: argparse.Namespace) -> list[str]:
+    """Describe the run without any az, network or file access."""
+    if args.orchestrator_image:
+        image_step = f"use explicit image {args.orchestrator_image}"
+        image = args.orchestrator_image
+    else:
+        image_step = (
+            f"resolve image from jobs {args.workload}-{args.environment} "
+            f"and registry {args.registry} at run time"
+        )
+        image = "<resolved-at-run-time>"
+    return [
+        "DRY RUN: no az command was executed and nothing was changed.",
+        "1. az containerapp list (authentication guard)",
+        f"2. {image_step}",
+        "3. " + " ".join(deployment_command(args, image, "what-if")),
+        "(--apply would run the same command with 'create' instead of 'what-if')",
+    ]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--resource-group", required=True, choices=("ama",))
@@ -137,7 +180,14 @@ def main() -> int:
     parser.add_argument(
         "--apply", action="store_true", help="Deploy instead of the default what-if"
     )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print the deterministic plan and command without calling az; excludes --apply",
+    )
     args = parser.parse_args()
+    if args.dry_run and args.apply:
+        parser.error("--dry-run cannot be combined with --apply")
     args.orchestrator_image = args.orchestrator_image.strip()
     if not re.fullmatch(r"[a-z][a-z0-9]{2,9}", args.workload):
         parser.error("--workload must be 3-10 lowercase letters/digits, starting with a letter")
@@ -149,6 +199,9 @@ def main() -> int:
             or name in {"orchestratorImage", "workload", "environmentName"}
         ):
             parser.error("Use named options for image/workload/environment; others need NAME=VALUE")
+    if args.dry_run:
+        print("\n".join(dry_run_plan(args)), flush=True)
+        return 0
     try:
         authentication_guard(
             az_json("containerapp", "list", "--resource-group", args.resource_group),
@@ -158,7 +211,9 @@ def main() -> int:
             (args.orchestrator_image, "explicit --orchestrator-image")
             if args.orchestrator_image
             else resolve_image(
-                args.resource_group, f"{args.workload}-{args.environment}", args.registry
+                args.resource_group,
+                f"{args.workload}-{args.environment}",
+                args.registry,
             )
         )
         print(f"orchestratorImage={image} (source: {source})", flush=True)
@@ -168,25 +223,7 @@ def main() -> int:
                 file=sys.stderr,
                 flush=True,
             )
-        command = [
-            "az",
-            "deployment",
-            "group",
-            "create" if args.apply else "what-if",
-            "--resource-group",
-            args.resource_group,
-            "--template-file",
-            str(INFRA / "main.bicep"),
-            "--parameters",
-            args.parameters,
-        ]
-        for parameter in [
-            *args.parameter,
-            f"workload={args.workload}",
-            f"environmentName={args.environment}",
-            f"orchestratorImage={image}",
-        ]:
-            command.extend(["--parameters", parameter])
+        command = deployment_command(args, image, "create" if args.apply else "what-if")
         return subprocess.run(command, check=False).returncode
     except (DeploymentError, OSError) as exc:
         print(f"Deployment stopped: {exc}", file=sys.stderr)

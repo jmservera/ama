@@ -34,6 +34,7 @@ class RunbookOwnershipTests(unittest.TestCase):
                 "money-budget-limit",
                 "liability-unknown",
                 "price-unknown",
+                "alert-unowned",
             ),
             "ai-limit-expiry": ("authority-expired", "authority-expiring"),
         }

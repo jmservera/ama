@@ -498,7 +498,7 @@ class WorkflowMixin:
             if h["hold"].get("accountable_role") and not h["hold"].get("legacy"):
                 verdict = gates.safety_release_gate(h["hold"], user, [])
                 if verdict.outcome != gates.PASS:
-                    raise PermissionError(verdict.reason)
+                    raise gates.GateResultPermissionError(verdict.reason, verdict)
             hazard.require_independent(user, h)
             h.update(released=True, released_by=user["name"], released_at=_now(), release_note=note)
             h["hold"].update(status="Released", decision=dict(at=_now(), actor=self._hazard_actor(user),
