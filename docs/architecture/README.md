@@ -47,6 +47,12 @@ records the owner's later cut-over sign-off and archive `v0.21.0`, not a new
 deployment or whole-issue acceptance. The original cut-over evidence remains historical; the diagram delivery
 views now add the dated source continuation without rewriting that evidence.
 
+For issue #137, use the
+[environment, region, and quota parameter strategy](./environment-region-quota-strategy.md)
+for the compiled `dev`, `test`, and `pilot` `.bicepparam` matrix, bounded region
+and service quota parameters, mechanical Bicep and CLI recorded-check guards,
+and the `R1` through `R17` capability and quota evidence boundary.
+
 These are two views of the same solution, not two alternative architectures.
 Their retained core layout describes the sources on
 [PR #68](https://github.com/jmservera/ama/pull/68) at

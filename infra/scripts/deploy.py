@@ -12,6 +12,30 @@ from typing import Any
 PLACEHOLDER = "mcr.microsoft.com/k8se/quickstart:latest"
 INFRA = Path(__file__).resolve().parents[1]
 REPOSITORY = "zava-forward-orchestrator"
+FORBIDDEN_CHECK_PATTERN = re.compile(
+    r"(?:placeholder|example\.invalid|n/a"
+    r"|(?<![a-z0-9])(?:todo|tbd|assumed|assumption|unverified|pending|unknown|none|na|skip)(?![a-z0-9]))",
+    re.IGNORECASE,
+)
+EMBEDDED_UUID_PATTERN = re.compile(
+    r"(?<![0-9a-f])[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}(?![0-9a-f])",
+    re.IGNORECASE,
+)
+FORBIDDEN_REGION_SLUGS = frozenset(
+    {
+        "placeholder",
+        "todo",
+        "tbd",
+        "assumed",
+        "assumption",
+        "unverified",
+        "pending",
+        "unknown",
+        "none",
+        "na",
+        "skip",
+    }
+)
 
 
 class DeploymentError(RuntimeError):
@@ -125,6 +149,38 @@ def authentication_guard(apps: list[dict[str, Any]], parameters: list[str]) -> N
             )
 
 
+def validate_parameter_overrides(parameters: list[str]) -> None:
+    """Reject placeholder, assumed, UUID-bearing, or invalid region/check CLI overrides."""
+    for entry in parameters:
+        name, _, raw_value = entry.partition("=")
+        if name in {"regionCheckReference", "quotaCheckReference"}:
+            normalized = raw_value.strip()
+            if (
+                not normalized
+                or FORBIDDEN_CHECK_PATTERN.search(normalized)
+                or EMBEDDED_UUID_PATTERN.search(normalized)
+            ):
+                raise DeploymentError(
+                    f"Invalid {name} override: supply a dated recorded check reference "
+                    "without placeholders, assumptions, or UUIDs."
+                )
+        elif name == "location":
+            if raw_value != "uksouth":
+                raise DeploymentError(
+                    "Invalid location override: primary location must be uksouth."
+                )
+        elif name == "sqlLocation":
+            if (
+                not re.fullmatch(r"[a-z][a-z0-9]+", raw_value)
+                or raw_value in FORBIDDEN_REGION_SLUGS
+                or "placeholder" in raw_value
+            ):
+                raise DeploymentError(
+                    "Invalid sqlLocation override: supply a lowercase Azure region slug, "
+                    "not a placeholder or assumption."
+                )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--resource-group", required=True, choices=("ama",))
@@ -150,6 +206,7 @@ def main() -> int:
         ):
             parser.error("Use named options for image/workload/environment; others need NAME=VALUE")
     try:
+        validate_parameter_overrides(args.parameter)
         authentication_guard(
             az_json("containerapp", "list", "--resource-group", args.resource_group),
             args.parameter,

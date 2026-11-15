@@ -21,15 +21,15 @@ param productionProfileRequiresKeyVaultPurgeProtection string
 param productionProfileRequiresRegistryQuarantine string
 
 @minLength(1)
-@description('Must not be empty. Empty means regionCheckReference is missing; record a dated capability check for the selected regions first.')
+@description('Must not be empty. Empty means regionCheckReference is missing, placeholder/assumption text, or a raw identifier; record a dated capability check for the selected regions first.')
 param regionCheckMustBeRecorded string
 
 @minLength(1)
-@description('Must not be empty. Empty means quotaCheckReference is missing; record a dated quota check for the selected configuration first.')
+@description('Must not be empty. Empty means quotaCheckReference is missing, placeholder/assumption text, or a raw identifier; record a dated quota check for the selected configuration first.')
 param quotaCheckMustBeRecorded string
 
 @minLength(1)
-@description('Must not be empty. Empty means location or sqlLocation is still an unresolved owner placeholder.')
+@description('Must not be empty. Empty means location or sqlLocation is missing, malformed, or still an unresolved owner placeholder.')
 param deploymentLocationsMustBeSelected string
 
 @minLength(1)
