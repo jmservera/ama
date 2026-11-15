@@ -4,6 +4,13 @@ from __future__ import annotations
 
 from typing import Any
 
+from zava_forward.core.regulatory_output_guard import (
+    ADVISORY_REVIEW_TEXT,
+    GuardTelemetry,
+    inspect_regulatory_output,
+    merge_guard_statuses,
+)
+
 FIELD = "plain_language"
 
 _SUMMARIES = {
@@ -36,7 +43,12 @@ def split_flag(body: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
     return flag, {key: value for key, value in body.items() if key != FIELD}
 
 
-def apply(reply: dict[str, Any], enabled: bool) -> dict[str, Any]:
+def apply(
+    reply: dict[str, Any],
+    enabled: bool,
+    *,
+    telemetry: GuardTelemetry | None = None,
+) -> dict[str, Any]:
     """Add the summary; the reply text, citations and provenance stay as produced."""
     if not enabled:
         return reply
@@ -46,4 +58,14 @@ def apply(reply: dict[str, Any], enabled: bool) -> dict[str, Any]:
     summary = template.format(sources=sources)
     if reply.get("kind") == "answer" and not count:
         summary = "This answer has no cited source. Treat it as open and ask the named owner."
-    return dict(reply, plain_language=True, plain_summary=summary)
+    decision = inspect_regulatory_output(summary, on_violation="rewrite", telemetry=telemetry)
+    if not decision.passed:
+        summary = decision.rewritten_text or ADVISORY_REVIEW_TEXT
+    out = dict(reply, plain_language=True, plain_summary=summary)
+    if isinstance(reply.get("output_guard"), dict):
+        out["output_guard"] = merge_guard_statuses(
+            [reply["output_guard"], decision.to_status_dict()]
+        )
+    elif not decision.passed:
+        out["output_guard"] = decision.to_status_dict()
+    return out

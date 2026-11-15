@@ -33,8 +33,14 @@ from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARNING
 from zava_forward.core.chat_panel import ChatPanel, chat_skills, TASK as CHAT_TASK, MAX_INPUT_CHARS, MAX_HISTORY_CHARS, MAX_THREAD_TURNS, all_role_limits, role_limits, AGENT_DEPTH, MEMORY_CAPS, CALLS_PER_REQUEST_BASIS
 from zava_forward.core.regulatory_chat import RegulatoryChat, TASK as REGULATORY_TASK
+from zava_forward.core.regulatory_output_guard import (
+    ADVISORY_REVIEW_TEXT,
+    GuardTelemetry,
+    inspect_regulatory_output,
+    merge_guard_statuses,
+)
 from zava_forward.agents import regulatory_chat
-from zava_forward.core.source_monitor import dated_card
+from zava_forward.core.source_monitor import dated_card, watch_summary
 from zava_forward.core.chatthreads import ChatNotFound
 from zava_forward.core.documents import DocumentStoreError
 from zava_forward.core.ranking_publication import ArchiveStorageError
@@ -109,12 +115,13 @@ class App:
                 raise ai_consumption.DispatchWithdrawn("captured-readings-transmission-unavailable")
             return ai.evidence(*args)
 
-        self.assistants = Assistants(store, provider=AgentWorker(fenced).provider_call, transport=lambda: store.ai)
+        self.guard_telemetry = GuardTelemetry()
+        self.assistants = Assistants(store, provider=AgentWorker(fenced).provider_call, transport=lambda: store.ai, guard_telemetry=self.guard_telemetry)
         self.chat = ChatIsolation(store)
         self.chat.sensors = self.assistants.sensors
         self.panel = ChatPanel(self.chat, ChatModel(
             AgentWorker(lambda *args: store.ai.evidence(*args)),
-            admission=lambda: chat_admission(store)))
+            admission=lambda: chat_admission(store)), guard_telemetry=self.guard_telemetry)
         self.simulation, self.simulation_reason = None, "not-configured"
         try:
             self.simulation = simulation_lane.Lane.open(os.environ, working=(getattr(store, "db_path", ""),))
@@ -126,7 +133,7 @@ class App:
         scenario_homes = sorted({str(x["rows"][0]["home_id"]) for x in scenarios})
         self.aftercare = AftercareService(DocumentStateStore(store), homes=scenario_homes, cohort=scenario_homes, scenarios=scenarios)
         self.regulatory = RegulatoryChat(
-            self.chat, law, regulatory_chat.answer, regulatory_chat.purpose, regulatory_chat.refusal
+            self.chat, law, regulatory_chat.answer, regulatory_chat.purpose, regulatory_chat.refusal, guard_telemetry=self.guard_telemetry
         )
         self.law_lock = threading.Lock()
         self.engine = None
@@ -238,6 +245,352 @@ def all_proposals(read_page, max_pages=200):
         if not after:
             return rows
     raise ValueError("Too many proposals for one file; narrow the list to one case.")
+
+
+def _guard_prose(
+    text: str,
+    telemetry: GuardTelemetry,
+    *,
+    source_status: str | None = None,
+    effective_date: str | None = None,
+    as_of_date: str | None = None,
+    human_rule_activated: bool | None = None,
+    active_operational_rule: bool = False,
+    source_date: str | None = None,
+    retrieval_date: str | None = None,
+    provision: str | None = None,
+) -> tuple[str, dict]:
+    dec = inspect_regulatory_output(
+        text,
+        status=source_status,
+        effective=effective_date or source_date,
+        retrieved=retrieval_date,
+        as_of=as_of_date,
+        human_rule_activated=human_rule_activated,
+        active_operational_rule=active_operational_rule,
+        provision_id=provision,
+        on_violation="rewrite",
+        telemetry=telemetry,
+    )
+    if dec.passed:
+        return text, dec.to_status_dict()
+    return dec.rewritten_text or ADVISORY_REVIEW_TEXT, dec.to_status_dict()
+
+
+def _guard_law_sources_payload(listing: dict, telemetry: GuardTelemetry, today: str) -> dict:
+    sources_out = []
+    all_statuses = []
+    for raw in listing.get("sources", []):
+        item = dict(raw)
+        item_statuses = []
+        item["title"], st = _guard_prose(
+            str(item.get("title", "")),
+            telemetry,
+            as_of_date=today,
+            source_date=item.get("effective"),
+            retrieval_date=item.get("retrieved"),
+            provision=item.get("id"),
+        )
+        item_statuses.append(st)
+        caveats_out = []
+        for cav in item.get("caveats", []):
+            safe_cav, cst = _guard_prose(
+                str(cav),
+                telemetry,
+                as_of_date=today,
+                source_date=item.get("effective"),
+                retrieval_date=item.get("retrieved"),
+                provision=item.get("id"),
+            )
+            caveats_out.append(safe_cav)
+            item_statuses.append(cst)
+        item["caveats"] = caveats_out
+        merged = merge_guard_statuses(item_statuses)
+        item["output_guard"] = merged
+        all_statuses.append(merged)
+        sources_out.append(item)
+    gaps_out = []
+    for raw_gap in listing.get("gaps", []):
+        gap = dict(raw_gap)
+        g_statuses = []
+        for field in ("answer", "reason"):
+            if isinstance(gap.get(field), str):
+                gap[field], gst = _guard_prose(gap[field], telemetry, as_of_date=today)
+                g_statuses.append(gst)
+        g_merged = merge_guard_statuses(g_statuses)
+        gap["output_guard"] = g_merged
+        all_statuses.append(g_merged)
+        gaps_out.append(gap)
+    return dict(
+        listing,
+        sources=sources_out,
+        gaps=gaps_out,
+        output_guard=merge_guard_statuses(all_statuses, telemetry=telemetry),
+    )
+
+
+def _guard_law_source_detail(src: dict, telemetry: GuardTelemetry, today: str) -> dict:
+    out = dict(src)
+    statuses = []
+    out["title"], st = _guard_prose(
+        str(out.get("title", "")),
+        telemetry,
+        as_of_date=today,
+        source_date=out.get("effective"),
+        retrieval_date=out.get("retrieved"),
+        provision=out.get("id"),
+    )
+    statuses.append(st)
+    caveats_out = []
+    for cav in out.get("caveats", []):
+        safe_cav, cst = _guard_prose(
+            str(cav),
+            telemetry,
+            as_of_date=today,
+            source_date=out.get("effective"),
+            retrieval_date=out.get("retrieved"),
+            provision=out.get("id"),
+        )
+        caveats_out.append(safe_cav)
+        statuses.append(cst)
+    out["caveats"] = caveats_out
+    provs_out = []
+    for raw_p in out.get("provisions", []):
+        p = dict(raw_p)
+        if isinstance(p.get("heading"), str):
+            p["heading"], pst = _guard_prose(
+                p["heading"],
+                telemetry,
+                as_of_date=today,
+                source_date=out.get("effective"),
+                retrieval_date=out.get("retrieved"),
+                provision=p.get("id"),
+            )
+            statuses.append(pst)
+        provs_out.append(p)
+    out["provisions"] = provs_out
+    out["output_guard"] = merge_guard_statuses(statuses, telemetry=telemetry)
+    return out
+
+
+def _guard_law_provision(prov: dict, telemetry: GuardTelemetry, today: str) -> dict:
+    out = dict(prov)
+    statuses = []
+    for field in ("title", "heading"):
+        if isinstance(out.get(field), str):
+            out[field], st = _guard_prose(
+                out[field],
+                telemetry,
+                as_of_date=today,
+                source_date=out.get("effective"),
+                retrieval_date=out.get("retrieved"),
+                provision=out.get("id"),
+            )
+            statuses.append(st)
+    caveats_out = []
+    for cav in out.get("caveats", []):
+        safe_cav, cst = _guard_prose(
+            str(cav),
+            telemetry,
+            as_of_date=today,
+            source_date=out.get("effective"),
+            retrieval_date=out.get("retrieved"),
+            provision=out.get("id"),
+        )
+        caveats_out.append(safe_cav)
+        statuses.append(cst)
+    out["caveats"] = caveats_out
+    out["output_guard"] = merge_guard_statuses(statuses, telemetry=telemetry)
+    return out
+
+
+def _guard_law_search(found: dict, telemetry: GuardTelemetry, today: str) -> dict:
+    out = dict(found)
+    statuses = []
+    provs_out = []
+    for raw_p in out.get("provisions", []):
+        guarded_p = _guard_law_provision(raw_p, telemetry, today)
+        statuses.append(guarded_p["output_guard"])
+        provs_out.append(guarded_p)
+    out["provisions"] = provs_out
+    gaps_out = []
+    for raw_gap in out.get("no_source_held", []):
+        gap = dict(raw_gap)
+        g_statuses = []
+        for field in ("answer", "reason"):
+            if isinstance(gap.get(field), str):
+                gap[field], gst = _guard_prose(gap[field], telemetry, as_of_date=today)
+                g_statuses.append(gst)
+        g_merged = merge_guard_statuses(g_statuses)
+        gap["output_guard"] = g_merged
+        statuses.append(g_merged)
+        gaps_out.append(gap)
+    out["no_source_held"] = gaps_out
+    out["output_guard"] = merge_guard_statuses(statuses, telemetry=telemetry)
+    return out
+
+
+def _guard_rulecard_dict(
+    law, card: dict, today: str, telemetry: GuardTelemetry
+) -> tuple[dict, dict]:
+    out = dated_card(law, card, today) if "source_freshness" not in card else dict(card)
+    active_ver = law.rules.is_active(out["card_id"], today)
+    cits, elig = rule_engine.citation_eligibility(law, out, today)
+    declared_active = out.get("state") == "active" or active_ver == out.get("version")
+    legally_eligible = elig == "active"
+    human_activated = bool(declared_active and legally_eligible)
+    ineligible_status = next(
+        (
+            str(c.get("status"))
+            for c in cits
+            if c.get("status") in ("consultation", "future_phase", "historical")
+        ),
+        "future_phase" if declared_active and not legally_eligible else "in_force",
+    )
+    eff_date = out.get("effective")
+    prov_id = (out.get("provisions") or [out.get("card_id")])[0]
+    retrieved = cits[0].get("retrieved") if cits else None
+    statuses = []
+    for field in ("title", "trigger", "applicability", "clock", "safe_default"):
+        if isinstance(out.get(field), str):
+            out[field], st = _guard_prose(
+                out[field],
+                telemetry,
+                source_status=(
+                    ineligible_status if declared_active and not legally_eligible else "in_force"
+                ),
+                effective_date=eff_date if declared_active else None,
+                as_of_date=today,
+                human_rule_activated=human_activated if declared_active else False,
+                active_operational_rule=declared_active,
+                source_date=eff_date,
+                retrieval_date=retrieved,
+                provision=str(prov_id),
+            )
+            statuses.append(st)
+    return out, merge_guard_statuses(statuses)
+
+
+def _guard_rule_reviews_payload(reviews: list[dict], telemetry: GuardTelemetry, today: str) -> dict:
+    items_out = []
+    statuses = []
+    for raw in reviews:
+        item = dict(raw)
+        item_statuses = []
+        if isinstance(item.get("note"), str) and item["note"]:
+            item["note"], st = _guard_prose(
+                item["note"],
+                telemetry,
+                as_of_date=today,
+                human_rule_activated=False,
+                active_operational_rule=False,
+                source_date=item.get("source_effective"),
+                provision=item.get("source_id"),
+            )
+            item_statuses.append(st)
+        else:
+            _, st = _guard_prose(
+                f"Review item for {item.get('card_id', 'rule card')}: pending human review.",
+                telemetry,
+                as_of_date=today,
+                human_rule_activated=False,
+                active_operational_rule=False,
+            )
+            item_statuses.append(st)
+        merged = merge_guard_statuses(item_statuses)
+        item["output_guard"] = merged
+        statuses.append(merged)
+        items_out.append(item)
+    return {
+        "reviews": items_out,
+        "output_guard": merge_guard_statuses(statuses, telemetry=telemetry),
+    }
+
+
+def _guard_check_or_alert_dict(item: dict, telemetry: GuardTelemetry, today: str) -> dict:
+    out = dict(item)
+    cits = out.get("citations") or []
+    active_ctrl = bool(out.get("active_control", False))
+    ineligible_cit = next(
+        (
+            c
+            for c in cits
+            if c.get("status") in ("consultation", "future_phase", "historical")
+            or (isinstance(c.get("effective"), str) and c["effective"] > today)
+        ),
+        None,
+    )
+    src_status = str(ineligible_cit["status"]) if (active_ctrl and ineligible_cit) else "in_force"
+    eff_date = (
+        str(ineligible_cit["effective"])
+        if (active_ctrl and ineligible_cit and ineligible_cit.get("effective"))
+        else (cits[0].get("effective") if cits else None)
+    )
+    retrieved = cits[0].get("retrieved") if cits else None
+    prov_id = cits[0].get("id") if cits else out.get("card_id")
+    human_ok = bool(active_ctrl and ineligible_cit is None)
+    statuses = []
+    for field in ("safe_action", "noticed", "label"):
+        if isinstance(out.get(field), str) and out[field]:
+            out[field], st = _guard_prose(
+                out[field],
+                telemetry,
+                source_status=src_status,
+                effective_date=eff_date if active_ctrl else None,
+                as_of_date=today,
+                human_rule_activated=human_ok if active_ctrl else None,
+                active_operational_rule=active_ctrl,
+                source_date=eff_date,
+                retrieval_date=retrieved,
+                provision=str(prov_id) if prov_id else None,
+            )
+            statuses.append(st)
+    if isinstance(out.get("events"), list):
+        events_out = []
+        for ev in out["events"]:
+            ev_copy = dict(ev)
+            if (
+                isinstance(ev_copy.get("note"), str)
+                and ev_copy["note"]
+                and ev_copy["note"] != projection.NOTE_HELD
+            ):
+                ev_copy["note"], est = _guard_prose(ev_copy["note"], telemetry, as_of_date=today)
+                statuses.append(est)
+            events_out.append(ev_copy)
+        out["events"] = events_out
+    out["output_guard"] = merge_guard_statuses(statuses)
+    return out
+
+
+def _guard_alerts_payload(payload: dict, telemetry: GuardTelemetry, today: str) -> dict:
+    out = dict(payload)
+    statuses = []
+    homes_out = []
+    for raw_home in out.get("homes", []):
+        home = dict(raw_home)
+        alerts_out = []
+        for raw_alert in home.get("alerts", []):
+            guarded_a = _guard_check_or_alert_dict(raw_alert, telemetry, today)
+            statuses.append(guarded_a["output_guard"])
+            alerts_out.append(guarded_a)
+        home["alerts"] = alerts_out
+        homes_out.append(home)
+    out["homes"] = homes_out
+    out["output_guard"] = merge_guard_statuses(statuses, telemetry=telemetry)
+    return out
+
+
+def _guard_checkpoint_payload(payload: dict, telemetry: GuardTelemetry, today: str) -> dict:
+    out = dict(payload)
+    statuses = []
+    checks_out = []
+    for raw_c in out.get("checks", []):
+        guarded_c = _guard_check_or_alert_dict(raw_c, telemetry, today)
+        statuses.append(guarded_c["output_guard"])
+        checks_out.append(guarded_c)
+    out["checks"] = checks_out
+    out["output_guard"] = merge_guard_statuses(statuses, telemetry=telemetry)
+    return out
 
 
 def law_source_rows(listing):
@@ -675,21 +1028,30 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._rule_alerts(u, url.path, None, q)
                 if url.path == "/api/law/cards" or url.path.startswith("/api/law/cards/"):
                     return self._rulecards(u, url.path, None)
+                if not projection.allowed(u, "law"):
+                    return self._json(403, {"error": "Your role does not include this."})
                 if app.law is None:
                     return self._json(503, {"error": "The law store is not loaded."})
                 parts = [unquote(x) for x in url.path.strip("/").split("/")]
                 try:
                     with app.law_lock:
+                        day = datetime.now(UTC).date().isoformat()
+                        if parts == ["api", "law", "watch"]:
+                            raw_as_of = (q.get("as_of") or [""])[0].strip()
+                            as_of = rulecards._day(raw_as_of) if raw_as_of else day
+                            return self._json(200, watch_summary(app.law, today=as_of, telemetry=app.guard_telemetry))
                         if parts == ["api", "law", "sources"]:
-                            return self._json(200, app.law.sources())
+                            return self._json(200, _guard_law_sources_payload(app.law.sources(), app.guard_telemetry, day))
                         if parts == ["api", "law", "sources.csv"]:
-                            return self._csv("law-sources.csv", law_source_rows(app.law.sources()))
+                            return self._csv("law-sources.csv", law_source_rows(_guard_law_sources_payload(app.law.sources(), app.guard_telemetry, day)))
                         if len(parts) == 4 and parts[:3] == ["api", "law", "sources"]:
-                            return self._json(200, app.law.source(parts[3]))
+                            return self._json(200, _guard_law_source_detail(app.law.source(parts[3]), app.guard_telemetry, day))
                         if len(parts) == 4 and parts[:3] == ["api", "law", "provisions"]:
-                            return self._json(200, app.law.provision(parts[3]))
+                            return self._json(200, _guard_law_provision(app.law.provision(parts[3]), app.guard_telemetry, day))
                         if parts == ["api", "law", "search"]:
-                            return self._json(200, app.law.search(q.get("q", [""])[0][:200]))
+                            return self._json(200, _guard_law_search(app.law.search(q.get("q", [""])[0][:200]), app.guard_telemetry, day))
+                except rulecards.RuleError as exc:
+                    return self._json(400, {"error": str(exc)})
                 except KeyError:
                     pass
                 return self._json(404, {"error": "Not found."})
@@ -738,6 +1100,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 out["navigation"] = navigation(u)
                 if not projection.is_contractor(u):
                     out["work_queues"] = taskqueues.contract(ranking.CURRENT)
+                if projection.allowed(u, "law"):
+                    out["regulatory_output_guard"] = app.guard_telemetry.snapshot()
                 return self._json(200, out)
             if url.path == "/api/account/photo":
                 try:
@@ -1085,11 +1449,12 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             try:
                 with app.law_lock:
                     engine = app.rule_engine()
+                    day = datetime.now(UTC).date().isoformat()
                     if body is None and parts == ["api", "law", "alerts"]:
                         case_id = (query or {}).get("case", [None])[0]
                         if case_id:
                             app.store.detail(case_id, user)
-                        return self._json(200, engine.alerts(user, case_id))
+                        return self._json(200, _guard_alerts_payload(engine.alerts(user, case_id), app.guard_telemetry, day))
                     if body is not None and len(parts) == 4 and parts[2] == "checks":
                         if body:
                             raise ValueError("Check inputs, trigger and time are server-derived.")
@@ -1099,7 +1464,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                             c for c in checkpoint["checks"]
                             if user["role"] in c["audience"] or user["email"] == c["decision_owner"]
                         ]
-                        return self._json(200, checkpoint)
+                        return self._json(200, _guard_checkpoint_payload(checkpoint, app.guard_telemetry, day))
                     if body is not None and len(parts) == 5 and parts[2] == "alerts":
                         if app.provider.name != "trusted-proxy":
                             raise PermissionError("Alert decisions require a trusted named owner.")
@@ -1137,19 +1502,19 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             rules.distinct = lambda actor, author: identity.distinct(app.store, actor, author)
             try:
                 with app.law_lock:
+                    day = datetime.now(UTC).date().isoformat()
                     if body is None:
-                        day = datetime.now(UTC).date().isoformat()
                         if len(parts) == 3:
-                            cards = [dated_card(app.law, c, day) for c in rules.cards()]
-                            return self._json(200, {"cards": cards})
+                            pairs = [_guard_rulecard_dict(app.law, c, day, app.guard_telemetry) for c in rules.cards()]
+                            return self._json(200, {"cards": [p[0] for p in pairs], "output_guard": merge_guard_statuses([p[1] for p in pairs], telemetry=app.guard_telemetry)})
                         if len(parts) == 4 and parts[3] == "reviews":
-                            return self._json(200, {"reviews": rules.reviews()})
+                            return self._json(200, _guard_rule_reviews_payload(rules.reviews(), app.guard_telemetry, day))
                         if len(parts) == 4:
                             history = rules.history(parts[3])
                             if not history:
                                 return self._json(404, {"error": "Card not found."})
-                            versions = [dated_card(app.law, c, day) for c in history]
-                            return self._json(200, {"versions": versions, "active_version": rules.is_active(parts[3])})
+                            pairs = [_guard_rulecard_dict(app.law, c, day, app.guard_telemetry) for c in history]
+                            return self._json(200, {"versions": [p[0] for p in pairs], "active_version": rules.is_active(parts[3]), "output_guard": merge_guard_statuses([p[1] for p in pairs], telemetry=app.guard_telemetry)})
                     elif len(parts) == 3:
                         allowed = {"card_id", *rulecards.FIELDS}
                         if set(body) - allowed:
@@ -1171,7 +1536,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         if identity.is_entra(user) and not identity.link(app.store, user, strict=True):
                             raise rulecards.RuleError("identity continuity is unavailable")
                         version = rules.propose(cid, user["email"].strip().lower(), rulecards.AUTHOR, **fields)
-                        return self._json(201, {"version": version, "versions": rules.history(cid)})
+                        pairs = [_guard_rulecard_dict(app.law, c, day, app.guard_telemetry) for c in rules.history(cid)]
+                        return self._json(201, {"version": version, "versions": [p[0] for p in pairs], "output_guard": merge_guard_statuses([p[1] for p in pairs], telemetry=app.guard_telemetry)})
                     elif len(parts) == 6:
                         if set(body) - {"note"}:
                             raise ValueError("Only note is accepted; authority and event dates are server-derived.")
@@ -1187,7 +1553,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                             rules.hold(*args, note=body.get("note"))
                         else:
                             actions[action](*args)
-                        return self._json(200, {"versions": rules.history(cid)})
+                        pairs = [_guard_rulecard_dict(app.law, c, day, app.guard_telemetry) for c in rules.history(cid)]
+                        return self._json(200, {"versions": [p[0] for p in pairs], "output_guard": merge_guard_statuses([p[1] for p in pairs], telemetry=app.guard_telemetry)})
             except rulecards.RuleError as e:
                 return self._json(409, {"error": str(e)})
             except ValueError as e:
@@ -1214,6 +1581,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         "demo_activation": demo,
                         "demo_disclaimer": ai_registry.DEMO_ACTIVATION["disclaimer"] if demo else None,
                         "role_limits": all_role_limits(), "your_role_limits": role_limits(c.current_user(user).get("role")),
+                        "output_guard": app.guard_telemetry.snapshot(),
                         "limits": {"calls_per_turn": 1, "calls_per_request": 1, "retries": 0, "output_tokens": 600,
                                    "turns_per_thread": MAX_THREAD_TURNS,
                                    "context_chars": MAX_INPUT_CHARS, "history_chars": MAX_HISTORY_CHARS,
@@ -1225,6 +1593,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(200, {"label": "synthetic-demo", "enabled": True,
                                                "privacy": app.regulatory.privacy_status(user),
                                                "usage": app.regulatory.usage_status(user),
+                                               "output_guard": app.guard_telemetry.snapshot(),
                                                "warning": CHAT_WARNING})
                     if not post and parts == ["regulatory", "inbox"]:
                         return self._json(200, app.regulatory.inbox(user))
@@ -1241,7 +1610,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                             plain, body = plain_language.split_flag(body)
                             with app.law_lock:
                                 return self._json(200, plain_language.apply(
-                                    app.regulatory.ask(user, parts[2], body["content"]), plain))
+                                    app.regulatory.ask(user, parts[2], body["content"]), plain, telemetry=app.guard_telemetry))
                         if parts[3] == "doubt" and set(body) == {"turn"}:
                             return self._json(200, app.regulatory.doubt(user, parts[2], body["turn"]))
                         raise ValueError("Only content for ask or turn for doubt is accepted.")
@@ -1281,7 +1650,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     if c.privacy.decision()["approved"]:
                         raise ValueError("Chat storage is approved. Use a chat thread.")
                     return self._json(200, plain_language.apply(app.panel.ask_unstored(
-                        u, str(body.get("case_id") or ""), body.get("content"), skill=body.get("skill")), plain))
+                        u, str(body.get("case_id") or ""), body.get("content"), skill=body.get("skill")), plain, telemetry=app.guard_telemetry))
                 if post and parts == ["threads"]:
                     u = c.current_user(user)
                     if body.get("case_id") and s.detail(body["case_id"], u) is None:
@@ -1322,7 +1691,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                             app.panel.record_validation_refused(u, tid)
                             raise ValueError("Choose a listed skill or omit skill for legacy chat.")
                         return self._json(200, plain_language.apply(
-                            app.panel.ask(u, tid, body.get("content"), skill=body.get("skill")), plain))
+                            app.panel.ask(u, tid, body.get("content"), skill=body.get("skill")), plain, telemetry=app.guard_telemetry))
                     if parts[2] == "proposals":
                         # Proposal-only: the existing assistants path queues it for the independent review.
                         t = s.chat_resume(u, tid)
