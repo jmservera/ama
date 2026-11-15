@@ -4801,16 +4801,26 @@ hashes or proposal version. Its missing source hash stays Unknown; a source
 challenge is refused rather than inventing generation evidence.
 
 `challenge_open` requires `proposal_id`, `proposal_version`, `decision_version`,
-`target_kind` (`proposal`, `source` or `policy`), supplied `channel`, `source`,
-`request`, `explanation`, `owner`, `non_digital_route` and `next_update`.
-Digital means staff recording supplied digital evidence, not resident
-self-authentication. Phone, Letter and In person use the same controlled path.
-`challenge_resolve` requires `id`, `expected_version`, `resolution`,
-`resolution_ref`, `explanation` and `next_update`. The named owner or an existing
-authorised manager can record one terminal resolution, either
-`Correction recorded` or `Explanation recorded`. Opening evidence and the
-original human decision are retained; terminal corrections cannot be erased by
-a later resolution. These are human-supplied records, not automated redress.
+`target_kind` (`proposal`, `source`, `policy` or `human_decision`), supplied
+`channel`, `source`, `request`, `explanation`, `owner`, `non_digital_route` and
+`next_update`. Digital means staff recording supplied digital evidence, not
+resident self-authentication. Phone, Letter and In person use the same
+controlled path. `challenge_update` appends supplementary evidence (`id`,
+`expected_version`, `channel`, `source`, `request`, `explanation`,
+`next_update`) while keeping the opening request immutable.
+`challenge_escalate` transfers an open or escalated challenge to a distinct
+named human owner (`id`, `expected_version`, `owner`, `reason`, `next_update`)
+with monotonic optimistic concurrency. `challenge_resolve` requires `id`,
+`expected_version`, `resolution`, `resolution_ref`, `explanation` and
+`next_update`. The named owner or an existing authorised manager can record one
+terminal resolution, either `Correction recorded` or `Explanation recorded`.
+Opening evidence and the original human decision are retained; terminal
+corrections cannot be erased by a later resolution. Every challenge write
+rejects forbidden adverse keys (`ChallengeSafeguardError`) and enforces
+`assert_no_adverse_challenge_effects`, ensuring non-challenge case state
+(`ranking`, `resident`, `funding`, `decision`, `measure_decisions`, `hazards`,
+`service_requests`, `appointments`) stays untouched. These are human-supplied
+records, not automated redress.
 
 New priority generation hashes the actual audience-filtered case citation labels
 at input capture, before generation. These are citation-snapshot versions, not
@@ -4941,34 +4951,45 @@ is the provenance record. See the [API section](../api/README.md#synthetic-resid
 
 `zava_forward.core.challenges.ChallengeRegister` is a store-independent register for constructed
 challenges (FR-052, AC-071, FR-043). `record_digital` and `record_staff` (named staff, phone,
-in-person, paper or assisted-visit channel) record a challenge against a source, policy or proposal
-version and the human decision, with a human owner, a next-update date and a fixed accessible
-non-digital route statement. `view` shows only permitted explanations. Only the named owner can
-`review` or `resolve` with evidence. Graph nodes are `(kind, id, version)` tuples, so a correction
-to `POL-1/v1` does not touch dependents of `POL-1/v2`. A `corrected` outcome marks exactly the
-transitive dependents in the injected dependency graph stale and preserves prior versions; `upheld` and `withdrawn` mark
-nothing. The register has no consent, refusal, sanction, closure or hazard-clock fields and never
-reads or writes them. Passing `hazard_concern=True` records an immediate `hazard_referral` to the
-named owner on receipt, listed by `hazard_referrals()` until the owner records an evidenced handoff with `confirm_hazard_handoff()`, even after resolution; it neither starts nor changes
-any hazard clock, so the existing hazard process is not delayed by challenge review. `view()` adds a
-plain-language `protection` statement (a challenge does not change tenancy, repairs or services), and
-`overdue(today)` lists unresolved challenges past their promised next update for the human owner;
-neither changes any record. A hazard concern may carry `received_on`; the read-only
+in-person, paper or assisted-visit channel) record a challenge against a `source`, `policy`,
+`proposal` or `human_decision` version and the human decision reference, with a human owner, a
+next-update date and a fixed accessible non-digital route statement. `update` appends digital or
+staff-recorded supplementary statements and explanations while keeping the opening statement
+immutable, and `escalate` moves an unresolved challenge to a different named human owner with a
+recorded reason. `view` shows only permitted explanations across both initial and update entries,
+plus explicit `safeguards` (`no_retaliation`, `no_inferred_refusal`, `no_delayed_hazard_response`).
+Only the named owner can `review` or `resolve` with controlled evidence (chat-memory references are
+refused). Graph nodes are `(kind, id, version)` tuples, so a correction to `POL-1/v1` or
+`DEC-220/d1` does not touch dependents of `POL-1/v2` or `DEC-220/d2`. A `corrected` outcome marks
+exactly the transitive dependents in the injected dependency graph stale and preserves prior
+versions; `upheld` and `withdrawn` mark nothing. `FORBIDDEN_ADVERSE_FIELDS`,
+`reject_adverse_mapping` and `assert_no_adverse_challenge_effects` fail closed with
+`ChallengeSafeguardError` on any retaliation flag, priority/support degradation, unrelated closure,
+inferred resident refusal or hazard-clock/hold delay. Passing `hazard_concern=True` records an
+immediate `hazard_referral` to the named owner on receipt, listed by `hazard_referrals()` until the
+owner records an evidenced handoff with `confirm_hazard_handoff()`, even after update, escalation or
+resolution; updating or escalating an unhanded referral preserves its original `received_on` (dated
+or `None`) so ageing is never masked, and neither starts nor delays any statutory hazard clock.
+`view()` adds a plain-language `protection` statement (a challenge does not change tenancy, repairs
+or services), and `overdue(today)` lists unresolved challenges past their promised next update for
+the human owner; neither changes any record. A hazard concern may carry `received_on`; the read-only
 `hazard_referrals_overdue(today, max_days)` lists unhanded referrals older than the limit, of
 unknown age, or with a `received_on` in the future (flagged as a data-quality issue) so the owner
 can follow up. `max_days` is required because no limit has been owner-approved. It is a flag for
 human action, not a hazard clock.
 
-Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, and the
-no-retaliation and no-delayed-hazard-response criterion, which needs live workflow evidence and
-human review. Tests: `src/core/tests/test_challenges.py`.
+Store-backed persistence in JSON `Store` and SQLite `SqlStore` is covered via `affected_challenges`
+in `zava_forward.core.resident_decisions` (`challenge_open`, `challenge_update`,
+`challenge_escalate`, `challenge_resolve`). Tests: `src/core/tests/test_challenges.py` and
+`src/core/tests/test_issue_220_challenge_route.py`.
 
-Status record, 2026-11-04 (issue #220 stays open): criteria 1 to 4 were delivered by #418, #641 and
-#693, with the ageing and protection helpers in #826 and #966. Criterion 5 (no retaliation, inferred
-refusal or delayed hazard response) is unmet. The remaining work is human: representative resident
-and staff acceptance, a measured hazard-response comparison on live workflow data, and owner approval
-of the hazard follow-up age limit. The register itself cannot prove it. A further code slice would
-only wire these read-only helpers into a staff view, which needs owner direction first.
+Status record, 2026-11-14 (issue #220 operational human gate stays open): criteria 1 to 4 were
+delivered by #418, #641 and #693, with ageing and protection helpers in #826 and #966. Locally
+verifiable deterministic `src/core` non-retaliation, non-inferred-refusal and non-delayed-hazard
+safeguards across submit, update, escalate and resolve (`source`, `policy`, `proposal`,
+`human_decision`) are enforced and unit-tested in `test_issue_220_challenge_route.py`. Live
+representative resident/staff workflow acceptance, workbench UI wiring for update/escalate, and
+owner approval of the `max_days` hazard follow-up threshold remain separate human governance items.
 
 ## Aftercare concern route and evaluator view (#133)
 
