@@ -3991,12 +3991,20 @@ or `guardrail breach` in `trigger`, plus `scope`, `reason`, `incident_owner`,
 so incomplete reports never prevent immediate containment. Impacts and versions
 are derived inside the SQL write, not trusted from an HTTP preview.
 
-`restart-propose` takes `id`, `corrective_evidence`, `test_id`, `result: Pass`
-and `evidence_class: constructed-fixture`. This is explicitly a recorded
+`restart-propose` takes `id`, substantive non-placeholder `corrective_evidence`
+and `test_id`, `result: Pass` and `evidence_class: constructed-fixture`, binding
+a monotonic `proposal_seq` into `proposal_digest`. Placeholder text (`TBD`,
+`TODO`, `N/A`, `pending`, `unavailable`, self-approved/automatic-restart text),
+`view_only` principals, Keep-suspended rejected `(test_id, corrective_evidence)`
+replays, and claims already open or Restart-consumed for the same candidate
+release are refused. This is explicitly a recorded
 constructed claim, not a server-run test or actual acceptance. Incomplete
 incident/version evidence refuses restart. Proposal history is retained.
 `restart-decide` takes `id`, current `epoch`, exact `proposal_digest`,
-`decision` (`Restart` or `Keep suspended`) and matching `authority_ref`.
+`decision` (`Restart` or `Keep suspended`) and matching `authority_ref`,
+refusing `view_only` principals and previously decided `proposal_digest`
+replays while recording full approver `actor` identity (`email`, `name`, `code`,
+`oid`).
 Missing, failed, altered, stale, self-approved, untrusted and version-drifted
 evidence is refused and audited.
 Legacy impact completeness includes exact prior-release references/bindings and
@@ -4027,11 +4035,22 @@ share eligibility semantics. Bundle projection uses the current trusted provider
 not caller flags; provider switches/reopen preserve actual holds. Invalid task/
 scope/event history stays noncurrent without breaking generic evidence export.
 
-The issue's synthetic drill is `test_operator_suspension`; the already selected
+Normalized SQL `continuity_gate_state` (`continuity-gate-v1`),
+`continuity_open_holds`, and the versioned SQL `continuity` envelope fence
+`assistant_attempts` (`reserved` and `sending`) and `assistant_tasks`
+(`verify`, `accept`, and `edit-accept` review transitions) across independent
+SQL connections and mixed-version worker restarts so pre-gate or
+gate-mismatched processes fail closed across queued, leased, ready and exported
+proposals while manual case work, accessible resident challenge/correction and
+statutory hazard response remain available.
+
+The issue's synthetic drills are `test_operator_suspension`,
+`test_continuity_restart_gate` and core `test_restart_gate_sql_fences`; the already selected
 native SQL gate runs
 `test_assistants.MssqlDurabilityTests.test_operator_incident_drill` against its
 owned disposable database. These are engineering checks, not actual OD-35
-authority, threshold approval, competent evaluation or human drill acceptance.
+authority, threshold approval, competent evaluation, WCAG/resident accessibility
+acceptance, immutable external ledger custody or human drill acceptance.
 
 ## RAI task release API (#219)
 

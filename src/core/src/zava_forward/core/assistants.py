@@ -976,9 +976,11 @@ def shape_result(
 HOLD_GRACE = 5.0
 PAUSED = "Readings kept changing before the model ran; automatic review is paused briefly. Request review manually or wait."
 SQLITE_DDL = (
-    "CREATE TABLE IF NOT EXISTS assistant_tasks (id TEXT PRIMARY KEY, capability TEXT NOT NULL, case_id TEXT NOT NULL, signature TEXT NOT NULL, body TEXT NOT NULL, state TEXT NOT NULL, fence INTEGER NOT NULL, owner TEXT NOT NULL, lease_until REAL NOT NULL, attempts INTEGER NOT NULL, not_before REAL NOT NULL, revision INTEGER NOT NULL, dispatched REAL NOT NULL DEFAULT 0)",
+    "CREATE TABLE IF NOT EXISTS continuity_gate_state (id INTEGER PRIMARY KEY CHECK (id = 1), gate_version TEXT NOT NULL, epoch INTEGER NOT NULL DEFAULT 0)",
+    "CREATE TABLE IF NOT EXISTS continuity_open_holds (scope TEXT PRIMARY KEY, incident_id TEXT NOT NULL, epoch INTEGER NOT NULL)",
+    "CREATE TABLE IF NOT EXISTS assistant_tasks (id TEXT PRIMARY KEY, capability TEXT NOT NULL, case_id TEXT NOT NULL, signature TEXT NOT NULL, body TEXT NOT NULL, state TEXT NOT NULL, fence INTEGER NOT NULL, owner TEXT NOT NULL, lease_until REAL NOT NULL, attempts INTEGER NOT NULL, not_before REAL NOT NULL, revision INTEGER NOT NULL, dispatched REAL NOT NULL DEFAULT 0, review_gate_version TEXT NOT NULL DEFAULT '', reviewed_revision INTEGER NOT NULL DEFAULT 0)",
     "CREATE TABLE IF NOT EXISTS assistant_allowance (id TEXT PRIMARY KEY, calls INTEGER NOT NULL, tokens INTEGER NOT NULL, expires REAL NOT NULL, used_calls INTEGER NOT NULL, reserved_tokens INTEGER NOT NULL)",
-    "CREATE TABLE IF NOT EXISTS assistant_attempts (id TEXT PRIMARY KEY, task_id TEXT NOT NULL, fence INTEGER NOT NULL, pool TEXT NOT NULL, reserved INTEGER NOT NULL, actual INTEGER, outcome TEXT NOT NULL, active_until REAL NOT NULL DEFAULT 0)",
+    "CREATE TABLE IF NOT EXISTS assistant_attempts (id TEXT PRIMARY KEY, task_id TEXT NOT NULL, fence INTEGER NOT NULL, pool TEXT NOT NULL, reserved INTEGER NOT NULL, actual INTEGER, outcome TEXT NOT NULL, active_until REAL NOT NULL DEFAULT 0, capability TEXT NOT NULL DEFAULT '', gate_version TEXT NOT NULL DEFAULT '', send_gate_version TEXT NOT NULL DEFAULT '')",
     "CREATE TABLE IF NOT EXISTS assistant_events (id TEXT PRIMARY KEY, task_id TEXT NOT NULL, at REAL NOT NULL, body TEXT NOT NULL)",
     "CREATE INDEX IF NOT EXISTS ix_assistant_pending ON assistant_tasks (state, not_before, lease_until)",
     "CREATE TABLE IF NOT EXISTS assistant_schedule (capability TEXT NOT NULL, case_id TEXT NOT NULL, scope TEXT NOT NULL, signature TEXT NOT NULL, task_id TEXT NOT NULL, at REAL NOT NULL, replaced INTEGER NOT NULL DEFAULT 0, seen TEXT NOT NULL DEFAULT '', paused_at REAL NOT NULL DEFAULT 0, PRIMARY KEY (capability, case_id))",
@@ -986,13 +988,94 @@ SQLITE_DDL = (
     "CREATE TABLE IF NOT EXISTS assistant_dispatch_gate (home_id TEXT NOT NULL, task_id TEXT NOT NULL, fence INTEGER NOT NULL, expires_at REAL NOT NULL, PRIMARY KEY (home_id, task_id, fence))",
 ) + rel.SQLITE_DDL
 MSSQL_DDL = (
-    "CREATE TABLE assistant_tasks (id VARCHAR(64) PRIMARY KEY, capability VARCHAR(64) NOT NULL, case_id NVARCHAR(64) NOT NULL, signature VARCHAR(64) NOT NULL, body NVARCHAR(MAX) NOT NULL, state VARCHAR(24) NOT NULL, fence BIGINT NOT NULL, owner VARCHAR(64) NOT NULL, lease_until FLOAT NOT NULL, attempts INT NOT NULL, not_before FLOAT NOT NULL, revision BIGINT NOT NULL, dispatched FLOAT NOT NULL DEFAULT 0)",
+    "CREATE TABLE continuity_gate_state (id INT PRIMARY KEY CHECK (id = 1), gate_version VARCHAR(64) COLLATE Latin1_General_100_BIN2 NOT NULL, epoch BIGINT NOT NULL DEFAULT 0)",
+    "CREATE TABLE continuity_open_holds (scope VARCHAR(64) COLLATE Latin1_General_100_BIN2 PRIMARY KEY, incident_id VARCHAR(64) COLLATE Latin1_General_100_BIN2 NOT NULL, epoch BIGINT NOT NULL)",
+    "CREATE TABLE assistant_tasks (id VARCHAR(64) PRIMARY KEY, capability VARCHAR(64) NOT NULL, case_id NVARCHAR(64) NOT NULL, signature VARCHAR(64) NOT NULL, body NVARCHAR(MAX) NOT NULL, state VARCHAR(24) NOT NULL, fence BIGINT NOT NULL, owner VARCHAR(64) NOT NULL, lease_until FLOAT NOT NULL, attempts INT NOT NULL, not_before FLOAT NOT NULL, revision BIGINT NOT NULL, dispatched FLOAT NOT NULL DEFAULT 0, review_gate_version VARCHAR(64) COLLATE Latin1_General_100_BIN2 NOT NULL DEFAULT '', reviewed_revision BIGINT NOT NULL DEFAULT 0)",
     "CREATE TABLE assistant_allowance (id VARCHAR(64) PRIMARY KEY, calls BIGINT NOT NULL, tokens BIGINT NOT NULL, expires FLOAT NOT NULL, used_calls BIGINT NOT NULL, reserved_tokens BIGINT NOT NULL)",
-    "CREATE TABLE assistant_attempts (id VARCHAR(100) PRIMARY KEY, task_id VARCHAR(64) NOT NULL, fence BIGINT NOT NULL, pool VARCHAR(64) NOT NULL, reserved BIGINT NOT NULL, actual BIGINT NULL, outcome VARCHAR(40) NOT NULL, active_until FLOAT NOT NULL DEFAULT 0)",
+    "CREATE TABLE assistant_attempts (id VARCHAR(100) PRIMARY KEY, task_id VARCHAR(64) NOT NULL, fence BIGINT NOT NULL, pool VARCHAR(64) NOT NULL, reserved BIGINT NOT NULL, actual BIGINT NULL, outcome VARCHAR(40) NOT NULL, active_until FLOAT NOT NULL DEFAULT 0, capability VARCHAR(64) COLLATE Latin1_General_100_BIN2 NOT NULL DEFAULT '', gate_version VARCHAR(64) COLLATE Latin1_General_100_BIN2 NOT NULL DEFAULT '', send_gate_version VARCHAR(64) COLLATE Latin1_General_100_BIN2 NOT NULL DEFAULT '')",
     "CREATE TABLE assistant_events (id VARCHAR(64) PRIMARY KEY, task_id VARCHAR(64) NOT NULL, at FLOAT NOT NULL, body NVARCHAR(MAX) NOT NULL)",
     "CREATE TABLE assistant_schedule (capability VARCHAR(64) NOT NULL, case_id NVARCHAR(64) NOT NULL, scope VARCHAR(64) NOT NULL, signature VARCHAR(64) NOT NULL, task_id VARCHAR(64) NOT NULL, at FLOAT NOT NULL, replaced INT NOT NULL DEFAULT 0, seen VARCHAR(64) NOT NULL DEFAULT '', paused_at FLOAT NOT NULL DEFAULT 0, PRIMARY KEY (capability, case_id))",
     "CREATE TABLE assistant_dispatch_gate (home_id NVARCHAR(128) NOT NULL, task_id VARCHAR(64) NOT NULL, fence BIGINT NOT NULL, expires_at FLOAT NOT NULL, PRIMARY KEY (home_id, task_id, fence))",
 ) + rel.MSSQL_DDL
+
+SQLITE_ATTEMPT_TRIGGERS = (
+    "CREATE TRIGGER IF NOT EXISTS continuity_gate_no_delete BEFORE DELETE ON continuity_gate_state "
+    "BEGIN SELECT RAISE(ABORT, 'continuity gate state cannot be deleted'); END",
+    "CREATE TRIGGER IF NOT EXISTS continuity_gate_monotonic BEFORE UPDATE ON continuity_gate_state WHEN NEW.epoch < OLD.epoch "
+    "BEGIN SELECT RAISE(ABORT, 'continuity gate epoch is monotonic'); END",
+    "CREATE TRIGGER IF NOT EXISTS assistant_attempts_gate_insert BEFORE INSERT ON assistant_attempts "
+    "WHEN (NEW.outcome = 'reserved' AND (NEW.capability = '' OR NOT EXISTS (SELECT 1 FROM continuity_gate_state g WHERE g.id = 1 AND g.gate_version = NEW.gate_version))) "
+    "OR (NEW.outcome = 'sending' AND (NEW.capability = '' OR NOT EXISTS (SELECT 1 FROM continuity_gate_state g WHERE g.id = 1 AND g.gate_version = NEW.gate_version AND g.gate_version = NEW.send_gate_version))) "
+    "BEGIN SELECT RAISE(ABORT, 'continuity SQL gate mismatch'); END",
+    "CREATE TRIGGER IF NOT EXISTS assistant_attempts_hold_insert BEFORE INSERT ON assistant_attempts "
+    "WHEN NEW.outcome IN ('reserved', 'sending') AND EXISTS (SELECT 1 FROM continuity_open_holds h WHERE h.scope = 'all' OR h.scope = NEW.capability) "
+    "BEGIN SELECT RAISE(ABORT, 'continuity scope is suspended'); END",
+    "CREATE TRIGGER IF NOT EXISTS assistant_attempts_gate_update BEFORE UPDATE ON assistant_attempts "
+    "WHEN (NEW.active_until > 0 OR NEW.outcome <> OLD.outcome) AND ("
+    "(NEW.outcome = 'reserved' AND (NEW.capability = '' OR NOT EXISTS (SELECT 1 FROM continuity_gate_state g WHERE g.id = 1 AND g.gate_version = NEW.gate_version))) "
+    "OR (NEW.outcome = 'sending' AND (NEW.capability = '' OR NOT EXISTS (SELECT 1 FROM continuity_gate_state g WHERE g.id = 1 AND g.gate_version = NEW.gate_version AND g.gate_version = NEW.send_gate_version)))) "
+    "BEGIN SELECT RAISE(ABORT, 'continuity SQL gate mismatch'); END",
+    "CREATE TRIGGER IF NOT EXISTS assistant_attempts_hold_update BEFORE UPDATE ON assistant_attempts "
+    "WHEN NEW.outcome IN ('reserved', 'sending') "
+    "AND EXISTS (SELECT 1 FROM continuity_open_holds h WHERE h.scope = 'all' OR h.scope = NEW.capability) "
+    "BEGIN SELECT RAISE(ABORT, 'continuity scope is suspended'); END",
+    "CREATE TRIGGER IF NOT EXISTS assistant_tasks_gate_insert BEFORE INSERT ON assistant_tasks "
+    "WHEN NEW.state = 'accepted' AND (NEW.reviewed_revision <> NEW.revision OR NOT EXISTS (SELECT 1 FROM continuity_gate_state g WHERE g.id = 1 AND g.gate_version = NEW.review_gate_version)) "
+    "BEGIN SELECT RAISE(ABORT, 'continuity SQL gate mismatch'); END",
+    "CREATE TRIGGER IF NOT EXISTS assistant_tasks_hold_insert BEFORE INSERT ON assistant_tasks "
+    "WHEN NEW.state = 'accepted' AND EXISTS (SELECT 1 FROM continuity_open_holds h WHERE h.scope = 'all' OR h.scope = NEW.capability) "
+    "BEGIN SELECT RAISE(ABORT, 'continuity scope is suspended'); END",
+    "CREATE TRIGGER IF NOT EXISTS assistant_tasks_gate_update BEFORE UPDATE ON assistant_tasks "
+    "WHEN ((NEW.state = 'accepted' AND (OLD.state <> 'accepted' OR NEW.revision <> OLD.revision OR NEW.body <> OLD.body)) "
+    "OR (OLD.state = 'ready' AND NEW.state = 'ready' AND NEW.revision <> OLD.revision AND NEW.dispatched = OLD.dispatched)) "
+    "AND (NEW.reviewed_revision <> NEW.revision OR NOT EXISTS (SELECT 1 FROM continuity_gate_state g WHERE g.id = 1 AND g.gate_version = NEW.review_gate_version)) "
+    "BEGIN SELECT RAISE(ABORT, 'continuity SQL gate mismatch'); END",
+    "CREATE TRIGGER IF NOT EXISTS assistant_tasks_hold_update BEFORE UPDATE ON assistant_tasks "
+    "WHEN ((NEW.state = 'accepted' AND (OLD.state <> 'accepted' OR NEW.revision <> OLD.revision OR NEW.body <> OLD.body)) "
+    "OR (OLD.state = 'ready' AND NEW.state = 'ready' AND NEW.revision <> OLD.revision AND NEW.dispatched = OLD.dispatched)) "
+    "AND EXISTS (SELECT 1 FROM continuity_open_holds h WHERE h.scope = 'all' OR h.scope = NEW.capability) "
+    "BEGIN SELECT RAISE(ABORT, 'continuity scope is suspended'); END",
+)
+
+MSSQL_ATTEMPT_TRIGGERS = (
+    "IF OBJECT_ID(N'continuity_gate_no_delete', N'TR') IS NULL EXEC(N'CREATE TRIGGER continuity_gate_no_delete ON continuity_gate_state "
+    "INSTEAD OF DELETE AS IF EXISTS (SELECT 1 FROM deleted) THROW 50004, ''continuity gate state cannot be deleted'', 1')",
+    "IF OBJECT_ID(N'continuity_gate_monotonic', N'TR') IS NULL EXEC(N'CREATE TRIGGER continuity_gate_monotonic ON continuity_gate_state "
+    "AFTER UPDATE AS IF EXISTS (SELECT 1 FROM inserted i JOIN deleted d ON d.id = i.id WHERE i.epoch < d.epoch) "
+    "THROW 50004, ''continuity gate epoch is monotonic'', 1')",
+    "IF OBJECT_ID(N'assistant_attempts_gate_insert', N'TR') IS NULL EXEC(N'CREATE TRIGGER assistant_attempts_gate_insert ON assistant_attempts "
+    "AFTER INSERT AS "
+    "IF EXISTS (SELECT 1 FROM inserted i WHERE (i.outcome = ''reserved'' AND (i.capability = '''' OR NOT EXISTS (SELECT 1 FROM continuity_gate_state g WHERE g.id = 1 AND g.gate_version = i.gate_version))) "
+    "OR (i.outcome = ''sending'' AND (i.capability = '''' OR NOT EXISTS (SELECT 1 FROM continuity_gate_state g WHERE g.id = 1 AND g.gate_version = i.gate_version AND g.gate_version = i.send_gate_version)))) "
+    "THROW 50004, ''continuity SQL gate mismatch'', 1; "
+    "IF EXISTS (SELECT 1 FROM inserted i WHERE i.outcome IN (''reserved'', ''sending'') AND EXISTS (SELECT 1 FROM continuity_open_holds h WHERE h.scope = ''all'' OR h.scope = i.capability)) "
+    "THROW 50004, ''continuity scope is suspended'', 1')",
+    "IF OBJECT_ID(N'assistant_attempts_gate_update', N'TR') IS NULL EXEC(N'CREATE TRIGGER assistant_attempts_gate_update ON assistant_attempts "
+    "AFTER UPDATE AS "
+    "IF EXISTS (SELECT 1 FROM inserted i JOIN deleted d ON d.id = i.id WHERE (i.active_until > 0 OR i.outcome <> d.outcome) AND ("
+    "(i.outcome = ''reserved'' AND (i.capability = '''' OR NOT EXISTS (SELECT 1 FROM continuity_gate_state g WHERE g.id = 1 AND g.gate_version = i.gate_version))) "
+    "OR (i.outcome = ''sending'' AND (i.capability = '''' OR NOT EXISTS (SELECT 1 FROM continuity_gate_state g WHERE g.id = 1 AND g.gate_version = i.gate_version AND g.gate_version = i.send_gate_version))))) "
+    "THROW 50004, ''continuity SQL gate mismatch'', 1; "
+    "IF EXISTS (SELECT 1 FROM inserted i WHERE i.outcome IN (''reserved'', ''sending'') "
+    "AND EXISTS (SELECT 1 FROM continuity_open_holds h WHERE h.scope = ''all'' OR h.scope = i.capability)) "
+    "THROW 50004, ''continuity scope is suspended'', 1')",
+    "IF OBJECT_ID(N'assistant_tasks_gate_insert', N'TR') IS NULL EXEC(N'CREATE TRIGGER assistant_tasks_gate_insert ON assistant_tasks "
+    "AFTER INSERT AS "
+    "IF EXISTS (SELECT 1 FROM inserted i WHERE i.state = ''accepted'' AND (i.reviewed_revision <> i.revision OR NOT EXISTS (SELECT 1 FROM continuity_gate_state g WHERE g.id = 1 AND g.gate_version = i.review_gate_version))) "
+    "THROW 50004, ''continuity SQL gate mismatch'', 1; "
+    "IF EXISTS (SELECT 1 FROM inserted i WHERE i.state = ''accepted'' AND EXISTS (SELECT 1 FROM continuity_open_holds h WHERE h.scope = ''all'' OR h.scope = i.capability COLLATE Latin1_General_100_BIN2)) "
+    "THROW 50004, ''continuity scope is suspended'', 1')",
+    "IF OBJECT_ID(N'assistant_tasks_gate_update', N'TR') IS NULL EXEC(N'CREATE TRIGGER assistant_tasks_gate_update ON assistant_tasks "
+    "AFTER UPDATE AS "
+    "IF EXISTS (SELECT 1 FROM inserted i JOIN deleted d ON d.id = i.id WHERE ((i.state = ''accepted'' AND (d.state <> ''accepted'' OR i.revision <> d.revision OR i.body <> d.body)) "
+    "OR (d.state = ''ready'' AND i.state = ''ready'' AND i.revision <> d.revision AND i.dispatched = d.dispatched)) "
+    "AND (i.reviewed_revision <> i.revision OR NOT EXISTS (SELECT 1 FROM continuity_gate_state g WHERE g.id = 1 AND g.gate_version = i.review_gate_version))) "
+    "THROW 50004, ''continuity SQL gate mismatch'', 1; "
+    "IF EXISTS (SELECT 1 FROM inserted i JOIN deleted d ON d.id = i.id WHERE ((i.state = ''accepted'' AND (d.state <> ''accepted'' OR i.revision <> d.revision OR i.body <> d.body)) "
+    "OR (d.state = ''ready'' AND i.state = ''ready'' AND i.revision <> d.revision AND i.dispatched = d.dispatched)) "
+    "AND EXISTS (SELECT 1 FROM continuity_open_holds h WHERE h.scope = ''all'' OR h.scope = i.capability COLLATE Latin1_General_100_BIN2)) "
+    "THROW 50004, ''continuity scope is suspended'', 1')",
+)
 
 
 class DispatchGate:
@@ -1157,6 +1240,9 @@ class Assistants:
                         f"CREATE TRIGGER IF NOT EXISTS assistant_events_no_{action.lower()} BEFORE {action} ON assistant_events BEGIN SELECT RAISE(ABORT, 'assistant evidence is append-only'); END"
                     )
             self._upgrade(db)
+            for trigger in (MSSQL_ATTEMPT_TRIGGERS if self.mssql else SQLITE_ATTEMPT_TRIGGERS):
+                db.execute(trigger)
+            continuity.sync_sql_gate(db, read_meta=True, mssql=self.mssql)
             try:
                 from .sensor_consumer import ensure_control_home
 
@@ -1176,6 +1262,15 @@ class Assistants:
         else:
             present = column in [r[1] for r in db.execute(f"PRAGMA table_info({table})").fetchall()]
         if not present:
+            if self.mssql:
+                row = db.execute("SELECT ledger_type FROM sys.tables WHERE object_id = OBJECT_ID(?)", (table,)).fetchone()
+                if row and isinstance(row[0], int) and row[0] != 0:
+                    sqltype, default = ddl.split(" NOT NULL DEFAULT ", 1)
+                    db.execute(f"ALTER TABLE {table} ADD {column} {sqltype} NULL")
+                    db.execute(f"UPDATE {table} SET {column} = {default} WHERE {column} IS NULL")
+                    db.execute(f"ALTER TABLE {table} ADD CONSTRAINT ck_{table}_{column}_nn CHECK ({column} IS NOT NULL)")
+                    db.execute(f"ALTER TABLE {table} ADD CONSTRAINT df_{table}_{column} DEFAULT {default} FOR {column}")
+                    return True
             db.execute(f"ALTER TABLE {table} ADD {'' if self.mssql else 'COLUMN '}{column} {ddl}")
         return not present
 
@@ -1200,6 +1295,20 @@ class Assistants:
             "assistant_schedule",
             "paused_at",
             "FLOAT NOT NULL DEFAULT 0" if self.mssql else "REAL NOT NULL DEFAULT 0",
+        )
+        gate_col_ddl = (
+            "VARCHAR(64) COLLATE Latin1_General_100_BIN2 NOT NULL DEFAULT ''"
+            if self.mssql
+            else "TEXT NOT NULL DEFAULT ''"
+        )
+        for col in ("capability", "gate_version", "send_gate_version"):
+            self._add_column(db, "assistant_attempts", col, gate_col_ddl)
+        self._add_column(db, "assistant_tasks", "review_gate_version", gate_col_ddl)
+        self._add_column(
+            db,
+            "assistant_tasks",
+            "reviewed_revision",
+            "BIGINT NOT NULL DEFAULT 0" if self.mssql else "INTEGER NOT NULL DEFAULT 0",
         )
         if self._add_column(
             db,
@@ -1315,6 +1424,9 @@ class Assistants:
         return continuity.load(row[0] if row else None)
 
     def suspended(self, db, capability):
+        hold = continuity.gate_hold(db, mssql=self.mssql)
+        if hold is not None:
+            return continuity.reason_text(hold)
         s = continuity.active(
             self.continuity(db), capability, constructed=not isinstance(self.store.ai, Ai)
         )
@@ -1426,7 +1538,7 @@ class Assistants:
                     ).fetchall()
                 ]
                 capability = continuity.record_task(body)
-                s = continuity.active(
+                s = continuity.gate_hold(db, mssql=self.mssql) or continuity.active(
                     self.continuity(db), capability, constructed=not isinstance(self.store.ai, Ai)
                 )
                 current = continuity.epoch_current(body, self.continuity(db))
@@ -1833,7 +1945,7 @@ class Assistants:
         )
         body["history_count"] = total
         body["display_state"] = "stale" if body["stale"] else body["state"]
-        held = continuity.active(
+        held = continuity.gate_hold(db, mssql=self.mssql) or continuity.active(
             self.continuity(db), body["capability"], constructed=not isinstance(self.store.ai, Ai)
         )
         body["epoch_current"] = continuity.epoch_current(body, self.continuity(db))
@@ -2471,7 +2583,7 @@ class Assistants:
                     )
                 return None
             fence = task["fence"] + 1
-            refusal = self._reserve(db, now, f"{tid}:{fence}", tid, fence)
+            refusal = self._reserve(db, now, f"{tid}:{fence}", tid, fence, task["capability"])
             if refusal == "active":
                 reason = "Waiting for a shared active-call slot; ordinary manual case work remains available."
                 if task["reason"] != reason:
@@ -2560,7 +2672,7 @@ class Assistants:
             prior[4],
         )
 
-    def _reserve(self, db, now, attempt, tid, fence):
+    def _reserve(self, db, now, attempt, tid, fence, capability):
         """Inside the caller's transaction: take one durable active-call slot and debit one call plus its token
         reservation from the shared allowance. Returns None on success, else "active" or "pool"."""
         l = self.limits
@@ -2594,8 +2706,17 @@ class Assistants:
             (l.reservation, l.pool),
         )
         db.execute(
-            "INSERT INTO assistant_attempts (id,task_id,fence,pool,reserved,actual,outcome,active_until) VALUES (?,?,?,?,?,NULL,'reserved',?)",
-            (attempt, tid, fence, l.pool, l.reservation, now + l.lease),
+            "INSERT INTO assistant_attempts (id,task_id,fence,pool,reserved,actual,outcome,active_until,capability,gate_version,send_gate_version) VALUES (?,?,?,?,?,NULL,'reserved',?,?,?,'')",
+            (
+                attempt,
+                tid,
+                fence,
+                l.pool,
+                l.reservation,
+                now + l.lease,
+                capability,
+                continuity.GATE_VERSION,
+            ),
         )
         return None
 
@@ -2639,7 +2760,7 @@ class Assistants:
                 if not reason and chars > self.limits.input_chars:
                     reason = "Input exceeds limit; use the manual route."
                 if not reason:
-                    refusal = self._reserve(db, self.now(db), attempt, call_id, 1)
+                    refusal = self._reserve(db, self.now(db), attempt, call_id, 1, capability)
                     reason = {
                         "active": "Waiting for a shared active-call slot; use the manual route.",
                         "pool": "Shared durable allowance exhausted/expired; use the manual route.",
@@ -2691,8 +2812,8 @@ class Assistants:
             self.event(db, attempt.split(":")[0], kind="send-refused", reason=refused[:120])
             return refused
         db.execute(
-            "UPDATE assistant_attempts SET outcome='sending',active_until=? WHERE id=?",
-            (max(row[1], now + window), attempt),
+            "UPDATE assistant_attempts SET outcome='sending',send_gate_version=?,active_until=? WHERE id=?",
+            (continuity.GATE_VERSION, max(row[1], now + window), attempt),
         )
         return None
 
@@ -3439,10 +3560,16 @@ class Assistants:
                     stored["financial_attribution"] = dict(
                         status="unresolved", reason=str(error), action=action
                     )
-            res = db.execute(
-                "UPDATE assistant_tasks SET body=?,state=?,revision=revision+1 WHERE id=? AND revision=?",
-                (canonical(stored), state, tid, revision),
-            )
+            if action == "reject":
+                res = db.execute(
+                    "UPDATE assistant_tasks SET body=?,state=?,revision=revision+1 WHERE id=? AND revision=?",
+                    (canonical(stored), state, tid, revision),
+                )
+            else:
+                res = db.execute(
+                    "UPDATE assistant_tasks SET body=?,state=?,review_gate_version=?,reviewed_revision=revision+1,revision=revision+1 WHERE id=? AND revision=?",
+                    (canonical(stored), state, continuity.GATE_VERSION, tid, revision),
+                )
             if res.rowcount != 1:
                 raise ConflictError(tid)
             self.event(

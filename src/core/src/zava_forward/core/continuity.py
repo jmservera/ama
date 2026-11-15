@@ -41,6 +41,7 @@ from .restart_authority import (
     actors_for_store,
     ensure_distinct_restart_actor,
     reject_automatic_restart,
+    validate_corrective_evidence,
     validate_restart_authority,
 )
 
@@ -49,6 +50,7 @@ SUSPEND_ROLES = MANAGER_ROLES + ("Quality Inspector", "Building Safety Liaison")
 KINDS = ("model", "rule", "configuration")
 EVALUATIONS = ("pass", "fail")
 EXPORT_FORMAT = "zf-evidence-export/1"
+GATE_VERSION = "continuity-gate-v1"
 ALL = "all"
 MANUAL_NOTE = ("Manual case work, resident challenge and hazard response continue outside any suspension; "
                "emergency and statutory hazard duties are never paused.")
@@ -69,12 +71,122 @@ def blank():
     return dict(epoch=0, suspensions=[], changes=[])
 
 
+def dump_sql(doc):
+    """Wrap a continuity document for SQL persistence so pre-gate or mismatched-gate readers fail closed."""
+    return json.dumps(dict(gate_version=GATE_VERSION, epoch=-1, continuity=doc))
+
+
+def unwrap_sql(obj):
+    """Unwrap a matching SQL gate envelope, leaving legacy plain dicts or foreign envelopes unchanged."""
+    if isinstance(obj, dict) and obj.get("gate_version") == GATE_VERSION and isinstance(obj.get("continuity"), dict):
+        return obj["continuity"]
+    return obj
+
+
 def load(raw):
     """A persisted document or an empty one; shared by the Store and the independent assistant connection."""
-    doc = json.loads(raw) if raw else blank()
+    if raw is None:
+        return blank()
+    if isinstance(raw, dict):
+        doc = deepcopy(raw)
+    elif isinstance(raw, str):
+        try:
+            doc = json.loads(raw)
+        except (ValueError, TypeError):
+            return dict(epoch=-1, suspensions=[], changes=[])
+    else:
+        return dict(epoch=-1, suspensions=[], changes=[])
+    if not isinstance(doc, dict):
+        return dict(epoch=-1, suspensions=[], changes=[])
+    if "gate_version" in doc:
+        if doc.get("gate_version") != GATE_VERSION or not isinstance(doc.get("continuity"), dict):
+            return dict(epoch=-1, suspensions=[], changes=[], gate_mismatch=True)
+        doc = deepcopy(doc["continuity"])
     for key, value in blank().items():
         doc.setdefault(key, value)
     return doc
+
+
+def gate_mismatch_hold(found=None):
+    return dict(id="gate-mismatch", scope=ALL, status="Suspended", gate_mismatch=True, gate_version=found)
+
+
+def gate_hold(db, *, mssql=False):
+    """Return a fail-closed hold when the SQL continuity gate state is missing or version-mismatched."""
+    has_table = (
+        "SELECT name FROM sys.tables WHERE name = ?"
+        if mssql
+        else "SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?"
+    )
+    if db.execute(has_table, ("continuity_gate_state",)).fetchone() is None:
+        return gate_mismatch_hold(None)
+    row = db.execute("SELECT gate_version FROM continuity_gate_state WHERE id = 1").fetchone()
+    if row is None or row[0] != GATE_VERSION:
+        return gate_mismatch_hold(row[0] if row else None)
+    return None
+
+
+def gate_sync_rows(raw_value, current_sql_epoch=0):
+    """Project monotonic SQL gate epoch and open hold rows from a continuity document without failing on malformed JSON."""
+    floor = max(0, int(current_sql_epoch or 0))
+    if raw_value is None:
+        return floor, []
+    doc = load(raw_value)
+    parsed = doc.get("epoch")
+    safe_epoch = max(floor, parsed if type(parsed) is int and parsed >= 0 else 0)
+    if not history_valid(doc):
+        return safe_epoch, [(ALL, "invalid-history", safe_epoch)]
+    holds = [(s["scope"], s["id"], s["epoch"]) for s in doc["suspensions"] if s.get("status") == "Suspended"]
+    return safe_epoch, holds
+
+
+def sync_sql_gate(db, raw_value=None, *, read_meta=False, mssql=False):
+    """Synchronize normalized continuity gate tables inside the caller's open SQL transaction."""
+    db.execute(
+        "INSERT INTO continuity_gate_state (id, gate_version, epoch) "
+        "SELECT 1, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM continuity_gate_state WHERE id = 1)",
+        (GATE_VERSION,),
+    )
+    state_row = db.execute("SELECT gate_version, epoch FROM continuity_gate_state WHERE id = 1").fetchone()
+    stored_epoch = int(state_row[1]) if state_row else 0
+    if read_meta:
+        has_meta = (
+            "SELECT name FROM sys.tables WHERE name = ?"
+            if mssql
+            else "SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?"
+        )
+        if db.execute(has_meta, ("meta",)).fetchone() is not None:
+            meta_row = db.execute("SELECT value FROM meta WHERE key = ?", ("continuity",)).fetchone()
+            if meta_row is None:
+                seeded = dump_sql(blank())
+                db.execute(
+                    "INSERT INTO meta (key, value) SELECT 'continuity', ? "
+                    "WHERE NOT EXISTS (SELECT 1 FROM meta WHERE key = 'continuity')",
+                    (seeded,),
+                )
+                raw_value = seeded
+            else:
+                raw_value = meta_row[0]
+                if isinstance(raw_value, str):
+                    try:
+                        parsed = json.loads(raw_value)
+                    except (ValueError, TypeError):
+                        parsed = None
+                    if isinstance(parsed, dict) and "gate_version" not in parsed:
+                        normalized = load(parsed)
+                        if history_valid(normalized):
+                            wrapped = dump_sql(normalized)
+                            db.execute("UPDATE meta SET value = ? WHERE key = 'continuity'", (wrapped,))
+                            raw_value = wrapped
+    safe_epoch, holds = gate_sync_rows(raw_value, stored_epoch)
+    if safe_epoch > stored_epoch:
+        db.execute("UPDATE continuity_gate_state SET epoch = ? WHERE id = 1", (safe_epoch,))
+    db.execute("DELETE FROM continuity_open_holds")
+    for scope, incident_id, hold_epoch in holds:
+        db.execute(
+            "INSERT INTO continuity_open_holds (scope, incident_id, epoch) VALUES (?, ?, ?)",
+            (scope, incident_id, hold_epoch),
+        )
 
 
 def active(doc, task, constructed=False):
@@ -165,9 +277,75 @@ def sha(value):
 
 
 def reason_text(s):
+    if s.get("gate_mismatch"):
+        return f"Continuity SQL gate version mismatch or uninitialized state; use the manual route. {MANUAL_NOTE}"
     if s.get("invalid_history"):
         return f"Continuity task or event history is unavailable or malformed; use the manual route. {MANUAL_NOTE}"
     return f"Suspended ({s['id']}): use the manual route. {MANUAL_NOTE}"
+
+
+def _check_digest_replay(doc, current_suspension, proposal_digest):
+    if not isinstance(proposal_digest, str) or not proposal_digest:
+        return
+    for prior in current_suspension.get("decisions", []):
+        prior_digest = (prior.get("proposal") or {}).get("digest") if isinstance(prior, dict) else None
+        if prior_digest == proposal_digest:
+            raise PermissionError("Proposal digest was already rejected; record fresh corrective tests.")
+    for other in doc["suspensions"]:
+        if other.get("id") != current_suspension.get("id") and other.get("status") == "Restarted":
+            used_digest = ((other.get("restart") or {}).get("proposal") or {}).get("digest")
+            if used_digest == proposal_digest:
+                raise PermissionError("Proposal digest was already consumed by an earlier restart; record fresh corrective tests.")
+def _refuse_view_only(user):
+    if user.get("view_only"):
+        raise PermissionError("View-only administrative access cannot suspend AI work or propose or decide a restart.")
+
+
+def _check_claim_replay(doc, current_suspension, test_id, corrective_evidence, current_candidate=None, *, for_decision=False):
+    norm_tid = test_id.strip().casefold()
+    norm_ev = corrective_evidence.strip().casefold()
+
+    def _raw_tid(prop):
+        return isinstance(prop, dict) and isinstance(prop.get("test_id"), str) and prop["test_id"].strip().casefold() == norm_tid
+
+    def _raw_ev(prop):
+        return (
+            isinstance(prop, dict)
+            and isinstance(prop.get("corrective_evidence"), str)
+            and prop["corrective_evidence"].strip().casefold() == norm_ev
+        )
+
+    def _same_candidate_claim(prop):
+        return (
+            current_candidate is not None
+            and isinstance(prop, dict)
+            and prop.get("candidate") == current_candidate
+            and (_raw_tid(prop) or _raw_ev(prop))
+        )
+
+    for prior in current_suspension.get("decisions", []):
+        prior_prop = (prior.get("proposal") or {}) if isinstance(prior, dict) else {}
+        if _same_candidate_claim(prior_prop):
+            raise PermissionError("Rejected corrective test evidence cannot be replayed; record fresh corrective tests.")
+    for other in doc["suspensions"]:
+        if other.get("id") == current_suspension.get("id"):
+            continue
+        for prior in other.get("decisions", []):
+            prior_prop = (prior.get("proposal") or {}) if isinstance(prior, dict) else {}
+            if _same_candidate_claim(prior_prop):
+                raise PermissionError("Rejected corrective test evidence cannot be replayed; record fresh corrective tests.")
+        if other.get("status") == "Restarted":
+            used_prop = ((other.get("restart") or {}).get("proposal") or {})
+            if _same_candidate_claim(used_prop):
+                raise PermissionError(
+                    "Corrective test claim was already consumed on a prior suspension; record fresh corrective tests."
+                )
+        elif other.get("status") == "Suspended":
+            open_prop = other.get("proposal") or {}
+            if _raw_tid(open_prop) or _raw_ev(open_prop):
+                raise PermissionError(
+                    "Corrective test claim is already proposed on another open suspension; record fresh corrective tests."
+                )
 
 
 def epoch_current(record, epoch):
@@ -306,11 +484,28 @@ def validate_sql(store):
         if not current["complete"]:
             raise PermissionError("Restart needs complete SQL-owned version and release evidence.")
         if action == "restart_propose":
+            _check_claim_replay(
+                store._cont(),
+                s,
+                p["test_id"],
+                p["corrective_evidence"],
+                current,
+                for_decision=False,
+            )
             p["candidate"] = current
             p["digest"] = sha({key: value for key, value in p.items() if key != "digest"})
             store.audit(p["by"], "ai_corrective_test_claim", "-", json.dumps(p, sort_keys=True))
-        elif current != p["candidate"]:
-            raise PermissionError("Corrective candidate changed; record fresh corrective tests.")
+        else:
+            if current != p["candidate"]:
+                raise PermissionError("Corrective candidate changed; record fresh corrective tests.")
+            _check_claim_replay(
+                store._cont(),
+                s,
+                p["test_id"],
+                p["corrective_evidence"],
+                current,
+                for_decision=True,
+            )
 
 
 def _incident_action(method):
@@ -425,6 +620,7 @@ class ContinuityMixin:
     @_incident_action
     def suspend(self, user, body, assistant_affected=None):
         k.refuse_bulk(body)
+        _refuse_view_only(user)
         k.require_role(user, SUSPEND_ROLES, "a manager, quality inspector or building safety liaison can suspend AI work")
         reject_automatic_restart(body)
         from . import ai_registry
@@ -492,10 +688,12 @@ class ContinuityMixin:
     @_incident_action
     def restart_propose(self, user, body):
         k.refuse_bulk(body)
+        _refuse_view_only(user)
         k.require_role(user, MANAGER_ROLES, "a manager can propose a restart")
         reject_automatic_restart(body)
         with self.lock:
-            if not history_valid(self._cont()):
+            doc = self._cont()
+            if not history_valid(doc):
                 raise PermissionError("Continuity history is incomplete or malformed; keep the affected scope suspended.")
             s = self._suspension(body)
             if s["status"] != "Suspended":
@@ -525,20 +723,35 @@ class ContinuityMixin:
                 raise PermissionError(
                     "Incident evidence, impacted versions and restart authority are incomplete; keep the affected scope suspended."
                 ) from err
+            corrective_evidence = validate_corrective_evidence(
+                body.get("corrective_evidence"),
+                label="the corrective evidence",
+                limit=600,
+            )
+            test_id = validate_corrective_evidence(
+                body.get("test_id"),
+                label="the corrective test identifier",
+                limit=200,
+                min_len=3,
+            )
+            _check_claim_replay(doc, s, test_id, corrective_evidence, for_decision=False)
+            proposal_seq = len(s.get("proposals", [])) + 1
             s["proposal"] = dict(by=user["email"], actor={key: user.get(key) for key in ("email", "name", "code", "oid")},
-                                 at=k.now(), epoch=self._cont()["epoch"], incident=s["id"], scope=s["scope"],
-                                 corrective_evidence=k.evidence_text(body.get("corrective_evidence"), "the corrective evidence", 600),
-                                 test_id=k.evidence_text(body.get("test_id"), "the corrective test identifier", 200),
+                                 at=k.now(), epoch=doc["epoch"], incident=s["id"], scope=s["scope"],
+                                 proposal_seq=proposal_seq,
+                                 corrective_evidence=corrective_evidence,
+                                 test_id=test_id,
                                  evidence_class="constructed-fixture", result="Pass")
             s.setdefault("proposals", []).append(s["proposal"])
             self.audit(user["email"], "ai_restart_propose", "-", s["id"])
             self.save()
-            self.local.incident_validation["persisted"] = True
+            (self.local if hasattr(self, "db") else self).incident_validation["persisted"] = True
             return control_record(user, s)
 
     @_incident_action
     def restart_decide(self, user, body, *, trusted_route=None):
         k.refuse_bulk(body)
+        _refuse_view_only(user)
         if trusted_route is False:
             raise PermissionError("Restart decisions need the OID-bound trusted sign-in route.")
         k.require_role(user, MANAGER_ROLES, "a manager can decide a restart")
@@ -550,6 +763,7 @@ class ContinuityMixin:
             s = self._suspension(body)
             if s["status"] != "Suspended":
                 raise ValueError("This suspension is not open; a replayed restart is refused.")
+            _check_digest_replay(doc, s, body.get("proposal_digest"))
             p = s.get("proposal")
             if not p:
                 raise PermissionError("Restart needs corrective evidence proposed first. Owner: programme manager.")
@@ -574,6 +788,13 @@ class ContinuityMixin:
                     or "ai_restart" not in user.get("rule_roles", [])):
                 raise PermissionError("A separately provisioned OID-bound trusted AI restart capability is required; OD-35 remains unappointed.")
             decision = k.choice(body.get("decision"), ("Restart", "Keep suspended"), "the decision")
+            if decision == "Restart":
+                try:
+                    verified_ev = validate_corrective_evidence(p.get("corrective_evidence"), label="the corrective evidence", limit=600)
+                    verified_tid = validate_corrective_evidence(p.get("test_id"), label="the corrective test identifier", limit=200, min_len=3)
+                except ValueError as err:
+                    raise PermissionError("Corrective evidence is incomplete or placeholder; record fresh tests.") from err
+                _check_claim_replay(doc, s, verified_tid, verified_ev, for_decision=True)
             prior_actors = (s.get("actor"), s.get("recorded_by"), p.get("actor"), p.get("by"))
             authority = validate_restart_authority(
                 body.get("authority_ref"),
@@ -598,7 +819,9 @@ class ContinuityMixin:
                 ) from err
             if authority != expected_authority:
                 raise PermissionError("The declared restart authority is unavailable or mismatched; actual OD-35 authority is not established.")
-            rec = dict(decision=decision, by=user["email"], at=k.now(), epoch=doc["epoch"], proposal=p,
+            rec = dict(decision=decision, by=user["email"],
+                       actor={key: user.get(key) for key in ("email", "name", "code", "oid")},
+                       at=k.now(), epoch=doc["epoch"], proposal=p,
                        authority_ref=authority, restart_rule=RULE_024, automatic_restart=False,
                        evidence_class="constructed-fixture",
                        note="Constructed permission/test drill only; actual OD-35/RULE-020 restart remains blocked.")
@@ -612,7 +835,7 @@ class ContinuityMixin:
                 rec["new_epoch"] = doc["epoch"]
             self.audit(user["email"], "ai_restart_decide", "-", f"{s['id']} {decision}")
             self.save()
-            self.local.incident_validation["persisted"] = True
+            (self.local if hasattr(self, "db") else self).incident_validation["persisted"] = True
             return control_record(user, s)
 
     # ---- change register

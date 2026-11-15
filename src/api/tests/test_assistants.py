@@ -1300,11 +1300,14 @@ class DialectConnection:
             return self.raw.execute("SELECT 0")
         if sql.startswith("SET TRANSACTION ISOLATION LEVEL"):
             return self.raw.execute("SELECT 1")
+        if "FROM sys.tables" in sql:
+            return self.raw.execute("SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?", args)
         if "N'TR'" in sql or "sys.indexes" in sql or "COL_LENGTH" in sql:
             return self.raw.execute("SELECT 1")
         if sql.startswith("IF OBJECT_ID"):
             sql = sql[sql.index("CREATE TABLE"):]
             sql = sql.replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS", 1)
+            sql = re.sub(r"\s+COLLATE\s+\w+", "", sql)
             sql = re.sub(r"N?VARCHAR\((?:MAX|\d+)\)", "TEXT", sql)
             sql = sql.replace("BIGINT", "INTEGER")
         if "DATEDIFF_BIG" in sql:
@@ -1339,7 +1342,7 @@ class DialectTests(Base):
         self.assertIn("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE", statements)
         self.assertTrue(any("OFFSET 0 ROWS FETCH NEXT" in s for s in statements))
         self.assertTrue(any("fence=?" in s and "lease_until>?" in s for s in statements))
-        self.assertEqual(len(MSSQL_DDL), 7)
+        self.assertEqual(len(MSSQL_DDL), 9)
 
 
 class ConfigurationTests(unittest.TestCase):
@@ -1579,6 +1582,7 @@ class MssqlFixture:
         try:
             for name in ("assistant_dispatch_gate", "assistant_schedule",
                          "assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance",
+                         "continuity_open_holds", "continuity_gate_state",
                          "audit_head", "audit", "recommendations", "cases", "staff", "meta"):
                 db.execute(f"IF OBJECT_ID(N'{name}', N'U') IS NOT NULL DROP TABLE {name}")
         finally:
