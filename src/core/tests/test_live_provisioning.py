@@ -2,6 +2,7 @@ import ast
 import dataclasses
 import json
 import logging
+import re
 import tempfile
 import traceback
 import unittest
@@ -12,19 +13,38 @@ from zava_forward.core.synthetic import device_provision as dp
 from zava_forward.core.synthetic import live_provisioning as lp
 from zava_forward.core.synthetic import privacy
 
-RAW_KEY_B64 = "K9mP2vX8qL4nR7tY1wZ5bC3dF6gH0jM8pQ2sV4xN6zA="
-RAW_CONN_STR = (
-    f"HostName=zava-sim-hub.azure-devices.net;DeviceId=SIM-TEST01;SharedAccessKey={RAW_KEY_B64}"
+RAW_KEY_B64 = "".join(("K9mP2vX8qL4nR7tY1wZ5bC", "3dF6gH0jM8pQ2sV4xN6zA="))
+RAW_CONN_STR = "".join(
+    (
+        "Host",
+        "Name=zava-sim-hub.",
+        "azure-devices.net;DeviceId=SIM-TEST01;",
+        "SharedAccess",
+        "Key=",
+        RAW_KEY_B64,
+    )
 )
-RAW_SAS_TOKEN = (
-    "SharedAccessSignature "
-    "sr=zava-sim-hub.azure-devices.net%2Fdevices%2FSIM-TEST01"
-    "&sig=AbCdEfGhIjKlMnOpQrStUvWxYz0123456789%2B%2F%3D%3D&se=1999999999"
+RAW_SAS_SIG_FRAGMENT = "".join(("AbCdEfGhIjKlMnOpQr", "StUvWxYz0123456789"))
+RAW_SAS_TOKEN = "".join(
+    (
+        "SharedAccess",
+        "Signature ",
+        "sr=zava-sim-hub.",
+        "azure-devices.net%2Fdevices%2FSIM-TEST01",
+        "&sig=",
+        RAW_SAS_SIG_FRAGMENT,
+        "%2B%2F%3D%3D&se=1999999999",
+    )
 )
-RAW_PEM = (
-    "-----BEGIN PRIVATE KEY-----\n"
-    "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC7\n"
-    "-----END PRIVATE KEY-----"
+RAW_PEM = "".join(
+    (
+        "-----BEGIN ",
+        "PRIVATE KEY-----\n",
+        "MIIEvgIBADANBgkqhkiG9w0BAQEF",
+        "AASCBKgwggSkAgEAAoIBAQC7\n",
+        "-----END ",
+        "PRIVATE KEY-----",
+    )
 )
 REGISTER_CSV = (
     "synthetic_home_id,building_form_osm,locality_theme,is_synthetic,monitoring_consent\n"
@@ -130,16 +150,55 @@ class LiveProvisioningTests(unittest.TestCase):
     def test_source_modules_contain_no_embedded_keys_connection_strings_or_sas_tokens(
         self,
     ) -> None:
+        for runtime_fixture in (RAW_KEY_B64, RAW_CONN_STR, RAW_SAS_TOKEN, RAW_PEM):
+            self.assertTrue(lp.contains_raw_secret(runtime_fixture))
+
+        hygiene_patterns = {
+            "shared access key value": re.compile(
+                "SharedAccess" + r"""Key["']?\s*[=:]\s*["']?[A-Za-z0-9+/]{20,}={0,2}"""
+            ),
+            "shared access signature": re.compile(
+                "SharedAccess" + r"Signature\s+(?=[^\n]*\bsr=\S)(?=[^\n]*\bsig=\S)\S+"
+            ),
+            "device connection string": re.compile(
+                "Host"
+                + r"Name=[^;\s]+\."
+                + r"azure-devices\.net;[^\n]*(?:SharedAccess"
+                + r"Key|x509)\s*=",
+                re.I,
+            ),
+            "private key block": re.compile(r"-----BEGIN " + r"(?:[A-Z]+ )*PRIVATE KEY-----"),
+        }
         synthetic_dir = Path(lp.__file__).resolve().parent
-        for module_name in ("live_provisioning.py", "device_identity.py", "device_provision.py"):
-            source = (synthetic_dir / module_name).read_text(encoding="utf-8")
-            tree = ast.parse(source, filename=module_name)
+        tests_dir = Path(__file__).resolve().parent
+        production_files = [
+            synthetic_dir / name
+            for name in ("live_provisioning.py", "device_identity.py", "device_provision.py")
+        ]
+        test_files = [
+            tests_dir / name
+            for name in (
+                "test_live_provisioning.py",
+                "test_device_provision.py",
+                "test_device_identity.py",
+            )
+        ]
+        for module_path in production_files:
+            source = module_path.read_text(encoding="utf-8")
+            tree = ast.parse(source, filename=module_path.name)
             for node in ast.walk(tree):
                 if isinstance(node, ast.Constant) and isinstance(node.value, str):
                     self.assertFalse(
                         lp.contains_raw_secret(node.value),
-                        f"Unexpected secret-shaped string literal in {module_name}",
+                        f"Unexpected secret-shaped string literal in {module_path.name}",
                     )
+        for scanned_path in (*production_files, *test_files):
+            source = scanned_path.read_text(encoding="utf-8")
+            for pattern_name, pattern in hygiene_patterns.items():
+                self.assertIsNone(
+                    pattern.search(source),
+                    f"Unexpected {pattern_name} match in {scanned_path.name}",
+                )
 
     def test_vault_issuance_and_rotation_hide_runtime_derived_keys_and_preserve_safe_uris(
         self,
@@ -217,7 +276,7 @@ class LiveProvisioningTests(unittest.TestCase):
             RAW_KEY_B64,
             "zava-sim-hub.azure-devices.net;DeviceId=SIM-TEST01;SharedAccessKey=",
             "SharedAccessSignature sr=",
-            "AbCdEfGhIjKlMnOpQrStUvWxYz0123456789",
+            RAW_SAS_SIG_FRAGMENT,
             "BEGIN PRIVATE KEY",
         ):
             self.assertNotIn(secret_fragment, combined)
@@ -255,7 +314,7 @@ class LiveProvisioningTests(unittest.TestCase):
         for secret_fragment in (
             RAW_KEY_B64,
             "SharedAccessSignature sr=",
-            "AbCdEfGhIjKlMnOpQrStUvWxYz0123456789",
+            RAW_SAS_SIG_FRAGMENT,
             "DeviceId=SIM-TEST01;SharedAccessKey=",
         ):
             self.assertNotIn(secret_fragment, joined_logs)

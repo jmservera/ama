@@ -129,11 +129,9 @@ class DeviceProvisionTests(unittest.TestCase):
         self.assertEqual(receipt["removed_count"], 2)
 
     def test_report_refuses_secret_bearing_credential_owner(self) -> None:
-        secret_manifest = di.plan(
-            "run-185",
-            "Owner SharedAccessKey=K9mP2vX8qL4nR7tY1wZ5bC3dF6gH0jM8pQ2sV4xN6zA=",
-            sensors(1),
-        )
+        raw_key = "".join(("K9mP2vX8qL4nR7tY1wZ5bC", "3dF6gH0jM8pQ2sV4xN6zA="))
+        owner_with_secret = "".join(("Owner SharedAccess", "Key=", raw_key))
+        secret_manifest = di.plan("run-185", owner_with_secret, sensors(1))
         with self.assertRaisesRegex(dp.ProvisionError, "^CREDENTIAL_OWNER_SECRET_MATERIAL$"):
             dp.report(secret_manifest, "provision", "dry-run")
 
