@@ -1,0 +1,75 @@
+{
+  "task_id": "2026-11-15-retrofit-technical-quality-wcag-231",
+  "task_slug": "retrofit-technical-quality-wcag-231",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/retrofit-technical-quality-wcag-231-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/retrofit-technical-quality-wcag-231-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/retrofit-technical-quality-wcag-231-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/retrofit-technical-quality-wcag-231-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/retrofit-technical-quality-wcag-231-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/retrofit-technical-quality-wcag-231-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "User requested an autonomous full RPI loop (Research, Plan, Plan Critique, Implement, Review) for GitHub issue #231 on branch feat/ux-231-retrofit-wcag targeting feat/demo-233-same-home-tensions-0825, using Focused validation tier and committing locally without pushing.",
+      "status": "confirmed",
+      "evidence": "Caller prompt in non-interactive CLI execution"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready. Scope WCAG 2.2 upgrades to technical-queue and quality-queue in role-screens.js, style.css, and test_technical_quality_screens_wcag.py while preserving exact pinned fields/titles and counted baseline guards.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/retrofit-technical-quality-wcag-231-research.md (C1-C16, W1)"
+    },
+    {
+      "decision": "Plan critique executed once (status: Complete, verdict: Revise with 0 Critical, 0 High, 3 Medium planner-owned findings PC-001, PC-002, PC-003). All three findings were applied directly to plan and phase details without requiring user decisions; plan finalized as ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/retrofit-technical-quality-wcag-231-plan-critique.md; .copilot-tracking/plans/2026-11-15/retrofit-technical-quality-wcag-231-plan.md"
+    },
+    {
+      "decision": "Implement completed across P01, P02, and P03 with all Focused-tier unit/guard suites, ruff, mypy, Chromium browser checks (including pinned axe 4.10.3 with zero violations), and refreshed web-design-guidelines passing.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-15/retrofit-technical-quality-wcag-231-changes.md"
+    },
+    {
+      "decision": "Post-implementation Review executed once (execution status: Complete; outcome: Defects found; assessed boundary: full task P01-P03 across role-screens.js, style.css, role_screens_browser_check.py, and test_technical_quality_screens_wcag.py). Production screens and browser checks have zero defects; RV-001 (Medium, json.dumps ensure_ascii=False in test_technical_quality_screens_wcag.py) is routed to a follow-up rpi-implement pass alongside low-severity follow-ups RV-002 and RV-003.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/retrofit-technical-quality-wcag-231-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Select a ranked follow-up work item to start a child automatic RPI loop in Research, Stop automatic session, or Switch to manual mode."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Resolve RV-001 (and RV-003 prose cleanup): pass ensure_ascii=False to json.dumps(tree) in test_technical_quality_screens_wcag.py so PC-002's Unicode em-dash regression check is active",
+      "rationale": "Ranked #1 for trivial 1-line implementation effort, immediate test-oracle integrity impact (closes RV-001), and KISS test-hygiene leverage.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/retrofit-technical-quality-wcag-231-review.md (RV-001, RV-003)"
+    },
+    {
+      "rank": 2,
+      "task": "Reconcile parent-branch resident-service-issues ('Routes to ask' region) and programme-queue write-control checks in specialist_keyboard_browser_check.py and atlas_tensions_browser_check.py",
+      "rationale": "Ranked #2 for small bounded effort, high CI/gate value (restores full-run green status across parent-branch browser harnesses after #1758), and harness-consistency leverage.",
+      "evidence": ".copilot-tracking/changes/2026-11-15/retrofit-technical-quality-wcag-231-changes.md; .copilot-tracking/reviews/logs/2026-11-15/retrofit-technical-quality-wcag-231-review.md"
+    },
+    {
+      "rank": 3,
+      "task": "Resolve RV-002: extend PAS 2035 qualityAcceptanceGap(r) independence check to compare accepted_by against defect.fixed_by as well as submitted_by",
+      "rationale": "Ranked #3 for compact helper update, domain safety/PAS 2035 independence value when remediating contractors differ from submitters, and single-responsibility domain-rule consolidation.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/retrofit-technical-quality-wcag-231-review.md (RV-002)"
+    },
+    {
+      "rank": 4,
+      "task": "Complete human assistive-technology and role-representative validation for #231 under #151 and #155",
+      "rationale": "Ranked #4 because it requires human AT/representative execution outside code changes, while carrying essential acceptance value before Issue #231 can close.",
+      "evidence": ".copilot-tracking/research/2026-11-15/retrofit-technical-quality-wcag-231-research.md (C10, C16); docs/reference/research/ux/wcag-conformance-baseline.md"
+    }
+  ]
+}

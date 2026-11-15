@@ -370,5 +370,5 @@ input[aria-invalid=true],select[aria-invalid=true],textarea[aria-invalid=true]{b
 .screen-record { content-visibility: auto; contain-intrinsic-size: auto 20rem; }
 [tabindex="-1"] { scroll-margin-top: var(--sp-4); }
 .screen-record[id], .screen-evidence h2[tabindex="-1"] { scroll-margin-top: var(--sp-5); }
-.screen-evidence td { font-variant-numeric: tabular-nums; }
-[tabindex="-1"]:focus { outline: var(--focus-w) solid var(--focus-ink); outline-offset: var(--focus-off); box-shadow: 0 0 0 var(--focus-off) var(--focus); }
+.screen-evidence th, .screen-evidence td { font-variant-numeric: tabular-nums; }
+[tabindex="-1"]:focus, .screen-record h2[tabindex="-1"]:focus-visible { outline: var(--focus-w) solid var(--focus-ink); outline-offset: var(--focus-off); box-shadow: 0 0 0 var(--focus-off) var(--focus); }
