@@ -5459,25 +5459,39 @@ chat-value ship test remain open.
 ### Affected-person challenge API and workbench (#220)
 
 `POST /api/cases/{id}/resident` reuses the existing authenticated resident action
-route for `challenge_open` and `challenge_resolve`. See the
+route for `challenge_open`, `challenge_update`, `challenge_reopen`,
+`challenge_escalate` and `challenge_resolve` across priority, `ai_task` and
+`form_staging` targets, while `POST /api/assistants/proposals/{tid}/challenge`
+handles `open`, `update`, `reopen`, `escalate` and `resolve` for SQLite
+assistant proposals with `revision` concurrency fencing. See the
 [core field and version contract](../core/README.md#version-bound-affected-person-challenges-220).
-The permitted case response includes `challenge_targets` and retained
-`affected_challenges`; neither is exposed without both existing resident-view
-and recorded-reason entitlements. Client actor/time overrides are rejected.
-SQL validates current identities, target/human-decision tokens and correction
-dependencies again at writer time. A saved operation whose acknowledgement
-cannot be projected/encoded is explicitly reported as HTTP 409 with
-`outcome: "committed"`; do not blindly retry it.
+Permitted case and assistant responses include `challenge_targets` /
+`affected_challenges` (or proposal `challenges`) together with
+`non_retaliation_assurance` and `hazard_clock_preserved: True`; challenge
+narratives are never exposed without both resident-view and recorded-reason
+entitlements, and sensor-withheld assistant views redact free-text challenge
+notes. Client actor/time overrides and forbidden adverse keys are rejected with
+HTTP 400. SQL validates current identities, target/human-decision tokens and
+correction dependencies again at writer time. A saved operation whose
+acknowledgement cannot be projected/encoded is explicitly reported as HTTP 409
+with `outcome: "committed"`; do not blindly retry it.
 
-The case workbench uses labelled native forms for supplied Digital or
-staff-recorded Phone/Letter/In person evidence, a named human owner, explanation,
-manual route, next update and terminal supplied resolution. It preserves unsaved
-drafts and their original version bindings across unrelated case refreshes,
-warns on navigation and confirms correction recording. Stale suggestions and
-historical human reviews have explicit text rather than colour-only status.
-No resident consent, refusal, sanction, remedy outcome, unrelated closure or
-safety-clock change is inferred; urgent safety intake must not wait for a
-challenge.
+The case workbench (`#affected-challenges` in `web/panels.js`) uses labelled
+native forms for supplied Digital or staff-recorded Phone, Letter, In person,
+Assisted visit and Trusted intermediary channels, direct resident or
+representative/nominee submission (`submitted_by` and optional
+`representative_ref`), an immediate safety-concern flag (`hazard_concern`), a
+named human owner, explanation, manual route, next update, terminal supplied
+resolution and resolved-challenge reopen (`#challenge-reopen-{id}`). It
+preserves unsaved drafts and their original version bindings across unrelated
+case refreshes, warns on navigation and confirms correction recording. Stale
+suggestions, historical human reviews and verified non-retaliation /
+safety-clock safeguards use explicit plain-language text rather than colour-only
+status. Raising, updating, reopening, escalating or resolving a challenge never
+lowers case priority, never infers consent, refusal, no-access, sanction or
+withdrawal, never closes unrelated work items, and never delays or pauses
+statutory or emergency safety clocks; urgent safety concerns route immediately
+without waiting for challenge review.
 
 History is paged in bounded windows of 50 with keyboard-operable Older/Newer
 controls and URL-bound page state. Every retained target and open or resolved

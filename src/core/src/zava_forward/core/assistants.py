@@ -15,7 +15,8 @@ import time
 import uuid
 from collections.abc import Mapping
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from copy import deepcopy
+from datetime import date, datetime, timezone
 from typing import Any
 
 from . import assistant_release as rel
@@ -23,7 +24,9 @@ from .ai import may_carry_captured_readings
 from .doc_controls import is_available_case_document
 from . import (
     ai_consumption,
+    challenges,
     continuity,
+    controls,
     monitoring_coverage,
     projection,
     rai_metrics,
@@ -137,6 +140,29 @@ WITHHELD_NOTE = (
     "Withheld: this note may refer to retained readings and monitoring consent is not granted now."
 )
 ROLE_WITHHELD_OUTPUT = dict(summary=projection.NOTE_HELD, findings=[], unknowns=[])
+ASSISTANT_CHALLENGE_ACTIONS = ("open", "update", "reopen", "escalate", "resolve")
+ASSISTANT_CHALLENGE_CHANNELS = (
+    "Digital", "Phone", "Letter", "In person", "Assisted visit", "Trusted intermediary"
+)
+ASSISTANT_CHALLENGE_SUBMITTERS = ("The resident", "Their representative", "Nominee")
+ASSISTANT_CHALLENGE_TARGETS = ("proposal", "source", "policy")
+ASSISTANT_CHALLENGE_RESOLUTIONS = ("Explanation recorded", "Correction recorded")
+TRANSIENT_VIEW_KEYS = (
+    "history_next_offset",
+    "history_count",
+    "display_state",
+    "stale",
+    "actionable",
+    "suspension",
+    "release_denial",
+    "epoch_current",
+    "relied_on",
+    "review_flag",
+    "sensor_withheld",
+    "role_withheld",
+    "non_retaliation_assurance",
+    "hazard_clock_preserved",
+)
 
 
 def _output_violates_visibility(output, withheld):
@@ -1809,10 +1835,15 @@ class Assistants:
     def _view(self, db, user, tid, history_offset=0):
         body = self._row(db, tid)
         c = self.authorize(db, user, body["capability"], body["case_id"])
+        viewer = self.authorize(db, user, body["capability"])
         current = self.snapshot(db, body["capability"], c)
-        body["stale"] = signature(current) != body["source_signature"]
-        newer = body["stale"] and scheduling_signature(current) == scheduling_signature(
-            body["snapshot"]
+        source_stale = signature(current) != body["source_signature"]
+        challenged_stale = bool(body.get("challenged_stale"))
+        body["stale"] = source_stale or challenged_stale
+        newer = (
+            source_stale
+            and not challenged_stale
+            and scheduling_signature(current) == scheduling_signature(body["snapshot"])
         )
         history_limit = 50
         query = "SELECT body FROM assistant_events WHERE task_id=? ORDER BY at DESC,id DESC"
@@ -1859,6 +1890,25 @@ class Assistants:
             body["display_state"] = "release-denied"
         elif not body["epoch_current"]:
             body["display_state"] = "epoch-stale"
+        raw_challenges = body.get("challenges")
+        if isinstance(raw_challenges, list) and raw_challenges:
+            flagged = any(r.get("hazard_referral") is not None for r in raw_challenges)
+            routed = any(
+                (r.get("hazard_referral") or {}).get("routed_hazard_index") is not None
+                for r in raw_challenges
+            )
+            body["hazard_clock_preserved"] = True
+            body["non_retaliation_assurance"] = challenges.build_non_retaliation_assurance(
+                hazard_concern=flagged, independent_hazard_routed=routed
+            )
+            if not projection.appointment_evidence_visible(viewer):
+                body.pop("challenges", None)
+                body["provenance"] = [
+                    dict(ev, note=projection.NOTE_HELD)
+                    if ev.get("kind") == "challenge" and ev.get("note")
+                    else ev
+                    for ev in body["provenance"]
+                ]
         withheld = self._withhold_sensors(db, body)
         if withheld:
             body["provenance"] = self._scrub_events(body["provenance"])
@@ -1905,7 +1955,8 @@ class Assistants:
             )
         )
         conflict_current = (
-            body["stale"]
+            source_stale
+            and not challenged_stale
             and live_conflicts
             and _sensor_bucket_key(current) == _sensor_bucket_key(body["snapshot"])
             and body["epoch_current"]
@@ -1970,6 +2021,27 @@ class Assistants:
         for key in ("verification", "review"):
             if (body.get(key) or {}).get("note"):
                 body[key] = dict(body[key], note=WITHHELD_NOTE)
+        if isinstance(body.get("challenges"), list):
+            scrubbed = []
+            for rec in body["challenges"]:
+                item = deepcopy(rec)
+                for field in ("request", "explanation"):
+                    if item.get(field):
+                        item[field] = WITHHELD_NOTE
+                if isinstance(item.get("resolution"), dict) and item["resolution"].get("explanation"):
+                    item["resolution"] = dict(item["resolution"], explanation=WITHHELD_NOTE)
+                if isinstance(item.get("updates"), list):
+                    item["updates"] = [
+                        dict(u, detail=WITHHELD_NOTE) if u.get("detail") else u
+                        for u in item["updates"]
+                    ]
+                if isinstance(item.get("previous_resolutions"), list):
+                    item["previous_resolutions"] = [
+                        dict(pr, explanation=WITHHELD_NOTE) if pr.get("explanation") else pr
+                        for pr in item["previous_resolutions"]
+                    ]
+                scrubbed.append(item)
+            body["challenges"] = scrubbed
         body["sensor_withheld"] = True
         return True
 
@@ -3406,17 +3478,7 @@ class Assistants:
                 if action == "verify"
                 else ("rejected" if action == "reject" else "accepted")
             )
-            for key in (
-                "history_next_offset",
-                "history_count",
-                "display_state",
-                "stale",
-                "actionable",
-                "suspension",
-                "release_denial",
-                "epoch_current",
-                "relied_on",
-            ):
+            for key in TRANSIENT_VIEW_KEYS:
                 stored.pop(key, None)
             if action != "verify" and (task.get("envelope") or {}).get("meter_root"):
                 try:
@@ -3458,6 +3520,453 @@ class Assistants:
                 financial_attribution=stored.get("financial_attribution"),
             )
         return self.detail(user, tid)
+
+    def _authorize_challenge_staff(self, db, user, case_id):
+        row = db.execute("SELECT body FROM staff WHERE email=?", (user.get("email", "").lower(),)).fetchone()
+        current = json.loads(row[0]) if row else None
+        if (not current or current.get("role") != user.get("role") or current.get("disabled")
+                or current.get("active") is False
+                or current.get("email", "").lower() != user.get("email", "").lower()):
+            raise PermissionError("Current staff role has changed or been revoked.")
+        if not projection.appointment_evidence_visible(current):
+            raise PermissionError(
+                "Challenge records need current resident-workflow and recorded-reason rights."
+            )
+        for field in ("case_ids", "areas"):
+            values = current.get(field)
+            if values is not None and (
+                not isinstance(values, list) or len(values) > 1000
+                or any(not isinstance(x, str) or not 1 <= len(x) <= 128 for x in values)
+            ):
+                raise PermissionError("Current staff scope is malformed; resolve it manually.")
+        ids = current.get("case_ids")
+        if ids is not None and case_id not in ids:
+            raise PermissionError("Case is outside your current scope.")
+        crow = db.execute("SELECT body FROM cases WHERE id=?", (case_id,)).fetchone()
+        if crow is None:
+            raise KeyError(case_id)
+        case = json.loads(crow[0])
+        areas = current.get("areas")
+        if areas is not None and case.get("home", {}).get("area") not in areas:
+            raise PermissionError("Case area is outside your current scope.")
+        return current, case
+
+    @staticmethod
+    def _challenge_staff_identity(person):
+        return dict(email=person["email"], name=person["name"], role=person["role"],
+                    code=person.get("code", ""))
+
+    @staticmethod
+    def _iso_date(value, label):
+        if not isinstance(value, str):
+            raise ValueError(f"Enter {label} as YYYY-MM-DD.")
+        cleaned = value.strip()
+        try:
+            return date.fromisoformat(cleaned).isoformat()
+        except ValueError:
+            raise ValueError(f"Enter {label} as YYYY-MM-DD.") from None
+
+    @staticmethod
+    def _submitter_meta(case, body):
+        submitted_by = controls.choice(
+            body.get("submitted_by", "The resident"),
+            ASSISTANT_CHALLENGE_SUBMITTERS,
+            "who submitted the challenge",
+        )
+        raw_ref = body.get("representative_ref")
+        if submitted_by == "The resident":
+            if raw_ref is not None and str(raw_ref).strip():
+                raise ValueError(
+                    "Do not supply representative_ref when the resident submitted directly."
+                )
+            return dict(submitted_by=submitted_by, representative_ref=None,
+                        representative_authority_status="Direct resident submission")
+        rep_ref = controls.evidence_text(raw_ref, "the representative or nominee reference")
+        auth_status = "Unverified representative; challenge accepted without inferring consent"
+        raw_auths = case.get("representative_authorities")
+        if isinstance(raw_auths, dict):
+            versions = raw_auths.get(rep_ref)
+            if isinstance(versions, list) and versions and isinstance(versions[-1], dict):
+                state = str(versions[-1].get("status") or "Recorded")
+                if state in ("Confirmed", "Verified"):
+                    auth_status = f"Verified representative authority ({rep_ref})"
+        elif isinstance(raw_auths, list):
+            for auth in raw_auths:
+                if isinstance(auth, dict) and rep_ref in (
+                    auth.get("id"), auth.get("representative"), auth.get("evidence_ref"),
+                    auth.get("representative_ref"),
+                ):
+                    state = str(auth.get("status") or "Recorded")
+                    if state in ("Confirmed", "Verified"):
+                        auth_status = f"Verified representative authority ({rep_ref})"
+                    break
+        return dict(submitted_by=submitted_by, representative_ref=rep_ref,
+                    representative_authority_status=auth_status)
+
+    def challenge(self, user, tid, body):
+        if not self.sql:
+            raise ValueError(self.disabled())
+        if not isinstance(body, dict):
+            raise ValueError("Challenge request must be a JSON object.")
+        controls.refuse_bulk(body)
+        challenges.reject_adverse_mapping(body, "Assistant proposal challenge")
+        sub_action = body.get("action")
+        if sub_action not in ASSISTANT_CHALLENGE_ACTIONS:
+            raise ValueError("Choose open, update, reopen, escalate or resolve.")
+        revision = body.get("revision")
+        if type(revision) is not int or revision < 1:
+            raise ValueError("Supply the integer proposal revision.")
+        schemas = {
+            "open": (
+                {"action", "revision", "target_kind", "channel", "source", "request",
+                 "explanation", "owner", "non_digital_route", "next_update"},
+                {"submitted_by", "representative_ref", "hazard_concern", "hazard_intake"},
+            ),
+            "update": (
+                {"action", "revision", "id", "expected_version", "detail", "source", "next_update"},
+                {"channel", "submitted_by", "representative_ref", "hazard_concern", "hazard_intake"},
+            ),
+            "reopen": (
+                {"action", "revision", "id", "expected_version", "reason", "source", "next_update"},
+                {"channel", "submitted_by", "representative_ref", "owner",
+                 "hazard_concern", "hazard_intake"},
+            ),
+            "escalate": (
+                {"action", "revision", "id", "expected_version", "reason", "escalated_to",
+                 "next_update"},
+                set(),
+            ),
+            "resolve": (
+                {"action", "revision", "id", "expected_version", "resolution", "resolution_ref",
+                 "explanation", "next_update"},
+                set(),
+            ),
+        }
+        req_keys, opt_keys = schemas[sub_action]
+        if not (req_keys <= set(body) <= req_keys | opt_keys):
+            raise ValueError(
+                "Supply only the permitted assistant challenge fields; server fields are automatic."
+            )
+        flag = body.get("hazard_concern", False)
+        if not isinstance(flag, bool):
+            raise ValueError("hazard_concern must be true or false.")
+        intake = body.get("hazard_intake")
+        if intake is not None and not flag:
+            raise ValueError("Set hazard_concern to true when supplying hazard_intake.")
+        if intake is not None:
+            if not isinstance(intake, dict):
+                raise ValueError("hazard_intake must be an object.")
+            in_req = {"category", "priority", "source", "aware_at"}
+            if not (in_req <= set(intake) <= in_req | {"note"}):
+                raise ValueError(
+                    "Supply category, priority, source, aware_at and optional note for hazard_intake."
+                )
+            challenges.reject_adverse_mapping(intake, "Assistant challenge hazard_intake")
+        with self.transaction() as db:
+            pre = self._row(db, tid)
+            actor, case_snapshot = self._authorize_challenge_staff(db, user, pre["case_id"])
+            if revision != pre["revision"]:
+                raise ConflictError(tid)
+            owner_person = None
+            if "owner" in body and body["owner"] is not None:
+                orow = db.execute(
+                    "SELECT body FROM staff WHERE email=?",
+                    (str(body["owner"]).strip().lower(),),
+                ).fetchone()
+                owner_person = json.loads(orow[0]) if orow else None
+                if (not owner_person or owner_person.get("disabled")
+                        or owner_person.get("active") is False
+                        or not projection.appointment_evidence_visible(owner_person)):
+                    raise ValueError(
+                        "Choose an active named owner with resident-workflow and recorded-reason rights."
+                    )
+            escalated_person = None
+            if sub_action == "escalate":
+                erow = db.execute(
+                    "SELECT body FROM staff WHERE email=?",
+                    (str(body["escalated_to"]).strip().lower(),),
+                ).fetchone()
+                escalated_person = json.loads(erow[0]) if erow else None
+                if (not escalated_person or escalated_person.get("disabled")
+                        or escalated_person.get("active") is False
+                        or not projection.appointment_evidence_visible(escalated_person)):
+                    raise ValueError(
+                        "Choose an active escalation owner with resident-workflow and recorded-reason rights."
+                    )
+            existing_list = pre.get("challenges") or []
+            if sub_action != "open":
+                cid_req = controls.text(body.get("id"), "a recorded challenge ID", 24)
+                exp_ver = body.get("expected_version")
+                if type(exp_ver) is not int or exp_ver < 1:
+                    raise ValueError("Supply the integer expected_version for the challenge.")
+                matched = next((r for r in existing_list if r.get("id") == cid_req), None)
+                if matched is None:
+                    raise ValueError("Choose a recorded challenge on this assistant proposal.")
+                if exp_ver != matched.get("version"):
+                    raise ConflictError(cid_req)
+                if sub_action == "reopen" and matched.get("status") != "Resolved":
+                    raise ValueError("Only a resolved challenge can be reopened.")
+                if sub_action in ("update", "escalate", "resolve") and matched.get("status") == "Resolved":
+                    raise ValueError("Reopen a resolved challenge before updating, escalating or resolving it.")
+            if sub_action == "open":
+                target_kind = controls.choice(
+                    body.get("target_kind"), ASSISTANT_CHALLENGE_TARGETS, "proposal, source or policy"
+                )
+                channel = controls.choice(
+                    body.get("channel"), ASSISTANT_CHALLENGE_CHANNELS, "a challenge channel"
+                )
+                submitter = self._submitter_meta(case_snapshot, body)
+                source = controls.evidence_text(body.get("source"), "the challenge evidence reference")
+                request_txt = controls.text(body.get("request"), "the person's supplied request", 300)
+                explanation_txt = controls.text(body.get("explanation"), "the plain-language explanation", 300)
+                non_digital = controls.text(body.get("non_digital_route"), "the accessible non-digital route", 240)
+                next_upd = self._iso_date(body.get("next_update"), "the next update date")
+            elif sub_action == "update":
+                detail_txt = controls.text(body.get("detail"), "the challenge update detail", 300)
+                source = controls.evidence_text(body.get("source"), "the update evidence reference")
+                next_upd = self._iso_date(body.get("next_update"), "the next update date")
+                upd_channel = (
+                    controls.choice(body.get("channel"), ASSISTANT_CHALLENGE_CHANNELS, "a challenge channel")
+                    if body.get("channel") is not None else None
+                )
+                upd_submitter = (
+                    self._submitter_meta(case_snapshot, body)
+                    if ("submitted_by" in body or "representative_ref" in body) else None
+                )
+            elif sub_action == "reopen":
+                reason_txt = controls.text(body.get("reason"), "the reason to reopen", 300)
+                source = controls.evidence_text(body.get("source"), "the reopen evidence reference")
+                next_upd = self._iso_date(body.get("next_update"), "the next update date")
+                reopen_channel = (
+                    controls.choice(body.get("channel"), ASSISTANT_CHALLENGE_CHANNELS, "a challenge channel")
+                    if body.get("channel") is not None else None
+                )
+                reopen_submitter = (
+                    self._submitter_meta(case_snapshot, body)
+                    if ("submitted_by" in body or "representative_ref" in body) else None
+                )
+            elif sub_action == "escalate":
+                reason_txt = controls.text(body.get("reason"), "the escalation reason", 300)
+                next_upd = self._iso_date(body.get("next_update"), "the next update date")
+            else:
+                res_outcome = controls.choice(
+                    body.get("resolution"), ASSISTANT_CHALLENGE_RESOLUTIONS, "the human resolution"
+                )
+                res_ref = controls.evidence_text(body.get("resolution_ref"), "the resolution evidence reference")
+                explanation_txt = controls.text(body.get("explanation"), "the resolution explanation", 300)
+                next_upd = self._iso_date(body.get("next_update"), "the next update date")
+        case_id = pre["case_id"]
+        capability = pre["capability"]
+        with self.store.lock:
+            before_case = deepcopy(self.store._case(case_id))
+            self.store._ranks = None
+            before_ranking = self.store._ranking()
+        routed_idx = None
+        if intake is not None:
+            routed_idx = self.store.raise_hazard(
+                actor,
+                case_id,
+                intake["category"],
+                intake["priority"],
+                str(intake.get("note") or ""),
+                dict(source=intake["source"], aware_at=intake["aware_at"]),
+            )
+        with self.store.lock:
+            after_case = deepcopy(self.store._case(case_id))
+            self.store._ranks = None
+            after_ranking = self.store._ranking()
+            challenges.assert_no_adverse_challenge_effects(
+                before_case,
+                after_case,
+                allow_new_independent_hazard=routed_idx is not None,
+            )
+            b_rank = before_ranking.get(case_id)
+            a_rank = after_ranking.get(case_id)
+            lowered = b_rank is not None and a_rank is not None and a_rank["rank"] > b_rank["rank"]
+            if lowered or (routed_idx is None and after_ranking != before_ranking):
+                raise challenges.ChallengeSafeguardError(
+                    "Assistant proposal challenge lowered or altered case priority ranking."
+                )
+        at_iso = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        actor_ident = self._challenge_staff_identity(actor)
+        with self.transaction() as db:
+            stored = self._row(db, tid)
+            if revision != stored["revision"]:
+                raise ConflictError(tid)
+            for key in TRANSIENT_VIEW_KEYS:
+                stored.pop(key, None)
+            items = list(stored.get("challenges") or [])
+            if sub_action == "open":
+                assert owner_person is not None
+                target_id = (
+                    tid if target_kind == "proposal"
+                    else (f"case:{case_id}" if target_kind == "source" else f"rule:{RULE_VERSION}")
+                )
+                record = dict(
+                    id=controls.next_id(items, "ACH"),
+                    version=1,
+                    status="Open",
+                    proposal_id=tid,
+                    proposal_kind="assistant_task",
+                    capability=capability,
+                    case_id=case_id,
+                    source_signature=stored["source_signature"],
+                    target=dict(kind=target_kind, id=target_id, version=stored["source_signature"]),
+                    channel=channel,
+                    source=source,
+                    request=request_txt,
+                    explanation=explanation_txt,
+                    owner=self._challenge_staff_identity(owner_person),
+                    non_digital_route=non_digital,
+                    next_update=next_upd,
+                    recorded_by=actor_ident,
+                    opened_at=at_iso,
+                    updated_at=at_iso,
+                    updates=[],
+                    escalations=[],
+                    resolution=None,
+                    hazard_referral=None,
+                    **submitter,
+                )
+                items.append(record)
+                event_note = request_txt
+            else:
+                cid_req = str(body["id"]).strip()
+                record = next(r for r in items if r["id"] == cid_req)
+                if record["version"] != body["expected_version"]:
+                    raise ConflictError(cid_req)
+                record["version"] += 1
+                record["updated_at"] = at_iso
+                record["next_update"] = next_upd
+                if sub_action == "update":
+                    if upd_channel is not None:
+                        record["channel"] = upd_channel
+                    if upd_submitter is not None:
+                        record.update(upd_submitter)
+                    record.setdefault("updates", []).append(dict(
+                        kind="update", detail=detail_txt, source=source,
+                        recorded_by=actor_ident, recorded_at=at_iso, next_update=next_upd,
+                        channel=record["channel"], submitted_by=record.get("submitted_by", "The resident"),
+                    ))
+                    event_note = detail_txt
+                elif sub_action == "reopen":
+                    prior = record.get("resolution")
+                    if isinstance(prior, dict):
+                        record.setdefault("previous_resolutions", []).append(deepcopy(prior))
+                        if prior.get("outcome") == "Correction recorded":
+                            record["prior_correction_preserved"] = True
+                    record["resolution"] = None
+                    record["status"] = "Open"
+                    if reopen_channel is not None:
+                        record["channel"] = reopen_channel
+                    if reopen_submitter is not None:
+                        record.update(reopen_submitter)
+                    if owner_person is not None:
+                        record["owner"] = self._challenge_staff_identity(owner_person)
+                    record.setdefault("updates", []).append(dict(
+                        kind="reopen", detail=reason_txt, source=source,
+                        recorded_by=actor_ident, recorded_at=at_iso, next_update=next_upd,
+                        channel=record["channel"], submitted_by=record.get("submitted_by", "The resident"),
+                    ))
+                    event_note = reason_txt
+                elif sub_action == "escalate":
+                    assert escalated_person is not None
+                    esc_ident = self._challenge_staff_identity(escalated_person)
+                    record["status"] = "Escalated"
+                    record["owner"] = esc_ident
+                    record.setdefault("escalations", []).append(dict(
+                        reason=reason_txt, escalated_to=esc_ident,
+                        recorded_by=actor_ident, recorded_at=at_iso, next_update=next_upd,
+                    ))
+                    event_note = reason_txt
+                else:
+                    record["status"] = "Resolved"
+                    record["resolution"] = dict(
+                        outcome=res_outcome, reference=res_ref, explanation=explanation_txt,
+                        recorded_by=actor_ident, recorded_at=at_iso, next_update=next_upd,
+                    )
+                    if res_outcome == "Correction recorded":
+                        stored["challenged_stale"] = dict(
+                            challenge_id=record["id"],
+                            target_kind=record["target"]["kind"],
+                            source_signature=stored["source_signature"],
+                            recorded_at=at_iso,
+                            recorded_by=actor["email"],
+                            reference=res_ref,
+                        )
+                    event_note = explanation_txt
+            if flag:
+                existing_ref = record.get("hazard_referral")
+                if existing_ref is None:
+                    existing_ref = dict(
+                        status="referred_on_receipt",
+                        received_at=at_iso,
+                        route="emergency_or_statutory_hazard_triage",
+                        independent_intake=True,
+                        waits_for_challenge_review=False,
+                        hazard_clock_preserved=True,
+                    )
+                else:
+                    existing_ref = dict(
+                        existing_ref,
+                        independent_intake=True,
+                        waits_for_challenge_review=False,
+                        hazard_clock_preserved=True,
+                    )
+                if routed_idx is not None:
+                    existing_ref["routed_hazard_index"] = routed_idx
+                record["hazard_referral"] = existing_ref
+            ref_now = record.get("hazard_referral")
+            record["safeguards"] = dict(challenges.SAFEGUARDS)
+            record["hazard_clock_preserved"] = True
+            record["non_retaliation_assurance"] = challenges.build_non_retaliation_assurance(
+                hazard_concern=ref_now is not None,
+                independent_hazard_routed=(ref_now or {}).get("routed_hazard_index") is not None,
+            )
+            stored["challenges"] = items
+            state = stored.get("state", "ready")
+            for key in ("state", "fence", "owner", "lease_until", "attempts", "not_before", "revision"):
+                stored.pop(key, None)
+            res = db.execute(
+                "UPDATE assistant_tasks SET body=?,state=?,revision=revision+1 WHERE id=? AND revision=?",
+                (canonical(stored), state, tid, revision),
+            )
+            if res.rowcount != 1:
+                raise ConflictError(tid)
+            self.event(
+                db, tid, kind="challenge", action=sub_action, challenge_id=record["id"],
+                actor=actor["email"], note=event_note,
+                non_retaliation_assurance="verified", hazard_clock_preserved=True,
+            )
+            updated_revision = revision + 1
+            challenged_stale_flag = bool(stored.get("challenged_stale"))
+            projected_challenges = deepcopy(items)
+        self.store.audit(
+            actor["email"],
+            f"assistant_challenge_{sub_action}",
+            case_id,
+            f"{tid[:12]} {record['id']}; non_retaliation_assurance=verified; hazard_clock_preserved=true",
+        )
+        if user.get("role") in REGISTRY[capability]["roles"]:
+            return self.detail(user, tid)
+        any_flagged = any(r.get("hazard_referral") is not None for r in projected_challenges)
+        any_routed = any(
+            (r.get("hazard_referral") or {}).get("routed_hazard_index") is not None
+            for r in projected_challenges
+        )
+        return dict(
+            id=tid,
+            capability=capability,
+            case_id=case_id,
+            revision=updated_revision,
+            stale=challenged_stale_flag,
+            actionable=False if challenged_stale_flag else None,
+            challenges=projected_challenges,
+            hazard_clock_preserved=True,
+            non_retaliation_assurance=challenges.build_non_retaliation_assurance(
+                hazard_concern=any_flagged, independent_hazard_routed=any_routed
+            ),
+        )
 
     def _worker(self):
         while not self.stop_event.is_set():

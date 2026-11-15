@@ -30,8 +30,8 @@ ACCESS_CODES = ("None", "Unknown", "Large print", "Phone only", "Plain language"
 RESIDENT_ACTIONS = ("scope_record", "safe_contact_record", "representative_record", "disclosure_check",
                     "decision_record", "service_open", "service_update", "service_close",
                     "service_reopen", "service_reassign", "update_record", "remedy_confirm", "remedy_update",
-                    "challenge_open", "challenge_update", "challenge_escalate", "challenge_resolve",
-                    "service_forward", "service_supersede_authorize",
+                    "challenge_open", "challenge_update", "challenge_reopen", "challenge_escalate",
+                    "challenge_resolve", "service_forward", "service_supersede_authorize",
                     "nomination_record", "nomination_correct", "nomination_review", "tenure_intake",
                     "tenure_legal_position", "tenure_verify", "tenure_question_pack",
                     "tenure_question_pack_review",
@@ -83,8 +83,16 @@ MANAGERS = ("Retrofit Programme Manager", "Programme Support Officer")
 FORMAL_ROUTES = ("Complaint", "Independent review")
 FOLLOWUP_ACTIONS = ("service_open", "service_update", "service_close", "service_reopen", "service_reassign",
                     "update_record", "remedy_confirm", "remedy_update", "challenge_open",
-                    "challenge_update", "challenge_escalate", "challenge_resolve",
-                    "service_supersede_authorize")
+                    "challenge_update", "challenge_reopen", "challenge_escalate",
+                    "challenge_resolve", "service_supersede_authorize")
+CHALLENGE_CHANNELS = ("Digital", "Phone", "Letter", "In person", "Assisted visit",
+                      "Trusted intermediary")
+CHALLENGE_SUBMITTERS = ("The resident", "Their representative", "Nominee")
+NON_RETALIATION_ACTIONS = frozenset({
+    "challenge_open", "challenge_update", "challenge_reopen", "challenge_escalate",
+    "challenge_resolve", "nomination_record", "nomination_correct", "nomination_review",
+    "service_open", "service_reopen",
+})
 
 
 class ResidentCommittedError(RuntimeError):
@@ -571,8 +579,47 @@ def _digest(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
+def _is_replaying_sql(store):
+    holder = getattr(store, "local", None)
+    ctx = getattr(holder, "resident_validation", None) if holder is not None else None
+    return bool(ctx and ctx.get("validating"))
+
+
+def _challenge_has_correction(record):
+    return ((record.get("resolution") or {}).get("outcome") == "Correction recorded"
+            or record.get("prior_correction_preserved") is True)
+
+
 def priority_binding(rec):
     """Bind original suggestion inputs separately from the retained human disposition."""
+    kind = rec.get("kind")
+    if kind == "ai_task":
+        prov = rec.get("provenance")
+        raw_hashes = prov.get("source_hashes") if isinstance(prov, dict) else None
+        original = {key: rec.get(key) for key in (
+            "id", "kind", "task", "created", "source", "model", "prompt_version",
+            "policy_version", "case_ids", "ai_output", "workflow_output", "sources", "release",
+        )}
+        original["source_hashes"] = deepcopy(raw_hashes if isinstance(raw_hashes, dict) else {})
+        decision = {
+            "status": deepcopy(rec.get("status")),
+            "resolved_by": deepcopy(rec.get("resolved_by")),
+            "resolved_at": deepcopy(rec.get("resolved_at")),
+            "reason": deepcopy(rec.get("reviewer_reason")
+                               if "reviewer_reason" in rec else rec.get("reason")),
+            "reviewer_action": deepcopy(rec.get("reviewer_action")),
+            "override_text": deepcopy(rec.get("override_text")),
+        }
+        return _digest(original), _digest(decision), decision
+    if kind == "form_staging":
+        original = {key: deepcopy(rec.get(key)) for key in (
+            "id", "kind", "case_id", "schema_id", "schema_version",
+            "schema_digest", "source", "candidates",
+        )}
+        decision = deepcopy(rec.get("human_decision") or {
+            "status": "Proposed", "resolved_by": None, "resolved_at": None, "reason": None,
+        })
+        return _digest(original), _digest(decision), decision
     original = {key: rec.get(key) for key in (
         "id", "created", "source", "model", "prompt_version", "policy_version",
         "source_versions", "case_ids", "items", "workflow_items", "ai_output", "release",
@@ -583,18 +630,120 @@ def priority_binding(rec):
     return _digest(original), _digest(decision), decision
 
 
-def _priority_record(store, rec_id):
+def _form_staging_records(case, catalog_only=False):
+    out = []
+    if not isinstance(case, dict):
+        return out
+    case_id = case.get("id")
+    drafts = case.get("form_reviews") or case.get("form_drafts") or []
+    held_drafts = {
+        hold.get("draft_id")
+        for hold in (case.get("finance_decision_holds") or [])
+        if isinstance(hold, dict)
+        and hold.get("status") == "Held"
+        and isinstance(hold.get("draft_id"), str)
+    }
+    linked_batches = set()
+    for draft in drafts:
+        if not isinstance(draft, dict) or draft.get("id") in held_drafts:
+            continue
+        for row in (draft.get("fields") or {}).values():
+            ev = (row or {}).get("evidence") or {}
+            if isinstance(ev.get("batch_id"), str):
+                linked_batches.add(ev["batch_id"])
+    challenged_ids = {
+        (ch.get("target") or {}).get("id")
+        for ch in (case.get("affected_challenges") or [])
+        if isinstance(ch, dict)
+    } | {
+        ch.get("proposal_id")
+        for ch in (case.get("affected_challenges") or [])
+        if isinstance(ch, dict)
+    }
+    for batch in case.get("form_staging") or []:
+        if not isinstance(batch, dict) or not isinstance(batch.get("id"), str):
+            continue
+        batch_id = batch["id"]
+        prop_id = f"form:{batch_id}"
+        if catalog_only and batch_id not in linked_batches and prop_id not in challenged_ids:
+            continue
+        verified_by = None
+        verified_at = None
+        for draft in drafts:
+            if not isinstance(draft, dict) or draft.get("id") in held_drafts:
+                continue
+            for row in (draft.get("fields") or {}).values():
+                ev = (row or {}).get("evidence") or {}
+                if ev.get("batch_id") == batch_id:
+                    ver = ev.get("verification") or {}
+                    verified_by = ver.get("verified_by") or row.get("updated_by") or draft.get("recorded_by")
+                    verified_at = ver.get("verified_at") or row.get("updated_at") or draft.get("recorded_at")
+                    break
+            if verified_by:
+                break
+        src = batch.get("source") or {}
+        src_ver = (f"{src.get('id')}:{src.get('version')}:{src.get('content_sha256')}"
+                   if src.get("id") else None)
+        pol_ver = (f"{batch.get('schema_id')}@{batch.get('schema_version')}:{batch.get('schema_digest')}"
+                   if batch.get("schema_id") else None)
+        proc = batch.get("processing") or {}
+        out.append(dict(
+            id=prop_id, kind="form_staging", case_id=case_id,
+            case_ids=[case_id] if case_id else [], schema_id=batch.get("schema_id"),
+            schema_version=batch.get("schema_version"), schema_digest=batch.get("schema_digest"),
+            source=proc.get("mode") or "ai", model=proc.get("model"),
+            prompt_version=proc.get("prompt_version"), policy_version=pol_ver,
+            source_versions={case_id: src_ver} if case_id and src_ver else {},
+            candidates=deepcopy(batch.get("candidates") or []),
+            resolved_by=verified_by,
+            human_decision=dict(
+                status="Accepted" if verified_by else "Proposed",
+                resolved_by=verified_by, resolved_at=verified_at, reason=None,
+            ),
+        ))
+    return out
+
+
+def _priority_record(store, rec_id, case=None):
     if not isinstance(rec_id, str) or not rec_id or len(rec_id) > 64:
-        raise ValueError("Choose a recorded priority suggestion for this case.")
+        raise ValueError("Choose a recorded suggestion for this case.")
+    if case is not None and rec_id.startswith("form:"):
+        found = next((r for r in _form_staging_records(case) if r["id"] == rec_id), None)
+        if not found:
+            raise ValueError("Choose a recorded suggestion for this case.")
+        return found
     if hasattr(store, "db"):
         with store.dblock:
             row = store.db.execute("SELECT body FROM recommendations WHERE id=?", (rec_id,)).fetchone()
         rec = json.loads(row[0]) if row else None
     else:
         rec = next((r for r in store.data["recommendations"] if r["id"] == rec_id), None)
-    if not rec or rec.get("kind") == "ai_task":
-        raise ValueError("Choose a recorded priority suggestion for this case.")
+    if not rec:
+        raise ValueError("Choose a recorded suggestion for this case.")
     return rec
+
+
+def _source_version_for(rec, case_id):
+    if rec.get("kind") == "ai_task":
+        prov = rec.get("provenance")
+        hashes = prov.get("source_hashes") if isinstance(prov, dict) else None
+        return hashes.get(case_id) if isinstance(hashes, dict) else None
+    sv = rec.get("source_versions")
+    return sv.get(case_id) if isinstance(sv, dict) else None
+
+
+def _policy_version_for(rec):
+    if rec.get("kind") == "ai_task":
+        return rec.get("policy_version") or rec.get("prompt_version")
+    return rec.get("policy_version")
+
+
+def _policy_id_for(rec):
+    if rec.get("kind") == "ai_task":
+        return f"ai-task:{rec.get('task') or 'task'}"
+    if rec.get("kind") == "form_staging":
+        return f"form-schema:{rec.get('schema_id') or 'form'}"
+    return "priority-ranking"
 
 
 def _dependency(rec, kind, case_id):
@@ -605,14 +754,15 @@ def _dependency(rec, kind, case_id):
             raise ValueError("This suggestion has no recorded human decision yet. Challenge the suggestion instead.")
         return dict(kind=kind, id=rec["id"], version=priority_binding(rec)[1])
     if kind == "source":
-        version = (rec.get("source_versions") or {}).get(case_id)
+        version = _source_version_for(rec, case_id)
         if not version:
             raise ValueError("This older suggestion has no recorded source version. Challenge the suggestion instead.")
         return dict(kind=kind, id=case_id, version=version)
     if kind == "policy":
-        if not rec.get("policy_version"):
+        pol_version = _policy_version_for(rec)
+        if not pol_version:
             raise ValueError("This suggestion has no recorded policy version. Challenge the suggestion instead.")
-        return dict(kind=kind, id="priority-ranking", version=rec["policy_version"])
+        return dict(kind=kind, id=_policy_id_for(rec), version=pol_version)
     raise ValueError("Choose proposal, source, policy or human_decision.")
 
 
@@ -624,7 +774,7 @@ def priority_correction_lookup(store, sql_current=False):
         rows = ((case["id"], record["id"], record["target"])
                 for case in store.cases.values()
                 for record in case.get("affected_challenges", [])
-                if (record.get("resolution") or {}).get("outcome") == "Correction recorded")
+                if _challenge_has_correction(record))
     lookup = {}
     for case_id, record_id, target in rows:
         key = (target["kind"], target["id"], target["version"])
@@ -654,12 +804,17 @@ def challenge_references_visible(store, user):
 
 def priority_challenge_state(store, rec, corrections=None):
     """Derive correction effects without rewriting original proposals or human decisions."""
-    if rec.get("kind") == "ai_task":
-        return dict(stale=False, review_stale=False, challenge_ids=[])
     dependencies = [_dependency(rec, "proposal", None)]
+    if rec.get("kind") == "ai_task":
+        prov = rec.get("provenance")
+        raw_hashes = prov.get("source_hashes") if isinstance(prov, dict) else None
+        source_map = raw_hashes if isinstance(raw_hashes, dict) else {}
+    else:
+        sv = rec.get("source_versions")
+        source_map = sv if isinstance(sv, dict) else {}
     dependencies += [dict(kind="source", id=cid, version=version)
-                     for cid, version in (rec.get("source_versions") or {}).items()]
-    if rec.get("policy_version"):
+                     for cid, version in source_map.items() if version]
+    if _policy_version_for(rec):
         dependencies.append(_dependency(rec, "policy", None))
     if rec.get("resolved_by"):
         dependencies.append(_dependency(rec, "human_decision", None))
@@ -676,19 +831,37 @@ def _priority_includes_case(rec, case_id):
             or any(item["case_id"] == case_id for item in rec.get("final_items") or []))
 
 
+def _catalog_row(store, rec, case_id, corrections):
+    original, decision_version, decision = priority_binding(rec)
+    kind = rec.get("kind")
+    pkind = kind if kind in ("ai_task", "form_staging") else "priority"
+    return dict(
+        proposal_id=rec["id"], proposal_kind=pkind, proposal_version=original,
+        decision_version=decision_version, human_decision=decision,
+        source_version=_source_version_for(rec, case_id),
+        policy_version=_policy_version_for(rec), model=rec.get("model"),
+        prompt_version=rec.get("prompt_version"), source=rec.get("source"),
+        hazard_clock_preserved=True,
+        non_retaliation_assurance=challenges.build_non_retaliation_assurance(),
+        **priority_challenge_state(store, rec, corrections),
+    )
+
+
 def challenge_catalog(store, case_id):
     out = []
     corrections = priority_correction_lookup(store)
+    ai_rows = []
     for rec in store.data["recommendations"]:
-        if rec.get("kind") == "ai_task" or not _priority_includes_case(rec, case_id):
+        if not _priority_includes_case(rec, case_id):
             continue
-        original, decision_version, decision = priority_binding(rec)
-        out.append(dict(proposal_id=rec["id"], proposal_version=original,
-                        decision_version=decision_version, human_decision=decision,
-                        source_version=(rec.get("source_versions") or {}).get(case_id),
-                        policy_version=rec.get("policy_version"), model=rec.get("model"),
-                        prompt_version=rec.get("prompt_version"), source=rec.get("source"),
-                        **priority_challenge_state(store, rec, corrections)))
+        if rec.get("kind") == "ai_task":
+            ai_rows.append(_catalog_row(store, rec, case_id, corrections))
+        else:
+            out.append(_catalog_row(store, rec, case_id, corrections))
+    out.extend(ai_rows)
+    case = store.cases.get(case_id)
+    for form_rec in _form_staging_records(case, catalog_only=True):
+        out.append(_catalog_row(store, form_rec, case_id, corrections))
     return out
 
 
@@ -774,9 +947,25 @@ def _operation(store, user, case_id, body):
                 raise PermissionError("Reload your current staff identity before recording this step.")
             c = store._case(case_id)
             before = deepcopy(c)
+            before_ranking = store._ranking() if body["action"] in NON_RETALIATION_ACTIONS else None
             if sql:
                 context["rowversion"] = store._rv[case_id]
             detail = getattr(store, "_res_" + body["action"])(actor, c, context["body"])
+            if before_ranking is not None:
+                store._ranks = None
+                after_ranking = store._ranking()
+                added_hazard = len(c.get("hazards", [])) > len(before.get("hazards", []))
+                before_entry = before_ranking.get(case_id)
+                after_entry = after_ranking.get(case_id)
+                lowered = (
+                    before_entry is not None
+                    and after_entry is not None
+                    and after_entry["rank"] > before_entry["rank"]
+                )
+                if lowered or (not added_hazard and after_ranking != before_ranking):
+                    raise challenges.ChallengeSafeguardError(
+                        "Challenge or correction operation lowered or altered case priority ranking."
+                    )
             store.audit(actor["email"], f"resident_{body['action']}", case_id, detail)
             saving = True
             store.save()
@@ -1152,6 +1341,7 @@ class ResidentDecisionMixin:
         })
         if body["hazard_concern"] is not False:
             raise ValueError("Use the independent hazard intake now (/api/cases/{case_id}/hazard-raise), not the nomination queue. Existing hazard service owns emergency response and clocks.")
+        before_nom = deepcopy(c)
         record = dict(
             id=f"NOM-{uuid.uuid4().hex}", version=1,
             case_id=c["id"], kind=k.choice(body["kind"], ("Officer nomination", "Self-referral"), "the referral kind"),
@@ -1174,6 +1364,9 @@ class ResidentDecisionMixin:
             corrections=[],
         )
         c.setdefault("nomination_records", []).append(record)
+        challenges.assert_no_adverse_challenge_effects(
+            before_nom, c, allowed_case_keys=("nomination_records",)
+        )
         return f"{record['id']} unverified intake recorded"
 
     def _res_nomination_correct(self, user, c, body):
@@ -1181,6 +1374,7 @@ class ResidentDecisionMixin:
             "case_id", "id", "expected_version", "reported_subject_ref", "account",
             "source", "channel", "next_update", "challenge_id",
         })
+        before_nom = deepcopy(c)
         record = k.find(c.get("nomination_records", []), body["id"], "nomination")
         _version(body, record)
         _owner_rights(self, user, record["owner"])
@@ -1202,12 +1396,16 @@ class ResidentDecisionMixin:
             review.setdefault("stale_from_version", correction["version"])
         record.update(version=correction["version"], next_update=next_update,
                       review_status="Re-review required; no priority or consent change")
+        challenges.assert_no_adverse_challenge_effects(
+            before_nom, c, allowed_case_keys=("nomination_records",)
+        )
         return f"{record['id']} correction version {record['version']} recorded"
 
     def _res_nomination_review(self, user, c, body):
         _intake_fields(user, c, body, {
             "case_id", "id", "expected_version", "outcome", "rationale", "evidence_ref", "next_update",
         })
+        before_nom = deepcopy(c)
         record = k.find(c.get("nomination_records", []), body["id"], "nomination")
         _version(body, record)
         reviews = record.setdefault("reviews", [])
@@ -1225,6 +1423,9 @@ class ResidentDecisionMixin:
         ))
         record.update(next_update=_day(body["next_update"]),
                       review_status=f"Human review recorded: {outcome}; no priority, consent or sanction change")
+        challenges.assert_no_adverse_challenge_effects(
+            before_nom, c, allowed_case_keys=("nomination_records",)
+        )
         return f"{record['id']} version {record['version']} human review recorded"
 
     def _res_tenure_intake(self, user, c, body):
@@ -1518,19 +1719,142 @@ class ResidentDecisionMixin:
         return (f"tenure report {body['report_version']} review trigger {number} resolved; "
                 "re-verify and redraft any question pack; case-wide hold remains")
 
+    def _challenge_submitter_info(self, c, body):
+        raw = body.get("submitted_by")
+        submitted_by = ("The resident" if raw is None
+                        else k.choice(raw, CHALLENGE_SUBMITTERS, "who supplied the challenge"))
+        rep_raw = body.get("representative_ref")
+        if submitted_by == "The resident":
+            if rep_raw not in (None, ""):
+                raise ValueError(
+                    "Representative reference applies only when a representative or nominee "
+                    "submits for the resident."
+                )
+            return dict(submitted_by="The resident")
+        rep_ref = k.text(rep_raw, "the representative or nominee reference", 100)
+        raw_auths = c.get("representative_authorities")
+        auth_status = "Unverified representative; challenge accepted without inferring consent"
+        if isinstance(raw_auths, dict):
+            versions = raw_auths.get(rep_ref)
+            if isinstance(versions, list) and versions and isinstance(versions[-1], dict):
+                latest = str(versions[-1].get("status") or "")
+                if latest in ("Confirmed", "Verified"):
+                    auth_status = f"Verified representative authority ({rep_ref})"
+        elif isinstance(raw_auths, list):
+            for item in raw_auths:
+                if isinstance(item, dict) and rep_ref in (
+                    item.get("representative_ref"), item.get("id"), item.get("evidence_ref")
+                ):
+                    latest = str(item.get("status") or "")
+                    if latest in ("Confirmed", "Verified"):
+                        auth_status = f"Verified representative authority ({rep_ref})"
+                    break
+        return dict(
+            submitted_by=submitted_by,
+            representative_ref=rep_ref,
+            representative_authority_status=auth_status,
+        )
+
+    def _route_challenge_hazard(self, user, c, record, body):
+        concern = body.get("hazard_concern", False)
+        if type(concern) is not bool:
+            raise ValueError("State whether a safety or hazard concern was mentioned (true or false).")
+        intake = body.get("hazard_intake")
+        if intake is not None and not isinstance(intake, dict):
+            raise ValueError("Supply hazard_intake as an object when routing safety intake.")
+        if intake is not None and not concern:
+            raise ValueError("Set hazard_concern=True when supplying immediate hazard_intake details.")
+        if not concern:
+            return False, False
+        existing = record.get("hazard_referral")
+        if existing is None:
+            record["hazard_referral"] = dict(
+                status="referred_on_receipt",
+                to=deepcopy(record["owner"]),
+                received_at=_time(),
+                independent_intake=True,
+                independent_route=f"/api/cases/{c['id']}/hazard-raise",
+                waits_for_challenge_review=False,
+                hazard_clock_preserved=True,
+            )
+        else:
+            existing.update(
+                status="referred_on_receipt",
+                to=deepcopy(record["owner"]),
+                independent_intake=True,
+                independent_route=f"/api/cases/{c['id']}/hazard-raise",
+                waits_for_challenge_review=False,
+                hazard_clock_preserved=True,
+            )
+        if intake is None:
+            return True, False
+        req_keys = {"category", "priority", "source", "aware_at"}
+        opt_keys = {"note"}
+        if not (req_keys <= set(intake) <= req_keys | opt_keys):
+            raise ValueError(
+                "Supply category, priority, source, aware_at and optional note for hazard_intake."
+            )
+        challenges.reject_adverse_mapping(intake, "Challenge hazard_intake")
+        from . import hazard, workflows
+        cat = k.choice(intake.get("category"), workflows.HAZARD_CATEGORIES, "a safety category")
+        prio = k.choice(intake.get("priority"), workflows.HAZARD_PRIORITIES, "emergency or significant")
+        source = k.evidence_text(intake.get("source"), "the safety report source")
+        aware = workflows._hazard_time(intake.get("aware_at"), "the awareness time", actual=True)
+        note = k.text(intake.get("note"), "", required=False)
+        h = dict(
+            category=cat, priority=prio, noticed=aware[:10], aware_at=aware, source=source,
+            recorded_at=workflows._now(), referred=None, repaired=None, released=False, job="",
+            owner=user["name"], sender=hazard.identity(user), raised_by=user["name"],
+            raised_by_email=user["email"], raised_identity=hazard.identity(user), note=note,
+            hold=dict(scope="Home", case_id=c["id"], status="Active",
+                      accountable_role="Building Safety Liaison", decision=None),
+        )
+        detail = f"Home retrofit hold; independent challenge safety intake {record['id']}; {source}"
+        h.setdefault("history", []).append(dict(
+            kind="safety_raised", at=workflows._now(), actor=hazard.identity(user),
+            detail=detail, emergency=prio == "Emergency",
+        ))
+        c.setdefault("hazards", []).append(h)
+        record["hazard_referral"]["routed_hazard_index"] = len(c["hazards"]) - 1
+        if not _is_replaying_sql(self):
+            if prio == "Emergency":
+                self.audit(
+                    user["email"],
+                    "safety_emergency",
+                    c["id"],
+                    "Reported emergency: use the existing hazard service immediately; "
+                    "retrofit and AI gates must not delay referral",
+                )
+            self.audit(user["email"], "safety_raised", c["id"], detail)
+        return True, True
+
+    @staticmethod
+    def _stamp_challenge_assurance(record, *, independent_routed=False):
+        referral = record.get("hazard_referral")
+        flagged = referral is not None
+        routed = bool(independent_routed or (referral or {}).get("routed_hazard_index") is not None)
+        record["safeguards"] = dict(challenges.SAFEGUARDS)
+        record["hazard_clock_preserved"] = True
+        record["non_retaliation_assurance"] = challenges.build_non_retaliation_assurance(
+            hazard_concern=flagged,
+            independent_hazard_routed=routed,
+        )
+
     def _res_challenge_open(self, user, c, body):
         from . import projection
         if not projection.appointment_evidence_visible(user):
             raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
         challenges.reject_adverse_mapping(body, "Challenge open request")
-        fields = {"action", "proposal_id", "proposal_version", "decision_version", "target_kind",
-                  "channel", "source", "request", "explanation", "owner", "non_digital_route", "next_update"}
-        if set(body) != fields:
+        required = {"action", "proposal_id", "proposal_version", "decision_version", "target_kind",
+                    "channel", "source", "request", "explanation", "owner", "non_digital_route",
+                    "next_update"}
+        optional = {"submitted_by", "representative_ref", "hazard_concern", "hazard_intake"}
+        if not (required <= set(body) <= required | optional):
             raise ValueError("Supply only the challenge fields. Identity, time, decisions and dependencies are recorded by the server.")
         before = deepcopy(c)
-        rec = _priority_record(self, body.get("proposal_id"))
+        rec = _priority_record(self, body.get("proposal_id"), case=c)
         if not _priority_includes_case(rec, c["id"]):
-            raise ValueError("Choose a priority suggestion that includes this case.")
+            raise ValueError("Choose a suggestion that includes this case.")
         original, decision_version, decision = priority_binding(rec)
         if body["proposal_version"] != original or body["decision_version"] != decision_version:
             raise ValueError("The suggestion or its human review changed. Reload before recording the challenge.")
@@ -1538,47 +1862,102 @@ class ResidentDecisionMixin:
         owner = _person(self, body["owner"])
         if not projection.appointment_evidence_visible(owner):
             raise ValueError("Choose a named owner with resident-workflow and recorded-reason rights.")
+        submitter = self._challenge_submitter_info(c, body)
+        pkind = rec.get("kind") if rec.get("kind") in ("ai_task", "form_staging") else "priority"
         record = dict(id=k.next_id(c.get("affected_challenges", []), "CH"),
                       version=1, status="Open", target=target, proposal_id=rec["id"],
-                      proposal_version=original, human_decision=decision,
+                      proposal_kind=pkind, proposal_version=original, human_decision=decision,
                       decision_version=decision_version, owner=_identity(owner),
-                      channel=k.choice(body["channel"], ("Digital", "Phone", "Letter", "In person"), "the supplied challenge channel"),
+                      channel=k.choice(body["channel"], CHALLENGE_CHANNELS, "the supplied challenge channel"),
                       source=k.text(body["source"], "the supplied challenge reference", 300),
                       request=k.text(body["request"], "the person's supplied request", 300),
                       explanation=k.text(body["explanation"], "the permitted plain-language explanation", 300),
                       non_digital_route=k.text(body["non_digital_route"], "an accessible phone, letter or in-person route", 300),
                       next_update=_day(body["next_update"]), recorded_by=_identity(user), at=_time(),
                       ai_details={key: deepcopy(rec.get(key)) for key in ("source", "model", "prompt_version", "policy_version", "source_versions")},
-                      resolution=None)
+                      resolution=None, **submitter)
+        _, routed = self._route_challenge_hazard(user, c, record, body)
+        self._stamp_challenge_assurance(record, independent_routed=routed)
         c.setdefault("affected_challenges", []).append(record)
-        challenges.assert_no_adverse_challenge_effects(before, c)
-        return f"{record['id']} supplied challenge recorded"
+        challenges.assert_no_adverse_challenge_effects(before, c, allow_new_independent_hazard=routed)
+        return (f"{record['id']} supplied challenge recorded; "
+                "non_retaliation_assurance=verified; hazard_clock_preserved=true")
 
     def _res_challenge_update(self, user, c, body):
         from . import projection
         if not projection.appointment_evidence_visible(user):
             raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
         challenges.reject_adverse_mapping(body, "Challenge update request")
-        fields = {"action", "id", "expected_version", "channel", "source", "request", "explanation", "next_update"}
-        if set(body) != fields:
+        required = {"action", "id", "expected_version", "channel", "source", "request",
+                    "explanation", "next_update"}
+        optional = {"submitted_by", "representative_ref", "hazard_concern", "hazard_intake"}
+        if not (required <= set(body) <= required | optional):
             raise ValueError("Supply only the challenge update fields. Identity, time and original submissions stay preserved.")
         before = deepcopy(c)
         record = k.find(c.get("affected_challenges", []), body["id"], "challenge")
         _version(body, record)
-        if record["status"] not in ("Open", "Escalated"):
-            raise ValueError("This challenge already has its recorded resolution. Open a new challenge if fresh evidence arises.")
+        if record["status"] not in ("Open", "Escalated", "Reopened"):
+            raise ValueError("This challenge already has its recorded resolution. Reopen or open a challenge if fresh evidence arises.")
+        submitter = self._challenge_submitter_info(c, body)
         next_version = record["version"] + 1
         next_due = _day(body["next_update"])
         entry = dict(version=next_version,
-                     channel=k.choice(body["channel"], ("Digital", "Phone", "Letter", "In person"), "the supplied challenge channel"),
+                     channel=k.choice(body["channel"], CHALLENGE_CHANNELS, "the supplied challenge channel"),
                      source=k.text(body["source"], "the supplied challenge update reference", 300),
                      request=k.text(body["request"], "the person's supplied challenge update", 300),
                      explanation=k.text(body["explanation"], "the permitted plain-language explanation", 300),
-                     next_update=next_due, recorded_by=_identity(user), at=_time())
+                     next_update=next_due, recorded_by=_identity(user), at=_time(), **submitter)
+        _, routed = self._route_challenge_hazard(user, c, record, body)
         record.setdefault("updates", []).append(entry)
         record.update(version=next_version, next_update=next_due)
-        challenges.assert_no_adverse_challenge_effects(before, c)
-        return f"{record['id']} supplied challenge update recorded"
+        self._stamp_challenge_assurance(record, independent_routed=routed)
+        challenges.assert_no_adverse_challenge_effects(before, c, allow_new_independent_hazard=routed)
+        return (f"{record['id']} supplied challenge update recorded; "
+                "non_retaliation_assurance=verified; hazard_clock_preserved=true")
+
+    def _res_challenge_reopen(self, user, c, body):
+        from . import projection
+        if not projection.appointment_evidence_visible(user):
+            raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
+        challenges.reject_adverse_mapping(body, "Challenge reopen request")
+        required = {"action", "id", "expected_version", "channel", "source", "request",
+                    "explanation", "owner", "next_update"}
+        optional = {"submitted_by", "representative_ref", "hazard_concern", "hazard_intake"}
+        if not (required <= set(body) <= required | optional):
+            raise ValueError("Supply only the challenge reopen fields. Identity, time and prior resolutions stay preserved.")
+        before = deepcopy(c)
+        record = k.find(c.get("affected_challenges", []), body["id"], "challenge")
+        _version(body, record)
+        if record["status"] != "Resolved" or record.get("resolution") is None:
+            raise ValueError("Only a resolved challenge can be reopened.")
+        owner = _person(self, body["owner"])
+        if not projection.appointment_evidence_visible(owner):
+            raise ValueError("Choose a named owner with resident-workflow and recorded-reason rights.")
+        submitter = self._challenge_submitter_info(c, body)
+        prior_corrected = _challenge_has_correction(record)
+        prior_resolution = deepcopy(record["resolution"])
+        next_version = record["version"] + 1
+        next_due = _day(body["next_update"])
+        new_owner = _identity(owner)
+        entry = dict(version=next_version,
+                     channel=k.choice(body["channel"], CHALLENGE_CHANNELS, "the supplied challenge channel"),
+                     source=k.text(body["source"], "the supplied reopen evidence reference", 300),
+                     request=k.text(body["request"], "the person's supplied reopen request", 300),
+                     explanation=k.text(body["explanation"], "the permitted plain-language explanation", 300),
+                     owner=new_owner, next_update=next_due, recorded_by=_identity(user), at=_time(),
+                     **submitter)
+        record.setdefault("previous_resolutions", []).append(prior_resolution)
+        record.setdefault("reopens", []).append(entry)
+        record.update(status="Reopened", version=next_version, owner=new_owner,
+                      next_update=next_due, resolution=None,
+                      prior_correction_preserved=prior_corrected)
+        if (record.get("hazard_referral") or {}).get("status") == "referred_on_receipt":
+            record["hazard_referral"]["to"] = deepcopy(new_owner)
+        _, routed = self._route_challenge_hazard(user, c, record, body)
+        self._stamp_challenge_assurance(record, independent_routed=routed)
+        challenges.assert_no_adverse_challenge_effects(before, c, allow_new_independent_hazard=routed)
+        return (f"{record['id']} supplied challenge reopened; "
+                "non_retaliation_assurance=verified; hazard_clock_preserved=true")
 
     def _res_challenge_escalate(self, user, c, body):
         from . import projection
@@ -1591,7 +1970,7 @@ class ResidentDecisionMixin:
         before = deepcopy(c)
         record = k.find(c.get("affected_challenges", []), body["id"], "challenge")
         _version(body, record)
-        if record["status"] not in ("Open", "Escalated"):
+        if record["status"] not in ("Open", "Escalated", "Reopened"):
             raise ValueError("This challenge already has its recorded resolution and cannot be escalated.")
         owner = _person(self, body["owner"])
         if not projection.appointment_evidence_visible(owner):
@@ -1607,8 +1986,12 @@ class ResidentDecisionMixin:
                      next_update=next_due, recorded_by=_identity(user), at=_time())
         record.setdefault("escalations", []).append(entry)
         record.update(status="Escalated", version=next_version, owner=new_owner, next_update=next_due)
+        if (record.get("hazard_referral") or {}).get("status") == "referred_on_receipt":
+            record["hazard_referral"]["to"] = deepcopy(new_owner)
+        self._stamp_challenge_assurance(record)
         challenges.assert_no_adverse_challenge_effects(before, c)
-        return f"{record['id']} supplied challenge escalated"
+        return (f"{record['id']} supplied challenge escalated; "
+                "non_retaliation_assurance=verified; hazard_clock_preserved=true")
 
     def _res_challenge_resolve(self, user, c, body):
         from . import projection
@@ -1620,7 +2003,7 @@ class ResidentDecisionMixin:
         before = deepcopy(c)
         record = k.find(c.get("affected_challenges", []), body["id"], "challenge")
         _version(body, record)
-        if record["status"] not in ("Open", "Escalated"):
+        if record["status"] not in ("Open", "Escalated", "Reopened"):
             raise ValueError("This challenge already has its recorded resolution. Its evidence cannot be replaced.")
         _owner_rights(self, user, record["owner"])
         resolution = dict(outcome=k.choice(body["resolution"], ("Correction recorded", "Explanation recorded"), "the supplied resolution"),
@@ -1628,8 +2011,10 @@ class ResidentDecisionMixin:
                           explanation=k.text(body["explanation"], "the permitted resolution explanation", 300),
                           next_update=_day(body["next_update"]), recorded_by=_identity(user), at=_time())
         record.update(status="Resolved", version=record["version"] + 1, resolution=resolution)
+        self._stamp_challenge_assurance(record)
         challenges.assert_no_adverse_challenge_effects(before, c)
-        return f"{record['id']} supplied resolution recorded"
+        return (f"{record['id']} supplied resolution recorded; "
+                "non_retaliation_assurance=verified; hazard_clock_preserved=true")
 
     def _res_scope_record(self, user, c, body):
         if _inventory_managed(c):
@@ -1741,6 +2126,7 @@ class ResidentDecisionMixin:
         return f"scope revision {context['revision']}: {status} decision v{len(versions)}"
 
     def _res_service_open(self, user, c, body):
+        before_srv = deepcopy(c)
         route = k.choice(body.get("route"), ROUTES, "the route")
         owners = []
         for key, label in (("service_owner", "who deals with it"), ("redress_owner", "who owns the redress")):
@@ -1785,6 +2171,9 @@ class ResidentDecisionMixin:
                    review_decision_version=body.get("review_decision_version") if route == "Independent review" else None,
                    history=[])
         c.setdefault("service_requests", []).append(req)
+        challenges.assert_no_adverse_challenge_effects(
+            before_srv, c, allowed_case_keys=("service_requests",)
+        )
         return f"{req['id']} {route} opened"
 
     def _res_service_forward(self, user, c, body):
@@ -1972,6 +2361,7 @@ class ResidentDecisionMixin:
         return f"{req['id']} {key} response responsibility reassigned; remedy unchanged"
 
     def _res_service_reopen(self, user, c, body):
+        before_srv = deepcopy(c)
         req = k.find(c.get("service_requests", []), body.get("id"), "request")
         _version(body, req)
         if req["status"] != "Closed":
@@ -1983,6 +2373,9 @@ class ResidentDecisionMixin:
         note = k.text(body.get("note"), "why the response is reopened")
         req["status"] = "Open"
         self._response_event(req, user, note)
+        challenges.assert_no_adverse_challenge_effects(
+            before_srv, c, allowed_case_keys=("service_requests",)
+        )
         return f"{req['id']} response reopened; remedy unchanged"
 
     def _res_update_record(self, user, c, body):

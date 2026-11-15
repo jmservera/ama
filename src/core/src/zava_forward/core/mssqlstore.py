@@ -228,9 +228,11 @@ class MssqlStore(SqlStore):
             CROSS APPLY OPENJSON(c.body, '$.affected_challenges')
             WITH (id NVARCHAR(64) '$.id',
                   target NVARCHAR(MAX) '$.target' AS JSON,
-                  outcome NVARCHAR(64) '$.resolution.outcome') AS ch
+                  outcome NVARCHAR(64) '$.resolution.outcome',
+                  preserved BIT '$.prior_correction_preserved') AS ch
             WHERE c.priority_correction = 1
-              AND ch.outcome COLLATE Latin1_General_100_BIN2 = 'Correction recorded'
+              AND (ch.outcome COLLATE Latin1_General_100_BIN2 = 'Correction recorded'
+                   OR ch.preserved = 1)
         """).fetchall()
         return [(cid, rid, json.loads(target)) for cid, rid, target in rows]
 

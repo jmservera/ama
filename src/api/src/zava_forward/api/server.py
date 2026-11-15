@@ -1558,6 +1558,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, app.assistants.review(
                         u, parts[3], body.get("action"), body.get("revision"), body.get("note", ""),
                         body.get("output"), body.get("source_verified", False)))
+                if len(parts) == 5 and parts[:3] == ["api", "assistants", "proposals"] and parts[4] == "challenge":
+                    return self._json(200, app.assistants.challenge(u, parts[3], body))
                 if url.path == "/api/time/acknowledge":
                     ver = app.time.acknowledge(u)
                     s.audit(u["email"], "time_notice_acknowledged", "-", f"notice {ver}")

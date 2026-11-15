@@ -524,6 +524,14 @@ def review(store, user, rec_id, action, reason="", text=None):
             if repaired is not None:
                 return _record_view(store, user, repaired)
             raise ValueError("This AI output has already been reviewed.")
+        from . import resident_decisions
+        if action != "reject" and resident_decisions.priority_challenge_state(
+                store, rec,
+                resident_decisions.priority_correction_lookup(store, sql_current=hasattr(store, "db")))["stale"]:
+            raise PermissionError(
+                "A supplied correction affects this suggestion. Owner: its reviewer. "
+                "Create a fresh suggestion or use the manual route."
+            )
         if action != "reject" and store.continuity_suspension(rec["task"]):
             raise PermissionError(store.continuity_block(rec["task"]))
         if action != "reject" and rec["source"] == "ai":
