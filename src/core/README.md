@@ -5183,39 +5183,64 @@ Metadata and linkable hashes are not anonymous; DPO retention review is still ne
 
 ### Data protection register and dispatch gate (#121)
 
-`data_protection` is a reference-only, model-free module (no SQL, no storage).
-`register_report(env)` lists eight data classes (constructed fixtures, staff and
-tenant identities, review records, raw document bytes, prompts/outputs/citations,
-audit, telemetry) with purpose, audience, storage and provider-copy position, and
-which approvals are still missing. Approvals are references read from
-`DP_<CLASS>_<GATE>_REF` (gates: `LAWFUL_BASIS`, `ART9`, `RETENTION`, `ERASURE`,
-`TRANSFER`, `NECESSITY`); `SYNTH-` references never count and values are never
-echoed. `model_dispatch(class_id, env, derivative)` permits only constructed
-fixtures by default, denies actual classes until their references exist, and
-refuses intact raw documents unless a `reviewed_redacted` derivative is named;
-every denial returns a manual path. `validate_task_payload` enforces declared
-field names, types and lengths for the three regulatory tasks and reports
-dropped names only. `rights_status` computes the one-calendar-month due date
-and state of logged requests in memory. It sets no retention period, records no
-lawful basis and verifies no DPO or Legal approval. It is not wired to any live
-model call or rights log, so the #121 acceptance criteria stay unmet.
+`data_protection` defines the whole-system RAI processing and retention inventory,
+minimum-necessary AI task manifests, intact attachment dispatch gate and
+persisted statutory rights-request ledger (`Refs #121`).
+
+* `register_report(env)` maps ten data classes: one constructed class
+  (`fixture_resident` under `subject_population="constructed_resident_fixture"`)
+  and nine actual personal-data or processing classes (`staff_identity`,
+  `tenant_identity`, `review_record`, `future_real_resident`, `raw_document`,
+  `prompt_output`, `audit_ledger`, `telemetry`, `provider_retained_copy`),
+  keeping current staff/tenant identities and review records strictly separate
+  from constructed resident fixtures and future real resident data. It reports
+  `subject_populations`, `whole_system_coverage` across inputs, raw
+  document/image bytes, prompts/outputs/citations, reviewer identity, audit,
+  telemetry/tokens, provider processing and provider retained copies, and
+  `hosting_region_vs_inference_residency`
+  (`uk_hosting_does_not_prove_uk_inference_residency: True`). Approvals are
+  references read from `DP_<CLASS>_<GATE>_REF` (`LAWFUL_BASIS`, `ART9`,
+  `RETENTION`, `ERASURE`, `TRANSFER`, `NECESSITY`); `SYNTH-` tokens never count,
+  values are never echoed, and `dpo_reviewed` stays `False`.
+* `TASKS` declares `purpose`, `audience`, `permitted_fields` (with `fields`
+  alias mapping each field to `(type, max_length)`), `prohibited` and
+  `necessity` across whole-system AI tasks (`rule_lookup`, `check_explain`,
+  `alert_triage`, `agent_chat`, `look_at_attachment`, `intake_summary`,
+  `case_brief`, `read_document`, `funding_draft`, `priority`).
+  `validate_task_payload` and `model_dispatch` strip undeclared and
+  special-category fields, reject empty or disallowed payloads, and set
+  `user_permission_establishes_necessity=False` so user permission never
+  establishes task necessity or bypasses field/length/special-category checks.
+* `dispatch_attachment_to_model` and `model_dispatch("raw_document", ...)`
+  enforce that permission to upload, store or download
+  (`storage_permission_granted=True`) never approves sending intact document or
+  image bytes to AI (`storage_approves_ai_dispatch=False`). Dispatch requires
+  either a human-reviewed `reviewed_redacted` derivative (`redaction_reviewer_id`
+  and `redaction_review_id`, non-synthetic and non-automated) or an explicitly
+  scoped non-synthetic necessity approval (`scoped_necessity_ref` or validated
+  `necessity_exception`), failing closed without fallback rescue and preserving
+  `manual_path`.
+* `RightsRequestLedger` (`record_rights_request`, `log_rights_action`,
+  `answer_rights_request`, `rights_status`) persists statutory rights requests
+  across `Store` (`live.json`), `SqlStore` (`meta` document `"rights_requests"`),
+  and atomic JSON files, alongside in-memory row lists. It records timezone-aware
+  receipt timestamps, one-calendar-month statutory deadlines (`due_date`),
+  `locate`/`export`/`erase` action logs and `subject_key`-free metadata audit
+  entries, while keeping local store deletion (`local_deleted`) strictly
+  separate from external model-provider erasure
+  (`provider_erasure_confirmed=False`).
 
 `GET /api/data-protection` (any signed-in staff role, read-only, no body
 accepted) returns `register_report(os.environ)` so owners and auditors can see
 which approvals are missing; reference values are never echoed and
 `dpo_reviewed` stays false.
 
-Slice 3 wires the gate into the model transport (`ai.Ai`). `dispatch_hold`
-reads `ZF_DATA_PROCESSING`: unset or `constructed` (the development path)
-changes nothing; any other value, including a typo, means actual processing,
-so `Ai.run` (class `prompt_output`), `Ai.look_at` (class `raw_document`, intact
-bytes, no derivative path yet) and a backstop in `Ai._request` refuse the call
-until the class has its non-synthetic references. The user sees the template or
-"file is stored" text plus the manual path. The default is constructed-only, so
-the control depends on operators setting the mode before any actual data is
-processed; it is not proof that none is. `Ai.evidence` and the chat model in
-`src/agents` are covered only by the `_request` backstop where they use it.
-No rights log is persisted.
+`dispatch_hold` and `document_model_hold` wire the gate into `ai.Ai` via
+`ZF_DATA_PROCESSING` (unset or `constructed` keeps constructed fixture flows
+unchanged; any other value, including a typo, activates actual-processing holds
+across `Ai.run`, `Ai.look_at` and the `Ai._request` transport backstop). Formal
+DPO and Legal sign-off of lawful basis, retention schedule, processor/transfer
+terms and live rights procedures remains an open human governance gate (`Refs #121`).
 
 ### Offline regulatory consumption (2026-10-27, #208)
 
