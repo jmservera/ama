@@ -129,7 +129,7 @@ class ConceptualFigureTests(unittest.TestCase):
         abstract = " ".join(abstract.split())
         normalized = " ".join(narrative.split())
 
-        self.assertIn("My experience with this case", abstract)
+        self.assertIn("a replacement I could not use", abstract)
         self.assertIn("I could inspect completed issues", normalized)
         self.assertIn("I selected the case after encountering", normalized)
         self.assertNotRegex(

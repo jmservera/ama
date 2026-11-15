@@ -1,9 +1,10 @@
 \subsection{Case rival-explanation register}\label{app:rivals}
 
-The main interpretation is in Section~\ref{sec:threats}. The register preserves
-recorded rivals separately from untested alternatives. A limit is not grounds
-for ruling an explanation out. Score/deployment correspondence remains
-unverified (Section~\ref{sec:audittrail}).
+Section~\ref{sec:threats} discusses the main competing explanations.
+The first table lists explanations supported by case records; the second
+lists plausible alternatives that still need testing. Limited evidence
+leaves an explanation open. The link between the assessed release and the
+failed deployment also remains unverified (Section~\ref{sec:audittrail}).
 
 \begin{table}[!htbp]
 \centering\footnotesize
@@ -66,11 +67,12 @@ analysis distinguishing inherited debt from introduced faults. \\
 
 \subsection{Candidate-mechanism evidence audits}\label{app:mechanismaudit}
 
-These are operational boundaries for this paper, not validated necessary and
-sufficient conditions for all agentic development. The indicators are already reported in
-Table~\ref{tab:mechanisms}, Table~\ref{tab:audittrail} and the case chronology; they are not repeated here. Experimental implications
-state what evidence would discriminate an explanation; the five-arm experiment
-does not manipulate the five candidates separately.
+These definitions specify how the paper uses each candidate mechanism.
+Their applicability to other agentic-development settings remains untested.
+Tables~\ref{tab:mechanisms} and \ref{tab:audittrail} report the case indicators.
+For each mechanism below, the experimental implication describes evidence
+that could distinguish it from competing explanations. The five-arm
+experiment does not test the mechanisms separately.
 
 \subsubsection{Specification inflation}
 
@@ -250,8 +252,9 @@ outcomes the ratio is undefined; report the total cost and zero count.
 
 \subsection{Consolidation step prompt}\label{app:prompt}
 
-Verbatim frozen v4 prompt from execution source \sourceref{R31}, not the
-amended study's approved prompt. The archived bytes are preserved unchanged
+The verbatim frozen v4 prompt comes from execution source \sourceref{R31}.
+It records that historical version; the amended study uses a later prompt.
+The archived bytes are preserved unchanged
 (digest \sourceref{R35}).
 Display wrapping does not alter its text. Braces mark runner parameters.
 
@@ -279,14 +282,15 @@ the cumulative net difference is
 =\delta\frac{N(N-1)}{2}-kN.
 \label{eq:costprojection}
 \end{equation}
-The first term is the assumed gross avoidable burden of omitting
-consolidation; the second is the investment to avoid it. A positive
-difference means A costs more under these assumptions, not measured savings.
+The first term adds up the assumed extra implementation cost without
+consolidation. The second subtracts the consolidation investment.
+A positive difference means A costs more under these assumptions.
+No measured saving is implied.
 For $k>0$ and $\delta>0$, the first cycle count with $\Delta C(N)\geq0$ is
 $N_{\mathrm{BE}}=\lceil1+2k/\delta\rceil$; when $\delta=0$, the investment never pays back in
-this credit-only model. Real trajectories need not follow a linear premium,
-and B can retain debt too: $\delta$ is a relative gap, not A's absolute
-debt or a claim that B is debt-free.
+this credit-only model. Actual cost differences may grow nonlinearly, and B can retain debt too.
+The parameter $\delta$ describes how the cost gap between A and B grows;
+it does not measure either arm's total debt.
 
 \begin{figure}[!htbp]
 \centering
@@ -328,9 +332,9 @@ Assumed premium increase $\delta$ & 10 cycles & 20 cycles & 40 cycles \\
 
 These settings preserve the earlier numerical proposal behind
 Section~\ref{sec:futureexperiment}. All task scales, thresholds, allocations
-and analysis choices below await a new design review, feasibility estimate,
-spending approval and prospective registration. They neither amend the
-completed study nor guarantee that longer tasks will exhibit decay.
+and analysis choices below need a new design review, feasibility estimate,
+spending approval and prospective registration. The completed study remains
+unchanged. A longer task could still show stable retention.
 
 \paragraph{Longer trajectories and greater coupling.}
 In the assumed cost model, break-even depends on investment $k$ and the

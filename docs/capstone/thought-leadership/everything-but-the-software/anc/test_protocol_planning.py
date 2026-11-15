@@ -192,7 +192,7 @@ class ProtocolPlanningTests(unittest.TestCase):
         for marker in (
             "prospective reporting requirements",
             "candidate independent-cell analysis",
-            "scheduling label alone",
+            "label alone cannot establish their dependence or independence",
             "forecast and approval are required separately",
         ):
             with self.subTest(marker=marker):

@@ -12051,3 +12051,21 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-14] fix | Correct registered screen map counts (Refs #156)
 
 * Corrected the screen map prose to sixteen rows (thirteen employee plus three resident) with thirteen linking a written design record, and linked the `programme-queue-paging-v1` proposal for `programme-queue`. No acceptance or human gate is claimed.
+
+## [2026-11-16] update | Plain-language paper and active Supplement revision
+
+* Reviewed all 70 active sections/subsections of the
+  [paper and ancillary TeX inputs](../capstone/thought-leadership/everything-but-the-software/README.md#human-readability-source-revision-16-november)
+  for computer scientists and data scientists using LLMs in the SDLC.
+  Clarified measurement terms and shortened dense qualifications while
+  preserving scientific uncertainty, results and study design.
+* Preserved seven displayed equations, all 40 table environments, three
+  prompts, citations, bibliography, 61 source bindings and author TODOs.
+  Added a source-only revision binding with prior digests retained.
+* Structural checks and 73 of 74 authoring tests pass. The unchanged native
+  diagram exporter requires an unavailable browser. A separate 73-page PDF
+  passes nonblank, page-boundary and unresolved-reference checks; seven
+  rendered pages were inspected. Only the inherited `inputenc` warning remains.
+  The existing PDF changed outside this build and is left uncommitted with
+  owner confirmation. No experiment, scoring or protocol change occurred;
+  scientific review, hosted CI and final approvals remain separate.

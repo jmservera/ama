@@ -6,6 +6,35 @@ ms.date: 2026-11-15
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
 
+## Human Readability Source Revision 16 November
+
+The [article source](./main.tex) and all seven active ancillary TeX inputs
+have received a plain-language pass for computer scientists and data scientists
+using LLMs in the SDLC. The review covered all 70 sections and subsections,
+including the back matter and Supplement. It explains contracts, acquisition,
+retention, risk sets, estimands, bootstrap intervals and ordinal ratings near
+their use. The two inactive historical inputs remain unchanged.
+
+The [revision record](./anc/revision-report.md#human-readability-revision-16-november)
+describes the scope and checks. All seven displayed equations, 40 table
+environments, three literal prompts, citation sequences, bibliography,
+61 source-register bindings and author TODOs are preserved.
+The [binding](./anc/supplement-integration.json) adds
+`human_readability_revision` without replacing earlier source/PDF records.
+
+This is a source-only revision. The owner asked to leave the existing
+`main.pdf` untouched and uncommitted; it changed outside this revision's
+external build, so preservation of that file could not be verified.
+A separate validation PDF has 73 pages, with the Supplement starting on
+page 46 and the source register on page 70. All pages are nonblank and
+text is within page bounds; references resolve, and seven selected renders
+were inspected. Tectonic reports only the inherited `inputenc` warning.
+Structural checks and 73 of 74 package tests pass. The native diagram
+exporter requires an unavailable Playwright browser; no exporter pass is
+claimed. Earlier page counts and delivery descriptions below retain their
+dated revision scope. Scientific review, hosted CI and final approvals
+remain separate.
+
 ## Current Status
 
 The title is unchanged at the owner's request. The current

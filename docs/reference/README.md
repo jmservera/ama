@@ -44,6 +44,14 @@ projection, source/icon provenance and explicit integration/privacy/compliance
 limits. Prepared materials do not establish live listening, composure,
 production acceptance or a higher score.
 
+The paper's [16 November source-only readability revision](../capstone/thought-leadership/everything-but-the-software/README.md#human-readability-source-revision-16-november)
+clarifies the article and all active TeX inputs for computer scientists and
+data scientists working with LLMs in the SDLC. Equations, tables, prompts and
+citations are preserved. A separate 73-page PDF validates the source; the
+existing PDF is excluded at the owner's request. Structural checks and
+73 of 74 authoring tests pass; the browser diagram exporter remains
+unavailable. The following delivery descriptions retain their dated scope.
+
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.

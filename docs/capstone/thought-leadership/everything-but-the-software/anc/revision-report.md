@@ -4,7 +4,11 @@ description: Narrative and author-TODO reconciliation, remaining evidence plan a
 ms.date: 2026-11-15
 ---
 
-The latest v23 revision rewrites selected paper prose for direct, readable
+The 16 November source-only revision applies a plain-language pass to the
+article and every active TeX input. Its scope and validation are recorded
+below; the existing PDF is excluded from delivery.
+
+The preceding v23 revision rewrites selected paper prose for direct, readable
 language. It preserves the findings, study design, formulas, tables, figures
 and source evidence, and records the rebuilt paper in a new binding.
 
@@ -70,6 +74,67 @@ The 5 November recovery/source check, 2 November allocation record and
 from Scope and Outcome through Title Assessment retain the original
 24 October report, and the 25 October addendum remains historical. Their
 earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Human Readability Revision 16 November
+
+### Scope and Changes
+
+The owner requested clearer explanations, varied sentence length and common
+language for computer scientists and data scientists using LLMs and agents
+in the SDLC. The full current article and its seven active ancillary TeX
+inputs were read, covering 70 sections and subsections. No active section
+was omitted. The inactive `extended-background.tex` and `compact-appendix.tex`
+remain unchanged.
+
+The edit explains a repository trajectory and test contract before relying
+on them, distinguishes implementing features from preserving and extending
+them, and defines risk sets and the primary estimand in plain language.
+The bootstrap description explains resampling, while the judging account
+explains why ordinal scores and missing-outcome bounds need care.
+Long qualifications are split into specific statements. Repetitive contrasts
+are reduced while preserving consequential uncertainty and approval limits.
+The participant-observer retains first-person narration.
+
+There is no new source verification, equation audit, experimental analysis,
+scoring, registration or protocol amendment. The owner separately authorized
+maintenance of the directly related content tests and binding. Exact-wording
+expectations now match the revised explanations; existing scientific guards
+and data comparisons remain active.
+
+### Validation and Source-Only Delivery
+
+Classification: focused editorial revision with directly coupled authoring-test
+and digest maintenance. No application, dependency manifest, infrastructure,
+deployment, security control or repository gate semantics changed.
+
+* The structural checker passes: 94 cited keys and 94 embedded bibliography
+  entries resolve; the abstract has 1,781 source characters, below 1,920.
+  The historical comparison object remains unavailable.
+* Direct comparison with the intake source preserves all 40 table
+  environments, seven displayed equations, three literal prompts, citation
+  sequences, bibliography, labels, 61 source-register bindings and author
+  comments/TODOs. Figures, chart inputs and inactive inputs are unchanged.
+* The package suite passes 73 of 74 tests. The native diagram-export test
+  fails because its required Playwright browser is unavailable. No figure
+  changed, and no export success or full-suite pass is claimed.
+* A separate external Tectonic build produces a 73-page PDF. The Supplement
+  starts on page 46; the source register starts on page 70. All pages contain
+  text within page bounds, and no unresolved-reference markers were found.
+  Rendered pages 1, 15, 21, 36, 46, 51 and 73 were inspected. The inherited
+  `inputenc` warning remains; no overfull or underfull boxes were reported.
+* The existing `main.pdf` was already dirty at intake and subsequently
+  changed outside this revision's external build. The owner confirmed
+  source-only continuation with that PDF left uncommitted. No claim is
+  made that its bytes were preserved. `human_readability_revision` binds
+  the current sources and separate validation PDF; every historical
+  source/PDF binding remains unchanged.
+
+Work execution: Complete for the authorized source revision and focused
+checks; browser-export validation remains unavailable. Assessment:
+editorial review complete within the active source package, without
+independent scientific peer review or fresh claim-by-claim verification.
+Independent exact-head review, applicable hosted CI, author/employer approval
+and venue acceptance remain separate requirements.
 
 ## Direct Style Revision 15 November
 
