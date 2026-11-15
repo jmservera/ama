@@ -1,7 +1,7 @@
 ---
-title: Everything but the Software - source package (draft v19)
-description: Falsifiable predictions, per-model coverage split, longer-horizon factorial design and evidence-bound finalization in one article and additive Supplement
-ms.date: 2026-11-14
+title: Everything but the Software - source package (draft v20)
+description: Complete final study results and human-readable chart interpretation in one article and additive Supplement
+ms.date: 2026-11-15
 ---
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
@@ -12,8 +12,8 @@ The title is unchanged at the owner's request. The current
 [paper](./main.pdf) and [source](./main.tex) explain the completed exploratory
 study through its principal findings: largely stable retention, selective
 benefits from consolidation or review, and additional resource cost.
-The [Supplement](./main.pdf#page=47) retains the detailed results, uncertainty,
-calibration and execution record in the same 66-page document.
+The [Supplement](./main.pdf#page=51) retains the detailed results, uncertainty,
+calibration and execution record in the same 70-page document.
 The supplement is additive: source-specific qualifications, detailed
 method/rival checks, the frozen prompt, deferred rates and provenance.
 Repeated Background text, figures and case narratives are excluded from
@@ -22,8 +22,10 @@ The standalone supplement PDF/TeX/bibliography were removed at the owner's
 request after exact archive readback and restore checks; their original
 committed versions remain in Git at `80656f32`. No source evidence was discarded.
 
-The [14 November critique and falsifiability revision](./anc/revision-report.md#critique-and-falsifiability-revision-14-november)
-records the current v19 delivery. The
+The [15 November final-results and chart interpretation record](./anc/revision-report.md#final-results-and-chart-interpretation-15-november)
+records the current v20 delivery. The
+[14 November critique and falsifiability revision](./anc/revision-report.md#critique-and-falsifiability-revision-14-november)
+retains the preceding v19 record. The
 [finalization follow-up](./anc/revision-report.md#finalization-follow-up-14-november)
 retains the preceding v18 record. The
 [report refresh](./anc/revision-report.md#attested-report-refresh-14-november)
@@ -44,6 +46,40 @@ calendar dates no longer lead the argument. The supplied
 [project-insights export](./anc/project-insights-2026-11-01.csv) supports the
 backlog handoff; its provenance and missing export metadata are in the
 [evidence index](./anc/case-evidence-matrix.json).
+
+### Final Results and Chart Interpretation 15 November
+
+The final [experiment report](https://github.com/jmservera/ama-thought-mve/blob/d097a10b090baefadf995ecd910eb96c324f0234/results/EXPERIMENT_RESULTS.md)
+and its committed artifacts contain all 315 completed trajectories, 5,355
+measured steps and 5,372 attempts across sixteen execution sources. The
+owner-attested unassisted frame unlocks the primary and secondary coverage
+contrasts; the primary B-D estimate remains +1.19 percentage points
+(95% interval [0.10, 2.22]), below the ten-point practical benchmark.
+The accepted retention panel records one open regression. Two CR1 outcomes
+remain unknown, and 55 attempts retain incomplete billing. The supplementary
+judging remains its earlier 313/315 snapshot (626 evaluable endpoint packets,
+1,252 calls), not a new complete judging run.
+
+The new [trajectory chart](./fig-study-trajectories.png) and
+[outcome/cost chart](./fig-study-outcomes-costs.png) are generated from the
+source-bound [snapshot](./anc/study-results-2026-11-15.json). Higher coverage
+and fewer complexity hotspots are preferable on those measures. Contrasts
+name their focal arm, distinguish the zero line from the +10-point benchmark,
+and flag intervals including zero as directionally uncertain. CR1 passes
+must be read alongside feature completeness; unknown outcomes are not failures.
+The cost panel explains that upper-left is preferable only at comparable
+delivered behaviour, and that the billed sample differs from the coverage
+sample. The editable economics figure marks its model as assumed and explains
+that fewer break-even cycles mean earlier payback, not observed savings.
+
+All 70 authoring tests and structural checks pass. Plot ranges contain all
+cell means, browser checks find no overlapping reading cues, and the 70-page
+PDF has no blank pages or out-of-page text. Selected figures, the Supplement,
+ledger and literal prompt pages were inspected. Only the inherited `inputenc`
+notice remains. The [binding](./anc/supplement-integration.json) preserves the
+earlier candidate and all dated revisions. Human approval, source-access limits,
+hosted CI and independent exact-head review remain separate. No new experiment,
+judge calls, VM mutation, commit or push was performed in this update.
 
 ### Critique and Falsifiability Revision 14 November
 

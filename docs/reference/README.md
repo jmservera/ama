@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-14
+ms.date: 2026-11-15
 ms.topic: overview
 ---
 
@@ -47,8 +47,14 @@ production acceptance or a higher score.
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
-The current v19 coauthored delivery has 66 pages, with the additive Supplement
-starting on page 47. The
+The current v20 coauthored delivery has 70 pages, with the additive Supplement
+starting on page 51. The
+[15 November final-results and chart interpretation record](../capstone/thought-leadership/everything-but-the-software/README.md#final-results-and-chart-interpretation-15-november)
+incorporates all 315 completed trajectories, sixteen execution sources, updated
+contrasts and billing, and source-bound empirical charts with explicit
+higher/lower, zero/interval, unknown-outcome and quality-matched cost cues.
+The economics graphic remains an assumed model, and the hybrid policy remains
+an untested follow-up. The
 [14 November critique and falsifiability revision](../capstone/thought-leadership/everything-but-the-software/README.md#critique-and-falsifiability-revision-14-november)
 separates the short-horizon decay premise (P1) from the consolidation remedy
 (P2 10-point coverage threshold and P3 CR1/cost payback) and the structural
@@ -67,17 +73,18 @@ contrasts with abstention counts. It preserves the
 [14 November readability revision](../capstone/thought-leadership/everything-but-the-software/README.md#readability-and-interpretation-14-november)
 and its findings-led structure, split tables, corrected structural-target
 interpretation and detailed Supplement. The completed
-315-trajectory five-arm S1 results, workflow replay, blinded AI judging,
-human calibration spot-check and SDK audit remain grounded in
-[`results/WHITEPAPER_REPORT.md`](https://github.com/jmservera/ama-thought-mve/blob/main/results/WHITEPAPER_REPORT.md)
-(`jmservera/ama-thought-mve` `main` commit `bd75c1c2`), following the original
+315-trajectory five-arm S1 results and retained judging/calibration/SDK records
+are now grounded in
+[final experiment report](https://github.com/jmservera/ama-thought-mve/blob/d097a10b090baefadf995ecd910eb96c324f0234/results/EXPERIMENT_RESULTS.md)
+(`jmservera/ama-thought-mve` commit `d097a10b`), following the original
 [13 November study results update](../capstone/thought-leadership/everything-but-the-software/README.md#study-results-and-post-collection-judging-13-november).
-The automated whole-study primary remains unavailable
-(`primary_estimates_available = false`) because two transport-quarantined
-trajectories are incomplete. Separate B-D/B-A intervals cover complete
-63-versus-63 comparisons, not a restored whole-study frame or confirmatory
-verdict. The 54 incomplete-billing holds, scenario abstentions and scheduling
-dependence remain explicit. The v16 60-page readability delivery (Supplement
+The completed owner-attested frame unlocks the automated whole-study primary
+(`primary_estimates_available = true`) and all four coverage contrasts.
+Two CR1 outcomes and 55 billing holds remain unresolved. Judging retains the
+earlier 313/315 snapshot with 626 evaluable packets and 1,252 calls; it was
+not silently completed when the development runs completed. Scenario
+abstentions, scheduling dependence and unregistered amendments remain explicit.
+The v19 66-page delivery (Supplement page 47) and v16 60-page readability delivery (Supplement
 page 44), v15 56-page results delivery (Supplement page 46) and earlier v14
 49-page pre-results delivery (Supplement page 39) remain in the revision record.
 

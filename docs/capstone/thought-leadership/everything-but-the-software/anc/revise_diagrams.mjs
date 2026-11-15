@@ -141,17 +141,19 @@ await replaceLabels("fig-contract-states", {
 await replaceLabels("fig-refactoring-economics", {
   "ASSUMED SCENARIOS / NOT RESULTS | Payback depends on k / delta":
     "ASSUMED COST SCENARIOS | Payback depends on k / delta",
-  "Consolidated B investment\nAverage k credits / cycle\nTotal outlay (AI credits):\nk * N  (assumed k = 5)":
-    "Consolidation investment\nAverage k credits / cycle\nTotal outlay: k * N\nk awaits calibration",
+  "Consolidation investment\nAverage k credits / cycle\nTotal outlay: k * N\nk awaits calibration":
+    "Consolidation investment\nAverage k credits / cycle\nTotal outlay: k * N\nObserved B: 5.8-12.6 / cycle",
+  "Net difference (A - B)\ndelta*N*(N - 1)/2 - k*N\n> 0: A costs more than B\n< 0: B cost unrecovered":
+    "Net (A - B): higher favors B\ndelta*N*(N - 1)/2 - k*N\n> 0: favors consolidation B\n< 0: B investment unrecovered",
   "Null slope: delta = 0\nNo break-even (k > 0)\nPure overhead every cycle\nN = 10: -50 credits\nN = 20: -100 | N = 40: -200":
     "No premium: delta = 0\nNo break-even for k > 0\nPure overhead\nCaps do not reveal delta\nComparable quality needed",
   "Ratio k / delta = 5\nBreak-even at 11 cycles\nN >= 1 + 2k / delta\nExample: k = 5, delta = 1\nNot a measured estimate":
     "Ratio k / delta = 5\nBreak-even at 11 cycles\nN >= 1 + 2k / delta\nExample: k = 5, delta = 1\nIllustrative parameters",
   "Ratio k / delta = 100\nBreak-even at 201 cycles\nN >= 1 + 2k / delta\nExample: k = 100, delta = 1\nNot a measured estimate":
     "Ratio k / delta = 100\nBreak-even at 201 cycles\nN >= 1 + 2k / delta\nExample: k = 100, delta = 1\nIllustrative parameters",
-  "All values are algebraic AI credit differences (A minus B) for assumed k = 5 credits/cycle.\nAt pilot horizon N = 10, all three assumed slopes remain negative (-50, -27.5, -5 credits): no payback.":
+  "Break-even depends on the ratio k / delta, not the units or a preferred k.\nk awaits measured consolidation spend; delta is an uncapped, quality-matched counterfactual.":
     "Break-even depends on the ratio k / delta, not the units or a preferred k.\n"
-    + "k awaits measured consolidation spend; delta is an uncapped, quality-matched counterfactual.",
+    + "Observed B step means are 5.82-12.59 credits; delta requires uncapped counterfactuals.",
 });
 
 const economicsPath = resolve(paper, "fig-refactoring-economics.excalidraw");
@@ -171,11 +173,11 @@ const label = (id, value, x, y, width = 500) => ({
   seed: 2027, isDeleted: false, containerId: null,
 });
 economics.elements.push(
-  label("ratio-plot-title", "Break-even sensitivity: N >= 1 + 2 * (k / delta)\nIllustrative boundary; integer cycles round up", 90, 660, 1050),
+  label("ratio-plot-title", "Break-even sensitivity: N >= 1 + 2 * (k / delta)\nAssumed model: lower cycles = earlier payback; integer cycles round up", 90, 660, 1050),
   line("ratio-plot-x", 110, 990, [[0, 0], [900, 0]]),
   line("ratio-plot-y", 110, 990, [[0, 0], [0, -220]]),
   line("ratio-plot-function", 110, 990, [[0, 0], [900, -220]], "#0078D4"),
-  label("ratio-plot-x-label", "k / delta (0 to 100; delta > 0)", 380, 1010, 730),
+  label("ratio-plot-x-label", "k / delta (0 to 100; delta > 0)\nLarger ratio = later break-even", 380, 1010, 730),
   label("ratio-plot-low", "5: 11 cycles\n10: 21 cycles", 155, 880, 400),
   label("ratio-plot-high", "100: 201 cycles", 775, 730, 400),
   label("ratio-plot-y-label", "Cycles\n1 to 201", 0, 800, 150),

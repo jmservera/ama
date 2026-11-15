@@ -319,18 +319,16 @@ disclosed AI-assisted failure/mismatch triage.
 \subsection{Additional endpoint and resource statistics}\label{app:resultsdetail}
 
 These tables retain distributional, size and judging detail from the
-13 November empirical handoff. They complement the separate coverage,
-CR1, structural and cost tables in the main results. All cells allocated
-21 trajectories; measured $P_{10}$ counts are 21 except Gemini E and GPT C
-(20 each). The retained-contract measures are diagnostics under the
-panel-acceptance limits recorded in the protocol.
+completed 315/315 empirical record (\nolinkurl{results/EXPERIMENT_RESULTS.md}).
+They complement the separate coverage, CR1, structural and cost tables in
+the main results. All fifteen cells have 21 allocated and 21 completed
+trajectories (315/315 total).
 
 \begin{table}[!htbp]
 \centering\small
-\caption{Additional $P_{10}$ coverage and retention statistics. Losses are
-mean open contract counts at $P_{10}$; loss cycles sum those counts over
-$P_1$--$P_{10}$. Missing endpoints are excluded from these descriptive means
-and retained in the allocation frame.}\label{tab:resultsdistribution}
+\caption{Additional $P_{10}$ coverage and retention statistics across all
+21/21 completed trajectories per cell. Losses are mean open contract counts
+at $P_{10}$; loss cycles sum those counts over $P_1$--$P_{10}$.}\label{tab:resultsdistribution}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcrrrr@{}}
 \toprule
 Model & Arm & Median (\%) & Minimum (\%) & Mean losses & Loss cycles \\
@@ -345,7 +343,7 @@ Gemini 4 Argon & A & 99.21 & 96.06 & 0.000 & 0.000 \\
 Gemini 4 Argon & B & 99.21 & 99.21 & 0.000 & 0.000 \\
 Gemini 4 Argon & C & 100.00 & 96.85 & 0.000 & 0.000 \\
 Gemini 4 Argon & D & 99.21 & 96.85 & 0.000 & 0.000 \\
-Gemini 4 Argon & E & 99.21 & 98.43 & 0.050 & 0.200 \\
+Gemini 4 Argon & E & 99.21 & 98.43 & 0.048 & 0.190 \\
 \midrule
 GPT 6.1 Sol & A & 88.98 & 88.98 & 0.000 & 0.000 \\
 GPT 6.1 Sol & B & 100.00 & 88.98 & 0.000 & 0.000 \\
@@ -358,20 +356,23 @@ GPT 6.1 Sol & E & 100.00 & 88.98 & 0.000 & 0.000 \\
 
 The descriptive B--D coverage differences are $+0.26$, $+0.15$ and $+3.15$
 percentage points for Sonnet, Gemini and GPT, respectively; B--A differences
-are $+0.22$, $+0.34$ and $+3.67$. Their equal-model averages are $+1.19$
-and $+1.41$ points. The pooled within-cell SD over 313 observed endpoints
-is 3.1119 points with 298 degrees of freedom. Within-model cell SD ranges
-are 0.47--0.94 for Sonnet, 0.39--0.98 for Gemini and 4.81--5.59 for GPT.
-The pooled SD is a descriptive planning input, not a verified common
-variance or an observed-power calculation.
+are $+0.22$, $+0.34$ and $+3.67$; B--C differences are $+0.07$, $-0.19$ and
+$+2.10$; E--B differences are $+0.07$, $+0.04$ and $0.00$. Their equal-model
+averages are $+1.19$, $+1.41$, $+0.66$ and $+0.04$ points. The pooled
+within-cell SD over all 315 completed endpoints is 3.1278 points with 300
+degrees of freedom (3.1119 points with 298 degrees of freedom across the
+313 pre-recovery endpoints). Within-model cell SD ranges are 0.47--0.94 for
+Sonnet, 0.39--0.98 for Gemini and 4.81--5.59 for GPT. The pooled SD is a
+descriptive planning input, not a verified common variance or an
+observed-power calculation.
 
 \begin{table}[!htbp]
 \centering\small
-\caption{Companion final-coverage contrasts, in percentage points, equally
-weighting the three models. Each arm has 63 allocated trajectories.
-Observed counts are focal/comparator. Complete comparisons supply a point
-and 95\% bootstrap interval; partial comparisons instead bound every missing
-coverage value over [0,100]\%. Allocation bounds are not confidence intervals.}
+\caption{Final-coverage contrasts (\texttt{H1}), in percentage points,
+equally weighting the three models across all 63 versus 63 completed
+unassisted trajectories per arm. Point differences and 95\% bootstrap
+intervals use 10,000 stratified draws (seed 2027); with zero missing
+endpoints, full-allocation bounds coincide with the point differences.}
 \label{tab:resultsh1contrasts}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrll@{}}
 \toprule
@@ -379,18 +380,16 @@ Contrast & Observed & Gain & 95\% interval & Allocation bounds \\
 \midrule
 B -- D & 63/63 & +1.1874 & [+0.1000, +2.2247] & [+1.1874, +1.1874] \\
 B -- A & 63/63 & +1.4123 & [+0.3250, +2.4497] & [+1.4123, +1.4123] \\
-B -- C & 63/62 & --- & --- & [+0.6624, +2.2497] \\
-E -- B & 62/63 & --- & --- & [-1.5498, +0.0375] \\
+B -- C & 63/63 & +0.6624 & [-0.4499, +1.7498] & [+0.6624, +0.6624] \\
+E -- B & 63/63 & +0.0375 & [-1.0749, +1.1374] & [+0.0375, +0.0375] \\
 \bottomrule
 \end{tabular*}
 \end{table}
 
 \begin{table}[!htbp]
 \centering\small
-\caption{Model-specific companion coverage contrasts, in percentage
-points, with 21 trajectories allocated to each arm. Gemini E and GPT C
-each lack one final endpoint. Missing frames supply bounds rather than
-point estimates or bootstrap intervals.}
+\caption{Model-specific coverage contrasts (\texttt{H1}), in percentage
+points, across all 21 versus 21 completed unassisted trajectories per arm.}
 \label{tab:resultsh1modelintervals}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrll@{}}
 \toprule
@@ -404,30 +403,30 @@ Sonnet 5.5 & E -- B & +0.0750 & [-0.2625, +0.3750] & [+0.0750, +0.0750] \\
 Gemini 4 Argon & B -- D & +0.1500 & [-0.1500, +0.5249] & [+0.1500, +0.1500] \\
 Gemini 4 Argon & B -- A & +0.3375 & [-0.0750, +0.8249] & [+0.3375, +0.3375] \\
 Gemini 4 Argon & B -- C & -0.1875 & [-0.4874, +0.1875] & [-0.1875, -0.1875] \\
-Gemini 4 Argon & E -- B & --- & --- & [-4.7244, +0.0375] \\
+Gemini 4 Argon & E -- B & +0.0375 & [-0.2250, +0.3000] & [+0.0375, +0.0375] \\
 \midrule
 GPT 6.1 Sol & B -- D & +3.1496 & [0.0000, +6.2992] & [+3.1496, +3.1496] \\
 GPT 6.1 Sol & B -- A & +3.6745 & [+0.5249, +6.8241] & [+3.6745, +3.6745] \\
-GPT 6.1 Sol & B -- C & --- & --- & [+2.0997, +6.8616] \\
+GPT 6.1 Sol & B -- C & +2.0997 & [-1.0499, +5.2493] & [+2.0997, +2.0997] \\
 GPT 6.1 Sol & E -- B & 0.0000 & [-3.1496, +3.1496] & [0.0000, 0.0000] \\
 \bottomrule
 \end{tabular*}
 \end{table}
 
-Table~\ref{tab:resultsh1contrasts} retains the complete B--D/B--A intervals
-separately from the automated whole-study primary. The B--C allocation
-bounds remain above zero, whereas E--B includes zero. These bounds describe
-the finite allocated trajectories, allowing any possible missing endpoint;
-they do not quantify sampling uncertainty or generalisation to other tasks.
-Table~\ref{tab:resultsh1modelintervals} also shows the heterogeneity: the
-Sonnet/Gemini coverage intervals span zero, and GPT's B--D interval touches it.
+Table~\ref{tab:resultsh1contrasts} reports all four pooled 63-versus-63
+coverage contrasts now unlocked by complete 315/315 unassisted collection.
+The pooled B--D and B--A intervals exclude zero, whereas B--C and E--B
+span zero. Table~\ref{tab:resultsh1modelintervals} shows the heterogeneity:
+the Sonnet and Gemini coverage intervals span zero for every contrast, and
+GPT's B--D interval touches zero at its lower endpoint.
 
 \begin{table}[!htbp]
 \centering\small
 \caption{Exact worst-/best-case identification bounds for within-model
-and equal-model-weight CR1 differences, rounded to two decimals in percentage points. These
-bounds assign unknown outcomes adversarially; they are not sampling
-confidence intervals.}\label{tab:resultscrbounds}
+and equal-model-weight CR1 differences (\texttt{H6}), rounded to two
+decimals in percentage points. These bounds assign the two unadjudicated
+GPT~6.1 Sol CR1 test errors (\texttt{B-08} and \texttt{C-14}) adversarially;
+they are not sampling confidence intervals.}\label{tab:resultscrbounds}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lll@{}}
 \toprule
 Model & Contrast & Difference bounds (points) \\
@@ -440,24 +439,24 @@ Sonnet 5.5 & E -- B & [-4.76, -4.76] \\
 Gemini 4 Argon & B -- D & [+4.76, +4.76] \\
 Gemini 4 Argon & B -- A & [+9.52, +9.52] \\
 Gemini 4 Argon & B -- C & [-38.10, -38.10] \\
-Gemini 4 Argon & E -- B & [+9.52, +14.29] \\
+Gemini 4 Argon & E -- B & [+14.29, +14.29] \\
 \midrule
 GPT 6.1 Sol & B -- D & [-9.52, -4.76] \\
 GPT 6.1 Sol & B -- A & [-9.52, -4.76] \\
-GPT 6.1 Sol & B -- C & [-4.76, +9.52] \\
+GPT 6.1 Sol & B -- C & [-4.76, +4.76] \\
 GPT 6.1 Sol & E -- B & [+9.52, +14.29] \\
 \midrule
 Equal-model & B -- D & [0.00, +1.59] \\
 Equal-model & B -- A & [0.00, +1.59] \\
-Equal-model & B -- C & [-14.29, -9.52] \\
-Equal-model & E -- B & [+4.76, +7.94] \\
+Equal-model & B -- C & [-14.29, -11.11] \\
+Equal-model & E -- B & [+6.35, +7.94] \\
 \bottomrule
 \end{tabular*}
 \end{table}
 
 \begin{table}[!htbp]
 \centering\small
-\caption{Companion CR1 success differences for cells with 21 observed
+\caption{CR1 success differences (\texttt{H6}) for cells with 21 observed
 Boolean outcomes in both arms, in percentage points. Intervals subtract
 opposite endpoints of 97.5\% equal-tailed Clopper--Pearson intervals for the
 two arms, giving at least 95\% coverage per comparison under the binomial
@@ -475,15 +474,18 @@ Sonnet 5.5 & E -- B & -4.7619 & [-26.7692, +18.7736] \\
 Gemini 4 Argon & B -- D & +4.7619 & [-43.8776, +51.6701] \\
 Gemini 4 Argon & B -- A & +9.5238 & [-39.1648, +54.7328] \\
 Gemini 4 Argon & B -- C & -38.0952 & [-77.0464, +14.6925] \\
+Gemini 4 Argon & E -- B & +14.2857 & [-37.2441, +60.6678] \\
 \bottomrule
 \end{tabular*}
 \end{table}
 
-Unknown CR1 outcomes prevent complete Boolean-pair intervals for every
-GPT contrast and Gemini E--B; their allocation bounds remain in
-Table~\ref{tab:resultscrbounds}. The broad intervals in
-Table~\ref{tab:resultscrintervals} caution against treating the observed
-Gemini review advantage as an established population effect.
+The two unadjudicated GPT~6.1 Sol CR1 test errors (\texttt{B-08} and
+\texttt{C-14}) prevent complete Boolean-pair intervals for the GPT CR1
+contrasts; their exact allocation bounds remain in
+Table~\ref{tab:resultscrbounds}. All eight Sonnet and Gemini CR1 contrasts
+now have complete 21-versus-21 Boolean intervals in
+Table~\ref{tab:resultscrintervals}, whose broad widths caution against
+treating single-task binomial differences as precise population estimates.
 
 The handoff's exploratory inspection identified a recurring Sonnet F10
 audit-target convention miss on
@@ -507,9 +509,10 @@ randomised mechanism interventions or a new annotation audit.
 
 \begin{table}[!htbp]
 \centering\small
-\caption{Additional size and complexity companions at $P_{10}$.
-Complexity is the mean per function; source lines exclude blank/full-comment
-lines, and Markdown words exclude generated reports and dot directories.}
+\caption{Additional size and complexity companions at $P_{10}$ across all
+21/21 completed trajectories per cell. Complexity is the mean per function;
+source lines exclude blank/full-comment lines, and Markdown words exclude
+generated reports and dot directories.}
 \label{tab:resultssize}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcrrr@{}}
 \toprule
@@ -525,11 +528,11 @@ Gemini 4 Argon & A & 2.68 & 600.6 & 106.0 \\
 Gemini 4 Argon & B & 2.26 & 620.1 & 403.1 \\
 Gemini 4 Argon & C & 1.78 & 778.5 & 371.7 \\
 Gemini 4 Argon & D & 2.63 & 596.5 & 106.0 \\
-Gemini 4 Argon & E & 2.73 & 605.2 & 106.0 \\
+Gemini 4 Argon & E & 2.74 & 605.1 & 106.0 \\
 \midrule
 GPT 6.1 Sol & A & 2.55 & 519.7 & 1747.1 \\
 GPT 6.1 Sol & B & 2.49 & 557.0 & 2002.4 \\
-GPT 6.1 Sol & C & 2.58 & 519.1 & 2030.2 \\
+GPT 6.1 Sol & C & 2.58 & 519.6 & 2028.9 \\
 GPT 6.1 Sol & D & 2.56 & 520.2 & 1732.2 \\
 GPT 6.1 Sol & E & 2.60 & 545.6 & 1859.1 \\
 \bottomrule
@@ -797,14 +800,21 @@ tests, alongside Lizard 1.24.3, jscpd 5.4.1 and Ruff 0.17.3
 and execution records, not newly reproduced runtime qualification.
 
 The 126 A/D trajectories scheduled eleven steps each; the 189 B/C/E
-trajectories scheduled twenty-one, totalling 5,355. The resilience record
-retains both incomplete trajectories without replacements:
-\nolinkurl{pilot-estimation-gemini-4-argon-E-15} measured 10/21 steps,
-with eleven unattempted after the feature-six HTTP stream interruption;
-\nolinkurl{pilot-estimation-gpt-6.1-sol-C-20} measured 18/21, with three
-unattempted after the feature-ten WebSocket fallback interruption.
-The \nolinkurl{study-resilience-policy/v1} record describes quarantine
-of unfinished unknown-charge work rather than replaying uncertain state.
+trajectories scheduled twenty-one, totalling 5,355. At the 13--14 November
+snapshot, the \nolinkurl{study-resilience-policy/v1} supervisor quarantined
+two trajectories after unfinished unknown-charge transport failures rather
+than replaying uncertain state:
+\nolinkurl{pilot-estimation-gemini-4-argon-E-15} had measured 10/21 steps
+(eleven unattempted after the feature-six HTTP stream interruption) and
+\nolinkurl{pilot-estimation-gpt-6.1-sol-C-20} had measured 18/21 steps
+(three unattempted after the feature-ten WebSocket fallback interruption).
+Both trajectories were subsequently completed via audited source-pinned
+recovery transitions (\nolinkurl{075102667af7b2e8aac926163cd0bcd726b40190}
+and \nolinkurl{5481fd8a47aa0bad660e7c0ab68f7fcfeea4137f}, where
+\nolinkurl{E-15} experienced one further HTTP stream timeout on
+\nolinkurl{f09-feature-1} at 16/21 steps before completing), yielding
+all 315/315 completed trajectories and 5,355/5,355 measured steps while
+retaining all historical attempt holds in the study ledger.
 
 \paragraph{Adjudication and unknown outcomes.}
 Read-only re-evaluation under \nolinkurl{analysis-adjudications/v1}, at
@@ -815,67 +825,91 @@ development agents were not rerun. Two CR1 outcomes remain unknown:
 \nolinkurl{gpt-6.1-sol-B-08} and \nolinkurl{gpt-6.1-sol-C-14} retained an
 unadjudicated error on
 \nolinkurl{test_f09_hidden::test_h09_same_state_same_ranking}.
-Their unknown outcomes widen the CR1 bounds.
+Their unknown outcomes widen the GPT CR1 bounds by 4.76 percentage points
+($1/21$).
 
 \paragraph{Outstanding credits and in-band interaction.}
-The 5,303 fully billed attempts total 62,052.6069 settled credits. The
-54 unresolved attempts comprise 38 native-retry holds, fifteen historical
-recovery-interrupted holds and one quarantine hold. They retain 18,900.0
-reserved credits and a 783.16186-credit certified partial lower bound.
-These records do not supply a complete final invoice or a currency price.
+Across 5,372 total study attempts, 5,317 settled with complete billing
+totaling 62,299.75904 AI credits (62,299.76; compared with 5,303 attempts
+and 62,052.6069 credits at the 5,357-attempt 313/315 snapshot). The
+55 unresolved attempts comprise 38 native-retry holds and 17 historical
+recovery-interrupted holds, with zero remaining quarantine holds (versus
+15 recovery holds and one quarantine hold among 54 holds at the 313/315
+snapshot). They retain 19,200.0 reserved credits (18,900.0 prior to the
+\nolinkurl{E-15-f09-feature-1} timeout hold) and a 783.16186-credit
+certified partial lower bound. These records do not supply a complete final
+invoice or a currency price.
 
 The audit in
 \nolinkurl{results/pilot-estimation-judging/intervention-log-audit-summary.json}
-covers all 5,357 retained \nolinkurl{transport/events.jsonl} journals.
+covers all 5,372 retained \nolinkurl{transport/events.jsonl} study-attempt
+journals (5,387 session-start and final-message events in the directory
+scan; 5,357 journals at the pre-recovery snapshot).
 Disabled user-input/elicitation interfaces produced zero interactive RPC
-events. Of 42,594 tool calls, 42,520 (99.83\%) requested
+events. Of 42,952 tool calls in the 5,372-journal audit (42,664 in the
+report summary and 42,594 at the 5,357-journal snapshot), 42,878 (99.83\%;
+42,590 and 42,520 in those earlier summaries) requested
 \nolinkurl{isolated_exec}. All 74 other requests (53 \texttt{create},
-21 \texttt{edit}, all Sonnet) were rejected as nonexistent tools;
-none requested an interactive question tool.
+21 \texttt{edit}, all Sonnet, with 50 entries retained in the summary array)
+were rejected as nonexistent tools; none requested an interactive question tool.
 
 Thirty-six sessions (0.67\%) across 29/315 trajectories (9.21\%) ended
 with a permission question, leaving source unchanged in 35 cases.
-GPT supplied eighteen such sessions out of 1,805, all at F9, with source
-unchanged in all eighteen, asking to extend an immutable earlier
-\nolinkurl{READ_METHODS} test. Sonnet supplied eighteen out of 1,785
-(thirteen consolidation, four review, one feature), seventeen leaving
-source unchanged, concerning shell edits or \texttt{sh ./tcr} without
-built-in editing tools or \nolinkurl{/usr/bin/env bash}.
-Gemini supplied none out of 1,767 sessions. Separately, 509 non-review
-measured steps left HEAD unchanged. These journal observations do not
-independently establish out-of-band intervention coverage.
+GPT supplied eighteen such sessions out of 1,795 study attempts (1,805 in
+the earlier directory count), all at F9, with source unchanged in all
+eighteen, asking to extend an immutable earlier \nolinkurl{READ_METHODS}
+test. Sonnet supplied eighteen out of 1,786 attempts (1,785 earlier;
+thirteen consolidation, four review, one feature), seventeen leaving source
+unchanged, concerning shell edits or \texttt{sh ./tcr} without built-in
+editing tools or \nolinkurl{/usr/bin/env bash}. Gemini supplied none out of
+1,791 attempts (1,767 before \nolinkurl{E-15} completion). Separately, 513
+non-review measured steps left HEAD unchanged (509 pre-recovery). These
+journal observations do not independently establish out-of-band intervention
+coverage.
 
 \paragraph{Owner attestation and updated report binding.}
-The updated \nolinkurl{results/pilot-estimation/provenance.json} records
+The final \nolinkurl{results/pilot-estimation/provenance.json} records
 \nolinkurl{intervention-coverage/v1} as \texttt{owner-attested} at
-\nolinkurl{2026-11-14T02:48:20.351742+00:00}: 313 covered trajectories,
-zero assisted. Its recorded manifest SHA-256 is
-\nolinkurl{66b098851800522d9d5117177aac34525cb1e9a17c0c4bd7d924d512c1ea6b06},
+\nolinkurl{2026-11-15T09:08:12.811511+00:00}: all 315 covered trajectories,
+zero assisted, with manifest SHA-256
+\nolinkurl{d26ebe733e50256184c2d5e4d3d66dda55233c14d54a434a037cde6f4cd64879}
 scoped to study-state SHA-256
-\nolinkurl{fb39a46fc36f33f62f3286fd517b63bb09787e9c7bcd7d276c4a362f256f2de1}.
+\nolinkurl{7992b0e21cbacde39b48bb6223d5b663b7013630b265ae64a37223414ab05e4a}
+(superseding the 14 November 313-trajectory attestation at
+\nolinkurl{2026-11-14T02:48:20.351742+00:00} with manifest SHA-256
+\nolinkurl{66b098851800522d9d5117177aac34525cb1e9a17c0c4bd7d924d512c1ea6b06}
+and pre-recovery study-state SHA-256
+\nolinkurl{fb39a46fc36f33f62f3286fd517b63bb09787e9c7bcd7d276c4a362f256f2de1}).
 These are bindings supplied in the published provenance, not an independent
 verification of every intervention or of the private manifest's contents.
-The two incomplete trajectories retain their partial status.
 
-The 14 November report refresh is pinned to source commit
-\nolinkurl{bd75c1c2104d001d62f9fb2bb4feab438b86f763}. Local and online
-report Git blobs matched; the report SHA-256 is
-\nolinkurl{ffde7266c3379446b5cdcc8fa695ee387c99a8a6c31fbd227b62291fd33c200c}.
-The new companion estimates add no candidate or judge calls and leave
-the original frozen collection, strict automated gate and historical
-13 November source pins intact. Scheduling/epoch dependence, scenario
-abstention and multiplicity remain interpretation limits.
+The 14 November report refresh was pinned to source commit
+\nolinkurl{bd75c1c2104d001d62f9fb2bb4feab438b86f763} (report SHA-256
+\nolinkurl{ffde7266c3379446b5cdcc8fa695ee387c99a8a6c31fbd227b62291fd33c200c}).
+The 15 November final results are pinned to \texttt{main} commit
+\nolinkurl{d097a10b090baefadf995ecd910eb96c324f0234}, where
+\nolinkurl{results/EXPERIMENT_RESULTS.md} has SHA-256
+\nolinkurl{e4680e66ba6791c7a23bd484954767bc7d580f881db939cf4fb113d28af10f15}
+and \nolinkurl{results/pilot-estimation-judging/extracted-contrasts.json}
+has Git blob \nolinkurl{0ab114c5f02596baa5a6a25939f652dac6f30569}.
+Scheduling/epoch dependence, scenario abstention and multiplicity remain
+interpretation limits.
 
 \paragraph{Retained timing and version metadata.}
 Read-only inspection of the operator archive on 14 November found
 numeric start times, controller durations, attempt IDs and source commits
-for all 5,357 attempts in
-\nolinkurl{.study/pilot-estimation/state.json}. Its SHA-256 matches the
-original study-state binding used by Assessment~v3 above. These records
-support reconstruction of execution order and source epochs without
-rerunning candidates; they contain no separate finish or boot/launch IDs
-in the inspected attempt objects and do not establish provider-service
-independence.
+for all 5,357 attempts in the pre-recovery
+\nolinkurl{.study/pilot-estimation/state.json} (SHA-256
+\nolinkurl{fb39a46fc36f33f62f3286fd517b63bb09787e9c7bcd7d276c4a362f256f2de1},
+matching Assessment~v3), and the committed
+\nolinkurl{results/pilot-estimation/attempts.csv} and
+\nolinkurl{provenance.json} at \nolinkurl{d097a10b} record all 5,372
+attempts and all fifteen source transitions through final state SHA-256
+\nolinkurl{7992b0e21cbacde39b48bb6223d5b663b7013630b265ae64a37223414ab05e4a}.
+These records support reconstruction of execution order and source epochs
+without rerunning candidates; they contain no separate finish or
+boot/launch IDs in the inspected attempt objects and do not establish
+provider-service independence.
 
 The retained v3 configuration records \nolinkurl{gpt-6-luna}, two repeats
 and \nolinkurl{sdk1.0.28-cli1.0.105-judge3}; its instrument freeze and
@@ -887,9 +921,11 @@ new observations, rather than recover an unlogged historical version.
 
 \begin{table}[!htbp]
 \centering\footnotesize
-\caption{Execution sources in the 13 November handoff. The 5,357 attempts
-include 5,341 returned steps, fifteen recovery interruptions and one
-infrastructure failure. At the historical 8 November checkpoint, E1--E3
+\caption{Execution sources across the completed 315/315 study. The 5,372
+attempts include 5,355 returned steps and 17 recovery interruptions (zero
+remaining infrastructure-failed or quarantine-held attempts; the 13 November
+handoff through E14 had 5,341 returned steps and 5,357 attempts across
+313 completed trajectories). At the historical 8 November checkpoint, E1--E3
 had 651, 227 and 369 reported steps (1,247 total). Source identifiers do
 not establish collection times or independent replicate counts.}
 \label{tab:executionepochs}
@@ -911,8 +947,10 @@ E11 & \nolinkurl{29e5f0834717b3c8a58a248858782174e775b6b8}; correlated Gemini 50
 E12 & \nolinkurl{73712f7834ca520df543b6a58315bb299ffd38a8}; Gemini HTTP stream-timeout reporting and holds & 54 & 55 \\
 E13 & \nolinkurl{0c35eff0e345d04c41722a43420d19b892c7fb8c}; audited bootstrap for retained study state & 1,388 & 1,390 \\
 E14 & \nolinkurl{a9d76bb6dbb118c43315fb2a13b7bcdb732d946d}; WebSocket fallback validation and halt quarantine & 426 & 426 \\
+E15 & \nolinkurl{075102667af7b2e8aac926163cd0bcd726b40190}; quarantine-completion recovery for E-15 and C-20 & 9 & 10 \\
+E16 & \nolinkurl{5481fd8a47aa0bad660e7c0ab68f7fcfeea4137f}; 5,350-step recovery completing E-15 after F9 HTTP timeout & 5 & 5 \\
 \midrule
-Total & Fourteen execution sources; 315 allocated trajectories, 313 complete & 5,341 & 5,357 \\
+Total & Sixteen execution sources; 315 allocated trajectories, 315 complete & 5,355 & 5,372 \\
 \bottomrule
 \end{tabularx}
 \end{table}

@@ -11868,3 +11868,29 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
   has zero overfull boxes and visually inspected pages, with only the
   inherited `inputenc` notice remaining. No experiment, VM mutation, paid
   session, commit, push or publication occurred.
+
+## [2026-11-15] update | Final study results and human-readable chart directions
+
+* Updated the [paper package](../capstone/thought-leadership/everything-but-the-software/README.md#final-results-and-chart-interpretation-15-november)
+  from the final experiment report at `jmservera/ama-thought-mve` commit
+  `d097a10b`: all 315 trajectories, 5,355 measured steps and 5,372 attempts
+  across sixteen sources are complete. The owner-attested frame unlocks the
+  primary coverage estimate; two CR1 outcomes and 55 billing holds remain
+  unknown. Judging retains the earlier 313/315 snapshot rather than claiming
+  new calls or silently completed packets.
+* Added source-bound trajectory and outcome/cost charts, checked all 300
+  plotted cycle means against the committed series, corrected range clipping
+  and the Arms A-D denominator, and updated final tables and source bindings.
+* Added explicit higher/lower directions, zero/CI and practical-target cues,
+  missingness and billed-sample notes, and quality-matched cost interpretation
+  in graphics and captions. The native economics diagram explains earlier
+  payback and the k/delta direction under its assumed model. The triggered
+  hybrid policy remains proposed, not an observed combined-treatment result.
+* All 70 authoring tests, structural checks, chart geometry and native bindings
+  pass. The single 70-page PDF (Supplement page 51) has in-page/nonblank checks
+  and inspected figure, ledger and prompt pages. Only the inherited `inputenc`
+  notice remains. The [dated record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#final-results-and-chart-interpretation-15-november)
+  preserves prior candidate/revision bindings and reports the stale-assertion
+  repair and remaining evidence/approval limits. No experiment, paid call,
+  VM change, registration, commit, push or publication occurred; hosted CI
+  and independent exact-head review remain unperformed.

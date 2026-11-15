@@ -162,7 +162,7 @@ class ProtocolPlanningTests(unittest.TestCase):
         )[0]
         abstract_prose = " ".join(abstract.split())
         self.assertIn("21 repository trajectories per condition", abstract_prose)
-        self.assertIn("313 of 315", abstract_prose)
+        self.assertIn("315 of 315", abstract_prose)
         labels = {}
         for stem in ("fig-pilot-design", "fig-experiment-measures"):
             scene = json.loads((PACKAGE / f"{stem}.excalidraw").read_text())

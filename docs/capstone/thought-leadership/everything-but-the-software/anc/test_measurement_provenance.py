@@ -2,7 +2,9 @@
 
 import hashlib
 import json
+import struct
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ANC = Path(__file__).resolve().parent
@@ -38,7 +40,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         )
         for name, (sha256, _) in PROMPTS.items():
             self.assertEqual(bindings["literal_inputs"][f"anc/{name}"], sha256)
-        for name, sha256 in bindings["falsifiability_revision"]["source_sha256"].items():
+        for name, sha256 in bindings["chart_interpretation_revision"]["source_sha256"].items():
             with self.subTest(source=name):
                 self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), sha256)
 
@@ -149,7 +151,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
 
     def test_judging_delivery_binding_preserves_the_historical_measurement_record(self):
         bindings = json.loads((ANC / "supplement-integration.json").read_text())
-        current = bindings["falsifiability_revision"]
+        current = bindings["chart_interpretation_revision"]
         finalization = bindings["finalization_revision"]
         runtime_flow = bindings["runtime_flow_revision"]
         historical = bindings["measurement_provenance_revision"]
@@ -158,8 +160,12 @@ class MeasurementProvenanceTests(unittest.TestCase):
             hashlib.sha256((PACKAGE / "main.pdf").read_bytes()).hexdigest(),
             current["delivery_sha256"],
         )
-        self.assertEqual(current["delivery_pages"], 66)
-        self.assertEqual(current["supplement_start_page"], 47)
+        self.assertEqual(current["delivery_pages"], 70)
+        self.assertEqual(current["supplement_start_page"], 51)
+        self.assertEqual(bindings["final_results_revision"]["delivery_pages"], 69)
+        self.assertEqual(bindings["final_results_revision"]["supplement_start_page"], 50)
+        self.assertEqual(bindings["falsifiability_revision"]["delivery_pages"], 66)
+        self.assertEqual(bindings["falsifiability_revision"]["supplement_start_page"], 47)
         self.assertEqual(finalization["delivery_pages"], 64)
         self.assertEqual(finalization["supplement_start_page"], 45)
         self.assertEqual(bindings["attested_report_revision"]["delivery_pages"], 64)
@@ -203,18 +209,18 @@ class MeasurementProvenanceTests(unittest.TestCase):
                 self.assertIn(label, source)
 
         for marker in (
-            "primary_estimates_available=false",
+            "primary_estimates_available=true",
             "intervention-coverage/v1",
             "pilot-estimation-gemini-4-argon-E-15",
             "pilot-estimation-gpt-6.1-sol-C-20",
-            "62,052.61",
-            "18,900.0",
+            "62,299.76",
+            "19,200.0",
             "783.16",
             "418.64",
             "human-calibration-guidance/v3",
             "review_status=in_progress",
-            "42,594",
-            "5,357",
+            "42,664",
+            "5,372",
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, source)
@@ -255,9 +261,9 @@ class MeasurementProvenanceTests(unittest.TestCase):
                 self.assertEqual(set(rows), expected_cells)
         coverage = tables["tab:resultsbenchmark"]
         adaptation = tables["tab:resultsadaptation"]
-        self.assertEqual(sum(int(row[0].split("/")[0]) for row in coverage.values()), 313)
-        self.assertEqual(coverage[("Gemini 4 Argon", "E")][0], "20/21")
-        self.assertEqual(coverage[("GPT 6.1 Sol", "C")][0], "20/21")
+        self.assertEqual(sum(int(row[0].split("/")[0]) for row in coverage.values()), 315)
+        self.assertEqual(coverage[("Gemini 4 Argon", "E")][0], "21/21")
+        self.assertEqual(coverage[("GPT 6.1 Sol", "C")][0], "21/21")
         self.assertEqual(
             [coverage[("GPT 6.1 Sol", arm)][2] for arm in "ABDE"],
             ["5", "12", "6", "12"],
@@ -286,12 +292,12 @@ class MeasurementProvenanceTests(unittest.TestCase):
         protocol = " ".join((ANC / "experiment-protocol.tex").read_text().split())
         supplement = " ".join((ANC / "measurement-provenance.tex").read_text().split())
 
-        self.assertIn("all 313 completed trajectories", protocol)
+        self.assertIn("all 315 completed trajectories", protocol)
         self.assertIn("operator account of intervention", protocol)
-        self.assertIn("primary_estimates_available=false", protocol)
-        self.assertIn("five-arm frame is incomplete", protocol)
+        self.assertIn("primary_estimates_available=true", protocol)
+        self.assertIn("two completed trajectories", protocol)
         self.assertIn("63 versus 63", protocol)
-        self.assertIn("post-collection exploratory", protocol)
+        self.assertIn("exploratory pilot/estimation study", protocol)
         self.assertNotIn("attestation remains absent", protocol)
         self.assertNotIn("missing intervention attestation", manuscript)
         self.assertIn("not an independent verification", supplement)
@@ -311,12 +317,12 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertEqual(pooled, {
             "B -- D": ["63/63", "+1.1874", "[+0.1000, +2.2247]", "[+1.1874, +1.1874]"],
             "B -- A": ["63/63", "+1.4123", "[+0.3250, +2.4497]", "[+1.4123, +1.4123]"],
-            "B -- C": ["63/62", "---", "---", "[+0.6624, +2.2497]"],
-            "E -- B": ["62/63", "---", "---", "[-1.5498, +0.0375]"],
+            "B -- C": ["63/63", "+0.6624", "[-0.4499, +1.7498]", "[+0.6624, +0.6624]"],
+            "E -- B": ["63/63", "+0.0375", "[-1.0749, +1.1374]", "[+0.0375, +0.0375]"],
         })
         self.assertEqual(len(model_rows), 12)
-        self.assertEqual(sum(row[2] == "---" and row[3] == "---" for row in model_rows), 2)
-        self.assertEqual(len(cr_rows), 7)
+        self.assertEqual(sum(row[2] == "---" and row[3] == "---" for row in model_rows), 0)
+        self.assertEqual(len(cr_rows), 8)
         self.assertFalse(any(row[0].startswith("GPT") for row in cr_rows))
         for row in cr_rows:
             with self.subTest(model=row[0], contrast=row[1]):
@@ -427,6 +433,77 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("re-adds four for its protected supervisor", protocol)
         self.assertIn("not capability-free", protocol)
 
+    def test_given_final_results_when_tables_checked_then_snapshot_values_and_unknowns_match(self):
+        from test_protocol_planning import table_rows
+
+        snapshot = json.loads((ANC / "study-results-2026-11-15.json").read_text())
+        protocol = (ANC / "experiment-protocol.tex").read_text()
+        models = {"claude-sonnet-5.5": "Sonnet 5.5", "gemini-4-argon": "Gemini 4 Argon", "gpt-6.1-sol": "GPT 6.1 Sol"}
+        tables = {
+            label: {(row[0].removeprefix(r"\midrule").strip(), row[1]): row[2:]
+                    for row in table_rows(protocol, label)}
+            for label in ("tab:resultsbenchmark", "tab:resultsadaptation", "tab:resultsstructural")
+        }
+
+        self.assertTrue(snapshot["primary_estimates_available"])
+        self.assertEqual(len(snapshot["cells"]), 15)
+        self.assertEqual(sum(cell["cr1_missing"] for cell in snapshot["cells"]), 2)
+        self.assertEqual(sum(cell["p10_open_reg_runs"] for cell in snapshot["cells"]), 1)
+        self.assertIn("all 252 trajectories", protocol)
+        for cell in snapshot["cells"]:
+            identity = (models[cell["model"]], cell["arm"])
+            with self.subTest(cell=identity):
+                self.assertEqual(cell["allocated"], 21)
+                self.assertEqual(cell["completed"], 21)
+                coverage = tables["tab:resultsbenchmark"][identity]
+                self.assertEqual(coverage[0], "21/21")
+                self.assertAlmostEqual(float(coverage[1]), cell["p10_mean"], delta=0.005)
+                self.assertEqual(int(coverage[2]), cell["p10_100_runs"])
+                self.assertEqual(int(coverage[3]), cell["p10_open_reg_runs"])
+                adaptation = tables["tab:resultsadaptation"][identity]
+                self.assertEqual([int(value) for value in adaptation[:3]],
+                                 [cell["cr1_pass"], cell["cr1_fail"], cell["cr1_missing"]])
+                for value, field in zip(tables["tab:resultsstructural"][identity],
+                                        ("ccn_over_10_pct", "dup_pct", "lint_per_kloc")):
+                    self.assertAlmostEqual(float(value), cell[field], delta=0.005)
+
+    def test_given_empirical_charts_when_checked_then_full_rasters_and_data_binding_match(self):
+        payload = (ANC / "study-results-2026-11-15.json").read_bytes()
+        expected_hash = hashlib.sha256(payload).hexdigest()
+        sizes = {"fig-study-trajectories": (3240, 1680), "fig-study-outcomes-costs": (3360, 1410)}
+        bindings = json.loads((ANC / "supplement-integration.json").read_text())["chart_interpretation_revision"]
+
+        for stem, size in sizes.items():
+            with self.subTest(chart=stem):
+                svg = ET.fromstring((PACKAGE / f"{stem}.svg").read_bytes())
+                self.assertEqual(svg.get("data-source-sha256"), expected_hash)
+                png = (PACKAGE / f"{stem}.png").read_bytes()
+                self.assertEqual(png[:8], b"\x89PNG\r\n\x1a\n")
+                self.assertEqual(struct.unpack(">II", png[16:24]), size)
+                for extension in ("svg", "png"):
+                    name = f"{stem}.{extension}"
+                    self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(),
+                                     bindings["charts"][name])
+
+    def test_given_chart_reading_cues_when_rendered_then_directions_and_limits_are_explicit(self):
+        cues = {
+            "fig-study-trajectories": ("Higher pass rate is better", "Lower is better", "21-run means"),
+            "fig-study-outcomes-costs": (
+                "Right of 0 favors first arm", "CI includes 0: direction uncertain",
+                "More passes is better; grey is unknown", "Up = more coverage; left = fewer credits",
+                "Prefer upper-left at comparable outcomes", "Coverage uses all 21",
+            ),
+        }
+
+        for stem, expected in cues.items():
+            text = " ".join(ET.fromstring((PACKAGE / f"{stem}.svg").read_bytes()).itertext())
+            for cue in expected:
+                with self.subTest(chart=stem, cue=cue):
+                    self.assertIn(cue, text)
+        protocol = " ".join((ANC / "experiment-protocol.tex").read_text().split())
+        self.assertIn("contract sets expand across cycles", protocol)
+        self.assertIn("cheap failure is not efficiency", protocol)
+        self.assertIn("not statistical significance", protocol)
 
 if __name__ == "__main__":
     unittest.main()

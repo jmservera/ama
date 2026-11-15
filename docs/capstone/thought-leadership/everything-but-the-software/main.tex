@@ -1,9 +1,10 @@
 % !TEX program = pdflatex
 % ---------------------------------------------------------------------------
-% Everything but the Software -- LaTeX source (draft v19, integrated Supplement)
+% Everything but the Software -- LaTeX source (draft v20, integrated Supplement)
 % Figures use PNG for LaTeX; conceptual editing authority is .excalidraw.
 % anc/make_figures.py regenerates only case and published-evidence figures.
 % anc/export_diagrams.mjs exports native Excalidraw sources to SVG and PNG.
+% anc/export_results_charts.mjs exports empirical study charts to SVG and PNG.
 % Compile with pdflatex, twice. No BibTeX run is needed: the bibliography is
 % embedded below, so arXiv's automatic TeX processing works without a .bbl.
 % references.bib in the same folder holds the same entries for reuse.
@@ -44,7 +45,7 @@
 \renewcommand{\floatpagefraction}{0.85}
 \newif\ifresults
 \resultstrue
-% Authorized exploratory results update from committed results/WHITEPAPER_REPORT.md; retains base registration, unregistered amendments and 14 implementation epochs.
+% Authorized exploratory results update from committed results/EXPERIMENT_RESULTS.md; retains base registration, unregistered amendments and 16 implementation epochs.
 
 \title{Everything but the Software:\\[4pt]
 \large Feature-Driven Decay in an Agentic Coding Loop.\\
@@ -56,7 +57,7 @@ authors' own and do not necessarily reflect those of Microsoft.}\\[4pt]
 \large Isabel Cabezas Martin\\[4pt]
 \small Software Engineer, Frontier Company at Microsoft}
 
-\date{Draft of 14 November 2026}
+\date{Draft of 15 November 2026}
 % TODO(author): replace with the submission date.
 
 \begin{document}
@@ -76,13 +77,13 @@ consolidation raises final coverage by at least 10 percentage points and
 aids a withheld change request.
 Three models each received 21 repository trajectories per condition across
 feature-only delivery, consolidation, read-only review, longer sessions and
-visible-specification repair: 313 of 315 trajectories completed.
+visible-specification repair: all 315 of 315 trajectories completed.
 Neither prediction held on this task. Short-horizon decay did not appear:
 Sonnet~5.5 and Gemini~4 Argon averaged 99.18\%--99.74\% hidden-test
-coverage, one completed trajectory had an open regression, and workflow
+coverage, one trajectory had an open regression, and workflow
 replay found zero witnessed losses.
 Consolidation removed functions above cyclomatic complexity 10 from all
-63 treated endpoints, but its pooled coverage gain over longer sessions
+63 treated endpoints, but its primary coverage gain over longer sessions
 was 1.19 percentage points (95\% bootstrap interval [0.10, 2.22]), well
 below the 10-point threshold and driven by GPT~6.1 Sol (+3.15 points;
 Sonnet +0.26 and Gemini +0.15 intervals span zero), where consolidation
@@ -90,9 +91,9 @@ raised complete feature delivery from 5/21 to 12/21.
 On Gemini~4 Argon, read-only review achieved 16/21 change-request
 successes versus 8/21 with consolidation. Consolidation used roughly twice
 the settled delivery credits without reducing change-request cost,
-motivating a longer-horizon factorial design.
+motivating a triggered hybrid policy and a longer-horizon factorial design.
 \end{abstract}
-% Companion complete-pair intervals retain the incomplete automated whole-study gate, owner-attestation boundary and 14-epoch provenance.
+% Complete 315/315 unassisted intervals retain the owner-attestation boundary, 313/315 judging snapshot and 16-epoch provenance.
 
 \noindent\textbf{Keywords:} agentic software engineering; coding agents;
 spec-driven development; software evolution; technical debt; refactoring;
@@ -194,14 +195,15 @@ induces progressive behavioural loss by $P_{10}$, evidenced by open
 retained-contract regressions ($L^P_{r,10}>0$), accumulated loss cycles or
 witnessed workflow-replay losses. \emph{Outcome: not supported on this
 task} (0/126 completed A and D endpoints had an open regression at
-$P_{10}$; 1/313 across all arms; 0/626 in workflow replay).
+$P_{10}$; 1/315 across all arms; 0/626 in workflow replay).
 \item \textbf{P2 (Primary coverage gain threshold).} Scheduled
 consolidation (Arm~B) exceeds the matched-allowance longer-session control
 (Arm~D) in equal-model-weight final hidden-test coverage at $P_{10}$ by at
 least the pre-specified minimum useful effect of $\Delta_*=10$ percentage
 points (Section~\ref{sec:protocollimits}). \emph{Outcome: below threshold}
 ($+1.19$ percentage points, 95\% bootstrap interval $[0.10,2.22]$; $+1.41$
-points versus Arm~A, $[0.33,2.45]$), with the gain concentrated in
+points versus Arm~A, $[0.33,2.45]$; $+0.66$ points versus Arm~C,
+$[-0.45,1.75]$), with the gain concentrated in
 GPT~6.1 Sol ($+3.15$ points, $[0.00,6.30]$) while Sonnet~5.5 ($+0.26$
 points, $[-0.15,0.75]$) and Gemini~4 Argon ($+0.15$ points,
 $[-0.15,0.52]$) intervals span zero.
@@ -209,7 +211,8 @@ $[-0.15,0.52]$) intervals span zero.
 Consolidation (Arm~B) raises held-out CR1 success and reduces CR1 or net
 credit expenditure relative to feature-only delivery (Arm~A), read-only
 review (Arm~C) and longer sessions (Arm~D). \emph{Outcome: not supported}
-(equal-model CR1 B--D and B--A bounds $[0.00,+1.59]$ percentage points;
+(equal-model CR1 B--D and B--A bounds $[0.00,+1.59]$ percentage points and
+B--C bounds $[-14.29,-11.11]$ points;
 Gemini~4 Argon review achieved 16/21 successes versus 8/21 with
 consolidation; settled delivery credits rose by $1.84\times$ to
 $2.25\times$ with no CR1 cost reduction).
@@ -269,10 +272,11 @@ comparison is secondary. Equal ceilings need not produce equal spending,
 and the design does not isolate refactoring or validate the five case
 mechanisms individually. An owner-confirmed registered base and disclosed
 unregistered amendments frame the completed exploratory collection.
-Owner attestation now covers all 313 completed trajectories. Companion
-intervals describe the complete B--D and B--A comparisons; two
-transport-quarantined C/E trajectories still block the automated
-whole-study primary (Section~\ref{sec:resultsledger}). The case's validity and the pilot's
+Following audited quarantine-completion recovery of the two transport-interrupted
+C and E trajectories, all 315 allocated trajectories are complete and
+owner-attested unassisted, unlocking the whole-study primary B--D and all
+within-model coverage contrasts (\nolinkurl{primary_estimates_available=true};
+Section~\ref{sec:resultsledger}). The case's validity and the pilot's
 identification limits are consolidated in Sections~\ref{sec:threats}
 and~\ref{sec:protocollimits}.
 
@@ -897,7 +901,10 @@ consolidation has an explicit cost. Payback depends on $k/\delta$: a ratio of 5 
 and a ratio of 100 at 201; $\delta=0$ gives no payback for $k>0$.
 Parameters are invented for transparent sensitivity,
 not fitted to study data. No dollar conversion or human-work estimate is
-implied.}\label{fig:refactoringeconomics}
+implied. Higher $\Delta C(N)$ favours B in the assumed model; a lower
+break-even cycle count means earlier recovery of the investment. Increasing
+$k/\delta$ delays that break-even, rather than demonstrating an observed
+cost or quality effect.}\label{fig:refactoringeconomics}
 \end{figure}
 
 \begin{table}[!htbp]
@@ -1073,9 +1080,43 @@ disable the whole-study primary estimator.
 
 \subsection{Implications for practice}\label{sec:feedbackfirst}
 
-The case motivates protecting a usable increment, bounding the delivery horizon
-and keeping lessons retrievable or executable. The ancillary supplement
-retains the proposed practice checklist and framework-builder suggestions.
+The final report's Minimum Viable Experiment decision framework recommends
+an overall \textbf{adjust} portfolio decision. This is an advisory synthesis
+of the separate treatments; a triggered hybrid policy was not tested:
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Passive extra single-session slack (Arm~D, 45~minutes versus
+Arm~A, 30~minutes): \emph{no-go}.} Uninterrupted 45-minute feature sessions
+matched 30-minute sessions in wall-clock duration, credit expenditure
+($53.70$ versus $54.52$ on Sonnet~5.5; $116.29$ versus $112.66$ on
+Gemini~4 Argon; $161.28$ versus $155.93$ on GPT~6.1 Sol), structural
+metrics and pass rates. The report attributes this pattern to early session
+exits; the cell means alone do not identify the stopping cause or establish
+equivalence. Its advice to keep budgets tight applies to this workload,
+not every agentic delivery task.
+\item \textbf{Unconditional $1{:}1$ consolidation after every feature
+(Arm~B blanket cadence): \emph{no-go}.} Doubling session count roughly
+doubled delivery credits ($1.84\times$ to $2.25\times$) and added little
+value when static metrics and tests were already clean.
+\item \textbf{Metric- or halt-triggered hybrid review and consolidation
+(synthesis of Arms~B, C and~E): \emph{candidate for follow-up}.}
+Automated \texttt{./tcr} refactoring with \nolinkurl{tools/quality.py}
+eliminated all complexity-$>10$ hotspots across all 63 Arm~B trajectories
+and was associated with greater GPT~6.1 Sol F9 acquisition. Read-only review
+(\texttt{REVIEW.md} in Arm~C) had higher observed Gemini~4 Argon CR1 success
+($76.2\%$ versus $38.1\%$), and Arm~E's audited
+\texttt{REPAIR.json} rule achieved $95.2\%$ CR1 success on GPT~6.1 Sol.
+The proposed follow-up would trigger a combined consolidation-and-review step
+conditionally (whenever cyclomatic complexity exceeds 10, duplication
+reaches $3\%$, lint is nonzero, or a feature session halts uncommitted, or
+periodically every three to five features) and include both Arm~C's
+semantic invariant checklist and an audited test-assertion escape hatch.
+\end{itemize}
+
+The case also motivates protecting a usable increment, bounding the
+delivery horizon and keeping lessons retrievable or executable. The
+ancillary supplement retains the proposed practice checklist and
+framework-builder suggestions.
 For future product integrations, routine intermediate tracking files should
 stay out of the squash-merged product diff once durable findings and original
 review evidence have been preserved. This is a proposed practice, motivated
@@ -1095,32 +1136,36 @@ cadence or the preservation of expertise. Those remain separate questions.
 Evaluated against explicit falsification criteria, the ten-feature S1
 experiment confirmed neither half of its initial conjecture. First, the
 short-horizon decay premise (P1) was not supported on this clean synthetic
-task: previously acquired behaviour was largely retained across 313
-completed trajectories, with zero open regressions at $P_{10}$ in all 126
-feature-only and longer-session runs, one open regression overall (Gemini~4
-Argon~E), and zero witnessed capability losses across 626 workflow-replay
-packets. The most informative failures were unacquired features and a
-permission-boundary hole exposed by the final extension, showing that stable
-retention can coexist with incomplete or unsafe-to-extend software.
+task: previously acquired behaviour was largely retained across all 315
+completed trajectories (`5,355 / 5,355` measured steps), with zero open
+regressions at $P_{10}$ in all 126 feature-only and longer-session runs,
+one open regression overall (Gemini~4 Argon~E), and zero witnessed
+capability losses across 626 workflow-replay packets. The most informative
+failures were unacquired features and a permission-boundary hole exposed by
+the final extension, showing that stable retention can coexist with
+incomplete or unsafe-to-extend software.
 
 Second, the consolidation remedy passed its structural manipulation check
-(0.00\% functions above complexity 10 across all 63 Arm~B endpoints and
-92\%--100\% lint reductions on Sonnet~5.5 and GPT~6.1 Sol) but failed its
-primary behavioural and economic predictions (P2 and P3). Its pooled
-complete-pair coverage gain over matched-allowance longer sessions was
-1.19 percentage points (95\% bootstrap interval [0.10, 2.22]; $+1.41$
-points over feature-only delivery, [0.33, 2.45]), well below the
-pre-specified 10-point minimum useful threshold. That pooled gain came
-almost entirely from GPT~6.1 Sol overcoming an F8 test-allowlist lock to
-finish the ninth feature ($+3.15$ points, [0.00, 6.30]), whereas the B--D
-coverage intervals for Sonnet~5.5 ($+0.26$ points, $[-0.15, 0.75]$) and
-Gemini~4 Argon ($+0.15$ points, $[-0.15, 0.52]$) spanned zero.
-Consolidation offered no consistent advantage on the final change request:
-read-only review achieved 16/21 successes on Gemini~4 Argon versus 8/21
-with consolidation. Consolidation also used roughly twice the settled
-delivery credits without reducing change-request cost, yielding selective
-structural and test-lock mitigation at additional expense rather than a
-general short-horizon saving.
+(0.00\% functions above complexity 10 across all 63 Arm~B endpoints,
+92\%--100\% lint reductions on Sonnet~5.5 and GPT~6.1 Sol, and only
+$3.2\%$--$7.2\%$ more source lines) but failed its primary behavioural and
+economic predictions (P2 and P3). Its unlocked whole-study primary coverage
+gain over matched-allowance longer sessions was 1.19 percentage points
+(95\% bootstrap interval [0.10, 2.22]; $+1.41$ points over feature-only
+delivery, [0.33, 2.45]; $+0.66$ points over read-only review,
+$[-0.45, 1.75]$), well below the pre-specified 10-point minimum useful
+threshold. That pooled gain came almost entirely from GPT~6.1 Sol
+overcoming an F8 test-allowlist lock to finish the ninth feature ($+3.15$
+points, [0.00, 6.30]), whereas the B--D coverage intervals for Sonnet~5.5
+($+0.26$ points, $[-0.15, 0.75]$) and Gemini~4 Argon ($+0.15$ points,
+$[-0.15, 0.52]$) spanned zero. Consolidation offered no consistent
+advantage on the final change request: read-only review achieved 16/21
+successes on Gemini~4 Argon versus 8/21 with consolidation. Consolidation
+also used roughly twice the settled delivery credits without a consistent
+change-request cost reduction. The report's \textbf{adjust} recommendation
+motivates testing a metric- or halt-triggered hybrid pass that pairs
+\texttt{./tcr} structural cleanup with semantic invariant review; the
+combined policy has no measured efficacy or cost advantage in this study.
 
 The motivating case concerns a different scale and failure: a migration
 interrupted a usable workflow after extensive agent-assisted preparation.
@@ -1133,9 +1178,9 @@ branch-isolated change requests and factorial separation of refactoring,
 invariant review and test mutability (Section~\ref{sec:futureexperiment}).
 
 These are exploratory findings from one suite and one final change request.
-Owner attestation covers completed trajectories; unregistered amendments,
-two incomplete trajectories, partial ratings, billing gaps and changing
-execution sources limit inference.
+Owner attestation covers all 315 completed trajectories; unregistered
+amendments, two unadjudicated GPT~6.1 Sol CR1 test errors, 55 billing holds,
+the 313/315 judging snapshot and sixteen execution sources limit inference.
 The practical implication is to check retained behaviour and future-change
 requirements alongside structural metrics, and to measure the cost of each
 correction strategy. More produced or cleaner code is useful only insofar
@@ -1241,6 +1286,15 @@ scientific-critical-thinking skills to state explicit testable predictions
 and verdicts, surface the per-model coverage split alongside the pooled
 estimate, and specify a longer-horizon factorial follow-up protocol,
 without altering experimental observations, scoring or registration.
+The 15 November final-results revision integrated the completed 315/315
+trajectory dataset (\nolinkurl{results/EXPERIMENT_RESULTS.md} at commit
+\nolinkurl{d097a10b090baefadf995ecd910eb96c324f0234}) after the independent
+researcher executed the audited quarantine-completion recoveries for
+\nolinkurl{pilot-estimation-gpt-6.1-sol-C-20} and
+\nolinkurl{pilot-estimation-gemini-4-argon-E-15}, updated the tables,
+sixteen-epoch ledger, MVE \texttt{H1}--\texttt{H7} decision matrix and
+economics diagram, and added the empirical trajectory and outcome charts
+generated from the committed study artifacts.
 
 Servera Bondroit supplied the case observations, selected the case and made the analytical
 judgements, and reports checking the repository figures and Azure expenditure
@@ -1356,11 +1410,35 @@ The 14 November refresh uses commit
 online \texttt{main} file. Its companion
 \nolinkurl{results/pilot-estimation-judging/extracted-contrasts.json}
 has Git blob \nolinkurl{f1aef11e7094ca284c25594459aecb180212c9cb}.
+The 15 November final-results integration pins \texttt{main} commit
+\href{https://github.com/jmservera/ama-thought-mve/commit/d097a10b090baefadf995ecd910eb96c324f0234}
+{\nolinkurl{d097a10b090baefadf995ecd910eb96c324f0234}}
+(tree \nolinkurl{2b07b649758f9f3f42d3adb86e1415b0c6ffb11d}), where
+\nolinkurl{results/EXPERIMENT_RESULTS.md} (Git blob
+\nolinkurl{fdfb57da92f195d580f2ee3de4840fc0c13cd607}, SHA-256
+\nolinkurl{e4680e66ba6791c7a23bd484954767bc7d580f881db939cf4fb113d28af10f15})
+and \nolinkurl{results/pilot-estimation-judging/extracted-contrasts.json}
+(Git blob \nolinkurl{0ab114c5f02596baa5a6a25939f652dac6f30569}) record
+all 315 of 315 completed trajectories (5,355 of 5,355 measured steps across
+5,372 attempts) following audited quarantine-completion recovery commits
+\href{https://github.com/jmservera/ama-thought-mve/commit/075102667af7b2e8aac926163cd0bcd726b40190}
+{\nolinkurl{075102667af7b2e8aac926163cd0bcd726b40190}} and
+\href{https://github.com/jmservera/ama-thought-mve/commit/5481fd8a47aa0bad660e7c0ab68f7fcfeea4137f}
+{\nolinkurl{5481fd8a47aa0bad660e7c0ab68f7fcfeea4137f}}
+(disclosed 14 November 2026, manifest SHA-256
+\nolinkurl{0fb342ff7efe16678e84f140220fd71eb8f01e25fee5b776c22aeb9ee3357577},
+inputs SHA-256
+\nolinkurl{c41f02de9f84843260b53ec59cc0f874b6afaf1555dc38209e66db63949f2f24},
+study-state SHA-256
+\nolinkurl{7992b0e21cbacde39b48bb6223d5b663b7013630b265ae64a37223414ab05e4a},
+owner-attestation manifest SHA-256
+\nolinkurl{d26ebe733e50256184c2d5e4d3d66dda55233c14d54a434a037cde6f4cd64879}).
 The report digest, intervention-attestation binding and analysis limits
 are retained in the Supplement and ancillary revision record.
-Supplement Table~\ref{tab:executionepochs} records all fourteen source commits across
-which the 5,357 study attempts (5,341 returned steps, 15 recovery-interrupted
-attempts and one infrastructure-failed attempt) were collected. Historical
+Supplement Table~\ref{tab:executionepochs} records all sixteen source commits across
+which the 5,372 study attempts (5,355 returned steps and 17 recovery-interrupted
+attempts, with zero remaining infrastructure-failed or quarantine-held
+attempts) were collected. Historical
 interim counts remain in that record, separate from final trajectory outcomes.
 
 The authors select the experiment GitHub repository as the deposit for

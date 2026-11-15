@@ -1,8 +1,13 @@
 ---
 title: Everything but the Software - Revision Record
-description: Hypothesis-falsifiability revision, longer-horizon factorial experiment design and quarantine-unblock analysis alongside preserved finalization records
-ms.date: 2026-11-14
+description: Complete final study results, chart reading cues and validation alongside preserved dated source records
+ms.date: 2026-11-15
 ---
+
+The 15 November final-results update incorporates the completed source-bound
+315-trajectory dataset and adds human-readable direction and uncertainty cues
+to the empirical and economics graphics. Earlier reviews, source pins,
+incomplete-data states and validation records below remain historical.
 
 The 14 November critique and falsifiability revision applies the external
 review of hypothesis refutability: it separates the short-horizon decay
@@ -49,6 +54,91 @@ The 5 November recovery/source check, 2 November allocation record and
 from Scope and Outcome through Title Assessment retain the original
 24 October report, and the 25 October addendum remains historical. Their
 earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Final Results and Chart Interpretation 15 November
+
+### Source and Scope
+
+The owner supplied the final experiment report and its pilot/judging folders,
+reporting that the researcher executed the completed recoveries. The source
+pin is `d097a10b090baefadf995ecd910eb96c324f0234` in
+`jmservera/ama-thought-mve`. The inspected online report identifies that commit;
+the committed report SHA-256 is
+`e4680e66ba6791c7a23bd484954767bc7d580f881db939cf4fb113d28af10f15`.
+The final execution pin is `5481fd8a47aa0bad660e7c0ab68f7fcfeea4137f` and
+study-state binding is
+`7992b0e21cbacde39b48bb6223d5b663b7013630b265ae64a37223414ab05e4a`.
+These source/metadata checks do not independently rerun or certify the study.
+Researcher execution and operational separation retain the authorship and
+institutional-independence limits in the manuscript.
+
+| Claim and manuscript locator | Inspected evidence | Support and limit |
+| --- | --- | --- |
+| Completed frame; execution and collection sections | Committed report, summary, run and attempt exports | Artifact support: 315 completed trajectories, 5,355 measured steps, 5,372 attempts, sixteen source epochs, accepted retention panel and owner-attested unassisted coverage. Out-of-band intervention is not independently verified. |
+| Final coverage and CR1 outcomes; main tables and Supplement | Committed summary, retained snapshot and contrast exports | Coverage/structural/CR1 table values match the retained snapshot. All four coverage comparisons now have estimates; two unadjudicated CR1 errors remain unknown, not zero or failed outcomes. Estimates remain exploratory. |
+| Billing; resource table and ledger | Committed attempt export and report | 5,317 fully billed attempts, 62,299.75904 settled credits, 38 retry holds and 17 recovery holds. The 55 holds retain 19,200 reserved credits; the 783.16186 lower bound is not a settled total. |
+| Judging and calibration; post-collection assessment | Existing committed judging outputs | The earlier 313/315 snapshot retains 630 scheduled/626 evaluable packets and 1,252 calls. Completing development did not complete those four unavailable judging packets. Calibration remains in progress and AI-assisted, not independent reliability evidence. |
+| Empirical charts; Figures 9 and 10 | 3,150 committed cycle rows and source-bound JSON | All 150 cell-by-cycle means for each of the two plotted metrics reproduce within retained precision. Static range clipping and the Arms A-D denominator were corrected. No candidate code or judge was rerun. |
+
+### Human Reading Cues
+
+The user requested an explicit better/worse direction and additional reading
+clues. Figures and captions now state:
+
+* Higher pass rates mean more specified contracts satisfied; lower hotspot
+  percentages mean fewer complex functions, not proof of correctness.
+* Each trajectory line is a 21-run mean without uncertainty bands. The upper
+  axis is zoomed, and expanding contract sets can lower coverage without
+  showing loss of previously acquired behaviour.
+* Positive contrasts favour the first named arm. Intervals including zero
+  leave the direction uncertain; +10 points is the primary practical benchmark,
+  not a significance threshold.
+* More CR1 passes are preferable, but retention obligations depend on prior
+  feature completeness. Grey outcomes remain unknown.
+* Up/left in the cost panel means more coverage/less spending. Upper-left is
+  preferable only at comparable delivered behaviour; coverage uses every run
+  while costs use fully billed subsets. Cheap failure is not efficiency.
+* The economics graphic is an assumed model. Higher net A-B favours B;
+  fewer break-even cycles mean earlier payback, and larger k/delta delays it.
+  The null case, invented parameters and observed step means remain distinct.
+
+The triggered hybrid policy is explicitly a proposed follow-up, not an
+evaluated combination or a measured cost advantage. An Excalidraw delegate
+updated the native economics labels and matching authoring text through the
+existing exporter; equations, values and other diagram files were preserved.
+
+### Validation and Delivery
+
+The focused tier applies: reporting, figures, non-gate export tooling, related
+authoring tests and bindings changed. No experiment engine, scoring rule,
+dependency, security control or publication-gate semantics changed.
+
+* All 70 authoring tests pass. The initial full-suite run had one stale exact-
+  phrase assertion; the test now checks the actual explicit exploratory-study
+  declaration, and the same check and full suite pass afterward.
+* The structural checker passes: 1,836-character abstract, 94 cited/embedded
+  entries, 105 reusable bibliography entries and approximately 17,010 main-body
+  words. Historical baseline `0d5dcb02` remains unavailable.
+* Browser geometry checks confirm fourteen direction/reading cues fit without
+  text overlap. All plotted cycle values lie within their axes. Native source,
+  export, full-raster, frozen-prompt and current/historical bindings pass.
+* Tectonic produces one 70-page PDF, Supplement page 51, with zero errors,
+  unresolved references, overfull or underfull boxes. All 31,103 extracted words
+  have in-page bounds and no page is blank. Final rendered pages 28, 32, 36,
+  51, 69 and 70 were inspected; earlier candidate opening and conclusion pages
+  were also inspected. Only the inherited `inputenc` notice remains.
+* PDF SHA-256 is
+  `a31b7e8968a175ac5ac8ac8816e55ca860d5b1032f2697be93cc57a86391781b`.
+  The separate `chart_interpretation_revision` in
+  [supplement-integration.json](./supplement-integration.json) preserves the
+  pre-annotation `final_results_revision` and every earlier revision. Working
+  build/inspection files remain external.
+
+Local work is complete. Scientific assessment remains source-bound and
+exploratory; author, employer and venue approval, remaining original-source
+access limits, hosted CI and independent exact-head review are not established
+by these checks. No new data collection, paid candidate/judge call, VM change,
+registration, commit, push or external publication occurred in this update.
 
 ## Critique and Falsifiability Revision 14 November
 

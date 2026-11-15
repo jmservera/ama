@@ -42,11 +42,11 @@
     },
     {
       "stem": "fig-refactoring-economics",
-      "source_sha256": "9aca1d6a7143f85ed0246f41fc8e76a946e969d16641f2d5689f86c738920758",
-      "svg_sha256": "f05285dd93f7464824fd4bb758727d437c8354ed5c8f692beed3e9088bf7280f",
-      "png_sha256": "61b16bccfbac2bb67067dffb680523c3ed02c6d8697640938431196dc4e66a21",
+      "source_sha256": "25c3d443abf83117b20d6369a1d3eb11b9246bfc00e988b2f23eb010a7575fd5",
+      "svg_sha256": "99bc176403332eb884cd35448e75abdd6795a57230e25c067f5e74ae64fe937e",
+      "png_sha256": "7449ceac5c8cfbc657a590bba76796238e76e7e91044c2192bff3e76ff602b00",
       "width": 1240,
-      "height": 1080,
+      "height": 1110,
       "elements": 73
     },
     {

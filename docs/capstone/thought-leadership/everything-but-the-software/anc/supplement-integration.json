@@ -21,7 +21,7 @@
       "content_sha256": "c8608e6fe586fa252099e566a859d01350c5709fd79c9bc40c72595d19f25ccc"
     },
     "anc/measurement-provenance.tex": {
-      "content_sha256": "12fd8fd51d27888eb985b935e928a29f738e716e8024b07b148a2e417581315f"
+      "content_sha256": "d6b98eccbadeb10990fd37fdd75ade5bbad05ae8ef0f84d3129fe727364cb11d"
     }
   },
   "author_review_revision": {
@@ -224,6 +224,81 @@
       "anc/experiment-protocol.tex": "80be451cc5522d152f3de259a888d91933fde92c31c3f5599068fb370e224df6",
       "anc/additional-evidence.tex": "9194a87c35bb31dd9242ac96da5c1b005e23af13ecd7f0aa2be187cfd47fd384",
       "anc/measurement-provenance.tex": "791582b67d5f0f283f2806eeba7a5edc61212afda96ca4f943ae2405525fdc92"
+    }
+  },
+  "final_results_revision": {
+    "date": "2026-11-15",
+    "scope": "Complete 315-trajectory final results, accepted retained-contract panel, sixteen execution sources, final billing and CR1 unknowns, preserved pre-completion judging snapshot, and source-bound empirical charts. Hybrid policy remains proposed; no new experiment, judging, registration or remote write.",
+    "prior_delivery_revision": "falsifiability_revision",
+    "results_main_commit": "d097a10b090baefadf995ecd910eb96c324f0234",
+    "experiment_results_report_git_blob": "fdfb57da92f195d580f2ee3de4840fc0c13cd607",
+    "experiment_results_report_sha256": "e4680e66ba6791c7a23bd484954767bc7d580f881db939cf4fb113d28af10f15",
+    "final_execution_commit": "5481fd8a47aa0bad660e7c0ab68f7fcfeea4137f",
+    "study_state_sha256": "7992b0e21cbacde39b48bb6223d5b663b7013630b265ae64a37223414ab05e4a",
+    "intervention_manifest_sha256": "d26ebe733e50256184c2d5e4d3d66dda55233c14d54a434a037cde6f4cd64879",
+    "primary_estimates_available": true,
+    "completed_trajectories": 315,
+    "measured_steps": 5355,
+    "attempts": 5372,
+    "billing_holds": 55,
+    "cr1_unknowns": 2,
+    "judging_snapshot": {
+      "completed_trajectories": 313,
+      "scheduled_endpoint_packets": 630,
+      "evaluable_endpoint_packets": 626,
+      "judge_calls": 1252,
+      "source_commit": "c10e6d6f62785a5028406a9963acdd499f6bd6b6"
+    },
+    "prior_active_content_sha256": {
+      "anc/measurement-provenance.tex": "12fd8fd51d27888eb985b935e928a29f738e716e8024b07b148a2e417581315f"
+    },
+    "delivery_sha256": "a6d014caef2a729f90c333151b40f7639a8860d6ba37134d92efd5dd034c791c",
+    "delivery_pages": 69,
+    "supplement_start_page": 50,
+    "source_sha256": {
+      "main.tex": "cf4e36a68a263607153d1682765039b37c62583db536475762c73c153cbc838d",
+      "references.bib": "9f1591d786ac533d3d0216ec8105acf6f7d0593422247ddaf46860ef7991e76e",
+      "anc/experiment-protocol.tex": "4337deb0cd05fe5080e1d2c0decc9da6fa2f7e80ba8a2cb017dbd67ab489bf84",
+      "anc/additional-evidence.tex": "9194a87c35bb31dd9242ac96da5c1b005e23af13ecd7f0aa2be187cfd47fd384",
+      "anc/measurement-provenance.tex": "6b1ca52bfffb8957d03c964953e5f14f1816ce86d20d898523d7da8a326e9c68",
+      "anc/export_results_charts.mjs": "fa258959853601e333184c66fbb65c02ea4cc76d0d90b06df69a8c1d0d471085",
+      "anc/study-results-2026-11-15.json": "98c1ddcc3f9f52928c7227689bb25c2083dd142aa6d95375e24a5e6f04cabc91"
+    },
+    "charts": {
+      "fig-study-trajectories.svg": "4bb060935929277ce90ac55a9c949c8e012d034772e6ab0f4d7156646558a82f",
+      "fig-study-trajectories.png": "7a86567518d327bcb6c8059543a4a8956e845e01041d7e0fc33e6d0ce2120f46",
+      "fig-study-outcomes-costs.svg": "e49326fc08e61c29938a564d9e06c34ba44df9aaf04521a5aecc06a856754804",
+      "fig-study-outcomes-costs.png": "2f7d0c8f2a3267ec8656a3c1ff777540c894113e7ceb93e415d495a1a2ca1de8"
+    }
+  },
+  "chart_interpretation_revision": {
+    "date": "2026-11-15",
+    "scope": "Human-readable higher/lower directions, zero and confidence-interval reading cues, practical benchmark, unknown outcomes, quality-matched cost interpretation and assumed-model economics labels. Prior final-results candidate retained; numerical results and experimental protocol unchanged.",
+    "prior_delivery_revision": "final_results_revision",
+    "results_main_commit": "d097a10b090baefadf995ecd910eb96c324f0234",
+    "delivery_sha256": "a31b7e8968a175ac5ac8ac8816e55ca860d5b1032f2697be93cc57a86391781b",
+    "delivery_pages": 70,
+    "supplement_start_page": 51,
+    "source_sha256": {
+      "main.tex": "3614f73d4d43fdf7f7a8fbc5afe07681c04c523d30e2e109cb2cb92463a47508",
+      "references.bib": "9f1591d786ac533d3d0216ec8105acf6f7d0593422247ddaf46860ef7991e76e",
+      "anc/experiment-protocol.tex": "2697c7a8dd6b5e28a56f0f32f015f347e05efc7022bdf9d3b1383abd1e755f42",
+      "anc/additional-evidence.tex": "9194a87c35bb31dd9242ac96da5c1b005e23af13ecd7f0aa2be187cfd47fd384",
+      "anc/measurement-provenance.tex": "6b1ca52bfffb8957d03c964953e5f14f1816ce86d20d898523d7da8a326e9c68",
+      "anc/export_results_charts.mjs": "cb028b8170069980f8a1878c005536cb5ab0c9576dab4fbe366cd68b46efb480",
+      "anc/study-results-2026-11-15.json": "98c1ddcc3f9f52928c7227689bb25c2083dd142aa6d95375e24a5e6f04cabc91"
+    },
+    "charts": {
+      "fig-study-trajectories.svg": "a36feed3f48d1d3b1366d6c0fffdc0b4f11152e5dfdd1eb724a573f4ab724fd5",
+      "fig-study-trajectories.png": "c32a04109e819e7c1864954d71f8d2a2b0359dee4f248654ce1540c3cc0e437e",
+      "fig-study-outcomes-costs.svg": "f279ef225838d642f6bcf3336e9bc55032ffc817623d7afe85c4f3ef251d0c20",
+      "fig-study-outcomes-costs.png": "8833f05b425b558015fe125dce45ec267dcff22516a89950d2ab5abb140b292c"
+    },
+    "economics_figure": {
+      "stem": "fig-refactoring-economics",
+      "source_sha256": "25c3d443abf83117b20d6369a1d3eb11b9246bfc00e988b2f23eb010a7575fd5",
+      "svg_sha256": "99bc176403332eb884cd35448e75abdd6795a57230e25c067f5e74ae64fe937e",
+      "png_sha256": "7449ceac5c8cfbc657a590bba76796238e76e7e91044c2192bff3e76ff602b00"
     }
   },
   "restored_citation_keys": [
