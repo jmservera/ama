@@ -407,7 +407,7 @@ const programmeRow = (row) => {
   const sent = work.handoff?.sender;
   return [
     `${row.id}: ${row.address || "Address unknown"}`,
-    work.returned ? work.returned.reason : work.handoff ? `Not returned. Handoff state: ${screenValue(work.handoff.state)}.` : "Not returned",
+    work.returned ? `State: Returned. ${screenValue(work.returned.reason)}` : work.handoff ? `State: Not returned. Handoff state: ${screenValue(work.handoff.state)}.` : "State: Not returned",
     work.returned ? work.returned.sender : sent,
     work.owner,
     work.handoff ? work.handoff.proposed_receiver : "No handoff proposed",
@@ -433,8 +433,8 @@ function programmeQueue(first, total, loadPage, start = 0) {
   let items = first;
   let offset = start;
   const holder = h("div", {});
-  const status = h("p", { role: "status", id: "programme-filter-status" });
-  const paging = h("p", { class: "empty", role: "status", id: "programme-page-status" });
+  const status = h("p", { role: "status", "aria-live": "polite", id: "programme-filter-status" });
+  const paging = h("p", { class: "empty", role: "status", "aria-live": "polite", id: "programme-page-status" });
   const select = h("select", { id: "programme-scope", name: "scope" },
     programmeScopes.map(([value, text]) => h("option", { value }, text)));
   const apply = (scope, remember = true) => {
@@ -496,9 +496,9 @@ function programmeQueue(first, total, loadPage, start = 0) {
 }
 const programmeFunnel = (report) => {
   const rows = report?.funnel;
-  if (!Array.isArray(rows)) return h("p", { class: "empty" }, "Lifecycle and funnel counts are Unknown. No record was supplied.");
+  if (!Array.isArray(rows)) return h("p", { class: "empty" }, "State: Unknown. Lifecycle and funnel counts are Unknown. No record was supplied.");
   return h("div", {},
-    h("p", {}, `Recorded as of ${screenValue(report.as_of)}. Audit integrity: ${screenValue(report.audit_integrity)}. Conversion is Unknown; counts are stage history only.`),
+    h("p", {}, `State: Recorded stage history (not a pass). Recorded as of ${screenValue(report.as_of)}. Audit integrity state: ${screenValue(report.audit_integrity)}. Conversion state: Unknown; counts are stage history only.`),
     screenTable("Lifecycle and funnel by stage",
       ["Stage", "Entries", "Exits", "Returns", "Reopens", "Cases in scope"],
       rows.map((r) => [r.stage, r.entries, r.exits, r.returns, r.reopens, r.denominator])));
@@ -645,12 +645,20 @@ function journeyStageMap(c, current = null) {
 // Text prefix for each step state (WCAG 1.4.1). Unrecognised states fall back to Warning, never Pass: no state here is a pass.
 const programmeStatePrefix = { "Blocked": "Action needed", "Blocked: evidence missing": "Action needed", "No recorded blocker": "Warning" };
 const programmeStateLabel = (state) => `${Object.hasOwn(programmeStatePrefix, state) ? programmeStatePrefix[state] : "Warning"}: ${state}`;
-const programmeSections = [["programme-summary", "State summary"], ["programme-steps", "Step states table"],
-  ["programme-journey", "Journey stages"], ["programme-withheld", "Not shown for this role"]];
-const programmeJump = (id) => (event) => {
-  const target = document.getElementById(id);
-  if (target) { target.focus(); target.scrollIntoView?.({ block: "start" }); }
-};
+const programmeJumpNav = (label, sections) => h("nav", { "aria-label": label, class: "screen-links" },
+  sections.map(([id, text]) => h("a", { href: `#${id}`, "data-jump": id }, `Go to ${text}`)));
+const programmeOverviewSections = [
+  ["programme-overview-boundary", "Overview boundary"],
+  ["programme-shared-queue", "Shared queue"],
+  ["programme-funnel", "Lifecycle and funnel"],
+  ["programme-overview-withheld", "Overview withheld"]
+];
+const programmeSections = [
+  ["programme-summary", "State summary"],
+  ["programme-steps", "Same-home step states"],
+  ["programme-journey", "Journey stages"],
+  ["programme-withheld", "Not shown for this role"]
+];
 registerRoleScreen({
   id: "programme-queue",
   ownsStageMap: true,
@@ -663,13 +671,14 @@ registerRoleScreen({
     const first = await loadPage(start);
     const report = await api("/api/coordinator?view=all", undefined, signal).catch(() => null);
     return h("div", {},
-      screenPanel("Evidence boundary",
-        h("p", {}, "Read-only view of recorded work. Chase and update responsibility are shown separately. Nothing here sends, assigns or changes a record. Source: desk research, not observed behaviour; validation remains open.")),
-      screenPanel("Shared queue", programmeQueue(first.items || [], first.total, loadPage, start)),
-      screenPanel("Lifecycle and funnel", programmeFunnel(report)),
+      programmeJumpNav("Jump to a section of the programme overview", programmeOverviewSections),
+      screenJumpTarget("programme-overview-boundary", screenPanel("Evidence boundary",
+        h("p", {}, "Read-only view of recorded work. Chase and update responsibility are shown separately. Nothing here sends, assigns or changes a record. Source: desk research, not observed behaviour; validation remains open."))),
+      screenJumpTarget("programme-shared-queue", screenPanel("Shared queue", programmeQueue(first.items || [], first.total, loadPage, start))),
+      screenJumpTarget("programme-funnel", screenPanel("Lifecycle and funnel", programmeFunnel(report))),
       screenTension("disclosure"),
-      screenWithheld(["Resident contact details and access history (open the case workspace for the safe route reference)",
-        "Household and vulnerability details beyond what a queue row needs", "Funding amounts and claim values"]));
+      screenJumpTarget("programme-overview-withheld", screenWithheld(["Resident contact details and access history (open the case workspace for the safe route reference)",
+        "Household and vulnerability details beyond what a queue row needs", "Funding amounts and claim values"])));
   },
   async load(c) {
     const orders = await api(`/api/workorders?case=${encodeURIComponent(c.id)}`, undefined, routeController.signal).catch(() => null);
@@ -678,23 +687,21 @@ registerRoleScreen({
   render(c, extra) {
     const rows = programmeGates(c, extra?.orders);
     const blocked = rows.filter((r) => r[1].startsWith("Blocked"));
-    const section = (id, node) => h("div", { id, tabindex: "-1" }, node);
     return h("div", {},
       screenPanel(`Connected view for ${c.id}`,
         h("p", {}, "Technical, resident, delivery, quality and finance states are shown independently. One clear state never clears another."),
-        h("div", { class: "row", role: "group", "aria-label": "Jump to a section of this screen" },
-          programmeSections.map(([id, text]) => h("button", { class: "btn alt", type: "button", onclick: programmeJump(id) }, text))),
+        programmeJumpNav("Jump to a section of the connected home view", programmeSections),
         blocked.length ? screenUnknown(`${blocked.length} of 5 steps are blocked: ${blocked.map((r) => r[0]).join(", ")}.`,
-          blocked[0][3], blocked[0][4]) : h("p", {}, "No blocker is recorded, which does not confirm readiness."),
-        section("programme-summary", h("div", {},
+          blocked[0][3], blocked[0][4]) : h("p", {}, "State: Warning. No blocker is recorded, which does not confirm readiness."),
+        screenJumpTarget("programme-summary", h("div", {},
           h("h3", {}, "State summary in words"),
           h("p", {}, "Each state starts with a word so it does not depend on colour. A step with no recorded blocker is a warning, not a pass."),
           h("ul", {}, rows.map(([name, state, meaning, owner, action]) => h("li", {},
             `${programmeStateLabel(state)}: ${name} step. ${meaning} Owner: ${owner}. Next action: ${action}.`))))),
-        section("programme-steps", screenTable("Same-home step states", ["Step", "State", "Meaning", "Owner", "Next action"], rows))),
-      section("programme-journey", journeyStageMap(c)),
+        screenJumpTarget("programme-steps", screenTable("Same-home step states", ["Step", "State", "Meaning", "Owner", "Next action"], rows))),
+      screenJumpTarget("programme-journey", journeyStageMap(c)),
       screenTension("disclosure"),
-      section("programme-withheld", screenWithheld(["Resident contact details and access history (use the safe route reference in the case workspace)",
+      screenJumpTarget("programme-withheld", screenWithheld(["Resident contact details and access history (use the safe route reference in the case workspace)",
         "Household and vulnerability details beyond what a step state needs", "Funding amounts and claim values"])));
   }
 });

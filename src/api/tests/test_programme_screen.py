@@ -380,10 +380,8 @@ class ProgrammeScreen(unittest.TestCase):
         self.assertIn("not a pass", clear)
         self.assertNotIn("Blocked", clear)
         for node in (out["blocked"], out["clear"]):
-            for control in ("form", "input", "select", "textarea"):
+            for control in ("button", "form", "input", "select", "textarea"):
                 self.assertNotIn(control, tags(node))
-            # Only the four section-jump buttons, which move focus and change no record.
-            self.assertEqual(tags(node).count("button"), 4)
 
     def test_queue_pages_reach_all_permitted_cases_with_get_only(self) -> None:
         out = run_paging()
@@ -535,7 +533,7 @@ class ProgrammeScreen(unittest.TestCase):
         self.assertNotIn("screen=procurement-packages", coordinator)
         self.assertIn("is not installed for your role", coordinator)
         for node in (run()["blocked"],):
-            self.assertEqual(tags(node).count("button"), 4)
+            self.assertNotIn("button", tags(node))
 
     def test_every_stage_link_has_distinct_accessible_text(self) -> None:
         for role in ("Retrofit Programme Manager", "Retrofit Coordinator"):
