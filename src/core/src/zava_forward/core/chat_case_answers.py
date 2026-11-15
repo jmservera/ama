@@ -41,8 +41,10 @@ RULES: dict[str, str] = {
         "person. The chat takes none of these steps."
     ),
     VISIT_CONSENT: (
-        "Before a non-emergency visit to a home, the resident's consent is recorded by the "
-        "named officer using the case consent control. Chat cannot record or assume it."
+        "Before a non-emergency visit to a home, the named officer must confirm the "
+        "resident's consent and access with the resident, and the resident's consent is "
+        "recorded by the named officer using the case consent control. Chat cannot record "
+        "or assume either."
     ),
     DOMAIN_BOUNDARY: (
         "Grant eligibility, PAS 2035 sign-off and sensor or damp findings are decided by the "
