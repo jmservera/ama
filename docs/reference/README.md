@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-13
+ms.date: 2026-11-15
 ms.topic: overview
 ---
 
@@ -47,9 +47,53 @@ production acceptance or a higher score.
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
-The current coauthored delivery has 49 pages, with the additive Supplement
-starting on page 39. This is a draft with unreported experimental outcomes,
-not a completed confirmatory report.
+The current v21 coauthored delivery has 70 pages, with the additive Supplement
+starting on page 48 and the source/digest register on pages 68-70. The
+[15 November provenance and readability revision](../capstone/thought-leadership/everything-but-the-software/README.md#provenance-and-readability-15-november)
+moves 61 unique identifiers out of prose, adds local arm/checkpoint/uncertainty
+explanations and shortens repeated result and assistance histories. All
+existing table fields, displayed equations, prompts and prior records are
+preserved; 72 authoring tests and structural checks pass. The overall page
+count has not grown. The preceding v20 70-page delivery (Supplement page 51)
+remains in the binding and dated record. The
+[15 November final-results and chart interpretation record](../capstone/thought-leadership/everything-but-the-software/README.md#final-results-and-chart-interpretation-15-november)
+incorporates all 315 completed trajectories, sixteen execution sources, updated
+contrasts and billing, and source-bound empirical charts with explicit
+higher/lower, zero/interval, unknown-outcome and quality-matched cost cues.
+The economics graphic remains an assumed model, and the hybrid policy remains
+an untested follow-up. The
+[14 November critique and falsifiability revision](../capstone/thought-leadership/everything-but-the-software/README.md#critique-and-falsifiability-revision-14-november)
+separates the short-horizon decay premise (P1) from the consolidation remedy
+(P2 10-point coverage threshold and P3 CR1/cost payback) and the structural
+manipulation check (`tab:predictionverdicts`), surfaces the per-model
+coverage split in the abstract, main results and conclusion, and specifies a
+30-to-40-cycle brownfield factorial follow-up experiment (`sec:futureexperiment`).
+The [14 November finalization follow-up](../capstone/thought-leadership/everything-but-the-software/README.md#finalization-follow-up-14-november)
+records the exact Coach assessment, original-source qualifications, scoped
+participant-name review, retained timing/version metadata and the selected
+experiment GitHub deposit. Manager approval and the earlier CELA submission
+are owner-reported; final-version clearance remains unconfirmed. The
+[14 November report refresh](../capstone/thought-leadership/everything-but-the-software/README.md#attested-report-refresh-14-november)
+adds owner-attested coverage of 313 completed trajectories, exploratory
+complete-pair intervals, allocation bounds and observed-scenario judge
+contrasts with abstention counts. It preserves the
+[14 November readability revision](../capstone/thought-leadership/everything-but-the-software/README.md#readability-and-interpretation-14-november)
+and its findings-led structure, split tables, corrected structural-target
+interpretation and detailed Supplement. The completed
+315-trajectory five-arm S1 results and retained judging/calibration/SDK records
+are now grounded in
+[final experiment report](https://github.com/jmservera/ama-thought-mve/blob/d097a10b090baefadf995ecd910eb96c324f0234/results/EXPERIMENT_RESULTS.md)
+(`jmservera/ama-thought-mve` commit `d097a10b`), following the original
+[13 November study results update](../capstone/thought-leadership/everything-but-the-software/README.md#study-results-and-post-collection-judging-13-november).
+The completed owner-attested frame unlocks the automated whole-study primary
+(`primary_estimates_available = true`) and all four coverage contrasts.
+Two CR1 outcomes and 55 billing holds remain unresolved. Judging retains the
+earlier 313/315 snapshot with 626 evaluable packets and 1,252 calls; it was
+not silently completed when the development runs completed. Scenario
+abstentions, scheduling dependence and unregistered amendments remain explicit.
+The v19 66-page delivery (Supplement page 47) and v16 60-page readability delivery (Supplement
+page 44), v15 56-page results delivery (Supplement page 46) and earlier v14
+49-page pre-results delivery (Supplement page 39) remain in the revision record.
 
 The later [8 November study update](../capstone/source/review-2026-11-08.md#later-8-november-study-and-coauthor-update)
 records owner-confirmed OSF base `xcpt4` (7 November; public API returned 401),

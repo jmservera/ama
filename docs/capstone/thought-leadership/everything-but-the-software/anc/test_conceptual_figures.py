@@ -115,8 +115,8 @@ class ConceptualFigureTests(unittest.TestCase):
             self.assertIn(f"{{{stem}.png}}", narrative)
         for identifier in ("PF1", "PF2", "PF3"):
             self.assertIn(f"TODO(author): {identifier}", source)
-        self.assertIn(r"\resultsfalse", narrative)
-        self.assertNotIn(r"\resultstrue", narrative)
+        self.assertIn(r"\resultstrue", narrative)
+        self.assertNotIn(r"\resultsfalse", narrative)
         self.assertIn("ten ordered features", narrative)
         self.assertNotIn("Regional access scope change", narrative)
 

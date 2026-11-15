@@ -1,0 +1,1975 @@
+{
+  "schema": "study-results-snapshot/v1",
+  "source_repo": "https://github.com/jmservera/ama-thought-mve",
+  "results_commit": "d097a10b090baefadf995ecd910eb96c324f0234",
+  "execution_commit": "5481fd8a47aa0bad660e7c0ab68f7fcfeea4137f",
+  "inputs_sha256": "c41f02de9f84843260b53ec59cc0f874b6afaf1555dc38209e66db63949f2f24",
+  "experiment_results_md_sha256": "e4680e66ba6791c7a23bd484954767bc7d580f881db939cf4fb113d28af10f15",
+  "study_state_sha256": "7992b0e21cbacde39b48bb6223d5b663b7013630b265ae64a37223414ab05e4a",
+  "intervention_coverage": {
+    "status": "owner-attested",
+    "manifest_sha256": "d26ebe733e50256184c2d5e4d3d66dda55233c14d54a434a037cde6f4cd64879",
+    "scope_state_sha256": "7992b0e21cbacde39b48bb6223d5b663b7013630b265ae64a37223414ab05e4a",
+    "attested_at": "2026-11-15T09:08:12.811511+00:00",
+    "covered_trajectories": 315,
+    "assisted_trajectories": 0
+  },
+  "primary_estimates_available": true,
+  "overall_summary": {
+    "interpretation": "Primary B-D: equal weights across all three model strata",
+    "pooled_within_cell_sd": 3.127783414795164,
+    "degrees_of_freedom": 300
+  },
+  "pooled_contrasts": {
+    "B-D": {
+      "complete_unassisted_pair_63_vs_63": true,
+      "h1_pass_rate_diff_pct_points": 1.1874,
+      "h1_bootstrap_95_ci": [
+        0.1,
+        2.2247
+      ],
+      "h1_full_allocation_identification_bounds_pct_points": [
+        1.1874,
+        1.1874
+      ]
+    },
+    "B-A": {
+      "complete_unassisted_pair_63_vs_63": true,
+      "h1_pass_rate_diff_pct_points": 1.4123,
+      "h1_bootstrap_95_ci": [
+        0.325,
+        2.4497
+      ],
+      "h1_full_allocation_identification_bounds_pct_points": [
+        1.4123,
+        1.4123
+      ]
+    },
+    "B-C": {
+      "complete_unassisted_pair_63_vs_63": true,
+      "h1_pass_rate_diff_pct_points": 0.6624,
+      "h1_bootstrap_95_ci": [
+        -0.4499,
+        1.7498
+      ],
+      "h1_full_allocation_identification_bounds_pct_points": [
+        0.6624,
+        0.6624
+      ]
+    },
+    "E-B": {
+      "complete_unassisted_pair_63_vs_63": true,
+      "h1_pass_rate_diff_pct_points": 0.0375,
+      "h1_bootstrap_95_ci": [
+        -1.0749,
+        1.1374
+      ],
+      "h1_full_allocation_identification_bounds_pct_points": [
+        0.0375,
+        0.0375
+      ]
+    }
+  },
+  "within_model_contrasts": {
+    "claude-sonnet-5.5": {
+      "B-D": {
+        "complete_unassisted_pair_21_vs_21": true,
+        "h1_diff": 0.2625,
+        "h1_ci": [
+          -0.15,
+          0.7499
+        ],
+        "h1_identification_bounds": [
+          0.2625,
+          0.2625
+        ],
+        "h6_cr1_complete_boolean_pair": true,
+        "h6_cr1_diff_points": 4.7619,
+        "h6_cr1_exact_ci": [
+          -18.7736,
+          26.7692
+        ],
+        "h6_cr1_identification_bounds_points": [
+          4.7619,
+          4.7619
+        ]
+      },
+      "B-A": {
+        "complete_unassisted_pair_21_vs_21": true,
+        "h1_diff": 0.225,
+        "h1_ci": [
+          -0.1875,
+          0.7124
+        ],
+        "h1_identification_bounds": [
+          0.225,
+          0.225
+        ],
+        "h6_cr1_complete_boolean_pair": true,
+        "h6_cr1_diff_points": 0.0,
+        "h6_cr1_exact_ci": [
+          -18.8335,
+          18.8335
+        ],
+        "h6_cr1_identification_bounds_points": [
+          0.0,
+          0.0
+        ]
+      },
+      "B-C": {
+        "complete_unassisted_pair_21_vs_21": true,
+        "h1_diff": 0.075,
+        "h1_ci": [
+          -0.225,
+          0.4124
+        ],
+        "h1_identification_bounds": [
+          0.075,
+          0.075
+        ],
+        "h6_cr1_complete_boolean_pair": true,
+        "h6_cr1_diff_points": 0.0,
+        "h6_cr1_exact_ci": [
+          -18.8335,
+          18.8335
+        ],
+        "h6_cr1_identification_bounds_points": [
+          0.0,
+          0.0
+        ]
+      },
+      "E-B": {
+        "complete_unassisted_pair_21_vs_21": true,
+        "h1_diff": 0.075,
+        "h1_ci": [
+          -0.2625,
+          0.375
+        ],
+        "h1_identification_bounds": [
+          0.075,
+          0.075
+        ],
+        "h6_cr1_complete_boolean_pair": true,
+        "h6_cr1_diff_points": -4.7619,
+        "h6_cr1_exact_ci": [
+          -26.7692,
+          18.7736
+        ],
+        "h6_cr1_identification_bounds_points": [
+          -4.7619,
+          -4.7619
+        ]
+      }
+    },
+    "gemini-4-argon": {
+      "B-D": {
+        "complete_unassisted_pair_21_vs_21": true,
+        "h1_diff": 0.15,
+        "h1_ci": [
+          -0.15,
+          0.5249
+        ],
+        "h1_identification_bounds": [
+          0.15,
+          0.15
+        ],
+        "h6_cr1_complete_boolean_pair": true,
+        "h6_cr1_diff_points": 4.7619,
+        "h6_cr1_exact_ci": [
+          -43.8776,
+          51.6701
+        ],
+        "h6_cr1_identification_bounds_points": [
+          4.7619,
+          4.7619
+        ]
+      },
+      "B-A": {
+        "complete_unassisted_pair_21_vs_21": true,
+        "h1_diff": 0.3375,
+        "h1_ci": [
+          -0.075,
+          0.8249
+        ],
+        "h1_identification_bounds": [
+          0.3375,
+          0.3375
+        ],
+        "h6_cr1_complete_boolean_pair": true,
+        "h6_cr1_diff_points": 9.5238,
+        "h6_cr1_exact_ci": [
+          -39.1648,
+          54.7328
+        ],
+        "h6_cr1_identification_bounds_points": [
+          9.5238,
+          9.5238
+        ]
+      },
+      "B-C": {
+        "complete_unassisted_pair_21_vs_21": true,
+        "h1_diff": -0.1875,
+        "h1_ci": [
+          -0.4874,
+          0.1875
+        ],
+        "h1_identification_bounds": [
+          -0.1875,
+          -0.1875
+        ],
+        "h6_cr1_complete_boolean_pair": true,
+        "h6_cr1_diff_points": -38.0952,
+        "h6_cr1_exact_ci": [
+          -77.0464,
+          14.6925
+        ],
+        "h6_cr1_identification_bounds_points": [
+          -38.0952,
+          -38.0952
+        ]
+      },
+      "E-B": {
+        "complete_unassisted_pair_21_vs_21": true,
+        "h1_diff": 0.0375,
+        "h1_ci": [
+          -0.225,
+          0.3
+        ],
+        "h1_identification_bounds": [
+          0.0375,
+          0.0375
+        ],
+        "h6_cr1_complete_boolean_pair": true,
+        "h6_cr1_diff_points": 14.2857,
+        "h6_cr1_exact_ci": [
+          -37.2441,
+          60.6678
+        ],
+        "h6_cr1_identification_bounds_points": [
+          14.2857,
+          14.2857
+        ]
+      }
+    },
+    "gpt-6.1-sol": {
+      "B-D": {
+        "complete_unassisted_pair_21_vs_21": true,
+        "h1_diff": 3.1496,
+        "h1_ci": [
+          0.0,
+          6.2992
+        ],
+        "h1_identification_bounds": [
+          3.1496,
+          3.1496
+        ],
+        "h6_cr1_complete_boolean_pair": false,
+        "h6_cr1_diff_points": null,
+        "h6_cr1_exact_ci": [
+          null,
+          null
+        ],
+        "h6_cr1_identification_bounds_points": [
+          -9.5238,
+          -4.7619
+        ]
+      },
+      "B-A": {
+        "complete_unassisted_pair_21_vs_21": true,
+        "h1_diff": 3.6745,
+        "h1_ci": [
+          0.5249,
+          6.8241
+        ],
+        "h1_identification_bounds": [
+          3.6745,
+          3.6745
+        ],
+        "h6_cr1_complete_boolean_pair": false,
+        "h6_cr1_diff_points": null,
+        "h6_cr1_exact_ci": [
+          null,
+          null
+        ],
+        "h6_cr1_identification_bounds_points": [
+          -9.5238,
+          -4.7619
+        ]
+      },
+      "B-C": {
+        "complete_unassisted_pair_21_vs_21": true,
+        "h1_diff": 2.0997,
+        "h1_ci": [
+          -1.0499,
+          5.2493
+        ],
+        "h1_identification_bounds": [
+          2.0997,
+          2.0997
+        ],
+        "h6_cr1_complete_boolean_pair": false,
+        "h6_cr1_diff_points": null,
+        "h6_cr1_exact_ci": [
+          null,
+          null
+        ],
+        "h6_cr1_identification_bounds_points": [
+          -4.7619,
+          4.7619
+        ]
+      },
+      "E-B": {
+        "complete_unassisted_pair_21_vs_21": true,
+        "h1_diff": 0.0,
+        "h1_ci": [
+          -3.1496,
+          3.1496
+        ],
+        "h1_identification_bounds": [
+          0.0,
+          0.0
+        ],
+        "h6_cr1_complete_boolean_pair": false,
+        "h6_cr1_diff_points": null,
+        "h6_cr1_exact_ci": [
+          null,
+          null
+        ],
+        "h6_cr1_identification_bounds_points": [
+          9.5238,
+          14.2857
+        ]
+      }
+    }
+  },
+  "cells": [
+    {
+      "model": "claude-sonnet-5.5",
+      "arm": "A",
+      "allocated": 21,
+      "completed": 21,
+      "p10_mean": 99.44,
+      "p10_median": 100.0,
+      "p10_min": 96.85,
+      "p10_100_runs": 12,
+      "p10_open_reg_mean": 0.0,
+      "p10_open_reg_runs": 0,
+      "loss_cycles_mean": 0.0,
+      "cr1_pass": 21,
+      "cr1_fail": 0,
+      "cr1_missing": 0,
+      "ccn_over_10_pct": 1.1,
+      "dup_pct": 0.33,
+      "lint_per_kloc": 28.15,
+      "mean_ccn": 2.79,
+      "nloc_src": 439.6,
+      "md_words": 106.0,
+      "delivery_credits_mean": 54.52,
+      "delivery_credits_n": 21,
+      "cr1_credits_mean": 11.07,
+      "cr1_credits_n": 21
+    },
+    {
+      "model": "claude-sonnet-5.5",
+      "arm": "B",
+      "allocated": 21,
+      "completed": 21,
+      "p10_mean": 99.66,
+      "p10_median": 100.0,
+      "p10_min": 98.43,
+      "p10_100_runs": 13,
+      "p10_open_reg_mean": 0.0,
+      "p10_open_reg_runs": 0,
+      "loss_cycles_mean": 0.0,
+      "cr1_pass": 21,
+      "cr1_fail": 0,
+      "cr1_missing": 0,
+      "ccn_over_10_pct": 0.0,
+      "dup_pct": 0.05,
+      "lint_per_kloc": 2.26,
+      "mean_ccn": 2.66,
+      "nloc_src": 463.2,
+      "md_words": 351.3,
+      "delivery_credits_mean": 115.02,
+      "delivery_credits_n": 21,
+      "cr1_credits_mean": 12.07,
+      "cr1_credits_n": 21
+    },
+    {
+      "model": "claude-sonnet-5.5",
+      "arm": "C",
+      "allocated": 21,
+      "completed": 21,
+      "p10_mean": 99.59,
+      "p10_median": 100.0,
+      "p10_min": 97.64,
+      "p10_100_runs": 12,
+      "p10_open_reg_mean": 0.0,
+      "p10_open_reg_runs": 0,
+      "loss_cycles_mean": 0.0,
+      "cr1_pass": 21,
+      "cr1_fail": 0,
+      "cr1_missing": 0,
+      "ccn_over_10_pct": 0.95,
+      "dup_pct": 0.25,
+      "lint_per_kloc": 21.14,
+      "mean_ccn": 2.78,
+      "nloc_src": 449.5,
+      "md_words": 378.8,
+      "delivery_credits_mean": 110.89,
+      "delivery_credits_n": 21,
+      "cr1_credits_mean": 11.85,
+      "cr1_credits_n": 21
+    },
+    {
+      "model": "claude-sonnet-5.5",
+      "arm": "D",
+      "allocated": 21,
+      "completed": 21,
+      "p10_mean": 99.4,
+      "p10_median": 100.0,
+      "p10_min": 96.85,
+      "p10_100_runs": 11,
+      "p10_open_reg_mean": 0.0,
+      "p10_open_reg_runs": 0,
+      "loss_cycles_mean": 0.0,
+      "cr1_pass": 20,
+      "cr1_fail": 1,
+      "cr1_missing": 0,
+      "ccn_over_10_pct": 1.1,
+      "dup_pct": 0.31,
+      "lint_per_kloc": 28.84,
+      "mean_ccn": 2.8,
+      "nloc_src": 435.6,
+      "md_words": 106.0,
+      "delivery_credits_mean": 53.7,
+      "delivery_credits_n": 21,
+      "cr1_credits_mean": 11.14,
+      "cr1_credits_n": 21
+    },
+    {
+      "model": "claude-sonnet-5.5",
+      "arm": "E",
+      "allocated": 21,
+      "completed": 21,
+      "p10_mean": 99.74,
+      "p10_median": 100.0,
+      "p10_min": 97.64,
+      "p10_100_runs": 16,
+      "p10_open_reg_mean": 0.0,
+      "p10_open_reg_runs": 0,
+      "loss_cycles_mean": 0.0,
+      "cr1_pass": 20,
+      "cr1_fail": 1,
+      "cr1_missing": 0,
+      "ccn_over_10_pct": 1.44,
+      "dup_pct": 0.26,
+      "lint_per_kloc": 28.23,
+      "mean_ccn": 2.79,
+      "nloc_src": 438.0,
+      "md_words": 106.0,
+      "delivery_credits_mean": 104.1,
+      "delivery_credits_n": 20,
+      "cr1_credits_mean": 11.05,
+      "cr1_credits_n": 21
+    },
+    {
+      "model": "gemini-4-argon",
+      "arm": "A",
+      "allocated": 21,
+      "completed": 21,
+      "p10_mean": 99.18,
+      "p10_median": 99.21,
+      "p10_min": 96.06,
+      "p10_100_runs": 6,
+      "p10_open_reg_mean": 0.0,
+      "p10_open_reg_runs": 0,
+      "loss_cycles_mean": 0.0,
+      "cr1_pass": 6,
+      "cr1_fail": 15,
+      "cr1_missing": 0,
+      "ccn_over_10_pct": 0.33,
+      "dup_pct": 0.0,
+      "lint_per_kloc": 0.08,
+      "mean_ccn": 2.68,
+      "nloc_src": 600.6,
+      "md_words": 106.0,
+      "delivery_credits_mean": 112.66,
+      "delivery_credits_n": 20,
+      "cr1_credits_mean": 27.1,
+      "cr1_credits_n": 21
+    },
+    {
+      "model": "gemini-4-argon",
+      "arm": "B",
+      "allocated": 21,
+      "completed": 21,
+      "p10_mean": 99.51,
+      "p10_median": 99.21,
+      "p10_min": 99.21,
+      "p10_100_runs": 8,
+      "p10_open_reg_mean": 0.0,
+      "p10_open_reg_runs": 0,
+      "loss_cycles_mean": 0.0,
+      "cr1_pass": 8,
+      "cr1_fail": 13,
+      "cr1_missing": 0,
+      "ccn_over_10_pct": 0.0,
+      "dup_pct": 0.0,
+      "lint_per_kloc": 0.0,
+      "mean_ccn": 2.26,
+      "nloc_src": 620.1,
+      "md_words": 403.1,
+      "delivery_credits_mean": 253.03,
+      "delivery_credits_n": 17,
+      "cr1_credits_mean": 30.79,
+      "cr1_credits_n": 21
+    },
+    {
+      "model": "gemini-4-argon",
+      "arm": "C",
+      "allocated": 21,
+      "completed": 21,
+      "p10_mean": 99.7,
+      "p10_median": 100.0,
+      "p10_min": 96.85,
+      "p10_100_runs": 16,
+      "p10_open_reg_mean": 0.0,
+      "p10_open_reg_runs": 0,
+      "loss_cycles_mean": 0.0,
+      "cr1_pass": 16,
+      "cr1_fail": 5,
+      "cr1_missing": 0,
+      "ccn_over_10_pct": 0.0,
+      "dup_pct": 0.0,
+      "lint_per_kloc": 0.06,
+      "mean_ccn": 1.78,
+      "nloc_src": 778.5,
+      "md_words": 371.7,
+      "delivery_credits_mean": 239.55,
+      "delivery_credits_n": 18,
+      "cr1_credits_mean": 40.53,
+      "cr1_credits_n": 20
+    },
+    {
+      "model": "gemini-4-argon",
+      "arm": "D",
+      "allocated": 21,
+      "completed": 21,
+      "p10_mean": 99.36,
+      "p10_median": 99.21,
+      "p10_min": 96.85,
+      "p10_100_runs": 7,
+      "p10_open_reg_mean": 0.0,
+      "p10_open_reg_runs": 0,
+      "loss_cycles_mean": 0.0,
+      "cr1_pass": 7,
+      "cr1_fail": 14,
+      "cr1_missing": 0,
+      "ccn_over_10_pct": 0.08,
+      "dup_pct": 0.05,
+      "lint_per_kloc": 0.09,
+      "mean_ccn": 2.63,
+      "nloc_src": 596.5,
+      "md_words": 106.0,
+      "delivery_credits_mean": 116.29,
+      "delivery_credits_n": 17,
+      "cr1_credits_mean": 28.02,
+      "cr1_credits_n": 21
+    },
+    {
+      "model": "gemini-4-argon",
+      "arm": "E",
+      "allocated": 21,
+      "completed": 21,
+      "p10_mean": 99.55,
+      "p10_median": 99.21,
+      "p10_min": 98.43,
+      "p10_100_runs": 10,
+      "p10_open_reg_mean": 0.048,
+      "p10_open_reg_runs": 1,
+      "loss_cycles_mean": 0.19,
+      "cr1_pass": 11,
+      "cr1_fail": 10,
+      "cr1_missing": 0,
+      "ccn_over_10_pct": 0.48,
+      "dup_pct": 0.0,
+      "lint_per_kloc": 0.0,
+      "mean_ccn": 2.74,
+      "nloc_src": 605.1,
+      "md_words": 106.0,
+      "delivery_credits_mean": 237.66,
+      "delivery_credits_n": 17,
+      "cr1_credits_mean": 30.06,
+      "cr1_credits_n": 20
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "arm": "A",
+      "allocated": 21,
+      "completed": 21,
+      "p10_mean": 91.6,
+      "p10_median": 88.98,
+      "p10_min": 88.98,
+      "p10_100_runs": 5,
+      "p10_open_reg_mean": 0.0,
+      "p10_open_reg_runs": 0,
+      "loss_cycles_mean": 0.0,
+      "cr1_pass": 19,
+      "cr1_fail": 2,
+      "cr1_missing": 0,
+      "ccn_over_10_pct": 3.42,
+      "dup_pct": 0.0,
+      "lint_per_kloc": 16.04,
+      "mean_ccn": 2.55,
+      "nloc_src": 519.7,
+      "md_words": 1747.1,
+      "delivery_credits_mean": 155.93,
+      "delivery_credits_n": 18,
+      "cr1_credits_mean": 39.32,
+      "cr1_credits_n": 20
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "arm": "B",
+      "allocated": 21,
+      "completed": 21,
+      "p10_mean": 95.28,
+      "p10_median": 100.0,
+      "p10_min": 88.98,
+      "p10_100_runs": 12,
+      "p10_open_reg_mean": 0.0,
+      "p10_open_reg_runs": 0,
+      "loss_cycles_mean": 0.0,
+      "cr1_pass": 17,
+      "cr1_fail": 3,
+      "cr1_missing": 1,
+      "ccn_over_10_pct": 0.0,
+      "dup_pct": 0.0,
+      "lint_per_kloc": 0.0,
+      "mean_ccn": 2.49,
+      "nloc_src": 557.0,
+      "md_words": 2002.4,
+      "delivery_credits_mean": 286.78,
+      "delivery_credits_n": 16,
+      "cr1_credits_mean": 38.46,
+      "cr1_credits_n": 21
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "arm": "C",
+      "allocated": 21,
+      "completed": 21,
+      "p10_mean": 93.18,
+      "p10_median": 88.98,
+      "p10_min": 88.98,
+      "p10_100_runs": 8,
+      "p10_open_reg_mean": 0.0,
+      "p10_open_reg_runs": 0,
+      "loss_cycles_mean": 0.0,
+      "cr1_pass": 17,
+      "cr1_fail": 3,
+      "cr1_missing": 1,
+      "ccn_over_10_pct": 3.33,
+      "dup_pct": 0.11,
+      "lint_per_kloc": 12.72,
+      "mean_ccn": 2.58,
+      "nloc_src": 519.6,
+      "md_words": 2028.9,
+      "delivery_credits_mean": 278.14,
+      "delivery_credits_n": 13,
+      "cr1_credits_mean": 39.88,
+      "cr1_credits_n": 21
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "arm": "D",
+      "allocated": 21,
+      "completed": 21,
+      "p10_mean": 92.13,
+      "p10_median": 88.98,
+      "p10_min": 88.98,
+      "p10_100_runs": 6,
+      "p10_open_reg_mean": 0.0,
+      "p10_open_reg_runs": 0,
+      "loss_cycles_mean": 0.0,
+      "cr1_pass": 19,
+      "cr1_fail": 2,
+      "cr1_missing": 0,
+      "ccn_over_10_pct": 3.42,
+      "dup_pct": 0.11,
+      "lint_per_kloc": 13.01,
+      "mean_ccn": 2.56,
+      "nloc_src": 520.2,
+      "md_words": 1732.2,
+      "delivery_credits_mean": 161.28,
+      "delivery_credits_n": 17,
+      "cr1_credits_mean": 38.51,
+      "cr1_credits_n": 21
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "arm": "E",
+      "allocated": 21,
+      "completed": 21,
+      "p10_mean": 95.28,
+      "p10_median": 100.0,
+      "p10_min": 88.98,
+      "p10_100_runs": 12,
+      "p10_open_reg_mean": 0.0,
+      "p10_open_reg_runs": 0,
+      "loss_cycles_mean": 0.0,
+      "cr1_pass": 20,
+      "cr1_fail": 1,
+      "cr1_missing": 0,
+      "ccn_over_10_pct": 3.32,
+      "dup_pct": 0.05,
+      "lint_per_kloc": 20.73,
+      "mean_ccn": 2.6,
+      "nloc_src": 545.6,
+      "md_words": 1859.1,
+      "delivery_credits_mean": 300.18,
+      "delivery_credits_n": 15,
+      "cr1_credits_mean": 39.88,
+      "cr1_credits_n": 20
+    }
+  ],
+  "series_means": {
+    "claude-sonnet-5.5": {
+      "A": [
+        {
+          "k": 1,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 19.6915,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 2,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.9524,
+          "lint_per_kloc": 23.6278,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 3,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 2.9581,
+          "lint_per_kloc": 23.1695,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 4,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 2.4038,
+          "lint_per_kloc": 20.0627,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 5,
+          "n": 21,
+          "pass_rate": 99.9256,
+          "share_ccn_over_10_pct": 2.0033,
+          "lint_per_kloc": 22.7001,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 6,
+          "n": 21,
+          "pass_rate": 99.8145,
+          "share_ccn_over_10_pct": 1.771,
+          "lint_per_kloc": 21.952,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 7,
+          "n": 21,
+          "pass_rate": 99.8395,
+          "share_ccn_over_10_pct": 1.3795,
+          "lint_per_kloc": 21.1093,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 8,
+          "n": 21,
+          "pass_rate": 99.7171,
+          "share_ccn_over_10_pct": 1.0971,
+          "lint_per_kloc": 21.7793,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 9,
+          "n": 21,
+          "pass_rate": 99.7076,
+          "share_ccn_over_10_pct": 1.0705,
+          "lint_per_kloc": 21.9894,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 10,
+          "n": 21,
+          "pass_rate": 99.4376,
+          "share_ccn_over_10_pct": 1.1033,
+          "lint_per_kloc": 28.1502,
+          "open_regressions": 0.0
+        }
+      ],
+      "B": [
+        {
+          "k": 1,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 3.8845,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 2,
+          "n": 21,
+          "pass_rate": 97.619,
+          "share_ccn_over_10_pct": 0.4762,
+          "lint_per_kloc": 6.8845,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 3,
+          "n": 21,
+          "pass_rate": 98.1685,
+          "share_ccn_over_10_pct": 1.2952,
+          "lint_per_kloc": 4.7211,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 4,
+          "n": 21,
+          "pass_rate": 99.7199,
+          "share_ccn_over_10_pct": 0.8571,
+          "lint_per_kloc": 4.0405,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 5,
+          "n": 21,
+          "pass_rate": 99.7768,
+          "share_ccn_over_10_pct": 0.5295,
+          "lint_per_kloc": 4.0465,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 6,
+          "n": 21,
+          "pass_rate": 99.8145,
+          "share_ccn_over_10_pct": 0.4667,
+          "lint_per_kloc": 2.0507,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 7,
+          "n": 21,
+          "pass_rate": 99.8395,
+          "share_ccn_over_10_pct": 0.2476,
+          "lint_per_kloc": 1.5752,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 8,
+          "n": 21,
+          "pass_rate": 99.9529,
+          "share_ccn_over_10_pct": 0.1033,
+          "lint_per_kloc": 1.6022,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 9,
+          "n": 21,
+          "pass_rate": 99.9582,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 1.5031,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 10,
+          "n": 21,
+          "pass_rate": 99.6625,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 2.2623,
+          "open_regressions": 0.0
+        }
+      ],
+      "C": [
+        {
+          "k": 1,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.6805,
+          "lint_per_kloc": 16.8581,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 2,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.4762,
+          "lint_per_kloc": 19.4361,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 3,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 2.7238,
+          "lint_per_kloc": 17.3484,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 4,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 2.2167,
+          "lint_per_kloc": 14.9281,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 5,
+          "n": 21,
+          "pass_rate": 99.9256,
+          "share_ccn_over_10_pct": 1.8476,
+          "lint_per_kloc": 18.3101,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 6,
+          "n": 21,
+          "pass_rate": 99.8145,
+          "share_ccn_over_10_pct": 1.6333,
+          "lint_per_kloc": 17.6768,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 7,
+          "n": 21,
+          "pass_rate": 99.8395,
+          "share_ccn_over_10_pct": 1.2776,
+          "lint_per_kloc": 16.5325,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 8,
+          "n": 21,
+          "pass_rate": 99.8586,
+          "share_ccn_over_10_pct": 1.0133,
+          "lint_per_kloc": 16.8373,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 9,
+          "n": 21,
+          "pass_rate": 99.8747,
+          "share_ccn_over_10_pct": 0.9914,
+          "lint_per_kloc": 16.7965,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 10,
+          "n": 21,
+          "pass_rate": 99.5876,
+          "share_ccn_over_10_pct": 0.9452,
+          "lint_per_kloc": 21.1365,
+          "open_regressions": 0.0
+        }
+      ],
+      "D": [
+        {
+          "k": 1,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 17.0747,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 2,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.9524,
+          "lint_per_kloc": 22.5183,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 3,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 2.9581,
+          "lint_per_kloc": 21.2657,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 4,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 2.4038,
+          "lint_per_kloc": 18.3752,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 5,
+          "n": 21,
+          "pass_rate": 99.9256,
+          "share_ccn_over_10_pct": 2.0167,
+          "lint_per_kloc": 21.4213,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 6,
+          "n": 21,
+          "pass_rate": 99.8145,
+          "share_ccn_over_10_pct": 1.7748,
+          "lint_per_kloc": 19.8927,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 7,
+          "n": 21,
+          "pass_rate": 99.8395,
+          "share_ccn_over_10_pct": 1.3762,
+          "lint_per_kloc": 18.7552,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 8,
+          "n": 21,
+          "pass_rate": 99.7171,
+          "share_ccn_over_10_pct": 1.0895,
+          "lint_per_kloc": 20.396,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 9,
+          "n": 21,
+          "pass_rate": 99.7076,
+          "share_ccn_over_10_pct": 1.0662,
+          "lint_per_kloc": 20.4044,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 10,
+          "n": 21,
+          "pass_rate": 99.4001,
+          "share_ccn_over_10_pct": 1.1043,
+          "lint_per_kloc": 28.8364,
+          "open_regressions": 0.0
+        }
+      ],
+      "E": [
+        {
+          "k": 1,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.6805,
+          "lint_per_kloc": 20.6762,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 2,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 1.9048,
+          "lint_per_kloc": 23.5773,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 3,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 3.7829,
+          "lint_per_kloc": 22.7924,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 4,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 3.0833,
+          "lint_per_kloc": 19.7037,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 5,
+          "n": 21,
+          "pass_rate": 99.9256,
+          "share_ccn_over_10_pct": 2.5881,
+          "lint_per_kloc": 22.7475,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 6,
+          "n": 21,
+          "pass_rate": 99.8145,
+          "share_ccn_over_10_pct": 2.2848,
+          "lint_per_kloc": 21.3857,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 7,
+          "n": 21,
+          "pass_rate": 99.8395,
+          "share_ccn_over_10_pct": 1.7786,
+          "lint_per_kloc": 20.4717,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 8,
+          "n": 21,
+          "pass_rate": 99.8586,
+          "share_ccn_over_10_pct": 1.3971,
+          "lint_per_kloc": 20.9776,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 9,
+          "n": 21,
+          "pass_rate": 99.8747,
+          "share_ccn_over_10_pct": 1.4519,
+          "lint_per_kloc": 21.0297,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 10,
+          "n": 21,
+          "pass_rate": 99.7375,
+          "share_ccn_over_10_pct": 1.4433,
+          "lint_per_kloc": 28.232,
+          "open_regressions": 0.0
+        }
+      ]
+    },
+    "gemini-4-argon": {
+      "A": [
+        {
+          "k": 1,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 2.3715,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 2,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.946,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 3,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.8271,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 4,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.6838,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 5,
+          "n": 21,
+          "pass_rate": 99.8512,
+          "share_ccn_over_10_pct": 0.5976,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 6,
+          "n": 21,
+          "pass_rate": 99.6289,
+          "share_ccn_over_10_pct": 0.5305,
+          "lint_per_kloc": 0.1448,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 7,
+          "n": 21,
+          "pass_rate": 99.679,
+          "share_ccn_over_10_pct": 0.39,
+          "lint_per_kloc": 0.1185,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 8,
+          "n": 21,
+          "pass_rate": 98.9628,
+          "share_ccn_over_10_pct": 0.2957,
+          "lint_per_kloc": 0.0972,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 9,
+          "n": 21,
+          "pass_rate": 99.081,
+          "share_ccn_over_10_pct": 0.2824,
+          "lint_per_kloc": 0.0914,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 10,
+          "n": 21,
+          "pass_rate": 99.1751,
+          "share_ccn_over_10_pct": 0.3333,
+          "lint_per_kloc": 0.0766,
+          "open_regressions": 0.0
+        }
+      ],
+      "B": [
+        {
+          "k": 1,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 2,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 3,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 4,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 5,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 6,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 7,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 8,
+          "n": 21,
+          "pass_rate": 99.3871,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 9,
+          "n": 21,
+          "pass_rate": 99.457,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 10,
+          "n": 21,
+          "pass_rate": 99.5126,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        }
+      ],
+      "C": [
+        {
+          "k": 1,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 6.9291,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 2,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 3,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.7904,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 4,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.8354,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 5,
+          "n": 21,
+          "pass_rate": 99.9256,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 6,
+          "n": 21,
+          "pass_rate": 99.8145,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.1097,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 7,
+          "n": 21,
+          "pass_rate": 99.8395,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 8,
+          "n": 21,
+          "pass_rate": 99.6228,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 9,
+          "n": 21,
+          "pass_rate": 99.6658,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0796,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 10,
+          "n": 21,
+          "pass_rate": 99.7,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0622,
+          "open_regressions": 0.0
+        }
+      ],
+      "D": [
+        {
+          "k": 1,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 4.9535,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 2,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 3,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.28,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 4,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.2267,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 5,
+          "n": 21,
+          "pass_rate": 99.9256,
+          "share_ccn_over_10_pct": 0.1986,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 6,
+          "n": 21,
+          "pass_rate": 99.8145,
+          "share_ccn_over_10_pct": 0.1762,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 7,
+          "n": 21,
+          "pass_rate": 99.8395,
+          "share_ccn_over_10_pct": 0.1324,
+          "lint_per_kloc": 0.1417,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 8,
+          "n": 21,
+          "pass_rate": 99.1985,
+          "share_ccn_over_10_pct": 0.0933,
+          "lint_per_kloc": 0.1134,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 9,
+          "n": 21,
+          "pass_rate": 99.2899,
+          "share_ccn_over_10_pct": 0.09,
+          "lint_per_kloc": 0.1065,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 10,
+          "n": 21,
+          "pass_rate": 99.3626,
+          "share_ccn_over_10_pct": 0.0805,
+          "lint_per_kloc": 0.0869,
+          "open_regressions": 0.0
+        }
+      ],
+      "E": [
+        {
+          "k": 1,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.3662,
+          "lint_per_kloc": 5.6332,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 2,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.2648,
+          "lint_per_kloc": 2.3593,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 3,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.431,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 4,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.3764,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 5,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 6,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.1659,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 7,
+          "n": 21,
+          "pass_rate": 99.9465,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0476
+        },
+        {
+          "k": 8,
+          "n": 21,
+          "pass_rate": 99.4342,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0476
+        },
+        {
+          "k": 9,
+          "n": 21,
+          "pass_rate": 99.4987,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0476
+        },
+        {
+          "k": 10,
+          "n": 21,
+          "pass_rate": 99.5501,
+          "share_ccn_over_10_pct": 0.4767,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0476
+        }
+      ]
+    },
+    "gpt-6.1-sol": {
+      "A": [
+        {
+          "k": 1,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 20.4296,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 2,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 7.271,
+          "lint_per_kloc": 24.2778,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 3,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 5.0,
+          "lint_per_kloc": 17.1289,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 4,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 4.1214,
+          "lint_per_kloc": 16.4476,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 5,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 3.5538,
+          "lint_per_kloc": 13.85,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 6,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 3.2133,
+          "lint_per_kloc": 16.3644,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 7,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 2.5524,
+          "lint_per_kloc": 16.4215,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 8,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 1.909,
+          "lint_per_kloc": 13.8424,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 9,
+          "n": 21,
+          "pass_rate": 91.3116,
+          "share_ccn_over_10_pct": 1.891,
+          "lint_per_kloc": 14.7647,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 10,
+          "n": 21,
+          "pass_rate": 91.601,
+          "share_ccn_over_10_pct": 3.4224,
+          "lint_per_kloc": 16.0358,
+          "open_regressions": 0.0
+        }
+      ],
+      "B": [
+        {
+          "k": 1,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 2,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 3,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 4,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 5,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 6,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 7,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 8,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 9,
+          "n": 21,
+          "pass_rate": 95.1128,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 10,
+          "n": 21,
+          "pass_rate": 95.2756,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 0.0,
+          "open_regressions": 0.0
+        }
+      ],
+      "C": [
+        {
+          "k": 1,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 18.8847,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 2,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 7.3495,
+          "lint_per_kloc": 20.3465,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 3,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 4.7514,
+          "lint_per_kloc": 11.8456,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 4,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 3.901,
+          "lint_per_kloc": 11.148,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 5,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 3.3733,
+          "lint_per_kloc": 9.2584,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 6,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 3.05,
+          "lint_per_kloc": 10.8682,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 7,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 2.4257,
+          "lint_per_kloc": 10.8399,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 8,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 1.8195,
+          "lint_per_kloc": 9.0651,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 9,
+          "n": 21,
+          "pass_rate": 92.9407,
+          "share_ccn_over_10_pct": 1.7919,
+          "lint_per_kloc": 10.7819,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 10,
+          "n": 21,
+          "pass_rate": 93.1759,
+          "share_ccn_over_10_pct": 3.3295,
+          "lint_per_kloc": 12.715,
+          "open_regressions": 0.0
+        }
+      ],
+      "D": [
+        {
+          "k": 1,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 12.9727,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 2,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 7.271,
+          "lint_per_kloc": 17.3412,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 3,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 5.0,
+          "lint_per_kloc": 11.2143,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 4,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 4.1538,
+          "lint_per_kloc": 11.4147,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 5,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 3.5952,
+          "lint_per_kloc": 9.8339,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 6,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 3.2486,
+          "lint_per_kloc": 11.699,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 7,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 2.5738,
+          "lint_per_kloc": 12.1915,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 8,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 1.9233,
+          "lint_per_kloc": 10.2758,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 9,
+          "n": 21,
+          "pass_rate": 91.8546,
+          "share_ccn_over_10_pct": 1.899,
+          "lint_per_kloc": 11.2264,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 10,
+          "n": 21,
+          "pass_rate": 92.126,
+          "share_ccn_over_10_pct": 3.4229,
+          "lint_per_kloc": 13.0129,
+          "open_regressions": 0.0
+        }
+      ],
+      "E": [
+        {
+          "k": 1,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 0.0,
+          "lint_per_kloc": 16.7274,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 2,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 7.2748,
+          "lint_per_kloc": 21.9662,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 3,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 4.9429,
+          "lint_per_kloc": 18.2995,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 4,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 4.0748,
+          "lint_per_kloc": 18.5695,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 5,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 3.5076,
+          "lint_per_kloc": 16.026,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 6,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 3.1633,
+          "lint_per_kloc": 18.4409,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 7,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 2.5233,
+          "lint_per_kloc": 19.6474,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 8,
+          "n": 21,
+          "pass_rate": 100.0,
+          "share_ccn_over_10_pct": 1.8552,
+          "lint_per_kloc": 16.7348,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 9,
+          "n": 21,
+          "pass_rate": 95.1128,
+          "share_ccn_over_10_pct": 1.8062,
+          "lint_per_kloc": 18.5706,
+          "open_regressions": 0.0
+        },
+        {
+          "k": 10,
+          "n": 21,
+          "pass_rate": 95.2756,
+          "share_ccn_over_10_pct": 3.3214,
+          "lint_per_kloc": 20.7259,
+          "open_regressions": 0.0
+        }
+      ]
+    }
+  }
+}
