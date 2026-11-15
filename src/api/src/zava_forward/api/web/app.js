@@ -370,7 +370,9 @@ function missingWorkspaceScripts(hash, caseRoute) {
 function isRoleScreensDestination(destination) {
   return destination === "#/screens"
     || destination === "#/role/building_safety_lead"
-    || destination === "#/role/repairs";
+    || destination === "#/role/repairs"
+    || destination === "#/role/housing_officer"
+    || destination === "#/role/resident_engagement";
 }
 
 async function requireWorkspaceScripts(hash, caseRoute) {
