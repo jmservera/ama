@@ -31,11 +31,13 @@ from .aftercare import (
     CLOSURE_KINDS,
     EVALUATOR_NOTICE,
     NON_DIGITAL_CHANNELS,
+    PACK_ACTIONS,
     PROTECTION,
     AftercareRegister,
     intake_errors,
     intake_form,
     neutral_text,
+    neutral_violations,
 )
 from .controls import RESIDENT_ROLES, RESIDENT_VIEW_ROLES
 from .synthetic import sensor_scenarios as ss
@@ -76,6 +78,9 @@ CLOSURE_NOTE = (
 )
 SENSOR_NOTE = (
     "Sensor readings are context only. A normal reading does not close, lower or dismiss a concern."
+)
+NEUTRAL_NOTE_ERROR = (
+    "Keep this note factual and observational. Record only what was reported, observed or checked."
 )
 FIXED_UNKNOWNS = (
     "Values are synthetic exercise values, not measured homes or real households.",
@@ -247,10 +252,17 @@ def _validate(doc: object) -> Doc:
                 or rec["statement"] != original["statement"].strip()
                 or rec.get("representative_basis") != (basis.strip() if basis else None)
                 or (owner_known and rec["owner"] != receipt["owner"]["label"])
+                or (not owner_known and receipt["owner"]["label"] != UNKNOWN_OWNER)
                 or requests[receipt["request_id"]]["concern_id"] != cid
                 or requests[receipt["request_id"]]["fingerprint"] != _receipt_fingerprint(receipt)
             ):
                 raise ValueError("receipt")
+            neutral_text(receipt["what_happens_next"])
+            neutral_text(receipt["protection"])
+            neutral_text(receipt["accessible_route"])
+            neutral_text(receipt["synthetic_notice"])
+            neutral_text(receipt["recorded_by"]["name"])
+            neutral_text(receipt["owner"]["label"])
         for action in actions:
             if not all(
                 isinstance(action[k], str) for k in ("at", "actor", "role", "action", "ref")
@@ -310,10 +322,20 @@ def _context_errors(context: object) -> dict[str, str]:
         kinds = _guard_kinds(key) + [k for k in _guard_kinds(value) if k not in _guard_kinds(key)]
         if kinds:
             return {"context": f"Note {position}: {_flagged(kinds)}"}
+        if neutral_violations(key) or neutral_violations(value):
+            return {"context": f"Note {position}: {NEUTRAL_NOTE_ERROR}"}
     return {}
 
 
-def _free_text(value: object, field: str, label: str, cap: int, errors: dict[str, str]) -> str:
+def _free_text(
+    value: object,
+    field: str,
+    label: str,
+    cap: int,
+    errors: dict[str, str],
+    *,
+    require_neutral: bool = False,
+) -> str:
     if not isinstance(value, str) or not value.strip():
         return ""
     if len(value) > cap:
@@ -322,6 +344,8 @@ def _free_text(value: object, field: str, label: str, cap: int, errors: dict[str
         kinds = _guard_kinds(value)
         if kinds:
             errors[field] = _flagged(kinds)
+        elif require_neutral and neutral_violations(value):
+            errors[field] = NEUTRAL_NOTE_ERROR
     return value
 
 
@@ -408,7 +432,10 @@ class AftercareService:
                 "name": "channel",
                 "label": "How was this raised with you?",
                 "required": True,
-                "options": [{"value": c, "label": CHANNEL_LABELS[c]} for c in NON_DIGITAL_CHANNELS],
+                "options": [
+                    {"value": c, "label": neutral_text(CHANNEL_LABELS[c])}
+                    for c in NON_DIGITAL_CHANNELS
+                ],
             },
             {"name": "next_update", "label": "Date of the next update", "required": True},
         ]
@@ -418,12 +445,18 @@ class AftercareService:
             **form,
             "assisted": True,
             "staff_fields": staff_fields,
-            "owner_note": "A new concern has no named owner. A manager names one afterwards.",
-            "owner_choices": [{"value": r, "label": owner_label(r)} for r in VIEW_ROLES],
+            "owner_note": neutral_text(
+                "A new concern has no named owner. A manager names one afterwards."
+            ),
+            "owner_choices": [
+                {"value": r, "label": neutral_text(owner_label(r))} for r in VIEW_ROLES
+            ],
             "homes": None if self.homes is None else sorted(self.homes),
-            "synthetic_notice": SYNTHETIC_NOTICE,
-            "manual_route": "If this screen is unavailable, write the concern on paper with the "
-            "channel, your name and the home reference, and give it to the named owner.",
+            "synthetic_notice": neutral_text(SYNTHETIC_NOTICE),
+            "manual_route": neutral_text(
+                "If this screen is unavailable, write the concern on paper with the "
+                "channel, your name and the home reference, and give it to the named owner."
+            ),
         }
 
     def record_concern(
@@ -546,9 +579,9 @@ class AftercareService:
             "next_update": rec["next_update"],
             "investigation": rec["investigation"],
             "what_happens_next": neutral_text(next_steps),
-            "protection": PROTECTION,
-            "accessible_route": ACCESSIBLE_ROUTE,
-            "synthetic_notice": SYNTHETIC_NOTICE,
+            "protection": neutral_text(PROTECTION),
+            "accessible_route": neutral_text(ACCESSIBLE_ROUTE),
+            "synthetic_notice": neutral_text(SYNTHETIC_NOTICE),
         }
 
     def _display(self, doc: Doc, cid: str, reg: AftercareRegister) -> Record:
@@ -579,16 +612,16 @@ class AftercareService:
             "unresolved": cid in unresolved,
             "overdue": cid in overdue,
             "closures": [
-                {**c, "note": CLOSURE_NOTE}
+                {**c, "note": neutral_text(CLOSURE_NOTE)}
                 for c in reg.closures
                 if c["home_ref"] == rec["home_ref"]
             ],
             "sensor_context": rec["sensor_context"],
-            "sensor_note": SENSOR_NOTE,
+            "sensor_note": neutral_text(SENSOR_NOTE),
             "dismissed_by_sensor": False,
             "history": rec["history"],
-            "accessible_route": ACCESSIBLE_ROUTE,
-            "protection": PROTECTION,
+            "accessible_route": neutral_text(ACCESSIBLE_ROUTE),
+            "protection": neutral_text(PROTECTION),
         }
 
     def concerns(self, user: Mapping[str, Any] | None, home_ref: str | None = None) -> Record:
@@ -600,7 +633,11 @@ class AftercareService:
             for cid, rec in reg.concerns.items()
             if home_ref is None or rec["home_ref"] == home_ref
         ]
-        return {"items": items, "count": len(items), "synthetic_notice": SYNTHETIC_NOTICE}
+        return {
+            "items": items,
+            "count": len(items),
+            "synthetic_notice": neutral_text(SYNTHETIC_NOTICE),
+        }
 
     def concern(self, user: Mapping[str, Any] | None, cid: str) -> Record:
         self._staff(user, VIEW_ROLES, "see aftercare concerns")
@@ -648,8 +685,9 @@ class AftercareService:
     def record_outcome(
         self, user: Mapping[str, Any] | None, cid: str, outcome: str, basis: str, evidence: str
     ) -> Record:
+        self._staff(user, VIEW_ROLES, "record_outcome")
         errors: dict[str, str] = {}
-        _free_text(evidence, "evidence", "The evidence", EVIDENCE_MAX, errors)
+        _free_text(evidence, "evidence", "The evidence", EVIDENCE_MAX, errors, require_neutral=True)
         if errors:
             raise ValidationError(errors)
         return self._owner_action(
@@ -662,13 +700,81 @@ class AftercareService:
     def set_remedy(
         self, user: Mapping[str, Any] | None, cid: str, status: str, evidence: str | None = None
     ) -> Record:
+        self._staff(user, VIEW_ROLES, "set_remedy")
         errors: dict[str, str] = {}
-        _free_text(evidence, "evidence", "The evidence", EVIDENCE_MAX, errors)
+        _free_text(evidence, "evidence", "The evidence", EVIDENCE_MAX, errors, require_neutral=True)
         if errors:
             raise ValidationError(errors)
         return self._owner_action(
             user, cid, "set_remedy", lambda reg, o: reg.set_remedy(cid, o, status, evidence)
         )
+
+    def propose_pack(
+        self, user: Mapping[str, Any] | None, cid: str, ai_summary: str | None = None
+    ) -> Record:
+        """Draft a bounded concern-pack proposal without exposing a model HTTP route."""
+        actor = self._staff(user, VIEW_ROLES, "propose a concern pack")
+        errors: dict[str, str] = {}
+        if ai_summary is not None:
+            if not isinstance(ai_summary, str) or not ai_summary.strip():
+                errors["ai_summary"] = "Write a short factual summary or leave it out."
+            else:
+                _free_text(
+                    ai_summary,
+                    "ai_summary",
+                    "The summary",
+                    EVIDENCE_MAX,
+                    errors,
+                    require_neutral=True,
+                )
+        if errors:
+            raise ValidationError(errors)
+
+        def work(doc: Doc) -> Record:
+            reg = _register(doc)
+            if cid not in reg.concerns:
+                raise KeyError(cid)
+            pack = reg.propose_pack(cid, ai_summary)
+            doc["register"] = reg.to_state()
+            self._log(doc, actor, "propose_pack", str(pack["id"]))
+            return pack
+
+        return self._txn(work)
+
+    def review_pack(
+        self, user: Mapping[str, Any] | None, pack_id: str, action: str, reason: str
+    ) -> Record:
+        """Accept or reject a concern-pack proposal as the named concern owner."""
+        actor = self._staff(user, VIEW_ROLES, "review a concern pack")
+        errors: dict[str, str] = {}
+        if action not in PACK_ACTIONS:
+            errors["action"] = "Choose accept or reject."
+        if not isinstance(reason, str) or not reason.strip():
+            errors["reason"] = "Give a short factual reason for your review."
+        else:
+            _free_text(reason, "reason", "The reason", EVIDENCE_MAX, errors, require_neutral=True)
+        if errors:
+            raise ValidationError(errors)
+
+        def work(doc: Doc) -> Record:
+            reg = _register(doc)
+            if pack_id not in reg.packs:
+                raise KeyError(pack_id)
+            cid = str(reg.packs[pack_id]["concern_id"])
+            owner = reg.concerns[cid]["owner"]
+            if owner == UNKNOWN_OWNER:
+                raise PermissionError(
+                    "No owner is named for this concern yet, so nobody can act on it. "
+                    "A manager must name an owner first."
+                )
+            if owner != owner_label(actor["role"]):
+                raise PermissionError("Only the named owner role can act on this concern.")
+            reviewed = reg.review_pack(pack_id, owner, action, reason)
+            doc["register"] = reg.to_state()
+            self._log(doc, actor, f"review_pack_{action}", pack_id)
+            return reviewed
+
+        return self._txn(work)
 
     def assign_owner(self, user: Mapping[str, Any] | None, cid: str, owner_role: str) -> Record:
         actor = self._staff(user, MANAGER, "name an owner")
@@ -732,7 +838,7 @@ class AftercareService:
             item = reg.record_closure(home_ref, kind, closed_on, actor["role"])
             doc["register"] = reg.to_state()
             self._log(doc, actor, f"closure_{kind}", home_ref.strip())
-            return {**item, "note": CLOSURE_NOTE}
+            return {**item, "note": neutral_text(CLOSURE_NOTE)}
 
         return self._txn(work)
 
@@ -775,9 +881,9 @@ class AftercareService:
         summary = reg.evaluator_view(self.cohort, baseline_homes=comparable)
         total = len(self.cohort)
         return {
-            "cohort_label": "Synthetic handover cohort",
+            "cohort_label": neutral_text("Synthetic handover cohort"),
             "rows": rows,
-            "windows": dict(WINDOWS),
+            "windows": {k: neutral_text(v) for k, v in WINDOWS.items()},
             "totals": {
                 "homes_in_cohort": total,
                 "homes_with_usable_comparison": {"count": len(comparable), "denominator": total},
@@ -790,10 +896,10 @@ class AftercareService:
                 ],
             },
             "register_summary": summary,
-            "unknowns": [*summary["unknowns"], *FIXED_UNKNOWNS],
+            "unknowns": [neutral_text(u) for u in (*summary["unknowns"], *FIXED_UNKNOWNS)],
             "notice": neutral_text(EVALUATOR_NOTICE),
-            "sensor_note": SENSOR_NOTE,
-            "synthetic_notice": SYNTHETIC_NOTICE,
+            "sensor_note": neutral_text(SENSOR_NOTE),
+            "synthetic_notice": neutral_text(SYNTHETIC_NOTICE),
         }
 
     @staticmethod
@@ -804,8 +910,10 @@ class AftercareService:
             "early": None,
             "late": None,
             "deltas": None,
-            "reason": "No usable comparison is recorded for this home, so the baseline and "
-            "outcome are Unknown.",
+            "reason": neutral_text(
+                "No usable comparison is recorded for this home, so the baseline and "
+                "outcome are Unknown."
+            ),
         }
         if scenario is None:
             return unknown
