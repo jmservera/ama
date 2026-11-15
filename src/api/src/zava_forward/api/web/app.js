@@ -347,23 +347,30 @@ function retryWorkspaceScript(path) {
 
 function missingWorkspaceScripts(hash, caseRoute) {
   const destination = hash.split("?")[0];
+  const screensRoute = isRoleScreensDestination(destination);
   const contractor = me?.user.role === "Contractor";
   const staffCase = Boolean(me) && caseRoute && !contractor;
   const staffDestination = Boolean(me) && !contractor && !caseRoute;
   return [
     ["/async-action.js", true, typeof AsyncAction !== "undefined" && AsyncAction
       && ["handler", "run", "feedback"].every(method => typeof AsyncAction[method] === "function")],
-    ["/ops.js", staffCase || (staffDestination && hash === "#/capacity") || (contractor && !caseRoute && destination !== "#/screens"), typeof qualityPanel === "function"],
+    ["/ops.js", staffCase || (staffDestination && hash === "#/capacity") || (contractor && !caseRoute && !screensRoute), typeof qualityPanel === "function"],
     ["/panels.js", staffCase || (staffDestination && hash === "#/finance"), typeof financePanel === "function"],
     ["/assistants.js", staffCase || (staffDestination && hash === "#/assistants"), typeof assistantCasePanel === "function"],
     ["/chat.js", Boolean(me) && !contractor, typeof chatCasePanel === "function" && typeof employeeChat !== "undefined"],
     ["/aftercare.js", staffDestination && destination === "#/aftercare", typeof aftercareWorkspaceView === "function"],
     ["/timecapture.js", staffDestination && hash === "#/time", typeof timeView === "function"],
-    ["/role-screens.js", Boolean(me) && destination === "#/screens", typeof roleScreensView === "function"],
+    ["/role-screens.js", Boolean(me) && screensRoute, typeof roleScreensView === "function"],
     ["/simulator-control.js", Boolean(me) && destination === "#/simulator", typeof simulatorControlView === "function"],
     ["/progress.js", staffDestination && ["#/progress", "#/closed"].includes(destination), typeof ProgressViews === "object"],
     ["/vendor/leaflet.js", staffDestination && (hash === "#/overview" || destination === "#/coordinator"), typeof L === "object"],
   ].filter(([, needed, loaded]) => needed && !loaded).map(([path]) => path);
+}
+
+function isRoleScreensDestination(destination) {
+  return destination === "#/screens"
+    || destination === "#/role/building_safety_lead"
+    || destination === "#/role/repairs";
 }
 
 async function requireWorkspaceScripts(hash, caseRoute) {
@@ -425,7 +432,7 @@ async function route() {
   const signal = routeController.signal;
   const hash = location.hash || "#/";
   const m = location.hash.match(/^#\/case\/([^?]+)(?:\?.*)?$/);
-  const active = m ? (coordinatorOrigin ? "#/overview" : queueOrigin === "all" ? "#/all" : "#/") : hash.startsWith("#/coordinator") ? "#/overview" : hash.split("?")[0];
+  const active = m ? (coordinatorOrigin ? "#/overview" : queueOrigin === "all" ? "#/all" : "#/") : hash.startsWith("#/coordinator") ? "#/overview" : isRoleScreensDestination(hash.split("?")[0]) ? "#/screens" : hash.split("?")[0];
   document.querySelectorAll("#nav a").forEach((link) => {
     if (link.getAttribute("href") === active) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
@@ -439,7 +446,7 @@ async function route() {
   if (me !== session) return;
   if (typeof employeeChat !== "undefined") employeeChat.install();
   workspaceStatus.textContent = routeStatus;
-  if (hash.split("?")[0] === "#/screens") return await roleScreensView();
+  if (isRoleScreensDestination(hash.split("?")[0])) return await roleScreensView();
   if (hash.split("?")[0] === "#/simulator") return await simulatorControlView();
   if (me.user.role === "Contractor") return await (m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView());
   if (me.services?.cases === false && hash !== "#/assistants" && hash !== "#/import") {

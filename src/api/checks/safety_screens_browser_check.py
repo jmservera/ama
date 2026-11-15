@@ -16,18 +16,22 @@ from checks.role_screens_fixtures import synthetic_data
 AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
 SKIPPED: list[str] = []
 SCREENS = (
-    ("safety@example.test", "Building safety referral queue"),
-    ("sam@example.test", "Repairs and hazard triage"),
+    ("safety@example.test", "Building safety referral queue", "#/role/building_safety_lead"),
+    ("sam@example.test", "Repairs and hazard triage", "#/role/repairs"),
 )
 EXPECTED = (
+    "Every referral, clock, and stop-work state is written as words first",
     "Pending receipt. Follow-up owner:",
     "Pending acceptance. Follow-up owner:",
     "owns the accepted scope",
     "Legacy referral with no recorded send time",
     "No referral sent.",
+    "Confirmed: Stop-work indicator: released.",
     "Decided by",
     "Evidence: SYN-RELEASE-227",
+    "Action needed: Stop-work indicator: released.",
     "No authoritative decision evidence is recorded; do not rely on this release.",
+    "Action needed: Stop-work indicator: retrofit work is paused.",
     "Release needs an authorised human decision.",
     "SYN-SOURCE-5",
 )
@@ -60,6 +64,16 @@ def safety_data() -> dict[str, Any]:
     return data
 
 
+def set_panel_rendering(page: Page, rendered: bool) -> None:
+    """Panels use content-visibility: auto; render them all to read or scan every panel."""
+    page.evaluate(
+        """rendered => document.querySelectorAll('.screen-record').forEach(el => rendered
+          ? el.style.setProperty('content-visibility', 'visible', 'important')
+          : el.style.removeProperty('content-visibility'))""",
+        rendered,
+    )
+
+
 def scan_axe(page: Page, story: str) -> None:
     axe_path = os.environ.get("ZF_AXE_JS")
     if not axe_path:
@@ -68,9 +82,13 @@ def scan_axe(page: Page, story: str) -> None:
         return
     raw = Path(axe_path).read_bytes()
     check("axe file is the pinned 4.10.3 build", hashlib.sha256(raw).hexdigest() == AXE_SHA256)
-    page.evaluate(raw.decode())
-    result = page.evaluate("""async () => await axe.run(document.querySelector('main'), {
-      runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']}})""")
+    set_panel_rendering(page, True)
+    try:
+        page.evaluate(raw.decode())
+        result = page.evaluate("""async () => await axe.run(document.querySelector('main'), {
+          runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']}})""")
+    finally:
+        set_panel_rendering(page, False)
     check(f"{story} axe (main only, 1280px) finds no violations: {[v['id'] for v in result['violations']]}",
           not result["violations"])
     print(f"INFO {story} axe incomplete: {[i['id'] for i in result['incomplete']]}")
@@ -78,13 +96,36 @@ def scan_axe(page: Page, story: str) -> None:
 
 def check_accessibility(page: Page, story: str) -> None:
     evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
-    text = evidence.inner_text()
+    set_panel_rendering(page, True)
+    try:
+        text = evidence.inner_text()
+    finally:
+        set_panel_rendering(page, False)
     check(f"{story} states are text, no write controls",
           evidence.locator("button, form, input, select, textarea").count() == 0)
     check(f"{story} boundary text names what the screen does not do", BOUNDARY in text)
     check(f"{story} every hazard is listed (SA-007)", all(f"H-{n}" in text for n in range(1, 7)))
     for phrase in EXPECTED:
         check(f"{story} shows: {phrase}", phrase in text)
+    jump_nav = evidence.get_by_role("navigation", name="Sections on this screen", exact=True)
+    jump_links = jump_nav.locator("a[data-jump]")
+    check(
+        f"{story} jump links have >=24px height and underline cue",
+        jump_links.count() == 4
+        and jump_links.evaluate_all(
+            """els => els.every(el => el.getBoundingClientRect().height >= 24
+              && getComputedStyle(el).textDecorationLine.includes('underline'))"""
+        ),
+    )
+    before_hash = page.evaluate("() => location.hash")
+    restart_link = jump_nav.get_by_role("link", name="Go to Retrofit pause and restart decision", exact=True)
+    restart_link.focus()
+    page.keyboard.press("Enter")
+    check(
+        f"{story} Enter on jump link focuses section heading without routing away",
+        page.evaluate("() => ({id: document.activeElement?.id, hash: location.hash})")
+        == {"id": "hazard-restart-heading", "hash": before_hash},
+    )
     check(f"{story} no contact links", evidence.locator('a[href^="tel:"], a[href^="mailto:"]').count() == 0)
     regions = evidence.locator('div.table-scroll[role="region"]')
     expected = regions.evaluate_all("els => els.map(el => el.getAttribute('aria-label'))")
@@ -145,7 +186,7 @@ def run_browser(base: str) -> None:
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
         try:
-            for email, screen in SCREENS:
+            for email, screen, alias_hash in SCREENS:
                 context = browser.new_context(viewport={"width": 1280, "height": 900})
                 try:
                     page = context.new_page()
@@ -158,9 +199,8 @@ def run_browser(base: str) -> None:
                     page.locator("button[type=submit]").click()
                     page.locator("#nav").wait_for()
                     page.on("request", lambda r: writes.append(r.url) if r.method not in ("GET", "HEAD", "OPTIONS") else None)
-                    page.get_by_role("link", name="Specialist screens", exact=True).click()
-                    page.get_by_role("heading", name="Specialist screens", exact=True).wait_for()
-                    page.get_by_role("link", name=screen, exact=True).click()
+                    page.goto(base + "/app" + alias_hash)
+                    page.get_by_role("heading", name=screen, exact=True).wait_for()
                     check_queue(page, screen)
                     page.locator('a.item[href*="case=ZF-1"]').click()
                     page.get_by_role("region", name="Evidence for ZF-1", exact=True).wait_for()

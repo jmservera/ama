@@ -72,10 +72,11 @@ class RoleScreenConformance(unittest.TestCase):
 
     def test_interactive_controls_are_native_and_keyboard_operable(self) -> None:
         self.assertNotIn("innerHTML", SCREENS)
+        self.assertNotIn('href: "#"', SCREENS)
         self.assertNotRegex(SCREENS, r'h\("(?:div|span|li|p|td)", \{[^}]*on(?:click|keydown)')
         for handler in re.finditer(r"onclick:", SCREENS):
             window = SCREENS[max(0, handler.start() - 120) : handler.start()]
-            self.assertTrue('h("button"' in window or 'h("a", { href: "#",' in window)
+            self.assertIn('h("button"', window)
         for region in re.findall(r'role: "region"[^)]*', SCREENS):
             self.assertIn('"aria-label"', region)
             self.assertIn("tabindex: 0", region)
