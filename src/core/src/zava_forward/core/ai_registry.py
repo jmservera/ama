@@ -209,13 +209,30 @@ def demo_activation_honoured(task_id, env=None):
         and (env.get(DEMO_PROFILE) or "") == DEMO_PROFILE_VALUE
 
 
+def is_dispatch_enabled(task_id, env=None):
+    """True only when registered and enabled for dispatch (or synthetic demo activation is honoured)."""
+    if not is_registered(task_id):
+        return False
+    entry = get(task_id) or {}
+    if entry.get("enabled") is False:
+        return demo_activation_honoured(task_id, env)
+    return True
+
+
+def consumption_capability(task_id):
+    """Canonical kebab-case consumption capability identifier for a registered task."""
+    require_registered(task_id)
+    return task_id.replace("_", "-")
+
+
 def authorizes_live(task_id, env=None):
     """False until every authority is a recorded, personally validated person (none is), except the demo-only chat switch."""
     if demo_activation_honoured(task_id, env):
         return True
     t = get(task_id)
-    return bool(t) and t["accountable_individual"] != UNKNOWN and t["delegation"] != UNKNOWN and \
-        t["approval_state"] != UNAPPROVED and all(v != UNKNOWN for v in t["authority"].values())
+    return bool(t) and rai_release.named_human(t["accountable_individual"]) and \
+        rai_release.named(t["delegation"]) and t["approval_state"] != UNAPPROVED and \
+        all(rai_release.named_human(v) for v in t["authority"].values())
 
 
 def envelope(task_id, case_ids, source_versions, result, case_version=None):

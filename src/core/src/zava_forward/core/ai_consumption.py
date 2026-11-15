@@ -20,6 +20,8 @@ from datetime import UTC, datetime
 from decimal import Decimal, localcontext
 from typing import Any, Protocol
 
+from . import rai_release
+
 LOG = logging.getLogger(__name__)
 SCHEMA = "ai-consumption-v1"
 PARTITION = "ai-consumption"
@@ -532,6 +534,25 @@ class Consumption:
         pid = reference(json.dumps(body, sort_keys=True))
         with self.port.transaction() as db:
             records = self._read(db)
+            if not synthetic:
+                for r in records:
+                    if (
+                        r["kind"] == "authority"
+                        and r["price"] == pid
+                        and not (
+                            rai_release.named_human(r.get("owner"))
+                            and rai_release.named(r.get("alert"))
+                            and rai_release.named_human(r.get("alert_owner"))
+                            and all(
+                                b["calls"] and b["tokens"] and amount(b["amount"])
+                                for b in r["budgets"]
+                            )
+                        )
+                    ):
+                        raise ValueError(
+                            "Beyond the exercise a named human approving owner, an owned alert "
+                            "and finite positive limits are required."
+                        )
             budgets = {
                 b["id"]
                 for r in records
@@ -566,6 +587,8 @@ class Consumption:
         An authority whose price is not recorded as synthetic lies beyond the exercise: it needs
         a named approving owner, finite positive call, token and money limits and an owned alert.
         """
+        if not all(isinstance(v, str) and v.strip() for v in (authority, owner, evidence)):
+            raise ValueError("Authority, owner and evidence are required.")
         if not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", capability):
             raise ValueError("A capability identifier is required.")
         begin, finish = timestamp(start), timestamp(end)
@@ -604,7 +627,11 @@ class Consumption:
         with self.port.transaction() as db:
             records = self._read(db)
             known = next((r for r in records if r["kind"] == "price" and r["id"] == price), None)
-            if known is not None and not known["synthetic"]:
+            if (
+                (known is not None and not known["synthetic"])
+                or alert is not None
+                or alert_owner is not None
+            ):
                 self._require_bounds(owner, selected, alert, alert_owner)
                 body.update(alert=reference(alert or ""), alert_owner=reference(alert_owner or ""))
             previous = next((r for r in records if r.get("id") == aid), None)
@@ -638,14 +665,75 @@ class Consumption:
     def _require_bounds(
         owner: str, budgets: list[dict[str, Any]], alert: str | None, alert_owner: str | None
     ) -> None:
-        if not all(isinstance(v, str) and v.strip() for v in (owner, alert, alert_owner)):
+        if not (
+            rai_release.named_human(owner)
+            and rai_release.named(alert)
+            and rai_release.named_human(alert_owner)
+        ):
             raise ValueError(
-                "Beyond the exercise an approving owner and an owned alert are required."
+                "Beyond the exercise a named human approving owner and a human-owned alert "
+                "are required."
             )
         if any(not b["calls"] or not b["tokens"] or not amount(b["amount"]) for b in budgets):
             raise ValueError(
                 "Beyond the exercise finite positive call, token and money limits are required."
             )
+
+    def non_exercise_status(
+        self,
+        capability: str,
+        *,
+        configuration: str | None = None,
+        model: str | None = None,
+        now: float | None = None,
+    ) -> dict[str, Any]:
+        """Read-only check for an unexpired, human-owned non-exercise budget."""
+        reasons: list[str] = []
+        with self._scope(None) as db:
+            records = self._read(db)
+            clock = self.port.now(db) if now is None else now
+            authorities = [
+                r
+                for r in records
+                if r["kind"] == "authority"
+                and r["capability"] == capability
+                and (configuration is None or r["configuration"] == configuration)
+            ]
+            authority = next(
+                (r for r in reversed(authorities) if r["start"] <= clock < r["end"]), None
+            )
+            if authority is None:
+                reasons.append("authority-expired" if authorities else "authority-unknown")
+                return dict(allowed=False, capability=capability, reasons=reasons)
+            prices = [
+                r
+                for r in records
+                if r["kind"] == "price"
+                and r["id"] == authority["price"]
+                and (model is None or r["model"] == model)
+                and r["retrieved"] <= clock
+                and r["start"] <= clock < r["end"]
+            ]
+            price = prices[-1] if prices else None
+            if price is None or price["synthetic"]:
+                reasons.append("non-synthetic-price-missing")
+            if not (authority.get("alert") and authority.get("alert_owner")):
+                reasons.append("alert-unowned")
+            if not (1 <= authority["max_calls"] <= 100 and 1 <= authority["max_depth"] <= 100):
+                reasons.append("request-bounds-invalid")
+            if not authority["budgets"] or any(
+                not b["calls"] or not b["tokens"] or not amount(b["amount"])
+                for b in authority["budgets"]
+            ):
+                reasons.append("finite-positive-limits-missing")
+            if price is not None and self._currency_hold(
+                records,
+                {b["id"] for b in authority["budgets"]},
+                price["id"],
+                price["currency"],
+            ):
+                reasons.append("currency-mismatch")
+        return dict(allowed=not reasons, capability=capability, reasons=reasons)
 
     @staticmethod
     def _charge(price: Mapping[str, Any], used: Mapping[str, Any]) -> Decimal | None:
