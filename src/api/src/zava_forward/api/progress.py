@@ -11,7 +11,7 @@ from datetime import UTC, date, datetime, timedelta
 from itertools import groupby
 from typing import Any, Literal
 
-from zava_forward.core import insights, projection, taskqueues
+from zava_forward.core import insights, projection, taskqueues, tokenomics
 from zava_forward.core.list_export import safe_cell
 from zava_forward.core.workflows import MANAGER_ROLES, handoff_view
 
@@ -216,6 +216,36 @@ def _series(counter: Counter[str], labels: list[str] | None = None) -> list[dict
     return [{"label": label, "count": counter[label]} for label in labels or sorted(counter)]
 
 
+def _synthetic_recommendation(record: dict[str, Any], ids: set[str]) -> bool:
+    if record.get("is_synthetic") is not True:
+        return False
+    links = record.get("case_ids")
+    if isinstance(links, list):
+        return bool(links) and all(isinstance(cid, str) and cid in ids for cid in links)
+    case_id = record.get("case_id")
+    return isinstance(case_id, str) and bool(case_id) and case_id in ids
+
+
+def _ai_economics(
+    store: Any,
+    records: list[dict[str, Any]],
+    ids: set[str],
+    start: date,
+    end: date,
+) -> dict[str, Any]:
+    admitted = [dict(r) for r in records if _synthetic_recommendation(r, ids)]
+    window_start = f"{start.isoformat()}T00:00:00Z"
+    window_end = f"{(end + DAY).isoformat()}T00:00:00Z"
+    summary: dict[str, Any] = dict(tokenomics.store_ai_consumption_economics(
+        store,
+        start=window_start,
+        end=window_end,
+        as_of=window_end,
+        recommendations=admitted,
+    ))
+    return summary
+
+
 def _ai(records: list[dict[str, Any]], ids: set[str], start: date, end: date) -> dict[str, Any]:
     outcomes: Counter[str] = Counter()
     unreviewed = unknown_date = non_ai = eligible = 0
@@ -318,6 +348,8 @@ def dashboard(store: Any, user: dict[str, Any], query: dict[str, list[str]]) -> 
         durations.sort()
         count = len(durations)
         median = (durations[(count - 1) // 2] + durations[count // 2]) / 2 if count else None
+        synthetic_ids = {c["id"] for c in cases}
+        recs = list(store.data.get("recommendations", []))
         return dict(
             label="Demonstration data",
             start=start.isoformat(),
@@ -343,7 +375,8 @@ def dashboard(store: Any, user: dict[str, Any], query: dict[str, list[str]]) -> 
                 journey=_series(steps, [*JOURNEY, "Unknown"]),
                 teams=_series(teams),
             ),
-            ai=_ai(store.data.get("recommendations", []), {c["id"] for c in cases}, start, end),
+            ai=_ai(recs, synthetic_ids, start, end),
+            ai_consumption_economics=_ai_economics(store, recs, synthetic_ids, start, end),
         )
 
 

@@ -961,12 +961,13 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     evaluation["tokenomics_comparison"] = tokenomics_comparison.compact_comparison_summary(
                         tokenomics_comparison.canonical_offline_candidate_comparison(heldout_suite)
                     )
+                    live_bounds = {k: q[k][0] for k in ("start", "end", "as_of") if k in q}
                     return self._json(
                         200,
                         {
                             "evaluation": evaluation,
                             "chat_evaluation": chat_eval.run_eval(),
-                            "live": s.ai_live_report(u),
+                            "live": s.ai_live_report(u, **live_bounds),
                             "registry": ai_registry.registry(),
                             "consumption": consumption,
                         },

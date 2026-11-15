@@ -31,6 +31,7 @@ from . import (
     ranking_publication,
     stock,
     taskqueues,
+    tokenomics,
 )
 from .finance import FinanceMixin
 from .list_export import safe_cell
@@ -1098,9 +1099,15 @@ class Store(
         with self.lock:
             return insights.facets(list(self.cases.values()))
 
+    def ai_consumption_economics(self, **kwargs):
+        return tokenomics.store_ai_consumption_economics(self, **kwargs)
+
     def stats(self):
         with self.lock:
-            return insights.stats(list(self.cases.values()), self.data["staff"])
+            cases = list(self.cases.values())
+            staff = list(self.data["staff"])
+        econ = self.ai_consumption_economics()
+        return insights.stats(cases, staff, ai_consumption_economics=econ)
 
     def progress_report(self, user, *, as_of, start=None, view="mine", filters=None, scenario=None):
         from . import progress
@@ -1123,6 +1130,9 @@ class Store(
             "funding",
         ):
             raise ValueError("Unknown cohort flag.")
+        progress.timestamp(as_of, "As-of")
+        if start is not None:
+            progress.timestamp(start, "Period start")
         with self.lock:
             baseline = self._filtered(user, view, "", {})
             selected = self._filtered(user, view, "", filters)
@@ -1149,6 +1159,10 @@ class Store(
                 cohort=cohort,
                 scenario=scenario,
                 audit_intact=audit_intact,
+                ai_consumption_economics=self.ai_consumption_economics(
+                    start=start,
+                    as_of=as_of,
+                ),
             )
 
     def map_points(self, f):
@@ -2119,8 +2133,8 @@ class Store(
     def review_ai(self, user, rec_id, action, reason="", text=None):
         return ai_tasks.review(self, user, rec_id, action, reason, text)
 
-    def ai_live_report(self, user=None):
-        return ai_tasks.live_report(self, user=user)
+    def ai_live_report(self, user=None, *, start=None, end=None, as_of=None):
+        return ai_tasks.live_report(self, user=user, start=start, end=end, as_of=as_of)
 
     def funding_step(self, user, case_id, action, text="", *, body=None, **extra):
         from .finance import _identity, classify_finance_operation, guard_no_automated_finance_authority
