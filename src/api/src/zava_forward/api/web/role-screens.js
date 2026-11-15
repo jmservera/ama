@@ -33,7 +33,7 @@ function screenJumpNav(label, jumps) {
 const screenUnknown = (reason, owner, action) => h("div", { class: "blocked" },
   h("p", { class: "blocked-title" }, "Cannot confirm readiness"),
   screenFields([["Why it is blocked", reason], ["Owner", owner], ["Next action", action]]));
-const screenWithheld = (items) => screenPanel("Not shown for this role",
+const screenWithheld = (items, anchor = null) => screenPanel("Not shown for this role", ...(anchor ? [{ anchor }] : []),
   h("p", {}, "These items exist in the wider case but are not displayed on this screen. They are listed so that their absence is not read as nothing recorded. Withholding is not authorisation: your access is unchanged and no record changes."),
   h("ul", {}, items.map((item) => h("li", {}, item))));
 // Tension callouts: plain text status, no colour or icon meaning. Atlas hypotheses until validated in #155.
@@ -43,7 +43,7 @@ const screenTensionText = {
   choice: ["Tension: utilisation versus choice",
     "A recorded resident choice, pause or withdrawal comes first. Contractor capacity is only offered or committed, never a booking or a promise, and packages are never ranked by utilisation or headroom."]
 };
-const screenTension = (kind) => screenPanel(screenTensionText[kind][0],
+const screenTension = (kind, anchor = null) => screenPanel(screenTensionText[kind][0], ...(anchor ? [{ anchor }] : []),
   h("p", {}, "Status: proposed design rule. Atlas hypothesis, pending validation in #155; not observed behaviour."),
   h("p", {}, screenTensionText[kind][1]));
 function screenTable(label, headings, rows, limit = 50, cell = (value) => screenValue(value), rowHeader = false) {
@@ -90,8 +90,12 @@ function screenHref(id, caseId, page = 0, keepScope = true) {
 }
 const ROLE_HASH_SCREENS = {
   "#/role/building_safety_lead": "safety-lead",
-  "#/role/repairs": "hazard-triage"
+  "#/role/repairs": "hazard-triage",
+  "#/role/housing_officer": "resident-service-issues",
+  "#/role/resident_engagement": "resident-choice"
 };
+const residentJumpNav = (sections, label = "Sections of this view") => h("nav", { role: "navigation", "aria-label": label, class: "screen-links" },
+  sections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading`, "data-jump-target": `${id}-heading` }, `Go to ${title}`)));
 async function roleScreensView() {
   const signal = routeController.signal;
   const [routePath, rawQuery = ""] = (typeof location === "undefined" ? "#/screens" : location.hash || "#/screens").split("?");
@@ -133,9 +137,10 @@ async function roleScreensView() {
   const overview = screen.overview ? await screen.overview(signal, data.items, c, page)
     : !c && screen.summarise && data.items.length ? await screen.summarise(data.items, signal) : null;
   signal.throwIfAborted();
+  const isResidentRoleScreen = screen.id === "resident-choice" || screen.id === "resident-service-issues";
   const label = (row) => `${row.id}: ${row.address || "Address unknown"}. ${row.status || row.stage || "State unknown"}`;
-  const queue = h("section", { "aria-labelledby": "screen-queue-heading" },
-    h("h2", { id: "screen-queue-heading" }, "Choose a home"),
+  const queue = h("section", { ...(isResidentRoleScreen ? { id: "screen-queue" } : {}), "aria-labelledby": "screen-queue-heading" },
+    h("h2", { id: "screen-queue-heading", ...(isResidentRoleScreen ? { tabindex: -1 } : {}) }, "Choose a home"),
     h("p", {}, "All cases permitted to your signed-in role, including safety concerns. This is a bounded page, not a portfolio total."),
     h("p", { role: "status" }, `${data.items.length} records on page ${page + 1}; ${data.total} permitted cases.`),
     data.items.length ? h("ul", { class: "list" }, data.items.map((row) => h("li", {},
@@ -143,24 +148,35 @@ async function roleScreensView() {
         "aria-current": row.id === caseId ? "true" : null },
         h("div", {}, label(row),
           row.hazard && h("span", { class: "flag danger" }, "Safety issue open"),
+          isResidentRoleScreen && row.hazard && h("span", { "data-state-cue": "safety" }, " State: Action needed - open safety issue."),
           row.work && workSummary(row.work))))))
       : h("p", { class: "empty" }, "No cases on this page. Reset the view or return to your work list."),
     h("div", { class: "row" },
       page > 0 && h("a", { class: "btn alt", href: screenHref(id, caseId, page - 1) }, "Previous page"),
       (page + 1) * 20 < data.total && h("a", { class: "btn alt", href: screenHref(id, caseId, page + 1) }, "Next page"),
       h("a", { class: "btn alt", "data-reset": "true", href: screenHref(id, null, 0, false) }, "Reset screen view")));
-  const selected = c ? h("section", { class: "screen-evidence", "aria-label": `Evidence for ${c.id}` },
-    h("h2", {}, `Selected home ${c.id}`),
+  const selected = c ? h("section", isResidentRoleScreen
+      ? { id: "screen-evidence", class: "screen-evidence", "aria-labelledby": "screen-evidence-heading" }
+      : { class: "screen-evidence", "aria-label": `Evidence for ${c.id}` },
+    h("h2", isResidentRoleScreen ? { id: "screen-evidence-heading", tabindex: -1 } : {}, `Selected home ${c.id}`),
     h("p", { "data-same-home": c.id }, h("span", { class: "flag" }, `Same home: case ${c.id}`),
+      isResidentRoleScreen && h("span", { "data-state-cue": "scope" }, " State: Confirmed - single-home record scope."),
       " Links to other role screens keep this case reference. A different home is never shown here as another stage of it."),
     h("p", {}, "Recorded evidence only. Missing, stale or withheld information cannot establish readiness. No message, approval or record change is made from this screen."),
     await screen.render(c, extra),
     !screen.ownsStageMap && journeyStageMap(c, screen.id),
     h("p", {}, h("a", { href: `#/case/${encodeURIComponent(c.id)}` }, "Open existing case workspace")))
     : h("div", {}, h("p", { class: "empty" }, "No home selected. Choose a home from this queue."));
+  const workspaceJump = isResidentRoleScreen ? residentJumpNav([
+    ["screen-queue", "Choose a home"],
+    ...(overview ? (screen.id === "resident-choice"
+      ? [["choice-portfolio", "Portfolio choice and update commitments"], ["choice-portfolio-withheld", "Portfolio items not shown for this role"]]
+      : [["service-portfolio", "Open service issues across this page"]]) : []),
+    ...(c ? [["screen-evidence", `Selected home ${c.id}`]] : [])
+  ], "Workspace sections") : null;
   signal.throwIfAborted();
   workspaceStatus.textContent = `${me.user.role}. ${screen.title}. ${c ? `Selected home ${c.id}.` : "No home selected."}`;
-  show(h("h1", {}, screen.title), menu,
+  show(h("h1", {}, screen.title), menu, workspaceJump,
     h("div", { class: "layout" }, h("aside", { class: "side" }, queue),
       h("div", { class: "main" }, overview, selected)),
     h("a", { href: "#/" }, "Back to my work"));
@@ -855,12 +871,30 @@ registerRoleScreen({
 
 // Resident choice and service cue maps use shared hoisted stateCue (WCAG 1.4.1; Object.hasOwn prevents prototype matches).
 const choiceCues = { Accepted: "Confirmed", Declined: "Confirmed", Paused: "Confirmed", Withdrawn: "Confirmed", Waiting: "Waiting for resident", "Not recorded": "Waiting for resident" };
+const readinessCues = { "Resident decision current": "Confirmed", "Needs human review": "Action needed" };
+const readinessCue = (value) => value === null || value === undefined || value === "" ? "Waiting for resident: Unknown" : stateCue(readinessCues, String(value));
+const safeRouteCue = (ref) => ref === null || ref === undefined || ref === "" ? "Action needed: Unknown (safe route not recorded)" : `Confirmed: ${screenValue(ref)} (safe route reference only; contact details not shown here)`;
+const formalRouteCues = { Acknowledged: "Confirmed" };
+const formalRouteCue = (value) => value === null || value === undefined || value === "" ? "Action needed: Unknown" : stateCue(formalRouteCues, String(value));
 const updateCues = { Outstanding: "Action needed", Proposed: "Action needed" };
 const serviceCues = { Open: "Action needed", "In progress": "Action needed", Resolved: "Action needed", Closed: "Confirmed" };
-const residentJumpNav = (sections) => h("nav", { "aria-label": "Sections of this view", class: "screen-links" },
-  sections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading` }, title)));
-const choiceSections = [["choice-measures", "Choice for each measure"], ["choice-stopped", "Paused or withdrawn"], ["choice-update", "Update commitment"], ["choice-service", "Service requests"]];
-const serviceSections = [["service-issues", "Service issues"], ["service-update", "Update commitment"]];
+const choiceSections = [
+  ["choice-boundary", "Evidence boundary"],
+  ["choice-measures", "Choice for each measure"],
+  ["choice-stopped", "Paused or withdrawn"],
+  ["choice-update", "Update commitment"],
+  ["choice-service", "Service requests"],
+  ["choice-precedence", "Choice precedence rule"],
+  ["choice-tension-choice", "Design tension on resident choice"],
+  ["choice-tension-disclosure", "Design tension on continuity and disclosure"],
+  ["choice-withheld", "Not shown for this role"]
+];
+const serviceSections = [
+  ["service-boundary", "Evidence boundary"],
+  ["service-issues", "Service issues"],
+  ["service-redress", "Independent review and complaints"],
+  ["service-update", "Update commitment"]
+];
 const choiceRoles = ["Resident Liaison Officer", "Retrofit Coordinator", "Retrofit Programme Manager", "Programme Support Officer"];
 const choiceStop = new Set(["Paused", "Withdrawn"]);
 const choiceLatest = (m) => (m.versions || []).at(-1);
@@ -875,8 +909,8 @@ function choiceMeasure(m) {
   const v = choiceLatest(m);
   const ctx = m.context ? `scope ${screenValue(m.context.scope)}, revision ${screenValue(m.context.revision)}, design ${screenValue(m.context.design_version)}` : "Current scope not recorded";
   return [m.measure, ctx, stateCue(choiceCues, m.status),
-    v ? `v${v.version} ${v.status} (${choiceBinding(v)}), answered by ${screenValue(v.answered_by)}, recorded ${screenStamp(v.at)}${v.note ? `: ${v.note}` : ""}` : "None recorded",
-    screenValue(m.readiness)];
+    v ? `${stateCue(choiceCues, v.status, `v${v.version} ${v.status}`)} (${choiceBinding(v)}), answered by ${screenValue(v.answered_by)}, recorded ${screenStamp(v.at)}${v.note ? `: ${v.note}` : ""}` : "Waiting for resident: None recorded",
+    readinessCue(m.readiness)];
 }
 function choiceStoppedSummary(m) {
   const v = choiceStopVersion(m) || choiceLatest(m);
@@ -889,9 +923,9 @@ function choiceQueueRow(c) {
   const stopped = measures.filter(choiceStopped).map(choiceStoppedSummary);
   const u = c.resident_update;
   return [`${c.id}, ${screenValue(c.address)}, ${screenValue(c.town)}`,
-    measures.length ? measures.map((m) => { const v = choiceLatest(m); return stateCue(choiceCues, m.status, `${m.measure}: current ${m.status}${v ? `; latest recorded v${v.version} ${v.status} (${choiceBinding(v)})` : ""}`); }).join("; ") : "No measure choices recorded",
-    stopped.length ? stopped.join("; ") : "None recorded",
-    u ? `${stateCue(updateCues, u.status)}: ${screenValue(u.purpose)}. Owner ${screenPerson(u.owner_identity || u.owner)}, due ${screenStamp(u.due_at)}, safe route ${screenValue(u.safe_contact_ref)}` : "No commitment recorded"];
+    measures.length ? measures.map((m) => { const v = choiceLatest(m); return stateCue(choiceCues, m.status, `${m.measure}: current ${m.status}${v ? `; latest recorded v${v.version} ${v.status} (${choiceBinding(v)})` : ""}`); }).join("; ") : "Waiting for resident: No measure choices recorded",
+    stopped.length ? stopped.join("; ") : "State: None recorded",
+    u ? `${stateCue(updateCues, u.status)}: ${screenValue(u.purpose)}. Owner ${screenPerson(u.owner_identity || u.owner)}, due ${screenStamp(u.due_at)}, safe route ${safeRouteCue(u.safe_contact_ref)}` : "Action needed: No commitment recorded"];
 }
 function choiceDownload(queue) {
   const { limit, offset } = queue;
@@ -920,7 +954,7 @@ registerRoleScreen({
   summary(queue) {
     const items = queue && Array.isArray(queue.items) ? queue.items : null;
     return h("div", {},
-      screenPanel("Choice and update commitments across open homes (portfolio scope, not this home)",
+      screenPanel("Choice and update commitments across open homes (portfolio scope, not this home)", { anchor: "choice-portfolio" },
         items
           ? h("div", {},
             h("p", {}, `Read-only. Shows ${items.length} of ${screenValue(queue.total)} open homes, in home ID order, as your role may see them. A paused or withdrawn measure is listed separately from contact and access. Open a home for the full version history.`),
@@ -930,7 +964,7 @@ registerRoleScreen({
               items.map(choiceQueueRow), Infinity))
           : screenUnknown("The cross-home queue could not be loaded.", "Resident liaison officer or programme manager", "Reload, or open each home from the case queue")),
       screenWithheld(["Resident phone, email and postal contact history (shown only as a safe route reference)",
-        "Detailed access and household history beyond the update commitment", "Contractor capacity and offered slots"]));
+        "Detailed access and household history beyond the update commitment", "Contractor capacity and offered slots"], "choice-portfolio-withheld"));
   },
   render(c) {
     const measures = c.measure_decisions || [];
@@ -939,7 +973,7 @@ registerRoleScreen({
     const requests = c.service_requests || [];
     return h("div", {},
       residentJumpNav(choiceSections),
-      screenPanel("Evidence boundary",
+      screenPanel("Evidence boundary", { anchor: "choice-boundary" },
         h("p", {}, "Read-only view. No message, call or letter is sent and no record changes here. Record supplied answers in the case workspace. Resident-facing screens are designed separately. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
       screenPanel("Choice for each measure", { anchor: "choice-measures" },
@@ -957,24 +991,24 @@ registerRoleScreen({
             const state = stateCue(choiceCues, v ? v.status : m.status, choiceStop.has(m.status) && v === choiceLatest(m) ? m.status : `${v.status} (current answer ${m.status})`);
             return [m.measure, v ? `${state}, ${choiceBinding(v)}` : state, v?.note, "Action needed: Human review before any restart"];
           }))
-          : h("p", { class: "empty" }, "No measure is currently paused or withdrawn in the recorded answers.")),
+          : h("p", { class: "empty" }, "State: None recorded. No measure is currently paused or withdrawn in the recorded answers.")),
       screenPanel("Linked update commitment", { anchor: "choice-update" },
         update ? screenFields([
           ["Status", stateCue(updateCues, update.status)], ["Purpose or linked issue", update.purpose],
           ["Owner", screenPerson(update.owner_identity || update.owner)], ["Due", screenStamp(update.due_at)],
-          ["Basis for due date", update.basis], ["Safe route reference", update.safe_contact_ref],
+          ["Basis for due date", update.basis], ["Safe route reference", safeRouteCue(update.safe_contact_ref)],
           ["Version", update.version], ["Meaning", "A commitment is not a message. Nothing is sent or marked received here."]])
           : screenUnknown("No update commitment is recorded for this home.", "Case owner or resident-workflow manager", "Record a commitment in the case workspace")),
       screenPanel("Service requests and access needs (separate from choice)", { anchor: "choice-service" },
         screenRecordTable("Service requests and contact needs",
           ["Request", "Route", "State and meaning", "Contact needs", "Next update"],
           requests.map((r) => [r.id, r.route, serviceStatus(r), serviceNeeds(r), r.next_update]))),
-      screenPanel("Choice comes before offered capacity",
+      screenPanel("Choice comes before offered capacity", { anchor: "choice-precedence" },
         h("p", {}, "A recorded choice, pause or withdrawal takes precedence over any offered contractor slot. An offered slot is not a booking and not a promise to the resident. Offered capacity is shown on the Package queue screen, not here.")),
-      screenTension("choice"),
-      screenTension("disclosure"),
+      screenTension("choice", "choice-tension-choice"),
+      screenTension("disclosure", "choice-tension-disclosure"),
       screenWithheld(["Resident phone, email and postal contact history (shown only as a safe route reference)",
-        "Detailed access and household history beyond the contact needs above", "Contractor capacity and offered slots"]));
+        "Detailed access and household history beyond the contact needs above", "Contractor capacity and offered slots"], "choice-withheld"));
   }
 });
 const hazardTriageRoles = ["Retrofit Coordinator", "Resident Liaison Officer", "Quality Inspector"];
@@ -1878,8 +1912,11 @@ const serviceReview = (r) => r.route === "Independent review"
   ? `Independent review of ${screenValue(r.review_reference)}; ${screenValue(r.review_measure)} v${screenValue(r.review_decision_version)}`
   : "Not an independent review";
 function redressRoutePanel(route) {
-  if (!route) return screenUnknown("The independent review and complaints route is not available on this record.", "Resident-workflow manager", "Reload the home");
-  return screenPanel("Independent human review and formal complaints, without detriment",
+  if (!route) {
+    return screenPanel("Independent human review and formal complaints, without detriment", { anchor: "service-redress" },
+      screenUnknown("The independent review and complaints route is not available on this record.", "Resident-workflow manager", "Reload the home"));
+  }
+  return screenPanel("Independent human review and formal complaints, without detriment", { anchor: "service-redress" },
     h("p", {}, "A resident, their representative or frontline staff on their behalf can ask for an independent human review or make a formal complaint at any time."),
     h("ul", {}, (route.commitments || []).map((x) => h("li", {}, x))),
     screenRecordTable("Routes to ask",
@@ -1892,18 +1929,18 @@ function redressRoutePanel(route) {
       : h("p", { class: "empty" }, "No recorded decision with a known recorder is open to independent review. This does not establish that none can be reviewed."),
     (route.formal_requests || []).length ? screenRecordTable("Formal requests and whether they were sent",
       ["Issue", "Route", "State", "Formal route status", "Next update", "Measure reviewed", "Decision version"],
-      route.formal_requests.map((x) => [x.id, x.route, stateCue(serviceCues, x.status), screenValue(x.formal_route_status), screenStamp(x.next_update), screenValue(x.review_measure), x.review_decision_version == null ? "Not applicable" : `v${screenValue(x.review_decision_version)}`]))
+      route.formal_requests.map((x) => [x.id, x.route, stateCue(serviceCues, x.status), formalRouteCue(x.formal_route_status), screenStamp(x.next_update), screenValue(x.review_measure), x.review_decision_version == null ? "Not applicable" : `v${screenValue(x.review_decision_version)}`]))
       : h("p", { class: "empty" }, "No formal request recorded. This does not establish that the resident has none."),
     h("p", {}, route.send_note));
 }
 function serviceQueueRow([row, c]) {
-  if (!c) return [row.id, "Unavailable. Open the home to check.", "Unavailable", "Unavailable"];
+  if (!c) return [row.id, "Action needed: Unavailable. Open the home to check.", "Waiting for resident: Unavailable", "Action needed: Unavailable"];
   const open = (c.service_requests || []).filter((r) => r.status !== "Closed");
   const u = c.resident_update;
   return [row.id,
-    open.length ? open.map((r) => stateCue(serviceCues, r.status, `${r.id} ${screenValue(r.route)}: ${screenValue(r.status)}, next update ${screenStamp(r.next_update)}`)).join("; ") : "No open request recorded",
-    open.length ? [...new Set(open.map(serviceNeeds))].join("; ") : "None recorded",
-    u ? `${stateCue(updateCues, u.status)}, owner ${screenPerson(u.owner_identity || u.owner)}, safe route ${screenValue(u.safe_contact_ref)}` : "No commitment recorded"];
+    open.length ? open.map((r) => stateCue(serviceCues, r.status, `${r.id} ${screenValue(r.route)}: ${screenValue(r.status)}, next update ${screenStamp(r.next_update)}`)).join("; ") : "Confirmed: No open request recorded",
+    open.length ? [...new Set(open.map(serviceNeeds))].join("; ") : "State: None recorded",
+    u ? `${stateCue(updateCues, u.status)}, owner ${screenPerson(u.owner_identity || u.owner)}, safe route ${safeRouteCue(u.safe_contact_ref)}` : "Action needed: No commitment recorded"];
 }
 registerRoleScreen({
   id: "resident-service-issues",
@@ -1918,7 +1955,7 @@ registerRoleScreen({
     return this.summary(entries);
   },
   summary(entries) {
-    return screenPanel("Open service issues across this page of homes",
+    return screenPanel("Open service issues across this page of homes", { anchor: "service-portfolio" },
       h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Contact needs are shown with each issue. Open a home for the full record."),
       screenRecordTable("Open service issues by home",
         ["Home", "Open issues and next update", "Contact needs", "Update commitment"],
@@ -1927,9 +1964,13 @@ registerRoleScreen({
   render(c) {
     const requests = c.service_requests || [];
     const update = c.resident_update;
+    const hasHistory = requests.some((r) => (r.history || []).length);
+    const sections = hasHistory
+      ? [...serviceSections.slice(0, 3), ["service-history", "Response history"], serviceSections[3]]
+      : serviceSections;
     return h("div", {},
-      residentJumpNav(serviceSections),
-      screenPanel("Evidence boundary",
+      residentJumpNav(sections),
+      screenPanel("Evidence boundary", { anchor: "service-boundary" },
         h("p", {}, "Read-only view. No message, call or letter is sent and no record changes here. Resident-facing screens are designed separately. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
       screenPanel("Service issues", { anchor: "service-issues" },
@@ -1939,17 +1980,17 @@ registerRoleScreen({
           ["Issue", "Route", "Summary and outcome wanted", "State and meaning", "Owners", "Contact needs", "Representative reference", "Next update", "Review link"],
           requests.map((r) => [r.id, r.route, `${screenValue(r.summary)}. Wanted: ${screenValue(r.desired_outcome)}`, serviceStatus(r), serviceOwner(r),
             serviceNeeds(r), r.representative_ref, screenStamp(r.next_update), serviceReview(r)]))
-          : h("p", { class: "empty" }, "No service issue recorded. This does not establish that the resident has none.")),
+          : h("p", { class: "empty" }, "State: None recorded. No service issue recorded. This does not establish that the resident has none.")),
       redressRoutePanel(c.redress_route),
-      requests.some((r) => (r.history || []).length) ? screenPanel("Response history",
+      hasHistory ? screenPanel("Response history", { anchor: "service-history" },
         screenRecordTable("Recorded response steps",
           ["Issue", "State", "Recorded by", "Recorded", "Note"],
-          requests.flatMap((r) => (r.history || []).map((x) => [r.id, x.status, x.by, screenStamp(x.at), x.note])))) : null,
+          requests.flatMap((r) => (r.history || []).map((x) => [r.id, serviceStatus({ status: x.status }), x.by, screenStamp(x.at), x.note])))) : null,
       screenPanel("Linked update commitment", { anchor: "service-update" },
         update ? screenFields([
           ["Status", stateCue(updateCues, update.status)], ["Purpose or linked issue", update.purpose],
           ["Owner", screenPerson(update.owner_identity || update.owner)], ["Due", screenStamp(update.due_at)],
-          ["Safe route reference", update.safe_contact_ref],
+          ["Safe route reference", safeRouteCue(update.safe_contact_ref)],
           ["Meaning", "A commitment is not a message. Nothing is sent or marked received here."]])
           : screenUnknown("No update commitment is recorded for this home.", "Case owner or resident-workflow manager", "Record a commitment in the case workspace")));
   }
