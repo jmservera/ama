@@ -4029,6 +4029,139 @@ class RegulatoryEvalGates216Tests(unittest.TestCase):
                 refuse_question(must_allow), msg=f"Unexpected refusal: {must_allow!r}"
             )
 
+    def test_c23_single_card_envelope_compatibility_and_deterministic_comparator_alias(
+        self,
+    ) -> None:
+        from zava_forward.core.regulatory_eval_gates import (
+            compare_chat_against_deterministic_rule_cards,
+        )
+
+        self.assertIs(
+            compare_chat_against_deterministic_rule_cards,
+            compare_chat_against_rule_cards,
+        )
+
+        expected_v1_keys = {
+            "id",
+            "status",
+            "approved_by",
+            "approved_on",
+            "effective",
+            "exercise",
+            "link",
+            "safe_default",
+            "clock",
+            "source_freshness",
+        }
+
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = Fixture(tmp)
+            try:
+                at = _configure_scenario(fixture, "supported")
+                chat = RegulatoryChat(
+                    fixture.iso,
+                    fixture.law,
+                    render_extractive_answer,
+                    classify_purpose,
+                    refuse_question,
+                    env=ENV,
+                    clock=_fixed_clock(at),
+                )
+                case_id = str(next(iter(fixture.store.cases)))
+                actor: dict[str, Any] = dict(fixture.owner)
+                question = "What do the approved hazard provisions record for this home?"
+
+                single_bundle = chat.bundle(actor, case_id, question)
+                self.assertEqual(len(single_bundle["cards"]), 1)
+                self.assertEqual(set(single_bundle["cards"][0].keys()), expected_v1_keys)
+                self.assertNotIn("provision_ids", single_bundle["cards"][0])
+
+                tid = chat.start(actor, case_id)
+                reply = chat.ask(actor, tid, question)
+                self.assertEqual(reply["kind"], "answer")
+                self.assertEqual(set(reply["cards"][0].keys()), expected_v1_keys)
+                self.assertEqual(
+                    grade_chat_turn(reply, {**single_bundle, "kind": "answer"}),
+                    {"citation_validity": True, "answer_contract": True},
+                )
+
+                # Two active cards backed by distinct single-provision sources also preserve
+                # the 10-field regulatory-chat-v1 card envelope without provision_ids.
+                second_quote = "Distinct synthetic hazard source clause; not law."
+                second_digest = _sha256_hex(second_quote)
+                with fixture.law.transaction():
+                    fixture.law.sql.run(
+                        "INSERT INTO reg_source VALUES (?,?,?,?,?,?,?,?,?)",
+                        (
+                            "synthetic-second",
+                            "synthetic-demo second source",
+                            "https://example.test/second-source",
+                            "exercise",
+                            "exercise",
+                            "Juan Manuel Servera",
+                            "High",
+                            "daily",
+                            "none",
+                        ),
+                    )
+                    fixture.law.sql.run(
+                        "INSERT INTO reg_version VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+                        (
+                            "synthetic-second",
+                            1,
+                            "in_force",
+                            "2026-01-01",
+                            "2026-10-16",
+                            "2026-10-16",
+                            "reviewed",
+                            second_digest,
+                            "none",
+                            "ok",
+                            "full",
+                            None,
+                        ),
+                    )
+                    fixture.law.sql.run(
+                        "INSERT INTO reg_provision VALUES (?,?,?,?,?,?,?)",
+                        (
+                            "synthetic-second@v1#0001",
+                            "synthetic-second",
+                            1,
+                            1,
+                            "Second synthetic clause",
+                            second_quote,
+                            second_digest,
+                        ),
+                    )
+                fixture.card("synthetic-second-card", pid="synthetic-second@v1#0001")
+
+                distinct_two_bundle = chat.bundle(actor, case_id, question)
+                self.assertEqual(len(distinct_two_bundle["cards"]), 2)
+                for card in distinct_two_bundle["cards"]:
+                    self.assertEqual(set(card.keys()), expected_v1_keys)
+                    self.assertNotIn("provision_ids", card)
+                self.assertEqual(
+                    len(deterministic_rule_cards(distinct_two_bundle)["cards"]),
+                    2,
+                )
+            finally:
+                fixture.close()
+
+        valid_agr = _valid_agreement(self.cases)
+        agreed_gates = evaluate_citation_and_refusal_gates(self.cases, agreement=valid_agr)
+        alias_cmp = compare_chat_against_deterministic_rule_cards(
+            self.cases,
+            self.paired_cards,
+            gates_report=agreed_gates,
+            observations=_valid_observations(self.cases, self.paired_cards),
+            benefit_thresholds=_valid_thresholds(),
+            cost_inputs=_valid_cost_inputs(),
+            rule_hazard_misses=0,
+            now=NOW,
+        )
+        self.assertTrue(alias_cmp["measured_value"])
+        self.assertEqual(alias_cmp["ship_mode"], "chat_with_cards")
+
 
 if __name__ == "__main__":
     unittest.main()

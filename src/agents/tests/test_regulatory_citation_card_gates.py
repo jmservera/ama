@@ -3,11 +3,17 @@
 from __future__ import annotations
 
 import copy
+import sys
 import unittest
+from pathlib import Path
 from typing import Any
 
-from regulatory_gate_fixture import answer_cases
-from zava_forward.agents import citation_card_gates as gates
+_TESTS_DIR = str(Path(__file__).resolve().parent)
+if _TESTS_DIR not in sys.path:
+    sys.path.insert(0, _TESTS_DIR)
+
+from regulatory_gate_fixture import answer_cases  # noqa: E402
+from zava_forward.agents import citation_card_gates as gates  # noqa: E402
 
 
 class CitationCardGates(unittest.TestCase):

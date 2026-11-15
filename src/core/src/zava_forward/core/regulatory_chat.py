@@ -353,6 +353,7 @@ class RegulatoryChat:
         if blocked:
             return dict(result, refusal=blocked)
         sources: dict[str, Any] = {}
+        card_provisions: list[list[str]] = []
         signatures = set()
         with self.law.sql.lock:
             for latest_card in self.law.rules.cards():
@@ -407,10 +408,10 @@ class RegulatoryChat:
                         link="/api/law/cards/" + quote(card["card_id"], safe=""),
                         safe_default=card["safe_default"],
                         clock=card["clock"],
-                        provision_ids=list(card["provisions"]),
                         source_freshness=card_freshness(self.law, card, day),
                     )
                 )
+                card_provisions.append(list(card["provisions"]))
                 signatures.add((card["safe_default"], card["clock"]))
                 for pid in card["provisions"]:
                     sources[pid] = self._source(self.law.provision(pid))
@@ -425,6 +426,14 @@ class RegulatoryChat:
             result["conflict"] = False
             result["unknown"] = "No permitted structured home fact selected for this purpose."
             return result
+        if len(result["cards"]) > 1:
+            provs_per_source: dict[str, int] = {}
+            for pid in sources:
+                base_sid = pid.split("@v", 1)[0]
+                provs_per_source[base_sid] = provs_per_source.get(base_sid, 0) + 1
+            for card_entry, pids in zip(result["cards"], card_provisions, strict=True):
+                if any(provs_per_source.get(pid.split("@v", 1)[0], 0) > 1 for pid in pids):
+                    card_entry["provision_ids"] = pids
         if result["sources"] and not result["conflict"] and kind == "hazard-awareness-clock":
             if user["role"] in HAZARD_ROLES:
                 for i, hazard in enumerate(detail.get("hazards", [])[:2]):

@@ -4917,7 +4917,8 @@ evaluation gates and the deterministic rule-card shipping comparator inside
   "provisional_not_agreed"`), while threshold breaches or missing sets resolve
   to `"fail"`.
 * `deterministic_rule_cards`, `observation_surface_digest`,
-  `compare_chat_against_rule_cards`, `verify_reply_grounding`,
+  `compare_chat_against_rule_cards` (also aliased as
+  `compare_chat_against_deterministic_rule_cards`), `verify_reply_grounding`,
   `resolve_regulatory_surface` and
   `RegulatoryChat` (`surface`, `RegulatoryChat.ship_gated(...)`, and automatic
   `enforce_ship_gate` enforcement on `start()` and `ask()` — including
@@ -4935,7 +4936,10 @@ evaluation gates and the deterministic rule-card shipping comparator inside
   `last_success`, `cadence_days` and `due_on` records matching aggregate
   status, exact 3-way canonical `source_monitor` freshness `label`, date rollup
   and source `currentness` across rendering, card projection and turn grading)
-  and exact per-card `provision_ids` linkage covering all active bundle
+  and unambiguous provision linkage (preserving the 10-field
+  `regulatory-chat-v1` card envelope on single-card and distinct-source bundles
+  while attaching exact per-card `provision_ids` whenever a multi-card bundle
+  shares a multi-provision `source_id`) covering all active bundle
   provisions without unflagged multi-version, duplicate-ID or divergent
   `(safe_default, clock)` card-signature contradictions (isolating conflicting
   snapshots under `conflict_provisions` with `cards = []` and `provisions = []`

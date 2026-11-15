@@ -4415,6 +4415,9 @@ def compare_chat_against_rule_cards(
     return comparison_report
 
 
+compare_chat_against_deterministic_rule_cards = compare_chat_against_rule_cards
+
+
 def _verify_comparison_evidence(comparison: object) -> bool:
     try:
         if (
