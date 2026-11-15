@@ -56,6 +56,7 @@ function screenTable(label, headings, rows, limit = 50, cell = (value) => screen
       : h("p", { class: "empty" }, "No records supplied. This does not establish readiness."));
 }
 // Non-colour state meaning: every state is led by a plain-text prefix so it is not conveyed by colour or position alone.
+const stateCue = (table, status, detail = status) => `${Object.hasOwn(table, status) ? table[status] : "Action needed"}: ${screenValue(detail)}`;
 const screenCapacityState = (cap) => {
   const headroom = cap?.headroom;
   if (typeof headroom !== "number" || !Number.isFinite(headroom)) return "Unknown: headroom not supplied";
@@ -194,18 +195,27 @@ const assetGates = [
   ["Resident experience", "Resident feedback recorded with consent", "Resident engagement lead", "Board or delegated owner"],
   ["Pause or exit choice for the next tranche", "Recommendation with the evidence it relies on", "Asset owner", "Board or delegated owner"]
 ];
+// State is always words first, so colour, icons or position never carry the meaning alone.
+const assetState = (state, meaning) => `State: ${state}. ${meaning}`;
+const assetUnknownState = "Not evidenced for this home or portfolio";
+const assetConflictCues = {
+  "Reconciled (recorded by a named person)": "Recorded",
+  "Withdrawn (recorded by a named person)": "Withdrawn",
+  Unresolved: "Action needed"
+};
+const assetReconciliationCues = { reconciled: "Recorded", unreconciled: "Action needed", Unknown: "State" };
 function assetCost(report) {
   const m = report?.consumption;
   const passed = m && m.quality_status === "Pass" && m.quality_qualified_cost && m.quality_qualified_cost !== "Unknown" && m.evidence_label;
   return screenFields([
-    ["AI report", report?.consumption ? "Loaded" : "Unavailable. The AI report could not be loaded, so every AI figure below is Unknown."],
+    ["AI report", report?.consumption ? "Loaded" : assetState("Unavailable", "The AI report could not be loaded, so every AI figure below is Unknown.")],
     ["Without AI", "Nothing on this view needs AI. Ask the Programme manager or Finance owner for the dated cost and value records to read these figures by hand."],
-    ["Overall AI cost per accepted outcome", "Unknown. Other cost components are not complete and quality-qualified."],
+    ["Overall AI cost per accepted outcome", assetState("Unknown", "Other cost components are not complete and quality-qualified.")],
     ["Token/API component per accepted proposal (component only)", passed ? `${m.quality_qualified_cost} ${screenValue(m.currency)}` : "Unknown"],
     ["Report period (UTC)", m?.period ? `${screenValue(m.period.start)} to ${screenValue(m.period.end)}, as of ${screenValue(m.period.as_of)}` : "Unknown"],
     ["Accepted-outcome denominator", screenValue(m?.denominator)],
-    ["Quality floor", screenValue(m?.quality_status)],
-    ["Value status", m?.cash_value && m.cash_value !== "Unknown" ? m.cash_value : "Unknown. No finance-defensible value is recorded."],
+    ["Quality floor", assetState(screenValue(m?.quality_status), m ? "As reported for all homes" : "The AI report could not be loaded")],
+    ["Value status", m?.cash_value && m.cash_value !== "Unknown" ? `State: Recorded. ${m.cash_value}` : assetState("Unknown", "No finance-defensible value is recorded.")],
     ["Evidence class", screenValue(m?.evidence_label)],
     ["Coverage", screenValue(m?.coverage)],
     ["Reading", "A token count is never shown as the cost of AI. Without a recorded price source, a passed quality floor and a stated evidence class, cost stays Unknown."]
@@ -221,6 +231,7 @@ function assetUsage(report) {
   const capabilities = m.by_capability && typeof m.by_capability === "object" && !Array.isArray(m.by_capability) ? Object.entries(m.by_capability) : null;
   const components = m.other_tca_components && typeof m.other_tca_components === "object" ? Object.entries(m.other_tca_components) : [];
   const unit = m.currency && m.currency !== "Unknown" ? ` ${m.currency}` : "";
+  const reconciliation = screenValue(m.reconciliation);
   return h("div", {},
     screenFields([
       ["Metered calls in the period (all capabilities)", usageCount(m.calls)],
@@ -232,8 +243,8 @@ function assetUsage(report) {
       ["Reviews not joined", usageCount(m.unjoined_reviews)],
       ["Human-accepted proposals", usageCount(m.accepted_proposals)],
       ["Limits", "No limit, budget or price target is set on this view (BRD OD-51 is open). Held calls are listed as alerts below; only the owning team can read them against a limit."],
-      ["Reconciliation with the bill", screenValue(m.reconciliation)],
-      ["Total Cost of AI", m.total_cost_of_ai && m.total_cost_of_ai !== "Unknown" ? `${m.total_cost_of_ai}${unit}` : "Unknown. Every component below must be recorded first."]
+      ["Reconciliation with the bill", stateCue(assetReconciliationCues, reconciliation)],
+      ["Total Cost of AI", m.total_cost_of_ai && m.total_cost_of_ai !== "Unknown" ? `State: Recorded. ${m.total_cost_of_ai}${unit}` : assetState("Unknown", "Every component below must be recorded first.")]
     ]),
     alerts
       ? screenTable("Held-call and limit alerts (an owner is named for each)", ["Owner", "Reason", "Route"],
@@ -251,23 +262,23 @@ function assetUsage(report) {
       : null);
 }
 const assetSections = [
+  ["asset-boundary", "Evidence boundary"],
   ["asset-summary", "Summary in words"],
   ["asset-queue", "Stock conflict queue"],
   ["asset-comparison", "Stock conflict comparison"],
+  ["asset-eligibility", "Eligibility"],
   ["asset-inputs", "Missing investment inputs"],
   ["asset-checks", "Benefits and phase check"],
   ["asset-portfolio", "Portfolio scope"],
-  ["asset-ai", "AI cohort and usage"]
+  ["asset-ai", "AI cohort and cost"],
+  ["asset-usage", "AI usage, alerts and cost components"]
 ];
-const assetJumpNav = () => h("nav", { "aria-label": "Sections of this view", class: "screen-links" },
-  assetSections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading` }, title)));
+const assetJumpNav = () => h("nav", { role: "navigation", "aria-label": "Sections of this view", class: "screen-links" },
+  assetSections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading`, "data-jump-target": `${id}-heading` }, `Go to ${title}`)));
 const assetNote = (text) => h("p", { class: "empty" }, text);
-// State is always words first, so colour, icons or position never carry the meaning alone.
-const assetState = (state, meaning) => `State: ${state}. ${meaning}`;
-const assetUnknownState = "Not evidenced for this home or portfolio";
 if (typeof document !== "undefined" && typeof document.addEventListener === "function") {
   document.addEventListener("click", (event) => {
-    const link = event.target.closest?.("a[data-jump]");
+    const link = event.target?.closest?.("a[data-jump]");
     if (!link) return;
     event.preventDefault();
     document.getElementById(link.getAttribute("data-jump"))?.focus();
@@ -310,7 +321,7 @@ registerRoleScreen({
     const owner = queries.find((q) => assetStatus(c, q) === "Unresolved")?.query_owner;
     return h("div", {},
       assetJumpNav(),
-      screenPanel("Evidence boundary",
+      screenPanel("Evidence boundary", { anchor: "asset-boundary" },
         h("p", {}, "Read-only reader view. It records no investment approval and changes no record. Budgets, priorities, forecasts and eligibility are Unknown unless a constructed fixture says so, and this page cannot confirm them. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
       screenPanel("Summary in words", { anchor: "asset-summary" }, ...assetSummary(extra, extra?.report)),
@@ -320,7 +331,7 @@ registerRoleScreen({
         extra?.queue
           ? screenTable("Open stock conflicts by home", ["Home", "Open conflicts", "Fields in conflict", "Oldest source date", "Resolution owners", "Investment inputs"],
             extra.queue.items.map((r) => [`${r.id}, ${r.address}, ${r.town}`, r.open_queries, (r.fields || []).join(", "), `${r.oldest_source_date}, ${assetAgeDays(r.oldest_source_date)}`,
-              (r.owners || []).join(", ") || "Unassigned", "Unknown. See missing investment inputs."]), 100)
+              (r.owners || []).join(", ") || "Unassigned", assetState("Unknown", "See missing investment inputs.")]), 100)
           : screenUnknown("The cross-home queue could not be loaded.", "Programme manager", "Reload, or open each home from the case queue")),
       screenPanel("Stock conflict comparison", { anchor: "asset-comparison" },
         screenTable("Stock source conflicts and source age",
@@ -328,9 +339,10 @@ registerRoleScreen({
           queries.map((q) => [q.id, q.field,
             `${q.left.value}, ${q.left.source_id} v${q.left.version}, ${assetAgeDays(q.left.date)}, ${q.left.validation_state}`,
             `${q.right.value}, ${q.right.source_id} v${q.right.version}, ${assetAgeDays(q.right.date)}, ${q.right.validation_state}`,
-            assetStatus(c, q), screenPerson(q.query_owner)]))),
-      screenPanel("Eligibility",
-        screenFields([["Eligibility", "Unknown"],
+            stateCue(assetConflictCues, assetStatus(c, q)), screenPerson(q.query_owner)]))),
+      screenPanel("Eligibility", { anchor: "asset-eligibility" },
+        screenFields([["Eligibility state", assetState("Unknown", "This page cannot confirm eligibility.")],
+          ["Eligibility", "Unknown"],
           ["Resolution owner", owner ? screenPerson(owner) : "Unassigned. Programme manager to name an owner."],
           ["Next action", "Obtain source-authority review. Nothing here selects a winning source."]])),
       screenPanel("Missing investment inputs", { anchor: "asset-inputs" },
@@ -346,7 +358,7 @@ registerRoleScreen({
         screenFields([["Cases permitted to your role", extra?.portfolio?.total],
           ["Meaning", "A role-scoped count, not a stock, budget or programme total"]])),
       screenPanel("Ledger-wide AI cohort (all homes, not this home)", { anchor: "asset-ai" }, assetCost(extra?.report)),
-      screenPanel("Ledger-wide AI usage, alerts and cost components (all homes, not this home)", assetUsage(extra?.report)));
+      screenPanel("Ledger-wide AI usage, alerts and cost components (all homes, not this home)", { anchor: "asset-usage" }, assetUsage(extra?.report)));
   }
 });
 
@@ -834,8 +846,7 @@ registerRoleScreen({
   }
 });
 
-// Text prefixes carry the state so colour is never the only signal (WCAG 1.4.1). Lookups use Object.hasOwn so inherited names never match.
-const stateCue = (table, status, detail = status) => `${Object.hasOwn(table, status) ? table[status] : "Action needed"}: ${screenValue(detail)}`;
+// Resident choice and service cue maps use shared hoisted stateCue (WCAG 1.4.1; Object.hasOwn prevents prototype matches).
 const choiceCues = { Accepted: "Confirmed", Declined: "Confirmed", Paused: "Confirmed", Withdrawn: "Confirmed", Waiting: "Waiting for resident", "Not recorded": "Waiting for resident" };
 const updateCues = { Outstanding: "Action needed", Proposed: "Action needed" };
 const serviceCues = { Open: "Action needed", "In progress": "Action needed", Resolved: "Action needed", Closed: "Confirmed" };
