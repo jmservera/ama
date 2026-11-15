@@ -153,6 +153,8 @@ async function roleScreensView() {
     h("h2", {}, `Selected home ${c.id}`),
     h("p", { "data-same-home": c.id }, h("span", { class: "flag" }, `Same home: case ${c.id}`),
       " Links to other role screens keep this case reference. A different home is never shown here as another stage of it."),
+    c.work?.next_action && h("p", { "data-same-home-next-action": c.id },
+      `Current owner: ${screenValue(c.work.owner)}. Next action: ${c.work.next_action}`),
     h("p", {}, "Recorded evidence only. Missing, stale or withheld information cannot establish readiness. No message, approval or record change is made from this screen."),
     await screen.render(c, extra),
     !screen.ownsStageMap && journeyStageMap(c, screen.id),
