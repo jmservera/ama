@@ -160,6 +160,9 @@ param chatRetentionDays int = 0
 param enableRankingArchiveBlob bool = false
 @description('Demo-only, default-off opt-in (Refs #136, #1288): start the API with the public fixture simulation lane at ZF_SIM_STORE/ZF_SIM_KEY_FILE under /state/public-simulation, replica-local and VOLATILE (lost on replica replacement or scale to zero), at most one API replica. Requires demoDirectIngress, the development profile, browser authentication, deployed applications and a real API image. Not durable history, live IoT Hub ingestion, a real selected-home reading path, whole-issue acceptance or a deployment approval; it never changes the durable SQL admission, budgets or model settings.')
 param enablePublicSimulationLane bool = false
+@description('Days ledger digests stay immutable on the ledger-digests Blob container (Refs #115). Must be at least 1 and no shorter than the legal audit retention period once decided; ARM creates an unlocked time-based WORM policy and irreversible locking is an owner action.')
+@minValue(1)
+param ledgerDigestImmutabilityDays int = 365
 @description('Days ranking archive records stay immutable. 0 (unset) creates no policy: the duration and its approval are a manual prerequisite and no immutable release may be claimed. A positive value creates an unlocked policy; locking is an owner action.')
 @minValue(0)
 param rankingArchiveImmutabilityDays int = 0
@@ -285,6 +288,7 @@ module storage 'modules/storage.bicep' = {
     zoneIds: network.outputs.zoneIds
     enableLock: enableLocks
     zoneRedundant: zoneRedundant
+    ledgerDigestImmutabilityDays: ledgerDigestImmutabilityDays
     enableRankingArchive: enableRankingArchiveBlob
     rankingArchiveImmutabilityDays: rankingArchiveImmutabilityDays
     roleAssignments: [
@@ -436,6 +440,7 @@ module apps 'modules/containerapps.bicep' = if (deployApplications || deployEnvi
     zoneRedundant: zoneRedundant
     evidenceStore: evidenceStore
     sharePointSiteId: sharePointSiteId
+    ledgerDigestContainer: storage.outputs.ledgerDigestContainer
     rankingArchiveContainer: storage.outputs.rankingArchiveContainer
     apiImage: apiImage
     enableApiAi: enableApiAi

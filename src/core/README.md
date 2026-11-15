@@ -6,6 +6,33 @@ ms.date: 2026-11-15
 ms.topic: reference
 ---
 
+## Immutable Blob ledger digests and scheduled verification (2026-11-15, Refs #115)
+
+`ledger_digest_blob` provides pure offline and Blob-transport verification for
+the hash-chained audit ledger anchors stored in the `ledger-digests` container.
+`verify_container_retention_lock` validates container `immutabilityPolicies`
+properties (`immutabilityPeriodSinceCreationInDays >= min_retention_days`,
+`allowProtectedAppendWrites == False`, rejection of mutually exclusive ARM
+append-write flags, `publicAccess == "None"`, and storage-account lifecycle
+deletion prefix disjointness), distinguishing pre-lock ARM deployment templates
+(`require_locked=False`, `locked=False`) from runtime locked WORM enforcement
+(`require_locked=True`, `state == "Locked"`). `verify_blob_retention_headers`
+validates `x-ms-immutability-policy-mode: locked` and future UTC
+`x-ms-immutability-policy-until-date` response headers on remote digest blobs.
+
+`BlobLedgerDigestStore` writes root `digest-{count:010d}.json` and sealed
+`year-{YYYY}.json` anchors create-only (`If-None-Match: *`), verifying read-back
+logical field equality on `409`/`412` conflict responses and exposing no
+overwrite or delete path. `publish_ledger_digests`, `verify_ledger_digests`,
+`reconcile_ledger_digests`, and `run_scheduled_verification` verify local chain
+and year integrity against remote immutable anchors and emit sanitized console
+markers (`LEDGER_DIGEST_OK` on intact verification, `LEDGER_DIGEST_ALERT` with
+`exit_code == 1` on any mismatch, missing/unlocked retention policy, unconfigured
+scheduled environment, or transport error) scrubbed through
+`monitoring_coverage.sanitize_diagnostic` with zero URL, SAS, or token leakage.
+Offline unit and compiled Bicep tests do not prove live Azure WORM policy locking
+or live Azure Monitor alert delivery (`Refs #115`).
+
 ## Hazard and safeguarding clock and named owner projection (2026-11-15, Refs #76)
 
 `taskqueues.project_safety_clock_and_owner` and `taskqueues.context` (`MEMBERSHIP_REVISION = 5`)

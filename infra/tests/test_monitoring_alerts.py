@@ -94,6 +94,25 @@ class AlertOwnerAndRunbookTests(unittest.TestCase):
         self.assertIn("'job-rank'", desc_expr)
         self.assertLess(desc_expr.index("'job-rank'"), desc_expr.index("'job-auth'"))
 
+    def test_installed_ledger_alerts_name_owner_resolvable_runbook_and_core_markers(self) -> None:
+        from zava_forward.core import ledger_digest_blob, monitoring_coverage
+
+        main = (INFRA / "main.bicep").read_text(encoding="utf-8")
+        anchors = _anchors(RUNBOOK.read_text(encoding="utf-8"))
+        coverage_by_id = {entry.anchor: entry for entry in monitoring_coverage.ALERTS}
+        for rule_id, marker in (
+            ("ledger-digest-mismatch", ledger_digest_blob.ALERT_MARKER),
+            ("ledger-verify-missing", ledger_digest_blob.OK_MARKER),
+        ):
+            with self.subTest(rule=rule_id):
+                self.assertIn(f"alert-${{applicationPrefix}}-{rule_id}", main)
+                self.assertIn(f"${{runbookBase}}#{rule_id}", main)
+                self.assertIn(rule_id, anchors)
+                self.assertIn(marker, main)
+                self.assertIn(ledger_digest_blob.PROPOSED_OWNER, main)
+                self.assertIn(rule_id, coverage_by_id)
+                self.assertEqual(coverage_by_id[rule_id].status, monitoring_coverage.INSTALLED)
+
 
 class WorkbookPanelTests(unittest.TestCase):
     def test_cost_vs_budget_shows_unreconciled_variance(self) -> None:

@@ -201,4 +201,5 @@ module queueEndpoint 'privateEndpoint.bicep' = {
 
 output id string = account.id
 output name string = account.name
+output ledgerDigestContainer string = containers[5]
 output rankingArchiveContainer string = enableRankingArchive ? rankingArchive.name : ''
