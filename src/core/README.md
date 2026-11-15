@@ -1635,10 +1635,12 @@ data, network calls or AI dependencies, and aligns `discovery_register` and
   and unresolved post-handover `reopen` blocks while keeping intended energy
   outcomes separate, reports separate `unknown_cause_count` and
   `disputed_cause_count` counters on `waits_by_party` rows alongside
-  `unknown_or_disputed_count`, exposes `to_json_dict()` for plain JSON
-  serialization, and freezes nested `FlowDiscoveryReport` mappings
-  (`FrozenDict`) bound to evaluated provenance and a verified SHA-256
-  `calculation_digest`.
+  `unknown_or_disputed_count`, exposes `to_json_dict()` for cross-process JSON
+  serialization, and converts nested `FlowDiscoveryReport` mappings to
+  read-only `FrozenDict` (`dict` subclass preserving `dataclasses.asdict()`,
+  with low-level `dict.__setitem__` tampering caught by `verify_digest()`)
+  bound to evaluated provenance, `dictionary_schema_digest`, and a verified
+  SHA-256 `calculation_digest`.
 * `RankedConstraintRegister` (`build_seed_constraint_register`) enforces
   contiguous `1..N` ranking across the five candidate hypotheses, requires both
   non-empty `supporting_evidence` and non-empty `contradicting_evidence` tuples
@@ -1651,8 +1653,10 @@ data, network calls or AI dependencies, and aligns `discovery_register` and
   `finding_status="candidate_hypothesis_not_company_finding"` across all
   discovery outputs until the nominated human discovery owner records formal
   validation with `ENDPOINT_AGREED`, zero dictionary or flow gaps, zero invalid
-  accepted handovers, and an intact `calculation_digest`, raising
-  `GovernanceViolationError` on any invalid promotion or tampered report.
+  accepted handovers, sub-artifact signer parity, matching
+  `dictionary_schema_digest`, and an intact `calculation_digest`, raising
+  `GovernanceViolationError` on any invalid promotion, seal replay, or tampered
+  report across both in-process dataclasses and cross-process JSON mappings.
 
 See [Phase 0 Retrofit-Flow Discovery Contract](../../docs/reference/research/company/phase0-retrofit-flow-discovery-contract.md)
 for standards provenance and open Zava North Homes human governance gates.

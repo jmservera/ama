@@ -166,14 +166,18 @@ nominated-owner sign-off:
   domain-validated `LifecycleDictionary`, zero unresolved `FlowDiscoveryReport`
   gaps and zero `invalid_accepted_handover_ids`, complete two-sided evidence,
   and sign-off by the exact nominated human discovery owner.
-* `FlowDiscoveryReport` recursively freezes all nested mappings and sequences
-  via re-init-locked `FrozenDict` and `tuple` coercion, exposes
-  `to_json_dict()` for plain JSON round-trips, and binds `evaluate_property_flow`
-  provenance, `validate_flow_report` sign-off seals, `Phase0DiscoveryPack`, and
-  `enforce_governance_guard` (across dataclasses and `Mapping` payloads) to a
-  verified SHA-256 `calculation_digest`, blocking post-calculation or
-  post-sign-off mutation and `dataclasses.replace` forgery while preserving
-  `dataclasses.asdict()` serialization.
+* `FlowDiscoveryReport` recursively converts all nested mappings and sequences
+  into read-only `FrozenDict` (`dict` subclass preserving `dataclasses.asdict()`
+  and plain JSON serialization) and `tuple` containers, exposes `to_json_dict()`
+  for cross-process JSON round-trips, and binds `evaluate_property_flow`
+  provenance, `validate_flow_report` sign-off seals, `Phase0DiscoveryPack`
+  (including sub-artifact signer parity across `dictionary_report`,
+  `flow_report`, and `constraint_register`), and `enforce_governance_guard`
+  (across in-process dataclasses and cross-process JSON `Mapping` payloads) to
+  both a verified SHA-256 `calculation_digest` and `dictionary_schema_digest`.
+  Standard item/attribute mutation, post-sign-off `dataclasses.replace` seal
+  replay, and low-level `dict.__setitem__` tampering are refused at validation
+  and governance boundaries via `verify_digest()`.
 * In `discovery_register`, domain-only `decide()` preserves legacy
   `is_company_finding` compatibility while keeping `owner_validated=False` and
   `finding_status="candidate_hypothesis_not_company_finding"` until

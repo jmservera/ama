@@ -6,8 +6,8 @@
     "task_slug": "phase0-retrofit-flow-discovery-124-c1"
   },
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-15/phase0-retrofit-flow-discovery-124-c1-research.md",
@@ -15,7 +15,7 @@
     "details": ".copilot-tracking/details/2026-11-15/phase0-retrofit-flow-discovery-124-c2-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c2-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-11-15/phase0-retrofit-flow-discovery-124-c2-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-c2-review.md"
   },
   "confirmed_decisions": [
     {
@@ -29,19 +29,30 @@
       "evidence": ".copilot-tracking/research/2026-11-15/phase0-retrofit-flow-discovery-124-c1-research.md; .copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-c1-review.md"
     },
     {
-      "decision": "Critique execution: executed once on final c2 candidate; Critique verdict: Revise; Direct dispositions: PC-001 (resolved: unconditional verify_digest in FlowDiscoveryReport.__post_init__, _EVALUATED_PROVENANCE_TOKEN check in validate_flow_report, and _VALIDATED_FLOW_REPORT_SEALS check across report/pack/guard), PC-002 (resolved: 20-key _FLOW_REPORT_SIGNATURE_KEYS, strict date-not-datetime validation, GovernanceViolationError wrapping, symmetric nested flow_report checks), and PC-003 (resolved: FrozenDict.__init__ overloads and direct FrozenDict[str, object] return in to_json_dict for mypy --strict). Planning status: ready.",
+      "decision": "Critique execution: executed once on final c2 candidate; Critique verdict: Revise; Direct dispositions: PC-001 (resolved: unconditional verify_digest in FlowDiscoveryReport.__post_init__, _EVALUATED_FLOW_REPORT_REFS check in validate_flow_report, and _VALIDATED_FLOW_REPORT_SEALS check across report/pack/guard), PC-002 (resolved: 20-key _FLOW_REPORT_SIGNATURE_KEYS, strict date-not-datetime validation, GovernanceViolationError wrapping, symmetric nested flow_report checks), and PC-003 (resolved: FrozenDict.__init__ overloads and direct FrozenDict[str, object] return in to_json_dict for mypy --strict). Planning status: ready.",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c2-plan-critique.md; .copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c2-plan.md"
+    },
+    {
+      "decision": "Review execution: Complete; Review outcome: Defects found; Assessed boundary: full task issue-124-c2 (P01, P02) at b7c91e832; Review path: .copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-c2-review.md (RV-001..RV-005 routed to child task issue-124-c3).",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-c2-review.md"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Review",
-    "action": "Transition active_phase from Implement to Review after committing c2 implementation and run single rpi-review pass on issue-124-c2."
+    "phase": "Follow-up",
+    "action": "Start child automatic RPI loop issue-124-c3 (phase0-retrofit-flow-discovery-124-c3) to resolve c2 RV-001..RV-005 and record a Conformant review verdict."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
+      "task": "Resolve c2 review findings RV-001..RV-005 in discovery_contract.py, test_discovery_contract.py, and Phase 0 docs (dictionary_schema_digest binding, Phase0DiscoveryPack sub-artifact signer parity, cross-process JSON Mapping verification, ContextVar gate on owner_validated FlowDiscoveryReport construction, and FrozenDict prose precision)",
+      "rationale": "Directly required to satisfy caller request for an adversarially verified Conformant review verdict on Issue #124.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-c2-review.md"
+    },
+    {
+      "rank": 2,
       "task": "Optional CSV extract adapter mapping synthetic retrofit-flow year-one CSV tables into discovery_contract records",
       "rationale": "Retained non-blocking follow-up outside Phase 0 pure rule-layer scope.",
       "evidence": "docs/brds/retrofit-flow-discovery-brief.md; .copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c1-plan.md"

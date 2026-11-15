@@ -3,6 +3,8 @@
 import copy
 import hashlib
 import json
+import subprocess
+import sys
 import unittest
 from dataclasses import asdict, replace
 from datetime import date
@@ -1192,7 +1194,7 @@ class GovernanceGuardTests(unittest.TestCase):
                 note="Blank digest must fail before replace",
             )
 
-        tampered_validated = replace(validated)
+        tampered_validated = copy.deepcopy(validated)
         dict.__setitem__(tampered_validated.state_counts, "paused", 77)
         with self.assertRaises(c.GovernanceViolationError):
             c.enforce_governance_guard(
@@ -1344,6 +1346,282 @@ class GovernanceGuardTests(unittest.TestCase):
                     "flow_report": None,
                 }
             )
+
+    def test_dictionary_schema_binding_rejects_mismatched_dictionary_at_validation_and_pack(
+        self,
+    ) -> None:
+        owner = _ready_owner()
+        validated_dict = _validated_dictionary()
+        extra_stage = c.StageSpec(
+            order=16,
+            code="unapproved_shadow_hold",
+            name="Unapproved shadow hold",
+            kind="exception",
+            entry_event="work release",
+            exit_event="appointment",
+            pas2035_role_boundary="Unvalidated local exception stage",
+            owner_role="Retrofit Programme Manager",
+        )
+        mismatched_dict = replace(validated_dict, stages=validated_dict.stages + (extra_stage,))
+        mismatched_report = c.evaluate_property_flow(
+            mismatched_dict,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(c.BaselineCandidateRecord("P_SCHEMA", "2026-02-10", "c-schema"),),
+            stage_records=(
+                c.PropertyStageRecord(
+                    property_id="P_SCHEMA",
+                    stage_code="unapproved_shadow_hold",
+                    entered_at="2026-02-11",
+                    exited_at="2026-02-12",
+                    source_ref="s-shadow",
+                ),
+            ),
+        )
+        with self.assertRaises(c.GovernanceViolationError):
+            c.validate_flow_report(
+                mismatched_report,
+                owner,
+                validated_dict,
+                by="Dev Patel",
+                on=VALIDATED_ON,
+                note="Must reject mismatched dictionary schema",
+            )
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(mismatched_report, dictionary=validated_dict)
+
+        mismatched_dict_summary = c.summarize_lifecycle_dictionary(mismatched_dict)
+        with self.assertRaises(c.GovernanceViolationError):
+            c.validate_lifecycle_report(
+                mismatched_dict_summary,
+                owner,
+                validated_dict,
+                by="Dev Patel",
+                on=VALIDATED_ON,
+                note="Must reject mismatched dictionary summary",
+            )
+        with self.assertRaises(c.GovernanceViolationError):
+            c.Phase0DiscoveryPack(
+                contract_version=c.CONTRACT_VERSION,
+                discovery_owner=owner,
+                dictionary=validated_dict,
+                dictionary_report=c.summarize_lifecycle_dictionary(validated_dict),
+                flow_report=mismatched_report,
+                constraint_register=c.build_seed_constraint_register(),
+            )
+
+    def test_pack_rejects_sub_artifact_signer_mismatch_across_owners(self) -> None:
+        owner_a = _ready_owner()
+        owner_b = c.agree_discovery_endpoint(
+            c.nominate_discovery_owner(
+                nominated_by="Clara Finch",
+                nominated_by_role="Executive Director of Assets and Sustainability",
+                owner="Farah Khan",
+                owner_role="Director of Asset Strategy",
+                nominated_on=NOMINATED_ON,
+            ),
+            endpoint=c.ENDPOINT,
+            agreed_by="Farah Khan",
+            agreed_role="Director of Asset Strategy",
+            agreed_on=AGREED_ON,
+        )
+        dictionary = _validated_dictionary()
+        dict_report_a = c.validate_lifecycle_report(
+            c.summarize_lifecycle_dictionary(dictionary),
+            owner_a,
+            dictionary,
+            by="Dev Patel",
+            on=VALIDATED_ON,
+            note="Owner A dictionary sign-off",
+        )
+        flow_b = c.validate_flow_report(
+            c.evaluate_property_flow(
+                dictionary,
+                window_start=WINDOW_START,
+                window_end=WINDOW_END,
+                as_of=AS_OF,
+                candidates=(c.BaselineCandidateRecord("P_OWN", "2026-02-15", "c-own"),),
+            ),
+            owner_b,
+            dictionary,
+            by="Farah Khan",
+            on=VALIDATED_ON,
+            note="Owner B flow sign-off",
+        )
+        register_a = c.validate_constraint_register(
+            self._adjudicated_register(),
+            owner_a,
+            dictionary,
+            by="Dev Patel",
+            on=VALIDATED_ON,
+            note="Owner A register sign-off",
+        )
+        with self.assertRaises(c.GovernanceViolationError):
+            c.Phase0DiscoveryPack(
+                contract_version=c.CONTRACT_VERSION,
+                discovery_owner=owner_a,
+                dictionary=dictionary,
+                dictionary_report=dict_report_a,
+                flow_report=flow_b,
+                constraint_register=register_a,
+                owner_validated=True,
+                finding_status=c.VALIDATED_FINDING_STATUS,
+                owner_validated_by="Dev Patel",
+                owner_validated_on=VALIDATED_ON,
+                validation_note="Mixed-signer pack must fail",
+                notice="",
+            )
+
+    def test_post_signoff_replace_cannot_replay_existing_seal(self) -> None:
+        owner = _ready_owner()
+        dictionary = _validated_dictionary()
+        clean_report = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(c.BaselineCandidateRecord("P_REPLAY", "2026-03-01", "c-ok"),),
+        )
+        gapped_report = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(c.BaselineCandidateRecord("P_REPLAY", "2026-03-01", ""),),
+        )
+        validated = c.validate_flow_report(
+            clean_report,
+            owner,
+            dictionary,
+            by="Dev Patel",
+            on=VALIDATED_ON,
+            note="Exact seal note",
+        )
+        cloned = copy.deepcopy(validated)
+        c.enforce_governance_guard(cloned, discovery_owner=owner, dictionary=dictionary)
+
+        with self.assertRaises(c.GovernanceViolationError):
+            replace(
+                gapped_report,
+                gaps=(),
+                owner_validated=True,
+                finding_status=c.VALIDATED_FINDING_STATUS,
+                owner_validated_by="Dev Patel",
+                owner_validated_on=VALIDATED_ON,
+                validation_note="Exact seal note",
+                dictionary_schema_digest=validated.dictionary_schema_digest,
+                calculation_digest=validated.calculation_digest,
+            )
+        with self.assertRaises(c.GovernanceViolationError):
+            replace(validated, validation_note="Exact seal note")
+
+    def test_cross_process_json_roundtrip_mapping_passes_guard_and_rejects_tampering(
+        self,
+    ) -> None:
+        owner = _ready_owner()
+        dictionary = _validated_dictionary()
+        clean_report = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(c.BaselineCandidateRecord("P_SUBPROC", "2026-03-10", "c-sub"),),
+        )
+        validated = c.validate_flow_report(
+            clean_report,
+            owner,
+            dictionary,
+            by="Dev Patel",
+            on=VALIDATED_ON,
+            note="Cross-process JSON verification",
+        )
+        serialized = json.dumps(validated.to_json_dict())
+        probe = """
+import json, sys
+from datetime import date
+from dataclasses import replace
+from zava_forward.core import discovery_contract as c
+
+payload = json.loads(sys.stdin.read())
+owner = c.agree_discovery_endpoint(
+    c.nominate_discovery_owner(
+        nominated_by="Clara Finch",
+        nominated_by_role="Executive Director of Assets and Sustainability",
+        owner="Dev Patel",
+        owner_role="Head of Retrofit Delivery",
+        nominated_on=date(2026, 11, 1),
+    ),
+    endpoint=c.ENDPOINT,
+    agreed_by="Dev Patel",
+    agreed_role="Head of Retrofit Delivery",
+    agreed_on=date(2026, 11, 3),
+)
+raw = c.build_default_lifecycle_dictionary()
+vdate = date(2026, 11, 2)
+d = replace(
+    raw,
+    stages=tuple(
+        replace(s, validated_by="Amina Begum", validated_on=vdate, validated_role=s.owner_role)
+        for s in raw.stages
+    ),
+    events=tuple(
+        replace(e, validated_by="Amina Begum", validated_on=vdate, validated_role=e.owner_role)
+        for e in raw.events
+    ),
+    timestamps=tuple(
+        replace(t, validated_by="Amina Begum", validated_on=vdate, validated_role=t.owner_role)
+        for t in raw.timestamps
+    ),
+    wait_states=tuple(
+        replace(w, validated_by="Amina Begum", validated_on=vdate, validated_role=w.owner_role)
+        for w in raw.wait_states
+    ),
+    return_loops=tuple(
+        replace(r, validated_by="Amina Begum", validated_on=vdate, validated_role=r.owner_role)
+        for r in raw.return_loops
+    ),
+)
+c.enforce_governance_guard(payload, discovery_owner=owner, dictionary=d)
+
+tampered = dict(payload)
+tampered["state_counts"] = dict(payload["state_counts"], paused=9)
+try:
+    c.enforce_governance_guard(tampered, discovery_owner=owner, dictionary=d)
+except c.GovernanceViolationError:
+    pass
+else:
+    raise AssertionError("Tampered cross-process JSON mapping was not rejected")
+
+extra = c.StageSpec(
+    16,
+    "shadow",
+    "Shadow",
+    "exception",
+    "work release",
+    "appointment",
+    "b",
+    "Retrofit Programme Manager",
+    "Amina Begum",
+    vdate,
+    "Retrofit Programme Manager",
+)
+d_mismatch = replace(d, stages=d.stages + (extra,))
+try:
+    c.enforce_governance_guard(payload, discovery_owner=owner, dictionary=d_mismatch)
+except c.GovernanceViolationError:
+    pass
+else:
+    raise AssertionError("Dictionary-mismatched cross-process JSON mapping was not rejected")
+"""
+        proc = subprocess.run(
+            [sys.executable, "-c", probe],
+            input=serialized,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(proc.returncode, 0, msg=proc.stderr or proc.stdout)
 
 
 if __name__ == "__main__":

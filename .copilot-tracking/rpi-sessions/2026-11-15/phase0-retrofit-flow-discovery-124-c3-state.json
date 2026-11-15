@@ -1,0 +1,50 @@
+{
+  "task_id": "issue-124-c3",
+  "task_slug": "phase0-retrofit-flow-discovery-124-c3",
+  "parent_task": {
+    "task_id": "issue-124-c2",
+    "task_slug": "phase0-retrofit-flow-discovery-124-c2"
+  },
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/phase0-retrofit-flow-discovery-124-c1-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c3-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/phase0-retrofit-flow-discovery-124-c3-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c3-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/phase0-retrofit-flow-discovery-124-c3-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Launch child automatic RPI loop issue-124-c3 from issue-124-c2 to resolve RV-001..RV-005 from phase0-retrofit-flow-discovery-124-c2-review.md and record an adversarially verified Conformant review verdict.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-c2-review.md (RV-001..RV-005)"
+    },
+    {
+      "decision": "Research disposition: reused; Planning Readiness: Ready. Reuse phase0-retrofit-flow-discovery-124-c1-research.md together with exact reproductions RV-001..RV-005 in phase0-retrofit-flow-discovery-124-c2-review.md.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/phase0-retrofit-flow-discovery-124-c1-research.md; .copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-c2-review.md"
+    },
+    {
+      "decision": "Critique execution: executed once on final c3 candidate; Critique verdict: Revise; Direct dispositions: PC-001 (resolved: Phase0DiscoveryPack.dictionary vs caller dictionary check), PC-002 (resolved: candidate-mode dictionary check when supplied + non-blank dictionary_schema_digest on LifecycleDictionaryReport), and PC-003 (resolved: 5-tuple _VALIDATED_FLOW_REPORT_SEALS + tight ContextVar scope in __deepcopy__). Planning status: ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c3-plan-critique.md; .copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c3-plan.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "Commit c3 implementation locally, transition issue-124-c3 to Review, and execute single post-implementation rpi-review."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Optional CSV extract adapter mapping synthetic retrofit-flow year-one CSV tables into discovery_contract records",
+      "rationale": "Retained non-blocking follow-up outside Phase 0 pure rule-layer scope.",
+      "evidence": "docs/brds/retrofit-flow-discovery-brief.md; .copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c2-plan.md"
+    }
+  ]
+}
