@@ -46,6 +46,14 @@ Rebased `feat/ai-116-entra-output-0052` cleanly onto `origin/feat/demo-164-chat-
 * Completion evidence: `229` unit tests across `8` suites (`141` in the `4` primary caller suites + `48` in `#164` eval/chat suites + `40` in `test_ai_consumption_api.py`), `mypy` + `ruff` across `src/core`/`src/agents`/`src/api`, and `25` tests in `tools/rename-zava-tests.py` passed with `0` errors.
 * Validation: Passed across all Focused-tier commands.
 
+### Cycle 1 Rebase Continuation Onto `0c1fa1da4` (`PR #1769`) and `d8cb35d25` (`PR #1770`)
+
+* Related phase or task: Child rebase continuation `issue-116-entra-output-0052-c1-rebase` (`P01-T01`, `P02-T01`; inside Cycle 1, no new correction cycle spent)
+* Files: `src/core/src/zava_forward/core/store.py`
+* What changed and why: Executed `git fetch origin feat/demo-164-chat-grounding-provenance-0900` (which fetched `d8cb35d25` from `PR #1770` `Refs #133`, direct child of `0c1fa1da4` from `PR #1769` `Refs #83`) and rebased `7b882614d..e7d05fab4` onto `origin/feat/demo-164-chat-grounding-provenance-0900` (`d8cb35d25`), producing rebased commits `fc44a697c` (`7b882614d'`) and `41091c2a0` (`e7d05fab4'`). `src/api/src/zava_forward/api/server.py` and `src/api/tests/test_role_endpoint_inventory.py` auto-merged cleanly, `taskqueues.MEMBERSHIP_REVISION = 4` and `sqlstore._queue_fingerprint` carried over untouched from `0c1fa1da4`, `d8cb35d25` merged with zero file overlap, and the sole conflict in `src/core/src/zava_forward/core/store.py` (`_queue_candidates` and `_work_context`) was resolved to preserve both `0c1fa1da4`'s `handoff_policy` cache-key entry and 4-argument `handoff_view(c, as_of=self.as_of, policy=data.get("handoff_policy"), staff=data.get("staff"))` call (matching auto-merged `detail`) alongside `7b882614d`'s multi-line Ruff formatting and `#116` role-visibility methods.
+* Completion evidence: Both `git merge-base --is-ancestor 0c1fa1da4 HEAD` and `git merge-base --is-ancestor d8cb35d25 HEAD` exited `0` (`fc44a697c..41091c2a0`).
+* Validation: Passed across all post-rebase Focused validation commands (`115` caller unit tests, `174` cross-feature `#83`/`#133`/`#116` unit tests, `src/core` `ruff` + `mypy`, `src/api` `ruff`, and `25` `tools/rename-zava-tests.py` tests).
+
 ## Implementation-Time Plan and Detail Updates
 
 ### Session-Workspace `.pth` Import Resolution and Clean Pre-Commit Review Ordering
@@ -68,6 +76,9 @@ Rebased `feat/ai-116-entra-output-0052` cleanly onto `origin/feat/demo-164-chat-
 | `src/agents` `mypy` + `ruff check .` + `ruff format --check .` | `src/agents` | Passed | `mypy`: `0` issues in `66` files; `ruff`: `All checks passed!`, `62 files already formatted` |
 | `src/api` `mypy` + `ruff check .` + `ruff format --check .` | `src/api` | Passed | `mypy`: `0` issues in `280` files; `ruff`: `All checks passed!`, `196 files already formatted` |
 | `tools/rename-zava-tests.py` | Repository migration regression | Passed | `Ran 25 tests in 0.745s — OK` |
+| Post-rebase (`0c1fa1da4` -> `d8cb35d25`) caller unit suites (`test_ai_tasks.py`, `test_design_system.py` mapped from absent `test_design_system_source_contract.py`, `test_data_protection.py`) | `src/core`, `src/api` | Passed | `Ran 115 tests in 41.074s — OK` (disclosed filename mapping: `src/api/tests/test_design_system_source_contract.py` does not exist in repository history; canonical suite `src/api/tests/test_design_system.py` executed) |
+| Post-rebase (`0c1fa1da4` -> `d8cb35d25`) cross-feature `#83` + `#133` + `#116` suites (`test_handoff_escalation_83.py`, `test_handoff_escalation_api_83.py`, `test_aftercare.py`, `test_aftercare_intake.py`, `test_aftercare_served.py`, `test_role_endpoint_inventory.py`, `test_content_standard.py`, `test_human_review_effectiveness_223.py`) | `src/core`, `src/api` | Passed | `Ran 174 tests in 61.017s — OK` |
+| Post-rebase (`0c1fa1da4` -> `d8cb35d25`) `src/core` (`ruff check .`, `ruff format --check .`, `mypy`), `src/api` (`ruff check .`, `ruff format --check .`), and `tools/rename-zava-tests.py` | `src/core`, `src/api`, repository root | Passed | `src/core`: `All checks passed!`, `284 files already formatted`, `mypy`: `Success: no issues found in 337 source files`; `src/api`: `All checks passed!`, `197 files already formatted`; `rename-zava-tests.py`: `Ran 25 tests in 0.564s — OK` |
 | Full local gate (`tools/rpi-checks.py --all`) & Docker builds | Repository-wide | Skipped | Explicitly excluded by caller (`Focused tier, no Docker/full gate`) |
 
 ## Pre-Review Reconciliation
