@@ -1,0 +1,83 @@
+{
+  "task_id": "issue-185-simulated-device-identity-provisioning-c2",
+  "task_slug": "simulated-device-identity-provisioning-185-c2",
+  "parent_task": {
+    "task_id": "issue-185-simulated-device-identity-provisioning",
+    "task_slug": "simulated-device-identity-provisioning-185"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/simulated-device-identity-provisioning-185-c2-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/simulated-device-identity-provisioning-185-c2-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/simulated-device-identity-provisioning-185-c2-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/simulated-device-identity-provisioning-185-c2-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/simulated-device-identity-provisioning-185-c2-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/simulated-device-identity-provisioning-185-c2-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute confirmed automatic RPI child loop (research, plan, implement, review) on feat/iot-185-device-provisioning for Issue #185 / PR #1801 c2 src-api credential-hygiene test failure remediation under Focused validation tier, committing locally without push.",
+      "status": "confirmed",
+      "evidence": "Caller prompt explicitly specifies full RPI loop execution in non-interactive mode for PR #1801 head ffce28c98."
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready. Converged on assembling synthetic secret test fixtures at runtime in src/core/tests/test_live_provisioning.py and src/core/tests/test_device_provision.py across split keyword/domain/base64 segments (preventing both contiguous and [^\n]* single-line regex bridging under 100-col ruff format) while keeping runtime inputs byte-for-byte identical and extending src/core test-source hygiene assertions.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/simulated-device-identity-provisioning-185-c2-research.md (C1-C9)"
+    },
+    {
+      "decision": "Plan critique execution: executed (single final-candidate pass via rpi-plan-critique).",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/simulated-device-identity-provisioning-185-c2-plan-critique.md"
+    },
+    {
+      "decision": "Plan critique verdict: Revise (0 Critical, 0 High, 1 Medium PC-001, 1 Low PC-002); direct planner corrections applied and closed (corrected per-file test counts to 12 + 12 = 24, retained AST lp.contains_raw_secret scan on production modules alongside 6-file 4-pattern hygiene scan, and shared runtime constant across both 36-char SAS signature assertion sites); Planning status Ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-15/simulated-device-identity-provisioning-185-c2-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Review execution: Complete (single-pass post-implementation rpi-review across P01, P01-T01, P01-T02, P02, and P02-T01).",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/simulated-device-identity-provisioning-185-c2-review.md"
+    },
+    {
+      "decision": "Review outcome: Conformant across full assessed boundary (runtime assembly of synthetic secret test fixtures in test_live_provisioning.py and test_device_provision.py, SHA256_INVARIANCE_OK vs ffce28c98, standalone 6-file 4-pattern hygiene guard + AST production scan, 12/12 passing test_iot_credential_hygiene.py, and Focused ruff/mypy/unittest parity; 0 Critical, 0 High, 0 Medium, 0 Low findings).",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/simulated-device-identity-provisioning-185-c2-review.md#outcome"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user or coordinator selection of a ranked post-Review follow-up work item, Stop automatic session, or Switch to manual mode."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Push frozen local c2 commit on feat/iot-185-device-provisioning to origin and verify PR #1801 passes all 10/10 hosted CI checks including src-api",
+      "rationale": "Highest ease and immediate delivery impact: zero code changes required once coordinator reviews the frozen local commit, clearing the sole 1/10 failing CI check on PR #1801.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/simulated-device-identity-provisioning-185-c2-review.md; PR #1801 check run 132858346342"
+    },
+    {
+      "rank": 2,
+      "task": "Add optional --id-scheme sim-dps flag to zava_forward.core.synthetic.device_provision CLI alongside default SYN-* dry-run/apply",
+      "rationale": "High ease and engineering-quality leverage (KISS/DRY single CLI entry point): exposes existing SIM-* symmetric SAS lifecycle functions via CLI flag without duplicating adapters or changing default SYN-* output.",
+      "evidence": "src/core/src/zava_forward/core/synthetic/device_provision.py; .copilot-tracking/plans/2026-11-15/simulated-device-identity-provisioning-185-c2-plan.md#follow-up-items"
+    },
+    {
+      "rank": 3,
+      "task": "Tick proven acceptance criteria and close GitHub issue #185 after parent PR #1641 and PR #1801 review and merge",
+      "rationale": "High governance value and simple execution once hosted CI green checks and owner merge gates complete.",
+      "evidence": "GitHub issue #185; PR #1801; PR #1641"
+    },
+    {
+      "rank": 4,
+      "task": "Add optional live Azure DPS enrollment-group transport adapter behind explicit opt-in extra under Platform Engineering / IoT Operations Owner authorization",
+      "rationale": "Preserves clean inversion-of-control boundary over ProvisioningRegistryAdapter and CredentialVaultAdapter while gated on external platform owner authorization (ADR 0003 decision 6).",
+      "evidence": "docs/adr/0003-iot-telemetry-architecture.md; src/core/src/zava_forward/core/synthetic/live_provisioning.py"
+    }
+  ]
+}

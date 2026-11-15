@@ -1182,9 +1182,35 @@ Limits. Tests run the real SDK against a simulator of the documented REST condit
 table; Azure behaviour (412, status codes, ETag format, list limits, RBAC) is unobserved.
 A hub with more than 100 unmarked devices in one listing makes `list_run` refuse, not guess.
 One process per run ID; cross-process contention is not fenced. An injected client may keep
-its own transport retries. The Registry-before-credential order and the lack of an
-authentication update remain unresolved, and credential issuance, storage, rotation and
-teardown for the whole of #185 remain open.
+its own transport retries. Live Azure DPS enrollment-group transport remains gated behind
+Platform Engineering / IoT Operations Owner authorization (ADR 0003 decision 6).
+
+### Simulated `SIM-*` DPS / symmetric SAS provisioning and teardown (`synthetic.live_provisioning`)
+
+`synthetic.live_provisioning` records the decided simulated device identity approach
+(`per-device symmetric SAS / DPS enrollment group`) and the named credential owner role
+(`Platform Engineering / IoT Operations Owner`) across `ProvisioningManifest`
+(`ProvisioningPlan`), `plan_simulated_provisioning`, `device_identity.Manifest`, and
+`device_provision.report`.
+
+* `plan_simulated_provisioning` and `plan_simulated_register` map each consenting synthetic
+  stock home 1:1 to a `SIM-<sensor_key>` device identity and refuse blank, placeholder,
+  personal-data, or secret-bearing credential owner strings.
+* `SymmetricSasCredentialStore` generates an ephemeral enrollment-group master key in memory
+  at runtime, derives per-device symmetric SAS keys via HMAC-SHA256 inside non-repr private
+  storage, and returns only immutable opaque `secretref://dps-sas/...` references.
+* `redact_provisioning_secrets` and `SecretRedactingFilter` scrub symmetric keys, connection
+  strings, SAS tokens, and PEM blocks from returned summaries, audit records, exceptions, and
+  logger calls so raw secret values never appear in source or logs.
+* `teardown_simulated_identities` (aliased as `deprovision_simulated_devices` and re-exported
+  from `synthetic.device_provision`) deterministically removes every targeted `SIM-*`
+  simulated device identity, preserves non-simulated registry entries, revokes associated
+  credentials, fails closed if any residual simulated identity or credential remains, and
+  returns a SHA-256 verifiable `TeardownReceipt` confirming zero residual simulated identities.
+
+```bash
+PYTHONPATH=src:tests python3 -m unittest discover -s tests -p "test_*provision*.py" -q
+```
 
 ## Journey ownership register and human-review routing (#128)
 
