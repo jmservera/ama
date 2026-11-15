@@ -264,6 +264,7 @@ def _record_view(store, user, rec):
     out = dict(rec)
     if not isinstance(user, dict):
         return out
+    is_author = bool(user.get("email") and rec.get("resolved_by") == user.get("email"))
     withheld = projection.withheld_scope_values(store, user, out.get("case_ids", []))
     reason_ok = projection.can_see_reason(user)
     if out.get("ai_output") and (
@@ -271,12 +272,18 @@ def _record_view(store, user, rec):
         or projection.contains_withheld_value(out["ai_output"], withheld)
     ):
         out["ai_output"] = projection.NOTE_HELD
-    for key in ("shown_output", "override_text"):
+    for key in ("shown_output", "workflow_output"):
         if out.get(key) and projection.contains_withheld_value(out[key], withheld):
             out[key] = projection.NOTE_HELD
-    if not reason_ok:
+    if not is_author:
+        if out.get("override_text") and projection.contains_withheld_value(
+            out["override_text"], withheld
+        ):
+            out["override_text"] = projection.NOTE_HELD
         for key in ("reason", "reviewer_reason"):
-            if out.get(key):
+            if out.get(key) and (
+                not reason_ok or projection.contains_withheld_value(out[key], withheld)
+            ):
                 out[key] = projection.NOTE_HELD
     if isinstance(out.get("citations"), list):
         out["citations"] = [
@@ -289,7 +296,11 @@ def _record_view(store, user, rec):
     ev = out.get("review_evidence")
     if isinstance(ev, dict):
         ev_copy = dict(ev)
-        if not reason_ok and ev_copy.get("reason"):
+        if (
+            not is_author
+            and ev_copy.get("reason")
+            and (not reason_ok or projection.contains_withheld_value(ev_copy["reason"], withheld))
+        ):
             ev_copy["reason"] = projection.NOTE_HELD
         comp = ev_copy.get("compared")
         if isinstance(comp, dict):

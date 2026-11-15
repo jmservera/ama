@@ -230,7 +230,7 @@ def validate_necessity_exception(
     actual: bool = False,
     as_of: str | date | datetime | None = None,
 ) -> dict[str, Any]:
-    """Validate a bounded, human-approved scoped necessity exception for document AI processing."""
+    """Verify whether a human-authorized text-only derivative may be sent to an external model."""
     if not isinstance(exception, Mapping):
         return dict(
             permitted=False,

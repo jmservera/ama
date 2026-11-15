@@ -686,6 +686,77 @@ class TasksMixin:
         with self.assertRaises(PermissionError):
             self.store.ai_live_report(contractor)
 
+    def test_record_view_preserves_author_review_notes_while_holding_tainted_outputs_and_non_author_views(
+        self,
+    ):
+        rc = dict(self.sam, role="Retrofit Coordinator")
+        pso = dict(
+            code="PSO8",
+            email="pso-author-check@example.test",
+            name="PSO Author Check",
+            role="Programme Support Officer",
+        )
+        bsl = dict(
+            code="BSL8",
+            email="bsl-author-check@example.test",
+            name="BSL Author Check",
+            role="Building Safety Liaison",
+        )
+        with self.store.lock:
+            self.store.data["staff"].extend([pso, bsl])
+            self.store.staff[pso["email"]] = pso
+            self.store.staff[bsl["email"]] = bsl
+            case_zf1 = self.store._case("ZF-1")
+            case_zf1["resident"]["adjustment"] = "SYNTH-ADJ-AUTHOR-CANARY"
+            case_zf1["finance"] = dict(account="SYNTH-FIN-AUTHOR-CANARY")
+            self.store.save()
+
+        self.out["text"] = "- Survey step [[Stage: Contacting resident]]"
+        proposal = self.store.ai_run(rc, "ZF-1", "summary")
+        own_edit = "Keep SYNTH-ADJ-AUTHOR-CANARY and SYNTH-FIN-AUTHOR-CANARY confirmation."
+        own_reason = "Reviewer recorded SYNTH-ADJ-AUTHOR-CANARY and SYNTH-FIN-AUTHOR-CANARY."
+        returned = self.store.review_ai(rc, proposal["record_id"], "edit", own_reason, own_edit)
+        self.assertEqual(returned["override_text"], own_edit)
+        self.assertEqual(returned["reviewer_reason"], own_reason)
+        self.assertEqual(returned["review_evidence"]["reason"], own_reason)
+
+        tainted = dict(
+            next(r for r in self.records() if r["id"] == proposal["record_id"]),
+            reason=own_reason,
+            ai_output="Leak SYNTH-ADJ-AUTHOR-CANARY",
+            shown_output="Leak SYNTH-ADJ-AUTHOR-CANARY",
+            workflow_output="Leak SYNTH-ADJ-AUTHOR-CANARY",
+            citations=["Stage: Contacting resident", "Adjustment: SYNTH-ADJ-AUTHOR-CANARY"],
+            unresolved=["Adjustment: SYNTH-ADJ-AUTHOR-CANARY"],
+            review_evidence=dict(
+                returned["review_evidence"],
+                compared=dict(
+                    ai="Leak SYNTH-ADJ-AUTHOR-CANARY",
+                    workflow="Leak SYNTH-ADJ-AUTHOR-CANARY",
+                ),
+            ),
+        )
+        author_view = ai_tasks._record_view(self.store, rc, tainted)
+        self.assertEqual(author_view["override_text"], own_edit)
+        self.assertEqual(author_view["reviewer_reason"], own_reason)
+        self.assertEqual(author_view["reason"], own_reason)
+        self.assertEqual(author_view["review_evidence"]["reason"], own_reason)
+        for held_key in ("ai_output", "shown_output", "workflow_output"):
+            self.assertEqual(author_view[held_key], projection.NOTE_HELD)
+        self.assertEqual(author_view["citations"], ["Stage: Contacting resident"])
+        self.assertEqual(author_view["unresolved"], [])
+        self.assertEqual(author_view["review_evidence"]["compared"]["ai"], projection.NOTE_HELD)
+        self.assertEqual(
+            author_view["review_evidence"]["compared"]["workflow"], projection.NOTE_HELD
+        )
+
+        for non_author in (pso, bsl):
+            other_view = ai_tasks._record_view(self.store, non_author, tainted)
+            self.assertEqual(other_view["override_text"], projection.NOTE_HELD)
+            self.assertEqual(other_view["reviewer_reason"], projection.NOTE_HELD)
+            self.assertEqual(other_view["reason"], projection.NOTE_HELD)
+            self.assertEqual(other_view["review_evidence"]["reason"], projection.NOTE_HELD)
+
     def test_funding_draft_excludes_vulnerability_reason_even_for_manager_and_projects_by_finance_role(
         self,
     ):
