@@ -3889,6 +3889,21 @@ deployment observed on 2026-10-12 but not reproven since) and 5 (status kept
 current in the epic). Criterion 2 is recorded here but its manual rows still
 need owner confirmation.
 
+## Ledger digest immutability and scheduled verification wiring (Refs #115, 2026-11-15)
+
+Source and compiled-template hardening for the `ledger-digests` Blob container
+immutability policy, Container Apps `ledgerVerify` scheduled job wiring, and
+Azure Monitor scheduled log-query alerts (`ledgerDigestMismatch` and
+`ledgerVerifyMissing`):
+
+| Parameter | Default | Effect |
+| --- | --- | --- |
+| `ledgerDigestImmutabilityDays` | `365` | `@minValue(1)`. Forwarded from `main.bicep` to `modules/storage.bicep` `digestRetention` (`allowProtectedAppendWrites: false`). ARM creates the time-based WORM policy in `Unlocked` state; irreversible policy locking (`lockImmutabilityPolicy`) remains an explicit owner action after Legal sets the retention schedule. |
+
+* `modules/storage.bicep` exports `ledgerDigestContainer` (`ledger-digests`) and `main.bicep` binds it into `modules/containerapps.bicep` `ZF_DIGEST_CONTAINER` on the daily `0 2 * * *` `ledgerVerify` job (`replicaRetryLimit: 0`), preventing container-name drift across storage and scheduled verification.
+* `main.bicep` keeps Severity 1 `ledgerDigestMismatch` (`Log has "LEDGER_DIGEST_ALERT"`, `GreaterThan 0`, `PT1H`) and `ledgerVerifyMissing` (`Log has "LEDGER_DIGEST_OK"`, `LessThan 1`, `P1D` / `PT26H`) wired to the Log Analytics workspace and monitoring action group, with offline policy and negative-mutation checks in `tests/test_bicep_policy.py` and `tests/test_monitoring_alerts.py` cross-checked against `zava_forward.core.ledger_digest_blob` and `zava_forward.orchestrator.digest_blob`.
+* Offline compilation and unit tests do not establish live Azure policy locking, live Container Apps Job execution, or live Azure Monitor notification delivery (`Refs #115`).
+
 ## Ranking archive Blob wiring (Refs #136, #1258, 2026-11-09)
 
 Source wiring only for the Blob JSON ranking publication archive chosen on #1258

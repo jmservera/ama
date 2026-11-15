@@ -33,6 +33,8 @@ param zoneRedundant bool = false
 @allowed(['blob', 'sharepoint'])
 param evidenceStore string = 'blob'
 param sharePointSiteId string = ''
+@description('Immutable Blob container name for hash-chained ledger head and sealed-year digests (Refs #115).')
+param ledgerDigestContainer string = 'ledger-digests'
 @description('Ranking archive container name for the Blob JSON archive (Refs #1258). Empty keeps the API on its existing configuration, where the store selects the local folder archive (a dev/test adapter, not evidence of durable storage).')
 param rankingArchiveContainer string = ''
 param apiImage string
@@ -464,7 +466,7 @@ resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && d
             { name: 'ZF_SQL_AUTH', value: 'msi' }
             { name: 'ZF_SQL_CLIENT_ID', value: identityClientIds.api }
             { name: 'ZF_DIGEST_ACCOUNT_URL', value: blobEndpoint }
-            { name: 'ZF_DIGEST_CONTAINER', value: 'ledger-digests' }
+            { name: 'ZF_DIGEST_CONTAINER', value: ledgerDigestContainer }
             { name: 'ZF_DIGEST_CLIENT_ID', value: identityClientIds.api }
             { name: 'ZF_DIGEST_DIR', value: '/tmp/digests' }
           ])
