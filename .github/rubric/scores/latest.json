@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-14T08:35:58+00:00",
-  "commit": "759a28862a2b3669066500eef2d985bad790a5e6",
+  "scored_at": "2026-11-15T02:08:39+00:00",
+  "commit": "9e5efcc826f5d77bf806083d6a03b0c09642c1e2",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43575856445",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43665711975",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "ad995cdbac1abc98ae5a53234cf2d627837ef5faef39947b874deaed9da3707c",
     "adr": "a5d94c6e67f2ef35c8e152e782f8356dc01f1ca5fd620bbd98ebfb85870975bc",
-    "solution-code": "987718488fa31287b3c3813a325750cb0ef880d1c1f854ea66ec8afc85bcd9b8",
-    "infrastructure": "6c1f39f9980bf88d5772027cbe7cd507a28312976dd38794a92c0e6452c550fb",
+    "solution-code": "0badc88390cd9e309a19ccbeab2b5affbf52ea9821de862bb62f032aa8786f78",
+    "infrastructure": "279e36d803276aa854eaf2f822cb2ea28eb5e37dbbe72841e50927e76caa5c1f",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "687ae0ad2df52516882908bf45ecca662c52802d59a5116a4fe119ec3ae97840",
     "thought-leadership": "f7f2adc273905a84d848d54be0a77abc3550013fd1c9ea9e2fedb743bdacf70a"
@@ -156,7 +156,7 @@
         "docs/capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex:188-189",
         "docs/capstone/thought-leadership/everything-but-the-software/anc/measurement-provenance.tex:268-269"
       ],
-      "rationale": "Two new '% TODO(author)' markers were added alongside the supplementary judging section, and Microsoft publication approval remains pending; the draft version advanced (v13 to v14) but completeness did not improve. Satisfactory (3) retained."
+      "rationale": "Two new TODO(author) markers were added alongside the supplementary judging section, and Microsoft publication approval remains pending; draft version advanced v13 to v14 but completeness did not improve. Satisfactory (3) retained."
     },
     "D3": {
       "score": 2,
