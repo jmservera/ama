@@ -55,7 +55,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         )
         for name, (sha256, _) in PROMPTS.items():
             self.assertEqual(bindings["literal_inputs"][f"anc/{name}"], sha256)
-        for name, sha256 in bindings["author_voice_revision"]["source_sha256"].items():
+        for name, sha256 in bindings["style_revision"]["source_sha256"].items():
             with self.subTest(source=name):
                 self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), sha256)
 
@@ -167,19 +167,29 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("hard provider spending cap", text)
         self.assertIn("raw packets and mappings", text)
 
-    def test_judging_delivery_binding_preserves_the_historical_measurement_record(self):
+    def test_style_delivery_binding_preserves_the_historical_measurement_record(self):
         bindings = json.loads((ANC / "supplement-integration.json").read_text())
-        current = bindings["author_voice_revision"]
+        previous = bindings["author_voice_revision"]
+        current = bindings["style_revision"]
         finalization = bindings["finalization_revision"]
         runtime_flow = bindings["runtime_flow_revision"]
         historical = bindings["measurement_provenance_revision"]
 
         self.assertEqual(
+            previous["delivery_sha256"],
+            "8fc72c56d892fdf7be42a6f06c8c3880d51372e64ac2822d32887c4949c91908",
+        )
+        self.assertEqual(previous["delivery_pages"], 71)
+        self.assertEqual(
+            previous["source_sha256"]["main.tex"],
+            "8ace88a8a0d2de39cf58130d94f12db938092ee4049cb3a406f3571ce60058a9",
+        )
+        self.assertEqual(
             hashlib.sha256((PACKAGE / "main.pdf").read_bytes()).hexdigest(),
             current["delivery_sha256"],
         )
-        self.assertEqual(current["prior_delivery_revision"], "narrative_learning_revision")
-        self.assertEqual(current["delivery_pages"], 71)
+        self.assertEqual(current["prior_delivery_revision"], "author_voice_revision")
+        self.assertEqual(current["delivery_pages"], 72)
         self.assertEqual(current["supplement_start_page"], 45)
         self.assertEqual(bindings["provenance_readability_revision"]["delivery_pages"], 70)
         self.assertEqual(bindings["chart_interpretation_revision"]["delivery_pages"], 70)

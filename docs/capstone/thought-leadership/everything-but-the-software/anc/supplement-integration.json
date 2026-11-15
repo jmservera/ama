@@ -396,6 +396,19 @@
     },
     "validation_limits": "Two-pass pdfLaTeX completed with two ignored infinite-glue-shrinkage diagnostics at main.tex:1988. Structural checks pass; the native diagram-export test requires an unavailable Playwright browser. No independent exact-head review, hosted CI, clearance or venue acceptance is established."
   },
+  "style_revision": {
+    "date": "2026-11-15",
+    "scope": "Direct prose revision of the abstract, case narrative, discussion and conclusion. Results, study design, formulas, tables, figures and source evidence remain unchanged.",
+    "prior_delivery_revision": "author_voice_revision",
+    "delivery_sha256": "6125792d2db26738fbcb74876e1d89423898641236ffc8e6a1a7bfca00e59868",
+    "delivery_pages": 72,
+    "supplement_start_page": 45,
+    "reviewed_pages": [1, 11, 35, 36, 37, 45, 70],
+    "source_sha256": {
+      "main.tex": "1e50321bbe7069ad42583f3b252a59c101d8993655354ffac1e62b1f3adab813"
+    },
+    "validation_limits": "Tectonic produced a valid 72-page PDF and the structural checker passed. The 74-test package suite passed 73 tests; the native diagram-export test could not launch because its Playwright browser was unavailable. No experiment or model query was run; independent exact-head review, hosted CI, clearance and venue acceptance remain separate."
+  },
   "restored_citation_keys": [
     "bacchelli2013review",
     "becker2025metr",

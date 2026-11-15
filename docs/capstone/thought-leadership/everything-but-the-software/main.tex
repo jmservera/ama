@@ -68,29 +68,30 @@ authors' own and do not necessarily reflect those of Microsoft.}\\[4pt]
 \maketitle
 
 \begin{abstract}
-A working prototype became an unusable replacement despite extensive
+A working prototype enhancement became an unusable replacement despite extensive
 agent-assisted preparation and reviewed feature delivery. My experience
-with this case motivated a question: what does each feature leave
-for the next? Five candidate mechanisms organise the account, with
-migration and deployment dependencies as rival explanations.
-A separate exploratory study asked whether ten sequential features
-induce behavioural decay and whether scheduled consolidation improves
-final coverage by at least 10 percentage points and aids a withheld
-change request. Three models each received 21 repository trajectories per condition
-across feature-only delivery, consolidation, read-only review, longer
-sessions and visible-specification repair; all 315 of 315 completed.
-The expected pattern did not emerge. Sonnet~5.5 and Gemini~4 Argon averaged
-99.18\%--99.74\% hidden-test coverage; one trajectory had an open
-regression, and workflow replay found zero witnessed losses.
-Consolidation removed functions above cyclomatic complexity 10 from all
-63 treated endpoints, but its primary coverage gain over longer sessions
-was 1.19 percentage points (95\% bootstrap interval [0.10, 2.22]),
-below the ten-point benchmark and driven mainly by GPT~6.1 Sol.
-Read-only review achieved 16/21 Gemini~4 Argon change-request successes
-versus 8/21 with consolidation, which roughly doubled settled delivery
-credits without reducing change-request cost. The findings distinguish
-acquisition, retention and adaptation, and inform a future, separately
-funded study of longer, more coupled work and review-based workflows.
+with this case raised a question: what does each feature leave for the
+next? The case analysis considers five possible process-related causes, 
+but technical migration and deployment problems could also explain what happened.
+
+A separate exploratory study tested ten sequential features and a withheld
+change request. Three models each completed 21 repository trajectories per
+condition. The conditions were feature-only delivery, consolidation,
+read-only review, longer sessions and visible-specification repair. All 315 of 315 allocated trajectories finished. Sonnet~5.5 and Gemini~4 Argon
+averaged 99.18\%--99.74\%
+hidden-test coverage. One trajectory had an open regression, and workflow
+replay found no witnessed losses.
+
+At all 63 consolidation endpoints, no function exceeded cyclomatic
+complexity 10. Consolidation improved final coverage over longer sessions
+by 1.19 percentage points (95\% bootstrap interval [0.10, 2.22]), below
+the ten-point benchmark; GPT~6.1 Sol accounted for most of the gain.
+Read-only review succeeded on 16/21 Gemini~4 Argon change requests, compared
+with 8/21 after consolidation. Consolidation roughly doubled settled
+delivery credits and did not consistently reduce change-request cost.
+These results separate feature acquisition, retention and adaptation.
+They also identify questions for a separately funded study of longer,
+more coupled work and review-based workflows.
 \end{abstract}
 % Complete 315/315 unassisted intervals retain the owner-attestation boundary, 313/315 judging snapshot and 16-epoch provenance.
 
@@ -130,8 +131,8 @@ another change depends on it. Counting completed changes reveals neither.
 
 Agentic development makes this distinction newly pressing. PhotoCraft, an
 early-alpha reimplementation of Photoshop, reports 631 of 631 menu items
-live, but explicitly defines that count as dispatch rather than behaviour.
-Its own dated assessment estimates about 76\% feature breadth and 45\%
+live. That count measures dispatch; the project's dated assessment
+separately estimates about 76\% feature breadth and 45\%
 readiness for real work~\cite{photocraft2026}. A command can be reachable
 without the surrounding workflow being dependable. At the repository level,
 SWE-Maintain finds that agents solve fewer later tasks when starting from
@@ -149,16 +150,16 @@ distinction between producing code and learning through working software
 sharpens the research question~\cite{beck2026prodacity,orosz2025beck}:
 what does a feature leave behind for the next one?
 
-The question arose during my work on an architectural demonstrator developed
-with multiple agents. Research documents, business and product
+I developed the motivating architectural demonstrator with multiple agents.
+Research documents, business and product
 requirements and architecture decisions were built through sustained
 conversation, challenge and owner decisions. Design Thinking methods,
 including what-if scenarios, persona analysis and journey mapping, helped
 question the proposed solution; disposable pilots and prototypes exposed
 workflow problems before a usable MVP emerged. A backlog agent then converted
 that accumulated context into epics and user stories for a delivery coordinator.
-The intended advantage was faster implementation of better-understood
-features, supported by explicit acceptance criteria and review.
+I expected this preparation to speed implementation of better-understood
+features, with explicit acceptance criteria and review.
 
 Extended autonomous sessions nevertheless left the replacement unusable for
 me. Renewed product-use feedback redirected implementation and
@@ -257,7 +258,7 @@ and challenged requirements to coordinated feature delivery and corrective
 product feedback. Five candidate mechanisms and within-case contrasts connect
 the interruption of usability to competing explanations
 (Sections~\ref{sec:method}--\ref{sec:mechanisms}).
-\item A consolidation harness and an executed 315-trajectory, five-arm
+\item A consolidation procedure and an executed 315-trajectory, five-arm
 exploratory study with post-collection workflow replay and blinded AI
 judging, estimating retained behaviour, future changeability and resource
 cost. Its earlier planning drew on the registered-report example of
@@ -404,16 +405,16 @@ retained context, not a separately manipulated skill treatment.
 
 \emph{Working behaviour} means completing an intended task through the
 running system, including the identity, data and service dependencies needed
-for that task. A healthy endpoint or a passing repository test alone does not
-establish it. \emph{Decay} denotes loss of previously working behaviour or
+for that task. A healthy endpoint or passing repository test covers only
+part of that evidence. \emph{Decay} denotes loss of previously working behaviour or
 increasing difficulty of understanding and changing a system. The case
 records lost usability during replacement; any decline in intrinsic code
 quality remains unmeasured. Deployment drift could produce the same observation.
 \emph{Adaptability} is operationalised prospectively as success and cost on
 the fixed-budget, unforeseen change request, not as a universal measure of
 maintainability. \emph{Consolidation} means scheduled structural work intended
-to preserve observable behaviour, with tests checking that intention; passing
-finite tests cannot prove semantic equivalence.
+to preserve observable behaviour, with tests checking that intention.
+Passing finite tests supports only the contracts they cover.
 
 Five measurement categories remain separate. PRs, lines and words describe
 \emph{production volume}; checks, reviews and receipts describe
@@ -519,7 +520,7 @@ Product-use feedback again shapes what subsequent work must establish. \\
 \end{table}
 
 \FloatBarrier
-\subsection{From discovery to epics and user stories}
+\subsection{Building the epics and user stories}
 
 Preparation involved sustained steering rather than a single specification
 prompt. Role-agent challenges questioned the requested end-to-end agents;
@@ -707,14 +708,14 @@ differs from the consolidation package tested in Section~\ref{sec:experiment}.}\
 \FloatBarrier
 \subsection{Case validity and rival explanations}\label{sec:threats}
 
-The five categories are not independent causes identified by these data.
-The same missing identity and staff bindings can indicate deferred migration
-work, incomplete deployment acceptance or a lost lesson. Discriminating them
-requires the deployment comparison and actual session-input trace identified
-in Table~\ref{tab:audittrail}, not another count of documents or citations.
-Similarly, a growing read path does not demonstrate context overflow, and an
-expensive gate is not necessarily a disproportionate gate. Per-change gate
-time, avoided defects and human effort were not measured.
+The five categories overlap in this case. Missing identity and staff
+bindings could reflect deferred migration, incomplete deployment acceptance
+or a lesson that workers did not apply. The deployment comparison and
+session-input trace in Table~\ref{tab:audittrail} could help distinguish
+these explanations. Document and citation counts cannot do so. The available
+evidence also cannot establish context overflow from a growing read path or
+disproportionate cost from an expensive gate alone. Per-change gate time,
+avoided defects and human effort were not measured.
 
 The source-layout migration, owner-selected priorities and delegated merging
 changed alongside coordination. Scope additions, budget constraints, model/tool
@@ -728,17 +729,19 @@ influences on reliability~\cite{bird2014extrinsic}. It neither tests
 AI-agent configuration nor diagnoses this case's sign-in failure.
 
 Construct validity is limited by whitespace counts, lexical indicators and
-selectively reviewed records. Appropriate caution can raise boundary-phrase density;
-missing references do not prove missing knowledge. As coordinator designer,
-participant and analyst, I selected the episodes and may favour a coherent
-retrospective explanation. AI synthesis is not an independent observer.
+selectively reviewed records. Appropriate caution can raise boundary-phrase
+density; the records cannot show whether a missing reference reflects absent
+knowledge or missing documentation. As coordinator designer, participant
+and analyst, I selected the episodes and may favour a coherent retrospective
+explanation. AI-assisted synthesis shares these source limits and needs
+independent checking.
 Public records support recomputation but not independent corroboration of
 every statement. The single exercise I designed and purposively selected
 external examples do not establish prevalence or general causal effects.
 The separate experiment has its own identification limits in
 Section~\ref{sec:protocollimits}.
 
-\section{Consolidation hypothesis and harness}\label{sec:harness}
+\section{Consolidation hypothesis and procedure}\label{sec:harness}
 
 Restoring the case's missing identity and staff bindings required
 configuration and end-to-end verification. Consolidation addresses a
@@ -748,12 +751,12 @@ extend. The separate experiment narrowed the question to that inherited
 state. It tested retained behaviour and a withheld change request, without
 treating code cleanup as a remedy for the case's configuration failure.
 
-The idea is already practised. OpenAI describes replacing weekly manual
-clean-ups with recurring background agents that open small refactoring pull
+Teams already use recurring agents for cleanup. OpenAI describes replacing
+weekly manual clean-ups with background agents that open small refactoring pull
 requests, alongside a documentation-gardening agent~\cite{openai2026harness}.
 Anthropic asks each session to leave a clean state and update a progress
-file~\cite{anthropic2025harness}. Neither account reports a controlled
-comparison of feature-only delivery with consolidation between feature steps.
+file~\cite{anthropic2025harness}. These accounts describe practice; neither
+compares feature-only delivery with consolidation between feature steps.
 Darwin's continuous optimisation is a further precedent for automated
 improvement, but its performance evaluations do not isolate that intervention
 or test an unforeseen change request~\cite{pavlenko2026factory}
@@ -761,25 +764,24 @@ or test an unforeseen change request~\cite{pavlenko2026factory}
 agents~\cite{gautam2025refactorbench}; the narrower hypothesis concerns retained
 behaviour and later adaptation during repeated feature additions.
 
-AutoSaddler's preprint abstract already treats harness improvement as
-offline learning from execution traces, combining failure diagnosis,
+AutoSaddler's preprint abstract describes optimizing an agent's execution
+setup from traces through failure diagnosis,
 structured patches and validation-based update
-selection~\cite{microsoft2026autosaddler}. Agent-led reflective correction is
-therefore not the novelty claimed here. The proposed intervention instead
-consolidates the retained repository between feature steps and measures
-retained contracts and a withheld change request.
+selection~\cite{microsoft2026autosaddler}. Agent-led reflective correction
+appears in prior work. This study tests a different intervention:
+consolidating the repository between feature steps, then measuring retained
+contracts and performance on a withheld change request.
 
-The consolidation harness tests a bounded part of reflective
-correction. The distinction is what persists afterward. Self-Refine revises
+The consolidation procedure tests one bounded form of reflective
+correction. It changes what persists in the repository. Self-Refine revises
 an output and Reflexion retains lessons for later trials
 ~\cite{madaan2023selfrefine,shinn2023reflexion}; the present intervention
 instead consolidates the software and its handover between different
 feature requests. CRITIC's tool feedback is another precedent
-~\cite{gou2024critic}, but it does not authorize feeding the held-out
-evaluation into this experiment. Whether the retained changes help an
-unforeseen request remains the empirical question. The harness schedules
-each pause; the agent is not authorised to reject features or redirect
-the product.
+~\cite{gou2024critic}. The held-out evaluation remained separate from that
+feedback. The study tests whether retained changes help with an unforeseen
+request. The schedule sets each pause; the agent cannot reject features or
+redirect the product.
 After each feature, delivery pauses for a bounded consolidation session.
 The agent runs the tests and examines structural diagnostics, then reviews
 the latest diff for duplication, complexity, unclear names, dead code,
@@ -795,12 +797,14 @@ rather than continually extending it. The next feature begins after the
 quality or time budget ends the pause. The supplement reproduces the
 historical v4 prompt; the current researcher kit defines the amended
 prompt. The active B/C templates and their source bindings are reproduced
-in Supplement Section~\ref{app:activeprompts}. The intervention combines refactoring, additional tests and a
-design-oriented note; it is not a pure refactoring treatment.
+in Supplement Section~\ref{app:activeprompts}. The intervention combines
+refactoring, additional tests and a design-oriented note, so the study
+cannot isolate refactoring alone.
 
 The hypothesis draws on Beck's alternation of features and
 futures~\cite{beck2026prodacity,beck2025devslow} and \emph{Tidy
-First?}~\cite{beck2023tidy}. It is not free, and may not work. Agent
+First?}~\cite{beck2023tidy}. The procedure costs time; its benefit remains
+an empirical question. Agent
 refactorings can be incomplete or incorrect~\cite{gautam2025refactorbench};
 human studies also caution against equating a refactoring label with a
 quality gain. Kim et~al. report developers' refactoring challenges and
@@ -810,7 +814,7 @@ smells~\cite{bavota2015quality}. These findings motivate checking outcomes
 rather than assuming improvement. Test-commit-or-revert
 protects only behaviour represented by its tests, not every intended
 contract~\cite{ma2026building}. Section~\ref{sec:experiment} specifies how
-the package was evaluated and reports its results.
+the procedure was evaluated and reports the results.
 
 % ===========================================================================
 \FloatBarrier
@@ -829,19 +833,16 @@ trajectories, whose counts differ across cells; unresolved charges prevent
 a complete all-allocation cost comparison. The resource table in
 Section~\ref{sec:resultsstructural} retains those denominators.
 
-There was no consistent reduction in the cost of the final change request.
-Consolidation therefore showed no short-horizon credit payback in the
-accounted observations. It sometimes delivered more complete software,
-however, so the additional spend must be read alongside the outcomes.
-Giving the longer-session control (D) 50\% more time and twice A's credit
-allowance produced similar spending to A. Matching allowances with consolidation
-in B did not match realised resource use.
+Across models, consolidation did not consistently reduce final
+change-request cost, so the accounted observations show no short-horizon
+credit payback. Some trajectories did deliver more complete software; read
+the additional spend alongside those outcomes. The longer-session control
+(D) had 50\% more time and twice A's credit allowance, yet spent a similar
+amount. Matching allowances for B and D did not produce matching resource use.
 
-Longer-term payback remains a separate question. The economic hypothesis is
-that early consolidation can reduce the burden inherited by later features.
-The intuition is an investment: accept a small cleanup cost now to avoid
-more expensive changes later. That benefit exists only if enough later
-work is actually made easier. The earlier sensitivity model in Supplement
+This study cannot establish long-term payback. The economic hypothesis is
+that early consolidation reduces the cost of enough later features to
+offset the cleanup work. The earlier sensitivity model in Supplement
 Section~\ref{app:economics} makes those assumptions explicit
 (Figure~\ref{fig:refactoringeconomics}, Table~\ref{tab:costscenario});
 its cost growth was never fitted to this experiment.
@@ -881,7 +882,7 @@ The narrower
 experimental question is whether bounded post-feature correction preserves
 behaviour and later changeability.
 
-Human sign-off also need not establish who formed a judgment. In Anthropic's
+An approval record does not show who formed the judgment. In Anthropic's
 randomised study, 61 analysts were recruited and 50 used the agent. Those
 50 analysts matched their agent's
 randomly assigned preference on 86\% of four analytical choices
@@ -889,24 +890,24 @@ randomly assigned preference on 86\% of four analytical choices
 deliberately strengthened in one farming-analysis task with one model; the
 rate concerns a different task and setting from coding
 \cite[Our study's limitations]{herdagdelen2026judgment}.
-This challenges an assumption that retaining approval alone preserves
-independent judgment, not the case's reported decisions. The article proposes
+This cautions against treating approval alone as evidence of independent
+judgment. The result says nothing about the case's reported decisions. The article proposes
 asking experts for their view first or making the best case for each option
 \cite[What this means]{herdagdelen2026judgment}. Separately, I propose
 recording alternatives and a human's reasons before accepting an agent's
 recommendation. Its effectiveness remains to be tested.
 
-\subsection{Can another agent restore futures?}
+\subsection{Can another agent preserve room for change?}
 
-Here ``futures'' means the options for later changes, rather than immediate
-feature output. Beck's alternation suggests preserving those options during
+Here, room for change means the options the system supports after the current
+feature. Beck's alternation suggests preserving those options during
 feature work~\cite{beck2026prodacity,beck2025devslow}. Darwin, AutoSaddler and
-SkillOpt already provide precedents for agent-guided correction; reflection
-itself is not the proposed novelty. Ng's reflection framework also argues
-for evaluating and revising work rather than treating first-pass generation
-as the finished product~\cite{ng2024reflection}. Improvement here means
-a measured advantage in retained behaviour or later adaptation, not merely
-writing a lesson, changing a prompt or calling the process self-improving.
+SkillOpt already provide precedents for agent-guided correction. Ng's
+reflection framework also argues for evaluating and revising work instead
+of treating first-pass generation as the finished product
+~\cite{ng2024reflection}. Here, improvement means a measured advantage in
+retained behaviour or later adaptation. A lesson, prompt change or
+self-improvement label alone cannot establish that advantage.
 The experiment does not train model weights; the evolving repository and
 handover are the states under test. An exposed model name is not a guarantee
 against provider-side changes.
@@ -920,11 +921,10 @@ cannot replace the retention and adaptation measures.
 
 The experiment provides two useful contrasts. On GPT~6.1 Sol, some earlier
 tests encoded a closed list of permitted view methods. A later feature
-needed to extend that list, but the harness protected accepted test files
+needed to extend that list, but the study rules protected accepted test files
 from edits. Consolidation and visible-specification repair were associated
-with more complete feature delivery in that setting. This concerns the
-interaction between generated tests and harness rules as well as code
-structure.
+with more complete feature delivery in that setting. This points to an
+interaction between generated tests, study rules and code structure.
 
 On Gemini~4 Argon, the problem was a view that rejected named write methods
 but forwarded newly added ones. Read-only review had more successful final
@@ -983,12 +983,12 @@ needed to design it.
 \subsection{Implications for practice}\label{sec:feedbackfirst}
 
 The final report's Minimum Viable Experiment framework recommends
-\textbf{adjust}: change what to investigate rather than adopt the whole
+\textbf{adjust}: change the next study instead of adopting the full
 consolidation package. On this workload, extra single-session allowance
 left observed spending and outcomes similar, while unconditional
 consolidation roughly doubled delivery credits. The report calls both
-strategies \emph{no-go} at this horizon. Similar cell means neither
-establish equivalence nor explain why sessions stopped early.
+strategies \emph{no-go} at this horizon. Similar cell means do not establish
+equivalence or explain why sessions stopped early.
 
 The more promising question is when a particular correction is needed.
 Structural cleanup helped with complex functions; review had a stronger
@@ -999,9 +999,13 @@ Section~\ref{app:practicecandidate}. Its efficacy and cost advantage still
 need testing. It would be premature to replace an established review
 workflow with that unevaluated combination.
 
+If you adopt scheduled consolidation, measure its added cost against retained
+behaviour and success on a new requirement. In this study, structural
+measures improved, but the coverage gain over longer sessions was 1.19
+percentage points and change-request costs did not consistently fall.
 The case also motivates protecting a usable increment, bounding the delivery
-horizon and keeping lessons retrievable or executable. Its large evidence
-trails suggest keeping routine intermediate tracking files out of the
+horizon and keeping lessons retrievable or executable. Its extensive evidence
+trail suggests keeping routine intermediate tracking files out of the
 squash-merged product diff after preserving durable findings and original
 reviews. Selection must be finite, archive-backed and restore-verified,
 including adverse reviews; mandatory safety, privacy, approval and publication
@@ -1014,13 +1018,12 @@ checklist and framework-builder suggestions.
 \FloatBarrier
 \section{Conclusion}\label{sec:conclusion}
 
-The ten-feature S1 experiment supported neither half of its initial
-conjecture. Previously acquired behaviour was largely retained across all
-315 completed repository trajectories: none of the 126 feature-only or
-longer-session runs had an open regression at the final checkpoint
-($P_{10}$), and only one did across all arms. Workflow replay likewise found
-zero witnessed losses across 626 evaluable packets. The important failures
-were unacquired features and a permission-boundary hole exposed by the
+Across the ten-feature S1 task, previously acquired behaviour was largely
+retained. None of the 126 feature-only or longer-session runs had an open
+regression at the final checkpoint ($P_{10}$); only one trajectory across
+all arms did. Workflow replay found no witnessed losses across 626 evaluable
+packets. The main failures were features that agents never acquired and a
+permission-boundary hole exposed by the
 withheld regional-access extension (CR1). Stable retention can therefore
 coexist with incomplete or unsafe-to-extend software.
 
@@ -1041,8 +1044,8 @@ combined policy has no measured efficacy or cost advantage in this study.
 The motivating case concerns a different scale and failure: a migration
 interrupted a usable workflow after extensive agent-assisted preparation.
 Its five candidate mechanisms connect inherited obligations, lessons and
-completion signals to opportunities for correction; the experiment does
-not test those mechanisms individually. Together with the literature,
+completion signals to opportunities for correction. The experiment did not
+test those mechanisms individually. Together with the literature,
 the two accounts motivate evaluating the system left for the next change.
 They also explain why the next experiment needs a new design: longer,
 more coupled work, several adaptation probes and comparisons that can
@@ -1053,15 +1056,14 @@ These are exploratory findings from one suite and one final change request.
 Owner attestation covers all 315 completed trajectories; unregistered
 amendments, two unadjudicated GPT~6.1 Sol CR1 test errors, 55 billing holds,
 the 313/315 judging snapshot and sixteen execution sources limit inference.
-The study's learning is therefore methodological as well as practical.
-An experiment motivated by decay found mostly stable retention, then
-exposed why acquisition, adaptation and structural quality cannot substitute
-for one another. A future paper can build on those distinctions to test
+The study also clarifies what future evaluations should measure. It began
+with a decay hypothesis, found mostly stable retention and showed why
+acquisition, adaptation and structural quality need separate measures.
+A future paper can build on those distinctions to test
 longer development loops and RPI-based correction, once a new protocol
-and the larger resource commitment are approved. For now, the supported
-conclusion is narrower and useful: evaluate whether the system still does
-its work, whether it can accept the next change, and what each improvement
-costs.
+and the larger resource commitment are approved. For practice, measure three
+things: whether the system completes its intended task, whether it accepts
+the next change, and what each improvement costs.
 
 % Author disposition (15 November 2026): only coauthor review is reported; no additional reviewer acknowledgement is claimed.
 

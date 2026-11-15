@@ -4,6 +4,10 @@ description: Narrative and author-TODO reconciliation, remaining evidence plan a
 ms.date: 2026-11-15
 ---
 
+The latest v23 revision rewrites selected paper prose for direct, readable
+language. It preserves the findings, study design, formulas, tables, figures
+and source evidence, and records the rebuilt paper in a new binding.
+
 The latest 15 November narrative revision connects the interrupted workflow,
 hypotheses, exploratory findings and future-study learning. It records the
 author's answers and distinguishes applied editorial changes from pending
@@ -66,6 +70,46 @@ The 5 November recovery/source check, 2 November allocation record and
 from Scope and Outcome through Title Assessment retain the original
 24 October report, and the 25 October addendum remains historical. Their
 earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Direct Style Revision 15 November
+
+### Scope and Applied Changes
+
+The owner requested a direct-prose revision of the paper. The abstract now
+states the motivating case, study conditions and findings in shorter
+sentences. The case account, consolidation discussion and conclusion replace
+selected formulaic contrasts with direct statements. The practical section
+gives readers a concrete recommendation: measure consolidation cost against
+retained behaviour and success on a new requirement.
+
+The edit preserves first-person narration for the participant-observer,
+all reported results and their uncertainty, the study design, equations,
+tables, figures, citations and source registers. It adds no experiment,
+analysis, scoring or model call. The original `author_voice_revision`
+binding remains unchanged; `style_revision` records the new source and PDF.
+
+### Validation and Delivery
+
+Classification: focused editorial revision.
+
+* The Tectonic build produced a 72-page PDF. The Supplement starts on page 45,
+  and the source and digest register starts on page 70.
+* Rendered pages 1, 11, 35-37, 45 and 70 were inspected. Extracted PDF text
+  contains the revised abstract, case heading, practical recommendation and
+  conclusion.
+* The manuscript structural checker passed. The package suite ran 74 tests:
+  73 passed, and the native diagram-export test could not launch because its
+  Playwright browser was unavailable. The `style_revision` binding records the
+  final source/PDF digests and keeps the prior author-voice binding unchanged.
+* The Tectonic log contains the inherited `inputenc` warning for its UTF-8
+  engine. No overfull or underfull box warnings were found.
+* No experiment, model call, source retrieval or publication action occurred.
+  Independent exact-head review, hosted CI, author approval, employer
+  clearance and venue acceptance remain separate.
+
+Work execution: Complete for the authorized editorial revision. Assessment:
+scoped editorial review complete; this does not certify the scientific
+claims or constitute independent peer review.
 
 ## Narrative, Learning and TODO Reconciliation 15 November
 
