@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-11-13
+ms.date: 2026-11-15
 ms.topic: reference
 ---
 
@@ -11823,3 +11823,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Updated `data-operator` and `exceptionRegisterPanel` in `src/api/src/zava_forward/api/web/role-screens.js` with `nav[aria-label]` keyboard jump links (`a[data-jump]`), `section[tabindex="-1"]` targets across selected-home and overview compositions, `th[scope="row"]` record headers via `screenRecordTable` across all eight stewardship and exception-register tables, and fail-closed `State:` and `Source state:` textual labels across conflicts, returns, handoff, blockers, event dispositions, recovery context and the exception register.
 * Expanded `src/api/tests/test_data_steward_screen_wcag.py`, aligned `src/api/tests/test_exception_register_screen.py` row-header assertions, and recorded the engineering slice in [customer-journeys/data.md](research/ux/customer-journeys/data.md#data-screens-delivery-status-2026-11-04-229). Local automated evidence on synthetic data only: assistive-technology testing and human review under #151 and #155 remain open, so no WCAG conformance claim is made and the #229 accessibility criterion remains unticked.
+
+## [2026-11-15] update | Issue #159 conversational assistant keyboard, focus and live-region verification (Refs #159)
+
+* Added `src/api/tests/test_assistant_panel_a11y_159.py` (leaving `chat-widget.js`, `chat.js`, `role-screens.js`, `panels.js` and stylesheets unchanged) to verify keyboard-only operability, focus management, `revealBeside` overlap scroll clearance, Chromium CDP `Accessibility.getFullAXTree` semantics and `MutationObserver` polite live-region announcements across `#employee-chat-launcher`, `#employee-chat`, `#chat-panel` and `#workspace-status` using both unconditional Node-VM + real Python `ChatPanel` payloads and rendered headless Chromium on constructed synthetic data.
+* Recorded the dated verification boundary in [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md#conversational-assistant-panel-keyboard-and-live-region-check-2026-11-15-159) (including aligned `Keyboard`, `Name, role, value`, `Status messages` and `Focus not obscured` audit notes) and refreshed its [index](README.md) row. Automated browser accessibility-tree and DOM live-region evidence only: desktop NVDA/Firefox and VoiceOver/Safari runs, 400% zoom checks and human acceptance under [production-ux-acceptance-protocol.md](research/ux/production-ux-acceptance-protocol.md) (#151, #155, #619) remain `Not run`, so no WCAG 2.2 conformance claim is made.
