@@ -4,6 +4,7 @@
 import argparse
 import base64
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -14,7 +15,9 @@ import time
 import urllib.error
 import urllib.request
 from collections import Counter
+from dataclasses import dataclass
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 from uuid import UUID
 
@@ -31,6 +34,10 @@ PARAMETER_FILES = {
     "test": "main.test.bicepparam",
     "pilot": "main.pilot.example.bicepparam",
 }
+ENVIRONMENT_PARAMETER_FILES = {
+    "dev": "parameters/dev.bicepparam",
+    "prod": "parameters/prod.bicepparam",
+}
 OVERRIDES = {
     "location",
     "sqlLocation",
@@ -42,6 +49,160 @@ OVERRIDES = {
     "entraClientId",
     "entraBearerOnly",
 }
+INJECTED_PARAMETERS = frozenset(
+    OVERRIDES
+    | {
+        "workload",
+        "environmentName",
+        "allowPublicNetworkAccess",
+        "deployApplications",
+    }
+    | set(IMAGE_PARAMETERS.values())
+)
+
+
+@dataclass(frozen=True)
+class FromEmptyStep:
+    """Canonical step registration in the reproducible from-empty deployment sequence."""
+
+    step_id: str
+    pipeline_hook: str
+    rebuild_stages: tuple[str, ...]
+    artifacts: tuple[str, ...]
+    manual_prerequisite_owner: str | None
+    description: str
+
+
+FROM_EMPTY_STEP_ORDER: tuple[str, ...] = (
+    "preflight",
+    "what-if",
+    "deploy",
+    "sql-init",
+    "seed",
+    "smoke",
+)
+FROM_EMPTY_STEPS: tuple[FromEmptyStep, ...] = (
+    FromEmptyStep(
+        step_id="preflight",
+        pipeline_hook="verify-environment",
+        rebuild_stages=("parameters",),
+        artifacts=(
+            "infra/scripts/pipeline.py",
+            "infra/scripts/tenant-readiness-preflight.py",
+            "infra/entra/app-registration.json",
+            "infra/secret-inventory.json",
+            "infra/defender-decision.json",
+        ),
+        manual_prerequisite_owner="Juan Manuel Servera (@jmservera)",
+        description=(
+            "Validate tenant readiness, secret inventory, Defender/policy governance baseline, "
+            "and protected GitHub deployment environment rules."
+        ),
+    ),
+    FromEmptyStep(
+        step_id="what-if",
+        pipeline_hook="plan",
+        rebuild_stages=("dependencies",),
+        artifacts=(
+            "infra/main.bicep",
+            "infra/governance.bicep",
+            "infra/parameters/dev.bicepparam",
+            "infra/parameters/prod.bicepparam",
+            "infra/scripts/deploy.py",
+            "infra/scripts/pipeline.py",
+        ),
+        manual_prerequisite_owner=None,
+        description=(
+            "Compile environment parameters, enforce compile-time isolation guards, "
+            "and summarize resource-group ARM what-if changes inside ama."
+        ),
+    ),
+    FromEmptyStep(
+        step_id="deploy",
+        pipeline_hook="publish,deploy",
+        rebuild_stages=(
+            "discover",
+            "images",
+            "credential",
+            "applications",
+            "authentication",
+        ),
+        artifacts=(
+            "infra/main.bicep",
+            "infra/modules/containerapps.bicep",
+            "src/api/Dockerfile",
+            "src/agents/Dockerfile",
+            "src/orchestrator/Dockerfile",
+            "src/importer/Dockerfile",
+            "infra/scripts/deploy.py",
+            "infra/scripts/pipeline.py",
+            "infra/scripts/setup-entra.py",
+            "infra/scripts/credential_arm.py",
+        ),
+        manual_prerequisite_owner=None,
+        description=(
+            "Publish immutable ACR image digests, apply ARM resource-group deployment, "
+            "and reconcile Entra application credentials and EasyAuth bindings."
+        ),
+    ),
+    FromEmptyStep(
+        step_id="sql-init",
+        pipeline_hook="check_sql",
+        rebuild_stages=("sql-users",),
+        artifacts=(
+            "infra/scripts/create-sql-users.py",
+            "infra/scripts/create-sql-users.sql",
+            "infra/sql/resident-showcase.sql",
+            "infra/sql/resident-assistant.sql",
+            "infra/staff-initializer-rbac.bicep",
+        ),
+        manual_prerequisite_owner=None,
+        description=(
+            "Verify private-only Azure SQL posture and apply idempotent contained Entra "
+            "database users, least-privilege role grants, and SQL DDL scripts."
+        ),
+    ),
+    FromEmptyStep(
+        step_id="seed",
+        pipeline_hook="seed",
+        rebuild_stages=("seed", "staff"),
+        artifacts=(
+            "src/importer/Dockerfile",
+            "src/orchestrator/src/zava_forward/orchestrator/rebuild_azure.py",
+            "infra/scripts/resident_sensor_seed.py",
+            "infra/scripts/initialize-workbench-staff.py",
+        ),
+        manual_prerequisite_owner=None,
+        description=(
+            "Load deterministic synthetic retrofit and IoT sensor records without reseeding "
+            "populated stores, and reconcile synthetic staff roster bindings."
+        ),
+    ),
+    FromEmptyStep(
+        step_id="smoke",
+        pipeline_hook="smoke",
+        rebuild_stages=(
+            "health",
+            "api-denial",
+            "browser-redirect",
+            "workload-sql",
+            "model-standard",
+            "model-capable",
+            "restart",
+        ),
+        artifacts=(
+            "infra/scripts/pipeline.py",
+            "infra/scripts/private-cutover-proof.py",
+            "src/orchestrator/src/zava_forward/orchestrator/rebuild.py",
+            "src/orchestrator/src/zava_forward/orchestrator/rebuild_azure.py",
+        ),
+        manual_prerequisite_owner=None,
+        description=(
+            "Execute post-deployment health, three unauthenticated/forged-header 401 denials, "
+            "browser sign-in redirect, private SQL/AI round-trips, and replica restart checks."
+        ),
+    ),
+)
 FORBIDDEN_CHECK_PATTERN = re.compile(
     r"(?:placeholder|example\.invalid|n/a"
     r"|(?<![a-z0-9])(?:todo|tbd|assumed|assumption|unverified|pending|unknown|none|na|skip)(?![a-z0-9]))",
@@ -468,6 +629,31 @@ def deployment(infra: Path, environment: str, output: Path, images_directory: Pa
                 [f"* Environment: {environment}", "* Status: Succeeded"]
                 + [f"* Check passed: {name}" for name in summary["checks"]],
             )
+
+
+def _load_reproducibility_module() -> ModuleType:
+    module_name = "_ama_infra_reproducibility_check"
+    cached = sys.modules.get(module_name)
+    if isinstance(cached, ModuleType):
+        return cached
+    module_path = Path(__file__).resolve().with_name("reproducibility_check.py")
+    spec = importlib.util.spec_from_file_location(module_name, module_path)
+    if spec is None or spec.loader is None:
+        raise PipelineError(f"Cannot load reproducibility verifier from {module_path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def execute_from_empty_dry_run(repo_root: Path = ROOT, environment: str = "dev") -> Any:
+    module = _load_reproducibility_module()
+    return module.execute_from_empty_dry_run(repo_root=repo_root, environment=environment)
+
+
+def verify_from_empty_deployment_reproducibility(repo_root: Path = ROOT) -> Any:
+    module = _load_reproducibility_module()
+    return module.verify_from_empty_deployment_reproducibility(repo_root=repo_root)
 
 
 def main() -> int:
