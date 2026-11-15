@@ -32,6 +32,7 @@ from .resident_decisions import (
     resident_gate,
 )
 from .stock import support_status
+from .taskqueues import raw_safeguarding_items
 
 CONTRACTOR = "Contractor"
 RESIDENT_RECORD_ROLES = RESIDENT_ROLES
@@ -248,6 +249,10 @@ def hold_notes(c):
             for key in ("reason", "source"):
                 if c.get(key):
                     c[key] = NOTE_HELD
+        for sg_item in raw_safeguarding_items(c):
+            for key in ("source", "job", "summary", "reason"):
+                if sg_item.get(key):
+                    sg_item[key] = NOTE_HELD
         for k, v in c.items():
             is_safety_dict = ("category" in c and "released" in c) or c.get("item_kind") in (
                 "hazard",
@@ -399,6 +404,10 @@ def _is_high_sensitivity_path(path: tuple[str, ...]) -> bool:
     if not path:
         return False
     if path[-1] in _HIGH_SENSITIVITY_LEAF_KEYS:
+        return True
+    if path[-1] == "summary" and any(
+        seg in ("hazards", "safeguarding_items", "safeguarding") for seg in path
+    ):
         return True
     return any(seg in _HIGH_SENSITIVITY_SEGMENTS for seg in path)
 

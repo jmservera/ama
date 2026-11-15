@@ -352,6 +352,111 @@ class HazardSafeguardingClockAndOwnerCoreTests(unittest.TestCase):
             finally:
                 sstore.db.close()
 
+    def test_raw_standalone_safeguarding_visibility_and_ai_output_gating(self) -> None:
+        data = _seed_data()
+        bsl = next(s for s in data["staff"] if s["code"] == "BS-1")
+        coord = next(s for s in data["staff"] if s["code"] == "RC-1")
+        grants = dict(
+            code="GE-1",
+            name="Gail Grants",
+            email="gail@example.test",
+            role="Grants and Evidence Officer",
+        )
+        data["staff"].append(grants)
+
+        zf1 = data["cases"][0]
+        zf1["safeguarding_items"] = [
+            dict(
+                id="SG-RAW-76",
+                category="Safeguarding concern",
+                priority="Emergency",
+                aware_at="2026-10-14T09:00:00Z",
+                summary="SG-RAW-SUMMARY-TOKEN-76",
+                source="SG-RAW-SOURCE-TOKEN-76",
+                job="SG-RAW-JOB-TOKEN-76",
+                reason="SG-RAW-REASON-TOKEN-76",
+                note="SG-RAW-NOTE-TOKEN-76",
+            )
+        ]
+        zf1["documents"] = [
+            dict(
+                id="DOC-SG-LEAK",
+                kind="Survey",
+                name="survey.pdf",
+                added="2026-10-10",
+                summary="Survey synthesis mentioning SG-RAW-SUMMARY-TOKEN-76.",
+            ),
+            dict(
+                id="DOC-CLEAN",
+                kind="EPC",
+                name="epc.pdf",
+                added="2026-10-10",
+                summary="Clean EPC summary with rated band D.",
+            ),
+        ]
+        zf1.setdefault(
+            "funding",
+            dict(
+                route="Not decided",
+                status="Not started",
+                reference="",
+                draft="",
+                approved_by=None,
+            ),
+        )["draft"] = "Draft grant submission referencing SG-RAW-REASON-TOKEN-76."
+
+        zf2 = data["cases"][1]
+        zf2["safeguarding"] = dict(note="PASSIVE-CANARY-NOTE-ONLY-76")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            json_path = Path(tmp) / "seed.json"
+            json_path.write_text(json.dumps(data))
+            store_cls: Any = Store
+            store: Any = store_cls(str(json_path))
+
+            raw_zf1 = store.cases[zf1["id"]]
+            proj_rc = projection.project_case_visibility(coord, raw_zf1)
+            assert proj_rc is not None
+            sg_proj = proj_rc["safeguarding_items"][0]
+            for field in ("summary", "source", "job", "reason", "note"):
+                self.assertEqual(sg_proj[field], projection.NOTE_HELD)
+            docs_rc = {d["id"]: d["summary"] for d in proj_rc["documents"]}
+            self.assertEqual(docs_rc["DOC-SG-LEAK"], projection.NOTE_HELD)
+            self.assertEqual(docs_rc["DOC-CLEAN"], "Clean EPC summary with rated band D.")
+
+            proj_grants = projection.project_case_visibility(grants, raw_zf1)
+            assert proj_grants is not None
+            self.assertEqual(proj_grants["funding"]["draft"], projection.NOTE_HELD)
+
+            withheld_rc = projection.withheld_scope_values(store, coord, [zf1["id"]])
+            for token in (
+                "sg-raw-summary-token-76",
+                "sg-raw-source-token-76",
+                "sg-raw-job-token-76",
+                "sg-raw-reason-token-76",
+                "sg-raw-note-token-76",
+            ):
+                self.assertIn(token, withheld_rc)
+
+            withheld_other = projection.withheld_scope_values(store, coord, [zf2["id"]])
+            self.assertIn("sg-raw-summary-token-76", withheld_other)
+
+            proj_bsl = projection.project_case_visibility(bsl, raw_zf1)
+            assert proj_bsl is not None
+            self.assertEqual(
+                proj_bsl["safeguarding_items"][0]["summary"], "SG-RAW-SUMMARY-TOKEN-76"
+            )
+            docs_bsl = {d["id"]: d["summary"] for d in proj_bsl["documents"]}
+            self.assertEqual(
+                docs_bsl["DOC-SG-LEAK"],
+                "Survey synthesis mentioning SG-RAW-SUMMARY-TOKEN-76.",
+            )
+
+            proj_zf2_rc = projection.project_case_visibility(coord, store.cases[zf2["id"]])
+            assert proj_zf2_rc is not None
+            self.assertEqual(proj_zf2_rc["safeguarding"], dict(note=projection.NOTE_HELD))
+            self.assertFalse(taskqueues.has_open_safeguarding(store.cases[zf2["id"]]))
+
 
 if __name__ == "__main__":
     unittest.main()
