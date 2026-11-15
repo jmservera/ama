@@ -1605,6 +1605,70 @@ active-time and primary delay code rules, persistence and screens.
 python -m unittest discover -s tests -p 'test_discovery_flow.py' -q
 ```
 
+### Phase 0 unified retrofit-flow discovery contract and governance guard (Refs #124)
+
+`discovery_contract` unifies Phase 0 retrofit-flow discovery (`BG-011`,
+`RULE-019`, `OD-16`, `OD-18`) in pure standard-library Python without company
+data, network calls or AI dependencies, and aligns `discovery_register` and
+`discovery_flow` outputs under one fail-closed governance contract:
+
+* `NominatedDiscoveryOwner`, `nominate_discovery_owner`, and
+  `agree_discovery_endpoint` require distinct named human sponsor and owner
+  actors (rejecting blank, placeholder, self-nominated and AI/automated actors)
+  and explicit agreement on the `accepted handover` endpoint (`ENDPOINT_AGREED`).
+* `LifecycleDictionary` (`build_default_lifecycle_dictionary`) defines the 10
+  ordered PAS 2035 and retrofit flow stages through `accepted handover`
+  (enforced in canonical `1..10` `REQUIRED_FLOW_STAGE_CODES` order by
+  `LifecycleDictionary.__post_init__`) plus `paused`, `excluded`, `withdrawn`,
+  `cancelled` and `reopened_aftercare` states, 15 distinct lifecycle events, 8
+  timestamp specifications (keeping `active_days=None` unless explicit
+  active-work start and finish timestamps exist), 7 wait states and 4
+  return-loop kinds (`return`, `rejection`, `repeat visit`, `reopen`), each
+  verifying `validated_role == owner_role` alongside human validator identity
+  across both required seed items and any appended dictionary extensions.
+* `evaluate_property_flow` restricts cohort aggregations strictly to in-window
+  `baseline_candidate_ids` on or before `as_of` (recording unmatched-cohort and
+  post-cutoff records in `gaps`), retains zero-event and non-progressing
+  baseline candidates with `zero_event_candidate_ids` grounded strictly in
+  lifecycle event presence, computes both the `BG-011`
+  `assessment-to-ready-to-install` leg and end-to-end / post-installation
+  `accepted handover` legs, verifies `accepted handover` prerequisite events
+  and unresolved post-handover `reopen` blocks while keeping intended energy
+  outcomes separate, reports separate `unknown_cause_count` and
+  `disputed_cause_count` counters on `waits_by_party` rows alongside
+  `unknown_or_disputed_count`, exposes `to_json_dict(signing_key=...)` for
+  HMAC-SHA256 authenticated cross-process JSON serialization (while preserving
+  unkeyed `to_json_dict()` for in-process provenance checks), and converts
+  nested `FlowDiscoveryReport` mappings to read-only `FrozenDict` (`dict`
+  subclass preserving `dataclasses.asdict()`, with low-level
+  `dict.__setitem__` tampering caught by `verify_digest()`) bound to evaluated
+  provenance, non-blank `dictionary_schema_digest`, and a verified SHA-256
+  `calculation_digest`.
+* `RankedConstraintRegister` (`build_seed_constraint_register`) enforces
+  contiguous `1..N` ranking across the five candidate hypotheses, requires both
+  non-empty `supporting_evidence` and non-empty `contradicting_evidence` tuples
+  plus all five `ConstraintTestAssessment` criteria for acceptance, enforces
+  proposer separation, and preserves `DISPUTED` hypotheses visibly inside
+  validated registers and packs as non-findings.
+* `enforce_governance_guard(..., signing_key=...)`, `validate_flow_report`,
+  `validate_owner_finding` (`discovery_register`), and dataclass `__post_init__`
+  checks stamp `owner_validated=False` and
+  `finding_status="candidate_hypothesis_not_company_finding"` across all
+  discovery outputs until the nominated human discovery owner records formal
+  validation with `ENDPOINT_AGREED`, zero dictionary or flow gaps, zero invalid
+  accepted handovers, sub-artifact signer parity, matching non-blank
+  `dictionary_schema_digest`, and an intact `calculation_digest`, raising
+  `GovernanceViolationError` on any invalid promotion, seal replay, unkeyed JSON
+  forgery, schema-mismatched `Mapping`, or tampered report across all five
+  canonical dataclasses and disjoint `Mapping` shapes.
+
+See [Phase 0 Retrofit-Flow Discovery Contract](../../docs/reference/research/company/phase0-retrofit-flow-discovery-contract.md)
+for standards provenance and open Zava North Homes human governance gates.
+
+```bash
+PYTHONPATH=src:tests python3 -m unittest discover -s tests -p 'test_discovery*.py' -v
+```
+
 ## Appointment agreements and visit evidence (#87)
 
 `appointment_control(user, work_order_id, body)` records explicit offers, separate
