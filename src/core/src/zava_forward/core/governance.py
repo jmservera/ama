@@ -112,6 +112,31 @@ RAI_UNASSESSED = (
     "EU-COND-02",
     "EU-COND-04",
 )
+RAI_EU_CONDITIONAL = (
+    "EU-COND-01",
+    "EU-COND-02",
+    "EU-COND-04",
+)
+RAI_AFFECTED_DISPATCH = "DISABLED until appropriate evidence and qualified approvals exist"
+RAI_CONDITIONAL_EU_ASSURANCE = "Applies only after qualified applicability review"
+PRD_QUALITY_REVIEW = dict(
+    status=(
+        "Pending fresh independent PRD quality review "
+        "(prior pre-merge resident draft FAIL / Validate BLOCKED / Finalize NOT_EVALUATED)"
+    ),
+    satisfied=False,
+    accepted=False,
+    separate_from_report_acceptance=True,
+    separate_from_remediation_completion=True,
+    report_acceptance_scope="baseline-assessment-and-remediation-planning only",
+)
+PRD_OWNER_ACCEPTANCE = dict(
+    status="Unsigned candidate pending separate human owner acceptance",
+    accepted=False,
+    separate_from_report_acceptance=True,
+    separate_from_remediation_completion=True,
+    report_acceptance_scope="baseline-assessment-and-remediation-planning only",
+)
 RAI_TIERS = (
     "implemented/source-tested",
     "deployed-observed",
@@ -252,6 +277,7 @@ def _rai_view(governance, assessment):
             and context["source_commit"] != RAI_BASELINE
         ]
         residual = fid in RAI_RESIDUALS
+        conditional_eu = fid in RAI_EU_CONDITIONAL
         findings.append(
             dict(
                 finding_id=fid,
@@ -263,6 +289,12 @@ def _rai_view(governance, assessment):
                     else "DOWNGRADED"
                     if residual
                     else "UNCHANGED"
+                ),
+                conditional_eu=conditional_eu,
+                applicability_review=(
+                    "Required before conditional EU assurance applies"
+                    if conditional_eu
+                    else "Not conditional EU check"
                 ),
                 claims=deepcopy(claims),
                 current_claims=deepcopy(current),
@@ -293,7 +325,11 @@ def _rai_view(governance, assessment):
         dispositions_complete=count == 22 and invalid == 0,
         open_count=22,
         acceptance="Unknown",
+        prd_quality_review=deepcopy(PRD_QUALITY_REVIEW),
+        prd_owner_acceptance=deepcopy(PRD_OWNER_ACCEPTANCE),
         live_use="BLOCKED pending separate qualified evidence and approvals",
+        affected_dispatch=RAI_AFFECTED_DISPATCH,
+        conditional_eu_assurance=RAI_CONDITIONAL_EU_ASSURANCE,
         note="All supplied evidence is an unverified constructed claim, not acceptance, delegation or closure.",
     )
 
@@ -981,6 +1017,7 @@ class GovernanceMixin:
             detached = copy(self)
             detached.data = dict(self.data, governance=deepcopy(self.data.get("governance", {})))
             g = detached._gov()
+            rai = _rai_view(g, assessment)
             payload = dict(
                 protocol=g["protocol_versions"],
                 benefits=g["benefits"],
@@ -993,7 +1030,9 @@ class GovernanceMixin:
                 capture_open=not detached.capture_gate(),
                 capture_blockers=detached.capture_gate(),
                 note=EMERGENCY_NOTE,
-                rai_evidence=_rai_view(g, assessment),
+                prd_quality_review=deepcopy(PRD_QUALITY_REVIEW),
+                prd_owner_acceptance=deepcopy(PRD_OWNER_ACCEPTANCE),
+                rai_evidence=rai,
             )
         readiness = rai_control_plane.exercise_acceptance_report(
             self,

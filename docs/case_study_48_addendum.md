@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-11-08
+ms.date: 2026-11-15
 ms.topic: reference
 ---
 
@@ -1137,6 +1137,27 @@ witnessed recovery, actual-model quality, privacy/legal approval, current PRD
 acceptance, competent human review or live release. Mandatory version-linked
 real AI/SQL/Azure application acceptance and effective scoped spending authority
 remain separately unmet; no new capture or dispatch authority is granted.
+
+On 2026-11-15, the core governance projection (`governance_view` and
+`rai_evidence`) also exposes explicit, immutable `prd_quality_review` and
+`prd_owner_acceptance` blocks alongside `affected_dispatch` (`DISABLED until
+appropriate evidence and qualified approvals exist`) and
+`conditional_eu_assurance` (`Applies only after qualified applicability
+review`). Current [PRD v0.21.0](./prds/zava-forward-retrofit-programme-demonstrator.md#constructed-finding-evidence-engineering-2026-10-18-126)
+remains an `Unsigned candidate` whose pre-merge resident draft quality review
+(`FAIL / Validate BLOCKED / Finalize NOT_EVALUATED`) and pending human owner
+acceptance stay separate from historical exercise-accepted PRD `0.12.0`,
+baseline `0.14.0` planning-only report acceptance (`baseline-assessment-and-remediation-planning only`),
+`0.16.0` remediation planning, and 22/22 `dispositions_complete` claim counts.
+Appending constructed RAI claims, freezing/approving a protocol, recording
+benefits or release decisions, or mutating stored register dictionaries cannot
+satisfy or overwrite PRD quality review or owner acceptance. Conditional EU AI
+Act checks (`EU-COND-01`, `EU-COND-02`, `EU-COND-04`) retain `conditional_eu`
+and `applicability_review` (`Required before conditional EU assurance applies`)
+with `NOT_ASSESSED`, `UNCHANGED`, `Open` and `Unknown` status until qualified
+human legal/compliance applicability review; see [ADR 0002](./adrs/0002-pilot-readiness-architecture.md#finding-evidence-register-engineering-2026-10-18-126).
+Real OD-36 DPIA/lawful-basis approval, human/budget-owner sign-off and live
+deployment remain unperformed.
 
 ### Regulatory Evidence and Service Design
 
