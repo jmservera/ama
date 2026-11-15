@@ -3,28 +3,42 @@
 from __future__ import annotations
 
 import importlib
+import json
 import os
+import tempfile
 import unittest
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 from unittest import mock
 
 from zava_forward.core.data_protection import (
     BY_ID,
+    CONSTRUCTED_DERIVATIVE,
     DATA_CLASSES,
+    HOSTING_REGION_VS_INFERENCE_RESIDENCY,
     MODE_ENV,
+    SUBJECT_POPULATIONS,
     TASKS,
+    WHOLE_SYSTEM_SURFACES,
+    RightsRequestLedger,
+    answer_rights_request,
+    dispatch_attachment_to_model,
     dispatch_hold,
     due_date,
+    log_rights_action,
     model_dispatch,
+    record_rights_request,
     register_report,
     required_gates,
     rights_status,
     validate_task_payload,
 )
 
-# The legacy ai module is exempt from strict typing, so reach it dynamically.
+# Legacy modules exempt from strict typing are reached dynamically.
 ai_module: Any = importlib.import_module("zava_forward.core.ai")
+store_module: Any = importlib.import_module("zava_forward.core.store")
+sqlstore_module: Any = importlib.import_module("zava_forward.core.sqlstore")
 
 
 def refs(class_id: str, value: str = "REF-1") -> dict[str, str]:
@@ -550,6 +564,514 @@ class DocumentDerivativeAndProjectionTests(unittest.TestCase):
             "Neutral phrasing derived under necessity exception.",
         )
         self.assertEqual(rpm_view["funding"]["draft"], "Application draft £5,000.")
+
+
+class WholeSystemInventoryAndNecessityTests(unittest.TestCase):
+    def test_subject_populations_separate_staff_tenant_review_fixtures_and_future_residents(
+        self,
+    ) -> None:
+        rep = register_report({})
+        self.assertEqual(BY_ID["fixture_resident"].kind, "constructed")
+        self.assertEqual(
+            BY_ID["fixture_resident"].subject_population, "constructed_resident_fixture"
+        )
+        expected_actual_populations = {
+            "staff_identity": "current_staff_identity",
+            "tenant_identity": "current_tenant_identity",
+            "review_record": "current_review_record",
+            "future_real_resident": "future_real_resident",
+        }
+        for cid, pop in expected_actual_populations.items():
+            self.assertEqual(BY_ID[cid].kind, "actual")
+            self.assertEqual(BY_ID[cid].subject_population, pop)
+            self.assertIn(cid, rep["subject_populations"][pop]["class_ids"])
+        self.assertEqual(
+            rep["subject_populations"]["constructed_resident_fixture"]["class_ids"],
+            ["fixture_resident"],
+        )
+        for pop_id in SUBJECT_POPULATIONS:
+            if pop_id != "constructed_resident_fixture":
+                self.assertNotIn(
+                    "fixture_resident", rep["subject_populations"][pop_id]["class_ids"]
+                )
+        self.assertTrue(
+            HOSTING_REGION_VS_INFERENCE_RESIDENCY[
+                "uk_hosting_does_not_prove_uk_inference_residency"
+            ]
+        )
+        self.assertTrue(
+            rep["hosting_region_vs_inference_residency"][
+                "uk_hosting_does_not_prove_uk_inference_residency"
+            ]
+        )
+        self.assertTrue(
+            rep["hosting_region_vs_inference_residency"][
+                "synthetic_resident_does_not_exempt_actual_staff"
+            ]
+        )
+        self.assertFalse(
+            rep["hosting_region_vs_inference_residency"]["inference_residency_verified"]
+        )
+
+    def test_whole_system_inventory_covers_all_nine_actual_classes_and_surfaces(self) -> None:
+        actual_ids = {c.id for c in DATA_CLASSES if c.kind == "actual"}
+        self.assertEqual(
+            actual_ids,
+            {
+                "staff_identity",
+                "tenant_identity",
+                "review_record",
+                "future_real_resident",
+                "raw_document",
+                "prompt_output",
+                "audit_ledger",
+                "telemetry",
+                "provider_retained_copy",
+            },
+        )
+        for cid in actual_ids:
+            self.assertTrue(BY_ID[cid].processing_surfaces, cid)
+        rep = register_report({})
+        coverage = rep["whole_system_coverage"]
+        self.assertEqual(set(coverage), set(WHOLE_SYSTEM_SURFACES))
+        for surface in WHOLE_SYSTEM_SURFACES:
+            self.assertTrue(coverage[surface], surface)
+        self.assertEqual(
+            required_gates(BY_ID["provider_retained_copy"]),
+            ("LAWFUL_BASIS", "RETENTION", "ERASURE", "TRANSFER"),
+        )
+
+    def test_whole_system_task_manifests_cover_all_seven_plus_legacy_tasks(self) -> None:
+        required_tasks = {
+            "rule_lookup",
+            "check_explain",
+            "alert_triage",
+            "agent_chat",
+            "look_at_attachment",
+            "intake_summary",
+            "case_brief",
+            "read_document",
+        }
+        self.assertTrue(required_tasks <= set(TASKS))
+        for name, spec in TASKS.items():
+            for key in (
+                "purpose",
+                "audience",
+                "necessity",
+                "prohibited",
+                "permitted_fields",
+                "fields",
+            ):
+                self.assertTrue(spec[key], f"{name}:{key}")
+            self.assertEqual(spec["permitted_fields"], spec["fields"], name)
+            for fname, rule in spec["permitted_fields"].items():
+                field_type, bound = rule
+                self.assertIn(field_type, (str, int), f"{name}:{fname}")
+                self.assertGreater(bound, 0, f"{name}:{fname}")
+
+    def test_user_permission_never_establishes_task_necessity_or_bypasses_bounds(self) -> None:
+        sample_valid: dict[str, dict[str, Any]] = {
+            "rule_lookup": {"card_id": "RC-2035", "provision_id": "PAS2035-8.2"},
+            "check_explain": {"card_id": "C-1", "as_of": "2026-11-15"},
+            "alert_triage": {"alert_id": "ALT-1", "status": "open"},
+            "agent_chat": {"case_id": "ZF-1", "role": "Retrofit Coordinator"},
+            "look_at_attachment": {"doc_id": "D-1", "derivative": "reviewed_redacted"},
+            "intake_summary": {"case_id": "ZF-1", "stage": "Intake", "priority_band": "routine"},
+            "case_brief": {"case_id": "ZF-1", "stage": "Survey", "waiting_days": 5},
+        }
+        for task_name, valid_body in sample_valid.items():
+            empty_res = validate_task_payload(task_name, {}, user_permission_granted=True)
+            self.assertFalse(empty_res["permitted"], task_name)
+            self.assertFalse(empty_res["user_permission_establishes_necessity"], task_name)
+
+            perm_only = validate_task_payload(
+                task_name,
+                {"user_permission_granted": True, "resident_name": "Jane Doe", "health": "COPD"},
+                user_permission_granted=True,
+            )
+            self.assertFalse(perm_only["permitted"], task_name)
+            self.assertIn("health", perm_only["special_category_dropped"])
+            self.assertNotIn("COPD", str(perm_only))
+
+            mixed = validate_task_payload(
+                task_name,
+                {
+                    **valid_body,
+                    "medical": "oxygen",
+                    "undeclared_extra": "drop-me",
+                },
+                user_permission_granted=True,
+            )
+            self.assertTrue(mixed["permitted"], task_name)
+            self.assertFalse(mixed["user_permission_establishes_necessity"], task_name)
+            self.assertNotIn("undeclared_extra", mixed["fields"])
+            self.assertIn("medical", mixed["special_category_dropped"])
+            self.assertNotIn("oxygen", str(mixed))
+
+        bool_int = validate_task_payload(
+            "case_brief", {"waiting_days": True}, user_permission_granted=True
+        )
+        self.assertFalse(bool_int["permitted"])
+        self.assertEqual(bool_int["rejected"], ["waiting_days"])
+
+        unknown_task_constructed = model_dispatch(
+            "fixture_resident",
+            {},
+            task="unapproved_freeform",
+            payload={"prompt": "hi"},
+            user_permission_granted=True,
+        )
+        self.assertFalse(unknown_task_constructed["permitted"])
+        self.assertFalse(unknown_task_constructed["user_permission_establishes_necessity"])
+
+        bad_payload_actual = model_dispatch(
+            "prompt_output",
+            refs("prompt_output"),
+            task="agent_chat",
+            payload={"resident_name": "Disallowed"},
+            user_permission_granted=True,
+        )
+        self.assertFalse(bad_payload_actual["permitted"])
+        self.assertFalse(bad_payload_actual["user_permission_establishes_necessity"])
+
+
+class IntactAttachmentDispatchControlTests(unittest.TestCase):
+    def test_storage_permission_never_approves_intact_attachment_dispatch(self) -> None:
+        env = refs("raw_document")
+        for deriv in (None, "", "intact", "raw", "unreviewed_ocr"):
+            decision = dispatch_attachment_to_model(
+                env,
+                derivative=deriv,
+                storage_permission_granted=True,
+                user_permission_granted=True,
+                case_id="ZF-1",
+                doc_id="D-1",
+            )
+            self.assertFalse(decision["permitted"], str(deriv))
+            self.assertFalse(decision["storage_approves_ai_dispatch"])
+            self.assertFalse(decision["user_permission_establishes_necessity"])
+            self.assertIn("manual", decision["manual_path"].lower())
+
+        no_rescue = dispatch_attachment_to_model(
+            env,
+            derivative=CONSTRUCTED_DERIVATIVE,
+            scoped_necessity_ref="NEC-2026-99",
+            storage_permission_granted=True,
+            user_permission_granted=True,
+        )
+        self.assertFalse(no_rescue["permitted"])
+
+    def test_reviewed_redacted_derivative_and_scoped_necessity_ref_boundaries(self) -> None:
+        env = refs("raw_document")
+        missing_reviewer = dispatch_attachment_to_model(
+            env,
+            derivative="reviewed_redacted",
+            storage_permission_granted=True,
+        )
+        self.assertFalse(missing_reviewer["permitted"])
+
+        bad_reviewer_not_rescued = dispatch_attachment_to_model(
+            env,
+            derivative="reviewed_redacted",
+            redaction_reviewer_id="synth-reviewer-1",
+            redaction_review_id="RED-1",
+            scoped_necessity_ref="NEC-2026-10",
+            storage_permission_granted=True,
+        )
+        self.assertFalse(bad_reviewer_not_rescued["permitted"])
+
+        approved_derivative = dispatch_attachment_to_model(
+            env,
+            derivative="reviewed_redacted",
+            redaction_reviewer_id="rlo@zava.example",
+            redaction_review_id="RED-2026-10",
+            payload={"doc_id": "D-1", "derivative": "reviewed_redacted"},
+        )
+        self.assertTrue(approved_derivative["permitted"])
+        self.assertEqual(approved_derivative["approval_basis"], "reviewed_redacted")
+        self.assertFalse(approved_derivative["storage_approves_ai_dispatch"])
+
+        approved_scoped = dispatch_attachment_to_model(
+            env,
+            derivative="intact",
+            scoped_necessity_ref="NEC-2026-22",
+            storage_permission_granted=True,
+        )
+        self.assertTrue(approved_scoped["permitted"])
+        self.assertEqual(approved_scoped["approval_basis"], "scoped_necessity_ref")
+
+        for synth_ref in ("SYNTH-NEC-1", "synth-nec-lower"):
+            denied_synth = dispatch_attachment_to_model(
+                env,
+                derivative="intact",
+                scoped_necessity_ref=synth_ref,
+                storage_permission_granted=True,
+            )
+            self.assertFalse(denied_synth["permitted"], synth_ref)
+
+        bad_exc_not_rescued = dispatch_attachment_to_model(
+            env,
+            derivative="intact",
+            necessity_exception={"reference": "SYNTH-1"},
+            scoped_necessity_ref="NEC-2026-22",
+            case_id="ZF-1",
+            doc_id="D-1",
+        )
+        self.assertFalse(bad_exc_not_rescued["permitted"])
+
+        active_env = {MODE_ENV: "actual", **env}
+        self.assertIsNotNone(
+            dispatch_hold(
+                "raw_document",
+                active_env,
+                storage_permission_granted=True,
+                user_permission_granted=True,
+            )
+        )
+        self.assertIsNone(
+            dispatch_hold(
+                "raw_document",
+                active_env,
+                scoped_necessity_ref="NEC-2026-22",
+            )
+        )
+
+
+class RightsRequestLedgerPersistenceTests(unittest.TestCase):
+    def test_rights_ledger_persists_in_store_and_json_file_roundtrip(self) -> None:
+        received = datetime(2026, 1, 31, 9, 30, tzinfo=UTC)
+        as_of_open = datetime(2026, 2, 15, 12, 0, tzinfo=UTC)
+        answered_on_time = datetime(2026, 2, 27, 16, 0, tzinfo=UTC)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            seed_path = Path(tmp) / "seed.json"
+            seed_path.write_text(
+                json.dumps({"cases": [], "staff": [], "recommendations": [], "audit": []}),
+                encoding="utf-8",
+            )
+            live_path = Path(tmp) / "live.json"
+            json_ledger_path = Path(tmp) / "rights-ledger.json"
+            store: Any = store_module.Store(str(seed_path), live_path=str(live_path))
+
+            rec = record_rights_request(
+                store,
+                request_id="DSR-2026-001",
+                kind="access",
+                subject_population="current_staff_identity",
+                subject_key="SUBJ-SECRET-STAFF-99",
+                received_at=received,
+                actor="dpo@zava.example",
+                notes_ref="SAR-INTAKE-REF-001",
+            )
+            self.assertEqual(rec["id"], "DSR-2026-001")
+            self.assertEqual(rec["request_id"], "DSR-2026-001")
+            self.assertEqual(rec["due_at"], "2026-02-28T09:30:00+00:00")
+
+            log_rights_action(
+                store,
+                "DSR-2026-001",
+                action="locate",
+                actor="dpo@zava.example",
+                at=as_of_open,
+                target_scope="staff_identity_and_reviews",
+                record_count=3,
+            )
+            log_rights_action(
+                store,
+                "DSR-2026-001",
+                action="export",
+                actor="dpo@zava.example",
+                at=as_of_open,
+                target_scope="staff_identity_and_reviews",
+                record_count=2,
+            )
+            open_status = rights_status(store, as_of_open)
+            self.assertTrue(open_status["persisted"])
+            self.assertEqual(open_status["requests"][0]["state"], "open")
+
+            answer_rights_request(
+                store,
+                "DSR-2026-001",
+                actor="dpo@zava.example",
+                answered_at=answered_on_time,
+                summary_ref="SAR-BUNDLE-001",
+            )
+            self.assertNotIn("SUBJ-SECRET-STAFF-99", json.dumps(store.data.get("audit", [])))
+
+            reloaded_store: Any = store_module.Store(str(seed_path), live_path=str(live_path))
+            reloaded_status = rights_status(reloaded_store, answered_on_time)
+            self.assertEqual(reloaded_status["requests"][0]["state"], "answered")
+            self.assertEqual(reloaded_status["requests"][0]["action_kinds"], ["locate", "export"])
+
+            json_payload = RightsRequestLedger(reloaded_store).to_json()
+            json_ledger_path.write_text(json_payload, encoding="utf-8")
+            roundtrip_mem = RightsRequestLedger.from_json(json_payload)
+            self.assertEqual(roundtrip_mem.get("DSR-2026-001")["summary_ref"], "SAR-BUNDLE-001")
+
+            file_ledger = RightsRequestLedger(path=json_ledger_path)
+            file_status = rights_status(file_ledger, answered_on_time)
+            self.assertTrue(file_status["persisted"])
+            self.assertEqual(file_status["requests"][0]["id"], "DSR-2026-001")
+            self.assertEqual(file_status["requests"][0]["state"], "answered")
+
+    def test_rights_ledger_persists_across_sqlite_sqlstore_reopen(self) -> None:
+        received = datetime(2026, 10, 1, 10, 0, tzinfo=UTC)
+        erased_at = datetime(2026, 10, 12, 11, 0, tzinfo=UTC)
+        late_answer = datetime(2026, 11, 5, 15, 0, tzinfo=UTC)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            seed_path = Path(tmp) / "seed.json"
+            seed_path.write_text(
+                json.dumps({"cases": [], "staff": [], "recommendations": [], "audit": []}),
+                encoding="utf-8",
+            )
+            db_path = Path(tmp) / "zava.sqlite3"
+            sql_store: Any = sqlstore_module.SqlStore(str(seed_path), str(db_path))
+            try:
+                record_rights_request(
+                    sql_store,
+                    request_id="DSR-SQL-01",
+                    kind="erasure",
+                    subject_population="current_tenant_identity",
+                    subject_key="SUBJ-SECRET-TENANT-42",
+                    received_at=received,
+                    actor="dpo@zava.example",
+                )
+                log_rights_action(
+                    sql_store,
+                    "DSR-SQL-01",
+                    action="erase",
+                    actor="dpo@zava.example",
+                    at=erased_at,
+                    target_scope="tenant_session_and_prompt_cache",
+                    record_count=4,
+                    local_deleted=True,
+                    audit_retained_reason="Article 17(3)(b) statutory audit integrity",
+                )
+                answer_rights_request(
+                    sql_store,
+                    "DSR-SQL-01",
+                    actor="dpo@zava.example",
+                    answered_at=late_answer,
+                    summary_ref="ERASE-RESP-01",
+                    local_deleted=True,
+                )
+            finally:
+                sql_store.db.close()
+
+            reopened: Any = sqlstore_module.SqlStore(str(seed_path), str(db_path))
+            try:
+                rep = rights_status(reopened, late_answer)
+                self.assertTrue(rep["persisted"])
+                self.assertEqual(len(rep["requests"]), 1)
+                row = rep["requests"][0]
+                self.assertEqual(row["id"], "DSR-SQL-01")
+                self.assertEqual(row["state"], "answered_late")
+                self.assertTrue(row["local_deleted"])
+                self.assertFalse(row["provider_erasure_confirmed"])
+                self.assertEqual(rep["local_deleted_not_provider_erased"], ["DSR-SQL-01"])
+                self.assertNotIn(
+                    "SUBJ-SECRET-TENANT-42", json.dumps(reopened.data.get("audit", []))
+                )
+            finally:
+                reopened.db.close()
+
+    def test_rights_ledger_never_represents_local_deletion_as_provider_erasure(self) -> None:
+        ledger = RightsRequestLedger()
+        received = datetime(2026, 11, 1, 8, 0, tzinfo=UTC)
+        now = datetime(2026, 11, 10, 8, 0, tzinfo=UTC)
+
+        rec = ledger.record_request(
+            request_id="DSR-ERASE-1",
+            kind="erasure",
+            subject_population="current_staff_identity",
+            subject_key="staff-ref-1",
+            received_at=received,
+            actor="dpo@zava.example",
+        )
+        self.assertFalse(rec["local_deleted"])
+        self.assertFalse(rec["provider_erasure_confirmed"])
+
+        after_erase = ledger.log_action(
+            "DSR-ERASE-1",
+            action="erase",
+            actor="dpo@zava.example",
+            at=now,
+            target_scope="local_prompt_output",
+            record_count=1,
+            local_deleted=True,
+        )
+        self.assertTrue(after_erase["local_deleted"])
+        self.assertFalse(after_erase["provider_erasure_confirmed"])
+        self.assertEqual(
+            after_erase["provider_erasure_status"],
+            "local_deleted_only_provider_erasure_unconfirmed",
+        )
+
+        answered = ledger.answer_request(
+            "DSR-ERASE-1",
+            actor="dpo@zava.example",
+            answered_at=now,
+            summary_ref="ERASE-LOCAL-ONLY-1",
+            local_deleted=True,
+        )
+        self.assertTrue(answered["local_deleted"])
+        self.assertFalse(answered["provider_erasure_confirmed"])
+
+        rep = rights_status(ledger, now)
+        self.assertEqual(rep["local_deleted_not_provider_erased"], ["DSR-ERASE-1"])
+        self.assertFalse(rep["requests"][0]["provider_erasure_confirmed"])
+
+        with self.assertRaises(ValueError):
+            ledger.log_action(
+                "DSR-ERASE-1",
+                action="erase",
+                actor="dpo@zava.example",
+                at=now,
+                provider_erasure_confirmed=True,
+            )
+        with self.assertRaises(ValueError):
+            rights_status(
+                [
+                    {
+                        "id": "BAD-1",
+                        "kind": "erasure",
+                        "received_at": "2026-11-01T00:00:00+00:00",
+                        "provider_erasure_confirmed": True,
+                    }
+                ],
+                now,
+            )
+        with self.assertRaises(ValueError):
+            RightsRequestLedger.from_json(
+                json.dumps(
+                    {
+                        "schema": "zava.rights_requests.v1",
+                        "requests": [
+                            {
+                                "id": "BAD-2",
+                                "request_id": "BAD-2",
+                                "kind": "erasure",
+                                "subject_population": "current_staff_identity",
+                                "subject_key": "k",
+                                "received_at": "2026-11-01T00:00:00+00:00",
+                                "due_at": "2026-12-01T00:00:00+00:00",
+                                "recorded_by": "dpo@zava.example",
+                                "provider_erasure_confirmed": True,
+                            }
+                        ],
+                    }
+                )
+            )
+        with self.assertRaises(ValueError):
+            ledger.record_request(
+                request_id="SYNTH-DSR-1",
+                kind="access",
+                subject_population="current_staff_identity",
+                subject_key="k",
+                received_at=received,
+                actor="dpo@zava.example",
+            )
 
 
 if __name__ == "__main__":

@@ -411,3 +411,57 @@ D8 above remain "Not recorded", `ZF_DATA_PROCESSING=actual` remains refused whil
 `DPO_LEGAL_APPROVED` is `False`, no retention period is approved for real or
 production personal data, and passing unit tests do not constitute DPO or Legal
 sign-off.
+
+## Whole-System Processing, Derivative Dispatch and Rights-Request Controls (2026-11-15, Refs #121)
+
+Deterministic local engineering update in `src/core/src/zava_forward/core/data_protection.py`
+and `src/core/src/zava_forward/core/sqlstore.py` extending the whole-system RAI
+processing inventory, task-necessity manifest, intact-attachment dispatch gate
+and persisted rights-request workflow. Decisions `D1` to `D8` and the unchecked
+DPO and Legal release gates above remain unapproved (`dpo_reviewed=False`).
+
+* Subject-population and residency separation: `DATA_CLASSES` separates
+  `fixture_resident` (`constructed`, `constructed_resident_fixture`) from nine
+  `actual` classes (`staff_identity`, `tenant_identity`, `review_record`,
+  `future_real_resident`, `raw_document`, `prompt_output`, `audit_ledger`,
+  `telemetry`, `provider_retained_copy`) across `current_staff_identity`,
+  `current_tenant_identity`, `current_review_record` and `future_real_resident`.
+  `register_report(env)` surfaces `whole_system_coverage` across inputs, raw
+  document/image bytes, prompts/outputs/citations, reviewer identity, audit,
+  telemetry/tokens, provider processing and provider retained copies, together
+  with `hosting_region_vs_inference_residency`
+  (`uk_hosting_does_not_prove_uk_inference_residency: True`, recording that UK
+  South application hosting does not establish UK model-inference, abuse-review
+  or provider retained-copy residency).
+* Whole-system task necessity (`TASKS` and `validate_task_payload`): every
+  declared AI task (`rule_lookup`, `check_explain`, `alert_triage`, `agent_chat`,
+  `look_at_attachment`, `intake_summary`, `case_brief`, `read_document`,
+  `funding_draft`, `priority`) records `purpose`, `audience`,
+  `permitted_fields` (`(type, max_length)`), `prohibited` and `necessity`.
+  `validate_task_payload` and `model_dispatch` enforce
+  `user_permission_establishes_necessity=False`: user permission alone never
+  authorizes an undeclared task, an empty payload, an out-of-bounds field or a
+  special-category field.
+* Intact document and image dispatch boundary (`dispatch_attachment_to_model`,
+  `model_dispatch`, `document_model_hold`): upload, storage or download
+  permission (`storage_permission_granted=True`) never authorizes sending intact
+  bytes to an external model (`storage_approves_ai_dispatch=False`). Model
+  dispatch requires non-synthetic class references plus either a human-reviewed
+  `reviewed_redacted` derivative (`redaction_reviewer_id` and
+  `redaction_review_id`) or a non-synthetic scoped necessity approval
+  (`scoped_necessity_ref` or validated `necessity_exception`); all failures
+  deny model dispatch and preserve `manual_path`.
+* Persisted rights-request ledger (`RightsRequestLedger`,
+  `record_rights_request`, `log_rights_action`, `answer_rights_request`,
+  `rights_status`): persists statutory requests (`access`, `rectification`,
+  `erasure`, `restriction`, `objection`, `portability`) in `Store`, `SqlStore`
+  (`meta` document `"rights_requests"`) or atomic JSON files with timezone-aware
+  receipt timestamps, one-calendar-month statutory deadlines, `locate`/`export`/`erase`
+  action logs and `subject_key`-free metadata audit entries. Local deletion
+  (`local_deleted=True`) is never represented as external model-provider
+  erasure (`provider_erasure_confirmed=False`; attempts to record confirmed
+  provider erasure from local state raise `ValueError`).
+* Open human gates (`Refs #121`): named DPO confirmation of per-class lawful
+  basis and Article 17(3) audit retention, Legal sign-off of retention periods
+  and processor/transfer terms (`DH-006`), and ratified live intake procedures
+  remain open before any real personal data processing.
