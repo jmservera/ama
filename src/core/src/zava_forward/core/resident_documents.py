@@ -108,6 +108,9 @@ def parse_document_facts(raw: Any) -> DocumentFacts:
 SCAN_TEXT = {
     "pending": "Warning: the file check has not finished. Staff need to check it.",
     "infected": "Error: the recorded file check flagged possible malware. Ask staff for help.",
+    "failed": (
+        "Error: the recorded file check failed and could not clear this file. Ask staff for help."
+    ),
     "mismatch": (
         "Error: the recorded file check says the contents do not match the file type. "
         "Ask staff which format to provide."
@@ -131,7 +134,10 @@ def document_answer(facts: DocumentFacts) -> tuple[str, tuple[str, ...]]:
     for request in facts.requests or ():
         if facts.documents is None:
             state = "Whether a document has been provided is unknown."
-        elif any(d.kind == request.kind and not d.generated for d in facts.documents):
+        elif any(
+            d.kind == request.kind and not d.generated and d.scan_status == "clean"
+            for d in facts.documents
+        ):
             state = "A presented document is recorded. Staff still need to check it."
         else:
             state = "Missing from the presented documents in this view."

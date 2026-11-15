@@ -15,6 +15,8 @@ from dataclasses import dataclass
 from datetime import UTC, date, datetime
 from typing import Any
 
+from .doc_controls import scan_status
+
 OWNER_ROLES = "DPO and Legal (named owners not yet recorded; issue #121 dependency)"
 MANUAL_PATH = "Handle the item manually; a named human decides. No model is used."
 GATES = ("LAWFUL_BASIS", "ART9", "RETENTION", "ERASURE", "TRANSFER", "NECESSITY")
@@ -513,6 +515,15 @@ def document_model_hold(
     )
     requires_deriv = bool(doc_map.get("requires_derivative"))
     is_uploaded_doc = isinstance(doc, Mapping) and doc.get("generated") is False
+    if (
+        isinstance(doc, Mapping)
+        and not doc.get("generated")
+        and ("scan" in doc or "scan_status" in doc)
+        and scan_status(doc) != "clean"
+    ):
+        return (
+            f"Document has not passed the content scan and cannot be sent to a model. {MANUAL_PATH}"
+        )
     is_actual = actual_mode(mapping)
     if is_actual:
         return dispatch_hold(

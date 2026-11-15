@@ -4,6 +4,8 @@ from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime, time, timedelta
 from typing import Any
 
+from .doc_controls import is_available_case_document
+
 VERSION = "work-queues-1"
 MEMBERSHIP_REVISION = 5
 UNKNOWN = "Unknown"
@@ -794,7 +796,11 @@ def context(
     freshness: list[dict[str, Any]] = []
     stale = False
     for kind, days in (("EPC", 30), ("Survey", 180)):
-        documents = [d for d in case.get("documents", []) if d.get("kind") == kind]
+        documents = [
+            d
+            for d in case.get("documents", [])
+            if d.get("kind") == kind and is_available_case_document(d)
+        ]
         doc = documents[-1] if documents else {}
         observed = instant(doc.get("at"))
         age = (now - observed).total_seconds() / 86400 if observed and observed <= now else None

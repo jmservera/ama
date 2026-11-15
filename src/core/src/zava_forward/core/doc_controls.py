@@ -27,7 +27,9 @@ import os
 import re
 import urllib.parse
 import xml.etree.ElementTree as ET
+from collections.abc import Mapping
 from datetime import date, datetime, timedelta
+from typing import Any
 
 from . import controls
 from .documents import AzureBlobDocumentStore, DocumentStoreError
@@ -41,6 +43,7 @@ MAGIC = {"pdf": (b"%PDF",), "png": (b"\x89PNG\r\n\x1a\n",), "jpg": (b"\xff\xd8\x
 DEFENDER_TAG = "Malware Scanning scan result"
 DEFENDER_CLEAN = "No threats found"
 DEFENDER_BAD = "Malicious"
+VERDICTS = ("clean", "pending", "infected", "mismatch", "failed")
 RETENTION_YEARS = {"EPC": 6, "Survey": 6, "Design": 6, "Consent": 3, "Funding evidence": 7, "Photo": 3, "Other": 1}
 RETENTION_LABEL = (f"{SYNTHETIC} placeholder period from the trigger; not an approved retention schedule. "
                    "The DPO and Legal set the real periods (PR-003, OD-14).")
@@ -132,9 +135,69 @@ def _scan_result(result):
     if (type(result) is not tuple or len(result) != 2
             or type(result[0]) is not str or type(result[1]) is not str):
         raise RuntimeError("The scanner returned a malformed result; the document remains unavailable.")
-    if result[0] not in ("clean", "pending", "infected", "mismatch"):
+    if result[0] not in VERDICTS:
         raise RuntimeError("The scanner returned an unsupported verdict; the document remains unavailable.")
     return result
+
+
+def _valid_verdict(value: Any) -> str | None:
+    return value if type(value) is str and value in VERDICTS else None
+
+
+def scan_status(doc: Any) -> str | None:
+    """Fail-closed malware scan status across nested scan and top-level scan_status."""
+    if not isinstance(doc, Mapping):
+        return None
+    has_scan = "scan" in doc
+    has_top = "scan_status" in doc
+    if not has_scan and not has_top:
+        return None
+    nested: str | None = None
+    if has_scan:
+        raw_scan = doc["scan"]
+        if not isinstance(raw_scan, Mapping):
+            return None
+        nested = _valid_verdict(raw_scan.get("status"))
+        if nested is None:
+            return None
+    top: str | None = None
+    if has_top:
+        top = _valid_verdict(doc["scan_status"])
+        if top is None:
+            return None
+    if has_scan and has_top and nested != top:
+        if nested == "clean":
+            return top
+        if top == "clean":
+            return nested
+        return None
+    return nested if has_scan else top
+
+
+def is_clean_document(doc: Any) -> bool:
+    return isinstance(doc, Mapping) and (doc.get("generated") is True or scan_status(doc) == "clean")
+
+
+def is_clean_upload(doc: Any) -> bool:
+    return isinstance(doc, Mapping) and not doc.get("generated") and scan_status(doc) == "clean"
+
+
+def is_available_case_document(doc: Any) -> bool:
+    if not isinstance(doc, Mapping):
+        return False
+    if doc.get("generated") is True:
+        return True
+    if doc.get("generated") is False or "scan" in doc or "scan_status" in doc:
+        return scan_status(doc) == "clean"
+    return True
+
+
+def is_rescan_pending(doc: Any) -> bool:
+    if not isinstance(doc, Mapping) or bool(doc.get("generated")):
+        return False
+    if "scan" not in doc and "scan_status" not in doc:
+        return True
+    return scan_status(doc) == "pending"
 
 
 class DocControlsMixin:
@@ -152,6 +215,8 @@ class DocControlsMixin:
 
     def scan_new_document(self, case_id, did, name, data, mime):
         """Scan a stored upload. Returns the scan record; deletes the blob and raises on a bad verdict."""
+        if self.scanner is None:
+            raise RuntimeError("No content scanner is configured; the document remains unavailable.")
         verdict, detail = _scan_result(self.scanner.scan(case_id, did, name, data, mime))
         if verdict in ("infected", "mismatch"):
             self.docstore.delete(case_id, did)
@@ -161,8 +226,7 @@ class DocControlsMixin:
 
     @staticmethod
     def require_clean(doc):
-        scan = doc.get("scan") or {}
-        if not doc.get("generated") and scan.get("status") != "clean":
+        if not is_clean_document(doc):
             raise DocumentUnavailable("This document is not available until it has passed the content scan.")
 
     def _remove_document(self, case_id, doc, action, who, detail):
@@ -180,34 +244,40 @@ class DocControlsMixin:
 
     def _scan_stored(self, case_id, doc, who, *, remove_bad=True):
         """Scan a stored document (caller holds the lock). A missing scan field counts as pending. Returns the scan record."""
+        if self.scanner is None:
+            raise RuntimeError("No content scanner is configured; the document remains unavailable.")
         data = self.docstore.get(case_id, doc["id"])
         verdict, detail = _scan_result(self.scanner.scan(case_id, doc["id"], doc["name"], data, doc["mime"]))
         if remove_bad and verdict in ("infected", "mismatch"):
             self._remove_document(case_id, doc, "document_quarantined_deleted", who, f"{doc['id']}: {doc['kind']}: {verdict}")
             raise ValueError("That file failed the content check and was removed.")
+        if hasattr(self, "_touch"):
+            self._touch(case_id)
         doc["scan"] = dict(status=verdict, scanner=self.scanner.name, at=datetime.now().isoformat(timespec="seconds"), detail=detail)
+        if "scan_status" in doc:
+            doc["scan_status"] = verdict
         self.audit(who, "document_rescanned", case_id, f"{doc['id']}: {verdict}")
         self.save()
         return doc["scan"]
 
     def ensure_scanned(self, case_id, doc, who="system"):
         """Rescan on first use when the scan is missing (stored before scanning existed) or pending."""
-        if doc.get("generated") or (doc.get("scan") or {}).get("status", "pending") != "pending":
+        if not is_rescan_pending(doc):
             return
         self._scan_stored(case_id, doc, who)
 
     def rescan_pending(self, who="system"):
         """Job entry point: rescan every missing or pending document. Returns counts."""
-        out = dict(checked=0, clean=0, pending=0, removed=0)
+        out = dict(checked=0, clean=0, pending=0, blocked=0, removed=0)
         with self.lock:
             for cid in list(self.cases):
                 for d in list(self.cases[cid]["documents"]):
-                    if d.get("generated") or (d.get("scan") or {}).get("status", "pending") != "pending":
+                    if not is_rescan_pending(d):
                         continue
                     out["checked"] += 1
                     try:
                         st = self._scan_stored(cid, d, who)["status"]
-                        out["clean" if st == "clean" else "pending"] += 1
+                        out[st if st in ("clean", "pending") else "blocked"] += 1
                     except ValueError:
                         out["removed"] += 1
                     except DocumentStoreError:
@@ -217,7 +287,7 @@ class DocControlsMixin:
     def rescan_document(self, user, case_id, doc_id):
         self._doc_role(user, "rescan")
         with self.lock:
-            doc = next((d for d in self._case(case_id)["documents"] if d["id"] == doc_id and not d["generated"]), None)
+            doc = next((d for d in self._case(case_id)["documents"] if d["id"] == doc_id and not d.get("generated")), None)
             if not doc:
                 raise KeyError(doc_id)
             return dict(self._scan_stored(case_id, doc, user["email"]))

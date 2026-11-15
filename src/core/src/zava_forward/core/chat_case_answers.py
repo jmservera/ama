@@ -9,6 +9,8 @@ from collections.abc import Callable, Mapping
 from functools import partial
 from typing import Any
 
+from .doc_controls import is_available_case_document
+
 VALUE_LIMIT = 240
 MAX_CITATIONS = 20
 TRUNCATED = "Further recorded detail is not shown here. Open the case card to see all of it."
@@ -188,7 +190,13 @@ def case_facts(detail: Mapping[str, Any], *, reason_visible: bool) -> dict[str, 
     for i, row in enumerate(_rows(detail.get("sensor_review_drafts"))[:4]):
         put(f"sensor.{i}.task_key", row.get("task_key"))
         put(f"sensor.{i}.state", row.get("state"))
-    kinds = sorted({str(d.get("kind")) for d in _rows(detail.get("documents")) if d.get("kind")})
+    kinds = sorted(
+        {
+            str(d.get("kind"))
+            for d in _rows(detail.get("documents"))
+            if is_available_case_document(d) and d.get("kind")
+        }
+    )
     put("documents", ", ".join(kinds) if kinds else "none recorded")
     return facts
 

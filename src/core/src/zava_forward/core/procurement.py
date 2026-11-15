@@ -21,6 +21,7 @@ from datetime import UTC, date, datetime
 from . import controls, gates, job_pack, projection
 from .appointments import AppointmentCommittedError, AppointmentMixin
 from .change_provenance import _actor
+from .doc_controls import is_clean_upload
 from .documents import DocumentStoreError
 from .workflows import MANAGER_ROLES, _now, _today
 
@@ -187,7 +188,7 @@ class ProcurementMixin(AppointmentMixin):
         cid, doc_id = details.get("source_case_id"), details.get("document_id")
         c = self.cases.get(cid)
         doc = next((d for d in c.get("documents", []) if d["id"] == doc_id), None) if c else None
-        if (not doc or doc.get("generated") or doc.get("scan", {}).get("status") != "clean"
+        if (not doc or not is_clean_upload(doc)
                 or str(doc.get("version")) != details.get("source_version") or not doc.get("content_sha256")):
             raise ValueError("Capacity source/version is missing, changed or unverified. Upload and check the original commitment document.")
         try:

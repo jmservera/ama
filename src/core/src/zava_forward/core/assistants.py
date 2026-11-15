@@ -20,6 +20,7 @@ from typing import Any
 
 from . import assistant_release as rel
 from .ai import may_carry_captured_readings
+from .doc_controls import is_available_case_document
 from . import (
     ai_consumption,
     continuity,
@@ -281,7 +282,7 @@ def capture(capability, c, procurement=None, sensors=None):
             [
                 pick(d, ("id", "kind", "version", "content_sha256", "at"))
                 for d in c.get("documents", [])
-                if d.get("kind") in kinds
+                if d.get("kind") in kinds and is_available_case_document(d)
             ],
             key=lambda d: str(d.get("id")),
         )
