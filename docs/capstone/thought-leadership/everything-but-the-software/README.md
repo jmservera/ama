@@ -13,8 +13,8 @@ The title is unchanged at the owner's request. The current
 study through its principal findings: largely stable retention, selective
 benefits from consolidation or review, and additional resource cost.
 The [Supplement](./main.pdf#page=45) retains the detailed results, uncertainty,
-calibration and execution record in the same 72-page document.
-The [source and digest register](./main.pdf#page=70) occupies the final
+calibration and execution record in the same 71-page document.
+The [source and digest register](./main.pdf#page=69) occupies the final
 three pages; full identifiers no longer interrupt the narrative.
 The supplement is additive: source-specific qualifications, detailed
 method/rival checks, the frozen prompt, deferred rates and provenance.
@@ -28,6 +28,8 @@ committed versions remain in Git at `80656f32`. No source evidence was discarded
 
 The [15 November narrative and TODO record](./anc/revision-report.md#narrative-learning-and-todo-reconciliation-15-november)
 records the current v22 delivery and the remaining evidence plan. The
+[author voice follow-up](./anc/revision-report.md#author-voice-follow-up-15-november)
+records the current first-person revision and its validation. The
 [15 November provenance and readability record](./anc/revision-report.md#provenance-and-readability-15-november)
 retains the preceding v21 delivery. The
 [final-results and chart interpretation record](./anc/revision-report.md#final-results-and-chart-interpretation-15-november)
@@ -102,6 +104,23 @@ reference checks pass, and selected rendered pages were inspected. The separate
 `narrative_learning_revision` binding preserves v21 and all earlier bindings.
 This focused editorial/tooling validation is not independent scientific review,
 hosted CI, employer clearance or arXiv acceptance.
+
+### Author Voice Follow-Up 15 November
+
+The case narrative uses first-person singular for the author's actions and
+reflections; the methods retain the participant-observer role, and formal
+author metadata and contribution statements retain the authors' names. The
+future-study discussion now states what the experiment assessed and what a
+follow-up design would need to examine. The study results, design and
+protocol are unchanged.
+
+The current 71-page PDF, Supplement start (page 45) and source-register pages
+(69-71) are recorded in the `author_voice_revision` binding, which preserves
+the preceding `narrative_learning_revision`. The focused authoring suite ran
+74 tests: 73 passed, and the native diagram exporter could not launch because
+its Playwright browser was unavailable. The structural checker passed.
+Two-pass pdfLaTeX compilation succeeded with two ignored glue-shrinkage
+diagnostics at `main.tex:1988`; selected pages were rendered and inspected.
 
 ### Provenance and Readability 15 November
 

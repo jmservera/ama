@@ -55,7 +55,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         )
         for name, (sha256, _) in PROMPTS.items():
             self.assertEqual(bindings["literal_inputs"][f"anc/{name}"], sha256)
-        for name, sha256 in bindings["narrative_learning_revision"]["source_sha256"].items():
+        for name, sha256 in bindings["author_voice_revision"]["source_sha256"].items():
             with self.subTest(source=name):
                 self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), sha256)
 
@@ -169,7 +169,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
 
     def test_judging_delivery_binding_preserves_the_historical_measurement_record(self):
         bindings = json.loads((ANC / "supplement-integration.json").read_text())
-        current = bindings["narrative_learning_revision"]
+        current = bindings["author_voice_revision"]
         finalization = bindings["finalization_revision"]
         runtime_flow = bindings["runtime_flow_revision"]
         historical = bindings["measurement_provenance_revision"]
@@ -178,7 +178,9 @@ class MeasurementProvenanceTests(unittest.TestCase):
             hashlib.sha256((PACKAGE / "main.pdf").read_bytes()).hexdigest(),
             current["delivery_sha256"],
         )
-        self.assertEqual(current["prior_delivery_revision"], "provenance_readability_revision")
+        self.assertEqual(current["prior_delivery_revision"], "narrative_learning_revision")
+        self.assertEqual(current["delivery_pages"], 71)
+        self.assertEqual(current["supplement_start_page"], 45)
         self.assertEqual(bindings["provenance_readability_revision"]["delivery_pages"], 70)
         self.assertEqual(bindings["chart_interpretation_revision"]["delivery_pages"], 70)
         self.assertEqual(bindings["chart_interpretation_revision"]["supplement_start_page"], 51)
@@ -580,7 +582,8 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("acquisition means implementing a required capability", prose)
         self.assertIn("identification bounds instead span the possible success rates", prose)
         self.assertIn("sampling uncertainty", prose)
-        self.assertIn("not an approved protocol", manuscript)
+        self.assertIn("offer design inputs for a future study", manuscript)
+        self.assertIn("require separate development and review", manuscript)
         self.assertNotIn("those options execution", manuscript)
 
 if __name__ == "__main__":

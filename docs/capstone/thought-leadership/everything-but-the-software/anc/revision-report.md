@@ -201,6 +201,38 @@ assisted narrative/source review, not independent human peer review or
 scientific, statistical, employer or venue certification. Browser re-export
 validation remains unavailable.
 
+## Author Voice Follow-Up 15 November
+
+The owner asked for direct first-person singular when the paper describes his
+case actions and reflections. The narrative now uses I/my for that account,
+identifies the author as participant-observer in the methods, and retains
+named author attribution in metadata and formal contributions. The future-study
+passage now states the bounded design that was evaluated and the questions and
+design work a follow-up can address. No results, study design or protocol
+changed.
+
+### Validation and Delivery
+
+Classification: focused editorial and authoring-test update. The active source
+and PDF hashes are recorded in the new `author_voice_revision` binding; the
+preceding `narrative_learning_revision` entry remains unchanged.
+
+* The PDF has 71 pages, the Supplement starts on page 45, and the source
+  register occupies pages 69-71. Pages 1, 8, 34, 36, 45 and 69-71 were
+  rendered and inspected.
+* `python3 -B anc/check_paper.py` passes structural checks. The 74-test
+  authoring run passed 73 tests; the native diagram-export test could not
+  launch because the required Playwright browser was unavailable.
+* Two-pass pdfLaTeX compilation succeeded. The log contains two ignored
+  infinite-glue-shrinkage diagnostics at `main.tex:1988`. PDF text extraction
+  confirms the revised passages and successful reference resolution.
+* Independent exact-head review, hosted CI, final author approval, employer
+  clearance and venue acceptance remain separate and unperformed.
+
+Work execution: Complete for the authorized author-voice and limitation
+wording revision. Assessment: scoped editorial review complete; this does not
+certify the paper's scientific claims or constitute independent peer review.
+
 ## Provenance and Readability 15 November
 
 ### Scope and Applied Findings

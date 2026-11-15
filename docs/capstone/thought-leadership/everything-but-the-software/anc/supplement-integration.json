@@ -383,6 +383,19 @@
     "unchanged_figure_revision": "chart_interpretation_revision",
     "validation_limits": "Inherited inputenc warning; browser exporter could not run because its required Playwright browser was unavailable. No independent exact-head review, hosted CI, clearance or venue acceptance is established."
   },
+  "author_voice_revision": {
+    "date": "2026-11-15",
+    "scope": "First-person singular for the participant-observer's case actions and reflections; future-study limitations stated through design scope. No experimental results or protocol changed.",
+    "prior_delivery_revision": "narrative_learning_revision",
+    "delivery_sha256": "8fc72c56d892fdf7be42a6f06c8c3880d51372e64ac2822d32887c4949c91908",
+    "delivery_pages": 71,
+    "supplement_start_page": 45,
+    "reviewed_pages": [1, 8, 34, 36, 45, 69, 70, 71],
+    "source_sha256": {
+      "main.tex": "8ace88a8a0d2de39cf58130d94f12db938092ee4049cb3a406f3571ce60058a9"
+    },
+    "validation_limits": "Two-pass pdfLaTeX completed with two ignored infinite-glue-shrinkage diagnostics at main.tex:1988. Structural checks pass; the native diagram-export test requires an unavailable Playwright browser. No independent exact-head review, hosted CI, clearance or venue acceptance is established."
+  },
   "restored_citation_keys": [
     "bacchelli2013review",
     "becker2025metr",

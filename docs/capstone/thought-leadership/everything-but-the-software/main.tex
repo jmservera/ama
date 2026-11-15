@@ -69,8 +69,8 @@ authors' own and do not necessarily reflect those of Microsoft.}\\[4pt]
 
 \begin{abstract}
 A working prototype became an unusable replacement despite extensive
-agent-assisted preparation and reviewed feature delivery. This
-practitioner-led case motivated a question: what does each feature leave
+agent-assisted preparation and reviewed feature delivery. My experience
+with this case motivated a question: what does each feature leave
 for the next? Five candidate mechanisms organise the account, with
 migration and deployment dependencies as rival explanations.
 A separate exploratory study asked whether ten sequential features
@@ -101,8 +101,8 @@ feedback loops; human--AI interaction; exploratory case study; experiment protoc
 % ===========================================================================
 \section{Introduction}\label{sec:intro}
 
-The practitioner could inspect completed issues and passing checks, but
-could not sign in and use the replacement system. Earlier, short exchanges
+I could inspect completed issues and passing checks, but could not sign in
+and use the replacement system. Earlier, short exchanges
 with agents had produced a working prototype; later, a coordinator and
 parallel workers delivered a more formal backlog while migration
 dependencies remained unresolved. That interruption, described below,
@@ -149,8 +149,8 @@ distinction between producing code and learning through working software
 sharpens the research question~\cite{beck2026prodacity,orosz2025beck}:
 what does a feature leave behind for the next one?
 
-The question arose in an architectural demonstrator developed by one
-practitioner with multiple agents. Research documents, business and product
+The question arose during my work on an architectural demonstrator developed
+with multiple agents. Research documents, business and product
 requirements and architecture decisions were built through sustained
 conversation, challenge and owner decisions. Design Thinking methods,
 including what-if scenarios, persona analysis and journey mapping, helped
@@ -161,7 +161,7 @@ The intended advantage was faster implementation of better-understood
 features, supported by explicit acceptance criteria and review.
 
 Extended autonomous sessions nevertheless left the replacement unusable for
-the participant. Renewed product-use feedback redirected implementation and
+me. Renewed product-use feedback redirected implementation and
 refactoring. This sequence motivates investigating how preparation and local
 completion checks translate into the behaviour inherited by later work.
 The repository, pull requests, append-only log and versioned coordinator
@@ -169,7 +169,7 @@ instructions retain the evolving delivery record~\cite{servera2026ama};
 the source package pins the evidence used here. The repository may be
 temporarily unavailable during the experiment embargo, after which the
 approved history and context are intended for release.
-The author's earlier
+My earlier
 experience with Aithena, a book-search project with PDF ingestion and
 a browser interface discussed separately in the supplement, and the PhotoCraft
 inspection selected after the motivating-case analysis have separate provenance in
@@ -265,7 +265,7 @@ Lulla et~al.~\cite{lulla2026protocol} and HVE Core's Minimum Viable Experiment m
 (Sections~\ref{sec:harness} and~\ref{sec:experiment}).
 \end{enumerate}
 
-The case concerns a migration and a configuration designed by Servera Bondroit, including
+The case concerns a migration and a configuration I designed, including
 delegated delivery and merge decisions. The case suggests hypotheses whose
 causal relationships remain to be tested. The primary comparison estimates a multi-component consolidation package
 against matched time and nominal-credit ceilings. The extra-allowance B--A
@@ -285,8 +285,8 @@ and~\ref{sec:protocollimits}.
 
 \subsection{Setting}
 
-The motivating project was an architectural training exercise developed by
-one practitioner acting as architect, developer and product owner.
+I developed the motivating architectural training exercise while acting as
+architect, developer and product owner.
 Its synthetic, multi-role service workflow combined documentary evidence,
 approvals, identity, data and external-service dependencies. The exercise
 required research, requirements, architecture, a delivery plan and a working
@@ -295,8 +295,8 @@ journey consequential even in a non-production system. No operational
 service or real resident data is evaluated here.
 % TODO(author): retain owner-reported manager approval and the supplied AICC acknowledgement of 14 November 2026; the owner corrected the earlier 27 October date. A response is expected by 29 November 2026, not guaranteed approval. Confirm that the applicable clearance process covers the final draft; CELA/final-version clearance remains pending.
 
-Agents performed most research synthesis, drafting and coding, with the
-practitioner steering scope and decisions. Several weeks of discovery and
+Agents performed most research synthesis, drafting and coding; I steered
+scope and decisions. Several weeks of discovery and
 requirements work preceded roughly a week of interactive MVP development
 and a ten-day autonomous delivery window. The project continued afterward;
 its current state and detailed chronology belong to the versioned repository
@@ -305,7 +305,7 @@ additional completion signal. Internal assessment wording is not reproduced.
 
 \subsection{Workflow and tools}
 
-GitHub Copilot and HVE Core first helped the practitioner learn what to
+GitHub Copilot and HVE Core first helped me learn what to
 build. Research agents assembled source snapshots and maintained syntheses
 in a knowledge base with an index, owner-curated memory and an append-only
 log. The Design Thinking coach and stakeholder-role agents then challenged
@@ -317,8 +317,8 @@ exercise; direct stakeholder research was still needed.
 As understanding changed, BRD and PRD builders, quality review and the ADR
 assistant helped turn conversations and owner decisions into revised
 requirements and architecture records. Disposable pilots and prototypes
-made candidate workflows tangible. Critiques and participant feedback
-informed a deployed MVP that the author used intermittently and refined
+made candidate workflows tangible. Critiques and my product-use feedback
+informed a deployed MVP that I used intermittently and refined
 through short feedback loops.
 
 The handoff to autonomous delivery changed how that understanding reached
@@ -347,7 +347,7 @@ recorded selectors and recalled interface labels are distinguished in the
 source package. The delivery record is consequently an evolving workflow.
 % TODO(author): check the remaining historical case CLI/reviewer/build identifiers against retained records when VM evidence becomes available; mark identifiers unavailable if never logged. Current versions and new sessions cannot reconstruct historical identifiers.
 
-Early worker sessions implemented directly, prompting the author to make
+Early worker sessions implemented directly, prompting me to make
 the full RPI sequence and committed tracking artefacts mandatory. Further
 instructions required evidence-backed acceptance ticks, scheduled monitoring
 and increasingly comprehensive local gates. Human decisions, approvals,
@@ -359,8 +359,8 @@ migration and procedural requirements therefore changed together.
 \subsection{Data and analysis}
 
 This exploratory single-case study follows the transition from interactive
-discovery and MVP use to backlog-mediated autonomous delivery. The author
-selected the case after encountering the unusable replacement and acts as
+discovery and MVP use to backlog-mediated autonomous delivery. I selected
+the case after encountering the unusable replacement and acted as
 participant-observer. Case-study guidance and the ACM SIGSOFT Empirical
 Standards inform the account~\cite{runeson2009guidelines,sigsoft2021standards}.
 
@@ -368,7 +368,7 @@ The original analysis and later follow-up use separate repository snapshots
 (source records \sourceref{R01} and \sourceref{R02} in the end register).
 Sources include the knowledge-base
 log and index, requirements, architecture decisions, coordinator definition,
-issues, pull requests and retained RPI records. The author's review adds
+issues, pull requests and retained RPI records. My review adds
 process clarification and an export of project issue states, retained as
 \nolinkurl{anc/project-insights-2026-11-01.csv}. Source dates, historical
 counts and extraction rules remain in the ancillary records. The main
@@ -379,8 +379,8 @@ lessons and AI-assisted interpretation of selected episodes. It did not
 include systematic entry-by-entry coding. Early log entries were
 reconstructed from history; later entries are contemporaneous project
 accounts. Specification review was selective. Participant recollection,
-committed source and execution evidence remain distinct, including in the
-author's fuller account of renewed feedback. The original source package
+committed source and execution evidence remain distinct, including in my
+fuller account of renewed feedback. The original source package
 retains missing score-to-release and deployed-journey links.
 
 External repositories and literature were selected for relevance to
@@ -447,7 +447,7 @@ replacement lacking identity, staff and model prerequisites. & Delivery
 failed to preserve a complete working journey. & Execute the same journey
 against versioned deployments and configurations. \\
 O2 & Pull requests and automated assessments recorded completion while
-participant sign-in remained blocked. & The completion signals covered a
+my sign-in remained blocked. & The completion signals covered a
 different or insufficiently linked outcome. & Link the assessed capability
 and release to the failed deployed task. \\
 O3 & Requirements and process records expanded through discovery and delivery;
@@ -458,16 +458,16 @@ O4 & Simplicity and deployment lessons were recorded, but later replacement
 work omitted previously working prerequisites. & Lesson availability and
 application may diverge. & Trace the relevant session inputs and whether
 the lesson was actionable or deliberately deferred. \\
-O5 & Coordinator rules formalised gates and delegated merging; the author
-continued resolving blockers and later requested stabilization. & Approval
+O5 & Coordinator rules formalised gates and delegated merging; I continued
+resolving blockers and later requested stabilization. & Approval
 activity and product-use feedback served different functions. & Compare
 outcome checks, steering decisions and subsequent implementation changes. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-Servera Bondroit selected the episodes, designed the coordinator and had an
-interest in successful delivery. Those roles favour a coherent retrospective
+I selected the episodes, designed the coordinator and had an interest in
+successful delivery. Those roles favour a coherent retrospective
 explanation. Experience-based beliefs can differ from project
 evidence~\cite{devanbu2016belief}; the same caution applies to AI-written
 records and AI-assisted synthesis. Independent checking of O1--O5 against
@@ -484,8 +484,8 @@ where a link still needs checking.
 \FloatBarrier
 \section{Exploratory testbed: observations}\label{sec:what}
 
-The interruption was concrete: a participant who had used the MVP could
-no longer complete the replacement's sign-in and service workflow.
+The interruption was concrete: I could no longer complete the replacement's
+sign-in and service workflow after using the MVP.
 Understanding how that happened requires following the work before the
 failure, through discovery, prototypes and the backlog handoff, as well as
 the feedback that followed it. Table~\ref{tab:timeline} summarises those
@@ -502,8 +502,8 @@ Phase & Activity & State inherited by later work \\
 Discovery, several weeks & Research, role-agent and Design Thinking challenge,
 what-if scenarios, persona and journey analysis; iterative BRD, PRD and ADR
 work. & A rich but evolving requirements and decision context. \\
-Interactive probes, about a week & Disposable prototypes, participant
-critique and short implementation/feedback cycles produce a used MVP. &
+Interactive probes, about a week & Disposable prototypes, my critique
+and short implementation/feedback cycles produce a used MVP. &
 Working journeys, simplicity lessons and deployment prerequisites. \\
 Backlog handoff & A backlog agent derives epics and user stories, criteria,
 dependencies and existing-coverage labels. & A formal work hierarchy that
@@ -511,7 +511,7 @@ selects implementation and review tasks. \\
 Autonomous delivery, about ten days & Parallel RPI workers deliver issues
 under a coordinator while migration and gate requirements evolve. & Merged
 changes and validation records; the replacement lacks a complete usable journey. \\
-Renewed steering and follow-up & The participant prioritises usable increments,
+Renewed steering and follow-up & I prioritise usable increments,
 functional checks, refinement and refactoring; stabilization is formalised. &
 Product-use feedback again shapes what subsequent work must establish. \\
 \bottomrule
@@ -529,11 +529,11 @@ The resulting BRDs, PRDs and ADRs were critiqued and revised through further
 conversation. These activities changed the proposed solution before and
 during implementation.
 
-Disposable prototypes then made some assumptions tangible. Participant
-critique and an agent-assisted simplicity review produced requirements for
+Disposable prototypes then made some assumptions tangible. My critique
+and an agent-assisted simplicity review produced requirements for
 clear ownership, a visible next action, understandable blockers and manual
 paths that remained usable without AI. Short feedback cycles reshaped an
-MVP around those lessons. The author reports using it intermittently,
+MVP around those lessons. I used it intermittently,
 including sign-in, synthetic data and model-backed assistant paths.
 
 The backlog manager drew on this accumulated context to generate the work
@@ -553,10 +553,10 @@ issues and workers satisfied local implementation and review obligations.
 At the same time, a source-layout migration replaced the used MVP. The
 replacement passed bounded engineering checks, including health, restart
 and unauthenticated-request rejection, but lacked identity, staff and model
-prerequisites needed for the participant's complete workflow. Restoring a
+prerequisites needed for my complete workflow. Restoring a
 public entry point left sign-in dependencies unresolved.
 
-The author continued supplying approvals and resolving technical blockers.
+I continued supplying approvals and resolving technical blockers.
 What diminished was the ability to exercise realistic work in the
 replacement and use that experience to steer the next change. Missing
 prerequisites became further issues, each with research, planning, review
@@ -598,10 +598,10 @@ behaviour depended on task framing, context and opportunities for challenge. \\
 
 \subsection{Renewed feedback and follow-up}\label{sec:currentstatus}
 
-The participant requested a usable increment, prioritised feedback-first
-work and asked the coordinator to pause, exercise the accumulated
-functionality and refactor. The participant's account places this renewed
-feedback at the turning point in making the replacement useful. Subsequent
+I requested a usable increment, prioritised feedback-first work and asked
+the coordinator to pause, exercise the accumulated functionality and
+refactor. My account places this renewed feedback at the turning point in
+making the replacement useful. Subsequent
 source history records implementation refinement and recurring stabilization
 checkpoints. The retained checkpoint review qualifies its local engineering
 evidence and leaves live acceptance separate.
@@ -652,8 +652,8 @@ Process-gate inflation & Broad per-push gates, constrained validation
 resources and an exception for a small correction & Bainbridge;
 ironies of generative AI; Murphy; Goldratt & Gate time per change; review
 minutes per merge \\
-Feedback starvation & A used MVP was frozen; the participant could not
-exercise the replacement and requested usable increments & XP; incremental delivery;
+Feedback starvation & A used MVP was frozen; I could not exercise the
+replacement and requested usable increments & XP; incremental delivery;
 tracer bullets; Agile Manifesto; DORA & Time to first human use; age of last
 usable increment \\
 \bottomrule
@@ -669,7 +669,7 @@ If realistic product use is delayed, the loop can continue without exposing
 the missing journey. Table~\ref{tab:theory} in the Supplement relates this
 account to accumulation, transmission and correction.
 
-Before the participant's checkpoint request, the loop had no scheduled
+Before I requested a checkpoint, the loop had no scheduled
 cumulative consolidation step.
 Its large restructuring, the source-layout migration, was planned as backlog
 items; local refactoring could still occur within individual issues.
@@ -689,7 +689,7 @@ The mechanisms suggest a possible reinforcing loop
 (Figure~\ref{fig:loop}). In this case a large specification accompanied a
 large backlog and parallel sessions. Artefact-based gates generated more
 documents; some recorded lessons were absent from later briefs; regressions
-were not exposed through routine product-use feedback. The author responded to gaps with more rules,
+were not exposed through routine product-use feedback. I responded to gaps with more rules,
 criteria and gates. That sequence is consistent with reinforcement, but does
 not establish each causal link. A running increment and a human
 checkpoint are proposed conditions of every cycle, to test whether they interrupt it.
@@ -730,10 +730,10 @@ AI-agent configuration nor diagnoses this case's sign-in failure.
 Construct validity is limited by whitespace counts, lexical indicators and
 selectively reviewed records. Appropriate caution can raise boundary-phrase density;
 missing references do not prove missing knowledge. As coordinator designer,
-participant and analyst, the author selected the episodes and may favour a coherent
+participant and analyst, I selected the episodes and may favour a coherent
 retrospective explanation. AI synthesis is not an independent observer.
 Public records support recomputation but not independent corroboration of
-every statement. The single practitioner-designed exercise and purposively selected
+every statement. The single exercise I designed and purposively selected
 external examples do not establish prevalence or general causal effects.
 The separate experiment has its own identification limits in
 Section~\ref{sec:protocollimits}.
@@ -870,14 +870,14 @@ succeed.
 
 \subsection{Human judgement and reflective work}
 
-The participant supplied several kinds of reflective
-work: choosing what not to build, recognising the unusable replacement and
-deciding which earlier lessons mattered. Naur's theory-building account
+I supplied several kinds of reflective work: choosing what not to build,
+recognising the unusable replacement and deciding which earlier lessons
+mattered. Naur's theory-building account
 helps describe that retained understanding~\cite{naur1985theory}.
 Beck's distinction between visible output and understanding supplies another
-framing~\cite{beck2026mathematicians}. These judgements were supplied by the author
-during the case. Whether agents could make comparable judgements remains
-open. The narrower
+framing~\cite{beck2026mathematicians}. These case-specific judgements
+motivate a further question: could agents make comparable judgements?
+The narrower
 experimental question is whether bounded post-feature correction preserves
 behaviour and later changeability.
 
@@ -892,9 +892,9 @@ rate concerns a different task and setting from coding
 This challenges an assumption that retaining approval alone preserves
 independent judgment, not the case's reported decisions. The article proposes
 asking experts for their view first or making the best case for each option
-\cite[What this means]{herdagdelen2026judgment}. Separately, recording alternatives
-and a human's reasons before accepting an agent's recommendation is the
-present author's proposed safeguard, not a remedy evaluated in that study.
+\cite[What this means]{herdagdelen2026judgment}. Separately, I propose
+recording alternatives and a human's reasons before accepting an agent's
+recommendation. Its effectiveness remains to be tested.
 
 \subsection{Can another agent restore futures?}
 
@@ -943,13 +943,13 @@ remain separate questions in the ancillary research agenda.
 
 \subsection{What this study teaches a future experiment}\label{sec:futureexperiment}
 
-The result surprised the practitioner who motivated the study. Servera
-Bondroit expected the experiment to expose decay and was disappointed
-that it largely retained previously acquired behaviour. His interpretation
-is that current model capability may require more complex, longer work to
-expose the suspected burden. That remains an explanation to test: this
-study compares neither model generations nor task horizons. A follow-up
-must allow stable retention to remain a legitimate result.
+The result surprised me. I had expected the experiment to expose decay and
+was disappointed that it largely retained previously acquired behaviour.
+I read this result as a reason to test the suspected burden with longer,
+more complex work. The experiment examined a ten-feature horizon across
+three current models; future research can vary task duration and complexity
+to test this explanation. A follow-up must allow stable retention to remain
+a legitimate result.
 
 S1 nevertheless changed what needs measuring. Acquiring a feature,
 preserving an established contract and adapting to a new requirement need
@@ -960,21 +960,20 @@ changing the continuing delivery trajectory. More coupled brownfield work
 could test whether implementation burden or loss emerges over longer
 horizons, while keeping genuine acquisition failures visible.
 
-The review-only result also changes the treatment question. The author
-suspects that the review stage of HVE Core's research, plan, implement and
-review workflow may already supply useful correction. The present
-experiment used bounded feature and post-feature sessions with discovery
-disabled; it did not compare the full RPI workflow with feature-only
-delivery. A future paper should examine that comparison, while separating
-the full workflow's effect from review, refactoring, extra tests and
-handover content where feasible. RPI's possible sufficiency is a hypothesis,
-not an established explanation for these outcomes.
+The review-only result also changes the treatment question. I suspect that
+the review stage of HVE Core's research, plan, implement and review workflow
+may already supply useful correction. This experiment evaluated bounded
+feature and post-feature sessions with discovery disabled. A future study can
+estimate whether the full RPI sequence improves correction over feature-only
+delivery, while separating the effects of review, refactoring, extra tests
+and handover content where feasible.
 
 The earlier numerical design candidates remain in Supplement
 Section~\ref{app:futuredesign}, including longer trajectories, branch-isolated
-change requests and component comparisons. They are starting points for a
-new design, not an approved protocol. Longer, more complex tasks are
-expected to require substantially more tokens; the authors are postponing
+change requests and component comparisons. They offer design inputs for a
+future study; its task scale, resource needs and protocol require separate
+development and review. Longer, more complex tasks are expected to require
+substantially more tokens; the authors are postponing
 that study pending resource estimates and spending approval. A later paper
 would need a separately reviewed and prospectively registered protocol,
 aligned randomisation and uncertainty analysis, and quality-matched costs.
@@ -1107,18 +1106,18 @@ an earlier Coach-guided assessment used a general-purpose agent context.
 The package README and \nolinkurl{anc/revision-report.md} retain each
 revision's tools, source-access limits, superseded findings and validation.
 The empirical update used the completed report (\sourceref{R17}--\sourceref{R21})
-and the researcher's audited recovery records. Editorial assistance did not
+and my audited recovery records. Editorial assistance did not
 collect new candidate or judge outcomes or change scoring or registration.
 
-Servera Bondroit disclosed using AI assistance to triage failures and
+I disclosed using AI assistance to triage failures and
 mismatches in the 90-row human-calibration spot-check, rather than inspecting
 every passing row individually. The calibration remains incomplete and
 is not independent human reliability evidence. AI-assisted interpretation
 of the case likewise supplies no independent empirical coding or replication.
 
-Servera Bondroit supplied the case observations, selected the case and made the analytical
-judgements, and reports checking the repository figures and Azure expenditure
-and confirming the Beck paraphrase after reading the essay and watching the talk.
+I supplied the case observations, selected the case and made the analytical
+judgements. I also checked the repository figures and Azure expenditure and
+confirmed the Beck paraphrase after reading the essay and watching the talk.
 The supplied automatic critique and this revision's focused source and
 arithmetic checks are assisted evidence assessments, not independent human
 verification. The package records their coverage and unavailable sources.
@@ -1133,8 +1132,8 @@ actual submission venue's policy, which has not been assessed here.
 \section*{Competing interests}
 Both authors are Microsoft employees. The study concerns Microsoft and
 GitHub tools, and its historical case arose within a Microsoft training
-programme. Servera Bondroit designed the coordinator and analysed a case
-in which he was a participant; Cabezas Martin conducts experimental execution
+programme. I designed the coordinator and analysed a case in which I
+participated; Cabezas Martin conducts experimental execution
 and data collection separately from those roles. These professional and
 participant-observer interests remain relevant despite the operational
 separation. The authors' views do not imply company endorsement.
@@ -1146,7 +1145,7 @@ The repository analysed was publicly accessible during the case at
 \url{https://github.com/jmservera/ama}. The original case and later follow-up
 use separate snapshots (\sourceref{R01}, \sourceref{R02}); the source package
 retains the case evidence index, repository observations and metrics, missing
-execution links, analysis scripts and supplementary practitioner context.
+execution links, analysis scripts and supplementary participant-observer context.
 These records distinguish retained source from participant recollection;
 live issue states can change independently. Full source identifiers and
 file digests appear once in Table~\ref{tab:source-register} at the end of
