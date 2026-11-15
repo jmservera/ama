@@ -44,6 +44,36 @@ CHECK_MAX_AGE = timedelta(hours=1)
 NO_AUTOMATION = (
     "Recovery is a recorded human request. Nothing is replayed or released automatically."
 )
+OUTAGE_NEXT_STEPS: dict[str, tuple[str, ...]] = {
+    "outage": (
+        "Continue manual case work and keep urgent safety or hazard duties on the human route.",
+        "Check with the named incident or service owner before asking a human to re-run "
+        "affected work.",
+        NO_AUTOMATION,
+    ),
+    "unknown": (
+        "Do not treat missing or stale checks as healthy; verify source records manually "
+        "before acting.",
+        "Keep urgent safety or hazard duties on the human route.",
+        NO_AUTOMATION,
+    ),
+    "no_known_outage": (
+        "Review scoped items against original source records before holding, resolving or "
+        "requesting a human re-run.",
+        NO_AUTOMATION,
+    ),
+}
+
+
+def _correlation_id(item_id: str, original: object, extra: Mapping[str, Any]) -> str:
+    if isinstance(original, Mapping):
+        raw = original.get("correlation_id")
+        if isinstance(raw, str) and raw.strip():
+            return raw.strip()
+    ref = extra.get("ref")
+    if isinstance(ref, str) and ref.strip():
+        return ref.strip()
+    return item_id
 
 
 def _text(value: object, label: str) -> str:
@@ -96,13 +126,17 @@ class ExceptionQueue:
         while f"EX-{seq:03d}" in self._items:
             seq += 1
         item_id = f"EX-{seq:03d}"
+        resolved_owner = self._owner(kind, owner)
+        owner_role = OWNER_ROLE[kind]
+        correlation_id = _correlation_id(item_id, original, extra)
         rec: Record = {
             "id": item_id,
             "kind": kind,
-            "owner": self._owner(kind, owner),
-            "owner_role": OWNER_ROLE[kind],
+            "owner": resolved_owner,
+            "owner_role": owner_role,
             "summary": _text(summary, "Summary"),
             "status": "open",
+            "correlation_id": correlation_id,
             "original_source": deepcopy(original),
             "eligibility": UNKNOWN,
             "unresolved_eligibility": True,
@@ -112,8 +146,19 @@ class ExceptionQueue:
                 "automatic_release": False,
                 "note": NO_AUTOMATION,
             },
+            "recovery_context": {
+                "correlation_id": correlation_id,
+                "ref": extra.get("ref"),
+                "owner": resolved_owner,
+                "owner_role": owner_role,
+                "allowed_actions": list(ALLOWED_ACTIONS[kind]),
+                "runbook": RUNBOOK[kind],
+                "automatic_replay": False,
+                "automatic_release": False,
+            },
             "runbook": RUNBOOK[kind],
             "recovery": None,
+            "audit_trail": [],
             **extra,
         }
         self._items[item_id] = rec
@@ -146,7 +191,7 @@ class ExceptionQueue:
             for item in self._items.values():
                 if item["kind"] == kind and item.get("ref") == key:
                     return deepcopy(item)
-        extra: Record = {"values": shown}
+        extra: Record = {"values": shown, "resolution_owner": self._owner(kind, owner)}
         if key is not None:
             extra["ref"] = key
         return self._add(kind, owner, summary, original_source, extra)
@@ -173,7 +218,7 @@ class ExceptionQueue:
             for item in self._items.values():
                 if item["kind"] == kind and item.get("ref") == key:
                     return deepcopy(item)
-        extra: Record = {"error": _text(error, "Error")}
+        extra: Record = {"error": _text(error, "Error"), "failure_category": kind}
         if key is not None:
             extra["ref"] = key
         return self._add(kind, owner, summary, original_source, extra)
@@ -217,6 +262,16 @@ class ExceptionQueue:
         if action == "resolve_by_owner" and actor != item["owner"]:
             self._log(actor, "denied", item_id, "Only the named owner resolves.")
             raise PermissionError("Only the named resolution owner can resolve this item.")
+        at = self._clock()
+        entry: Record = {
+            "at": at,
+            "by": actor,
+            "action": action,
+            "reason": why,
+            "replayed": False,
+            "released": False,
+        }
+        item["audit_trail"].append(entry)
         item["status"] = {
             "hold": "held",
             "request_rerun": "rerun_requested",
@@ -225,15 +280,23 @@ class ExceptionQueue:
         item["recovery"] = {
             "action": action,
             "by": actor,
+            "at": at,
             "reason": why,
             "replayed": False,
             "released": False,
             "automatic_replay": False,
             "automatic_release": False,
             "note": NO_AUTOMATION,
+            "audit_trail": deepcopy(item["audit_trail"]),
         }
         self._log(actor, action, item_id, why)
         return deepcopy(item)
+
+    def record_detected_outage(self, component: str, note: str, since: str | None = None) -> None:
+        """Project an already-recorded continuity suspension or service outage onto the banner."""
+        name, why = _text(component, "Component"), _text(note, "Note")
+        started = _text(since, "Since") if since is not None and since.strip() else self._clock()
+        self._outages[name] = {"since": started, "note": why, "recovered": False}
 
     def set_outage(self, actor: str, component: str, note: str) -> None:
         if OPERATOR not in self._roles(actor):
@@ -277,7 +340,13 @@ class ExceptionQueue:
             )
         else:
             state, text = "no_known_outage", f"No outage recorded at last check ({last_checked})."
-        return {"state": state, "text": text, "components": down, "last_checked": last_checked}
+        return {
+            "state": state,
+            "text": text,
+            "components": down,
+            "last_checked": last_checked,
+            "next_steps": list(OUTAGE_NEXT_STEPS[state]),
+        }
 
     def access_report(self, actor: str) -> Record:
         """Visible roles and scope, plus the access audit limited to the actor's role scope."""
