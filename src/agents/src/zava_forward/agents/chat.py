@@ -11,10 +11,14 @@ so the panel can fall back to workflow-only handling.
 from __future__ import annotations
 
 import logging
+import uuid
 from collections.abc import Callable
+from contextlib import nullcontext
 from typing import Any
 
 from zava_forward.core.ai import count_dispatches
+from zava_forward.core.ai_consumption import CURRENT, CallContext, call_context, reference
+from zava_forward.core.ai_registry import CHAT_TASK
 from zava_forward.core.chat_panel import ModelReply, ModelUnavailable, valid_usage
 
 from zava_forward.agents.dispatch import AgentWorker
@@ -66,7 +70,17 @@ class ChatModel:
             raise unavailable("admission-check-failed") from None
         if denied:
             raise unavailable("activation-not-approved")
-        with count_dispatches() as witness:
+        outer = CURRENT.get()
+        if outer is None:
+            root = reference(uuid.uuid4().hex)
+            scope: Any = call_context(
+                CallContext(
+                    root, root, CHAT_TASK, "retrofit-case", reference(CHAT_TASK), reference(system)
+                )
+            )
+        else:
+            scope = nullcontext()
+        with scope, count_dispatches() as witness:
             envelope = self.worker.provider_call(system, prompt, self.max_tokens, self.timeout)
         usage = valid_usage(envelope.get("usage"))
         calls = witness.attempts

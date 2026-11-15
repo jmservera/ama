@@ -28,7 +28,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from zava_forward.core import ai_registry, chat_isolation, chat_panel, export_fields
+from zava_forward.core import ai_registry, chat_isolation, chat_panel, export_fields, rai_release
 from zava_forward.core.ai_registry import digest
 from zava_forward.core.chat_case_answers import RULES as WORKFLOW_RULES
 from zava_forward.core.chat_isolation import ChatIsolation
@@ -697,7 +697,7 @@ def call_authorization(
     a = auth or {}
     reasons = []
     owner = a.get("authorised_by")
-    if not isinstance(owner, str) or not owner.strip():
+    if not rai_release.named_human(owner):
         reasons.append("no named owner authorisation")
     for key, need, used in (("max_calls", calls, used_calls), ("max_tokens", tokens, used_tokens)):
         limit = a.get(key)

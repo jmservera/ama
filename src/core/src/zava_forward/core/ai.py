@@ -272,6 +272,9 @@ class Ai:
         if not ai_registry.is_registered(task):
             return out(text=template, source="template", model=None, validated=True, registered=False,
                        reason="AI feature is not registered; use the manual route")
+        if not ai_registry.is_dispatch_enabled(task):
+            return out(text=template, source="template", model=None, validated=True, enabled=False,
+                       reason="AI feature is disabled; use the manual route")
         if off:
             return out(text=template, source="template", model=None, validated=True, reason="workflow-only mode selected")
         dep = self.strong if strong else self.fast
@@ -290,7 +293,7 @@ class Ai:
         try:
             if ai_consumption.CURRENT.get() is None:
                 root = ai_consumption.reference(uuid.uuid4().hex)
-                context = ai_consumption.CallContext(root, root, task.replace("_", "-"), "retrofit-case",
+                context = ai_consumption.CallContext(root, root, ai_registry.consumption_capability(task), "retrofit-case",
                                                      self.configuration(dep, 0.3, 700),
                                                      ai_consumption.reference(ai_prompts.version(task)) if task in ai_prompts.PROMPTS else ai_consumption.reference(system))
                 with ai_consumption.call_context(context):
@@ -316,6 +319,15 @@ class Ai:
                 case_id=None, doc_id=None, resident_consent=None, doc=None):
         """Describe an uploaded document. Reads text and images; other types are stored only."""
         export_fields.scalars(dict(name=name, mime=mime), ("name", "mime"))
+        from . import ai_registry
+        if not ai_registry.is_registered("read_document"):
+            return dict(text="The file is stored. AI reading is not registered; add a short note about what it is.",
+                        source="template", model=None, validated=True, registered=False, task="read_document",
+                        reason="AI feature is not registered; use the manual route")
+        if not ai_registry.is_dispatch_enabled("read_document"):
+            return dict(text="The file is stored. AI reading is disabled; add a short note about what it is.",
+                        source="template", model=None, validated=True, enabled=False, task="read_document",
+                        reason="AI feature is disabled; use the manual route")
         system, instruction = ai_prompts.render("read_document", name=name)
         if mime.startswith("image/"):
             if mime not in IMAGE_TYPES or len(data) > MAX_IMAGE_BYTES:
@@ -354,7 +366,7 @@ class Ai:
                             reason="Release changed before dispatch; use the manual route.")
             if ai_consumption.CURRENT.get() is None:
                 root = ai_consumption.reference(uuid.uuid4().hex)
-                context = ai_consumption.CallContext(root, root, "read-document", "document",
+                context = ai_consumption.CallContext(root, root, ai_registry.consumption_capability("read_document"), "document",
                                                      self.configuration(self.strong, 0.3, 500),
                                                      ai_consumption.reference(ai_prompts.version("read_document")))
                 with ai_consumption.call_context(context):
