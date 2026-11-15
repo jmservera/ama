@@ -511,9 +511,7 @@ def summarize_ai_consumption_economics(
     # Step 1: Extract ledger-side state from raw ledger_records or precomputed consumption_report.
     ledger_state: dict[str, Any] | None = None
     if ledger_records is not None:
-        ledger_state = _reconcile_ledger(
-            ledger_records, begin=begin, finish=finish, cutoff=cutoff
-        )
+        ledger_state = _reconcile_ledger(ledger_records, begin=begin, finish=finish, cutoff=cutoff)
 
     metered_call_count = 0
     unmetered_call_count = 0
@@ -705,8 +703,10 @@ def summarize_ai_consumption_economics(
         if rec_ts is not None:
             if begin is not None and rec_ts < begin:
                 resolved_ts = parse_record_timestamp(rec.get("resolved_at"))
-                if resolved_ts is None or resolved_ts < begin or (
-                    finish is not None and resolved_ts >= finish
+                if (
+                    resolved_ts is None
+                    or resolved_ts < begin
+                    or (finish is not None and resolved_ts >= finish)
                 ):
                     continue
             if (finish is not None and rec_ts >= finish) or (
@@ -719,9 +719,7 @@ def summarize_ai_consumption_economics(
         mroot = _extract_meter_root(rec)
         rec_id = rec.get("id")
         hashed_id = (
-            ai_consumption.reference(rec_id)
-            if isinstance(rec_id, str) and rec_id.strip()
-            else None
+            ai_consumption.reference(rec_id) if isinstance(rec_id, str) and rec_id.strip() else None
         )
         source = str(rec.get("source") or "")
         status = str(rec.get("status") or "")
@@ -807,9 +805,7 @@ def summarize_ai_consumption_economics(
                 other_components[comp_key] = format(ai_consumption.amount(str(comp_val)), "f")
 
     resolved_quality = (
-        quality_floor_status
-        if quality_floor_status in ("Pass", "Failure", UNKNOWN)
-        else UNKNOWN
+        quality_floor_status if quality_floor_status in ("Pass", "Failure", UNKNOWN) else UNKNOWN
     )
 
     # Step 4: Evaluate price_source_configured and fail-closed Unknown cost invariants (FR-3).
@@ -863,9 +859,7 @@ def summarize_ai_consumption_economics(
                 if accepted_outcome_count > 0 and resolved_quality == "Pass":
                     cost_per_accepted_outcome = _ratio_str(tca_decimal, accepted_outcome_count)
             if accepted_outcome_count > 0:
-                token_cost_per_accepted_outcome = _ratio_str(
-                    billed_decimal, accepted_outcome_count
-                )
+                token_cost_per_accepted_outcome = _ratio_str(billed_decimal, accepted_outcome_count)
                 if resolved_quality == "Pass":
                     quality_qualified_cost_per_accepted_outcome = token_cost_per_accepted_outcome
         if booked_value is not None and booked_value != UNKNOWN:

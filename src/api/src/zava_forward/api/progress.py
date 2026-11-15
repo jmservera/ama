@@ -236,13 +236,15 @@ def _ai_economics(
     admitted = [dict(r) for r in records if _synthetic_recommendation(r, ids)]
     window_start = f"{start.isoformat()}T00:00:00Z"
     window_end = f"{(end + DAY).isoformat()}T00:00:00Z"
-    summary: dict[str, Any] = dict(tokenomics.store_ai_consumption_economics(
-        store,
-        start=window_start,
-        end=window_end,
-        as_of=window_end,
-        recommendations=admitted,
-    ))
+    summary: dict[str, Any] = dict(
+        tokenomics.store_ai_consumption_economics(
+            store,
+            start=window_start,
+            end=window_end,
+            as_of=window_end,
+            recommendations=admitted,
+        )
+    )
     return summary
 
 
