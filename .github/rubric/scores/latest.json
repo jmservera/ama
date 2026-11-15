@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-15T02:08:39+00:00",
-  "commit": "9e5efcc826f5d77bf806083d6a03b0c09642c1e2",
+  "scored_at": "2026-11-15T12:28:54+00:00",
+  "commit": "7859266280d6dc9a498ebee04b923c23fcc143f7",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43665711975",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43713375654",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "ad995cdbac1abc98ae5a53234cf2d627837ef5faef39947b874deaed9da3707c",
@@ -14,7 +14,7 @@
     "infrastructure": "279e36d803276aa854eaf2f822cb2ea28eb5e37dbbe72841e50927e76caa5c1f",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "687ae0ad2df52516882908bf45ecca662c52802d59a5116a4fe119ec3ae97840",
-    "thought-leadership": "f7f2adc273905a84d848d54be0a77abc3550013fd1c9ea9e2fedb743bdacf70a"
+    "thought-leadership": "2f288af759371a7076513ed65ca453c832f29fd4eecdf40608f7d16ea4159008"
   },
   "total": 79,
   "sections": {
@@ -145,25 +145,25 @@
     "D1": {
       "score": 4,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex:132-190",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/measurement-provenance.tex:113-270"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:98-130",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md"
       ],
-      "rationale": "New prospective supplementary blind-judging instrument (witnessed endpoint loss, four ordinal dimensions, blinding/calibration rules) is genuine further synthesis with concrete method detail, but still no completed judging or outcomes to act on. Good (4) retained, consistent with baseline."
+      "rationale": "New final-results/chart-interpretation and critique-falsifiability content integrates real completed-study data (315 trajectories, B-D +1.19pp) and a sharper falsifiable P1-P3 formulation. Genuine further synthesis grounded in evidence; still no new judging outcome beyond prior snapshot. Good (4)..."
     },
     "D2": {
       "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex:188-189",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/measurement-provenance.tex:268-269"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1175-1306",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:57-72"
       ],
-      "rationale": "Two new TODO(author) markers were added alongside the supplementary judging section, and Microsoft publication approval remains pending; draft version advanced v13 to v14 but completeness did not improve. Satisfactory (3) retained."
+      "rationale": "Remaining TODO(author) markers dropped from 11 to 8 in main.tex and 7 to 4 in experiment-protocol.tex; README reports a readability pass consolidating 61 identifiers into one register and all 72 authoring checks passing. Craft improved but Microsoft publication approval and several TODOs remain o..."
     },
     "D3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:38-42"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:673-674"
       ],
-      "rationale": "README continues to state explicitly that no archive, OSF upload, visibility change or scientific submission has occurred; publication approval remains pending. Needs Improvement (2) retained."
+      "rationale": "README still states explicitly that no archive, OSF upload, visibility change or scientific submission has occurred; publication approval remains pending. Needs Improvement (2) retained, unchanged by this revision."
     }
   }
 }
