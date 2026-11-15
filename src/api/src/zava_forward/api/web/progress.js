@@ -55,7 +55,8 @@ const ProgressViews = (() => {
       h("div", { class: "progress-bars", "aria-hidden": "true" }, rows.length ? rows.map(row =>
         h("div", { class: "progress-bar-row" }, h("span", { class: "progress-bar-label" }, row[0]),
           h("div", {}, row.slice(1).map((count, index) => {
-            const bar = h("meter", { min: 0, max, value: count, tabindex: -1 });
+            const bar = h("meter", { min: 0, max, value: count, tabindex: -1,
+              "aria-label": `${row[0]}, ${columns[index + 1]}: ${number(count)} (highest shown: ${number(max)})` });
             return h("div", { class: "progress-bar-value" },
               h("span", {}, `${columns[index + 1]}: ${number(count)}`), bar);
           })))) : h("p", {}, "No recorded data for this view.")),

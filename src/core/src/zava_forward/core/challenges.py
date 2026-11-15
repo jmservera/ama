@@ -31,6 +31,71 @@ PROTECTION = (
 )
 NOT_INFERRED = ("consent", "refusal", "sanction", "unrelated_closure", "hazard_clock")
 
+# Case state a challenge or data-correction request must never change: ranking inputs (priority,
+# queue rank), eligibility/tenure state, resident consent and participation, and hazard records
+# with their response clocks.
+PROTECTED_CASE_KEYS = (
+    "stage",
+    "days_in_stage",
+    "closed",
+    "resident",
+    "hazards",
+    "measure_decisions",
+    "resident_reviews",
+    "resident_scopes",
+    "resident_update",
+    "tenure_review_required",
+    "tenure_reports",
+)
+GUARANTEES = (
+    "A challenge or correction never lowers your priority, eligibility or place in the queue.",
+    "It never records you as refusing or withdrawing, or changes your consent.",
+    "It never pauses, holds or extends the clock on any hazard or safeguarding response.",
+)
+ASSURANCE_TEXT = (
+    "Raising this challenge or correction will not be held against you. We have not recorded you "
+    "as refusing, and no safety or hazard response has been paused or delayed."
+)
+RETALIATION_REFUSAL = (
+    "Refused: recording a challenge or correction request must not change priority, eligibility, "
+    "queue rank, consent or participation, or any hazard or safeguarding response clock. "
+    "Nothing was saved. Owner: the named officer. Next action: tell the named officer."
+)
+
+
+def protected_snapshot(case: Mapping[str, Any]) -> Record:
+    """Deep copy of the protected case state, keeping absent keys absent."""
+    return {key: deepcopy(case[key]) for key in PROTECTED_CASE_KEYS if key in case}
+
+
+def protected_changes(before: Mapping[str, Any], case: Mapping[str, Any]) -> list[str]:
+    """Names of protected keys that differ between a prior snapshot and the case now."""
+    after = protected_snapshot(case)
+    return [key for key in PROTECTED_CASE_KEYS if before.get(key) != after.get(key)]
+
+
+def assert_no_retaliation(before: Mapping[str, Any], case: Mapping[str, Any]) -> None:
+    """Raise when any protected state changed; the caller's writer then rolls the action back."""
+    if protected_changes(before, case):
+        raise ValueError(RETALIATION_REFUSAL)
+
+
+def assurance() -> Record:
+    """Fresh explicit assurance flags, stamped only after the protected-state check passed."""
+    return {
+        "no_retaliation": True,
+        "inferred_refusal": False,
+        "hazard_response_delayed": False,
+        "text": ASSURANCE_TEXT,
+    }
+
+
+def stamp_assurance(before: Mapping[str, Any], case: Mapping[str, Any], record: Record) -> Record:
+    """Verify nothing protected changed, then attach the assurance to the challenge record."""
+    assert_no_retaliation(before, case)
+    record["assurance"] = assurance()
+    return record
+
 
 def _text(value: object, label: str) -> str:
     if not isinstance(value, str) or not value.strip():
@@ -273,4 +338,5 @@ class ChallengeRegister:
         rec["explanations"] = [e for e in rec["explanations"] if e["permitted"]]
         rec["not_inferred"] = list(NOT_INFERRED)
         rec["protection"] = PROTECTION
+        rec["assurance"] = assurance()
         return rec

@@ -12,9 +12,11 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, cast
 
+from aftercare_fixture import CORE_SRC
+from zava_forward.core import aftercare as af
 from zava_forward.core import aftercare_intake as ai
 from zava_forward.core import projection
-from zava_forward.core.aftercare import BANNED_PHRASES
+from zava_forward.core.aftercare import BANNED_PHRASES, neutral_text
 from zava_forward.core.synthetic import sensor_scenarios as ss
 
 NOW = datetime(2026, 11, 9, 12, 0, tzinfo=UTC)
@@ -215,6 +217,162 @@ class IntakeTests(Base):
         shown = self.service().concerns(MANAGER)
         self.assertEqual(shown["count"], 20)
         self.assertEqual(len({c["id"] for c in shown["items"]}), 20)
+
+    def test_household_and_representative_self_service_digital_route_and_cross_day_replay(
+        self,
+    ) -> None:
+        assert ai.__file__ is not None
+        self.assertTrue(Path(ai.__file__).resolve().is_relative_to(CORE_SRC))
+        status, form = self.svc.handle("GET", "/api/aftercare/household-form", None)
+        self.assertEqual((status, form["assisted"]), (200, False))
+        self.assertEqual(form["accessible_route"], af.ACCESSIBLE_ROUTE)
+        self.assertEqual(form["manual_route"], ai.HOUSEHOLD_MANUAL_ROUTE)
+        self.assertTrue(form["support_options"])
+        hh_body = {
+            "request_id": "req-hh-0001",
+            "raised_by": "household",
+            "home_ref": HOME,
+            "kind": "discomfort",
+            "statement": "  Cold hallway near the front door.  ",
+        }
+        status, created = self.svc.handle(
+            "POST", "/api/aftercare/household-concerns", None, hh_body
+        )
+        self.assertEqual((status, created["replayed"]), (201, False))
+        receipt_body = created["receipt"]
+        self.assertEqual(receipt_body["route"], "digital")
+        self.assertIsNone(receipt_body["channel"])
+        self.assertIsNone(receipt_body["recorded_by"])
+        self.assertEqual(receipt_body["next_update"], "2026-11-16")
+        self.assertEqual(receipt_body["owner"]["label"], ai.UNKNOWN_OWNER)
+        later_svc = ai.AftercareService(
+            ai.FileStateStore(self.path),
+            homes=HOMES,
+            now=lambda: datetime(2026, 11, 25, 9, 0, tzinfo=UTC),
+        )
+        status, replayed = later_svc.handle(
+            "POST", "/api/aftercare/household-concerns", None, hh_body
+        )
+        self.assertEqual((status, replayed["replayed"]), (200, True))
+        self.assertEqual(replayed["receipt"]["receipt_id"], receipt_body["receipt_id"])
+        self.assertEqual(
+            later_svc.handle(
+                "POST",
+                "/api/aftercare/household-concerns",
+                None,
+                {**hh_body, "statement": "Different text."},
+            )[0],
+            409,
+        )
+        rep_missing = self.svc.handle(
+            "POST",
+            "/api/aftercare/household-concerns",
+            None,
+            {**hh_body, "request_id": "req-rep-0001", "raised_by": "representative"},
+        )
+        self.assertEqual(rep_missing[0], 400)
+        self.assertIn("representative_basis", rep_missing[1]["errors"])
+        owner_refused = self.svc.handle(
+            "POST",
+            "/api/aftercare/household-concerns",
+            None,
+            {**hh_body, "request_id": "req-own-0001", "owner_role": "Retrofit Coordinator"},
+        )
+        self.assertEqual(owner_refused[0], 400)
+        self.assertIn("owner_role", owner_refused[1]["errors"])
+
+    def test_household_receipt_requires_matching_request_id_and_omits_sensor_context(self) -> None:
+        receipt, _ = self.svc.submit_household_concern(
+            {
+                "request_id": "req-read-0001",
+                "raised_by": "representative",
+                "representative_basis": "Signed household consent note",
+                "home_ref": HOME,
+                "kind": "control_use",
+                "statement": "Unsure which schedule sets overnight heating.",
+                "support_needed": ["interpreter"],
+            }
+        )
+        cid = str(receipt["concern_id"])
+        self.svc.add_sensor_context(COORDINATOR, cid, {"signal": "NO_EXERCISE_SIGNAL"})
+        self.assertEqual(
+            self.svc.handle("GET", f"/api/aftercare/household-concerns/{cid}", None)[0], 403
+        )
+        self.assertEqual(
+            self.svc.handle(
+                "GET",
+                f"/api/aftercare/household-concerns/{cid}",
+                None,
+                None,
+                {"request_id": "wrong-id"},
+            )[0],
+            403,
+        )
+        self.assertEqual(
+            self.svc.handle(
+                "GET",
+                "/api/aftercare/household-concerns/AC-999",
+                None,
+                None,
+                {"request_id": "req-read-0001"},
+            )[0],
+            404,
+        )
+        status, shown = self.svc.handle(
+            "GET",
+            f"/api/aftercare/household-concerns/{cid}",
+            None,
+            None,
+            {"request_id": "req-read-0001"},
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(shown["support_needed"], ["interpreter"])
+        self.assertNotIn("sensor_context", shown)
+        self.assertNotIn("history", shown)
+
+    def test_support_needed_persists_across_digital_and_non_digital_routes_and_legacy_state_loads(
+        self,
+    ) -> None:
+        legacy_receipt = self.record(request_id="req-leg-0001", channel="assisted_visit")
+        doc = json.loads(self.path.read_text(encoding="utf-8"))
+        doc["register"]["concerns"]["AC-001"].pop("support_needed", None)
+        doc["receipts"]["AC-001"].pop("support_needed", None)
+        self.path.write_text(json.dumps(doc), encoding="utf-8")
+        reopened = self.service()
+        replayed, is_replay = reopened.record_concern(
+            LIAISON, values(request_id="req-leg-0001", channel="assisted_visit")
+        )
+        self.assertTrue(is_replay)
+        self.assertEqual(replayed["receipt_id"], legacy_receipt["receipt_id"])
+        assisted, _ = reopened.record_concern(
+            LIAISON,
+            values(
+                request_id="req-sup-0001",
+                channel="phone",
+                support_needed=["bsl", "callback_window"],
+            ),
+        )
+        digital, _ = reopened.submit_household_concern(
+            {
+                "request_id": "req-sup-0002",
+                "raised_by": "household",
+                "home_ref": HOME,
+                "kind": "other",
+                "statement": "Need large-print copy of visit notes.",
+                "support_needed": ["large_print"],
+            }
+        )
+        self.assertEqual(assisted["support_needed"], ["bsl", "callback_window"])
+        self.assertEqual(digital["support_needed"], ["large_print"])
+        again = self.service()
+        self.assertEqual(
+            again.concern(MANAGER, str(assisted["concern_id"]))["support_needed"],
+            ["bsl", "callback_window"],
+        )
+        self.assertEqual(
+            again.household_receipt(str(digital["concern_id"]), "req-sup-0002")["support_needed"],
+            ["large_print"],
+        )
 
 
 class PersistenceTests(Base):
@@ -551,6 +709,72 @@ class NeutralTextTests(Base):
                 for phrase in BANNED_PHRASES:
                     self.assertNotIn(phrase, text.lower(), text)
 
+    def test_verbatim_household_text_preserved_while_generated_and_error_strings_are_neutral(
+        self,
+    ) -> None:
+        verbatim = "We were told we would save money, and the damp was caused by the works."
+        basis = "Advocate checking why lower energy bills were promised."
+        digital, _ = self.svc.submit_household_concern(
+            {
+                "request_id": "req-verb-001",
+                "raised_by": "representative",
+                "representative_basis": basis,
+                "home_ref": HOME,
+                "kind": "higher_bill",
+                "statement": verbatim,
+                "support_needed": ["easy_read"],
+            }
+        )
+        assisted, _ = self.svc.record_concern(
+            LIAISON,
+            values(
+                request_id="req-verb-002",
+                raised_by="representative",
+                representative_basis=basis,
+                statement=verbatim,
+                support_needed=["paper_letter"],
+            ),
+        )
+        self.assertEqual(
+            (digital["original"]["statement"], digital["original"]["representative_basis"]),
+            (verbatim, basis),
+        )
+        self.assertEqual(
+            (assisted["original"]["statement"], assisted["original"]["representative_basis"]),
+            (verbatim, basis),
+        )
+        err_400 = self.svc.handle("POST", "/api/aftercare/household-concerns", None, {})[1]
+        err_403 = self.svc.handle("GET", "/api/aftercare/evaluator", None)[1]
+        err_409 = self.svc.handle(
+            "POST",
+            "/api/aftercare/household-concerns",
+            None,
+            {
+                "request_id": "req-verb-001",
+                "raised_by": "household",
+                "home_ref": HOME,
+                "kind": "other",
+                "statement": "Changed text",
+            },
+        )[1]
+        payloads = [
+            self.svc.household_form(),
+            self.svc.form(LIAISON),
+            digital,
+            assisted,
+            self.svc.household_receipt(str(digital["concern_id"]), "req-verb-001"),
+            self.svc.concern(MANAGER, str(digital["concern_id"])),
+            self.svc.concerns(MANAGER),
+            self.svc.evaluator_view(MANAGER),
+            err_400,
+            err_403,
+            err_409,
+        ]
+        free_text = ("original", "statement", "representative_basis")
+        for payload in payloads:
+            for text in self.strings(payload, free_text):
+                self.assertEqual(neutral_text(text), text)
+
 
 class RouteTests(Base):
     def call(self, method: str, path: str, user: Any = LIAISON, body: Any = None) -> Any:
@@ -758,6 +982,112 @@ class SensorContextGuardTests(Base):
         self.assertIn("context", payload["errors"])
         self.assertNotIn("someone@example.com", json.dumps(payload))
         self.assertEqual(self.path.read_bytes(), before)
+
+
+class Issue133IntakeRefinementTests(Base):
+    def test_representative_channel_and_call_back_alias_record_and_persist(self) -> None:
+        form = self.svc.form(LIAISON)
+        channel_field = next(f for f in form["staff_fields"] if f["name"] == "channel")
+        channel_labels = {o["value"]: o["label"] for o in channel_field["options"]}
+        self.assertEqual(channel_labels.get("representative"), "Through a representative")
+        receipt, replayed = self.svc.record_concern(
+            LIAISON,
+            values(
+                request_id="req-rep-chan-01",
+                raised_by="representative",
+                representative_basis="Signed consent note",
+                channel="representative",
+                support_needed=["call_back", "easy_read"],
+            ),
+        )
+        self.assertFalse(replayed)
+        self.assertEqual(receipt["channel"], "representative")
+        self.assertEqual(receipt["support_needed"], ["callback_window", "easy_read"])
+        reopened = self.service()
+        shown = reopened.concern(MANAGER, str(receipt["concern_id"]))
+        self.assertEqual(shown["channel"], "representative")
+        self.assertEqual(shown["support_needed"], ["callback_window", "easy_read"])
+
+    def test_household_receipt_rejects_staff_recorded_concern_even_with_matching_request_id(
+        self,
+    ) -> None:
+        receipt = self.record(request_id="req-staff-only-01", channel="phone")
+        cid = str(receipt["concern_id"])
+        with self.assertRaises(PermissionError):
+            self.svc.household_receipt(cid, "req-staff-only-01")
+        status, payload = self.svc.handle(
+            "GET",
+            f"/api/aftercare/household-concerns/{cid}",
+            None,
+            None,
+            {"request_id": "req-staff-only-01"},
+        )
+        self.assertEqual(status, 403)
+        self.assertEqual(payload["error"], ai.RECEIPT_ACCESS_DENIED_MESSAGE)
+        self.assertNotIn(HOME, json.dumps(payload))
+
+    def test_staff_outcome_remedy_and_sensor_context_routes_reject_non_neutral_wording_as_400(
+        self,
+    ) -> None:
+        self.record()
+        self.svc.assign_owner(MANAGER, "AC-001", "Resident Liaison Officer")
+        bad_calls: list[tuple[str, dict[str, Any], str]] = [
+            (
+                "outcome",
+                {
+                    "outcome": "no_remedy_needed",
+                    "basis": "home_visit",
+                    "evidence": "Condensation is due to poor ventilation habits.",
+                },
+                "evidence",
+            ),
+            (
+                "remedy",
+                {"status": "in_progress", "evidence": "Incorrect use of the thermostat."},
+                "evidence",
+            ),
+            (
+                "sensor-context",
+                {"context": {"note": "Guarantees lower energy bills."}},
+                "context",
+            ),
+        ]
+        for action, body, field in bad_calls:
+            with self.subTest(action=action):
+                status, payload = self.svc.handle(
+                    "POST", f"/api/aftercare/concerns/AC-001/{action}", LIAISON, body
+                )
+                self.assertEqual(status, 400)
+                self.assertIn(field, payload["errors"])
+                self.assertEqual(neutral_text(payload["error"]), payload["error"])
+                self.assertEqual(neutral_text(payload["errors"][field]), payload["errors"][field])
+        shown = self.svc.concern(MANAGER, "AC-001")
+        self.assertEqual(shown["investigation"], "received")
+        self.assertEqual(shown["remedy"]["status"], "not_assessed")
+
+    def test_evaluator_view_exposes_fr036_concern_pack_governance_and_preserves_unknowns(
+        self,
+    ) -> None:
+        svc = ai.AftercareService(
+            ai.FileStateStore(self.path),
+            homes=[*HOMES, "HOME-UNMEASURED"],
+            cohort=[*HOMES, "HOME-UNMEASURED"],
+            now=lambda: NOW,
+        )
+        status, view = svc.handle("GET", "/api/aftercare/evaluator", MANAGER)
+        self.assertEqual(status, 200)
+        task = view["concern_pack_task"]
+        self.assertEqual(task["task_id"], "aftercare-concern-pack")
+        self.assertEqual(task["requirement"], "FR-036")
+        self.assertEqual(task["kind"], "proposal-pack")
+        self.assertEqual(task["approval_state"], "unapproved")
+        self.assertFalse(task["enabled"])
+        self.assertFalse(task["live_authorized"])
+        self.assertTrue(task["requires_human_review"])
+        unmeasured = next(r for r in view["rows"] if r["home_ref"] == "HOME-UNMEASURED")
+        self.assertEqual(unmeasured["comparison"]["status"], "unknown")
+        self.assertIsNone(unmeasured["comparison"]["baseline"])
+        self.assertIsNone(unmeasured["comparison"]["late"])
 
 
 if __name__ == "__main__":

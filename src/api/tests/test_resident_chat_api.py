@@ -612,6 +612,35 @@ class ChatApiTests(DemoTestCase):
         for _, example, _ in chat.TOPIC_EXAMPLES:
             self.assertNotEqual(chat.route(example), "unknown", example)
 
+    def test_unconfigured_agenda_omits_callback_suggestion_in_rules_and_advisor_paths(
+        self,
+    ) -> None:
+        question = "What time is my phone visit?"
+        self.assertEqual(chat.route(question), "unknown")
+        self.assertFalse(chat.is_refusal(question))
+        self.assertIn("Can I find a callback time?", str(self.ask(question=question)[1]["answer"]))
+
+        self.app.agenda = None
+        status, rules_body = self.ask(question=question)
+        self.assertEqual(status, 200)
+        self.assertNotIn("Can I find a callback time?", str(rules_body["answer"]))
+
+        direct_status, direct_body = self.ask(topic="appointments")
+        self.assertEqual(direct_status, 200)
+        self.assertIn("not connected", str(direct_body["answer"]))
+        self.assertIsNone(direct_body["action"])
+
+        advisor = Mock()
+        self.app.assistant_advisor = advisor
+        adv_status, adv_body = self.ask(question=question)
+        self.assertEqual(adv_status, 200)
+        self.assertNotIn("Can I find a callback time?", str(adv_body["answer"]))
+        advisor.answer_question.assert_not_called()
+        self.assertNotIn(
+            "Can I find a callback time?",
+            chat.answer("unknown", {"agenda_available": False}, question).answer,
+        )
+
     def test_refusals_keep_the_boundary_text(self) -> None:
         for question in REFUSED_QUESTIONS:
             with self.subTest(question=question):

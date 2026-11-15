@@ -1,0 +1,64 @@
+{
+  "task_id": "issue-134-same-home-walk-0018",
+  "task_slug": "issue-134-same-home-walk-0018",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/issue-134-same-home-walk-0018-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/issue-134-same-home-walk-0018-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/issue-134-same-home-walk-0018-phase-details.md",
+    "critique": ".copilot-tracking/critiques/2026-11-15/issue-134-same-home-walk-0018-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/issue-134-same-home-walk-0018-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/issue-134-same-home-walk-0018-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Confirmed automatic full RPI loop through Review and local commit without push on feat/ux-134-same-home-walk-0018 targeting feat/demo-233-same-home-tensions-0825",
+      "status": "confirmed",
+      "evidence": "Caller prompt specifying full RPI loop in order (research, plan, plan-critique, implement, review), focused validation tier, Refs #134, and clean frozen local commit without push"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready; selected Option B (extend profile_journey_contract.py with connected same-home validators, add plain-language next_action continuity on role-screens.js selected-home header, author docs/reference/research/ux/profile-journey-contract.md + KB index/log, and add core + API/Node acceptance tests)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-134-same-home-walk-0018-research.md (C1-C22)"
+    },
+    {
+      "decision": "Single-pass plan critique executed (verdict Revise); all six planner-owned findings (PC-001 through PC-006) applied directly to plan.md and phase-details.md; plan finalized as Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/critiques/2026-11-15/issue-134-same-home-walk-0018-critique.md; .copilot-tracking/plans/2026-11-15/issue-134-same-home-walk-0018-plan.md"
+    },
+    {
+      "decision": "Post-implementation Review executed once (Execution status: Complete; Outcome: Defects found with zero functional defects and one Low documentation symbol-name drift RV-001 routed to rpi-implement plus RV-002 routed to post-commit/human follow-up)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-134-same-home-walk-0018-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user or coordinator selection of ranked follow-up item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Align perspective_walkthroughs.register() and BOUNDARIES key mentions in docs/reference/research/ux/profile-journey-contract.md (RV-001 [Low])",
+      "rationale": "Highest ease of implementation with direct documentation-to-code symbol precision; zero runtime changes needed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-134-same-home-walk-0018-review.md (RV-001); docs/reference/research/ux/profile-journey-contract.md"
+    },
+    {
+      "rank": 2,
+      "task": "Add live Chromium [data-same-home-next-action] assertion to src/api/checks/role_screens_browser_check.py and refresh scenario-manifest.json recipe SHA",
+      "rationale": "Small bounded browser-harness slice extending Node vm + HTTP acceptance coverage into headless Chromium",
+      "evidence": ".copilot-tracking/plans/2026-11-15/issue-134-same-home-walk-0018-plan.md (Follow-Up Items); src/api/checks/role_screens_browser_check.py"
+    },
+    {
+      "rank": 3,
+      "task": "Execute human/resident and assistive-technology perspective walkthroughs (#155, #151) for AC-034 through AC-043 (RV-002)",
+      "rationale": "Required human-gated governance and lived-experience acceptance gate before Issue #134 can close",
+      "evidence": "src/core/src/zava_forward/core/perspective_walkthroughs.py; src/core/src/zava_forward/core/journey_acceptance.py"
+    }
+  ]
+}

@@ -39,6 +39,11 @@ class Bundle:
     atlas_ids: tuple[str, ...]
     comparator: str
     zero_measures: tuple[str, ...]
+    title: str = ""
+    linked_requirements: tuple[str, ...] = ()
+    learning_question: str = ""
+    beyond_effort_measures: tuple[str, ...] = ()
+    stop_rule: str = ""
 
 
 BUNDLES: dict[str, Bundle] = {
@@ -49,30 +54,85 @@ BUNDLES: dict[str, Bundle] = {
             ("O01", "O02", "O03", "O15"),
             "Manual re-asking and chase log",
             ("authority_or_consent_breaches", "promises_without_owner"),
+            title="Story once and promise ownership",
+            linked_requirements=("FR-045", "FR-048", "AC-062", "AC-064", "GOAL-004"),
+            learning_question=(
+                "Does a scoped, corrected account cut repeat explanations "
+                "without blurring authority?"
+            ),
+            beyond_effort_measures=(
+                "repeat_ask_count",
+                "promises_without_owner",
+                "authority_or_consent_breaches",
+            ),
+            stop_rule="Stop if representative or consent boundaries blur",
         ),
         Bundle(
             "pre-visit-pack",
             ("O06", "O08", "O09"),
             "Current visit preparation",
             ("offers_misread_as_commitments",),
+            title="Pre-visit pack and readiness rehearsal",
+            linked_requirements=("FR-048", "FR-049", "AC-062", "AC-063", "AC-065"),
+            learning_question=(
+                "Does a cited pre-visit pack reduce missing facts and abortive visits?"
+            ),
+            beyond_effort_measures=(
+                "missing_fact_count_at_visit",
+                "offers_misread_as_commitments",
+            ),
+            stop_rule="Stop if an offer reads as a commitment",
         ),
         Bundle(
             "change-impact",
             ("O07", "O16"),
             "Manual dependency check",
             ("approvals_wrongly_carried_over",),
+            title="Change impact and evidence reuse",
+            linked_requirements=("FR-008", "FR-043", "AC-011", "AC-013", "AC-051"),
+            learning_question=(
+                "Does a dependency check catch stale evidence that a manual check misses?"
+            ),
+            beyond_effort_measures=(
+                "stale_items_escaped",
+                "approvals_wrongly_carried_over",
+            ),
+            stop_rule="Stop if reuse transfers an approval",
         ),
         Bundle(
             "handover-aftercare",
             ("O13", "O14"),
             "Paper handover",
             ("open_remedies_hidden",),
+            title="Accessible handover and aftercare",
+            linked_requirements=("FR-049", "FR-014", "AC-063"),
+            learning_question=(
+                "Can the resident use the handover material, and are open remedies "
+                "still visible after it?"
+            ),
+            beyond_effort_measures=(
+                "accessibility_defects_found",
+                "open_remedies_hidden",
+            ),
+            stop_rule="Stop if handover closes an open remedy",
         ),
         Bundle(
             "funding-evidence",
             ("O16", "O17"),
             "Manual evidence pack",
             ("inferred_submissions",),
+            title="Review-ready funding evidence",
+            linked_requirements=("FR-019", "FR-042", "AC-050"),
+            learning_question=(
+                "Does the pack reduce reviewer return requests without implying "
+                "submission or award?"
+            ),
+            beyond_effort_measures=(
+                "reviewer_returns",
+                "unsupported_statements",
+                "inferred_submissions",
+            ),
+            stop_rule="Stop if a submission or award is inferred",
         ),
     )
 }
@@ -129,7 +189,13 @@ def compare_bundle(bundle_key: str, cases: list[dict[str, Any]]) -> dict[str, An
     delta = flow["median_minutes"] - comp["median_minutes"]
     return {
         "bundle": bundle_key,
+        "bundle_title": bundle.title,
+        "atlas_ids": bundle.atlas_ids,
+        "linked_requirements": bundle.linked_requirements,
         "comparator_description": bundle.comparator,
+        "learning_question": bundle.learning_question,
+        "beyond_effort_measures": bundle.beyond_effort_measures,
+        "stop_rule": bundle.stop_rule,
         "evidence_label": EVIDENCE_LABEL,
         "comparator": comp,
         "workflow": flow,

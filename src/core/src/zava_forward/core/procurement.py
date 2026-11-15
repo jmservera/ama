@@ -31,6 +31,20 @@ TRANSITIONS = {ISSUED: (APPOINTED, WITHDRAWN), APPOINTED: (COMPLETED, WITHDRAWN,
 CONSULTATION_STATUSES = ("applies", "complete", "not_applicable", "unknown")
 
 
+def leaseholder_status(p):
+    """Latest supplied leaseholder consultation status of a contract record; missing or unrecognised values read as unknown."""
+    latest = ((p.get("consultation_history") or [{}])[-1].get("status"))
+    return latest if latest in CONSULTATION_STATUSES else "unknown"
+
+
+def _hold_reason(pid, status):
+    if status == "applies":
+        return f"Leaseholder consultation applies to {pid} and is not complete. It must be completed and verified by Legal before this contract is let or renewed."
+    if status == "unknown":
+        return f"Leaseholder consultation status is unknown for {pid}. Legal must verify it before this contract is let or renewed. A supplied record does not clear this stop."
+    return f"Leaseholder consultation is recorded as {status.replace('_', ' ')} for {pid} but Legal authority is unverified. Legal must verify it before this contract is let or renewed."
+
+
 def _clean(text, n=300):
     if text is not None and not isinstance(text, str):
         raise ValueError("Enter text for this procurement field.")
@@ -299,7 +313,7 @@ class ProcurementMixin(AppointmentMixin):
             proc = self._proc()
             p = dict(id=f"PKG-{len(proc['packages']) + 1:03d}", name=name, period_from=start, period_to=end, contract_ref=contract_ref, contract_version=contract_version,
                      scope=scope, scope_version=1, scope_history=[dict(version=1, scope=scope, by=user["name"], at=_now(), reason="First version")],
-                     capacity={}, consultation_status="unknown", consultation_history=[],
+                     capacity={}, consultation_status="unknown", leaseholder_consultation_status="unknown", consultation_history=[],
                      created_by=user["name"], created_at=_now())
             proc["packages"].append(p)
             self._proc_save(user, "package_created", "-", f"{p['id']} {name} {start} to {end} ref {contract_ref}; draft, not an instruction")
@@ -336,6 +350,7 @@ class ProcurementMixin(AppointmentMixin):
                           authority_status="Unverified", source_status="Supplied human decision; not Legal approval")
             history.append(record)
             p["consultation_status"] = "unknown"
+            p["leaseholder_consultation_status"] = record["status"]
             self._proc_save(actor, "consultation_recorded", "-", f"{pid} supplied {record['status']}; record {record['version']}; Legal authority unverified; consultation-dependent actions held")
 
     def require_consultation_clear(self, p):
@@ -350,9 +365,10 @@ class ProcurementMixin(AppointmentMixin):
             _actor(self, user)
             p = self._package(pid)
             supplied = (p.get("consultation_history") or [{}])[-1].get("status")
+            status = leaseholder_status(p)
             return dict(package=p["id"], event=event, blocked=True, effective_status="unknown",
-                        supplied_status=supplied, authority_status="Unverified",
-                        reason=f"Consultation status is unknown for {p['id']}. Legal must verify it before this contract is let or renewed. A supplied record does not clear this stop.",
+                        supplied_status=supplied, leaseholder_consultation_status=status, authority_status="Unverified",
+                        reason=_hold_reason(p["id"], status),
                         manual_path="Ask Legal and the contract owner to confirm consultation outside this service. No letting or renewal happens here.")
 
     def request_contract_event(self, user, pid, event):
@@ -361,7 +377,7 @@ class ProcurementMixin(AppointmentMixin):
             raise ValueError("Choose let or renew.")
         with self._proc_operation(user, "contract_event", pid=pid) as actor:
             gate = self.contract_event_gate(user, pid, event)
-            self._proc_save(actor, "contract_event_held", "-", f"{pid} {event} request held; consultation status unknown; Legal authority unverified; no letting or renewal happened")
+            self._proc_save(actor, "contract_event_held", "-", f"{pid} {event} request held; leaseholder consultation {gate['leaseholder_consultation_status']}; Legal authority unverified; no letting or renewal happened")
             return gate
 
     def rescope_package(self, user, pid, scope, reason):
@@ -621,7 +637,9 @@ class ProcurementMixin(AppointmentMixin):
                         item.update(evidence_status=f"Unknown - not confirmed: {error}", usable_committed=0)
                 out.append(dict(id=p["id"], name=p["name"], period_from=p["period_from"], period_to=p["period_to"], contract_ref=p["contract_ref"], contract_version=p.get("contract_version"),
                                 scope=p["scope"], scope_version=p["scope_version"], scope_history=p["scope_history"], capacity=cap,
-                                consultation_status="unknown", consultation_authority="Unverified",
+                                consultation_status="unknown", leaseholder_consultation_status=leaseholder_status(p),
+                                letting_renewal_blocked=True, letting_renewal_reason=_hold_reason(p["id"], leaseholder_status(p)),
+                                consultation_authority="Unverified",
                                 consultation_history=p.get("consultation_history", [])))
             if limit is not None:
                 return deepcopy(dict(items=out, total=total, offset=offset, limit=limit))

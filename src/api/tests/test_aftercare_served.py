@@ -174,6 +174,27 @@ class AftercareServed(Served):
         self.assertIn(self.call("sam", "/api/aftercare/concerns", dict(BODY))[0], (400,))
         self.assertEqual(self.call("sam", "/api/aftercare/nothing")[0], 404)
 
+    def test_served_representative_channel_and_evaluator_fr036_pack_metadata(self) -> None:
+        code, created = self.call(
+            "sam",
+            "/api/aftercare/concerns",
+            self.body(
+                request_id="req-served-rep-01",
+                raised_by="representative",
+                representative_basis="Signed household letter",
+                channel="representative",
+                support_needed=["call_back", "easy_read"],
+            ),
+        )
+        self.assertEqual(code, 201, created)
+        self.assertEqual(created["receipt"]["channel"], "representative")
+        self.assertEqual(created["receipt"]["support_needed"], ["callback_window", "easy_read"])
+        eval_code, view = self.call("pam", "/api/aftercare/evaluator")
+        self.assertEqual(eval_code, 200)
+        self.assertEqual(view["concern_pack_task"]["requirement"], "FR-036")
+        self.assertFalse(view["concern_pack_task"]["live_authorized"])
+        self.assertTrue(view["concern_pack_task"]["requires_human_review"])
+
 
 if __name__ == "__main__":
     unittest.main()

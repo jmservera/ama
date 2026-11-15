@@ -190,10 +190,9 @@ def escalation_destination() -> dict[str, Any]:
         ),
         advisory_only=True,
         contract_instruction=False,
-        note=(
-            "A concern raised here does not change the work order. "
-            "Only the contract manager issues a new version."
-        ),
+        is_contract_instruction=False,
+        acts_as_contract_instruction=False,
+        note=job_pack.NON_INSTRUCTION_NOTICE,
     )
 
 
@@ -208,7 +207,8 @@ def route_escalation(
         if not name:
             raise ValueError(escalation_destination()["owner_status"])
     out = job_pack.escalation(kind, summary, raised_by, order, name, owner_role)
-    out["owner"]["contact"] = contact or None
+    if contact:
+        out["owner"]["contact"] = contact
     return out
 
 
@@ -270,29 +270,64 @@ def _review_view(rec: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
+def _view_escalation(item: dict[str, Any], user: Any) -> dict[str, Any]:
+    out = deepcopy(item)
+    raw_owner = out.get("owner")
+    owner = raw_owner if isinstance(raw_owner, dict) else {}
+    out.setdefault("named_owner", owner.get("name", ""))
+    out.setdefault("owner_role", owner.get("role", ""))
+    out.setdefault("escalation_kind", out.get("kind", ""))
+    if not projection.can_see_reason(user):
+        out["summary"] = projection.NOTE_HELD
+    return out
+
+
+def _merged_escalations(c: dict[str, Any], wid: str, user: Any) -> list[dict[str, Any]]:
+    seen: set[tuple[Any, ...]] = set()
+    out: list[dict[str, Any]] = []
+    for raw in (*(c.get("escalations") or []), *(c.get("field_escalations") or [])):
+        if raw.get("order") != wid:
+            continue
+        key = (
+            ("id", raw["id"])
+            if raw.get("id")
+            else (
+                "fallback",
+                raw.get("order"),
+                raw.get("kind") or raw.get("escalation_kind"),
+                raw.get("routed_at") or raw.get("raised_at"),
+                raw.get("summary"),
+            )
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(_view_escalation(raw, user))
+    return out
+
+
 def view(store: Any, user: Any, wid: str) -> dict[str, Any]:
     _staff_only(store, user)
     with store.lock:
         pack = _pack(store, user, wid)
         _, c = _find(store, wid)
+        escalations = _merged_escalations(c, wid, user)
         return dict(
             pack=pack,
             receipts=[_view_receipt(i, r, user) for i, r in _records(c, wid)],
             recovery=[job_pack.visit_recovery(e) for e in job_pack.NO_SHOW_EVENTS],
             escalation=escalation_destination(),
-            escalations=[
-                dict(
-                    e,
-                    summary=e["summary"]
-                    if projection.can_see_reason(user)
-                    else projection.NOTE_HELD,
-                )
-                for e in c.get("escalations") or []
-                if e.get("order") == wid
-            ],
+            escalation_options=dict(
+                kinds=list(job_pack.ESCALATION_KINDS),
+                owner_roles=list(job_pack.ESCALATION_OWNER_ROLES),
+            ),
+            escalations=escalations,
             boundaries=dict(
                 contract_instruction=False,
+                is_contract_instruction=False,
+                acts_as_contract_instruction=False,
                 advisory_only=True,
+                instruction_notice=job_pack.NON_INSTRUCTION_NOTICE,
                 acceptance=(
                     "Acceptance needs independent review by a named quality role. "
                     "This screen never accepts work."
@@ -510,37 +545,82 @@ def acknowledge(store: Any, user: Any, wid: str, body: dict[str, Any]) -> dict[s
 
 
 def escalate(store: Any, user: Any, wid: str, body: dict[str, Any]) -> dict[str, Any]:
-    """Record a variation or concern against the case for a named owner. Advice only."""
+    """Route a fieldwork variation or concern to a named staff owner. Advice only."""
     _staff_only(store, user)
     if not isinstance(body, dict):
         raise ValueError("Send the escalation as a JSON object.")
+    job_pack.reject_instruction_claim(body)
+    if "named_owner" in body and body["named_owner"] is None:
+        raise ValueError("Name the staff owner who will decide this (named_owner).")
+    if "owner_role" in body and body["owner_role"] is None:
+        raise ValueError("Choose a contract manager or the building safety liaison as owner_role.")
     for key in ("named_owner", "owner_role"):
         if body.get(key) is not None and not isinstance(body[key], str):
             raise ValueError("Enter the named owner and role as text.")
+    kind, summary = body.get("kind"), body.get("summary")
+    if not isinstance(kind, str) or not isinstance(summary, str):
+        raise ValueError("Choose the kind and describe what needs deciding, as text.")
     _pack(store, user, wid)
-    w, _ = _find(store, wid)
-    with store._quality_operation(user, w["case_id"]) as (c, actor):
-        routed = route_escalation(
-            body.get("kind"),  # type: ignore[arg-type]
-            body.get("summary"),  # type: ignore[arg-type]
-            actor["email"],
-            wid,
-            body.get("named_owner") or "",
-            body.get("owner_role") or "",
+    w, found = _find(store, wid)
+    if found.get("closed") is not False or w["state"] == "Withdrawn":
+        raise ValueError("This work order is withdrawn or its case is closed.")
+    explicit_owner = "named_owner" in body or "owner_role" in body
+    raw_owner = (body.get("named_owner") or "").strip()
+    raw_role = (body.get("owner_role") or "").strip()
+    if explicit_owner and not raw_owner:
+        raise ValueError("Name the staff owner who will decide this (named_owner).")
+    with _read_dependency(store, user), store._quality_operation(user, w["case_id"]) as (c, actor):
+        if c.get("closed") is not False:
+            raise ValueError("This work order is withdrawn or its case is closed.")
+        raised_by = str(actor.get("name") or actor["email"])
+        routed = (
+            route_escalation(kind, summary, raised_by, wid, raw_owner, raw_role)
+            if explicit_owner
+            else route_escalation(kind, summary, raised_by, wid)
         )
+        staff = store._quality_staff()
+        if staff and explicit_owner:
+            match = [
+                p
+                for p in staff
+                if _norm(p.get("name")) == _norm(routed["owner"]["name"])
+                and p.get("role") == routed["owner"]["role"]
+            ]
+            if not match:
+                raise ValueError("The named owner must be a staff member holding that owner_role.")
+            routed["owner"]["name"] = str(match[0]["name"])
+        elif staff:
+            by_name = [p for p in staff if _norm(p.get("name")) == _norm(routed["owner"]["name"])]
+            if by_name and not any(p.get("role") == routed["owner"]["role"] for p in by_name):
+                raise ValueError("The named owner must be a staff member holding that owner_role.")
+        now = _now()
         rows = c.setdefault("escalations", [])
+        field_rows = c.setdefault("field_escalations", [])
+        seq = max(len(rows), len(field_rows)) + 1
         rec = dict(
             routed,
-            id=f"ESC-{wid}-{len(rows) + 1}",
+            id=f"ESC-{wid}-{seq}",
             case_id=w["case_id"],
             named_owner=routed["owner"]["name"],
             owner_role=routed["owner"]["role"],
             escalation_kind=routed["kind"],
             routed_by=actor["email"],
-            routed_at=_now(),
+            routed_at=now,
+            raised_at=now,
+            raised_by_email=actor["email"],
         )
         job_pack.assert_advisory(rec)
-        rows.append(rec)
+        rows.append(deepcopy(rec))
+        field_rows.append(deepcopy(rec))
+        store.audit(
+            actor["email"],
+            "field_escalation_raised",
+            w["case_id"],
+            (
+                f"{wid} {rec['kind']} owner={rec['named_owner']} "
+                f"({rec['owner_role']}) acts_as_contract_instruction=False"
+            ),
+        )
         store.audit(
             actor["email"],
             "field_escalation_routed",
@@ -548,7 +628,7 @@ def escalate(store: Any, user: Any, wid: str, body: dict[str, Any]) -> dict[str,
             f"{wid} {rec['escalation_kind']} to {rec['named_owner']} ({rec['owner_role']})",
         )
         store.save()
-        return dict(outcome="routed", escalation=dict(rec))
+        return dict(outcome="routed", escalation=deepcopy(rec))
 
 
 ACTIONS = {

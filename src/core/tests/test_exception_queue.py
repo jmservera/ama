@@ -77,6 +77,28 @@ class ExceptionQueueTests(unittest.TestCase):
         last = q.access_report("Olive Operator")["audit"][-2]
         self.assertEqual((last["actor"], last["action"]), ("Olive Operator", "request_rerun"))
 
+    def test_every_failure_kind_is_owned_audited_and_keeps_source_and_eligibility(self) -> None:
+        q = make()
+        for kind, owner in (
+            ("failed_import", "Sam Steward"),
+            ("failed_ai_run", "Olive Operator"),
+            ("stranded_task", "Olive Operator"),
+        ):
+            item = q.raise_failure(kind, owner, "x", ORIGINAL, "boom")
+            self.assertEqual(item["owner"], owner)
+            self.assertEqual(item["original_source"], ORIGINAL)
+            self.assertTrue(item["unresolved_eligibility"])
+            self.assertEqual(item["eligibility"], "Unknown")
+            policy = item["recovery_policy"]
+            self.assertIs(policy["automatic_replay"], False)
+            self.assertIs(policy["automatic_release"], False)
+            self.assertNotIn("resolve_by_owner", policy["allowed_actions"])
+            out = q.request_recovery(owner, item["id"], "hold", "checking")
+            self.assertIs(out["recovery"]["automatic_replay"], False)
+            self.assertIs(out["recovery"]["automatic_release"], False)
+            self.assertTrue(out["unresolved_eligibility"])
+            self.assertEqual(out["original_source"], ORIGINAL)
+
     def test_action_must_match_item_kind(self) -> None:
         q = make()
         failure = q.raise_failure("failed_ai_run", "Olive Operator", "x", ORIGINAL, "timeout")
@@ -155,6 +177,76 @@ class ExceptionQueueTests(unittest.TestCase):
         q.clear_outage("Olive Operator", " model-service ", "ok")
         self.assertEqual(q.outage_banner()["state"], "unknown")
         self.assertEqual(q.outage_banner()["components"], {})
+
+    def test_queued_conflict_exposes_resolution_owner_and_recovery_context(self) -> None:
+        q = make()
+        q.raise_conflict(
+            "source_conflict",
+            "Sam Steward",
+            "Build year",
+            VALUES,
+            {**ORIGINAL, "correlation_id": "corr-stock-1"},
+            ref="stock:C1:SQ-1",
+        )
+        (queued,) = q.queue("Sam Steward")
+        self.assertEqual(queued["resolution_owner"], "Sam Steward")
+        self.assertEqual(queued["values"], VALUES)
+        self.assertEqual(queued["correlation_id"], "corr-stock-1")
+        self.assertEqual(queued["recovery_context"]["correlation_id"], "corr-stock-1")
+        self.assertEqual(queued["recovery_context"]["ref"], "stock:C1:SQ-1")
+        self.assertFalse(queued["recovery_context"]["automatic_replay"])
+        self.assertFalse(queued["recovery_context"]["automatic_release"])
+
+    def test_multi_step_recovery_records_timestamped_audit_trail_without_mutating_source(
+        self,
+    ) -> None:
+        ticks = iter(
+            [
+                "2026-11-01T00:00:00+00:00",
+                "2026-11-01T01:00:00+00:00",
+                "2026-11-01T01:00:01+00:00",
+                "2026-11-01T02:00:00+00:00",
+                "2026-11-01T02:00:01+00:00",
+            ]
+        )
+        q = ExceptionQueue(STAFF, clock=lambda: next(ticks))
+        item = q.raise_failure(
+            "failed_ai_run", "Olive Operator", "Model call", ORIGINAL, "timeout", ref="R-9"
+        )
+        self.assertEqual(item["failure_category"], "failed_ai_run")
+        self.assertEqual(item["correlation_id"], "R-9")
+        held = q.request_recovery("Olive Operator", item["id"], "hold", "Checking model logs")
+        self.assertEqual(held["status"], "held")
+        self.assertEqual(len(held["audit_trail"]), 1)
+        rerun = q.request_recovery(
+            "Olive Operator", item["id"], "request_rerun", "Incident cleared; ask human re-run"
+        )
+        self.assertEqual(rerun["status"], "rerun_requested")
+        self.assertEqual([e["action"] for e in rerun["audit_trail"]], ["hold", "request_rerun"])
+        self.assertEqual(
+            [e["at"] for e in rerun["audit_trail"]],
+            ["2026-11-01T01:00:00+00:00", "2026-11-01T02:00:00+00:00"],
+        )
+        self.assertTrue(all(not e["replayed"] and not e["released"] for e in rerun["audit_trail"]))
+        self.assertEqual(rerun["recovery"]["at"], "2026-11-01T02:00:00+00:00")
+        self.assertEqual(rerun["original_source"], ORIGINAL)
+        self.assertEqual(rerun["eligibility"], "Unknown")
+
+    def test_outage_banner_includes_next_steps_and_detected_outages(self) -> None:
+        q = make()
+        unknown = q.outage_banner()
+        self.assertEqual(unknown["state"], "unknown")
+        self.assertTrue(any("verify source records" in s for s in unknown["next_steps"]))
+        clear = q.outage_banner("2026-11-01T00:00:00+00:00")
+        self.assertEqual(clear["state"], "no_known_outage")
+        self.assertTrue(clear["next_steps"])
+        q.record_detected_outage(
+            "ai-tasks (all)", "Suspended: provider fault", since="2026-11-01T00:00:00Z"
+        )
+        down = q.outage_banner()
+        self.assertEqual(down["state"], "outage")
+        self.assertIn("ai-tasks (all)", down["components"])
+        self.assertTrue(any("Continue manual case work" in s for s in down["next_steps"]))
 
 
 if __name__ == "__main__":

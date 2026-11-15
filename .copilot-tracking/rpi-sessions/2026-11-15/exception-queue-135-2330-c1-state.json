@@ -1,0 +1,61 @@
+{
+  "task_id": "issue-135-2330-c1",
+  "task_slug": "exception-queue-135-2330-c1",
+  "parent_task": {
+    "task_id": "issue-135-2330",
+    "task_slug": "exception-queue-135-2330"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/exception-queue-135-2330-c1-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/exception-queue-135-2330-c1-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/exception-queue-135-2330-c1-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/exception-queue-135-2330-c1-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/exception-queue-135-2330-c1-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/exception-queue-135-2330-c1-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run automatic full RPI loop (research, plan, implement, review) for Cycle 1 of Issue #135 (PR #1757) on branch feat/ux-135-exception-queue-2330 with focused validation tier.",
+      "status": "confirmed",
+      "evidence": "User prompt explicitly requested the full RPI loop in order (research, plan, implement, review) in non-interactive mode."
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready. Audited web/app.js and server.py: substantive WCAG 2.2 AA, Epic #149 focus/describedby/copy, and POST-only /api/exceptions/recovery contracts already hold without app.js/server.py changes; update counted baselines (8->9 invalid sites, 13->14 tables), add 9th-site static test, add /api/exceptions/recovery to EXEMPT in test_list_export_inventory.py, and update wcag-conformance-baseline.md + KB index/log.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/exception-queue-135-2330-c1-research.md (C1-C10)"
+    },
+    {
+      "decision": "Single-pass plan critique executed; Verdict Pass (0 Critical, 0 High, 0 Medium, 2 Low). Direct planner polish PC-001 (ruff <=100-char EXEMPT string and function slice anchor) and PC-002 (literal app.js statement order in Error identification prose and explicit log.md relative-link verification) applied directly; no user decision required.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/exception-queue-135-2330-c1-plan-critique.md (PC-001, PC-002)"
+    },
+    {
+      "decision": "Post-implementation Review executed once; Execution status Complete; Outcome Conformant across full P01 boundary (FR-1..FR-4, NFR-1..NFR-2, AC-1..AC-5) with 0 defects.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/exception-queue-135-2330-c1-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Select a ranked post-Review follow-up item, Stop automatic session, or Switch to manual mode."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Wire one shared [data-unsaved=\"true\"] beforeunload and hash-navigation guard across employee workbench forms in src/api/src/zava_forward/api/web/app.js.",
+      "rationale": "Highest ease (single centralized listener in app.js), immediate UX value preventing accidental loss of in-progress audit reasons and review notes, and KISS/DRY leverage eliminating per-form navigation guards.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-14/exception-queue-135-2330-review.md (RV-001) and .copilot-tracking/reviews/logs/2026-11-15/exception-queue-135-2330-c1-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Connect standalone importer process rejected-batch storage directly to the shared database without manual refusal-ledger transfer once importer storage topology is unified.",
+      "rationale": "Moderate cross-package effort (src/importer and src/core), high operational completeness for rejected batch visibility, and inversion-of-control/dependency-reduction leverage over manual ledger handoffs.",
+      "evidence": ".copilot-tracking/plans/2026-11-15/exception-queue-135-2330-c1-plan.md (Follow-Up Items) and .copilot-tracking/reviews/logs/2026-11-15/exception-queue-135-2330-c1-review.md"
+    }
+  ]
+}

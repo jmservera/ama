@@ -1322,8 +1322,13 @@ same actor signing in again sees the original draft and request id, and a differ
 Because the draft lives only in memory, an aftercare `beforeunload` guard warns on reload, full
 navigation or tab close while the draft is edited or its save is unconfirmed; safe hash-route changes
 do not prompt, and the guard clears on a confirmed receipt, sign-out or actor change. Nothing is
-written to browser storage. No evaluator or resident account, portal or closure is
+written to browser storage. `aftercare.js` renders dedicated channel and `support_needed` labels
+(including multi-select communication adjustments and the `representative` channel), preserves
+`Unknown` without coercing missing rows or concern lists to `0` or `No concerns raised`, and shows
+the `FR-036` proposal-only `aftercare-concern-pack` status on the evaluator view. No evaluator or
+resident account, portal or closure is
 added; the quality-note action is not offered as concern intake. Tests: `tests/test_aftercare_served.py`,
+`tests/test_aftercare_screen.py`,
 `tests/test_role_endpoint_inventory.py`; browser check `checks/aftercare_browser_check.py` (constructed
 keyboard and axe observations, not assistive-technology or WCAG acceptance).
 
@@ -5896,6 +5901,11 @@ The screen `staff-job-pack-intake` (`web/staff-intake.js`) is registered through
 Browser capture (opt-in, `ZF_STAFF_INTAKE_BROWSER=1` and the pinned `ZF_AXE_PATH`) ran axe on four states;
 SQL Server tests are opt-in with `ZF_STAFF_INTAKE_MSSQL=1`. This is not a provider portal and not assistive
 technology, named quality, legal or live acceptance. Slice 2 text above predates these routes.
+`field-escalate` takes `kind` and `summary` plus either an explicit staff `named_owner` and `owner_role`
+or the configured escalation destination when assigned (400 for non-text values, placeholder/role-word or
+unassigned owners, an instruction or binding claim, a closed case or a withdrawn order). The screen raises it
+through a form and shows a raised item as not a contract instruction only when the server stamps confirm it is
+advisory; otherwise it shows Unknown. Tests: `test_fieldwork_variation_owner_guard.py` and `test_staff_intake_api.py` (SQLite, JSON store, node vm).
 
 Corrective cycle C4: capture needs the explicit job pack reference the worker wrote against (400 if
 missing or malformed, 409 if the pack changed); a retry with the same capture reference replays the stored

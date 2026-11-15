@@ -585,7 +585,11 @@ entries are kept. Age is never an input and no timeout exists: an aged
 `Pending` attempt stays `Pending`. Supersession sends nothing and does not
 authorize a resend: a later send still needs `retry_unresolved` and the usual
 owner or named-reviewer rights, and a `Superseded` attempt still counts as
-unresolved. A late outcome for a superseded attempt is refused and its
+unresolved. A later `Acknowledged` attempt never supersedes an earlier one; it
+only sets `stale_pending_supersession_required` and
+`supersession_eligible_attempts` (idle `Pending` attempts, not in flight) on the
+route, with `supersession_evidence_ref` set to its `receipt_ref` for the two
+authorizers to cite. A late outcome for a superseded attempt is refused and its
 `receipt_ref` logged. Limits: the in-flight check is per store instance;
 a receipt found by verification has no manual recording path (do not
 supersede, reconcile with the receiver); the evidence reference is kept
@@ -641,6 +645,38 @@ rule reference in a newer schema version stales every field; other schema
 changes stale only dependent fields (see dependency propagation below). It
 never marks anything reviewed.
 
+`form_validation.validate(store, user, case_id, draft_id, rules)` evaluates
+deterministic closed-vocabulary rule sets (`min`, `max`, `max_length`,
+`pattern`, `equals`, `one_of`, and `sum` using exact `Decimal` arithmetic)
+over reviewer-confirmed inputs only. Structural errors or rules targeting
+human-only categories (`declaration`, `signature`, `attestation`, `consent`,
+`approval`) raise `ValueError`. Validation is `Not evaluated` unless the
+registered schema and source policy are approved, `funding` forms carry an
+`Evidenced` route, the draft's `schema_digest` matches the registered version,
+`(rules["id"], rules["version"])` appears in `schema["rule_refs"]`, and
+`rules["approval"]` and `rules["bound"]` match the exact schema and template
+versions. Unreviewed, rejected, stale or blank-string fields are never passed to
+rules (`Unknown`), tampered or unregistered reviewer history fails (`Fail`),
+approved `sum` rules resolve matching `calculation_ref` placeholders, and
+overall status aggregates with `Fail > Conflict > Unknown > Pass`.
+
+`form_validation.review_pack(store, user, case_id, draft_id, rules)` runs one
+read-only `_report` pass (hashing each distinct document at most once) to build
+a version-linked pack containing `fields`, deduplicated `evidence` linked by
+`attachment_id` (`{id}:v{version}`), `attachments`, `history`, `validation` and
+`stale_fields`, stamped with `template_version`, per-field/per-evidence
+`input_version` and `content_sha256`. `pack_status` is `Ready for Finance review`
+only when `validation["status"] == "Pass"` and `stale_fields` is empty (otherwise
+`Held`); `reviewed` stays `False`, `submission` stays `Not submitted` and
+`eligibility` stays `Not assessed`. `form_validation.pack_freshness(store, user,
+case_id, saved_pack, rules)` verifies `content_sha256` and case identity
+(`Invalid` on tamper or cross-case copy, `Unavailable` when retained evidence
+or the working draft is unavailable) and returns `Current` or `Stale` with
+exact `stale_fields`, `unaffected_fields` and `reasons`, propagating staleness
+only through `required_when` (`field_id`) and `sum` (`addends` to target)
+dependencies across source, input, schema and rule changes (including
+Pass-preserving parameter or message edits).
+
 `view` and `diagnose` provide field-specific Unknown/Conflict/Fail draft
 diagnostics and source-linked diagnostic manifests. Conditions use confirmed,
 valid, current values only, combine predicates with OR and compare types
@@ -670,7 +706,10 @@ returns `diagnostic_freshness`, one entry per saved manifest: `Stale` when
 reviewed inputs changed after it (`changed_fields` lists only the fields whose
 reviewed value or state differ from the manifest), a bound source changed
 (`stale_fields` lists only those fields) or a newer schema version exists, with a re-run action; otherwise
-`Current`. Approved rules, calculations and reviewed packs still do not exist.
+`Current`. In `form_review` alone, approved rules and calculations remain Not
+evaluated; `form_validation` evaluates deterministic approved rule sets when
+supplied, while live approved schemas, live rule sets and reviewed packs remain
+gated on external human Finance and template-owner authority (FD-01 to FD-14).
 
 Dependency propagation (#96, FR-043 part) is derived on read from the immutable
 schema registry; nothing is written and history is kept. `forms.schema_impact`
@@ -695,8 +734,10 @@ are never created here: a draft-scoped hold that carries approval fields is
 `field_ids`) whose listed fields are not stale, removed, unknown or reviewed
 after that input version; otherwise `Review required`. A plain Held record stays
 `Held`, other drafts' records are ignored and a malformed ledger entry is
-`Review required`. Approved schemas, rules, Finance review and reviewed exports
-remain unmet.
+`Review required`. `forms.register_schema` still registers unapproved schemas
+only; live approved schemas, live approved rule sets, Finance review and
+reviewed exports (`reviewed=True`) remain gated on external human Finance,
+Legal and template-owner decisions (FD-01 to FD-14).
 Already-clean evidence is required: reads/reviews never scan or save a source.
 Missing, pending, quarantined or deleted retained evidence blocks disclosure of
 the entire affected draft/history, including recorded diagnostics. On `view`,
@@ -727,12 +768,39 @@ figures, approved thresholds or restart authority are invented.
 From `src/core`, after pip editable installation:
 
 ```bash
-PYTHONPATH=tests python3 -m unittest test_form_review test_form_staging test_form_dependencies -q
+PYTHONPATH=tests python3 -m unittest test_form_review test_form_staging test_form_dependencies test_form_export test_issue_98_field_validation -q
 ```
 
 Tests use the public tiny synthetic fixture with temporary JSON/SQLite storage.
 Full #96/#98 approved readiness/export and #99 envelope/breach acceptance remain
 blocked on human decisions. No issue closure or production acceptance is implied.
+
+## Investment envelope, liquidity and downside tolerance controls (#99)
+
+`exposure_limits.record_limits(approval, envelope, tolerances, *, liquidity=None)`
+and `exposure_limits.load_limits(path)` record human-approved capital envelope
+limits (`amount`, `currency`, `period` and optional `annual_plan`), optional
+liquidity and covenant minimum headroom floors (`minimum`, `currency` and
+optional paired `covenant_minimum` plus `covenant_unit`), and downside maximum
+tolerances across `safety`, `resident`, `quality`, `capital`, `grant` and
+`capacity`. The module holds zero Zava North Homes figures (`OD-12`, `OD-15`):
+every control requires attributed human approval (`approved_by`/`approver`,
+`YYYY-MM-DD` ISO date or `T` timestamp `approved_at`/`approved_on`, `role`,
+`evidence_ref` and `restart_owner`), and missing, blank, conflicting, stale or
+unrecognised fields raise `LimitsError` or return `Held`.
+
+`exposure_limits.assess(limits, exposure, today=None)` re-validates the supplied
+record, checks non-negative finite observations against upper ceilings and
+signed finite observations against minimum floors (including negative cash or
+covenant deficits), and returns `pause_signal` (`paused=True`,
+`decision_required=True`, `decision_owner=restart_owner`, `automatic_cut=False`)
+whenever any limit is breached, unknown, missing or stale. A within-limits
+result returns `No pause signal` and explicitly states it is not approval to
+accelerate; nothing automatically cuts, contains or restarts live delivery.
+
+```bash
+python3 -m unittest discover -s tests -p 'test_*99*.py' -v
+```
 
 ## Resident advisory assistant (#469)
 
@@ -4815,6 +4883,16 @@ Case detail applies the same current-reader check to both challenge narratives
 and the target catalog, including when a cookie or populated store cache still
 holds a downgraded or removed staff identity. Denial removes both fields without
 removing the ordinary case card; trusted internal `user=None` remains unchanged.
+Non-retaliation guard (#220): `challenge_open`, `challenge_resolve` and
+`nomination_correct` snapshot the protected case state (ranking inputs, stage,
+tenure/eligibility state, measure decisions and reviews, resident update
+commitment, and hazard records with response clocks) before the write and refuse
+with `Nothing was saved` if any of it differs afterwards, so a challenge or
+correction cannot lower priority, eligibility or queue rank, infer a refused or
+withdrawn state, or pause, hold or extend a hazard or safeguarding clock. Case
+detail returns `challenge_guarantees` to readers with challenge rights and the
+case screen lists them. Proof: `src/api/tests/test_challenge_non_retaliation_hazard_guard.py`.
+
 Release/model-route denial audit survives a failed accept/edit; failed human
 disposition changes and their acceptance/edit audit entries are rolled back.
 
@@ -4955,11 +5033,13 @@ only wire these read-only helpers into a staff view, which needs owner direction
 `zava_forward.core.aftercare.AftercareRegister` is a store-independent register for constructed
 aftercare concerns (FR-049, AC-063). `raise_concern` records a discomfort, higher-bill, control-use
 or other concern from a household or a representative (a stated basis is required) by a `digital`
-route or a `staff_recorded` route (phone, in-person, paper or assisted-visit channel) with a named
-human owner, a next-update date and a fixed non-digital route statement. Only the owner records an
-investigation outcome, and the basis must be a human one (home visit, household conversation,
-specialist review or records review); a sensor reading is stored as context, is never a basis and
-never dismisses the report. The remedy status is separate and completion needs evidence.
+route or a `staff_recorded` route (phone, in-person, paper, assisted-visit or representative
+channel) with a named human owner, a next-update date and a fixed non-digital route statement. Only
+the owner records an investigation outcome, and the basis must be a human one (home visit,
+household conversation, specialist review or records review); a sensor reading is stored as context,
+is never a basis and never dismisses the report. Staff-authored outcome, remedy and pack-review
+notes pass `neutral_text`, while household verbatim statements and representative basis stay
+untouched. The remedy status is separate and completion needs evidence.
 `record_closure` records handover or financial closure separately and changes no concern or remedy;
 `unresolved()` keeps open concerns visible after closure. `evaluator_view(handed_over_homes,
 baseline_homes)` returns counts with stated denominators, unknown baseline coverage, outcomes
@@ -4973,35 +5053,50 @@ summary is attached only after the neutral-text guard. It is `Not reviewed` and 
 until the named owner calls `review_pack` with `accept` or `reject` and a reason; neither action
 changes the concern, its outcome or its remedy, and a sensor reading never appears in the pack. The
 task `aftercare-concern-pack` is registered in `ai_registry` as an unapproved, disabled proposal
-task with a manual route and no model binding (FR-036).
+task with a manual route and no model binding (FR-036), and both `propose_pack` and
+`AftercareService.evaluator_view` (`concern_pack_task`) attach that `FR-036` registry status.
 
 `add_sensor_context` attaches a later sensor signal to a concern as context only: it changes no
 investigation state, outcome or remedy, never marks the concern dismissed, and the text (also at
 `raise_concern`) passes the neutral-text guard. The household view still omits sensor context.
 
 `intake_form()` returns the plain-language household route (who is raising it, representative
-basis, concern kind, own-words statement, and the phone, in-person, paper and assisted-visit
-channels) for a screen or paper form to follow, and `intake_errors(values)` returns plain,
-per-field problems. `to_state()` and `AftercareRegister.from_state()` give a JSON-safe snapshot for
-a later store; a restore is refused if it would mark a concern sensor-dismissed, give an outcome a
-non-human basis, or orphan a pack.
+basis, concern kind, own-words statement, optional `support_needed` communication or visit
+adjustments from `SUPPORT_OPTION_CODES`, and the phone, in-person, paper and assisted-visit
+channels) for a screen or paper form to follow; `intake_errors(values)` returns plain, per-field
+problems and `intake_error_summary(errors)` builds a plain-language summary. `to_state()` and
+`AftercareRegister.from_state()` give a JSON-safe snapshot (backward-compatible with earlier
+records without `support_needed`); a restore is refused if it would mark a concern sensor-dismissed,
+give an outcome a non-human basis, orphan a pack, or introduce causation, blame or savings wording.
+`assert_templates_neutral` checks every fixed module template at import time, and `neutral_text`
+blocks literal phrases, Unicode/hyphen/newline evasions, causal/blame/savings paraphrases, and
+second-clause injections after uncertainty or negation clauses without echoing rejected text.
 
-Not delivered: persistence in the stores, API and UI wiring (Fluent 2, WCAG), evaluator role access
-and the DPO position on outcome data (both open), a model route for the pack summary (needs
-release evidence and owner approval), and a pack screen. Tests: `src/core/tests/test_aftercare.py`.
+Not delivered: served resident and staff UI screens and WCAG 2.2 AA assistive-technology acceptance
+evidence, named operational owners in live deployment, evaluator role access and the DPO position on
+outcome data (both open), a model route for the pack summary (needs release evidence and owner
+approval), and a pack screen. Tests: `src/core/tests/test_aftercare.py`.
 
 Stage A of the connected slice (#133, Refs only, unwired) adds
-`zava_forward.core.aftercare_intake.AftercareService`, a synthetic staff-assisted layer over the
-register above. It does not reimplement the register. It adds a role-gated intake (existing staff
-roles only), a durable receipt that keeps the raw statement and representative basis, an idempotent
-`request_id`, owner actions limited to the named synthetic scenario owner (a missing owner is
-`Unknown`, and only a manager can name one afterwards), manager-only closure that never alters a
-concern, and a joined baseline, outcome and unresolved view with denominators and Unknowns. State is
-one validated JSON document behind an atomic `StateStore.update`; `FileStateStore` is a
-demonstration store only. `handle(method, path, user, body, query)` is the route contract for a later
-thin hook. Not delivered: server, store, UI route or endpoint-inventory wiring; served, persistence,
-restart and browser evidence; evaluator role; DPO or lawful-basis position. The unwired screen module
-is `src/api/src/zava_forward/api/web/aftercare.js`. Tests: `src/core/tests/test_aftercare_intake.py`
+`zava_forward.core.aftercare_intake.AftercareService`, a synthetic service layer over the register
+above. It does not reimplement the register. Alongside role-gated staff-recorded non-digital intake
+(`form`, `record_concern` on `/api/aftercare/form` and `/api/aftercare/concerns` for phone,
+in-person, paper, assisted-visit and representative channels), it exposes accessible self-service
+digital intake for households and representatives (`household_form`, `submit_household_concern`, and
+digital-only `request_id`-bound `household_receipt` on `/api/aftercare/household-form` and
+`/api/aftercare/household-concerns` omitting staff sensor context and audit history), preserving
+optional `support_needed` adjustments (normalising legacy `call_back` to `callback_window`),
+verbatim household statements and representative basis, idempotent `request_id` replay across UTC
+days (preserving legacy `staff_recorded` SHA-256 request fingerprints), owner actions limited to the
+named synthetic scenario owner (a missing owner is `Unknown`, and only a manager can name one
+afterwards), manager-only closure that never alters a concern, import-time and runtime
+neutral-text checks across service and store messages, and a joined baseline, outcome and unresolved
+view with denominators and Unknowns. State is one validated JSON document behind an atomic
+`StateStore.update`; `FileStateStore` is a demonstration store only. `handle(method, path, user,
+body, query)` is the route contract for a later thin hook. Not delivered: server, UI route or
+endpoint-inventory wiring; served, restart and browser accessibility evidence; evaluator role; DPO
+or lawful-basis position. The unwired screen module is
+`src/api/src/zava_forward/api/web/aftercare.js`. Tests: `src/core/tests/test_aftercare_intake.py`
 and `src/api/tests/test_aftercare_screen.py`. Corrective cycle C2: an exact replay returns the
 original receipt even after `next_update` has passed (the time check applies to new records only),
 sensor-context keys and values pass the same best-effort synthetic privacy guard and length limits
@@ -5214,7 +5309,13 @@ member, corrector and acknowledger join the record participants, so the existing
 from accepting. A repeated `capture_ref` replays without a second record, and a changed pack digest is
 rejected as stale. The configured escalation destination comes from `ZF_STAFF_INTAKE_ESCALATION_OWNER`,
 `_ROLE` and `_CONTACT`; anything missing shows "Unknown - not configured". Nothing here is a contract
-instruction, resident consent or acceptance, and `POST /api/workorders/{id}/field-escalate` records a variation or concern for a named owner as advice only (summary held for roles without a recorded need). Persistence
+instruction, resident consent or acceptance. `escalate` (`POST /api/workorders/{id}/field-escalate`) routes a
+fieldwork variation or concern to a named owner (explicit staff owner holding a contract manager or building
+safety liaison role, or the configured escalation destination when assigned) as text-only `kind` and `summary`,
+advice-only (`contract_instruction=False`, `is_contract_instruction=False`, `acts_as_contract_instruction=False`)
+with `note` and `contract_notice` preserved by the no-need projection. Placeholder/role-word owner names,
+instruction or binding claims, closed cases and withdrawn orders are refused, and `summary` free text is held
+for roles without a recorded need on both the intake view and case detail. Persistence
 reuses the case body, so there is no schema change. Tests: `src/api/tests/test_staff_intake_api.py`.
 C4 changes: `capture` passes the work order's bound, still-current resident scope revision as
 `context_revision` (409 if missing or changed, never waived); new evidence needs an explicit valid
@@ -5225,13 +5326,15 @@ oid (a name is still allowed and the real accept path denies that person); `capt
 under the existing procurement validation token, so on SQL a work order withdrawn or reissued by another
 store before the commit raises a conflict and no receipt is stored. An existing token is never replaced.
 Limits: receipts stored before C5 with a staff code as worker are not rewritten; the JSON store has no
-cross-process guard; an escalation names a person but is not verified against staff records; synthetic approvals are not QA, legal or resident consent.
+cross-process guard; an env-configured fallback owner outside the staff directory is checked for non-placeholder syntax and role consistency rather than external HR records; synthetic approvals are not QA, legal or resident consent.
 
 ## Constructed learning-test report command (#129, Refs #123)
 
 `learning_test_bundles` can print one bundle's existing stop-first report from caller-constructed
-numbers. It adds only an input boundary: `run_report` and `render_report`, the five bundles,
-comparators, six effort components and zero-target counts are unchanged.
+numbers. Each `Bundle` and `compare_bundle` result also exposes canonical protocol metadata
+(`title`, `atlas_ids`, `linked_requirements`, `learning_question`, `beyond_effort_measures`, and
+`stop_rule`), while `run_report` and `render_report`, the five bundle keys, comparators, six effort
+components and zero-target counts remain backward-compatible.
 
 ```bash
 python -m zava_forward.core.learning_test_bundles < constructed-run.json
@@ -5255,3 +5358,38 @@ until Finance validates them. It stores nothing: no file, run record, database, 
 `ZF_DATA` access. Tests: `python -m unittest discover -s tests -p 'test_learning_test_bundles.py' -q`.
 This is not a real experiment, screen wiring, stored runs or multi-run aggregation; those stay held
 by the [protocol](../../docs/reference/research/ux/journey-learning-test-bundles.md).
+
+## Usability testing programme contract and evaluator (#155)
+
+`zava_forward.core.usability_programme` defines the deterministic validator and evaluator for the
+[moderated usability testing programme](../../docs/reference/research/ux/usability-test-programme-plan.md):
+
+* `default_programme_plan()` and `validate_programme_plan(plan)` enforce 5 to 8 participants per
+  role cohort across all 11 PRD perspectives plus voluntary `resident` and `resident-representative`
+  cohorts (with `T0` scoped to staff and contractor workbenches only), a separate 2 to 3
+  `proxy-pilot` cohort (`counts_toward_role_minimum=False`), eight accessibility-support clauses
+  covering screen reader, keyboard-only, 400% magnification, and manual/non-digital routes, and
+  eight voluntary separate consent and synthetic-only data-handling clauses.
+* `derive_task_scripts()` and `validate_task_scripts(scripts)` derive the 21 canonical task scripts
+  (`T0`, `T1` to `T8`, `R-J1` to `R-J6`, `R-R1`, and `B1-story-once` to `B5-funding-evidence`)
+  live from `profile_journey_contract`, `perspective_walkthroughs` (retaining `partial`, `unmet`,
+  and `PROXY_ONLY` markers), `journey_register.JOURNEYS`, and `learning_test_bundles.BUNDLES`
+  (preserving two-arm comparators, zero-target stop rules, Atlas failure cases, `O16` single
+  counting, and `OUT_OF_SCOPE` exclusion).
+* `validate_audit_use_agreement(agreement, measurement_date=...)` and `evaluate_role_measures(...)`
+  gate staff usability measurement on prior `named_human` staff representative agreement to the
+  non-surveillance `SA-010` audit-use statement (`agreed_date <= measurement_date`), reject
+  individual-level keys (`FORBIDDEN_MEASURE_FIELDS`) or per-participant rows, mask sub-5 cells
+  (`MIN_CELL_FLOOR = 5`) to `None` while retaining `h4_stop_rule_breach`, and keep `SA-009`
+  thresholds (`>=80%` `<5m` on `T0`, median `SUS >= 70`) marked as design hypotheses.
+* `log_finding(...)` and `validate_findings_log(...)` require unique `UF-NNN` IDs, `1..4` severity,
+  anonymised text, GitHub backlog issue links (`#N` or issue URL), `named_human` risk-acceptance
+  owners, and human retest evidence (`synthetic_walkthrough` and `proxy_pilot` cannot close a
+  finding as `retested`).
+* `evaluate_programme_results(...)` and `build_synthetic_walkthrough_report()` retain `supported`,
+  `not_supported`, `inconclusive`, and `not_run` outcomes without silent omission and stamp every
+  synthetic walkthrough record and report with `not_user_validation=True` and
+  `"Synthetic walkthrough - not user validation"` (`user_validation_established=False`,
+  `human_usability_signoff=False`). Tests: `tests/test_usability_programme.py`. Refs #155; real
+  human participant sessions, staff `SA-010` agreement, and DPO retention sign-off remain unrun.
+

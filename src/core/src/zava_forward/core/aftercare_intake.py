@@ -21,27 +21,36 @@ import tempfile
 import unicodedata
 from collections.abc import Callable, Collection, Mapping, Sequence
 from copy import deepcopy
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Protocol, TypeVar, cast
 
-from . import chat_privacy
+from . import ai_registry, chat_privacy
 from .aftercare import (
     ACCESSIBLE_ROUTE,
     CLOSURE_KINDS,
     EVALUATOR_NOTICE,
     NON_DIGITAL_CHANNELS,
+    PACK_MANUAL_ROUTE,
+    PACK_TASK,
     PROTECTION,
     AftercareRegister,
+    assert_templates_neutral,
+    intake_error_summary,
     intake_errors,
     intake_form,
     neutral_text,
+    normalize_support_needed,
 )
 from .controls import RESIDENT_ROLES, RESIDENT_VIEW_ROLES
 from .synthetic import sensor_scenarios as ss
 from .workflows import MANAGER_ROLES
 
 _redact = cast(Callable[[str], tuple[str, list[str]]], chat_privacy.redact)
+_registry_get = cast(Callable[[str], dict[str, Any] | None], ai_registry.get)
+_authorizes_live = cast(
+    Callable[[str, Mapping[str, str] | None], bool], ai_registry.authorizes_live
+)
 Doc = dict[str, Any]
 Record = dict[str, Any]
 T = TypeVar("T")
@@ -52,6 +61,8 @@ VIEW_ROLES: tuple[str, ...] = tuple(RESIDENT_VIEW_ROLES)
 MANAGER: tuple[str, ...] = tuple(MANAGER_ROLES)
 UNKNOWN_OWNER = "Unknown (no owner named)"
 OWNER_SUFFIX = " (synthetic scenario owner)"
+COHORT_LABEL = "Synthetic handover cohort"
+DEFAULT_UPDATE_DAYS = 7
 REQUEST_ID = re.compile(r"^[A-Za-z0-9_-]{8,64}$")
 STATEMENT_MAX = 1000
 BASIS_MAX = 200
@@ -65,6 +76,7 @@ CHANNEL_LABELS = {
     "in_person": "In person",
     "paper": "On paper",
     "assisted_visit": "During an assisted visit",
+    "representative": "Through a representative",
 }
 SYNTHETIC_NOTICE = (
     "This is a demonstration with synthetic records only. Do not enter real names, contact "
@@ -76,6 +88,44 @@ CLOSURE_NOTE = (
 )
 SENSOR_NOTE = (
     "Sensor readings are context only. A normal reading does not close, lower or dismiss a concern."
+)
+OWNER_NOTE = "A new concern has no named owner. A manager names one afterwards."
+ASSISTED_MANUAL_ROUTE = (
+    "If this screen is unavailable, write the concern on paper with the "
+    "channel, your name and the home reference, and give it to the named owner."
+)
+HOUSEHOLD_MANUAL_ROUTE = (
+    "If you prefer not to use a screen, raise your concern by phone, in person, on paper, "
+    "with help at a visit or through a representative, and a member of staff will record it "
+    "with you."
+)
+HOUSEHOLD_UPDATE_NOTE = (
+    "We set the first update date within 7 days and a manager names the person looking into "
+    "your concern."
+)
+COMPARISON_UNKNOWN_REASON = (
+    "No usable comparison is recorded for this home, so the baseline and outcome are Unknown."
+)
+COMPARISON_SUFFICIENT_REASON = (
+    "Descriptive observed means only. They do not show a cause, assign fault or promise savings."
+)
+DEFAULT_VALIDATION_MESSAGE = "Some details need fixing before this can be recorded."
+STATE_INVALID_MESSAGE = (
+    "The saved aftercare record is not valid, so it was left unchanged. "
+    "Use the manual route and ask a person to check it."
+)
+STATE_UNREADABLE_MESSAGE = "The saved aftercare record could not be read, so it was left unchanged."
+CONFLICT_REQUEST_MESSAGE = (
+    "This request reference was already used for a different concern. Start a new record."
+)
+NOT_FOUND_MESSAGE = "That concern was not found."
+NOT_AVAILABLE_MESSAGE = "That action is not available here."
+RECEIPT_ACCESS_DENIED_MESSAGE = (
+    "Provide the matching request reference from your receipt to view this concern."
+)
+NEUTRAL_EVIDENCE_MESSAGE = (
+    "Write only factual notes on what was checked or done, with no claims about causes, "
+    "fault or future bills."
 )
 FIXED_UNKNOWNS = (
     "Values are synthetic exercise values, not measured homes or real households.",
@@ -96,6 +146,57 @@ _PRIVACY_LABELS = {
     "postcode": "a postcode",
     "special_category": "health or other sensitive detail",
 }
+_INTAKE_MESSAGES = (
+    "The saved record could not be read.",
+    "The record could not be opened. Nothing was saved.",
+    "The record is locked. Nothing was saved.",
+    "The record could not be saved. Nothing was saved.",
+    "Add at least one short descriptive note.",
+    "Enter a date as year-month-day, for example 2026-12-01.",
+    "Choose today or a later date.",
+    "Sign in again so your name can be recorded.",
+    "The request reference is missing. Reload the form and try again.",
+    "Choose how the household or representative raised this.",
+    "This home reference is not in the demonstration set.",
+    "Leave the owner blank. A manager names the owner afterwards.",
+    "No owner is named for this concern yet, so nobody can act on it. "
+    "A manager must name an owner first.",
+    "Only the named owner role can act on this concern.",
+    "Choose one of the listed owner roles.",
+    "This concern already has a named owner.",
+    "Choose handover or financial.",
+    "Send the details as a JSON object.",
+    "This is needed.",
+)
+
+
+assert_templates_neutral(
+    UNKNOWN_OWNER,
+    OWNER_SUFFIX,
+    COHORT_LABEL,
+    CHANNEL_LABELS,
+    SYNTHETIC_NOTICE,
+    CLOSURE_NOTE,
+    SENSOR_NOTE,
+    OWNER_NOTE,
+    ASSISTED_MANUAL_ROUTE,
+    HOUSEHOLD_MANUAL_ROUTE,
+    HOUSEHOLD_UPDATE_NOTE,
+    COMPARISON_UNKNOWN_REASON,
+    COMPARISON_SUFFICIENT_REASON,
+    DEFAULT_VALIDATION_MESSAGE,
+    STATE_INVALID_MESSAGE,
+    STATE_UNREADABLE_MESSAGE,
+    CONFLICT_REQUEST_MESSAGE,
+    NOT_FOUND_MESSAGE,
+    NOT_AVAILABLE_MESSAGE,
+    RECEIPT_ACCESS_DENIED_MESSAGE,
+    NEUTRAL_EVIDENCE_MESSAGE,
+    FIXED_UNKNOWNS,
+    WINDOWS,
+    _PRIVACY_LABELS,
+    _INTAKE_MESSAGES,
+)
 
 
 class StateInvalid(RuntimeError):
@@ -109,7 +210,7 @@ class PersistenceError(RuntimeError):
 class ValidationError(ValueError):
     def __init__(self, errors: Mapping[str, str], message: str | None = None) -> None:
         self.errors = dict(errors)
-        super().__init__(message or "Some details need fixing before this can be recorded.")
+        super().__init__(neutral_text(message or DEFAULT_VALIDATION_MESSAGE))
 
 
 class ConflictError(RuntimeError):
@@ -170,7 +271,7 @@ class FileStateStore:
 
 
 def owner_label(role: str) -> str:
-    return f"{role}{OWNER_SUFFIX}"
+    return neutral_text(f"{role}{OWNER_SUFFIX}")
 
 
 def _blank() -> Doc:
@@ -190,23 +291,43 @@ def _fingerprint(
     home: str,
     kind: str,
     statement: str,
-    channel: str,
-    next_update: str,
+    channel: str | None,
+    next_update: str | None,
+    *,
+    route: str = "staff_recorded",
+    support_needed: Sequence[str] = (),
 ) -> str:
-    payload = [raised_by, basis, home, kind, statement, channel, next_update]
+    support = list(support_needed)
+    if route == "staff_recorded" and not support:
+        payload: list[Any] = [raised_by, basis, home, kind, statement, channel, next_update]
+    else:
+        payload = [
+            route,
+            raised_by,
+            basis,
+            home,
+            kind,
+            statement,
+            channel,
+            next_update,
+            support,
+        ]
     return hashlib.sha256(json.dumps(payload).encode("utf-8")).hexdigest()
 
 
 def _receipt_fingerprint(r: Mapping[str, Any]) -> str:
     original = r["original"]
+    requested_update = original["next_update"] if "next_update" in original else r["next_update"]
     return _fingerprint(
         r["raised_by"],
         original["representative_basis"],
         r["home_ref"],
         r["kind"],
         original["statement"],
-        r["channel"],
-        r["next_update"],
+        r.get("channel"),
+        requested_update,
+        route=str(r.get("route", "staff_recorded")),
+        support_needed=tuple(r.get("support_needed", ())),
     )
 
 
@@ -235,15 +356,38 @@ def _validate(doc: object) -> Doc:
             original = receipt["original"]
             basis = original["representative_basis"]
             owner_known = receipt["owner"]["status"] != "unknown"
+            route = rec.get("route")
+            rec_support = rec.get("support_needed", [])
+            receipt_support = receipt.get("support_needed", [])
+            if route == "staff_recorded":
+                recorded_by = receipt.get("recorded_by")
+                valid_route = (
+                    rec.get("channel") in NON_DIGITAL_CHANNELS
+                    and rec.get("channel") == receipt.get("channel")
+                    and isinstance(recorded_by, dict)
+                    and rec.get("recorded_by") == recorded_by.get("name")
+                )
+            elif route == "digital":
+                req_update = original.get("next_update") if "next_update" in original else False
+                valid_route = (
+                    "channel" not in rec
+                    and "recorded_by" not in rec
+                    and receipt.get("channel") is None
+                    and receipt.get("recorded_by") is None
+                    and "next_update" in original
+                    and (req_update is None or req_update == receipt["next_update"])
+                )
+            else:
+                valid_route = False
             if (
                 receipt["concern_id"] != cid
                 or receipt["receipt_id"] != f"RC-{cid}"
-                or rec["route"] != "staff_recorded"
+                or receipt.get("route") != route
+                or not valid_route
                 or rec["home_ref"] != receipt["home_ref"]
                 or rec["kind"] != receipt["kind"]
                 or rec["raised_by"] != receipt["raised_by"]
-                or rec["channel"] != receipt["channel"]
-                or rec["recorded_by"] != receipt["recorded_by"]["name"]
+                or rec_support != receipt_support
                 or rec["statement"] != original["statement"].strip()
                 or rec.get("representative_basis") != (basis.strip() if basis else None)
                 or (owner_known and rec["owner"] != receipt["owner"]["label"])
@@ -257,10 +401,7 @@ def _validate(doc: object) -> Doc:
             ):
                 raise ValueError("action")
     except (ValueError, KeyError, TypeError, AttributeError) as exc:
-        raise StateInvalid(
-            "The saved aftercare record is not valid, so it was left unchanged. "
-            "Use the manual route and ask a person to check it."
-        ) from exc
+        raise StateInvalid(neutral_text(STATE_INVALID_MESSAGE)) from exc
     return doc
 
 
@@ -270,9 +411,7 @@ def _parse(text: str | None) -> Doc:
     try:
         return _validate(json.loads(text))
     except json.JSONDecodeError as exc:
-        raise StateInvalid(
-            "The saved aftercare record could not be read, so it was left unchanged."
-        ) from exc
+        raise StateInvalid(neutral_text(STATE_UNREADABLE_MESSAGE)) from exc
 
 
 def _guard_kinds(text: str) -> list[str]:
@@ -288,7 +427,7 @@ def _guard_kinds(text: str) -> list[str]:
 
 def _flagged(kinds: Sequence[str]) -> str:
     found = ", ".join(_PRIVACY_LABELS.get(k, k) for k in kinds)
-    return (
+    return neutral_text(
         f"This looks like it contains {found}. This demonstration holds synthetic "
         "records only, so take it out and describe the concern without it."
     )
@@ -297,19 +436,34 @@ def _flagged(kinds: Sequence[str]) -> str:
 def _context_errors(context: object) -> dict[str, str]:
     """Defined synthetic schema for sensor context: short descriptive text, guarded."""
     if not isinstance(context, Mapping) or not context:
-        return {"context": "Add at least one short descriptive note."}
+        return {"context": neutral_text("Add at least one short descriptive note.")}
     if len(context) > CONTEXT_MAX_ITEMS:
-        return {"context": f"Keep sensor context to {CONTEXT_MAX_ITEMS} notes or fewer."}
+        return {
+            "context": neutral_text(f"Keep sensor context to {CONTEXT_MAX_ITEMS} notes or fewer.")
+        }
     for position, (key, value) in enumerate(context.items(), start=1):
         if not isinstance(key, str) or not CONTEXT_KEY.fullmatch(key):
-            return {"context": f"Note {position}: use a short plain label of letters and numbers."}
+            return {
+                "context": neutral_text(
+                    f"Note {position}: use a short plain label of letters and numbers."
+                )
+            }
         if not isinstance(value, str) or not value.strip():
-            return {"context": f"Note {position}: write a short description."}
+            return {"context": neutral_text(f"Note {position}: write a short description.")}
         if len(value) > CONTEXT_VALUE_MAX:
-            return {"context": f"Note {position} is too long. Keep it under {CONTEXT_VALUE_MAX}."}
+            return {
+                "context": neutral_text(
+                    f"Note {position} is too long. Keep it under {CONTEXT_VALUE_MAX}."
+                )
+            }
         kinds = _guard_kinds(key) + [k for k in _guard_kinds(value) if k not in _guard_kinds(key)]
         if kinds:
-            return {"context": f"Note {position}: {_flagged(kinds)}"}
+            return {"context": neutral_text(f"Note {position}: {_flagged(kinds)}")}
+        try:
+            neutral_text(key)
+            neutral_text(value)
+        except ValueError:
+            return {"context": neutral_text(f"Note {position}: {NEUTRAL_EVIDENCE_MESSAGE}")}
     return {}
 
 
@@ -317,12 +471,28 @@ def _free_text(value: object, field: str, label: str, cap: int, errors: dict[str
     if not isinstance(value, str) or not value.strip():
         return ""
     if len(value) > cap:
-        errors[field] = f"{label} is too long. Keep it under {cap} characters."
+        errors[field] = neutral_text(f"{label} is too long. Keep it under {cap} characters.")
     else:
         kinds = _guard_kinds(value)
         if kinds:
             errors[field] = _flagged(kinds)
     return value
+
+
+def _staff_evidence(value: object, errors: dict[str, str]) -> None:
+    _free_text(value, "evidence", "The evidence", EVIDENCE_MAX, errors)
+    if "evidence" not in errors and isinstance(value, str) and value.strip():
+        try:
+            neutral_text(value)
+        except ValueError:
+            errors["evidence"] = neutral_text(NEUTRAL_EVIDENCE_MESSAGE)
+
+
+def _safe_error_text(exc: BaseException) -> str:
+    try:
+        return neutral_text(str(exc))
+    except ValueError:
+        return neutral_text(NEUTRAL_EVIDENCE_MESSAGE)
 
 
 def _date(value: object, field: str, floor: str, errors: dict[str, str]) -> str:
@@ -383,10 +553,12 @@ class AftercareService:
     @staticmethod
     def _staff(user: Mapping[str, Any] | None, roles: tuple[str, ...], what: str) -> Record:
         if not isinstance(user, Mapping) or user.get("role") not in roles:
-            raise PermissionError(f"Your role cannot {what}. Ask a colleague who can.")
+            raise PermissionError(
+                neutral_text(f"Your role cannot {what}. Ask a colleague who can.")
+            )
         name = user.get("name")
         if not isinstance(name, str) or not name.strip():
-            raise PermissionError("Sign in again so your name can be recorded.")
+            raise PermissionError(neutral_text("Sign in again so your name can be recorded."))
         return {"name": name.strip(), "role": str(user["role"])}
 
     def _log(self, doc: Doc, actor: Record, action: str, ref: str) -> None:
@@ -399,6 +571,19 @@ class AftercareService:
                 "ref": ref,
             }
         )
+
+    def household_form(self) -> Record:
+        """Accessible self-service digital concern form for a household or representative."""
+        form = intake_form()
+        return {
+            **form,
+            "assisted": False,
+            "owner_note": neutral_text(OWNER_NOTE),
+            "next_update_note": neutral_text(HOUSEHOLD_UPDATE_NOTE),
+            "homes": None if self.homes is None else sorted(self.homes),
+            "synthetic_notice": neutral_text(SYNTHETIC_NOTICE),
+            "manual_route": neutral_text(HOUSEHOLD_MANUAL_ROUTE),
+        }
 
     def form(self, user: Mapping[str, Any] | None) -> Record:
         self._staff(user, RECORD_ROLES, "record a concern")
@@ -418,12 +603,137 @@ class AftercareService:
             **form,
             "assisted": True,
             "staff_fields": staff_fields,
-            "owner_note": "A new concern has no named owner. A manager names one afterwards.",
+            "owner_note": neutral_text(OWNER_NOTE),
             "owner_choices": [{"value": r, "label": owner_label(r)} for r in VIEW_ROLES],
             "homes": None if self.homes is None else sorted(self.homes),
+            "synthetic_notice": neutral_text(SYNTHETIC_NOTICE),
+            "manual_route": neutral_text(ASSISTED_MANUAL_ROUTE),
+        }
+
+    def submit_household_concern(self, values: Mapping[str, Any]) -> tuple[Record, bool]:
+        """Submit a self-service accessible digital concern from a household or representative."""
+        errors = self._household_errors(values)
+        errors.update(intake_errors(values))
+        if errors:
+            raise ValidationError(errors, intake_error_summary(errors))
+        raised_by = str(values["raised_by"])
+        raw_basis = values.get("representative_basis")
+        basis = str(raw_basis) if raised_by == "representative" and raw_basis is not None else None
+        home = str(values["home_ref"]).strip()
+        statement = str(values["statement"])
+        support = normalize_support_needed(values.get("support_needed"))
+        raw_update = values.get("next_update")
+        requested_update = (
+            None
+            if raw_update is None or (isinstance(raw_update, str) and not raw_update.strip())
+            else date.fromisoformat(str(raw_update)).isoformat()
+        )
+        request_id = str(values["request_id"])
+        fingerprint = _fingerprint(
+            raised_by,
+            basis,
+            home,
+            str(values["kind"]),
+            statement,
+            None,
+            requested_update,
+            route="digital",
+            support_needed=support,
+        )
+
+        def work(doc: Doc) -> tuple[Record, bool]:
+            seen = doc["requests"].get(request_id)
+            if seen is not None:
+                if seen["fingerprint"] != fingerprint:
+                    raise ConflictError(neutral_text(CONFLICT_REQUEST_MESSAGE))
+                return deepcopy(doc["receipts"][seen["concern_id"]]), True
+            today = self._today()
+            if requested_update is not None:
+                if requested_update < today:
+                    raise ValidationError({"next_update": "Choose today or a later date."})
+                effective_update = requested_update
+            else:
+                effective_update = (
+                    date.fromisoformat(today) + timedelta(days=DEFAULT_UPDATE_DAYS)
+                ).isoformat()
+            reg = _register(doc)
+            rec = reg.raise_concern(
+                "digital",
+                raised_by,
+                home,
+                str(values["kind"]),
+                statement,
+                UNKNOWN_OWNER,
+                effective_update,
+                representative_basis=basis,
+                support_needed=support,
+            )
+            cid = str(rec["id"])
+            receipt = self._receipt(
+                rec,
+                None,
+                request_id,
+                statement,
+                basis,
+                route="digital",
+                requested_next_update=requested_update,
+            )
+            doc["register"] = reg.to_state()
+            doc["receipts"][cid] = receipt
+            doc["requests"][request_id] = {"fingerprint": fingerprint, "concern_id": cid}
+            self._log(
+                doc,
+                {"name": raised_by, "role": "household_route"},
+                "household_concern_submitted",
+                cid,
+            )
+            return deepcopy(receipt), False
+
+        return self._txn(work, writes=lambda outcome: not outcome[1])
+
+    def household_receipt(self, cid: str, request_id: str) -> Record:
+        """Read-only status and receipt for the raising household or representative."""
+        doc = self._load()
+        reg = _register(doc)
+        if cid not in reg.concerns or cid not in doc["receipts"]:
+            raise KeyError(cid)
+        rec = reg.concerns[cid]
+        receipt = doc["receipts"][cid]
+        if (
+            rec.get("route") != "digital"
+            or not isinstance(request_id, str)
+            or receipt.get("request_id") != request_id
+        ):
+            raise PermissionError(neutral_text(RECEIPT_ACCESS_DENIED_MESSAGE))
+        view = reg.view(cid)
+        unresolved = {r["id"] for r in reg.unresolved()}
+        owner = str(view["owner"])
+        return {
+            "id": cid,
+            "receipt_id": receipt["receipt_id"],
+            "request_id": receipt["request_id"],
+            "received_at": receipt["received_at"],
+            "route": view["route"],
+            "channel": view.get("channel"),
+            "raised_by": view["raised_by"],
+            "representative_basis": receipt["original"]["representative_basis"],
+            "home_ref": view["home_ref"],
+            "kind": view["kind"],
+            "statement": receipt["original"]["statement"],
+            "support_needed": list(view.get("support_needed", [])),
+            "owner": {
+                "label": owner,
+                "status": "unknown" if owner == UNKNOWN_OWNER else "synthetic_scenario_owner",
+            },
+            "investigation": view["investigation"],
+            "outcome": view["outcome"],
+            "remedy": view["remedy"],
+            "next_update": view["next_update"],
+            "unresolved": cid in unresolved,
+            "what_happens_next": receipt["what_happens_next"],
+            "accessible_route": ACCESSIBLE_ROUTE,
+            "protection": PROTECTION,
             "synthetic_notice": SYNTHETIC_NOTICE,
-            "manual_route": "If this screen is unavailable, write the concern on paper with the "
-            "channel, your name and the home reference, and give it to the named owner.",
         }
 
     def record_concern(
@@ -434,12 +744,13 @@ class AftercareService:
         errors = self._assisted_errors(actor, values)
         errors.update(intake_errors(values))
         if errors:
-            raise ValidationError(errors)
+            raise ValidationError(errors, intake_error_summary(errors))
         raw_basis = values.get("representative_basis")
         basis = raw_basis if values["raised_by"] == "representative" else None
         home = str(values["home_ref"]).strip()
         statement = str(values["statement"])
         channel = str(values["channel"])
+        support = normalize_support_needed(values.get("support_needed"))
         next_update = date.fromisoformat(str(values["next_update"])).isoformat()
         request_id = str(values["request_id"])
         fingerprint = _fingerprint(
@@ -450,16 +761,15 @@ class AftercareService:
             statement,
             channel,
             next_update,
+            route="staff_recorded",
+            support_needed=support,
         )
 
         def work(doc: Doc) -> tuple[Record, bool]:
             seen = doc["requests"].get(request_id)
             if seen is not None:
                 if seen["fingerprint"] != fingerprint:
-                    raise ConflictError(
-                        "This request reference was already used for a different concern. "
-                        "Start a new record."
-                    )
+                    raise ConflictError(neutral_text(CONFLICT_REQUEST_MESSAGE))
                 return deepcopy(doc["receipts"][seen["concern_id"]]), True
             if next_update < self._today():
                 raise ValidationError({"next_update": "Choose today or a later date."})
@@ -475,6 +785,7 @@ class AftercareService:
                 representative_basis=basis,
                 recorded_by=actor["name"],
                 channel=channel,
+                support_needed=support,
             )
             cid = str(rec["id"])
             receipt = self._receipt(rec, actor, request_id, statement, basis)
@@ -485,6 +796,29 @@ class AftercareService:
             return deepcopy(receipt), False
 
         return self._txn(work, writes=lambda outcome: not outcome[1])
+
+    def _household_errors(self, values: Mapping[str, Any]) -> dict[str, str]:
+        errors: dict[str, str] = {}
+        if not isinstance(values.get("request_id"), str) or not REQUEST_ID.match(
+            values["request_id"]
+        ):
+            errors["request_id"] = (
+                "The request reference is missing. Reload the form and try again."
+            )
+        home = values.get("home_ref")
+        if self.homes is not None and isinstance(home, str) and home.strip() not in self.homes:
+            errors["home_ref"] = "This home reference is not in the demonstration set."
+        if values.get("owner_role"):
+            errors["owner_role"] = "Leave the owner blank. A manager names the owner afterwards."
+        raw_update = values.get("next_update")
+        if raw_update is not None and (not isinstance(raw_update, str) or raw_update.strip()):
+            _date(raw_update, "next_update", "0001-01-01", errors)
+        for field, label, cap in (
+            ("statement", "The statement", STATEMENT_MAX),
+            ("representative_basis", "The authority statement", BASIS_MAX),
+        ):
+            _free_text(values.get(field), field, label, cap, errors)
+        return errors
 
     def _assisted_errors(self, actor: Record, values: Mapping[str, Any]) -> dict[str, str]:
         errors: dict[str, str] = {}
@@ -512,10 +846,13 @@ class AftercareService:
     def _receipt(
         self,
         rec: Record,
-        actor: Record,
+        actor: Record | None,
         request_id: str,
         statement: str,
         basis: str | None,
+        *,
+        route: str = "staff_recorded",
+        requested_next_update: str | None = None,
     ) -> Record:
         unknown = rec["owner"] == UNKNOWN_OWNER
         if unknown:
@@ -527,18 +864,24 @@ class AftercareService:
             f"{owner_text} The next update is due on {rec['next_update']}. A normal sensor "
             "reading does not close it. You can still raise it by phone, in person or on paper."
         )
+        original: Record = {"statement": statement, "representative_basis": basis}
+        if route == "digital":
+            original["next_update"] = requested_next_update
         return {
             "receipt_id": f"RC-{rec['id']}",
             "concern_id": rec["id"],
             "request_id": request_id,
             "received_at": self._now().astimezone(UTC).isoformat(timespec="seconds"),
-            "recorded_by": {"name": actor["name"], "role": actor["role"]},
-            "route": "staff_recorded",
-            "channel": rec["channel"],
+            "recorded_by": (
+                {"name": actor["name"], "role": actor["role"]} if actor is not None else None
+            ),
+            "route": route,
+            "channel": rec.get("channel"),
             "raised_by": rec["raised_by"],
             "home_ref": rec["home_ref"],
             "kind": rec["kind"],
-            "original": {"statement": statement, "representative_basis": basis},
+            "support_needed": list(rec.get("support_needed", [])),
+            "original": original,
             "owner": {
                 "label": rec["owner"],
                 "status": "unknown" if unknown else "synthetic_scenario_owner",
@@ -565,8 +908,9 @@ class AftercareService:
             "raised_by": rec["raised_by"],
             "representative_basis": receipt["original"]["representative_basis"],
             "route": rec["route"],
-            "channel": rec["channel"],
-            "recorded_by": rec["recorded_by"],
+            "channel": rec.get("channel"),
+            "recorded_by": rec.get("recorded_by"),
+            "support_needed": list(rec.get("support_needed", [])),
             "statement": receipt["original"]["statement"],
             "owner": {
                 "label": owner,
@@ -649,7 +993,7 @@ class AftercareService:
         self, user: Mapping[str, Any] | None, cid: str, outcome: str, basis: str, evidence: str
     ) -> Record:
         errors: dict[str, str] = {}
-        _free_text(evidence, "evidence", "The evidence", EVIDENCE_MAX, errors)
+        _staff_evidence(evidence, errors)
         if errors:
             raise ValidationError(errors)
         return self._owner_action(
@@ -663,7 +1007,7 @@ class AftercareService:
         self, user: Mapping[str, Any] | None, cid: str, status: str, evidence: str | None = None
     ) -> Record:
         errors: dict[str, str] = {}
-        _free_text(evidence, "evidence", "The evidence", EVIDENCE_MAX, errors)
+        _staff_evidence(evidence, errors)
         if errors:
             raise ValidationError(errors)
         return self._owner_action(
@@ -705,7 +1049,11 @@ class AftercareService:
             merged = {**(reg.concerns[cid]["sensor_context"] or {}), **context}
             if len(merged) > CONTEXT_MAX_ITEMS:
                 raise ValidationError(
-                    {"context": f"A concern can hold {CONTEXT_MAX_ITEMS} sensor notes at most."}
+                    {
+                        "context": neutral_text(
+                            f"A concern can hold {CONTEXT_MAX_ITEMS} sensor notes at most."
+                        )
+                    }
                 )
             reg.add_sensor_context(cid, context)
             doc["register"] = reg.to_state()
@@ -774,8 +1122,41 @@ class AftercareService:
             )
         summary = reg.evaluator_view(self.cohort, baseline_homes=comparable)
         total = len(self.cohort)
+        task_entry = _registry_get(PACK_TASK) or {}
+        concern_pack_task: Record = {
+            "task_id": PACK_TASK,
+            "requirement": "FR-036",
+            "kind": neutral_text(str(task_entry.get("kind", "proposal-pack"))),
+            "state": neutral_text(str(task_entry.get("state", "disabled"))),
+            "approval_state": neutral_text(str(task_entry.get("approval_state", "unapproved"))),
+            "enabled": bool(task_entry.get("enabled", False)),
+            "live_authorized": _authorizes_live(PACK_TASK, None),
+            "requires_human_review": True,
+            "reviewer_role": neutral_text(
+                str(task_entry.get("reviewer_role", "Named human aftercare owner"))
+            ),
+            "purpose": neutral_text(
+                str(
+                    task_entry.get(
+                        "purpose",
+                        "Draft an optional structured summary of a resident aftercare concern "
+                        "for the named human owner to investigate.",
+                    )
+                )
+            ),
+            "influence": neutral_text(
+                str(
+                    task_entry.get(
+                        "influence",
+                        "Proposal pack only. It cannot alter, close, reclassify, or dismiss a "
+                        "concern or set a remedy status.",
+                    )
+                )
+            ),
+            "manual_route": neutral_text(PACK_MANUAL_ROUTE),
+        }
         return {
-            "cohort_label": "Synthetic handover cohort",
+            "cohort_label": neutral_text(COHORT_LABEL),
             "rows": rows,
             "windows": dict(WINDOWS),
             "totals": {
@@ -790,6 +1171,7 @@ class AftercareService:
                 ],
             },
             "register_summary": summary,
+            "concern_pack_task": concern_pack_task,
             "unknowns": [*summary["unknowns"], *FIXED_UNKNOWNS],
             "notice": neutral_text(EVALUATOR_NOTICE),
             "sensor_note": SENSOR_NOTE,
@@ -804,8 +1186,7 @@ class AftercareService:
             "early": None,
             "late": None,
             "deltas": None,
-            "reason": "No usable comparison is recorded for this home, so the baseline and "
-            "outcome are Unknown.",
+            "reason": neutral_text(COMPARISON_UNKNOWN_REASON),
         }
         if scenario is None:
             return unknown
@@ -828,10 +1209,7 @@ class AftercareService:
             "early": means["early"],
             "late": means["late"],
             "deltas": result["deltas"],
-            "reason": neutral_text(
-                "Descriptive observed means only. They do not show a cause, assign fault or "
-                "promise savings."
-            ),
+            "reason": neutral_text(COMPARISON_SUFFICIENT_REASON),
         }
 
     def handle(
@@ -846,17 +1224,17 @@ class AftercareService:
         try:
             return self._route(method.upper(), path, user, body, query or {})
         except ValidationError as exc:
-            return 400, {"error": str(exc), "errors": exc.errors}
+            return 400, {"error": neutral_text(str(exc)), "errors": exc.errors}
         except PermissionError as exc:
-            return 403, {"error": str(exc)}
+            return 403, {"error": neutral_text(str(exc))}
         except KeyError:
-            return 404, {"error": "That concern was not found."}
+            return 404, {"error": neutral_text(NOT_FOUND_MESSAGE)}
         except ConflictError as exc:
-            return 409, {"error": str(exc)}
+            return 409, {"error": _safe_error_text(exc)}
         except ValueError as exc:
-            return 400, {"error": str(exc), "errors": {}}
+            return 400, {"error": _safe_error_text(exc), "errors": {}}
         except (StateInvalid, PersistenceError) as exc:
-            return 503, {"error": str(exc)}
+            return 503, {"error": _safe_error_text(exc)}
 
     def _route(
         self,
@@ -884,8 +1262,15 @@ class AftercareService:
 
         if parts == ["form"] and method == "GET":
             return 200, self.form(user)
+        if parts == ["household-form"] and method == "GET":
+            return 200, self.household_form()
         if parts == ["evaluator"] and method == "GET":
             return 200, self.evaluator_view(user)
+        if parts == ["household-concerns"] and method == "POST":
+            receipt, replayed = self.submit_household_concern(data)
+            return (200 if replayed else 201), {"receipt": receipt, "replayed": replayed}
+        if len(parts) == 2 and parts[0] == "household-concerns" and method == "GET":
+            return 200, self.household_receipt(parts[1], query.get("request_id", ""))
         if parts == ["concerns"]:
             if method == "GET":
                 return 200, self.concerns(user, query.get("home_ref"))
@@ -916,7 +1301,14 @@ class AftercareService:
                 return 200, self.add_sensor_context(user, cid, context)
         if parts == ["closures"] and method == "POST":
             return 201, self.record_closure(user, text("home_ref"), text("kind"), text("closed_on"))
-        known = {"form", "evaluator", "concerns", "closures"}
+        known = {
+            "form",
+            "household-form",
+            "evaluator",
+            "concerns",
+            "household-concerns",
+            "closures",
+        }
         if parts and parts[0] in known:
-            return 405, {"error": "That action is not available here."}
+            return 405, {"error": neutral_text(NOT_AVAILABLE_MESSAGE)}
         raise KeyError(path)

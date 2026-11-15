@@ -1,0 +1,64 @@
+{
+  "task_id": "2026-11-15-issue-159-assistant-a11y",
+  "task_slug": "issue-159-assistant-a11y",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/issue-159-assistant-a11y-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/issue-159-assistant-a11y-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/issue-159-assistant-a11y-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/issue-159-assistant-a11y-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/issue-159-assistant-a11y-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/issue-159-assistant-a11y-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "User requested an autonomous full RPI loop (Research, Plan, Implement, Review) for GitHub Issue #159 on branch feat/ux-159-assistant-a11y (based on PR #1639), using Focused validation tier and committing locally without pushing.",
+      "status": "confirmed",
+      "evidence": "Caller prompt in non-interactive CLI execution"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready. Existing chat.js and chat-widget.js already satisfy keyboard operability, focus management, and polite live-region announcements (C1-C5, W1-W3); avoid web edits and deliver src/api/tests/test_assistant_panel_a11y_159.py (Node VM + headless Chromium CDP AXTree/live-region/keyboard verification) plus truthful UX verification documentation in docs/reference/research/ux/wcag-conformance-baseline.md, docs/reference/README.md, and docs/reference/log.md.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-159-assistant-a11y-research.md"
+    },
+    {
+      "decision": "One-pass plan critique executed (verdict: Revise; critique path: .copilot-tracking/reviews/plans/2026-11-15/issue-159-assistant-a11y-plan-critique.md). Direct planner dispositions applied for PC-001 (dynamic test_mvp.DATA fixtures, non-case vs case-scoped employeeChat singleton lifecycle isolation, browser cited-answer + refusal coverage), PC-002 (non-auth 500 transport role=alert coverage, Space launcher + height slider checks, #chat-panel > p[role=status] child selector, hidden-attribute live-region observation), and PC-003 (Focused-tier classification record, 2.4.11 audit-row alignment, repo-local gh api user noreply email, Refs #159 non-closing commit wording after rpi-review). Planning status finalized as Ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-15/issue-159-assistant-a11y-plan.md; .copilot-tracking/reviews/plans/2026-11-15/issue-159-assistant-a11y-plan-critique.md"
+    },
+    {
+      "decision": "One-pass post-implementation Review executed (Execution status: Complete; Outcome: Defects found; assessed boundary: P01, P02, and Focused-tier validation; review path: .copilot-tracking/reviews/logs/2026-11-15/issue-159-assistant-a11y-review.md). Routed RV-001, RV-002, and RV-003 to rpi-implement and RV-004 plus human AT acceptance (#151/#155/#619) to distinct follow-up.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-159-assistant-a11y-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Research",
+    "action": "Start child task 2026-11-15-issue-159-assistant-a11y-remediation in Research to remediate RV-001, RV-002, and RV-003 before local branch commit."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Remediate RV-001, RV-002, and RV-003 in src/api/tests/test_assistant_panel_a11y_159.py, docs/reference/research/ux/wcag-conformance-baseline.md, and docs/reference/log.md, then create the local Refs #159 commit.",
+      "rationale": "Highest ease of implementation, direct accuracy/impact on Issue #159 engineering proof, and hermetic test-quality leverage before committing locally.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-159-assistant-a11y-review.md (RV-001, RV-002, RV-003)"
+    },
+    {
+      "rank": 2,
+      "task": "Optionally run AssistantPanelBrowserA11y159Tests after playwright install chromium in .github/workflows/src-ci.yml under a dedicated Full-tier workflow PR.",
+      "rationale": "Small workflow change with direct CI browser regression value once Full-tier gate prerequisites are run.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-159-assistant-a11y-review.md (RV-004); .github/workflows/src-ci.yml"
+    },
+    {
+      "rank": 3,
+      "task": "Execute named human desktop screen-reader and zoom sessions (NVDA with Firefox, VoiceOver with Safari, 200%/400% zoom) for the conversational assistant widget and single case view under Issues #151, #155, and #619.",
+      "rationale": "Remaining human-only assistive-technology acceptance gate across the UX programme once automated browser accessibility-tree, keyboard, and live-region engineering proof lands.",
+      "evidence": "docs/reference/research/ux/wcag-conformance-baseline.md; docs/reference/research/ux/production-ux-acceptance-protocol.md (C12)"
+    }
+  ]
+}

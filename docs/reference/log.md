@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-11-13
+ms.date: 2026-11-15
 ms.topic: reference
 ---
 
@@ -11936,9 +11936,59 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Local engineering evidence only (static tests and the browser check with axe 4.10.3). No screen-reader, assistive-technology, conformance or staff comprehension claim; criterion 5 stays unmet.
 * Added the #1611 static regression `src/api/tests/test_home_chat_regulatory_keyboard_provenance.py` (native controls, launcher aria state, Escape and Close focus return, live regions, provenance, source count and a persistent per-reply outcome line), recorded under the 2026-11-14 RPI artifacts. Static local evidence only; no tick or closure.
 
+## [2026-11-14] update | Issue #233 tension callouts and same-home stage statement (Refs #233)
+
+* Added plain-language "Tension: continuity versus disclosure" and "Tension: utilisation versus choice" callouts to `programme-queue`, `resident-choice` and `procurement-packages`, labelled atlas hypotheses pending #155 with a text status line and no role simulator.
+* The programme-queue journey stage map now states that every link carries the one selected home and that separate example homes are never stages of it. Updated [atlas-screen-trace.md](research/ux/atlas-screen-trace.md); new test `src/api/tests/test_role_screens_tensions_same_home.py`. Engineering trace only: no browser, assistive-technology or user evidence; the criteria are not ticked.
+
+## [2026-11-14] update | Issue #233 same-home stage map on every role screen (Refs #233)
+
+* The eight-stage "Journey stages for <home>" map, previously only on the `programme-queue` home view, now follows the evidence on every other role screen once a home is selected. Links carry the one selected case reference; the current screen is written as text, a screen outside the stages says so, and stage screens not installed for the role stay text with owner and next action. Updated [atlas-screen-trace.md](research/ux/atlas-screen-trace.md); new test `src/api/tests/test_role_screens_connected_journey.py`. Node render evidence only: no browser, assistive-technology or user evidence; Criterion 2 stays unticked.
+
+## [2026-11-14] update | Issue #233 stage map names and current-step announcement (Refs #233)
+
+* The role-screen journey stage list is now named "Eight journey stages for <home>" and marks the current stage with `aria-current="step"` once (resident-choice serves two stages), alongside the existing text cue. New test `src/api/tests/test_role_screens_stage_map_focus.py` also pins no added tab stops or nested headings and the text status line on tension callouts. Node render evidence only: no browser, assistive-technology or user evidence; Criterion 2 stays unticked.
+
+## [2026-11-14] update | Issue #156 screen design traceability matrix (Refs #156)
+
+* Added [screen-design-traceability.md](research/ux/screen-design-traceability.md): one row per role screen, the chat panel and the alert surface for #225 to #233, #159 and #215, linking journey, task flow, design artefact, a test and the named design gap. Indexed in the knowledge base README.
+* New test `src/api/tests/test_screen_design_traceability.py` checks that every registered role screen has a row and that links, anchors and tests exist. It asserts no human, accessibility or content acceptance; criterion 1 of #156 stays unmet and the design review gate Blocked.
+
+## [2026-11-15] create | Issue #134 profile journey contract and connected same-home journey acceptance (Refs #134)
+
+* Added [profile-journey-contract.md](research/ux/profile-journey-contract.md) and indexed it in [README.md](README.md): documents the five-element profile journey contract across the eleven PRD perspectives plus connected same-home invariants (`check_shared_facts`, `check_vulnerability_redaction`, `check_handover_dependencies`, `check_next_action_continuity`, `project_same_home_bundle`, `validate_same_home_walk`) in `src/core/src/zava_forward/core/profile_journey_contract.py` and selected-home `Current owner` / `Next action` continuity on staff specialist views in `src/api/src/zava_forward/api/web/role-screens.js`.
+* Verified on constructed synthetic data by `src/core/tests/test_profile_journey_contract.py` and `src/api/tests/test_same_home_profile_journey_acceptance.py` across the six staff profiles, `Programme Support Officer`, assigned and unassigned `Contractor` views and the live read-only `ResidentPreview` portal (`GET /resident/view`). Engineering shape evidence only (`accepted = False`); `AC-034` to `AC-043`, live perspective walkthroughs (#155), assistive-technology runs (#151) and human/resident approval boundaries remain `not-established`.
+
+## [2026-11-15] update | Issue #135 exception queue WCAG baseline and export inventory alignment (Refs #135)
+
+* Recorded the dated source audit of the `#/exceptions` exception recovery audit-reason field (ninth `aria-invalid` site) and competing source values table (fourteenth script-built table) in [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md), and refreshed its [index](README.md) row.
+* Updated the counted guards in `src/api/tests/test_accessibility_baseline.py` and `src/api/tests/test_epic149_form_error_summary_associations.py`, added a static wiring test for the recovery audit-reason field, and classified the `POST` decision endpoint `/api/exceptions/recovery` in `src/api/tests/test_list_export_inventory.py` alongside the existing exception register summary export.
+* Source and Node-VM engineering evidence only: no screen-reader, assistive-technology, 320 px reflow, zoom or manual acceptance claim, no WCAG conformance claim, and no `#135` human criterion ticked.
+
+## [2026-11-15] update | Issue #229 data steward and operator WCAG keyboard jump navigation, row headers and textual state labels (Refs #229)
+
+* Updated `data-operator` and `exceptionRegisterPanel` in `src/api/src/zava_forward/api/web/role-screens.js` with `nav[aria-label]` keyboard jump links (`a[data-jump]`), `section[tabindex="-1"]` targets across selected-home and overview compositions, `th[scope="row"]` record headers via `screenRecordTable` across all eight stewardship and exception-register tables, and fail-closed `State:` and `Source state:` textual labels across conflicts, returns, handoff, blockers, event dispositions, recovery context and the exception register.
+* Expanded `src/api/tests/test_data_steward_screen_wcag.py`, aligned `src/api/tests/test_exception_register_screen.py` row-header assertions, and recorded the engineering slice in [customer-journeys/data.md](research/ux/customer-journeys/data.md#data-screens-delivery-status-2026-11-04-229). Local automated evidence on synthetic data only: assistive-technology testing and human review under #151 and #155 remain open, so no WCAG conformance claim is made and the #229 accessibility criterion remains unticked.
+
 ## [2026-11-14] update | Issue #110 distinct device identity, schema version and stable reading ID
 
 * Added producer-side validation (`Reading.validate`, `require_distinct`, `validate_row`) in core, refusal of duplicate homes and invalid rows in the API live simulator, and cohort tests. Local offline evidence only; no live IoT Hub run. RPI artifacts are under `.copilot-tracking/*/2026-11-14-iot-distinct-device-identity-*`.
+## [2026-11-15] update | Issue #159 conversational assistant keyboard, focus and live-region verification (Refs #159)
+
+* Added `src/api/tests/test_assistant_panel_a11y_159.py` (leaving `chat-widget.js`, `chat.js`, `role-screens.js`, `panels.js` and stylesheets unchanged) to verify keyboard-only operability, focus management, `revealBeside` overlap scroll clearance, Chromium CDP `Accessibility.getFullAXTree` semantics and `MutationObserver` polite live-region announcements across `#employee-chat-launcher`, `#employee-chat`, `#chat-panel` and `#workspace-status` using both unconditional Node-VM + real Python `ChatPanel` payloads and rendered headless Chromium on constructed synthetic data.
+* Recorded the dated verification boundary in [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md#conversational-assistant-panel-keyboard-and-live-region-check-2026-11-15-159) (including aligned `Keyboard`, `Name, role, value`, `Status messages` and `Focus not obscured` audit notes) and refreshed its [index](README.md) row. Automated browser accessibility-tree and DOM live-region evidence only: desktop NVDA/Firefox and VoiceOver/Safari runs, 400% zoom checks and human acceptance under [production-ux-acceptance-protocol.md](research/ux/production-ux-acceptance-protocol.md) (#151, #155, #619) remain `Not run`, so no WCAG 2.2 conformance claim is made.
+
+## [2026-11-15] update | Issue #151 workbench WCAG 2.2 baseline audit and accessible equivalents (Refs #151, #119)
+
+* Expanded [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md) and refreshed its [index](README.md) entry with a structured eight-dimension WCAG 2.2 AA workbench audit (keyboard operation, focus order and visibility, name/role/value and non-colour cues, status messages, contrast, reflow and zoom, target size, and error identification), a complete accessible-equivalents register covering `mapPanel`, Overview `bars()` SVG charts, `ProgressViews` `<meter>` charts, coordinator heatmap/funnel, journey steppers, and all 15 script-built table builders, and explicit recorded gaps including `/law.html`.
+* Hardened workbench web assets under `src/api/src/zava_forward/api/web/`: disambiguated `bars()` disclosure summaries and added `.table-scroll` wrappers and empty-state rows (`app.js`), added a synchronized `[data-maplist-empty]` zero-item notice in `mapPanel` (`app.js`), added series-qualified `aria-label` text on `ProgressViews` `<meter>` bars (`progress.js`), completed `<caption class="sr-only">`, `.table-scroll` focusable regions, and `<th scope="row">` headers across `ops.js` (`sensorTable`, `packagesView`), `panels.js`, `app.js`, and `role-screens.js` (`screenTable` defaulting `rowHeader = true`), added a `.skip-link` bypass anchor on `welcome.html`, and added 24px/40px target-size rules plus `var(--muted)` contrast cleanup in `style.css`.
+* Updated `src/api/tests/test_accessibility_baseline.py` (15 captioned tables, 3 HTML zoom/language checks, expanded target-size selectors) and added `src/api/tests/test_wcag_workbench_baseline_151.py` exercising static invariants and Node-VM DOM parity. Engineering baseline evidence on synthetic data only: live assistive-technology, screen-reader, and human acceptance runs (#155) and owner target confirmation remain open, and no WCAG 2.2 conformance claim is made.
+## [2026-11-15] update | Issue #155 usability testing programme specification and deterministic core evaluator (Refs #155)
+
+* Upgraded [usability-test-programme-plan.md](research/ux/usability-test-programme-plan.md) in place (`ms.date: 2026-11-15`), added `src/core/src/zava_forward/core/usability_programme.py` and `src/core/tests/test_usability_programme.py`, documented the contract in `src/core/README.md`, linked the specification test in [design-system.md](research/ux/design-system.md), and refreshed [README.md](README.md).
+* Enforces 5 to 8 target participants across all 13 representative role cohorts (10 internal staff perspectives, external contractor, voluntary resident and authorised representative, with `T0` scoped to staff/contractor workbenches) plus a separate 2 to 3 `proxy-pilot` cohort, eight accessibility-support clauses and four assistive-technology routes, eight voluntary separate consent and synthetic-only data-handling clauses, 21 live-derived scripts (`T0`, `T1` to `T8`, `R-J1` to `R-R1`, `B1` to `B5`) from `profile_journey_contract`, `perspective_walkthroughs`, `journey_register` and `learning_test_bundles` (excluding `O10`, `O18` to `O20`), `SA-010` prior `named_human` staff agreement and sub-5 `None` cell masking, mandatory GitHub backlog issue links on `UF-NNN` findings, and a separate `Synthetic walkthrough - not user validation` (`not_user_validation = True`) baseline retaining `supported`, `not_supported` and `inconclusive` outcomes.
+* All human participant sessions, owner plan ratification, written `SA-010` staff agreement and DPO retention decisions remain `Not run` (`Refs #155` only; no human usability acceptance or WCAG conformance claim is made).
+
 
 ## [2026-11-15] update | White-paper provenance register and readable context
 

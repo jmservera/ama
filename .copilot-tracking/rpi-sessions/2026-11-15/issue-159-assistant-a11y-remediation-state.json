@@ -1,0 +1,67 @@
+{
+  "task_id": "2026-11-15-issue-159-assistant-a11y-remediation",
+  "task_slug": "issue-159-assistant-a11y-remediation",
+  "parent_task": {
+    "task_id": "2026-11-15-issue-159-assistant-a11y",
+    "task_slug": "issue-159-assistant-a11y"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/issue-159-assistant-a11y-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/issue-159-assistant-a11y-remediation-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/issue-159-assistant-a11y-remediation-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/issue-159-assistant-a11y-remediation-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/issue-159-assistant-a11y-remediation-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/issue-159-assistant-a11y-remediation-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Child task launched in automatic mode from parent task 2026-11-15-issue-159-assistant-a11y Rank 1 follow-up to remediate RV-001, RV-002, and RV-003 before creating the local Refs #159 commit.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-159-assistant-a11y-review.md"
+    },
+    {
+      "decision": "Research disposition satisfied-and-skipped (Planning Readiness: Ready): parent primary research (.copilot-tracking/research/2026-11-15/issue-159-assistant-a11y-research.md) and parent review findings RV-001, RV-002, and RV-003 (.copilot-tracking/reviews/logs/2026-11-15/issue-159-assistant-a11y-review.md) plus direct inspection of chat-widget.js, server.py, and simulation_lane.py fully specify all affected lines and verification commands.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-159-assistant-a11y-research.md; .copilot-tracking/reviews/logs/2026-11-15/issue-159-assistant-a11y-review.md"
+    },
+    {
+      "decision": "One-pass child plan critique executed (verdict: Revise; critique path: .copilot-tracking/reviews/plans/2026-11-15/issue-159-assistant-a11y-remediation-plan-critique.md). Applied direct planner dispositions for PC-001 (exact 403 #workspace-status copy vs 401 app.js sign-in alert interception + chat-http:401 whitelist) and PC-002 (ArrowDown + Shift+Tab submit for #employee-chat-skill, in-viewport position:absolute target for revealBeside, and full-tree childIds traversal through ignored AX wrappers while status is non-empty). Planning status finalized as Ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-15/issue-159-assistant-a11y-remediation-plan.md; .copilot-tracking/reviews/plans/2026-11-15/issue-159-assistant-a11y-remediation-plan-critique.md"
+    },
+    {
+      "decision": "One-pass child post-implementation Review executed (Execution status: Complete; Outcome: Defects found; assessed boundary: P01 remediation and Focused-tier validation; review path: .copilot-tracking/reviews/logs/2026-11-15/issue-159-assistant-a11y-remediation-review.md). Routed RV-001 (CDP expanded/pressed, no-trap Tab exit, post-403/401 MutationObserver check, #employee-chat-question Enter skill submit, and exact baseline wording) and RV-002 (_SyntheticWorkbenchHarness.__init__ partial-init cleanup and single EOF newline hygiene) to rpi-implement.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-159-assistant-a11y-remediation-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Complete child task in Follow-up and launch final polish child task 2026-11-15-issue-159-assistant-a11y-polish for RV-001 and RV-002 before local commit."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Resolve RV-001 and RV-002 in src/api/tests/test_assistant_panel_a11y_159.py, docs/reference/research/ux/wcag-conformance-baseline.md, and docs/reference/log.md, verify git diff --cached --check, and commit locally (Refs #159).",
+      "rationale": "Tiny surgical polish achieving 100% 1-for-1 baseline-to-assertion parity and EOF hygiene prior to local commit.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-159-assistant-a11y-remediation-review.md (RV-001, RV-002)"
+    },
+    {
+      "rank": 2,
+      "task": "Optionally run AssistantPanelBrowserA11y159Tests after playwright install chromium in .github/workflows/src-ci.yml under a dedicated Full-tier workflow PR.",
+      "rationale": "Small workflow change with direct CI browser regression value once Full-tier gate prerequisites are run.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-159-assistant-a11y-review.md (RV-004); .github/workflows/src-ci.yml"
+    },
+    {
+      "rank": 3,
+      "task": "Execute named human desktop screen-reader and zoom sessions (NVDA with Firefox, VoiceOver with Safari, 200%/400% zoom) for the conversational assistant widget and single case view under Issues #151, #155, and #619.",
+      "rationale": "Remaining human-only assistive-technology acceptance gate across the UX programme once automated browser accessibility-tree, keyboard, and live-region engineering proof lands.",
+      "evidence": "docs/reference/research/ux/wcag-conformance-baseline.md; docs/reference/research/ux/production-ux-acceptance-protocol.md (C12)"
+    }
+  ]
+}

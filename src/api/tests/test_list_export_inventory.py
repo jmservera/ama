@@ -78,6 +78,7 @@ EXEMPT = {
     "/api/assistants/simulation/quality/": "Quality totals for the practice run.",
     "/api/buildings/": "One building view.",
     "/api/cases/": "One case; the case queue exports its rows.",
+    "/api/exceptions/recovery": "One exception decision; the exception register exports.",
     "/api/chat/regulatory/threads/": "Conversation content is never exported (RULE-026).",
     "/api/chat/threads/": "Conversation content is never exported (RULE-026).",
     "/api/law/provisions/": "The text of one provision, read on screen.",

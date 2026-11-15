@@ -11,7 +11,7 @@ from typing import Any
 from unittest import mock
 
 from dataset import DATA
-from zava_forward.core import exception_register, import_refusals, projection
+from zava_forward.core import continuity, exception_register, import_refusals, projection
 from zava_forward.core.exception_register import staff_from_env
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
@@ -69,6 +69,9 @@ class Register(SqlStoreCase):
         self.assertEqual({v["value"] for v in item["values"]}, {"D", "C"})
         self.assertEqual(item["owner"], "human0@example.test")
         self.assertEqual(item["eligibility"], "Unknown")
+        self.assertTrue(item["unresolved_eligibility"])
+        self.assertFalse(item["recovery_policy"]["automatic_replay"])
+        self.assertFalse(item["recovery_policy"]["automatic_release"])
         self.assertEqual(item["original_source"]["case_id"], self.reg_case["id"])
 
     def test_operator_sees_failed_ai_run_not_conflicts(self) -> None:
@@ -175,6 +178,151 @@ class Register(SqlStoreCase):
             self.steward, {"human0@example.test": ("data_steward",)}
         )
         self.assertTrue(any("No named digital operator" in u for u in view["unrouted"]))
+
+    def _key(self, user: dict[str, str], kind: str) -> str:
+        view = self.store.exception_register(user, STAFF)
+        return str(next(i["recovery_key"] for i in view["items"] if i["kind"] == kind))
+
+    def test_recovery_is_audited_and_changes_nothing_else(self) -> None:
+        key = self._key(self.steward, "source_conflict")
+        data = json.dumps(self.store.data, sort_keys=True, default=str)
+        done = self.store.request_exception_recovery(
+            self.steward, STAFF, key, "resolve_by_owner", "Checked both sources with the owner."
+        )
+        self.assertEqual(done["status"], "closed")
+        self.assertFalse(done["recovery"]["replayed"] or done["recovery"]["released"])
+        self.assertTrue(done["unresolved_eligibility"])
+        self.assertEqual(done["original_source"]["case_id"], self.reg_case["id"])
+        self.assertEqual(json.dumps(self.store.data, sort_keys=True, default=str), data)
+        entry = [
+            e for e in self.store.audit_entries() if e["action"] == "exception_recovery_requested"
+        ]
+        self.assertEqual((len(entry), entry[0]["case"]), (1, key))
+        again = self.store.exception_register(self.steward, STAFF)["items"][0]
+        self.assertEqual(
+            (again["status"], again["recovery"]["by"]), ("closed", self.steward["email"])
+        )
+        with self.assertRaises(ValueError):
+            self.store.request_exception_recovery(self.steward, STAFF, key, "hold", "Again.")
+
+    def test_recovery_refuses_scope_owner_action_and_missing_reason(self) -> None:
+        conflict = self._key(self.steward, "source_conflict")
+        failed = self._key(self.operator, "failed_ai_run")
+        steward2 = {
+            "human0@example.test": ("data_steward",),
+            "human2@example.test": ("data_steward",),
+        }
+        other = dict(self.steward, email="human2@example.test")
+        for who, key, action in (
+            (self.operator, conflict, "hold"),
+            (self.steward, failed, "hold"),
+            (other, conflict, "resolve_by_owner"),
+        ):
+            with self.assertRaises(PermissionError):
+                self.store.request_exception_recovery(who, steward2 | STAFF, key, action, "Why.")
+        with self.assertRaises(ValueError):
+            self.store.request_exception_recovery(self.steward, STAFF, conflict, "replay", "Why.")
+        with self.assertRaises(ValueError):
+            self.store.request_exception_recovery(self.steward, STAFF, conflict, "hold", " ")
+        with self.assertRaises(PermissionError):
+            self.store.request_exception_recovery(self.pm, STAFF, conflict, "hold", "Why.")
+        done = [
+            e for e in self.store.audit_entries() if e["action"] == "exception_recovery_requested"
+        ]
+        self.assertEqual(done, [])
+        self.assertTrue(any(e["action"] == "denied" for e in self.store.audit_entries()))
+
+    def test_failed_run_rerun_is_a_request_not_a_replay(self) -> None:
+        key = self._key(self.operator, "failed_ai_run")
+        done = self.store.request_exception_recovery(
+            self.operator, STAFF, key, "request_rerun", "Model timed out."
+        )
+        self.assertEqual(done["status"], "rerun_requested")
+        self.assertFalse(done["recovery"]["automatic_replay"])
+        rec = next(r for r in self.store.data["recommendations"] if r["id"] == "R-AI")
+        self.assertEqual(rec["source"], "template")
+
+    def test_conflict_and_failures_expose_resolution_owner_category_correlation_and_context(
+        self,
+    ) -> None:
+        self.reg_case["hazards"] = [{"response_due_at": "2020-01-01T00:00:00Z"}]
+        rec = next(r for r in self.store.data["recommendations"] if r["id"] == "R-AI")
+        rec["correlation_id"] = "CORR-AI-77"
+        self.store.data["import_batches"] = [
+            {
+                "batch_id": "B-77",
+                "status": "rejected",
+                "error": "schema mismatch",
+                "correlation_id": "CORR-B77",
+            }
+        ]
+        steward_view = self.store.exception_register(self.steward, STAFF)
+        self.assertEqual(steward_view["access"]["viewer_roles"], ["data_steward"])
+        self.assertIn("source_conflict", steward_view["access"]["allowed_kinds"])
+        self.assertIn("failed_import", steward_view["access"]["allowed_kinds"])
+        conflict = next(i for i in steward_view["items"] if i["kind"] == "source_conflict")
+        self.assertEqual(conflict["resolution_owner"], "human0@example.test")
+        self.assertEqual(
+            [(v["value"], v["source"], v["date"], v["version"]) for v in conflict["values"]],
+            [("D", "S-A", "2026-01-01", "1"), ("C", "S-B", "2026-01-01", "2")],
+        )
+        self.assertEqual(conflict["correlation_id"], f"stock:{self.reg_case['id']}:SQ-1")
+        self.assertEqual(conflict["recovery_context"]["correlation_id"], conflict["correlation_id"])
+        batch_item = next(i for i in steward_view["items"] if i["kind"] == "failed_import")
+        self.assertEqual(batch_item["failure_category"], "failed_import")
+        self.assertEqual(batch_item["correlation_id"], "CORR-B77")
+        self.assertEqual(batch_item["eligibility"], "Unknown")
+        op_view = self.store.exception_register(self.operator, STAFF)
+        self.assertEqual(op_view["access"]["viewer_roles"], ["digital_operator"])
+        ai_item = next(i for i in op_view["items"] if i["kind"] == "failed_ai_run")
+        self.assertEqual(ai_item["failure_category"], "failed_ai_run")
+        self.assertEqual(ai_item["correlation_id"], "CORR-AI-77")
+        stranded = next(i for i in op_view["items"] if i["kind"] == "stranded_task")
+        self.assertEqual(stranded["failure_category"], "stranded_task")
+        self.assertEqual(stranded["correlation_id"], f"case:{self.reg_case['id']}/hazards/0")
+        self.assertFalse(stranded["recovery_context"]["automatic_replay"])
+        self.assertFalse(stranded["recovery_context"]["automatic_release"])
+
+    def test_continuity_suspension_and_actual_hold_surface_honest_outage_banner_with_next_steps(
+        self,
+    ) -> None:
+        for r in self.store.data["recommendations"]:
+            r.setdefault("user", "human0@example.test")
+        pm = self.people["Retrofit Programme Manager"]
+        suspended = self.store.suspend(
+            pm,
+            {
+                "scope": continuity.ALL,
+                "reason": "Provider quota exhausted",
+                "incident_owner": "Pam Lead",
+                "containment": "Manual workflow active",
+                "comms_owner": "Comms Lead",
+                "comms_audience": "Retrofit staff",
+            },
+        )
+        comp_key = f"ai-tasks ({continuity.ALL})"
+        for who, staff, expected_state in (
+            (self.operator, STAFF, "ok"),
+            (pm, {}, "roles_not_named"),
+        ):
+            view = self.store.exception_register(who, staff)
+            self.assertEqual(view["state"], expected_state)
+            self.assertEqual(view["banner"]["state"], "outage")
+            self.assertTrue(len(view["banner"]["next_steps"]) >= 2)
+            self.assertIn(comp_key, view["banner"]["components"])
+            self.assertIn("Pam Lead", view["banner"]["components"][comp_key]["note"])
+            self.assertFalse(
+                any("service state is Unknown" in s for s in view["sources"]),
+                view["sources"],
+            )
+        # Constructed-only restart where actual_hold remains True keeps the banner in outage.
+        susp_doc = next(
+            s for s in self.store.data["continuity"]["suspensions"] if s["id"] == suspended["id"]
+        )
+        susp_doc["status"] = "Restarted"
+        susp_doc["actual_hold"] = True
+        still_held = self.store.exception_register(self.operator, STAFF)
+        self.assertEqual(still_held["banner"]["state"], "outage")
 
 
 class Config(unittest.TestCase):
@@ -337,6 +485,33 @@ class ImportRefusalRegister(unittest.TestCase):
                 self.store.record_import_refusals([REFUSAL, bad])
         self.assertNotIn(import_refusals.KEY, self.store.data)
 
+    def test_rejected_import_batches_survive_restart_for_sql_and_json_without_mutating_data(
+        self,
+    ) -> None:
+        self.store.data.setdefault(import_refusals.KEY, {"refusals": []})["rejected_batches"] = [
+            {
+                "batch_id": "BATCH-404",
+                "status": "rejected",
+                "error": "Missing UPRN header",
+                "correlation_id": "CORR-BATCH-404",
+            }
+        ]
+        self.store.save()
+        self.store = self.open()
+        before = copy.deepcopy(self.store.data[import_refusals.KEY])
+        view = self.store.exception_register(self.steward, STAFF)
+        self.assertEqual(self.store.data[import_refusals.KEY], before)
+        items = self.failed_imports(view)
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0]["ref"], "batch:BATCH-404")
+        self.assertEqual(items[0]["failure_category"], "failed_import")
+        self.assertEqual(items[0]["correlation_id"], "CORR-BATCH-404")
+        self.assertEqual(items[0]["eligibility"], "Unknown")
+        self.assertEqual(
+            self.failed_imports(self.store.exception_register(self.operator, STAFF)), []
+        )
+        self.assertTrue(any("1 rejected import batch(es)" in s for s in view["sources"]))
+
 
 class ImportRefusalRegisterJson(ImportRefusalRegister):
     kind = "json"
@@ -402,6 +577,127 @@ class Endpoint(MatrixServer):
 
     def test_unauthenticated_is_refused(self) -> None:
         self.assertIn(self.call("", "/api/exceptions")[0], (401, 403))
+
+    def test_post_recovery_multi_step_audit_trail_parity_and_no_replay_or_overwrite(self) -> None:
+        steward_ck = self.session("u1@example.test")
+        operator_ck = self.session("u2@example.test")
+        self.store.cases["ZF-1"]["closed"] = False
+        orig_query = {
+            "id": "SQ-9",
+            "field": "epc",
+            "left": side("D", "S-A", "1"),
+            "right": side("C", "S-B", "2"),
+        }
+        self.store.cases["ZF-1"]["stock_reconciliation"] = [copy.deepcopy(orig_query)]
+        self.store.data["recommendations"] = [
+            r for r in self.store.data["recommendations"] if r.get("id") != "R-EP-1"
+        ] + [
+            {
+                "id": "R-EP-1",
+                "kind": "ai_task",
+                "task": "summary",
+                "mode": "ai",
+                "source": "template",
+                "fallback_reason": "timeout",
+                "correlation_id": "CORR-EP-1",
+                "status": "Not reviewed",
+                "created": "2026-11-01",
+            }
+        ]
+        mapping = {"u1@example.test": ["data_steward"], "u2@example.test": ["digital_operator"]}
+        with self.staff_env(mapping):
+            code, text = self.call(steward_ck, "/api/exceptions")
+            self.assertEqual(code, 200)
+            conflict = next(
+                i
+                for i in json.loads(text)["items"]
+                if i["recovery_key"] == "source_conflict:stock:ZF-1:SQ-9"
+            )
+            key = conflict["recovery_key"]
+            # Cross-role and invalid input boundaries.
+            self.assertEqual(
+                self.call(
+                    operator_ck,
+                    "/api/exceptions/recovery",
+                    {"key": key, "action": "hold", "reason": "Wrong role."},
+                )[0],
+                403,
+            )
+            self.assertEqual(
+                self.call(
+                    steward_ck,
+                    "/api/exceptions/recovery",
+                    {"key": key, "action": "hold", "reason": "   "},
+                )[0],
+                400,
+            )
+            self.assertEqual(
+                self.call(
+                    steward_ck,
+                    "/api/exceptions/recovery",
+                    {"key": key, "action": "replay_now", "reason": "Not allowed."},
+                )[0],
+                400,
+            )
+            # Step 1: hold -> Step 2: resolve_by_owner; POST/GET audit_trail lengths match (2).
+            c1, t1 = self.call(
+                steward_ck,
+                "/api/exceptions/recovery",
+                {"key": key, "action": "hold", "reason": "Checking EPC certificate."},
+            )
+            self.assertEqual(c1, 200)
+            held = json.loads(t1)
+            self.assertEqual((held["status"], len(held["audit_trail"])), ("held", 1))
+            c2, t2 = self.call(
+                steward_ck,
+                "/api/exceptions/recovery",
+                {
+                    "key": key,
+                    "action": "resolve_by_owner",
+                    "reason": "Verified source S-B manually in stock system.",
+                },
+            )
+            self.assertEqual(c2, 200)
+            closed_post = json.loads(t2)
+            self.assertEqual(
+                (closed_post["status"], len(closed_post["audit_trail"])),
+                ("closed", 2),
+            )
+            _, after_text = self.call(steward_ck, "/api/exceptions")
+            closed_get = next(
+                i for i in json.loads(after_text)["items"] if i["recovery_key"] == key
+            )
+            self.assertEqual(len(closed_get["audit_trail"]), 2)
+            self.assertEqual(
+                [e["action"] for e in closed_get["audit_trail"]],
+                ["hold", "resolve_by_owner"],
+            )
+            for entry in closed_get["audit_trail"]:
+                self.assertEqual(entry["by"], "u1@example.test")
+                self.assertTrue(bool(entry["at"]))
+                self.assertFalse(entry["replayed"])
+                self.assertFalse(entry["released"])
+            # Underlying eligibility and original source record remain untouched.
+            self.assertEqual(closed_get["eligibility"], "Unknown")
+            self.assertEqual(
+                self.store.cases["ZF-1"]["stock_reconciliation"],
+                [orig_query],
+            )
+            # Operator request_rerun records human request without replaying AI task.
+            co, to = self.call(
+                operator_ck,
+                "/api/exceptions/recovery",
+                {
+                    "key": "failed_ai_run:R-EP-1",
+                    "action": "request_rerun",
+                    "reason": "Operator verified service health for manual re-run.",
+                },
+            )
+            self.assertEqual(co, 200)
+            rerun = json.loads(to)
+            self.assertEqual(rerun["status"], "rerun_requested")
+            rec = next(r for r in self.store.data["recommendations"] if r["id"] == "R-EP-1")
+            self.assertEqual(rec["source"], "template")
 
 
 if __name__ == "__main__":
