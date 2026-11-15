@@ -6,6 +6,29 @@ ms.date: 2026-11-15
 ms.topic: reference
 ---
 
+## Hazard and safeguarding clock and named owner projection (2026-11-15, Refs #76)
+
+`taskqueues.project_safety_clock_and_owner` and `taskqueues.context` (`MEMBERSHIP_REVISION = 5`)
+project an explicit operational reference clock (`clock_label`, `clock_status`,
+`clock_remaining_hours`, `clock_deadline_utc`, `clock_basis`) and a non-blank
+accountable owner (`named_owner`, `accountable_owner`, `owner_role`, `owner_id`,
+`unassigned`, `escalation_owner`, `escalation_owner_role`, `escalation_owner_id`)
+for every active hazard and safeguarding item across `Store`, `SqlStore`, and
+`MssqlStore` with staff-order-invariant `code` -> `email` -> `name` lookup and
+sorted role fallback. External hazard and safeguarding authorities retain statutory
+ownership of categorisation, clocks, and closure (`RULE-003`): recorded external
+deadlines take precedence, awareness timestamps derive operational reference
+windows (24h emergency / 7d investigation / 14d work-start for hazards; 24h
+urgent / 48h referral response for safeguarding), and missing timestamps fail
+closed (`fail_closed_missing_timestamp`) rather than guessing. Unaccepted
+referrals preserve receipt-is-not-acceptance (`FR-003`) by flagging
+`unassigned=True` while surfacing the designated escalation owner so no safety
+item is ever blank or anonymous. Standalone safeguarding items (`safeguarding_items`
+and item-shaped `safeguarding` records, excluding note-only canary fixtures)
+appear in `detail["safeguarding_items"]` and `detail["hazards"]` with
+`hold_notes` redaction for non-reason staff and default-deny withholding for
+contractors (`PR-002`).
+
 ## Offline RAI held-out evaluation and tokenomics candidate comparison (2026-11-15, Refs #108)
 
 `heldout_eval` freezes task, model, prompt, policy and source versions across all

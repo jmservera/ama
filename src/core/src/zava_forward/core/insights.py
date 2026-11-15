@@ -1,5 +1,6 @@
 """Read-only views over the case data: filters, statistics, map, visits, handover suggestions."""
 from collections import Counter, defaultdict
+from . import taskqueues
 from .resident_decisions import resident_status
 
 from .stock import support_coverage, support_status
@@ -28,7 +29,7 @@ SORTS = {
 
 
 def has_hazard(c):
-    return any(not h["released"] for h in c["hazards"])
+    return taskqueues.has_open_safety(c)
 
 
 def preferred_role(c):

@@ -982,7 +982,7 @@ class SqlStore(Store):
         nxt = next((a["date"] for a in c["appointments"] if a["outcome"] == "Booked"), None)
         name, home = c["resident"]["name"], c["home"]
         return (c["id"], c["stage"], home["area"], c["wave"], c["owner_code"], int(bool(c["closed"])),
-                int(any(not h["released"] for h in c["hazards"])), home["postcode"], home["address"], json.dumps(c),
+                int(taskqueues.has_open_safety(c)), home["postcode"], home["address"], json.dumps(c),
                 int(ranking._support(c)), int(c["days_in_stage"]), ranking.sql_key(c), c["contractor"]["name"],
                 " ".join([name, home["address"], home["postcode"], c["id"]]).lower(), " ".join([home["address"], home["postcode"], c["id"]]).lower(),
                 name.split(" ")[-1].lower(), (c["contacts"][-1]["at"] if c["contacts"] else None) or "0000", nxt or "9999",

@@ -9,12 +9,21 @@ from copy import deepcopy
 from datetime import UTC, date, datetime, time, timedelta
 import math
 
-from . import change_provenance, controls, gates, hazard, identity, insights, projection
+from . import (
+    change_provenance,
+    controls,
+    gates,
+    hazard,
+    identity,
+    insights,
+    projection,
+    taskqueues,
+)
 
 MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
 DEFAULT_ESCALATION_ROLE = "Retrofit Programme Manager"
 HAZARD_PRIORITIES = ("Emergency", "Significant", "Routine")
-HAZARD_CATEGORIES = ("Damp and mould", "Structural", "Electrical", "Other")
+HAZARD_CATEGORIES = ("Damp and mould", "Structural", "Electrical", "Safeguarding", "Other")
 SAFETY_ROLES = ("Building Safety Liaison",) + MANAGER_ROLES
 HANDOFF_OPEN = "Offered"
 HANDOFF_PENDING = (HANDOFF_OPEN, "Received", "Escalated")
@@ -377,18 +386,143 @@ def hazard_state(h):
     return "Raised"
 
 
-def hazard_view(h, case_id):
+_ENRICHED_SAFETY_KEYS = (
+    "item_kind",
+    "named_owner",
+    "accountable_owner",
+    "owner_role",
+    "owner_id",
+    "unassigned",
+    "escalation_owner",
+    "escalation_owner_role",
+    "escalation_owner_id",
+    "clock_label",
+    "clock_status",
+    "clock_deadline_utc",
+    "clock_remaining_hours",
+    "clock_basis",
+    "elapsed_hours",
+    "response_state",
+    "resident_update_state",
+)
+
+
+def _apply_safety_enrichment(
+    out,
+    *,
+    case=None,
+    as_of=None,
+    staff=None,
+    default_kind="hazard",
+):
+    projected = taskqueues.project_safety_clock_and_owner(
+        out,
+        case=case,
+        as_of=as_of,
+        staff=staff,
+        default_kind=default_kind,
+    )
+    for key in _ENRICHED_SAFETY_KEYS:
+        out[key] = projected[key]
+    raw_owner = out.get("owner")
+    if (
+        not isinstance(raw_owner, str)
+        or raw_owner.strip().lower() in taskqueues.UNRECORDED_OWNER_TOKENS
+    ):
+        out["owner"] = projected["named_owner"]
+    return out
+
+
+def hazard_view(h, case_id, *, case=None, as_of=None, staff=None):
     out = deepcopy(h)
-    out["state"] = hazard_state(h)
+    out.setdefault("released", not taskqueues.is_open_safety_item(out))
+    out["state"] = hazard_state(out)
     out["service_authority"] = "Existing hazard and repairs service"
     out["classification"] = "Unverified report; service categorisation not recorded here"
-    for key in ("source", "aware_at", "sent_at", "received_at", "accepted_at",
-                "response_due_at", "responded_at", "resident_update_due_at", "resident_updated_at"):
+    for key in (
+        "source",
+        "aware_at",
+        "sent_at",
+        "received_at",
+        "accepted_at",
+        "response_due_at",
+        "responded_at",
+        "resident_update_due_at",
+        "resident_updated_at",
+    ):
         out.setdefault(key, None)
-    out.setdefault("hold", dict(scope="Home", case_id=case_id, status="Released" if h["released"] else "Active",
-                                accountable_role=None, legacy=True))
-    out["follow_up"] = deepcopy(h.get("accepted_by") or h.get("sender"))
-    return out
+    out.setdefault(
+        "hold",
+        dict(
+            scope="Home",
+            case_id=case_id,
+            status="Released" if out["released"] else "Active",
+            accountable_role=None,
+            legacy=True,
+        ),
+    )
+    out["follow_up"] = deepcopy(
+        h.get("accepted_by")
+        or (h.get("destination") if h.get("accepted_at") else None)
+        or h.get("sender")
+    )
+    is_sg = taskqueues.is_safeguarding_item(out, default_kind="hazard")
+    return _apply_safety_enrichment(
+        out,
+        case=case,
+        as_of=as_of,
+        staff=staff,
+        default_kind="safeguarding" if is_sg else "hazard",
+    )
+
+
+def safeguarding_view(sg, case_id, *, index=0, case=None, as_of=None, staff=None):
+    out = deepcopy(sg)
+    released = not taskqueues.is_open_safety_item(out)
+    out["id"] = out.get("id") or f"SG-{index + 1}"
+    out["category"] = out.get("category") or "Safeguarding"
+    out["priority"] = out.get("priority") or "Significant"
+    out["released"] = released
+    out["standalone_safeguarding"] = True
+    out["state"] = out.get("state") or ("Retrofit hold released" if released else hazard_state(out))
+    out["service_authority"] = "Designated safeguarding lead and statutory safeguarding route"
+    out["classification"] = (
+        "Safeguarding concern; statutory safeguarding decision stays with named authority"
+    )
+    for key in (
+        "source",
+        "aware_at",
+        "sent_at",
+        "received_at",
+        "accepted_at",
+        "response_due_at",
+        "responded_at",
+        "resident_update_due_at",
+        "resident_updated_at",
+    ):
+        out.setdefault(key, None)
+    out.setdefault(
+        "hold",
+        dict(
+            scope="Home",
+            case_id=case_id,
+            status="Released" if released else "Active",
+            accountable_role="Building Safety Liaison",
+            decision=None,
+        ),
+    )
+    out["follow_up"] = deepcopy(
+        sg.get("accepted_by")
+        or (sg.get("destination") if sg.get("accepted_at") else None)
+        or sg.get("sender")
+    )
+    return _apply_safety_enrichment(
+        out,
+        case=case,
+        as_of=as_of,
+        staff=staff,
+        default_kind="safeguarding",
+    )
 
 
 def _hazard_time(value, label, actual=False):
@@ -996,4 +1130,12 @@ class WorkflowMixin:
 
     def hazard_states(self, case_id):
         with self.lock:
-            return [dict(index=i, **hazard_view(h, case_id)) for i, h in enumerate(self._case(case_id)["hazards"])]
+            c = self._case(case_id)
+            staff_list = self.data.get("staff") or list(self.staff.values())
+            return [
+                dict(
+                    index=i,
+                    **hazard_view(h, case_id, case=c, as_of=self.as_of, staff=staff_list),
+                )
+                for i, h in enumerate(c["hazards"])
+            ]
