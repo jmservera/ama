@@ -349,7 +349,7 @@ Set these **GitHub environment variables**, never committed values:
 | `AZURE_REGISTRY_NAME` | Release and target environments; existing registry in ama |
 | `DEPLOY_PARAMETERS` | Plan and target environments; JSON override contract below |
 
-`DEPLOY_PARAMETERS` must contain exactly `location`, `sqlLocation`,
+`DEPLOY_PARAMETERS` must contain exactly `location`, `sqlLocation`, `aiModelLocation`,
 `regionCheckReference`, `quotaCheckReference`, `alertEmail`,
 `sqlAdminGroupName`, `sqlAdminGroupObjectId`, `entraClientId` (all nonempty
 strings), and `entraBearerOnly` (an explicit JSON boolean). Use approved values
@@ -1002,6 +1002,7 @@ remain an owner design decision, not an executable instruction here.
 | Model SKU/quota inputs (`modelDeployments`) | `standard`: gpt-4.1-mini; `capable`: gpt-4.1; both version 2025-04-14, `GlobalStandard`, capacity 30 | same defaults, subject to checks | same defaults; catalog checked below, quota and approved subscription binding unknown |
 | Retention (fixed unless a documented module input exists) | Log Analytics 90 days; SQL PITR 14 days; blob/container soft delete 30 days; ACR 30 days; audit/digest immutability 365 days unlocked; IoT 1 day | same | same; not a legally approved retention schedule |
 | `location` and `sqlLocation` | `uksouth` candidate, recheck | `uksouth` candidate, recheck | empty PLACEHOLDERs retained; pilot `uksouth` selected, separate SQL region unselected |
+| `aiModelLocation`, `aiModelFallbackLocation`, `modelCapacityBudget` | `uksouth`, no fallback, budget 30 | `uksouth`, no fallback, budget 30 | empty model region PLACEHOLDER, no fallback, budget 30 |
 | `regionCheckReference`, `quotaCheckReference` | empty PLACEHOLDERs | empty PLACEHOLDERs | empty PLACEHOLDERs |
 | Deployable as committed | No: complete placeholders/checks privately | No: complete placeholders/checks privately | No: additionally requires pilot decisions |
 
@@ -1029,6 +1030,21 @@ Rules:
   records, not approval tokens. Any nonempty string satisfies the mechanical
   gate, so a human must verify contents, freshness and exact configuration.
   Do not enter placeholder text to pass it.
+
+Region and quota choices are explicit parameters in every parameter set:
+`location`, `sqlLocation`, `aiModelLocation` (model account and deployments,
+defaults to `location`), optional `aiModelFallbackLocation` (recorded only,
+never deployed automatically, must differ from `aiModelLocation`) and
+`modelCapacityBudget` (approved model capacity units; `chatModelCapacity` must
+fit it, enforced by the `modelCapacityMustFitBudget` guard). The deterministic
+offline helper `infra/scripts/region_quota_preflight.py <param-file> [--bicepparam <file>] [--record
+check.json]` also parses `chatModelCapacity`/`modelDeployments`
+capacities from the file and checks them against the budget and the record; it reports whether every region is selected, the references are
+recorded, the dated record covers each selected region and every quota has
+headroom (limit - used - requested) within the budget. It never calls Azure and
+never approves a deployment; committed sets report `blocked` until a real dated
+record exists. `infra/tests/test_region_quota_137.py` pins this
+contract for dev, test and pilot.
 
 Recorded region and quota checks (re-run before each deployment; a check in another subscription or on another date proves nothing):
 

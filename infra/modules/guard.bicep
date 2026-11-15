@@ -129,6 +129,8 @@ output checked array = [
   regionCheckMustBeRecorded
   quotaCheckMustBeRecorded
   deploymentLocationsMustBeSelected
+  aiFallbackLocationMustDiffer
+  modelCapacityMustFitBudget
   sharePointEvidenceStoreRequiresSiteId
   tokenStoreReadyRequiresTokenStore
   entraRoleMapRequiresEntraClientId
@@ -147,3 +149,11 @@ output checked array = [
   publicSimulationRequiresRealApiImage
   publicSimulationRequiresSingleReplica
 ]
+
+@minLength(1)
+@description('Must not be empty. Empty means the fallback model region equals the primary model region; a fallback must be a different region.')
+param aiFallbackLocationMustDiffer string
+
+@minLength(1)
+@description('Must not be empty. Empty means the chatModelCapacity exceeds modelCapacityBudget; record a new quota check before raising the budget.')
+param modelCapacityMustFitBudget string
