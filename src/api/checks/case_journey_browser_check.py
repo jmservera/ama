@@ -811,8 +811,7 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             )
             commitment.get_by_role("button", name="Raise commitment", exact=True).click()
             finance.wait_for_function(
-                "() => document.querySelector('[id=\"f-Raise a commitment-supplier\"]').value"
-                " === ''"
+                "() => document.querySelector('#f-raise-a-commitment-supplier').value === ''"
             )
             check(
                 "client success clears only explicitly submitted same-card fields",
