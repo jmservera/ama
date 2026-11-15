@@ -1,16 +1,21 @@
 ---
-title: Everything but the Software - source package (draft v14)
-description: Single-document paper with prospective supplementary blind judging, source-bound measurements and preserved execution provenance
-ms.date: 2026-11-09
+title: Everything but the Software - source package (draft v21)
+description: Readable narrative and deduplicated provenance register with preserved results in one article and additive Supplement
+ms.date: 2026-11-15
 ---
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
 
 ## Current Status
 
-The title is unchanged at the owner's request. The complete
-[paper](./main.pdf) and [source](./main.tex) now include a
-[Supplement section](./main.pdf#page=39) in the same document.
+The title is unchanged at the owner's request. The current
+[paper](./main.pdf) and [source](./main.tex) explain the completed exploratory
+study through its principal findings: largely stable retention, selective
+benefits from consolidation or review, and additional resource cost.
+The [Supplement](./main.pdf#page=48) retains the detailed results, uncertainty,
+calibration and execution record in the same 70-page document.
+The [source and digest register](./main.pdf#page=68) occupies the final
+three pages; full identifiers no longer interrupt the narrative.
 The supplement is additive: source-specific qualifications, detailed
 method/rival checks, the frozen prompt, deferred rates and provenance.
 Repeated Background text, figures and case narratives are excluded from
@@ -19,10 +24,24 @@ The standalone supplement PDF/TeX/bibliography were removed at the owner's
 request after exact archive readback and restore checks; their original
 committed versions remain in Git at `80656f32`. No source evidence was discarded.
 
-The [8 November measurement clarification](./anc/revision-report.md#measurement-provenance-clarification-8-november)
-records the current revision; the
-[execution and authorship record](./anc/revision-report.md#execution-registration-and-coauthorship-8-november)
-retains that earlier scope. The earlier
+The [15 November provenance and readability record](./anc/revision-report.md#provenance-and-readability-15-november)
+records the current v21 delivery. The
+[final-results and chart interpretation record](./anc/revision-report.md#final-results-and-chart-interpretation-15-november)
+preserves the preceding v20 delivery. The
+[14 November critique and falsifiability revision](./anc/revision-report.md#critique-and-falsifiability-revision-14-november)
+retains the preceding v19 record. The
+[finalization follow-up](./anc/revision-report.md#finalization-follow-up-14-november)
+retains the preceding v18 record. The
+[report refresh](./anc/revision-report.md#attested-report-refresh-14-november)
+retains the preceding v17 record. The
+[readability revision](./anc/revision-report.md#readability-and-interpretation-14-november)
+retains the preceding v16 record. Results remain enabled (`\resultstrue`);
+the [13 November empirical integration](./anc/revision-report.md#study-results-and-post-collection-judging-13-november)
+retains the original results-intake and delivery record. The
+[9 November supplementary judging record](./anc/revision-report.md#supplementary-blind-judging-9-november),
+[8 November measurement clarification](./anc/revision-report.md#measurement-provenance-clarification-8-november)
+and [execution and authorship record](./anc/revision-report.md#execution-registration-and-coauthorship-8-november)
+retain their earlier dated scopes. The earlier
 [nine-point author review disposition](./anc/revision-report.md#author-review-disposition-1-november)
 retains its own scope. The case follows agent-assisted research,
 Design Thinking challenge, prototypes, requirements, epics and stories,
@@ -31,6 +50,268 @@ calendar dates no longer lead the argument. The supplied
 [project-insights export](./anc/project-insights-2026-11-01.csv) supports the
 backlog handoff; its provenance and missing export metadata are in the
 [evidence index](./anc/case-evidence-matrix.json).
+
+### Provenance and Readability 15 November
+
+The readability revision consolidates all 61 distinct identifiers previously
+printed in the active paper into Table 35 at the end: 19 SHA-256 digests and
+42 Git commit, tree or blob IDs. Short linked record labels replace full
+hashes in Data Availability, execution history, judging and prompt provenance.
+The register explains the identifier types and preserves historical/final
+scopes; a matching digest establishes retained content, not claim support.
+
+Result tables now include a local arm key. The task and checkpoint notation,
+acquisition versus retention, sampling intervals versus missing-outcome bounds,
+complexity and deferred intervention-demand rate are explained near their use.
+Repeated numerical summaries and the long source/AI-assistance revision history
+are shortened; their detailed tables and original dated records remain intact.
+Follow-up designs and practice suggestions remain proposed, not demonstrated.
+
+The full PDF remains 70 pages. The Supplement starts three pages earlier,
+on page 48 rather than 51, making room for the three-page end register without
+length growth. All 72 authoring tests and structural checks pass. Direct
+comparisons preserve 1,454 fields in 34 existing tables, all seven displayed
+equations, three literal prompts and every author TODO. All 61 PDF destinations
+resolve, all pages are nonblank and text is in bounds; fourteen selected pages
+were inspected directly or matched to inspected renders. The inherited
+`inputenc` notice remains the only compiler warning.
+
+The separate `provenance_readability_revision` in the
+[binding](./anc/supplement-integration.json) preserves the v20 and earlier
+deliveries. This is an assisted readability revision, not independent scientific
+review or venue compliance. Remaining evidence/approval limits are unchanged;
+no experiment, scoring, registration, paid call, commit or remote publication
+was performed.
+
+### Final Results and Chart Interpretation 15 November
+
+The final [experiment report](https://github.com/jmservera/ama-thought-mve/blob/d097a10b090baefadf995ecd910eb96c324f0234/results/EXPERIMENT_RESULTS.md)
+and its committed artifacts contain all 315 completed trajectories, 5,355
+measured steps and 5,372 attempts across sixteen execution sources. The
+owner-attested unassisted frame unlocks the primary and secondary coverage
+contrasts; the primary B-D estimate remains +1.19 percentage points
+(95% interval [0.10, 2.22]), below the ten-point practical benchmark.
+The accepted retention panel records one open regression. Two CR1 outcomes
+remain unknown, and 55 attempts retain incomplete billing. The supplementary
+judging remains its earlier 313/315 snapshot (626 evaluable endpoint packets,
+1,252 calls), not a new complete judging run.
+
+The new [trajectory chart](./fig-study-trajectories.png) and
+[outcome/cost chart](./fig-study-outcomes-costs.png) are generated from the
+source-bound [snapshot](./anc/study-results-2026-11-15.json). Higher coverage
+and fewer complexity hotspots are preferable on those measures. Contrasts
+name their focal arm, distinguish the zero line from the +10-point benchmark,
+and flag intervals including zero as directionally uncertain. CR1 passes
+must be read alongside feature completeness; unknown outcomes are not failures.
+The cost panel explains that upper-left is preferable only at comparable
+delivered behaviour, and that the billed sample differs from the coverage
+sample. The editable economics figure marks its model as assumed and explains
+that fewer break-even cycles mean earlier payback, not observed savings.
+
+All 70 authoring tests and structural checks pass. Plot ranges contain all
+cell means, browser checks find no overlapping reading cues, and the 70-page
+PDF has no blank pages or out-of-page text. Selected figures, the Supplement,
+ledger and literal prompt pages were inspected. Only the inherited `inputenc`
+notice remains. The [binding](./anc/supplement-integration.json) preserves the
+earlier candidate and all dated revisions. Human approval, source-access limits,
+hosted CI and independent exact-head review remain separate. No new experiment,
+judge calls, VM mutation, commit or push was performed in this update.
+
+### Critique and Falsifiability Revision 14 November
+
+Following the external hypothesis-falsifiability critique, the elastic
+conjecture ("can carry ... unless") is replaced by a two-part falsifiable
+formulation separating the short-horizon decay premise (P1) from the
+consolidation remedy (P2 coverage gain threshold $\Delta_*=10$ percentage
+points; P3 change-request adaptability and credit payback) alongside the
+structural treatment-fidelity check. Table 15 (`tab:predictionverdicts`)
+summarises each criterion, observed result and exploratory verdict: P1 is
+not supported on the ten-feature task, P2 is below the 10-point threshold
+($+1.19$ percentage points, $[0.10,2.22]$), and P3 is not supported, while
+structural fidelity succeeded.
+
+The abstract, main coverage section and conclusion now state the per-model
+coverage split alongside the pooled $+1.19$-point B-D figure: GPT 6.1 Sol
+gained $+3.15$ points ($[0.00,6.30]$) by overcoming F8's protected-test
+allowlist lock on F9 ranking (12/21 vs 6/21 complete delivery), whereas
+Sonnet 5.5 ($+0.26$ points, $[-0.15,0.75]$) and Gemini 4 Argon ($+0.15$
+points, $[-0.15,0.52]$) B-D intervals span zero. Section 8.5 specifies a
+30-to-40-cycle brownfield follow-up design matching the break-even regime
+$N_{\mathrm{BE}}=\lceil 1+2k/\delta\rceil$, with $K\geq4$ branch-isolated
+Latin-square change requests, a $2\times2$ factorial crossing refactoring
+and invariant review (plus test-suite mutability), and preregistered
+block-level falsification rules.
+
+All 67 authoring tests pass, all 1,378 existing numerical table fields are
+preserved, and the 66-page PDF (Supplement page 47) has zero overfull boxes
+and visually verified pages. The new `falsifiability_revision` in
+[supplement-integration.json](./anc/supplement-integration.json) preserves
+v18 and earlier bindings.
+
+### Finalization Follow-up 14 November
+
+The exact Data Science and Engineering Coach assessed the remaining inference
+TODO. The implemented independent model/arm bootstrap and public block/source
+joins are now explicit. Dependence justification and actual amendment timing
+remain author decisions; no replacement estimator or new empirical runs were
+introduced. Original-source checks support the retained figures with specified
+full-text/abstract limits and the Laban v1 39%/35% presentation difference.
+
+The active narrative, PDF participant contexts and native figure text contain
+no additional named case partners, customers or coworkers beyond the two
+authors. Credited publication authors and public speakers remain attributed.
+This is not a confidentiality clearance for complete Git history or newly
+published raw/ancillary extracts.
+
+Read-only retrieval from the author-named VM working copies found all 5,357
+attempt starts, controller durations, IDs and source commits. The study-state
+hash matches Assessment v3; the retained judge config/source lineage is
+consistent with SDK 1.0.28, CLI 1.0.105, `gpt-6-luna` and two repeats. No VM
+restart, candidate/judge rerun or private-data inspection was needed. Unlogged
+historical backend/case version identifiers cannot be recreated by a new session.
+
+Manager approval and the 27 October CELA submission are recorded as the
+owner's account. No objection is not an inspected final-version clearance;
+the earlier copy predates the empirical additions. Confirm whether the current
+draft needs further review under the applicable process. The experiment GitHub
+repository is the selected deposit; its v4/v6/v7 archives/checksum assets are
+retained, with a final release manifest and registered-archive correspondence
+still to be completed.
+
+All 66 authoring tests pass. All 1,378 existing table fields are preserved.
+The single 64-page PDF retains Supplement page 45, in-page text and no blank
+pages. Changed pages and the execution ledger/B/C prompts were inspected;
+only the inherited `inputenc` notice remains. The
+[binding](./anc/supplement-integration.json) preserves v17 and earlier history.
+Hosted CI, independent exact-head review and final author/publication approval
+remain separate unmet gates.
+
+### Attested Report Refresh 14 November
+
+The updated
+[report](https://github.com/jmservera/ama-thought-mve/blob/bd75c1c2104d001d62f9fb2bb4feab438b86f763/results/WHITEPAPER_REPORT.md)
+and companion extraction are pinned to `bd75c1c2104d001d62f9fb2bb4feab438b86f763`.
+The local report matches the online `main` Git blob. Its published provenance
+now records owner-attested intervention coverage for all 313 completed
+trajectories, with none assisted. This is an operator account, not independent
+verification of out-of-band activity. Two quarantined trajectories remain
+partial, so the automated whole-study primary stays unavailable.
+
+Separate complete-pair comparisons now report the equal-model-weight final
+coverage differences: B-D `+1.1874` percentage points (95% bootstrap interval
+`[+0.1000, +2.2247]`) and B-A `+1.4123` (`[+0.3250, +2.4497]`), each using
+63 versus 63 allocated trajectories. The paper retains their exploratory,
+post-collection status, unresolved scheduling dependence and small magnitude
+relative to the earlier ten-point benchmark.
+
+The existing Supplement adds model-level coverage and CR1 intervals,
+full-allocation bounds and judge contrasts with abstention counts. It
+distinguishes confidence intervals from missing-trajectory bounds, and
+observed-scenario means from the strict complete-scenario estimand. Neither
+the bounds nor the NA counts recover unrated scenario dimensions.
+
+All 63 authoring tests pass. Checks reproduce the two pooled coverage
+intervals and seven complete-cell CR1 intervals, verify 128 judge-summary
+comparisons within published precision, match 241 new numerical/missingness
+fields to the companion export and preserve all 886 v16 table fields.
+The 64-page PDF has in-page text and no blank pages; selected rendered pages
+were inspected. There are no unresolved references or overfull/underfull
+boxes; the inherited `inputenc` notice remains. The
+[binding](./anc/supplement-integration.json) retains all prior deliveries.
+No experiment, scoring, registration, candidate or judge session changed.
+Hosted CI and independent exact-head review remain unperformed.
+
+### Readability and Interpretation 14 November
+
+The abstract and conclusion now lead with the findings and their practical
+meaning. Results distinguish acquiring a feature from retaining behaviour
+that already worked, and explain why CR1 success has a treatment-dependent
+retention baseline. Judging methods describe the performed assessment;
+the earlier proposal remains identified as historical.
+
+Coverage and CR1 outcomes have separate tables, as do structural metrics
+and credits/minutes. Main results tables use larger type and descriptive
+headings. Additional distributions, contrast bounds, size measures,
+post-collection ratings, calibration and the fourteen-source ledger remain
+in the existing Supplement. The claim that Gemini's baseline met every
+structural target is corrected; Sonnet B's remaining lint is also explicit.
+Observed spending precedes the unchanged hypothetical payback model.
+
+All 60 authoring tests and structural checks pass. An additional 618 field,
+denominator, ledger and CR1-bound checks against the staged v15 candidate
+confirmed numerical preservation. The rebuilt PDF has no unresolved
+references or overfull/underfull boxes; all 60 pages have in-page text and
+no blank pages. Selected rendered results, conclusion and Supplement pages
+were inspected. The inherited Tectonic `inputenc` notice remains.
+The [current binding](./anc/supplement-integration.json) preserves the v15
+delivery hashes separately. Dated sections below retain their original
+status and validation scope.
+
+### Study Results and Post-Collection Judging 13 November
+
+The paper integrates the committed empirical study handoff from
+[`results/WHITEPAPER_REPORT.md`](https://github.com/jmservera/ama-thought-mve/blob/main/results/WHITEPAPER_REPORT.md)
+in `jmservera/ama-thought-mve` (`main` commit
+`7943e40347862e76e3bc04490040ad5904487c86`, branch commit
+`8591630c556f9f87c952f5d44ca7ce58b2bf1a83`, tree
+`cb542312d8bde5d26bc716f2c8f7a5e8eaef7037`, report Git blob
+`3e44ae10547b6376864089e605e946f74a378d56`, SHA-256
+`2180679ce9fe18d77e3107ed5cdc01edd32749a4a15114bf23f647c516d83af4`),
+backed by `results/pilot-estimation/` and `results/pilot-estimation-judging/`.
+
+* Across 315 allocated trajectories (three models x five arms x 21 replicates;
+  5,355 scheduled steps), 313 trajectories (99.37%) completed all delivery and
+  CR1 steps, yielding 5,341 measured steps (99.74%) across 5,357 attempts
+  spanning 14 execution source commits through
+  `a9d76bb6dbb118c43315fb2a13b7bcdb732d946d`. Two trajectories
+  (`pilot-estimation-gemini-4-argon-E-15` at 10/21 steps and
+  `pilot-estimation-gpt-6.1-sol-C-20` at 18/21 steps) were quarantined after
+  provider transport/fallback interruptions and remain in all allocation
+  denominators.
+* Formal primary bootstrap intervals remain withheld
+  (`primary_estimates_available = false`) because no external post-collection
+  operator attestation (`intervention-coverage/v1`) was supplied to certify
+  the absence of out-of-band human edits and two trajectories in Arms C and E
+  were quarantined. All findings are reported as exploratory estimation with
+  exact CR1 identification bounds.
+* Out of 5,357 attempts, 5,303 settled with complete billing (`62,052.61` AI
+  credits, exact `62,052.6069`), while 54 attempts (38 native-retry holds,
+  15 recovery-interrupted holds and one quarantine hold) retain `18,900.0`
+  reserved credits (`783.16` credits, exact `783.16186`, certified as a
+  partial lower bound).
+* Ten sequential features induced only one open contract regression at P10
+  across 313 completed trajectories (`claude-sonnet-5.5` and `gemini-4-argon`
+  averaged 99.18% to 99.74% P10 pass rates; pooled within-cell SD is 3.11
+  percentage points with 298 df). Arm B eliminated functions above cyclomatic
+  complexity 10 (0.00% across all 63 Arm B runs), reduced lint density by 92%
+  on `claude-sonnet-5.5` and 100% on `gpt-6.1-sol`, mitigated `gpt-6.1-sol`'s
+  self-locking F8 test allowlist (raising 100% P10 completion from 5/21 in A
+  and 6/21 in D to 12/21 in B and E), and roughly doubled delivery credits
+  (1.84x to 2.25x vs A) without lowering CR1 cost. On `gemini-4-argon`,
+  read-only review in Arm C (16/21 CR1 success, 76.2%) outperformed
+  metric-gated consolidation in Arm B (8/21, 38.1%) when already-green static
+  metrics left an F8 view-method blocklist trap untouched.
+* Post-collection replay of 12 public-specification workflows across 3,457
+  recorded commits (630 endpoint packets; 626 evaluable) found zero witnessed
+  capability losses (`observed_loss = 0`). Blinded `gpt-6-luna` Assessment v3
+  (`c10e6d6f`, 1,252/1,252 calls, `418.64` settled credits after halted v1/v2
+  attempts holding 60 reserved credits and `5.28` settled credits) yielded
+  positive complete-frame B-D and B-A contrasts on functional completeness and
+  API usability (`+0.0577` and `+0.0599` for B-D at P10; `+0.0351` and
+  `+0.0357` at CR1). Human calibration across `S01..S08` (90 rows, 79 scorable
+  rows, 16 distinct contexts, scored by `jmservera` under
+  `human-calibration-guidance/v3` with `review_status = in_progress` and
+  disclosed AI-assisted failure/mismatch triage) had 94.3% to 98.7% raw exact
+  agreement (87.5% to 96.9% equal-context exact agreement) and zero
+  disagreements of two or more points. The 5,357-journal SDK audit confirmed
+  zero interactive user-input RPCs, 99.83% `isolated_exec` tool discipline
+  (74 rejected built-in `create`/`edit` attempts on Sonnet 5.5), and 36
+  sessions (0.67%) ending with a permission or environment question.
+* The complete v15 delivery has **56 pages**, with empirical results in
+  **Sections 7.8-7.11 (pages 26-30)** and the additive Supplement starting on
+  **page 46**. All **58 authoring tests** and structural checks pass; Tectonic
+  0.17.0 compiles the PDF with zero errors, zero unresolved references and
+  zero overfull or underfull boxes.
 
 ### Supplementary Blind Judging 9 November
 

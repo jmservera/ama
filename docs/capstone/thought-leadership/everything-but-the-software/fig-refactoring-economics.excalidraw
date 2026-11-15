@@ -553,7 +553,7 @@
       "y": 152,
       "width": 320,
       "height": 110,
-      "text": "Net difference (A - B)\ndelta*N*(N - 1)/2 - k*N\n> 0: A costs more than B\n< 0: B cost unrecovered",
+      "text": "Net (A - B): higher favors B\ndelta*N*(N - 1)/2 - k*N\n> 0: favors consolidation B\n< 0: B investment unrecovered",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
@@ -597,7 +597,7 @@
       "y": 152,
       "width": 296,
       "height": 110,
-      "text": "Consolidation investment\nAverage k credits / cycle\nTotal outlay: k * N\nk awaits calibration",
+      "text": "Consolidation investment\nAverage k credits / cycle\nTotal outlay: k * N\nObserved B: 5.8-12.6 / cycle",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
@@ -605,7 +605,7 @@
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "invest-box",
-      "originalText": "Consolidation investment\nAverage k credits / cycle\nTotal outlay: k * N\nk awaits calibration"
+      "originalText": "Consolidation investment\nAverage k credits / cycle\nTotal outlay: k * N\nObserved B: 5.8-12.6 / cycle"
     },
     {
       "id": "invest-dock",
@@ -1486,7 +1486,7 @@
       "y": 588,
       "width": 1200,
       "height": 60,
-      "text": "Break-even depends on the ratio k / delta, not the units or a preferred k.\nk awaits measured consolidation spend; delta is an uncapped, quality-matched counterfactual.",
+      "text": "Break-even depends on the ratio k / delta, not the units or a preferred k.\nObserved B step means are 5.82-12.59 credits; delta requires uncapped counterfactuals.",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
@@ -1494,7 +1494,7 @@
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "Break-even depends on the ratio k / delta, not the units or a preferred k.\nk awaits measured consolidation spend; delta is an uncapped, quality-matched counterfactual."
+      "originalText": "Break-even depends on the ratio k / delta, not the units or a preferred k.\nObserved B step means are 5.82-12.59 credits; delta requires uncapped counterfactuals."
     },
     {
       "id": "ratio-plot-title",
@@ -1503,8 +1503,8 @@
       "y": 660,
       "width": 1050,
       "height": 60,
-      "text": "Break-even sensitivity: N >= 1 + 2 * (k / delta)\nIllustrative boundary; integer cycles round up",
-      "originalText": "Break-even sensitivity: N >= 1 + 2 * (k / delta)\nIllustrative boundary; integer cycles round up",
+      "text": "Break-even sensitivity: N >= 1 + 2 * (k / delta)\nAssumed model: lower cycles = earlier payback; integer cycles round up",
+      "originalText": "Break-even sensitivity: N >= 1 + 2 * (k / delta)\nAssumed model: lower cycles = earlier payback; integer cycles round up",
       "fontSize": 24,
       "fontFamily": 2,
       "lineHeight": 1.25,
@@ -1611,8 +1611,8 @@
       "y": 1010,
       "width": 730,
       "height": 60,
-      "text": "k / delta (0 to 100; delta > 0)",
-      "originalText": "k / delta (0 to 100; delta > 0)",
+      "text": "k / delta (0 to 100; delta > 0)\nLarger ratio = later break-even",
+      "originalText": "k / delta (0 to 100; delta > 0)\nLarger ratio = later break-even",
       "fontSize": 24,
       "fontFamily": 2,
       "lineHeight": 1.25,

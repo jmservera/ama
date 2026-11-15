@@ -1,9 +1,50 @@
 ---
 title: Everything but the Software - Revision Record
-description: Prospective supplementary judging, source-bound measurement clarification and retained historical revision evidence
-ms.date: 2026-11-09
+description: Readability review, deduplicated end register and validation alongside preserved dated result and source records
+ms.date: 2026-11-15
 ---
 
+The later 15 November readability revision centralizes exact provenance in
+one end register, adds local result explanations and shortens repeated prose
+without changing observations or expanding the 70-page delivery. The v20
+and earlier source, review and delivery records below remain historical.
+
+The 15 November final-results update incorporates the completed source-bound
+315-trajectory dataset and adds human-readable direction and uncertainty cues
+to the empirical and economics graphics. Earlier reviews, source pins,
+incomplete-data states and validation records below remain historical.
+
+The 14 November critique and falsifiability revision applies the external
+review of hypothesis refutability: it separates the short-horizon decay
+premise (P1) from the consolidation remedy (P2 coverage threshold
+$\Delta_*=10$ percentage points; P3 CR1 adaptability and cost payback) and
+the structural manipulation check, surfaces the per-model coverage split in
+the abstract, main results and conclusion, and adds a 30-to-40-cycle
+factorial follow-up design (`sec:futureexperiment`). It preserves all
+existing numerical tables and earlier dated records.
+
+The 14 November finalization follow-up records the exact Coach assessment,
+original-source checks, active participant-name audit, allowlisted historical VM
+metadata and the owner's approval/deposit decisions. It retains the existing
+estimator, original outcomes, source-access limits and earlier adverse records.
+
+The later 14 November report refresh records owner-attested coverage and
+exploratory companion estimates from the changed local/online report. It
+preserves the strict automated primary gate, two partial trajectories,
+readability improvements and all earlier dated source and delivery records.
+
+The 14 November readability revision reorganises the article around its
+findings, separates the wide result tables and retains detailed statistics
+and provenance in the existing Supplement. It changes no experimental
+observations, scoring or protocol. Dated records below retain their original
+wording and validation outcomes.
+
+The 13 November study-results revision integrates the completed 315-trajectory
+five-arm exploratory S1 experiment, 14 implementation epochs, 630-endpoint
+workflow replay, 1,252-call blinded `gpt-6-luna` judging, 90-row human
+calibration spot-check and 5,357-journal SDK intervention audit from
+`results/WHITEPAPER_REPORT.md`, enabling `\resultstrue` while preserving all
+earlier method, measurement and historical records.
 The 9 November supplementary judging account adds prospective methods for
 a separate post-collection instrument. It preserves original endpoints,
 running sources, results TODOs and all earlier revision evidence.
@@ -18,6 +59,575 @@ The 5 November recovery/source check, 2 November allocation record and
 from Scope and Outcome through Title Assessment retain the original
 24 October report, and the 25 October addendum remains historical. Their
 earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Provenance and Readability 15 November
+
+### Scope and Applied Findings
+
+The owner requested a readability review and authorized revision of the white
+paper, specifically moving repeated SHA digests into an end table and reducing
+reader backtracking without adding length. The revision uses the current
+article, active Supplement inputs and retained package evidence. No external
+source was newly retrieved or independently revalidated. The existing topic
+branch and open PR 1790 continue the same paper workstream; no remote write
+was performed.
+
+* Full identifiers interrupted Data Availability, execution history, judging,
+  attestation and prompt explanations. Table 35 (`tab:source-register`) now
+  contains each of the original 61 identifiers once, with a linked R01-R61
+  record, object type, purpose and historical/final scope. The 19 SHA-256
+  digests remain distinct from the 42 Git commit/tree/blob IDs. No source pin
+  or digest value changed.
+* Result letters and checkpoints required backtracking. Tables 10-13 now have
+  a local arm key; the design and result prose explain S1, final feature
+  checkpoint P10, regional-access extension CR1, acquisition/retention and
+  sampling intervals versus bounds for unknown outcomes. Complexity and the
+  deferred intervention-demand rate have local plain-language explanations.
+* Repeated comparisons and revision chronology obscured the argument. The
+  introduction, conclusion, Data Availability and AI-assistance account are
+  shorter; all detailed data tables, original disclosures, literal prompts,
+  prior reviews and author TODOs remain in their existing records. The
+  allowance comparison explicitly names Arm A as D's comparator.
+* Follow-up wording implied more certainty than the task supports. The
+  longer-horizon design is presented as a proposal, with an assumed economic
+  model and unmeasured long-run cost slope. The hybrid/practice package remains
+  untested; safety, privacy, approval and publication gates remain explicit.
+
+The preserved final-results source and prior checks retain their original
+evidence status. This editorial pass establishes source/number preservation
+and local presentation checks, not new empirical support or a measured gain
+in reader comprehension.
+
+### Validation and Delivery
+
+The focused tier applies to editorial TeX, non-gate authoring tests, bindings
+and documentation. The tests follow relocated identifiers and add unique-
+register/local-context checks; experimental scoring, estimator, dependencies,
+security controls and required publication-gate semantics are unchanged.
+
+* All 72 authoring tests pass. The initial full-suite run found one obsolete
+  phrase assertion about D's allowance; it now checks the explicit Arm A
+  wording, and the exact test and full suite pass. A dangling editorial
+  transition was also corrected and rechecked before the final build.
+* Baseline comparison at `c3d08d0631151ce022d073f6d10ffc1d6504b1ba`
+  preserves all 61 unique identifiers, 1,454 fields across 34 existing tables,
+  seven displayed equations, three literal prompt files and every author TODO.
+  All historical binding entries are unchanged; prior active Supplement
+  digests are retained in the new revision entry.
+* The structural checker passes: 1,836 abstract source characters, 94 cited/
+  embedded entries, 105 reusable bibliography entries and approximately 16,737
+  introduction-through-conclusion words. Historical baseline `0d5dcb02`
+  remains unavailable; these counts are not outcomes or readability scores.
+* Tectonic builds one 70-page PDF: Supplement page 48, final source register
+  pages 68-70. The preceding v20 Supplement began on page 51. All 30,868
+  extracted words are within page bounds, no page is blank and all 61 register
+  destinations resolve. There are no errors, undefined references, overfull
+  or underfull boxes; the inherited `inputenc` notice remains.
+* Selected pages 1, 2, 4, 28, 29, 31, 37, 38, 40, 48, 53 and 68-70 were
+  inspected directly or were pixel-identical to inspected candidate renders.
+  Figure files and raw chart inputs are unchanged. The installed PDF matches
+  the final external build in
+  `/tmp/ama-paper-readability-20261115-final-AN4no9/`.
+* The `provenance_readability_revision` in
+  [supplement-integration.json](./supplement-integration.json) binds the final
+  PDF, sources, register and reviewed pages. Earlier candidates and revision
+  records remain intact; no cleanup was authorized or performed.
+
+Local requested revision is complete. Assessment is a scoped assisted
+readability and preservation review; scientific evidence limitations,
+unregistered amendments, two CR1 unknowns, 55 billing holds, the incomplete
+judging/calibration frame and author decisions remain unchanged. Human,
+employer/venue approval, hosted CI and independent exact-head review are not
+established. No paid run, VM change, experiment, scoring, registration,
+commit, push or external publication occurred.
+
+## Final Results and Chart Interpretation 15 November
+
+### Source and Scope
+
+The owner supplied the final experiment report and its pilot/judging folders,
+reporting that the researcher executed the completed recoveries. The source
+pin is `d097a10b090baefadf995ecd910eb96c324f0234` in
+`jmservera/ama-thought-mve`. The inspected online report identifies that commit;
+the committed report SHA-256 is
+`e4680e66ba6791c7a23bd484954767bc7d580f881db939cf4fb113d28af10f15`.
+The final execution pin is `5481fd8a47aa0bad660e7c0ab68f7fcfeea4137f` and
+study-state binding is
+`7992b0e21cbacde39b48bb6223d5b663b7013630b265ae64a37223414ab05e4a`.
+These source/metadata checks do not independently rerun or certify the study.
+Researcher execution and operational separation retain the authorship and
+institutional-independence limits in the manuscript.
+
+| Claim and manuscript locator | Inspected evidence | Support and limit |
+| --- | --- | --- |
+| Completed frame; execution and collection sections | Committed report, summary, run and attempt exports | Artifact support: 315 completed trajectories, 5,355 measured steps, 5,372 attempts, sixteen source epochs, accepted retention panel and owner-attested unassisted coverage. Out-of-band intervention is not independently verified. |
+| Final coverage and CR1 outcomes; main tables and Supplement | Committed summary, retained snapshot and contrast exports | Coverage/structural/CR1 table values match the retained snapshot. All four coverage comparisons now have estimates; two unadjudicated CR1 errors remain unknown, not zero or failed outcomes. Estimates remain exploratory. |
+| Billing; resource table and ledger | Committed attempt export and report | 5,317 fully billed attempts, 62,299.75904 settled credits, 38 retry holds and 17 recovery holds. The 55 holds retain 19,200 reserved credits; the 783.16186 lower bound is not a settled total. |
+| Judging and calibration; post-collection assessment | Existing committed judging outputs | The earlier 313/315 snapshot retains 630 scheduled/626 evaluable packets and 1,252 calls. Completing development did not complete those four unavailable judging packets. Calibration remains in progress and AI-assisted, not independent reliability evidence. |
+| Empirical charts; Figures 9 and 10 | 3,150 committed cycle rows and source-bound JSON | All 150 cell-by-cycle means for each of the two plotted metrics reproduce within retained precision. Static range clipping and the Arms A-D denominator were corrected. No candidate code or judge was rerun. |
+
+### Human Reading Cues
+
+The user requested an explicit better/worse direction and additional reading
+clues. Figures and captions now state:
+
+* Higher pass rates mean more specified contracts satisfied; lower hotspot
+  percentages mean fewer complex functions, not proof of correctness.
+* Each trajectory line is a 21-run mean without uncertainty bands. The upper
+  axis is zoomed, and expanding contract sets can lower coverage without
+  showing loss of previously acquired behaviour.
+* Positive contrasts favour the first named arm. Intervals including zero
+  leave the direction uncertain; +10 points is the primary practical benchmark,
+  not a significance threshold.
+* More CR1 passes are preferable, but retention obligations depend on prior
+  feature completeness. Grey outcomes remain unknown.
+* Up/left in the cost panel means more coverage/less spending. Upper-left is
+  preferable only at comparable delivered behaviour; coverage uses every run
+  while costs use fully billed subsets. Cheap failure is not efficiency.
+* The economics graphic is an assumed model. Higher net A-B favours B;
+  fewer break-even cycles mean earlier payback, and larger k/delta delays it.
+  The null case, invented parameters and observed step means remain distinct.
+
+The triggered hybrid policy is explicitly a proposed follow-up, not an
+evaluated combination or a measured cost advantage. An Excalidraw delegate
+updated the native economics labels and matching authoring text through the
+existing exporter; equations, values and other diagram files were preserved.
+
+### Validation and Delivery
+
+The focused tier applies: reporting, figures, non-gate export tooling, related
+authoring tests and bindings changed. No experiment engine, scoring rule,
+dependency, security control or publication-gate semantics changed.
+
+* All 70 authoring tests pass. The initial full-suite run had one stale exact-
+  phrase assertion; the test now checks the actual explicit exploratory-study
+  declaration, and the same check and full suite pass afterward.
+* The structural checker passes: 1,836-character abstract, 94 cited/embedded
+  entries, 105 reusable bibliography entries and approximately 17,010 main-body
+  words. Historical baseline `0d5dcb02` remains unavailable.
+* Browser geometry checks confirm fourteen direction/reading cues fit without
+  text overlap. All plotted cycle values lie within their axes. Native source,
+  export, full-raster, frozen-prompt and current/historical bindings pass.
+* Tectonic produces one 70-page PDF, Supplement page 51, with zero errors,
+  unresolved references, overfull or underfull boxes. All 31,103 extracted words
+  have in-page bounds and no page is blank. Final rendered pages 28, 32, 36,
+  51, 69 and 70 were inspected; earlier candidate opening and conclusion pages
+  were also inspected. Only the inherited `inputenc` notice remains.
+* PDF SHA-256 is
+  `a31b7e8968a175ac5ac8ac8816e55ca860d5b1032f2697be93cc57a86391781b`.
+  The separate `chart_interpretation_revision` in
+  [supplement-integration.json](./supplement-integration.json) preserves the
+  pre-annotation `final_results_revision` and every earlier revision. Working
+  build/inspection files remain external.
+
+Local work is complete. Scientific assessment remains source-bound and
+exploratory; author, employer and venue approval, remaining original-source
+access limits, hosted CI and independent exact-head review are not established
+by these checks. No new data collection, paid candidate/judge call, VM change,
+registration, commit, push or external publication occurred in this update.
+
+## Critique and Falsifiability Revision 14 November
+
+### Applied Critique and Prediction Verdicts
+
+The user-supplied review observed that the ten-feature S1 study neither
+confirmed the initial conjecture nor could formally falsify an elastic
+"can carry ... unless" phrasing, and recommended stating explicit testable
+predictions with thresholds, labelling each verdict honestly, naming the
+per-model split alongside the $+1.19$-point pooled B-D coverage estimate,
+and designing a deeper follow-up experiment.
+
+| Critique item | Manuscript change | Locator |
+| --- | --- | --- |
+| Replace elastic "can carry ... unless" phrasing with falsifiable predictions and explicit verdicts | Separated the conjecture into P1 (short-horizon decay premise), P2 (primary B-D coverage gain $\Delta_*\geq10$ percentage points), P3 (CR1 adaptability and credit payback) and a structural manipulation check, keeping pre-specified $\Delta_*=10$ distinct from post-collection evaluation structure | `main.tex` Abstract, Section 1 (`sec:intro`), Section 9 (`sec:conclusion`); `anc/experiment-protocol.tex` Table 15 (`tab:predictionverdicts`) |
+| Surface per-model heterogeneity next to the pooled $+1.19$ pp B-D figure | Reported GPT 6.1 Sol $+3.15$ pp ($[0.00,+6.30]$, F9 ranking acquisition 12/21 vs 6/21) alongside Sonnet 5.5 $+0.26$ pp ($[-0.15,+0.75]$) and Gemini 4 Argon $+0.15$ pp ($[-0.15,+0.52]$), whose intervals span zero | `main.tex` Abstract, Section 1, Section 9; `anc/experiment-protocol.tex` Section 7.9 (`sec:resultscorrectness`) |
+| Propose a future experiment with sufficient depth for conclusive results | Added Section 8.5 (`sec:futureexperiment`): $N=30$--$40$ sequential cycles on a $3\text{k}$--$10\text{k}$ NLOC brownfield service repository spanning $N_{\mathrm{BE}}=\lceil 1+2k/\delta\rceil$, $K\geq4$ branch-isolated Latin-square change requests at $P_{10}..P_{40}$, a $2\times2$ factorial crossing refactoring and invariant review plus test mutability, and preregistered block-level falsification rules | `main.tex` Section 8.5 (`sec:futureexperiment`) |
+
+### Unblocking the Two Quarantined Trajectories
+
+Read-only inspection of `/home/jmservera/source/ama-thought-mve` (`harness/study.py`,
+`harness/prepare_estimation_recovery.py`, `harness/pilot_analysis.py`) and
+allowlisted metadata in `ama-thought-mve-fallback-recovery/.study/pilot-estimation/state.json`
+identifies why `primary_estimates_available` is `false` and what is required
+to finish the two incomplete trajectories before the active study deadline
+(`1795318710.65`, `2026-11-22T03:38:30Z`):
+
+1. **Exact state of the two quarantined cells:**
+   * `pilot-estimation-gemini-4-argon-E-15` (`completed_steps = 10` of 21,
+     checkpoint `f06-feature` at Git HEAD `763a9a36eb7191d023601c35fcfa049e1c1894b5`)
+     stopped on `pilot-estimation-gemini-4-argon-E-15-f06-feature-1`
+     (`status = infra_failed`, `failure_kind = transport`, `failure_stage = session_send`,
+     `accounting = unknown`, 300 reserved credits in `quarantine_hold`,
+     `supervision.action = quarantine_cell`). Eleven steps remain
+     (`f06-feature` through `f10-repair` plus `cr1-change`).
+   * `pilot-estimation-gpt-6.1-sol-C-20` (`completed_steps = 18` of 21,
+     checkpoint `f10-feature` at Git HEAD `81e23369f6125314bab89ac52361b44da8339f60`)
+     stopped on `pilot-estimation-gpt-6.1-sol-C-20-f10-feature-1`
+     (`status = recovery_interrupted`, `credits_status = recovery_hold`,
+     300 reserved credits) under incident `FALLBACK_RECOVERY_STATE_SHA256`
+     (`kind = fallback_metadata_quarantine`). Three steps remain
+     (`f10-feature`, `f10-review`, `cr1-change`).
+2. **Code gates preventing in-place replay:**
+   * `StudyController.go()` (`harness/study.py` line 2096) skips cells with
+     `status == "quarantined"`, and `new_attempt()` (line 1819) raises
+     `StudyError("Quarantined cell cannot replay an unresolved request")`.
+   * `validate_supervisor_state()` (`harness/study.py` lines 572--575)
+     requires `cell["status"] == "quarantined"` whenever a ledger entry has
+     `status == "quarantine_hold"`, and `validate_recovery_state()`
+     (lines 1084--1096) requires `cell["status"] == "quarantined"` and
+     `cell["attempts"][-1] in quarantine_only` for `fallback_metadata_quarantine`.
+3. **Controlled recovery path to complete the 315/315 frame:**
+   * Never mutate `ama-thought-mve-fallback-recovery` in place; preserve
+     stopped state `fb39a46fc36f33f62f3286fd517b63bb09787e9c7bcd7d276c4a362f256f2de1`
+     as the immutable 13--14 November baseline.
+   * Add a fifteenth disclosed recovery transition in `harness/study.py` and
+     `harness/prepare_estimation_recovery.py` keyed to `fb39a46f...` that
+     copies `.study/pilot-estimation` into a new working directory, keeps
+     the two 300-credit unknown-charge holds permanently in `recovery_hold`
+     (so unknown usage is never zero-imputed), resets both cells from
+     `"quarantined"` to `"partial"` at their verified checkpoint HEADs
+     (`763a9a36...` and `81e23369...`), and authorises fresh retry
+     reservations for the remaining 14 steps (11 in `gemini-4-argon-E-15`
+     and 3 in `gpt-6.1-sol-C-20`).
+   * Run `study.py` to finish only those 14 steps, update
+     `intervention-coverage/v1` to attest all 315 completed trajectories,
+     and re-export `results/pilot-estimation/`. That flips
+     `primary_unassisted_frame_complete` and `primary_estimates_available`
+     to `true`, completing all five-arm H1 coverage contrasts (`B-D`,
+     `B-A`, `B-C`, `E-B`). Note that two already-completed trajectories
+     (`pilot-estimation-gpt-6.1-sol-B-08` and `C-14`) have `cr_success = null`
+     because their CR1 hidden-test runs ended with non-binary collection
+     outcomes (`agent_returned`); those are genuine task outcomes and must
+     not be rerun, so GPT CR1 contrasts will rightly remain identification
+     bounds even after all 315 trajectories complete.
+   * Replay the four newly completed endpoint packets ($P_{10}$ and CR1 for
+     `gemini-4-argon-E-15` and `gpt-6.1-sol-C-20`) through `judging/execute.py`
+     and run 8 `gpt-6-luna` calls ($4\text{ packets}\times2\text{ repeats}$)
+     to complete all 630/630 packets while preserving the existing 1,252
+     Assessment v3 ratings.
+
+### Validation
+
+* All 67 authoring tests pass, including the new falsifiability and
+  future-design regression test.
+* All 1,378 existing numerical and protocol table fields match the prior
+  v18/v17 sources; the new 4-row `tab:predictionverdicts` table is additive.
+* The structural checker passes: 1,811-character abstract ($<1,920$), 94
+  cited/embedded entries, 105 BibTeX entries, and approximately 15,979
+  main-body words.
+* Tectonic compiles a single 66-page PDF (Supplement starting on page 47)
+  with zero errors, zero unresolved references, zero overfull boxes and no
+  blank pages; the inherited `inputenc` warning remains. Rendered pages
+  1, 2, 3, 32, 35, 36, 47, 65 and 66 were visually inspected. Current PDF
+  SHA-256 is `6b00bc227ccd56b89c352d1cea57871a85fd55aa6bf000eb75385b0a64a45977`,
+  bound under `falsifiability_revision` in
+  [supplement-integration.json](./supplement-integration.json).
+
+## Finalization Follow-up 14 November
+
+### Scope and Six Dispositions
+
+The owner requested the exact Data Science and Engineering Coach, RPI original-
+source research, a partner/customer/coworker-name review, approval-status handling,
+historical version-retrieval advice and the experiment GitHub repository as the
+deposit. The owner confirmed local write permission and then authorized read-only
+SSH metadata access in the named last-execution and v3 judging working copies.
+The staged v17 paper remains intact; new changes continue on
+`docs/whitepaper-study-results`.
+
+| Item | Completed work | Remaining author action or limit |
+| --- | --- | --- |
+| Statistical TODO | Exact Coach assessment and parent verification identify independent model/arm whole-trajectory resampling, 63 five-arm groups and public run/source joins. The Supplement now distinguishes public linkage from private timing and valid dependence assumptions. | Approve a dated dependence justification and actual amendment/outcome-access chronology; any sensitivity analysis is separately post-collection, not a silent replacement. |
+| Original sources | Wider inventory, Deeper original-passage checks and Contrarian scope/consistency checks completed. The source register below identifies actual originals and verification coverage. | Author-confirm the assisted checks and keep remaining abstract-only/full-text limitations explicit. |
+| Participant names | Active source/PDF participant contexts and six native SVG text exports reviewed; no additional identified case partner, customer or coworker was found beyond the two authors. No private contacts, cohort paths or VM details were added to the paper. | Credited publication authors/public speakers remain named. Future extracts, historical/private files and complete Git history require their own publication-scope review. |
+| Manager/CELA status | Owner reports manager approval and a draft sent to CELA on 27 October with no objection. The TODO now records those facts rather than generic absence of all approval. | No approval record, final-version scope or no-response policy was inspected. The earlier draft predates the empirical additions; confirm that the applicable process covers the current draft. |
+| Historical metadata | Read-only VM retrieval found all attempt starts/durations/IDs/source commits and matching v3 source/config bindings. No restart or new session was needed. | Controller intervals do not prove provider-service independence. Unlogged historical case/reviewer/backend IDs remain unavailable until retained records expose them. |
+| Deposit | Experiment GitHub repository selected. Published v4/v6/v7 protocol archives and checksum assets confirmed by release metadata. | Complete an immutable-version release manifest, verify exact registered-archive correspondence/file hashes and approve the sanitized publication scope. No remote publication occurred. |
+
+The exact Coach's first invocation stopped on a parent-imposed read-only-file
+restriction. The retry permitted only its mandatory session-state write and
+completed the assessment. All four scientific skills were loaded; SymPy execution
+was unavailable, and the reported arithmetic used standard-library checks rather
+than a new symbolic certification. This is assisted assessment, not independent
+human scientific review.
+
+### Original Source Register
+
+Coverage is targeted to retained claims, not all 94 cited works or raw-data
+replication. Original manuscript versions remain distinguished from publication
+metadata. No citation was silently replaced by a different source.
+
+| Source | Inspected original and locator | Support and limit |
+| --- | --- | --- |
+| SWE-Maintain | [arXiv v1](https://arxiv.org/html/2610.14768v1), Sections 4.1-4.2, Tables 2-3; Table 3 `S4.T3` | Full-text support for retained counts/contrasts, including selected 619-event TR `-1.1 [-3.8,+1.6]` and ER `+2.7 [-0.5,+6.1]`; selected cohorts remain outcome-dependent. |
+| AGENTS.md evaluation | [arXiv v3](https://arxiv.org/html/2602.11988v3), Section 4.2, Tables 2-3, Appendix B | Full-text support for reported cost/success contrasts and table `p=0.038`; percentage-formatted prose and relative introduction wording are not imported as different absolute effects. |
+| Context-file evolution | [arXiv v4](https://arxiv.org/html/2510.21413v4), Section 4.3/Table 2 | Full-text support for 169 commits and 242 overlapping category assignments; counts do not establish net growth, intent or performance. |
+| Agent READMEs | [arXiv v2](https://arxiv.org/html/2511.12884v2), Sections 4.2.2-4.2.3 | Full-text support for 100 post-adoption commits, 139 assignments and 78/32/19/10 displayed labels; not a causal context-file effect. |
+| Agentic PR decisions | [arXiv v1](https://arxiv.org/html/2605.22534v1), Sections 3-6/Tables 1-3 | Full-text support for 9,799 reviewed/717 manual PRs; 35.7% uses 353 rejections, 15.4% uses 364 merges. |
+| AIDev | [arXiv v1](https://arxiv.org/html/2602.09185v1), Section 1/Table 1 | Full-text support for 932,791 PRs/five agents/116,211 repositories; dataset cutoff 1 August 2025, not accepted user outcomes. |
+| Multi-turn conversation | [arXiv v1](https://arxiv.org/html/2505.06120v1), Abstract, Section 6.1/Table 1, Figure 1 and Section 9 | Retained 39% relative drop supported by abstract/results; v1 Figure 1 says 35%. The inconsistency is retained explicitly, not silently reconciled or generalized to coding repositories. |
+| Code Red | [arXiv v1](https://arxiv.org/html/2203.04374v1), Sections 4.2, 5.2/Table 3 and 5.4 | Full-text support for 39 proprietary codebases and reported 124% longer issue Time-in-Development; vendor association, proxy and observational limits confirmed. |
+| Knight Capital | [SEC release 2013-222](https://www.sec.gov/newsroom/press-releases/2013-222), technological missteps paragraph | Primary-page corroboration for orders, loss and 2005/2012 code/deployment facts. Original order PDF still unavailable; release is not silently substituted for the cited order. |
+| Expert judgment | [Anthropic primary page](https://www.anthropic.com/research/agents-judgment-calls), Study design, Results and Limitations | Primary-page support for 61 recruited/50 agent users/86% match across four decisions; strengthened preferences, one task/model and subgroup differences retained. |
+| Building to the Test | [arXiv v1](https://arxiv.org/html/2606.28430v1), Sections 2-4/Table 1 | Full-text support for seven of twelve assigned oracle-in-the-loop runs with dead/absent library dispositions; task-specific, not general prevalence. |
+| CLI adoption | [arXiv v1](https://arxiv.org/html/2607.01418v1), Sections 5.1 and 6 | Full-text support for modeled approximately 24% merged-PR lift; self-selection, time-varying confounds and proxy scope retained. Original link added to both bibliography forms. |
+| Technical-debt productivity | [Chalmers institutional record](https://research.chalmers.se/en/publication/46d5f3e9-bfac-47f8-bd9d-d1cced552753), Abstract; DOI `10.1145/3194164.3194178` | Abstract supports 43 surveyed developers/16 follow-up practitioners/23% self-reported wasted time. ACM PDF returns 403 and legacy Oslo link redirects to NVA; full-method verification remains unavailable. |
+| Echoes of AI | DOI [publisher page](https://link.springer.com/article/10.1007/s10664-026-10889-1), secondary abstract metadata | Abstract/metadata support for observational phase 1 and randomized phase 2 with no significant downstream differences. Publisher article/PDF redirects to identity infrastructure; exact late-2024 qualifier remains unverified in this pass. |
+| SlopCodeBench | [arXiv v2 record](https://arxiv.org/abs/2603.24755v2) | Identity/abstract verified; no numerical SlopCodeBench effect is retained in the current manuscript. Conference status not established. |
+| METR | [arXiv v2 record](https://arxiv.org/abs/2507.09089v2) | Original identity located, metadata-only verification; no numerical METR effect is retained. No new effect size or citation was imported from this lookup. |
+
+### Retained Metadata and Access Boundaries
+
+The author-named execution working copy retains the study state with SHA-256
+`fb39a46fc36f33f62f3286fd517b63bb09787e9c7bcd7d276c4a362f256f2de1`.
+All 5,357 attempts have numeric starts and controller durations, IDs and source
+commits. The state has 315 trajectory records and selects 21 replicates per model/arm at
+source `a9d76bb6dbb118c43315fb2a13b7bcdb732d946d`. No separate finished/ended or
+boot/launch IDs were present in the inspected attempt objects. This is metadata
+coverage, not independently measured model-service overlap.
+
+The v3 instrument freeze uses that same state hash, judging source
+`c10e6d6f62785a5028406a9963acdd499f6bd6b6` and config digest
+`efb0516ec2f2b28ff3cb7880baf42398e16867e65830abe5eb82babd9958dfec`, frozen
+`2026-11-13T16:00:17.959379+00:00`. The judge config declares `gpt-6-luna`,
+two repeats and `sdk1.0.28-cli1.0.105-judge3`; human-calibration completion is
+still false. File-byte digests are separately retained in the delivery binding:
+config `5da1116ec0b34750f3094ffd79cce4b4fe61a8814ca555f053f0b37e1e33ce37`,
+freeze `514fa31dbe1c6c182cc733675ead8cddc85c5d90fa8a33c53329688f181932ab`.
+
+Only allowlisted metadata was read. No credentials, prompts, raw packets,
+private specimen mappings or private datasets were inspected or printed. The
+first broad metadata command completed after a timeout; a quoting-failed aggregate
+was stopped and repaired with a stdin-fed query. Neither failure was recorded
+as missing historical evidence. No VM or experiment state was modified.
+
+### Validation and Remaining Gates
+
+The focused tier applies: source reporting, related authoring tests and metadata
+bindings changed; experimental observations, estimators, dependencies, security
+controls and publication-gate semantics did not.
+
+* All 66 authoring tests pass, including three new finalization regressions.
+* All 1,378 existing table fields are unchanged against the staged v17 sources.
+* The structural checker passes: 94 cited/embedded entries, 105 reusable entries,
+  1,904-character abstract and approximately 14,582 main-body words. Historical
+  baseline `0d5dcb02` remains unavailable.
+* The single 64-page PDF retains Supplement page 45. All 28,323 extracted words
+  have in-page bounds and no pages are blank. Rendered pages 24, 36, 37, 42,
+  45, 53, 54, 61, 62, 63 and 64 were inspected, including the preserved
+  fourteen-epoch table and both B/C prompt displays.
+* Tectonic reports no errors, unresolved references or overfull/underfull boxes;
+  the inherited `inputenc` notice remains. Current PDF SHA-256 is
+  `3d8a48e26f0f889edb691acdd1904f6283c2853109b3b15fb4adb23055809100`.
+  The new `finalization_revision` in
+  [supplement-integration.json](./supplement-integration.json) preserves v17
+  and earlier bindings. Build/review files remain external.
+
+Local research, metadata retrieval, scoped name review and supported source
+changes are complete. Statistical dependence/adoption and amendment decisions,
+remaining original-access limits, final author/CELA/venue clearance and final
+deposit-manifest approval remain unresolved. Hosted CI and independent exact-head
+review were not run. No new estimator, experiment, paid candidate/judge session,
+registration, VM restart or mutation, commit, push or external publication is claimed.
+
+## Attested Report Refresh 14 November
+
+### Scope and Source Pins
+
+The owner requested updating the paper from the changed local
+`/home/jmservera/source/ama-thought-mve/results/WHITEPAPER_REPORT.md` and its
+online GitHub `main` file. Work continues on `docs/whitepaper-study-results`;
+the staged v16 candidate was preserved. The experiment repository remained
+read-only, and no new candidate or judge calls, private-data inspection,
+protocol amendment, registration, commit, push or publication occurred.
+
+The inspected experiment head is `bd75c1c2104d001d62f9fb2bb4feab438b86f763`.
+The report's latest file-changing commit is
+`fa34bb91a74e47d5e2cb12430c01a873540e1ef2`; its local and online Git blob is
+`f416316985c8dca20ad8955fe3c596db995c6276`, and its SHA-256 is
+`ffde7266c3379446b5cdcc8fa695ee387c99a8a6c31fbd227b62291fd33c200c`.
+The report frontmatter still dates itself 13 November; this refresh is
+identified by the inspected commits and 14 November retrieval, not by
+silently changing the source date. The new
+`results/pilot-estimation-judging/extracted-contrasts.json` has Git blob
+`f1aef11e7094ca284c25594459aecb180212c9cb` and schema
+`extracted-complete-pair-and-judging-contrasts/v1`.
+
+### Evidence and Applied Interpretation
+
+| Claim and manuscript locator | Inspected source | Evidence state and limit |
+| --- | --- | --- |
+| Current report identity; Data availability | Local Git identities and report SHA-256; online GitHub file/API | Metadata-only identity check; matching blobs do not independently validate the study. |
+| Owner-attested unassisted coverage for 313 completed trajectories; collection ledger and Supplement execution record | `results/pilot-estimation/provenance.json`, `runs.csv`, updated report | Full-text/artifact support for the operator account: `owner-attested`, 313 covered, zero assisted, timestamp `2026-11-14T02:48:20.351742+00:00`. Recorded manifest SHA-256 `66b098851800522d9d5117177aac34525cb1e9a17c0c4bd7d924d512c1ea6b06` and study-state SHA-256 `fb39a46fc36f33f62f3286fd517b63bb09787e9c7bcd7d276c4a362f256f2de1` are supplied provenance, not an independent inspection of the private manifest or out-of-band activity. |
+| Whole-study primary remains unavailable, while complete B-D/B-A comparisons have intervals; coverage results and Supplement contrasts | Updated report, companion extraction, retained `runs.csv` and `harness/analyze.py` | Full-text/artifact support. Both pooled coverage points and 10,000-draw, seed-2027 bootstrap intervals were reconstructed to reported precision. Complete pair means complete compared arms, not paired resampling or retrospective preregistration. |
+| Model-specific CR1 uncertainty and pooled missing-outcome bounds; Supplement CR1 tables | Companion extraction, retained Boolean outcomes and `success_difference` helper | Seven complete-cell points and conservative binomial intervals reproduced. Unknown outcomes remain bounds, not zero or Boolean failures. Per-comparison coverage is distinct from family-wide coverage. |
+| Judge point contrasts, allocation bounds and abstention counts; main judge table and Supplement partial-frame tables | Companion extraction and retained `results/pilot-estimation-judging/summary.json` | 128 comparisons checked. Judge intervals are transcribed from the pinned companion, not independently regenerated or rescored. Observed-scenario means change the estimand; bounds over wholly missing trajectories do not identify unrated dimensions within observed trajectories. |
+
+One rounded-summary precision limit remains: the companion's degenerate
+CR1 B-D recovery bound is `-0.0113`, whereas reconstruction from the
+published rounded trajectory means yields approximately `-0.0112434`.
+Its two endpoints account for the only differences exceeding half a unit
+in the fourth decimal (maximum about `0.0000566` score points). The source
+precision is retained, not treated as exact raw-rating reconstruction;
+this does not change the reported interpretation. That degenerate bound
+is not substituted for the observed-scenario bootstrap interval.
+
+The report's claims that NA counts resolve all ambiguity or that positive
+finite-allocation bounds prove a general effect are not adopted. The
+manuscript explains the conditional quantity instead. Prior corrections
+to structural-target compliance and D's time/credit allowance remain.
+Historical reviews, hashes, calibration limitations, unregistered amendments,
+the fourteen execution epochs and the unchanged economic sensitivity
+model are preserved.
+
+### Validation and Delivery
+
+The focused tier applies: this changes scientific reporting, related
+authoring checks and documentation, not experimental observations,
+oracles, dependencies, security controls or publication-gate semantics.
+
+* All 63 paper authoring tests pass, including three new report-refresh
+  regressions. Source/PDF, prompt and native figure bindings pass.
+* Exact transcription checks match 241 new numerical, missing-value and
+  abstention fields to the pinned companion. All 886 prior v16 fields in
+  twelve results tables remain unchanged; new pooled CR1 bounds are additive.
+* The structural checker passes with 94 cited/embedded entries, 105 reusable
+  BibTeX entries, a 1,904-character abstract and approximately 14,520 main-body
+  words. Historical baseline `0d5dcb02` remains unavailable.
+* Tectonic produces one 64-page PDF, Supplement page 45. The actual log has
+  no errors, unresolved references or overfull/underfull boxes; the inherited
+  `inputenc` compatibility notice remains. All 64 pages are nonblank and
+  all 27,844 extracted words have in-page bounds. Rendered pages 1, 30, 34,
+  45, 55, 56, 58, 59 and 63 were inspected for readable, intact content.
+* The new `attested_report_revision` in
+  [supplement-integration.json](./supplement-integration.json) binds the
+  current sources and PDF, preserving v16 and earlier records. PDF SHA-256
+  is `6928c5920f5b4607d92f750c204c49cd422fecbe70953f108c16d1e9d2f99b44`.
+  Build logs and review images remain outside the repository in
+  `/tmp/ama-paper-report-refresh-20261114-4KyGId/`.
+
+Work execution is complete for this local refresh. Evidence assessment is
+source-bound and exploratory, not independent human scientific review.
+The automated whole-study primary remains unavailable because of two
+partial trajectories; billing, scheduling dependence and scenario
+abstention remain limits. Hosted CI and independent exact-head review
+were not run, and author/employer/publication approval is not claimed.
+
+## Readability and Interpretation 14 November
+
+### Scope and Disposition
+
+The owner authorised applying the preceding coherence/readability review
+on the existing `docs/whitepaper-study-results` branch. The results-intake
+candidate was already staged; that staging was left intact. The outputs
+are the article, its existing Supplement, the single PDF, directly related
+authoring checks and package/knowledge-base pointers. No experiment source,
+dataset, judge run, budget or registration was changed.
+
+| Review concern | Applied revision |
+| --- | --- |
+| Conclusions buried in numerical repetition | Abstract and conclusion state stable retention, selective benefits, additional costs and task-specific scope before supporting detail. |
+| Structural-target claims contradict the table | Gemini's low baseline metrics are distinguished from meeting every target; Sonnet B's nonzero lint remains visible. Session stopping reasons and review follow-through are not inferred from cell means. |
+| Proposed and completed judging mixed together | Active methods describe the performed assessment; the 9 November proposal is explicitly historical, with its source pin retained. |
+| Retention, completeness and CR1 appear interchangeable | The results explain never-acquired ranking, treatment-dependent CR1 retention obligations and the workflow/hidden-test coverage difference. Missing-outcome bounds are distinguished from confidence intervals. |
+| Wide tables require tiny type | Coverage/CR1 and structure/resources are split into larger-type tables. Additional distributions, size measures, ratings, calibration and the execution ledger remain in the Supplement. |
+| Provenance overwhelms interpretation | Runtime rosters, hold categories, exact precision and recovery/source details move out of the findings narrative while preserving source records and the original dataset frame. |
+| Hypothetical economics precede measured spending | The cost discussion begins with settled observations and their incomplete-billing limits; the original equation and all sensitivity cells are unchanged. D's allowance is correctly described as 50% more time and twice the credits. |
+
+### Evidence and Validation
+
+This is an editorial revision of the previously supplied results, not a
+fresh execution or independent scientific assessment. The source remains
+the 13 November handoff pinned in the prior section. A direct comparison
+against the staged v15 sources passed 618 field/denominator/source-ledger
+checks, including exact-fraction checks of CR1 identification bounds.
+All fifteen model-arm cells, reported rating means, calibration values
+and fourteen execution sources are retained across the split tables.
+
+The validation tier is focused: presentation, interpretation and existing
+authoring-test expectations changed; application behaviour, experimental
+oracles, security controls, dependency manifests and publication-gate
+semantics did not. The root virtual environment was initially absent;
+`uv venv .venv --python python3` restored the local standard-library runner
+without changing dependency manifests.
+
+* All 60 package authoring tests pass, including numerical planning,
+  prompt/figure bindings, completed-method wording, table allocation and
+  explicit structural-target shortfalls.
+* The structural checker passes with 94 cited/embedded entries, 105 reusable
+  entries and a 1,826-character abstract. Approximate main-body length is
+  14,251 words, versus the v15 record's 16,349. The checker's unrelated
+  historical baseline `0d5dcb02` remains unavailable.
+* Tectonic produces one 60-page PDF, Supplement page 44, with no errors,
+  unresolved references or overfull/underfull boxes. The inherited
+  `inputenc` compatibility notice remains. All-page extracted text bounds
+  and nonblank-page checks pass. Selected rendered pages were inspected;
+  final table-flow corrections and the intact B/C prompt page were rechecked.
+* The original v15 delivery binding is preserved in
+  [supplement-integration.json](./supplement-integration.json), alongside
+  the new `readability_revision`. Final PDF SHA-256 is
+  `5f2bf7f61a76adcd8a0384dc768c13990cbfdcdc9b2c9c7f8c13c41504b2e9df`.
+  Compiler logs and rendered working files remain in external build directories.
+
+Work execution is complete for this local editorial scope. Formal primary
+estimates remain unavailable, assistance coverage and billing remain
+incomplete, and calibration remains an author/AI-triaged spot-check.
+Hosted CI and independent exact-head review were not run. No commit, push,
+external publication or scientific/employer approval is claimed.
+
+## Study Results and Post-Collection Judging 13 November
+
+### Scope, Source Pins and Mandatory Guardrails
+
+The owner requested adding the completed study results from
+`/home/jmservera/source/ama-thought-mve/results/WHITEPAPER_REPORT.md` and
+`https://github.com/jmservera/ama-thought-mve/blob/main/results/WHITEPAPER_REPORT.md`
+to the whitepaper. In `jmservera/ama-thought-mve`, the squash-merged `main`
+commit is `7943e40347862e76e3bc04490040ad5904487c86` and the local branch head
+is `8591630c556f9f87c952f5d44ca7ce58b2bf1a83`; both resolve to the identical
+Git tree `cb542312d8bde5d26bc716f2c8f7a5e8eaef7037`. The report
+`results/WHITEPAPER_REPORT.md` has Git blob
+`3e44ae10547b6376864089e605e946f74a378d56` and SHA-256
+`2180679ce9fe18d77e3107ed5cdc01edd32749a4a15114bf23f647c516d83af4`.
+
+Every table and summary statistic in `WHITEPAPER_REPORT.md` was cross-checked
+against the committed artifacts in `results/pilot-estimation/` (`report.md`,
+`runs.csv`, `series.csv`, `attempts.csv`, `intervals.csv`, `provenance.json`,
+`hypotheses.tex`, `trajectories.tex`) and `results/pilot-estimation-judging/`
+(`README.md`, `summary.json`, `report.csv`,
+`human-calibration/human-vs-ai-comparison.json`,
+`intervention-log-audit-summary.json`) using exact rational arithmetic and
+the four scientific methodology skills (`sympy`, `statistical-analysis`,
+`scientific-critical-thinking`, `experimental-design`).
+
+| Claim / manuscript locator | Inspected source locator | Evidence state and limit |
+| --- | --- | --- |
+| 313/315 completed trajectories, 5,341/5,355 measured steps across 5,357 attempts and 14 source commits ending at `a9d76bb6`; Section 7.8 and Table 18 | `results/WHITEPAPER_REPORT.md`; `results/pilot-estimation/runs.csv`, `attempts.csv`, `provenance.json` | Full-text and artifact support; 14 implementation epochs and recovery scheduling remain confounded with time, arm and model |
+| Two transport-quarantined runs (`gemini-4-argon-E-15` at 10/21 steps, `gpt-6.1-sol-C-20` at 18/21) and withheld primary intervals (`primary_estimates_available = false`); Section 7.8 | `results/pilot-estimation/report.md`, `runs.csv`, `provenance.json` | Full-text support; no external `intervention-coverage/v1` operator attestation supplied, so formal bootstrap CIs remain `unavailable` |
+| 5,303 complete-billing attempts (`62,052.6069` settled credits) and 54 incomplete-billing holds (`18,900.0` reserved, `783.16186` partial lower bound); Section 7.8 | `results/WHITEPAPER_REPORT.md`; `results/pilot-estimation/attempts.csv` | Full-text and ledger support; missing charges are never zero and AI credits are not converted to currency |
+| P10 coverage, open regressions (1 across 313 endpoints), loss cycles, pooled within-cell SD (3.1119 pts, df 298) and CR1 identification bounds; Section 7.9 and Table 9 | `results/WHITEPAPER_REPORT.md`; `results/pilot-estimation/runs.csv`, `series.csv`, `intervals.csv` | Full-text and exact-rational verification; 87 records (98 test outcomes) reclassified by `analysis-adjudications/v1`, with two `gpt-6.1-sol` CR1 runs remaining unadjudicated `null` |
+| Three model-specific mechanisms (Sonnet 5.5 F10 edge case; GPT 6.1 Sol F8 test-immutability self-lock; Gemini 4 Argon F8 view-blocklist trap where Arm C 16/21 beat Arm B 8/21); Section 7.9 and Discussion | `results/WHITEPAPER_REPORT.md`; `results/pilot-estimation/runs.csv`, `series.csv`; `intervention-log-audit-summary.json` | Full-text support for observed outcomes and journal counts; mechanism explanations remain exploratory within S1 |
+| P10 structural metrics (0.00% functions > 10 CCN in all 63 Arm B runs; 92%-100% lint reduction on Sonnet 5.5 and GPT 6.1 Sol), NLOC, Markdown words, settled delivery/CR1 credits and minutes, and per-cycle consolidation spend `k` (5.82, 12.59, 12.04 credits); Section 7.10, Table 10 and Section 8.1 | `results/WHITEPAPER_REPORT.md`; `results/pilot-estimation/series.csv`, `runs.csv`, `attempts.csv` | Full-text and exact cell verification; Arm B roughly doubled delivery credits (1.84x-2.25x vs A) without lowering 10-feature or CR1 spend |
+| 12-workflow replay across 3,457 commits (630 packets, 626 evaluable, 0 witnessed losses) and blinded `gpt-6-luna` Assessment v3 (`1,252/1,252` calls, `418.635894` settled credits after v1/v2 halts); Section 7.11, Tables 11-12 and Supplement Section A.9 | `results/WHITEPAPER_REPORT.md`; `results/pilot-estimation-judging/README.md`, `summary.json`, `report.csv` | Full-text and JSON verification; post-collection exploratory instrument, `gpt-6-luna` shares a provider family with `gpt-6.1-sol`, and workflow scenarios did not exercise CR1 view-mutation surfaces |
+| Human calibration spot-check `S01..S08` (90 rows, 79 scorable, 16 contexts, 94.3%-98.7% raw exact agreement, 0 diffs >= 2) and 5,357-journal SDK audit (0 interactive RPCs, 99.83% `isolated_exec`, 36 permission-halt sessions); Section 7.11 and Table 13 | `results/WHITEPAPER_REPORT.md`; `human-calibration/human-vs-ai-comparison.json`; `intervention-log-audit-summary.json` | Full-text support; reviewer `jmservera` recorded `review_status = in_progress` under `human-calibration-guidance/v3` with disclosed AI-assisted failure/mismatch triage |
+
+### Validation and Delivery Binding
+
+* `python3 -B -m unittest discover -s anc -p 'test_*.py' -v`: **58 tests PASS**,
+  including the new study-results and guardrail regression checks.
+* `python3 -B anc/check_paper.py`: **PASS**, 94 cited/embedded entries,
+  105 reusable BibTeX entries, 1,871-character abstract (limit < 1,920) and
+  approximately 16,349 main-body words.
+* `tectonic main.tex --keep-logs --keep-intermediates --untrusted`: compiles
+  the single **56-page** PDF (`main.pdf`, SHA-256
+  `ab687b49b89a696ba83f00a668d018fec32ffd5d7d132e2d5c5aaa076ca9e354`), with
+  empirical results in Sections 7.8-7.11 (pages 26-30), the 14-epoch table in
+  Data availability (page 37) and the additive Supplement starting on page 46.
+  The TeX log has zero errors, zero unresolved references and zero overfull or
+  underfull boxes; only the inherited `inputenc` compatibility warning remains.
+  The active source/PDF bindings are recorded under `study_results_revision` in
+  [supplement-integration.json](./supplement-integration.json), preserving all
+  earlier revision records.
 
 ## Supplementary Blind Judging 9 November
 
