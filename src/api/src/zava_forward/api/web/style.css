@@ -96,7 +96,7 @@ h2{font-size:var(--fs-lg);line-height:var(--lineHeightBase500);margin:var(--sp-5
 .coordinator-filters .row>div{min-width:0;flex:1 1 14rem}
 .coordinator-filters input,.coordinator-filters select{width:100%}
 .coordinator .heat-count{font-weight:600}
-.coordinator .heat-present{background:var(--soft);color:var(--ink)}
+.coordinator .heat-present{background:var(--soft);color:var(--ink);box-shadow:inset 3px 0 0 var(--brand)}
 .coordinator table a{display:inline-block;min-height:1.5rem;padding:var(--sp-1)}
 .coordinator-summary a{padding-block:var(--sp-1)}
 .coordinator dt{text-transform:none}
@@ -372,4 +372,4 @@ input[aria-invalid=true],select[aria-invalid=true],textarea[aria-invalid=true]{b
 .screen-record[id], .screen-evidence h2[tabindex="-1"] { scroll-margin-top: var(--sp-5); }
 .screen-evidence th, .screen-evidence td { font-variant-numeric: tabular-nums; }
 [tabindex="-1"]:focus { outline: var(--focus-w) solid var(--focus-ink); outline-offset: var(--focus-off); box-shadow: 0 0 0 var(--focus-off) var(--focus); }
-.screen-record h2[tabindex="-1"]:focus-visible { outline: var(--focus-w) solid var(--focus-ink); outline-offset: var(--focus-off); box-shadow: 0 0 0 var(--focus-off) var(--focus); }
+.coordinator h2[tabindex="-1"]:focus-visible, .screen-record h2[tabindex="-1"]:focus-visible { outline: var(--focus-w) solid var(--focus-ink); outline-offset: var(--focus-off); box-shadow: 0 0 0 var(--focus-off) var(--focus); }

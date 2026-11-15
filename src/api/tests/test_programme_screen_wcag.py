@@ -396,8 +396,18 @@ class ProgrammeScreenWcag(unittest.TestCase):
             table = next(n for n in walk(region) if n["tag"] == "table")
             captions = [text(n) for n in walk(table) if n["tag"] == "caption"]
             self.assertEqual(len(captions), 1)
-            headers = [n for n in walk(table) if n["tag"] == "th"]
-            self.assertTrue(headers and all(h["attrs"].get("scope") == "col" for h in headers))
+            thead = next(n for n in walk(table) if n["tag"] == "thead")
+            col_headers = [n for n in walk(thead) if n["tag"] == "th"]
+            self.assertTrue(
+                col_headers and all(h["attrs"].get("scope") == "col" for h in col_headers)
+            )
+            tbody = next(n for n in walk(table) if n["tag"] == "tbody")
+            row_trs = [n for n in tbody["kids"] if isinstance(n, dict) and n["tag"] == "tr"]
+            self.assertTrue(row_trs)
+            for tr in row_trs:
+                first_cell = next(c for c in tr["kids"] if isinstance(c, dict))
+                self.assertEqual(first_cell["tag"], "th")
+                self.assertEqual(first_cell["attrs"].get("scope"), "row")
         # Focused Next on last page transfers focus to Previous, and back to Next on page 1.
         self.assertEqual(self.out["pagerFocus"], ["programme-prev", "programme-next"])
 
