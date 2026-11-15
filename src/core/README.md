@@ -5357,3 +5357,38 @@ until Finance validates them. It stores nothing: no file, run record, database, 
 `ZF_DATA` access. Tests: `python -m unittest discover -s tests -p 'test_learning_test_bundles.py' -q`.
 This is not a real experiment, screen wiring, stored runs or multi-run aggregation; those stay held
 by the [protocol](../../docs/reference/research/ux/journey-learning-test-bundles.md).
+
+## Usability testing programme contract and evaluator (#155)
+
+`zava_forward.core.usability_programme` defines the deterministic validator and evaluator for the
+[moderated usability testing programme](../../docs/reference/research/ux/usability-test-programme-plan.md):
+
+* `default_programme_plan()` and `validate_programme_plan(plan)` enforce 5 to 8 participants per
+  role cohort across all 11 PRD perspectives plus voluntary `resident` and `resident-representative`
+  cohorts (with `T0` scoped to staff and contractor workbenches only), a separate 2 to 3
+  `proxy-pilot` cohort (`counts_toward_role_minimum=False`), eight accessibility-support clauses
+  covering screen reader, keyboard-only, 400% magnification, and manual/non-digital routes, and
+  eight voluntary separate consent and synthetic-only data-handling clauses.
+* `derive_task_scripts()` and `validate_task_scripts(scripts)` derive the 21 canonical task scripts
+  (`T0`, `T1` to `T8`, `R-J1` to `R-J6`, `R-R1`, and `B1-story-once` to `B5-funding-evidence`)
+  live from `profile_journey_contract`, `perspective_walkthroughs` (retaining `partial`, `unmet`,
+  and `PROXY_ONLY` markers), `journey_register.JOURNEYS`, and `learning_test_bundles.BUNDLES`
+  (preserving two-arm comparators, zero-target stop rules, Atlas failure cases, `O16` single
+  counting, and `OUT_OF_SCOPE` exclusion).
+* `validate_audit_use_agreement(agreement, measurement_date=...)` and `evaluate_role_measures(...)`
+  gate staff usability measurement on prior `named_human` staff representative agreement to the
+  non-surveillance `SA-010` audit-use statement (`agreed_date <= measurement_date`), reject
+  individual-level keys (`FORBIDDEN_MEASURE_FIELDS`) or per-participant rows, mask sub-5 cells
+  (`MIN_CELL_FLOOR = 5`) to `None` while retaining `h4_stop_rule_breach`, and keep `SA-009`
+  thresholds (`>=80%` `<5m` on `T0`, median `SUS >= 70`) marked as design hypotheses.
+* `log_finding(...)` and `validate_findings_log(...)` require unique `UF-NNN` IDs, `1..4` severity,
+  anonymised text, GitHub backlog issue links (`#N` or issue URL), `named_human` risk-acceptance
+  owners, and human retest evidence (`synthetic_walkthrough` and `proxy_pilot` cannot close a
+  finding as `retested`).
+* `evaluate_programme_results(...)` and `build_synthetic_walkthrough_report()` retain `supported`,
+  `not_supported`, `inconclusive`, and `not_run` outcomes without silent omission and stamp every
+  synthetic walkthrough record and report with `not_user_validation=True` and
+  `"Synthetic walkthrough - not user validation"` (`user_validation_established=False`,
+  `human_usability_signoff=False`). Tests: `tests/test_usability_programme.py`. Refs #155; real
+  human participant sessions, staff `SA-010` agreement, and DPO retention sign-off remain unrun.
+
