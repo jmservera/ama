@@ -211,3 +211,71 @@ class ExceptionFeedTests(unittest.TestCase):
         feed_unaccepted_handoffs(q, rows, "Olive Operator")
         self.assertEqual(len(first), 1)
         self.assertEqual(len(q.queue("Olive Operator")), 1)
+
+    def test_failed_ai_runs_and_imports_preserve_correlation_id_without_leaking_text(self) -> None:
+        q = make()
+        ai_items = feed_failed_ai_runs(
+            q,
+            [
+                rec(
+                    "r-env",
+                    source="template",
+                    fallback_reason="timeout",
+                    envelope={"meter_id": "meter-42", "prompt": "personal text"},
+                ),
+                rec(
+                    "r-top",
+                    source="template",
+                    fallback_reason="timeout",
+                    correlation_id="corr-ai-9",
+                ),
+            ],
+            "Olive Operator",
+        )
+        self.assertEqual([i["correlation_id"] for i in ai_items], ["meter-42", "corr-ai-9"])
+        self.assertEqual(
+            [i["failure_category"] for i in ai_items], ["failed_ai_run", "failed_ai_run"]
+        )
+        self.assertNotIn("personal text", str(ai_items))
+        imp_items = feed_failed_imports(
+            q,
+            [batch("b-corr", "rejected", correlation_id="corr-batch-1")],
+            "Sam Steward",
+            [
+                {
+                    "source_name": "bad.xlsx",
+                    "source_sha256": "ef" * 32,
+                    "reason": "bad header",
+                    "correlation_id": "corr-refusal-1",
+                }
+            ],
+        )
+        self.assertEqual(
+            [i["correlation_id"] for i in imp_items], ["corr-batch-1", "corr-refusal-1"]
+        )
+        self.assertEqual(
+            [i["failure_category"] for i in imp_items], ["failed_import", "failed_import"]
+        )
+
+    def test_sourceless_stranded_task_gets_deterministic_fallback_ref_and_correlation_id(
+        self,
+    ) -> None:
+        q = make()
+        (raised,) = feed_stranded_tasks(
+            q,
+            [
+                {
+                    "task": "Inspect loft",
+                    "owner": "",
+                    "due_at": "2026-11-01",
+                    "completion": "Not evidenced",
+                    "case_id": "C9",
+                    "source": "",
+                    "as_of": "2026-11-03",
+                }
+            ],
+            "Olive Operator",
+        )
+        self.assertEqual(raised["ref"], "task:C9:Inspect loft")
+        self.assertEqual(raised["correlation_id"], "task:C9:Inspect loft")
+        self.assertEqual(raised["failure_category"], "stranded_task")

@@ -12,26 +12,65 @@ const screenStamp = (value) => {
     ? new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short" }).format(date)
     : "Unknown";
 };
+const screenNodeValue = (value) => value && typeof value === "object" && (value.nodeType || value.tag) ? value : screenValue(value);
 const screenFields = (rows) => h("dl", {}, rows.flatMap(([label, value]) => [
-  h("dt", {}, label), h("dd", {}, screenValue(value))
+  h("dt", {}, label), h("dd", {}, screenNodeValue(value))
 ]));
-const screenPanel = (title, ...children) => h("section", { class: "card screen-record" },
-  h("h2", {}, title), ...children);
+// A leading { anchor } child makes the panel a named jump target; listed titles get one too. Headings take focus programmatically only.
+const screenPanelIds = { "Technical readiness": "technical-readiness", "Source facts": "technical-source-facts", "Design version": "technical-design",
+  "Separate sign-offs": "technical-signoffs", "Returns and routing": "technical-returns", "Missing references": "technical-missing" };
+const screenPanel = (title, ...children) => {
+  const explicit = children[0]?.anchor ? children.shift().anchor : null;
+  const id = explicit || (Object.hasOwn(screenPanelIds, title) ? screenPanelIds[title] : null);
+  return id
+    ? h("section", { class: "card screen-record", id, "aria-labelledby": `${id}-heading` }, h("h2", { id: `${id}-heading`, tabindex: -1 }, title), ...children)
+    : h("section", { class: "card screen-record" }, h("h2", {}, title), ...children);
+};
+const screenJumpTarget = (id, panel) => h("div", { id, tabindex: "-1" }, panel);
+function screenJumpNav(label, jumps) {
+  return h("nav", { class: "row", "aria-label": label },
+    jumps.map(([id, text]) => h("a", { href: `#${id}`, class: "btn alt", "data-jump": id, "data-jump-target": id }, `Go to ${text}`)));
+}
 const screenUnknown = (reason, owner, action) => h("div", { class: "blocked" },
   h("p", { class: "blocked-title" }, "Cannot confirm readiness"),
   screenFields([["Why it is blocked", reason], ["Owner", owner], ["Next action", action]]));
-const screenWithheld = (items) => screenPanel("Not shown for this role",
+const screenWithheld = (items, anchor = null) => screenPanel("Not shown for this role", ...(anchor ? [{ anchor }] : []),
   h("p", {}, "These items exist in the wider case but are not displayed on this screen. They are listed so that their absence is not read as nothing recorded. Withholding is not authorisation: your access is unchanged and no record changes."),
   h("ul", {}, items.map((item) => h("li", {}, item))));
-function screenTable(label, headings, rows, limit = 50, cell = (value) => screenValue(value), rowHeader = false) {
+// Tension callouts: plain text status, no colour or icon meaning. Atlas hypotheses until validated in #155.
+const screenTensionText = {
+  disclosure: ["Tension: continuity versus disclosure",
+    "This screen carries the home and its owner forward so the resident is not asked again, and shows only the fields this role needs. Anything held back is listed under \"Not shown for this role\" instead of being left out silently. Withholding is not authorisation."],
+  choice: ["Tension: utilisation versus choice",
+    "A recorded resident choice, pause or withdrawal comes first. Contractor capacity is only offered or committed, never a booking or a promise, and packages are never ranked by utilisation or headroom."]
+};
+const screenTension = (kind, anchor = null) => screenPanel(screenTensionText[kind][0], ...(anchor ? [{ anchor }] : []),
+  h("p", {}, "Status: proposed design rule. Atlas hypothesis, pending validation in #155; not observed behaviour."),
+  h("p", {}, screenTensionText[kind][1]));
+function screenTable(label, headings, rows, limit = 50, cell = (value) => screenNodeValue(value), rowHeader = true) {
   return h("div", {},
-    rows.length > limit && h("p", { role: "status" }, `Showing the first ${limit} of ${rows.length} records. Open the case workspace to inspect the remaining evidence. This is not a complete readiness check.`),
+    rows.length > limit && h("p", { role: "status", "aria-live": "polite" }, `Showing the first ${limit} of ${rows.length} records. Open the case workspace to inspect the remaining evidence. This is not a complete readiness check.`),
     rows.length ? h("div", { class: "table-scroll", role: "region", "aria-label": label, tabindex: 0 },
       h("table", {}, h("caption", {}, label),
         h("thead", {}, h("tr", {}, headings.map((title) => h("th", { scope: "col" }, title)))),
         h("tbody", {}, rows.slice(0, limit).map((row) => h("tr", {}, row.map((value, column) => h(rowHeader && column === 0 ? "th" : "td", rowHeader && column === 0 ? { scope: "row" } : {}, cell(value, column))))))))
       : h("p", { class: "empty" }, "No records supplied. This does not establish readiness."));
 }
+// Non-colour state meaning: every state is led by a plain-text prefix so it is not conveyed by colour or position alone.
+const stateCue = (table, status, detail = status) => `${Object.hasOwn(table, status) ? table[status] : "Action needed"}: ${screenValue(detail)}`;
+const screenCapacityState = (cap) => {
+  const headroom = cap?.headroom;
+  if (typeof headroom !== "number" || !Number.isFinite(headroom)) return "Unknown: headroom not supplied";
+  if (headroom < 0) return `Over-committed: ${headroom}`;
+  return headroom === 0 ? "Fully committed: 0" : `Offered capacity remaining: ${headroom}`;
+};
+const screenExpiryState = (value) => {
+  const due = value ? new Date(value) : null;
+  if (!due || Number.isNaN(due.getTime())) return "Unknown: expiry date not supplied";
+  const days = Math.floor((due.getTime() - Date.now()) / 86400000);
+  if (days < 0) return `Expired: ${value}`;
+  return days <= 30 ? `Expires within 30 days: ${value}` : `In date until: ${value}`;
+};
 // Resident screens name each record in the first column, so it is a row header for table navigation.
 const screenRecordTable = (label, headings, rows, limit = 50) => screenTable(label, headings, rows, limit, undefined, true);
 function registerRoleScreen(screen) {
@@ -50,20 +89,40 @@ function screenHref(id, caseId, page = 0, keepScope = true) {
   if (scope) query.set("scope", scope);
   return `#/screens${query.size ? `?${query}` : ""}`;
 }
+const ROLE_HASH_SCREENS = {
+  "#/role/building_safety_lead": "safety-lead",
+  "#/role/repairs": "hazard-triage",
+  "#/role/housing_officer": "resident-service-issues",
+  "#/role/contact_centre": "resident-service-issues",
+  "#/role/resident_engagement": "resident-choice",
+  "#/role/procurement": "procurement-packages",
+  "#/role/contractor": "contractor-job-pack",
+  "#/role/programme_manager": "programme-queue",
+  "#/role/retrofit_coordinator": "programme-queue"
+};
+const residentJumpNav = (sections, label = "Sections of this view") => h("nav", { role: "navigation", "aria-label": label, class: "screen-links" },
+  sections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading`, "data-jump-target": `${id}-heading` }, `Go to ${title}`)));
 async function roleScreensView() {
   const signal = routeController.signal;
-  const query = new URLSearchParams(location.hash.split("?")[1] || "");
-  const id = query.get("screen");
+  const announce = (text) => {
+    if (!signal.aborted && typeof workspaceStatus === "object" && workspaceStatus) workspaceStatus.textContent = text;
+  };
+  const [routePath, rawQuery = ""] = (typeof location === "undefined" ? "#/screens" : location.hash || "#/screens").split("?");
+  const query = new URLSearchParams(rawQuery);
+  const aliasScreen = Object.hasOwn(ROLE_HASH_SCREENS, routePath) ? ROLE_HASH_SCREENS[routePath] : null;
+  const id = query.get("screen") || aliasScreen;
   const caseId = query.get("case");
   const rawPage = query.get("page") || "0";
   const page = Number(rawPage);
   const installed = [...roleScreens.values()].filter((screen) => screen.roles.includes(me.user.role));
   const screen = installed.find((item) => item.id === id);
   if (!/^\d+$/.test(rawPage) || !Number.isSafeInteger(page) || page > 100000) {
+    announce(`${me.user.role}. Invalid screen page.`);
     return show(h("h1", {}, "Invalid screen page"), h("p", { role: "alert" }, "Choose a page from the queue."),
       h("a", { "data-reset": "true", href: screenHref(id, caseId, 0, false) }, "Reset screen view"));
   }
   if (id && !screen) {
+    announce(`${me.user.role}. Screen unavailable.`);
     return show(h("h1", {}, "Screen unavailable"),
       h("p", { role: "alert" }, "This screen is not installed for your signed-in role. Your access has not changed. Owner: your team manager. Next action: go back to specialist screens and open one that is listed for you."),
       h("a", { href: "#/screens" }, "Back to specialist screens"));
@@ -72,44 +131,70 @@ async function roleScreensView() {
     installed.map((item) => h("a", { href: screenHref(item.id, caseId),
       "aria-current": item.id === id ? "page" : null }, item.title)));
   if (!screen) {
+    announce(`${me.user.role}. Specialist screens. ${installed.length ? "Choose a screen." : "No specialist screens installed."}`);
     return show(h("h1", {}, "Specialist screens"), menu,
       h("p", {}, installed.length
         ? "Choose a screen. Select a home explicitly; no case is selected automatically."
         : "No specialist screens are installed for your role on this branch. Use your existing work list."),
       h("a", { href: "#/" }, "Back to my work"));
   }
-  show(h("h1", {}, screen.title), h("p", { role: "status", "aria-busy": "true" }, "Loading recorded evidence."));
+  announce(`${me.user.role}. ${screen.title}. Loading recorded evidence.`);
+  show(h("h1", {}, screen.title), h("p", { role: "status", "aria-live": "polite", "aria-busy": "true" }, "Loading recorded evidence."));
   const data = await api(`/api/cases?view=all&limit=20&offset=${page * 20}`, undefined, signal);
   const c = caseId ? await api(`/api/cases/${encodeURIComponent(caseId)}`, undefined, signal) : null;
+  if (c && c.id !== caseId) {
+    announce(`${me.user.role}. ${screen.title}. Record mismatch.`);
+    return show(h("h1", {}, screen.title), h("p", { role: "alert" }, `The record returned does not match the requested home ${caseId}, so nothing is shown for it. Your access has not changed. Owner: your team manager. Next action: choose the home again from the queue.`),
+      h("a", { "data-reset": "true", href: screenHref(id, null, 0, false) }, "Reset screen view"));
+  }
   const extra = c && screen.load ? await screen.load(c) : null;
   const overview = screen.overview ? await screen.overview(signal, data.items, c, page)
     : !c && screen.summarise && data.items.length ? await screen.summarise(data.items, signal) : null;
   signal.throwIfAborted();
+  const isResidentRoleScreen = screen.id === "resident-choice" || screen.id === "resident-service-issues";
   const label = (row) => `${row.id}: ${row.address || "Address unknown"}. ${row.status || row.stage || "State unknown"}`;
-  const queue = h("section", { "aria-labelledby": "screen-queue-heading" },
-    h("h2", { id: "screen-queue-heading" }, "Choose a home"),
+  const queue = h("section", { ...(isResidentRoleScreen ? { id: "screen-queue" } : {}), "aria-labelledby": "screen-queue-heading" },
+    h("h2", { id: "screen-queue-heading", ...(isResidentRoleScreen ? { tabindex: -1 } : {}) }, "Choose a home"),
     h("p", {}, "All cases permitted to your signed-in role, including safety concerns. This is a bounded page, not a portfolio total."),
-    h("p", { role: "status" }, `${data.items.length} records on page ${page + 1}; ${data.total} permitted cases.`),
+    h("p", { role: "status", "aria-live": "polite" }, `${data.items.length} records on page ${page + 1}; ${data.total} permitted cases.`),
     data.items.length ? h("ul", { class: "list" }, data.items.map((row) => h("li", {},
       h("a", { class: "item", href: screenHref(id, row.id, page),
         "aria-current": row.id === caseId ? "true" : null },
         h("div", {}, label(row),
           row.hazard && h("span", { class: "flag danger" }, "Safety issue open"),
+          isResidentRoleScreen && row.hazard && h("span", { "data-state-cue": "safety" }, " State: Action needed - open safety issue."),
           row.work && workSummary(row.work))))))
       : h("p", { class: "empty" }, "No cases on this page. Reset the view or return to your work list."),
     h("div", { class: "row" },
       page > 0 && h("a", { class: "btn alt", href: screenHref(id, caseId, page - 1) }, "Previous page"),
       (page + 1) * 20 < data.total && h("a", { class: "btn alt", href: screenHref(id, caseId, page + 1) }, "Next page"),
       h("a", { class: "btn alt", "data-reset": "true", href: screenHref(id, null, 0, false) }, "Reset screen view")));
-  const selected = c ? h("section", { class: "screen-evidence", "aria-label": `Evidence for ${c.id}` },
-    h("h2", {}, `Selected home ${c.id}`),
+  const selected = c ? h("section", {
+      ...(isResidentRoleScreen ? { id: "screen-evidence" } : {}),
+      class: "screen-evidence",
+      "aria-label": `Evidence for ${c.id}`
+    },
+    h("h2", isResidentRoleScreen ? { id: "screen-evidence-heading", tabindex: -1 } : {}, `Selected home ${c.id}`),
+    h("p", { "data-same-home": c.id }, h("span", { class: "flag" }, `Same home: case ${c.id}`),
+      isResidentRoleScreen && h("span", { "data-state-cue": "scope" }, " State: Confirmed - single-home record scope."),
+      " Links to other role screens keep this case reference. A different home is never shown here as another stage of it."),
+    c.work?.next_action && h("p", { "data-same-home-next-action": c.id },
+      `Current owner: ${screenValue(c.work.owner)}. Next action: ${c.work.next_action}`),
     h("p", {}, "Recorded evidence only. Missing, stale or withheld information cannot establish readiness. No message, approval or record change is made from this screen."),
     await screen.render(c, extra),
+    !screen.ownsStageMap && journeyStageMap(c, screen.id),
     h("p", {}, h("a", { href: `#/case/${encodeURIComponent(c.id)}` }, "Open existing case workspace")))
-    : h("div", {}, h("p", { class: "empty" }, "No home selected. Choose a home from this queue."), overview);
+    : h("div", {}, h("p", { class: "empty" }, "No home selected. Choose a home from this queue."));
+  const workspaceJump = isResidentRoleScreen ? residentJumpNav([
+    ["screen-queue", "Choose a home"],
+    ...(overview ? (screen.id === "resident-choice"
+      ? [["choice-portfolio", "Portfolio choice and update commitments"], ["choice-portfolio-withheld", "Portfolio items not shown for this role"]]
+      : [["service-portfolio", "Open service issues across this page"]]) : []),
+    ...(c ? [["screen-evidence", `Selected home ${c.id}`]] : [])
+  ], "Workspace sections") : null;
   signal.throwIfAborted();
   workspaceStatus.textContent = `${me.user.role}. ${screen.title}. ${c ? `Selected home ${c.id}.` : "No home selected."}`;
-  show(h("h1", {}, screen.title), menu,
+  show(h("h1", {}, screen.title), menu, workspaceJump,
     h("div", { class: "layout" }, h("aside", { class: "side" }, queue),
       h("div", { class: "main" }, overview, selected)),
     h("a", { href: "#/" }, "Back to my work"));
@@ -150,18 +235,27 @@ const assetGates = [
   ["Resident experience", "Resident feedback recorded with consent", "Resident engagement lead", "Board or delegated owner"],
   ["Pause or exit choice for the next tranche", "Recommendation with the evidence it relies on", "Asset owner", "Board or delegated owner"]
 ];
+// State is always words first, so colour, icons or position never carry the meaning alone.
+const assetState = (state, meaning) => `State: ${state}. ${meaning}`;
+const assetUnknownState = "Not evidenced for this home or portfolio";
+const assetConflictCues = {
+  "Reconciled (recorded by a named person)": "Recorded",
+  "Withdrawn (recorded by a named person)": "Withdrawn",
+  Unresolved: "Action needed"
+};
+const assetReconciliationCues = { reconciled: "Recorded", unreconciled: "Action needed", Unknown: "State" };
 function assetCost(report) {
   const m = report?.consumption;
   const passed = m && m.quality_status === "Pass" && m.quality_qualified_cost && m.quality_qualified_cost !== "Unknown" && m.evidence_label;
   return screenFields([
-    ["AI report", report?.consumption ? "Loaded" : "Unavailable. The AI report could not be loaded, so every AI figure below is Unknown."],
+    ["AI report", report?.consumption ? "Loaded" : assetState("Unavailable", "The AI report could not be loaded, so every AI figure below is Unknown.")],
     ["Without AI", "Nothing on this view needs AI. Ask the Programme manager or Finance owner for the dated cost and value records to read these figures by hand."],
-    ["Overall AI cost per accepted outcome", "Unknown. Other cost components are not complete and quality-qualified."],
+    ["Overall AI cost per accepted outcome", assetState("Unknown", "Other cost components are not complete and quality-qualified.")],
     ["Token/API component per accepted proposal (component only)", passed ? `${m.quality_qualified_cost} ${screenValue(m.currency)}` : "Unknown"],
     ["Report period (UTC)", m?.period ? `${screenValue(m.period.start)} to ${screenValue(m.period.end)}, as of ${screenValue(m.period.as_of)}` : "Unknown"],
     ["Accepted-outcome denominator", screenValue(m?.denominator)],
-    ["Quality floor", screenValue(m?.quality_status)],
-    ["Value status", m?.cash_value && m.cash_value !== "Unknown" ? m.cash_value : "Unknown. No finance-defensible value is recorded."],
+    ["Quality floor", assetState(screenValue(m?.quality_status), m ? "As reported for all homes" : "The AI report could not be loaded")],
+    ["Value status", m?.cash_value && m.cash_value !== "Unknown" ? `State: Recorded. ${m.cash_value}` : assetState("Unknown", "No finance-defensible value is recorded.")],
     ["Evidence class", screenValue(m?.evidence_label)],
     ["Coverage", screenValue(m?.coverage)],
     ["Reading", "A token count is never shown as the cost of AI. Without a recorded price source, a passed quality floor and a stated evidence class, cost stays Unknown."]
@@ -177,6 +271,7 @@ function assetUsage(report) {
   const capabilities = m.by_capability && typeof m.by_capability === "object" && !Array.isArray(m.by_capability) ? Object.entries(m.by_capability) : null;
   const components = m.other_tca_components && typeof m.other_tca_components === "object" ? Object.entries(m.other_tca_components) : [];
   const unit = m.currency && m.currency !== "Unknown" ? ` ${m.currency}` : "";
+  const reconciliation = screenValue(m.reconciliation);
   return h("div", {},
     screenFields([
       ["Metered calls in the period (all capabilities)", usageCount(m.calls)],
@@ -188,8 +283,8 @@ function assetUsage(report) {
       ["Reviews not joined", usageCount(m.unjoined_reviews)],
       ["Human-accepted proposals", usageCount(m.accepted_proposals)],
       ["Limits", "No limit, budget or price target is set on this view (BRD OD-51 is open). Held calls are listed as alerts below; only the owning team can read them against a limit."],
-      ["Reconciliation with the bill", screenValue(m.reconciliation)],
-      ["Total Cost of AI", m.total_cost_of_ai && m.total_cost_of_ai !== "Unknown" ? `${m.total_cost_of_ai}${unit}` : "Unknown. Every component below must be recorded first."]
+      ["Reconciliation with the bill", stateCue(assetReconciliationCues, reconciliation)],
+      ["Total Cost of AI", m.total_cost_of_ai && m.total_cost_of_ai !== "Unknown" ? `State: Recorded. ${m.total_cost_of_ai}${unit}` : assetState("Unknown", "Every component below must be recorded first.")]
     ]),
     alerts
       ? screenTable("Held-call and limit alerts (an owner is named for each)", ["Owner", "Reason", "Route"],
@@ -206,6 +301,52 @@ function assetUsage(report) {
         components.map(([name, value]) => [name, value === "Unknown" ? "Unknown" : `${value}${unit}`]))
       : null);
 }
+const assetSections = [
+  ["asset-boundary", "Evidence boundary"],
+  ["asset-summary", "Summary in words"],
+  ["asset-queue", "Stock conflict queue"],
+  ["asset-comparison", "Stock conflict comparison"],
+  ["asset-eligibility", "Eligibility"],
+  ["asset-inputs", "Missing investment inputs"],
+  ["asset-checks", "Benefits and phase check"],
+  ["asset-portfolio", "Portfolio scope"],
+  ["asset-ai", "AI cohort and cost"],
+  ["asset-usage", "AI usage, alerts and cost components"]
+];
+const assetJumpNav = () => h("nav", { role: "navigation", "aria-label": "Sections of this view", class: "screen-links" },
+  assetSections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading`, "data-jump-target": `${id}-heading` }, `Go to ${title}`)));
+const assetNote = (text) => h("p", { class: "empty" }, text);
+if (typeof document !== "undefined" && typeof document.addEventListener === "function") {
+  document.addEventListener("click", (event) => {
+    if (event.defaultPrevented) return;
+    const link = event.target?.closest?.("a[data-jump]");
+    if (!link) return;
+    event.preventDefault();
+    document.getElementById(link.getAttribute("data-jump"))?.focus?.();
+    document.getElementById(link.getAttribute("data-jump"))?.scrollIntoView?.({ block: "start" });
+  });
+}
+function assetSummary(extra, report) {
+  const m = report?.consumption;
+  const queue = extra?.queue;
+  const conflicts = queue ? `${queue.items.length} homes with an open stock conflict` : "Unknown (the cross-home queue could not be loaded)";
+  const rows = [
+    ["Permitted cases (role-scoped count)", Number.isInteger(extra?.portfolio?.total) ? `State: Counted. ${extra.portfolio.total} cases` : assetState("Unknown", "The count could not be loaded"),
+      "A count of cases your role may read, not a stock, budget or programme total."],
+    ["Stock conflicts across homes", queue ? `State: ${queue.items.length ? "Open" : "None recorded"}. ${conflicts}` : assetState("Unknown", conflicts),
+      "Ordered by source age only. Not an investment priority."],
+    ["Risk band", assetState("Unknown", "No risk band is recorded or calculated here"), "Nothing on this view ranks homes by risk."],
+    ["Delivery milestones (phase checks)", assetState("Unknown", `${assetGates.length} of ${assetGates.length} checks have no dated evidence`), "A named owner must supply dated evidence before a check is read as passed."],
+    ["Investment inputs", assetState("Unknown", `${assetInputs.length} of ${assetInputs.length} inputs missing`), "Budgets, priorities and forecasts stay Unknown unless a constructed fixture says so."],
+    ["AI cohort quality floor", assetState(screenValue(m?.quality_status), m ? "As reported for all homes" : "The AI report could not be loaded"), "Ledger-wide, not this home."],
+    ["AI cost per accepted outcome", assetState("Unknown", "Other cost components are not complete and quality-qualified"), "A token count is never shown as the cost of AI."]
+  ];
+  return [
+    h("p", {}, "Every figure below is stated in words. Status never depends on colour. Use the section links to move between sections, or the heading list of your screen reader."),
+    assetNote("The summary table has three columns: measure, state in words, and what the state means."),
+    screenTable("Portfolio summary in words", ["Measure", "State in words", "What it means"], rows, 100, undefined, true)
+  ];
+}
 registerRoleScreen({
   id: "asset-board",
   title: "Asset and board view",
@@ -221,42 +362,45 @@ registerRoleScreen({
     const queries = c.stock_reconciliation || [];
     const owner = queries.find((q) => assetStatus(c, q) === "Unresolved")?.query_owner;
     return h("div", {},
-      screenPanel("Evidence boundary",
+      assetJumpNav(),
+      screenPanel("Evidence boundary", { anchor: "asset-boundary" },
         h("p", {}, "Read-only reader view. It records no investment approval and changes no record. Budgets, priorities, forecasts and eligibility are Unknown unless a constructed fixture says so, and this page cannot confirm them. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
-      screenPanel("Stock conflict queue across homes (portfolio scope, not this home)",
+      screenPanel("Summary in words", { anchor: "asset-summary" }, ...assetSummary(extra, extra?.report)),
+      screenPanel("Stock conflict queue across homes (portfolio scope, not this home)", { anchor: "asset-queue" },
         h("p", {}, "Homes with an open stock conflict, oldest source first. The order is source age only. It is not an investment priority, and no source is chosen as correct."),
         extra?.queue ? h("p", {}, h("a", { class: "btn alt", href: "/api/asset/stock-queue.csv", download: "stock-queue.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back.") : null,
         extra?.queue
           ? screenTable("Open stock conflicts by home", ["Home", "Open conflicts", "Fields in conflict", "Oldest source date", "Resolution owners", "Investment inputs"],
             extra.queue.items.map((r) => [`${r.id}, ${r.address}, ${r.town}`, r.open_queries, (r.fields || []).join(", "), `${r.oldest_source_date}, ${assetAgeDays(r.oldest_source_date)}`,
-              (r.owners || []).join(", ") || "Unassigned", "Unknown. See missing investment inputs."]), 100)
+              (r.owners || []).join(", ") || "Unassigned", assetState("Unknown", "See missing investment inputs.")]), 100)
           : screenUnknown("The cross-home queue could not be loaded.", "Programme manager", "Reload, or open each home from the case queue")),
-      screenPanel("Stock conflict comparison",
+      screenPanel("Stock conflict comparison", { anchor: "asset-comparison" },
         screenTable("Stock source conflicts and source age",
           ["Query", "Field", "First source (value, ID, version, age)", "Compared source (value, ID, version, age)", "Status", "Resolution owner"],
           queries.map((q) => [q.id, q.field,
             `${q.left.value}, ${q.left.source_id} v${q.left.version}, ${assetAgeDays(q.left.date)}, ${q.left.validation_state}`,
             `${q.right.value}, ${q.right.source_id} v${q.right.version}, ${assetAgeDays(q.right.date)}, ${q.right.validation_state}`,
-            assetStatus(c, q), screenPerson(q.query_owner)]))),
-      screenPanel("Eligibility",
-        screenFields([["Eligibility", "Unknown"],
+            stateCue(assetConflictCues, assetStatus(c, q)), screenPerson(q.query_owner)]))),
+      screenPanel("Eligibility", { anchor: "asset-eligibility" },
+        screenFields([["Eligibility state", assetState("Unknown", "This page cannot confirm eligibility.")],
+          ["Eligibility", "Unknown"],
           ["Resolution owner", owner ? screenPerson(owner) : "Unassigned. Programme manager to name an owner."],
           ["Next action", "Obtain source-authority review. Nothing here selects a winning source."]])),
-      screenPanel("Missing investment inputs",
+      screenPanel("Missing investment inputs", { anchor: "asset-inputs" },
         screenTable("Investment inputs", ["Input", "State", "Resolution owner and action"],
-          assetInputs.map(([name, action]) => [name, "Unknown", action]))),
-      screenPanel("Benefits and phase check",
+          assetInputs.map(([name, action]) => [name, assetState("Unknown", assetUnknownState), action]))),
+      screenPanel("Benefits and phase check", { anchor: "asset-checks" },
         screenUnknown("No measured benefit or phase check evidence is supplied for this home.", "Programme manager to name an owner", "Supply dated evidence before any phase check is read as passed"),
         h("p", {}, "Each check below stays Unknown until a named owner supplies dated evidence. This view does not pass a check, release a tranche or pause or restart work. The Board or its delegated owners decide."),
         screenTable("Phase checks and benefits",
           ["Check", "State", "Evidence needed", "Evidence owner", "Who decides"],
-          assetGates.map(([name, need, owner, decider]) => [name, "Unknown", need, owner, decider]))),
-      screenPanel("Portfolio scope (separate from this home)",
+          assetGates.map(([name, need, owner, decider]) => [name, assetState("Unknown", assetUnknownState), need, owner, decider]))),
+      screenPanel("Portfolio scope (separate from this home)", { anchor: "asset-portfolio" },
         screenFields([["Cases permitted to your role", extra?.portfolio?.total],
           ["Meaning", "A role-scoped count, not a stock, budget or programme total"]])),
-      screenPanel("Ledger-wide AI cohort (all homes, not this home)", assetCost(extra?.report)),
-      screenPanel("Ledger-wide AI usage, alerts and cost components (all homes, not this home)", assetUsage(extra?.report)));
+      screenPanel("Ledger-wide AI cohort (all homes, not this home)", { anchor: "asset-ai" }, assetCost(extra?.report)),
+      screenPanel("Ledger-wide AI usage, alerts and cost components (all homes, not this home)", { anchor: "asset-usage" }, assetUsage(extra?.report)));
   }
 });
 
@@ -296,7 +440,7 @@ const programmeRow = (row) => {
   const sent = work.handoff?.sender;
   return [
     `${row.id}: ${row.address || "Address unknown"}`,
-    work.returned ? work.returned.reason : work.handoff ? `Not returned. Handoff state: ${screenValue(work.handoff.state)}.` : "Not returned",
+    work.returned ? `State: Returned. ${screenValue(work.returned.reason)}` : work.handoff ? `State: Not returned. Handoff state: ${screenValue(work.handoff.state)}.` : "State: Not returned",
     work.returned ? work.returned.sender : sent,
     work.owner,
     work.handoff ? work.handoff.proposed_receiver : "No handoff proposed",
@@ -311,6 +455,12 @@ const programmeHeadings = ["Home", "Return reason", "Sender", "Current owner",
 // The link keeps the scope that filtered the rows, so it cannot go stale between Apply and paging.
 // Its page is the sidebar page (screenPageSize rows) holding the row, counted over the unfiltered loaded page.
 const programmeCell = (scope, items, offset) => (value, column) => {
+  if (column === 1) {
+    const text = screenValue(value);
+    if (text.startsWith("State: Returned.")) return h("span", { class: "flag danger", "data-state-cue": "returned" }, text);
+    if (text.includes("Handoff state:")) return h("span", { class: "flag", "data-state-cue": "handoff" }, text);
+    return h("span", { class: "flag", "data-state-cue": "not-returned" }, text);
+  }
   if (column !== programmeHeadings.length - 1) return screenValue(value);
   const position = offset + items.findIndex((row) => row.id === value);
   const base = screenHref("programme-queue", value, Math.floor(position / screenPageSize), false);
@@ -322,15 +472,15 @@ function programmeQueue(first, total, loadPage, start = 0) {
   let items = first;
   let offset = start;
   const holder = h("div", {});
-  const status = h("p", { role: "status", id: "programme-filter-status" });
-  const paging = h("p", { class: "empty", role: "status", id: "programme-page-status" });
-  const select = h("select", { id: "programme-scope", name: "scope" },
+  const status = h("p", { role: "status", "aria-live": "polite", id: "programme-filter-status" });
+  const paging = h("p", { class: "empty", role: "status", "aria-live": "polite", id: "programme-page-status" });
+  const select = h("select", { id: "programme-scope", name: "scope", "aria-describedby": "programme-page-status programme-filter-status" },
     programmeScopes.map(([value, text]) => h("option", { value }, text)));
   const apply = (scope, remember = true) => {
     if (remember) programmeKeepScope(scope);
     const rows = items.filter((row) => programmeIn(row, scope));
     status.textContent = `${rows.length} of ${items.length} records on this page shown. Scope: ${programmeScopes.find(([v]) => v === scope)[1]}. Filtering changes the view only; no record is changed.`;
-    holder.replaceChildren(screenTable("Shared queue: returned and handed-off work", programmeHeadings, rows.map(programmeRow), 50, programmeCell(scope, items, offset)));
+    holder.replaceChildren(screenTable("Shared queue: returned and handed-off work", programmeHeadings, rows.map(programmeRow), 50, programmeCell(scope, items, offset), true));
   };
   const pageText = () => `Showing cases ${total ? offset + 1 : 0} to ${offset + items.length} of ${total} permitted cases. The scope filter applies to this page only; open the other pages to see the rest. Not a portfolio total.`;
   let prevButton = null;
@@ -385,10 +535,10 @@ function programmeQueue(first, total, loadPage, start = 0) {
 }
 const programmeFunnel = (report) => {
   const rows = report?.funnel;
-  if (!Array.isArray(rows)) return h("p", { class: "empty" }, "Lifecycle and funnel counts are Unknown. No record was supplied.");
+  if (!Array.isArray(rows)) return h("p", { class: "empty", "data-state-cue": "unknown" }, "State: Unknown. Lifecycle and funnel counts are Unknown. No record was supplied.");
   return h("div", {},
-    h("p", {}, `Recorded as of ${screenValue(report.as_of)}. Audit integrity: ${screenValue(report.audit_integrity)}. Conversion is Unknown; counts are stage history only.`),
-    screenTable("Lifecycle and funnel by stage",
+    h("p", { class: "status-line wait", "data-state-cue": "stage-history" }, `State: Recorded stage history (not a pass). Recorded as of ${screenValue(report.as_of)}. Audit integrity state: ${screenValue(report.audit_integrity)}. Conversion state: Unknown; counts are stage history only.`),
+    screenRecordTable("Lifecycle and funnel by stage",
       ["Stage", "Entries", "Exits", "Returns", "Reopens", "Cases in scope"],
       rows.map((r) => [r.stage, r.entries, r.exits, r.returns, r.reopens, r.denominator])));
 };
@@ -514,19 +664,50 @@ const journeyStages = [
   ["7. Handover and live with measures", "resident-choice", "Open remedies are not closed by handover."],
   ["8. Reconcile and learn", "finance-invoices", "No award is inferred from an invoice."]
 ];
-function journeyStageMap(c) {
+// current is the screen showing the map; its stages render as text so the walker sees where they are, and a screen outside the eight stages says so.
+function journeyStageMap(c, current = null) {
   const open = (id) => roleScreens.has(id) && roleScreens.get(id).roles.includes(me.user.role);
   return screenPanel(`Journey stages for ${c.id}`,
-    h("p", {}, "One home, eight stages. Each stage opens the screen that shows its own state for this same home. Stages are separate states: no stage clears another, and a link is navigation only. This map is a design hypothesis, not observed behaviour."),
-    h("ol", {}, journeyStages.map(([stage, id, boundary]) => h("li", {},
+    h("p", {}, "One home, eight stages. Each stage opens the screen that shows its own state for this same home. Every link carries this one home's case reference. Separate example homes are never shown as stages of this home. Stages are separate states: no stage clears another, and a link is navigation only. This map is a design hypothesis, not observed behaviour."),
+    current && !journeyStages.some(([, id]) => id === current)
+      && h("p", {}, `This screen is not one of the eight stages. It shows the same home ${c.id}.`),
+    h("ol", { "aria-label": `Eight journey stages for ${c.id}` }, journeyStages.map(([stage, id, boundary], index) => h("li",
+      // The text "You are on this screen" stays the cue; aria-current adds the native step announcement once, as resident-choice serves two stages.
+      { "aria-current": id !== null && id === current && journeyStages.findIndex(([, other]) => other === current) === index ? "step" : null },
       // Link text carries the stage name so stages sharing a screen stay distinct in link lists (WCAG 2.4.4).
-      id !== null && open(id) ? h("a", { href: screenHref(id, c.id) }, `${stage}: ${roleScreens.get(id).title}`)
+      id !== null && id === current ? `${stage}: ${roleScreens.get(id).title}. You are on this screen, showing home ${c.id}.`
+      : id !== null && open(id) ? h("a", { href: screenHref(id, c.id) }, `${stage}: ${roleScreens.get(id).title}`)
         : `${stage}: ${id === null ? "no screen yet (recorded deferral)."
           : `${roleScreens.get(id)?.title || id} is not installed for your role. Your access has not changed. Owner: your team manager. Next action: ask them to add it for your role.`}`,
       ` ${boundary}`))));
 }
+// Text prefix for each step state (WCAG 1.4.1). Unrecognised states fall back to Warning, never Pass: no state here is a pass.
+const programmeStatePrefix = { "Blocked": "Action needed", "Blocked: evidence missing": "Action needed", "No recorded blocker": "Warning" };
+const programmeStateLabel = (state) => `${Object.hasOwn(programmeStatePrefix, state) ? programmeStatePrefix[state] : "Warning"}: ${state}`;
+const programmeStepCell = (value, column) => {
+  const text = screenValue(value);
+  if (column !== 1) return text;
+  return text.startsWith("Blocked")
+    ? h("span", { class: "flag danger", "data-state-cue": "action-needed" }, text)
+    : h("span", { class: "flag", "data-state-cue": "warning" }, text);
+};
+const programmeJumpNav = (label, sections) => h("nav", { "aria-label": label, class: "screen-links" },
+  sections.map(([id, text]) => h("a", { href: `#${id}`, "data-jump": id, "data-jump-target": id }, `Go to ${text}`)));
+const programmeOverviewSections = [
+  ["programme-overview-boundary", "Overview boundary"],
+  ["programme-shared-queue", "Shared queue"],
+  ["programme-funnel", "Lifecycle and funnel"],
+  ["programme-overview-withheld", "Overview withheld"]
+];
+const programmeSections = [
+  ["programme-summary", "State summary"],
+  ["programme-steps", "Same-home step states"],
+  ["programme-journey", "Journey stages"],
+  ["programme-withheld", "Not shown for this role"]
+];
 registerRoleScreen({
   id: "programme-queue",
+  ownsStageMap: true,
   title: "Programme queue and connected home view",
   roles: [...screenManagers, "Retrofit Coordinator"],
   async overview(signal, items, c, page = 0) {
@@ -536,12 +717,14 @@ registerRoleScreen({
     const first = await loadPage(start);
     const report = await api("/api/coordinator?view=all", undefined, signal).catch(() => null);
     return h("div", {},
-      screenPanel("Evidence boundary",
-        h("p", {}, "Read-only view of recorded work. Chase and update responsibility are shown separately. Nothing here sends, assigns or changes a record. Source: desk research, not observed behaviour; validation remains open.")),
-      screenPanel("Shared queue", programmeQueue(first.items || [], first.total, loadPage, start)),
-      screenPanel("Lifecycle and funnel", programmeFunnel(report)),
-      screenWithheld(["Resident contact details and access history (open the case workspace for the safe route reference)",
-        "Household and vulnerability details beyond what a queue row needs", "Funding amounts and claim values"]));
+      programmeJumpNav("Jump to a section of the programme overview", programmeOverviewSections),
+      screenJumpTarget("programme-overview-boundary", screenPanel("Evidence boundary",
+        h("p", {}, "Read-only view of recorded work. Chase and update responsibility are shown separately. Nothing here sends, assigns or changes a record. Source: desk research, not observed behaviour; validation remains open."))),
+      screenJumpTarget("programme-shared-queue", screenPanel("Shared queue", programmeQueue(first.items || [], first.total, loadPage, start))),
+      screenJumpTarget("programme-funnel", screenPanel("Lifecycle and funnel", programmeFunnel(report))),
+      screenTension("disclosure"),
+      screenJumpTarget("programme-overview-withheld", screenWithheld(["Resident contact details and access history (open the case workspace for the safe route reference)",
+        "Household and vulnerability details beyond what a queue row needs", "Funding amounts and claim values"])));
   },
   async load(c) {
     const orders = await api(`/api/workorders?case=${encodeURIComponent(c.id)}`, undefined, routeController.signal).catch(() => null);
@@ -550,18 +733,29 @@ registerRoleScreen({
   render(c, extra) {
     const rows = programmeGates(c, extra?.orders);
     const blocked = rows.filter((r) => r[1].startsWith("Blocked"));
-    return screenPanel(`Connected view for ${c.id}`,
-      h("p", {}, "Technical, resident, delivery, quality and finance states are shown independently. One clear state never clears another."),
-      blocked.length ? screenUnknown(`${blocked.length} of 5 steps are blocked: ${blocked.map((r) => r[0]).join(", ")}.`,
-        blocked[0][3], blocked[0][4]) : h("p", {}, "No blocker is recorded, which does not confirm readiness."),
-      screenTable("Same-home step states", ["Step", "State", "Meaning", "Owner", "Next action"], rows),
-      journeyStageMap(c),
-      screenWithheld(["Resident contact details and access history (use the safe route reference in the case workspace)",
-        "Household and vulnerability details beyond what a step state needs", "Funding amounts and claim values"]));
+    return h("div", {},
+      screenPanel(`Connected view for ${c.id}`,
+        h("p", {}, "Technical, resident, delivery, quality and finance states are shown independently. One clear state never clears another."),
+        programmeJumpNav("Jump to a section of the connected home view", programmeSections),
+        blocked.length ? screenUnknown(`${blocked.length} of 5 steps are blocked: ${blocked.map((r) => r[0]).join(", ")}.`,
+          blocked[0][3], blocked[0][4]) : h("p", { class: "status-line wait", "data-state-cue": "warning" }, "State: Warning. No blocker is recorded, which does not confirm readiness."),
+        screenJumpTarget("programme-summary", h("div", {},
+          h("h3", {}, "State summary in words"),
+          h("p", {}, "Each state starts with a word so it does not depend on colour. A step with no recorded blocker is a warning, not a pass."),
+          h("ul", {}, rows.map(([name, state, meaning, owner, action]) => h("li", {},
+            `${programmeStateLabel(state)}: ${name} step. ${meaning} Owner: ${owner}. Next action: ${action}.`))))),
+        screenJumpTarget("programme-steps", screenTable("Same-home step states", ["Step", "State", "Meaning", "Owner", "Next action"], rows, 50, programmeStepCell, true))),
+      screenJumpTarget("programme-journey", journeyStageMap(c)),
+      screenTension("disclosure"),
+      screenJumpTarget("programme-withheld", screenWithheld(["Resident contact details and access history (use the safe route reference in the case workspace)",
+        "Household and vulnerability details beyond what a step state needs", "Funding amounts and claim values"])));
   }
 });
 const technicalRoles = ["Retrofit Coordinator", "Quality Inspector", "Building Safety Liaison", ...screenManagers];
 const qualityRoles = ["Quality Inspector", ...screenManagers];
+const qualityName = (v) => typeof v === "string" && v.trim() !== "";
+const pasJumpNav = (sections) => h("nav", { "aria-label": "Sections on this screen", class: "screen-links" },
+  sections.map(([id, label]) => h("a", { href: `#${id}`, "data-jump": `${id}-heading`, "data-jump-target": `${id}-heading` }, label)));
 // Competent role per sign-off, mirroring core signoffs.SIGNOFFS (a proposal for the programme to confirm).
 const signoffTypes = [
   ["assessment", "Retrofit assessment", "Quality Inspector"],
@@ -574,13 +768,29 @@ function signoffState(s) {
   if (!s) return { text: "Not given", ok: false };
   if (s.status === "Signed off") {
     // A sign-off is a named human decision on a stated design version; without both it is incomplete evidence.
-    const named = typeof s.by === "string" && s.by.trim() !== "";
+    const named = qualityName(s.by);
     const versioned = s.version !== null && s.version !== undefined && s.version !== "";
     if (!named || !versioned) return { text: `Signed off record is incomplete: ${named ? "" : "no named person"}${!named && !versioned ? " and " : ""}${versioned ? "" : "no design version"}`, ok: false };
     return { text: `Signed off on design version ${screenValue(s.version)}`, ok: true };
   }
   return { text: s.status === "Returned" ? "Returned" : s.status === "Needs reassessment" ? "Needs reassessment" : screenValue(s.status), ok: false };
 }
+// WCAG 1.4.1: every sign-off state starts with a text prefix so colour is never the only cue.
+const evidencePrefixes = { "Signed off": "Verified", "Returned": "Action needed", "Needs reassessment": "Action needed", "Not given": "Pending review" };
+function evidenceLabel(x) {
+  const key = x.s?.status ?? "Not given";
+  if (key === "Signed off" && !x.ok) return `Action needed: ${x.text}`;
+  return `${Object.hasOwn(evidencePrefixes, key) ? evidencePrefixes[key] : "Pending review"}: ${x.text}`;
+}
+function technicalDesignState(t) {
+  const versioned = t.design_version !== null && t.design_version !== undefined && t.design_version !== "";
+  return versioned && qualityName(t.design_name)
+    ? `Recorded: Design version ${screenValue(t.design_version)} on record (not stage approval)`
+    : "Action needed: Design record is incomplete";
+}
+const technicalSections = [["technical-boundary", "Evidence boundary"], ["technical-readiness", "Technical readiness"],
+  ["technical-source-facts", "Source facts"], ["technical-design", "Design version"], ["technical-signoffs", "Separate sign-offs"],
+  ["technical-returns", "Returns and routing"], ["technical-missing", "Missing references"]];
 registerRoleScreen({
   id: "technical-queue",
   title: "Technical queue",
@@ -598,36 +808,38 @@ registerRoleScreen({
     for (const x of states) if (t && !x.ok && !(missing || []).some((m) => m.item.startsWith(x.label))) reasons.push(`${x.label}: ${x.text}.`);
     const returned = states.filter((x) => x.s?.status === "Returned" || x.s?.status === "Needs reassessment");
     return h("div", {},
-      screenPanel("Evidence boundary",
+      pasJumpNav(technicalSections),
+      screenPanel("Evidence boundary", { anchor: "technical-boundary" },
         h("p", {}, "Read-only reader view. It gives no sign-off and changes no record. Sign-offs are named human professional decisions; role membership alone does not attest competence. Source: desk research, not observed behaviour."),
+        h("p", {}, "Every state on this screen is written in words first; colour is never the only signal."),
         h("p", {}, `Home scope: ${c.id} only.`)),
       screenPanel("Technical readiness",
         reasons.length
           ? screenUnknown(reasons.join(" "), "See the owner named against each item", "Complete and record each item, then reload this screen")
-          : h("p", { class: "ok", role: "status" }, "Recorded evidence is complete: every sign-off is valid, none is awaiting reassessment, and nothing is missing. This screen does not approve the stage.")),
+          : h("p", { class: "status-line ok", role: "status" }, "Ready on record: Recorded evidence is complete: every sign-off is valid, none is awaiting reassessment, and nothing is missing. This screen does not approve the stage.")),
       screenPanel("Source facts",
-        screenTable("Source facts and conflicts", ["Query", "Field", "First source (value, ID, version, age)", "Compared source (value, ID, version, age)", "Status", "Owner"],
+        screenRecordTable("Source facts and conflicts", ["Query", "Field", "First source (value, ID, version, age)", "Compared source (value, ID, version, age)", "Status", "Owner"],
           queries.map((q) => [q.id, q.field,
             `${q.left.value}, ${q.left.source_id} v${q.left.version}, ${assetAgeDays(q.left.date)}, ${q.left.validation_state}`,
             `${q.right.value}, ${q.right.source_id} v${q.right.version}, ${assetAgeDays(q.right.date)}, ${q.right.validation_state}`,
-            assetStatus(c, q), screenPerson(q.query_owner)]))),
+            stateCue(assetConflictCues, assetStatus(c, q)), screenPerson(q.query_owner)]))),
       screenPanel("Design version",
-        t ? screenFields([["Current design version", t.design_version], ["Recorded by", t.design_name], ["Recorded at", screenStamp(t.design_at)],
+        t ? screenFields([["Design state", technicalDesignState(t)], ["Current design version", t.design_version], ["Recorded by", t.design_name], ["Recorded at", screenStamp(t.design_at)],
           ["Latest change note", t.versions?.at(-1)?.note]])
           : screenUnknown("No design is recorded for this home.", "Retrofit Coordinator", "Record the design")),
       screenPanel("Separate sign-offs",
-        screenTable("Sign-off validity after design changes", ["Sign-off", "Competent role", "State", "By", "Note or reason"],
-          states.map((x) => [x.label, x.role, x.text, x.s?.by || "Nobody yet", x.s?.reason || x.s?.note]))),
+        screenRecordTable("Sign-off validity after design changes", ["Sign-off", "Competent role", "State", "By", "Note or reason"],
+          states.map((x) => [x.label, x.role, evidenceLabel(x), x.s?.by || "Nobody yet", x.s?.reason || x.s?.note]))),
       screenPanel("Returns and routing",
-        returned.length ? screenTable("Returned or reassessment sign-offs", ["Sign-off", "Route to", "Why", "Returned by"],
+        returned.length ? screenRecordTable("Returned or reassessment sign-offs", ["Sign-off", "State", "Route to", "Why", "Returned by"],
           returned.map((x) => {
             const last = (x.s.history || []).at(-1);
-            return [x.label, `${x.role} (competent reviewer for this sign-off, not a generic approval)`, x.s.reason, last?.by];
+            return [x.label, evidenceLabel(x), `${x.role} (competent reviewer for this sign-off, not a generic approval)`, x.s.reason, last?.by];
           }))
           : h("p", { class: "empty" }, "No returned sign-offs recorded. This does not establish readiness.")),
       screenPanel("Missing references",
         missing === null ? screenUnknown("Missing references are not supplied for this home.", "Grants and Evidence Officer", "Reload; do not treat as complete")
-          : screenTable("Missing references", ["Missing item", "Owner"], missing.map((m) => [m.item, m.assigned_to]))),
+          : screenRecordTable("Missing references", ["Missing item", "State", "Owner"], missing.map((m) => [m.item, "Action needed: Missing on record", m.assigned_to]))),
       screenWithheld(["Resident choices, consent wording and contact history (see resident-choice for the measure-specific choice)",
         "Household and vulnerability details beyond what a design check needs", "Funding amounts and claim values"]));
   }
@@ -637,12 +849,41 @@ function qualityMeasures(c) {
   const m = c.measures;
   return (Array.isArray(m) ? m : String(m ?? "").split(",")).map((x) => String(x).trim()).filter(Boolean);
 }
-const qualityName = (v) => typeof v === "string" && v.trim() !== "";
 // Acceptance is a named person independent of the work; a record without that is incomplete evidence.
 function qualityAcceptanceGap(r) {
   if (!qualityName(r.accepted_by)) return "accepted without a named inspector";
   if (qualityName(r.submitted_by) && r.accepted_by.trim().toLowerCase() === r.submitted_by.trim().toLowerCase()) return "accepted by the person who submitted the work, so not independent";
   return "";
+}
+const qualityMeasureCues = {
+  Submitted: "Pending review",
+  Returned: "Action needed",
+  "Fixed, awaiting reinspection": "Pending review",
+  Accepted: "Verified",
+  "Handed over": "Verified"
+};
+function qualityMeasureState(r) {
+  const gap = qualityAcceptanceGap(r);
+  if ((r.state === "Accepted" || r.state === "Handed over") && gap) return `Action needed: ${screenValue(r.state)} (${gap})`;
+  return stateCue(qualityMeasureCues, r.state);
+}
+function qualityCheckState(r, item) {
+  if (!String(item.evidence || "").trim()) return "Action needed: No evidence";
+  if (r.state === "Accepted" || r.state === "Handed over") {
+    return qualityAcceptanceGap(r) ? "Action needed: Evidence noted (acceptance incomplete)" : "Verified: Evidence noted";
+  }
+  return "Pending review: Evidence noted";
+}
+function qualityReinspectionState(r) {
+  if (r.state === "Fixed, awaiting reinspection") return "Pending review: Awaiting independent reinspection";
+  if (r.state === "Accepted" || r.state === "Handed over") {
+    return qualityAcceptanceGap(r) ? "Action needed: Reinspection lacks independent named inspector" : "Verified: Independent reinspection passed";
+  }
+  return "Action needed: Not yet possible until fix is recorded";
+}
+function qualityRecordAnchor(r, index) {
+  const slug = String(screenValue(r.measure)).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "item";
+  return `quality-measure-${slug}-${index + 1}`;
 }
 function qualityNext(r) {
   if (r.state === "Returned") return `Defect owner ${screenValue(r.defect?.owner)} to correct, then record the fix`;
@@ -650,6 +891,16 @@ function qualityNext(r) {
   if (r.state === "Submitted") return "Independent inspector to accept or return";
   if (r.state === "Accepted") return "Handover to be recorded by a person";
   return "None recorded";
+}
+function qualityDefectState(r) {
+  if (r.state === "Returned") return "Open: awaiting a fix by the defect owner";
+  if (r.state === "Fixed, awaiting reinspection") return "Fixed: awaiting independent reinspection";
+  return r.state === "Accepted" || r.state === "Handed over" ? "Closed: reinspection passed" : "Unknown: no defect state recorded";
+}
+function qualityHandoverState(r) {
+  if (r.state === "Handed over" || r.handover) return "Signed off: handover recorded by a person";
+  if (r.state === "Accepted") return "Awaiting sign-off: accepted, handover not yet recorded";
+  return "Not ready: handover sign-off cannot be recorded until the work is accepted";
 }
 registerRoleScreen({
   id: "quality-queue",
@@ -670,29 +921,65 @@ registerRoleScreen({
     if (!measures.length) blockers.push("No measures are recorded for this home.");
     if (server === null) blockers.push("Handover checks (checklist coverage, safety and resident scope) are not supplied.");
     for (const b of server || []) blockers.push(`${b.measure}: ${b.reason}`);
+    const qualitySections = [["quality-boundary", "Evidence boundary"], ["quality-readiness", "Handover readiness"],
+      ...(records.length ? records.map((r, idx) => [qualityRecordAnchor(r, idx), `${screenValue(r.measure)}: ${screenValue(r.state)}`])
+        : [["quality-evidence", "Quality evidence"]])];
     return h("div", {},
-      screenPanel("Evidence boundary",
+      pasJumpNav(qualitySections),
+      screenPanel("Evidence boundary", { anchor: "quality-boundary" },
         h("p", {}, "Read-only reader view. It accepts, returns and hands over nothing. Acceptance is by a named person independent of the work. Source: desk research, not observed behaviour."),
+        h("p", {}, "Every state on this screen is written in words first; colour is never the only signal."),
         h("p", {}, `Home scope: ${c.id} only.`)),
-      screenPanel("Handover readiness",
+      screenPanel("Handover readiness", { anchor: "quality-readiness" },
         blockers.length ? screenUnknown(blockers.join(" "), "Quality Inspector or defect owner named per measure", "Record the missing evidence, fix or reinspection; handover stays blocked until then")
-          : h("p", { class: "ok", role: "status" }, "Every measure has accepted evidence and no open defect. This screen does not record the handover.")),
-      ...(records.length ? records.map((r) => screenPanel(`${r.measure}: ${r.state}`,
-        screenFields([["Checklist", `${screenValue(r.checklist)} ${screenValue(r.checklist_version)}`], ["Evidence version", r.evidence_version],
-          ["Evidence source", r.source], ["Submitted by", r.submitted_by], ["Accepted by", r.accepted_by || "Nobody yet"], ["Next action", qualityNext(r)]]),
-        screenTable(`Per-check evidence for ${r.measure}`, ["Check", "Evidence seen", "State"],
-          (r.items || []).map((i) => [i.label, i.evidence, String(i.evidence || "").trim() ? "Evidence noted" : "No evidence"])),
-        r.defect ? screenFields([["Defect", r.defect.description], ["Why returned", r.defect.reason], ["Defect owner", r.defect.owner],
+          : h("p", { class: "status-line ok", role: "status" }, "Ready on record. Every measure has accepted evidence and no open defect. This screen does not record the handover.")),
+      ...(records.length ? records.map((r, idx) => screenPanel(`${r.measure}: ${r.state}`, { anchor: qualityRecordAnchor(r, idx) },
+        screenFields([["Measure state", qualityMeasureState(r)], ["Checklist", `${screenValue(r.checklist)} ${screenValue(r.checklist_version)}`],
+          ["Evidence version", r.evidence_version], ["Evidence source", r.source], ["Submitted by", r.submitted_by],
+          ["Accepted by", r.accepted_by || "Nobody yet"], ["Next action", qualityNext(r)]]),
+        screenRecordTable(`Per-check evidence for ${r.measure}`, ["Check", "Evidence seen", "State"],
+          (r.items || []).map((i) => [i.label, i.evidence, qualityCheckState(r, i)])),
+        r.defect ? screenFields([["Defect", r.defect.description], ["Why returned", r.defect.reason],
+          ["Defect owner", qualityName(r.defect.owner) ? r.defect.owner : "Action needed: Unassigned (no defect owner named)"],
           ["Raised by", r.defect.raised_by], ["Fixed by", r.defect.fixed_by || "Not yet fixed"], ["Remediation evidence", r.defect.remediation_evidence || "Not supplied"],
-          ["Reinspection", r.state === "Fixed, awaiting reinspection" ? "Awaiting independent reinspection" : r.state === "Accepted" || r.state === "Handed over" ? "Passed" : "Not yet possible"]])
-          : h("p", { class: "empty" }, "No defect recorded."),
+          ["Defect status", qualityDefectState(r)],
+          ["Reinspection", r.state === "Fixed, awaiting reinspection" ? "Awaiting independent reinspection" : r.state === "Accepted" || r.state === "Handed over" ? "Passed" : "Not yet possible"],
+          ["Reinspection state", qualityReinspectionState(r)]])
+          : h("div", {}, h("p", { class: "empty" }, "No defect recorded."), screenFields([["Defect status", qualityDefectState(r)]])),
+        screenFields([["Handover sign-off state", qualityHandoverState(r)]]),
         r.handover ? screenFields([["Handed over by", r.handover.by], ["Handed over at", screenStamp(r.handover.at)]]) : null))
-        : [screenPanel("Quality evidence", h("p", { class: "empty" }, "No quality records supplied. This does not establish readiness."))]),
+        : [screenPanel("Quality evidence", { anchor: "quality-evidence" }, h("p", { class: "empty" }, "No quality records supplied. This does not establish readiness."))]),
       screenWithheld(["Resident contact details and access history (use the safe route reference in the case workspace)",
         "Household and vulnerability details beyond what an inspection needs", "Funding amounts and claim values"]));
   }
 });
 
+// Resident choice and service cue maps use shared hoisted stateCue (WCAG 1.4.1; Object.hasOwn prevents prototype matches).
+const choiceCues = { Accepted: "Confirmed", Declined: "Confirmed", Paused: "Confirmed", Withdrawn: "Confirmed", Waiting: "Waiting for resident", "Not recorded": "Waiting for resident" };
+const readinessCues = { "Resident decision current": "Confirmed", "Needs human review": "Action needed" };
+const readinessCue = (value) => value === null || value === undefined || value === "" ? "Waiting for resident: Unknown" : stateCue(readinessCues, String(value));
+const safeRouteCue = (ref) => ref === null || ref === undefined || ref === "" ? "Action needed: Unknown (safe route not recorded)" : `Confirmed: ${screenValue(ref)} (safe route reference only; contact details not shown here)`;
+const formalRouteCues = { Acknowledged: "Confirmed" };
+const formalRouteCue = (value) => value === null || value === undefined || value === "" ? "Action needed: Unknown" : stateCue(formalRouteCues, String(value));
+const updateCues = { Outstanding: "Action needed", Proposed: "Action needed" };
+const serviceCues = { Open: "Action needed", "In progress": "Action needed", Resolved: "Action needed", Closed: "Confirmed" };
+const choiceSections = [
+  ["choice-boundary", "Evidence boundary"],
+  ["choice-measures", "Choice for each measure"],
+  ["choice-stopped", "Paused or withdrawn"],
+  ["choice-update", "Update commitment"],
+  ["choice-service", "Service requests"],
+  ["choice-precedence", "Choice precedence rule"],
+  ["choice-tension-choice", "Design tension on resident choice"],
+  ["choice-tension-disclosure", "Design tension on continuity and disclosure"],
+  ["choice-withheld", "Not shown for this role"]
+];
+const serviceSections = [
+  ["service-boundary", "Evidence boundary"],
+  ["service-issues", "Service issues"],
+  ["service-redress", "Independent review and complaints"],
+  ["service-update", "Update commitment"]
+];
 const choiceRoles = ["Resident Liaison Officer", "Retrofit Coordinator", "Retrofit Programme Manager", "Programme Support Officer"];
 const choiceStop = new Set(["Paused", "Withdrawn"]);
 const choiceLatest = (m) => (m.versions || []).at(-1);
@@ -706,24 +993,24 @@ const choiceStopped = (m) => choiceStop.has(m.status) || choiceStopVersion(m) !=
 function choiceMeasure(m) {
   const v = choiceLatest(m);
   const ctx = m.context ? `scope ${screenValue(m.context.scope)}, revision ${screenValue(m.context.revision)}, design ${screenValue(m.context.design_version)}` : "Current scope not recorded";
-  return [m.measure, ctx, m.status,
-    v ? `v${v.version} ${v.status} (${choiceBinding(v)}), answered by ${screenValue(v.answered_by)}, recorded ${screenStamp(v.at)}${v.note ? `: ${v.note}` : ""}` : "None recorded",
-    screenValue(m.readiness)];
+  return [m.measure, ctx, stateCue(choiceCues, m.status),
+    v ? `${stateCue(choiceCues, v.status, `v${v.version} ${v.status}`)} (${choiceBinding(v)}), answered by ${screenValue(v.answered_by)}, recorded ${screenStamp(v.at)}${v.note ? `: ${v.note}` : ""}` : "Waiting for resident: None recorded",
+    readinessCue(m.readiness)];
 }
 function choiceStoppedSummary(m) {
   const v = choiceStopVersion(m) || choiceLatest(m);
   const state = v && v.status !== m.status ? `${v.status} (current answer ${m.status})` : m.status;
   const review = m.review?.status === "Needs human review" ? ", needs human review before any restart" : "";
-  return `${m.measure}: ${state}${v ? ` (v${v.version}, ${choiceBinding(v)})` : ""}${review}`;
+  return stateCue(choiceCues, v ? v.status : m.status, `${m.measure}: ${state}${v ? ` (v${v.version}, ${choiceBinding(v)})` : ""}${review}`);
 }
 function choiceQueueRow(c) {
   const measures = c.measure_decisions || [];
   const stopped = measures.filter(choiceStopped).map(choiceStoppedSummary);
   const u = c.resident_update;
   return [`${c.id}, ${screenValue(c.address)}, ${screenValue(c.town)}`,
-    measures.length ? measures.map((m) => { const v = choiceLatest(m); return `${m.measure}: current ${m.status}${v ? `; latest recorded v${v.version} ${v.status} (${choiceBinding(v)})` : ""}`; }).join("; ") : "No measure choices recorded",
-    stopped.length ? stopped.join("; ") : "None recorded",
-    u ? `${screenValue(u.status)}: ${screenValue(u.purpose)}. Owner ${screenPerson(u.owner_identity || u.owner)}, due ${screenStamp(u.due_at)}, safe route ${screenValue(u.safe_contact_ref)}` : "No commitment recorded"];
+    measures.length ? measures.map((m) => { const v = choiceLatest(m); return stateCue(choiceCues, m.status, `${m.measure}: current ${m.status}${v ? `; latest recorded v${v.version} ${v.status} (${choiceBinding(v)})` : ""}`); }).join("; ") : "Waiting for resident: No measure choices recorded",
+    stopped.length ? stopped.join("; ") : "State: None recorded",
+    u ? `${stateCue(updateCues, u.status)}: ${screenValue(u.purpose)}. Owner ${screenPerson(u.owner_identity || u.owner)}, due ${screenStamp(u.due_at)}, safe route ${safeRouteCue(u.safe_contact_ref)}` : "Action needed: No commitment recorded"];
 }
 function choiceDownload(queue) {
   const { limit, offset } = queue;
@@ -752,7 +1039,7 @@ registerRoleScreen({
   summary(queue) {
     const items = queue && Array.isArray(queue.items) ? queue.items : null;
     return h("div", {},
-      screenPanel("Choice and update commitments across open homes (portfolio scope, not this home)",
+      screenPanel("Choice and update commitments across open homes (portfolio scope, not this home)", { anchor: "choice-portfolio" },
         items
           ? h("div", {},
             h("p", {}, `Read-only. Shows ${items.length} of ${screenValue(queue.total)} open homes, in home ID order, as your role may see them. A paused or withdrawn measure is listed separately from contact and access. Open a home for the full version history.`),
@@ -762,7 +1049,7 @@ registerRoleScreen({
               items.map(choiceQueueRow), Infinity))
           : screenUnknown("The cross-home queue could not be loaded.", "Resident liaison officer or programme manager", "Reload, or open each home from the case queue")),
       screenWithheld(["Resident phone, email and postal contact history (shown only as a safe route reference)",
-        "Detailed access and household history beyond the update commitment", "Contractor capacity and offered slots"]));
+        "Detailed access and household history beyond the update commitment", "Contractor capacity and offered slots"], "choice-portfolio-withheld"));
   },
   render(c) {
     const measures = c.measure_decisions || [];
@@ -770,81 +1057,140 @@ registerRoleScreen({
     const update = c.resident_update;
     const requests = c.service_requests || [];
     return h("div", {},
-      screenPanel("Evidence boundary",
+      residentJumpNav(choiceSections),
+      screenPanel("Evidence boundary", { anchor: "choice-boundary" },
         h("p", {}, "Read-only view. No message, call or letter is sent and no record changes here. Record supplied answers in the case workspace. Resident-facing screens are designed separately. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
-      screenPanel("Choice for each measure",
+      screenPanel("Choice for each measure", { anchor: "choice-measures" },
+        h("p", {}, "Every state is written as words first: Confirmed, Waiting for resident or Action needed. Colour is never the only signal."),
         h("p", {}, "Each answer belongs to one measure and one scope version. Not recorded means no answer is known. Contact or access is never read as a yes."),
         screenRecordTable("Measure choices by version",
           ["Measure", "Scope version", "Current answer", "Latest recorded answer", "Readiness"],
           measures.map(choiceMeasure))),
-      screenPanel("Paused or withdrawn by the resident",
+      screenPanel("Paused or withdrawn by the resident", { anchor: "choice-stopped" },
         h("p", {}, "A pause or withdrawal is the resident's decision about one measure. It is not a contact attempt, a missed visit or an access need."),
         stopped.length ? screenRecordTable("Measures paused or withdrawn",
           ["Measure", "State and scope answered", "In their words", "Restart needs"],
           stopped.map((m) => {
             const v = choiceStopVersion(m) || choiceLatest(m);
-            const state = choiceStop.has(m.status) && v === choiceLatest(m) ? m.status : `${v.status} (current answer ${m.status})`;
-            return [m.measure, v ? `${state}, ${choiceBinding(v)}` : state, v?.note, "Human review before any restart"];
+            const state = stateCue(choiceCues, v ? v.status : m.status, choiceStop.has(m.status) && v === choiceLatest(m) ? m.status : `${v.status} (current answer ${m.status})`);
+            return [m.measure, v ? `${state}, ${choiceBinding(v)}` : state, v?.note, "Action needed: Human review before any restart"];
           }))
-          : h("p", { class: "empty" }, "No measure is currently paused or withdrawn in the recorded answers.")),
-      screenPanel("Linked update commitment",
+          : h("p", { class: "empty" }, "State: None recorded. No measure is currently paused or withdrawn in the recorded answers.")),
+      screenPanel("Linked update commitment", { anchor: "choice-update" },
         update ? screenFields([
-          ["Status", update.status], ["Purpose or linked issue", update.purpose],
+          ["Status", stateCue(updateCues, update.status)], ["Purpose or linked issue", update.purpose],
           ["Owner", screenPerson(update.owner_identity || update.owner)], ["Due", screenStamp(update.due_at)],
-          ["Basis for due date", update.basis], ["Safe route reference", update.safe_contact_ref],
+          ["Basis for due date", update.basis], ["Safe route reference", safeRouteCue(update.safe_contact_ref)],
           ["Version", update.version], ["Meaning", "A commitment is not a message. Nothing is sent or marked received here."]])
           : screenUnknown("No update commitment is recorded for this home.", "Case owner or resident-workflow manager", "Record a commitment in the case workspace")),
-      screenPanel("Service requests and access needs (separate from choice)",
+      screenPanel("Service requests and access needs (separate from choice)", { anchor: "choice-service" },
         screenRecordTable("Service requests and contact needs",
           ["Request", "Route", "State and meaning", "Contact needs", "Next update"],
           requests.map((r) => [r.id, r.route, serviceStatus(r), serviceNeeds(r), r.next_update]))),
-      screenPanel("Choice comes before offered capacity",
+      screenPanel("Choice comes before offered capacity", { anchor: "choice-precedence" },
         h("p", {}, "A recorded choice, pause or withdrawal takes precedence over any offered contractor slot. An offered slot is not a booking and not a promise to the resident. Offered capacity is shown on the Package queue screen, not here.")),
+      screenTension("choice", "choice-tension-choice"),
+      screenTension("disclosure", "choice-tension-disclosure"),
       screenWithheld(["Resident phone, email and postal contact history (shown only as a safe route reference)",
-        "Detailed access and household history beyond the contact needs above", "Contractor capacity and offered slots"]));
+        "Detailed access and household history beyond the contact needs above", "Contractor capacity and offered slots"], "choice-withheld"));
   }
 });
 const hazardTriageRoles = ["Retrofit Coordinator", "Resident Liaison Officer", "Quality Inspector"];
+const HAZARD_ESCALATION_CUES = {
+  Accepted: "Confirmed",
+  Sent: "Action needed",
+  Received: "Action needed",
+  Referred: "Action needed",
+  Raised: "Action needed",
+  Open: "Action needed",
+  Escalated: "Action needed"
+};
+const HAZARD_STATE_KEY_COPY = "Every referral, clock, and stop-work state is written as words first (Confirmed, Waiting, Action needed, State, or Unknown), so colour is never the only signal.";
 const hazardActor = (value) => value && (value.name || value.role)
   ? [value.name, value.role].filter(Boolean).join(", ") : "Unknown";
-const hazardStep = (stamp) => stamp ? `Recorded ${screenStamp(stamp)}` : "Not recorded";
+function hazardStep(stamp) {
+  if (!stamp) return "State: Not recorded";
+  const formatted = screenStamp(stamp);
+  return formatted === "Unknown"
+    ? `Unknown: Timestamp not readable (${screenValue(stamp)})`
+    : `State: Recorded ${formatted}`;
+}
+function hazardSafetyClock(h) {
+  const clock = h.clock_text || h.escalation_clock;
+  return clock ? `State: ${clock}` : "Unknown: Clock not supplied";
+}
+const hazardOwner = (h) => h.accountable_owner || "Building Safety lead (escalation owner)";
 function hazardFollowUp(h) {
-  if (h.accepted_at) return `${hazardActor(h.accepted_by || h.destination)} owns the accepted scope`;
-  if (h.received_at) return `Pending acceptance. Follow-up owner: ${hazardActor(h.follow_up || h.sender)}`;
-  if (h.sent_at) return `Pending receipt. Follow-up owner: ${hazardActor(h.sender)} chases until acceptance`;
-  if (h.referred) return `Legacy referral with no recorded send time. Recorded owner (unverified): ${screenValue(h.owner)}. Retrofit Coordinator to confirm ownership and check the external service record`;
-  return `No referral sent. Owner: ${screenValue(h.owner)} to send or record a manual route`;
+  if (h.accepted_at) return `Confirmed: ${hazardActor(h.accepted_by || h.destination)} owns the accepted scope`;
+  if (h.received_at) return `Action needed: Pending acceptance. Follow-up owner: ${hazardActor(h.follow_up || h.sender)}`;
+  if (h.sent_at) return `Action needed: Pending receipt. Follow-up owner: ${hazardActor(h.sender)} chases until acceptance`;
+  if (h.referred) return `Action needed: Legacy referral with no recorded send time. Recorded owner (unverified): ${screenValue(h.owner)}. Retrofit Coordinator to confirm ownership and check the external service record`;
+  return `Action needed: No referral sent. Owner: ${screenValue(h.owner)} to send or record a manual route`;
+}
+function hazardEscalationState(h) {
+  const raw = screenValue(h?.state);
+  if (raw === "Unknown") return "Unknown: Escalation state: Unknown";
+  const lower = raw.toLowerCase();
+  const cue = Object.hasOwn(HAZARD_ESCALATION_CUES, raw)
+    ? HAZARD_ESCALATION_CUES[raw]
+    : lower.endsWith(" released") ? "Confirmed"
+      : (lower.endsWith(" active") || lower.endsWith(" needed")) ? "Action needed" : "Unknown";
+  return `${cue}: Escalation state: ${raw}`;
+}
+function hazardClock(h) {
+  if (h.responded_at) {
+    const formatted = screenStamp(h.responded_at);
+    return formatted === "Unknown"
+      ? `Unknown: Service responded (${screenValue(h.responded_at)}; timestamp not readable)`
+      : `Confirmed: Service responded ${formatted}`;
+  }
+  if (!h.response_due_at) return "Unknown: Service response clock: no due time recorded";
+  const due = new Date(h.response_due_at).getTime();
+  if (Number.isNaN(due)) return `Unknown: Service response clock: due time not readable (${screenValue(h.response_due_at)})`;
+  const late = due < Date.now();
+  return `${late ? "Action needed: Overdue" : "Waiting: Awaiting"} service response. Due ${screenStamp(h.response_due_at)}. Recorded by the service, not set here`;
 }
 function hazardHold(h) {
-  const pause = h.hold || {};
-  const decision = pause.decision;
+  const pause = (h && h.hold) || {};
+  const status = Object.hasOwn(pause, "status") ? screenValue(pause.status) : "Unknown";
+  const decision = Object.hasOwn(pause, "decision") ? pause.decision : null;
   const scope = `${screenValue(pause.scope)} ${screenValue(pause.case_id)} only`;
-  if (pause.status !== "Released") return `${screenValue(pause.status)}. Scope: ${scope}. Release needs an authorised human decision.`;
+  if (status !== "Released") {
+    const cue = status === "Active" ? "Action needed" : "Unknown";
+    return `${cue}: Stop-work indicator: ${status === "Active" ? "retrofit work is paused" : "pause status " + status}. Scope: ${scope}. Release needs an authorised human decision.`;
+  }
   return decision
-    ? `Released. Scope: ${scope}. Decided by ${hazardActor(decision.actor)} at ${screenStamp(decision.at)}. Reason: ${screenValue(decision.reason)}. Evidence: ${screenValue(decision.evidence)}`
-    : `Released. Scope: ${scope}. No authoritative decision evidence is recorded; do not rely on this release.`;
+    ? `Confirmed: Stop-work indicator: released. Scope: ${scope}. Decided by ${hazardActor(decision.actor)} at ${screenStamp(decision.at)}. Reason: ${screenValue(decision.reason)}. Evidence: ${screenValue(decision.evidence)}`
+    : `Action needed: Stop-work indicator: released. Scope: ${scope}. No authoritative decision evidence is recorded; do not rely on this release.`;
 }
+const hazardPanel = (key, title, ...children) => screenPanel(title, { anchor: `hazard-${key}` }, ...children);
+const hazardJump = (sections) => h("nav", { "aria-label": "Sections on this screen", class: "screen-links" },
+  sections.map(([key, title]) => {
+    const id = `hazard-${key}-heading`;
+    return h("a", { href: `#${id}`, "data-jump": id, "data-jump-target": id }, `Go to ${title}`);
+  }));
 function hazardScreen(intro) {
   return (c) => {
     const items = c.hazards || [];
     return h("div", {},
-      screenPanel("Evidence boundary",
+      hazardJump([["boundary", "Evidence and checks"], ["queue", "Referral queue"], ["restart", "Retrofit pause and restart decision"], ["act", "Where to act"]]),
+      hazardPanel("boundary", "Evidence and checks",
         h("p", {}, intro),
-        h("p", {}, "This screen does not classify hazards, set clocks, close hazards or authorise work. Categories and priorities are the recorded report, not a service categorisation. Sent, received and accepted are separate: a sent referral is not receipt, and receipt is not ownership. Source: desk research, not observed behaviour."),
+        h("p", {}, `This screen does not classify hazards, set clocks, close hazards or authorise work. Categories and priorities are the recorded report, not a service categorisation. Sent, received and accepted are separate: a sent referral is not receipt, and receipt is not ownership. ${HAZARD_STATE_KEY_COPY} Source: desk research, not observed behaviour.`),
         h("p", {}, `Home scope: ${c.id} only. Every recorded hazard and safeguarding item is listed, including released ones.`)),
-      screenPanel("Referral queue",
+      hazardPanel("queue", "Referral queue",
         screenTable("Hazard referrals for this home",
           ["Item", "Reported observation and urgency", "Aware at", "Source", "Destination", "Sent", "Received", "Accepted", "State", "Follow-up"],
-          items.map((x, i) => [`H-${i + 1}`, `${screenValue(x.category)}, ${screenValue(x.priority)}`,
+          items.map((x, i) => [`H-${i + 1}`, `${screenValue(x.category)}, urgency: ${screenValue(x.priority)}`,
             screenStamp(x.aware_at), x.source, hazardActor(x.destination),
             hazardStep(x.sent_at), hazardStep(x.received_at), hazardStep(x.accepted_at),
-            x.state, hazardFollowUp(x)]), Infinity)),
-      screenPanel("Retrofit pause and release decision",
+            hazardEscalationState(x), hazardFollowUp(x)]), Infinity)),
+      hazardPanel("restart", "Retrofit pause and restart decision",
         screenTable("Scoped pause and release evidence",
-          ["Item", "Pause and release evidence", "Service response due", "Service responded"],
-          items.map((x, i) => [`H-${i + 1}`, hazardHold(x), hazardStep(x.response_due_at), hazardStep(x.responded_at)]), Infinity)),
-      screenPanel("Where to act",
+          ["Item", "Pause and release evidence", "Service response clock", "Clock", "Accountable owner", "Service responded"],
+          items.map((x, i) => [`H-${i + 1}`, hazardHold(x), hazardClock(x), hazardSafetyClock(x), hazardOwner(x), hazardStep(x.responded_at)]), Infinity)),
+      hazardPanel("act", "Where to act",
         h("p", {}, "Referral, receipt, acceptance and release are recorded in the existing case workspace by the named authorised person. Emergency concerns follow the existing human emergency procedure now, not this screen.")));
   };
 }
@@ -859,25 +1205,34 @@ const hazardQueue = {
   },
   summary(entries) {
     const pause = (x) => {
-      const status = (x.hold || {}).status || "Unknown";
-      return status === "Released" && !(x.hold || {}).decision
-        ? "Released. Release decision evidence: open the home" : status;
+      const pauseObj = (x && x.hold) || {};
+      const status = Object.hasOwn(pauseObj, "status") ? screenValue(pauseObj.status) : "Unknown";
+      const hasDecision = Boolean(Object.hasOwn(pauseObj, "decision") && pauseObj.decision);
+      if (status === "Active") return "Action needed: Stop-work indicator: Active (retrofit work paused)";
+      if (status === "Released") {
+        return hasDecision
+          ? "Confirmed: Stop-work indicator: Released (decision recorded; open the home to inspect)"
+          : "Action needed: Stop-work indicator: Released. Release decision evidence: open the home";
+      }
+      return `Unknown: Stop-work indicator: ${status}`;
     };
-    const flag = (cells) => [...cells, ...Array(9).fill("Unavailable")];
+    const flag = (cells) => [...cells, ...Array(11).fill("Unavailable")];
     const rows = entries.flatMap(([row, c]) => {
-      if (!c) return [flag([row.id, "Unavailable. Open the home to check."])];
-      if (!Array.isArray(c.hazards)) return [flag([row.id, "Unknown. Hazard list not supplied. Open the home to check."])];
-      if (!c.hazards.length && row.hazard) return [flag([row.id, "Mismatch. The list flags a hazard but the case returns none. Open the home to check."])];
-      return c.hazards.map((x, i) => [`${row.id} H-${i + 1}`, `${screenValue(x.category)}, ${screenValue(x.priority)}`,
+      if (!c) return [flag([row.id, "Unknown: Unavailable. Open the home to check."])];
+      if (!Array.isArray(c.hazards)) return [flag([row.id, "Unknown: Unknown. Hazard list not supplied. Open the home to check."])];
+      if (!c.hazards.length && row.hazard) return [flag([row.id, "Action needed: Mismatch. The list flags a hazard but the case returns none. Open the home to check."])];
+      return c.hazards.map((x, i) => [`${row.id} H-${i + 1}`, `${screenValue(x.category)}, urgency: ${screenValue(x.priority)}`,
         screenStamp(x.aware_at), x.source, hazardActor(x.destination),
         hazardStep(x.sent_at), hazardStep(x.received_at), hazardStep(x.accepted_at),
-        x.state, hazardFollowUp(x), pause(x)]);
+        hazardEscalationState(x), hazardFollowUp(x), pause(x), hazardSafetyClock(x), hazardOwner(x)]);
     });
-    return screenPanel("Hazard referrals across this page of homes",
-      h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Every recorded hazard and safeguarding item is listed, including released ones. A home with no row has no hazard list entry on this page; this does not establish that no hazard exists. Unavailable, unknown and mismatched homes are listed so they are not read as clear. Open a home for pause and release decision evidence."),
-      screenTable("Hazard referrals by home",
-        ["Home and item", "Reported observation and urgency", "Aware at", "Source", "Destination", "Sent", "Received", "Accepted", "State", "Follow-up", "Pause status"],
-        rows, Infinity));
+    return h("div", {},
+      hazardJump([["page-summary", "Hazard referrals across this page of homes"]]),
+      hazardPanel("page-summary", "Hazard referrals across this page of homes",
+        h("p", {}, `Read-only summary of the homes on this page, not a portfolio total. Every recorded hazard and safeguarding item is listed, including released ones. A home with no row has no hazard list entry on this page; this does not establish that no hazard exists. Unavailable, unknown and mismatched homes are listed so they are not read as clear. ${HAZARD_STATE_KEY_COPY} Open a home for pause and release decision evidence.`),
+        screenTable("Hazard referrals by home",
+          ["Home and item", "Reported observation and urgency", "Aware at", "Source", "Destination", "Sent", "Received", "Accepted", "State", "Follow-up", "Pause status", "Clock", "Accountable owner"],
+          rows, Infinity)));
   }
 };
 registerRoleScreen({
@@ -894,14 +1249,137 @@ registerRoleScreen({
   roles: hazardTriageRoles,
   render: hazardScreen("Read-only view for repairs and hazard triage: awareness time and source, referral progress and the person who chases an unanswered referral.")
 });
-const operatorSide = (a) => a ? `${screenValue(a.value)}; source ${screenValue(a.source_id)} v${screenValue(a.version)}; dated ${screenValue(a.date)}; ${screenValue(a.validation_state)}` : "Unknown";
-const operatorStatus = (c, q) => (c.stock_reconciliation_events || []).filter((e) => e.query_id === q.id).at(-1)?.status || "Unresolved";
+const operatorPanel = (id, title, ...children) => h("section", { class: "card screen-record", id, tabindex: "-1" }, h("h2", {}, title), ...children);
+const operatorJumps = [
+  ["operator-boundary", "Evidence boundary"],
+  ["operator-conflicts", "Conflict queue"],
+  ["operator-eligibility", "Eligibility and original source"],
+  ["operator-returns", "Returns and reopens"],
+  ["operator-handoff", "Handoff and exception queue"],
+  ["operator-events", "Event metadata and recovery context"]
+];
+const operatorLookup = (map, value, fallback) => {
+  if (typeof value !== "string") return fallback;
+  const key = value.trim().toLowerCase();
+  return Object.hasOwn(map, key) ? map[key] : fallback;
+};
+const operatorSourceStates = {
+  validated: "Source state: Validated on record (not a winning source)",
+  verified: "Source state: Verified on record (not a winning source)",
+  unvalidated: "Source state: Unvalidated (needs steward check)",
+  unverified: "Source state: Unverified (needs steward check)",
+  disputed: "Source state: Disputed (action needed; sources disagree)",
+  quarantined: "Source state: Quarantined (not cleared for use)",
+  stale: "Source state: Stale (needs refresh check)",
+  unknown: "Source state: Unknown"
+};
+const operatorSourceState = (value) => operatorLookup(operatorSourceStates, value, "Source state: Unknown");
+const operatorEventStates = {
+  unresolved: "State: Unresolved (action needed; both source values kept)",
+  open: "State: Open (action needed; waiting for steward review)",
+  withdrawn: "State: Withdrawn (recorded disposition; not a winning source)",
+  reconciled: "State: Reconciled on record",
+  resolved: "State: Resolved on record (recorded disposition only)",
+  returned: "State: Returned (action needed)",
+  quarantined: "State: Quarantined (not cleared for use)"
+};
+const operatorEventState = (value) => operatorLookup(operatorEventStates, value, "State: Unknown");
+const exceptionRecord = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+const operatorReturnState = (r) => {
+  if (!exceptionRecord(r)) return "State: Unknown";
+  const hasReopened = Object.hasOwn(r, "reopened");
+  if (hasReopened && typeof r.reopened !== "boolean") return "State: Unknown";
+  const hasKind = Object.hasOwn(r, "event_type");
+  if (hasKind && typeof r.event_type !== "string") return "State: Unknown";
+  const kind = hasKind ? r.event_type.trim().toLowerCase() : "";
+  if (hasKind && kind !== "return" && kind !== "reopen") return "State: Unknown";
+  if (hasReopened && hasKind && ((kind === "reopen") !== r.reopened)) return "State: Unknown";
+  if (hasReopened) return r.reopened ? "State: Reopened (action needed)" : "State: Returned (action needed)";
+  if (kind === "reopen") return "State: Reopened (action needed)";
+  if (kind === "return") return "State: Returned (action needed)";
+  return typeof r.from_stage === "string" && typeof r.to_stage === "string"
+    ? "State: Returned (action needed)"
+    : "State: Unknown";
+};
+const operatorHandoffStates = {
+  offered: "State: Offered, awaiting acceptance (action needed)",
+  sent: "State: Sent, awaiting acceptance (action needed)",
+  received: "State: Received, awaiting acceptance (ownership unchanged; action needed)",
+  pending: "State: Pending acceptance (action needed)",
+  escalated: "State: Escalated (unaccepted handoff; action needed)",
+  declined: "State: Declined by receiver (action needed)",
+  rejected: "State: Rejected by receiver (action needed)",
+  returned: "State: Returned (action needed)",
+  accepted: "State: Accepted by receiver",
+  confirmed: "State: Confirmed by receiver",
+  withdrawn: "State: Withdrawn on record",
+  completed: "State: Completed on record",
+  blocked: "State: Blocked (action needed)"
+};
+const operatorHandoffState = (value) => operatorLookup(operatorHandoffStates, value, "State: Unknown (handoff not confirmed)");
+const operatorBlockerStates = {
+  open: "State: Open prerequisite (action needed)",
+  blocked: "State: Blocked (action needed)",
+  resolved: "State: Resolved on record"
+};
+const operatorBlockerState = (blocker) => {
+  if (!exceptionRecord(blocker)) return "State: Unknown";
+  const hasStatus = Object.hasOwn(blocker, "status");
+  const hasStop = Object.hasOwn(blocker, "current_stop");
+  if (!hasStatus && !hasStop) return "State: Open prerequisite (action needed)";
+  const status = hasStatus ? operatorLookup(operatorBlockerStates, blocker.status, null) : null;
+  if (hasStatus && !status) return "State: Unknown";
+  if (!hasStop) return status;
+  if (typeof blocker.current_stop !== "boolean") return "State: Unknown";
+  if (!hasStatus) {
+    return blocker.current_stop
+      ? "State: Active stop on current stage (action needed)"
+      : "State: Open prerequisite (does not stop current stage; action needed)";
+  }
+  const key = blocker.status.trim().toLowerCase();
+  if (blocker.current_stop) {
+    if (key === "resolved") return "State: Unknown";
+    return key === "blocked"
+      ? "State: Active stop on current stage (blocked; action needed)"
+      : "State: Active stop on current stage (open prerequisite; action needed)";
+  }
+  if (key === "resolved") return "State: Resolved on record (does not stop current stage)";
+  return key === "blocked"
+    ? "State: Blocked prerequisite (does not stop current stage; action needed)"
+    : "State: Open prerequisite (does not stop current stage; action needed)";
+};
+const exceptionRegisterStates = {
+  ok: "State: Loaded (ok; not an all clear)",
+  roles_not_named: "State: Action needed (roles_not_named)"
+};
+const exceptionRegisterState = (value) => operatorLookup(exceptionRegisterStates, value, "State: Unknown");
+const exceptionItemStates = {
+  open: "State: Open (action needed)",
+  quarantined: "State: Quarantined (not cleared for use)",
+  held: "State: Paused for human review (held; action needed)",
+  rerun_requested: "State: Re-run requested (human action needed; not replayed)",
+  closed: "State: Closed on record"
+};
+const exceptionItemState = (value) => operatorLookup(exceptionItemStates, value, "State: Unknown");
+const exceptionEligibilityStates = {
+  unknown: "Unknown",
+  "not assessed": "Not assessed",
+  not_assessed: "Not assessed",
+  suppressed: "Suppressed"
+};
+const exceptionEligibilityState = (value) => operatorLookup(exceptionEligibilityStates, value, "Unknown");
+const operatorSide = (a) => a && typeof a === "object" && !Array.isArray(a)
+  ? `${screenValue(a.value)}; source ${screenValue(a.source_id)} v${screenValue(a.version)}; dated ${screenValue(a.date)}; ${operatorSourceState(a.validation_state)}`
+  : "Source state: Unknown";
+const operatorStatus = (c, q) => {
+  const last = (c.stock_reconciliation_events || []).filter((e) => e.query_id === q.id).at(-1);
+  return last ? operatorEventState(last.status) : operatorEventStates.unresolved;
+};
 const exceptionKinds = {
   source_conflict: "Source conflict", identity_conflict: "Identity conflict", failed_import: "Failed import",
   failed_ai_run: "Requested AI help did not deliver a model result", failed_integration: "Failed integration run",
   stranded_task: "Stranded work"
 };
-const exceptionRecord = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 const exceptionText = (value) => typeof value === "string" || typeof value === "number" ? screenValue(value) : "Unknown";
 const exceptionBannerLabel = { unknown: "Service state Unknown", outage: "Outage recorded", no_known_outage: "No outage recorded. This is not proof of health." };
 function validExceptionRegister(data) {
@@ -928,7 +1406,7 @@ const exceptionSide = (side) => exceptionRecord(side)
   ? `${exceptionText(side.value)}; source ${exceptionText(side.source)} v${exceptionText(side.version)}; dated ${exceptionText(side.date)}` : "Unknown";
 function exceptionUnavailable(error) {
   const denied = error && error.status === 403;
-  return screenPanel("Exception register",
+  return operatorPanel("operator-register", "Exception register",
     h("p", { role: "alert" }, denied
       ? `Access denied. ${typeof error.message === "string" && error.message ? error.message : "Only a named data steward or digital operator can see this."} Your access has not changed.`
       : "The exception register could not be shown, so nothing is known about open exceptions. Do not read this as all clear."),
@@ -986,6 +1464,46 @@ function exceptionSummaryControl(rows) {
     h("p", { id: "exception-summary-note" }, "Demonstrator feature only: no operational or real-record use is approved. The file copies four columns for the items listed here, within your role scope, as they were when this page loaded. It changes nothing. It is not a complete exception list, and an empty or short file would not mean all clear. The reference is valid only in this view and is not a stable identity. Owners, free text, record, source, case, batch and query identifiers and conflict values are not included. How a downloaded copy is kept or handled is not decided or managed here."),
     status);
 }
+const indicatorStates = { fresh: "Fresh", stale: "Stale", enabled: "Enabled", disabled: "Disabled", healthy: "Healthy", degraded: "Degraded", down: "Down", quarantined: "Quarantined" };
+const indicatorState = (value) => typeof value === "string" && Object.hasOwn(indicatorStates, value.toLowerCase()) ? indicatorStates[value.toLowerCase()] : "Unknown";
+function indicatorRows(data, items, unreadable = 0) {
+  const given = exceptionRecord(data.indicators) ? data.indicators : {};
+  const when = (entry) => exceptionRecord(entry) && typeof entry.as_of === "string" && entry.as_of ? `As of ${entry.as_of}` : "Time not supplied";
+  const quarantined = items.filter((item) => exceptionRecord(item.original_source) && typeof item.original_source.status === "string"
+    && item.original_source.status.toLowerCase() === "quarantined").length;
+  const tasks = Array.isArray(given.ai_tasks) ? given.ai_tasks.filter((task) => exceptionRecord(task) && typeof task.task === "string") : [];
+  const count = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+  const list = (value) => Array.isArray(value) ? value.length : 0;
+  const stale = items.filter((item) => exceptionRecord(item.original_source) && typeof item.original_source.status === "string"
+    && item.original_source.status.toLowerCase() === "stale").length + list(data.sources);
+  const suppressed = items.filter((item) => typeof item.eligibility === "string" && /suppress/i.test(item.eligibility)).length;
+  const blocked = data.state === "roles_not_named" || unreadable > 0 || list(data.unrouted) > 0;
+  const none = blocked ? "Action needed" : "Needs review";
+  const rows = [
+    ["Open exceptions", `State: ${items.length ? "Attention" : none}. ${count(items.length, "item", "items")} returned for you. Read-only; none is changed here.`],
+    ["Sources not connected", `State: ${stale ? "Warning" : none}. ${count(stale, "source or stale record", "sources or stale records")} listed. Read-only.`],
+    ["Suppressed records", `State: ${suppressed ? "Attention" : none}. ${count(suppressed, "item", "items")} marked suppressed. Read-only.`],
+    ["Lineage freshness", `State: ${indicatorState(given.lineage?.state)}. ${when(given.lineage)}. Read-only; Unknown is not proof the lineage is current.`],
+    ["Ingestion quarantine", `State: ${quarantined ? `Quarantined (${quarantined} ${quarantined === 1 ? "item" : "items"} listed below)` : "None returned, which is not an all clear"}. Records stay as received; nothing is released or replayed here.`],
+    ["Sensor feed health", `State: ${indicatorState(given.sensor_feed?.state)}. ${when(given.sensor_feed)}. Read-only; open a home for its sensor readings.`]
+  ];
+  tasks.forEach((task) => rows.push([`AI task: ${exceptionText(task.task)}`,
+    `State: ${indicatorState(task.enabled === true ? "enabled" : task.enabled === false ? "disabled" : null)}. ${when(task)}. Read-only; enabling or disabling a task is a controlled change outside this screen.`]));
+  if (!tasks.length) rows.push(["AI tasks", "State: Unknown. No task settings were returned. Read-only; enabling or disabling a task is a controlled change outside this screen."]);
+  return rows;
+}
+const exceptionJumps = [["exception-state", "State at a glance"], ["exception-sources", "Sources and unrouted records"],
+  ["exception-items", "Open exception items"], ["exception-conflicts", "Source conflicts"]];
+const exceptionHeading = (id, text) => h("h3", { id, tabindex: "-1" }, text);
+function exceptionJumpNav() {
+  return h("nav", { class: "row", "aria-label": "Data stewardship sections" },
+    exceptionJumps.map(([id, text]) => h("button", { type: "button", "data-jump-target": id, onclick: () => {
+      const target = document.getElementById(id);
+      if (!target) return;
+      target.focus();
+      target.scrollIntoView({ block: "start" });
+    } }, `Go to ${text}`)));
+}
 function exceptionRegisterPanel(data) {
   const items = data.items.filter(exceptionItem);
   const unreadable = data.items.length - items.length;
@@ -996,30 +1514,33 @@ function exceptionRegisterPanel(data) {
   const scope = exceptionRecord(data.access.scope) ? Object.entries(data.access.scope) : [];
   const list = (label, values) => values.length ? h("ul", {}, values.map((value) => h("li", {}, exceptionText(value))))
     : h("p", {}, `${label}: none returned. This does not establish that nothing is missing.`);
-  return screenPanel("Exception register",
-    h("p", { role: "status" }, `${exceptionBannerLabel[banner.state] || "Service state Unknown"}. ${exceptionText(banner.text)}`),
+  return operatorPanel("operator-register", "Exception register",
+    h("p", { role: "status" }, `${operatorLookup(exceptionBannerLabel, banner.state, "Service state Unknown")}. ${exceptionText(banner.text)}`),
     h("p", {}, "Read-only list returned by the server for your signed-in access. Nothing is replayed, re-run, released, corrected or assigned here, and no AI call is made. Recovery guidance below is placeholder text, not an approved runbook."),
     h("p", {}, exceptionText(data.note)),
+    exceptionJumpNav(),
     h("p", {}, "Deliberate rules-and-template processing (workflow-only) is not a failure and is not a model result. It is never listed here, so an empty list does not show that a model succeeded or that nothing failed."),
-    screenFields([["Register state", data.state],
+    screenFields([["Register state", exceptionRegisterState(data.state)],
       ["Your access", roles.length ? roles.map(([name, held]) => `${exceptionText(name)}: ${Array.isArray(held) ? held.map(exceptionText).join(", ") : "Unknown"}`).join("; ") : "No role named for you"],
-      ["Role scope", scope.length ? scope.map(([kind, role]) => `${exceptionKinds[kind] || exceptionText(kind)}: ${exceptionText(role)}`).join("; ") : "Unknown"]]),
-    h("h3", {}, "Sources not connected and records not routed"),
+      ["Role scope", scope.length ? scope.map(([kind, role]) => `${operatorLookup(exceptionKinds, kind, "Unknown")}: ${exceptionText(role)}`).join("; ") : "Unknown"]]),
+    exceptionHeading("exception-state", "State at a glance"),
+    screenFields(indicatorRows(data, items, unreadable)),
+    exceptionHeading("exception-sources", "Sources not connected and records not routed"),
     list("Sources", data.sources),
     list("Unrouted", data.unrouted),
-    h("h3", {}, "Open exception items"),
+    exceptionHeading("exception-items", "Open exception items"),
     unreadable ? h("p", { role: "status" }, `${unreadable} returned entries could not be read and are not shown. This list is not complete.`) : null,
-    items.length ? [summary && exceptionSummaryControl(summary), screenTable("Exception items returned for you",
+    items.length ? [summary && exceptionSummaryControl(summary), screenRecordTable("Exception items returned for you",
       ["Reference", "Kind", "State", "Configured owner", "What happened and reason", "Manual next step", "Source or run reference", "Eligibility"],
-      items.map((item) => [item.id, exceptionKinds[item.kind] || exceptionText(item.kind), exceptionText(item.status), exceptionOwner(item),
-        exceptionHappened(item), `Placeholder guidance, not an approved runbook: ${exceptionText(item.runbook)}`, exceptionReference(item), exceptionText(item.eligibility)]), Infinity)]
+      items.map((item) => [item.id, operatorLookup(exceptionKinds, item.kind, "Unknown"), exceptionItemState(item.status), exceptionOwner(item),
+        exceptionHappened(item), `Placeholder guidance, not an approved runbook: ${exceptionText(item.runbook)}`, exceptionReference(item), `State: ${exceptionEligibilityState(item.eligibility)}`]), Infinity)]
       : h("p", { class: "empty" }, "No exception items were returned. This is not an all clear: the Sources list shows which sources are not connected, service health is Unknown and unrouted records are listed above."),
-    h("h3", {}, "Source conflicts: both values"),
-    conflicts.length ? screenTable("Source conflicts with every returned value",
+    exceptionHeading("exception-conflicts", "Source conflicts: both values"),
+    conflicts.length ? screenRecordTable("Source conflicts with every returned value",
       ["Reference", "First value, source, version, date", "Second value, source, version, date", "Further values", "Resolution owner", "Eligibility"],
       conflicts.map((item) => [item.id, exceptionSide(item.values[0]), exceptionSide(item.values[1]),
         item.values.length > 2 ? item.values.slice(2).map(exceptionSide).join(" | ") : "None",
-        exceptionOwner(item), `${exceptionText(item.eligibility)}. No winning source is selected.`]), Infinity)
+        exceptionOwner(item), `State: ${exceptionEligibilityState(item.eligibility)}. No winning source is selected.`]), Infinity)
       : h("p", { class: "empty" }, "No source conflicts were returned. This does not establish that none exist."));
 }
 async function exceptionRegisterView(signal) {
@@ -1034,7 +1555,7 @@ async function exceptionRegisterView(signal) {
   signal.throwIfAborted();
   return validExceptionRegister(data) ? exceptionRegisterPanel(data) : exceptionUnavailable(null);
 }
-const exceptionRegisterEntry = () => screenPanel("Exception register",
+const exceptionRegisterEntry = () => operatorPanel("operator-register-entry", "Exception register",
   h("p", {}, "Failed or quarantined AI requests, unowned overdue work and source conflicts for named data stewards and digital operators. Opening it is a read-only request and is recorded in the audit log."),
   h("a", { href: `${screenHref("data-operator", null)}&exceptions=1` }, "Open the exception register"));
 registerRoleScreen({
@@ -1042,10 +1563,14 @@ registerRoleScreen({
   title: "Data steward and operator view",
   roles: screenManagers,
   async overview(signal, rows, c) {
+    const isExceptions = screenScopeQuery().get("exceptions") === "1";
     const [register, summary] = await Promise.all([
-      screenScopeQuery().get("exceptions") === "1" ? exceptionRegisterView(signal) : exceptionRegisterEntry(),
+      isExceptions ? exceptionRegisterView(signal) : exceptionRegisterEntry(),
       !c && rows.length ? this.summarise(rows, signal) : null]);
-    return h("div", {}, register, summary);
+    const jumps = summary ? screenJumpNav("Data steward overview sections", [
+      [isExceptions ? "operator-register" : "operator-register-entry", "Exception register"],
+      ["operator-page-queue", "Conflict and return queue"]]) : null;
+    return h("div", {}, jumps, register, summary);
   },
   async summarise(rows, signal) {
     const entries = await Promise.all(rows.map((row) =>
@@ -1057,20 +1582,26 @@ registerRoleScreen({
   },
   summary(entries) {
     const conflicts = entries.flatMap(([row, c]) => {
-      if (!c) return [[row.id, "Unavailable", "Open the home to check.", "Unavailable", "Unavailable", "Unavailable"]];
+      if (!c) {
+        return [[row.id, "State: Unavailable (action needed; not clear)", "Open the home to check.",
+          "Source state: Unknown (Unavailable)", "Source state: Unknown (Unavailable)", "State: Unavailable (action needed; not clear)"]];
+      }
       return (c.stock_reconciliation || []).map((q) => [c.id, q.id, q.field, operatorSide(q.left), operatorSide(q.right), operatorStatus(c, q)]);
     });
     const returns = entries.flatMap(([row, c]) => {
-      if (!c) return [[row.id, "Unavailable", "Unavailable", "Unavailable", "Unavailable", "Open the home to check."]];
-      return (c.returns || []).filter((r) => r.event_type !== "advance").map((r) => [c.id, r.reopened ? "Reopened" : "Returned",
+      if (!c) {
+        return [[row.id, "State: Unavailable (action needed; not clear)", "Unavailable",
+          "Source state: Unknown (Unavailable)", "Unavailable", "Open the home to check."]];
+      }
+      return (c.returns || []).filter((r) => r.event_type !== "advance").map((r) => [c.id, operatorReturnState(r),
         `${screenValue(r.from_stage)} to ${screenValue(r.to_stage)}`, `${screenValue(r.source)} v${screenValue(r.source_version)}`, r.reason, r.next_action]);
     });
-    return screenPanel("Conflict and return queue across this page of homes",
-      h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Both source values stay as recorded; no winning source is selected and nothing is replayed, corrected or retried. A home with no row has no conflict or return recorded on this page; this does not establish that none exists. Unavailable homes are listed so they are not read as clear. Open a home for events and recovery context."),
-      screenTable("Source conflicts by home with both values",
+    return operatorPanel("operator-page-queue", "Conflict and return queue across this page of homes",
+      h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Every state is written in words with a State or Source state label, so meaning never relies on colour alone. Both source values stay as recorded; no winning source is selected and nothing is replayed, corrected or retried. A home with no row has no conflict or return recorded on this page; this does not establish that none exists. Unavailable homes are listed so they are not read as clear. Open a home for events and recovery context."),
+      screenRecordTable("Source conflicts by home with both values",
         ["Home", "Query", "Field", "First source (value, source, version, date, validation)", "Compared source (value, source, version, date, validation)", "State"],
         conflicts, Infinity),
-      screenTable("Returns and reopens by home",
+      screenRecordTable("Returns and reopens by home",
         ["Home", "Type", "Stage change", "Source", "Reason", "Next action"],
         returns, Infinity));
   },
@@ -1082,53 +1613,95 @@ registerRoleScreen({
     const handoff = work?.handoff;
     const returns = (c.returns || []).filter((r) => r.event_type !== "advance");
     return h("div", {},
-      screenPanel("Evidence boundary",
-        h("p", {}, "Read-only view for data stewards, performance analysts and digital operators. It does not replay, correct, resolve or retry anything, and it keeps the original source values. Source: desk research, not observed behaviour."),
+      screenJumpNav("Data steward and operator sections", operatorJumps),
+      operatorPanel("operator-boundary", "Evidence boundary",
+        h("p", {}, "Read-only view for data stewards, performance analysts and digital operators. It does not replay, correct, resolve or retry anything, and it keeps the original source values. Every state is written in words with a State or Source state label, so meaning never relies on colour alone. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
-      screenPanel("Conflict queue: both source values",
-        screenTable("Source conflicts with both values and source details",
+      operatorPanel("operator-conflicts", "Conflict queue: both source values",
+        screenRecordTable("Source conflicts with both values and source details",
           ["Query", "Field", "First source (value, source, version, date, validation)", "Compared source (value, source, version, date, validation)", "State", "Resolution owner"],
           queries.map((q) => [q.id, q.field, operatorSide(q.left), operatorSide(q.right),
             operatorStatus(c, q), screenPerson(q.query_owner)]))),
-      screenPanel("Eligibility and original source",
-        screenFields([["Eligibility", "Unknown"],
-          ["Original source values", queries.length ? "Preserved unchanged in the table above" : "None supplied"],
-          ["Winning source", "Not selected. No latest-wins or silent correction is applied."]])),
-      screenPanel("Returns and reopens",
-        returns.length ? screenTable("Recorded returns and reopens",
+      operatorPanel("operator-eligibility", "Eligibility and original source",
+        screenFields([["Eligibility", "State: Unknown. Unresolved on this screen; not confirmed or cleared."],
+          ["Original source values", queries.length ? "State: Preserved unchanged in the table above" : "State: Unknown (none supplied)"],
+          ["Winning source", "State: Not selected. No latest-wins or silent correction is applied."]])),
+      operatorPanel("operator-returns", "Returns and reopens",
+        returns.length ? screenRecordTable("Recorded returns and reopens",
           ["Recorded", "Type", "From", "To", "Reason", "Source", "Next action", "Receiving owner"],
-          returns.map((r) => [screenStamp(r.at), r.reopened ? "Reopened" : "Returned", r.from_stage, r.to_stage, r.reason,
+          returns.map((r) => [screenStamp(r.at), operatorReturnState(r), r.from_stage, r.to_stage, r.reason,
             `${screenValue(r.source)} v${screenValue(r.source_version)}`, r.next_action, screenPerson(r.receiving_owner)]))
           : screenUnknown("No return or reopen is recorded for this home.", "Programme manager to name an owner", "Confirm whether a return is expected")),
-      screenPanel("Handoff and exception queue",
+      operatorPanel("operator-handoff", "Handoff and exception queue",
         handoff ? screenFields([["Handoff destination", handoff.destination], ["Proposed receiver", handoff.proposed_receiver],
           ["Confirmed receiver", handoff.confirmed_receiver], ["Chase owner", handoff.chase_owner],
-          ["Handoff state", handoff.state], ["Work reason", work.reason], ["Next action", work.next_action]])
+          ["Handoff state", operatorHandoffState(handoff.state)], ["Work reason", work.reason], ["Next action", work.next_action]])
           : screenUnknown("No handoff is recorded for this home.", "Programme manager to name an owner", "Confirm whether a handoff is expected"),
-        screenTable("Open exceptions and prerequisites",
-          ["Step", "Reason", "Owner", "Next action", "Source and version"],
-          blockers.map((b) => [b.step, b.reason, b.owner, b.next_action, `${screenValue(b.source)} v${screenValue(b.version)}`]))),
-      screenPanel("Event metadata and recovery context",
+        screenRecordTable("Open exceptions and prerequisites",
+          ["Step", "State", "Reason", "Owner", "Next action", "Source and version"],
+          blockers.map((b) => [b.step, operatorBlockerState(b), b.reason, b.owner, b.next_action, `${screenValue(b.source)} v${screenValue(b.version)}`]))),
+      operatorPanel("operator-events", "Event metadata and recovery context",
         h("p", {}, "Illustrative event metadata only. These are recorded dispositions with a narrative reason. They are not an operational audit trail and cannot prove that nothing else happened."),
-        screenTable("Recorded stock query events",
+        screenRecordTable("Recorded stock query events",
           ["Event", "Query", "State", "Recorded", "Recorded by", "Reason", "Evidence"],
-          events.map((e) => [e.id, e.query_id, e.status, screenStamp(e.at), screenPerson(e.recorded_by), e.reason, e.evidence])),
-        screenFields([["Recovery context", work ? `Next action: ${screenValue(work.next_action)}. Owner: ${screenValue(work.owner)}. Recorded as of ${screenValue(work.as_of)}.` : "Unknown. No recovery context is recorded."],
-          ["Integration run and queue state", "Unknown. No interface run record is supplied to this screen."]])));
+          events.map((e) => [e.id, e.query_id, operatorEventState(e.status), screenStamp(e.at), screenPerson(e.recorded_by), e.reason, e.evidence])),
+        screenFields([["Recovery context", work ? `State: Action needed. Next action: ${screenValue(work.next_action)}. Owner: ${screenValue(work.owner)}. Recorded as of ${screenValue(work.as_of)}.` : "State: Unknown. No recovery context is recorded."],
+          ["Integration run and queue state", "State: Unknown. No interface run record is supplied to this screen."]])));
   }
 });
 const reviewerRole = "Contracts manager, independent of the person who issued or submitted the pack";
 const wording = (value, fallback = "Unknown") => value === null || value === undefined || value === "" ? fallback : String(value);
 const reference = (order) => `${wording(order.id)} v${wording(order.version)}`;
+// Keyboard jump links reuse the shared a[data-jump] click handler, so they never change the hash route.
+const procurementJumpNav = (sections) => h("nav", { role: "navigation", "aria-label": "Sections of this view", class: "screen-links" },
+  sections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading`, "data-jump-target": `${id}-heading` }, `Go to ${title}`)));
+const procurementBadge = (cue, label, danger = false) => h("span", { class: danger ? "flag danger" : "flag", "data-state-cue": cue }, label);
+const workOrderCues = { Completed: "Completed on record, not accepted", Withdrawn: "Withdrawn", Issued: "Open", Appointed: "Open", Acknowledged: "Open" };
+const invoiceCues = { Matched: "Checked", Received: "Waiting for check", "Not checked": "Waiting for check" };
+const packageDraftAnchor = (p, i) => `package-draft-${String(wording(p.id)).replace(/[^A-Za-z0-9_-]/g, "-")}-${i + 1}`;
+const evidenceCues = { Recorded: "Recorded", Unknown: "Unknown" };
+const packageCapacityBadge = (cap) => {
+  const label = screenCapacityState(cap);
+  return procurementBadge(label.split(":")[0], label, label.startsWith("Over-committed") || label.startsWith("Unknown"));
+};
+const packageEvidenceBadge = (status) => {
+  if (status === null || status === undefined || String(status).trim() === "") {
+    return procurementBadge("Unknown", "Unknown - not confirmed", true);
+  }
+  const label = String(status);
+  if (label.startsWith("Evidenced")) return procurementBadge("Evidenced", label, false);
+  if (label.startsWith("Unknown")) return procurementBadge("Unknown", label, true);
+  return procurementBadge("Action needed", `Action needed: ${label}`, true);
+};
+const packageExpiryBadge = (value) => {
+  const label = screenExpiryState(value);
+  return procurementBadge(label.split(":")[0], label, !label.startsWith("In date until:"));
+};
+const workOrderStateBadge = (state) => {
+  const label = stateCue(workOrderCues, state);
+  return procurementBadge(label.split(":")[0], label, state === "Withdrawn" || label.startsWith("Action needed"));
+};
+const prerequisiteBadge = (stateText) => {
+  if (stateText.startsWith("Met on record")) return procurementBadge("Met on record", stateText, false);
+  const cue = stateText.startsWith("Blocked") ? "Blocked" : stateText.startsWith("Unknown") ? "Unknown" : "Unmet";
+  return procurementBadge(cue, stateText, true);
+};
 const completionMove = (order) => (order.history || []).filter((step) => step.to_state === "Completed").pop();
 function workOrderRecordRows(orders) {
   return orders.map((o) => {
     const done = completionMove(o);
-    return [reference(o), (o.corrections || []).length
-      ? (o.corrections || []).map((k) => `${wording(k.reason)} (${wording(k.by)}, ${wording(k.at)})`).join("; ") : "None recorded",
-    o.state === "Completed" && done ? `Recorded by ${wording(done.by)} on ${wording(done.at)}. A recorded completion is not acceptance.`
-      : o.state === "Completed" ? "Completed on record. Who recorded it is Unknown." : "Not recorded",
-    "Unknown. No independent review record is supplied to this screen."];
+    const corrections = (o.corrections || []).length
+      ? procurementBadge("Corrections recorded", (o.corrections || []).map((k) => `${wording(k.reason)} (${wording(k.by)}, ${wording(k.at)})`).join("; "), true)
+      : procurementBadge("None recorded", "None recorded", false);
+    const completion = o.state === "Completed" && done
+      ? procurementBadge("Completed on record, not accepted", `Recorded by ${wording(done.by)} on ${wording(done.at)}. A recorded completion is not acceptance.`, false)
+      : o.state === "Completed"
+        ? procurementBadge("Completed on record, recorder unknown", "Completed on record. Who recorded it is Unknown.", true)
+        : procurementBadge("Not recorded", "Not recorded", false);
+    const review = o.independent_review
+      ? procurementBadge("Independent review status", stateCue({ Recorded: "Recorded on review", Returned: "Action needed" }, o.independent_review), o.independent_review !== "Recorded")
+      : procurementBadge("Unknown: pending independent review", "Unknown. No independent review record is supplied to this screen.", true);
+    return [reference(o), corrections, completion, review];
   });
 }
 function packagePrerequisites(pkg, orders) {
@@ -1143,11 +1716,11 @@ function packagePrerequisites(pkg, orders) {
     : current.length !== active.length ? "Unmet. A work order is tied to an older package scope."
     : bound ? "Met on record" : "Unmet. Resident scope confirmation needed.";
   return [
-    ["Scope recorded with a version", pkg.scope && pkg.scope_version ? `Met on record (scope v${pkg.scope_version})` : "Unmet", "Programme manager"],
-    ["Contract or call-off reference recorded", pkg.contract_ref ? `Met on record (${pkg.contract_ref} v${wording(pkg.contract_version)})` : "Unmet", "Contracts manager"],
-    ["Committed capacity evidenced for every contractor", evidenced ? "Met on record" : "Unmet or Unknown", "Contracts manager"],
-    ["Consultation status confirmed", pkg.consultation_status === "complete" || pkg.consultation_status === "not_applicable" ? "Met on record" : "Unmet. Status is Unknown or applies.", "Legal or procurement authority"],
-    ["Work order issued for the selected home with resident scope", binding, "Contracts manager"]
+    ["Scope recorded with a version", prerequisiteBadge(pkg.scope && pkg.scope_version ? `Met on record (scope v${pkg.scope_version})` : "Unmet"), "Programme manager"],
+    ["Contract or call-off reference recorded", prerequisiteBadge(pkg.contract_ref ? `Met on record (${pkg.contract_ref} v${wording(pkg.contract_version)})` : "Unmet"), "Contracts manager"],
+    ["Committed capacity evidenced for every contractor", prerequisiteBadge(evidenced ? "Met on record" : "Unmet or Unknown"), "Contracts manager"],
+    ["Leaseholder consultation status", prerequisiteBadge(`Blocked: letting or renewal held. Status: ${String(pkg.leaseholder_consultation_status || "unknown").replace("_", " ")}. ${pkg.letting_renewal_reason || "Unknown blocks letting or renewal until Legal verifies it."}`), "Legal or procurement authority"],
+    ["Work order issued for the selected home with resident scope", prerequisiteBadge(binding), "Contracts manager"]
   ];
 }
 registerRoleScreen({
@@ -1164,38 +1737,50 @@ registerRoleScreen({
     const packages = extra?.packages || [];
     const orders = extra?.orders || [];
     return h("div", {},
-      screenPanel("Evidence boundary",
+      procurementJumpNav([["package-boundary", "Evidence boundary"], ["package-capacity", "Offered capacity"],
+        ["package-tension", "Tension: utilisation versus choice"], ["package-queue", "Package queue"],
+        ["package-expiry", "Insurance and certification expiry"], ["package-orders", "Work orders"],
+        ["package-records", "Corrections and completion"], ...packages.map((p, i) => [packageDraftAnchor(p, i), `Draft readiness ${wording(p.id)}`]),
+        ["package-review", "Contractor submission and review"], ["package-withheld", "Not shown for this role"]]),
+      screenPanel("Evidence boundary", { anchor: "package-boundary" },
         h("p", {}, "Read-only reader view. It records no approval, issues no work order and books no visit. Readiness here is a draft only. Contract terms, capacity and delegations are Unknown unless a fixture or recorded evidence says so. Source: desk research, not observed behaviour."),
         h("p", {}, `Work orders shown are for home ${c.id} only.`)),
-      screenPanel("Offered capacity and resident choice",
+      screenPanel("Offered capacity and resident choice", { anchor: "package-capacity" },
         h("p", {}, "Offered capacity is not a booking and not a promise to any resident. A resident's measure-specific choice, pause or withdrawal is recorded and shown on the Resident choice screen, and it takes precedence over any offered slot. Packages are listed in reference order, never ranked by utilisation or headroom.")),
-      screenPanel("Package queue",
-        screenTable("Packages with period, scope, version and capacity",
+      screenTension("choice", "package-tension"),
+      screenPanel("Package queue", { anchor: "package-queue" },
+        screenRecordTable("Packages with period, scope, version and capacity",
           ["Package", "Period", "Scope and version", "Contract or call-off reference", "Contractor", "Offered", "Recorded committed", "In use", "Recorded headroom", "Capacity evidence status"],
           [...packages].sort((x, y) => String(x.id).localeCompare(String(y.id))).flatMap((p) => (p.capacity?.length ? p.capacity : [{}]).map((cap) => [
             `${wording(p.id)}: ${wording(p.name)}`, `${wording(p.period_from)} to ${wording(p.period_to)}`,
             `${wording(p.scope)} (v${wording(p.scope_version)})`, `${wording(p.contract_ref)} v${wording(p.contract_version)}`,
-            cap.contractor, cap.offered, cap.committed, cap.in_use, cap.headroom, wording(cap.evidence_status)])))),
-      screenPanel("Work orders for this home",
-        screenTable("Work-order references for the selected home",
+            cap.contractor, cap.offered, cap.committed, cap.in_use, packageCapacityBadge(cap), packageEvidenceBadge(cap.evidence_status)])))),
+      screenPanel("Contractor insurance and certification expiry", { anchor: "package-expiry" },
+        h("p", {}, "Expiry is shown from supplied dates only. It does not confirm that cover or certification is valid, and nothing is renewed or approved here."),
+        ...packages.flatMap((p) => (p.capacity || []).map((cap) => screenFields([
+          [`${wording(p.id)}: ${screenValue(cap.contractor)} insurance`, packageExpiryBadge(cap.insurance_expiry)],
+          [`${wording(p.id)}: ${screenValue(cap.contractor)} certification`, packageExpiryBadge(cap.certification_expiry)]]))),
+        !packages.some((p) => p.capacity?.length) ? h("p", { class: "empty" }, "No contractors supplied. This does not establish that cover is in date.") : null),
+      screenPanel("Work orders for this home", { anchor: "package-orders" },
+        screenRecordTable("Work-order references for the selected home",
           ["Work order", "Package", "Contractor", "State", "Scope"],
-          orders.map((o) => [reference(o), o.package, o.contractor, o.state, o.scope]))),
-      screenPanel("Corrections and completion on record",
-        screenTable("Work-order corrections, recorded completion and review for the selected home",
+          orders.map((o) => [reference(o), o.package, o.contractor, workOrderStateBadge(o.state), o.scope]))),
+      screenPanel("Corrections and completion on record", { anchor: "package-records" },
+        screenRecordTable("Work-order corrections, recorded completion and review for the selected home",
           ["Work order", "Corrections recorded", "Completion recorded", "Independent review and acceptance"],
           workOrderRecordRows(orders))),
-      ...packages.map((p) => screenPanel(`Draft readiness: ${wording(p.id)}`,
-        h("p", { role: "status" }, "Draft readiness only. This is not a release or approval."),
-        screenTable(`Unmet prerequisites for ${wording(p.id)}`, ["Prerequisite", "State", "Next reviewer (role)"],
+      ...packages.map((p, i) => screenPanel(`Draft readiness: ${wording(p.id)}`, { anchor: packageDraftAnchor(p, i) },
+        h("p", { class: "status-line wait", role: "status", "data-state-cue": "Draft readiness only" }, "State: Draft readiness only. This is not a release or approval."),
+        screenRecordTable(`Unmet prerequisites for ${wording(p.id)}`, ["Prerequisite", "State", "Next reviewer (role)"],
           packagePrerequisites(p, orders.filter((o) => o.package === p.id))),
-        screenFields([["Next reviewer", reviewerRole], ["Named reviewer", "Unassigned. Contracts manager to name a person."]]))),
-      screenPanel("Contractor submission and review",
-        screenFields([["Contractor submission", "Recorded outside this screen; not shown here"],
-          ["Acknowledgement", "A contractor acknowledgement is not acceptance"],
-          ["Independent review and acceptance", "Separate step by a named reviewer; not available from this screen"]])),
+        screenFields([["Next reviewer", reviewerRole], ["Named reviewer", procurementBadge("Action needed", "Action needed: Unassigned. Contracts manager to name a person.", true)]]))),
+      screenPanel("Contractor submission and review", { anchor: "package-review" },
+        screenFields([["Contractor submission", procurementBadge("Unknown", "Unknown: Recorded outside this screen; not shown here", true)],
+          ["Acknowledgement", procurementBadge("Pending review", "Pending review: A contractor acknowledgement is not acceptance", true)],
+          ["Independent review and acceptance", procurementBadge("Pending independent review", "Pending independent review: Separate step by a named reviewer; not available from this screen", true)]])),
       screenWithheld(["Resident contact details and access history (open the case workspace for the safe route reference)",
         "Household and vulnerability details beyond what a package queue needs", "Contract rates, prices and invoice values",
-        "Contractor submissions and acknowledgements, which are recorded outside this screen"]));
+        "Contractor submissions and acknowledgements, which are recorded outside this screen"], "package-withheld"));
   }
 });
 
@@ -1217,29 +1802,36 @@ registerRoleScreen({
   render(c, extra) {
     const orders = extra?.orders || [];
     return h("div", {},
-      screenPanel("What this screen does",
+      procurementJumpNav([["jobpack-purpose", "What this screen does"], ["jobpack-orders", "Your job pack"],
+        ["jobpack-evidence", "Evidence checklist"], ["jobpack-review", "Submission and review"],
+        ["jobpack-withheld", "Not shown for this role"]]),
+      screenPanel("What this screen does", { anchor: "jobpack-purpose" },
         h("p", {}, "Read-only job pack view. Nothing is submitted, accepted or booked from here, and it is not a provider portal. To submit or correct evidence, send it to your named contact."),
         h("p", {}, "Source: desk research hypothesis, not observed behaviour.")),
-      screenPanel("Your job pack",
-        screenTable("Your work orders for this home", ["Work order and version", "State", "Works", "Scope"],
-          orders.map((o) => [reference(o), o.state, o.measures, o.scope])),
-        screenFields([["Notice before visit", c.needs_notice ? "Needs notice" : "No extra notice needed"],
+      screenPanel("Your job pack", { anchor: "jobpack-orders" },
+        screenRecordTable("Your work orders for this home", ["Work order and version", "State", "Works", "Scope"],
+          orders.map((o) => [reference(o), workOrderStateBadge(o.state), o.measures, o.scope])),
+        screenFields([["Notice before visit", c.needs_notice
+            ? procurementBadge("Visit notice required", "Visit notice required: Needs notice", true)
+            : procurementBadge("Standard visit", "Standard visit: No extra notice needed", false)],
           ["Named contact", c.named_contact]]),
         h("p", {}, "The reason for any notice is not shared with contractors.")),
-      screenPanel("Evidence checklist",
-        screenTable("Evidence checklist for this job pack", ["Evidence item", "State on record"],
+      screenPanel("Evidence checklist", { anchor: "jobpack-evidence" },
+        screenRecordTable("Evidence checklist for this job pack", ["Evidence item", "State on record"],
           jobPackChecklist.map((item) => [item, item === "Appointment outcome recorded" && orders.some((o) => (o.appointments || []).length)
-            ? "Recorded on a work order" : "Unknown. Not assessed on this screen."]))),
-      screenPanel("Submission and review are separate",
-        screenFields([["Your submission", "Not recorded on this screen"],
+            ? procurementBadge("Recorded", stateCue(evidenceCues, "Recorded", "Recorded on a work order"), false)
+            : procurementBadge("Unknown", stateCue(evidenceCues, "Unknown", "Not assessed on this screen"), true)]))),
+      screenPanel("Submission and review are separate", { anchor: "jobpack-review" },
+        screenFields([["Your submission", procurementBadge("Not recorded", "Not recorded on this screen", true)],
           ["Completion on the work order", orders.some((o) => o.state === "Completed")
-            ? "Marked Completed on the work order by staff. This is a record, not acceptance." : "Not marked Completed"],
-          ["Acknowledgement", "Not recorded. An acknowledgement is not acceptance."],
-          ["Independent review and acceptance", "Unknown. Review data is not available here. Done by someone other than you."],
+            ? procurementBadge("Completed on record, not accepted", "Completed on record, not accepted: Marked Completed on the work order by staff. This is a record, not acceptance.", false)
+            : procurementBadge("Not marked Completed", "Pending completion: Not marked Completed", true)],
+          ["Acknowledgement", procurementBadge("Not recorded, not acceptance", "Not recorded. An acknowledgement is not acceptance.", true)],
+          ["Independent review and acceptance", procurementBadge("Unknown: pending independent review", "Unknown. Review data is not available here. Done by someone other than you.", true)],
           ["Next reviewer", reviewerRole]])),
       screenWithheld(["Resident phone, email and postal contact history (use the named contact)",
         "Household details and any reason behind a notice or access need", "Contract rates, prices and invoice values",
-        "Other contractors' capacity and work orders"]));
+        "Other contractors' capacity and work orders"], "jobpack-withheld"));
   }
 });
 const financeRoles = ["Grants and Evidence Officer", ...screenManagers];
@@ -1314,33 +1906,35 @@ function financeExceptionPanel(inv) {
 function financeInvoicePanel(c) {
   const f = c.finance || {};
   const invoices = f.invoices || [];
-  if (!invoices.length) return screenPanel("Invoice line comparison",
-    h("p", { class: "empty" }, "No invoices recorded for this home. This does not establish that nothing is owed."));
-  return screenPanel("Invoice line comparison", ...invoices.map((inv) => h("div", {},
+  if (!invoices.length) return screenJumpTarget("finance-lines", screenPanel("Invoice line comparison",
+    h("p", { class: "empty" }, "No invoices recorded for this home. This does not establish that nothing is owed.")));
+  return screenJumpTarget("finance-lines", screenPanel("Invoice line comparison", ...invoices.map((inv) => h("div", {},
     h("h3", {}, `${inv.id}: ${screenValue(inv.kind)} ${screenValue(inv.ref)} from ${screenValue(inv.supplier)}`),
     screenFields([["Version and record", `${inv.id}, work order ${screenValue(inv.work_order)}, match status: ${screenValue(inv.status)}`],
-      ["Payment pause", inv.hold ? `Paused by ${screenValue(inv.hold.name)}: ${screenValue(inv.hold.reason)}` : "No pause recorded"],
+      ["Payment pause", inv.hold ? `State: Paused by ${screenValue(inv.hold.name)}: ${screenValue(inv.hold.reason)}` : "State: No pause recorded"],
       ["Finance decision", inv.disposition ? `${screenFinanceDecision(inv.disposition)}, recorded by ${screenValue(inv.disposition_by)}` : "No Finance decision recorded"],
       ["Payment status (a note of what Finance did elsewhere)", `${screenValue(inv.payment_status)}. This system never makes or releases a payment.`]]),
     screenTable(`Line comparison for ${inv.id}`,
       ["Invoice line", "Quantity and line total", "Commitment", "Scope", "Quantity check", "Budget", "Supplied milestone reference", "Exception or unknown"],
       financeLineRows(f, inv)),
-    financeExceptionPanel(inv))));
+    financeExceptionPanel(inv)))));
 }
 const financeQueueRows = (queue) => queue.map((q) => [q.case_id, q.invoice, `${screenValue(q.supplier)}, ref ${screenValue(q.ref)}`,
-  screenValue(q.status), financeChecked(q) ? `${q.exceptions ?? "Unknown"} exceptions` : "Unknown. Not checked yet", q.on_hold ? "Paused" : "Not paused", financeMoney(q.total)]);
+  stateCue(invoiceCues, q.status), financeChecked(q) ? `${q.exceptions ?? "Unknown"} exceptions` : "Unknown. Not checked yet", q.on_hold ? "State: Paused" : "State: Not paused", financeMoney(q.total)]);
+const financeInvoiceJumps = [["finance-queue", "invoices waiting for Finance"], ["finance-lines", "invoice line comparison"], ["finance-economics", "AI economics"]];
+const financeFundingJumps = [["grant-pack", "funding route and grant stages"], ["funding-summary", "funding state summary and readiness export"], ["finance-economics", "AI economics"]];
 const financeTcaComponents = ["Token and API usage", "Platform and hosting", "Software and licences", "People and process change", "Rework and review effort"];
 const financeValueDestinations = "new revenue won, revenue retained, spend removed, spend avoided or capital freed";
 function financeEconomicsPanel(report) {
   const missing = (what) => `Unknown. ${what}`;
-  return screenPanel("AI economics (ledger-wide, all homes)",
+  return screenJumpTarget("finance-economics", screenPanel("AI economics (ledger-wide, all homes)",
     h("p", {}, "Design only. Usage must be reconciled to billing before any cost is read. Total Cost of AI is the sum of its components, and any missing component keeps it Unknown. Booked-value status stays Unknown until Finance records a defensible value. No price, budget or target is set here (BRD OD-51 open). This is read-only and nothing here depends on AI: Finance decisions and invoice checks work the same when AI is unavailable."),
     screenFields([
       ["Usage reconciled to billing", missing("No billing source is recorded, so usage cannot be reconciled.")],
       ...financeTcaComponents.map((name) => [`Total Cost of AI component: ${name}`, missing("No priced source is recorded.")]),
       ["Total Cost of AI components", missing("Components are missing, so no total is shown.")],
       ["Booked-value status", missing(`No value is booked. A booked value needs one destination: ${financeValueDestinations}.`)]]),
-    assetCost(report));
+    assetCost(report)));
 }
 registerRoleScreen({
   id: "finance-invoices",
@@ -1358,10 +1952,11 @@ registerRoleScreen({
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only reader view for the approver and payment officer. It makes no payment, approval or decision and changes no record. Use the existing case workspace to act. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only, except the queue below.`)),
-      screenPanel("Invoices waiting for Finance (all homes your role can see)",
+      screenJumpNav("Finance invoice sections", financeInvoiceJumps),
+      screenJumpTarget("finance-queue", screenPanel("Invoices waiting for Finance (all homes your role can see)",
         queue ? screenTable("Invoices with exceptions, pauses or not yet checked",
           ["Home", "Invoice", "Supplier and reference", "Status", "Exceptions", "Pause", "Invoice total"], financeQueueRows(queue))
-          : h("p", { class: "empty" }, "Unknown. The queue could not be read for your role. Owner: your team manager. Next action: ask them to check your access.")),
+          : h("p", { class: "empty" }, "Unknown. The queue could not be read for your role. Owner: your team manager. Next action: ask them to check your access."))),
       financeInvoicePanel(c),
       financeEconomicsPanel(extra?.report));
   }
@@ -1498,6 +2093,21 @@ function fundingDraftPanel(draft, caseId, downloadEnabled) {
       ` Not submitted; eligibility Not assessed. The file is built when you ask for it and may be newer than input version ${screenValue(draft.input_version)} shown here. Check the version and hash inside the file. A read-only copy for reading, not a reviewed pack.`) : null,
     downloadEnabled && draft.draft_id ? fundingSavedCopyCheck(draft, caseId) : null);
 }
+const fundingEligibility = (g) => {
+  const e = g.eligibility;
+  if (!e?.outcome) return "Not assessed";
+  const verified = e.verified === true || String(e.status || "").toLowerCase() === "verified";
+  return verified ? `Verified: ${e.outcome}` : `${e.outcome} (recorded, not verified)`;
+};
+function fundingStateRows(grants, drafts, readable) {
+  const eligibility = grants.length ? grants.map((g) => `${screenValue(g.id)}: ${fundingEligibility(g)}`).join("; ") : "Unknown";
+  const ready = !readable ? "Unknown" : drafts.some((d) => d.reviewed_ready) ? "Ready as recorded by a reviewer" : "Not ready";
+  return [
+    ["Grant eligibility", `State: ${eligibility}`, "A recorded check outcome only. This page never decides eligibility."],
+    ["Co-funding cap", "State: Unknown", "No co-funding cap is recorded here. A person checks the funder's cap by hand."],
+    ["Claim pack readiness", `State: ${ready}`, "A reviewer's record. A person still checks and submits outside this system."],
+    ["Cost variance", "State: Unknown", "No dated variance statement is recorded here. Finance owns the variance reading."]];
+}
 registerRoleScreen({
   id: "finance-funding",
   title: "Funding route and claim pack",
@@ -1523,9 +2133,10 @@ registerRoleScreen({
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only reader view for the capital and grant preparer. It is a reviewed export or readiness view only. No submission, award, eligibility decision or payment is made or inferred. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
-      screenPanel("Funding route",
-        screenFields([["Route", funding.route], ["Status", funding.status], ["Reference", funding.reference],
-          ["Eligibility", "Unknown. This page cannot confirm eligibility."]])),
+      screenJumpNav("Funding sections", financeFundingJumps),
+      screenJumpTarget("grant-pack", screenPanel("Funding route",
+        screenFields([["Route", funding.route], ["Status", `Status: ${screenValue(funding.status)}`], ["Reference", funding.reference],
+          ["Eligibility", "State: Unknown. This page cannot confirm eligibility."]]))),
       screenPanel("Grant stages",
         grants.length ? screenTable("Grant stages and approved evidence", ["Grant", "Scheme", "Stage now", "Waiting for approval", "Approved evidence"],
           grants.map((g) => [g.id, g.scheme, g.state,
@@ -1538,8 +2149,12 @@ registerRoleScreen({
       readable && screenPanel("Form schema catalogue",
         h("p", {}, "The catalogue covers all forms, not only this home. Each row is one recorded version of a form definition, with its reviewer, evidence, recorder and time. A version shows Unapproved when no approval is recorded."),
         h("p", {}, h("a", { class: "btn alt", href: "/api/form-schemas.csv", download: "form-schemas.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back. It is not an approval and not a reviewed pack.")),
+      screenJumpTarget("funding-summary", screenPanel("Funding state summary",
+        h("p", {}, "Each state is written as words with a State prefix, so it never relies on colour. Unknown means nothing is recorded or readable here; it is not a pass."),
+        screenRecordTable("Funding indicators and their state",
+          ["Indicator", "State", "What it means"], fundingStateRows(grants, drafts, readable), Infinity))),
       screenPanel("Readiness export",
-        screenFields([["Claim pack readiness", !readable ? "Unknown. The field review could not be read." : drafts && drafts.some((d) => d.reviewed_ready) ? "A reviewer recorded ready on at least one draft. A person must still check and submit it outside this system." : "Not ready. No reviewed export exists."],
+        screenFields([["Claim pack readiness", !readable ? "State: Unknown. The field review could not be read." : drafts && drafts.some((d) => d.reviewed_ready) ? "State: Ready as recorded by a reviewer. A reviewer recorded ready on at least one draft. A person must still check and submit it outside this system." : "State: Not ready. No reviewed export exists."],
           ["Open decision pauses", !pauses ? "Unknown. The field review could not be read." : pauses.length ? `${pauses.length} recorded` : "None recorded"],
           ["Submission, award and payment", "Not recorded here. This screen never infers them."]])),
       financeEconomicsPanel(extra?.report));
@@ -1552,20 +2167,42 @@ const serviceMeaning = {
   "Resolved": "The owner says it is dealt with. It is not closed until the outcome is recorded.",
   "Closed": "Closed with an outcome recorded for the resident."
 };
-const serviceStatus = (r) => `${screenValue(r.status)}. ${serviceMeaning[r.status] || "Meaning not recorded."}`;
-const serviceNeeds = (r) => Array.isArray(r.accessibility) && r.accessibility.length ? r.accessibility.join(", ") : "Unknown";
+const serviceStatus = (r) => `${stateCue(serviceCues, r.status)}. ${Object.hasOwn(serviceMeaning, r.status) ? serviceMeaning[r.status] : "Meaning not recorded."}`;
+const serviceNeeds = (r) => Array.isArray(r.accessibility) && r.accessibility.length ? `Confirmed: ${r.accessibility.join(", ")}` : "Waiting for resident: Unknown";
 const serviceOwner = (r) => `Service: ${screenPerson(r.service_identity || r.service_owner)}. Redress: ${screenPerson(r.redress_identity || r.redress_owner)}`;
 const serviceReview = (r) => r.route === "Independent review"
   ? `Independent review of ${screenValue(r.review_reference)}; ${screenValue(r.review_measure)} v${screenValue(r.review_decision_version)}`
   : "Not an independent review";
+function redressRoutePanel(route) {
+  if (!route) {
+    return screenPanel("Independent human review and formal complaints, without detriment", { anchor: "service-redress" },
+      screenUnknown("The independent review and complaints route is not available on this record.", "Resident-workflow manager", "Reload the home"));
+  }
+  return screenPanel("Independent human review and formal complaints, without detriment", { anchor: "service-redress" },
+    h("p", {}, "A resident, their representative or frontline staff on their behalf can ask for an independent human review or make a formal complaint at any time."),
+    h("ul", {}, (route.commitments || []).map((x) => h("li", {}, x))),
+    screenRecordTable("Routes to ask",
+      ["Route", "Who can ask", "How"],
+      (route.routes || []).map((x) => [x.route, x.who, x.how])),
+    screenRecordTable("Decisions open to independent review",
+      ["Measure", "Decision version", "Recorded answer"],
+      (route.reviewable_decisions || []).map((x) => [x.measure, `v${screenValue(x.version)}`, stateCue(choiceCues, x.status)])),
+    (route.reviewable_decisions || []).length ? null
+      : h("p", { class: "empty" }, "No recorded decision with a known recorder is open to independent review. This does not establish that none can be reviewed."),
+    (route.formal_requests || []).length ? screenRecordTable("Formal requests and whether they were sent",
+      ["Issue", "Route", "State", "Formal route status", "Next update", "Measure reviewed", "Decision version"],
+      route.formal_requests.map((x) => [x.id, x.route, stateCue(serviceCues, x.status), formalRouteCue(x.formal_route_status), screenStamp(x.next_update), screenValue(x.review_measure), x.review_decision_version == null ? "Not applicable" : `v${screenValue(x.review_decision_version)}`]))
+      : h("p", { class: "empty" }, "No formal request recorded. This does not establish that the resident has none."),
+    h("p", {}, route.send_note));
+}
 function serviceQueueRow([row, c]) {
-  if (!c) return [row.id, "Unavailable. Open the home to check.", "Unavailable", "Unavailable"];
+  if (!c) return [row.id, "Action needed: Unavailable. Open the home to check.", "Waiting for resident: Unavailable", "Action needed: Unavailable"];
   const open = (c.service_requests || []).filter((r) => r.status !== "Closed");
   const u = c.resident_update;
   return [row.id,
-    open.length ? open.map((r) => `${r.id} ${screenValue(r.route)}: ${screenValue(r.status)}, next update ${screenStamp(r.next_update)}`).join("; ") : "No open request recorded",
-    open.length ? [...new Set(open.map(serviceNeeds))].join("; ") : "None recorded",
-    u ? `${screenValue(u.status)}, owner ${screenPerson(u.owner_identity || u.owner)}, safe route ${screenValue(u.safe_contact_ref)}` : "No commitment recorded"];
+    open.length ? open.map((r) => stateCue(serviceCues, r.status, `${r.id} ${screenValue(r.route)}: ${screenValue(r.status)}, next update ${screenStamp(r.next_update)}`)).join("; ") : "Confirmed: No open request recorded",
+    open.length ? [...new Set(open.map(serviceNeeds))].join("; ") : "State: None recorded",
+    u ? `${stateCue(updateCues, u.status)}, owner ${screenPerson(u.owner_identity || u.owner)}, safe route ${safeRouteCue(u.safe_contact_ref)}` : "Action needed: No commitment recorded"];
 }
 registerRoleScreen({
   id: "resident-service-issues",
@@ -1580,7 +2217,7 @@ registerRoleScreen({
     return this.summary(entries);
   },
   summary(entries) {
-    return screenPanel("Open service issues across this page of homes",
+    return screenPanel("Open service issues across this page of homes", { anchor: "service-portfolio" },
       h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Contact needs are shown with each issue. Open a home for the full record."),
       screenRecordTable("Open service issues by home",
         ["Home", "Open issues and next update", "Contact needs", "Update commitment"],
@@ -1589,26 +2226,33 @@ registerRoleScreen({
   render(c) {
     const requests = c.service_requests || [];
     const update = c.resident_update;
+    const hasHistory = requests.some((r) => (r.history || []).length);
+    const sections = hasHistory
+      ? [...serviceSections.slice(0, 3), ["service-history", "Response history"], serviceSections[3]]
+      : serviceSections;
     return h("div", {},
-      screenPanel("Evidence boundary",
+      residentJumpNav(sections),
+      screenPanel("Evidence boundary", { anchor: "service-boundary" },
         h("p", {}, "Read-only view. No message, call or letter is sent and no record changes here. Resident-facing screens are designed separately. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
-      screenPanel("Service issues",
+      screenPanel("Service issues", { anchor: "service-issues" },
+        h("p", {}, "Every state is written as words first: Confirmed or Action needed. Colour is never the only signal."),
         h("p", {}, "Each issue shows the route, the named owners, the contact needs the resident gave and the next update date. A complaint or independent review has a different service owner and redress owner. A pause or withdrawal of a measure is shown on the resident choice screen, not here."),
         requests.length ? screenRecordTable("Service issues and contact needs",
           ["Issue", "Route", "Summary and outcome wanted", "State and meaning", "Owners", "Contact needs", "Representative reference", "Next update", "Review link"],
           requests.map((r) => [r.id, r.route, `${screenValue(r.summary)}. Wanted: ${screenValue(r.desired_outcome)}`, serviceStatus(r), serviceOwner(r),
             serviceNeeds(r), r.representative_ref, screenStamp(r.next_update), serviceReview(r)]))
-          : h("p", { class: "empty" }, "No service issue recorded. This does not establish that the resident has none.")),
-      requests.some((r) => (r.history || []).length) ? screenPanel("Response history",
+          : h("p", { class: "empty" }, "State: None recorded. No service issue recorded. This does not establish that the resident has none.")),
+      redressRoutePanel(c.redress_route),
+      hasHistory ? screenPanel("Response history", { anchor: "service-history" },
         screenRecordTable("Recorded response steps",
           ["Issue", "State", "Recorded by", "Recorded", "Note"],
-          requests.flatMap((r) => (r.history || []).map((x) => [r.id, x.status, x.by, screenStamp(x.at), x.note])))) : null,
-      screenPanel("Linked update commitment",
+          requests.flatMap((r) => (r.history || []).map((x) => [r.id, serviceStatus({ status: x.status }), x.by, screenStamp(x.at), x.note])))) : null,
+      screenPanel("Linked update commitment", { anchor: "service-update" },
         update ? screenFields([
-          ["Status", update.status], ["Purpose or linked issue", update.purpose],
+          ["Status", stateCue(updateCues, update.status)], ["Purpose or linked issue", update.purpose],
           ["Owner", screenPerson(update.owner_identity || update.owner)], ["Due", screenStamp(update.due_at)],
-          ["Safe route reference", update.safe_contact_ref],
+          ["Safe route reference", safeRouteCue(update.safe_contact_ref)],
           ["Meaning", "A commitment is not a message. Nothing is sent or marked received here."]])
           : screenUnknown("No update commitment is recorded for this home.", "Case owner or resident-workflow manager", "Record a commitment in the case workspace")));
   }

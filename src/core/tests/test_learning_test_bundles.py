@@ -32,6 +32,137 @@ class LearningTestBundles(unittest.TestCase):
         for bundle in ltb.BUNDLES.values():
             self.assertFalse(ltb.OUT_OF_SCOPE & set(bundle.atlas_ids))
 
+    def test_ac1_bundles_each_have_a_non_ai_comparator_and_zero_measure(self) -> None:
+        keys = (
+            "story-once",
+            "pre-visit-pack",
+            "change-impact",
+            "handover-aftercare",
+            "funding-evidence",
+        )
+        self.assertEqual(tuple(ltb.BUNDLES), keys)
+        for key in keys:
+            bundle = ltb.BUNDLES[key]
+            self.assertTrue(bundle.comparator)
+            self.assertNotRegex(bundle.comparator.lower(), r"\b(ai|agent|assistant|model)\b")
+            self.assertTrue(bundle.zero_measures)
+            report = ltb.compare_bundle(
+                key, [case("a", counts=dict.fromkeys(bundle.zero_measures, 0))]
+            )
+            self.assertEqual(report["comparator_description"], bundle.comparator)
+            self.assertFalse(report["stop"])
+
+    def test_protocol_metadata_matches_prd_and_learning_questions(self) -> None:
+        expected = {
+            "story-once": (
+                "Story once and promise ownership",
+                ("O01", "O02", "O03", "O15"),
+                ("FR-045", "FR-048", "AC-062", "AC-064", "GOAL-004"),
+                "Manual re-asking and chase log",
+                "Stop if representative or consent boundaries blur",
+            ),
+            "pre-visit-pack": (
+                "Pre-visit pack and readiness rehearsal",
+                ("O06", "O08", "O09"),
+                ("FR-048", "FR-049", "AC-062", "AC-063", "AC-065"),
+                "Current visit preparation",
+                "Stop if an offer reads as a commitment",
+            ),
+            "change-impact": (
+                "Change impact and evidence reuse",
+                ("O07", "O16"),
+                ("FR-008", "FR-043", "AC-011", "AC-013", "AC-051"),
+                "Manual dependency check",
+                "Stop if reuse transfers an approval",
+            ),
+            "handover-aftercare": (
+                "Accessible handover and aftercare",
+                ("O13", "O14"),
+                ("FR-049", "FR-014", "AC-063"),
+                "Paper handover",
+                "Stop if handover closes an open remedy",
+            ),
+            "funding-evidence": (
+                "Review-ready funding evidence",
+                ("O16", "O17"),
+                ("FR-019", "FR-042", "AC-050"),
+                "Manual evidence pack",
+                "Stop if a submission or award is inferred",
+            ),
+        }
+        for key, (title, atlas_ids, reqs, comparator, stop_rule) in expected.items():
+            bundle = ltb.BUNDLES[key]
+            self.assertEqual(bundle.title, title)
+            self.assertEqual(bundle.atlas_ids, atlas_ids)
+            self.assertEqual(bundle.linked_requirements, reqs)
+            self.assertEqual(bundle.comparator, comparator)
+            self.assertEqual(bundle.stop_rule, stop_rule)
+            self.assertTrue(bundle.learning_question.endswith("?"))
+            self.assertTrue(set(bundle.zero_measures).issubset(bundle.beyond_effort_measures))
+            report = ltb.compare_bundle(
+                key, [case("m", counts=dict.fromkeys(bundle.zero_measures, 0))]
+            )
+            self.assertEqual(report["bundle_title"], title)
+            self.assertEqual(report["atlas_ids"], atlas_ids)
+            self.assertEqual(report["linked_requirements"], reqs)
+            self.assertEqual(report["learning_question"], bundle.learning_question)
+            self.assertEqual(report["beyond_effort_measures"], bundle.beyond_effort_measures)
+            self.assertEqual(report["stop_rule"], stop_rule)
+        legacy = ltb.Bundle("custom", ("O01",), "Manual desk check", ("breach_count",))
+        self.assertEqual(legacy.title, "")
+        self.assertEqual(legacy.linked_requirements, ())
+
+    def test_shifting_staff_minutes_to_resident_effort_is_not_a_saving(self) -> None:
+        comparator_effort = {
+            "preparation": 8.0,
+            "checking": 4.0,
+            "correction": 2.0,
+            "coordination": 6.0,
+            "resident_effort": 2.0,
+            "support_cost": 2.0,
+        }
+        shifted_workflow = {
+            "preparation": 3.0,
+            "checking": 3.0,
+            "correction": 2.0,
+            "coordination": 2.0,
+            "resident_effort": 11.0,
+            "support_cost": 5.0,
+        }
+        zero = dict.fromkeys(ltb.BUNDLES["story-once"].zero_measures, 0)
+        out = ltb.compare_bundle(
+            "story-once",
+            [
+                {
+                    "case": "shift-1",
+                    "arms": {
+                        "comparator": {"effort": comparator_effort, "counts": zero},
+                        "workflow": {"effort": shifted_workflow, "counts": zero},
+                    },
+                }
+            ],
+        )
+        self.assertEqual(out["comparator"]["median_minutes"], 24.0)
+        self.assertEqual(out["workflow"]["median_minutes"], 26.0)
+        self.assertEqual(out["median_difference_minutes"], 2.0)
+        self.assertEqual(out["direction"], "comparator lower or equal")
+
+    def test_every_zero_measure_across_all_five_bundles_triggers_stop_rule(self) -> None:
+        seen_measures: set[str] = set()
+        for key, bundle in ltb.BUNDLES.items():
+            base_zero = dict.fromkeys(bundle.zero_measures, 0)
+            for measure in bundle.zero_measures:
+                seen_measures.add(measure)
+                for arm in ltb.ARMS:
+                    item = case("z1", counts=dict(base_zero))
+                    item["arms"][arm]["counts"] = {**base_zero, measure: 1}
+                    report = ltb.compare_bundle(key, [item])
+                    self.assertTrue(report["stop"], (key, arm, measure))
+                    self.assertEqual(report["breaches"], [f"z1/{arm}/{measure}"])
+                    rendered = ltb.render_report(report)
+                    self.assertLess(rendered.index("STOP:"), rendered.index("median"))
+        self.assertEqual(len(seen_measures), 6)
+
     def test_net_effort_sums_six_components(self) -> None:
         self.assertEqual(ltb.case_net_effort(EFFORT), 12.0)
 
@@ -134,6 +265,21 @@ class RunReports(unittest.TestCase):
             ltb.reconcile_o16([{"bundle": "pre-visit-pack", "o16_counted_under": "change-impact"}])
         with self.assertRaises(ValueError):
             ltb.reconcile_o16([{"bundle": "nope"}])
+
+    def test_five_bundle_campaign_reconciles_single_o16_owner(self) -> None:
+        campaign: list[dict[str, Any]] = []
+        reports: dict[str, dict[str, Any]] = {}
+        for key, bundle in ltb.BUNDLES.items():
+            extra = {"o16_counted_under": "change-impact"} if "O16" in bundle.atlas_ids else {}
+            item = run(key, dict.fromkeys(bundle.zero_measures, 0), **extra)
+            campaign.append(item)
+            reports[key] = ltb.run_report(item)
+        self.assertEqual(len(reports), 5)
+        self.assertEqual(ltb.reconcile_o16(campaign), "change-impact")
+        for key in ("change-impact", "funding-evidence"):
+            self.assertEqual(reports[key]["o16_counted_under"], "change-impact")
+        for key in ("story-once", "pre-visit-pack", "handover-aftercare"):
+            self.assertIsNone(reports[key]["o16_counted_under"])
 
     def test_render_states_stop_first_and_capacity(self) -> None:
         report = ltb.run_report(

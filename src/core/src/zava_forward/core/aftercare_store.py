@@ -20,6 +20,7 @@ import os
 from collections.abc import Callable
 from typing import Any, TypeVar
 
+from .aftercare import assert_templates_neutral, neutral_text
 from .aftercare_intake import ConflictError, PersistenceError
 from .store import ConflictError as StoreConflict
 
@@ -31,6 +32,13 @@ UNCONFIRMED = (
     "We could not confirm whether this was saved. Check the concerns list, then send it again "
     "with the same request reference. It will not be recorded twice."
 )
+STORE_CONFLICT_MESSAGE = (
+    "Another update was saved first, so nothing from this request was saved. "
+    "Check the concerns list, then send it again."
+)
+STORE_PERSISTENCE_MESSAGE = "The record could not be saved. Nothing was saved."
+
+assert_templates_neutral(UNCONFIRMED, STORE_CONFLICT_MESSAGE, STORE_PERSISTENCE_MESSAGE)
 
 
 class UnconfirmedWriteError(PersistenceError):
@@ -138,13 +146,10 @@ class DocumentStateStore:
             refresh = restore_error
         committed = persisted == attempted or bool(getattr(exc, "committed", False))
         if isinstance(exc, StoreConflict) and persisted != attempted:
-            return ConflictError(
-                "Another update was saved first, so nothing from this request was saved. "
-                "Check the concerns list, then send it again."
-            )
+            return ConflictError(neutral_text(STORE_CONFLICT_MESSAGE))
         if persisted == previous and not committed and refresh is None:
-            return PersistenceError("The record could not be saved. Nothing was saved.")
-        error = UnconfirmedWriteError(UNCONFIRMED)
+            return PersistenceError(neutral_text(STORE_PERSISTENCE_MESSAGE))
+        error = UnconfirmedWriteError(neutral_text(UNCONFIRMED))
         if refresh is not None:
             error.add_note(
                 f"Refresh failed ({type(refresh).__name__}); "

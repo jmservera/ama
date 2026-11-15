@@ -1,0 +1,72 @@
+{
+  "task_id": "229-c1-rebase",
+  "task_slug": "229-data-steward-wcag-c1-rebase",
+  "parent_task": {
+    "task_id": "229-rv-fixes",
+    "task_slug": "229-data-steward-wcag-rv-fixes"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/229-data-steward-wcag-c1-rebase-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/229-data-steward-wcag-c1-rebase-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/229-data-steward-wcag-c1-rebase-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/229-data-steward-wcag-c1-rebase-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/229-data-steward-wcag-c1-rebase-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/229-data-steward-wcag-c1-rebase-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute confirmed automatic full RPI loop (Research, Plan with rpi-plan-critique, Implement, Review) for Issue #229 / PR #1764 Cycle 1 rebase onto updated parent origin/feat/demo-233-same-home-tensions-0825 without pushing",
+      "status": "confirmed",
+      "evidence": "Explicit caller prompt in non-interactive session (2026-11-15)"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready; Selected approach: Option B (rebase feat/ux-229-data-steward-wcag onto origin/feat/demo-233-same-home-tensions-0825, preserve all #232/#230/#134 helpers, adopt #232 screenRecordTable row headers across all 8 #229 tables, restore docs/reference/log.md blank-line separation with #135 compatibility, and pin coexistence in test_data_steward_screen_wcag.py)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/229-data-steward-wcag-c1-rebase-research.md (C1-C12, W1)"
+    },
+    {
+      "decision": "Plan critique execution: Complete; Verdict: Revise; Direct planner dispositions applied for PC-001 (preserve Infinity row limit on all 4 unlimited #229 screenRecordTable calls across exceptionRegisterPanel and data-operator.summary) and PC-002 (fold post-Review review.md and state.json tracking artifacts into the frozen local Cycle 1 commit with zero post-Review production edits and zero remote push); Plan status finalized as Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/229-data-steward-wcag-c1-rebase-plan-critique.md; .copilot-tracking/plans/2026-11-15/229-data-steward-wcag-c1-rebase-plan.md"
+    },
+    {
+      "decision": "Implementation execution: Complete across full plan (P01-T01, P02-T01, P02-T02, P03-T01). Rebased onto origin/feat/demo-233-same-home-tensions-0825 at 7989f1394 (incorporating #134, #230, #232, and newly merged #135), adopted screenRecordTable across all 8 #229 tables, and passed 163 Focused + sibling unittest cases plus ruff check, ruff format --check, mypy (290 files), and node --check",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-15/229-data-steward-wcag-c1-rebase-changes.md"
+    },
+    {
+      "decision": "Review execution: Complete; Outcome: Conformant; Assessed boundary: FR-01 through FR-04, P01-T01 through P03-T01, PC-001 and PC-002, rebased diff origin/feat/demo-233-same-home-tensions-0825..HEAD (7989f1394..HEAD), and Focused validation tier; 0 defects found",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/229-data-steward-wcag-c1-rebase-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked post-Review follow-up work item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Execute Chromium Playwright checks (src/api/checks/data_operator_browser_check.py and src/api/checks/specialist_keyboard_browser_check.py) in a browser-tier validation run",
+      "rationale": "Highest ease-of-implementation and fast confidence leverage: runs existing browser scripts with zero production code churn to confirm live computed styles, axe checks, and scroll/focus behavior atop #232 + #135 + #229",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/229-data-steward-wcag-c1-rebase-review.md (## Plan Follow-Up Assessment)"
+    },
+    {
+      "rank": 2,
+      "task": "Re-verify docs/reference/log.md append order if remaining open sibling UX PRs (#1765, #1767) merge into feat/demo-233-same-home-tensions-0825 before PR #1764 merges",
+      "rationale": "Low-effort merge-queue hygiene (#1757 / #135 is already merged at 7989f1394 and preserved); keeps the append-only knowledge-base log clean across remaining sibling UX branches",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/229-data-steward-wcag-c1-rebase-review.md (## Plan Follow-Up Assessment)"
+    },
+    {
+      "rank": 3,
+      "task": "Complete human assistive-technology testing (#151) and participant walkthrough evaluation (#155) for the data steward and operator screen",
+      "rationale": "High user-impact governance gate required before asserting WCAG 2.2 AA conformance acceptance, but depends on external human participants and assistive-technology sessions",
+      "evidence": ".copilot-tracking/research/2026-11-15/229-data-steward-wcag-c1-rebase-research.md (C10, C12); docs/reference/research/ux/customer-journeys/data.md"
+    }
+  ]
+}

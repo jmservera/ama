@@ -7,16 +7,19 @@ fake test constant; nothing here touches SQL, Azure or a real credential.
 import base64
 import http.client
 import json
+import tempfile
 import threading
 import unittest
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from http.server import ThreadingHTTPServer
+from pathlib import Path
 from typing import Any
 
 from zava_forward.core import resident_showcase as rs
 
 from zava_forward.api.resident_demo import app as demo
+from zava_forward.api.resident_demo.agenda import Agenda
 
 FAKE_PASSWORD = "FAKE-TEST-FIXTURE-ONLY-not-a-real-demo-password"
 NOW = datetime(2026, 10, 25, 12, 0, tzinfo=UTC)
@@ -196,6 +199,7 @@ class SignInTests(DemoTestCase):
                 "banner",
                 "viewer",
                 "account",
+                "agenda_available",
                 "callbacks_available",
                 "read_only",
                 "home",
@@ -217,6 +221,7 @@ class SignInTests(DemoTestCase):
         self.assertEqual(len(view["timeline"]), 6)
         text = json.dumps(view)
         self.assertEqual(view["account"], {"email": "one@example.com"})
+        self.assertFalse(view["agenda_available"])
         self.assertFalse(view["callbacks_available"])
         for hidden in ("two@example.com", "case_id", "C-2", "provenance"):
             self.assertNotIn(hidden, text)
@@ -272,6 +277,44 @@ class SignInTests(DemoTestCase):
             )
         for client in (self.client(), one, two):
             self.assertNotIn("@example.com", json.dumps(client.call("GET", "/demo/session")[1]))
+
+    def test_session_and_view_surface_agenda_availability_and_agenda_endpoint_fails_closed(
+        self,
+    ) -> None:
+        anon = self.client()
+        status, session_body, _ = anon.call("GET", "/demo/session")
+        self.assertEqual(status, 200)
+        self.assertIs(session_body["agenda_available"], False)
+        self.assertIs(session_body["callbacks_available"], False)
+
+        signed = self.client()
+        self.assertEqual(signed.login("one@example.com"), 200)
+        signed_session = signed.call("GET", "/demo/session")[1]
+        self.assertIs(signed_session["agenda_available"], False)
+        self.assertIs(signed_session["callbacks_available"], False)
+        view_body = signed.call("GET", "/demo/view")[1]
+        self.assertIs(view_body["agenda_available"], False)
+        self.assertIs(view_body["callbacks_available"], False)
+        agenda_status, agenda_err, _ = signed.call(
+            "POST", "/demo/agenda", {"action": "list", "use_record": True}
+        )
+        self.assertEqual(agenda_status, 503)
+        self.assertIn("The local callback agenda is not connected.", agenda_err["error"])
+
+        with tempfile.TemporaryDirectory() as tmp:
+            self.app.agenda = Agenda.create(
+                Path(tmp) / "agenda.sqlite",
+                [(NOW + timedelta(hours=1), NOW + timedelta(hours=1, minutes=30))],
+            )
+            try:
+                connected_session = signed.call("GET", "/demo/session")[1]
+                connected_view = signed.call("GET", "/demo/view")[1]
+            finally:
+                self.app.agenda = None
+        self.assertIs(connected_session["agenda_available"], True)
+        self.assertIs(connected_session["callbacks_available"], True)
+        self.assertIs(connected_view["agenda_available"], True)
+        self.assertIs(connected_view["callbacks_available"], True)
 
     def test_account_identity_is_not_disclosed_after_authority_loss(self) -> None:
         c = self.client()
@@ -745,11 +788,73 @@ class AbuseAndHardeningTests(DemoTestCase):
             self.own_every_slot(owned)
             status, body, response = client.call("GET", "/demo/view")
             self.assertEqual(status, 503)
-            self.assertEqual(body["retry_after"], demo.RETRY_AFTER_SECONDS)
+            self.assertEqual(body["retry_after_seconds"], demo.RETRY_AFTER_SECONDS)
+            self.assertEqual(body["error"], demo.BUSY)
             self.assertEqual(response.getheader("Retry-After"), str(demo.RETRY_AFTER_SECONDS))
         finally:
             for _ in owned:
                 self.app.slots.release()
+
+    def test_retry_after_seconds_is_configurable_and_bounded(self) -> None:
+        self.assertEqual(demo.RETRY_AFTER_SECONDS, 3)
+        self.assertEqual(demo.clamp_retry_after(0), demo.MIN_RETRY_AFTER_SECONDS)
+        self.assertEqual(demo.clamp_retry_after(-4), demo.MIN_RETRY_AFTER_SECONDS)
+        self.assertEqual(demo.clamp_retry_after(5), 5)
+        self.assertEqual(demo.clamp_retry_after(99), demo.MAX_RETRY_AFTER_SECONDS)
+        for invalid in (True, False, "3", 2.5, None):
+            with self.assertRaises(ValueError):
+                demo.clamp_retry_after(invalid)
+        bad_arg: Any = True
+        with self.assertRaises(ValueError):
+            demo.ResidentDemo(
+                self.reader,
+                self.app.identity,
+                self.app.verifier,
+                self.codec,
+                self.limiter,
+                (HOST,),
+                NOW + timedelta(hours=6),
+                retry_after_seconds=bad_arg,
+            )
+        custom = demo.ResidentDemo(
+            self.reader,
+            self.app.identity,
+            self.app.verifier,
+            self.codec,
+            self.limiter,
+            (HOST,),
+            NOW + timedelta(hours=6),
+            "127.0.0.1",
+            0,
+            self.clock,
+            retry_after_seconds=99,
+        )
+        server = demo.serve(custom)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        self.addCleanup(server.server_close)
+        self.addCleanup(server.shutdown)
+        client = Client(custom.port)
+        self.assertEqual(client.login("one@example.com"), 200)
+        held = [custom.slots.acquire(timeout=SLOT_WAIT_SECONDS) for _ in range(demo.MAX_CONCURRENT)]
+        self.assertTrue(all(held))
+        try:
+            status, body, response = client.call("GET", "/demo/view")
+            self.assertEqual(status, 503)
+            self.assertEqual(body["retry_after_seconds"], 10)
+            self.assertEqual(response.getheader("Retry-After"), "10")
+            self.assertIn("Try again in a few seconds", body["error"])
+        finally:
+            for _ in held:
+                custom.slots.release()
+
+    def test_expired_503_omits_retry_after_header(self) -> None:
+        client = self.client()
+        self.assertEqual(client.login("one@example.com"), 200)
+        self.clock.now = (NOW + timedelta(hours=7)).timestamp()
+        status, body, response = client.call("GET", "/demo/view")
+        self.assertEqual(status, 503)
+        self.assertIsNone(response.getheader("Retry-After"))
+        self.assertNotIn("retry_after_seconds", body)
 
     def test_shed_view_owns_every_slot_despite_delayed_login_release(self) -> None:
         slots = DelayedReleaseSlots(demo.MAX_CONCURRENT)

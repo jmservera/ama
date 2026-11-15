@@ -1,0 +1,70 @@
+{
+  "task_id": "issue-155-usability-programme-1507",
+  "task_slug": "ux-155-usability-programme",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/ux-155-usability-programme-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/ux-155-usability-programme-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/ux-155-usability-programme-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/ux-155-usability-programme-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/ux-155-usability-programme-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/ux-155-usability-programme-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute confirmed automatic full RPI loop (Research, Plan, Plan-Critique, Implement, Review) for Issue #155 on feat/ux-155-usability-programme with focused validation tier and without pushing or opening a PR",
+      "status": "confirmed",
+      "evidence": "User prompt instruction (2026-11-15)"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready. Selected Option 1: create pure typed zava_forward.core.usability_programme + test_usability_programme.py wired directly to profile_journey_contract, perspective_walkthroughs, journey_register, and learning_test_bundles, and upgrade docs/reference/research/ux/usability-test-programme-plan.md in place with KB index/log updates",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/ux-155-usability-programme-research.md (C1-C14)"
+    },
+    {
+      "decision": "Plan critique executed once (.copilot-tracking/reviews/plans/2026-11-15/ux-155-usability-programme-plan-critique.md); verdict: Revise; direct dispositions applied for PC-001 through PC-005 (acyclic P01->P02->P03 with P01 .venv bootstrap and column-5 path::Class::method syntax; T8 + SIX_STAFF_PROFILES/PROXY_ONLY/OUT_OF_SCOPE + validate_same_home_walk/run_report/reconcile_o16; SA-010 ISO date/named_human/None sub-5 masking/H4 & cohort-scoped T0; four-class evidence_source + removal of 'no issue yet'; P03-T03 privacy-safe local commit coordination). Plan finalized Ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/ux-155-usability-programme-plan-critique.md; .copilot-tracking/plans/2026-11-15/ux-155-usability-programme-plan.md"
+    },
+    {
+      "decision": "Review execution: Complete; Outcome: Conformant; Assessed boundary: full plan P01-P03 for Issue #155 (usability_programme.py, test_usability_programme.py, usability-test-programme-plan.md, design-system.md, docs/reference/README.md, docs/reference/log.md, src/core/README.md, focused validation, and non-validation human-gate boundaries); zero material defects; one Low defensive hardening item RV-001 routed to follow-up alongside external human SA-010, DPO, and moderated session gates.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/ux-155-usability-programme-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked post-Review follow-up item (1-4), Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Harden usability_programme evaluator for multi-wave ingestion (RV-001: composite (target_id, cohort_id, evidence_source) outcome keying, None-vs-0 unobserved metric tri-state, and structured AuditUseAgreement + full-cohort coverage gate)",
+      "rationale": "Highest ease of implementation (pure in-repo Python + unit tests) and strong KISS/defensive engineering-quality leverage before ingesting live wave-1 session batches",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/ux-155-usability-programme-review.md (RV-001); src/core/src/zava_forward/core/usability_programme.py"
+    },
+    {
+      "rank": 2,
+      "task": "Obtain named staff representative agreement on the SA-010 non-surveillance audit-use statement and owner ratification of the usability test plan",
+      "rationale": "Smallest external governance action with immediate gate-clearing value before any live staff session measure may be recorded under SA-010",
+      "evidence": "docs/prds/zava-forward-retrofit-programme-demonstrator.md (SA-010); docs/reference/research/ux/usability-test-programme-plan.md"
+    },
+    {
+      "rank": 3,
+      "task": "Record DPO lawful-basis, optional-recording, and retention decision for voluntary usability study consent and notes",
+      "rationale": "Mandatory external data-protection gate before recruiting real or proxy human participants",
+      "evidence": "docs/reference/research/ux/usability-test-programme-plan.md; docs/brds/agentic-retrofit-programme-brd.md (NFR-008, NFR-009)"
+    },
+    {
+      "rank": 4,
+      "task": "Execute 2-3 proxy pilot followed by moderated 5-8 participant sessions per role including screen-reader, keyboard-only, and magnification users (#151 / #155)",
+      "rationale": "Highest end-user validation value once SA-010 and DPO gates clear, converting synthetic non-validation baselines into real human usability and assistive-technology evidence",
+      "evidence": "docs/reference/research/ux/usability-test-programme-plan.md; docs/prds/zava-forward-retrofit-programme-demonstrator.md (SA-009)"
+    }
+  ]
+}

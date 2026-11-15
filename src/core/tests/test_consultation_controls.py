@@ -370,6 +370,34 @@ class JsonConsultation(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "let or renew"):
             self.store.contract_event_gate(self.manager, self.pid, "award")
 
+    def test_leaseholder_status_defaults_unknown_and_blocks_each_status(self) -> None:
+        row = self.store.list_packages(self.manager)[0]
+        self.assertEqual(row["leaseholder_consultation_status"], "unknown")
+        self.assertTrue(row["letting_renewal_blocked"])
+        with self.store.lock:
+            package = self.store._package(self.pid)
+            package.pop("leaseholder_consultation_status")
+            package["consultation_history"] = [{"status": "bogus"}]
+            self.store.save()
+        self.assertEqual(
+            self.store.list_packages(self.manager)[0]["leaseholder_consultation_status"], "unknown"
+        )
+        self.store.data["procurement"]["packages"][0]["consultation_history"] = []
+        for version, status in enumerate(CONSULTATION_STATUSES):
+            self.store.record_consultation(self.manager, self.pid, self.payload(status, version))
+            row = self.store.list_packages(self.manager)[0]
+            self.assertEqual(row["leaseholder_consultation_status"], status)
+            self.assertTrue(row["letting_renewal_blocked"])
+            gate = self.store.contract_event_gate(self.manager, self.pid, "renew")
+            self.assertTrue(gate["blocked"])
+            self.assertEqual(gate["leaseholder_consultation_status"], status)
+        applies = self.store.list_packages(self.manager)[0]
+        self.store.record_consultation(self.manager, self.pid, self.payload("applies", 4))
+        reason = self.store.list_packages(self.manager)[0]["letting_renewal_reason"]
+        self.assertIn("applies", reason)
+        self.assertIn("not complete", reason)
+        self.assertNotEqual(applies["letting_renewal_reason"], reason)
+
     def test_letting_and_renewal_request_is_held_and_audited(self) -> None:
         self.store.record_consultation(self.manager, self.pid, self.payload("complete"))
         for event in ("let", "renew"):

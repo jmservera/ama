@@ -27,6 +27,20 @@ ACKNOWLEDGED = "Receipt acknowledged - not accepted"
 
 ESCALATION_KINDS = ("variation", "safety", "access", "scope question", "other")
 ESCALATION_OWNER_ROLES = MANAGER_ROLES + ("Building Safety Liaison",)
+NON_INSTRUCTION_NOTICE = (
+    "This is a concern for the named owner. It is not a contract instruction or variation. "
+    "The work order does not change until the contract manager issues a new version."
+)
+INSTRUCTION_CLAIMS = (
+    "acts_as_contract_instruction",
+    "contract_instruction",
+    "is_contract_instruction",
+    "binding",
+    "approved",
+    "instruct",
+    "issue_variation",
+    "new_version",
+)
 _PLACEHOLDER_WORDS = frozenset(
     "unknown unassigned unnamed tbc tbd tba todo na none nobody anyone someone team queue group "
     "desk mailbox inbox department dept pending placeholder owner vacant shared generic triage "
@@ -239,7 +253,11 @@ def named_owner(name: Any, role: Any) -> dict[str, str]:
 
 def assert_advisory(record: Mapping[str, Any]) -> None:
     """Refuse any variation or escalation record that could act as a contract instruction."""
-    if record.get("contract_instruction") is not False:
+    if (
+        record.get("contract_instruction") is not False
+        or record.get("is_contract_instruction", False) is not False
+        or record.get("acts_as_contract_instruction", False) is not False
+    ):
         raise ValueError("A variation or escalation is advice only, never a contract instruction.")
 
 
@@ -258,7 +276,22 @@ def escalation(
         owner=owner,
         status="Raised - awaiting owner",
         contract_instruction=False,
+        is_contract_instruction=False,
+        acts_as_contract_instruction=False,
         note=ADVISORY_NOTE,
+        contract_notice=NON_INSTRUCTION_NOTICE,
     )
     assert_advisory(out)
     return out
+
+
+def reject_instruction_claim(body: Mapping[str, Any]) -> None:
+    """Refuse a submission that tries to act as a binding variation or instruction."""
+    for key in INSTRUCTION_CLAIMS:
+        val = body.get(key)
+        if val is not None and val is not False and val != "":
+            raise ValueError(
+                "A variation or escalation cannot be a contract instruction. "
+                "Only a contract manager can issue a new work order version, "
+                "through separate procurement approval."
+            )

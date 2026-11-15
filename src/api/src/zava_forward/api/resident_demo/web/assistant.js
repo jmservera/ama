@@ -189,12 +189,13 @@
   window.mountResidentAssistant = function (content, api, sessionExpired, searchCallbacks) {
     var generation = 0;
     var signedIn = false;
+    var agendaAvailable = false;
     var busy = false;
     if (typeof window.ChatWidget?.create !== "function") {
       var unavailable = node("p", "Chat could not load. Reload this page to try again, or contact your housing officer using your usual contact details. The manual callback form is still available.");
       unavailable.setAttribute("role", "alert");
       content.appendChild(unavailable);
-      return { setSession: function () {} };
+      return { setSession: function () {}, setAgendaAvailable: function () {} };
     }
     var ui = window.ChatWidget.create({
       id: "resident-chat", title: "Help with your case",
@@ -205,7 +206,9 @@
     launcher.id = "chat-launcher";
     title.id = "assistant-title";
     panel.setAttribute("aria-labelledby", title.id);
-    var notice = node("p", "Advisory only. Chat cannot submit forms, give consent or make decisions. Callback booking needs your separate confirmation.");
+    var baseNotice = "Advisory only. Chat cannot submit forms, give consent or make decisions.";
+    var callbackNotice = " Callback booking needs your separate confirmation.";
+    var notice = node("p", baseNotice);
     notice.id = "assistant-notice";
     ui.intro.appendChild(notice);
     ui.intro.appendChild(node("p", "AI may help explain your case. Each answer says whether AI or rules were used. AI cannot decide eligibility or give legal, safety or financial advice. This chat does not send messages to staff."));
@@ -233,6 +236,18 @@
     callbacks.type = "button";
     callbacks.className = "secondary";
     ui.intro.appendChild(callbacks);
+    var callbacksOffNote = node("p", "");
+    callbacksOffNote.id = "assistant-callbacks-note";
+    ui.intro.appendChild(callbacksOffNote);
+    function applyAgendaState() {
+      callbacks.hidden = !agendaAvailable;
+      callbacksOffNote.hidden = agendaAvailable;
+      callbacksOffNote.textContent = agendaAvailable
+        ? ""
+        : "Synthetic callback booking is not connected in this showcase. Use the contact routes on this page.";
+      notice.textContent = baseNotice + (agendaAvailable ? callbackNotice : "");
+    }
+    applyAgendaState();
     ui.intro.appendChild(node("p", "A person can help instead. Phone your housing officer using your usual number, or write to or visit your local office."));
     ui.intro.appendChild(node("p", "For immediate danger, call 999. Report safety concerns directly to a person or emergency repairs service. Chat has not alerted anyone."));
 
@@ -282,7 +297,7 @@
             ].filter(Boolean).join(" ")
           });
           if (question.value === draft) question.value = "";
-          if (response.body.action === "appointments") {
+          if (response.body.action === "appointments" && agendaAvailable) {
             var search = node("button", "Find callback times in the manual form");
             search.type = "button";
             search.addEventListener("click", function () {
@@ -313,9 +328,15 @@
       ui.setStatus(consent.checked ? "" : "Record use stopped. Previous answers cleared.");
     });
     return {
-      setSession: function (value) {
+      setAgendaAvailable: function (value) {
+        agendaAvailable = Boolean(value);
+        applyAgendaState();
+      },
+      setSession: function (value, agendaValue) {
         generation += 1;
         signedIn = value;
+        if (typeof agendaValue === "boolean") agendaAvailable = agendaValue;
+        applyAgendaState();
         busy = false;
         form.hidden = !signedIn;
         anonymous.hidden = signedIn;

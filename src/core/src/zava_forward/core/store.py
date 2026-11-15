@@ -13,13 +13,13 @@ from copy import deepcopy
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, gates, identity, insights, ledger, projection, ranking, ranking_archive_blob, ranking_publication, stock, taskqueues
+from . import challenges, ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, gates, identity, insights, ledger, projection, ranking, ranking_archive_blob, ranking_publication, stock, taskqueues
 from .finance import FinanceMixin
 from .list_export import safe_cell
 from .continuity import ContinuityMixin
 from .governance import GovernanceMixin
 from .grants import GrantMixin, grant_summary
-from .resident_decisions import ResidentDecisionMixin, measure_decision_view, remember_first_contact, retention_schedule, resident_gate, resident_status
+from .resident_decisions import ResidentDecisionMixin, measure_decision_view, redress_route_view, remember_first_contact, retention_schedule, resident_gate, resident_status
 from .signoffs import SignoffMixin, missing_items, technical_gate
 from zava_forward.core.ai import Ai
 from .chatthreads import ChatMixin
@@ -173,7 +173,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             why.append(f"Funding has not been confirmed. Owner: {c['owner']}. Next action: check the funding and record it.")
         open_h = [h for h in c["hazards"] if not h["released"]]
         if open_h:
-            why.append(f"Home retrofit work is stopped for safety review. Owner: {open_h[0]['owner']} (referral follow-up). Next action: obtain external service evidence and an independent decision to restart retrofit work.")
+            why.append(f"Home retrofit work is stopped for safety review. Owner: {taskqueues.accountable_owner(open_h[0].get('owner'))} (referral follow-up). Next action: obtain external service evidence and an independent decision to restart retrofit work.")
         return why + resident_gate(c) + technical_gate(c)
 
     @staticmethod
@@ -196,7 +196,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             return "Completed"
         open_h = [h for h in c["hazards"] if not h["released"]]
         if open_h:
-            return f"Stopped until {open_h[0]['owner']} obtains evidence and an independent decision to restart retrofit work"
+            return f"Stopped until {taskqueues.accountable_owner(open_h[0].get('owner'))} obtains evidence and an independent decision to restart retrofit work"
         if c["stage"] == READY_STAGE and not Store.gate_reasons(c):
             return "Ready"
         return f"Waiting on {c['waiting_on']} {c['reason']}"
@@ -456,7 +456,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             return [("Contractor", c["contractor"]["name"]), ("Works", c["measures"]),
                     ("Next visit", nxt["date"] if nxt else "None booked")]
         if role == "Building Safety Liaison":
-            return [("Open safety issues", "; ".join(f"{h['category']} ({h['owner']})" for h in open_h) or "None"),
+            return [("Open safety issues", "; ".join(f"{taskqueues.safe_category(h['category'], reason_ok)} ({taskqueues.accountable_owner(h.get('owner'))})" for h in open_h) or "None"),
                     ("Works", c["measures"])]
         if role == "Grants and Evidence Officer":
             return [("Funding", f"{c['funding']['route']}, {c['funding']['status']}"),
@@ -483,16 +483,61 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             d["checklist"] = self.checklist(c)
             d["technical_missing"] = missing_items(c, usable_only=True)
             d["quality_handover_blockers"] = handover_blockers(c)
-            from .resident_decisions import INTAKE_FIELDS, followup_view, challenge_references_visible
-            followup_view(d)
-            if user is not None and challenge_references_visible(self, user):
-                from .resident_decisions import challenge_catalog
-                d["challenge_targets"] = challenge_catalog(self, case_id)
+            from . import nomination_route
+            from .resident_decisions import (
+                INTAKE_FIELDS,
+                _priority_includes_case,
+                challenge_catalog,
+                challenge_references_visible,
+                followup_view,
+                nomination_permissions,
+            )
+            visible = True if user is None else challenge_references_visible(self, user)
+            reason_ok = True if user is None else projection.can_see_reason(user)
+            case_recs = [
+                r for r in self.data.get("recommendations", ())
+                if r.get("kind") != "ai_task" and _priority_includes_case(r, case_id)
+            ]
+            followup_view(
+                d,
+                recommendations=case_recs,
+                can_view_intake=visible,
+                can_view_reason=reason_ok,
+            )
+            if visible and "affected_challenges" in d:
+                d["affected_challenges"] = nomination_route.scrub_nomination_restricted_fields(
+                    d["affected_challenges"]
+                )
+                for ch in d["affected_challenges"]:
+                    expl = nomination_route.filter_explanation_for_viewer(
+                        nomination_route.challenge_explanation(
+                            ch,
+                            can_view_intake=visible,
+                            can_view_reason=reason_ok,
+                        ),
+                        can_view_intake=visible,
+                        can_view_reason=reason_ok,
+                    )
+                    if expl is not None:
+                        ch["plain_language_explanation"] = expl
+            if user is not None and visible:
+                d["challenge_targets"] = challenge_catalog(
+                    self,
+                    case_id,
+                    can_view_intake=visible,
+                    can_view_reason=reason_ok,
+                )
+                d["challenge_guarantees"] = list(challenges.GUARANTEES)
+                d["challenge_assurance"] = challenges.assurance()
+                d["nomination_permissions"] = nomination_permissions(self, user, d)
             elif user is not None:
                 for field in INTAKE_FIELDS:
                     d.pop(field, None)
                 d.pop("affected_challenges", None)
                 d.pop("challenge_targets", None)
+                d.pop("challenge_guarantees", None)
+                d.pop("challenge_assurance", None)
+                d.pop("nomination_permissions", None)
             d.pop("form_staging", None)
             d.pop("form_reviews", None)
             d.pop("finance_decision_holds", None)
@@ -507,11 +552,12 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             d.setdefault("stock_reconciliation_events", [])
             for row in d["stock_reconciliation"]:
                 row["status"] = stock.query_status(c, row["id"])
-            d["hazards"] = [hazard_view(h, case_id) for h in c["hazards"]]
+            d["hazards"] = [hazard_view(h, case_id, self.as_of) for h in c["hazards"]]
             if user is None or not projection.is_contractor(user):
                 d["work"] = self.work_context(c, user)
             if c.get("handoff"):
                 d["handoff"] = handoff_view(c)
+            d["redress_route"] = redress_route_view(c)
             d["status"] = self.status_line(c)
             d["gate"] = self.gate_reasons(c) + buildings.blockers(self.data, self.cases, c)
             if d["status"] == "Ready" and d["gate"]:
@@ -625,7 +671,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     def require_safety_clear(self, c):
         active = next((h for h in c["hazards"] if not h["released"]), None)
         if active:
-            raise GateError([f"Home retrofit work is stopped for safety review. Owner: {active['owner']} (referral follow-up). Next action: obtain external evidence and an independent decision to restart retrofit work."], [gates.BOOKING_RULES["safety"]])
+            raise GateError([f"Home retrofit work is stopped for safety review. Owner: {taskqueues.accountable_owner(active.get('owner'))} (referral follow-up). Next action: obtain external evidence and an independent decision to restart retrofit work."], [gates.BOOKING_RULES["safety"]])
 
     def require_resident_clear(self, c, bindings=None):
         reasons = resident_gate(c, bindings)

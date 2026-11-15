@@ -619,15 +619,18 @@ def _is_paused(view: dict[str, Any]) -> bool:
     return bool(view.get("progress") == PAUSED_PROGRESS)
 
 
-def suggestions(question: str) -> list[str]:
+def suggestions(question: str, *, callbacks_available: bool = True) -> list[str]:
     """Up to three example questions closest to the words used; defaults to the common three."""
     tokens = words(question)
+    examples = tuple(
+        item for item in TOPIC_EXAMPLES if callbacks_available or item[0] != "appointments"
+    )
     ranked = sorted(
-        (item for item in TOPIC_EXAMPLES if tokens & item[2]),
+        (item for item in examples if tokens & item[2]),
         key=lambda item: -len(tokens & item[2]),
     )
     chosen = [item[1] for item in ranked[:3]]
-    for item in TOPIC_EXAMPLES[:3]:
+    for item in examples[:3]:
         if len(chosen) < 3 and item[1] not in chosen:
             chosen.append(item[1])
     return chosen
@@ -647,7 +650,13 @@ def with_pause_note(advice: Advice, topic: Topic | str, view: dict[str, Any]) ->
     return advice
 
 
-def answer(topic: str, view: dict[str, Any], question: str = "") -> Advice:
+def answer(
+    topic: str,
+    view: dict[str, Any],
+    question: str = "",
+    *,
+    callbacks_available: bool | None = None,
+) -> Advice:
     sources: tuple[str, ...]
     notice = ADVISORY_NOTICE
     if topic == "home":
@@ -706,9 +715,17 @@ def answer(topic: str, view: dict[str, Any], question: str = "") -> Advice:
     elif topic == "safety":
         answer, sources = SAFETY, ("Human emergency and repairs route, not a safety assessment",)
     elif question and not is_refusal(question):
+        agenda_ready = (
+            bool(view["agenda_available"])
+            if callbacks_available is None and "agenda_available" in view
+            else bool(True if callbacks_available is None else callbacks_available)
+        )
         answer = (
             "I cannot answer that. Closest topics: "
-            + ", ".join(f'"{example}"' for example in suggestions(question))
+            + ", ".join(
+                f'"{example}"'
+                for example in suggestions(question, callbacks_available=agenda_ready)
+            )
             + ". You can ask one of these in the box. "
             "Speak to your housing officer, or write to or visit your local office, for "
             "anything else. I cannot approve, decide, diagnose, give consent, book from chat "

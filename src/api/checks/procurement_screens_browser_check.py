@@ -136,7 +136,7 @@ SCREENS = (
                 rows=(
                     "PKG-001: SYN north wave | 2026-01-01 to 2099-12-31 | Loft insulation (v1) | "
                     "SYN-CALL-OFF vSYN-1 | Test Ltd | 9 | 1 | 1 | 0 | Unknown - not confirmed",
-                    "WO-0001 v1 | PKG-001 | Test Ltd | Issued | Loft insulation",
+                    "WO-0001 v1 | PKG-001 | Test Ltd | Open: Issued | Loft insulation",
                     "WO-0001 v1 | None recorded | Not recorded | Unknown. No independent review",
                 ),
                 status_regions=1,
@@ -188,11 +188,11 @@ SCREENS = (
                 keep,
                 (
                     "Issued",
-                    "Unknown. Not assessed on this screen.",
+                    "Unknown: Not assessed on this screen",
                     "Not marked Completed",
                     "Unknown. Review data is not available here. Done by someone other than you.",
                 ),
-                rows=("Appointment outcome recorded | Unknown. Not assessed on this screen.",),
+                rows=("Appointment outcome recorded | Unknown: Not assessed on this screen",),
                 absent=("Marked Completed on the work order",),
             ),
             State(
@@ -202,11 +202,11 @@ SCREENS = (
                     "Completed",
                     "Marked Completed on the work order by staff. This is a record, not acceptance.",
                 ),
-                rows=("Appointment outcome recorded | Recorded on a work order",),
+                rows=("Appointment outcome recorded | Recorded: Recorded on a work order",),
                 absent=("Not marked Completed",),
             ),
             State("Withdrawn", withdrawn, ("Withdrawn", "Not marked Completed")),
-            State("Empty", empty, (EMPTY, "Unknown. Not assessed on this screen."), empty_notes=1),
+            State("Empty", empty, (EMPTY, "Unknown: Not assessed on this screen"), empty_notes=1),
         ],
     ),
 )

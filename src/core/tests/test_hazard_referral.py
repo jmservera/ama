@@ -119,6 +119,10 @@ class JsonHazardReferral(unittest.TestCase):
         self.accept()
         self.store.record_repair(self.bea, "ZF-3", 0, "SYN-REPAIR")
 
+    def test_safeguarding_concern_can_be_recorded(self) -> None:
+        idx = self.store.raise_hazard(self.sam, "ZF-3", "Safeguarding", "Emergency", "", SOURCE)
+        self.assertEqual(self.store.detail("ZF-3")["hazards"][idx]["category"], "Safeguarding")
+
     def test_chat_memory_is_never_hazard_decision_evidence(self) -> None:
         refs = (
             "CM-18f1a2b3c4d5e6f71a2b",

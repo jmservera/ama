@@ -1,0 +1,74 @@
+{
+  "task_id": "issue-129-learning-test-bundles-0023",
+  "task_slug": "learning-test-bundles-129",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/learning-test-bundles-129-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/learning-test-bundles-129-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/learning-test-bundles-129-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/learning-test-bundles-129-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/learning-test-bundles-129-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/learning-test-bundles-129-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute confirmed automatic full RPI loop (Research, Plan, Plan-Critique, Implement, Review) for Issue #129 slice on feat/ux-129-learning-test-bundles-0023 without pushing",
+      "status": "confirmed",
+      "evidence": "User prompt instruction (2026-11-15)"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready. Selected Option 1: additive protocol metadata on Bundle/compare_bundle in src/core, complete 5-bundle unit tests in src/core/tests/test_learning_test_bundles.py, and add Node-VM + AftercareService role-screen scenario verification across all 5 bundles in src/api/tests/test_learning_test_bundle_scenarios.py while preserving the protocol screen/storage gate",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/learning-test-bundles-129-research.md (C1-C12)"
+    },
+    {
+      "decision": "Critique execution: Complete (single final-candidate pass executed)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/learning-test-bundles-129-plan-critique.md"
+    },
+    {
+      "decision": "Critique verdict: Pass (0 actionable PC-xxx findings; direct disposition recorded in plan)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/learning-test-bundles-129-plan-critique.md; .copilot-tracking/plans/2026-11-15/learning-test-bundles-129-plan.md"
+    },
+    {
+      "decision": "Review execution: Complete (single post-implementation rpi-review pass executed across full task P01-P03)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/learning-test-bundles-129-review.md"
+    },
+    {
+      "decision": "Review outcome: Conformant (assessed boundary FR-1..FR-3, NFR-1..NFR-2, AC-1..AC-7; 0 RV-xxx defects; external human governance gates routed as distinct follow-ups under Refs #129)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/learning-test-bundles-129-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked post-Review follow-up item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Record Atlas-owner confirmation of the five-bundle Opportunity mapping (including single-bundle or shared O16 rule) once human owner review completes",
+      "rationale": "Smallest bounded governance update once the named Opportunity Atlas owner signs off; unblocks #129 AC3 and simplifies O16 attribution rules with zero speculative runtime code",
+      "evidence": "docs/reference/research/ux/journey-learning-test-bundles.md; .copilot-tracking/reviews/logs/2026-11-15/learning-test-bundles-129-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Apply DPO representative-data retention decision to the learning-test bundle protocol and runtime gate once human DPO review completes",
+      "rationale": "Required data-protection gate before storing run records or wiring a bundle-runner screen; preserves clean separation between pure scorer logic and stateful storage",
+      "evidence": "docs/adrs/0003-journey-derived-capabilities-runtime-fit.md; docs/reference/research/ux/journey-learning-test-bundles.md"
+    },
+    {
+      "rank": 3,
+      "task": "Capture facilitator-run live two-arm bundle study findings (#129 / #155) and Finance capacity-benefit review once participant sessions conclude",
+      "rationale": "Highest end-to-end programme learning value once Atlas-owner and DPO gates clear; turns constructed protocol invariants into observed evidence without prematurely claiming cash savings",
+      "evidence": "docs/reference/research/ux/journey-learning-test-bundles.md; docs/prds/zava-forward-retrofit-programme-demonstrator.md"
+    }
+  ]
+}

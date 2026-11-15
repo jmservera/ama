@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Prototype Profile Review
 description: Company-role critique, dated owner usability feedback and proposed next-prototype acceptance checks
-ms.date: 2026-11-10
+ms.date: 2026-11-14
 ms.topic: reference
 ---
 
@@ -565,6 +565,50 @@ documentation trace is current-source evidence, not a code-correction grant or
 a fresh pool. No model, deployment or live run was made. Fluent 2, the WCAG
 baseline, the [content standard](./content-standard.md), resident consent and
 the manual paths are unchanged.
+
+### Registered screen to journey, task flow and design artefact map (2026-11-14, Refs #156)
+
+This dated, additive map is keyed by the screens that exist in source rather
+than by issue number, so each delivered screen can be found from one table. The
+screen ids are `registerRoleScreen` ids in
+`src/api/src/zava_forward/api/web/role-screens.js` plus the routes named in the
+[atlas screen trace](./atlas-screen-trace.md). The executable register above is
+unchanged (74 screen issues, 0 supplied designs, blocked). Journeys are
+hypotheses. The design column links the nearest existing written design record
+(a design note or a delivery-status section). Those are not versioned,
+reviewable screen designs under the gate rule, so every row stays "Not
+supplied" for the versioned design and carries its exact gap.
+
+| Screen (source id or route) | Journey (hypothesis) | Task flow | Design artefact (nearest written record) | Gap that remains |
+| --- | --- | --- | --- | --- |
+| `asset-board` | [Asset executive][bc-asset], [Board][bc-board] | [Asset flow][bc-eleven] T01 | [Asset and board delivery status](./customer-journeys/asset.md#asset-and-board-screen-delivery-status-2026-11-04-226) | Versioned design Not supplied; conflict and unknown-input states |
+| `programme-queue` and connected home view | [Programme planner][bc-programme], [connected journey][bc-connected] | [Profile flow][bc-profile] Programme coordinator; [lifecycle][bc-lifecycle] | [programme-queue-paging-v1](./customer-journeys/programme.md#programme-case-queue-and-paging-proposed-v1-state-and-recovery-design-2026-11-10-refs-156-230-149) (PROPOSED, partial to `programme-queue`, NOT APPROVED) | Versioned design Not supplied; empty-page versus empty-set state unresolved |
+| `technical-queue` | [Assessor][bc-assessor], [designer][bc-technical] | [Technical flow][bc-eleven] T04 | [Technical and quality delivery status](./customer-journeys/programme.md#technical-and-quality-screens-delivery-status-2026-11-04-231) | Versioned design Not supplied; separate sign-off wording |
+| `quality-queue` | [Independent QA][bc-quality] | [Quality flow][bc-eleven] T09 | [Technical and quality delivery status](./customer-journeys/programme.md#technical-and-quality-screens-delivery-status-2026-11-04-231) | Versioned design Not supplied; reinspection thresholds |
+| `resident-choice` | [Household][bc-household], [representative][bc-representative] | [Resident task designs J1 to J4](./customer-journeys/residents.md#resident-and-representative-task-designs-2026-10-27-154) | [Resident and representative task designs](./customer-journeys/residents.md#resident-and-representative-task-designs-2026-10-27-154) | Versioned design Not supplied; resident-facing wording unreviewed |
+| `resident-service-issues` | [Engagement][bc-engagement], [redress][bc-redress] | [Resident task design J6](./customer-journeys/residents.md#j6-challenge-complain-and-follow-a-remedy) | [Resident and representative task designs](./customer-journeys/residents.md#resident-and-representative-task-designs-2026-10-27-154) | Versioned design Not supplied; wording review |
+| `safety-lead` and `hazard-triage` | [Repairs and hazard response][bc-safety] | [Safety flow][bc-eleven] T06 | [Safety screens delivery status](./customer-journeys/safety.md#safety-screens-delivery-status-2026-11-04-227) | Versioned design Not supplied; referral timing expectations |
+| `procurement-packages` | [Procurement manager][bc-supplier] | [Procurement flow][bc-eleven] T07 | Procurement is covered by the [atlas screen trace](./atlas-screen-trace.md#perspectives-to-screens) only | Written design record and versioned design Not supplied |
+| `contractor-job-pack` | [Scheduler and supervisor][bc-scheduler] | [Profile flow][bc-profile] Provider / contractor T08 | Covered by the [atlas screen trace](./atlas-screen-trace.md#perspectives-to-screens) only | Written design record and versioned design Not supplied; provider portal not decided |
+| `finance-invoices` and `finance-funding` | [Payment officer][bc-payment], [grant preparer][bc-finance] | [Profile flow][bc-profile] Finance and Grants T10; [assisted forms][bc-forms] | [Finance screens delivery status](./customer-journeys/finance.md#finance-screens-delivery-status-2026-11-04-225) | Versioned design Not supplied; funding route and schema |
+| `data-operator` | [Data steward][bc-data], [operator][bc-operator] | NOT SUPPLIED for import, preview and recovery (see #78, #80 rows) | [Data screens delivery status](./customer-journeys/data.md#data-screens-delivery-status-2026-11-04-229) | Task flow and versioned design Not supplied |
+| Case workspace `#/case/<id>` | [Connected service journey][bc-connected] | Six-step stepper in the design note (partial) | [Employee case workspace redesign](./employee-case-workspace-redesign.md) | Versioned design Not supplied; no case-officer test |
+| Today's briefing | [Connected service journey][bc-connected] | Partial: guideline mapping only | [Briefing HAX design note](./briefing-hax-design-note.md) | Versioned design Not supplied; detailed flow |
+| Resident demo web app | [Rented household][bc-household] | Gap: no detailed flow; manual path is the contact route | [Resident demo redesign](./resident-demo-redesign-2026-11-04.md) | Versioned design Not supplied; resident wording and device evidence |
+| Employee and resident chat widgets | [Connected service journey][bc-connected], [household][bc-household] | Gap: no detailed flow; manual route kept | [Case workspace note](./employee-case-workspace-redesign.md) and [chat learning record](./resident-chat-learning-record.md) | Versioned design Not supplied; AI-unavailable manual path |
+| Administrator `#/simulator` | Operator, per the [IoT trace update](#demo-iot-to-ui-source-trace-update-2026-11-12-refs-156-184-187-189-134) | Gap: no detailed flow | Not supplied | Written design record and versioned design Not supplied |
+
+All sixteen rows (thirteen employee screens and routes plus three resident
+screens) link a journey and name a task flow or an explicit gap, and thirteen
+link the nearest written design record. Two rows (`procurement-packages`,
+`contractor-job-pack`) and the simulator have no design record beyond the
+atlas trace or none at all, and no row has a versioned reviewable design.
+Criterion 1 is therefore advanced, not proven: the links requested exist, but
+the designs they should point to are not supplied. No design review,
+accessibility, content or user acceptance is claimed. Fluent 2, the
+[WCAG baseline](./wcag-conformance-baseline.md), the
+[content standard](./content-standard.md), resident consent and the manual
+paths are unchanged.
 
 [bc-prd]: ../../../prds/zava-forward-retrofit-programme-demonstrator.md
 [bc-connected]: ./customer-journeys/customer-journey-atlas.md#one-connected-service-journey

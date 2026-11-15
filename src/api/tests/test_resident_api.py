@@ -1262,3 +1262,19 @@ class ResidentApi(unittest.TestCase):
             self.call("/api/cases/ZF-1", "kim")[1]["resident_readiness"],
             [dict(measure="Loft insulation", flag="Hold")],
         )
+
+    def test_http_nomination_dual_routes_and_plain_language_explanation(self) -> None:
+        intake = self.intake_payload(tenure=False)
+        intake["channel"] = "staff_recorded_non_digital"
+        intake["assisted_channel"] = "Phone"
+        code, detail = self.call("/api/cases/ZF-1/resident", "sam", intake)
+        self.assertEqual(code, 200, detail)
+        nom = detail["nomination_records"][0]
+        self.assertEqual(nom["original"]["route_mode"], "staff_recorded_non_digital")
+        self.assertEqual(nom["original"]["assisted_channel"], "Phone")
+        exp = nom["plain_language_explanation"]
+        self.assertIs(exp["permitted"], True)
+        self.assertIn("Sam", exp["human_decision_owner"])
+        self.assertTrue(exp["ai_involvement_explanation"])
+        self.assertTrue(exp["policy_reasons"])
+        self.assertTrue(exp["uncertainty_note"])

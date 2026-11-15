@@ -94,7 +94,8 @@ def shipped_helpers() -> str:
 def evaluate(expression: str) -> Any:
     source = (WEB / "case-workspace.js").read_text()
     result = subprocess.run(
-        ["node", "-e", source + f"\nconsole.log(JSON.stringify({expression}));"],
+        ["node", "-"],
+        input=source + f"\nconsole.log(JSON.stringify({expression}));",
         text=True,
         capture_output=True,
         check=True,
@@ -187,7 +188,7 @@ const fetch = async (path, options) => {
 })().catch(error => {console.error(error); process.exitCode = 1;});
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_queue_drafts_survive_old_failed_and_changed_revision_listings(self) -> None:
@@ -265,7 +266,7 @@ const api = async (path, body) => {
 })().catch(error => {console.error(error); process.exitCode = 1;});
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_api_preserves_outcome_before_http_status_classification(self) -> None:
@@ -333,7 +334,7 @@ const api = async (path, body) => {
 })().catch(error => {console.error(error); process.exitCode = 1;});
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_upload_preparation_and_guarded_dispatch_outcomes(self) -> None:
@@ -415,7 +416,7 @@ const refresh = """
 })().catch(error => {console.error(error); process.exitCode = 1;});
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_priority_invocation_and_procurement_preserve_history_barriers(self) -> None:
@@ -533,7 +534,13 @@ const api = async (path, body) => {
 })().catch(error => {console.error(error); process.exitCode = 1;});
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True, timeout=30)
+        result = subprocess.run(
+            ["node", "-"],
+            input=script,
+            text=True,
+            capture_output=True,
+            timeout=30,
+        )
         self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_priority_creation_after_a_real_committed_outcome_offers_no_repeat(self) -> None:
@@ -653,7 +660,13 @@ const texts = box => box.querySelectorAll("p").map(p => p.textContent);
 })().catch(error => {console.error(error); process.exitCode = 1;});
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True, timeout=30)
+        result = subprocess.run(
+            ["node", "-"],
+            input=script,
+            text=True,
+            capture_output=True,
+            timeout=30,
+        )
         self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_raw_resident_and_challenge_outcomes_exclude_repeat_posts(self) -> None:
@@ -788,7 +801,7 @@ const fetch = async () => {
 })().catch(error => {console.error(error); process.exitCode = 1;});
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_submission_reconciles_semantic_live_recovery_and_cached_values(self) -> None:
@@ -877,7 +890,7 @@ for (const representation of ["original", "live", "recovery", "cache-only", "bot
 console.log("PASS");
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("PASS", result.stdout)
 
@@ -966,7 +979,7 @@ const api = async (path, body) => {
 })().catch(error => {console.error(error); process.exitCode = 1;});
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("PASS", result.stdout)
 
@@ -1037,7 +1050,7 @@ const refresh = async fn => {
 })().catch(error => {console.error(error); process.exitCode = 1;});
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("PASS", result.stdout)
 
@@ -1090,7 +1103,7 @@ assert.notEqual(caseSession, oldSession);
 console.log("PASS");
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("PASS", result.stdout)
 
@@ -1166,7 +1179,8 @@ const tick = () => new Promise(resolve => setImmediate(resolve));
 """
         )
         result = subprocess.run(
-            ["node", "--unhandled-rejections=strict", "-e", script],
+            ["node", "--unhandled-rejections=strict", "-"],
+            input=script,
             text=True,
             capture_output=True,
             timeout=30,
@@ -1267,7 +1281,7 @@ const api = async (path, body) => {
 })().catch(error => {console.error(error); process.exitCode = 1;});
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("PASS", result.stdout)
         source = (WEB / "app.js").read_text()
@@ -1306,7 +1320,7 @@ for (const override of [{}, {stale: true}, {state: "queued"}, {state: "accepted"
 console.log("PASS");
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("PASS", result.stdout)
 
@@ -1356,7 +1370,7 @@ assert.equal(definitions[1].panel.hidden, true, "summary does not require the AI
 console.log("PASS");
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("PASS", result.stdout)
 
@@ -1492,7 +1506,7 @@ assert.equal(ui.tabs.getAttribute("role"), "tablist");
 console.log("PASS");
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("PASS", result.stdout)
 
@@ -1640,7 +1654,13 @@ const refresh = """
 })();
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True, check=True)
+        result = subprocess.run(
+            ["node", "-"],
+            input=script,
+            text=True,
+            capture_output=True,
+            check=True,
+        )
         self.assertEqual(
             json.loads(result.stdout),
             {
@@ -1679,7 +1699,13 @@ console.log(JSON.stringify([first.length, first[0].field === live,
   second.length, second[0].field === live]));
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True, check=True)
+        result = subprocess.run(
+            ["node", "-"],
+            input=script,
+            text=True,
+            capture_output=True,
+            check=True,
+        )
         self.assertEqual(json.loads(result.stdout), [1, True, 1, True])
 
     def test_shared_dirty_guard_reconciles_pending_and_unload(self) -> None:
@@ -1726,7 +1752,7 @@ assert.equal(hasUnsavedChanges(), false);
 console.log("PASS");
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("PASS", result.stdout)
 
@@ -1852,7 +1878,7 @@ const api = async (path, body) => {
 })().catch(error => {console.error(error); process.exitCode = 1;});
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("PASS", result.stdout)
 
@@ -1892,7 +1918,29 @@ for (const page of [2, 4]) {
 console.log("PASS");
 """
         )
-        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PASS", result.stdout)
+
+    def test_node_stdin_handles_scripts_above_linux_max_arg_strlen(self) -> None:
+        max_arg_strlen = 131_072
+        script = (
+            DOM
+            + shipped_helpers()
+            + "\n"
+            + (WEB / "ops.js").read_text()
+            + "\n"
+            + (WEB / "panels.js").read_text()
+            + "\n// "
+            + ("x" * 16_384)
+            + """
+assert.equal(typeof nominationPanel._routeForm, "function");
+assert.equal(typeof panelOwned, "function");
+console.log("PASS");
+"""
+        )
+        self.assertGreater(len(script.encode("utf-8")), max_arg_strlen)
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("PASS", result.stdout)
 

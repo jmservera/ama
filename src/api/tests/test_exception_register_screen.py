@@ -217,7 +217,11 @@ class ExceptionRegisterScreen(unittest.TestCase):
 
     def test_no_controls_and_entry_is_a_plain_link(self) -> None:
         for name in ("full", "empty", "denied", "entry"):
-            tags = [n["tag"] for n in walk(self.out[name]["out"])]
+            tags = [
+                n["tag"]
+                for n in walk(self.out[name]["out"])
+                if "data-jump-target" not in n.get("attrs", {})
+            ]
             for control in ("button", "form", "input", "select", "textarea"):
                 self.assertNotIn(control, tags, name)
         links = [n for n in walk(self.out["entry"]["out"]) if n["tag"] == "a"]
@@ -230,8 +234,14 @@ class ExceptionRegisterScreen(unittest.TestCase):
         self.assertEqual(len(tables), 2)
         for table in tables:
             self.assertEqual(table["kids"][0]["tag"], "caption")
-            for th in (n for n in walk(table) if n["tag"] == "th"):
+            thead = next(k for k in table["kids"] if k["tag"] == "thead")
+            for th in (n for n in walk(thead) if n["tag"] == "th"):
                 self.assertEqual(th["attrs"]["scope"], "col")
+            tbody = next(k for k in table["kids"] if k["tag"] == "tbody")
+            for row in (k for k in tbody["kids"] if k["tag"] == "tr"):
+                self.assertEqual(row["kids"][0]["tag"], "th")
+                self.assertEqual(row["kids"][0]["attrs"]["scope"], "row")
+                self.assertTrue(all(cell["tag"] == "td" for cell in row["kids"][1:]))
         for region in (n for n in nodes if (n.get("attrs") or {}).get("role") == "region"):
             self.assertEqual(region["attrs"]["tabindex"], 0)
 
@@ -304,7 +314,7 @@ async function scenario(name, data, opts = {}) {
     }
     return found;
   };
-  const buttons = find(out, "button");
+  const buttons = find(out, "button").filter(b => !(b.attrs && b.attrs["data-jump-target"]));
   const statusNode = find(out, "p").find(p => p.attrs && p.attrs.id === "exception-summary-status");
   const beforeCalls = calls.length;
   if (buttons.length && listeners.click) listeners.click();
