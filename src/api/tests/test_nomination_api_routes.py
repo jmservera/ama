@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import importlib.util
 import json
 import os
 import tempfile
@@ -55,11 +56,7 @@ class _AccessibleFormInspector(HTMLParser):
 
 
 def _playwright_available() -> bool:
-    try:
-        from playwright.sync_api import sync_playwright  # noqa: F401
-    except Exception:
-        return False
-    return True
+    return importlib.util.find_spec("playwright") is not None
 
 
 class NominationApiRoutesTests(unittest.TestCase):
@@ -508,6 +505,43 @@ class NominationApiRoutesTests(unittest.TestCase):
             self.assertIn("digital", opts, cid)
             self.assertIn("staff_recorded_non_digital", opts, cid)
 
+    def _launch_headless_chromium(self, pw: Any) -> Any:
+        from playwright.sync_api import Error as PlaywrightError
+
+        try:
+            return pw.chromium.launch(headless=True)
+        except PlaywrightError as error:
+            if "Executable doesn't exist" in str(error):
+                self.skipTest("Chromium is installed by the later browser-check step")
+            raise
+
+    @unittest.skipUnless(_playwright_available(), "playwright unavailable")
+    def test_keyboard_operability_skips_when_chromium_executable_missing(self) -> None:
+        from playwright.sync_api import Error as PlaywrightError
+
+        class _MissingBinaryChromium:
+            def launch(self, *, headless: bool) -> Any:
+                raise PlaywrightError(
+                    "BrowserType.launch: Executable doesn't exist at /tmp/ms-playwright/chromium"
+                )
+
+        class _BrokenChromium:
+            def launch(self, *, headless: bool) -> Any:
+                raise PlaywrightError("BrowserType.launch: sandbox crash")
+
+        class _FakePlaywright:
+            def __init__(self, chromium: Any) -> None:
+                self.chromium = chromium
+
+        with self.assertRaises(unittest.SkipTest) as skipped:
+            self._launch_headless_chromium(_FakePlaywright(_MissingBinaryChromium()))
+        self.assertIn(
+            "Chromium is installed by the later browser-check step", str(skipped.exception)
+        )
+
+        with self.assertRaises(PlaywrightError):
+            self._launch_headless_chromium(_FakePlaywright(_BrokenChromium()))
+
     @unittest.skipUnless(_playwright_available(), "playwright unavailable")
     def test_workbench_keyboard_operability_for_digital_and_non_digital_routes(self) -> None:
         from playwright.sync_api import sync_playwright
@@ -518,7 +552,7 @@ class NominationApiRoutesTests(unittest.TestCase):
         nom_id = self.call_json("/api/cases/ZF-1", "sam")[1]["nomination_records"][0]["id"]
 
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = self._launch_headless_chromium(pw)
             try:
                 context = browser.new_context(
                     viewport={"width": 1280, "height": 900}, reduced_motion="reduce"

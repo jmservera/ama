@@ -821,13 +821,14 @@ function affectedChallengePanel(c, id, refresh) {
           && !window.confirm("Record this supplied human correction? Only suggestions and reviews that use the challenged version will need a fresh review. No works choice or safety response changes."))
       : null,
   });
-  const perms = c.nomination_permissions && typeof c.nomination_permissions === "object"
-    ? c.nomination_permissions : null;
-  const repRefs = perms && Array.isArray(perms.representative_authorities)
-    ? perms.representative_authorities : [];
   const staff = (me.staff || []).filter((person) => [
     "Resident Liaison Officer", "Retrofit Coordinator", "Retrofit Programme Manager", "Programme Support Officer"
   ].includes(person.role));
+  const caseRecord = typeof c !== "undefined" && c ? c : null;
+  const perms = caseRecord && caseRecord.nomination_permissions && typeof caseRecord.nomination_permissions === "object"
+    ? caseRecord.nomination_permissions : null;
+  const repRefs = perms && Array.isArray(perms.representative_authorities)
+    ? perms.representative_authorities : [];
   return h("section", { id: "affected-challenges", class: "card" },
     h("h2", {}, "Challenge a suggestion or ask for a correction"),
     h("p", {}, "Record only what the person supplied, including digital, phone, letter or in-person requests. A person owns the response. Nothing is sent here. Ask the named officer for accessible human help without using this screen. Urgent hazard response continues separately."),
