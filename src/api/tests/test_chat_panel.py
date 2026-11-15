@@ -357,6 +357,29 @@ class PanelTests(roles.Matrix):
             ROLE, f"/api/chat/threads/{tid}/proposals", {"capability": "funding-evidence"}
         )
         self.assertIn(code, (400, 403), d)
+        with patch.object(Assistants, "invoke", return_value={"id": "P-SYN-1"}) as invoke_mock:
+            for invalid_env, expected_hint in (
+                ({"CHAT_PROVIDER_REGION": "eastus"}, "unapproved_region"),
+                ({"CHAT_DPIA_REF": ""}, "dpia_ref"),
+            ):
+                with patch.dict(os.environ, invalid_env):
+                    refused_code, refused_body = self.api(
+                        ROLE,
+                        f"/api/chat/threads/{tid}/proposals",
+                        {"capability": "assessment-preparation"},
+                    )
+                self.assertEqual(refused_code, 403, refused_body)
+                self.assertIn(expected_hint, refused_body["error"])
+            invoke_mock.assert_not_called()
+            self.assertEqual(self.api(ROLE, f"/api/chat/threads/{tid}")[1]["messages"], [])
+            accepted_code, accepted_body = self.api(
+                ROLE,
+                f"/api/chat/threads/{tid}/proposals",
+                {"capability": "assessment-preparation"},
+            )
+            self.assertEqual((accepted_code, accepted_body["id"]), (202, "P-SYN-1"))
+            self.assertEqual(invoke_mock.call_count, 1)
+            self.assertEqual(len(self.api(ROLE, f"/api/chat/threads/{tid}")[1]["messages"]), 1)
         bare = str(self.api(ROLE, "/api/chat/threads", {})[1]["id"])
         self.assertEqual(
             self.api(
@@ -524,6 +547,42 @@ class PanelTests(roles.Matrix):
         self.assertIs(self.api(ROLE, "/api/chat/status")[1]["storage_approved"], True)
         with patch.dict(os.environ, {k: "" for k in APPROVED}):
             self.assertIs(self.api(ROLE, "/api/chat/status")[1]["storage_approved"], False)
+
+    def test_status_exposes_provider_position_and_refuses_unapproved_region(self) -> None:
+        code, status = self.api(ROLE, "/api/chat/status")
+        self.assertEqual(code, 200)
+        pos = status["provider_position"]
+        self.assertTrue(pos["valid"])
+        self.assertEqual(pos["region"], "uksouth")
+        self.assertEqual(pos["residency_zone"], "uk_south")
+        self.assertTrue(pos["zero_model_training"])
+        self.assertFalse(pos["dpo_legal_approved"])
+        for ref_val in APPROVED.values():
+            self.assertNotIn(ref_val, json.dumps(pos))
+
+        with patch.dict(
+            os.environ,
+            {
+                "CHAT_PROVIDER_REGION": "PRIVATE-REGION-CANARY",
+                "CHAT_TRANSFER_REF": "PRIVATE-TRANSFER-CANARY",
+            },
+        ):
+            bad_code, bad_status = self.api(ROLE, "/api/chat/status")
+        self.assertEqual(bad_code, 200)
+        self.assertIs(bad_status["storage_approved"], False)
+        self.assertFalse(bad_status["provider_position"]["valid"])
+        self.assertEqual(bad_status["provider_position"]["region"], "unapproved")
+        dumped_bad = json.dumps(bad_status)
+        self.assertNotIn("PRIVATE-REGION-CANARY", dumped_bad)
+        self.assertNotIn("PRIVATE-TRANSFER-CANARY", dumped_bad)
+
+        with patch.dict(os.environ, {"CHAT_PROVIDER_TRAINING": "true"}):
+            train_status = self.api(ROLE, "/api/chat/status")[1]
+        self.assertIs(train_status["storage_approved"], False)
+        self.assertIn(
+            "provider_training_prohibited",
+            train_status["provider_position"]["violations"],
+        )
 
     def test_status_reports_role_limits_and_bounds(self) -> None:
         status = self.api(ROLE, "/api/chat/status")[1]
