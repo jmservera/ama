@@ -1,7 +1,9 @@
 """Synthetic test values only; they are not company figures or Board approvals."""
 
+import importlib
 import json
 import math
+import sys
 import tempfile
 import threading
 import unittest
@@ -10,8 +12,35 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
 
-from zava_forward.core import exposure_limits as limits
-from zava_forward.core.finance import FinanceMixin
+_CORE_SRC = Path(__file__).resolve().parents[1] / "src"
+
+
+def _ensure_local_exposure_limits() -> None:
+    if sys.path[:1] != [str(_CORE_SRC)]:
+        sys.path[:] = [str(_CORE_SRC), *(p for p in sys.path if p != str(_CORE_SRC))]
+        importlib.invalidate_caches()
+    for pkg_name, pkg_dir in (
+        ("zava_forward", str(_CORE_SRC / "zava_forward")),
+        ("zava_forward.core", str(_CORE_SRC / "zava_forward" / "core")),
+    ):
+        pkg = sys.modules.get(pkg_name)
+        if pkg is not None and hasattr(pkg, "__path__") and list(pkg.__path__)[:1] != [pkg_dir]:
+            pkg.__path__ = [pkg_dir, *(p for p in pkg.__path__ if p != pkg_dir)]
+    loaded = sys.modules.get("zava_forward.core.exposure_limits")
+    if loaded is not None:
+        loaded_file = loaded.__file__
+        if not (loaded_file and Path(loaded_file).resolve().is_relative_to(_CORE_SRC)):
+            sys.modules.pop("zava_forward.core.exposure_limits", None)
+            core_pkg: Any = sys.modules.get("zava_forward.core")
+            if core_pkg is not None and hasattr(core_pkg, "exposure_limits"):
+                del core_pkg.exposure_limits
+            importlib.invalidate_caches()
+
+
+_ensure_local_exposure_limits()
+
+from zava_forward.core import exposure_limits as limits  # noqa: E402
+from zava_forward.core.finance import FinanceMixin  # noqa: E402
 
 APPROVAL = dict(
     approver="Test approver",
@@ -29,14 +58,14 @@ class ExposureLimits(unittest.TestCase):
         return limits.record_limits(APPROVAL, ENVELOPE, TOLERANCES)
 
     def test_attribution_is_required_and_never_defaulted(self) -> None:
+        base_approval = {k: v for k, v in APPROVAL.items() if k not in ("approver", "approved_on")}
         for missing in ("approved_by", "approved_at"):
-            approval = {k: v for k, v in APPROVAL.items() if k not in ("approver", "approved_on")}
-            approval.update(approved_by="Test approver", approved_at="2026-01-01")
+            approval = dict(base_approval, approved_by="Test approver", approved_at="2026-01-01")
             del approval[missing]
             with self.assertRaises(limits.LimitsError):
                 limits.record_limits(approval, ENVELOPE, TOLERANCES)
         record = limits.record_limits(
-            dict(APPROVAL, approved_by="Named person", approved_at="2026-01-01T10:00:00Z"),
+            dict(base_approval, approved_by="Named person", approved_at="2026-01-01T10:00:00Z"),
             ENVELOPE,
             TOLERANCES,
         )
@@ -123,6 +152,75 @@ class ExposureLimits(unittest.TestCase):
         self.assertEqual(limits.assess(self.record(), exposure)["status"], "Breach")
         exposure = dict(committed=1, currency="GBP", tolerances=dict(capital=10**400, safety=0))
         self.assertEqual(limits.assess(self.record(), exposure)["status"], "Breach")
+
+    def test_conflicting_aliases_compact_iso_unknown_keys_and_overflow_are_refused(self) -> None:
+        base_approval = {k: v for k, v in APPROVAL.items() if k not in ("approver", "approved_on")}
+        for bad_approval in (
+            dict(APPROVAL, approved_by="Different person"),
+            dict(APPROVAL, approved_at="2026-01-01T10:00:00Z"),
+            dict(base_approval, approved_by="Person", approved_at="2026-W01-1"),
+            dict(base_approval, approved_by="Person", approved_at="20260101T100000"),
+            dict(base_approval, approved_by="Person", approved_at="2026-01-01 10:00:00"),
+            dict(base_approval, approved_by="Person", approved_at="2026-01-01T99:99:99"),
+            dict(APPROVAL, extra="x"),
+        ):
+            with self.assertRaises(limits.LimitsError):
+                limits.record_limits(bad_approval, ENVELOPE, TOLERANCES)
+        for bad_env in (
+            dict(ENVELOPE, extra=1),
+            dict(ENVELOPE, amount=10**400),
+            dict(ENVELOPE, annual_plan=-1),
+        ):
+            with self.assertRaises(limits.LimitsError):
+                limits.record_limits(APPROVAL, bad_env, TOLERANCES)
+        with self.assertRaises(limits.LimitsError):
+            limits.record_limits(APPROVAL, ENVELOPE, dict(capital=dict(maximum=10, unit="%", x=1)))
+
+    def test_liquidity_and_covenant_floors_assess_breach_unknown_and_within(self) -> None:
+        rec = limits.record_limits(
+            APPROVAL,
+            dict(ENVELOPE, annual_plan=90),
+            TOLERANCES,
+            liquidity=dict(minimum=30, currency="GBP", covenant_minimum=1.2, covenant_unit="x"),
+        )
+        within = limits.assess(
+            rec,
+            dict(
+                committed=80,
+                currency="GBP",
+                liquidity=30,
+                covenant=1.2,
+                covenant_unit="x",
+                tolerances=dict(capital=5, safety=0),
+            ),
+        )
+        self.assertEqual((within["status"], within["signal"]), ("Within limits", "No pause signal"))
+        both = limits.assess(
+            rec,
+            dict(
+                committed=110,
+                currency="GBP",
+                liquidity=dict(available=-10, currency="GBP"),
+                covenant=dict(headroom=1.1, unit="x"),
+                tolerances=dict(capital=5, safety=0),
+            ),
+        )
+        self.assertEqual(both["status"], "Breach")
+        self.assertEqual(
+            both["reason"],
+            "Over approved limit: envelope, annual_plan; "
+            "below approved minimum: liquidity, covenant.",
+        )
+
+    def test_forged_limits_and_negative_ceiling_observations_never_pass_assess(self) -> None:
+        forged = dict(self.record(), envelope=dict(ENVELOPE, amount=10**400))
+        self.assertEqual(limits.assess(forged, dict(committed=1, currency="GBP"))["status"], "Held")
+        neg = limits.assess(
+            self.record(), dict(committed=-1, currency="GBP", tolerances=dict(capital=1, safety=0))
+        )
+        self.assertEqual((neg["status"], neg["signal"]), ("Unknown", limits.UNAPPROVED))
+        non_dict = limits.assess(self.record(), "invalid")  # type: ignore[arg-type]
+        self.assertEqual((non_dict["status"], non_dict["signal"]), ("Unknown", limits.UNAPPROVED))
 
 
 class LiveSignal(unittest.TestCase):
