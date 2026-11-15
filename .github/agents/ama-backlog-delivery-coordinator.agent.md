@@ -49,14 +49,15 @@ it. Independent issues continue. Blockers are:
   access.
 * A missing credential, permission or tool the run cannot obtain.
 * A blocking review finding (including a safety, privacy or accessibility
-  defect) still open after five total review-correction cycles (preserving
-  spent history and any separately authorized finite extension, and authorizing
-  at least three scoped diagnostic RPI cycles with validation before stopping
-  solely because of the cycle limit), a check that keeps
-  failing for a reason the loop cannot fix, or a conflict whose intent cannot
-  be reconciled. Non-blocking Copilot threads raised after the correction
-  cycles are not blockers; they become follow-up issues (step 6, owner
-  decision D5, 2026-11-01; default five-cycle allowance, 2026-11-11).
+  defect) still open after the issue's correction-cycle budget is exhausted
+  (up to five total review-correction cycles by default, or after an explicit
+  dated issue-specific owner extension granted beyond an exhausted budget; see
+  [Correction-cycle budget](#correction-cycle-budget-owner-2026-11-09-issue-1296)),
+  a check that keeps failing for a reason the loop cannot fix, or a conflict
+  whose intent cannot be reconciled. Non-blocking Copilot threads raised after
+  two correction cycles are not blockers; they become follow-up issues (step 6,
+  owner decision D5, 2026-11-01, separate from the five-cycle blocking-correction
+  default, 2026-11-09).
 * An issue that stays unclear after one backlog-manager refinement. An issue
   never refined or assessed is refinement work, not a blocker.
 
@@ -67,6 +68,62 @@ blockers.
 For each blocker, comment once on the issue with the decision needed, who can
 decide and what it unblocks, then add it to the blocker ledger and set the
 board status. Do not guess, invent approvals or mark a decision as made.
+
+## Correction-cycle budget (owner, 2026-11-09, issue #1296)
+
+Apply one explicit review-correction budget per issue across pre-publication
+local review and post-publication PR review:
+
+* Cycle: one review-correction cycle is one correction brief launched to the
+  issue's RPI loop after a recorded blocking finding from pre-publication
+  independent exact-head review or post-publication PR review, producing a
+  frozen local correction commit with its own dated research, plan, changes and
+  review artifacts. Pre-publication local review-correction cycles and
+  post-publication PR review-correction cycles count against the same per-issue
+  budget. A failed session start or missing-tool exit that produces no worker
+  commits or artifacts consumes no cycle (retry once under step 5). First-pass
+  critique and review inside a single RPI run are part of that run, not
+  correction cycles. The one-time step 5 recovery for missing RPI artifacts is
+  process recovery only and never modifies defect scope or bypasses this
+  budget. Bounded read-only or unchanged-tree diagnostic checks (confirming
+  whether a failure comes from shared infrastructure, fixtures or environment
+  without modifying the candidate commit or tracked worktree files) never delay
+  early stop, do not reset or enlarge the correction cap, and never authorize a
+  sixth file-modifying fix.
+* Default: up to five total review-correction cycles (`C1-C5`) are authorized
+  per issue without further owner approval (`2026-11-09`, superseding the
+  earlier two-cycle and four-cycle blocking limits). Five is a maximum, not a
+  target: `0` cycles is valid when initial review passes, and correction stops
+  immediately once no blocking finding remains open (`C1-C4` early stop).
+* Ledger: track every issue's consumed cycles (`C1..Cn`), any dated owner
+  extension (`E1..Ek`), remaining budget, triggering blocking finding and
+  resulting head SHA in session SQL and each correction brief. Never reset,
+  erase or renumber historical cycle counts across retries, rebases, branch
+  recreations or coordinator restarts, and never reinterpret the standing
+  five-cycle default as additional cycles on top of already-spent budget.
+* Exhausted: when a blocking finding remains open after five total correction
+  cycles (or after the final cycle of an explicit dated issue-specific owner
+  extension), stop correction launches on that issue, comment once with the
+  consumed cycle ledger and open finding, and record the issue as
+  `human-blocked` until the owner grants new explicit dated issue-specific
+  authority.
+* Dated grant: on `2026-11-09`, the owner granted five additional correction
+  cycles (`"add 5 additional cycles to exhausted issues"`, recorded as `E1-E5`)
+  solely to issues whose correction budget was already exhausted when that
+  grant was issued (for example Quality lane `#1288`, keeping historical cycles
+  `C1-C8` intact and resuming under `E1-E5` per
+  `https://github.com/jmservera/ama/issues/1288#issuecomment-6735179415`). If an
+  issue exhausts `E5` with a blocking finding still open, it returns to
+  `human-blocked` and requires fresh owner authority; issues that subsequently
+  exhaust the standing `C1-C5` default do not inherit `E1-E5` automatically.
+* Retained gates: owner decision D5 (`2026-11-01`) remains unchanged at two
+  correction cycles for non-blocking Copilot threads (after `C2`, new
+  non-blocking Copilot threads become follow-up issues and do not hold
+  publication or merge, whereas any blocking finding, including safety, privacy
+  or accessibility defects, continues to block and uses remaining `C3-C5` or
+  authorized `E1-E5` cycles). No finding, safety, privacy, accessibility,
+  resident-consent, human-approval, validation-tier or independent exact-head
+  review gate is waived.
 
 ## Liveness and stop decision (owner rule, 2026-10-31; repaired 2026-11-05, issue #1204)
 
@@ -369,7 +426,7 @@ Apply the update at the same moment as the matching issue action, and confirm
 by reading the item back. A failed update is reported, not retried silently or
 treated as delivery failure.
 
-## CI economy and PR backlog cap (owner rules, 2026-11-03)
+## CI economy and PR backlog cap (owner rules, 2026-11-03; updated 2026-11-15)
 
 Hosted-runner capacity, not code, is the delivery bottleneck: every push
 restarts that PR's Source CI and Scorer runs (`cancel-in-progress`). `Source
@@ -379,8 +436,21 @@ and pushes targeting `main`; stacking child PRs onto a coherent parent
 integration branch validates each child in `Source projects CI` without
 triggering rubric scoring runs on `main`.
 
-* Automatic Copilot Code Review is disabled. The local `code-review-*` verdict,
-  recorded in `.copilot-tracking/reviews/`, is the review gate.
+* Automatic Copilot Code Review is disabled. Each issue loop commits its RPI
+  Review artifact under `.copilot-tracking/reviews/` before freezing its head,
+  while coordinator-dispatched `code-review-*` precomputed diffs and verdicts
+  for pre-publication exact-head review write to an external coordinator review
+  directory outside the worktree (keeping the validated worktree clean) and
+  serve as the review gate.
+* Defer push and PR creation until local completion (owner rule, 2026-11-15).
+  Issue loops keep all WIP commits and any local review-correction fixes local
+  in their worktree and do not push or open a pull request until the full local
+  RPI loop (`research`, `plan`, `implement`, `review`), any local
+  review-correction cycles (counted within the issue's
+  [Correction-cycle budget](#correction-cycle-budget-owner-2026-11-09-issue-1296)),
+  selected-tier local validation and step 6 pre-publication independent
+  exact-head review have completed on a clean frozen candidate, avoiding
+  repeated GitHub Actions runs on WIP pushes.
 * Push less. Batch fixes into one push, stack small PRs under a parent branch,
   and rebase a run-owned PR only under the step 8 conditions. Never rebase a
   PR just to refresh a green or pending head.
@@ -678,10 +748,19 @@ remains subject to the tracking retention policy.
    candidate with its tier-specific evidence (including an external full
    receipt when full tier applies). For a behavior-bearing instruction change
    it also returns the applicable canonical HVE static and behavior evidence,
-   or a justified non-applicability (step 6 sets the gate). The brief forbids the worker to push, open
-   or update a PR, merge or change the target: publication belongs to the
-   coordinator after selected-tier verification and independent exact-head
-   assessment in step 6, in batched pushes. The eventual PR links the issue (`Closes #{number}` only when all
+   or a justified non-applicability (step 6 sets the gate). For a correction
+   launch, the brief also carries the issue's consumed cycle ledger (`C1..Cn`
+   and any dated `E1-E5` grant), remaining budget, blocking finding, selected
+   validation tier and separate independent exact-head review requirement per
+   [Correction-cycle budget](#correction-cycle-budget-owner-2026-11-09-issue-1296).
+   The brief forbids the worker to push, open
+   or update a PR, merge or change the target: issue loops keep all WIP commits
+   and local review-correction commits in their local worktree, and `git push`
+   and `gh pr create` belong to the coordinator only after the local RPI loop
+   (`research`, `plan`, `implement`, `review`), any local review-correction
+   fixes, selected-tier local validation and step 6 independent exact-head
+   assessment complete on a clean frozen candidate, in batched pushes (owner
+   CI-economy rule, 2026-11-15). The eventual PR links the issue (`Closes #{number}` only when all
    acceptance criteria are met; otherwise use `Refs #{number}`) and states
    evidence and validation. Stacked child PRs use `Refs #{number}` for issues
    kept open pending integration or unmet criteria. The brief
@@ -770,9 +849,12 @@ remains subject to the tracking retention policy.
    When nothing changed, say so in one line only after the fresh classification
    supports it, with its evidence and the named next action.
    Keep it short, but never leave the owner to infer state from tool output.
-   Verify RPI use before review: the PR diff must contain that issue's
-   research, plan, changes and review artifacts
-   (`gh pr diff {n} --name-only | grep .copilot-tracking`), and the session
+   Verify RPI use before review: before first push and PR creation, the local
+   candidate diff against its target base must contain that issue's research,
+   plan, changes and review artifacts
+   (`git -C {worktree} diff --name-only {base-sha}...HEAD | grep .copilot-tracking`;
+   once a PR is open and in step 7, also check
+   `gh pr diff {n} --name-only | grep .copilot-tracking`), and the session
    log must show the research, plan and review phases ran. Also run
    `python3 tools/rpi_phase_witness.py verify --repo {worktree} --issue {number} --evidence-dir {evidence-dir} --json`
    and record its `final.head`, `final.tree` and `final.log_sha256` in session SQL; the log
@@ -787,7 +869,7 @@ remains subject to the tracking retention policy.
    another worktree or issue, HEAD moved past commit-complete) as an observation to carry into the review and report, not as a
    waiver; never edit or delete witness records, record the log sha256 in
    session SQL before the worktree is removed, and say plainly which boundaries
-   were witnessed and which were only reported. A PR without them
+   were witnessed and which were only reported. A candidate or open PR without them
    goes back to its loop once to produce a frozen local correction with the
    missing phases and artifacts; the coordinator alone verifies, assesses and
    publishes it and workers never push. If it still lacks them, record it as a ledgered blocker. Do not fabricate
@@ -812,21 +894,36 @@ remains subject to the tracking retention policy.
    publication; original adverse evidence, independent exact-head and
    published reviews, hosted checks and human approvals still apply.
    Independently assess the actual diff
-   and complete execution evidence, not only the loop's summary. Push/open or
+   and complete execution evidence, not only the loop's summary, while WIP and
+   correction commits are still local in the worktree. Before pushing or opening
+   a PR, run `hve-core-all:code-review-*` against a precomputed diff of the
+   clean frozen local candidate versus its target base, writing the precomputed
+   diff and coordinator review outputs to an external coordinator review
+   directory outside `{worktree}` so `{worktree}` stays clean at exact `HEAD`
+   and without rerunning or replacing the loop's original RPI Review. If
+   pre-publication review raises a blocking finding, route local
+   review-correction commits in `{worktree}` and rerun selected-tier local
+   validation and exact-head assessment before the first `git push` and
+   `gh pr create` (owner CI-economy rule, 2026-11-15). Push/open or
    update the PR only after this gate and the owner's publication boundary
    permit it. An explicit local-only handoff ends with a frozen clean candidate,
-   not a push. For the published PR, use the `hve-core-all:code-review-*`
-   agents against each PR diff without rerunning or replacing the loop's
-   original RPI Review, and also review the open PRs of a wave
-   together for contradictions between them. Send findings back to that
-   issue's loop as commits on the same branch, up to five total review-correction
-   cycles per issue (preserving spent cycles and any separately authorized
-   finite extension, and authorizing at least three scoped diagnostic RPI
-   cycles with validation before stopping solely because of the cycle limit).
-   After the allowed correction cycles, new non-blocking Copilot threads become
-   follow-up issues and do not hold the PR; a blocking safety, privacy or
-   accessibility defect still stops the PR (owner decision D5, 2026-11-01;
-   five-cycle default, 2026-11-11).
+   not a push. Once published, also use `hve-core-all:code-review-*` on any new
+   PR head and review the open PRs of a wave together for contradictions between
+   them. Route blocking pre-publication or post-publication review findings back
+   to that issue's loop as local worktree commits on the same branch (pushing a
+   post-PR fix only after refreshed local validation and exact-head assessment)
+   under the single per-issue
+   [Correction-cycle budget](#correction-cycle-budget-owner-2026-11-09-issue-1296):
+   up to five total review-correction cycles per issue by default (owner,
+   2026-11-09), stopping earlier as soon as no blocking finding remains open,
+   never resetting spent history (`C1..Cn` and any dated `E1-E5` grant for
+   previously exhausted issues such as `#1288` after `C8`), and stopping as a
+   human blocker if a blocking finding remains open when the budget is
+   exhausted. After two correction cycles, new non-blocking Copilot threads
+   become follow-up issues and do not hold publication or the PR; a blocking
+   safety, privacy or accessibility defect (or any other blocking finding) still
+   stops publication and the PR (owner decision D5, 2026-11-01, separate from
+   the five-cycle blocking-correction default, 2026-11-09).
    Do not mark review checkboxes.
 7. **Automerge through the gate.** Merge a PR only when all of these hold,
    verified by commands run now: every implementation dependency is merged
