@@ -30,6 +30,7 @@ from typing import Any
 
 from zava_forward.core import ai_registry, chat_isolation, chat_panel, export_fields
 from zava_forward.core.ai_registry import digest
+from zava_forward.core.chat_case_answers import RULES as WORKFLOW_RULES
 from zava_forward.core.chat_isolation import ChatIsolation
 from zava_forward.core.chat_panel import ChatPanel, ModelUnavailable
 from zava_forward.core.chat_privacy import MEMORY_CLASSES
@@ -84,6 +85,7 @@ REVOCATION_SCENARIOS = (
     "permission-role-and-staff-revoked-mid-thread",
     "permission-case-removed-mid-thread",
     "permission-reason-access-lost-mid-thread",
+    "permission-source-and-ai-consent-revoked-mid-thread",
     "grounding-source-changes-between-turns",
     "grounding-stale-answer-stays-in-history",
     "memory-poisoning-persists-across-permission-change",
@@ -242,6 +244,12 @@ class Run:
             self.store.staff.pop(USER["email"])
         elif kind == "remove_case":
             self.store.cases.pop(op.get("case", self.case_id))
+        elif kind == "revoke_source":
+            _set(self.store.cases[op.get("case", self.case_id)], op["path"], "")
+        elif kind == "set_ai_consent":
+            self.store.cases[op.get("case", self.case_id)].setdefault("resident", {})[
+                "ai_data_use_consent"
+            ] = op["state"]
         elif kind == "remember":
             self.remember(op, turn, fails)
         else:
@@ -334,7 +342,7 @@ def _comparison(run: Run, turn: dict[str, Any], reply: dict[str, Any] | None) ->
     refs = exp.get("cites") or (turn.get("script") or {}).get("citations", [])
     wanted = [run.model.expand(c) for c in refs]
     ctx = run.iso.case_context(run.staff(), run.case_id) if run.case_id in run.store.cases else None
-    card = chat_panel.permitted_sources(run.case_id, ctx) if ctx else {}
+    card = {**(chat_panel.permitted_sources(run.case_id, ctx) if ctx else {}), **WORKFLOW_RULES}
     return dict(
         ai_kind=reply["kind"] if reply else None,
         card_has_cited_facts=bool(wanted) and all(w in card for w in wanted),

@@ -904,7 +904,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(403, {"error": "Only a manager can see the AI evaluation report."})
                 from zava_forward.core import ai_registry
 
-                from zava_forward.agents import ai_eval
+                from zava_forward.agents import ai_eval, chat_eval
                 try:
                     q = parse_qs(url.query, keep_blank_values=True)
                     if set(q) - {"start", "end", "as_of"} or any(len(v) != 1 or not v[0] for v in q.values()):
@@ -925,8 +925,16 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                             consumption = app.assistants.consumption.report(start=start, end=end, as_of=as_of)
                         except ai_consumption.DispatchHeld as error:
                             consumption["reason"] = str(error)
-                    return self._json(200, {"evaluation": ai_eval.run_eval(), "live": s.ai_live_report(),
-                                            "registry": ai_registry.registry(), "consumption": consumption})
+                    return self._json(
+                        200,
+                        {
+                            "evaluation": ai_eval.run_eval(),
+                            "chat_evaluation": chat_eval.run_eval(),
+                            "live": s.ai_live_report(),
+                            "registry": ai_registry.registry(),
+                            "consumption": consumption,
+                        },
+                    )
                 except ValueError as error:
                     return self._json(400, {"error": str(error)})
             if url.path == "/api/ai/cohort-evaluation":
