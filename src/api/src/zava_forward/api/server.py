@@ -3,6 +3,7 @@ import base64
 import binascii
 import json
 import logging
+import math
 import os
 import secrets
 import sys
@@ -184,13 +185,24 @@ EXPORT_KINDS = {"/api/finance.csv": "finance_queue", "/api/asset/stock-queue.csv
                 "/api/handoffs/unaccepted.csv": "handoffs"}
 
 
-def _max_age_hours(url):
-    """Optional ageing limit shared by the unaccepted-handoff JSON and CSV routes; the first value wins, blank means none."""
-    raw = parse_qs(url.query, keep_blank_values=True).get("max_age_hours", [None])[0]
-    limit = float(raw) if raw not in (None, "") else None
-    if limit is not None and not 0 < limit < 1e6:
-        raise ValueError
+def _parse_max_age_hours(raw):
+    if raw in (None, ""):
+        return None
+    if isinstance(raw, bool):
+        raise ValueError("max_age_hours must be a positive number of hours.")
+    try:
+        limit = float(raw)
+    except (TypeError, ValueError):
+        raise ValueError("max_age_hours must be a positive number of hours.") from None
+    if not math.isfinite(limit) or not 0 < limit < 1e6:
+        raise ValueError("max_age_hours must be a positive number of hours.")
     return limit
+
+
+def _max_age_hours(url):
+    """Optional ageing limit shared by handoff JSON and CSV routes; the first value wins, blank means none."""
+    raw = parse_qs(url.query, keep_blank_values=True).get("max_age_hours", [None])[0]
+    return _parse_max_age_hours(raw)
 
 
 def concern_export_row(item):
@@ -307,7 +319,7 @@ def get_kind(path):
         return path[len("/api/"):]
     return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ranking/publication": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
-            "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/handoffs/unaccepted": "handoffs", "/api/packages": "packages",
+            "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/handoffs/unaccepted": "handoffs", "/api/handoffs/unowned": "handoffs", "/api/handoffs/escalated": "handoffs", "/api/packages": "packages",
             "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/ai/cohort-evaluation": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/resident/choice-queue": "resident_choice_queue", "/api/finance": "finance_queue", "/api/finance/exposure": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/exceptions": "exceptions", "/api/continuity/export": "continuity_export", "/api/retention": "retention", "/api/data-protection": "data_protection"}.get(path, "unknown")
 
 
@@ -824,6 +836,23 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 if url.path.endswith(".csv"):
                     return self._send(200, list_export.to_csv(rows), "text/csv; charset=utf-8",
                                       {"Content-Disposition": 'attachment; filename="unaccepted-handoffs.csv"'})
+                return self._json(200, rows)
+            if url.path in ("/api/handoffs/unowned", "/api/handoffs/escalated"):
+                try:
+                    limit = _max_age_hours(url)
+                except ValueError:
+                    return self._json(400, {"error": "max_age_hours must be a positive number of hours."})
+                as_of_param = parse_qs(url.query, keep_blank_values=True).get("as_of", [None])[0]
+                as_of_arg = as_of_param if as_of_param not in (None, "") else None
+                try:
+                    if url.path == "/api/handoffs/unowned":
+                        rows = s.unowned_handoffs(u, as_of=as_of_arg, max_age_hours=limit)
+                    else:
+                        rows = s.escalated_handoffs(u, as_of=as_of_arg, max_age_hours=limit)
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
                 return self._json(200, rows)
             if url.path in ("/api/packages", "/api/workorders"):
                 try:
@@ -1452,6 +1481,23 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, s.bulk_edit_preview(u, body))
                 if url.path == "/api/bulk-edits/apply":
                     return self._json(200, s.bulk_edit_apply(u, body))
+                if url.path == "/api/handoffs/escalate-overdue":
+                    if u["role"] not in MANAGER_ROLES:
+                        raise PermissionError("Only a programme manager can escalate overdue handoffs.")
+                    limit = _parse_max_age_hours(body.get("max_age_hours"))
+                    as_of_raw = body.get("as_of")
+                    if as_of_raw is not None and not isinstance(as_of_raw, str):
+                        raise ValueError("Ageing needs an as-of time with a timezone.")
+                    from zava_forward.core.sqlstore import CommittedReloadError
+                    try:
+                        return self._json(200, s.escalate_overdue_handoffs(
+                            u,
+                            as_of=as_of_raw or None,
+                            max_age_hours=limit,
+                            reason=body.get("reason"),
+                        ))
+                    except CommittedReloadError as error:
+                        return self._json(409, {"error": str(error), "outcome": "committed"})
                 if len(parts) == 4 and parts[:2] == ["api", "assistants"] and parts[3] == "invoke":
                     return self._json(202, app.assistants.invoke(u, parts[2], body.get("case_id")))
                 if url.path in ("/api/assistants/simulation/quality/observe", "/api/assistants/simulation/quality/request"):

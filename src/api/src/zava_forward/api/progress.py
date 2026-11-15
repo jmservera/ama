@@ -303,8 +303,16 @@ def dashboard(store: Any, user: dict[str, Any], query: dict[str, list[str]]) -> 
         steps = Counter(STEP.get(case.get("stage"), "Unknown") for case in current)
         teams = Counter(case.get("owner_role") or "Unknown" for case in current)
         stalled = sum(case.get("days_in_stage", 0) >= insights.LONG_WAIT for case in current)
+        policy = store.data.get("handoff_policy")
+        staff_rows = store.data.get("staff")
         overdue = sum(
-            bool(taskqueues.overdue_tasks(case, as_of=store.as_of, handoff=handoff_view(case)))
+            bool(
+                taskqueues.overdue_tasks(
+                    case,
+                    as_of=store.as_of,
+                    handoff=handoff_view(case, as_of=store.as_of, policy=policy, staff=staff_rows),
+                )
+            )
             for case in current
         )
         durations.sort()

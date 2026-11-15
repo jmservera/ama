@@ -6,11 +6,13 @@ person: the system records, enforces who may do what, and refuses steps that
 skip a state.
 """
 from copy import deepcopy
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, time, timedelta
+import math
 
 from . import change_provenance, controls, gates, hazard, identity, insights, projection
 
 MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
+DEFAULT_ESCALATION_ROLE = "Retrofit Programme Manager"
 HAZARD_PRIORITIES = ("Emergency", "Significant", "Routine")
 HAZARD_CATEGORIES = ("Damp and mould", "Structural", "Electrical", "Other")
 SAFETY_ROLES = ("Building Safety Liaison",) + MANAGER_ROLES
@@ -28,6 +30,142 @@ def _now(timespec="minutes"):
     return datetime.now(UTC).isoformat(timespec=timespec)
 
 
+def _valid_hours(value):
+    if value is None or value == "" or isinstance(value, bool):
+        return None
+    try:
+        hours = float(value)
+    except (TypeError, ValueError):
+        return None
+    if not math.isfinite(hours) or not 0 < hours < 1e6:
+        return None
+    return hours
+
+
+def _validate_max_age_hours(max_age_hours):
+    if max_age_hours is None:
+        return None
+    hours = _valid_hours(max_age_hours)
+    if hours is None:
+        raise ValueError("max_age_hours must be a positive number of hours.")
+    return hours
+
+
+def approved_handoff_policy(policy):
+    """Return a validated approved BG-010 handoff SLA policy dict, or None when unapproved/unset."""
+    if not isinstance(policy, dict) or policy.get("status") != "Approved":
+        return None
+    owner = policy.get("owner")
+    if not isinstance(owner, str) or not owner.strip() or owner.strip() in ("Unknown", "to be named"):
+        return None
+    acceptance_hours = _valid_hours(policy.get("acceptance_hours"))
+    if acceptance_hours is None:
+        return None
+    urgent_raw = policy.get("urgent_acceptance_hours")
+    urgent_hours = None
+    if urgent_raw is not None:
+        urgent_hours = _valid_hours(urgent_raw)
+        if urgent_hours is None:
+            return None
+    role_raw = policy.get("escalation_role")
+    escalation_role = (
+        role_raw.strip()
+        if isinstance(role_raw, str) and role_raw.strip() in MANAGER_ROLES
+        else DEFAULT_ESCALATION_ROLE
+    )
+    esc_owner = policy.get("escalation_owner")
+    esc_code = policy.get("escalation_owner_code")
+    esc_to = policy.get("escalation_to")
+    policy_id = str(policy.get("policy_id") or policy.get("version") or "BG-010").strip() or "BG-010"
+    return dict(
+        status="Approved",
+        owner=owner.strip(),
+        policy_id=policy_id,
+        acceptance_hours=acceptance_hours,
+        urgent_acceptance_hours=urgent_hours,
+        escalation_role=escalation_role,
+        escalation_owner=esc_owner.strip() if isinstance(esc_owner, str) and esc_owner.strip() else None,
+        escalation_owner_code=esc_code.strip() if isinstance(esc_code, str) and esc_code.strip() else None,
+        escalation_to=esc_to.strip().lower() if isinstance(esc_to, str) and esc_to.strip() else None,
+    )
+
+
+def approved_handoff_limit_hours(policy, *, urgency=None):
+    """Return the approved BG-010 acceptance limit in hours for the handoff urgency, or None."""
+    approved = approved_handoff_policy(policy)
+    if approved is None:
+        return None
+    if urgency == "Urgent" and approved["urgent_acceptance_hours"] is not None:
+        return approved["urgent_acceptance_hours"]
+    return approved["acceptance_hours"]
+
+
+def _parse_sla_as_of(as_of):
+    if as_of in (None, ""):
+        return None
+    if not isinstance(as_of, str):
+        raise ValueError("Ageing needs an as-of time with a timezone.")
+    text = as_of.strip()
+    if len(text) == 10:
+        return datetime.combine(date.fromisoformat(text), time(), UTC)
+    parsed = datetime.fromisoformat(text)
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        raise ValueError("Ageing needs an as-of time with a timezone.")
+    return parsed.astimezone(UTC)
+
+
+def _optional_tz_instant(value):
+    if not isinstance(value, str) or not value.strip():
+        return None
+    text = value.strip()
+    try:
+        if len(text) == 10:
+            return datetime.combine(date.fromisoformat(text), time(), UTC)
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        return None
+    return parsed.astimezone(UTC)
+
+
+def _resolve_escalation_target(h, *, policy=None, staff=None):
+    staff_rows = [s for s in (staff or ()) if isinstance(s, dict)]
+    if h.get("escalation_owner"):
+        code = h.get("escalation_owner_code")
+        role = h.get("escalation_owner_role")
+        matched = next((s for s in staff_rows if code and s.get("code") == code), None)
+        if matched and not role:
+            role = matched.get("role")
+        return h["escalation_owner"], code, role or DEFAULT_ESCALATION_ROLE, matched
+    approved = approved_handoff_policy(policy)
+    preferred_role = approved["escalation_role"] if approved else DEFAULT_ESCALATION_ROLE
+    if approved:
+        for s in staff_rows:
+            if s.get("role") not in MANAGER_ROLES:
+                continue
+            if (
+                (approved["escalation_to"] and str(s.get("email") or "").lower() == approved["escalation_to"])
+                or (approved["escalation_owner_code"] and s.get("code") == approved["escalation_owner_code"])
+                or (approved["escalation_owner"] and s.get("name") == approved["escalation_owner"])
+            ):
+                return s["name"], s["code"], s["role"], s
+        if approved["escalation_owner"]:
+            return (
+                approved["escalation_owner"],
+                approved["escalation_owner_code"],
+                preferred_role,
+                None,
+            )
+    for s in staff_rows:
+        if s.get("role") == preferred_role:
+            return s["name"], s["code"], s["role"], s
+    for s in staff_rows:
+        if s.get("role") in MANAGER_ROLES:
+            return s["name"], s["code"], s["role"], s
+    return preferred_role, None, preferred_role, None
+
+
 def _due(value):
     if value in (None, ""):
         return None
@@ -40,7 +178,127 @@ def _due(value):
     return parsed.astimezone(UTC).isoformat(timespec="minutes")
 
 
-def handoff_view(c):
+def handoff_sla(c, *, as_of=None, policy=None, max_age_hours=None, staff=None):
+    """Deterministic BG-010 SLA and escalation evaluation for a case handoff."""
+    if not c.get("handoff"):
+        return None
+    h = c["handoff"]
+    state = h.get("state")
+    explicit_limit = _validate_max_age_hours(max_age_hours)
+    approved = approved_handoff_policy(policy)
+    limit_hours = (
+        explicit_limit
+        if explicit_limit is not None
+        else approved_handoff_limit_hours(approved, urgency=h.get("urgency"))
+    )
+    offered = _optional_tz_instant(h.get("offered_at"))
+    sla_due_dt = (
+        (offered + timedelta(hours=limit_hours)).astimezone(UTC)
+        if offered is not None and limit_hours is not None
+        else None
+    )
+    sla_due_at = sla_due_dt.isoformat() if sla_due_dt is not None else None
+    due_raw = h.get("due_at")
+    due_dt = _optional_tz_instant(due_raw)
+    if due_dt is not None and sla_due_dt is not None:
+        effective_due_at = due_raw if due_dt <= sla_due_dt else sla_due_at
+    else:
+        effective_due_at = due_raw if due_dt is not None else sla_due_at
+
+    now = _parse_sla_as_of(as_of)
+    ref_end = (
+        now
+        if state in HANDOFF_PENDING
+        else (_optional_tz_instant(h.get("completed_at") or h.get("answered_at")) or now)
+    )
+    if offered is not None and ref_end is not None:
+        raw_seconds = (ref_end - offered).total_seconds()
+        elapsed_hours = max(0.0, round(raw_seconds / 3600, 2))
+    else:
+        raw_seconds = None
+        elapsed_hours = None
+
+    if state in HANDOFF_PENDING and now is not None:
+        due_over = max(0.0, (now - due_dt).total_seconds()) if due_dt is not None and due_dt < now else 0.0
+        sla_over = (
+            max(0.0, raw_seconds - limit_hours * 3600)
+            if raw_seconds is not None and limit_hours is not None and raw_seconds > limit_hours * 3600
+            else 0.0
+        )
+        over_seconds = max(due_over, sla_over)
+        overdue = over_seconds > 0.0
+        overdue_hours = round(over_seconds / 3600, 2) if overdue else 0.0
+    else:
+        overdue = False
+        overdue_hours = 0.0 if state not in HANDOFF_PENDING else None
+
+    needs_escalation = bool(overdue and state in (HANDOFF_OPEN, "Received"))
+    target, target_code, target_role, _ = _resolve_escalation_target(h, policy=approved, staff=staff)
+
+    if state == "Escalated":
+        escalation_status = "Escalated"
+    elif state in (HANDOFF_OPEN, "Received"):
+        if overdue:
+            escalation_status = "Overdue - escalation required"
+        elif limit_hours is not None or due_dt is not None:
+            escalation_status = "Within approved window"
+        else:
+            escalation_status = "Pending acceptance (unbounded - OD-09)"
+    elif state == "Accepted":
+        escalation_status = "Accepted"
+    elif state == "Completed":
+        escalation_status = "Completed"
+    else:
+        escalation_status = "Closed without acceptance"
+
+    accountable = c.get("owner") or "Unknown"
+    proposed = h.get("to_name") or h.get("to_role") or "the proposed receiver"
+    if state == "Escalated":
+        escalation_next_action = (
+            f"Escalated to {target}: confirm acceptance with {proposed} or reassign; "
+            f"{accountable} remains accountable owner."
+        )
+    elif needs_escalation:
+        escalation_next_action = (
+            f"Escalate overdue handoff to {target}; {accountable} remains accountable owner "
+            f"and must keep chasing {proposed}."
+        )
+    elif state in (HANDOFF_OPEN, "Received"):
+        if limit_hours is not None or due_dt is not None:
+            escalation_next_action = (
+                f"Ask {proposed} to accept or decline within the approved window; "
+                f"{accountable} remains accountable owner and chase owner."
+            )
+        else:
+            escalation_next_action = (
+                f"Ask {proposed} to accept or decline; "
+                f"{accountable} remains accountable owner and must keep chasing."
+            )
+    elif state == "Accepted":
+        escalation_next_action = (
+            f"Complete the accepted handoff action; {accountable} is now the accountable owner."
+        )
+    else:
+        escalation_next_action = None
+
+    return dict(
+        approved_limit_hours=limit_hours,
+        sla_due_at=sla_due_at,
+        effective_due_at=effective_due_at,
+        elapsed_hours=elapsed_hours,
+        overdue_hours=overdue_hours,
+        overdue=overdue,
+        needs_escalation=needs_escalation,
+        escalation_status=escalation_status,
+        escalation_target=target,
+        escalation_target_code=target_code,
+        escalation_target_role=target_role,
+        escalation_next_action=escalation_next_action,
+        auto_escalated=bool(h.get("auto_escalated")),
+    )
+
+
+def handoff_view(c, *, as_of=None, policy=None, max_age_hours=None, staff=None):
     """Project accountability separately from an offer or receipt; never mutate stored history."""
     if not c.get("handoff"):
         return None
@@ -54,10 +312,13 @@ def handoff_view(c):
              chase_owner_code=c["owner_code"] if accepted else h.get("from_code"))
     for key in ("due_at", "urgency", "next_action", "resident_update_owner", "resident_update_due_at"):
         h.setdefault(key, None)
+    sla = handoff_sla(c, as_of=as_of, policy=policy, max_age_hours=max_age_hours, staff=staff)
+    if sla is not None:
+        h.update(sla)
     return h
 
 
-def handoff_ageing(c, as_of, max_age_hours=None):
+def handoff_ageing(c, as_of, max_age_hours=None, *, policy=None):
     """Read-only ageing of one unaccepted handoff against its own due time and an approved limit.
 
     The approved limit is an operational decision (BG-010, OD-09) and is never defaulted: without
@@ -67,20 +328,38 @@ def handoff_ageing(c, as_of, max_age_hours=None):
     if not h or h["state"] not in HANDOFF_PENDING:
         return None
     now = datetime.fromisoformat(as_of)
-    if now.tzinfo is None:
+    if now.tzinfo is None or now.utcoffset() is None:
         raise ValueError("Ageing needs an as-of time with a timezone.")
-    age = round((now - datetime.fromisoformat(h["offered_at"])).total_seconds() / 3600, 2)
+    offered = datetime.fromisoformat(h["offered_at"])
+    if offered.tzinfo is None or offered.utcoffset() is None:
+        raise ValueError("Handoff offered_at needs a timezone.")
+    explicit_limit = _validate_max_age_hours(max_age_hours)
+    approved = approved_handoff_policy(policy)
+    limit = (
+        explicit_limit
+        if explicit_limit is not None
+        else approved_handoff_limit_hours(approved, urgency=h.get("urgency"))
+    )
+    raw_seconds = (now - offered).total_seconds()
+    age = round(raw_seconds / 3600, 2)
     reasons = []
     if h["due_at"] and datetime.fromisoformat(h["due_at"]) < now:
         reasons.append("Handoff due time has passed")
-    if max_age_hours is not None and age > max_age_hours:
-        reasons.append(f"Unaccepted for more than the approved {max_age_hours} hours")
+    if limit is not None and raw_seconds > limit * 3600:
+        shown_limit = max_age_hours if explicit_limit is not None else limit
+        reasons.append(f"Unaccepted for more than the approved {shown_limit} hours")
+    if limit is None:
+        limit_note = "Approved escalation time not set (OD-09)"
+    elif explicit_limit is not None:
+        limit_note = None
+    else:
+        limit_note = f"Approved escalation limit: {limit}h ({approved['policy_id']})"
     return dict(case_id=c["id"], status=h["status"], age_hours=age, due_at=h["due_at"],
                 chase_owner=h["chase_owner"], chase_owner_code=h["chase_owner_code"],
                 proposed_receiver=h["proposed_receiver"], escalated=h["state"] == "Escalated",
                 needs_escalation=bool(reasons) and h["state"] != "Escalated", reasons=reasons,
-                approved_limit_hours=max_age_hours,
-                limit_note=None if max_age_hours is not None else "Approved escalation time not set (OD-09)",
+                approved_limit_hours=max_age_hours if explicit_limit is not None else limit,
+                limit_note=limit_note,
                 as_of=as_of)
 
 
@@ -302,9 +581,94 @@ class WorkflowMixin:
             if h["state"] == "Escalated":
                 raise ValueError("This handoff has already been escalated.")
             h.update(state="Escalated", escalated_at=_now("microseconds"), escalation_owner=to["name"],
-                     escalation_owner_code=to["code"], answer_note=reason)
+                     escalation_owner_code=to["code"], escalation_owner_role=to["role"],
+                     auto_escalated=False, answer_note=reason)
             self._handoff_event(c, user)
             self._save_workflow(user, "handoff_escalated", case_id, f"to {to['code']}: {reason}")
+
+    def escalate_overdue_handoffs(self, user, *, as_of=None, max_age_hours=None, reason=None):
+        """Controlled manager sweep transitioning overdue Offered/Received handoffs to Escalated."""
+        controls.require_role(user, MANAGER_ROLES, "a programme manager can escalate overdue handoffs")
+        as_of = as_of or _now()
+        _parse_sla_as_of(as_of)
+        _validate_max_age_hours(max_age_hours)
+        custom_note = (
+            controls.text(reason, "why this handoff needs escalation")
+            if reason not in (None, "")
+            else None
+        )
+        with self.lock:
+            policy = self.data.get("handoff_policy")
+            staff_rows = self.data.get("staff")
+            evaluated_count = 0
+            already_escalated_count = 0
+            candidates = []
+            for cid in sorted(self.cases):
+                c = self.cases[cid]
+                if c.get("closed"):
+                    continue
+                raw_h = c.get("handoff")
+                if not raw_h or raw_h.get("state") not in HANDOFF_PENDING:
+                    continue
+                if raw_h["state"] == "Escalated":
+                    already_escalated_count += 1
+                    continue
+                evaluated_count += 1
+                sla = handoff_sla(
+                    c, as_of=as_of, policy=policy, max_age_hours=max_age_hours, staff=staff_rows
+                )
+                if sla and sla["overdue"]:
+                    _, _, _, matched = _resolve_escalation_target(
+                        raw_h, policy=policy, staff=staff_rows
+                    )
+                    target = matched or user
+                    candidates.append((cid, sla, target))
+
+            escalated_case_ids = []
+            items = []
+            for cid, sla, target in candidates:
+                with change_provenance.controlled(self, user, cid) as (c, actor):
+                    h = c.get("handoff")
+                    if not h or h.get("state") not in (HANDOFF_OPEN, "Received"):
+                        continue
+                    note = (
+                        custom_note
+                        if custom_note is not None
+                        else f"Auto-escalated past approved window ({sla['overdue_hours']}h overdue as of {as_of})"
+                    )
+                    h.update(
+                        state="Escalated",
+                        escalated_at=_now("microseconds"),
+                        escalation_owner=target["name"],
+                        escalation_owner_code=target["code"],
+                        escalation_owner_role=target["role"],
+                        auto_escalated=True,
+                        answer_note=note,
+                    )
+                    self._handoff_event(c, actor)
+                    self._save_workflow(
+                        actor, "handoff_escalated", cid, f"to {target['code']}: {note}"
+                    )
+                    escalated_case_ids.append(cid)
+                    projected = handoff_view(
+                        c,
+                        as_of=as_of,
+                        policy=policy,
+                        max_age_hours=max_age_hours,
+                        staff=staff_rows,
+                    )
+                    items.append(self._shared_handoff_row(c, projected, as_of))
+            visible_items = (
+                items if projection.can_see_reason(user) else projection.hold_notes(items)
+            )
+            return dict(
+                as_of=as_of,
+                evaluated_count=evaluated_count,
+                escalated_count=len(escalated_case_ids),
+                already_escalated_count=already_escalated_count,
+                escalated_case_ids=escalated_case_ids,
+                items=visible_items,
+            )
 
     def complete_handoff(self, user, case_id, note):
         note = controls.text(note, "the completed action")
@@ -319,16 +683,81 @@ class WorkflowMixin:
             self._handoff_event(c, user)
             self._save_workflow(user, "handoff_completed", case_id, note)
 
+    @staticmethod
+    def _direct_handoff_visible(user, h):
+        return (
+            user["code"] in (h.get("from_code"), h.get("to_code"), h.get("escalation_owner_code"))
+            or (not h.get("to_code") and h.get("to_role") == user.get("role"))
+            or user["role"] in MANAGER_ROLES
+        )
+
+    @staticmethod
+    def _shared_handoff_row(c, h, as_of):
+        row = dict(case_id=c["id"], stage=c.get("stage"), as_of=as_of)
+        for key in (
+            "state",
+            "status",
+            "from_code",
+            "from_name",
+            "to_code",
+            "to_name",
+            "to_role",
+            "destination",
+            "proposed_receiver",
+            "confirmed_receiver",
+            "accountable_owner",
+            "accountable_owner_code",
+            "chase_owner",
+            "chase_owner_code",
+            "offered_at",
+            "received_at",
+            "escalated_at",
+            "due_at",
+            "sla_due_at",
+            "effective_due_at",
+            "urgency",
+            "approved_limit_hours",
+            "elapsed_hours",
+            "overdue_hours",
+            "overdue",
+            "needs_escalation",
+            "escalation_status",
+            "escalation_target",
+            "escalation_target_code",
+            "escalation_target_role",
+            "escalation_owner",
+            "escalation_owner_code",
+            "escalation_next_action",
+            "auto_escalated",
+            "note",
+            "answer_note",
+            "next_action",
+            "resident_update_owner",
+            "resident_update_due_at",
+        ):
+            row[key] = h.get(key)
+        return row
+
+    @staticmethod
+    def _handoff_queue_sort_key(row):
+        return (
+            not bool(row.get("overdue")),
+            -(row.get("overdue_hours") or 0.0),
+            -(row.get("elapsed_hours") or 0.0),
+            row["case_id"],
+        )
+
     def pending_handoffs(self, user):
         controls.require_role(user, projection.STAFF_ROLES, "authorised staff can view handoffs")
         with self.lock:
+            policy = self.data.get("handoff_policy")
+            staff_rows = self.data.get("staff")
             rows = []
             for c in self.cases.values():
-                h = handoff_view(c)
-                if h and h["state"] in HANDOFF_PENDING and (
-                    user["code"] in (h.get("from_code"), h.get("to_code"))
-                    or user["role"] in MANAGER_ROLES
-                ):
+                if c.get("closed"):
+                    continue
+                h = handoff_view(c, as_of=self.as_of, policy=policy, staff=staff_rows)
+                if h and h["state"] in HANDOFF_PENDING and self._direct_handoff_visible(user, h):
                     rows.append(dict(case_id=c["id"], resident=c["resident"]["name"],
                                      address=c["home"]["address"], **h))
             return rows if projection.can_see_reason(user) else projection.hold_notes(rows)
@@ -337,17 +766,80 @@ class WorkflowMixin:
         """Visible unaccepted handoffs with ageing; escalation stays a named manager's act."""
         controls.require_role(user, projection.STAFF_ROLES, "authorised staff can view handoffs")
         as_of = as_of or _now()
-        if datetime.fromisoformat(as_of).tzinfo is None:
+        now = datetime.fromisoformat(as_of)
+        if now.tzinfo is None or now.utcoffset() is None:
             raise ValueError("Ageing needs an as-of time with a timezone.")
+        _validate_max_age_hours(max_age_hours)
         with self.lock:
+            policy = self.data.get("handoff_policy")
             rows = []
             for c in self.cases.values():
-                row = handoff_ageing(c, as_of, max_age_hours)
+                if c.get("closed"):
+                    continue
+                row = handoff_ageing(c, as_of, max_age_hours, policy=policy)
                 h = c.get("handoff") or {}
-                if row and (user["code"] in (h.get("from_code"), h.get("to_code"))
-                            or user["role"] in MANAGER_ROLES):
+                if row and self._direct_handoff_visible(user, h):
                     rows.append(row)
-            return sorted(rows, key=lambda r: -r["age_hours"])
+            return sorted(rows, key=lambda r: (-r["age_hours"], r["case_id"]))
+
+    def unowned_handoffs(self, user, as_of=None, max_age_hours=None):
+        """Shared role-visible queue of handoffs without a confirmed accepting receiver."""
+        controls.require_role(user, projection.STAFF_ROLES, "authorised staff can view handoffs")
+        as_of = as_of or _now()
+        _parse_sla_as_of(as_of)
+        _validate_max_age_hours(max_age_hours)
+        with self.lock:
+            policy = self.data.get("handoff_policy")
+            staff_rows = self.data.get("staff")
+            rows = []
+            for c in self.cases.values():
+                if c.get("closed"):
+                    continue
+                h = handoff_view(
+                    c, as_of=as_of, policy=policy, max_age_hours=max_age_hours, staff=staff_rows
+                )
+                if (
+                    h
+                    and h["state"] in HANDOFF_PENDING
+                    and h.get("confirmed_receiver") is None
+                    and (
+                        self._direct_handoff_visible(user, h)
+                        or h.get("to_role") == user.get("role")
+                    )
+                ):
+                    rows.append(self._shared_handoff_row(c, h, as_of))
+            rows.sort(key=self._handoff_queue_sort_key)
+            return rows if projection.can_see_reason(user) else projection.hold_notes(rows)
+
+    def escalated_handoffs(self, user, as_of=None, max_age_hours=None):
+        """Shared role- and manager-visible queue of escalated or overdue unaccepted handoffs."""
+        controls.require_role(user, projection.STAFF_ROLES, "authorised staff can view handoffs")
+        as_of = as_of or _now()
+        _parse_sla_as_of(as_of)
+        _validate_max_age_hours(max_age_hours)
+        with self.lock:
+            policy = self.data.get("handoff_policy")
+            staff_rows = self.data.get("staff")
+            rows = []
+            for c in self.cases.values():
+                if c.get("closed"):
+                    continue
+                h = handoff_view(
+                    c, as_of=as_of, policy=policy, max_age_hours=max_age_hours, staff=staff_rows
+                )
+                if (
+                    h
+                    and h["state"] in HANDOFF_PENDING
+                    and (h["state"] == "Escalated" or h.get("overdue"))
+                    and (
+                        self._direct_handoff_visible(user, h)
+                        or h.get("to_role") == user.get("role")
+                        or h.get("escalation_target_role") == user.get("role")
+                    )
+                ):
+                    rows.append(self._shared_handoff_row(c, h, as_of))
+            rows.sort(key=self._handoff_queue_sort_key)
+            return rows if projection.can_see_reason(user) else projection.hold_notes(rows)
 
     # ---- external hazard referral; only the linked home's retrofit hold is controlled here
     def _hazard(self, c, idx):
