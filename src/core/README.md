@@ -547,10 +547,18 @@ changed. Local recording and a receiver receipt stay separate: only a non-empty
 `receipt_ref` from the receiver gives `Acknowledged`; a receiver error or
 malformed reply gives `Unconfirmed` (receipt unknown, not proof of non-receipt),
 and only a receiver that raises `NotSent` gives `Failed` with `not_sent`. A send
-whose outcome could not be saved stays `Pending`. `Pending`, `Unconfirmed` and
+whose outcome could not be saved is retried once against the local store (never
+re-contacting the receiver), logs its `receipt_ref` on persistent failure, and
+stays `Pending` until superseded. `Pending`, `Unconfirmed`, `Superseded` and
 legacy `Failed` attempts without `not_sent` are unresolved: a resend needs
 `retry_unresolved` after reconciliation, and the in-flight check is per store
-instance only. The outcome is bound to the reservation id the send committed.
+instance only. Recording an explicit `service_forward` retry with
+`retry_unresolved` when no send is in flight marks any stale `Pending` attempt
+`Superseded` (`superseded_from="Pending"`, `superseded_at`,
+`superseded_by_attempt`) inside the same reservation transaction without
+creating a `supersession` dual-approval record, keeping all original attempt
+fields and the stable `route_key`. The outcome is bound to the reservation id
+the send committed.
 Independent review forwarding needs the named reviewer's own identity (code or
 oid continuity), with no manager bypass; unknown identity fails closed.
 All attempts share one `route_key` idempotency key. The caller must supply
@@ -597,8 +605,12 @@ entries are kept. Age is never an input and no timeout exists: an aged
 `Pending` attempt stays `Pending`. Supersession sends nothing and does not
 authorize a resend: a later send still needs `retry_unresolved` and the usual
 owner or named-reviewer rights, and a `Superseded` attempt still counts as
-unresolved. A late outcome for a superseded attempt is refused and its
-`receipt_ref` logged. Limits: the in-flight check is per store instance;
+unresolved (whereas an explicit `service_forward` retry with `retry_unresolved`
+directly marks any remaining stale `Pending` attempt `Superseded` with
+`superseded_by_attempt` and reserves the superseding attempt without claiming
+two-person `supersession` approval). A late outcome for a superseded attempt is
+refused and its `receipt_ref` logged. Limits: the in-flight check is per store
+instance;
 a receipt found by verification has no manual recording path (do not
 supersede, reconcile with the receiver); the evidence reference is kept
 by retention deletion.

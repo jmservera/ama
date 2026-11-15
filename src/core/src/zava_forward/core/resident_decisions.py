@@ -1781,12 +1781,23 @@ class ResidentDecisionMixin:
             _owner_rights(self, user, req.get("redress_identity"), req.get("redress_owner_email"))
         ref = k.text(body.get("resident_request_ref"), "the reference showing the resident asked for this to be sent", 100)
         attempt = len(route["attempts"]) + 1
+        now = _time()
+        superseded = [a["attempt"] for a in attempts if a["status"] == "Pending"]
+        for prior in attempts:
+            if prior["status"] == "Pending":
+                prior.update(status="Superseded", superseded_from="Pending",
+                             superseded_at=now, superseded_by_attempt=attempt)
         route["attempts"].append(dict(attempt=attempt, status="Pending", request_id=req["id"],
                                       request_version=req.get("version", 0), resident_request_ref=ref,
                                       reservation_id=body.get("reservation_id"),
-                                      requested_by=_identity(user), reserved_at=_time(),
+                                      requested_by=_identity(user), reserved_at=now,
                                       reason="Sending. No outcome is recorded yet."))
         req["formal_route"] = route
+        if superseded:
+            noun = "attempt" if len(superseded) == 1 else "attempts"
+            nums = ", ".join(str(n) for n in superseded)
+            return (f"{req['id']} formal-route attempt {attempt} reserved; "
+                    f"prior pending {noun} {nums} superseded; no outcome recorded")
         return f"{req['id']} formal-route attempt {attempt} reserved; no outcome recorded"
 
     def _res_service_forward_outcome(self, user, c, body):
