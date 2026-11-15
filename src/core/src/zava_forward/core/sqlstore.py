@@ -759,9 +759,11 @@ class SqlStore(Store):
         self._meta_set("rec_order_review", REC_REVIEW)
 
     def _queue_fingerprint(self):
+        policy_row = self.db.execute("SELECT value FROM meta WHERE key='handoff_policy'").fetchone()
+        policy = json.loads(policy_row[0]) if policy_row else None
         return json.dumps(
             [taskqueues.VERSION, self.as_of, controls.today(), ranking.CURRENT,
-             taskqueues.MEMBERSHIP_REVISION],
+             taskqueues.MEMBERSHIP_REVISION, policy],
             sort_keys=True,
         )
 
@@ -787,10 +789,14 @@ class SqlStore(Store):
         cases = {cid: json.loads(body) for cid, body in rows}
         selected = list(cases.values())
         data = {}
-        for name in ("buildings", "procurement"):
+        for name in ("buildings", "procurement", "handoff_policy"):
             row = self.db.execute("SELECT value FROM meta WHERE key=?", (name,)).fetchone()
             if row:
                 data[name] = json.loads(row[0])
+        data["staff"] = [
+            json.loads(r[0])
+            for r in self.db.execute("SELECT body FROM staff ORDER BY email").fetchall()
+        ]
         if ids is not None and any(c.get("building_id") for c in selected):
             # Building validation checks all linked home IDs, not just changed homes.
             cases = {cid: json.loads(body) for cid, body in
@@ -1189,8 +1195,8 @@ class SqlStore(Store):
                             raise ConflictError(rid)
                         recs.append((rid, known[0] + 1, rec, body))
                 proc_body = self._proc_write()
-                # Shared validation can change when packages, holds or linked homes change.
-                shared = bool({"buildings", "procurement"} & proc_body.keys()) or any(
+                # Shared validation can change when packages, holds, handoff policy or linked homes change.
+                shared = bool({"buildings", "procurement", "handoff_policy"} & proc_body.keys()) or any(
                     self.cases[cid].get("building_id")
                     or json.loads(self._snap[cid]).get("building_id")
                     for cid, _ in changed
@@ -1346,7 +1352,7 @@ class SqlStore(Store):
         self._sync()
 
     # ---- procurement and governance data kept as checked documents
-    DOCS = ("procurement", "governance", "continuity", "buildings", "schemes", "form_schemas", "bulk_edits", "import_exceptions", "aftercare")
+    DOCS = ("procurement", "governance", "continuity", "buildings", "schemes", "form_schemas", "bulk_edits", "import_exceptions", "aftercare", "handoff_policy")
 
     def _proc_sync(self):
         snapshots, loaded = {}, {}

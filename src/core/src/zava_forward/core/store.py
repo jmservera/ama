@@ -332,7 +332,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     def _queue_candidates(self, queue):
         """Index IDs, never viewer-projected context; called under the store lock."""
         key = (self.version, self.as_of, controls.today(),
-               json.dumps(ranking.CURRENT, sort_keys=True))
+               json.dumps(ranking.CURRENT, sort_keys=True),
+               json.dumps(self.data.get("handoff_policy"), sort_keys=True))
         cached = getattr(self, "_queue_index", None)
         if cached is None or cached[0] != key:
             members = {name: [] for name, _, _ in taskqueues.DEFINITIONS}
@@ -423,7 +424,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                            if stock.query_status(c, q["id"]) == "Unresolved"],
             building_reasons=buildings.blockers(data, cases, c),
             resident_reasons=resident_gate(c), technical_missing=missing_items(c),
-            handoff=handoff_view(c))
+            handoff=handoff_view(
+                c, as_of=self.as_of, policy=data.get("handoff_policy"), staff=data.get("staff")
+            ))
 
     def focus(self, c, role, reason_ok=True):
         """Role-specific facts for the card, as label/value pairs."""
@@ -494,7 +497,12 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if user is None or not projection.is_contractor(user):
                 d["work"] = self.work_context(c, user)
             if c.get("handoff"):
-                d["handoff"] = handoff_view(c)
+                d["handoff"] = handoff_view(
+                    c,
+                    as_of=self.as_of,
+                    policy=self.data.get("handoff_policy"),
+                    staff=self.data.get("staff"),
+                )
             d["status"] = self.status_line(c)
             d["gate"] = self.gate_reasons(c) + buildings.blockers(self.data, self.cases, c)
             if d["status"] == "Ready" and d["gate"]:

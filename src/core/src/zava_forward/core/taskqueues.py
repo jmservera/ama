@@ -4,7 +4,7 @@ from datetime import UTC, datetime, time
 from typing import Any
 
 VERSION = "work-queues-1"
-MEMBERSHIP_REVISION = 3
+MEMBERSHIP_REVISION = 4
 UNKNOWN = "Unknown"
 HELD = "Held for roles with a recorded need"
 PENDING = ("Offered", "Received", "Escalated")
@@ -161,8 +161,11 @@ def overdue_tasks(
         "resident_update",
     )
     if handoff and handoff.get("state") in PENDING:
+        handoff_due = (
+            handoff.get("effective_due_at") or handoff.get("due_at") or handoff.get("sla_due_at")
+        )
         deadline(
-            handoff.get("due_at"),
+            handoff_due,
             None,
             "Handoff acceptance",
             handoff.get("chase_owner") or UNKNOWN,
@@ -361,11 +364,16 @@ def context(
     recorded_at = case.get("stage_since") or UNKNOWN
     returned_view: dict[str, Any] | None = None
     if not selected and pending and handoff:
-        next_action = (
-            text(handoff.get("next_action"))
-            if handoff.get("next_action")
-            else ("Ask the proposed receiver to accept or decline; the sender must keep chasing.")
-        )
+        if handoff.get("next_action"):
+            next_action = text(handoff.get("next_action"))
+        elif (
+            handoff.get("state") == "Escalated" or handoff.get("needs_escalation")
+        ) and isinstance(handoff.get("escalation_next_action"), str):
+            next_action = str(handoff["escalation_next_action"])
+        else:
+            next_action = (
+                "Ask the proposed receiver to accept or decline; the sender must keep chasing."
+            )
         source = origin("handoff")["source"]
         recorded_at = handoff.get("offered_at") or UNKNOWN
     returned = (case.get("returns") or [None])[-1]
@@ -422,12 +430,24 @@ def context(
         technical_reassessment=reassess,
         handoff=dict(
             state=handoff.get("state") or UNKNOWN,
+            status=handoff.get("status") or handoff.get("state") or UNKNOWN,
+            accountable_owner=handoff.get("accountable_owner") or owner,
             destination=handoff.get("destination") or UNKNOWN,
             sender=handoff.get("from_name") or UNKNOWN,
             proposed_receiver=handoff.get("proposed_receiver") or UNKNOWN,
             confirmed_receiver=handoff.get("confirmed_receiver") or UNKNOWN,
             chase_owner=handoff.get("chase_owner") or UNKNOWN,
             resident_update_owner=handoff.get("resident_update_owner") or UNKNOWN,
+            due_at=handoff.get("effective_due_at") or handoff.get("due_at"),
+            approved_limit_hours=handoff.get("approved_limit_hours"),
+            elapsed_hours=handoff.get("elapsed_hours"),
+            overdue_hours=handoff.get("overdue_hours"),
+            overdue=bool(handoff.get("overdue")),
+            needs_escalation=bool(handoff.get("needs_escalation")),
+            escalation_status=handoff.get("escalation_status") or UNKNOWN,
+            escalation_target=handoff.get("escalation_target") or UNKNOWN,
+            escalation_target_role=handoff.get("escalation_target_role") or UNKNOWN,
+            escalation_next_action=handoff.get("escalation_next_action") or UNKNOWN,
         )
         if handoff
         else None,
