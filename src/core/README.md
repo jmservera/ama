@@ -8,13 +8,14 @@ ms.topic: reference
 
 ## Hazard and safeguarding clock and named owner projection (2026-11-15, Refs #76)
 
-`taskqueues.project_safety_clock_and_owner` and `taskqueues.context` (`MEMBERSHIP_REVISION = 4`)
+`taskqueues.project_safety_clock_and_owner` and `taskqueues.context` (`MEMBERSHIP_REVISION = 5`)
 project an explicit operational reference clock (`clock_label`, `clock_status`,
 `clock_remaining_hours`, `clock_deadline_utc`, `clock_basis`) and a non-blank
 accountable owner (`named_owner`, `accountable_owner`, `owner_role`, `owner_id`,
 `unassigned`, `escalation_owner`, `escalation_owner_role`, `escalation_owner_id`)
 for every active hazard and safeguarding item across `Store`, `SqlStore`, and
-`MssqlStore`. External hazard and safeguarding authorities retain statutory
+`MssqlStore` with staff-order-invariant `code` -> `email` -> `name` lookup and
+sorted role fallback. External hazard and safeguarding authorities retain statutory
 ownership of categorisation, clocks, and closure (`RULE-003`): recorded external
 deadlines take precedence, awareness timestamps derive operational reference
 windows (24h emergency / 7d investigation / 14d work-start for hazards; 24h

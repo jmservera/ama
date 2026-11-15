@@ -5,7 +5,7 @@ from datetime import UTC, datetime, time, timedelta
 from typing import Any
 
 VERSION = "work-queues-1"
-MEMBERSHIP_REVISION = 4
+MEMBERSHIP_REVISION = 5
 UNKNOWN = "Unknown"
 HELD = "Held for roles with a recorded need"
 PENDING = ("Offered", "Received", "Escalated")
@@ -197,6 +197,14 @@ def has_open_safeguarding(case: Mapping[str, Any]) -> bool:
     ) or any(is_open_safety_item(s) for s in raw_safeguarding_items(case))
 
 
+def _staff_sort_key(member: Mapping[str, Any]) -> tuple[str, str, str]:
+    return (
+        str(member.get("code") or member.get("oid") or "").strip(),
+        str(member.get("email") or "").strip().lower(),
+        str(member.get("name") or "").strip().lower(),
+    )
+
+
 def _match_staff(
     *,
     code: str | None = None,
@@ -204,18 +212,30 @@ def _match_staff(
     name: str | None = None,
     staff: Sequence[Mapping[str, Any]],
 ) -> Mapping[str, Any] | None:
-    email_low = email.strip().lower() if email else None
-    name_low = name.strip().lower() if name else None
-    for member in staff:
-        m_code = str(member.get("code") or member.get("oid") or "").strip()
-        m_email = str(member.get("email") or "").strip().lower()
-        m_name = str(member.get("name") or "").strip().lower()
-        if code and m_code and m_code == code:
-            return member
-        if email_low and m_email and m_email == email_low:
-            return member
-        if name_low and m_name and m_name == name_low:
-            return member
+    if not staff:
+        return None
+    ordered = sorted(staff, key=_staff_sort_key)
+    if code:
+        code_clean = code.strip()
+        if code_clean:
+            for member in ordered:
+                m_code = str(member.get("code") or member.get("oid") or "").strip()
+                if m_code and m_code == code_clean:
+                    return member
+    if email:
+        email_low = email.strip().lower()
+        if email_low:
+            for member in ordered:
+                m_email = str(member.get("email") or "").strip().lower()
+                if m_email and m_email == email_low:
+                    return member
+    if name:
+        name_low = name.strip().lower()
+        if name_low:
+            for member in ordered:
+                m_name = str(member.get("name") or "").strip().lower()
+                if m_name and m_name == name_low:
+                    return member
     return None
 
 
@@ -342,13 +362,17 @@ def project_safety_clock_and_owner(
             explicit_role=case_map.get("owner_role"),
         )
     if escalation is None:
+        ordered_roster = sorted(
+            roster,
+            key=lambda m: str(m.get("code") or m.get("email") or m.get("name") or ""),
+        )
         for target_role in (
             "Building Safety Liaison",
             "Retrofit Programme Manager",
             "Programme Support Officer",
             "Resident Liaison Officer",
         ):
-            for member in roster:
+            for member in ordered_roster:
                 if str(member.get("role") or "").strip() == target_role:
                     escalation = _resolve_person(
                         member,
