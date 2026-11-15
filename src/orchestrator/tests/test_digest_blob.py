@@ -17,6 +17,13 @@ class FakeImmutableContainer:
 
     def __init__(self):
         self.blobs, self.calls = {}, []
+        self.default_headers = {}
+        self.per_blob_headers = {}
+
+    def _headers_for(self, name):
+        if name in self.per_blob_headers:
+            return dict(self.per_blob_headers[name])
+        return dict(self.default_headers)
 
     def __call__(self, method, url, headers, body, timeout=20):
         self.calls.append((method, url, dict(headers)))
@@ -28,14 +35,14 @@ class FakeImmutableContainer:
             if name in self.blobs:
                 return 409, {}, b""
             self.blobs[name] = body
-            return 201, {}, b""
+            return 201, self._headers_for(name), b""
         if method == "DELETE":
             return 409, {}, b""
         if method == "GET" and "comp=list" in u.query:
             xml = "<EnumerationResults><Blobs>" + "".join(f"<Blob><Name>{n}</Name></Blob>" for n in sorted(self.blobs)) + "</Blobs><NextMarker/></EnumerationResults>"
             return 200, {}, xml.encode()
         if method == "GET":
-            return (200, {}, self.blobs[name]) if name in self.blobs else (404, {}, b"")
+            return (200, self._headers_for(name), self.blobs[name]) if name in self.blobs else (404, {}, b"")
         return 405, {}, b""
 
 
@@ -473,6 +480,132 @@ class BlobDigestTests(unittest.TestCase):
                                 "year-2024": b"PRIVATE_SENTINEL"}
         self.assertEqual(self.blob.list_digests(),
                          sorted(["unrelated.json", "Year-2024.json", "digest-malformed.txt", "year-2024"]))
+
+    def test_retention_lock_posture_metadata_and_fail_closed_enforcement(self):
+        self.assertEqual(self.run_job("--publish"), 0)
+        advisory = digest_blob.verify(self.store, self.blob)
+        self.assertTrue(advisory["intact"])
+        self.assertEqual(advisory["immutability_policy_state"], "Absent")
+        self.assertIsNone(advisory["retention_days"])
+        self.assertFalse(advisory["locked"])
+        self.assertTrue(advisory["immutability_posture"]["live_worm_lock_human_gated"])
+        self.assertTrue(advisory["immutability_posture"]["retention_schedule_human_gated"])
+
+        self.container.blobs.clear()
+        self.container.calls.clear()
+        for existing_file in Path(self.store.digest_dir).glob("*.json"):
+            existing_file.unlink()
+        e1 = ledger.make_entry("a", "x", "c", "d", ledger.GENESIS, "2024-05-01T00:00:00")
+        e2 = ledger.make_entry("a", "y", "c", "d", e1["hash"], "2025-05-01T00:00:00")
+        Path(self.store.audit_path).write_text(
+            "\n".join(json.dumps(entry) for entry in (e1, e2)) + "\n"
+        )
+        with self.assertRaises(digest_blob.DocumentStoreError):
+            digest_blob.publish(self.store, self.blob, require_retention_lock=True)
+        puts = [c for c in self.container.calls if c[0] == "PUT"]
+        self.assertEqual(len(puts), 1)
+        self.assertFalse(self.blob.last_immutability_posture["locked"])
+        self.assertEqual(self.blob.last_immutability_posture["immutability_policy_state"], "Absent")
+
+        self.container.blobs.clear()
+        self.container.default_headers = {
+            "x-ms-immutability-policy-mode": "locked",
+            "x-ms-immutability-policy-until-date": "Sun, 15 Nov 2099 02:00:00 GMT",
+            "x-ms-creation-time": "Sun, 15 Nov 2026 02:00:00 GMT",
+        }
+        locked_env = {
+            "ZF_DIGEST_REQUIRE_RETENTION_LOCK": "true",
+            "ZF_DIGEST_MIN_RETENTION_DAYS": "365",
+        }
+        self.out.clear()
+        rc = digest_blob.main(
+            ["--publish"], store=self.store, blob=self.blob, env=locked_env, out=self.out.append
+        )
+        self.assertEqual(rc, 0)
+        self.assertTrue(any(digest_blob.OK_MARKER in line for line in self.out))
+
+        verified = digest_blob.verify(
+            self.store, self.blob, require_retention_lock=True, min_retention_days=365
+        )
+        self.assertTrue(verified["intact"])
+        self.assertTrue(verified["locked"])
+        self.assertTrue(verified["retention_lock_verified"])
+        self.assertEqual(verified["immutability_policy_state"], "Locked")
+        self.assertGreaterEqual(verified["retention_days"], 365)
+
+        self.container.per_blob_headers["year-2024.json"] = {
+            "x-ms-immutability-policy-mode": "unlocked",
+            "x-ms-immutability-policy-until-date": "Sun, 15 Nov 2099 02:00:00 GMT",
+            "x-ms-creation-time": "Sun, 15 Nov 2026 02:00:00 GMT",
+        }
+        mixed = digest_blob.verify(
+            self.store, self.blob, require_retention_lock=True, min_retention_days=365
+        )
+        self.assertFalse(mixed["intact"])
+        self.assertFalse(mixed["locked"])
+        self.assertFalse(mixed["retention_lock_verified"])
+        self.assertEqual(mixed["immutability_policy_state"], "Unlocked")
+        self.out.clear()
+        self.assertEqual(
+            digest_blob.main([], store=self.store, blob=self.blob, env=locked_env, out=self.out.append),
+            1,
+        )
+        self.assertNotIn("year-2024.json", "\n".join(self.out))
+
+        self.container.per_blob_headers.clear()
+        short_env = {
+            "ZF_DIGEST_REQUIRE_RETENTION_LOCK": "true",
+            "ZF_DIGEST_MIN_RETENTION_DAYS": "99999",
+        }
+        self.out.clear()
+        self.assertEqual(
+            digest_blob.main([], store=self.store, blob=self.blob, env=short_env, out=self.out.append),
+            1,
+        )
+        self.assertTrue(any(digest_blob.ALERT_MARKER in line for line in self.out))
+
+        rec_path = Path(self.tmp.name) / "record.json"
+        rec_path.write_text(
+            json.dumps(
+                {
+                    name: json.loads(raw.decode())["head"]
+                    for name, raw in self.container.blobs.items()
+                }
+            )
+        )
+        self.out.clear()
+        self.assertEqual(
+            digest_blob.main(
+                ["--reconcile", str(rec_path)],
+                blob=self.blob,
+                env=locked_env,
+                out=self.out.append,
+            ),
+            0,
+        )
+        self.container.default_headers["x-ms-immutability-policy-mode"] = "unlocked"
+        self.out.clear()
+        self.assertEqual(
+            digest_blob.main(
+                ["--reconcile", str(rec_path)],
+                blob=self.blob,
+                env=locked_env,
+                out=self.out.append,
+            ),
+            1,
+        )
+        self.assertTrue(any(digest_blob.RECONCILE_ALERT_MARKER in line for line in self.out))
+
+        for bad_env in (
+            {"ZF_DIGEST_REQUIRE_RETENTION_LOCK": "maybe"},
+            {"ZF_DIGEST_MIN_RETENTION_DAYS": "0"},
+        ):
+            self.out.clear()
+            self.assertEqual(
+                digest_blob.main([], store=self.store, blob=self.blob, env=bad_env, out=self.out.append),
+                1,
+            )
+            self.assertTrue(any(digest_blob.ALERT_MARKER in line for line in self.out))
 
 
 if __name__ == "__main__":

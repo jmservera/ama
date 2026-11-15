@@ -35,6 +35,11 @@ param evidenceStore string = 'blob'
 param sharePointSiteId string = ''
 @description('Immutable Blob container name for hash-chained ledger head and sealed-year digests (Refs #115).')
 param ledgerDigestContainer string = 'ledger-digests'
+@description('Require locked WORM retention headers during scheduled ledger digest publish and verification (Refs #115).')
+param ledgerDigestRequireRetentionLock bool = true
+@description('Minimum required immutable retention days enforced by scheduled ledger digest publish and verification (Refs #115).')
+@minValue(1)
+param ledgerDigestMinRetentionDays int = 365
 @description('Ranking archive container name for the Blob JSON archive (Refs #1258). Empty keeps the API on its existing configuration, where the store selects the local folder archive (a dev/test adapter, not evidence of durable storage).')
 param rankingArchiveContainer string = ''
 param apiImage string
@@ -500,6 +505,8 @@ resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && d
             { name: 'ZF_DIGEST_CONTAINER', value: ledgerDigestContainer }
             { name: 'ZF_DIGEST_CLIENT_ID', value: identityClientIds.api }
             { name: 'ZF_DIGEST_DIR', value: '/tmp/digests' }
+            { name: 'ZF_DIGEST_REQUIRE_RETENTION_LOCK', value: ledgerDigestRequireRetentionLock ? 'true' : 'false' }
+            { name: 'ZF_DIGEST_MIN_RETENTION_DAYS', value: string(ledgerDigestMinRetentionDays) }
           ])
           volumeMounts: scratchVolumeMounts
         }

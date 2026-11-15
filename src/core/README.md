@@ -118,25 +118,35 @@ the hash-chained audit ledger anchors stored in the `ledger-digests` container.
 `verify_container_retention_lock` validates container `immutabilityPolicies`
 properties (`immutabilityPeriodSinceCreationInDays >= min_retention_days`,
 `allowProtectedAppendWrites == False`, rejection of mutually exclusive ARM
-append-write flags, `publicAccess == "None"`, and storage-account lifecycle
-deletion prefix disjointness), distinguishing pre-lock ARM deployment templates
-(`require_locked=False`, `locked=False`) from runtime locked WORM enforcement
-(`require_locked=True`, `state == "Locked"`). `verify_blob_retention_headers`
-validates `x-ms-immutability-policy-mode: locked` and future UTC
-`x-ms-immutability-policy-until-date` response headers on remote digest blobs.
+append-write flags, `publicAccess == "None"`, optional container-level
+`immutableStorageWithVersioning: { enabled: True }`, and storage-account
+lifecycle deletion prefix disjointness), distinguishing pre-lock ARM deployment
+templates (`require_locked=False`, `immutability_policy_state="Unlocked"`,
+`locked=False`) from runtime locked WORM enforcement (`require_locked=True`,
+`immutability_policy_state="Locked"`, `locked=True`). `verify_blob_retention_headers`
+validates `x-ms-immutability-policy-mode: locked`, future UTC
+`x-ms-immutability-policy-until-date`, and minimum retention duration against
+creation timestamps (`created_at` or `x-ms-creation-time`) on remote digest blobs.
 
 `BlobLedgerDigestStore` writes root `digest-{count:010d}.json` and sealed
 `year-{YYYY}.json` anchors create-only (`If-None-Match: *`), verifying read-back
-logical field equality on `409`/`412` conflict responses and exposing no
-overwrite or delete path. `publish_ledger_digests`, `verify_ledger_digests`,
-`reconcile_ledger_digests`, and `run_scheduled_verification` verify local chain
-and year integrity against remote immutable anchors and emit sanitized console
-markers (`LEDGER_DIGEST_OK` on intact verification, `LEDGER_DIGEST_ALERT` with
-`exit_code == 1` on any mismatch, missing/unlocked retention policy, unconfigured
-scheduled environment, or transport error) scrubbed through
-`monitoring_coverage.sanitize_diagnostic` with zero URL, SAS, or token leakage.
-Offline unit and compiled Bicep tests do not prove live Azure WORM policy locking
-or live Azure Monitor alert delivery (`Refs #115`).
+logical field equality on `409`/`412` conflict responses, suppressing underlying
+transport exception chains (`from None`), and exposing no overwrite or delete
+path. `synthesize_immutability_posture`, `publish_ledger_digests` (plus
+`publish_ledger_digests_with_posture` and `publish_store_digests`),
+`verify_ledger_digests`, `reconcile_ledger_digests`, `run_scheduled_verification`,
+and `zava_forward.orchestrator.digest_blob` record weakest-link container
+immutability posture metadata (`immutability_policy_state`, `retention_days`,
+`locked`, plus `live_worm_lock_human_gated=True` and
+`retention_schedule_human_gated=True`), fail closed when a retention lock is
+required (`require_retention_lock=True` / `ZF_DIGEST_REQUIRE_RETENTION_LOCK=true`)
+but absent, unlocked, expired, or shorter than `ZF_DIGEST_MIN_RETENTION_DAYS`,
+and emit sanitized console markers (`LEDGER_DIGEST_OK` on intact verification,
+`LEDGER_DIGEST_ALERT` with `exit_code == 1` on any mismatch, missing/unlocked
+retention policy, unconfigured scheduled environment, or transport error)
+scrubbed through `monitoring_coverage.sanitize_diagnostic` with zero URL, SAS,
+or token leakage. Offline unit and compiled Bicep tests do not prove live Azure
+WORM policy locking or Legal retention-schedule approval (`Refs #115`).
 
 ## Hazard and safeguarding clock and named owner projection (2026-11-15, Refs #76)
 

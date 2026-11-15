@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import tempfile
+import traceback
 import unittest
 import urllib.parse
 from collections.abc import Mapping
@@ -33,6 +34,7 @@ from zava_forward.core.ledger_digest_blob import (
     main,
     open_ledger_digest_store,
     publish_ledger_digests,
+    publish_ledger_digests_with_posture,
     reconcile_ledger_digests,
     run_scheduled_verification,
     verify_blob_retention_headers,
@@ -71,6 +73,7 @@ class _FakeImmutableBlobTransport:
         *,
         immutability_mode: str | None = "locked",
         immutability_until: str | None = LOCKED_UNTIL_RFC1123,
+        creation_time: str | None = "Sun, 15 Nov 2026 02:00:00 GMT",
         page_size: int = 2,
         conflict_status: int = 409,
         conflict_code: str = "BlobAlreadyExists",
@@ -78,6 +81,8 @@ class _FakeImmutableBlobTransport:
         self.blobs: dict[str, bytes] = {}
         self.immutability_mode = immutability_mode
         self.immutability_until = immutability_until
+        self.creation_time = creation_time
+        self.per_blob_headers: dict[str, dict[str, str]] = {}
         self.page_size = page_size
         self.conflict_status = conflict_status
         self.conflict_code = conflict_code
@@ -85,12 +90,16 @@ class _FakeImmutableBlobTransport:
         self.next_put_status: int | None = None
         self.raise_on_method: str | None = None
 
-    def _worm_headers(self) -> dict[str, str]:
+    def _worm_headers(self, blob_name: str = "") -> dict[str, str]:
+        if blob_name and blob_name in self.per_blob_headers:
+            return dict(self.per_blob_headers[blob_name])
         headers: dict[str, str] = {}
         if self.immutability_mode is not None:
             headers["x-ms-immutability-policy-mode"] = self.immutability_mode
         if self.immutability_until is not None:
             headers["x-ms-immutability-policy-until-date"] = self.immutability_until
+        if self.creation_time is not None:
+            headers["x-ms-creation-time"] = self.creation_time
         return headers
 
     def __call__(
@@ -141,12 +150,12 @@ class _FakeImmutableBlobTransport:
                     b"",
                 )
             self.blobs[blob_name] = body or b""
-            return 201, self._worm_headers(), b""
+            return 201, self._worm_headers(blob_name), b""
 
         if method == "GET":
             if blob_name not in self.blobs:
                 return 404, {"x-ms-error-code": "BlobNotFound"}, b""
-            return 200, self._worm_headers(), self.blobs[blob_name]
+            return 200, self._worm_headers(blob_name), self.blobs[blob_name]
 
         return 405, {}, b""
 
@@ -833,6 +842,215 @@ class LedgerDigestBlobTests(unittest.TestCase):
             )
             self.assertTrue(any(RECONCILE_ALERT_MARKER in line for line in rec_bad_lines))
             self.assertEqual(main(argv=["--reconcile"], env=env, out=lambda _: None), 2)
+
+    def test_container_retention_lock_immutable_versioning_and_human_gates(self) -> None:
+        policy = {
+            "state": "Locked",
+            "immutabilityPeriodSinceCreationInDays": 365,
+            "allowProtectedAppendWrites": False,
+        }
+        for bad_container in (
+            None,
+            {"publicAccess": "None"},
+            {"publicAccess": "None", "immutableStorageWithVersioning": {"enabled": False}},
+        ):
+            rep = verify_container_retention_lock(
+                policy,
+                container_properties=bad_container,
+                require_immutable_versioning=True,
+            )
+            self.assertFalse(rep["intact"])
+            self.assertIn("immutable_storage_with_versioning_disabled", rep["problems"])
+
+        ok_rep = verify_container_retention_lock(
+            policy,
+            container_properties={
+                "publicAccess": "None",
+                "immutableStorageWithVersioning": {"enabled": True},
+            },
+            require_immutable_versioning=True,
+        )
+        self.assertTrue(ok_rep["intact"])
+        self.assertEqual(ok_rep["immutability_policy_state"], "Locked")
+        self.assertIs(ok_rep["live_worm_lock_human_gated"], True)
+        self.assertIs(ok_rep["retention_schedule_human_gated"], True)
+        absent_rep = verify_container_retention_lock(None)
+        self.assertEqual(absent_rep["immutability_policy_state"], "Absent")
+
+    def test_blob_retention_headers_creation_time_and_minimum_retention_days(self) -> None:
+        headers = {
+            "x-ms-immutability-policy-mode": "locked",
+            "x-ms-immutability-policy-until-date": LOCKED_UNTIL_RFC1123,
+            "x-ms-creation-time": "Sun, 15 Nov 2026 02:00:00 GMT",
+        }
+        ok = verify_blob_retention_headers(headers, as_of=AS_OF_UTC, min_retention_days=365)
+        self.assertTrue(ok["intact"])
+        self.assertTrue(ok["locked"])
+        self.assertEqual(ok["immutability_policy_state"], "Locked")
+        self.assertEqual(ok["retention_days"], 731)
+
+        short = verify_blob_retention_headers(headers, as_of=AS_OF_UTC, min_retention_days=800)
+        self.assertFalse(short["intact"])
+        self.assertFalse(short["locked"])
+        self.assertIn("blob_immutability_shorter_than_minimum", short["problems"])
+
+        bad_created = verify_blob_retention_headers(
+            {**headers, "x-ms-creation-time": "not-a-date"},
+            as_of=AS_OF_UTC,
+        )
+        self.assertFalse(bad_created["intact"])
+        self.assertIn("invalid_blob_creation_time", bad_created["problems"])
+
+    def test_publish_enforces_fail_closed_retention_lock_and_records_posture(self) -> None:
+        entries = _sample_chain()
+        for mode, expected_state in (("unlocked", "Unlocked"), (None, "Absent")):
+            transport = _FakeImmutableBlobTransport(
+                immutability_mode=mode,
+                immutability_until=LOCKED_UNTIL_RFC1123 if mode else None,
+            )
+            blob = BlobLedgerDigestStore(
+                ACCOUNT_URL,
+                DEFAULT_CONTAINER,
+                sas=SECRET_SAS,
+                transport=transport,
+            )
+            with self.assertRaises(LedgerDigestBlobError):
+                publish_ledger_digests(
+                    entries,
+                    blob,
+                    before_year=2026,
+                    require_retention_lock=True,
+                    as_of=AS_OF_UTC,
+                )
+            put_calls = [c for c in transport.calls if c[0] == "PUT"]
+            self.assertEqual(len(put_calls), 1)
+            self.assertIsNotNone(blob.last_immutability_posture)
+            assert blob.last_immutability_posture is not None
+            self.assertEqual(
+                blob.last_immutability_posture["immutability_policy_state"],
+                expected_state,
+            )
+            self.assertFalse(blob.last_immutability_posture["locked"])
+
+        locked_transport = _FakeImmutableBlobTransport()
+        locked_blob = BlobLedgerDigestStore(
+            ACCOUNT_URL,
+            DEFAULT_CONTAINER,
+            sas=SECRET_SAS,
+            transport=locked_transport,
+        )
+        pub_result = publish_ledger_digests_with_posture(
+            entries,
+            locked_blob,
+            before_year=2026,
+            require_retention_lock=True,
+            min_retention_days=365,
+            as_of=AS_OF_UTC,
+        )
+        self.assertEqual(
+            pub_result["uploaded"],
+            ["digest-0000000004.json", "year-2024.json", "year-2025.json"],
+        )
+        self.assertEqual(pub_result["immutability_policy_state"], "Locked")
+        self.assertTrue(pub_result["locked"])
+        self.assertEqual(pub_result["retention_days"], 731)
+        posture = pub_result["immutability_posture"]
+        self.assertTrue(posture["live_worm_lock_human_gated"])
+        self.assertTrue(posture["retention_schedule_human_gated"])
+
+    def test_weakest_link_posture_decoupled_locked_and_sanitized_traceback(self) -> None:
+        entries = _sample_chain()
+        transport = _FakeImmutableBlobTransport()
+        blob = BlobLedgerDigestStore(
+            ACCOUNT_URL,
+            DEFAULT_CONTAINER,
+            sas=SECRET_SAS,
+            transport=transport,
+        )
+        publish_ledger_digests(
+            entries,
+            blob,
+            before_year=2026,
+            require_retention_lock=True,
+            as_of=AS_OF_UTC,
+        )
+        transport.per_blob_headers["year-2024.json"] = {
+            "x-ms-immutability-policy-mode": "unlocked",
+            "x-ms-immutability-policy-until-date": LOCKED_UNTIL_RFC1123,
+            "x-ms-creation-time": "Sun, 15 Nov 2026 02:00:00 GMT",
+        }
+        advisory = verify_ledger_digests(
+            entries,
+            blob,
+            require_retention_lock=False,
+            as_of=AS_OF_UTC,
+        )
+        self.assertTrue(advisory["intact"])
+        self.assertFalse(advisory["locked"])
+        self.assertEqual(advisory["immutability_policy_state"], "Unlocked")
+
+        enforced = verify_ledger_digests(
+            entries,
+            blob,
+            require_retention_lock=True,
+            as_of=AS_OF_UTC,
+        )
+        self.assertFalse(enforced["intact"])
+        self.assertFalse(enforced["locked"])
+        self.assertFalse(enforced["retention_lock_verified"])
+        self.assertEqual(enforced["immutability_policy_state"], "Unlocked")
+
+        transport.per_blob_headers.clear()
+        tampered = [dict(e) for e in entries]
+        tampered[-1]["detail"] = {"rewritten": 1}
+        mismatch_rep = verify_ledger_digests(
+            tampered,
+            blob,
+            require_retention_lock=True,
+            as_of=AS_OF_UTC,
+        )
+        self.assertFalse(mismatch_rep["intact"])
+        self.assertTrue(mismatch_rep["locked"])
+        self.assertEqual(mismatch_rep["immutability_policy_state"], "Locked")
+
+        lines: list[str] = []
+        outcome = run_scheduled_verification(
+            tampered,
+            blob,
+            publish=False,
+            require_retention_lock=True,
+            as_of=AS_OF_UTC,
+            out=lines.append,
+        )
+        self.assertEqual(outcome["exit_code"], 1)
+        self.assertEqual(outcome["immutability_policy_state"], "Locked")
+        self.assertIs(outcome["locked"], True)
+        self.assertEqual(outcome["retention_days"], 731)
+        self.assertIs(outcome["immutability_posture"]["live_worm_lock_human_gated"], True)
+        self.assertIs(outcome["immutability_posture"]["retention_schedule_human_gated"], True)
+        payload = json.loads(lines[0].split(" ", 2)[2])
+        self.assertEqual(payload["status"], "breach")
+
+        transport.raise_on_method = "GET"
+        with self.assertRaises(LedgerDigestBlobError) as ctx:
+            blob.list_names()
+        self.assertIsNone(ctx.exception.__cause__)
+        self.assertTrue(ctx.exception.__suppress_context__)
+        rendered_tb = "".join(traceback.format_exception(ctx.exception))
+        self.assertNotIn("SUPERSECRET", rendered_tb)
+        self.assertNotIn("stzavasecretacct", rendered_tb)
+
+        transport.raise_on_method = "PUT"
+        with self.assertRaises(LedgerDigestBlobUncertain) as put_ctx:
+            blob.create_anchor(
+                "digest-0000000099.json",
+                ledger.make_digest(99, "a" * 64),
+            )
+        self.assertIsNone(put_ctx.exception.__cause__)
+        self.assertTrue(put_ctx.exception.__suppress_context__)
+        put_tb = "".join(traceback.format_exception(put_ctx.exception))
+        self.assertNotIn("SUPERSECRET", put_tb)
+        self.assertNotIn("stzavasecretacct", put_tb)
 
 
 if __name__ == "__main__":

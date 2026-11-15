@@ -21,6 +21,10 @@ param productionProfileRequiresKeyVaultPurgeProtection string
 param productionProfileRequiresRegistryQuarantine string
 
 @minLength(1)
+@description('Must not be empty. Empty means the production profile was combined with a mutable, unlocked, or sub-365-day ledger-digests container configuration.')
+param productionProfileRequiresImmutableLedgerDigests string
+
+@minLength(1)
 @description('Must not be empty. Empty means regionCheckReference is missing, placeholder/assumption text, or a raw identifier; record a dated capability check for the selected regions first.')
 param regionCheckMustBeRecorded string
 
@@ -126,6 +130,7 @@ output checked array = [
   productionProfileForbidsPublicNetworkAccess
   productionProfileRequiresKeyVaultPurgeProtection
   productionProfileRequiresRegistryQuarantine
+  productionProfileRequiresImmutableLedgerDigests
   regionCheckMustBeRecorded
   quotaCheckMustBeRecorded
   deploymentLocationsMustBeSelected

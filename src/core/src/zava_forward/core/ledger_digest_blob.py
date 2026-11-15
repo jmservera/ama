@@ -182,6 +182,7 @@ def verify_container_retention_lock(
     lifecycle_prefixes: Sequence[str] = (),
     container_name: str = DEFAULT_CONTAINER,
     require_locked: bool = True,
+    require_immutable_versioning: bool = False,
     min_retention_days: int = DEFAULT_MIN_RETENTION_DAYS,
 ) -> dict[str, Any]:
     """Validate container immutability policy, public access, and lifecycle deletion rules.
@@ -207,6 +208,16 @@ def verify_container_retention_lock(
             problems.append("container_public_access_enabled")
         if cprops.get("hasImmutabilityPolicy") is False:
             problems.append("container_missing_immutability_policy")
+        versioning_cfg = cprops.get("immutableStorageWithVersioning")
+        if require_immutable_versioning:
+            if not isinstance(versioning_cfg, Mapping) or versioning_cfg.get("enabled") is not True:
+                problems.append("immutable_storage_with_versioning_disabled")
+        elif versioning_cfg is not None and (
+            not isinstance(versioning_cfg, Mapping) or versioning_cfg.get("enabled") is False
+        ):
+            problems.append("immutable_storage_with_versioning_disabled")
+    elif require_immutable_versioning:
+        problems.append("immutable_storage_with_versioning_disabled")
 
     props: Mapping[str, Any] | None = None
     if isinstance(policy, Mapping):
@@ -215,12 +226,22 @@ def verify_container_retention_lock(
     state: Any = None
     days: Any = None
     locked = False
+    immutability_policy_state = "Absent"
 
     if props is None or len(props) == 0:
         problems.append("missing_immutability_policy")
     else:
         state = props.get("state")
         locked = state == "Locked"
+        if state is None or state == "Unlocked":
+            immutability_policy_state = "Unlocked"
+        elif state == "Locked":
+            immutability_policy_state = "Locked"
+        elif isinstance(state, str) and state.strip():
+            immutability_policy_state = state.strip()
+        else:
+            immutability_policy_state = "Invalid"
+
         if require_locked:
             if state != "Locked":
                 problems.append("retention_policy_not_locked")
@@ -262,13 +283,17 @@ def verify_container_retention_lock(
     if overlapping_prefixes:
         problems.append("lifecycle_rule_overlaps_digest_container")
 
+    effective_locked = bool(locked and not problems)
     return {
         "intact": not problems,
-        "locked": locked and not problems,
+        "locked": effective_locked,
         "state": state if isinstance(state, str) else None,
+        "immutability_policy_state": immutability_policy_state,
         "retention_days": days if type(days) is int else None,
         "min_retention_days": min_retention_days,
         "overlapping_lifecycle_prefixes": overlapping_prefixes,
+        "live_worm_lock_human_gated": True,
+        "retention_schedule_human_gated": True,
         "problems": problems,
     }
 
@@ -287,19 +312,33 @@ def verify_blob_retention_headers(
         raise ValueError("min_retention_days must be a positive integer")
 
     ref_time = _ensure_utc(as_of) if as_of is not None else datetime.now(UTC)
-    created_utc = _ensure_utc(created_at) if created_at is not None else None
-
     problems: list[str] = []
+    created_utc = _ensure_utc(created_at) if created_at is not None else None
+    if created_utc is None:
+        raw_created = _header(headers, "x-ms-creation-time")
+        if isinstance(raw_created, str) and raw_created.strip():
+            created_utc = _parse_utc_timestamp(raw_created)
+            if created_utc is None:
+                problems.append("invalid_blob_creation_time")
+
     raw_mode = _header(headers, "x-ms-immutability-policy-mode")
-    mode = raw_mode.strip().lower() if isinstance(raw_mode, str) else None
+    stripped_mode = raw_mode.strip() if isinstance(raw_mode, str) else ""
+    mode = stripped_mode.lower() if stripped_mode else None
     if mode != "locked":
         problems.append("blob_immutability_mode_not_locked")
 
     raw_until = _header(headers, "x-ms-immutability-policy-until-date")
     until_dt = _parse_utc_timestamp(raw_until) if isinstance(raw_until, str) else None
+    retention_days: int | None = None
+    retention_days_exact = False
     if until_dt is None:
         problems.append("invalid_blob_immutability_until_date")
     else:
+        if created_utc is not None:
+            retention_days = max(0, (until_dt - created_utc) // timedelta(days=1))
+            retention_days_exact = True
+        else:
+            retention_days = max(0, (until_dt - ref_time) // timedelta(days=1))
         if until_dt <= ref_time:
             problems.append("blob_immutability_expired")
         if (
@@ -309,12 +348,116 @@ def verify_blob_retention_headers(
         ):
             problems.append("blob_immutability_shorter_than_minimum")
 
+    if mode is None:
+        immutability_policy_state = "Absent"
+    elif mode == "unlocked":
+        immutability_policy_state = "Unlocked"
+    elif mode == "locked":
+        if "blob_immutability_expired" in problems:
+            immutability_policy_state = "Expired"
+        elif "invalid_blob_immutability_until_date" in problems:
+            immutability_policy_state = "Invalid"
+        else:
+            immutability_policy_state = "Locked"
+    else:
+        immutability_policy_state = stripped_mode
+
+    effective_locked = bool(mode == "locked" and not problems)
     return {
         "intact": not problems,
-        "locked": mode == "locked" and not problems,
+        "locked": effective_locked,
         "mode": mode,
+        "immutability_policy_state": immutability_policy_state,
+        "retention_days": retention_days,
+        "retention_days_exact": retention_days_exact,
         "until": until_dt.isoformat() if until_dt is not None else None,
+        "live_worm_lock_human_gated": True,
+        "retention_schedule_human_gated": True,
         "problems": problems,
+    }
+
+
+def synthesize_immutability_posture(
+    *,
+    policy_report: Mapping[str, Any] | None = None,
+    header_reports: Sequence[Mapping[str, Any]] = (),
+) -> dict[str, Any]:
+    """Synthesize weakest-link container immutability and retention-lock posture metadata.
+
+    ``locked`` is True only when at least one source was inspected and every inspected policy and
+    anchor header report is intact and in ``"Locked"`` state. Live Azure WORM policy locking and
+    Legal retention-schedule approval remain explicitly marked human-gated.
+    """
+    has_policy = policy_report is not None
+    header_list = list(header_reports)
+    if not has_policy and not header_list:
+        return {
+            "immutability_policy_state": "Absent",
+            "retention_days": None,
+            "locked": False,
+            "policy_checked": False,
+            "anchors_checked": 0,
+            "live_worm_lock_human_gated": True,
+            "retention_schedule_human_gated": True,
+        }
+
+    states: list[str] = []
+    locked_flags: list[bool] = []
+    exact_days: list[int] = []
+    estimated_days: list[int] = []
+
+    if policy_report is not None:
+        p_state = str(policy_report.get("immutability_policy_state") or "Absent")
+        p_locked = bool(
+            policy_report.get("locked") is True
+            and policy_report.get("intact") is True
+            and p_state == "Locked"
+        )
+        states.append(p_state)
+        locked_flags.append(p_locked)
+        p_days = policy_report.get("retention_days")
+        if type(p_days) is int:
+            exact_days.append(p_days)
+
+    for h_rep in header_list:
+        h_state = str(h_rep.get("immutability_policy_state") or "Absent")
+        h_locked = bool(
+            h_rep.get("locked") is True and h_rep.get("intact") is True and h_state == "Locked"
+        )
+        states.append(h_state)
+        locked_flags.append(h_locked)
+        h_days = h_rep.get("retention_days")
+        if type(h_days) is int:
+            if h_rep.get("retention_days_exact") is True:
+                exact_days.append(h_days)
+            else:
+                estimated_days.append(h_days)
+
+    all_locked = bool(locked_flags) and all(locked_flags)
+    if all_locked:
+        effective_state = "Locked"
+    elif "Absent" in states:
+        effective_state = "Absent"
+    elif "Unlocked" in states:
+        effective_state = "Unlocked"
+    else:
+        non_locked = [s for s in states if s != "Locked"]
+        effective_state = non_locked[0] if non_locked else "Locked"
+
+    retention_days: int | None = None
+    if exact_days:
+        retention_days = min(exact_days)
+    elif estimated_days:
+        retention_days = min(estimated_days)
+
+    return {
+        "immutability_policy_state": effective_state,
+        "retention_days": retention_days,
+        "locked": all_locked,
+        "policy_checked": has_policy,
+        "anchors_checked": len(header_list),
+        "live_worm_lock_human_gated": True,
+        "retention_schedule_human_gated": True,
     }
 
 
@@ -323,8 +466,8 @@ def _parse_listing_page(body: bytes) -> tuple[list[str], str]:
     unreadable = "digest container listing was unreadable"
     try:
         root = ET.fromstring(body)
-    except (ET.ParseError, LookupError, ValueError) as exc:
-        raise LedgerDigestBlobError(unreadable) from exc
+    except (ET.ParseError, LookupError, ValueError):
+        raise LedgerDigestBlobError(unreadable) from None
     if root.tag != "EnumerationResults":
         raise LedgerDigestBlobError(unreadable)
     blobs = root.findall("Blobs")
@@ -368,9 +511,10 @@ class BlobLedgerDigestStore:
                 transport=transport,
                 env=env,
             )
-        except ValueError as exc:
-            raise LedgerDigestBlobError("ledger digest store configuration is invalid") from exc
+        except ValueError:
+            raise LedgerDigestBlobError("ledger digest store configuration is invalid") from None
         self.container = container
+        self.last_immutability_posture: dict[str, Any] | None = None
 
     def _blob_url(self, name: str) -> str:
         url = f"{self._store.base}/{urllib.parse.quote(name, safe='')}"
@@ -386,31 +530,30 @@ class BlobLedgerDigestStore:
     ) -> tuple[int, Mapping[str, str], bytes]:
         try:
             headers: dict[str, str] = self._store._headers(extra)
-        except Exception as exc:
+        except Exception:
             raise LedgerDigestBlobError(
                 f"digest container {operation} refused: authorization unavailable"
-            ) from exc
+            ) from None
         try:
             result: tuple[int, Mapping[str, str], bytes] = self._store.transport(
                 method, url, headers, body
             )
-        except Exception as exc:
+        except Exception:
             if method == "PUT":
                 raise LedgerDigestBlobUncertain(
                     f"digest container {operation} outcome is unknown"
-                ) from exc
+                ) from None
             raise LedgerDigestBlobError(
                 f"digest container {operation} failed: storage unreachable"
-            ) from exc
+            ) from None
         return result
 
-    def create_anchor(self, name: str, digest: Mapping[str, Any]) -> bool:
-        """Upload one canonical digest anchor create-only (`If-None-Match: *`).
-
-        Returns True when newly written (`200`/`201`). On `409`/`412` existing-blob responses,
-        reads back the remote anchor and returns False only when its immutable logical digest
-        fields match ``digest``; raises ``LedgerDigestBlobError`` on any divergence or read failure.
-        """
+    def create_anchor_with_headers(
+        self,
+        name: str,
+        digest: Mapping[str, Any],
+    ) -> tuple[bool, dict[str, str]]:
+        """Upload one canonical digest anchor create-only and return `(created, headers)`."""
         if not valid_anchor(name, digest):
             raise InvalidDigestAnchorError("invalid local digest anchor")
         data = json.dumps(dict(digest), sort_keys=True).encode("utf-8")
@@ -422,22 +565,32 @@ class BlobLedgerDigestStore:
         }
         status, headers, _ = self._send("PUT", self._blob_url(name), extra, data, "upload")
         if status in (200, 201):
-            return True
+            return True, dict(headers)
         error_code = _header(headers, "x-ms-error-code")
         if status == 412 or (
             status == 409 and error_code in (None, "BlobAlreadyExists", "BlobImmutableDueToPolicy")
         ):
-            existing, _ = self.read_anchor_with_headers(name)
+            existing, get_headers = self.read_anchor_with_headers(name)
             if not logical_anchor_equal(name, digest, existing):
                 raise LedgerDigestBlobError(
                     "existing remote digest anchor differs from local digest"
                 )
-            return False
+            return False, get_headers
         if status == 408 or status >= 500:
             raise LedgerDigestBlobUncertain(
                 f"digest container upload outcome is unknown (HTTP {status})"
             )
         raise LedgerDigestBlobError(f"digest container upload refused (HTTP {status})")
+
+    def create_anchor(self, name: str, digest: Mapping[str, Any]) -> bool:
+        """Upload one canonical digest anchor create-only (`If-None-Match: *`).
+
+        Returns True when newly written (`200`/`201`). On `409`/`412` existing-blob responses,
+        reads back the remote anchor and returns False only when its immutable logical digest
+        fields match ``digest``; raises ``LedgerDigestBlobError`` on any divergence or read failure.
+        """
+        created, _ = self.create_anchor_with_headers(name, digest)
+        return created
 
     def read_anchor_with_headers(self, name: str) -> tuple[dict[str, Any], dict[str, str]]:
         """Download and parse one canonical digest anchor alongside its response headers."""
@@ -449,8 +602,8 @@ class BlobLedgerDigestStore:
         try:
             decoded = body.decode("utf-8")
             parsed = json.loads(decoded)
-        except (UnicodeDecodeError, ValueError) as exc:
-            raise InvalidDigestAnchorError("invalid remote digest anchor") from exc
+        except (UnicodeDecodeError, ValueError):
+            raise InvalidDigestAnchorError("invalid remote digest anchor") from None
         if not isinstance(parsed, dict) or not valid_anchor(name, parsed):
             raise InvalidDigestAnchorError("invalid remote digest anchor")
         return parsed, dict(headers)
@@ -527,17 +680,57 @@ def publish_ledger_digests(
     sealed_year_digests: Sequence[Mapping[str, Any]] | None = None,
     before_year: int | str | None = None,
     published_at: str | None = None,
+    require_retention_lock: bool = False,
+    retention_policy: Mapping[str, Any] | None = None,
+    container_properties: Mapping[str, Any] | None = None,
+    lifecycle_prefixes: Sequence[str] = (),
+    min_retention_days: int = DEFAULT_MIN_RETENTION_DAYS,
+    as_of: datetime | None = None,
+    posture_out: dict[str, Any] | None = None,
 ) -> list[str]:
-    """Verify the local hash chain, then create-only upload head and sealed-year anchors.
+    """Verify the local hash chain, check container/blob WORM posture, and upload missing anchors.
 
-    Never anchors a broken chain or local digest that disagrees with ``entries``. Raises
-    ``LedgerDigestBlobError`` if a remote anchor already exists with conflicting digest content.
+    Never anchors a broken chain or local digest that disagrees with ``entries``. Records
+    weakest-link immutability posture metadata on ``blob.last_immutability_posture`` (and optional
+    ``posture_out``), failing closed with ``LedgerDigestBlobError`` when ``require_retention_lock``
+    is True and container/blob retention lock evidence is absent, unlocked, expired, or shorter
+    than ``min_retention_days``.
     """
+    if type(min_retention_days) is not int or min_retention_days < 1:
+        raise ValueError("min_retention_days must be a positive integer")
+    ref_time = _ensure_utc(as_of) if as_of is not None else datetime.now(UTC)
+
+    def _record_posture(posture: dict[str, Any]) -> dict[str, Any]:
+        blob.last_immutability_posture = dict(posture)
+        if posture_out is not None:
+            posture_out.clear()
+            posture_out.update(posture)
+        return posture
+
+    policy_checked = (
+        retention_policy is not None or container_properties is not None or bool(lifecycle_prefixes)
+    )
+    policy_rep: dict[str, Any] | None = None
+    if policy_checked:
+        policy_rep = verify_container_retention_lock(
+            retention_policy,
+            container_properties=container_properties,
+            lifecycle_prefixes=lifecycle_prefixes,
+            container_name=blob.container,
+            require_locked=require_retention_lock,
+            min_retention_days=min_retention_days,
+        )
+        if not policy_rep["intact"]:
+            _record_posture(synthesize_immutability_posture(policy_report=policy_rep))
+            raise LedgerDigestBlobError(
+                "digest container retention policy check failed: "
+                + ", ".join(policy_rep["problems"])
+            )
+
     entry_list = [dict(e) for e in entries]
     chain_rep: dict[str, Any] = ledger.verify_entries(entry_list)
-    if not chain_rep["intact"]:
-        return []
-    if entry_list and not ledger.verify_years(entry_list)["intact"]:
+    if not chain_rep["intact"] or (entry_list and not ledger.verify_years(entry_list)["intact"]):
+        _record_posture(synthesize_immutability_posture(policy_report=policy_rep))
         return []
 
     cutoff = datetime.now(UTC).year if before_year is None else before_year
@@ -588,20 +781,115 @@ def publish_ledger_digests(
             raise InvalidDigestAnchorError("local year digest does not match ledger chain")
 
     uploaded: list[str] = []
-    for name, digest in valid_heads:
-        if blob.create_anchor(name, digest):
+    header_reps: list[dict[str, Any]] = []
+    for name, digest in [*valid_heads, *valid_years]:
+        created, resp_headers = blob.create_anchor_with_headers(name, digest)
+        if created:
             uploaded.append(name)
-    for name, digest in valid_years:
-        if blob.create_anchor(name, digest):
-            uploaded.append(name)
+            if (
+                require_retention_lock
+                and _header(resp_headers, "x-ms-immutability-policy-mode") is None
+            ):
+                _, get_headers = blob.read_anchor_with_headers(name)
+                if _header(get_headers, "x-ms-immutability-policy-mode") is not None:
+                    resp_headers = get_headers
+        header_rep = verify_blob_retention_headers(
+            resp_headers,
+            as_of=ref_time,
+            created_at=ref_time if created else None,
+            min_retention_days=min_retention_days,
+        )
+        header_reps.append(header_rep)
+        if require_retention_lock and not header_rep["intact"]:
+            _record_posture(
+                synthesize_immutability_posture(
+                    policy_report=policy_rep,
+                    header_reports=header_reps,
+                )
+            )
+            raise LedgerDigestBlobError(
+                "digest anchor lacks required immutable retention lock: "
+                + ", ".join(header_rep["problems"])
+            )
+
+    posture = _record_posture(
+        synthesize_immutability_posture(
+            policy_report=policy_rep,
+            header_reports=header_reps,
+        )
+    )
+    if require_retention_lock and not posture["locked"]:
+        raise LedgerDigestBlobError("digest container retention lock could not be verified")
     return uploaded
 
 
-def publish_store_digests(store: Any, blob: BlobLedgerDigestStore) -> list[str]:
+def publish_ledger_digests_with_posture(
+    entries: Sequence[Mapping[str, Any]],
+    blob: BlobLedgerDigestStore,
+    *,
+    head_digests: Sequence[Mapping[str, Any]] | None = None,
+    sealed_year_digests: Sequence[Mapping[str, Any]] | None = None,
+    before_year: int | str | None = None,
+    published_at: str | None = None,
+    require_retention_lock: bool = False,
+    retention_policy: Mapping[str, Any] | None = None,
+    container_properties: Mapping[str, Any] | None = None,
+    lifecycle_prefixes: Sequence[str] = (),
+    min_retention_days: int = DEFAULT_MIN_RETENTION_DAYS,
+    as_of: datetime | None = None,
+) -> dict[str, Any]:
+    """Publish ledger digests and return uploaded names with recorded immutability posture."""
+    posture: dict[str, Any] = {}
+    uploaded = publish_ledger_digests(
+        entries,
+        blob,
+        head_digests=head_digests,
+        sealed_year_digests=sealed_year_digests,
+        before_year=before_year,
+        published_at=published_at,
+        require_retention_lock=require_retention_lock,
+        retention_policy=retention_policy,
+        container_properties=container_properties,
+        lifecycle_prefixes=lifecycle_prefixes,
+        min_retention_days=min_retention_days,
+        as_of=as_of,
+        posture_out=posture,
+    )
+    return {
+        "uploaded": uploaded,
+        "immutability_policy_state": posture["immutability_policy_state"],
+        "retention_days": posture["retention_days"],
+        "locked": posture["locked"],
+        "immutability_posture": posture,
+    }
+
+
+def publish_store_digests(
+    store: Any,
+    blob: BlobLedgerDigestStore,
+    *,
+    require_retention_lock: bool = False,
+    retention_policy: Mapping[str, Any] | None = None,
+    container_properties: Mapping[str, Any] | None = None,
+    lifecycle_prefixes: Sequence[str] = (),
+    min_retention_days: int = DEFAULT_MIN_RETENTION_DAYS,
+    as_of: datetime | None = None,
+    posture_out: dict[str, Any] | None = None,
+) -> list[str]:
     """Write local head and sealed-year digests via store, then upload missing anchors."""
     entries = [dict(e) for e in store.audit_entries()]
     if not ledger.verify_entries(entries)["intact"]:
-        return []
+        return publish_ledger_digests(
+            entries,
+            blob,
+            require_retention_lock=require_retention_lock,
+            retention_policy=retention_policy,
+            container_properties=container_properties,
+            lifecycle_prefixes=lifecycle_prefixes,
+            min_retention_days=min_retention_days,
+            as_of=as_of,
+            posture_out=posture_out,
+        )
     store.write_digest()
     store.write_year_digests()
     raw_heads = ledger.read_digests(store.digest_dir)
@@ -613,6 +901,13 @@ def publish_store_digests(store: Any, blob: BlobLedgerDigestStore) -> list[str]:
         blob,
         head_digests=raw_heads,
         sealed_year_digests=raw_years,
+        require_retention_lock=require_retention_lock,
+        retention_policy=retention_policy,
+        container_properties=container_properties,
+        lifecycle_prefixes=lifecycle_prefixes,
+        min_retention_days=min_retention_days,
+        as_of=as_of,
+        posture_out=posture_out,
     )
 
 
@@ -629,10 +924,13 @@ def verify_ledger_digests(
     as_of: datetime | None = None,
 ) -> dict[str, Any]:
     """Verify ledger entries solely against anchors in the immutable Blob container."""
+    if type(min_retention_days) is not int or min_retention_days < 1:
+        raise ValueError("min_retention_days must be a positive integer")
     problems: list[dict[str, Any]] = []
     policy_checked = (
         retention_policy is not None or container_properties is not None or bool(lifecycle_prefixes)
     )
+    policy_rep: dict[str, Any] | None = None
     if policy_checked:
         policy_rep = verify_container_retention_lock(
             retention_policy,
@@ -653,7 +951,7 @@ def verify_ledger_digests(
     names = blob.list_names()
     heads: list[dict[str, Any]] = []
     years: list[dict[str, Any]] = []
-    headers_checked = 0
+    header_reps: list[dict[str, Any]] = []
 
     for name in names:
         if not name.startswith(("digest-", "year-")):
@@ -678,17 +976,20 @@ def verify_ledger_digests(
                 }
             )
             continue
-        if require_retention_lock:
-            headers_checked += 1
-            header_rep = verify_blob_retention_headers(headers, as_of=as_of)
-            if not header_rep["intact"]:
-                problems.append(
-                    {
-                        "check": "retention_headers",
-                        "name": name,
-                        "problems": header_rep["problems"],
-                    }
-                )
+        header_rep = verify_blob_retention_headers(
+            headers,
+            as_of=as_of,
+            min_retention_days=min_retention_days,
+        )
+        header_reps.append(header_rep)
+        if require_retention_lock and not header_rep["intact"]:
+            problems.append(
+                {
+                    "check": "retention_headers",
+                    "name": name,
+                    "problems": header_rep["problems"],
+                }
+            )
         if name.startswith("digest-"):
             heads.append(digest)
         else:
@@ -751,15 +1052,31 @@ def verify_ledger_digests(
             }
         )
 
-    lock_verified = bool(
-        require_retention_lock and not problems and (headers_checked > 0 or policy_checked)
+    posture = synthesize_immutability_posture(
+        policy_report=policy_rep,
+        header_reports=header_reps,
     )
+    blob.last_immutability_posture = dict(posture)
+    if require_retention_lock and not posture["locked"]:
+        if not any(p["check"] in ("retention_policy", "retention_headers") for p in problems):
+            problems.append(
+                {
+                    "check": "retention_lock",
+                    "problem": "immutable container retention lock was not verified",
+                }
+            )
+
+    lock_verified = bool(require_retention_lock and posture["locked"])
     return {
         "intact": not problems,
         "digests": len(heads),
         "year_digests": len(years),
         "entries": int(chain_rep["entries"]),
         "retention_lock_verified": lock_verified,
+        "immutability_policy_state": posture["immutability_policy_state"],
+        "retention_days": posture["retention_days"],
+        "locked": posture["locked"],
+        "immutability_posture": posture,
         "problems": problems,
     }
 
@@ -769,9 +1086,15 @@ def reconcile_ledger_digests(
     record: Mapping[str, str],
     *,
     require_retention_lock: bool = False,
+    retention_policy: Mapping[str, Any] | None = None,
+    container_properties: Mapping[str, Any] | None = None,
+    lifecycle_prefixes: Sequence[str] = (),
+    min_retention_days: int = DEFAULT_MIN_RETENTION_DAYS,
     as_of: datetime | None = None,
 ) -> dict[str, Any]:
     """Compare remote container anchors against an independent second-person SHA-256 record."""
+    if type(min_retention_days) is not int or min_retention_days < 1:
+        raise ValueError("min_retention_days must be a positive integer")
     if (
         not isinstance(record, Mapping)
         or not record
@@ -784,8 +1107,30 @@ def reconcile_ledger_digests(
             "the independent record must map canonical anchor names to SHA-256 heads"
         )
 
-    remote: dict[str, str] = {}
     problems: list[dict[str, Any]] = []
+    policy_checked = (
+        retention_policy is not None or container_properties is not None or bool(lifecycle_prefixes)
+    )
+    policy_rep: dict[str, Any] | None = None
+    if policy_checked:
+        policy_rep = verify_container_retention_lock(
+            retention_policy,
+            container_properties=container_properties,
+            lifecycle_prefixes=lifecycle_prefixes,
+            container_name=blob.container,
+            require_locked=require_retention_lock,
+            min_retention_days=min_retention_days,
+        )
+        if not policy_rep["intact"]:
+            problems.append(
+                {
+                    "check": "retention_policy",
+                    "problems": policy_rep["problems"],
+                }
+            )
+
+    remote: dict[str, str] = {}
+    header_reps: list[dict[str, Any]] = []
     for name in blob.list_names():
         if not name.startswith(("digest-", "year-")):
             continue
@@ -801,16 +1146,20 @@ def reconcile_ledger_digests(
                 {"check": "remote", "name": name, "problem": "invalid remote digest anchor"}
             )
             continue
-        if require_retention_lock:
-            header_rep = verify_blob_retention_headers(headers, as_of=as_of)
-            if not header_rep["intact"]:
-                problems.append(
-                    {
-                        "check": "retention_headers",
-                        "name": name,
-                        "problems": header_rep["problems"],
-                    }
-                )
+        header_rep = verify_blob_retention_headers(
+            headers,
+            as_of=as_of,
+            min_retention_days=min_retention_days,
+        )
+        header_reps.append(header_rep)
+        if require_retention_lock and not header_rep["intact"]:
+            problems.append(
+                {
+                    "check": "retention_headers",
+                    "name": name,
+                    "problems": header_rep["problems"],
+                }
+            )
         remote[name] = str(digest["head"])
 
     for name in sorted(set(record) - set(remote)):
@@ -838,9 +1187,29 @@ def reconcile_ledger_digests(
                     "problem": "remote head differs from the independent record",
                 }
             )
+
+    posture = synthesize_immutability_posture(
+        policy_report=policy_rep,
+        header_reports=header_reps,
+    )
+    blob.last_immutability_posture = dict(posture)
+    if require_retention_lock and not posture["locked"]:
+        if not any(p["check"] in ("retention_policy", "retention_headers") for p in problems):
+            problems.append(
+                {
+                    "check": "retention_lock",
+                    "problem": "immutable container retention lock was not verified",
+                }
+            )
+
     return {
         "intact": not problems,
         "compared": len(set(record) & set(remote)),
+        "retention_lock_verified": bool(require_retention_lock and posture["locked"]),
+        "immutability_policy_state": posture["immutability_policy_state"],
+        "retention_days": posture["retention_days"],
+        "locked": posture["locked"],
+        "immutability_posture": posture,
         "problems": problems,
     }
 
@@ -950,6 +1319,12 @@ def run_scheduled_verification(
                 sealed_year_digests=sealed_year_digests,
                 before_year=before_year,
                 published_at=published_at,
+                require_retention_lock=require_retention_lock,
+                retention_policy=retention_policy,
+                container_properties=container_properties,
+                lifecycle_prefixes=lifecycle_prefixes,
+                min_retention_days=min_retention_days,
+                as_of=as_of,
             )
         report = verify_ledger_digests(
             entry_list,
@@ -963,6 +1338,11 @@ def run_scheduled_verification(
             as_of=as_of,
         )
     except LedgerDigestBlobError:
+        err_posture = (
+            dict(blob.last_immutability_posture)
+            if blob.last_immutability_posture is not None
+            else synthesize_immutability_posture()
+        )
         diag = _emit_alert(
             out,
             status=BLOCKED,
@@ -978,9 +1358,18 @@ def run_scheduled_verification(
             "proposed_owner": PROPOSED_OWNER,
             "diagnostic": diag,
             "published": published,
+            "immutability_policy_state": err_posture["immutability_policy_state"],
+            "retention_days": err_posture["retention_days"],
+            "locked": err_posture["locked"],
+            "immutability_posture": err_posture,
             "report": None,
         }
     except Exception:
+        err_posture = (
+            dict(blob.last_immutability_posture)
+            if blob.last_immutability_posture is not None
+            else synthesize_immutability_posture()
+        )
         diag = _emit_alert(
             out,
             status=BLOCKED,
@@ -996,6 +1385,10 @@ def run_scheduled_verification(
             "proposed_owner": PROPOSED_OWNER,
             "diagnostic": diag,
             "published": published,
+            "immutability_policy_state": err_posture["immutability_policy_state"],
+            "retention_days": err_posture["retention_days"],
+            "locked": err_posture["locked"],
+            "immutability_posture": err_posture,
             "report": None,
         }
 
@@ -1015,6 +1408,10 @@ def run_scheduled_verification(
             "proposed_owner": PROPOSED_OWNER,
             "diagnostic": diag,
             "published": published,
+            "immutability_policy_state": report["immutability_policy_state"],
+            "retention_days": report["retention_days"],
+            "locked": report["locked"],
+            "immutability_posture": report["immutability_posture"],
             "report": report,
         }
 
@@ -1031,6 +1428,10 @@ def run_scheduled_verification(
         "proposed_owner": PROPOSED_OWNER,
         "diagnostic": diag,
         "published": published,
+        "immutability_policy_state": report["immutability_policy_state"],
+        "retention_days": report["retention_days"],
+        "locked": report["locked"],
+        "immutability_posture": report["immutability_posture"],
         "report": report,
     }
 
@@ -1043,6 +1444,7 @@ def _run_reconcile_cli(
 ) -> int:
     try:
         require_lock = _parse_bool_env(cfg, REQUIRE_LOCK_VAR, default=False)
+        min_days = _parse_min_days_env(cfg)
         resolved_blob = blob or open_ledger_digest_store(cfg)
     except LedgerDigestBlobError:
         out(f"{RECONCILE_ALERT_MARKER} cannot reconcile: invalid digest configuration")
@@ -1057,6 +1459,7 @@ def _run_reconcile_cli(
             resolved_blob,
             record,
             require_retention_lock=require_lock,
+            min_retention_days=min_days,
         )
     except (OSError, ValueError, LedgerDigestBlobError) as exc:
         out(f"{RECONCILE_ALERT_MARKER} cannot reconcile: {type(exc).__name__}")
