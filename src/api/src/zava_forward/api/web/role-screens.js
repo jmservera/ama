@@ -12,8 +12,9 @@ const screenStamp = (value) => {
     ? new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short" }).format(date)
     : "Unknown";
 };
+const screenNodeValue = (value) => value && typeof value === "object" && (value.nodeType || value.tag) ? value : screenValue(value);
 const screenFields = (rows) => h("dl", {}, rows.flatMap(([label, value]) => [
-  h("dt", {}, label), h("dd", {}, screenValue(value))
+  h("dt", {}, label), h("dd", {}, screenNodeValue(value))
 ]));
 // A leading { anchor } child makes the panel a named jump target; listed titles get one too. Headings take focus programmatically only.
 const screenPanelIds = { "Technical readiness": "technical-readiness", "Source facts": "technical-source-facts", "Design version": "technical-design",
@@ -46,7 +47,7 @@ const screenTensionText = {
 const screenTension = (kind, anchor = null) => screenPanel(screenTensionText[kind][0], ...(anchor ? [{ anchor }] : []),
   h("p", {}, "Status: proposed design rule. Atlas hypothesis, pending validation in #155; not observed behaviour."),
   h("p", {}, screenTensionText[kind][1]));
-function screenTable(label, headings, rows, limit = 50, cell = (value) => screenValue(value), rowHeader = false) {
+function screenTable(label, headings, rows, limit = 50, cell = (value) => screenNodeValue(value), rowHeader = false) {
   return h("div", {},
     rows.length > limit && h("p", { role: "status" }, `Showing the first ${limit} of ${rows.length} records. Open the case workspace to inspect the remaining evidence. This is not a complete readiness check.`),
     rows.length ? h("div", { class: "table-scroll", role: "region", "aria-label": label, tabindex: 0 },
@@ -92,7 +93,9 @@ const ROLE_HASH_SCREENS = {
   "#/role/building_safety_lead": "safety-lead",
   "#/role/repairs": "hazard-triage",
   "#/role/housing_officer": "resident-service-issues",
-  "#/role/resident_engagement": "resident-choice"
+  "#/role/resident_engagement": "resident-choice",
+  "#/role/procurement": "procurement-packages",
+  "#/role/contractor": "contractor-job-pack"
 };
 const residentJumpNav = (sections, label = "Sections of this view") => h("nav", { role: "navigation", "aria-label": label, class: "screen-links" },
   sections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading`, "data-jump-target": `${id}-heading` }, `Go to ${title}`)));
@@ -302,6 +305,7 @@ const assetJumpNav = () => h("nav", { role: "navigation", "aria-label": "Section
 const assetNote = (text) => h("p", { class: "empty" }, text);
 if (typeof document !== "undefined" && typeof document.addEventListener === "function") {
   document.addEventListener("click", (event) => {
+    if (event.defaultPrevented) return;
     const link = event.target?.closest?.("a[data-jump]");
     if (!link) return;
     event.preventDefault();
@@ -1577,21 +1581,55 @@ const reviewerRole = "Contracts manager, independent of the person who issued or
 const wording = (value, fallback = "Unknown") => value === null || value === undefined || value === "" ? fallback : String(value);
 const reference = (order) => `${wording(order.id)} v${wording(order.version)}`;
 // Keyboard jump links reuse the shared a[data-jump] click handler, so they never change the hash route.
-const procurementJumpNav = (sections) => h("nav", { "aria-label": "Sections of this view", class: "screen-links" },
-  sections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading` }, title)));
+const procurementJumpNav = (sections) => h("nav", { role: "navigation", "aria-label": "Sections of this view", class: "screen-links" },
+  sections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading`, "data-jump-target": `${id}-heading` }, `Go to ${title}`)));
+const procurementBadge = (cue, label, danger = false) => h("span", { class: danger ? "flag danger" : "flag", "data-state-cue": cue }, label);
 const workOrderCues = { Completed: "Completed on record, not accepted", Withdrawn: "Withdrawn", Issued: "Open", Appointed: "Open", Acknowledged: "Open" };
 const invoiceCues = { Matched: "Checked", Received: "Waiting for check", "Not checked": "Waiting for check" };
 const packageDraftAnchor = (p, i) => `package-draft-${String(wording(p.id)).replace(/[^A-Za-z0-9_-]/g, "-")}-${i + 1}`;
 const evidenceCues = { Recorded: "Recorded", Unknown: "Unknown" };
+const packageCapacityBadge = (cap) => {
+  const label = screenCapacityState(cap);
+  return procurementBadge(label.split(":")[0], label, label.startsWith("Over-committed") || label.startsWith("Unknown"));
+};
+const packageEvidenceBadge = (status) => {
+  if (status === null || status === undefined || String(status).trim() === "") {
+    return procurementBadge("Unknown", "Unknown - not confirmed", true);
+  }
+  const label = String(status);
+  if (label.startsWith("Evidenced")) return procurementBadge("Evidenced", label, false);
+  if (label.startsWith("Unknown")) return procurementBadge("Unknown", label, true);
+  return procurementBadge("Action needed", `Action needed: ${label}`, true);
+};
+const packageExpiryBadge = (value) => {
+  const label = screenExpiryState(value);
+  return procurementBadge(label.split(":")[0], label, !label.startsWith("In date until:"));
+};
+const workOrderStateBadge = (state) => {
+  const label = stateCue(workOrderCues, state);
+  return procurementBadge(label.split(":")[0], label, state === "Withdrawn" || label.startsWith("Action needed"));
+};
+const prerequisiteBadge = (stateText) => {
+  if (stateText.startsWith("Met on record")) return procurementBadge("Met on record", stateText, false);
+  const cue = stateText.startsWith("Blocked") ? "Blocked" : stateText.startsWith("Unknown") ? "Unknown" : "Unmet";
+  return procurementBadge(cue, stateText, true);
+};
 const completionMove = (order) => (order.history || []).filter((step) => step.to_state === "Completed").pop();
 function workOrderRecordRows(orders) {
   return orders.map((o) => {
     const done = completionMove(o);
-    return [reference(o), (o.corrections || []).length
-      ? (o.corrections || []).map((k) => `${wording(k.reason)} (${wording(k.by)}, ${wording(k.at)})`).join("; ") : "None recorded",
-    o.state === "Completed" && done ? `Recorded by ${wording(done.by)} on ${wording(done.at)}. A recorded completion is not acceptance.`
-      : o.state === "Completed" ? "Completed on record. Who recorded it is Unknown." : "Not recorded",
-    "Unknown. No independent review record is supplied to this screen."];
+    const corrections = (o.corrections || []).length
+      ? procurementBadge("Corrections recorded", (o.corrections || []).map((k) => `${wording(k.reason)} (${wording(k.by)}, ${wording(k.at)})`).join("; "), true)
+      : procurementBadge("None recorded", "None recorded", false);
+    const completion = o.state === "Completed" && done
+      ? procurementBadge("Completed on record, not accepted", `Recorded by ${wording(done.by)} on ${wording(done.at)}. A recorded completion is not acceptance.`, false)
+      : o.state === "Completed"
+        ? procurementBadge("Completed on record, recorder unknown", "Completed on record. Who recorded it is Unknown.", true)
+        : procurementBadge("Not recorded", "Not recorded", false);
+    const review = o.independent_review
+      ? procurementBadge("Independent review status", stateCue({ Recorded: "Recorded on review", Returned: "Action needed" }, o.independent_review), o.independent_review !== "Recorded")
+      : procurementBadge("Unknown: pending independent review", "Unknown. No independent review record is supplied to this screen.", true);
+    return [reference(o), corrections, completion, review];
   });
 }
 function packagePrerequisites(pkg, orders) {
@@ -1606,11 +1644,11 @@ function packagePrerequisites(pkg, orders) {
     : current.length !== active.length ? "Unmet. A work order is tied to an older package scope."
     : bound ? "Met on record" : "Unmet. Resident scope confirmation needed.";
   return [
-    ["Scope recorded with a version", pkg.scope && pkg.scope_version ? `Met on record (scope v${pkg.scope_version})` : "Unmet", "Programme manager"],
-    ["Contract or call-off reference recorded", pkg.contract_ref ? `Met on record (${pkg.contract_ref} v${wording(pkg.contract_version)})` : "Unmet", "Contracts manager"],
-    ["Committed capacity evidenced for every contractor", evidenced ? "Met on record" : "Unmet or Unknown", "Contracts manager"],
-    ["Leaseholder consultation status", `Blocked: letting or renewal held. Status: ${String(pkg.leaseholder_consultation_status || "unknown").replace("_", " ")}. ${pkg.letting_renewal_reason || "Unknown blocks letting or renewal until Legal verifies it."}`, "Legal or procurement authority"],
-    ["Work order issued for the selected home with resident scope", binding, "Contracts manager"]
+    ["Scope recorded with a version", prerequisiteBadge(pkg.scope && pkg.scope_version ? `Met on record (scope v${pkg.scope_version})` : "Unmet"), "Programme manager"],
+    ["Contract or call-off reference recorded", prerequisiteBadge(pkg.contract_ref ? `Met on record (${pkg.contract_ref} v${wording(pkg.contract_version)})` : "Unmet"), "Contracts manager"],
+    ["Committed capacity evidenced for every contractor", prerequisiteBadge(evidenced ? "Met on record" : "Unmet or Unknown"), "Contracts manager"],
+    ["Leaseholder consultation status", prerequisiteBadge(`Blocked: letting or renewal held. Status: ${String(pkg.leaseholder_consultation_status || "unknown").replace("_", " ")}. ${pkg.letting_renewal_reason || "Unknown blocks letting or renewal until Legal verifies it."}`), "Legal or procurement authority"],
+    ["Work order issued for the selected home with resident scope", prerequisiteBadge(binding), "Contracts manager"]
   ];
 }
 registerRoleScreen({
@@ -1627,47 +1665,50 @@ registerRoleScreen({
     const packages = extra?.packages || [];
     const orders = extra?.orders || [];
     return h("div", {},
-      procurementJumpNav([["package-capacity", "Offered capacity"], ["package-queue", "Package queue"], ["package-expiry", "Insurance and certification expiry"],
-        ["package-orders", "Work orders"], ["package-records", "Corrections and completion"], ...packages.map((p, i) => [packageDraftAnchor(p, i), `Draft readiness ${wording(p.id)}`])]),
-      screenPanel("Evidence boundary",
+      procurementJumpNav([["package-boundary", "Evidence boundary"], ["package-capacity", "Offered capacity"],
+        ["package-tension", "Tension: utilisation versus choice"], ["package-queue", "Package queue"],
+        ["package-expiry", "Insurance and certification expiry"], ["package-orders", "Work orders"],
+        ["package-records", "Corrections and completion"], ...packages.map((p, i) => [packageDraftAnchor(p, i), `Draft readiness ${wording(p.id)}`]),
+        ["package-review", "Contractor submission and review"], ["package-withheld", "Not shown for this role"]]),
+      screenPanel("Evidence boundary", { anchor: "package-boundary" },
         h("p", {}, "Read-only reader view. It records no approval, issues no work order and books no visit. Readiness here is a draft only. Contract terms, capacity and delegations are Unknown unless a fixture or recorded evidence says so. Source: desk research, not observed behaviour."),
         h("p", {}, `Work orders shown are for home ${c.id} only.`)),
       screenPanel("Offered capacity and resident choice", { anchor: "package-capacity" },
         h("p", {}, "Offered capacity is not a booking and not a promise to any resident. A resident's measure-specific choice, pause or withdrawal is recorded and shown on the Resident choice screen, and it takes precedence over any offered slot. Packages are listed in reference order, never ranked by utilisation or headroom.")),
-      screenTension("choice"),
+      screenTension("choice", "package-tension"),
       screenPanel("Package queue", { anchor: "package-queue" },
-        screenTable("Packages with period, scope, version and capacity",
+        screenRecordTable("Packages with period, scope, version and capacity",
           ["Package", "Period", "Scope and version", "Contract or call-off reference", "Contractor", "Offered", "Recorded committed", "In use", "Recorded headroom", "Capacity evidence status"],
           [...packages].sort((x, y) => String(x.id).localeCompare(String(y.id))).flatMap((p) => (p.capacity?.length ? p.capacity : [{}]).map((cap) => [
             `${wording(p.id)}: ${wording(p.name)}`, `${wording(p.period_from)} to ${wording(p.period_to)}`,
             `${wording(p.scope)} (v${wording(p.scope_version)})`, `${wording(p.contract_ref)} v${wording(p.contract_version)}`,
-            cap.contractor, cap.offered, cap.committed, cap.in_use, screenCapacityState(cap), wording(cap.evidence_status)])))),
+            cap.contractor, cap.offered, cap.committed, cap.in_use, packageCapacityBadge(cap), packageEvidenceBadge(cap.evidence_status)])))),
       screenPanel("Contractor insurance and certification expiry", { anchor: "package-expiry" },
         h("p", {}, "Expiry is shown from supplied dates only. It does not confirm that cover or certification is valid, and nothing is renewed or approved here."),
         ...packages.flatMap((p) => (p.capacity || []).map((cap) => screenFields([
-          [`${wording(p.id)}: ${screenValue(cap.contractor)} insurance`, screenExpiryState(cap.insurance_expiry)],
-          [`${wording(p.id)}: ${screenValue(cap.contractor)} certification`, screenExpiryState(cap.certification_expiry)]]))),
+          [`${wording(p.id)}: ${screenValue(cap.contractor)} insurance`, packageExpiryBadge(cap.insurance_expiry)],
+          [`${wording(p.id)}: ${screenValue(cap.contractor)} certification`, packageExpiryBadge(cap.certification_expiry)]]))),
         !packages.some((p) => p.capacity?.length) ? h("p", { class: "empty" }, "No contractors supplied. This does not establish that cover is in date.") : null),
       screenPanel("Work orders for this home", { anchor: "package-orders" },
-        screenTable("Work-order references for the selected home",
+        screenRecordTable("Work-order references for the selected home",
           ["Work order", "Package", "Contractor", "State", "Scope"],
-          orders.map((o) => [reference(o), o.package, o.contractor, stateCue(workOrderCues, o.state), o.scope]))),
+          orders.map((o) => [reference(o), o.package, o.contractor, workOrderStateBadge(o.state), o.scope]))),
       screenPanel("Corrections and completion on record", { anchor: "package-records" },
-        screenTable("Work-order corrections, recorded completion and review for the selected home",
+        screenRecordTable("Work-order corrections, recorded completion and review for the selected home",
           ["Work order", "Corrections recorded", "Completion recorded", "Independent review and acceptance"],
           workOrderRecordRows(orders))),
       ...packages.map((p, i) => screenPanel(`Draft readiness: ${wording(p.id)}`, { anchor: packageDraftAnchor(p, i) },
-        h("p", { role: "status" }, "Draft readiness only. This is not a release or approval."),
-        screenTable(`Unmet prerequisites for ${wording(p.id)}`, ["Prerequisite", "State", "Next reviewer (role)"],
+        h("p", { class: "status-line wait", role: "status", "data-state-cue": "Draft readiness only" }, "State: Draft readiness only. This is not a release or approval."),
+        screenRecordTable(`Unmet prerequisites for ${wording(p.id)}`, ["Prerequisite", "State", "Next reviewer (role)"],
           packagePrerequisites(p, orders.filter((o) => o.package === p.id))),
-        screenFields([["Next reviewer", reviewerRole], ["Named reviewer", "Unassigned. Contracts manager to name a person."]]))),
-      screenPanel("Contractor submission and review",
-        screenFields([["Contractor submission", "Recorded outside this screen; not shown here"],
-          ["Acknowledgement", "A contractor acknowledgement is not acceptance"],
-          ["Independent review and acceptance", "Separate step by a named reviewer; not available from this screen"]])),
+        screenFields([["Next reviewer", reviewerRole], ["Named reviewer", procurementBadge("Action needed", "Action needed: Unassigned. Contracts manager to name a person.", true)]]))),
+      screenPanel("Contractor submission and review", { anchor: "package-review" },
+        screenFields([["Contractor submission", procurementBadge("Unknown", "Unknown: Recorded outside this screen; not shown here", true)],
+          ["Acknowledgement", procurementBadge("Pending review", "Pending review: A contractor acknowledgement is not acceptance", true)],
+          ["Independent review and acceptance", procurementBadge("Pending independent review", "Pending independent review: Separate step by a named reviewer; not available from this screen", true)]])),
       screenWithheld(["Resident contact details and access history (open the case workspace for the safe route reference)",
         "Household and vulnerability details beyond what a package queue needs", "Contract rates, prices and invoice values",
-        "Contractor submissions and acknowledgements, which are recorded outside this screen"]));
+        "Contractor submissions and acknowledgements, which are recorded outside this screen"], "package-withheld"));
   }
 });
 
@@ -1689,30 +1730,36 @@ registerRoleScreen({
   render(c, extra) {
     const orders = extra?.orders || [];
     return h("div", {},
-      procurementJumpNav([["jobpack-purpose", "What this screen does"], ["jobpack-orders", "Your job pack"], ["jobpack-evidence", "Evidence checklist"], ["jobpack-review", "Submission and review"]]),
+      procurementJumpNav([["jobpack-purpose", "What this screen does"], ["jobpack-orders", "Your job pack"],
+        ["jobpack-evidence", "Evidence checklist"], ["jobpack-review", "Submission and review"],
+        ["jobpack-withheld", "Not shown for this role"]]),
       screenPanel("What this screen does", { anchor: "jobpack-purpose" },
         h("p", {}, "Read-only job pack view. Nothing is submitted, accepted or booked from here, and it is not a provider portal. To submit or correct evidence, send it to your named contact."),
         h("p", {}, "Source: desk research hypothesis, not observed behaviour.")),
       screenPanel("Your job pack", { anchor: "jobpack-orders" },
-        screenTable("Your work orders for this home", ["Work order and version", "State", "Works", "Scope"],
-          orders.map((o) => [reference(o), stateCue(workOrderCues, o.state), o.measures, o.scope])),
-        screenFields([["Notice before visit", c.needs_notice ? "Needs notice" : "No extra notice needed"],
+        screenRecordTable("Your work orders for this home", ["Work order and version", "State", "Works", "Scope"],
+          orders.map((o) => [reference(o), workOrderStateBadge(o.state), o.measures, o.scope])),
+        screenFields([["Notice before visit", c.needs_notice
+            ? procurementBadge("Visit notice required", "Visit notice required: Needs notice", true)
+            : procurementBadge("Standard visit", "Standard visit: No extra notice needed", false)],
           ["Named contact", c.named_contact]]),
         h("p", {}, "The reason for any notice is not shared with contractors.")),
       screenPanel("Evidence checklist", { anchor: "jobpack-evidence" },
-        screenTable("Evidence checklist for this job pack", ["Evidence item", "State on record"],
+        screenRecordTable("Evidence checklist for this job pack", ["Evidence item", "State on record"],
           jobPackChecklist.map((item) => [item, item === "Appointment outcome recorded" && orders.some((o) => (o.appointments || []).length)
-            ? stateCue(evidenceCues, "Recorded", "Recorded on a work order") : stateCue(evidenceCues, "Unknown", "Not assessed on this screen")]))),
+            ? procurementBadge("Recorded", stateCue(evidenceCues, "Recorded", "Recorded on a work order"), false)
+            : procurementBadge("Unknown", stateCue(evidenceCues, "Unknown", "Not assessed on this screen"), true)]))),
       screenPanel("Submission and review are separate", { anchor: "jobpack-review" },
-        screenFields([["Your submission", "Not recorded on this screen"],
+        screenFields([["Your submission", procurementBadge("Not recorded", "Not recorded on this screen", true)],
           ["Completion on the work order", orders.some((o) => o.state === "Completed")
-            ? "Marked Completed on the work order by staff. This is a record, not acceptance." : "Not marked Completed"],
-          ["Acknowledgement", "Not recorded. An acknowledgement is not acceptance."],
-          ["Independent review and acceptance", "Unknown. Review data is not available here. Done by someone other than you."],
+            ? procurementBadge("Completed on record, not accepted", "Completed on record, not accepted: Marked Completed on the work order by staff. This is a record, not acceptance.", false)
+            : procurementBadge("Not marked Completed", "Pending completion: Not marked Completed", true)],
+          ["Acknowledgement", procurementBadge("Not recorded, not acceptance", "Not recorded. An acknowledgement is not acceptance.", true)],
+          ["Independent review and acceptance", procurementBadge("Unknown: pending independent review", "Unknown. Review data is not available here. Done by someone other than you.", true)],
           ["Next reviewer", reviewerRole]])),
       screenWithheld(["Resident phone, email and postal contact history (use the named contact)",
         "Household details and any reason behind a notice or access need", "Contract rates, prices and invoice values",
-        "Other contractors' capacity and work orders"]));
+        "Other contractors' capacity and work orders"], "jobpack-withheld"));
   }
 });
 const financeRoles = ["Grants and Evidence Officer", ...screenManagers];

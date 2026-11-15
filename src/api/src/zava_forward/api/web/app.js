@@ -372,7 +372,9 @@ function isRoleScreensDestination(destination) {
     || destination === "#/role/building_safety_lead"
     || destination === "#/role/repairs"
     || destination === "#/role/housing_officer"
-    || destination === "#/role/resident_engagement";
+    || destination === "#/role/resident_engagement"
+    || destination === "#/role/procurement"
+    || destination === "#/role/contractor";
 }
 
 async function requireWorkspaceScripts(hash, caseRoute) {
@@ -433,13 +435,13 @@ async function route() {
   clearTimeout(searchTimer);
   const signal = routeController.signal;
   const hash = location.hash || "#/";
+  const baseHash = hash.split("?")[0];
   const m = location.hash.match(/^#\/case\/([^?]+)(?:\?.*)?$/);
-  const active = m ? (coordinatorOrigin ? "#/overview" : queueOrigin === "all" ? "#/all" : "#/") : hash.startsWith("#/coordinator") ? "#/overview" : isRoleScreensDestination(hash.split("?")[0]) ? "#/screens" : hash.split("?")[0];
+  const active = m ? (coordinatorOrigin ? "#/overview" : queueOrigin === "all" ? "#/all" : "#/") : hash.startsWith("#/coordinator") ? "#/overview" : isRoleScreensDestination(baseHash) ? "#/screens" : baseHash;
   document.querySelectorAll("#nav a").forEach((link) => {
     if (link.getAttribute("href") === active) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
   });
-  const baseHash = hash.split("?")[0];
   const destination = me.navigation.find((item) => item.href === active);
   const routeStatus = `${me.user.role}. ${destination?.scope || (hash === "#/handoff-waiting" ? "Handoff waiting times" : baseHash === "#/exceptions" ? "Data steward and operator exception queue" : "Case workspace")}.`;
   workspaceStatus.textContent = routeStatus;
@@ -449,8 +451,8 @@ async function route() {
   if (me !== session) return;
   if (typeof employeeChat !== "undefined") employeeChat.install();
   workspaceStatus.textContent = routeStatus;
-  if (isRoleScreensDestination(hash.split("?")[0])) return await roleScreensView();
-  if (hash.split("?")[0] === "#/simulator") return await simulatorControlView();
+  if (isRoleScreensDestination(baseHash)) return await roleScreensView();
+  if (baseHash === "#/simulator") return await simulatorControlView();
   if (me.user.role === "Contractor") return await (m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView());
   if (me.services?.cases === false && hash !== "#/assistants" && hash !== "#/import") {
     return show(h("h1", {}, "No case work for this account"),
@@ -1842,8 +1844,9 @@ async function contractorListView() {
   const render = () => out.replaceChildren(
     h("p", { class: "muted" }, `${total} ${total === 1 ? "job" : "jobs"}`),
     h("ul", { class: "list" }, rows.length ? rows.map((r) => h("li", {}, h("a", { class: "item", href: `#/case/${encodeURIComponent(r.id)}` },
-      h("div", {}, h("span", { class: "name" }, `${r.address}, ${r.town} ${r.postcode}`), h("div", { class: "status" }, r.status),
-        r.needs_notice ? h("span", { class: "flag" }, "Needs notice") : h("span", { class: "muted" }, "No extra notice needed"),
+      h("div", {}, h("span", { class: "name" }, `${r.address}, ${r.town} ${r.postcode}`),
+        h("div", { class: "status" }, h("span", { class: "flag", "data-state-cue": "Case status" }, `Status: ${r.status || "Unknown"}`)),
+        contractorVisitNoticeBadge(r.needs_notice),
         h("div", {}, `Named contact: ${r.named_contact}`)),
       h("div", { class: "meta" }, h("div", {}, r.stage), r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "card" }, "No jobs assigned to you.")),
     rows.length < total ? h("p", {}, h("button", { class: "alt", onclick: () => load(true) }, `Show more (${rows.length} of ${total} shown)`)) : null);
@@ -1853,9 +1856,15 @@ async function contractorListView() {
     total = d.total;
     render();
   };
-  show(h("h1", {}, "Your jobs"), h("p", { class: "muted" }, "You see the address, the works and a named contact. Where a resident needs notice before a visit it says so; the reason is not shared with contractors."), out);
+  const jobsSection = h("section", { class: "card", id: "contractor-assigned-jobs", "aria-labelledby": "contractor-assigned-jobs-heading" },
+    h("h2", { id: "contractor-assigned-jobs-heading", tabindex: "-1" }, "Assigned jobs"),
+    out);
+  show(h("h1", {}, "Your jobs"),
+    contractorJumpLinks([["contractor-assigned-jobs-heading", "Assigned jobs"], ["contractor-work-orders-heading", "Your work orders"]], "Sections of your jobs"),
+    h("p", { class: "muted" }, "You see the address, the works and a named contact. Where a resident needs notice before a visit it says so; the reason is not shared with contractors."),
+    jobsSection);
   await load();
-  out.after(await contractorOrders());
+  jobsSection.after(await contractorOrders());
 }
 
 async function contractorCaseView(id) {
@@ -1863,19 +1872,37 @@ async function contractorCaseView(id) {
   try { c = await api(`/api/cases/${encodeURIComponent(id)}`); } catch (e) { if (e.name === "AbortError" || !me) return; return show(h("a", { class: "back", href: "#/" }, "Back to your jobs"), h("p", { class: "err" }, e.message)); }
   show(h("a", { class: "back", href: "#/" }, "Back to your jobs"),
     h("h1", {}, `${c.home.address}, ${c.home.town} ${c.home.postcode}`),
-    h("div", { class: "status-line", role: "status" }, c.status),
-    h("section", { class: "card regulatory", id: "regulatory-supplier" }, h("h2", {}, "Requirements and doubt route"),
+    h("div", { class: "status-line", role: "status", "data-state-cue": "Case status" }, `Status: ${c.status || "Unknown"}`),
+    contractorJumpLinks([["regulatory-supplier-heading", "Requirements and doubt route"], ["contractor-before-visit-heading", "Before you visit"],
+      ["contractor-job-details-heading", "The job"], ["contractor-visits-heading", "Visits"]], "Sections of this job"),
+    h("section", { class: "card regulatory", id: "regulatory-supplier", "aria-labelledby": "regulatory-supplier-heading" },
+      h("h2", { id: "regulatory-supplier-heading", tabindex: "-1" }, "Requirements and doubt route"),
       h("p", {}, "Suppliers: follow the agreed contract and scheme requirements, not a chat interpretation of law. Contract and TrustMark terms are not held here. Obtain them from your named contact or contracts manager before relying on a requirement."),
       h("p", {}, `In doubt, contact ${c.named_contact}. For a possible emergency or hazard use the existing human emergency or hazard service immediately; do not wait for this application. No consent, safety approval or financial commitment is inferred.`),
       h("p", {}, "Share only necessary resident information. This view grants no access to staff regulatory chat or alerts.")),
-    h("section", { class: `card${c.needs_notice ? " ai" : ""}` }, h("h2", {}, "Before you visit"),
-      h("p", { class: "big" }, c.needs_notice ? "Needs notice" : "No extra notice needed"),
-      h("p", {}, `Named contact: ${c.named_contact}`)),
-    h("section", { class: "card" }, h("h2", {}, "The job"),
+    h("section", { class: `card${c.needs_notice ? " ai" : ""}`, id: "contractor-before-visit", "aria-labelledby": "contractor-before-visit-heading" },
+      h("h2", { id: "contractor-before-visit-heading", tabindex: "-1" }, "Before you visit"),
+      h("p", { class: "big" }, contractorVisitNoticeBadge(c.needs_notice)),
+      h("p", {}, `Named contact: ${c.named_contact}`),
+      h("p", { class: "muted" }, "The reason for any notice is not shared with contractors.")),
+    h("section", { class: "card", id: "contractor-job-details", "aria-labelledby": "contractor-job-details-heading" },
+      h("h2", { id: "contractor-job-details-heading", tabindex: "-1" }, "The job"),
       h("dl", {}, h("dt", {}, "Works"), h("dd", {}, c.measures), h("dt", {}, "Stage"), h("dd", {}, c.stage),
         h("dt", {}, "Home"), h("dd", {}, c.home.type), h("dt", {}, "Your contact"), h("dd", {}, `${c.contractor.name}, ${c.contractor.contact}`))),
-    h("section", { class: "card" }, h("h2", {}, "Visits"),
-      c.appointments.length ? h("ul", { class: "list" }, c.appointments.map((a) => h("li", {}, `${fmtDate(a.date)} ${a.slot}: ${a.type} (${a.outcome})`))) : h("p", {}, "No visits booked.")));
+    h("section", { class: "card", id: "contractor-visits", "aria-labelledby": "contractor-visits-heading" },
+      h("h2", { id: "contractor-visits-heading", tabindex: "-1" }, "Visits"),
+      c.appointments.length ? h("ul", { class: "list" }, c.appointments.map((a) => h("li", {}, `${fmtDate(a.date)} ${a.slot}: ${a.type} (Outcome: ${a.outcome || "Not recorded"})`))) : h("p", {}, "No visits booked.")));
+}
+
+function contractorJumpLinks(targets, label) {
+  return h("nav", { role: "navigation", "aria-label": label, class: "screen-links" },
+    targets.map(([targetId, title]) => h("a", { href: `#${targetId}`, "data-jump": targetId, "data-jump-target": targetId }, `Go to ${title}`)));
+}
+
+function contractorVisitNoticeBadge(needsNotice) {
+  return needsNotice
+    ? h("span", { class: "flag danger", "data-state-cue": "Visit notice required" }, "Visit notice required: Needs notice")
+    : h("span", { class: "flag", "data-state-cue": "Standard visit" }, "Standard visit: No extra notice needed");
 }
 
 function documentsPanel(c, id, refresh) {
@@ -2363,7 +2390,14 @@ document.addEventListener("keydown", (e) => {
 });
 document.addEventListener("click", (e) => {
   const menu = document.getElementById("account");
-  if (!menu.contains(e.target)) menu.open = false;
+  if (menu && !menu.contains(e.target)) menu.open = false;
+  if (e.defaultPrevented) return;
+  const jump = e.target?.closest?.("a[data-jump]");
+  if (!jump) return;
+  e.preventDefault();
+  const target = document.getElementById(jump.getAttribute("data-jump"));
+  target?.focus?.();
+  target?.scrollIntoView?.({ block: "start" });
 });
 window.addEventListener("hashchange", () => me && route());
 function startupFailed(error) {
