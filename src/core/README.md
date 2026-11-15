@@ -4808,6 +4808,27 @@ and cannot make completeness true. Reads initialize no defaults and write no aud
 This inventory does not change task-release admission, capture, breaches, consent,
 safety, finance, procurement or continuity.
 
+Both `governance_view` and `governance_view(...)["rai_evidence"]` also expose
+detached, immutable `prd_quality_review` (`satisfied=False`, `accepted=False`,
+`separate_from_report_acceptance=True`,
+`separate_from_remediation_completion=True`,
+`report_acceptance_scope="baseline-assessment-and-remediation-planning only"`)
+and `prd_owner_acceptance` (`accepted=False`,
+`separate_from_report_acceptance=True`,
+`separate_from_remediation_completion=True`,
+`report_acceptance_scope="baseline-assessment-and-remediation-planning only"`)
+projections (2026-11-15). Neither
+appending 22/22 claims, freezing/approving a protocol, recording benefits or
+release decisions, nor mutating stored governance keys can satisfy or overwrite
+current PRD quality review or human owner acceptance. `rai_evidence` also
+exposes `affected_dispatch="DISABLED until appropriate evidence and qualified
+approvals exist"` and `conditional_eu_assurance="Applies only after qualified
+applicability review"` alongside `live_use`, and marks `RAI_EU_CONDITIONAL`
+(`EU-COND-01`, `EU-COND-02`, `EU-COND-04`) with `conditional_eu=True` and
+`applicability_review="Required before conditional EU assurance applies"` while
+preserving `NOT_ASSESSED`, `UNCHANGED`, `Open`, `Unknown` and `Not
+independently established`.
+
 `GovernanceCommittedError` means SQL persisted but acknowledgement failed:
 reload and reconcile the event reference before another action. JSON retains
 best-effort in-process restoration and its existing cross-file crash/non-atomic

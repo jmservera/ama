@@ -698,10 +698,20 @@ For issue #126, the [constructed RAI evidence register](../../src/core/README.md
 and [API contract](../../src/api/README.md#constructed-rai-evidence-register-api-126)
 record append-only unverified claims for all 22 open baseline checks, with exact
 declared source/task/release comparison, explicit unknowns and current registered
-manager provenance. Local source/HTTP/disposable SQL/non-root image evidence is
-not a qualified assessment, human approval, closure or live-use acceptance.
-The [dated addendum note](../case_study_48_addendum.md#constructed-rai-evidence-register-engineering-2026-10-18)
-preserves historical report acceptance and separate real AI/SQL/Azure gates.
+manager provenance. On 2026-11-15, `governance_view` and `rai_evidence` also
+enforce explicit separation of pending PRD quality review and unsigned PRD
+`0.21.0` owner acceptance from `0.14.0` planning-only report acceptance and
+22/22 claim disposition counts, expose `affected_dispatch` (`DISABLED until
+appropriate evidence and qualified approvals exist`) alongside blocked
+`live_use`, and bind `conditional_eu_assurance` (`Applies only after qualified
+applicability review`) on `EU-COND-01`, `EU-COND-02` and `EU-COND-04`. Local
+source/HTTP/disposable SQL/non-root image evidence is not a qualified
+assessment, OD-36 DPIA/lawful-basis approval, human/budget-owner sign-off,
+closure or live-use acceptance. The [dated addendum note](../case_study_48_addendum.md#constructed-rai-evidence-register-engineering-2026-10-18),
+[PRD RAI engineering note](../prds/zava-forward-retrofit-programme-demonstrator.md#constructed-finding-evidence-engineering-2026-10-18-126)
+and [ADR 0002 note](../adrs/0002-pilot-readiness-architecture.md#finding-evidence-register-engineering-2026-10-18-126)
+preserve historical versions, negative/insufficient outcomes and separate real
+AI/SQL/Azure gates.
 
 For issue #153, the [chat and alert-panel copy audit](./research/ux/content-standard.md#chat-and-alert-panel-audit-extension-2026-10-18-153)
 extends the existing seven-file lexical guard to chat, including snapshot/envelope
