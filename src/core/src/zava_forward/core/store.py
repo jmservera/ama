@@ -2169,8 +2169,50 @@ class Store(
     def review_ai(self, user, rec_id, action, reason="", text=None):
         return ai_tasks.review(self, user, rec_id, action, reason, text)
 
-    def ai_live_report(self, user=None, *, start=None, end=None, as_of=None):
-        return ai_tasks.live_report(self, user=user, start=start, end=end, as_of=as_of)
+    def ai_live_report(self, user=None, *, start=None, end=None, as_of=None, assistants_service=None):
+        return ai_tasks.live_report(
+            self,
+            user=user,
+            start=start,
+            end=end,
+            as_of=as_of,
+            assistants_service=assistants_service,
+        )
+
+    def rai_readiness_report(self, user=None, *, assistants_service=None):
+        from . import rai_control_plane
+
+        if user is not None and user.get("role") not in MANAGER_ROLES:
+            raise PermissionError("Only a manager can read the RAI readiness report.")
+        return rai_control_plane.exercise_acceptance_report(
+            self,
+            user=user,
+            assistants_service=assistants_service,
+        )
+
+    def activate_ai_task_live(
+        self,
+        user,
+        task_id,
+        approval=None,
+        *,
+        approved_by=None,
+        named_approval_id=None,
+        assistants_service=None,
+        release_body=None,
+    ):
+        from . import rai_control_plane
+
+        return rai_control_plane.activate_live_task(
+            self,
+            task_id,
+            approval,
+            approved_by=approved_by,
+            named_approval_id=named_approval_id,
+            actor=user,
+            assistants_service=assistants_service,
+            release_body=release_body,
+        )
 
     def funding_step(self, user, case_id, action, text="", *, body=None, **extra):
         from .finance import _identity, classify_finance_operation, guard_no_automated_finance_authority

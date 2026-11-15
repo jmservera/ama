@@ -6,6 +6,41 @@ ms.date: 2026-11-15
 ms.topic: reference
 ---
 
+## Responsible AI release control plane, traceability and separated readiness (2026-11-15, Refs #218)
+
+`rai_control_plane` enforces deterministic `OQ-017` rejection of any live AI
+task activation (`activate_live_task`, `Store.activate_ai_task_live`,
+`assistant_release.record`, `Assistants.record_release`, and `rai_release.missing_binding`)
+unless both a non-empty named human `approved_by` and a non-placeholder
+`named_approval_id` are supplied for an enabled registered task, together with
+named-human live monitoring thresholds and an appointed release approver. Every
+rejected live activation attempt raises `LiveActivationApprovalError` (`OQ-017`)
+and persists a tamper-evident `rai_live_activation_rejected` audit entry outside
+any rolled-back SQL release transaction (plus a `live-activation-rejected` row
+in `assistant_events` when the SQL assistant store is active).
+
+`REQUIREMENT_TRACEABILITY`, `requirement_traceability()`,
+`requirement_traceability_map()`, `verify_traceability_targets()`, and
+`traceability_summary()` provide a machine-readable requirement-to-acceptance
+traceability register covering all 15 Epic `#218` requirement, acceptance,
+open-question, and rule identifiers (`FR-051` to `FR-054`, `NFR-014`, `AC-069`
+to `AC-073`, `OQ-017` to `OQ-019`, `RULE-024`, and `RULE-020`), verifying AST
+resolution of every referenced unit-test class and method while recording
+explicit owner/live deferrals (`OQ-017`, `OQ-018`, `OQ-019`) without fabricating
+live-provider or human sign-off.
+
+`exercise_acceptance_report()` and `Store.rai_readiness_report()` emit two
+disjoint sections across `Assistants.registry`, `ai_tasks.live_report`, and
+`GovernanceMixin.governance_view`: `rai_exercise_acceptance` (evaluating the
+deterministic RAI control checks and traceability completeness independently of
+live provider wiring) and `real_ai_delivery_gate` (evaluating real-AI provider
+wiring, serving-model attestation, actual-release binding, and owner live-use
+sign-off). Run the focused `#218` core suite from `src/core` with:
+
+```bash
+PYTHONPATH=src:tests python3 -m unittest tests/test_rai_control_plane_218.py -v
+```
+
 ## Deterministic no-automated-finance-authority guard and invariant check (2026-11-15, Refs #93)
 
 `finance` enforces the `RULE-010` / `AC-035` boundary that no automated, system,

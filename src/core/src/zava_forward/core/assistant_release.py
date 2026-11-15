@@ -122,6 +122,10 @@ def assessment(db, task, binding, now, live=False):
     except (ValueError, TypeError):
         logging.getLogger(__name__).warning("Malformed release record; dispatch denied.")
         return None, denial("malformed release record", ["valid release record"], task)
+    if live:
+        for rec in found:
+            rec.setdefault("approved_by", None)
+            rec.setdefault("named_approval_id", None)
     held = found
     if not task.startswith("legacy:"):
         try:
@@ -143,12 +147,40 @@ def admission(db, task, binding, now, live=False):
 def record(db, now, user, body, approvers, task_ids):
     if user.get("role") != "Retrofit Programme Manager":
         raise PermissionError("Only a Retrofit Programme Manager can record a release.")
+    from . import rai_control_plane
+    live_intent = rai_control_plane.is_live_release_intent(body)
+    live_check = None
+    if live_intent:
+        task_candidate = body.get("task") if isinstance(body, dict) else None
+        live_check = rai_control_plane.validate_live_task_approval(
+            task_candidate,
+            body if isinstance(body, dict) else None,
+            allowed_task_ids=set(task_ids),
+        )
+        reasons = list(live_check["reasons"])
+        if user.get("email", "").lower() not in approvers:
+            reasons.append("caller is not an appointed live release approver (OQ-017)")
+        from . import monitoring_coverage
+        mon_check = monitoring_coverage.check_monitoring_declaration(
+            body.get("monitoring_declaration") if isinstance(body, dict) else None,
+            task_enabled=True,
+            live=True,
+        )
+        if mon_check["missing"]:
+            reasons.append(
+                "monitoring_declaration lacks named-human approved live thresholds (OQ-017)"
+            )
+        if reasons:
+            raise rai_control_plane.LiveActivationApprovalError(
+                live_check["task_id"],
+                reasons,
+            )
     if user.get("email", "").lower() not in approvers:
         raise PermissionError("You are not a named release approver; use the manual route.")
     task = body.get("task")
     if task not in task_ids:
         raise ValueError("Choose a registered task.")
-    cls = body.get("evidence_class")
+    cls = "actual" if live_intent else body.get("evidence_class")
     if cls not in CLASSES:
         raise ValueError("State evidence_class: constructed-fixture or actual.")
     if body.get("residual_risk_decision") != "Accept":
@@ -162,6 +194,9 @@ def record(db, now, user, body, approvers, task_ids):
                approver=dict(name=user.get("name", ""), email=user["email"], role=user["role"]),
                expires=parse_expiry(body.get("expires")), recorded_at=now,
                actual_authorisation=cls == "actual")
+    if live_check is not None:
+        rec["approved_by"] = live_check["approved_by"]
+        rec["named_approval_id"] = live_check["named_approval_id"]
     for k in BOUND:
         rec[k] = text(body.get(k), k, 200)
     from . import ai_registry

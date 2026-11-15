@@ -575,8 +575,9 @@ def review(store, user, rec_id, action, reason="", text=None):
         return _record_view(store, user, rec)
 
 
-def live_report(store, user=None, *, start=None, end=None, as_of=None):
+def live_report(store, user=None, *, start=None, end=None, as_of=None, assistants_service=None):
     """Reviewer outcomes, fallback reasons and AI consumption economics recorded so far."""
+    from . import rai_control_plane
     if user is not None and user.get("role") not in projection.STAFF_ROLES:
         raise PermissionError("Only authorised staff can read the AI live report.")
     reason_ok = True if user is None else projection.can_see_reason(user)
@@ -611,10 +612,16 @@ def live_report(store, user=None, *, start=None, end=None, as_of=None):
                     if projection.contains_withheld_value(raw_reason, withheld):
                         shown_reason = projection.NOTE_HELD
             reasons.append(dict(task=task, action=status, reason=shown_reason))
+    readiness = rai_control_plane.exercise_acceptance_report(
+        store,
+        user=user,
+        assistants_service=assistants_service,
+    )
     return dict(
         prompt_version=PROMPT_VERSION,
         tasks=tasks,
         fallback_reasons=fallbacks,
         reviewer_reasons=reasons[-50:],
         ai_consumption_economics=econ,
+        **readiness,
     )

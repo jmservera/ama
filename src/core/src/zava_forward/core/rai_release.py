@@ -243,6 +243,13 @@ def missing_binding(
         )
         if live_check["missing"]:
             missing.append("named-human approved live monitoring thresholds")
+    if live and ("approved_by" in record or "named_approval_id" in record):
+        from . import rai_control_plane
+
+        if not rai_control_plane.valid_named_human_approver(record.get("approved_by")):
+            missing.append("named human approved_by (OQ-017)")
+        if not rai_control_plane.valid_named_approval_id(record.get("named_approval_id")):
+            missing.append("named_approval_id (OQ-017)")
     return missing
 
 
