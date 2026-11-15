@@ -27,6 +27,7 @@ from datetime import UTC, datetime
 from importlib.resources import files
 from typing import Any
 
+from . import resident_journey_design as _journey
 from . import resident_preview as _preview
 from .insights import STAGE_ORDER
 from .resident_documents import DocumentFacts
@@ -582,6 +583,328 @@ def showcase_view(row: ShowcaseRow, now: datetime | None = None) -> dict[str, An
     )
     if row.closed:
         out["closed"] = "This case is recorded as closed."
+    return out
+
+
+@dataclass(frozen=True)
+class RepresentativeShowcaseGrant:
+    """Task-limited synthetic representative session grant bound to one case, measure and expiry."""
+
+    case_id: str
+    email: str
+    representative_ref: str
+    measure: str
+    tasks: tuple[str, ...]
+    valid_from: datetime
+    expires_at: datetime | None
+    revoked: bool = False
+    status: str = "Confirmed"
+    scope: str = "Task-scoped showcase grant"
+    design_version: int = 1
+    context_revision: int = 1
+    safe_contact_ok: bool = True
+    scope_ok: bool = True
+    source: str = "Synthetic showcase representative grant"
+    resident_wishes: str = "Share only the listed task details until the recorded expiry time."
+    provenance: str = "owner-approved synthetic showcase grant"
+    email_count: int = 1
+    appointments: tuple[Mapping[str, Any], ...] = ()
+    documents: DocumentFacts = DocumentFacts()
+
+    @property
+    def principal_subject(self) -> str:
+        return f"rep:{self.case_id}:{self.representative_ref}"
+
+
+def admit_representative_grant(grant: RepresentativeShowcaseGrant) -> str:
+    """Validate synthetic admission invariants and return canonical login email, or raise."""
+    if not grant.case_id.strip() or not grant.provenance.strip():
+        raise ShowcaseDenied("provenance")
+    email = canonical_email(grant.email)
+    if email is None or grant.email_count != 1:
+        raise ShowcaseDenied("ambiguous_identity")
+    if _journey.valid_representative_ref(grant.representative_ref) is None:
+        raise ShowcaseDenied("representative_ref")
+    return email
+
+
+def representative_grant_evaluation(
+    grant: RepresentativeShowcaseGrant,
+    row: ShowcaseRow,
+    now: datetime | None = None,
+) -> _journey.AuthorityEvaluation:
+    """Evaluate representative authority, task scope and `expires_at` at request/action time."""
+    now_utc = _journey.parse_iso_utc(now) if now is not None else datetime.now(UTC)
+    clean_ref = _journey.valid_representative_ref(grant.representative_ref)
+    if clean_ref is None or now_utc is None:
+        return _journey.AuthorityEvaluation(
+            state="held",
+            active=False,
+            reason="missing_authority",
+            representative_ref=clean_ref or "",
+            expires_at=None,
+        )
+
+    exp_dt = _journey.parse_iso_utc(grant.expires_at) if grant.expires_at is not None else None
+    if exp_dt is not None and exp_dt > AUTHORITY_END:
+        exp_dt = AUTHORITY_END
+    exp_iso = _journey.format_iso_utc(exp_dt) if exp_dt is not None else None
+
+    if exclusion(row, now_utc) is not None or not grant.provenance.strip():
+        return _journey.AuthorityEvaluation(
+            state="held",
+            active=False,
+            reason="revoked",
+            representative_ref=clean_ref,
+            expires_at=exp_iso,
+        )
+
+    if grant.revoked or grant.status == "Revoked":
+        return _journey.AuthorityEvaluation(
+            state="held",
+            active=False,
+            reason="revoked",
+            representative_ref=clean_ref,
+            expires_at=exp_iso,
+        )
+    if grant.status == "Disputed":
+        return _journey.AuthorityEvaluation(
+            state="held",
+            active=False,
+            reason="disputed",
+            representative_ref=clean_ref,
+            expires_at=exp_iso,
+        )
+    if grant.status == "Unclear":
+        return _journey.AuthorityEvaluation(
+            state="held",
+            active=False,
+            reason="unclear",
+            representative_ref=clean_ref,
+            expires_at=exp_iso,
+        )
+    if grant.status != "Confirmed":
+        return _journey.AuthorityEvaluation(
+            state="held",
+            active=False,
+            reason="malformed_authority",
+            representative_ref=clean_ref,
+            expires_at=exp_iso,
+        )
+
+    if grant.expires_at is None or exp_dt is None or exp_iso is None:
+        return _journey.AuthorityEvaluation(
+            state="held",
+            active=False,
+            reason="missing_expiry",
+            representative_ref=clean_ref,
+            expires_at=None,
+        )
+
+    if not grant.tasks or any(
+        not isinstance(task, str) or task not in _journey.AUTHORITY_TASKS for task in grant.tasks
+    ):
+        return _journey.AuthorityEvaluation(
+            state="held",
+            active=False,
+            reason="malformed_authority",
+            representative_ref=clean_ref,
+            expires_at=exp_iso,
+        )
+    normalized_tasks = tuple(t for t in _journey.AUTHORITY_TASKS if t in grant.tasks)
+
+    if now_utc >= exp_dt:
+        return _journey.AuthorityEvaluation(
+            state="expired",
+            active=False,
+            reason="expired",
+            representative_ref=clean_ref,
+            expires_at=exp_iso,
+        )
+
+    start_dt = _journey.parse_iso_utc(grant.valid_from)
+    if start_dt is None or now_utc < start_dt:
+        return _journey.AuthorityEvaluation(
+            state="held",
+            active=False,
+            reason="not_yet_valid",
+            representative_ref=clean_ref,
+            expires_at=exp_iso,
+        )
+
+    if not grant.safe_contact_ok:
+        return _journey.AuthorityEvaluation(
+            state="held",
+            active=False,
+            reason="safe_contact_changed",
+            representative_ref=clean_ref,
+            expires_at=exp_iso,
+        )
+
+    if not grant.scope_ok or not grant.measure or grant.measure not in row.measures:
+        return _journey.AuthorityEvaluation(
+            state="held",
+            active=False,
+            reason="scope_changed",
+            representative_ref=clean_ref,
+            expires_at=exp_iso,
+        )
+
+    return _journey.AuthorityEvaluation(
+        state="active",
+        active=True,
+        reason="active",
+        representative_ref=clean_ref,
+        expires_at=exp_iso,
+        tasks=normalized_tasks,
+        measure=_bounded(grant.measure),
+        context_revision=grant.context_revision,
+        scope=_bounded(grant.scope),
+        design_version=str(grant.design_version),
+    )
+
+
+def _showcase_rep_appointments(
+    items: tuple[Mapping[str, Any], ...],
+) -> tuple[dict[str, list[dict[str, Any]]], bool]:
+    offered: list[dict[str, Any]] = []
+    confirmed: list[dict[str, Any]] = []
+    can_confirm = False
+    for raw in items:
+        if not isinstance(raw, Mapping):
+            continue
+        is_confirmed = bool(raw.get("confirmed", False))
+        allow_confirm = not is_confirmed and bool(raw.get("can_confirm_appointment", False))
+        if allow_confirm:
+            can_confirm = True
+        entry: dict[str, Any] = {
+            "offer_id": _bounded(str(raw.get("offer_id", "")), 80),
+            "date": _bounded(str(raw.get("date", "")), 20),
+            "period": _bounded(str(raw.get("period", "")), 40),
+            "instructions": (
+                _bounded(str(raw["instructions"]), 240)
+                if isinstance(raw.get("instructions"), str) and raw["instructions"].strip()
+                else None
+            ),
+            "booking_status": (
+                _journey.CONFIRMED_APPOINTMENT_LABEL
+                if is_confirmed
+                else _journey.OFFERED_APPOINTMENT_LABEL
+            ),
+            "can_confirm_appointment": allow_confirm,
+        }
+        if is_confirmed:
+            confirmed.append(entry)
+        else:
+            offered.append(entry)
+    return {"offered": offered, "confirmed": confirmed}, can_confirm
+
+
+def representative_showcase_view(
+    grant: RepresentativeShowcaseGrant,
+    row: ShowcaseRow,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    """Build positive-allowlist showcase representative view; transitions immediately on expiry."""
+    evaluation = representative_grant_evaluation(grant, row, now)
+    if not evaluation.active or evaluation.measure is None:
+        inactive = _journey.held_or_expired_view(
+            representative_ref=evaluation.representative_ref,
+            state=evaluation.state,
+            reason=evaluation.reason,
+            expires_at=evaluation.expires_at,
+        )
+        inactive["banner"] = BANNER
+        return inactive
+
+    stage_set: set[str] = set()
+    actions: list[str] = []
+    for task in evaluation.tasks:
+        stage_set.update(_journey.TASK_JOURNEY_STAGES.get(task, ()))
+        for act in _journey.TASK_PERMITTED_ACTIONS.get(task, ()):
+            if act not in actions:
+                actions.append(act)
+    journey_stages = [st for st in _journey.JOURNEY_STAGE_ORDER if st in stage_set]
+
+    stage = row.stage
+    if stage in STAGE_ORDER and stage in _preview.STAGE_TEXT:
+        progress, next_step = _preview.STAGE_TEXT[stage]
+        known_stage = stage if stage in STAGE_STEP else ""
+    else:
+        progress, next_step = _preview.UNKNOWN_PROGRESS, _preview.UNKNOWN_NEXT
+        known_stage = ""
+
+    measure_entry: dict[str, Any] = {
+        "measure": evaluation.measure,
+        "scope": evaluation.scope,
+        "design_version": evaluation.design_version,
+        "context_revision": evaluation.context_revision,
+        "tasks": list(evaluation.tasks),
+    }
+    if "Receive information" in evaluation.tasks or "Communicate" in evaluation.tasks:
+        measure_entry["stage"] = known_stage or "Unknown"
+        measure_entry["progress"] = progress
+        measure_entry["next_step"] = next_step
+
+    appointments_payload: dict[str, list[dict[str, Any]]] | None = None
+    if "Attend" in evaluation.tasks:
+        appointments_payload, can_confirm = _showcase_rep_appointments(grant.appointments)
+        measure_entry["appointments"] = appointments_payload
+        if can_confirm and "confirm_appointment" not in actions:
+            actions.append("confirm_appointment")
+
+    statement = (
+        f"You may {', '.join(evaluation.tasks)} for {evaluation.measure} "
+        f"({evaluation.scope}, design {evaluation.design_version}) until {evaluation.expires_at}."
+    )
+    out: dict[str, Any] = {
+        "banner": BANNER,
+        "viewer": {
+            "kind": "demo representative",
+            "representative_ref": evaluation.representative_ref,
+            "state": "active",
+            "active": True,
+        },
+        "read_only": not any(
+            t in evaluation.tasks for t in ("Communicate", "Attend", "Works decision")
+        ),
+        "state": "active",
+        "active": True,
+        "reason": "active",
+        "expires_at": evaluation.expires_at,
+        "journey_stages": journey_stages,
+        "permitted_actions": actions,
+        "authority_scope": [
+            {
+                "measure": evaluation.measure,
+                "scope": evaluation.scope,
+                "design_version": evaluation.design_version,
+                "context_revision": evaluation.context_revision,
+                "tasks": list(evaluation.tasks),
+                "expires_at": evaluation.expires_at,
+                "source": _bounded(grant.source, 120),
+                "resident_wishes": _bounded(grant.resident_wishes, 240),
+                "statement": statement,
+            }
+        ],
+        "measures": [measure_entry],
+        "tasks_not_shown": [
+            {"task": task, "reason": _journey.TASK_BOUNDARY_NOTES[task]}
+            for task in _journey.AUTHORITY_TASKS
+            if task not in evaluation.tasks
+        ],
+        "unavailable": [dict(feature=f, reason=r) for f, r in _preview.UNAVAILABLE],
+        "help": _preview.HELP,
+    }
+    if "Receive information" in evaluation.tasks or "Communicate" in evaluation.tasks:
+        out["stage"] = known_stage
+        out["progress"] = progress
+        out["next_step"] = next_step
+        out["documents"] = documents_view(grant.documents)
+        if row.closed:
+            out["closed"] = "This case is recorded as closed."
+    if appointments_payload is not None:
+        out["appointments"] = appointments_payload
     return out
 
 

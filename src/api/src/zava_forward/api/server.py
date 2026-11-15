@@ -1026,6 +1026,33 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(404, {"error": "Home case not found."})
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
+            if url.path.startswith("/api/cases/") and url.path.endswith("/representative-view"):
+                parts = url.path.strip("/").split("/")
+                if len(parts) != 4:
+                    return self._json(404, {"error": "Case not found."})
+                if u.get("role") not in controls.RESIDENT_VIEW_ROLES:
+                    return self._json(
+                        403,
+                        {"error": "Representative views need current resident-workflow staff."},
+                    )
+                try:
+                    rep_ref = q.get("representative_ref", [None])[0]
+                    session_id = q.get("session_id", [None])[0]
+                    return self._json(
+                        200,
+                        s.representative_view(
+                            u,
+                            unquote(parts[2]),
+                            rep_ref,
+                            session_id=session_id,
+                        ),
+                    )
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except KeyError:
+                    return self._json(404, {"error": "Case not found."})
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
             if url.path.startswith("/api/cases/"):
                 d = s.detail(url.path.rsplit("/", 1)[1], u)
                 return self._json(200, d) if d else self._json(404, {"error": "Case not found."})
@@ -1602,6 +1629,34 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(409, {"error": str(error), "outcome": "committed"})
                 if len(parts) == 4 and parts[:2] == ["api", "cases"]:
                     cid, act = parts[2], parts[3]
+                    if act == "representative-view":
+                        from zava_forward.core.resident_journey_design import (
+                            RepresentativeAccessBlockedError,
+                            RepresentativeScopeDeniedError,
+                        )
+
+                        if not projection.allowed(u, "case", "POST") and not projection.allowed(
+                            u, "case"
+                        ):
+                            return self._json(403, {"error": "Your role does not include this."})
+                        if u.get("role") not in controls.RESIDENT_VIEW_ROLES:
+                            return self._json(
+                                403,
+                                {
+                                    "error": (
+                                        "Representative views need current resident-workflow staff."
+                                    )
+                                },
+                            )
+                        try:
+                            return self._json(
+                                200, s.representative_action_check(u, unquote(cid), body)
+                            )
+                        except (
+                            RepresentativeAccessBlockedError,
+                            RepresentativeScopeDeniedError,
+                        ) as blocked_err:
+                            return self._json(403, blocked_err.to_payload())
                     if act == "sensor-draft":
                         from zava_forward.core.sqlstore import CommittedReloadError
 

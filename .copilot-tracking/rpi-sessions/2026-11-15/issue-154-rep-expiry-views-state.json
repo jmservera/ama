@@ -1,0 +1,69 @@
+{
+  "task_id": "issue-154-rep-expiry-views",
+  "task_slug": "issue-154-rep-expiry-views",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/issue-154-rep-expiry-views-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/issue-154-rep-expiry-views-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/issue-154-rep-expiry-views-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/issue-154-rep-expiry-views-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/issue-154-rep-expiry-views-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/issue-154-rep-expiry-views-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the full RPI loop in order (research, plan with rpi-plan-critique, implement, review) on feat/ux-154-rep-expiry-views for Issue #154 Criterion 3, commit changes and tracking artifacts locally without pushing, and avoid conflicting edits to role-screens.js where possible.",
+      "status": "confirmed",
+      "evidence": "Explicit caller task prompt, 2026-11-15."
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready. Converged on creating zava_forward.core.resident_journey_design, extending resident_decisions with optional UTC expires_at enforcement, and enforcing task-limited representative view projection and request/session-time expiry across ResidentDemo (resident_demo/app.py + resident_showcase.py) and server.py (/api/cases/<id>/representative-view) without editing role-screens.js.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-154-rep-expiry-views-research.md (C1-C16)"
+    },
+    {
+      "decision": "Single-pass plan critique execution Complete with verdict Revise; applied direct planner corrections for PC-001 through PC-006 (disjoint SessionCodec handle subjects and Agenda callback keys plus additive /demo/session contract; review_date-only vs missing_expiry, versions[-1] precedence, and datetime.now(UTC) + controls.today(); controls.RESIDENT_VIEW_ROLES, with self.lock:, and server.py do_GET/do_POST ordering; appointments.py resident_bindings/confirmations/appointment_authorities schema; TASK_ASSISTANT_TOPICS and grant.documents isolation; and Unknown representative_ref rejection + denied case_id omission) and finalized plan status Ready without a second critique.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/issue-154-rep-expiry-views-plan-critique.md; .copilot-tracking/plans/2026-11-15/issue-154-rep-expiry-views-plan.md (## Critique Disposition)"
+    }
+    {
+      "decision": "Implementation Complete across declared full-plan scope (P01, P02, P03) with all ruff, mypy, and unit/HTTP loopback test gates passing and role-screens.js untouched.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-15/issue-154-rep-expiry-views-changes.md"
+    },
+    {
+      "decision": "Single-pass post-implementation Review execution Complete with outcome Conformant across full task boundary (P01-P03, FR-REP-01..03, NFR-REP-01..03, AC1..AC5, PC-001..PC-006); zero defects, decision gaps, or evidence gaps.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-154-rep-expiry-views-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked post-Review follow-up work item, Stop automatic session, or Switch to manual mode."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Render task-limited representative view and expired/held renewal cards in ResidentDemo UI (resident_demo/web/)",
+      "rationale": "Highest ease and immediate UX leverage: ResidentDemo API endpoints (/demo/session, /demo/view, /demo/assistant, /demo/agenda) already emit structured representative state, expires_at, permitted_actions, and renewal_route payloads without touching role-screens.js.",
+      "evidence": ".copilot-tracking/changes/2026-11-15/issue-154-rep-expiry-views-changes.md; src/api/src/zava_forward/api/resident_demo/app.py"
+    },
+    {
+      "rank": 2,
+      "task": "Complete remaining Issue #154 Criterion 2 resident portal journey screen coverage (J1-J6)",
+      "rationale": "High product value toward closing parent Issue #154 once conflicting role-screens.js branch work merges cleanly.",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-154-rep-expiry-views-research.md (C2); .copilot-tracking/reviews/logs/2026-11-15/issue-154-rep-expiry-views-review.md"
+    },
+    {
+      "rank": 3,
+      "task": "Prepare and record Issue #155 empirical resident and representative usability validation evidence (Issue #154 Criterion 5)",
+      "rationale": "Required human/resident validation gate before full Issue #154 acceptance closure; depends on UI journey readiness and participant sessions.",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-154-rep-expiry-views-research.md (C2); src/core/tests/test_resident_journey_design.py"
+    }
+  ]
+}

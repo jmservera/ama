@@ -981,19 +981,34 @@ def require_context(c, body):
     return measure, context
 
 
-def authority_for(c, ref, task, measure, context, version=None):
+def authority_for(c, ref, task, measure, context, version=None, *, now=None):
+    from . import resident_journey_design
+
     if retention_schedule(c)["expired"]:
         raise ValueError("Resident records are past retention. Obtain current human-reviewed evidence.")
-    versions = c.get("representative_authorities", {}).get(ref, []) if isinstance(ref, str) else []
+    clean_ref = resident_journey_design.valid_representative_ref(ref)
+    versions = c.get("representative_authorities", {}).get(clean_ref, []) if clean_ref else []
     a = versions[-1] if versions else None
     if not a or (version is not None and a["version"] != version):
         raise ValueError("Representative authority needs human confirmation through the safe contact route.")
+    if now is not None:
+        now_utc = resident_journey_design.parse_iso_utc(now)
+        if now_utc is None:
+            raise ValueError("Representative authority needs human confirmation through the safe contact route.")
+        check_day = now_utc.date().isoformat()
+    else:
+        now_utc = datetime.now(UTC)
+        check_day = k.today()
     if (a["status"] != "Confirmed" or task not in a["tasks"]
             or a["measure"] != measure or a["context_revision"] != context["revision"]
             or a["safe_contact_ref"] != c.get("resident_safe_contact")
             or a["safe_contact_revision"] != len(c.get("resident_contact_history", []))
-            or not a["authority_date"] <= k.today() < a["review_date"]):
+            or not a["authority_date"] <= check_day < a["review_date"]):
         raise ValueError("Representative authority needs human confirmation through the safe contact route.")
+    if "expires_at" in a:
+        parsed_exp = resident_journey_design.parse_iso_utc(a.get("expires_at"))
+        if parsed_exp is None or now_utc >= parsed_exp:
+            raise ValueError("Representative authority needs human confirmation through the safe contact route.")
     return a
 
 
@@ -1643,19 +1658,35 @@ class ResidentDecisionMixin:
         return f"safe contact revision {len(c['resident_contact_history'])} recorded"
 
     def _res_representative_record(self, user, c, body):
+        from . import resident_journey_design
+
         measure, context = require_context(c, body)
         ref = k.text(body.get("representative_ref"), "the representative reference", 80)
+        if resident_journey_design.valid_representative_ref(ref) is None:
+            raise ValueError("Enter a specific representative reference, not Unknown.")
         status = k.choice(body.get("status"), AUTHORITY_STATUSES, "the authority status")
         tasks = body.get("tasks")
         if not isinstance(tasks, list) or not tasks or any(t not in AUTHORITY_TASKS for t in tasks):
             raise ValueError("Choose the representative's evidenced tasks.")
         try:
-            start = date.fromisoformat(body.get("authority_date", "")).isoformat()
-            review = date.fromisoformat(body.get("review_date", "")).isoformat()
+            start_day = date.fromisoformat(body.get("authority_date", ""))
+            review_day = date.fromisoformat(body.get("review_date", ""))
+            start = start_day.isoformat()
+            review = review_day.isoformat()
         except (TypeError, ValueError):
             raise ValueError("Enter the authority and review dates as YYYY-MM-DD.")
         if start > k.today() or review <= start:
             raise ValueError("Authority cannot start in the future and review must follow its source date.")
+        expires_iso = None
+        if "expires_at" in body:
+            parsed_exp = resident_journey_design.parse_iso_utc(body.get("expires_at"))
+            if parsed_exp is None:
+                raise ValueError("Enter the authority expiry timestamp with a time and timezone.")
+            start_utc = datetime(start_day.year, start_day.month, start_day.day, 0, 0, 0, tzinfo=UTC)
+            review_utc = datetime(review_day.year, review_day.month, review_day.day, 0, 0, 0, tzinfo=UTC)
+            if parsed_exp <= start_utc or parsed_exp > review_utc:
+                raise ValueError("Authority expiry must fall after its start date and within its review date.")
+            expires_iso = resident_journey_design.format_iso_utc(parsed_exp)
         safe = k.text(body.get("safe_contact_ref"), "the resident-confirmed safe contact reference", 80)
         if safe != c.get("resident_safe_contact"):
             raise ValueError("Confirm the resident's current safe contact route first.")
@@ -1668,6 +1699,8 @@ class ResidentDecisionMixin:
                    safe_contact_ref=safe, safe_contact_revision=len(c.get("resident_contact_history", [])),
                    source=source, resident_wishes=wishes,
                    recorded_by=user["email"], at=k.now())
+        if expires_iso is not None:
+            rec["expires_at"] = expires_iso
         c.setdefault("representative_authorities", {}).setdefault(ref, []).append(rec)
         return f"representative authority version {rec['version']} recorded"
 
@@ -2021,3 +2054,93 @@ class ResidentDecisionMixin:
         remedy["history"].append(dict(old=old, status=status, actor=_identity(user),
                                        at=remedy["at"], note=note, version=remedy["version"]))
         return f"{req['id']} remedy {status}; response unchanged"
+
+    def _representative_sessions(self):
+        from . import resident_journey_design
+
+        sessions = getattr(self, "_rep_session_store", None)
+        if sessions is None:
+            sessions = resident_journey_design.RepresentativeSessionStore()
+            self._rep_session_store = sessions
+        return sessions
+
+    def representative_view(self, user, cid, representative_ref, *, now=None, session_id=None):
+        from . import resident_journey_design
+
+        with self.lock:
+            k.require_role(user, k.RESIDENT_VIEW_ROLES, "current resident-workflow staff")
+            c = self._case(cid)
+            orders = getattr(self, "work_orders", ())
+            if isinstance(session_id, str) and session_id.strip():
+                sid = session_id.strip()
+                sessions = self._representative_sessions()
+                if sessions.get(sid) is not None:
+                    return sessions.session_view(
+                        sid,
+                        c,
+                        now=now,
+                        work_orders=orders,
+                        include_case_id=True,
+                    )
+                _, view = sessions.open_session(
+                    c,
+                    representative_ref,
+                    now=now,
+                    work_orders=orders,
+                    session_id=sid,
+                    include_case_id=True,
+                )
+                return view
+            return resident_journey_design.project_representative_view(
+                c,
+                representative_ref,
+                now=now,
+                work_orders=orders,
+                include_case_id=True,
+            )
+
+    def representative_action_check(self, user, cid, body, *, now=None):
+        from . import resident_journey_design
+
+        if not isinstance(body, dict):
+            raise ValueError("Supply the representative action check payload.")
+        with self.lock:
+            k.require_role(user, k.RESIDENT_VIEW_ROLES, "current resident-workflow staff")
+            c = self._case(cid)
+            orders = getattr(self, "work_orders", ())
+            rep_ref = body.get("representative_ref")
+            act = body.get("action")
+            measure = body.get("measure")
+            assistant_topic = body.get("assistant_topic")
+            session_id = body.get("session_id")
+            if isinstance(session_id, str) and session_id.strip():
+                sid = session_id.strip()
+                sessions = self._representative_sessions()
+                if sessions.get(sid) is None and rep_ref is not None:
+                    sessions.open_session(
+                        c,
+                        rep_ref,
+                        now=now,
+                        work_orders=orders,
+                        session_id=sid,
+                        include_case_id=False,
+                    )
+                return sessions.session_action(
+                    sid,
+                    c,
+                    act,
+                    measure=measure,
+                    assistant_topic=assistant_topic,
+                    now=now,
+                    work_orders=orders,
+                )
+            return resident_journey_design.enforce_representative_action(
+                c,
+                rep_ref,
+                act,
+                measure=measure,
+                assistant_topic=assistant_topic,
+                now=now,
+                work_orders=orders,
+            )
+
