@@ -737,7 +737,12 @@ class ContinuityMixin:
             reasons.extend(release_problems(bundle))
             bundle["complete"] = not reasons
             bundle["audience"] = dict(scope="full", full_ledger_proof=True)
-            if not projection.can_see_reason(user):
+            full_scope = (
+                projection.can_see_reason(user)
+                and user.get("role") in projection.RESIDENT_VIEW_ROLES
+                and user.get("role") in projection.FINANCE_VIEW
+            )
+            if not full_scope:
                 bundle = limited_export(bundle)
         bundle["digest"] = sha({k_: v for k_, v in bundle.items() if k_ != "digest"})
         self.audit(user["email"], "evidence_export", "-", f"digest={bundle['digest'][:16]} records={len(bundle['ai_records'])}")

@@ -312,7 +312,8 @@ class Ai:
                        reason=f"result discarded: {held}")
         return out(text=text, source="ai", model=dep, validated=True, reason=None)
 
-    def look_at(self, name, data, mime, off=False):
+    def look_at(self, name, data, mime, off=False, *, derivative=None, necessity_exception=None,
+                case_id=None, doc_id=None, resident_consent=None, doc=None):
         """Describe an uploaded document. Reads text and images; other types are stored only."""
         export_fields.scalars(dict(name=name, mime=mime), ("name", "mime"))
         system, instruction = ai_prompts.render("read_document", name=name)
@@ -332,7 +333,10 @@ class Ai:
         if held:
             return dict(text="The file is stored. AI reading is suspended; add a short note about what it is.", source="template",
                         model=None, validated=True, task="read_document", reason=held)
-        protected = data_protection.dispatch_hold("raw_document", os.environ)
+        protected = data_protection.document_model_hold(
+            doc, os.environ, case_id=case_id, doc_id=doc_id,
+            derivative=derivative, necessity_exception=necessity_exception,
+            resident_consent=resident_consent)
         if protected:
             return dict(text="The file is stored. It is not sent to AI; add a short note about what it is.", source="template",
                         model=None, validated=True, task="read_document", reason=protected)
@@ -357,6 +361,11 @@ class Ai:
                     text = self._chat(self.strong, system, content, 500, receipt=receipt)
             else:
                 text = self._chat(self.strong, system, content, 500, receipt=receipt)
+            if not text or FORBIDDEN.search(text):
+                return dict(text="The file is stored. Add a short note about what it is.",
+                            source="template", model=self.strong, validated=False, ai_text=text,
+                            task="read_document", release=selected, **receipt,
+                            reason="model output failed validation")
             held = self.gate("read_document", self.strong) if self.gate else None
             if self.release and selected != self.release("read_document", self.strong):
                 held = "activation release changed; use the manual route"

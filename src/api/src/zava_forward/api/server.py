@@ -959,7 +959,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         {
                             "evaluation": ai_eval.run_eval(),
                             "chat_evaluation": chat_eval.run_eval(),
-                            "live": s.ai_live_report(),
+                            "live": s.ai_live_report(u),
                             "registry": ai_registry.registry(),
                             "consumption": consumption,
                         },
@@ -1211,10 +1211,13 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                                or permitted and t["owner_role"] == role]
                     return self._json(200, threads)
                 if not post and len(parts) == 2 and parts[0] == "threads":
-                    thread = s.chat_resume(c.current_user(user), parts[1])
+                    current = c.current_user(user)
+                    thread = s.chat_resume(current, parts[1])
                     if thread["title"].startswith(REGULATORY_TASK + ":"):
                         self._regulatory_access(user)
                         thread = app.regulatory.history(user, parts[1])
+                    else:
+                        thread = c.scrub_thread(current, thread)
                     return self._json(200, thread)
                 if not post and parts == ["memory"]:
                     return self._json(200, c.privacy.list_memory(c.current_user(user)))
@@ -1686,7 +1689,18 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     elif act == "retention-approve":
                         s.approve_retention_deletion(u, cid, body.get("id"))
                     elif act == "read-doc":
-                        return self._json(200, s.read_document(u, cid, body.get("id"), body.get("mode")))
+                        return self._json(
+                            200,
+                            s.read_document(
+                                u,
+                                cid,
+                                body.get("id"),
+                                body.get("mode"),
+                                derivative=body.get("ai_derivative", body.get("derivative")),
+                                derivative_text=body.get("derivative_text"),
+                                necessity_exception=body.get("necessity_exception"),
+                            ),
+                        )
                     elif act == "resident":
                         from zava_forward.core.resident_decisions import ResidentCommittedError
                         try:
@@ -1720,7 +1734,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         s.funding_step(u, cid, body.get("action"), body.get("text", ""))
                     elif act == "draft":
                         s._case(cid)
-                        return self._json(200, s.draft(cid, body.get("kind", "update")))
+                        return self._json(200, s.draft(cid, body.get("kind", "update"), user=u))
                     else:
                         return self._json(404, {"error": "Not found."})
                     detail = s.detail(cid, u)

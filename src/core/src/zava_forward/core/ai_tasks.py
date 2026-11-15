@@ -21,6 +21,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from . import projection, ai_prompts, export_fields
+from .ai import FORBIDDEN
 from .resident_decisions import resident_status
 from .stock import support_status
 
@@ -258,9 +259,58 @@ def source_snapshot_hashes(sources):
             for cid, labels in sources.items()}
 
 
+def _record_view(store, user, rec):
+    """Project an AI comparison/review record for the caller's current role and case visibility."""
+    out = dict(rec)
+    if not isinstance(user, dict):
+        return out
+    withheld = projection.withheld_scope_values(store, user, out.get("case_ids", []))
+    reason_ok = projection.can_see_reason(user)
+    if out.get("ai_output") and (
+        FORBIDDEN.search(str(out["ai_output"]))
+        or projection.contains_withheld_value(out["ai_output"], withheld)
+    ):
+        out["ai_output"] = projection.NOTE_HELD
+    for key in ("shown_output", "override_text"):
+        if out.get(key) and projection.contains_withheld_value(out[key], withheld):
+            out[key] = projection.NOTE_HELD
+    if not reason_ok:
+        for key in ("reason", "reviewer_reason"):
+            if out.get(key):
+                out[key] = projection.NOTE_HELD
+    if isinstance(out.get("citations"), list):
+        out["citations"] = [
+            c for c in out["citations"] if not projection.contains_withheld_value(c, withheld)
+        ]
+    if isinstance(out.get("unresolved"), list):
+        out["unresolved"] = [
+            u for u in out["unresolved"] if not projection.contains_withheld_value(u, withheld)
+        ]
+    ev = out.get("review_evidence")
+    if isinstance(ev, dict):
+        ev_copy = dict(ev)
+        if not reason_ok and ev_copy.get("reason"):
+            ev_copy["reason"] = projection.NOTE_HELD
+        comp = ev_copy.get("compared")
+        if isinstance(comp, dict):
+            comp_copy = dict(comp)
+            if comp_copy.get("ai") and (
+                FORBIDDEN.search(str(comp_copy["ai"]))
+                or projection.contains_withheld_value(comp_copy["ai"], withheld)
+            ):
+                comp_copy["ai"] = projection.NOTE_HELD
+            if comp_copy.get("workflow") and projection.contains_withheld_value(
+                comp_copy["workflow"], withheld
+            ):
+                comp_copy["workflow"] = projection.NOTE_HELD
+            ev_copy["compared"] = comp_copy
+        out["review_evidence"] = ev_copy
+    return out
+
+
 def finish(store, user, task, case_ids, r, workflow_text, sources, template_cites=None, bullets=False, record_cites=None, epoch0=None):
     """Turn an Ai result into the shown output, with citations checked, plus its comparison record."""
-    ai_output = r["text"] if r["source"] == "ai" else r.get("ai_text")
+    raw_ai_output = r["text"] if r["source"] == "ai" else r.get("ai_text")
     dropped = 0
     if r["source"] == "ai" and record_cites is None:
         text, cites, bad, dropped = analyse(r["text"], sources, bullets)
@@ -274,44 +324,99 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
     reason = r.get("reason")
     mode = "workflow-only" if reason == "workflow-only mode selected" else "ai"
     from . import ai_registry
-    env = ai_registry.envelope(task, case_ids, {cid: hashlib.sha256("\n".join(sorted(labels)).encode()).hexdigest()[:16]
-                                               for cid, labels in sources.items()},
-                               dict(r, prompt_version=ai_prompts.version(task)), store.version)
+    src_hashes = {cid: hashlib.sha256("\n".join(sorted(labels)).encode()).hexdigest()[:16]
+                  for cid, labels in sources.items()}
     def publish(late):
-        why = "late result quarantined after a suspension or restart" if late else reason
-        shown, citations, checked = (workflow_text, [], False) if late else (text, cites, verified)
-        result = dict(r, source="template", model=None, reason=why) if late else r
-        shown_mode = mode
-        rec = add_record(store, user, task=task, case_ids=list(case_ids), mode=mode, source=r["source"], model=r.get("model"),
-                         latency_ms=r.get("latency_ms"), ai_output=ai_output, workflow_output=workflow_text, shown_output=shown,
-                         fallback_reason=why, envelope=env, release=r.get("release"), verified=checked, instruction_status="Not an instruction",
+        permitted = isinstance(user, dict) and user.get("role") in projection.STAFF_ROLES
+        if permitted:
+            cases_map = getattr(store, "cases", {}) or {}
+            for cid in case_ids:
+                if cid in cases_map and projection.project_case_visibility(user, cases_map[cid]) is None:
+                    permitted = False
+                    break
+        withheld = projection.withheld_scope_values(store, user, case_ids)
+        raw_markers = CITE_RE.findall(r.get("text") or "") if r["source"] == "ai" else []
+        safe_bad = [x for x in bad if not projection.contains_withheld_value(x, withheld)]
+        safe_cites = [x for x in cites if not projection.contains_withheld_value(x, withheld)]
+        leaked_ai = bool(
+            raw_ai_output
+            and (
+                not permitted
+                or FORBIDDEN.search(str(raw_ai_output))
+                or projection.contains_withheld_value(raw_ai_output, withheld)
+            )
+        )
+        safe_ai_output = None if leaked_ai else raw_ai_output
+        role_withheld = not permitted or (
+            r["source"] == "ai"
+            and (
+                FORBIDDEN.search(str(r.get("text") or ""))
+                or projection.contains_withheld_value(r.get("text"), withheld)
+                or any(projection.contains_withheld_value(m, withheld) for m in raw_markers)
+                or len(safe_cites) != len(cites)
+                or len(safe_bad) != len(bad)
+            )
+        )
+        if role_withheld:
+            hold_why = "model output withheld by role visibility check; use the manual route"
+            fb_cites = [
+                x
+                for x in list(record_cites if record_cites is not None else template_cites or [])
+                if resolve(x, sources) and not projection.contains_withheld_value(x, withheld)
+            ]
+            eff_r = dict(r, text=workflow_text, source="template", model=None, validated=False, reason=hold_why)
+            eff_text, eff_cites, eff_bad, eff_verified = workflow_text, fb_cites, [], bool(fb_cites)
+            eff_reason, eff_mode = hold_why, "workflow-only"
+        else:
+            eff_r = r
+            eff_text, eff_cites, eff_bad, eff_verified = text, safe_cites, safe_bad, verified
+            eff_reason, eff_mode = reason, mode
+        env = ai_registry.envelope(task, case_ids, src_hashes,
+                                   dict(eff_r, prompt_version=ai_prompts.version(task)), store.version)
+        why = "late result quarantined after a suspension or restart" if late else eff_reason
+        shown, citations, checked = (workflow_text, [], False) if late else (eff_text, eff_cites, eff_verified)
+        result = dict(eff_r, source="template", model=None, reason=why) if late else dict(eff_r)
+        result.pop("ai_text", None)
+        shown_mode = eff_mode
+        rec = add_record(store, user, task=task, case_ids=list(case_ids), mode=eff_mode, source=eff_r["source"], model=eff_r.get("model"),
+                         latency_ms=eff_r.get("latency_ms"), ai_output=safe_ai_output, workflow_output=workflow_text, shown_output=shown,
+                         fallback_reason=why, envelope=env, release=eff_r.get("release"), verified=checked, instruction_status="Not an instruction",
                          status=QUARANTINED if late else NOT_REVIEWED,
                          continuity_epoch=epoch0, quarantine=dict(reason=why, at=_now()) if late else None,
                          provenance=dict(citation_resolved=checked, source_verified=False, human_reviewed=False,
-                                         source_hashes=env["source_versions"], case_version=store.version, hold=None), citations=citations, unresolved=bad, dropped_uncited=dropped)
+                                         source_hashes=env["source_versions"], case_version=store.version, hold=None), citations=citations, unresolved=eff_bad, dropped_uncited=dropped)
         if r.get("meter_root"):
             held = store.ai.consumption.publish_output(r["meter_root"], rec["id"],
-                                                       eligible=not late and r["source"] == "ai" and checked)
+                                                       eligible=not late and eff_r["source"] == "ai" and checked)
             if held:
                 why = f"Financial attribution held ({held['reason']}); use the manual route."
                 shown, citations, checked = workflow_text, [], False
                 shown_mode = "workflow-only"
-                result = dict(r, text=shown, source="template", model=None, reason=why,
+                result = dict(eff_r, text=shown, source="template", model=None, reason=why,
                               financial_attribution=held)
+                result.pop("ai_text", None)
                 env.update(ai_registry.envelope(task, case_ids, env["source_versions"], result, store.version))
                 rec.update(source="template", model=None, mode="workflow-only", shown_output=shown,
                            fallback_reason=why, verified=False, citations=[], financial_attribution=held)
                 rec["provenance"]["citation_resolved"] = False
                 rec["provenance"]["hold"] = held["reason"]
                 store.save()
-        return dict(result, text=shown, citations=citations, unresolved=bad, dropped_uncited=dropped, verified=checked,
+        raw_stmts = statement_sources(eff_r["text"], sources, bullets) if not late and result["source"] == "ai" else [
+            dict(text=shown, citations=citations, unresolved=[] if late else eff_bad)]
+        stmts = [
+            dict(
+                s,
+                citations=[c for c in s.get("citations", []) if not projection.contains_withheld_value(c, withheld)],
+                unresolved=[u for u in s.get("unresolved", []) if not projection.contains_withheld_value(u, withheld)],
+            )
+            for s in raw_stmts
+        ]
+        return dict(result, text=shown, citations=citations, unresolved=eff_bad, dropped_uncited=dropped, verified=checked,
                     approval=rec["status"], instruction_status="Not an instruction", envelope=env, record_id=rec["id"],
                     continuity_epoch=epoch0, mode=shown_mode, prompt_version=ai_prompts.version(task),
                     generated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
                     source_case_ids=list(sources),
-                    statements=statement_sources(r["text"], sources, bullets)
-                    if not late and result["source"] == "ai" else [
-                        dict(text=shown, citations=citations, unresolved=[] if late else bad)])
+                    statements=stmts)
     return store.continuity_publish(task, epoch0, r["source"], publish)
 
 
@@ -331,7 +436,10 @@ def run_text_task(store, user, task, cases, sysmsg, prompt, template, template_c
     return finish(store, user, task, list(sources), r, template, sources, template_cites, bullets, epoch0=epoch0)
 
 
-def run_document(store, user, case_id, doc, data, mode=None):
+def run_document(store, user, case_id, doc, data, mode=None, *, derivative=None, necessity_exception=None,
+                 resident_consent=None, dispatch_mime=None):
+    import os
+    from . import data_protection
     require_registered("read_document")
     export_fields.scalars(doc, ("name", "mime"))
     with store.lock:
@@ -339,7 +447,34 @@ def run_document(store, user, case_id, doc, data, mode=None):
     off = workflow_only(mode)
     epoch0 = store.continuity_epoch()
     t0 = time.perf_counter()
-    r = store.ai.look_at(doc["name"], data, doc["mime"], off=off)
+    eff_mime = dispatch_mime or doc["mime"]
+    readable_mime = (
+        eff_mime.startswith("image/")
+        or eff_mime.startswith("text/")
+        or eff_mime in ("application/json", "text/csv")
+    )
+    hold = (
+        data_protection.document_model_hold(
+            doc, os.environ, case_id=case_id, doc_id=str(doc.get("id") or ""),
+            derivative=derivative, necessity_exception=necessity_exception,
+            resident_consent=resident_consent,
+        )
+        if readable_mime and not off
+        else None
+    )
+    if hold:
+        r = dict(
+            text="The file is stored. It is not sent to AI; add a short note about what it is.",
+            source="template", model=None, validated=True, task="read_document", reason=hold,
+        )
+    else:
+        try:
+            r = store.ai.look_at(doc["name"], data, eff_mime, off=off,
+                                 derivative=derivative, necessity_exception=necessity_exception,
+                                 case_id=case_id, doc_id=str(doc.get("id") or ""),
+                                 resident_consent=resident_consent, doc=doc)
+        except TypeError:
+            r = store.ai.look_at(doc["name"], data, eff_mime, off=off)
     r.setdefault("reason", None if r["source"] == "ai" else "file type is stored but not read")
     r["latency_ms"] = round((time.perf_counter() - t0) * 1000, 1)
     label = f"Document: {doc['name']}"
@@ -350,6 +485,8 @@ def run_document(store, user, case_id, doc, data, mode=None):
 def review(store, user, rec_id, action, reason="", text=None):
     if action not in REVIEW_ACTIONS:
         raise ValueError("Choose accept, edit or reject.")
+    if not isinstance(user, dict) or user.get("role") not in projection.STAFF_ROLES:
+        raise PermissionError("Your role cannot review AI proposals.")
     reason = (reason or "").strip()[:300]
     if action in ("edit", "reject") and not reason:
         raise ValueError("Say why.")
@@ -359,12 +496,16 @@ def review(store, user, rec_id, action, reason="", text=None):
             raise KeyError(rec_id)
         if rec["user"] != user["email"]:
             raise PermissionError("This AI output was made for someone else.")
+        cases_map = getattr(store, "cases", {}) or {}
+        for cid in rec.get("case_ids", []):
+            if cid in cases_map and projection.project_case_visibility(user, cases_map[cid]) is None:
+                raise PermissionError("You do not have access to this case.")
         if rec["status"] == QUARANTINED:
             raise PermissionError("This AI output was quarantined after a suspension or restart and cannot be relied on.")
         if rec["status"] != NOT_REVIEWED:
             repaired = store._repair_ai_review(rec, action, REVIEW_ACTIONS[action])
             if repaired is not None:
-                return repaired
+                return _record_view(store, user, repaired)
             raise ValueError("This AI output has already been reviewed.")
         if action != "reject" and store.continuity_suspension(rec["task"]):
             raise PermissionError(store.continuity_block(rec["task"]))
@@ -406,11 +547,14 @@ def review(store, user, rec_id, action, reason="", text=None):
         store.save()
         if metered:
             store.ai.consumption.review(rec_id, disposition, intent=intent)
-        return dict(rec)
+        return _record_view(store, user, rec)
 
 
-def live_report(store):
+def live_report(store, user=None):
     """Reviewer outcomes and fallback reasons across everything recorded so far."""
+    if user is not None and user.get("role") not in projection.STAFF_ROLES:
+        raise PermissionError("Only authorised staff can read the AI live report.")
+    reason_ok = True if user is None else projection.can_see_reason(user)
     with store.lock:
         recs = list(store.data["recommendations"])
     tasks, reasons, fallbacks = {}, [], {}
@@ -426,5 +570,14 @@ def live_report(store):
         if why:
             fallbacks[why] = fallbacks.get(why, 0) + 1
         if status in ("Edited", "Rejected") and r.get("reason", r.get("reviewer_reason")):
-            reasons.append(dict(task=task, action=status, reason=r.get("reason") or r.get("reviewer_reason")))
+            raw_reason = r.get("reason") or r.get("reviewer_reason")
+            shown_reason = raw_reason
+            if user is not None:
+                if not reason_ok:
+                    shown_reason = projection.NOTE_HELD
+                else:
+                    withheld = projection.withheld_scope_values(store, user, r.get("case_ids", []))
+                    if projection.contains_withheld_value(raw_reason, withheld):
+                        shown_reason = projection.NOTE_HELD
+            reasons.append(dict(task=task, action=status, reason=shown_reason))
     return dict(prompt_version=PROMPT_VERSION, tasks=tasks, fallback_reasons=fallbacks, reviewer_reasons=reasons[-50:])
