@@ -1309,37 +1309,45 @@ at those owner/live gates; no Azure deployment was performed for this authoring.
 
 ## Hardened source image rollout (#118)
 
-Refs #118. All six application containers are defined in
+Refs #118, #144. All seven application and maintenance job containers are defined in
 [`modules/containerapps.bicep`](./modules/containerapps.bicep): API, agents,
-orchestrator, import, token renewal and ledger verification. Compiled tests
+orchestrator, import, token renewal, ledger verification and ranking publication. Compiled tests
 verify each image parameter, API health probes and 2-4 replicas, plus the
 default-off Premium Front Door/WAF/Private Link edge. Maintenance jobs retain
 their direct Python module commands; no guard-bearing image path is required.
 Worker transport remains #144 (see the hosting status table below); a Bicep resource is not worker acceptance.
 
-Hosted hardening acceptance is **Partial**: the
+Hosted ARM schema hardening remains **Partial**, while in-process deployed container
+hardening is **Enforced** (#144): the
 [Container Apps 2025-07-01 schema](https://learn.microsoft.com/azure/templates/microsoft.app/2025-07-01/containerapps)
 and 2026-07-01 schema were checked on 2026-10-16 and expose no
 `readOnlyRootFilesystem`, capability-drop or `securityContext` settings for
-these container definitions. No unsupported property is added and no deployed
-kernel enforcement is claimed. Images remain non-root but no longer carry a
-fail-closed startup guard that would prevent Container Apps startup. Local/CI
-Docker contracts explicitly set `--read-only --cap-drop ALL --security-opt
-no-new-privileges` and verify the actual kernel state. They also exercise plain
-non-root startup for compatibility; this is not evidence of an Azure rollout.
-A future supported hosted configuration and private runtime proof are still
-required to meet the full hardening criterion. No hosting architecture change
-or deployment approval is inferred.
+these container definitions. No unsupported ARM property is added and no Azure host
+read-only root mount is claimed without a live private runtime receipt. Instead, every
+deployed Container App and Job specification (`modules/containerapps.bicep`,
+`resident-demo.bicep`, `live-receiver-job.bicep` and `live-simulator-job.bicep`) sets
+`ZF_CONTAINER_HARDENING=enforced`, `PYTHONDONTWRITEBYTECODE=1` and bounded `EmptyDir`
+scratch mounts (`/tmp`, plus `/state` on workloads outside `resident-demo`, which omits
+`ZF_STATE` under `FORBIDDEN_ENV_PREFIXES`). At startup,
+`zava_forward.core.container_hardening.enforce_from_env()` applies `umask(0o077)` and
+Linux `prctl(PR_SET_NO_NEW_PRIVS, 1)` and fails closed with exit code `2` unless the
+process runs as UID/GID `10001:10001`, `/proc/self/status` confirms `NoNewPrivs == 1`
+and zero `CapInh`/`CapPrm`/`CapEff`/`CapAmb` masks, `/` and `/app` reject writes, and
+declared scratch mounts are writable. Local/CI Docker contracts continue to set
+`--read-only --cap-drop ALL --security-opt no-new-privileges` and verify kernel state;
+plain local host developer runs leave `ZF_CONTAINER_HARDENING` unset for compatibility
+and are not evidence of an Azure rollout. No hosting architecture change or deployment
+approval is inferred.
 
-### Hosting completeness status (issue 144, 2026-11-01)
+### Hosting completeness status (issue 144, 2026-11-15)
 
 | Criterion | Status | Evidence |
 | --- | --- | --- |
-| Worker and job images real, versioned, deployed through the pipeline | Unmet | Images and the `src-deploy.yml` digest pipeline are real. The agents entrypoint has a tested run loop (`zava_forward.agents.worker`), a stdlib Azure Queue adapter (`zava_forward.agents.queue_azure`, scripted transport only, not run against Azure) and, since #1523, a Managed Identity token source (`runtime.identity_token`), an API post-back (`ApiResultSink`) and the wiring (`build_runtime`), all unit-tested locally. Per the Bicep configuration and current code, `serve` runs the queue loop only when `ZF_AGENT_RESULT_ROUTE=enabled`, which the Bicep deliberately omits, so a deployed worker would run a standby loop that keeps the heartbeat and processes no tasks. No live deployed pipeline receipt, live queue run or API post-back run exists, so the criterion stays Unmet. The orchestrator entrypoint still only prints a version |
-| Scale rules, probes, limits, rollback | Defined and compile-tested | `test_api_replicas_probes_and_private_edge_contract` asserts the API http rule (50 concurrent, 0 to 4 replicas), Startup, Liveness and Readiness probes, 0.5 vCPU/1 GiB limits, Single revision mode, the agents queue rule and job limits. `test_agents_app_has_no_hosted_probe_and_keeps_scale_limits_and_single_revision` pins the agents app: the worker has no listener and Container Apps probes are HTTP or TCP only, so it has no hosted probe (the `health` heartbeat command is a local diagnostic; its 120 s limit is checked arithmetically in `HeartbeatMarginTests` for one provider call at the largest accepted task timeout (read from the `TaskMessage.from_json` bound) plus the larger of the fault backoff and the idle wait, with a 2x margin; the pulse runs once per loop iteration, so a task with several provider calls and queue, token, post and ack latency are not bounded). No executable rollback test and no live rollout were run. Since 2026-11-13 `infra/tests/test_container_hosting_completeness.py` pins, for every declared app and job in the Bicep sources, bounded CPU and memory, bounded replicas and a scale rule, job timeout and retry limits, all three probes on the ingress port, single revision mode, and the documented rollback path. It reads the templates as text: a source contract, not a deployed scale, probe or rollback receipt |
-| Hardening enforced in the deployed app | Partial, platform-blocked | See the hosted hardening note above; CI Docker checks only |
-| Load test on the declared fixture | Run locally, not at declared scale | [`scale-load-2026-11-01.json`](../docs/architecture/scale-load-2026-11-01.json); separate-process closed-loop run [`scale-restart-2026-11-13.json`](../docs/architecture/scale-restart-2026-11-13.json) (see [Separate-process load and restart run](#separate-process-load-and-restart-run-issue-144-2026-11-13)) |
-| Single-replica restart with audit persistence | Verified on the SQL store | `src/api/tests/test_restart_audit.py` reopens the SQL store (not an API replica restart); ledger entries, chain and digest persist. `src/agents/tests/test_worker.py` `ReplicaRestartTests` simulates a worker killed before the post and between post and ack: after a manual lease release a replacement worker handles the redelivered task, and a post that was already made is repeated (at-least-once delivery; the duplicate carries the same task id and fence, but API-side dedupe is not built or tested). `src/api/tests/test_scale_fixture_load_and_restart.py` adds a real API process killed with SIGKILL and restarted on the same SQLite store, checked through `/api/audit-check` (local, one process; not a hosted replica). No hosted single-replica restart receipt and no Azure restore proof |
+| Worker and job images real, versioned, deployed through the pipeline | Pipeline and code verified locally; live rollout pending | All four source Dockerfiles (`api`, `agents`, `orchestrator`, `importer`) build pinned `python:3.12.9-slim-bookworm@sha256:...` non-root (`10001:10001`) images, `.github/workflows/src-deploy.yml` builds, scans, deploys to staging and promotes immutable `@sha256:` digests via `pipeline.py`, and `pipeline.py` plus `deploy.py` verify digest consistency across `auth-renewal`, `ledger-verify` and `rank-publish`. `zava_forward.agents` provides the tested queue/post-back loop (remaining in safe standby while `ZF_AGENT_RESULT_ROUTE` is omitted in Bicep), and `zava_forward.orchestrator` implements a bounded `run` mode (`args: ['run']` on `job-${prefix}-orchestrator`) validating queue/API configuration and running safe standby while bare invocation keeps its version print. Verified by `infra/tests/test_container_hosting_144.py`; no live Azure pipeline deployment receipt, live queue run or live API post-back run is claimed here |
+| Scale rules, probes, limits, rollback | Defined and compile-tested | `test_api_replicas_probes_and_private_edge_contract` asserts the API http rule (50 concurrent, 0 to 4 replicas), Startup, Liveness and Readiness probes, 0.5 vCPU/1 GiB limits, Single revision mode, the agents queue rule and job limits. `test_agents_app_has_no_hosted_probe_and_keeps_scale_limits_and_single_revision` pins the agents app: the worker has no listener and Container Apps probes are HTTP or TCP only, so it has no hosted probe (the `health` heartbeat command is a local diagnostic; its 120 s limit is checked arithmetically in `HeartbeatMarginTests` for one provider call at the largest accepted task timeout (read from the `TaskMessage.from_json` bound) plus the larger of the fault backoff and the idle wait, with a 2x margin; the pulse runs once per loop iteration, so a task with several provider calls and queue, token, post and ack latency are not bounded). No executable rollback test and no live rollout were run. Since 2026-11-13 `infra/tests/test_container_hosting_completeness.py` and since 2026-11-15 `infra/tests/test_container_hosting_144.py` pin bounded CPU and memory, bounded replicas and scale rules, job timeout and retry limits, all three probes on the ingress port, single revision mode, and the documented rollback path. They validate compiled Bicep and source contracts, not a live deployed Azure scale, probe or rollback receipt |
+| Hardening enforced in the deployed app | Enforced in deployed Bicep specs and runtime entrypoints (ARM schema partial) | Every deployed Container App and Job in `modules/containerapps.bicep` (including `publicSimulationRecipe`), `resident-demo.bicep`, `live-receiver-job.bicep` and `live-simulator-job.bicep` sets `ZF_CONTAINER_HARDENING=enforced`, `PYTHONDONTWRITEBYTECODE=1` and `EmptyDir` scratch volumes, and all 12 workload entrypoints invoke `zava_forward.core.container_hardening.enforce_from_env()` before opening sockets or queues. `infra/tests/test_container_hosting_144.py` verifies compiled Bicep specs, positive and mutation-negative runtime checks, Linux child-process `prctl(PR_SET_NO_NEW_PRIVS, 1)` + `umask(0o077)` kernel state, and OS-process exit-code-`2` refusal across `api`, `agents`, `orchestrator` and `importer`. Container Apps `2025-07-01` still lacks ARM `securityContext`, so Azure host-level rootfs enforcement awaits platform support and a live private runtime receipt |
+| Load test on the declared fixture | Run locally, not at declared scale | [`scale-load-2026-11-01.json`](../docs/architecture/scale-load-2026-11-01.json) and [`scale-load-2026-11-15.json`](../docs/architecture/scale-load-2026-11-15.json); separate-process closed-loop runs [`scale-restart-2026-11-13.json`](../docs/architecture/scale-restart-2026-11-13.json) and [`scale-restart-2026-11-15.json`](../docs/architecture/scale-restart-2026-11-15.json) (see [Separate-process load and restart run](#separate-process-load-and-restart-run-issue-144-2026-11-13) and the 2026-11-15 update below) |
+| Single-replica restart with audit persistence | Verified on the SQL store and separate OS API process | `src/api/tests/test_restart_audit.py` reopens the SQL store; ledger entries, chain and digest persist. `src/agents/tests/test_worker.py` `ReplicaRestartTests` and `infra/tests/test_container_hosting_144.py` verify worker crash before post/ack redelivers after lease release without task loss (at-least-once delivery; API-side dedupe remains separate scope). `src/api/tests/test_scale_fixture_load_and_restart.py` ([`scale-restart-2026-11-15.json`](../docs/architecture/scale-restart-2026-11-15.json)) and `infra/tests/test_container_hosting_144.py` verify a real single-process API server killed with `SIGKILL` and restarted on the same SQLite store preserves all pre-kill entries and an intact SHA-256 chain through `/api/audit-check` before and after post-restart writes (local single process; no hosted Azure replica restart receipt or Azure SQL restore proof) |
 
 Revision rollback: apps use `activeRevisionsMode: Single`, and a failed Startup
 or Readiness probe keeps the previous revision serving. There is no historical
@@ -1402,6 +1410,21 @@ billable at limit) are in the report; cost is Unknown because no price source is
 set (BRD OD-51). The 708 MiB resident figure includes the fixture and the load
 client sharing the process, and approaches the 1 GiB limit, so size the memory
 limit against a hosted run.
+
+### Recorded 60,000-home load and restart verification (issue 144, 2026-11-15)
+
+Re-ran both local harnesses on 2026-11-15 over the 60,000 fictional-home SQLite
+`SqlStore` fixture (`53,821` deterministic contact and appointment events, seed `11`,
+no inference) and verified the recorded artifacts in
+[`infra/tests/test_container_hosting_144.py`](./tests/test_container_hosting_144.py):
+
+* Open-loop load harness (`src/api/tests/scale_load.py --homes 60000 --sessions 20 --rate 5.0 --duration 60`, record [`scale-load-2026-11-15.json`](../docs/architecture/scale-load-2026-11-15.json)): `252` total requests (`232` in the `60.0 s` observation window, `3.87 requests/s`, `7.84 s` drain), `0` errors across all routes, cold first-request latencies `203.5 ms` list / `78.8 ms` detail / `1,867.0 ms` dashboard, warm p95 `14,805.2 ms` list / `14,730.1 ms` detail / `18,302.8 ms` dashboard (above NFR-002 staff thresholds under single-process SQLite contention), `4.02` SQL statements per request, `715.6 MiB` RSS after run (`1,057.8 MiB` peak RSS including in-process fixture build), and `meets_declared_workload: false`.
+* Separate-process closed-loop load and `SIGKILL` restart harness (`src/api/tests/test_scale_fixture_load_and_restart.py --homes 60000 --concurrency 20 --seconds 60`, record [`scale-restart-2026-11-15.json`](../docs/architecture/scale-restart-2026-11-15.json)): `2.34 s` cold start to `/healthz` `200`, `448` requests across `64.3 s` (`6.97 requests/s`, `0` errors, overall p50 `2,824.2 ms` and p95 `4,598.8 ms`), isolated API server RSS `614.9 MiB` after load and `626.9 MiB` high-water (within the `1.0 GiB` container limit), `3` acknowledged audit writes before `SIGKILL` (no graceful shutdown), `2.11 s` restart readiness on the same SQLite store with all `3` entries and an intact SHA-256 chain reported by `/api/audit-check`, followed by `1` post-restart write advancing the intact chain to `4` entries, and `meets_declared_workload: false`.
+
+Both runs are local single-process SQLite measurements over synthetic data (`60 s`
+window and `53,821` events rather than the declared `1,800 s` and `600,000` events).
+Each run is not at declared scale, makes no production, autoscaling, multi-replica or
+availability claim, and is not an Azure Container Apps or Azure SQL measurement.
 
 Front Door Premium, WAF and origin Private Link remain infra-only gated
 definitions: `enablePublicEdge=false` by default, production/private profile

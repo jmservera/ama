@@ -119,6 +119,12 @@ var publicSimulationKey = '/state/public-simulation/hmac.key'
 // Fixed trusted startup recipe: initialise only an empty pair, validate, then run the ordinary API module. Faults, including a missing module in an older image, leave the files untouched and the API starts with the lane unavailable.
 var publicSimulationRecipe = '''
 import os, sys
+from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
+try:
+    enforce_from_env()
+except ContainerHardeningError as error:
+    print("Refusing to start: " + str(error), file=sys.stderr, flush=True)
+    raise SystemExit(2) from None
 store = "/state/public-simulation/store.sqlite"
 key = "/state/public-simulation/hmac.key"
 try:
@@ -134,10 +140,25 @@ os.execv(sys.executable, [sys.executable, "-m", "zava_forward.api"])
 var chatDemoActive = demoDirectIngress && chatDemoActivation == 'approved-2026-11-03'
 var chatEnabled = !empty(trim(chatDpiaRef)) && !empty(trim(chatLawfulBasisRef)) && !empty(trim(chatNoticeRef)) && !empty(trim(chatRetentionRef)) && chatRetentionDays > 0
 
-var commonEnv = [
+var hardeningEnv = [
+  { name: 'ZF_CONTAINER_HARDENING', value: 'enforced' }
+  { name: 'PYTHONDONTWRITEBYTECODE', value: '1' }
+  { name: 'TMPDIR', value: '/tmp' }
+  { name: 'ZF_STATE', value: '/state' }
+]
+var scratchVolumes = [
+  { name: 'tmp', storageType: 'EmptyDir' }
+  { name: 'state', storageType: 'EmptyDir' }
+]
+var scratchVolumeMounts = [
+  { volumeName: 'tmp', mountPath: '/tmp' }
+  { volumeName: 'state', mountPath: '/state' }
+]
+
+var commonEnv = concat(hardeningEnv, [
   { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: appInsightsConnectionString }
   { name: 'OTEL_SERVICE_NAMESPACE', value: 'zava-forward' }
-]
+])
 
 resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
   name: 'ca-${prefix}-api'
@@ -234,8 +255,10 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
             { type: 'Readiness', httpGet: { path: '/healthz', port: 8088 }, periodSeconds: 5, timeoutSeconds: 3, successThreshold: 1, failureThreshold: 3 }
             { type: 'Liveness', httpGet: { path: '/healthz', port: 8088 }, periodSeconds: 10, timeoutSeconds: 5, failureThreshold: 6 }
           ]
+          volumeMounts: scratchVolumeMounts
         }
       ]
+      volumes: scratchVolumes
       scale: {
         minReplicas: apiMinReplicas
         maxReplicas: enablePublicSimulationLane ? 1 : 4
@@ -317,12 +340,14 @@ resource tokenRenewal 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && d
         image: orchestratorImage
         command: ['python', '-m', 'zava_forward.orchestrator.token_store']
         resources: { cpu: json('0.25'), memory: '0.5Gi' }
-        env: [
+        env: concat(hardeningEnv, [
           { name: 'AZURE_CLIENT_ID', value: tokenMaintenanceClientId }
           { name: 'TOKEN_STORAGE_ACCOUNT', value: tokenStoreAccountName }
           { name: 'KEY_VAULT_URI', value: keyVaultUri }
-        ]
+        ])
+        volumeMounts: scratchVolumeMounts
       }]
+      volumes: scratchVolumes
     }
   }
 }
@@ -363,8 +388,10 @@ resource agents 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads &
             { name: 'API_BASE_URL', value: 'https://${api!.properties.configuration.ingress.fqdn}' }
             { name: 'API_AUDIENCE', value: 'api://${entraClientId}' }
           ])
+          volumeMounts: scratchVolumeMounts
         }
       ]
+      volumes: scratchVolumes
       scale: {
         minReplicas: 0
         maxReplicas: 5
@@ -415,6 +442,8 @@ resource orchestrator 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && d
         {
           name: 'orchestrator'
           image: orchestratorImage
+          command: ['python', '-m', 'zava_forward.orchestrator']
+          args: ['run']
           resources: { cpu: json('0.25'), memory: '0.5Gi' }
           env: concat(commonEnv, [
             { name: 'AZURE_CLIENT_ID', value: identityClientIds.orchestrator }
@@ -423,8 +452,10 @@ resource orchestrator 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && d
             { name: 'API_BASE_URL', value: 'https://${api!.properties.configuration.ingress.fqdn}' }
             { name: 'API_AUDIENCE', value: 'api://${entraClientId}' }
           ])
+          volumeMounts: scratchVolumeMounts
         }
       ]
+      volumes: scratchVolumes
     }
   }
 }
@@ -470,8 +501,10 @@ resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && d
             { name: 'ZF_DIGEST_CLIENT_ID', value: identityClientIds.api }
             { name: 'ZF_DIGEST_DIR', value: '/tmp/digests' }
           ])
+          volumeMounts: scratchVolumeMounts
         }
       ]
+      volumes: scratchVolumes
     }
   }
 }
@@ -517,8 +550,10 @@ resource rankingPublish 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads &&
             { name: 'ZF_RANKING_ARCHIVE', value: 'azure-blob' }
             { name: 'ZF_RANKING_BLOB_CONTAINER', value: rankingArchiveContainer }
           ])
+          volumeMounts: scratchVolumeMounts
         }
       ]
+      volumes: scratchVolumes
     }
   }
 }
@@ -576,8 +611,10 @@ resource importJob 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && depl
             { name: 'QUEUE_ENDPOINT', value: queueEndpoint }
             { name: 'IMPORT_QUEUE', value: 'import-jobs' }
           ])
+          volumeMounts: scratchVolumeMounts
         }
       ]
+      volumes: scratchVolumes
     }
   }
 }
