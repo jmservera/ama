@@ -6,8 +6,8 @@
     "task_slug": "220-no-retaliation"
   },
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-15/220-no-retaliation-rebase-1641-research.md",
@@ -15,7 +15,7 @@
     "details": ".copilot-tracking/details/2026-11-15/220-no-retaliation-rebase-1641-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-11-15/220-no-retaliation-rebase-1641-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-11-15/220-no-retaliation-rebase-1641-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/220-no-retaliation-rebase-1641-review.md"
   },
   "confirmed_decisions": [
     {
@@ -32,12 +32,17 @@
       "decision": "Plan critique execution: Complete; Verdict: Revise (PC-001 High, PC-002..PC-004 Medium). Applied all 4 direct planner corrections in one batch (full src-ci.yml unittest discover across src/core and src/api, load_tests deduplication + unexported-PYTHONPATH mypy safety, complete 18-symbol challenges re-export + dual src/core/README.md anchors, and post-fetch SHA/range-diff check + post-cleanup bare caller check + pre-Review commits); residual risk of unpushed remote CI/live MSSQL explicitly accepted per Caller Task 3",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/plans/2026-11-15/220-no-retaliation-rebase-1641-plan-critique.md; .copilot-tracking/plans/2026-11-15/220-no-retaliation-rebase-1641-plan.md"
+    },
+    {
+      "decision": "Review execution: Complete; Outcome: Conformant. Assessed boundary: lossless rebase of feat/ai-220-no-retaliation onto origin/feat/demo-164-chat-grounding-provenance-0900 (697b00c0a, PR #1641 -> 135bd2a3e, 5803323ad, fb950840a), 18-symbol no_retaliation_guard facade, deduplicated test_no_retaliation_guard_220 selector, resident_decisions.py held form_review isolation guard, full src-ci.yml Focused Tier validation (3,685 core + 3,772 api tests, ruff, mypy), independent exact-head code-review, and clean unpushed local commits",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/220-no-retaliation-rebase-1641-review.md"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Review",
-    "action": "Activate rpi-review once on reconciled full-plan implementation evidence (135bd2a3e, 5803323ad, fb950840a)"
+    "phase": "Follow-up",
+    "action": "Select a ranked follow-up work item to start a child automatic RPI loop, Stop automatic session, or Switch to manual mode"
   },
   "prioritized_follow_ups": [
     {
