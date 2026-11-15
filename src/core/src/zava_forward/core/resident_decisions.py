@@ -636,9 +636,16 @@ def _form_staging_records(case, catalog_only=False):
         return out
     case_id = case.get("id")
     drafts = case.get("form_reviews") or case.get("form_drafts") or []
+    held_drafts = {
+        hold.get("draft_id")
+        for hold in (case.get("finance_decision_holds") or [])
+        if isinstance(hold, dict)
+        and hold.get("status") == "Held"
+        and isinstance(hold.get("draft_id"), str)
+    }
     linked_batches = set()
     for draft in drafts:
-        if not isinstance(draft, dict):
+        if not isinstance(draft, dict) or draft.get("id") in held_drafts:
             continue
         for row in (draft.get("fields") or {}).values():
             ev = (row or {}).get("evidence") or {}
@@ -663,7 +670,7 @@ def _form_staging_records(case, catalog_only=False):
         verified_by = None
         verified_at = None
         for draft in drafts:
-            if not isinstance(draft, dict):
+            if not isinstance(draft, dict) or draft.get("id") in held_drafts:
                 continue
             for row in (draft.get("fields") or {}).values():
                 ev = (row or {}).get("evidence") or {}

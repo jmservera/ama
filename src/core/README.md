@@ -5170,6 +5170,7 @@ PYTHONPATH=src/core/tests:src/agents/tests:src/api/tests:src/api python3 -m unit
   test_resident_decisions.JsonResidentDecisions \
   test_resident_decisions.SqlResidentDecisions \
   test_challenge_no_retaliation_220 \
+  test_no_retaliation_guard_220 \
   test_challenge_no_retaliation_api_220 \
   test_resident_api -k challenge -q
 ```
@@ -5272,8 +5273,11 @@ human action, not a hazard clock.
 
 Store-backed persistence in JSON `Store` and SQLite `SqlStore` is covered via `affected_challenges`
 in `zava_forward.core.resident_decisions` (`challenge_open`, `challenge_update`,
-`challenge_escalate`, `challenge_resolve`). Tests: `src/core/tests/test_challenges.py` and
-`src/core/tests/test_issue_220_challenge_route.py`.
+`challenge_reopen`, `challenge_escalate`, `challenge_resolve`), with public guard re-exports in
+`zava_forward.core.no_retaliation_guard`. Tests: `src/core/tests/test_challenges.py`,
+`src/core/tests/test_issue_220_challenge_route.py`,
+`src/core/tests/test_challenge_no_retaliation_220.py`, and
+`src/core/tests/test_no_retaliation_guard_220.py`.
 
 Status record, 2026-11-14 (issue #220 operational human gate stays open): criteria 1 to 4 were
 delivered by #418, #641 and #693, with ageing and protection helpers in #826 and #966. Locally
