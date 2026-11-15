@@ -25,7 +25,12 @@ from .sensor_analysis import (
     enforce_sensor_non_authority,
     review_task_candidate,
 )
-from .sensor_analysis_store import analyse_retained
+from .sensor_analysis_store import (
+    UNAVAILABLE,
+    RetainedReadingSource,
+    analyse_retained,
+    retained_source,
+)
 from .sensor_consumer import ConsumerError, SensorConsumer
 from .sqlstore import CommittedReloadError, SqlStore
 from .store import Store
@@ -164,9 +169,15 @@ def _gate(store: DraftStore, user: User, case_id: str, env: Mapping[str, str] | 
     return True
 
 
+def _retained_reader(store: DraftStore) -> RetainedReadingSource:
+    if _sql(store):
+        return SensorConsumer(store)
+    return retained_source(store)
+
+
 def _consent_granted(store: DraftStore, case_id: str) -> bool:
     try:
-        return SensorConsumer(store).home_consent(case_id) == "granted"
+        return _retained_reader(store).home_consent(case_id) == "granted"
     except ConsumerError:
         return False
 
@@ -386,12 +397,15 @@ def _from_retained(
     as_of: datetime,
     at: str | None,
 ) -> Json:
+    policy = server_policy()
     try:
-        consumer = SensorConsumer(store)
-        signal = analyse_retained(consumer, case_id, window, as_of, server_policy())
+        reader = _retained_reader(store)
+        signal = analyse_retained(reader, case_id, window, as_of, policy)
     except ConsumerError:
         return _refusal("RETAINED_READINGS_UNAVAILABLE")
-    return _propose(store, user, case_id, signal, server_policy(), at or _now())
+    if signal.reasons == (UNAVAILABLE,):
+        return _refusal("RETAINED_READINGS_UNAVAILABLE")
+    return _propose(store, user, case_id, signal, policy, at or _now())
 
 
 def _parse_window(body: object) -> Window:

@@ -1104,7 +1104,7 @@ class SensorConsumer:
                 window = " AND observed_at BETWEEN ? AND ?" if bounds else ""
                 stored = db.execute(
                     f"SELECT {', '.join(READING_COLUMNS)} FROM sensor_reading"
-                    f" WHERE home_id=?{window} ORDER BY observed_at, sensor_id",
+                    f" WHERE home_id=?{window} ORDER BY observed_at, sensor_id, reading_id",
                     (home, *bounds.get(home, ())),
                 ).fetchall()
                 fetched.extend(stored)
