@@ -38,8 +38,8 @@
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "Await user selection of a ranked post-Review follow-up item, Stop automatic session, or Switch to manual mode."
+    "phase": "Research",
+    "action": "Spawned child automatic RPI correction loop issue-124-c1 (phase0-retrofit-flow-discovery-124-c1) to remediate RV-001, RV-002, and RV-003."
   },
   "prioritized_follow_ups": [
     {

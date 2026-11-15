@@ -1,0 +1,50 @@
+{
+  "task_id": "issue-124-c1",
+  "task_slug": "phase0-retrofit-flow-discovery-124-c1",
+  "parent_task": {
+    "task_id": "issue-124",
+    "task_slug": "phase0-retrofit-flow-discovery-124"
+  },
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/phase0-retrofit-flow-discovery-124-c1-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c1-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/phase0-retrofit-flow-discovery-124-c1-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c1-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/phase0-retrofit-flow-discovery-124-c1-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute confirmed automatic RPI correction loop (Research -> Plan with critique -> Implement -> Review) for child task issue-124-c1 on branch feat/gov-124-phase0-discovery to resolve RV-001, RV-002, and RV-003 under the focused validation tier without pushing or opening a PR.",
+      "status": "confirmed",
+      "evidence": "Caller prompt for Issue #124 (c1 Review Remediation) on 2026-11-15; .copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-review.md"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready. Remediate RV-001, RV-002, and RV-003 in discovery_contract.py and test_discovery_contract.py using FrozenDict + calculation_digest immutability, validated_role == owner_role spec checks, canonical stage order in LifecycleDictionary.__post_init__, strict baseline_candidate_ids and as_of cohort filtering, gap/invalid-handover promotion rejection, and separate unknown/disputed wait counters.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/phase0-retrofit-flow-discovery-124-c1-research.md (C1-C12)"
+    },
+    {
+      "decision": "Critique execution: executed once on final candidate; Critique verdict: Revise; Direct dispositions: PC-001 (resolved: non-blank verify_digest() runs before replace(...) in validate_flow_report and unconditionally before early return in enforce_governance_guard, plus Mapping gap/invalid-handover rejection) and PC-002 (resolved: duplicate_candidate_ids scoped to filtered in_window <= as_of candidates). Planning status: ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c1-plan-critique.md; .copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c1-plan.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "Commit c1 implementation and tracking artifacts locally, then transition active_phase to Review and activate rpi-review once."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Optional CSV extract adapter mapping synthetic retrofit-flow year-one CSV tables into discovery_contract records",
+      "rationale": "Retained from parent Issue #124 follow-ups outside Phase 0 pure rule-layer scope until sponsor/owner direction.",
+      "evidence": "docs/brds/retrofit-flow-discovery-brief.md; .copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-plan.md"
+    }
+  ]
+}

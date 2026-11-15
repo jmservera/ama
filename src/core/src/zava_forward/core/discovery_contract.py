@@ -16,11 +16,14 @@ retrofit-flow discovery. It enforces four non-negotiable governance rules:
    output until the nominated human discovery owner records formal validation.
 """
 
+import copy
+import hashlib
+import json
 from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass, replace
 from datetime import UTC, date, datetime
-from typing import Protocol, runtime_checkable
+from typing import NoReturn, Protocol, runtime_checkable
 
 from .discovery_flow import DISPUTED as WAIT_CAUSE_DISPUTED
 from .discovery_flow import LOOP_KINDS, UNATTRIBUTED, UNKNOWN
@@ -243,10 +246,16 @@ class StageSpec:
     owner_role: str
     validated_by: str = ""
     validated_on: date | None = None
+    validated_role: str = ""
 
     @property
     def validated(self) -> bool:
-        return is_valid_human_actor(self.validated_by) and self.validated_on is not None
+        return (
+            bool(self.owner_role.strip())
+            and is_valid_human_actor(self.validated_by)
+            and self.validated_on is not None
+            and self.validated_role == self.owner_role
+        )
 
 
 @dataclass(frozen=True)
@@ -258,10 +267,16 @@ class EventSpec:
     owner_role: str
     validated_by: str = ""
     validated_on: date | None = None
+    validated_role: str = ""
 
     @property
     def validated(self) -> bool:
-        return is_valid_human_actor(self.validated_by) and self.validated_on is not None
+        return (
+            bool(self.owner_role.strip())
+            and is_valid_human_actor(self.validated_by)
+            and self.validated_on is not None
+            and self.validated_role == self.owner_role
+        )
 
 
 @dataclass(frozen=True)
@@ -274,10 +289,16 @@ class TimestampSpec:
     owner_role: str
     validated_by: str = ""
     validated_on: date | None = None
+    validated_role: str = ""
 
     @property
     def validated(self) -> bool:
-        return is_valid_human_actor(self.validated_by) and self.validated_on is not None
+        return (
+            bool(self.owner_role.strip())
+            and is_valid_human_actor(self.validated_by)
+            and self.validated_on is not None
+            and self.validated_role == self.owner_role
+        )
 
 
 @dataclass(frozen=True)
@@ -290,10 +311,16 @@ class WaitStateSpec:
     owner_role: str
     validated_by: str = ""
     validated_on: date | None = None
+    validated_role: str = ""
 
     @property
     def validated(self) -> bool:
-        return is_valid_human_actor(self.validated_by) and self.validated_on is not None
+        return (
+            bool(self.owner_role.strip())
+            and is_valid_human_actor(self.validated_by)
+            and self.validated_on is not None
+            and self.validated_role == self.owner_role
+        )
 
 
 @dataclass(frozen=True)
@@ -305,10 +332,16 @@ class ReturnLoopSpec:
     owner_role: str
     validated_by: str = ""
     validated_on: date | None = None
+    validated_role: str = ""
 
     @property
     def validated(self) -> bool:
-        return is_valid_human_actor(self.validated_by) and self.validated_on is not None
+        return (
+            bool(self.owner_role.strip())
+            and is_valid_human_actor(self.validated_by)
+            and self.validated_on is not None
+            and self.validated_role == self.owner_role
+        )
 
 
 @dataclass(frozen=True)
@@ -319,12 +352,24 @@ class LifecycleDictionary:
     wait_states: tuple[WaitStateSpec, ...]
     return_loops: tuple[ReturnLoopSpec, ...]
 
+    def __post_init__(self) -> None:
+        flow_sequence = tuple((s.order, s.code) for s in self.stages if s.kind == "flow")
+        expected_sequence = tuple(enumerate(REQUIRED_FLOW_STAGE_CODES, start=1))
+        if flow_sequence != expected_sequence:
+            raise GovernanceViolationError(
+                "LifecycleDictionary flow stages must match canonical "
+                "REQUIRED_FLOW_STAGE_CODES order 1..10"
+            )
+
 
 def validate_stage_spec(spec: StageSpec, *, validator: str, role: str, on: date) -> StageSpec:
     if role != spec.owner_role:
         raise ValueError(f"Stage {spec.code} is validated by {spec.owner_role}, not {role}")
     return replace(
-        spec, validated_by=_require_human_actor(validator, "Stage validator"), validated_on=on
+        spec,
+        validated_by=_require_human_actor(validator, "Stage validator"),
+        validated_on=on,
+        validated_role=role,
     )
 
 
@@ -332,7 +377,10 @@ def validate_event_spec(spec: EventSpec, *, validator: str, role: str, on: date)
     if role != spec.owner_role:
         raise ValueError(f"Event '{spec.event}' is validated by {spec.owner_role}, not {role}")
     return replace(
-        spec, validated_by=_require_human_actor(validator, "Event validator"), validated_on=on
+        spec,
+        validated_by=_require_human_actor(validator, "Event validator"),
+        validated_on=on,
+        validated_role=role,
     )
 
 
@@ -342,7 +390,10 @@ def validate_timestamp_spec(
     if role != spec.owner_role:
         raise ValueError(f"Timestamp {spec.code} is validated by {spec.owner_role}, not {role}")
     return replace(
-        spec, validated_by=_require_human_actor(validator, "Timestamp validator"), validated_on=on
+        spec,
+        validated_by=_require_human_actor(validator, "Timestamp validator"),
+        validated_on=on,
+        validated_role=role,
     )
 
 
@@ -355,6 +406,7 @@ def validate_wait_state_spec(
         spec,
         validated_by=_require_human_actor(validator, "Wait-state validator"),
         validated_on=on,
+        validated_role=role,
     )
 
 
@@ -367,6 +419,7 @@ def validate_return_loop_spec(
         spec,
         validated_by=_require_human_actor(validator, "Return-loop validator"),
         validated_on=on,
+        validated_role=role,
     )
 
 
@@ -818,15 +871,23 @@ def lifecycle_dictionary_gaps(dictionary: LifecycleDictionary) -> list[str]:
     gaps: list[str] = []
     stages_by_code = {s.code: s for s in dictionary.stages}
     flow_stages = [s for s in dictionary.stages if s.kind == "flow"]
-    expected_orders = list(range(1, len(REQUIRED_FLOW_STAGE_CODES) + 1))
-    if [s.order for s in sorted(flow_stages, key=lambda x: x.order)] != expected_orders:
-        gaps.append("Flow stages must have contiguous order 1..10 through accepted handover")
+    expected_flow = list(enumerate(REQUIRED_FLOW_STAGE_CODES, start=1))
+    if [(s.order, s.code) for s in flow_stages] != expected_flow:
+        gaps.append(
+            "Flow stages must follow canonical REQUIRED_FLOW_STAGE_CODES order 1..10 "
+            "through accepted handover"
+        )
     for code in REQUIRED_FLOW_STAGE_CODES + REQUIRED_EXCEPTION_STATE_CODES:
         stage = stages_by_code.get(code)
         if stage is None:
             gaps.append(f"Define lifecycle stage or state '{code}'")
         elif not (stage.name.strip() and stage.pas2035_role_boundary.strip()):
             gaps.append(f"Complete description and PAS 2035 boundary for stage '{code}'")
+        elif stage.validated_role and stage.validated_role != stage.owner_role:
+            gaps.append(
+                f"Stage '{code}' recorded validator role '{stage.validated_role}', "
+                f"expected '{stage.owner_role}'"
+            )
         elif not stage.validated:
             gaps.append(f"The {stage.owner_role} has not validated stage '{code}'")
 
@@ -839,6 +900,11 @@ def lifecycle_dictionary_gaps(dictionary: LifecycleDictionary) -> list[str]:
             gaps.append(f"Event '{event_name}' references unknown stage '{ev.stage_code}'")
         elif not (ev.meaning.strip() and ev.distinct_from_note.strip()):
             gaps.append(f"Add meaning and distinction rule for event '{event_name}'")
+        elif ev.validated_role and ev.validated_role != ev.owner_role:
+            gaps.append(
+                f"Event '{event_name}' recorded validator role '{ev.validated_role}', "
+                f"expected '{ev.owner_role}'"
+            )
         elif not ev.validated:
             gaps.append(f"The {ev.owner_role} has not validated event '{event_name}'")
 
@@ -849,6 +915,11 @@ def lifecycle_dictionary_gaps(dictionary: LifecycleDictionary) -> list[str]:
             gaps.append(f"Define timestamp specification '{ts_code}'")
         elif not (ts.meaning.strip() and ts.precision_rule.strip() and ts.non_imputation_rule):
             gaps.append(f"Complete rules for timestamp specification '{ts_code}'")
+        elif ts.validated_role and ts.validated_role != ts.owner_role:
+            gaps.append(
+                f"Timestamp '{ts_code}' recorded validator role '{ts.validated_role}', "
+                f"expected '{ts.owner_role}'"
+            )
         elif not ts.validated:
             gaps.append(f"The {ts.owner_role} has not validated timestamp '{ts_code}'")
 
@@ -859,6 +930,11 @@ def lifecycle_dictionary_gaps(dictionary: LifecycleDictionary) -> list[str]:
             gaps.append(f"Define wait state '{wait_code}'")
         elif not (wait.meaning.strip() and wait.clock_rule.strip() and wait.unknown_cause_rule):
             gaps.append(f"Complete attribution rules for wait state '{wait_code}'")
+        elif wait.validated_role and wait.validated_role != wait.owner_role:
+            gaps.append(
+                f"Wait state '{wait_code}' recorded validator role '{wait.validated_role}', "
+                f"expected '{wait.owner_role}'"
+            )
         elif not wait.validated:
             gaps.append(f"The {wait.owner_role} has not validated wait state '{wait_code}'")
 
@@ -873,6 +949,11 @@ def lifecycle_dictionary_gaps(dictionary: LifecycleDictionary) -> list[str]:
             gaps.append(f"Return loop '{kind}' must reference valid target stages")
         elif not (loop.meaning.strip() and loop.non_inference_rule.strip()):
             gaps.append(f"Complete meaning and non-inference rule for return loop '{kind}'")
+        elif loop.validated_role and loop.validated_role != loop.owner_role:
+            gaps.append(
+                f"Return loop '{kind}' recorded validator role '{loop.validated_role}', "
+                f"expected '{loop.owner_role}'"
+            )
         elif not loop.validated:
             gaps.append(f"The {loop.owner_role} has not validated return loop '{kind}'")
 
@@ -1054,6 +1135,69 @@ class PropertyReturnLoopRecord:
     source_ref: str = ""
 
 
+class FrozenDict[K, V](dict[K, V]):
+    """Immutable dict subclass preserving dataclasses.asdict() and JSON serialization."""
+
+    def __setitem__(self, key: K, value: V) -> NoReturn:
+        raise TypeError("FrozenDict does not support item assignment")
+
+    def __delitem__(self, key: K) -> NoReturn:
+        raise TypeError("FrozenDict does not support item deletion")
+
+    def clear(self) -> NoReturn:
+        raise TypeError("FrozenDict does not support clear()")
+
+    def pop(self, *args: object) -> NoReturn:
+        raise TypeError("FrozenDict does not support pop()")
+
+    def popitem(self) -> NoReturn:
+        raise TypeError("FrozenDict does not support popitem()")
+
+    def setdefault(self, *args: object) -> NoReturn:
+        raise TypeError("FrozenDict does not support setdefault()")
+
+    def update(self, *args: object, **kwargs: object) -> NoReturn:
+        raise TypeError("FrozenDict does not support update()")
+
+    def __ior__(self, other: object) -> NoReturn:  # type: ignore[misc]
+        raise TypeError("FrozenDict does not support in-place merge")
+
+    def __copy__(self) -> "FrozenDict[K, V]":
+        return FrozenDict(self)
+
+    def __deepcopy__(self, memo: dict[int, object]) -> "FrozenDict[K, V]":
+        return FrozenDict((copy.deepcopy(k, memo), copy.deepcopy(v, memo)) for k, v in self.items())
+
+
+def _freeze_value(value: object) -> object:
+    if isinstance(value, Mapping):
+        return FrozenDict((k, _freeze_value(v)) for k, v in value.items())
+    if isinstance(value, (tuple, list)):
+        return tuple(_freeze_value(item) for item in value)
+    return value
+
+
+_FLOW_REPORT_CONTAINER_FIELDS = (
+    "baseline_candidate_ids",
+    "zero_event_candidate_ids",
+    "duplicate_candidate_ids",
+    "state_counts",
+    "accepted_handover_property_ids",
+    "invalid_accepted_handover_ids",
+    "intended_energy_outcome_counts",
+    "bg011_assessment_to_ready_to_install_days",
+    "candidate_to_accepted_handover_days",
+    "post_install_handover_legs_days",
+    "stage_metrics",
+    "waits_by_party",
+    "waits_by_state",
+    "return_loops_by_property",
+    "return_loop_totals",
+    "explicit_rework_days_by_kind",
+    "gaps",
+)
+
+
 @dataclass(frozen=True)
 class FlowDiscoveryReport:
     window_start: date
@@ -1082,10 +1226,71 @@ class FlowDiscoveryReport:
     owner_validated_on: date | None = None
     validation_note: str = ""
     notice: str = NOT_FINDING
+    calculation_digest: str = ""
+
+    def _expected_digest(self) -> str:
+        payload = {
+            "window_start": self.window_start.isoformat(),
+            "window_end": self.window_end.isoformat(),
+            "as_of": self.as_of.isoformat(),
+            "baseline_candidate_ids": self.baseline_candidate_ids,
+            "zero_event_candidate_ids": self.zero_event_candidate_ids,
+            "duplicate_candidate_ids": self.duplicate_candidate_ids,
+            "state_counts": self.state_counts,
+            "accepted_handover_property_ids": self.accepted_handover_property_ids,
+            "invalid_accepted_handover_ids": self.invalid_accepted_handover_ids,
+            "intended_energy_outcome_counts": self.intended_energy_outcome_counts,
+            "bg011_assessment_to_ready_to_install_days": (
+                self.bg011_assessment_to_ready_to_install_days
+            ),
+            "candidate_to_accepted_handover_days": self.candidate_to_accepted_handover_days,
+            "post_install_handover_legs_days": self.post_install_handover_legs_days,
+            "stage_metrics": self.stage_metrics,
+            "waits_by_party": self.waits_by_party,
+            "waits_by_state": self.waits_by_state,
+            "return_loops_by_property": self.return_loops_by_property,
+            "return_loop_totals": self.return_loop_totals,
+            "explicit_rework_days_by_kind": self.explicit_rework_days_by_kind,
+            "gaps": self.gaps,
+        }
+        encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        return hashlib.sha256(encoded).hexdigest()
+
+    def verify_digest(self) -> None:
+        """Raise GovernanceViolationError if calculation_digest is blank or tampered with."""
+        if not isinstance(self.calculation_digest, str) or not self.calculation_digest.strip():
+            raise GovernanceViolationError(
+                "FlowDiscoveryReport is missing a verified calculation_digest"
+            )
+        if self.calculation_digest != self._expected_digest():
+            raise GovernanceViolationError(
+                "FlowDiscoveryReport calculation_digest mismatch indicates post-calculation "
+                "tampering"
+            )
 
     def __post_init__(self) -> None:
+        for attr_name in _FLOW_REPORT_CONTAINER_FIELDS:
+            object.__setattr__(self, attr_name, _freeze_value(getattr(self, attr_name)))
+        if not isinstance(self.calculation_digest, str):
+            raise GovernanceViolationError("FlowDiscoveryReport calculation_digest must be a str")
+        expected_digest = self._expected_digest()
+        if not self.calculation_digest.strip():
+            object.__setattr__(self, "calculation_digest", expected_digest)
+        elif self.calculation_digest != expected_digest:
+            raise GovernanceViolationError(
+                "FlowDiscoveryReport calculation_digest mismatch indicates post-calculation "
+                "tampering"
+            )
         if not self.owner_validated and self.finding_status == CANDIDATE_FINDING_STATUS:
             return
+        if self.gaps:
+            raise GovernanceViolationError(
+                "FlowDiscoveryReport cannot claim owner validation while unresolved gaps remain"
+            )
+        if self.invalid_accepted_handover_ids:
+            raise GovernanceViolationError(
+                "FlowDiscoveryReport cannot claim owner validation with invalid accepted handovers"
+            )
         if not (
             self.owner_validated
             and self.finding_status == VALIDATED_FINDING_STATUS
@@ -1125,8 +1330,6 @@ def evaluate_property_flow(
     start_dt = datetime(window_start.year, window_start.month, window_start.day, tzinfo=UTC)
     end_dt = datetime(window_end.year, window_end.month, window_end.day, 23, 59, 59, tzinfo=UTC)
 
-    id_counts = Counter(c.property_id for c in candidates)
-    duplicate_ids = tuple(sorted(pid for pid, n in id_counts.items() if n > 1))
     in_window: list[BaselineCandidateRecord] = []
     for cand in candidates:
         if not cand.source_ref.strip():
@@ -1137,10 +1340,19 @@ def evaluate_property_flow(
                 f"Candidate {cand.property_id} has unusable identified_at '{cand.identified_at}'"
             )
             continue
+        if ident_dt.date() > as_of:
+            gaps.append(
+                f"Candidate {cand.property_id} identified_at '{cand.identified_at}' is after "
+                f"as_of '{as_of.isoformat()}'"
+            )
+            continue
         if start_dt <= ident_dt <= end_dt:
             in_window.append(cand)
 
+    id_counts = Counter(c.property_id for c in in_window)
+    duplicate_ids = tuple(sorted(pid for pid, n in id_counts.items() if n > 1))
     baseline_ids = tuple(dict.fromkeys(c.property_id for c in in_window))
+    baseline_id_set = set(baseline_ids)
     state_counts = {
         "in_window_candidates": len(in_window),
         "paused": sum(bool(c.paused_reason.strip()) for c in in_window),
@@ -1154,9 +1366,13 @@ def evaluate_property_flow(
     )
 
     events_by_prop: dict[str, dict[str, datetime]] = {}
-    props_with_activity: set[str] = set()
+    props_with_lifecycle_events: set[str] = set()
     for ev in event_records:
-        props_with_activity.add(ev.property_id)
+        if ev.property_id not in baseline_id_set:
+            gaps.append(
+                f"Property {ev.property_id} event '{ev.event}' is outside baseline_candidate_ids"
+            )
+            continue
         if ev.event not in valid_events:
             gaps.append(f"Property {ev.property_id} has unknown lifecycle event '{ev.event}'")
             continue
@@ -1169,13 +1385,25 @@ def evaluate_property_flow(
                 f"'{ev.occurred_at}'"
             )
             continue
+        if occ.date() > as_of:
+            gaps.append(
+                f"Property {ev.property_id} event '{ev.event}' occurred_at '{ev.occurred_at}' "
+                f"is after as_of '{as_of.isoformat()}'"
+            )
+            continue
+        props_with_lifecycle_events.add(ev.property_id)
         prop_events = events_by_prop.setdefault(ev.property_id, {})
         if ev.event not in prop_events or occ < prop_events[ev.event]:
             prop_events[ev.event] = occ
 
     stage_rows: list[dict[str, object]] = []
     for st in stage_records:
-        props_with_activity.add(st.property_id)
+        if st.property_id not in baseline_id_set:
+            gaps.append(
+                f"Property {st.property_id} stage '{st.stage_code}' is outside "
+                "baseline_candidate_ids"
+            )
+            continue
         if st.stage_code not in valid_stages:
             gaps.append(f"Property {st.property_id} has unknown stage '{st.stage_code}'")
             continue
@@ -1188,6 +1416,12 @@ def evaluate_property_flow(
                 f"'{st.entered_at}'"
             )
             continue
+        if ent.date() > as_of:
+            gaps.append(
+                f"Property {st.property_id} stage '{st.stage_code}' entered_at "
+                f"'{st.entered_at}' is after as_of '{as_of.isoformat()}'"
+            )
+            continue
         if st.exited_at.strip():
             ext = _parse_contract_timestamp(st.exited_at)
             if ext is None:
@@ -1196,6 +1430,12 @@ def evaluate_property_flow(
                     f"'{st.exited_at}'"
                 )
                 calendar_days: float | None = None
+            elif ext.date() > as_of:
+                gaps.append(
+                    f"Property {st.property_id} stage '{st.stage_code}' exited_at "
+                    f"'{st.exited_at}' is after as_of '{as_of.isoformat()}'"
+                )
+                continue
             elif ext < ent:
                 gaps.append(
                     f"Property {st.property_id} stage '{st.stage_code}' exited before entry"
@@ -1204,7 +1444,7 @@ def evaluate_property_flow(
             else:
                 calendar_days = _elapsed_days(ent, ext)
         else:
-            calendar_days = _elapsed_days(ent, as_of_dt) if as_of_dt >= ent else None
+            calendar_days = _elapsed_days(ent, max(as_of_dt, ent))
 
         active_days: float | None = None
         if st.active_started_at.strip() or st.active_completed_at.strip():
@@ -1215,6 +1455,12 @@ def evaluate_property_flow(
                     f"Property {st.property_id} stage '{st.stage_code}' has incomplete or "
                     "unusable active-work timestamps; active_days kept None"
                 )
+            elif act_s.date() > as_of or act_e.date() > as_of:
+                gaps.append(
+                    f"Property {st.property_id} stage '{st.stage_code}' active-work timestamp "
+                    f"is after as_of '{as_of.isoformat()}'"
+                )
+                continue
             elif act_e < act_s:
                 gaps.append(
                     f"Property {st.property_id} stage '{st.stage_code}' active work ended "
@@ -1235,11 +1481,18 @@ def evaluate_property_flow(
 
     party_days: Counter[str] = Counter()
     party_open: Counter[str] = Counter()
+    party_unknown_cause: Counter[str] = Counter()
+    party_disputed_cause: Counter[str] = Counter()
     party_unknown: Counter[str] = Counter()
     state_wait_days: Counter[str] = Counter()
     state_wait_open: Counter[str] = Counter()
     for wt in wait_records:
-        props_with_activity.add(wt.property_id)
+        if wt.property_id not in baseline_id_set:
+            gaps.append(
+                f"Property {wt.property_id} wait '{wt.wait_state_code}' is outside "
+                "baseline_candidate_ids"
+            )
+            continue
         if wt.wait_state_code not in valid_waits:
             gaps.append(f"Property {wt.property_id} has unknown wait state '{wt.wait_state_code}'")
             continue
@@ -1253,6 +1506,12 @@ def evaluate_property_flow(
                 f"Property {wt.property_id} wait '{wt.wait_state_code}' has unusable started_at"
             )
             continue
+        if ws.date() > as_of:
+            gaps.append(
+                f"Property {wt.property_id} wait '{wt.wait_state_code}' started_at "
+                f"'{wt.started_at}' is after as_of '{as_of.isoformat()}'"
+            )
+            continue
         if wt.ended_at.strip():
             we = _parse_contract_timestamp(wt.ended_at)
             if we is None:
@@ -1260,16 +1519,27 @@ def evaluate_property_flow(
                     f"Property {wt.property_id} wait '{wt.wait_state_code}' has unusable ended_at"
                 )
                 continue
+            if we.date() > as_of:
+                gaps.append(
+                    f"Property {wt.property_id} wait '{wt.wait_state_code}' ended_at "
+                    f"'{wt.ended_at}' is after as_of '{as_of.isoformat()}'"
+                )
+                continue
         else:
-            we = as_of_dt
+            we = max(as_of_dt, ws)
         if we < ws:
             gaps.append(f"Property {wt.property_id} wait '{wt.wait_state_code}' ended before start")
             continue
         dur = _elapsed_days(ws, we)
         party = wt.party.strip() or UNATTRIBUTED
+        cause = wt.cause_code.strip()
+        is_unknown_cause = cause in (UNKNOWN, "")
+        is_disputed_cause = cause == WAIT_CAUSE_DISPUTED
         party_days[party] += dur  # type: ignore[assignment]
         party_open[party] += not bool(wt.ended_at.strip())
-        party_unknown[party] += wt.cause_code.strip() in (UNKNOWN, WAIT_CAUSE_DISPUTED, "")
+        party_unknown_cause[party] += is_unknown_cause
+        party_disputed_cause[party] += is_disputed_cause
+        party_unknown[party] += is_unknown_cause or is_disputed_cause
         state_wait_days[wt.wait_state_code] += dur  # type: ignore[assignment]
         state_wait_open[wt.wait_state_code] += not bool(wt.ended_at.strip())
 
@@ -1277,7 +1547,11 @@ def evaluate_property_flow(
     rework_by_kind: dict[str, float] = dict.fromkeys(REQUIRED_RETURN_LOOP_KINDS, 0.0)
     unresolved_reopen_after: dict[str, list[datetime]] = {}
     for lp in loop_records:
-        props_with_activity.add(lp.property_id)
+        if lp.property_id not in baseline_id_set:
+            gaps.append(
+                f"Property {lp.property_id} loop '{lp.kind}' is outside baseline_candidate_ids"
+            )
+            continue
         if lp.kind not in valid_loops:
             gaps.append(f"Property {lp.property_id} has unknown return loop kind '{lp.kind}'")
             continue
@@ -1296,6 +1570,12 @@ def evaluate_property_flow(
                 f"'{lp.recorded_at}'"
             )
             continue
+        if lp_dt.date() > as_of:
+            gaps.append(
+                f"Property {lp.property_id} loop '{lp.kind}' recorded_at '{lp.recorded_at}' "
+                f"is after as_of '{as_of.isoformat()}'"
+            )
+            continue
         prop_loop = loops_by_prop.setdefault(
             lp.property_id, dict.fromkeys(REQUIRED_RETURN_LOOP_KINDS, 0)
         )
@@ -1308,8 +1588,7 @@ def evaluate_property_flow(
         if lp.kind == "reopen" and lp.unresolved:
             unresolved_reopen_after.setdefault(lp.property_id, []).append(lp_dt)
 
-    zero_event_ids = tuple(pid for pid in baseline_ids if pid not in props_with_activity)
-    all_tracked_ids = tuple(dict.fromkeys((*baseline_ids, *sorted(events_by_prop))))
+    zero_event_ids = tuple(pid for pid in baseline_ids if pid not in props_with_lifecycle_events)
 
     bg011_days: dict[str, float | None] = {}
     e2e_days: dict[str, float | None] = {}
@@ -1317,7 +1596,7 @@ def evaluate_property_flow(
     accepted_ids: list[str] = []
     invalid_accepted_ids: list[str] = []
 
-    for pid in all_tracked_ids:
+    for pid in baseline_ids:
         pev = events_by_prop.get(pid, {})
         bg011_days[pid] = _pair_leg_days(
             pid,
@@ -1364,6 +1643,9 @@ def evaluate_property_flow(
             party=party,
             days=round(float(days_val), 4),
             open_waits=party_open[party],
+            unknown_cause_count=party_unknown_cause[party],
+            disputed_cause_count=party_disputed_cause[party],
+            unknown_or_disputed_count=party_unknown[party],
             unknown_or_disputed_cause=party_unknown[party],
         )
         for party, days_val in sorted(party_days.items(), key=lambda kv: (-kv[1], kv[0]))
@@ -1431,6 +1713,11 @@ def validate_flow_report(
     on: date,
     note: str,
 ) -> FlowDiscoveryReport:
+    report.verify_digest()
+    if report.gaps:
+        raise GovernanceViolationError("FlowDiscoveryReport still records unresolved gaps")
+    if report.invalid_accepted_handover_ids:
+        raise GovernanceViolationError("FlowDiscoveryReport records invalid accepted handovers")
     actor, cleaned_note = _require_ready_owner_and_dictionary(discovery_owner, dictionary, by, note)
     return replace(
         report,
@@ -1868,6 +2155,7 @@ class Phase0DiscoveryPack:
     notice: str = NOT_FINDING
 
     def __post_init__(self) -> None:
+        self.flow_report.verify_digest()
         if not self.owner_validated and self.finding_status == CANDIDATE_FINDING_STATUS:
             return
         if not (
@@ -1876,7 +2164,10 @@ class Phase0DiscoveryPack:
             and self.discovery_owner.is_ready
             and not lifecycle_dictionary_gaps(self.dictionary)
             and self.dictionary_report.owner_validated
+            and not self.dictionary_report.gaps
             and self.flow_report.owner_validated
+            and not self.flow_report.gaps
+            and not self.flow_report.invalid_accepted_handover_ids
             and self.constraint_register.owner_validated
             and is_valid_human_actor(self.owner_validated_by)
             and self.owner_validated_by.strip() == self.discovery_owner.owner.strip()
@@ -2016,6 +2307,11 @@ def enforce_governance_guard(
     if not isinstance(owner_val, bool):
         raise GovernanceViolationError("owner_validated must be a boolean")
 
+    if isinstance(output, FlowDiscoveryReport):
+        output.verify_digest()
+    elif isinstance(output, Phase0DiscoveryPack):
+        output.flow_report.verify_digest()
+
     if not owner_val:
         if status_val != CANDIDATE_FINDING_STATUS:
             raise GovernanceViolationError(
@@ -2043,3 +2339,37 @@ def enforce_governance_guard(
         )
     if isinstance(output, ConstraintHypothesis) and output.review_status == DISPUTED:
         raise GovernanceViolationError("Disputed hypothesis cannot pass as owner_validated")
+    if isinstance(output, LifecycleDictionaryReport) and output.gaps:
+        raise GovernanceViolationError(
+            "Validated LifecycleDictionaryReport cannot carry unresolved gaps"
+        )
+    if isinstance(output, FlowDiscoveryReport) and (
+        output.gaps or output.invalid_accepted_handover_ids
+    ):
+        raise GovernanceViolationError(
+            "Validated FlowDiscoveryReport cannot carry unresolved gaps or invalid handovers"
+        )
+    if isinstance(output, Phase0DiscoveryPack) and (
+        not output.dictionary_report.owner_validated
+        or output.dictionary_report.gaps
+        or not output.flow_report.owner_validated
+        or output.flow_report.gaps
+        or output.flow_report.invalid_accepted_handover_ids
+        or not output.constraint_register.owner_validated
+    ):
+        raise GovernanceViolationError(
+            "Validated Phase0DiscoveryPack requires zero-gap validated sub-reports"
+        )
+    if isinstance(output, Mapping):
+        if output.get("gaps") or output.get("invalid_accepted_handover_ids"):
+            raise GovernanceViolationError(
+                "Validated discovery output mapping cannot carry unresolved gaps or "
+                "invalid accepted handovers"
+            )
+        nested_flow = output.get("flow_report")
+        if isinstance(nested_flow, Mapping) and (
+            nested_flow.get("gaps") or nested_flow.get("invalid_accepted_handover_ids")
+        ):
+            raise GovernanceViolationError(
+                "Validated pack mapping cannot carry flow_report gaps or invalid handovers"
+            )

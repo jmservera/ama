@@ -205,6 +205,44 @@ class LifecycleDictionaryTests(unittest.TestCase):
             ["Define lifecycle event 'invoice' as a separate event"],
         )
 
+    def test_direct_constructed_specs_require_matching_validated_role_in_gaps(self) -> None:
+        validated = _validated_dictionary()
+        forged_stage = replace(validated.stages[0], validated_role="")
+        wrong_role_event = replace(validated.events[0], validated_role="Data Analyst")
+        wrong_role_ts = replace(validated.timestamps[0], validated_role="Data Analyst")
+        forged_wait = replace(validated.wait_states[0], validated_role="")
+        wrong_role_loop = replace(validated.return_loops[0], validated_role="Data Analyst")
+
+        self.assertFalse(forged_stage.validated)
+        self.assertFalse(wrong_role_event.validated)
+        self.assertFalse(wrong_role_ts.validated)
+        self.assertFalse(forged_wait.validated)
+        self.assertFalse(wrong_role_loop.validated)
+
+        tampered = c.LifecycleDictionary(
+            stages=(forged_stage, *validated.stages[1:]),
+            events=(wrong_role_event, *validated.events[1:]),
+            timestamps=(wrong_role_ts, *validated.timestamps[1:]),
+            wait_states=(forged_wait, *validated.wait_states[1:]),
+            return_loops=(wrong_role_loop, *validated.return_loops[1:]),
+        )
+        gaps = c.lifecycle_dictionary_gaps(tampered)
+        self.assertEqual(len(gaps), 5)
+        self.assertTrue(any("has not validated stage" in g for g in gaps))
+        self.assertTrue(any("recorded validator role 'Data Analyst'" in g for g in gaps))
+
+    def test_lifecycle_dictionary_enforces_canonical_flow_stage_order(self) -> None:
+        validated = _validated_dictionary()
+        swapped_renumbered = (
+            replace(validated.stages[1], order=1),
+            replace(validated.stages[0], order=2),
+            *validated.stages[2:],
+        )
+        with self.assertRaises(c.GovernanceViolationError):
+            replace(validated, stages=swapped_renumbered)
+        with self.assertRaises(c.GovernanceViolationError):
+            replace(validated, stages=validated.stages[1:])
+
 
 class PropertyFlowEvaluationTests(unittest.TestCase):
     def test_flow_retains_zero_event_paused_excluded_cancelled_and_withdrawn_candidates(
@@ -429,16 +467,25 @@ class PropertyFlowEvaluationTests(unittest.TestCase):
             window_start=WINDOW_START,
             window_end=WINDOW_END,
             as_of=AS_OF,
-            candidates=(c.BaselineCandidateRecord("P1", "2026-01-01", "c-1"),),
+            candidates=(
+                c.BaselineCandidateRecord("P1", "2026-01-01", "c-1"),
+                c.BaselineCandidateRecord("P2", "2026-01-02", "c-2"),
+            ),
             wait_records=waits,
             loop_records=loops,
         )
         self.assertEqual(report.waits_by_party[0]["party"], "Installer Alpha")
         self.assertEqual(report.waits_by_party[0]["days"], 15.0)
+        self.assertEqual(report.waits_by_party[0]["unknown_cause_count"], 1)
+        self.assertEqual(report.waits_by_party[0]["disputed_cause_count"], 0)
+        self.assertEqual(report.waits_by_party[0]["unknown_or_disputed_count"], 1)
         self.assertEqual(report.waits_by_party[0]["unknown_or_disputed_cause"], 1)
         self.assertEqual(report.waits_by_party[1]["party"], "Unattributed")
         self.assertEqual(report.waits_by_party[1]["days"], 5.0)
         self.assertEqual(report.waits_by_party[1]["open_waits"], 1)
+        self.assertEqual(report.waits_by_party[1]["unknown_cause_count"], 0)
+        self.assertEqual(report.waits_by_party[1]["disputed_cause_count"], 1)
+        self.assertEqual(report.waits_by_party[1]["unknown_or_disputed_count"], 1)
         self.assertEqual(report.return_loop_totals["repeat visit"], 1)
         self.assertEqual(report.return_loop_totals["rejection"], 1)
         self.assertEqual(report.explicit_rework_days_by_kind["rejection"], 4.5)
@@ -452,7 +499,10 @@ class PropertyFlowEvaluationTests(unittest.TestCase):
             window_start=WINDOW_START,
             window_end=WINDOW_END,
             as_of=AS_OF,
-            candidates=(c.BaselineCandidateRecord("P1", "2026-01-10T09:00:00", "c-1"),),
+            candidates=(
+                c.BaselineCandidateRecord("P1", "2026-01-10T09:00:00", "c-1"),
+                c.BaselineCandidateRecord("P2", "2026-01-12", "c-2"),
+            ),
             event_records=(
                 c.PropertyEventRecord("P2", "retrofit assessment completed", "2026-03-10", "e-1"),
                 c.PropertyEventRecord("P2", "ready to install", "2026-03-01", "e-2"),
@@ -463,6 +513,194 @@ class PropertyFlowEvaluationTests(unittest.TestCase):
         self.assertTrue(any("unusable identified_at" in g for g in report.gaps))
         self.assertTrue(any("before 'retrofit assessment completed'" in g for g in report.gaps))
         self.assertTrue(any("unknown lifecycle event" in g for g in report.gaps))
+
+    def test_flow_excludes_unmatched_cohort_and_post_as_of_records_into_gaps(self) -> None:
+        dictionary = _validated_dictionary()
+        report = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=date(2026, 11, 30),
+            as_of=AS_OF,
+            candidates=(
+                c.BaselineCandidateRecord("P1", "2026-01-10", "c-1"),
+                c.BaselineCandidateRecord("P1", "2026-11-12", "c-1-post-cutoff-dup"),
+                c.BaselineCandidateRecord("P-FUTURE", "2026-11-15", "c-future"),
+            ),
+            stage_records=(
+                c.PropertyStageRecord(
+                    "P-OUTSIDE",
+                    "pas2035_retrofit_assessment",
+                    "2026-02-01",
+                    "2026-02-05",
+                    source_ref="s-out",
+                ),
+                c.PropertyStageRecord(
+                    "P1",
+                    "pas2035_retrofit_assessment",
+                    "2026-11-01",
+                    "2026-11-12",
+                    source_ref="s-post",
+                ),
+            ),
+            event_records=(
+                c.PropertyEventRecord("P-OUTSIDE", "candidate selection", "2026-02-01", "e-out"),
+                c.PropertyEventRecord(
+                    "P1", "retrofit assessment completed", "2026-11-11", "e-post"
+                ),
+            ),
+            wait_records=(
+                c.PropertyWaitRecord(
+                    "P-OUTSIDE",
+                    "awaiting_supplier_or_professional_capacity",
+                    "Installer Alpha",
+                    "2026-02-01",
+                    "2026-02-10",
+                    source_ref="w-out",
+                ),
+                c.PropertyWaitRecord(
+                    "P1",
+                    "awaiting_supplier_or_professional_capacity",
+                    "Installer Alpha",
+                    "2026-11-11",
+                    "",
+                    source_ref="w-post",
+                ),
+            ),
+            loop_records=(
+                c.PropertyReturnLoopRecord(
+                    "P-OUTSIDE",
+                    "rejection",
+                    "quality_and_evidence_acceptance",
+                    "appointment_and_installation",
+                    "2026-03-01",
+                    rework_days=5.0,
+                    source_ref="l-out",
+                ),
+                c.PropertyReturnLoopRecord(
+                    "P1",
+                    "rejection",
+                    "quality_and_evidence_acceptance",
+                    "appointment_and_installation",
+                    "2026-11-12",
+                    rework_days=7.0,
+                    source_ref="l-post",
+                ),
+            ),
+        )
+        self.assertEqual(report.baseline_candidate_ids, ("P1",))
+        self.assertEqual(report.duplicate_candidate_ids, ())
+        self.assertNotIn("P-OUTSIDE", report.bg011_assessment_to_ready_to_install_days)
+        self.assertNotIn("P-OUTSIDE", report.post_install_handover_legs_days)
+        self.assertEqual(report.stage_metrics, ())
+        self.assertEqual(report.waits_by_party, ())
+        self.assertEqual(report.return_loop_totals["rejection"], 0)
+        self.assertEqual(report.explicit_rework_days_by_kind["rejection"], 0.0)
+        self.assertEqual(sum("outside baseline_candidate_ids" in g for g in report.gaps), 4)
+        self.assertEqual(sum("after as_of" in g for g in report.gaps), 6)
+
+    def test_zero_event_candidate_ids_depend_strictly_on_lifecycle_events(self) -> None:
+        dictionary = _validated_dictionary()
+        report = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(
+                c.BaselineCandidateRecord("P-NO-EVENTS", "2026-01-10", "c-1"),
+                c.BaselineCandidateRecord("P-WITH-EVENT", "2026-01-12", "c-2"),
+            ),
+            stage_records=(
+                c.PropertyStageRecord(
+                    "P-NO-EVENTS",
+                    "candidate_identification",
+                    "2026-01-10T09:00:00Z",
+                    "",
+                    source_ref="s-1",
+                ),
+            ),
+            event_records=(
+                c.PropertyEventRecord(
+                    "P-NO-EVENTS", "candidate selection", "2026-11-12", "e-post-cutoff"
+                ),
+                c.PropertyEventRecord("P-WITH-EVENT", "candidate selection", "2026-01-12", "e-ok"),
+            ),
+            wait_records=(
+                c.PropertyWaitRecord(
+                    "P-NO-EVENTS",
+                    "awaiting_resident_access_adjustment_or_decision",
+                    "Resident Liaison",
+                    "2026-02-01",
+                    "2026-02-04",
+                    source_ref="w-1",
+                ),
+            ),
+            loop_records=(
+                c.PropertyReturnLoopRecord(
+                    "P-NO-EVENTS",
+                    "repeat visit",
+                    "resident_engagement_and_survey_booking",
+                    "resident_engagement_and_survey_booking",
+                    "2026-02-05",
+                    rework_days=1.0,
+                    source_ref="l-1",
+                ),
+            ),
+        )
+        self.assertEqual(report.zero_event_candidate_ids, ("P-NO-EVENTS",))
+
+    def test_waits_by_party_separates_unknown_and_disputed_cause_counts(self) -> None:
+        dictionary = _validated_dictionary()
+        report = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(c.BaselineCandidateRecord("P1", "2026-01-01", "c-1"),),
+            wait_records=(
+                c.PropertyWaitRecord(
+                    "P1",
+                    "awaiting_supplier_or_professional_capacity",
+                    "Installer Alpha",
+                    "2026-02-01",
+                    "2026-02-03",
+                    cause_code="UNKNOWN",
+                    source_ref="w-1",
+                ),
+                c.PropertyWaitRecord(
+                    "P1",
+                    "awaiting_supplier_or_professional_capacity",
+                    "Installer Alpha",
+                    "2026-02-04",
+                    "2026-02-06",
+                    cause_code="   ",
+                    source_ref="w-2",
+                ),
+                c.PropertyWaitRecord(
+                    "P1",
+                    "awaiting_supplier_or_professional_capacity",
+                    "Installer Alpha",
+                    "2026-02-07",
+                    "2026-02-10",
+                    cause_code="DISPUTED",
+                    source_ref="w-3",
+                ),
+                c.PropertyWaitRecord(
+                    "P1",
+                    "awaiting_supplier_or_professional_capacity",
+                    "Installer Alpha",
+                    "2026-02-11",
+                    "2026-02-12",
+                    cause_code="PARTS_LEAD_TIME",
+                    source_ref="w-4",
+                ),
+            ),
+        )
+        row = report.waits_by_party[0]
+        self.assertEqual(row["party"], "Installer Alpha")
+        self.assertEqual(row["unknown_cause_count"], 2)
+        self.assertEqual(row["disputed_cause_count"], 1)
+        self.assertEqual(row["unknown_or_disputed_count"], 3)
+        self.assertEqual(row["unknown_or_disputed_cause"], 3)
 
     def test_flow_evaluation_is_deterministic_across_repeated_runs(self) -> None:
         dictionary = _validated_dictionary()
@@ -732,6 +970,194 @@ class GovernanceGuardTests(unittest.TestCase):
                 by="Dev Patel",
                 on=VALIDATED_ON,
                 note="Premature pack sign-off",
+            )
+
+    def test_validate_flow_report_and_guard_reject_gaps_and_invalid_handovers(self) -> None:
+        owner = _ready_owner()
+        dictionary = _validated_dictionary()
+        adjudicated_reg = self._adjudicated_register()
+
+        report_with_gap = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(c.BaselineCandidateRecord("P1", "2026-01-10", ""),),
+        )
+        self.assertTrue(report_with_gap.gaps)
+        with self.assertRaises(c.GovernanceViolationError):
+            c.validate_flow_report(
+                report_with_gap,
+                owner,
+                dictionary,
+                by="Dev Patel",
+                on=VALIDATED_ON,
+                note="Attempted sign-off with source_ref gap",
+            )
+
+        report_with_invalid_handover = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(c.BaselineCandidateRecord("P1", "2026-01-10", "c-1"),),
+            event_records=(
+                c.PropertyEventRecord("P1", "candidate selection", "2026-01-10", "e-1"),
+                c.PropertyEventRecord("P1", "accepted handover", "2026-03-01", "e-2"),
+            ),
+        )
+        self.assertEqual(report_with_invalid_handover.invalid_accepted_handover_ids, ("P1",))
+        with self.assertRaises(c.GovernanceViolationError):
+            c.validate_flow_report(
+                report_with_invalid_handover,
+                owner,
+                dictionary,
+                by="Dev Patel",
+                on=VALIDATED_ON,
+                note="Attempted sign-off with invalid accepted handover",
+            )
+
+        pack_with_invalid_flow = c.Phase0DiscoveryPack(
+            contract_version=c.CONTRACT_VERSION,
+            discovery_owner=owner,
+            dictionary=dictionary,
+            dictionary_report=c.summarize_lifecycle_dictionary(dictionary),
+            flow_report=report_with_invalid_handover,
+            constraint_register=adjudicated_reg,
+        )
+        with self.assertRaises(c.GovernanceViolationError):
+            c.validate_discovery_pack(
+                pack_with_invalid_flow,
+                by="Dev Patel",
+                on=VALIDATED_ON,
+                note="Pack sign-off must refuse invalid accepted handover",
+            )
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(
+                {
+                    "owner_validated": True,
+                    "finding_status": c.VALIDATED_FINDING_STATUS,
+                    "owner_validated_by": "Dev Patel",
+                    "gaps": ("unresolved gap",),
+                },
+                discovery_owner=owner,
+                dictionary=dictionary,
+            )
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(
+                {
+                    "owner_validated": True,
+                    "finding_status": c.VALIDATED_FINDING_STATUS,
+                    "owner_validated_by": "Dev Patel",
+                    "flow_report": {"invalid_accepted_handover_ids": ("P1",)},
+                },
+                discovery_owner=owner,
+                dictionary=dictionary,
+            )
+
+    def test_flow_report_freezes_nested_mappings_and_verifies_calculation_digest(self) -> None:
+        owner = _ready_owner()
+        dictionary = _validated_dictionary()
+        report = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(c.BaselineCandidateRecord("P1", "2026-01-01", "c-1"),),
+            stage_records=(
+                c.PropertyStageRecord(
+                    "P1",
+                    "pas2035_retrofit_assessment",
+                    "2026-01-05",
+                    "2026-01-10",
+                    source_ref="s-1",
+                ),
+            ),
+            event_records=(
+                c.PropertyEventRecord("P1", "installation", "2026-02-01", "e-1"),
+                c.PropertyEventRecord("P1", "physical acceptance", "2026-02-04", "e-2"),
+            ),
+            wait_records=(
+                c.PropertyWaitRecord(
+                    "P1",
+                    "awaiting_supplier_or_professional_capacity",
+                    "Installer Alpha",
+                    "2026-01-11",
+                    "2026-01-14",
+                    source_ref="w-1",
+                ),
+            ),
+            loop_records=(
+                c.PropertyReturnLoopRecord(
+                    "P1",
+                    "rejection",
+                    "quality_and_evidence_acceptance",
+                    "appointment_and_installation",
+                    "2026-02-05",
+                    rework_days=2.0,
+                    source_ref="l-1",
+                ),
+            ),
+        )
+        self.assertEqual(report.gaps, ())
+        self.assertTrue(bool(report.calculation_digest))
+        report.verify_digest()
+
+        with self.assertRaises(TypeError):
+            report.state_counts["paused"] = 99
+        with self.assertRaises(TypeError):
+            report.post_install_handover_legs_days["P1"]["installation to physical acceptance"] = (
+                0.0
+            )
+        with self.assertRaises(TypeError):
+            report.stage_metrics[0]["calendar_days"] = 0.0
+        with self.assertRaises(TypeError):
+            report.waits_by_party[0]["days"] = 0.0
+        with self.assertRaises(TypeError):
+            report.return_loops_by_property["P1"]["rejection"] = 0
+
+        validated = c.validate_flow_report(
+            report,
+            owner,
+            dictionary,
+            by="Dev Patel",
+            on=VALIDATED_ON,
+            note="Clean flow report validated",
+        )
+        self.assertEqual(validated.calculation_digest, report.calculation_digest)
+        self.assertIn("calculation_digest", json.dumps(asdict(validated), default=str))
+
+        tampered_candidate = replace(report)
+        dict.__setitem__(tampered_candidate.state_counts, "paused", 42)
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(tampered_candidate)
+        with self.assertRaises(c.GovernanceViolationError):
+            c.validate_flow_report(
+                tampered_candidate,
+                owner,
+                dictionary,
+                by="Dev Patel",
+                on=VALIDATED_ON,
+                note="Tampered candidate must fail",
+            )
+
+        blank_digest_candidate = replace(report)
+        object.__setattr__(blank_digest_candidate, "calculation_digest", "")
+        with self.assertRaises(c.GovernanceViolationError):
+            c.validate_flow_report(
+                blank_digest_candidate,
+                owner,
+                dictionary,
+                by="Dev Patel",
+                on=VALIDATED_ON,
+                note="Blank digest must fail before replace",
+            )
+
+        tampered_validated = replace(validated)
+        dict.__setitem__(tampered_validated.state_counts, "paused", 77)
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(
+                tampered_validated, discovery_owner=owner, dictionary=dictionary
             )
 
 

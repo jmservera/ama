@@ -106,12 +106,23 @@ domain-validated sub-dictionaries through `accepted handover`:
   parties remain visible without inference.
 * Four return-loop kinds (`return`, `rejection`, `repeat visit`, `reopen`)
   record backward flow and rework without treating failed access as resident
-  refusal.
-* `evaluate_property_flow` retains zero-event, paused, excluded, cancelled, and
-  withdrawn baseline candidates; computes both the `BG-011`
+  refusal. Every dictionary specification (`StageSpec`, `EventSpec`,
+  `TimestampSpec`, `WaitStateSpec`, and `ReturnLoopSpec`) records
+  `validated_role` alongside `validated_by` and `validated_on`, requiring
+  `validated_role == owner_role` in `.validated` and
+  `lifecycle_dictionary_gaps()`, while `LifecycleDictionary.__post_init__`
+  enforces canonical `1..10` `REQUIRED_FLOW_STAGE_CODES` ordering.
+* `evaluate_property_flow` restricts cohort aggregations strictly to in-window
+  `baseline_candidate_ids` on or before `as_of` (recording unmatched-cohort and
+  post-cutoff records as explicit `gaps`); retains zero-event, paused,
+  excluded, cancelled, and withdrawn baseline candidates with
+  `zero_event_candidate_ids` determined strictly by valid in-cohort `<= as_of`
+  lifecycle event presence; computes both the `BG-011`
   `assessment-to-ready-to-install` cycle-time leg and the
-  `candidate-selection-to-accepted-handover` and post-installation legs; checks
-  that `accepted handover` is preceded by `design approved`,
+  `candidate-selection-to-accepted-handover` and post-installation legs; reports
+  separate `unknown_cause_count` and `disputed_cause_count` counters on each
+  `waits_by_party` row alongside `unknown_or_disputed_count`; checks that
+  `accepted handover` is preceded by `design approved`,
   `resident works decision recorded`, `physical acceptance`,
   `evidence acceptance`, and `resident handover` with no unresolved
   post-handover `reopen`; and tracks intended energy outcome status separately.
@@ -152,8 +163,15 @@ nominated-owner sign-off:
   register, pack, or output mapping claims `owner_validated=True` or
   `finding_status="owner_validated_company_finding"` without a
   `NominatedDiscoveryOwner` in `ENDPOINT_AGREED` state, a zero-gap
-  domain-validated `LifecycleDictionary`, complete two-sided evidence, and
-  sign-off by the exact nominated human discovery owner.
+  domain-validated `LifecycleDictionary`, zero unresolved `FlowDiscoveryReport`
+  gaps and zero `invalid_accepted_handover_ids`, complete two-sided evidence,
+  and sign-off by the exact nominated human discovery owner.
+* `FlowDiscoveryReport` recursively freezes all nested mappings and sequences
+  via `FrozenDict` and `tuple` coercion while binding construction,
+  `validate_flow_report`, `Phase0DiscoveryPack`, and `enforce_governance_guard`
+  to a verified SHA-256 `calculation_digest`, blocking post-calculation or
+  post-sign-off container mutation while preserving `dataclasses.asdict()`
+  serialization.
 * In `discovery_register`, domain-only `decide()` preserves legacy
   `is_company_finding` compatibility while keeping `owner_validated=False` and
   `finding_status="candidate_hypothesis_not_company_finding"` until
