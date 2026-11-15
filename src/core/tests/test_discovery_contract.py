@@ -1,5 +1,6 @@
 """Deterministic unit tests for the Phase 0 retrofit-flow discovery contract (issue #124)."""
 
+import copy
 import hashlib
 import json
 import unittest
@@ -730,6 +731,44 @@ class PropertyFlowEvaluationTests(unittest.TestCase):
         }
         self.assertEqual(len(digests), 1)
 
+    def test_flow_excludes_incomplete_post_as_of_active_work_and_keeps_window_end_microseconds(
+        self,
+    ) -> None:
+        dictionary = _validated_dictionary()
+        report = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(
+                c.BaselineCandidateRecord("P_END", "2026-10-31T23:59:59.500000Z", "c-end"),
+            ),
+            stage_records=(
+                c.PropertyStageRecord(
+                    "P_END",
+                    "pas2035_retrofit_assessment",
+                    "2026-11-01T09:00:00Z",
+                    "2026-11-05T17:00:00Z",
+                    active_started_at="2026-11-12T09:00:00Z",
+                    active_completed_at="",
+                    source_ref="s-future-start",
+                ),
+                c.PropertyStageRecord(
+                    "P_END",
+                    "pas2035_design_and_coordination",
+                    "2026-11-01T09:00:00Z",
+                    "2026-11-05T17:00:00Z",
+                    active_started_at="",
+                    active_completed_at="2026-11-12T17:00:00Z",
+                    source_ref="s-future-end",
+                ),
+            ),
+        )
+        self.assertEqual(report.baseline_candidate_ids, ("P_END",))
+        self.assertEqual(report.stage_metrics, ())
+        self.assertEqual(len(report.gaps), 2)
+        self.assertTrue(all("after as_of" in gap for gap in report.gaps))
+
 
 class RankedConstraintRegisterTests(unittest.TestCase):
     def test_seed_constraint_register_enforces_contiguous_ranks_and_candidate_status(self) -> None:
@@ -1158,6 +1197,152 @@ class GovernanceGuardTests(unittest.TestCase):
         with self.assertRaises(c.GovernanceViolationError):
             c.enforce_governance_guard(
                 tampered_validated, discovery_owner=owner, dictionary=dictionary
+            )
+
+    def test_frozen_dict_blocks_reinit_and_attribute_mutation(self) -> None:
+        dictionary = _validated_dictionary()
+        report = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(c.BaselineCandidateRecord("P1", "2026-01-01", "c-1"),),
+        )
+        with self.assertRaises(TypeError):
+            report.state_counts.__init__({"paused": 42})  # type: ignore[misc]
+        with self.assertRaises(TypeError):
+            report.state_counts._frozen = False  # type: ignore[attr-defined]
+        with self.assertRaises(TypeError):
+            del report.state_counts._frozen  # type: ignore[attr-defined]
+        self.assertEqual(report.state_counts["paused"], 0)
+        self.assertEqual(copy.deepcopy(report).calculation_digest, report.calculation_digest)
+        self.assertEqual(asdict(report)["state_counts"]["paused"], 0)
+
+    def test_provenance_blocks_blank_digest_reset_and_same_cohort_collision_forgery(
+        self,
+    ) -> None:
+        owner = _ready_owner()
+        dictionary = _validated_dictionary()
+        clean_report = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(c.BaselineCandidateRecord("P_COLLIDE", "2026-01-10", "c-ok"),),
+        )
+        gapped_report = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(c.BaselineCandidateRecord("P_COLLIDE", "2026-01-10", ""),),
+        )
+        with self.assertRaises(c.GovernanceViolationError):
+            replace(gapped_report, gaps=(), calculation_digest="")
+
+        validated = c.validate_flow_report(
+            clean_report,
+            owner,
+            dictionary,
+            by="Dev Patel",
+            on=VALIDATED_ON,
+            note="Clean collision cohort validated",
+        )
+        with self.assertRaises(c.GovernanceViolationError):
+            replace(validated, state_counts={"paused": 99}, calculation_digest="")
+
+        colliding_forged = replace(
+            gapped_report,
+            gaps=(),
+            calculation_digest=clean_report.calculation_digest,
+        )
+        with self.assertRaises(c.GovernanceViolationError):
+            c.validate_flow_report(
+                colliding_forged,
+                owner,
+                dictionary,
+                by="Dev Patel",
+                on=VALIDATED_ON,
+                note="Forged same-cohort digest must fail",
+            )
+        with self.assertRaises(c.GovernanceViolationError):
+            replace(
+                gapped_report,
+                gaps=(),
+                owner_validated=True,
+                finding_status=c.VALIDATED_FINDING_STATUS,
+                owner_validated_by="Dev Patel",
+                owner_validated_on=VALIDATED_ON,
+                validation_note="Direct forged seal",
+                calculation_digest=clean_report.calculation_digest,
+            )
+
+    def test_mapping_guard_enforces_nested_flow_dataclass_and_json_roundtrip_digest(
+        self,
+    ) -> None:
+        owner = _ready_owner()
+        dictionary = _validated_dictionary()
+        clean_report = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(c.BaselineCandidateRecord("P_MAP", "2026-02-01", "c-map"),),
+        )
+        gapped_report = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(c.BaselineCandidateRecord("P_MAP", "2026-02-01", ""),),
+        )
+        validated = c.validate_flow_report(
+            clean_report,
+            owner,
+            dictionary,
+            by="Dev Patel",
+            on=VALIDATED_ON,
+            note="Validated for JSON round-trip",
+        )
+
+        roundtripped = json.loads(json.dumps(validated.to_json_dict()))
+        c.enforce_governance_guard(roundtripped, discovery_owner=owner, dictionary=dictionary)
+
+        tampered_json = json.loads(json.dumps(validated.to_json_dict()))
+        tampered_json["state_counts"]["paused"] = 5
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(tampered_json, discovery_owner=owner, dictionary=dictionary)
+
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(
+                {
+                    "owner_validated": True,
+                    "finding_status": c.VALIDATED_FINDING_STATUS,
+                    "owner_validated_by": "Dev Patel",
+                    "accepted_handover_property_ids": ("P_MAP",),
+                },
+                discovery_owner=owner,
+                dictionary=dictionary,
+            )
+
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(
+                {
+                    "owner_validated": True,
+                    "finding_status": c.VALIDATED_FINDING_STATUS,
+                    "owner_validated_by": "Dev Patel",
+                    "flow_report": gapped_report,
+                },
+                discovery_owner=owner,
+                dictionary=dictionary,
+            )
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(
+                {
+                    "owner_validated": False,
+                    "finding_status": c.CANDIDATE_FINDING_STATUS,
+                    "flow_report": None,
+                }
             )
 
 

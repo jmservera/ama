@@ -19,11 +19,12 @@ retrofit-flow discovery. It enforces four non-negotiable governance rules:
 import copy
 import hashlib
 import json
+import weakref
 from collections import Counter
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import asdict, dataclass, replace
 from datetime import UTC, date, datetime
-from typing import NoReturn, Protocol, runtime_checkable
+from typing import Any, NoReturn, Protocol, overload, runtime_checkable
 
 from .discovery_flow import DISPUTED as WAIT_CAUSE_DISPUTED
 from .discovery_flow import LOOP_KINDS, UNATTRIBUTED, UNKNOWN
@@ -1138,6 +1139,32 @@ class PropertyReturnLoopRecord:
 class FrozenDict[K, V](dict[K, V]):
     """Immutable dict subclass preserving dataclasses.asdict() and JSON serialization."""
 
+    __slots__ = ("_frozen",)
+
+    @overload
+    def __init__(self) -> None: ...
+
+    @overload
+    def __init__(self, map: Mapping[K, V], /) -> None: ...
+
+    @overload
+    def __init__(self, iterable: Iterable[tuple[K, V]], /) -> None: ...
+
+    @overload
+    def __init__(self, **kwargs: V) -> None: ...
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        if getattr(self, "_frozen", False):
+            raise TypeError("FrozenDict does not support re-initialization")
+        super().__init__(*args, **kwargs)
+        object.__setattr__(self, "_frozen", True)
+
+    def __setattr__(self, name: str, value: object) -> NoReturn:
+        raise TypeError("FrozenDict does not support attribute mutation")
+
+    def __delattr__(self, name: str) -> NoReturn:
+        raise TypeError("FrozenDict does not support attribute deletion")
+
     def __setitem__(self, key: K, value: V) -> NoReturn:
         raise TypeError("FrozenDict does not support item assignment")
 
@@ -1197,6 +1224,88 @@ _FLOW_REPORT_CONTAINER_FIELDS = (
     "gaps",
 )
 
+_FLOW_REPORT_DIGEST_KEYS = (
+    "window_start",
+    "window_end",
+    "as_of",
+    "baseline_candidate_ids",
+    "zero_event_candidate_ids",
+    "duplicate_candidate_ids",
+    "state_counts",
+    "accepted_handover_property_ids",
+    "invalid_accepted_handover_ids",
+    "intended_energy_outcome_counts",
+    "bg011_assessment_to_ready_to_install_days",
+    "candidate_to_accepted_handover_days",
+    "post_install_handover_legs_days",
+    "stage_metrics",
+    "waits_by_party",
+    "waits_by_state",
+    "return_loops_by_property",
+    "return_loop_totals",
+    "explicit_rework_days_by_kind",
+    "gaps",
+)
+
+_FLOW_REPORT_SIGNATURE_KEYS = frozenset(
+    k for k in _FLOW_REPORT_DIGEST_KEYS if k != "gaps"
+) | frozenset({"calculation_digest"})
+
+_EVALUATED_FLOW_REPORT_DIGESTS: set[str] = set()
+_VALIDATED_FLOW_REPORT_SEALS: set[tuple[str, str, str, str]] = set()
+_EVALUATED_FLOW_REPORT_REFS: dict[int, "weakref.ref[FlowDiscoveryReport]"] = {}
+
+
+def _register_evaluated_report(report: "FlowDiscoveryReport") -> None:
+    oid = id(report)
+
+    def _cleanup(_ref: "weakref.ref[FlowDiscoveryReport]") -> None:
+        _EVALUATED_FLOW_REPORT_REFS.pop(oid, None)
+
+    _EVALUATED_FLOW_REPORT_REFS[oid] = weakref.ref(report, _cleanup)
+    _EVALUATED_FLOW_REPORT_DIGESTS.add(report.calculation_digest)
+
+
+def _is_evaluated_report_instance(report: "FlowDiscoveryReport") -> bool:
+    ref = _EVALUATED_FLOW_REPORT_REFS.get(id(report))
+    return ref is not None and ref() is report
+
+
+def _strict_iso_date(value: object, field_name: str) -> str:
+    if isinstance(value, date) and not isinstance(value, datetime):
+        return value.isoformat()
+    if isinstance(value, str) and len(value) == 10:
+        try:
+            return date.fromisoformat(value).isoformat()
+        except ValueError as exc:
+            raise GovernanceViolationError(
+                f"Invalid ISO calendar date for {field_name}: {value!r}"
+            ) from exc
+    raise GovernanceViolationError(f"Expected calendar date or YYYY-MM-DD string for {field_name}")
+
+
+def _compute_flow_report_digest(payload: Mapping[str, object]) -> str:
+    try:
+        canonical: dict[str, object] = {
+            "window_start": _strict_iso_date(payload["window_start"], "window_start"),
+            "window_end": _strict_iso_date(payload["window_end"], "window_end"),
+            "as_of": _strict_iso_date(payload["as_of"], "as_of"),
+        }
+        for key in _FLOW_REPORT_CONTAINER_FIELDS:
+            if key not in payload:
+                raise GovernanceViolationError(
+                    f"FlowDiscoveryReport payload missing required field '{key}'"
+                )
+            canonical[key] = _freeze_value(payload[key])
+        encoded = json.dumps(canonical, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    except GovernanceViolationError:
+        raise
+    except (KeyError, TypeError, ValueError) as exc:
+        raise GovernanceViolationError(
+            "FlowDiscoveryReport payload failed canonical digest serialization"
+        ) from exc
+    return hashlib.sha256(encoded).hexdigest()
+
 
 @dataclass(frozen=True)
 class FlowDiscoveryReport:
@@ -1229,32 +1338,32 @@ class FlowDiscoveryReport:
     calculation_digest: str = ""
 
     def _expected_digest(self) -> str:
-        payload = {
-            "window_start": self.window_start.isoformat(),
-            "window_end": self.window_end.isoformat(),
-            "as_of": self.as_of.isoformat(),
-            "baseline_candidate_ids": self.baseline_candidate_ids,
-            "zero_event_candidate_ids": self.zero_event_candidate_ids,
-            "duplicate_candidate_ids": self.duplicate_candidate_ids,
-            "state_counts": self.state_counts,
-            "accepted_handover_property_ids": self.accepted_handover_property_ids,
-            "invalid_accepted_handover_ids": self.invalid_accepted_handover_ids,
-            "intended_energy_outcome_counts": self.intended_energy_outcome_counts,
-            "bg011_assessment_to_ready_to_install_days": (
-                self.bg011_assessment_to_ready_to_install_days
-            ),
-            "candidate_to_accepted_handover_days": self.candidate_to_accepted_handover_days,
-            "post_install_handover_legs_days": self.post_install_handover_legs_days,
-            "stage_metrics": self.stage_metrics,
-            "waits_by_party": self.waits_by_party,
-            "waits_by_state": self.waits_by_state,
-            "return_loops_by_property": self.return_loops_by_property,
-            "return_loop_totals": self.return_loop_totals,
-            "explicit_rework_days_by_kind": self.explicit_rework_days_by_kind,
-            "gaps": self.gaps,
-        }
-        encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
-        return hashlib.sha256(encoded).hexdigest()
+        return _compute_flow_report_digest(
+            {
+                "window_start": self.window_start,
+                "window_end": self.window_end,
+                "as_of": self.as_of,
+                "baseline_candidate_ids": self.baseline_candidate_ids,
+                "zero_event_candidate_ids": self.zero_event_candidate_ids,
+                "duplicate_candidate_ids": self.duplicate_candidate_ids,
+                "state_counts": self.state_counts,
+                "accepted_handover_property_ids": self.accepted_handover_property_ids,
+                "invalid_accepted_handover_ids": self.invalid_accepted_handover_ids,
+                "intended_energy_outcome_counts": self.intended_energy_outcome_counts,
+                "bg011_assessment_to_ready_to_install_days": (
+                    self.bg011_assessment_to_ready_to_install_days
+                ),
+                "candidate_to_accepted_handover_days": self.candidate_to_accepted_handover_days,
+                "post_install_handover_legs_days": self.post_install_handover_legs_days,
+                "stage_metrics": self.stage_metrics,
+                "waits_by_party": self.waits_by_party,
+                "waits_by_state": self.waits_by_state,
+                "return_loops_by_property": self.return_loops_by_property,
+                "return_loop_totals": self.return_loop_totals,
+                "explicit_rework_days_by_kind": self.explicit_rework_days_by_kind,
+                "gaps": self.gaps,
+            }
+        )
 
     def verify_digest(self) -> None:
         """Raise GovernanceViolationError if calculation_digest is blank or tampered with."""
@@ -1268,19 +1377,21 @@ class FlowDiscoveryReport:
                 "tampering"
             )
 
+    def to_json_dict(self) -> FrozenDict[str, object]:
+        """Return an immutable JSON-ready mapping with ISO-8601 calendar dates."""
+        raw = asdict(self)
+        raw["window_start"] = self.window_start.isoformat()
+        raw["window_end"] = self.window_end.isoformat()
+        raw["as_of"] = self.as_of.isoformat()
+        raw["owner_validated_on"] = (
+            self.owner_validated_on.isoformat() if self.owner_validated_on is not None else None
+        )
+        return FrozenDict[str, object]((k, _freeze_value(v)) for k, v in raw.items())
+
     def __post_init__(self) -> None:
         for attr_name in _FLOW_REPORT_CONTAINER_FIELDS:
             object.__setattr__(self, attr_name, _freeze_value(getattr(self, attr_name)))
-        if not isinstance(self.calculation_digest, str):
-            raise GovernanceViolationError("FlowDiscoveryReport calculation_digest must be a str")
-        expected_digest = self._expected_digest()
-        if not self.calculation_digest.strip():
-            object.__setattr__(self, "calculation_digest", expected_digest)
-        elif self.calculation_digest != expected_digest:
-            raise GovernanceViolationError(
-                "FlowDiscoveryReport calculation_digest mismatch indicates post-calculation "
-                "tampering"
-            )
+        self.verify_digest()
         if not self.owner_validated and self.finding_status == CANDIDATE_FINDING_STATUS:
             return
         if self.gaps:
@@ -1296,10 +1407,25 @@ class FlowDiscoveryReport:
             and self.finding_status == VALIDATED_FINDING_STATUS
             and is_valid_human_actor(self.owner_validated_by)
             and self.owner_validated_on is not None
+            and not isinstance(self.owner_validated_on, datetime)
             and bool(self.validation_note.strip())
         ):
             raise GovernanceViolationError(
                 "FlowDiscoveryReport cannot claim owner validation without formal human sign-off"
+            )
+        seal = (
+            self.calculation_digest,
+            self.owner_validated_by.strip(),
+            self.owner_validated_on.isoformat(),
+            self.validation_note.strip(),
+        )
+        if (
+            self.calculation_digest not in _EVALUATED_FLOW_REPORT_DIGESTS
+            or seal not in _VALIDATED_FLOW_REPORT_SEALS
+        ):
+            raise GovernanceViolationError(
+                "FlowDiscoveryReport cannot claim owner validation without evaluated calculation "
+                "provenance and validate_flow_report sign-off"
             )
 
 
@@ -1327,8 +1453,6 @@ def evaluate_property_flow(
     valid_waits = {w.code for w in dictionary.wait_states}
     valid_loops = {r.kind for r in dictionary.return_loops}
     as_of_dt = datetime(as_of.year, as_of.month, as_of.day, tzinfo=UTC)
-    start_dt = datetime(window_start.year, window_start.month, window_start.day, tzinfo=UTC)
-    end_dt = datetime(window_end.year, window_end.month, window_end.day, 23, 59, 59, tzinfo=UTC)
 
     in_window: list[BaselineCandidateRecord] = []
     for cand in candidates:
@@ -1346,7 +1470,7 @@ def evaluate_property_flow(
                 f"as_of '{as_of.isoformat()}'"
             )
             continue
-        if start_dt <= ident_dt <= end_dt:
+        if window_start <= ident_dt.date() <= window_end:
             in_window.append(cand)
 
     id_counts = Counter(c.property_id for c in in_window)
@@ -1448,19 +1572,29 @@ def evaluate_property_flow(
 
         active_days: float | None = None
         if st.active_started_at.strip() or st.active_completed_at.strip():
-            act_s = _parse_contract_timestamp(st.active_started_at)
-            act_e = _parse_contract_timestamp(st.active_completed_at)
-            if act_s is None or act_e is None:
-                gaps.append(
-                    f"Property {st.property_id} stage '{st.stage_code}' has incomplete or "
-                    "unusable active-work timestamps; active_days kept None"
-                )
-            elif act_s.date() > as_of or act_e.date() > as_of:
+            act_s = (
+                _parse_contract_timestamp(st.active_started_at)
+                if st.active_started_at.strip()
+                else None
+            )
+            act_e = (
+                _parse_contract_timestamp(st.active_completed_at)
+                if st.active_completed_at.strip()
+                else None
+            )
+            if (act_s is not None and act_s.date() > as_of) or (
+                act_e is not None and act_e.date() > as_of
+            ):
                 gaps.append(
                     f"Property {st.property_id} stage '{st.stage_code}' active-work timestamp "
                     f"is after as_of '{as_of.isoformat()}'"
                 )
                 continue
+            if act_s is None or act_e is None:
+                gaps.append(
+                    f"Property {st.property_id} stage '{st.stage_code}' has incomplete or "
+                    "unusable active-work timestamps; active_days kept None"
+                )
             elif act_e < act_s:
                 gaps.append(
                     f"Property {st.property_id} stage '{st.stage_code}' active work ended "
@@ -1663,7 +1797,35 @@ def evaluate_property_flow(
         for kind in REQUIRED_RETURN_LOOP_KINDS
     }
 
-    return FlowDiscoveryReport(
+    accepted_handover_tuple = tuple(accepted_ids)
+    invalid_handover_tuple = tuple(invalid_accepted_ids)
+    stage_metrics_tuple = tuple(stage_rows)
+    gaps_tuple = tuple(gaps)
+    digest = _compute_flow_report_digest(
+        {
+            "window_start": window_start,
+            "window_end": window_end,
+            "as_of": as_of,
+            "baseline_candidate_ids": baseline_ids,
+            "zero_event_candidate_ids": zero_event_ids,
+            "duplicate_candidate_ids": duplicate_ids,
+            "state_counts": state_counts,
+            "accepted_handover_property_ids": accepted_handover_tuple,
+            "invalid_accepted_handover_ids": invalid_handover_tuple,
+            "intended_energy_outcome_counts": energy_counts,
+            "bg011_assessment_to_ready_to_install_days": bg011_days,
+            "candidate_to_accepted_handover_days": e2e_days,
+            "post_install_handover_legs_days": handover_legs,
+            "stage_metrics": stage_metrics_tuple,
+            "waits_by_party": waits_party_rows,
+            "waits_by_state": waits_state_rows,
+            "return_loops_by_property": loops_by_prop,
+            "return_loop_totals": loop_totals,
+            "explicit_rework_days_by_kind": rework_by_kind,
+            "gaps": gaps_tuple,
+        }
+    )
+    report = FlowDiscoveryReport(
         window_start=window_start,
         window_end=window_end,
         as_of=as_of,
@@ -1671,20 +1833,23 @@ def evaluate_property_flow(
         zero_event_candidate_ids=zero_event_ids,
         duplicate_candidate_ids=duplicate_ids,
         state_counts=state_counts,
-        accepted_handover_property_ids=tuple(accepted_ids),
-        invalid_accepted_handover_ids=tuple(invalid_accepted_ids),
+        accepted_handover_property_ids=accepted_handover_tuple,
+        invalid_accepted_handover_ids=invalid_handover_tuple,
         intended_energy_outcome_counts=energy_counts,
         bg011_assessment_to_ready_to_install_days=bg011_days,
         candidate_to_accepted_handover_days=e2e_days,
         post_install_handover_legs_days=handover_legs,
-        stage_metrics=tuple(stage_rows),
+        stage_metrics=stage_metrics_tuple,
         waits_by_party=waits_party_rows,
         waits_by_state=waits_state_rows,
         return_loops_by_property=loops_by_prop,
         return_loop_totals=loop_totals,
         explicit_rework_days_by_kind=rework_by_kind,
-        gaps=tuple(gaps),
+        gaps=gaps_tuple,
+        calculation_digest=digest,
     )
+    _register_evaluated_report(report)
+    return report
 
 
 def _pair_leg_days(
@@ -1714,12 +1879,26 @@ def validate_flow_report(
     note: str,
 ) -> FlowDiscoveryReport:
     report.verify_digest()
+    if (
+        not _is_evaluated_report_instance(report)
+        or report.calculation_digest not in _EVALUATED_FLOW_REPORT_DIGESTS
+    ):
+        raise GovernanceViolationError(
+            "FlowDiscoveryReport must originate directly from evaluate_property_flow before "
+            "owner validation"
+        )
     if report.gaps:
         raise GovernanceViolationError("FlowDiscoveryReport still records unresolved gaps")
     if report.invalid_accepted_handover_ids:
         raise GovernanceViolationError("FlowDiscoveryReport records invalid accepted handovers")
+    if not isinstance(on, date) or isinstance(on, datetime):
+        raise GovernanceViolationError(
+            "FlowDiscoveryReport validation date must be a calendar date"
+        )
     actor, cleaned_note = _require_ready_owner_and_dictionary(discovery_owner, dictionary, by, note)
-    return replace(
+    seal = (report.calculation_digest, actor, on.isoformat(), cleaned_note)
+    _VALIDATED_FLOW_REPORT_SEALS.add(seal)
+    validated = replace(
         report,
         owner_validated=True,
         finding_status=VALIDATED_FINDING_STATUS,
@@ -1727,7 +1906,10 @@ def validate_flow_report(
         owner_validated_on=on,
         validation_note=cleaned_note,
         notice="",
+        calculation_digest=report.calculation_digest,
     )
+    _register_evaluated_report(validated)
+    return validated
 
 
 @dataclass(frozen=True)
@@ -2158,6 +2340,19 @@ class Phase0DiscoveryPack:
         self.flow_report.verify_digest()
         if not self.owner_validated and self.finding_status == CANDIDATE_FINDING_STATUS:
             return
+        flow_on = self.flow_report.owner_validated_on
+        flow_seal_ok = (
+            flow_on is not None
+            and not isinstance(flow_on, datetime)
+            and self.flow_report.calculation_digest in _EVALUATED_FLOW_REPORT_DIGESTS
+            and (
+                self.flow_report.calculation_digest,
+                self.flow_report.owner_validated_by.strip(),
+                flow_on.isoformat(),
+                self.flow_report.validation_note.strip(),
+            )
+            in _VALIDATED_FLOW_REPORT_SEALS
+        )
         if not (
             self.owner_validated
             and self.finding_status == VALIDATED_FINDING_STATUS
@@ -2168,10 +2363,12 @@ class Phase0DiscoveryPack:
             and self.flow_report.owner_validated
             and not self.flow_report.gaps
             and not self.flow_report.invalid_accepted_handover_ids
+            and flow_seal_ok
             and self.constraint_register.owner_validated
             and is_valid_human_actor(self.owner_validated_by)
             and self.owner_validated_by.strip() == self.discovery_owner.owner.strip()
             and self.owner_validated_on is not None
+            and not isinstance(self.owner_validated_on, datetime)
             and bool(self.validation_note.strip())
         ):
             raise GovernanceViolationError(
@@ -2280,6 +2477,89 @@ def _validated_by_actor(output: GovernedDiscoveryOutput) -> str:
     return str(getattr(output, "owner_validated_by", ""))
 
 
+def _is_flow_report_mapping(mapping: Mapping[str, object]) -> bool:
+    return any(key in mapping for key in _FLOW_REPORT_SIGNATURE_KEYS)
+
+
+def _verify_validated_flow_report_seal(report: FlowDiscoveryReport, expected_owner: str) -> None:
+    report.verify_digest()
+    flow_on = report.owner_validated_on
+    if (
+        not report.owner_validated
+        or report.finding_status != VALIDATED_FINDING_STATUS
+        or bool(report.gaps)
+        or bool(report.invalid_accepted_handover_ids)
+        or not is_valid_human_actor(report.owner_validated_by)
+        or report.owner_validated_by.strip() != expected_owner
+        or flow_on is None
+        or isinstance(flow_on, datetime)
+        or not report.validation_note.strip()
+        or report.calculation_digest not in _EVALUATED_FLOW_REPORT_DIGESTS
+        or (
+            report.calculation_digest,
+            report.owner_validated_by.strip(),
+            flow_on.isoformat(),
+            report.validation_note.strip(),
+        )
+        not in _VALIDATED_FLOW_REPORT_SEALS
+    ):
+        raise GovernanceViolationError(
+            "Validated FlowDiscoveryReport requires zero gaps, zero invalid handovers, and "
+            "intact evaluated sign-off provenance"
+        )
+
+
+def _verify_flow_report_mapping(
+    mapping: Mapping[str, object],
+    *,
+    require_validated: bool,
+    expected_owner: str | None = None,
+) -> None:
+    raw_digest = mapping.get("calculation_digest")
+    if not isinstance(raw_digest, str) or not raw_digest.strip():
+        raise GovernanceViolationError(
+            "FlowDiscoveryReport mapping is missing a verified calculation_digest"
+        )
+    expected_digest = _compute_flow_report_digest(mapping)
+    if raw_digest != expected_digest:
+        raise GovernanceViolationError(
+            "FlowDiscoveryReport mapping calculation_digest mismatch indicates tampering"
+        )
+    if not require_validated:
+        return
+    if (
+        mapping.get("owner_validated") is not True
+        or mapping.get("finding_status") != VALIDATED_FINDING_STATUS
+        or bool(mapping.get("gaps"))
+        or bool(mapping.get("invalid_accepted_handover_ids"))
+    ):
+        raise GovernanceViolationError(
+            "Validated FlowDiscoveryReport mapping requires owner_validated=True, zero gaps, and "
+            "zero invalid accepted handovers"
+        )
+    actor_raw = mapping.get("owner_validated_by")
+    note_raw = mapping.get("validation_note")
+    if not isinstance(actor_raw, str) or not is_valid_human_actor(actor_raw):
+        raise GovernanceViolationError(
+            "Validated FlowDiscoveryReport mapping requires a valid human owner_validated_by"
+        )
+    if expected_owner is not None and actor_raw.strip() != expected_owner:
+        raise GovernanceViolationError(
+            "Validated FlowDiscoveryReport mapping must match the nominated discovery owner"
+        )
+    on_iso = _strict_iso_date(mapping.get("owner_validated_on"), "owner_validated_on")
+    if not isinstance(note_raw, str) or not note_raw.strip():
+        raise GovernanceViolationError(
+            "Validated FlowDiscoveryReport mapping requires a non-blank validation_note"
+        )
+    seal = (raw_digest, actor_raw.strip(), on_iso, note_raw.strip())
+    if raw_digest not in _EVALUATED_FLOW_REPORT_DIGESTS or seal not in _VALIDATED_FLOW_REPORT_SEALS:
+        raise GovernanceViolationError(
+            "Validated FlowDiscoveryReport mapping lacks evaluated calculation provenance or "
+            "validate_flow_report sign-off"
+        )
+
+
 def enforce_governance_guard(
     output: object,
     *,
@@ -2311,6 +2591,24 @@ def enforce_governance_guard(
         output.verify_digest()
     elif isinstance(output, Phase0DiscoveryPack):
         output.flow_report.verify_digest()
+    elif isinstance(output, Mapping):
+        if _is_flow_report_mapping(output):
+            _verify_flow_report_mapping(output, require_validated=False)
+        if "flow_report" in output:
+            nested_candidate = output["flow_report"]
+            if isinstance(nested_candidate, FlowDiscoveryReport):
+                enforce_governance_guard(
+                    nested_candidate, discovery_owner=discovery_owner, dictionary=dictionary
+                )
+            elif isinstance(nested_candidate, Mapping):
+                _verify_flow_report_mapping(nested_candidate, require_validated=False)
+                enforce_governance_guard(
+                    nested_candidate, discovery_owner=discovery_owner, dictionary=dictionary
+                )
+            else:
+                raise GovernanceViolationError(
+                    "Pack mapping flow_report must be a FlowDiscoveryReport or flow-report mapping"
+                )
 
     if not owner_val:
         if status_val != CANDIDATE_FINDING_STATUS:
@@ -2333,7 +2631,8 @@ def enforce_governance_guard(
         raise GovernanceViolationError(
             "Validated discovery output requires a zero-gap domain-validated LifecycleDictionary"
         )
-    if not is_valid_human_actor(validated_by) or validated_by.strip() != discovery_owner.owner:
+    expected_owner = discovery_owner.owner.strip()
+    if not is_valid_human_actor(validated_by) or validated_by.strip() != expected_owner:
         raise GovernanceViolationError(
             "Validated discovery output must be signed off by the exact nominated discovery owner"
         )
@@ -2343,33 +2642,38 @@ def enforce_governance_guard(
         raise GovernanceViolationError(
             "Validated LifecycleDictionaryReport cannot carry unresolved gaps"
         )
-    if isinstance(output, FlowDiscoveryReport) and (
-        output.gaps or output.invalid_accepted_handover_ids
-    ):
-        raise GovernanceViolationError(
-            "Validated FlowDiscoveryReport cannot carry unresolved gaps or invalid handovers"
-        )
-    if isinstance(output, Phase0DiscoveryPack) and (
-        not output.dictionary_report.owner_validated
-        or output.dictionary_report.gaps
-        or not output.flow_report.owner_validated
-        or output.flow_report.gaps
-        or output.flow_report.invalid_accepted_handover_ids
-        or not output.constraint_register.owner_validated
-    ):
-        raise GovernanceViolationError(
-            "Validated Phase0DiscoveryPack requires zero-gap validated sub-reports"
-        )
+    if isinstance(output, FlowDiscoveryReport):
+        _verify_validated_flow_report_seal(output, expected_owner)
+    if isinstance(output, Phase0DiscoveryPack):
+        if (
+            not output.dictionary_report.owner_validated
+            or output.dictionary_report.gaps
+            or not output.constraint_register.owner_validated
+        ):
+            raise GovernanceViolationError(
+                "Validated Phase0DiscoveryPack requires zero-gap validated sub-reports"
+            )
+        _verify_validated_flow_report_seal(output.flow_report, expected_owner)
     if isinstance(output, Mapping):
         if output.get("gaps") or output.get("invalid_accepted_handover_ids"):
             raise GovernanceViolationError(
                 "Validated discovery output mapping cannot carry unresolved gaps or "
                 "invalid accepted handovers"
             )
-        nested_flow = output.get("flow_report")
-        if isinstance(nested_flow, Mapping) and (
-            nested_flow.get("gaps") or nested_flow.get("invalid_accepted_handover_ids")
-        ):
-            raise GovernanceViolationError(
-                "Validated pack mapping cannot carry flow_report gaps or invalid handovers"
+        if _is_flow_report_mapping(output):
+            _verify_flow_report_mapping(
+                output, require_validated=True, expected_owner=expected_owner
             )
+        if "flow_report" in output:
+            nested_flow = output["flow_report"]
+            if isinstance(nested_flow, FlowDiscoveryReport):
+                _verify_validated_flow_report_seal(nested_flow, expected_owner)
+            elif isinstance(nested_flow, Mapping):
+                _verify_flow_report_mapping(
+                    nested_flow, require_validated=True, expected_owner=expected_owner
+                )
+            else:
+                raise GovernanceViolationError(
+                    "Validated pack mapping flow_report must be a validated FlowDiscoveryReport "
+                    "or flow-report mapping"
+                )

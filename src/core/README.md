@@ -1635,8 +1635,10 @@ data, network calls or AI dependencies, and aligns `discovery_register` and
   and unresolved post-handover `reopen` blocks while keeping intended energy
   outcomes separate, reports separate `unknown_cause_count` and
   `disputed_cause_count` counters on `waits_by_party` rows alongside
-  `unknown_or_disputed_count`, and freezes nested `FlowDiscoveryReport`
-  mappings (`FrozenDict`) bound to a verified SHA-256 `calculation_digest`.
+  `unknown_or_disputed_count`, exposes `to_json_dict()` for plain JSON
+  serialization, and freezes nested `FlowDiscoveryReport` mappings
+  (`FrozenDict`) bound to evaluated provenance and a verified SHA-256
+  `calculation_digest`.
 * `RankedConstraintRegister` (`build_seed_constraint_register`) enforces
   contiguous `1..N` ranking across the five candidate hypotheses, requires both
   non-empty `supporting_evidence` and non-empty `contradicting_evidence` tuples

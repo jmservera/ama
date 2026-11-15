@@ -167,11 +167,13 @@ nominated-owner sign-off:
   gaps and zero `invalid_accepted_handover_ids`, complete two-sided evidence,
   and sign-off by the exact nominated human discovery owner.
 * `FlowDiscoveryReport` recursively freezes all nested mappings and sequences
-  via `FrozenDict` and `tuple` coercion while binding construction,
-  `validate_flow_report`, `Phase0DiscoveryPack`, and `enforce_governance_guard`
-  to a verified SHA-256 `calculation_digest`, blocking post-calculation or
-  post-sign-off container mutation while preserving `dataclasses.asdict()`
-  serialization.
+  via re-init-locked `FrozenDict` and `tuple` coercion, exposes
+  `to_json_dict()` for plain JSON round-trips, and binds `evaluate_property_flow`
+  provenance, `validate_flow_report` sign-off seals, `Phase0DiscoveryPack`, and
+  `enforce_governance_guard` (across dataclasses and `Mapping` payloads) to a
+  verified SHA-256 `calculation_digest`, blocking post-calculation or
+  post-sign-off mutation and `dataclasses.replace` forgery while preserving
+  `dataclasses.asdict()` serialization.
 * In `discovery_register`, domain-only `decide()` preserves legacy
   `is_company_finding` compatibility while keeping `owner_validated=False` and
   `finding_status="candidate_hypothesis_not_company_finding"` until

@@ -6,8 +6,8 @@
     "task_slug": "phase0-retrofit-flow-discovery-124"
   },
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-15/phase0-retrofit-flow-discovery-124-c1-research.md",
@@ -15,7 +15,7 @@
     "details": ".copilot-tracking/details/2026-11-15/phase0-retrofit-flow-discovery-124-c1-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c1-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-11-15/phase0-retrofit-flow-discovery-124-c1-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-c1-review.md"
   },
   "confirmed_decisions": [
     {
@@ -32,19 +32,30 @@
       "decision": "Critique execution: executed once on final candidate; Critique verdict: Revise; Direct dispositions: PC-001 (resolved: non-blank verify_digest() runs before replace(...) in validate_flow_report and unconditionally before early return in enforce_governance_guard, plus Mapping gap/invalid-handover rejection) and PC-002 (resolved: duplicate_candidate_ids scoped to filtered in_window <= as_of candidates). Planning status: ready.",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c1-plan-critique.md; .copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c1-plan.md"
+    },
+    {
+      "decision": "Review execution: Complete; Outcome: Defects found (RV-001..RV-005 routed to rpi-implement via child automatic loop issue-124-c2); Assessed boundary: full task P01 and P02 at commit 4e5f033a9.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-c1-review.md"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Review",
-    "action": "Commit c1 implementation and tracking artifacts locally, then transition active_phase to Review and activate rpi-review once."
+    "phase": "Follow-up",
+    "action": "Child task issue-124-c2 (phase0-retrofit-flow-discovery-124-c2) selected automatically in non-interactive remediation mode to resolve RV-001..RV-005 and record a Conformant verdict."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
+      "task": "Resolve c1 review defects RV-001..RV-005 in discovery_contract.py and test_discovery_contract.py (provenance-bound calculation_digest, Mapping guard nested/serialized flow checks, FrozenDict.__init__ lock, incomplete active-timestamp as_of cutoff, and window_end UTC date comparison)",
+      "rationale": "Highest impact and immediate caller requirement to achieve an evidence-backed Conformant review verdict on Issue #124.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-c1-review.md (RV-001..RV-005)"
+    },
+    {
+      "rank": 2,
       "task": "Optional CSV extract adapter mapping synthetic retrofit-flow year-one CSV tables into discovery_contract records",
-      "rationale": "Retained from parent Issue #124 follow-ups outside Phase 0 pure rule-layer scope until sponsor/owner direction.",
-      "evidence": "docs/brds/retrofit-flow-discovery-brief.md; .copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-plan.md"
+      "rationale": "Retained non-blocking follow-up outside Phase 0 pure rule-layer scope.",
+      "evidence": "docs/brds/retrofit-flow-discovery-brief.md; .copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c1-plan.md"
     }
   ]
 }
