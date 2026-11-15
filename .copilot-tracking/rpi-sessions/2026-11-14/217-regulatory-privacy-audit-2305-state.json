@@ -1,0 +1,59 @@
+{
+  "task_id": "217-regulatory-privacy-audit-2305",
+  "task_slug": "217-regulatory-privacy-audit-2305",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14/217-regulatory-privacy-audit-2305-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14/217-regulatory-privacy-audit-2305-plan.md",
+    "details": ".copilot-tracking/details/2026-11-14/217-regulatory-privacy-audit-2305-phase-details.md",
+    "critique": ".copilot-tracking/critiques/2026-11-14/217-regulatory-privacy-audit-2305-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-14/217-regulatory-privacy-audit-2305-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-14/217-regulatory-privacy-audit-2305-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready for local src/core Issue #217 engineering controls across Foundry query minimisation/special-category purpose controls, Entra three-role separation, UK GDPR Art 22A-22C propose-and-retained-human-decision guard, and chat/check tokenomics metering and cost controls",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-14/217-regulatory-privacy-audit-2305-research.md (C1-C12)"
+    },
+    {
+      "decision": "Single-pass plan critique executed (Verdict: Revise) and all five planner-owned findings (PC-001..PC-005) applied directly to finalize plan as implementation-ready without user escalation",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/critiques/2026-11-14/217-regulatory-privacy-audit-2305-critique.md; .copilot-tracking/plans/2026-11-14/217-regulatory-privacy-audit-2305-plan.md (## Critique Disposition)"
+    },
+    {
+      "decision": "Single post-implementation Review executed (Execution status: Complete; Outcome: Conformant) over full P01-P03 src/core boundary; non-blocking defense-in-depth finding RV-001 [Low] and external human/live gates routed to distinct follow-ups",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/217-regulatory-privacy-audit-2305-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked post-Review follow-up work item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Harden ConsequentialDecisionGuard.history against un-normalized Entra rule_roles claims (RV-001) and expose foundry_query, ConsequentialDecisionGuard, and governed_metering_and_cost through src/api routes",
+      "rationale": "Highest ease of implementation and engineering-quality leverage: local, deterministic Python change centralizing verified Entra capability resolution across core and API surfaces.",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/217-regulatory-privacy-audit-2305-review.md (RV-001); src/core/src/zava_forward/core/regulatory_privacy.py"
+    },
+    {
+      "rank": 2,
+      "task": "Record human DPO DPIA sign-off and Legal applicability decision for UK GDPR Articles 22A-22C before live personal-data processing (#217, #224)",
+      "rationale": "Mandatory human governance gate explicitly preserved as dpo_reviewed=False in local code before live personal-data activation.",
+      "evidence": "docs/reference/research/chat-memory-dpia.md; docs/reference/regulatory/reviewed-updates/2026-11-01-adm-ai-act-applicability-review.md"
+    },
+    {
+      "rank": 3,
+      "task": "Verify live Azure Entra tenant assignments for ZavaForward.RuleAuthor, ZavaForward.RuleOwner, and ZavaForward.RegulatoryChat and live Foundry query routing (#217, #358)",
+      "rationale": "Hosted live-tenant verification gate requiring external Azure credentials and deployed Foundry infrastructure.",
+      "evidence": "infra/entra/app-registration.json; GitHub Issue #217"
+    }
+  ]
+}

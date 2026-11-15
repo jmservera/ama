@@ -641,10 +641,12 @@ class RuleEngine:
         now: datetime | None = None,
     ) -> None:
         """Append a named-owner acknowledgement, outcome or classification; never suppress."""
-        from zava_forward.core.projection import STAFF_ROLES
+        from zava_forward.core.regulatory_privacy import require_regulatory_role
 
-        if user.get("role") not in STAFF_ROLES or "rule_owner" not in user.get("rule_roles", []):
-            raise PermissionError("A trusted named owner capability is required")
+        try:
+            user = require_regulatory_role(user, "alert_disposition", require_entra=False)
+        except PermissionError as exc:
+            raise PermissionError("A trusted named owner capability is required") from exc
         if action not in ("acknowledge", "outcome", "false_positive", "confirmed"):
             raise ValueError("unsupported alert disposition")
         if not _text(note) or len(note) > 600:

@@ -4677,19 +4677,44 @@ not a complete retention or rights implementation; the
 [draft DPIA](../../docs/reference/research/chat-memory-dpia.md#regulatory-assistant-dpia-draft-for-dpo-review-2026-10-16-refs-217)
 requires DPO review and remains unapproved.
 
-`regulatory_privacy.minimise_query(purpose, fields)` is a model-free guard for
-any future Foundry query. Each purpose (`rule_lookup`, `check_explain`,
-`alert_triage`) has a field allowlist; other fields and every special-category
-field are dropped and reported by name only, never value. An unknown purpose is
-refused with a manual path to the rule card and a named human. It is not wired
-to a live Foundry call, so the criterion stays partial.
+`regulatory_privacy.minimise_query(purpose, fields)` and
+`regulatory_privacy.build_foundry_query(...)` enforce deterministic field
+minimisation and special-category purpose controls before any Foundry query is
+formed. Each purpose (`rule_lookup`, `check_explain`, `alert_triage`) and
+question topic (`provision_lookup`, `hazard-awareness-clock`,
+`automated-decision-safeguard`) has an explicit scalar field allowlist; fields
+not needed for the question and every special-category field or cue are dropped
+and reported by field name only, never value. `check_special_category_purpose`
+enforces existing role-based `projection.can_see_reason` boundaries internally,
+checks `data_protection.dispatch_hold`, and blocks external model dispatch of
+special-category data while `dpo_reviewed` is false. `RegulatoryChat.foundry_query`
+admits the caller, projects the home through `store.detail`, excludes raw
+case/source/special-category values, and records a metadata-only
+`chat.regulatory.foundry_query` audit entry.
 
-`regulatory_privacy.record_human_decision(...)` builds the Art 22A to 22C record
-for a consequential decision on a system proposal. It refuses a blank or
-system-like decider, a role other than `approver`, empty or over-long reasons and
-a naive time, and always records `decided_by_system=False`. It is a pure builder,
-not wired to storage or an approval flow, and records no legal conclusion; the
-Art 22 criterion stays open until Legal and the DPO confirm it.
+`regulatory_privacy` also enforces separate, mutually non-implying Entra
+capabilities (`ZavaForward.RuleAuthor` -> `rule_author`,
+`ZavaForward.RuleOwner` -> `rule_owner`,
+`ZavaForward.RegulatoryChat` -> `regulatory_chat`) via
+`resolve_entra_regulatory_roles`, `require_regulatory_role`, and
+`enforce_separation_of_duties`. View-only `ApplicationAdmin` carries none of the
+three capabilities, forged `rule_roles` are overwritten from verified Entra
+claims, `RegulatoryChat.admit` requires `regulatory_chat` on trusted-proxy
+principals, and `RuleEngine.disposition` requires verified `rule_owner`
+capability.
+
+`regulatory_privacy.record_human_decision(...)` and
+`regulatory_privacy.ConsequentialDecisionGuard` enforce the UK GDPR Articles
+22A to 22C propose-and-flag safeguard in `LawStore`. System outputs are persisted
+only as `status="proposed"` (`effect="non_binding_proposal"`,
+`decided_by_system=False`), consequential execution is blocked
+until an `accepted` decision exists, bot/placeholder deciders and chat-memory
+reasons are rejected, proposer-versus-approver separation of duties is enforced,
+and `reg_consequential_proposal` / `reg_consequential_decision` rows are
+protected by SQLite `BEFORE UPDATE` and `BEFORE DELETE` abort triggers with
+metadata-only audit entries (`regulatory.art22.propose` /
+`regulatory.art22.decide`). Formal Legal and DPO sign-off remains an open human
+governance gate (`dpo_reviewed=False`).
 
 Rule/card approvals, source reviews, checks and alerts already retain append-only
 SQL history. SQL chat turn events now include actor/role, case/thread/sequence,
@@ -4756,13 +4781,28 @@ reconstructed. Unmetered events in the selected role/window are explicit.
 Service cost and AI cost per accepted check remain Unknown, not zero. Missing
 inputs are owner-agreed acceptance/counts, dated prices, attributable billing/
 shared-service allocation and human review effort. No model evaluation or
-paid budget/expiry authority is created.
+paid budget/expiry authority is created. `regulatory_privacy.cost_record` and
+`regulatory_usage` (`check_usage_metering`, `chat_cost_record`,
+`check_cost_record`, `summarize_checks`, and `governed_metering_and_cost`)
+project both `chat` and `check` surfaces onto closed identifier, count, and
+version schemas (`cost="Unknown"` and `cost_minor_units=None` when
+`price_version="unpriced"`), enforce caller-owned chat and audience/owner-scoped
+check visibility, filter records against `CHAT_RETENTION_REF` /
+`CHAT_RETENTION_DAYS` (`dpo_reviewed=False`), and emit metadata-only
+`regulatory.metering.read` / `regulatory.metering.denied` audit events.
 
 Engine contract version 2 requires nonempty `reasons` as well as named human,
 source, evidence and decision timestamp before a significant-decision check is
 clear. An evidence ID alone, absent reasons or whitespace reasons stays unknown.
 Version 1 checkpoints are not reused. This is a bounded evidence check, not
 proof of a real human decision or UK GDPR compliance.
+
+Run the targeted #217 privacy, separation-of-duties, Art 22A-22C, and
+tokenomics proofs from `src/core`:
+
+```bash
+PYTHONPATH=src:tests python3 -m unittest discover -s tests -p 'test_*217*.py' -v
+```
 
 Run the synthetic core proofs with an installed editable package, from the
 repository root:

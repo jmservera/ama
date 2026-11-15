@@ -12,11 +12,17 @@ from datetime import UTC, datetime
 from typing import Any
 from urllib.parse import quote
 
-from zava_forward.core import projection
+from zava_forward.core import identity, projection
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import redact
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
-from zava_forward.core.regulatory_privacy import retention_report
+from zava_forward.core.regulatory_privacy import (
+    MANUAL_PATH,
+    build_foundry_query,
+    is_trusted_proxy_user,
+    resolve_entra_regulatory_roles,
+    retention_report,
+)
 from zava_forward.core.regulatory_usage import MAX_BYTES, MAX_POSITIONS, offline_usage, summarize
 from zava_forward.core.rule_engine import citation_eligibility
 from zava_forward.core.source_monitor import card_freshness
@@ -56,29 +62,26 @@ class RegulatoryChat:
         self.clock = clock or (lambda: datetime.now(UTC))
 
     def admit(self, user: dict[str, Any]) -> dict[str, Any]:
+        if bool(user.get("view_only")):
+            raise ChatForbidden("View-only administrators cannot use regulatory chat.")
+        has_entra_markers = (
+            identity.is_entra(user)
+            or "oid" in user
+            or "tid" in user
+            or user.get("auth_mode") == "trusted-proxy"
+        )
+        verified_entra: dict[str, Any] | None = None
+        if has_entra_markers:
+            verified_entra = identity.verified(user)
+            if verified_entra is None:
+                raise ChatForbidden("A verified Entra principal is required for regulatory chat.")
         marker = self.store.data.get("regulatory_chat_exercise")
         if hasattr(self.store, "assistant_connection"):
             with self.store.dblock:
                 row = self.store.db.execute(
                     "SELECT value FROM meta WHERE key=?", ("regulatory_chat_exercise",)
                 ).fetchone()
-                person = self.store.db.execute(
-                    "SELECT body FROM staff WHERE email=?", (user_key(user),)
-                ).fetchone()
             marker = row[0] if row else None
-            if not person:
-                raise ChatForbidden("The staff principal is no longer provisioned.")
-            person = json.loads(person[0])
-            user = (
-                dict(
-                    person,
-                    role=user["role"],
-                    auth_provider="trusted-proxy",
-                    rule_roles=user.get("rule_roles", []),
-                )
-                if user.get("auth_provider") == "trusted-proxy"
-                else person
-            )
         if (
             self.env.get("ZF_REGULATORY_CHAT") != MARKER
             or marker != MARKER
@@ -93,18 +96,43 @@ class RegulatoryChat:
                     "Synthetic-demo chat needs explicitly simulated privacy references."
                 )
         self.iso.privacy._require()
-        if hasattr(self.store, "assistant_connection"):
-            if not projection.allowed(user, "chat"):
-                raise ChatForbidden("The current staff role does not include chat.")
-            return dict(user)
-        current = self.iso.current_user(user)
-        if user.get("auth_provider") == "trusted-proxy":
+        try:
+            current = dict(self.iso.current_user(user))
+        except ChatForbidden:
+            if hasattr(self.store, "assistant_connection") and not identity.is_entra(user):
+                raise ChatForbidden("The staff principal is no longer provisioned.") from None
+            raise
+        if is_trusted_proxy_user(user):
+            if "app_roles" in user or "entra_roles" in user:
+                caps = sorted(resolve_entra_regulatory_roles(user))
+            else:
+                caps = [str(r) for r in (user.get("rule_roles") or ()) if isinstance(r, str)]
+            if "regulatory_chat" not in caps:
+                raise ChatForbidden(
+                    "The ZavaForward.RegulatoryChat capability is required for regulatory chat."
+                )
             current = dict(
                 current,
                 role=user["role"],
                 auth_provider="trusted-proxy",
-                rule_roles=user.get("rule_roles", []),
+                rule_roles=caps,
             )
+            if verified_entra is not None:
+                for claim_key in (
+                    "oid",
+                    "tid",
+                    "identity_source",
+                    "app_roles",
+                    "bound",
+                    "derived_code",
+                    "derived_email",
+                    "view_only",
+                ):
+                    if claim_key in verified_entra:
+                        current[claim_key] = verified_entra[claim_key]
+            for extra_key in ("auth_mode", "entra_roles"):
+                if extra_key in user:
+                    current[extra_key] = user[extra_key]
             if not projection.allowed(current, "chat"):
                 raise ChatForbidden("The authenticated staff role does not include chat.")
         return dict(current)
@@ -324,6 +352,137 @@ class RegulatoryChat:
             result["unknown"] = "No permitted structured home fact selected for this purpose."
         return result
 
+    def foundry_query(self, user: dict[str, Any], cid: str, question: object) -> dict[str, Any]:
+        """Build a question-scoped, canary-free Foundry query after admission and projection."""
+        user = self.admit(user)
+        if not isinstance(question, str) or not 1 <= len(question.strip()) <= 1000:
+            raise ValueError("Question must contain 1 to 1000 characters.")
+        clean_q = question.strip()
+        refusal = self.refuse(clean_q)
+        if refusal:
+            self.store.audit(
+                user_key(user),
+                "chat.regulatory.foundry_query",
+                cid,
+                json.dumps(
+                    dict(
+                        permitted=False,
+                        role=user["role"],
+                        reason="refused_question",
+                        label=MARKER,
+                    ),
+                    sort_keys=True,
+                ),
+            )
+            return dict(
+                permitted=False,
+                refusal=refusal,
+                fields={},
+                dropped=[],
+                unneeded_for_question=[],
+                special_category_dropped=[],
+                dpo_reviewed=False,
+                manual_path=MANUAL_PATH,
+            )
+        detail = self.store.detail(cid, user)
+        if detail is None:
+            raise ChatNotFound(cid)
+        day = self.clock().isoformat(timespec="seconds")[:10]
+        kind = self.classify(clean_q)
+        candidate: dict[str, Any] = dict(as_of=day, case_id=cid)
+        for k, v in detail.items():
+            if k not in candidate:
+                candidate[k] = v
+        resident = detail.get("resident")
+        if isinstance(resident, dict):
+            for rk, rv in resident.items():
+                if rk not in candidate:
+                    candidate[rk] = rv
+        hazards = detail.get("hazards")
+        if isinstance(hazards, list):
+            candidate["hazard_count"] = len(hazards)
+            candidate["active_hold_count"] = sum(
+                1
+                for h in hazards
+                if isinstance(h, dict)
+                and isinstance(h.get("hold"), dict)
+                and h["hold"].get("status") == "Active"
+            )
+        decisions = detail.get("automated_decisions")
+        if isinstance(decisions, list):
+            candidate["automated_decision_count"] = len(decisions)
+        if self.law is not None:
+            with self.law.sql.lock:
+                for latest_card in self.law.rules.cards():
+                    active = self.law.rules.is_active(latest_card["card_id"], day)
+                    if active is None:
+                        continue
+                    card = next(
+                        c
+                        for c in self.law.rules.history(latest_card["card_id"])
+                        if c["version"] == active
+                    )
+                    if (
+                        not card["exercise"]
+                        or not card["approved_by"]
+                        or not card["check"]
+                        or (kind is not None and card["check"]["kind"] != kind)
+                    ):
+                        continue
+                    candidate["card_id"] = str(card["card_id"])
+                    candidate["card_version"] = f"v{active}"
+                    candidate["check_kind"] = str(card["check"]["kind"])
+                    if card["provisions"]:
+                        pid = str(card["provisions"][0])
+                        candidate["provision_id"] = pid
+                        prov = self.law.provision(pid)
+                        candidate["source_id"] = str(prov["source_id"])
+                        candidate["version"] = f"v{prov['version']}"
+                    break
+        low = clean_q.lower()
+        provision_only = any(
+            term in low
+            for term in ("provision", "source", "section", "legislation", "statute", "cite")
+        ) and not any(
+            term in low
+            for term in ("home", "case", "property", "clock", "hold", "overdue", "check", "this ")
+        )
+        purpose = "rule_lookup" if provision_only else "check_explain"
+        topic = (
+            "provision_lookup"
+            if provision_only
+            else (
+                kind if kind in ("hazard-awareness-clock", "automated-decision-safeguard") else None
+            )
+        )
+        built = build_foundry_query(
+            purpose,
+            candidate,
+            question=clean_q,
+            question_topic=topic,
+            user=user,
+            env=self.env,
+        )
+        self.store.audit(
+            user_key(user),
+            "chat.regulatory.foundry_query",
+            cid,
+            json.dumps(
+                dict(
+                    permitted=bool(built["permitted"]),
+                    purpose=built["purpose"],
+                    question_topic=built["question_topic"],
+                    kept_count=len(built["fields"]),
+                    dropped_count=len(built["dropped"]),
+                    special_category_dropped_count=len(built["special_category_dropped"]),
+                    role=user["role"],
+                    label=MARKER,
+                ),
+                sort_keys=True,
+            ),
+        )
+        return built
+
     @staticmethod
     def _source(p: dict[str, Any]) -> dict[str, Any]:
         return dict(
@@ -455,9 +614,7 @@ class RegulatoryChat:
                 "Named synthetic-demo owner is missing or ambiguous; no turn was sent."
             )
         owner = self.admit(owners[0])
-        if sender.get("auth_provider") == "trusted-proxy" and "regulatory_chat" not in owner.get(
-            "rule_roles", []
-        ):
+        if is_trusted_proxy_user(sender) and "regulatory_chat" not in owner.get("rule_roles", []):
             raise ChatForbidden("The named owner lacks the separately assigned chat capability.")
         if sender["role"] in HAZARD_ROLES and owner["role"] not in HAZARD_ROLES:
             raise ChatForbidden("The named owner's current role cannot read these hazard facts.")
