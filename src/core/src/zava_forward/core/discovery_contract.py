@@ -18,6 +18,7 @@ retrofit-flow discovery. It enforces four non-negotiable governance rules:
 
 import copy
 import hashlib
+import hmac
 import json
 import weakref
 from collections import Counter
@@ -25,7 +26,7 @@ from collections.abc import Iterable, Mapping, Sequence
 from contextvars import ContextVar
 from dataclasses import asdict, dataclass, replace
 from datetime import UTC, date, datetime
-from typing import Any, NoReturn, Protocol, overload, runtime_checkable
+from typing import Any, NoReturn, Protocol, TypeGuard, overload, runtime_checkable
 
 from .discovery_flow import DISPUTED as WAIT_CAUSE_DISPUTED
 from .discovery_flow import LOOP_KINDS, UNATTRIBUTED, UNKNOWN
@@ -155,6 +156,26 @@ def _require_non_blank(value: str, label: str) -> str:
     return cleaned
 
 
+def _is_calendar_date(value: object) -> TypeGuard[date]:
+    return isinstance(value, date) and not isinstance(value, datetime)
+
+
+def _is_strict_int(value: object) -> TypeGuard[int]:
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
+def _require_calendar_date(value: object, label: str) -> date:
+    if not _is_calendar_date(value):
+        raise ValueError(f"{label} must be a calendar date")
+    return value
+
+
+def _require_gov_calendar_date(value: object, label: str) -> date:
+    if not _is_calendar_date(value):
+        raise GovernanceViolationError(f"{label} must be a calendar date")
+    return value
+
+
 @dataclass(frozen=True)
 class NominatedDiscoveryOwner:
     nominated_by: str = ""
@@ -173,7 +194,7 @@ class NominatedDiscoveryOwner:
             and is_valid_human_actor(self.owner)
             and self.nominated_by_role.strip()
             and self.owner_role.strip()
-            and self.nominated_on is not None
+            and _is_calendar_date(self.nominated_on)
             and self.nominated_by.strip().lower() != self.owner.strip().lower()
         ):
             return "NOT_NOMINATED"
@@ -181,7 +202,7 @@ class NominatedDiscoveryOwner:
             self.endpoint.strip().lower() == ENDPOINT
             and is_valid_human_actor(self.endpoint_agreed_by)
             and self.endpoint_agreed_role.strip()
-            and self.endpoint_agreed_on is not None
+            and _is_calendar_date(self.endpoint_agreed_on)
             and self.endpoint_agreed_on >= self.nominated_on
         ):
             return "ENDPOINT_NOT_AGREED"
@@ -200,6 +221,7 @@ def nominate_discovery_owner(
     owner_role: str,
     nominated_on: date,
 ) -> NominatedDiscoveryOwner:
+    checked_date = _require_calendar_date(nominated_on, "Owner nomination date")
     sponsor = _require_human_actor(nominated_by, "Executive sponsor")
     nominee = _require_human_actor(owner, "Discovery owner")
     if sponsor.lower() == nominee.lower():
@@ -209,7 +231,7 @@ def nominate_discovery_owner(
         nominated_by_role=_require_non_blank(nominated_by_role, "Executive sponsor role"),
         owner=nominee,
         owner_role=_require_non_blank(owner_role, "Discovery owner role"),
-        nominated_on=nominated_on,
+        nominated_on=checked_date,
     )
 
 
@@ -221,18 +243,19 @@ def agree_discovery_endpoint(
     agreed_role: str,
     agreed_on: date,
 ) -> NominatedDiscoveryOwner:
-    if record.status() == "NOT_NOMINATED" or record.nominated_on is None:
+    checked_date = _require_calendar_date(agreed_on, "Endpoint agreement date")
+    if record.status() == "NOT_NOMINATED" or not _is_calendar_date(record.nominated_on):
         raise ValueError("Nominate a human discovery owner before agreeing the endpoint")
     if endpoint.strip().lower() != ENDPOINT:
         raise ValueError(f"Phase 0 discovery endpoint must be '{ENDPOINT}', not '{endpoint}'")
-    if agreed_on < record.nominated_on:
+    if checked_date < record.nominated_on:
         raise ValueError("Endpoint agreement date cannot precede owner nomination date")
     return replace(
         record,
         endpoint=ENDPOINT,
         endpoint_agreed_by=_require_human_actor(agreed_by, "Endpoint approver"),
         endpoint_agreed_role=_require_non_blank(agreed_role, "Endpoint approver role"),
-        endpoint_agreed_on=agreed_on,
+        endpoint_agreed_on=checked_date,
     )
 
 
@@ -253,9 +276,11 @@ class StageSpec:
     @property
     def validated(self) -> bool:
         return (
-            bool(self.owner_role.strip())
+            _is_strict_int(self.order)
+            and self.order >= 1
+            and bool(self.owner_role.strip())
             and is_valid_human_actor(self.validated_by)
-            and self.validated_on is not None
+            and _is_calendar_date(self.validated_on)
             and self.validated_role == self.owner_role
         )
 
@@ -276,7 +301,7 @@ class EventSpec:
         return (
             bool(self.owner_role.strip())
             and is_valid_human_actor(self.validated_by)
-            and self.validated_on is not None
+            and _is_calendar_date(self.validated_on)
             and self.validated_role == self.owner_role
         )
 
@@ -298,7 +323,7 @@ class TimestampSpec:
         return (
             bool(self.owner_role.strip())
             and is_valid_human_actor(self.validated_by)
-            and self.validated_on is not None
+            and _is_calendar_date(self.validated_on)
             and self.validated_role == self.owner_role
         )
 
@@ -320,7 +345,7 @@ class WaitStateSpec:
         return (
             bool(self.owner_role.strip())
             and is_valid_human_actor(self.validated_by)
-            and self.validated_on is not None
+            and _is_calendar_date(self.validated_on)
             and self.validated_role == self.owner_role
         )
 
@@ -341,7 +366,7 @@ class ReturnLoopSpec:
         return (
             bool(self.owner_role.strip())
             and is_valid_human_actor(self.validated_by)
-            and self.validated_on is not None
+            and _is_calendar_date(self.validated_on)
             and self.validated_role == self.owner_role
         )
 
@@ -365,23 +390,25 @@ class LifecycleDictionary:
 
 
 def validate_stage_spec(spec: StageSpec, *, validator: str, role: str, on: date) -> StageSpec:
+    checked_date = _require_calendar_date(on, "Stage validation date")
     if role != spec.owner_role:
         raise ValueError(f"Stage {spec.code} is validated by {spec.owner_role}, not {role}")
     return replace(
         spec,
         validated_by=_require_human_actor(validator, "Stage validator"),
-        validated_on=on,
+        validated_on=checked_date,
         validated_role=role,
     )
 
 
 def validate_event_spec(spec: EventSpec, *, validator: str, role: str, on: date) -> EventSpec:
+    checked_date = _require_calendar_date(on, "Event validation date")
     if role != spec.owner_role:
         raise ValueError(f"Event '{spec.event}' is validated by {spec.owner_role}, not {role}")
     return replace(
         spec,
         validated_by=_require_human_actor(validator, "Event validator"),
-        validated_on=on,
+        validated_on=checked_date,
         validated_role=role,
     )
 
@@ -389,12 +416,13 @@ def validate_event_spec(spec: EventSpec, *, validator: str, role: str, on: date)
 def validate_timestamp_spec(
     spec: TimestampSpec, *, validator: str, role: str, on: date
 ) -> TimestampSpec:
+    checked_date = _require_calendar_date(on, "Timestamp validation date")
     if role != spec.owner_role:
         raise ValueError(f"Timestamp {spec.code} is validated by {spec.owner_role}, not {role}")
     return replace(
         spec,
         validated_by=_require_human_actor(validator, "Timestamp validator"),
-        validated_on=on,
+        validated_on=checked_date,
         validated_role=role,
     )
 
@@ -402,12 +430,13 @@ def validate_timestamp_spec(
 def validate_wait_state_spec(
     spec: WaitStateSpec, *, validator: str, role: str, on: date
 ) -> WaitStateSpec:
+    checked_date = _require_calendar_date(on, "Wait-state validation date")
     if role != spec.owner_role:
         raise ValueError(f"Wait state {spec.code} is validated by {spec.owner_role}, not {role}")
     return replace(
         spec,
         validated_by=_require_human_actor(validator, "Wait-state validator"),
-        validated_on=on,
+        validated_on=checked_date,
         validated_role=role,
     )
 
@@ -415,12 +444,13 @@ def validate_wait_state_spec(
 def validate_return_loop_spec(
     spec: ReturnLoopSpec, *, validator: str, role: str, on: date
 ) -> ReturnLoopSpec:
+    checked_date = _require_calendar_date(on, "Return-loop validation date")
     if role != spec.owner_role:
         raise ValueError(f"Return loop '{spec.kind}' is validated by {spec.owner_role}, not {role}")
     return replace(
         spec,
         validated_by=_require_human_actor(validator, "Return-loop validator"),
-        validated_on=on,
+        validated_on=checked_date,
         validated_role=role,
     )
 
@@ -872,6 +902,10 @@ def lifecycle_dictionary_gaps(dictionary: LifecycleDictionary) -> list[str]:
     """Return plain-language completeness and domain-owner validation gaps across the dictionary."""
     gaps: list[str] = []
     stages_by_code = {s.code: s for s in dictionary.stages}
+    if len(stages_by_code) != len(dictionary.stages):
+        gaps.append("LifecycleDictionary contains duplicate stage codes")
+    if len({s.order for s in dictionary.stages}) != len(dictionary.stages):
+        gaps.append("LifecycleDictionary contains duplicate stage orders")
     flow_stages = [s for s in dictionary.stages if s.kind == "flow"]
     expected_flow = list(enumerate(REQUIRED_FLOW_STAGE_CODES, start=1))
     if [(s.order, s.code) for s in flow_stages] != expected_flow:
@@ -880,10 +914,27 @@ def lifecycle_dictionary_gaps(dictionary: LifecycleDictionary) -> list[str]:
             "through accepted handover"
         )
     for code in REQUIRED_FLOW_STAGE_CODES + REQUIRED_EXCEPTION_STATE_CODES:
-        stage = stages_by_code.get(code)
-        if stage is None:
+        if code not in stages_by_code:
             gaps.append(f"Define lifecycle stage or state '{code}'")
-        elif not (stage.name.strip() and stage.pas2035_role_boundary.strip()):
+    for stage in dictionary.stages:
+        code = stage.code
+        if (
+            not code.strip()
+            or not _is_strict_int(stage.order)
+            or stage.order < 1
+            or stage.kind not in ("flow", "exception", "terminal")
+        ):
+            gaps.append(
+                f"Stage '{code}' must define a positive integer order, non-blank code, "
+                "and valid kind"
+            )
+        elif not (
+            stage.name.strip()
+            and stage.entry_event.strip()
+            and stage.exit_event.strip()
+            and stage.pas2035_role_boundary.strip()
+            and stage.owner_role.strip()
+        ):
             gaps.append(f"Complete description and PAS 2035 boundary for stage '{code}'")
         elif stage.validated_role and stage.validated_role != stage.owner_role:
             gaps.append(
@@ -894,13 +945,16 @@ def lifecycle_dictionary_gaps(dictionary: LifecycleDictionary) -> list[str]:
             gaps.append(f"The {stage.owner_role} has not validated stage '{code}'")
 
     events_by_name = {e.event: e for e in dictionary.events}
+    if len(events_by_name) != len(dictionary.events):
+        gaps.append("LifecycleDictionary contains duplicate event names")
     for event_name in REQUIRED_LIFECYCLE_EVENTS:
-        ev = events_by_name.get(event_name)
-        if ev is None:
+        if event_name not in events_by_name:
             gaps.append(f"Define lifecycle event '{event_name}' as a separate event")
-        elif ev.stage_code not in stages_by_code:
+    for ev in dictionary.events:
+        event_name = ev.event
+        if not event_name.strip() or ev.stage_code not in stages_by_code:
             gaps.append(f"Event '{event_name}' references unknown stage '{ev.stage_code}'")
-        elif not (ev.meaning.strip() and ev.distinct_from_note.strip()):
+        elif not (ev.meaning.strip() and ev.distinct_from_note.strip() and ev.owner_role.strip()):
             gaps.append(f"Add meaning and distinction rule for event '{event_name}'")
         elif ev.validated_role and ev.validated_role != ev.owner_role:
             gaps.append(
@@ -911,11 +965,21 @@ def lifecycle_dictionary_gaps(dictionary: LifecycleDictionary) -> list[str]:
             gaps.append(f"The {ev.owner_role} has not validated event '{event_name}'")
 
     ts_by_code = {t.code: t for t in dictionary.timestamps}
+    if len(ts_by_code) != len(dictionary.timestamps):
+        gaps.append("LifecycleDictionary contains duplicate timestamp specification codes")
     for ts_code in REQUIRED_TIMESTAMP_CODES:
-        ts = ts_by_code.get(ts_code)
-        if ts is None:
+        if ts_code not in ts_by_code:
             gaps.append(f"Define timestamp specification '{ts_code}'")
-        elif not (ts.meaning.strip() and ts.precision_rule.strip() and ts.non_imputation_rule):
+    for ts in dictionary.timestamps:
+        ts_code = ts.code
+        if not (
+            ts_code.strip()
+            and ts.applies_to.strip()
+            and ts.meaning.strip()
+            and ts.precision_rule.strip()
+            and ts.non_imputation_rule.strip()
+            and ts.owner_role.strip()
+        ):
             gaps.append(f"Complete rules for timestamp specification '{ts_code}'")
         elif ts.validated_role and ts.validated_role != ts.owner_role:
             gaps.append(
@@ -926,11 +990,21 @@ def lifecycle_dictionary_gaps(dictionary: LifecycleDictionary) -> list[str]:
             gaps.append(f"The {ts.owner_role} has not validated timestamp '{ts_code}'")
 
     waits_by_code = {w.code: w for w in dictionary.wait_states}
+    if len(waits_by_code) != len(dictionary.wait_states):
+        gaps.append("LifecycleDictionary contains duplicate wait-state codes")
     for wait_code in REQUIRED_WAIT_STATE_CODES:
-        wait = waits_by_code.get(wait_code)
-        if wait is None:
+        if wait_code not in waits_by_code:
             gaps.append(f"Define wait state '{wait_code}'")
-        elif not (wait.meaning.strip() and wait.clock_rule.strip() and wait.unknown_cause_rule):
+    for wait in dictionary.wait_states:
+        wait_code = wait.code
+        if not (
+            wait_code.strip()
+            and wait.meaning.strip()
+            and wait.accountable_domain.strip()
+            and wait.clock_rule.strip()
+            and wait.unknown_cause_rule.strip()
+            and wait.owner_role.strip()
+        ):
             gaps.append(f"Complete attribution rules for wait state '{wait_code}'")
         elif wait.validated_role and wait.validated_role != wait.owner_role:
             gaps.append(
@@ -941,15 +1015,22 @@ def lifecycle_dictionary_gaps(dictionary: LifecycleDictionary) -> list[str]:
             gaps.append(f"The {wait.owner_role} has not validated wait state '{wait_code}'")
 
     loops_by_kind = {r.kind: r for r in dictionary.return_loops}
+    if len(loops_by_kind) != len(dictionary.return_loops):
+        gaps.append("LifecycleDictionary contains duplicate return-loop kinds")
     for kind in REQUIRED_RETURN_LOOP_KINDS:
-        loop = loops_by_kind.get(kind)
-        if loop is None:
+        if kind not in loops_by_kind:
             gaps.append(f"Define return loop kind '{kind}'")
-        elif not loop.allowed_target_stages or any(
-            target not in stages_by_code for target in loop.allowed_target_stages
+    for loop in dictionary.return_loops:
+        kind = loop.kind
+        if (
+            not kind.strip()
+            or not loop.allowed_target_stages
+            or any(target not in stages_by_code for target in loop.allowed_target_stages)
         ):
             gaps.append(f"Return loop '{kind}' must reference valid target stages")
-        elif not (loop.meaning.strip() and loop.non_inference_rule.strip()):
+        elif not (
+            loop.meaning.strip() and loop.non_inference_rule.strip() and loop.owner_role.strip()
+        ):
             gaps.append(f"Complete meaning and non-inference rule for return loop '{kind}'")
         elif loop.validated_role and loop.validated_role != loop.owner_role:
             gaps.append(
@@ -1036,16 +1117,30 @@ class LifecycleDictionaryReport:
     dictionary_schema_digest: str = ""
 
     def __post_init__(self) -> None:
+        if self.owner_validated_on is not None and not _is_calendar_date(self.owner_validated_on):
+            raise GovernanceViolationError(
+                "LifecycleDictionaryReport owner_validated_on must be a calendar date"
+            )
         if not self.owner_validated and self.finding_status == CANDIDATE_FINDING_STATUS:
+            if (
+                self.notice != NOT_FINDING
+                or bool(self.owner_validated_by.strip())
+                or self.owner_validated_on is not None
+                or bool(self.validation_note.strip())
+            ):
+                raise GovernanceViolationError(
+                    "Candidate LifecycleDictionaryReport must retain NOT_FINDING notice and "
+                    "blank discovery-owner sign-off fields"
+                )
             return
         if not (
             self.owner_validated
             and self.finding_status == VALIDATED_FINDING_STATUS
+            and self.notice == ""
             and self.endpoint == ENDPOINT
             and not self.gaps
             and is_valid_human_actor(self.owner_validated_by)
-            and self.owner_validated_on is not None
-            and not isinstance(self.owner_validated_on, datetime)
+            and _is_calendar_date(self.owner_validated_on)
             and bool(self.validation_note.strip())
             and bool(self.dictionary_schema_digest.strip())
         ):
@@ -1104,6 +1199,7 @@ def validate_lifecycle_report(
     on: date,
     note: str,
 ) -> LifecycleDictionaryReport:
+    checked_date = _require_gov_calendar_date(on, "LifecycleDictionaryReport validation date")
     actor, cleaned_note = _require_ready_owner_and_dictionary(discovery_owner, dictionary, by, note)
     if report.gaps:
         raise GovernanceViolationError("LifecycleDictionaryReport still records unresolved gaps")
@@ -1125,7 +1221,7 @@ def validate_lifecycle_report(
         owner_validated=True,
         finding_status=VALIDATED_FINDING_STATUS,
         owner_validated_by=actor,
-        owner_validated_on=on,
+        owner_validated_on=checked_date,
         validation_note=cleaned_note,
         notice="",
     )
@@ -1328,8 +1424,145 @@ _FLOW_REPORT_DIGEST_KEYS = (
 )
 
 _FLOW_REPORT_SIGNATURE_KEYS = frozenset(
-    k for k in _FLOW_REPORT_DIGEST_KEYS if k != "gaps"
-) | frozenset({"calculation_digest"})
+    k for k in _FLOW_REPORT_DIGEST_KEYS if k not in ("gaps", "dictionary_schema_digest")
+) | frozenset({"calculation_digest", "governance_hmac"})
+
+_FLOW_REPORT_REQUIRED_KEYS = frozenset(_FLOW_REPORT_DIGEST_KEYS) | frozenset(
+    {
+        "calculation_digest",
+        "owner_validated",
+        "finding_status",
+        "owner_validated_by",
+        "owner_validated_on",
+        "validation_note",
+        "notice",
+    }
+)
+_FLOW_REPORT_ALLOWED_KEYS = _FLOW_REPORT_REQUIRED_KEYS | frozenset({"governance_hmac"})
+
+_LIFECYCLE_REPORT_SIGNATURE_KEYS = frozenset(
+    {
+        "stage_count",
+        "event_count",
+        "timestamp_spec_count",
+        "wait_state_count",
+        "return_loop_count",
+        "endpoint",
+    }
+)
+_LIFECYCLE_REPORT_KEYS = _LIFECYCLE_REPORT_SIGNATURE_KEYS | frozenset(
+    {
+        "gaps",
+        "owner_validated",
+        "finding_status",
+        "owner_validated_by",
+        "owner_validated_on",
+        "validation_note",
+        "notice",
+        "dictionary_schema_digest",
+    }
+)
+
+_HYPOTHESIS_SIGNATURE_KEYS = frozenset(
+    {
+        "rank",
+        "code",
+        "summary",
+        "intervention_class",
+        "domain_owner_roles",
+        "proposed_by",
+        "supporting_evidence",
+        "contradicting_evidence",
+        "constraint_test",
+        "review_status",
+        "domain_validated_by",
+        "domain_validated_role",
+        "domain_validated_on",
+        "discovery_owner_validated_by",
+        "discovery_owner_validated_on",
+        "decision_note",
+        "supporting_count",
+        "contradicting_count",
+        "passes_constraint_test",
+        "evidence_gaps",
+    }
+)
+_HYPOTHESIS_KEYS = frozenset(
+    {
+        "rank",
+        "code",
+        "summary",
+        "intervention_class",
+        "domain_owner_roles",
+        "proposed_by",
+        "supporting_evidence",
+        "contradicting_evidence",
+        "constraint_test",
+        "review_status",
+        "domain_validated_by",
+        "domain_validated_role",
+        "domain_validated_on",
+        "discovery_owner_validated_by",
+        "discovery_owner_validated_on",
+        "decision_note",
+        "owner_validated",
+        "finding_status",
+    }
+)
+_HYPOTHESIS_ROW_KEYS = frozenset(
+    {
+        "rank",
+        "code",
+        "summary",
+        "intervention_class",
+        "review_status",
+        "supporting_count",
+        "contradicting_count",
+        "supporting_evidence",
+        "contradicting_evidence",
+        "passes_constraint_test",
+        "evidence_gaps",
+        "owner_validated",
+        "finding_status",
+    }
+)
+
+_REGISTER_SIGNATURE_KEYS = frozenset({"hypotheses"})
+_REGISTER_KEYS = frozenset(
+    {
+        "hypotheses",
+        "owner_validated",
+        "finding_status",
+        "owner_validated_by",
+        "owner_validated_on",
+        "validation_note",
+        "notice",
+    }
+)
+
+_PACK_SIGNATURE_KEYS = frozenset(
+    {
+        "contract_version",
+        "discovery_owner",
+        "dictionary",
+        "dictionary_report",
+        "flow_report",
+        "constraint_register",
+        "provenance_note",
+    }
+)
+_PACK_ALLOWED_KEYS = _PACK_SIGNATURE_KEYS | frozenset(
+    {
+        "owner_validated",
+        "finding_status",
+        "owner_validated_by",
+        "owner_validated_on",
+        "validation_note",
+        "notice",
+    }
+)
+
+_MIN_SIGNING_KEY_BYTES = 16
 
 _EVALUATED_FLOW_REPORT_DIGESTS: set[str] = set()
 _VALIDATED_FLOW_REPORT_SEALS: set[tuple[str, str, str, str, str]] = set()
@@ -1337,6 +1570,41 @@ _EVALUATED_FLOW_REPORT_REFS: dict[int, "weakref.ref[FlowDiscoveryReport]"] = {}
 _ALLOW_VALIDATED_FLOW_REPORT_INIT: ContextVar[bool] = ContextVar(
     "_ALLOW_VALIDATED_FLOW_REPORT_INIT", default=False
 )
+
+
+def _validate_signing_key(signing_key: object) -> bytes:
+    if not isinstance(signing_key, (bytes, bytearray)) or len(signing_key) < _MIN_SIGNING_KEY_BYTES:
+        raise GovernanceViolationError(
+            f"signing_key must be bytes of at least {_MIN_SIGNING_KEY_BYTES} bytes"
+        )
+    return bytes(signing_key)
+
+
+def _compute_flow_report_hmac(
+    signing_key: bytes,
+    *,
+    calculation_digest: str,
+    dictionary_schema_digest: str,
+    owner_validated: bool,
+    finding_status: str,
+    owner_validated_by: str,
+    owner_validated_on_iso: str | None,
+    validation_note: str,
+    notice: str,
+) -> str:
+    key_bytes = _validate_signing_key(signing_key)
+    payload = [
+        calculation_digest,
+        dictionary_schema_digest,
+        owner_validated,
+        finding_status,
+        owner_validated_by,
+        owner_validated_on_iso,
+        validation_note,
+        notice,
+    ]
+    encoded = json.dumps(payload, separators=(",", ":")).encode("utf-8")
+    return hmac.new(key_bytes, encoded, hashlib.sha256).hexdigest()
 
 
 def _register_evaluated_report(report: "FlowDiscoveryReport") -> None:
@@ -1396,60 +1664,90 @@ def _compute_flow_report_digest(payload: Mapping[str, object]) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
+def _optional_calendar_date(value: object, field_name: str) -> date | None:
+    if value is None:
+        return None
+    if _is_calendar_date(value):
+        return value
+    if isinstance(value, str) and len(value) == 10:
+        try:
+            return date.fromisoformat(value)
+        except ValueError as exc:
+            raise GovernanceViolationError(
+                f"Invalid ISO calendar date for {field_name}: {value!r}"
+            ) from exc
+    raise GovernanceViolationError(f"Expected calendar date or YYYY-MM-DD string for {field_name}")
+
+
 def _verify_report_matches_dictionary(
     report_or_mapping: "FlowDiscoveryReport | Mapping[str, object]",
     dictionary: LifecycleDictionary,
 ) -> None:
     expected_schema_digest = _dictionary_schema_digest(dictionary)
     if isinstance(report_or_mapping, FlowDiscoveryReport):
-        actual_schema = report_or_mapping.dictionary_schema_digest
+        actual_schema: object = report_or_mapping.dictionary_schema_digest
         stage_metrics: object = report_or_mapping.stage_metrics
         waits_by_state: object = report_or_mapping.waits_by_state
         loop_totals: object = report_or_mapping.return_loop_totals
         loops_by_prop: object = report_or_mapping.return_loops_by_property
     else:
-        actual_schema = str(report_or_mapping.get("dictionary_schema_digest", ""))
+        actual_schema = report_or_mapping.get("dictionary_schema_digest", "")
         stage_metrics = report_or_mapping.get("stage_metrics", ())
         waits_by_state = report_or_mapping.get("waits_by_state", ())
         loop_totals = report_or_mapping.get("return_loop_totals", {})
         loops_by_prop = report_or_mapping.get("return_loops_by_property", {})
 
-    if not actual_schema.strip() or actual_schema != expected_schema_digest:
+    if (
+        not isinstance(actual_schema, str)
+        or not actual_schema.strip()
+        or actual_schema != expected_schema_digest
+    ):
         raise GovernanceViolationError(
             "FlowDiscoveryReport dictionary_schema_digest does not match LifecycleDictionary"
         )
     valid_stages = {s.code for s in dictionary.stages}
     valid_waits = {w.code for w in dictionary.wait_states}
     valid_loops = {r.kind for r in dictionary.return_loops}
-    if isinstance(stage_metrics, Sequence):
-        for row in stage_metrics:
-            if isinstance(row, Mapping) and row.get("stage_code") not in valid_stages:
-                raise GovernanceViolationError(
-                    f"FlowDiscoveryReport stage_metrics contains unknown stage "
-                    f"{row.get('stage_code')!r}"
-                )
-    if isinstance(waits_by_state, Sequence):
-        for row in waits_by_state:
-            if isinstance(row, Mapping) and row.get("wait_state_code") not in valid_waits:
-                raise GovernanceViolationError(
-                    f"FlowDiscoveryReport waits_by_state contains unknown wait state "
-                    f"{row.get('wait_state_code')!r}"
-                )
-    if isinstance(loop_totals, Mapping):
-        for kind in loop_totals:
+    if not isinstance(stage_metrics, Sequence) or isinstance(
+        stage_metrics, (str, bytes, bytearray)
+    ):
+        raise GovernanceViolationError("FlowDiscoveryReport stage_metrics must be a sequence")
+    for row in stage_metrics:
+        if not isinstance(row, Mapping) or row.get("stage_code") not in valid_stages:
+            raise GovernanceViolationError(
+                "FlowDiscoveryReport stage_metrics contains invalid or unknown stage"
+            )
+    if not isinstance(waits_by_state, Sequence) or isinstance(
+        waits_by_state, (str, bytes, bytearray)
+    ):
+        raise GovernanceViolationError("FlowDiscoveryReport waits_by_state must be a sequence")
+    for row in waits_by_state:
+        if not isinstance(row, Mapping) or row.get("wait_state_code") not in valid_waits:
+            raise GovernanceViolationError(
+                "FlowDiscoveryReport waits_by_state contains invalid or unknown wait state"
+            )
+    if not isinstance(loop_totals, Mapping):
+        raise GovernanceViolationError("FlowDiscoveryReport return_loop_totals must be a mapping")
+    for kind in loop_totals:
+        if kind not in valid_loops:
+            raise GovernanceViolationError(
+                f"FlowDiscoveryReport return_loop_totals contains unknown loop kind {kind!r}"
+            )
+    if not isinstance(loops_by_prop, Mapping):
+        raise GovernanceViolationError(
+            "FlowDiscoveryReport return_loops_by_property must be a mapping"
+        )
+    for prop_row in loops_by_prop.values():
+        if not isinstance(prop_row, Mapping):
+            raise GovernanceViolationError(
+                "FlowDiscoveryReport return_loops_by_property row must be a mapping"
+            )
+        for kind in prop_row:
             if kind not in valid_loops:
                 raise GovernanceViolationError(
-                    f"FlowDiscoveryReport return_loop_totals contains unknown loop kind {kind!r}"
+                    f"FlowDiscoveryReport return_loops_by_property contains unknown loop "
+                    f"kind {kind!r}"
                 )
-    if isinstance(loops_by_prop, Mapping):
-        for prop_row in loops_by_prop.values():
-            if isinstance(prop_row, Mapping):
-                for kind in prop_row:
-                    if kind not in valid_loops:
-                        raise GovernanceViolationError(
-                            f"FlowDiscoveryReport return_loops_by_property contains unknown loop "
-                            f"kind {kind!r}"
-                        )
 
 
 @dataclass(frozen=True)
@@ -1524,19 +1822,76 @@ class FlowDiscoveryReport:
                 "tampering"
             )
 
-    def to_json_dict(self) -> FrozenDict[str, object]:
+    def to_json_dict(self, *, signing_key: bytes | None = None) -> FrozenDict[str, object]:
         """Return a tamper-evident JSON-ready FrozenDict with ISO-8601 calendar dates.
 
-        Cross-process consumers verify SHA-256 calculation_digest and
-        dictionary_schema_digest via enforce_governance_guard(..., dictionary=dictionary).
+        In-process consumers verify evaluated provenance and sign-off seals directly;
+        cross-process JSON consumers supply signing_key (>= 16 bytes) to mint and
+        verify an HMAC-SHA256 governance_hmac over both calculation_digest,
+        dictionary_schema_digest, and all sign-off and notice fields.
         """
+        self.verify_digest()
+        if not (
+            _is_calendar_date(self.window_start)
+            and _is_calendar_date(self.window_end)
+            and _is_calendar_date(self.as_of)
+            and (self.owner_validated_on is None or _is_calendar_date(self.owner_validated_on))
+        ):
+            raise GovernanceViolationError("FlowDiscoveryReport dates must be calendar dates")
+        on_iso = (
+            self.owner_validated_on.isoformat() if self.owner_validated_on is not None else None
+        )
         raw = asdict(self)
         raw["window_start"] = self.window_start.isoformat()
         raw["window_end"] = self.window_end.isoformat()
         raw["as_of"] = self.as_of.isoformat()
-        raw["owner_validated_on"] = (
-            self.owner_validated_on.isoformat() if self.owner_validated_on is not None else None
-        )
+        raw["owner_validated_on"] = on_iso
+        if signing_key is not None:
+            key_bytes = _validate_signing_key(signing_key)
+            if (
+                not _is_evaluated_report_instance(self)
+                or self.calculation_digest not in _EVALUATED_FLOW_REPORT_DIGESTS
+            ):
+                raise GovernanceViolationError(
+                    "Cannot sign FlowDiscoveryReport JSON without evaluated calculation provenance"
+                )
+            if self.owner_validated:
+                if (
+                    on_iso is None
+                    or (
+                        self.calculation_digest,
+                        self.dictionary_schema_digest,
+                        self.owner_validated_by.strip(),
+                        on_iso,
+                        self.validation_note.strip(),
+                    )
+                    not in _VALIDATED_FLOW_REPORT_SEALS
+                ):
+                    raise GovernanceViolationError(
+                        "Cannot sign validated FlowDiscoveryReport JSON without a verified "
+                        "validate_flow_report sign-off seal"
+                    )
+            elif (
+                self.finding_status != CANDIDATE_FINDING_STATUS
+                or self.notice != NOT_FINDING
+                or bool(self.owner_validated_by.strip())
+                or on_iso is not None
+                or bool(self.validation_note.strip())
+            ):
+                raise GovernanceViolationError(
+                    "Candidate FlowDiscoveryReport cannot sign inconsistent sign-off metadata"
+                )
+            raw["governance_hmac"] = _compute_flow_report_hmac(
+                key_bytes,
+                calculation_digest=self.calculation_digest,
+                dictionary_schema_digest=self.dictionary_schema_digest,
+                owner_validated=self.owner_validated,
+                finding_status=self.finding_status,
+                owner_validated_by=self.owner_validated_by,
+                owner_validated_on_iso=on_iso,
+                validation_note=self.validation_note,
+                notice=self.notice,
+            )
         return FrozenDict[str, object]((k, _freeze_value(v)) for k, v in raw.items())
 
     def __deepcopy__(self, memo: dict[int, object]) -> "FlowDiscoveryReport":
@@ -1597,10 +1952,27 @@ class FlowDiscoveryReport:
         return cloned
 
     def __post_init__(self) -> None:
+        if not (
+            _is_calendar_date(self.window_start)
+            and _is_calendar_date(self.window_end)
+            and _is_calendar_date(self.as_of)
+            and (self.owner_validated_on is None or _is_calendar_date(self.owner_validated_on))
+        ):
+            raise GovernanceViolationError("FlowDiscoveryReport dates must be calendar dates")
         for attr_name in _FLOW_REPORT_CONTAINER_FIELDS:
             object.__setattr__(self, attr_name, _freeze_value(getattr(self, attr_name)))
         self.verify_digest()
         if not self.owner_validated and self.finding_status == CANDIDATE_FINDING_STATUS:
+            if (
+                self.notice != NOT_FINDING
+                or bool(self.owner_validated_by.strip())
+                or self.owner_validated_on is not None
+                or bool(self.validation_note.strip())
+            ):
+                raise GovernanceViolationError(
+                    "Candidate FlowDiscoveryReport must retain NOT_FINDING notice and "
+                    "blank discovery-owner sign-off fields"
+                )
             return
         if not _ALLOW_VALIDATED_FLOW_REPORT_INIT.get():
             raise GovernanceViolationError(
@@ -1618,9 +1990,9 @@ class FlowDiscoveryReport:
         if not (
             self.owner_validated
             and self.finding_status == VALIDATED_FINDING_STATUS
+            and self.notice == ""
             and is_valid_human_actor(self.owner_validated_by)
-            and self.owner_validated_on is not None
-            and not isinstance(self.owner_validated_on, datetime)
+            and _is_calendar_date(self.owner_validated_on)
             and bool(self.validation_note.strip())
             and bool(self.dictionary_schema_digest.strip())
         ):
@@ -1657,6 +2029,9 @@ def evaluate_property_flow(
     loop_records: Sequence[PropertyReturnLoopRecord] = (),
 ) -> FlowDiscoveryReport:
     """Evaluate baseline population, PAS 2035 stages, BG-011/handover legs, waits and loops."""
+    _require_calendar_date(window_start, "window_start")
+    _require_calendar_date(window_end, "window_end")
+    _require_calendar_date(as_of, "as_of")
     if window_end < window_start:
         raise ValueError("window_end cannot precede window_start")
     if as_of < window_start:
@@ -2211,12 +2586,18 @@ class ConstraintHypothesis:
     finding_status: str = CANDIDATE_FINDING_STATUS
 
     def __post_init__(self) -> None:
-        if self.rank < 1:
-            raise ValueError("ConstraintHypothesis rank must be >= 1")
+        if not _is_strict_int(self.rank) or self.rank < 1:
+            raise ValueError("ConstraintHypothesis rank must be an integer >= 1")
         if not (self.code.strip() and self.summary.strip() and self.domain_owner_roles):
             raise ValueError("ConstraintHypothesis requires code, summary and domain_owner_roles")
         if not self.proposed_by.strip():
             raise ValueError("ConstraintHypothesis requires proposed_by")
+        if self.domain_validated_on is not None and not _is_calendar_date(self.domain_validated_on):
+            raise ValueError("domain_validated_on must be a calendar date")
+        if self.discovery_owner_validated_on is not None and not _is_calendar_date(
+            self.discovery_owner_validated_on
+        ):
+            raise ValueError("discovery_owner_validated_on must be a calendar date")
         if any(item.direction != SUPPORTS for item in self.supporting_evidence):
             raise ValueError("supporting_evidence may contain only 'supports' EvidenceRecord items")
         if any(item.direction != CONTRADICTS for item in self.contradicting_evidence):
@@ -2226,11 +2607,46 @@ class ConstraintHypothesis:
         if self.review_status not in (PROPOSED, DOMAIN_VALIDATED, OWNER_VALIDATED, DISPUTED):
             raise ValueError(f"Unsupported review_status '{self.review_status}'")
 
+        if self.review_status in (DOMAIN_VALIDATED, DISPUTED):
+            if not (
+                bool(self.supporting_evidence)
+                and bool(self.contradicting_evidence)
+                and self.domain_validated_role in self.domain_owner_roles
+                and is_valid_human_actor(self.domain_validated_by)
+                and _is_calendar_date(self.domain_validated_on)
+                and self.domain_validated_by.strip().lower() != self.proposed_by.strip().lower()
+                and bool(self.decision_note.strip())
+                and (self.review_status != DOMAIN_VALIDATED or self.constraint_test.passes_all)
+            ):
+                raise GovernanceViolationError(
+                    f"ConstraintHypothesis {self.code} cannot record review_status="
+                    f"'{self.review_status}' without two-sided evidence and valid human "
+                    "domain-owner validation"
+                )
+
+        if self.review_status == PROPOSED and (
+            bool(self.domain_validated_by.strip())
+            or bool(self.domain_validated_role.strip())
+            or self.domain_validated_on is not None
+        ):
+            raise GovernanceViolationError(
+                f"ConstraintHypothesis {self.code} in PROPOSED status cannot carry "
+                "domain-validation sign-off fields"
+            )
+
         if (
             not self.owner_validated
             and self.finding_status == CANDIDATE_FINDING_STATUS
             and self.review_status != OWNER_VALIDATED
         ):
+            if (
+                bool(self.discovery_owner_validated_by.strip())
+                or self.discovery_owner_validated_on is not None
+            ):
+                raise GovernanceViolationError(
+                    f"Candidate ConstraintHypothesis {self.code} cannot carry "
+                    "discovery-owner sign-off fields while owner_validated=False"
+                )
             return
 
         if not (
@@ -2242,10 +2658,10 @@ class ConstraintHypothesis:
             and self.constraint_test.passes_all
             and self.domain_validated_role in self.domain_owner_roles
             and is_valid_human_actor(self.domain_validated_by)
-            and self.domain_validated_on is not None
+            and _is_calendar_date(self.domain_validated_on)
             and self.domain_validated_by.strip().lower() != self.proposed_by.strip().lower()
             and is_valid_human_actor(self.discovery_owner_validated_by)
-            and self.discovery_owner_validated_on is not None
+            and _is_calendar_date(self.discovery_owner_validated_on)
             and self.discovery_owner_validated_by.strip().lower()
             != self.proposed_by.strip().lower()
             and bool(self.decision_note.strip())
@@ -2308,6 +2724,7 @@ def validate_constraint_by_domain_owner(
     note: str,
 ) -> ConstraintHypothesis:
     """Record domain-owner acceptance or dispute; remains a candidate until discovery-owner gate."""
+    checked_date = _require_calendar_date(on, "Domain validation date")
     if role not in hypothesis.domain_owner_roles:
         allowed = " or ".join(hypothesis.domain_owner_roles)
         raise ValueError(f"{hypothesis.code} must be decided by {allowed}, not {role}")
@@ -2326,7 +2743,7 @@ def validate_constraint_by_domain_owner(
         review_status=DOMAIN_VALIDATED if accept else DISPUTED,
         domain_validated_by=actor,
         domain_validated_role=role,
-        domain_validated_on=on,
+        domain_validated_on=checked_date,
         decision_note=cleaned_note,
         owner_validated=False,
         finding_status=CANDIDATE_FINDING_STATUS,
@@ -2343,6 +2760,7 @@ def validate_constraint_by_discovery_owner(
     note: str,
 ) -> ConstraintHypothesis:
     """Promote a domain-validated hypothesis to an owner-validated company finding."""
+    checked_date = _require_gov_calendar_date(on, "Discovery-owner validation date")
     actor, cleaned_note = _require_ready_owner_and_dictionary(discovery_owner, dictionary, by, note)
     if actor.lower() == hypothesis.proposed_by.strip().lower():
         raise GovernanceViolationError(
@@ -2367,7 +2785,7 @@ def validate_constraint_by_discovery_owner(
         hypothesis,
         review_status=OWNER_VALIDATED,
         discovery_owner_validated_by=actor,
-        discovery_owner_validated_on=on,
+        discovery_owner_validated_on=checked_date,
         decision_note=cleaned_note,
         owner_validated=True,
         finding_status=VALIDATED_FINDING_STATUS,
@@ -2385,6 +2803,10 @@ class RankedConstraintRegister:
     notice: str = NOT_FINDING
 
     def __post_init__(self) -> None:
+        if self.owner_validated_on is not None and not _is_calendar_date(self.owner_validated_on):
+            raise GovernanceViolationError(
+                "RankedConstraintRegister owner_validated_on must be a calendar date"
+            )
         ranks = [h.rank for h in self.hypotheses]
         if ranks != list(range(1, len(self.hypotheses) + 1)):
             raise ValueError("RankedConstraintRegister hypotheses must have contiguous ranks 1..N")
@@ -2393,18 +2815,47 @@ class RankedConstraintRegister:
             raise ValueError("RankedConstraintRegister constraint codes must be unique")
 
         if not self.owner_validated and self.finding_status == CANDIDATE_FINDING_STATUS:
+            if (
+                self.notice != NOT_FINDING
+                or bool(self.owner_validated_by.strip())
+                or self.owner_validated_on is not None
+                or bool(self.validation_note.strip())
+            ):
+                raise GovernanceViolationError(
+                    "Candidate RankedConstraintRegister must retain NOT_FINDING notice and "
+                    "blank discovery-owner sign-off fields"
+                )
             return
 
+        expected_actor = self.owner_validated_by.strip()
+        hypotheses_ok = all(
+            (
+                not h.owner_validated
+                and h.finding_status == CANDIDATE_FINDING_STATUS
+                and not constraint_evidence_gaps(h)
+            )
+            if h.review_status == DISPUTED
+            else (
+                h.review_status == OWNER_VALIDATED
+                and h.owner_validated
+                and h.finding_status == VALIDATED_FINDING_STATUS
+                and h.discovery_owner_validated_by.strip() == expected_actor
+            )
+            for h in self.hypotheses
+        )
         if not (
             self.owner_validated
             and self.finding_status == VALIDATED_FINDING_STATUS
+            and self.notice == ""
             and bool(self.hypotheses)
             and is_valid_human_actor(self.owner_validated_by)
-            and self.owner_validated_on is not None
+            and _is_calendar_date(self.owner_validated_on)
             and bool(self.validation_note.strip())
+            and hypotheses_ok
         ):
             raise GovernanceViolationError(
-                "RankedConstraintRegister cannot claim owner validation without formal sign-off"
+                "RankedConstraintRegister cannot claim owner validation without formal sign-off "
+                "and adjudicated hypotheses"
             )
 
         for item in self.hypotheses:
@@ -2509,6 +2960,7 @@ def validate_constraint_register(
     note: str,
 ) -> RankedConstraintRegister:
     """Validate an adjudicated register while keeping any DISPUTED items as non-findings."""
+    checked_date = _require_gov_calendar_date(on, "Constraint register validation date")
     actor, cleaned_note = _require_ready_owner_and_dictionary(discovery_owner, dictionary, by, note)
     promoted: list[ConstraintHypothesis] = []
     for item in register.hypotheses:
@@ -2528,7 +2980,7 @@ def validate_constraint_register(
                     discovery_owner,
                     dictionary,
                     by=actor,
-                    on=on,
+                    on=checked_date,
                     note=cleaned_note,
                 )
             )
@@ -2544,7 +2996,7 @@ def validate_constraint_register(
         owner_validated=True,
         finding_status=VALIDATED_FINDING_STATUS,
         owner_validated_by=actor,
-        owner_validated_on=on,
+        owner_validated_on=checked_date,
         validation_note=cleaned_note,
         notice="",
     )
@@ -2567,6 +3019,10 @@ class Phase0DiscoveryPack:
     notice: str = NOT_FINDING
 
     def __post_init__(self) -> None:
+        if self.owner_validated_on is not None and not _is_calendar_date(self.owner_validated_on):
+            raise GovernanceViolationError(
+                "Phase0DiscoveryPack owner_validated_on must be a calendar date"
+            )
         self.flow_report.verify_digest()
         expected_schema_digest = _dictionary_schema_digest(self.dictionary)
         _verify_report_matches_dictionary(self.flow_report, self.dictionary)
@@ -2577,21 +3033,31 @@ class Phase0DiscoveryPack:
             and self.dictionary_report.wait_state_count == len(self.dictionary.wait_states)
             and self.dictionary_report.return_loop_count == len(self.dictionary.return_loops)
         )
-        if not dict_counts_match or (
-            bool(self.dictionary_report.dictionary_schema_digest.strip())
-            and self.dictionary_report.dictionary_schema_digest != expected_schema_digest
+        if (
+            not dict_counts_match
+            or not self.dictionary_report.dictionary_schema_digest.strip()
+            or self.dictionary_report.dictionary_schema_digest != expected_schema_digest
         ):
             raise GovernanceViolationError(
                 "Phase0DiscoveryPack dictionary_report does not match "
                 "Phase0DiscoveryPack.dictionary"
             )
         if not self.owner_validated and self.finding_status == CANDIDATE_FINDING_STATUS:
+            if (
+                self.notice != NOT_FINDING
+                or bool(self.owner_validated_by.strip())
+                or self.owner_validated_on is not None
+                or bool(self.validation_note.strip())
+            ):
+                raise GovernanceViolationError(
+                    "Candidate Phase0DiscoveryPack must retain NOT_FINDING notice and "
+                    "blank discovery-owner sign-off fields"
+                )
             return
         expected_owner = self.discovery_owner.owner.strip()
         flow_on = self.flow_report.owner_validated_on
         flow_seal_ok = (
-            flow_on is not None
-            and not isinstance(flow_on, datetime)
+            _is_calendar_date(flow_on)
             and self.flow_report.calculation_digest in _EVALUATED_FLOW_REPORT_DIGESTS
             and (
                 self.flow_report.calculation_digest,
@@ -2615,6 +3081,9 @@ class Phase0DiscoveryPack:
         if not (
             self.owner_validated
             and self.finding_status == VALIDATED_FINDING_STATUS
+            and self.notice == ""
+            and bool(self.provenance_note.strip())
+            and self.contract_version == CONTRACT_VERSION
             and self.discovery_owner.is_ready
             and not lifecycle_dictionary_gaps(self.dictionary)
             and self.dictionary_report.owner_validated
@@ -2631,8 +3100,7 @@ class Phase0DiscoveryPack:
             and hypotheses_ok
             and is_valid_human_actor(self.owner_validated_by)
             and self.owner_validated_by.strip() == expected_owner
-            and self.owner_validated_on is not None
-            and not isinstance(self.owner_validated_on, datetime)
+            and _is_calendar_date(self.owner_validated_on)
             and bool(self.validation_note.strip())
         ):
             raise GovernanceViolationError(
@@ -2673,6 +3141,11 @@ def validate_discovery_pack(
     on: date,
     note: str,
 ) -> Phase0DiscoveryPack:
+    checked_date = _require_gov_calendar_date(on, "Phase0DiscoveryPack validation date")
+    if pack.contract_version != CONTRACT_VERSION:
+        raise GovernanceViolationError(
+            f"Unsupported Phase0DiscoveryPack contract_version {pack.contract_version!r}"
+        )
     actor, cleaned_note = _require_ready_owner_and_dictionary(
         pack.discovery_owner, pack.dictionary, by, note
     )
@@ -2681,7 +3154,7 @@ def validate_discovery_pack(
         pack.discovery_owner,
         pack.dictionary,
         by=actor,
-        on=on,
+        on=checked_date,
         note=cleaned_note,
     )
     validated_flow = validate_flow_report(
@@ -2689,7 +3162,7 @@ def validate_discovery_pack(
         pack.discovery_owner,
         pack.dictionary,
         by=actor,
-        on=on,
+        on=checked_date,
         note=cleaned_note,
     )
     validated_register = validate_constraint_register(
@@ -2697,7 +3170,7 @@ def validate_discovery_pack(
         pack.discovery_owner,
         pack.dictionary,
         by=actor,
-        on=on,
+        on=checked_date,
         note=cleaned_note,
     )
     return Phase0DiscoveryPack(
@@ -2711,7 +3184,7 @@ def validate_discovery_pack(
         owner_validated=True,
         finding_status=VALIDATED_FINDING_STATUS,
         owner_validated_by=actor,
-        owner_validated_on=on,
+        owner_validated_on=checked_date,
         validation_note=cleaned_note,
         notice="",
     )
@@ -2742,8 +3215,610 @@ def _validated_by_actor(output: GovernedDiscoveryOutput) -> str:
     return str(getattr(output, "owner_validated_by", ""))
 
 
-def _is_flow_report_mapping(mapping: Mapping[str, object]) -> bool:
-    return any(key in mapping for key in _FLOW_REPORT_SIGNATURE_KEYS)
+def _classify_discovery_mapping(mapping: Mapping[str, object]) -> str | None:
+    matched: list[str] = []
+    if any(key in mapping for key in _FLOW_REPORT_SIGNATURE_KEYS):
+        matched.append("flow_report")
+    if any(key in mapping for key in _LIFECYCLE_REPORT_SIGNATURE_KEYS):
+        matched.append("lifecycle_report")
+    if any(key in mapping for key in _HYPOTHESIS_SIGNATURE_KEYS):
+        matched.append("hypothesis")
+    if any(key in mapping for key in _REGISTER_SIGNATURE_KEYS):
+        matched.append("register")
+    if any(key in mapping for key in _PACK_SIGNATURE_KEYS):
+        matched.append("pack")
+    if len(matched) > 1:
+        raise GovernanceViolationError(
+            f"Ambiguous discovery mapping mixes keys from multiple shapes: {matched}"
+        )
+    return matched[0] if matched else None
+
+
+def _require_exact_keys(
+    mapping: Mapping[str, object], expected: frozenset[str], label: str
+) -> None:
+    if frozenset(mapping.keys()) != expected:
+        raise GovernanceViolationError(f"{label} mapping keys do not match contract schema")
+
+
+def _require_allowed_keys(
+    mapping: Mapping[str, object],
+    required: frozenset[str],
+    allowed: frozenset[str],
+    label: str,
+) -> None:
+    keys = frozenset(mapping.keys())
+    if not (required <= keys <= allowed):
+        raise GovernanceViolationError(f"{label} mapping keys do not match contract schema")
+
+
+def _require_str_field(mapping: Mapping[str, object], key: str, label: str) -> str:
+    val = mapping.get(key)
+    if not isinstance(val, str):
+        raise GovernanceViolationError(f"{label}.{key} must be a string")
+    return val
+
+
+def _require_bool_field(mapping: Mapping[str, object], key: str, label: str) -> bool:
+    val = mapping.get(key)
+    if not isinstance(val, bool):
+        raise GovernanceViolationError(f"{label}.{key} must be a boolean")
+    return val
+
+
+def _require_int_field(mapping: Mapping[str, object], key: str, label: str) -> int:
+    val = mapping.get(key)
+    if not _is_strict_int(val):
+        raise GovernanceViolationError(f"{label}.{key} must be an integer")
+    return val
+
+
+def _require_seq_field(mapping: Mapping[str, object], key: str, label: str) -> Sequence[object]:
+    val = mapping.get(key)
+    if not isinstance(val, Sequence) or isinstance(val, (str, bytes, bytearray)):
+        raise GovernanceViolationError(f"{label}.{key} must be a sequence")
+    return val
+
+
+def _require_str_tuple_field(
+    mapping: Mapping[str, object], key: str, label: str
+) -> tuple[str, ...]:
+    seq = _require_seq_field(mapping, key, label)
+    if not all(isinstance(item, str) for item in seq):
+        raise GovernanceViolationError(f"{label}.{key} must contain strings")
+    return tuple(str(item) for item in seq)
+
+
+def _coerce_evidence_record(value: object) -> EvidenceRecord:
+    if isinstance(value, EvidenceRecord):
+        return value
+    if not isinstance(value, Mapping):
+        raise GovernanceViolationError("EvidenceRecord item must be an EvidenceRecord or mapping")
+    _require_exact_keys(
+        value,
+        frozenset({"statement", "source_ref", "direction", "recorded_by"}),
+        "EvidenceRecord",
+    )
+    try:
+        return EvidenceRecord(
+            statement=_require_str_field(value, "statement", "EvidenceRecord"),
+            source_ref=_require_str_field(value, "source_ref", "EvidenceRecord"),
+            direction=_require_str_field(value, "direction", "EvidenceRecord"),
+            recorded_by=_require_str_field(value, "recorded_by", "EvidenceRecord"),
+        )
+    except (ValueError, TypeError) as exc:
+        raise GovernanceViolationError(str(exc)) from exc
+
+
+def _coerce_constraint_test(value: object) -> ConstraintTestAssessment:
+    if isinstance(value, ConstraintTestAssessment):
+        return value
+    if not isinstance(value, Mapping):
+        raise GovernanceViolationError(
+            "constraint_test must be a ConstraintTestAssessment or mapping"
+        )
+    _require_exact_keys(
+        value,
+        frozenset(
+            {
+                "material_critical_path_share",
+                "affects_multiple_properties",
+                "recurs_across_comparable_cases",
+                "traceable_owner_or_dependency",
+                "changes_operational_or_investment_decision",
+            }
+        ),
+        "ConstraintTestAssessment",
+    )
+    return ConstraintTestAssessment(
+        material_critical_path_share=_require_bool_field(
+            value, "material_critical_path_share", "ConstraintTestAssessment"
+        ),
+        affects_multiple_properties=_require_bool_field(
+            value, "affects_multiple_properties", "ConstraintTestAssessment"
+        ),
+        recurs_across_comparable_cases=_require_bool_field(
+            value, "recurs_across_comparable_cases", "ConstraintTestAssessment"
+        ),
+        traceable_owner_or_dependency=_require_bool_field(
+            value, "traceable_owner_or_dependency", "ConstraintTestAssessment"
+        ),
+        changes_operational_or_investment_decision=_require_bool_field(
+            value, "changes_operational_or_investment_decision", "ConstraintTestAssessment"
+        ),
+    )
+
+
+def _coerce_lifecycle_report_mapping(
+    mapping: Mapping[str, object],
+) -> LifecycleDictionaryReport:
+    _require_exact_keys(mapping, _LIFECYCLE_REPORT_KEYS, "LifecycleDictionaryReport")
+    stage_count = _require_int_field(mapping, "stage_count", "LifecycleDictionaryReport")
+    event_count = _require_int_field(mapping, "event_count", "LifecycleDictionaryReport")
+    ts_count = _require_int_field(mapping, "timestamp_spec_count", "LifecycleDictionaryReport")
+    wait_count = _require_int_field(mapping, "wait_state_count", "LifecycleDictionaryReport")
+    loop_count = _require_int_field(mapping, "return_loop_count", "LifecycleDictionaryReport")
+    if min(stage_count, event_count, ts_count, wait_count, loop_count) < 0:
+        raise GovernanceViolationError("LifecycleDictionaryReport counts cannot be negative")
+    return LifecycleDictionaryReport(
+        stage_count=stage_count,
+        event_count=event_count,
+        timestamp_spec_count=ts_count,
+        wait_state_count=wait_count,
+        return_loop_count=loop_count,
+        endpoint=_require_str_field(mapping, "endpoint", "LifecycleDictionaryReport"),
+        gaps=_require_str_tuple_field(mapping, "gaps", "LifecycleDictionaryReport"),
+        owner_validated=_require_bool_field(
+            mapping, "owner_validated", "LifecycleDictionaryReport"
+        ),
+        finding_status=_require_str_field(mapping, "finding_status", "LifecycleDictionaryReport"),
+        owner_validated_by=_require_str_field(
+            mapping, "owner_validated_by", "LifecycleDictionaryReport"
+        ),
+        owner_validated_on=_optional_calendar_date(
+            mapping["owner_validated_on"], "owner_validated_on"
+        ),
+        validation_note=_require_str_field(mapping, "validation_note", "LifecycleDictionaryReport"),
+        notice=_require_str_field(mapping, "notice", "LifecycleDictionaryReport"),
+        dictionary_schema_digest=_require_str_field(
+            mapping, "dictionary_schema_digest", "LifecycleDictionaryReport"
+        ),
+    )
+
+
+def _coerce_hypothesis_mapping(mapping: Mapping[str, object]) -> ConstraintHypothesis:
+    _require_exact_keys(mapping, _HYPOTHESIS_KEYS, "ConstraintHypothesis")
+    sup_seq = _require_seq_field(mapping, "supporting_evidence", "ConstraintHypothesis")
+    con_seq = _require_seq_field(mapping, "contradicting_evidence", "ConstraintHypothesis")
+    try:
+        return ConstraintHypothesis(
+            rank=_require_int_field(mapping, "rank", "ConstraintHypothesis"),
+            code=_require_str_field(mapping, "code", "ConstraintHypothesis"),
+            summary=_require_str_field(mapping, "summary", "ConstraintHypothesis"),
+            intervention_class=_require_str_field(
+                mapping, "intervention_class", "ConstraintHypothesis"
+            ),
+            domain_owner_roles=_require_str_tuple_field(
+                mapping, "domain_owner_roles", "ConstraintHypothesis"
+            ),
+            proposed_by=_require_str_field(mapping, "proposed_by", "ConstraintHypothesis"),
+            supporting_evidence=tuple(_coerce_evidence_record(item) for item in sup_seq),
+            contradicting_evidence=tuple(_coerce_evidence_record(item) for item in con_seq),
+            constraint_test=_coerce_constraint_test(mapping["constraint_test"]),
+            review_status=_require_str_field(mapping, "review_status", "ConstraintHypothesis"),
+            domain_validated_by=_require_str_field(
+                mapping, "domain_validated_by", "ConstraintHypothesis"
+            ),
+            domain_validated_role=_require_str_field(
+                mapping, "domain_validated_role", "ConstraintHypothesis"
+            ),
+            domain_validated_on=_optional_calendar_date(
+                mapping["domain_validated_on"], "domain_validated_on"
+            ),
+            discovery_owner_validated_by=_require_str_field(
+                mapping, "discovery_owner_validated_by", "ConstraintHypothesis"
+            ),
+            discovery_owner_validated_on=_optional_calendar_date(
+                mapping["discovery_owner_validated_on"], "discovery_owner_validated_on"
+            ),
+            decision_note=_require_str_field(mapping, "decision_note", "ConstraintHypothesis"),
+            owner_validated=_require_bool_field(mapping, "owner_validated", "ConstraintHypothesis"),
+            finding_status=_require_str_field(mapping, "finding_status", "ConstraintHypothesis"),
+        )
+    except (ValueError, TypeError) as exc:
+        raise GovernanceViolationError(str(exc)) from exc
+
+
+def _verify_candidate_hypothesis_row_mapping(mapping: Mapping[str, object]) -> None:
+    _require_exact_keys(mapping, _HYPOTHESIS_ROW_KEYS, "ConstraintHypothesis row")
+    rank = _require_int_field(mapping, "rank", "ConstraintHypothesis row")
+    code = _require_str_field(mapping, "code", "ConstraintHypothesis row")
+    summary = _require_str_field(mapping, "summary", "ConstraintHypothesis row")
+    intervention_class = _require_str_field(
+        mapping, "intervention_class", "ConstraintHypothesis row"
+    )
+    review_status = _require_str_field(mapping, "review_status", "ConstraintHypothesis row")
+    sup_count = _require_int_field(mapping, "supporting_count", "ConstraintHypothesis row")
+    con_count = _require_int_field(mapping, "contradicting_count", "ConstraintHypothesis row")
+    sup_seq = _require_seq_field(mapping, "supporting_evidence", "ConstraintHypothesis row")
+    con_seq = _require_seq_field(mapping, "contradicting_evidence", "ConstraintHypothesis row")
+    passes_test = _require_bool_field(mapping, "passes_constraint_test", "ConstraintHypothesis row")
+    ev_gaps = _require_str_tuple_field(mapping, "evidence_gaps", "ConstraintHypothesis row")
+    owner_val = _require_bool_field(mapping, "owner_validated", "ConstraintHypothesis row")
+    status_val = _require_str_field(mapping, "finding_status", "ConstraintHypothesis row")
+    sup_items = tuple(_coerce_evidence_record(item) for item in sup_seq)
+    con_items = tuple(_coerce_evidence_record(item) for item in con_seq)
+    if any(item.direction != SUPPORTS for item in sup_items) or any(
+        item.direction != CONTRADICTS for item in con_items
+    ):
+        raise GovernanceViolationError("ConstraintHypothesis row evidence direction mismatch")
+    if (
+        owner_val
+        or status_val != CANDIDATE_FINDING_STATUS
+        or rank < 1
+        or not code.strip()
+        or not summary.strip()
+        or not intervention_class.strip()
+        or review_status not in (PROPOSED, DOMAIN_VALIDATED, DISPUTED)
+        or sup_count != len(sup_items)
+        or con_count != len(con_items)
+    ):
+        raise GovernanceViolationError(
+            "ConstraintHypothesis summary row cannot claim owner_validated or inconsistent counts"
+        )
+    expected_gaps: list[str] = []
+    if not sup_items:
+        expected_gaps.append(
+            f"Hypothesis {code} has no supporting_evidence from Zava North Homes artefacts"
+        )
+    if not con_items:
+        expected_gaps.append(
+            f"Hypothesis {code} has no contradicting_evidence recorded for two-sided testing"
+        )
+    if ev_gaps != tuple(expected_gaps):
+        raise GovernanceViolationError("ConstraintHypothesis row evidence_gaps mismatch")
+    if review_status in (DOMAIN_VALIDATED, DISPUTED) and expected_gaps:
+        raise GovernanceViolationError(
+            "ConstraintHypothesis row in adjudicated status requires two-sided evidence"
+        )
+    if review_status == DOMAIN_VALIDATED and not passes_test:
+        raise GovernanceViolationError(
+            "ConstraintHypothesis row in DOMAIN_VALIDATED status must pass constraint test"
+        )
+
+
+def _coerce_register_mapping(mapping: Mapping[str, object]) -> RankedConstraintRegister:
+    _require_exact_keys(mapping, _REGISTER_KEYS, "RankedConstraintRegister")
+    hyp_seq = _require_seq_field(mapping, "hypotheses", "RankedConstraintRegister")
+    hypotheses: list[ConstraintHypothesis] = []
+    for item in hyp_seq:
+        if isinstance(item, ConstraintHypothesis):
+            hypotheses.append(item)
+        elif isinstance(item, Mapping):
+            hypotheses.append(_coerce_hypothesis_mapping(item))
+        else:
+            raise GovernanceViolationError(
+                "RankedConstraintRegister.hypotheses must contain ConstraintHypothesis items"
+            )
+    try:
+        return RankedConstraintRegister(
+            hypotheses=tuple(hypotheses),
+            owner_validated=_require_bool_field(
+                mapping, "owner_validated", "RankedConstraintRegister"
+            ),
+            finding_status=_require_str_field(
+                mapping, "finding_status", "RankedConstraintRegister"
+            ),
+            owner_validated_by=_require_str_field(
+                mapping, "owner_validated_by", "RankedConstraintRegister"
+            ),
+            owner_validated_on=_optional_calendar_date(
+                mapping["owner_validated_on"], "owner_validated_on"
+            ),
+            validation_note=_require_str_field(
+                mapping, "validation_note", "RankedConstraintRegister"
+            ),
+            notice=_require_str_field(mapping, "notice", "RankedConstraintRegister"),
+        )
+    except (ValueError, TypeError) as exc:
+        raise GovernanceViolationError(str(exc)) from exc
+
+
+def _owners_match(actual: NominatedDiscoveryOwner, expected: NominatedDiscoveryOwner) -> bool:
+    return (
+        actual.is_ready
+        and expected.is_ready
+        and actual.nominated_by.strip() == expected.nominated_by.strip()
+        and actual.nominated_by_role.strip() == expected.nominated_by_role.strip()
+        and actual.owner.strip() == expected.owner.strip()
+        and actual.owner_role.strip() == expected.owner_role.strip()
+        and actual.nominated_on == expected.nominated_on
+        and actual.endpoint.strip().lower() == expected.endpoint.strip().lower()
+        and actual.endpoint_agreed_by.strip() == expected.endpoint_agreed_by.strip()
+        and actual.endpoint_agreed_role.strip() == expected.endpoint_agreed_role.strip()
+        and actual.endpoint_agreed_on == expected.endpoint_agreed_on
+    )
+
+
+def _coerce_owner_from_pack_value(value: object) -> NominatedDiscoveryOwner:
+    if isinstance(value, NominatedDiscoveryOwner):
+        return value
+    if not isinstance(value, Mapping):
+        raise GovernanceViolationError(
+            "Pack mapping discovery_owner must be a NominatedDiscoveryOwner or mapping"
+        )
+    _require_exact_keys(
+        value,
+        frozenset(
+            {
+                "nominated_by",
+                "nominated_by_role",
+                "owner",
+                "owner_role",
+                "nominated_on",
+                "endpoint",
+                "endpoint_agreed_by",
+                "endpoint_agreed_role",
+                "endpoint_agreed_on",
+            }
+        ),
+        "NominatedDiscoveryOwner",
+    )
+    return NominatedDiscoveryOwner(
+        nominated_by=_require_str_field(value, "nominated_by", "NominatedDiscoveryOwner"),
+        nominated_by_role=_require_str_field(value, "nominated_by_role", "NominatedDiscoveryOwner"),
+        owner=_require_str_field(value, "owner", "NominatedDiscoveryOwner"),
+        owner_role=_require_str_field(value, "owner_role", "NominatedDiscoveryOwner"),
+        nominated_on=_optional_calendar_date(value["nominated_on"], "nominated_on"),
+        endpoint=_require_str_field(value, "endpoint", "NominatedDiscoveryOwner"),
+        endpoint_agreed_by=_require_str_field(
+            value, "endpoint_agreed_by", "NominatedDiscoveryOwner"
+        ),
+        endpoint_agreed_role=_require_str_field(
+            value, "endpoint_agreed_role", "NominatedDiscoveryOwner"
+        ),
+        endpoint_agreed_on=_optional_calendar_date(
+            value["endpoint_agreed_on"], "endpoint_agreed_on"
+        ),
+    )
+
+
+def _coerce_dictionary_from_pack_value(value: object) -> LifecycleDictionary:
+    if isinstance(value, LifecycleDictionary):
+        return value
+    if not isinstance(value, Mapping):
+        raise GovernanceViolationError(
+            "Pack mapping dictionary must be a LifecycleDictionary or mapping"
+        )
+    _require_exact_keys(
+        value,
+        frozenset({"stages", "events", "timestamps", "wait_states", "return_loops"}),
+        "LifecycleDictionary",
+    )
+    stages_raw = _require_seq_field(value, "stages", "LifecycleDictionary")
+    events_raw = _require_seq_field(value, "events", "LifecycleDictionary")
+    timestamps_raw = _require_seq_field(value, "timestamps", "LifecycleDictionary")
+    waits_raw = _require_seq_field(value, "wait_states", "LifecycleDictionary")
+    loops_raw = _require_seq_field(value, "return_loops", "LifecycleDictionary")
+
+    stages: list[StageSpec] = []
+    for st in stages_raw:
+        if isinstance(st, StageSpec):
+            stages.append(st)
+        elif isinstance(st, Mapping):
+            _require_exact_keys(
+                st,
+                frozenset(
+                    {
+                        "order",
+                        "code",
+                        "name",
+                        "kind",
+                        "entry_event",
+                        "exit_event",
+                        "pas2035_role_boundary",
+                        "owner_role",
+                        "validated_by",
+                        "validated_on",
+                        "validated_role",
+                    }
+                ),
+                "StageSpec",
+            )
+            stages.append(
+                StageSpec(
+                    order=_require_int_field(st, "order", "StageSpec"),
+                    code=_require_str_field(st, "code", "StageSpec"),
+                    name=_require_str_field(st, "name", "StageSpec"),
+                    kind=_require_str_field(st, "kind", "StageSpec"),
+                    entry_event=_require_str_field(st, "entry_event", "StageSpec"),
+                    exit_event=_require_str_field(st, "exit_event", "StageSpec"),
+                    pas2035_role_boundary=_require_str_field(
+                        st, "pas2035_role_boundary", "StageSpec"
+                    ),
+                    owner_role=_require_str_field(st, "owner_role", "StageSpec"),
+                    validated_by=_require_str_field(st, "validated_by", "StageSpec"),
+                    validated_on=_optional_calendar_date(st["validated_on"], "validated_on"),
+                    validated_role=_require_str_field(st, "validated_role", "StageSpec"),
+                )
+            )
+        else:
+            raise GovernanceViolationError("LifecycleDictionary.stages must contain StageSpec")
+
+    events: list[EventSpec] = []
+    for ev in events_raw:
+        if isinstance(ev, EventSpec):
+            events.append(ev)
+        elif isinstance(ev, Mapping):
+            _require_exact_keys(
+                ev,
+                frozenset(
+                    {
+                        "event",
+                        "stage_code",
+                        "meaning",
+                        "distinct_from_note",
+                        "owner_role",
+                        "validated_by",
+                        "validated_on",
+                        "validated_role",
+                    }
+                ),
+                "EventSpec",
+            )
+            events.append(
+                EventSpec(
+                    event=_require_str_field(ev, "event", "EventSpec"),
+                    stage_code=_require_str_field(ev, "stage_code", "EventSpec"),
+                    meaning=_require_str_field(ev, "meaning", "EventSpec"),
+                    distinct_from_note=_require_str_field(ev, "distinct_from_note", "EventSpec"),
+                    owner_role=_require_str_field(ev, "owner_role", "EventSpec"),
+                    validated_by=_require_str_field(ev, "validated_by", "EventSpec"),
+                    validated_on=_optional_calendar_date(ev["validated_on"], "validated_on"),
+                    validated_role=_require_str_field(ev, "validated_role", "EventSpec"),
+                )
+            )
+        else:
+            raise GovernanceViolationError("LifecycleDictionary.events must contain EventSpec")
+
+    timestamps: list[TimestampSpec] = []
+    for ts in timestamps_raw:
+        if isinstance(ts, TimestampSpec):
+            timestamps.append(ts)
+        elif isinstance(ts, Mapping):
+            _require_exact_keys(
+                ts,
+                frozenset(
+                    {
+                        "code",
+                        "applies_to",
+                        "meaning",
+                        "precision_rule",
+                        "non_imputation_rule",
+                        "owner_role",
+                        "validated_by",
+                        "validated_on",
+                        "validated_role",
+                    }
+                ),
+                "TimestampSpec",
+            )
+            timestamps.append(
+                TimestampSpec(
+                    code=_require_str_field(ts, "code", "TimestampSpec"),
+                    applies_to=_require_str_field(ts, "applies_to", "TimestampSpec"),
+                    meaning=_require_str_field(ts, "meaning", "TimestampSpec"),
+                    precision_rule=_require_str_field(ts, "precision_rule", "TimestampSpec"),
+                    non_imputation_rule=_require_str_field(
+                        ts, "non_imputation_rule", "TimestampSpec"
+                    ),
+                    owner_role=_require_str_field(ts, "owner_role", "TimestampSpec"),
+                    validated_by=_require_str_field(ts, "validated_by", "TimestampSpec"),
+                    validated_on=_optional_calendar_date(ts["validated_on"], "validated_on"),
+                    validated_role=_require_str_field(ts, "validated_role", "TimestampSpec"),
+                )
+            )
+        else:
+            raise GovernanceViolationError(
+                "LifecycleDictionary.timestamps must contain TimestampSpec"
+            )
+
+    waits: list[WaitStateSpec] = []
+    for wt in waits_raw:
+        if isinstance(wt, WaitStateSpec):
+            waits.append(wt)
+        elif isinstance(wt, Mapping):
+            _require_exact_keys(
+                wt,
+                frozenset(
+                    {
+                        "code",
+                        "meaning",
+                        "accountable_domain",
+                        "clock_rule",
+                        "unknown_cause_rule",
+                        "owner_role",
+                        "validated_by",
+                        "validated_on",
+                        "validated_role",
+                    }
+                ),
+                "WaitStateSpec",
+            )
+            waits.append(
+                WaitStateSpec(
+                    code=_require_str_field(wt, "code", "WaitStateSpec"),
+                    meaning=_require_str_field(wt, "meaning", "WaitStateSpec"),
+                    accountable_domain=_require_str_field(
+                        wt, "accountable_domain", "WaitStateSpec"
+                    ),
+                    clock_rule=_require_str_field(wt, "clock_rule", "WaitStateSpec"),
+                    unknown_cause_rule=_require_str_field(
+                        wt, "unknown_cause_rule", "WaitStateSpec"
+                    ),
+                    owner_role=_require_str_field(wt, "owner_role", "WaitStateSpec"),
+                    validated_by=_require_str_field(wt, "validated_by", "WaitStateSpec"),
+                    validated_on=_optional_calendar_date(wt["validated_on"], "validated_on"),
+                    validated_role=_require_str_field(wt, "validated_role", "WaitStateSpec"),
+                )
+            )
+        else:
+            raise GovernanceViolationError(
+                "LifecycleDictionary.wait_states must contain WaitStateSpec"
+            )
+
+    loops: list[ReturnLoopSpec] = []
+    for lp in loops_raw:
+        if isinstance(lp, ReturnLoopSpec):
+            loops.append(lp)
+        elif isinstance(lp, Mapping):
+            _require_exact_keys(
+                lp,
+                frozenset(
+                    {
+                        "kind",
+                        "meaning",
+                        "allowed_target_stages",
+                        "non_inference_rule",
+                        "owner_role",
+                        "validated_by",
+                        "validated_on",
+                        "validated_role",
+                    }
+                ),
+                "ReturnLoopSpec",
+            )
+            loops.append(
+                ReturnLoopSpec(
+                    kind=_require_str_field(lp, "kind", "ReturnLoopSpec"),
+                    meaning=_require_str_field(lp, "meaning", "ReturnLoopSpec"),
+                    allowed_target_stages=_require_str_tuple_field(
+                        lp, "allowed_target_stages", "ReturnLoopSpec"
+                    ),
+                    non_inference_rule=_require_str_field(
+                        lp, "non_inference_rule", "ReturnLoopSpec"
+                    ),
+                    owner_role=_require_str_field(lp, "owner_role", "ReturnLoopSpec"),
+                    validated_by=_require_str_field(lp, "validated_by", "ReturnLoopSpec"),
+                    validated_on=_optional_calendar_date(lp["validated_on"], "validated_on"),
+                    validated_role=_require_str_field(lp, "validated_role", "ReturnLoopSpec"),
+                )
+            )
+        else:
+            raise GovernanceViolationError(
+                "LifecycleDictionary.return_loops must contain ReturnLoopSpec"
+            )
+
+    try:
+        return LifecycleDictionary(
+            stages=tuple(stages),
+            events=tuple(events),
+            timestamps=tuple(timestamps),
+            wait_states=tuple(waits),
+            return_loops=tuple(loops),
+        )
+    except (ValueError, TypeError) as exc:
+        raise GovernanceViolationError(str(exc)) from exc
 
 
 def _verify_validated_flow_report_seal(
@@ -2757,12 +3832,12 @@ def _verify_validated_flow_report_seal(
     if (
         not report.owner_validated
         or report.finding_status != VALIDATED_FINDING_STATUS
+        or report.notice != ""
         or bool(report.gaps)
         or bool(report.invalid_accepted_handover_ids)
         or not is_valid_human_actor(report.owner_validated_by)
         or report.owner_validated_by.strip() != expected_owner
-        or flow_on is None
-        or isinstance(flow_on, datetime)
+        or not _is_calendar_date(flow_on)
         or not report.validation_note.strip()
         or report.calculation_digest not in _EVALUATED_FLOW_REPORT_DIGESTS
         or (
@@ -2786,49 +3861,270 @@ def _verify_flow_report_mapping(
     require_validated: bool,
     expected_owner: str | None = None,
     dictionary: LifecycleDictionary | None = None,
+    signing_key: bytes | None = None,
 ) -> None:
-    raw_digest = mapping.get("calculation_digest")
-    if not isinstance(raw_digest, str) or not raw_digest.strip():
+    _require_allowed_keys(
+        mapping, _FLOW_REPORT_REQUIRED_KEYS, _FLOW_REPORT_ALLOWED_KEYS, "FlowDiscoveryReport"
+    )
+    owner_val = _require_bool_field(mapping, "owner_validated", "FlowDiscoveryReport")
+    status_val = _require_str_field(mapping, "finding_status", "FlowDiscoveryReport")
+    actor_raw = _require_str_field(mapping, "owner_validated_by", "FlowDiscoveryReport")
+    note_raw = _require_str_field(mapping, "validation_note", "FlowDiscoveryReport")
+    notice_raw = _require_str_field(mapping, "notice", "FlowDiscoveryReport")
+    schema_digest = _require_str_field(mapping, "dictionary_schema_digest", "FlowDiscoveryReport")
+    raw_digest = _require_str_field(mapping, "calculation_digest", "FlowDiscoveryReport")
+
+    w_start = _optional_calendar_date(mapping["window_start"], "window_start")
+    w_end = _optional_calendar_date(mapping["window_end"], "window_end")
+    as_of_d = _optional_calendar_date(mapping["as_of"], "as_of")
+    if w_start is None or w_end is None or as_of_d is None or w_end < w_start or as_of_d < w_start:
+        raise GovernanceViolationError("FlowDiscoveryReport mapping has invalid window/as_of dates")
+    on_date = _optional_calendar_date(mapping["owner_validated_on"], "owner_validated_on")
+    on_iso = on_date.isoformat() if on_date is not None else None
+
+    if not raw_digest.strip() or not schema_digest.strip():
         raise GovernanceViolationError(
-            "FlowDiscoveryReport mapping is missing a verified calculation_digest"
+            "FlowDiscoveryReport mapping is missing calculation_digest or dictionary_schema_digest"
         )
     expected_digest = _compute_flow_report_digest(mapping)
     if raw_digest != expected_digest:
         raise GovernanceViolationError(
             "FlowDiscoveryReport mapping calculation_digest mismatch indicates tampering"
         )
+
+    if signing_key is not None:
+        raw_hmac = mapping.get("governance_hmac")
+        if not isinstance(raw_hmac, str) or not raw_hmac.strip():
+            raise GovernanceViolationError(
+                "Cross-process FlowDiscoveryReport mapping requires a governance_hmac"
+            )
+        expected_hmac = _compute_flow_report_hmac(
+            signing_key,
+            calculation_digest=raw_digest,
+            dictionary_schema_digest=schema_digest,
+            owner_validated=owner_val,
+            finding_status=status_val,
+            owner_validated_by=actor_raw,
+            owner_validated_on_iso=on_iso,
+            validation_note=note_raw,
+            notice=notice_raw,
+        )
+        if not hmac.compare_digest(raw_hmac, expected_hmac):
+            raise GovernanceViolationError(
+                "FlowDiscoveryReport mapping governance_hmac mismatch indicates tampering"
+            )
+    else:
+        if raw_digest not in _EVALUATED_FLOW_REPORT_DIGESTS:
+            raise GovernanceViolationError(
+                "Unkeyed FlowDiscoveryReport mapping lacks in-process evaluated provenance; "
+                "pass signing_key for cross-process JSON verification"
+            )
+
     if dictionary is not None:
         _verify_report_matches_dictionary(mapping, dictionary)
-    if not require_validated:
+
+    if not owner_val:
+        if require_validated:
+            raise GovernanceViolationError(
+                "Validated FlowDiscoveryReport mapping requires owner_validated=True"
+            )
+        if (
+            status_val != CANDIDATE_FINDING_STATUS
+            or notice_raw != NOT_FINDING
+            or bool(actor_raw.strip())
+            or on_date is not None
+            or bool(note_raw.strip())
+        ):
+            raise GovernanceViolationError(
+                "Candidate FlowDiscoveryReport mapping must retain NOT_FINDING notice and "
+                "blank discovery-owner sign-off fields"
+            )
         return
-    if dictionary is None:
+
+    if dictionary is None or lifecycle_dictionary_gaps(dictionary):
         raise GovernanceViolationError(
             "Validated FlowDiscoveryReport mapping requires a zero-gap LifecycleDictionary"
         )
+    _verify_report_matches_dictionary(mapping, dictionary)
+    gaps_seq = _require_str_tuple_field(mapping, "gaps", "FlowDiscoveryReport")
+    invalid_seq = _require_str_tuple_field(
+        mapping, "invalid_accepted_handover_ids", "FlowDiscoveryReport"
+    )
     if (
-        mapping.get("owner_validated") is not True
-        or mapping.get("finding_status") != VALIDATED_FINDING_STATUS
-        or bool(mapping.get("gaps"))
-        or bool(mapping.get("invalid_accepted_handover_ids"))
+        status_val != VALIDATED_FINDING_STATUS
+        or notice_raw != ""
+        or bool(gaps_seq)
+        or bool(invalid_seq)
+        or not is_valid_human_actor(actor_raw)
+        or on_iso is None
+        or not note_raw.strip()
+        or expected_owner is None
+        or actor_raw.strip() != expected_owner
     ):
         raise GovernanceViolationError(
-            "Validated FlowDiscoveryReport mapping requires owner_validated=True, zero gaps, and "
-            "zero invalid accepted handovers"
+            "Validated FlowDiscoveryReport mapping requires zero gaps, zero invalid accepted "
+            "handovers, and formal sign-off by the nominated discovery owner"
         )
-    actor_raw = mapping.get("owner_validated_by")
-    note_raw = mapping.get("validation_note")
-    if not isinstance(actor_raw, str) or not is_valid_human_actor(actor_raw):
-        raise GovernanceViolationError(
-            "Validated FlowDiscoveryReport mapping requires a valid human owner_validated_by"
+    if signing_key is None and (
+        (
+            raw_digest,
+            schema_digest,
+            actor_raw.strip(),
+            on_iso,
+            note_raw.strip(),
         )
-    if expected_owner is not None and actor_raw.strip() != expected_owner:
+        not in _VALIDATED_FLOW_REPORT_SEALS
+    ):
         raise GovernanceViolationError(
-            "Validated FlowDiscoveryReport mapping must match the nominated discovery owner"
+            "Unkeyed validated FlowDiscoveryReport mapping lacks a verified in-process "
+            "validate_flow_report sign-off seal"
         )
-    _strict_iso_date(mapping.get("owner_validated_on"), "owner_validated_on")
-    if not isinstance(note_raw, str) or not note_raw.strip():
+
+
+def _verify_pack_mapping(
+    mapping: Mapping[str, object],
+    *,
+    discovery_owner: NominatedDiscoveryOwner | None,
+    dictionary: LifecycleDictionary | None,
+    signing_key: bytes | None,
+) -> None:
+    _require_exact_keys(mapping, _PACK_ALLOWED_KEYS, "Phase0DiscoveryPack")
+    contract_version = _require_str_field(mapping, "contract_version", "Phase0DiscoveryPack")
+    provenance_note = _require_str_field(mapping, "provenance_note", "Phase0DiscoveryPack")
+    owner_val = _require_bool_field(mapping, "owner_validated", "Phase0DiscoveryPack")
+    status_val = _require_str_field(mapping, "finding_status", "Phase0DiscoveryPack")
+    actor_raw = _require_str_field(mapping, "owner_validated_by", "Phase0DiscoveryPack")
+    on_date = _optional_calendar_date(mapping["owner_validated_on"], "owner_validated_on")
+    note_raw = _require_str_field(mapping, "validation_note", "Phase0DiscoveryPack")
+    notice_raw = _require_str_field(mapping, "notice", "Phase0DiscoveryPack")
+
+    pack_owner = _coerce_owner_from_pack_value(mapping["discovery_owner"])
+    pack_dictionary = _coerce_dictionary_from_pack_value(mapping["dictionary"])
+    if dictionary is not None and _dictionary_schema_digest(
+        pack_dictionary
+    ) != _dictionary_schema_digest(dictionary):
         raise GovernanceViolationError(
-            "Validated FlowDiscoveryReport mapping requires a non-blank validation_note"
+            "Pack mapping dictionary does not match supplied LifecycleDictionary"
+        )
+    effective_dictionary = dictionary if dictionary is not None else pack_dictionary
+    expected_schema_digest = _dictionary_schema_digest(effective_dictionary)
+
+    sub_dict_raw = mapping["dictionary_report"]
+    if isinstance(sub_dict_raw, LifecycleDictionaryReport):
+        dict_rep = sub_dict_raw
+    elif (
+        isinstance(sub_dict_raw, Mapping)
+        and _classify_discovery_mapping(sub_dict_raw) == "lifecycle_report"
+    ):
+        dict_rep = _coerce_lifecycle_report_mapping(sub_dict_raw)
+    else:
+        raise GovernanceViolationError(
+            "Pack mapping dictionary_report must be a LifecycleDictionaryReport or mapping"
+        )
+    if (
+        dict_rep.stage_count != len(effective_dictionary.stages)
+        or dict_rep.event_count != len(effective_dictionary.events)
+        or dict_rep.timestamp_spec_count != len(effective_dictionary.timestamps)
+        or dict_rep.wait_state_count != len(effective_dictionary.wait_states)
+        or dict_rep.return_loop_count != len(effective_dictionary.return_loops)
+        or not dict_rep.dictionary_schema_digest.strip()
+        or dict_rep.dictionary_schema_digest != expected_schema_digest
+    ):
+        raise GovernanceViolationError(
+            "Pack mapping dictionary_report does not match Phase0DiscoveryPack dictionary"
+        )
+    enforce_governance_guard(
+        dict_rep,
+        discovery_owner=discovery_owner,
+        dictionary=effective_dictionary,
+        signing_key=signing_key,
+    )
+
+    sub_flow_raw = mapping["flow_report"]
+    if isinstance(sub_flow_raw, FlowDiscoveryReport):
+        flow_validated = sub_flow_raw.owner_validated
+        enforce_governance_guard(
+            sub_flow_raw,
+            discovery_owner=discovery_owner,
+            dictionary=effective_dictionary,
+            signing_key=signing_key,
+        )
+    elif (
+        isinstance(sub_flow_raw, Mapping)
+        and _classify_discovery_mapping(sub_flow_raw) == "flow_report"
+    ):
+        flow_validated = _require_bool_field(sub_flow_raw, "owner_validated", "FlowDiscoveryReport")
+        enforce_governance_guard(
+            sub_flow_raw,
+            discovery_owner=discovery_owner,
+            dictionary=effective_dictionary,
+            signing_key=signing_key,
+        )
+    else:
+        raise GovernanceViolationError(
+            "Pack mapping flow_report must be a FlowDiscoveryReport or flow-report mapping"
+        )
+
+    sub_reg_raw = mapping["constraint_register"]
+    if isinstance(sub_reg_raw, RankedConstraintRegister):
+        reg_rep = sub_reg_raw
+    elif (
+        isinstance(sub_reg_raw, Mapping) and _classify_discovery_mapping(sub_reg_raw) == "register"
+    ):
+        reg_rep = _coerce_register_mapping(sub_reg_raw)
+    else:
+        raise GovernanceViolationError(
+            "Pack mapping constraint_register must be a RankedConstraintRegister or mapping"
+        )
+    enforce_governance_guard(
+        reg_rep,
+        discovery_owner=discovery_owner,
+        dictionary=effective_dictionary,
+        signing_key=signing_key,
+    )
+
+    if not owner_val:
+        if (
+            status_val != CANDIDATE_FINDING_STATUS
+            or notice_raw != NOT_FINDING
+            or bool(actor_raw.strip())
+            or on_date is not None
+            or bool(note_raw.strip())
+        ):
+            raise GovernanceViolationError(
+                "Candidate Phase0DiscoveryPack mapping must retain NOT_FINDING notice and "
+                "blank discovery-owner sign-off fields"
+            )
+        return
+
+    if discovery_owner is None or not discovery_owner.is_ready:
+        raise GovernanceViolationError(
+            "Validated Phase0DiscoveryPack mapping requires a ready NominatedDiscoveryOwner"
+        )
+    if dictionary is None or lifecycle_dictionary_gaps(dictionary):
+        raise GovernanceViolationError(
+            "Validated Phase0DiscoveryPack mapping requires a zero-gap LifecycleDictionary"
+        )
+    expected_owner = discovery_owner.owner.strip()
+    owner_matches = _owners_match(pack_owner, discovery_owner)
+    if not (
+        contract_version == CONTRACT_VERSION
+        and bool(provenance_note.strip())
+        and status_val == VALIDATED_FINDING_STATUS
+        and notice_raw == ""
+        and owner_matches
+        and not lifecycle_dictionary_gaps(pack_dictionary)
+        and dict_rep.owner_validated
+        and flow_validated
+        and reg_rep.owner_validated
+        and is_valid_human_actor(actor_raw)
+        and actor_raw.strip() == expected_owner
+        and on_date is not None
+        and bool(note_raw.strip())
+    ):
+        raise GovernanceViolationError(
+            "Validated Phase0DiscoveryPack mapping requires matching contract_version, "
+            "ready discovery_owner, zero-gap dictionary, and validated sub-artifacts"
         )
 
 
@@ -2837,8 +4133,11 @@ def enforce_governance_guard(
     *,
     discovery_owner: NominatedDiscoveryOwner | None = None,
     dictionary: LifecycleDictionary | None = None,
+    signing_key: bytes | None = None,
 ) -> None:
     """Fail-closed guard verifying discovery outputs never claim unvalidated company status."""
+    key_bytes = _validate_signing_key(signing_key) if signing_key is not None else None
+
     if isinstance(output, Mapping):
         if "owner_validated" not in output or "finding_status" not in output:
             raise GovernanceViolationError(
@@ -2846,8 +4145,79 @@ def enforce_governance_guard(
             )
         owner_val = output["owner_validated"]
         status_val = output["finding_status"]
-        validated_by = str(output.get("owner_validated_by", ""))
-    elif isinstance(output, GovernedDiscoveryOutput):
+        if not isinstance(owner_val, bool):
+            raise GovernanceViolationError("owner_validated must be a boolean")
+        if not isinstance(status_val, str):
+            raise GovernanceViolationError("finding_status must be a string")
+
+        shape = _classify_discovery_mapping(output)
+        if shape is None:
+            raise GovernanceViolationError(
+                "Unrecognized discovery output mapping does not match any Phase 0 contract shape"
+            )
+        if shape == "flow_report":
+            expected_owner = (
+                discovery_owner.owner.strip()
+                if (owner_val and discovery_owner is not None and discovery_owner.is_ready)
+                else None
+            )
+            if owner_val and expected_owner is None:
+                raise GovernanceViolationError(
+                    "Validated discovery output requires a NominatedDiscoveryOwner in "
+                    "ENDPOINT_AGREED state"
+                )
+            _verify_flow_report_mapping(
+                output,
+                require_validated=owner_val,
+                expected_owner=expected_owner,
+                dictionary=dictionary,
+                signing_key=key_bytes,
+            )
+            return
+        if shape == "lifecycle_report":
+            coerced_dict_rep = _coerce_lifecycle_report_mapping(output)
+            enforce_governance_guard(
+                coerced_dict_rep,
+                discovery_owner=discovery_owner,
+                dictionary=dictionary,
+                signing_key=key_bytes,
+            )
+            return
+        if shape == "hypothesis":
+            if frozenset(output.keys()) == _HYPOTHESIS_ROW_KEYS:
+                if owner_val:
+                    raise GovernanceViolationError(
+                        "ConstraintHypothesis summary row lacks sign-off provenance for "
+                        "owner_validated=True; validate the full ConstraintHypothesis or register"
+                    )
+                _verify_candidate_hypothesis_row_mapping(output)
+                return
+            coerced_hyp = _coerce_hypothesis_mapping(output)
+            enforce_governance_guard(
+                coerced_hyp,
+                discovery_owner=discovery_owner,
+                dictionary=dictionary,
+                signing_key=key_bytes,
+            )
+            return
+        if shape == "register":
+            coerced_reg = _coerce_register_mapping(output)
+            enforce_governance_guard(
+                coerced_reg,
+                discovery_owner=discovery_owner,
+                dictionary=dictionary,
+                signing_key=key_bytes,
+            )
+            return
+        _verify_pack_mapping(
+            output,
+            discovery_owner=discovery_owner,
+            dictionary=dictionary,
+            signing_key=key_bytes,
+        )
+        return
+
+    if isinstance(output, GovernedDiscoveryOutput):
         owner_val = output.owner_validated
         status_val = output.finding_status
         validated_by = _validated_by_actor(output)
@@ -2865,10 +4235,8 @@ def enforce_governance_guard(
             _verify_report_matches_dictionary(output, dictionary)
     elif isinstance(output, LifecycleDictionaryReport):
         if dictionary is not None and (
-            (
-                bool(output.dictionary_schema_digest.strip())
-                and output.dictionary_schema_digest != _dictionary_schema_digest(dictionary)
-            )
+            not output.dictionary_schema_digest.strip()
+            or output.dictionary_schema_digest != _dictionary_schema_digest(dictionary)
             or output.stage_count != len(dictionary.stages)
             or output.event_count != len(dictionary.events)
             or output.timestamp_spec_count != len(dictionary.timestamps)
@@ -2878,42 +4246,42 @@ def enforce_governance_guard(
             raise GovernanceViolationError(
                 "LifecycleDictionaryReport does not match supplied LifecycleDictionary"
             )
+    elif isinstance(output, RankedConstraintRegister):
+        for hyp in output.hypotheses:
+            enforce_governance_guard(
+                hyp,
+                discovery_owner=discovery_owner,
+                dictionary=dictionary,
+                signing_key=key_bytes,
+            )
     elif isinstance(output, Phase0DiscoveryPack):
         output.flow_report.verify_digest()
         _verify_report_matches_dictionary(output.flow_report, output.dictionary)
-        if dictionary is not None:
-            if _dictionary_schema_digest(output.dictionary) != _dictionary_schema_digest(
-                dictionary
-            ):
-                raise GovernanceViolationError(
-                    "Phase0DiscoveryPack dictionary does not match supplied LifecycleDictionary"
-                )
-    elif isinstance(output, Mapping):
-        if _is_flow_report_mapping(output):
-            _verify_flow_report_mapping(output, require_validated=False, dictionary=dictionary)
-        for sub_key in ("dictionary_report", "constraint_register"):
-            if sub_key in output:
-                sub_obj = output[sub_key]
-                enforce_governance_guard(
-                    sub_obj, discovery_owner=discovery_owner, dictionary=dictionary
-                )
-        if "flow_report" in output:
-            nested_candidate = output["flow_report"]
-            if isinstance(nested_candidate, FlowDiscoveryReport):
-                enforce_governance_guard(
-                    nested_candidate, discovery_owner=discovery_owner, dictionary=dictionary
-                )
-            elif isinstance(nested_candidate, Mapping):
-                _verify_flow_report_mapping(
-                    nested_candidate, require_validated=False, dictionary=dictionary
-                )
-                enforce_governance_guard(
-                    nested_candidate, discovery_owner=discovery_owner, dictionary=dictionary
-                )
-            else:
-                raise GovernanceViolationError(
-                    "Pack mapping flow_report must be a FlowDiscoveryReport or flow-report mapping"
-                )
+        if dictionary is not None and _dictionary_schema_digest(
+            output.dictionary
+        ) != _dictionary_schema_digest(dictionary):
+            raise GovernanceViolationError(
+                "Phase0DiscoveryPack dictionary does not match supplied LifecycleDictionary"
+            )
+        eff_dict = dictionary if dictionary is not None else output.dictionary
+        enforce_governance_guard(
+            output.dictionary_report,
+            discovery_owner=discovery_owner,
+            dictionary=eff_dict,
+            signing_key=key_bytes,
+        )
+        enforce_governance_guard(
+            output.flow_report,
+            discovery_owner=discovery_owner,
+            dictionary=eff_dict,
+            signing_key=key_bytes,
+        )
+        enforce_governance_guard(
+            output.constraint_register,
+            discovery_owner=discovery_owner,
+            dictionary=eff_dict,
+            signing_key=key_bytes,
+        )
 
     if not owner_val:
         if status_val != CANDIDATE_FINDING_STATUS:
@@ -2921,8 +4289,49 @@ def enforce_governance_guard(
                 f"Unvalidated output must carry finding_status='{CANDIDATE_FINDING_STATUS}', "
                 f"got '{status_val}'"
             )
+        if isinstance(output, FlowDiscoveryReport) and (
+            output.notice != NOT_FINDING
+            or bool(output.owner_validated_by.strip())
+            or output.owner_validated_on is not None
+            or bool(output.validation_note.strip())
+        ):
+            raise GovernanceViolationError(
+                "Candidate FlowDiscoveryReport cannot carry sign-off fields or stripped notice"
+            )
+        if isinstance(
+            output, (LifecycleDictionaryReport, RankedConstraintRegister, Phase0DiscoveryPack)
+        ) and (
+            output.notice != NOT_FINDING
+            or bool(output.owner_validated_by.strip())
+            or output.owner_validated_on is not None
+            or bool(output.validation_note.strip())
+        ):
+            raise GovernanceViolationError(
+                "Candidate discovery output cannot carry sign-off fields or stripped notice"
+            )
+        if isinstance(output, ConstraintHypothesis) and (
+            output.review_status == OWNER_VALIDATED
+            or bool(output.discovery_owner_validated_by.strip())
+            or output.discovery_owner_validated_on is not None
+        ):
+            raise GovernanceViolationError(
+                "Candidate ConstraintHypothesis cannot carry discovery-owner validation fields"
+            )
         return
 
+    if not isinstance(
+        output,
+        (
+            LifecycleDictionaryReport,
+            FlowDiscoveryReport,
+            ConstraintHypothesis,
+            RankedConstraintRegister,
+            Phase0DiscoveryPack,
+        ),
+    ):
+        raise GovernanceViolationError(
+            "Custom GovernedDiscoveryOutput types cannot claim owner_validated=True"
+        )
     if status_val != VALIDATED_FINDING_STATUS:
         raise GovernanceViolationError(
             f"Validated output must carry finding_status='{VALIDATED_FINDING_STATUS}', "
@@ -2942,11 +4351,32 @@ def enforce_governance_guard(
         raise GovernanceViolationError(
             "Validated discovery output must be signed off by the exact nominated discovery owner"
         )
-    if isinstance(output, ConstraintHypothesis) and output.review_status == DISPUTED:
-        raise GovernanceViolationError("Disputed hypothesis cannot pass as owner_validated")
+    if isinstance(output, ConstraintHypothesis):
+        if (
+            output.review_status != OWNER_VALIDATED
+            or not output.supporting_evidence
+            or not output.contradicting_evidence
+            or not output.constraint_test.passes_all
+            or output.domain_validated_role not in output.domain_owner_roles
+            or not is_valid_human_actor(output.domain_validated_by)
+            or not _is_calendar_date(output.domain_validated_on)
+            or output.domain_validated_by.strip().lower() == output.proposed_by.strip().lower()
+            or not _is_calendar_date(output.discovery_owner_validated_on)
+            or output.discovery_owner_validated_by.strip().lower()
+            == output.proposed_by.strip().lower()
+            or not output.decision_note.strip()
+        ):
+            raise GovernanceViolationError(
+                "Validated ConstraintHypothesis violates two-sided evidence, constraint test, "
+                "domain-owner, or discovery-owner invariants"
+            )
     if isinstance(output, LifecycleDictionaryReport):
         if (
             output.gaps
+            or output.notice != ""
+            or output.endpoint != ENDPOINT
+            or not _is_calendar_date(output.owner_validated_on)
+            or not output.validation_note.strip()
             or output.dictionary_schema_digest != expected_schema_digest
             or output.stage_count != len(dictionary.stages)
             or output.event_count != len(dictionary.events)
@@ -2959,9 +4389,41 @@ def enforce_governance_guard(
             )
     if isinstance(output, FlowDiscoveryReport):
         _verify_validated_flow_report_seal(output, expected_owner, dictionary)
+    if isinstance(output, RankedConstraintRegister):
+        if (
+            not output.hypotheses
+            or output.notice != ""
+            or not _is_calendar_date(output.owner_validated_on)
+            or not output.validation_note.strip()
+            or not all(
+                (
+                    not h.owner_validated
+                    and h.finding_status == CANDIDATE_FINDING_STATUS
+                    and not constraint_evidence_gaps(h)
+                )
+                if h.review_status == DISPUTED
+                else (
+                    h.review_status == OWNER_VALIDATED
+                    and h.owner_validated
+                    and h.finding_status == VALIDATED_FINDING_STATUS
+                    and h.discovery_owner_validated_by.strip() == expected_owner
+                )
+                for h in output.hypotheses
+            )
+        ):
+            raise GovernanceViolationError(
+                "Validated RankedConstraintRegister requires adjudicated hypotheses signed by "
+                "the nominated discovery owner"
+            )
     if isinstance(output, Phase0DiscoveryPack):
         if (
-            lifecycle_dictionary_gaps(output.dictionary)
+            output.contract_version != CONTRACT_VERSION
+            or output.notice != ""
+            or not output.provenance_note.strip()
+            or not _owners_match(output.discovery_owner, discovery_owner)
+            or not _is_calendar_date(output.owner_validated_on)
+            or not output.validation_note.strip()
+            or lifecycle_dictionary_gaps(output.dictionary)
             or _dictionary_schema_digest(output.dictionary) != expected_schema_digest
             or not output.dictionary_report.owner_validated
             or output.dictionary_report.gaps
@@ -2975,32 +4437,3 @@ def enforce_governance_guard(
                 "signed by the nominated discovery owner"
             )
         _verify_validated_flow_report_seal(output.flow_report, expected_owner, dictionary)
-    if isinstance(output, Mapping):
-        if output.get("gaps") or output.get("invalid_accepted_handover_ids"):
-            raise GovernanceViolationError(
-                "Validated discovery output mapping cannot carry unresolved gaps or "
-                "invalid accepted handovers"
-            )
-        if _is_flow_report_mapping(output):
-            _verify_flow_report_mapping(
-                output,
-                require_validated=True,
-                expected_owner=expected_owner,
-                dictionary=dictionary,
-            )
-        if "flow_report" in output:
-            nested_flow = output["flow_report"]
-            if isinstance(nested_flow, FlowDiscoveryReport):
-                _verify_validated_flow_report_seal(nested_flow, expected_owner, dictionary)
-            elif isinstance(nested_flow, Mapping):
-                _verify_flow_report_mapping(
-                    nested_flow,
-                    require_validated=True,
-                    expected_owner=expected_owner,
-                    dictionary=dictionary,
-                )
-            else:
-                raise GovernanceViolationError(
-                    "Validated pack mapping flow_report must be a validated FlowDiscoveryReport "
-                    "or flow-report mapping"
-                )

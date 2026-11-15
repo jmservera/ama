@@ -1624,7 +1624,8 @@ data, network calls or AI dependencies, and aligns `discovery_register` and
   timestamp specifications (keeping `active_days=None` unless explicit
   active-work start and finish timestamps exist), 7 wait states and 4
   return-loop kinds (`return`, `rejection`, `repeat visit`, `reopen`), each
-  verifying `validated_role == owner_role` alongside human validator identity.
+  verifying `validated_role == owner_role` alongside human validator identity
+  across both required seed items and any appended dictionary extensions.
 * `evaluate_property_flow` restricts cohort aggregations strictly to in-window
   `baseline_candidate_ids` on or before `as_of` (recording unmatched-cohort and
   post-cutoff records in `gaps`), retains zero-event and non-progressing
@@ -1635,28 +1636,31 @@ data, network calls or AI dependencies, and aligns `discovery_register` and
   and unresolved post-handover `reopen` blocks while keeping intended energy
   outcomes separate, reports separate `unknown_cause_count` and
   `disputed_cause_count` counters on `waits_by_party` rows alongside
-  `unknown_or_disputed_count`, exposes `to_json_dict()` for cross-process JSON
-  serialization, and converts nested `FlowDiscoveryReport` mappings to
-  read-only `FrozenDict` (`dict` subclass preserving `dataclasses.asdict()`,
-  with low-level `dict.__setitem__` tampering caught by `verify_digest()`)
-  bound to evaluated provenance, `dictionary_schema_digest`, and a verified
-  SHA-256 `calculation_digest`.
+  `unknown_or_disputed_count`, exposes `to_json_dict(signing_key=...)` for
+  HMAC-SHA256 authenticated cross-process JSON serialization (while preserving
+  unkeyed `to_json_dict()` for in-process provenance checks), and converts
+  nested `FlowDiscoveryReport` mappings to read-only `FrozenDict` (`dict`
+  subclass preserving `dataclasses.asdict()`, with low-level
+  `dict.__setitem__` tampering caught by `verify_digest()`) bound to evaluated
+  provenance, non-blank `dictionary_schema_digest`, and a verified SHA-256
+  `calculation_digest`.
 * `RankedConstraintRegister` (`build_seed_constraint_register`) enforces
   contiguous `1..N` ranking across the five candidate hypotheses, requires both
   non-empty `supporting_evidence` and non-empty `contradicting_evidence` tuples
   plus all five `ConstraintTestAssessment` criteria for acceptance, enforces
   proposer separation, and preserves `DISPUTED` hypotheses visibly inside
   validated registers and packs as non-findings.
-* `enforce_governance_guard`, `validate_flow_report`, `validate_owner_finding`
-  (`discovery_register`), and dataclass `__post_init__` checks stamp
-  `owner_validated=False` and
+* `enforce_governance_guard(..., signing_key=...)`, `validate_flow_report`,
+  `validate_owner_finding` (`discovery_register`), and dataclass `__post_init__`
+  checks stamp `owner_validated=False` and
   `finding_status="candidate_hypothesis_not_company_finding"` across all
   discovery outputs until the nominated human discovery owner records formal
   validation with `ENDPOINT_AGREED`, zero dictionary or flow gaps, zero invalid
-  accepted handovers, sub-artifact signer parity, matching
+  accepted handovers, sub-artifact signer parity, matching non-blank
   `dictionary_schema_digest`, and an intact `calculation_digest`, raising
-  `GovernanceViolationError` on any invalid promotion, seal replay, or tampered
-  report across both in-process dataclasses and cross-process JSON mappings.
+  `GovernanceViolationError` on any invalid promotion, seal replay, unkeyed JSON
+  forgery, schema-mismatched `Mapping`, or tampered report across all five
+  canonical dataclasses and disjoint `Mapping` shapes.
 
 See [Phase 0 Retrofit-Flow Discovery Contract](../../docs/reference/research/company/phase0-retrofit-flow-discovery-contract.md)
 for standards provenance and open Zava North Homes human governance gates.

@@ -1,0 +1,50 @@
+{
+  "task_id": "issue-124-c4",
+  "task_slug": "phase0-retrofit-flow-discovery-124-c4",
+  "parent_task": {
+    "task_id": "issue-124-c3",
+    "task_slug": "phase0-retrofit-flow-discovery-124-c3"
+  },
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/phase0-retrofit-flow-discovery-124-c1-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c4-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/phase0-retrofit-flow-discovery-124-c4-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c4-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/phase0-retrofit-flow-discovery-124-c4-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Launch child automatic RPI loop issue-124-c4 from issue-124-c3 to resolve RV-001..RV-005 from phase0-retrofit-flow-discovery-124-c3-review.md and record an adversarially verified Conformant review verdict.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-c3-review.md (RV-001..RV-005)"
+    },
+    {
+      "decision": "Research disposition: reused; Planning Readiness: Ready. Reuse phase0-retrofit-flow-discovery-124-c1-research.md together with exact reproductions RV-001..RV-005 in phase0-retrofit-flow-discovery-124-c3-review.md and verified discovery_contract.py code boundaries.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/phase0-retrofit-flow-discovery-124-c1-research.md; .copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-c3-review.md"
+    },
+    {
+      "decision": "Plan critique execution: Complete; Verdict: Revise; Critique path: .copilot-tracking/reviews/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c4-plan-critique.md. Applied direct planner corrections PC-001 (domain_validated_role check + multi-shape collision & allowed-key enforcement), PC-002 (embedded pack discovery_owner/dictionary parsing & gap checks), PC-003 (8-element HMAC payload including notice + entry-level signing_key validation + candidate hygiene), and PC-004 (_is_calendar_date across spec/governance surfaces + single-pass 49-gap preservation).",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c4-plan-critique.md; .copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c4-plan.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "Execute single post-implementation rpi-review for issue-124-c4 and write .copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-c4-review.md."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Optional CSV extract adapter mapping synthetic retrofit-flow year-one CSV tables into discovery_contract records",
+      "rationale": "Retained non-blocking follow-up outside Phase 0 pure rule-layer scope.",
+      "evidence": "docs/brds/retrofit-flow-discovery-brief.md"
+    }
+  ]
+}

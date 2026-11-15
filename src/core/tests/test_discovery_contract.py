@@ -7,7 +7,7 @@ import subprocess
 import sys
 import unittest
 from dataclasses import asdict, replace
-from datetime import date
+from datetime import UTC, date, datetime
 
 from zava_forward.core import discovery_contract as c
 
@@ -245,6 +245,123 @@ class LifecycleDictionaryTests(unittest.TestCase):
             replace(validated, stages=swapped_renumbered)
         with self.assertRaises(c.GovernanceViolationError):
             replace(validated, stages=validated.stages[1:])
+
+    def test_dictionary_gaps_reject_unvalidated_or_duplicate_extensions_and_bad_stage_refs(
+        self,
+    ) -> None:
+        owner = _ready_owner()
+        validated = _validated_dictionary()
+        unval_stage = c.StageSpec(
+            16,
+            "shadow_exception",
+            "Shadow exception",
+            "exception",
+            "work release",
+            "appointment",
+            "Exception hold boundary",
+            "Retrofit Programme Manager",
+        )
+        unval_event = c.EventSpec(
+            "shadow event",
+            "appointment_and_installation",
+            "Shadow event",
+            "Distinct from appointment",
+            "Retrofit Programme Manager",
+        )
+        unval_ts = c.TimestampSpec(
+            "shadow_ts",
+            "shadow",
+            "Shadow timestamp",
+            "UTC ISO",
+            "Keep None when absent",
+            "Data and Performance Lead",
+        )
+        unval_wait = c.WaitStateSpec(
+            "waiting_shadow",
+            "Shadow wait",
+            "Programme",
+            "Explicit clock",
+            "Unknown kept visible",
+            "Retrofit Programme Manager",
+        )
+        unval_loop = c.ReturnLoopSpec(
+            "shadow_loop",
+            "Shadow return loop",
+            ("appointment_and_installation",),
+            "Recorded only when logged",
+            "Retrofit Programme Manager",
+        )
+        extended_unval = replace(
+            validated,
+            stages=validated.stages + (unval_stage,),
+            events=validated.events + (unval_event,),
+            timestamps=validated.timestamps + (unval_ts,),
+            wait_states=validated.wait_states + (unval_wait,),
+            return_loops=validated.return_loops + (unval_loop,),
+        )
+        ext_gaps = c.lifecycle_dictionary_gaps(extended_unval)
+        self.assertEqual(len(ext_gaps), 5)
+        with self.assertRaises(c.GovernanceViolationError):
+            c.validate_lifecycle_report(
+                c.summarize_lifecycle_dictionary(extended_unval),
+                owner,
+                extended_unval,
+                by="Dev Patel",
+                on=VALIDATED_ON,
+                note="Must reject unvalidated extension entries",
+            )
+
+        bad_refs = replace(
+            validated,
+            stages=validated.stages
+            + (
+                c.StageSpec(
+                    15,
+                    validated.stages[0].code,
+                    "Duplicate code and order",
+                    "exception",
+                    "nonexistent_entry",
+                    "nonexistent_exit",
+                    "Boundary",
+                    "Retrofit Programme Manager",
+                    "Amina Begum",
+                    VALIDATED_ON,
+                    "Retrofit Programme Manager",
+                ),
+            ),
+            events=validated.events
+            + (
+                c.EventSpec(
+                    validated.events[0].event,
+                    "unknown_stage_code",
+                    "Duplicate event",
+                    "Distinct",
+                    "Retrofit Programme Manager",
+                    "Amina Begum",
+                    VALIDATED_ON,
+                    "Retrofit Programme Manager",
+                ),
+            ),
+            return_loops=validated.return_loops
+            + (
+                c.ReturnLoopSpec(
+                    "bad_target_loop",
+                    "Unknown target stage",
+                    ("unknown_stage_code",),
+                    "Rule",
+                    "Retrofit Programme Manager",
+                    "Amina Begum",
+                    VALIDATED_ON,
+                    "Retrofit Programme Manager",
+                ),
+            ),
+        )
+        ref_gaps = c.lifecycle_dictionary_gaps(bad_refs)
+        self.assertTrue(any("duplicate stage codes" in g for g in ref_gaps))
+        self.assertTrue(any("duplicate stage orders" in g for g in ref_gaps))
+        self.assertTrue(any("duplicate event names" in g for g in ref_gaps))
+        self.assertTrue(any("unknown stage" in g for g in ref_gaps))
+        self.assertTrue(any("valid target stages" in g for g in ref_gaps))
 
 
 class PropertyFlowEvaluationTests(unittest.TestCase):
@@ -1536,14 +1653,29 @@ class GovernanceGuardTests(unittest.TestCase):
             on=VALIDATED_ON,
             note="Cross-process JSON verification",
         )
-        serialized = json.dumps(validated.to_json_dict())
+        signing_key = b"zava-phase0-shared-secret-key-32b"
+        with self.assertRaises(c.GovernanceViolationError):
+            validated.to_json_dict(signing_key=b"short")
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(
+                validated,
+                discovery_owner=owner,
+                dictionary=dictionary,
+                signing_key=b"short",
+            )
+        signed_serialized = json.dumps(validated.to_json_dict(signing_key=signing_key))
+        unsigned_serialized = json.dumps(validated.to_json_dict())
+        envelope = json.dumps({"signed": signed_serialized, "unsigned": unsigned_serialized})
         probe = """
 import json, sys
 from datetime import date
 from dataclasses import replace
 from zava_forward.core import discovery_contract as c
 
-payload = json.loads(sys.stdin.read())
+outer = json.loads(sys.stdin.read())
+payload = json.loads(outer["signed"])
+unsigned_payload = json.loads(outer["unsigned"])
+key = b"zava-phase0-shared-secret-key-32b"
 owner = c.agree_discovery_endpoint(
     c.nominate_discovery_owner(
         nominated_by="Clara Finch",
@@ -1553,12 +1685,12 @@ owner = c.agree_discovery_endpoint(
         nominated_on=date(2026, 11, 1),
     ),
     endpoint=c.ENDPOINT,
-    agreed_by="Dev Patel",
-    agreed_role="Head of Retrofit Delivery",
+    agreed_by="Clara Finch",
+    agreed_role="Executive Director of Assets and Sustainability",
     agreed_on=date(2026, 11, 3),
 )
 raw = c.build_default_lifecycle_dictionary()
-vdate = date(2026, 11, 2)
+vdate = date(2026, 11, 5)
 d = replace(
     raw,
     stages=tuple(
@@ -1582,16 +1714,38 @@ d = replace(
         for r in raw.return_loops
     ),
 )
-c.enforce_governance_guard(payload, discovery_owner=owner, dictionary=d)
+c.enforce_governance_guard(payload, discovery_owner=owner, dictionary=d, signing_key=key)
+
+for label, bad_payload, bad_key, bad_dict in (
+    ("unkeyed-unsigned", unsigned_payload, None, d),
+    ("unkeyed-signed", payload, None, d),
+    ("wrong-key", payload, b"wrong-phase0-shared-secret-key!!", d),
+):
+    try:
+        c.enforce_governance_guard(
+            bad_payload, discovery_owner=owner, dictionary=bad_dict, signing_key=bad_key
+        )
+    except c.GovernanceViolationError:
+        pass
+    else:
+        raise AssertionError(f"Expected GovernanceViolationError for {label}")
 
 tampered = dict(payload)
 tampered["state_counts"] = dict(payload["state_counts"], paused=9)
 try:
-    c.enforce_governance_guard(tampered, discovery_owner=owner, dictionary=d)
+    c.enforce_governance_guard(tampered, discovery_owner=owner, dictionary=d, signing_key=key)
 except c.GovernanceViolationError:
     pass
 else:
     raise AssertionError("Tampered cross-process JSON mapping was not rejected")
+
+tampered_note = dict(payload, validation_note="Attacker note")
+try:
+    c.enforce_governance_guard(tampered_note, discovery_owner=owner, dictionary=d, signing_key=key)
+except c.GovernanceViolationError:
+    pass
+else:
+    raise AssertionError("Tampered sign-off metadata was not rejected by governance_hmac")
 
 extra = c.StageSpec(
     16,
@@ -1608,7 +1762,9 @@ extra = c.StageSpec(
 )
 d_mismatch = replace(d, stages=d.stages + (extra,))
 try:
-    c.enforce_governance_guard(payload, discovery_owner=owner, dictionary=d_mismatch)
+    c.enforce_governance_guard(
+        payload, discovery_owner=owner, dictionary=d_mismatch, signing_key=key
+    )
 except c.GovernanceViolationError:
     pass
 else:
@@ -1616,12 +1772,286 @@ else:
 """
         proc = subprocess.run(
             [sys.executable, "-c", probe],
-            input=serialized,
+            input=envelope,
             text=True,
             capture_output=True,
             check=False,
         )
         self.assertEqual(proc.returncode, 0, msg=proc.stderr or proc.stdout)
+
+    def test_unkeyed_forged_flow_mapping_and_tampered_hmac_or_notice_fail_closed(self) -> None:
+        owner = _ready_owner()
+        dictionary = _validated_dictionary()
+        signing_key = b"zava-phase0-shared-secret-key-32b"
+        base_report = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(c.BaselineCandidateRecord("P_REAL", "2026-02-01", "c-real"),),
+        )
+        forged = json.loads(json.dumps(base_report.to_json_dict()))
+        forged["baseline_candidate_ids"] = ["P_FAKE"]
+        forged["zero_event_candidate_ids"] = ["P_FAKE"]
+        forged["bg011_assessment_to_ready_to_install_days"] = {"P_FAKE": None}
+        forged["candidate_to_accepted_handover_days"] = {"P_FAKE": None}
+        forged["post_install_handover_legs_days"] = {
+            "P_FAKE": {leg[0]: None for leg in c.POST_INSTALL_HANDOVER_LEGS}
+        }
+        canonical_payload = {k: forged[k] for k in c._FLOW_REPORT_DIGEST_KEYS}
+        forged["calculation_digest"] = hashlib.sha256(
+            json.dumps(canonical_payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(forged, dictionary=dictionary)
+
+        forged_validated = dict(
+            forged,
+            owner_validated=True,
+            finding_status=c.VALIDATED_FINDING_STATUS,
+            owner_validated_by="Dev Patel",
+            owner_validated_on=VALIDATED_ON.isoformat(),
+            validation_note="Forged unkeyed JSON sign-off",
+            notice="",
+        )
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(
+                forged_validated, discovery_owner=owner, dictionary=dictionary
+            )
+
+        signed_candidate = json.loads(json.dumps(base_report.to_json_dict(signing_key=signing_key)))
+        c.enforce_governance_guard(signed_candidate, dictionary=dictionary, signing_key=signing_key)
+        stripped_notice = dict(signed_candidate, notice="")
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(
+                stripped_notice, dictionary=dictionary, signing_key=signing_key
+            )
+        untracked_clone = replace(base_report)
+        with self.assertRaises(c.GovernanceViolationError):
+            untracked_clone.to_json_dict(signing_key=signing_key)
+
+    def test_all_five_mapping_shapes_enforce_schema_parity_and_reject_collisions(self) -> None:
+        owner = _ready_owner()
+        dictionary = _validated_dictionary()
+        signing_key = b"zava-phase0-shared-secret-key-32b"
+        adjudicated_reg = self._adjudicated_register()
+        candidate_pack = c.Phase0DiscoveryPack(
+            contract_version=c.CONTRACT_VERSION,
+            discovery_owner=owner,
+            dictionary=dictionary,
+            dictionary_report=c.summarize_lifecycle_dictionary(dictionary),
+            flow_report=c.evaluate_property_flow(
+                dictionary,
+                window_start=WINDOW_START,
+                window_end=WINDOW_END,
+                as_of=AS_OF,
+                candidates=(c.BaselineCandidateRecord("P_PACK", "2026-01-15", "c-pack"),),
+            ),
+            constraint_register=adjudicated_reg,
+        )
+        validated_pack = c.validate_discovery_pack(
+            candidate_pack,
+            by="Dev Patel",
+            on=VALIDATED_ON,
+            note="Full pack sign-off for 5-shape mapping tests",
+        )
+
+        dict_rep_map = json.loads(json.dumps(asdict(validated_pack.dictionary_report), default=str))
+        c.enforce_governance_guard(dict_rep_map, discovery_owner=owner, dictionary=dictionary)
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(
+                dict(dict_rep_map, stage_count=99),
+                discovery_owner=owner,
+                dictionary=dictionary,
+            )
+
+        cap_hyp = validated_pack.constraint_register.hypotheses[0]
+        cap_map = json.loads(json.dumps(asdict(cap_hyp), default=str))
+        c.enforce_governance_guard(cap_map, discovery_owner=owner, dictionary=dictionary)
+        for bad_hyp_map in (
+            dict(cap_map, supporting_evidence=[]),
+            dict(cap_map, domain_validated_role="Finance"),
+            dict(
+                cap_map,
+                discovery_owner_validated_by="Clara Finch",
+                owner_validated_by="Dev Patel",
+            ),
+            dict(
+                cap_map,
+                owner_validated=False,
+                finding_status=c.CANDIDATE_FINDING_STATUS,
+                review_status=c.OWNER_VALIDATED,
+            ),
+        ):
+            with self.assertRaises(c.GovernanceViolationError):
+                c.enforce_governance_guard(
+                    bad_hyp_map, discovery_owner=owner, dictionary=dictionary
+                )
+
+        for row in adjudicated_reg.to_rows():
+            c.enforce_governance_guard(row)
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(
+                dict(
+                    adjudicated_reg.to_rows()[0],
+                    owner_validated=True,
+                    finding_status=c.VALIDATED_FINDING_STATUS,
+                ),
+                discovery_owner=owner,
+                dictionary=dictionary,
+            )
+
+        reg_map = json.loads(json.dumps(asdict(validated_pack.constraint_register), default=str))
+        c.enforce_governance_guard(reg_map, discovery_owner=owner, dictionary=dictionary)
+        bad_reg_map = copy.deepcopy(reg_map)
+        bad_reg_map["hypotheses"][0]["review_status"] = c.PROPOSED
+        bad_reg_map["hypotheses"][0]["owner_validated"] = False
+        bad_reg_map["hypotheses"][0]["finding_status"] = c.CANDIDATE_FINDING_STATUS
+        bad_reg_map["hypotheses"][0]["domain_validated_by"] = ""
+        bad_reg_map["hypotheses"][0]["domain_validated_role"] = ""
+        bad_reg_map["hypotheses"][0]["domain_validated_on"] = None
+        bad_reg_map["hypotheses"][0]["discovery_owner_validated_by"] = ""
+        bad_reg_map["hypotheses"][0]["discovery_owner_validated_on"] = None
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(bad_reg_map, discovery_owner=owner, dictionary=dictionary)
+
+        pack_map = json.loads(json.dumps(asdict(validated_pack), default=str))
+        pack_map["flow_report"] = json.loads(
+            json.dumps(validated_pack.flow_report.to_json_dict(signing_key=signing_key))
+        )
+        c.enforce_governance_guard(
+            pack_map,
+            discovery_owner=owner,
+            dictionary=dictionary,
+            signing_key=signing_key,
+        )
+        missing_reg_pack = dict(pack_map)
+        missing_reg_pack.pop("constraint_register")
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(
+                missing_reg_pack,
+                discovery_owner=owner,
+                dictionary=dictionary,
+                signing_key=signing_key,
+            )
+        wrong_subshape_pack = dict(pack_map, dictionary_report=reg_map)
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(
+                wrong_subshape_pack,
+                discovery_owner=owner,
+                dictionary=dictionary,
+                signing_key=signing_key,
+            )
+        candidate_sub_pack = dict(
+            pack_map,
+            dictionary_report=json.loads(
+                json.dumps(asdict(candidate_pack.dictionary_report), default=str)
+            ),
+        )
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(
+                candidate_sub_pack,
+                discovery_owner=owner,
+                dictionary=dictionary,
+                signing_key=signing_key,
+            )
+
+        collision_map = dict(dict_rep_map, hypotheses=[])
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(collision_map, discovery_owner=owner, dictionary=dictionary)
+
+        class FakeValidatedOutput:
+            owner_validated = True
+            finding_status = c.VALIDATED_FINDING_STATUS
+            owner_validated_by = "Dev Patel"
+
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(
+                FakeValidatedOutput(), discovery_owner=owner, dictionary=dictionary
+            )
+
+    def test_blank_candidate_schema_digest_and_datetime_masquerading_as_date_rejected(
+        self,
+    ) -> None:
+        owner = _ready_owner()
+        dictionary = _validated_dictionary()
+        blank_dict_rep = c.LifecycleDictionaryReport(
+            stage_count=len(dictionary.stages),
+            event_count=len(dictionary.events),
+            timestamp_spec_count=len(dictionary.timestamps),
+            wait_state_count=len(dictionary.wait_states),
+            return_loop_count=len(dictionary.return_loops),
+            endpoint=c.ENDPOINT,
+            gaps=(),
+            dictionary_schema_digest="",
+        )
+        with self.assertRaises(c.GovernanceViolationError):
+            c.enforce_governance_guard(blank_dict_rep, dictionary=dictionary)
+        flow_rep = c.evaluate_property_flow(
+            dictionary,
+            window_start=WINDOW_START,
+            window_end=WINDOW_END,
+            as_of=AS_OF,
+            candidates=(c.BaselineCandidateRecord("P_DT", "2026-01-10", "c-dt"),),
+        )
+        with self.assertRaises(c.GovernanceViolationError):
+            c.Phase0DiscoveryPack(
+                contract_version=c.CONTRACT_VERSION,
+                discovery_owner=owner,
+                dictionary=dictionary,
+                dictionary_report=blank_dict_rep,
+                flow_report=flow_rep,
+                constraint_register=c.build_seed_constraint_register(),
+            )
+
+        bad_dt = datetime(2026, 11, 5, 12, 0, tzinfo=UTC)
+        with self.assertRaises(ValueError):
+            c.nominate_discovery_owner(
+                nominated_by="Clara Finch",
+                nominated_by_role="Executive Director",
+                owner="Dev Patel",
+                owner_role="Head of Retrofit Delivery",
+                nominated_on=bad_dt,
+            )
+        dt_owner = replace(owner, endpoint_agreed_on=bad_dt)
+        self.assertFalse(dt_owner.is_ready)
+        dt_stage = replace(dictionary.stages[0], validated_on=bad_dt)
+        self.assertFalse(dt_stage.validated)
+        with self.assertRaises(ValueError):
+            c.validate_stage_spec(
+                c.build_default_lifecycle_dictionary().stages[0],
+                validator="Amina Begum",
+                role=c.build_default_lifecycle_dictionary().stages[0].owner_role,
+                on=bad_dt,
+            )
+        with self.assertRaises(ValueError):
+            c.evaluate_property_flow(
+                dictionary,
+                window_start=WINDOW_START,
+                window_end=WINDOW_END,
+                as_of=bad_dt,
+                candidates=(),
+            )
+        with self.assertRaises(c.GovernanceViolationError):
+            c.validate_lifecycle_report(
+                c.summarize_lifecycle_dictionary(dictionary),
+                owner,
+                dictionary,
+                by="Dev Patel",
+                on=bad_dt,
+                note="Datetime must be rejected",
+            )
+        seed_hyp = _with_two_sided_evidence(c.build_seed_constraint_register().hypotheses[0])
+        tested_hyp = c.assess_constraint_test(seed_hyp, _all_true_test())
+        with self.assertRaises(ValueError):
+            c.validate_constraint_by_domain_owner(
+                tested_hyp,
+                validator="Domain Owner 1",
+                role=tested_hyp.domain_owner_roles[0],
+                on=bad_dt,
+                accept=True,
+                note="Datetime must be rejected",
+            )
 
 
 if __name__ == "__main__":

@@ -168,16 +168,21 @@ nominated-owner sign-off:
   and sign-off by the exact nominated human discovery owner.
 * `FlowDiscoveryReport` recursively converts all nested mappings and sequences
   into read-only `FrozenDict` (`dict` subclass preserving `dataclasses.asdict()`
-  and plain JSON serialization) and `tuple` containers, exposes `to_json_dict()`
-  for cross-process JSON round-trips, and binds `evaluate_property_flow`
-  provenance, `validate_flow_report` sign-off seals, `Phase0DiscoveryPack`
-  (including sub-artifact signer parity across `dictionary_report`,
-  `flow_report`, and `constraint_register`), and `enforce_governance_guard`
-  (across in-process dataclasses and cross-process JSON `Mapping` payloads) to
-  both a verified SHA-256 `calculation_digest` and `dictionary_schema_digest`.
-  Standard item/attribute mutation, post-sign-off `dataclasses.replace` seal
-  replay, and low-level `dict.__setitem__` tampering are refused at validation
-  and governance boundaries via `verify_digest()`.
+  and plain JSON serialization) and `tuple` containers, exposes
+  `to_json_dict(signing_key=...)` for authenticated cross-process JSON
+  round-trips (`>= 16`-byte shared secret minting an HMAC-SHA256
+  `governance_hmac` over `calculation_digest`, `dictionary_schema_digest`, and
+  all sign-off and `notice` metadata while preserving unkeyed in-process
+  provenance checks), and binds `evaluate_property_flow` provenance,
+  `validate_flow_report` sign-off seals, `Phase0DiscoveryPack` (including
+  sub-artifact signer parity across `dictionary_report`, `flow_report`, and
+  `constraint_register`), and `enforce_governance_guard` (across all five
+  canonical Phase 0 dataclasses and disjoint `Mapping` shapes, plus extension
+  entries in `lifecycle_dictionary_gaps`) to both a verified SHA-256
+  `calculation_digest` and non-blank `dictionary_schema_digest`. Standard
+  item/attribute mutation, post-sign-off `dataclasses.replace` seal replay,
+  unkeyed JSON forgery, and low-level `dict.__setitem__` tampering are refused
+  at validation and governance boundaries via `verify_digest()`.
 * In `discovery_register`, domain-only `decide()` preserves legacy
   `is_company_finding` compatibility while keeping `owner_validated=False` and
   `finding_status="candidate_hypothesis_not_company_finding"` until

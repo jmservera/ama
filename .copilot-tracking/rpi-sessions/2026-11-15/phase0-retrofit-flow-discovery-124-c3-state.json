@@ -6,8 +6,8 @@
     "task_slug": "phase0-retrofit-flow-discovery-124-c2"
   },
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-15/phase0-retrofit-flow-discovery-124-c1-research.md",
@@ -15,7 +15,7 @@
     "details": ".copilot-tracking/details/2026-11-15/phase0-retrofit-flow-discovery-124-c3-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c3-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-11-15/phase0-retrofit-flow-discovery-124-c3-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-c3-review.md"
   },
   "confirmed_decisions": [
     {
@@ -33,18 +33,29 @@
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c3-plan-critique.md; .copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c3-plan.md"
     }
+    {
+      "decision": "Review execution: Complete; Outcome: Defects found (RV-001..RV-005 in phase0-retrofit-flow-discovery-124-c3-review.md). Transitioned to child automatic RPI loop issue-124-c4 under explicit autonomous user mandate to resolve remaining findings and achieve a Conformant review verdict.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-c3-review.md"
+    }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Review",
-    "action": "Commit c3 implementation locally, transition issue-124-c3 to Review, and execute single post-implementation rpi-review."
+    "phase": "Follow-up",
+    "action": "Continue autonomous session in child task issue-124-c4 (phase0-retrofit-flow-discovery-124-c4) to resolve c3 RV-001..RV-005 and record a Conformant review verdict."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
+      "task": "Resolve c3 review defects RV-001..RV-005 (HMAC cross-process JSON verification + in-process Mapping provenance, validated pack/register/lifecycle Mapping parity, extension spec gap checks, signature key disambiguation, non-blank candidate dictionary digest)",
+      "rationale": "Directly closes all remaining adversarial governance findings so Issue #124 achieves a verified Conformant verdict.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-c3-review.md"
+    },
+    {
+      "rank": 2,
       "task": "Optional CSV extract adapter mapping synthetic retrofit-flow year-one CSV tables into discovery_contract records",
       "rationale": "Retained non-blocking follow-up outside Phase 0 pure rule-layer scope.",
-      "evidence": "docs/brds/retrofit-flow-discovery-brief.md; .copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-c2-plan.md"
+      "evidence": "docs/brds/retrofit-flow-discovery-brief.md"
     }
   ]
 }
