@@ -8,6 +8,7 @@ anything for them. The role mapping is a proposal for the programme to confirm.
 from typing import Any
 
 from . import controls as k, stock
+from .doc_controls import is_available_case_document
 
 SIGNOFFS = {
     "assessment": dict(label="Retrofit assessment", roles=("Quality Inspector",), design_dependent=False),
@@ -24,7 +25,7 @@ def _missing_evidence(c: dict[str, Any], usable_only: bool = False) -> list[str]
     from .store import Store
     if usable_only:
         # Uploads count only once they have passed the content scan; generated documents are exempt.
-        c = dict(c, documents=[d for d in c["documents"] if d.get("generated") or (d.get("scan") or {}).get("status") == "clean"])
+        c = dict(c, documents=[d for d in c["documents"] if is_available_case_document(d)])
     return [x["kind"] for x in Store.checklist(c) if not x["present"]]
 
 

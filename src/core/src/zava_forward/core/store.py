@@ -48,7 +48,7 @@ from .resident_decisions import (
 from .signoffs import SignoffMixin, missing_items, technical_gate
 from zava_forward.core.ai import Ai
 from .chatthreads import ChatMixin
-from .doc_controls import DocControlsMixin, open_scanner
+from .doc_controls import DocControlsMixin, is_available_case_document, open_scanner
 from .exception_register import ExceptionRegisterMixin
 from .import_refusals import ImportRefusalsMixin
 from .documents import ACCEPTED, MAX_BYTES, open_document_store
@@ -659,7 +659,7 @@ class Store(
         nxt = next((a for a in c["appointments"] if a["outcome"] == "Booked"), None)
         staff_list = self.data.get("staff") or list(self.staff.values())
         open_h = self._open_safety_items(c, staff=staff_list)
-        ev = {d["kind"] for d in c["documents"]}
+        ev = {d["kind"] for d in c["documents"] if is_available_case_document(d)}
         missing = [k for k in self.EVIDENCE if k not in ev]
         rs = c["resident"]
         if role == "Resident Liaison Officer":
@@ -1171,8 +1171,8 @@ class Store(
     MAX_BYTES = MAX_BYTES
 
     @staticmethod
-    def checklist(c):
-        have = {d["kind"] for d in c["documents"]}
+    def checklist(c: Any) -> list[dict[str, Any]]:
+        have = {k for d in c["documents"] for k in (d["kind"],) if is_available_case_document(d)}
         return [dict(kind=k, present=k in have) for k in Store.EVIDENCE]
 
     def _doc_role(self, user, what):
@@ -1304,7 +1304,7 @@ class Store(
                 raise PermissionError("You do not have access to this case.")
             c = self._case(case_id)
             doc = next(
-                (d for d in c["documents"] if d["id"] == doc_id and not d["generated"]), None
+                (d for d in c["documents"] if d["id"] == doc_id and not d.get("generated")), None
             )
             if not doc:
                 raise KeyError(doc_id)
@@ -1368,7 +1368,7 @@ class Store(
             doc = next((d for d in c["documents"] if d["id"] == doc_id), None)
             if not doc:
                 raise KeyError(doc_id)
-            if doc["generated"]:
+            if doc.get("generated"):
                 text = (
                     f"{doc['name']}\nCase {c['id']}: {c['home']['address']}, {c['home']['postcode']}\n"
                     f"Filed {doc['at']} by {doc['by']}\nType: {doc['kind']}\n"

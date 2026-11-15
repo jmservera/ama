@@ -23,6 +23,8 @@ from collections.abc import Iterable, Mapping
 from copy import deepcopy
 from typing import Any
 
+from .doc_controls import is_available_case_document
+
 from .controls import RESIDENT_ROLES, RESIDENT_VIEW_ROLES
 from .resident_decisions import (
     INTAKE_FIELDS,
@@ -642,8 +644,10 @@ def redact_staff_detail(user, d):
             d["funding"]["draft"] = NOTE_HELD
     for doc in d.get("documents", []):
         if isinstance(doc, dict) and doc.get("summary") and doc["summary"] != NOTE_HELD:
-            if (doc.get("summary_from_exception") and not reason_ok) or contains_withheld_value(
-                doc["summary"], withheld
+            if (
+                not is_available_case_document(doc)
+                or (doc.get("summary_from_exception") and not reason_ok)
+                or contains_withheld_value(doc["summary"], withheld)
             ):
                 doc["summary"] = NOTE_HELD
     return d

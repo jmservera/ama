@@ -17,11 +17,13 @@ import os
 import re
 import time
 import uuid
+from collections.abc import Mapping
 from datetime import datetime, timezone
 from typing import Any
 
 from . import projection, ai_prompts, export_fields
 from .ai import FORBIDDEN
+from .doc_controls import is_available_case_document
 from .resident_decisions import resident_status
 from .stock import support_status
 
@@ -89,7 +91,7 @@ def source_labels(c, reason_ok=False):
     for e in (c.get("history") or [])[-10:]:
         if isinstance(e, dict) and e.get("at"):
             out.append(f"Case history {str(e['at'])[:10]}")
-    out += [f"Document: {d['name']}" for d in c.get("documents", [])]
+    out += [f"Document: {d['name']}" for d in c.get("documents", []) if is_available_case_document(d)]
     return out
 
 
@@ -453,6 +455,10 @@ def run_document(store, user, case_id, doc, data, mode=None, *, derivative=None,
     from . import data_protection
     require_registered("read_document")
     export_fields.scalars(doc, ("name", "mime"))
+    if isinstance(doc, Mapping) and (
+        doc.get("generated") is False or "scan" in doc or "scan_status" in doc
+    ):
+        store.require_clean(doc)
     with store.lock:
         sources = {case_id: source_labels(store._case(case_id), projection.can_see_reason(user))}
     off = workflow_only(mode)
