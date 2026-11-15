@@ -63,6 +63,12 @@ SITES = (
         '"aria-describedby": `${id}-error`',
         "id: `${id}-error`",
     ),
+    (
+        "app.js",
+        'reasonInput.setAttribute("aria-invalid", "true")',
+        '"aria-describedby": `${hintId} ${errId}`',
+        'h("p", { id: errId, class: "field-error", role: "alert"',
+    ),
 )
 # Sites that rely on native validation or a later check rather than moving focus when they mark
 # the field. Recorded gaps, shrink-only: a fix must remove the entry so the check then enforces it.
@@ -84,6 +90,7 @@ RECOVERY_COPY = (
     ("ops.js", "Enter the remediation evidence before recording the fix."),
     ("ops.js", "Enter the contract or call-off version before creating the package."),
     ("app.js", "Enter a reason to edit or reject this draft."),
+    ("app.js", "Enter the audit reason before recording a recovery decision."),
     ("panels.js", "before recording this challenge."),
 )
 RAW_ERROR = re.compile(
@@ -107,14 +114,14 @@ def window(text: str, needle: str, before: int = 8, after: int = 8) -> str:
 
 class FormErrorAssociations(unittest.TestCase):
     def test_counted_baseline_is_unchanged_and_fully_mapped(self) -> None:
-        # The baseline test pins eight setAttribute sites; this table must map exactly those.
-        self.assertIn("self.assertEqual(sites, 8,", BASELINE_TEST.read_text())
+        # The baseline test pins nine setAttribute sites; this table must map exactly those.
+        self.assertIn("self.assertEqual(sites, 9,", BASELINE_TEST.read_text())
         found = sum(
             line.count('setAttribute("aria-invalid", "true")')
             for path in sorted(WEB.glob("*.js"))
             for line in path.read_text().splitlines()
         )
-        self.assertEqual(found, 8)
+        self.assertEqual(found, 9)
         self.assertEqual(len(SITES), found)
         for name, invalid, _, _ in SITES:
             self.assertIn(invalid, source(name), name)
