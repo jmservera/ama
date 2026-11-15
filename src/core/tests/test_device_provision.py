@@ -114,6 +114,29 @@ class DeviceProvisionTests(unittest.TestCase):
             self.assertFalse(dp.owner_named(owner), owner)
         self.assertTrue(dp.owner_named("Named Owner"))
 
+    def test_report_and_teardown_include_approach_and_zero_residual_receipt(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        target = di.plan("run-185", dp.CREDENTIAL_OWNER_ROLE, sensors(2))
+        provisioned = dp.run(target, "provision", True, registry, store)
+        self.assertEqual(provisioned["approach"], dp.DEVICE_IDENTITY_APPROACH)
+        self.assertEqual(provisioned["credential_owner"], dp.CREDENTIAL_OWNER_ROLE)
+        torn_down = dp.run(target, "teardown", True, registry, store)
+        self.assertEqual(torn_down["approach"], dp.DEVICE_IDENTITY_APPROACH)
+        receipt = torn_down["teardown_receipt"]
+        assert isinstance(receipt, dict)
+        self.assertIs(receipt["verified_zero_residual"], True)
+        self.assertEqual(receipt["residual_simulated_count"], 0)
+        self.assertEqual(receipt["removed_count"], 2)
+
+    def test_report_refuses_secret_bearing_credential_owner(self) -> None:
+        secret_manifest = di.plan(
+            "run-185",
+            "Owner SharedAccessKey=K9mP2vX8qL4nR7tY1wZ5bC3dF6gH0jM8pQ2sV4xN6zA=",
+            sensors(1),
+        )
+        with self.assertRaisesRegex(dp.ProvisionError, "^CREDENTIAL_OWNER_SECRET_MATERIAL$"):
+            dp.report(secret_manifest, "provision", "dry-run")
+
     def test_invalid_action_is_refused(self) -> None:
         with self.assertRaises(dp.ProvisionError):
             dp.run(manifest(), "delete-all", False)
