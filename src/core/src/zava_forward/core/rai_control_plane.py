@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import ast
 import copy
+import functools
 import json
 import os
 import re
@@ -821,28 +822,25 @@ def _class_methods_with_in_file_bases(
     return methods
 
 
-def verify_traceability_targets(repo_root: Path | None = None) -> dict[str, Any]:
-    """Verify via AST that every test target in `REQUIREMENT_TRACEABILITY` resolves on disk."""
-    root = repo_root if repo_root is not None else _default_repo_root()
+def _scan_traceability_targets(
+    root: Path,
+) -> tuple[bool, int, tuple[tuple[str, str, str], ...]]:
     parsed_cache: dict[Path, dict[str, ast.ClassDef]] = {}
-    unresolved: list[dict[str, str]] = []
+    unresolved: list[tuple[str, str, str]] = []
     verified_count = 0
 
     for entry in REQUIREMENT_TRACEABILITY:
         req_id = str(entry["id"])
         for target in entry["acceptance_checks"]:
-            file_part, sep, symbol_part = str(target).partition("::")
+            target_str = str(target)
+            file_part, sep, symbol_part = target_str.partition("::")
             if not sep or "." not in symbol_part:
-                unresolved.append(
-                    {"id": req_id, "target": str(target), "reason": "malformed target descriptor"}
-                )
+                unresolved.append((req_id, target_str, "malformed target descriptor"))
                 continue
             class_name, _, method_name = symbol_part.partition(".")
             file_path = root / file_part
             if not file_path.is_file():
-                unresolved.append(
-                    {"id": req_id, "target": str(target), "reason": "test file does not exist"}
-                )
+                unresolved.append((req_id, target_str, "test file does not exist"))
                 continue
             if file_path not in parsed_cache:
                 tree = ast.parse(file_path.read_text(encoding="utf-8"), filename=str(file_path))
@@ -851,30 +849,38 @@ def verify_traceability_targets(repo_root: Path | None = None) -> dict[str, Any]
                 }
             classes = parsed_cache[file_path]
             if class_name not in classes:
-                unresolved.append(
-                    {
-                        "id": req_id,
-                        "target": str(target),
-                        "reason": f"class {class_name!r} not found",
-                    }
-                )
+                unresolved.append((req_id, target_str, f"class {class_name!r} not found"))
                 continue
             methods = _class_methods_with_in_file_bases(classes, class_name)
             if method_name not in methods:
                 unresolved.append(
-                    {
-                        "id": req_id,
-                        "target": str(target),
-                        "reason": f"method {method_name!r} not found on {class_name!r}",
-                    }
+                    (req_id, target_str, f"method {method_name!r} not found on {class_name!r}")
                 )
                 continue
             verified_count += 1
 
+    return (not unresolved, verified_count, tuple(unresolved))
+
+
+@functools.lru_cache(maxsize=1)
+def _cached_default_traceability_targets() -> tuple[bool, int, tuple[tuple[str, str, str], ...]]:
+    return _scan_traceability_targets(_default_repo_root())
+
+
+def verify_traceability_targets(repo_root: Path | None = None) -> dict[str, Any]:
+    """Verify via AST that every test target in `REQUIREMENT_TRACEABILITY` resolves on disk."""
+    all_resolved, verified_count, frozen_unresolved = (
+        _scan_traceability_targets(repo_root)
+        if repo_root is not None
+        else _cached_default_traceability_targets()
+    )
     return {
-        "all_resolved": not unresolved,
+        "all_resolved": all_resolved,
         "verified_target_count": verified_count,
-        "unresolved": unresolved,
+        "unresolved": [
+            {"id": req_id, "target": target, "reason": reason}
+            for req_id, target, reason in frozen_unresolved
+        ],
     }
 
 

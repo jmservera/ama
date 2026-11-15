@@ -6,6 +6,7 @@ import copy
 import json
 import os
 import tempfile
+import time
 import unittest
 from pathlib import Path
 from typing import Any
@@ -488,6 +489,71 @@ class RaiControlPlane218Tests(unittest.TestCase):
             broken = rai_control_plane.verify_traceability_targets(repo_root=root)
             self.assertIs(broken["all_resolved"], False)
             self.assertGreaterEqual(len(broken["unresolved"]), 15)
+
+    def test_verify_traceability_targets_caches_default_root_immutably_under_one_ms(self) -> None:
+        rai_control_plane._cached_default_traceability_targets.cache_clear()
+        self.addCleanup(rai_control_plane._cached_default_traceability_targets.cache_clear)
+
+        with patch.object(
+            rai_control_plane,
+            "_scan_traceability_targets",
+            wraps=rai_control_plane._scan_traceability_targets,
+        ) as scan_spy:
+            first = rai_control_plane.verify_traceability_targets()
+            self.assertIs(first["all_resolved"], True)
+            self.assertEqual(first["unresolved"], [])
+            self.assertEqual(scan_spy.call_count, 1)
+            expected_count = first["verified_target_count"]
+
+            first["all_resolved"] = False
+            first["verified_target_count"] = 0
+            first["unresolved"].append({"id": "FR-051", "target": "mutated", "reason": "mutated"})
+
+            samples_ms: list[float] = []
+            for _ in range(10):
+                t0 = time.perf_counter()
+                warm = rai_control_plane.verify_traceability_targets(None)
+                samples_ms.append((time.perf_counter() - t0) * 1000.0)
+                self.assertIs(warm["all_resolved"], True)
+                self.assertEqual(warm["verified_target_count"], expected_count)
+                self.assertEqual(warm["unresolved"], [])
+
+            self.assertEqual(scan_spy.call_count, 1)
+            self.assertLess(min(samples_ms), 1.0)
+            self.assertLess(sum(samples_ms) / len(samples_ms), 1.0)
+
+            with tempfile.TemporaryDirectory() as tmp:
+                tmp_root = Path(tmp)
+                explicit_broken = rai_control_plane.verify_traceability_targets(repo_root=tmp_root)
+                self.assertIs(explicit_broken["all_resolved"], False)
+                self.assertEqual(scan_spy.call_count, 2)
+
+                still_cached = rai_control_plane.verify_traceability_targets(None)
+                self.assertIs(still_cached["all_resolved"], True)
+                self.assertEqual(scan_spy.call_count, 2)
+
+                rai_control_plane._cached_default_traceability_targets.cache_clear()
+                try:
+                    with patch.object(
+                        rai_control_plane,
+                        "_default_repo_root",
+                        return_value=tmp_root,
+                    ):
+                        broken_first = rai_control_plane.verify_traceability_targets(None)
+                        self.assertIs(broken_first["all_resolved"], False)
+                        self.assertTrue(broken_first["unresolved"])
+                        original_reason = broken_first["unresolved"][0]["reason"]
+                        self.assertEqual(scan_spy.call_count, 3)
+
+                        broken_first["unresolved"][0]["reason"] = "mutated-reason"
+                        broken_second = rai_control_plane.verify_traceability_targets(None)
+                        self.assertEqual(scan_spy.call_count, 3)
+                        self.assertEqual(
+                            broken_second["unresolved"][0]["reason"],
+                            original_reason,
+                        )
+                finally:
+                    rai_control_plane._cached_default_traceability_targets.cache_clear()
 
     def test_exercise_acceptance_separates_rai_checks_from_real_ai_delivery_gate(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
