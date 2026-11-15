@@ -303,6 +303,10 @@ class TechnicalAndQualityWcagTests(unittest.TestCase):
         self.assertIn(":focus-visible{outline:", CSS)
         self.assertRegex(
             CSS,
+            r'\[tabindex="-1"\]:focus\s*\{\s*outline:\s*var\(--focus-w\)\s+solid\s+var\(--focus-ink\)',
+        )
+        self.assertRegex(
+            CSS,
             r'\.screen-record\s+h2\[tabindex="-1"\]:focus-visible\s*\{[^}]*outline:\s*var\(--focus-w\)\s+solid\s+var\(--focus-ink\)',
         )
         self.assertRegex(

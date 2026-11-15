@@ -44,7 +44,7 @@
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Select a ranked follow-up work item to start a child automatic RPI loop in Research, Stop automatic session, or Switch to manual mode."
+    "action": "Child task 2026-11-15-retrofit-technical-quality-wcag-231-c1 completed Review as Conformant; await post-Review follow-up selection on child state record .copilot-tracking/rpi-sessions/2026-11-15/retrofit-technical-quality-wcag-231-c1-state.json."
   },
   "prioritized_follow_ups": [
     {
