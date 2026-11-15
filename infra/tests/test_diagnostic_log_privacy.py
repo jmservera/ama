@@ -1,4 +1,4 @@
-"""Issue 146 criterion 4: Bicep diagnostic settings keep content-bearing logs out of Log Analytics."""
+"""Issue 146 criterion 4: Bicep diagnostic settings exclude content-bearing Log Analytics logs."""
 
 import re
 import unittest
@@ -88,9 +88,7 @@ class DiagnosticSettingsPrivacyTests(unittest.TestCase):
 
     def test_sql_server_diagnostics_are_audit_events_only(self) -> None:
         text = (INFRA / "modules" / "sql.bicep").read_text(encoding="utf-8")
-        server = next(
-            body for name, body in BLOCK.findall(text) if name == "serverDiagnostics"
-        )
+        server = next(body for name, body in BLOCK.findall(text) if name == "serverDiagnostics")
         self.assertEqual(
             re.findall(r"category:\s*'(\w+)'", server),
             ["SQLSecurityAuditEvents"],

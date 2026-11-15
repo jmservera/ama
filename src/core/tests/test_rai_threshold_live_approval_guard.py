@@ -7,7 +7,7 @@ import unittest
 from typing import Any
 
 from cohort_eval_fixture import clean_observed, manifest
-from zava_forward.core import cohort_eval, rai_release
+from zava_forward.core import cohort_eval, monitoring_coverage, rai_release
 
 NOW = 1_000.0
 HUMAN = {
@@ -163,6 +163,50 @@ class LiveReleaseApprover(unittest.TestCase):
             "unexpired release",
             rai_release.missing_binding(record, {"model_version": "m1"}, [], NOW, True),
         )
+
+    def test_live_release_rejects_constructed_or_non_human_monitoring_thresholds(self) -> None:
+        constructed_decl = monitoring_coverage.task_declaration("stock-prioritisation")
+        spec = {"monitoring_declaration": copy.deepcopy(constructed_decl)}
+        record = {
+            "approver": {"name": "Amina Okafor", "email": "amina@zava.example"},
+            "serving_model": "m1",
+            "expires": NOW + 10,
+            "evidence_class": "actual",
+            "monitoring_declaration": constructed_decl,
+        }
+        binding = {"model_version": "m1"}
+        self.assertEqual(rai_release.missing_binding(record, binding, [], NOW, False), [])
+        self.assertIn(
+            "named-human approved live monitoring thresholds",
+            rai_release.missing_binding(record, binding, [], NOW, True),
+        )
+        for bad in ("Copilot Agent", "Data lead (fictional)", "TBD"):
+            bad_decl = copy.deepcopy(constructed_decl)
+            for item in bad_decl["indicators"].values():
+                item["threshold"] = {"limit": 0.05, "min_sample": 20, "approved_by": bad}
+            self.assertIn(
+                "named-human approved live monitoring thresholds",
+                rai_release.missing_binding(
+                    dict(record, monitoring_declaration=bad_decl), binding, [], NOW, True
+                ),
+            )
+        approved_decl = copy.deepcopy(constructed_decl)
+        for item in approved_decl["indicators"].values():
+            item["threshold"] = {
+                "limit": 0.05,
+                "min_sample": 20,
+                "approved_by": "Amina Okafor, RAI Assurance Lead",
+            }
+        self.assertTrue(rai_release.valid_monitoring_declaration(approved_decl, spec))
+        self.assertEqual(
+            rai_release.missing_binding(
+                dict(record, monitoring_declaration=approved_decl), binding, [], NOW, True
+            ),
+            [],
+        )
+        weakened = copy.deepcopy(approved_decl)
+        weakened["indicators"]["cohort_errors"] = {"applicable": False, "reason": "skip"}
+        self.assertFalse(rai_release.valid_monitoring_declaration(weakened, spec))
 
 
 if __name__ == "__main__":

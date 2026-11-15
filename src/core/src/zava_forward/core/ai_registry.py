@@ -115,6 +115,8 @@ def digest(value):
 
 
 def _entry(task_id, kind, version, purpose, roles, categories, influence, affected, reviewer):
+    from . import monitoring_coverage
+
     return dict(
         id=task_id, kind=kind, version=version, purpose=purpose,
         scope="constructed synthetic exercise only; no live resident, safety or financial processing",
@@ -131,6 +133,7 @@ def _entry(task_id, kind, version, purpose, roles, categories, influence, affect
         reliance_review="dated qualified UK and conditional EU review required before affected operational reliance; "
                         "housing or hosting location alone does not decide applicability",
         manual_route="Use the ordinary case controls and the named function; no model call.",
+        monitoring_declaration=monitoring_coverage.task_declaration(task_id),
     )
 
 
@@ -181,8 +184,18 @@ def registry():
 
 
 def missing_fields(entry):
-    """Required register fields that are absent or empty."""
-    return [f for f in REQUIRED_FIELDS if not (entry or {}).get(f)]
+    """Required register fields that are absent or empty, including a valid monitoring declaration."""
+    missing = [f for f in REQUIRED_FIELDS if not (entry or {}).get(f)]
+    if entry is not None:
+        from . import monitoring_coverage
+
+        decl = monitoring_coverage.check_monitoring_declaration(
+            entry.get("monitoring_declaration"),
+            task_enabled=bool(entry.get("enabled", True)),
+        )
+        if decl["missing"]:
+            missing.append("monitoring_declaration")
+    return missing
 
 
 def get(task_id):

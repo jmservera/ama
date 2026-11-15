@@ -1,7 +1,7 @@
 ---
 title: Monitoring candidates and operator runbooks
 description: Source-only alert catalogue, proposed routing, safe responses and unresolved monitoring acceptance
-ms.date: 2026-11-13
+ms.date: 2026-11-15
 ms.topic: how-to
 ---
 
@@ -230,6 +230,18 @@ execution metadata without fetching SAS or tokens. Response: follow
 authentication, no logon bypass. Recovery: approved renewal and binding/expiry
 verification; do not print or manually paste credentials.
 
+### Job rank
+
+Normal suffix `rank-publish`, demo `rank`; only when `enableRankingArchiveBlob`
+and background workloads are enabled. Proposed owner: Digital service owner,
+with Asset Strategy and Data and Performance. Triage: archive publication
+execution metadata, immutable blob container retention policy and snapshot
+digest without exporting property-level ranking rows into diagnostic logs.
+Response: hold automated archive publication, preserve the prior immutable
+ranking snapshot and human investment-committee approval boundary; never overwrite
+or weaken blob immutability to clear a failed run. Recovery: verified archive
+container policy, reconciled snapshot digest and authorized idempotent rerun.
+
 ## New Disabled IoT Candidates
 
 Each rule is independent, `alert-${prefix}-${suffix}`, Total >0 over
@@ -399,7 +411,12 @@ offline checks with constructed fixtures; no producer, alert or live limit exist
 the six harm indicators, denominators, windows, thresholds, named monitoring and
 incident owners and a response. It reports Blocked with the missing items, or
 Declared (never approved or green), and it exposes ownership and manual-route status
-for a disabled task. No declaration is recorded for any real task.
+for a disabled task. Source declarations with offline-constructed thresholds and
+role-level owner proposals are recorded across all 13 registered AI tasks in
+[ai_registry.py](../src/core/src/zava_forward/core/ai_registry.py) and enforced on
+serving release contracts in
+[rai_release.py](../src/core/src/zava_forward/core/rai_release.py); live serving
+remains Blocked until named human threshold and owner approvals (OD-51) are recorded.
 It also provides
 an allowlist sanitiser for aggregate diagnostic events. Separately,
 [diagnostic_logging.py](../src/core/src/zava_forward/core/diagnostic_logging.py)
@@ -495,15 +512,15 @@ B/R/T IDs below label the issue's criteria positionally, not new requirements.
 | --- | --- | --- |
 | B1 job/poison/ledger/IoT alerts | Disabled job/IoT candidates; agent-tasks poison arrival candidate; existing ledger rules, 26h correction; import poison gap | Verified `StorageQueueLogs` signal and drill, an import poison producer, owned notification drill; #110/#115 actual acceptance |
 | B2 availability/errors/latency/cost vs budget dashboard | Workbook aggregate query sources, cost-vs-budget table with Unknown actual and Unreconciled variance | Actual instrumentation/tests, KQL/portal execution and financial cost feed/reconciliation |
-| B3 each alert runbook with owner | All eight existing rules/four budget notices and eight candidates catalogued; proposed roles; each rule description names its proposed owner and links its anchor, test-enforced | Named actual primary/backup appointments and response/escalation limits |
+| B3 each alert runbook with owner | All eight existing rules/four budget notices and eleven candidates catalogued; proposed roles; each rule description names its proposed owner and links its anchor, test-enforced | Named actual primary/backup appointments and response/escalation limits |
 | B4 diagnostic exclusion | Fail-closed redaction of every application log record, canary tests, no new log categories, metrics-only IoT | Platform diagnostic categories (Container Apps `allLogs`, SQL, Key Vault, storage) and DPO/privacy approval |
-| R1 indicators/denominators/window/thresholds/owners/response | RAI procedure and blocked workbook panel | Per-task/release approved declaration and real appointments |
-| R2 unsupported claims/critical misses/stale review/challenges/cohort errors/effort | Explicit indicator list in RAI procedure | Applicable producer coverage and complete review-effort evidence |
+| R1 indicators/denominators/window/thresholds/owners/response | RAI procedure, blocked workbook panel and per-task/serving-release `monitoring_declaration` contracts across all 13 registered AI tasks | Named actual human owner/threshold approvals (OD-51) and live telemetry producers |
+| R2 unsupported claims/critical misses/stale review/challenges/cohort errors/effort | Explicit 6-indicator task/release declarations including 4-stage `review_effort` (`approval_rate_is_safety=False`) | Live producer coverage and operational review-effort capture |
 | R3 missing samples/usage/approvals/thresholds not green | Typed empty query sources, null measurements, static Blocked/Unknown panels | Actual query/error/serving behavior; approved sufficiency and threshold evidence |
 | R4 seeded harm/breach creates incident and suspension | Existing authorized incident path documented | Owned signal-to-incident integration and actual accepted drill; no suspension from metric alert |
 | R5 restart reconciliation and disabled-task ownership/manual routes | Required response/recovery, blocked panel and an offline replay-safe window counter | Durable windows/denominators/repeated-event runtime coverage and appointment evidence |
 | R6 no raw prompts/source/sensitive reasons/tokens/identities | No new content logging; protected audit separation documented | Source-level exclusion/retention/access tests on existing telemetry |
-| R7 offline constructed vs named-human live thresholds | Disabled candidates labelled proposed, approval-reference boundary | Named actual human approvals, not a nonempty string or fixture |
+| R7 offline constructed vs named-human live thresholds | Disabled candidates labelled proposed, approval-reference boundary and executable live named-human threshold guard rejecting constructed/system/agent/fictional sign-offs | Named actual human approvals (OD-51), not a nonempty string or fixture |
 | R8 existing audit/report/UI, no new platform/future-IoT dependency | Reuse existing Azure Monitor and SQL audit/continuity paths; IoT rules independent | Actual runtime/report integration without adding a separate platform |
 | T1 calls/tokens/budget/expiry breach alerts owned/runbook | Disabled `ai-limits` candidate on the ledger `AI_LIMIT_BREACH` marker, owner and runbook link in the rule description; offline limit evaluator | OD-51 owners/limits, activation approval, delivered notification drill |
 | T2 capability/period usage beside Azure cost/variance | Workbook usage-by-capability-and-month panel from `AI_USAGE`, Azure cost record column and Unreconciled variance | Same-period billing feed, dated price and approved tolerance; console marker is non-authoritative |

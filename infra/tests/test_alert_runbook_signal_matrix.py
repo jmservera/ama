@@ -26,7 +26,7 @@ MATRIX = {
     "alert-${applicationPrefix}-ledger-verify-missing": "ledger-verify-missing",
     "alert-${name}-secret-expiry": "vault-expiry",
     "alert-${name}-denied-access": "vault-denied",
-    "alert-${jobName}-failed": "job-orchestrator|job-ledger|job-import|job-auth",
+    "alert-${jobName}-failed": "job-orchestrator|job-ledger|job-import|job-rank|job-auth",
     "alert-${prefix}-${failure.suffix}": (
         "iot-ingress-throttle|iot-routing-dropped|iot-routing-invalid|iot-routing-orphaned"
     ),
@@ -180,6 +180,7 @@ class AlertRunbookSignalMatrixTests(unittest.TestCase):
             "job-orchestrator",
             "job-ledger",
             "job-import",
+            "job-rank",
             "job-auth",
             "iot-routing-dropped",
         ):

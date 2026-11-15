@@ -16,10 +16,8 @@ def _sections() -> dict[str, str]:
     parts = re.split(r"^#{2,4} .+$", RUNBOOK, flags=re.MULTILINE)
     heads = re.findall(r"^#{2,4} (.+)$", RUNBOOK, flags=re.MULTILINE)
     return {
-        re.sub(r"[^a-z0-9 -]", "", h.lower()).strip().replace(" ", "-"): " ".join(
-            body.split()
-        )
-        for h, body in zip(heads, parts[1:])
+        re.sub(r"[^a-z0-9 -]", "", h.lower()).strip().replace(" ", "-"): " ".join(body.split())
+        for h, body in zip(heads, parts[1:], strict=False)
     }
 
 
@@ -51,7 +49,7 @@ class RunbookOwnershipTests(unittest.TestCase):
     def test_every_rule_runbook_link_resolves_to_owner_section(self) -> None:
         sections = _sections()
         linked = set(re.findall(r"\$\{runbookBase\}#([a-z-]+)", MODULE))
-        linked |= {"job-orchestrator", "job-ledger", "job-import", "job-auth"}
+        linked |= {"job-orchestrator", "job-ledger", "job-import", "job-rank", "job-auth"}
         linked |= {
             "iot-ingress-throttle",
             "iot-routing-dropped",
@@ -64,9 +62,7 @@ class RunbookOwnershipTests(unittest.TestCase):
         for anchor in sorted(linked):
             with self.subTest(anchor=anchor):
                 self.assertIn(anchor, sections)
-                body = sections[anchor] + (
-                    iot_owner if anchor.startswith("iot-") else ""
-                )
+                body = sections[anchor] + (iot_owner if anchor.startswith("iot-") else "")
                 self.assertRegex(body, r"[Oo]wner")
 
     def test_ledger_digest_alerts_name_owner_and_anchor(self) -> None:
