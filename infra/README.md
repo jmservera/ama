@@ -24,6 +24,7 @@ private production profile. They do not authorize deployment.
 * `modules/`: 20 Bicep modules covering `guard`, `identity`, `network` (VNet, NSGs, private DNS), `envDns`, `privateEndpoint`, `monitoring` (Log Analytics, App Insights, AMPLS, action group), `operationalMonitoring` (workbook and metric/log alerts), `keyvault`, `storage` (blobs, WORM, lifecycle, queues), `authTokenStore`, `registry`, `sql` (Entra-only SQL and Ledger), `foundry`, `iothub`, `iothub-scope-guard`, `containerapps` (environment, API, EasyAuth, jobs), `edge`, `edge-existing-auth`, `edge-existing-guard` and `staff-initializer-guard`.
 * `role-assignments.json`: role-assignment matrix; `entra/app-registration.json`: declarative Entra registration and owners. Both are checked by `tests/test_identity_rbac.py`.
 * `network-posture-inventory.json`: deterministic VNet subnet, NSG, private DNS zone, VNet link, data-store private endpoint, exercise-exception and Key Vault managed-identity secret-binding contract paired with [`../docs/architecture/network-posture.md`](../docs/architecture/network-posture.md) and checked by `tests/test_network_posture.py`.
+* `secret-inventory.json`, `scripts/secret_lifecycle.py`: Key Vault secret inventory, staged zero-downtime Entra client-secret rotation verifier, 90-day data-plane `AzureDiagnostics` access auditor and HMAC-SHA256 signed review ledger CLI; see [Key Vault secret lifecycle](#key-vault-secret-lifecycle).
 * `scripts/bicep_inventory.py`: offline architecture-to-Bicep resource inventory, 20-module delivery matrix and from-empty deployment sequence verifier (`python3 infra/scripts/bicep_inventory.py --check`).
 * `scripts/reproducibility_check.py`: offline from-empty step registration, defaultless parameter coverage, and deterministic 6-step dry-run verifier (`python3 infra/scripts/reproducibility_check.py --check --dry-run`).
 * `scripts/pipeline.py`: CI deployment and verification CLI (`plan`, `deploy`, `publish`, `changed-images`, `verify-environment`) and canonical `FROM_EMPTY_STEPS` registry.
@@ -1506,7 +1507,7 @@ exercise DPO is Juan Manuel Servera; no real-company delegation is inferred.
 
 ## Key Vault secret lifecycle
 
-Secrets are listed in [secret-inventory.json](secret-inventory.json) with an owner, rotation interval and expiry alert window. `infra/scripts/secret_lifecycle.py` checks vault metadata against it (never secret values), produces the access review record and prints the rotation steps. Run `python3 -m unittest discover -s infra/tests -q` for its tests.
+Secrets are listed in [secret-inventory.json](secret-inventory.json) with an owner, rotation interval and expiry alert window. `infra/scripts/secret_lifecycle.py` wraps `zava_forward.core.secret_lifecycle` to check vault metadata against the inventory, verify staged zero-downtime Entra client-secret rotation receipts, audit Key Vault data-plane `AzureDiagnostics` logs against [role-assignments.json](role-assignments.json), and maintain an append-only HMAC-SHA256 signed access review ledger. Every helper fails closed (`SecretExposureError`) if raw secret values, tokens, SAS strings or private keys appear anywhere in an input payload, and never reads or prints secret values. Run `PYTHONPATH=src/core/src python3 -m unittest src/core/tests/test_secret_lifecycle.py infra/tests/test_secret_lifecycle.py -q` for the deterministic unit and CLI suites.
 
 | Secret | Rotation interval | Expiry alert | Owner |
 | --- | --- | --- | --- |
@@ -1521,18 +1522,75 @@ Expiry alerting: the vault diagnostic setting sends all logs to Log Analytics, a
 
 ### Rotate the Entra client secret
 
-Run `secret_lifecycle.py rotation-plan --vault <vault> --app-id <id>`; `secret_lifecycle.py rotation-simulate` runs an offline model of the same order and exits non-zero if sign-in would fail at any step (tests also show that deleting the old credential first, or before the app refreshes, fails). The model proves the ordering only, not a live outage-free exercise. The order gives no downtime: append a new app credential (the old stays valid), write it as a new version of `entra-client-secret` with an expiry, let the versionless Container Apps reference refresh (up to 30 minutes) or restart the active revision, verify sign-in, then delete the old credential. Do not delete first. The repeatable scripted step is `create-api-app-registration.sh -v <vault>`; add an `--end-date` when setting the secret.
+Run `python3 infra/scripts/secret_lifecycle.py rotation-plan --vault <vault> --app-id <id>` to print the staged sequence and `python3 infra/scripts/secret_lifecycle.py rotation-simulate` to verify the ordering model offline. For an auditable zero-downtime rotation (in-place versionless `entra-client-secret` refresh or two-name `entraClientSecretName` switchover in `modules/containerapps.bicep`), verify each gate with metadata-only evidence JSON via `rotation-verify`:
+
+1. Append a second Entra app credential while keeping the prior credential active with at least 60 minutes of dual-secret overlap (exceeding Container Apps' 30-minute versionless Key Vault polling interval), stream the generated secret directly into Key Vault with `tr -d '\r\n'` and `--output none` so the credential value never prints to stdout or carries a trailing newline (`az ad app credential reset --id <app-id> --append --display-name container-apps-auth-YYYY-MM --years 1 --query password -o tsv | tr -d '\r\n' | az keyvault secret set --vault-name <vault> --name entra-client-secret --expires <iso> --file /dev/stdin --output none`), read credential `keyId` and validity metadata (`az ad app credential list --id <app-id>`) plus Key Vault version `created` and `expires` metadata (`az keyvault secret list-versions --vault-name <vault> --name entra-client-secret`) separately, and validate the `dual_secret_overlap` stage (`safeToRetirePriorCredential` remains `false`; `browserMode` is enforced by default unless `--allow-non-browser-mode` is explicitly passed for API-only test topologies).
+2. After at least 60 minutes of elapsed dual-secret overlap (`elapsedOverlapMinutes >= 60`), refresh the API Container App secret reference (restart the active revision, deploy a new revision, or switch `entraClientSecretName` to the staged secret name) so 100% of active traffic serves the newest Key Vault secret version on healthy replicas (`Running` or `RunningAtMaxScale`, `replicasReady >= 1`), record `containerApp.switchoverAt` (`>= overlapStart + 60m` and `>= nextVersionId.created`), confirm continuous bounded-gap zero-error probes starting at or after `switchoverAt` (`firstSampleAt >= switchoverAt`, `totalSamples >= 3`, `firstSampleAt`..`lastSampleAt` spanning `>= 60` seconds with `maxGapSeconds <= 60`, `/healthz` `200`, anonymous `/api/me` `401`, `/sign-in` `302`, and authenticated API session `200` with `"freshTokenExchangeVerified": true` proving live OAuth token redemption with the new client secret rather than cached session reuse), and run `rotation-verify` at stage `post_switchover` (passing `--signing-key-file` (`chmod 0600`, outside the Git worktree) or `--signing-key-env` (`>= 32` UTF-8 bytes) when authenticating `rotation-switchover-receipt.json` for step 3):
+
+```bash
+python3 infra/scripts/secret_lifecycle.py rotation-verify \
+  --evidence rotation-post-switchover.json \
+  --min-overlap-minutes 60 \
+  --signing-key-file ~/.config/zava-ops/kv-rotation-hmac.key \
+  --out rotation-switchover-receipt.json
+```
+
+3. Only when `rotation-verify` exits `0` with `"safeToRetirePriorCredential": true`, delete the prior Entra app credential by `keyId` and disable the prior Key Vault secret version, then record the `post_retire` receipt with `containerApp.switchoverAt`, `post_retire` probes collected entirely at or after retirement (`firstSampleAt >= retiredAt`, after `post_switchover` probes finished), and either `credentials.retiredPriorCredential` timestamps or `credentials.priorRetiredAt` paired with the `HMAC-SHA256`-signed `priorSwitchoverReceipt` verified with the matching `--signing-key-file` or `--signing-key-env` to prove pre-retirement overlap.
+4. If switchover or authenticated probes fail before step 3, keep the prior Entra credential and Key Vault version enabled, pin the Container App secret `keyVaultUrl` directly to `https://<vault>.vault.azure.net/secrets/entra-client-secret/<priorVersionId>` for an in-place secret (because Azure Key Vault versionless resolution returns `403 SecretDisabled` when the newest version is disabled rather than falling back to an older version) or revert `entraClientSecretName` to the distinct `priorSecretName` in a two-name staged switchover, record `containerApp.rollbackAt`, restore 100% Container Apps traffic to the prior revision, confirm continuous post-rollback probes (`firstSampleAt >= rollbackAt`, `/healthz` `200`, anonymous `/api/me` `401`, `/sign-in` `302`, and authenticated session `200` with `"freshTokenExchangeVerified": true`), and run `rotation-verify` with `"stage": "rollback"`. Rollback receipts confirm `"rollbackVerified": true` while keeping `"ok": false` and `"safeToRetirePriorCredential": false` so automated scripts never retire the working credential during recovery.
 
 ### Access review
 
-Quarterly (`reviewIntervalDays` 90), export `az role assignment list --scope <vault id> --include-inherited -o json` and run `secret_lifecycle.py review --assignments roles.json --reviewer <name>`. A named human sets each pending decision to keep or remove and the signed record is kept with the operations evidence. `secret_lifecycle.py review-status --record review.json` exits non-zero while any decision is pending, no reviewer is named or `nextReviewDue` has passed, so a scheduled run can flag a missing or stale review. Owner alone gives no data-plane access.
+Quarterly (`reviewIntervalDays` `90` in `secret-inventory.json`), review both Key Vault RBAC role assignments (`Owner` alone grants no data-plane secret access) and actual Key Vault `AzureDiagnostics` data-plane operations over the preceding 90-day window, then append an HMAC-SHA256 signed, SHA-256 hash-chained record to the operations review ledger:
+
+1. Export all RBAC assignments inherited by the vault (`--scope <vault-id> --include-inherited`, capturing root `/`, management groups, subscription, resource group, and vault directly from ARM) plus child-secret assignments (`--all`, filtered to `<vault-id>/secrets/*`) via `rbac-merge` (top-level ARM `{"value": [...]}` list envelopes are also unwrapped safely), export metadata-only `AzureDiagnostics` rows (`OperationName`, `identity_claim_oid_g`, `httpStatusCode_d`, `id_s`, `TimeGenerated`), map deployed managed identity principal OIDs (`api`, `token-maintenance`, `resident-demo`, `agents`, `orchestrator`, `import`) in `principals.json`, and run `access-audit`:
+
+```bash
+az role assignment list --scope "<vault-id>" --include-inherited -o json > roles-inherited.json
+az role assignment list --all -o json > roles-all.json
+python3 infra/scripts/secret_lifecycle.py rbac-merge \
+  --vault-id "<vault-id>" \
+  --inherited roles-inherited.json \
+  --all roles-all.json \
+  --out roles.json
+python3 infra/scripts/secret_lifecycle.py access-audit \
+  --vault-name <vault-name> \
+  --assignments roles.json \
+  --diagnostics kv-diagnostics-90d.json \
+  --expected-principals principals.json \
+  --window-days 90 \
+  --out kv-access-audit.json
+```
+
+* Expected caller policy is derived fail-closed from [role-assignments.json](role-assignments.json): `api` may hold vault-scoped `Key Vault Secrets User` and call `SecretGet` on `entra-client-secret` (including staged `entra-*` names) and `entra-token-store-sas`; `token-maintenance` may hold child-secret-scoped `Key Vault Secrets Officer` on `<vault-id>/secrets/entra-token-store-sas` only and call `SecretGet` and `SecretSet` on `entra-token-store-sas` only (vault-wide or subscription/resource-group data-plane grants raise `excess_rbac_privilege`); `resident-demo` may hold child-secret-scoped `Key Vault Secrets User` on `resident-demo-password-verifier` and `resident-demo-session-key` only; `agents`, `orchestrator` and `import` are forbidden from all Key Vault data-plane calls; any unmapped OID, foreign-vault RBAC assignment (`wrong_vault_rbac_scope`), or anonymous secret call is flagged.
+* OID-less platform expiry events (`SecretNearExpiryEventGridNotification` and `SecretExpiredEventGridNotification`) are counted under `systemNotificationCount` rather than false-positive caller anomalies, whereas OID-less secret operations (`SecretGet`, `SecretSet`, `SecretDelete`, `SecretList`) are bucketed under `<anonymous>` and flagged as `unexpected_caller`. Any HTTP `403` or repeated `401` (`>= 5` by default) raises `denied_access_activity`. `auditDigest` is a canonical SHA-256 integrity checksum over the audited snapshot that `review-sign` recomputes and binds under the human reviewer's `HMAC-SHA256` signature.
+
+2. A named human reviewer (never an empty string, placeholder or bot account) records explicit `keep` or `remove` decisions keyed by every `assignmentId` and `remediated`, `revoked` or `accepted_exception` dispositions with rationale keyed by every `anomalyId` in `decisions.json`, then signs and chains the record using an owner-only (`chmod 0600`, non-symlink) key file stored outside the Git repository worktree (`review-sign` enforces full `reviewIntervalDays` window coverage on the inaugural ledger entry and gapless `windowStart <= prev.windowEnd < windowEnd` continuity on chained entries):
+
+```bash
+python3 infra/scripts/secret_lifecycle.py review-sign \
+  --audit kv-access-audit.json \
+  --decisions decisions.json \
+  --reviewer "Juan Manuel Servera (@jmservera)" \
+  --key-file ~/.config/zava-ops/kv-review-hmac.key \
+  --key-id ops-2026-q4 \
+  --ledger ~/.config/zava-ops/kv-access-reviews.jsonl
+```
+
+3. Scheduled compliance checks run `ledger-verify` (and `review-status` for single standalone records), exiting non-zero if the ledger is empty, any `prevHash` or `entryHash` link is tampered, any `hmac-sha256` signature fails constant-time verification against `--keys-file` (`0600`, outside the repository), `vaultName` drifts across entries, audit windows leave an unreviewed gap, inter-review spacing exceeds 90 days, or the `nextReviewDue` calendar date has passed in UTC (`"overdue": true` after `23:59:59Z` on `nextReviewDue`):
+
+```bash
+python3 infra/scripts/secret_lifecycle.py ledger-verify \
+  --ledger ~/.config/zava-ops/kv-access-reviews.jsonl \
+  --keys-file ~/.config/zava-ops/kv-review-verify-keys.json \
+  --vault-name <vault-name>
+```
 
 ### Open items
 
-* Owner confirmation (or delegation) for each secret and for the review.
-* A live no-downtime rotation exercise in the test environment; only the ordering and checks are tested offline.
+* Owner confirmation (or delegation) for each secret and for the quarterly review signing key custody outside the repository.
+* A live operator-attended zero-downtime rotation exercise in the `ama` test environment producing an archived `rotation-verify` receipt; the staged verifier, rollback hold and ordering model are tested offline in CI.
+* Export of the first live 90-day `AzureDiagnostics` + RBAC snapshot from `ama` into an inaugural `review-sign` ledger entry.
 * Confirmation after deployment that the alert rules evaluate in Azure Monitor (not verified here; the template builds with `az bicep build`).
-* Scheduling the review and `check` runs (for example a calendar task or pipeline) is an owner choice.
 
 ## Disposable Key Vault for development
 
