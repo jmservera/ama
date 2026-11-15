@@ -900,7 +900,7 @@ class BicepPolicyTests(unittest.TestCase):
         }
         self.assertEqual(jobs["import"]["eventTriggerConfig"]["scale"]["maxExecutions"], 2)
         self.assertEqual(jobs["import"]["eventTriggerConfig"]["scale"]["minExecutions"], 0)
-        for name in ("orchestrator", "ledger-verify", "auth-renewal"):
+        for name in ("orchestrator", "ledger-verify", "auth-renewal", "ranking-publish"):
             with self.subTest(job=name):
                 self.assertEqual(jobs[name]["scheduleTriggerConfig"]["parallelism"], 1)
                 self.assertGreater(jobs[name]["replicaTimeout"], 0)

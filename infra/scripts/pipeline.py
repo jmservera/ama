@@ -29,6 +29,26 @@ IMAGE_PARAMETERS = {
     "orchestrator": "orchestratorImage",
     "importer": "importImage",
 }
+RELEASE_MANIFEST_FILE = "release-manifest.json"
+PLAN_IMMUTABLE_IMAGE_RE = re.compile(r"^[a-z0-9.-]+/[a-z0-9._/-]+@sha256:[0-9a-f]{64}$")
+WORKLOAD_IMAGE_PARAMETERS = {
+    "api": "apiImage",
+    "agents": "agentImage",
+    "orchestrator": "orchestratorImage",
+    "auth-renewal": "orchestratorImage",
+    "ledger-verify": "orchestratorImage",
+    "rank-publish": "orchestratorImage",
+    "import": "importImage",
+}
+HARDENING_CONTRACT: dict[str, Any] = {
+    "uid": 10001,
+    "gid": 10001,
+    "read_only_rootfs_compatible": True,
+    "writable_scratch_mounts": ["/tmp", "/state"],
+    "capabilities_dropped": ["ALL"],
+    "no_new_privileges": True,
+    "runtime_enforcement_env": "ZF_CONTAINER_HARDENING=enforced",
+}
 PARAMETER_FILES = {
     "dev": "main.bicepparam",
     "test": "main.test.bicepparam",
@@ -381,23 +401,112 @@ def publish(project: str, destination: Path) -> None:
     )
 
 
-def release_images(directory: Path, server: str) -> dict[str, str]:
-    images: dict[str, str] = {}
+def build_release_manifest(directory: Path, server: str) -> dict[str, Any]:
+    sha = source_sha()
+    tag = release_tag()
+    project_records: dict[str, dict[str, str]] = {}
+    parameter_images: dict[str, str] = {}
     for project in PROJECTS:
-        record = json.loads((directory / f"{project}.json").read_text())
-        image = record["image"]
+        record_path = directory / f"{project}.json"
+        if not record_path.is_file():
+            raise PipelineError(f"Missing release metadata file for project {project}")
+        record = json.loads(record_path.read_text())
+        if not isinstance(record, dict):
+            raise PipelineError("Release metadata record must be a JSON object")
+        image = record.get("image")
         if (
-            record["project"] != project
-            or record["source_sha"] != source_sha()
-            or record["tag"] != release_tag()
+            record.get("project") != project
+            or record.get("source_sha") != sha
+            or record.get("tag") != tag
+            or not isinstance(image, str)
+            or "quickstart" in image.lower()
             or not re.fullmatch(
                 re.escape(f"{server}/zava-forward-{project}@sha256:") + r"[0-9a-f]{64}", image
             )
         ):
             raise PipelineError("Release metadata does not match this run, project and registry")
+        parameter_key = IMAGE_PARAMETERS[project]
+        project_records[project] = {
+            "dockerfile": f"src/{project}/Dockerfile",
+            "image": image,
+            "parameter": parameter_key,
+            "repository": f"zava-forward-{project}",
+        }
+        parameter_images[parameter_key] = image
+    workloads = {
+        workload: {
+            "image": parameter_images[param_key],
+            "parameter": param_key,
+        }
+        for workload, param_key in WORKLOAD_IMAGE_PARAMETERS.items()
+    }
+    return {
+        "schema_version": 1,
+        "registry": server,
+        "source_sha": sha,
+        "tag": tag,
+        "hardening": dict(HARDENING_CONTRACT),
+        "projects": project_records,
+        "workloads": workloads,
+    }
+
+
+def verify_release_manifest(manifest: dict[str, Any], server: str) -> dict[str, str]:
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("schema_version") != 1
+        or manifest.get("registry") != server
+        or manifest.get("source_sha") != source_sha()
+        or manifest.get("tag") != release_tag()
+        or manifest.get("hardening") != HARDENING_CONTRACT
+    ):
+        raise PipelineError("Release manifest metadata or hardening contract is invalid")
+    projects = manifest.get("projects")
+    workloads = manifest.get("workloads")
+    if not isinstance(projects, dict) or set(projects) != set(PROJECTS):
+        raise PipelineError("Release manifest projects do not match canonical workload set")
+    if not isinstance(workloads, dict) or set(workloads) != set(WORKLOAD_IMAGE_PARAMETERS):
+        raise PipelineError("Release manifest workloads do not cover all hosted apps and jobs")
+    images: dict[str, str] = {}
+    for project in PROJECTS:
+        entry = projects[project]
+        if not isinstance(entry, dict):
+            raise PipelineError("Release manifest project entry must be an object")
+        image = entry.get("image")
+        expected_param = IMAGE_PARAMETERS[project]
+        if (
+            entry.get("parameter") != expected_param
+            or entry.get("dockerfile") != f"src/{project}/Dockerfile"
+            or entry.get("repository") != f"zava-forward-{project}"
+            or not isinstance(image, str)
+            or "quickstart" in image.lower()
+            or not re.fullmatch(
+                re.escape(f"{server}/zava-forward-{project}@sha256:") + r"[0-9a-f]{64}", image
+            )
+        ):
+            raise PipelineError("Release metadata does not match this run, project and registry")
+        images[expected_param] = image
+    for workload, expected_param in WORKLOAD_IMAGE_PARAMETERS.items():
+        binding = workloads[workload]
+        if (
+            not isinstance(binding, dict)
+            or binding.get("parameter") != expected_param
+            or binding.get("image") != images[expected_param]
+        ):
+            raise PipelineError(f"Release manifest workload {workload} image binding mismatch")
+    return images
+
+
+def release_images(directory: Path, server: str) -> dict[str, str]:
+    manifest = build_release_manifest(directory, server)
+    images = verify_release_manifest(manifest, server)
+    (directory / RELEASE_MANIFEST_FILE).write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n"
+    )
+    for project in PROJECTS:
+        image = images[IMAGE_PARAMETERS[project]]
         # Deploy identity must have AcrPull only, without quarantine bypass.
         run("docker", "pull", image)
-        images[IMAGE_PARAMETERS[project]] = image
     return images
 
 
@@ -558,7 +667,11 @@ def deployment(infra: Path, environment: str, output: Path, images_directory: Pa
             if len(matches) != 1:
                 raise PipelineError("PR planning requires all four initialized workload resources")
             image = matches[0]["properties"]["template"]["containers"][0]["image"]
-            if not isinstance(image, str) or "@sha256:" not in image:
+            if (
+                not isinstance(image, str)
+                or "quickstart" in image.lower()
+                or PLAN_IMMUTABLE_IMAGE_RE.fullmatch(image) is None
+            ):
                 raise PipelineError("PR planning requires existing immutable workload images")
             compiled["parameters"][key] = {"value": image}
         maintenance = [
@@ -594,6 +707,9 @@ def deployment(infra: Path, environment: str, output: Path, images_directory: Pa
         summary = summarize_plan(plan, subscription, sha)
         summary["parameter_sha256"] = hashlib.sha256(parameter_file.read_bytes()).hexdigest()
         if images_directory is not None:
+            manifest_path = images_directory / RELEASE_MANIFEST_FILE
+            if manifest_path.is_file():
+                summary["release_manifest"] = json.loads(manifest_path.read_text())
             summary["deployment_status"] = "Failed"
         output.write_text(json.dumps(summary, indent=2) + "\n")
         publish_step_summary("What-if result", what_if_lines(summary, environment))

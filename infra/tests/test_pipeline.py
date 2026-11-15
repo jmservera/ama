@@ -694,6 +694,76 @@ class PipelineTests(unittest.TestCase):
                         )
                 self.assertEqual(az.call_count, 2)
 
+    def test_release_images_persists_and_verifies_consolidated_release_manifest(self):
+        with TemporaryDirectory() as temporary, patch.dict(os.environ, ENV):
+            directory = Path(temporary)
+            server = "example.azurecr.io"
+            tag = f"sha-{SHA}-r123-a1"
+            for index, project in enumerate(pipeline.PROJECTS, start=1):
+                digest = str(index) * 64
+                (directory / f"{project}.json").write_text(
+                    json.dumps(
+                        {
+                            "project": project,
+                            "image": f"{server}/zava-forward-{project}@sha256:{digest}",
+                            "source_sha": SHA,
+                            "tag": tag,
+                        }
+                    )
+                )
+            with patch.object(pipeline, "run", return_value="") as run:
+                resolved = pipeline.release_images(directory, server)
+            self.assertEqual(run.call_count, 4)
+            manifest = json.loads((directory / pipeline.RELEASE_MANIFEST_FILE).read_text())
+            self.assertEqual(manifest["schema_version"], 1)
+            self.assertEqual(manifest["source_sha"], SHA)
+            self.assertEqual(manifest["tag"], tag)
+            self.assertEqual(manifest["hardening"], pipeline.HARDENING_CONTRACT)
+            self.assertEqual(
+                manifest["workloads"]["orchestrator"]["image"], resolved["orchestratorImage"]
+            )
+            self.assertEqual(manifest["workloads"]["import"]["image"], resolved["importImage"])
+            for mutate in (
+                lambda m: m["hardening"].update(uid=0),
+                lambda m: m["projects"]["importer"].update(
+                    image="mcr.microsoft.com/k8se/quickstart@sha256:" + "4" * 64
+                ),
+                lambda m: m["workloads"]["rank-publish"].update(image=resolved["apiImage"]),
+            ):
+                broken = json.loads(json.dumps(manifest))
+                mutate(broken)
+                with self.assertRaises(pipeline.PipelineError):
+                    pipeline.verify_release_manifest(broken, server)
+
+    def test_pr_plan_rejects_placeholder_and_malformed_digest_images(self):
+        def resource(name, image):
+            return {"name": name, "properties": {"template": {"containers": [{"image": image}]}}}
+
+        valid = "example.azurecr.io/app@sha256:" + "b" * 64
+        for bad_image in (
+            "mcr.microsoft.com/k8se/quickstart:latest",
+            "mcr.microsoft.com/k8se/quickstart@sha256:" + "b" * 64,
+            "example.azurecr.io/importer@sha256:short",
+            "example.azurecr.io/importer:sha-1234",
+        ):
+            apps = [
+                resource("ca-forward-test-api", valid),
+                resource("ca-forward-test-agents", valid),
+            ]
+            jobs = [
+                resource("job-forward-test-orchestrator", valid),
+                resource("job-forward-test-import", bad_image),
+            ]
+            with (
+                self.subTest(bad_image=bad_image),
+                TemporaryDirectory() as temporary,
+                patch.dict(os.environ, ENV),
+                patch.object(pipeline, "parameters", return_value={"parameters": {}}),
+                patch.object(pipeline, "az", side_effect=[apps, jobs]),
+                self.assertRaisesRegex(pipeline.PipelineError, "immutable workload images"),
+            ):
+                pipeline.deployment(ROOT / "infra", "test", Path(temporary) / "s.json", None)
+
     def test_failed_what_if_never_applies(self):
         with TemporaryDirectory() as temporary, patch.dict(os.environ, ENV):
             directory = Path(temporary)

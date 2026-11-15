@@ -42,14 +42,18 @@ param ledgerDigestRequireRetentionLock bool = true
 param ledgerDigestMinRetentionDays int = 365
 @description('Ranking archive container name for the Blob JSON archive (Refs #1258). Empty keeps the API on its existing configuration, where the store selects the local folder archive (a dev/test adapter, not evidence of durable storage).')
 param rankingArchiveContainer string = ''
+@minLength(1)
 param apiImage string
 @description('Minimum API replicas. Default 0 permits scale-to-zero for cost-safe demos and cold starts; set 2 explicitly for always-on production replicas.')
 @minValue(0)
 @maxValue(4)
 param apiMinReplicas int = 0
 param enableApiAi bool = false
+@minLength(1)
 param agentImage string
+@minLength(1)
 param orchestratorImage string
+@minLength(1)
 param importImage string
 
 var queueEndpoint = 'https://${storageAccountName}.queue.${environment().suffixes.storage}'
@@ -609,9 +613,12 @@ resource importJob 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && depl
         {
           name: 'import'
           image: importImage
+          command: ['python', '-m', 'zava_forward.importer']
+          args: ['run']
           resources: { cpu: json('0.5'), memory: '1Gi' }
           env: concat(commonEnv, [
             { name: 'AZURE_CLIENT_ID', value: identityClientIds.import }
+            { name: 'ZF_STORE', value: 'mssql' }
             { name: 'SQL_SERVER', value: sqlServerFqdn }
             { name: 'SQL_DATABASE', value: sqlDatabaseName }
             { name: 'BLOB_ENDPOINT', value: blobEndpoint }
