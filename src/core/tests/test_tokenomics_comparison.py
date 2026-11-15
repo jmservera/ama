@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import unittest
 from typing import Any
+from unittest import mock
 
 from zava_forward.core import ai_consumption, heldout_eval, tokenomics_comparison
 
@@ -50,6 +51,8 @@ class TokenomicsComparisonTest(unittest.TestCase):
             "lever_config": dict(baseline["lever_config"], model="cheap-mini-v2"),
             "case_ids": list(baseline["case_ids"]),
             "accepted_case_ids": list(baseline["accepted_case_ids"]),
+            "evaluation_outcome": "pass",
+            "gate_failures": [],
             "quality_counters": dict(baseline["quality_counters"], critical_misses=1),
             "usage": {"estimated_cost": "0.000400", "currency": "GBP"},
         }
@@ -66,6 +69,8 @@ class TokenomicsComparisonTest(unittest.TestCase):
             "lever_config": dict(baseline["lever_config"], model="cheap-mini-v2"),
             "case_ids": list(baseline["case_ids"]),
             "accepted_case_ids": list(baseline["accepted_case_ids"]),
+            "evaluation_outcome": "pass",
+            "gate_failures": [],
             "quality_counters": dict(baseline["quality_counters"], unsupported_claims=1),
             "usage": {"estimated_cost": "0.000450", "currency": "GBP"},
         }
@@ -84,6 +89,8 @@ class TokenomicsComparisonTest(unittest.TestCase):
             "lever_config": dict(baseline["lever_config"], routing="fast-tier-router-v2"),
             "case_ids": list(baseline["case_ids"]),
             "accepted_case_ids": list(baseline["accepted_case_ids"]),
+            "evaluation_outcome": "pass",
+            "gate_failures": [],
             "quality_counters": dict(baseline["quality_counters"], overrides=1),
             "usage": {"estimated_cost": "0.000500", "currency": "GBP"},
         }
@@ -92,6 +99,8 @@ class TokenomicsComparisonTest(unittest.TestCase):
             "lever_config": dict(baseline["lever_config"], routing="fast-tier-router-v3"),
             "case_ids": list(baseline["case_ids"]),
             "accepted_case_ids": list(baseline["accepted_case_ids"]),
+            "evaluation_outcome": "pass",
+            "gate_failures": [],
             "quality_counters": dict(baseline["quality_counters"], reopened_cases=1),
             "usage": {"estimated_cost": "0.000500", "currency": "GBP"},
         }
@@ -114,6 +123,8 @@ class TokenomicsComparisonTest(unittest.TestCase):
             "lever_config": dict(baseline["lever_config"], caching="aggressive-cache-v2"),
             "case_ids": list(baseline["case_ids"]),
             "accepted_case_ids": list(baseline["accepted_case_ids"])[:-1],
+            "evaluation_outcome": "pass",
+            "gate_failures": [],
             "quality_counters": dict(baseline["quality_counters"]),
             "usage": {"estimated_cost": "0.000700", "currency": "GBP"},
         }
@@ -128,6 +139,8 @@ class TokenomicsComparisonTest(unittest.TestCase):
         common = {
             "case_ids": list(baseline["case_ids"]),
             "accepted_case_ids": list(baseline["accepted_case_ids"]),
+            "evaluation_outcome": "pass",
+            "gate_failures": [],
             "quality_counters": dict(baseline["quality_counters"]),
             "usage": {"estimated_cost": "0.000900", "currency": "GBP"},
         }
@@ -188,6 +201,8 @@ class TokenomicsComparisonTest(unittest.TestCase):
             "lever_config": dict(baseline["lever_config"], caching="prefix-cache-v2"),
             "case_ids": reordered,
             "accepted_case_ids": list(baseline["accepted_case_ids"]),
+            "evaluation_outcome": "pass",
+            "gate_failures": [],
             "quality_counters": dict(baseline["quality_counters"]),
             "usage": {"estimated_cost": "0.000800", "currency": "GBP"},
         }
@@ -205,6 +220,8 @@ class TokenomicsComparisonTest(unittest.TestCase):
                 "lever_config": dict(base_levers, caching="prefix-cache-v2"),
                 "case_ids": list(baseline["case_ids"]),
                 "accepted_case_ids": list(baseline["accepted_case_ids"]),
+                "evaluation_outcome": "pass",
+                "gate_failures": [],
                 "quality_counters": dict(baseline["quality_counters"]),
                 "usage": {"estimated_cost": "0.000500", "currency": "GBP"},
                 "unknown_liabilities": 1,
@@ -214,6 +231,8 @@ class TokenomicsComparisonTest(unittest.TestCase):
                 "lever_config": dict(base_levers, routing="router-v2"),
                 "case_ids": list(baseline["case_ids"]),
                 "accepted_case_ids": list(baseline["accepted_case_ids"]),
+                "evaluation_outcome": "pass",
+                "gate_failures": [],
                 "quality_counters": dict(baseline["quality_counters"]),
                 "usage": {},
             },
@@ -222,6 +241,8 @@ class TokenomicsComparisonTest(unittest.TestCase):
                 "lever_config": dict(base_levers, model="mini-2026-expected"),
                 "case_ids": list(baseline["case_ids"]),
                 "accepted_case_ids": list(baseline["accepted_case_ids"]),
+                "evaluation_outcome": "pass",
+                "gate_failures": [],
                 "quality_counters": dict(baseline["quality_counters"]),
                 "usage": {"estimated_cost": "0.000500", "currency": "GBP"},
                 "actual_serving_version": "other-serving-snapshot",
@@ -250,6 +271,8 @@ class TokenomicsComparisonTest(unittest.TestCase):
             "lever_config": dict(baseline["lever_config"], caching="prefix-cache-v2"),
             "case_ids": list(baseline["case_ids"]),
             "accepted_case_ids": list(baseline["accepted_case_ids"]),
+            "evaluation_outcome": "pass",
+            "gate_failures": [],
             "quality_counters": dict(baseline["quality_counters"]),
             "usage": {"estimated_cost": "0.000800", "currency": "GBP"},
         }
@@ -277,6 +300,8 @@ class TokenomicsComparisonTest(unittest.TestCase):
             "lever_config": dict(baseline["lever_config"], caching="prefix-cache-v2"),
             "case_ids": list(baseline["case_ids"]),
             "accepted_case_ids": list(baseline["accepted_case_ids"]),
+            "evaluation_outcome": "pass",
+            "gate_failures": [],
             "quality_counters": dict(baseline["quality_counters"]),
             "usage": {"estimated_cost": "0.000904", "currency": "GBP"},
             "time_released_minutes": 42,
@@ -290,6 +315,149 @@ class TokenomicsComparisonTest(unittest.TestCase):
             tokenomics_comparison.TIME_RELEASED_CAPACITY_ONLY,
         )
         self.assertFalse(row["time_released"]["included_in_net_saving"])
+
+    def test_single_lever_model_candidate_keeps_frozen_manifest_digest_immutable(self) -> None:
+        manifest, baseline = _fixture()
+        responses = heldout_eval.canonical_baseline_responses()
+        for item in responses.values():
+            item["serving_version"] = "gpt-4o-nano-synthetic-2026"
+            if isinstance(item.get("provider_result"), dict):
+                item["provider_result"]["model"] = "gpt-4o-nano-synthetic-2026"
+        cand = {
+            "candidate_id": "nano-model-pass",
+            "declared_lever": "model",
+            "lever_config": dict(baseline["lever_config"], model="gpt-4o-nano-synthetic-2026"),
+            "responses": responses,
+        }
+        with mock.patch(
+            "zava_forward.core.heldout_eval.approve_manifest",
+            side_effect=AssertionError("compare_candidates must not re-sign manifest"),
+        ):
+            report = tokenomics_comparison.compare_candidates(manifest, baseline, [cand])
+        self.assertEqual(report["manifest_digest"], heldout_eval.FROZEN_MANIFEST_DIGEST)
+        self.assertEqual(report["candidates"][0]["outcome"], "pass")
+
+    def test_summary_candidate_rejects_missing_outcome_accepted_ids_or_gate_failures(
+        self,
+    ) -> None:
+        manifest, baseline = _fixture()
+        valid_summary = {
+            "candidate_id": "summary-cand",
+            "lever_config": dict(baseline["lever_config"], caching="prefix-cache-v2"),
+            "case_ids": list(baseline["case_ids"]),
+            "accepted_case_ids": list(baseline["accepted_case_ids"]),
+            "evaluation_outcome": "pass",
+            "gate_failures": [],
+            "quality_counters": dict(baseline["quality_counters"]),
+            "usage": {"estimated_cost": "0.000800", "currency": "GBP"},
+        }
+        for missing_key in ("evaluation_outcome", "accepted_case_ids", "gate_failures"):
+            bad = dict(valid_summary)
+            del bad[missing_key]
+            with self.assertRaises(ValueError, msg=missing_key):
+                tokenomics_comparison.compare_candidates(manifest, baseline, [bad])
+
+        bad_subset = dict(
+            valid_summary,
+            accepted_case_ids=[*baseline["accepted_case_ids"], "FORGED-CASE-99"],
+        )
+        with self.assertRaises(ValueError):
+            tokenomics_comparison.compare_candidates(manifest, baseline, [bad_subset])
+
+        gated = dict(valid_summary, gate_failures=["source_integrity_failed"])
+        row = tokenomics_comparison.compare_candidates(manifest, baseline, [gated])["candidates"][0]
+        self.assertEqual(row["outcome"], "failure")
+        self.assertFalse(row["is_saving"])
+        self.assertIn("candidate_gate_failure:source_integrity_failed", row["failure_reasons"])
+
+    def test_currency_mismatch_or_missing_currency_blocks_savings(self) -> None:
+        manifest, baseline = _fixture()
+        usd_cand = {
+            "candidate_id": "usd-cand",
+            "lever_config": dict(baseline["lever_config"], caching="prefix-cache-v2"),
+            "case_ids": list(baseline["case_ids"]),
+            "accepted_case_ids": list(baseline["accepted_case_ids"]),
+            "evaluation_outcome": "pass",
+            "gate_failures": [],
+            "quality_counters": dict(baseline["quality_counters"]),
+            "usage": {"estimated_cost": "0.000700", "currency": "USD"},
+        }
+        row = tokenomics_comparison.compare_candidates(manifest, baseline, [usd_cand])[
+            "candidates"
+        ][0]
+        self.assertEqual(row["outcome"], "failure")
+        self.assertFalse(row["is_saving"])
+        self.assertEqual(row["cost"]["nominal_cost_delta"], ai_consumption.UNKNOWN)
+        self.assertIn("currency_mismatch:USD!=GBP", row["failure_reasons"])
+
+        no_currency = dict(usd_cand, usage={"estimated_cost": "0.000700"})
+        with self.assertRaises(ValueError):
+            tokenomics_comparison.compare_candidates(manifest, baseline, [no_currency])
+
+    def test_tampered_baseline_manifest_digest_is_rejected(self) -> None:
+        manifest, baseline = _fixture()
+        cand = {
+            "candidate_id": "cache-cand",
+            "lever_config": dict(baseline["lever_config"], caching="prefix-cache-v2"),
+            "case_ids": list(baseline["case_ids"]),
+            "accepted_case_ids": list(baseline["accepted_case_ids"]),
+            "evaluation_outcome": "pass",
+            "gate_failures": [],
+            "quality_counters": dict(baseline["quality_counters"]),
+            "usage": {"estimated_cost": "0.000800", "currency": "GBP"},
+        }
+        forged_baseline = dict(baseline, manifest_digest="0" * 64)
+        with self.assertRaises(ValueError):
+            tokenomics_comparison.compare_candidates(manifest, forged_baseline, [cand])
+
+        missing_digest = dict(baseline)
+        del missing_digest["manifest_digest"]
+        with self.assertRaises(ValueError):
+            tokenomics_comparison.compare_candidates(manifest, missing_digest, [cand])
+
+    def test_candidate_prompt_lever_with_heldout_leak_fails_isolation(self) -> None:
+        manifest, baseline = _fixture()
+        leaked_cand = {
+            "candidate_id": "leaked-prompt-lever",
+            "declared_lever": "prompt",
+            "lever_config": dict(
+                baseline["lever_config"],
+                prompt="prompt-v2-tuned-on-HO-LEG-PR-01-heldout-case",
+            ),
+            "case_ids": list(baseline["case_ids"]),
+            "accepted_case_ids": list(baseline["accepted_case_ids"]),
+            "evaluation_outcome": "pass",
+            "gate_failures": [],
+            "quality_counters": dict(baseline["quality_counters"]),
+            "usage": {"estimated_cost": "0.000700", "currency": "GBP"},
+        }
+        report = tokenomics_comparison.compare_candidates(manifest, baseline, [leaked_cand])
+        self.assertFalse(report["holdout_leakage_clear"])
+        row = report["candidates"][0]
+        self.assertFalse(row["holdout_leakage_clear"])
+        self.assertEqual(row["outcome"], "failure")
+        self.assertFalse(row["is_saving"])
+        self.assertIn("prompt_or_tuning_heldout_leak", row["failure_reasons"])
+
+    def test_non_offline_summary_candidate_enforces_serving_model_match(self) -> None:
+        manifest, baseline = _fixture()
+        cand = {
+            "candidate_id": "live-serving-drift",
+            "declared_lever": "model",
+            "lever_config": dict(baseline["lever_config"], model="gpt-4o-mini-approved-v2"),
+            "case_ids": list(baseline["case_ids"]),
+            "accepted_case_ids": list(baseline["accepted_case_ids"]),
+            "evaluation_outcome": "pass",
+            "gate_failures": [],
+            "quality_counters": dict(baseline["quality_counters"]),
+            "usage": {"estimated_cost": "0.000700", "currency": "GBP"},
+            "offline_scripted": False,
+            "actual_serving_version": "unapproved-shadow-snapshot",
+        }
+        row = tokenomics_comparison.compare_candidates(manifest, baseline, [cand])["candidates"][0]
+        self.assertEqual(row["outcome"], "failure")
+        self.assertFalse(row["is_saving"])
+        self.assertIn("serving_version_mismatch", row["failure_reasons"])
 
 
 if __name__ == "__main__":

@@ -12,8 +12,10 @@ ms.topic: reference
 five registered assistants and all six retained legacy task families, together
 with an independently labelled synthetic held-out split, categorical expected
 outcomes, full expected-answer prose, critical-error definitions, cohorts,
-sample floors and human-approved thresholds bound by both `thresholds_digest` and
-full `manifest_digest`. `check_prompt_tuning_isolation` renders all five
+sample floors and human-authorized thresholds bound to `HELDOUT-FREEZE-2026-10-15`
+by statically pinned `FROZEN_THRESHOLDS_DIGEST` and `FROZEN_MANIFEST_DIGEST`
+(flagging `capability_version_drift` if live assistant or legacy prompt/policy/task
+versions change without an explicit re-freeze). `check_prompt_tuning_isolation` renders all five
 assistant request payloads and all six legacy prompt templates (plus any caller
 prompts or tuning examples) and fails closed if any held-out case identifier or
 six-word expected-answer shingle leaks into prompts or tuning.
@@ -29,10 +31,14 @@ unknown liabilities, reviewer protocol, `pass`/`fail`/`insufficient` outcomes an
 proposals carry no calibrated probability scores.
 
 `tokenomics_comparison` compares candidate configurations against the frozen
-held-out split and recorded baseline using exact `Decimal` arithmetic. Any
+held-out split and recorded baseline (`manifest_digest`-verified) using exact
+`Decimal` arithmetic in matching currencies. Summary candidates without `responses`
+must supply verified `evaluation_outcome`, `accepted_case_ids` and `gate_failures`,
+and candidate `lever_config.prompt` values are checked for held-out leakage. Any
 cheaper candidate that raises `critical_misses`, `unsupported_claims`,
 `overrides`, `reopened_cases` or `critical_errors`, loses a baseline-accepted
-case, mismatches serving version or leaves unknown liabilities is classified as
+case, mismatches serving version or currency, leaks held-out material or leaves
+unknown liabilities is classified as
 `outcome="failure"` (`is_saving=False`), never a saving. Every routing, caching,
 model or prompt candidate must alter exactly one lever at a time on the identical
 held-out cases, and `time_released_minutes` stays capacity-only unless finance

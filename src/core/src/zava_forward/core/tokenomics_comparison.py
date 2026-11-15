@@ -86,13 +86,56 @@ def _parse_cost(usage_map: Mapping[str, Any], tariff: Mapping[str, Any] | None) 
     )
 
 
-def _validate_baseline(
+def _validate_prompt_list(value: object, field_name: str) -> list[str]:
+    if (
+        not isinstance(value, Sequence)
+        or isinstance(value, str | bytes | bytearray)
+        or not all(isinstance(item, str) for item in value)
+    ):
+        raise ValueError(f"{field_name} must be a non-string sequence of prompt strings.")
+    return [str(item) for item in value]
+
+
+def _validate_tuning_list(
+    value: object,
+    field_name: str,
+) -> list[str | Mapping[str, Any]]:
+    if (
+        not isinstance(value, Sequence)
+        or isinstance(value, str | bytes | bytearray)
+        or not all(isinstance(item, str | Mapping) for item in value)
+    ):
+        raise ValueError(f"{field_name} must be a non-string sequence of strings or mappings.")
+    return list(value)
+
+
+def _validate_baseline_artifact(
     baseline: Mapping[str, Any],
     frozen_case_ids: list[str],
+    freeze: Mapping[str, Any],
+    approval_manifest_digest: object,
     default_tariff: Mapping[str, Any] | None,
-) -> tuple[dict[str, str], dict[str, int], list[str], set[str], Decimal | None, int]:
+) -> tuple[dict[str, str], dict[str, int], list[str], set[str], Decimal | None, int, str, str]:
     if not rai_release.named(baseline.get("baseline_id")):
         raise ValueError("Baseline requires a non-empty baseline_id.")
+    raw_manifest_digest = baseline.get("manifest_digest")
+    if not rai_release.named(raw_manifest_digest):
+        raise ValueError(
+            "Baseline requires a non-empty manifest_digest matching the frozen held-out manifest."
+        )
+    base_manifest_digest = str(raw_manifest_digest).strip()
+    expected_manifest_digest = str(freeze.get("manifest_digest") or "")
+    if bool(freeze.get("frozen")):
+        if base_manifest_digest != expected_manifest_digest:
+            raise ValueError(
+                "Baseline manifest_digest must match the frozen held-out manifest_digest."
+            )
+    elif (
+        rai_release.named(approval_manifest_digest)
+        and base_manifest_digest != str(approval_manifest_digest).strip()
+    ):
+        raise ValueError("Baseline manifest_digest must match the frozen held-out manifest_digest.")
+
     levers = _valid_lever_config(baseline.get("lever_config"))
     if levers is None:
         raise ValueError(
@@ -121,84 +164,123 @@ def _validate_baseline(
     usage_raw = baseline.get("usage")
     if not isinstance(usage_raw, Mapping):
         raise ValueError("Baseline usage must be a mapping.")
+    if not rai_release.named(usage_raw.get("currency")):
+        raise ValueError("Baseline usage must specify a non-empty currency.")
+    base_currency = str(usage_raw["currency"]).strip()
     base_cost = None if unknown_raw > 0 else _parse_cost(usage_raw, default_tariff)
-    return levers, counters, list(frozen_case_ids), accepted_ids, base_cost, unknown_raw
+    return (
+        levers,
+        counters,
+        list(frozen_case_ids),
+        accepted_ids,
+        base_cost,
+        unknown_raw,
+        base_currency,
+        base_manifest_digest,
+    )
 
 
-def _manifest_for_candidate_model(
-    manifest: Mapping[str, Any],
-    candidate_model: str,
-) -> dict[str, Any]:
-    versions = manifest.get("versions")
-    if not isinstance(versions, Mapping) or versions.get("model") == candidate_model:
-        return dict(manifest)
-    # Keep the frozen held-out split, labels and thresholds verified first; adjust only the
-    # expected serving version for single-lever model evaluation after freeze validation succeeds.
-    adjusted = copy.deepcopy(dict(manifest))
-    adjusted["versions"]["model"] = candidate_model
-    approval = adjusted.get("threshold_approval")
-    approved_by = (
-        str(approval["approved_by"])
-        if isinstance(approval, Mapping) and isinstance(approval.get("approved_by"), str)
-        else "Claire Whittaker (Head of Building Safety & Compliance)"
-    )
-    approved_at = (
-        str(approval["approved_at"])
-        if isinstance(approval, Mapping) and isinstance(approval.get("approved_at"), str)
-        else "2026-11-12T11:00:00Z"
-    )
-    return heldout_eval.approve_manifest(
-        adjusted,
-        approved_by=approved_by,
-        approved_at=approved_at,
-    )
+_validate_baseline = _validate_baseline_artifact
 
 
 def _extract_candidate_metrics(
     candidate: Mapping[str, Any],
     manifest: Mapping[str, Any],
     cand_levers: Mapping[str, str],
+    rendered_prompts: Sequence[str],
+    tuning_examples: Sequence[str | Mapping[str, Any]],
     default_tariff: Mapping[str, Any] | None,
 ) -> dict[str, Any]:
-    cand_tariff = (
-        candidate.get("tariff") if isinstance(candidate.get("tariff"), Mapping) else default_tariff
+    raw_tariff = candidate.get("tariff")
+    if raw_tariff is not None and not isinstance(raw_tariff, Mapping):
+        raise ValueError("Candidate tariff must be a mapping when provided.")
+    cand_tariff = raw_tariff if isinstance(raw_tariff, Mapping) else default_tariff
+    if isinstance(cand_tariff, Mapping) and not rai_release.named(cand_tariff.get("currency")):
+        raise ValueError("Candidate tariff must specify a non-empty currency.")
+
+    cand_rendered_prompts = _validate_prompt_list(
+        candidate.get("rendered_prompts", ()),
+        "candidate.rendered_prompts",
     )
-    if isinstance(candidate.get("responses"), Mapping):
+    cand_prompt_inputs = [*rendered_prompts, cand_levers["prompt"], *cand_rendered_prompts]
+
+    raw_responses = candidate.get("responses")
+    if isinstance(raw_responses, Mapping):
         offline_flag = bool(candidate.get("offline_scripted", True))
-        eval_manifest = _manifest_for_candidate_model(manifest, cand_levers["model"])
         eval_report = heldout_eval.evaluate_heldout(
-            eval_manifest,
-            candidate["responses"],
+            manifest,
+            raw_responses,
+            rendered_prompts=cand_prompt_inputs,
+            tuning_examples=tuning_examples,
             tariff=cand_tariff,
             offline_scripted=offline_flag,
+            expected_serving_model=cand_levers["model"],
         )
         split = eval_report["split"]
-        usage_map = eval_report["usage"]
+        usage_map = dict(eval_report["usage"])
+        if not rai_release.named(usage_map.get("currency")):
+            raise ValueError("Candidate usage must specify a non-empty currency.")
+        cand_currency: str | None = str(usage_map["currency"]).strip()
         unknown_count = int(eval_report["unknown_liabilities"]["count"])
         serving_mismatches = list(eval_report["actual_serving_version"]["mismatches"])
         cand_cost = None if unknown_count > 0 else _parse_cost(usage_map, cand_tariff)
+        gate_failures = list(eval_report.get("failure_reasons", [])) + list(
+            eval_report.get("insufficient_reasons", [])
+        )
+        cand_isolation = eval_report["isolation"]
         return {
             "case_ids": list(split["case_ids"]),
             "accepted_case_ids": set(eval_report["accepted_case_ids"]),
             "quality_counters": dict(eval_report["quality_counters"]),
-            "usage": dict(usage_map),
+            "usage": usage_map,
+            "currency": cand_currency,
             "cost": cand_cost,
             "unknown_liabilities": unknown_count,
             "evaluation_outcome": str(eval_report["outcome"]),
+            "gate_failures": gate_failures,
+            "holdout_leakage_clear": bool(cand_isolation["isolated"]),
             "serving_version": str(eval_report["actual_serving_version"]["reported"]),
             "serving_mismatches": serving_mismatches,
             "evaluation_digest": eval_report["hashes"]["evaluation_digest"],
         }
+    if raw_responses is not None:
+        raise ValueError("Candidate responses must be a mapping when provided.")
 
     raw_cases = candidate.get("case_ids")
     if not isinstance(raw_cases, Sequence) or isinstance(raw_cases, str | bytes | bytearray):
         raise ValueError("Candidate without responses must provide case_ids.")
     case_ids = [str(x) for x in raw_cases]
 
-    raw_accepted = candidate.get("accepted_case_ids", case_ids)
+    if "evaluation_outcome" not in candidate or (
+        candidate.get("evaluation_outcome") not in heldout_eval.OUTCOMES
+    ):
+        raise ValueError(
+            "Summary candidate without responses must provide verified evaluation_outcome "
+            "(pass, fail or insufficient)."
+        )
+    eval_outcome = str(candidate["evaluation_outcome"])
+
+    if "accepted_case_ids" not in candidate:
+        raise ValueError(
+            "Summary candidate without responses must provide verified accepted_case_ids."
+        )
+    raw_accepted = candidate.get("accepted_case_ids")
     if not isinstance(raw_accepted, Sequence) or isinstance(raw_accepted, str | bytes | bytearray):
         raise ValueError("Candidate accepted_case_ids must be a sequence of case IDs.")
     accepted_ids = {str(x) for x in raw_accepted}
+    if not accepted_ids <= set(case_ids):
+        raise ValueError("Candidate accepted_case_ids must be a subset of candidate case_ids.")
+
+    if "gate_failures" not in candidate:
+        raise ValueError("Summary candidate without responses must provide verified gate_failures.")
+    raw_gate_failures = candidate.get("gate_failures")
+    if (
+        not isinstance(raw_gate_failures, Sequence)
+        or isinstance(raw_gate_failures, str | bytes | bytearray)
+        or not all(rai_release.named(item) for item in raw_gate_failures)
+    ):
+        raise ValueError("Candidate gate_failures must be a sequence of non-empty strings.")
+    gate_failures = [str(item).strip() for item in raw_gate_failures]
 
     counters = _valid_counters(candidate.get("quality_counters"))
     if counters is None:
@@ -209,7 +291,16 @@ def _extract_candidate_metrics(
         raise ValueError("Candidate unknown_liabilities must be a non-negative integer.")
 
     usage_raw = candidate.get("usage")
+    if usage_raw is not None and not isinstance(usage_raw, Mapping):
+        raise ValueError("Candidate usage must be a mapping when provided.")
     usage_dict: dict[str, Any] = dict(usage_raw) if isinstance(usage_raw, Mapping) else {}
+    if usage_dict:
+        if not rai_release.named(usage_dict.get("currency")):
+            raise ValueError("Candidate usage must specify a non-empty currency.")
+        cand_currency = str(usage_dict["currency"]).strip()
+    else:
+        cand_currency = None
+
     has_token_keys = any(
         k in usage_dict for k in ("prompt_tokens", "completion_tokens", "total_tokens")
     )
@@ -226,32 +317,48 @@ def _extract_candidate_metrics(
         if cand_cost is None:
             unknown_raw += 1
 
-    eval_outcome = str(candidate.get("evaluation_outcome", "pass"))
-    if eval_outcome not in heldout_eval.OUTCOMES:
-        raise ValueError("Candidate evaluation_outcome must be pass, fail or insufficient.")
+    cand_isolation = heldout_eval.check_prompt_tuning_isolation(
+        manifest,
+        rendered_prompts=cand_prompt_inputs,
+        tuning_examples=tuning_examples,
+    )
 
     serving_ver = str(candidate.get("actual_serving_version", heldout_eval.OFFLINE_SERVING_VERSION))
+    offline_summary = bool(
+        candidate.get("offline_scripted", serving_ver == heldout_eval.OFFLINE_SERVING_VERSION)
+    )
     expected_serving = candidate.get("expected_serving_version")
+    effective_expected = (
+        expected_serving.strip()
+        if isinstance(expected_serving, str) and expected_serving.strip()
+        else (cand_levers["model"] if not offline_summary else "")
+    )
     mismatches: list[dict[str, str]] = []
-    if (
-        isinstance(expected_serving, str)
-        and expected_serving.strip()
-        and serving_ver != expected_serving.strip()
-    ):
-        mismatches.append({"expected": expected_serving.strip(), "observed": serving_ver})
+    if effective_expected and serving_ver != effective_expected:
+        mismatches.append({"expected": effective_expected, "observed": serving_ver})
 
     return {
         "case_ids": case_ids,
         "accepted_case_ids": accepted_ids,
         "quality_counters": counters,
         "usage": usage_dict,
+        "currency": cand_currency,
         "cost": cand_cost,
         "unknown_liabilities": unknown_raw,
         "evaluation_outcome": eval_outcome,
+        "gate_failures": gate_failures,
+        "holdout_leakage_clear": bool(cand_isolation["isolated"]),
         "serving_version": serving_ver,
         "serving_mismatches": mismatches,
         "evaluation_digest": rai_release.digest(
-            {"candidate_id": candidate.get("candidate_id"), "counters": counters, "cases": case_ids}
+            {
+                "candidate_id": candidate.get("candidate_id"),
+                "counters": counters,
+                "cases": case_ids,
+                "accepted_case_ids": sorted(accepted_ids),
+                "evaluation_outcome": eval_outcome,
+                "gate_failures": gate_failures,
+            }
         ),
     }
 
@@ -281,11 +388,14 @@ def compare_candidates(
     if not isinstance(finance_confirmed_saving, bool):
         raise ValueError("finance_confirmed_saving must be a boolean.")
 
+    validated_prompts = _validate_prompt_list(rendered_prompts, "rendered_prompts")
+    validated_tuning = _validate_tuning_list(tuning_examples, "tuning_examples")
+
     freeze = heldout_eval.check_heldout_freeze(manifest)
     isolation = heldout_eval.check_prompt_tuning_isolation(
         manifest,
-        rendered_prompts=rendered_prompts,
-        tuning_examples=tuning_examples,
+        rendered_prompts=validated_prompts,
+        tuning_examples=validated_tuning,
     )
     held_out = manifest.get("held_out") if isinstance(manifest.get("held_out"), Mapping) else {}
     assert isinstance(held_out, Mapping)
@@ -296,6 +406,12 @@ def compare_candidates(
     if not frozen_case_ids:
         raise ValueError("Manifest held_out.case_ids must be a non-empty sequence.")
 
+    approval_block = (
+        manifest.get("threshold_approval")
+        if isinstance(manifest.get("threshold_approval"), Mapping)
+        else {}
+    )
+    assert isinstance(approval_block, Mapping)
     (
         base_levers,
         base_counters,
@@ -303,11 +419,21 @@ def compare_candidates(
         base_accepted,
         base_cost,
         base_unknown,
-    ) = _validate_baseline(baseline, frozen_case_ids, default_tariff)
+        base_currency,
+        base_manifest_digest,
+    ) = _validate_baseline_artifact(
+        baseline,
+        frozen_case_ids,
+        freeze,
+        approval_block.get("manifest_digest"),
+        default_tariff,
+    )
 
     suite_blockers: list[str] = []
     if freeze["blockers"]:
         suite_blockers.extend(f"manifest_freeze:{b}" for b in freeze["blockers"])
+    if base_manifest_digest != freeze["manifest_digest"]:
+        suite_blockers.append("baseline_manifest_digest_mismatch")
     if freeze["insufficient_samples"]:
         suite_blockers.extend(f"manifest_insufficient:{s}" for s in freeze["insufficient_samples"])
     if not isolation["isolated"]:
@@ -337,7 +463,14 @@ def compare_candidates(
                 f"Candidate {cand_id} lever_config must define model, routing, caching and prompt."
             )
 
-        metrics = _extract_candidate_metrics(cand, manifest, cand_levers, default_tariff)
+        metrics = _extract_candidate_metrics(
+            cand,
+            manifest,
+            cand_levers,
+            validated_prompts,
+            validated_tuning,
+            default_tariff,
+        )
         failure_reasons: list[str] = list(suite_blockers)
 
         # 1. Single-lever discipline against recorded baseline
@@ -384,14 +517,33 @@ def compare_candidates(
         if metrics["evaluation_outcome"] != "pass":
             failure_reasons.append(f"heldout_evaluation_{metrics['evaluation_outcome']}")
 
+        for gf in metrics["gate_failures"]:
+            failure_reasons.append(f"candidate_gate_failure:{gf}")
+
+        if not metrics["holdout_leakage_clear"]:
+            if "prompt_or_tuning_heldout_leak" not in failure_reasons:
+                failure_reasons.append("prompt_or_tuning_heldout_leak")
+            failure_reasons.append("holdout_leakage_detected")
+
         if metrics["serving_mismatches"]:
             failure_reasons.append("serving_version_mismatch")
+
+        cand_currency: str | None = metrics["currency"]
+        currency_mismatch = cand_currency is not None and cand_currency != base_currency
+        if currency_mismatch:
+            failure_reasons.append(f"currency_mismatch:{cand_currency}!={base_currency}")
 
         # 4. Complete usage and unknown liabilities check (Decimal only)
         cand_cost: Decimal | None = metrics["cost"]
         cand_unknown: int = metrics["unknown_liabilities"]
         cheaper_nominal = False
-        if cand_unknown > 0 or base_unknown > 0 or cand_cost is None or base_cost is None:
+        if currency_mismatch:
+            nominal_cost_str = (
+                f"{cand_cost:.6f}" if cand_cost is not None else ai_consumption.UNKNOWN
+            )
+            nominal_delta_str = ai_consumption.UNKNOWN
+            net_saving_str = "0.000000"
+        elif cand_unknown > 0 or base_unknown > 0 or cand_cost is None or base_cost is None:
             failure_reasons.append("incomplete_usage_or_unknown_liability")
             nominal_cost_str = ai_consumption.UNKNOWN
             nominal_delta_str = ai_consumption.UNKNOWN
@@ -443,10 +595,13 @@ def compare_candidates(
                 "quality_deltas": quality_deltas,
                 "regressed_quality_metrics": regressed_metrics,
                 "lost_accepted_case_ids": lost_accepted,
+                "gate_failures": metrics["gate_failures"],
+                "holdout_leakage_clear": metrics["holdout_leakage_clear"],
                 "actual_serving_version": metrics["serving_version"],
                 "unknown_liabilities": cand_unknown,
                 "cost": {
-                    "currency": str(baseline["usage"].get("currency", "GBP")),
+                    "currency": base_currency,
+                    "candidate_currency": cand_currency,
                     "baseline_cost": (
                         f"{base_cost:.6f}" if base_cost is not None else ai_consumption.UNKNOWN
                     ),
@@ -474,6 +629,9 @@ def compare_candidates(
         "saving_candidate_ids": savings_ids,
         "failed_candidate_ids": failed_ids,
     }
+    holdout_leakage_clear = bool(
+        isolation["isolated"] and all(c["holdout_leakage_clear"] for c in evaluated_candidates)
+    )
     report: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
         "synthetic": bool(manifest.get("synthetic", True)),
@@ -483,6 +641,7 @@ def compare_candidates(
         "heldout_split_id": held_out.get("split_id"),
         "heldout_denominator": len(frozen_case_ids),
         "manifest_digest": freeze["manifest_digest"],
+        "holdout_leakage_clear": holdout_leakage_clear,
         "suite_valid": len(suite_blockers) == 0,
         "suite_blockers": suite_blockers,
         "time_released_treatment": time_treatment,
@@ -593,6 +752,7 @@ def compact_comparison_summary(
         "baseline_id": report.get("baseline_id"),
         "heldout_split_id": report.get("heldout_split_id"),
         "heldout_denominator": report.get("heldout_denominator"),
+        "holdout_leakage_clear": report.get("holdout_leakage_clear"),
         "suite_valid": report.get("suite_valid"),
         "time_released_treatment": report.get("time_released_treatment"),
         "summary": report.get("summary"),

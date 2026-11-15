@@ -1,7 +1,7 @@
 """Offline RAI held-out evaluation and prompt/tuning isolation checks (Issue #108).
 
 Freezes task, model, prompt, policy and source versions, an independently labelled held-out
-split, expected outcomes, critical-error definitions, cohorts, sample floors and human-approved
+split, expected outcomes, critical-error definitions, cohorts, sample floors and human-authorized
 thresholds before evaluation. Verifies that held-out case identifiers and expected-answer prose
 never enter assistant or legacy prompt templates or tuning examples, and evaluates all five
 assistants and all six retained legacy families offline without network calls.
@@ -54,6 +54,107 @@ THRESHOLD_KEYS = (
 )
 OFFLINE_SERVING_VERSION = "unattested (offline scripted fixture)"
 SHINGLE_WORDS = 6
+CANONICAL_FREEZE_ID = "HELDOUT-FREEZE-2026-10-15"
+
+FROZEN_VERSIONS: dict[str, str] = {
+    "model": "gpt-4o-mini-2024-07-18",
+    "policy": "synthetic-gaps-2026-10-13-v1:b66fdaccdcbd",
+    "prompt": "assistants:evidence-proposal-v1+legacy:2026-10-15.2",
+    "source": "constructed-synthetic-heldout-2026-11.1",
+    "task": "1.0.0+2026-10-15.1",
+}
+
+FROZEN_CAPABILITY_VERSIONS: dict[str, dict[str, str]] = {
+    "stock-prioritisation": {
+        "task": "1.0.0",
+        "model": "gpt-4o-mini-2024-07-18",
+        "prompt": "3768ed36e3242c28",
+        "policy": "synthetic-gaps-2026-10-13-v1:bb974eaf2f8b",
+        "source": "bd66b741abf300ac",
+    },
+    "assessment-preparation": {
+        "task": "1.0.0",
+        "model": "gpt-4o-mini-2024-07-18",
+        "prompt": "227fbd67300191c2",
+        "policy": "synthetic-gaps-2026-10-13-v1:38aadbe30ceb",
+        "source": "85e08cf5af33f7cd",
+    },
+    "funding-evidence": {
+        "task": "1.0.0",
+        "model": "gpt-4o-mini-2024-07-18",
+        "prompt": "a3a511de0e461d78",
+        "policy": "synthetic-gaps-2026-10-13-v1:f182f3b38088",
+        "source": "5dabe1a2162e5f62",
+    },
+    "works-resident-coordination": {
+        "task": "1.0.0",
+        "model": "gpt-4o-mini-2024-07-18",
+        "prompt": "46d998c3de7ac61e",
+        "policy": "synthetic-gaps-2026-10-13-v1:afb0ef7dde7a",
+        "source": "3f0a66365555e8d1",
+    },
+    "quality-evidence": {
+        "task": "1.0.0",
+        "model": "gpt-4o-mini-2024-07-18",
+        "prompt": "9582b9a76f52d5ef",
+        "policy": "synthetic-gaps-2026-10-13-v1:a7ce4702fe12",
+        "source": "b979970eefcae01d",
+    },
+    "briefing": {
+        "task": "2026-10-15.1",
+        "model": "gpt-4o-mini-2024-07-18",
+        "prompt": "b4b77f4cf772b67e",
+        "policy": "legacy-forbidden-output-filter-v1",
+        "source": "fd193779e8934b0e",
+    },
+    "message": {
+        "task": "2026-10-15.1",
+        "model": "gpt-4o-mini-2024-07-18",
+        "prompt": "0a6be41a81a76db8",
+        "policy": "legacy-forbidden-output-filter-v1",
+        "source": "d679814cf564c114",
+    },
+    "summary": {
+        "task": "2026-10-15.1",
+        "model": "gpt-4o-mini-2024-07-18",
+        "prompt": "bcac8ba6c5fd65c6",
+        "policy": "legacy-forbidden-output-filter-v1",
+        "source": "98157c739a1588d2",
+    },
+    "priority": {
+        "task": "2026-10-15.1",
+        "model": "gpt-4o-2024-08-06",
+        "prompt": "15ed5b165b2074a1",
+        "policy": (
+            "legacy-forbidden-output-filter-v1:"
+            "b66fdaccdcbd46a0eb257572a2b8f0fb98e7eafd53b468b67084d9a19761be2c"
+        ),
+        "source": "2a633f68879b0315",
+    },
+    "funding_draft": {
+        "task": "2026-10-15.1",
+        "model": "gpt-4o-2024-08-06",
+        "prompt": "05094b0e0b3c0a78",
+        "policy": "legacy-forbidden-output-filter-v1",
+        "source": "7ff8794229c8c359",
+    },
+    "read_document": {
+        "task": "2026-10-15.1",
+        "model": "gpt-4o-2024-08-06",
+        "prompt": "a430d3d670fcf0d7",
+        "policy": "legacy-forbidden-output-filter-v1",
+        "source": "59ff3f6085e6fb60",
+    },
+}
+
+FROZEN_THRESHOLDS_DIGEST = "8d689be0641426eae0ccaffd5a187497ec69d1c0bdf0e73dafe1dd55ff1d484d"
+FROZEN_MANIFEST_DIGEST = "b4a23f199c8df85baa735d88556ac9054ba5531fee60882457452d41c4a2712a"
+
+_HEX64_RE = re.compile(r"\b[0-9a-f]{64}\b", flags=re.IGNORECASE)
+_ZF_ID_RE = re.compile(r"\bZF-[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\b", flags=re.IGNORECASE)
+_CITE_TAG_RE = re.compile(r"\[\[[^\]]*\]\]")
+_PAS_STD_RE = re.compile(r"\bPAS\s+203[05]\b", flags=re.IGNORECASE)
+_NUM_TOKEN_RE = re.compile(r"\b\d+\b")
 
 CALIBRATION_NOT_APPLICABLE: dict[str, Any] = {
     "applicable": False,
@@ -176,14 +277,29 @@ def check_heldout_freeze(
         blockers.append("missing_frozen_versions")
 
     cap_versions = manifest.get("capability_versions")
+    drifted_capability_versions: list[str] = []
     if not isinstance(cap_versions, Mapping):
         blockers.append("missing_capability_versions")
     else:
         missing_caps = [
-            cap for cap in ALL_CAPABILITIES if not _valid_version_map(cap_versions.get(cap))
+            cap_name
+            for cap_name in ALL_CAPABILITIES
+            if not _valid_version_map(cap_versions.get(cap_name))
         ]
         if missing_caps:
             blockers.append(f"missing_capability_versions:{','.join(missing_caps)}")
+        live_caps = _capability_version_snapshot()
+        for cap_name in ALL_CAPABILITIES:
+            frozen_cap = cap_versions.get(cap_name)
+            live_cap = live_caps.get(cap_name)
+            if _valid_version_map(frozen_cap) and isinstance(live_cap, Mapping):
+                assert isinstance(frozen_cap, Mapping)
+                for vkey in VERSION_KEYS:
+                    if str(frozen_cap.get(vkey)) != str(live_cap.get(vkey)):
+                        drifted_capability_versions.append(f"{cap_name}.{vkey}")
+        if drifted_capability_versions:
+            blockers.append("capability_version_drift")
+            blockers.append(f"capability_version_drift:{','.join(drifted_capability_versions)}")
 
     critical_errors = manifest.get("critical_errors")
     if (
@@ -379,6 +495,7 @@ def check_heldout_freeze(
         "sample_sufficient": sample_sufficient,
         "ready_for_evaluation": frozen and sample_sufficient,
         "blockers": blockers,
+        "drifted_capability_versions": drifted_capability_versions,
         "insufficient_samples": insufficient_samples,
         "manifest_digest": manifest_body_digest(manifest),
         "thresholds_digest": (
@@ -502,6 +619,14 @@ def check_prompt_tuning_isolation(
     tuning_examples: Sequence[str | Mapping[str, Any]] = (),
 ) -> dict[str, Any]:
     """Verify zero held-out case IDs or expected-answer prose appear in prompts or tuning."""
+    if not isinstance(rendered_prompts, Sequence) or isinstance(
+        rendered_prompts, str | bytes | bytearray
+    ):
+        raise ValueError("rendered_prompts must be a non-string sequence of prompt strings.")
+    if not isinstance(tuning_examples, Sequence) or isinstance(
+        tuning_examples, str | bytes | bytearray
+    ):
+        raise ValueError("tuning_examples must be a non-string sequence of strings or mappings.")
     held_out = manifest.get("held_out")
     cases = held_out.get("cases") if isinstance(held_out, Mapping) else None
     raw_ids = held_out.get("case_ids") if isinstance(held_out, Mapping) else None
@@ -586,6 +711,26 @@ def _tariff_charge(
         + (Decimal(cached_tokens) * cached_rate / thousand)
         + (Decimal(completion_tokens) * out_rate / thousand)
     )
+
+
+def _check_statement_support(statement: str, grounded_corpus: str) -> list[str]:
+    """Return ungrounded ZF-* identifiers or numeric tokens in a candidate statement."""
+    cleaned_corpus = _HEX64_RE.sub(" ", grounded_corpus)
+    grounded_zf = {m.casefold() for m in _ZF_ID_RE.findall(cleaned_corpus)}
+    grounded_nums = set(re.findall(r"\d+", cleaned_corpus))
+
+    cleaned_stmt = _CITE_TAG_RE.sub(" ", statement)
+    cleaned_stmt = _PAS_STD_RE.sub(" ", cleaned_stmt)
+
+    ungrounded: list[str] = []
+    for zf_match in _ZF_ID_RE.findall(cleaned_stmt):
+        if zf_match.casefold() not in grounded_zf:
+            ungrounded.append(zf_match)
+    stmt_without_zf = _ZF_ID_RE.sub(" ", cleaned_stmt)
+    for num_match in _NUM_TOKEN_RE.findall(stmt_without_zf):
+        if num_match not in grounded_nums:
+            ungrounded.append(num_match)
+    return ungrounded
 
 
 def _evaluate_assistant_case(
@@ -709,6 +854,26 @@ def _evaluate_assistant_case(
             unsupported_claims += 1
             critical_errors.append("unsupported_factual_claim")
 
+    if output is not None:
+        grounded_corpus = json.dumps(
+            {
+                "case_id": fixture["record"]["id"],
+                "sources": snap["sources"],
+                "citations": sorted(snap["citations"].keys()),
+            },
+            sort_keys=True,
+        )
+        ungrounded_tokens = list(_check_statement_support(str(output["summary"]), grounded_corpus))
+        for finding in output["findings"]:
+            ungrounded_tokens.extend(
+                _check_statement_support(str(finding["text"]), grounded_corpus)
+            )
+        if ungrounded_tokens:
+            unsupported_claims += len(ungrounded_tokens)
+            passed = False
+            if "unsupported_factual_claim" not in critical_errors:
+                critical_errors.append("unsupported_factual_claim")
+
     return {
         "case_id": cid,
         "capability": capability,
@@ -765,6 +930,19 @@ def _evaluate_legacy_case(
                 critical_errors.append("safety_priority_miss")
             if dropped > 0:
                 critical_errors.append("fabricated_source_citation")
+            for item in items:
+                item_cid = str(item["case_id"])
+                item_corpus = json.dumps(
+                    {item_cid: sources.get(item_cid, [])},
+                    sort_keys=True,
+                )
+                ungrounded_reason = _check_statement_support(
+                    str(item.get("reason", "")), item_corpus
+                )
+                if ungrounded_reason:
+                    unsupported_claims += len(ungrounded_reason)
+                    if "unsupported_factual_claim" not in critical_errors:
+                        critical_errors.append("unsupported_factual_claim")
             passed = not critical_errors and not critical_miss_ids and dropped == 0
         else:
             unsupported_claims += 1
@@ -777,14 +955,22 @@ def _evaluate_legacy_case(
         clean, good, bad, dropped = ai_tasks.analyse(text, sources, bullets=bullets)
         statements = ai_tasks.statement_sources(text, sources, bullets=bullets)
         uncited_statements = sum(1 for st in statements if not st["citations"])
-        unsupported_claims += len(bad) + int(dropped) + uncited_statements
+        grounded_legacy_corpus = json.dumps(sources, sort_keys=True)
+        ungrounded_stmt_tokens: list[str] = []
+        for st in statements:
+            ungrounded_stmt_tokens.extend(
+                _check_statement_support(str(st.get("text", "")), grounded_legacy_corpus)
+            )
+        unsupported_claims += (
+            len(bad) + int(dropped) + uncited_statements + len(ungrounded_stmt_tokens)
+        )
 
         required_tokens = [str(item).casefold() for item in spec.get("required_tokens", ())]
         tokens_ok = all(tok in clean.casefold() for tok in required_tokens)
         usable = bool(clean) and bool(good) and not bad and uncited_statements == 0
         if bad or dropped > 0:
             critical_errors.append("fabricated_source_citation")
-        if uncited_statements > 0 or not good:
+        if uncited_statements > 0 or not good or ungrounded_stmt_tokens:
             critical_errors.append("unsupported_factual_claim")
         if spec["expected_outcome"] == "abstain_unknown" and not tokens_ok:
             critical_errors.append("abstention_violation")
@@ -818,8 +1004,11 @@ def evaluate_heldout(
     tuning_examples: Sequence[str | Mapping[str, Any]] = (),
     tariff: Mapping[str, Any] | None = DEFAULT_OFFLINE_TARIFF,
     offline_scripted: bool = True,
+    expected_serving_model: str | None = None,
 ) -> dict[str, Any]:
     """Run the offline RAI held-out evaluation against a frozen manifest and scripted responses."""
+    if expected_serving_model is not None and not rai_release.named(expected_serving_model):
+        raise ValueError("expected_serving_model must be a non-empty model string when provided.")
     freeze = check_heldout_freeze(manifest, live=not offline_scripted)
     isolation = check_prompt_tuning_isolation(
         manifest,
@@ -843,7 +1032,10 @@ def evaluate_heldout(
         manifest.get("versions") if isinstance(manifest.get("versions"), Mapping) else {}
     )
     assert isinstance(frozen_versions, Mapping)
-    expected_model = str(frozen_versions.get("model") or "")
+    frozen_model = str(frozen_versions.get("model") or "")
+    expected_model = (
+        expected_serving_model.strip() if expected_serving_model is not None else frozen_model
+    )
 
     case_results: list[dict[str, Any]] = []
     missing_response_ids: list[str] = []
@@ -862,7 +1054,7 @@ def evaluate_heldout(
     observed_serving_versions: set[str] = set()
     serving_mismatches: list[dict[str, str]] = []
 
-    if not freeze["blockers"] and isolation["isolated"]:
+    if freeze["ready_for_evaluation"] and isolation["isolated"]:
         for cid in case_ids:
             spec = cases_map[cid]
             resp = responses.get(cid)
@@ -1165,7 +1357,8 @@ def evaluate_heldout(
         },
         "actual_serving_version": {
             "reported": actual_serving,
-            "expected_frozen_model": expected_model,
+            "expected_frozen_model": frozen_model,
+            "expected_serving_model": expected_model,
             "offline_scripted": offline_scripted,
             "observed_declared_versions": sorted(observed_serving_versions),
             "mismatches": serving_mismatches,
@@ -1394,7 +1587,7 @@ def _capability_version_snapshot() -> dict[str, dict[str, str]]:
 
 
 def canonical_heldout_manifest() -> dict[str, Any]:
-    """Return the human-approved frozen synthetic held-out manifest covering all 11 capabilities."""
+    """Return the human-authorized frozen synthetic held-out manifest for all 11 capabilities."""
     rec_sp_01 = _base_case_record("ZF-HO-101", epc="Unknown", survey_epc="C")
     rec_sp_02 = _base_case_record(
         "ZF-HO-102", epc="E", survey_epc="C", adjustment="Large print letters"
@@ -1699,19 +1892,13 @@ def canonical_heldout_manifest() -> dict[str, Any]:
     }
 
     case_ids = list(cases.keys())
-    cap_versions = _capability_version_snapshot()
     raw_manifest: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
+        "freeze_id": CANONICAL_FREEZE_ID,
         "suite_id": "znh-rai-heldout-offline-2026-11",
         "synthetic": True,
-        "versions": {
-            "task": f"{assistants.VERSION}+{ai_registry.REGISTRY_VERSION}",
-            "model": "gpt-4o-mini-2024-07-18",
-            "prompt": f"assistants:{assistants.SCHEMA_VERSION}+legacy:{ai_prompts.VERSION}",
-            "policy": (f"{assistants.RULE_VERSION}:{ranking.policy_hash(ranking.CURRENT)[:12]}"),
-            "source": "constructed-synthetic-heldout-2026-11.1",
-        },
-        "capability_versions": cap_versions,
+        "versions": copy.deepcopy(FROZEN_VERSIONS),
+        "capability_versions": copy.deepcopy(FROZEN_CAPABILITY_VERSIONS),
         "held_out": {
             "split_id": "heldout-offline-v1-seed-20261115",
             "seed": 20261115,
@@ -1792,12 +1979,14 @@ def canonical_heldout_manifest() -> dict[str, Any]:
             ),
             "escalation_owner": "Claire Whittaker (Head of Building Safety & Compliance)",
         },
+        "threshold_approval": {
+            "approved_by": "Claire Whittaker (Head of Building Safety & Compliance)",
+            "approved_at": "2026-11-12T11:00:00Z",
+            "thresholds_digest": FROZEN_THRESHOLDS_DIGEST,
+            "manifest_digest": FROZEN_MANIFEST_DIGEST,
+        },
     }
-    return approve_manifest(
-        raw_manifest,
-        approved_by=" Claire Whittaker (Head of Building Safety & Compliance) ",
-        approved_at="2026-11-12T11:00:00Z",
-    )
+    return raw_manifest
 
 
 def _assistant_provider_response(
@@ -2066,6 +2255,11 @@ def baseline_candidate_from_evaluation(
         },
         "unknown_liabilities": int(unknown_block.get("count", 0)),
         "actual_serving_version": str(serving.get("reported", OFFLINE_SERVING_VERSION)),
+        "manifest_digest": (
+            evaluation["hashes"]["manifest_digest"]
+            if isinstance(evaluation.get("hashes"), Mapping)
+            else None
+        ),
         "evaluation_digest": (
             evaluation["hashes"]["evaluation_digest"]
             if isinstance(evaluation.get("hashes"), Mapping)

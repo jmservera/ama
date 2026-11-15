@@ -6,6 +6,7 @@ import copy
 import json
 import unittest
 from typing import Any
+from unittest import mock
 
 from zava_forward.core import (
     ai_consumption,
@@ -314,6 +315,116 @@ class HeldoutEvalTest(unittest.TestCase):
         self.assertEqual(report["outcome"], "fail")
         self.assertIn("serving_version_mismatch", report["failure_reasons"])
         self.assertEqual(len(report["actual_serving_version"]["mismatches"]), 1)
+
+    def test_canonical_freeze_constants_are_statically_pinned_to_canonical_freeze_id(self) -> None:
+        self.assertEqual(heldout_eval.CANONICAL_FREEZE_ID, "HELDOUT-FREEZE-2026-10-15")
+        self.assertEqual(len(heldout_eval.FROZEN_THRESHOLDS_DIGEST), 64)
+        self.assertEqual(len(heldout_eval.FROZEN_MANIFEST_DIGEST), 64)
+        with mock.patch(
+            "zava_forward.core.heldout_eval.approve_manifest",
+            side_effect=AssertionError("canonical_heldout_manifest must not sign dynamically"),
+        ):
+            manifest = heldout_eval.canonical_heldout_manifest()
+        self.assertEqual(manifest["freeze_id"], heldout_eval.CANONICAL_FREEZE_ID)
+        self.assertEqual(
+            manifest["threshold_approval"]["thresholds_digest"],
+            heldout_eval.FROZEN_THRESHOLDS_DIGEST,
+        )
+        self.assertEqual(
+            manifest["threshold_approval"]["manifest_digest"],
+            heldout_eval.FROZEN_MANIFEST_DIGEST,
+        )
+        freeze = heldout_eval.check_heldout_freeze(manifest)
+        self.assertTrue(freeze["frozen"])
+        self.assertEqual(freeze["manifest_digest"], heldout_eval.FROZEN_MANIFEST_DIGEST)
+
+    def test_live_capability_version_drift_blocks_heldout_freeze(self) -> None:
+        manifest = heldout_eval.canonical_heldout_manifest()
+        drifted_snapshot = copy.deepcopy(heldout_eval._capability_version_snapshot())
+        first_cap = next(iter(drifted_snapshot))
+        drifted_snapshot[first_cap]["prompt"] = "drifted-prompt-9.9.9"
+        drifted_snapshot[first_cap]["policy"] = "drifted-policy-9.9.9"
+
+        with mock.patch(
+            "zava_forward.core.heldout_eval._capability_version_snapshot",
+            return_value=drifted_snapshot,
+        ):
+            freeze = heldout_eval.check_heldout_freeze(manifest)
+            report = heldout_eval.evaluate_heldout(
+                manifest, heldout_eval.canonical_baseline_responses()
+            )
+        self.assertFalse(freeze["frozen"])
+        self.assertFalse(freeze["ready_for_evaluation"])
+        self.assertIn("capability_version_drift", freeze["blockers"])
+        self.assertTrue(
+            any(b.startswith(f"capability_version_drift:{first_cap}.") for b in freeze["blockers"])
+        )
+        self.assertEqual(report["outcome"], "fail")
+        self.assertEqual(report["cases"], [])
+
+    def test_uncited_numbers_and_zf_case_ids_in_cited_sentence_increment_unsupported_claims(
+        self,
+    ) -> None:
+        manifest = heldout_eval.canonical_heldout_manifest()
+        responses = heldout_eval.canonical_baseline_responses()
+        responses["HO-LEG-BR-01"]["text"] = (
+            "Case ZF-HO-111 waited 27 days alongside unverified case ZF-HO-999 with 42 breaches "
+            "under PAS 2035 (" + ("a" * 64) + ") [[Days in stage: 27]]."
+        )
+        report = heldout_eval.evaluate_heldout(manifest, responses)
+        self.assertEqual(report["outcome"], "fail")
+        self.assertGreaterEqual(report["quality_counters"]["unsupported_claims"], 1)
+        case_row = next(c for c in report["cases"] if c["case_id"] == "HO-LEG-BR-01")
+        self.assertGreaterEqual(case_row["unsupported_claims"], 1)
+
+        clean_responses = heldout_eval.canonical_baseline_responses()
+        clean_responses["HO-LEG-BR-01"]["text"] += (
+            f" Verified digest {heldout_eval.FROZEN_MANIFEST_DIGEST} under PAS 2035 "
+            "[[Days in stage: 27]]."
+        )
+        clean_report = heldout_eval.evaluate_heldout(manifest, clean_responses)
+        self.assertEqual(clean_report["outcome"], "pass")
+        self.assertEqual(clean_report["quality_counters"]["unsupported_claims"], 0)
+
+    def test_cohort_floor_breach_pre_gates_evaluate_heldout_before_per_case_scoring(
+        self,
+    ) -> None:
+        raw = copy.deepcopy(heldout_eval.canonical_heldout_manifest())
+        target_cohort = next(iter(raw["cohorts"]))
+        first_in_cohort = next(
+            cid for cid, spec in raw["held_out"]["cases"].items() if spec["cohort"] == target_cohort
+        )
+        kept_cases = {
+            cid: spec
+            for cid, spec in raw["held_out"]["cases"].items()
+            if spec["cohort"] != target_cohort or cid == first_in_cohort
+        }
+        # Preserve full capability and dimension coverage by bumping the cohort min_n floor instead
+        raw = copy.deepcopy(heldout_eval.canonical_heldout_manifest())
+        raw["cohorts"][target_cohort]["min_n"] = len(raw["held_out"]["case_ids"]) + 5
+        resigned = heldout_eval.approve_manifest(
+            raw,
+            approved_by="Claire Whittaker (Head of Building Safety & Compliance)",
+            approved_at="2026-11-12T11:00:00Z",
+        )
+        self.assertIsNotNone(kept_cases)
+        freeze = heldout_eval.check_heldout_freeze(resigned)
+        self.assertTrue(freeze["frozen"])
+        self.assertFalse(freeze["ready_for_evaluation"])
+
+        report = heldout_eval.evaluate_heldout(
+            resigned, heldout_eval.canonical_baseline_responses()
+        )
+        self.assertEqual(report["outcome"], "insufficient")
+        self.assertEqual(report["cases"], [])
+        self.assertEqual(report["accepted_case_ids"], [])
+
+    def test_check_prompt_tuning_isolation_rejects_bare_string_sequences(self) -> None:
+        manifest = heldout_eval.canonical_heldout_manifest()
+        with self.assertRaises(ValueError):
+            heldout_eval.check_prompt_tuning_isolation(manifest, rendered_prompts="raw-string")
+        with self.assertRaises(ValueError):
+            heldout_eval.check_prompt_tuning_isolation(manifest, tuning_examples="raw-string")
 
 
 if __name__ == "__main__":

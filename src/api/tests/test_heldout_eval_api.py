@@ -103,7 +103,10 @@ class HeldoutEvalApiTest(unittest.TestCase):
         manager = self.email_for_role("Retrofit Programme Manager")
         status, report = self.call("/api/ai/report", email=manager)
         self.assertEqual(status, 200)
-        self.assertEqual(set(report), {"evaluation", "live", "registry", "consumption"})
+        self.assertEqual(
+            set(report),
+            {"evaluation", "chat_evaluation", "live", "registry", "consumption"},
+        )
         self.assertEqual(report["evaluation"]["held_out"]["outcome"], "pass")
         self.assertEqual(report["evaluation"]["held_out"]["calibration_status"], "not_applicable")
         self.assertTrue(report["evaluation"]["tokenomics_comparison"]["suite_valid"])
@@ -162,6 +165,8 @@ class HeldoutEvalApiTest(unittest.TestCase):
                 "lever_config": dict(base_levers, model="cheap-nano-v1"),
                 "case_ids": list(baseline["case_ids"]),
                 "accepted_case_ids": list(baseline["accepted_case_ids"]),
+                "evaluation_outcome": "pass",
+                "gate_failures": [],
                 "quality_counters": dict(baseline["quality_counters"], overrides=1),
                 "usage": {"estimated_cost": "0.000300", "currency": "GBP"},
             },
@@ -171,6 +176,8 @@ class HeldoutEvalApiTest(unittest.TestCase):
                 "lever_config": dict(base_levers, caching="prefix-cache-v2"),
                 "case_ids": list(baseline["case_ids"]),
                 "accepted_case_ids": list(baseline["accepted_case_ids"]),
+                "evaluation_outcome": "pass",
+                "gate_failures": [],
                 "quality_counters": dict(baseline["quality_counters"]),
                 "usage": {"estimated_cost": "0.000850", "currency": "GBP"},
             },
@@ -190,6 +197,83 @@ class HeldoutEvalApiTest(unittest.TestCase):
         last_audit = list(self.store.audit_entries())[-1]
         self.assertEqual(last_audit["action"], "ai_candidate_comparison")
         self.assertEqual(last_audit["who"], manager)
+
+    def test_post_candidate_comparison_rejects_unverified_summary_or_tampered_baseline_digest(
+        self,
+    ) -> None:
+        manager = self.email_for_role("Retrofit Programme Manager")
+        suite = heldout_eval.canonical_offline_heldout_suite()
+        baseline = suite["baseline_candidate"]
+        unverified_summary = {
+            "candidate_id": "summary-missing-fields",
+            "lever_config": dict(baseline["lever_config"], caching="prefix-cache-v2"),
+            "case_ids": list(baseline["case_ids"]),
+            "quality_counters": dict(baseline["quality_counters"]),
+            "usage": {"estimated_cost": "0.000850", "currency": "GBP"},
+        }
+        status, _ = self.call(
+            "/api/ai/candidate-comparison",
+            email=manager,
+            body={"candidates": [unverified_summary]},
+        )
+        self.assertEqual(status, 400)
+
+        verified_summary = dict(
+            unverified_summary,
+            accepted_case_ids=list(baseline["accepted_case_ids"]),
+            evaluation_outcome="pass",
+            gate_failures=[],
+        )
+        forged_baseline = dict(baseline, manifest_digest="f" * 64)
+        status, _ = self.call(
+            "/api/ai/candidate-comparison",
+            email=manager,
+            body={"baseline": forged_baseline, "candidates": [verified_summary]},
+        )
+        self.assertEqual(status, 400)
+
+    def test_post_candidate_comparison_blocks_prompt_lever_leak_and_currency_mismatch(
+        self,
+    ) -> None:
+        manager = self.email_for_role("Retrofit Programme Manager")
+        suite = heldout_eval.canonical_offline_heldout_suite()
+        baseline = suite["baseline_candidate"]
+        base_levers = baseline["lever_config"]
+        candidates = [
+            {
+                "candidate_id": "prompt-lever-leak",
+                "declared_lever": "prompt",
+                "lever_config": dict(base_levers, prompt="prompt-v2-leaking-HO-LEG-PR-01"),
+                "case_ids": list(baseline["case_ids"]),
+                "accepted_case_ids": list(baseline["accepted_case_ids"]),
+                "evaluation_outcome": "pass",
+                "gate_failures": [],
+                "quality_counters": dict(baseline["quality_counters"]),
+                "usage": {"estimated_cost": "0.000700", "currency": "GBP"},
+            },
+            {
+                "candidate_id": "usd-currency-mismatch",
+                "declared_lever": "caching",
+                "lever_config": dict(base_levers, caching="prefix-cache-v2"),
+                "case_ids": list(baseline["case_ids"]),
+                "accepted_case_ids": list(baseline["accepted_case_ids"]),
+                "evaluation_outcome": "pass",
+                "gate_failures": [],
+                "quality_counters": dict(baseline["quality_counters"]),
+                "usage": {"estimated_cost": "0.000700", "currency": "USD"},
+            },
+        ]
+        status, result = self.call(
+            "/api/ai/candidate-comparison",
+            email=manager,
+            body={"candidates": candidates},
+        )
+        self.assertEqual(status, 200, result)
+        self.assertFalse(result["holdout_leakage_clear"])
+        by_id = {c["candidate_id"]: c for c in result["candidates"]}
+        for cid in ("prompt-lever-leak", "usd-currency-mismatch"):
+            self.assertEqual(by_id[cid]["outcome"], "failure", cid)
+            self.assertFalse(by_id[cid]["is_saving"], cid)
 
 
 if __name__ == "__main__":
