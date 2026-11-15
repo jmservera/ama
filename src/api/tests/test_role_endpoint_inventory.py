@@ -19,7 +19,7 @@ GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api
                  "/api/facets", "/api/stats", "/api/progress", "/api/closed-cases", "/api/closed-cases.csv",
                  "/api/map", "/api/visits?view=all", "/api/funding", "/api/briefing",
                  "/api/audit-check",
-                 "/api/handoffs", "/api/handoffs/unaccepted", "/api/handoffs/unaccepted.csv", "/api/handoffs/unowned", "/api/handoffs/escalated", "/api/packages", "/api/workorders", "/api/workorders/WO-0001/job-pack", "/api/workorders/WO-0001/field-intake", "/api/handoffs.csv", "/api/packages.csv", "/api/workorders.csv", "/api/visits.csv", "/api/funding.csv", "/api/finance.csv", "/api/asset/stock-queue.csv", "/api/checklists.csv", "/api/form-schemas.csv", "/api/checklists", "/api/ai/report", "/api/ai/cohort-evaluation", "/api/finance", "/api/finance/exposure", "/api/asset/stock-queue", "/api/resident/choice-queue",
+                 "/api/handoffs", "/api/handoffs/unaccepted", "/api/handoffs/unaccepted.csv", "/api/handoffs/unowned", "/api/handoffs/escalated", "/api/packages", "/api/workorders", "/api/workorders/WO-0001/job-pack", "/api/workorders/WO-0001/field-intake", "/api/handoffs.csv", "/api/packages.csv", "/api/workorders.csv", "/api/visits.csv", "/api/funding.csv", "/api/finance.csv", "/api/asset/stock-queue.csv", "/api/checklists.csv", "/api/form-schemas.csv", "/api/checklists", "/api/ai/report", "/api/ai/cohort-evaluation", "/api/ai/heldout-evaluation", "/api/finance", "/api/finance/exposure", "/api/asset/stock-queue", "/api/resident/choice-queue",
                  "/api/governance", "/api/continuity", "/api/continuity/export", "/api/exceptions", "/api/retention", "/api/data-protection", "/api/docs/ZF-1/none",
                  "/api/resident/choice-queue.csv?limit=2",
                  "/api/time/status", "/api/time/mine", "/api/time/mine.csv", "/api/time/report", "/api/time/report.csv", "/api/law/sources", "/api/law/sources.csv", "/api/law/search?q=x",
@@ -28,7 +28,7 @@ GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api
                  "/api/assistants", "/api/assistants/forecast", "/api/assistants/rai-metrics", "/api/assistants/proposals", "/api/assistants/proposals.csv", "/api/assistants/simulation/quality", "/api/chat/status", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1",
                  "/api/form-schemas", "/api/cases/ZF-1/form-candidates", "/api/cases/ZF-1/form-review", "/api/cases/ZF-1/form-review/SYN-DRAFT/held-export", "/api/cases/ZF-1/form-review/SYN-DRAFT/proposal-freshness", "/api/nothing"]
 POST_ENDPOINTS = [("/api/ranking/publish", {}), ("/api/workorders/WO-0001/field-capture", {}), ("/api/workorders/WO-0001/field-correct", {}), ("/api/workorders/WO-0001/field-acknowledge", {}), ("/api/bulk-edits/preview", {}), ("/api/bulk-edits/apply", {}), ("/api/handoffs/escalate-overdue", {}),
-                  ("/api/ai/priority", {"n": 3}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
+                  ("/api/ai/priority", {"n": 3}), ("/api/ai/candidate-comparison", {}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
                   ("/api/form-schemas", {}), ("/api/cases/ZF-1/form-candidates", {}), ("/api/cases/ZF-1/form-review", {}),
                   ("/api/cases/ZF-1/form-review/SYN-DRAFT/held-export/freshness", {"draft_id": "SYN-DRAFT"}),
                   ("/api/cases/ZF-1/resident", {"action": "decision_record"}),
@@ -188,7 +188,7 @@ class RoleEndpointInventory(Matrix):
 
     def test_contractor_audit_view_and_export_are_denied(self):
         ck = self.session("u7@example.test")
-        for path in ("/api/audit-check", "/api/cases.csv?view=all", "/api/continuity/export", "/api/ai/report", "/api/ai/cohort-evaluation", "/api/assistants/proposals"):
+        for path in ("/api/audit-check", "/api/cases.csv?view=all", "/api/continuity/export", "/api/ai/report", "/api/ai/cohort-evaluation", "/api/ai/heldout-evaluation", "/api/assistants/proposals"):
             self.assertEqual(self.call(ck, path)[0], 403, path)
 
     def test_staff_without_need_see_notes_held_but_need_roles_see_them(self):

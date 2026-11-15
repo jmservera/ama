@@ -150,3 +150,10 @@ disallow_untyped_calls = false
 module = ["zava_forward.core.sensor_review_draft", "test_sensor_review_draft",
           "tests.test_sensor_review_draft"]
 disallow_untyped_calls = false
+
+# Typed offline held-out evaluation and tokenomics comparison call migrated untyped core helpers.
+[[tool.mypy.overrides]]
+module = ["zava_forward.core.heldout_eval", "zava_forward.core.tokenomics_comparison",
+          "test_heldout_eval", "tests.test_heldout_eval",
+          "test_tokenomics_comparison", "tests.test_tokenomics_comparison"]
+disallow_untyped_calls = false
