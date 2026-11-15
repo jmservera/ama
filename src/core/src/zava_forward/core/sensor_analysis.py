@@ -252,12 +252,35 @@ def _stamp(value: datetime) -> str:
 
 
 def _canonical_row(row: Mapping[str, str]) -> str:
-    return json.dumps(dict(sorted(row.items())), ensure_ascii=True, sort_keys=True)
+    return json.dumps(
+        {str(k): v for k, v in sorted(row.items(), key=lambda item: str(item[0]))},
+        ensure_ascii=True,
+        sort_keys=True,
+        default=str,
+    )
+
+
+def _exact_row_key(row: Mapping[str, str]) -> tuple[str, str, str, str]:
+    home_val: object = row.get("home_id")
+    home_type = "str" if isinstance(home_val, str) else type(home_val).__qualname__
+    return (home_type, str(row.get("home_id", "")), _canonical_row(row), _schema_marker(row))
+
+
+def _dedupe_exact_rows(rows: Sequence[Mapping[str, str]]) -> list[Mapping[str, str]]:
+    seen: dict[tuple[str, str, str, str], Mapping[str, str]] = {}
+    for row in rows:
+        key = _exact_row_key(row)
+        if key not in seen:
+            seen[key] = row
+    return list(seen.values())
 
 
 def _by_observation(rows: Sequence[Mapping[str, str]]) -> list[Mapping[str, str]]:
-    """Canonical order so the result is a function of the reading set, not of arrival order."""
-    return sorted(rows, key=lambda r: (str(r.get("observed_at", "")), _canonical_row(r)))
+    """Canonical set order so the result is a function of the reading set, not arrival or replay."""
+    return sorted(
+        _dedupe_exact_rows(rows),
+        key=lambda r: (str(r.get("observed_at", "")), _exact_row_key(r)),
+    )
 
 
 _METRICS = (("temperature_c", "temperature_unit"), ("humidity_pct", "humidity_unit"))
@@ -265,6 +288,7 @@ _METRICS = (("temperature_c", "temperature_unit"), ("humidity_pct", "humidity_un
 
 def reading_tuples(rows: Sequence[Mapping[str, str]]) -> list[tuple[str, str, str, str, str]]:
     """Canonical (sensor_id, metric, timestamp, value, unit) tuples, sorted independent of order."""
+    unique = _dedupe_exact_rows(rows)
     return sorted(
         (
             str(row.get("sensor_id", "")),
@@ -273,7 +297,7 @@ def reading_tuples(rows: Sequence[Mapping[str, str]]) -> list[tuple[str, str, st
             str(row.get(metric, "")),
             str(row.get(unit, "")),
         )
-        for row in rows
+        for row in unique
         for metric, unit in _METRICS
     )
 
