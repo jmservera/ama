@@ -69,6 +69,31 @@ class AlertOwnerAndRunbookTests(unittest.TestCase):
                 "candidateAlertsEnabled", json.dumps(rules[name]["properties"]["enabled"])
             )
 
+    def test_ranking_archive_job_failure_alert_routes_to_job_rank_runbook(self) -> None:
+        source = MODULE.read_text(encoding="utf-8")
+        anchors = _anchors(RUNBOOK.read_text(encoding="utf-8"))
+        self.assertIn("job-rank", anchors)
+        self.assertIn("endsWith(jobName, '-rank') || endsWith(jobName, '-rank-publish')", source)
+        result = subprocess.run(
+            ["az", "bicep", "build", "--file", str(MODULE), "--stdout"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            self.skipTest("az bicep unavailable")
+        template = json.loads(result.stdout)
+        job_rule = next(
+            r
+            for r in template["resources"]
+            if r["type"] == "Microsoft.Insights/metricAlerts" and "jobName" in r["name"]
+        )
+        desc_expr = job_rule["properties"]["description"]
+        self.assertIn("'-rank'", desc_expr)
+        self.assertIn("'-rank-publish'", desc_expr)
+        self.assertIn("'job-rank'", desc_expr)
+        self.assertLess(desc_expr.index("'job-rank'"), desc_expr.index("'job-auth'"))
+
 
 class WorkbookPanelTests(unittest.TestCase):
     def test_cost_vs_budget_shows_unreconciled_variance(self) -> None:

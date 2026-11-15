@@ -1579,15 +1579,22 @@ class Assistants:
                             release=None,
                             authority_gap=rai_release.AUTHORITY_GAP,
                             status=monitoring_coverage.disabled_task_status(spec),
+                            monitoring_status=monitoring_coverage.check_monitoring_declaration(
+                                spec.get("monitoring_declaration"),
+                                task_enabled=False,
+                                live=False,
+                            ),
                         )
                     )
                     continue
                 if task in REGISTRY:
+                    live = isinstance(self.store.ai, Ai)
                     binding = runtime_binding(task, self.store.ai)
                     selected, denied = rel.assessment(
-                        db, task, binding, self.now(db), live=isinstance(self.store.ai, Ai)
+                        db, task, binding, self.now(db), live=live
                     )
                 else:
+                    live = True
                     dep = (
                         getattr(self.store.ai, "fast", "")
                         if task in ("message", "summary", "briefing")
@@ -1595,8 +1602,9 @@ class Assistants:
                     )
                     binding = ai_registry.legacy_binding(task, self.store.ai, dep)
                     selected, denied = rel.assessment(
-                        db, f"legacy:{task}", binding, self.now(db), live=True
+                        db, f"legacy:{task}", binding, self.now(db), live=live
                     )
+                active_decl = (selected or spec).get("monitoring_declaration")
                 registered.append(
                     dict(
                         spec,
@@ -1604,6 +1612,11 @@ class Assistants:
                         release_denial=denied,
                         release=rai_release.reference(selected) if selected else None,
                         authority_gap=rai_release.AUTHORITY_GAP,
+                        monitoring_status=monitoring_coverage.check_monitoring_declaration(
+                            active_decl,
+                            task_enabled=True,
+                            live=live,
+                        ),
                     )
                 )
             return dict(

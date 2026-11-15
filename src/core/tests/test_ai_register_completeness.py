@@ -29,6 +29,14 @@ class RegisterCompleteness(unittest.TestCase):
             with self.assertRaises(ai_registry.UnregisteredFeature):
                 ai_registry.require_registered("summary")
 
+    def test_missing_or_malformed_monitoring_declaration_fails_registration(self) -> None:
+        entry = dict(ai_registry.tasks()["summary"], monitoring_declaration=None)
+        self.assertEqual(ai_registry.missing_fields(entry), ["monitoring_declaration"])
+        with mock.patch.object(ai_registry, "get", return_value=entry):
+            self.assertFalse(ai_registry.is_registered("summary"))
+            with self.assertRaises(ai_registry.UnregisteredFeature):
+                ai_registry.require_registered("summary")
+
 
 class UnregisteredFailsClosed(unittest.TestCase):
     def test_unknown_or_malformed_names_are_not_registered(self) -> None:
