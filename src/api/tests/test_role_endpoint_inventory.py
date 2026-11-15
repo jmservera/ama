@@ -26,12 +26,13 @@ GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api
                  "/api/law/cards", "/api/law/cards/reviews", "/api/law/cards/hazard-awareness-clock", "/api/law/alerts",
                  "/api/aftercare/form", "/api/aftercare/concerns", "/api/aftercare/concerns.csv", "/api/aftercare/evaluator",
                  "/api/assistants", "/api/assistants/forecast", "/api/assistants/rai-metrics", "/api/assistants/proposals", "/api/assistants/proposals.csv", "/api/assistants/simulation/quality", "/api/chat/status", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1",
-                 "/api/form-schemas", "/api/cases/ZF-1/form-candidates", "/api/cases/ZF-1/form-review", "/api/cases/ZF-1/form-review/SYN-DRAFT/held-export", "/api/cases/ZF-1/form-review/SYN-DRAFT/proposal-freshness", "/api/nothing"]
+                 "/api/form-schemas", "/api/cases/ZF-1/form-candidates", "/api/cases/ZF-1/form-review", "/api/cases/ZF-1/form-review/SYN-DRAFT/held-export", "/api/cases/ZF-1/form-review/SYN-DRAFT/proposal-freshness", "/api/cases/ZF-1/representative-view?representative_ref=SYN-REP", "/api/nothing"]
 POST_ENDPOINTS = [("/api/ranking/publish", {}), ("/api/workorders/WO-0001/field-capture", {}), ("/api/workorders/WO-0001/field-correct", {}), ("/api/workorders/WO-0001/field-acknowledge", {}), ("/api/bulk-edits/preview", {}), ("/api/bulk-edits/apply", {}), ("/api/handoffs/escalate-overdue", {}),
                   ("/api/ai/priority", {"n": 3}), ("/api/ai/candidate-comparison", {}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
                   ("/api/form-schemas", {}), ("/api/cases/ZF-1/form-candidates", {}), ("/api/cases/ZF-1/form-review", {}),
                   ("/api/cases/ZF-1/form-review/SYN-DRAFT/held-export/freshness", {"draft_id": "SYN-DRAFT"}),
                   ("/api/cases/ZF-1/resident", {"action": "decision_record"}),
+                  ("/api/cases/ZF-1/representative-view", {"representative_ref": "SYN-REP", "action": "view_task_briefing"}),
                   ("/api/cases/ZF-1/technical", {"action": "signoff_give", "type": "design"}),
                   ("/api/cases/ZF-1/stock-reconciliation", {}),
                   ("/api/cases/ZF-1/stock-query-event", {"query_id": "SQ-1", "action": "resolve"}),
@@ -140,7 +141,7 @@ class RoleEndpointInventory(Matrix):
 
     def test_inventory_covers_dynamic_case_actions_added_by_integration(self):
         tested = {path.rsplit("/", 1)[-1] for path, _ in POST_ENDPOINTS}
-        for action in ("resident", "technical", "stock-reconciliation", "stock-query-event", "form-candidates", "form-review"):
+        for action in ("resident", "representative-view", "technical", "stock-reconciliation", "stock-query-event", "form-candidates", "form-review"):
             self.assertIn(action, tested)
 
     def test_every_role_against_every_endpoint(self):

@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import Any, Protocol
 from urllib.parse import urlsplit
 
+from zava_forward.core import resident_journey_design as rjd
 from zava_forward.core import resident_showcase as rs
 from zava_forward.core.resident_assistant import (
     Advisor,
@@ -123,6 +124,7 @@ class ResidentDemo:
         assistant_advisor: Advisor | None = None,
         agenda: Agenda | None = None,
         chat_log: ChatLog | None = None,
+        representative_grants: tuple[rs.RepresentativeShowcaseGrant, ...] = (),
     ):
         self.client_address = client_address
         self.reader, self.identity, self.verifier = reader, identity, verifier
@@ -131,6 +133,11 @@ class ResidentDemo:
         self.host, self.port, self.clock = host, port, clock
         self.slots = threading.BoundedSemaphore(MAX_CONCURRENT)
         self.by_handle = {codec.handle(case): case for case in identity.cases.values()}
+        self._rep_by_email: dict[str, str] = {}
+        self.rep_by_handle: dict[str, rs.RepresentativeShowcaseGrant] = {}
+        self.rep_sessions = rjd.RepresentativeSessionStore()
+        for grant in representative_grants:
+            self.register_representative_grant(grant)
         self.assistant_provider = (
             assistant_provider if assistant_provider is not None else FakeProvider()
         )
@@ -138,9 +145,20 @@ class ResidentDemo:
         self.agenda = agenda
         self.chat_log = chat_log
 
+    def register_representative_grant(self, grant: rs.RepresentativeShowcaseGrant) -> None:
+        """Admit or update a task-limited representative grant under its disjoint session handle."""
+        email = rs.admit_representative_grant(grant)
+        if email in self.identity.cases:
+            raise rs.ShowcaseConfigError("Representative showcase email collides with a resident.")
+        handle = self.codec.handle(grant.principal_subject)
+        if handle in self.by_handle:
+            raise rs.ShowcaseConfigError("Representative showcase handle collides with a resident.")
+        self._rep_by_email[email] = handle
+        self.rep_by_handle[handle] = grant
+
     @property
     def ready(self) -> bool:
-        return bool(self.identity.cases) and not self.expired
+        return bool(self.identity.cases or self.rep_by_handle) and not self.expired
 
     @property
     def expired(self) -> bool:
@@ -157,20 +175,140 @@ class ResidentDemo:
             name = name[1:-1]
         return name.lower() in self.allowed_hosts
 
+    def _is_representative_token(self, token: str | None) -> bool:
+        found = self.codec.verify(token)
+        return found is not None and found[0] in self.rep_by_handle
+
+    def _sync_rep_session(
+        self,
+        session_id: str,
+        grant: rs.RepresentativeShowcaseGrant,
+        row: rs.ShowcaseRow | None,
+    ) -> tuple[rjd.AuthorityEvaluation, dict[str, Any]]:
+        now_utc = self.now()
+        stamp = rjd.format_iso_utc(now_utc)
+        if row is None:
+            exp_dt = rjd.parse_iso_utc(grant.expires_at) if grant.expires_at is not None else None
+            exp_iso = rjd.format_iso_utc(exp_dt) if exp_dt is not None else None
+            clean_ref = rjd.valid_representative_ref(grant.representative_ref) or ""
+            ev = rjd.AuthorityEvaluation(
+                state="held",
+                active=False,
+                reason="missing_authority",
+                representative_ref=clean_ref,
+                expires_at=exp_iso,
+            )
+            view = rjd.held_or_expired_view(
+                representative_ref=clean_ref,
+                state="held",
+                reason="missing_authority",
+                expires_at=exp_iso,
+            )
+            view["banner"] = rs.BANNER
+        else:
+            ev = rs.representative_grant_evaluation(grant, row, now_utc)
+            view = rs.representative_showcase_view(grant, row, now_utc)
+            if ev.active:
+                view["callbacks_available"] = self.agenda is not None and "Communicate" in ev.tasks
+        prior = self.rep_sessions.get(session_id)
+        resolved_exp = (
+            ev.expires_at
+            if ev.expires_at is not None
+            else (prior.expires_at if prior is not None else None)
+        )
+        tracked = rjd.RepresentativeSession(
+            session_id=session_id,
+            case_id=grant.case_id,
+            representative_ref=ev.representative_ref,
+            state=ev.state,
+            reason=ev.reason,
+            expires_at=resolved_exp,
+            journey_stages=tuple(view["journey_stages"]),
+            permitted_actions=tuple(view["permitted_actions"]),
+            updated_at=stamp,
+        )
+        self.rep_sessions.record_session(tracked)
+        if view.get("expires_at") is None and resolved_exp is not None:
+            view["expires_at"] = resolved_exp
+            if isinstance(view.get("renewal_route"), Mapping):
+                route = dict(view["renewal_route"])
+                route["recorded_expires_at"] = resolved_exp
+                view["renewal_route"] = route
+        view["session"] = tracked.snapshot()
+        return ev, view
+
+    def _live_grant_for_handle(
+        self,
+        handle: str,
+    ) -> rs.RepresentativeShowcaseGrant | None:
+        grant_loader = getattr(self.reader, "list_representative_grants", None)
+        if callable(grant_loader):
+            for candidate in grant_loader():
+                if (
+                    isinstance(candidate, rs.RepresentativeShowcaseGrant)
+                    and self.codec.handle(candidate.principal_subject) == handle
+                ):
+                    return candidate
+            cached = self.rep_by_handle.get(handle)
+            if cached is not None:
+                return replace(cached, status="Missing")
+        return self.rep_by_handle.get(handle)
+
+    def representative_state_for(
+        self, token: str | None
+    ) -> (
+        tuple[
+            rs.RepresentativeShowcaseGrant,
+            rs.ShowcaseRow | None,
+            rjd.AuthorityEvaluation,
+            dict[str, Any],
+        ]
+        | None
+    ):
+        found = self.codec.verify(token)
+        if found is None:
+            return None
+        grant = self._live_grant_for_handle(found[0])
+        if grant is None:
+            return None
+        row = self.reader.fetch_case(grant.case_id)
+        ev, view = self._sync_rep_session(found[1], grant, row)
+        return grant, row, ev, view
+
+    def representative_active(self, token: str | None) -> bool:
+        state = self.representative_state_for(token)
+        return state is not None and state[2].active
+
     def login(self, email: Any, password: Any) -> str | None:
         """Return a session token, or None. Re-reads the case, so a revoked row cannot sign in."""
-        case_id = rs.verify_login(self.verifier, self.identity, email, password)
-        if case_id is None:
-            return None
-        row = self.reader.fetch_case(case_id)
-        if row is None:
-            return None
-        try:
-            rs.authorise(row, self.now(), case_id, self.identity.email_for(case_id))
-        except rs.ShowcaseDenied:
-            return None
-        token: str = self.codec.issue(case_id)[0]
-        return token
+        password_ok = self.verifier.verify(password if isinstance(password, str) else "")
+        case_id = self.identity.case_for(email) if isinstance(email, str) else None
+        if password_ok and case_id is not None:
+            row = self.reader.fetch_case(case_id)
+            if row is None:
+                return None
+            try:
+                rs.authorise(row, self.now(), case_id, self.identity.email_for(case_id))
+            except rs.ShowcaseDenied:
+                return None
+            token: str = self.codec.issue(case_id)[0]
+            return token
+        canonical = rs.canonical_email(email) if isinstance(email, str) else None
+        rep_handle = self._rep_by_email.get(canonical) if canonical else None
+        if password_ok and rep_handle is not None:
+            grant = self.rep_by_handle.get(rep_handle)
+            if grant is None:
+                return None
+            row = self.reader.fetch_case(grant.case_id)
+            if row is None:
+                return None
+            ev = rs.representative_grant_evaluation(grant, row, self.now())
+            if not ev.active:
+                return None
+            rep_token, session_id = self.codec.issue(grant.principal_subject)
+            self._sync_rep_session(session_id, grant, row)
+            return str(rep_token)
+        return None
 
     def view_for(self, token: str | None) -> dict[str, Any] | None:
         row = self.row_for(token)
@@ -344,26 +482,59 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 )
             elif self.command in ("GET", "HEAD") and path == "/demo/session":
                 token, cookie = self._csrf_cookie()
-                signed = app.codec.verify(_cookies(self.headers.get("Cookie")).get(SESSION_COOKIE))
-                signed_in = signed is not None and signed[0] in app.by_handle
-                self._json(
-                    200,
-                    dict(
-                        csrf=token,
-                        signed_in=signed_in,
-                        session_id=signed[1] if signed_in and signed else None,
-                        banner=rs.BANNER,
-                    ),
-                    (cookie,),
+                raw_session = _cookies(self.headers.get("Cookie")).get(SESSION_COOKIE)
+                signed = app.codec.verify(raw_session)
+                rep_state = (
+                    app.representative_state_for(raw_session) if signed is not None else None
                 )
+                if rep_state is not None and signed is not None:
+                    _, _, ev, rep_view = rep_state
+                    payload: dict[str, Any] = dict(
+                        csrf=token,
+                        authenticated=True,
+                        active=ev.active,
+                        signed_in=ev.active,
+                        session_id=signed[1],
+                        banner=rs.BANNER,
+                        principal_kind="representative",
+                        viewer_kind="representative",
+                        state=ev.state,
+                        expires_at=rep_view["expires_at"],
+                        journey_stages=rep_view["journey_stages"],
+                        permitted_actions=rep_view["permitted_actions"],
+                        authority_scope=rep_view["authority_scope"],
+                    )
+                    if not ev.active:
+                        payload["reason"] = ev.reason
+                        payload["notice"] = rep_view["notice"]
+                        payload["renewal_route"] = rep_view["renewal_route"]
+                    self._json(200, payload, (cookie,))
+                else:
+                    signed_in = signed is not None and signed[0] in app.by_handle
+                    self._json(
+                        200,
+                        dict(
+                            csrf=token,
+                            signed_in=signed_in,
+                            session_id=signed[1] if signed_in and signed else None,
+                            banner=rs.BANNER,
+                        ),
+                        (cookie,),
+                    )
             elif self.command in ("GET", "HEAD") and path == "/demo/view":
                 if not self._session_bound():
                     return
-                view = app.view_for(_cookies(self.headers.get("Cookie")).get(SESSION_COOKIE))
-                if view is None:
-                    self._json(401, dict(error="Please sign in again."))
+                raw_session = _cookies(self.headers.get("Cookie")).get(SESSION_COOKIE)
+                rep_state = app.representative_state_for(raw_session)
+                if rep_state is not None:
+                    _, _, ev, rep_view = rep_state
+                    self._json(200 if ev.active else 403, rep_view)
                 else:
-                    self._json(200, view)
+                    view = app.view_for(raw_session)
+                    if view is None:
+                        self._json(401, dict(error="Please sign in again."))
+                    else:
+                        self._json(200, view)
             elif self.command == "POST" and path == "/demo/login":
                 self._login()
             elif self.command == "POST" and path == "/demo/logout":
@@ -431,11 +602,6 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 return
             if not self._session_bound():
                 return
-            row = app.row_for(session)
-            if row is None:
-                self._json(401, dict(error="Please sign in again."))
-                return
-            view = rs.showcase_view(row, app.now())
             value = body.get("topic", body.get("question"))
             if not isinstance(value, str) or not 1 <= len(value.strip()) <= 500:
                 self._json(400, dict(error="Choose one of the listed questions."))
@@ -450,15 +616,53 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                         self._json(400, dict(error="Choose one of the listed questions."))
                         return
                     topic = value
-            try:
-                case = CaseProgress(
-                    view["progress"], view["next_step"], view.get("closed", ""), row.documents
-                )
-                signed = app.codec.verify(session)
-                case_id = app.by_handle.get(signed[0]) if signed else None
-                if case_id is None:
+
+            rep_state = app.representative_state_for(session)
+            signed = app.codec.verify(session)
+            if rep_state is not None:
+                grant, rep_row, ev, rep_view = rep_state
+                if not ev.active or rep_row is None:
+                    blocked = rjd.RepresentativeAccessBlockedError(
+                        state=ev.state,
+                        reason=ev.reason,
+                        expires_at=rep_view["expires_at"],
+                        renewal_route=rep_view["renewal_route"],
+                    )
+                    self._json(403, blocked.to_payload())
+                    return
+                topic_key = topic.value if isinstance(topic, Topic) else str(topic)
+                if topic_key not in rjd.allowed_assistant_topics(ev.tasks):
+                    denied = rjd.RepresentativeScopeDeniedError(
+                        action=f"assistant:{topic_key}",
+                        expires_at=rep_view["expires_at"],
+                        permitted_actions=rep_view["permitted_actions"],
+                    )
+                    self._json(403, denied.to_payload())
+                    return
+                view = rep_view
+                docs = grant.documents
+                principal_id: str | None = grant.principal_subject
+                callbacks_permitted = "Communicate" in ev.tasks
+            else:
+                row = app.row_for(session)
+                if row is None:
                     self._json(401, dict(error="Please sign in again."))
                     return
+                view = rs.showcase_view(row, app.now())
+                docs = row.documents
+                principal_id = app.by_handle.get(signed[0]) if signed else None
+                callbacks_permitted = True
+
+            if principal_id is None:
+                self._json(401, dict(error="Please sign in again."))
+                return
+            try:
+                case = CaseProgress(
+                    view.get("progress", ""),
+                    view.get("next_step", ""),
+                    view.get("closed", ""),
+                    docs,
+                )
                 if (
                     "question" in body
                     and topic is not Topic.DOCUMENTS
@@ -471,7 +675,7 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                     )
                     advice = (
                         app.assistant_advisor.answer_question(
-                            value.strip(), case, resident_key(case_id), base
+                            value.strip(), case, resident_key(principal_id), base
                         )
                         if app.assistant_advisor is not None
                         else replace(base, label="Summary by rules - AI is not enabled")
@@ -479,7 +683,7 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 else:
                     advice = (
                         (
-                            app.assistant_advisor.answer(topic, case, resident_key(case_id))
+                            app.assistant_advisor.answer(topic, case, resident_key(principal_id))
                             if app.assistant_advisor is not None
                             else advise(topic, case, app.assistant_provider)
                         )
@@ -494,7 +698,9 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                     ):
                         advice = replace(advice, label="Summary by rules - AI is not enabled")
                 advice = chat.with_pause_note(advice, topic, view)
-                callbacks = topic == "appointments" and app.agenda is not None
+                callbacks = (
+                    topic == "appointments" and app.agenda is not None and callbacks_permitted
+                )
                 if topic == "appointments" and not callbacks:
                     advice = replace(
                         advice,
@@ -510,7 +716,22 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                     ),
                 )
                 return
-            if app.view_for(session) is None:
+            if rep_state is not None:
+                after = app.representative_state_for(session)
+                if after is None:
+                    self._json(401, dict(error="Please sign in again."))
+                    return
+                _, _, after_ev, after_view = after
+                if not after_ev.active:
+                    blocked = rjd.RepresentativeAccessBlockedError(
+                        state=after_ev.state,
+                        reason=after_ev.reason,
+                        expires_at=after_view["expires_at"],
+                        renewal_route=after_view["renewal_route"],
+                    )
+                    self._json(403, blocked.to_payload())
+                    return
+            elif app.view_for(session) is None:
                 self._json(401, dict(error="Please sign in again."))
                 return
             if app.chat_log is not None and signed is not None:
@@ -580,21 +801,47 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             if not self._session_bound():
                 return
             session = _cookies(self.headers.get("Cookie")).get(SESSION_COOKIE)
-            if app.view_for(session) is None:
-                self._json(401, dict(error="Please sign in again."))
-                return
-            signed = app.codec.verify(session)
-            case_id = app.by_handle.get(signed[0]) if signed else None
-            if case_id is None:
-                self._json(401, dict(error="Please sign in again."))
-                return
+            rep_state = app.representative_state_for(session)
+            if rep_state is not None:
+                grant, _, ev, rep_view = rep_state
+                if not ev.active:
+                    blocked = rjd.RepresentativeAccessBlockedError(
+                        state=ev.state,
+                        reason=ev.reason,
+                        expires_at=rep_view["expires_at"],
+                        renewal_route=rep_view["renewal_route"],
+                    )
+                    self._json(403, blocked.to_payload())
+                    return
+                if "request_scoped_callback" not in rep_view["permitted_actions"]:
+                    denied = rjd.RepresentativeScopeDeniedError(
+                        action="request_scoped_callback",
+                        expires_at=rep_view["expires_at"],
+                        permitted_actions=rep_view["permitted_actions"],
+                    )
+                    self._json(403, denied.to_payload())
+                    return
+                owner = resident_key(grant.principal_subject)
+
+                def authorised() -> bool:
+                    return app.representative_active(session) and not app.expired
+            else:
+                if app.view_for(session) is None:
+                    self._json(401, dict(error="Please sign in again."))
+                    return
+                signed = app.codec.verify(session)
+                case_id = app.by_handle.get(signed[0]) if signed else None
+                if case_id is None:
+                    self._json(401, dict(error="Please sign in again."))
+                    return
+                owner = resident_key(case_id)
+
+                def authorised() -> bool:
+                    return app.view_for(session) is not None and not app.expired
+
             if app.agenda is None:
                 self._json(503, dict(error="The local callback agenda is not connected. " + MANUAL))
                 return
-            owner = resident_key(case_id)
-
-            def authorised() -> bool:
-                return app.view_for(session) is not None and not app.expired
 
             try:
                 result: dict[str, Any] = dict(notice=AGENDA_NOTICE, manual=MANUAL)
@@ -623,6 +870,17 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 self._json(409, dict(error=str(error)))
                 return
             except PermissionError:
+                if rep_state is not None:
+                    after = app.representative_state_for(session)
+                    if after is not None and not after[2].active:
+                        blocked = rjd.RepresentativeAccessBlockedError(
+                            state=after[2].state,
+                            reason=after[2].reason,
+                            expires_at=after[3]["expires_at"],
+                            renewal_route=after[3]["renewal_route"],
+                        )
+                        self._json(403, blocked.to_payload())
+                        return
                 self._json(401, dict(error="Please sign in again."))
                 return
             except ValueError as error:
