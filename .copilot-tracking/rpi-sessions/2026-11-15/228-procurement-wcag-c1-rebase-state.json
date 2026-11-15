@@ -6,8 +6,8 @@
     "task_slug": "procurement-contractor-wcag-228"
   },
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-15/228-procurement-wcag-c1-rebase-research.md",
@@ -15,7 +15,7 @@
     "details": ".copilot-tracking/details/2026-11-15/228-procurement-wcag-c1-rebase-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-11-15/228-procurement-wcag-c1-rebase-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-11-15/228-procurement-wcag-c1-rebase-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/228-procurement-wcag-c1-rebase-review.md"
   },
   "confirmed_decisions": [
     {
@@ -32,25 +32,30 @@
       "decision": "Single-pass rpi-plan-critique executed (verdict: Revise; 0 Critical, 1 High, 1 Medium); direct planner corrections PC-001 (Resident Liaison Officer choiceRoles session + aria-labelledby='screen-evidence-heading' assertion for #232 resident routes) and PC-002 (primary /usr/bin/python3 + PYTHONPATH runner + pre-review implementation commit / post-review tracking commit split) applied directly without repeat critique",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/plans/2026-11-15/228-procurement-wcag-c1-rebase-plan-critique.md; .copilot-tracking/plans/2026-11-15/228-procurement-wcag-c1-rebase-plan.md"
+    },
+    {
+      "decision": "Single-pass rpi-review executed (execution status: Complete; outcome: Conformant; 0 findings across Critical/High/Medium/Low) over assessed boundary fe63981978970e38cafed5ebe3d38eb7f9a13cf8..6efa815aa including refreshed Web Interface Guidelines audit",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/228-procurement-wcag-c1-rebase-review.md"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Review",
-    "action": "Refresh Web Interface Guidelines and activate rpi-review once on the clean rebased implementation candidate"
+    "phase": "Follow-up",
+    "action": "Await user or coordinator selection among ranked follow-up choices, Stop automatic session, or Switch to manual mode after coordinator exact-head review and force-with-lease push of PR #1765"
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Run opt-in Chromium Playwright + axe checks across rebased #/role/procurement and #/role/contractor screens",
-      "rationale": "Extends Node VM DOM verification to browser-rendered focus and axe-core assertions when browser-tier gates run",
-      "evidence": ".copilot-tracking/research/2026-11-15/228-procurement-wcag-c1-rebase-research.md (C3, C4, W1)"
+      "task": "Run opt-in Chromium Playwright + axe runtime check (src/api/checks/specialist_keyboard_browser_check.py) across #/role/procurement and #/role/contractor",
+      "rationale": "Highest ease of implementation and engineering-quality leverage: reuses the existing browser harness to extend Node VM DOM verification to real Chromium focus rings and axe-core assertions",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/228-procurement-wcag-c1-rebase-review.md; src/api/checks/specialist_keyboard_browser_check.py"
     },
     {
       "rank": 2,
-      "task": "Complete human assistive-technology (#151) and live perspective walkthrough (#155) validation for procurement and contractor screens",
-      "rationale": "Required before claiming WCAG 2.2 AA conformance acceptance or ticking human criteria on #228/#151/#155",
-      "evidence": "docs/reference/research/ux/wcag-conformance-baseline.md; .copilot-tracking/research/2026-11-15/228-procurement-wcag-c1-rebase-research.md (C10, C11)"
+      "task": "Complete human assistive-technology (#151) and live participant perspective walkthrough (#155) validation for procurement and contractor screens",
+      "rationale": "High governance impact, human-owned dependency: required before claiming WCAG 2.2 AA conformance acceptance or ticking human criteria on #228/#151/#155",
+      "evidence": "docs/reference/research/ux/wcag-conformance-baseline.md; .copilot-tracking/reviews/logs/2026-11-15/228-procurement-wcag-c1-rebase-review.md"
     }
   ]
 }
