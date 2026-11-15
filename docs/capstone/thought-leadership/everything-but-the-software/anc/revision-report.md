@@ -7,6 +7,9 @@ ms.date: 2026-11-15
 The 16 November source-only revision applies a plain-language pass to the
 article and every active TeX input. Its scope and validation are recorded
 below; the existing PDF is excluded from delivery.
+The later abstract edit keeps the author's revised opening paragraph and
+recasts the study description as a sequence: agents work through features,
+then a separate isolated evaluator runs tests hidden from them.
 
 The preceding v23 revision rewrites selected paper prose for direct, readable
 language. It preserves the findings, study design, formulas, tables, figures
@@ -95,6 +98,14 @@ Long qualifications are split into specific statements. Repetitive contrasts
 are reduced while preserving consequential uncertainty and approval limits.
 The participant-observer retains first-person narration.
 
+The abstract's study description now explains the measurement setup before
+giving its results. Agents saw the feature specifications, while the scoring
+tests remained outside their workspaces. After each development step, a
+separate evaluator ran the tests in an isolated container and counted passed
+contracts. The paragraph then follows the runs through consolidation and
+change-request results. The author's revised first abstract paragraph was
+left unchanged. No study methods, outcomes or analysis changed.
+
 There is no new source verification, equation audit, experimental analysis,
 scoring, registration or protocol amendment. The owner separately authorized
 maintenance of the directly related content tests and binding. Exact-wording
@@ -108,7 +119,7 @@ and digest maintenance. No application, dependency manifest, infrastructure,
 deployment, security control or repository gate semantics changed.
 
 * The structural checker passes: 94 cited keys and 94 embedded bibliography
-  entries resolve; the abstract has 1,781 source characters, below 1,920.
+  entries resolve; the abstract has 1,916 source characters, below 1,920.
   The historical comparison object remains unavailable.
 * Direct comparison with the intake source preserves all 40 table
   environments, seven displayed equations, three literal prompts, citation
@@ -120,8 +131,10 @@ deployment, security control or repository gate semantics changed.
 * A separate external Tectonic build produces a 73-page PDF. The Supplement
   starts on page 46; the source register starts on page 70. All pages contain
   text within page bounds, and no unresolved-reference markers were found.
-  Rendered pages 1, 15, 21, 36, 46, 51 and 73 were inspected. The inherited
-  `inputenc` warning remains; no overfull or underfull boxes were reported.
+  Rendered pages 1, 15, 21, 36, 46, 51 and 73 were inspected in the earlier
+  readability build; the follow-up build confirms the updated abstract on
+  page 1. The inherited `inputenc` warning remains; no overfull or underfull
+  boxes were reported.
 * The existing `main.pdf` was already dirty at intake and subsequently
   changed outside this revision's external build. The owner confirmed
   source-only continuation with that PDF left uncommitted. No claim is

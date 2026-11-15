@@ -74,28 +74,33 @@ delivery plan. This experience raised a question: what does each feature leave
 for the next? The case analysis considers five possible process-related causes,
 but technical migration and deployment problems could also explain what happened.
 
-A separate exploratory study tested ten sequential features and a withheld
-change request. Three models each completed 21 repository trajectories per
-condition. The conditions were feature-only delivery, consolidation
-(refactoring, added tests and a handover note), read-only review, longer
-sessions and repair against visible specifications. All 315 of 315
-allocated trajectories finished. Sonnet~5.5 and Gemini~4 Argon
-averaged 99.18\%--99.74\%
-hidden-test coverage, measured as the fraction of required contracts passed.
-One trajectory ended with a previously passing contract still failing;
-workflow replay found no losses of earlier observed capabilities.
+To test the question, I designed a study with ten ordered features in one
+repository, followed by a withheld change request. Agents kept coding,
+consolidated, reviewed without editing, or repaired behaviour against
+visible specifications; a control gave them more coding time. They saw the
+specifications, not the scoring tests. After each step, a separate evaluator
+ran hidden tests in isolated containers and counted passed contracts out
+of 127.
 
-At all 63 consolidation endpoints, no function exceeded cyclomatic
-complexity 10. Consolidation improved final coverage over longer sessions
-by 1.19 percentage points (95\% bootstrap interval [0.10, 2.22]), below
-the ten-point benchmark; GPT~6.1 Sol accounted for most of the gain.
-Read-only review succeeded on 16/21 Gemini~4 Argon change requests, compared
-with 8/21 after consolidation. Consolidation roughly doubled settled
-delivery credits and did not consistently reduce change-request cost.
-These results show why implementing features, preserving them and adapting
-them to a new requirement need separate measures.
-They also identify questions for a separately funded study of longer,
-more coupled work and review-based workflows.
+Three models each completed 21 repository trajectories in every condition.
+All 315 allocated trajectories finished. Sonnet~5.5 and Gemini~4 Argon
+averaged 99.18\%--99.74\% test coverage. One trajectory ended with a
+previously passing contract still failing, while replay found no losses
+of earlier observed capabilities.
+
+Consolidation cleaned up the code: none of its 63 endpoints had a function
+above cyclomatic complexity 10. The coverage gain over longer coding
+sessions was only 1.19 percentage points (95\% bootstrap interval
+[0.10, 2.22]), well below the ten-point benchmark. Most of that gain came
+from GPT~6.1 Sol. On Gemini~4 Argon, read-only review passed 16 of 21
+held-out change requests; consolidation passed 8. Consolidation also
+roughly doubled settled delivery credits and did not consistently reduce
+change-request cost.
+
+The results separate three questions: did the features work, did earlier
+behaviour survive, and could the system take another change? A separately
+funded study could test these questions on longer projects with more
+interdependent work.
 \end{abstract}
 % Complete 315/315 unassisted intervals retain the owner-attestation boundary, 313/315 judging snapshot and 16-epoch provenance.
 
