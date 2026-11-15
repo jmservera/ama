@@ -1,4 +1,5 @@
 """WCAG 2.2 baseline (#151): static checks on the workbench pages, tokens and the audit record."""
+
 import re
 import unittest
 from pathlib import Path
@@ -26,7 +27,7 @@ def token(name):
 
 
 def lum(hex_colour):
-    channels = [int(hex_colour[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+    channels = [int(hex_colour[i : i + 2], 16) / 255 for i in (1, 3, 5)]
     r, g, b = [c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4 for c in channels]
     return 0.2126 * r + 0.7152 * g + 0.0722 * b
 
@@ -38,7 +39,7 @@ def ratio(a, b):
 
 class Wcag22Baseline(unittest.TestCase):
     def test_pages_declare_language_and_allow_zoom(self):
-        for page in ("index.html", "welcome.html"):
+        for page in ("index.html", "welcome.html", "law.html"):
             html = (WEB / page).read_text()
             self.assertIn('lang="en-GB"', html, page)
             self.assertIn("width=device-width", html, page)
@@ -46,8 +47,18 @@ class Wcag22Baseline(unittest.TestCase):
             self.assertNotIn("maximum-scale", html, page)
 
     def test_text_contrast_meets_aa(self):
-        pairs = [("ink", "bg"), ("ink", "surface"), ("muted", "surface"), ("muted", "bg"), ("surface", "brand"),
-                 ("surface", "brand-d"), ("brand", "surface"), ("brand", "soft"), ("warn", "warn-bg"), ("ok", "ok-bg")]
+        pairs = [
+            ("ink", "bg"),
+            ("ink", "surface"),
+            ("muted", "surface"),
+            ("muted", "bg"),
+            ("surface", "brand"),
+            ("surface", "brand-d"),
+            ("brand", "surface"),
+            ("brand", "soft"),
+            ("warn", "warn-bg"),
+            ("ok", "ok-bg"),
+        ]
         for fg, bg in pairs:
             self.assertGreaterEqual(ratio(token(fg), token(bg)), 4.5, "%s on %s" % (fg, bg))
 
@@ -71,7 +82,17 @@ class Wcag22Baseline(unittest.TestCase):
     def test_pointer_targets_have_a_24px_minimum_height(self):
         # WCAG 2.5.8: rule-level static check; rendered measurement is a manual or browser check.
         rem = 16
-        for selector in (r"button,\.btn", r"\.linkbtn", r"\.maplist summary", r"\.regulatory summary"):
+        selectors = (
+            r"button,\.btn",
+            r"details>summary",
+            r"\.chart-data summary",
+            r"input\[type=checkbox\],input\[type=radio\]",
+            r"\.leafmap \.leaflet-bar a,\.leafmap\.leaflet-touch \.leaflet-bar a",
+            r"\.linkbtn",
+            r"\.maplist summary",
+            r"\.regulatory summary",
+        )
+        for selector in selectors:
             rule = re.search(r"(?:^|\})" + selector + r"\{([^}]*)\}", CSS, re.M)
             self.assertIsNotNone(rule, selector)
             height = re.search(r"min-height:([\d.]+)rem", rule.group(1))
@@ -94,25 +115,36 @@ class Wcag22Baseline(unittest.TestCase):
                 if 'setAttribute("aria-invalid", "true")' not in line:
                     continue
                 sites += 1
-                window = "\n".join(lines[max(number - 4, 0):number + 3])
-                built_with_describedby = re.search(r'"aria-describedby":|setAttribute\("aria-describedby"', text)
-                self.assertTrue("aria-describedby" in window or built_with_describedby, f"{path.name}:{number}")
-        self.assertEqual(sites, 9, "new aria-invalid site: audit it and update this check and the record")
+                window = "\n".join(lines[max(number - 4, 0) : number + 3])
+                built_with_describedby = re.search(
+                    r'"aria-describedby":|setAttribute\("aria-describedby"', text
+                )
+                self.assertTrue(
+                    "aria-describedby" in window or built_with_describedby, f"{path.name}:{number}"
+                )
+        invalid_msg = "new aria-invalid site: audit it and update this check and the record"
+        self.assertEqual(sites, 9, invalid_msg)
 
     def test_saved_held_copy_field_is_tied_to_its_visible_message(self):
         # The eighth site (96): the saved Held copy file input must name the same element the
         # script fills and reveals as its visible message, and keep its visible label.
         text = (WEB / "role-screens.js").read_text()
         start = text.index("function fundingSavedCopyCheck(")
-        body = text[start:text.index("function fundingDraftPanel(", start)]
-        self.assertIn('id: `${id}-error`', body)
+        body = text[start : text.index("function fundingDraftPanel(", start)]
+        self.assertIn("id: `${id}-error`", body)
         self.assertRegex(body, r'h\("div", \{[^}]*class: "field-error"[^}]*id: `\$\{id\}-error`')
         self.assertIn('"aria-describedby": `${id}-error`', body)
-        show = body[body.index("const show = "):body.index("const input = ")]
-        for step in ("error.textContent = flagged ? text", "error.hidden = !flagged",
-                     'input.setAttribute("aria-invalid", "true")', 'input.removeAttribute("aria-invalid")'):
+        show = body[body.index("const show = ") : body.index("const input = ")]
+        for step in (
+            "error.textContent = flagged ? text",
+            "error.hidden = !flagged",
+            'input.setAttribute("aria-invalid", "true")',
+            'input.removeAttribute("aria-invalid")',
+        ):
             self.assertIn(step, show)
-        self.assertRegex(body, r'h\("p", \{\}, h\("label", \{ for: id \}, "[^"]+"\), " ", input, error\)')
+        self.assertRegex(
+            body, r'h\("p", \{\}, h\("label", \{ for: id \}, "[^"]+"\), " ", input, error\)'
+        )
 
     def test_exception_recovery_reason_field_is_tied_to_its_visible_message(self) -> None:
         # The ninth site (#135): the exception recovery audit-reason textarea names its hint and
@@ -140,7 +172,10 @@ class Wcag22Baseline(unittest.TestCase):
         self.assertGreaterEqual(float(padding.group(1)), 3.5 + 1.0)
         fixed = []
         for path in sorted(WEB.glob("*.css")):
-            fixed += [f"{path.name}:{rule}" for rule in re.findall(r"([^{}]+)\{[^{}]*position:fixed", path.read_text())]
+            fixed += [
+                f"{path.name}:{rule}"
+                for rule in re.findall(r"([^{}]+)\{[^{}]*position:fixed", path.read_text())
+            ]
         self.assertEqual(len(fixed), 2, fixed)
         self.assertTrue(all(item.startswith("chat-widget.css:") for item in fixed), fixed)
 
@@ -148,13 +183,16 @@ class Wcag22Baseline(unittest.TestCase):
         # WCAG 2.5.7: no script binds drag or touch handlers directly; the map pans with Leaflet
         # keyboard and zoom controls and has a list alternative.
         for path in sorted(WEB.glob("*.js")):
-            self.assertNotRegex(path.read_text(), r"draggable|dragstart|mousedown|touchstart", path.name)
+            self.assertNotRegex(
+                path.read_text(), r"draggable|dragstart|mousedown|touchstart", path.name
+            )
 
     def test_every_table_has_a_caption_and_column_headers(self) -> None:
         # WCAG 1.3.1 and 4.1.2: each script-built table is named by a caption and every header cell
         # declares its scope. The count forces a new table to be audited and added here.
         # 13 on 2026-11-11: the handoff waiting table (#83) was audited from source and added.
         # 14 on 2026-11-15: the exception queue competing-values table (#135) was audited and added.
+        # 15 on 2026-11-15: sensorTable in ops.js (#151) gained a caption and scroll region.
         tables = 0
         for path in sorted(WEB.glob("*.js")):
             text = path.read_text()
@@ -162,7 +200,7 @@ class Wcag22Baseline(unittest.TestCase):
             for match in re.finditer(r'h\("table", \{\},\s*(.{0,60})', text):
                 tables += 1
                 self.assertIn('h("caption"', match.group(1), f"{path.name}: {match.group(1)}")
-        self.assertEqual(tables, 14, "new table: audit it and update this check and the record")
+        self.assertEqual(tables, 15, "new table: audit it and update this check and the record")
 
     def test_audit_record_names_target_gaps_and_makes_no_conformance_claim(self):
         self.assertIn("WCAG 2.2", DOC)

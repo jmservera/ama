@@ -640,15 +640,9 @@ class ProcurementContractorScreenWcagTests(unittest.TestCase):
                 self.assertEqual(
                     shell_sections[0]["attrs"].get("aria-labelledby"), "screen-queue-heading"
                 )
+                self.assertEqual(shell_sections[1]["attrs"].get("aria-label"), "Evidence for C-1")
                 if is_resident:
-                    self.assertEqual(
-                        shell_sections[1]["attrs"].get("aria-labelledby"),
-                        "screen-evidence-heading",
-                    )
-                else:
-                    self.assertEqual(
-                        shell_sections[1]["attrs"].get("aria-label"), "Evidence for C-1"
-                    )
+                    self.assertEqual(shell_sections[1]["attrs"].get("id"), "screen-evidence")
 
     def test_procurement_and_contractor_tables_use_col_and_row_header_scopes(self) -> None:
         scenarios: tuple[tuple[str, dict[str, Any], tuple[str, ...]], ...] = (

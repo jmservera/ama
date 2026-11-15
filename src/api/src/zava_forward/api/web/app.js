@@ -368,13 +368,17 @@ function missingWorkspaceScripts(hash, caseRoute) {
 }
 
 function isRoleScreensDestination(destination) {
-  return destination === "#/screens"
-    || destination === "#/role/building_safety_lead"
-    || destination === "#/role/repairs"
-    || destination === "#/role/housing_officer"
-    || destination === "#/role/resident_engagement"
-    || destination === "#/role/procurement"
-    || destination === "#/role/contractor";
+  const target = String(destination || "").split("?")[0];
+  return target === "#/screens"
+    || target === "#/role/building_safety_lead"
+    || target === "#/role/repairs"
+    || target === "#/role/housing_officer"
+    || target === "#/role/contact_centre"
+    || target === "#/role/resident_engagement"
+    || target === "#/role/procurement"
+    || target === "#/role/contractor"
+    || target === "#/role/programme_manager"
+    || target === "#/role/retrofit_coordinator";
 }
 
 async function requireWorkspaceScripts(hash, caseRoute) {
@@ -1196,7 +1200,7 @@ async function caseView(id) {
       regulatoryAlertsPanel(id), !c.closed && returned, stockPanel(c)]],
     ["survey", "Survey and assessment", [technicalPanel(c, id, refresh), documentsPanel(c, id, refresh)]],
     ["funding", "Funding", [fundingPanel(c, id, refresh, savedFields, session), financePanel(c, id, refresh), grantPanel(c, id, refresh)]],
-    ["resident", "Resident", [residentPanel(c, id, refresh), nominationPanel(c), call, write, affectedChallengePanel(c, id, refresh)]],
+    ["resident", "Resident", [residentPanel(c, id, refresh), nominationPanel(c, id, refresh), call, write, affectedChallengePanel(c, id, refresh)]],
     ["contractor", "Contractor and works", [h("section", { class: "card" }, h("h2", {}, "Contractor and appointments"),
       h("p", {}, `${c.contractor.name}, ${c.contractor.contact}, ${c.contractor.phone}`),
       h("p", {}, `Next visit: ${fmtDate((c.appointments.find(a => a.outcome === "Booked") || {}).date)}`),
@@ -2433,9 +2437,12 @@ function bars(title, data, link) {
         svg("text", { x: 190 + (d.n / max) * 240 + 6, y: i * rowH + 16, class: "lbl" }, String(d.n)));
       return bar;
     }));
-  const table = h("details", { class: "chart-data" }, h("summary", {}, "Show this chart as a table"),
-    h("table", {}, h("caption", { class: "sr-only" }, title), h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Group"), h("th", { scope: "col" }, "Cases"))),
-      h("tbody", {}, data.map((d) => h("tr", {}, h("th", { scope: "row" }, d.label), h("td", {}, String(d.n)))))));
+  const table = h("details", { class: "chart-data" },
+    h("summary", {}, "Show this chart as a table", h("span", { class: "sr-only" }, `: ${title}`)),
+    h("div", { class: "table-scroll", role: "region", tabindex: "0", "aria-label": `${title} table` },
+      h("table", {}, h("caption", { class: "sr-only" }, title), h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Group"), h("th", { scope: "col" }, "Cases"))),
+        h("tbody", {}, data.length ? data.map((d) => h("tr", {}, h("th", { scope: "row" }, d.label), h("td", {}, String(d.n))))
+          : h("tr", {}, h("td", { colspan: "2" }, "No cases recorded."))))));
   return h("section", { class: "card" }, h("h2", {}, title), g, table, link);
 }
 
@@ -2517,8 +2524,9 @@ function mapPanel(coordinator = null, filters = null) {
     if (focus) title.focus();
   };
   const listHead = h("summary", { id: "maplist-h" }, "Show the map areas as a list (keyboard and screen reader friendly)");
+  const listEmpty = h("p", { class: "muted", "data-maplist-empty": "", hidden: true }, "No mapped homes in this view. Choose Show these as a list for all selected cases.");
   const listUl = h("ul", { "aria-labelledby": "maplist-h", class: "plainlist" });
-  const listBox = h("details", { class: "maplist" }, listHead, listUl);
+  const listBox = h("details", { class: "maplist" }, listHead, listEmpty, listUl);
   const sidebar = h("aside", { class: "map-info", "aria-label": "Map information and home summary" },
     h("p", {}, "Select a home for a summary, then choose Open home. Escape closes the summary first."),
     h("p", {}, Object.entries(MAP_SIGNALS).map(([kind, signal]) => h("span", { class: `key ${kind}` }, mapSymbol(kind), signal.label))),
@@ -2530,13 +2538,13 @@ function mapPanel(coordinator = null, filters = null) {
   const toggle = h("button", { type: "button", class: "alt", "aria-expanded": "false",
     onclick: () => dialog.open ? collapse() : expand() }, "Expand map");
   const workspace = h("div", { class: "map-workspace" }, sidebar, mapStage);
-  const box = h("section", { class: "card map-panel", onkeydown: (event) => {
+  const box = h("section", { class: "card map-panel", "aria-labelledby": "map-title", onkeydown: (event) => {
     if (event.key === "Escape" && selectedId !== null) {
       event.preventDefault();
       event.stopPropagation();
       closeHome();
     }
-  } }, h("div", { class: "row between" }, h("h2", { id: "map-title" }, "Map of open cases"), toggle),
+  } }, h("div", { class: "row between" }, h("h2", { id: "map-title", tabindex: "-1" }, "Map of open cases"), toggle),
   workspace);
   const slot = h("div", { class: "map-slot" }, box);
   const resize = () => map?.invalidateSize({ pan: true, animate: false });
@@ -2581,6 +2589,10 @@ function mapPanel(coordinator = null, filters = null) {
   disposeMapPanel = dispose;
   signal.addEventListener("abort", dispose, { once: true });
   const renderList = (d) => {
+    const empty = !d.items.length;
+    listEmpty.hidden = !empty;
+    if (empty) listEmpty.removeAttribute("hidden");
+    else listEmpty.setAttribute("hidden", "");
     listUl.replaceChildren(...d.items.map((p) => {
       if (d.mode === "clusters") {
         const label = `${p.count} homes, ${p.hazards} with a safety issue open`;
@@ -2736,8 +2748,8 @@ async function coordinatorView() {
     values[key] = input;
     return h("div", {}, h("label", { for: `co-${key}` }, label), input);
   };
-  const error = h("p", { class: "err", role: "alert" });
-  const form = h("form", { class: "card coordinator-filters", onsubmit: (event) => {
+  const error = h("p", { id: "co-filter-error", class: "err", role: "alert" });
+  const form = h("form", { class: "card coordinator-filters", "aria-labelledby": "coordinator-filters-heading", onsubmit: (event) => {
     event.preventDefault();
     const next = Object.fromEntries(Object.entries(values).map(([key, input]) => [key, input.value.trim()]));
     if (!next.view || !next.group_by) {
@@ -2747,7 +2759,7 @@ async function coordinatorView() {
     }
     location.hash = `#/coordinator?${qs(next)}`;
   } },
-  h("h2", {}, "Choose the current case population"),
+  h("h2", { id: "coordinator-filters-heading", tabindex: "-1" }, "Choose the current case population"),
   h("div", { class: "row" },
     field("Case scope", "view", [["mine", "My assigned open cases"], ["all", "All permitted open cases"]]),
     field("Heatmap grouping", "group_by", [["area", "Local authority"], ["building", "Recorded building"], ["archetype", "Recorded home type"]]),
@@ -2761,20 +2773,27 @@ async function coordinatorView() {
     textField("Find by name, address, postcode or case ID", "q"),
     textField("Event cutoff (ISO date, time and timezone)", "as_of", true),
     textField("Event period start (optional ISO timestamp)", "start")),
-  h("p", {}, "Dates select recorded events only. Current case membership, stages and stopped work are not reconstructed at the cutoff."),
+  h("p", { id: "co-cutoff-note" }, "Dates select recorded events only. Current case membership, stages and stopped work are not reconstructed at the cutoff."),
   h("button", { type: "submit" }, "Apply coordinator filters"),
   h("a", { class: "btn alt", href: "#/coordinator" }, "Reset coordinator filters"), error);
   values.group_by.value = state.group_by || "area";
+  for (const requiredSelect of [values.view, values.group_by]) {
+    requiredSelect.setAttribute("aria-describedby", "co-filter-error");
+    requiredSelect.addEventListener("change", () => { error.textContent = ""; });
+  }
+  for (const cutoffInput of [values.as_of, values.start]) {
+    cutoffInput.setAttribute("aria-describedby", "co-cutoff-note");
+  }
   const link = (n, changes, label) => h("a", {
     href: href(changes), "aria-label": `${number(n)} ${label}`,
   }, number(n));
-  const table = (title, headers, rows) => h("section", { class: "card" },
-    h("h2", {}, title), h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": title },
+  const table = (title, headers, rows, headingId) => h("section", { class: "card" },
+    h("h2", { id: headingId, tabindex: "-1" }, title), h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": title },
       h("table", {}, h("caption", { class: "muted" }, title),
         h("thead", {}, h("tr", {}, headers.map((x) => h("th", { scope: "col" }, x)))),
         h("tbody", {}, rows.length ? rows : h("tr", {}, h("td", { colspan: headers.length }, "No cases match this population. Change or reset the filters."))))));
-  const summary = h("section", { class: "card coordinator-summary", "aria-label": "Coordinator denominator and coverage" },
-    h("h2", {}, "Denominator and coverage"),
+  const summary = h("section", { class: "card coordinator-summary", "aria-labelledby": "coordinator-summary-heading" },
+    h("h2", { id: "coordinator-summary-heading", tabindex: "-1" }, "Denominator and coverage"),
     h("p", {}, `${number(data.cohort.selected_cases)} current cases selected from ${number(data.cohort.baseline_cases)} permitted open cases in this scope. `,
       link(data.cohort.excluded_by_filters, { metric: "filtered_out", metric_stage: "", group: "" }, "cases excluded by source filters"), " excluded by filters, not lifecycle exclusion."),
     h("p", {}, link(data.counts.stopped, { metric: "stopped", metric_stage: "", group: "" }, "currently stopped cases"), " currently cannot move on. ",
@@ -2787,14 +2806,26 @@ async function coordinatorView() {
       " with unknown or invalid coordinates remain in the population."),
     h("p", {}, `Lifecycle exclusions: Unknown. True conversion: Unknown. Audit evidence: ${data.audit_integrity}. ${data.approval_status}.`),
     h("p", {}, `Current dataset date: ${data.current_as_of}. Event window: ${data.period_start || "all recorded history"} to ${data.as_of}, inclusive UTC.`));
+  const heatState = (count) => {
+    if (typeof count === "number" && Number.isFinite(count)) {
+      return count > 0
+        ? { cls: " heat-present", cue: "present", label: "present", badge: "Present" }
+        : { cls: "", cue: "zero", label: "none recorded", badge: "None" };
+    }
+    return { cls: "", cue: "unknown", label: "unknown count", badge: "Unknown" };
+  };
   const heatmap = table("Heatmap of current cases",
     ["Recorded group", "Current stage", "Cases / denominator", "Cannot move on", "Unknown coordinates", "Unknown stage history"],
-    data.heatmap.map((cell) => h("tr", {},
-      h("th", { scope: "row" }, cell.group), h("td", {}, cell.stage),
-      h("td", { class: `heat-count${cell.count ? " heat-present" : ""}` },
-        link(cell.count, { metric: "current", metric_stage: cell.stage, group: cell.group }, `current cases in ${cell.group}, ${cell.stage}`),
-        ` / ${number(cell.denominator)}`),
-      h("td", {}, number(cell.stopped)), h("td", {}, number(cell.missing_geocode)), h("td", {}, number(cell.unknown_history)))));
+    data.heatmap.map((cell) => {
+      const hs = heatState(cell.count);
+      return h("tr", {},
+        h("th", { scope: "row" }, cell.group), h("td", {}, cell.stage),
+        h("td", { class: `heat-count${hs.cls}`, "data-state-cue": hs.cue },
+          h("span", { class: "flag", "data-state-cue": hs.cue }, hs.badge), " ",
+          link(cell.count, { metric: "current", metric_stage: cell.stage, group: cell.group }, `current cases (${hs.label}) in ${cell.group}, ${cell.stage}`),
+          ` / ${number(cell.denominator)}`),
+        h("td", {}, number(cell.stopped)), h("td", {}, number(cell.missing_geocode)), h("td", {}, number(cell.unknown_history)));
+    }), "coordinator-heatmap-heading");
   const metrics = [["current", "Current"], ["entries", "Observed entries"], ["exits", "Observed exits"],
     ["returns", "Observed returns"], ["reopens", "Observed reopens"], ["stopped", "Currently stopped"]];
   const funnel = table("Lifecycle funnel: current and observed cases",
@@ -2802,13 +2833,27 @@ async function coordinatorView() {
     data.funnel.map((row) => h("tr", {}, h("th", { scope: "row" }, row.stage),
       metrics.map(([key, label]) => h("td", {}, row[key] === null ? "Unknown" :
         link(row[key], { metric: key, metric_stage: row.stage, group: "" }, `${label.toLowerCase()} for ${row.stage}`))),
-      h("td", {}, number(row.denominator)), h("td", {}, "Unknown"), h("td", {}, "Unknown"))));
+      h("td", {}, number(row.denominator)), h("td", {}, "Unknown"), h("td", {}, "Unknown"))), "coordinator-funnel-heading");
+  const stopCue = (stopped) => {
+    if (stopped === true) return h("span", { class: "flag danger", "data-state-cue": "stopped" }, "Action needed: Cannot move on");
+    if (stopped === false) return h("span", { class: "flag", "data-state-cue": "no-stop" }, "State: No current stop recorded");
+    return h("span", { class: "flag", "data-state-cue": "unknown" }, "State: Unknown (stop state not supplied)");
+  };
   const records = table("Selected records", ["Case", "Current stage", "Address", "Coordinates", "Can move on"],
     data.records.items.map((row) => h("tr", {}, h("th", { scope: "row" },
       h("a", { href: `#/case/${encodeURIComponent(row.id)}` }, row.id)),
       h("td", {}, row.stage), h("td", {}, `${row.address}, ${row.postcode}`),
-      h("td", {}, row.geocode), h("td", {}, row.stopped ? "Cannot move on" : "No current stop recorded"))));
+      h("td", {}, row.geocode), h("td", {}, stopCue(row.stopped)))), "coordinator-records-heading");
   records.querySelector(".table-scroll").id = "coordinator-records";
+  const jumpNav = contractorJumpLinks([
+    ["coordinator-filters-heading", "Case population filters"],
+    ["coordinator-summary-heading", "Denominator and coverage"],
+    ["coordinator-heatmap-heading", "Heatmap of current cases"],
+    ["coordinator-funnel-heading", "Lifecycle funnel"],
+    ["coordinator-selection-heading", "Record selection"],
+    ["map-title", "Map of open cases"],
+    ["coordinator-records-heading", "Selected records"],
+  ], "Jump to a coordinator section");
   const paging = h("p", { class: "row" },
     Number(state.offset || 0) > 0 && h("a", { class: "btn alt", href: href({ offset: Math.max(0, data.records.offset - data.records.limit) }) }, "Previous records"),
     data.records.offset + data.records.limit < data.records.total && h("a", { class: "btn alt", href: href({ offset: data.records.offset + data.records.limit }) }, "Next records"));
@@ -2816,12 +2861,12 @@ async function coordinatorView() {
   workspaceStatus.textContent = `${me.user.role}. Coordinator current cohort ${data.cohort.selected_cases}; selected records ${data.records.total}. Filters do not change access.`;
   show(h("div", { class: "coordinator" },
     h("div", { class: "row between" }, h("h1", {}, "Coordinator flow"), h("a", { href: "#/overview" }, "Back to overview")),
-    form, summary,
+    jumpNav, form, summary,
     h("details", {}, h("summary", {}, "Count definitions and limits"),
       h("dl", {}, Object.entries(data.definitions).flatMap(([key, value]) => [h("dt", {}, key.replaceAll("_", " ")), h("dd", {}, value)]))),
     heatmap, h("p", {}, "Observed counts are distinct cases, not event occurrences. A case may appear in several stages. Rows do not form an additive conversion rate. Initial entries, final exits and older history may be unknown."),
-    funnel, h("section", { class: "card", role: "status" },
-      h("h2", {}, "Record selection"),
+    funnel, h("section", { class: "card", role: "status", "aria-labelledby": "coordinator-selection-heading" },
+      h("h2", { id: "coordinator-selection-heading", tabindex: "-1" }, "Record selection"),
       h("p", {}, `${number(data.records.total)} selected records; ${data.selection.metric.replaceAll("_", " ")}${data.selection.metric_stage ? ` for ${data.selection.metric_stage}` : ""}${data.selection.group ? ` in ${data.selection.group}` : ""}. Cohort denominator: ${number(data.cohort.selected_cases)}.`),
       h("a", { href: href({ metric: "current", metric_stage: "", group: "" }) }, "Show the full filtered population")),
     mp.box, records, paging));
@@ -2863,11 +2908,11 @@ async function overviewView() {
       h("section", { class: "card" }, h("h2", {}, "Contractors"),
         h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Contractors table" },
           h("table", {}, h("caption", { class: "sr-only" }, "Contractors and their open work"), h("thead", {}, h("tr", {}, ["Contractor", "Open", "On site or booked", "Stuck 60+ days"].map((x) => h("th", { scope: "col" }, x)))),
-            h("tbody", {}, st.contractors.map((c) => h("tr", {}, h("td", {}, c.name), h("td", {}, c.open), h("td", {}, c.booked), h("td", {}, c.long)))))))),
+            h("tbody", {}, st.contractors.map((c) => h("tr", {}, h("th", { scope: "row" }, c.name), h("td", {}, c.open), h("td", {}, c.booked), h("td", {}, c.long)))))))),
     h("section", { class: "card" }, h("h2", {}, "Team workload"),
       h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Team workload table" },
         h("table", {}, h("caption", { class: "sr-only" }, "Team workload by person"), h("thead", {}, h("tr", {}, ["Name", "Role", "Open cases", "With a safety issue"].map((x) => h("th", { scope: "col" }, x)))),
-          h("tbody", {}, st.team.map((t) => h("tr", {}, h("td", {}, t.name), h("td", {}, t.role), h("td", {}, t.open), h("td", {}, t.hazards))))))));
+          h("tbody", {}, st.team.map((t) => h("tr", {}, h("th", { scope: "row" }, t.name), h("td", {}, t.role), h("td", {}, t.open), h("td", {}, t.hazards))))))));
   mp.size();
   await mp.draw(true);
 }
@@ -2890,7 +2935,8 @@ async function fundingView() {
   show(h("h1", {}, "Funding applications"),
     h("p", { class: "muted" }, "Homes where funding is not yet confirmed. Open one to draft the application with AI, add evidence, and have it approved."),
     h("p", {}, h("a", { class: "btn alt", href: "/api/funding.csv", download: "funding.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back."),
-    h("table", {}, h("caption", { class: "sr-only" }, "Homes where funding is not yet confirmed"), h("thead", {}, h("tr", {}, ["Resident", "Area", "Route", "Status", "Evidence", "Owner"].map((x) => h("th", { scope: "col" }, x)))),
-      h("tbody", {}, rows.slice(0, 150).map((r) => h("tr", {}, h("td", {}, h("a", { href: `#/case/${encodeURIComponent(r.id)}` }, r.resident)),
-        h("td", {}, r.area), h("td", {}, r.route), h("td", {}, r.status), h("td", {}, `${r.have} of ${r.need}`), h("td", {}, r.owner))))));
+    h("div", { class: "table-scroll", role: "region", tabindex: 0, "aria-label": "Homes where funding is not yet confirmed table" },
+      h("table", {}, h("caption", { class: "sr-only" }, "Homes where funding is not yet confirmed"), h("thead", {}, h("tr", {}, ["Resident", "Area", "Route", "Status", "Evidence", "Owner"].map((x) => h("th", { scope: "col" }, x)))),
+        h("tbody", {}, rows.slice(0, 150).map((r) => h("tr", {}, h("th", { scope: "row" }, h("a", { href: `#/case/${encodeURIComponent(r.id)}` }, r.resident)),
+          h("td", {}, r.area), h("td", {}, r.route), h("td", {}, r.status), h("td", {}, `${r.have} of ${r.need}`), h("td", {}, r.owner)))))));
 }

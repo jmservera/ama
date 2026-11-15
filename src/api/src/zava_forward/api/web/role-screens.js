@@ -47,9 +47,9 @@ const screenTensionText = {
 const screenTension = (kind, anchor = null) => screenPanel(screenTensionText[kind][0], ...(anchor ? [{ anchor }] : []),
   h("p", {}, "Status: proposed design rule. Atlas hypothesis, pending validation in #155; not observed behaviour."),
   h("p", {}, screenTensionText[kind][1]));
-function screenTable(label, headings, rows, limit = 50, cell = (value) => screenNodeValue(value), rowHeader = false) {
+function screenTable(label, headings, rows, limit = 50, cell = (value) => screenNodeValue(value), rowHeader = true) {
   return h("div", {},
-    rows.length > limit && h("p", { role: "status" }, `Showing the first ${limit} of ${rows.length} records. Open the case workspace to inspect the remaining evidence. This is not a complete readiness check.`),
+    rows.length > limit && h("p", { role: "status", "aria-live": "polite" }, `Showing the first ${limit} of ${rows.length} records. Open the case workspace to inspect the remaining evidence. This is not a complete readiness check.`),
     rows.length ? h("div", { class: "table-scroll", role: "region", "aria-label": label, tabindex: 0 },
       h("table", {}, h("caption", {}, label),
         h("thead", {}, h("tr", {}, headings.map((title) => h("th", { scope: "col" }, title)))),
@@ -93,14 +93,20 @@ const ROLE_HASH_SCREENS = {
   "#/role/building_safety_lead": "safety-lead",
   "#/role/repairs": "hazard-triage",
   "#/role/housing_officer": "resident-service-issues",
+  "#/role/contact_centre": "resident-service-issues",
   "#/role/resident_engagement": "resident-choice",
   "#/role/procurement": "procurement-packages",
-  "#/role/contractor": "contractor-job-pack"
+  "#/role/contractor": "contractor-job-pack",
+  "#/role/programme_manager": "programme-queue",
+  "#/role/retrofit_coordinator": "programme-queue"
 };
 const residentJumpNav = (sections, label = "Sections of this view") => h("nav", { role: "navigation", "aria-label": label, class: "screen-links" },
   sections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading`, "data-jump-target": `${id}-heading` }, `Go to ${title}`)));
 async function roleScreensView() {
   const signal = routeController.signal;
+  const announce = (text) => {
+    if (!signal.aborted && typeof workspaceStatus === "object" && workspaceStatus) workspaceStatus.textContent = text;
+  };
   const [routePath, rawQuery = ""] = (typeof location === "undefined" ? "#/screens" : location.hash || "#/screens").split("?");
   const query = new URLSearchParams(rawQuery);
   const aliasScreen = Object.hasOwn(ROLE_HASH_SCREENS, routePath) ? ROLE_HASH_SCREENS[routePath] : null;
@@ -111,10 +117,12 @@ async function roleScreensView() {
   const installed = [...roleScreens.values()].filter((screen) => screen.roles.includes(me.user.role));
   const screen = installed.find((item) => item.id === id);
   if (!/^\d+$/.test(rawPage) || !Number.isSafeInteger(page) || page > 100000) {
+    announce(`${me.user.role}. Invalid screen page.`);
     return show(h("h1", {}, "Invalid screen page"), h("p", { role: "alert" }, "Choose a page from the queue."),
       h("a", { "data-reset": "true", href: screenHref(id, caseId, 0, false) }, "Reset screen view"));
   }
   if (id && !screen) {
+    announce(`${me.user.role}. Screen unavailable.`);
     return show(h("h1", {}, "Screen unavailable"),
       h("p", { role: "alert" }, "This screen is not installed for your signed-in role. Your access has not changed. Owner: your team manager. Next action: go back to specialist screens and open one that is listed for you."),
       h("a", { href: "#/screens" }, "Back to specialist screens"));
@@ -123,16 +131,19 @@ async function roleScreensView() {
     installed.map((item) => h("a", { href: screenHref(item.id, caseId),
       "aria-current": item.id === id ? "page" : null }, item.title)));
   if (!screen) {
+    announce(`${me.user.role}. Specialist screens. ${installed.length ? "Choose a screen." : "No specialist screens installed."}`);
     return show(h("h1", {}, "Specialist screens"), menu,
       h("p", {}, installed.length
         ? "Choose a screen. Select a home explicitly; no case is selected automatically."
         : "No specialist screens are installed for your role on this branch. Use your existing work list."),
       h("a", { href: "#/" }, "Back to my work"));
   }
-  show(h("h1", {}, screen.title), h("p", { role: "status", "aria-busy": "true" }, "Loading recorded evidence."));
+  announce(`${me.user.role}. ${screen.title}. Loading recorded evidence.`);
+  show(h("h1", {}, screen.title), h("p", { role: "status", "aria-live": "polite", "aria-busy": "true" }, "Loading recorded evidence."));
   const data = await api(`/api/cases?view=all&limit=20&offset=${page * 20}`, undefined, signal);
   const c = caseId ? await api(`/api/cases/${encodeURIComponent(caseId)}`, undefined, signal) : null;
   if (c && c.id !== caseId) {
+    announce(`${me.user.role}. ${screen.title}. Record mismatch.`);
     return show(h("h1", {}, screen.title), h("p", { role: "alert" }, `The record returned does not match the requested home ${caseId}, so nothing is shown for it. Your access has not changed. Owner: your team manager. Next action: choose the home again from the queue.`),
       h("a", { "data-reset": "true", href: screenHref(id, null, 0, false) }, "Reset screen view"));
   }
@@ -145,7 +156,7 @@ async function roleScreensView() {
   const queue = h("section", { ...(isResidentRoleScreen ? { id: "screen-queue" } : {}), "aria-labelledby": "screen-queue-heading" },
     h("h2", { id: "screen-queue-heading", ...(isResidentRoleScreen ? { tabindex: -1 } : {}) }, "Choose a home"),
     h("p", {}, "All cases permitted to your signed-in role, including safety concerns. This is a bounded page, not a portfolio total."),
-    h("p", { role: "status" }, `${data.items.length} records on page ${page + 1}; ${data.total} permitted cases.`),
+    h("p", { role: "status", "aria-live": "polite" }, `${data.items.length} records on page ${page + 1}; ${data.total} permitted cases.`),
     data.items.length ? h("ul", { class: "list" }, data.items.map((row) => h("li", {},
       h("a", { class: "item", href: screenHref(id, row.id, page),
         "aria-current": row.id === caseId ? "true" : null },
@@ -158,9 +169,11 @@ async function roleScreensView() {
       page > 0 && h("a", { class: "btn alt", href: screenHref(id, caseId, page - 1) }, "Previous page"),
       (page + 1) * 20 < data.total && h("a", { class: "btn alt", href: screenHref(id, caseId, page + 1) }, "Next page"),
       h("a", { class: "btn alt", "data-reset": "true", href: screenHref(id, null, 0, false) }, "Reset screen view")));
-  const selected = c ? h("section", isResidentRoleScreen
-      ? { id: "screen-evidence", class: "screen-evidence", "aria-labelledby": "screen-evidence-heading" }
-      : { class: "screen-evidence", "aria-label": `Evidence for ${c.id}` },
+  const selected = c ? h("section", {
+      ...(isResidentRoleScreen ? { id: "screen-evidence" } : {}),
+      class: "screen-evidence",
+      "aria-label": `Evidence for ${c.id}`
+    },
     h("h2", isResidentRoleScreen ? { id: "screen-evidence-heading", tabindex: -1 } : {}, `Selected home ${c.id}`),
     h("p", { "data-same-home": c.id }, h("span", { class: "flag" }, `Same home: case ${c.id}`),
       isResidentRoleScreen && h("span", { "data-state-cue": "scope" }, " State: Confirmed - single-home record scope."),
@@ -442,6 +455,12 @@ const programmeHeadings = ["Home", "Return reason", "Sender", "Current owner",
 // The link keeps the scope that filtered the rows, so it cannot go stale between Apply and paging.
 // Its page is the sidebar page (screenPageSize rows) holding the row, counted over the unfiltered loaded page.
 const programmeCell = (scope, items, offset) => (value, column) => {
+  if (column === 1) {
+    const text = screenValue(value);
+    if (text.startsWith("State: Returned.")) return h("span", { class: "flag danger", "data-state-cue": "returned" }, text);
+    if (text.includes("Handoff state:")) return h("span", { class: "flag", "data-state-cue": "handoff" }, text);
+    return h("span", { class: "flag", "data-state-cue": "not-returned" }, text);
+  }
   if (column !== programmeHeadings.length - 1) return screenValue(value);
   const position = offset + items.findIndex((row) => row.id === value);
   const base = screenHref("programme-queue", value, Math.floor(position / screenPageSize), false);
@@ -455,13 +474,13 @@ function programmeQueue(first, total, loadPage, start = 0) {
   const holder = h("div", {});
   const status = h("p", { role: "status", "aria-live": "polite", id: "programme-filter-status" });
   const paging = h("p", { class: "empty", role: "status", "aria-live": "polite", id: "programme-page-status" });
-  const select = h("select", { id: "programme-scope", name: "scope" },
+  const select = h("select", { id: "programme-scope", name: "scope", "aria-describedby": "programme-page-status programme-filter-status" },
     programmeScopes.map(([value, text]) => h("option", { value }, text)));
   const apply = (scope, remember = true) => {
     if (remember) programmeKeepScope(scope);
     const rows = items.filter((row) => programmeIn(row, scope));
     status.textContent = `${rows.length} of ${items.length} records on this page shown. Scope: ${programmeScopes.find(([v]) => v === scope)[1]}. Filtering changes the view only; no record is changed.`;
-    holder.replaceChildren(screenTable("Shared queue: returned and handed-off work", programmeHeadings, rows.map(programmeRow), 50, programmeCell(scope, items, offset)));
+    holder.replaceChildren(screenTable("Shared queue: returned and handed-off work", programmeHeadings, rows.map(programmeRow), 50, programmeCell(scope, items, offset), true));
   };
   const pageText = () => `Showing cases ${total ? offset + 1 : 0} to ${offset + items.length} of ${total} permitted cases. The scope filter applies to this page only; open the other pages to see the rest. Not a portfolio total.`;
   let prevButton = null;
@@ -516,10 +535,10 @@ function programmeQueue(first, total, loadPage, start = 0) {
 }
 const programmeFunnel = (report) => {
   const rows = report?.funnel;
-  if (!Array.isArray(rows)) return h("p", { class: "empty" }, "State: Unknown. Lifecycle and funnel counts are Unknown. No record was supplied.");
+  if (!Array.isArray(rows)) return h("p", { class: "empty", "data-state-cue": "unknown" }, "State: Unknown. Lifecycle and funnel counts are Unknown. No record was supplied.");
   return h("div", {},
-    h("p", {}, `State: Recorded stage history (not a pass). Recorded as of ${screenValue(report.as_of)}. Audit integrity state: ${screenValue(report.audit_integrity)}. Conversion state: Unknown; counts are stage history only.`),
-    screenTable("Lifecycle and funnel by stage",
+    h("p", { class: "status-line wait", "data-state-cue": "stage-history" }, `State: Recorded stage history (not a pass). Recorded as of ${screenValue(report.as_of)}. Audit integrity state: ${screenValue(report.audit_integrity)}. Conversion state: Unknown; counts are stage history only.`),
+    screenRecordTable("Lifecycle and funnel by stage",
       ["Stage", "Entries", "Exits", "Returns", "Reopens", "Cases in scope"],
       rows.map((r) => [r.stage, r.entries, r.exits, r.returns, r.reopens, r.denominator])));
 };
@@ -665,8 +684,15 @@ function journeyStageMap(c, current = null) {
 // Text prefix for each step state (WCAG 1.4.1). Unrecognised states fall back to Warning, never Pass: no state here is a pass.
 const programmeStatePrefix = { "Blocked": "Action needed", "Blocked: evidence missing": "Action needed", "No recorded blocker": "Warning" };
 const programmeStateLabel = (state) => `${Object.hasOwn(programmeStatePrefix, state) ? programmeStatePrefix[state] : "Warning"}: ${state}`;
+const programmeStepCell = (value, column) => {
+  const text = screenValue(value);
+  if (column !== 1) return text;
+  return text.startsWith("Blocked")
+    ? h("span", { class: "flag danger", "data-state-cue": "action-needed" }, text)
+    : h("span", { class: "flag", "data-state-cue": "warning" }, text);
+};
 const programmeJumpNav = (label, sections) => h("nav", { "aria-label": label, class: "screen-links" },
-  sections.map(([id, text]) => h("a", { href: `#${id}`, "data-jump": id }, `Go to ${text}`)));
+  sections.map(([id, text]) => h("a", { href: `#${id}`, "data-jump": id, "data-jump-target": id }, `Go to ${text}`)));
 const programmeOverviewSections = [
   ["programme-overview-boundary", "Overview boundary"],
   ["programme-shared-queue", "Shared queue"],
@@ -712,13 +738,13 @@ registerRoleScreen({
         h("p", {}, "Technical, resident, delivery, quality and finance states are shown independently. One clear state never clears another."),
         programmeJumpNav("Jump to a section of the connected home view", programmeSections),
         blocked.length ? screenUnknown(`${blocked.length} of 5 steps are blocked: ${blocked.map((r) => r[0]).join(", ")}.`,
-          blocked[0][3], blocked[0][4]) : h("p", {}, "State: Warning. No blocker is recorded, which does not confirm readiness."),
+          blocked[0][3], blocked[0][4]) : h("p", { class: "status-line wait", "data-state-cue": "warning" }, "State: Warning. No blocker is recorded, which does not confirm readiness."),
         screenJumpTarget("programme-summary", h("div", {},
           h("h3", {}, "State summary in words"),
           h("p", {}, "Each state starts with a word so it does not depend on colour. A step with no recorded blocker is a warning, not a pass."),
           h("ul", {}, rows.map(([name, state, meaning, owner, action]) => h("li", {},
             `${programmeStateLabel(state)}: ${name} step. ${meaning} Owner: ${owner}. Next action: ${action}.`))))),
-        screenJumpTarget("programme-steps", screenTable("Same-home step states", ["Step", "State", "Meaning", "Owner", "Next action"], rows))),
+        screenJumpTarget("programme-steps", screenTable("Same-home step states", ["Step", "State", "Meaning", "Owner", "Next action"], rows, 50, programmeStepCell, true))),
       screenJumpTarget("programme-journey", journeyStageMap(c)),
       screenTension("disclosure"),
       screenJumpTarget("programme-withheld", screenWithheld(["Resident contact details and access history (use the safe route reference in the case workspace)",

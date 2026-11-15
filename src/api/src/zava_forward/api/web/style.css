@@ -51,6 +51,7 @@ button.alt,.btn.alt{background:var(--surface);color:var(--brand)}
 button.link{background:none;border:0;color:#fff;text-decoration:underline;padding:0}
 :focus-visible{outline:var(--focus-w) solid var(--focus-ink);outline-offset:var(--focus-off);box-shadow:0 0 0 var(--focus-off) var(--focus)}
 html{scroll-padding-block-end:6rem}
+details>summary{cursor:pointer;min-height:1.5rem;padding-block:var(--sp-1)}
 .top{gap:1rem;flex-wrap:wrap}
 .top nav{flex-wrap:wrap;justify-content:flex-end;flex:1}
 .account{position:relative}
@@ -96,11 +97,12 @@ h2{font-size:var(--fs-lg);line-height:var(--lineHeightBase500);margin:var(--sp-5
 .coordinator-filters .row>div{min-width:0;flex:1 1 14rem}
 .coordinator-filters input,.coordinator-filters select{width:100%}
 .coordinator .heat-count{font-weight:600}
-.coordinator .heat-present{background:var(--soft);color:var(--ink)}
+.coordinator .heat-present{background:var(--soft);color:var(--ink);box-shadow:inset 3px 0 0 var(--brand)}
 .coordinator table a{display:inline-block;min-height:1.5rem;padding:var(--sp-1)}
 .coordinator-summary a{padding-block:var(--sp-1)}
 .coordinator dt{text-transform:none}
 input,select,textarea{font:inherit;padding:var(--sp-2) var(--sp-3);border:1px solid var(--field-line);border-radius:var(--radius);max-width:100%}
+input[type=checkbox],input[type=radio]{min-width:1.5rem;min-height:1.5rem;vertical-align:middle}
 label{display:block;font-weight:600;margin:.6rem 0 .2rem}
 textarea{width:100%;min-height:5rem}
 .regulatory textarea{overflow-x:hidden}
@@ -245,7 +247,7 @@ nav a:hover{border-bottom-color:#fff}
 .lbl{font-size:12px;fill:var(--ink)}
 .bar{fill:var(--brand)}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.chart-data{margin-top:var(--sp-2)}.chart-data table{border-collapse:collapse;width:100%}.chart-data th,.chart-data td{text-align:left;border-bottom:1px solid var(--line);padding:var(--sp-1) var(--sp-2)}
+.chart-data{margin-top:var(--sp-2)}.chart-data summary{cursor:pointer;font-weight:600;min-height:1.5rem}.chart-data table{border-collapse:collapse;width:100%}.chart-data th,.chart-data td{text-align:left;border-bottom:1px solid var(--line);padding:var(--sp-1) var(--sp-2)}
 .map{width:100%;height:auto;border:1px solid var(--line);border-radius:.4rem}
 .mapbg{fill:#eef3f4}
 .dot{cursor:pointer;stroke:#fff;stroke-width:1}
@@ -270,6 +272,7 @@ th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);f
 .tile.static{cursor:default}
 .tile span{color:var(--ink)}
 .leafmap{height:460px;border-radius:.4rem;border:1px solid var(--line)}
+.leafmap .leaflet-bar a,.leafmap.leaflet-touch .leaflet-bar a{width:2.5rem;height:2.5rem;min-width:2.5rem;min-height:2.5rem;line-height:2.5rem;color:var(--ink)}
 .map-panel,.map-workspace,.map-stage,.map-info{min-width:0}
 .map-stage{position:relative}
 .map-info{overflow-wrap:anywhere}
@@ -309,7 +312,7 @@ th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);f
 .main{min-width:0}
 @media(max-width:900px){.layout{grid-template-columns:1fr}.side{position:static}}
 .tile:hover{background:var(--surface)}
-.focus{grid-template-columns:8rem 1fr;font-size:.9rem;margin-top:.4rem}.focus dt{color:#555}
+.focus{grid-template-columns:8rem 1fr;font-size:.9rem;margin-top:.4rem}.focus dt{color:var(--muted)}
 .cluster{width:104px;min-height:50px;border-radius:var(--radius-lg);background:var(--surface);color:var(--ink);border:2px solid var(--brand);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:600;font-size:12px;line-height:20px}
 .cluster.hazard{border:3px double var(--warn)}
 .cluster-safety{display:block}
@@ -372,4 +375,4 @@ input[aria-invalid=true],select[aria-invalid=true],textarea[aria-invalid=true]{b
 .screen-record[id], .screen-evidence h2[tabindex="-1"] { scroll-margin-top: var(--sp-5); }
 .screen-evidence th, .screen-evidence td { font-variant-numeric: tabular-nums; }
 [tabindex="-1"]:focus { outline: var(--focus-w) solid var(--focus-ink); outline-offset: var(--focus-off); box-shadow: 0 0 0 var(--focus-off) var(--focus); }
-.screen-record h2[tabindex="-1"]:focus-visible { outline: var(--focus-w) solid var(--focus-ink); outline-offset: var(--focus-off); box-shadow: 0 0 0 var(--focus-off) var(--focus); }
+.coordinator h2[tabindex="-1"]:focus-visible, .screen-record h2[tabindex="-1"]:focus-visible { outline: var(--focus-w) solid var(--focus-ink); outline-offset: var(--focus-off); box-shadow: 0 0 0 var(--focus-off) var(--focus); }

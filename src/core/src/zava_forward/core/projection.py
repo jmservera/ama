@@ -212,6 +212,13 @@ def redact_staff_detail(user, d):
         d.pop("affected_challenges", None)
         d.pop("challenge_targets", None)
         d.pop("challenge_guarantees", None)
+        d.pop("challenge_assurance", None)
+        d.pop("nomination_permissions", None)
+    else:
+        from . import nomination_route
+        for key in ("nomination_records", "affected_challenges", "challenge_targets"):
+            if key in d:
+                d[key] = nomination_route.scrub_nomination_restricted_fields(d[key])
     if user.get("role") not in FINANCE_VIEW:
         d.pop("finance", None)
         d.pop("grants", None)

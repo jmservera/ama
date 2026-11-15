@@ -483,13 +483,53 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             d["checklist"] = self.checklist(c)
             d["technical_missing"] = missing_items(c, usable_only=True)
             d["quality_handover_blockers"] = handover_blockers(c)
-            from .resident_decisions import INTAKE_FIELDS, followup_view, challenge_references_visible
-            followup_view(d)
-            if user is not None and challenge_references_visible(self, user):
-                from .resident_decisions import challenge_catalog
-                d["challenge_targets"] = challenge_catalog(self, case_id)
+            from . import nomination_route
+            from .resident_decisions import (
+                INTAKE_FIELDS,
+                _priority_includes_case,
+                challenge_catalog,
+                challenge_references_visible,
+                followup_view,
+                nomination_permissions,
+            )
+            visible = True if user is None else challenge_references_visible(self, user)
+            reason_ok = True if user is None else projection.can_see_reason(user)
+            case_recs = [
+                r for r in self.data.get("recommendations", ())
+                if r.get("kind") != "ai_task" and _priority_includes_case(r, case_id)
+            ]
+            followup_view(
+                d,
+                recommendations=case_recs,
+                can_view_intake=visible,
+                can_view_reason=reason_ok,
+            )
+            if visible and "affected_challenges" in d:
+                d["affected_challenges"] = nomination_route.scrub_nomination_restricted_fields(
+                    d["affected_challenges"]
+                )
+                for ch in d["affected_challenges"]:
+                    expl = nomination_route.filter_explanation_for_viewer(
+                        nomination_route.challenge_explanation(
+                            ch,
+                            can_view_intake=visible,
+                            can_view_reason=reason_ok,
+                        ),
+                        can_view_intake=visible,
+                        can_view_reason=reason_ok,
+                    )
+                    if expl is not None:
+                        ch["plain_language_explanation"] = expl
+            if user is not None and visible:
+                d["challenge_targets"] = challenge_catalog(
+                    self,
+                    case_id,
+                    can_view_intake=visible,
+                    can_view_reason=reason_ok,
+                )
                 d["challenge_guarantees"] = list(challenges.GUARANTEES)
                 d["challenge_assurance"] = challenges.assurance()
+                d["nomination_permissions"] = nomination_permissions(self, user, d)
             elif user is not None:
                 for field in INTAKE_FIELDS:
                     d.pop(field, None)
@@ -497,6 +537,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 d.pop("challenge_targets", None)
                 d.pop("challenge_guarantees", None)
                 d.pop("challenge_assurance", None)
+                d.pop("nomination_permissions", None)
             d.pop("form_staging", None)
             d.pop("form_reviews", None)
             d.pop("finance_decision_holds", None)

@@ -706,6 +706,282 @@ class JsonNominationChallengeRoute(unittest.TestCase):
         self.assertEqual(len(reloaded["nomination_records"]), nom_count)
         self.assertEqual(reloaded["hazards"][idx]["hold"]["status"], "Active")
 
+    def test_ac5_plain_language_explanation_and_restricted_vulnerability_scrubbing(
+        self,
+    ) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.nomination_body())
+        with self.store.lock:
+            raw_case = self.store._case("ZF-1")
+            raw_case["nomination_records"][0]["owner"] = None
+            raw_case["nomination_records"][0]["acknowledgement"] = {}
+            raw_case["nomination_records"][0]["support_needs"] = "SYN-VULN-SUPPORT-CANARY"
+            raw_case["nomination_records"][0]["risk_flags"] = "SYN-VULN-RISK-CANARY"
+            self.store.save()
+        no_ai_detail = self.open_store().detail("ZF-1", self.sam)
+        no_ai_exp = no_ai_detail["nomination_records"][0]["plain_language_explanation"]
+        self.assertIs(no_ai_exp["permitted"], True)
+        self.assertIs(no_ai_exp["ai_involved"], False)
+        self.assertIn("No AI was involved", no_ai_exp["ai_involvement_explanation"])
+        self.assertIn("Unassigned", no_ai_exp["human_decision_owner"])
+        self.assertTrue(no_ai_exp["policy_reasons"])
+        self.assertIn("staff-recorded acknowledgement", no_ai_exp["uncertainty_note"])
+        for canary in ("SYN-VULN-SUPPORT-CANARY", "SYN-VULN-RISK-CANARY"):
+            self.assertNotIn(canary, json.dumps(no_ai_exp))
+
+        proposal = dict(self.store.ai_priority(self.sam, mode="workflow-only"))
+        self.store.resolve_priority(self.sam, str(proposal["id"]), "accept")
+        rule_detail = self.open_store().detail("ZF-1", self.sam)
+        rule_exp = rule_detail["nomination_records"][0]["plain_language_explanation"]
+        self.assertIs(rule_exp["ai_involved"], False)
+        self.assertIn(str(proposal["id"]), rule_exp["ai_involvement_explanation"])
+
+        with self.store.lock:
+            for rec in self.store.data.get("recommendations", ()):
+                if rec.get("id") == proposal["id"]:
+                    rec["source"] = "ai"
+                    rec["model"] = "gpt-4.1-mini"
+            self.store.save()
+
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            self.challenge_body(
+                proposal,
+                channel="staff_recorded_non_digital",
+                assisted_channel="Phone",
+            ),
+        )
+        with self.store.lock:
+            raw_case = self.store._case("ZF-1")
+            raw_case["nomination_records"][0]["vulnerability_notes"] = "SYN-RESTRICTED-VULN-NOTE"
+            raw_case["nomination_records"][0]["safeguarding_detail"] = "SYN-RESTRICTED-SAFEGUARD"
+            raw_case["affected_challenges"][0]["medical_detail"] = "SYN-RESTRICTED-MEDICAL"
+            self.store.save()
+
+        ai_detail = self.open_store().detail("ZF-1", self.sam)
+        nom_exp = ai_detail["nomination_records"][0]["plain_language_explanation"]
+        self.assertIs(nom_exp["ai_involved"], True)
+        self.assertIn("gpt-4.1-mini", nom_exp["ai_involvement_explanation"])
+        self.assertTrue(any(str(proposal["id"]) in src for src in nom_exp["sources"]))
+
+        ch_exp = ai_detail["affected_challenges"][0]["plain_language_explanation"]
+        self.assertIs(ch_exp["permitted"], True)
+        self.assertIs(ch_exp["ai_involved"], True)
+        self.assertIn("Sam", ch_exp["human_decision_owner"])
+        self.assertTrue(ch_exp["policy_reasons"])
+        self.assertIn("Pending human review", ch_exp["uncertainty_note"])
+
+        target_exp = ai_detail["challenge_targets"][0]["plain_language_explanation"]
+        self.assertIs(target_exp["permitted"], True)
+        self.assertIn(str(proposal["id"]), " ".join(target_exp["sources"]))
+
+        dumped_sam = json.dumps(ai_detail)
+        for restricted in (
+            "SYN-RESTRICTED-VULN-NOTE",
+            "SYN-RESTRICTED-SAFEGUARD",
+            "SYN-RESTRICTED-MEDICAL",
+        ):
+            self.assertNotIn(restricted, dumped_sam)
+        for canary in ("SYN-VULN-SUPPORT-CANARY", "SYN-VULN-RISK-CANARY"):
+            self.assertNotIn(canary, json.dumps(nom_exp))
+            self.assertNotIn(canary, json.dumps(ch_exp))
+            self.assertNotIn(canary, json.dumps(target_exp))
+
+        self.assertIsNone(
+            nr.filter_explanation_for_viewer(nom_exp, can_view_intake=False, can_view_reason=False)
+        )
+        redacted_reason = nr.filter_explanation_for_viewer(
+            nom_exp, can_view_intake=True, can_view_reason=False
+        )
+        assert redacted_reason is not None
+        self.assertNotIn("SYN phone intake", json.dumps(redacted_reason))
+        rex_actor = {
+            "code": "RC-1",
+            "name": "Rex Coordinator",
+            "email": "rex@example.test",
+            "role": "Retrofit Coordinator",
+        }
+        for denied_actor in (rex_actor, self.kim):
+            denied_text = json.dumps(self.open_store().detail("ZF-1", denied_actor))
+            for canary in (
+                "SYN-VULN-SUPPORT-CANARY",
+                "SYN-VULN-RISK-CANARY",
+                "SYN-RESTRICTED-VULN-NOTE",
+                "SYN-RESTRICTED-SAFEGUARD",
+                "SYN-RESTRICTED-MEDICAL",
+                "plain_language_explanation",
+            ):
+                self.assertNotIn(canary, denied_text)
+
+    def test_ac6_dual_route_channels_and_owner_field_permissions(self) -> None:
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            self.nomination_body(
+                channel="staff_recorded_non_digital",
+                assisted_channel="Paper",
+                owner=self.sam["email"],
+            ),
+        )
+        nom_id = str(self.store.cases["ZF-1"]["nomination_records"][0]["id"])
+        self.assert_unchanged_failure(
+            partial(
+                self.store.resident_action,
+                self.sam,
+                "ZF-1",
+                self.acknowledge_body(
+                    nom_id,
+                    1,
+                    channel="staff_recorded_non_digital",
+                    assisted_channel=None,
+                ),
+            )
+        )
+        self.assert_unchanged_failure(
+            partial(
+                self.store.resident_action,
+                self.sam,
+                "ZF-1",
+                self.acknowledge_body(
+                    nom_id,
+                    1,
+                    channel="digital",
+                    assisted_channel="Phone",
+                ),
+            )
+        )
+        self.assert_unchanged_failure(
+            partial(
+                self.store.resident_action,
+                self.sam,
+                "ZF-1",
+                self.acknowledge_body(
+                    nom_id,
+                    1,
+                    channel="digital",
+                    owner=self.rae["email"],
+                ),
+            )
+        )
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            self.acknowledge_body(
+                nom_id,
+                1,
+                channel="digital",
+                owner=self.sam["email"],
+            ),
+        )
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            self.acknowledge_body(
+                nom_id,
+                2,
+                channel="staff_recorded_non_digital",
+                assisted_channel="In person",
+                owner=self.sam["email"],
+            ),
+        )
+        self.store.resident_action(
+            self.pam,
+            "ZF-1",
+            self.acknowledge_body(
+                nom_id,
+                3,
+                channel="staff_recorded_non_digital",
+                assisted_channel="Letter",
+                owner=self.rae["email"],
+                owner_reassignment_reason="SYN manager balance workload",
+            ),
+        )
+        self.store.resident_action(
+            self.pam,
+            "ZF-1",
+            self.acknowledge_body(
+                nom_id,
+                4,
+                channel="staff_recorded_non_digital",
+                assisted_channel="In person",
+                owner=self.sam["email"],
+                owner_reassignment_reason="SYN return to Sam",
+            ),
+        )
+        proposal = dict(self.store.ai_priority(self.sam, mode="workflow-only"))
+        self.store.resolve_priority(self.sam, str(proposal["id"]), "accept")
+        self.assert_unchanged_failure(
+            partial(
+                self.store.resident_action,
+                self.sam,
+                "ZF-1",
+                self.challenge_body(
+                    proposal,
+                    channel="digital",
+                    owner=self.rae["email"],
+                ),
+            )
+        )
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            self.challenge_body(
+                proposal,
+                channel="digital",
+                owner=self.sam["email"],
+            ),
+        )
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            self.challenge_body(
+                proposal,
+                channel="staff_recorded_non_digital",
+                assisted_channel="Phone",
+                owner=self.sam["email"],
+            ),
+        )
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            self.correction_body(
+                nom_id,
+                5,
+                challenge_id="CH-1",
+                channel="digital",
+            ),
+        )
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            self.correction_body(
+                nom_id,
+                6,
+                challenge_id="CH-2",
+                channel="staff_recorded_non_digital",
+                assisted_channel="Trusted intermediary",
+            ),
+        )
+        detail = self.open_store().detail("ZF-1", self.sam)
+        record = detail["nomination_records"][0]
+        self.assertEqual(record["original"]["route_mode"], "staff_recorded_non_digital")
+        self.assertEqual(record["original"]["assisted_channel"], "Paper")
+        self.assertEqual(record["acknowledgement"]["route_mode"], "staff_recorded_non_digital")
+        self.assertEqual(record["acknowledgement"]["assisted_channel"], "In person")
+        self.assertEqual(
+            [c["route_mode"] for c in detail["affected_challenges"]],
+            ["digital", "staff_recorded_non_digital"],
+        )
+        self.assertEqual(detail["affected_challenges"][1]["assisted_channel"], "Phone")
+        self.assertEqual(
+            [c["route_mode"] for c in record["challenge_trail"]["competing_evidence"]],
+            ["digital", "staff_recorded_non_digital"],
+        )
+        self.assertEqual(
+            record["challenge_trail"]["competing_evidence"][1]["assisted_channel"],
+            "Trusted intermediary",
+        )
+
 
 class SqlNominationChallengeRoute(JsonNominationChallengeRoute):
     sql = True

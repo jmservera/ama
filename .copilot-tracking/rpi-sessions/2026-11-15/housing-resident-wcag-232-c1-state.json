@@ -1,0 +1,67 @@
+{
+  "task_id": "2026-11-15-housing-resident-wcag-232-c1",
+  "task_slug": "housing-resident-wcag-232-c1",
+  "parent_task": {
+    "task_id": "2026-11-15-housing-resident-wcag-232",
+    "task_slug": "housing-resident-wcag-232"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/housing-resident-wcag-232-c1-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/housing-resident-wcag-232-c1-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/housing-resident-wcag-232-c1-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/housing-resident-wcag-232-c1-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/housing-resident-wcag-232-c1-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/housing-resident-wcag-232-c1-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Caller explicitly requested an autonomous Cycle 1 (c1) full RPI loop (Research, Plan, Implement, Review) for Issue #232 (PR #1786) to rebase branch feat/ux-232-resident-wcag onto origin/feat/demo-233-same-home-tensions-0825 (which now includes merged PR #1784 for #230 at 6510b6fbc), resolve conflicts preserving both #230 and #232 changes, run focused validation, update .copilot-tracking/ RPI artifacts, and commit cleanly without pushing.",
+      "status": "confirmed",
+      "evidence": "Caller prompt in non-interactive CLI execution"
+    },
+    {
+      "decision": "Research disposition recorded as executed with Planning Readiness Ready (Selected Recommendation Option B: rebase feat/ux-232-resident-wcag onto 6510b6fbc, union-merge isRoleScreensDestination with split('?')[0] across all 10 routes in app.js and ROLE_HASH_SCREENS across all 9 role aliases in role-screens.js preserving all #230 and #232 hunks, add #230+#232 coexistence assertion in test_housing_resident_wcag_232.py, run focused validation, and commit Cycle 1 artifacts cleanly without pushing).",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/housing-resident-wcag-232-c1-research.md (C1-C10, W1)"
+    },
+    {
+      "decision": "Single-pass plan critique executed (Complete) with verdict Revise (1 Low finding PC-001); PC-001 applied directly by planning parent in P02/P02-T01 (test_contact_centre_housing_and_resident_routes_and_script_isolation naming, programme-queue registered screen ID vs programme-shared-queue/programme-funnel jump-target section IDs, and explicit VM export for lexical const ROLE_HASH_SCREENS and programmeOverviewSections), finalizing Cycle 1 plan as Ready without repeating critique.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/housing-resident-wcag-232-c1-plan-critique.md; .copilot-tracking/plans/2026-11-15/housing-resident-wcag-232-c1-plan.md (## Critique Disposition)"
+    },
+    {
+      "decision": "Single-pass rpi-review executed (Complete) with outcome Residual work across full Cycle 1 boundary (P01, P01-T01, P02, P02-T01, P02-T02): zero implementation defects, decision gaps, or material evidence gaps; non-blocking RV-001 (human AT/mobile walkthrough under #151/#155) and RV-002 (dedicated full-tier specialist_keyboard_browser_check.py NO_REGION_GAPS update under #1294) routed to distinct follow-ups while preserving Refs #232.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/housing-resident-wcag-232-c1-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Select a ranked post-Review follow-up item, Stop automatic session, or Switch to manual mode (after coordinator reviews and pushes the clean frozen commit on feat/ux-232-resident-wcag)."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Align NO_REGION_GAPS for resident-service-issues ('Routes to ask' region from #86) in src/api/checks/specialist_keyboard_browser_check.py in a dedicated full-tier gate-tool PR (Cycle 0 RV-002).",
+      "rationale": "Single-entry set cleanup in a gate script that prevents stale NO_REGION_GAPS mismatches in future full-tier gate runs under #1294.",
+      "evidence": "src/api/checks/specialist_keyboard_browser_check.py; .copilot-tracking/reviews/logs/2026-11-15/housing-resident-wcag-232-review.md (RV-002)"
+    },
+    {
+      "rank": 2,
+      "task": "Execute human assistive-technology (NVDA/JAWS/VoiceOver) and 360px mobile walkthroughs across #/role/housing_officer, #/role/contact_centre, #/role/resident_engagement, and #/case/<id>?tab=resident to close Issue #232 (Cycle 0 RV-001).",
+      "rationale": "Required by #151, #155, and wcag-conformance-baseline.md to convert engineering readiness (Refs #232) into verified accessibility acceptance.",
+      "evidence": "docs/reference/research/ux/wcag-conformance-baseline.md; .copilot-tracking/reviews/logs/2026-11-15/housing-resident-wcag-232-review.md (RV-001)"
+    },
+    {
+      "rank": 3,
+      "task": "Coordinate cross-suite CSS selector narrowing if [tabindex=\"-1\"]:focus is later scoped to exclude main#app pointer clicks across #228/#229/#230/#231/#232 WCAG suites.",
+      "rationale": "Low-effort visual polish once coordinated across the shared style.css selector tests.",
+      "evidence": ".copilot-tracking/research/2026-11-15/housing-resident-wcag-232-research.md (C7, C14)"
+    }
+  ]
+}
