@@ -2,9 +2,48 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-11-14
+ms.date: 2026-11-15
 ms.topic: reference
 ---
+
+## Offline RAI held-out evaluation and tokenomics candidate comparison (2026-11-15, Refs #108)
+
+`heldout_eval` freezes task, model, prompt, policy and source versions across all
+five registered assistants and all six retained legacy task families, together
+with an independently labelled synthetic held-out split, categorical expected
+outcomes, full expected-answer prose, critical-error definitions, cohorts,
+sample floors and human-authorized thresholds bound to `HELDOUT-FREEZE-2026-10-15`
+by statically pinned `FROZEN_THRESHOLDS_DIGEST` and `FROZEN_MANIFEST_DIGEST`
+(flagging `capability_version_drift` if live assistant or legacy prompt/policy/task
+versions change without an explicit re-freeze). `check_prompt_tuning_isolation` renders all five
+assistant request payloads and all six legacy prompt templates (plus any caller
+prompts or tuning examples) and fails closed if any held-out case identifier or
+six-word expected-answer shingle leaks into prompts or tuning.
+
+`evaluate_heldout` executes the offline validators across controls, ambiguity,
+abstention, source integrity and factual support without network calls, recording
+critical errors, safety priority critical misses, usable coverage, unaveraged
+per-cohort subgroup results (with `SYNTHETIC_NON_FAIRNESS_NOTICE`), hashes,
+split, seed, denominators, `actual_serving_version` (reported explicitly as
+`unattested (offline scripted fixture)` when offline), token usage, explicit
+unknown liabilities, reviewer protocol, `pass`/`fail`/`insufficient` outcomes and
+`calibration.status == "not_applicable"` because bounded text and citation
+proposals carry no calibrated probability scores.
+
+`tokenomics_comparison` compares candidate configurations against the frozen
+held-out split and recorded baseline (`manifest_digest`-verified) using exact
+`Decimal` arithmetic in matching currencies. Summary candidates without `responses`
+must supply verified `evaluation_outcome`, `accepted_case_ids` and `gate_failures`,
+and candidate `lever_config.prompt` values are checked for held-out leakage. Any
+cheaper candidate that raises `critical_misses`, `unsupported_claims`,
+`overrides`, `reopened_cases` or `critical_errors`, loses a baseline-accepted
+case, mismatches serving version or currency, leaks held-out material or leaves
+unknown liabilities is classified as
+`outcome="failure"` (`is_saving=False`), never a saving. Every routing, caching,
+model or prompt candidate must alter exactly one lever at a time on the identical
+held-out cases, and `time_released_minutes` stays capacity-only unless finance
+confirms a cash saving. Synthetic offline passage is engineering evidence only
+and never grants live release, OQ-018 fairness clearance or live spend authority.
 
 ## Retained sensor readings for employees and Quality evidence (Refs #1288, #107)
 

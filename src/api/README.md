@@ -2,9 +2,27 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-11-14
+ms.date: 2026-11-15
 ms.topic: reference
 ---
+
+## Offline RAI held-out evaluation and candidate comparison API (2026-11-15, Refs #108)
+
+Manager-only `GET /api/ai/heldout-evaluation` returns the side-effect-free
+offline `held_out` suite and canonical `tokenomics_comparison` report from
+`zava_forward.core`, rejecting non-managers and contractors (403) and any query
+string (400). `GET /api/ai/report` preserves its top-level `evaluation`,
+`chat_evaluation`, `live`, `registry` and `consumption` keys and adds compact
+`held_out` and `tokenomics_comparison` summaries inside `evaluation`.
+
+Manager-only `POST /api/ai/candidate-comparison` evaluates 1 to 50 candidate
+configurations against the frozen held-out split and recorded baseline, recording
+an `ai_candidate_comparison` audit entry and rejecting non-managers (403), query
+parameters (400) and unknown, unverified summary or malformed fields (400). Cheaper candidates with
+quality regressions, currency mismatches, prompt-lever held-out leakage or multi-lever changes are returned with `outcome="failure"`
+and `is_saving=false`. These endpoints run constructed offline evaluations with
+zero provider network calls and do not establish live Azure OpenAI benchmarks,
+human participant evaluation or live activation clearance.
 
 ## Handoff waiting times screen (2026-11-11, Refs #83)
 

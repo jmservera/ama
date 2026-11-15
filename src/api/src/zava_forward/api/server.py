@@ -16,7 +16,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
 from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
-from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, controls, form_export, form_review, forms, profile
+from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, controls, form_export, form_review, forms, heldout_eval, profile, tokenomics_comparison
 
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
@@ -320,7 +320,7 @@ def get_kind(path):
     return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ranking/publication": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
             "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/handoffs/unaccepted": "handoffs", "/api/handoffs/unowned": "handoffs", "/api/handoffs/escalated": "handoffs", "/api/packages": "packages",
-            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/ai/cohort-evaluation": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/resident/choice-queue": "resident_choice_queue", "/api/finance": "finance_queue", "/api/finance/exposure": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/exceptions": "exceptions", "/api/continuity/export": "continuity_export", "/api/retention": "retention", "/api/data-protection": "data_protection"}.get(path, "unknown")
+            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/ai/cohort-evaluation": "ai_report", "/api/ai/heldout-evaluation": "ai_report", "/api/ai/candidate-comparison": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/resident/choice-queue": "resident_choice_queue", "/api/finance": "finance_queue", "/api/finance/exposure": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/exceptions": "exceptions", "/api/continuity/export": "continuity_export", "/api/retention": "retention", "/api/data-protection": "data_protection"}.get(path, "unknown")
 
 
 GOVERNANCE_ACTIONS = {"protocol-freeze": "protocol_freeze", "protocol-approve": "protocol_approve", "benefits-record": "benefits_record",
@@ -954,10 +954,16 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                             consumption = app.assistants.consumption.report(start=start, end=end, as_of=as_of)
                         except ai_consumption.DispatchHeld as error:
                             consumption["reason"] = str(error)
+                    evaluation = dict(ai_eval.run_eval())
+                    heldout_suite = heldout_eval.canonical_offline_heldout_suite()
+                    evaluation["held_out"] = heldout_eval.compact_report_summary(heldout_suite)
+                    evaluation["tokenomics_comparison"] = tokenomics_comparison.compact_comparison_summary(
+                        tokenomics_comparison.canonical_offline_candidate_comparison(heldout_suite)
+                    )
                     return self._json(
                         200,
                         {
-                            "evaluation": ai_eval.run_eval(),
+                            "evaluation": evaluation,
                             "chat_evaluation": chat_eval.run_eval(),
                             "live": s.ai_live_report(),
                             "registry": ai_registry.registry(),
@@ -973,6 +979,16 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(400, {"error": "Unknown cohort evaluation parameter."})
                 from zava_forward.agents import ai_eval
                 return self._json(200, ai_eval.cohort_evaluation_export())
+            if url.path == "/api/ai/heldout-evaluation":
+                if u["role"] not in MANAGER_ROLES:
+                    return self._json(403, {"error": "Only a manager can see the held-out AI evaluation record."})
+                if url.query:
+                    return self._json(400, {"error": "Unknown held-out evaluation parameter."})
+                suite = heldout_eval.canonical_offline_heldout_suite()
+                return self._json(200, {
+                    "held_out": suite,
+                    "tokenomics_comparison": tokenomics_comparison.canonical_offline_candidate_comparison(suite),
+                })
             if url.path.startswith("/api/docs/"):
                 try:
                     _, _, _, cid, did = url.path.split("/")
@@ -1569,6 +1585,62 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, getattr(s, GOVERNANCE_ACTIONS[parts[2]])(u, body))
                 if url.path == "/api/import-check":
                     return self._json(200, s.import_check(body.get("text", "")))
+                if url.path == "/api/ai/candidate-comparison":
+                    if u["role"] not in MANAGER_ROLES:
+                        raise PermissionError("Only a manager can run an AI candidate comparison.")
+                    if url.query:
+                        raise ValueError("Unknown candidate comparison parameter.")
+                    allowed_keys = {
+                        "candidates",
+                        "manifest",
+                        "baseline",
+                        "rendered_prompts",
+                        "tuning_examples",
+                        "finance_confirmed_saving",
+                        "default_tariff",
+                    }
+                    if set(body) - allowed_keys:
+                        raise ValueError("Unknown candidate comparison field.")
+                    manifest_in = body.get("manifest")
+                    baseline_in = body.get("baseline")
+                    if manifest_in is None or baseline_in is None:
+                        default_manifest = heldout_eval.canonical_heldout_manifest()
+                        if manifest_in is None:
+                            manifest_in = default_manifest
+                        if baseline_in is None:
+                            default_suite = heldout_eval.canonical_offline_heldout_suite()
+                            baseline_in = default_suite["baseline_candidate"]
+                    rendered_prompts = body.get("rendered_prompts", ())
+                    if not isinstance(rendered_prompts, (list, tuple)) or not all(
+                        isinstance(item, str) for item in rendered_prompts
+                    ):
+                        raise ValueError("rendered_prompts must be a list of strings.")
+                    tuning_examples = body.get("tuning_examples", ())
+                    if not isinstance(tuning_examples, (list, tuple)) or not all(
+                        isinstance(item, (str, dict)) for item in tuning_examples
+                    ):
+                        raise ValueError("tuning_examples must be a list of strings or objects.")
+                    tariff_in = body.get("default_tariff", heldout_eval.DEFAULT_OFFLINE_TARIFF)
+                    if tariff_in is not None and not isinstance(tariff_in, dict):
+                        raise ValueError("default_tariff must be an object or null.")
+                    comparison = tokenomics_comparison.compare_candidates(
+                        manifest_in,
+                        baseline_in,
+                        body.get("candidates"),
+                        rendered_prompts=rendered_prompts,
+                        tuning_examples=tuning_examples,
+                        finance_confirmed_saving=body.get("finance_confirmed_saving", False),
+                        default_tariff=tariff_in,
+                    )
+                    summary = comparison["summary"]
+                    s.audit(
+                        u["email"],
+                        "ai_candidate_comparison",
+                        "-",
+                        f"baseline={comparison['baseline_id']} total={summary['total_candidates']} "
+                        f"passed={summary['passed_candidates']} savings={summary['verified_saving_candidates']}",
+                    )
+                    return self._json(200, comparison)
                 if url.path == "/api/ai/priority":
                     from zava_forward.core.sqlstore import CommittedReloadError
                     try:
