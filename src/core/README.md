@@ -441,17 +441,28 @@ controlled domain approval. Actual reviewer detection, corrections and total
 preparation/review effort against paired workflow-only scenarios remain
 unmeasured; #223 is not satisfied by these tests.
 
-The #222 cohort evaluator (`cohort_eval.evaluate`, `cohort_eval.export_record`)
+The #222 and #128 cohort evaluator (`cohort_eval.evaluate`, `cohort_eval.export_record`,
+`cohort_eval.approve_protected_characteristics`, `cohort_eval.approve_context_dimensions`)
 enforces the OQ-018 pre-live owner-approval boundary fail-closed. Every record
-carries `owner_approval_status` (`unapproved`, `pending_owner_approval`, or
+retains `cohort_definitions`, `version_definitions`, `counts` (`eligible`, `tested`,
+`abstained`, `failed`, `missing`), subgroup sufficiency, exclusions, review burden,
+Wilson uncertainty, `ranking_policy`, `non_ai_comparison`, human `disposition`,
+`owner_approval_status` (`unapproved`, `pending_owner_approval`, or
 `approved`), `lawful_analysis_fields`, `lawful_analysis_fields_approved`,
-`live_activation_allowed`, `synthetic_not_fairness_evidence: True`, and
-`non_fairness_provenance_notice`. `owner_approval_status` reaches `approved` and
+`live_activation_allowed`, `synthetic_not_fairness_evidence`, and
+`non_fairness_provenance_notice`. Protected-characteristic fields require
+digest-bound DPO minimum-necessary approval (`unapproved_protected_characteristic`),
+optional `geography` and `archetype` dimensions require digest-bound relevance
+approval (`unapproved_context_dimension`), missing/declined sensor or non-response
+cases fail if service or priority is lowered or if vulnerability, refusal or
+protected characteristics are inferred, and sensor fixtures block device
+provisioning (`sensor_fixture_provisioning_forbidden`) or invented hazard/dew-point
+thresholds (`sensor_fixture_invented_threshold`). `owner_approval_status` reaches `approved` and
 `lawful_analysis_fields_approved` reaches `True` only when non-fictional named
 human approvals for cohorts, lawful analysis fields (exact-set matched to the
 manifest dimensions), and thresholds carry valid ISO dates and a matching
-`manifest_digest`. Synthetic runs never set `fairness_evidence: True` or
-`live_activation_allowed: True`, and `export_record` rejects tampered hashes,
+`manifest_digest` (which excludes approval envelopes). Synthetic or generated runs never set `fairness_evidence: True` or
+`live_activation_allowed: True`, a recorded human disposition never authorises a failing or unapproved cohort (`activation_allowed: False`), and `export_record` rejects tampered hashes,
 missing non-fairness disclaimers, or live-activation claims on synthetic or
 unapproved records. Cohorts, lawful fields, sample sufficiency and thresholds
 remain owner-unapproved in the repository (OQ-018), and synthetic results
@@ -1054,16 +1065,7 @@ reasons and counts. The route has no score and never changes rank or service. Co
 data only; no usability, accessibility or fairness evidence. See the
 [test plan](../../docs/reference/research/ux/equity-journey-test-plan.md).
 
-`paired_equity.evaluate(pairs, anchors, seeded_defects, rank)` checks constructed pairs that
-differ in one attribute (source completeness, sensor completeness, support or contact need,
-appointment history) and
-requires the subject to be ranked (not excluded) no lower than the reference and its review route to have no rank
-effect. Each dimension has a fixture-local predeclared contrast (not a production mapping or
-approved policy); confounded, no-contrast or mislabeled pairs, and pairs whose case ID is missing or
-shared with an anchor, are listed in `invalid_pairs`,
-block the record and are not counted as tested. It reports tested and failed counts per dimension, never averages a failing dimension
-away, and blocks on a missing dimension or an undetected seeded defect. It uses the deterministic
-policy by default, approves nothing and is not fairness evidence; AI task cohorts are not covered.
+`paired_equity.evaluate(pairs, anchors, seeded_defects, rank, *, policy, ai_task, thresholds, disposition, protected_fields_approval, context_approvals)` checks constructed pairs against predeclared independent contrasts (`paired_equity.predeclared_cohorts()`) across source completeness, sensor completeness (`missing` and `declined`), support or contact need, and provider-versus-resident appointment history (`provider_cancelled`, `provider_delayed`, `no_response`, `prior_no_access`), plus optional `geography` and `archetype` dimensions when approved as relevant (`context_approvals` bound to `paired_equity.input_digest(pairs, anchors)`). It requires the subject to be ranked (not excluded) no lower than the reference, service not to be lowered, no prohibited inference of vulnerability, refusal or protected characteristics, and the review route to have no rank effect. Confounded, no-contrast, mislabeled or contradicted-expectation pairs, and pairs whose case ID is missing or shared with an anchor, are listed in `invalid_pairs`, block the record and are not counted as tested. When `policy` or `ai_task` is supplied, it verifies named ranking-policy ownership and signoff/rule-order/content hashes, compares AI outputs transparently against the deterministic non-AI baseline (`non_ai_comparison`), retains safe abstentions (`abstained: True`, `fallback_to_non_ai: True`) separately from deprioritisation or service-lowering defects, enforces DPO minimum-necessary approval on protected-characteristic fields, and blocks sensor-fixture provisioning or invented hazard/dew-point thresholds. It retains `cohort_definitions`, `version_definitions`, `counts` (`eligible`, `tested`, `abstained`, `failed`), per-dimension sufficiency, exclusions, review burden, Wilson uncertainty and human `disposition`, never averages a failing dimension away, blocks on unapproved or insufficient thresholds (`thresholds`) or undetected seeded defects, and keeps `fairness_evidence: False` on constructed pairs and `activation_allowed: False` whenever any check or approval fails.
 
 ```bash
 python -m unittest discover -s tests -p test_paired_equity.py -q
