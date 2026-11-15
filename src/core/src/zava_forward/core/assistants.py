@@ -4062,8 +4062,9 @@ class Assistants:
             for key in ("state", "fence", "owner", "lease_until", "attempts", "not_before", "revision"):
                 stored.pop(key, None)
             res = db.execute(
-                "UPDATE assistant_tasks SET body=?,state=?,revision=revision+1 WHERE id=? AND revision=?",
-                (canonical(stored), state, tid, revision),
+                "UPDATE assistant_tasks SET body=?,state=?,review_gate_version=?,"
+                "reviewed_revision=revision+1,revision=revision+1 WHERE id=? AND revision=?",
+                (canonical(stored), state, continuity.GATE_VERSION, tid, revision),
             )
             if res.rowcount != 1:
                 raise ConflictError(tid)
