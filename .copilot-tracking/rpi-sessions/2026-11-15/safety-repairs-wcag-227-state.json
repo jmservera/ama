@@ -1,0 +1,58 @@
+{
+  "task_id": "2026-11-15-safety-repairs-wcag-227",
+  "task_slug": "safety-repairs-wcag-227",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/safety-repairs-wcag-227-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/safety-repairs-wcag-227-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/safety-repairs-wcag-227-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/safety-repairs-wcag-227-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/safety-repairs-wcag-227-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-15/safety-repairs-wcag-227-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "User requested an autonomous full RPI loop (Research, Plan, Plan Critique, Implement, Review) for GitHub issue #227 on branch feat/ux-227-safety-repairs-wcag-0006 targeting feat/demo-233-same-home-tensions-0825, using Focused validation tier and committing locally without pushing.",
+      "status": "confirmed",
+      "evidence": "Caller prompt in non-interactive CLI execution; /tmp/issue-227.md"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready. Selected converged Option A: migrate hazardJump/hazardPanel to screenPanel anchors and data-jump delegation, add cross-home jump nav and word-first Object.hasOwn-safe state labels across per-home and cross-home tables while preserving CopyAudit and substring contracts, enforce non-colour underlines + 24px min-height on .screen-links a and borders on .flag/.flag.danger, and support permission-preserving #/role/building_safety_lead and #/role/repairs hash aliases.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/safety-repairs-wcag-227-research.md (C1-C20, W1)"
+    },
+    {
+      "decision": "Plan critique execution: complete; verdict: Revise. Applied all four planner-owned direct corrections (PC-001 through PC-004) in one coherent batch without repeating critique; plan and phase details are finalized and Ready for implementation.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/safety-repairs-wcag-227-plan-critique.md; .copilot-tracking/plans/2026-11-15/safety-repairs-wcag-227-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Review execution: Complete; outcome: Conformant; assessed boundary: full task P01 and P02 (FR-01 through FR-04, NFR-01, AC-01 through AC-06, PC-001 through PC-004, Focused-tier + Chromium/axe-core 4.10.3 + refreshed Web Interface Guidelines validation, and distinct human AT/role follow-up routing under Refs #227).",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-15/safety-repairs-wcag-227-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked post-Review follow-up item, Stop automatic session, or Switch to manual mode."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Align src/api/checks/specialist_keyboard_browser_check.py EXPECTED_TABLES fixture with Resident service issue queue Routes to ask table on feat/demo-233-same-home-tensions-0825",
+      "rationale": "High ease of implementation (single fixture-tuple update), high test-reliability impact on the parent #233 branch, and high engineering-quality leverage keeping the cross-screen specialist keyboard Playwright check green across all registered screens.",
+      "evidence": "src/api/checks/specialist_keyboard_browser_check.py; .copilot-tracking/reviews/2026-11-15/safety-repairs-wcag-227-review.md#residual-work"
+    },
+    {
+      "rank": 2,
+      "task": "Complete human assistive-technology and named safety-role user validation (#151, #155, #156) for safety-lead (#/role/building_safety_lead) and hazard-triage (#/role/repairs)",
+      "rationale": "Required external human screen-reader, magnification, and named safety-role walkthroughs before claiming full WCAG 2.2 AA conformance or closing #227.",
+      "evidence": "docs/reference/research/ux/wcag-conformance-baseline.md:21-98; /tmp/issue-227.md; .copilot-tracking/reviews/2026-11-15/safety-repairs-wcag-227-review.md#plan-follow-up-assessment"
+    }
+  ]
+}

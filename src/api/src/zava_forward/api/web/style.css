@@ -149,8 +149,8 @@ textarea{width:100%;min-height:5rem}
 .item .name{font-weight:600}
 .item .status,.muted{color:var(--muted)}
 .item .meta{text-align:right;color:var(--muted);font-size:.9rem}
-.flag{display:inline-block;font-size:.8rem;padding:.05rem .5rem;border-radius:1rem;background:var(--soft);color:var(--brand-d);margin-left:.4rem}
-.flag.danger{background:var(--warn-bg);color:var(--warn);font-weight:600}
+.flag{display:inline-block;font-size:.8rem;padding:.05rem .5rem;border:1px solid var(--soft-line);border-radius:1rem;background:var(--soft);color:var(--brand-d);margin-left:.4rem}
+.flag.danger{border-color:var(--warn);background:var(--warn-bg);color:var(--warn);font-weight:600}
 .status-line{font-size:1.15rem;padding:.7rem 1rem;border-left:5px solid var(--brand);background:var(--soft);border-radius:.3rem}
 .status-line.danger{border-color:var(--warn);background:var(--warn-bg)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
@@ -362,11 +362,11 @@ input[aria-invalid=true],select[aria-invalid=true],textarea[aria-invalid=true]{b
 .next-action{font-weight:600;margin-top:var(--sp-2)}
 @media(max-width:600px){.card{padding:var(--sp-3)}.row>*{max-width:100%}.blocked dl{grid-template-columns:1fr}.brand{flex-shrink:1}.top nav{row-gap:.125rem}}
 .screen-links { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-block: var(--sp-4); }
-.screen-links a { display: inline-flex; align-items: center; min-height: 2.5rem; padding: var(--sp-1) var(--sp-2); color: var(--brand-d); touch-action: manipulation; }
+.screen-links a { display: inline-flex; align-items: center; min-height: 2.5rem; padding: var(--sp-1) var(--sp-2); color: var(--brand-d); touch-action: manipulation; text-decoration: underline; text-underline-offset: .16em; }
 .screen-links a:hover { color: var(--ink); text-decoration: underline; }
 .screen-links a[aria-current="page"] { font-weight: 600; text-decoration-thickness: .2em; }
 .screen-evidence { min-width: 0; overflow-wrap: anywhere; }
-.screen-evidence h2, .screen-evidence h3 { text-wrap: balance; }
+.screen-evidence h2, .screen-evidence h3, .screen-record h2 { text-wrap: balance; scroll-margin-top: var(--sp-4); }
 .screen-record { content-visibility: auto; contain-intrinsic-size: auto 20rem; }
 .screen-record[id], .screen-evidence h2[tabindex="-1"] { scroll-margin-top: var(--sp-5); }
 .screen-evidence td { font-variant-numeric: tabular-nums; }

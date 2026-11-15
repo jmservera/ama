@@ -88,10 +88,16 @@ function screenHref(id, caseId, page = 0, keepScope = true) {
   if (scope) query.set("scope", scope);
   return `#/screens${query.size ? `?${query}` : ""}`;
 }
+const ROLE_HASH_SCREENS = {
+  "#/role/building_safety_lead": "safety-lead",
+  "#/role/repairs": "hazard-triage"
+};
 async function roleScreensView() {
   const signal = routeController.signal;
-  const query = new URLSearchParams(location.hash.split("?")[1] || "");
-  const id = query.get("screen");
+  const [routePath, rawQuery = ""] = (typeof location === "undefined" ? "#/screens" : location.hash || "#/screens").split("?");
+  const query = new URLSearchParams(rawQuery);
+  const aliasScreen = Object.hasOwn(ROLE_HASH_SCREENS, routePath) ? ROLE_HASH_SCREENS[routePath] : null;
+  const id = query.get("screen") || aliasScreen;
   const caseId = query.get("case");
   const rawPage = query.get("page") || "0";
   const page = Number(rawPage);
@@ -151,7 +157,7 @@ async function roleScreensView() {
     await screen.render(c, extra),
     !screen.ownsStageMap && journeyStageMap(c, screen.id),
     h("p", {}, h("a", { href: `#/case/${encodeURIComponent(c.id)}` }, "Open existing case workspace")))
-    : h("div", {}, h("p", { class: "empty" }, "No home selected. Choose a home from this queue."), overview);
+    : h("div", {}, h("p", { class: "empty" }, "No home selected. Choose a home from this queue."));
   signal.throwIfAborted();
   workspaceStatus.textContent = `${me.user.role}. ${screen.title}. ${c ? `Selected home ${c.id}.` : "No home selected."}`;
   show(h("h1", {}, screen.title), menu,
@@ -281,7 +287,8 @@ if (typeof document !== "undefined" && typeof document.addEventListener === "fun
     const link = event.target?.closest?.("a[data-jump]");
     if (!link) return;
     event.preventDefault();
-    document.getElementById(link.getAttribute("data-jump"))?.focus();
+    document.getElementById(link.getAttribute("data-jump"))?.focus?.();
+    document.getElementById(link.getAttribute("data-jump"))?.scrollIntoView?.({ block: "start" });
   });
 }
 function assetSummary(extra, report) {
@@ -971,46 +978,79 @@ registerRoleScreen({
   }
 });
 const hazardTriageRoles = ["Retrofit Coordinator", "Resident Liaison Officer", "Quality Inspector"];
+const HAZARD_ESCALATION_CUES = {
+  Accepted: "Confirmed",
+  Sent: "Action needed",
+  Received: "Action needed",
+  Referred: "Action needed",
+  Raised: "Action needed",
+  Open: "Action needed",
+  Escalated: "Action needed"
+};
+const HAZARD_STATE_KEY_COPY = "Every referral, clock, and stop-work state is written as words first (Confirmed, Waiting, Action needed, State, or Unknown), so colour is never the only signal.";
 const hazardActor = (value) => value && (value.name || value.role)
   ? [value.name, value.role].filter(Boolean).join(", ") : "Unknown";
-const hazardStep = (stamp) => stamp ? `Recorded ${screenStamp(stamp)}` : "Not recorded";
-const hazardSafetyClock = (h) => h.clock_text || h.escalation_clock || "Clock not supplied";
+function hazardStep(stamp) {
+  if (!stamp) return "State: Not recorded";
+  const formatted = screenStamp(stamp);
+  return formatted === "Unknown"
+    ? `Unknown: Timestamp not readable (${screenValue(stamp)})`
+    : `State: Recorded ${formatted}`;
+}
+function hazardSafetyClock(h) {
+  const clock = h.clock_text || h.escalation_clock;
+  return clock ? `State: ${clock}` : "Unknown: Clock not supplied";
+}
 const hazardOwner = (h) => h.accountable_owner || "Building Safety lead (escalation owner)";
 function hazardFollowUp(h) {
-  if (h.accepted_at) return `${hazardActor(h.accepted_by || h.destination)} owns the accepted scope`;
-  if (h.received_at) return `Pending acceptance. Follow-up owner: ${hazardActor(h.follow_up || h.sender)}`;
-  if (h.sent_at) return `Pending receipt. Follow-up owner: ${hazardActor(h.sender)} chases until acceptance`;
-  if (h.referred) return `Legacy referral with no recorded send time. Recorded owner (unverified): ${screenValue(h.owner)}. Retrofit Coordinator to confirm ownership and check the external service record`;
-  return `No referral sent. Owner: ${screenValue(h.owner)} to send or record a manual route`;
+  if (h.accepted_at) return `Confirmed: ${hazardActor(h.accepted_by || h.destination)} owns the accepted scope`;
+  if (h.received_at) return `Action needed: Pending acceptance. Follow-up owner: ${hazardActor(h.follow_up || h.sender)}`;
+  if (h.sent_at) return `Action needed: Pending receipt. Follow-up owner: ${hazardActor(h.sender)} chases until acceptance`;
+  if (h.referred) return `Action needed: Legacy referral with no recorded send time. Recorded owner (unverified): ${screenValue(h.owner)}. Retrofit Coordinator to confirm ownership and check the external service record`;
+  return `Action needed: No referral sent. Owner: ${screenValue(h.owner)} to send or record a manual route`;
 }
-const hazardEscalationState = (h) => `Escalation state: ${screenValue(h.state)}`;
+function hazardEscalationState(h) {
+  const raw = screenValue(h?.state);
+  if (raw === "Unknown") return "Unknown: Escalation state: Unknown";
+  const lower = raw.toLowerCase();
+  const cue = Object.hasOwn(HAZARD_ESCALATION_CUES, raw)
+    ? HAZARD_ESCALATION_CUES[raw]
+    : lower.endsWith(" released") ? "Confirmed"
+      : (lower.endsWith(" active") || lower.endsWith(" needed")) ? "Action needed" : "Unknown";
+  return `${cue}: Escalation state: ${raw}`;
+}
 function hazardClock(h) {
-  if (h.responded_at) return `Service responded ${screenStamp(h.responded_at)}`;
-  if (!h.response_due_at) return "Service response clock: no due time recorded";
+  if (h.responded_at) {
+    const formatted = screenStamp(h.responded_at);
+    return formatted === "Unknown"
+      ? `Unknown: Service responded (${screenValue(h.responded_at)}; timestamp not readable)`
+      : `Confirmed: Service responded ${formatted}`;
+  }
+  if (!h.response_due_at) return "Unknown: Service response clock: no due time recorded";
   const due = new Date(h.response_due_at).getTime();
-  if (Number.isNaN(due)) return `Service response clock: due time not readable (${screenValue(h.response_due_at)})`;
+  if (Number.isNaN(due)) return `Unknown: Service response clock: due time not readable (${screenValue(h.response_due_at)})`;
   const late = due < Date.now();
-  return `${late ? "Overdue" : "Awaiting"} service response. Due ${screenStamp(h.response_due_at)}. Recorded by the service, not set here`;
+  return `${late ? "Action needed: Overdue" : "Waiting: Awaiting"} service response. Due ${screenStamp(h.response_due_at)}. Recorded by the service, not set here`;
 }
 function hazardHold(h) {
-  const pause = h.hold || {};
-  const decision = pause.decision;
+  const pause = (h && h.hold) || {};
+  const status = Object.hasOwn(pause, "status") ? screenValue(pause.status) : "Unknown";
+  const decision = Object.hasOwn(pause, "decision") ? pause.decision : null;
   const scope = `${screenValue(pause.scope)} ${screenValue(pause.case_id)} only`;
-  if (pause.status !== "Released") return `Stop-work indicator: ${pause.status === "Active" ? "retrofit work is paused" : "pause status " + screenValue(pause.status)}. Scope: ${scope}. Release needs an authorised human decision.`;
+  if (status !== "Released") {
+    const cue = status === "Active" ? "Action needed" : "Unknown";
+    return `${cue}: Stop-work indicator: ${status === "Active" ? "retrofit work is paused" : "pause status " + status}. Scope: ${scope}. Release needs an authorised human decision.`;
+  }
   return decision
-    ? `Stop-work indicator: released. Scope: ${scope}. Decided by ${hazardActor(decision.actor)} at ${screenStamp(decision.at)}. Reason: ${screenValue(decision.reason)}. Evidence: ${screenValue(decision.evidence)}`
-    : `Stop-work indicator: released. Scope: ${scope}. No authoritative decision evidence is recorded; do not rely on this release.`;
+    ? `Confirmed: Stop-work indicator: released. Scope: ${scope}. Decided by ${hazardActor(decision.actor)} at ${screenStamp(decision.at)}. Reason: ${screenValue(decision.reason)}. Evidence: ${screenValue(decision.evidence)}`
+    : `Action needed: Stop-work indicator: released. Scope: ${scope}. No authoritative decision evidence is recorded; do not rely on this release.`;
 }
-const hazardPanel = (key, title, ...children) => h("section", { class: "card screen-record", "aria-labelledby": `hazard-${key}-heading` },
-  h("h2", { id: `hazard-${key}-heading`, tabindex: -1 }, title), ...children);
+const hazardPanel = (key, title, ...children) => screenPanel(title, { anchor: `hazard-${key}` }, ...children);
 const hazardJump = (sections) => h("nav", { "aria-label": "Sections on this screen", class: "screen-links" },
-  sections.map(([key, title]) => h("a", { href: "#",
-    onclick: (event) => {
-      event.preventDefault();
-      const heading = document.getElementById(`hazard-${key}-heading`);
-      heading?.focus?.();
-      heading?.scrollIntoView?.({ block: "start" });
-    } }, `Go to ${title}`)));
+  sections.map(([key, title]) => {
+    const id = `hazard-${key}-heading`;
+    return h("a", { href: `#${id}`, "data-jump": id, "data-jump-target": id }, `Go to ${title}`);
+  }));
 function hazardScreen(intro) {
   return (c) => {
     const items = c.hazards || [];
@@ -1018,12 +1058,12 @@ function hazardScreen(intro) {
       hazardJump([["boundary", "Evidence and checks"], ["queue", "Referral queue"], ["restart", "Retrofit pause and restart decision"], ["act", "Where to act"]]),
       hazardPanel("boundary", "Evidence and checks",
         h("p", {}, intro),
-        h("p", {}, "This screen does not classify hazards, set clocks, close hazards or authorise work. Categories and priorities are the recorded report, not a service categorisation. Sent, received and accepted are separate: a sent referral is not receipt, and receipt is not ownership. Source: desk research, not observed behaviour."),
+        h("p", {}, `This screen does not classify hazards, set clocks, close hazards or authorise work. Categories and priorities are the recorded report, not a service categorisation. Sent, received and accepted are separate: a sent referral is not receipt, and receipt is not ownership. ${HAZARD_STATE_KEY_COPY} Source: desk research, not observed behaviour.`),
         h("p", {}, `Home scope: ${c.id} only. Every recorded hazard and safeguarding item is listed, including released ones.`)),
       hazardPanel("queue", "Referral queue",
         screenTable("Hazard referrals for this home",
           ["Item", "Reported observation and urgency", "Aware at", "Source", "Destination", "Sent", "Received", "Accepted", "State", "Follow-up"],
-          items.map((x, i) => [`H-${i + 1}`, `${screenValue(x.category)}, ${screenValue(x.priority)}`,
+          items.map((x, i) => [`H-${i + 1}`, `${screenValue(x.category)}, urgency: ${screenValue(x.priority)}`,
             screenStamp(x.aware_at), x.source, hazardActor(x.destination),
             hazardStep(x.sent_at), hazardStep(x.received_at), hazardStep(x.accepted_at),
             hazardEscalationState(x), hazardFollowUp(x)]), Infinity)),
@@ -1046,25 +1086,34 @@ const hazardQueue = {
   },
   summary(entries) {
     const pause = (x) => {
-      const status = (x.hold || {}).status || "Unknown";
-      return status === "Released" && !(x.hold || {}).decision
-        ? "Released. Release decision evidence: open the home" : status;
+      const pauseObj = (x && x.hold) || {};
+      const status = Object.hasOwn(pauseObj, "status") ? screenValue(pauseObj.status) : "Unknown";
+      const hasDecision = Boolean(Object.hasOwn(pauseObj, "decision") && pauseObj.decision);
+      if (status === "Active") return "Action needed: Stop-work indicator: Active (retrofit work paused)";
+      if (status === "Released") {
+        return hasDecision
+          ? "Confirmed: Stop-work indicator: Released (decision recorded; open the home to inspect)"
+          : "Action needed: Stop-work indicator: Released. Release decision evidence: open the home";
+      }
+      return `Unknown: Stop-work indicator: ${status}`;
     };
     const flag = (cells) => [...cells, ...Array(11).fill("Unavailable")];
     const rows = entries.flatMap(([row, c]) => {
-      if (!c) return [flag([row.id, "Unavailable. Open the home to check."])];
-      if (!Array.isArray(c.hazards)) return [flag([row.id, "Unknown. Hazard list not supplied. Open the home to check."])];
-      if (!c.hazards.length && row.hazard) return [flag([row.id, "Mismatch. The list flags a hazard but the case returns none. Open the home to check."])];
-      return c.hazards.map((x, i) => [`${row.id} H-${i + 1}`, `${screenValue(x.category)}, ${screenValue(x.priority)}`,
+      if (!c) return [flag([row.id, "Unknown: Unavailable. Open the home to check."])];
+      if (!Array.isArray(c.hazards)) return [flag([row.id, "Unknown: Unknown. Hazard list not supplied. Open the home to check."])];
+      if (!c.hazards.length && row.hazard) return [flag([row.id, "Action needed: Mismatch. The list flags a hazard but the case returns none. Open the home to check."])];
+      return c.hazards.map((x, i) => [`${row.id} H-${i + 1}`, `${screenValue(x.category)}, urgency: ${screenValue(x.priority)}`,
         screenStamp(x.aware_at), x.source, hazardActor(x.destination),
         hazardStep(x.sent_at), hazardStep(x.received_at), hazardStep(x.accepted_at),
         hazardEscalationState(x), hazardFollowUp(x), pause(x), hazardSafetyClock(x), hazardOwner(x)]);
     });
-    return screenPanel("Hazard referrals across this page of homes",
-      h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Every recorded hazard and safeguarding item is listed, including released ones. A home with no row has no hazard list entry on this page; this does not establish that no hazard exists. Unavailable, unknown and mismatched homes are listed so they are not read as clear. Open a home for pause and release decision evidence."),
-      screenTable("Hazard referrals by home",
-        ["Home and item", "Reported observation and urgency", "Aware at", "Source", "Destination", "Sent", "Received", "Accepted", "State", "Follow-up", "Pause status", "Clock", "Accountable owner"],
-        rows, Infinity));
+    return h("div", {},
+      hazardJump([["page-summary", "Hazard referrals across this page of homes"]]),
+      hazardPanel("page-summary", "Hazard referrals across this page of homes",
+        h("p", {}, `Read-only summary of the homes on this page, not a portfolio total. Every recorded hazard and safeguarding item is listed, including released ones. A home with no row has no hazard list entry on this page; this does not establish that no hazard exists. Unavailable, unknown and mismatched homes are listed so they are not read as clear. ${HAZARD_STATE_KEY_COPY} Open a home for pause and release decision evidence.`),
+        screenTable("Hazard referrals by home",
+          ["Home and item", "Reported observation and urgency", "Aware at", "Source", "Destination", "Sent", "Received", "Accepted", "State", "Follow-up", "Pause status", "Clock", "Accountable owner"],
+          rows, Infinity)));
   }
 };
 registerRoleScreen({
