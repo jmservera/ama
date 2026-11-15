@@ -304,10 +304,21 @@ function appointmentSlot(state) {
 }
 
 function workOrdersCard(rows, mine) {
-  return h("section", { class: "card" }, h("h2", {}, mine ? "Your work orders" : "Work orders"),
+  const orderStateCues = { Completed: "Completed on record, not accepted", Withdrawn: "Withdrawn", Issued: "Open", Appointed: "Open", Acknowledged: "Open" };
+  const orderStateBadge = (state) => {
+    const cue = Object.hasOwn(orderStateCues, state) ? orderStateCues[state] : "Action needed";
+    const label = `${cue}: ${state || "Unknown"}`;
+    return h("span", { class: state === "Withdrawn" || cue === "Action needed" ? "flag danger" : "flag", "data-state-cue": cue }, label);
+  };
+  const noticeBadge = (needsNotice) => needsNotice
+    ? h("span", { class: "flag danger", "data-state-cue": "Visit notice required" }, "Visit notice required: Needs notice")
+    : h("span", { class: "flag", "data-state-cue": "Standard visit" }, "Standard visit: No extra notice needed");
+  const sectionAttrs = mine ? { class: "card", id: "contractor-work-orders", "aria-labelledby": "contractor-work-orders-heading" } : { class: "card" };
+  const headingAttrs = mine ? { id: "contractor-work-orders-heading", tabindex: "-1" } : {};
+  return h("section", sectionAttrs, h("h2", headingAttrs, mine ? "Your work orders" : "Work orders"),
     rows.length ? h("ul", { class: "list" }, rows.map((w) => h("li", {},
-      h("strong", {}, `${w.id}, version ${w.version}`), ` ${w.state}. ${w.address}, ${w.postcode}. Works: ${w.measures}. `,
-      w.needs_notice ? h("span", { class: "flag" }, "Needs notice") : "No extra notice needed", `. Named contact: ${w.named_contact}.`,
+      h("strong", {}, `${w.id}, version ${w.version}`), " ", orderStateBadge(w.state), `. ${w.address}, ${w.postcode}. Works: ${w.measures}. `,
+      noticeBadge(w.needs_notice), `. Named contact: ${w.named_contact}.`,
       h("p", {}, `Appointment: ${w.appointment_control.status}.${w.appointment_control.missing.length ? ` ${w.appointment_control.missing.join("; ")}.` : ""}`),
       appointmentSlot(w.appointment_control),
       h("div", { class: "muted" }, w.scope), w.appointments.length > 0 && h("div", { class: "muted" }, "Visits: " + w.appointments.map((a) => `${a.outcome}${a.date ? ` ${a.date}` : ""}`).join("; "))))) : h("p", {}, "No work orders yet."));
