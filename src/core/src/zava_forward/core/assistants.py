@@ -36,6 +36,12 @@ from . import (
     sensor_view,
 )
 from zava_forward.core.ai import FORBIDDEN, Ai
+from zava_forward.core.regulatory_output_guard import (
+    GuardDecision,
+    GuardTelemetry,
+    ViolationCategory,
+    inspect_regulatory_output,
+)
 from .store import ConflictError
 from .synthetic.sensor_identity import demo_homes
 
@@ -165,7 +171,12 @@ TRANSIENT_VIEW_KEYS = (
 )
 
 
-def _output_violates_visibility(output, withheld):
+def _output_violates_visibility(
+    output: Any,
+    withheld: Any,
+    *,
+    guard_telemetry: GuardTelemetry | None = None,
+) -> bool:
     if not isinstance(output, Mapping):
         return False
     texts = [output.get("summary")]
@@ -174,11 +185,17 @@ def _output_violates_visibility(output, withheld):
             texts.append(f.get("text"))
             texts.extend(f.get("citations") or ())
     texts.extend(output.get("unknowns") or ())
-    return any(
-        isinstance(t, str)
-        and (FORBIDDEN.search(t) or projection.contains_withheld_value(t, withheld))
-        for t in texts
-    )
+    for t in texts:
+        if not isinstance(t, str):
+            continue
+        if FORBIDDEN.search(t) or projection.contains_withheld_value(t, withheld):
+            return True
+        dec = inspect_regulatory_output(t, on_violation="reject")
+        if not dec.passed:
+            if guard_telemetry is not None:
+                guard_telemetry.record_decision(dec)
+            return True
+    return False
 
 
 def signature(snapshot):
@@ -756,7 +773,13 @@ def review_flag(
     return out
 
 
-def validate_output(value, snapshot, max_chars):
+def validate_output(
+    value: Any,
+    snapshot: Mapping[str, Any],
+    max_chars: int,
+    *,
+    guard_telemetry: GuardTelemetry | None = None,
+) -> dict[str, Any]:
     if not isinstance(value, dict) or set(value) != {"summary", "findings", "unknowns"}:
         raise ValueError("Expected summary, findings and unknowns.")
     if (
@@ -798,6 +821,45 @@ def validate_output(value, snapshot, max_chars):
         or FORBIDDEN.search(canonical(value))
     ):
         raise ValueError("Output bounds exceeded after unknown reconciliation.")
+    violations: list[ViolationCategory] = []
+    reasons: list[str] = []
+    for candidate_text in (
+        value["summary"],
+        *[item["text"] for item in value["findings"]],
+        *value["unknowns"],
+    ):
+        dec = inspect_regulatory_output(candidate_text, on_violation="reject")
+        if not dec.passed:
+            for v in dec.violations:
+                if v not in violations:
+                    violations.append(v)
+            for r in dec.reasons:
+                if r not in reasons:
+                    reasons.append(r)
+    if violations:
+        if guard_telemetry is not None:
+            guard_telemetry.record_decision(
+                GuardDecision(
+                    checked=True,
+                    passed=False,
+                    action="rejected",
+                    violations=tuple(violations),
+                    reasons=tuple(reasons),
+                    rewritten_text=None,
+                )
+            )
+        raise ValueError("Regulatory non-advice or future-law output guard rejected proposal.")
+    if guard_telemetry is not None:
+        guard_telemetry.record_decision(
+            GuardDecision(
+                checked=True,
+                passed=True,
+                action="passed",
+                violations=(),
+                reasons=(),
+                rewritten_text=None,
+            )
+        )
     return value
 
 
@@ -955,7 +1017,11 @@ def sanitize_identity(envelope: dict[str, Any]) -> dict[str, Any]:
 
 
 def shape_result(
-    task: dict[str, Any], result: Any, limits: Limits
+    task: dict[str, Any],
+    result: Any,
+    limits: Limits,
+    *,
+    guard_telemetry: GuardTelemetry | None = None,
 ) -> tuple[dict[str, Any], Any, Any]:
     """Reduce a raw provider result to (envelope, output, failure). Only safe, known fields survive; text is never saved on failure."""
     if not isinstance(result, dict):
@@ -992,7 +1058,12 @@ def shape_result(
         text = result.get("text")
         if not isinstance(text, str) or len(text) > limits.output_chars:
             raise ValueError("Output exceeds bounds.")
-        output = validate_output(json.loads(text), task["snapshot"], limits.output_chars)
+        output = validate_output(
+            json.loads(text),
+            task["snapshot"],
+            limits.output_chars,
+            guard_telemetry=guard_telemetry,
+        )
     except (ValueError, TypeError, KeyError):
         failure = "Failed or malformed evidence proposal; human/manual work required."
         envelope["source"] = "unverified"
@@ -1199,8 +1270,20 @@ class Affected(list):
 
 
 class Assistants:
-    def __init__(self, store, env=None, provider=None, transport=None):
+    def __init__(
+        self,
+        store,
+        env=None,
+        provider=None,
+        transport=None,
+        *,
+        guard_telemetry: GuardTelemetry | None = None,
+    ):
         self.store, self.limits = store, Limits(env)
+        self.guard_telemetry: GuardTelemetry = (
+            guard_telemetry if guard_telemetry is not None else GuardTelemetry()
+        )
+        self._guard_local = threading.local()
         # Resolves the object that physically carries the request bytes, when the provider hides it behind a wrapper.
         self.transport = transport
         # The provider port: (system, prompt, max_tokens, timeout) -> raw envelope. The default late-binds to the store's AI client.
@@ -2040,7 +2123,9 @@ class Assistants:
             )
         )
         reason_ok = projection.can_see_reason(user)
-        if body.get("output") and _output_violates_visibility(body["output"], role_withheld):
+        if body.get("output") and _output_violates_visibility(
+            body["output"], role_withheld, guard_telemetry=self.guard_telemetry
+        ):
             body["output"] = dict(ROLE_WITHHELD_OUTPUT)
             body["role_withheld"] = True
             body["actionable"] = False
@@ -2056,7 +2141,9 @@ class Assistants:
                 if not reason_ok and ev.get("note"):
                     ev["note"] = projection.NOTE_HELD
                 for okey in ("output", "edited_output"):
-                    if ev.get(okey) and _output_violates_visibility(ev[okey], role_withheld):
+                    if ev.get(okey) and _output_violates_visibility(
+                        ev[okey], role_withheld, guard_telemetry=self.guard_telemetry
+                    ):
                         ev[okey] = dict(ROLE_WITHHELD_OUTPUT)
                 scrubbed_events.append(ev)
             body["provenance"] = scrubbed_events
@@ -3194,11 +3281,17 @@ class Assistants:
 
     def complete(self, task, envelope, output, failure=None):
         envelope = sanitize_identity(envelope)
+        already_guarded = bool(getattr(self._guard_local, "already_guarded", False))
         if output is not None:
             try:
                 if envelope.get("source") != "ai" or envelope.get("outcome") != "returned":
                     raise ValueError("Unverified provider outcome.")
-                output = validate_output(output, task["snapshot"], self.limits.output_chars)
+                output = validate_output(
+                    output,
+                    task["snapshot"],
+                    self.limits.output_chars,
+                    guard_telemetry=None if already_guarded else self.guard_telemetry,
+                )
             except (ValueError, TypeError, KeyError):
                 output, failure = None, "Invalid/unverified proposal; use manual work."
         with self.transaction() as db:
@@ -3519,9 +3612,15 @@ class Assistants:
             if returned.is_set() and time.perf_counter() - started <= self.limits.timeout
             else dict(outcome="timeout", usage=None, source="unverified", text=None)
         )
-        envelope, output, failure = shape_result(task, result, self.limits)
+        envelope, output, failure = shape_result(
+            task, result, self.limits, guard_telemetry=self.guard_telemetry
+        )
         try:
-            return self.complete(task, envelope, output, failure)
+            self._guard_local.already_guarded = True
+            try:
+                return self.complete(task, envelope, output, failure)
+            finally:
+                self._guard_local.already_guarded = False
         except Exception:
             # Completion acknowledgement may have been lost. Never dispatch the provider again here.
             with self.transaction() as db:
@@ -3594,7 +3693,10 @@ class Assistants:
                         )
                     if action == "edit-accept":
                         stored["output"] = validate_output(
-                            output, task["snapshot"], self.limits.output_chars
+                            output,
+                            task["snapshot"],
+                            self.limits.output_chars,
+                            guard_telemetry=self.guard_telemetry,
                         )
                     stored["review"] = dict(
                         action=action, by=user["email"], note=note, at=self.now(db)

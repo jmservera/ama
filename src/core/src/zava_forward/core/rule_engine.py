@@ -235,7 +235,11 @@ def citation_eligibility(
                 )
             }
         )
-        if p["status"] in ("consultation", "historical") or p["effective"] and p["effective"] > day:
+        if (
+            p["status"] in ("consultation", "future_phase", "historical")
+            or p["effective"]
+            and p["effective"] > day
+        ):
             if state != "unknown":
                 state = "not applicable"
         elif (

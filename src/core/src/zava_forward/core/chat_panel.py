@@ -50,6 +50,7 @@ from zava_forward.core.chat_isolation import (
 )
 from zava_forward.core.chat_privacy import MEMORY_LIMIT, MEMORY_MAX, redact
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
+from zava_forward.core.regulatory_output_guard import GuardTelemetry, inspect_regulatory_output
 
 LABEL = "AI suggestion, not approved"
 ABSTAIN = (
@@ -559,9 +560,18 @@ def parse_reply(text: str, allowed: dict[str, str]) -> tuple[str, list[str]] | N
 
 
 class ChatPanel:
-    def __init__(self, isolation: ChatIsolation, model: Model | None = None) -> None:
+    def __init__(
+        self,
+        isolation: ChatIsolation,
+        model: Model | None = None,
+        *,
+        guard_telemetry: GuardTelemetry | None = None,
+    ) -> None:
         self.iso = isolation
         self.model = model
+        self.guard_telemetry: GuardTelemetry = (
+            guard_telemetry if guard_telemetry is not None else GuardTelemetry()
+        )
 
     @staticmethod
     def _source_kind(cite: str) -> str:
@@ -975,6 +985,11 @@ class ChatPanel:
                             cite_withheld
                             or iso._withheld(user, thread, parsed[0])
                             or ACTION_CLAIM.search(normalise_policy_text(parsed[0]))
+                            or not inspect_regulatory_output(
+                                parsed[0],
+                                on_violation="reject",
+                                telemetry=self.guard_telemetry,
+                            ).passed
                         ):
                             kind, text = "withheld", WITHHELD
                         elif unsupported_claims(parsed[0], [sources[c] for c in parsed[1]]):
