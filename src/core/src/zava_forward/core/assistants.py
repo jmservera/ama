@@ -1025,14 +1025,16 @@ SQLITE_ATTEMPT_TRIGGERS = (
     "CREATE TRIGGER IF NOT EXISTS assistant_tasks_hold_insert BEFORE INSERT ON assistant_tasks "
     "WHEN NEW.state = 'accepted' AND EXISTS (SELECT 1 FROM continuity_open_holds h WHERE h.scope = 'all' OR h.scope = NEW.capability) "
     "BEGIN SELECT RAISE(ABORT, 'continuity scope is suspended'); END",
-    "CREATE TRIGGER IF NOT EXISTS assistant_tasks_gate_update BEFORE UPDATE ON assistant_tasks "
+    "CREATE TRIGGER IF NOT EXISTS assistant_tasks_gate_update "
+    "BEFORE UPDATE OF state, body, capability, review_gate_version, reviewed_revision ON assistant_tasks "
     "WHEN ((NEW.state = 'accepted' AND (OLD.state <> 'accepted' OR NEW.revision <> OLD.revision OR NEW.body <> OLD.body)) "
-    "OR (OLD.state = 'ready' AND NEW.state = 'ready' AND NEW.revision <> OLD.revision AND NEW.dispatched = OLD.dispatched)) "
+    "OR (OLD.state = 'ready' AND NEW.state = 'ready' AND NEW.revision <> OLD.revision)) "
     "AND (NEW.reviewed_revision <> NEW.revision OR NOT EXISTS (SELECT 1 FROM continuity_gate_state g WHERE g.id = 1 AND g.gate_version = NEW.review_gate_version)) "
     "BEGIN SELECT RAISE(ABORT, 'continuity SQL gate mismatch'); END",
-    "CREATE TRIGGER IF NOT EXISTS assistant_tasks_hold_update BEFORE UPDATE ON assistant_tasks "
+    "CREATE TRIGGER IF NOT EXISTS assistant_tasks_hold_update "
+    "BEFORE UPDATE OF state, body, capability, review_gate_version, reviewed_revision ON assistant_tasks "
     "WHEN ((NEW.state = 'accepted' AND (OLD.state <> 'accepted' OR NEW.revision <> OLD.revision OR NEW.body <> OLD.body)) "
-    "OR (OLD.state = 'ready' AND NEW.state = 'ready' AND NEW.revision <> OLD.revision AND NEW.dispatched = OLD.dispatched)) "
+    "OR (OLD.state = 'ready' AND NEW.state = 'ready' AND NEW.revision <> OLD.revision)) "
     "AND EXISTS (SELECT 1 FROM continuity_open_holds h WHERE h.scope = 'all' OR h.scope = NEW.capability) "
     "BEGIN SELECT RAISE(ABORT, 'continuity scope is suspended'); END",
 )
@@ -1067,14 +1069,17 @@ MSSQL_ATTEMPT_TRIGGERS = (
     "THROW 50004, ''continuity scope is suspended'', 1')",
     "IF OBJECT_ID(N'assistant_tasks_gate_update', N'TR') IS NULL EXEC(N'CREATE TRIGGER assistant_tasks_gate_update ON assistant_tasks "
     "AFTER UPDATE AS "
+    "IF (UPDATE(state) OR UPDATE(body) OR UPDATE(capability) OR UPDATE(review_gate_version) OR UPDATE(reviewed_revision)) "
+    "BEGIN "
     "IF EXISTS (SELECT 1 FROM inserted i JOIN deleted d ON d.id = i.id WHERE ((i.state = ''accepted'' AND (d.state <> ''accepted'' OR i.revision <> d.revision OR i.body <> d.body)) "
-    "OR (d.state = ''ready'' AND i.state = ''ready'' AND i.revision <> d.revision AND i.dispatched = d.dispatched)) "
+    "OR (d.state = ''ready'' AND i.state = ''ready'' AND i.revision <> d.revision)) "
     "AND (i.reviewed_revision <> i.revision OR NOT EXISTS (SELECT 1 FROM continuity_gate_state g WHERE g.id = 1 AND g.gate_version = i.review_gate_version))) "
     "THROW 50004, ''continuity SQL gate mismatch'', 1; "
     "IF EXISTS (SELECT 1 FROM inserted i JOIN deleted d ON d.id = i.id WHERE ((i.state = ''accepted'' AND (d.state <> ''accepted'' OR i.revision <> d.revision OR i.body <> d.body)) "
-    "OR (d.state = ''ready'' AND i.state = ''ready'' AND i.revision <> d.revision AND i.dispatched = d.dispatched)) "
+    "OR (d.state = ''ready'' AND i.state = ''ready'' AND i.revision <> d.revision)) "
     "AND EXISTS (SELECT 1 FROM continuity_open_holds h WHERE h.scope = ''all'' OR h.scope = i.capability COLLATE Latin1_General_100_BIN2)) "
-    "THROW 50004, ''continuity scope is suspended'', 1')",
+    "THROW 50004, ''continuity scope is suspended'', 1; "
+    "END')",
 )
 
 

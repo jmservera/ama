@@ -546,6 +546,10 @@ class RestartGateSqlFencesTest(unittest.TestCase):
             )
         with self.assertRaisesRegex(sqlite3.IntegrityError, "continuity SQL gate mismatch"):
             conn.execute(
+                "UPDATE assistant_tasks SET body=body, revision=revision+1 WHERE id='T-READY-1'"
+            )
+        with self.assertRaisesRegex(sqlite3.IntegrityError, "continuity SQL gate mismatch"):
+            conn.execute(
                 "INSERT INTO assistant_tasks "
                 "(id, capability, case_id, signature, body, state, fence, owner, lease_until, "
                 "attempts, not_before, revision) "
@@ -615,6 +619,27 @@ class RestartGateSqlFencesTest(unittest.TestCase):
             "WHERE id IN ('cur-1', 'cur-send')"
         )
         self.assertEqual(s["status"], "Suspended")
+
+        # Triggers never reference dispatched: dispatched-only/revision retry updates on 'ready'
+        # rows succeed, body=body pre-gate verify updates still fail closed, and C5->C7 schema
+        # downgrade (DROP COLUMN dispatched) + migrate() recovery succeed with active triggers.
+        for trig in (
+            *ASSISTANTS_MOD.SQLITE_ATTEMPT_TRIGGERS,
+            *ASSISTANTS_MOD.MSSQL_ATTEMPT_TRIGGERS,
+        ):
+            self.assertNotIn("dispatched", trig)
+        conn.execute(
+            "UPDATE assistant_tasks SET dispatched=99.0, revision=revision+1 WHERE id='T-READY-1'"
+        )
+        with self.assertRaisesRegex(sqlite3.IntegrityError, "continuity scope is suspended"):
+            conn.execute(
+                "UPDATE assistant_tasks SET body=body, revision=revision+1 WHERE id='T-READY-1'"
+            )
+        conn.execute("DROP INDEX IF EXISTS ix_assistant_dispatched")
+        conn.execute("ALTER TABLE assistant_tasks DROP COLUMN dispatched")
+        self.service.migrate()
+        cols = {row[1] for row in conn.execute("PRAGMA table_info(assistant_tasks)")}
+        self.assertIn("dispatched", cols)
 
     def test_null_gate_version_and_missing_gate_row_fail_closed_in_sql_and_python(self) -> None:
         conn = sqlite3.connect(self.db_path, isolation_level=None)
