@@ -4887,6 +4887,106 @@ PYTHONPATH="$PWD/src/core/tests" python3 -m unittest \
   test_rulecards test_source_monitor -q
 ```
 
+### Owned citation/refusal evaluation gates and rule-card ship comparator (#216)
+
+`zava_forward.core.regulatory_eval_gates` keeps the offline regulatory chat
+evaluation gates and the deterministic rule-card shipping comparator inside
+`zava-forward-core`, preserving the one-way dependency boundary (`ALLOWED =
+{"core"}`) without importing `zava-forward-agents`.
+
+* `GATE_OWNERS`, `PROVISIONAL_THRESHOLDS` and `GATE_RULES` bind named exercise
+  gate owners (`LEGAL_GATE_OWNER` for `citation_validity` and
+  `COMPLIANCE_GATE_OWNER` for `refusal_accuracy`) with `GateRule` records
+  (`effective_date = "2026-10-16"`).
+* `DEFAULT_EVAL_CASES` and `ADVERSARIAL_PROMPTS` define the deterministic
+  graded and adversarial evaluation sets across supported citations, stale
+  monitoring-cadence labels, conflicting source versions, missing/future/
+  partial/held abstentions, untrusted prompt-injection provisions and
+  out-of-scope compliance, legal-advice, approval and safety-bypass prompts.
+* `evaluate_citation_and_refusal_gates` measures per-set and combined
+  per-check citation-validity and refusal-accuracy rates (`overall_pass =
+  None`) and emits both `case_set_sha256` (pre-run case definitions and
+  prompts) and `evaluated_outputs_sha256` (binding `actual` turn envelopes to
+  the evaluated cases). Without a valid independent `OwnerGateAgreement`
+  jointly signed in dual capacity by `LEGAL_GATE_OWNER` (`owner`) and
+  `COMPLIANCE_GATE_OWNER` (`compliance_owner` or `refusal_owner`) with an
+  `independent_grader` distinct from both gate owners, a pre-evaluation
+  `agreed_on` date (`<=` earliest evaluated case `as_of` date), and matching
+  `case_set_digest`, passing provisional runs resolve to
+  `GateResult.outcome == "unknown"` (`threshold_status =
+  "provisional_not_agreed"`), while threshold breaches or missing sets resolve
+  to `"fail"`.
+* `deterministic_rule_cards`, `observation_surface_digest`,
+  `compare_chat_against_rule_cards`, `verify_reply_grounding`,
+  `resolve_regulatory_surface` and
+  `RegulatoryChat` (`surface`, `RegulatoryChat.ship_gated(...)`, and automatic
+  `enforce_ship_gate` enforcement on `start()` and `ask()` — including
+  canonical `refuse_question` and isolated-copy `verify_reply_grounding` bundle
+  checks before persisting any ship-gated `ask()` turn — whenever
+  `ship_gate_comparison` is supplied) share unified
+  whole-bundle validation across
+  extractive rendering, deterministic card projection and expected-bundle
+  derivation, enforce canonical `refuse_question` checks (including bounded
+  progressive/modal compliance-satisfaction, legal-obligation and regulatory
+  sign-off paraphrase patterns) directly inside `RegulatoryChat.surface` before
+  returning either `chat` or actionable `rule_cards`, project active,
+  `as_of`-current deterministic rule cards only when every actionable card
+  carries substantiated `source_freshness` (constituent monitoring `status`,
+  `last_success`, `cadence_days` and `due_on` records matching aggregate
+  status, exact 3-way canonical `source_monitor` freshness `label`, date rollup
+  and source `currentness` across rendering, card projection and turn grading)
+  and exact per-card `provision_ids` linkage covering all active bundle
+  provisions without unflagged multi-version, duplicate-ID or divergent
+  `(safe_default, clock)` card-signature contradictions (isolating conflicting
+  snapshots under `conflict_provisions` with `cards = []` and `provisions = []`
+  when `conflict = True`, and failing closed on future-dated, held, draft,
+  partial, unreviewed, non-exercise, malformed-fact, unflagged-conflict,
+  unlinked-card, ambiguous multi-provision or explicitly refused bundles while
+  coercing non-canonical refusal text to `EMPTY_BUNDLE_REFUSAL`), verify
+  `gates_report["evaluated_outputs_sha256"]` and
+  `gates_report["report_integrity_sha256"]` alongside pre-evaluation dual-owner
+  agreement, full source/fact/card provenance, unconditional `expected`
+  ground-truth emptiness on refused/conflict turns, canonical refusal reason
+  membership across both expected/actual refused turns and standalone
+  adversarial `refuse` callbacks, `as_of` temporal currentness (including
+  UTC-conversion overflow guards) and per-case grades (requiring at least one
+  answer turn in `graded` and one prompt-triggered refused turn in
+  `adversarial`, and allowing only contract-valid canonical conservative
+  `false_refusal` envelopes under sub-`1.0` owner-agreed `min_rates` while
+  blocking any `unsafe_non_refusal`, `invalid_response` or missed standalone
+  adversarial prompt), check exact URL-encoded card routes
+  (`/api/law/cards/{quote(card_id, safe='')}`, where `card_id` is the
+  unversioned prefix of `card["id"]` with bounded ASCII `@v{version}`
+  alignment), versioned provision routes
+  (`/api/law/provisions/{quote(provision_id, safe='')}`) and full baseline
+  projection parity across answer and non-answer turns,   cryptographically bind non-synthetic paired `(role, participant, case_id,
+  task)` observations and mandatory timezone-aware `[agreed_on,
+  evaluation_timestamp]` observation timestamps (`observed_at` or
+  `recorded_at`, rejecting ambiguous date-only strings, post-evaluation
+  same-day instants, and owner gate / threshold / accepted-check definitions
+  post-dating observations) to
+  evaluated `cards` and `chat` surfaces via `observation_surface_digest`,
+  compare extractive chat against cards on non-regressing paired task
+  completion/comprehension/total-effort lift (`min_*_gain in [0, 1]`,
+  `max_elapsed_ratio in (0, 1]`) across `repairs`, `housing` and `grants`,
+  critical hazard misses across both `chat` and `cards` arms and beside-cost
+  economics (`cost_per_accepted_check`, `authorise_model_run`, plus an exact
+  unrounded check against the caller-supplied pre-evaluation owner-agreed
+  unit-cost ceiling `max_ai_cost_per_accepted_check_gbp` in
+  `benefit_thresholds` with zero repository-wide price or budget constants
+  while `BRD OD-51` remains open), stamp `evidence_scope =
+  "offline_workflow_evaluation_not_live_release_approval"`, verify `chat_reply`
+  directly against `bundle` via `grade_chat_turn`, and enforce `ship_mode =
+  "cards_only"` (`cards_alone = True`, `chat = None`) by default whenever chat
+  lacks measured value, exceeds its owner-agreed unit-cost ceiling or lacks
+  bundle grounding over deterministic rule cards with links. This remains an
+  offline workflow evaluation proof, not live model approval or operational
+  release sign-off.
+
+```bash
+cd src/core && python3 -m unittest discover -s tests -p 'test_*216*.py' -v
+```
+
 ### Version-bound affected-person challenges (#220)
 
 The existing resident operation records supplied challenges against retained
