@@ -234,8 +234,14 @@ class ExceptionRegisterScreen(unittest.TestCase):
         self.assertEqual(len(tables), 2)
         for table in tables:
             self.assertEqual(table["kids"][0]["tag"], "caption")
-            for th in (n for n in walk(table) if n["tag"] == "th"):
+            thead = next(k for k in table["kids"] if k["tag"] == "thead")
+            for th in (n for n in walk(thead) if n["tag"] == "th"):
                 self.assertEqual(th["attrs"]["scope"], "col")
+            tbody = next(k for k in table["kids"] if k["tag"] == "tbody")
+            for row in (k for k in tbody["kids"] if k["tag"] == "tr"):
+                self.assertEqual(row["kids"][0]["tag"], "th")
+                self.assertEqual(row["kids"][0]["attrs"]["scope"], "row")
+                self.assertTrue(all(cell["tag"] == "td" for cell in row["kids"][1:]))
         for region in (n for n in nodes if (n.get("attrs") or {}).get("role") == "region"):
             self.assertEqual(region["attrs"]["tabindex"], 0)
 
