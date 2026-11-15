@@ -1,0 +1,72 @@
+{
+  "task_id": "2026-11-15-wcag-baseline-151-c2",
+  "task_slug": "wcag-baseline-151-c2",
+  "parent_task": {
+    "task_id": "2026-11-15-wcag-baseline-151",
+    "task_slug": "wcag-baseline-151"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": null,
+    "plan": ".copilot-tracking/plans/2026-11-15/wcag-baseline-151-c2-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/wcag-baseline-151-c2-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/wcag-baseline-151-c2-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/wcag-baseline-151-c2-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/wcag-baseline-151-c2-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Confirmed automatic child RPI loop (c2) on branch feat/ux-151-wcag-baseline continuing parent task 2026-11-15-wcag-baseline-151 under the Focused validation tier to resolve the rev-151-wcag NO_SKIP_LINK regression in test_epic149_landmarks_skip_link_focus_order.py, apply ruff format --isolated --line-length 100 to test_accessibility_baseline.py and test_wcag_workbench_baseline_151.py, run targeted validation, update .copilot-tracking/ changes and reviews artifacts while preserving prior cycle evidence, and commit locally without pushing.",
+      "status": "confirmed",
+      "evidence": "Caller prompt in non-interactive CLI execution; parent session .copilot-tracking/rpi-sessions/2026-11-15/wcag-baseline-151-state.json"
+    },
+    {
+      "decision": "Research disposition: satisfied-and-skipped; Planning Readiness: Ready. Caller-supplied rev-151-wcag finding and direct inspection of src/api/tests/test_epic149_landmarks_skip_link_focus_order.py:29,179-182 and src/api/src/zava_forward/api/web/welcome.html:10 fully ground the shrink-only NO_SKIP_LINK = {'/law.html'} update and ruff format alignment.",
+      "status": "confirmed",
+      "evidence": "src/api/tests/test_epic149_landmarks_skip_link_focus_order.py:29,179-182; src/api/src/zava_forward/api/web/welcome.html:10; .copilot-tracking/changes/2026-11-15/wcag-baseline-151-changes.md"
+    },
+    {
+      "decision": "Plan critique executed once (status: Complete, verdict: Pass, 0 findings). Plan and phase details finalized as Ready without repeating critique.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/wcag-baseline-151-c2-plan-critique.md; .copilot-tracking/plans/2026-11-15/wcag-baseline-151-c2-plan.md"
+    },
+    {
+      "decision": "Implementation complete across full plan P01 (P01-T01, P01-T02); NO_SKIP_LINK shrunk to {'/law.html'}, isolated 100-column formatting applied preserving sites==9 substring guard, and all targeted/coupled validation gates passed.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-15/wcag-baseline-151-c2-changes.md"
+    },
+    {
+      "decision": "Post-implementation Review executed once (execution status: Complete; outcome: Conformant; assessed boundary: full task P01; 0 findings). Historical Cycle 1 artifacts preserved intact.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/wcag-baseline-151-c2-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked follow-up work item, Stop automatic session, or Switch to manual mode."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Add a .skip-link bypass anchor and polite status region to standalone /law.html if brought into workbench conformance scope",
+      "rationale": "Highest ease of implementation (single HTML file) and closes the remaining NO_SKIP_LINK = {'/law.html'} entry without touching regulatory snapshots.",
+      "evidence": "docs/reference/research/ux/wcag-conformance-baseline.md (## Recorded gaps); src/api/tests/test_epic149_landmarks_skip_link_focus_order.py:29"
+    },
+    {
+      "rank": 2,
+      "task": "Apply Web Interface Guidelines typography and locale polish (RV-001: tabular-nums on numeric columns, Intl.NumberFormat in bars(), and <meta name=\"theme-color\"> on HTML entrypoints)",
+      "rationale": "Low implementation effort with clean CSS/Intl engineering-quality leverage across all 15 workbench tables and Overview charts.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/wcag-baseline-151-review.md (RV-001)"
+    },
+    {
+      "rank": 3,
+      "task": "Author a11y-runtime.config.json and integrate rendered Playwright / axe-core regression probes into hosted CI (#155)",
+      "rationale": "High assurance value complementing static and Node-VM checks with rendered bounding-box target-size, focus-obscured, and computed-contrast checks across workbench states.",
+      "evidence": "docs/reference/research/ux/wcag-conformance-baseline.md; .copilot-tracking/research/2026-11-15/wcag-baseline-151-research.md (C22, C24)"
+    }
+  ]
+}

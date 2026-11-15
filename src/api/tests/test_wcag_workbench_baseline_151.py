@@ -494,7 +494,7 @@ vm.runInContext(progressSrc, ctx);
                 start = max(0, match.start() - 180)
                 prefix = text[start : match.start()]
                 after = text[match.start() : match.start() + 360]
-                site = f"{path.name}:{text[:match.start()].count(chr(10)) + 1}"
+                site = f"{path.name}:{text[: match.start()].count(chr(10)) + 1}"
                 self.assertIn('class: "table-scroll"', prefix, site)
                 self.assertIn('role: "region"', prefix, site)
                 self.assertIn("tabindex", prefix, site)
