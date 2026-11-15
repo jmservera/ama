@@ -95,7 +95,9 @@ const ROLE_HASH_SCREENS = {
   "#/role/housing_officer": "resident-service-issues",
   "#/role/resident_engagement": "resident-choice",
   "#/role/procurement": "procurement-packages",
-  "#/role/contractor": "contractor-job-pack"
+  "#/role/contractor": "contractor-job-pack",
+  "#/role/programme_manager": "programme-queue",
+  "#/role/retrofit_coordinator": "programme-queue"
 };
 const residentJumpNav = (sections, label = "Sections of this view") => h("nav", { role: "navigation", "aria-label": label, class: "screen-links" },
   sections.map(([id, title]) => h("a", { href: `#${id}-heading`, "data-jump": `${id}-heading`, "data-jump-target": `${id}-heading` }, `Go to ${title}`)));
@@ -442,6 +444,12 @@ const programmeHeadings = ["Home", "Return reason", "Sender", "Current owner",
 // The link keeps the scope that filtered the rows, so it cannot go stale between Apply and paging.
 // Its page is the sidebar page (screenPageSize rows) holding the row, counted over the unfiltered loaded page.
 const programmeCell = (scope, items, offset) => (value, column) => {
+  if (column === 1) {
+    const text = screenValue(value);
+    if (text.startsWith("State: Returned.")) return h("span", { class: "flag danger", "data-state-cue": "returned" }, text);
+    if (text.includes("Handoff state:")) return h("span", { class: "flag", "data-state-cue": "handoff" }, text);
+    return h("span", { class: "flag", "data-state-cue": "not-returned" }, text);
+  }
   if (column !== programmeHeadings.length - 1) return screenValue(value);
   const position = offset + items.findIndex((row) => row.id === value);
   const base = screenHref("programme-queue", value, Math.floor(position / screenPageSize), false);
@@ -455,13 +463,13 @@ function programmeQueue(first, total, loadPage, start = 0) {
   const holder = h("div", {});
   const status = h("p", { role: "status", "aria-live": "polite", id: "programme-filter-status" });
   const paging = h("p", { class: "empty", role: "status", "aria-live": "polite", id: "programme-page-status" });
-  const select = h("select", { id: "programme-scope", name: "scope" },
+  const select = h("select", { id: "programme-scope", name: "scope", "aria-describedby": "programme-page-status programme-filter-status" },
     programmeScopes.map(([value, text]) => h("option", { value }, text)));
   const apply = (scope, remember = true) => {
     if (remember) programmeKeepScope(scope);
     const rows = items.filter((row) => programmeIn(row, scope));
     status.textContent = `${rows.length} of ${items.length} records on this page shown. Scope: ${programmeScopes.find(([v]) => v === scope)[1]}. Filtering changes the view only; no record is changed.`;
-    holder.replaceChildren(screenTable("Shared queue: returned and handed-off work", programmeHeadings, rows.map(programmeRow), 50, programmeCell(scope, items, offset)));
+    holder.replaceChildren(screenTable("Shared queue: returned and handed-off work", programmeHeadings, rows.map(programmeRow), 50, programmeCell(scope, items, offset), true));
   };
   const pageText = () => `Showing cases ${total ? offset + 1 : 0} to ${offset + items.length} of ${total} permitted cases. The scope filter applies to this page only; open the other pages to see the rest. Not a portfolio total.`;
   let prevButton = null;
@@ -516,10 +524,10 @@ function programmeQueue(first, total, loadPage, start = 0) {
 }
 const programmeFunnel = (report) => {
   const rows = report?.funnel;
-  if (!Array.isArray(rows)) return h("p", { class: "empty" }, "State: Unknown. Lifecycle and funnel counts are Unknown. No record was supplied.");
+  if (!Array.isArray(rows)) return h("p", { class: "empty", "data-state-cue": "unknown" }, "State: Unknown. Lifecycle and funnel counts are Unknown. No record was supplied.");
   return h("div", {},
-    h("p", {}, `State: Recorded stage history (not a pass). Recorded as of ${screenValue(report.as_of)}. Audit integrity state: ${screenValue(report.audit_integrity)}. Conversion state: Unknown; counts are stage history only.`),
-    screenTable("Lifecycle and funnel by stage",
+    h("p", { class: "status-line wait", "data-state-cue": "stage-history" }, `State: Recorded stage history (not a pass). Recorded as of ${screenValue(report.as_of)}. Audit integrity state: ${screenValue(report.audit_integrity)}. Conversion state: Unknown; counts are stage history only.`),
+    screenRecordTable("Lifecycle and funnel by stage",
       ["Stage", "Entries", "Exits", "Returns", "Reopens", "Cases in scope"],
       rows.map((r) => [r.stage, r.entries, r.exits, r.returns, r.reopens, r.denominator])));
 };
@@ -665,8 +673,15 @@ function journeyStageMap(c, current = null) {
 // Text prefix for each step state (WCAG 1.4.1). Unrecognised states fall back to Warning, never Pass: no state here is a pass.
 const programmeStatePrefix = { "Blocked": "Action needed", "Blocked: evidence missing": "Action needed", "No recorded blocker": "Warning" };
 const programmeStateLabel = (state) => `${Object.hasOwn(programmeStatePrefix, state) ? programmeStatePrefix[state] : "Warning"}: ${state}`;
+const programmeStepCell = (value, column) => {
+  const text = screenValue(value);
+  if (column !== 1) return text;
+  return text.startsWith("Blocked")
+    ? h("span", { class: "flag danger", "data-state-cue": "action-needed" }, text)
+    : h("span", { class: "flag", "data-state-cue": "warning" }, text);
+};
 const programmeJumpNav = (label, sections) => h("nav", { "aria-label": label, class: "screen-links" },
-  sections.map(([id, text]) => h("a", { href: `#${id}`, "data-jump": id }, `Go to ${text}`)));
+  sections.map(([id, text]) => h("a", { href: `#${id}`, "data-jump": id, "data-jump-target": id }, `Go to ${text}`)));
 const programmeOverviewSections = [
   ["programme-overview-boundary", "Overview boundary"],
   ["programme-shared-queue", "Shared queue"],
@@ -712,13 +727,13 @@ registerRoleScreen({
         h("p", {}, "Technical, resident, delivery, quality and finance states are shown independently. One clear state never clears another."),
         programmeJumpNav("Jump to a section of the connected home view", programmeSections),
         blocked.length ? screenUnknown(`${blocked.length} of 5 steps are blocked: ${blocked.map((r) => r[0]).join(", ")}.`,
-          blocked[0][3], blocked[0][4]) : h("p", {}, "State: Warning. No blocker is recorded, which does not confirm readiness."),
+          blocked[0][3], blocked[0][4]) : h("p", { class: "status-line wait", "data-state-cue": "warning" }, "State: Warning. No blocker is recorded, which does not confirm readiness."),
         screenJumpTarget("programme-summary", h("div", {},
           h("h3", {}, "State summary in words"),
           h("p", {}, "Each state starts with a word so it does not depend on colour. A step with no recorded blocker is a warning, not a pass."),
           h("ul", {}, rows.map(([name, state, meaning, owner, action]) => h("li", {},
             `${programmeStateLabel(state)}: ${name} step. ${meaning} Owner: ${owner}. Next action: ${action}.`))))),
-        screenJumpTarget("programme-steps", screenTable("Same-home step states", ["Step", "State", "Meaning", "Owner", "Next action"], rows))),
+        screenJumpTarget("programme-steps", screenTable("Same-home step states", ["Step", "State", "Meaning", "Owner", "Next action"], rows, 50, programmeStepCell, true))),
       screenJumpTarget("programme-journey", journeyStageMap(c)),
       screenTension("disclosure"),
       screenJumpTarget("programme-withheld", screenWithheld(["Resident contact details and access history (use the safe route reference in the case workspace)",
