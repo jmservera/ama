@@ -70,8 +70,10 @@ The notation $F_t$ denotes the state after feature $t$, and $P_t$ the state
 after its assigned post-step; these coincide in feature-only arms A and D.
 Thus $P_{10}$ is the final ten-feature repository before the withheld extension.
 Every selected model, GPT~6.1 Sol, Sonnet~5.5 and Gemini~4 Argon,
-runs every arm. Randomised interleaving within model/replicate blocks
-uses seed 2027. Feature steps, tests and checkpoints are repeated
+runs every arm. The scheduler randomises model order within each replicate, then arm order
+within each model, using seed 2027. Its parallel dispatcher can admit later
+eligible trajectories as workers become free; a five-arm scheduling group
+is therefore not a synchronized execution batch. Feature steps, tests and checkpoints are repeated
 observations within a trajectory, not independent replicates; agent
 sessions are not independent units either. The selected number $n$ applies
 \emph{per model per arm}, equally across all fifteen cells.
@@ -525,13 +527,16 @@ component intervals under independent runs with a common success
 probability within each cell. Aggregate contrasts must preserve model
 strata. The coverage calculation supplies no power guarantee for CR1.
 
-\subsection{Historical resource planning and operational boundaries}\label{sec:prerun}
+\subsection{Resource and information boundaries}\label{sec:prerun}
 
-The following resource scenarios and feasibility criteria retain the
-2--5 November planning record. In particular, their full ten-feature
-calibration differs from the short calibration disclosed for ongoing
-unregistered execution. They are not measured costs, a current affordability
-approval or evidence that historical launch gates were satisfied.
+The experiment distinguishes resources an agent could use from resources
+it actually consumed. A larger allowance may leave spending unchanged
+when a session exits early; a transport interruption may leave a charge
+unknown even after the development work is complete. The results report
+observations and unresolved liabilities separately. Historical planning
+scenarios remain in Supplement Section~\ref{app:resources}, including
+Table~\ref{tab:pilotresources}; they retain the earlier full-calibration
+assumption and do not establish that historical launch gates were met.
 
 The actual aggregate envelope remains 300,000 AI credits, with a
 270,000-credit local admission ceiling. Prior spending and provisions for
@@ -542,63 +547,10 @@ Original 300-credit sessions use a 270-credit soft limit; D's
 In-flight responses can overshoot; these are not provider billing caps.
 No verified dollar conversion is available.
 
-Each study trajectory contains ten feature cycles and one CR1 session,
-the latter capped at 45 minutes and 300 nominal credits in every arm.
-A/D therefore have eleven sessions per trajectory; B/C/E have twenty-one.
-A allows at most 5.75 agent-hours and 3,300 nominal credits per study
-trajectory; B/C/D/E each allow 8.25 hours and 6,300 credits.
-Across three models and five arms, the study has $15n$ trajectories,
-$3n[2(11)+3(21)]=255n$ sessions,
-$3n[5.75+4(8.25)]=116.25n$ maximum agent-hours and
-$3n[3300+4(6300)]=85500n$ nominal session credits.
-
-The historical excluded cost-only calibration scenario retains one trajectory per model per arm:
-15 trajectories, ten features each and no CR1. A/D have ten sessions and
-B/C/E twenty; A allows five hours and 3,000 credits, and B/C/D/E each
-allow 7.5 hours and 6,000 credits. Thus calibration adds 240 sessions,
-105 maximum agent-hours and 81,000 nominal credits, independent of $n$.
-
-\begin{table}[!htbp]
-\centering\small
-\caption{Historical five-arm resource scenarios for the offered choices of $n$ per
-model per arm; the historical default column is bold. These are summed nominal
-session allowances and time ceilings, not expenditure or enlarged budgets.
-Every choice exceeds the aggregate envelope at nominal session caps.}
-\label{tab:pilotresources}
-\begin{tabularx}{\textwidth}{@{}Y>{\bfseries}rrr@{}}
-\toprule
-Quantity & $n=12$ (default) & $n=21$ & $n=33$ \\
-\midrule
-Study trajectories per arm, all models & 36 & 63 & 99 \\
-Study trajectories, all arms & 180 & 315 & 495 \\
-Study sessions, including CR1 & 3,060 & 5,355 & 8,415 \\
-Study maximum agent-hours & 1,395.00 & 2,441.25 & 3,836.25 \\
-Study nominal session credits & 1,026,000 & 1,795,500 & 2,821,500 \\
-Excluded calibration trajectories, no CR1 & 15 & 15 & 15 \\
-Excluded calibration sessions & 240 & 240 & 240 \\
-Calibration maximum agent-hours & 105.00 & 105.00 & 105.00 \\
-Calibration nominal session credits & 81,000 & 81,000 & 81,000 \\
-Combined trajectories & 195 & 330 & 510 \\
-Combined sessions & 3,300 & 5,595 & 8,655 \\
-Combined maximum agent-hours & 1,500.00 & 2,546.25 & 3,941.25 \\
-Combined nominal session credits & 1,107,000 & 1,876,500 & 2,902,500 \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-Combined nominal allowances are $85500n+81000$ credits and maximum
-agent-hours are $116.25n+105$. At default $n=12$, 1,107,000 nominal credits
-and 3,300 sessions including calibration do not authorize spending beyond
-the unchanged 300,000-credit envelope or 270,000-credit admission ceiling.
-Excluded calibration informs cost and time feasibility only, not outcome-
-or variance-driven sample resizing. Its cost forecast must show that the
-entire selected allocation, including CR1 and all-attempt liabilities, fits
-remaining admission and the deadline after prior spend and unknown-usage
-holds. Otherwise halt before study collection. A different allocation
-requires a separately authorized prospective amendment and a new saved
-study, never a changed allocation on resume or a silent reduction to fit
-the budget. An interrupted or unaffordable study retains its selected
-allocation and is reported incomplete.
+The historical plan required the selected allocation, calibration and
+all-attempt liabilities to fit the remaining envelope and deadline before
+collection. It prohibited outcome-driven resizing or silent reductions to
+fit the budget. Its detailed arithmetic remains in the Supplement.
 The launcher inspected on 5 November enforces attempt and aggregate admission but does
 not compute or approve that full-allocation forecast. A dated researcher
 forecast and approval are required separately; a nonempty calibration
@@ -1061,6 +1013,7 @@ Manipulation check: Structural hygiene (\texttt{H3}, \texttt{H4}) & Arm~B reduce
 \end{tabularx}
 \end{table}
 \else
+% Historical conditional plotting requests: active results exist, but the original full F/P and all-attempt-cost requirements still need the dated disposition in anc/revision-report.md.
 % TODO(author): PF1 requires actual F/P checkpoint vectors, eligibility and missingness.
 % TODO(author): PF2 requires actual CR1 vectors, prerequisites, assistance and all-attempt costs.
 % TODO(author): PF3 requires actual final coverage and attributable delivery credits.

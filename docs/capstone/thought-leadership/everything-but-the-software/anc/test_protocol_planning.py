@@ -103,7 +103,10 @@ class ProtocolPlanningTests(unittest.TestCase):
                 )
 
     def test_given_allocation_choices_when_totaled_then_all_39_resource_cells_match(self) -> None:
-        rows = table_rows(self.protocol, "tab:pilotresources")
+        rows = table_rows(
+            (PACKAGE / "anc/measurement-provenance.tex").read_text(encoding="utf-8"),
+            "tab:pilotresources",
+        )
         expected = [resources(n) for n in ALLOCATIONS]
         self.assertEqual([row[0] for row in rows], list(expected[0]))
         for row in rows:
@@ -206,7 +209,9 @@ class ProtocolPlanningTests(unittest.TestCase):
             self.assertIn(marker, text)
 
     def test_given_cost_sensitivity_when_evaluated_then_all_nine_cells_match(self) -> None:
-        rows = table_rows(self.manuscript, "tab:costscenario")
+        rows = table_rows(
+            (PACKAGE / "anc/case-audits.tex").read_text(encoding="utf-8"), "tab:costscenario"
+        )
         self.assertEqual(len(rows), 3)
         for row, delta in zip(rows, (Fraction(0), Fraction(1, 2), Fraction(1))):
             self.assertEqual(len(row), 4)

@@ -21,6 +21,18 @@ Current body \cite{alpha}.\label{known}\ref{known}
 
 
 class PaperCheckerTests(unittest.TestCase):
+    def test_given_optional_acknowledgements_when_counted_then_back_matter_is_excluded(self) -> None:
+        from check_paper import body_words
+
+        body = r"\section{Introduction}Two words."
+        for boundary in (
+            r"\section*{Acknowledgements}",
+            r"\section*{Author contributions}",
+            r"\begin{thebibliography}{1}",
+        ):
+            with self.subTest(boundary=boundary):
+                self.assertEqual(body_words(body + boundary + "Back matter."), body_words(body))
+
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory(prefix="paper-tooling-", dir="/tmp")
         self.addCleanup(self.temporary.cleanup)

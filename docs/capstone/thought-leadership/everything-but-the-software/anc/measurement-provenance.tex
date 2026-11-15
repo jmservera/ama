@@ -935,6 +935,94 @@ Total & Sixteen execution sources; 315 allocated trajectories, 315 complete & 5,
 \end{table}
 
 \FloatBarrier
+\subsection{Scheduling evidence and remaining chronology}\label{app:scheduling}
+
+The 15 November read-only inspection used the public source and exports at
+\sourceref{R17}. In \nolinkurl{harness/study.py}, lines 286--323 shuffle
+model order within each replicate and arm order within each model using
+the configured seed. Lines 2141--2180 dispatch eligible trajectories through
+a worker pool, admitting new work as workers finish and deferring routes
+subject to backoff. Thus the intended allocation interleaves arms, while
+actual overlaps can cross scheduling groups.
+
+The published \nolinkurl{runs.csv} contains all 315 trajectories in 63
+model/replicate groups, each containing A--E. The 5,372-row
+\nolinkurl{attempts.csv} retains source assignments across sixteen epochs,
+but has no per-attempt start or finish timestamp columns.
+The separate \nolinkurl{provenance.json} records parallelism changing from
+ten to eight and controller-start metadata. CSV row order is an export
+order, not a measured wall-clock execution order. The earlier operator
+inspection found per-attempt starts and durations in retained state;
+reconciling those records with amendments and outcome access remains
+necessary. Neither the scheduler nor the export grouping establishes
+independent provider-service conditions or resolves the bootstrap choice.
+
+\subsection{Historical resource planning scenarios}\label{app:resources}
+
+These scenarios retain the 2--5 November planning record. Their full
+ten-feature calibration differs from the short calibration disclosed for
+the unregistered execution. They are not measured costs, a current
+affordability approval or evidence that historical launch gates were met.
+
+Each study trajectory contains ten feature cycles and one CR1 session,
+the latter capped at 45 minutes and 300 nominal credits in every arm.
+A/D therefore have eleven sessions per trajectory; B/C/E have twenty-one.
+A allows at most 5.75 agent-hours and 3,300 nominal credits per study
+trajectory; B/C/D/E each allow 8.25 hours and 6,300 credits.
+Across three models and five arms, the study has $15n$ trajectories,
+$3n[2(11)+3(21)]=255n$ sessions,
+$3n[5.75+4(8.25)]=116.25n$ maximum agent-hours and
+$3n[3300+4(6300)]=85500n$ nominal session credits.
+
+The historical excluded cost-only calibration scenario retains one trajectory per model per arm:
+15 trajectories, ten features each and no CR1. A/D have ten sessions and
+B/C/E twenty; A allows five hours and 3,000 credits, and B/C/D/E each
+allow 7.5 hours and 6,000 credits. Thus calibration adds 240 sessions,
+105 maximum agent-hours and 81,000 nominal credits, independent of $n$.
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Historical five-arm resource scenarios for the offered choices of $n$ per
+model per arm; the historical default column is bold. These are summed nominal
+session allowances and time ceilings, not expenditure or enlarged budgets.
+Every choice exceeds the aggregate envelope at nominal session caps.}
+\label{tab:pilotresources}
+\begin{tabularx}{\textwidth}{@{}Y>{\bfseries}rrr@{}}
+\toprule
+Quantity & $n=12$ (default) & $n=21$ & $n=33$ \\
+\midrule
+Study trajectories per arm, all models & 36 & 63 & 99 \\
+Study trajectories, all arms & 180 & 315 & 495 \\
+Study sessions, including CR1 & 3,060 & 5,355 & 8,415 \\
+Study maximum agent-hours & 1,395.00 & 2,441.25 & 3,836.25 \\
+Study nominal session credits & 1,026,000 & 1,795,500 & 2,821,500 \\
+Excluded calibration trajectories, no CR1 & 15 & 15 & 15 \\
+Excluded calibration sessions & 240 & 240 & 240 \\
+Calibration maximum agent-hours & 105.00 & 105.00 & 105.00 \\
+Calibration nominal session credits & 81,000 & 81,000 & 81,000 \\
+Combined trajectories & 195 & 330 & 510 \\
+Combined sessions & 3,300 & 5,595 & 8,655 \\
+Combined maximum agent-hours & 1,500.00 & 2,546.25 & 3,941.25 \\
+Combined nominal session credits & 1,107,000 & 1,876,500 & 2,902,500 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Combined nominal allowances are $85500n+81000$ credits and maximum
+agent-hours are $116.25n+105$. At default $n=12$, 1,107,000 nominal credits
+and 3,300 sessions including calibration do not authorize spending beyond
+the unchanged 300,000-credit envelope or 270,000-credit admission ceiling.
+Excluded calibration informs cost and time feasibility only, not outcome-
+or variance-driven sample resizing. Its cost forecast must show that the
+entire selected allocation, including CR1 and all-attempt liabilities, fits
+remaining admission and the deadline after prior spend and unknown-usage
+holds. Otherwise halt before study collection. A different allocation
+requires a separately authorized prospective amendment and a new saved
+study, never a changed allocation on resume or a silent reduction to fit
+the budget. An interrupted or unaffordable study retains its selected
+allocation and is reported incomplete.
+
+\FloatBarrier
 \subsection{Active AI review and consolidation prompt examples}\label{app:activeprompts}
 
 These are the exact checked-in B/C templates at the active source commit,

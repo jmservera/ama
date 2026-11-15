@@ -55,7 +55,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         )
         for name, (sha256, _) in PROMPTS.items():
             self.assertEqual(bindings["literal_inputs"][f"anc/{name}"], sha256)
-        for name, sha256 in bindings["provenance_readability_revision"]["source_sha256"].items():
+        for name, sha256 in bindings["narrative_learning_revision"]["source_sha256"].items():
             with self.subTest(source=name):
                 self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), sha256)
 
@@ -169,7 +169,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
 
     def test_judging_delivery_binding_preserves_the_historical_measurement_record(self):
         bindings = json.loads((ANC / "supplement-integration.json").read_text())
-        current = bindings["provenance_readability_revision"]
+        current = bindings["narrative_learning_revision"]
         finalization = bindings["finalization_revision"]
         runtime_flow = bindings["runtime_flow_revision"]
         historical = bindings["measurement_provenance_revision"]
@@ -178,9 +178,8 @@ class MeasurementProvenanceTests(unittest.TestCase):
             hashlib.sha256((PACKAGE / "main.pdf").read_bytes()).hexdigest(),
             current["delivery_sha256"],
         )
-        self.assertEqual(current["delivery_pages"], 70)
-        self.assertLessEqual(current["delivery_pages"], bindings["chart_interpretation_revision"]["delivery_pages"])
-        self.assertEqual(current["prior_delivery_revision"], "chart_interpretation_revision")
+        self.assertEqual(current["prior_delivery_revision"], "provenance_readability_revision")
+        self.assertEqual(bindings["provenance_readability_revision"]["delivery_pages"], 70)
         self.assertEqual(bindings["chart_interpretation_revision"]["delivery_pages"], 70)
         self.assertEqual(bindings["chart_interpretation_revision"]["supplement_start_page"], 51)
         self.assertEqual(bindings["final_results_revision"]["delivery_pages"], 69)
@@ -383,9 +382,11 @@ class MeasurementProvenanceTests(unittest.TestCase):
         )
 
         self.assertIn("owner-reported manager approval", approval_note)
-        self.assertIn("27 October 2026 CELA submission", approval_note)
-        self.assertIn("confirm that the applicable clearance process covers the final draft", approval_note)
-        self.assertIn("not a separately inspected final-version clearance", approval_note)
+        self.assertIn("AICC acknowledgement of 14 November 2026", approval_note)
+        self.assertIn("expected by 29 November 2026, not guaranteed approval", approval_note)
+        self.assertIn("Confirm that the applicable clearance process covers the final draft", approval_note)
+        self.assertIn("CELA/final-version clearance remains pending", approval_note)
+        self.assertNotIn("27 October 2026 CELA submission", approval_note)
         self.assertNotIn("CELA approved", approval_note)
 
     def test_given_finalization_when_metadata_recovered_then_history_is_not_rerun(self):
@@ -418,9 +419,10 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("institutional-abstract support", source_review)
 
     def test_given_falsifiable_predictions_when_read_then_verdicts_and_future_design_are_explicit(self):
+        from check_paper import expand_inputs
         from test_protocol_planning import table_rows
 
-        manuscript = " ".join((PACKAGE / "main.tex").read_text().split())
+        manuscript = " ".join(expand_inputs((PACKAGE / "main.tex").read_text()).split())
         protocol = " ".join((ANC / "experiment-protocol.tex").read_text().split())
         rows = table_rows((ANC / "experiment-protocol.tex").read_text(), "tab:predictionverdicts")
 
@@ -438,7 +440,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
             "N=30",
             "Latin-square",
             r"2\times2",
-            "Sonnet +0.26 and Gemini +0.15 intervals span zero",
+            "Sonnet~5.5 and Gemini~4 Argon showed small B--D gains",
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, manuscript)
@@ -578,7 +580,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("acquisition means implementing a required capability", prose)
         self.assertIn("identification bounds instead span the possible success rates", prose)
         self.assertIn("sampling uncertainty", prose)
-        self.assertIn("proposed for a separately registered follow-up", manuscript)
+        self.assertIn("not an approved protocol", manuscript)
         self.assertNotIn("those options execution", manuscript)
 
 if __name__ == "__main__":

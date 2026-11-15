@@ -1,6 +1,6 @@
 ---
-title: Everything but the Software - source package (draft v21)
-description: Readable narrative and deduplicated provenance register with preserved results in one article and additive Supplement
+title: Everything but the Software - source package (draft v22)
+description: Findings-led narrative, author-TODO disposition and future-study learning with preserved evidence in one additive Supplement
 ms.date: 2026-11-15
 ---
 
@@ -12,20 +12,24 @@ The title is unchanged at the owner's request. The current
 [paper](./main.pdf) and [source](./main.tex) explain the completed exploratory
 study through its principal findings: largely stable retention, selective
 benefits from consolidation or review, and additional resource cost.
-The [Supplement](./main.pdf#page=48) retains the detailed results, uncertainty,
-calibration and execution record in the same 70-page document.
-The [source and digest register](./main.pdf#page=68) occupies the final
+The [Supplement](./main.pdf#page=45) retains the detailed results, uncertainty,
+calibration and execution record in the same 72-page document.
+The [source and digest register](./main.pdf#page=70) occupies the final
 three pages; full identifiers no longer interrupt the narrative.
 The supplement is additive: source-specific qualifications, detailed
 method/rival checks, the frozen prompt, deferred rates and provenance.
 Repeated Background text, figures and case narratives are excluded from
-the current build; their earlier source versions remain in Git.
+the current build; their earlier source versions remain in Git. Detailed
+theory, illustrative economics, follow-up candidates and historical resource
+arithmetic now sit in the existing Supplement, not a second document.
 The standalone supplement PDF/TeX/bibliography were removed at the owner's
 request after exact archive readback and restore checks; their original
 committed versions remain in Git at `80656f32`. No source evidence was discarded.
 
-The [15 November provenance and readability record](./anc/revision-report.md#provenance-and-readability-15-november)
-records the current v21 delivery. The
+The [15 November narrative and TODO record](./anc/revision-report.md#narrative-learning-and-todo-reconciliation-15-november)
+records the current v22 delivery and the remaining evidence plan. The
+[15 November provenance and readability record](./anc/revision-report.md#provenance-and-readability-15-november)
+retains the preceding v21 delivery. The
 [final-results and chart interpretation record](./anc/revision-report.md#final-results-and-chart-interpretation-15-november)
 preserves the preceding v20 delivery. The
 [14 November critique and falsifiability revision](./anc/revision-report.md#critique-and-falsifiability-revision-14-november)
@@ -50,6 +54,54 @@ calendar dates no longer lead the argument. The supplied
 [project-insights export](./anc/project-insights-2026-11-01.csv) supports the
 backlog handoff; its provenance and missing export metadata are in the
 [evidence index](./anc/case-evidence-matrix.json).
+
+### Narrative, Learning and TODO Reconciliation 15 November
+
+The revised account starts with a usable workflow interrupted despite completed
+issues and passing checks, then explains the decay conjecture and the
+consolidation test. Mostly stable retention, selective coverage gains and
+additional cost lead to a narrower conclusion rather than a claim that the
+conjecture was confirmed. Author reflections are attributed: stronger-than-
+expected model performance and the absence of the expected decay are reasons
+to reconsider the measurement design, not proof that harder tasks must decay.
+
+The next paper needs a separately designed, reviewed and prospectively
+registered study. Longer, more coupled work and a full HVE research, plan,
+implement and review comparison are candidates. Review's contribution must be
+distinguished from the package where feasible. Substantially larger resource
+approval is pending; no new run, judging call or protocol change was authorized.
+The earlier numerical candidates and untested hybrid remain in the Supplement.
+
+The [dated TODO disposition and remaining-work plan](./anc/revision-report.md#narrative-learning-and-todo-reconciliation-15-november)
+separates decisions now applied from evidence and approvals still needed.
+The supplied AICC acknowledgement records receipt on 14 November 2026,
+correcting the earlier 27 October account. The author's expected response
+date is 29 November, not guaranteed clearance. arXiv is the selected target;
+final-version clearance, both authors' final approval and current submission
+policy/source-bundle checks remain pending. Only coauthor review was reported;
+unsupported generic acknowledgements were removed.
+
+Read-only inspection of the public experiment source and exports establishes
+allocation/shuffling and asynchronous dispatch, not actual wall-clock order or
+independent provider conditions. VM access will support the remaining historical
+metadata, overlap and amendment/outcome-access chronology checks. It is not
+needed for the editorial changes already applied.
+
+The current PDF has 72 pages, with the Supplement beginning on page 45 rather
+than page 48 in v21. The shorter main route and retained detail take priority
+over an unchanged total page count. All 34 existing table data bodies, seven
+displayed equations, three literal prompts and 61 source-register bindings
+are preserved. No empirical/chart/diagram assets changed.
+
+The 73-test authoring run passed 72 tests; the native diagram-export test
+failed because the required Playwright browser was unavailable. A task-local
+download did not finish and was stopped; no passing exporter check is claimed.
+Structural checks pass. Tectonic produced the delivered PDF with only the
+inherited `inputenc` warning; page/text geometry, nonblank pages and unresolved
+reference checks pass, and selected rendered pages were inspected. The separate
+`narrative_learning_revision` binding preserves v21 and all earlier bindings.
+This focused editorial/tooling validation is not independent scientific review,
+hosted CI, employer clearance or arXiv acceptance.
 
 ### Provenance and Readability 15 November
 

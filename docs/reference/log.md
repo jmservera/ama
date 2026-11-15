@@ -11962,3 +11962,34 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
   No experiment, paid call, VM mutation, scoring/registration change, commit,
   push or external publication occurred; hosted CI and independent exact-head
   review remain unperformed.
+
+## [2026-11-15] update | White-paper narrative, learning and TODO disposition
+
+* Revised the [paper package](../capstone/thought-leadership/everything-but-the-software/README.md#narrative-learning-and-todo-reconciliation-15-november)
+  around the interrupted workflow, explicit hypotheses, mostly stable retention
+  and selective benefits, then methodological learning for a later paper.
+  Attributed author reflections and the full-RPI hypothesis remain distinct
+  from observed findings. Longer tasks and greater spending require a new
+  approved study, not a retroactive protocol change.
+* Moved detailed theory, assumed economics, future-design/hybrid candidates
+  and historical resource arithmetic into the existing additive Supplement.
+  The single PDF has 72 pages, with the Supplement starting on page 45,
+  three pages earlier than v21. All 34 existing table data bodies, seven
+  displayed equations, three prompts, 61 source bindings and unchanged
+  empirical/chart/diagram assets are preserved.
+* Recorded the [author-TODO disposition and remaining-work plan](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#narrative-learning-and-todo-reconciliation-15-november):
+  acknowledgement receipt is corrected to 14 November; an expected response
+  by 29 November is not clearance. Selected excerpt permission is scoped,
+  unsupported acknowledgements removed, and final-version author/employer
+  approval, arXiv/deposit checks and source verification remain separate.
+  Public scheduling/export inspection does not replace pending VM chronology
+  or establish independent provider conditions.
+* Structural checks pass; 72 of 73 authoring tests pass. The native browser
+  diagram-export test failed because its browser was unavailable; the
+  incomplete task-local download was stopped. Tectonic compilation and
+  nonblank/in-bounds/reference checks pass with only the inherited `inputenc`
+  notice; selected PDF renders were inspected. A coupled body-word counter
+  fix has one focused regression. The new v22 binding preserves earlier
+  records. No new experiment, paid call, VM access, scoring or registration
+  change, external submission, hosted CI or independent exact-head review
+  was performed.

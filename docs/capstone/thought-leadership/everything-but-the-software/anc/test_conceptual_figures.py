@@ -112,7 +112,7 @@ class ConceptualFigureTests(unittest.TestCase):
 
         self.assertNotRegex(narrative, r"\b(?:I|my|My|mine|myself|we|We|our|Our|me)\b")
         for stem in STEMS:
-            self.assertIn(f"{{{stem}.png}}", narrative)
+            self.assertIn(f"{{{stem}.png}}", source)
         for identifier in ("PF1", "PF2", "PF3"):
             self.assertIn(f"TODO(author): {identifier}", source)
         self.assertIn(r"\resultstrue", narrative)
