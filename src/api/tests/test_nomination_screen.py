@@ -257,6 +257,151 @@ console.log(JSON.stringify({
             self.assertIn("digital", sel["options"])
             self.assertIn("staff_recorded_non_digital", sel["options"])
 
+    def test_route_form_blur_change_preserves_refusal_message_while_input_and_select_clear(
+        self,
+    ) -> None:
+        blur_script = r"""
+const fs = require("node:fs");
+const src = fs.readFileSync(process.argv[1] + "/panels.js", "utf8");
+const header = src.slice(src.indexOf("const panelOwned = "), src.indexOf("\nfunction actForm"));
+const body = src.slice(
+  src.indexOf("function nominationPanel"),
+  src.indexOf("\nfunction affectedChallengePanel"),
+);
+let active = null;
+let rejectPending = null;
+globalThis.caseSession = {};
+globalThis.api = () => new Promise((_, reject) => { rejectPending = reject; });
+const h = (tag, attrs, ...kids) => {
+  const cleanAttrs = { ...(attrs || {}) };
+  const listeners = {};
+  for (const [k, v] of Object.entries(cleanAttrs)) {
+    if (k.startsWith("on") && typeof v === "function") {
+      listeners[k.slice(2)] = [v];
+      delete cleanAttrs[k];
+    }
+  }
+  const flatKids = kids.flat(Infinity).filter((k) => k !== null && k !== undefined && k !== false);
+  const node = {
+    tag,
+    tagName: tag.toUpperCase(),
+    attrs: cleanAttrs,
+    dataset: {},
+    listeners,
+    kids: flatKids,
+    value: cleanAttrs.value || "",
+    disabled: false,
+    hidden: Boolean(cleanAttrs.hidden),
+    textContent: flatKids.filter((k) => typeof k === "string").join(""),
+    validity: { valid: true },
+    get id() { return this.attrs.id || ""; },
+    set id(v) { this.attrs.id = String(v); },
+    setAttribute(k, v) { this.attrs[k] = String(v); },
+    removeAttribute(k) { delete this.attrs[k]; },
+    getAttribute(k) { return this.attrs[k] ?? null; },
+    addEventListener(type, fn) { (this.listeners[type] ||= []).push(fn); },
+    dispatch(type) {
+      for (const fn of this.listeners[type] || []) {
+        fn({ target: this, preventDefault() {} });
+      }
+    },
+    focus() {
+      const prev = active;
+      active = this;
+      if (prev && prev !== this && prev._dirtySinceFocus) {
+        prev._dirtySinceFocus = false;
+        prev.dispatch("change");
+      }
+    },
+  };
+  return node;
+};
+const findById = (n, target) => {
+  if (!n || typeof n !== "object") return null;
+  if (n.id === target) return n;
+  for (const k of n.kids || []) {
+    const hit = findById(k, target);
+    if (hit) return hit;
+  }
+  return null;
+};
+eval(header + "\n" + body);
+const details = nominationPanel._routeForm({
+  caseId: "ZF-1",
+  key: "challenge-open",
+  title: "Record challenge",
+  actionWord: "challenge",
+  refresh: async () => {},
+  fields: [
+    ["channel", "Route", [["digital", "Digital"], ["staff_recorded_non_digital", "Assisted"]], {
+      initial: "digital",
+    }],
+    ["assisted_channel", "Assisted channel", ["phone", "letter"], {
+      initial: "phone",
+      showWhen: (vals) => vals.channel === "staff_recorded_non_digital",
+    }],
+    ["request", "Supplied challenge details", null, { initial: "Initial supplied note" }],
+  ],
+  build: (vals) => vals,
+});
+(async () => {
+  const form = findById(details, "challenge-open");
+  const channel = findById(details, "challenge-open-channel");
+  const assisted = findById(details, "challenge-open-assisted_channel");
+  const request = findById(details, "challenge-open-request");
+  const feedback = findById(details, "challenge-open-feedback");
+  const submitPromise = form.listeners.submit[0]({ preventDefault() {} });
+  request.focus();
+  request.value = "Later evidence";
+  request._dirtySinceFocus = true;
+  request.dispatch("input");
+  const pendingFeedback = feedback.textContent;
+  rejectPending(Object.assign(new Error("Synthetic mutation result"), { status: 409 }));
+  await submitPromise;
+  const afterRefusalBlurFeedback = feedback.textContent;
+  const focusedAfterRefusal = active ? active.id : "";
+  request.setAttribute("aria-invalid", "true");
+  request.dispatch("input");
+  const afterGenuineInputFeedback = feedback.textContent;
+  const requestInvalidAfterInput = request.getAttribute("aria-invalid");
+  const assistedHiddenBeforeSelect = assisted.hidden;
+  channel.setAttribute("aria-invalid", "true");
+  globalThis.caseSession.rawFormStates.get("challenge-open").message = "Stale select error";
+  form.updateMutationState();
+  channel.value = "staff_recorded_non_digital";
+  channel.dispatch("change");
+  console.log(JSON.stringify({
+    pendingFeedback,
+    afterRefusalBlurFeedback,
+    focusedAfterRefusal,
+    afterGenuineInputFeedback,
+    requestInvalidAfterInput,
+    assistedHiddenBeforeSelect,
+    assistedHiddenAfterSelect: assisted.hidden,
+    channelInvalidAfterChange: channel.getAttribute("aria-invalid"),
+    feedbackAfterSelectChange: feedback.textContent,
+  }));
+})();
+"""
+        res = subprocess.run(
+            ["node", "-e", blur_script, str(WEB)],
+            text=True,
+            capture_output=True,
+            timeout=30,
+        )
+        self.assertEqual(res.returncode, 0, res.stderr)
+        out = json.loads(res.stdout)
+        self.assertIn("Recording the supplied evidence", out["pendingFeedback"])
+        self.assertEqual(out["focusedAfterRefusal"], "challenge-open-feedback")
+        self.assertIn("Synthetic mutation result", out["afterRefusalBlurFeedback"])
+        self.assertIn("Owner: your team manager", out["afterRefusalBlurFeedback"])
+        self.assertEqual(out["afterGenuineInputFeedback"], "")
+        self.assertIsNone(out["requestInvalidAfterInput"])
+        self.assertTrue(out["assistedHiddenBeforeSelect"])
+        self.assertFalse(out["assistedHiddenAfterSelect"])
+        self.assertIsNone(out["channelInvalidAfterChange"])
+        self.assertEqual(out["feedbackAfterSelectChange"], "")
+
 
 if __name__ == "__main__":
     unittest.main()

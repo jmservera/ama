@@ -1,0 +1,77 @@
+{
+  "task_id": "nomination-api-routes-130-c2",
+  "task_slug": "nomination-api-routes-130-c2",
+  "parent_task": {
+    "task_id": "nomination-api-routes-130-ci-fix",
+    "task_slug": "nomination-api-routes-130-ci-fix"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/nomination-api-routes-130-c2-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/nomination-api-routes-130-c2-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/nomination-api-routes-130-c2-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/nomination-api-routes-130-c2-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/nomination-api-routes-130-c2-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/nomination-api-routes-130-c2-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Confirmed automatic RPI continuation from Research through Review on PR #1776 branch feat/ux-130-api-routes (rebased onto origin/feat/demo-233-same-home-tensions-0825) with local commit and no push",
+      "status": "confirmed",
+      "evidence": "Caller prompt continuous RPI loop instruction in worktree /home/azureuser/source/ama-demo-wt/feat-130-api-routes at HEAD 2786009ee"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/nomination-api-routes-130-c2-research.md"
+    },
+    {
+      "decision": "Single-pass plan critique executed",
+      "status": "executed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/nomination-api-routes-130-c2-plan-critique.md"
+    },
+    {
+      "decision": "Single-pass plan critique verdict Pass with 0 PC findings; direct planner finalization applied",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-15/nomination-api-routes-130-c2-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Single-pass post-implementation Review executed",
+      "status": "executed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/nomination-api-routes-130-c2-review.md"
+    },
+    {
+      "decision": "Post-implementation Review outcome Conformant across full_plan Cycle 2 boundary (P01, P02, P03) with Focused Tier validation passed and hosted CI pending owner push",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/nomination-api-routes-130-c2-review.md#outcome"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked post-Review follow-up item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Push rebased feat/ux-130-api-routes (--force-with-lease) to PR #1776, verify green hosted GitHub Actions src-api and browser checks on the exact head, and run independent exact-head review (Refs #130)",
+      "rationale": "Highest immediate value and minimal effort once owner authorizes remote push; validates the KISS select-only change listener fix in hosted ubuntu-latest CI on top of 6510b6fbc",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/nomination-api-routes-130-c2-review.md#plan-follow-up-assessment"
+    },
+    {
+      "rank": 2,
+      "task": "Extend src/api/checks/nomination_browser_check.py to scan interactive dual-route nomination acknowledgement and correction disclosures with axe-core 4.10.3 (Refs #130)",
+      "rationale": "Low-effort, self-contained Playwright + axe-core coverage gain that reuses the existing SHA-verified scan helper without new dependencies",
+      "evidence": "src/api/checks/nomination_browser_check.py and .copilot-tracking/plans/2026-11-15/nomination-api-routes-130-c2-plan.md#follow-up-items"
+    },
+    {
+      "rank": 3,
+      "task": "Consolidate shared bindCaseMutationForm field-validation and invalid-clearing boilerplate between nominationPanel._routeForm and affectedChallengePanel formFor in src/api/src/zava_forward/api/web/panels.js (Refs #130)",
+      "rationale": "Moderate effort with strong KISS and DRY engineering-quality leverage so challenge and nomination route forms share one canonical event-clearing contract",
+      "evidence": ".copilot-tracking/research/2026-11-15/nomination-api-routes-130-c2-research.md (C5) and src/api/src/zava_forward/api/web/panels.js"
+    }
+  ]
+}

@@ -622,6 +622,7 @@ nominationPanel._routeForm = function ({
       label,
       labelNode,
       input,
+      isSelect: Boolean(options),
       requiredWhen: config.requiredWhen || null,
       showWhen: config.showWhen || null,
     };
@@ -651,7 +652,7 @@ nominationPanel._routeForm = function ({
     focus: false,
     update: () => {},
   };
-  for (const { input } of inputs) {
+  for (const { input, isSelect } of inputs) {
     if (typeof input.addEventListener === "function") {
       const clearInvalid = () => {
         input.removeAttribute("aria-invalid");
@@ -660,7 +661,7 @@ nominationPanel._routeForm = function ({
         mutation.update();
       };
       input.addEventListener("input", clearInvalid);
-      input.addEventListener("change", clearInvalid);
+      if (isSelect) input.addEventListener("change", clearInvalid);
     }
   }
   syncVisibility();
