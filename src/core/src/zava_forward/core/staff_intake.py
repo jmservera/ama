@@ -152,22 +152,64 @@ def _read_dependency(store: Any, user: Any) -> Iterator[None]:
         local.procurement_validation = None
 
 
-def escalation_destination() -> dict[str, Any]:
+def _valid_contact(contact: str) -> bool:
+    email = re.fullmatch(r"([^@\s]+)@[^@\s]+\.[^@\s]+", contact)
+    words = re.findall(r"[a-z]+", (email.group(1) if email else contact).lower())
+    if not contact or any(w in job_pack._PLACEHOLDER_WORDS for w in words):
+        return False
+    return bool(email or re.search(r"\d{5,}", contact))
+
+
+def _configured_owner(env: Any = None) -> tuple[str, str, str]:
+    env = os.environ if env is None else env
     owner, role, contact = (
-        os.environ.get(f"ZF_STAFF_INTAKE_ESCALATION_{k}", "").strip()
+        str(env.get(f"ZF_STAFF_INTAKE_ESCALATION_{k}", "")).strip()
         for k in ("OWNER", "ROLE", "CONTACT")
     )
+    try:
+        job_pack.named_owner(owner, role)
+    except ValueError:
+        return "", "", ""
+    return (owner, role, contact) if _valid_contact(contact) else ("", "", "")
+
+
+def escalation_destination() -> dict[str, Any]:
+    owner, role, contact = _configured_owner()
+    assigned = bool(owner)
     return dict(
         owner=owner or UNKNOWN,
         role=role or UNKNOWN,
         contact=contact or UNKNOWN,
-        configured=bool(owner and role and contact),
+        configured=assigned,
+        owner_assigned=assigned,
+        owner_status=(
+            "Named owner assigned"
+            if assigned
+            else "No named owner yet. Owner needed: the contract manager names a person, "
+            "their role and contact before a variation or concern can be routed."
+        ),
+        advisory_only=True,
         contract_instruction=False,
         note=(
             "A concern raised here does not change the work order. "
             "Only the contract manager issues a new version."
         ),
     )
+
+
+def route_escalation(
+    kind: str, summary: str, raised_by: str, order: str, owner: str = "", role: str = ""
+) -> dict[str, Any]:
+    """Route a variation or concern to a named owner (given or configured); refuse if none."""
+    if owner or role:
+        name, owner_role, contact = owner, role, ""
+    else:
+        name, owner_role, contact = _configured_owner()
+        if not name:
+            raise ValueError(escalation_destination()["owner_status"])
+    out = job_pack.escalation(kind, summary, raised_by, order, name, owner_role)
+    out["owner"]["contact"] = contact or None
+    return out
 
 
 def _view_receipt(idx: int, rec: dict[str, Any], user: Any) -> dict[str, Any]:
@@ -238,8 +280,19 @@ def view(store: Any, user: Any, wid: str) -> dict[str, Any]:
             receipts=[_view_receipt(i, r, user) for i, r in _records(c, wid)],
             recovery=[job_pack.visit_recovery(e) for e in job_pack.NO_SHOW_EVENTS],
             escalation=escalation_destination(),
+            escalations=[
+                dict(
+                    e,
+                    summary=e["summary"]
+                    if projection.can_see_reason(user)
+                    else projection.NOTE_HELD,
+                )
+                for e in c.get("escalations") or []
+                if e.get("order") == wid
+            ],
             boundaries=dict(
                 contract_instruction=False,
+                advisory_only=True,
                 acceptance=(
                     "Acceptance needs independent review by a named quality role. "
                     "This screen never accepts work."
@@ -456,7 +509,54 @@ def acknowledge(store: Any, user: Any, wid: str, body: dict[str, Any]) -> dict[s
         return dict(outcome="acknowledged", receipt=_view_receipt(idx, rec, actor))
 
 
-ACTIONS = {"field-capture": capture, "field-correct": correct, "field-acknowledge": acknowledge}
+def escalate(store: Any, user: Any, wid: str, body: dict[str, Any]) -> dict[str, Any]:
+    """Record a variation or concern against the case for a named owner. Advice only."""
+    _staff_only(store, user)
+    if not isinstance(body, dict):
+        raise ValueError("Send the escalation as a JSON object.")
+    for key in ("named_owner", "owner_role"):
+        if body.get(key) is not None and not isinstance(body[key], str):
+            raise ValueError("Enter the named owner and role as text.")
+    _pack(store, user, wid)
+    w, _ = _find(store, wid)
+    with store._quality_operation(user, w["case_id"]) as (c, actor):
+        routed = route_escalation(
+            body.get("kind"),  # type: ignore[arg-type]
+            body.get("summary"),  # type: ignore[arg-type]
+            actor["email"],
+            wid,
+            body.get("named_owner") or "",
+            body.get("owner_role") or "",
+        )
+        rows = c.setdefault("escalations", [])
+        rec = dict(
+            routed,
+            id=f"ESC-{wid}-{len(rows) + 1}",
+            case_id=w["case_id"],
+            named_owner=routed["owner"]["name"],
+            owner_role=routed["owner"]["role"],
+            escalation_kind=routed["kind"],
+            routed_by=actor["email"],
+            routed_at=_now(),
+        )
+        job_pack.assert_advisory(rec)
+        rows.append(rec)
+        store.audit(
+            actor["email"],
+            "field_escalation_routed",
+            w["case_id"],
+            f"{wid} {rec['escalation_kind']} to {rec['named_owner']} ({rec['owner_role']})",
+        )
+        store.save()
+        return dict(outcome="routed", escalation=dict(rec))
+
+
+ACTIONS = {
+    "field-capture": capture,
+    "field-correct": correct,
+    "field-acknowledge": acknowledge,
+    "field-escalate": escalate,
+}
 
 
 def handle(

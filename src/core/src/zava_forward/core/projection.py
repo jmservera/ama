@@ -130,7 +130,12 @@ def hold_notes(c):
             for key in ("reason", "source"):
                 if c.get(key):
                     c[key] = NOTE_HELD
+        advisory = c.get("contract_instruction") is False and "summary" in c and "kind" in c
+        if advisory and c.get("summary"):
+            c["summary"] = NOTE_HELD
         for k, v in c.items():
+            if advisory and k == "note":
+                continue
             private_hazard = (
                 ("category" in c and "released" in c and k in ("source", "job"))
                 or ("actor" in c and k in ("reason", "evidence"))

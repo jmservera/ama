@@ -117,6 +117,25 @@ function intakeCapture(order, pack, rerender) {
   }, rerender);
 }
 
+const intakeKinds = ["variation", "safety", "access", "scope question", "other"];
+const intakeOwnerRoles = ["Retrofit Programme Manager", "Programme Support Officer", "Building Safety Liaison"];
+
+function intakeEscalate(order, rerender) {
+  const id = `esc-${order}`;
+  return h("details", {}, h("summary", {}, "Route a variation or concern to a named owner"),
+    intakeForm("Route a variation or concern", [
+      h("p", {}, "This is advice only. It does not change the work order or instruct the contractor. Use the owner's own name, not a role."),
+      intakeField(`${id}-kind`, "Kind", h("select", { id: `${id}-kind`, name: "kind", required: true },
+        intakeKinds.map((k) => h("option", { value: k }, k)))),
+      intakeField(`${id}-summary`, "What needs deciding", h("textarea", { id: `${id}-summary`, name: "summary", maxlength: 500, rows: 3, required: true })),
+      intakeField(`${id}-owner`, "Named owner, if not the configured owner", h("input", { id: `${id}-owner`, name: "named_owner", maxlength: 80, autocomplete: "off", spellcheck: "false" })),
+      intakeField(`${id}-role`, "Owner role", h("select", { id: `${id}-role`, name: "owner_role" },
+        [h("option", { value: "" }, "Use the configured owner"), ...intakeOwnerRoles.map((r) => h("option", { value: r }, r))])),
+    ], "Route for decision", (data) => api(`/api/workorders/${encodeURIComponent(order)}/field-escalate`, {
+      kind: data.get("kind"), summary: data.get("summary"),
+      named_owner: data.get("named_owner") || undefined, owner_role: data.get("owner_role") || undefined }), rerender));
+}
+
 function intakeOrder(data, orderId, rerender) {
   const pack = data.pack;
   const status = h("p", { role: "status", "aria-live": "polite" });
@@ -138,7 +157,13 @@ function intakeOrder(data, orderId, rerender) {
       data.recovery.map((r) => [r.event, r.outcome, r.resident_effect, r.next_step])),
     screenFields([["Escalation owner", data.escalation.owner], ["Escalation role", data.escalation.role],
       ["Escalation contact", data.escalation.contact],
+      ["Owner status", data.escalation.owner_status],
+      ["Contract instruction", data.escalation.contract_instruction === false && data.escalation.advisory_only !== false && data.boundaries.advisory_only
+        ? "No. Variations and concerns are advice only." : "Not confirmed. Treat this as advice only and ask the contract manager."],
       ["Effect", "A concern does not change the work order. Only the contract manager issues a new version."]]),
+    screenTable("Variations and concerns routed for this order", ["Kind", "Summary", "Owner", "Status", "Contract instruction"],
+      (data.escalations || []).map((e) => [e.kind, e.summary, `${e.named_owner} (${e.owner_role})`, e.status, e.contract_instruction === false ? "No, advice only" : "Not confirmed"])),
+    intakeEscalate(orderId, rerender),
     h("p", {}, data.boundaries.acceptance), h("p", {}, data.boundaries.consent));
 }
 

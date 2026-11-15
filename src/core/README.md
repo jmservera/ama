@@ -5214,7 +5214,7 @@ member, corrector and acknowledger join the record participants, so the existing
 from accepting. A repeated `capture_ref` replays without a second record, and a changed pack digest is
 rejected as stale. The configured escalation destination comes from `ZF_STAFF_INTAKE_ESCALATION_OWNER`,
 `_ROLE` and `_CONTACT`; anything missing shows "Unknown - not configured". Nothing here is a contract
-instruction, resident consent or acceptance, and there is no escalation write path (gap kept). Persistence
+instruction, resident consent or acceptance, and `POST /api/workorders/{id}/field-escalate` records a variation or concern for a named owner as advice only (summary held for roles without a recorded need). Persistence
 reuses the case body, so there is no schema change. Tests: `src/api/tests/test_staff_intake_api.py`.
 C4 changes: `capture` passes the work order's bound, still-current resident scope revision as
 `context_revision` (409 if missing or changed, never waived); new evidence needs an explicit valid
@@ -5225,7 +5225,7 @@ oid (a name is still allowed and the real accept path denies that person); `capt
 under the existing procurement validation token, so on SQL a work order withdrawn or reissued by another
 store before the commit raises a conflict and no receipt is stored. An existing token is never replaced.
 Limits: receipts stored before C5 with a staff code as worker are not rewritten; the JSON store has no
-cross-process guard; escalation stays a gap; synthetic approvals are not QA, legal or resident consent.
+cross-process guard; an escalation names a person but is not verified against staff records; synthetic approvals are not QA, legal or resident consent.
 
 ## Constructed learning-test report command (#129, Refs #123)
 
