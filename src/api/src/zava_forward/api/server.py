@@ -15,6 +15,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
+from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
 from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, controls, form_export, form_review, forms, heldout_eval, profile, tokenomics_comparison
 
@@ -1904,6 +1905,11 @@ class _Server(ThreadingHTTPServer):
 
 
 def main() -> None:
+    try:
+        enforce_from_env()
+    except ContainerHardeningError as error:
+        print(f"Refusing to start: {error}", file=sys.stderr, flush=True)
+        raise SystemExit(2) from None
     install_diagnostic_redaction()
     password = os.environ.get("ZF_PASSWORD") or secrets.token_urlsafe(9)
     try:

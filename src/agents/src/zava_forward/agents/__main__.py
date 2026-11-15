@@ -2,4 +2,5 @@ import sys
 
 from zava_forward.agents.worker import main
 
-sys.exit(main())
+if __name__ == "__main__":
+    sys.exit(main())

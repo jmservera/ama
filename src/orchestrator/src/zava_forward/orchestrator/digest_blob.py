@@ -18,6 +18,7 @@ import urllib.parse
 import xml.etree.ElementTree as ET
 
 from zava_forward.core import ledger
+from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
 from zava_forward.core.documents import AzureBlobDocumentStore, DocumentStoreError
 
 ALERT_MARKER = "LEDGER_DIGEST_ALERT"
@@ -221,6 +222,11 @@ def main(argv=None, env=None, store=None, blob=None, out=print):
 
 Publish then verify, or (read-only) reconcile remote anchors with a second person's independent
 record. Exit 1 and alert on mismatch."""
+    try:
+        enforce_from_env(env)
+    except ContainerHardeningError as error:
+        print(f"Refusing to start: {error}", file=sys.stderr, flush=True)
+        return 2
     argv = sys.argv[1:] if argv is None else argv
     if "--reconcile" in argv:
         i = argv.index("--reconcile")

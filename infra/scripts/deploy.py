@@ -38,7 +38,8 @@ def resolve_image(group: str, prefix: str, registry: str) -> tuple[str, str]:
     if not isinstance(jobs, list):
         raise DeploymentError("Job discovery did not return a list")
     targets = {
-        f"job-{prefix}-{suffix}" for suffix in ("orchestrator", "auth-renewal", "ledger-verify")
+        f"job-{prefix}-{suffix}"
+        for suffix in ("orchestrator", "auth-renewal", "ledger-verify", "rank-publish")
     }
     images: set[str] = set()
     for job in jobs:

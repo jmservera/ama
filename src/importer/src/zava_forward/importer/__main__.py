@@ -4,6 +4,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
+from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
 from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 from zava_forward.core.exception_queue import STEWARD, ExceptionQueue
 from zava_forward.core.exception_register import staff_from_env
@@ -175,6 +176,11 @@ def _transfer(args: argparse.Namespace) -> int:
 
 
 def main(argv: list[str]) -> int:
+    try:
+        enforce_from_env()
+    except ContainerHardeningError as error:
+        print(f"Refusing to start: {error}", file=sys.stderr, flush=True)
+        return 2
     install_diagnostic_redaction()
     if not argv:
         print(f"zava-forward-import {__version__}")
@@ -226,4 +232,5 @@ def main(argv: list[str]) -> int:
     return 1 if prev.blocking else 0
 
 
-sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

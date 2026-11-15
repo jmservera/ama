@@ -368,6 +368,7 @@ def deployment(infra: Path, environment: str, output: Path, images_directory: Pa
             in {
                 f"job-forward-{environment}-auth-renewal",
                 f"job-forward-{environment}-ledger-verify",
+                f"job-forward-{environment}-rank-publish",
             }
         ]
         if any(
