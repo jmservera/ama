@@ -6,6 +6,31 @@ ms.date: 2026-11-15
 ms.topic: reference
 ---
 
+## Management-view AI consumption economics endpoints (2026-11-15, Refs #100)
+
+Management JSON and CSV endpoints surface the `ai-consumption-economics/v1`
+`ai_consumption_economics` summary from `zava_forward.core.tokenomics` with
+explicit integer denominators (`proposal_count`, `accepted_outcome_count`,
+`metered_call_count`, `unmetered_call_count`) and `"Unknown"` (never `0` or
+`0.0`) whenever `OD-51` is open, pricing or billing reconciliation is absent, or
+`accepted_outcome_count == 0`:
+
+* `GET /api/stats` (`Store.stats`)
+* `GET /api/stats?report=progress` and `GET /api/cases.csv?report=progress`
+  (`Store.progress_report` and `progress.export_csv`, scoped to `start` and
+  `as_of`)
+* `GET /api/coordinator` (`coordinator.read`, scoped to `start` and `as_of`)
+* `GET /api/progress` (`zava_forward.api.progress.dashboard`, scoped to
+  `[start, end + 1 day)` over synthetic-admitted records only, with zero wall-clock
+  drift and zero raw recommendation text or reviewer prose in responses)
+* `GET /api/ai/report` (`live.ai_consumption_economics`, preserving the five
+  top-level keys `evaluation`, `chat_evaluation`, `live`, `registry`, and
+  `consumption` while forwarding optional `start`, `end`, and `as_of` bounds to
+  `Store.ai_live_report`)
+
+Focused HTTP endpoint coverage lives in
+`src/api/tests/test_management_tokenomics_api_100.py` (`Refs #100`).
+
 ## Hazard and safeguarding clock and named owner in queues and case cards (2026-11-15, Refs #76)
 
 `workSummary` and `safetyPanel` in `web/app.js` render the projected operational

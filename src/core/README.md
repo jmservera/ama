@@ -40,6 +40,45 @@ any supplied `Store` or `SqlStore`. Run the focused `#93` invariant suite from
 ```bash
 PYTHONPATH=src:tests python3 -m unittest tests/test_finance_no_automated_path_93.py -v
 ```
+## Management-view AI consumption economics and explicit denominators (2026-11-15, Refs #100)
+
+`tokenomics` (`summarize_ai_consumption_economics`, `store_ai_consumption_economics`,
+and `assert_tokenomics_invariants`) computes the read-only `ai-consumption-economics/v1`
+summary (`ai_consumption_economics`) required across management views (BRD Required
+Management Views, `FR-052`, `NFR-012`, `OD-51`; PRD `FR-061`, `NFR-017`). Every
+payload carries explicit integer denominators at top level and under
+`denominators` (`proposal_count`, `accepted_outcome_count`, `metered_call_count`,
+`unmetered_call_count`, plus `unreviewed_proposal_count`,
+`rejected_or_withdrawn_count`, and `workflow_only_excluded_count`). Workflow-only
+and template fallback drafts (`workflow_only=True`, `source in {"template", "manual"}`,
+or `eligible is False`) are excluded from AI proposal and accepted-outcome
+denominators.
+
+Cost fields use exact `Decimal` strings or `"Unknown"`, never `0`, `0.0`, `"0"`,
+or `"0.00"` for missing evidence:
+
+* Whenever no price source is configured, `OD-51` remains `"open"`, billing is not
+  reconciled, currencies conflict, or any unmetered or unpriced call exists,
+  `token_cost`, `total_cost_of_ai`, `token_cost_per_accepted_outcome`,
+  `cost_per_accepted_outcome`, and `quality_qualified_cost_per_accepted_outcome`
+  all report `"Unknown"`.
+* Whenever `accepted_outcome_count == 0`, per-accepted-outcome fields report
+  `"Unknown"`, even when `token_cost` is priced and reconciled.
+* `total_cost_of_ai` and `cost_per_accepted_outcome` remain `"Unknown"` unless all
+  eight Total Cost of AI components (`tokens`, `embeddings_search_indexing`,
+  `retry_amplification`, `prompt_context_overhead`, `observability_eval`,
+  `guardrails`, `hosting_idle`, `human_review_exception_time`) carry reconciled
+  same-currency amounts.
+* `booked_value` defaults to `"Unknown"` unless finance-approved cash saving
+  evidence is explicitly supplied, keeping released staff time separate from
+  booked financial value.
+
+`Store.ai_consumption_economics` surfaces this summary without mutating store or
+audit state across `insights.stats` (`Store.stats`), `progress.report`
+(`Store.progress_report` and `progress.export_csv`), `coordinator.read`, and
+`ai_tasks.live_report` (`Store.ai_live_report`). Offline synthetic coverage in
+`src/core/tests/test_management_tokenomics_invariant_100.py` does not close
+`OD-51` or establish live Azure billing reconciliation (`Refs #100`).
 
 ## Immutable Blob ledger digests and scheduled verification (2026-11-15, Refs #115)
 

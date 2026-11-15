@@ -21,7 +21,7 @@ from collections.abc import Mapping
 from datetime import datetime, timezone
 from typing import Any
 
-from . import projection, ai_prompts, export_fields
+from . import projection, ai_prompts, export_fields, tokenomics
 from .ai import FORBIDDEN
 from .doc_controls import is_available_case_document
 from .resident_decisions import resident_status
@@ -575,13 +575,19 @@ def review(store, user, rec_id, action, reason="", text=None):
         return _record_view(store, user, rec)
 
 
-def live_report(store, user=None):
-    """Reviewer outcomes and fallback reasons across everything recorded so far."""
+def live_report(store, user=None, *, start=None, end=None, as_of=None):
+    """Reviewer outcomes, fallback reasons and AI consumption economics recorded so far."""
     if user is not None and user.get("role") not in projection.STAFF_ROLES:
         raise PermissionError("Only authorised staff can read the AI live report.")
     reason_ok = True if user is None else projection.can_see_reason(user)
     with store.lock:
         recs = list(store.data["recommendations"])
+    econ = tokenomics.store_ai_consumption_economics(
+        store,
+        start=start,
+        end=end,
+        as_of=as_of,
+    )
     tasks, reasons, fallbacks = {}, [], {}
     for r in recs:
         task = "priority" if r.get("kind") != "ai_task" else r["task"]
@@ -605,4 +611,10 @@ def live_report(store, user=None):
                     if projection.contains_withheld_value(raw_reason, withheld):
                         shown_reason = projection.NOTE_HELD
             reasons.append(dict(task=task, action=status, reason=shown_reason))
-    return dict(prompt_version=PROMPT_VERSION, tasks=tasks, fallback_reasons=fallbacks, reviewer_reasons=reasons[-50:])
+    return dict(
+        prompt_version=PROMPT_VERSION,
+        tasks=tasks,
+        fallback_reasons=fallbacks,
+        reviewer_reasons=reasons[-50:],
+        ai_consumption_economics=econ,
+    )
