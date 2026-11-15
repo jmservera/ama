@@ -5045,15 +5045,19 @@ cd src/core && python3 -m unittest discover -s tests -p 'test_*216*.py' -v
 
 ### Version-bound affected-person challenges (#220)
 
-The existing resident operation records supplied challenges against retained
-priority suggestions (`kind != "ai_task"`). It does not replace measure-decision
-independent review or complaint/remedy controls. Both resident-information and
-recorded-reason permissions are required to read or write the new fields.
-`Store.detail` supplies `challenge_targets` with immutable proposal and separate
-human-decision version tokens; callers must echo both when opening a challenge.
-The registered server actor and current named owner remain authoritative.
-Eligibility includes both original generation candidates and cases retained in
-the human decision's `final_items`. A person may edit in an owned open case
+The resident operation records supplied challenges against retained priority
+suggestions, case-scoped `ai_task` suggestions and `form_staging` extraction
+batches (`form:<batch_id>`), while `Assistants.challenge` covers SQLite
+`assistant_tasks` proposals and `ChallengeRegister` provides the
+store-independent dependency and safeguard engine. It does not replace
+measure-decision independent review or complaint/remedy controls. Both
+resident-information and recorded-reason permissions are required to read or
+write challenge narratives. `Store.detail` supplies `challenge_targets` with
+immutable proposal and separate human-decision version tokens; callers must echo
+both when opening a challenge. The registered server actor and current named
+owner remain authoritative. Eligibility includes original generation candidates,
+cases retained in the human decision's `final_items`, case-linked `ai_task`
+outputs and case `form_staging` batches. A person may edit in an owned open case
 outside the original 40 candidates. That case can challenge the retained
 proposal/decision without changing the original generation `case_ids`, source
 hashes or proposal version. Its missing source hash stays Unknown; a source
@@ -5062,24 +5066,49 @@ challenge is refused rather than inventing generation evidence.
 `challenge_open` requires `proposal_id`, `proposal_version`, `decision_version`,
 `target_kind` (`proposal`, `source`, `policy` or `human_decision`), supplied
 `channel`, `source`, `request`, `explanation`, `owner`, `non_digital_route` and
-`next_update`. Digital means staff recording supplied digital evidence, not
-resident self-authentication. Phone, Letter and In person use the same
-controlled path. `challenge_update` appends supplementary evidence (`id`,
-`expected_version`, `channel`, `source`, `request`, `explanation`,
-`next_update`) while keeping the opening request immutable.
-`challenge_escalate` transfers an open or escalated challenge to a distinct
-named human owner (`id`, `expected_version`, `owner`, `reason`, `next_update`)
-with monotonic optimistic concurrency. `challenge_resolve` requires `id`,
-`expected_version`, `resolution`, `resolution_ref`, `explanation` and
-`next_update`. The named owner or an existing authorised manager can record one
-terminal resolution, either `Correction recorded` or `Explanation recorded`.
-Opening evidence and the original human decision are retained; terminal
-corrections cannot be erased by a later resolution. Every challenge write
-rejects forbidden adverse keys (`ChallengeSafeguardError`) and enforces
-`assert_no_adverse_challenge_effects`, ensuring non-challenge case state
-(`ranking`, `resident`, `funding`, `decision`, `measure_decisions`, `hazards`,
-`service_requests`, `appointments`) stays untouched. These are human-supplied
-records, not automated redress.
+`next_update`, with optional `submitted_by` (`The resident`, `Their
+representative` or `Nominee`), `representative_ref`, `hazard_concern` and
+`hazard_intake`. Digital means staff recording supplied digital evidence, not
+resident self-authentication. Phone, Letter, In person, Assisted visit and
+Trusted intermediary use the same controlled path; representative and nominee
+submissions record read-only `representative_authority_status` without inferring
+works consent or blocking intake. `challenge_update` appends supplementary
+evidence (`id`, `expected_version`, `channel`, `source`, `request`,
+`explanation`, `next_update`, plus optional representative and safety fields)
+while keeping the opening request immutable. `challenge_reopen` reopens a
+resolved challenge (`id`, `expected_version`, `channel`, `source`, `request`,
+`explanation`, `owner`, `next_update`, plus optional representative and safety
+fields, available in both `RESIDENT_ACTIONS` and `FOLLOWUP_ACTIONS`), archiving
+prior resolutions in `previous_resolutions` and setting
+`prior_correction_preserved: True` when a prior `Correction recorded` outcome
+existed so downstream `stale` fences (including `ai_tasks.review` and SQL
+`priority_correction` indexing) remain active until fresh human work.
+`challenge_escalate` transfers an open, reopened or escalated challenge to a
+distinct named human owner (`id`, `expected_version`, `owner`, `reason`,
+`next_update`) with monotonic optimistic concurrency. `challenge_resolve`
+requires `id`, `expected_version`, `resolution`, `resolution_ref`, `explanation`
+and `next_update`. The named owner or an existing authorised manager can record
+`Correction recorded` or `Explanation recorded`.
+
+Every challenge, correction, reopen, nomination and service-dispute write
+rejects forbidden adverse keys (`ChallengeSafeguardError`), enforces
+`assert_no_adverse_challenge_effects` and verifies live portfolio `_ranking()`
+invariance: priority and ranking never drop, no `refusal`, `no_access`,
+`sanction`, `withdrawn` or `negative_engagement` state is set or inferred, no
+unrelated task, return, service request, work order, package, handoff or
+resident update is closed, and no statutory or emergency hazard or safeguarding
+clock (`awaiting_hazard_action`, Awaab's Law 24h/7d/14d deadlines or
+`safeguarding` clocks) is paused, reset or delayed. Setting `hazard_concern=True`
+immediately records a receipt-dated `hazard_referral`
+(`waits_for_challenge_review: False`) without resetting `received_on` on later
+updates or reopens; supplying `hazard_intake` (`category`, `priority`, `source`,
+`aware_at` and optional `note`) atomically appends an active independent case
+hazard with `safety_raised` / `safety_emergency` audit evidence while preserving
+all existing hazard clocks. Records, views (`ChallengeRegister.view`,
+`Store.detail` / `SqlStore.detail`, `Assistants.detail`) and challenge audit
+entries expose machine-checkable `non_retaliation_assurance`
+(`build_non_retaliation_assurance`) and `hazard_clock_preserved: True`. These
+are human-supplied records, not automated redress.
 
 New priority generation hashes the actual audience-filtered case citation labels
 at input capture, before generation. These are citation-snapshot versions, not
@@ -5139,15 +5168,19 @@ Focused synthetic JSON/SQLite proof, with installed editable distributions:
 ```bash
 PYTHONPATH=src/core/tests:src/agents/tests:src/api/tests:src/api python3 -m unittest \
   test_resident_decisions.JsonResidentDecisions \
-  test_resident_decisions.SqlResidentDecisions test_resident_api -k challenge -q
+  test_resident_decisions.SqlResidentDecisions \
+  test_challenge_no_retaliation_220 \
+  test_challenge_no_retaliation_api_220 \
+  test_resident_api -k challenge -q
 ```
 
-This is a bounded retained-priority slice, not whole-system AC-071 acceptance.
-Other assistant/form paths, operational native SQL Server acceptance, qualified
-legal/RAI review and resident comprehension remain unproven. Seven constructed
-native SQL Server correction-race, dependency, entitlement and rollback
-regressions supplement the JSON/SQLite checks. Subsequent native cached-reader,
-atomic migration/restart, correction-flag rollback and persisted denial-audit
+This covers retained priority, `ai_task`, `form_staging` and SQLite
+`assistant_tasks` challenge routes plus runtime non-retaliation, non-refusal and
+zero-hazard-delay invariants, not operational native SQL Server acceptance,
+qualified legal/RAI review or resident comprehension. Seven constructed native
+SQL Server correction-race, dependency, entitlement and rollback regressions
+supplement the JSON/SQLite checks. Subsequent native cached-reader, atomic
+migration/restart, correction-flag rollback and persisted denial-audit
 regressions add focused coverage, not operational acceptance. The bounded
 60,000-case query measurement above is not a whole-workflow load claim.
 

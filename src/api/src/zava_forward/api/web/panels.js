@@ -445,17 +445,18 @@ function affectedChallengePanel(c, id, refresh) {
   const formFor = (key, title, fields, build, correction = false) => {
     const session = caseSession;
     const status = h("p", { id: `${key}-feedback`, role: "status", "aria-live": "polite", tabindex: -1 });
-    const inputs = fields.map(([name, label, options]) => {
+    const inputs = fields.map(([name, label, options, optional]) => {
       const attrs = { id: `${key}-${name}`, name, autocomplete: "off", "aria-describedby": status.id };
       const input = options ? h("select", attrs, options.map((option) => h("option", { value: option }, option)))
         : h("input", { ...attrs, type: name === "next_update" ? "date" : "text", maxlength: 300,
-          ...(name === "proposal_id" ? { list: targetOptions.id, spellcheck: "false" } : {}) });
+          ...(name === "proposal_id" ? { list: targetOptions.id, spellcheck: "false" } : {}),
+          ...(name === "representative_ref" ? { spellcheck: "false" } : {}) });
       input.addEventListener("input", () => {
         input.removeAttribute("aria-invalid");
         if (!mutation.pending && !session.historyBarrier) mutation.message = "";
         mutation.update();
       });
-      return { name, label, input };
+      return { name, label, input, optional: Boolean(optional) };
     });
     const button = h("button", { type: "submit" }, title);
     const form = h("form", { id: key, "data-challenge-case": id, novalidate: true,
@@ -473,9 +474,11 @@ function affectedChallengePanel(c, id, refresh) {
       onsubmit: async (event) => {
         event.preventDefault();
         if (button.disabled || session?.historyBarrier) { mutation.update(); return; }
-        for (const { input, label } of inputs) {
+        const submittedBy = inputs.find((item) => item.name === "submitted_by")?.input.value || "The resident";
+        for (const { name, input, label, optional } of inputs) {
           input.removeAttribute("aria-invalid");
-          if (!input.value.trim() || !input.validity.valid) {
+          const needsRepRef = name === "representative_ref" && submittedBy !== "The resident";
+          if (((!optional || needsRepRef) && !input.value.trim()) || !input.validity.valid) {
             input.setAttribute("aria-invalid", "true");
             status.textContent = `Enter ${label.toLowerCase()} before recording this challenge.`;
             input.focus();
@@ -541,22 +544,75 @@ function affectedChallengePanel(c, id, refresh) {
     targets.length ? formFor("challenge-open", "Record supplied challenge", [
       ["proposal_id", "Suggestion reference"],
       ["target_kind", "Challenged information", ["", "proposal", "source", "policy"]],
-      ["channel", "Supplied challenge channel", ["", "Digital", "Phone", "Letter", "In person"]],
+      ["channel", "Supplied challenge channel", ["", "Digital", "Phone", "Letter", "In person", "Assisted visit", "Trusted intermediary"]],
+      ["submitted_by", "Submitted by", ["The resident", "Their representative", "Nominee"]],
+      ["representative_ref", "Representative reference (if submitted on someone's behalf)", null, true],
       ["source", "Supplied challenge evidence reference"], ["request", "The person's supplied request"],
       ["explanation", "Permitted plain-language explanation"], ["owner", "Named challenge owner", ["", ...staff.map((person) => person.email)]],
-      ["non_digital_route", "Accessible phone, letter or in-person route"], ["next_update", "Challenge next update date"]
+      ["non_digital_route", "Accessible phone, letter or in-person route"],
+      ["hazard_concern", "Safety concern mentioned in this request", ["No", "Yes - route urgent safety check separately now"]],
+      ["next_update", "Challenge next update date"]
     ], (body) => {
       const target = targets.find((item) => item.proposal_id === body.proposal_id);
       if (!target) throw new Error("Enter an exact recorded suggestion reference from the suggestion history.");
-      return { action: "challenge_open", ...body, proposal_version: target.proposal_version,
-        decision_version: target.decision_version };
+      const out = {
+        action: "challenge_open",
+        proposal_id: body.proposal_id,
+        proposal_version: target.proposal_version,
+        decision_version: target.decision_version,
+        target_kind: body.target_kind,
+        channel: body.channel,
+        submitted_by: body.submitted_by || "The resident",
+        source: body.source,
+        request: body.request,
+        explanation: body.explanation,
+        owner: body.owner,
+        non_digital_route: body.non_digital_route,
+        hazard_concern: (body.hazard_concern || "").startsWith("Yes"),
+        next_update: body.next_update,
+      };
+      if (out.submitted_by !== "The resident" || (body.representative_ref || "").trim()) {
+        out.representative_ref = (body.representative_ref || "").trim();
+      }
+      return out;
     }) : h("p", {}, "No recorded priority suggestion for this case. Ordinary human review and complaints remain available through the named officer."),
     h("h3", {}, "Recorded challenges and resolutions"),
     historyFor("challenge-record-history", "challenges", records, (record) => h("div", {},
-      h("p", {}, `${record.id}: ${record.status}. ${record.channel}. ${record.request}`),
+      h("p", {}, `${record.id}: ${record.status}. ${record.channel}. Submitted by ${record.submitted_by || "The resident"}${record.representative_ref ? ` (${record.representative_ref})` : ""}. ${record.request}`),
       h("p", {}, `Explanation: ${record.explanation}. Owner: ${named(record.owner)}. Manual route: ${record.non_digital_route}. Next update: ${fmtDate(record.next_update)}.`),
       h("p", {}, `Challenged ${record.target.kind}: ${record.target.id}, version ${record.target.version}. Supplied reference: ${record.source}. Human draft decision at opening: ${record.human_decision?.status || "Unknown"}.`),
-      record.resolution ? h("p", {}, `${record.resolution.outcome}: ${record.resolution.explanation}. Evidence: ${record.resolution.reference}. Recorded by ${named(record.resolution.recorded_by)}. Next update: ${fmtDate(record.resolution.next_update)}.`)
+      h("p", {}, `Safeguards verified: priority unchanged, no refusal or no-access recorded, other work stays open, and safety response times stay unchanged.${record.hazard_referral ? " Safety concern flagged on receipt for separate urgent safety action without waiting for challenge review." : ""}`),
+      record.resolution ? h("div", {},
+        h("p", {}, `${record.resolution.outcome}: ${record.resolution.explanation}. Evidence: ${record.resolution.reference}. Recorded by ${named(record.resolution.recorded_by)}. Next update: ${fmtDate(record.resolution.next_update)}.`),
+        formFor(`challenge-reopen-${record.id}`, `Reopen ${record.id} with new supplied evidence`, [
+          ["channel", "Supplied challenge channel", ["", "Digital", "Phone", "Letter", "In person", "Assisted visit", "Trusted intermediary"]],
+          ["submitted_by", "Submitted by", ["The resident", "Their representative", "Nominee"]],
+          ["representative_ref", "Representative reference (if submitted on someone's behalf)", null, true],
+          ["source", "New supplied evidence reference"],
+          ["request", "The person's supplied reopen request"],
+          ["explanation", "Permitted plain-language explanation"],
+          ["owner", "Named challenge owner", ["", ...staff.map((person) => person.email)]],
+          ["hazard_concern", "Safety concern mentioned in this request", ["No", "Yes - route urgent safety check separately now"]],
+          ["next_update", "Reopened challenge next update date"]
+        ], (body) => {
+          const out = {
+            action: "challenge_reopen",
+            id: record.id,
+            expected_version: record.version,
+            channel: body.channel,
+            submitted_by: body.submitted_by || "The resident",
+            source: body.source,
+            request: body.request,
+            explanation: body.explanation,
+            owner: body.owner,
+            hazard_concern: (body.hazard_concern || "").startsWith("Yes"),
+            next_update: body.next_update,
+          };
+          if (out.submitted_by !== "The resident" || (body.representative_ref || "").trim()) {
+            out.representative_ref = (body.representative_ref || "").trim();
+          }
+          return out;
+        }))
         : formFor(`challenge-resolve-${record.id}`, `Record supplied resolution for ${record.id}`, [
           ["resolution", "Supplied human resolution", ["", "Explanation recorded", "Correction recorded"]],
           ["resolution_ref", "Human resolution evidence reference"], ["explanation", "Permitted resolution explanation"],

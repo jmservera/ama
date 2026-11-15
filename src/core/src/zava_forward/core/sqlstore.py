@@ -988,6 +988,7 @@ class SqlStore(Store):
                 name.split(" ")[-1].lower(), (c["contacts"][-1]["at"] if c["contacts"] else None) or "0000", nxt or "9999",
                 resident_status(c), c["funding"]["status"],
                 int(any((record.get("resolution") or {}).get("outcome") == "Correction recorded"
+                        or record.get("prior_correction_preserved") is True
                         for record in c.get("affected_challenges", []))))
 
     def _db_seq(self):
@@ -1132,7 +1133,8 @@ class SqlStore(Store):
             SELECT c.id, json_extract(ch.value, '$.id'), json_extract(ch.value, '$.target')
             FROM cases AS c, json_each(c.body, '$.affected_challenges') AS ch
             WHERE c.priority_correction = 1
-              AND json_extract(ch.value, '$.resolution.outcome') = 'Correction recorded'
+              AND (json_extract(ch.value, '$.resolution.outcome') = 'Correction recorded'
+                   OR json_extract(ch.value, '$.prior_correction_preserved') = 1)
         """).fetchall()
         return [(cid, rid, json.loads(target)) for cid, rid, target in rows]
 
