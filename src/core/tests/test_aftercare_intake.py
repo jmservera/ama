@@ -760,5 +760,220 @@ class SensorContextGuardTests(Base):
         self.assertEqual(self.path.read_bytes(), before)
 
 
+class NeutralBoundaryTests(Base):
+    """Issue #133 Criterion 5: enforce neutral text across intake, notes, packs, and restore."""
+
+    def test_outcome_remedy_and_sensor_context_reject_non_neutral_notes_without_echo_or_write(
+        self,
+    ) -> None:
+        from zava_forward.core.aftercare import neutral_text
+
+        self.assertEqual(neutral_text(ai.NEUTRAL_NOTE_ERROR), ai.NEUTRAL_NOTE_ERROR)
+        self.record()
+        self.svc.assign_owner(MANAGER, "AC-001", "Resident Liaison Officer")
+        with self.assertRaises(PermissionError):
+            self.svc.record_outcome(
+                INSPECTOR, "AC-001", "advice_given", "home_visit", "You will save money."
+            )
+        with self.assertRaises(PermissionError):
+            self.svc.set_remedy(INSPECTOR, "AC-001", "open", "Drying laundry caused damp.")
+        before = self.path.read_bytes()
+        bad_routes: list[tuple[str, dict[str, Any], str, str]] = [
+            (
+                "outcome",
+                {
+                    "outcome": "advice_given",
+                    "basis": "home_visit",
+                    "evidence": "Damp from drying laundry indoors.",
+                },
+                "evidence",
+                "drying laundry",
+            ),
+            (
+                "remedy",
+                {"status": "open", "evidence": "This upgrade pays for itself."},
+                "evidence",
+                "pays for itself",
+            ),
+            (
+                "sensor-context",
+                {"context": {"note": "Insulation caused the condensation."}},
+                "context",
+                "caused the condensation",
+            ),
+            (
+                "sensor-context",
+                {"context": {"blame note": "Observed 18 C"}},
+                "context",
+                "blame note",
+            ),
+        ]
+        for action, payload, err_key, secret_phrase in bad_routes:
+            with self.subTest(action=action, secret_phrase=secret_phrase):
+                status, body = self.svc.handle(
+                    "POST",
+                    f"/api/aftercare/concerns/AC-001/{action}",
+                    LIAISON,
+                    payload,
+                )
+                self.assertEqual(status, 400)
+                self.assertIn(err_key, body["errors"])
+                self.assertNotIn(secret_phrase, json.dumps(body).lower())
+                self.assertEqual(self.path.read_bytes(), before)
+        self.svc.record_outcome(
+            LIAISON, "AC-001", "remedy_needed", "home_visit", "Checked trickle vents on visit."
+        )
+        after_outcome = self.path.read_bytes()
+        status, body = self.svc.handle(
+            "POST",
+            "/api/aftercare/concerns/AC-001/remedy",
+            LIAISON,
+            {"status": "completed", "evidence": "Fixed resident's lifestyle issue."},
+        )
+        self.assertEqual(status, 400)
+        self.assertIn("evidence", body["errors"])
+        self.assertNotIn("lifestyle", json.dumps(body).lower())
+        self.assertEqual(self.path.read_bytes(), after_outcome)
+
+    def test_household_statement_and_basis_stay_verbatim_while_receipt_and_views_stay_neutral(
+        self,
+    ) -> None:
+        from zava_forward.core.aftercare import neutral_violations
+
+        raw_stmt = "The retrofit caused damp and you promised I will save \u00a3150."
+        raw_basis = "Representative note saying higher bills are your fault."
+        receipt = self.record(
+            raised_by="representative",
+            representative_basis=raw_basis,
+            statement=raw_stmt,
+        )
+        self.assertEqual(receipt["original"]["statement"], raw_stmt)
+        self.assertEqual(receipt["original"]["representative_basis"], raw_basis)
+        self.svc.record_closure(MANAGER, HOME, "handover", "2026-11-10")
+        concern = self.svc.concern(MANAGER, "AC-001")
+        self.assertEqual(concern["statement"], raw_stmt)
+        self.assertEqual(concern["representative_basis"], raw_basis)
+        ev = self.svc.evaluator_view(MANAGER)
+        checked = [
+            receipt["what_happens_next"],
+            receipt["protection"],
+            receipt["accessible_route"],
+            receipt["synthetic_notice"],
+            concern["sensor_note"],
+            concern["closures"][0]["note"],
+            ev["cohort_label"],
+            ev["notice"],
+            ev["sensor_note"],
+            ev["synthetic_notice"],
+            *ev["windows"].values(),
+            *ev["unknowns"],
+            *(row["comparison"]["reason"] for row in ev["rows"]),
+        ]
+        for text in checked:
+            with self.subTest(text=text):
+                self.assertEqual(neutral_violations(text), ())
+
+    def test_bounded_pack_propose_and_review_guard_neutrality_and_expose_no_http_route(
+        self,
+    ) -> None:
+        self.record()
+        with self.assertRaises(PermissionError):
+            self.svc.propose_pack(INSPECTOR, "AC-001")
+        before_unassigned = self.svc.propose_pack(COORDINATOR, "AC-001")
+        self.assertEqual(before_unassigned["source"], "template")
+        with self.assertRaisesRegex(PermissionError, "No owner is named"):
+            self.svc.review_pack(LIAISON, str(before_unassigned["id"]), "accept", "Checked facts.")
+        self.svc.assign_owner(MANAGER, "AC-001", "Resident Liaison Officer")
+        concern_before = self.svc.concern(MANAGER, "AC-001")
+        raw_before = self.path.read_bytes()
+        for bad_summary in (
+            " ",
+            "Condensation from drying clothes indoors.",
+            "Expected energy savings of 15%.",
+        ):
+            with self.subTest(bad_summary=bad_summary):
+                with self.assertRaises(ai.ValidationError) as ctx:
+                    self.svc.propose_pack(LIAISON, "AC-001", bad_summary)
+                self.assertIn("ai_summary", ctx.exception.errors)
+                self.assertNotIn("drying", json.dumps(ctx.exception.errors).lower())
+                self.assertEqual(self.path.read_bytes(), raw_before)
+        pack = self.svc.propose_pack(
+            COORDINATOR, "AC-001", "Household reported cold living room in the evening."
+        )
+        pid = str(pack["id"])
+        with self.assertRaisesRegex(PermissionError, "named owner"):
+            self.svc.review_pack(COORDINATOR, pid, "accept", "Factual summary.")
+        after_pack = self.path.read_bytes()
+        with self.assertRaises(ai.ValidationError) as ctx:
+            self.svc.review_pack(LIAISON, pid, "reject", "Bills will fall once warmer.")
+        self.assertIn("reason", ctx.exception.errors)
+        self.assertNotIn("bills will fall", json.dumps(ctx.exception.errors).lower())
+        self.assertEqual(self.path.read_bytes(), after_pack)
+        reviewed = self.svc.review_pack(LIAISON, pid, "accept", "Factual visit preparation notes.")
+        self.assertTrue(reviewed["approved"])
+        self.assertEqual(self.svc.concern(MANAGER, "AC-001"), concern_before)
+
+    def test_corrupted_non_neutral_receipt_or_register_state_fails_closed(self) -> None:
+        self.record()
+        clean = json.loads(self.path.read_text())
+        mutations: list[Callable[[dict[str, Any]], object]] = [
+            lambda d: d["receipts"]["AC-001"].__setitem__(
+                "what_happens_next", "You will save money soon."
+            ),
+            lambda d: d["register"]["concerns"]["AC-001"].__setitem__(
+                "accessible_route", "Caused by the resident."
+            ),
+        ]
+        for mutate in mutations:
+            bad = json.loads(json.dumps(clean))
+            mutate(bad)
+            raw = json.dumps(bad).encode()
+            self.path.write_bytes(raw)
+            status, body = self.svc.handle("GET", "/api/aftercare/concerns", MANAGER)
+            self.assertEqual(status, 503)
+            self.assertNotIn("will save", json.dumps(body).lower())
+            self.assertEqual(self.path.read_bytes(), raw)
+
+    def test_quality_add_aftercare_rejects_causation_blame_savings_and_memory_refs_atomically(
+        self,
+    ) -> None:
+        from zava_forward.core.quality import checklist_for
+        from zava_forward.core.store import Store
+
+        data_mod = __import__("dataset")
+        qp_mod = __import__("test_quality_procurement")
+        d = json.loads(json.dumps(data_mod.DATA))
+        d["staff"] = json.loads(json.dumps(qp_mod.STAFF))
+        data_mod.supplied_resident_fixture(d["cases"][0])
+        store_path = self.path.parent / "quality-store.json"
+        store_path.write_text(json.dumps(d))
+        store: Any = cast(Any, Store)(str(store_path))
+        sam, _, _, quil, kim = d["staff"]
+        checklist = cast(Any, checklist_for)("Loft insulation")
+        ev = {lab: "seen and photographed" for lab in checklist["items"]}
+        store.submit_quality(sam, "ZF-1", "Loft insulation", "SYN", "Installer", ev, 1)
+        store.accept_quality(quil, "ZF-1", 0)
+        store.hand_over_quality(sam, "ZF-1", 0, "Handover guide explained", True)
+        with self.assertRaises(PermissionError):
+            store.add_aftercare(kim, "ZF-1", 0, "You will save money.")
+        before_notes = list(store.detail("ZF-1")["quality"][0]["aftercare"])
+        before_audit = list(store.audit_entries())
+        for bad_note in (
+            "Damp from drying laundry indoors.",
+            "Insulation caused the mould.",
+            "Upgrade pays for itself.",
+            "Per CM-001 chat-memory note, room felt cold.",
+        ):
+            with self.subTest(bad_note=bad_note):
+                with self.assertRaises(ValueError) as ctx:
+                    store.add_aftercare(sam, "ZF-1", 0, bad_note)
+                self.assertNotIn("drying laundry", str(ctx.exception).lower())
+                self.assertNotIn("pays for itself", str(ctx.exception).lower())
+                self.assertEqual(store.detail("ZF-1")["quality"][0]["aftercare"], before_notes)
+                self.assertEqual(list(store.audit_entries()), before_audit)
+        store.add_aftercare(sam, "ZF-1", 0, "Visited household; loft hatch seal checked.")
+        self.assertEqual(len(store.detail("ZF-1")["quality"][0]["aftercare"]), 1)
+
+
 if __name__ == "__main__":
     unittest.main()

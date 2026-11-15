@@ -5069,8 +5069,14 @@ never dismisses the report. The remedy status is separate and completion needs e
 `unresolved()` keeps open concerns visible after closure. `evaluator_view(handed_over_homes,
 baseline_homes)` returns counts with stated denominators, unknown baseline coverage, outcomes
 including "no outcome yet", unresolved concerns and concerns outside the stated scope, with a
-fixed notice that it shows no causation, fault or savings. `neutral_text` rejects causation, blame
-or savings wording in templated text.
+fixed notice that it shows no causation, fault or savings. `neutral_text` and
+`neutral_violations` fold Unicode width, invisible characters and typographic punctuation, stop
+indirect `whether`/`if` uncertainty and negated disclaimers at clause boundaries, and reject
+causation claims, household/lifestyle blame and financial or energy savings promises across all
+templated text, staff investigation/remedy/sensor notes, optional `FR-036` concern-pack drafts and
+review reasons, snapshot restores (`AftercareRegister.from_state` and `AftercareService` state
+validation), and `quality.py:add_aftercare` handover follow-up notes, while preserving resident
+own-words statements and representative authority bases verbatim.
 
 `propose_pack(concern_id, ai_summary=None)` drafts an optional concern pack for the named owner. The
 pack is built from the record by template, so it exists when AI is unavailable; an optional AI

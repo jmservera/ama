@@ -2,7 +2,9 @@
 
 import json
 import unittest
+from collections.abc import Callable
 from copy import deepcopy
+from typing import Any
 
 from zava_forward.core import aftercare as af
 from zava_forward.core.aftercare import AftercareRegister
@@ -285,6 +287,133 @@ class EvaluatorTests(unittest.TestCase):
         ):
             self.assertEqual(af.neutral_text(good), good)
 
+    def test_unicode_whitespace_and_soft_hyphen_obfuscation_are_rejected(self) -> None:
+        for bad in (
+            "\uff57\uff49\uff4c\uff4c \uff53\uff41\uff56\uff45 money",
+            "\uff43\uff41\uff55\uff53\uff45\uff44 \uff42\uff59 damp",
+            "will\u200bsave on heating",
+            "your\u200dfault entirely",
+            "guar\u00adanteed lower cost",
+            "mis\u00aduse of the thermostat",
+            "will   save next winter",
+            "caused\nby condensation",
+            "resident\u2019s lifestyle",
+            "you\u2019ll save next quarter",
+        ):
+            with self.subTest(bad=bad):
+                self.assertTrue(af.neutral_violations(bad))
+                with self.assertRaises(ValueError):
+                    af.neutral_text(bad)
+
+    def test_multi_clause_uncertainty_and_negated_caveat_do_not_exempt_later_claims(self) -> None:
+        for bad in (
+            "Unknown whether flow dropped\nThe retrofit caused the cold room",
+            "Unknown whether flow dropped; however, drying laundry indoors caused damp",
+            "Unknown whether flow dropped, so bills will fall",
+            "Cannot determine whether the valve stuck - resident lifestyle is at issue",
+            "Not known if sensors drifted -- energy savings are expected",
+            "Unknown whether humidity rose\u2014windows kept closed in winter",
+            "Unknown whether flow changed while heating habits remain poor",
+            "No claim of savings; however, the upgrade pays for itself",
+            "They do not show a cause, and the heat pump caused the cold room",
+        ):
+            with self.subTest(bad=bad):
+                self.assertTrue(af.neutral_violations(bad))
+                with self.assertRaises(ValueError):
+                    af.neutral_text(bad)
+        for good in (
+            af.EVALUATOR_NOTICE,
+            af.PROTECTION,
+            af.ACCESSIBLE_ROUTE,
+            af.PACK_MANUAL_ROUTE,
+            "Descriptive observed means only. They do not show a cause, assign fault or "
+            "promise savings.",
+            "Not known if the heating controls were reset during the power cut.",
+        ):
+            with self.subTest(good=good):
+                self.assertEqual(af.neutral_violations(good), ())
+                self.assertEqual(af.neutral_text(good), good)
+
+    def test_lifestyle_blame_measure_causation_and_savings_promise_corpora_are_rejected(
+        self,
+    ) -> None:
+        for bad in (
+            "Condensation from drying laundry indoors.",
+            "Damp from drying clothes on radiators.",
+            "Mould from not opening windows.",
+            "Humidity rose with windows kept shut.",
+            "Cold room from lack of ventilation.",
+            "High humidity reflects the occupant's lifestyle.",
+            "Cold mornings reflect household heating habits.",
+            "Improper use of the programmer.",
+            "Thermostat setting was user error.",
+            "Damage reflects carelessness.",
+            "High consumption is the fault of the resident.",
+            "Wall insulation is proven to cause the damp patch.",
+            "The reading proves that the heat pump failed.",
+            "Mould growth is attributable to the glazing.",
+            "Airtightness caused the condensation.",
+            "Ventilation is why your bedroom feels cold.",
+            "The upgrade will save \u00a3150 a year.",
+            "Households save up to 20% on heating.",
+            "Expected five-year payback.",
+            "The measure pays for itself.",
+            "Slashes household heating bills.",
+            "Promised energy savings after handover.",
+            "The home is cheaper to run.",
+        ):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                af.neutral_text(bad)
+        for good in (
+            "Visited home; trickle vents observed closed and extract fan switched off at isolator.",
+            "Household reported drying washing indoors because external line was removed.",
+            "Observed 17.5 C mean evening living-room temperature over seven days.",
+            "Checked programmer schedule with household and left printed quick guide.",
+        ):
+            with self.subTest(good=good):
+                self.assertEqual(af.neutral_text(good), good)
+
+    def test_register_writes_guard_staff_fields_while_keeping_household_statement_verbatim(
+        self,
+    ) -> None:
+        reg = AftercareRegister()
+        verbatim_statement = "I think the retrofit caused damp and you said I will save \u00a3200."
+        verbatim_basis = "Carer letter saying higher bills are your fault."
+        cid = raised(
+            reg,
+            raised_by="representative",
+            representative_basis=verbatim_basis,
+            statement=verbatim_statement,
+        )
+        self.assertEqual(reg.concerns[cid]["statement"], verbatim_statement)
+        self.assertEqual(reg.concerns[cid]["representative_basis"], verbatim_basis)
+        for bad_kw in (
+            {"home": "H1 caused by damp"},
+            {"owner": "Lead promising energy savings"},
+            {"route": "staff_recorded", "channel": "phone", "recorded_by": "Sam blaming tenant"},
+            {"sensor_context": {"caused by": "normal"}},
+            {"sensor_context": {"note": "drying clothes"}},
+        ):
+            with self.subTest(bad_kw=bad_kw), self.assertRaises(ValueError):
+                raised(reg, **bad_kw)
+        self.assertEqual(len(reg.concerns), 1)
+        with self.assertRaises(ValueError):
+            reg.add_sensor_context(cid, {"blame": "reading"})
+        with self.assertRaises(ValueError):
+            reg.record_outcome(
+                cid, OWNER, "advice_given", "home_visit", "Damp from not opening windows."
+            )
+        self.assertEqual(reg.concerns[cid]["investigation"], "received")
+        with self.assertRaises(ValueError):
+            reg.set_remedy(cid, OWNER, "open", "Upgrade pays for itself.")
+        reg.record_outcome(cid, OWNER, "remedy_needed", "home_visit", "Checked vents on visit.")
+        with self.assertRaises(ValueError):
+            reg.set_remedy(cid, OWNER, "completed", "Fixed user error on thermostat.")
+        self.assertEqual(reg.concerns[cid]["remedy"]["status"], "open")
+        with self.assertRaises(ValueError):
+            reg.record_closure("H1", "handover", "2026-12-10", "Owner promising payback")
+        self.assertEqual(reg.closures, [])
+
 
 class ConcernPackTests(unittest.TestCase):
     def test_pack_exists_without_ai_and_is_unreviewed(self) -> None:
@@ -353,6 +482,59 @@ class ConcernPackTests(unittest.TestCase):
         live = ai_registry.authorizes_live(af.PACK_TASK)  # type: ignore[no-untyped-call]
         self.assertFalse(live)
         self.assertIn("no model call", task["manual_route"])
+
+    def test_pack_review_reason_and_reviewer_are_guarded_without_mutating_pack_or_concern(
+        self,
+    ) -> None:
+        reg = AftercareRegister()
+        cid = raised(reg)
+        pack = reg.propose_pack(cid)
+        pid = str(pack["id"])
+        for bad_reason in (
+            "Rejected because damp is due to the resident.",
+            "Accepted; heating bills will fall next month.",
+            "Rejected; insulation caused the condensation.",
+        ):
+            with self.subTest(bad_reason=bad_reason), self.assertRaises(ValueError):
+                reg.review_pack(pid, OWNER, "reject", bad_reason)
+        self.assertIsNone(reg.packs[pid]["review"])
+        self.assertEqual(reg.packs[pid]["approval"], af.PACK_NOT_REVIEWED)
+        self.assertFalse(reg.packs[pid]["approved"])
+
+    def test_all_templated_register_outputs_pass_neutral_guard(self) -> None:
+        reg = AftercareRegister()
+        cid = raised(
+            reg,
+            statement="Household said the retrofit caused damp and promised savings.",
+        )
+        texts: list[str] = []
+        form = af.intake_form()
+        texts.extend([form["title"], form["intro"], form["accessible_route"], form["protection"]])
+        for field in form["fields"]:
+            texts.append(field["label"])
+            for opt in field.get("options", ()):
+                texts.append(opt["label"])
+        for opt in form["non_digital_channels"]:
+            texts.append(opt["label"])
+        texts.extend(af.intake_errors({"raised_by": "representative"}).values())
+        shown = reg.view(cid)
+        texts.extend([shown["accessible_route"], shown["protection"]])
+        ev = reg.evaluator_view(["H1", "H2"], baseline_homes=["H1"])
+        texts.append(ev["notice"])
+        texts.extend(ev["unknowns"])
+        pack = reg.propose_pack(cid)
+        texts.extend(
+            [
+                pack["approval"],
+                pack["manual_route"],
+                pack["notice"],
+                *pack["recorded_facts"],
+                *pack["questions_for_investigator"],
+            ]
+        )
+        for item in texts:
+            with self.subTest(item=item):
+                self.assertEqual(af.neutral_violations(item), ())
 
 
 class IntakeFormTests(unittest.TestCase):
@@ -423,6 +605,43 @@ class SnapshotTests(unittest.TestCase):
         bad["packs"]["PK-001"]["concern_id"] = "AC-009"
         with self.assertRaises(ValueError):
             AftercareRegister.from_state(bad)
+
+    def test_from_state_refuses_non_neutral_concern_closure_and_pack_fields(self) -> None:
+        reg = self._populated()
+        reg.set_remedy("AC-001", OWNER, "completed", "Draught strip fitted and checked.")
+        reg.review_pack("PK-001", OWNER, "accept", "Useful factual checklist for home visit.")
+        state = reg.to_state()
+        mutations: list[Callable[[dict[str, Any]], object]] = [
+            lambda s: s["concerns"]["AC-001"].__setitem__("owner", "Owner blaming resident"),
+            lambda s: s["concerns"]["AC-001"].__setitem__(
+                "accessible_route", "You will save money by calling."
+            ),
+            lambda s: s["concerns"]["AC-001"]["sensor_context"].__setitem__(
+                "note", "caused by drying laundry"
+            ),
+            lambda s: s["concerns"]["AC-001"]["outcome"].__setitem__(
+                "evidence", "Not opening windows caused mould."
+            ),
+            lambda s: s["concerns"]["AC-001"]["remedy"].__setitem__(
+                "evidence", "Upgrade pays for itself."
+            ),
+            lambda s: s["closures"][0].__setitem__("owner", "Lead promising energy savings"),
+            lambda s: s["packs"]["PK-001"].__setitem__(
+                "ai_summary", "Higher bills are the resident's fault."
+            ),
+            lambda s: s["packs"]["PK-001"]["recorded_facts"].__setitem__(
+                0, "The retrofit caused the damp."
+            ),
+            lambda s: s["packs"]["PK-001"]["review"].__setitem__(
+                "reason", "Saves money next winter."
+            ),
+        ]
+        for idx, mutate in enumerate(mutations):
+            with self.subTest(mutation=idx):
+                bad = deepcopy(state)
+                mutate(bad)
+                with self.assertRaises(ValueError):
+                    AftercareRegister.from_state(bad)
 
     def _register_of(self, count: int) -> AftercareRegister:
         reg = AftercareRegister()

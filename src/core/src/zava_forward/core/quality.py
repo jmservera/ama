@@ -15,7 +15,7 @@ from contextlib import contextmanager
 from copy import deepcopy
 from typing import Any
 
-from . import change_provenance, controls, gates, rai_release
+from . import aftercare, aftercare_intake, change_provenance, controls, gates, rai_release
 from .stock import decision_scope
 from .workflows import MANAGER_ROLES, _now
 from .resident_decisions import require_context, resident_gate
@@ -390,10 +390,14 @@ class QualityMixin:
             self.save()
 
     def add_aftercare(self, user, case_id, idx, note):
-        note = _clean(note)
-        if not note:
-            raise ValueError("Say what the resident reported or what was done.")
         with self._quality_operation(user, case_id) as (c, user):
+            note = _clean(note)
+            if not note:
+                raise ValueError("Say what the resident reported or what was done.")
+            if controls.is_memory_reference(note):
+                raise ValueError(controls.MEMORY_REFUSAL)
+            if aftercare.neutral_violations(note):
+                raise ValueError(aftercare_intake.NEUTRAL_NOTE_ERROR)
             rec = self._qrec(c, idx)
             if rec["state"] != HANDED:
                 raise ValueError("Aftercare can be recorded once the work has been handed over.")
