@@ -687,26 +687,61 @@ class DataOperatorHomeAndOverviewWcag(unittest.TestCase):
             self.assertNotRegex(rendered, leaked)
 
     def test_home_and_summary_tables_are_keyboard_focusable_named_and_scoped(self) -> None:
-        for key in ("homeTree", "summaryTree"):
+        for key in ("homeTree", "summaryTree", "overviewExceptions"):
             nodes = walk(self.out[key])
             regions = [n for n in nodes if n["attrs"].get("role") == "region"]
             labels = [r["attrs"].get("aria-label") for r in regions]
-            self.assertTrue(labels)
-            self.assertEqual(len(labels), len(set(labels)))
+            self.assertTrue(labels, key)
+            self.assertEqual(len(labels), len(set(labels)), key)
             for region in regions:
-                self.assertEqual(region["attrs"].get("tabindex"), 0)
+                self.assertEqual(region["attrs"].get("tabindex"), 0, key)
             tables = [n for n in nodes if n.get("tag") == "table"]
-            self.assertEqual(len(tables), len(regions))
+            self.assertEqual(len(tables), len(regions), key)
             for table in tables:
-                self.assertEqual(table["kids"][0]["tag"], "caption")
-                self.assertTrue(text(table["kids"][0]).strip())
-                ths = [n for n in walk(table) if n.get("tag") == "th"]
-                self.assertTrue(ths)
-                self.assertTrue(all(th["attrs"].get("scope") == "col" for th in ths))
-            for node in nodes:
-                self.assertNotIn(node.get("tag"), ("button", "form", "input", "select", "textarea"))
-                self.assertNotIn("onclick", node["attrs"])
-                self.assertNotIn("aria-invalid", node["attrs"])
+                self.assertEqual(table["kids"][0]["tag"], "caption", key)
+                self.assertTrue(text(table["kids"][0]).strip(), key)
+                thead = next(k for k in table["kids"] if k.get("tag") == "thead")
+                col_ths = [n for n in walk(thead) if n.get("tag") == "th"]
+                self.assertTrue(col_ths, key)
+                self.assertTrue(all(th["attrs"].get("scope") == "col" for th in col_ths), key)
+                tbody = next(k for k in table["kids"] if k.get("tag") == "tbody")
+                rows = [k for k in tbody["kids"] if k.get("tag") == "tr"]
+                self.assertTrue(rows, key)
+                for row in rows:
+                    cells = row["kids"]
+                    self.assertEqual(cells[0]["tag"], "th", key)
+                    self.assertEqual(cells[0]["attrs"].get("scope"), "row", key)
+                    self.assertTrue(all(c["tag"] == "td" for c in cells[1:]), key)
+            if key in ("homeTree", "summaryTree"):
+                for node in nodes:
+                    self.assertNotIn(
+                        node.get("tag"), ("button", "form", "input", "select", "textarea")
+                    )
+                    self.assertNotIn("onclick", node["attrs"])
+                    self.assertNotIn("aria-invalid", node["attrs"])
+
+    def test_rebase_preserves_housing_resident_helpers_alongside_steward_screen(self) -> None:
+        role_source = (WEB / "role-screens.js").read_text(encoding="utf-8")
+        style_source = (WEB / "style.css").read_text(encoding="utf-8")
+        for token in (
+            "const stateCue =",
+            "const screenRecordTable =",
+            "const ROLE_HASH_SCREENS =",
+            "const residentJumpNav =",
+            'id: "resident-service-issues"',
+            'id: "resident-choice"',
+            'id: "data-operator"',
+            'screenRecordTable("Exception items returned for you"',
+            'screenRecordTable("Source conflicts by home with both values"',
+            'screenRecordTable("Source conflicts with both values and source details"',
+        ):
+            self.assertIn(token, role_source)
+        for rule in (
+            ".screen-record h2",
+            '[tabindex="-1"] { scroll-margin-top: var(--sp-4); }',
+            '[tabindex="-1"]:focus',
+        ):
+            self.assertIn(rule, style_source)
 
 
 if __name__ == "__main__":

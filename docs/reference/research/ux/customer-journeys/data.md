@@ -112,12 +112,14 @@ operational audit trail. The research remains desk-based hypothesis, not
 observed behaviour.
 
 Local engineering update (2026-11-15, Refs #229): added keyboard jump
-navigation (`nav[aria-label]` with `a[data-jump]` links) and focusable
+navigation (`nav[aria-label]` with `a[data-jump]` links), focusable
 `section[tabindex="-1"]` targets across the selected-home steward and operator
 view, the overview register entry and unavailable panels, and the page-level
-conflict and return queue, plus fail-closed `State:` and `Source state:`
-textual state labels across conflicts, returns, handoff, blockers, event
-dispositions, recovery context and the exception register, pinned by
+conflict and return queue, `th[scope="row"]` record headers across all eight
+stewardship and exception-register tables (`screenRecordTable`), and
+fail-closed `State:` and `Source state:` textual state labels across conflicts,
+returns, handoff, blockers, event dispositions, recovery context and the
+exception register, pinned by
 `src/api/tests/test_data_steward_screen_wcag.py`.
 
 Unmet: the WCAG 2.2 baseline criterion (#151). Conformance needs assistive
