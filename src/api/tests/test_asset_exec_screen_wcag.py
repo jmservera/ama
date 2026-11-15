@@ -1,12 +1,40 @@
 """WCAG 2.2 AA (#226, #151): asset executive and board view states in words and keyboard paths."""
 
+from __future__ import annotations
+
+import importlib
 import json
+import sys
 import unittest
-from typing import Any
+from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 from checks import specialist_keyboard_browser_check as keyboard_check
 
-from test_asset_board_screen import WEB, run, tags, walk
+if TYPE_CHECKING:
+    from test_asset_board_screen import WEB, run, tags, walk
+else:
+    _tests_dir = str(Path(__file__).resolve().parent)
+    if _tests_dir not in sys.path:
+        sys.path.insert(0, _tests_dir)
+    _asset_board = importlib.import_module("test_asset_board_screen")
+    WEB = _asset_board.WEB
+    run = _asset_board.run
+    tags = _asset_board.tags
+    walk = _asset_board.walk
+
+EXPECTED_JUMP_SECTIONS: tuple[tuple[str, str], ...] = (
+    ("asset-boundary", "Go to Evidence boundary"),
+    ("asset-summary", "Go to Summary in words"),
+    ("asset-queue", "Go to Stock conflict queue"),
+    ("asset-comparison", "Go to Stock conflict comparison"),
+    ("asset-eligibility", "Go to Eligibility"),
+    ("asset-inputs", "Go to Missing investment inputs"),
+    ("asset-checks", "Go to Benefits and phase check"),
+    ("asset-portfolio", "Go to Portfolio scope"),
+    ("asset-ai", "Go to AI cohort and cost"),
+    ("asset-usage", "Go to AI usage, alerts and cost components"),
+)
 
 
 def cells(tree: object, caption: str) -> list[list[str]]:
@@ -45,16 +73,30 @@ class AssetExecScreenWcag(unittest.TestCase):
         tree = run({})["tree"]
         nodes = walk(tree)
         nav = next(n for n in nodes if n.get("tag") == "nav")
-        self.assertTrue(nav["attrs"]["aria-label"])
+        self.assertEqual(nav["attrs"].get("role"), "navigation")
+        self.assertEqual(nav["attrs"].get("aria-label"), "Sections of this view")
         links = [n for n in walk(nav) if n.get("tag") == "a"]
-        self.assertGreaterEqual(len(links), 6)
+        self.assertEqual(
+            [(link["attrs"]["data-jump"], link["kids"][0]) for link in links],
+            [(f"{sec_id}-heading", label) for sec_id, label in EXPECTED_JUMP_SECTIONS],
+        )
+        sections = [n for n in nodes if n.get("tag") == "section"]
+        self.assertEqual(
+            [sec["attrs"].get("id") for sec in sections],
+            [sec_id for sec_id, _ in EXPECTED_JUMP_SECTIONS],
+        )
+        for sec in sections:
+            sec_id = sec["attrs"]["id"]
+            self.assertEqual(sec["attrs"].get("aria-labelledby"), f"{sec_id}-heading")
         headings = {
             n["attrs"]["id"]: n
             for n in nodes
             if n.get("tag") == "h2" and "id" in n.get("attrs", {})
         }
         for link in links:
-            target: Any = headings.get(link["attrs"]["data-jump"])
+            jump_id = link["attrs"]["data-jump"]
+            self.assertEqual(link["attrs"].get("data-jump-target"), jump_id)
+            target: Any = headings.get(jump_id)
             self.assertIsNotNone(target, link["attrs"]["href"])
             self.assertEqual(target["attrs"]["tabindex"], -1)
         for control in ("button", "form", "input", "select", "textarea"):
