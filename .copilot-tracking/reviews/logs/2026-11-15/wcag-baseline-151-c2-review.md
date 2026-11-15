@@ -97,18 +97,19 @@ Later implementation of a routed finding does not require another Review.
 
 | Command | Scope | Status | Summary |
 |---|---|---|---|
-| `python3 -m ruff format --isolated --line-length 100 --check src/api/tests/test_accessibility_baseline.py src/api/tests/test_wcag_workbench_baseline_151.py src/api/tests/test_epic149_landmarks_skip_link_focus_order.py` | Touched test modules | Passed | `3 files already formatted` |
-| `PYTHONPATH=src/core/src:src/core/tests:src/agents/src:src/api/src python3 -m unittest discover -s src/api/tests -p 'test_epic149_landmarks_skip_link_focus_order.py' -q` | Landmarks and shrink-only `NO_SKIP_LINK` | Passed | `Ran 14 tests in 2.773s - OK` |
-| `PYTHONPATH=src/core/src:src/core/tests:src/agents/src:src/api/src python3 -m unittest discover -s src/api/tests -p 'test_wcag_workbench_baseline_151.py' -q` | `#151` Node-VM and 8-dimension invariants | Passed | `Ran 6 tests in 0.164s - OK` |
-| `PYTHONPATH=src/core/src:src/core/tests:src/agents/src:src/api/src python3 -m unittest discover -s src/api/tests -p 'test_accessibility_baseline.py' -q` | `#151` static baseline checks | Passed | `Ran 14 tests in 0.068s - OK` |
-| `PYTHONPATH=src/core/src:src/core/tests:src/agents/src:src/api/src python3 -m unittest discover -s src/api/tests -p 'test_epic149_*.py' -q` | All Epic `#149` suites (`test_epic149_form_error_summary_associations.py` included) | Passed | `Ran 55 tests in 85.715s - OK` |
-| `(cd src/api && python3 -m ruff check src tests)` | `src/api` lint | Passed | `All checks passed!` |
-| `(cd src/api && python3 -m mypy src tests/test_epic149_landmarks_skip_link_focus_order.py tests/test_wcag_workbench_baseline_151.py tests/test_accessibility_baseline.py)` | Static type checking | Passed | `Success: no issues found in 31 source files` |
+| `python3 -m ruff format --isolated --line-length 100 --check src/api/tests/test_accessibility_baseline.py src/api/tests/test_wcag_workbench_baseline_151.py src/api/tests/test_epic149_landmarks_skip_link_focus_order.py` | Touched `#151` / `#149` test modules | Passed | `3 files already formatted` |
+| `(cd src/api && python3 -m ruff check .)` | `src-ci.yml` parity lint across `src/api` | Passed | `All checks passed!` |
+| `(cd src/api && python3 -m ruff format --check .)` | `src-ci.yml` parity format check across `src/api` (no explicit excluded paths) | Passed | `214 files already formatted` |
+| `(cd src/api && python3 -m mypy)` | `src-ci.yml` parity static type check across `src/api` (`mypy_path` in `pyproject.toml`) | Passed | `Success: no issues found in 298 source files` (`MYPYPATH=../core/src:../agents/src` overrides installed untyped `zava-forward-agents` and flags `# type: ignore[import-untyped]` in `tests/test_ai_consumption_api.py:24-25`) |
+| `(cd src/api && PYTHONPATH=src:tests:../core/src:../core/tests:../agents/src:../agents/tests python3 -m unittest tests/test_wcag_workbench_baseline_151.py tests/test_accessibility_baseline.py tests/test_epic149_landmarks_skip_link_focus_order.py tests/test_epic149_form_error_summary_associations.py tests/test_housing_resident_wcag_232.py tests/test_assistant_panel_a11y_159.py -v)` | Rebased cross-PR `#151`, `#149`, `#232`, and `#159` WCAG suites (`aria-invalid == 9`, `tables == 15`, `NO_SKIP_LINK == {"/law.html"}`, Chromium CDP AXTree) | Passed | `Ran 55 tests in 8.923s - OK` |
+| `(cd src/api && PYTHONPATH=src:tests:../core/src:../core/tests:../agents/src:../agents/tests python3 -m unittest tests/test_nomination_screen.py tests/test_nomination_api_routes.py tests/test_case_journey.py tests/test_content_standard.py -q)` | Rebased `#130` nomination dual-route/keyboard/Playwright, case journey, and content standard suites | Passed | `Ran 74 tests in 13.943s - OK` |
+| `(cd src/api && PYTHONPATH=src:tests:../core/src:../core/tests:../agents/src:../agents/tests python3 -m unittest discover -s tests -p 'test_*wcag*.py' -q)` | All 19 role-screen and workbench WCAG suites in `src/api/tests` | Passed | `Ran 150 tests in 12.061s - OK` |
+| `(cd src/api && PYTHONPATH=src:tests:../core/src:../core/tests:../agents/src:../agents/tests python3 -m unittest discover -s tests -p 'test_epic149_*.py' -q)` | All Epic `#149` suites | Passed | `Ran 55 tests in 88.609s - OK` |
 
 ## Outcome
 
 * Outcome: Conformant
-* Outcome rationale: `NO_SKIP_LINK` in `test_epic149_landmarks_skip_link_focus_order.py` is updated to `{"/law.html"}` and passes all 14 tests; `test_accessibility_baseline.py` and `test_wcag_workbench_baseline_151.py` are formatted cleanly with `ruff format --isolated --line-length 100` while preserving `test_epic149_form_error_summary_associations.py`; `(cd src/api && python3 -m ruff check src tests)` and `mypy` pass with zero issues; and all Cycle 1 tracking artifacts remain preserved intact.
+* Outcome rationale: Rebased cleanly onto `origin/feat/demo-233-same-home-tensions-0825` (`f52679affff4b15b4bbdf6995ab530d6aca10c96`), preserving `#232`, `#159`, `#130`, and `#151` documentation and `panels.js` changes, aligning `test_housing_resident_wcag_232.py` to `tables == 15` (`sensorTable` caption from `#151`) while keeping `aria-invalid == 9` and `NO_SKIP_LINK = {"/law.html"}`, and passing `ruff check .`, `ruff format --check .` (`214` files), `mypy` (`298` files), and all combined `#151`/`#149`/`#232`/`#159`/`#130` WCAG and nomination test suites while leaving historical Cycle 1 tracking artifacts intact.
 
 ## Closeout Routing Record
 
@@ -123,5 +124,5 @@ Later implementation of a routed finding does not require another Review.
 
 * Execution status: Complete
 * Outcome: Conformant
-* Validation coverage: `ruff format --isolated --line-length 100 --check`, `test_epic149_landmarks_skip_link_focus_order.py` (14), `test_wcag_workbench_baseline_151.py` (6), `test_accessibility_baseline.py` (14), `test_epic149_*.py` (55), `ruff check src tests`, and `mypy` (31 files) all passed
+* Validation coverage: `ruff check .`, `ruff format --check .` (214 files), `mypy` (298 files), combined `#151`/`#149`/`#232`/`#159` WCAG suite (55), `#130`/journey/content suite (74), all 19 `*wcag*` suites (150), and all `epic149` suites (55) passed
 * Blockers: none

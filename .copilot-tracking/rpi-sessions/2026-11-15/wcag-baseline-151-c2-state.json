@@ -42,6 +42,11 @@
       "decision": "Post-implementation Review executed once (execution status: Complete; outcome: Conformant; assessed boundary: full task P01; 0 findings). Historical Cycle 1 artifacts preserved intact.",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/logs/2026-11-15/wcag-baseline-151-c2-review.md"
+    },
+    {
+      "decision": "Rebased feat/ux-151-wcag-baseline onto origin/feat/demo-233-same-home-tensions-0825 (f52679affff4b15b4bbdf6995ab530d6aca10c96 after #232, #159, and #130 merged), resolved conflicts in docs/reference/README.md, docs/reference/log.md, docs/reference/research/ux/wcag-conformance-baseline.md, and src/api/src/zava_forward/api/web/panels.js, aligned test_housing_resident_wcag_232.py captioned table count to 15 (keeping aria-invalid count at 9), and verified src-ci.yml parity checks (ruff check ., ruff format --check ., mypy across 298 files, and 55/74/150/55 unittest suites).",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-15/wcag-baseline-151-c2-changes.md; .copilot-tracking/reviews/logs/2026-11-15/wcag-baseline-151-c2-review.md"
     }
   ],
   "blockers": [],

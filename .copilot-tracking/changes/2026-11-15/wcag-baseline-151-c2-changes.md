@@ -38,6 +38,14 @@ Delivered the focused Cycle 2 (`c2`) correction for issue `#151` (`rev-151-wcag`
 * Completion evidence: Zero failures or errors across all commands.
 * Validation: Passed (`14` + `6` + `14` + `55` unit tests, `ruff check`, `ruff format --check`, `mypy`).
 
+### Post-Rebase Reconciliation onto `origin/feat/demo-233-same-home-tensions-0825` (`f52679aff`)
+
+* Related phase or task: `P01-T01`, `P01-T02`
+* Files: `docs/reference/README.md`, `docs/reference/log.md`, `docs/reference/research/ux/wcag-conformance-baseline.md`, `src/api/src/zava_forward/api/web/panels.js`, `src/api/tests/test_housing_resident_wcag_232.py`
+* What changed and why: Rebased `feat/ux-151-wcag-baseline` onto `origin/feat/demo-233-same-home-tensions-0825` (`f52679affff4b15b4bbdf6995ab530d6aca10c96`) after stacked PRs `#1786` (`#232`), `#1789` (`#159`), and `#1776` (`#130`) merged into the parent topic branch. Resolved rebase conflicts in `docs/reference/README.md`, `docs/reference/log.md`, `docs/reference/research/ux/wcag-conformance-baseline.md`, and `src/api/src/zava_forward/api/web/panels.js` so `#232`'s `residentPanel` `.table-scroll` (`"aria-label": "Resident decisions by measure"`), `<th scope="row">`, and textual `panelCue`/`panelReadiness` cues, `#130`'s `nominationPanel._routeForm` / `_explanationView` (`aria-invalid` site count remains `9`), `#159`'s conversational assistant Chromium CDP AXTree and polite live-region audit entries, and `#151`'s `technicalPanel` and `financeQueueView` `.table-scroll` + `<th scope="row">` wrappers, 8-dimension workbench audit, and 15-table inventory coexist cleanly. Updated `src/api/tests/test_housing_resident_wcag_232.py` (`test_static_shell_css_and_table_guards_hold`) from `self.assertEqual(tables, 14)` to `self.assertEqual(tables, 15)` to reflect `#151` adding `<caption class="sr-only">` to `sensorTable` in `ops.js`.
+* Completion evidence: Clean rebase atop `f52679affff4b15b4bbdf6995ab530d6aca10c96` and zero failures across `src-ci.yml` parity checks and cross-PR `#151`/`#149`/`#232`/`#159`/`#130` suites.
+* Validation: Passed (`ruff check .`, `ruff format --check .`, `mypy` across 298 source files, `55`-test combined parity suite, `74`-test `#130`/journey/content suite, `150`-test `*wcag*` suite, and `55`-test `epic149` suite).
+
 ## Implementation-Time Plan and Detail Updates
 
 * none
@@ -47,12 +55,13 @@ Delivered the focused Cycle 2 (`c2`) correction for issue `#151` (`rev-151-wcag`
 | Check | Scope | Status | Evidence or reason |
 |-------|-------|--------|--------------------|
 | `python3 -m ruff format --isolated --line-length 100 --check` | `test_accessibility_baseline.py`, `test_wcag_workbench_baseline_151.py`, `test_epic149_landmarks_skip_link_focus_order.py` | Passed | `3 files already formatted` (exit `0`) |
-| `unittest` (`test_epic149_landmarks_skip_link_focus_order.py`) | Landmarks, shrink-only `NO_SKIP_LINK`, focus, reduced motion, forced colours | Passed | `Ran 14 tests in 2.773s - OK` |
-| `unittest` (`test_wcag_workbench_baseline_151.py`) | `#151` Node-VM DOM accessible equivalents and 8-dimension baseline invariants | Passed | `Ran 6 tests in 0.164s - OK` |
-| `unittest` (`test_accessibility_baseline.py`) | `#151` static token contrast, target-size, table, and error-site invariants | Passed | `Ran 14 tests in 0.068s - OK` |
-| `unittest` (`test_epic149_*.py`) | All Epic `#149` suites including `test_epic149_form_error_summary_associations.py` | Passed | `Ran 55 tests in 85.715s - OK` |
-| `(cd src/api && python3 -m ruff check src tests)` | `src/api` source and test lint | Passed | `All checks passed!` (exit `0`) |
-| `(cd src/api && python3 -m mypy src tests/test_epic149_landmarks_skip_link_focus_order.py tests/test_wcag_workbench_baseline_151.py tests/test_accessibility_baseline.py)` | Static type checking | Passed | `Success: no issues found in 31 source files` (exit `0`) |
+| `(cd src/api && python3 -m ruff check .)` | Full `src/api` `src-ci.yml` lint check | Passed | `All checks passed!` (exit `0`) |
+| `(cd src/api && python3 -m ruff format --check .)` | Full `src/api` `src-ci.yml` format check (respecting `pyproject.toml` excludes without explicit excluded paths) | Passed | `214 files already formatted` (exit `0`) |
+| `(cd src/api && python3 -m mypy)` | Full `src/api` `src-ci.yml` type check (`pyproject.toml` sets `mypy_path = ["src", "tests", "../core/src", "../core/tests"]`) | Passed | `Success: no issues found in 298 source files` (exit `0`; note: passing `MYPYPATH=../core/src:../agents/src` overrides installed untyped `zava-forward-agents` and flags `# type: ignore[import-untyped]` in `tests/test_ai_consumption_api.py:24-25` as `unused-ignore`) |
+| `unittest` (`test_wcag_workbench_baseline_151.py`, `test_accessibility_baseline.py`, `test_epic149_landmarks_skip_link_focus_order.py`, `test_epic149_form_error_summary_associations.py`, `test_housing_resident_wcag_232.py`, `test_assistant_panel_a11y_159.py`) | Combined `#151`, `#149`, `#232`, and `#159` accessibility regression suites (including Chromium CDP AXTree) | Passed | `Ran 55 tests in 8.923s - OK` |
+| `unittest` (`test_nomination_screen.py`, `test_nomination_api_routes.py`, `test_case_journey.py`, `test_content_standard.py`) | `#130` nomination dual-route/keyboard/Playwright, case journey, and plain-language guards | Passed | `Ran 74 tests in 13.943s - OK` |
+| `unittest` (`test_*wcag*.py`) | All 19 role-screen and workbench WCAG suites in `src/api/tests` | Passed | `Ran 150 tests in 12.061s - OK` |
+| `unittest` (`test_epic149_*.py`) | All Epic `#149` suites including `test_epic149_form_error_summary_associations.py` | Passed | `Ran 55 tests in 88.609s - OK` |
 
 ## Pre-Review Reconciliation
 
@@ -80,7 +89,7 @@ Delivered the focused Cycle 2 (`c2`) correction for issue `#151` (`rev-151-wcag`
 
 * Implementation execution status: Complete
 * Declared scope and markers: full plan (`P01`); completed: `P01`, `P01-T01`, `P01-T02`; remaining: none
-* Validation coverage: `ruff format --isolated --line-length 100 --check`, `test_epic149_landmarks_skip_link_focus_order.py` (14), `test_wcag_workbench_baseline_151.py` (6), `test_accessibility_baseline.py` (14), `test_epic149_*.py` (55), `ruff check src tests`, and `mypy` (31 files) all passed
+* Validation coverage: `ruff check .`, `ruff format --check .` (214 files), `mypy` (298 files), combined `#151`/`#149`/`#232`/`#159` WCAG suite (55), `#130`/journey/content suite (74), all 19 `*wcag*` suites (150), and all `epic149` suites (55) passed
 * Blockers: none
 * Current plan and detail updates: Checked `P01`, `P01-T01`, `P01-T02` and marked Phase Index `completed`
 * Planning and critique state: ready (`Pass` critique with `0` findings)
