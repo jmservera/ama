@@ -2086,9 +2086,17 @@ class ConsumptionApi(unittest.TestCase):
                 with urllib.request.urlopen(base) as response:
                     held = json.load(response)
                     self.assertEqual(response.status, 200)
-                self.assertEqual(set(held), {"evaluation", "live", "registry", "consumption"})
+                self.assertEqual(
+                    set(held),
+                    {"evaluation", "chat_evaluation", "live", "registry", "consumption"},
+                )
                 self.assertEqual(set(held["evaluation"]), set(result["evaluation"]))
                 self.assertEqual(held["evaluation"]["version"], result["evaluation"]["version"])
+                self.assertEqual(set(held["chat_evaluation"]), set(result["chat_evaluation"]))
+                self.assertEqual(
+                    held["chat_evaluation"]["version"], result["chat_evaluation"]["version"]
+                )
+                self.assertEqual(held["chat_evaluation"]["enablement"]["state"], "disabled")
                 self.assertEqual(held["registry"], result["registry"])
                 self.assertEqual(
                     held["consumption"],
