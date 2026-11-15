@@ -62,7 +62,7 @@ const pendingMutations = new Set();
 
 function mutationKey(path, body) {
   return JSON.stringify([path, body.action || body.task || (path.endsWith("/draft") ? body.kind : "") || "",
-    ...["id", "index", "measure", "case_id", "package", "capability", "turn"]
+    ...["id", "index", "key", "measure", "case_id", "package", "capability", "turn"]
       .map(key => body[key] ?? null)]);
 }
 
@@ -439,8 +439,9 @@ async function route() {
     if (link.getAttribute("href") === active) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
   });
+  const baseHash = hash.split("?")[0];
   const destination = me.navigation.find((item) => item.href === active);
-  const routeStatus = `${me.user.role}. ${destination?.scope || (hash === "#/handoff-waiting" ? "Handoff waiting times" : "Case workspace")}.`;
+  const routeStatus = `${me.user.role}. ${destination?.scope || (hash === "#/handoff-waiting" ? "Handoff waiting times" : baseHash === "#/exceptions" ? "Data steward and operator exception queue" : "Case workspace")}.`;
   workspaceStatus.textContent = routeStatus;
   try {
   await requireWorkspaceScripts(hash, Boolean(m));
@@ -468,6 +469,7 @@ async function route() {
   if (hash.split("?")[0] === "#/progress") return await ProgressViews.dashboard();
   if (hash === "#/capacity") return await capacityView();
   if (hash === "#/import") return await importView();
+  if (baseHash === "#/exceptions") return await exceptionsView();
   if (hash === "#/overview") return await overviewView();
   if (hash.split("?")[0] === "#/coordinator") return await coordinatorView();
   if (hash === "#/visits") return await visitsView();
@@ -890,7 +892,9 @@ async function handoffWaitingView() {
   if (!rows) return show(back, title, h("p", { role: "alert", class: "err" }, message), recheck);
   const scope = h("section", { class: "card", "aria-label": "Scope of this screen" },
     h("p", {}, "This screen lists every handoff that has not been accepted yet and that your role can see. It is not the list called Handoffs waiting for you. It is read-only: nothing here changes a handoff."),
-    h("p", {}, "No approved waiting-time limit is set for the whole queue (OD-09 is not decided). A long wait alone does not mean a handoff is late, and nothing is escalated automatically. A handoff is marked as needing escalation only when its own due time has passed. Open the case to chase, escalate or withdraw."));
+    h("p", {}, "No approved waiting-time limit is set for the whole queue (OD-09 is not decided). A long wait alone does not mean a handoff is late, and nothing is escalated automatically. A handoff is marked as needing escalation only when its own due time has passed. Open the case to chase, escalate or withdraw."),
+    h("p", {}, "For conflicting source values, failed imports, failed model calls and stranded tasks, open the ",
+      h("a", { href: "#/exceptions" }, "data steward and operator exception queue"), "."));
   if (!rows.length) return show(back, title, scope,
     h("p", { role: "status" }, "No unaccepted handoffs are visible to your role."), recheck);
   const heads = ["Case", "State", "Status", "Waiting", "Due", "Chase owner", "Proposed receiver", "Escalation"];
@@ -1976,7 +1980,363 @@ function importView() {
   }));
   show(h("a", { class: "back", href: "#/" }, "Back to the list"), h("h1", {}, "Check a spreadsheet"),
     h("p", {}, "Choose any spreadsheet saved as CSV. We match the columns for you and list anything to fix. Your file is never changed."),
+    h("p", {}, "Rejected import batches, failed model calls, stranded tasks and conflicting source values are tracked in the ",
+      h("a", { href: "#/exceptions" }, "data steward and operator exception queue"), "."),
     h("label", { for: "f" }, "Spreadsheet (CSV)"), file, out);
+}
+
+const EXCEPTIONS_READ_ERROR = "The exception queue could not load, so conflicting source values and operational failures cannot be verified right now. Owner: application support. Next action: choose Check again, then contact application support if it continues.";
+const EXCEPTIONS_DENIED = "Access to the exception queue is restricted to named data stewards and digital operators (or a programme manager before roles are named). Owner: the programme owner. Next action: ask the programme owner to name a data steward and a digital operator before opening this queue.";
+
+function exceptionActionLabel(action) {
+  if (action === "request_rerun") return "Request human re-run";
+  if (action === "resolve_by_owner") return "Record owner resolution";
+  return "Keep on hold";
+}
+
+function exceptionStatusLabel(status) {
+  if (status === "held") return "Paused for human review";
+  if (status === "rerun_requested") return "Human re-run requested";
+  if (status === "closed") return "Closed by named owner";
+  return "Open for review";
+}
+
+function exceptionKindLabel(item) {
+  const kind = typeof item === "string" ? item : (item.failure_category || item.kind);
+  if (kind === "source_conflict") return "Conflicting source values";
+  if (kind === "identity_conflict") return "Identity conflict";
+  if (kind === "failed_import") return "Failed import";
+  if (kind === "failed_ai_run") return "Failed model call";
+  if (kind === "failed_integration") return "Failed integration";
+  if (kind === "stranded_task") return "Stranded task";
+  return String(kind || "Exception");
+}
+
+function exceptionRoleLabel(code) {
+  if (code === "data_steward") return "Data steward (source conflicts, identity conflicts and failed imports)";
+  if (code === "digital_operator") return "Digital operator (failed model calls, failed integrations and stranded tasks)";
+  return String(code || "Unassigned");
+}
+
+function exceptionTime(value) {
+  if (value == null || value === "") return "Unknown";
+  const text = String(value);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+    const day = new Date(`${text}T00:00:00Z`);
+    return Number.isNaN(day.getTime()) ? text
+      : `${new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeZone: "UTC" }).format(day)} (${text})`;
+  }
+  const parsed = new Date(text);
+  return Number.isNaN(parsed.getTime()) ? text
+    : `${new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }).format(parsed)} UTC`;
+}
+
+function exceptionOriginalSummary(orig) {
+  if (!orig || typeof orig !== "object") return "Preserved as recorded";
+  const parts = [];
+  if (orig.case_id) parts.push(`case ${orig.case_id}`);
+  if (orig.id) parts.push(`record ${orig.id}`);
+  if (orig.batch_id) parts.push(`batch ${orig.batch_id}`);
+  if (orig.source_name) parts.push(`file ${orig.source_name}`);
+  if (orig.source_sha256) parts.push(`sha256 ${String(orig.source_sha256).slice(0, 12)}`);
+  if (orig.at) parts.push(`recorded ${exceptionTime(orig.at)}`);
+  return parts.length ? `Preserved without overwrite (${parts.join(", ")})` : "Preserved without overwrite";
+}
+
+function validExceptionQueuePayload(data) {
+  return Boolean(data && typeof data === "object"
+    && (data.state === "ok" || data.state === "roles_not_named")
+    && data.banner && typeof data.banner === "object"
+    && typeof data.banner.state === "string"
+    && typeof data.banner.text === "string"
+    && Array.isArray(data.items)
+    && Array.isArray(data.sources)
+    && Array.isArray(data.unrouted)
+    && data.access && typeof data.access === "object");
+}
+
+function renderExceptionOutageSection(banner, sources, unrouted) {
+  const detected = banner.state === "outage";
+  const clear = banner.state === "no_known_outage";
+  const tone = detected ? "danger" : clear ? "ok" : "wait";
+  const prefix = detected ? "Outage detected" : clear ? "No outage recorded" : "Service health unverified";
+  const components = banner.components && typeof banner.components === "object"
+    ? Object.entries(banner.components) : [];
+  const nextSteps = Array.isArray(banner.next_steps) ? banner.next_steps : [];
+  const sourceList = Array.isArray(sources) ? sources : [];
+  const unroutedList = Array.isArray(unrouted) ? unrouted : [];
+  return h("section", { class: "card screen-evidence", "aria-label": "Service and outage status" },
+    h("h2", {}, "Service and outage status"),
+    h("p", { class: `status-line ${tone}`, role: "status" }, `${prefix}: ${banner.text}`),
+    components.length ? h("div", {},
+      h("h3", {}, "Affected services"),
+      h("ul", {}, components.map(([name, info]) => h("li", {},
+        h("code", { translate: "no" }, name),
+        `: ${info && info.note ? info.note : "Suspended"}`,
+        info && info.since ? ` (since ${exceptionTime(info.since)})` : "")))) : null,
+    nextSteps.length ? h("div", {},
+      h("h3", {}, "What staff should do now"),
+      h("ul", {}, nextSteps.map((step) => h("li", {}, String(step))))) : null,
+    sourceList.length ? h("div", {},
+      h("h3", {}, "Feed connection status"),
+      h("ul", {}, sourceList.map((line) => h("li", {}, String(line))))) : null,
+    unroutedList.length ? h("div", {},
+      h("h3", {}, "Unrouted records requiring attention"),
+      h("ul", {}, unroutedList.map((line) => h("li", {}, String(line))))) : null);
+}
+
+function renderExceptionRecoveryForm(item, index, reload) {
+  const trail = Array.isArray(item.audit_trail) ? item.audit_trail : [];
+  const trailBlock = [
+    h("h4", {}, "Recorded recovery audit trail"),
+    trail.length
+      ? h("ol", {}, trail.map((entry) => h("li", {},
+        `${exceptionActionLabel(entry.action)} by ${entry.by || "Unknown"} (${exceptionTime(entry.at)}): ${entry.reason || "No reason recorded"}. Replayed: ${entry.replayed ? "Yes" : "No"}. Released: ${entry.released ? "Yes" : "No"}.`)))
+      : h("p", { class: "muted" }, "No recovery decisions recorded yet."),
+  ];
+  if (item.status === "closed" || !item.recovery_key) {
+    return h("div", {},
+      h("p", { class: "muted", role: "status" },
+        item.status === "closed"
+          ? "Closed by the named owner. No further recovery action can be recorded on this item."
+          : "This item has no stable recovery key and must be inspected directly in its source record."),
+      ...trailBlock);
+  }
+  const actionId = `ex-action-${index}`;
+  const reasonId = `ex-reason-${index}`;
+  const hintId = `ex-hint-${index}`;
+  const errId = `ex-err-${index}`;
+  const policyActions = item.recovery_policy?.allowed_actions || item.recovery_context?.allowed_actions;
+  const actions = Array.isArray(policyActions) && policyActions.length
+    ? policyActions
+    : ["request_rerun", "resolve_by_owner"];
+  const actionSelect = h("select", { id: actionId, name: "action", autocomplete: "off" },
+    actions.map((act) => h("option", { value: act }, exceptionActionLabel(act))));
+  const errNode = h("p", { id: errId, class: "field-error", role: "alert", hidden: true });
+  const statusNode = h("p", { class: "muted", role: "status", "aria-live": "polite" });
+  const reasonInput = h("textarea", {
+    id: reasonId, name: "reason", rows: "2", maxlength: "400", autocomplete: "off",
+    "aria-describedby": `${hintId} ${errId}`,
+    placeholder: "Example: Checked source file against supplier log; keeping paused until named owner confirms.",
+  });
+  const submitBtn = h("button", { type: "submit" }, "Record controlled recovery decision");
+  const form = h("form", { class: "safety-step", onsubmit: async (event) => {
+    event.preventDefault();
+    const reason = reasonInput.value.trim();
+    if (!reason) {
+      reasonInput.setAttribute("aria-invalid", "true");
+      errNode.hidden = false;
+      errNode.textContent = "Enter the audit reason before recording a recovery decision. Owner: you, as the signed-in steward or operator. Next action: explain what you checked and why this decision applies.";
+      reasonInput.focus();
+      return;
+    }
+    reasonInput.removeAttribute("aria-invalid");
+    errNode.hidden = true;
+    errNode.textContent = "";
+    submitBtn.disabled = true;
+    submitBtn.setAttribute("aria-busy", "true");
+    statusNode.textContent = "Recording controlled recovery decision.";
+    try {
+      await api("/api/exceptions/recovery", { key: item.recovery_key, action: actionSelect.value, reason });
+      form.dataset.unsaved = "";
+      await reload(`Recorded ${exceptionActionLabel(actionSelect.value).toLowerCase()} for ${item.id}. No automatic replay or external release was performed.`);
+    } catch (error) {
+      submitBtn.disabled = false;
+      submitBtn.removeAttribute("aria-busy");
+      statusNode.textContent = "";
+      if (!error || error.name === "AbortError" || error.status === 401) return;
+      errNode.hidden = false;
+      errNode.textContent = ownedNotice(error.message, "check the audit reason and recorded recovery history before trying again.");
+      reasonInput.focus();
+    }
+  } },
+  h("label", { for: actionId }, "Controlled recovery action"),
+  actionSelect,
+  h("label", { for: reasonId }, "Audit reason (required, recorded in the audit log)"),
+  reasonInput,
+  h("p", { id: hintId, class: "field-hint muted" },
+    "Recording a decision appends an audited human request only. Nothing replays a model call, re-imports a batch, overwrites an original source value or contacts a resident."),
+  errNode, statusNode, submitBtn);
+  reasonInput.addEventListener("input", () => {
+    form.dataset.unsaved = reasonInput.value.trim() ? "true" : "";
+    if (reasonInput.value.trim()) {
+      reasonInput.removeAttribute("aria-invalid");
+      errNode.hidden = true;
+      errNode.textContent = "";
+    }
+  });
+  return h("div", {}, form, ...trailBlock);
+}
+
+async function exceptionsView(savedNotice = "") {
+  const back = h("a", { class: "back", href: typeof queueHref === "function" ? queueHref() : "#/" }, "Back to the list");
+  const title = h("h1", {}, "Data steward and digital operator exception queue");
+  show(back, title, h("p", { role: "status", "aria-live": "polite" }, "Loading exception queue."));
+  let data = null;
+  let message = EXCEPTIONS_READ_ERROR;
+  try {
+    const raw = await api("/api/exceptions");
+    if (validExceptionQueuePayload(raw)) data = raw;
+  } catch (error) {
+    if (error && (error.name === "AbortError" || error.status === 401)) return;
+    if (error && error.status === 403) message = EXCEPTIONS_DENIED;
+  }
+  const recheck = h("p", {}, h("button", { type: "button", class: "alt", onclick: () => exceptionsView() }, "Check again"));
+  if (!data) {
+    return show(back, title, h("p", { role: "alert", class: "err" }, message), recheck);
+  }
+  const noticeBanner = savedNotice
+    ? h("p", { class: "status-line ok", role: "status", "aria-live": "polite" }, savedNotice)
+    : null;
+  const roleMap = data.access.roles && typeof data.access.roles === "object" ? data.access.roles : {};
+  const viewerEmail = Object.keys(roleMap)[0] || (typeof me === "object" && me?.user?.email) || "Signed-in staff";
+  if (data.state === "roles_not_named") {
+    return show(back, title, noticeBanner,
+      h("section", { class: "card blocked", "aria-label": "Operator access and scope" },
+        h("h2", { class: "blocked-title" }, "Operator access and scope: roles not yet named"),
+        h("p", {}, data.unrouted[0] || "No data steward or digital operator is named yet."),
+        h("p", { class: "muted" }, data.note || ""),
+        h("dl", {},
+          h("dt", {}, "Signed-in viewer"), h("dd", {}, h("code", { translate: "no" }, viewerEmail)),
+          h("dt", {}, "Named roles"), h("dd", {}, "None configured (data_steward and digital_operator are unassigned)"),
+          h("dt", {}, "Owner"), h("dd", {}, "Programme owner"),
+          h("dt", {}, "Next action"), h("dd", {}, "Ask the programme owner to name a data steward and a digital operator before opening exception items."))),
+      renderExceptionOutageSection(data.banner, data.sources, data.unrouted.slice(1)),
+      recheck);
+  }
+  const rawHash = typeof location !== "undefined" && typeof location.hash === "string" ? location.hash : "#/exceptions";
+  const params = new URLSearchParams(rawHash.split("?")[1] || "");
+  const selectedKind = params.get("kind") || "";
+  const selectedStatus = params.get("status") || "";
+  const viewerRoles = Array.isArray(data.access.viewer_roles) ? data.access.viewer_roles : (roleMap[viewerEmail] || []);
+  const allowedKinds = Array.isArray(data.access.allowed_kinds) ? data.access.allowed_kinds : [];
+  const isConflict = (item) => item.kind === "source_conflict" || item.kind === "identity_conflict";
+  const filtered = data.items.filter((item) => {
+    const itemCategory = isConflict(item) ? item.kind : (item.failure_category || item.kind);
+    if (selectedKind && itemCategory !== selectedKind) return false;
+    if (selectedStatus && item.status !== selectedStatus) return false;
+    return true;
+  });
+  const conflicts = filtered.filter(isConflict);
+  const failures = filtered.filter((item) => !isConflict(item));
+  const showConflicts = allowedKinds.some((k) => k === "source_conflict" || k === "identity_conflict") || conflicts.length > 0;
+  const showFailures = allowedKinds.some((k) => k !== "source_conflict" && k !== "identity_conflict") || failures.length > 0;
+
+  const kindSelect = h("select", { id: "ex-filter-kind", name: "kind", autocomplete: "off" },
+    h("option", { value: "" }, "All permitted categories"),
+    [["source_conflict", "Conflicting source values"], ["identity_conflict", "Identity conflicts"],
+      ["failed_import", "Failed imports"], ["failed_ai_run", "Failed model calls"],
+      ["stranded_task", "Stranded tasks"]]
+      .map(([val, text]) => h("option", { value: val }, text)));
+  kindSelect.value = selectedKind;
+  const statusSelect = h("select", { id: "ex-filter-status", name: "status", autocomplete: "off" },
+    h("option", { value: "" }, "All recovery states"),
+    [["open", "Open for review"], ["held", "Paused for human review"],
+      ["rerun_requested", "Human re-run requested"], ["closed", "Closed by named owner"]]
+      .map(([val, text]) => h("option", { value: val }, text)));
+  statusSelect.value = selectedStatus;
+  const filterForm = h("form", { class: "card", onsubmit: (event) => {
+    event.preventDefault();
+    const next = new URLSearchParams();
+    if (kindSelect.value) next.set("kind", kindSelect.value);
+    if (statusSelect.value) next.set("status", statusSelect.value);
+    const query = next.toString();
+    if (typeof location !== "undefined") location.hash = query ? `#/exceptions?${query}` : "#/exceptions";
+  } },
+  h("h2", {}, "Filter visible exceptions"),
+  h("div", { class: "row" },
+    h("div", {}, h("label", { for: "ex-filter-kind" }, "Exception category"), kindSelect),
+    h("div", {}, h("label", { for: "ex-filter-status" }, "Recovery state"), statusSelect)),
+  h("p", { class: "row" },
+    h("button", { type: "submit" }, "Apply queue filters"),
+    (selectedKind || selectedStatus) ? h("a", { class: "btn alt", href: "#/exceptions" }, "Show all permitted items") : null));
+
+  let formIndex = 0;
+  const reload = (msg) => exceptionsView(msg);
+  const conflictCards = conflicts.map((item) => {
+    const idx = ++formIndex;
+    const caseId = item.original_source?.case_id || null;
+    const values = Array.isArray(item.values) ? item.values : [];
+    return h("article", { class: "card screen-record" },
+      h("div", { class: "row between" },
+        h("h3", {}, `${exceptionKindLabel(item)}: ${item.summary || item.id}`),
+        h("span", { class: "flag" }, exceptionStatusLabel(item.status))),
+      h("dl", {},
+        h("dt", {}, "Record"), h("dd", {},
+          caseId ? h("a", { href: `#/case/${encodeURIComponent(caseId)}` }, caseId) : null,
+          caseId ? " " : null,
+          h("code", { translate: "no" }, item.id)),
+        h("dt", {}, "Recovery key"), h("dd", {}, h("code", { translate: "no" }, item.recovery_key || item.ref || item.id)),
+        h("dt", {}, "Correlation ID"), h("dd", {}, h("code", { translate: "no" }, item.correlation_id || "Unknown")),
+        h("dt", {}, "Resolution owner"), h("dd", {}, h("code", { translate: "no" }, item.resolution_owner || item.owner || "Data steward")),
+        h("dt", {}, "Eligibility"), h("dd", {},
+          `${item.eligibility || "Unknown"} (${item.unresolved_eligibility ? "unresolved eligibility preserved; no winning source is selected automatically" : "recorded"})`),
+        h("dt", {}, "Original source"), h("dd", {}, exceptionOriginalSummary(item.original_source)),
+        h("dt", {}, "Recovery guidance"), h("dd", {}, item.recovery_context?.runbook || item.runbook || "Compare both source values with the named resolution owner.")),
+      h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": `Competing source values for ${item.id}` },
+        h("table", {},
+          h("caption", { class: "sr-only" }, `Competing source values for ${item.id} with source, date and version`),
+          h("thead", {}, h("tr", {},
+            ["Value", "Source", "Date", "Version"].map((col) => h("th", { scope: "col" }, col)))),
+          h("tbody", {}, values.map((val) => h("tr", {},
+            h("th", { scope: "row" }, val.value == null ? "Unknown" : String(val.value)),
+            h("td", {}, val.source || "Unknown"),
+            h("td", {}, exceptionTime(val.date)),
+            h("td", {}, h("code", { translate: "no" }, val.version || "unversioned"))))))),
+      renderExceptionRecoveryForm(item, idx, reload));
+  });
+
+  const failureCards = failures.map((item) => {
+    const idx = ++formIndex;
+    const caseId = item.original_source?.case_id || null;
+    const sourceRef = item.recovery_context?.ref || item.ref || item.id;
+    return h("article", { class: "card screen-record" },
+      h("div", { class: "row between" },
+        h("h3", {}, `${exceptionKindLabel(item)}: ${item.summary || item.id}`),
+        h("span", { class: "flag" }, exceptionStatusLabel(item.status))),
+      h("dl", {},
+        h("dt", {}, "Failure category"), h("dd", {},
+          `${exceptionKindLabel(item)} (`, h("code", { translate: "no" }, item.failure_category || item.kind), ")"),
+        h("dt", {}, "Failure detail"), h("dd", {}, item.error || "Recorded failure"),
+        h("dt", {}, "Owner"), h("dd", {},
+          h("code", { translate: "no" }, item.owner || "Unassigned"),
+          item.owner_role ? ` (${item.owner_role})` : ""),
+        h("dt", {}, "Recovery key"), h("dd", {}, h("code", { translate: "no" }, item.recovery_key || sourceRef)),
+        h("dt", {}, "Correlation ID"), h("dd", {}, h("code", { translate: "no" }, item.correlation_id || "Unknown")),
+        h("dt", {}, "Source reference"), h("dd", {},
+          caseId ? h("a", { href: `#/case/${encodeURIComponent(caseId)}` }, caseId) : null,
+          caseId ? " " : null,
+          h("code", { translate: "no" }, sourceRef)),
+        h("dt", {}, "Eligibility"), h("dd", {},
+          `${item.eligibility || "Unknown"} (${item.unresolved_eligibility ? "unresolved eligibility preserved without silent overwrite" : "recorded"})`),
+        h("dt", {}, "Original source"), h("dd", {}, exceptionOriginalSummary(item.original_source)),
+        h("dt", {}, "Recovery guidance"), h("dd", {}, item.recovery_context?.runbook || item.runbook || "Investigate the failure before recording a controlled recovery action.")),
+      renderExceptionRecoveryForm(item, idx, reload));
+  });
+
+  show(back, title, noticeBanner,
+    h("section", { class: "card screen-evidence", "aria-label": "Operator access and scope" },
+      h("h2", {}, "Operator access and scope"),
+      h("p", {}, data.note || "Viewing changes nothing. Recovery is a recorded, audited human request; nothing is replayed, corrected, re-sent or released automatically."),
+      h("dl", {},
+        h("dt", {}, "Signed-in viewer"), h("dd", {}, h("code", { translate: "no" }, viewerEmail)),
+        h("dt", {}, "Scoped queue roles"), h("dd", {}, viewerRoles.length ? viewerRoles.map(exceptionRoleLabel).join("; ") : "Scoped read access"),
+        h("dt", {}, "Permitted item kinds"), h("dd", {}, allowedKinds.length ? allowedKinds.join(", ") : "None"),
+        h("dt", {}, "Category ownership"), h("dd", {},
+          data.access.scope && typeof data.access.scope === "object"
+            ? Object.entries(data.access.scope).map(([k, r]) => `${k}: ${r}`).join("; ")
+            : "Scoped by role"))),
+    renderExceptionOutageSection(data.banner, data.sources, data.unrouted),
+    filterForm,
+    showConflicts ? h("section", { class: "screen-evidence", "aria-label": "Conflicting source values" },
+      h("h2", {}, `Conflicting source values (${conflicts.length})`),
+      conflictCards.length ? conflictCards
+        : h("p", { class: "empty" }, "No conflicting source values match this view. Disconnected feeds in the service status above remain unverified, not clear.")) : null,
+    showFailures ? h("section", { class: "screen-evidence", "aria-label": "Operational failures and stranded tasks" },
+      h("h2", {}, `Failed imports, failed model calls and stranded tasks (${failures.length})`),
+      failureCards.length ? failureCards
+        : h("p", { class: "empty" }, "No failed imports, failed model calls or stranded tasks match this view. Disconnected feeds in the service status above remain unverified, not clear.")) : null,
+    recheck);
 }
 
 async function signOut(switchAccount) {

@@ -97,7 +97,7 @@ class Wcag22Baseline(unittest.TestCase):
                 window = "\n".join(lines[max(number - 4, 0):number + 3])
                 built_with_describedby = re.search(r'"aria-describedby":|setAttribute\("aria-describedby"', text)
                 self.assertTrue("aria-describedby" in window or built_with_describedby, f"{path.name}:{number}")
-        self.assertEqual(sites, 8, "new aria-invalid site: audit it and update this check and the record")
+        self.assertEqual(sites, 9, "new aria-invalid site: audit it and update this check and the record")
 
     def test_saved_held_copy_field_is_tied_to_its_visible_message(self):
         # The eighth site (96): the saved Held copy file input must name the same element the
@@ -113,6 +113,24 @@ class Wcag22Baseline(unittest.TestCase):
                      'input.setAttribute("aria-invalid", "true")', 'input.removeAttribute("aria-invalid")'):
             self.assertIn(step, show)
         self.assertRegex(body, r'h\("p", \{\}, h\("label", \{ for: id \}, "[^"]+"\), " ", input, error\)')
+
+    def test_exception_recovery_reason_field_is_tied_to_its_visible_message(self) -> None:
+        # The ninth site (#135): the exception recovery audit-reason textarea names its hint and
+        # visible alert message via aria-describedby, keeps a visible label, and takes focus.
+        start = APP.index("function renderExceptionRecoveryForm(")
+        body = APP[start : APP.index("async function exceptionsView(", start)]
+        for piece in (
+            "const errId = `ex-err-${index}`;",
+            'h("p", { id: errId, class: "field-error", role: "alert", hidden: true })',
+            '"aria-describedby": `${hintId} ${errId}`',
+            'h("label", { for: reasonId }, "Audit reason (required, recorded in the audit log)")',
+            'reasonInput.setAttribute("aria-invalid", "true")',
+            'reasonInput.removeAttribute("aria-invalid")',
+            "errNode.hidden = false",
+            "errNode.hidden = true",
+            "reasonInput.focus()",
+        ):
+            self.assertIn(piece, body)
 
     def test_fixed_launcher_cannot_hide_the_focused_control(self):
         # WCAG 2.4.11: the fixed chat launcher is 3.5rem tall plus its inset, so the page keeps
@@ -136,6 +154,7 @@ class Wcag22Baseline(unittest.TestCase):
         # WCAG 1.3.1 and 4.1.2: each script-built table is named by a caption and every header cell
         # declares its scope. The count forces a new table to be audited and added here.
         # 13 on 2026-11-11: the handoff waiting table (#83) was audited from source and added.
+        # 14 on 2026-11-15: the exception queue competing-values table (#135) was audited and added.
         tables = 0
         for path in sorted(WEB.glob("*.js")):
             text = path.read_text()
@@ -143,7 +162,7 @@ class Wcag22Baseline(unittest.TestCase):
             for match in re.finditer(r'h\("table", \{\},\s*(.{0,60})', text):
                 tables += 1
                 self.assertIn('h("caption"', match.group(1), f"{path.name}: {match.group(1)}")
-        self.assertEqual(tables, 13, "new table: audit it and update this check and the record")
+        self.assertEqual(tables, 14, "new table: audit it and update this check and the record")
 
     def test_audit_record_names_target_gaps_and_makes_no_conformance_claim(self):
         self.assertIn("WCAG 2.2", DOC)

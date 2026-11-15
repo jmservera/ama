@@ -13,6 +13,12 @@ QUARANTINED = "Quarantined"
 UNKNOWN = "Unknown"
 
 
+def _non_empty_str(value: object) -> str | None:
+    if isinstance(value, str) and value.strip():
+        return value.strip()
+    return None
+
+
 def _ai_failure_reason(rec: Mapping[str, Any]) -> str | None:
     """Why an AI task gave no model result, or None (also when workflow-only was chosen)."""
     if rec.get("kind") != "ai_task":
@@ -39,18 +45,29 @@ def feed_failed_ai_runs(
         if reason is None:
             continue
         record_id = str(rec.get("id", ""))
+        envelope = rec.get("envelope")
+        env_map = envelope if isinstance(envelope, Mapping) else {}
+        correlation_id = (
+            _non_empty_str(rec.get("correlation_id"))
+            or _non_empty_str(env_map.get("correlation_id"))
+            or _non_empty_str(env_map.get("request_id"))
+            or _non_empty_str(env_map.get("meter_id"))
+        )
+        original: dict[str, Any] = {
+            "record_id": record_id,
+            "task": rec.get("task"),
+            "case_ids": list(rec.get("case_ids") or []),
+            "status": rec.get("status"),
+            "created": rec.get("created"),
+        }
+        if correlation_id is not None:
+            original["correlation_id"] = correlation_id
         raised.append(
             queue.raise_failure(
                 "failed_ai_run",
                 owner,
                 f"AI task {rec.get('task', UNKNOWN)} did not deliver a model result.",
-                {
-                    "record_id": record_id,
-                    "task": rec.get("task"),
-                    "case_ids": list(rec.get("case_ids") or []),
-                    "status": rec.get("status"),
-                    "created": rec.get("created"),
-                },
+                original,
                 reason,
                 ref=record_id,
             )
@@ -68,6 +85,7 @@ def feed_stranded_tasks(
         if isinstance(named, str) and named.strip() and named != UNKNOWN:
             continue
         source = str(task.get("source", ""))
+        fallback_ref = f"task:{task.get('case_id') or UNKNOWN}:{task.get('task') or UNKNOWN}"
         raised.append(
             queue.raise_failure(
                 "stranded_task",
@@ -80,7 +98,7 @@ def feed_stranded_tasks(
                     "as_of": task.get("as_of"),
                 },
                 f"No named owner; completion {task.get('completion', 'Not evidenced')}.",
-                ref=source or None,
+                ref=source.strip() or fallback_ref,
             )
         )
     return raised
@@ -136,20 +154,24 @@ def feed_failed_imports(
         if batch.get("status") != "rejected":
             continue
         batch_id = str(batch.get("batch_id", ""))
+        batch_original: dict[str, Any] = {
+            "batch_id": batch_id,
+            "structure": batch.get("structure"),
+            "version": batch.get("version"),
+            "source_name": batch.get("source_name"),
+            "source_sha256": batch.get("source_sha256"),
+            "staged_by": batch.get("staged_by"),
+            "staged_at": batch.get("staged_at"),
+        }
+        batch_cid = _non_empty_str(batch.get("correlation_id"))
+        if batch_cid is not None:
+            batch_original["correlation_id"] = batch_cid
         raised.append(
             queue.raise_failure(
                 "failed_import",
                 owner,
                 f"Import batch {batch_id or UNKNOWN} was rejected and did not go live.",
-                {
-                    "batch_id": batch_id,
-                    "structure": batch.get("structure"),
-                    "version": batch.get("version"),
-                    "source_name": batch.get("source_name"),
-                    "source_sha256": batch.get("source_sha256"),
-                    "staged_by": batch.get("staged_by"),
-                    "staged_at": batch.get("staged_at"),
-                },
+                batch_original,
                 f"Rejected by {batch.get('decided_by') or UNKNOWN}: "
                 f"{batch.get('decision_note') or 'no note recorded'}.",
                 ref=f"batch:{batch_id}",
@@ -158,16 +180,20 @@ def feed_failed_imports(
     for refusal in refusals:
         digest = str(refusal.get("source_sha256", ""))
         name = refusal.get("source_name")
+        refusal_original: dict[str, Any] = {
+            "source_name": name,
+            "source_sha256": digest or None,
+            "at": refusal.get("at"),
+        }
+        refusal_cid = _non_empty_str(refusal.get("correlation_id"))
+        if refusal_cid is not None:
+            refusal_original["correlation_id"] = refusal_cid
         raised.append(
             queue.raise_failure(
                 "failed_import",
                 owner,
                 f"Import file {name or UNKNOWN} was refused.",
-                {
-                    "source_name": name,
-                    "source_sha256": digest or None,
-                    "at": refusal.get("at"),
-                },
+                refusal_original,
                 str(refusal.get("reason") or "No reason recorded."),
                 ref=f"file:{digest or name}",
             )
