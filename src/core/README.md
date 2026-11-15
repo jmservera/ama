@@ -4835,14 +4835,24 @@ witnessed restore, real-model, qualified human or application acceptance.
   dropped sealed year. A self-consistent rewrite of a sealed year is caught only by
   its digest, so those files belong in the immutable Blob container. A malformed,
   duplicate or unreadable year digest file fails `--by-year` closed (`bad_digests`), and
-  the report lists `sealed_years`, so an empty digest folder is visible. Proven in
-  `src/core/tests/test_recovery.py`; run the scheduled `--by-year` check before relying on the ledger.
+  the report lists `sealed_years`, so an empty digest folder is visible. On `Store`,
+  `SqlStore`, and `MssqlStore`, `verify_ledger_before_reliance()` (and
+  `require_verified_ledger_for_reliance()`, raising secret-free `LedgerRelianceError`)
+  verifies the chain, `audit_head`, root `digest-*.json` anchors, and `year-YYYY.json`
+  files before sealing completed past years and enforcing intact sealed digests across
+  multi-year histories (`src/core/tests/test_recovery.py`, `src/core/tests/test_sqlstore.py`).
 * `python -m zava_forward.core.synthetic.loadcheck --data zavaforward.json --homes 60000` runs the
   NFR-002 mix (five sessions, two writers) against the configured store and prints
-  p50/p95/max per class. Local SQLite on 2026-10-15 over 60,000 labelled synthetic
-  homes for 30 s: list p95 0.28 s, detail 0.30 s, write 0.33 s, no errors (limits 1 s,
-  1 s, 2 s). Open items: the same run against Azure SQL, dashboard and import preview
-  classes, and cost (needs Azure meter rates and measured vCore time).
+  measured `load` (`sessions`, `writers`, `seconds`, `total_requests`, `achieved_rps`),
+  per-class `p50`/`p95`/`max` against `LIMITS` (`1.0 s`, `1.0 s`, `2.0 s`), and a
+  structured `cost` section (`--vcore-seconds`, `--meter-rate`, `--cost-target`). When
+  Azure SQL billed vCore-seconds and meter rate are supplied, `cost` records `status:
+  "measured"` and `within_target` (exiting `1` on a target breach); when omitted, `cost`
+  honestly reports `status: "Unknown"` with `missing_inputs` and
+  `azure_live_run_human_gated: true`. Local SQLite on 2026-10-15 over 60,000 labelled
+  synthetic homes for 30 s: list p95 0.28 s, detail 0.30 s, write 0.33 s, no errors.
+  Open items: the same run against live Azure SQL with billed vCore-seconds and meter
+  rates, plus dashboard and import preview classes.
 * `src/core/src/zava_forward/core/recovery.py` erases a resident's personal fields and keeps a
   personal-data-free deletion register outside the database. The register is one
   write-once entry per erasure under the reserved case id `_erasures` in the document

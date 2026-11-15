@@ -7,7 +7,9 @@ from unittest.mock import patch
 from pathlib import Path
 
 import dataset
-from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core import ledger
+from zava_forward.core.mssqlstore import MssqlStore
+from zava_forward.core.sqlstore import LedgerRelianceError, SqlStore
 from zava_forward.core.store import ConflictError
 
 
@@ -128,6 +130,132 @@ class SqlStoreTests(unittest.TestCase):
 
     def test_health_checks_database(self):
         self.assertTrue(SqlStore(self.data, self.db).ready())
+
+    def _seed_multi_year_sql(self, store):
+        rows = [
+            ("sam", "log_contact", "ZF-1", "y2024-1", "2024-03-10T09:00:00"),
+            ("sam", "log_contact", "ZF-1", "y2024-2", "2024-11-20T14:30:00"),
+            ("sam", "log_contact", "ZF-1", "y2025-1", "2025-02-15T11:00:00"),
+            ("sam", "log_contact", "ZF-1", "y2025-2", "2025-09-05T16:45:00"),
+            ("sam", "log_contact", "ZF-1", "y2026-1", "2026-01-12T08:15:00"),
+            ("sam", "log_contact", "ZF-1", "y2026-2", "2026-06-01T10:00:00"),
+        ]
+        with store.dblock:
+            store.db.execute("BEGIN IMMEDIATE")
+            store._append_audit(rows)
+            store.db.execute("COMMIT")
+
+    def test_pre_reliance_multi_year_verification_passes_and_blocks_tampering_and_dropped_years(self):
+        s = SqlStore(self.data, self.db)
+        self.addCleanup(s.db.close)
+        self._seed_multi_year_sql(s)
+        rep = s.require_verified_ledger_for_reliance(current_year=2026)
+        self.assertTrue(rep["reliance_allowed"])
+        self.assertTrue(rep["audit_head_matches"])
+        self.assertEqual(rep["entries"], 6)
+        self.assertEqual(rep["sealed_years"], ["2024", "2025"])
+        self.assertTrue(rep["years"]["2024"]["sealed"] and rep["years"]["2025"]["sealed"])
+        self.assertFalse(rep["years"]["2026"]["sealed"])
+        self.assertEqual(rep["problems"], [])
+
+        # Tamper a sealed 2025 row by dropping the append-only trigger
+        raw = sqlite3.connect(self.db)
+        self.addCleanup(raw.close)
+        raw.execute("DROP TRIGGER audit_no_update")
+        raw.execute("UPDATE audit SET detail='tampered-2025' WHERE seq=3")
+        raw.commit()
+        tampered = s.verify_ledger_before_reliance(current_year=2026)
+        self.assertFalse(tampered["reliance_allowed"])
+        with self.assertRaises(LedgerRelianceError):
+            s.require_verified_ledger_for_reliance(current_year=2026)
+
+        # Fresh store: seal 2024+2025, then drop 2024 rows and rebuild chain + audit_head
+        db2 = os.path.join(self.tmp.name, "pw2.sqlite")
+        s2 = SqlStore(self.data, db2)
+        self.addCleanup(s2.db.close)
+        self._seed_multi_year_sql(s2)
+        s2.require_verified_ledger_for_reliance(current_year=2026)
+        raw2 = sqlite3.connect(db2)
+        self.addCleanup(raw2.close)
+        raw2.execute("DROP TRIGGER audit_no_delete")
+        raw2.execute("DROP TRIGGER audit_no_update")
+        raw2.execute("DELETE FROM audit")
+        prev = ledger.GENESIS
+        kept = [
+            (1, "2025-02-15T11:00:00", "sam", "log_contact", "ZF-1", "y2025-1"),
+            (2, "2025-09-05T16:45:00", "sam", "log_contact", "ZF-1", "y2025-2"),
+            (3, "2026-01-12T08:15:00", "sam", "log_contact", "ZF-1", "y2026-1"),
+        ]
+        for seq, at, who, action, cid, detail in kept:
+            entry = ledger.make_entry(who, action, cid, detail, prev, at)
+            raw2.execute(
+                "INSERT INTO audit VALUES (?,?,?,?,?,?,?,?)",
+                (seq, at, who, action, cid, detail, prev, entry["hash"]),
+            )
+            prev = entry["hash"]
+        raw2.execute("UPDATE audit_head SET count=?, hash=? WHERE id=1", (len(kept), prev))
+        raw2.commit()
+        self.assertTrue(s2.verify_audit())
+        dropped = s2.verify_ledger_before_reliance(current_year=2026)
+        self.assertFalse(dropped["reliance_allowed"])
+        self.assertEqual(dropped["missing_years"], ["2024"])
+        self.assertIn("missing_audit_year", {p["code"] for p in dropped["problems"]})
+
+    def test_pre_reliance_detects_sql_audit_head_mismatch_and_missing_head(self):
+        s = SqlStore(self.data, self.db)
+        self.addCleanup(s.db.close)
+        self._seed_multi_year_sql(s)
+        s.require_verified_ledger_for_reliance(current_year=2026)
+        raw = sqlite3.connect(self.db)
+        self.addCleanup(raw.close)
+        raw.execute("DROP TRIGGER audit_no_delete")
+        # Delete the unsealed tail 2026 entry without updating audit_head
+        raw.execute("DELETE FROM audit WHERE seq=6")
+        raw.commit()
+        mismatch = s.verify_ledger_before_reliance(current_year=2026)
+        self.assertFalse(mismatch["reliance_allowed"])
+        self.assertFalse(mismatch["audit_head_matches"])
+        self.assertIn("audit_head_mismatch", {p["code"] for p in mismatch["problems"]})
+
+        raw.execute("DELETE FROM audit_head WHERE id=1")
+        raw.commit()
+        missing = s.verify_ledger_before_reliance(current_year=2026)
+        self.assertFalse(missing["reliance_allowed"])
+        self.assertIn("audit_head_missing", {p["code"] for p in missing["problems"]})
+
+    def test_pre_reliance_scrubs_driver_secrets_and_is_inherited_by_mssqlstore(self):
+        self.assertTrue(issubclass(MssqlStore, SqlStore))
+        mssql_db = os.path.join(self.tmp.name, "mssql-double.sqlite")
+        base = SqlStore(self.data, mssql_db)
+        self.addCleanup(base.db.close)
+        self._seed_multi_year_sql(base)
+        ms = MssqlStore.__new__(MssqlStore)
+        ms.db = base.db
+        ms.dblock = base.dblock
+        ms.digest_dir = base.digest_dir
+        ms.lock = base.lock
+        ok = ms.require_verified_ledger_for_reliance(current_year=2026)
+        self.assertTrue(ok["reliance_allowed"])
+        self.assertEqual(ok["sealed_years"], ["2024", "2025"])
+
+        sentinel = "Server=tcp:secret-sql.database.windows.net;Password=SUPER_SECRET_PASSWORD_99;"
+
+        class FakeDriverError(Exception):
+            pass
+
+        with (
+            patch.object(MssqlStore, "dberror", property(lambda inst: FakeDriverError)),
+            patch.object(ms, "db") as fake_db,
+        ):
+            fake_db.execute.side_effect = FakeDriverError(sentinel)
+            failed = ms.verify_ledger_before_reliance(current_year=2026)
+            self.assertFalse(failed["reliance_allowed"])
+            self.assertIn("audit_unreadable", {p["code"] for p in failed["problems"]})
+            self.assertNotIn(sentinel, json.dumps(failed))
+            with self.assertRaises(LedgerRelianceError) as cm:
+                ms.require_verified_ledger_for_reliance(current_year=2026)
+            self.assertNotIn(sentinel, str(cm.exception))
+            self.assertIsNone(cm.exception.__cause__)
 
 
 if __name__ == "__main__":

@@ -7,14 +7,21 @@ entry count and head hash at a moment in time. Stored somewhere the application
 cannot rewrite (in Azure, an immutable Blob container), it also exposes a
 truncation or a whole-chain rewrite that the chain alone cannot show.
 """
+import errno
 import hashlib
 import json
 import os
+import re
 import sys
+import tempfile
 from datetime import datetime, timezone
 
 GENESIS = "0" * 64
 FIELDS = ("at", "who", "action", "case", "detail", "prev")
+ASCII_YEAR_RE = re.compile(r"^(?!0000)[0-9]{4}$")
+HEX64_RE = re.compile(r"^[0-9a-f]{64}$")
+YEAR_DIGEST_FILE_RE = re.compile(r"^year-([0-9]{4})\.json$")
+ROOT_DIGEST_FILE_RE = re.compile(r"^digest-([0-9]{10})\.json$")
 
 
 def entry_hash(entry):
@@ -70,10 +77,11 @@ def make_year_digest(year, entries, chain="main"):
 
 def year_digests(entries, before=None):
     """One digest per year present in the chain, only for years earlier than `before` when given (sealed years)."""
+    cutoff = None if before is None else (f"{before:04d}" if type(before) is int else str(before))
     by = {}
     for e in entries:
         by.setdefault(_year(e), []).append(e)
-    return [make_year_digest(y, es) for y, es in sorted(by.items()) if before is None or y < str(before)]
+    return [make_year_digest(y, es) for y, es in sorted(by.items()) if cutoff is None or y < cutoff]
 
 
 def verify_years(entries, digests=()):
@@ -113,23 +121,121 @@ def make_digest(count, head, chain="main"):
                 at=datetime.now(timezone.utc).isoformat(timespec="seconds"))
 
 
-def write_digest(directory, digest):
+def _write_json_once(path, payload):
+    directory = os.path.dirname(path) or "."
     os.makedirs(directory, exist_ok=True)
-    path = os.path.join(directory, f"digest-{digest['count']:010d}.json")
     if os.path.exists(path):
         return path
-    with open(path, "x", encoding="utf-8") as f:
-        json.dump(digest, f, sort_keys=True)
+    fd, tmp = tempfile.mkstemp(prefix=".digest-", suffix=".tmp", dir=directory)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            json.dump(payload, f, sort_keys=True)
+            f.flush()
+        try:
+            os.link(tmp, path)
+        except FileExistsError:
+            pass
+        except OSError as exc:
+            if exc.errno not in (errno.EXDEV, errno.EPERM, errno.ENOTSUP, errno.EACCES):
+                raise
+            try:
+                with open(path, "x", encoding="utf-8") as out:
+                    json.dump(payload, out, sort_keys=True)
+            except FileExistsError:
+                pass
+    finally:
+        try:
+            os.unlink(tmp)
+        except FileNotFoundError:
+            pass
     return path
+
+
+def write_digest(directory, digest):
+    path = os.path.join(directory, f"digest-{digest['count']:010d}.json")
+    return _write_json_once(path, digest)
 
 
 def write_year_digest(directory, digest):
-    os.makedirs(directory, exist_ok=True)
     path = os.path.join(directory, f"year-{digest['year']}.json")
-    if not os.path.exists(path):
-        with open(path, "x", encoding="utf-8") as f:
-            json.dump(digest, f, sort_keys=True)
-    return path
+    return _write_json_once(path, digest)
+
+
+def inspect_digest_directory(directory):
+    """Read and validate root `digest-*.json` and sealed `year-*.json` files without leaking paths."""
+    if not directory or not isinstance(directory, str):
+        return [], [], [dict(code="digest_store_unreadable", year=None, reason="digest directory is not configured")]
+    if not os.path.lexists(directory):
+        return [], [], []
+    if (os.path.islink(directory) and not os.path.exists(directory)) or not os.path.isdir(directory):
+        return [], [], [dict(code="digest_store_unreadable", year=None, reason="digest directory is not a readable directory")]
+    try:
+        names = sorted(os.listdir(directory))
+    except OSError:
+        return [], [], [dict(code="digest_store_unreadable", year=None, reason="digest directory could not be listed")]
+    roots, years, problems, seen_years = [], [], [], set()
+    for name in names:
+        full = os.path.join(directory, name)
+        if name.startswith("digest-") and name.endswith(".json"):
+            m = ROOT_DIGEST_FILE_RE.fullmatch(name)
+            try:
+                with open(full, encoding="utf-8") as f:
+                    d = json.load(f)
+            except (OSError, ValueError):
+                problems.append(dict(code="root_digest_unreadable", year=None, reason="independent root digest is unreadable"))
+                continue
+            cnt = d.get("count") if isinstance(d, dict) else None
+            head = d.get("head") if isinstance(d, dict) else None
+            valid_root = (
+                m is not None
+                and isinstance(d, dict)
+                and type(cnt) is int
+                and cnt >= 0
+                and int(m.group(1)) == cnt
+                and d.get("chain", "main") == "main"
+                and d.get("algorithm", "sha256") == "sha256"
+                and isinstance(head, str)
+                and bool(HEX64_RE.fullmatch(head))
+                and (cnt != 0 or head == GENESIS)
+            )
+            if valid_root:
+                roots.append(d)
+            else:
+                problems.append(dict(code="root_digest_malformed", year=None, reason="independent root digest is malformed"))
+        elif name.startswith("year-") and name.endswith(".json"):
+            ym = YEAR_DIGEST_FILE_RE.fullmatch(name)
+            file_year = ym.group(1) if ym and ASCII_YEAR_RE.fullmatch(ym.group(1)) else None
+            try:
+                with open(full, encoding="utf-8") as f:
+                    d = json.load(f)
+            except (OSError, ValueError):
+                years.append(dict(unreadable=name))
+                problems.append(dict(code="corrupt_year_digest", year=file_year, reason="sealed year digest is unreadable"))
+                continue
+            valid_year = (
+                file_year is not None
+                and isinstance(d, dict)
+                and all(k in d for k in DIGEST_KEYS)
+                and isinstance(d.get("year"), str)
+                and d["year"] == file_year
+                and bool(ASCII_YEAR_RE.fullmatch(d["year"]))
+                and type(d.get("count")) is int
+                and d["count"] >= 1
+                and d.get("chain", "main") == "main"
+                and d.get("algorithm", "sha256") == "sha256"
+                and isinstance(d.get("first_prev"), str)
+                and bool(HEX64_RE.fullmatch(d["first_prev"]))
+                and isinstance(d.get("head"), str)
+                and bool(HEX64_RE.fullmatch(d["head"]))
+                and file_year not in seen_years
+            )
+            if valid_year:
+                seen_years.add(file_year)
+                years.append(d)
+            else:
+                years.append(dict(unreadable=name))
+                problems.append(dict(code="corrupt_year_digest", year=file_year, reason="sealed year digest is malformed or mismatched"))
+    return roots, years, problems
 
 
 def read_year_digests(directory):

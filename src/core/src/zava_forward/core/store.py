@@ -75,6 +75,15 @@ class ConflictError(Exception):
     """Another writer changed the same record first, so this write was refused."""
 
 
+class LedgerRelianceError(RuntimeError):
+    """Audit ledger or sealed digest verification failed before reliance."""
+
+    def __init__(self, message: str, report: dict[str, Any] | None = None) -> None:
+        super().__init__(message)
+        self.report: dict[str, Any] = dict(report) if isinstance(report, dict) else {}
+        self.problems: list[dict[str, Any]] = list(self.report.get("problems", []))
+
+
 class Store(
     ChatMixin,
     WorkflowMixin,
@@ -204,13 +213,396 @@ class Store(
     def verify_ledger_by_year(self):
         return ledger.verify_years(self.audit_entries(), ledger.read_year_digests(self.digest_dir))
 
-    def write_year_digests(self):
+    def write_year_digests(self, *, before=None):
         """Seal every year before the current one. Sealed years are written once and never overwritten."""
+        cutoff = (
+            f"{datetime.now().year:04d}"
+            if before is None
+            else (f"{before:04d}" if type(before) is int else str(before))
+        )
         with self.lock:
             return [
                 ledger.write_year_digest(self.digest_dir, d)
-                for d in ledger.year_digests(list(self.audit_entries()), before=datetime.now().year)
+                for d in ledger.year_digests(list(self.audit_entries()), before=cutoff)
             ]
+
+    def _reliance_lock(self):
+        return self.lock
+
+    def _reliance_db_errors(self) -> tuple[type[BaseException], ...]:
+        try:
+            err = getattr(self, "dberror", None)
+        except ImportError:
+            return ()
+        if isinstance(err, type) and issubclass(err, BaseException):
+            return (err,)
+        if isinstance(err, tuple) and all(
+            isinstance(item, type) and issubclass(item, BaseException) for item in err
+        ):
+            return err
+        return ()
+
+    @staticmethod
+    def _validate_audit_entry_shape(entry: Any, index: int) -> dict[str, Any] | None:
+        if not isinstance(entry, dict):
+            return dict(
+                code="audit_entry_malformed",
+                entry=index,
+                year=None,
+                reason="audit entry is not a mapping",
+            )
+        if not all(
+            isinstance(entry.get(k), str)
+            for k in ("at", "who", "action", "case", "detail", "prev", "hash")
+        ):
+            return dict(
+                code="audit_entry_malformed",
+                entry=index,
+                year=None,
+                reason="audit entry is missing required string fields",
+            )
+        year = entry["at"][:4]
+        if not ledger.ASCII_YEAR_RE.fullmatch(year):
+            return dict(
+                code="audit_entry_malformed",
+                entry=index,
+                year=None,
+                reason="audit entry timestamp lacks a four-digit ASCII year",
+            )
+        if not (
+            ledger.HEX64_RE.fullmatch(entry["prev"])
+            and ledger.HEX64_RE.fullmatch(entry["hash"])
+        ):
+            return dict(
+                code="audit_entry_malformed",
+                entry=index,
+                year=year,
+                reason="audit entry hash link is malformed",
+            )
+        return None
+
+    def _reliance_audit_snapshot(self) -> tuple[list[dict[str, Any]], bool, list[dict[str, Any]]]:
+        entries = list(self.audit_entries())
+        for idx, entry in enumerate(entries, start=1):
+            bad = self._validate_audit_entry_shape(entry, idx)
+            if bad is not None:
+                return [], False, [bad]
+        actual_head = entries[-1]["hash"] if entries else ledger.GENESIS
+        recorded_head = getattr(self, "last_hash", None)
+        if isinstance(recorded_head, str) and actual_head != recorded_head:
+            return (
+                entries,
+                False,
+                [
+                    dict(
+                        code="audit_head_mismatch",
+                        year=None,
+                        reason="the chain differs from the recorded ledger head",
+                    )
+                ],
+            )
+        return entries, True, []
+
+    def _invoke_write_year_digests(self, year_cutoff: str) -> list[str]:
+        try:
+            return list(self.write_year_digests(before=year_cutoff))
+        except TypeError:
+            return list(self.write_year_digests())
+
+    @staticmethod
+    def _clean_problem_year(raw: Any) -> str | None:
+        if isinstance(raw, str):
+            if ledger.ASCII_YEAR_RE.fullmatch(raw):
+                return raw
+            ym = ledger.YEAR_DIGEST_FILE_RE.fullmatch(raw)
+            if ym and ledger.ASCII_YEAR_RE.fullmatch(ym.group(1)):
+                return ym.group(1)
+        return None
+
+    @staticmethod
+    def _dedupe_problems(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        seen: set[str] = set()
+        out: list[dict[str, Any]] = []
+        for item in items:
+            key = json.dumps(item, sort_keys=True)
+            if key not in seen:
+                seen.add(key)
+                out.append(item)
+        return out
+
+    def verify_ledger_before_reliance(
+        self,
+        *,
+        require_sealed_past_years: bool = True,
+        current_year: int | None = None,
+        seal_past_years: bool = True,
+    ) -> dict[str, Any]:
+        """Seal intact past years and verify per-year chains, anchors, and heads before reliance."""
+        if not isinstance(require_sealed_past_years, bool):
+            raise ValueError("require_sealed_past_years must be a bool")
+        if not isinstance(seal_past_years, bool):
+            raise ValueError("seal_past_years must be a bool")
+        if current_year is not None and (
+            isinstance(current_year, bool)
+            or not isinstance(current_year, int)
+            or not 1 <= current_year <= 9999
+        ):
+            raise ValueError("current_year must be an integer between 1 and 9999")
+        effective_year = datetime.now().year if current_year is None else current_year
+        year_cutoff = f"{effective_year:04d}"
+        recoverable = self._reliance_db_errors() + (
+            OSError,
+            ValueError,
+            TypeError,
+            KeyError,
+            RuntimeError,
+        )
+        try:
+            with self._reliance_lock():
+                problems: list[dict[str, Any]] = []
+                try:
+                    entries, head_ok, snap_problems = self._reliance_audit_snapshot()
+                except recoverable:
+                    return dict(
+                        reliance_allowed=False,
+                        intact=False,
+                        current_year=year_cutoff,
+                        require_sealed_past_years=require_sealed_past_years,
+                        entries=0,
+                        head=ledger.GENESIS,
+                        audit_head_matches=False,
+                        digests_checked=0,
+                        digest_mismatches=[],
+                        years={},
+                        sealed_years=[],
+                        missing_years=[],
+                        bad_digests=[],
+                        sealed_digest_files=[],
+                        problems=[
+                            dict(
+                                code="audit_unreadable",
+                                year=None,
+                                reason="audit entries could not be read",
+                            )
+                        ],
+                    )
+                problems.extend(snap_problems)
+                if any(
+                    p["code"] in ("audit_unreadable", "audit_entry_malformed")
+                    for p in snap_problems
+                ):
+                    return dict(
+                        reliance_allowed=False,
+                        intact=False,
+                        current_year=year_cutoff,
+                        require_sealed_past_years=require_sealed_past_years,
+                        entries=0,
+                        head=ledger.GENESIS,
+                        audit_head_matches=False,
+                        digests_checked=0,
+                        digest_mismatches=[],
+                        years={},
+                        sealed_years=[],
+                        missing_years=[],
+                        bad_digests=[],
+                        sealed_digest_files=[],
+                        problems=self._dedupe_problems(problems),
+                    )
+
+                root_digests, pre_year_digests, dir_problems = ledger.inspect_digest_directory(
+                    self.digest_dir
+                )
+                problems.extend(dir_problems)
+                chain_rep = ledger.verify_entries(entries, root_digests)
+                if chain_rep["problem"] is not None:
+                    cprob = chain_rep["problem"]
+                    idx = int(cprob["entry"])
+                    pyear = entries[idx - 1]["at"][:4] if 1 <= idx <= len(entries) else None
+                    problems.append(
+                        dict(
+                            code="chain_tampered",
+                            entry=idx,
+                            year=pyear,
+                            reason=str(cprob["reason"]),
+                        )
+                    )
+                for mismatch in chain_rep["digest_mismatches"]:
+                    problems.append(
+                        dict(
+                            code="root_digest_mismatch",
+                            digest_count=int(mismatch["digest_count"]),
+                            year=None,
+                            reason=str(mismatch["reason"]),
+                        )
+                    )
+
+                pre_year_rep = ledger.verify_years(entries, pre_year_digests)
+                pre_year_intact = bool(pre_year_rep.get("intact"))
+                written_files: list[str] = []
+                if seal_past_years and not problems and pre_year_intact:
+                    try:
+                        written_files = [
+                            os.path.basename(str(p))
+                            for p in self._invoke_write_year_digests(year_cutoff)
+                        ]
+                    except recoverable:
+                        problems.append(
+                            dict(
+                                code="year_digest_seal_failed",
+                                year=None,
+                                reason="completed past year digests could not be written",
+                            )
+                        )
+
+                _, post_year_digests, post_dir_problems = ledger.inspect_digest_directory(
+                    self.digest_dir
+                )
+                problems.extend(post_dir_problems)
+                year_rep = ledger.verify_years(entries, post_year_digests)
+                try:
+                    hook_year_rep = self.verify_ledger_by_year()
+                except recoverable:
+                    problems.append(
+                        dict(
+                            code="year_verification_failed",
+                            year=None,
+                            reason="per-year ledger verification could not complete",
+                        )
+                    )
+                else:
+                    if not hook_year_rep.get("intact", False) and year_rep.get("intact", False):
+                        year_rep = hook_year_rep
+
+                for bad in year_rep.get("bad_digests", []):
+                    byear = self._clean_problem_year(bad)
+                    if not any(
+                        p["code"] == "corrupt_year_digest" and p.get("year") == byear
+                        for p in problems
+                    ):
+                        problems.append(
+                            dict(
+                                code="corrupt_year_digest",
+                                year=byear,
+                                reason="sealed year digest is unreadable, malformed, or duplicated",
+                            )
+                        )
+                for missing_year in year_rep.get("missing_years", []):
+                    problems.append(
+                        dict(
+                            code="missing_audit_year",
+                            year=self._clean_problem_year(str(missing_year)),
+                            reason="audit entries for a sealed year are missing",
+                        )
+                    )
+                sealed_set = set(year_rep.get("sealed_years", []))
+                for year, info in sorted(year_rep.get("years", {}).items()):
+                    for reason in info.get("problems", []):
+                        code = (
+                            "year_digest_mismatch"
+                            if "sealed digest" in reason
+                            else (
+                                "year_link_broken"
+                                if "previous year" in reason
+                                else "year_chain_tampered"
+                            )
+                        )
+                        problems.append(dict(code=code, year=year, reason=str(reason)))
+                    if (
+                        require_sealed_past_years
+                        and year < year_cutoff
+                        and (not info.get("sealed") or year not in sealed_set)
+                    ):
+                        problems.append(
+                            dict(
+                                code="unsealed_past_year",
+                                year=year,
+                                reason="past year with audit entries has no sealed digest",
+                            )
+                        )
+
+                deduped = self._dedupe_problems(problems)
+                reliance_allowed = (
+                    not deduped
+                    and head_ok
+                    and bool(chain_rep.get("intact"))
+                    and bool(year_rep.get("intact"))
+                )
+                if not reliance_allowed and not deduped:
+                    deduped.append(
+                        dict(
+                            code="ledger_verification_failed",
+                            year=None,
+                            reason="ledger verification did not pass",
+                        )
+                    )
+                sanitized_bad = [
+                    self._clean_problem_year(b) or "unreadable"
+                    for b in year_rep.get("bad_digests", [])
+                ]
+                return dict(
+                    reliance_allowed=reliance_allowed,
+                    intact=reliance_allowed,
+                    current_year=year_cutoff,
+                    require_sealed_past_years=require_sealed_past_years,
+                    entries=int(chain_rep["entries"]),
+                    head=str(chain_rep["head"]),
+                    audit_head_matches=head_ok,
+                    digests_checked=int(chain_rep["digests_checked"]),
+                    digest_mismatches=list(chain_rep["digest_mismatches"]),
+                    years=dict(year_rep.get("years", {})),
+                    sealed_years=list(year_rep.get("sealed_years", [])),
+                    missing_years=list(year_rep.get("missing_years", [])),
+                    bad_digests=sanitized_bad,
+                    sealed_digest_files=written_files,
+                    problems=deduped,
+                )
+        except recoverable:
+            return dict(
+                reliance_allowed=False,
+                intact=False,
+                current_year=year_cutoff,
+                require_sealed_past_years=require_sealed_past_years,
+                entries=0,
+                head=ledger.GENESIS,
+                audit_head_matches=False,
+                digests_checked=0,
+                digest_mismatches=[],
+                years={},
+                sealed_years=[],
+                missing_years=[],
+                bad_digests=[],
+                sealed_digest_files=[],
+                problems=[
+                    dict(
+                        code="audit_unreadable",
+                        year=None,
+                        reason="ledger state could not be read or verified",
+                    )
+                ],
+            )
+
+    def require_verified_ledger_for_reliance(
+        self,
+        *,
+        require_sealed_past_years: bool = True,
+        current_year: int | None = None,
+        seal_past_years: bool = True,
+    ) -> dict[str, Any]:
+        """Verify ledger and sealed past-year digests before reliance, or raise `LedgerRelianceError`."""
+        report = self.verify_ledger_before_reliance(
+            require_sealed_past_years=require_sealed_past_years,
+            current_year=current_year,
+            seal_past_years=seal_past_years,
+        )
+        if not report["reliance_allowed"]:
+            codes = ", ".join(
+                sorted({str(p.get("code", "ledger_verification_failed")) for p in report["problems"]})
+            ) or "ledger_verification_failed"
+            raise LedgerRelianceError(
+                f"Ledger verification failed before reliance ({codes}).",
+                report,
+            )
+        return report
 
     def ledger_head(self):
         count, head = 0, ledger.GENESIS
