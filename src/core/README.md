@@ -5326,8 +5326,10 @@ cross-process guard; escalation stays a gap; synthetic approvals are not QA, leg
 ## Constructed learning-test report command (#129, Refs #123)
 
 `learning_test_bundles` can print one bundle's existing stop-first report from caller-constructed
-numbers. It adds only an input boundary: `run_report` and `render_report`, the five bundles,
-comparators, six effort components and zero-target counts are unchanged.
+numbers. Each `Bundle` and `compare_bundle` result also exposes canonical protocol metadata
+(`title`, `atlas_ids`, `linked_requirements`, `learning_question`, `beyond_effort_measures`, and
+`stop_rule`), while `run_report` and `render_report`, the five bundle keys, comparators, six effort
+components and zero-target counts remain backward-compatible.
 
 ```bash
 python -m zava_forward.core.learning_test_bundles < constructed-run.json
