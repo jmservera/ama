@@ -2122,10 +2122,17 @@ class Store(
     def ai_live_report(self, user=None):
         return ai_tasks.live_report(self, user=user)
 
-    def funding_step(self, user, case_id, action, text=""):
-        from .finance import _identity
+    def funding_step(self, user, case_id, action, text="", *, body=None, **extra):
+        from .finance import _identity, classify_finance_operation, guard_no_automated_finance_authority
 
-        with self._finance_operation(user, case_id) as (user, c):
+        payload = dict(body) if isinstance(body, dict) else {}
+        if extra:
+            payload.update(extra)
+        payload.setdefault("action", action)
+        op = classify_finance_operation("funding_step", action, payload)
+        guard_no_automated_finance_authority(user, operation=op, body=payload)
+
+        with self._finance_operation(user, case_id, operation=op) as (user, c):
             f = c["funding"]
             authority = None
             if action in ("approve", "submit", "confirm"):

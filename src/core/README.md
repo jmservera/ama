@@ -6,6 +6,41 @@ ms.date: 2026-11-15
 ms.topic: reference
 ---
 
+## Deterministic no-automated-finance-authority guard and invariant check (2026-11-15, Refs #93)
+
+`finance` enforces the `RULE-010` / `AC-035` boundary that no automated, system,
+agent, worker, orchestrator, unauthenticated, non-human, or AI proposal-apply
+path can perform any of the four protected financial and grant operations in
+`PROTECTED_FINANCE_OPERATIONS` (`submit_bid`, `approve_match_funding`,
+`certify_claim`, `record_cash`). `classify_finance_operation` and
+`guard_no_automated_finance_authority` execute at entry across
+`FinanceMixin.finance_action`, `FinanceMixin._finance_operation`, `validate_sql`,
+`GrantMixin.grant_action`, `Store.funding_step`, and `form_review.action`,
+refusing automated or non-human callers, stored non-human finance designations,
+AI proposal auto-apply payloads (`proposal_id`, `recommendation_id`,
+`assistant_task_id`, `ai_proposal`, `from_proposal`, `apply_proposal`,
+`auto_apply`, `envelope`), and automated shortcut actions with
+`AutomatedFinanceAuthorityRefusedError` (a structured `ValueError` carrying
+`operation`, `actor_kind`, `reason`, `rule="RULE-010"`,
+`code="automated_finance_authority_refused"`, and `as_record()`), leaving
+in-memory, SQLite/SQL, and hash-chained audit records untouched while preserving
+`PermissionError` / `AuthorityGateError` for human role, independence, and
+delegated-authority checks (`#94`, `#95`).
+
+`verify_no_automated_finance_authority(store=None)` provides a deterministic,
+side-effect-free runtime and test invariant check: it verifies that
+`funding-evidence` and `funding_draft` remain strictly `propose-only` in
+`bounded_ai` and `ai_registry`, AST-scans core automation modules plus sibling
+`agents` and `orchestrator` sources for zero references to gated authority
+methods, executes live refusal probes across all four protected operations on an
+isolated temporary synthetic store, and asserts zero state or audit mutation on
+any supplied `Store` or `SqlStore`. Run the focused `#93` invariant suite from
+`src/core` with:
+
+```bash
+PYTHONPATH=src:tests python3 -m unittest tests/test_finance_no_automated_path_93.py -v
+```
+
 ## Immutable Blob ledger digests and scheduled verification (2026-11-15, Refs #115)
 
 `ledger_digest_blob` provides pure offline and Blob-transport verification for
