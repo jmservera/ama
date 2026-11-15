@@ -1677,7 +1677,7 @@ registerRoleScreen({
         h("p", {}, "Offered capacity is not a booking and not a promise to any resident. A resident's measure-specific choice, pause or withdrawal is recorded and shown on the Resident choice screen, and it takes precedence over any offered slot. Packages are listed in reference order, never ranked by utilisation or headroom.")),
       screenTension("choice", "package-tension"),
       screenPanel("Package queue", { anchor: "package-queue" },
-        screenTable("Packages with period, scope, version and capacity",
+        screenRecordTable("Packages with period, scope, version and capacity",
           ["Package", "Period", "Scope and version", "Contract or call-off reference", "Contractor", "Offered", "Recorded committed", "In use", "Recorded headroom", "Capacity evidence status"],
           [...packages].sort((x, y) => String(x.id).localeCompare(String(y.id))).flatMap((p) => (p.capacity?.length ? p.capacity : [{}]).map((cap) => [
             `${wording(p.id)}: ${wording(p.name)}`, `${wording(p.period_from)} to ${wording(p.period_to)}`,
@@ -1690,16 +1690,16 @@ registerRoleScreen({
           [`${wording(p.id)}: ${screenValue(cap.contractor)} certification`, packageExpiryBadge(cap.certification_expiry)]]))),
         !packages.some((p) => p.capacity?.length) ? h("p", { class: "empty" }, "No contractors supplied. This does not establish that cover is in date.") : null),
       screenPanel("Work orders for this home", { anchor: "package-orders" },
-        screenTable("Work-order references for the selected home",
+        screenRecordTable("Work-order references for the selected home",
           ["Work order", "Package", "Contractor", "State", "Scope"],
           orders.map((o) => [reference(o), o.package, o.contractor, workOrderStateBadge(o.state), o.scope]))),
       screenPanel("Corrections and completion on record", { anchor: "package-records" },
-        screenTable("Work-order corrections, recorded completion and review for the selected home",
+        screenRecordTable("Work-order corrections, recorded completion and review for the selected home",
           ["Work order", "Corrections recorded", "Completion recorded", "Independent review and acceptance"],
           workOrderRecordRows(orders))),
       ...packages.map((p, i) => screenPanel(`Draft readiness: ${wording(p.id)}`, { anchor: packageDraftAnchor(p, i) },
         h("p", { class: "status-line wait", role: "status", "data-state-cue": "Draft readiness only" }, "State: Draft readiness only. This is not a release or approval."),
-        screenTable(`Unmet prerequisites for ${wording(p.id)}`, ["Prerequisite", "State", "Next reviewer (role)"],
+        screenRecordTable(`Unmet prerequisites for ${wording(p.id)}`, ["Prerequisite", "State", "Next reviewer (role)"],
           packagePrerequisites(p, orders.filter((o) => o.package === p.id))),
         screenFields([["Next reviewer", reviewerRole], ["Named reviewer", procurementBadge("Action needed", "Action needed: Unassigned. Contracts manager to name a person.", true)]]))),
       screenPanel("Contractor submission and review", { anchor: "package-review" },
@@ -1737,7 +1737,7 @@ registerRoleScreen({
         h("p", {}, "Read-only job pack view. Nothing is submitted, accepted or booked from here, and it is not a provider portal. To submit or correct evidence, send it to your named contact."),
         h("p", {}, "Source: desk research hypothesis, not observed behaviour.")),
       screenPanel("Your job pack", { anchor: "jobpack-orders" },
-        screenTable("Your work orders for this home", ["Work order and version", "State", "Works", "Scope"],
+        screenRecordTable("Your work orders for this home", ["Work order and version", "State", "Works", "Scope"],
           orders.map((o) => [reference(o), workOrderStateBadge(o.state), o.measures, o.scope])),
         screenFields([["Notice before visit", c.needs_notice
             ? procurementBadge("Visit notice required", "Visit notice required: Needs notice", true)
@@ -1745,7 +1745,7 @@ registerRoleScreen({
           ["Named contact", c.named_contact]]),
         h("p", {}, "The reason for any notice is not shared with contractors.")),
       screenPanel("Evidence checklist", { anchor: "jobpack-evidence" },
-        screenTable("Evidence checklist for this job pack", ["Evidence item", "State on record"],
+        screenRecordTable("Evidence checklist for this job pack", ["Evidence item", "State on record"],
           jobPackChecklist.map((item) => [item, item === "Appointment outcome recorded" && orders.some((o) => (o.appointments || []).length)
             ? procurementBadge("Recorded", stateCue(evidenceCues, "Recorded", "Recorded on a work order"), false)
             : procurementBadge("Unknown", stateCue(evidenceCues, "Unknown", "Not assessed on this screen"), true)]))),

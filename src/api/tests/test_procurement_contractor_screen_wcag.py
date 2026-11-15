@@ -574,17 +574,40 @@ class ProcurementContractorScreenWcagTests(unittest.TestCase):
             "navigation": [{"href": "#/screens", "scope": "Specialist screens"}],
             "services": {"cases": True},
         }
+        rlo_session = {
+            "user": {"name": "Riley Liaison", "role": "Resident Liaison Officer"},
+            "navigation": [{"href": "#/screens", "scope": "Specialist screens"}],
+            "services": {"cases": True},
+        }
         aliases = (
-            ("#/role/procurement?case=C-1", MANAGER_SESSION, "Package queue"),
-            ("#/role/contractor?case=C-1", CONTRACTOR_SESSION, "Job pack and evidence checklist"),
+            ("#/role/procurement?case=C-1", MANAGER_SESSION, "Package queue", False),
+            (
+                "#/role/contractor?case=C-1",
+                CONTRACTOR_SESSION,
+                "Job pack and evidence checklist",
+                False,
+            ),
             (
                 "#/role/building_safety_lead?case=C-1",
                 safety_session,
                 "Building safety referral queue",
+                False,
             ),
-            ("#/role/repairs?case=C-1", repairs_session, "Repairs and hazard triage"),
+            ("#/role/repairs?case=C-1", repairs_session, "Repairs and hazard triage", False),
+            (
+                "#/role/housing_officer?case=C-1",
+                rlo_session,
+                "Resident service issue queue",
+                True,
+            ),
+            (
+                "#/role/resident_engagement?case=C-1",
+                rlo_session,
+                "Resident choice and update queue",
+                True,
+            ),
         )
-        for route_hash, session, expected_h1 in aliases:
+        for route_hash, session, expected_h1, is_resident in aliases:
             with self.subTest(route_hash=route_hash):
                 out = run_dom(
                     {
@@ -617,7 +640,91 @@ class ProcurementContractorScreenWcagTests(unittest.TestCase):
                 self.assertEqual(
                     shell_sections[0]["attrs"].get("aria-labelledby"), "screen-queue-heading"
                 )
-                self.assertEqual(shell_sections[1]["attrs"].get("aria-label"), "Evidence for C-1")
+                if is_resident:
+                    self.assertEqual(
+                        shell_sections[1]["attrs"].get("aria-labelledby"),
+                        "screen-evidence-heading",
+                    )
+                else:
+                    self.assertEqual(
+                        shell_sections[1]["attrs"].get("aria-label"), "Evidence for C-1"
+                    )
+
+    def test_procurement_and_contractor_tables_use_col_and_row_header_scopes(self) -> None:
+        scenarios: tuple[tuple[str, dict[str, Any], tuple[str, ...]], ...] = (
+            (
+                "procurement-packages",
+                MANAGER_SESSION,
+                (
+                    "Packages with period, scope, version and capacity",
+                    "Work-order references for the selected home",
+                    "Work-order corrections, recorded completion and review for the selected home",
+                    "Unmet prerequisites for PKG-1",
+                ),
+            ),
+            (
+                "contractor-job-pack",
+                CONTRACTOR_SESSION,
+                (
+                    "Your work orders for this home",
+                    "Evidence checklist for this job pack",
+                ),
+            ),
+        )
+        for screen_id, session, expected_captions in scenarios:
+            with self.subTest(screen=screen_id):
+                out = run_dom(
+                    {
+                        "mode": "roleScreenRender",
+                        "scripts": ["role-screens.js"],
+                        "screenId": screen_id,
+                        "me": session,
+                        "caseDetail": {
+                            "id": "C-1",
+                            "needs_notice": True,
+                            "named_contact": "Alex Liaison",
+                        },
+                        "packages": [SAMPLE_PACKAGE],
+                        "orders": [SAMPLE_ORDER],
+                    }
+                )
+                tables = [el for el in walk_elements(out["app"]) if el["tag"] == "table"]
+                captions = tuple(
+                    node_text(
+                        next(
+                            k for k in tbl["kids"] if isinstance(k, dict) and k["tag"] == "caption"
+                        )
+                    )
+                    for tbl in tables
+                )
+                self.assertEqual(captions, expected_captions)
+                for tbl in tables:
+                    thead = next(
+                        k for k in tbl["kids"] if isinstance(k, dict) and k["tag"] == "thead"
+                    )
+                    head_cells = [
+                        c
+                        for tr in thead["kids"]
+                        if isinstance(tr, dict)
+                        for c in tr["kids"]
+                        if isinstance(c, dict)
+                    ]
+                    self.assertGreater(len(head_cells), 0)
+                    for cell in head_cells:
+                        self.assertEqual(cell["tag"], "th")
+                        self.assertEqual(cell["attrs"].get("scope"), "col")
+                    tbody = next(
+                        k for k in tbl["kids"] if isinstance(k, dict) and k["tag"] == "tbody"
+                    )
+                    body_rows = [tr for tr in tbody["kids"] if isinstance(tr, dict)]
+                    self.assertGreater(len(body_rows), 0)
+                    for tr in body_rows:
+                        row_cells = [c for c in tr["kids"] if isinstance(c, dict)]
+                        self.assertEqual(row_cells[0]["tag"], "th")
+                        self.assertEqual(row_cells[0]["attrs"].get("scope"), "row")
+                        self.assertTrue(node_text(row_cells[0]).strip())
+                        for td in row_cells[1:]:
+                            self.assertEqual(td["tag"], "td")
 
     def test_staff_contractor_list_and_case_views_landmarks_and_jump_links(self) -> None:
         list_out = run_dom(
