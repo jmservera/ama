@@ -376,69 +376,37 @@ function nominationPanel(c, id, refresh) {
     const missing = follow && Array.isArray(follow.missing) ? follow.missing : null;
     const explanation = record.plain_language_explanation
       || (follow && follow.plain_language_explanation) || null;
-    const ownerOptions = staffOwners.map((p) => [
-      p.email, p.role ? `${p.name} (${p.role})` : p.name,
-    ]);
+    const ownerOptions = staffOwners.map((p) => [p.email, p.role ? `${p.name} (${p.role})` : p.name]);
     const currentOwnerEmail = record.owner && typeof record.owner.email === "string"
       ? record.owner.email : (staffOwners.length === 1 ? staffOwners[0].email : "");
+    const assistedMediums = [
+      ["", "Select assisted non-digital medium"], ["phone", "Phone"], ["paper", "Paper"],
+      ["letter", "Letter"], ["in_person", "In person"], ["trusted_intermediary", "Trusted intermediary"],
+    ];
+    const nonDigitalRule = {
+      showWhen: (v) => v.channel === "staff_recorded_non_digital",
+      requiredWhen: (v) => v.channel === "staff_recorded_non_digital",
+    };
     const ackForm = interactive && ackIds.includes(record.id)
       ? nominationPanel._routeForm({
-        caseId: id,
-        key: `nomination-ack-${record.id}`,
-        title: `Record acknowledgement for ${record.id}`,
-        submitLabel: "Record acknowledgement",
-        actionWord: "acknowledgement",
-        refresh,
+        caseId: id, key: `nomination-ack-${record.id}`, title: `Record acknowledgement for ${record.id}`,
+        submitLabel: "Record acknowledgement", actionWord: "acknowledgement", refresh,
         fields: [
-          ["channel", "Acknowledgement intake route", [
-            ["", "Select intake route"],
-            ["digital", "Digital route"],
-            ["staff_recorded_non_digital", "Staff-recorded non-digital route"],
-          ]],
-          ["assisted_channel", "Assisted non-digital medium", [
-            ["", "Select assisted non-digital medium"],
-            ["phone", "Phone"],
-            ["paper", "Paper"],
-            ["letter", "Letter"],
-            ["in_person", "In person"],
-            ["trusted_intermediary", "Trusted intermediary"],
-          ], {
-            showWhen: (v) => v.channel === "staff_recorded_non_digital",
-            requiredWhen: (v) => v.channel === "staff_recorded_non_digital",
-          }],
-          ["owner", "Named follow-up owner", [["", "Select named follow-up owner"], ...ownerOptions], {
-            initial: currentOwnerEmail,
-          }],
-          ...(perms.can_reassign_owner ? [[
-            "owner_reassignment_reason",
-            "Owner reassignment reason (optional)",
-            null,
-            { maxlength: 500, requiredWhen: () => false },
-          ]] : []),
+          ["channel", "Acknowledgement intake route", [["", "Select intake route"], ["digital", "Digital route"], ["staff_recorded_non_digital", "Staff-recorded non-digital route"]]],
+          ["assisted_channel", "Assisted non-digital medium", assistedMediums, nonDigitalRule],
+          ["owner", "Named follow-up owner", [["", "Select named follow-up owner"], ...ownerOptions], { initial: currentOwnerEmail }],
+          ...(perms.can_reassign_owner ? [["owner_reassignment_reason", "Owner reassignment reason (optional)", null, { maxlength: 500, requiredWhen: () => false }]] : []),
           ["acknowledgement_ref", "Staff-recorded acknowledgement evidence reference", null, { maxlength: 500 }],
-          ["non_digital_route", "Staffed phone, paper, letter or in-person contact route", null, {
-            maxlength: 500,
-            initial: typeof record.non_digital_route === "string" ? record.non_digital_route : "",
-          }],
-          ["next_update", "Next update date", null, {
-            initial: typeof record.next_update === "string" ? record.next_update : "",
-          }],
+          ["non_digital_route", "Staffed phone, paper, letter or in-person contact route", null, { maxlength: 500, initial: typeof record.non_digital_route === "string" ? record.non_digital_route : "" }],
+          ["next_update", "Next update date", null, { initial: typeof record.next_update === "string" ? record.next_update : "" }],
         ],
         build: (body) => {
           const payload = {
-            action: "nomination_acknowledge",
-            case_id: id,
-            id: record.id,
-            expected_version: record.version,
-            channel: body.channel,
-            owner: body.owner,
-            acknowledgement_ref: body.acknowledgement_ref,
-            non_digital_route: body.non_digital_route,
-            next_update: body.next_update,
+            action: "nomination_acknowledge", case_id: id, id: record.id, expected_version: record.version,
+            channel: body.channel, owner: body.owner, acknowledgement_ref: body.acknowledgement_ref,
+            non_digital_route: body.non_digital_route, next_update: body.next_update,
           };
-          if (body.channel === "staff_recorded_non_digital") {
-            payload.assisted_channel = body.assisted_channel;
-          }
+          if (body.channel === "staff_recorded_non_digital") payload.assisted_channel = body.assisted_channel;
           if (perms.can_reassign_owner && body.owner_reassignment_reason && body.owner_reassignment_reason.trim()) {
             payload.owner_reassignment_reason = body.owner_reassignment_reason;
           }
@@ -447,75 +415,28 @@ function nominationPanel(c, id, refresh) {
       }) : null;
     const corrForm = interactive && corrIds.includes(record.id)
       ? nominationPanel._routeForm({
-        caseId: id,
-        key: `nomination-correct-${record.id}`,
-        title: `Record competing correction for ${record.id}`,
-        submitLabel: "Record competing correction",
-        actionWord: "correction",
-        refresh,
+        caseId: id, key: `nomination-correct-${record.id}`, title: `Record competing correction for ${record.id}`,
+        submitLabel: "Record competing correction", actionWord: "correction", refresh,
         fields: [
-          ["channel", "Correction intake route", [
-            ["", "Select correction intake route"],
-            ["digital", "Digital route"],
-            ["staff_recorded_non_digital", "Staff-recorded non-digital route"],
-          ]],
-          ["assisted_channel", "Assisted non-digital medium", [
-            ["", "Select assisted non-digital medium"],
-            ["phone", "Phone"],
-            ["paper", "Paper"],
-            ["letter", "Letter"],
-            ["in_person", "In person"],
-            ["trusted_intermediary", "Trusted intermediary"],
-          ], {
-            showWhen: (v) => v.channel === "staff_recorded_non_digital",
-            requiredWhen: (v) => v.channel === "staff_recorded_non_digital",
-          }],
-          ["raised_by", "Who supplied the correction", [
-            ["Resident", "Resident"],
-            ["Officer", "Officer"],
-            ...(repRefs.length ? [["Representative", "Representative"]] : []),
-          ], { initial: "Resident" }],
-          ...(repRefs.length ? [[
-            "representative_ref",
-            "Confirmed representative reference",
-            [["", "Select confirmed representative"], ...repRefs.map((ref) => [ref, ref])],
-            {
-              showWhen: (v) => v.raised_by === "Representative",
-              requiredWhen: (v) => v.raised_by === "Representative",
-            },
-          ]] : []),
-          ["reported_subject_ref", "Corrected unverified subject reference", null, {
-            maxlength: 100,
-            initial: typeof original.reported_subject_ref === "string" ? original.reported_subject_ref : "",
-          }],
+          ["channel", "Correction intake route", [["", "Select correction intake route"], ["digital", "Digital route"], ["staff_recorded_non_digital", "Staff-recorded non-digital route"]]],
+          ["assisted_channel", "Assisted non-digital medium", assistedMediums, nonDigitalRule],
+          ["raised_by", "Who supplied the correction", [["Resident", "Resident"], ["Officer", "Officer"], ...(repRefs.length ? [["Representative", "Representative"]] : [])], { initial: "Resident" }],
+          ...(repRefs.length ? [["representative_ref", "Confirmed representative reference", [["", "Select confirmed representative"], ...repRefs.map((ref) => [ref, ref])], { showWhen: (v) => v.raised_by === "Representative", requiredWhen: (v) => v.raised_by === "Representative" }]] : []),
+          ["reported_subject_ref", "Corrected unverified subject reference", null, { maxlength: 100, initial: typeof original.reported_subject_ref === "string" ? original.reported_subject_ref : "" }],
           ["account", "Competing corrected account", null, { multiline: true, maxlength: 4000 }],
           ["source", "Supplied correction evidence reference", null, { maxlength: 500 }],
-          ["challenge_id", "Linked challenge reference (optional)", [
-            ["", "No linked challenge"],
-            ...challengeIds.map((cid) => [cid, cid]),
-          ], { requiredWhen: () => false }],
+          ["challenge_id", "Linked challenge reference (optional)", [["", "No linked challenge"], ...challengeIds.map((cid) => [cid, cid])], { requiredWhen: () => false }],
           ["next_update", "Correction next update date"],
         ],
         build: (body) => {
           const payload = {
-            action: "nomination_correct",
-            case_id: id,
-            id: record.id,
-            expected_version: record.version,
-            reported_subject_ref: body.reported_subject_ref,
-            account: body.account,
-            source: body.source,
-            channel: body.channel,
-            next_update: body.next_update,
-            challenge_id: body.challenge_id ? body.challenge_id : null,
-            raised_by: body.raised_by || "Resident",
+            action: "nomination_correct", case_id: id, id: record.id, expected_version: record.version,
+            reported_subject_ref: body.reported_subject_ref, account: body.account, source: body.source,
+            channel: body.channel, next_update: body.next_update,
+            challenge_id: body.challenge_id ? body.challenge_id : null, raised_by: body.raised_by || "Resident",
           };
-          if (body.channel === "staff_recorded_non_digital") {
-            payload.assisted_channel = body.assisted_channel;
-          }
-          if (body.raised_by === "Representative" && body.representative_ref) {
-            payload.representative_ref = body.representative_ref;
-          }
+          if (body.channel === "staff_recorded_non_digital") payload.assisted_channel = body.assisted_channel;
+          if (body.raised_by === "Representative" && body.representative_ref) payload.representative_ref = body.representative_ref;
           return payload;
         },
       }) : null;
@@ -592,13 +513,7 @@ nominationPanel._routeForm = function ({
   if (!status.id) status.id = `${key}-feedback`;
   const inputs = fields.map((spec) => {
     const [name, label, options, config = {}] = spec;
-    const attrs = {
-      id: `${key}-${name}`,
-      name,
-      autocomplete: "off",
-      "aria-describedby": status.id,
-      ...(config.attrs || {}),
-    };
+    const attrs = { id: `${key}-${name}`, name, autocomplete: "off", "aria-describedby": status.id, ...(config.attrs || {}) };
     let input;
     if (options) {
       input = h("select", attrs, options.map((option) => {
@@ -608,24 +523,11 @@ nominationPanel._routeForm = function ({
     } else if (config.multiline) {
       input = h("textarea", { ...attrs, maxlength: config.maxlength || 4000 }, config.initial || "");
     } else {
-      input = h("input", {
-        ...attrs,
-        type: name === "next_update" ? "date" : "text",
-        maxlength: config.maxlength || 300,
-        ...(config.initial ? { value: config.initial } : {}),
-      });
+      input = h("input", { ...attrs, type: name === "next_update" ? "date" : "text", maxlength: config.maxlength || 300, ...(config.initial ? { value: config.initial } : {}) });
     }
     if (config.initial !== undefined && "value" in input) input.value = config.initial;
     const labelNode = h("label", { for: attrs.id }, label);
-    return {
-      name,
-      label,
-      labelNode,
-      input,
-      isSelect: Boolean(options),
-      requiredWhen: config.requiredWhen || null,
-      showWhen: config.showWhen || null,
-    };
+    return { name, label, labelNode, input, isSelect: Boolean(options), requiredWhen: config.requiredWhen || null, showWhen: config.showWhen || null };
   });
   const currentValues = () => Object.fromEntries(inputs.map(({ name, input }) => [name, input.value || ""]));
   const setHidden = (node, flag) => {
@@ -639,19 +541,10 @@ nominationPanel._routeForm = function ({
       const visible = Boolean(entry.showWhen(vals));
       setHidden(entry.labelNode, !visible);
       setHidden(entry.input, !visible);
-      if (!visible && typeof entry.input.removeAttribute === "function") {
-        entry.input.removeAttribute("aria-invalid");
-      }
+      if (!visible && typeof entry.input.removeAttribute === "function") entry.input.removeAttribute("aria-invalid");
     }
   };
-  let mutation = {
-    pending: false,
-    message: "",
-    recordedForm: null,
-    checkHistory: false,
-    focus: false,
-    update: () => {},
-  };
+  let mutation = { pending: false, message: "", recordedForm: null, checkHistory: false, focus: false, update: () => {} };
   for (const { input, isSelect } of inputs) {
     if (typeof input.addEventListener === "function") {
       const clearInvalid = () => {
