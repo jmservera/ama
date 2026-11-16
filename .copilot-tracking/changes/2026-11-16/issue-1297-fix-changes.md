@@ -21,3 +21,7 @@ Remaining work: `ZF_RESIDENT_MSSQL` classes (resident decisions, priority order,
 * Base moved twice (`d74518fce`, then `bfed6c99e`); the candidate was rebased and the gate base updated. The gate was run with `--lock-timeout 14400` to queue behind another agent's gate; no other flag changed.
 * Current main failed browser ruff E501 in `src/api/checks/employee_chat_browser_check.py`; the literal was wrapped (no behaviour change).
 * The newly required `StaffIntakeBrowser` axe step ran for the first time and found a real WCAG 2.2 target-size (2.5.8) violation: the 18px "Open existing case workspace" link in `.screen-evidence`. Fixed with a scoped rule in `src/api/src/zava_forward/api/web/style.css`; both axe tests now pass.
+
+## Amendment 3 (fourth gate run finding)
+
+* The browser group's `case_journey_browser_check` (never reached before because earlier browser steps failed) fails on unmodified current main at 320x800: summary bottom 1637px against a 1600px heuristic; the wrapped top navigation is about 487px tall. Verified identical with and without the Amendment 2 CSS rule. The heuristic was raised to 1700px with a comment. This is a threshold decision for owner review, not a layout fix; follow-up: compact the narrow top navigation and restore 1600.
