@@ -280,8 +280,17 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             }""")
             expect(question).to_have_attribute(
                 "aria-describedby",
-                "employee-chat-entry-warning chat-privacy employee-chat-error chat-demo-disclaimer",
+                "employee-chat-entry-warning chat-privacy employee-chat-error employee-chat-keys chat-demo-disclaimer",
             )
+            expect(page.locator("#employee-chat-keys")).to_be_visible()
+            expect(page.locator("#employee-chat-keys")).to_contain_text("Press Enter to send")
+            question.focus()
+            page.keyboard.press("Tab")
+            expect(page.get_by_role("combobox", name="Agent skill")).to_be_focused()
+            page.keyboard.press("Tab")
+            expect(
+                page.get_by_role("dialog").get_by_role("button", name="Send", exact=True)
+            ).to_be_focused()
             question.fill("Explain the next check")
             page.get_by_role("dialog").get_by_role("button", name="Send", exact=True).click()
             log = page.get_by_role("log", name="Employee assistant conversation")

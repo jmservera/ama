@@ -126,7 +126,7 @@ const employeeChat = (() => {
       launcher().hidden = !me || me.user.role === "Contractor";
     };
     select.append(ui.node("option", "General work help", { value: "general" }));
-    input.setAttribute("aria-describedby", "employee-chat-entry-warning employee-chat-error");
+    input.setAttribute("aria-describedby", "employee-chat-entry-warning employee-chat-error employee-chat-keys");
     ui.beforeInput.append(ui.node("small",
       "Do not enter personal or sensitive resident information. Chat cannot approve or change records.",
       { id: "employee-chat-entry-warning", class: "chat-widget-meta" }));
@@ -204,7 +204,7 @@ const employeeChat = (() => {
       ui.intro.append(h("p", { id: "chat-privacy" },
         `${admission.warning} Retention: ${admission.retention}. Synthetic data only. ${admission.demo_activation ? "" : "Model activation requires separate approval."}`));
       if (admission.limits) ui.intro.append(h("p", { id: "chat-limits" }, limitsNote(admission.limits)));
-      input.setAttribute("aria-describedby", "employee-chat-entry-warning chat-privacy employee-chat-error" + (admission.demo_activation ? " chat-demo-disclaimer" : ""));
+      input.setAttribute("aria-describedby", "employee-chat-entry-warning chat-privacy employee-chat-error employee-chat-keys" + (admission.demo_activation ? " chat-demo-disclaimer" : ""));
       stored = admission.storage_approved !== false;
       if (!stored) ui.intro.append(h("p", { id: "chat-unstored" },
         "Chat storage is not approved yet. Replies use rules only on the case you have open, nothing you type is saved and no AI model is used."));

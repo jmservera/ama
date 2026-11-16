@@ -162,7 +162,7 @@ class ProvenanceAndOutcomeTests(unittest.TestCase):
         self.assertIn("Chat cannot approve or change records.", CHAT)
         self.assertIn("Chat cannot approve, send, book or change records.", CHAT)
         self.assertIn("The assistant cannot change a record, approve, send or book anything", CHAT)
-        self.assertIn('"employee-chat-entry-warning employee-chat-error"', CHAT)
+        self.assertIn('"employee-chat-entry-warning employee-chat-error employee-chat-keys"', CHAT)
         self.assertIn("AI suggestion, not approved", CHAT)
 
     def test_aria_invalid_sites_are_not_added_to_chat_scripts(self) -> None:
