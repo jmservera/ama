@@ -18,7 +18,7 @@ Both authors are Microsoft employees, and the analysis and scientific
 review remain within that shared institutional setting.
 
 An earlier three-arm protocol was registered at \url{https://osf.io/ywsrv/overview},
-and the owner confirms a 7 November 2026 OSF-registered base at
+and I, the repository maintainer, confirm a 7 November 2026 OSF-registered base at
 \url{https://osf.io/xcpt4}. Its metadata was not independently verified
 (Data availability). Because the OSF registration could not be amended in
 place, the executed five-arm model-stratified design and mid-study resilience
@@ -31,13 +31,13 @@ The completed study is exploratory and estimates effects under an evolving
 protocol. It cannot be treated as one preregistered confirmatory evaluation.
 The public protocol leaves its formal hypothesis list empty and marks the
 current amendment's registration fields false or null. Those fields concern
-the amendment; the registered base remains owner-confirmed.
+the amendment; the registered base remains based on my confirmation.
 
 The active profile is \nolinkurl{pilot-estimation.json},
 \texttt{model-stratified-v2-five-arm}, suite \texttt{s1-retrofit}.
 GPT~6.1 Sol, Claude Sonnet~5.5 and Gemini~4 Argon use medium effort across
-arms A--E, F1--F10 and held-out CR1, with seed 2027. The owner-supplied
-runtime selection is $n=21$ trajectories per model per arm despite the
+arms A--E, F1--F10 and held-out CR1, with seed 2027. The runtime selection
+I supplied is $n=21$ trajectories per model per arm despite the
 file default of 12: $3\times5\times21=315$ planned trajectories.
 A trajectory is the sequence of work on one repository. Its feature steps,
 sessions and completion counters describe work within that sequence and
@@ -296,6 +296,10 @@ The runner enforces the time budget, protected tests and retained green
 code, rather than accepting an AI statement as an independent quality verdict.
 The exact checked-in B/C examples, parameter substitution and saved-prompt
 limitations are in Supplement Section~\ref{app:activeprompts}.
+
+The following risk-set definitions and reporting requirements come from
+the earlier design. They describe intended reporting; the inspected
+analyzer's more conservative export is distinguished below.
 
 For trajectory $r$, $F_t$ is the retained state after feature step $t$ and
 $P_t$ the state after its assigned post-step; these source states coincide
@@ -1023,7 +1027,7 @@ Prediction & Falsification / target criterion & Observed ten-feature result (315
 \midrule
 P1: Short-horizon decay premise (\texttt{H2}) & Unconsolidated delivery (Arms~A, D) exhibits open regressions ($L^P_{r,10}>0$) or witnessed workflow losses by $P_{10}$ & 0/126 completed A and D runs with open loss at $P_{10}$ (1/315 overall, in Gemini~E); 99.18\%--99.74\% Arm~A coverage on Sonnet and Gemini; 0/626 workflow-replay losses & Not supported / invalidated at $N=10$ \\
 P2: Primary consolidation coverage gain (\texttt{H1}, \texttt{H7}) & Arm~B exceeds Arm~D in equal-model-weight $P_{10}$ coverage by $\Delta_*\geq10$ percentage points & $+1.19$ pp (95\% CI $[+0.10,+2.22]$; B--A $+1.41$ pp, $[+0.33,+2.45]$; B--C $+0.66$ pp, $[-0.45,+1.75]$); GPT $+3.15$ pp $[0.00,+6.30]$ (F9 acquisition: 12/21 vs 6/21), while Sonnet $+0.26$ pp and Gemini $+0.15$ pp CIs span zero & Mixed / below 10-point threshold (single-model F9 recovery) \\
-P3: Change-request adaptability and cost payback (\texttt{H5}, \texttt{H6}) & Arm~B raises CR1 success and reduces CR1 or net credit spend relative to Arms~A, C and D & Equal-model CR1 B--D and B--A bounds $[0.00,+1.59]$ pp, B--C $[-14.29,-11.11]$ pp; Gemini review 16/21 vs Arm~B 8/21; settled delivery credits $1.84\times$--$2.25\times$ Arm~A with no CR1 saving & Not supported (\texttt{H5} invalidated; \texttt{H6} inconclusive for B, review wins on Gemini) \\
+P3: Change-request adaptability and cost payback (\texttt{H5}, \texttt{H6}) & Arm~B raises CR1 success and reduces CR1 or net credit spend relative to Arms~A, C and D & Equal-model CR1 B--D and B--A bounds $[0.00,+1.59]$ pp, B--C $[-14.29,-11.11]$ pp; Gemini review 16/21 vs Arm~B 8/21; settled delivery credits $1.84\times$--$2.25\times$ Arm~A with no CR1 saving & Not supported (\texttt{H5} invalidated; \texttt{H6} inconclusive for B, higher observed Gemini CR1 success under review) \\
 Manipulation check: Structural hygiene (\texttt{H3}, \texttt{H4}) & Arm~B reduces functions above complexity 10, duplication and lint toward stopping targets & 0.00\% functions $>10$ complexity across all 63 Arm~B endpoints; lint $-92\%$ on Sonnet (to 2.26/kloc) and $-100\%$ on GPT (to 0.00/kloc); \texttt{src} NLOC $+3.2\%$ to $+7.2\%$ & Supported as treatment fidelity (\textbf{adjust} to triggered hybrid B+C+E pass) \\
 \bottomrule
 \end{tabularx}
