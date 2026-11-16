@@ -43,6 +43,6 @@
     {"decision":"Rootless gate support","status":"authorized","evidence":"Owner selected narrowly scoped reviewed rootless-Docker gate fix; Plan D6 confines explicit DOCKER_HOST to absolute local Unix sockets with endpoint-bound receipts and retained environment isolation/full tier."}
   ],
   "blockers": [],
-  "next_action": {"phase":"Implement","action":"Lazy disabled imports and null-span guards pass core 27, rescan 10, worker 101, API 10 and gate 111 tests. Commit corrected source/evidence, fetch main, then run a new complete exact-head gate with explicit rootless endpoint and independent assessment."},
+  "next_action": {"phase":"Implement","action":"Second full run passed 16/17 groups; SQL stopped at missing libltdl. Task-owned dependency restored and real owned SQL query passes. Commit evidence, merge authorized current main 4c3f1d13 and run a new complete exact-head gate before independent assessment/publication."},
   "prioritized_follow_ups": []
 }

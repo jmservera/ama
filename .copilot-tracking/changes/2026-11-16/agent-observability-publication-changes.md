@@ -100,6 +100,20 @@ ms.date: 2026-11-16
 * Current-main skip accounting also accepts all three actual API discovery
   transcripts from the failed run. That targeted check is not execution of
   the now-required SQL/browser suites and is not full-gate acceptance.
+* Second complete run at `ee8c8c61`, base `a612ba00`: 16 of 17 groups passed,
+  including all five projects, browser, infra, migration and four image scans/
+  contracts. MSSQL stopped before tests because `libltdl.so.7` was absent.
+  Failed receipt remains `/var/tmp/ama-og-4fsxlE/final2/receipt.json`.
+* Restored official Ubuntu `libltdl7` 2.5.4-9 only into the task-owned portable
+  Python library prefix, using its existing ELF RPATH. No global installation,
+  loader wrapper, gate-source change, credential inheritance or permission
+  change. Exact isolated native SQL load/import now passes.
+* A separately owned, heavy-lock-protected, loopback-only SQL Server diagnostic
+  confirms native driver connection and a real query; its container was removed
+  in finally. This is prerequisite proof, not the full required SQL suite.
+* Main advanced to `4c3f1d13` (map-check readiness fix). Integrate as authorized
+  and start an entirely new full run: native input/base changes invalidate reuse
+  of the previous passing groups.
 
 ## Business Alignment
 
