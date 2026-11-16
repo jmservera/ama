@@ -1,0 +1,122 @@
+{
+  "task_id": "agent-observability-implementation",
+  "task_slug": "agent-observability-implementation",
+  "session_name": "Agent observability",
+  "parent_task": null,
+  "child_tasks": [],
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-16/agent-observability-implementation-plan.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-16/agent-observability-implementation-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-16/agent-observability-implementation-changes.md",
+    "review": null
+  },
+  "documents": {
+    "research": [
+      ".copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md"
+    ],
+    "plan": [
+      ".copilot-tracking/plans/2026-11-16/agent-observability-implementation-plan.md"
+    ],
+    "critique": [
+      ".copilot-tracking/reviews/plans/2026-11-16/agent-observability-implementation-plan-critique.md"
+    ],
+    "changes": [
+      ".copilot-tracking/changes/2026-11-16/agent-observability-implementation-changes.md"
+    ],
+    "review": []
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Advanced main ancestry",
+      "status": "merge-authorized",
+      "evidence": "Owner selected Merge origin/main into the implementation child after committing owned work. No rebase, force-push or parent-PR merge."
+    },
+    {
+      "decision": "Exporter selection after SDK privacy inspection",
+      "status": "otlp-first",
+      "evidence": "Owner selected Implement OTLP first; defer direct Azure exporter. No tenant, collector or deployment activation authorized."
+    },
+    {
+      "decision": "Automatic session scope",
+      "status": "current",
+      "evidence": "User selected Capstone executive presentation and Handle it end to end on 2026-11-16. Implement privacy-safe OTel layer, dependent correlation/operational documentation and tests, and future-only Agent 365 capstone proposal from F1-F6. Preserve domain authority and explanation safeguards. Excludes real-data access, live deployment, tenant onboarding, new explanation UI, license purchases and paid inference."
+    },
+    {
+      "decision": "Automatic progression boundary",
+      "status": "through-review",
+      "evidence": "User selected Handle it end to end on 2026-11-16."
+    },
+    {
+      "decision": "Research decision participation",
+      "status": "agent-owned",
+      "evidence": "End-to-end default selected by user."
+    },
+    {
+      "decision": "Planning decision participation",
+      "status": "agent-owned",
+      "evidence": "End-to-end default selected by user."
+    },
+    {
+      "decision": "Review decision participation",
+      "status": "agent-owned",
+      "evidence": "End-to-end default selected by user."
+    },
+    {
+      "decision": "Follow-up decision participation",
+      "status": "agent-owned",
+      "evidence": "End-to-end default selected by user."
+    },
+    {
+      "decision": "Planning critique",
+      "status": "standard",
+      "evidence": "First-task default; user was informed critique runs once."
+    },
+    {
+      "decision": "Review step",
+      "status": "run",
+      "evidence": "First-task default; user was informed review runs once."
+    },
+    {
+      "decision": "Requested outcome",
+      "status": "current",
+      "evidence": "User 2026-11-16: Add Agent 365 as future proposals for the presentation, add the OTEL observability layer, and apply the recommendations. Confirmed capstone executive deck and end-to-end progression."
+    },
+    {
+      "decision": "Research reuse",
+      "status": "reused",
+      "evidence": "Existing PRD-led assessment F1-F6, C1-C19 and W1-W11 at research artifact; source baseline d74518fce8eab67286487b0f66aedcc816ff95a7. Recheck affected source before planning implementation."
+    },
+    {
+      "decision": "Agent 365 activation",
+      "status": "future-proposal-only",
+      "evidence": "User explicitly requests Agent 365 as a future presentation proposal. No tenant onboarding, licensing, payload export or live activation authorized."
+    },
+    {
+      "decision": "Validation classification",
+      "status": "full-tier",
+      "evidence": "Proposed runtime telemetry dependencies and privacy-sensitive instrumentation change packages and a security/privacy boundary. Mixed deck/runtime work takes the strictest tier. Full local gate, external exact-head receipt, independent review, hosted CI and owner approval remain required."
+    },
+    {
+      "decision": "Canvas",
+      "status": "current",
+      "evidence": "instanceId rpi-agent-observability; handle BS1J; extensionId plugin:hve-core:rpi-workflow. Opened and connected at user request. Older completed research is linked but not parsed by the canvas; unrelated legacy state warnings are outside scope."
+    }
+  ],
+  "blockers": [
+    {
+      "id": "current-main-ancestry",
+      "summary": "Fetched main bfed6c99 advanced beyond stack base d74518fc; canonical full gate requires current main ancestry.",
+      "resolution": "Owner authorized merge; agent will commit owned work and merge current main once deck source writes stop."
+    }
+  ],
+  "next_action": {
+    "phase": "Implement",
+    "action": "P01-P03 completed with baseline diagram failures disclosed; commit owned work, merge main as authorized, then enter Review for P04 publication."
+  },
+  "prioritized_follow_ups": []
+}

@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-15
+ms.date: 2026-11-16
 ms.topic: overview
 ---
 
@@ -398,6 +398,13 @@ owner/threshold approvals remain unmet. No deployment or issue closure follows.
 The runbook's Demo Routing Decision section records owner decision
 `keep_console_alerts_for_demo`: the demo keeps console log export for the
 ledger alerts and defers candidate `9c2a59f6` to production.
+
+The [16 November OTel contract](../../infra/monitoring-runbooks.md#explicit-otlp-instrumentation-2026-11-16)
+adds opt-in, content-free OTLP spans/metrics and restricted audit correlation,
+with offline coverage and explicit live/SLO gaps. Direct Azure export is deferred
+after SDK inspection found implicit metadata and secondary traffic. Agent 365
+remains a conditional future proposal with unresolved content-schema/privacy
+compatibility, not a substitute for domain controls or meaningful explanations.
 
 For finance #96/#98/#99, the
 [working field-review contract](../../src/core/README.md#unapproved-working-field-review-96-98-99)

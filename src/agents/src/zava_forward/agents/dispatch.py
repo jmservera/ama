@@ -10,6 +10,7 @@ post-back) belong to issue #144; this module defines the ports they implement.
 
 from __future__ import annotations
 
+import contextvars
 import json
 import threading
 import time
@@ -17,7 +18,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, Protocol
 
-from zava_forward.core import assistants
+from zava_forward.core import assistants, telemetry
 from zava_forward.core.ai_consumption import CallContext, call_context, captured_readings, reference
 
 MAX_MESSAGE_CHARS = 64000
@@ -52,6 +53,7 @@ class TaskMessage:
     task: dict[str, Any]
     max_tokens: int
     timeout: int
+    traceparent: str | None = None
 
     @classmethod
     def from_task(cls, task: dict[str, Any], limits: Any) -> TaskMessage:
@@ -59,14 +61,14 @@ class TaskMessage:
             task={k: task[k] for k in TASK_KEYS},
             max_tokens=limits.output_tokens,
             timeout=limits.timeout,
+            traceparent=telemetry.valid_traceparent(task.get("traceparent")) or telemetry.carrier(),
         )
 
     def to_json(self) -> str:
-        return str(
-            assistants.canonical(
-                dict(task=self.task, max_tokens=self.max_tokens, timeout=self.timeout)
-            )
-        )
+        body = dict(task=self.task, max_tokens=self.max_tokens, timeout=self.timeout)
+        if parent := telemetry.valid_traceparent(self.traceparent):
+            body["traceparent"] = parent
+        return str(assistants.canonical(body))
 
     @classmethod
     def from_json(cls, text: str) -> TaskMessage:
@@ -88,7 +90,12 @@ class TaskMessage:
             or not 1 <= max_tokens <= 2000
         ):
             raise ValueError("Task message bounds are invalid.")
-        return cls(task=task, max_tokens=max_tokens, timeout=timeout)
+        return cls(
+            task=task,
+            max_tokens=max_tokens,
+            timeout=timeout,
+            traceparent=telemetry.valid_traceparent(raw.get("traceparent")),
+        )
 
 
 @dataclass(frozen=True)
@@ -101,6 +108,7 @@ class ResultMessage:
     envelope: dict[str, Any]
     output: dict[str, Any] | None
     failure: str | None
+    traceparent: str | None = None
 
     def to_json(self) -> str:
         body = dict(
@@ -111,6 +119,8 @@ class ResultMessage:
             output=self.output,
             failure=self.failure,
         )
+        if parent := telemetry.valid_traceparent(self.traceparent):
+            body["traceparent"] = parent
         return str(assistants.canonical(body))
 
     @classmethod
@@ -123,6 +133,7 @@ class ResultMessage:
             raw["envelope"],
             raw["output"],
             raw["failure"],
+            telemetry.valid_traceparent(raw.get("traceparent")),
         )
 
 
@@ -223,7 +234,10 @@ class AgentWorker:
                 returned.set()
 
         started = time.perf_counter()
-        threading.Thread(target=call, daemon=True, name="agents-provider").start()
+        thread_context = contextvars.copy_context()
+        threading.Thread(
+            target=thread_context.run, args=(call,), daemon=True, name="agents-provider"
+        ).start()
         while not returned.wait(0.1):
             if self.stop_event.is_set() or time.perf_counter() - started >= timeout:
                 break
@@ -233,6 +247,20 @@ class AgentWorker:
 
     def handle(self, message: TaskMessage, limits: Any) -> ResultMessage | None:
         """Run one task; None when no slot is free or the worker is stopping (redeliver)."""
+        parent = None if telemetry.correlation() else message.traceparent
+        with telemetry.operation(
+            "invoke_workflow", parent=parent, capability=message.task["capability"]
+        ) as observation:
+            result = self._handle(message, limits)
+            if result is None:
+                observation.fail("cancelled")
+            elif result.failure:
+                observation.fail(
+                    "timeout" if result.envelope.get("outcome") == "timeout" else "error"
+                )
+            return result
+
+    def _handle(self, message: TaskMessage, limits: Any) -> ResultMessage | None:
         task = message.task
         if self.stop_event.is_set() or not self.slots.acquire(blocking=False):
             return None
@@ -249,7 +277,9 @@ class AgentWorker:
                 # The drain window ended mid-call: redeliver instead of recording a failure.
                 return None
             envelope, output, failure = assistants.shape_result(task, raw, limits)
-        return ResultMessage(task["id"], task["fence"], task["owner"], envelope, output, failure)
+        return ResultMessage(
+            task["id"], task["fence"], task["owner"], envelope, output, failure, telemetry.carrier()
+        )
 
 
 def run_once(queue: TaskQueue, worker: AgentWorker, sink: ResultSink, limits: Any) -> bool:
@@ -258,6 +288,21 @@ def run_once(queue: TaskQueue, worker: AgentWorker, sink: ResultSink, limits: An
     if received is None:
         return False
     receipt, message = received
+    with telemetry.operation("messaging.process", parent=message.traceparent) as observation:
+        handled = _run_received(queue, worker, sink, limits, receipt, message)
+        if not handled:
+            observation.fail()
+        return handled
+
+
+def _run_received(
+    queue: TaskQueue,
+    worker: AgentWorker,
+    sink: ResultSink,
+    limits: Any,
+    receipt: str,
+    message: TaskMessage,
+) -> bool:
     try:
         result = worker.handle(message, limits)
         if result is None:

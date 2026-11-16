@@ -4,7 +4,8 @@ import time
 import unittest
 from typing import Any
 
-from zava_forward.core import assistants
+from telemetry_support import capture_telemetry
+from zava_forward.core import assistants, telemetry
 from zava_forward.core.ai_consumption import CURRENT
 
 from zava_forward.agents.dispatch import (
@@ -14,6 +15,7 @@ from zava_forward.agents.dispatch import (
     TaskMessage,
     run_once,
 )
+from zava_forward.agents.runtime import ApiResultSink
 
 SNAPSHOT: dict[str, Any] = {"citations": ["home.epc", "survey.epc"], "unknowns": ["survey.built"]}
 
@@ -80,6 +82,41 @@ def message(task: dict[str, Any] | None = None) -> TaskMessage:
 
 
 class WorkerTests(unittest.TestCase):
+    def test_timeout_preserves_late_thread_parent_and_slot(self) -> None:
+        release, finished = threading.Event(), threading.Event()
+
+        def slow(*_: Any) -> dict[str, Any]:
+            try:
+                with telemetry.operation("chat"):
+                    release.wait(5)
+                    return returned(good_text())
+            finally:
+                finished.set()
+
+        with capture_telemetry() as captured:
+            worker = AgentWorker(slow, active_calls=1)
+            msg = TaskMessage(make_task(), 100, 1)
+            try:
+                result = worker.handle(msg, limits())
+                assert result is not None
+                self.assertEqual(result.envelope["outcome"], "timeout")
+                self.assertIsNone(worker.handle(msg, limits()))
+            finally:
+                release.set()
+                self.assertTrue(finished.wait(2))
+            self.assertTrue(worker.slots.acquire(timeout=2))
+            worker.slots.release()
+            spans = captured.spans.get_finished_spans()
+            workflow = next(
+                s
+                for s in spans
+                if s.name.startswith("invoke_workflow")
+                and (s.attributes or {}).get("error.type") == "timeout"
+            )
+            provider = next(s for s in spans if s.name == "chat")
+            assert provider.parent is not None
+            self.assertEqual(provider.parent.span_id, workflow.context.span_id)
+
     def handle(self, provider: Any, task: dict[str, Any] | None = None) -> ResultMessage:
         result = AgentWorker(provider).handle(message(task), limits())
         assert result is not None
@@ -198,6 +235,20 @@ class WorkerTests(unittest.TestCase):
 
 
 class MessageTests(unittest.TestCase):
+    def test_optional_context_round_trip_preserves_old_closed_payload(self) -> None:
+        legacy = message().to_json()
+        self.assertNotIn("traceparent", json.loads(legacy))
+        with capture_telemetry(), telemetry.operation("messaging.publish"):
+            traced = message()
+            self.assertIsNotNone(traced.traceparent)
+            self.assertEqual(TaskMessage.from_json(traced.to_json()), traced)
+            self.assertEqual(set(traced.task), set(make_task()))
+            result = ResultMessage("t", 1, "o", {}, None, None, telemetry.carrier())
+            self.assertEqual(ResultMessage.from_json(result.to_json()), result)
+            raw = json.loads(legacy)
+            raw.update(traceparent="resident=private@example.invalid", baggage="PRIVATE_PAYLOAD")
+            self.assertIsNone(TaskMessage.from_json(json.dumps(raw)).traceparent)
+
     def test_task_round_trip_and_bounds(self) -> None:
         m = message()
         self.assertEqual(TaskMessage.from_json(m.to_json()), m)
@@ -223,6 +274,49 @@ class MessageTests(unittest.TestCase):
 
 
 class QueueTests(unittest.TestCase):
+    def test_queue_provider_postback_share_trace_without_payloads(self) -> None:
+        requests: list[dict[str, str]] = []
+
+        def transport(
+            method: str, url: str, headers: dict[str, str], body: bytes | None
+        ) -> tuple[int, bytes]:
+            requests.append(headers)
+            return 204, b""
+
+        def provider(*_: Any) -> dict[str, Any]:
+            with telemetry.operation("chat"):
+                return returned(good_text())
+
+        with capture_telemetry() as captured:
+            with telemetry.operation("messaging.publish"):
+                queued = message()
+            sink = ApiResultSink("https://api.example.test", lambda: "PRIVATE_SECRET", transport)
+            queue = InMemoryQueue([queued])
+            self.assertTrue(run_once(queue, AgentWorker(provider), sink, limits()))
+            self.assertEqual(queue.acked, ["0"])
+            spans = captured.spans.get_finished_spans()
+            by_name = {s.name: s for s in spans}
+            producer = by_name["publish agent-tasks"]
+            consumer = by_name["process agent-tasks"]
+            workflow = by_name["invoke_workflow stock-prioritisation"]
+            client = by_name["POST"]
+            for child, parent in (
+                (consumer, producer),
+                (workflow, consumer),
+                (by_name["chat"], workflow),
+                (client, workflow),
+            ):
+                assert child.parent is not None
+                self.assertEqual(child.parent.span_id, parent.context.span_id)
+            self.assertEqual(
+                requests[0]["traceparent"].split("-")[1], f"{producer.context.trace_id:032x}"
+            )
+            self.assertNotIn("baggage", requests[0])
+            exported = " ".join(s.to_json() for s in spans)
+            self.assertNotIn("PRIVATE_SECRET", exported)
+            self.assertNotIn("ZF-1", exported)
+            self.assertNotIn("EPC differs", exported)
+
     def test_ack_after_successful_post(self) -> None:
         queue, sink = InMemoryQueue([message()]), Sink()
         worker = AgentWorker(lambda *a: returned(good_text()))

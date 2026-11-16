@@ -2,9 +2,18 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-31
+ms.date: 2026-11-16
 ms.topic: reference
 ---
+
+## Opt-in operational tracing
+
+`ZF_OTEL_EXPORTER=otlp` explicitly initializes the content-free pipeline in API
+startup; default `none` preserves legacy console formatting and exports nothing.
+Method/status HTTP spans reset per keep-alive request and join proposal execution,
+provider threads and protected audit events without exporting dynamic URLs.
+See the [settings, offline checks and outstanding collector/approval gaps](../../infra/monitoring-runbooks.md#explicit-otlp-instrumentation-2026-11-16).
+No Application Insights/Agent 365 ingestion or accepted SLO is claimed.
 
 ## Handoff waiting times screen (2026-11-11, Refs #83)
 

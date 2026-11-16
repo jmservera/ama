@@ -2,9 +2,20 @@
 title: Zava Forward agents
 description: Five retrofit assistants, the offline AI evaluation harness and their dated validation record for the agents project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-31
+ms.date: 2026-11-16
 ms.topic: reference
 ---
+
+## Opt-in operational tracing
+
+The active `serve` route supports explicit OTLP initialization using the
+[shared settings and privacy/evidence contract](../../infra/monitoring-runbooks.md#explicit-otlp-instrumentation-2026-11-16).
+`health`, version and standby do not start exporters or consume messages.
+Optional validated `traceparent` fields preserve legacy task/result JSON;
+baggage/tracestate are not forwarded. Provider-thread context, late-call slot
+ownership, post-back acknowledgement and API/SQL authority remain unchanged.
+The worker receives no SQL/blob/Key Vault permission. Export is off by default;
+neither cloud queue wiring nor Agent 365 adoption is newly activated.
 
 ## Consumption provenance (#432)
 

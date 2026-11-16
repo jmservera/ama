@@ -2,9 +2,18 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-31
+ms.date: 2026-11-16
 ms.topic: reference
 ---
+
+## Opt-in operational tracing
+
+`core[telemetry]` supplies an explicit SDK/OTLP HTTP layer; core alone needs only
+the OTel API and exports nothing. See the [enablement, privacy contract and
+synthetic receipt](../../infra/monitoring-runbooks.md#explicit-otlp-instrumentation-2026-11-16).
+SQL audit/consent/release/consumption remain authoritative. No prompts, outputs,
+SQL text, business identifiers or model reasoning are added to diagnostics.
+Agent 365 and direct Azure export are deferred.
 
 ## Retained sensor readings for employees and Quality evidence (Refs #1288, #107)
 
