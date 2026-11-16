@@ -49,6 +49,11 @@ def sql_chat_log(extra: str = "", names: tuple[str, ...] = gate.SQL_CHAT_REQUIRE
     return f"{results}{extra}Ran {count} tests in 0.1s\n\nOK\n"
 
 
+def class_log(classes: tuple[str, ...]) -> str:
+    results = "".join(f"test_x ({name}.test_x) ... ok\n" for name in classes)
+    return f"{results}Ran {len(classes)} tests in 0.1s\n\nOK\n"
+
+
 class GateTests(unittest.TestCase):
     def test_employee_acceptance_cli_is_required_without_extras_and_dispatched(
         self,
@@ -496,8 +501,11 @@ class GateTests(unittest.TestCase):
             "executed_groups": ["mssql"],
         }
         suites = [c for c in gate.required_checks(self.root, receipt) if c["suite"]]
-        self.assertEqual(len(suites), 2)
-        existing, sensor = suites
+        self.assertEqual(len(suites), 3)
+        existing, sensor, opt_in = suites
+        self.assertEqual(opt_in["argv"][1:], ["-m", "unittest", "-v", *gate.SQL_OPT_IN_CLASSES])
+        self.assertEqual(opt_in["env"], {**existing["env"], **gate.SQL_OPT_IN_FLAGS})
+        self.assertTrue(opt_in["integration"])
         self.assertEqual(existing["argv"][-len(gate.SQL_SELECTORS) :], list(gate.SQL_SELECTORS))
         self.assertNotIn(gate.SENSOR_MSSQL_FLAG, existing["env"])
         self.assertEqual(sensor["argv"][1:], ["-m", "unittest", "-v", gate.SENSOR_MSSQL_SELECTOR])
@@ -509,6 +517,65 @@ class GateTests(unittest.TestCase):
             gate.required_sql_count(sensor["argv"]), len(gate.SENSOR_MSSQL_REQUIRED_TESTS)
         )
         self.assertIsNone(gate.required_sql_count(existing["argv"]))
+
+    def test_discovery_skips_are_bound_to_exact_class_reason_and_group(self) -> None:
+        def log(test: str, reason: str) -> str:
+            return f"{test} ... skipped '{reason}'\nRan 1 test in 0.1s\n\nOK (skipped=1)\n"
+
+        draft = "test_x (test_sensor_review_draft.MssqlDraftCases.test_x)"
+        reason = "requires ZF_SENSOR_DRAFT_MSSQL=1"
+        self.assertEqual(
+            gate.check_skips(log(draft, reason), group="project-core")["skips"][0]["test"], draft
+        )
+        for kwargs, text in (
+            ({"group": "project-api"}, log(draft, reason)),
+            ({"group": "project-core"}, log("test_x (test_other.MssqlDraftCases.test_x)", reason)),
+            ({"group": "project-core", "integration": True}, log(draft, reason)),
+            (
+                {"group": "project-api"},
+                log(
+                    "test_x (test_unknown.Browser.test_x)",
+                    "opt-in local Chromium",
+                ),
+            ),
+        ):
+            with self.subTest(kwargs=kwargs, text=text), self.assertRaises(gate.GateError):
+                gate.check_skips(text, **kwargs)
+        browser = f"test_x ({gate.BROWSER_OPT_IN_CLASSES[0]}.test_x)"
+        gate.check_skips(log(browser, "opt-in local Chromium"), group="project-api")
+        simulation = f"test_x ({gate.PUBLIC_SIMULATION_CLASS}.test_x)"
+        gate.check_skips(
+            log(simulation, gate.PUBLIC_SIMULATION_SKIP), group="infra", integration=True
+        )
+        with self.assertRaises(gate.GateError):
+            gate.check_skips(
+                log(simulation, gate.PUBLIC_SIMULATION_SKIP), group="image-api", integration=True
+            )
+
+    def test_required_opt_in_classes_need_ok_tests_and_no_skips(self) -> None:
+        classes = gate.SQL_OPT_IN_CLASSES
+        argv = ["python", "-m", "unittest", "-v", *classes]
+        self.assertEqual(gate.required_classes(argv), classes)
+        good = class_log(classes)
+        gate.check_skips(good, integration=True, required_classes=classes)
+        missing = class_log(classes[:-1])
+        failed = good.replace(") ... ok", ") ... FAIL", 1)
+        skipped = good.replace(
+            f"({classes[0]}.test_x) ... ok", f"({classes[0]}.test_x) ... skipped 'x'", 1
+        ).replace("OK\n", "OK (skipped=1)\n")
+        for text in (missing, failed, skipped):
+            with self.subTest(text=text), self.assertRaises(gate.GateError):
+                gate.check_skips(text, required_classes=classes)
+
+    def test_opt_in_test_paths_select_their_required_group(self) -> None:
+        for path, group in gate.OPT_IN_TEST_GROUPS.items():
+            with self.subTest(path=path):
+                self.assertIn(group, gate.changed_groups([path], []))
+        self.assertIn("image-api", gate.changed_groups(["infra/main.bicep"], []))
+        self.assertIn(
+            "image-api",
+            gate.changed_groups(["infra/tests/test_public_simulation_startup.py"], []),
+        )
 
     def test_changed_core_sensor_paths_select_mssql_and_the_flagged_command(self) -> None:
         core = "src/core/src/zava_forward/core/"
@@ -746,6 +813,8 @@ class GateTests(unittest.TestCase):
                 text = sql_chat_log(names=required)
             elif check["suite"]:
                 text = "test_x ... ok\nRan 1 test in 0.1s\n\nOK\n"
+                if gate.required_classes(check["argv"]):
+                    text = class_log(gate.required_classes(check["argv"]))
             (self.out / name).write_text(text)
             if check["suite"]:
                 row.update(
@@ -1301,6 +1370,8 @@ class GateTests(unittest.TestCase):
                     text = f"{gate.CHAT_PANEL_DISCOVERY_SKIP[0]} ... ok\nRan 1 test in 0.1s\n\nOK\n"
                 if gate.EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in check["argv"]:
                     text = "test_x ... ok\n" * 3 + "Ran 3 tests in 0.1s\n\nOK\n"
+                if gate.required_classes(check["argv"]):
+                    text = class_log(gate.required_classes(check["argv"]))
                 row.update(gate.check_skips(text))
             if gate.EMPLOYEE_CHAT_BROWSER_MODULE in check["argv"]:
                 text = gate.EMPLOYEE_CHAT_PASS + "3 states\n"
@@ -2064,6 +2135,8 @@ os.fstat(3)
                     text = f"{gate.CHAT_PANEL_DISCOVERY_SKIP[0]} ... ok\nRan 1 test in 0.1s\n\nOK\n"
                 if gate.EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in check["argv"]:
                     text = "test_x ... ok\n" * 3 + "Ran 3 tests in 0.1s\n\nOK\n"
+                if gate.required_classes(check["argv"]):
+                    text = class_log(gate.required_classes(check["argv"]))
                 required = gate.required_sql_tests(check["argv"])
                 if required:
                     text = sql_chat_log(names=required)
@@ -2176,7 +2249,7 @@ os.fstat(3)
             for row in suites:
                 changed["commands"].remove(row)
                 changed["files"].pop(row["log"])
-            self.assertEqual(len(suites), 11)
+            self.assertEqual(len(suites), 15)
             gate.atomic_json(path, changed)
             (self.out / "receipt.sha256").write_text(real_digest(path))
             with self.assertRaises(gate.GateError):

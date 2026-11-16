@@ -189,7 +189,16 @@ the files before relying on them; they are not self-updating.
   change touches it; local `--changed` selects `mssql` for non-inert
   core paths containing `sensor` and for the listed
   `SENSOR_MSSQL_DIRECT_DEPENDENCIES`, so a sensor-named Markdown file selects
-  nothing extra); workflow-hash drift, ShellCheck and
+  nothing extra); the other opt-in classes that discovery tolerates only as
+  exact per-group `DISCOVERY_SKIPS` pairs, each with a required zero-skip,
+  at-least-one-`ok` execution: the staff intake, live receiver and sensor draft
+  SQL classes (`SQL_OPT_IN_CLASSES`, one more local SQL group step), the
+  Chromium and axe staff intake browser classes (browser group, `ZF_BROWSER_TESTS=1`
+  and `ZF_STAFF_INTAKE_BROWSER=1` with the pinned `ZF_AXE_PATH`) and the
+  public simulation startup tests (image-api group, `ZF_API_IMAGE` set to the
+  built tag; the `infra` group tolerates only its four exact skips). Local
+  `--changed` selects `mssql`, `browser` or `image-api` for their test modules
+  and for infra Bicep paths; workflow-hash drift, ShellCheck and
   Trivy database identity probes; fresh-image, shard fail-closed and clean
   exact-head receipt binding.
 * Shared (the same kind of check runs in both places; compare the verification
