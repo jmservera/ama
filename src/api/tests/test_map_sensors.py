@@ -28,7 +28,7 @@ class MapSensors(Seed, ta.ApiTests):
         self.put(3, offset=120)
         s = self.sensor()
         self.assertEqual((s["state"], s["alert"], s["calibrated"]), ("fresh", False, False))
-        self.assertIn("Synthetic", s["provenance"])
+        self.assertIn("Synthetic", s["source"])
         self.assertEqual(s["temperature_c"], 19.2)
         self.assertEqual(s["humidity_pct"], 52.0)
         text = json.dumps(self.request("/api/map?zoom=14")[1])

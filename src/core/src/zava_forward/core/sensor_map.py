@@ -83,7 +83,7 @@ def summary(db: Any, home_id: str, now: float, mssql: bool = False) -> dict[str,
         alert=state in ALERT_STATES,
         observed_at=latest["observed_at"],
         age_seconds=max(age, 0),
-        provenance=PROVENANCE,
+        source=PROVENANCE,
     )
     if state != "future-dated":
         out.update(

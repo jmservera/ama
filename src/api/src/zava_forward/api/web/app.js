@@ -2562,7 +2562,7 @@ function mapPanel(coordinator = null, filters = null) {
     sensorState.replaceChildren(sensorBadge(point), h("span", { class: "sr-only" }, `. ${point.sensor?.label || ""}`));
     sensorValues.textContent = sensorReading(point.sensor) || "No values shown";
     sensorWhen.textContent = sensorTimeText(point.sensor);
-    sensorSource.textContent = point.sensor?.provenance || "No synthetic reading shown for this home.";
+    sensorSource.textContent = point.sensor?.source || "No synthetic reading shown for this home.";
     navigate.href = `#/case/${encodeURIComponent(point.id)}`;
     homeCard.hidden = false;
     if (focus) title.focus();

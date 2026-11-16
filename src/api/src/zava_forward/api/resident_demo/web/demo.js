@@ -300,7 +300,7 @@
     var freshness = sensors.freshness || {};
     var fresh = freshness.state === "recent";
     if (!sensors.stale) status.appendChild(el("p")).appendChild(badge(fresh ? "check" : "info", "Reading status: " + (freshness.text || "Freshness unknown."), fresh ? "ok" : ""));
-    status.appendChild(el("p", "Source: " + (sensors.source || "Synthetic demo data. Not calibrated."), "sensor-provenance"));
+    status.appendChild(el("p", "Source: " + (sensors.source || "Synthetic demo data. Not calibrated."), "sensor-source"));
     section.appendChild(status);
     var recorded = el("p", "Latest stored reading: ");
     recorded.appendChild(sensorTime(latest.observed_at, " (UK time)"));
