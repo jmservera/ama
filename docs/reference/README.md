@@ -44,17 +44,36 @@ projection, source/icon provenance and explicit integration/privacy/compliance
 limits. Prepared materials do not establish live listening, composure,
 production acceptance or a higher score.
 
+The paper's [16 November source-only readability revision](../capstone/thought-leadership/everything-but-the-software/README.md#human-readability-source-revision-16-november)
+clarifies the article and all active TeX inputs for computer scientists and
+data scientists working with LLMs in the SDLC. Equations, tables, prompts and
+citations are preserved. A separate 73-page PDF validates the source; the
+existing PDF is excluded at the owner's request. Structural checks and
+73 of 74 authoring tests pass; the browser diagram exporter remains
+unavailable. The following delivery descriptions retain their dated scope.
+
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
-The current v21 coauthored delivery has 70 pages, with the additive Supplement
-starting on page 48 and the source/digest register on pages 68-70. The
+The current v22 coauthored delivery has 72 pages, with the additive Supplement
+starting on page 45 and the source/digest register on pages 70-72. The
+[15 November narrative and TODO revision](../capstone/thought-leadership/everything-but-the-software/README.md#narrative-learning-and-todo-reconciliation-15-november)
+connects the interrupted workflow, hypotheses, unexpected findings and learning
+for a separately designed future study. Detailed theory, assumed economics
+and unapproved follow-up/resource candidates move into the existing Supplement.
+The [remaining-work plan](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#remaining-work-in-dependency-order)
+separates VM chronology and metadata, inference/source checks, deposit and
+approval obligations. The supplied acknowledgement corrects clearance receipt
+to 14 November; the expected 29 November response is not approval.
+Structural checks and 72 of 73 tests pass; the browser diagram-export check
+is unavailable. Existing table data, equations, prompts, figures, source values
+and historical bindings are preserved. The preceding v21 70-page delivery
+(Supplement page 48) remains in the binding and dated record. The
 [15 November provenance and readability revision](../capstone/thought-leadership/everything-but-the-software/README.md#provenance-and-readability-15-november)
 moves 61 unique identifiers out of prose, adds local arm/checkpoint/uncertainty
-explanations and shortens repeated result and assistance histories. All
-existing table fields, displayed equations, prompts and prior records are
-preserved; 72 authoring tests and structural checks pass. The overall page
-count has not grown. The preceding v20 70-page delivery (Supplement page 51)
+explanations and shortens repeated result and assistance histories. Its
+then-current 72 authoring tests and structural checks passed with no page
+growth. The preceding v20 70-page delivery (Supplement page 51)
 remains in the binding and dated record. The
 [15 November final-results and chart interpretation record](../capstone/thought-leadership/everything-but-the-software/README.md#final-results-and-chart-interpretation-15-november)
 incorporates all 315 completed trajectories, sixteen execution sources, updated

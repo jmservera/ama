@@ -1,10 +1,28 @@
 ---
 title: Everything but the Software - Revision Record
-description: Readability review, deduplicated end register and validation alongside preserved dated result and source records
+description: Narrative and author-TODO reconciliation, remaining evidence plan and preserved dated review records
 ms.date: 2026-11-15
 ---
 
-The later 15 November readability revision centralizes exact provenance in
+The 16 November source-only revision applies a plain-language pass to the
+article and every active TeX input. Its scope and validation are recorded
+below; the existing PDF is excluded from delivery.
+The later abstract edit keeps the author's revised opening paragraph and
+recasts the study description as a sequence: agents work through features,
+then a separate isolated evaluator runs tests hidden from them.
+
+The preceding v23 revision rewrites selected paper prose for direct, readable
+language. It preserves the findings, study design, formulas, tables, figures
+and source evidence, and records the rebuilt paper in a new binding.
+
+The latest 15 November narrative revision connects the interrupted workflow,
+hypotheses, exploratory findings and future-study learning. It records the
+author's answers and distinguishes applied editorial changes from pending
+VM evidence, source verification and final approval. The dated v21 and earlier
+records below retain their original wording, including superseded approval
+dates and validation counts.
+
+The earlier 15 November readability revision centralizes exact provenance in
 one end register, adds local result explanations and shortens repeated prose
 without changing observations or expanding the 70-page delivery. The v20
 and earlier source, review and delivery records below remain historical.
@@ -59,6 +77,283 @@ The 5 November recovery/source check, 2 November allocation record and
 from Scope and Outcome through Title Assessment retain the original
 24 October report, and the 25 October addendum remains historical. Their
 earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Human Readability Revision 16 November
+
+### Scope and Changes
+
+The owner requested clearer explanations, varied sentence length and common
+language for computer scientists and data scientists using LLMs and agents
+in the SDLC. The full current article and its seven active ancillary TeX
+inputs were read, covering 70 sections and subsections. No active section
+was omitted. The inactive `extended-background.tex` and `compact-appendix.tex`
+remain unchanged.
+
+The edit explains a repository trajectory and test contract before relying
+on them, distinguishes implementing features from preserving and extending
+them, and defines risk sets and the primary estimand in plain language.
+The bootstrap description explains resampling, while the judging account
+explains why ordinal scores and missing-outcome bounds need care.
+Long qualifications are split into specific statements. Repetitive contrasts
+are reduced while preserving consequential uncertainty and approval limits.
+The participant-observer retains first-person narration.
+
+The abstract's study description now explains the measurement setup before
+giving its results. Agents saw the feature specifications, while the scoring
+tests remained outside their workspaces. After each development step, a
+separate evaluator ran the tests in an isolated container and counted passed
+contracts. The paragraph then follows the runs through consolidation and
+change-request results. The author's revised first abstract paragraph was
+left unchanged. No study methods, outcomes or analysis changed.
+
+There is no new source verification, equation audit, experimental analysis,
+scoring, registration or protocol amendment. The owner separately authorized
+maintenance of the directly related content tests and binding. Exact-wording
+expectations now match the revised explanations; existing scientific guards
+and data comparisons remain active.
+
+### Validation and Source-Only Delivery
+
+Classification: focused editorial revision with directly coupled authoring-test
+and digest maintenance. No application, dependency manifest, infrastructure,
+deployment, security control or repository gate semantics changed.
+
+* The structural checker passes: 94 cited keys and 94 embedded bibliography
+  entries resolve; the abstract has 1,916 source characters, below 1,920.
+  The historical comparison object remains unavailable.
+* Direct comparison with the intake source preserves all 40 table
+  environments, seven displayed equations, three literal prompts, citation
+  sequences, bibliography, labels, 61 source-register bindings and author
+  comments/TODOs. Figures, chart inputs and inactive inputs are unchanged.
+* The package suite passes 73 of 74 tests. The native diagram-export test
+  fails because its required Playwright browser is unavailable. No figure
+  changed, and no export success or full-suite pass is claimed.
+* A separate external Tectonic build produces a 73-page PDF. The Supplement
+  starts on page 46; the source register starts on page 70. All pages contain
+  text within page bounds, and no unresolved-reference markers were found.
+  Rendered pages 1, 15, 21, 36, 46, 51 and 73 were inspected in the earlier
+  readability build; the follow-up build confirms the updated abstract on
+  page 1. The inherited `inputenc` warning remains; no overfull or underfull
+  boxes were reported.
+* The existing `main.pdf` was already dirty at intake and subsequently
+  changed outside this revision's external build. The owner confirmed
+  source-only continuation with that PDF left uncommitted. No claim is
+  made that its bytes were preserved. `human_readability_revision` binds
+  the current sources and separate validation PDF; every historical
+  source/PDF binding remains unchanged.
+
+Work execution: Complete for the authorized source revision and focused
+checks; browser-export validation remains unavailable. Assessment:
+editorial review complete within the active source package, without
+independent scientific peer review or fresh claim-by-claim verification.
+Independent exact-head review, applicable hosted CI, author/employer approval
+and venue acceptance remain separate requirements.
+
+## Direct Style Revision 15 November
+
+### Scope and Applied Changes
+
+The owner requested a direct-prose revision of the paper. The abstract now
+states the motivating case, study conditions and findings in shorter
+sentences. The case account, consolidation discussion and conclusion replace
+selected formulaic contrasts with direct statements. The practical section
+gives readers a concrete recommendation: measure consolidation cost against
+retained behaviour and success on a new requirement.
+
+The edit preserves first-person narration for the participant-observer,
+all reported results and their uncertainty, the study design, equations,
+tables, figures, citations and source registers. It adds no experiment,
+analysis, scoring or model call. The original `author_voice_revision`
+binding remains unchanged; `style_revision` records the new source and PDF.
+
+### Validation and Delivery
+
+Classification: focused editorial revision.
+
+* The Tectonic build produced a 72-page PDF. The Supplement starts on page 45,
+  and the source and digest register starts on page 70.
+* Rendered pages 1, 11, 35-37, 45 and 70 were inspected. Extracted PDF text
+  contains the revised abstract, case heading, practical recommendation and
+  conclusion.
+* The manuscript structural checker passed. The package suite ran 74 tests:
+  73 passed, and the native diagram-export test could not launch because its
+  Playwright browser was unavailable. The `style_revision` binding records the
+  final source/PDF digests and keeps the prior author-voice binding unchanged.
+* The Tectonic log contains the inherited `inputenc` warning for its UTF-8
+  engine. No overfull or underfull box warnings were found.
+* No experiment, model call, source retrieval or publication action occurred.
+  Independent exact-head review, hosted CI, author approval, employer
+  clearance and venue acceptance remain separate.
+
+Work execution: Complete for the authorized editorial revision. Assessment:
+scoped editorial review complete; this does not certify the scientific
+claims or constitute independent peer review.
+
+## Narrative, Learning and TODO Reconciliation 15 November
+
+### Authorized Scope and Scientific Boundary
+
+The owner authorized applying the present revision and deferred VM evidence
+access. The AMA Presentation Communications Strategist supplied bounded
+read-only narrative suggestions. The applied arc is interrupted usable
+workflow, explicit conjecture, an experiment that did not reproduce the
+expected decay, and clearer questions for a separate future study.
+The title, results, scoring, estimator, registration, literal prompts and
+historical/adverse records remain unchanged. The article reports completed
+exploratory research, not a newly frozen protocol or a completed RPI comparison.
+
+Detailed theory mapping, the unchanged assumed cost equation/figure/table,
+numerical follow-up candidates, the untested hybrid and historical resource
+arithmetic moved into the existing additive Supplement. The main account
+explains why acquisition, retention and adaptation answer different questions.
+Attributed author reflections do not establish that longer tasks will decay,
+that RPI prevents decay or that review alone explains any effect.
+
+### Current Author TODO Disposition
+
+The intake found eight active author-action items, plus three conditional
+plotting comments. Six author-action comments and the three historical plot
+comments remain after two editorial dispositions. Comment presence alone is
+not the release checklist; the unresolved obligations below still apply.
+
+| Intake item | Answer or action applied now | Remaining evidence or approval |
+| --- | --- | --- |
+| Submission date | Preserved the draft date and date TODO; arXiv is the author's chosen target. | Set the real date only for the authorized submission candidate; freshly check applicable arXiv policy, category, disclosure and source-bundle requirements. |
+| Manager/CELA clearance | Corrected the earlier 27 October account using the supplied AICC acknowledgement: receipt 14 November 2026, starting its stated fourteen-day review period. The author expects a response by 29 November. No private submission identifier or correspondence was added. | Final-version scope and applicable clearance remain pending. Receipt, silence and an expected date are not approval. Retain the owner's reported manager approval as reported, not independently verified. |
+| Historical runtime identifiers | Narrowed the TODO to missing historical case CLI/reviewer/build records. | Inspect retained VM evidence read-only when access is supplied. Current installations cannot reconstruct unlogged history; mark unavailable identifiers explicitly. |
+| Acknowledgements/review | Removed unsupported generic acknowledgements. The author reports only the coauthor's review. | Do not imply additional reviewers or both authors' approval of this exact revision. Obtain final exact-version approval separately. |
+| Material source/claim verification | Narrowed the TODO to consequential gaps in the existing source register. The author reports reading most cited papers. | Record exact passages supporting material claims; preserve abstract-only, partial, metadata-only and unavailable states. Reading most papers is not a recorded claim audit or independent replication. |
+| Selected provenance permission | Recorded authorization for the selected existing excerpts, subject to required clearance; replaced the generic permission TODO with a scoped dated disposition. | Historical/raw records and newly released excerpts require confidentiality review. Permission does not waive clearance or authorize upload. |
+| Deposit and registration correspondence | Retained the selected experiment GitHub deposit and historical v4/v6/v7 distinctions. | Bind approved released files and hashes in a final manifest; verify accessible registration/archive correspondence without retroactive registration claims. |
+| Statistical chronology/dependence | Inspected public scheduling implementation and export limits; clarified asynchronous execution. | Reconcile actual timing, scheduling overlap, amendments and outcome access, then obtain a dated dependence justification. Any additional sensitivity analysis needs explicit post-collection status and authorization; no estimator was replaced. |
+
+The three `PF` comments remain in the inactive historical plotting branch:
+
+| Historical plot item | Current disposition |
+| --- | --- |
+| PF1: F/P checkpoint vectors, eligibility and missingness | The current chart explains P checkpoints, but is not a complete F/P acquisition/loss risk-set reconstruction. Do not equate plotted means with all requested vectors. |
+| PF2: CR1 vectors, prerequisites, assistance and all-attempt costs | Current CR1 tables exist; two outcomes and 55 attempts' billing remain unresolved. The chart is not a complete prerequisite/assistance/cost reconciliation. |
+| PF3: final coverage and attributable delivery credits | The scatter uses the fully billed subset, not a complete quality-matched cost frontier or measured long-horizon payback. |
+
+The twelve owner-TODO occurrences in the retained original
+[hypotheses](./mve-feature-consolidation-harness/hypotheses.md),
+[design](./mve-feature-consolidation-harness/experiment-design.md) and
+[plan](./mve-feature-consolidation-harness/mve-plan.md) are historical proposal
+questions, not current approvals. They are preserved rather than completed
+after observing outcomes. Earlier checklists and false-results instructions
+retain their original dated scope; the current manuscript has results enabled.
+
+### Evidence Inspected in This Revision
+
+| Claim and manuscript locator | Inspected source and genuine locator | Evidence status and limit |
+| --- | --- | --- |
+| Model/arm allocation; experiment Design and estimands, Supplement Scheduling evidence | Public experiment source at `d097a10b090baefadf995ecd910eb96c324f0234`, `harness/study.py:286-323` | Full source support: model order shuffled within replicate, then arms within model. Not actual start order. |
+| Asynchronous dispatch; same sections | Same pin, `harness/study.py:2141-2180` | Full source support: worker pool fills eligible work and defers routes under backoff. Scheduling groups are not synchronized execution batches. |
+| Public chronology limits; Supplement Scheduling evidence | Same pin, `results/pilot-estimation/runs.csv`, `attempts.csv`, `provenance.json` | Direct export inspection: 315 runs, 63 model/replicate groups each A-E; 5,372 attempts across sixteen sources; no attempt start/finish timestamp columns. Parallelism history records ten then eight. No wall-clock independence inference. |
+| Clearance timing; author TODO | Author-supplied AICC acknowledgement and correction | Supplied record inspected for receipt date; final clearance and its scope unverified. Expectation of a 29 November response is author-supplied, not a policy guarantee. |
+| Surprise, task scale and full-RPI hypothesis; Discussion and Conclusion | Author answers in this revision | Participant interpretation, not experimental evidence. More complex tasks, review-component comparisons and larger spending remain unapproved follow-up candidates. |
+
+### Remaining Work in Dependency Order
+
+1. When VM access is supplied, inspect only approved retained records: missing
+   historical identifiers, per-attempt starts/durations and controller/source
+   transitions. Reconcile them against amendments and outcome-access records.
+   Record missingness rather than starting sessions to recreate history.
+2. Resolve the dependence justification with the actual allocation/overlap
+   evidence and statistical review. Preserve the published estimator and
+   label any newly authorized sensitivity analysis as post-collection.
+3. Reconcile CR1 unknowns, held billing, judging-frame completeness and human
+   calibration where original evidence permits. No rerun, paid call, changed
+   score or unknown-to-success conversion is authorized by this editorial task.
+   Close PF1-PF3 only to the extent actual inputs support their full scope.
+4. Complete consequential claim/source checks from the existing register,
+   retaining partial/abstract-only limits. Known examples include the cited
+   Knight Capital order versus inspected SEC release and technical-debt
+   productivity's inspected institutional abstract versus unavailable full
+   methods. Do not silently substitute sources.
+5. After applicable clearance and both authors' exact-version approval,
+   reconcile the approved deposit manifest and registration archives; verify
+   current arXiv rules and source-bundle compilation, set the submission date,
+   and obtain any required independent scientific and exact-head review.
+   No upload or submission is part of this revision.
+6. Design the future experiment for a later paper only after a separate brief,
+   resource approval and protocol review. Justify task scale, independent units,
+   acquisition/retention/adaptation endpoints, full-RPI and component contrasts,
+   missingness, uncertainty and cost-matching before collection. Existing
+   30-40-cycle and factorial suggestions are candidates, not a frozen design.
+
+### Validation and Delivery
+
+Classification: focused editorial and non-gate authoring-tool/test changes.
+No experiment execution, scoring, data, infrastructure, deployment, dependency
+manifest, security control or gate semantics changed. The full application
+gate is not the relevant check for this slice.
+
+* The single rebuilt PDF has 72 pages, Supplement page 45 and the source
+  register on pages 70-72. The main route reaches the Supplement three pages
+  earlier than v21; moving detail does not imply reducing the total length.
+* Direct baseline comparison against `1172b5a6637e8e12d51b8f9836292959aabcef44`
+  preserves all 34 original table data bodies, seven displayed equations,
+  three literal prompts and 61 identifier/value pairs. Empirical snapshot,
+  chart sources, figures and editable diagrams are unchanged. Existing
+  historical manifest entries remain intact; a new binding records v22.
+* Structural checks pass: approximately 15,701 main-body words, 1,594 abstract
+  source characters, 94 cited/embedded bibliography entries and 105 reusable
+  BibTeX entries. Historical baseline `0d5dcb02` remains unavailable.
+* The body counter now stops at the first unnumbered back-matter section or
+  bibliography, not only an Acknowledgements heading. Removing unsupported
+  acknowledgements exposed that coupled bug; one regression covers all three
+  boundaries. Relocated-content tests now inspect the appropriate active input.
+* The 73-test run passed 72 tests. Native diagram re-export failed before
+  browser launch because the required Playwright executable was absent.
+  The host platform was unsupported by that pinned browser installer; a
+  task-local fallback download did not finish and was stopped. No diagram
+  was changed, and the missing check is not reported as passed.
+* Tectonic 0.17.0 compiled with the resolved official bundle endpoint; only
+  the inherited `inputenc` warning remains. All pages are nonblank, text is
+  in bounds and extracted text contains no unresolved `??` references.
+  Selected rendered pages 1, 35, 36, 45, 51, 52 and 68 were inspected.
+* Hosted CI and independent exact-head review were not performed. Employer,
+  author and venue approval are separate. No VM access, experiment, paid
+  judging, registration change or external submission occurred.
+
+Work execution: Complete for the authorized editorial revision and TODO
+disposition; remaining evidence work is deferred explicitly. Assessment:
+assisted narrative/source review, not independent human peer review or
+scientific, statistical, employer or venue certification. Browser re-export
+validation remains unavailable.
+
+## Author Voice Follow-Up 15 November
+
+The owner asked for direct first-person singular when the paper describes his
+case actions and reflections. The narrative now uses I/my for that account,
+identifies the author as participant-observer in the methods, and retains
+named author attribution in metadata and formal contributions. The future-study
+passage now states the bounded design that was evaluated and the questions and
+design work a follow-up can address. No results, study design or protocol
+changed.
+
+### Validation and Delivery
+
+Classification: focused editorial and authoring-test update. The active source
+and PDF hashes are recorded in the new `author_voice_revision` binding; the
+preceding `narrative_learning_revision` entry remains unchanged.
+
+* The PDF has 71 pages, the Supplement starts on page 45, and the source
+  register occupies pages 69-71. Pages 1, 8, 34, 36, 45 and 69-71 were
+  rendered and inspected.
+* `python3 -B anc/check_paper.py` passes structural checks. The 74-test
+  authoring run passed 73 tests; the native diagram-export test could not
+  launch because the required Playwright browser was unavailable.
+* Two-pass pdfLaTeX compilation succeeded. The log contains two ignored
+  infinite-glue-shrinkage diagnostics at `main.tex:1988`. PDF text extraction
+  confirms the revised passages and successful reference resolution.
+* Independent exact-head review, hosted CI, final author approval, employer
+  clearance and venue acceptance remain separate and unperformed.
+
+Work execution: Complete for the authorized author-voice and limitation
+wording revision. Assessment: scoped editorial review complete; this does not
+certify the paper's scientific claims or constitute independent peer review.
 
 ## Provenance and Readability 15 November
 
