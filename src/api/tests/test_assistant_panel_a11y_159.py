@@ -669,7 +669,11 @@ class AssistantPanelNodeA11y159Tests(unittest.TestCase):
   assert.equal(errorEl.getAttribute("aria-atomic"), "true");
   assert.equal(
     input.getAttribute("aria-describedby"),
-    "employee-chat-entry-warning chat-privacy employee-chat-error"
+    "employee-chat-entry-warning chat-privacy employee-chat-error employee-chat-keys"
+  );
+  assert.equal(
+    env.document.getElementById("employee-chat-keys").textContent,
+    "Press Enter to send. Press Shift and Enter for a new line. Press Escape to close the chat."
   );
 
   // Shift+Enter and IME composition must never submit prematurely.
