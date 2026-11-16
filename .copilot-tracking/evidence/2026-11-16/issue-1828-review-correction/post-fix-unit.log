@@ -1,0 +1,19 @@
+test_premise_is_unprovable_when_the_container_does_not_change_width (test_map_viewport_premise.ViewportPremiseTests.test_premise_is_unprovable_when_the_container_does_not_change_width) ... PASS a viewport change requests the map once the resize settles
+ok
+test_read_for_the_resized_viewport_satisfies_the_premise (test_map_viewport_premise.ViewportPremiseTests.test_read_for_the_resized_viewport_satisfies_the_premise) ... PASS a viewport change requests the map once the resize settles
+PASS the viewport change resizes the map container
+PASS a map read carries the resized viewport bounds, not the earlier ones
+ok
+test_read_pending_from_the_previous_step_does_not_satisfy_the_premise (test_map_viewport_premise.ViewportPremiseTests.test_read_pending_from_the_previous_step_does_not_satisfy_the_premise) ... ok
+test_read_with_the_old_viewport_width_after_the_resize_is_not_attributed (test_map_viewport_premise.ViewportPremiseTests.test_read_with_the_old_viewport_width_after_the_resize_is_not_attributed) ... PASS a viewport change requests the map once the resize settles
+PASS the viewport change resizes the map container
+ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+OK
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+OK
