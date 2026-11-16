@@ -6,7 +6,7 @@ Seed rows follow the retained synthetic contract. Nothing here claims live Azure
 import json
 import time
 import unittest
-from typing import Any
+from typing import Any, cast
 
 from zava_forward.core import insights, sensor_map
 
@@ -15,14 +15,27 @@ from test_quality_sensors import Seed
 
 
 class MapSensors(Seed, ta.ApiTests):
-    def put(self, count: int = 3, **kw: Any) -> None:
-        super().put(count, base=int(time.time()), **kw)
+    def put(
+        self,
+        count: int = 3,
+        consent: str | None = "granted",
+        home: str = "ZF-1",
+        offset: int = 3 * 3600,
+        **kw: Any,
+    ) -> None:
+        super().put(count, consent, home, offset, base=int(time.time()), **kw)
+
+    def map_view(self) -> tuple[int, dict[str, Any]]:
+        return cast(
+            tuple[int, dict[str, Any]],
+            self.request("/api/map?zoom=14"),  # type: ignore[no-untyped-call]
+        )
 
     def sensor(self, case: str = "ZF-1") -> dict[str, Any]:
-        status, view = self.request("/api/map?zoom=14")
+        status, view = self.map_view()
         self.assertEqual(status, 200)
         self.assertEqual(view["mode"], "points")
-        return {i["id"]: i["sensor"] for i in view["items"]}[case]
+        return cast(dict[str, Any], {i["id"]: i["sensor"] for i in view["items"]}[case])
 
     def test_recent_reading_is_summarised_without_history_or_ids(self) -> None:
         self.put(3, offset=120)
@@ -31,7 +44,7 @@ class MapSensors(Seed, ta.ApiTests):
         self.assertIn("Synthetic", s["source"])
         self.assertEqual(s["temperature_c"], 19.2)
         self.assertEqual(s["humidity_pct"], 52.0)
-        text = json.dumps(self.request("/api/map?zoom=14")[1])
+        text = json.dumps(self.map_view()[1])
         for private in ("SENS-SYN-1", "R-ZF-1-", "reading_id", "sensor_id"):
             self.assertNotIn(private, text)
 
