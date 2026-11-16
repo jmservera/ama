@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-16T11:49:04+00:00",
-  "commit": "d74518fce8eab67286487b0f66aedcc816ff95a7",
+  "scored_at": "2026-11-16T12:00:59+00:00",
+  "commit": "0fec16bab717734a9086c6e0cbd80e6a00aeb903",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43860096718",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43861633819",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "ad995cdbac1abc98ae5a53234cf2d627837ef5faef39947b874deaed9da3707c",
@@ -14,7 +14,7 @@
     "infrastructure": "279e36d803276aa854eaf2f822cb2ea28eb5e37dbbe72841e50927e76caa5c1f",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "687ae0ad2df52516882908bf45ecca662c52802d59a5116a4fe119ec3ae97840",
-    "thought-leadership": "2f288af759371a7076513ed65ca453c832f29fd4eecdf40608f7d16ea4159008"
+    "thought-leadership": "7d68a174899cb67a503f911e5f824ebcf4ef144156a39c3449d8d72045b3e39c"
   },
   "total": 79,
   "sections": {
@@ -148,15 +148,16 @@
         "docs/capstone/thought-leadership/everything-but-the-software/README.md:98-130",
         "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md"
       ],
-      "rationale": "New final-results/chart-interpretation and critique-falsifiability content integrates real completed-study data (315 trajectories, B-D +1.19pp) and a sharper falsifiable P1-P3 formulation. Genuine further synthesis grounded in evidence; still no new judging outcome beyond prior snapshot. Good (4)..."
+      "rationale": "Final-results/chart-interpretation and critique-falsifiability content integrates completed-study data (315 trajectories, B-D +1.19pp) and a sharper falsifiable P1-P3 formulation. Genuine synthesis grounded in evidence; no new judging outcome beyond prior snapshot. Good (4) retained."
     },
     "D2": {
       "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1175-1306",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:57-72"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1-11",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:9-23",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:81-130"
       ],
-      "rationale": "Remaining TODO(author) markers dropped from 11 to 8 in main.tex and 7 to 4 in experiment-protocol.tex; README reports a readability pass consolidating 61 identifiers into one register and all 72 authoring checks passing. Craft improved but Microsoft publication approval and several TODOs remain o..."
+      "rationale": "16 Nov pass covers all 70 sections; TODOs fell further (6 in main.tex, 3 in experiment-protocol.tex) but substantive ones remain (clearance, deposit manifest, CR1/F-P evidence). Owner left main.pdf unrebuilt/unverified, so publish-readiness unproven. Satisfactory (3) retained."
     },
     "D3": {
       "score": 2,
