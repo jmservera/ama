@@ -6,6 +6,23 @@ ms.date: 2026-11-16
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
 
+## Copy Review Recommendations 16 November
+
+The five approved copy-review recommendations are applied to the article
+and two active ancillary inputs. They narrow an untested-procedure claim
+to this study, identify historical reporting requirements before presenting
+them, attribute supplied registration/runtime information in the author's
+first person, clarify what provenance links verify and describe the observed
+Gemini CR1 comparison without winner language.
+
+The [revision record](./anc/revision-report.md#copy-review-recommendations-16-november)
+preserves the original findings and evidence limits. `copy_review_revision`
+binds all eight active sources and retains the preceding active Supplement
+content digest. Earlier dated bindings are unchanged. Structural checks and
+73 of 74 package tests pass; the unchanged diagram exporter cannot import
+`esbuild`. No TeX compiler is available on PATH. The existing PDF is unchanged,
+and no new layout review, scientific verification or final approval is claimed.
+
 ## Conservative Prose Follow-Up 16 November
 
 The follow-up includes the owner's staged abstract revision and checks the

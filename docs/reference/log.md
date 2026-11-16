@@ -12088,3 +12088,19 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
   strict-bound error in the abstract. Corrected below ten to at most ten,
   matching the methods and results without changing observations. The
   original finding is retained in the revision record.
+
+## [2026-11-16] update | Apply approved paper copy-review recommendations
+
+* Applied the five approved findings to the article and two active TeX inputs:
+  study-scoped wording, earlier historical-reporting context, explicit
+  first-person attribution, provenance-verification limits and descriptive
+  Gemini CR1 wording. Results, equations, citations and scientific uncertainty
+  are preserved.
+* Updated the [paper guide](../capstone/thought-leadership/everything-but-the-software/README.md#copy-review-recommendations-16-november),
+  revision record, index and additive source binding. The active Supplement
+  content digest is refreshed with its preceding value retained; dated
+  historical bindings are unchanged.
+* Structural checks and 73 of 74 package tests pass. The unchanged diagram
+  exporter cannot import `esbuild`. No compiler is available on PATH;
+  the existing PDF is unchanged and no new layout review is claimed.
+  Independent review, hosted checks and final approvals remain separate.

@@ -59,6 +59,13 @@ the existing PDF. Structural checks and 73 of 74 tests pass; the unchanged
 diagram exporter cannot import `esbuild`. No compiler is available on PATH,
 so this follow-up has no fresh PDF or rendered-layout validation.
 
+The approved [copy-review recommendations](../capstone/thought-leadership/everything-but-the-software/README.md#copy-review-recommendations-16-november)
+narrow an unsupported absolute, distinguish historical reporting instructions,
+clarify attribution and verification limits, and use descriptive result wording.
+The source-only update retains earlier bindings and the existing PDF.
+Structural checks and 73 of 74 tests pass; the unchanged diagram exporter
+still lacks `esbuild`. Scientific and final approvals remain separate.
+
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
