@@ -126,6 +126,8 @@ class UnacceptedDownloadText(unittest.TestCase):
 
 
 def heavy_lock_or_none() -> Any:
+    if os.environ.get("ZF_HEAVY_LOCK_HELD") == "1":
+        return open(os.devnull)  # noqa: SIM115 - the caller (tools/rpi-checks.py) holds the lock
     stream = open(HEAVY_LOCK, "a+")  # noqa: SIM115 - held for the whole browser class
     try:
         fcntl.flock(stream, fcntl.LOCK_EX | fcntl.LOCK_NB)
