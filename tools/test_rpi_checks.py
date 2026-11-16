@@ -14,7 +14,6 @@ import shutil
 import socket
 import subprocess
 import sys
-import sysconfig
 import tempfile
 import threading
 import types
@@ -2980,10 +2979,6 @@ os.fstat(3)
 
         with patch.object(runner, "command", side_effect=command):
             runner._install("api", ["core", "agents", "api"])
-        # The mocked installer must still expose real third-party runtime dependencies.
-        (self.out / "venvs/api/lib/python3.12/site-packages/test-dependencies.pth").write_text(
-            sysconfig.get_path("purelib") + "\n"
-        )
         interpreter = runner.python("api")
         self.assertTrue(Path(interpreter).is_file())
 

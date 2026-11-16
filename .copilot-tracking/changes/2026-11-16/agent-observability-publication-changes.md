@@ -78,6 +78,28 @@ ms.date: 2026-11-16
   adverse run and rerun the corrected exact candidate; no failed receipt reuse.
 * Corrected adapter guard plus existing focused worker tests: 101 pass in the
   separate agents development environment; affected-file Ruff/format pass.
+* Completed adverse full run at `d7f976ff`: core fails its clock/UUID-free
+  preview import probe; orchestrator fails its driverless `-S` command probe.
+  Both share eager OTel context import, which creates random keys even when
+  telemetry is disabled. Correct by deferring third-party imports and span
+  contexts until telemetry is enabled, not by weakening either guard.
+* Other failed-run blockers include exact opt-in skip accounting and source
+  bytecode contamination. Current main `a612ba00` includes the owner-approved
+  #1831 gate fixes for those; merged as already authorized. No failed receipt
+  is promoted or reused, and all required SQL/browser/image groups still run.
+* Disabled operations now use a null context and never import OTel; enabled
+  paths retain real SDK spans/propagation. Observation methods and the SQL
+  attribute call guard the absent span. Removed the earlier smoke-fixture
+  dependency-path workaround because the root import defect is now corrected.
+* After correction/main integration: core telemetry/diagnostic/determinism
+  27 tests pass; driverless rescan 10 pass; focused worker 101 pass; actual API
+  HTTP/assistant composition 10 pass; gate regression suite 111 pass.
+  Strict mypy passes core 329, agents 57 and API 306 source files. A disabled
+  SQL call initially exposed one missing null-span guard, now fixed and covered
+  by both enabled and disabled API composition cases.
+* Current-main skip accounting also accepts all three actual API discovery
+  transcripts from the failed run. That targeted check is not execution of
+  the now-required SQL/browser suites and is not full-gate acceptance.
 
 ## Business Alignment
 

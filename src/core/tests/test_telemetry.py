@@ -22,7 +22,10 @@ class TelemetryTests(unittest.TestCase):
     def test_default_off_has_no_spans_or_context(self) -> None:
         with patch.dict(os.environ, {}, clear=True), patch.object(telemetry, "_runtime", None):
             telemetry.initialize("zava-forward-api")
-            with telemetry.operation("chat"):
+            with telemetry.operation("chat") as observation:
+                observation.usage(1, 2)
+                observation.http_status(503)
+                observation.fail("timeout")
                 self.assertIsNone(telemetry.carrier())
                 self.assertEqual(telemetry.correlation(), {})
             self.assertIsNone(telemetry._runtime)

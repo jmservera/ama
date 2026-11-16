@@ -10,18 +10,16 @@ import re
 import threading
 import time
 from collections.abc import Iterator, Mapping
-from contextlib import contextmanager
+from contextlib import AbstractContextManager, contextmanager, nullcontext
 from dataclasses import dataclass, field
 from importlib.metadata import version
 from typing import TYPE_CHECKING, Literal
 from urllib.parse import urlsplit
 
-from opentelemetry import context, trace
-from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
-
 from .version import __version__
 
 if TYPE_CHECKING:
+    from opentelemetry import trace
     from opentelemetry.sdk.metrics import MeterProvider
     from opentelemetry.sdk.trace import TracerProvider
 
@@ -46,7 +44,6 @@ CAPABILITIES = frozenset(
 )
 _METHODS = frozenset({"GET", "HEAD", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"})
 _TRACEPARENT = re.compile(r"00-([0-9a-f]{32})-([0-9a-f]{16})-[0-9a-f]{2}")
-_PROPAGATOR = TraceContextTextMapPropagator()
 _LOCK = threading.Lock()
 _runtime: Runtime | None = None
 
@@ -64,7 +61,10 @@ class Runtime:
     def __init__(
         self, config: Configuration, traces: TracerProvider, meters: MeterProvider
     ) -> None:
+        from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
+
         self.config, self.traces, self.meters = config, traces, meters
+        self.propagator = TraceContextTextMapPropagator()
         self.tracer = traces.get_tracer(__name__, __version__)
         meter = meters.get_meter(__name__, __version__)
         buckets = tuple(0.01 * 2**i for i in range(15))
@@ -250,16 +250,19 @@ def valid_traceparent(value: object) -> str | None:
 
 
 def carrier() -> str | None:
-    if _runtime is None:
+    runtime = _runtime
+    if runtime is None:
         return None
     values: dict[str, str] = {}
-    _PROPAGATOR.inject(values)
+    runtime.propagator.inject(values)
     return valid_traceparent(values.get("traceparent"))
 
 
 def correlation() -> dict[str, str]:
     if _runtime is None:
         return {}
+    from opentelemetry import trace
+
     current = trace.get_current_span().get_span_context()
     if not current.is_valid:
         return {}
@@ -288,20 +291,24 @@ def resource_attributes() -> dict[str, str]:
 
 @dataclass
 class Observation:
-    span: trace.Span
+    span: trace.Span | None
     attributes: dict[str, str | int]
     runtime: Runtime | None = field(repr=False)
 
     def fail(self, reason: str = "error") -> None:
         error = reason if reason in {"error", "timeout", "cancelled", "rejected"} else "error"
         self.attributes["error.type"] = error
-        self.span.set_attribute("error.type", error)
-        self.span.set_status(trace.StatusCode.ERROR)
+        if self.span is not None:
+            from opentelemetry.trace import StatusCode
+
+            self.span.set_attribute("error.type", error)
+            self.span.set_status(StatusCode.ERROR)
 
     def http_status(self, status: int) -> None:
         code = status if 100 <= status <= 599 else 500
         self.attributes["http.response.status_code"] = code
-        self.span.set_attribute("http.response.status_code", code)
+        if self.span is not None:
+            self.span.set_attribute("http.response.status_code", code)
         if code >= 500:
             self.fail()
 
@@ -310,7 +317,8 @@ class Observation:
         for direction, value in (("input", input_tokens), ("output", output_tokens)):
             if type(value) is not int or not 0 <= value <= 10**12:
                 raise ValueError("Invalid settled telemetry usage.")
-            self.span.set_attribute(f"gen_ai.usage.{direction}_tokens", value)
+            if self.span is not None:
+                self.span.set_attribute(f"gen_ai.usage.{direction}_tokens", value)
             if self.runtime is not None:
                 self.runtime.tokens[direction].add(
                     value,
@@ -333,13 +341,13 @@ def operation(
 ) -> Iterator[Observation]:
     """Emit only closed operation/attribute vocabularies, with no exception events."""
     kinds = {
-        "http.server": trace.SpanKind.SERVER,
-        "http.client": trace.SpanKind.CLIENT,
-        "messaging.publish": trace.SpanKind.PRODUCER,
-        "messaging.process": trace.SpanKind.CONSUMER,
-        "db.transaction": trace.SpanKind.CLIENT,
-        "invoke_workflow": trace.SpanKind.INTERNAL,
-        "chat": trace.SpanKind.CLIENT,
+        "http.server": "SERVER",
+        "http.client": "CLIENT",
+        "messaging.publish": "PRODUCER",
+        "messaging.process": "CONSUMER",
+        "db.transaction": "CLIENT",
+        "invoke_workflow": "INTERNAL",
+        "chat": "CLIENT",
     }
     if name not in kinds:
         raise ValueError("Invalid telemetry operation.")
@@ -367,20 +375,27 @@ def operation(
             attributes["gen_ai.agent.name"] = capability
             span_name = f"invoke_workflow {capability}"
     remote = valid_traceparent(parent)
-    parent_context = context.Context() if root else None
-    if remote:
-        parent_context = _PROPAGATOR.extract({"traceparent": remote}, context=context.Context())
     runtime = _runtime
-    tracer = runtime.tracer if runtime else trace.NoOpTracer()
-    started = time.perf_counter()
-    with tracer.start_as_current_span(
-        span_name,
-        context=parent_context,
-        kind=kinds[name],
-        attributes=attributes,
-        record_exception=False,
-        set_status_on_exception=False,
-    ) as span:
+    span_context: AbstractContextManager[trace.Span | None] = nullcontext(None)
+    started = 0.0
+    if runtime is not None:
+        from opentelemetry import context, trace
+
+        parent_context = context.Context() if root else None
+        if remote:
+            parent_context = runtime.propagator.extract(
+                {"traceparent": remote}, context=context.Context()
+            )
+        span_context = runtime.tracer.start_as_current_span(
+            span_name,
+            context=parent_context,
+            kind=trace.SpanKind[kinds[name]],
+            attributes=attributes,
+            record_exception=False,
+            set_status_on_exception=False,
+        )
+        started = time.perf_counter()
+    with span_context as span:
         observation = Observation(span, attributes, runtime)
         try:
             yield observation

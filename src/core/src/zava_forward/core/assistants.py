@@ -682,7 +682,8 @@ class Assistants:
     @contextmanager
     def transaction(self):
         with telemetry.operation("db.transaction") as observation:
-            observation.span.set_attribute("db.system.name", "microsoft.sql_server" if self.mssql else "sqlite")
+            if observation.span is not None:
+                observation.span.set_attribute("db.system.name", "microsoft.sql_server" if self.mssql else "sqlite")
             with self._transaction() as db:
                 yield db
 
