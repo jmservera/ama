@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-15
+ms.date: 2026-11-16
 ms.topic: overview
 ---
 
@@ -51,6 +51,20 @@ citations are preserved. A separate 73-page PDF validates the source; the
 existing PDF is excluded at the owner's request. Structural checks and
 73 of 74 authoring tests pass; the browser diagram exporter remains
 unavailable. The following delivery descriptions retain their dated scope.
+
+The later [conservative prose follow-up](../capstone/thought-leadership/everything-but-the-software/README.md#conservative-prose-follow-up-16-november)
+includes the owner's abstract edits and checks all seven active TeX inputs,
+with only small further wording changes. It preserves earlier bindings and
+the existing PDF. Structural checks and 73 of 74 tests pass; the unchanged
+diagram exporter cannot import `esbuild`. No compiler is available on PATH,
+so this follow-up has no fresh PDF or rendered-layout validation.
+
+The approved [copy-review recommendations](../capstone/thought-leadership/everything-but-the-software/README.md#copy-review-recommendations-16-november)
+narrow an unsupported absolute, distinguish historical reporting instructions,
+clarify attribution and verification limits, and use descriptive result wording.
+The source-only update retains earlier bindings and the existing PDF.
+Structural checks and 73 of 74 tests pass; the unchanged diagram exporter
+still lacks `esbuild`. Scientific and final approvals remain separate.
 
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the

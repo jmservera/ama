@@ -21,7 +21,7 @@
       "content_sha256": "7346b69e089fdf713b9b73e614ba97acd6c247584928a566f4583b1ab686034d"
     },
     "anc/measurement-provenance.tex": {
-      "content_sha256": "2a0ef6678fbacc94446fb263e97a2361d50ca354d5746fed3529a25dc5a3c5b6"
+      "content_sha256": "bb665b2da622b57e2ff3c06fb95c32186b01ba85e3806c090f09fe1eefe62a17"
     }
   },
   "author_review_revision": {
@@ -441,6 +441,45 @@
       "main.tex": "a95490c336692be1d2212a46e1cc0da43b4b3abe065a70fe2a4d2f99fe6dde8b"
     },
     "validation_limits": "Separate external validation PDF only. The existing main.pdf changed outside this revision's build and is excluded from delivery with owner confirmation. Historical source/PDF bindings remain unchanged. Scientific review, hosted CI, author/employer approval and venue acceptance remain separate."
+  },
+  "prose_polish_revision": {
+    "date": "2026-11-16",
+    "scope": "Conservative scientific-prose pass across main.tex and its seven active TeX inputs, including the owner-approved staged abstract revision. Further edits are limited to flagged wording in the article and sentence rhythm in the Supplement introduction; technical terms and qualified claims remain intact.",
+    "prior_delivery_revision": "human_readability_revision",
+    "delivery_status": "source-only; existing main.pdf excluded",
+    "intake_main_sha256": "bbc5f27dd1a18608161d84451e2a0dab55bbcd9bb250b011e9c8c4000c1abf5a",
+    "unchanged_pdf_sha256": "c39812f602c488ab5158ad2a63e83d79b7a576f003c94d7a5a4a4f8f85a5e6d0",
+    "review_correction": "Independent review of a5080d83 found that the inherited abstract claim below ten was stricter than the methods and results support. Corrected to at most ten, matching the <=10 target and no-functions-exceeded-10 result; no observations changed.",
+    "source_sha256": {
+      "main.tex": "299bc45daa24b0abb494a66c1da30b3ccb29f02abe85a55963566690d14415bd",
+      "anc/background.tex": "9e3b2f93159e833cc4ff876cca08bd2837d6b3132d50bf9736c424e607f58bfc",
+      "anc/experiment-protocol.tex": "02b9481f2bd5d3207ab42d430f929079e876d78de32c5b9690527a7784491b18",
+      "anc/supplement-section.tex": "a3c0b060ac77d8373acecf71ab06d97a2f5a89ecd670d0518b7cfb61636ec64a",
+      "anc/additional-evidence.tex": "28eb743b5bab60354de3086a433a84261809616de47a4238a183cf548c7688d4",
+      "anc/case-audits.tex": "229f5e9f275641d0874451167d0f25dd9bebd0e91cd5680bbb4a4eb5bdffb95d",
+      "anc/deferred-measures.tex": "36464df072e2f13548352c786b1e462ad1bf1a9d203da25a45243a2643f9742a",
+      "anc/measurement-provenance.tex": "dedbafcdcd8d87312141a16f78c48732be5eaa27605fd37d69495e9642a6c68d"
+    }
+  },
+  "copy_review_revision": {
+    "date": "2026-11-16",
+    "scope": "Apply the five approved copy-review recommendations: study-scoped wording for an untested procedure, earlier identification of historical reporting requirements, first-person attribution of supplied registration/runtime information, explicit limits of provenance links and descriptive Gemini CR1 wording. No study design, outcomes or analysis changed.",
+    "prior_delivery_revision": "prose_polish_revision",
+    "delivery_status": "source-only; existing main.pdf excluded",
+    "unchanged_pdf_sha256": "c39812f602c488ab5158ad2a63e83d79b7a576f003c94d7a5a4a4f8f85a5e6d0",
+    "prior_active_content_sha256": {
+      "anc/measurement-provenance.tex": "2a0ef6678fbacc94446fb263e97a2361d50ca354d5746fed3529a25dc5a3c5b6"
+    },
+    "source_sha256": {
+      "main.tex": "cd6f1e81bcb349e89e61fe7b3ec1e6392cf5cdc9012a31be5ed2ffe0a4878e8b",
+      "anc/background.tex": "9e3b2f93159e833cc4ff876cca08bd2837d6b3132d50bf9736c424e607f58bfc",
+      "anc/experiment-protocol.tex": "5211334607aa9025aec92e1826355981efa3d497f82d898bc91d3eeb4f510123",
+      "anc/supplement-section.tex": "a3c0b060ac77d8373acecf71ab06d97a2f5a89ecd670d0518b7cfb61636ec64a",
+      "anc/additional-evidence.tex": "28eb743b5bab60354de3086a433a84261809616de47a4238a183cf548c7688d4",
+      "anc/case-audits.tex": "229f5e9f275641d0874451167d0f25dd9bebd0e91cd5680bbb4a4eb5bdffb95d",
+      "anc/deferred-measures.tex": "36464df072e2f13548352c786b1e462ad1bf1a9d203da25a45243a2643f9742a",
+      "anc/measurement-provenance.tex": "4f09f69256d74543cdb4e177e4b603181f4deefc6180d257a321cb955b7c2c4a"
+    }
   },
   "restored_citation_keys": [
     "bacchelli2013review",

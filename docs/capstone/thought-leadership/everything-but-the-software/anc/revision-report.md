@@ -1,7 +1,7 @@
 ---
 title: Everything but the Software - Revision Record
 description: Narrative and author-TODO reconciliation, remaining evidence plan and preserved dated review records
-ms.date: 2026-11-15
+ms.date: 2026-11-16
 ---
 
 The 16 November source-only revision applies a plain-language pass to the
@@ -77,6 +77,107 @@ The 5 November recovery/source check, 2 November allocation record and
 from Scope and Outcome through Title Assessment retain the original
 24 October report, and the 25 October addendum remains historical. Their
 earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Copy Review Recommendations 16 November
+
+The owner approved all five findings from the read-only copy review of
+`main.tex` and its seven active imports. The edits affect the article,
+`anc/experiment-protocol.tex` and `anc/measurement-provenance.tex`.
+
+| Original finding | Applied change | Evidence and limit |
+| --- | --- | --- |
+| "Nobody has tested whether that works" claimed absence of research beyond the study's scope. | "This study did not test that procedure." | Narrows the claim without asserting a new literature search. |
+| Historical reporting instructions preceded their status explanation. | Identify the earlier risk-set definitions and reporting requirements before presenting them. | The instructions and the inspected analyzer's narrower export remain distinct; no reporting gap is resolved by editing. |
+| "Owner" left supplied registration/runtime information unattributed. | Use the participant-observer's existing first-person voice and identify the repository-maintainer role in the execution account. | The 8 November execution record retains the owner's supplied registration and runtime account. Metadata remains independently unverified; execution/data collection remains Cabezas Martin's role. Literal provenance status fields are unchanged. |
+| "Every intervention ... [has] not been independently verified" had ambiguous negation. | State explicitly that out-of-band intervention coverage and private manifest contents have not been independently verified. | Preserves the distinction between published bindings and independent verification; no private manifest was inspected. |
+| "Review wins on Gemini" overstated the descriptive comparison. | "Higher observed Gemini CR1 success under review." | Keeps the recorded counts, intervals and exploratory interpretation. |
+
+Classification: focused editorial work with directly coupled source-digest
+guard maintenance. The existing tests retain their coverage;
+no application, dependency, security control or publication-gate semantics
+changed. `copy_review_revision` adds all eight current source hashes.
+The active Supplement content digest is refreshed, with its preceding value
+retained in `prior_active_content_sha256`. All dated historical revision
+bindings remain unchanged.
+
+Direct comparison with intake commit
+`1088d68f2e0b8870b3c17c22b2935b7944bc5075` preserves seven displayed
+equations, 252 inline-math spans, all 94 citation commands in order,
+172 labels, ten input commands including literal prompts, 36 full-line
+comments and the numeric-literal sequence. Bibliography and PDF bytes are
+unchanged. No new empirical claim, number, citation or actor role is inferred
+from the copywriting rules.
+
+Structural checks pass, including the unchanged 1,910-character abstract.
+The first 74-test run found a stale active Supplement content digest after
+the wording edit, alongside the existing diagram-export failure. After the
+digest correction, 73 of 74 tests pass; the unchanged native diagram exporter
+cannot import `esbuild`. Historical comparison with the checker's optional
+`0d5dcb02` baseline is unavailable, separately from the direct intake
+comparison above. No TeX compiler is available on PATH; no new PDF or
+rendered-layout review is claimed.
+
+Copy delivery checks pass for source-grounded wording, retained author voice,
+scientific qualifications and absence of Unicode em/en dashes in the eight
+active TeX files. UI, asset, motion and interaction checks do not apply.
+Independent exact-head review and hosted checks are tracked in PR #1825;
+local source checks do not establish scientific, author, employer or venue
+approval.
+
+## Conservative Prose Follow-Up 16 November
+
+The owner requested a scientific-prose pass that included the imported TeX
+sections and authorized inclusion of the existing staged abstract edits.
+The article and all seven active inputs were checked. Since the prose
+already needed little editing, further changes are limited to four wording
+adjustments in the article and one sentence in the Supplement introduction.
+Technical uses of terms such as harness, journey and end-to-end are retained,
+as are uncertainty, attribution and first-person case narration.
+The inactive inputs are unchanged.
+
+Classification: focused editorial work with directly coupled source-digest
+and authoring-test maintenance. The existing guard checks the new revision's
+eight source hashes; its coverage is unchanged. Earlier bindings and review
+outcomes remain historical. No executable application, dependency, security
+control or publication-gate semantics changed.
+
+Comparison with the intake source, including the owner's abstract edits,
+preserves 35 complete table/longtable blocks, seven displayed equations,
+252 inline-math spans, all 94 citation commands in order, 172 labels, three
+literal-input commands, 36 full-line comments and all 2,731 numeric tokens.
+The bibliography and reusable BibTeX file are unchanged. Expanded source
+length falls from 33,426 to 33,422 whitespace-delimited words. Each input
+stays within the requested length limit. Character checks find no unintended
+invisible characters, mixed-script confusables, nonstandard spaces or trailing
+line whitespace.
+
+Structural checks pass, including the 1,910-character abstract and all
+94 cited bibliography keys. The package run passes 73 of 74 tests.
+The native diagram-export test fails because Node cannot import `esbuild`;
+that failure was present before this pass and no diagram changed. A stale
+source digest caused a second intake failure after the staged abstract edit;
+the new binding resolves it while preserving the previous record.
+No TeX compiler is available on PATH, so no new compilation or rendered-layout
+check was performed. The existing PDF's bytes are unchanged.
+
+Independent review of `a5080d83df569c9e2510dc0ddff83a6a9b126b3f`
+found one issue: the inherited abstract said complexity was below ten, while
+the methods set a target of at most ten and the results say no functions
+exceeded ten. The abstract is corrected to at most ten. No observed values
+changed. This finding and the original review outcome are retained here;
+the final exact-head assessment and hosted checks are tracked in PR #1825.
+After the correction, structural checks and all 28 measurement-provenance
+tests pass. The unrelated diagram-export failure was not rerun.
+The next review, of `2bb6342d6bf2a81acb8bbb0524b4a19de787c666`,
+found a stale manuscript hash after the sentence changed between validation
+and commit. With owner permission, the validated wording is restored and
+the affected checks are rerun before publication. That review did not
+reproduce the claimed test pass for the intervening source.
+
+`prose_polish_revision` binds the eight current sources and unchanged PDF.
+This editorial pass does not establish independent scientific peer review,
+hosted CI success or final approval.
+Earlier validation and review statements below apply to their named revisions.
 
 ## Human Readability Revision 16 November
 
