@@ -94,7 +94,7 @@ class ViewportPremiseTests(unittest.TestCase):
         def monotonic() -> float:
             return page.now / 1000
 
-        with patch.object(check_module.time, "monotonic", monotonic):
+        with patch("checks.map_fullscreen_browser_check.time.monotonic", monotonic):
             check_module.check_viewport_change_requests_map(page)  # type: ignore[arg-type]
 
     def test_read_pending_from_the_previous_step_does_not_satisfy_the_premise(self) -> None:
