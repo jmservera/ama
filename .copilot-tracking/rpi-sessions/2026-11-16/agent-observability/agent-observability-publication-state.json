@@ -10,7 +10,7 @@
   "child_tasks": [],
   "mode": "automatic",
   "active_phase": "Implement",
-  "status": "active",
+  "status": "blocked",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md",
@@ -41,7 +41,7 @@
     {"decision":"Advanced main ancestry","status":"merge-authorized","evidence":"Inherited owner permission to merge current main into child after committing owned work; no rebase or parent PR merge."},
     {"decision":"Canvas","status":"current","evidence":"instanceId rpi-agent-observability; extensionId plugin:hve-core:rpi-workflow; same session, follows child."}
   ],
-  "blockers": [],
-  "next_action": {"phase":"Implement","action":"RV-001 resolved in fresh environments; commit original Review/correction, integrate authorized current main and run full gate in a clean external candidate worktree."},
+  "blockers": [{"id":"canonical-docker-access","summary":"Full gate at 4df29ff8 fails Docker preflight: isolated HOME uses inaccessible /var/run/docker.sock; existing rootless context is not inherited.","resolution":"Owner restores approved access or explicitly directs a reviewed supported configuration change; rerun full gate with a new receipt directory. No publication bypass."}],
+  "next_action": {"phase":"Implement","action":"Owner reports login restored, but explicit default context still fails socket permission. Await direction on reviewed rootless gate support versus approved canonical socket access before retrying."},
   "prioritized_follow_ups": []
 }
