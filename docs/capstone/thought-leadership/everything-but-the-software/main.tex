@@ -68,18 +68,20 @@ authors' own and do not necessarily reflect those of Microsoft.}\\[4pt]
 \maketitle
 
 \begin{abstract}
-After a prototype and an initial working version validated my approach,
-I rebuilt the system with a loop of agent-led feature additions.
-Despite extensive planning, a few cycles left me with a solution I could not use.
-What does each feature leave for the next one?
-The case analysis considers five possible causes and other technical explanations.
+After spending time to carefully build requirements documents, a prototype and
+an initial working version that validated my approach,
+I rebuilt the system with a coordinator of Research-Plan-Implement loop agents (RPI).
+Despite extensive planning, the loop left me with a solution I could not use.
+This situation, and some other similar experiences I had with agentic loops, led to 
+what I'm asking here: What does each feature leave for the next one?
+This case analysis considers five possible causes and other technical explanations.
 
 To examine this question, I designed a study in which agents build ten
-features, then implement an unseen change request. Between features, agents
+features, then implement a previously unknown change request. Between features, agents
 kept coding, consolidated, reviewed without editing, or repaired specified
-behaviour. Consolidation reorganises code while preserving its behaviour.
-A separate evaluator ran hidden tests in isolated containers after each step.
-Later workflow replays checked earlier capabilities.
+behaviour. Then, a separate evaluator ran hidden tests in isolated containers
+after each step, and a later workflow replays earlier capabilities to identify the 
+differences in decay when using different techniques.
 
 All 315 allocated trajectories finished.
 Each trajectory follows work on one codebase. The three models each completed
@@ -93,15 +95,16 @@ independent code paths at all 63 final checkpoints.
 Its test pass-rate gain over longer coding sessions was 1.19 percentage
 points (95\% resampling-based interval [0.10, 2.22]).
 The improvement fell well short of the ten-point benchmark
-for a practically important gain. GPT~6.1 Sol benefited most.
+for representing a practically important gain. 
 
-For Gemini~4 Argon, read-only review passed the later change request in
-16 of 21 runs, compared with 8 for consolidation.
-Consolidation almost doubled feature-delivery credits versus feature-only
+Consolidation helped GPT~6.1 Sol more than the other two models. For Gemini~4 Argon,
+agents given read-only review sessions succeeded on the last change request in
+16 of 21 runs, compared with 8 for consolidation, with the drawback that the 
+consolidation process almost doubled feature-delivery credit usage versus feature-only
 coding and did not lower later change costs.
 
 Taken together, features mostly left earlier behaviour intact in this short study;
-cleaner code alone did not ensure easier or cheaper later changes.
+clean code alone did not ensure easier or cheaper later changes.
 \end{abstract}
 % Complete 315/315 unassisted intervals retain the owner-attestation boundary, 313/315 judging snapshot and 16-epoch provenance.
 
@@ -112,13 +115,20 @@ feedback loops; human-AI interaction; exploratory case study; experiment protoco
 % ===========================================================================
 \section{Introduction}\label{sec:intro}
 
-I could inspect completed issues and passing checks, but could not sign in
-and use the replacement system. Earlier, short exchanges
-with agents had produced a working prototype; later, a coordinator and
-parallel workers delivered a more formal backlog while migration
-dependencies remained unresolved. That interruption, described below,
-raised a broader question than any one failed deployment: when each change
-looks locally complete, who checks the system that the next change inherits?
+I was working on a project assignment with the help of agents,
+I could inspect completed issues and passing checks, but,
+after a few days of having the agents working in a loop, I could not sign in
+and test the solution I was building. Previously, I ran some short exchanges
+with agents that produced a working prototype and an MVE in just a few hours.
+I used them to improve the specifications documents (BRD \& PRD) with the intention
+to make the agentic build process better, faster and produce reliable outcomes.
+I defined a coordinator and parallel workers that delivered a formal backlog,
+and I let them build it autonomously. The first 5 days they completed 47 of the
+more than 180 issues. It looked as good progress, but, when I tried to open the
+product to provide feedback, I couldn't even log in into the portal,
+while in the prototype and MVE this basic feature was working from the beginning.
+That interruption, raised a broader question than any one failed deployment:
+when each change looks locally complete, who checks the system that the next change inherits?
 
 On 1~August 2012, Knight Capital's automated router sent more than four
 million orders while attempting to fill 212 customer orders. The firm lost
