@@ -12,9 +12,11 @@ ms.date: 2026-11-16
 * Declared scope: P04-T01 in the reused
   [.copilot-tracking/plans/2026-11-16/agent-observability-implementation-plan.md](../../plans/2026-11-16/agent-observability-implementation-plan.md),
   including accepted RV-001 correction.
-* Status: Partial. P04 and P04-T01 remain unchecked.
+* Status: Complete for P04-T01. Published at exact validated head; hosted
+  Source projects CI passes. Parent reconciles its full-plan P04 completion.
 * Original Review: Complete / Defects found, preserved unchanged after closeout.
-* No second critique or Review phase; exact-head publication assessment remains required.
+* No second critique or Review phase; bounded exact-head assessment and
+  parent evidence reconciliation are recorded below.
 
 ## Completed Work
 
@@ -114,6 +116,49 @@ ms.date: 2026-11-16
 * Main advanced to `4c3f1d13` (map-check readiness fix). Integrate as authorized
   and start an entirely new full run: native input/base changes invalidate reuse
   of the previous passing groups.
+* Third complete run passes all 17 required groups at
+  `425b7d7691e21eff8635155183eea86502769346`, base
+  `4c3f1d13f0f27c8ea989ee23bb1d58364c2aa52b`. Receipt:
+  `/var/tmp/ama-og-4fsxlE/final3/receipt.json`. Fetched main and independently
+  invoked the canonical receipt verifier successfully before assessment.
+  Real SQL/browser/scanner/image coverage now ran; no partial receipt, skipped
+  prerequisite, cloud fallback or protection change substitutes for it.
+* Exact-head independent publication assessment and hosted implementation CI
+  remain pending. Native deck provenance limitations and human/live acceptance
+  boundaries remain as originally recorded.
+* Bounded independent post-Review assessment inspected the rootless endpoint/
+  receipt path and runtime correction delta at the exact candidate: no
+  high-confidence defect or implementation publication blocker. The helper
+  stopped Partial at its read limit; this original limitation is preserved.
+* Parent closed its listed material evidence gaps: candidate tree matches the
+  receipt and is clean; all three real MSSQL suites have successful zero-skip
+  integration command rows; core/agents pins match at 1.45.2; API reuses core's
+  extra; real Docker --host takes precedence over an untrusted context.
+  T1 is not adopted: usage validation is unchanged from the original feature,
+  and the caller records only the ledger-settled ai_consumption.usage result,
+  whose exact-int/range/total validation precedes telemetry.
+* Parent publication decision: ready to submit this bounded delta for hosted
+  CI and owner review. No repeat broad runtime RPI Review, fully validated
+  deck, live acceptance or human approval is claimed.
+* Fetched unchanged main and successfully reverified the full external receipt
+  immediately before pushing the exact candidate. Published implementation
+  PR [#1834](https://github.com/jmservera/ama/pull/1834), targeting the open
+  research parent #1823. No new source commit follows the passing gate.
+* Exact-head Source projects CI
+  [43973038649](https://github.com/jmservera/ama/actions/runs/43973038649)
+  is running. A hosted result is not yet claimed; rubric absence on this
+  stacked target is not a successful check.
+* Final hosted result: that exact-head run completed successfully. All ten
+  reported jobs pass: no-working-data, changes, namespace, MSSQL, image-paths,
+  core, agents, API, orchestrator and importer. No skipped job or additional
+  hosted workflow was observed. Rubric did not run on the stacked target and
+  is not counted as passed. Full local image/scanner coverage is supported
+  by the complete receipt, not by an assertion of hosted coverage parity.
+* P04-T01 is complete. Parent full-plan reconciliation can check P04.
+  Final publication evidence is durable in #1834 rather than a new source
+  commit that would invalidate the exact-candidate receipt. Follow-up fixes
+  are validated and boundedly assessed, not subjected to another full Review;
+  a new Review remains available on request.
 
 ## Business Alignment
 
@@ -121,8 +166,6 @@ ms.date: 2026-11-16
 
 ## Remaining Work
 
-* Reproduce RV-001, correct component development extras and run focused fresh
-  tests/types. Commit original Review and correction, integrate current main
-  as authorized, then validate a clean external candidate.
-* Full gate, verified receipt, independent exact-head assessment, push/PR and
-  observed hosted CI. No bypass or live activation.
+* No required implementation/publication work remains in the approved scope.
+* Owner retains review/merge of #1823 and #1834. Native deck provenance and
+  live/tenant/accessibility acceptance stay qualified, outside this delivery.

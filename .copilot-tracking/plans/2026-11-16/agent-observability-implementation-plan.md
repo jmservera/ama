@@ -337,7 +337,7 @@ Dependencies:
   preview and delivery receipt.
 
 <!-- rpi:phase id=P04 -->
-### [ ] P04: Validate, independently assess and publish the exact candidate
+### [x] P04: Validate, independently assess and publish the exact candidate
 
 Goals:
 * Deliver a reproducible candidate only with the repository's required evidence.
@@ -348,7 +348,7 @@ Dependencies:
 Changes in the map: verifies all changed parts; adds no runtime connection.
 
 <!-- rpi:task id=P04-T01 -->
-#### [ ] P04-T01: Complete targeted checks, independent review and full gate
+#### [x] P04-T01: Complete targeted checks, independent review and full gate
 
 Goals:
 * Tests reject privacy/context/behavior regressions, and exact-head evidence

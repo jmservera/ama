@@ -13,7 +13,7 @@
   "mode": "automatic",
   "active_phase": "Follow-up",
   "status": "completed",
-  "session_status": "running",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md",
     "plan": ".copilot-tracking/plans/2026-11-16/agent-observability-implementation-plan.md",
@@ -118,14 +118,7 @@
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Start recorded publication child with reused research and P04 plan scope; resolve RV-001, validate and publish without repeating Review."
+    "action": "Delivered through publication child: all plan tasks complete, all 17 local gate groups and ten hosted jobs pass at 425b7d76. Durable final evidence: https://github.com/jmservera/ama/pull/1834#issuecomment-6932106508. Owner reviews #1823 then #1834; no automatic merge/live activation. Original Review and qualified deck/assessment limits preserved."
   },
-  "prioritized_follow_ups": [
-    {
-      "rank": 1,
-      "task": "RV-001 and remaining P04 assigned to agent-observability-publication",
-      "rationale": "Required for original acceptance; component-local SDK development install gap precedes full gate/publication.",
-      "evidence": ".copilot-tracking/reviews/logs/2026-11-16/agent-observability-implementation-review.md RD-003 through RD-005"
-    }
-  ]
+  "prioritized_follow_ups": []
 }

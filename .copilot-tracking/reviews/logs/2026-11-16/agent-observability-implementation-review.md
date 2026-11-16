@@ -66,12 +66,12 @@ implementation, including the moved convention repository.
 
 ### Current Disposition
 
-* Based on events: RD-001 through RD-006.
+* Based on events: RD-001 through RD-007.
 * Review execution: Complete.
 * Final outcome: Defects found; RV-001 requires correction before publication.
 * Finding decisions and next actions: RV-001 resolved by child implementation/
-  fresh-install evidence, not by rewriting this original assessment; remaining
-  full-tier publication checks and exact-head assessment still required.
+  fresh-install evidence, not by rewriting this original assessment. Child
+  P04 evidence now supports publication; owner retains PR review/merge.
 * Decisions still needed: none; walkthrough skipped-auto.
 
 ### Decision History
@@ -84,6 +84,7 @@ implementation, including the moved convention repository.
 | RD-004 | execution/outcome | parent | Complete / Defects found | none | none | parent | publication checks | Preserve this original result | Scoped comparison complete; not acceptance or an exact-head gate |
 | RD-005 | continuation | automatic parent | required in-scope correction | rpi-implement | rpi-implement | agent | RV-001 resolution plus P04 | Resume bounded correction and publication | No new critique or Review phase authorized |
 | RD-006 | RV-001 resolution | child implementation validation | resolved | rpi-implement | P04 publication | agent | full receipt/exact-head assessment | Commit correction and original evidence | Fresh agents 79 tests/types and API 10 tests/types plus pip check pass; identity guard retained |
+| RD-007 | Child publication acceptance | parent from completed child evidence | P04 complete; original Review outcome preserved | Follow-up | owner PR review | owner | human merge approval, separate from delivered scope | Review #1823 and #1834 | Exact head 425b7d76/base 4c3f1d13 passes all 17 local groups with immediately verified receipt and all ten hosted jobs in run 43973038649. Bounded independent assessment has no publication blocker; helper Partial read-limit and parent gap reconciliation preserved. Draft deck remains Partial, no live acceptance or second full Review claimed |
 
 ## Validation Evidence
 
