@@ -5603,6 +5603,10 @@ homes SQL database. It is a temporary owner showcase, not resident enrolment, no
 identity and not production authentication. It is a different composition from the loopback-only
 #444 preview above: that preview and its fixture guard are unchanged and are not imported.
 
+The [threat model](../../docs/reference/research/resident-demo-threat-model-2026-11-16.md) assesses the
+public fake-email login, the shared demo credential, sessions, cross-case access, database fields
+and deployment isolation. It is a design-time assessment, not security acceptance.
+
 Both resident pages (this showcase and the #444 preview) show a demonstration-only notice that
 Legal and Data Protection Officer review is still outstanding (owner decision 2026-11-03, same
 basis as #766). The notice is static page text. It is not a Legal or DPO approval, it does not

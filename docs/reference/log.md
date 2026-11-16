@@ -12020,3 +12020,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-14] fix | Correct registered screen map counts (Refs #156)
 
 * Corrected the screen map prose to sixteen rows (thirteen employee plus three resident) with thirteen linking a written design record, and linked the `programme-queue-paging-v1` proposal for `programme-queue`. No acceptance or human gate is claimed.
+
+## [2026-11-16] add | Resident demo threat model for the synthetic Azure showcase (Refs #462)
+
+* Added the [threat model](research/resident-demo-threat-model-2026-11-16.md) covering public fake-email login, the shared demo credential, session handling, cross-case access, database fields and deployment isolation, and linked it from the showcase section of the API README and this index.
+* Local checks recorded in the dated RPI changes record. No Azure mutation, deployment or spend occurred; criteria needing owner pre-spend approval, hosted checks and coordinator assessment stay unmet. No security acceptance is claimed.
