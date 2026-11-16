@@ -12084,3 +12084,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
   on PATH; no new PDF or layout review is claimed. The existing PDF is
   byte-for-byte unchanged. Independent review, hosted CI and final approvals
   remain separate.
+* Independent review of the first prose-pass commit found an inherited
+  strict-bound error in the abstract. Corrected below ten to at most ten,
+  matching the methods and results without changing observations. The
+  original finding is retained in the revision record.

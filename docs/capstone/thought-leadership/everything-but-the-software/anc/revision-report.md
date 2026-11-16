@@ -100,12 +100,12 @@ preserves 35 complete table/longtable blocks, seven displayed equations,
 252 inline-math spans, all 94 citation commands in order, 172 labels, three
 literal-input commands, 36 full-line comments and all 2,731 numeric tokens.
 The bibliography and reusable BibTeX file are unchanged. Expanded source
-length falls from 33,426 to 33,420 whitespace-delimited words. Each input
+length falls from 33,426 to 33,422 whitespace-delimited words. Each input
 stays within the requested length limit. Character checks find no unintended
 invisible characters, mixed-script confusables, nonstandard spaces or trailing
 line whitespace.
 
-Structural checks pass, including the 1,905-character abstract and all
+Structural checks pass, including the 1,910-character abstract and all
 94 cited bibliography keys. The package run passes 73 of 74 tests.
 The native diagram-export test fails because Node cannot import `esbuild`;
 that failure was present before this pass and no diagram changed. A stale
@@ -114,9 +114,18 @@ the new binding resolves it while preserving the previous record.
 No TeX compiler is available on PATH, so no new compilation or rendered-layout
 check was performed. The existing PDF's bytes are unchanged.
 
+Independent review of `a5080d83df569c9e2510dc0ddff83a6a9b126b3f`
+found one issue: the inherited abstract said complexity was below ten, while
+the methods set a target of at most ten and the results say no functions
+exceeded ten. The abstract is corrected to at most ten. No observed values
+changed. This finding and the original review outcome are retained here;
+the final exact-head assessment and hosted checks are tracked in PR #1825.
+After the correction, structural checks and all 28 measurement-provenance
+tests pass. The unrelated diagram-export failure was not rerun.
+
 `prose_polish_revision` binds the eight current sources and unchanged PDF.
-This editorial pass does not establish independent scientific review,
-independent exact-head review, hosted CI success or final approval.
+This editorial pass does not establish independent scientific peer review,
+hosted CI success or final approval.
 Earlier validation and review statements below apply to their named revisions.
 
 ## Human Readability Revision 16 November

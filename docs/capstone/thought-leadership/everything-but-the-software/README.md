@@ -15,6 +15,10 @@ sentence in the Supplement introduction. Scientific terms, qualified claims
 and first-person case narration are retained; the two inactive inputs are
 unchanged.
 
+Independent review also found an inherited bound error in the abstract:
+the methods and results support complexity at most ten, not below ten.
+The abstract now matches that bound; no observations changed.
+
 The [revision record](./anc/revision-report.md#conservative-prose-follow-up-16-november)
 records the checks, and `prose_polish_revision` adds current source digests
 without changing earlier bindings. Structural checks pass; 73 of 74 package
