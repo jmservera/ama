@@ -120,15 +120,50 @@ def check_browser_shortcuts(page: Page, mode: str) -> None:
         page.remove_listener("request", record_request)
 
 
-def check_viewport_change_requests_map(page: Page) -> None:
+def map_read_width_px(url: str) -> float | None:
+    """Pixel width of the viewport a map read was issued for, from its bbox and zoom."""
+    query = parse_qs(urlsplit(url).query)
+    try:
+        west, east = (float(query["bbox"][0].split(",")[index]) for index in (1, 3))
+        return (east - west) / 360 * 256 * 2 ** float(query["zoom"][0])
+    except (KeyError, IndexError, ValueError):
+        return None
+
+
+def check_viewport_change_requests_map(page: Page, timeout_ms: int = 5000) -> None:
     size = page.viewport_size
     assert size is not None
+    reads: list[str] = []
+
+    def record_read(request: Request) -> None:
+        if "/api/map?" in request.url:
+            reads.append(request.url)
+
+    # A read pending from the preceding step must not be mistaken for the resize's own read.
+    settle_map_reads(page)
+    leaflet = page.locator("#leaflet")
+    before = leaflet.evaluate("el => el.clientWidth")
+    page.on("request", record_read)
     try:
-        with page.expect_request(lambda request: "/api/map?" in request.url, timeout=5000):
-            page.set_viewport_size({"width": size["width"] - 40, "height": size["height"]})
+        page.set_viewport_size({"width": size["width"] - 40, "height": size["height"]})
+        waited = 0
+        while not reads and waited < timeout_ms:
+            page.wait_for_timeout(50)
+            waited += 50
+        check("a viewport change requests the map once the resize settles", bool(reads))
+        after = leaflet.evaluate("el => el.clientWidth")
+        check("the viewport change resizes the map container", before - after >= 1)
+        widths = [map_read_width_px(url) for url in reads]
+        check(
+            "a map read carries the resized viewport bounds, not the earlier ones",
+            any(
+                width is not None and abs(width - after) <= 1 and abs(width - before) >= 1
+                for width in widths
+            ),
+        )
     finally:
+        page.remove_listener("request", record_read)
         page.set_viewport_size(size)
-    check("a viewport change still requests the map once the resize settles", True)
 
 
 def check_shortcuts_after_pending_resize(page: Page) -> None:
