@@ -19,6 +19,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
+from zava_forward.core import telemetry
 from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 
 from zava_forward.agents.dispatch import AgentWorker, ResultSink, TaskQueue, run_once
@@ -115,7 +116,8 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         try:
             runtime = build_runtime(os.environ)
-        except ConfigError as error:
+            telemetry.initialize("zava-forward-agents")
+        except (ConfigError, ValueError) as error:
             print(
                 f"zava-forward-agents serve: {error} No tasks will be processed.",
                 file=sys.stderr,
@@ -123,16 +125,19 @@ def main(argv: list[str] | None = None) -> int:
             return NOT_CONFIGURED
         stop = threading.Event()
         install_signal_handlers(stop, runtime.worker)
-        serve(
-            runtime.queue,
-            runtime.worker,
-            runtime.sink,
-            runtime.limits,
-            stop,
-            idle=IDLE_SECONDS,
-            alive=lambda: limits_active(runtime.limits),
-            pulse=lambda: beat(heartbeat),
-        )
+        try:
+            serve(
+                runtime.queue,
+                runtime.worker,
+                runtime.sink,
+                runtime.limits,
+                stop,
+                idle=IDLE_SECONDS,
+                alive=lambda: limits_active(runtime.limits),
+                pulse=lambda: beat(heartbeat),
+            )
+        finally:
+            telemetry.shutdown()
         return EXPIRED if not limits_active(runtime.limits) else 0
     from zava_forward.agents.version import __version__
 

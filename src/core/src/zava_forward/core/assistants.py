@@ -14,6 +14,7 @@ import time
 import uuid
 from collections.abc import Mapping
 from contextlib import contextmanager
+import contextvars
 from datetime import datetime, timezone
 from typing import Any
 
@@ -28,7 +29,9 @@ from . import (
     quality,
     ranking,
     rai_release,
+    sensor_map,
     sensor_view,
+    telemetry,
 )
 from zava_forward.core.ai import FORBIDDEN, Ai
 from .store import ConflictError
@@ -678,6 +681,14 @@ class Assistants:
 
     @contextmanager
     def transaction(self):
+        with telemetry.operation("db.transaction") as observation:
+            if observation.span is not None:
+                observation.span.set_attribute("db.system.name", "microsoft.sql_server" if self.mssql else "sqlite")
+            with self._transaction() as db:
+                yield db
+
+    @contextmanager
+    def _transaction(self):
         db = self.store.assistant_connection()
         try:
             if self.mssql:
@@ -705,6 +716,8 @@ class Assistants:
         return float(db.execute(query).fetchone()[0])
 
     def event(self, db, tid, **body):
+        if correlation := telemetry.correlation():
+            body["trace_context"] = correlation
         db.execute("INSERT INTO assistant_events (id, task_id, at, body) VALUES (?,?,?,?)",
                    (uuid.uuid4().hex, tid, self.now(db), canonical(body)))
 
@@ -926,6 +939,10 @@ class Assistants:
         return None
 
     def _enqueue(self, db, capability, c, mode, actor, replaced=None):
+        with telemetry.operation("messaging.publish", backend="other_sql"):
+            return self._enqueue_task(db, capability, c, mode, actor, replaced)
+
+    def _enqueue_task(self, db, capability, c, mode, actor, replaced=None):
         if denial := self.quality_scope_denial(capability, c["id"], mode != "proactive"):
             raise ValueError(denial)
         snapshot = self.snapshot(db, capability, c)
@@ -942,6 +959,8 @@ class Assistants:
                         manual=f"Review the ordinary case with {', '.join(REGISTRY[capability]['roles'])}.",
                         release=release, reason=reason, continuity_epoch=epoch, created_at=self.now(db),
                         manual_requested=mode != "proactive")
+            if traceparent := telemetry.carrier():
+                body["traceparent"] = traceparent
             state = "disabled" if reason else "pending"
             if self.limits.valid and len(canonical(snapshot)) > self.limits.input_chars - 1500:
                 state, body["reason"] = "failed", "Source capture exceeds bounded input. Review manually."
@@ -1092,6 +1111,30 @@ class Assistants:
             c = self.authorize(db, user, "quality-evidence", case_id)
             out = sensor_view.view(db, case_id, sensor_view.reference_for(c.get("quality")), self.now(db), self.mssql)
         return dict(out, case_id=case_id)
+
+    def map_sensors(self, user, case_ids):
+        """Latest bounded sensor summary per mapped home, projected for this user's role and scope.
+
+        A role outside quality evidence, or a case outside the current staff scope, gets a fixed
+        state with no values. Without SQL no readings exist, so the state says so."""
+        ids = [i for i in case_ids if isinstance(i, str) and 1 <= len(i) <= 64]
+        if user.get("role") not in REGISTRY["quality-evidence"]["roles"]:
+            return {i: sensor_map.fixed("restricted") for i in ids}
+        if not self.sql:
+            return {i: sensor_map.fixed("not-connected") for i in ids}
+        out = {}
+        with self.transaction() as db:
+            now = self.now(db)
+            allowed = []
+            for i in ids[: sensor_map.HOME_CAP]:
+                try:
+                    self.authorize(db, user, "quality-evidence", i)
+                    allowed.append(i)
+                except (PermissionError, KeyError):
+                    out[i] = sensor_map.fixed("restricted")
+            out.update(sensor_map.summaries(db, allowed, now, self.mssql))
+        out.update({i: sensor_map.fixed("not-loaded") for i in ids[sensor_map.HOME_CAP :]})
+        return out
 
     def detail(self, user, tid, history_offset=0):
         if not self.sql:
@@ -1870,8 +1913,14 @@ class Assistants:
         if task is None:
             self.call_slots.release()
             return False
+        with telemetry.operation("invoke_workflow", parent=task.get("traceparent"),
+                                 capability=task["capability"]) as observation:
+            return self._execute_claimed(task, observation)
+
+    def _execute_claimed(self, task, observation):
         system, prompt = build_request(task)
         if len(system) + len(prompt) > self.limits.input_chars:
+            observation.fail("rejected")
             self.call_slots.release()
             return self.complete(task, dict(outcome="input-too-large", usage=None, source="unverified"),
                                  None, "Input exceeds limit; manual review required.")
@@ -1915,18 +1964,22 @@ class Assistants:
                 held = ("Captured sensor readings cannot be sent to a real AI model in this release; they were "
                         "not sent. Use the manual route.")
         if held:
+            observation.fail("rejected")
             self.call_slots.release()
             return self.complete(task, dict(outcome="suspended-before-dispatch", usage=None, source="unverified"), None, held)
         try:
             with self.dispatch_lock:
                 stopped = self.stop_event.is_set()
                 if not stopped:
-                    threading.Thread(target=call, daemon=True, name="retrofit-provider").start()
+                    thread_context = contextvars.copy_context()
+                    threading.Thread(target=thread_context.run, args=(call,), daemon=True, name="retrofit-provider").start()
         except RuntimeError:
+            observation.fail()
             self.call_slots.release()
             return self.complete(task, dict(outcome="provider-unavailable", usage=None, source="unverified"),
                                  None, "Provider dispatch unavailable; use manual work.")
         if stopped:
+            observation.fail("cancelled")
             self.call_slots.release()
             return self.complete(task, dict(outcome="shutdown", usage=None, source="unverified"),
                                  None, "Assistance stopped before dispatch; use manual work.")
@@ -1936,12 +1989,14 @@ class Assistants:
         result = values[0] if returned.is_set() and time.perf_counter() - started <= self.limits.timeout else dict(
             outcome="timeout", usage=None, source="unverified", text=None)
         envelope, output, failure = shape_result(task, result, self.limits)
+        if failure:
+            observation.fail("timeout" if result.get("outcome") == "timeout" else "error")
         try:
             return self.complete(task, envelope, output, failure)
         except Exception:
             # Completion acknowledgement may have been lost. Never dispatch the provider again here.
             with self.transaction() as db:
-                current = self._row(db, tid)
+                current = self._row(db, task["id"])
                 return current["fence"] == task["fence"] and current["state"] in ("ready", "failed", "pending")
 
     def review(self, user, tid, action, revision, note="", output=None, source_verified=False):

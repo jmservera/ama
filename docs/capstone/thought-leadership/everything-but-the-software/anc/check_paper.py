@@ -69,7 +69,7 @@ def expand_inputs(text: str, package: Path = PACKAGE, seen: tuple[Path, ...] = (
 
 def body_words(text: str) -> int:
     body = text.split(r"\section{Introduction}", 1)[1]
-    body = body.split(r"\section*{Acknowledgements}", 1)[0]
+    body = re.split(r"\\section\*\{|\\begin\{thebibliography\}", body, maxsplit=1)[0]
     body = strip_comments(body)
     body = re.sub(r"\\begin\{verbatim\}.*?\\end\{verbatim\}", "", body, flags=re.S)
     body = re.sub(r"\\(?:cite\w*|ref|label|includegraphics)(?:\[[^]]*\])?\{[^}]*\}", "", body)

@@ -102,6 +102,11 @@ def exercise(browser: Any, base: str, reader: FixtureReader) -> None:
     sign_in(page, base, "alice@example.com")
     latest = reader.rows["CASE-A"].sensors[-1]
     check("two semantic gauges", page.get_by_role("meter").count() == 2)
+    status = page.locator("#sec-sensors .sensor-status")
+    check(
+        "reading status and synthetic source are written as text",
+        "Reading status:" in status.inner_text() and "Source: Synthetic demo data" in status.inner_text(),
+    )
     check(
         "temperature matches generator",
         page.locator("#gauge-temperature_c").evaluate("(el) => el.value") == latest.temperature_c,
@@ -261,6 +266,7 @@ def exercise(browser: Any, base: str, reader: FixtureReader) -> None:
         "stale history is flagged and has no forecast",
         page.locator(".sensor-forecast-point").count() == 0
         and "more than 24 hours old" in page.inner_text("#sec-sensors")
+        and "Reading status:" not in page.inner_text("#sec-sensors .sensor-status")
         and page.locator(".sensor-chart circle").count() > 0,
     )
     stale_state["now"] = NOW

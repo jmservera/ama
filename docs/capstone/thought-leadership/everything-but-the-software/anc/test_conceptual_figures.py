@@ -110,15 +110,33 @@ class ConceptualFigureTests(unittest.TestCase):
         narrative = re.sub(r"(?m)^%.*$", "", narrative)
         narrative = narrative.replace("[Our study's limitations]", "")
 
-        self.assertNotRegex(narrative, r"\b(?:I|my|My|mine|myself|we|We|our|Our|me)\b")
         for stem in STEMS:
-            self.assertIn(f"{{{stem}.png}}", narrative)
+            self.assertIn(f"{{{stem}.png}}", source)
         for identifier in ("PF1", "PF2", "PF3"):
             self.assertIn(f"TODO(author): {identifier}", source)
         self.assertIn(r"\resultstrue", narrative)
         self.assertNotIn(r"\resultsfalse", narrative)
         self.assertIn("ten ordered features", narrative)
         self.assertNotIn("Regional access scope change", narrative)
+
+    def test_given_case_narrative_when_read_then_author_is_written_in_first_person(self) -> None:
+        source = (PACKAGE / "main.tex").read_text(encoding="utf-8")
+        abstract = source.split(r"\begin{abstract}", 1)[1].split(r"\end{abstract}", 1)[0]
+        narrative = source.split(r"\section{Introduction}", 1)[1].split(
+            r"\section*{Author contributions}", 1
+        )[0]
+        narrative = re.sub(r"(?m)^%.*$", "", narrative)
+        abstract = " ".join(abstract.split())
+        normalized = " ".join(narrative.split())
+
+        self.assertIn("a solution I could not use", abstract)
+        self.assertIn("separate evaluator", abstract)
+        self.assertIn("hidden tests in isolated containers", abstract)
+        self.assertIn("I could inspect completed issues", normalized)
+        self.assertIn("I selected the case after encountering", normalized)
+        self.assertNotRegex(
+            narrative, r"\b(?:the practitioner|the author|Servera Bondroit|his|he)\b"
+        )
 
     def test_given_manuscript_when_checked_then_concepts_and_deferred_plots_are_explicit(self) -> None:
         from check_paper import expand_inputs

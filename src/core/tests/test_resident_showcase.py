@@ -539,5 +539,21 @@ class BoundaryTests(unittest.TestCase):
             )
 
 
+class SensorFreshnessTests(unittest.TestCase):
+    NOW = datetime(2026, 11, 16, 12, 0, tzinfo=UTC)
+
+    def state(self, age: timedelta) -> str:
+        stamp = (self.NOW - age).isoformat().replace("+00:00", "Z")
+        return str(rs.sensor_freshness([{"observed_at": stamp}], self.NOW)["state"])
+
+    def test_states_are_plain_and_never_live(self) -> None:
+        self.assertEqual(rs.sensor_freshness([], self.NOW)["state"], "none")
+        self.assertEqual(self.state(timedelta(minutes=5)), "recent")
+        self.assertEqual(self.state(timedelta(hours=3)), "retained")
+        self.assertEqual(self.state(timedelta(hours=30)), "stale")
+        self.assertEqual(self.state(timedelta(minutes=-5)), "future")
+        self.assertIn("Not calibrated", rs.SENSOR_PROVENANCE)
+
+
 if __name__ == "__main__":
     unittest.main()

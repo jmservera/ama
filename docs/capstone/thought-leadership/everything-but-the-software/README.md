@@ -1,10 +1,39 @@
 ---
-title: Everything but the Software - source package (draft v21)
-description: Readable narrative and deduplicated provenance register with preserved results in one article and additive Supplement
+title: Everything but the Software - source package (draft v23)
+description: Findings-led narrative, direct prose revision and future-study learning with preserved evidence in one additive Supplement
 ms.date: 2026-11-15
 ---
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
+
+## Human Readability Source Revision 16 November
+
+The [article source](./main.tex) and all seven active ancillary TeX inputs
+have received a plain-language pass for computer scientists and data scientists
+using LLMs in the SDLC. The review covered all 70 sections and subsections,
+including the back matter and Supplement. It explains contracts, acquisition,
+retention, risk sets, estimands, bootstrap intervals and ordinal ratings near
+their use. The two inactive historical inputs remain unchanged.
+
+The [revision record](./anc/revision-report.md#human-readability-revision-16-november)
+describes the scope and checks. All seven displayed equations, 40 table
+environments, three literal prompts, citation sequences, bibliography,
+61 source-register bindings and author TODOs are preserved.
+The [binding](./anc/supplement-integration.json) adds
+`human_readability_revision` without replacing earlier source/PDF records.
+
+This is a source-only revision. The owner asked to leave the existing
+`main.pdf` untouched and uncommitted; it changed outside this revision's
+external build, so preservation of that file could not be verified.
+A separate validation PDF has 73 pages, with the Supplement starting on
+page 46 and the source register on page 70. All pages are nonblank and
+text is within page bounds; references resolve, and seven selected renders
+were inspected. Tectonic reports only the inherited `inputenc` warning.
+Structural checks and 73 of 74 package tests pass. The native diagram
+exporter requires an unavailable Playwright browser; no exporter pass is
+claimed. Earlier page counts and delivery descriptions below retain their
+dated revision scope. Scientific review, hosted CI and final approvals
+remain separate.
 
 ## Current Status
 
@@ -12,20 +41,29 @@ The title is unchanged at the owner's request. The current
 [paper](./main.pdf) and [source](./main.tex) explain the completed exploratory
 study through its principal findings: largely stable retention, selective
 benefits from consolidation or review, and additional resource cost.
-The [Supplement](./main.pdf#page=48) retains the detailed results, uncertainty,
-calibration and execution record in the same 70-page document.
-The [source and digest register](./main.pdf#page=68) occupies the final
+The [Supplement](./main.pdf#page=45) retains the detailed results, uncertainty,
+calibration and execution record in the same 72-page document.
+The [source and digest register](./main.pdf#page=70) occupies the final
 three pages; full identifiers no longer interrupt the narrative.
 The supplement is additive: source-specific qualifications, detailed
 method/rival checks, the frozen prompt, deferred rates and provenance.
 Repeated Background text, figures and case narratives are excluded from
-the current build; their earlier source versions remain in Git.
+the current build; their earlier source versions remain in Git. Detailed
+theory, illustrative economics, follow-up candidates and historical resource
+arithmetic now sit in the existing Supplement, not a second document.
 The standalone supplement PDF/TeX/bibliography were removed at the owner's
 request after exact archive readback and restore checks; their original
 committed versions remain in Git at `80656f32`. No source evidence was discarded.
 
-The [15 November provenance and readability record](./anc/revision-report.md#provenance-and-readability-15-november)
-records the current v21 delivery. The
+The [15 November narrative and TODO record](./anc/revision-report.md#narrative-learning-and-todo-reconciliation-15-november)
+records the current v22 delivery and the remaining evidence plan. The
+[15 November direct style revision](./anc/revision-report.md#direct-style-revision-15-november)
+records the current v23 source and PDF binding without changing the prior
+author-voice record. The
+[author voice follow-up](./anc/revision-report.md#author-voice-follow-up-15-november)
+records the current first-person revision and its validation. The
+[15 November provenance and readability record](./anc/revision-report.md#provenance-and-readability-15-november)
+retains the preceding v21 delivery. The
 [final-results and chart interpretation record](./anc/revision-report.md#final-results-and-chart-interpretation-15-november)
 preserves the preceding v20 delivery. The
 [14 November critique and falsifiability revision](./anc/revision-report.md#critique-and-falsifiability-revision-14-november)
@@ -50,6 +88,71 @@ calendar dates no longer lead the argument. The supplied
 [project-insights export](./anc/project-insights-2026-11-01.csv) supports the
 backlog handoff; its provenance and missing export metadata are in the
 [evidence index](./anc/case-evidence-matrix.json).
+
+### Narrative, Learning and TODO Reconciliation 15 November
+
+The revised account starts with a usable workflow interrupted despite completed
+issues and passing checks, then explains the decay conjecture and the
+consolidation test. Mostly stable retention, selective coverage gains and
+additional cost lead to a narrower conclusion rather than a claim that the
+conjecture was confirmed. Author reflections are attributed: stronger-than-
+expected model performance and the absence of the expected decay are reasons
+to reconsider the measurement design, not proof that harder tasks must decay.
+
+The next paper needs a separately designed, reviewed and prospectively
+registered study. Longer, more coupled work and a full HVE research, plan,
+implement and review comparison are candidates. Review's contribution must be
+distinguished from the package where feasible. Substantially larger resource
+approval is pending; no new run, judging call or protocol change was authorized.
+The earlier numerical candidates and untested hybrid remain in the Supplement.
+
+The [dated TODO disposition and remaining-work plan](./anc/revision-report.md#narrative-learning-and-todo-reconciliation-15-november)
+separates decisions now applied from evidence and approvals still needed.
+The supplied AICC acknowledgement records receipt on 14 November 2026,
+correcting the earlier 27 October account. The author's expected response
+date is 29 November, not guaranteed clearance. arXiv is the selected target;
+final-version clearance, both authors' final approval and current submission
+policy/source-bundle checks remain pending. Only coauthor review was reported;
+unsupported generic acknowledgements were removed.
+
+Read-only inspection of the public experiment source and exports establishes
+allocation/shuffling and asynchronous dispatch, not actual wall-clock order or
+independent provider conditions. VM access will support the remaining historical
+metadata, overlap and amendment/outcome-access chronology checks. It is not
+needed for the editorial changes already applied.
+
+The current PDF has 72 pages, with the Supplement beginning on page 45 rather
+than page 48 in v21. The shorter main route and retained detail take priority
+over an unchanged total page count. All 34 existing table data bodies, seven
+displayed equations, three literal prompts and 61 source-register bindings
+are preserved. No empirical/chart/diagram assets changed.
+
+The 73-test authoring run passed 72 tests; the native diagram-export test
+failed because the required Playwright browser was unavailable. A task-local
+download did not finish and was stopped; no passing exporter check is claimed.
+Structural checks pass. Tectonic produced the delivered PDF with only the
+inherited `inputenc` warning; page/text geometry, nonblank pages and unresolved
+reference checks pass, and selected rendered pages were inspected. The separate
+`narrative_learning_revision` binding preserves v21 and all earlier bindings.
+This focused editorial/tooling validation is not independent scientific review,
+hosted CI, employer clearance or arXiv acceptance.
+
+### Author Voice Follow-Up 15 November
+
+The case narrative uses first-person singular for the author's actions and
+reflections; the methods retain the participant-observer role, and formal
+author metadata and contribution statements retain the authors' names. The
+future-study discussion now states what the experiment assessed and what a
+follow-up design would need to examine. The study results, design and
+protocol are unchanged.
+
+The preceding 71-page PDF, Supplement start (page 45) and source-register pages
+(69-71) are recorded in the `author_voice_revision` binding, which preserves
+the preceding `narrative_learning_revision`. The focused authoring suite ran
+74 tests: 73 passed, and the native diagram exporter could not launch because
+its Playwright browser was unavailable. The structural checker passed.
+Two-pass pdfLaTeX compilation succeeded with two ignored glue-shrinkage
+diagnostics at `main.tex:1988`; selected pages were rendered and inspected.
 
 ### Provenance and Readability 15 November
 

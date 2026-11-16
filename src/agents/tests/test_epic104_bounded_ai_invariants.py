@@ -128,7 +128,14 @@ class AssistantNonMutation(unittest.TestCase):
                     self.assertIs(result.envelope["approved"], False)
 
     def test_worker_and_chat_adapters_import_no_store_or_controlled_record_module(self) -> None:
-        allowed_core = {"assistants", "ai_registry", "ai", "ai_consumption", "chat_panel"}
+        allowed_core = {
+            "assistants",
+            "ai_registry",
+            "ai",
+            "ai_consumption",
+            "chat_panel",
+            "telemetry",
+        }
         for module in (dispatch_module, chat_module):
             tree = ast.parse(Path(str(module.__file__)).read_text(encoding="utf-8"))
             for node in ast.walk(tree):

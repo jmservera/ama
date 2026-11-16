@@ -2,9 +2,18 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-31
+ms.date: 2026-11-16
 ms.topic: reference
 ---
+
+## Opt-in operational tracing
+
+`ZF_OTEL_EXPORTER=otlp` explicitly initializes the content-free pipeline in API
+startup; default `none` preserves legacy console formatting and exports nothing.
+Method/status HTTP spans reset per keep-alive request and join proposal execution,
+provider threads and protected audit events without exporting dynamic URLs.
+See the [settings, offline checks and outstanding collector/approval gaps](../../infra/monitoring-runbooks.md#explicit-otlp-instrumentation-2026-11-16).
+No Application Insights/Agent 365 ingestion or accepted SLO is claimed.
 
 ## Handoff waiting times screen (2026-11-11, Refs #83)
 
@@ -991,6 +1000,18 @@ The map area list and **Show these as a list** retain direct manual access
 without map gestures. The expanded Coordinator list shortcut exits the map and
 focuses Selected records. No resident consent, approval, safety or data-access
 authority changes.
+
+Issue #1818: each employee map home point also carries a bounded `sensor`
+summary (`zava_forward.core.sensor_map`): newest synthetic temperature and
+relative humidity, a text state (fresh, stale, offline, no readings, consent
+withheld, restricted, not connected), `calibrated: false` and a synthetic
+source note. Values appear only for roles allowed the quality-evidence view
+and only after the per-home consent check; one latest-row query per home, at
+most 100 homes per response, never for clusters or the Coordinator map. The
+home card, area list and marker labels show it as text, and **Show only homes
+with stale or offline sensors** filters the loaded points. This is stored
+synthetic data, not live Azure IoT Hub transport; that walkthrough criterion
+stays open.
 
 Run the focused constructed-data browser check from `src/api`:
 
@@ -5830,6 +5851,8 @@ generator's daily pattern, within the display bounds. It is suppressed with a pl
 there are fewer than 6 readings, the latest reading is missing or faulted, or the history is
 stale. Charts use a dashed line with hollow squares and a `Latest stored` divider, and the data
 table lists forecast rows as `Forecast (estimate)`. The wording is descriptive, not diagnostic.
+
+The `sensors` envelope also carries `freshness` (none, recent within 15 minutes, retained, stale or future with plain text), a `source` note (synthetic, not calibrated) and `calibrated: false`. The view shows a "Reading status" badge and a "Source" line; neither claims live measurement.
 
 The view applied to the live database still reports no sensors until it is re-applied after
 `sensor_register` and `sensor_reading` exist (see `infra/README.md`), and the generated

@@ -280,7 +280,8 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             }""")
             expect(question).to_have_attribute(
                 "aria-describedby",
-                "employee-chat-entry-warning chat-privacy employee-chat-error employee-chat-keys chat-demo-disclaimer",
+                "employee-chat-entry-warning chat-privacy employee-chat-error "
+                "employee-chat-keys chat-demo-disclaimer",
             )
             expect(page.locator("#employee-chat-keys")).to_be_visible()
             expect(page.locator("#employee-chat-keys")).to_contain_text("Press Enter to send")

@@ -82,6 +82,15 @@ python3 tools/rpi-checks.py --all --jobs 3 --base "$BASE_SHA" --out /tmp/rpi-ISS
 python3 tools/rpi-checks.py --verify-receipt /tmp/rpi-ISSUE-final/receipt.json --base "$BASE_SHA"
 ```
 
+The gate isolates HOME and Docker configuration. To use an existing local
+rootless daemon, explicitly set `DOCKER_HOST` to its absolute Unix socket
+(for example `export DOCKER_HOST=unix:///run/user/1000/docker.sock`) for both
+execution and receipt verification. Otherwise it uses
+`unix:///var/run/docker.sock`. Remote TCP/SSH endpoints and malformed values
+are rejected, without fallback. Docker contexts and registry credentials are
+not inherited. The endpoint is part of receipt tool identity; changing it
+requires a new run. No daemon or socket permissions are changed.
+
 Selections containing browser checks require the resolved absolute `--out`
 pathname to be at most 58 filesystem-encoded bytes on Linux. The runner sets
 `TMPDIR` to `<output>/tmp` (at most 62 bytes), and Chromium appends
@@ -189,7 +198,16 @@ the files before relying on them; they are not self-updating.
   change touches it; local `--changed` selects `mssql` for non-inert
   core paths containing `sensor` and for the listed
   `SENSOR_MSSQL_DIRECT_DEPENDENCIES`, so a sensor-named Markdown file selects
-  nothing extra); workflow-hash drift, ShellCheck and
+  nothing extra); the other opt-in classes that discovery tolerates only as
+  exact per-group `DISCOVERY_SKIPS` pairs, each with a required zero-skip,
+  at-least-one-`ok` execution: the staff intake, live receiver and sensor draft
+  SQL classes (`SQL_OPT_IN_CLASSES`, one more local SQL group step), the
+  Chromium and axe staff intake browser classes (browser group, `ZF_BROWSER_TESTS=1`
+  and `ZF_STAFF_INTAKE_BROWSER=1` with the pinned `ZF_AXE_PATH`) and the
+  public simulation startup tests (image-api group, `ZF_API_IMAGE` set to the
+  built tag; the `infra` group tolerates only its four exact skips). Local
+  `--changed` selects `mssql`, `browser` or `image-api` for their test modules
+  and for infra Bicep paths; workflow-hash drift, ShellCheck and
   Trivy database identity probes; fresh-image, shard fail-closed and clean
   exact-head receipt binding.
 * Shared (the same kind of check runs in both places; compare the verification
