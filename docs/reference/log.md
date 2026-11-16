@@ -12012,6 +12012,37 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
   No experiment, paid call, VM mutation, scoring/registration change, commit,
   push or external publication occurred; hosted CI and independent exact-head
   review remain unperformed.
+
+## [2026-11-15] update | White-paper narrative, learning and TODO disposition
+
+* Revised the [paper package](../capstone/thought-leadership/everything-but-the-software/README.md#narrative-learning-and-todo-reconciliation-15-november)
+  around the interrupted workflow, explicit hypotheses, mostly stable retention
+  and selective benefits, then methodological learning for a later paper.
+  Attributed author reflections and the full-RPI hypothesis remain distinct
+  from observed findings. Longer tasks and greater spending require a new
+  approved study, not a retroactive protocol change.
+* Moved detailed theory, assumed economics, future-design/hybrid candidates
+  and historical resource arithmetic into the existing additive Supplement.
+  The single PDF has 72 pages, with the Supplement starting on page 45,
+  three pages earlier than v21. All 34 existing table data bodies, seven
+  displayed equations, three prompts, 61 source bindings and unchanged
+  empirical/chart/diagram assets are preserved.
+* Recorded the [author-TODO disposition and remaining-work plan](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#narrative-learning-and-todo-reconciliation-15-november):
+  acknowledgement receipt is corrected to 14 November; an expected response
+  by 29 November is not clearance. Selected excerpt permission is scoped,
+  unsupported acknowledgements removed, and final-version author/employer
+  approval, arXiv/deposit checks and source verification remain separate.
+  Public scheduling/export inspection does not replace pending VM chronology
+  or establish independent provider conditions.
+* Structural checks pass; 72 of 73 authoring tests pass. The native browser
+  diagram-export test failed because its browser was unavailable; the
+  incomplete task-local download was stopped. Tectonic compilation and
+  nonblank/in-bounds/reference checks pass with only the inherited `inputenc`
+  notice; selected PDF renders were inspected. A coupled body-word counter
+  fix has one focused regression. The new v22 binding preserves earlier
+  records. No new experiment, paid call, VM access, scoring or registration
+  change, external submission, hosted CI or independent exact-head review
+  was performed.
 ## [2026-11-14] update | Registered screen to journey, task flow and design artefact map (Refs #156)
 
 * Added a dated, additive map to the [Prototype Profile Review](research/ux/zava-forward-prototype-profile-review.md#registered-screen-to-journey-task-flow-and-design-artefact-map-2026-11-14-refs-156): sixteen registered screens and routes, each with a journey link and a task flow or named gap; twelve link a written design record.
@@ -12020,3 +12051,21 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-14] fix | Correct registered screen map counts (Refs #156)
 
 * Corrected the screen map prose to sixteen rows (thirteen employee plus three resident) with thirteen linking a written design record, and linked the `programme-queue-paging-v1` proposal for `programme-queue`. No acceptance or human gate is claimed.
+
+## [2026-11-16] update | Plain-language paper and active Supplement revision
+
+* Reviewed all 70 active sections/subsections of the
+  [paper and ancillary TeX inputs](../capstone/thought-leadership/everything-but-the-software/README.md#human-readability-source-revision-16-november)
+  for computer scientists and data scientists using LLMs in the SDLC.
+  Clarified measurement terms and shortened dense qualifications while
+  preserving scientific uncertainty, results and study design.
+* Preserved seven displayed equations, all 40 table environments, three
+  prompts, citations, bibliography, 61 source bindings and author TODOs.
+  Added a source-only revision binding with prior digests retained.
+* Structural checks and 73 of 74 authoring tests pass. The unchanged native
+  diagram exporter requires an unavailable browser. A separate 73-page PDF
+  passes nonblank, page-boundary and unresolved-reference checks; seven
+  rendered pages were inspected. Only the inherited `inputenc` warning remains.
+  The existing PDF changed outside this build and is left uncommitted with
+  owner confirmation. No experiment, scoring or protocol change occurred;
+  scientific review, hosted CI and final approvals remain separate.

@@ -13,10 +13,9 @@ independently across the 315 allocated trajectories under the predefined
 exploratory protocol and disclosed amendments. Study conception, methodology,
 evaluation criteria, post-collection analysis, the human-calibration
 spot-check and manuscript preparation were undertaken by
-Juan Manuel Servera Bondroit. This operational separation is intended to
-minimise potential experimenter bias; both authors are Microsoft employees,
-and neither institutional independence nor independent scientific review
-or analysis follows from it.
+Juan Manuel Servera Bondroit. Separating these roles was intended to reduce potential experimenter bias.
+Both authors are Microsoft employees, and the analysis and scientific
+review remain within that shared institutional setting.
 
 An earlier three-arm protocol was registered at \url{https://osf.io/ywsrv/overview},
 and the owner confirms a 7 November 2026 OSF-registered base at
@@ -28,10 +27,11 @@ handling, VM restarts and quarantine-completion transitions) were publicly
 disclosed in version control, culminating in initial handoff commit
 \sourceref{R07} and final quarantine-recovery sources
 \sourceref{R22} and \sourceref{R23} in the end register.
-The run is an exploratory pilot/estimation study, rather than a single
-preregistered confirmatory evaluation. The public protocol's empty formal
-hypothesis list and false/null current-amendment registration fields do
-not negate the owner-confirmed registered base.
+The completed study is exploratory and estimates effects under an evolving
+protocol. It cannot be treated as one preregistered confirmatory evaluation.
+The public protocol leaves its formal hypothesis list empty and marks the
+current amendment's registration fields false or null. Those fields concern
+the amendment; the registered base remains owner-confirmed.
 
 The active profile is \nolinkurl{pilot-estimation.json},
 \texttt{model-stratified-v2-five-arm}, suite \texttt{s1-retrofit}.
@@ -39,8 +39,9 @@ GPT~6.1 Sol, Claude Sonnet~5.5 and Gemini~4 Argon use medium effort across
 arms A--E, F1--F10 and held-out CR1, with seed 2027. The owner-supplied
 runtime selection is $n=21$ trajectories per model per arm despite the
 file default of 12: $3\times5\times21=315$ planned trajectories.
-Feature steps, sessions and completion counters do not supply an
-independent sample size or a completed-trajectory count.
+A trajectory is the sequence of work on one repository. Its feature steps,
+sessions and completion counters describe work within that sequence and
+cannot be counted as additional independent replicates.
 
 Collection used sixteen successive execution-source versions, rather than
 one frozen implementation. The first three were inspected on 8 November;
@@ -62,18 +63,22 @@ quarantines, credit holds and execution-version boundaries.
 
 \subsection{Design and estimands}\label{sec:protocolsummary}
 
-One independent replicate is a fresh repository trajectory through S1's
-ten ordered features and a final held-out change request, CR1.
+The planned independent experimental unit is one fresh repository developed
+through S1's ten ordered features and a final held-out change request, CR1.
+We call this sequence a \emph{trajectory}. The dependence assumptions used
+in the analysis are discussed in Section~\ref{sec:protocollimits}.
 S1 is a standard-library Python workbench covering lifecycle, handoffs,
 consent, permissions, ranking and audit. CR1 adds regional access control.
 The notation $F_t$ denotes the state after feature $t$, and $P_t$ the state
 after its assigned post-step; these coincide in feature-only arms A and D.
 Thus $P_{10}$ is the final ten-feature repository before the withheld extension.
 Every selected model, GPT~6.1 Sol, Sonnet~5.5 and Gemini~4 Argon,
-runs every arm. Randomised interleaving within model/replicate blocks
-uses seed 2027. Feature steps, tests and checkpoints are repeated
-observations within a trajectory, not independent replicates; agent
-sessions are not independent units either. The selected number $n$ applies
+runs every arm. The scheduler randomises model order within each replicate, then arm order
+within each model, using seed 2027. Its parallel dispatcher can admit later
+eligible trajectories as workers become free; a five-arm scheduling group
+is therefore not a synchronized execution batch. Feature steps, tests, checkpoints and agent sessions provide repeated
+observations within a trajectory. Counting them as separate replicates
+would overstate the sample size. The selected number $n$ applies
 \emph{per model per arm}, equally across all fifteen cells.
 
 \begin{table}[!htbp]
@@ -104,18 +109,19 @@ The source inspection, historical gate status and unchanged v4 freeze are
 retained in the dated revision record and source register.
 
 B--D is the primary practical comparison: consolidation versus giving
-the builder the same total time and nominal credits. Equal ceilings do
-not guarantee equal realised resources; D also has fewer fresh sessions.
-B--A measures the additional package; B--C also changes editing rights,
-tests and handover content. E--B contrasts visible behavioural repair with
-behaviour-preserving consolidation. These secondary package comparisons
-do not isolate refactoring or any of the five case mechanisms.
+the builder the same total time and nominal credits. These are maximum
+allowances; actual spending can differ, and D also has fewer fresh sessions.
+B--A adds both the consolidation package and its resources. B--C changes
+editing rights, tests and handover content. E--B compares repair against
+visible requirements with consolidation intended to preserve behaviour.
+Each comparison changes several things at once, so it cannot identify the
+effect of refactoring alone or of any one case mechanism.
 
 C cannot repair code during its review session, but REVIEW.md can direct
-repairs in later feature sessions. Follow-through needs review-item and
-diff locators with external adjudication; file overlap alone is not proof.
-B's added tests must agree with visible specifications, rather than
-legitimating a defect. Subsequent feature sessions must keep accepted
+repairs in later feature sessions. To establish follow-through, an external assessor would need to link a
+specific review item to a later diff. Changes to the same file would be
+insufficient evidence. B's added tests must agree with visible
+specifications; a test that accepts a defect does not satisfy this rule. Subsequent feature sessions must keep accepted
 tests green. E can correct an agent-authored expectation only with a
 specific contradictory specification and a retained explanation.
 Accepted Python test files are immutable in full, including imports,
@@ -144,10 +150,11 @@ preparation and the authenticated model connection remain on that host.
 The development model can request \texttt{isolated\_exec}; a Python broker
 runs each requested command in a fresh isolated container, returning bounded
 stdout, stderr and exit status through the transport to the model.
-Validated filesystem/Git state is replayed into a fresh writable isolated
-workspace for the next call; this is not a persistent container or writable
-host checkout. Candidate processes and memory do not persist, while
-host/model conversation context is not reset by that boundary.
+For the next call, the broker restores validated filesystem/Git state into
+a fresh writable isolated workspace. Each command therefore starts in a
+new container, with no surviving candidate processes or process memory.
+The host checkout remains protected. The host/model conversation continues
+across calls.
 Only validated committed regular content crosses feature/CR checkpoints;
 the host canonicalises history rather than retaining arbitrary actor
 commit metadata.
@@ -172,14 +179,16 @@ read-only root filesystem and set \texttt{no-new-privileges}, with CPU,
 memory, process and time limits. Docker uses \texttt{--cap-drop=ALL}
 but re-adds four for its protected supervisor; the candidate child runs
 as UID/GID 1001 with cleared effective, permitted and inheritable
-capabilities. The entire container is therefore not capability-free.
+capabilities. Those four supervisor capabilities remain at the container level even
+though they are cleared for the candidate child.
 Development workspace mounts remain writable; replay snapshot/evaluator
 mounts are read-only. Copilot authentication stays with the trusted host transport.
 An isolation or collection failure leaves the checkpoint unavailable.
-A successfully collected candidate failure remains failure evidence,
-rather than automatically becoming unavailable or a numerical zero rating.
-These boundaries describe inspected source contracts, not an adversarial
-integrity proof or verification of every archived execution epoch.
+If collection succeeds and the candidate fails, that failure remains in
+the evidence. It does not automatically make the checkpoint unavailable
+or assign a zero judge rating. These boundaries describe the inspected
+source. Their enforcement was not adversarially proven or verified across
+every archived execution version.
 
 \begin{figure}[!htbp]
 \centering
@@ -199,7 +208,10 @@ Source and historical-runtime qualification are in the revision record.}
 
 The primary outcome is final behavioural coverage: contracts passed out
 of all 127 scheduled feature contracts at $P_{10}$, before CR1.
-Coverage combines acquisition, retention and repair.
+A contract is a required behaviour checked by a fixed hidden test.
+This score can improve because an agent implements a missing feature,
+preserves an existing one or repairs a failure. The score alone cannot
+distinguish those routes.
 Retained-contract loss and CR1 adaptation are distinct secondary outcomes,
 with legacy identifiers H2 and H6 retained only for data traceability.
 HIR/IDR definitions are in the supplementary appendices;
@@ -207,16 +219,17 @@ comprehension is not measured.
 
 \paragraph{Who measures, and what ``quality'' means.}
 The development evaluator (\sourceref{R05}) does not call a separate LLM-as-judge
-to assign numerical outcome scores. The experiment models produce features, consolidation,
-review notes or repairs; these are treatments, not independent measurement
-instruments. The host evaluator runs fixed hidden test contracts and
+to assign numerical outcome scores. The experiment models implement features, consolidate code, write review
+notes or make repairs. These activities are the interventions being tested.
+Separate instruments measure their outcomes. The host evaluator runs fixed hidden test contracts and
 external code-analysis tools, writes \texttt{measure.json}, and computes
 summaries from those records. Table~\ref{tab:measurementprovenance} separates
 outcomes, structural proxies and resource observations.
-``Behavioural coverage'' is a test-contract pass fraction, not instrumented
-line or branch coverage. Complexity, duplication and lint do not constitute
-a general architecture, readability or comprehension score; the active
-metric dictionary contains no maintainability-index score.
+``Behavioural coverage'' is the fraction of test contracts passed. It is
+not instrumented line or branch coverage. Complexity, duplication and lint
+describe selected code properties; they cannot establish overall
+architecture quality, readability or comprehension. The active metric
+dictionary contains no maintainability-index score.
 
 \begin{table}[!htbp]
 \small
@@ -263,19 +276,18 @@ normally repeatable. Environment-dependent code, timeouts or flaky tests
 can still vary. The evaluator records errors, skips and timeouts; missing
 or non-binary endpoints cannot silently become passing outcomes.
 The reported local evaluator is not a claim of OS or network isolation.
-Elapsed time and consumption vary with execution and provider conditions;
-their deterministic aggregation after recording does not make the underlying
-observations deterministic.
+Elapsed time and consumption vary with execution and provider conditions.
+Summing recorded values is repeatable, even when the underlying observations
+vary between runs.
 Raw fields, units, scopes, tool settings and missingness are specified in
 Supplement Section~\ref{app:measurementprovenance}.
 
-\paragraph{AI review is a treatment, not an outcome judge.}
+\paragraph{How AI review enters the experiment.}
 Arm C's model reads \nolinkurl{reports/quality.md} and the feature diff, then
 rewrites \texttt{REVIEW.md} in at most 300 words using a checklist of
 duplication, complex functions, names, dead code, responsibilities and
-behaviour-focused tests. Those qualitative judgements may vary between
-model sessions, but the kit does not convert them into a numerical review
-or quality score. Arm B uses a similar checklist to guide changes.
+behaviour-focused tests. The review can vary between model sessions. The kit retains the note
+without converting it into a numerical quality score. Arm B uses a similar checklist to guide changes.
 Its complexity $\leq10$, duplication $<3\%$ and zero configured-lint-warning
 targets are requested stopping conditions and treatment-fidelity checks.
 \texttt{make check} runs tests and generates the metrics report; the report
@@ -289,7 +301,8 @@ For trajectory $r$, $F_t$ is the retained state after feature step $t$ and
 $P_t$ the state after its assigned post-step; these source states coincide
 in A and D. Let $\mathcal{R}_{r,t}$ contain eligible, unchanged contracts
 that passed at least one earlier end-of-cycle checkpoint $P_u$, $u<t$.
-Superseded contracts leave this risk set. At $F_t$ and $P_t$, let
+Superseded contracts leave this risk set. This \emph{risk set} includes only contracts that could now be lost because
+they worked before and are still required. At $F_t$ and $P_t$, let
 $\mathcal{O}^{p}_{r,t}\subseteq\mathcal{R}_{r,t}$ contain contracts with
 observed binary results $S^p_{r,t}(q)$, $p\in\{F,P\}$. Report
 \begin{equation}
@@ -298,12 +311,13 @@ L^p_{r,t}=\sum_{q\in\mathcal{O}^{p}_{r,t}}
 d^p_{r,t}=\frac{L^p_{r,t}}{|\mathcal{O}^{p}_{r,t}|}.
 \label{eq:decayloss}
 \end{equation}
-The density is checkpoint prevalence of failure among observed,
-previously acquired contracts. An empty observed denominator is undefined.
-These summaries require known full-risk membership. If earlier acquisition
-checkpoints leave membership uncertain, retain that uncertainty and the
-checkpoint vectors rather than treating unobserved acquisition as failure
-to acquire.
+Here $L$ counts failures and $d$ is the fraction failing among observed,
+previously acquired contracts at that checkpoint. An empty observed denominator is undefined.
+To interpret either summary, we need to know which contracts belong in the
+full risk set. If an earlier checkpoint is missing, we may not know whether
+a contract was ever acquired. Preserve that uncertainty and the per-contract
+checkpoint results; lack of an observation cannot establish an acquisition
+failure.
 Publish the full risk set, observed subset and missing count
 $M^p_{r,t}=|\mathcal{R}_{r,t}|-|\mathcal{O}^p_{r,t}|$ alongside it.
 The full-risk loss count lies between $L^p_{r,t}$ and
@@ -336,9 +350,11 @@ frequencies.}\label{fig:contractstates}
 CR1 success requires all 15 CR1 contracts and retention of every feature
 contract passing before CR1. Also report contracts passed out of 15,
 previously passing contracts lost, and observed/missing denominators.
-Stratify by whether F9 and F10 prerequisites were acquired before CR1:
-an incomplete arm has fewer retention obligations, and prerequisite
-strata are post-treatment selections, not randomised subgroups.
+Report results separately by whether F9 and F10 prerequisites were acquired
+before CR1. A less complete repository has fewer passing contracts to
+preserve. Because treatment can affect whether those prerequisites are
+acquired, these groups are selected after treatment and cannot be interpreted
+as randomised subgroups.
 One fixed CR1 is task-specific. A prewritten, randomly selected request
 pool belongs to a separately registered subsequent study.
 The summary inspected on 5 November computes composite CR1 success. The
@@ -361,18 +377,18 @@ The active-source inspection confirms conservative loss and composite CR1
 summaries, not those planned richer exports.}\label{fig:experimentmeasures}
 \end{figure}
 
-Actual AI credits include every delivery and CR1 attempt, including
+AI-credit accounting must include every delivery and CR1 attempt, including
 failures, assistance and infrastructure retries; phases are reported
-separately. Cheap failure is not efficiency. Credits, tokens, elapsed
+separately. Lower spending is useful only when read alongside what the
+agent delivered. Credits, tokens, elapsed
 time and currency are distinct. Lizard measures complexity, Ruff lint
 and jscpd duplication. The inspected Ruff invocation uses
 \texttt{--isolated} with the fixed \texttt{E,F,W,C90,B,SIM} rule selection,
 ignoring repository configuration files, but does not include
 \texttt{--ignore-noqa}. Inline \texttt{\# noqa} can therefore suppress
 diagnostics, and the active metric dictionary exports no separate suppression
-count. The earlier description overstated this safeguard. This is a
-measurement-integrity limitation, not evidence that participants used
-suppression. This manuscript clarification changes no running instrumentation;
+count. The earlier description overstated this safeguard. This limits the integrity of the lint measurement. The inspection did
+not establish that participants used suppression. This manuscript clarification changes no running instrumentation;
 any subsequent fix needs explicit source/epoch and amendment disclosure.
 SDK request wall time and tool time are observable. Provider-active
 time and rate-limit waits require explicit telemetry; absent telemetry
@@ -434,8 +450,10 @@ Servera Bondroit selected a minimum useful absolute coverage gain of ten
 percentage points, approximately thirteen test-weighted contracts.
 Coverage scores $Y$ are expressed on the 0--100 scale. Let
 $\overline{Y}_{ma}$ be mean final coverage for model $m$ and arm $a$.
-The primary estimand is the equal-model-weight difference in mean coverage
-over the $M=3$ selected models. Its estimator is
+The primary estimand, the quantity the study aims to estimate, is the
+difference in mean coverage averaged equally over the $M=3$ selected models.
+Each model contributes one-third of the result, regardless of its coverage
+level. The estimator calculated from the observed trajectories is
 \begin{equation}
 \widehat{\Delta}_{BD}=\frac{1}{M}
 \sum_{m=1}^{M}(\overline{Y}_{mB}-\overline{Y}_{mD}).
@@ -483,9 +501,10 @@ These planning requirements and assumptions are retained from the earlier
 record. Neither the registered base nor selection of $n=21$ establishes
 their validity for evolving-source exploratory data.
 
-The candidate independent-cell analysis resamples whole trajectories
-within model and arm, with 10,000 draws and pointwise 95\% percentile
-intervals. The inspected v6 code uses independent arm/model draws; it
+The candidate independent-cell analysis uses a bootstrap: it repeatedly
+samples whole trajectories with replacement within each model/arm cell.
+The 2.5th and 97.5th percentiles of 10,000 resulting estimates give each
+95\% interval. The inspected v6 code uses independent arm/model draws; it
 does not preserve joint scheduling-block draws.
 The inspected primary requires a complete allocated five-arm/model metadata
 frame, known unassisted status and observed contributing B/D final coverage.
@@ -500,8 +519,8 @@ family-wide coverage claim.
 Retain scheduling-block identifiers. The earlier source-bound review
 identified an unresolved choice between this independent-trajectory
 variance/bootstrap scheme and model/replicate blocking.
-A scheduling label alone establishes
-neither pairing nor independence. Scheduling-only blocks with independent
+Trajectories with the same scheduling label may share execution conditions,
+but the label alone cannot establish their dependence or independence. Scheduling-only blocks with independent
 inference require justification; block-aware analysis would require a
 separately approved, disclosed choice and aligned planning variance.
 Shared block/service effects remain unmeasured; the v6 source freeze
@@ -509,9 +528,8 @@ does not resolve this choice, and this update supplies no new resolution.
 Public run identifiers allow the model/replicate scheduling groups and
 source epochs to be reconstructed. Retained operator metadata also contain
 start times and controller durations for every attempt (Supplement
-Section~\ref{app:executiondetail}). Those intervals describe controller
-activity, rather than establishing model-service co-exposure or independent
-errors. The reported companion intervals retain the analysis actually
+Section~\ref{app:executiondetail}). Those intervals describe controller activity. They do not show whether
+requests shared provider conditions or whether their errors were independent. The reported companion intervals retain the analysis actually
 performed; a dependence-sensitive comparison would be a separately
 disclosed post-collection analysis.
 % TODO(author): document and approve the dependence justification and actual amendment/outcome-access chronology using retained records. Any new sensitivity analysis must be explicitly post-collection; do not silently replace the estimator or backdate registration.
@@ -525,13 +543,16 @@ component intervals under independent runs with a common success
 probability within each cell. Aggregate contrasts must preserve model
 strata. The coverage calculation supplies no power guarantee for CR1.
 
-\subsection{Historical resource planning and operational boundaries}\label{sec:prerun}
+\subsection{Resource and information boundaries}\label{sec:prerun}
 
-The following resource scenarios and feasibility criteria retain the
-2--5 November planning record. In particular, their full ten-feature
-calibration differs from the short calibration disclosed for ongoing
-unregistered execution. They are not measured costs, a current affordability
-approval or evidence that historical launch gates were satisfied.
+The experiment distinguishes resources an agent could use from resources
+it actually consumed. A larger allowance may leave spending unchanged
+when a session exits early; a transport interruption may leave a charge
+unknown even after the development work is complete. The results report
+observations and unresolved liabilities separately. Historical planning
+scenarios remain in Supplement Section~\ref{app:resources}, including
+Table~\ref{tab:pilotresources}; they retain the earlier full-calibration
+assumption and do not establish that historical launch gates were met.
 
 The actual aggregate envelope remains 300,000 AI credits, with a
 270,000-credit local admission ceiling. Prior spending and provisions for
@@ -542,63 +563,10 @@ Original 300-credit sessions use a 270-credit soft limit; D's
 In-flight responses can overshoot; these are not provider billing caps.
 No verified dollar conversion is available.
 
-Each study trajectory contains ten feature cycles and one CR1 session,
-the latter capped at 45 minutes and 300 nominal credits in every arm.
-A/D therefore have eleven sessions per trajectory; B/C/E have twenty-one.
-A allows at most 5.75 agent-hours and 3,300 nominal credits per study
-trajectory; B/C/D/E each allow 8.25 hours and 6,300 credits.
-Across three models and five arms, the study has $15n$ trajectories,
-$3n[2(11)+3(21)]=255n$ sessions,
-$3n[5.75+4(8.25)]=116.25n$ maximum agent-hours and
-$3n[3300+4(6300)]=85500n$ nominal session credits.
-
-The historical excluded cost-only calibration scenario retains one trajectory per model per arm:
-15 trajectories, ten features each and no CR1. A/D have ten sessions and
-B/C/E twenty; A allows five hours and 3,000 credits, and B/C/D/E each
-allow 7.5 hours and 6,000 credits. Thus calibration adds 240 sessions,
-105 maximum agent-hours and 81,000 nominal credits, independent of $n$.
-
-\begin{table}[!htbp]
-\centering\small
-\caption{Historical five-arm resource scenarios for the offered choices of $n$ per
-model per arm; the historical default column is bold. These are summed nominal
-session allowances and time ceilings, not expenditure or enlarged budgets.
-Every choice exceeds the aggregate envelope at nominal session caps.}
-\label{tab:pilotresources}
-\begin{tabularx}{\textwidth}{@{}Y>{\bfseries}rrr@{}}
-\toprule
-Quantity & $n=12$ (default) & $n=21$ & $n=33$ \\
-\midrule
-Study trajectories per arm, all models & 36 & 63 & 99 \\
-Study trajectories, all arms & 180 & 315 & 495 \\
-Study sessions, including CR1 & 3,060 & 5,355 & 8,415 \\
-Study maximum agent-hours & 1,395.00 & 2,441.25 & 3,836.25 \\
-Study nominal session credits & 1,026,000 & 1,795,500 & 2,821,500 \\
-Excluded calibration trajectories, no CR1 & 15 & 15 & 15 \\
-Excluded calibration sessions & 240 & 240 & 240 \\
-Calibration maximum agent-hours & 105.00 & 105.00 & 105.00 \\
-Calibration nominal session credits & 81,000 & 81,000 & 81,000 \\
-Combined trajectories & 195 & 330 & 510 \\
-Combined sessions & 3,300 & 5,595 & 8,655 \\
-Combined maximum agent-hours & 1,500.00 & 2,546.25 & 3,941.25 \\
-Combined nominal session credits & 1,107,000 & 1,876,500 & 2,902,500 \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-Combined nominal allowances are $85500n+81000$ credits and maximum
-agent-hours are $116.25n+105$. At default $n=12$, 1,107,000 nominal credits
-and 3,300 sessions including calibration do not authorize spending beyond
-the unchanged 300,000-credit envelope or 270,000-credit admission ceiling.
-Excluded calibration informs cost and time feasibility only, not outcome-
-or variance-driven sample resizing. Its cost forecast must show that the
-entire selected allocation, including CR1 and all-attempt liabilities, fits
-remaining admission and the deadline after prior spend and unknown-usage
-holds. Otherwise halt before study collection. A different allocation
-requires a separately authorized prospective amendment and a new saved
-study, never a changed allocation on resume or a silent reduction to fit
-the budget. An interrupted or unaffordable study retains its selected
-allocation and is reported incomplete.
+The historical plan required the selected allocation, calibration and
+all-attempt liabilities to fit the remaining envelope and deadline before
+collection. It prohibited outcome-driven resizing or silent reductions to
+fit the budget. Its detailed arithmetic remains in the Supplement.
 The launcher inspected on 5 November enforces attempt and aggregate admission but does
 not compute or approve that full-allocation forecast. A dated researcher
 forecast and approval are required separately; a nonempty calibration
@@ -670,10 +638,10 @@ the primary and secondary coverage estimates are available
 (\nolinkurl{primary_estimates_available=true}). Pooled comparisons use
 63 versus 63 trajectories, and within-model comparisons use 21 versus 21.
 Retained-regression counts are also complete. CR1 has a different limit:
-two completed GPT trajectories retain an unadjudicated test error. Exact
-binomial intervals describe sampling uncertainty for fully observed Sonnet
-and Gemini outcomes; GPT's identification bounds instead span the possible
-success rates when its unknown outcomes are assigned to failure or success.
+two completed GPT trajectories retain an unadjudicated test error. Exact binomial intervals describe sampling uncertainty for fully observed
+Sonnet and Gemini outcomes. GPT's identification bounds answer a different
+question: what success rates remain possible if each unknown outcome is
+assigned first to failure and then to success?
 The detailed tables retain the method names and both uncertainties separately.
 
 Billing remains partly held for interrupted provider calls. Across 5,372
@@ -1061,6 +1029,7 @@ Manipulation check: Structural hygiene (\texttt{H3}, \texttt{H4}) & Arm~B reduce
 \end{tabularx}
 \end{table}
 \else
+% Historical conditional plotting requests: active results exist, but the original full F/P and all-attempt-cost requirements still need the dated disposition in anc/revision-report.md.
 % TODO(author): PF1 requires actual F/P checkpoint vectors, eligibility and missingness.
 % TODO(author): PF2 requires actual CR1 vectors, prerequisites, assistance and all-attempt costs.
 % TODO(author): PF3 requires actual final coverage and attributable delivery credits.
