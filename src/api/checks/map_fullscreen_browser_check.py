@@ -189,7 +189,7 @@ def check_expanded_filters(
             )
         )
     check("zero-result support filter is exercised", selections[-1]["total"] == 0)
-    expect(page.locator(".map-info [role=status]")).to_have_text("0 homes shown")
+    expect(page.locator(".map-info [role=status]").first).to_have_text("0 homes shown")
 
     # Hold a genuine older fit read while a newer area selection completes.
     held: list[Route] = []
@@ -239,11 +239,11 @@ def check_expanded_filters(
         expect(area).to_be_focused()
         expect(area).to_be_enabled()
         expect(page.locator(".map-marker")).to_have_count(0)
-        expect(page.locator(".map-info [role=status]")).to_have_text("0 homes shown")
+        expect(page.locator(".map-info [role=status]").first).to_have_text("0 homes shown")
         held[0].fulfill(response=older)
         expect(page.locator(".map-panel .async-feedback")).to_have_count(0)
         expect(page.locator(".map-marker")).to_have_count(0)
-        expect(page.locator(".map-info [role=status]")).to_have_text("0 homes shown")
+        expect(page.locator(".map-info [role=status]").first).to_have_text("0 homes shown")
         check(
             "latest area selection survives older successful flag response",
             area.input_value() == "Cluster examples",
