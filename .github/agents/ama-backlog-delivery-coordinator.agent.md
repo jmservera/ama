@@ -589,7 +589,7 @@ remains subject to the tracking retention policy.
    an absolute evidence directory outside every worktree that you own and create for this
    launch (`{evidence-dir}`, for example under `~/.local/share/ama/phase-witness/`), so the
    runtime log and lock never dirty the candidate:
-   `python3 tools/rpi_phase_witness.py record launch --repo {worktree} --issue {number} --evidence-dir {evidence-dir} --brief {brief-path} --session {name} --actor coordinator --claim-model claude-sonnet-5.5`.
+   `python3 tools/rpi_phase_witness.py record launch --repo {worktree} --issue {number} --evidence-dir {evidence-dir} --brief {brief-path} --session {name} --actor coordinator --claim-model {model}`.
    A refusal (exit 2) blocks that launch until its reason is fixed. The
    witness observes its own UTC clock, Git HEAD and tree, dirty source and,
    at later boundaries, the canonical artifacts; it accepts no caller-supplied times, and its record is
@@ -601,17 +601,30 @@ remains subject to the tracking retention policy.
    `record research-open` after persisting the opening state and before
    substantive search, `plan-done`, `implement-start` (changes record
    persisted before any source edit), `implement-done`, `review-done`, and
-   `commit-complete --claim-commit {sha}` only after the commit exists. Then run:
+   `commit-complete --claim-commit {sha}` only after the commit exists.
+   The brief states the ordering rule: the worker persists the dated
+   `.copilot-tracking/` artifact first and only then calls the witness, because
+   the witness observes the artifact named by `--state`. `research-open` follows
+   the research Markdown file; `implement-start` follows the changes Markdown
+   file and precedes any source edit. The brief also forbids staging
+   `__pycache__`, `.mypy_cache` or `.ruff_cache`.
+   The brief states these execution-hygiene rules: run the `src/core` and
+   `src/api` test suites sequentially, never concurrently in the same worktree;
+   cap every `read_bash` delay at 600 seconds or less; and before
+   `rpi-checks.py --all`, check `/tmp/ama-rpi-heavy.lock` or pass
+   `--lock-timeout 0`.
+   Then run:
    Write a unique launcher with a quoted heredoc (no expansion, no `eval`),
    `/tmp/launch-{name}-{timestamp}.sh`, where `{name}` is the session name
    `rpi-{number}` or `rpi-{number}-{role}` (also the witness `--session`):
 
    ```bash
    #!/usr/bin/env bash
-   name=$1 stamp=$2 brief=$3
+   name=$1 stamp=$2 brief=$3 model=$4
    log=/tmp/$name.log
    echo "--- launch $stamp" >> "$log"
-   copilot --agent hve-core-all:rpi-agent --model claude-sonnet-5.5 \
+   [ "$model" = automatic ] && model_args=() || model_args=(--model "$model")
+   copilot --agent hve-core-all:rpi-agent "${model_args[@]}" \
      --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' \
      -p "$(cat "$brief")" 2>&1 | tee -a "$log"
    status=${PIPESTATUS[0]}
@@ -620,17 +633,22 @@ remains subject to the tracking retention policy.
    ```
 
    Run it as
-   `tmux new-session -d -s {name} -c {worktree} "bash /tmp/launch-{name}-{timestamp}.sh {name} {timestamp} {brief-path}"`
+   `tmux new-session -d -s {name} -c {worktree} "bash /tmp/launch-{name}-{timestamp}.sh {name} {timestamp} {brief-path} {model}"`
    so it does not depend on tmux's default shell. `status` is the Copilot
    exit, captured immediately after `tee`. Each attempt owns the
    `--- launch` line and the `exit=` line that follows it; a missing `exit=`
    line for the current attempt is unknown, never success.
    Logs are preserved across retries: each launch appends a
    `--- launch {timestamp}` line and never truncates or deletes an earlier log.
-   Use Sonnet 5.5 for all coordinator-launched RPI issue sessions, including
-   retries, corrections and validation continuations, by passing
-   `--model claude-sonnet-5.5` on every launch. The coordinator's own session
-   stays on Automatic; this does not change independent reviewer selection.
+   Select the model by fit and pass it with `--model` (and the same value as
+   `--claim-model`) on every launch, including retries, corrections and
+   validation continuations. The coordinator stays on Automatic (for example
+   `gemini-4-hydrogen`) for fast parallel orchestration. RPI code, rebase and
+   UI workers use `claude-sonnet-5.5`. Validation-only or docs-only RPI loops
+   may use `gemini-4-carbon` (or Automatic, passed as `{model}` = `automatic`,
+   which omits `--model` and records `automatic` as the claim). Independent exact-head review
+   uses `gpt-6.1-terra` or the code-review agents (step 6). When unsure,
+   use `claude-sonnet-5.5`.
    If the requested model or launch tool is unavailable, report the specific
    model/tool blocker for the affected loop only; do not silently fall back
    to another model.
