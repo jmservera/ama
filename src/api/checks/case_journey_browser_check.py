@@ -1542,8 +1542,16 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                     bottom = page.locator(".case-summary").evaluate(
                         "el => el.getBoundingClientRect().bottom"
                     )
-                    # The wrapped 320px top navigation alone is about 490px tall on current main.
-                    check(f"320x800 summary within one viewport scroll ({bottom})", bottom <= 1700)
+                    check(f"320x800 summary within one viewport scroll ({bottom})", bottom <= 1600)
+                    check(
+                        "320px navigation links keep 24px wide and 40px tall touch targets",
+                        page.evaluate(
+                            """() => [...document.querySelectorAll('#nav a')].every(a => {
+                          const r = a.getBoundingClientRect();
+                          return r.width >= 24 && r.height >= 40;
+                        })"""
+                        ),
+                    )
                     page.screenshot(path=str(out / "mobile-320.png"))
             page.emulate_media(reduced_motion="reduce", forced_colors="active")
             check(
