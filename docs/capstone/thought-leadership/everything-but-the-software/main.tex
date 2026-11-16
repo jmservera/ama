@@ -68,44 +68,40 @@ authors' own and do not necessarily reflect those of Microsoft.}\\[4pt]
 \maketitle
 
 \begin{abstract}
-After a successful prototype and an MVE that I used to validate my
-approach in a new solution I was working on, my efforts to
-rebuild the system with an agentic loop produced something I could not use.
-I followed the usual practice, with extensive agent-assisted
-preparation and a carefully crafted feature delivery plan. The deployed solution,
-which was initially functional, became unusable after a small number of cycles adding
-new features. That raised a question: what does each feature leave
-for the next one? The case analysis considers five possible causes,
-but other technical problems could also explain what happened.
+After a prototype and an initial working version validated my approach,
+I rebuilt the system with a loop of agent-led feature additions.
+Despite extensive planning, a few cycles left me with a solution I could not use.
+What does each feature leave for the next one?
+The case analysis considers five possible causes and other technical explanations.
 
-To test this hypothesis, I designed a study in which agents build ten sequential features in one
-repository and then receive a change request introduced after feature development.
-Between features, agents kept coding, consolidated, reviewed without editing,
-or fixed behaviour against the provided specifications.
+To examine this question, I designed a study in which agents build ten
+features, then implement an unseen change request. Between features, agents
+kept coding, consolidated, reviewed without editing, or repaired specified
+behaviour. Consolidation reorganises code while preserving its behaviour.
+A separate evaluator ran hidden tests in isolated containers after each step.
+Later workflow replays checked earlier capabilities.
 
-After each step, a separate evaluator ran hidden tests in isolated containers
-and recorded the share that passed, to check whether the features
-worked as specified. We replayed the workflows at later checkpoints to see whether
-new features broke behaviour that had initially worked. Finally, the
-agents implemented a change they had not seen during feature development, which
-tested whether they could adapt their own code without breaking
-what already worked.
+All 315 allocated trajectories finished.
+Each trajectory follows work on one codebase. The three models each completed
+21 repository trajectories in every condition.
+Sonnet~5.5 and Gemini~4 Argon averaged hidden test pass rates of
+99.18\%--99.74\%. One run ended with a previously passing requirement still
+failing. Workflow replay found no losses of earlier observed capabilities.
 
-From the 315 allocated trajectories, three models completed 21 repository trajectories
-in every condition. Sonnet~5.5 and Gemini~4 Argon averaged hidden test pass rates of
-99.18\%--99.74\%. One trajectory ended with a previously passing contract still failing,
-and replay found no losses of earlier observed capabilities.
+Structurally, consolidation kept every function below ten
+independent code paths at all 63 final checkpoints.
+Its test pass-rate gain over longer coding sessions was 1.19 percentage
+points (95\% resampling-based interval [0.10, 2.22]).
+The improvement fell well short of the ten-point benchmark
+for a practically important gain. GPT~6.1 Sol benefited most.
 
-Consolidation cleaned up the code, keeping all functions with a cyclomatic
-complexity below 10 in any of its 63 endpoints. Even so,
-the gain in hidden test pass rate over longer coding
-sessions was only 1.19 percentage points (95\% bootstrap interval
-[0.10, 2.22]), well below the ten-point benchmark. Consolidation helped
-GPT~6.1 Sol more than the other two models. With Gemini~4 Argon, agents given
-read-only review sessions succeeded on the change requests in 16 of 21 runs, while
-those given consolidation sessions passed in only 8. Consolidation almost doubled
-the credits consumed during feature delivery compared with feature-only coding and
-did not reduce the cost of implementing the later change request.
+For Gemini~4 Argon, read-only review passed the later change request in
+16 of 21 runs, compared with 8 for consolidation.
+Consolidation almost doubled feature-delivery credits versus feature-only
+coding and did not lower later change costs.
+
+Taken together, features mostly left earlier behaviour intact in this short study;
+cleaner code alone did not ensure easier or cheaper later changes.
 \end{abstract}
 % Complete 315/315 unassisted intervals retain the owner-attestation boundary, 313/315 judging snapshot and 16-epoch provenance.
 
@@ -367,7 +363,7 @@ source package. The delivery record therefore describes a workflow that kept cha
 Early worker sessions implemented directly, prompting me to make
 the full RPI sequence and committed tracking artefacts mandatory. Further
 instructions required evidence-backed acceptance ticks, scheduled monitoring
-and increasingly comprehensive local gates. Human decisions, approvals,
+and increasingly extensive local gates. Human decisions, approvals,
 credentials and unresolved review findings could still block work. At the
 same transition, an accepted architecture decision prioritised migration
 to a new source layout and froze feature work in the MVP. Coordination,
@@ -738,7 +734,7 @@ could help explain the outcome attributed to autonomy. The
 \hyperref[sec:supplement]{supplementary rival-explanation register} retains the full
 register, separating recorded circumstances from plausible but untested
 alternatives. Bird et~al.'s study of co-installed applications on Windows
-machines offers a methodological analogy for checking environmental
+machines is a methodological analogy for checking environmental
 influences on reliability~\cite{bird2014extrinsic}. It gives no
 diagnosis of this case's agent configuration or sign-in failure.
 
@@ -888,8 +884,8 @@ I supplied several kinds of reflective work: choosing what not to build,
 recognising the unusable replacement and deciding which earlier lessons
 mattered. Naur's theory-building account
 describes that retained understanding~\cite{naur1985theory}, and
-Beck's distinction between visible output and understanding offers a second
-framing~\cite{beck2026mathematicians}. These case-specific judgements
+Beck also distinguishes visible output from
+understanding~\cite{beck2026mathematicians}. These case-specific judgements
 raise the question of whether agents could make comparable ones.
 The experiment asks something narrower: whether bounded post-feature
 correction preserves behaviour and later changeability.

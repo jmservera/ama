@@ -1,7 +1,7 @@
 ---
 title: Everything but the Software - Revision Record
 description: Narrative and author-TODO reconciliation, remaining evidence plan and preserved dated review records
-ms.date: 2026-11-15
+ms.date: 2026-11-16
 ---
 
 The 16 November source-only revision applies a plain-language pass to the
@@ -77,6 +77,47 @@ The 5 November recovery/source check, 2 November allocation record and
 from Scope and Outcome through Title Assessment retain the original
 24 October report, and the 25 October addendum remains historical. Their
 earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Conservative Prose Follow-Up 16 November
+
+The owner requested a scientific-prose pass that included the imported TeX
+sections and authorized inclusion of the existing staged abstract edits.
+The article and all seven active inputs were checked. Since the prose
+already needed little editing, further changes are limited to four wording
+adjustments in the article and one sentence in the Supplement introduction.
+Technical uses of terms such as harness, journey and end-to-end are retained,
+as are uncertainty, attribution and first-person case narration.
+The inactive inputs are unchanged.
+
+Classification: focused editorial work with directly coupled source-digest
+and authoring-test maintenance. The existing guard checks the new revision's
+eight source hashes; its coverage is unchanged. Earlier bindings and review
+outcomes remain historical. No executable application, dependency, security
+control or publication-gate semantics changed.
+
+Comparison with the intake source, including the owner's abstract edits,
+preserves 35 complete table/longtable blocks, seven displayed equations,
+252 inline-math spans, all 94 citation commands in order, 172 labels, three
+literal-input commands, 36 full-line comments and all 2,731 numeric tokens.
+The bibliography and reusable BibTeX file are unchanged. Expanded source
+length falls from 33,426 to 33,420 whitespace-delimited words. Each input
+stays within the requested length limit. Character checks find no unintended
+invisible characters, mixed-script confusables, nonstandard spaces or trailing
+line whitespace.
+
+Structural checks pass, including the 1,905-character abstract and all
+94 cited bibliography keys. The package run passes 73 of 74 tests.
+The native diagram-export test fails because Node cannot import `esbuild`;
+that failure was present before this pass and no diagram changed. A stale
+source digest caused a second intake failure after the staged abstract edit;
+the new binding resolves it while preserving the previous record.
+No TeX compiler is available on PATH, so no new compilation or rendered-layout
+check was performed. The existing PDF's bytes are unchanged.
+
+`prose_polish_revision` binds the eight current sources and unchanged PDF.
+This editorial pass does not establish independent scientific review,
+independent exact-head review, hosted CI success or final approval.
+Earlier validation and review statements below apply to their named revisions.
 
 ## Human Readability Revision 16 November
 

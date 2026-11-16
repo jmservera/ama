@@ -1,10 +1,26 @@
 ---
 title: Everything but the Software - source package (draft v23)
 description: Findings-led narrative, direct prose revision and future-study learning with preserved evidence in one additive Supplement
-ms.date: 2026-11-15
+ms.date: 2026-11-16
 ---
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
+
+## Conservative Prose Follow-Up 16 November
+
+The follow-up includes the owner's staged abstract revision and checks the
+article plus all seven active ancillary TeX inputs. The existing prose
+needs only small changes: simpler wording in the article and a shorter
+sentence in the Supplement introduction. Scientific terms, qualified claims
+and first-person case narration are retained; the two inactive inputs are
+unchanged.
+
+The [revision record](./anc/revision-report.md#conservative-prose-follow-up-16-november)
+records the checks, and `prose_polish_revision` adds current source digests
+without changing earlier bindings. Structural checks pass; 73 of 74 package
+tests pass. The unchanged diagram-export test cannot load `esbuild`.
+No TeX compiler is available on PATH, so no fresh PDF or layout review is
+claimed. The existing `main.pdf` is byte-for-byte unchanged.
 
 ## Human Readability Source Revision 16 November
 

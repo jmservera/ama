@@ -442,6 +442,24 @@
     },
     "validation_limits": "Separate external validation PDF only. The existing main.pdf changed outside this revision's build and is excluded from delivery with owner confirmation. Historical source/PDF bindings remain unchanged. Scientific review, hosted CI, author/employer approval and venue acceptance remain separate."
   },
+  "prose_polish_revision": {
+    "date": "2026-11-16",
+    "scope": "Conservative scientific-prose pass across main.tex and its seven active TeX inputs, including the owner-approved staged abstract revision. Further edits are limited to flagged wording in the article and sentence rhythm in the Supplement introduction; technical terms and qualified claims remain intact.",
+    "prior_delivery_revision": "human_readability_revision",
+    "delivery_status": "source-only; existing main.pdf excluded",
+    "intake_main_sha256": "bbc5f27dd1a18608161d84451e2a0dab55bbcd9bb250b011e9c8c4000c1abf5a",
+    "unchanged_pdf_sha256": "c39812f602c488ab5158ad2a63e83d79b7a576f003c94d7a5a4a4f8f85a5e6d0",
+    "source_sha256": {
+      "main.tex": "7f97093ba68307a6fccaa814cad3963066ef98c4b9b883ee71ea24d15bb10f1c",
+      "anc/background.tex": "9e3b2f93159e833cc4ff876cca08bd2837d6b3132d50bf9736c424e607f58bfc",
+      "anc/experiment-protocol.tex": "02b9481f2bd5d3207ab42d430f929079e876d78de32c5b9690527a7784491b18",
+      "anc/supplement-section.tex": "a3c0b060ac77d8373acecf71ab06d97a2f5a89ecd670d0518b7cfb61636ec64a",
+      "anc/additional-evidence.tex": "28eb743b5bab60354de3086a433a84261809616de47a4238a183cf548c7688d4",
+      "anc/case-audits.tex": "229f5e9f275641d0874451167d0f25dd9bebd0e91cd5680bbb4a4eb5bdffb95d",
+      "anc/deferred-measures.tex": "36464df072e2f13548352c786b1e462ad1bf1a9d203da25a45243a2643f9742a",
+      "anc/measurement-provenance.tex": "dedbafcdcd8d87312141a16f78c48732be5eaa27605fd37d69495e9642a6c68d"
+    }
+  },
   "restored_citation_keys": [
     "bacchelli2013review",
     "becker2025metr",
