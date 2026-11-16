@@ -68,46 +68,50 @@ authors' own and do not necessarily reflect those of Microsoft.}\\[4pt]
 \maketitle
 
 \begin{abstract}
-An effort to extend a working prototype produced a solution I could
-not use, despite extensive agent-assisted preparation and a daintily crafted feature
-delivery plan. This experience raised a question: what does each feature leave
-for the next? The case analysis considers five possible process-related causes,
-but technical migration and deployment problems could also explain what happened.
+After a successful prototype and an MVE that I used to validate my
+approach in a new solution I was working on, my efforts to 
+rebuild the system with an agentic loop produced something I could not use.
+Despite of working by the book, with extensive agent-assisted
+preparation and a carefully crafted feature delivery plan, the deployed solution, 
+that was initially functional, became unusable after a short number of cycles adding
+new features. This experience raised a question: what does each feature leave
+for the next one? In the case analysis we consider five possible causes,
+but other technical problems could also explain what happened.
 
-To test the question, I designed a study with ten ordered features in one
-repository, followed by a withheld change request. Agents kept coding,
-consolidated, reviewed without editing, or repaired behaviour against
-visible specifications; a control gave them more coding time. They saw the
-specifications, not the scoring tests. After each step, a separate evaluator
-ran hidden tests in isolated containers and counted passed contracts out
-of 127.
+To test this hypothesis, I designed a study to build ten sequential features in one
+repository, followed by a change request that was introduced after the feature development.
+During the experiment, agents kept coding, consolidated, reviewed without editing, 
+or fixed behaviour against the provided specifications.
 
-Three models each completed 21 repository trajectories in every condition.
-All 315 allocated trajectories finished. Sonnet~5.5 and Gemini~4 Argon
-averaged 99.18\%--99.74\% test coverage. One trajectory ended with a
-previously passing contract still failing, while replay found no losses
-of earlier observed capabilities.
+After each step, a separate evaluator ran a set of hidden tests in isolated containers
+and measured how many of them succeeded out of the total, to verify whether the features
+worked as specified. We then replayed the workflows at later checkpoints to identify if
+adding new features caused any broken behaviour that initially worked. Finally, the
+agents were asked to implement a change they had not seen during feature development,
+to find out whether they could adapt the code they had built without breaking
+what already worked.
 
-Consolidation cleaned up the code: none of its 63 endpoints had a function
-above cyclomatic complexity 10. The coverage gain over longer coding
+From the 315 allocated trajectories, three models completed 21 repository trajectories
+in every condition. Sonnet~5.5 and Gemini~4 Argon averaged hidden test pass rates of
+99.18\%--99.74\%. One trajectory ended with a previously passing contract still failing, 
+while replay found no losses of earlier observed capabilities.
+
+Even after consolidation cleaned up the code, keeping all functions with a cyclomatic 
+complexity below 10 in any of its 63 endpoints, 
+the gain in hidden test pass rate over longer coding
 sessions was only 1.19 percentage points (95\% bootstrap interval
-[0.10, 2.22]), well below the ten-point benchmark. Most of that gain came
-from GPT~6.1 Sol. On Gemini~4 Argon, read-only review passed 16 of 21
-held-out change requests; consolidation passed 8. Consolidation also
-roughly doubled settled delivery credits and did not consistently reduce
-change-request cost.
-
-Tests showed whether features worked. Replay checked whether later changes
-broke them; the withheld request tested whether the system could adapt.
-The checks developed during this study could inform a more detailed
-investigation of the same hypothesis using longer, more interdependent
-projects.
+[0.10, 2.22]), well below the ten-point benchmark. The consolidation helped
+GPT~6.1 Sol more than the other two models. With Gemini~4 Argon, agents given 
+read-only review sessions succeeded on the change requests for 16 of 21 runs, while
+those given consolidation sessions passed in only 8. The consolidation almost doubled
+the credits consumed during feature delivery compared with the feature-only coding and
+did not reduce the cost of implementing the later change request.
 \end{abstract}
 % Complete 315/315 unassisted intervals retain the owner-attestation boundary, 313/315 judging snapshot and 16-epoch provenance.
 
 \noindent\textbf{Keywords:} agentic software engineering; coding agents;
 spec-driven development; software evolution; technical debt; refactoring;
-feedback loops; human--AI interaction; exploratory case study; experiment protocol.
+feedback loops; human-AI interaction; exploratory case study; experiment protocol.
 
 % ===========================================================================
 \section{Introduction}\label{sec:intro}
@@ -161,7 +165,7 @@ distinction between producing code and learning through working software
 sharpens the research question~\cite{beck2026prodacity,orosz2025beck}:
 what does a feature leave behind for the next one?
 
-I developed the motivating architectural demonstrator with multiple agents.
+I built the demonstrator that triggered this study with multiple agents.
 Research documents, business and product
 requirements and architecture decisions were built through sustained
 conversation, challenge and owner decisions. Design Thinking methods,
@@ -298,7 +302,7 @@ and~\ref{sec:protocollimits}.
 
 \subsection{Setting}
 
-I developed the motivating architectural training exercise while acting as
+For this architectural training exercise, I took on the roles of
 architect, developer and product owner.
 Its synthetic, multi-role service workflow combined documentary evidence,
 approvals, identity, data and external-service dependencies. The exercise
