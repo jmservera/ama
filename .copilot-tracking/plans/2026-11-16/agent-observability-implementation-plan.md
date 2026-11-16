@@ -364,6 +364,16 @@ Details:
 * Resolve original Review RV-001 by making fresh API/agents development
   installations include the pinned telemetry SDK/exporter; verify in separate environments,
   not only the aggregate core-dev environment. Runtime locks are unchanged.
+* Owner authorized a narrowly scoped, reviewed rootless-Docker gate fix after
+  canonical preflight lost the working user context. Explicit `DOCKER_HOST`
+  may select only an absolute local Unix socket. Preserve the isolated HOME
+  and all other credential/environment scrubbing, bind the endpoint into tool
+  identity for receipt verification, retain the default rootful endpoint,
+  and reject remote or malformed endpoints without a fallback.
+* Extend existing gate tests for actual subprocess environment propagation,
+  invalid endpoint rejection and endpoint/tool identity changes. Document
+  explicit rootless invocation; no wrapper, daemon/socket permission change,
+  cloud fallback, skipped group or gate weakening.
 * Complete one post-implementation Review and independent exact-head assessment.
   Preserve adverse findings and bounded correction history.
 * Commit implementation and original dated RPI evidence; fetch main and run
@@ -415,6 +425,7 @@ Dependencies:
 | D3 | Native PPTX update, not deck conversion | Selected | Agent | Capstone source guide | Rebuild and inspect actual delivery |
 | D4 | Isolate risky runtime work from research PR | Selected | Agent | Repository branch policy | Child branch preserves unmerged research |
 | D5 | Direct OTel SDK/manual spans rather than distro auto-setup | Selected | Agent | Supported vendor-neutral path; explicit allowlisted emitters/resources avoid accidental capture and duplicate pipelines | No assertion that distro is mandatory or unsuitable; reconsider if future needs justify it |
+| D6 | Explicit local-Unix rootless Docker support in the canonical gate | Confirmed | Owner | "Authorize a narrowly scoped, reviewed rootless-Docker gate fix" after default socket permission failure | Full tier retained; endpoint-bound receipts and focused regressions required |
 
 ## Planning Readiness and Next Step
 

@@ -82,6 +82,15 @@ python3 tools/rpi-checks.py --all --jobs 3 --base "$BASE_SHA" --out /tmp/rpi-ISS
 python3 tools/rpi-checks.py --verify-receipt /tmp/rpi-ISSUE-final/receipt.json --base "$BASE_SHA"
 ```
 
+The gate isolates HOME and Docker configuration. To use an existing local
+rootless daemon, explicitly set `DOCKER_HOST` to its absolute Unix socket
+(for example `export DOCKER_HOST=unix:///run/user/1000/docker.sock`) for both
+execution and receipt verification. Otherwise it uses
+`unix:///var/run/docker.sock`. Remote TCP/SSH endpoints and malformed values
+are rejected, without fallback. Docker contexts and registry credentials are
+not inherited. The endpoint is part of receipt tool identity; changing it
+requires a new run. No daemon or socket permissions are changed.
+
 Selections containing browser checks require the resolved absolute `--out`
 pathname to be at most 58 filesystem-encoded bytes on Linux. The runner sets
 `TMPDIR` to `<output>/tmp` (at most 62 bytes), and Chromium appends

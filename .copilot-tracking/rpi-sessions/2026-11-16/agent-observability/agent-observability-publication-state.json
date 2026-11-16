@@ -10,7 +10,7 @@
   "child_tasks": [],
   "mode": "automatic",
   "active_phase": "Implement",
-  "status": "blocked",
+  "status": "active",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md",
@@ -39,9 +39,10 @@
     {"decision":"Plan","status":"reused","evidence":"Existing P04 acceptance and validation requirements cover fresh-install correction and publication."},
     {"decision":"Exporter selection","status":"otlp-first","evidence":"Inherited owner decision; direct Azure exporter deferred."},
     {"decision":"Advanced main ancestry","status":"merge-authorized","evidence":"Inherited owner permission to merge current main into child after committing owned work; no rebase or parent PR merge."},
-    {"decision":"Canvas","status":"current","evidence":"instanceId rpi-agent-observability; extensionId plugin:hve-core:rpi-workflow; same session, follows child."}
+    {"decision":"Canvas","status":"current","evidence":"instanceId rpi-agent-observability; extensionId plugin:hve-core:rpi-workflow; same session, follows child."},
+    {"decision":"Rootless gate support","status":"authorized","evidence":"Owner selected narrowly scoped reviewed rootless-Docker gate fix; Plan D6 confines explicit DOCKER_HOST to absolute local Unix sockets with endpoint-bound receipts and retained environment isolation/full tier."}
   ],
-  "blockers": [{"id":"canonical-docker-access","summary":"Full gate at 4df29ff8 fails Docker preflight: isolated HOME uses inaccessible /var/run/docker.sock; existing rootless context is not inherited.","resolution":"Owner restores approved access or explicitly directs a reviewed supported configuration change; rerun full gate with a new receipt directory. No publication bypass."}],
-  "next_action": {"phase":"Implement","action":"Owner reports login restored, but explicit default context still fails socket permission. Await direction on reviewed rootless gate support versus approved canonical socket access before retrying."},
+  "blockers": [],
+  "next_action": {"phase":"Implement","action":"106 gate regressions and canonical lint pass; commit D6 support and evidence, then run complete gate against an exact clean candidate with explicit local rootless DOCKER_HOST. Independent exact-head assessment remains required."},
   "prioritized_follow_ups": []
 }

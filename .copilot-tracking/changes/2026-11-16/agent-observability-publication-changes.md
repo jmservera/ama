@@ -55,6 +55,22 @@ ms.date: 2026-11-16
   engine remains available. No unchanged full gate was rerun merely to repeat
   that failure. Owner direction is needed on supported rootless gate support
   versus restoring approved canonical socket access.
+* Owner explicitly authorized the narrowly scoped, reviewed rootless gate fix.
+  Plan D6 now requires explicit local-Unix `DOCKER_HOST`, matching subprocess
+  and receipt identities, preserved environment isolation and no skipped checks.
+  This changes gate semantics and retains the full validation tier.
+* Implemented explicit local-Unix `DOCKER_HOST` in isolated subprocesses and
+  Docker tool identity; the same endpoint is required to verify receipts.
+  Default remains the rootful socket. Remote/malformed values fail explicitly;
+  no caller Docker context, credentials or other environment are inherited.
+* Added three focused regressions. All 106 gate tests and canonical Ruff/
+  formatting checks pass with Python 3.12 on PATH. The bytecode smoke fixture's
+  mocked installer now exposes installed third-party dependencies to its child
+  through a path-only `.pth`; scratch source paths and no-bytecode assertions
+  remain unchanged. This repairs the new mandatory public OTel API import.
+* Real `docker --host unix:///run/user/1000/docker.sock version` succeeds.
+  Full validation will use that explicit endpoint with a new exact candidate
+  and receipt. Independent endpoint/receipt assessment remains pending.
 
 ## Business Alignment
 
