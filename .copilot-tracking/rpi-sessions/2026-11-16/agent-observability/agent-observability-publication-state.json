@@ -43,6 +43,6 @@
     {"decision":"Rootless gate support","status":"authorized","evidence":"Owner selected narrowly scoped reviewed rootless-Docker gate fix; Plan D6 confines explicit DOCKER_HOST to absolute local Unix sockets with endpoint-bound receipts and retained environment isolation/full tier."}
   ],
   "blockers": [],
-  "next_action": {"phase":"Implement","action":"106 gate regressions and canonical lint pass; commit D6 support and evidence, then run complete gate against an exact clean candidate with explicit local rootless DOCKER_HOST. Independent exact-head assessment remains required."},
+  "next_action": {"phase":"Implement","action":"Full gate at d7f976ff passes rootless preflight but finds a missing telemetry import-guard allowlist entry. Corrected guard and 101 focused worker tests pass; await remaining run evidence, commit correction, then run a new complete exact-head gate and independent assessment."},
   "prioritized_follow_ups": []
 }

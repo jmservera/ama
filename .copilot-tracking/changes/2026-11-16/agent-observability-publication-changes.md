@@ -71,6 +71,13 @@ ms.date: 2026-11-16
 * Real `docker --host unix:///run/user/1000/docker.sock version` succeeds.
   Full validation will use that explicit endpoint with a new exact candidate
   and receipt. Independent endpoint/receipt assessment remains pending.
+* First rootless full gate passed tool preflight but agents failed 1 of 487
+  tests: the existing direct-import authority guard lacked the newly introduced
+  content-free telemetry module. Added only that module to its closed
+  allowlist; forbidden store/SQL/consent imports remain rejected. Preserve this
+  adverse run and rerun the corrected exact candidate; no failed receipt reuse.
+* Corrected adapter guard plus existing focused worker tests: 101 pass in the
+  separate agents development environment; affected-file Ruff/format pass.
 
 ## Business Alignment
 
