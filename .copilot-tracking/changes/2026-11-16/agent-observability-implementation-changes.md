@@ -161,7 +161,8 @@ Add Agent 365 as a conditional future capstone proposal only.
 |---|---|---|---|
 | Ancestry | Child/parent branch | Passed | Both at 723d502687ee148c7cbd869cad2ec3036e71a8a2; PR 1823 open |
 | Targeted tests/type/lint | P01/P02 | Passed | 22 core, 79 worker and 10 API focused tests; strict core/agents/API types; focused Ruff |
-| Capstone | P03 | Partial | Native build/32 shape checks, 55-page preview/108 jumps, financial guards and 10 preview tests pass; 2 generators/4 assertions fail identically on original HEAD |
+| Native capstone | P03 | Passed | Build/32 shape checks, 55-page preview/108 jumps, financial guards and 10 preview tests |
+| Diagram provenance | P03 | Failed | 2 generators/4 assertions fail identically on original HEAD; draft receipt remains Partial |
 | Full gate/exact-head review | P04 | Unavailable | Requires completed/committed implementation |
 | Live Azure/provider/Agent 365 | Excluded | Skipped | No live authorization; offline tests only |
 

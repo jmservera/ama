@@ -361,6 +361,9 @@ Requirements:
 Details:
 * Run focused core/agent/API tests together per owning runner, then Ruff/mypy
   and capstone checks. Extend broader coverage only for actual failures or full gate.
+* Resolve original Review RV-001 by making fresh API/agents development
+  installations include the pinned telemetry SDK/exporter; verify in separate environments,
+  not only the aggregate core-dev environment. Runtime locks are unchanged.
 * Complete one post-implementation Review and independent exact-head assessment.
   Preserve adverse findings and bounded correction history.
 * Commit implementation and original dated RPI evidence; fetch main and run
