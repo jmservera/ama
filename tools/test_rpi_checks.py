@@ -552,6 +552,20 @@ class GateTests(unittest.TestCase):
                 log(simulation, gate.PUBLIC_SIMULATION_SKIP), group="image-api", integration=True
             )
 
+    def test_docstring_tests_keep_their_class_for_skip_and_execution_evidence(self) -> None:
+        simulation = gate.PUBLIC_SIMULATION_CLASS
+        header = f"test_x ({simulation}.test_x)"
+        reason = gate.PUBLIC_SIMULATION_SKIP
+        skipped = (
+            f"{header}\nFirst docstring line ... skipped '{reason}'\n"
+            "Ran 1 test in 0.1s\n\nOK (skipped=1)\n"
+        )
+        gate.check_skips(skipped, group="infra", integration=True)
+        with self.assertRaises(gate.GateError):
+            gate.check_skips(skipped, group="project-api")
+        passed = f"{header}\nFirst docstring line ... ok\nRan 1 test in 0.1s\n\nOK\n"
+        gate.check_skips(passed, integration=True, required_classes=(simulation,))
+
     def test_required_opt_in_classes_need_ok_tests_and_no_skips(self) -> None:
         classes = gate.SQL_OPT_IN_CLASSES
         argv = ["python", "-m", "unittest", "-v", *classes]

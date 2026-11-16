@@ -219,6 +219,9 @@ BROWSER_OPT_IN_CLASSES = (
     "test_atlas_tensions_checker.DesignVersionBrowserTests",
     "test_unaccepted_handoff_download_ui.UnacceptedDownloadBrowser",
 )
+# The runner holds the shared heavy-resource lock for the whole gate; two browser classes would
+# otherwise try to take it again from a child process and skip.
+HEAVY_LOCK_HELD_FLAG = "ZF_HEAVY_LOCK_HELD"
 AXE_BROWSER_CLASS = "test_staff_intake_browser.StaffIntakeBrowser"
 PUBLIC_SIMULATION_MODULE = "test_public_simulation_startup"
 PUBLIC_SIMULATION_CLASS = f"{PUBLIC_SIMULATION_MODULE}.PublicSimulationStartupTests"
@@ -1255,7 +1258,11 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
     add(
         [python, "-m", "unittest", "-v", *BROWSER_OPT_IN_CLASSES],
         "src/api",
-        env={"PYTHONPATH": test_paths("api", True), "ZF_BROWSER_TESTS": "1"},
+        env={
+            "PYTHONPATH": test_paths("api", True),
+            "ZF_BROWSER_TESTS": "1",
+            HEAVY_LOCK_HELD_FLAG: "1",
+        },
         suite=True,
         integration=True,
     )
@@ -1727,7 +1734,7 @@ def required_classes(argv: list[str]) -> tuple[str, ...]:
 
 def _classes_executed(text: str, classes: tuple[str, ...]) -> bool:
     """Every named class reports at least one test and each of its tests ends in ok."""
-    lines = text.splitlines()
+    lines = merge_docstring_headers(text).splitlines()
     headers = [i for i, line in enumerate(lines) if re.match(r"(.+?) \.\.\. ", line)]
     end = next(
         (i for i, line in enumerate(lines) if re.match(r"Ran \d+ tests? in ", line)),
@@ -1736,7 +1743,7 @@ def _classes_executed(text: str, classes: tuple[str, ...]) -> bool:
     if end is None:
         return False
     for name in classes:
-        pattern = re.compile(rf"\w+ \({re.escape(name)}\.\w+\) \.\.\. ")
+        pattern = re.compile(rf"\w+ \({re.escape(name)}\.\w+\) .*\.\.\. ")
         starts = [i for i in headers if i < end and pattern.match(lines[i])]
         if not starts:
             return False
@@ -1747,8 +1754,13 @@ def _classes_executed(text: str, classes: tuple[str, ...]) -> bool:
     return True
 
 
+def merge_docstring_headers(text: str) -> str:
+    """Verbose unittest prints a test with a docstring as its id line, then the docstring result."""
+    return re.sub(r"(?m)^(\w+ \([\w.]+\))\n(?=.+ \.\.\. )", r"\1 ", text)
+
+
 def skip_class(test: str) -> str:
-    match = re.search(r"\(([\w.]+)\.\w+\)$", test)
+    match = re.search(r"\w+ \(([\w.]+)\.\w+\)", test)
     return match[1] if match else ""
 
 
@@ -1799,7 +1811,9 @@ def check_skips(
     counts = re.findall(r"Ran (\d+) tests? in ", text)
     skips = [
         {"test": match[0], "reason": match[1]}
-        for match in re.findall(r"(?m)^(.+?) \.\.\. skipped ['\"](.+?)['\"]$", text)
+        for match in re.findall(
+            r"(?m)^(.+?) \.\.\. skipped ['\"](.+?)['\"]$", merge_docstring_headers(text)
+        )
     ]
     if not counts or int(counts[-1]) == 0:
         raise GateError("Unittest command did not report an executed suite")
@@ -2556,7 +2570,11 @@ class Runner:
             self.command(
                 [py, "-m", "unittest", "-v", *BROWSER_OPT_IN_CLASSES],
                 "src/api",
-                env={**self.tests_env("api", True), "ZF_BROWSER_TESTS": "1"},
+                env={
+                    **self.tests_env("api", True),
+                    "ZF_BROWSER_TESTS": "1",
+                    HEAVY_LOCK_HELD_FLAG: "1",
+                },
                 suite=True,
                 integration=True,
             )
