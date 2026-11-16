@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import time
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urlsplit
@@ -12,6 +13,40 @@ from urllib.parse import parse_qs, urlsplit
 from checks.design_system_browser_check import check, main
 from checks.regulatory_ux_check import AXE_SHA256
 from playwright.sync_api import Page, Playwright, Request, Route, expect, sync_playwright
+
+OBSERVE_AFTER_KEYS_MS = 400
+
+
+def settle_map_reads(
+    page: Page, quiet_ms: int = OBSERVE_AFTER_KEYS_MS, deadline_s: float = 10
+) -> None:
+    """Wait until no map read is pending, including Leaflet's 200 ms debounced resize read.
+
+    Network idle and aria-busy cannot see that timer, so require a quiet window longer than it.
+    """
+    reads = 0
+
+    def count_read(request: Request) -> None:
+        nonlocal reads
+        if "/api/map?" in request.url:
+            reads += 1
+
+    page.on("request", count_read)
+    try:
+        deadline = last_activity = time.monotonic()
+        deadline += deadline_s
+        seen = 0
+        while time.monotonic() < deadline:
+            busy = page.locator("#leaflet").get_attribute("aria-busy") == "true"
+            if busy or reads != seen:
+                seen = reads
+                last_activity = time.monotonic()
+            elif (time.monotonic() - last_activity) * 1000 >= quiet_ms:
+                return
+            page.wait_for_timeout(50)
+        raise AssertionError(f"map reads did not settle within {deadline_s} s ({reads} observed)")
+    finally:
+        page.remove_listener("request", count_read)
 
 
 def scan(page: Page, axe: str, reports: list[dict[str, Any]], state: str) -> None:
@@ -38,8 +73,7 @@ def check_browser_shortcuts(page: Page, mode: str) -> None:
             requests.append(request.url)
 
     # Let any redraw left by the preceding interaction finish before observing.
-    expect(page.locator("#leaflet")).not_to_have_attribute("aria-busy", "true")
-    page.wait_for_load_state("networkidle")
+    settle_map_reads(page)
     page.on("request", record_request)
     try:
         for selector in ("#leaflet", ".map-marker:has(.map-symbol.normal)"):
@@ -79,9 +113,33 @@ def check_browser_shortcuts(page: Page, mode: str) -> None:
                     f"{result['modifiers']} {result['key']}",
                     result["allowed"] and result["unchanged"],
                 )
+        # Leaflet defers a resize read by 200 ms; keep observing past that so a late read is not missed.
+        page.wait_for_timeout(OBSERVE_AFTER_KEYS_MS)
         check(f"{mode} browser shortcuts issue no map requests", not requests)
     finally:
         page.remove_listener("request", record_request)
+
+
+def check_viewport_change_requests_map(page: Page) -> None:
+    size = page.viewport_size
+    assert size is not None
+    try:
+        with page.expect_request(lambda request: "/api/map?" in request.url, timeout=5000):
+            page.set_viewport_size({"width": size["width"] - 40, "height": size["height"]})
+    finally:
+        page.set_viewport_size(size)
+    check("a viewport change still requests the map once the resize settles", True)
+
+
+def check_shortcuts_after_pending_resize(page: Page) -> None:
+    # A resize leaves Leaflet's 200 ms map read pending; shortcuts must not be blamed for it.
+    size = page.viewport_size
+    assert size is not None
+    page.set_viewport_size({"width": size["width"] - 40, "height": size["height"]})
+    try:
+        check_browser_shortcuts(page, "embedded after a pending resize")
+    finally:
+        page.set_viewport_size(size)
 
 
 def check_expanded_filters(
@@ -751,6 +809,8 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             page.locator("#mapArea").select_option(label="Point examples")
             expect(page.locator(".map-marker")).to_have_count(3)
             check_expanded_filters(page, base, axe, out, reports)
+            check_viewport_change_requests_map(page)
+            check_shortcuts_after_pending_resize(page)
             check_browser_shortcuts(page, "embedded")
             normal.focus()
             normal.press("Enter")
