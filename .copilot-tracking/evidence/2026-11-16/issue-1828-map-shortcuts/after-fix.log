@@ -1,0 +1,6 @@
+RUN 0 PASS
+RUN 1 PASS
+RUN 2 PASS
+RUN 3 PASS
+RUN 4 PASS
+MUTANT FAIL (good) mutant browser shortcuts issue no map requests

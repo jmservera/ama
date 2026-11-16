@@ -1,0 +1,672 @@
+PASS a viewport change requests the map once the resize settles
+.PASS a viewport change requests the map once the resize settles
+PASS the viewport change resizes the map container
+PASS a map read carries the resized viewport bounds, not the earlier ones
+..PASS a viewport change requests the map once the resize settles
+PASS the viewport change resizes the map container
+.....http-response GET /api/assistants/proposals status=503
+...............Rule evaluation unavailable for ZF-9
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+...Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+..Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-5
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+......auth flow: workbench-entered
+http-response GET /api/assistants/simulation/quality status=503
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+.auth flow: workbench-entered
+http-response GET /api/assistants/simulation/quality status=503
+.................http-response GET /api/account/photo status=503
+http-response GET /api/law/sources status=503
+http-response GET /api/law/sources.csv status=503
+http-response GET /api/law/search status=503
+http-response GET /api/law/cards status=503
+http-response GET /api/law/cards/reviews status=503
+http-response GET /api/law/cards/hazard-awareness-clock status=503
+http-response GET /api/law/alerts status=503
+http-response GET /api/assistants/simulation/quality status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+http-response GET /api/account/photo status=503
+http-response GET /api/law/sources status=503
+http-response GET /api/law/sources.csv status=503
+http-response GET /api/law/search status=503
+http-response GET /api/law/cards status=503
+http-response GET /api/law/cards/reviews status=503
+http-response GET /api/law/cards/hazard-awareness-clock status=503
+http-response GET /api/law/alerts status=503
+http-response GET /api/assistants/simulation/quality status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+http-response GET /api/account/photo status=503
+http-response GET /api/law/sources status=503
+http-response GET /api/law/sources.csv status=503
+http-response GET /api/law/search status=503
+http-response GET /api/law/cards status=503
+http-response GET /api/law/cards/reviews status=503
+http-response GET /api/law/cards/hazard-awareness-clock status=503
+http-response GET /api/law/alerts status=503
+http-response GET /api/assistants/simulation/quality status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+http-response GET /api/account/photo status=503
+http-response GET /api/law/sources status=503
+http-response GET /api/law/sources.csv status=503
+http-response GET /api/law/search status=503
+http-response GET /api/law/cards status=503
+http-response GET /api/law/cards/reviews status=503
+http-response GET /api/law/cards/hazard-awareness-clock status=503
+http-response GET /api/law/alerts status=503
+http-response GET /api/assistants/simulation/quality status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+http-response GET /api/account/photo status=503
+http-response GET /api/law/sources status=503
+http-response GET /api/law/sources.csv status=503
+http-response GET /api/law/search status=503
+http-response GET /api/law/cards status=503
+http-response GET /api/law/cards/reviews status=503
+http-response GET /api/law/cards/hazard-awareness-clock status=503
+http-response GET /api/law/alerts status=503
+http-response GET /api/assistants/simulation/quality status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+http-response GET /api/account/photo status=503
+http-response GET /api/law/sources status=503
+http-response GET /api/law/sources.csv status=503
+http-response GET /api/law/search status=503
+http-response GET /api/law/cards status=503
+http-response GET /api/law/cards/reviews status=503
+http-response GET /api/law/cards/hazard-awareness-clock status=503
+http-response GET /api/law/alerts status=503
+http-response GET /api/assistants/simulation/quality status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+http-response GET /api/account/photo status=503
+http-response GET /api/law/sources status=503
+http-response GET /api/law/sources.csv status=503
+http-response GET /api/law/search status=503
+http-response GET /api/law/cards status=503
+http-response GET /api/law/cards/reviews status=503
+http-response GET /api/law/cards/hazard-awareness-clock status=503
+http-response GET /api/law/alerts status=503
+http-response GET /api/assistants/simulation/quality status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+http-response GET /api/account/photo status=503
+..Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+........Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+...Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+..http-response GET /api/assistants/simulation/quality status=503
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response GET /api/assistants/simulation/quality status=503
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response GET /api/assistants/simulation/quality status=503
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response GET /api/assistants/simulation/quality status=503
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response GET /api/assistants/simulation/quality status=503
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response GET /api/assistants/simulation/quality status=503
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response GET /api/assistants/simulation/quality status=503
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+......Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+...Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+....Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/cases/ZF-1/quality-accept status=503
+.Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+.Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 171, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/src/zava_forward/api/server.py", line 162, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+..........................................
+----------------------------------------------------------------------
+Ran 124 tests in 51.852s
+
+OK
+exit=0
