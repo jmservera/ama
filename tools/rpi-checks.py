@@ -2157,16 +2157,16 @@ class Runner:
             ]
         self.command(args, timeout=1200)
         self.metadata_cleanup()
-        if name == "api":
-            self.install_bytecode_policy()
+        self.install_bytecode_policy(name)
         self.command([*pip, "check"])
 
-    def install_bytecode_policy(self) -> None:
-        # Unchanged harness servers scrub their environment, including bytecode settings, and
-        # first run during API test discovery, so the policy must exist from venv creation.
+    def install_bytecode_policy(self, name: str) -> None:
+        # Unchanged harness servers and tests scrub their child environment, including bytecode
+        # settings, so every venv needs the policy from creation (#1215, #1297).
         bytecode_policy = "import sys; sys.dont_write_bytecode = True\n"
-        (self.out / "browser-bytecode-policy.pth").write_text(bytecode_policy)
-        (self.envs / "api/lib/python3.12/site-packages/00-rpi-bytecode.pth").write_text(
+        if name == "api":
+            (self.out / "browser-bytecode-policy.pth").write_text(bytecode_policy)
+        (self.envs / name / "lib/python3.12/site-packages/00-rpi-bytecode.pth").write_text(
             bytecode_policy
         )
 

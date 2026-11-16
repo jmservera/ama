@@ -2954,6 +2954,33 @@ os.fstat(3)
         self.assertEqual(sorted(scratch.rglob("*.pyc")), [])
         self.assertTrue((self.out / "browser-bytecode-policy.pth").is_file())
 
+    def test_every_venv_install_prevents_scrubbed_child_writing_source_bytecode(self) -> None:
+        # Tests such as the core discovery demo spawn the venv interpreter with a scrubbed
+        # environment; without an interpreter-level policy it wrote ignored .pyc files into
+        # the gate checkout and failed clean_identity (#1297).
+        runner = gate.Runner(self.root, self.out, self.base, [], selected={"groups": []})
+
+        def command(argv: list[str], cwd: str = ".", **kwargs: Any) -> str:
+            if argv[1:3] == ["-m", "venv"]:
+                subprocess.run([*argv, "--without-pip"], check=True)
+            return ""
+
+        for name in ("core", "agents", "orchestrator", "importer", "namespace"):
+            with self.subTest(venv=name):
+                source = Path(self.temp.name) / f"source-{name}"
+                source.mkdir()
+                (source / "scrubbed_probe.py").write_text("VALUE = 1\n")
+                with patch.object(runner, "command", side_effect=command):
+                    runner._install(name, [name], dev=False)
+                env = {"PATH": os.environ.get("PATH", ""), "PYTHONPATH": str(source)}
+                subprocess.run(
+                    [runner.python(name), "-c", "import scrubbed_probe"],
+                    check=True,
+                    env=env,
+                )
+                self.assertEqual(sorted(source.rglob("__pycache__")), [])
+                self.assertEqual(sorted(source.rglob("*.pyc")), [])
+
     def test_resume_reuses_successes_without_replaying_commands(self) -> None:
         parent = self.scoped_receipt(["preflight", "namespace"])
         parent_path = self.out / "receipt.json"
