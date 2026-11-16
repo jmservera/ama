@@ -15,3 +15,9 @@ Remaining work: `ZF_RESIDENT_MSSQL` classes (resident decisions, priority order,
 * Skip and execution parsing now merges docstring-test id headers into their result line (`merge_docstring_headers`), so infra `PublicSimulationStartupTests` skips resolve to their class. A regression test covers it.
 * The gate holds the shared heavy lock for the whole run. `heavy_lock_or_none()` in `src/api/tests/test_unaccepted_handoff_download_ui.py` honours `ZF_HEAVY_LOCK_HELD=1`, set only in the browser opt-in step of the plan and Runner.
 * Observed, not fixed: importer round-trip zip-timestamp flake and a load-induced project-core timeout on 4 CPUs.
+
+## Amendment 2 (second and third gate run findings)
+
+* Base moved twice (`d74518fce`, then `bfed6c99e`); the candidate was rebased and the gate base updated. The gate was run with `--lock-timeout 14400` to queue behind another agent's gate; no other flag changed.
+* Current main failed browser ruff E501 in `src/api/checks/employee_chat_browser_check.py`; the literal was wrapped (no behaviour change).
+* The newly required `StaffIntakeBrowser` axe step ran for the first time and found a real WCAG 2.2 target-size (2.5.8) violation: the 18px "Open existing case workspace" link in `.screen-evidence`. Fixed with a scoped rule in `src/api/src/zava_forward/api/web/style.css`; both axe tests now pass.

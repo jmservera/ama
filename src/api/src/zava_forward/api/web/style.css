@@ -99,6 +99,7 @@ h2{font-size:var(--fs-lg);line-height:var(--lineHeightBase500);margin:var(--sp-5
 .coordinator .heat-count{font-weight:600}
 .coordinator .heat-present{background:var(--soft);color:var(--ink);box-shadow:inset 3px 0 0 var(--brand)}
 .coordinator table a{display:inline-block;min-height:1.5rem;padding:var(--sp-1)}
+.screen-evidence p>a:only-child{display:inline-block;min-height:1.5rem;padding-block:var(--sp-1)}
 .coordinator-summary a{padding-block:var(--sp-1)}
 .coordinator dt{text-transform:none}
 input,select,textarea{font:inherit;padding:var(--sp-2) var(--sp-3);border:1px solid var(--field-line);border-radius:var(--radius);max-width:100%}
