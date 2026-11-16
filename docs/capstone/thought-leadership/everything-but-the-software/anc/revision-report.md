@@ -122,6 +122,11 @@ changed. This finding and the original review outcome are retained here;
 the final exact-head assessment and hosted checks are tracked in PR #1825.
 After the correction, structural checks and all 28 measurement-provenance
 tests pass. The unrelated diagram-export failure was not rerun.
+The next review, of `2bb6342d6bf2a81acb8bbb0524b4a19de787c666`,
+found a stale manuscript hash after the sentence changed between validation
+and commit. With owner permission, the validated wording is restored and
+the affected checks are rerun before publication. That review did not
+reproduce the claimed test pass for the intervening source.
 
 `prose_polish_revision` binds the eight current sources and unchanged PDF.
 This editorial pass does not establish independent scientific peer review,
