@@ -39,28 +39,45 @@
       "decision": "Single independent review executed; outcome Findings (0C/1H/4M/1L) all documentation accuracy, corrected directly; no repeat review",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/logs/2026-11-16/resident-demo-local-gate-462-review.md"
+    },
+    {
+      "decision": "Full gate executed and BLOCKED by pre-existing main runner defect; verify-receipt refuses; no bypass",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-16/resident-demo-local-gate-462-changes.md"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "B1-full-gate-main-runner",
+      "summary": "Full gate on current main base 5e0c7f744 fails: project-api unexpected required skip (reasons absent from runner allowlist). Same class of failure seen in another candidate's gate on the same base (project-core). Candidate changes are docs only; runner not edited; no bypass.",
+      "resolution": "Separately reviewed main fix for runner skip allowlist/SQL dispatch (issue #1297 lineage), then rerun the gate into a new output directory and verify the receipt. Failed receipt kept at /home/azureuser/.local/share/ama/gate-462/."
+    }
+  ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Candidate commit then external full gate (/tmp/ama-gate-462-20261116T082915Z) and receipt verification; coordinator exact-head assessment; owner pre-spend approval for cloud criteria"
+    "action": "Await main runner fix, then re-run full gate on a rebased candidate; coordinator exact-head review; owner pre-spend approval for cloud criteria"
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
+      "task": "Fix runner skip allowlist so current-main full gate can pass (#1297 lineage)",
+      "rationale": "Blocks every full-tier receipt including #462",
+      "evidence": "/home/azureuser/.local/share/ama/gate-462/receipt-failed.json"
+    },
+    {
+      "rank": 2,
       "task": "Make login limiter atomic and send Retry-After on login 429",
       "rationale": "Small, high-value hardening of a verified residual risk",
       "evidence": ".copilot-tracking/reviews/logs/2026-11-16/resident-demo-local-gate-462-review.md R-003"
     },
     {
-      "rank": 2,
+      "rank": 3,
       "task": "Operator verification of live SQL view and principal grants before rollout",
       "rationale": "View is the sole data boundary",
       "evidence": "docs/reference/research/resident-demo-threat-model-2026-11-16.md T7,T8"
     },
     {
-      "rank": 3,
+      "rank": 4,
       "task": "Owner pre-spend approval, then Azure spend record and deployment criteria",
       "rationale": "Issue criteria 6 and 7 remain unmet",
       "evidence": "gh issue 462"
