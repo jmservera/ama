@@ -37,6 +37,9 @@ def check_browser_shortcuts(page: Page, mode: str) -> None:
         if "/api/map?" in request.url:
             requests.append(request.url)
 
+    # Let any redraw left by the preceding interaction finish before observing.
+    expect(page.locator("#leaflet")).not_to_have_attribute("aria-busy", "true")
+    page.wait_for_load_state("networkidle")
     page.on("request", record_request)
     try:
         for selector in ("#leaflet", ".map-marker:has(.map-symbol.normal)"):
