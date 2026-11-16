@@ -815,9 +815,10 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         with self.lock:
             return insights.map_points(list(self.cases.values()), f)
 
-    def map_view(self, f, bbox=None, zoom=None):
+    def map_view(self, f, bbox=None, zoom=None, sensors=None):
         with self.lock:
-            return insights.map_view(self.cases.values(), f, bbox, zoom)
+            view = insights.map_view(self.cases.values(), f, bbox, zoom)
+        return insights.attach_sensors(view, sensors)
 
     def visits(self, user, view="mine"):
         with self.lock:
