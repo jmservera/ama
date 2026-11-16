@@ -865,7 +865,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             if url.path == "/api/map":
                 try:
                     z = num(q, "zoom", None, 0, 20)
-                    return self._json(200, s.map_view(filt(q), bbox(q), z))
+                    return self._json(200, s.map_view(filt(q), bbox(q), z, lambda ids: app.assistants.map_sensors(u, ids)))
                 except ValueError as e:
                     return self._json(400, {"error": str(e)})
             if url.path == "/api/visits":

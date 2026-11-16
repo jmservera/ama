@@ -28,6 +28,7 @@ from . import (
     quality,
     ranking,
     rai_release,
+    sensor_map,
     sensor_view,
 )
 from zava_forward.core.ai import FORBIDDEN, Ai
@@ -1092,6 +1093,30 @@ class Assistants:
             c = self.authorize(db, user, "quality-evidence", case_id)
             out = sensor_view.view(db, case_id, sensor_view.reference_for(c.get("quality")), self.now(db), self.mssql)
         return dict(out, case_id=case_id)
+
+    def map_sensors(self, user, case_ids):
+        """Latest bounded sensor summary per mapped home, projected for this user's role and scope.
+
+        A role outside quality evidence, or a case outside the current staff scope, gets a fixed
+        state with no values. Without SQL no readings exist, so the state says so."""
+        ids = [i for i in case_ids if isinstance(i, str) and 1 <= len(i) <= 64]
+        if user.get("role") not in REGISTRY["quality-evidence"]["roles"]:
+            return {i: sensor_map.fixed("restricted") for i in ids}
+        if not self.sql:
+            return {i: sensor_map.fixed("not-connected") for i in ids}
+        out = {}
+        with self.transaction() as db:
+            now = self.now(db)
+            allowed = []
+            for i in ids[: sensor_map.HOME_CAP]:
+                try:
+                    self.authorize(db, user, "quality-evidence", i)
+                    allowed.append(i)
+                except (PermissionError, KeyError):
+                    out[i] = sensor_map.fixed("restricted")
+            out.update(sensor_map.summaries(db, allowed, now, self.mssql))
+        out.update({i: sensor_map.fixed("not-loaded") for i in ids[sensor_map.HOME_CAP :]})
+        return out
 
     def detail(self, user, tid, history_offset=0):
         if not self.sql:

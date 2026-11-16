@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import time
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urlsplit
@@ -12,6 +13,40 @@ from urllib.parse import parse_qs, urlsplit
 from checks.design_system_browser_check import check, main
 from checks.regulatory_ux_check import AXE_SHA256
 from playwright.sync_api import Page, Playwright, Request, Route, expect, sync_playwright
+
+OBSERVE_AFTER_KEYS_MS = 400
+
+
+def settle_map_reads(
+    page: Page, quiet_ms: int = OBSERVE_AFTER_KEYS_MS, deadline_s: float = 10
+) -> None:
+    """Wait until no map read is pending, including Leaflet's 200 ms debounced resize read.
+
+    Network idle and aria-busy cannot see that timer, so require a quiet window longer than it.
+    """
+    reads = 0
+
+    def count_read(request: Request) -> None:
+        nonlocal reads
+        if "/api/map?" in request.url:
+            reads += 1
+
+    page.on("request", count_read)
+    try:
+        deadline = last_activity = time.monotonic()
+        deadline += deadline_s
+        seen = 0
+        while time.monotonic() < deadline:
+            busy = page.locator("#leaflet").get_attribute("aria-busy") == "true"
+            if busy or reads != seen:
+                seen = reads
+                last_activity = time.monotonic()
+            elif (time.monotonic() - last_activity) * 1000 >= quiet_ms:
+                return
+            page.wait_for_timeout(50)
+        raise AssertionError(f"map reads did not settle within {deadline_s} s ({reads} observed)")
+    finally:
+        page.remove_listener("request", count_read)
 
 
 def scan(page: Page, axe: str, reports: list[dict[str, Any]], state: str) -> None:
@@ -37,6 +72,8 @@ def check_browser_shortcuts(page: Page, mode: str) -> None:
         if "/api/map?" in request.url:
             requests.append(request.url)
 
+    # Let any redraw left by the preceding interaction finish before observing.
+    settle_map_reads(page)
     page.on("request", record_request)
     try:
         for selector in ("#leaflet", ".map-marker:has(.map-symbol.normal)"):
@@ -76,9 +113,68 @@ def check_browser_shortcuts(page: Page, mode: str) -> None:
                     f"{result['modifiers']} {result['key']}",
                     result["allowed"] and result["unchanged"],
                 )
+        # Leaflet defers a resize read by 200 ms; keep observing past that so a late read is not missed.
+        page.wait_for_timeout(OBSERVE_AFTER_KEYS_MS)
         check(f"{mode} browser shortcuts issue no map requests", not requests)
     finally:
         page.remove_listener("request", record_request)
+
+
+def map_read_width_px(url: str) -> float | None:
+    """Pixel width of the viewport a map read was issued for, from its bbox and zoom."""
+    query = parse_qs(urlsplit(url).query)
+    try:
+        west, east = (float(query["bbox"][0].split(",")[index]) for index in (1, 3))
+        return (east - west) / 360 * 256 * 2 ** float(query["zoom"][0])
+    except (KeyError, IndexError, ValueError):
+        return None
+
+
+def check_viewport_change_requests_map(page: Page, timeout_ms: int = 5000) -> None:
+    size = page.viewport_size
+    assert size is not None
+    reads: list[str] = []
+
+    def record_read(request: Request) -> None:
+        if "/api/map?" in request.url:
+            reads.append(request.url)
+
+    # A read pending from the preceding step must not be mistaken for the resize's own read.
+    settle_map_reads(page)
+    leaflet = page.locator("#leaflet")
+    before = leaflet.evaluate("el => el.clientWidth")
+    page.on("request", record_read)
+    try:
+        page.set_viewport_size({"width": size["width"] - 40, "height": size["height"]})
+        waited = 0
+        while not reads and waited < timeout_ms:
+            page.wait_for_timeout(50)
+            waited += 50
+        check("a viewport change requests the map once the resize settles", bool(reads))
+        after = leaflet.evaluate("el => el.clientWidth")
+        check("the viewport change resizes the map container", before - after >= 1)
+        widths = [map_read_width_px(url) for url in reads]
+        check(
+            "a map read carries the resized viewport bounds, not the earlier ones",
+            any(
+                width is not None and abs(width - after) <= 1 and abs(width - before) >= 1
+                for width in widths
+            ),
+        )
+    finally:
+        page.remove_listener("request", record_read)
+        page.set_viewport_size(size)
+
+
+def check_shortcuts_after_pending_resize(page: Page) -> None:
+    # A resize leaves Leaflet's 200 ms map read pending; shortcuts must not be blamed for it.
+    size = page.viewport_size
+    assert size is not None
+    page.set_viewport_size({"width": size["width"] - 40, "height": size["height"]})
+    try:
+        check_browser_shortcuts(page, "embedded after a pending resize")
+    finally:
+        page.set_viewport_size(size)
 
 
 def check_expanded_filters(
@@ -189,7 +285,7 @@ def check_expanded_filters(
             )
         )
     check("zero-result support filter is exercised", selections[-1]["total"] == 0)
-    expect(page.locator(".map-info [role=status]")).to_have_text("0 homes shown")
+    expect(page.locator(".map-info [role=status]").first).to_have_text("0 homes shown")
 
     # Hold a genuine older fit read while a newer area selection completes.
     held: list[Route] = []
@@ -239,11 +335,11 @@ def check_expanded_filters(
         expect(area).to_be_focused()
         expect(area).to_be_enabled()
         expect(page.locator(".map-marker")).to_have_count(0)
-        expect(page.locator(".map-info [role=status]")).to_have_text("0 homes shown")
+        expect(page.locator(".map-info [role=status]").first).to_have_text("0 homes shown")
         held[0].fulfill(response=older)
         expect(page.locator(".map-panel .async-feedback")).to_have_count(0)
         expect(page.locator(".map-marker")).to_have_count(0)
-        expect(page.locator(".map-info [role=status]")).to_have_text("0 homes shown")
+        expect(page.locator(".map-info [role=status]").first).to_have_text("0 homes shown")
         check(
             "latest area selection survives older successful flag response",
             area.input_value() == "Cluster examples",
@@ -748,6 +844,8 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             page.locator("#mapArea").select_option(label="Point examples")
             expect(page.locator(".map-marker")).to_have_count(3)
             check_expanded_filters(page, base, axe, out, reports)
+            check_viewport_change_requests_map(page)
+            check_shortcuts_after_pending_resize(page)
             check_browser_shortcuts(page, "embedded")
             normal.focus()
             normal.press("Enter")
