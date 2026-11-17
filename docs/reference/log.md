@@ -12126,6 +12126,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Extended the automated production-configuration check in `src/api/checks` with a 320 px zoom-equivalent reflow step and a reduced-motion step, with a unit test for the overflow helper, and recorded the local result and a person-run checklist in the [production acceptance protocol](research/ux/production-ux-acceptance-protocol.md).
 * Synthetic data and a local Chromium run only. Every person-run record row stays `Not run`; no screen reader, real resident, conformance or production-acceptance claim is made. Issue #619 remains open.
+## [2026-11-17] update | WCAG baseline guard-suite measurement refreshed (Refs #151)
+
+* Added a dated counted-measurement section to [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md#counted-guard-suite-measurement-2026-11-17-151): guard test totals, 22 web assets, 15 table builders and 9 `aria-invalid` sites re-measured against source, plus one regression test that keeps the asset and `aria-invalid` counts in step.
+* Manual screen-reader and keyboard rows stay `Not run` and the target level stays pending O-1. No conformance claim; #151 stays open.
 ## [2026-11-17] update | Identifier leak copy audit on exception screens (Refs #153)
 
 * Added an [identifier leak audit](research/ux/content-standard.md#identifier-leak-audit-2026-11-17-153) section to the content standard: two snake_case identifiers shown to staff on the data steward and digital operator screens were reworded, and a lexical regression guard was added. Named-human review of resident-facing wording (criterion 5) remains unmet.

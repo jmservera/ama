@@ -131,6 +131,19 @@ def test_malformed_details_fail_without_defaults(mutation):
         assert error == str(raised.value)
 
 
+def test_given_empty_details_placeholder_when_parsed_then_key_set_is_rejected():
+    """Run 42838857558 (#1397): a placeholder call with details `{}` must stay rejected."""
+    inputs = adapter.to_inputs(card(), IDS)
+    inputs["details"] = "{}"
+    inputs["summary"] = "placeholder - will be replaced"
+    message = "details must contain exactly the 20 rubric criterion IDs"
+    with pytest.raises(ValueError, match=message):
+        adapter.from_inputs(inputs, IDS)
+    parsed, error = gate.parse_scorecard([{"type": gate.TOOL_TYPE, **inputs}], IDS)
+    assert parsed is None
+    assert error == message
+
+
 @pytest.mark.parametrize(("bootstrap", "calibration"), [(True, False), (False, True)])
 def test_unscored_scaffold_is_not_a_submittable_grade(bootstrap, calibration):
     canonical = prepare.build_scorecard_template(RUBRIC, BASELINE, bootstrap, calibration)
