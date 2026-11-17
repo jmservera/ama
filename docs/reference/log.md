@@ -12121,3 +12121,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a dated deploy and verification note to [infra/README.md](../../infra/README.md#live-deploy-of-main-488c5a0c8-and-browser-verification-2026-11-17-refs-462): image digest, revision `--0000011`, an image-only metadata diff, the real-HTTPS login and negative-path results, the registry-window trap defect, cost admission, limits and the expiry and stop plan.
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
+
+## [2026-11-17] update | Issue 108 closure audit against main (Refs #108)
+
+* Added the [issue 108 closure audit](research/evaluation/issue-108-closure-audit.md): a per-criterion matrix against main `eb51af5c9`. It records that #1771 sits on the #1641 parent branch and not on main, that seven tasks remain not evaluated by the harness on main, and that subgroup accounting is not on main.
+* Added `ClosureAuditDocTests` in `src/agents/tests/test_ai_eval.py`, which fails if the page omits any task the harness reports as not evaluated. Offline accounting only; no model call, no tick, the issue stays open.
