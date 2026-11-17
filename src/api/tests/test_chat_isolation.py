@@ -176,6 +176,19 @@ class ChatIsolationTests(Matrix):
         self.assertEqual(self.api(role, "/api/chat/memory/opt-out", {})[1], {"deleted": 1})
         self.assertEqual(self.api(role, "/api/chat/memory")[1], [])
 
+    def test_foreign_memory_item_cannot_be_edited_or_deleted(self):
+        a, b = STAFF[0], STAFF[1]
+        mid = self.remember(a, "A-CANARY")[1]["id"]
+        self.assertEqual(self.api(b, "/api/chat/memory/opt-in", {"acknowledged": True})[0], 200)
+        spoof = dict(owner=self.email(a), user_key=self.email(a), content="B-OVERWRITE")
+        for action in ("edit", "delete"):
+            self.assertEqual(self.api(b, f"/api/chat/memory/{mid}/{action}", spoof)[0], 404, action)
+        self.assertEqual([m["content"] for m in self.api(a, "/api/chat/memory")[1]], ["A-CANARY"])
+        self.assertEqual(self.api(b, "/api/chat/memory")[1], [])
+        tid = self.thread(a)
+        for path in ("ask", "proposals"):
+            self.assertEqual(self.api(b, f"/api/chat/threads/{tid}/{path}", dict(spoof, capability="quality-evidence"))[0], 404, path)
+
     def test_masked_text_is_prompted_and_replies_are_redacted_before_storage(self):
         role = "Retrofit Coordinator"
         tid = self.thread(role)

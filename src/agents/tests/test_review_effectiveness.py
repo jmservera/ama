@@ -17,6 +17,32 @@ class ReviewEffectivenessTests(unittest.TestCase):
     def test_overall_passes_and_all_checks_hold(self) -> None:
         self.assertTrue(self.report["passed"], self.report["checks"])
 
+    def test_missing_one_defect_class_or_over_rejecting_fails_the_gate(self) -> None:
+        sens = self.report["sensitivity"]
+        self.assertEqual(
+            set(sens),
+            {
+                "misses_wrong",
+                "misses_stale",
+                "misses_unsupported",
+                "misses_incomplete",
+                "over_reject",
+            },
+        )
+        for name, p in sens.items():
+            self.assertFalse(p["gate_passed"], name)
+        for name in sens.keys() - {"over_reject"}:
+            self.assertEqual(sens[name]["detected"], 3, name)
+            self.assertEqual(sens[name]["false_rejects"], 0, name)
+        self.assertEqual(sens["over_reject"]["false_rejects"], 2)
+        self.assertEqual(sens["over_reject"]["detected"], 0)
+
+    def test_sensitivity_checks_fail_if_the_gate_stops_refusing(self) -> None:
+        with mock.patch.object(re_, "gate_satisfied", return_value=(True, "forced")):
+            checks = re_.run_review_test()["checks"]
+        self.assertFalse(checks["each_missed_defect_class_fails_gate"])
+        self.assertFalse(checks["over_rejecting_reviewer_cannot_pass"])
+
     def test_competent_panel_detects_every_defect_class_and_keeps_controls(self) -> None:
         p = self.report["panels"]["competent"]
         self.assertEqual((p["detected"], p["defects"], p["false_rejects"]), (4, 4, 0))

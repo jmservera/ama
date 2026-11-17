@@ -46,6 +46,12 @@ SELECT COUNT(*) FROM <audit ledger table>;
 
 Compare row counts and latest version against the source at the restore point. Reapply erasure tombstones and legal holds, and confirm that revoked permissions, suspended proposals and spent allowance are not resurrected. Delete the copy afterwards. Publish only hashes, status and counts.
 
+## Reassessment 2026-11-17
+
+Re-measured on `origin/main` eb51af5c9: `python3 -m unittest infra.tests.test_sql_tier` passes (6 tests). The restore and ledger verification stay blocked: no authorized disposable Azure infrastructure exists, and #121 is open, so retention cannot be matched to a legal decision.
+
+When `zoneRedundant` is false the derived backup storage redundancy is `Local`, which keeps backup copies in one datacenter. The owner should choose `Zone`, `Geo` or `GeoZone` for the pilot together with the recovery objectives (verify against the Azure SQL automated backups documentation on Microsoft Learn before deciding). The placeholder in the pilot example is not an approved value.
+
 ## Evidence
 
 | Check | Status | Notes |
