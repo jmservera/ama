@@ -290,6 +290,16 @@ class MaterialMismatch(Restart):
             "version": lambda: patch.object(
                 self.provider, "model_version", "different-model-version"
             ),
+            "provider": lambda: patch.object(self.provider, "provider", "other-provider"),
+            "endpoint": lambda: patch.object(self.provider, "endpoint", "other-route"),
+            "deployment": lambda: patch.object(self.provider, "fast", "other-deployment"),
+            "data": lambda: patch.dict(
+                assistants.REGISTRY[CAP],
+                {"categories": (*assistants.REGISTRY[CAP]["categories"], "x")},
+            ),
+            "provenance": lambda: patch.object(
+                assistants, "PROVENANCE", "constructed-provenance-2"
+            ),
         }
 
     def test_mismatch_on_a_separate_worker_denies_dispatch_and_stays_denied_after_restart(
