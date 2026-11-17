@@ -1510,7 +1510,7 @@ exercise DPO is Juan Manuel Servera; no real-company delegation is inferred.
 
 ## Key Vault secret lifecycle
 
-Secrets are listed in [secret-inventory.json](secret-inventory.json) with an owner, rotation interval and expiry alert window. `infra/scripts/secret_lifecycle.py` checks vault metadata against it (never secret values), produces the access review record and prints the rotation steps. Run `python3 -m unittest discover -s infra/tests -q` for its tests.
+Secrets are listed in [secret-inventory.json](secret-inventory.json) with an owner, rotation interval and expiry alert window. `infra/scripts/secret_lifecycle.py` checks vault metadata against it (never secret values) and reports any vault secret that has no inventory entry as `uninventoried`, produces the access review record and prints the rotation steps. Run `python3 -m unittest discover -s infra/tests -q` for its tests.
 
 | Secret | Rotation interval | Expiry alert | Owner |
 | --- | --- | --- | --- |
