@@ -425,6 +425,16 @@ checks; private identity-backed acceptance remains separate.
 | Automatic post-deployment checks | Local HTTP negative/positive tests and fake-command orchestration; live ingress/authentication/SQL/model/restart acceptance unmet |
 | No secret values in logs/repository | Pinned workflows, no stored-secret inputs, captured command output and canary regression checks; end-to-end live log audit not performed |
 
+Measured GitHub state, 2026-11-17 (read-only API; base `eb51af5c`, no workflow
+dispatched, no Azure action): `src-deploy.yml` has 0 runs; all 100 sampled
+`infra-plan.yml` runs were `skipped` because the repository variable
+`INFRA_PLAN_ENABLED` is unset; only the `copilot`, `dev-plan`, `test-plan` and
+`pilot-plan` environments exist, with no reviewers, administrator bypass allowed,
+no variables and no self-hosted runners; `main` has no branch protection.
+`pipeline.py verify-environment` on `dev-plan` fails closed as designed. These are
+owner setup gaps, not code defects. Evidence:
+`.copilot-tracking/research/2026-11-17-issue-138-research.md`.
+
 All six live issue criteria remain unchecked. Local checks:
 `python3 -m pip install PyYAML==6.0.3`, then
 `python3 -m unittest discover -s infra/tests -p test_pipeline.py -v`.
