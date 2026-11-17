@@ -306,6 +306,29 @@ Remaining uncertainty:
 * Recovery of `6cc59776` itself and the freshness of the successor score are
   UNKNOWN.
 
+#### Measurement update (2026-11-17, base `eb51af5c`, Refs #1397)
+
+Read from `gh run list` and job logs; no scorer, workflow, prompt or
+configuration changed.
+
+* The 40 latest `Capstone Rubric Scorer` runs on `main` span 2026-11-14 to
+  2026-11-17; the newest 17 all concluded `success`, and `scores/latest.json`
+  records total 79 at `915788b6` (run 44156510325). No later run shows the
+  key-set rejection.
+* The eight non-success runs in that window were five cancellations by
+  concurrency and failures in the `activation` job (run 43664409796: daily AI
+  Credits `Server Error`; run 43613413504: `Daily AIC inspection stopped to
+  preserve GitHub API quota`). None reached scoring, so none recurs #1397.
+* The rejection of an empty `details` object was not pinned by a test.
+  `test_given_empty_details_placeholder_when_parsed_then_key_set_is_rejected`
+  now pins the adapter and gate message for the run 42838857558 payload shape.
+  It changes no check.
+* Still unproved: recovery of `6cc59776` itself, the consumed accepted-item
+  bytes and why the producer sent a placeholder. Refusing a placeholder before
+  append, uploading the accepted-item list and `decision.json`, and reconciling
+  the prompt's quota statement all need workflow or prompt edits and stay owner
+  and full-tier items.
+
 ## Files
 
 | Path                                                 | Purpose                                                     |
