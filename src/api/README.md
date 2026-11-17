@@ -1034,6 +1034,23 @@ geometry, overflow and summary close/exit behavior. Acquire the shared heavy-che
 nonblocking before execution. Automated results are not human
 assistive-technology, staff usability or full WCAG acceptance.
 
+Issue #1836: the map sidebar holds two adjacent `role=status` paragraphs, the
+result count and the tile fallback note, so a selector matching both fails in
+Playwright strict mode. Use `count_notice` and `tile_notice` from
+`checks.map_tile_status_browser_check`. That focused check serves synthetic
+tile responses, then aborts them, reaches "0 homes shown" in each state and
+asserts the fallback note is hidden when tiles load and visible when they fail.
+It also demonstrates, as an intentional and labelled step, that the old
+selector is ambiguous. It needs no axe file; run it from `src/api`:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m checks.map_tile_status_browser_check
+```
+
+`tests/test_map_status_locators.py` guards the helper and the harness without a
+browser.
+
+
 ## Workspace script recovery (#524)
 
 When a required employee-workspace script is missing, the current screen retries
