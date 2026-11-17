@@ -22,7 +22,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from zava_forward.core.synthetic import sensor_identity
-from zava_forward.core.synthetic.sensor_stream import StreamError
+from zava_forward.core.synthetic.sensor_stream import StreamError, accountable_text
 
 VERSION = "live-sim-control-v1"
 MAX_COHORT = 100
@@ -69,9 +69,7 @@ def parse(document: object) -> Control:
     text = (document["approval_reference"], document["owner"])
     if (
         type(enabled) is not bool
-        or any(
-            type(v) is not str or not v.strip() or v.strip().lower() in PLACEHOLDERS for v in text
-        )
+        or not all(accountable_text(v) and v.strip().lower() not in PLACEHOLDERS for v in text)
         or type(homes) is not list
         or not 1 <= len(homes) <= MAX_COHORT
         or not all(type(h) is str and sensor_identity.home_key(h) for h in homes)
