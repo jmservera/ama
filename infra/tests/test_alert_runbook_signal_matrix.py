@@ -162,6 +162,34 @@ class AlertRunbookSignalMatrixTests(unittest.TestCase):
                 self.assertIn(anchor, sections)
                 self.assertRegex(_owned_body(anchor, sections), OWNER_PATTERN)
 
+    def test_every_job_suffix_resolves_to_section_naming_it(self) -> None:
+        module = (INFRA / "modules/operationalMonitoring.bicep").read_text(
+            encoding="utf-8"
+        )
+        ternary = re.search(r"\$\{(endsWith\(jobName.*?)\}\.", module).group(1)
+        clauses = re.findall(
+            r"((?:endsWith\(jobName, '[^']+'\)(?: \|\| )?)+) \? '([a-z-]+)'", ternary
+        )
+        fallback = re.search(r": '([a-z-]+)'$", ternary).group(1)
+
+        def resolve(suffix: str) -> str:
+            for tests, anchor in clauses:
+                if f"'-{suffix}'" in tests:
+                    return anchor
+            return fallback
+
+        suffixes = set(re.findall(r"'job-\$\{applicationPrefix\}-([a-z-]+)'", MAIN)) | {
+            "ledger-verify",
+            "audit",
+        }
+        self.assertTrue({"rank", "rank-publish", "auth-renewal"} <= suffixes)
+        sections = _sections()
+        for suffix in sorted(suffixes):
+            anchor = resolve(suffix)
+            with self.subTest(suffix=suffix, anchor=anchor):
+                self.assertIn(anchor, sections)
+                self.assertRegex(sections[anchor][1], rf"`(?:[^`]*-)?{suffix}`")
+
     def test_main_wires_operational_monitoring_with_action_group(self) -> None:
         self.assertIn("module operationalMonitoring", MAIN)
         self.assertIn("actionGroupId: monitoring.outputs.actionGroupId", MAIN)

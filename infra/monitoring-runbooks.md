@@ -224,11 +224,28 @@ retry under separate approval.
 ### Job auth
 
 Normal suffix `auth-renewal`, demo `auth`; only with token storage and background
-workloads. Proposed owner: Digital service owner. Triage: expiry/binding and
+workloads. The ranking jobs (`rank`, `rank-publish`) currently resolve to this
+anchor in the alert description; see [job ranking](#job-ranking). Proposed
+owner: Digital service owner. Triage: expiry/binding and
 execution metadata without fetching SAS or tokens. Response: follow
 [Key Vault lifecycle](./README.md#key-vault-secret-lifecycle) and preserve
 authentication, no logon bypass. Recovery: approved renewal and binding/expiry
 verification; do not print or manually paste credentials.
+
+### Job ranking
+
+Normal `job-${applicationPrefix}-rank-publish`, demo suffix `rank`; only with
+`enableRankingArchiveBlob`. Source gap: `operationalMonitoring.bicep` has no
+ranking branch, so the alert description for this job links to the
+[job-auth](#job-auth) anchor, which also names `rank` and `rank-publish` so the
+link is not silently wrong. Proposed owner: Digital service owner, with the
+ranking policy owner. Triage: execution metadata and exit reason without ranking
+payloads; `RANKING_PUBLISH_BLOCKED` is expected until a named owner signs a
+policy version, and a data `as_of` that is not the run date also fails. Response:
+keep the previous published ranking and the manual route; do not sign or
+backdate a policy. Recovery: signed policy by a named human, or a corrected
+`as_of`, then a successful authorized run. A later Bicep change should add a
+dedicated anchor.
 
 ## New Disabled IoT Candidates
 

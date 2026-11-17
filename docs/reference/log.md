@@ -12121,3 +12121,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a dated deploy and verification note to [infra/README.md](../../infra/README.md#live-deploy-of-main-488c5a0c8-and-browser-verification-2026-11-17-refs-462): image digest, revision `--0000011`, an image-only metadata diff, the real-HTTPS login and negative-path results, the registry-window trap defect, cost admission, limits and the expiry and stop plan.
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
+
+## [2026-11-17] update | Ranking job alert runbook coverage (Refs #146)
+
+* Measured the declared alert set against the runbook: `alert-<job>-failed` for the optional ranking jobs (`rank`, `rank-publish`) resolves to the `job-auth` anchor because `operationalMonitoring.bicep` has no ranking branch. Added a `Job ranking` section to [infra/monitoring-runbooks.md](../../infra/monitoring-runbooks.md#job-ranking), a pointer in `Job auth`, and a regression test in `infra/tests/test_alert_runbook_signal_matrix.py` that every job suffix resolves to a section naming it.
+* The Bicep anchor itself is unchanged (infrastructure change, full tier); it stays a follow-up. No deployment, appointment, rendering or billing evidence is added, and no #146 criterion is newly proven.
