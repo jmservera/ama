@@ -25,3 +25,27 @@ The plan, details and changes files and the `implement-start` witness were writt
 ## Not covered
 
 Expand, collapse and reopen at narrow widths is covered by existing 320/390 expanded-dialog assertions, not by the new test. Desktop unchanged by construction (rule is max-width 600px) and by the existing desktop checks passing.
+
+## Correction cycle 1 (2026-11-17)
+
+Started; results are appended below as they are produced. The earlier "Not covered" statement above (expand/collapse/reopen only covered by existing assertions) is retained as the adverse record that the review found insufficient.
+
+### Changes
+
+* `src/api/checks/map_fullscreen_browser_check.py`: added `check_narrow_keyboard_order` (Shift+Tab from the open summary heading reaches all 3 markers and 2 zoom controls, reverse order follows DOM order, none covered at the moment it holds focus, Tab returns forward) and `check_narrow_expand_reopen` (at 320/390: open a home, Expand map, same summary shown with heading focused, summary intercepts no control, Exit returns focus to Expand map, reopen reselects the same home, Escape closes the summary and returns focus to the marker). Removed the unused `base` parameter of `check_served_source_identity`.
+* CSS unchanged in this cycle.
+
+### Validation (run from `src/api`, axe 4.10.3 sha256 880970c0...a68bb)
+
+* `PYTHONPATH=tests:../core/tests:../agents/tests python3 -m checks.map_fullscreen_browser_check --axe <axe> --out <new dir>`: with fix, 2 runs, both rc=0, 436 PASS each; no flake observed in these two runs (the known intermittent `filter label and focus fit at 390x568` was not seen; it is not fixed).
+* Failing-first, CSS reverted to the base: the hard-fail run stops at the first assertion (`tiles unavailable 320x568: no marker or zoom control is covered ({'controls': 5, 'covered': 5})`). A soft-fail harness (`check` replaced by a recorder, temporary, outside the repo) with the CSS reverted gave 24 failures: per viewport (8) the pre-existing "no control covered", "summary does not overlap the map" and the NEW "no control is covered at the moment it holds keyboard focus". The new expand/reopen assertions pass without the CSS because the expanded dialog has its own layout; they guard criterion 3 (focus and selection preservation), not the CSS. CSS restored afterwards (`git diff` shows no CSS change).
+* `ruff format --isolated --line-length 100 --check` on the changed file: clean. `mypy src` (src/api): no issues.
+* Finding while writing the test: in the expanded dialog a Leaflet attribution link can overlap a marker at 320x568 (pre-existing Leaflet geometry, not the summary); the dialog assertion therefore tests that the summary intercepts no control, not that nothing does. Recorded, not fixed.
+
+### Limitation
+
+The rule is `max-width:600px`; widths 321-600px (e.g. 480, 600) get the same layout by construction but are not exercised by the check (viewports are 320 and 390). Above 600px the original overlay is unchanged.
+
+### Branch note
+
+`git branch -a | grep mobile-map-assessment` and `git ls-remote` found no `test/mobile-map-assessment-1818-restart` branch locally or on origin (see final reply).

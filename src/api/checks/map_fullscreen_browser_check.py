@@ -846,7 +846,7 @@ UNCOVERED_JS = """() => {
 }"""
 
 
-def check_served_source_identity(page: Page, base: str) -> None:
+def check_served_source_identity(page: Page) -> None:
     for name, kind in (("app.js", "script"), ("style.css", "link")):
         attribute = "src" if kind == "script" else "href"
         url = page.evaluate(
@@ -860,6 +860,106 @@ def check_served_source_identity(page: Page, base: str) -> None:
             hashlib.sha256(served).hexdigest()
             == hashlib.sha256((WEB_ROOT / name).read_bytes()).hexdigest(),
         )
+
+
+FOCUS_STATE_JS = """() => {
+  const el = document.activeElement;
+  const control = el && el.closest('.leafmap .map-marker, .leafmap .leaflet-control-zoom a');
+  if (!control) return null;
+  control.scrollIntoView({block: 'center', inline: 'center'});
+  const box = control.getBoundingClientRect();
+  const top = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+  const all = [...document.querySelectorAll('.leafmap .map-marker, .leafmap .leaflet-control-zoom a')];
+  return {index: all.indexOf(control), total: all.length,
+          uncovered: top === control || control.contains(top)};
+}"""
+
+
+def check_narrow_keyboard_order(page: Page, label: str) -> None:
+    """Shift+Tab from the open summary heading walks the map controls in DOM order, uncovered."""
+    page.locator("#map-home-title").focus()
+    reached: list[int] = []
+    covered_while_focused = 0
+    for _ in range(14):
+        page.keyboard.press("Shift+Tab")
+        state = page.evaluate(FOCUS_STATE_JS)
+        if state:
+            reached.append(state["index"])
+            covered_while_focused += 0 if state["uncovered"] else 1
+    check(
+        f"{label}: Shift+Tab from the summary reaches all markers and zoom controls ({reached})",
+        sorted(set(reached)) == list(range(5)),
+    )
+    check(
+        f"{label}: reverse tab order follows the DOM order of the controls ({reached})",
+        reached == sorted(reached, reverse=True),
+    )
+    check(
+        f"{label}: no control is covered at the moment it holds keyboard focus",
+        covered_while_focused == 0,
+    )
+    for _ in range(len(reached) + 2):
+        page.keyboard.press("Tab")
+    forward = page.evaluate(
+        "() => document.activeElement && (document.activeElement.id || document.activeElement.className)"
+    )
+    check(f"{label}: Tab order returns forward past the controls ({forward})", bool(forward))
+
+
+def check_narrow_expand_reopen(page: Page, label: str) -> None:
+    """Criterion 3: expand, collapse and reopen keep focus and the selected home."""
+    markers = page.locator(".map-marker")
+    card = page.locator(".map-home-card")
+    title = page.locator("#map-home-title")
+    markers.nth(2).focus()
+    markers.nth(2).press("Enter")
+    selected = card.inner_text()
+    page.get_by_role("button", name="Expand map", exact=True).press("Enter")
+    dialog = page.get_by_role("dialog")
+    expect(dialog).to_be_visible()
+    expect(dialog.locator(".map-marker")).to_have_count(3)
+    dialog.locator(".map-marker").nth(2).focus()
+    dialog.locator(".map-marker").nth(2).press("Enter")
+    expect(card).to_be_visible()
+    expect(title).to_be_focused()
+    check(f"{label}: expanded dialog shows the same home summary", card.inner_text() == selected)
+    intercepted = page.evaluate(
+        """() => {
+          const card = document.querySelector('.map-home-card');
+          let hits = 0;
+          const controls = document.querySelectorAll(
+            '.leafmap .map-marker, .leafmap .leaflet-control-zoom a');
+          for (const control of controls) {
+            control.scrollIntoView({block: 'center', inline: 'center'});
+            const box = control.getBoundingClientRect();
+            for (const fx of [0.2, 0.5, 0.8]) {
+              for (const fy of [0.2, 0.5, 0.8]) {
+                const top = document.elementFromPoint(
+                  box.left + box.width * fx, box.top + box.height * fy);
+                if (top && card.contains(top)) hits += 1;
+              }
+            }
+          }
+          return {controls: controls.length, hits};
+        }"""
+    )
+    check(
+        f"{label}: expanded dialog summary intercepts no marker or zoom control ({intercepted})",
+        intercepted == {"controls": 5, "hits": 0},
+    )
+    page.get_by_role("button", name="Exit expanded map", exact=True).press("Enter")
+    expect(dialog).to_have_count(0)
+    expect(page.get_by_role("button", name="Expand map", exact=True)).to_be_focused()
+    page.get_by_role("button", name="Expand map", exact=True).press("Enter")
+    expect(dialog).to_be_visible()
+    dialog.locator(".map-marker").nth(2).press("Enter")
+    expect(title).to_be_focused()
+    check(f"{label}: reopened dialog selects the same home", card.inner_text() == selected)
+    page.keyboard.press("Escape")
+    expect(card).to_be_hidden()
+    expect(dialog.locator(".map-marker").nth(2)).to_be_focused()
+    page.get_by_role("button", name="Exit expanded map", exact=True).press("Enter")
+    expect(dialog).to_have_count(0)
 
 
 def check_narrow_summary_clearance(browser: Browser, base: str, tiles_available: bool) -> None:
@@ -892,7 +992,7 @@ def check_narrow_summary_clearance(browser: Browser, base: str, tiles_available:
             markers = page.locator(".map-marker")
             expect(markers).to_have_count(3)
             if (width, height) == (320, 568):
-                check_served_source_identity(page, base)
+                check_served_source_identity(page)
             card = page.locator(".map-home-card")
             title = page.locator("#map-home-title")
             close = page.get_by_role("button", name="Close home summary", exact=True)
@@ -953,6 +1053,8 @@ def check_narrow_summary_clearance(browser: Browser, base: str, tiles_available:
                 card.inner_text() != first_text,
             )
             expect(title).to_be_focused()
+            check_narrow_keyboard_order(page, label)
+            check_narrow_expand_reopen(page, label)
         finally:
             context.close()
 
