@@ -297,7 +297,7 @@ Re-measured from `src/api` at base `eb51af5c9` with the existing unit tests, des
 | `unittest discover -s tests -p "*wcag*.py"` (per-role screen guards, matrix and workbench baseline) | 150 tests, all passing |
 | `unittest discover -s tests -p "*a11y*.py"` | 16 tests, all passing |
 | `unittest discover -s tests -p "*accessib*.py"` | 35 tests, all passing |
-| Served web assets | 22 (16 scripts, 3 pages, 3 style sheets) |
+| Served web assets | 23 (17 scripts, 3 pages, 3 style sheets) |
 | Script-built table builders | 15, each with a caption |
 | `aria-invalid` sites | 9 |
 
