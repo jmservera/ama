@@ -287,6 +287,22 @@ Known gaps at 2026-10-15:
 
 To ask for another format or report a problem, contact: owner to supply (O-4).
 
+## Counted guard-suite measurement (2026-11-17, #151)
+
+Re-measured from `src/api` at base `eb51af5c9` with the existing unit tests, desktop-first and on synthetic data. The totals below are engineering evidence of what the static and constructed-DOM guards check. They are not a rendered-page scan, a conformance result or an assistive-technology run.
+
+| Measure | Result |
+| --- | --- |
+| `test_accessibility_baseline.py` and `test_wcag_workbench_baseline_151.py` together | 20 tests, all passing |
+| `unittest discover -s tests -p "*wcag*.py"` (per-role screen guards, matrix and workbench baseline) | 150 tests, all passing |
+| `unittest discover -s tests -p "*a11y*.py"` | 16 tests, all passing |
+| `unittest discover -s tests -p "*accessib*.py"` | 35 tests, all passing |
+| Served web assets | 22 (16 scripts, 3 pages, 3 style sheets) |
+| Script-built table builders | 15, each with a caption |
+| `aria-invalid` sites | 9 |
+
+The three discovery patterns overlap, so the totals are not additive. The manual screen-reader and keyboard rows in the manual check record stay `Not run`, and the target level stays pending owner confirmation (O-1). The guards were not re-run at 320 px, at 200% text size or with a screen reader, so we do not claim conformance (#155).
+
 ## Programme screens status (2026-11-04, #230)
 
 Criteria 1, 2, 3 and 5 of #230 are ticked on merged PRs #662, #781, #818, #854, #931 and #969. Criterion 4 (WCAG 2.2 baseline, textual state meaning, keyboard navigation) stays unmet: the automated keyboard and axe checks are merged, but manual WCAG 2.2 review and assistive-technology testing by named people are not done (#151, #155). Automated checks are not conformance evidence. No code slice can supply this.

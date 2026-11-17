@@ -66,6 +66,19 @@ class CopyAudit(unittest.TestCase):
         for f in AUDITED_FILES:
             self.assertEqual(list(copy_violations((WEB / f).read_text())), [], f)
 
+    def test_no_snake_case_identifiers_in_prose_copy(self):
+        literal = re.compile(r'"([A-Z][^"\n]* [^"\n]*)"')
+        identifier = re.compile(r"\b[a-z]+(?:_[a-z]+)+\b")
+        code = re.compile(r"[=<>{}]|\.\w+\(|/api/")
+        found = [
+            f"{name}:{n}: {m.group(1)}"
+            for name in AUDITED_FILES
+            for n, line in enumerate((WEB / name).read_text().splitlines(), 1)
+            for m in literal.finditer(line)
+            if identifier.search(m.group(1)) and not code.search(m.group(1))
+        ]
+        self.assertEqual(found, [])
+
     def test_every_served_script_and_page_is_audited(self):
         served = {p.name for p in (*WEB.glob("*.js"), *WEB.glob("*.html"))}
         self.assertEqual(sorted(served - set(AUDITED_FILES)), [])
