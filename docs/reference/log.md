@@ -12121,3 +12121,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a dated deploy and verification note to [infra/README.md](../../infra/README.md#live-deploy-of-main-488c5a0c8-and-browser-verification-2026-11-17-refs-462): image digest, revision `--0000011`, an image-only metadata diff, the real-HTTPS login and negative-path results, the registry-window trap defect, cost admission, limits and the expiry and stop plan.
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
+
+## [2026-11-17] update | WCAG baseline guard-suite measurement refreshed (Refs #151)
+
+* Added a dated counted-measurement section to [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md#counted-guard-suite-measurement-2026-11-17-151): guard test totals, 22 web assets, 15 table builders and 9 `aria-invalid` sites re-measured against source, plus one regression test that keeps the asset and `aria-invalid` counts in step.
+* Manual screen-reader and keyboard rows stay `Not run` and the target level stays pending O-1. No conformance claim; #151 stays open.
+## [2026-11-17] update | Identifier leak copy audit on exception screens (Refs #153)
+
+* Added an [identifier leak audit](research/ux/content-standard.md#identifier-leak-audit-2026-11-17-153) section to the content standard: two snake_case identifiers shown to staff on the data steward and digital operator screens were reworded, and a lexical regression guard was added. Named-human review of resident-facing wording (criterion 5) remains unmet.
