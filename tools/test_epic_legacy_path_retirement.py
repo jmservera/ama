@@ -110,6 +110,17 @@ class GuardLogicTests(unittest.TestCase):
         self.assertFalse(historical_note("w.yml", "run: ls mvp/data"))
 
 
+class ArchiveTagDocTests(unittest.TestCase):
+    def test_readme_archive_section_matches_published_tag(self):
+        text = (ROOT / "README.md").read_text(encoding="utf-8")
+        section = text.split("## Source cut-over archive", 1)[1].split("\n## ", 1)[0]
+        self.assertIn("v0.21.0", section)
+        self.assertIn("65a514ed20e97816dbf47e9fb981ab4cfe40597d", section)
+        self.assertNotIn("local annotated", section)
+        self.assertNotIn("not pushed", section)
+        self.assertNotIn("git push origin refs/tags", section)
+
+
 class EpicLegacyPathTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
