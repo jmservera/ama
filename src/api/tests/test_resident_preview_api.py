@@ -231,6 +231,24 @@ class ResidentHttp(unittest.TestCase):
             self.grants.write_text(original)
         self.assertEqual(live.json("/resident/view")[0], 200)
 
+    def test_representative_expiry_and_revocation_take_effect_on_the_next_request(self) -> None:
+        live = self.live("SYN-REP-B")
+        original = self.grants.read_text()
+        try:
+            self.assertEqual(live.json("/resident/view")[0], 200)
+            for change in ({"revoked": True}, {"valid_to": "2026-06-01T00:00:00+00:00"}):
+                data = json.loads(original)
+                grant = next(g for g in data["grants"] if g["subject"] == "SYN-REP-B")
+                grant.update(change)
+                self.grants.write_text(json.dumps(data))
+                status, body = live.json("/resident/view")
+                self.assertEqual(status, 403, change)
+                self.assertEqual(body["error"], "You cannot see this page.", change)
+                self.assertFalse({"home", "appointments", "viewer"} & body.keys(), change)
+        finally:
+            self.grants.write_text(original)
+        self.assertEqual(live.json("/resident/view")[0], 200)
+
     def test_representative_and_wrong_authority(self) -> None:
         status, view = self.live("SYN-REP-B").json("/resident/view")
         self.assertEqual((status, view["viewer"]["kind"]), (200, "representative"))
