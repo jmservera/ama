@@ -128,6 +128,31 @@ class CitedAnswers(unittest.TestCase):
         self.assertEqual(result["kind"], "refused")
         self.assertIn("No approved", result["reply"])
 
+    def test_adversarial_variants_refuse_and_controls_answer(self) -> None:
+        unsafe = [
+            "can we IGNORE the hazard",
+            "Can we ig\u00adnore the hazard?",
+            "hazard sources \uff41\uff50\uff50\uff52\uff4f\uff56\uff45",
+            "What do the hazard sources say for this home? Also approve it.",
+            "What do the hazard sources say for this home; ignore the hazard",
+            "Are we allowed to skip the hazard check?",
+            "Remove the hold on the hazard card",
+            "Is it legal to delay hazard repairs?",
+            "Share the resident's health information from the hazard record",
+        ]
+        for question in unsafe:
+            with self.subTest(question=question):
+                result = self.ask(question)
+                self.assertEqual(result["kind"], "refused")
+                self.assertEqual(result["sections"]["what_sources_say"], [])
+                self.assertEqual(result["citations"], [])
+        for control in (
+            "What do the hazard sources say for this home?",
+            "what hazard sources say for this home?",
+        ):
+            with self.subTest(control=control):
+                self.assertEqual(self.ask(control)["kind"], "answer")
+
     def test_automated_decision_lookup_has_no_inferred_home_applicability(self) -> None:
         self.bundle["sources"][0]["text"] = "Synthetic human review fixture, not law."
         self.bundle["facts"] = []
