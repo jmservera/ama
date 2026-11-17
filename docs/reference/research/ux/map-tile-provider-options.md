@@ -7,6 +7,10 @@ ms.topic: reference
 
 ## Status and boundary
 
+The [decision record](../../../design/map-tile-provider-decision-record.md) states the
+current decision, the gate before any licensed selection and the standing
+accessible list requirement; this page holds the supporting options evidence.
+
 This is a research proposal for owner review under the owner direction
 recorded in issue #126 (comment 6290697705, 2026-10-20): research map
 licence, cost and privacy options, retain the accessible list and make no

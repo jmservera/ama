@@ -665,7 +665,10 @@ For the parent topic prepared against main `bb3a3b03`, the
 records merge identities, the covered #128 and #440 children, the final scope
 and tier recommendation and light local observations; complete parent
 validation is pending and no acceptance is implied.
-For issue #119, the [map tile provider options review](./research/ux/map-tile-provider-options.md)
+For issue #119, the [map tile provider decision record](../design/map-tile-provider-decision-record.md)
+states that no licensed provider is selected, the demo-only OSM scope, the gate
+before selection and the standing accessible list requirement. The
+[map tile provider options review](./research/ux/map-tile-provider-options.md)
 records dated licence, attribution, coverage, cost, processor and privacy
 evidence for the public OSM server, Azure Maps, OS Maps API, MapTiler and
 self-hosted tiles, and what cannot yet be verified. Vendor statements carry
