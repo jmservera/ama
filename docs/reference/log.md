@@ -12126,3 +12126,15 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Updated the [applicability pack](./regulatory/reviewed-updates/2026-11-01-adm-ai-act-applicability-review.md) and the [Legal briefing](./research/rai/legal-briefing-adm-ai-act.md) with a dated 2026-11-17 reading: S.I. 2026/82 reg. 5, the EU AI Act as made and Regulation (EU) 2026/1744 (Digital Omnibus on AI, OJ 2026-07-24), which moves the Chapter III high-risk application dates. This supersedes the earlier "retrieval failed" and "unverified delay" statements; the earlier rows are kept.
 * Still `Unknown`: ICO guidance (HTTP 403), consolidated EU text comparison, Article 22D regulations, snapshot line comparison and the EU territorial and role facts. All decisions stay `Pending`; no legal conclusion, approval or classification is made. Added regression test `tools/test_adm_evidence_pack.py`.
+## [2026-11-17] update | Regulatory alerts and home chat UX re-measured on main eb51af5c (Refs #215)
+
+* Re-ran the focused local evidence for #215 on base `eb51af5c` with the worktree sources first on `PYTHONPATH`: 73 unit tests (UX check, keyboard and provenance, live-region semantics, accessibility cues) passed, and `src/api/checks/regulatory_ux_check.py` passed 21 synthetic browser states with axe skipped because no trusted copy was supplied. The check reports staff comprehension as "Not run; unmet".
+* No defect was reproduced, so no source or test changed. The unavailable states (503 alerts, chat errors) already name an owner, a next action and a human route.
+* Criterion 3 (WCAG 2.2 AA, pending human assistive-technology testing under #155) and criterion 5 (comprehension testing with repairs, housing and grants staff, which needs owner authorisation) stay unticked. Scoped automated checks are engineering evidence, not conformance or staff acceptance. #1818 and #1641 scope was not touched. Independent review and hosted CI remain separate.
+## [2026-11-17] update | WCAG baseline guard-suite measurement refreshed (Refs #151)
+
+* Added a dated counted-measurement section to [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md#counted-guard-suite-measurement-2026-11-17-151): guard test totals, 22 web assets, 15 table builders and 9 `aria-invalid` sites re-measured against source, plus one regression test that keeps the asset and `aria-invalid` counts in step.
+* Manual screen-reader and keyboard rows stay `Not run` and the target level stays pending O-1. No conformance claim; #151 stays open.
+## [2026-11-17] update | Identifier leak copy audit on exception screens (Refs #153)
+
+* Added an [identifier leak audit](research/ux/content-standard.md#identifier-leak-audit-2026-11-17-153) section to the content standard: two snake_case identifiers shown to staff on the data steward and digital operator screens were reworded, and a lexical regression guard was added. Named-human review of resident-facing wording (criterion 5) remains unmet.
