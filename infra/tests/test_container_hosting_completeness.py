@@ -4,6 +4,7 @@ Reads the Bicep sources as text, so it needs no Azure access and no change to th
 It is a source contract, not evidence of a deployed scale rule, probe or revision rollback.
 """
 
+import json
 import re
 import unittest
 from pathlib import Path
@@ -154,6 +155,15 @@ class CrossChecks(unittest.TestCase):
         readme = " ".join((INFRA / "README.md").read_text().split())
         self.assertIn("not at declared scale", readme)
         self.assertIn("makes no production", readme)
+
+    def test_recorded_reports_disclaim_declared_scale_and_production_claims(self) -> None:
+        readme = (INFRA / "README.md").read_text()
+        for name in ("scale-load-2026-11-01.json", "scale-restart-2026-11-13.json"):
+            self.assertIn(name, readme)
+            report = json.loads((ROOT / "docs/architecture" / name).read_text())
+            self.assertFalse(report["executed_workload"]["meets_declared_workload"], name)
+            self.assertIn("Not production scale", report["scope"], name)
+            self.assertIn("Azure", report["scope"], name)
 
 
 class DeployedImageAndProbeInvariants(unittest.TestCase):
