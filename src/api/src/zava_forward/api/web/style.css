@@ -280,6 +280,7 @@ th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);f
 .map-stage{position:relative}
 .map-info{overflow-wrap:anywhere}
 .map-home-card{position:absolute;z-index:1000;top:var(--sp-3);right:var(--sp-3);width:min(22rem,calc(100% - 2 * var(--sp-3)));max-height:calc(100% - 2 * var(--sp-3));overflow:auto;overscroll-behavior:contain;background:var(--surface);color:var(--ink);border:1px solid var(--field-line);border-radius:var(--radius-lg);padding:var(--sp-4);overflow-wrap:anywhere}
+@media(max-width:600px){.map-home-card{position:static;width:auto;max-height:none;margin-top:var(--sp-3)}}
 .map-home-header{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sp-2)}
 .map-home-header h3{margin:0;min-width:0}
 .map-home-close{flex-shrink:0;min-width:2.5rem;padding:var(--sp-1);font-size:var(--fs-lg);touch-action:manipulation}
