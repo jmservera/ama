@@ -11,6 +11,7 @@ from typing import Any
 from urllib.parse import parse_qs, urlsplit
 
 from checks.design_system_browser_check import check, main
+from checks.map_tile_status_browser_check import count_notice
 from checks.regulatory_ux_check import AXE_SHA256
 from playwright.sync_api import Page, Playwright, Request, Route, expect, sync_playwright
 
@@ -285,7 +286,7 @@ def check_expanded_filters(
             )
         )
     check("zero-result support filter is exercised", selections[-1]["total"] == 0)
-    expect(page.locator(".map-info [role=status]").first).to_have_text("0 homes shown")
+    expect(count_notice(page)).to_have_text("0 homes shown")
 
     # Hold a genuine older fit read while a newer area selection completes.
     held: list[Route] = []
@@ -335,11 +336,11 @@ def check_expanded_filters(
         expect(area).to_be_focused()
         expect(area).to_be_enabled()
         expect(page.locator(".map-marker")).to_have_count(0)
-        expect(page.locator(".map-info [role=status]").first).to_have_text("0 homes shown")
+        expect(count_notice(page)).to_have_text("0 homes shown")
         held[0].fulfill(response=older)
         expect(page.locator(".map-panel .async-feedback")).to_have_count(0)
         expect(page.locator(".map-marker")).to_have_count(0)
-        expect(page.locator(".map-info [role=status]").first).to_have_text("0 homes shown")
+        expect(count_notice(page)).to_have_text("0 homes shown")
         check(
             "latest area selection survives older successful flag response",
             area.input_value() == "Cluster examples",

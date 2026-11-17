@@ -2,19 +2,19 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-16T19:08:06+00:00",
-  "commit": "7546c3105adaa31d3b35d2796f25eb6849b2ea61",
+  "scored_at": "2026-11-17T11:26:37+00:00",
+  "commit": "c38c85a35f43ae92420b63c2253673b79cdf84aa",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43934726402",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/44072889320",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "ad995cdbac1abc98ae5a53234cf2d627837ef5faef39947b874deaed9da3707c",
     "adr": "a5d94c6e67f2ef35c8e152e782f8356dc01f1ca5fd620bbd98ebfb85870975bc",
-    "solution-code": "a629aaea8948a5a0b5e7b124919e3e4d12037ba348e47f48a43a0ee3980279d0",
+    "solution-code": "38297f394d1591585dc3d257b14860f027f59faef3a8c832c29b690916c4c05c",
     "infrastructure": "279e36d803276aa854eaf2f822cb2ea28eb5e37dbbe72841e50927e76caa5c1f",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "687ae0ad2df52516882908bf45ecca662c52802d59a5116a4fe119ec3ae97840",
-    "thought-leadership": "7d68a174899cb67a503f911e5f824ebcf4ef144156a39c3449d8d72045b3e39c"
+    "thought-leadership": "6a40595ec971a24c589118002c230082bd8d7db828b15e034d6b2370fd505173"
   },
   "total": 79,
   "sections": {
@@ -148,23 +148,22 @@
         "docs/capstone/thought-leadership/everything-but-the-software/README.md:98-130",
         "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md"
       ],
-      "rationale": "Final-results/chart-interpretation and critique-falsifiability content integrates completed-study data (315 trajectories, B-D +1.19pp) and a sharper falsifiable P1-P3 formulation. Genuine synthesis grounded in evidence; no new judging outcome beyond prior snapshot. Good (4) retained."
+      "rationale": "Open criterion reassessed. 16 Nov changes are copy-review and prose-polish wording passes only (README.md, main.tex, anc/experiment-protocol.tex); no new synthesis, data or argument. Good (4) retained unchanged."
     },
     "D2": {
       "score": 3,
       "evidence": [
         "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1-11",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:9-23",
         "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:81-130"
       ],
-      "rationale": "16 Nov pass covers all 70 sections; TODOs fell further (6 in main.tex, 3 in experiment-protocol.tex) but substantive ones remain (clearance, deposit manifest, CR1/F-P evidence). Owner left main.pdf unrebuilt/unverified, so publish-readiness unproven. Satisfactory (3) retained."
+      "rationale": "Open criterion reassessed. TODO(author) counts unchanged (6 in main.tex, 4 in anc/experiment-protocol.tex); main.pdf remains unrebuilt/unverified per revision record. Satisfactory (3) retained unchanged."
     },
     "D3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:673-674"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:813-814"
       ],
-      "rationale": "README still states explicitly that no archive, OSF upload, visibility change or scientific submission has occurred; publication approval remains pending. Needs Improvement (2) retained, unchanged by this revision."
+      "rationale": "Open criterion reassessed. README still states no archive, OSF upload, visibility change or scientific submission occurred; publication approval remains pending. Needs Improvement (2) retained unchanged."
     }
   }
 }

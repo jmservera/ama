@@ -12062,6 +12062,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
   Agent 365 stays future-only with unresolved schema/content/identity,
   tenant/license/privacy/ingestion gates; no cloud, legal, SLO or human
   explanation acceptance follows.
+## [2026-11-16] add | Resident demo threat model for the synthetic Azure showcase (Refs #462)
+
+* Added the [threat model](research/resident-demo-threat-model-2026-11-16.md) covering public fake-email login, the shared demo credential, session handling, cross-case access, database fields and deployment isolation, and linked it from the showcase section of the API README and this index.
+* Local checks recorded in the dated RPI changes record. No Azure mutation, deployment or spend occurred; criteria needing owner pre-spend approval, hosted checks and coordinator assessment stay unmet. No security acceptance is claimed.
+
 ## [2026-11-16] update | Plain-language paper and active Supplement revision
 
 * Reviewed all 70 active sections/subsections of the
@@ -12114,3 +12119,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
   exporter cannot import `esbuild`. No compiler is available on PATH;
   the existing PDF is unchanged and no new layout review is claimed.
   Independent review, hosted checks and final approvals remain separate.
+
+## [2026-11-17] update | Resident demo threat model addendum after main integration (Refs #462)
+
+* Added the [threat model update](research/resident-demo-threat-model-update-2026-11-17.md) for main `1c9ac230`: the derived sensor `freshness`, `source` and `calibrated` keys, the validation provenance table separating historical, original and newly witnessed evidence, and the unproved items. The 2026-11-16 threat model is preserved unchanged and linked from this index.
+* Qualified the API README sentence about the resident sensor status badge and source line (empty history shows neither; stale history replaces the badge with a caution). Documentation only.
+* The candidate was brought onto main by a non-rewriting merge; no source file was edited by hand. No Azure mutation, deployment, spend, secret read or model call occurred. Hosted checks, the complete current-base gate, SQL, image and browser acceptance and independent review remain separate.

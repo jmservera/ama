@@ -1043,6 +1043,23 @@ geometry, overflow and summary close/exit behavior. Acquire the shared heavy-che
 nonblocking before execution. Automated results are not human
 assistive-technology, staff usability or full WCAG acceptance.
 
+Issue #1836: the map sidebar holds two adjacent `role=status` paragraphs, the
+result count and the tile fallback note, so a selector matching both fails in
+Playwright strict mode. Use `count_notice` and `tile_notice` from
+`checks.map_tile_status_browser_check`. That focused check serves synthetic
+tile responses, then aborts them, reaches "0 homes shown" in each state and
+asserts the fallback note is hidden when tiles load and visible when they fail.
+It also demonstrates, as an intentional and labelled step, that the old
+selector is ambiguous. It needs no axe file; run it from `src/api`:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m checks.map_tile_status_browser_check
+```
+
+`tests/test_map_status_locators.py` guards the helper and the harness without a
+browser.
+
+
 ## Workspace script recovery (#524)
 
 When a required employee-workspace script is missing, the current screen retries
@@ -5626,6 +5643,10 @@ homes SQL database. It is a temporary owner showcase, not resident enrolment, no
 identity and not production authentication. It is a different composition from the loopback-only
 #444 preview above: that preview and its fixture guard are unchanged and are not imported.
 
+The [threat model](../../docs/reference/research/resident-demo-threat-model-2026-11-16.md) assesses the
+public fake-email login, the shared demo credential, sessions, cross-case access, database fields
+and deployment isolation. It is a design-time assessment, not security acceptance.
+
 Both resident pages (this showcase and the #444 preview) show a demonstration-only notice that
 Legal and Data Protection Officer review is still outstanding (owner decision 2026-11-03, same
 basis as #766). The notice is static page text. It is not a Legal or DPO approval, it does not
@@ -5852,7 +5873,7 @@ there are fewer than 6 readings, the latest reading is missing or faulted, or th
 stale. Charts use a dashed line with hollow squares and a `Latest stored` divider, and the data
 table lists forecast rows as `Forecast (estimate)`. The wording is descriptive, not diagnostic.
 
-The `sensors` envelope also carries `freshness` (none, recent within 15 minutes, retained, stale or future with plain text), a `source` note (synthetic, not calibrated) and `calibrated: false`. The view shows a "Reading status" badge and a "Source" line; neither claims live measurement.
+The `sensors` envelope also carries `freshness` (none, recent within 15 minutes, retained, stale or future with plain text), a `source` note (synthetic, not calibrated) and `calibrated: false`. With at least one stored reading the view shows a "Reading status" badge (not shown when the history is stale, where a "not recent" caution replaces it) and a "Source" line. With no stored readings it shows neither, only a plain "no readings" sentence. None of these claims live measurement.
 
 The view applied to the live database still reports no sensors until it is re-applied after
 `sensor_register` and `sensor_reading` exist (see `infra/README.md`), and the generated

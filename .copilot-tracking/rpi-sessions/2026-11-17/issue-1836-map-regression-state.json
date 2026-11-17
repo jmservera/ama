@@ -1,0 +1,79 @@
+{
+ "task_id": "issue-1836-map-regression",
+ "task_slug": "issue-1836-map-regression",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-17/issue-1836-map-regression-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-17/issue-1836-map-regression-plan.md",
+  "details": ".copilot-tracking/details/2026-11-17/issue-1836-map-regression-phase-details.md",
+  "critique": ".copilot-tracking/reviews/plans/2026-11-17/issue-1836-map-regression-plan-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-17/issue-1836-map-regression-changes.md",
+  "review": ".copilot-tracking/reviews/logs/2026-11-17/issue-1836-map-regression-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Tier FOCUSED while change stays test-only; escalate if scope changes",
+   "status": "confirmed",
+   "evidence": "task brief 2026-11-17"
+  },
+  {
+   "decision": "No implementation fix: .first selectors already in main; add regression coverage only",
+   "status": "confirmed",
+   "evidence": "task brief 2026-11-17"
+  },
+  {
+   "decision": "Witness research-open seq 2 refused (no research artifact yet); retried after creating opening artifact",
+   "status": "disclosed",
+   "evidence": "evidence-1836/issue-1836/events.jsonl seq 2"
+  },
+  {
+   "decision": "Research executed; Planning Readiness Ready; baseline main harness fails only under default container font (0.17px), passes with Liberation Sans fontconfig",
+   "status": "done",
+   "evidence": ".copilot-tracking/research/2026-11-17/issue-1836-map-regression-research.md"
+  },
+  {
+   "decision": "Critique executed once; verdict Revise; PC-001 and PC-002 accepted and applied directly; no second critique",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/plans/2026-11-17/issue-1836-map-regression-plan-critique.md"
+  },
+  {
+   "decision": "Implementation complete; FOCUSED tier held (test-only); full api unit discovery skipped (runtime), map unit modules run",
+   "status": "done",
+   "evidence": ".copilot-tracking/changes/2026-11-17/issue-1836-map-regression-changes.md"
+  },
+  {
+   "decision": "Review executed once; outcome Conformant with justified divergence",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/logs/2026-11-17/issue-1836-map-regression-review.md"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "Coordinator: publish, independent exact-head review, hosted CI"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Hosted CI and independent review of this head",
+   "rationale": "required gates pending",
+   "evidence": "RV-002"
+  },
+  {
+   "rank": 2,
+   "task": "Rename constant PASS line in focused check",
+   "rationale": "cheap clarity",
+   "evidence": "RV-001"
+  },
+  {
+   "rank": 3,
+   "task": "Investigate 390x568 sub-pixel font sensitivity",
+   "rationale": "default font fails by 0.17px",
+   "evidence": "RV-003"
+  }
+ ]
+}

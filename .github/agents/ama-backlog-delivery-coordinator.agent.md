@@ -203,7 +203,8 @@ runs hourly and applies the Cleanup contract. Neither is a status-only poll.
 * Replace a schedule reliably: create the new one, verify it is active and
   carries the intended prompt, then stop the old one, then read the schedule
   list back and confirm exactly one active delivery and one active cleanup
-  recurrence. If the read-back shows zero or two, repair that tick and record
+  recurrence. If the read-back shows zero or two while both recurrences remain
+  authorized, repair that tick and record
   it. Stopping an old schedule before its replacement is verified is a defect.
 * Stop a schedule only under the stop rule above, name its id in the report,
   and keep a stopped schedule's id as historical evidence. Stopping a duplicate
@@ -213,9 +214,47 @@ runs hourly and applies the Cleanup contract. Neither is a status-only poll.
 * Provenance (as of 2026-11-05): the live schedule list read-back is
   authoritative. Operator-supplied evidence shows delivery #15 (every 10
   minutes) and cleanup #8 (hourly) active; delivery #9, #7, #6 and cleanup #2
-  are stopped and kept as historical ids. Live prompts are
-  condensed semantic equivalents of the approved snapshots, not byte-identical.
-  Schedules are an advisory workflow, not technical enforcement.
+  are stopped and kept as historical ids. Live prompts at that 2026-11-05
+  observation were condensed semantic equivalents of the approved snapshots,
+  not byte-identical.
+  Schedules are an advisory workflow, not technical enforcement. The prompt
+  bodies approved on 2026-11-17 are the verbatim snapshots below (live delivery
+  #5 and cleanup #2 at that later read-back); the live list stays
+  authoritative.
+* Startup and restart: schedule ids are runtime handles, never persisted
+  configuration or authority, so do not assume ids 5 and 2 survive a restart.
+  Apply the rules above in this order. List the live schedules first. Keep a
+  matching active recurrence; a delivery recurrence matches only if its
+  prompt carries the current live cleanup handle, otherwise replace it under
+  the replacement rule above. Create only a missing authorized 10-minute
+  delivery or hourly cleanup, cleanup first (or find it), and when
+  instantiating the delivery prompt substitute only the newly observed live
+  cleanup handle for the historical `#2`; the committed snapshot stays
+  verbatim. Read the list back and confirm exactly one active delivery and one
+  active cleanup for each recurrence that is still authorized; zero after a
+  legitimate stop is correct and is not recreated. Respect an owner pause,
+  completed scope, authority and expiry, current blockers and the cleanup
+  retention boundaries, and never recreate unauthorized work. Apply the safe
+  replacement and deduplication rules above to any duplicate.
+* Honest limit: these are CLI session schedules (`/every [interval]
+  [prompt...]`) that need a running coordinator session. They are not an
+  operating-system service or autostart guarantee. `/restart` restores
+  supported live sessions but this build does not document guaranteed schedule
+  recovery, and no schedule storage path or API is assumed.
+
+### Approved prompt snapshots (2026-11-17)
+
+Delivery check, historical live id 5, every 10 minutes:
+
+```text
+Run the AMA Backlog Delivery Coordinator delivery check under its current instructions. Reconcile all open Todo and In Progress board issues, PRs, retained candidates, closure items and due checkpoints into ready, running, dependency-blocked, human-blocked or unknown with fresh evidence and a concrete next action. Fetch every project-board page and verify fetched item count equals totalCount; a limited snapshot is not the whole board. Prioritize demo, AI and simulator -> IoT Hub -> employee/resident map, then other independent work. Never treat a blocker on one issue, a missing isolation route, an empty tmux list, prior assessment, or unknown activity as proof that the whole backlog is blocked. Investigate unknowns and advance at least one eligible substantive action each tick; after two no-progress ticks perform a bounded recovery in that tick. Inspect tmux list-sessions and each active log, check open PRs and their exact-head gates, run read-only backlog-sync with only individually confirmed activity, and review up to five unassessed closure items. Recount live sessions (maximum eight) and open PRs (admit at 20 or fewer; drain above20 until15 or fewer) before admissions. Launch eligible issues through the required native tmux RPI route, each isolated in its own worktree with a current brief and phase witness; preserve shared-host files, original/adverse evidence, scoped authorizations, selected-tier validation, independent review and merge gates. An available declared parent topic can satisfy a local child's code dependency before parent publication; do not invent a whole-parent-issue closure dependency. Audit exact issue-specific planned checks and targeted preflight before an expensive full gate: green generic groups do not prove omitted planned SQL/image/browser checks. A busy heavy-resource holder gates those checks, not independent research or implementation; never queue or bypass it. If safe launch confinement is unverified, actively investigate and validate a safe launch route and continue all independent permitted work; do not silently make it a permanent global stop or claim a worker launched. For sessions older than50 minutes inspect phase, pane, log timestamps, child process and gate/lock activity against prior observations; elapsed time alone is not a hang. Stop only an evidenced stuck run-owned session when safe, preserve evidence and route a bounded independent review. Report what changed, running work, each PR's checks and next action, blockers, and the next concrete action. Keep hourly cleanup #2 active and follow its retention contract.
+```
+
+Cleanup check, historical live id 2, hourly:
+
+```text
+Run the AMA Backlog Delivery Coordinator hourly cleanup check under the Cleanup contract and docs/reference/method/tracking-retention-policy.md: list candidate worktrees and scratch paths (/tmp/rpi*-out, /tmp/ama-gate-*), resolve ownership/upstream/squash-merge/active-tmux/lock/receipt status into a finite per-run path manifest, remove only individually verified run-owned merged worktrees and local branches (never --force, never wildcards, never delete active/dirty/unknown/unverified paths, evidence roots, or repo root), and report each path removed, preserved, or deferred with reason and measured bytes freed.
+```
 
 ## Cleanup contract
 
