@@ -31,6 +31,9 @@ IMAGES = ("api", "agents", "orchestrator", "importer")
 INERT_PREFIXES = ("docs/", ".copilot-tracking/", "support/")
 # Projects whose unit suite may be split across worker processes, with the maximum shard count.
 SHARDED_PROJECTS = {"api": 3}
+# Unit suite ceiling in seconds; core ran 1535 s on a loaded host (issue #470), so it gets double.
+SUITE_TIMEOUTS = {"core": 3600}
+DEFAULT_SUITE_TIMEOUT = 1800
 IMAGE_CACHE_MODES = ("layer", "fresh")
 # Groups every changed-path selection includes, so they never signal an interaction.
 UNIVERSAL_GROUPS = frozenset({"preflight", "namespace", "static"})
@@ -675,6 +678,10 @@ def inert_path(path: str) -> bool:
     return path.endswith(".md") or path.startswith(INERT_PREFIXES)
 
 
+def suite_timeout(project: str) -> int:
+    return SUITE_TIMEOUTS.get(project, DEFAULT_SUITE_TIMEOUT)
+
+
 def shard_count(jobs: int) -> int:
     return 1 if jobs < 2 else min(max(SHARDED_PROJECTS.values()), jobs + 1)
 
@@ -1128,7 +1135,7 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
                 cwd,
                 env={"PYTHONPATH": test_paths(project)},
                 suite=True,
-                timeout=1800,
+                timeout=suite_timeout(project),
             )
         add([python, "-m", "ruff", "check", "."], cwd)
         add([python, "-m", "ruff", "format", "--check", "."], cwd)
@@ -2271,7 +2278,7 @@ class Runner:
                         cwd,
                         env=self.tests_env(project),
                         suite=True,
-                        timeout=1800,
+                        timeout=suite_timeout(project),
                     )
                 self.command([py, "-m", "ruff", "check", "."], cwd)
                 self.command([py, "-m", "ruff", "format", "--check", "."], cwd)
@@ -2319,7 +2326,7 @@ class Runner:
                 cwd,
                 env=self.tests_env(project),
                 suite=True,
-                timeout=1800,
+                timeout=suite_timeout(project),
             )
             entry: dict[str, Any] = self.local.last_entry
             return entry
