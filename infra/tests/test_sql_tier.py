@@ -63,6 +63,12 @@ class SqlTierTests(unittest.TestCase):
         ):
             self.assertIn(text, RUNBOOK)
 
+    def test_runbook_reassessment_keeps_restore_blocked(self) -> None:
+        section = RUNBOOK.split("## Reassessment 2026-11-17", 1)[1].split("## Evidence", 1)[0]
+        self.assertIn("`Local`", section)
+        self.assertIn("blocked", section)
+        self.assertIn("#121 is open", section)
+
     @unittest.skipUnless(
         shutil.which("az") or os.environ.get("REQUIRE_AZ_BICEP") == "1",
         "Azure CLI with Bicep is needed to compile the templates",
