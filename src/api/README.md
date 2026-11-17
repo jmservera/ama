@@ -5634,6 +5634,10 @@ homes SQL database. It is a temporary owner showcase, not resident enrolment, no
 identity and not production authentication. It is a different composition from the loopback-only
 #444 preview above: that preview and its fixture guard are unchanged and are not imported.
 
+The [threat model](../../docs/reference/research/resident-demo-threat-model-2026-11-16.md) assesses the
+public fake-email login, the shared demo credential, sessions, cross-case access, database fields
+and deployment isolation. It is a design-time assessment, not security acceptance.
+
 Both resident pages (this showcase and the #444 preview) show a demonstration-only notice that
 Legal and Data Protection Officer review is still outstanding (owner decision 2026-11-03, same
 basis as #766). The notice is static page text. It is not a Legal or DPO approval, it does not
@@ -5860,7 +5864,7 @@ there are fewer than 6 readings, the latest reading is missing or faulted, or th
 stale. Charts use a dashed line with hollow squares and a `Latest stored` divider, and the data
 table lists forecast rows as `Forecast (estimate)`. The wording is descriptive, not diagnostic.
 
-The `sensors` envelope also carries `freshness` (none, recent within 15 minutes, retained, stale or future with plain text), a `source` note (synthetic, not calibrated) and `calibrated: false`. The view shows a "Reading status" badge and a "Source" line; neither claims live measurement.
+The `sensors` envelope also carries `freshness` (none, recent within 15 minutes, retained, stale or future with plain text), a `source` note (synthetic, not calibrated) and `calibrated: false`. With at least one stored reading the view shows a "Reading status" badge (not shown when the history is stale, where a "not recent" caution replaces it) and a "Source" line. With no stored readings it shows neither, only a plain "no readings" sentence. None of these claims live measurement.
 
 The view applied to the live database still reports no sensors until it is re-applied after
 `sensor_register` and `sensor_reading` exist (see `infra/README.md`), and the generated
