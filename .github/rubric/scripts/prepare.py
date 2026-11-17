@@ -318,9 +318,6 @@ def compute_state(root: Path, base_ref: str, event: str, force: bool = False) ->
         for artifact_id in set(artifacts) | set(previous)
         if (artifacts.get(artifact_id) or {}).get("fingerprint") != previous.get(artifact_id)
     )
-    if changed_artifacts:
-        reasons.append("changed artifacts: " + ", ".join(changed_artifacts))
-
     range_args = diff_args(root, base_ref, event, baseline)
     entries: list[tuple[str, str, str | None]] | None = None
     if range_args is not None:
@@ -350,6 +347,16 @@ def compute_state(root: Path, base_ref: str, event: str, force: bool = False) ->
     recorded_scores_changed = event == "pull_request" and (scores_file_changed or badge_changed)
     if entries is None and changed_artifacts and not (bootstrap or force):
         raise RuntimeError("cannot determine changed files relative to the baseline; refusing to score")
+    if event == "pull_request" and entries is not None and not (bootstrap or force or instrument_changed):
+        # A lagging baseline must not make a PR pay for artifacts its own diff never touched.
+        changed_artifacts = [
+            artifact_id
+            for artifact_id in changed_artifacts
+            if artifacts.get(artifact_id) is None
+            or any(classify_changes(entries, artifacts[artifact_id]["include"], artifacts[artifact_id]["exclude"], artifacts[artifact_id]["files"]))
+        ]
+    if changed_artifacts:
+        reasons.append("changed artifacts: " + ", ".join(changed_artifacts))
 
     changed_files: set[str] = set()
     removed_files: set[str] = set()

@@ -1,9 +1,10 @@
 \subsection{Case rival-explanation register}\label{app:rivals}
 
-The main interpretation is in Section~\ref{sec:threats}. The register preserves
-recorded rivals separately from untested alternatives. A limit is not grounds
-for ruling an explanation out. Score/deployment correspondence remains
-unverified (Section~\ref{sec:audittrail}).
+Section~\ref{sec:threats} discusses the main competing explanations.
+The first table lists explanations supported by case records; the second
+lists plausible alternatives that still need testing. Limited evidence
+leaves an explanation open. The link between the assessed release and the
+failed deployment also remains unverified (Section~\ref{sec:audittrail}).
 
 \begin{table}[!htbp]
 \centering\footnotesize
@@ -66,11 +67,12 @@ analysis distinguishing inherited debt from introduced faults. \\
 
 \subsection{Candidate-mechanism evidence audits}\label{app:mechanismaudit}
 
-These are operational boundaries for this paper, not validated necessary and
-sufficient conditions for all agentic development. The indicators are already reported in
-Table~\ref{tab:mechanisms}, Table~\ref{tab:audittrail} and the case chronology; they are not repeated here. Experimental implications
-state what evidence would discriminate an explanation; the five-arm experiment
-does not manipulate the five candidates separately.
+These definitions specify how the paper uses each candidate mechanism.
+Their applicability to other agentic-development settings remains untested.
+Tables~\ref{tab:mechanisms} and \ref{tab:audittrail} report the case indicators.
+For each mechanism below, the experimental implication describes evidence
+that could distinguish it from competing explanations. The five-arm
+experiment does not test the mechanisms separately.
 
 \subsubsection{Specification inflation}
 
@@ -189,6 +191,28 @@ recovery, product selection or a human-use checkpoint cadence. \\
 \par
 }
 
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Accumulation, transmission and correction in the working model.}\label{tab:theory}
+\begin{tabularx}{\textwidth}{@{}L{3.4cm}YL{4.6cm}@{}}
+\toprule
+Process & Question & In this case \\
+\midrule
+Accumulation & What obligations and change burden does each feature leave
+behind?~\cite{lehman1980laws,lehman1997metrics} &
+No scheduled cumulative consolidation before the checkpoint request;
+restructuring planned as backlog items \\
+Transmission & Which implementations, rules and lessons shape the next
+change?~\cite{sinha2025illusion,pan2026swemaintain} &
+Growing specifications and read path; previously working identity setup not preserved \\
+Selection and correction & Do review and tests expose the cumulative
+consequences before more work depends on them?~\cite{cohen2006review,yu2026habituation} &
+Proxy capture; process-gate inflation; feedback starvation \\
+\bottomrule
+\end{tabularx}
+\end{table}
+\FloatBarrier
+
 \subsection{Measures and lexicon}\label{app:measures}
 
 \paragraph{Log entries.} The knowledge-base log
@@ -213,7 +237,7 @@ it contains an identifier from SA-001 to SA-010 or the word
 \paragraph{Repository counts.} Issue and pull-request counts come from the
 GitHub search API on 24 October 2026 (for example,
 \texttt{is:pr is:merged merged:>=2026-10-15}). Document sizes are whitespace
-word counts of the files at commit \texttt{29c6b51}.
+word counts at the original case snapshot (\sourceref{R01}).
 
 \paragraph{Proposed measures.} \emph{Time to first human use}: elapsed time
 from the start of a delivery cycle to the first time a person uses the running
@@ -228,12 +252,162 @@ outcomes the ratio is undefined; report the total cost and zero count.
 
 \subsection{Consolidation step prompt}\label{app:prompt}
 
-Verbatim frozen v4 prompt from execution source
-\nolinkurl{e8707ecc8965d3f81f5142a2603042bfca1aab15}, not the amended
-study's approved prompt. The archived source is byte-identical, SHA-256
-\nolinkurl{75f646edbe04e1e3403b092b13edd6b66615a3362e67ad49744d229cdcb94f29}.
+The verbatim frozen v4 prompt comes from execution source \sourceref{R31}.
+It records that historical version; the amended study uses a later prompt.
+The archived bytes are preserved unchanged
+(digest \sourceref{R35}).
 Display wrapping does not alter its text. Braces mark runner parameters.
 
 \lstinputlisting[basicstyle=\footnotesize\ttfamily,
   columns=fullflexible,keepspaces=true,showstringspaces=false,upquote=true,
   breaklines=true,breakatwhitespace=false]{anc/consolidation-frozen-v4.prompt.txt}
+
+\FloatBarrier
+\subsection{Illustrative economics and sensitivity}\label{app:economics}
+
+This is the earlier assumed model discussed in
+Section~\ref{sec:costprojection}. Its parameters and scenarios are preserved
+for inspection; they were not fitted to the observed ten-feature costs.
+
+Let $N\geq1$ be an integer number of feature cycles, $k$ the assumed average consolidation
+investment in AI credits per cycle, and $\delta\cdot(t-1)$ the assumed excess
+feature-implementation cost in A relative to B at cycle $t$, excluding
+B's consolidation session. Shared baseline implementation costs cancel.
+Under the explicit simplifying assumptions of constant $k$, a linearly
+growing relative premium $\delta\geq0$, and comparable delivered behaviour,
+the cumulative net difference is
+\begin{equation}
+\Delta C(N)=C_A(N)-C_B(N)
+=\sum_{t=1}^{N}\bigl[\delta(t-1)-k\bigr]
+=\delta\frac{N(N-1)}{2}-kN.
+\label{eq:costprojection}
+\end{equation}
+The first term adds up the assumed extra implementation cost without
+consolidation. The second subtracts the consolidation investment.
+A positive difference means A costs more under these assumptions.
+No measured saving is implied.
+For $k>0$ and $\delta>0$, the first cycle count with $\Delta C(N)\geq0$ is
+$N_{\mathrm{BE}}=\lceil1+2k/\delta\rceil$; when $\delta=0$, the investment never pays back in
+this credit-only model. Actual cost differences may grow nonlinearly, and B can retain debt too.
+The parameter $\delta$ describes how the cost gap between A and B grows;
+it does not measure either arm's total debt.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{fig-refactoring-economics.png}
+\caption{Assumed cost-of-inaction mechanism and break-even sensitivity, not
+pilot results or an empirical projection. A linearly increasing relative
+implementation premium accumulates across feature boundaries; recurring
+consolidation has an explicit cost. Payback depends on $k/\delta$: a ratio of 5 breaks even at 11 cycles
+and a ratio of 100 at 201; $\delta=0$ gives no payback for $k>0$.
+Parameters are invented for transparent sensitivity,
+not fitted to study data. No dollar conversion or human-work estimate is
+implied. Higher $\Delta C(N)$ favours B in the assumed model; a lower
+break-even cycle count means earlier recovery of the investment. Increasing
+$k/\delta$ delays that break-even, rather than demonstrating an observed
+cost or quality effect.}\label{fig:refactoringeconomics}
+\end{figure}
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Illustrative net A--B cost in AI credits from
+Equation~\ref{eq:costprojection}, with assumed $k=5$ credits/cycle.
+Negative values mean B's investment has not paid back; zero and positive
+values mean break-even and a conditional credit advantage.
+None of the scenarios is an observed or preferred estimate.}
+\label{tab:costscenario}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Assumed premium increase $\delta$ & 10 cycles & 20 cycles & 40 cycles \\
+\midrule
+0 credits per successive cycle & -50 & -100 & -200 \\
+0.5 credits per successive cycle & -27.5 & -5 & 190 \\
+1 credit per successive cycle & -5 & 90 & 580 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\FloatBarrier
+\subsection{Retained follow-up design candidates}\label{app:futuredesign}
+
+These settings preserve the earlier numerical proposal behind
+Section~\ref{sec:futureexperiment}. All task scales, thresholds, allocations
+and analysis choices below need a new design review, feasibility estimate,
+spending approval and prospective registration. The completed study remains
+unchanged. A longer task could still show stable retention.
+
+\paragraph{Longer trajectories and greater coupling.}
+In the assumed cost model, break-even depends on investment $k$ and the
+relative cost-growth slope $\delta$: $N_{\mathrm{BE}}=\lceil 1+2k/\delta\rceil$
+for positive parameters (21 cycles at illustrative $k=5,\delta=0.5$).
+Measured consolidation sessions cost $5.82$--$12.59$ credits, but the pilot
+does not estimate long-run $\delta$ or when coupling and context limits matter.
+Its ten greenfield features produced roughly 440--780 Python source lines.
+A follow-up could extend
+trajectories to $N=30$--$40$ sequential feature and schema-evolution cycles
+on a multi-module brownfield service repository ($3{,}000$--$10{,}000$
+source lines) with persistent storage, cross-cutting permission invariants
+and scheduled interface migrations, recording retention and cost slopes at
+$P_{10},P_{20},P_{30}$ and $P_{40}$.
+
+\paragraph{Single terminal change request with prerequisite confounding.}
+Evaluating adaptation on one held-out CR1 after $P_{10}$ produced wide
+binomial intervals ($\pm18.8$ to $\pm48.0$ percentage points within models)
+and coupled retention obligations to whether F9 ranking had been acquired.
+A follow-up protocol could schedule $K\geq4$ orthogonal change requests in
+a Latin-square design across checkpoints $P_{10},P_{20},P_{30}$ and $P_{40}$.
+Each change request should execute on an isolated branch forked from $P_t$
+so adaptation measurement does not alter the main delivery trajectory, and
+should be scored both unconditionally and on a core contract set whose
+prerequisites are verified before the fork.
+
+\paragraph{Bundled package treatments.}
+Arm~B combined behaviour-preserving code refactoring, new agent-authored
+tests under an immutable test-file rule and \texttt{DESIGN.md} replacement,
+while Arm~C changed both editing rights and checklist content. A $2\times2$
+factorial core crossing \emph{behaviour-preserving code refactoring} (with
+test files locked) against \emph{explicit invariant and boundary review}
+(\texttt{REVIEW.md} targeting authorization, state transitions and
+cross-module contracts), paired with a controlled factor comparing
+\emph{immutable versus specification-revisable agent tests}, could help
+distinguish test-rule effects from refactoring and boundary review.
+Component fidelity, interaction effects and other treatment differences
+would still need explicit controls.
+
+\paragraph{Falsification criteria, blocked inference and gate resilience.}
+The earlier candidate thresholds were $\geq5\%$ open-regression loss among
+acquired contracts by $P_{30}$ or per-cycle implementation-credit growth
+of $\delta\geq0.5$ credits per cycle for P1, a task-calibrated minimum
+useful B--D coverage gain $\Delta_*$ for P2, and cumulative net credits
+$\Delta C(N)>0$ at matched behavioural coverage for P3.
+These are proposed criteria, not accepted decision rules or estimates.
+A new protocol should justify its thresholds and align randomisation and
+variance estimation, considering $(\mathrm{model},\mathrm{replicate})$
+blocks, a block bootstrap or a mixed model as appropriate to the actual
+allocation and dependence. Bounded transport retries, missing-data rules
+and the primary estimand must be settled before collection.
+
+\paragraph{Full RPI versus corrective components.}
+The author's additional hypothesis concerns a full research, plan,
+implement and review workflow compared with feature-only delivery.
+Testing the package would not by itself identify review's contribution.
+A component comparison must specify instructions, editing and test rights,
+handover, context, sessions and budgets, and record actual resource use.
+No RPI variant, allocation, effect threshold or spending is approved here.
+
+\subsection{Untested hybrid practice candidate}\label{app:practicecandidate}
+
+The report proposes combining the structural cleanup, semantic review and
+audited repair represented separately by Arms~B, C and E.
+Automated \texttt{./tcr} refactoring with \nolinkurl{tools/quality.py}
+eliminated all complexity-$>10$ hotspots across all 63 Arm~B trajectories
+and was associated with greater GPT~6.1 Sol F9 acquisition. Read-only review
+(\texttt{REVIEW.md} in Arm~C) had higher observed Gemini~4 Argon CR1 success
+($76.2\%$ versus $38.1\%$), and Arm~E's audited
+\texttt{REPAIR.json} rule achieved $95.2\%$ CR1 success on GPT~6.1 Sol.
+The proposed combined step would be triggered when cyclomatic complexity
+exceeds 10, duplication reaches $3\%$, lint is nonzero, a feature session
+halts uncommitted, or periodically every three to five features. It would
+include C's semantic-invariant checklist and an audited test-assertion
+escape hatch. These commands and thresholds retain the report's proposal;
+the hybrid's efficacy, stopping behaviour and cost remain unmeasured.

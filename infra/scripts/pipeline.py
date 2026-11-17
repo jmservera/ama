@@ -61,6 +61,7 @@ ENVIRONMENT_PARAMETER_FILES = {
 OVERRIDES = {
     "location",
     "sqlLocation",
+    "aiModelLocation",
     "regionCheckReference",
     "quotaCheckReference",
     "alertEmail",
@@ -338,7 +339,7 @@ def parameters(infra: Path, environment: str) -> dict[str, Any]:
             or EMBEDDED_UUID_PATTERN.search(normalized_check)
         ):
             raise PipelineError(f"Unresolved or invalid recorded check parameter: {key}")
-    for key in ("location", "sqlLocation"):
+    for key in ("location", "sqlLocation", "aiModelLocation"):
         region_slug = overrides[key]
         if (
             not re.fullmatch(r"[a-z][a-z0-9]+", region_slug)

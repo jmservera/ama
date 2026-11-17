@@ -20,7 +20,7 @@ from copy import deepcopy
 from datetime import UTC, date, datetime
 from typing import Any
 
-from . import challenges, complaints_route, identity
+from . import challenges, complaints_route, identity, nomination_route
 from . import controls as k
 
 DECISION_STATUSES = ("Waiting", "Accepted", "Declined", "Paused", "Withdrawn")
@@ -32,10 +32,9 @@ ACCESS_CODES = ("None", "Unknown", "Large print", "Phone only", "Plain language"
 RESIDENT_ACTIONS = ("scope_record", "safe_contact_record", "representative_record", "disclosure_check",
                     "decision_record", "service_open", "service_update", "service_close",
                     "service_reopen", "service_reassign", "update_record", "remedy_confirm", "remedy_update",
-                    "challenge_open", "challenge_update", "challenge_reopen", "challenge_escalate",
-                    "challenge_resolve", "service_forward", "service_supersede_authorize",
-                    "nomination_record", "nomination_correct", "nomination_review", "tenure_intake",
-                    "tenure_legal_position", "tenure_verify", "tenure_question_pack",
+                    "challenge_open", "challenge_resolve", "service_forward", "service_supersede_authorize",
+                    "nomination_record", "nomination_acknowledge", "nomination_correct", "nomination_review",
+                    "tenure_intake", "tenure_legal_position", "tenure_verify", "tenure_question_pack",
                     "tenure_question_pack_review",
                     "tenure_review_trigger", "tenure_trigger_resolve", "tenure_inventory_record")
 NOT_RECORDED = "Not recorded"
@@ -63,7 +62,8 @@ _AUTOMATED_APPROVER_TOKENS = frozenset(
         "system",
     }
 )
-INTAKE_ACTIONS = ("nomination_record", "nomination_correct", "nomination_review", "tenure_intake", "tenure_legal_position",
+INTAKE_ACTIONS = ("nomination_record", "nomination_acknowledge", "nomination_correct", "nomination_review",
+                  "tenure_intake", "tenure_legal_position",
                   "tenure_verify", "tenure_question_pack", "tenure_question_pack_review",
                   "tenure_review_trigger", "tenure_trigger_resolve", "tenure_inventory_record")
 REVIEW_TRIGGERS = ("Changed scope", "Dispute", "Defect", "Charge query", "Ambiguous lease identity")
@@ -87,6 +87,9 @@ INVENTORY_QUALIFICATION = (
     "Caller supplied. Completeness, household identity and authority are not verified here; "
     "this is not a roster, an approval or a release."
 )
+HAZARD_INTAKE_ROUTE = nomination_route.HAZARD_INTAKE
+HAZARD_ROUTING_MESSAGE = nomination_route.HAZARD_ROUTING_MESSAGE
+CORRECTION_RAISERS = ("Resident", "Representative", "Officer")
 INTAKE_CHANNELS = ("Digital", "Phone", "Letter", "In person", "Trusted intermediary")
 TENURE_HOLD = (
     "Tenure and lease identity are unverified. Owner: Home Ownership data owner and Legal "
@@ -102,14 +105,12 @@ MANAGERS = ("Retrofit Programme Manager", "Programme Support Officer")
 FORMAL_ROUTES = ("Complaint", "Independent review")
 FOLLOWUP_ACTIONS = ("service_open", "service_update", "service_close", "service_reopen", "service_reassign",
                     "update_record", "remedy_confirm", "remedy_update", "challenge_open",
-                    "challenge_update", "challenge_reopen", "challenge_escalate",
                     "challenge_resolve", "service_supersede_authorize")
 CHALLENGE_CHANNELS = ("Digital", "Phone", "Letter", "In person", "Assisted visit",
                       "Trusted intermediary")
 CHALLENGE_SUBMITTERS = ("The resident", "Their representative", "Nominee")
 NON_RETALIATION_ACTIONS = frozenset({
-    "challenge_open", "challenge_update", "challenge_reopen", "challenge_escalate",
-    "challenge_resolve", "nomination_record", "nomination_correct", "nomination_review",
+    "challenge_open", "challenge_resolve", "nomination_record", "nomination_correct", "nomination_review",
     "service_open", "service_reopen",
 })
 
@@ -256,6 +257,52 @@ def _intake_text(value, label, limit=500):
     if not isinstance(value, str) or not value.strip() or len(value) > limit:
         raise ValueError(f"Supply {label}, at most {limit} characters; the original is never truncated.")
     return value
+
+
+HazardRouted = nomination_route.HazardRouted
+
+
+def _refuse_hazard(c, body, *, required=False):
+    if required or "hazard_concern" in body:
+        if nomination_route.hazard_routing(body.get("hazard_concern"), case_id=c.get("id")) is not None:
+            raise HazardRouted(HAZARD_ROUTING_MESSAGE, case_id=c.get("id"))
+
+
+def _split_optional(body, optional):
+    return ({key: value for key, value in body.items() if key not in optional},
+            {key: body[key] for key in optional if key in body})
+
+
+def _raiser(c, extras):
+    """Who raised a challenge or correction; a representative needs current confirmed authority to communicate."""
+    raised_by = k.choice(extras.get("raised_by", "Officer"), CORRECTION_RAISERS, "who raised the correction")
+    raw_ref = extras.get("representative_ref")
+    if raised_by != "Representative":
+        if raw_ref is not None:
+            raise ValueError("A representative reference applies only when a representative raised the correction.")
+        return dict(raised_by=raised_by, representative_ref=None)
+    if not isinstance(raw_ref, str) or not raw_ref.strip():
+        raise ValueError("Representative authority needs human confirmation through the safe contact route.")
+    if retention_schedule(c)["expired"]:
+        raise ValueError("Resident records are past retention. Obtain current human-reviewed evidence.")
+    ref = raw_ref.strip()
+    versions = c.get("representative_authorities", {}).get(ref, [])
+    today = k.today()
+    safe_ref = c.get("resident_safe_contact")
+    safe_rev = len(c.get("resident_contact_history", []))
+    for measure in case_measures(c):
+        for_measure = [v for v in versions if v.get("measure") == measure]
+        if not for_measure:
+            continue
+        a = for_measure[-1]
+        context = current_context(c, measure)
+        if (context and a["status"] == "Confirmed" and "Communicate" in a["tasks"]
+                and a["context_revision"] == context["revision"]
+                and a["safe_contact_ref"] == safe_ref
+                and a["safe_contact_revision"] == safe_rev
+                and a["authority_date"] <= today < a["review_date"]):
+            return dict(raised_by=raised_by, representative_ref=ref)
+    raise ValueError("Representative authority needs human confirmation through the safe contact route.")
 
 
 def _intake_fields(user, c, body, fields):
@@ -514,14 +561,7 @@ def _review_current(record):
 
 def nomination_follow_up(record, today=None):
     """Read-only readiness view: never a decision, priority, consent or hazard change."""
-    owner = record.get("owner")
-    ack = record.get("acknowledgement")
-    route = record.get("non_digital_route")
-    missing = [label for label, value in (
-        ("named owner", owner and owner.get("name")),
-        ("staff-recorded acknowledgement", ack and ack.get("reference")),
-        ("staffed non-digital route", route),
-    ) if not value]
+    missing = nomination_route.missing_before_review(record)
     due = record.get("next_update")
     try:
         overdue = date.fromisoformat(due) < (today or datetime.now(UTC).date()) if due else "Unknown"
@@ -532,6 +572,10 @@ def nomination_follow_up(record, today=None):
         missing=missing or [],
         next_update_overdue=overdue,
         re_review_pending=bool(record.get("corrections")) and not _review_current(record),
+        dependent_review_versions_stale=[r["record_version"] for r in record.get("reviews") or []
+                                         if r.get("stale_from_version")],
+        automatic_acceptance=False,
+        automatic_sanction=False,
         review_current=_review_current(record),
         review_owner="Human identity and eligibility review; policy owner not yet appointed (OD-41/42)",
         not_inferred=["priority change", "consent or refusal", "vulnerability", "sanction",
@@ -539,10 +583,118 @@ def nomination_follow_up(record, today=None):
     )
 
 
-def followup_view(case):
+def confirmed_communicate_representatives(c):
+    """Return sorted representative references with confirmed, in-date Communicate authority."""
+    if retention_schedule(c)["expired"]:
+        return []
+    today = k.today()
+    safe_ref = c.get("resident_safe_contact")
+    safe_rev = len(c.get("resident_contact_history", []))
+    measures = case_measures(c)
+    confirmed = []
+    for ref, versions in sorted((c.get("representative_authorities") or {}).items()):
+        if not isinstance(ref, str) or not ref.strip() or not isinstance(versions, list):
+            continue
+        for measure in measures:
+            for_measure = [v for v in versions if isinstance(v, dict) and v.get("measure") == measure]
+            if not for_measure:
+                continue
+            a = for_measure[-1]
+            context = current_context(c, measure)
+            if (context and a.get("status") == "Confirmed" and "Communicate" in (a.get("tasks") or ())
+                    and a.get("context_revision") == context["revision"]
+                    and a.get("safe_contact_ref") == safe_ref
+                    and a.get("safe_contact_revision") == safe_rev
+                    and a.get("authority_date", "") <= today < a.get("review_date", "")):
+                confirmed.append(ref.strip())
+                break
+    return confirmed
+
+
+def nomination_permissions(store, user, case):
+    """Describe role-gated field permissions for nomination, acknowledgement, correction and challenge forms."""
+    from . import projection
+    if user is None or not challenge_references_visible(store, user):
+        return None
+    can_write = bool(projection.appointment_evidence_visible(user))
+    is_manager = user.get("role") in MANAGERS
+    acknowledgeable_ids = []
+    correctable_ids = []
+    editable_ids = []
+    for rec in case.get("nomination_records", []):
+        rec_id = rec.get("id")
+        if not isinstance(rec_id, str) or not rec_id:
+            continue
+        known_owner = _identity_status(rec.get("owner")) == "Known"
+        owns_or_manager = is_manager or (known_owner and _same_person(user, rec.get("owner")))
+        can_ack = can_write and not _review_current(rec) and (not known_owner or owns_or_manager)
+        can_corr = can_write and owns_or_manager
+        if can_ack:
+            acknowledgeable_ids.append(rec_id)
+        if can_corr:
+            correctable_ids.append(rec_id)
+        if can_ack or can_corr:
+            editable_ids.append(rec_id)
+    staff_owners = []
+    for person in store.data.get("staff", ()):
+        if not isinstance(person, dict) or not person.get("code") or not projection.appointment_evidence_visible(person):
+            continue
+        if is_manager or _same_person(user, person):
+            staff_owners.append(dict(
+                email=person.get("email"),
+                name=person.get("name"),
+                role=person.get("role"),
+            ))
+    staff_owners.sort(key=lambda owner: str(owner.get("email") or "").lower())
+    return dict(
+        can_view=True,
+        can_write=can_write,
+        can_submit_digital=can_write,
+        can_submit_staff_recorded_non_digital=can_write,
+        can_assign_third_party_owner=can_write and is_manager,
+        can_reassign_owner=is_manager,
+        acknowledgeable_nomination_ids=acknowledgeable_ids,
+        correctable_nomination_ids=correctable_ids,
+        editable_nomination_ids=editable_ids,
+        staff_owners=staff_owners,
+        representative_authorities=confirmed_communicate_representatives(case),
+        channels=["digital", "staff_recorded_non_digital", *INTAKE_CHANNELS],
+        challenge_channels=["digital", "staff_recorded_non_digital", "Digital", "Phone", "Letter", "In person"],
+        assisted_channels=[
+            dict(value="phone", label="Phone"),
+            dict(value="paper", label="Paper"),
+            dict(value="letter", label="Letter"),
+            dict(value="in_person", label="In person"),
+            dict(value="trusted_intermediary", label="Trusted intermediary"),
+        ],
+    )
+
+
+def followup_view(case, *, recommendations=(), can_view_intake=True, can_view_reason=True):
     """Expose missing legacy provenance without mutating or inventing it."""
     for record in case.get("nomination_records", []):
-        record["follow_up"] = nomination_follow_up(record)
+        cleaned = nomination_route.scrub_nomination_restricted_fields(record)
+        record.clear()
+        record.update(cleaned)
+        fu = nomination_follow_up(record)
+        expl = nomination_route.filter_explanation_for_viewer(
+            nomination_route.nomination_explanation(
+                record,
+                follow_up=fu,
+                recommendations=recommendations,
+                can_view_intake=can_view_intake,
+                can_view_reason=can_view_reason,
+            ),
+            can_view_intake=can_view_intake,
+            can_view_reason=can_view_reason,
+        )
+        if expl is not None:
+            fu["plain_language_explanation"] = expl
+            record["plain_language_explanation"] = deepcopy(expl)
+        record["follow_up"] = fu
+        record["challenge_trail"] = nomination_route.challenge_trail(
+            record, case.get("affected_challenges", ())
+        )
     for req in case.get("service_requests", []):
         if req.get("route") == "Independent review":
             req["reviewed_identity_status"] = _identity_status(req.get("reviewed_identity"))
@@ -850,37 +1002,32 @@ def _priority_includes_case(rec, case_id):
             or any(item["case_id"] == case_id for item in rec.get("final_items") or []))
 
 
-def _catalog_row(store, rec, case_id, corrections):
-    original, decision_version, decision = priority_binding(rec)
-    kind = rec.get("kind")
-    pkind = kind if kind in ("ai_task", "form_staging") else "priority"
-    return dict(
-        proposal_id=rec["id"], proposal_kind=pkind, proposal_version=original,
-        decision_version=decision_version, human_decision=decision,
-        source_version=_source_version_for(rec, case_id),
-        policy_version=_policy_version_for(rec), model=rec.get("model"),
-        prompt_version=rec.get("prompt_version"), source=rec.get("source"),
-        hazard_clock_preserved=True,
-        non_retaliation_assurance=challenges.build_non_retaliation_assurance(),
-        **priority_challenge_state(store, rec, corrections),
-    )
-
-
-def challenge_catalog(store, case_id):
+def challenge_catalog(store, case_id, *, can_view_intake=True, can_view_reason=True):
     out = []
     corrections = priority_correction_lookup(store)
     ai_rows = []
     for rec in store.data["recommendations"]:
         if not _priority_includes_case(rec, case_id):
             continue
-        if rec.get("kind") == "ai_task":
-            ai_rows.append(_catalog_row(store, rec, case_id, corrections))
-        else:
-            out.append(_catalog_row(store, rec, case_id, corrections))
-    out.extend(ai_rows)
-    case = store.cases.get(case_id)
-    for form_rec in _form_staging_records(case, catalog_only=True):
-        out.append(_catalog_row(store, form_rec, case_id, corrections))
+        original, decision_version, decision = priority_binding(rec)
+        entry = dict(proposal_id=rec["id"], proposal_version=original,
+                     decision_version=decision_version, human_decision=decision,
+                     source_version=(rec.get("source_versions") or {}).get(case_id),
+                     policy_version=rec.get("policy_version"), model=rec.get("model"),
+                     prompt_version=rec.get("prompt_version"), source=rec.get("source"),
+                     **priority_challenge_state(store, rec, corrections))
+        expl = nomination_route.filter_explanation_for_viewer(
+            nomination_route.challenge_explanation(
+                entry,
+                can_view_intake=can_view_intake,
+                can_view_reason=can_view_reason,
+            ),
+            can_view_intake=can_view_intake,
+            can_view_reason=can_view_reason,
+        )
+        if expl is not None:
+            entry["plain_language_explanation"] = expl
+        out.append(entry)
     return out
 
 
@@ -1432,6 +1579,44 @@ def measure_decision_view(c):
     return out
 
 
+NON_DETRIMENT_COMMITMENTS = (
+    "Programme place: asking for a review or making a complaint does not remove or delay the household's place in the programme.",
+    "Repairs: repairs and defect work continue and are not held back because of a review or complaint.",
+    "Safety duties: hazard and safety duties stay in force and are never waived or paused by a review or complaint.",
+    "Measures: a pause or withdrawal stays limited to its own measure.",
+)
+REDRESS_ROUTES = (
+    dict(route="Independent review",
+         who="The resident, their representative, or frontline staff on their behalf.",
+         how="Choose the recorded measure decision to review. A named reviewer who did not record that decision does the review."),
+    dict(route="Complaint",
+         who="The resident, their representative, or frontline staff on their behalf.",
+         how="Record the complaint and the outcome wanted. A different named person owns the redress."),
+)
+
+
+def redress_route_view(c):
+    """Read-only route to independent human review and the formal complaints route, with what is preserved."""
+    formal = []
+    for req in c.get("service_requests", []):
+        if req.get("route") not in FORMAL_ROUTES:
+            continue
+        attempts = (req.get("formal_route") or {}).get("attempts", [])
+        sent = attempts[-1]["status"] if attempts else "Not sent"
+        formal.append(dict(id=req["id"], route=req["route"], status=req.get("status"),
+                           next_update=req.get("next_update"), formal_route_status=sent,
+                           review_measure=req.get("review_measure"),
+                           review_decision_version=req.get("review_decision_version")))
+    recorded = c.get("measure_decisions") or {}
+    reviewable = [dict(measure=m, version=n, status=v.get("status"),
+                       recorder_identity_status=_identity_status(v.get("recorder_identity")))
+                  for m in case_measures(c) for n, v in enumerate(recorded.get(m, []), 1)
+                  if _identity_status(v.get("recorder_identity")) != "Unknown"]
+    return dict(commitments=list(NON_DETRIMENT_COMMITMENTS), routes=deepcopy(list(REDRESS_ROUTES)),
+                reviewable_decisions=reviewable, formal_requests=formal,
+                send_note="Recording a request here does not send it. Nothing has reached the formal complaints route unless its status is Acknowledged.")
+
+
 class ResidentDecisionMixin:
     def resident_recorder(self, user, service=False):
         roles = k.RESIDENT_VIEW_ROLES if service else k.RESIDENT_ROLES
@@ -1461,6 +1646,8 @@ class ResidentDecisionMixin:
                 for attempt in (request.get("formal_route") or {}).get("attempts", []):
                     attempt.pop("resident_request_ref", None)
                     attempt.pop("requested_by", None)
+            for challenge in c.get("affected_challenges", []):
+                challenge.pop("representative_ref", None)
             c["resident_retention_deleted_at"] = today or k.today()
             self.audit(user["email"], "resident_retention_deleted", case_id, "resident decision payload removed")
             self.save()
@@ -1483,13 +1670,19 @@ class ResidentDecisionMixin:
             self.save()
 
     def _res_nomination_record(self, user, c, body):
+        body, extras = _split_optional(body, ("assisted_channel",))
         _intake_fields(user, c, body, {
             "case_id", "kind", "reported_subject_ref", "account", "source", "channel",
             "owner", "acknowledgement_ref", "next_update", "non_digital_route", "hazard_concern",
         })
-        if body["hazard_concern"] is not False:
-            raise ValueError("Use the independent hazard intake now (/api/cases/{case_id}/hazard-raise), not the nomination queue. Existing hazard service owns emergency response and clocks.")
-        before_nom = deepcopy(c)
+        _refuse_hazard(c, body, required=True)
+        stored_channel, route_mode, assisted_channel = nomination_route.normalize_route_channel(
+            body["channel"],
+            assisted_channel=extras.get("assisted_channel"),
+            allow_intermediary=True,
+            label="the supplied channel",
+        )
+        guard = challenges.protected_snapshot(c)
         record = dict(
             id=f"NOM-{uuid.uuid4().hex}", version=1,
             case_id=c["id"], kind=k.choice(body["kind"], ("Officer nomination", "Self-referral"), "the referral kind"),
@@ -1497,13 +1690,18 @@ class ResidentDecisionMixin:
                 reported_subject_ref=_intake_text(body["reported_subject_ref"], "the unverified subject reference", 100),
                 account=_intake_text(body["account"], "the original account", 4000),
                 source=_intake_text(body["source"], "the supplied source"),
-                channel=k.choice(body["channel"], INTAKE_CHANNELS, "the supplied channel"),
+                channel=stored_channel,
+                route_mode=route_mode,
+                assisted_channel=assisted_channel,
                 recorded_by=_identity(user), at=_time(),
             ),
             identity_status="Unknown", support_needs="Unknown", risk_flags="Unknown",
             owner=_intake_owner(self, body["owner"]),
             acknowledgement=dict(
                 reference=_intake_text(body["acknowledgement_ref"], "the staff-recorded acknowledgement evidence"),
+                channel=stored_channel,
+                route_mode=route_mode,
+                assisted_channel=assisted_channel,
                 recorded_by=_identity(user), at=_time(), delivery="Not verified by this system",
             ),
             next_update=_day(body["next_update"]),
@@ -1512,17 +1710,94 @@ class ResidentDecisionMixin:
             corrections=[],
         )
         c.setdefault("nomination_records", []).append(record)
-        challenges.assert_no_adverse_challenge_effects(
-            before_nom, c, allowed_case_keys=("nomination_records",)
-        )
+        challenges.assert_no_retaliation(guard, c)
         return f"{record['id']} unverified intake recorded"
 
+    def _res_nomination_acknowledge(self, user, c, body):
+        body, extras = _split_optional(
+            body, ("hazard_concern", "channel", "assisted_channel", "owner_reassignment_reason")
+        )
+        _intake_fields(user, c, body, {
+            "case_id", "id", "expected_version", "owner",
+            "acknowledgement_ref", "non_digital_route", "next_update",
+        })
+        _refuse_hazard(c, extras)
+        guard = challenges.protected_snapshot(c)
+        record = k.find(c.get("nomination_records", []), body["id"], "nomination")
+        _version(body, record)
+        if _review_current(record):
+            raise ValueError("This referral version already has its human review. Record a correction before changing route ownership.")
+        if _identity_status(record.get("owner")) == "Known":
+            _owner_rights(self, user, record["owner"])
+        owner = _intake_owner(self, body["owner"])
+        if user["role"] not in MANAGERS and not _same_person(user, owner):
+            raise PermissionError("Only a resident-workflow manager can assign another colleague as owner.")
+        reassignment_reason = (
+            _intake_text(extras["owner_reassignment_reason"], "the owner reassignment reason")
+            if extras.get("owner_reassignment_reason") is not None
+            else None
+        )
+        raw_channel = (
+            extras["channel"]
+            if "channel" in extras
+            else ((record.get("original") or {}).get("channel") or "digital")
+        )
+        stored_channel, route_mode, assisted_channel = nomination_route.normalize_route_channel(
+            raw_channel,
+            assisted_channel=extras.get("assisted_channel"),
+            allow_intermediary=True,
+            label="the acknowledgement channel",
+        )
+        ack_ref = _intake_text(body["acknowledgement_ref"], "the staff-recorded acknowledgement evidence")
+        route = _intake_text(body["non_digital_route"], "the staffed non-digital route")
+        next_update = _day(body["next_update"])
+        if any(record.get(key) is not None for key in ("owner", "acknowledgement", "non_digital_route")):
+            record.setdefault("acknowledgement_history", []).append(dict(
+                record_version=record["version"],
+                owner=deepcopy(record.get("owner")),
+                acknowledgement=deepcopy(record.get("acknowledgement")),
+                non_digital_route=record.get("non_digital_route"),
+            ))
+        ack_payload = dict(
+            reference=ack_ref,
+            channel=stored_channel,
+            route_mode=route_mode,
+            assisted_channel=assisted_channel,
+            recorded_by=_identity(user),
+            at=_time(),
+            delivery="Not verified by this system",
+        )
+        if reassignment_reason is not None:
+            ack_payload["reassignment_reason"] = reassignment_reason
+        record.update(
+            version=record["version"] + 1,
+            owner=owner,
+            acknowledgement=ack_payload,
+            non_digital_route=route,
+            next_update=next_update,
+        )
+        challenges.assert_no_retaliation(guard, c)
+        return f"{record['id']} route acknowledgement version {record['version']} recorded"
+
     def _res_nomination_correct(self, user, c, body):
+        body, extras = _split_optional(
+            body, ("hazard_concern", "raised_by", "representative_ref", "dependencies", "assisted_channel")
+        )
         _intake_fields(user, c, body, {
             "case_id", "id", "expected_version", "reported_subject_ref", "account",
             "source", "channel", "next_update", "challenge_id",
         })
-        before_nom = deepcopy(c)
+        _refuse_hazard(c, extras)
+        raiser = _raiser(c, extras)
+        stored_channel, route_mode, assisted_channel = nomination_route.normalize_route_channel(
+            body["channel"],
+            assisted_channel=extras.get("assisted_channel"),
+            allow_intermediary=True,
+            label="the supplied channel",
+        )
+        has_deps = "dependencies" in extras
+        parsed_deps = nomination_route.parse_dependencies(extras["dependencies"]) if has_deps else {}
+        guard = challenges.protected_snapshot(c)
         record = k.find(c.get("nomination_records", []), body["id"], "nomination")
         _version(body, record)
         _owner_rights(self, user, record["owner"])
@@ -1534,28 +1809,49 @@ class ResidentDecisionMixin:
             reported_subject_ref=_intake_text(body["reported_subject_ref"], "the corrected unverified subject reference", 100),
             account=_intake_text(body["account"], "the competing corrected account", 4000),
             source=_intake_text(body["source"], "the supplied correction evidence"),
-            channel=k.choice(body["channel"], INTAKE_CHANNELS, "the supplied channel"),
+            channel=stored_channel,
+            route_mode=route_mode,
+            assisted_channel=assisted_channel,
             recorded_by=_identity(user), at=_time(),
-            challenge=challenge,
+            challenge=challenge, **raiser,
         )
         next_update = _day(body["next_update"])
+        reviews = record.get("reviews", [])
+        correction["challenged_review"] = deepcopy(reviews[-1]) if reviews else None
+        re_review_info = nomination_route.re_review_set(
+            ("nomination", record["id"], f"v{record['version']}"), parsed_deps, record
+        )
         record["corrections"].append(correction)
-        for review in record.get("reviews", []):
+        for review in reviews:
             review.setdefault("stale_from_version", correction["version"])
+        re_review_payload = dict(
+            required=True,
+            automatic_acceptance=False,
+            automatic_sanction=False,
+            dependent_review_versions=re_review_info["dependent_review_versions"],
+        )
+        if has_deps:
+            re_review_payload["dependents"] = [
+                dict(kind=nk, id=ni, version=nv) for nk, ni, nv in re_review_info["dependents"]
+            ]
+        correction["re_review"] = re_review_payload
         record.update(version=correction["version"], next_update=next_update,
                       review_status="Re-review required; no priority or consent change")
-        challenges.assert_no_adverse_challenge_effects(
-            before_nom, c, allowed_case_keys=("nomination_records",)
-        )
+        challenges.stamp_assurance(guard, c, record)
         return f"{record['id']} correction version {record['version']} recorded"
 
     def _res_nomination_review(self, user, c, body):
+        body, extras = _split_optional(body, ("hazard_concern",))
         _intake_fields(user, c, body, {
             "case_id", "id", "expected_version", "outcome", "rationale", "evidence_ref", "next_update",
         })
-        before_nom = deepcopy(c)
+        _refuse_hazard(c, extras)
+        guard = challenges.protected_snapshot(c)
         record = k.find(c.get("nomination_records", []), body["id"], "nomination")
         _version(body, record)
+        nomination_route.require_ready_for_review(record)
+        if _identity_status(record.get("owner")) != "Known":
+            raise ValueError("Human review cannot start until the referral has a registered named owner.")
         reviews = record.setdefault("reviews", [])
         if reviews and reviews[-1]["record_version"] == record["version"]:
             raise ValueError("This version already has its human review. Record a correction to request another.")
@@ -1571,9 +1867,7 @@ class ResidentDecisionMixin:
         ))
         record.update(next_update=_day(body["next_update"]),
                       review_status=f"Human review recorded: {outcome}; no priority, consent or sanction change")
-        challenges.assert_no_adverse_challenge_effects(
-            before_nom, c, allowed_case_keys=("nomination_records",)
-        )
+        challenges.assert_no_retaliation(guard, c)
         return f"{record['id']} version {record['version']} human review recorded"
 
     def _res_tenure_intake(self, user, c, body):
@@ -1867,142 +2161,29 @@ class ResidentDecisionMixin:
         return (f"tenure report {body['report_version']} review trigger {number} resolved; "
                 "re-verify and redraft any question pack; case-wide hold remains")
 
-    def _challenge_submitter_info(self, c, body):
-        raw = body.get("submitted_by")
-        submitted_by = ("The resident" if raw is None
-                        else k.choice(raw, CHALLENGE_SUBMITTERS, "who supplied the challenge"))
-        rep_raw = body.get("representative_ref")
-        if submitted_by == "The resident":
-            if rep_raw not in (None, ""):
-                raise ValueError(
-                    "Representative reference applies only when a representative or nominee "
-                    "submits for the resident."
-                )
-            return dict(submitted_by="The resident")
-        rep_ref = k.text(rep_raw, "the representative or nominee reference", 100)
-        raw_auths = c.get("representative_authorities")
-        auth_status = "Unverified representative; challenge accepted without inferring consent"
-        if isinstance(raw_auths, dict):
-            versions = raw_auths.get(rep_ref)
-            if isinstance(versions, list) and versions and isinstance(versions[-1], dict):
-                latest = str(versions[-1].get("status") or "")
-                if latest in ("Confirmed", "Verified"):
-                    auth_status = f"Verified representative authority ({rep_ref})"
-        elif isinstance(raw_auths, list):
-            for item in raw_auths:
-                if isinstance(item, dict) and rep_ref in (
-                    item.get("representative_ref"), item.get("id"), item.get("evidence_ref")
-                ):
-                    latest = str(item.get("status") or "")
-                    if latest in ("Confirmed", "Verified"):
-                        auth_status = f"Verified representative authority ({rep_ref})"
-                    break
-        return dict(
-            submitted_by=submitted_by,
-            representative_ref=rep_ref,
-            representative_authority_status=auth_status,
-        )
-
-    def _route_challenge_hazard(self, user, c, record, body):
-        concern = body.get("hazard_concern", False)
-        if type(concern) is not bool:
-            raise ValueError("State whether a safety or hazard concern was mentioned (true or false).")
-        intake = body.get("hazard_intake")
-        if intake is not None and not isinstance(intake, dict):
-            raise ValueError("Supply hazard_intake as an object when routing safety intake.")
-        if intake is not None and not concern:
-            raise ValueError("Set hazard_concern=True when supplying immediate hazard_intake details.")
-        if not concern:
-            return False, False
-        existing = record.get("hazard_referral")
-        if existing is None:
-            record["hazard_referral"] = dict(
-                status="referred_on_receipt",
-                to=deepcopy(record["owner"]),
-                received_at=_time(),
-                independent_intake=True,
-                independent_route=f"/api/cases/{c['id']}/hazard-raise",
-                waits_for_challenge_review=False,
-                hazard_clock_preserved=True,
-            )
-        else:
-            existing.update(
-                status="referred_on_receipt",
-                to=deepcopy(record["owner"]),
-                independent_intake=True,
-                independent_route=f"/api/cases/{c['id']}/hazard-raise",
-                waits_for_challenge_review=False,
-                hazard_clock_preserved=True,
-            )
-        if intake is None:
-            return True, False
-        req_keys = {"category", "priority", "source", "aware_at"}
-        opt_keys = {"note"}
-        if not (req_keys <= set(intake) <= req_keys | opt_keys):
-            raise ValueError(
-                "Supply category, priority, source, aware_at and optional note for hazard_intake."
-            )
-        challenges.reject_adverse_mapping(intake, "Challenge hazard_intake")
-        from . import hazard, workflows
-        cat = k.choice(intake.get("category"), workflows.HAZARD_CATEGORIES, "a safety category")
-        prio = k.choice(intake.get("priority"), workflows.HAZARD_PRIORITIES, "emergency or significant")
-        source = k.evidence_text(intake.get("source"), "the safety report source")
-        aware = workflows._hazard_time(intake.get("aware_at"), "the awareness time", actual=True)
-        note = k.text(intake.get("note"), "", required=False)
-        h = dict(
-            category=cat, priority=prio, noticed=aware[:10], aware_at=aware, source=source,
-            recorded_at=workflows._now(), referred=None, repaired=None, released=False, job="",
-            owner=user["name"], sender=hazard.identity(user), raised_by=user["name"],
-            raised_by_email=user["email"], raised_identity=hazard.identity(user), note=note,
-            hold=dict(scope="Home", case_id=c["id"], status="Active",
-                      accountable_role="Building Safety Liaison", decision=None),
-        )
-        detail = f"Home retrofit hold; independent challenge safety intake {record['id']}; {source}"
-        h.setdefault("history", []).append(dict(
-            kind="safety_raised", at=workflows._now(), actor=hazard.identity(user),
-            detail=detail, emergency=prio == "Emergency",
-        ))
-        c.setdefault("hazards", []).append(h)
-        record["hazard_referral"]["routed_hazard_index"] = len(c["hazards"]) - 1
-        if not _is_replaying_sql(self):
-            if prio == "Emergency":
-                self.audit(
-                    user["email"],
-                    "safety_emergency",
-                    c["id"],
-                    "Reported emergency: use the existing hazard service immediately; "
-                    "retrofit and AI gates must not delay referral",
-                )
-            self.audit(user["email"], "safety_raised", c["id"], detail)
-        return True, True
-
-    @staticmethod
-    def _stamp_challenge_assurance(record, *, independent_routed=False):
-        referral = record.get("hazard_referral")
-        flagged = referral is not None
-        routed = bool(independent_routed or (referral or {}).get("routed_hazard_index") is not None)
-        record["safeguards"] = dict(challenges.SAFEGUARDS)
-        record["hazard_clock_preserved"] = True
-        record["non_retaliation_assurance"] = challenges.build_non_retaliation_assurance(
-            hazard_concern=flagged,
-            independent_hazard_routed=routed,
-        )
-
     def _res_challenge_open(self, user, c, body):
         from . import projection
+        body, extras = _split_optional(
+            body, ("hazard_concern", "raised_by", "representative_ref", "assisted_channel")
+        )
         if not projection.appointment_evidence_visible(user):
             raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
-        challenges.reject_adverse_mapping(body, "Challenge open request")
-        required = {"action", "proposal_id", "proposal_version", "decision_version", "target_kind",
-                    "channel", "source", "request", "explanation", "owner", "non_digital_route",
-                    "next_update"}
-        optional = {"submitted_by", "representative_ref", "hazard_concern", "hazard_intake"}
-        if not (required <= set(body) <= required | optional):
+        fields = {"action", "proposal_id", "proposal_version", "decision_version", "target_kind",
+                  "channel", "source", "request", "explanation", "owner", "non_digital_route", "next_update"}
+        if set(body) != fields:
             raise ValueError("Supply only the challenge fields. Identity, time, decisions and dependencies are recorded by the server.")
-        before = deepcopy(c)
-        rec = _priority_record(self, body.get("proposal_id"), case=c)
+        _refuse_hazard(c, extras)
+        raiser = _raiser(c, extras)
+        stored_channel, route_mode, assisted_channel = nomination_route.normalize_route_channel(
+            body["channel"],
+            assisted_channel=extras.get("assisted_channel"),
+            allow_intermediary=False,
+            label="the supplied challenge channel",
+        )
+        guard = challenges.protected_snapshot(c)
+        rec = _priority_record(self, body.get("proposal_id"))
         if not _priority_includes_case(rec, c["id"]):
-            raise ValueError("Choose a suggestion that includes this case.")
+            raise ValueError("Choose a priority suggestion that includes this case.")
         original, decision_version, decision = priority_binding(rec)
         if body["proposal_version"] != original or body["decision_version"] != decision_version:
             raise ValueError("The suggestion or its human review changed. Reload before recording the challenge.")
@@ -2010,159 +2191,43 @@ class ResidentDecisionMixin:
         owner = _person(self, body["owner"])
         if not projection.appointment_evidence_visible(owner):
             raise ValueError("Choose a named owner with resident-workflow and recorded-reason rights.")
-        submitter = self._challenge_submitter_info(c, body)
-        pkind = rec.get("kind") if rec.get("kind") in ("ai_task", "form_staging") else "priority"
+        if user["role"] not in MANAGERS and not _same_person(user, owner):
+            raise PermissionError("Only a resident-workflow manager can assign another colleague as owner.")
         record = dict(id=k.next_id(c.get("affected_challenges", []), "CH"),
                       version=1, status="Open", target=target, proposal_id=rec["id"],
-                      proposal_kind=pkind, proposal_version=original, human_decision=decision,
+                      proposal_version=original, human_decision=decision,
                       decision_version=decision_version, owner=_identity(owner),
-                      channel=k.choice(body["channel"], CHALLENGE_CHANNELS, "the supplied challenge channel"),
+                      channel=stored_channel, route_mode=route_mode, assisted_channel=assisted_channel,
                       source=k.text(body["source"], "the supplied challenge reference", 300),
                       request=k.text(body["request"], "the person's supplied request", 300),
                       explanation=k.text(body["explanation"], "the permitted plain-language explanation", 300),
                       non_digital_route=k.text(body["non_digital_route"], "an accessible phone, letter or in-person route", 300),
                       next_update=_day(body["next_update"]), recorded_by=_identity(user), at=_time(),
                       ai_details={key: deepcopy(rec.get(key)) for key in ("source", "model", "prompt_version", "policy_version", "source_versions")},
-                      resolution=None, **submitter)
-        _, routed = self._route_challenge_hazard(user, c, record, body)
-        self._stamp_challenge_assurance(record, independent_routed=routed)
+                      resolution=None, **raiser)
         c.setdefault("affected_challenges", []).append(record)
-        challenges.assert_no_adverse_challenge_effects(before, c, allow_new_independent_hazard=routed)
-        return (f"{record['id']} supplied challenge recorded; "
-                "non_retaliation_assurance=verified; hazard_clock_preserved=true")
-
-    def _res_challenge_update(self, user, c, body):
-        from . import projection
-        if not projection.appointment_evidence_visible(user):
-            raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
-        challenges.reject_adverse_mapping(body, "Challenge update request")
-        required = {"action", "id", "expected_version", "channel", "source", "request",
-                    "explanation", "next_update"}
-        optional = {"submitted_by", "representative_ref", "hazard_concern", "hazard_intake"}
-        if not (required <= set(body) <= required | optional):
-            raise ValueError("Supply only the challenge update fields. Identity, time and original submissions stay preserved.")
-        before = deepcopy(c)
-        record = k.find(c.get("affected_challenges", []), body["id"], "challenge")
-        _version(body, record)
-        if record["status"] not in ("Open", "Escalated", "Reopened"):
-            raise ValueError("This challenge already has its recorded resolution. Reopen or open a challenge if fresh evidence arises.")
-        submitter = self._challenge_submitter_info(c, body)
-        next_version = record["version"] + 1
-        next_due = _day(body["next_update"])
-        entry = dict(version=next_version,
-                     channel=k.choice(body["channel"], CHALLENGE_CHANNELS, "the supplied challenge channel"),
-                     source=k.text(body["source"], "the supplied challenge update reference", 300),
-                     request=k.text(body["request"], "the person's supplied challenge update", 300),
-                     explanation=k.text(body["explanation"], "the permitted plain-language explanation", 300),
-                     next_update=next_due, recorded_by=_identity(user), at=_time(), **submitter)
-        _, routed = self._route_challenge_hazard(user, c, record, body)
-        record.setdefault("updates", []).append(entry)
-        record.update(version=next_version, next_update=next_due)
-        self._stamp_challenge_assurance(record, independent_routed=routed)
-        challenges.assert_no_adverse_challenge_effects(before, c, allow_new_independent_hazard=routed)
-        return (f"{record['id']} supplied challenge update recorded; "
-                "non_retaliation_assurance=verified; hazard_clock_preserved=true")
-
-    def _res_challenge_reopen(self, user, c, body):
-        from . import projection
-        if not projection.appointment_evidence_visible(user):
-            raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
-        challenges.reject_adverse_mapping(body, "Challenge reopen request")
-        required = {"action", "id", "expected_version", "channel", "source", "request",
-                    "explanation", "owner", "next_update"}
-        optional = {"submitted_by", "representative_ref", "hazard_concern", "hazard_intake"}
-        if not (required <= set(body) <= required | optional):
-            raise ValueError("Supply only the challenge reopen fields. Identity, time and prior resolutions stay preserved.")
-        before = deepcopy(c)
-        record = k.find(c.get("affected_challenges", []), body["id"], "challenge")
-        _version(body, record)
-        if record["status"] != "Resolved" or record.get("resolution") is None:
-            raise ValueError("Only a resolved challenge can be reopened.")
-        owner = _person(self, body["owner"])
-        if not projection.appointment_evidence_visible(owner):
-            raise ValueError("Choose a named owner with resident-workflow and recorded-reason rights.")
-        submitter = self._challenge_submitter_info(c, body)
-        prior_corrected = _challenge_has_correction(record)
-        prior_resolution = deepcopy(record["resolution"])
-        next_version = record["version"] + 1
-        next_due = _day(body["next_update"])
-        new_owner = _identity(owner)
-        entry = dict(version=next_version,
-                     channel=k.choice(body["channel"], CHALLENGE_CHANNELS, "the supplied challenge channel"),
-                     source=k.text(body["source"], "the supplied reopen evidence reference", 300),
-                     request=k.text(body["request"], "the person's supplied reopen request", 300),
-                     explanation=k.text(body["explanation"], "the permitted plain-language explanation", 300),
-                     owner=new_owner, next_update=next_due, recorded_by=_identity(user), at=_time(),
-                     **submitter)
-        record.setdefault("previous_resolutions", []).append(prior_resolution)
-        record.setdefault("reopens", []).append(entry)
-        record.update(status="Reopened", version=next_version, owner=new_owner,
-                      next_update=next_due, resolution=None,
-                      prior_correction_preserved=prior_corrected)
-        if (record.get("hazard_referral") or {}).get("status") == "referred_on_receipt":
-            record["hazard_referral"]["to"] = deepcopy(new_owner)
-        _, routed = self._route_challenge_hazard(user, c, record, body)
-        self._stamp_challenge_assurance(record, independent_routed=routed)
-        challenges.assert_no_adverse_challenge_effects(before, c, allow_new_independent_hazard=routed)
-        return (f"{record['id']} supplied challenge reopened; "
-                "non_retaliation_assurance=verified; hazard_clock_preserved=true")
-
-    def _res_challenge_escalate(self, user, c, body):
-        from . import projection
-        if not projection.appointment_evidence_visible(user):
-            raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
-        challenges.reject_adverse_mapping(body, "Challenge escalation request")
-        fields = {"action", "id", "expected_version", "owner", "reason", "next_update"}
-        if set(body) != fields:
-            raise ValueError("Supply only the challenge escalation fields. A named human owner and reason are required.")
-        before = deepcopy(c)
-        record = k.find(c.get("affected_challenges", []), body["id"], "challenge")
-        _version(body, record)
-        if record["status"] not in ("Open", "Escalated", "Reopened"):
-            raise ValueError("This challenge already has its recorded resolution and cannot be escalated.")
-        owner = _person(self, body["owner"])
-        if not projection.appointment_evidence_visible(owner):
-            raise ValueError("Choose a named owner with resident-workflow and recorded-reason rights.")
-        if _same_person(owner, record["owner"]):
-            raise ValueError("Choose a different named human owner to escalate this challenge.")
-        next_version = record["version"] + 1
-        next_due = _day(body["next_update"])
-        new_owner = _identity(owner)
-        previous_owner = deepcopy(record["owner"])
-        entry = dict(version=next_version, previous_owner=previous_owner, owner=new_owner,
-                     reason=k.text(body["reason"], "the supplied escalation reason", 300),
-                     next_update=next_due, recorded_by=_identity(user), at=_time())
-        record.setdefault("escalations", []).append(entry)
-        record.update(status="Escalated", version=next_version, owner=new_owner, next_update=next_due)
-        if (record.get("hazard_referral") or {}).get("status") == "referred_on_receipt":
-            record["hazard_referral"]["to"] = deepcopy(new_owner)
-        self._stamp_challenge_assurance(record)
-        challenges.assert_no_adverse_challenge_effects(before, c)
-        return (f"{record['id']} supplied challenge escalated; "
-                "non_retaliation_assurance=verified; hazard_clock_preserved=true")
+        challenges.stamp_assurance(guard, c, record)
+        return f"{record['id']} supplied challenge recorded"
 
     def _res_challenge_resolve(self, user, c, body):
         from . import projection
         if not projection.appointment_evidence_visible(user):
             raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
-        challenges.reject_adverse_mapping(body, "Challenge resolution request")
         if set(body) != {"action", "id", "expected_version", "resolution", "resolution_ref", "explanation", "next_update"}:
             raise ValueError("Supply only the resolution fields. A person must supply the resolution evidence.")
-        before = deepcopy(c)
+        guard = challenges.protected_snapshot(c)
         record = k.find(c.get("affected_challenges", []), body["id"], "challenge")
         _version(body, record)
-        if record["status"] not in ("Open", "Escalated", "Reopened"):
+        if record["status"] != "Open":
             raise ValueError("This challenge already has its recorded resolution. Its evidence cannot be replaced.")
         _owner_rights(self, user, record["owner"])
         resolution = dict(outcome=k.choice(body["resolution"], ("Correction recorded", "Explanation recorded"), "the supplied resolution"),
                           reference=k.text(body["resolution_ref"], "the supplied human resolution evidence", 300),
                           explanation=k.text(body["explanation"], "the permitted resolution explanation", 300),
                           next_update=_day(body["next_update"]), recorded_by=_identity(user), at=_time())
-        record.update(status="Resolved", version=record["version"] + 1, resolution=resolution)
-        self._stamp_challenge_assurance(record)
-        challenges.assert_no_adverse_challenge_effects(before, c)
-        return (f"{record['id']} supplied resolution recorded; "
-                "non_retaliation_assurance=verified; hazard_clock_preserved=true")
+        record.update(status="Resolved", version=2, resolution=resolution)
+        challenges.stamp_assurance(guard, c, record)
+        return f"{record['id']} supplied resolution recorded"
 
     def _res_scope_record(self, user, c, body):
         if _inventory_managed(c):
@@ -2351,23 +2416,12 @@ class ResidentDecisionMixin:
             _owner_rights(self, user, req.get("redress_identity"), req.get("redress_owner_email"))
         ref = k.text(body.get("resident_request_ref"), "the reference showing the resident asked for this to be sent", 100)
         attempt = len(route["attempts"]) + 1
-        now = _time()
-        superseded = [a["attempt"] for a in attempts if a["status"] == "Pending"]
-        for prior in attempts:
-            if prior["status"] == "Pending":
-                prior.update(status="Superseded", superseded_from="Pending",
-                             superseded_at=now, superseded_by_attempt=attempt)
         route["attempts"].append(dict(attempt=attempt, status="Pending", request_id=req["id"],
                                       request_version=req.get("version", 0), resident_request_ref=ref,
                                       reservation_id=body.get("reservation_id"),
-                                      requested_by=_identity(user), reserved_at=now,
+                                      requested_by=_identity(user), reserved_at=_time(),
                                       reason="Sending. No outcome is recorded yet."))
         req["formal_route"] = route
-        if superseded:
-            noun = "attempt" if len(superseded) == 1 else "attempts"
-            nums = ", ".join(str(n) for n in superseded)
-            return (f"{req['id']} formal-route attempt {attempt} reserved; "
-                    f"prior pending {noun} {nums} superseded; no outcome recorded")
         return f"{req['id']} formal-route attempt {attempt} reserved; no outcome recorded"
 
     def _res_service_forward_outcome(self, user, c, body):
@@ -2384,7 +2438,17 @@ class ResidentDecisionMixin:
             attempts[attempt - 1]["not_sent"] = True
         if body["status"] == "Acknowledged":
             attempts[attempt - 1].update(receipt_ref=body["receipt_ref"], received_at=body.get("received_at"))
+            self._flag_stale_pending(c, req, attempts, attempt)
         return f"{req['id']} formal-route attempt {attempt}: {body['status']}"
+
+    def _flag_stale_pending(self, c, req, attempts, acknowledged):
+        """Flag earlier idle Pending attempts for the manual_verified review; never change their status."""
+        busy = in_flight(self, c.get("id"), req["id"])
+        route = req["formal_route"]
+        route["supersession_eligible_attempts"] = [
+            a["attempt"] for a in attempts[:acknowledged - 1] if a["status"] == "Pending" and a["attempt"] not in busy]
+        route["stale_pending_supersession_required"] = bool(route["supersession_eligible_attempts"])
+        route["supersession_evidence_ref"] = attempts[acknowledged - 1]["receipt_ref"]
 
     def _res_service_supersede_authorize(self, user, c, body):
         """Owner-approved manual_verified step (issue 1238 Q6): two explicitly bound people, never age, never a resend."""
@@ -2426,6 +2490,10 @@ class ResidentDecisionMixin:
                                              binding_id=binding.binding_id, binding_digest=binding.digest))
         if len(record["authorizations"]) == 2:
             attempt.update(status="Superseded", superseded_from="Pending", superseded_at=_time())
+            route = req["formal_route"]
+            if number in route.get("supersession_eligible_attempts", []):
+                route["supersession_eligible_attempts"].remove(number)
+                route["stale_pending_supersession_required"] = bool(route["supersession_eligible_attempts"])
             detail = _approval_detail(binding, c.get("id"), req["id"], attempt.get("reservation_id"), number, role, evidence)
             return f"{detail}; attempt superseded, receipt, key and history kept"
         return _approval_detail(binding, c.get("id"), req["id"], attempt.get("reservation_id"), number, role, evidence)

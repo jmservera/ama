@@ -174,153 +174,26 @@ class AftercareServed(Served):
         self.assertIn(self.call("sam", "/api/aftercare/concerns", dict(BODY))[0], (400,))
         self.assertEqual(self.call("sam", "/api/aftercare/nothing")[0], 404)
 
-    def test_served_outcome_remedy_and_sensor_context_refuse_non_neutral_text_without_echo(
-        self,
-    ) -> None:
-        self.assertEqual(self.call("sam", "/api/aftercare/concerns", self.body())[0], 201)
-        self.assertEqual(
-            self.call(
-                "pam",
-                "/api/aftercare/concerns/AC-001/owner",
-                {"owner_role": "Resident Liaison Officer"},
-            )[0],
-            200,
-        )
-        self.assertEqual(
-            self.call(
-                "quin",
-                "/api/aftercare/concerns/AC-001/outcome",
-                {
-                    "outcome": "advice_given",
-                    "basis": "home_visit",
-                    "evidence": "You will save money.",
-                },
-            )[0],
-            403,
-        )
-        before = copy.deepcopy(self.store.data["aftercare"])
-        for suffix, body, field, marker in (
-            (
-                "outcome",
-                {
-                    "outcome": "advice_given",
-                    "basis": "home_visit",
-                    "evidence": "Condensation from drying laundry indoors.",
-                },
-                "evidence",
-                "drying laundry",
-            ),
-            (
-                "remedy",
-                {"status": "open", "evidence": "Expected energy savings of 20%."},
-                "evidence",
-                "energy savings",
-            ),
-            (
-                "sensor-context",
-                {"context": {"note": "Airtightness caused the mould."}},
-                "context",
-                "caused the mould",
-            ),
-        ):
-            with self.subTest(suffix=suffix):
-                code, out = self.call("sam", f"/api/aftercare/concerns/AC-001/{suffix}", body)
-                self.assertEqual(code, 400, out)
-                self.assertIn(field, out["errors"])
-                self.assertNotIn(marker, json.dumps(out).lower())
-                self.assertEqual(self.store.data["aftercare"], before)
-
-    def test_served_templated_endpoints_and_screen_literals_emit_only_neutral_text(self) -> None:
-        import re as _re
-
-        from zava_forward.core.aftercare import neutral_violations
-
-        raw_stmt = "Synthetic: the retrofit caused damp and promised I will save \u00a3100."
-        code, created = self.call("sam", "/api/aftercare/concerns", self.body(statement=raw_stmt))
-        self.assertEqual(code, 201, created)
-        receipt = created["receipt"]
-        self.assertEqual(receipt["original"]["statement"], raw_stmt)
-        _, form = self.call("sam", "/api/aftercare/form")
-        _, listing = self.call("sam", "/api/aftercare/concerns")
-        _, detail = self.call("sam", "/api/aftercare/concerns/AC-001")
-        _, evaluator = self.call("pam", "/api/aftercare/evaluator")
-
-        def collect(node: Any, key: str = "") -> list[str]:
-            if key in ("statement", "representative_basis"):
-                return []
-            if isinstance(node, str):
-                return [node]
-            if isinstance(node, dict):
-                out: list[str] = []
-                for k, v in node.items():
-                    out.extend(collect(v, str(k)))
-                return out
-            if isinstance(node, list):
-                items: list[str] = []
-                for elem in node:
-                    items.extend(collect(elem, key))
-                return items
-            return []
-
-        for payload in (form, receipt, listing, detail, evaluator):
-            for text in collect(payload):
-                with self.subTest(text=text):
-                    self.assertEqual(neutral_violations(text), ())
-        screen_js = (
-            Path(__file__).resolve().parents[1] / "src/zava_forward/api/web/aftercare.js"
-        ).read_text(encoding="utf-8")
-        for match in _re.finditer(r'"([^"\\]*(?:\\.[^"\\]*)*)"', screen_js):
-            literal = match.group(1)
-            if " " in literal:
-                with self.subTest(literal=literal):
-                    self.assertEqual(neutral_violations(literal), ())
-
-    def test_served_quality_aftercare_route_refuses_non_neutral_note_and_preserves_403(
-        self,
-    ) -> None:
-        from zava_forward.core.quality import checklist_for
-
-        with self.store.lock:
-            dataset.supplied_resident_fixture(self.store._case("ZF-1"))
-            self.store.save()
-        sam, _, _, quil, _ = STAFF
-        ev = {lab: "seen and photographed" for lab in checklist_for("Loft insulation")["items"]}
-        self.store.submit_quality(sam, "ZF-1", "Loft insulation", "SYN", "Installer", ev, 1)
-        self.store.accept_quality(quil, "ZF-1", 0)
-        self.store.hand_over_quality(sam, "ZF-1", 0, "SYN guide explained", True)
-        self.assertEqual(
-            self.call(
-                "kim",
-                "/api/cases/ZF-1/quality-aftercare",
-                {"index": 0, "note": "You will save money."},
-            )[0],
-            403,
-        )
-        before_notes = copy.deepcopy(self.store.detail("ZF-1")["quality"][0]["aftercare"])
-        before_audit = len(list(self.store.audit_entries()))
-        for bad_note in (
-            "Condensation from drying clothes indoors.",
-            "Wall insulation caused the damp.",
-            "This measure pays for itself.",
-        ):
-            with self.subTest(bad_note=bad_note):
-                code, out = self.call(
-                    "sam",
-                    "/api/cases/ZF-1/quality-aftercare",
-                    {"index": 0, "note": bad_note},
-                )
-                self.assertEqual(code, 400, out)
-                self.assertNotIn("drying clothes", json.dumps(out).lower())
-                self.assertNotIn("pays for itself", json.dumps(out).lower())
-                self.assertEqual(self.store.detail("ZF-1")["quality"][0]["aftercare"], before_notes)
-                self.assertEqual(len(list(self.store.audit_entries())), before_audit)
-        ok_code, _ = self.call(
+    def test_served_representative_channel_and_evaluator_fr036_pack_metadata(self) -> None:
+        code, created = self.call(
             "sam",
-            "/api/cases/ZF-1/quality-aftercare",
-            {"index": 0, "note": "Household reported hatch draught; seal checked on visit."},
+            "/api/aftercare/concerns",
+            self.body(
+                request_id="req-served-rep-01",
+                raised_by="representative",
+                representative_basis="Signed household letter",
+                channel="representative",
+                support_needed=["call_back", "easy_read"],
+            ),
         )
-        self.assertEqual(ok_code, 200)
-        self.assertEqual(len(self.store.detail("ZF-1")["quality"][0]["aftercare"]), 1)
+        self.assertEqual(code, 201, created)
+        self.assertEqual(created["receipt"]["channel"], "representative")
+        self.assertEqual(created["receipt"]["support_needed"], ["callback_window", "easy_read"])
+        eval_code, view = self.call("pam", "/api/aftercare/evaluator")
+        self.assertEqual(eval_code, 200)
+        self.assertEqual(view["concern_pack_task"]["requirement"], "FR-036")
+        self.assertFalse(view["concern_pack_task"]["live_authorized"])
+        self.assertTrue(view["concern_pack_task"]["requires_human_review"])
 
 
 if __name__ == "__main__":

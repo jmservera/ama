@@ -1,0 +1,63 @@
+{
+ "task_id": "issue-1204-exact-schedules",
+ "task_slug": "issue-1204-exact-schedules",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-17/issue-1204-exact-schedules-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-17/issue-1204-exact-schedules-plan.md",
+  "details": ".copilot-tracking/details/2026-11-17/issue-1204-exact-schedules-phase-details.md",
+  "critique": ".copilot-tracking/reviews/plans/2026-11-17/issue-1204-exact-schedules-plan-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-17/issue-1204-exact-schedules-changes.md",
+  "review": ".copilot-tracking/reviews/logs/2026-11-17/issue-1204-exact-schedules-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Tier FOCUSED; prompt-only change, no full gate; required review and hosted checks still apply before merge (coordinator-owned)",
+   "status": "confirmed",
+   "evidence": "owner scope 2026-11-17 via task brief"
+  },
+  {
+   "decision": "Research executed; Planning Readiness Ready",
+   "status": "done",
+   "evidence": ".copilot-tracking/research/2026-11-17/issue-1204-exact-schedules-research.md"
+  },
+  {
+   "decision": "Critique executed once; verdict Revise; PC-001..003 accepted and applied directly; no second critique",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/plans/2026-11-17/issue-1204-exact-schedules-plan-critique.md"
+  },
+  {
+   "decision": "Implementation complete; verbatim prompts equal approved strings; HVE Medium, behavior satisfied-and-skipped",
+   "status": "done",
+   "evidence": ".copilot-tracking/changes/2026-11-17/issue-1204-exact-schedules-changes.md"
+  },
+  {
+   "decision": "Review executed once; outcome Revise; F1-F3 corrected unreviewed; reviewer classified delta Major so behavior test Not available, HVE Deferred",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/logs/2026-11-17/issue-1204-exact-schedules-review.md"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "Coordinator: hve-builder-tester run on exact source, independent exact-head review, hosted checks before merge; Refs #1204"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Graded hve-builder-tester run on this exact source and independent review of F1-F3 corrections",
+   "rationale": "Deferred behavior gate and unreviewed corrections",
+   "evidence": ".copilot-tracking/reviews/logs/2026-11-17/issue-1204-exact-schedules-review.md"
+  },
+  {
+   "rank": 2,
+   "task": "Broader next-action-map/helper/refill redesign",
+   "rationale": "Owner-declared separate follow-up",
+   "evidence": ".copilot-tracking/research/2026-11-17/issue-1204-exact-schedules-research.md"
+  }
+ ]
+}

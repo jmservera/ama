@@ -6,19 +6,31 @@ grant fixture into a fresh directory. It reads no environment-selected data and 
 """
 
 import hashlib
+import importlib
 import json
+import pkgutil
 import shutil
+import sys
 import tempfile
+import types
+import uuid as _uuid
+from collections.abc import Iterator
+from contextlib import contextmanager
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 from .. import store as _store
 from .. import workflows as _workflows
+from . import provenance
 
 Store: Any = _store.Store
 _today: Any = _workflows._today
 
 FIXTURE_ID = "SYN-RESIDENT-PREVIEW-444"
+VERSION = "resident-preview-fixture-v1"
+SEED = 444
+AS_OF = date(2026, 10, 24)
 MEASURES = ("Loft insulation", "Cavity wall")
 CANARY = "SYN-CANARY"
 LIMITATIONS = [
@@ -386,18 +398,92 @@ def _grants() -> dict[str, Any]:
     )
 
 
-def build(out_dir: str | Path) -> tuple[Path, Path]:
-    """Create a new directory holding the dataset and grant fixture. Refuses an existing one."""
+def revision_sources() -> tuple[Path, ...]:
+    return (Path(__file__),)
+
+
+@contextmanager
+def _frozen(as_of: date, seed: int) -> Iterator[None]:
+    """Pin the clock and id sources the store reads, so a build depends only on (seed, as_of)."""
+
+    ticks = iter(range(0, 1 << 30, 1000))
+
+    class FrozenDatetime(datetime):
+        @classmethod
+        def now(cls, tz: Any = None) -> "FrozenDatetime":
+            moment = datetime(as_of.year, as_of.month, as_of.day, 12) + timedelta(
+                microseconds=next(ticks)
+            )
+            return cls(*moment.timetuple()[:6], moment.microsecond, tzinfo=tz)
+
+    class FrozenDate(date):
+        @classmethod
+        def today(cls) -> "FrozenDate":
+            return cls(as_of.year, as_of.month, as_of.day)
+
+    counter = iter(range(1 << 30))
+
+    class FrozenUuid:
+        def __init__(self, value: int) -> None:
+            self.hex = f"{seed:08x}{value:024x}"
+
+    frozen_uuid = types.SimpleNamespace(
+        uuid4=lambda: FrozenUuid(next(counter)),
+        **{k: getattr(_uuid, k) for k in dir(_uuid) if k != "uuid4" and not k.startswith("__")},
+    )
+    package = importlib.import_module("zava_forward.core")
+    for info in pkgutil.iter_modules(package.__path__, "zava_forward.core."):
+        if not info.ispkg and ".synthetic" not in info.name:
+            try:
+                importlib.import_module(info.name)
+            except ImportError:
+                continue
+    swaps: list[tuple[Any, str, Any]] = []
+    for name, module in list(sys.modules.items()):
+        if (
+            not name.startswith("zava_forward.core")
+            or module is None
+            or module is sys.modules[__name__]
+        ):
+            continue
+        for attr, original, frozen in (
+            ("datetime", datetime, FrozenDatetime),
+            ("date", date, FrozenDate),
+            ("uuid", _uuid, frozen_uuid),
+        ):
+            if getattr(module, attr, None) is original:
+                swaps.append((module, attr, original))
+                setattr(module, attr, frozen)
+    try:
+        yield
+    finally:
+        for module, attr, original in swaps:
+            setattr(module, attr, original)
+
+
+def build(out_dir: str | Path, seed: int = SEED, as_of: date | None = None) -> tuple[Path, Path]:
+    """Create a new directory holding the dataset and grant fixture. Refuses an existing one.
+
+    Output depends only on (seed, as_of); as_of defaults to the pinned fixture date, not the clock.
+    """
+    as_of = as_of or AS_OF
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=False, mode=0o700)
-    with tempfile.TemporaryDirectory(prefix="ama444-build-") as work:
+    with _frozen(as_of, seed), tempfile.TemporaryDirectory(prefix="ama444-build-") as work:
         base = Path(work) / "base.json"
-        base.write_text(json.dumps(_dataset()), encoding="utf-8")
+        base.write_text(json.dumps({**_dataset(), "as_of": as_of.isoformat()}), encoding="utf-8")
         store = Store(str(base), str(Path(work) / "live.json"), str(Path(work) / "audit.jsonl"))
         _drive(store)
         data = store.data
         shutil.copytree(Path(work) / "docs", out / "docs")
-    data["synthetic_preview"] = dict(disposable=True, fixture_id=FIXTURE_ID)
+    data["synthetic_preview"] = dict(
+        disposable=True,
+        fixture_id=FIXTURE_ID,
+        seed=seed,
+        version=VERSION,
+        as_of=as_of.isoformat(),
+        generator_revision=provenance.source_revision(revision_sources()),
+    )
     dataset, fixture = out / "dataset.json", out / "grants.json"
     dataset.write_text(json.dumps(data, indent=1), encoding="utf-8")
     fixture.write_text(json.dumps(_grants(), indent=1), encoding="utf-8")

@@ -62,7 +62,7 @@ const pendingMutations = new Set();
 
 function mutationKey(path, body) {
   return JSON.stringify([path, body.action || body.task || (path.endsWith("/draft") ? body.kind : "") || "",
-    ...["id", "index", "measure", "case_id", "package", "capability", "turn"]
+    ...["id", "index", "key", "measure", "case_id", "package", "capability", "turn"]
       .map(key => body[key] ?? null)]);
 }
 
@@ -347,23 +347,38 @@ function retryWorkspaceScript(path) {
 
 function missingWorkspaceScripts(hash, caseRoute) {
   const destination = hash.split("?")[0];
+  const screensRoute = isRoleScreensDestination(destination);
   const contractor = me?.user.role === "Contractor";
   const staffCase = Boolean(me) && caseRoute && !contractor;
   const staffDestination = Boolean(me) && !contractor && !caseRoute;
   return [
     ["/async-action.js", true, typeof AsyncAction !== "undefined" && AsyncAction
       && ["handler", "run", "feedback"].every(method => typeof AsyncAction[method] === "function")],
-    ["/ops.js", staffCase || (staffDestination && hash === "#/capacity") || (contractor && !caseRoute && destination !== "#/screens"), typeof qualityPanel === "function"],
+    ["/ops.js", staffCase || (staffDestination && hash === "#/capacity") || (contractor && !caseRoute && !screensRoute), typeof qualityPanel === "function"],
     ["/panels.js", staffCase || (staffDestination && hash === "#/finance"), typeof financePanel === "function"],
     ["/assistants.js", staffCase || (staffDestination && hash === "#/assistants"), typeof assistantCasePanel === "function"],
     ["/chat.js", Boolean(me) && !contractor, typeof chatCasePanel === "function" && typeof employeeChat !== "undefined"],
     ["/aftercare.js", staffDestination && destination === "#/aftercare", typeof aftercareWorkspaceView === "function"],
     ["/timecapture.js", staffDestination && hash === "#/time", typeof timeView === "function"],
-    ["/role-screens.js", Boolean(me) && destination === "#/screens", typeof roleScreensView === "function"],
+    ["/role-screens.js", Boolean(me) && screensRoute, typeof roleScreensView === "function"],
     ["/simulator-control.js", Boolean(me) && destination === "#/simulator", typeof simulatorControlView === "function"],
     ["/progress.js", staffDestination && ["#/progress", "#/closed"].includes(destination), typeof ProgressViews === "object"],
     ["/vendor/leaflet.js", staffDestination && (hash === "#/overview" || destination === "#/coordinator"), typeof L === "object"],
   ].filter(([, needed, loaded]) => needed && !loaded).map(([path]) => path);
+}
+
+function isRoleScreensDestination(destination) {
+  const target = String(destination || "").split("?")[0];
+  return target === "#/screens"
+    || target === "#/role/building_safety_lead"
+    || target === "#/role/repairs"
+    || target === "#/role/housing_officer"
+    || target === "#/role/contact_centre"
+    || target === "#/role/resident_engagement"
+    || target === "#/role/procurement"
+    || target === "#/role/contractor"
+    || target === "#/role/programme_manager"
+    || target === "#/role/retrofit_coordinator";
 }
 
 async function requireWorkspaceScripts(hash, caseRoute) {
@@ -424,14 +439,15 @@ async function route() {
   clearTimeout(searchTimer);
   const signal = routeController.signal;
   const hash = location.hash || "#/";
+  const baseHash = hash.split("?")[0];
   const m = location.hash.match(/^#\/case\/([^?]+)(?:\?.*)?$/);
-  const active = m ? (coordinatorOrigin ? "#/overview" : queueOrigin === "all" ? "#/all" : "#/") : hash.startsWith("#/coordinator") ? "#/overview" : hash.split("?")[0];
+  const active = m ? (coordinatorOrigin ? "#/overview" : queueOrigin === "all" ? "#/all" : "#/") : hash.startsWith("#/coordinator") ? "#/overview" : isRoleScreensDestination(baseHash) ? "#/screens" : baseHash;
   document.querySelectorAll("#nav a").forEach((link) => {
     if (link.getAttribute("href") === active) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
   });
   const destination = me.navigation.find((item) => item.href === active);
-  const routeStatus = `${me.user.role}. ${destination?.scope || (hash === "#/handoff-waiting" ? "Handoff waiting times" : "Case workspace")}.`;
+  const routeStatus = `${me.user.role}. ${destination?.scope || (hash === "#/handoff-waiting" ? "Handoff waiting times" : baseHash === "#/exceptions" ? "Data steward and operator exception queue" : "Case workspace")}.`;
   workspaceStatus.textContent = routeStatus;
   try {
   await requireWorkspaceScripts(hash, Boolean(m));
@@ -439,8 +455,8 @@ async function route() {
   if (me !== session) return;
   if (typeof employeeChat !== "undefined") employeeChat.install();
   workspaceStatus.textContent = routeStatus;
-  if (hash.split("?")[0] === "#/screens") return await roleScreensView();
-  if (hash.split("?")[0] === "#/simulator") return await simulatorControlView();
+  if (isRoleScreensDestination(baseHash)) return await roleScreensView();
+  if (baseHash === "#/simulator") return await simulatorControlView();
   if (me.user.role === "Contractor") return await (m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView());
   if (me.services?.cases === false && hash !== "#/assistants" && hash !== "#/import") {
     return show(h("h1", {}, "No case work for this account"),
@@ -459,6 +475,7 @@ async function route() {
   if (hash.split("?")[0] === "#/progress") return await ProgressViews.dashboard();
   if (hash === "#/capacity") return await capacityView();
   if (hash === "#/import") return await importView();
+  if (baseHash === "#/exceptions") return await exceptionsView();
   if (hash === "#/overview") return await overviewView();
   if (hash.split("?")[0] === "#/coordinator") return await coordinatorView();
   if (hash === "#/visits") return await visitsView();
@@ -616,7 +633,7 @@ function aiBox() {
   const number = new Intl.NumberFormat("en-GB");
   const box = h("section", { class: "card ai briefing" }, h("h2", {}, "Today's briefing"));
   const content = h("div", { class: "briefing-content" });
-  const status = h("p", { role: "status", "aria-live": "polite" });
+  const status = h("p", { role: "status", "aria-live": "polite", class: "briefing-status" });
   const toggle = h("select", { id: "wf-mode", name: "assistance-mode", onchange: () => load() },
     h("option", { value: "ai" }, "Allow AI suggestions"),
     h("option", { value: "workflow" }, "Use rules and templates, without AI"));
@@ -642,12 +659,17 @@ function aiBox() {
       h("p", { class: "muted" }, `${number.format(b.case_count)} permitted open ${b.case_count === 1 ? "case" : "cases"}. ${number.format(b.summary_count)} included in this summary (up to 8).`),
       h("p", { class: "ai-label" }, ai ? "AI suggestion, not approved. Not an instruction." : "Summary by rules. Not an instruction."),
       h("p", {}, "Why these cases: the fixed case ranking selects the first permitted open cases, with safety first. This briefing does not change that order. Check the linked records before using the text."),
+      h("dl", { class: "briefing-basis" },
+        h("dt", {}, "Priority"), h("dd", {}, "Set by fixed rules, not by AI."),
+        h("dt", {}, "Wording"), h("dd", {}, ai ? "Summarised by AI. Check it against the sources." : "Written by rules and templates. No AI was used."),
+        h("dt", {}, "Your control"), h("dd", {}, "Open any case from the list or the sources below. Use rules and templates, without AI, to turn AI off.")),
       h("p", { class: "muted" }, "Prepared at: ", refreshed && !Number.isNaN(refreshed.valueOf())
         ? h("time", { datetime: b.generated_at }, new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "long" }).format(refreshed))
         : "Not provided. Refresh to request current records."),
       h("h3", {}, ai ? "Generated briefing and its sources" : "Rules-derived summary and its sources"),
       h("ol", { class: "briefing-statements" }, (b.statements || [{ text: b.text, citations: [], unresolved: [] }]).map(statement => h("li", {},
         h("p", {}, statement.text),
+        h("p", { class: "muted", "data-statement-basis": "" }, `Why listed: one of the first permitted open cases in the fixed ranking. ${ai ? "Wording by AI." : "Wording by rules."}`),
         h("details", {}, h("summary", {}, `Sources used (${statement.citations.length})`),
           statement.citations.length ? h("ul", {}, statement.citations.map(cite => h("li", {}, source(cite, b.source_case_ids || [])))) : h("p", {}, "No statement references were provided. Check the case record."),
           statement.unresolved?.length ? h("p", { class: "err" }, `These references do not match the record: ${statement.unresolved.join("; ")}. Do not rely on this statement.`) : null)))),
@@ -678,7 +700,13 @@ function aiBox() {
     const cancel = () => { if (briefingBox === box) briefingBox = null; };
     signal.addEventListener("abort", cancel, { once: true });
     content.setAttribute("aria-busy", "true");
-    status.textContent = "Reading case summaries...";
+    status.replaceChildren(
+      h("span", {}, "Reading case summaries..."),
+      " ",
+      h("span", {}, painted
+        ? "Refreshing today's briefing. The current text stays visible until the new one is ready."
+        : "Your case list is still available."),
+    );
     try {
       const b = await api(`/api/briefing${aiMode.workflow ? "?mode=workflow" : ""}`, undefined, signal);
       if (signal.aborted || own !== sequence) return;
@@ -770,6 +798,17 @@ function priorityPanel() {
 
 const HANDOFF_READ_ERROR = "The handoffs waiting for you could not load, so we cannot tell whether any are waiting. Owner: application support. Next action: refresh to try again, then contact application support if it continues.";
 const HANDOFF_DENIED = "Your account cannot see the handoffs waiting for you, so we cannot tell whether any are waiting. Refreshing will not change this. Owner: your Retrofit Programme Manager or Programme Support Officer. Next action: ask them to check your role. Until then, ask the sender or open a case you already know, because the case list may not show every handoff waiting for you.";
+const MANAGER_TARGET = "a Retrofit Programme Manager or Programme Support Officer";
+// Plain-language state for an unaccepted handoff; the words carry the meaning, not colour.
+function handoffAttention(hd, now = Date.now()) {
+  const waited = Number.isFinite(Date.parse(hd.offered_at)) ? Math.max(0, Math.round((now - Date.parse(hd.offered_at)) / 36e5)) : null;
+  const elapsed = waited === null ? "Waiting time unknown" : `Waiting ${waited} ${waited === 1 ? "hour" : "hours"}`;
+  const target = `${hd.proposed_receiver || hd.to_name || "Unassigned"} (${hd.destination || hd.to_role || "role unknown"})`;
+  if (hd.state === "Escalated") return `State: Escalated: unaccepted handoff. ${elapsed}. Waiting for ${target}. Escalated to ${hd.escalation_owner || "a named manager"}.`;
+  const due = Date.parse(hd.due_at);
+  const overdue = Number.isFinite(due) && due < now;
+  return `State: Action needed. ${elapsed}. Waiting for ${target}. Due: ${hd.due_at || "no due time set"}${overdue ? " (overdue)" : ""}.${overdue ? ` Escalation target: ${MANAGER_TARGET}.` : ""}`;
+}
 function pendingHandoffs() {
   const box = h("section", { class: "card", "aria-label": "Handoffs waiting for you" },
     h("p", { role: "status" }, "Loading handoffs..."));
@@ -783,6 +822,7 @@ function pendingHandoffs() {
         " This file is not the list on this card. It has every handoff you can see that has not been accepted yet, with how long each has waited. It has no resident contact details. It is a read-only copy; changes in it are not imported back. No waiting-time limit is set for the whole queue, so a handoff is marked as needing escalation only when its own due time has passed. An empty file has no column names."),
       h("ul", { class: "list" }, rows.map((x) => h("li", {},
       h("a", { href: `#/case/${encodeURIComponent(x.case_id)}` }, `${x.resident}, ${x.address}`),
+      h("div", {}, handoffAttention(x)),
       h("div", { class: "muted" }, `${x.status}. Current owner: ${x.accountable_owner}; proposed receiver: ${x.proposed_receiver || "Unassigned"}; confirmed receiver: ${x.confirmed_receiver || "Unconfirmed"}; destination: ${x.destination || "Unknown"}; chase: ${x.chase_owner || "Unassigned"}.`),
       h("div", { class: "muted" }, `Urgency: ${x.urgency || "Unknown"}; due: ${x.due_at || "Unknown"}; next action: ${x.next_action || "Unknown"}. Resident update: ${x.resident_update_owner || "Unassigned"}, ${x.resident_update_due_at || "Unknown"}.`),
       h("div", {}, x.to_code === me.user.code ? "Open to record receipt, accept or decline." : "Open to chase, escalate or withdraw.")))));
@@ -800,7 +840,7 @@ function workSummary(work) {
     h("p", { class: "next-action" }, `Next action: ${work.next_action}`),
     h("p", { class: "muted" }, `Source: ${work.source}; evidence: ${work.evidence}; version: ${work.version}; recorded: ${work.recorded_at}; recorded as of: ${work.as_of}.`),
     work.handoff && h("p", {}, `Destination: ${work.handoff.destination}; proposed receiver: ${work.handoff.proposed_receiver}; confirmed receiver: ${work.handoff.confirmed_receiver}; chase owner: ${work.handoff.chase_owner}; resident-update owner: ${work.handoff.resident_update_owner}.`),
-    work.hazard_clocks.map((clock) => {
+    (work.hazard_clocks || []).map((clock) => {
       const clockSummary = clock.clock_label
         ? ` Clock: ${clock.clock_label} (${clock.clock_status === "fail_closed_missing_timestamp"
           ? "fail-closed: timestamp not recorded"
@@ -812,8 +852,10 @@ function workSummary(work) {
         ? ` Accountable owner: ${clock.named_owner} (${clock.owner_role || "Building Safety Liaison"}, ID ${clock.owner_id || "recorded"})${clock.unassigned ? ` [Unassigned item; escalation owner: ${clock.escalation_owner || clock.named_owner}]` : ""}.`
         : "";
       return h("p", { class: "safety-clock" },
-        `Safety clock in this recorded view: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; awareness: ${clock.aware_at}; named follow-up owner: ${clock.owner}; service response due: ${clock.response_due_at}; resident update due: ${clock.resident_update_due_at}. ${clock.authority} owns timing. ${clock.owner_status} Service response: ${clock.response_state}; resident update: ${clock.resident_update_state}.${clockSummary}${ownerSummary}`);
-    }));
+        `${clock.clock_text || "Safety clock: elapsed time and target window not supplied."} Accountable owner: ${clock.accountable_owner || "Building Safety lead (escalation owner)"}. Safety clock in this recorded view: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; awareness: ${clock.aware_at}; named follow-up owner: ${clock.owner}; service response due: ${clock.response_due_at}; resident update due: ${clock.resident_update_due_at}. ${clock.authority} owns timing. ${clock.owner_status} Service response: ${clock.response_state}; resident update: ${clock.resident_update_state}.${clockSummary}${ownerSummary}`);
+    }),
+    (work.safeguarding_clocks || []).map((clock) => h("p", { class: "safeguarding-clock" },
+      `Safeguarding clock in this recorded view: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; referred: ${clock.referred_at}; named accountable owner: ${clock.owner} (${clock.owner_role}); response due: ${clock.response_due_at}. ${clock.authority} owns timing. ${clock.owner_status} Response: ${clock.response_state}.`)));
 }
 
 function workSteps(work) {
@@ -870,10 +912,12 @@ async function handoffWaitingView() {
   if (!rows) return show(back, title, h("p", { role: "alert", class: "err" }, message), recheck);
   const scope = h("section", { class: "card", "aria-label": "Scope of this screen" },
     h("p", {}, "This screen lists every handoff that has not been accepted yet and that your role can see. It is not the list called Handoffs waiting for you. It is read-only: nothing here changes a handoff."),
-    h("p", {}, "No approved waiting-time limit is set for the whole queue (OD-09 is not decided). A long wait alone does not mean a handoff is late, and nothing is escalated automatically. A handoff is marked as needing escalation only when its own due time has passed. Open the case to chase, escalate or withdraw."));
+    h("p", {}, "No approved waiting-time limit is set for the whole queue (OD-09 is not decided). A long wait alone does not mean a handoff is late, and nothing is escalated automatically. A handoff is marked as needing escalation only when its own due time has passed. Open the case to chase, escalate or withdraw."),
+    h("p", {}, "For conflicting source values, failed imports, failed model calls and stranded tasks, open the ",
+      h("a", { href: "#/exceptions" }, "data steward and operator exception queue"), "."));
   if (!rows.length) return show(back, title, scope,
     h("p", { role: "status" }, "No unaccepted handoffs are visible to your role."), recheck);
-  const heads = ["Case", "Status", "Waiting", "Due", "Chase owner", "Proposed receiver", "Escalation"];
+  const heads = ["Case", "State", "Status", "Waiting", "Due", "Chase owner", "Proposed receiver", "Escalation"];
   const escalation = (x) => [x.escalated ? "Already escalated." : x.needs_escalation ? "Needs escalation." : "No escalation reason recorded.",
     x.reasons.length ? ` Reason: ${x.reasons.join("; ")}.` : ""].join("");
   show(back, title, scope,
@@ -884,6 +928,7 @@ async function handoffWaitingView() {
           h("thead", {}, h("tr", {}, heads.map((x) => h("th", { scope: "col" }, x)))),
           h("tbody", {}, rows.map((x) => h("tr", {},
             h("th", { scope: "row" }, h("a", { href: `#/case/${encodeURIComponent(x.case_id)}` }, x.case_id)),
+            h("td", {}, x.escalated ? "Escalated: unaccepted handoff" : "Action needed"),
             h("td", {}, x.status),
             h("td", {}, waitingHours(x.age_hours)),
             h("td", {}, waitingTime(x.due_at)),
@@ -1172,7 +1217,7 @@ async function caseView(id) {
       regulatoryAlertsPanel(id), !c.closed && returned, stockPanel(c)]],
     ["survey", "Survey and assessment", [technicalPanel(c, id, refresh), documentsPanel(c, id, refresh)]],
     ["funding", "Funding", [fundingPanel(c, id, refresh, savedFields, session), financePanel(c, id, refresh), grantPanel(c, id, refresh)]],
-    ["resident", "Resident", [residentPanel(c, id, refresh), nominationPanel(c), call, write, affectedChallengePanel(c, id, refresh)]],
+    ["resident", "Resident", [residentPanel(c, id, refresh), nominationPanel(c, id, refresh), call, write, affectedChallengePanel(c, id, refresh)]],
     ["contractor", "Contractor and works", [h("section", { class: "card" }, h("h2", {}, "Contractor and appointments"),
       h("p", {}, `${c.contractor.name}, ${c.contractor.contact}, ${c.contractor.phone}`),
       h("p", {}, `Next visit: ${fmtDate((c.appointments.find(a => a.outcome === "Booked") || {}).date)}`),
@@ -1530,6 +1575,7 @@ function handoffPanel(c, id, refresh) {
   const open = hd && ["Offered", "Received", "Escalated"].includes(hd.state);
   const kids = [h("h2", {}, "Handoff to a colleague")];
   if (hd) kids.push(
+    ["Offered", "Received", "Escalated"].includes(hd.state) && h("p", { role: "status" }, handoffAttention(hd)),
     h("p", { role: "status" }, `${hd.status}. Current accountable owner: ${hd.accountable_owner}. Destination: ${hd.destination || "Unknown"}. Proposed receiver: ${hd.proposed_receiver || "Unassigned"}. Confirmed receiver: ${hd.confirmed_receiver || "Unconfirmed"}. Chase owner: ${hd.chase_owner || "Unassigned"}.`),
     h("p", {}, `Urgency: ${hd.urgency || "Unknown"}. Due: ${hd.due_at || "Unknown"}. Next action: ${hd.next_action || "Unknown"}.`),
     h("p", {}, `Resident update owner: ${hd.resident_update_owner || "Unassigned"}; commitment: ${hd.resident_update_due_at || "Unknown"}. No message is sent automatically.`),
@@ -1852,6 +1898,8 @@ function safetyPanel(c, id, refresh) {
       h("dl", { class: "safety-facts" },
         h("dt", {}, "External case"), h("dd", {}, x.job || "Not recorded yet"),
         h("dt", {}, "Zava coordinator"), h("dd", {}, coordinator || "Not assigned yet"),
+        h("dt", {}, "Safety clock"), h("dd", {}, x.clock_text || x.escalation_clock || "Safety clock: elapsed time and target window not supplied."),
+        h("dt", {}, "Accountable owner"), h("dd", {}, x.accountable_owner || "Building Safety lead (escalation owner)"),
         h("dt", {}, "Evidence progress"), h("dd", {}, progress),
         h("dt", {}, "Restart decision"), h("dd", {}, decision
           ? `Restarted by ${decision.actor.name} (${decision.actor.role}). Reason: ${decision.reason}. Evidence: ${decision.evidence}`
@@ -1934,8 +1982,9 @@ async function contractorListView() {
   const render = () => out.replaceChildren(
     h("p", { class: "muted" }, `${total} ${total === 1 ? "job" : "jobs"}`),
     h("ul", { class: "list" }, rows.length ? rows.map((r) => h("li", {}, h("a", { class: "item", href: `#/case/${encodeURIComponent(r.id)}` },
-      h("div", {}, h("span", { class: "name" }, `${r.address}, ${r.town} ${r.postcode}`), h("div", { class: "status" }, r.status),
-        r.needs_notice ? h("span", { class: "flag" }, "Needs notice") : h("span", { class: "muted" }, "No extra notice needed"),
+      h("div", {}, h("span", { class: "name" }, `${r.address}, ${r.town} ${r.postcode}`),
+        h("div", { class: "status" }, h("span", { class: "flag", "data-state-cue": "Case status" }, `Status: ${r.status || "Unknown"}`)),
+        contractorVisitNoticeBadge(r.needs_notice),
         h("div", {}, `Named contact: ${r.named_contact}`)),
       h("div", { class: "meta" }, h("div", {}, r.stage), r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "card" }, "No jobs assigned to you.")),
     rows.length < total ? h("p", {}, h("button", { class: "alt", onclick: () => load(true) }, `Show more (${rows.length} of ${total} shown)`)) : null);
@@ -1945,9 +1994,15 @@ async function contractorListView() {
     total = d.total;
     render();
   };
-  show(h("h1", {}, "Your jobs"), h("p", { class: "muted" }, "You see the address, the works and a named contact. Where a resident needs notice before a visit it says so; the reason is not shared with contractors."), out);
+  const jobsSection = h("section", { class: "card", id: "contractor-assigned-jobs", "aria-labelledby": "contractor-assigned-jobs-heading" },
+    h("h2", { id: "contractor-assigned-jobs-heading", tabindex: "-1" }, "Assigned jobs"),
+    out);
+  show(h("h1", {}, "Your jobs"),
+    contractorJumpLinks([["contractor-assigned-jobs-heading", "Assigned jobs"], ["contractor-work-orders-heading", "Your work orders"]], "Sections of your jobs"),
+    h("p", { class: "muted" }, "You see the address, the works and a named contact. Where a resident needs notice before a visit it says so; the reason is not shared with contractors."),
+    jobsSection);
   await load();
-  out.after(await contractorOrders());
+  jobsSection.after(await contractorOrders());
 }
 
 async function contractorCaseView(id) {
@@ -1955,19 +2010,37 @@ async function contractorCaseView(id) {
   try { c = await api(`/api/cases/${encodeURIComponent(id)}`); } catch (e) { if (e.name === "AbortError" || !me) return; return show(h("a", { class: "back", href: "#/" }, "Back to your jobs"), h("p", { class: "err" }, e.message)); }
   show(h("a", { class: "back", href: "#/" }, "Back to your jobs"),
     h("h1", {}, `${c.home.address}, ${c.home.town} ${c.home.postcode}`),
-    h("div", { class: "status-line", role: "status" }, c.status),
-    h("section", { class: "card regulatory", id: "regulatory-supplier" }, h("h2", {}, "Requirements and doubt route"),
+    h("div", { class: "status-line", role: "status", "data-state-cue": "Case status" }, `Status: ${c.status || "Unknown"}`),
+    contractorJumpLinks([["regulatory-supplier-heading", "Requirements and doubt route"], ["contractor-before-visit-heading", "Before you visit"],
+      ["contractor-job-details-heading", "The job"], ["contractor-visits-heading", "Visits"]], "Sections of this job"),
+    h("section", { class: "card regulatory", id: "regulatory-supplier", "aria-labelledby": "regulatory-supplier-heading" },
+      h("h2", { id: "regulatory-supplier-heading", tabindex: "-1" }, "Requirements and doubt route"),
       h("p", {}, "Suppliers: follow the agreed contract and scheme requirements, not a chat interpretation of law. Contract and TrustMark terms are not held here. Obtain them from your named contact or contracts manager before relying on a requirement."),
       h("p", {}, `In doubt, contact ${c.named_contact}. For a possible emergency or hazard use the existing human emergency or hazard service immediately; do not wait for this application. No consent, safety approval or financial commitment is inferred.`),
       h("p", {}, "Share only necessary resident information. This view grants no access to staff regulatory chat or alerts.")),
-    h("section", { class: `card${c.needs_notice ? " ai" : ""}` }, h("h2", {}, "Before you visit"),
-      h("p", { class: "big" }, c.needs_notice ? "Needs notice" : "No extra notice needed"),
-      h("p", {}, `Named contact: ${c.named_contact}`)),
-    h("section", { class: "card" }, h("h2", {}, "The job"),
+    h("section", { class: `card${c.needs_notice ? " ai" : ""}`, id: "contractor-before-visit", "aria-labelledby": "contractor-before-visit-heading" },
+      h("h2", { id: "contractor-before-visit-heading", tabindex: "-1" }, "Before you visit"),
+      h("p", { class: "big" }, contractorVisitNoticeBadge(c.needs_notice)),
+      h("p", {}, `Named contact: ${c.named_contact}`),
+      h("p", { class: "muted" }, "The reason for any notice is not shared with contractors.")),
+    h("section", { class: "card", id: "contractor-job-details", "aria-labelledby": "contractor-job-details-heading" },
+      h("h2", { id: "contractor-job-details-heading", tabindex: "-1" }, "The job"),
       h("dl", {}, h("dt", {}, "Works"), h("dd", {}, c.measures), h("dt", {}, "Stage"), h("dd", {}, c.stage),
         h("dt", {}, "Home"), h("dd", {}, c.home.type), h("dt", {}, "Your contact"), h("dd", {}, `${c.contractor.name}, ${c.contractor.contact}`))),
-    h("section", { class: "card" }, h("h2", {}, "Visits"),
-      c.appointments.length ? h("ul", { class: "list" }, c.appointments.map((a) => h("li", {}, `${fmtDate(a.date)} ${a.slot}: ${a.type} (${a.outcome})`))) : h("p", {}, "No visits booked.")));
+    h("section", { class: "card", id: "contractor-visits", "aria-labelledby": "contractor-visits-heading" },
+      h("h2", { id: "contractor-visits-heading", tabindex: "-1" }, "Visits"),
+      c.appointments.length ? h("ul", { class: "list" }, c.appointments.map((a) => h("li", {}, `${fmtDate(a.date)} ${a.slot}: ${a.type} (Outcome: ${a.outcome || "Not recorded"})`))) : h("p", {}, "No visits booked.")));
+}
+
+function contractorJumpLinks(targets, label) {
+  return h("nav", { role: "navigation", "aria-label": label, class: "screen-links" },
+    targets.map(([targetId, title]) => h("a", { href: `#${targetId}`, "data-jump": targetId, "data-jump-target": targetId }, `Go to ${title}`)));
+}
+
+function contractorVisitNoticeBadge(needsNotice) {
+  return needsNotice
+    ? h("span", { class: "flag danger", "data-state-cue": "Visit notice required" }, "Visit notice required: Needs notice")
+    : h("span", { class: "flag", "data-state-cue": "Standard visit" }, "Standard visit: No extra notice needed");
 }
 
 function documentsPanel(c, id, refresh) {
@@ -2072,7 +2145,363 @@ function importView() {
   }));
   show(h("a", { class: "back", href: "#/" }, "Back to the list"), h("h1", {}, "Check a spreadsheet"),
     h("p", {}, "Choose any spreadsheet saved as CSV. We match the columns for you and list anything to fix. Your file is never changed."),
+    h("p", {}, "Rejected import batches, failed model calls, stranded tasks and conflicting source values are tracked in the ",
+      h("a", { href: "#/exceptions" }, "data steward and operator exception queue"), "."),
     h("label", { for: "f" }, "Spreadsheet (CSV)"), file, out);
+}
+
+const EXCEPTIONS_READ_ERROR = "The exception queue could not load, so conflicting source values and operational failures cannot be verified right now. Owner: application support. Next action: choose Check again, then contact application support if it continues.";
+const EXCEPTIONS_DENIED = "Access to the exception queue is restricted to named data stewards and digital operators (or a programme manager before roles are named). Owner: the programme owner. Next action: ask the programme owner to name a data steward and a digital operator before opening this queue.";
+
+function exceptionActionLabel(action) {
+  if (action === "request_rerun") return "Request human re-run";
+  if (action === "resolve_by_owner") return "Record owner resolution";
+  return "Keep on hold";
+}
+
+function exceptionStatusLabel(status) {
+  if (status === "held") return "Paused for human review";
+  if (status === "rerun_requested") return "Human re-run requested";
+  if (status === "closed") return "Closed by named owner";
+  return "Open for review";
+}
+
+function exceptionKindLabel(item) {
+  const kind = typeof item === "string" ? item : (item.failure_category || item.kind);
+  if (kind === "source_conflict") return "Conflicting source values";
+  if (kind === "identity_conflict") return "Identity conflict";
+  if (kind === "failed_import") return "Failed import";
+  if (kind === "failed_ai_run") return "Failed model call";
+  if (kind === "failed_integration") return "Failed integration";
+  if (kind === "stranded_task") return "Stranded task";
+  return String(kind || "Exception");
+}
+
+function exceptionRoleLabel(code) {
+  if (code === "data_steward") return "Data steward (source conflicts, identity conflicts and failed imports)";
+  if (code === "digital_operator") return "Digital operator (failed model calls, failed integrations and stranded tasks)";
+  return String(code || "Unassigned");
+}
+
+function exceptionTime(value) {
+  if (value == null || value === "") return "Unknown";
+  const text = String(value);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+    const day = new Date(`${text}T00:00:00Z`);
+    return Number.isNaN(day.getTime()) ? text
+      : `${new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeZone: "UTC" }).format(day)} (${text})`;
+  }
+  const parsed = new Date(text);
+  return Number.isNaN(parsed.getTime()) ? text
+    : `${new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }).format(parsed)} UTC`;
+}
+
+function exceptionOriginalSummary(orig) {
+  if (!orig || typeof orig !== "object") return "Preserved as recorded";
+  const parts = [];
+  if (orig.case_id) parts.push(`case ${orig.case_id}`);
+  if (orig.id) parts.push(`record ${orig.id}`);
+  if (orig.batch_id) parts.push(`batch ${orig.batch_id}`);
+  if (orig.source_name) parts.push(`file ${orig.source_name}`);
+  if (orig.source_sha256) parts.push(`sha256 ${String(orig.source_sha256).slice(0, 12)}`);
+  if (orig.at) parts.push(`recorded ${exceptionTime(orig.at)}`);
+  return parts.length ? `Preserved without overwrite (${parts.join(", ")})` : "Preserved without overwrite";
+}
+
+function validExceptionQueuePayload(data) {
+  return Boolean(data && typeof data === "object"
+    && (data.state === "ok" || data.state === "roles_not_named")
+    && data.banner && typeof data.banner === "object"
+    && typeof data.banner.state === "string"
+    && typeof data.banner.text === "string"
+    && Array.isArray(data.items)
+    && Array.isArray(data.sources)
+    && Array.isArray(data.unrouted)
+    && data.access && typeof data.access === "object");
+}
+
+function renderExceptionOutageSection(banner, sources, unrouted) {
+  const detected = banner.state === "outage";
+  const clear = banner.state === "no_known_outage";
+  const tone = detected ? "danger" : clear ? "ok" : "wait";
+  const prefix = detected ? "Outage detected" : clear ? "No outage recorded" : "Service health unverified";
+  const components = banner.components && typeof banner.components === "object"
+    ? Object.entries(banner.components) : [];
+  const nextSteps = Array.isArray(banner.next_steps) ? banner.next_steps : [];
+  const sourceList = Array.isArray(sources) ? sources : [];
+  const unroutedList = Array.isArray(unrouted) ? unrouted : [];
+  return h("section", { class: "card screen-evidence", "aria-label": "Service and outage status" },
+    h("h2", {}, "Service and outage status"),
+    h("p", { class: `status-line ${tone}`, role: "status" }, `${prefix}: ${banner.text}`),
+    components.length ? h("div", {},
+      h("h3", {}, "Affected services"),
+      h("ul", {}, components.map(([name, info]) => h("li", {},
+        h("code", { translate: "no" }, name),
+        `: ${info && info.note ? info.note : "Suspended"}`,
+        info && info.since ? ` (since ${exceptionTime(info.since)})` : "")))) : null,
+    nextSteps.length ? h("div", {},
+      h("h3", {}, "What staff should do now"),
+      h("ul", {}, nextSteps.map((step) => h("li", {}, String(step))))) : null,
+    sourceList.length ? h("div", {},
+      h("h3", {}, "Feed connection status"),
+      h("ul", {}, sourceList.map((line) => h("li", {}, String(line))))) : null,
+    unroutedList.length ? h("div", {},
+      h("h3", {}, "Unrouted records requiring attention"),
+      h("ul", {}, unroutedList.map((line) => h("li", {}, String(line))))) : null);
+}
+
+function renderExceptionRecoveryForm(item, index, reload) {
+  const trail = Array.isArray(item.audit_trail) ? item.audit_trail : [];
+  const trailBlock = [
+    h("h4", {}, "Recorded recovery audit trail"),
+    trail.length
+      ? h("ol", {}, trail.map((entry) => h("li", {},
+        `${exceptionActionLabel(entry.action)} by ${entry.by || "Unknown"} (${exceptionTime(entry.at)}): ${entry.reason || "No reason recorded"}. Replayed: ${entry.replayed ? "Yes" : "No"}. Released: ${entry.released ? "Yes" : "No"}.`)))
+      : h("p", { class: "muted" }, "No recovery decisions recorded yet."),
+  ];
+  if (item.status === "closed" || !item.recovery_key) {
+    return h("div", {},
+      h("p", { class: "muted", role: "status" },
+        item.status === "closed"
+          ? "Closed by the named owner. No further recovery action can be recorded on this item."
+          : "This item has no stable recovery key and must be inspected directly in its source record."),
+      ...trailBlock);
+  }
+  const actionId = `ex-action-${index}`;
+  const reasonId = `ex-reason-${index}`;
+  const hintId = `ex-hint-${index}`;
+  const errId = `ex-err-${index}`;
+  const policyActions = item.recovery_policy?.allowed_actions || item.recovery_context?.allowed_actions;
+  const actions = Array.isArray(policyActions) && policyActions.length
+    ? policyActions
+    : ["request_rerun", "resolve_by_owner"];
+  const actionSelect = h("select", { id: actionId, name: "action", autocomplete: "off" },
+    actions.map((act) => h("option", { value: act }, exceptionActionLabel(act))));
+  const errNode = h("p", { id: errId, class: "field-error", role: "alert", hidden: true });
+  const statusNode = h("p", { class: "muted", role: "status", "aria-live": "polite" });
+  const reasonInput = h("textarea", {
+    id: reasonId, name: "reason", rows: "2", maxlength: "400", autocomplete: "off",
+    "aria-describedby": `${hintId} ${errId}`,
+    placeholder: "Example: Checked source file against supplier log; keeping paused until named owner confirms.",
+  });
+  const submitBtn = h("button", { type: "submit" }, "Record controlled recovery decision");
+  const form = h("form", { class: "safety-step", onsubmit: async (event) => {
+    event.preventDefault();
+    const reason = reasonInput.value.trim();
+    if (!reason) {
+      reasonInput.setAttribute("aria-invalid", "true");
+      errNode.hidden = false;
+      errNode.textContent = "Enter the audit reason before recording a recovery decision. Owner: you, as the signed-in steward or operator. Next action: explain what you checked and why this decision applies.";
+      reasonInput.focus();
+      return;
+    }
+    reasonInput.removeAttribute("aria-invalid");
+    errNode.hidden = true;
+    errNode.textContent = "";
+    submitBtn.disabled = true;
+    submitBtn.setAttribute("aria-busy", "true");
+    statusNode.textContent = "Recording controlled recovery decision.";
+    try {
+      await api("/api/exceptions/recovery", { key: item.recovery_key, action: actionSelect.value, reason });
+      form.dataset.unsaved = "";
+      await reload(`Recorded ${exceptionActionLabel(actionSelect.value).toLowerCase()} for ${item.id}. No automatic replay or external release was performed.`);
+    } catch (error) {
+      submitBtn.disabled = false;
+      submitBtn.removeAttribute("aria-busy");
+      statusNode.textContent = "";
+      if (!error || error.name === "AbortError" || error.status === 401) return;
+      errNode.hidden = false;
+      errNode.textContent = ownedNotice(error.message, "check the audit reason and recorded recovery history before trying again.");
+      reasonInput.focus();
+    }
+  } },
+  h("label", { for: actionId }, "Controlled recovery action"),
+  actionSelect,
+  h("label", { for: reasonId }, "Audit reason (required, recorded in the audit log)"),
+  reasonInput,
+  h("p", { id: hintId, class: "field-hint muted" },
+    "Recording a decision appends an audited human request only. Nothing replays a model call, re-imports a batch, overwrites an original source value or contacts a resident."),
+  errNode, statusNode, submitBtn);
+  reasonInput.addEventListener("input", () => {
+    form.dataset.unsaved = reasonInput.value.trim() ? "true" : "";
+    if (reasonInput.value.trim()) {
+      reasonInput.removeAttribute("aria-invalid");
+      errNode.hidden = true;
+      errNode.textContent = "";
+    }
+  });
+  return h("div", {}, form, ...trailBlock);
+}
+
+async function exceptionsView(savedNotice = "") {
+  const back = h("a", { class: "back", href: typeof queueHref === "function" ? queueHref() : "#/" }, "Back to the list");
+  const title = h("h1", {}, "Data steward and digital operator exception queue");
+  show(back, title, h("p", { role: "status", "aria-live": "polite" }, "Loading exception queue."));
+  let data = null;
+  let message = EXCEPTIONS_READ_ERROR;
+  try {
+    const raw = await api("/api/exceptions");
+    if (validExceptionQueuePayload(raw)) data = raw;
+  } catch (error) {
+    if (error && (error.name === "AbortError" || error.status === 401)) return;
+    if (error && error.status === 403) message = EXCEPTIONS_DENIED;
+  }
+  const recheck = h("p", {}, h("button", { type: "button", class: "alt", onclick: () => exceptionsView() }, "Check again"));
+  if (!data) {
+    return show(back, title, h("p", { role: "alert", class: "err" }, message), recheck);
+  }
+  const noticeBanner = savedNotice
+    ? h("p", { class: "status-line ok", role: "status", "aria-live": "polite" }, savedNotice)
+    : null;
+  const roleMap = data.access.roles && typeof data.access.roles === "object" ? data.access.roles : {};
+  const viewerEmail = Object.keys(roleMap)[0] || (typeof me === "object" && me?.user?.email) || "Signed-in staff";
+  if (data.state === "roles_not_named") {
+    return show(back, title, noticeBanner,
+      h("section", { class: "card blocked", "aria-label": "Operator access and scope" },
+        h("h2", { class: "blocked-title" }, "Operator access and scope: roles not yet named"),
+        h("p", {}, data.unrouted[0] || "No data steward or digital operator is named yet."),
+        h("p", { class: "muted" }, data.note || ""),
+        h("dl", {},
+          h("dt", {}, "Signed-in viewer"), h("dd", {}, h("code", { translate: "no" }, viewerEmail)),
+          h("dt", {}, "Named roles"), h("dd", {}, "None configured (data_steward and digital_operator are unassigned)"),
+          h("dt", {}, "Owner"), h("dd", {}, "Programme owner"),
+          h("dt", {}, "Next action"), h("dd", {}, "Ask the programme owner to name a data steward and a digital operator before opening exception items."))),
+      renderExceptionOutageSection(data.banner, data.sources, data.unrouted.slice(1)),
+      recheck);
+  }
+  const rawHash = typeof location !== "undefined" && typeof location.hash === "string" ? location.hash : "#/exceptions";
+  const params = new URLSearchParams(rawHash.split("?")[1] || "");
+  const selectedKind = params.get("kind") || "";
+  const selectedStatus = params.get("status") || "";
+  const viewerRoles = Array.isArray(data.access.viewer_roles) ? data.access.viewer_roles : (roleMap[viewerEmail] || []);
+  const allowedKinds = Array.isArray(data.access.allowed_kinds) ? data.access.allowed_kinds : [];
+  const isConflict = (item) => item.kind === "source_conflict" || item.kind === "identity_conflict";
+  const filtered = data.items.filter((item) => {
+    const itemCategory = isConflict(item) ? item.kind : (item.failure_category || item.kind);
+    if (selectedKind && itemCategory !== selectedKind) return false;
+    if (selectedStatus && item.status !== selectedStatus) return false;
+    return true;
+  });
+  const conflicts = filtered.filter(isConflict);
+  const failures = filtered.filter((item) => !isConflict(item));
+  const showConflicts = allowedKinds.some((k) => k === "source_conflict" || k === "identity_conflict") || conflicts.length > 0;
+  const showFailures = allowedKinds.some((k) => k !== "source_conflict" && k !== "identity_conflict") || failures.length > 0;
+
+  const kindSelect = h("select", { id: "ex-filter-kind", name: "kind", autocomplete: "off" },
+    h("option", { value: "" }, "All permitted categories"),
+    [["source_conflict", "Conflicting source values"], ["identity_conflict", "Identity conflicts"],
+      ["failed_import", "Failed imports"], ["failed_ai_run", "Failed model calls"],
+      ["stranded_task", "Stranded tasks"]]
+      .map(([val, text]) => h("option", { value: val }, text)));
+  kindSelect.value = selectedKind;
+  const statusSelect = h("select", { id: "ex-filter-status", name: "status", autocomplete: "off" },
+    h("option", { value: "" }, "All recovery states"),
+    [["open", "Open for review"], ["held", "Paused for human review"],
+      ["rerun_requested", "Human re-run requested"], ["closed", "Closed by named owner"]]
+      .map(([val, text]) => h("option", { value: val }, text)));
+  statusSelect.value = selectedStatus;
+  const filterForm = h("form", { class: "card", onsubmit: (event) => {
+    event.preventDefault();
+    const next = new URLSearchParams();
+    if (kindSelect.value) next.set("kind", kindSelect.value);
+    if (statusSelect.value) next.set("status", statusSelect.value);
+    const query = next.toString();
+    if (typeof location !== "undefined") location.hash = query ? `#/exceptions?${query}` : "#/exceptions";
+  } },
+  h("h2", {}, "Filter visible exceptions"),
+  h("div", { class: "row" },
+    h("div", {}, h("label", { for: "ex-filter-kind" }, "Exception category"), kindSelect),
+    h("div", {}, h("label", { for: "ex-filter-status" }, "Recovery state"), statusSelect)),
+  h("p", { class: "row" },
+    h("button", { type: "submit" }, "Apply queue filters"),
+    (selectedKind || selectedStatus) ? h("a", { class: "btn alt", href: "#/exceptions" }, "Show all permitted items") : null));
+
+  let formIndex = 0;
+  const reload = (msg) => exceptionsView(msg);
+  const conflictCards = conflicts.map((item) => {
+    const idx = ++formIndex;
+    const caseId = item.original_source?.case_id || null;
+    const values = Array.isArray(item.values) ? item.values : [];
+    return h("article", { class: "card screen-record" },
+      h("div", { class: "row between" },
+        h("h3", {}, `${exceptionKindLabel(item)}: ${item.summary || item.id}`),
+        h("span", { class: "flag" }, exceptionStatusLabel(item.status))),
+      h("dl", {},
+        h("dt", {}, "Record"), h("dd", {},
+          caseId ? h("a", { href: `#/case/${encodeURIComponent(caseId)}` }, caseId) : null,
+          caseId ? " " : null,
+          h("code", { translate: "no" }, item.id)),
+        h("dt", {}, "Recovery key"), h("dd", {}, h("code", { translate: "no" }, item.recovery_key || item.ref || item.id)),
+        h("dt", {}, "Correlation ID"), h("dd", {}, h("code", { translate: "no" }, item.correlation_id || "Unknown")),
+        h("dt", {}, "Resolution owner"), h("dd", {}, h("code", { translate: "no" }, item.resolution_owner || item.owner || "Data steward")),
+        h("dt", {}, "Eligibility"), h("dd", {},
+          `${item.eligibility || "Unknown"} (${item.unresolved_eligibility ? "unresolved eligibility preserved; no winning source is selected automatically" : "recorded"})`),
+        h("dt", {}, "Original source"), h("dd", {}, exceptionOriginalSummary(item.original_source)),
+        h("dt", {}, "Recovery guidance"), h("dd", {}, item.recovery_context?.runbook || item.runbook || "Compare both source values with the named resolution owner.")),
+      h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": `Competing source values for ${item.id}` },
+        h("table", {},
+          h("caption", { class: "sr-only" }, `Competing source values for ${item.id} with source, date and version`),
+          h("thead", {}, h("tr", {},
+            ["Value", "Source", "Date", "Version"].map((col) => h("th", { scope: "col" }, col)))),
+          h("tbody", {}, values.map((val) => h("tr", {},
+            h("th", { scope: "row" }, val.value == null ? "Unknown" : String(val.value)),
+            h("td", {}, val.source || "Unknown"),
+            h("td", {}, exceptionTime(val.date)),
+            h("td", {}, h("code", { translate: "no" }, val.version || "unversioned"))))))),
+      renderExceptionRecoveryForm(item, idx, reload));
+  });
+
+  const failureCards = failures.map((item) => {
+    const idx = ++formIndex;
+    const caseId = item.original_source?.case_id || null;
+    const sourceRef = item.recovery_context?.ref || item.ref || item.id;
+    return h("article", { class: "card screen-record" },
+      h("div", { class: "row between" },
+        h("h3", {}, `${exceptionKindLabel(item)}: ${item.summary || item.id}`),
+        h("span", { class: "flag" }, exceptionStatusLabel(item.status))),
+      h("dl", {},
+        h("dt", {}, "Failure category"), h("dd", {},
+          `${exceptionKindLabel(item)} (`, h("code", { translate: "no" }, item.failure_category || item.kind), ")"),
+        h("dt", {}, "Failure detail"), h("dd", {}, item.error || "Recorded failure"),
+        h("dt", {}, "Owner"), h("dd", {},
+          h("code", { translate: "no" }, item.owner || "Unassigned"),
+          item.owner_role ? ` (${item.owner_role})` : ""),
+        h("dt", {}, "Recovery key"), h("dd", {}, h("code", { translate: "no" }, item.recovery_key || sourceRef)),
+        h("dt", {}, "Correlation ID"), h("dd", {}, h("code", { translate: "no" }, item.correlation_id || "Unknown")),
+        h("dt", {}, "Source reference"), h("dd", {},
+          caseId ? h("a", { href: `#/case/${encodeURIComponent(caseId)}` }, caseId) : null,
+          caseId ? " " : null,
+          h("code", { translate: "no" }, sourceRef)),
+        h("dt", {}, "Eligibility"), h("dd", {},
+          `${item.eligibility || "Unknown"} (${item.unresolved_eligibility ? "unresolved eligibility preserved without silent overwrite" : "recorded"})`),
+        h("dt", {}, "Original source"), h("dd", {}, exceptionOriginalSummary(item.original_source)),
+        h("dt", {}, "Recovery guidance"), h("dd", {}, item.recovery_context?.runbook || item.runbook || "Investigate the failure before recording a controlled recovery action.")),
+      renderExceptionRecoveryForm(item, idx, reload));
+  });
+
+  show(back, title, noticeBanner,
+    h("section", { class: "card screen-evidence", "aria-label": "Operator access and scope" },
+      h("h2", {}, "Operator access and scope"),
+      h("p", {}, data.note || "Viewing changes nothing. Recovery is a recorded, audited human request; nothing is replayed, corrected, re-sent or released automatically."),
+      h("dl", {},
+        h("dt", {}, "Signed-in viewer"), h("dd", {}, h("code", { translate: "no" }, viewerEmail)),
+        h("dt", {}, "Scoped queue roles"), h("dd", {}, viewerRoles.length ? viewerRoles.map(exceptionRoleLabel).join("; ") : "Scoped read access"),
+        h("dt", {}, "Permitted item kinds"), h("dd", {}, allowedKinds.length ? allowedKinds.join(", ") : "None"),
+        h("dt", {}, "Category ownership"), h("dd", {},
+          data.access.scope && typeof data.access.scope === "object"
+            ? Object.entries(data.access.scope).map(([k, r]) => `${k}: ${r}`).join("; ")
+            : "Scoped by role"))),
+    renderExceptionOutageSection(data.banner, data.sources, data.unrouted),
+    filterForm,
+    showConflicts ? h("section", { class: "screen-evidence", "aria-label": "Conflicting source values" },
+      h("h2", {}, `Conflicting source values (${conflicts.length})`),
+      conflictCards.length ? conflictCards
+        : h("p", { class: "empty" }, "No conflicting source values match this view. Disconnected feeds in the service status above remain unverified, not clear.")) : null,
+    showFailures ? h("section", { class: "screen-evidence", "aria-label": "Operational failures and stranded tasks" },
+      h("h2", {}, `Failed imports, failed model calls and stranded tasks (${failures.length})`),
+      failureCards.length ? failureCards
+        : h("p", { class: "empty" }, "No failed imports, failed model calls or stranded tasks match this view. Disconnected feeds in the service status above remain unverified, not clear.")) : null,
+    recheck);
 }
 
 async function signOut(switchAccount) {
@@ -2099,7 +2528,14 @@ document.addEventListener("keydown", (e) => {
 });
 document.addEventListener("click", (e) => {
   const menu = document.getElementById("account");
-  if (!menu.contains(e.target)) menu.open = false;
+  if (menu && !menu.contains(e.target)) menu.open = false;
+  if (e.defaultPrevented) return;
+  const jump = e.target?.closest?.("a[data-jump]");
+  if (!jump) return;
+  e.preventDefault();
+  const target = document.getElementById(jump.getAttribute("data-jump"));
+  target?.focus?.();
+  target?.scrollIntoView?.({ block: "start" });
 });
 window.addEventListener("hashchange", () => me && route());
 function startupFailed(error) {
@@ -2133,9 +2569,12 @@ function bars(title, data, link) {
         svg("text", { x: 190 + (d.n / max) * 240 + 6, y: i * rowH + 16, class: "lbl" }, String(d.n)));
       return bar;
     }));
-  const table = h("details", { class: "chart-data" }, h("summary", {}, "Show this chart as a table"),
-    h("table", {}, h("caption", { class: "sr-only" }, title), h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Group"), h("th", { scope: "col" }, "Cases"))),
-      h("tbody", {}, data.map((d) => h("tr", {}, h("th", { scope: "row" }, d.label), h("td", {}, String(d.n)))))));
+  const table = h("details", { class: "chart-data" },
+    h("summary", {}, "Show this chart as a table", h("span", { class: "sr-only" }, `: ${title}`)),
+    h("div", { class: "table-scroll", role: "region", tabindex: "0", "aria-label": `${title} table` },
+      h("table", {}, h("caption", { class: "sr-only" }, title), h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Group"), h("th", { scope: "col" }, "Cases"))),
+        h("tbody", {}, data.length ? data.map((d) => h("tr", {}, h("th", { scope: "row" }, d.label), h("td", {}, String(d.n))))
+          : h("tr", {}, h("td", { colspan: "2" }, "No cases recorded."))))));
   return h("section", { class: "card" }, h("h2", {}, title), g, table, link);
 }
 
@@ -2145,6 +2584,37 @@ const MAP_SIGNALS = {
   normal: { label: "Normal", code: "O" },
   long: { label: "Waiting 60+ days", code: "W" },
   hazard: { label: "Safety issue open", code: "!" },
+};
+
+const SENSOR_STATES = {
+  fresh: { short: "Sensor recent", mark: "\u2713" },
+  stale: { short: "Sensor reading out of date", mark: "!" },
+  offline: { short: "Sensor offline", mark: "!" },
+  "no-readings": { short: "No sensor readings", mark: "\u2013" },
+  "consent-withheld": { short: "Sensor readings withheld", mark: "\u2013" },
+  unavailable: { short: "Sensor readings unavailable", mark: "?" },
+  restricted: { short: "Sensor readings not shown for your role", mark: "\u2013" },
+  "not-connected": { short: "Sensors not connected", mark: "\u2013" },
+  "not-loaded": { short: "Sensor status not loaded", mark: "\u2013" },
+  "future-dated": { short: "Sensor time unclear", mark: "?" },
+};
+const sensorInfo = (p) => SENSOR_STATES[p.sensor?.state] || { short: "Sensor status unknown", mark: "?" };
+const sensorAlert = (p) => Boolean(p.sensor?.alert);
+const sensorReading = (sensor) => {
+  const parts = [];
+  if (typeof sensor?.temperature_c === "number") parts.push(`${sensor.temperature_c} \u00b0C`);
+  if (typeof sensor?.humidity_pct === "number") parts.push(`${sensor.humidity_pct}% relative humidity`);
+  return parts.join(", ");
+};
+const sensorBadge = (p) => h("span", { class: `sensor-badge${sensorAlert(p) ? " alert" : ""}` },
+  h("span", { "aria-hidden": "true" }, sensorInfo(p).mark), ` ${sensorInfo(p).short}`);
+const sensorLine = (p) => [sensorInfo(p).short, sensorReading(p.sensor)].filter(Boolean).join(", ");
+const withSensor = (base, p) => p.sensor ? `${base}. ${sensorLine(p)}` : base;
+const sensorTimeText = (sensor) => {
+  if (!sensor?.observed_at) return "No reading time recorded";
+  const when = new Date(sensor.observed_at);
+  const age = Math.max(0, Math.round((sensor.age_seconds || 0) / 60));
+  return `${when.toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/London" })} (UK time), ${age < 120 ? `${age} minutes` : age < 2880 ? `${Math.round(age / 60)} hours` : `${Math.round(age / 1440)} days`} ago`;
 };
 
 function mapSymbol(kind) {
@@ -2187,6 +2657,13 @@ function mapPanel(coordinator = null, filters = null) {
   const caseId = h("dd");
   const stage = h("dd");
   const status = h("dd");
+  const sensorState = h("dd");
+  const sensorValues = h("dd");
+  const sensorWhen = h("dd");
+  const sensorSource = h("dd");
+  const sensorBox = h("div", { class: "map-sensor-box" }, h("h4", {}, "Indoor sensor"),
+    h("dl", { class: "map-sensor-list" }, h("dt", {}, "Sensor status"), sensorState, h("dt", {}, "Latest reading"), sensorValues,
+      h("dt", {}, "Last reading time"), sensorWhen, h("dt", {}, "Source"), sensorSource));
   const navigate = h("a", { class: "btn" }, "Open home");
   const restoreMarker = (id) => {
     const target = markers.get(id)?.getElement();
@@ -2204,7 +2681,8 @@ function mapPanel(coordinator = null, filters = null) {
       h("button", { type: "button", class: "alt map-home-close", "aria-label": "Close home summary",
         onclick: () => closeHome() }, h("span", { "aria-hidden": "true" }, "\u00d7"))),
     address, h("dl", {}, h("dt", {}, "Case"), caseId, h("dt", {}, "Current stage"), stage,
-      h("dt", {}, "Map status"), status), navigate);
+      h("dt", {}, "Map status"), status),
+    sensorBox, navigate);
   const showHome = (point, focus = true) => {
     selectedId = point.id;
     title.textContent = point.name || point.id;
@@ -2212,17 +2690,31 @@ function mapPanel(coordinator = null, filters = null) {
     caseId.textContent = point.id;
     stage.textContent = point.stage || "Unknown";
     status.replaceChildren(mapSymbol(point.kind), MAP_SIGNALS[point.kind].label);
+    sensorBox.hidden = !point.sensor;
+    sensorState.replaceChildren(sensorBadge(point), h("span", { class: "sr-only" }, `. ${point.sensor?.label || ""}`));
+    sensorValues.textContent = sensorReading(point.sensor) || "No values shown";
+    sensorWhen.textContent = sensorTimeText(point.sensor);
+    sensorSource.textContent = point.sensor?.source || "No synthetic reading shown for this home.";
     navigate.href = `#/case/${encodeURIComponent(point.id)}`;
     homeCard.hidden = false;
     if (focus) title.focus();
   };
   const listHead = h("summary", { id: "maplist-h" }, "Show the map areas as a list (keyboard and screen reader friendly)");
+  const listEmpty = h("p", { class: "muted", "data-maplist-empty": "", hidden: true }, "No mapped homes in this view. Choose Show these as a list for all selected cases.");
   const listUl = h("ul", { "aria-labelledby": "maplist-h", class: "plainlist" });
-  const listBox = h("details", { class: "maplist" }, listHead, listUl);
+  const listBox = h("details", { class: "maplist" }, listHead, listEmpty, listUl);
+  let alertsOnly = false, lastView = null;
+  const sensorFilterInput = h("input", { type: "checkbox", id: "map-sensor-alerts",
+    onchange: () => { alertsOnly = sensorFilterInput.checked; if (lastView) renderView(lastView, false); } });
+  const sensorFilterNote = h("p", { class: "muted", "aria-live": "polite" });
+  const sensorFilter = h("div", { class: "map-sensor-filter", hidden: Boolean(coordinator) }, sensorFilterInput,
+    h("label", { for: "map-sensor-alerts" }, "Show only homes with stale or offline sensors"),
+    h("p", { class: "muted", id: "map-sensor-alerts-hint" }, "Applies to individual homes. Zoom in until homes are shown one by one."), sensorFilterNote);
+  sensorFilterInput.setAttribute("aria-describedby", "map-sensor-alerts-hint");
   const sidebar = h("aside", { class: "map-info", "aria-label": "Map information and home summary" },
     h("p", {}, "Select a home for a summary, then choose Open home. Escape closes the summary first."),
     h("p", {}, Object.entries(MAP_SIGNALS).map(([kind, signal]) => h("span", { class: `key ${kind}` }, mapSymbol(kind), signal.label))),
-    info, tileNote, listBox, open);
+    sensorFilter, info, tileNote, listBox, open);
   const mapStage = h("div", { class: "map-stage" }, el, homeCard);
   const filterSlot = filters ? h("div", { class: "map-filter-slot" }, filters) : null;
   const dialog = h("dialog", { class: "map-dialog", "aria-labelledby": "map-title",
@@ -2230,13 +2722,13 @@ function mapPanel(coordinator = null, filters = null) {
   const toggle = h("button", { type: "button", class: "alt", "aria-expanded": "false",
     onclick: () => dialog.open ? collapse() : expand() }, "Expand map");
   const workspace = h("div", { class: "map-workspace" }, sidebar, mapStage);
-  const box = h("section", { class: "card map-panel", onkeydown: (event) => {
+  const box = h("section", { class: "card map-panel", "aria-labelledby": "map-title", onkeydown: (event) => {
     if (event.key === "Escape" && selectedId !== null) {
       event.preventDefault();
       event.stopPropagation();
       closeHome();
     }
-  } }, h("div", { class: "row between" }, h("h2", { id: "map-title" }, "Map of open cases"), toggle),
+  } }, h("div", { class: "row between" }, h("h2", { id: "map-title", tabindex: "-1" }, "Map of open cases"), toggle),
   workspace);
   const slot = h("div", { class: "map-slot" }, box);
   const resize = () => map?.invalidateSize({ pan: true, animate: false });
@@ -2280,15 +2772,67 @@ function mapPanel(coordinator = null, filters = null) {
   };
   disposeMapPanel = dispose;
   signal.addEventListener("abort", dispose, { once: true });
-  const renderList = (d) => {
-    listUl.replaceChildren(...d.items.map((p) => {
+  const renderList = (d, items = d.items) => {
+    const empty = !items.length;
+    listEmpty.hidden = !empty;
+    if (empty) listEmpty.removeAttribute("hidden");
+    else listEmpty.setAttribute("hidden", "");
+    listUl.replaceChildren(...items.map((p) => {
       if (d.mode === "clusters") {
         const label = `${p.count} homes, ${p.hazards} with a safety issue open`;
         return h("li", {}, h("button", { type: "button", class: "linkbtn", "aria-label": `${label}. Zoom in to this area`,
           onclick: () => { map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18), { animate: false }); listHead.focus(); } }, label));
       }
-      return h("li", {}, h("a", { href: `#/case/${encodeURIComponent(p.id)}` }, `${p.name}, ${MAP_SIGNALS[p.kind].label}`));
+      return h("li", {}, h("a", { href: `#/case/${encodeURIComponent(p.id)}` }, withSensor(`${p.name}, ${MAP_SIGNALS[p.kind].label}`, p)));
     }));
+  };
+  const markerIcon = (p) => {
+    const icon = mapSymbol(p.kind);
+    if (sensorAlert(p)) icon.append(h("span", { class: "sensor-flag" }, "S"));
+    return icon;
+  };
+  const renderView = (d) => {
+    const points = d.mode === "points";
+    const items = alertsOnly && points ? d.items.filter(sensorAlert) : d.items;
+    sensorFilterNote.textContent = alertsOnly
+      ? (points ? `${items.length} of ${d.items.length} homes have a stale or offline sensor.` : "Zoom in to individual homes to filter by sensor status.")
+      : "";
+    info.setAttribute("role", "status");
+    info.textContent = coordinator
+      ? `${d.total} permitted records in this selection; ${d.mapped} with coordinates; ${d.missing_geocode} with unknown or invalid coordinates. ${d.in_view} mapped records in this viewport, ${d.shown} ${d.mode === "clusters" ? "clusters" : "markers"}. The record list includes every selected case.`
+      : d.mode === "clusters"
+      ? `${d.total} homes in this view, grouped into ${d.shown} areas. Zoom in to see each home.`
+      : `${d.total} ${d.total === 1 ? "home" : "homes"} shown`;
+    renderList(d, items);
+    const focusedMarker = [...markers].find(([, marker]) => marker.getElement() === document.activeElement)?.[0];
+    const cardFocused = homeCard.contains(document.activeElement);
+    const previousSelection = selectedId;
+    markers.clear();
+    layer.clearLayers();
+    items.forEach((p) => {
+      if (d.mode === "clusters") {
+        const label = `${p.count} homes, ${p.hazards} with a safety issue open. Zoom in to this area`;
+        const icon = h("div", { class: `cluster${p.hazards ? " hazard" : ""}`, "aria-hidden": "true" },
+          h("span", {}, `${p.count} homes`),
+          h("span", { class: "cluster-safety" }, `Safety: ${p.hazards}`));
+        const m = L.marker([p.lat, p.lon], { icon: L.divIcon({ className: "map-cluster", html: icon, iconSize: [104, 50] }),
+          keyboard: true, autoPanOnFocus: false, title: label, alt: label });
+        mapAction(m, () => map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18), { animate: false }));
+        m.addTo(layer);
+        return;
+      }
+      const label = withSensor(`${p.name}, ${MAP_SIGNALS[p.kind].label}`, p);
+      const m = L.marker([p.lat, p.lon], { icon: L.divIcon({ className: "map-marker", html: markerIcon(p), iconSize: [28, 28] }),
+        keyboard: true, autoPanOnFocus: false, bubblingMouseEvents: false, title: label, alt: label });
+      mapAction(m, () => showHome(p));
+      m.addTo(layer);
+      markers.set(p.id, m);
+    });
+    const current = d.mode === "points" && items.find((point) => point.id === previousSelection);
+    if (current) showHome(current, false);
+    else closeHome(false);
+    if (cardFocused && !current) el.focus({ preventScroll: true });
+    else if (focusedMarker) restoreMarker(focusedMarker);
   };
   let fitting = false, seq = 0;
   const draw = async (fit) => {
@@ -2357,42 +2901,8 @@ function mapPanel(coordinator = null, filters = null) {
       if (my === seq) el.removeAttribute("aria-busy");
     }
     if (signal.aborted || my !== seq) return;
-    info.setAttribute("role", "status");
-    info.textContent = coordinator
-      ? `${d.total} permitted records in this selection; ${d.mapped} with coordinates; ${d.missing_geocode} with unknown or invalid coordinates. ${d.in_view} mapped records in this viewport, ${d.shown} ${d.mode === "clusters" ? "clusters" : "markers"}. The record list includes every selected case.`
-      : d.mode === "clusters"
-      ? `${d.total} homes in this view, grouped into ${d.shown} areas. Zoom in to see each home.`
-      : `${d.total} ${d.total === 1 ? "home" : "homes"} shown`;
-    renderList(d);
-    const focusedMarker = [...markers].find(([, marker]) => marker.getElement() === document.activeElement)?.[0];
-    const cardFocused = homeCard.contains(document.activeElement);
-    const previousSelection = selectedId;
-    markers.clear();
-    layer.clearLayers();
-    d.items.forEach((p) => {
-      if (d.mode === "clusters") {
-        const label = `${p.count} homes, ${p.hazards} with a safety issue open. Zoom in to this area`;
-        const icon = h("div", { class: `cluster${p.hazards ? " hazard" : ""}`, "aria-hidden": "true" },
-          h("span", {}, `${p.count} homes`),
-          h("span", { class: "cluster-safety" }, `Safety: ${p.hazards}`));
-        const m = L.marker([p.lat, p.lon], { icon: L.divIcon({ className: "map-cluster", html: icon, iconSize: [104, 50] }),
-          keyboard: true, autoPanOnFocus: false, title: label, alt: label });
-        mapAction(m, () => map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18), { animate: false }));
-        m.addTo(layer);
-        return;
-      }
-      const label = `${p.name}, ${MAP_SIGNALS[p.kind].label}`;
-      const m = L.marker([p.lat, p.lon], { icon: L.divIcon({ className: "map-marker", html: mapSymbol(p.kind), iconSize: [28, 28] }),
-        keyboard: true, autoPanOnFocus: false, bubblingMouseEvents: false, title: label, alt: label });
-      mapAction(m, () => showHome(p));
-      m.addTo(layer);
-      markers.set(p.id, m);
-    });
-    const current = d.mode === "points" && d.items.find((point) => point.id === previousSelection);
-    if (current) showHome(current, false);
-    else closeHome(false);
-    if (cardFocused && !current) el.focus({ preventScroll: true });
-    else if (focusedMarker) restoreMarker(focusedMarker);
+    lastView = d;
+    renderView(d);
     if (fit && d.bounds) {
       fitting = true;
       map.fitBounds([[d.bounds[0], d.bounds[1]], [d.bounds[2], d.bounds[3]]], {
@@ -2436,8 +2946,8 @@ async function coordinatorView() {
     values[key] = input;
     return h("div", {}, h("label", { for: `co-${key}` }, label), input);
   };
-  const error = h("p", { class: "err", role: "alert" });
-  const form = h("form", { class: "card coordinator-filters", onsubmit: (event) => {
+  const error = h("p", { id: "co-filter-error", class: "err", role: "alert" });
+  const form = h("form", { class: "card coordinator-filters", "aria-labelledby": "coordinator-filters-heading", onsubmit: (event) => {
     event.preventDefault();
     const next = Object.fromEntries(Object.entries(values).map(([key, input]) => [key, input.value.trim()]));
     if (!next.view || !next.group_by) {
@@ -2447,7 +2957,7 @@ async function coordinatorView() {
     }
     location.hash = `#/coordinator?${qs(next)}`;
   } },
-  h("h2", {}, "Choose the current case population"),
+  h("h2", { id: "coordinator-filters-heading", tabindex: "-1" }, "Choose the current case population"),
   h("div", { class: "row" },
     field("Case scope", "view", [["mine", "My assigned open cases"], ["all", "All permitted open cases"]]),
     field("Heatmap grouping", "group_by", [["area", "Local authority"], ["building", "Recorded building"], ["archetype", "Recorded home type"]]),
@@ -2461,20 +2971,27 @@ async function coordinatorView() {
     textField("Find by name, address, postcode or case ID", "q"),
     textField("Event cutoff (ISO date, time and timezone)", "as_of", true),
     textField("Event period start (optional ISO timestamp)", "start")),
-  h("p", {}, "Dates select recorded events only. Current case membership, stages and stopped work are not reconstructed at the cutoff."),
+  h("p", { id: "co-cutoff-note" }, "Dates select recorded events only. Current case membership, stages and stopped work are not reconstructed at the cutoff."),
   h("button", { type: "submit" }, "Apply coordinator filters"),
   h("a", { class: "btn alt", href: "#/coordinator" }, "Reset coordinator filters"), error);
   values.group_by.value = state.group_by || "area";
+  for (const requiredSelect of [values.view, values.group_by]) {
+    requiredSelect.setAttribute("aria-describedby", "co-filter-error");
+    requiredSelect.addEventListener("change", () => { error.textContent = ""; });
+  }
+  for (const cutoffInput of [values.as_of, values.start]) {
+    cutoffInput.setAttribute("aria-describedby", "co-cutoff-note");
+  }
   const link = (n, changes, label) => h("a", {
     href: href(changes), "aria-label": `${number(n)} ${label}`,
   }, number(n));
-  const table = (title, headers, rows) => h("section", { class: "card" },
-    h("h2", {}, title), h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": title },
+  const table = (title, headers, rows, headingId) => h("section", { class: "card" },
+    h("h2", { id: headingId, tabindex: "-1" }, title), h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": title },
       h("table", {}, h("caption", { class: "muted" }, title),
         h("thead", {}, h("tr", {}, headers.map((x) => h("th", { scope: "col" }, x)))),
         h("tbody", {}, rows.length ? rows : h("tr", {}, h("td", { colspan: headers.length }, "No cases match this population. Change or reset the filters."))))));
-  const summary = h("section", { class: "card coordinator-summary", "aria-label": "Coordinator denominator and coverage" },
-    h("h2", {}, "Denominator and coverage"),
+  const summary = h("section", { class: "card coordinator-summary", "aria-labelledby": "coordinator-summary-heading" },
+    h("h2", { id: "coordinator-summary-heading", tabindex: "-1" }, "Denominator and coverage"),
     h("p", {}, `${number(data.cohort.selected_cases)} current cases selected from ${number(data.cohort.baseline_cases)} permitted open cases in this scope. `,
       link(data.cohort.excluded_by_filters, { metric: "filtered_out", metric_stage: "", group: "" }, "cases excluded by source filters"), " excluded by filters, not lifecycle exclusion."),
     h("p", {}, link(data.counts.stopped, { metric: "stopped", metric_stage: "", group: "" }, "currently stopped cases"), " currently cannot move on. ",
@@ -2487,14 +3004,26 @@ async function coordinatorView() {
       " with unknown or invalid coordinates remain in the population."),
     h("p", {}, `Lifecycle exclusions: Unknown. True conversion: Unknown. Audit evidence: ${data.audit_integrity}. ${data.approval_status}.`),
     h("p", {}, `Current dataset date: ${data.current_as_of}. Event window: ${data.period_start || "all recorded history"} to ${data.as_of}, inclusive UTC.`));
+  const heatState = (count) => {
+    if (typeof count === "number" && Number.isFinite(count)) {
+      return count > 0
+        ? { cls: " heat-present", cue: "present", label: "present", badge: "Present" }
+        : { cls: "", cue: "zero", label: "none recorded", badge: "None" };
+    }
+    return { cls: "", cue: "unknown", label: "unknown count", badge: "Unknown" };
+  };
   const heatmap = table("Heatmap of current cases",
     ["Recorded group", "Current stage", "Cases / denominator", "Cannot move on", "Unknown coordinates", "Unknown stage history"],
-    data.heatmap.map((cell) => h("tr", {},
-      h("th", { scope: "row" }, cell.group), h("td", {}, cell.stage),
-      h("td", { class: `heat-count${cell.count ? " heat-present" : ""}` },
-        link(cell.count, { metric: "current", metric_stage: cell.stage, group: cell.group }, `current cases in ${cell.group}, ${cell.stage}`),
-        ` / ${number(cell.denominator)}`),
-      h("td", {}, number(cell.stopped)), h("td", {}, number(cell.missing_geocode)), h("td", {}, number(cell.unknown_history)))));
+    data.heatmap.map((cell) => {
+      const hs = heatState(cell.count);
+      return h("tr", {},
+        h("th", { scope: "row" }, cell.group), h("td", {}, cell.stage),
+        h("td", { class: `heat-count${hs.cls}`, "data-state-cue": hs.cue },
+          h("span", { class: "flag", "data-state-cue": hs.cue }, hs.badge), " ",
+          link(cell.count, { metric: "current", metric_stage: cell.stage, group: cell.group }, `current cases (${hs.label}) in ${cell.group}, ${cell.stage}`),
+          ` / ${number(cell.denominator)}`),
+        h("td", {}, number(cell.stopped)), h("td", {}, number(cell.missing_geocode)), h("td", {}, number(cell.unknown_history)));
+    }), "coordinator-heatmap-heading");
   const metrics = [["current", "Current"], ["entries", "Observed entries"], ["exits", "Observed exits"],
     ["returns", "Observed returns"], ["reopens", "Observed reopens"], ["stopped", "Currently stopped"]];
   const funnel = table("Lifecycle funnel: current and observed cases",
@@ -2502,13 +3031,27 @@ async function coordinatorView() {
     data.funnel.map((row) => h("tr", {}, h("th", { scope: "row" }, row.stage),
       metrics.map(([key, label]) => h("td", {}, row[key] === null ? "Unknown" :
         link(row[key], { metric: key, metric_stage: row.stage, group: "" }, `${label.toLowerCase()} for ${row.stage}`))),
-      h("td", {}, number(row.denominator)), h("td", {}, "Unknown"), h("td", {}, "Unknown"))));
+      h("td", {}, number(row.denominator)), h("td", {}, "Unknown"), h("td", {}, "Unknown"))), "coordinator-funnel-heading");
+  const stopCue = (stopped) => {
+    if (stopped === true) return h("span", { class: "flag danger", "data-state-cue": "stopped" }, "Action needed: Cannot move on");
+    if (stopped === false) return h("span", { class: "flag", "data-state-cue": "no-stop" }, "State: No current stop recorded");
+    return h("span", { class: "flag", "data-state-cue": "unknown" }, "State: Unknown (stop state not supplied)");
+  };
   const records = table("Selected records", ["Case", "Current stage", "Address", "Coordinates", "Can move on"],
     data.records.items.map((row) => h("tr", {}, h("th", { scope: "row" },
       h("a", { href: `#/case/${encodeURIComponent(row.id)}` }, row.id)),
       h("td", {}, row.stage), h("td", {}, `${row.address}, ${row.postcode}`),
-      h("td", {}, row.geocode), h("td", {}, row.stopped ? "Cannot move on" : "No current stop recorded"))));
+      h("td", {}, row.geocode), h("td", {}, stopCue(row.stopped)))), "coordinator-records-heading");
   records.querySelector(".table-scroll").id = "coordinator-records";
+  const jumpNav = contractorJumpLinks([
+    ["coordinator-filters-heading", "Case population filters"],
+    ["coordinator-summary-heading", "Denominator and coverage"],
+    ["coordinator-heatmap-heading", "Heatmap of current cases"],
+    ["coordinator-funnel-heading", "Lifecycle funnel"],
+    ["coordinator-selection-heading", "Record selection"],
+    ["map-title", "Map of open cases"],
+    ["coordinator-records-heading", "Selected records"],
+  ], "Jump to a coordinator section");
   const paging = h("p", { class: "row" },
     Number(state.offset || 0) > 0 && h("a", { class: "btn alt", href: href({ offset: Math.max(0, data.records.offset - data.records.limit) }) }, "Previous records"),
     data.records.offset + data.records.limit < data.records.total && h("a", { class: "btn alt", href: href({ offset: data.records.offset + data.records.limit }) }, "Next records"));
@@ -2516,12 +3059,12 @@ async function coordinatorView() {
   workspaceStatus.textContent = `${me.user.role}. Coordinator current cohort ${data.cohort.selected_cases}; selected records ${data.records.total}. Filters do not change access.`;
   show(h("div", { class: "coordinator" },
     h("div", { class: "row between" }, h("h1", {}, "Coordinator flow"), h("a", { href: "#/overview" }, "Back to overview")),
-    form, summary,
+    jumpNav, form, summary,
     h("details", {}, h("summary", {}, "Count definitions and limits"),
       h("dl", {}, Object.entries(data.definitions).flatMap(([key, value]) => [h("dt", {}, key.replaceAll("_", " ")), h("dd", {}, value)]))),
     heatmap, h("p", {}, "Observed counts are distinct cases, not event occurrences. A case may appear in several stages. Rows do not form an additive conversion rate. Initial entries, final exits and older history may be unknown."),
-    funnel, h("section", { class: "card", role: "status" },
-      h("h2", {}, "Record selection"),
+    funnel, h("section", { class: "card", role: "status", "aria-labelledby": "coordinator-selection-heading" },
+      h("h2", { id: "coordinator-selection-heading", tabindex: "-1" }, "Record selection"),
       h("p", {}, `${number(data.records.total)} selected records; ${data.selection.metric.replaceAll("_", " ")}${data.selection.metric_stage ? ` for ${data.selection.metric_stage}` : ""}${data.selection.group ? ` in ${data.selection.group}` : ""}. Cohort denominator: ${number(data.cohort.selected_cases)}.`),
       h("a", { href: href({ metric: "current", metric_stage: "", group: "" }) }, "Show the full filtered population")),
     mp.box, records, paging));
@@ -2563,11 +3106,11 @@ async function overviewView() {
       h("section", { class: "card" }, h("h2", {}, "Contractors"),
         h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Contractors table" },
           h("table", {}, h("caption", { class: "sr-only" }, "Contractors and their open work"), h("thead", {}, h("tr", {}, ["Contractor", "Open", "On site or booked", "Stuck 60+ days"].map((x) => h("th", { scope: "col" }, x)))),
-            h("tbody", {}, st.contractors.map((c) => h("tr", {}, h("td", {}, c.name), h("td", {}, c.open), h("td", {}, c.booked), h("td", {}, c.long)))))))),
+            h("tbody", {}, st.contractors.map((c) => h("tr", {}, h("th", { scope: "row" }, c.name), h("td", {}, c.open), h("td", {}, c.booked), h("td", {}, c.long)))))))),
     h("section", { class: "card" }, h("h2", {}, "Team workload"),
       h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Team workload table" },
         h("table", {}, h("caption", { class: "sr-only" }, "Team workload by person"), h("thead", {}, h("tr", {}, ["Name", "Role", "Open cases", "With a safety issue"].map((x) => h("th", { scope: "col" }, x)))),
-          h("tbody", {}, st.team.map((t) => h("tr", {}, h("td", {}, t.name), h("td", {}, t.role), h("td", {}, t.open), h("td", {}, t.hazards))))))));
+          h("tbody", {}, st.team.map((t) => h("tr", {}, h("th", { scope: "row" }, t.name), h("td", {}, t.role), h("td", {}, t.open), h("td", {}, t.hazards))))))));
   mp.size();
   await mp.draw(true);
 }
@@ -2590,7 +3133,8 @@ async function fundingView() {
   show(h("h1", {}, "Funding applications"),
     h("p", { class: "muted" }, "Homes where funding is not yet confirmed. Open one to draft the application with AI, add evidence, and have it approved."),
     h("p", {}, h("a", { class: "btn alt", href: "/api/funding.csv", download: "funding.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back."),
-    h("table", {}, h("caption", { class: "sr-only" }, "Homes where funding is not yet confirmed"), h("thead", {}, h("tr", {}, ["Resident", "Area", "Route", "Status", "Evidence", "Owner"].map((x) => h("th", { scope: "col" }, x)))),
-      h("tbody", {}, rows.slice(0, 150).map((r) => h("tr", {}, h("td", {}, h("a", { href: `#/case/${encodeURIComponent(r.id)}` }, r.resident)),
-        h("td", {}, r.area), h("td", {}, r.route), h("td", {}, r.status), h("td", {}, `${r.have} of ${r.need}`), h("td", {}, r.owner))))));
+    h("div", { class: "table-scroll", role: "region", tabindex: 0, "aria-label": "Homes where funding is not yet confirmed table" },
+      h("table", {}, h("caption", { class: "sr-only" }, "Homes where funding is not yet confirmed"), h("thead", {}, h("tr", {}, ["Resident", "Area", "Route", "Status", "Evidence", "Owner"].map((x) => h("th", { scope: "col" }, x)))),
+        h("tbody", {}, rows.slice(0, 150).map((r) => h("tr", {}, h("th", { scope: "row" }, h("a", { href: `#/case/${encodeURIComponent(r.id)}` }, r.resident)),
+          h("td", {}, r.area), h("td", {}, r.route), h("td", {}, r.status), h("td", {}, `${r.have} of ${r.need}`), h("td", {}, r.owner)))))));
 }

@@ -207,7 +207,7 @@ class GrantMixin:
         if p["to"] == "Submitted":
             verdict = grant_eligibility_verdict(recorded, p.get("identity"), _identity(user))
             if not gates.transition_allowed([verdict]):
-                raise ValueError(f"{verdict.reason} Owner: {verdict.owner}. Next action: {verdict.correction}")
+                raise gates.GateResultError(f"{verdict.reason} Owner: {verdict.owner}. Next action: {verdict.correction}", verdict)
         authority = self._financial_authority(user, "grant:" + p["to"], case_id, g["scheme"])
         g["history"].append(dict(state=p["to"], source=p["source"], amount=p["amount"], proposed_by=p["name"], proposed_at=p["at"],
                                  approved_by=user["name"], approved_at=k.now(), case_id=case_id, scheme=g["scheme"], currency=p["currency"],

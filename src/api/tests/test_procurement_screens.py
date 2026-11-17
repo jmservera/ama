@@ -65,7 +65,7 @@ ORDER = {
     "measures": "Loft insulation",
     "scope": "Loft insulation 270mm",
 }
-CONTROLS = ("button", "form", "input", "select", "textarea", "a")
+CONTROLS = ("button", "form", "input", "select", "textarea")
 
 
 def run(screen: str, **extra: object) -> dict[str, Any]:

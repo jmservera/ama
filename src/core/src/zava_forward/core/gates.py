@@ -522,8 +522,56 @@ class FinanceGateError(ValueError):
         self.result = finance_gate(state, message, on)
 
 
+def _transition_rule(gate: str, requirement: str) -> GateRule:
+    return GateRule(
+        gate,
+        f"docs/prds/zava-forward-retrofit-programme-demonstrator.md FR-008 (governing) and "
+        f"{requirement} (exercise fixture)",
+        "2026-11-14",
+        "1",
+        _UNREVIEWED,
+    )
+
+
+TECHNICAL_RULE = _transition_rule("technical", "technical sign-off and evidence before booking")
+BUILDING_RULE = _transition_rule("building", "building clearance before sign-off or booking")
+STOCK_RULE = _transition_rule("stock", "unresolved stock queries before sign-off or booking")
+CAPTURE_RULE = _transition_rule("capture", "Phase 0 capture must be open for pilot cases")
+PAUSE_RULE = _transition_rule("pause", "guardrail pause scopes block case events")
+TRANSITION_RULES = (TECHNICAL_RULE, BUILDING_RULE, STOCK_RULE, CAPTURE_RULE, PAUSE_RULE)
+
+
+class RuleGatedPermissionError(PermissionError):
+    """A permission refusal that names the controlled rule it enforced."""
+
+    def __init__(self, message: str, rule: GateRule) -> None:
+        super().__init__(message)
+        self.rule = rule
+
+
+class GateResultError(ValueError):
+    """A refusal keeping its ValueError text and the full gate result, including its rule."""
+
+    def __init__(self, message: str, result: "GateResult") -> None:
+        super().__init__(message)
+        self.result = result
+        self.rule = result.rule
+        self.record = result.as_record()
+
+
+class GateResultPermissionError(PermissionError):
+    """A permission refusal keeping the full gate result, including its rule."""
+
+    def __init__(self, message: str, result: "GateResult") -> None:
+        super().__init__(message)
+        self.result = result
+        self.rule = result.rule
+        self.record = result.as_record()
+
+
 CONTROLLED_RULES: tuple[GateRule, ...] = (
     SAFETY_RELEASE_RULE,
+    *TRANSITION_RULES,
     *BOOKING_RULES.values(),
     QUALITY_RULE,
     CAPACITY_RULE,

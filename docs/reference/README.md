@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-15
+ms.date: 2026-11-17
 ms.topic: overview
 ---
 
@@ -44,12 +44,89 @@ projection, source/icon provenance and explicit integration/privacy/compliance
 limits. Prepared materials do not establish live listening, composure,
 production acceptance or a higher score.
 
+The paper's [16 November source-only readability revision](../capstone/thought-leadership/everything-but-the-software/README.md#human-readability-source-revision-16-november)
+clarifies the article and all active TeX inputs for computer scientists and
+data scientists working with LLMs in the SDLC. Equations, tables, prompts and
+citations are preserved. A separate 73-page PDF validates the source; the
+existing PDF is excluded at the owner's request. Structural checks and
+73 of 74 authoring tests pass; the browser diagram exporter remains
+unavailable. The following delivery descriptions retain their dated scope.
+
+The later [conservative prose follow-up](../capstone/thought-leadership/everything-but-the-software/README.md#conservative-prose-follow-up-16-november)
+includes the owner's abstract edits and checks all seven active TeX inputs,
+with only small further wording changes. It preserves earlier bindings and
+the existing PDF. Structural checks and 73 of 74 tests pass; the unchanged
+diagram exporter cannot import `esbuild`. No compiler is available on PATH,
+so this follow-up has no fresh PDF or rendered-layout validation.
+
+The approved [copy-review recommendations](../capstone/thought-leadership/everything-but-the-software/README.md#copy-review-recommendations-16-november)
+narrow an unsupported absolute, distinguish historical reporting instructions,
+clarify attribution and verification limits, and use descriptive result wording.
+The source-only update retains earlier bindings and the existing PDF.
+Structural checks and 73 of 74 tests pass; the unchanged diagram exporter
+still lacks `esbuild`. Scientific and final approvals remain separate.
+
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
-The current coauthored delivery has 49 pages, with the additive Supplement
-starting on page 39. This is a draft with unreported experimental outcomes,
-not a completed confirmatory report.
+The current v22 coauthored delivery has 72 pages, with the additive Supplement
+starting on page 45 and the source/digest register on pages 70-72. The
+[15 November narrative and TODO revision](../capstone/thought-leadership/everything-but-the-software/README.md#narrative-learning-and-todo-reconciliation-15-november)
+connects the interrupted workflow, hypotheses, unexpected findings and learning
+for a separately designed future study. Detailed theory, assumed economics
+and unapproved follow-up/resource candidates move into the existing Supplement.
+The [remaining-work plan](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#remaining-work-in-dependency-order)
+separates VM chronology and metadata, inference/source checks, deposit and
+approval obligations. The supplied acknowledgement corrects clearance receipt
+to 14 November; the expected 29 November response is not approval.
+Structural checks and 72 of 73 tests pass; the browser diagram-export check
+is unavailable. Existing table data, equations, prompts, figures, source values
+and historical bindings are preserved. The preceding v21 70-page delivery
+(Supplement page 48) remains in the binding and dated record. The
+[15 November provenance and readability revision](../capstone/thought-leadership/everything-but-the-software/README.md#provenance-and-readability-15-november)
+moves 61 unique identifiers out of prose, adds local arm/checkpoint/uncertainty
+explanations and shortens repeated result and assistance histories. Its
+then-current 72 authoring tests and structural checks passed with no page
+growth. The preceding v20 70-page delivery (Supplement page 51)
+remains in the binding and dated record. The
+[15 November final-results and chart interpretation record](../capstone/thought-leadership/everything-but-the-software/README.md#final-results-and-chart-interpretation-15-november)
+incorporates all 315 completed trajectories, sixteen execution sources, updated
+contrasts and billing, and source-bound empirical charts with explicit
+higher/lower, zero/interval, unknown-outcome and quality-matched cost cues.
+The economics graphic remains an assumed model, and the hybrid policy remains
+an untested follow-up. The
+[14 November critique and falsifiability revision](../capstone/thought-leadership/everything-but-the-software/README.md#critique-and-falsifiability-revision-14-november)
+separates the short-horizon decay premise (P1) from the consolidation remedy
+(P2 10-point coverage threshold and P3 CR1/cost payback) and the structural
+manipulation check (`tab:predictionverdicts`), surfaces the per-model
+coverage split in the abstract, main results and conclusion, and specifies a
+30-to-40-cycle brownfield factorial follow-up experiment (`sec:futureexperiment`).
+The [14 November finalization follow-up](../capstone/thought-leadership/everything-but-the-software/README.md#finalization-follow-up-14-november)
+records the exact Coach assessment, original-source qualifications, scoped
+participant-name review, retained timing/version metadata and the selected
+experiment GitHub deposit. Manager approval and the earlier CELA submission
+are owner-reported; final-version clearance remains unconfirmed. The
+[14 November report refresh](../capstone/thought-leadership/everything-but-the-software/README.md#attested-report-refresh-14-november)
+adds owner-attested coverage of 313 completed trajectories, exploratory
+complete-pair intervals, allocation bounds and observed-scenario judge
+contrasts with abstention counts. It preserves the
+[14 November readability revision](../capstone/thought-leadership/everything-but-the-software/README.md#readability-and-interpretation-14-november)
+and its findings-led structure, split tables, corrected structural-target
+interpretation and detailed Supplement. The completed
+315-trajectory five-arm S1 results and retained judging/calibration/SDK records
+are now grounded in
+[final experiment report](https://github.com/jmservera/ama-thought-mve/blob/d097a10b090baefadf995ecd910eb96c324f0234/results/EXPERIMENT_RESULTS.md)
+(`jmservera/ama-thought-mve` commit `d097a10b`), following the original
+[13 November study results update](../capstone/thought-leadership/everything-but-the-software/README.md#study-results-and-post-collection-judging-13-november).
+The completed owner-attested frame unlocks the automated whole-study primary
+(`primary_estimates_available = true`) and all four coverage contrasts.
+Two CR1 outcomes and 55 billing holds remain unresolved. Judging retains the
+earlier 313/315 snapshot with 626 evaluable packets and 1,252 calls; it was
+not silently completed when the development runs completed. Scenario
+abstentions, scheduling dependence and unregistered amendments remain explicit.
+The v19 66-page delivery (Supplement page 47) and v16 60-page readability delivery (Supplement
+page 44), v15 56-page results delivery (Supplement page 46) and earlier v14
+49-page pre-results delivery (Supplement page 39) remain in the revision record.
 
 The later [8 November study update](../capstone/source/review-2026-11-08.md#later-8-november-study-and-coauthor-update)
 records owner-confirmed OSF base `xcpt4` (7 November; public API returned 401),
@@ -968,6 +1045,9 @@ or infra acceptance claimed.
 | Understand all users' motivations, pains, gains and agent-assisted journeys | [Customer Journey Atlas](./research/ux/customer-journeys/customer-journey-atlas.md) | Nine linked company-role contributions, 28 stage-based maps, nomination/source-change subjourneys and 24 bounded opportunities; research hypotheses with current-delivery reconciliation, not observed user validation or approved features |
 | Run the five journey learning-test bundles against non-AI comparators (#129) | [Journey learning-test bundles protocol](./research/ux/journey-learning-test-bundles.md) | Protocol (2026-11-03) plus a deterministic net-effort comparison helper in `src/core` (2026-11-04) tested on constructed inputs only: comparators, six-component net-effort measure, stop rules, O10/O18-O20 exclusion; no experiment run; atlas-owner mapping confirmation, including O16 overlap, unmet |
 | Trace atlas themes and the eleven role journeys to screens (#233) | [Atlas findings and role journeys traced to screens](./research/ux/atlas-screen-trace.md) | Hypotheses until #155; all twelve screens are registered on main (2026-11-02 refresh); checker `src/core` `zava_forward.core.atlas_screen_trace`; static source guardrail test added 2026-11-02; bounded Chromium check of the tension sequence on one synthetic home added 2026-11-05 (`src/api/checks/atlas_tensions_browser_check.py`, engineering evidence only; extended 2026-11-10 to the technical and quality per-home screens; connected walkthrough not shown); rendered accessibility, design-system acceptance and user validation unproven |
+| Find the journey, task flow, design artefact and gap for each role screen, chat panel and alert surface (#156) | [Screen to journey, task flow and design artefact traceability](./research/ux/screen-design-traceability.md) | Link and gap register only; twelve screens have no wireframe, no human design acceptance, criterion 1 of #156 stays unmet |
+| Verify the five-element profile journey contract and connected same-home walkthrough invariants (#134) | [Profile journey contract and connected same-home journey acceptance](./research/ux/profile-journey-contract.md) | Code-testable contract across eleven perspectives plus shared facts, PR-002 contractor/non-reason redaction, handover preconditions and plain-language `Current owner` / `Next action` continuity across the six staff profiles, contractor view and read-only resident portal (`src/core` `profile_journey_contract`, `role-screens.js`, `test_profile_journey_contract.py`, `test_same_home_profile_journey_acceptance.py`); synthetic engineering evidence only (`accepted = False`), live walkthroughs (#155), AT conformance (#151) and `AC-034` to `AC-043` human/resident sign-off remain `not-established` |
+| Plan, validate or evaluate the moderated usability testing programme and labelled synthetic walkthrough baseline (#155) | [Usability testing programme plan](./research/ux/usability-test-programme-plan.md) | Complete moderated test specification and deterministic `src/core` `zava_forward.core.usability_programme` validator/evaluator: 21 contract-derived scripts (`T0`, `T1` to `T8`, `R-J1` to `R-R1`, `B1` to `B5`), 5 to 8 participants per role across 13 cohorts plus 2 to 3 `proxy-pilot`, accessibility and separate consent rules, `SA-010` prior `named_human` staff agreement and sub-5 `None` cell masking, mandatory GitHub backlog links on findings, and `Synthetic walkthrough - not user validation` (`not_user_validation = True`) baseline retaining negative and inconclusive outcomes; all human participant sessions, staff `SA-010` agreement and DPO decisions remain `Not run` |
 | Compare Azure development with M365 and business-platform implementation | [Implementation Options and Provisional Platform Recommendation](../case_study_48_addendum.md#implementation-options-and-provisional-platform-recommendation) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) and [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) |
 | Evaluate a new idea | [Idea Register](../ideas/idea-register.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 | Migrate company/programme branding to Zava North Homes / Zava Forward | [One-off migration script and guide](../../tools/rename-zava.md) | Dry-run inventory, tracked text/paths, PPTX/YAML/logo handling, readable image assets and historical exceptions; [observed from-empty Azure rebuild](../../infra/README.md#from-empty-rebuild-observed-on-2026-10-12), real SQL/model checks, [callback-only initialization](../../infra/README.md#post-deployment-api-authentication-initialization) and [tenant provisioning consent boundary](../../infra/README.md#api-registration-management-with-the-existing-m365-session) |
@@ -1079,18 +1159,21 @@ or infra acceptance claimed.
 | [Regulatory Literacy for Journey Users and Agents](./research/ux/regulatory-literacy-for-journeys.md) | Dated regulatory-literacy research and agent integration pattern; 2026-10-27 synthetic conflict-referral/usage delta retains human comprehension, approval and cards-only shipment boundaries |
 | [Zava Forward Prototype Profile Review](./research/ux/zava-forward-prototype-profile-review.md#screen-backlog-coverage-snapshot-2026-10-18-156) | #156 complete bounded issue inventory, captured 2026-10-18 before 04:13:45 UTC at source/base 2ca6d1c4: 184 issues (139 open/45 closed), 74 individual screen traces, 86 no-screen, 16 aggregate epics and eight explicitly reviewed surface choices. Exact journey/task-flow links or named gaps; all 74 current screen designs NOT SUPPLIED. Original eleven-profile/four-core-flow rows, decisions and Blocked gate preserved. Literal AC1 and design/human/accessibility/content/user acceptance remain open; closed #150 and historical H/engineering E are not approval. Dated delta 2026-11-03: 40 issues created since the snapshot (15 new screen traces, 7 screen-related items with no new design, 18 no-screen), title-level classification, 0 versioned designs supplied | 2026-11-03 Run `python3 tools/check-design-trace.py` for the executable gate state (blocked, 0 of 74 designs supplied) |
 | [Zava Forward Prototype Profile Review: demo IoT-to-UI source trace update](./research/ux/zava-forward-prototype-profile-review.md#demo-iot-to-ui-source-trace-update-2026-11-12-refs-156-184-187-189-134) | #156 additive dated update at `main` `e4854bd7e`: #189 now has a source screen `#/simulator` with a local browser check (design Not supplied, budget alert not verified, no live acceptance); #187 is a partial control surface (start and stop in source, replay, speed and pause only as library code); employee Quality sensor panel design Not supplied; source cadence is five minutes against the owner one-minute target; five-home scope of Quality AI NOT verified by a bounded, nonexhaustive trace. Preserves the 2026-10-18 rows and the executable register (74 screen issues, 0 designs supplied, blocked); no approval, tick, source change or live run | 2026-11-12 Documentation, link and diff review only; `tools/check-design-trace.py` and the local gate were not run |
+| [Zava Forward Prototype Profile Review: registered screen to journey, task flow and design artefact map](./research/ux/zava-forward-prototype-profile-review.md#registered-screen-to-journey-task-flow-and-design-artefact-map-2026-11-14-refs-156) | #156 additive dated map of sixteen registered screens and routes, each with a journey link and a task flow or named gap; thirteen link a written design record, the rest only the atlas trace or none. No versioned design is supplied, the 74-row register and Blocked gate are unchanged, and criterion 1 stays unticked | 2026-11-14 Documentation, link and diff review only; `tools/check-design-trace.py` run to confirm the register is unchanged |
 | [Prototype Learnings and Simplicity Review](./research/ux/prototype-learnings-and-simplicity-review.md) | Historical simplicity/platform learning plus requested UX Designer draft review: exact-intent/tab-local recovery, owner/source reconciliation and unique #58 journeys absent from main. Corrects untested first-task claims; real AI/SQL/Azure, human UX and quality/value gates stay separate | 2026-10-13 |
 | [Zava Forward Workbench Design System Foundations](./research/ux/design-system.md) | Owner-selected Fluent 2 adoption supersedes the extend proposal (#150). Partial sourced token/native foundations; circle/O, square/W, triangle/! markers, explicit cluster safety counts and selected-filter words. Seven-state inventory and actual AI draft-review controls; synthetic local browser checks, not full Fluent runtime delivery or human accessibility acceptance. Adds a journey, requirement, design artefact, web surface and automated test matrix (#149) where every human-evidence cell stays pending human test | 2026-11-13 |
 | [Employee Case Workspace Redesign](./research/ux/employee-case-workspace-redesign.md) | Issue #526 specification and implementation boundary: six evidence-based journey steps, summary strip, nine retained tabs and consistent draft/proposal reviews. Constructed-data unit, browser/37-state axe, keyboard and actual 200% zoom checks pass after mobile spacing/focus corrections. No new journey/confidence API fields; chat answers retain their separate proposal-review route. Screen-reader, staff usability, live acceptance and publication gates remain separate | 2026-10-28 |
-| [Zava Forward Workbench WCAG 2.2 Conformance Baseline](./research/ux/wcag-conformance-baseline.md) | Proposed WCAG 2.2 AA target and scope, first audit with computed contrast, fixes (focus indicator, field border, chart table equivalent), automated check coverage, manual check record per role and accessibility statement draft with known gaps (issue #151). Owner confirmation, rendered scanner, and all screen-reader, zoom and target-size tests remain open; table inventory 13 on 2026-11-11 (#83 waiting table, source audit only); no conformance claim | 2026-11-11 |
+| [Zava Forward Workbench WCAG 2.2 Conformance Baseline](./research/ux/wcag-conformance-baseline.md) | Proposed WCAG 2.2 AA target and scope, structured eight-dimension workbench audit (keyboard, focus order/visibility, name/role/value, status messages, contrast, reflow/zoom, target size, error identification), accessible-equivalents inventory for the Leaflet map, Overview SVG charts, `ProgressViews` `<meter>` charts, steppers and all 15 `.table-scroll` captioned/row-header tables (`test_accessibility_baseline.py`, `test_wcag_workbench_baseline_151.py`), conversational assistant keyboard, focus, Chromium CDP AXTree and polite live-region checks (#159, automated engineering evidence only), manual role check record, recorded gaps (including `/law.html`) and draft accessibility statement (issues #151, #119, #159). Error-identification inventory 9 and table inventory 15 on 2026-11-15; owner confirmation and all human assistive-technology, screen-reader, zoom and user acceptance runs (#155) remain open; no conformance claim | 2026-11-15 |
 | [Production UX Acceptance Protocol (chat widget and case view)](./research/ux/production-ux-acceptance-protocol.md) | Criterion status, human test scripts (keyboard, NVDA/VoiceOver, 320 px, 200 percent text, 400 percent zoom, resident consent journey) and blank record tables for the production acceptance carried into #619. All rows Not run; no conformance claim | 2026-11-02 |
 | [Equity, journey ownership and user research test plan](./research/ux/equity-journey-test-plan.md) | Plan and blank records for keyboard and screen reader checks, missing-data human review, journey owners and the draft aggregate-only user research protocol (#128). Nothing run or agreed; no usability or fairness claim. Second slice adds a paired-cohort priority check for the deterministic policy | 2026-11-04 |
-| [Usability testing programme plan](./research/ux/usability-test-programme-plan.md) | Draft moderated test plan, task scripts from the profile checks and learning-test bundles, aggregate-only measures, findings and results templates (#155). Nothing run or agreed; no usability result | 2026-11-04 |
+| [Usability testing programme plan](./research/ux/usability-test-programme-plan.md) | Moderated test programme specification and deterministic `src/core` `usability_programme` contract/evaluator (#155): 5 to 8 participants across all 13 representative cohorts (plus 2 to 3 `proxy-pilot`), 21 live-derived scripts from `profile_journey_contract`, `journey_register` and `learning_test_bundles`, accessibility and separate consent gates, `SA-010` prior `named_human` staff agreement and sub-5 `None` cell masking, backlog-linked `UF-NNN` findings, and a labelled `Synthetic walkthrough - not user validation` (`not_user_validation = True`) baseline retaining `supported`, `not_supported` and `inconclusive` outcomes. All human sessions, staff `SA-010` agreement and DPO sign-off remain `Not run`; no human usability validation claimed | 2026-11-15 |
 | [Regulatory Alert and Home Chat Acceptance Kit](./research/ux/regulatory-ux-acceptance-protocol.md) | Per-role keyboard and screen-reader scripts, frozen comprehension answer key and blank record tables for the two unmet #215 criteria. All rows Not run; no conformance or comprehension claim | 2026-11-03 |
 | [Zava Forward Workbench Supported Devices Proposal](./research/ux/supported-devices-proposal.md) | Proposed desktop, laptop, tablet and reflow widths for owner ratification (issue 152, OQ-004/011). Not decided; browsers, assistive tools and field or mobile use remain open | 2026-11-01 |
 | [Zava Forward Workbench Content Standard, Glossary and Copy Audit](./research/ux/content-standard.md) | Plain-language content standard, status and next-action glossary, blocked-message pattern (reason, owner, next action), AI suggestion wording (SA-003, SA-004) and the core-flow copy audit (issue #153). Named human review of resident-facing wording, reading-age targets and user testing remain open | 2026-10-15 |
 | [Resident Chat Learning Record (synthetic demo)](./research/ux/resident-chat-learning-record.md) | What the synthetic resident demo chat saves per question, why, its 14-day and 2,000-row bounds, the operator summary of unrouted questions, and that real-resident use needs DPO and Legal approval (#163 deferred). Refs #466 | 2026-11-01 |
 | [Resident Demo Web App UX Redesign Specification](./research/ux/resident-demo-redesign-2026-11-04.md) | UX specification for the #462 resident showcase addressing 2026-11-04 owner demo feedback: hidden form during sign-in loading with preserved email on error, icon-only `Account` button, top case summary (rules default, opt-in AI with source links and fallback), sticky section navigation, timeline/documents/funding hierarchy, and relocated temperature/humidity sensors with 24-hour synthetic forecast. Design specification only; no code modified, no user or screen-reader acceptance claimed. Refs #462. The 2026-11-04 live sensors walk (#1072) found the fail-closed no-readings message and records the blocked seed and the owner decision needed. | 2026-11-04 |
+| [Resident Demo Threat Model (Issue #462)](./research/resident-demo-threat-model-2026-11-16.md) | Design-time threat assessment of the synthetic resident showcase: public fake-email login, shared demo credential, session handling, cross-case access, database fields and deployment isolation, with accepted risks. Not a penetration test, security acceptance, DPO approval or deployment authority. Refs #462. | 2026-11-16 |
+| [Resident Demo Threat Model Update for Main 1c9ac230 (Issue #462)](./research/resident-demo-threat-model-update-2026-11-17.md) | Dated addendum after a non-rewriting integration of current main: derived sensor freshness keys, validation provenance (historical, original and newly witnessed) and what stays unproved. Not a security acceptance, penetration test, DPO approval or deployment authority. Refs #462. | 2026-11-17 |
 | [Chat and Memory Data Protection Analysis Record](./research/chat-memory-dpia.md) | Draft only: [staff hardening boundary](./research/chat-memory-dpia.md#staff-chat-engineering-boundary-2026-10-27-refs-157162159164163) records canonical question warning, shared cited routes, default-deny dispatch, bounded context and content-free consumption receipts; [2026-11-15 runtime residency/handling contract](./research/chat-memory-dpia.md#enforced-model-provider-and-region-position-2026-11-15-refs-163) enforces `uksouth` `Standard` / EU data-zone allowlists, zero training, content-filtering vs 30-day abuse-monitoring disclosure, cross-border transfer gating and pre-approval retention blocking (`chat_provider_position.py`); and [whole-system processing, derivative-dispatch and persisted rights-ledger controls](./research/chat-memory-dpia.md#whole-system-processing-derivative-dispatch-and-rights-request-controls-2026-11-15-refs-121) enforce intact-attachment gating (`storage_approves_ai_dispatch=False`) and statutory rights tracking (`uk_hosting_does_not_prove_uk_inference_residency: True`, `provider_erasure_confirmed=False`). Vendor terms stay not DPO-accepted and decisions D1 to D8 stay Not recorded; no approved production retention, lawful basis, notice or DPIA (#121/#157/#162/#159/#164/#163) | 2026-11-15 |
 | [Chat Storage Approval for the Synthetic-Data Demo](./research/chat-demo-storage-approval-2026-11-01.md) | Owner decision 2026-11-01 enabling chat storage for the synthetic-data demo only: DPIA, lawful basis, notice and 30-day retention references the deploy settings point to. Not a production or real-data approval; #163 criteria 2 and 5 stay deferred | 2026-11-01 |
 | [Easy Auth Intermittent 500s Under Concurrency](./research/easy-auth-intermittent-500-2026-11-03.md) | Empty-body 500s on the cutover test demo API (issue 810): ingress `Http` was insufficient; sidecar logs and stub A/B isolate the API's HTTP/1.0 close-per-response as the cause, fixed in source, deployed (image 4d56cf609) and verified live (0 x 500 in about 1,300 further requests, including signed-in resident traffic; staff-token burst still open) | 2026-11-04 |

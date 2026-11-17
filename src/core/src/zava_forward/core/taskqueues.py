@@ -9,6 +9,7 @@ from .doc_controls import is_available_case_document
 VERSION = "work-queues-1"
 MEMBERSHIP_REVISION = 5
 UNKNOWN = "Unknown"
+ESCALATION_OWNER = "Building Safety lead (escalation owner)"
 HELD = "Held for roles with a recorded need"
 PENDING = ("Offered", "Received", "Escalated")
 SAFEGUARDING_ITEM_KEYS = frozenset(
@@ -118,6 +119,63 @@ def contract(policy: dict[str, Any]) -> dict[str, Any]:
     )
 
 
+SAFEGUARDING_HELD = "Safeguarding items are shown only to roles with a recorded need."
+
+
+def safeguarding_clocks(
+    case: dict[str, Any], now: datetime, *, visible: bool, as_of: str
+) -> list[dict[str, Any]]:
+    """Recorded safeguarding deadlines and named owner; no duration is ever derived or invented.
+
+    Roles without a recorded need receive nothing, so neither presence nor detail is disclosed.
+    """
+    if not visible:
+        return []
+    clocks: list[dict[str, Any]] = []
+    for index, item in enumerate(case.get("safeguarding_items") or []):
+        if item.get("closed"):
+            continue
+        raw_owner = item.get("owner")
+        if isinstance(raw_owner, str):
+            raw_owner = dict(name=raw_owner)
+        owner = raw_owner if isinstance(raw_owner, dict) else {}
+        named = _text(owner.get("name")) or UNKNOWN
+        role = _text(owner.get("role")) or UNKNOWN
+        due = item.get("response_due_at")
+        due = due if isinstance(due, str) and instant(due) else None
+        referred = instant(item.get("referred_at"))
+        clocks.append(
+            dict(
+                kind="Safeguarding",
+                owner=named,
+                owner_role=role,
+                owner_named=named != UNKNOWN,
+                owner_status=(
+                    "Named accountable owner recorded."
+                    if named != UNKNOWN
+                    else "No named accountable owner is recorded. Ask the safeguarding "
+                    "lead to record one."
+                ),
+                response_state=timing(due, item.get("responded_at"), now),
+                referred_at=item.get("referred_at") if referred and referred <= now else UNKNOWN,
+                elapsed_hours=int((now - referred).total_seconds() // 3600)
+                if referred and referred <= now
+                else None,
+                response_due_at=due or UNKNOWN,
+                authority="Safeguarding lead",
+                case_id=case["id"],
+                source=f"case:{case['id']}/safeguarding_items/{index}",
+                version=item.get("version") or UNKNOWN,
+                as_of=as_of,
+            )
+        )
+    return clocks
+
+
+def _text(value: object) -> str:
+    return value.strip() if isinstance(value, str) else ""
+
+
 def validate_queue(value: str) -> None:
     if value and value not in {key for key, _, _ in DEFINITIONS}:
         raise ValueError("Choose one of the published work queues.")
@@ -133,6 +191,61 @@ def instant(value: object) -> datetime | None:
     if len(value) == 10:
         return datetime.combine(parsed.date(), time(), UTC)
     return parsed.astimezone(UTC) if parsed.tzinfo is not None else None
+
+
+def accountable_owner(value: object) -> str:
+    """The recorded owner, or the escalation owner when it is blank or unknown."""
+    named = str(value or "").strip()
+    return named if named and named != UNKNOWN else ESCALATION_OWNER
+
+
+def is_safeguarding(category: object) -> bool:
+    return "safeguard" in str(category or "").lower()
+
+
+def safe_category(category: object, reason_ok: bool) -> str:
+    """Never expose a safeguarding category label without the reason-visibility right."""
+    if is_safeguarding(category) and not reason_ok:
+        return "Safety review"
+    return str(category or UNKNOWN)
+
+
+def hazard_clock(
+    hazard: dict[str, Any], now: datetime, *, reason_ok: bool = True
+) -> dict[str, Any]:
+    """Per-item clock text, fallback accountable owner and pending external deadlines."""
+    follow = hazard.get("accepted_by") or hazard.get("sender") or {}
+    named = follow.get("name") or hazard.get("owner") or UNKNOWN
+    awareness = instant(hazard.get("aware_at"))
+    known = awareness is not None and awareness <= now
+    hours = int((now - awareness).total_seconds() // 3600) if known and awareness else None
+    due = hazard.get("response_due_at")
+    response = timing(due, hazard.get("responded_at"), now)
+    kind = "Hazard"
+    if is_safeguarding(hazard.get("category")):
+        kind = "Safeguarding" if reason_ok else "Safety"
+    elapsed = "elapsed time unknown" if hours is None else f"{hours} hours elapsed"
+    window = (
+        f"service response due {due}"
+        if instant(due) is not None
+        else "no response target window recorded"
+    )
+    states = (
+        response,
+        timing(hazard.get("resident_update_due_at"), hazard.get("resident_updated_at"), now),
+        timing(hazard.get("external_service_due_at"), hazard.get("external_service_confirmed"), now)
+        if instant(hazard.get("external_service_due_at")) is not None
+        else "Completed",
+    )
+    return dict(
+        kind=kind,
+        accountable_owner=accountable_owner(named),
+        clock_text=f"{kind} clock: {elapsed}; {window}; response {response.lower()}.",
+        named=named,
+        hours=hours,
+        known=known,
+        pending=any(state in ("Open", "Overdue") for state in states),
+    )
 
 
 def timing(due: object, done: object, now: datetime) -> str:
@@ -719,63 +832,51 @@ def context(
         )
 
     clocks: list[dict[str, Any]] = []
-    safeguarding_clocks: list[dict[str, Any]] = []
-
-    def _append_safety_item(
-        raw_item: Mapping[str, Any],
-        path: str,
-        *,
-        default_kind: str,
-    ) -> None:
-        if not is_open_safety_item(raw_item):
-            return
-        projected = project_safety_clock_and_owner(
-            raw_item,
-            case=case,
-            as_of=as_of,
-            staff=staff,
-            default_kind=default_kind,
-        )
-        named = projected["owner"]
-        is_sg = projected["item_kind"] == "safeguarding"
-        block(
-            "Safeguarding review"
-            if (is_sg and default_kind == "safeguarding")
-            else "Safety review",
-            "Retrofit work is stopped for safeguarding review."
-            if (is_sg and default_kind == "safeguarding")
-            else "Retrofit work is stopped for safety review.",
-            named if named != UNKNOWN else projected["named_owner"],
-            "Obtain external safeguarding confirmation and an independent decision to restart "
-            "retrofit work."
-            if (is_sg and default_kind == "safeguarding")
-            else "Obtain external service evidence and an independent decision to restart "
-            "retrofit work.",
-            path,
-            role=projected["owner_role"],
-            version=raw_item.get("referral_version"),
-        )
-        service_label = "safeguarding route" if is_sg else "hazard service"
-        owner_status = (
-            "Named follow-up owner recorded."
-            if projected["owner_named"]
-            else f"No named follow-up owner is recorded. Escalation owner: "
-            f"{projected['escalation_owner']} ({projected['escalation_owner_role']}). "
-            f"Ask {owner} to record one through the existing {service_label}."
-        )
-        entry = dict(
-            **projected,
-            owner_status=owner_status,
-            **origin(path, raw_item.get("referral_version")),
-        )
-        clocks.append(entry)
-        if is_sg:
-            safeguarding_clocks.append(dict(entry))
 
     for index, hazard in enumerate(_raw_hazard_dicts(case)):
-        _append_safety_item(hazard, f"hazards/{index}", default_kind="hazard")
-    for index, sg in enumerate(raw_safeguarding_items(case)):
-        _append_safety_item(sg, f"safeguarding/{index}", default_kind="safeguarding")
+        follow = hazard.get("accepted_by") or hazard.get("sender") or {}
+        named = follow.get("name") or hazard.get("owner") or UNKNOWN
+        path = f"hazards/{index}"
+        item = hazard_clock(hazard, now, reason_ok=reason_ok)
+        if not hazard.get("released"):
+            block(
+                "Safety review",
+                "Retrofit work is stopped for safety review.",
+                named,
+                "Obtain external service evidence and an independent decision to restart "
+                "retrofit work.",
+                path,
+            )
+        if not hazard.get("released") or item["pending"]:
+            clocks.append(
+                dict(
+                    kind=item["kind"],
+                    accountable_owner=item["accountable_owner"],
+                    clock_text=item["clock_text"],
+                    owner=named,
+                    owner_named=named != UNKNOWN,
+                    owner_status=(
+                        "Named follow-up owner recorded."
+                        if named != UNKNOWN
+                        else f"No named follow-up owner is recorded. Ask {owner} to record "
+                        "one through the existing hazard service."
+                    ),
+                    response_state=timing(
+                        hazard.get("response_due_at"), hazard.get("responded_at"), now
+                    ),
+                    resident_update_state=timing(
+                        hazard.get("resident_update_due_at"),
+                        hazard.get("resident_updated_at"),
+                        now,
+                    ),
+                    aware_at=hazard.get("aware_at") if item["known"] else UNKNOWN,
+                    elapsed_hours=item["hours"],
+                    response_due_at=hazard.get("response_due_at") or UNKNOWN,
+                    resident_update_due_at=hazard.get("resident_update_due_at") or UNKNOWN,
+                    authority="Existing hazard and repairs service",
+                    **origin(path, hazard.get("referral_version")),
+                )
+            )
     for query in stock_queries:
         block(
             "Stock review",
@@ -928,8 +1029,8 @@ def context(
         returned=returned_view,
         blockers=blockers,
         hazard_clocks=clocks,
-        safeguarding_clocks=safeguarding_clocks,
-        safety_items=[dict(x) for x in clocks],
+        safeguarding_clocks=safeguarding_clocks(case, now, visible=reason_ok, as_of=as_of),
+        safeguarding_visibility=SAFEGUARDING_HELD,
         overdue=overdue,
         evidence_freshness=freshness,
         technical_reassessment=reassess,

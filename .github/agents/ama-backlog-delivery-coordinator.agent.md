@@ -49,15 +49,11 @@ it. Independent issues continue. Blockers are:
   access.
 * A missing credential, permission or tool the run cannot obtain.
 * A blocking review finding (including a safety, privacy or accessibility
-  defect) still open after the issue's correction-cycle budget is exhausted
-  (up to five total review-correction cycles by default, or after an explicit
-  dated issue-specific owner extension granted beyond an exhausted budget; see
-  [Correction-cycle budget](#correction-cycle-budget-owner-2026-11-09-issue-1296)),
-  a check that keeps failing for a reason the loop cannot fix, or a conflict
-  whose intent cannot be reconciled. Non-blocking Copilot threads raised after
-  two correction cycles are not blockers; they become follow-up issues (step 6,
-  owner decision D5, 2026-11-01, separate from the five-cycle blocking-correction
-  default, 2026-11-09).
+  defect) still open after two correction cycles, a check that keeps
+  failing for a reason the loop cannot fix, or a conflict whose intent cannot
+  be reconciled. Non-blocking Copilot threads raised after two correction
+  cycles are not blockers; they become follow-up issues (step 6, owner
+  decision D5, 2026-11-01).
 * An issue that stays unclear after one backlog-manager refinement. An issue
   never refined or assessed is refinement work, not a blocker.
 
@@ -68,62 +64,6 @@ blockers.
 For each blocker, comment once on the issue with the decision needed, who can
 decide and what it unblocks, then add it to the blocker ledger and set the
 board status. Do not guess, invent approvals or mark a decision as made.
-
-## Correction-cycle budget (owner, 2026-11-09, issue #1296)
-
-Apply one explicit review-correction budget per issue across pre-publication
-local review and post-publication PR review:
-
-* Cycle: one review-correction cycle is one correction brief launched to the
-  issue's RPI loop after a recorded blocking finding from pre-publication
-  independent exact-head review or post-publication PR review, producing a
-  frozen local correction commit with its own dated research, plan, changes and
-  review artifacts. Pre-publication local review-correction cycles and
-  post-publication PR review-correction cycles count against the same per-issue
-  budget. A failed session start or missing-tool exit that produces no worker
-  commits or artifacts consumes no cycle (retry once under step 5). First-pass
-  critique and review inside a single RPI run are part of that run, not
-  correction cycles. The one-time step 5 recovery for missing RPI artifacts is
-  process recovery only and never modifies defect scope or bypasses this
-  budget. Bounded read-only or unchanged-tree diagnostic checks (confirming
-  whether a failure comes from shared infrastructure, fixtures or environment
-  without modifying the candidate commit or tracked worktree files) never delay
-  early stop, do not reset or enlarge the correction cap, and never authorize a
-  sixth file-modifying fix.
-* Default: up to five total review-correction cycles (`C1-C5`) are authorized
-  per issue without further owner approval (`2026-11-09`, superseding the
-  earlier two-cycle and four-cycle blocking limits). Five is a maximum, not a
-  target: `0` cycles is valid when initial review passes, and correction stops
-  immediately once no blocking finding remains open (`C1-C4` early stop).
-* Ledger: track every issue's consumed cycles (`C1..Cn`), any dated owner
-  extension (`E1..Ek`), remaining budget, triggering blocking finding and
-  resulting head SHA in session SQL and each correction brief. Never reset,
-  erase or renumber historical cycle counts across retries, rebases, branch
-  recreations or coordinator restarts, and never reinterpret the standing
-  five-cycle default as additional cycles on top of already-spent budget.
-* Exhausted: when a blocking finding remains open after five total correction
-  cycles (or after the final cycle of an explicit dated issue-specific owner
-  extension), stop correction launches on that issue, comment once with the
-  consumed cycle ledger and open finding, and record the issue as
-  `human-blocked` until the owner grants new explicit dated issue-specific
-  authority.
-* Dated grant: on `2026-11-09`, the owner granted five additional correction
-  cycles (`"add 5 additional cycles to exhausted issues"`, recorded as `E1-E5`)
-  solely to issues whose correction budget was already exhausted when that
-  grant was issued (for example Quality lane `#1288`, keeping historical cycles
-  `C1-C8` intact and resuming under `E1-E5` per
-  `https://github.com/jmservera/ama/issues/1288#issuecomment-6735179415`). If an
-  issue exhausts `E5` with a blocking finding still open, it returns to
-  `human-blocked` and requires fresh owner authority; issues that subsequently
-  exhaust the standing `C1-C5` default do not inherit `E1-E5` automatically.
-* Retained gates: owner decision D5 (`2026-11-01`) remains unchanged at two
-  correction cycles for non-blocking Copilot threads (after `C2`, new
-  non-blocking Copilot threads become follow-up issues and do not hold
-  publication or merge, whereas any blocking finding, including safety, privacy
-  or accessibility defects, continues to block and uses remaining `C3-C5` or
-  authorized `E1-E5` cycles). No finding, safety, privacy, accessibility,
-  resident-consent, human-approval, validation-tier or independent exact-head
-  review gate is waived.
 
 ## Liveness and stop decision (owner rule, 2026-10-31; repaired 2026-11-05, issue #1204)
 
@@ -158,8 +98,7 @@ without inventing, duplicating or no-op issues to look busy:
   worktree. Admission rule (single source; other sections cross-reference it):
   eight (owner, 2026-10-31) is the
   maximum number of live, useful native `rpi-*` tmux sessions, not eight
-  issues (there is no numerical active-issue cap when work is organized into
-  coherent parent stacks): independent workers may share a coherent parent scope or issue, and
+  issues: independent workers may share a coherent parent scope or issue, and
   repair, correction, validation and gate continuations each count only while
   their session is live. A finished session frees its slot at once; its issue
   stays in the ledger until published and merged, and a retained unpublished
@@ -217,106 +156,21 @@ blocker for the one lane a missing tool stops. Do not repeat "nothing changed".
 
 End of a scheduled tick is not the end of the run. Never call `task_complete`
 or stop the delivery schedule while `ready`, `running` or `unknown` in-scope
-work remains. Scheduled checks and turns must never claim "nothing changed",
-emit an idle or waiting summary, or pause on an unverified blocker while any
-open issue from `gh issue list --state open --limit 500` (or the full
-`gh api --paginate` set when the `500` cap saturates) remains unclassified
-in the current run. An asserted, carried-over or cached blocker lacking
-current-run command verification and a concrete link is inspection work to
-execute in this tick, never a ground to pause or skip independent lanes.
-"Nothing changed" and an idle tick are permitted only when the fresh
-current-run classification table renders before the summary and shows every
-remaining open issue in `active session`, `human-blocked` with link, or
-`dependency-blocked` with link, zero open issues unclassified or `ready to start`,
-and no reconciliation or closure review unassessed. A dependency on an
-identified `running` predecessor (named, evidenced, with no executable
-reconciliation or closure work left) permits ending THIS TICK with a named
-resume action, never stopping the schedule or completing the run; while other
-items remain, a dependency on a human-blocked item likewise ends only the tick.
-Ready, unknown, unassessed or executable reconciliation work excludes an idle
-tick. Stop the schedule only when the approved scope is delivered, the fresh
-classification table shows every remaining item `merged` or `human-blocked` with
-link (or `dependency-blocked` with link solely on a `human-blocked` item) with
-nothing `ready to start`, unknown, unassessed or executable (report it with the
-blocker ledger), a stated Inputs limit is reached (a pause, not completion) or
-the owner explicitly pauses the run; report the evidence either way. An explicit
+work remains. "Nothing changed" and an idle tick are permitted only when the
+fresh classification shows every remaining item `running`, `human-blocked` or
+dependent on one of those and no reconciliation or closure review is
+unassessed. A dependency on an identified `running` predecessor (named,
+evidenced, with no executable reconciliation or closure work left) permits
+ending THIS TICK with a named resume action, never stopping the schedule or
+completing the run; while other items remain, a dependency on a human-blocked
+item likewise ends only the tick. Ready, unknown, unassessed or executable reconciliation work excludes an
+idle tick. Stop the schedule only when the approved scope is delivered, the
+fresh classification shows every remaining item merged or human-blocked (or
+dependent only on a human-blocked item) with nothing ready, unknown,
+unassessed or executable (report it with the blocker ledger), a stated
+Inputs limit is reached (a pause, not completion) or the owner explicitly
+pauses the run; report the evidence either way. An explicit
 owner pause and a real scoped human gate stay legitimate stops for their scope.
-
-### Issue-state classification table and live handoff refresh
-
-Before emitting any idle, waiting, "nothing changed", pause or handoff summary,
-render an explicit Markdown issue-state classification table classifying every
-in-scope and open issue in the current run into one of five canonical states:
-
-* `merged` applies only when the issue's required delivery has merged to `main`
-  and closed the issue on GitHub. Never classify a still-open stacked child
-  merged only into an unmerged parent topic branch or an open
-  `status:partially-delivered` issue as `merged`.
-* `active session` applies to an open issue with at least one verified live
-  `tmux` `rpi-*` worker session (internal `running`, including multi-role
-  `rpi-{number}-{role}` sessions sharing one issue).
-* `human-blocked` applies to an open issue blocked on an owner decision,
-  credentials, legal/resident/executive approval, branch-protection gate or
-  exhausted `#1296` correction-cycle budget, and must include a concrete
-  non-self-bare link (`https://...` URL, `#issuecomment-...` anchor, Markdown
-  document link or distinct `#<other>` issue/PR reference) in the blocker link
-  column.
-* `dependency-blocked` applies to an open issue blocked on a specific upstream
-  active or human-blocked issue or PR, a still-open stacked child merged into a
-  parent topic branch awaiting that parent PR's merge to `main`, or an open PR
-  awaiting hosted GitHub Actions CI or queued auto-merge when no `tmux` session
-  is active, and must include a concrete link to the blocking issue, PR or
-  check run in the blocker link column.
-* `ready to start` applies to actionable open work eligible now (internal
-  `ready`, including open `status:partially-delivered` issues with actionable
-  remaining scope, completed unpublished candidates awaiting coordinator gate,
-  or failing fixable PR checks). Any `unknown` or unassessed open issue must be
-  inspected and classified in the current run before writing the summary; any
-  `ready to start` row bars "nothing changed" or global idle summaries, and bars
-  waiting summaries unless active `tmux` sessions are at the declared session
-  cap (`M/N`), an active PR drain (`Open PRs > 15` with drain recorded) holds,
-  or the note records only a lane-specific wait on a verified blocker while
-  actively starting each `ready to start` issue (up to available session
-  capacity) in the current check.
-
-Every handoff note, scheduled-check status note, stabilization checkpoint note
-and wave/final report must refresh open-issue counts, open-PR counts, active
-session status and exact SHAs from live commands run at the time of writing
-(`gh issue list --state open --limit 500`, `gh pr list --state open --limit 200`,
-`tmux list-sessions` and `git rev-parse`), never copied from an earlier tick,
-prior handoff or stale `/tmp` brief. Whenever `gh issue list --state open --limit 500`
-returns `500` items or `gh pr list --state open --limit 200` returns `200` items,
-treat the fixed CLI limit as saturated and retrieve the complete un-truncated set
-before counting or classifying via
-`gh api --paginate 'repos/{owner}/{repo}/issues?state=open&per_page=100' --jq '.[] | select(.pull_request == null)'`
-for open issues (excluding pull requests returned by the REST issues endpoint) and
-`gh api --paginate 'repos/{owner}/{repo}/pulls?state=open&per_page=100'` for open
-PRs. Validate freshly written coordinator handoff, checkpoint and status Markdown
-artifacts at write time against those live command outputs with
-`python3 tools/check-coordinator-handoff.py --handoff <path> --expect-open-issues <n> --expect-open-prs <n> --expect-active-sessions <n> --active-sessions <csv> --expect-head <sha> --expect-base <sha> --open-issues <csv>`
-before relying on or handing off the note (standalone
-`python3 tools/check-coordinator-handoff.py --handoff <path>` remains available
-for offline structural and internal-consistency checks on historical notes). Use
-this canonical snapshot and table order ahead of prose summaries:
-
-```markdown
-* Observed UTC: 2026-11-15T12:00:00Z
-* Written UTC: 2026-11-15T12:02:00Z
-* Live commands: `gh issue list --state open --limit 500`, `gh pr list --state open --limit 200`, `tmux list-sessions`, `git rev-parse HEAD origin/main`
-* Open issues: 3
-* Open PRs: 2
-* Active sessions: 1/8 (`rpi-1204`)
-* HEAD SHA: f74e1bf1fd7d3e62048a69ade51a126704ebc556
-* Origin/main SHA: a1b2c3d4e5f60718293a4b5c6d7e8f9012345678
-* Target/base SHA: f74e1bf1fd7d3e62048a69ade51a126704ebc556
-
-| Issue | State | Blocker or evidence link | Next action |
-| --- | --- | --- | --- |
-| #1200 | merged | PR #1630 | Closed on main |
-| #1204 | active session | PR #1641 | Monitor tmux session `rpi-1204` |
-| #1288 | human-blocked | https://github.com/jmservera/ama/issues/1288#issuecomment-1 | Await owner decision |
-| #1302 | dependency-blocked | PR #1641 | Start after parent PR merges |
-```
 
 ### Approvals and owner questions
 
@@ -337,29 +191,20 @@ this canonical snapshot and table order ahead of prose summaries:
 
 Two recurring checks run the loop; the coordinator manages them with its live
 schedule tool (`manage_schedule`), and no repository setting changes. A
-delivery check runs on an adaptive 10 to 30 minute cadence (default 10 minutes
-when short focused tasks are finishing, or 15 to 20 minutes when longer RPI
-waves are running alongside `ama-worker-watch.py` completion notifications) and
-applies this file. A cleanup check runs hourly and applies the Cleanup contract
-(including keeping `/mnt/tmp` available for `TMPDIR=/mnt/tmp` and pruning
-eligible stale caches, temporary directories, and merged worktrees). Neither is
-a status-only poll.
+delivery check runs every 10 minutes and applies this file. A cleanup check
+runs hourly and applies the Cleanup contract. Neither is a status-only poll.
 
 * Keep each approved prompt as a versioned snapshot in the run's approved
   evidence and record its version, schedule id, interval and creation time in
   session SQL (`schedule_versions`). Prompts derive from this file; they do
   not restate or loosen its rules. A delivery prompt that runs backlog
   reconciliation carries the activity handoff in Reconcile the whole backlog,
-  and never the legacy `--apply` before the accepted tool publication. A
-  scheduled delivery check must refresh open-issue counts, open-PR counts and
-  active session status from live commands, classify all open issues in the
-  five-category issue-state classification table before any idle or waiting
-  summary, and never claim "nothing changed" or pause on an unverified blocker
-  while open issues remain unclassified in the current run.
+  and never the legacy `--apply` before the accepted tool publication.
 * Replace a schedule reliably: create the new one, verify it is active and
   carries the intended prompt, then stop the old one, then read the schedule
   list back and confirm exactly one active delivery and one active cleanup
-  recurrence. If the read-back shows zero or two, repair that tick and record
+  recurrence. If the read-back shows zero or two while both recurrences remain
+  authorized, repair that tick and record
   it. Stopping an old schedule before its replacement is verified is a defect.
 * Stop a schedule only under the stop rule above, name its id in the report,
   and keep a stopped schedule's id as historical evidence. Stopping a duplicate
@@ -369,9 +214,47 @@ a status-only poll.
 * Provenance (as of 2026-11-05): the live schedule list read-back is
   authoritative. Operator-supplied evidence shows delivery #15 (every 10
   minutes) and cleanup #8 (hourly) active; delivery #9, #7, #6 and cleanup #2
-  are stopped and kept as historical ids. Live prompts are
-  condensed semantic equivalents of the approved snapshots, not byte-identical.
-  Schedules are an advisory workflow, not technical enforcement.
+  are stopped and kept as historical ids. Live prompts at that 2026-11-05
+  observation were condensed semantic equivalents of the approved snapshots,
+  not byte-identical.
+  Schedules are an advisory workflow, not technical enforcement. The prompt
+  bodies approved on 2026-11-17 are the verbatim snapshots below (live delivery
+  #5 and cleanup #2 at that later read-back); the live list stays
+  authoritative.
+* Startup and restart: schedule ids are runtime handles, never persisted
+  configuration or authority, so do not assume ids 5 and 2 survive a restart.
+  Apply the rules above in this order. List the live schedules first. Keep a
+  matching active recurrence; a delivery recurrence matches only if its
+  prompt carries the current live cleanup handle, otherwise replace it under
+  the replacement rule above. Create only a missing authorized 10-minute
+  delivery or hourly cleanup, cleanup first (or find it), and when
+  instantiating the delivery prompt substitute only the newly observed live
+  cleanup handle for the historical `#2`; the committed snapshot stays
+  verbatim. Read the list back and confirm exactly one active delivery and one
+  active cleanup for each recurrence that is still authorized; zero after a
+  legitimate stop is correct and is not recreated. Respect an owner pause,
+  completed scope, authority and expiry, current blockers and the cleanup
+  retention boundaries, and never recreate unauthorized work. Apply the safe
+  replacement and deduplication rules above to any duplicate.
+* Honest limit: these are CLI session schedules (`/every [interval]
+  [prompt...]`) that need a running coordinator session. They are not an
+  operating-system service or autostart guarantee. `/restart` restores
+  supported live sessions but this build does not document guaranteed schedule
+  recovery, and no schedule storage path or API is assumed.
+
+### Approved prompt snapshots (2026-11-17)
+
+Delivery check, historical live id 5, every 10 minutes:
+
+```text
+Run the AMA Backlog Delivery Coordinator delivery check under its current instructions. Reconcile all open Todo and In Progress board issues, PRs, retained candidates, closure items and due checkpoints into ready, running, dependency-blocked, human-blocked or unknown with fresh evidence and a concrete next action. Fetch every project-board page and verify fetched item count equals totalCount; a limited snapshot is not the whole board. Prioritize demo, AI and simulator -> IoT Hub -> employee/resident map, then other independent work. Never treat a blocker on one issue, a missing isolation route, an empty tmux list, prior assessment, or unknown activity as proof that the whole backlog is blocked. Investigate unknowns and advance at least one eligible substantive action each tick; after two no-progress ticks perform a bounded recovery in that tick. Inspect tmux list-sessions and each active log, check open PRs and their exact-head gates, run read-only backlog-sync with only individually confirmed activity, and review up to five unassessed closure items. Recount live sessions (maximum eight) and open PRs (admit at 20 or fewer; drain above20 until15 or fewer) before admissions. Launch eligible issues through the required native tmux RPI route, each isolated in its own worktree with a current brief and phase witness; preserve shared-host files, original/adverse evidence, scoped authorizations, selected-tier validation, independent review and merge gates. An available declared parent topic can satisfy a local child's code dependency before parent publication; do not invent a whole-parent-issue closure dependency. Audit exact issue-specific planned checks and targeted preflight before an expensive full gate: green generic groups do not prove omitted planned SQL/image/browser checks. A busy heavy-resource holder gates those checks, not independent research or implementation; never queue or bypass it. If safe launch confinement is unverified, actively investigate and validate a safe launch route and continue all independent permitted work; do not silently make it a permanent global stop or claim a worker launched. For sessions older than50 minutes inspect phase, pane, log timestamps, child process and gate/lock activity against prior observations; elapsed time alone is not a hang. Stop only an evidenced stuck run-owned session when safe, preserve evidence and route a bounded independent review. Report what changed, running work, each PR's checks and next action, blockers, and the next concrete action. Keep hourly cleanup #2 active and follow its retention contract.
+```
+
+Cleanup check, historical live id 2, hourly:
+
+```text
+Run the AMA Backlog Delivery Coordinator hourly cleanup check under the Cleanup contract and docs/reference/method/tracking-retention-policy.md: list candidate worktrees and scratch paths (/tmp/rpi*-out, /tmp/ama-gate-*), resolve ownership/upstream/squash-merge/active-tmux/lock/receipt status into a finite per-run path manifest, remove only individually verified run-owned merged worktrees and local branches (never --force, never wildcards, never delete active/dirty/unknown/unverified paths, evidence roots, or repo root), and report each path removed, preserved, or deferred with reason and measured bytes freed.
+```
 
 ## Cleanup contract
 
@@ -516,43 +399,16 @@ Apply the update at the same moment as the matching issue action, and confirm
 by reading the item back. A failed update is reported, not retried silently or
 treated as delivery failure.
 
-## CI economy and PR backlog cap (owner rules, 2026-11-03; updated 2026-11-15)
+## CI economy and PR backlog cap (owner rules, 2026-11-03)
 
 Hosted-runner capacity, not code, is the delivery bottleneck: every push
-restarts that PR's Source CI and Scorer runs (`cancel-in-progress`). `Source
-projects CI` (`src-ci.yml`) runs on pull requests targeting any branch, whereas
-`Capstone Rubric Scorer` (`rubric-score.lock.yml`) runs only on pull requests
-and pushes targeting `main`; stacking child PRs onto a coherent parent
-integration branch validates each child in `Source projects CI` without
-triggering rubric scoring runs on `main`.
+restarts that PR's Source CI and Scorer runs (`cancel-in-progress`).
 
-* Automatic Copilot Code Review is disabled. Each issue loop commits its RPI
-  Review artifact under `.copilot-tracking/reviews/` before freezing its head,
-  while coordinator-dispatched `code-review-*` precomputed diffs and verdicts
-  for pre-publication exact-head review write to an external coordinator review
-  directory outside the worktree (keeping the validated worktree clean) and
-  serve as the review gate.
-* Defer push and PR creation until local completion (owner rule, 2026-11-15).
-  Issue loops keep all WIP commits and any local review-correction fixes local
-  in their worktree and do not push or open a pull request until the full local
-  RPI loop (`research`, `plan`, `implement`, `review`), any local
-  review-correction cycles (counted within the issue's
-  [Correction-cycle budget](#correction-cycle-budget-owner-2026-11-09-issue-1296)),
-  selected-tier local validation and step 6 pre-publication independent
-  exact-head review have completed on a clean frozen candidate, avoiding
-  repeated GitHub Actions runs on WIP pushes.
+* Automatic Copilot Code Review is disabled. The local `code-review-*` verdict,
+  recorded in `.copilot-tracking/reviews/`, is the review gate.
 * Push less. Batch fixes into one push, stack small PRs under a parent branch,
   and rebase a run-owned PR only under the step 8 conditions. Never rebase a
   PR just to refresh a green or pending head.
-* Prevent avoidable `Source projects CI` reruns by running local `src-ci.yml`
-  parity checks before pushing: run bare `python3 -m mypy` inside each modified
-  `src/<project>` directory (for `src/api`, `PYTHONPATH=../core/src:../agents/src python3 -m mypy`),
-  run `python3 -m ruff format --isolated --line-length 100 --check` on modified
-  `infra/` Python files, include `src/api/tests` on `PYTHONPATH` when running
-  `src/api` tests from the repository root, update `scenario-manifest.json`
-  recipe SHAs when `src/api/checks/*_browser_check.py` changes, and run
-  `test_accessibility_baseline.py` and `test_content_standard.py` when web UI
-  files change.
 * Even an append-only docs conflict rebase creates a new head and invalidates
   head-bound evidence; the new head needs step 7/8 final exact-head
   selected-tier evidence, independent exact-head assessment and hosted checks
@@ -585,20 +441,15 @@ Require a dated record in the existing
 [cut-over evidence pack](../../docs/architecture/cutover-evidence-pack.md),
 linked from the checkpoint issue and blocker ledger, containing:
 
-* Source commit/tree (`HEAD SHA`), freshly resolved `Origin/main SHA` and any
-  stacked `Target/base SHA`, plus open-issue counts, open-PR counts and active
-  `tmux` session status refreshed from live commands at the time of writing
-  (`gh issue list --state open --limit 500`, `gh pr list --state open --limit 200`,
-  or the PR-filtered `gh api --paginate` queries above when either limit
-  saturates, `tmux list-sessions`, `git rev-parse`), covered merged PRs and
-  issues, exclusions, and BRD/PRD/ADR paths, versions or dated revisions, blob
-  identities and approval/status. Never copy earlier counts or SHAs across
-  checkpoint notes. Draft/candidate/proposed documents do not become approved
-  through a checkpoint. Assess merged main or, for stacked children merged into
-  their declared parent topic, the pinned parent-topic integration head before
-  dependent work starts. Record current-main provenance and keep parent-topic
-  observations separate from merged-main acceptance. Exclude unmerged sibling
-  functionality; identify candidate-policy evidence separately.
+* Source commit/tree and freshly resolved `origin/main` SHA, covered merged
+  PRs and issues, exclusions, and BRD/PRD/ADR paths, versions or dated
+  revisions, blob identities and approval/status. Draft/candidate/proposed
+  documents do not become approved through a checkpoint. Assess merged main
+  or, for stacked children merged into their declared parent topic, the pinned
+  parent-topic integration head before dependent work starts. Record current-main
+  provenance and keep parent-topic observations separate from merged-main
+  acceptance. Exclude unmerged sibling functionality; identify candidate-policy
+  evidence separately.
 * Traceability rows joining document-qualified requirement IDs (for example,
   BRD FR-003 versus PRD FR-003), approved planned features/decisions,
   architecture and contracts, code/tests, observed journeys and remaining
@@ -777,7 +628,7 @@ remains subject to the tracking retention policy.
    an absolute evidence directory outside every worktree that you own and create for this
    launch (`{evidence-dir}`, for example under `~/.local/share/ama/phase-witness/`), so the
    runtime log and lock never dirty the candidate:
-   `python3 tools/rpi_phase_witness.py record launch --repo {worktree} --issue {number} --evidence-dir {evidence-dir} --brief {brief-path} --session {name} --actor coordinator --claim-model gemini-4-carbon`.
+   `python3 tools/rpi_phase_witness.py record launch --repo {worktree} --issue {number} --evidence-dir {evidence-dir} --brief {brief-path} --session {name} --actor coordinator --claim-model {model}`.
    A refusal (exit 2) blocks that launch until its reason is fixed. The
    witness observes its own UTC clock, Git HEAD and tree, dirty source and,
    at later boundaries, the canonical artifacts; it accepts no caller-supplied times, and its record is
@@ -789,38 +640,54 @@ remains subject to the tracking retention policy.
    `record research-open` after persisting the opening state and before
    substantive search, `plan-done`, `implement-start` (changes record
    persisted before any source edit), `implement-done`, `review-done`, and
-   `commit-complete --claim-commit {sha}` only after the commit exists. Then run:
+   `commit-complete --claim-commit {sha}` only after the commit exists.
+   The brief states the ordering rule: the worker persists the dated
+   `.copilot-tracking/` artifact first and only then calls the witness, because
+   the witness observes the artifact named by `--state`. `research-open` follows
+   the research Markdown file; `implement-start` follows the changes Markdown
+   file and precedes any source edit. The brief also forbids staging
+   `__pycache__`, `.mypy_cache` or `.ruff_cache`.
+   The brief states these execution-hygiene rules: run the `src/core` and
+   `src/api` test suites sequentially, never concurrently in the same worktree;
+   cap every `read_bash` delay at 600 seconds or less; and before
+   `rpi-checks.py --all`, check `/tmp/ama-rpi-heavy.lock` or pass
+   `--lock-timeout 0`.
+   Then run:
    Write a unique launcher with a quoted heredoc (no expansion, no `eval`),
    `/tmp/launch-{name}-{timestamp}.sh`, where `{name}` is the session name
    `rpi-{number}` or `rpi-{number}-{role}` (also the witness `--session`):
 
    ```bash
    #!/usr/bin/env bash
-   name=$1 stamp=$2 brief=$3
+   name=$1 stamp=$2 brief=$3 model=$4
    log=/tmp/$name.log
-   mkdir -p /mnt/tmp 2>/dev/null || true
-   export TMPDIR=/mnt/tmp
    echo "--- launch $stamp" >> "$log"
-   copilot --agent hve-core-all:rpi-agent --model gemini-4-carbon \
+   [ "$model" = automatic ] && model_args=() || model_args=(--model "$model")
+   copilot --agent hve-core-all:rpi-agent "${model_args[@]}" \
      --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' \
-     -p "$(cat "$brief")" < /dev/null 2>&1 | tee -a "$log"
+     -p "$(cat "$brief")" 2>&1 | tee -a "$log"
    status=${PIPESTATUS[0]}
    echo "exit=$status" >> "$log"
    exit "$status"
    ```
 
    Run it as
-   `tmux new-session -d -s {name} -c {worktree} "bash /tmp/launch-{name}-{timestamp}.sh {name} {timestamp} {brief-path}"`
+   `tmux new-session -d -s {name} -c {worktree} "bash /tmp/launch-{name}-{timestamp}.sh {name} {timestamp} {brief-path} {model}"`
    so it does not depend on tmux's default shell. `status` is the Copilot
    exit, captured immediately after `tee`. Each attempt owns the
    `--- launch` line and the `exit=` line that follows it; a missing `exit=`
    line for the current attempt is unknown, never success.
    Logs are preserved across retries: each launch appends a
    `--- launch {timestamp}` line and never truncates or deletes an earlier log.
-   Use Gemini 4 Carbon (`--model gemini-4-carbon`) for all coordinator-launched RPI issue sessions, including
-   retries, corrections and validation continuations, by passing
-   `--model gemini-4-carbon` on every launch. The coordinator's own session
-   stays on Automatic; this does not change independent reviewer selection.
+   Select the model by fit and pass it with `--model` (and the same value as
+   `--claim-model`) on every launch, including retries, corrections and
+   validation continuations. The coordinator stays on Automatic (for example
+   `gemini-4-hydrogen`) for fast parallel orchestration. RPI code, rebase and
+   UI workers use `claude-sonnet-5.5`. Validation-only or docs-only RPI loops
+   may use `gemini-4-carbon` (or Automatic, passed as `{model}` = `automatic`,
+   which omits `--model` and records `automatic` as the claim). Independent exact-head review
+   uses `gpt-6.1-terra` or the code-review agents (step 6). When unsure,
+   use `claude-sonnet-5.5`.
    If the requested model or launch tool is unavailable, report the specific
    model/tool blocker for the affected loop only; do not silently fall back
    to another model.
@@ -843,19 +710,10 @@ remains subject to the tracking retention policy.
    candidate with its tier-specific evidence (including an external full
    receipt when full tier applies). For a behavior-bearing instruction change
    it also returns the applicable canonical HVE static and behavior evidence,
-   or a justified non-applicability (step 6 sets the gate). For a correction
-   launch, the brief also carries the issue's consumed cycle ledger (`C1..Cn`
-   and any dated `E1-E5` grant), remaining budget, blocking finding, selected
-   validation tier and separate independent exact-head review requirement per
-   [Correction-cycle budget](#correction-cycle-budget-owner-2026-11-09-issue-1296).
-   The brief forbids the worker to push, open
-   or update a PR, merge or change the target: issue loops keep all WIP commits
-   and local review-correction commits in their local worktree, and `git push`
-   and `gh pr create` belong to the coordinator only after the local RPI loop
-   (`research`, `plan`, `implement`, `review`), any local review-correction
-   fixes, selected-tier local validation and step 6 independent exact-head
-   assessment complete on a clean frozen candidate, in batched pushes (owner
-   CI-economy rule, 2026-11-15). The eventual PR links the issue (`Closes #{number}` only when all
+   or a justified non-applicability (step 6 sets the gate). The brief forbids the worker to push, open
+   or update a PR, merge or change the target: publication belongs to the
+   coordinator after selected-tier verification and independent exact-head
+   assessment in step 6, in batched pushes. The eventual PR links the issue (`Closes #{number}` only when all
    acceptance criteria are met; otherwise use `Refs #{number}`) and states
    evidence and validation. Stacked child PRs use `Refs #{number}` for issues
    kept open pending integration or unmet criteria. The brief
@@ -931,35 +789,22 @@ remains subject to the tracking retention policy.
    reports the blocker ledger. Name the schedule id in the
    report. Between checks, continue with independent work.
    End every check with a status summary in plain language, not a bare
-   command result. Cover, in this order: the live-refreshed counts, active
-   session status and pinned SHAs from commands run at write time
-   (`gh issue list --state open --limit 500`, `gh pr list --state open --limit 200`,
-   switching to the PR-filtered `gh api --paginate` queries when either limit
-   saturates, `tmux list-sessions`, `git rev-parse`); the explicit five-category
-   issue-state classification table (`merged`, `active session`,
-   `human-blocked` with link, `dependency-blocked` with link, or
-   `ready to start`) covering every open issue in the current run; what changed
-   since the last check (sessions finished, PRs opened, merged or reviewed,
-   issues reopened); what is running now (tmux session, issue and phase from
-   the log tail); each open PR with its checks, mergeability, review verdict
-   and the next action; what is waiting and why (dependency, failing check, fix
-   session, human decision); and what you will do at the next check. Name the
-   failing check and its cause when known, and say plainly when a cause is not
-   yet known. Detect material requirements/architecture/contract changes and
-   significant regressions during these checks; record and route an early
-   stabilization checkpoint before affected closure or dependent expansion
-   proceeds. Never claim "nothing changed" or pause on an unverified blocker
-   while any open issue remains unclassified in the current run; when nothing
-   changed, say so in one line only after the fresh classification table above
-   proves zero unclassified and zero `ready to start` open issues, with its
-   evidence and the named next action.
+   command result. Cover, in this order: what changed since the last check
+   (sessions finished, PRs opened, merged or reviewed, issues reopened);
+   what is running now (tmux session, issue and phase from the log tail); each
+   open PR with its checks, mergeability, review verdict and the next action;
+   what is waiting and why (dependency, failing check, fix session, human
+   decision); and what you will do at the next check. Name the failing check
+   and its cause when known, and say plainly when a cause is not yet known.
+   Detect material requirements/architecture/contract changes and significant
+   regressions during these checks; record and route an early stabilization
+   checkpoint before affected closure or dependent expansion proceeds.
+   When nothing changed, say so in one line only after the fresh classification
+   supports it, with its evidence and the named next action.
    Keep it short, but never leave the owner to infer state from tool output.
-   Verify RPI use before review: before first push and PR creation, the local
-   candidate diff against its target base must contain that issue's research,
-   plan, changes and review artifacts
-   (`git -C {worktree} diff --name-only {base-sha}...HEAD | grep .copilot-tracking`;
-   once a PR is open and in step 7, also check
-   `gh pr diff {n} --name-only | grep .copilot-tracking`), and the session
+   Verify RPI use before review: the PR diff must contain that issue's
+   research, plan, changes and review artifacts
+   (`gh pr diff {n} --name-only | grep .copilot-tracking`), and the session
    log must show the research, plan and review phases ran. Also run
    `python3 tools/rpi_phase_witness.py verify --repo {worktree} --issue {number} --evidence-dir {evidence-dir} --json`
    and record its `final.head`, `final.tree` and `final.log_sha256` in session SQL; the log
@@ -974,7 +819,7 @@ remains subject to the tracking retention policy.
    another worktree or issue, HEAD moved past commit-complete) as an observation to carry into the review and report, not as a
    waiver; never edit or delete witness records, record the log sha256 in
    session SQL before the worktree is removed, and say plainly which boundaries
-   were witnessed and which were only reported. A candidate or open PR without them
+   were witnessed and which were only reported. A PR without them
    goes back to its loop once to produce a frozen local correction with the
    missing phases and artifacts; the coordinator alone verifies, assesses and
    publishes it and workers never push. If it still lacks them, record it as a ledgered blocker. Do not fabricate
@@ -999,36 +844,17 @@ remains subject to the tracking retention policy.
    publication; original adverse evidence, independent exact-head and
    published reviews, hosted checks and human approvals still apply.
    Independently assess the actual diff
-   and complete execution evidence, not only the loop's summary, while WIP and
-   correction commits are still local in the worktree. Before pushing or opening
-   a PR, run `hve-core-all:code-review-*` against a precomputed diff of the
-   clean frozen local candidate versus its target base, writing the precomputed
-   diff and coordinator review outputs to an external coordinator review
-   directory outside `{worktree}` so `{worktree}` stays clean at exact `HEAD`
-   and without rerunning or replacing the loop's original RPI Review. If
-   pre-publication review raises a blocking finding, route local
-   review-correction commits in `{worktree}` and rerun selected-tier local
-   validation and exact-head assessment before the first `git push` and
-   `gh pr create` (owner CI-economy rule, 2026-11-15). Push/open or
+   and complete execution evidence, not only the loop's summary. Push/open or
    update the PR only after this gate and the owner's publication boundary
    permit it. An explicit local-only handoff ends with a frozen clean candidate,
-   not a push. Once published, also use `hve-core-all:code-review-*` on any new
-   PR head and review the open PRs of a wave together for contradictions between
-   them. Route blocking pre-publication or post-publication review findings back
-   to that issue's loop as local worktree commits on the same branch (pushing a
-   post-PR fix only after refreshed local validation and exact-head assessment)
-   under the single per-issue
-   [Correction-cycle budget](#correction-cycle-budget-owner-2026-11-09-issue-1296):
-   up to five total review-correction cycles per issue by default (owner,
-   2026-11-09), stopping earlier as soon as no blocking finding remains open,
-   never resetting spent history (`C1..Cn` and any dated `E1-E5` grant for
-   previously exhausted issues such as `#1288` after `C8`), and stopping as a
-   human blocker if a blocking finding remains open when the budget is
-   exhausted. After two correction cycles, new non-blocking Copilot threads
-   become follow-up issues and do not hold publication or the PR; a blocking
-   safety, privacy or accessibility defect (or any other blocking finding) still
-   stops publication and the PR (owner decision D5, 2026-11-01, separate from
-   the five-cycle blocking-correction default, 2026-11-09).
+   not a push. For the published PR, use the `hve-core-all:code-review-*`
+   agents against each PR diff without rerunning or replacing the loop's
+   original RPI Review, and also review the open PRs of a wave
+   together for contradictions between them. Send findings back to that
+   issue's loop as commits on the same branch, up to two correction cycles.
+   After two correction cycles, new non-blocking Copilot threads become
+   follow-up issues and do not hold the PR; a blocking safety, privacy or
+   accessibility defect still stops the PR (owner decision D5, 2026-11-01).
    Do not mark review checkboxes.
 7. **Automerge through the gate.** Merge a PR only when all of these hold,
    verified by commands run now: every implementation dependency is merged
@@ -1144,13 +970,7 @@ remains subject to the tracking retention policy.
 
 Report progress when each wave finishes and report the human blockers as soon
 as they are found, not only at the end, so the owner can resolve them while
-independent work continues. Refresh open-issue counts, open-PR counts, active
-`tmux` session status and exact `HEAD SHA`, `Origin/main SHA` and any stacked
-`Target/base SHA` from live commands at the time of writing every wave,
-handoff or final report, and lead any idle, waiting or pause handoff with the
-explicit five-category issue-state classification table (`merged`,
-`active session`, `human-blocked` with link, `dependency-blocked` with link, or
-`ready to start`). Return a table with one row per issue: issue, wave,
+independent work continues. Return a table with one row per issue: issue, wave,
 dependencies, branch, worktree, PR, checks, review verdict, merge state, board status. Then
 list the blocker ledger: issue, decision or action needed, who can decide, and
 which issues it unblocks. Include each due checkpoint's trigger, pinned source,

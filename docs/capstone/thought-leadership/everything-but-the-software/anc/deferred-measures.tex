@@ -1,10 +1,10 @@
 \subsection{Deferred intervention measures}\label{app:deferredmeasures}
 
-The study excludes intervention-rate outcomes but retains help and
-administrative records for eligibility and cost. These definitions are
-proposed future measures, not collected results.
-HG-DAgger and ThriftyDAgger supply cross-domain measurement precedents,
-not coding-agent effectiveness evidence
+The study retains help and administrative records to determine eligibility
+and cost. It does not report intervention rates. The proposed measures
+below distinguish help supplied from help needed. HG-DAgger and
+ThriftyDAgger provide precedents for measuring intervention in other domains;
+their findings do not establish effectiveness for coding agents
 ~\cite{kelly2019hgdagger,hoque2022thriftydagger}.
 
 For run $r$, $n_r\geq1$ is attempted feature cycles, including assigned
@@ -17,40 +17,34 @@ rate unknown. Observed human intervention rate would be
 \mathbf{1}\{h_{rj}>0\}.
 \label{eq:hir}
 \end{equation}
-Event counts and active human minutes are separate; repeated help in one
-cycle counts once for incidence. Let $d_{rj}\in\{0,1\}$ indicate an explicit
-help request or a block needing corrective human action. Then
+HIR answers how often a cycle received corrective help, regardless of how
+many events occurred or how long they took. Record event counts and active
+human minutes separately. Let $d_{rj}\in\{0,1\}$ indicate an explicit
+help request or a block needing corrective human action. The
+intervention-demand rate (IDR) is the fraction of cycles requiring that help:
 \begin{equation}
 \mathrm{IDR}_r=\frac{1}{n_r}\sum_{j=1}^{n_r}d_{rj}.
 \label{eq:intervention-demand}
 \end{equation}
-Requests and supplied help differ. A timeout alone is not a help request;
-zero attempts gives undefined rates. A future annotation protocol needs
-event/cycle/phase locators, coverage checks and adjudication; absent
-records cannot be zero. Routine launches, planned approvals and safety
+IDR counts cycles needing help, including requests that received none.
+A timeout alone does not establish such a request; zero attempts gives
+undefined rates. A future annotation protocol needs a locator for each
+event, cycle and phase, checks of annotation coverage and adjudication of
+unclear cases. Missing records leave the rate unknown. Routine launches, planned approvals and safety
 stops differ from corrective rescue. Low intervention must not reward
 silent failure or discourage necessary human judgement.
 
 \subsection{Historical freeze provenance}\label{app:freezeprovenance}
 
 The reported case-tool snapshot is HVE Core \texttt{plugins-v3.3.106},
-snapshot commit
-\nolinkurl{2df5013e29ebfd2ce61bcd0cf021d8c8186482eb},
-generated from source
-\nolinkurl{e9af018fe5ffbfbc72321a8bca21fb987359af08}.
-These are reported provenance identifiers, not verification of installation
-date or every session's runtime.
+snapshot \sourceref{R29}, generated from source \sourceref{R30}.
+These identifiers record the reported tool source. They leave its
+installation date and use in individual sessions unverified.
 
-The historical v4 execution source was
-\nolinkurl{e8707ecc8965d3f81f5142a2603042bfca1aab15}, with
-manifest-only commit
-\nolinkurl{03c50856838b539780d57216af2a4cf6744187d7}.
-Its attached \nolinkurl{osf-v4-2026-10-31.tar.gz} checksum was
-\nolinkurl{1a42fac40a4f1aa82df59c8c3f7f8d6dce37d22502c5952c398362ac63d6bd65}.
-The runtime image was
-\nolinkurl{sha256:090220b0b172ec205f1ea473d7c3a223eec5d7d619eb21acdcf15c9289287fa3}.
-These identify historical inputs, not a freeze or approval of the
-five-arm amendment. The original registration at
+The historical v4 execution source, manifest-only revision, archive and
+runtime image are \sourceref{R31}--\sourceref{R34}, respectively.
+They identify the inputs to that historical version. The five-arm
+amendment has its own source and approval history. The original registration at
 \url{https://osf.io/ywsrv/} is owner-reported approved after submission
 on 28 October; the inspected v4 prospective amendment flag was false
 and its completion date null. New approval and actual prospective

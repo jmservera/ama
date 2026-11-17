@@ -525,6 +525,44 @@ def _bounded(value: str, limit: int = 120) -> str:
     return value.strip()[:limit]
 
 
+SENSOR_PROVENANCE = (
+    "Synthetic demo data from the simulator. "
+    "Not calibrated, so not a verified measurement of your home."
+)
+RECENT_SECONDS = 900
+
+
+def sensor_freshness(history: list[dict[str, Any]], now: datetime) -> dict[str, Any]:
+    """Plain-language state of the newest stored reading. Nothing here is a live measurement."""
+    if not history:
+        return {"state": "none", "text": "No stored readings for your home."}
+    latest = datetime.fromisoformat(history[-1]["observed_at"].replace("Z", "+00:00"))
+    age = int((now - latest).total_seconds())
+    if age < 0:
+        return {
+            "state": "future",
+            "text": "The newest stored reading is dated in the future, so it is not recent.",
+        }
+    if age <= RECENT_SECONDS:
+        return {
+            "state": "recent",
+            "age_seconds": age,
+            "text": "The newest stored reading is recent (within 15 minutes).",
+        }
+    if is_stale(history, now):
+        return {
+            "state": "stale",
+            "age_seconds": age,
+            "text": "Stored history is not recent. The newest reading is more than 24 hours old.",
+        }
+    return {
+        "state": "retained",
+        "age_seconds": age,
+        "text": "The newest stored reading is older than 15 minutes. "
+        "These are stored readings, not live.",
+    }
+
+
 def showcase_view(row: ShowcaseRow, now: datetime | None = None) -> dict[str, Any]:
     """Positive allowlist, built field by field. Nothing outside these keys can reach a resident."""
     stage = row.stage
@@ -567,6 +605,9 @@ def showcase_view(row: ShowcaseRow, now: datetime | None = None) -> dict[str, An
                 "not live measurements or safety advice."
             ),
             "stale": is_stale(history, reference),
+            "freshness": sensor_freshness(history, reference),
+            "source": SENSOR_PROVENANCE,
+            "calibrated": False,
             "history": history,
             "forecast": forecast(history, reference),
         },

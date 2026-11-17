@@ -73,6 +73,39 @@ class Gov:
         priced = s.benefits_record(self.pm1, dict(base, ai_price_source="Synthetic price list 2026-11-01"))
         self.assertEqual(priced["ai_running_cost"]["cost_status"], "Priced from the named source")
 
+    def test_ai_running_cost_is_unknown_not_zero_without_price_or_outcomes(self):
+        s = self.store
+        base = dict(BENEFITS, mde_cycle_time_pct=10, mde_coordination_hours_pct=10)
+        line = s.benefits_record(self.pm1, base)["ai_running_cost"]
+        self.assertEqual(line["named_denominator"], "per accepted handover")
+        self.assertEqual((line["total_cost_of_ai"], line["cost_per_accepted_outcome"], line["accepted_outcome_count"]), ("Unknown",) * 3)
+        price = "Synthetic price list 2026-11-01"
+        for extra in (dict(ai_total_cost="12.50"), dict(ai_price_source=price, ai_total_cost="12.50", ai_accepted_outcomes=0),
+                      dict(ai_price_source=price, ai_accepted_outcomes=5), dict(ai_total_cost="12.50", ai_accepted_outcomes=5)):
+            line = s.benefits_record(self.pm1, dict(base, **extra))["ai_running_cost"]
+            self.assertEqual(line["cost_per_accepted_outcome"], "Unknown", extra)
+        line = s.benefits_record(self.pm1, dict(base, ai_price_source=price, ai_total_cost="12.50", ai_accepted_outcomes=5))["ai_running_cost"]
+        self.assertEqual((line["total_cost_of_ai"], line["cost_per_accepted_outcome"]), ("12.50", "2.5000"))
+        for zero in ("0", 0, "0.00"):
+            line = s.benefits_record(self.pm1, dict(base, ai_price_source=price, ai_total_cost=zero, ai_accepted_outcomes=5))["ai_running_cost"]
+            self.assertEqual((line["total_cost_of_ai"], line["cost_per_accepted_outcome"]), ("Unknown", "Unknown"), zero)
+        line = s.benefits_record(self.pm1, dict(base, ai_total_cost="   ", ai_accepted_outcomes="  "))["ai_running_cost"]
+        self.assertEqual(line["total_cost_of_ai"], "Unknown")
+        for bad in (dict(ai_total_cost="-1"), dict(ai_total_cost="abc"), dict(ai_accepted_outcomes="-2"), dict(ai_accepted_outcomes="\u00b2"),
+                    dict(ai_total_cost="1e9999999"), dict(ai_total_cost=True)):
+            with self.assertRaises(ValueError):
+                s.benefits_record(self.pm1, dict(base, **bad))
+
+    def test_release_decision_carries_ai_running_cost_line(self):
+        s = self.store
+        rec = s.release_record(self.pm1, dict(RELEASE, scope="Phase 0 capture", decision="Withhold"))
+        self.assertEqual(rec["ai_running_cost"]["cost_per_accepted_outcome"], "Unknown")
+        s.benefits_record(self.pm1, dict(BENEFITS, mde_cycle_time_pct=10, mde_coordination_hours_pct=10, ai_price_source="Synthetic price list",
+                                         ai_total_cost="9", ai_accepted_outcomes=3))
+        rec = s.release_record(self.pm1, dict(RELEASE, scope_kind="tranche", scope="Synthetic tranche 1"))
+        self.assertEqual(rec["ai_running_cost"]["cost_per_accepted_outcome"], "3.0000")
+        self.assertEqual(rec["economics_report_ref"], "Synthetic AI economics report")
+
     def test_value_claim_is_capacity_until_destination_confirmed(self):
         s = self.store
         with self.assertRaises(PermissionError):

@@ -126,10 +126,22 @@ class SafetyScreens(unittest.TestCase):
                     (table,) = find_all(region, "table")
                     (caption,) = find_all(table, "caption")
                     self.assertEqual(caption["kids"], [region["attrs"]["aria-label"]])
-                    heads = find_all(table, "th")
+                    (thead,) = find_all(table, "thead")
+                    heads = find_all(thead, "th")
+                    self.assertTrue(heads)
                     self.assertTrue(all(t["attrs"] == {"scope": "col"} for t in heads))
-                    for row in find_all(find_all(table, "tbody")[0], "tr"):
-                        self.assertEqual(len(find_all(row, "td")), len(heads))
+                    (tbody,) = find_all(table, "tbody")
+                    rows = find_all(tbody, "tr")
+                    self.assertTrue(rows)
+                    for row in rows:
+                        lead = row["kids"][0]
+                        self.assertEqual(lead["tag"], "th")
+                        self.assertEqual(lead["attrs"], {"scope": "row"})
+                        self.assertTrue("".join(string_leaves(lead["kids"])).strip())
+                        self.assertEqual(len(find_all(row, "th")), 1)
+                        tds = find_all(row, "td")
+                        self.assertEqual(row["kids"][1:], tds)
+                        self.assertEqual(1 + len(tds), len(heads))
 
     def test_cross_home_summary_is_not_truncated_beyond_fifty(self) -> None:
         released = hazard(hold={"scope": "Home", "case_id": "C-1", "status": "Released"})

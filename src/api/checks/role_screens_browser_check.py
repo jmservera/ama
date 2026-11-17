@@ -313,13 +313,14 @@ def check_table_headers(page: Page, story: str, scope: str = "main") -> None:
 def check_readonly_accessibility(page: Page, story: str) -> None:
     """Keyboard reachability, text-only state meaning and optional pinned axe scan."""
     evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
-    text = evidence.inner_text()
+    text = positive_text(page)
     check(
         f"{story} reader view has no write controls",
         evidence.locator("button, form, input, select, textarea").count() == 0,
     )
-    if story in STORY_RESIDENT:
+    if story in (*STORY_RESIDENT, *STORY_231, *STORY_POSITIVE):
         check_design_system_use(page, story)
+    if story in STORY_RESIDENT:
         state_words = ("Paused or withdrawn by the resident", "Linked update commitment")
         if story == "232s":
             state_words = ("State and meaning", "Linked update commitment")
@@ -345,7 +346,7 @@ def check_readonly_accessibility(page: Page, story: str) -> None:
             "Recorded evidence is complete" not in text
             and "Every measure has accepted evidence" not in text,
         )
-    if story in STORY_RESIDENT:
+    if story in (*STORY_RESIDENT, *STORY_231, *STORY_POSITIVE):
         check_table_headers(page, story)
     regions = evidence.locator('div.table-scroll[role="region"]')
     expected = regions.evaluate_all("els => els.map(el => el.getAttribute('aria-label'))")
@@ -820,7 +821,7 @@ def run_browser(base: str) -> None:
                 check("same home remains ZF-1", "Selected home ZF-1" in text)
                 if selected in STORY_ACCESSIBLE:
                     check_readonly_accessibility(page, selected)
-                if selected in STORY_RESIDENT:
+                if selected in (*STORY_RESIDENT, *STORY_231):
                     reach_table_regions(page, selected, 320)
                     page.set_viewport_size({"width": 1280, "height": 900})
                 if selected in STORY_POSITIVE:

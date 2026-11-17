@@ -1,0 +1,28 @@
+{
+  "task_id": "demo-165-importer-seed-roundtrip-0443",
+  "task_slug": "demo-165-importer-seed-roundtrip-0443",
+  "parent_task": {"task_id": "epic165-cohort-provenance-boundaries", "task_slug": "epic165-cohort-provenance-boundaries"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14-demo-165-importer-seed-roundtrip-0443-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14/demo-165-importer-seed-roundtrip-0443-plan.instructions.md",
+    "details": ".copilot-tracking/details/2026-11-14/demo-165-importer-seed-roundtrip-0443-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-11-14/demo-165-importer-seed-roundtrip-0443-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-14/demo-165-importer-seed-roundtrip-0443-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Critique executed once, no blocking findings", "status": "executed", "evidence": "plan Critique section"},
+    {"decision": "Review executed once, conformant with caveats", "status": "executed", "evidence": "review artifact"},
+    {"decision": "Use Refs #165 only; commit, do not push", "status": "confirmed", "evidence": "user request"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Owner selects a follow-up, Stop, or manual mode"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Install importer in dev environment so full discovery passes test_version", "rationale": "Easiest; removes a standing error", "evidence": "changes artifact validation table"},
+    {"rank": 2, "task": "Round-trip malformed synthetic workbooks through the refusal ledger", "rationale": "Extends coverage", "evidence": "review artifact"}
+  ]
+}

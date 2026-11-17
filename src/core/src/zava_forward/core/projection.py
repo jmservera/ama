@@ -23,8 +23,8 @@ from collections.abc import Iterable, Mapping
 from copy import deepcopy
 from typing import Any
 
+from . import taskqueues
 from .doc_controls import is_available_case_document
-
 from .controls import RESIDENT_ROLES, RESIDENT_VIEW_ROLES
 from .resident_decisions import (
     INTAKE_FIELDS,
@@ -225,6 +225,7 @@ def hold_notes(c):
         for item in c:
             hold_notes(item)
     elif isinstance(c, dict):
+        c.pop("safeguarding_items", None)
         if "document_history" in c:
             c["document_history"] = [
                 dict(
@@ -251,11 +252,20 @@ def hold_notes(c):
             for key in ("reason", "source"):
                 if c.get(key):
                     c[key] = NOTE_HELD
+        advisory = (
+            (c.get("contract_instruction") is False or "acts_as_contract_instruction" in c)
+            and "summary" in c
+            and ("kind" in c or "escalation_kind" in c)
+        )
+        if advisory and c.get("summary"):
+            c["summary"] = NOTE_HELD
         for sg_item in raw_safeguarding_items(c):
             for key in ("source", "job", "summary", "reason"):
                 if sg_item.get(key):
                     sg_item[key] = NOTE_HELD
         for k, v in c.items():
+            if advisory and k in ("note", "contract_notice"):
+                continue
             is_safety_dict = ("category" in c and "released" in c) or c.get("item_kind") in (
                 "hazard",
                 "safeguarding",
@@ -551,6 +561,7 @@ def contains_withheld_value(text: Any, withheld: Iterable[str]) -> bool:
 def redact_staff_detail(user, d):
     d.pop("sensor_review_drafts", None)
     raw_snapshot = deepcopy(d)
+    d.pop("safeguarding_items", None)
     resident_view = user.get("role") in RESIDENT_VIEW_ROLES
     resident_data = (
         {key: deepcopy(d[key]) for key in RESIDENT_FIELDS + ("decision",) if key in d}
@@ -560,6 +571,7 @@ def redact_staff_detail(user, d):
     if not resident_view:
         d.pop("resident_update", None)
         d.pop("service_requests", None)
+        d.pop("redress_route", None)
         for event in d.get("handoff_history", []):
             if isinstance(event.get("changes"), dict):
                 event["changes"].pop("resident_update", None)
@@ -598,6 +610,15 @@ def redact_staff_detail(user, d):
     if not can_see_reason(user):
         work = d.pop("work", None)  # Already projected by the shared queue read model.
         hold_notes(d)
+        for item in d.get("hazards", []):
+            if taskqueues.is_safeguarding(item.get("category")):
+                item["category"] = "Safety review"
+                item["clock_text"] = str(item.get("clock_text", "")).replace(
+                    "Safeguarding clock", "Safety clock")
+            for entry in (*item.get("history", []), item.get("legacy_record")):
+                for node in (entry, (entry or {}).get("snapshot")):
+                    if isinstance(node, dict) and taskqueues.is_safeguarding(node.get("category")):
+                        node["category"] = "Safety review"
         if work is not None:
             d["work"] = work
         if d.get("status", "").startswith("Waiting on "):
@@ -618,6 +639,14 @@ def redact_staff_detail(user, d):
             d.pop(key, None)
         d.pop("affected_challenges", None)
         d.pop("challenge_targets", None)
+        d.pop("challenge_guarantees", None)
+        d.pop("challenge_assurance", None)
+        d.pop("nomination_permissions", None)
+    else:
+        from . import nomination_route
+        for key in ("nomination_records", "affected_challenges", "challenge_targets"):
+            if key in d:
+                d[key] = nomination_route.scrub_nomination_restricted_fields(d[key])
     if user.get("role") not in FINANCE_VIEW:
         d.pop("finance", None)
         d.pop("grants", None)

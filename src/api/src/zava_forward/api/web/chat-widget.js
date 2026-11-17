@@ -42,7 +42,8 @@ window.ChatWidget = (() => {
     const log = node("div", "", { class: "chat-widget-log", role: "log", "aria-live": "polite", "aria-relevant": "additions text", "aria-atomic": "false", "aria-label": `${title} conversation`, tabindex: "0" });
     const form = node("form", "", { class: "chat-widget-composer" });
     const beforeInput = node("div");
-    const input = node("textarea", "", { id: `${id}-question`, name: "question", autocomplete: "off", rows: "2", maxlength: String(maxLength), "aria-label": questionLabel });
+    const input = node("textarea", "", { id: `${id}-question`, name: "question", autocomplete: "off", rows: "2", maxlength: String(maxLength), "aria-label": questionLabel, "aria-describedby": `${id}-keys` });
+    const keys = node("small", "Press Enter to send. Press Shift and Enter for a new line. Press Escape to close the chat.", { id: `${id}-keys`, class: "chat-widget-meta" });
     const select = node("select", "", { id: `${id}-skill`, name: "skill", autocomplete: "off", "aria-label": skillLabel });
     const tools = node("div", "", { class: "chat-widget-tools" });
     const reason = node("small", "Attachments and voice input are not supported in this chat. Use the existing document or contact routes.", { id: `${id}-unsupported`, class: "chat-widget-meta" });
@@ -55,7 +56,7 @@ window.ChatWidget = (() => {
     loading.hidden = true;
     const error = node("p", "", { id: `${id}-error`, role: "alert", "aria-live": "polite", "aria-atomic": "true", class: "chat-widget-error", tabindex: "-1" });
     error.hidden = true;
-    form.append(beforeInput, input, tools, reason);
+    form.append(beforeInput, input, keys, tools, reason);
     root.append(header, intro, log, status, loading, error, form);
     document.body.append(launcher, root);
     let docked = false;

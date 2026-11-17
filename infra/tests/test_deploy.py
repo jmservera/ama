@@ -64,7 +64,8 @@ class DeployTests(unittest.TestCase):
             az.chmod(0o755)
             (root / "calls.json").write_text("[]", encoding="utf-8")
             (root / "responses.json").write_text(
-                json.dumps([reply("containerapp list", apps or []), *responses]), encoding="utf-8"
+                json.dumps([reply("containerapp list", apps or []), *responses]),
+                encoding="utf-8",
             )
             env = {**os.environ, "PATH": str(root), "FAKE_AZ_ROOT": str(root)}
             result = subprocess.run(
@@ -90,6 +91,26 @@ class DeployTests(unittest.TestCase):
             if apps is None and calls and calls[0][:2] == ["containerapp", "list"]:
                 calls = calls[1:]
         return result, calls
+
+    def test_dry_run_is_deterministic_and_makes_no_az_calls(self):
+        options = ("--dry-run", "--parameter", "a=b", "--orchestrator-image", CURRENT)
+        first, calls = self.run_deploy([], *options, apps=[])
+        second, _ = self.run_deploy([], *options, apps=[])
+        self.assertEqual(first.returncode, 0, first.stderr)
+        self.assertEqual(calls, [])
+        self.assertEqual(first.stdout, second.stdout)
+        self.assertIn("DRY RUN", first.stdout)
+        self.assertIn(f"orchestratorImage={CURRENT}", first.stdout)
+        self.assertIn("what-if", first.stdout)
+
+    def test_dry_run_without_image_defers_resolution_and_rejects_apply(self):
+        result, calls = self.run_deploy([], "--dry-run", apps=[])
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(calls, [])
+        self.assertIn("<resolved-at-run-time>", result.stdout)
+        result, calls = self.run_deploy([], "--dry-run", "--apply", apps=[])
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(calls, [])
 
     def test_app_local_credential_and_authentication_lock_block_full_deployment(self):
         for tags in (
@@ -205,7 +226,10 @@ class DeployTests(unittest.TestCase):
         self.assert_selection(
             [
                 reply("containerapp job list", []),
-                reply("acr list", [{"name": "unrelated", "loginServer": "other.azurecr.io"}]),
+                reply(
+                    "acr list",
+                    [{"name": "unrelated", "loginServer": "other.azurecr.io"}],
+                ),
             ],
             PLACEHOLDER,
         )
@@ -221,7 +245,11 @@ class DeployTests(unittest.TestCase):
         ):
             with self.subTest(responses=responses):
                 self.assert_selection(
-                    [reply("containerapp job list", []), reply("acr list", REGISTRY), *responses],
+                    [
+                        reply("containerapp job list", []),
+                        reply("acr list", REGISTRY),
+                        *responses,
+                    ],
                     PLACEHOLDER,
                 )
 
@@ -262,7 +290,8 @@ class DeployTests(unittest.TestCase):
                         self.assertEqual(len(calls), len(responses) + 1)
                         self.assertEqual(calls[-1][:3], ["deployment", "group", action])
                         self.assertEqual(
-                            calls[-1][-2:], ["--parameters", f"orchestratorImage={image}"]
+                            calls[-1][-2:],
+                            ["--parameters", f"orchestratorImage={image}"],
                         )
                         source = (
                             "existing job"
@@ -270,7 +299,8 @@ class DeployTests(unittest.TestCase):
                             else "no existing job image or registry"
                         )
                         self.assertIn(
-                            f"orchestratorImage={image} (source: {source})", result.stdout
+                            f"orchestratorImage={image} (source: {source})",
+                            result.stdout,
                         )
                         if image == PLACEHOLDER:
                             self.assertIn("WARNING: placeholder image selected", result.stderr)
@@ -282,7 +312,10 @@ class DeployTests(unittest.TestCase):
             [
                 reply(
                     "containerapp job list",
-                    [job("orchestrator", CURRENT), job("ledger-verify", "registry/image:other")],
+                    [
+                        job("orchestrator", CURRENT),
+                        job("ledger-verify", "registry/image:other"),
+                    ],
                 )
             ]
         )
@@ -308,7 +341,11 @@ class DeployTests(unittest.TestCase):
             "acr repository show-tags",
         ]
         for prefix, command in zip(stages, commands, strict=True):
-            for error in ("AuthorizationFailed", "network unavailable", "(ResourceNotFound)"):
+            for error in (
+                "AuthorizationFailed",
+                "network unavailable",
+                "(ResourceNotFound)",
+            ):
                 with self.subTest(command=command, error=error):
                     result, calls = self.run_deploy([*prefix, reply(command, error=error, code=1)])
                     self.assertNotEqual(result.returncode, 0)
@@ -322,7 +359,10 @@ class DeployTests(unittest.TestCase):
             [reply("containerapp job list", [{"name": "job-forward-test-orchestrator"}])],
             [reply("containerapp job list", [job("orchestrator", "")])],
             [reply("containerapp job list", []), reply("acr list", {})],
-            [reply("containerapp job list", []), reply("acr list", [{"name": "example"}])],
+            [
+                reply("containerapp job list", []),
+                reply("acr list", [{"name": "example"}]),
+            ],
             [
                 reply("containerapp job list", []),
                 reply("acr list", REGISTRY),
@@ -385,7 +425,8 @@ class DeployTests(unittest.TestCase):
         result, calls = self.run_deploy(
             [
                 reply(
-                    "containerapp job list", [job("orchestrator", CURRENT, prefix="custom-pilot")]
+                    "containerapp job list",
+                    [job("orchestrator", CURRENT, prefix="custom-pilot")],
                 ),
                 reply("deployment group what-if"),
             ],

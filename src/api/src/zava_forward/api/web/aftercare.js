@@ -33,6 +33,38 @@ function acLabel(value) {
   return AFTERCARE_LABELS[value] || String(value ?? "Unknown");
 }
 
+const AC_CHANNEL_LABELS = {
+  digital: "Online self-service",
+  phone: "By phone",
+  in_person: "In person",
+  paper: "On paper",
+  assisted_visit: "During an assisted visit",
+  representative: "Through a representative",
+};
+
+const AC_SUPPORT_LABELS = {
+  large_print: "Large print",
+  easy_read: "Easy read",
+  interpreter: "Language interpreter",
+  bsl: "British Sign Language (BSL)",
+  callback_window: "Agreed phone call-back time",
+  paper_letter: "Paper letter or form by post",
+  support_person: "A visit where someone you trust can be with you",
+};
+
+function acChannelLabel(channel, route) {
+  if (channel && Object.hasOwn(AC_CHANNEL_LABELS, channel)) return AC_CHANNEL_LABELS[channel];
+  if (!channel && route === "digital") return AC_CHANNEL_LABELS.digital;
+  return channel === null || channel === undefined || channel === "" ? "Unknown" : String(channel);
+}
+
+function acSupportList(items) {
+  if (!Array.isArray(items) || !items.length) return "";
+  return items
+    .map((code) => (Object.hasOwn(AC_SUPPORT_LABELS, code) ? AC_SUPPORT_LABELS[code] : String(code)))
+    .join(", ");
+}
+
 function acText(value) {
   return value === null || value === undefined || value === "" ? "Unknown" : String(value);
 }
@@ -65,7 +97,8 @@ function acHouseholds(value) {
 }
 
 function acRowUnresolved(row) {
-  const total = (row.concerns || []).length;
+  if (!row || !Array.isArray(row.concerns)) return "Unknown";
+  const total = row.concerns.length;
   const n = row.unresolved_count;
   if (!acWhole(n) || n > total) return "Unknown";
   return `${n} of ${total}`;
@@ -81,7 +114,7 @@ function acOwner(owner) {
 }
 
 function acNotice(form) {
-  return h("p", { class: "notice" }, acText(form.synthetic_notice));
+  return form && form.synthetic_notice ? h("p", { class: "notice" }, acText(form.synthetic_notice)) : false;
 }
 
 function acField(spec, value, error) {
@@ -96,7 +129,11 @@ function acField(spec, value, error) {
     "aria-invalid": error ? "true" : undefined,
   };
   let control;
-  if (spec.options) {
+  if (spec.options && spec.multiple) {
+    const selected = Array.isArray(value) ? value : (value ? [value] : []);
+    control = h("select", { ...common, multiple: "", required: spec.required ? "" : undefined },
+      ...spec.options.map((o) => h("option", { value: o.value, selected: selected.includes(o.value) ? "" : undefined }, o.label)));
+  } else if (spec.options) {
     control = h("select", { ...common, required: spec.required ? "" : undefined },
       h("option", { value: "" }, "Choose one…"),
       ...spec.options.map((o) => h("option", { value: o.value, selected: o.value === value ? "" : undefined }, o.label)));
@@ -124,33 +161,41 @@ function aftercareFormView(form, state = {}) {
       h("h2", {}, "Some details need fixing"),
       h("ul", {}, ...entries.map(([name, text]) => h("li", {}, h("a", { href: `#ac-${name}` }, text)))))
     : false;
+  const routeNote = form.manual_route || form.accessible_route;
   return h("section", { "aria-labelledby": "ac-title" },
     h("h1", { id: "ac-title", tabindex: "-1" }, acText(form.title)),
     acNotice(form),
     h("p", {}, acText(form.intro)),
-    h("p", {}, acText(form.owner_note)),
+    form.owner_note ? h("p", {}, acText(form.owner_note)) : false,
+    form.support_note ? h("p", {}, acText(form.support_note)) : false,
+    form.next_update_note ? h("p", {}, acText(form.next_update_note)) : false,
     summary,
     h("form", { id: "ac-form", novalidate: "", "data-request-id": state.requestId || "" },
       ...specs.map((s) => acField(s, values[s.name], errors[s.name])),
       h("button", { type: "submit" }, state.sending ? "Saving…" : "Record concern")),
     h("p", { role: "status", id: "ac-status" }, state.message || ""),
-    h("p", {}, acText(form.manual_route)),
-    h("p", {}, acText(form.protection)));
+    routeNote ? h("p", {}, acText(routeNote)) : false,
+    form.protection ? h("p", {}, acText(form.protection)) : false);
 }
 
 function aftercareReceiptView(receipt, replay = false) {
   const owner = receipt.owner || {};
+  const recordedBy = receipt.recorded_by
+    ? `${acText(receipt.recorded_by.name)} (${acText(receipt.recorded_by.role)})`
+    : (receipt.route === "digital" ? "Submitted online" : "Unknown");
+  const support = acSupportList(receipt.support_needed);
   const rows = [
     ["Receipt", acText(receipt.receipt_id)],
     ["Concern", acText(receipt.concern_id)],
     ["Received", acText(receipt.received_at)],
-    ["Recorded by", `${acText(receipt.recorded_by && receipt.recorded_by.name)} (${acText(receipt.recorded_by && receipt.recorded_by.role)})`],
-    ["How it was raised", acLabel(receipt.channel)],
+    ["Recorded by", recordedBy],
+    ["How it was raised", acChannelLabel(receipt.channel, receipt.route)],
     ["Raised by", acLabel(receipt.raised_by)],
     ["Home reference", acText(receipt.home_ref)],
     ["Topic", acLabel(receipt.kind)],
     ["Original statement", acText(receipt.original && receipt.original.statement)],
     ["Authority given", acText(receipt.original && receipt.original.representative_basis)],
+    ...(support ? [["Communication support", support]] : []),
     ["Owner", owner.status === "unknown" ? acOwner(owner) : `${acText(owner.label)}`],
     ["Next update", acText(receipt.next_update)],
   ];
@@ -170,6 +215,7 @@ function aftercareConcernView(c) {
   const remedy = c.remedy || {};
   const outcome = c.outcome || null;
   const closures = c.closures || [];
+  const support = acSupportList(c.support_needed);
   return h("section", { "aria-labelledby": `ac-${c.id}-title` },
     h("h2", { id: `ac-${c.id}-title` }, `${acText(c.id)}: ${acLabel(c.kind)}`),
     h("dl", {},
@@ -181,7 +227,8 @@ function aftercareConcernView(c) {
       h("dt", {}, "Remedy"), h("dd", {}, acLabel(remedy.status)),
       h("dt", {}, "Next update"), h("dd", {}, acText(c.next_update)),
       h("dt", {}, "Original statement"), h("dd", {}, acText(c.statement)),
-      h("dt", {}, "Raised by"), h("dd", {}, `${acLabel(c.raised_by)} via ${acLabel(c.channel)}`)),
+      ...(support ? [h("dt", {}, "Communication support"), h("dd", {}, support)] : []),
+      h("dt", {}, "Raised by"), h("dd", {}, `${acLabel(c.raised_by)} via ${acChannelLabel(c.channel, c.route)}`)),
     closures.length
       ? h("p", {}, `Related handover or payment records (${closures.length}) are shown for context. ${acText(closures[0].note)}`)
       : false,
@@ -201,40 +248,54 @@ function acOutcomes(concerns) {
 
 function aftercareEvaluatorView(v) {
   const totals = v.totals || {};
-  const usable = totals.homes_with_usable_comparison || {};
-  const rows = (v.rows || []).map((row) => {
-    const cmp = row.comparison || {};
-    const ok = cmp.status === "sufficient";
+  const usable = totals.homes_with_usable_comparison;
+  const usableOk = usable && typeof usable === "object" && acWhole(usable.count) && acWhole(usable.denominator) && usable.count <= usable.denominator;
+  const usableLine = usableOk
+    ? `${usable.count} of ${usable.denominator} homes have a usable comparison.`
+    : "Homes with a usable comparison: Unknown.";
+  const raisedText = acWhole(totals.concerns_raised) ? String(totals.concerns_raised) : "Unknown";
+  const hasRows = Array.isArray(v.rows);
+  const rows = hasRows ? v.rows.map((row) => {
+    const cmp = row && row.comparison && typeof row.comparison === "object" ? row.comparison : {};
+    const ok = cmp.status === "sufficient" && cmp.baseline && cmp.late;
+    const hasConcerns = Boolean(row) && Array.isArray(row.concerns);
     return h("tr", {},
-      h("th", { scope: "row" }, acText(row.home_ref)),
+      h("th", { scope: "row" }, acText(row && row.home_ref)),
       h("td", {}, ok ? "Comparison available" : "Unknown"),
       h("td", {}, ok ? `${acNumber(cmp.baseline.temperature_c)} °C` : "Unknown"),
       h("td", {}, ok ? `${acNumber(cmp.late.temperature_c)} °C` : "Unknown"),
-      h("td", {}, String((row.concerns || []).length)),
-      h("td", {}, acOutcomes(row.concerns || [])),
-      h("td", {}, acRowUnresolved(row)));
-  });
+      h("td", {}, hasConcerns ? String(row.concerns.length) : "Unknown"),
+      h("td", {}, hasConcerns ? acOutcomes(row.concerns) : "Unknown"),
+      h("td", {}, hasConcerns ? acRowUnresolved(row) : "Unknown"));
+  }) : [];
+  const packTask = v.concern_pack_task && typeof v.concern_pack_task === "object" ? v.concern_pack_task : null;
+  const packLine = packTask
+    ? h("p", {}, `Optional AI concern pack (${acText(packTask.requirement)}): ${packTask.live_authorized ? "active" : "not active"} (${acText(packTask.approval_state)}). Any draft pack stays a proposal for the named owner to review and cannot change a concern.`)
+    : false;
   return h("section", { "aria-labelledby": "ac-eval-title" },
     h("h1", { id: "ac-eval-title", tabindex: "-1" }, "Aftercare view for a synthetic cohort"),
     h("p", {}, acText(v.synthetic_notice)),
     h("p", {}, acText(v.notice)),
-    h("p", {}, `${acText(usable.count)} of ${acText(usable.denominator)} homes have a usable comparison. Concerns raised: ${acText(totals.concerns_raised)}.`),
+    h("p", {}, `${usableLine} Concerns raised: ${raisedText}.`),
     h("p", {}, acHouseholds(totals.households_raising_concern)),
     h("p", {}, acFraction(totals.concerns_unresolved)),
     h("p", {}, acCountLine("Unresolved concerns in homes with a handover or financial closure", totals.unresolved_with_handover_or_financial_closure)),
     h("p", {}, acCountLine("Concerns outside the stated homes", totals.concerns_outside_stated_scope)),
+    packLine,
     h("h2", {}, "How the baseline is measured"),
     h("ul", {}, ...Object.entries(v.windows && typeof v.windows === "object" ? v.windows : {}).map(([k, w]) => h("li", {}, `${Object.hasOwn(AC_WINDOW_LABELS, k) ? AC_WINDOW_LABELS[k] : "Other period"}: ${acText(w)}`))),
-    rows.length
-      ? h("div", { class: "table-scroll", role: "region", tabindex: "0", "aria-label": AC_TABLE_CAPTION },
-        h("table", {},
-        h("caption", {}, AC_TABLE_CAPTION),
-        h("thead", {}, h("tr", {},
-          ...["Home", "Comparison", "Baseline mean", "Late mean", "Concerns", "Outcomes", "Unresolved"].map((t) => h("th", { scope: "col" }, t)))),
-        h("tbody", {}, ...rows)))
-      : h("p", {}, "No homes are in the synthetic cohort."),
+    !hasRows
+      ? h("p", {}, "Cohort homes: Unknown.")
+      : (rows.length
+        ? h("div", { class: "table-scroll", role: "region", tabindex: "0", "aria-label": AC_TABLE_CAPTION },
+          h("table", {},
+          h("caption", {}, AC_TABLE_CAPTION),
+          h("thead", {}, h("tr", {},
+            ...["Home", "Comparison", "Baseline mean", "Late mean", "Concerns", "Outcomes", "Unresolved"].map((t) => h("th", { scope: "col" }, t)))),
+          h("tbody", {}, ...rows)))
+        : h("p", {}, "No homes are in the synthetic cohort.")),
     h("h2", {}, "What is not known"),
-    h("ul", {}, ...(v.unknowns || []).map((u) => h("li", {}, acText(u)))),
+    h("ul", {}, ...(Array.isArray(v.unknowns) ? v.unknowns : []).map((u) => h("li", {}, acText(u)))),
     h("p", {}, acText(v.sensor_note)));
 }
 
@@ -263,8 +324,9 @@ function acUnconfirmed(outcome, message = AC_UNCONFIRMED) {
 async function aftercareSubmit(api, values, requestId, signal, opts = {}) {
   const earlier = Boolean(opts.unresolved);
   const body = { ...values, request_id: requestId };
+  const target = opts.household ? "household-concerns" : "concerns";
   try {
-    const reply = await api(`${AFTERCARE_API}/concerns`, body, signal);
+    const reply = await api(`${AFTERCARE_API}/${target}`, body, signal);
     if (!reply || !acValidReceipt(reply.receipt, requestId)) return acUnconfirmed("unconfirmed");
     const replay = Boolean(reply.replayed);
     return { ok: true, outcome: replay ? "replayed" : "saved", receipt: reply.receipt, replay, unresolved: false };
@@ -323,7 +385,17 @@ function acNewRequestId() {
 
 function acReadValues(form) {
   const values = {};
-  for (const el of form.elements) if (el.name && typeof el.value === "string") values[el.name] = el.value;
+  for (const el of form.elements) {
+    if (!el.name) continue;
+    if (el.multiple) {
+      const chosen = el.selectedOptions
+        ? Array.from(el.selectedOptions, (o) => o.value)
+        : Array.from(el.options || []).filter((o) => o.selected).map((o) => o.value);
+      values[el.name] = chosen.filter(Boolean);
+    } else if (typeof el.value === "string") {
+      values[el.name] = el.value;
+    }
+  }
   return values;
 }
 
@@ -435,6 +507,7 @@ globalThis.aftercareScreens = {
   concernView: aftercareConcernView,
   evaluatorView: aftercareEvaluatorView,
   submit: aftercareSubmit,
+  readValues: acReadValues,
   workspaceView: aftercareWorkspaceView,
   reset: () => { acDraftState = null; },
 };

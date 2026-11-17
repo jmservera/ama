@@ -1,0 +1,68 @@
+{
+  "task_id": "232-housing-resident-screens-wcag",
+  "task_slug": "housing-resident-screens-wcag-232",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/housing-resident-screens-wcag-232-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/housing-resident-screens-wcag-232-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/housing-resident-screens-wcag-232-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-11-15/housing-resident-screens-wcag-232-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/housing-resident-screens-wcag-232-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-15/housing-resident-screens-wcag-232-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Confirmed automatic RPI execution through Research, Plan, Critique, Implement, and Review on branch feat/ux-232-housing-res-wcag without pushing",
+      "status": "confirmed",
+      "evidence": "Caller prompt explicitly instructed running the full RPI loop in order in non-interactive mode and committing locally with Refs #232 without pushing."
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready. Converged on Option A (app.js + role-screens.js route wiring for #/role/housing_officer -> resident-service-issues and #/role/resident_engagement -> resident-choice, full-section-bijection residentJumpNav with role='navigation' and 'Go to ...' links targeting tabindex='-1' headings, explicit plain-language State:/Meaning: textual cues + data-state-cue attributes across all indicators without undocumented CSS classes, and sys.modules-safe test_housing_resident_screen_wcag.py).",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/housing-resident-screens-wcag-232-research.md (C1-C12, W1)"
+    },
+    {
+      "decision": "Single-pass rpi-plan-critique executed (verdict: Revise); all 6 planner-owned findings (PC-001..PC-006) accepted and applied directly to plan and phase details with zero divergent user decisions required. Planning status: Ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-15/housing-resident-screens-wcag-232-plan-critique.md; .copilot-tracking/plans/2026-11-15/housing-resident-screens-wcag-232-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Implement complete across P01, P02, and P03; reconciled unclassed <span data-state-cue='...'> primary-contrast badge cues so zero undocumented CSS classes enter role-screens.js. Focused unittest (5 new + 150 coupled), mypy (286 files), and ruff check/format passed.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-15/housing-resident-screens-wcag-232-changes.md"
+    },
+    {
+      "decision": "Single-pass rpi-review execution: Complete. Review outcome: Conformant across full task boundary (P01, P02, P03; FR-01..FR-04, NFR-01..NFR-02). Zero defects; routed non-blocking RV-001 [Low] and manual AT/device walkthrough (#151/#155) to prioritized_follow_ups.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-15/housing-resident-screens-wcag-232-review.md"
+    },
+    {
+      "decision": "Rebased completed commit onto origin/feat/demo-233-same-home-tensions-0825 (5536c3907, #227 PR #1755), preserving both #227 and #232 route aliases in isRoleScreensDestination / ROLE_HASH_SCREENS, shared hoisted stateCue, and delegated jump focus/scroll; verified 55 required + 80 coupled unit tests, ruff check/format (203 files), and mypy (288 files) without pushing.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-15/housing-resident-screens-wcag-232-changes.md; .copilot-tracking/reviews/2026-11-15/housing-resident-screens-wcag-232-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Select a ranked follow-up work item to start a child RPI loop, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Narrow [tabindex='-1']:focus in src/api/src/zava_forward/api/web/style.css to heading jump targets (RV-001 [Low])",
+      "rationale": "Single-line CSS refinement (highest ease of implementation and KISS selector precision) prevents pointer clicks on whitespace inside <main id='app' tabindex='-1'> from outlining #app while preserving programmatic heading focus rings on jump-link activation.",
+      "evidence": ".copilot-tracking/reviews/2026-11-15/housing-resident-screens-wcag-232-review.md (RV-001); src/api/src/zava_forward/api/web/style.css"
+    },
+    {
+      "rank": 2,
+      "task": "Execute and record manual assistive-technology (NVDA/JAWS/VoiceOver) and 360px real-device walkthrough for #/role/housing_officer and #/role/resident_engagement",
+      "rationale": "High acceptance impact — required by the WCAG 2.2 baseline (#151) and validation protocol (#155) before ticking the final closure criterion on issue #232, but requires human AT/device execution outside automated unit suites.",
+      "evidence": "docs/reference/research/ux/wcag-conformance-baseline.md; .copilot-tracking/plans/2026-11-15/housing-resident-screens-wcag-232-plan.md#follow-up-items"
+    }
+  ]
+}

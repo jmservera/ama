@@ -35,11 +35,12 @@ function sensorTable(title, rows, absent, labels = {}) {
   const box = h("div", {}, h("h3", {}, title));
   if (!rows || !rows.length) return box.append(h("p", {}, absent || "No retained readings.")), box;
   const head = ["Reading ID", "Sensor ID", "Observed (UTC)", "Temperature (degC)", "Relative humidity (%RH)", "Source"];
-  box.append(h("table", { "aria-label": title },
-    h("thead", {}, h("tr", {}, head.map((t) => h("th", { scope: "col" }, t)))),
-    h("tbody", {}, rows.map((r) => h("tr", {}, h("th", { scope: "row" }, r.reading_id), h("td", {}, r.sensor_id),
-      h("td", {}, h("time", { datetime: r.observed_at }, r.observed_at)), h("td", {}, r.temperature_c), h("td", {}, r.humidity_pct),
-      h("td", {}, labels[r.provenance_class] || "Synthetic reading, not calibrated"))))));
+  box.append(h("div", { class: "table-scroll", role: "region", tabindex: 0, "aria-label": `${title} table` },
+    h("table", {}, h("caption", { class: "sr-only" }, title),
+      h("thead", {}, h("tr", {}, head.map((t) => h("th", { scope: "col" }, t)))),
+      h("tbody", {}, rows.map((r) => h("tr", {}, h("th", { scope: "row" }, r.reading_id), h("td", {}, r.sensor_id),
+        h("td", {}, h("time", { datetime: r.observed_at }, r.observed_at)), h("td", {}, r.temperature_c), h("td", {}, r.humidity_pct),
+        h("td", {}, labels[r.provenance_class] || "Synthetic reading, not calibrated")))))));
   return box;
 }
 
@@ -309,10 +310,21 @@ function appointmentSlot(state) {
 }
 
 function workOrdersCard(rows, mine) {
-  return h("section", { class: "card" }, h("h2", {}, mine ? "Your work orders" : "Work orders"),
+  const orderStateCues = { Completed: "Completed on record, not accepted", Withdrawn: "Withdrawn", Issued: "Open", Appointed: "Open", Acknowledged: "Open" };
+  const orderStateBadge = (state) => {
+    const cue = Object.hasOwn(orderStateCues, state) ? orderStateCues[state] : "Action needed";
+    const label = `${cue}: ${state || "Unknown"}`;
+    return h("span", { class: state === "Withdrawn" || cue === "Action needed" ? "flag danger" : "flag", "data-state-cue": cue }, label);
+  };
+  const noticeBadge = (needsNotice) => needsNotice
+    ? h("span", { class: "flag danger", "data-state-cue": "Visit notice required" }, "Visit notice required: Needs notice")
+    : h("span", { class: "flag", "data-state-cue": "Standard visit" }, "Standard visit: No extra notice needed");
+  const sectionAttrs = mine ? { class: "card", id: "contractor-work-orders", "aria-labelledby": "contractor-work-orders-heading" } : { class: "card" };
+  const headingAttrs = mine ? { id: "contractor-work-orders-heading", tabindex: "-1" } : {};
+  return h("section", sectionAttrs, h("h2", headingAttrs, mine ? "Your work orders" : "Work orders"),
     rows.length ? h("ul", { class: "list" }, rows.map((w) => h("li", {},
-      h("strong", {}, `${w.id}, version ${w.version}`), ` ${w.state}. ${w.address}, ${w.postcode}. Works: ${w.measures}. `,
-      w.needs_notice ? h("span", { class: "flag" }, "Needs notice") : "No extra notice needed", `. Named contact: ${w.named_contact}.`,
+      h("strong", {}, `${w.id}, version ${w.version}`), " ", orderStateBadge(w.state), `. ${w.address}, ${w.postcode}. Works: ${w.measures}. `,
+      noticeBadge(w.needs_notice), `. Named contact: ${w.named_contact}.`,
       h("p", {}, `Appointment: ${w.appointment_control.status}.${w.appointment_control.missing.length ? ` ${w.appointment_control.missing.join("; ")}.` : ""}`),
       appointmentSlot(w.appointment_control),
       h("div", { class: "muted" }, w.scope), w.appointments.length > 0 && h("div", { class: "muted" }, "Visits: " + w.appointments.map((a) => `${a.outcome}${a.date ? ` ${a.date}` : ""}`).join("; "))))) : h("p", {}, "No work orders yet."));
@@ -468,7 +480,7 @@ async function capacityView() {
       h("div", { class: "table-scroll", role: "region", "aria-label": `Capacity for ${p.id}`, tabindex: 0 },
         h("table", {}, h("caption", { class: "muted" }, "One unit is one home work order for this package period, not a crew or weekly slot. Only evidenced commitment can confirm work."),
           h("thead", {}, h("tr", {}, ["Contractor", "Offered", "Committed", "In use", "Room left", "Evidence"].map((x) => h("th", { scope: "col" }, x)))),
-          h("tbody", {}, p.capacity.map((k) => h("tr", {}, h("td", {}, k.contractor), h("td", {}, k.offered), h("td", {}, k.committed), h("td", {}, k.in_use), h("td", {}, k.headroom),
+          h("tbody", {}, p.capacity.map((k) => h("tr", {}, h("th", { scope: "row" }, k.contractor), h("td", {}, k.offered), h("td", {}, k.committed), h("td", {}, k.in_use), h("td", {}, k.headroom),
             h("td", {}, `${k.evidence || "None"}. ${k.evidence_status}.`, k.details && h("div", {}, `Source ${k.details.document_id}, version ${k.details.source_version}. Reviewed ${fmtDate(k.details.reviewed_on)}. Capacity version ${k.version}.`))))))),
       h("h3", {}, "Record capacity"), ...[con, off, com, evi, sourceCase, document, sourceVersion, sourceDate, reviewed, validFrom, validTo, covered].flat(),
       h("p", { class: "muted" }, "Only a named manager with recorded contract authority can accept this commitment. Check the original document, current scope and covered homes. A review is current for 7 days. Record 0 if capacity is lost; existing orders will show a deficit."),

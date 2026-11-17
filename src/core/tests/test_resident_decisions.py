@@ -262,6 +262,37 @@ class JsonResidentDecisions(unittest.TestCase):
             **changes,
         )
 
+    def test_nomination_review_refused_until_route_and_owner_recorded(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.nomination())
+        with self.store.lock:
+            record = self.store._case("ZF-1")["nomination_records"][0]
+            record["owner"] = None
+            record["acknowledgement"] = None
+            record["non_digital_route"] = ""
+            self.store.save()
+        record_id = self.store.cases["ZF-1"]["nomination_records"][0]["id"]
+        self.unchanged_failure(
+            partial(self.store.resident_action, self.rae, "ZF-1", self.review(record_id, 1))
+        )
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            dict(
+                action="nomination_acknowledge",
+                case_id="ZF-1",
+                id=record_id,
+                expected_version=1,
+                owner=self.sam["email"],
+                acknowledgement_ref="SYN-ACK-REPAIRED",
+                non_digital_route="SYN Phone Sam or staffed desk.",
+                next_update="2099-01-10",
+            ),
+        )
+        self.store.resident_action(self.rae, "ZF-1", self.review(record_id, 2))
+        reviewed = self.open_store().detail("ZF-1", self.sam)["nomination_records"][0]
+        self.assertTrue(reviewed["follow_up"]["route_ready"])
+        self.assertTrue(reviewed["follow_up"]["review_current"])
+
     def test_nomination_review_retains_reviewer_and_correction_stales_it(self) -> None:
         self.store.resident_action(self.sam, "ZF-1", self.nomination())
         record = self.store.cases["ZF-1"]["nomination_records"][0]
@@ -335,6 +366,143 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertNotIn("stale_from_version", record["reviews"][1])
         self.assertEqual(self.store._ranking(), ranking)
         self.assertTrue(self.open_store().verify_audit())
+
+    def correction(self, record_id: str, version: int, **changes: Any) -> dict[str, Any]:
+        return dict(
+            dict(
+                action="nomination_correct",
+                case_id="ZF-1",
+                id=record_id,
+                expected_version=version,
+                reported_subject_ref="SYN-CORRECTED",
+                account="SYN competing evidence",
+                source="SYN correction evidence",
+                channel="Letter",
+                next_update="2099-01-02",
+                challenge_id=None,
+            ),
+            **changes,
+        )
+
+    def test_nomination_correction_retains_challenged_review_and_blocks_automatic_outcomes(
+        self,
+    ) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.nomination())
+        record_id = self.store.cases["ZF-1"]["nomination_records"][0]["id"]
+        self.store.resident_action(
+            self.rae,
+            "ZF-1",
+            self.review(record_id, 1, outcome="Not progressed; resident may challenge"),
+        )
+        ranking = self.store._ranking()
+        self.store.resident_action(
+            self.sam, "ZF-1", self.correction(record_id, 1, raised_by="Resident")
+        )
+        record = self.open_store().detail("ZF-1", self.sam)["nomination_records"][0]
+        correction = record["corrections"][0]
+        self.assertEqual(correction["raised_by"], "Resident")
+        self.assertEqual(correction["challenged_review"]["reviewer"]["code"], self.rae["code"])
+        self.assertEqual(
+            correction["challenged_review"]["outcome"], "Not progressed; resident may challenge"
+        )
+        self.assertEqual(
+            correction["re_review"],
+            dict(
+                required=True,
+                automatic_acceptance=False,
+                automatic_sanction=False,
+                dependent_review_versions=[1],
+            ),
+        )
+        view = record["follow_up"]
+        self.assertEqual(view["dependent_review_versions_stale"], [1])
+        self.assertIs(view["automatic_acceptance"], False)
+        self.assertIs(view["automatic_sanction"], False)
+        self.assertEqual(record["reviews"][0]["outcome"], "Not progressed; resident may challenge")
+        self.assertEqual(self.store._ranking(), ranking)
+
+    def test_nomination_correction_representative_needs_confirmed_authority(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.nomination())
+        record_id = self.store.cases["ZF-1"]["nomination_records"][0]["id"]
+        for changes in (
+            dict(raised_by="Representative"),
+            dict(raised_by="Representative", representative_ref="SYN-REP-A"),
+            dict(raised_by="Resident", representative_ref="SYN-REP-A"),
+            dict(raised_by="Stranger"),
+        ):
+            with self.subTest(changes=changes):
+                self.unchanged_failure(
+                    partial(
+                        self.store.resident_action,
+                        self.sam,
+                        "ZF-1",
+                        self.correction(record_id, 1, **changes),
+                    )
+                )
+        self.scope()
+        self.action("safe_contact_record", safe_contact_ref="SYN-SAFE-CANARY", source="SYN")
+        self.authority(tasks=["Receive information"])
+        self.unchanged_failure(
+            partial(
+                self.store.resident_action,
+                self.sam,
+                "ZF-1",
+                self.correction(
+                    record_id, 1, raised_by="Representative", representative_ref="SYN-REP-A"
+                ),
+            )
+        )
+        self.authority(tasks=["Communicate"])
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            self.correction(
+                record_id, 1, raised_by="Representative", representative_ref="SYN-REP-A"
+            ),
+        )
+        self.action("safe_contact_record", safe_contact_ref="SYN-SAFE-CHANGED", source="SYN")
+        self.unchanged_failure(
+            partial(
+                self.store.resident_action,
+                self.sam,
+                "ZF-1",
+                self.correction(
+                    record_id, 2, raised_by="Representative", representative_ref="SYN-REP-A"
+                ),
+            )
+        )
+        saved = self.store.cases["ZF-1"]["nomination_records"][0]["corrections"][0]
+        self.assertEqual(saved["raised_by"], "Representative")
+        self.assertEqual(saved["representative_ref"], "SYN-REP-A")
+
+    def test_hazard_concern_in_correction_or_challenge_routes_to_hazard_intake(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.nomination())
+        record_id = self.store.cases["ZF-1"]["nomination_records"][0]["id"]
+        proposal = self.priority_fixture()
+        for body in (
+            self.nomination(hazard_concern=True),
+            self.nomination(hazard_concern=None),
+            self.correction(record_id, 1, hazard_concern=True),
+            self.correction(record_id, 1, hazard_concern=None),
+            self.review(record_id, 1, hazard_concern=True),
+            self.review(record_id, 1, hazard_concern=None),
+            dict(self.challenge_body(proposal), hazard_concern=True),
+            dict(self.challenge_body(proposal), hazard_concern=None),
+            self.correction(record_id, 1, hazard_concern=0),
+            self.correction(record_id, 1, hazard_concern=""),
+            dict(self.challenge_body(proposal), hazard_concern=1),
+        ):
+            with self.subTest(action=body["action"], flag=body["hazard_concern"]):
+                before = copy.deepcopy(self.store.cases["ZF-1"])
+                audit = list(self.store.audit_entries())
+                with self.assertRaises(resident_decisions.HazardRouted) as caught:
+                    self.store.resident_action(self.sam, "ZF-1", body)
+                self.assertEqual(caught.exception.route["issue"], "#85")
+                self.assertEqual(caught.exception.route["action"], "/api/cases/ZF-1/hazard-raise")
+                self.assertIs(caught.exception.route["queue_item_created"], False)
+                self.assertIn("hazard-raise", str(caught.exception))
+                self.assertEqual(self.store.cases["ZF-1"], before)
+                self.assertEqual(list(self.store.audit_entries()), audit)
 
     def test_intake_wrong_identity_hazard_and_closed_input_no_mutation(self) -> None:
         for invalid in (
@@ -2602,6 +2770,40 @@ class JsonResidentDecisions(unittest.TestCase):
         )
         self.assertTrue(self.store.cases["ZF-1"]["closed"])
 
+    def test_redress_route_view_names_routes_preserved_duties_and_send_status(self) -> None:
+        self.scope()
+        self.answer(status="Withdrawn", note="SYN in their words")
+        view = self.store.detail("ZF-1", self.pam)["redress_route"]
+        self.assertEqual([r["route"] for r in view["routes"]], ["Independent review", "Complaint"])
+        text = " ".join(view["commitments"])
+        for duty in ("Programme place", "Repairs", "Safety duties", "own measure"):
+            self.assertIn(duty, text)
+        self.assertEqual(
+            view["reviewable_decisions"],
+            [
+                dict(
+                    measure=MEASURES[0],
+                    version=1,
+                    status="Withdrawn",
+                    recorder_identity_status="Known",
+                )
+            ],
+        )
+        self.assertEqual(view["formal_requests"], [])
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        body = self.review_body()
+        body.pop("action")
+        self.action("service_open", **body)
+        opened = self.store.detail("ZF-1", self.pam)["redress_route"]["formal_requests"]
+        self.assertEqual(
+            [(r["route"], r["formal_route_status"]) for r in opened],
+            [("Independent review", "Not sent")],
+        )
+        for key in ("measure_decisions", "resident_reviews", "decision", "hazards", "stage"):
+            self.assertEqual(self.store.cases["ZF-1"][key], before[key])
+        staff = self.store.detail("ZF-1", dict(self.sam, role="Quality Inspector"))
+        self.assertNotIn("redress_route", staff)
+
     def test_complaint_and_independent_review_stay_open_under_every_hold(self) -> None:
         self.scope()
         self.action("safe_contact_record", safe_contact_ref="SYN-SAFE-CANARY", source="SYN")
@@ -4037,6 +4239,51 @@ class JsonResidentDecisions(unittest.TestCase):
             receiver.envelopes[0]["idempotency_key"], receiver.envelopes[1]["idempotency_key"]
         )
 
+    def test_acknowledged_retry_flags_stale_pending_without_superseding(self) -> None:
+        self.pending_attempt()
+        self.forward(retry_unresolved=True)
+        route = self.route()
+        self.assertEqual([a["status"] for a in route["attempts"]], ["Pending", "Acknowledged"])
+        self.assertIs(route["stale_pending_supersession_required"], True)
+        self.assertEqual(route["supersession_eligible_attempts"], [1])
+        self.assertEqual(route["supersession_evidence_ref"], route["attempts"][1]["receipt_ref"])
+
+    def test_non_acknowledged_retry_leaves_pending_attempt_pending(self) -> None:
+        self.pending_attempt()
+        self.store.complaints_receiver = SyntheticReceiver("raise")
+        self.forward(retry_unresolved=True)
+        self.assertEqual(
+            [a["status"] for a in self.route()["attempts"]], ["Pending", "Unconfirmed"]
+        )
+
+    def test_acknowledgement_does_not_supersede_an_attempt_still_in_flight(self) -> None:
+        self.pending_attempt()
+        attempts = self.route()["attempts"]
+        attempts.append(dict(attempt=2, status="Pending", reservation_id="SYN-R2"))
+        resident_decisions._IN_FLIGHT.setdefault(self.store, set()).add(("ZF-1", "SR-1", 1))
+        try:
+            with self.store.lock:
+                req = self.store._case("ZF-1")["service_requests"][0]
+                self.store._res_service_forward_outcome(
+                    self.rae,
+                    self.store._case("ZF-1"),
+                    dict(
+                        id="SR-1",
+                        attempt=2,
+                        reservation_id="SYN-R2",
+                        status="Acknowledged",
+                        reason="SYN",
+                        receipt_ref="SYN-RCPT-2",
+                    ),
+                )
+        finally:
+            resident_decisions._IN_FLIGHT[self.store].discard(("ZF-1", "SR-1", 1))
+        self.assertEqual(
+            [a["status"] for a in req["formal_route"]["attempts"]], ["Pending", "Acknowledged"]
+        )
+        self.assertEqual(req["formal_route"]["supersession_eligible_attempts"], [])
+        self.assertIs(req["formal_route"]["stale_pending_supersession_required"], False)
+
     @contextmanager
     def outcome_save_fault(self, *, committed: bool) -> Iterator[list[int]]:
         """Fail the first outcome save only; a committed fault loses just its acknowledgement."""
@@ -4522,6 +4769,26 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertNotIn("requested_by", attempt)
         self.assertEqual(attempt["receipt_ref"], "SYN-RCPT-1")
 
+    def test_nomination_permissions_and_redaction_match_intake_role_matrix(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.nomination())
+        sam_detail = self.store.detail("ZF-1", self.sam)
+        pam_detail = self.store.detail("ZF-1", self.pam)
+        rex_detail = self.store.detail("ZF-1", self.rex)
+        kim_detail = self.store.detail("ZF-1", self.kim)
+        self.assertTrue(sam_detail["nomination_permissions"]["can_submit_digital"])
+        self.assertTrue(
+            sam_detail["nomination_permissions"]["can_submit_staff_recorded_non_digital"]
+        )
+        self.assertFalse(sam_detail["nomination_permissions"]["can_assign_third_party_owner"])
+        self.assertTrue(pam_detail["nomination_permissions"]["can_view"])
+        self.assertTrue(pam_detail["nomination_permissions"]["can_submit_digital"])
+        self.assertTrue(pam_detail["nomination_permissions"]["can_assign_third_party_owner"])
+        self.assertNotIn("nomination_permissions", rex_detail)
+        self.assertNotIn("nomination_permissions", kim_detail)
+        self.assertIn(
+            "plain_language_explanation",
+            sam_detail["nomination_records"][0],
+        )
     def test_forward_explicit_retry_marks_stale_pending_superseded_and_keeps_audit(self) -> None:
         receiver = SyntheticReceiver("ack")
         self.store.complaints_receiver = receiver

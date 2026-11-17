@@ -1268,7 +1268,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             if url.path == "/api/map":
                 try:
                     z = num(q, "zoom", None, 0, 20)
-                    return self._json(200, s.map_view(filt(q), bbox(q), z))
+                    return self._json(200, s.map_view(filt(q), bbox(q), z, lambda ids: app.assistants.map_sensors(u, ids)))
                 except ValueError as e:
                     return self._json(400, {"error": str(e)})
             if url.path == "/api/visits":
@@ -1448,8 +1448,17 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 except ValueError as e:
                     return self._json(400, {"error": str(e)})
             if url.path.startswith("/api/cases/"):
+                from zava_forward.api import nomination_routes
                 d = s.detail(url.path.rsplit("/", 1)[1], u)
-                return self._json(200, d) if d else self._json(404, {"error": "Case not found."})
+                if not d:
+                    return self._json(404, {"error": "Case not found."})
+                d = nomination_routes.project_case_nomination_routes(d, user=u)
+                if parse_qs(url.query).get("view", [None])[0] == "nomination-routes-html":
+                    if not nomination_routes.nomination_routes_visible(u):
+                        return self._json(403, {"error": "Your role does not include referral and challenge routes."})
+                    html_doc = nomination_routes.render_accessible_nomination_route_html(d, user=u)
+                    return self._send(200, html_doc.encode("utf-8"), "text/html; charset=utf-8")
+                return self._json(200, d)
             if url.path == "/api/audit-check":
                 return self._json(200, s.verify_ledger())
             return self._json(404, {"error": "Not found."})
@@ -1909,6 +1918,15 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     except DurabilityUnconfirmedError:
                         return self._json(409, {"error": "The ranking record was written but its archive folder could not be confirmed as durable. It has been audited as unconfirmed; ask a named owner to check the archive before relying on it.",
                                                 "outcome": "committed_unconfirmed"})
+                if url.path == "/api/exceptions/recovery":
+                    try:
+                        return self._json(200, s.request_exception_recovery(
+                            u, exception_register.staff_from_env(os.environ),
+                            body.get("key"), body.get("action"), body.get("reason")))
+                    except PermissionError as e:
+                        return self._json(403, {"error": str(e)})
+                    except ValueError as e:
+                        return self._json(400, {"error": str(e)})
                 if url.path == "/api/bulk-edits/preview":
                     return self._json(200, s.bulk_edit_preview(u, body))
                 if url.path == "/api/bulk-edits/apply":
@@ -2217,13 +2235,17 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                             ),
                         )
                     elif act == "resident":
+                        from zava_forward.api import nomination_routes
                         from zava_forward.core.resident_decisions import ResidentCommittedError
+                        action_name = body.get("action") if isinstance(body, dict) else None
+                        if isinstance(action_name, str) and action_name in nomination_routes.NOMINATION_ROUTE_ACTIONS:
+                            body = nomination_routes.build_route_action_payload(action_name, body, user=u)
                         try:
                             s.resident_action(u, cid, body)
                         except ResidentCommittedError as error:
                             return self._json(409, {"error": str(error), "outcome": "committed"})
                         try:
-                            detail = s.detail(cid, u)
+                            detail = nomination_routes.project_case_nomination_routes(s.detail(cid, u), user=u)
                             detail["rule_checks"] = app.check_case(cid, "data_change")
                         except Exception:
                             logging.getLogger(__name__).exception("Resident record persisted; response projection failed")
@@ -2267,12 +2289,21 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(409, {"error": "Preview blocked, changed or already used. Request a fresh preview before applying."})
                 return self._json(409, {"error": "Someone else changed this at the same moment. Reload and try again."})
             except GateError as e:
-                return self._json(409, {"error": "Not ready yet.", "reasons": e.reasons})
+                refusal = {"error": "Not ready yet.", "reasons": e.reasons}
+                if e.rules:
+                    refusal["rules"] = e.rules
+                return self._json(409, refusal)
             except PermissionError as e:
-                return self._json(403, {"error": str(e)})
+                refusal = {"error": str(e)}
+                if getattr(e, "rule", None):
+                    refusal["rule"] = e.rule.as_record()
+                return self._json(403, refusal)
             except KeyError:
                 return self._json(404, {"error": "Case not found."})
             except ValueError as e:
+                from zava_forward.core.nomination_route import HazardRouted
+                if isinstance(e, HazardRouted):
+                    return self._json(400, dict(e.route, error=str(e)))
                 return self._json(400, {"error": str(e)})
             except Exception:
                 if url.path in ("/api/bulk-edits/preview", "/api/bulk-edits/apply"):

@@ -28,8 +28,9 @@ import os
 import re
 from copy import copy, deepcopy
 from datetime import UTC, datetime
+from decimal import Decimal
 
-from . import controls as k
+from . import controls as k, gates
 from .change_provenance import _actor
 from .restart_authority import (
     RULE_024,
@@ -366,6 +367,33 @@ def _pct(value, label):
     return n
 
 
+UNKNOWN = "Unknown"
+
+
+def _ai_cost_figures(price, total, accepted):
+    """Total Cost of AI and cost per accepted outcome; Unknown, never 0, without a price source, a recorded total or an accepted outcome."""
+    total_cost = count = None
+    raw_total = "" if total is None else str(total).strip()
+    if raw_total:
+        if isinstance(total, bool) or not re.fullmatch(r"[0-9]{1,12}(?:\.[0-9]{1,6})?", raw_total):
+            raise ValueError("Enter the Total Cost of AI as a number or leave it blank.")
+        total_cost = Decimal(raw_total)
+    raw_accepted = "" if accepted is None else str(accepted).strip()
+    if raw_accepted:
+        if isinstance(accepted, bool) or not re.fullmatch(r"[0-9]{1,12}", raw_accepted):
+            raise ValueError("Enter the accepted-outcome count as a whole number or leave it blank.")
+        count = int(raw_accepted)
+    priced = bool(price) and total_cost is not None and total_cost > 0
+    per_outcome = total_cost / count if priced and count else None
+    return dict(total_cost_of_ai=f"{total_cost:f}" if priced else UNKNOWN,
+                accepted_outcome_count=count if count else UNKNOWN,
+                cost_per_accepted_outcome=f"{per_outcome:.4f}" if per_outcome is not None else UNKNOWN)
+
+
+def _ai_line_complete(line):
+    return isinstance(line, dict) and all(str(line.get(key) or "").strip() for key in ("named_denominator", "quality_floor", "total_cost_of_ai", "cost_per_accepted_outcome"))
+
+
 def _need_manager(user, what):
     k.require_role(user, MANAGER_ROLES, f"a manager can {what}")
 
@@ -575,21 +603,11 @@ class GovernanceMixin:
         if denominator not in AI_DENOMINATORS:
             raise ValueError("Choose the AI cost denominator: " + ", ".join(AI_DENOMINATORS) + ".")
         price = k.text(body.get("ai_price_source"), "the dated price source", 300, required=False)
-        ai_cost = dict(
-            denominator=denominator,
-            quality_floor=k.text(
-                body.get("ai_quality_floor"), "the quality floor the outcome must clear", 600
-            ),
-            cost_components=k.text(
-                body.get("ai_cost_components"),
-                "the Total Cost of AI components beyond token cost",
-                600,
-            ),
-            price_source=price or None,
-            cost_status="Priced from the named source"
-            if price
-            else "Unknown: no dated price source is recorded",
-        )
+        ai_cost = dict(denominator=denominator, named_denominator=denominator, quality_floor=k.text(body.get("ai_quality_floor"), "the quality floor the outcome must clear", 600),
+                       cost_components=k.text(body.get("ai_cost_components"), "the Total Cost of AI components beyond token cost", 600),
+                       price_source=price or None,
+                       cost_status="Priced from the named source" if price else "Unknown: no dated price source is recorded",
+                       **_ai_cost_figures(price, body.get("ai_total_cost"), body.get("ai_accepted_outcomes")))
         with self.lock:
             g = self._gov()
             entry = dict(
@@ -713,19 +731,15 @@ class GovernanceMixin:
             )
         e = g["benefits"].get("BG-011")
         if not e or e["status"] != "Approved":
-            why.append(
-                "The benefits register (BG-011 definitions and MDE) is not approved. Owner: programme manager."
-            )
-        elif not e.get("ai_running_cost"):
-            why.append(
-                "The benefits register has no AI running-cost line (denominator and quality floor). Owner: programme manager."
-            )
+            why.append("The benefits register (BG-011 definitions and MDE) is not approved. Owner: programme manager.")
+        elif not _ai_line_complete(e.get("ai_running_cost")):
+            why.append("The benefits register has no AI running-cost line (denominator and quality floor). Owner: programme manager.")
         return why
 
     def require_capture_open(self):
         why = self.capture_gate()
         if why:
-            raise PermissionError("Phase 0 capture is closed. " + " ".join(why))
+            raise gates.RuleGatedPermissionError("Phase 0 capture is closed. " + " ".join(why), gates.CAPTURE_RULE)
 
     def guard_case_event(self, c):
         """Capture gate for pilot-cohort cases (c["pilot"]) and pause check for every case; hazard response is deliberately not routed here."""
@@ -830,6 +844,12 @@ class GovernanceMixin:
                 body.get("shadow_entry_evidence"), "the shadow-mode entry evidence", 400
             )
         with self.lock:
+            if decision == "Release" and scope == "Phase 0 capture":
+                self.require_capture_open()
+            if decision == "Release" and scope in ("Shadow testing", "Live pilot") and not self.is_released("Phase 0 capture"):
+                raise PermissionError(f"{scope} cannot be released until Phase 0 capture is released. Owner: programme manager.")
+            ai_line = (self._gov()["benefits"].get("BG-011") or {}).get("ai_running_cost") or {}
+            rec["ai_running_cost"] = {key: ai_line.get(key) or UNKNOWN for key in ("named_denominator", "quality_floor", "total_cost_of_ai", "cost_per_accepted_outcome")}
             rel = self._gov()["releases"]
             rec["id"] = self._next_id("REL", rel)
             rel.append(rec)
@@ -1004,9 +1024,7 @@ class GovernanceMixin:
 
     def require_not_paused(self, scope_kind, scope):
         if self.is_paused(scope_kind, scope):
-            raise PermissionError(
-                f"This {scope_kind} is paused after a guardrail breach until restart is authorised. {EMERGENCY_NOTE}"
-            )
+            raise gates.RuleGatedPermissionError(f"This {scope_kind} is paused after a guardrail breach until restart is authorised. {EMERGENCY_NOTE}", gates.PAUSE_RULE)
 
     def governance_view(self, user, assessment=None, *, assistants_service=None):
         from . import rai_control_plane

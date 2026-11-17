@@ -15,6 +15,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 from . import (
+    challenges,
     ai_tasks,
     ai_prompts,
     buildings,
@@ -41,6 +42,7 @@ from .grants import GrantMixin, grant_summary
 from .resident_decisions import (
     ResidentDecisionMixin,
     measure_decision_view,
+    redress_route_view,
     remember_first_contact,
     retention_schedule,
     resident_gate,
@@ -66,9 +68,10 @@ BOOKED_STAGE = "Install booked"
 
 
 class GateError(Exception):
-    def __init__(self, reasons):
+    def __init__(self, reasons, rules=()):
         super().__init__("; ".join(reasons))
         self.reasons = reasons
+        self.rules = [r.as_record() if isinstance(r, gates.GateRule) else r for r in rules]
 
 
 class ConflictError(Exception):
@@ -697,6 +700,20 @@ class Store(
         return why + resident_gate(c) + technical_gate(c)
 
     @staticmethod
+    def _transition_rules(c):
+        """Rules behind the pre-booking reasons, so a refusal names what it enforced."""
+        rules = []
+        if c.get("funding_ok") is not True:
+            rules.append(gates.BOOKING_RULES["funding"])
+        if Store._open_safety_items(c):
+            rules.append(gates.BOOKING_RULES["safety"])
+        if resident_gate(c):
+            rules.append(gates.BOOKING_RULES["resident"])
+        if technical_gate(c):
+            rules.append(gates.TECHNICAL_RULE)
+        return rules
+
+    @staticmethod
     def status_line(c):
         if c["closed"]:
             return "Completed"
@@ -1108,7 +1125,9 @@ class Store(
             return [
                 (
                     "Open safety issues",
-                    "; ".join(f"{cat} ({own})" for cat, own in open_h) or "None",
+                    "; ".join(
+                        f"{taskqueues.safe_category(cat, reason_ok)} ({own})" for cat, own in open_h
+                    ) or "None",
                 ),
                 ("Works", c["measures"]),
             ]
@@ -1157,25 +1176,66 @@ class Store(
             d["checklist"] = self.checklist(c)
             d["technical_missing"] = missing_items(c, usable_only=True)
             d["quality_handover_blockers"] = handover_blockers(c)
+            from . import nomination_route
             from .resident_decisions import (
                 INTAKE_FIELDS,
-                followup_view,
+                _priority_includes_case,
+                challenge_catalog,
                 challenge_references_visible,
+                followup_view,
+                nomination_permissions,
             )
-
-            followup_view(d)
-            if user is not None and challenge_references_visible(self, user):
-                from .resident_decisions import challenge_catalog
-
-                d["challenge_targets"] = challenge_catalog(self, case_id)
+            visible = True if user is None else challenge_references_visible(self, user)
+            reason_ok = True if user is None else projection.can_see_reason(user)
+            case_recs = [
+                r for r in self.data.get("recommendations", ())
+                if r.get("kind") != "ai_task" and _priority_includes_case(r, case_id)
+            ]
+            followup_view(
+                d,
+                recommendations=case_recs,
+                can_view_intake=visible,
+                can_view_reason=reason_ok,
+            )
+            if visible and "affected_challenges" in d:
+                d["affected_challenges"] = nomination_route.scrub_nomination_restricted_fields(
+                    d["affected_challenges"]
+                )
+                for ch in d["affected_challenges"]:
+                    expl = nomination_route.filter_explanation_for_viewer(
+                        nomination_route.challenge_explanation(
+                            ch,
+                            can_view_intake=visible,
+                            can_view_reason=reason_ok,
+                        ),
+                        can_view_intake=visible,
+                        can_view_reason=reason_ok,
+                    )
+                    if expl is not None:
+                        ch["plain_language_explanation"] = expl
+            if user is not None and visible:
+                d["challenge_targets"] = challenge_catalog(
+                    self,
+                    case_id,
+                    can_view_intake=visible,
+                    can_view_reason=reason_ok,
+                )
+                d["challenge_guarantees"] = list(challenges.GUARANTEES)
+                d["challenge_assurance"] = challenges.assurance()
+                d["nomination_permissions"] = nomination_permissions(self, user, d)
             elif user is not None:
                 for field in INTAKE_FIELDS:
                     d.pop(field, None)
                 d.pop("affected_challenges", None)
                 d.pop("challenge_targets", None)
+                d.pop("challenge_guarantees", None)
+                d.pop("challenge_assurance", None)
+                d.pop("nomination_permissions", None)
             d.pop("form_staging", None)
             d.pop("form_reviews", None)
             d.pop("finance_decision_holds", None)
+            if user is not None:
+                d.pop("safeguarding_items", None)  # Only the allowlisted work.safeguarding_clocks leaves the store.
             d["support_status"] = stock.support_status(c["resident"])
             d["support_coverage"] = stock.support_coverage(c["resident"])
             d["resident"].setdefault("priority_support", None)
@@ -1204,6 +1264,7 @@ class Store(
                     policy=self.data.get("handoff_policy"),
                     staff=self.data.get("staff"),
                 )
+            d["redress_route"] = redress_route_view(c)
             d["status"] = self.status_line(c)
             d["gate"] = self.gate_reasons(c) + buildings.blockers(self.data, self.cases, c)
             if d["status"] == "Ready" and d["gate"]:
@@ -1358,12 +1419,12 @@ class Store(
     def require_stock_clear(self, c):
         reasons = stock.blockers(c)
         if reasons:
-            raise GateError(reasons)
+            raise GateError(reasons, [gates.STOCK_RULE])
 
     def require_building_clear(self, c, package_id=None):
         reasons = buildings.blockers(self.data, self.cases, c, package_id)
         if reasons:
-            raise GateError(reasons)
+            raise GateError(reasons, [gates.BUILDING_RULE])
 
     def require_safety_clear(self, c):
         staff_list = self.data.get("staff") or list(self.staff.values())
@@ -1372,13 +1433,14 @@ class Store(
             raise GateError(
                 [
                     f"Home retrofit work is stopped for safety review. Owner: {active[0][1]} (referral follow-up). Next action: obtain external evidence and an independent decision to restart retrofit work."
-                ]
+                ],
+                [gates.BOOKING_RULES["safety"]],
             )
 
     def require_resident_clear(self, c, bindings=None):
         reasons = resident_gate(c, bindings)
         if reasons:
-            raise GateError(reasons)
+            raise GateError(reasons, [gates.BOOKING_RULES["resident"]])
 
     @staticmethod
     def _evidence_missing(c: dict[str, Any]) -> list[str] | None:
@@ -1394,20 +1456,14 @@ class Store(
             gates.evidence_gate(self._evidence_missing(c), "Grants and Evidence Officer")
         )
         if not gates.transition_allowed(results):
-            raise GateError(
-                [
-                    f"{r.reason} Owner: {r.owner}. Next action: {r.correction}"
-                    for r in gates.unmet(results)
-                ]
-            )
+            unmet = gates.unmet(results)
+            raise GateError([f"{r.reason} Owner: {r.owner}. Next action: {r.correction}" for r in unmet], [r.rule for r in unmet if r.rule])
 
     def require_quality_evidence(self, rec):
         """Fail closed: acceptance and handover need an explicit pass on the stored checklist evidence."""
         result = quality_evidence_gate(rec)
         if not result.passed:
-            raise GateError(
-                [f"{result.reason} Owner: {result.owner}. Next action: {result.correction}"]
-            )
+            raise GateError([f"{result.reason} Owner: {result.owner}. Next action: {result.correction}"], [result.rule] if result.rule else [])
 
     def log_call(self, user, case_id, outcome, note, channel="Phone"):
         outcome = (outcome or "").strip()[:80]
@@ -1456,9 +1512,13 @@ class Store(
                     f"This case is not at the final checks. It may have changed since you opened it. Case owner: {c['owner']}. Next action: copy any unsaved notes, then reload the case and check its current stage before taking further action."
                 )
             why = self.gate_reasons(c)
-            why += buildings.blockers(self.data, self.cases, c)
+            rules = self._transition_rules(c) if why else []
+            building = buildings.blockers(self.data, self.cases, c)
+            if building:
+                why += building
+                rules.append(gates.BUILDING_RULE)
             if why:
-                raise GateError(why)
+                raise GateError(why, rules)
             self.require_safety_clear(c)
             self.require_resident_clear(c)
             self.require_booking_gates(c)
@@ -1597,9 +1657,10 @@ class Store(
         with self.lock:
             return insights.map_points(list(self.cases.values()), f)
 
-    def map_view(self, f, bbox=None, zoom=None):
+    def map_view(self, f, bbox=None, zoom=None, sensors=None):
         with self.lock:
-            return insights.map_view(self.cases.values(), f, bbox, zoom)
+            view = insights.map_view(self.cases.values(), f, bbox, zoom)
+        return insights.attach_sensors(view, sensors)
 
     def visits(self, user, view="mine"):
         with self.lock:

@@ -1,0 +1,3 @@
+tests/test_map_viewport_premise.py:97: error: Module "checks.map_fullscreen_browser_check" does not explicitly export attribute "time"  [attr-defined]
+Found 1 error in 1 file (checked 307 source files)
+exit=1

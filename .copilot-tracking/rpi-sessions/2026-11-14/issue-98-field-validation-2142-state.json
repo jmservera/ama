@@ -1,0 +1,58 @@
+{
+  "task_id": "issue-98",
+  "task_slug": "issue-98-field-validation-2142",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14/issue-98-field-validation-2142-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14/issue-98-field-validation-2142-plan.md",
+    "details": ".copilot-tracking/details/2026-11-14/issue-98-field-validation-2142-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-14/issue-98-field-validation-2142-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-14/issue-98-field-validation-2142-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-14/issue-98-field-validation-2142-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute confirmed automatic RPI loop (Research, Plan, Implement, Review) for Issue #98 remaining locally verifiable acceptance criteria in src/core on feat/fin-98-field-validation-2142 without pushing",
+      "status": "confirmed",
+      "evidence": "Caller prompt explicitly specifies full RPI loop in order, target branch/worktree, acceptance criteria, validation command, local commit, and no push"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready; converged on refining src/core/src/zava_forward/core/form_validation.py, adding src/core/tests/test_issue_98_field_validation.py, and updating src/core/README.md while keeping FD-01..FD-14 unapproved by default",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-14/issue-98-field-validation-2142-research.md (C1-C12)"
+    },
+    {
+      "decision": "Plan critique executed once; verdict: Revise; critique path: .copilot-tracking/reviews/plans/2026-11-14/issue-98-field-validation-2142-plan-critique.md; direct planner dispositions applied for PC-001 (rule definition persistence + c['field_id'] required_when propagation + non-empty Stale reasons), PC-002 (form_export._digest + controlled Unavailable / cross-case Invalid guards), and PC-003 (confirmation-provenance isolation, HUMAN_ONLY rejection, Decimal number equality, attachment_id stamping, README reconciliation); no user decision required; Plan finalized Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-14/issue-98-field-validation-2142-plan.md; .copilot-tracking/reviews/plans/2026-11-14/issue-98-field-validation-2142-plan-critique.md"
+    },
+    {
+      "decision": "Post-implementation Review executed once; execution status: Complete; outcome: Conformant; assessed boundary: full task P01-P02 in src/core (form_validation.py, test_issue_98_field_validation.py, src/core/README.md, local mypy/ruff/unittest verification); zero defects or decision/evidence gaps",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-14/issue-98-field-validation-2142-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked follow-up work item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Expose read-only form_validation.validate, review_pack, and pack_freshness endpoints in src/api alongside existing form_export routes",
+      "rationale": "Highest ease of engineering implementation, direct Finance workbench value, and high KISS/SOLID leverage by keeping src/api as a thin transport adapter over zava_forward.core.form_validation without duplicating validation logic",
+      "evidence": ".copilot-tracking/research/2026-11-14/issue-98-field-validation-2142-research.md (C12); .copilot-tracking/reviews/logs/2026-11-14/issue-98-field-validation-2142-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Obtain and record Zava North Homes Finance, Legal, and template-owner sign-off for FD-01 to FD-14 (#96, #97, #98)",
+      "rationale": "High programme impact required before live schemas, source policies, or funding rule sets can be approved or Issue #98 closed, gated on external human decision-makers rather than code changes",
+      "evidence": ".copilot-tracking/research/2026-11-14/issue-98-field-validation-2142-research.md (C1, C8); src/core/evals/fictional_form_review_pack.json"
+    }
+  ]
+}

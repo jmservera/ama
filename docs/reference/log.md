@@ -11748,6 +11748,152 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Audit only, no tick or closure. The cut-over audit test passes (9 tests) and the inventory has no unclassified row. A relative-link scan of tracked Markdown found broken targets under `docs/reference/` only in earlier, immutable entries of this log; none in the index, research, regulatory, method or resources files.
 * Criteria 1 and 2 stay pending owner review. Criterion 3 is unproven: the last Source projects CI run on `main` is a green manual dispatch of 2026-11-08, the workflow is path-filtered with no run on the current head, no deployment workflow run exists on `main`, and the `ca-cutover-test-demo-api` status could not be read (Azure authorization denied). Not a failure, not a pass.
+
+## [2026-11-13] update | Whitepaper integration of completed 315-trajectory S1 study and post-collection judging results
+
+* Integrated the committed empirical handoff from `jmservera/ama-thought-mve` (`main` commit `7943e40347862e76e3bc04490040ad5904487c86`, branch commit `8591630c556f9f87c952f5d44ca7ce58b2bf1a83`, tree `cb542312d8bde5d26bc716f2c8f7a5e8eaef7037`, `results/WHITEPAPER_REPORT.md` blob `3e44ae10547b6376864089e605e946f74a378d56`) into the [thought-leadership paper](../capstone/thought-leadership/everything-but-the-software/main.tex), [experiment protocol slice](../capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex), [measurement provenance supplement](../capstone/thought-leadership/everything-but-the-software/anc/measurement-provenance.tex), [package README](../capstone/thought-leadership/everything-but-the-software/README.md) and [revision report](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md).
+* Enabled `\resultstrue` and added five audited results tables plus the 14-epoch execution table (313/315 completed trajectories, 5,341/5,355 measured steps across 5,357 attempts; two quarantined runs retained in all denominators; 5,303 complete-billing attempts totalling `62,052.61` settled AI credits and 54 holds reserving `18,900.0` credits with `783.16` partial lower-bound credits; 12-workflow replay across 3,457 commits with zero witnessed losses across 626 evaluable endpoints; 1,252-call blinded `gpt-6-luna` Assessment v3 for `418.64` settled credits; 90-row `S01..S08` human calibration spot-check; and 5,357-journal SDK intervention audit).
+* Preserved all four mandatory reporting guardrails: unregistered five-arm Git amendment over the earlier OSF registrations (`ywsrv` and `xcpt4`), withheld primary bootstrap intervals (`primary_estimates_available = false` without an external `intervention-coverage/v1` operator attestation), separate reporting of incomplete billing holds without currency conversion, and post-collection exploratory posture for `gpt-6-luna` judging and AI-triaged `in_progress` human calibration.
+* Local validation: all 58 authoring unit tests and `anc/check_paper.py` pass; Tectonic 0.17.0 compiles the 56-page `main.pdf` (Supplement page 46) with zero errors, zero unresolved references and zero overfull or underfull boxes.
+
+## [2026-11-14] update | Whitepaper readability and interpretation revision
+
+* Applied the owner's coherence review to the existing
+  [paper](../capstone/thought-leadership/everything-but-the-software/main.tex):
+  findings-led abstract/conclusion, completed judging methods, explicit
+  acquisition-versus-retention and CR1 definitions, corrected metric-target
+  claims and observed costs before the unchanged payback scenario.
+* Split the wide result tables into readable coverage, CR1, structural and
+  resource views. Detailed distributions, contrast bounds, size measures,
+  ratings, calibration and the fourteen-source ledger remain in the existing
+  Supplement. The original source pins, adverse records, result frame,
+  registration/amendment and missing-billing/assistance limits are preserved.
+* Numerical preservation passed 618 field, denominator, ledger and exact
+  CR1-bound checks against the staged results draft. All 60 authoring tests
+  and structural checks pass. The single rebuilt PDF has 60 pages,
+  Supplement page 44; all-page text bounds/nonblank checks and selected
+  rendered-page inspections pass. The inherited Tectonic `inputenc` notice
+  remains, with no unresolved references or overfull/underfull boxes.
+* The [dated revision](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#readability-and-interpretation-14-november)
+  records focused-tier validation and the new delivery binding, preserving
+  the prior results/PDF hashes. Local editorial work only: no experiment,
+  scoring, budget, registration, commit, push or approval action; hosted and
+  independent exact-head review remain unperformed.
+
+## [2026-11-14] update | Whitepaper attestation and companion-estimate refresh
+
+* Updated the existing
+  [paper](../capstone/thought-leadership/everything-but-the-software/main.tex)
+  and additive Supplement from matching local/online report blob
+  `f416316985c8dca20ad8955fe3c596db995c6276` at experiment commit
+  `bd75c1c2104d001d62f9fb2bb4feab438b86f763`. Owner attestation now covers
+  all 313 completed trajectories as unassisted; two partial C/E trajectories
+  still block the strict automated whole-study primary.
+* Added exploratory complete-pair coverage intervals (B-D `+1.1874` points,
+  95% interval `[+0.1000, +2.2247]`; B-A `+1.4123`, `[+0.3250, +2.4497]`),
+  model-specific coverage/CR1 intervals, allocation bounds and judge
+  contrasts with scenario-abstention counts. Kept finite-allocation bounds,
+  sampling intervals and observed-scenario estimands distinct; no source
+  overclaims, revised registration or independent attestation are adopted.
+* All 63 authoring tests and structural checks pass. Source verification
+  reproduces two pooled coverage and seven CR1 intervals, checks 128 judge
+  summaries within published precision, matches 241 new fields and preserves
+  all 886 v16 table fields. The single 64-page PDF starts its Supplement on
+  page 45; all-page bounds/nonblank and selected visual checks pass. Only
+  the inherited Tectonic `inputenc` notice remains.
+* The [dated revision](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#attested-report-refresh-14-november)
+  records sources, the rounding limit, focused-tier validation and the new
+  delivery binding without overwriting prior evidence. Local refresh only:
+  no experiment, scoring, candidate/judge sessions, commit, push or approval;
+  hosted CI and independent exact-head review remain unperformed.
+
+## [2026-11-14] update | Whitepaper finalization evidence and decision follow-up
+
+* Continued the owner-authorized [paper](../capstone/thought-leadership/everything-but-the-software/main.tex)
+  on the existing topic branch with exact Data Science and Engineering Coach
+  assessment, original-source research and scoped participant-name review.
+  Implemented resampling is explicit; dependence justification and actual
+  amendment chronology remain author decisions, without a new estimator.
+* Recorded original support and limits, including Laban v1's 39%/35% display
+  difference, institutional-abstract Besker support and unverified full Echoes
+  details. Active narrative/figure review found no additional named case
+  partners, customers or coworkers; credited public-source authors remain.
+* Read only allowlisted metadata in the author-named VM working copies. All
+  5,357 starts/durations/IDs/source commits and the matching v3 state/config
+  lineage are retained; no restart or new session was needed. This does not
+  establish service independence or recover unlogged historical build IDs.
+* Recorded owner-reported manager approval and 27 October CELA submission with
+  no reported objection, without claiming inspected final-version clearance.
+  The experiment GitHub repository is the selected deposit; dated v4/v6/v7
+  protocol assets remain, with final manifest/correspondence review outstanding.
+* All 66 authoring tests and structural checks pass; all 1,378 existing table
+  fields are preserved. The single 64-page PDF retains Supplement page 45,
+  in-page/nonblank checks and inspected changed/ledger/prompt pages. Only the
+  inherited `inputenc` notice remains. The
+  [dated record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#finalization-follow-up-14-november)
+  retains sources, dispositions, validation and separate v18 bindings. No
+  experiment, paid candidate/judge session, registration, remote mutation,
+  commit, push, publication or scientific/employer approval was performed;
+  hosted CI and independent exact-head review remain unperformed.
+
+## [2026-11-14] update | Whitepaper falsifiability critique and long-horizon experiment design
+
+* Applied the hypothesis-falsifiability critique to the
+  [paper](../capstone/thought-leadership/everything-but-the-software/main.tex)
+  and [protocol slice](../capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex)
+  on `docs/whitepaper-study-results`: replaced the elastic "can carry ... unless"
+  formulation with explicit testable predictions separating the short-horizon
+  decay premise (P1: not supported), the primary B-D coverage threshold
+  ($\Delta_*\geq10$ percentage points, P2: below threshold at $+1.19$ points,
+  $[0.10,2.22]$), and CR1/credit payback (P3: not supported) from the
+  structural manipulation check (`tab:predictionverdicts`).
+* Surfaced the per-model coverage split in the abstract, Section 7.9 and
+  Conclusion alongside the pooled estimate: GPT 6.1 Sol gained $+3.15$ points
+  ($[0.00,6.30]$, F9 ranking acquisition 12/21 vs 6/21), while Sonnet 5.5
+  ($+0.26$ points, $[-0.15,0.75]$) and Gemini 4 Argon ($+0.15$ points,
+  $[-0.15,0.52]$) B-D intervals span zero.
+* Added Section 8.5 (`sec:futureexperiment`) specifying a 30-to-40-cycle
+  brownfield service benchmark matched to the $N_{\mathrm{BE}}=\lceil 1+2k/\delta\rceil$
+  break-even horizon, $K\geq4$ branch-isolated Latin-square change requests,
+  a $2\times2$ factorial crossing behaviour-preserving refactoring and
+  explicit invariant review (plus test-suite mutability), and preregistered
+  block-bootstrap/mixed-effects falsification rules.
+* Documented the exact code and state mechanics blocking the two quarantined
+  trajectories (`pilot-estimation-gemini-4-argon-E-15` at 10/21 steps and
+  `pilot-estimation-gpt-6.1-sol-C-20` at 18/21 steps) and the non-destructive
+  14-step recovery and 8-call judging path in the
+  [revision record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#critique-and-falsifiability-revision-14-november).
+* All 67 authoring tests and structural checks pass; all 1,378 prior table
+  fields remain unchanged. The single 66-page v19 PDF (Supplement page 47)
+  has zero overfull boxes and visually inspected pages, with only the
+  inherited `inputenc` notice remaining. No experiment, VM mutation, paid
+  session, commit, push or publication occurred.
+
+## [2026-11-15] update | Final study results and human-readable chart directions
+
+* Updated the [paper package](../capstone/thought-leadership/everything-but-the-software/README.md#final-results-and-chart-interpretation-15-november)
+  from the final experiment report at `jmservera/ama-thought-mve` commit
+  `d097a10b`: all 315 trajectories, 5,355 measured steps and 5,372 attempts
+  across sixteen sources are complete. The owner-attested frame unlocks the
+  primary coverage estimate; two CR1 outcomes and 55 billing holds remain
+  unknown. Judging retains the earlier 313/315 snapshot rather than claiming
+  new calls or silently completed packets.
+* Added source-bound trajectory and outcome/cost charts, checked all 300
+  plotted cycle means against the committed series, corrected range clipping
+  and the Arms A-D denominator, and updated final tables and source bindings.
+* Added explicit higher/lower directions, zero/CI and practical-target cues,
+  missingness and billed-sample notes, and quality-matched cost interpretation
+  in graphics and captions. The native economics diagram explains earlier
+  payback and the k/delta direction under its assumed model. The triggered
+  hybrid policy remains proposed, not an observed combined-treatment result.
+* All 70 authoring tests, structural checks, chart geometry and native bindings
+  pass. The single 70-page PDF (Supplement page 51) has in-page/nonblank checks
+  and inspected figure, ledger and prompt pages. Only the inherited `inputenc`
+  notice remains. The [dated record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#final-results-and-chart-interpretation-15-november)
+  preserves prior candidate/revision bindings and reports the stale-assertion
+  repair and remaining evidence/approval limits. No experiment, paid call,
+  VM change, registration, commit, push or publication occurred; hosted CI
+  and independent exact-head review remain unperformed.
 ## [2026-11-13] update | Case safety panel usability (Closes #1530)
 
 * Added a safety issue card row to the component inventory in [design-system.md](research/ux/design-system.md) for the reworked case safety panel: labelled per-action forms, hints, a next-step callout and compact key facts.
@@ -11860,3 +12006,182 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added `RightsRequestLedger` (`record_rights_request`, `log_rights_action`, `answer_rights_request`, `rights_status`) persisted across `Store`, `SqlStore` (`meta` document `"rights_requests"`) and JSON files with one-calendar-month deadlines, `locate`/`export`/`erase` action logs, `subject_key`-free audit entries and strict `local_deleted` versus `provider_erasure_confirmed=False` separation.
 * Updated `src/core/README.md`, `docs/reference/research/chat-memory-dpia.md` and `docs/reference/README.md`; added focused unit tests in `src/core/tests/test_data_protection.py`. Local engineering evidence only; DPO and Legal sign-offs remain open (`dpo_reviewed=False`, `Refs #121`).
 
+## [2026-11-14] update | Issue #233 tension callouts and same-home stage statement (Refs #233)
+
+* Added plain-language "Tension: continuity versus disclosure" and "Tension: utilisation versus choice" callouts to `programme-queue`, `resident-choice` and `procurement-packages`, labelled atlas hypotheses pending #155 with a text status line and no role simulator.
+* The programme-queue journey stage map now states that every link carries the one selected home and that separate example homes are never stages of it. Updated [atlas-screen-trace.md](research/ux/atlas-screen-trace.md); new test `src/api/tests/test_role_screens_tensions_same_home.py`. Engineering trace only: no browser, assistive-technology or user evidence; the criteria are not ticked.
+
+## [2026-11-14] update | Issue #233 same-home stage map on every role screen (Refs #233)
+
+* The eight-stage "Journey stages for <home>" map, previously only on the `programme-queue` home view, now follows the evidence on every other role screen once a home is selected. Links carry the one selected case reference; the current screen is written as text, a screen outside the stages says so, and stage screens not installed for the role stay text with owner and next action. Updated [atlas-screen-trace.md](research/ux/atlas-screen-trace.md); new test `src/api/tests/test_role_screens_connected_journey.py`. Node render evidence only: no browser, assistive-technology or user evidence; Criterion 2 stays unticked.
+
+## [2026-11-14] update | Issue #233 stage map names and current-step announcement (Refs #233)
+
+* The role-screen journey stage list is now named "Eight journey stages for <home>" and marks the current stage with `aria-current="step"` once (resident-choice serves two stages), alongside the existing text cue. New test `src/api/tests/test_role_screens_stage_map_focus.py` also pins no added tab stops or nested headings and the text status line on tension callouts. Node render evidence only: no browser, assistive-technology or user evidence; Criterion 2 stays unticked.
+
+## [2026-11-14] update | Issue #156 screen design traceability matrix (Refs #156)
+
+* Added [screen-design-traceability.md](research/ux/screen-design-traceability.md): one row per role screen, the chat panel and the alert surface for #225 to #233, #159 and #215, linking journey, task flow, design artefact, a test and the named design gap. Indexed in the knowledge base README.
+* New test `src/api/tests/test_screen_design_traceability.py` checks that every registered role screen has a row and that links, anchors and tests exist. It asserts no human, accessibility or content acceptance; criterion 1 of #156 stays unmet and the design review gate Blocked.
+
+## [2026-11-15] create | Issue #134 profile journey contract and connected same-home journey acceptance (Refs #134)
+
+* Added [profile-journey-contract.md](research/ux/profile-journey-contract.md) and indexed it in [README.md](README.md): documents the five-element profile journey contract across the eleven PRD perspectives plus connected same-home invariants (`check_shared_facts`, `check_vulnerability_redaction`, `check_handover_dependencies`, `check_next_action_continuity`, `project_same_home_bundle`, `validate_same_home_walk`) in `src/core/src/zava_forward/core/profile_journey_contract.py` and selected-home `Current owner` / `Next action` continuity on staff specialist views in `src/api/src/zava_forward/api/web/role-screens.js`.
+* Verified on constructed synthetic data by `src/core/tests/test_profile_journey_contract.py` and `src/api/tests/test_same_home_profile_journey_acceptance.py` across the six staff profiles, `Programme Support Officer`, assigned and unassigned `Contractor` views and the live read-only `ResidentPreview` portal (`GET /resident/view`). Engineering shape evidence only (`accepted = False`); `AC-034` to `AC-043`, live perspective walkthroughs (#155), assistive-technology runs (#151) and human/resident approval boundaries remain `not-established`.
+
+## [2026-11-15] update | Issue #135 exception queue WCAG baseline and export inventory alignment (Refs #135)
+
+* Recorded the dated source audit of the `#/exceptions` exception recovery audit-reason field (ninth `aria-invalid` site) and competing source values table (fourteenth script-built table) in [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md), and refreshed its [index](README.md) row.
+* Updated the counted guards in `src/api/tests/test_accessibility_baseline.py` and `src/api/tests/test_epic149_form_error_summary_associations.py`, added a static wiring test for the recovery audit-reason field, and classified the `POST` decision endpoint `/api/exceptions/recovery` in `src/api/tests/test_list_export_inventory.py` alongside the existing exception register summary export.
+* Source and Node-VM engineering evidence only: no screen-reader, assistive-technology, 320 px reflow, zoom or manual acceptance claim, no WCAG conformance claim, and no `#135` human criterion ticked.
+
+## [2026-11-15] update | Issue #229 data steward and operator WCAG keyboard jump navigation, row headers and textual state labels (Refs #229)
+
+* Updated `data-operator` and `exceptionRegisterPanel` in `src/api/src/zava_forward/api/web/role-screens.js` with `nav[aria-label]` keyboard jump links (`a[data-jump]`), `section[tabindex="-1"]` targets across selected-home and overview compositions, `th[scope="row"]` record headers via `screenRecordTable` across all eight stewardship and exception-register tables, and fail-closed `State:` and `Source state:` textual labels across conflicts, returns, handoff, blockers, event dispositions, recovery context and the exception register.
+* Expanded `src/api/tests/test_data_steward_screen_wcag.py`, aligned `src/api/tests/test_exception_register_screen.py` row-header assertions, and recorded the engineering slice in [customer-journeys/data.md](research/ux/customer-journeys/data.md#data-screens-delivery-status-2026-11-04-229). Local automated evidence on synthetic data only: assistive-technology testing and human review under #151 and #155 remain open, so no WCAG conformance claim is made and the #229 accessibility criterion remains unticked.
+
+## [2026-11-14] update | Issue #110 distinct device identity, schema version and stable reading ID
+
+* Added producer-side validation (`Reading.validate`, `require_distinct`, `validate_row`) in core, refusal of duplicate homes and invalid rows in the API live simulator, and cohort tests. Local offline evidence only; no live IoT Hub run. RPI artifacts are under `.copilot-tracking/*/2026-11-14-iot-distinct-device-identity-*`.
+## [2026-11-15] update | Issue #159 conversational assistant keyboard, focus and live-region verification (Refs #159)
+
+* Added `src/api/tests/test_assistant_panel_a11y_159.py` (leaving `chat-widget.js`, `chat.js`, `role-screens.js`, `panels.js` and stylesheets unchanged) to verify keyboard-only operability, focus management, `revealBeside` overlap scroll clearance, Chromium CDP `Accessibility.getFullAXTree` semantics and `MutationObserver` polite live-region announcements across `#employee-chat-launcher`, `#employee-chat`, `#chat-panel` and `#workspace-status` using both unconditional Node-VM + real Python `ChatPanel` payloads and rendered headless Chromium on constructed synthetic data.
+* Recorded the dated verification boundary in [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md#conversational-assistant-panel-keyboard-and-live-region-check-2026-11-15-159) (including aligned `Keyboard`, `Name, role, value`, `Status messages` and `Focus not obscured` audit notes) and refreshed its [index](README.md) row. Automated browser accessibility-tree and DOM live-region evidence only: desktop NVDA/Firefox and VoiceOver/Safari runs, 400% zoom checks and human acceptance under [production-ux-acceptance-protocol.md](research/ux/production-ux-acceptance-protocol.md) (#151, #155, #619) remain `Not run`, so no WCAG 2.2 conformance claim is made.
+
+## [2026-11-15] update | Issue #151 workbench WCAG 2.2 baseline audit and accessible equivalents (Refs #151, #119)
+
+* Expanded [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md) and refreshed its [index](README.md) entry with a structured eight-dimension WCAG 2.2 AA workbench audit (keyboard operation, focus order and visibility, name/role/value and non-colour cues, status messages, contrast, reflow and zoom, target size, and error identification), a complete accessible-equivalents register covering `mapPanel`, Overview `bars()` SVG charts, `ProgressViews` `<meter>` charts, coordinator heatmap/funnel, journey steppers, and all 15 script-built table builders, and explicit recorded gaps including `/law.html`.
+* Hardened workbench web assets under `src/api/src/zava_forward/api/web/`: disambiguated `bars()` disclosure summaries and added `.table-scroll` wrappers and empty-state rows (`app.js`), added a synchronized `[data-maplist-empty]` zero-item notice in `mapPanel` (`app.js`), added series-qualified `aria-label` text on `ProgressViews` `<meter>` bars (`progress.js`), completed `<caption class="sr-only">`, `.table-scroll` focusable regions, and `<th scope="row">` headers across `ops.js` (`sensorTable`, `packagesView`), `panels.js`, `app.js`, and `role-screens.js` (`screenTable` defaulting `rowHeader = true`), added a `.skip-link` bypass anchor on `welcome.html`, and added 24px/40px target-size rules plus `var(--muted)` contrast cleanup in `style.css`.
+* Updated `src/api/tests/test_accessibility_baseline.py` (15 captioned tables, 3 HTML zoom/language checks, expanded target-size selectors) and added `src/api/tests/test_wcag_workbench_baseline_151.py` exercising static invariants and Node-VM DOM parity. Engineering baseline evidence on synthetic data only: live assistive-technology, screen-reader, and human acceptance runs (#155) and owner target confirmation remain open, and no WCAG 2.2 conformance claim is made.
+## [2026-11-15] update | Issue #155 usability testing programme specification and deterministic core evaluator (Refs #155)
+
+* Upgraded [usability-test-programme-plan.md](research/ux/usability-test-programme-plan.md) in place (`ms.date: 2026-11-15`), added `src/core/src/zava_forward/core/usability_programme.py` and `src/core/tests/test_usability_programme.py`, documented the contract in `src/core/README.md`, linked the specification test in [design-system.md](research/ux/design-system.md), and refreshed [README.md](README.md).
+* Enforces 5 to 8 target participants across all 13 representative role cohorts (10 internal staff perspectives, external contractor, voluntary resident and authorised representative, with `T0` scoped to staff/contractor workbenches) plus a separate 2 to 3 `proxy-pilot` cohort, eight accessibility-support clauses and four assistive-technology routes, eight voluntary separate consent and synthetic-only data-handling clauses, 21 live-derived scripts (`T0`, `T1` to `T8`, `R-J1` to `R-R1`, `B1` to `B5`) from `profile_journey_contract`, `perspective_walkthroughs`, `journey_register` and `learning_test_bundles` (excluding `O10`, `O18` to `O20`), `SA-010` prior `named_human` staff agreement and sub-5 `None` cell masking, mandatory GitHub backlog issue links on `UF-NNN` findings, and a separate `Synthetic walkthrough - not user validation` (`not_user_validation = True`) baseline retaining `supported`, `not_supported` and `inconclusive` outcomes.
+* All human participant sessions, owner plan ratification, written `SA-010` staff agreement and DPO retention decisions remain `Not run` (`Refs #155` only; no human usability acceptance or WCAG conformance claim is made).
+
+
+## [2026-11-15] update | White-paper provenance register and readable context
+
+* Revised the [paper package](../capstone/thought-leadership/everything-but-the-software/README.md#provenance-and-readability-15-november)
+  to move all 61 distinct printed provenance identifiers into one linked end
+  register: 19 SHA-256 digests and 42 Git commit/tree/blob IDs. Each retains its
+  original value, object type and historical/final scope.
+* Added local arm keys and checkpoint, acquisition/retention and uncertainty
+  explanations; shortened repeated summaries and the source/AI-assistance
+  history. Detailed results, original disclosures, frozen prompts and author
+  TODOs remain intact. Future designs and the hybrid practice package remain
+  proposed, with approval and publication boundaries explicit.
+* All 72 authoring tests and structural checks pass. Comparison preserves
+  1,454 fields across 34 tables, seven displayed equations and three prompt
+  files. The single PDF remains 70 pages: Supplement page 48, end register
+  pages 68-70, with all destinations/in-page/nonblank checks and selected
+  renders inspected. Only the inherited `inputenc` notice remains.
+* The [dated review](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#provenance-and-readability-15-november)
+  records scope, checks, the wording-assertion repair and unchanged scientific
+  limits. The separate v21 binding preserves v20 and every earlier record.
+  No experiment, paid call, VM mutation, scoring/registration change, commit,
+  push or external publication occurred; hosted CI and independent exact-head
+  review remain unperformed.
+
+## [2026-11-15] update | White-paper narrative, learning and TODO disposition
+
+* Revised the [paper package](../capstone/thought-leadership/everything-but-the-software/README.md#narrative-learning-and-todo-reconciliation-15-november)
+  around the interrupted workflow, explicit hypotheses, mostly stable retention
+  and selective benefits, then methodological learning for a later paper.
+  Attributed author reflections and the full-RPI hypothesis remain distinct
+  from observed findings. Longer tasks and greater spending require a new
+  approved study, not a retroactive protocol change.
+* Moved detailed theory, assumed economics, future-design/hybrid candidates
+  and historical resource arithmetic into the existing additive Supplement.
+  The single PDF has 72 pages, with the Supplement starting on page 45,
+  three pages earlier than v21. All 34 existing table data bodies, seven
+  displayed equations, three prompts, 61 source bindings and unchanged
+  empirical/chart/diagram assets are preserved.
+* Recorded the [author-TODO disposition and remaining-work plan](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#narrative-learning-and-todo-reconciliation-15-november):
+  acknowledgement receipt is corrected to 14 November; an expected response
+  by 29 November is not clearance. Selected excerpt permission is scoped,
+  unsupported acknowledgements removed, and final-version author/employer
+  approval, arXiv/deposit checks and source verification remain separate.
+  Public scheduling/export inspection does not replace pending VM chronology
+  or establish independent provider conditions.
+* Structural checks pass; 72 of 73 authoring tests pass. The native browser
+  diagram-export test failed because its browser was unavailable; the
+  incomplete task-local download was stopped. Tectonic compilation and
+  nonblank/in-bounds/reference checks pass with only the inherited `inputenc`
+  notice; selected PDF renders were inspected. A coupled body-word counter
+  fix has one focused regression. The new v22 binding preserves earlier
+  records. No new experiment, paid call, VM access, scoring or registration
+  change, external submission, hosted CI or independent exact-head review
+  was performed.
+## [2026-11-14] update | Registered screen to journey, task flow and design artefact map (Refs #156)
+
+* Added a dated, additive map to the [Prototype Profile Review](research/ux/zava-forward-prototype-profile-review.md#registered-screen-to-journey-task-flow-and-design-artefact-map-2026-11-14-refs-156): sixteen registered screens and routes, each with a journey link and a task flow or named gap; twelve link a written design record.
+* No versioned reviewable design is supplied, the 74-row register and Blocked gate are unchanged, and #156 criterion 1 stays unticked. No design, accessibility, content or user acceptance is claimed.
+
+## [2026-11-14] fix | Correct registered screen map counts (Refs #156)
+
+* Corrected the screen map prose to sixteen rows (thirteen employee plus three resident) with thirteen linking a written design record, and linked the `programme-queue-paging-v1` proposal for `programme-queue`. No acceptance or human gate is claimed.
+
+## [2026-11-16] add | Resident demo threat model for the synthetic Azure showcase (Refs #462)
+
+* Added the [threat model](research/resident-demo-threat-model-2026-11-16.md) covering public fake-email login, the shared demo credential, session handling, cross-case access, database fields and deployment isolation, and linked it from the showcase section of the API README and this index.
+* Local checks recorded in the dated RPI changes record. No Azure mutation, deployment or spend occurred; criteria needing owner pre-spend approval, hosted checks and coordinator assessment stay unmet. No security acceptance is claimed.
+
+## [2026-11-16] update | Plain-language paper and active Supplement revision
+
+* Reviewed all 70 active sections/subsections of the
+  [paper and ancillary TeX inputs](../capstone/thought-leadership/everything-but-the-software/README.md#human-readability-source-revision-16-november)
+  for computer scientists and data scientists using LLMs in the SDLC.
+  Clarified measurement terms and shortened dense qualifications while
+  preserving scientific uncertainty, results and study design.
+* Preserved seven displayed equations, all 40 table environments, three
+  prompts, citations, bibliography, 61 source bindings and author TODOs.
+  Added a source-only revision binding with prior digests retained.
+* Structural checks and 73 of 74 authoring tests pass. The unchanged native
+  diagram exporter requires an unavailable browser. A separate 73-page PDF
+  passes nonblank, page-boundary and unresolved-reference checks; seven
+  rendered pages were inspected. Only the inherited `inputenc` warning remains.
+  The existing PDF changed outside this build and is left uncommitted with
+  owner confirmation. No experiment, scoring or protocol change occurred;
+  scientific review, hosted CI and final approvals remain separate.
+
+## [2026-11-16] lint | Conservative scientific-prose follow-up
+
+* Checked the article and seven active imported TeX inputs, including the
+  owner's staged abstract revision. Further edits are limited to wording in
+  the article and sentence rhythm in the Supplement introduction.
+* Updated the [paper guide](../capstone/thought-leadership/everything-but-the-software/README.md#conservative-prose-follow-up-16-november),
+  revision record, current-source binding, matching digest guard and index.
+  Prior bindings are unchanged. Direct intake comparison preserves tables,
+  equations, citations, labels, numeric tokens, literal inputs and comments.
+* Structural checks and 73 of 74 package tests pass. The unchanged diagram
+  exporter cannot import `esbuild`, as at intake. No compiler is available
+  on PATH; no new PDF or layout review is claimed. The existing PDF is
+  byte-for-byte unchanged. Independent review, hosted CI and final approvals
+  remain separate.
+* Independent review of the first prose-pass commit found an inherited
+  strict-bound error in the abstract. Corrected below ten to at most ten,
+  matching the methods and results without changing observations. The
+  original finding is retained in the revision record.
+
+## [2026-11-16] update | Apply approved paper copy-review recommendations
+
+* Applied the five approved findings to the article and two active TeX inputs:
+  study-scoped wording, earlier historical-reporting context, explicit
+  first-person attribution, provenance-verification limits and descriptive
+  Gemini CR1 wording. Results, equations, citations and scientific uncertainty
+  are preserved.
+* Updated the [paper guide](../capstone/thought-leadership/everything-but-the-software/README.md#copy-review-recommendations-16-november),
+  revision record, index and additive source binding. The active Supplement
+  content digest is refreshed with its preceding value retained; dated
+  historical bindings are unchanged.
+* Structural checks and 73 of 74 package tests pass. The unchanged diagram
+  exporter cannot import `esbuild`. No compiler is available on PATH;
+  the existing PDF is unchanged and no new layout review is claimed.
+  Independent review, hosted checks and final approvals remain separate.
+
+## [2026-11-17] update | Resident demo threat model addendum after main integration (Refs #462)
+
+* Added the [threat model update](research/resident-demo-threat-model-update-2026-11-17.md) for main `1c9ac230`: the derived sensor `freshness`, `source` and `calibrated` keys, the validation provenance table separating historical, original and newly witnessed evidence, and the unproved items. The 2026-11-16 threat model is preserved unchanged and linked from this index.
+* Qualified the API README sentence about the resident sensor status badge and source line (empty history shows neither; stale history replaces the badge with a caution). Documentation only.
+* The candidate was brought onto main by a non-rewriting merge; no source file was edited by hand. No Azure mutation, deployment, spend, secret read or model call occurred. Hosted checks, the complete current-base gate, SQL, image and browser acceptance and independent review remain separate.

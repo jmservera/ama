@@ -8,6 +8,7 @@ import sys
 import tempfile
 import threading
 import unittest
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -74,7 +75,7 @@ class ResidentHttp(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.tmp = tempfile.TemporaryDirectory(prefix="ama444-http-")
         cls.root = Path(cls.tmp.name) / "fixture"
-        build(cls.root)
+        build(cls.root, as_of=date.today())
         cls.grants = cls.root / "grants.json"
         cls.store, cls.work = rp.open_store(cls.root / "dataset.json")
         cls.servers = {}
@@ -266,7 +267,7 @@ class CommandLine(unittest.TestCase):
     def test_refuses_unsafe_configuration(self) -> None:
         with tempfile.TemporaryDirectory(prefix="ama444-cli-") as tmp:
             root = Path(tmp) / "fixture"
-            build(root)
+            build(root, as_of=date.today())
             base = ["--data-dir", str(root), "--subject", "SYN-RES-A"]
             saved = dict(os.environ)
             try:

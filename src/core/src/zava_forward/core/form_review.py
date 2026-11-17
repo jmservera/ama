@@ -63,6 +63,21 @@ def _valid(value: object, field: Record) -> bool:
     return kind == "string" and isinstance(value, str)
 
 
+def _reviewer_confirmed(draft: Record, fid: str, row: Record) -> bool:
+    """A value counts as confirmed only when a reviewer event recorded exactly it."""
+    events = [e for e in draft["history"] if e["field_id"] == fid]
+    if not events:
+        return False
+    last = events[-1]
+    return (
+        last["decision"] in ("accept", "correct")
+        and isinstance(last["reviewer"], str)
+        and bool(last["reviewer"])
+        and last["new"]["state"] == row["state"]
+        and _equal(last["new"]["value"], row["value"])
+    )
+
+
 def _schema(store: Any, sid: object, version: object) -> Record:
     forms._id(sid)
     forms._positive(version)
@@ -376,7 +391,11 @@ def _report(store: Any, case: Record, draft: Record, digests: Digests | None = N
         else:
             row["effective_state"] = row["state"]
         if row["effective_state"] in ("Accepted", "Corrected"):
-            if _valid(row["value"], field):
+            if not _reviewer_confirmed(draft, fid, row):
+                issues.append(
+                    dict(field_id=fid, status="Fail", reason="Value lacks reviewer confirmation.")
+                )
+            elif _valid(row["value"], field):
                 if not isinstance(row["value"], str) or row["value"].strip():
                     confirmed[fid] = row["value"]
             else:
@@ -440,7 +459,11 @@ def _report(store: Any, case: Record, draft: Record, digests: Digests | None = N
         (
             event["new"]["evidence"]["source"]["id"],
             event["new"]["evidence"]["source"]["version"],
-        ): deepcopy(event["new"]["evidence"]["source"])
+        ): dict(
+            deepcopy(event["new"]["evidence"]["source"]),
+            template_version=schema["template"]["version"],
+            input_version=draft["version"],
+        )
         for event in draft["history"]
         if event["new"]["evidence"] is not None
     }

@@ -203,6 +203,59 @@ SENSOR_MSSQL_REQUIRED_TESTS = _sql_tests(
 SENSOR_MSSQL_DISCOVERY_SKIPS = frozenset(
     (name, SENSOR_MSSQL_SKIP_REASON) for name in SENSOR_MSSQL_REQUIRED_TESTS
 )
+SQL_OPT_IN_FLAGS = {
+    "ZF_STAFF_INTAKE_MSSQL": "1",
+    SENSOR_MSSQL_FLAG: "1",
+    "ZF_SENSOR_DRAFT_MSSQL": "1",
+}
+SQL_OPT_IN_CLASSES = (
+    "test_staff_intake_api.MssqlStaffIntakeApi",
+    "test_live_receiver_sql.ReceiverMinimumGrantTests",
+    "test_sensor_review_draft.MssqlDraftCases",
+)
+BROWSER_OPT_IN_CLASSES = (
+    "test_handoff_read_guidance.HandoffReadGuidanceBrowser",
+    "test_timecapture_copy.StaffTimeGuidanceBrowser",
+    "test_handoff_waiting_view.WaitingViewBrowser",
+    "test_atlas_tensions_checker.DesignVersionBrowserTests",
+    "test_unaccepted_handoff_download_ui.UnacceptedDownloadBrowser",
+)
+# The runner holds the shared heavy-resource lock for the whole gate; two browser classes would
+# otherwise try to take it again from a child process and skip.
+HEAVY_LOCK_HELD_FLAG = "ZF_HEAVY_LOCK_HELD"
+AXE_BROWSER_CLASS = "test_staff_intake_browser.StaffIntakeBrowser"
+PUBLIC_SIMULATION_MODULE = "test_public_simulation_startup"
+PUBLIC_SIMULATION_CLASS = f"{PUBLIC_SIMULATION_MODULE}.PublicSimulationStartupTests"
+PUBLIC_SIMULATION_SKIP = (
+    "Docker, Azure CLI with Bicep and ZF_API_IMAGE are needed to execute the recipe"
+)
+# Skips tolerated in a discovery group only for these exact (module.Class, reason) pairs. Each
+# opt-in pair is bound to a required zero-skip execution in the mssql, browser or image group
+# (REQUIRED_CLASS_STEPS); the not-applicable pairs are the other store variant of a shared test.
+DISCOVERY_SKIPS: dict[str, frozenset[tuple[str, str]]] = {
+    "project-core": frozenset(
+        {
+            ("test_sensor_review_draft.MssqlDraftCases", "requires ZF_SENSOR_DRAFT_MSSQL=1"),
+            ("test_resident_decisions.JsonResidentDecisions", "SQL replay only"),
+        }
+    ),
+    "project-api": frozenset(
+        {
+            (
+                "test_staff_intake_api.MssqlStaffIntakeApi",
+                "needs the task-owned loopback SQL Server (ZF_STAFF_INTAKE_MSSQL=1)",
+            ),
+            ("test_live_receiver_sql.ReceiverMinimumGrantTests", "needs the task-owned SQL Server"),
+            (
+                "test_staff_intake_api.JsonStaffIntakeApi",
+                "the commit-time read dependency is an SQL store contract",
+            ),
+            (AXE_BROWSER_CLASS, "needs ZF_STAFF_INTAKE_BROWSER=1 and ZF_AXE_PATH"),
+            *((name, "opt-in local Chromium") for name in BROWSER_OPT_IN_CLASSES),
+        }
+    ),
+    "infra": frozenset({(PUBLIC_SIMULATION_CLASS, PUBLIC_SIMULATION_SKIP)}),
+}
 # Explicit sensor MSSQL suite imports or exercised store-initialization definitions no path
 # keyword selects. Not exhaustive or transitive.
 SENSOR_MSSQL_DIRECT_DEPENDENCIES = frozenset(
@@ -211,6 +264,25 @@ SENSOR_MSSQL_DIRECT_DEPENDENCIES = frozenset(
         "src/core/tests/dataset.py",
         "src/core/src/zava_forward/core/synthetic/__init__.py",
         "src/core/src/zava_forward/core/synthetic/indoor_projection.py",
+    )
+)
+# Test modules whose opt-in classes run only in a dedicated group; changing one selects it.
+OPT_IN_TEST_GROUPS = {
+    "src/api/tests/test_staff_intake_api.py": "mssql",
+    "src/api/tests/test_live_receiver_sql.py": "mssql",
+    "src/core/tests/test_sensor_review_draft.py": "mssql",
+    "src/api/tests/test_handoff_read_guidance.py": "browser",
+    "src/api/tests/test_timecapture_copy.py": "browser",
+    "src/api/tests/test_handoff_waiting_view.py": "browser",
+    "src/api/tests/test_atlas_tensions_checker.py": "browser",
+    "src/api/tests/test_unaccepted_handoff_download_ui.py": "browser",
+    "src/api/tests/test_staff_intake_browser.py": "browser",
+}
+# Infra paths that change the rendered API startup recipe the image-api group executes.
+PUBLIC_SIMULATION_INFRA_PATHS = frozenset(
+    (
+        "infra/tests/test_public_simulation_startup.py",
+        "infra/tests/test_bicep_policy.py",
     )
 )
 SQL_NOT_APPLICABLE = {
@@ -733,6 +805,8 @@ def changed_groups(paths: list[str], extras: list[str]) -> list[str]:
             selected.add("tooling")
         elif path.startswith("infra/"):
             selected.add("infra")
+            if path.endswith(".bicep") or path in PUBLIC_SIMULATION_INFRA_PATHS:
+                selected.add("image-api")
         elif len(parts) > 2 and parts[0] == "src" and parts[1] in PROJECTS:
             project = parts[1]
             consumers = (
@@ -752,6 +826,8 @@ def changed_groups(paths: list[str], extras: list[str]) -> list[str]:
                     selected.add("logo-0600")
             if project == "api" and ("/web/" in path or parts[2] == "checks"):
                 selected.add("browser")
+            if path in OPT_IN_TEST_GROUPS:
+                selected.add(OPT_IN_TEST_GROUPS[path])
             if project in ("core", "api") and (
                 "requirements" in path.lower() or parts[2] == "pyproject.toml"
             ):
@@ -1181,6 +1257,28 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         integration=True,
     )
     add(
+        [python, "-m", "unittest", "-v", *BROWSER_OPT_IN_CLASSES],
+        "src/api",
+        env={
+            "PYTHONPATH": test_paths("api", True),
+            "ZF_BROWSER_TESTS": "1",
+            HEAVY_LOCK_HELD_FLAG: "1",
+        },
+        suite=True,
+        integration=True,
+    )
+    add(
+        [python, "-m", "unittest", "-v", AXE_BROWSER_CLASS],
+        "src/api",
+        env={
+            "PYTHONPATH": test_paths("api", True),
+            "ZF_STAFF_INTAKE_BROWSER": "1",
+            "ZF_AXE_PATH": "<output>/axe-4.10.3.min.js",
+        },
+        suite=True,
+        integration=True,
+    )
+    add(
         [python, "-c", BROWSER_ENTRY, "checks.design_system_browser_check"],
         "src/api",
         env={"PYTHONPATH": "<output>/safety"},
@@ -1291,6 +1389,14 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         integration=True,
         timeout=1800,
     )
+    add(
+        [python, "-m", "unittest", "-v", *SQL_OPT_IN_CLASSES],
+        "src/api",
+        env={**sqlenv, **SQL_OPT_IN_FLAGS},
+        suite=True,
+        integration=True,
+        timeout=1800,
+    )
     add(["docker", "rm", "-f", sql["container"]])
     for name in (*[f"image-{p}" for p in IMAGES], "logo-0600"):
         if name not in groups:
@@ -1318,6 +1424,15 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         )
         if name == "logo-0600":
             continue
+        if project == "api":
+            add(
+                [py("namespace"), "-m", "unittest", "-v", PUBLIC_SIMULATION_CLASS],
+                "infra/tests",
+                env={"REQUIRE_AZ_BICEP": "1", "ZF_API_IMAGE": tag},
+                suite=True,
+                integration=True,
+                timeout=1800,
+            )
         args = [
             "trivy",
             "image",
@@ -1460,6 +1575,7 @@ def verify_commands(root: Path, out: Path, receipt: dict[str, Any]) -> None:
                         else None
                     ),
                     required_tests=required_sql_tests(check["argv"]),
+                    required_classes=required_classes(check["argv"]),
                 )
                 if counts["executed"] <= 0 or any(row.get(k) != v for k, v in counts.items()):
                     raise GateError("Required suite result evidence missing/mismatched")
@@ -1606,6 +1722,61 @@ def required_sql_count(argv: list[str]) -> int | None:
     return len(SENSOR_MSSQL_REQUIRED_TESTS) if argv[-1:] == [SENSOR_MSSQL_SELECTOR] else None
 
 
+def required_classes(argv: list[str]) -> tuple[str, ...]:
+    """Opt-in test classes this command must execute, named as unittest selectors in argv."""
+    known = (
+        *SQL_OPT_IN_CLASSES,
+        *BROWSER_OPT_IN_CLASSES,
+        AXE_BROWSER_CLASS,
+        PUBLIC_SIMULATION_CLASS,
+    )
+    return tuple(name for name in known if name in argv)
+
+
+def _classes_executed(text: str, classes: tuple[str, ...]) -> bool:
+    """Every named class reports at least one test and each of its tests ends in ok."""
+    lines = merge_docstring_headers(text).splitlines()
+    headers = [i for i, line in enumerate(lines) if re.match(r"(.+?) \.\.\. ", line)]
+    end = next(
+        (i for i, line in enumerate(lines) if re.match(r"Ran \d+ tests? in ", line)),
+        None,
+    )
+    if end is None:
+        return False
+    for name in classes:
+        pattern = re.compile(rf"\w+ \({re.escape(name)}\.\w+\) .*\.\.\. ")
+        starts = [i for i in headers if i < end and pattern.match(lines[i])]
+        if not starts:
+            return False
+        for start in starts:
+            stop = min([i for i in headers if i > start] + [end])
+            if not _region_passed([lines[start].split(" ... ", 1)[1], *lines[start + 1 : stop]]):
+                return False
+    return True
+
+
+def merge_docstring_headers(text: str) -> str:
+    """Verbose unittest prints a test with a docstring as its id line, then the docstring result."""
+    return re.sub(r"(?m)^(\w+ \([\w.]+\))\n(?=.+ \.\.\. )", r"\1 ", text)
+
+
+def skip_class(test: str) -> str:
+    match = re.search(r"\w+ \(([\w.]+)\.\w+\)", test)
+    return match[1] if match else ""
+
+
+def skip_allowed(skip: dict[str, str], group: str, integration: bool) -> bool:
+    test, reason = skip["test"], skip["reason"]
+    bound = (skip_class(test), reason) in DISCOVERY_SKIPS.get(group, frozenset())
+    if integration:
+        return (test, reason) in SQL_NOT_APPLICABLE or (group == "infra" and bound)
+    if bound or (group == "project-core" and (test, reason) in SENSOR_MSSQL_DISCOVERY_SKIPS):
+        return True
+    if reason == CHAT_PANEL_DISCOVERY_SKIP[1]:
+        return group == "project-api" and (test, reason) == CHAT_PANEL_DISCOVERY_SKIP
+    return reason in EXPECTED_SKIP_REASONS
+
+
 def check_employee_chat_log(output: str) -> None:
     if EMPLOYEE_CHAT_PASS not in output or "skipped" in output.lower():
         raise GateError("Required employee chat browser evidence missing/skipped")
@@ -1636,29 +1807,18 @@ def check_skips(
     expected_test: str | None = None,
     expected_count: int | None = None,
     required_tests: tuple[str, ...] | None = None,
+    required_classes: tuple[str, ...] = (),
 ) -> dict[str, Any]:
     counts = re.findall(r"Ran (\d+) tests? in ", text)
     skips = [
         {"test": match[0], "reason": match[1]}
-        for match in re.findall(r"(?m)^(.+?) \.\.\. skipped ['\"](.+?)['\"]$", text)
+        for match in re.findall(
+            r"(?m)^(.+?) \.\.\. skipped ['\"](.+?)['\"]$", merge_docstring_headers(text)
+        )
     ]
     if not counts or int(counts[-1]) == 0:
         raise GateError("Unittest command did not report an executed suite")
-    if (
-        integration and any((s["test"], s["reason"]) not in SQL_NOT_APPLICABLE for s in skips)
-    ) or any(
-        s["reason"] not in EXPECTED_SKIP_REASONS
-        and not (
-            group == "project-core"
-            and (s["test"], s["reason"]) in SENSOR_MSSQL_DISCOVERY_SKIPS
-            and not integration
-        )
-        or (
-            s["reason"] == CHAT_PANEL_DISCOVERY_SKIP[1]
-            and (group != "project-api" or (s["test"], s["reason"]) != CHAT_PANEL_DISCOVERY_SKIP)
-        )
-        for s in skips
-    ):
+    if not all(skip_allowed(s, group, integration) for s in skips):
         raise GateError(f"Unexpected required integration/dependency skip: {skips}")
     summary = re.findall(r"(?m)^OK(?: \((.*?)\))?$", text)
     if not summary:
@@ -1681,6 +1841,8 @@ def check_skips(
         )
     if required_tests is not None and not _required_tests_passed(text, required_tests):
         raise GateError("Required actual SQL chat test execution evidence missing/mismatched")
+    if required_classes and (skips or not _classes_executed(text, required_classes)):
+        raise GateError("Required opt-in class zero-skip execution evidence missing/mismatched")
     return {
         "tests": int(counts[-1]),
         "executed": int(counts[-1]) - len(skips),
@@ -1943,6 +2105,7 @@ class Runner:
                         else None
                     ),
                     required_tests=required_sql_tests(argv),
+                    required_classes=required_classes(argv),
                 )
             )
         if EMPLOYEE_CHAT_BROWSER_MODULE in argv:
@@ -1995,16 +2158,16 @@ class Runner:
             ]
         self.command(args, timeout=1200)
         self.metadata_cleanup()
-        if name == "api":
-            self.install_bytecode_policy()
+        self.install_bytecode_policy(name)
         self.command([*pip, "check"])
 
-    def install_bytecode_policy(self) -> None:
-        # Unchanged harness servers scrub their environment, including bytecode settings, and
-        # first run during API test discovery, so the policy must exist from venv creation.
+    def install_bytecode_policy(self, name: str) -> None:
+        # Unchanged harness servers and tests scrub their child environment, including bytecode
+        # settings, so every venv needs the policy from creation (#1215, #1297).
         bytecode_policy = "import sys; sys.dont_write_bytecode = True\n"
-        (self.out / "browser-bytecode-policy.pth").write_text(bytecode_policy)
-        (self.envs / "api/lib/python3.12/site-packages/00-rpi-bytecode.pth").write_text(
+        if name == "api":
+            (self.out / "browser-bytecode-policy.pth").write_text(bytecode_policy)
+        (self.envs / name / "lib/python3.12/site-packages/00-rpi-bytecode.pth").write_text(
             bytecode_policy
         )
 
@@ -2405,6 +2568,17 @@ class Runner:
                 suite=True,
                 integration=True,
             )
+            self.command(
+                [py, "-m", "unittest", "-v", *BROWSER_OPT_IN_CLASSES],
+                "src/api",
+                env={
+                    **self.tests_env("api", True),
+                    "ZF_BROWSER_TESTS": "1",
+                    HEAVY_LOCK_HELD_FLAG: "1",
+                },
+                suite=True,
+                integration=True,
+            )
             axe = self.out / "axe-4.10.3.min.js"
             with urlopen(
                 "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.3/axe.min.js",
@@ -2414,6 +2588,17 @@ class Runner:
             if digest(axe) != AXE_SHA256:
                 raise GateError("Pinned axe integrity check failed")
             try:
+                self.command(
+                    [py, "-m", "unittest", "-v", AXE_BROWSER_CLASS],
+                    "src/api",
+                    env={
+                        **self.tests_env("api", True),
+                        "ZF_STAFF_INTAKE_BROWSER": "1",
+                        "ZF_AXE_PATH": str(axe),
+                    },
+                    suite=True,
+                    integration=True,
+                )
                 self.command(
                     [py, "-c", BROWSER_ENTRY, "checks.design_system_browser_check"],
                     "src/api",
@@ -2585,6 +2770,14 @@ class Runner:
                 integration=True,
                 timeout=1800,
             )
+            self.command(
+                [py, "-m", "unittest", "-v", *SQL_OPT_IN_CLASSES],
+                "src/api",
+                env={**sqlenv, **SQL_OPT_IN_FLAGS},
+                suite=True,
+                integration=True,
+                timeout=1800,
+            )
             self.command(["docker", "rm", "-f", container])
             self.containers.remove(container)
 
@@ -2619,6 +2812,15 @@ class Runner:
             )
             if stress:
                 return
+            if project == "api":
+                self.command(
+                    [self.python("namespace"), "-m", "unittest", "-v", PUBLIC_SIMULATION_CLASS],
+                    "infra/tests",
+                    env={"REQUIRE_AZ_BICEP": "1", "ZF_API_IMAGE": tag},
+                    suite=True,
+                    integration=True,
+                    timeout=1800,
+                )
             args = [
                 "trivy",
                 "image",

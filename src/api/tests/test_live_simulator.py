@@ -41,6 +41,49 @@ def run_async(coro: Any) -> Any:
 
 
 class SendSlotTests(unittest.TestCase):
+    def test_cohort_sends_distinct_device_identity_with_schema_and_stable_ids_on_replay(
+        self,
+    ) -> None:
+        def run() -> list[tuple[str, str, bytes]]:
+            sink, clock = ls.MemorySink(), Clock()
+            run_async(
+                ls.send_slot(
+                    HOMES,
+                    SLOT,
+                    lr.Generator(110),
+                    sink,
+                    FAST,
+                    sleep=clock.sleep,
+                    clock=clock.monotonic,
+                )
+            )
+            return sorted(sink.messages)
+
+        first, second = run(), run()
+        self.assertEqual(first, second)
+        self.assertEqual(len({m[0] for m in first}), len(HOMES))
+        for device, message_id, body in first:
+            row = json.loads(body)
+            self.assertEqual(device, "SYN-" + row["sensor_id"])
+            self.assertEqual(message_id, row["reading_id"])
+            self.assertIn(row["schema_version"], lr.LIVE_VERSIONS)
+
+    def test_duplicate_homes_are_refused_before_any_send(self) -> None:
+        sink, clock = ls.MemorySink(), Clock()
+        with self.assertRaisesRegex(lr.LiveReadingError, "DEVICE_ID_COLLISION"):
+            run_async(
+                ls.send_slot(
+                    ["HOME-001", "HOME-001"],
+                    SLOT,
+                    lr.Generator(110),
+                    sink,
+                    FAST,
+                    sleep=clock.sleep,
+                    clock=clock.monotonic,
+                )
+            )
+        self.assertEqual(sink.messages, [])
+
     def test_every_home_gets_one_labelled_message_per_slot(self) -> None:
         sink, clock = ls.MemorySink(), Clock()
         summary = run_async(

@@ -1,0 +1,99 @@
+<!-- markdownlint-disable-file -->
+# RPI Plan Critique: Issue #159 Conversational Assistant Keyboard Operability and Live-Region Accessibility Verification
+
+## Metadata
+
+* Task ID: 2026-11-15-issue-159-assistant-a11y
+* Critique date: 2026-11-15
+* Plan: .copilot-tracking/plans/2026-11-15/issue-159-assistant-a11y-plan.md
+* Phase details: .copilot-tracking/details/2026-11-15/issue-159-assistant-a11y-phase-details.md
+* Critique execution status: Complete
+
+## Inputs and Criterion Boundary
+
+* Task context and caller requirements: Deliver executable verification and UX documentation on branch `feat/ux-159-assistant-a11y` for GitHub Issue #159 (`Conversational assistant experience in the workbench`), targeting `- [ ] Panel is keyboard operable, screen-reader tested, and announces new messages`. Caller instructions require inspecting `src/api/src/zava_forward/api/web/` and `src/api/tests/`, adding `src/api/tests/test_assistant_panel_a11y_159.py` (avoiding edits to `role-screens.js` / `panels.js` if already satisfied), recording the verification in `docs/reference/research/ux/`, running Focused-tier `unittest`, `ruff check`, and `mypy`, and committing all changes plus `.copilot-tracking/` artifacts locally with `Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>` without pushing.
+* Research and evidence considered: .copilot-tracking/plans/2026-11-15/issue-159-assistant-a11y-plan.md, .copilot-tracking/details/2026-11-15/issue-159-assistant-a11y-phase-details.md, .copilot-tracking/research/2026-11-15/issue-159-assistant-a11y-research.md (`C1`-`C14`, `W1`-`W3`), src/api/src/zava_forward/api/web/chat-widget.js, src/api/src/zava_forward/api/web/chat.js, src/api/pyproject.toml, src/api/tests/test_accessibility_baseline.py, src/api/tests/test_production_ux_acceptance_protocol.py, docs/reference/research/ux/wcag-conformance-baseline.md, and .github/copilot-instructions.md.
+* Decisions, dependencies, and acceptance criteria considered: Zero web JS/CSS/HTML edits (`AC-2`); dual-layer Node `vm` + backend `ChatPanel` and Playwright Chromium + CDP `Accessibility.getFullAXTree` + `MutationObserver` suite in `src/api/tests/test_assistant_panel_a11y_159.py` (`FR-01` to `FR-03`, `NFR-01`, `NFR-02`, `AC-1`); truthful UX record update in `docs/reference/research/ux/wcag-conformance-baseline.md` with KB index/log synchronization and human AT boundary preservation (`FR-04`, `AC-3`); clean `ruff`/`mypy` and local-only commit (`AC-4`).
+* Assessment boundary: Evaluates internal consistency, DOM/runtime accuracy against `chat-widget.js` and `chat.js`, `pyproject.toml` strict lint/type rules, baseline/protocol test guards, and AMA repository governance from the supplied evidence only. Cannot verify `app.js` route-change behavior or `test_mvp.DATA` fixture contents beyond what `research.md` (`C1`-`C14`) cites, and treats unverified assumptions there as planning defects (`PC-001`).
+
+## Coverage Assessment
+
+| Requirement, research, phase, or task ID | Coverage | Evidence or concern |
+|------------------------------------------|----------|---------------------|
+| FR-01 (Keyboard-only operability) | Partial | Covered in `plan.md`, but `P01-T02` omits `Space` activation on `#employee-chat-launcher` and arrow-key adjustment of the height `<input type="range">` (`--chat-height`) (`PC-002`). |
+| FR-02 (Live-region announcements and AXTree) | Partial | `plan.md` requires transport `role="alert"` verification (`chat.js:190, 223`), which is omitted from both `P01-T01` and `P01-T02`; `#chat-panel p[role="status"]` is also ambiguous with nested `#regulatory-chat` (`PC-002`). |
+| FR-03 (Focus management lifecycle) | Covered | `P01-T01` and `P01-T02` verify initial `#employee-chat-title` focus, `Send`-focused `busy(true)` retention on `#employee-chat-question`, blank-submit focus return, non-theft on reply arrival, `revealBeside` scroll clearance, docked `Escape`/`Close chat` launcher focus restore, and `401`/`403` `deny()` handoff to `#app` (`chat-widget.js:107-237`, `chat.js:134-192`). |
+| FR-04 (UX knowledge-base verification record) | Covered | `P02` and `P02-T01` update `docs/reference/research/ux/wcag-conformance-baseline.md`, `docs/reference/README.md`, and `docs/reference/log.md` while preserving `test_accessibility_baseline.py` and `test_production_ux_acceptance_protocol.py` invariants; minor `2.4.11` row alignment noted in `PC-003`. |
+| NFR-01 (Strict `ruff` and `mypy` in `src/api`) | Covered | `src/api/pyproject.toml` (`strict = true`, `line-length = 100`, `select = ["E", "F", "I", "B", "UP"]`, `follow_imports = "skip"` on `zava_forward.api.server`, `zava_forward.core.*`, `zava_forward.agents.*`, and `test_mvp`) is accounted for in `P01` and `P02-T02`. |
+| NFR-02 (Offline determinism and pre-Chromium CI safety) | Covered | Dual-layer architecture runs `AssistantPanelNodeA11y159Tests` unconditionally and skips `AssistantPanelBrowserA11y159Tests` only when Playwright or the Chromium executable is absent (`C8`, `C13`), while aborting non-loopback browser requests. |
+| AC-1, AC-2, AC-3 | Partial | Credible overall, subject to resolving the browser singleton/case-context flow (`PC-001`) and missing `FR-01`/`FR-02` sub-checks (`PC-002`). |
+| AC-4 (Validation and local commit) | Partial | Validation commands match caller instructions, but `P02-T02` and `AC-4` omit `Refs #159` non-closing commit rules, repo-local noreply `user.email` setup, Focused-tier classification record, and post-review commit ordering (`PC-003`). |
+| Research `C1`-`C14`, `W1`-`W3` | Partial | `C1`-`C14` ground the zero-web-edit decision and CI/guard constraints, but do not cite `test_mvp.DATA` user/case literals (`sam@example.test`, `ZF-1`) or `app.js` route-change `employeeChat.reset()` behavior assumed by `P01-T02` (`PC-001`). |
+| P01 / P01-T01 | Partial | Strong backend `ChatPanel` + Node `vm` design; needs transport `role="alert"` coverage, dynamic `test_mvp.DATA` case ID lookup, and `#chat-panel > p[role="status"]` child selector (`PC-001`, `PC-002`). |
+| P01 / P01-T02 | Partial | Sequential 7-step browser walkthrough conflicts with `employeeChat` singleton reuse (`chat.js:112`), exercises Step 5 before opening a case, omits refusal and transport-alert checks promised by `plan.md`, and omits `Space` launcher / height slider checks (`PC-001`, `PC-002`). |
+| P02 / P02-T01, P02-T02 | Partial | Guard-aware KB updates and Focused-tier checks are sound; needs Focused-tier classification recording, `2.4.11` audit-row consistency note, and explicit local-commit governance (`PC-003`). |
+
+## Verdict
+
+* Verdict: Revise
+* Rationale: The zero-web-edit strategy, dual-layer Node `vm` + Chromium CDP Accessibility Tree design, and UX evidence-honesty boundaries are well grounded, but three substantive plan-detail issues (`PC-001` through `PC-003`) require direct planner revision before implementation so `AssistantPanelBrowserA11y159Tests` does not trip on `employeeChat` singleton state or unverified fixture IDs and phase details fulfill every `FR-01`, `FR-02`, and `AC-4` commitment.
+
+## Findings
+
+<!-- rpi:critique id=PC-001 -->
+### PC-001 [High]: Browser walkthrough in `P01-T02` conflicts with `employeeChat` singleton reuse, runs case assertions without an open case, and hardcodes unverified fixture IDs
+
+* Related IDs: FR-01, FR-02, FR-03, AC-1, P01-T01, P01-T02, C2, C3, C6
+* Evidence: src/api/src/zava_forward/api/web/chat.js (lines 111-155), src/api/src/zava_forward/api/web/chat-widget.js (lines 107-112, 146-153), .copilot-tracking/plans/2026-11-15/issue-159-assistant-a11y-plan.md (line 115), .copilot-tracking/details/2026-11-15/issue-159-assistant-a11y-phase-details.md (lines 70, 86, 122-134), .copilot-tracking/research/2026-11-15/issue-159-assistant-a11y-research.md (`C1`-`C14`)
+* Concern: `P01-T02` specifies one continuous 7-step browser sequence that opens `#employee-chat` immediately after sign-in on the default non-case route in Step 1 (`location.hash` does not match `^#\/case\/([^?]+)`, so `caseId` is `""` and `ui.intro` renders `"General work help. No case or home record is visible."`), asks `"What is the current stage?"` in Step 5 expecting `Sources (` cited facts, closes via `Escape` in Step 6 (`widget.hide()` sets `root.hidden = true` without disposing `widget`), and navigates to `#/case/ZF-1?tab=ai` in Step 7 expecting `"Open chat"` (`employeeChat.open()`) to display `"Context: case ZF-1"`. Per `chat.js:112` (`if (widget) { widget.open(); return; }`), `employeeChat.open()` reuses the initial `caseId === ""` widget unless `employeeChat.reset()` was invoked on navigation, which `research.md` (`C1`-`C14`) never verified in `app.js`. In addition, Step 5 runs without an open case and omits the refusal turn promised in `plan.md` (`Test Ownership and Coverage Lock`, line 115), and both `P01-T01` and `P01-T02` hardcode `"ZF-1"` and `"sam@example.test"` without `C#` evidence in `research.md` confirming those exact literals exist in `test_mvp.DATA`.
+* Impact: Implementing `P01-T02` literally risks immediate assertion failure on `"Context: case ZF-1"` or `404`/auth lookup failures on hardcoded fixture IDs, leaves case-record citation rendering (`Sources (N)` with `N >= 1`) unexercised in Step 5, and drops browser-level refusal verification claimed in `plan.md`.
+* Smallest useful change: Revise `P01-T01` and `P01-T02` in `.copilot-tracking/details/2026-11-15/issue-159-assistant-a11y-phase-details.md` to derive a valid `Retrofit Coordinator` user and case ID dynamically from `test_mvp.DATA`, and split or reset between the non-case launcher checks and the `#/case/<case_id>?tab=ai` walkthrough so the case-scoped `#employee-chat` session opens cleanly on `#/case/<case_id>?tab=ai`, verifies `"Context: case <case_id>"`, submits both a case-grounded question (expanding `Sources (N)` with `N >= 1` via keyboard `Enter`) and a refused action prompt (`"Approve this case"`), and closes cleanly via `Escape`.
+* Action owner: planning_parent
+* Exact resolving evidence: Updated `P01-T01` and `P01-T02` sections in `.copilot-tracking/details/2026-11-15/issue-159-assistant-a11y-phase-details.md` specifying dynamic `test_mvp.DATA` user/case selection, explicit non-case vs case-scoped widget lifecycle handling (`employeeChat` fresh page/session or verified route reset), and explicit browser coverage for both case-cited answer and refusal turns.
+* Decision route: direct planner correction
+
+<!-- rpi:critique id=PC-002 -->
+### PC-002 [Medium]: Phase details drop `FR-02` transport `role="alert"` announcements, `FR-01` `Space` launcher and height-slider checks, and child-scoped `#chat-panel` status selection
+
+* Related IDs: FR-01, FR-02, AC-1, P01-T01, P01-T02, C2, C3, C4
+* Evidence: .copilot-tracking/plans/2026-11-15/issue-159-assistant-a11y-plan.md (lines 63, 76-81, 115), .copilot-tracking/details/2026-11-15/issue-159-assistant-a11y-phase-details.md (lines 69-88, 121-135), src/api/src/zava_forward/api/web/chat-widget.js (lines 53-54, 71-83, 219-223), src/api/src/zava_forward/api/web/chat.js (lines 188-191, 221-224, 239, 271, 378)
+* Concern: Three concrete requirements from `plan.md` are omitted or underspecified in `phase-details.md`: (1) `plan.md` (`In Scope` line 63 and `FR-02` line 80) requires testing transport `role="alert"` messages (`"Chat unavailable: ... Owner: application support. Next action: ..."` via `ui.fail(...)` in `chat.js:190, 223`), yet neither `P01-T01` nor `P01-T02` includes a non-auth `500`/network error case; (2) `plan.md` (`FR-01` lines 76-77) requires `Enter` and `Space` activation on `#employee-chat-launcher` and arrow-key adjustments on both width and height `<input type="range">` sliders, whereas `P01-T02` only specifies `Enter` on the launcher and `ArrowRight` on the width slider; and (3) `P01-T01` and `P01-T02` select `#chat-panel p[role="status"]`, which matches two elements because `chatCasePanel` (`chat.js:239, 271`) embeds `regulatoryChatPanel` (`#regulatory-chat > p[role="status"]`, `chat.js:378`), while `#employee-chat-error` starts `hidden = true` (`chat-widget.js:54, 221`) so `window.__a11yLiveEvents` should also observe `hidden` attribute removal alongside `childList` and `characterData`.
+* Impact: An implementer following `phase-details.md` can miss promised `FR-01` and `FR-02` acceptance checks (leaving `chat.js` transport-failure alert announcements untested) and encounter flaky status-region assertions if async `#regulatory-chat` admission updates fire during `#chat-panel` proposal checks.
+* Smallest useful change: Update `P01-T01` and `P01-T02` in `.copilot-tracking/details/2026-11-15/issue-159-assistant-a11y-phase-details.md` to add a non-auth transport/server failure (`500` -> `#employee-chat-error[role="alert"]` `"Chat unavailable: ... Owner: application support. Next action: ..."` with `busy(false)` recovery), `Space` activation on `#employee-chat-launcher` (for example reopening after Step 6 `Escape`), arrow-key adjustment of `#employee-chat-height` (`--chat-height`) while undocked, child selector `#chat-panel > p[role="status"]`, and `attributes` (`attributeFilter: ["hidden"]`) tracking in `window.__a11yLiveEvents`.
+* Action owner: planning_parent
+* Exact resolving evidence: Updated `P01-T01` and `P01-T02` sections in `.copilot-tracking/details/2026-11-15/issue-159-assistant-a11y-phase-details.md` explicitly listing transport `role="alert"` verification, `Space` launcher activation, height slider arrow-key adjustment, `#chat-panel > p[role="status"]`, and `hidden`-attribute live-region observation.
+* Decision route: direct planner correction
+
+<!-- rpi:critique id=PC-003 -->
+### PC-003 [Low]: Local commit governance (`Refs #159`, repo-local noreply `user.email`, post-review commit timing) and Focused-tier classification record are missing from `P02`
+
+* Related IDs: FR-04, AC-3, AC-4, P02-T01, P02-T02, C10, C12
+* Evidence: .github/copilot-instructions.md (Validation tiers, Branch and Pull Request Workflow), docs/reference/research/ux/wcag-conformance-baseline.md (lines 51-62, 248-270), src/api/tests/test_production_ux_acceptance_protocol.py (lines 46-50), .copilot-tracking/plans/2026-11-15/issue-159-assistant-a11y-plan.md (lines 46, 103), .copilot-tracking/details/2026-11-15/issue-159-assistant-a11y-phase-details.md (lines 165-184, 221-245)
+* Concern: `AC-4` requires committing all code/KB changes and `2026-11-15` `.copilot-tracking/` artifacts locally on `feat/ux-159-assistant-a11y` with the Copilot trailer and not pushing, but `P02-T02` stops after running validation commands and omits repository commit/validation safeguards from `.github/copilot-instructions.md`: (1) resolving `{id}+{login}@users.noreply.github.com` via `gh api user` and setting repository-local `git config --local user.email` before committing; (2) using `Refs #159` (stating the open human desktop NVDA/VoiceOver assistive-technology check) and strictly avoiding any closing keyword (`Closes #159`, `Fixes #159`, `Resolves #159`, even negated) because automated AXTree/live-region checks do not satisfy human AT acceptance; (3) sequencing the final local commit so `.copilot-tracking/` review artifacts produced by `rpi-review` are included rather than left untracked; and (4) recording the explicit Focused-tier classification basis plus aligning the `2.4.11` (`Focus not obscured`) row note in `wcag-conformance-baseline.md` (`line 61`, which currently says rendered overlap with the chat widget open is not tested) with the new `revealBeside` check while keeping 400% zoom manual testing open.
+* Impact: Without explicit commit and audit-table guidance in `P02`, implementation or loop closeout could accidentally use a prohibited closing keyword on a partially human-gated issue, commit with an unconfigured email, leave `.copilot-tracking/reviews/` uncommitted, or leave a stale `2.4.11` note contradicting the new section in `wcag-conformance-baseline.md`.
+* Smallest useful change: Update `AC-4` in `.copilot-tracking/plans/2026-11-15/issue-159-assistant-a11y-plan.md` and `P02-T01`/`P02-T02` in `.copilot-tracking/details/2026-11-15/issue-159-assistant-a11y-phase-details.md` to record the Focused-tier classification basis (test-only + KB documentation slice, zero web runtime/workflow/SQL/security/dependency edits), include the `2.4.11` `revealBeside` engineering note in `P02-T01`, and specify repo-local noreply `user.email` setup, `Refs #159` non-closing commit wording, and final local commit capture across implementation and review `.copilot-tracking/` artifacts without pushing.
+* Action owner: planning_parent
+* Exact resolving evidence: Updated `AC-4` in `.copilot-tracking/plans/2026-11-15/issue-159-assistant-a11y-plan.md` and `P02-T01`/`P02-T02` in `.copilot-tracking/details/2026-11-15/issue-159-assistant-a11y-phase-details.md` documenting the Focused-tier basis, `2.4.11` audit-row note, repo-local `gh api user` noreply email setup, `Refs #159` non-closing keyword rule, and post-review `.copilot-tracking/` local commit check.
+* Decision route: direct planner correction
+
+## Strengths and Residual Risk
+
+* Zero-web-edit determination is well evidenced (`C1`-`C11`): keeping `chat-widget.js`, `chat.js`, `role-screens.js`, `panels.js`, and CSS untouched preserves every pinned baseline count (`9` `aria-invalid` sites, `2` `position:fixed` rules, `14` tables in `test_accessibility_baseline.py`) and all plain-language/provenance substring guards (`test_content_standard.py`, `test_home_chat_regulatory_keyboard_provenance.py`).
+* Dual-layer verification (`AssistantPanelNodeA11y159Tests` + `AssistantPanelBrowserA11y159Tests`) cleanly reconciles `.github/workflows/src-ci.yml`'s pre-Chromium `unittest` step (`C13`) with full headless Chromium + CDP `Accessibility.getFullAXTree` execution on developer/gate hosts where Chromium is installed (`C8`), without hiding tests behind `ZF_BROWSER_TESTS=1`.
+* `src/api/pyproject.toml` (`C14`) already sets `follow_imports = "skip"` on `zava_forward.api.server`, `zava_forward.core.*`, `zava_forward.agents.*`, and `test_mvp`, so a fully annotated new test file `src/api/tests/test_assistant_panel_a11y_159.py` can satisfy `mypy --strict`, `ruff check`, and `ruff format --check` without editing `pyproject.toml`.
+* Residual risk (explicitly accepted in `plan.md` `Follow-Up Items`): Headless Linux lacks desktop assistive technology (`NVDA`, `VoiceOver`, `Orca`, audio hardware; `C12`), so human screen-reader and 400% zoom sign-off remain open under Issues #151, #155, and #619 and are transparently separated from automated accessibility-tree and live-region mutation verification.
+
+## Questions or Blocking Evidence Gaps
+
+* None requiring user input or new external research. `PC-001` resolves the unverified fixture-ID and singleton-lifecycle assumptions directly inside `P01-T01` and `P01-T02` by reading valid user/case records from `test_mvp.DATA` at test setup and isolating non-case from case-scoped browser sessions.
+
+## Limitations
+
+* This critique inspected only the caller-supplied plan, phase details, research artifact, and listed repository files (`chat-widget.js`, `chat.js`, `src/api/pyproject.toml`, `test_accessibility_baseline.py`, `test_production_ux_acceptance_protocol.py`, `wcag-conformance-baseline.md`). It did not inspect `app.js` or `test_mvp.py` directly or execute test runners during critique.
+
+## Recommended Next Action
+
+* Highest-impact finding: PC-001
+* Action owner: planning_parent
+* Smallest next action: Apply direct planner revisions for `PC-001`, `PC-002`, and `PC-003` to `.copilot-tracking/plans/2026-11-15/issue-159-assistant-a11y-plan.md` and `.copilot-tracking/details/2026-11-15/issue-159-assistant-a11y-phase-details.md`, record critique disposition in the plan, mark Planning Readiness `Ready`, and proceed to `rpi-implement` without re-running critique.
+* User response required: no

@@ -473,6 +473,9 @@ def _apply_safety_enrichment(
     )
     for key in _ENRICHED_SAFETY_KEYS:
         out[key] = projected[key]
+    out["clock_text"] = taskqueues.hazard_clock(
+        out, taskqueues.instant(as_of) or datetime.now(UTC)
+    )["clock_text"]
     raw_owner = out.get("owner")
     if (
         not isinstance(raw_owner, str)
@@ -482,7 +485,7 @@ def _apply_safety_enrichment(
     return out
 
 
-def hazard_view(h, case_id, *, case=None, as_of=None, staff=None):
+def hazard_view(h, case_id, as_of=None, *, case=None, staff=None):
     out = deepcopy(h)
     out.setdefault("released", not taskqueues.is_open_safety_item(out))
     out["state"] = hazard_state(out)
@@ -1187,7 +1190,7 @@ class WorkflowMixin:
             if h["hold"].get("accountable_role") and not h["hold"].get("legacy"):
                 verdict = gates.safety_release_gate(h["hold"], user, [])
                 if verdict.outcome != gates.PASS:
-                    raise PermissionError(verdict.reason)
+                    raise gates.GateResultPermissionError(verdict.reason, verdict)
             hazard.require_independent(user, h)
             h.update(released=True, released_by=user["name"], released_at=_now(), release_note=note)
             h["hold"].update(status="Released", decision=dict(at=_now(), actor=self._hazard_actor(user),

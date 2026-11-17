@@ -5,6 +5,7 @@ from .resident_decisions import resident_status
 
 from .stock import support_coverage, support_status
 from .export_fields import map_case
+from . import sensor_map
 
 STAGE_ORDER = ["Home identified", "Checking lease", "Rescheduled", "Contacting resident", "Contact paused",
                "Survey being booked", "Survey booked", "Survey write-up", "Design starting", "Design in progress",
@@ -147,8 +148,20 @@ def map_points(cases, f):
 MAP_CAP = 500
 
 
-def map_view(cases, f, bbox=None, zoom=None, cap=MAP_CAP):
-    """Points when few enough, otherwise grid clusters. bbox is (south, west, north, east)."""
+def attach_sensors(view, sensors=None):
+    """Add the permission-projected sensor summary to each point; clusters carry none."""
+    if view["mode"] == "points":
+        found = sensors([i["id"] for i in view["items"]]) if sensors else {}
+        for i in view["items"]:
+            i["sensor"] = found.get(i["id"]) or sensor_map.fixed("not-connected")
+    return view
+
+
+def map_view(cases, f, bbox=None, zoom=None, cap=MAP_CAP, sensors=None):
+    """Points when few enough, otherwise grid clusters. bbox is (south, west, north, east).
+
+    `sensors` maps the shown home ids to bounded sensor summaries. It is already permission-projected
+    by the caller and used only for points; without it each point says sensors are not connected."""
     pts = []
     for c in cases:
         if c["closed"] or not matches(c, f):
@@ -165,7 +178,7 @@ def map_view(cases, f, bbox=None, zoom=None, cap=MAP_CAP):
                       address=f"{c['home']['address']}, {c['home']['postcode']}", stage=c["stage"],
                       kind="hazard" if has_hazard(c) else "long" if c["days_in_stage"] >= LONG_WAIT else "normal")
                  for c, lat, lon in sorted(pts, key=lambda p: p[0]["id"])]
-        return dict(mode="points", total=total, shown=len(items), cap=cap, bounds=bounds, items=items)
+        return attach_sensors(dict(mode="points", total=total, shown=len(items), cap=cap, bounds=bounds, items=items), sensors)
     z = 8 if zoom is None else max(0, min(20, int(zoom)))
     cell = 360.0 / (2 ** z) / 4
     while True:

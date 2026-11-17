@@ -356,7 +356,7 @@ Set these **GitHub environment variables**, never committed values:
 | `AZURE_REGISTRY_NAME` | Release and target environments; existing registry in ama |
 | `DEPLOY_PARAMETERS` | Plan and target environments; JSON override contract below |
 
-`DEPLOY_PARAMETERS` must contain exactly `location`, `sqlLocation`,
+`DEPLOY_PARAMETERS` must contain exactly `location`, `sqlLocation`, `aiModelLocation`,
 `regionCheckReference`, `quotaCheckReference`, `alertEmail`,
 `sqlAdminGroupName`, `sqlAdminGroupObjectId`, `entraClientId` (all nonempty
 strings), and `entraBearerOnly` (an explicit JSON boolean). Use approved values
@@ -558,6 +558,8 @@ Runner unit tests use installed source packages:
 Compiled profile/staging/auth-mode checks run in the existing infra suite.
 
 Example from the repository root: `python3 infra/scripts/deploy.py --resource-group ama --registry <registry-name> --environment dev --parameters <private-completed-parameters.bicepparam>` (what-if; complete the recorded checks below and add `--apply` only after review).
+
+Add `--dry-run` to print the deterministic plan and what-if command with no `az`, network or file access (it cannot be combined with `--apply`; without `--orchestrator-image` the image shows as `<resolved-at-run-time>`). Issue #148 criterion 4 (disposable Azure from-empty rebuild) stays unmet.
 
 ## Direct demo ingress migration proposal (2026-10-16, #360)
 
@@ -1007,6 +1009,7 @@ remain an owner design decision, not an executable instruction here.
 | Model SKU/quota inputs (`modelDeployments`) | `standard`: `gpt-4.1-nano`, version `2025-04-14`, `GlobalStandard`, capacity `1` | same (`gpt-4.1-nano`, `2025-04-14`, `GlobalStandard`, capacity `1`), subject to checks | same (`gpt-4.1-nano`, `2025-04-14`, `GlobalStandard`, capacity `1`); `gpt-4.1-nano` and `GP_Gen5` post-date the `2026-10-18` `R4`/`R8`/`R9` snapshot below and remain `Unknown` pending fresh target-subscription checks |
 | Retention (fixed unless a documented module input exists) | Log Analytics 90 days; SQL PITR 14 days; blob/container soft delete 30 days; ACR 30 days; audit/digest immutability 365 days unlocked; IoT 1 day | same | same; not a legally approved retention schedule |
 | `location` and `sqlLocation` | `uksouth` candidate, recheck | `uksouth` candidate, recheck | empty PLACEHOLDERs retained; pilot `uksouth` selected, separate SQL region unselected |
+| `aiModelLocation`, `aiModelFallbackLocation`, `modelCapacityBudget` | `uksouth`, no fallback, budget 30 | `uksouth`, no fallback, budget 30 | empty model region PLACEHOLDER, no fallback, budget 30 |
 | `regionCheckReference`, `quotaCheckReference` | empty PLACEHOLDERs | empty PLACEHOLDERs | empty PLACEHOLDERs |
 | Deployable as committed | No: complete placeholders/checks privately | No: complete placeholders/checks privately | No: additionally requires pilot decisions |
 
@@ -1042,6 +1045,21 @@ Rules:
   guards validate format rather than live Azure state, a human must still verify
   record contents, freshness and exact configuration. Do not enter placeholder
   text or raw subscription/tenant UUIDs.
+
+Region and quota choices are explicit parameters in every parameter set:
+`location`, `sqlLocation`, `aiModelLocation` (model account and deployments,
+defaults to `location`), optional `aiModelFallbackLocation` (recorded only,
+never deployed automatically, must differ from `aiModelLocation`) and
+`modelCapacityBudget` (approved model capacity units; `chatModelCapacity` must
+fit it, enforced by the `modelCapacityMustFitBudget` guard). The deterministic
+offline helper `infra/scripts/region_quota_preflight.py <param-file> [--bicepparam <file>] [--record
+check.json]` also parses `chatModelCapacity`/`modelDeployments`
+capacities from the file and checks them against the budget and the record; it reports whether every region is selected, the references are
+recorded, the dated record covers each selected region and every quota has
+headroom (limit - used - requested) within the budget. It never calls Azure and
+never approves a deployment; committed sets report `blocked` until a real dated
+record exists. `infra/tests/test_region_quota_137.py` pins this
+contract for dev, test and pilot.
 
 Recorded region and quota checks (re-run before each deployment; a check in another subscription or on another date proves nothing):
 

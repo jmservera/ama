@@ -47,6 +47,11 @@ const respond = (status, body, headers = {}) => ({
   ok: status < 400, status, json: async () => body,
   headers: {get: k => headers[k] ?? null},
 });
+const respondRaw = (status, headers = {}) => ({
+  ok: status < 400, status,
+  json: async () => { throw new SyntaxError("Unexpected end of JSON input"); },
+  headers: {get: k => headers[k] ?? null},
+});
 const fetchStub = (path) => new Promise((resolve, reject) => pending.push({path, resolve, reject}));
 const context = {
   document, window: {mountResidentAssistant: () => ({setSession() {}})},
@@ -130,6 +135,102 @@ const out = () => ({
     await tick();
     await tick();
     console.log(JSON.stringify({waiting, retry, retried, after: out(), fetches: pending.length}));
+  } else if (scenario === "expired503") {
+    pending[0].resolve(respond(200, {signed_in: true, session_id: "s", csrf: "c"}));
+    await tick();
+    pending.at(-1).resolve(respond(503, {error: "This synthetic showcase has ended."}));
+    await tick();
+    await tick();
+    const retryTimers = timers.filter(t => t.live && t.ms !== 4000).length;
+    console.log(JSON.stringify({retryTimers, after: out(), fetches: pending.length}));
+  } else if (scenario === "shedfallback") {
+    pending[0].resolve(respond(200, {signed_in: true, session_id: "s", csrf: "c"}));
+    await tick();
+    const loadingView = out();
+    pending.at(-1).resolve(respondRaw(503, {"Retry-After": "1"}));
+    await tick();
+    await tick();
+    const waiting1 = out();
+    const wait1Timer = timers.filter(t => t.live && t.ms === 1000);
+    wait1Timer[0].f();
+    await tick();
+    pending.at(-1).resolve(respond(
+      503, {error: "The showcase is not available right now."}, {"Retry-After": "1"}));
+    await tick();
+    await tick();
+    const afterGeneric = out();
+    get("retry").fire("click");
+    pending.at(-1).resolve(respond(200, {signed_in: true, session_id: "s", csrf: "c"}));
+    await tick();
+    pending.at(-1).resolve(respondRaw(503, {"Retry-After": "99"}));
+    await tick();
+    await tick();
+    const waitingClamped = out();
+    const clampedTimer = timers.filter(t => t.live && t.ms === 10000);
+    clampedTimer[0].f();
+    await tick();
+    pending.at(-1).resolve(respondRaw(503, {"Retry-After": "Wed, 21 Oct 2026 07:28:00 GMT"}));
+    await tick();
+    await tick();
+    console.log(JSON.stringify({
+      loadingView,
+      waiting1,
+      wait1Count: wait1Timer.length,
+      afterGeneric,
+      waitingClamped,
+      clampedCount: clampedTimer.length,
+      afterEmpty: out(),
+    }));
+  } else if (scenario === "loginbusy") {
+    const busyBody = {
+      error: "The showcase is busy right now. Try again in a few seconds.",
+      retry_after_seconds: 3,
+    };
+    pending[0].resolve(respond(200, {authenticated: false, csrf: "c"}));
+    await tick();
+    get("email").value = "a@example.com";
+    get("password").value = "secret";
+    get("signin-form").fire("submit", {preventDefault() {}});
+    const loginSlowTimer = timers.filter(t => t.live && t.ms === 4000).at(-1);
+    pending.at(-1).resolve(respond(200, {session_id: "s", csrf: "c"}));
+    await tick();
+    pending.at(-1).resolve(respond(503, busyBody, {"Retry-After": "3"}));
+    await tick();
+    await tick();
+    const slowStillLive = loginSlowTimer.live;
+    loginSlowTimer.f();
+    const duringWait = out();
+    const buttonDisabledMidWait = get("signin-button").disabled;
+    timers.filter(t => t.live && t.ms === 3000)[0].f();
+    await tick();
+    pending.at(-1).resolve(respond(503, busyBody, {"Retry-After": "3"}));
+    await tick();
+    await tick();
+    const afterSecond503 = out();
+    get("retry").fire("click");
+    pending.at(-1).resolve(respond(200, {authenticated: false, csrf: "c"}));
+    await tick();
+    get("email").value = "a@example.com";
+    get("password").value = "secret";
+    get("signin-form").fire("submit", {preventDefault() {}});
+    pending.at(-1).resolve(respond(200, {session_id: "s", csrf: "c"}));
+    await tick();
+    pending.at(-1).resolve(respond(503, busyBody, {"Retry-After": "3"}));
+    await tick();
+    await tick();
+    timers.filter(t => t.live && t.ms === 3000).at(-1).f();
+    await tick();
+    pending.at(-1).reject(new Error("offline"));
+    await tick();
+    await tick();
+    console.log(JSON.stringify({
+      slowStillLive,
+      duringWait,
+      buttonDisabledMidWait,
+      afterSecond503,
+      buttonDisabledAfterReject: get("signin-button").disabled,
+      afterReject: out(),
+    }));
   } else if (scenario === "signout") {
     pending[0].resolve(respond(200, {authenticated: false, csrf: "c"}));
     await tick();
@@ -212,6 +313,46 @@ class ResidentDemoScriptTests(unittest.TestCase):
         self.assertTrue(got["retried"])
         self.assertIn("Try again in a few seconds", got["after"]["errorText"])
         self.assertEqual(got["fetches"], 3)
+
+    def test_expired_503_without_retry_hint_fails_immediately_without_busy_retry(self) -> None:
+        got = run("expired503")
+        self.assertEqual(got["retryTimers"], 0)
+        self.assertEqual(got["fetches"], 2)
+        self.assertEqual(got["after"]["errorText"], "This synthetic showcase has ended.")
+        self.assertIsNone(got["after"]["busy"])
+        self.assertEqual(got["after"]["focus"][-1], "error-title")
+
+    def test_generic_and_non_json_shed_503_clamp_delay_and_add_retry_guidance(self) -> None:
+        got = run("shedfallback")
+        self.assertEqual(got["loadingView"]["busy"], "true")
+        self.assertEqual(got["wait1Count"], 1)
+        self.assertEqual(got["waiting1"]["busy"], "true")
+        self.assertIn("1 second.", got["waiting1"]["status"])
+        self.assertNotIn("1 seconds", got["waiting1"]["status"])
+        self.assertIn("try again in a few seconds", got["waiting1"]["status"])
+        self.assertEqual(
+            got["afterGeneric"]["errorText"],
+            "The showcase is not available right now. Please try again in a few seconds.",
+        )
+        self.assertIsNone(got["afterGeneric"]["busy"])
+        self.assertEqual(got["afterGeneric"]["focus"][-1], "error-title")
+        self.assertEqual(got["clampedCount"], 1)
+        self.assertIn("10 seconds.", got["waitingClamped"]["status"])
+        self.assertIn("try again in a few seconds", got["afterEmpty"]["errorText"].lower())
+        self.assertIsNone(got["afterEmpty"]["busy"])
+
+    def test_login_shed_view_clears_slow_timer_and_keeps_promise_chain(self) -> None:
+        got = run("loginbusy")
+        self.assertFalse(got["slowStillLive"])
+        self.assertNotIn("Still signing you in", got["duringWait"]["status"])
+        self.assertIn("try again in a few seconds", got["duringWait"]["status"])
+        self.assertEqual(got["duringWait"]["busy"], "true")
+        self.assertTrue(got["buttonDisabledMidWait"])
+        self.assertIn("Try again in a few seconds", got["afterSecond503"]["errorText"])
+        self.assertIsNone(got["afterSecond503"]["busy"])
+        self.assertFalse(got["buttonDisabledAfterReject"])
+        self.assertIsNone(got["afterReject"]["busy"])
+        self.assertIn("could not reach the showcase", got["afterReject"]["signinError"])
 
 
 if __name__ == "__main__":

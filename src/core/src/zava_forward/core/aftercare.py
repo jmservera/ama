@@ -9,15 +9,22 @@ only and never dismisses a resident report. It reads or writes no consent, sanct
 
 import re
 import unicodedata
-from collections.abc import Iterable, Mapping
+from collections.abc import Callable, Iterable, Mapping
 from copy import deepcopy
 from datetime import date
-from typing import Any
+from functools import lru_cache
+from typing import Any, cast
+
+from . import ai_registry
 
 Record = dict[str, Any]
+_registry_get = cast(Callable[[str], dict[str, Any] | None], ai_registry.get)
+_authorizes_live = cast(
+    Callable[[str, Mapping[str, str] | None], bool], ai_registry.authorizes_live
+)
 
 ROUTES = ("digital", "staff_recorded")
-NON_DIGITAL_CHANNELS = ("phone", "in_person", "paper", "assisted_visit")
+NON_DIGITAL_CHANNELS = ("phone", "in_person", "paper", "assisted_visit", "representative")
 RAISED_BY = ("household", "representative")
 CONCERN_KINDS = ("discomfort", "higher_bill", "control_use", "other")
 INVESTIGATION = ("received", "under_investigation", "outcome_recorded")
@@ -25,15 +32,55 @@ OUTCOMES = ("remedy_needed", "no_remedy_needed", "advice_given", "cannot_determi
 HUMAN_BASES = ("home_visit", "household_conversation", "specialist_review", "records_review")
 REMEDY_STATUSES = ("not_assessed", "open", "in_progress", "completed", "not_needed")
 CLOSURE_KINDS = ("handover", "financial")
-PACK_TASK = "aftercare-concern-pack"
+PACK_TASK: str = str(ai_registry.CONCERN_PACK_TASK)
 PACK_ACTIONS = ("accept", "reject")
 PACK_NOT_REVIEWED = "Not reviewed"
 PACK_MANUAL_ROUTE = (
     "Use the concern record and the named owner; the pack is optional and no model is needed."
 )
 ACCESSIBLE_ROUTE = (
-    "You can also raise this by phone, in person or on paper, and a member of staff will "
-    "record it for you. No digital access is needed."
+    "You can also raise this by phone, in person, on paper, with help at a visit or through a "
+    "representative, and a member of staff will record it for you. No digital access is needed."
+)
+SUPPORT_OPTIONS = (
+    ("large_print", "Large print"),
+    ("easy_read", "Easy read"),
+    ("interpreter", "Language interpreter"),
+    ("bsl", "British Sign Language (BSL)"),
+    ("callback_window", "Agreed phone call-back time"),
+    ("paper_letter", "Paper letter or form by post"),
+    ("support_person", "A visit where someone you trust can be with you"),
+)
+SUPPORT_OPTION_CODES: tuple[str, ...] = tuple(code for code, _ in SUPPORT_OPTIONS)
+SUPPORT_NOTE = (
+    "Tell the member of staff what would help and they will arrange it. You do not need to "
+    "explain why, and you can bring or send a person to speak for you."
+)
+FORM_TITLE = "Raise a concern about your home"
+FORM_INTRO = (
+    "Tell us if your home feels uncomfortable, your bills are higher than you "
+    "expected, or you are unsure how to use your controls."
+)
+INTAKE_ERROR_MESSAGES = {
+    "raised_by": "Say whether you live in the home or act for the household.",
+    "representative_basis": "Say how you are authorised to act for the household.",
+    "home_ref": "Enter the home reference from your handover pack.",
+    "kind": "Choose what your concern is about.",
+    "statement": "Tell us your concern in your own words.",
+    "support_needed": "Choose from the listed support options, or leave this blank.",
+}
+EVALUATOR_UNKNOWNS = (
+    "Baseline coverage is unknown.",
+    "Households that did not raise a concern may still have one.",
+)
+PACK_APPROVAL_LABELS = {
+    "accept": "Accepted for reference",
+    "reject": "Rejected",
+}
+PACK_QUESTIONS = (
+    "What did the household describe, in their own words?",
+    "What does a visit or conversation with the household show?",
+    "What remedy, if any, does the household need, and who owns it?",
 )
 PROTECTION = (
     "Raising a concern will not change your tenancy, repairs or services. A named person looks "
@@ -50,185 +97,141 @@ BANNED_PHRASES = (
     "you will pay less",
     "caused by",
     "because of the resident",
-    "because of the tenant",
-    "because of the household",
-    "because of the occupant",
     "resident error",
-    "user error",
-    "operator error",
     "misuse",
     "your fault",
     "blame",
     "wasting",
-    "payback",
-    "pays for itself",
-    "pay for itself",
-    "drying clothes",
-    "drying laundry",
-    "lifestyle choice",
 )
 
-_INVISIBLE = dict.fromkeys([*range(0x200B, 0x2010), 0x00AD, 0x2060, 0xFEFF])
-_INVISIBLE_SPACE = dict.fromkeys([*range(0x200B, 0x2010), 0x00AD, 0x2060, 0xFEFF], " ")
+
 _HOUSEHOLD = r"(?:tenant|resident|household|occupant)"
-_MEASURE = (
-    r"(?:retrofit|works|insulation|measures?|installation|upgrade|heating|ventilation|"
-    r"heat pump|airtightness|glazing|controls?)"
+_RETROFIT = r"(?:retrofit|works|insulation|measures|installation|upgrade|heating|ventilation)"
+_CONTROL_OR_HABIT = (
+    r"(?:thermostat|heating controls?|controls?|ventilation|windows?|trickle vents?|"
+    r"lifestyle|habits?|behaviou?r)"
 )
-_PARAPHRASE_SPECS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
-    (label, re.compile(pattern))
-    for label, pattern in (
-        ("future_save_promise", r"\byou'?ll (?:save|pay less)\b"),
+PARAPHRASE_PATTERNS = tuple(
+    re.compile(p)
+    for p in (
+        r"\byou'?ll (?:save|pay less)\b",
+        r"\bcut(?:s|ting)? your (?:energy )?bills?\b",
+        r"\bbills? will (?:fall|drop|go down|reduce)\b",
+        r"\bsavings? of\b",
+        rf"\b{_HOUSEHOLD}s? (?:has |have |had )?(?:caused|misunderstood)\b",
+        rf"\b{_HOUSEHOLD}s? (?:is|was|were|are) at fault\b",
         (
-            "bill_cut_claim",
-            r"\b(?:cut|slash)(?:s|es|ing)? (?:your |the |household )?(?:energy |heating )?"
-            r"(?:bills?|costs?)\b",
+            rf"\b(?:{_HOUSEHOLD}|user)(?:s'|'s|s)? "
+            r"(?:error|mistake|misuse|neglect|lifestyle|habits?|behaviou?r)\b"
+        ),
+        r"\b(?:reduces?|lowers?|cuts?|trims?) (?:your|the|household|energy) "
+        r"(?:energy )?(?:bills?|costs?)\b",
+        r"\b(?:lower|smaller|cheaper) (?:energy )?bills?\b",
+        r"\bbills? (?:will|would) be (?:cheaper|lower|smaller)\b",
+        rf"\b{_RETROFIT} (?:has |have |had )?made (?:the home|your home|it|things|the house)?\s*"
+        r"(?:colder|warmer|damper|worse|better)\b",
+        r"\b(?:saves?|saving) (?:you |the household )?(?:money|energy|costs?)\b",
+        r"\byou (?:could|can|may|should) (?:save|pay less)\b",
+        r"\b(?:bills?|costs?) (?:should|are expected to|is expected to|are likely to) "
+        r"(?:fall|drop|go down|reduce)\b",
+        r"\bsavings? (?:is|are) (?:likely|expected|certain|assured)\b",
+        rf"\b(?:due|owing|down) to (?:the )?(?:{_HOUSEHOLD}s?|{_RETROFIT})\b",
+        rf"\b(?:due|owing|down) to (?:[\w'-]+ ){{0,4}}{_CONTROL_OR_HABIT}\b",
+        rf"\b{_HOUSEHOLD}(?:s'|'s|s)? (?:own )?fault\b",
+        rf"\b{_HOUSEHOLD}s? (?:has |have |had )?failed to\b",
+        rf"\b{_HOUSEHOLD}s? (?:waste|wastes|wasted|overuse|overuses|overused)\b",
+        r"\b(?:over-?use|overconsumption)\b",
+        rf"\b(?:result|consequence) of (?:the )?(?:new |recent )?{_RETROFIT}\b",
+        (
+            r"\b(?:result(?:s|ed|ing)?|aris(?:es|en|ing)|arose|stem(?:s|med|ming)?) from "
+            r"(?:the |your |their )?(?:new |recent |poor |incorrect |wrong )?"
+            rf"(?:{_RETROFIT}|{_HOUSEHOLD}(?:s'|'s|s)?|{_CONTROL_OR_HABIT})\b"
         ),
         (
-            "bills_will_fall",
-            r"\b(?:energy |heating )?bills? will (?:fall|drop|go down|reduce)\b",
-        ),
-        ("savings_of", r"\bsavings? of\b"),
-        (
-            "quantified_savings_promise",
-            r"\bsav(?:e|es|ing) (?:up to |around |over |about )?"
-            r"(?:(?:£|\$|€|gbp ?)\d+(?:\.\d+)?|\d+(?:\.\d+)? ?(?:%|\b(?:percent|per cent|"
-            r"pounds?|gbp)\b))",
+            rf"\b(?:{_RETROFIT}|{_HOUSEHOLD}(?:s'|'s|s)?|{_CONTROL_OR_HABIT}) "
+            r"(?:is|are|was|were) responsible for\b"
         ),
         (
-            "named_savings_claim",
-            r"\b(?:promised|guaranteed|expected|assured|projected) "
-            r"(?:(?:energy|bill|cost|financial|heating) )?(?:savings?|reductions?)\b",
+            r"\b(?:is|are|was|were) responsible for (?:[\w'-]+ ){0,3}"
+            r"(?:damp|mould|mold|condensation|chill|cold|discomfort|higher bills?|heat loss)\b"
         ),
         (
-            "category_savings_claim",
-            r"\b(?:energy|bill|cost|financial) savings?\b",
+            r"\b(?:triggered|provoked|created|produced|induced|driven) by "
+            rf"(?:the )?(?:new |recent )?(?:{_HOUSEHOLD}s?|{_RETROFIT}|{_CONTROL_OR_HABIT})\b"
         ),
         (
-            "cheaper_to_run",
-            r"\bcheaper to (?:run|heat)\b",
-        ),
-        ("blame_inflections", r"\bblam(?:e|es|ed|ing)\b"),
-        (
-            "household_caused_or_misunderstood",
-            rf"\b{_HOUSEHOLD}s? (?:has |have |had )?(?:caused|misunderstood|misused|ignored)\b",
-        ),
-        ("household_at_fault", rf"\b{_HOUSEHOLD}s? (?:is|was|were|are) at fault\b"),
-        ("fault_of_household", rf"\bfault of (?:the )?{_HOUSEHOLD}s?\b"),
-        ("household_behaviour", rf"\b{_HOUSEHOLD}s?'?s? (?:behaviou?r|lifestyle|habits?)\b"),
-        ("heating_or_ventilation_habits", r"\b(?:heating|ventilation|occupancy) habits?\b"),
-        (
-            "window_or_ventilation_blame",
-            r"\b(?:not opening windows?|windows? (?:kept |left )?(?:closed|shut)|"
-            r"(?:lack of|failing to|failure to) (?:ventilat(?:e|ion)|heat))\b",
+            rf"\b{_RETROFIT} (?:has |have |had )?"
+            r"(?:led to|leads to|resulted in|results in|caused|causes)\b"
         ),
         (
-            "improper_use_or_negligence",
-            r"\b(?:(?:improper|incorrect) use|negligen(?:ce|t)|careless(?:ness)?)\b",
+            r"\bbecause (?:of )?(?:the |your |their )?"
+            rf"(?:{_HOUSEHOLD}s?|{_RETROFIT}|{_CONTROL_OR_HABIT})\b"
+        ),
+        r"\b(?:attributable|attributed) to\b",
+        rf"\b(?:fault|error|mistake|negligence) of (?:the )?{_HOUSEHOLD}s?\b",
+        r"\bpoor (?:ventilation|heating|thermostat|control) (?:habits?|use|practices?)\b",
+        (
+            r"\b(?:incorrect|wrong|improper|poor) (?:use of (?:the )?|way of using (?:the )?)?"
+            r"(?:thermostat|heating controls?|controls?|ventilation|trickle vents?|heating)\b"
         ),
         (
-            "reduces_bills_or_costs",
-            r"\b(?:reduces?|reducing|lowers?|lowering|cuts?|trims?) "
-            r"(?:your|the|household|energy|heating) (?:(?:energy|heating) )?(?:bills?|costs?)\b",
-        ),
-        ("lower_bills_claim", r"\b(?:lower|smaller|cheaper) (?:(?:energy|heating) )?bills?\b"),
-        (
-            "bills_will_be_cheaper",
-            r"\bbills? (?:will|would) be (?:cheaper|lower|smaller)\b",
+            rf"\b{_HOUSEHOLD}(?:s'|'s|s)? (?:has |have |had |is |are |was |were )?"
+            r"(?:turn(?:s|ed|ing)?|set(?:s|ting)?|keep(?:s|ing)?|kept|leav(?:es|ing)|left|"
+            r"shut(?:s|ting)?|clos(?:es|ed|ing)) (?:the |their )?"
+            r"(?:thermostat|heating|controls?|windows?|trickle vents?)\b"
         ),
         (
-            "measure_made_home_worse_or_better",
-            rf"\b{_MEASURE} (?:has |have |had )?made "
-            r"(?:the home|your home|it|things|the house|the room)?\s*"
-            r"(?:colder|warmer|damper|mouldier|worse|better)\b",
+            r"\b(?:leaving|keeping|left|kept) (?:the |their )?"
+            r"(?:windows?|trickle vents?|vents?) (?:closed|shut)\b"
+        ),
+        r"\b(?:turning|turned) (?:the |their )?(?:thermostat|heating) (?:down|off|up too high)\b",
+        r"\bnot ventilating(?: the home)? properly\b|\bfailure to ventilate\b",
+        r"\bdrying (?:wet )?(?:clothes|laundry|washing) indoors\b",
+        r"\bblam(?:e|ed|es|ing)\b",
+        r"\bmis[-_ ]?us(?:e|ed|es|ing)\b",
+        r"\bwast(?:e|ed|es|ing) (?:heat|energy|power|money)\b",
+        (
+            r"\b(?:guarantees?|guaranteeing|guaranteed|promis(?:e|es|ed|ing)|assur(?:e|es|ed|ing)) "
+            r"(?:[\w'-]+ ){0,4}"
+            r"(?:(?:energy |bill |cost )?savings?|bill (?:reductions?|cuts?|drops?)|"
+            r"(?:lower|cheaper|smaller|reduced)(?:\b| (?:energy |heating )?(?:bills?|costs?)))\b"
         ),
         (
-            "saves_money_or_energy",
-            r"\b(?:saves?|saving) (?:you |the household )?(?:money|energy|costs?)\b",
-        ),
-        ("you_could_save", r"\byou (?:could|can|may|should) (?:save|pay less)\b"),
-        (
-            "bills_expected_to_fall",
-            r"\b(?:bills?|costs?) (?:should|are expected to|is expected to|are likely to) "
-            r"(?:fall|drop|go down|reduce)\b",
+            r"\b(?:energy |heating )?bill reductions? "
+            r"(?:are |is )?(?:guaranteed|promised|assured|certain)\b"
         ),
         (
-            "savings_likely",
-            r"\bsavings? (?:is|are) (?:likely|expected|certain|assured)\b",
+            r"\bslash(?:es|ed|ing)? "
+            r"(?:your |the |their |household |energy |heating )*(?:bills?|costs?)\b"
         ),
-        ("due_to_household", rf"\b(?:due|owing|down) to (?:the )?{_HOUSEHOLD}s?\b"),
-        ("household_fault", rf"\b{_HOUSEHOLD}s?'?s? (?:own )?fault\b"),
-        (
-            "household_wastes_or_overuses",
-            rf"\b{_HOUSEHOLD}s? (?:waste|wastes|wasted|overuse|overuses|overused)\b",
-        ),
-        ("overconsumption", r"\b(?:over-?use|overconsumption)\b"),
-        ("result_of_measure", rf"\b(?:result|consequence) of (?:the )?{_MEASURE}\b"),
-        (
-            "measure_led_to_or_caused",
-            rf"\b{_MEASURE} (?:has |have |had )?"
-            r"(?:led to|leads to|resulted in|results in|caused|causes)\b",
-        ),
-        (
-            "proven_or_attributable_causation",
-            r"\b(?:(?:proven|proved) to cause|proves (?:that|the)\b|attribut(?:able|ed) to|"
-            r"caused (?:the )?(?:damp|mould|mold|condensation|cold|higher|heat loss)|"
-            r"is why (?:the|your)\b|reason (?:your bills?|the (?:room|home|house))\b)",
-        ),
+        r"\b(?:save|saving|pay less) on (?:your |the |their |household )?"
+        r"(?:energy |heating )?(?:bills?|costs?)\b",
+        r"(?:[£$€]\s*\d+|\b\d+\s*(?:pounds?|percent|%))\s+off\s+"
+        r"(?:your |the |their |household )?(?:energy |heating )?(?:bills?|costs?)\b",
+        r"\bwill (?:cost less|be cheaper|cut costs?|reduce costs?)\b",
     )
 )
-PARAPHRASE_PATTERNS: tuple[re.Pattern[str], ...] = tuple(p for _, p in _PARAPHRASE_SPECS)
-
 _CLAUSE_STOP = (
-    r"(?=\s(?:and|but|or|however|therefore|thus|hence|consequently|yet|so|whereas|while|"
-    r"though|although)\b|[.!?;:,\u2014\u2013]|\s-\s|--|$)"
+    r"(?=\s(?:and|but|or|while|yet|though|although|because|so|whereas)\s|"
+    r"--|[.!?;,:\n\u2013\u2014()]|$)"
 )
-# Only a "whether/if" phrase stating uncertainty is exempt; it ends at a comma, conjunction or stop.
+# Only a single-clause "whether/if" phrase stating uncertainty is exempt; it stops at any break.
 _UNCERTAIN = re.compile(
     r"\b(?:cannot determine|can ?not determine|unknown|not known|no evidence)\s+(?:whether|if)\b"
-    rf".*?{_CLAUSE_STOP}"
+    r"[^.!?;,:\n\u2013\u2014()]*?" + _CLAUSE_STOP
 )
 
 
-# A plain statement that no claim, causation, fault or promise is made is a caveat, not a claim.
+# A plain statement that no claim or promise is made is a caveat, never a mask for a second clause.
 _NEGATED_CLAIM = re.compile(
-    r"(?:\b(?:no|not a|never a)\s+(?:claim|promise|guarantee)s?\s+(?:of|about)\b"
-    r"|\b(?:do|does|did|can)\s*not\s+(?:show|prove|establish|claim|promise|assign|attribute)\b)"
-    rf".*?{_CLAUSE_STOP}"
+    r"(?:\b(?:no|not a|never a)\s+(?:claim|promise|guarantee|finding|attribution)s?\s+"
+    r"(?:of|about)\b[^.!?;,:\n\u2013\u2014()]*?" + _CLAUSE_STOP + r"|"
+    r"\b(?:(?:do|does|did|can|will)\s+not|cannot|never)\s+"
+    r"(?:(?:show|assign|attribute|prove|find|make)\s+"
+    r"(?:a\s+|any\s+)?(?:cause|fault|blame|claim)(?:,\s*|\s+or\s+))*"
+    r"(?:(?:claim|promise|guarantee)(?:\s+or\s+|\s*,\s*)?)+\s+"
+    r"(?:any\s+)?(?:energy\s+|bill\s+|cost\s+)?savings?\b)"
 )
-
-
-def _normalize_for_guard(text: str) -> tuple[tuple[str, ...], tuple[str, ...]]:
-    nfkc = (
-        unicodedata.normalize("NFKC", text)
-        .replace("\u2018", "'")
-        .replace("\u2019", "'")
-        .replace("\u201c", '"')
-        .replace("\u201d", '"')
-        .lower()
-    )
-    variants = dict.fromkeys((nfkc.translate(_INVISIBLE), nfkc.translate(_INVISIBLE_SPACE)))
-    collapsed = tuple(re.sub(r"\s+", " ", v).strip() for v in variants)
-    claused = tuple(
-        re.sub(r"[ \t\f\v]+", " ", re.sub(r"[\r\n]+", "; ", v)).strip() for v in variants
-    )
-    return collapsed, claused
-
-
-def neutral_violations(text: str) -> tuple[str, ...]:
-    """Return deterministic violation identifiers for causation, blame or savings-promise text."""
-    collapsed_variants, claused_variants = _normalize_for_guard(text)
-    found: list[str] = []
-    for phrase in BANNED_PHRASES:
-        if any(phrase in collapsed for collapsed in collapsed_variants):
-            found.append(f"phrase:{phrase}")
-    stripped_variants = tuple(
-        _NEGATED_CLAIM.sub(" ", _UNCERTAIN.sub(" ", claused)) for claused in claused_variants
-    )
-    for label, pattern in _PARAPHRASE_SPECS:
-        if any(pattern.search(stripped) for stripped in stripped_variants):
-            found.append(f"pattern:{label}")
-    return tuple(found)
 
 
 def _text(value: object, label: str) -> str:
@@ -237,33 +240,104 @@ def _text(value: object, label: str) -> str:
     return value.strip()
 
 
+_INVISIBLE = dict.fromkeys([*range(0x200B, 0x2010), 0x2060, 0xFEFF, 0x00AD])
+_NEUTRAL_ERROR = "Generated text must not state causation, blame or a savings promise."
+
+
+def _squash_lines(value: str) -> str:
+    return "\n".join(" ".join(line.split()) for line in re.split(r"[\r\n]+", value))
+
+
+def _variants(text: str) -> list[str]:
+    """Lower-cased forms preserving line breaks while folding width, spacing and hidden chars."""
+    folded = unicodedata.normalize("NFKC", text).lower().replace("\u2019", "'")
+    joined = _squash_lines(folded.translate(_INVISIBLE))
+    spaced = _squash_lines(folded.translate(dict.fromkeys(_INVISIBLE, " ")))
+    dehyphen = _squash_lines(re.sub(r"(?<=\w)[-_]+(?=\w)", " ", joined))
+    out: list[str] = []
+    for candidate in (joined, spaced, dehyphen):
+        if candidate not in out:
+            out.append(candidate)
+    return out
+
+
+@lru_cache(maxsize=512)
+def _check_neutral(text: str) -> None:
+    for lowered in _variants(text):
+        collapsed = " ".join(lowered.split())
+        unhyphen = re.sub(r"(?<=\w)[-_]+(?=\w)", "", collapsed)
+        for phrase in BANNED_PHRASES:
+            if phrase in collapsed or phrase in unhyphen:
+                raise ValueError(_NEUTRAL_ERROR)
+        stripped = _NEGATED_CLAIM.sub(" ; ", _UNCERTAIN.sub(" ; ", lowered))
+        stripped_collapsed = " ".join(stripped.split())
+        for pattern in PARAPHRASE_PATTERNS:
+            if pattern.search(stripped) or pattern.search(stripped_collapsed):
+                raise ValueError(_NEUTRAL_ERROR)
+
+
 def neutral_text(text: str) -> str:
     """Return the text, or raise if it states causation, blame or a savings promise."""
-    violations = neutral_violations(text)
-    if violations:
-        first = violations[0]
-        if first.startswith("phrase:"):
-            phrase = first.split(":", 1)[1]
-            raise ValueError(f"Generated text must not contain '{phrase}'.")
-        raise ValueError("Generated text must not state causation, blame or a savings promise.")
+    _check_neutral(text)
     return text
 
 
+def strip_unsafe_sentences(text: str) -> str:
+    """Drop every sentence or line stating causation, blame or a savings promise; keep the rest."""
+    kept: list[str] = []
+    for paragraph in re.split(r"\n\s*\n+", text.strip()):
+        folded = " ".join(paragraph.split())
+        if not folded:
+            continue
+        for sentence in re.split(r"(?<=[.!?])\s+", folded):
+            if not sentence:
+                continue
+            try:
+                neutral_text(sentence)
+                neutral_text(" ".join([*kept, sentence]))
+            except ValueError:
+                continue
+            kept.append(sentence)
+    return " ".join(kept)
+
+
+def assert_templates_neutral(*templates: object) -> None:
+    """Fail fast when a fixed template, label or note (str, list, tuple, dict) is not neutral."""
+    for item in templates:
+        if isinstance(item, str):
+            neutral_text(item)
+        elif isinstance(item, Mapping):
+            assert_templates_neutral(*item.keys(), *item.values())
+        elif isinstance(item, (list, tuple)):
+            assert_templates_neutral(*item)
+
+
+assert_templates_neutral(
+    ACCESSIBLE_ROUTE,
+    PROTECTION,
+    EVALUATOR_NOTICE,
+    PACK_MANUAL_ROUTE,
+    PACK_NOT_REVIEWED,
+    PACK_APPROVAL_LABELS,
+    PACK_QUESTIONS,
+    SUPPORT_OPTIONS,
+    SUPPORT_NOTE,
+    FORM_TITLE,
+    FORM_INTRO,
+    INTAKE_ERROR_MESSAGES,
+    EVALUATOR_UNKNOWNS,
+)
+
+
 def _context(value: Mapping[str, str] | None) -> dict[str, str] | None:
-    """Sensor context is short descriptive text only; keys and values pass neutral_text."""
+    """Sensor context is short descriptive text only; it passes the same neutral-text guard."""
     if not value:
         return None
     out: dict[str, str] = {}
     for key, item in value.items():
-        if (
-            not isinstance(key, str)
-            or not key.strip()
-            or not isinstance(item, str)
-            or not item.strip()
-        ):
+        if not isinstance(key, str) or not isinstance(item, str):
             raise ValueError("Sensor context must be short text.")
-        neutral_text(key)
-        out[key] = neutral_text(item)
+        out[neutral_text(key)] = neutral_text(item)
     return out
 
 
@@ -271,14 +345,40 @@ def _labelled(pairs: Iterable[tuple[str, str]]) -> list[dict[str, str]]:
     return [{"value": v, "label": neutral_text(label)} for v, label in pairs]
 
 
+def normalize_support_needed(value: object) -> list[str]:
+    """Validate optional communication/accessibility support codes without requiring a reason."""
+    if value is None:
+        return []
+    if isinstance(value, str):
+        parts = [part.strip() for part in value.split(",") if part.strip()]
+        if not parts:
+            return []
+        value = parts
+    if isinstance(value, (bytes, bytearray, Mapping)) or not isinstance(value, Iterable):
+        raise ValueError("Support needed must be chosen from SUPPORT_OPTIONS.")
+    out: list[str] = []
+    for item in value:
+        if not isinstance(item, str):
+            raise ValueError("Support needed must be chosen from SUPPORT_OPTIONS.")
+        code = item.strip()
+        if code == "call_back":
+            code = "callback_window"
+        if code not in SUPPORT_OPTION_CODES:
+            raise ValueError("Support needed must be chosen from SUPPORT_OPTIONS.")
+        if code not in out:
+            out.append(code)
+    return out
+
+
 def intake_form() -> Record:
     """Plain-language household route definition for any screen or paper form to follow."""
     form: Record = {
-        "title": "Raise a concern about your home",
-        "intro": "Tell us if your home feels uncomfortable, your bills are higher than you "
-        "expected, or you are unsure how to use your controls.",
-        "accessible_route": ACCESSIBLE_ROUTE,
-        "protection": PROTECTION,
+        "title": neutral_text(FORM_TITLE),
+        "intro": neutral_text(FORM_INTRO),
+        "accessible_route": neutral_text(ACCESSIBLE_ROUTE),
+        "support_note": neutral_text(SUPPORT_NOTE),
+        "support_options": _labelled(SUPPORT_OPTIONS),
+        "protection": neutral_text(PROTECTION),
         "fields": [
             {
                 "name": "raised_by",
@@ -316,6 +416,13 @@ def intake_form() -> Record:
                 ),
             },
             {"name": "statement", "label": "Tell us in your own words", "required": True},
+            {
+                "name": "support_needed",
+                "label": "Would any of these help us communicate with you?",
+                "required": False,
+                "multiple": True,
+                "options": _labelled(SUPPORT_OPTIONS),
+            },
         ],
         "non_digital_channels": _labelled(
             [
@@ -323,13 +430,12 @@ def intake_form() -> Record:
                 ("in_person", "In person"),
                 ("paper", "On paper"),
                 ("assisted_visit", "With help at a visit"),
+                ("representative", "Through a representative"),
             ]
         ),
     }
     for field in form["fields"]:
         neutral_text(field["label"])
-    for key in ("title", "intro", "accessible_route", "protection"):
-        form[key] = neutral_text(form[key])
     return form
 
 
@@ -338,16 +444,31 @@ def intake_errors(values: Mapping[str, object]) -> dict[str, str]:
     errors: dict[str, str] = {}
     raised_by = values.get("raised_by")
     if raised_by not in RAISED_BY:
-        errors["raised_by"] = "Say whether you live in the home or act for the household."
+        errors["raised_by"] = neutral_text(INTAKE_ERROR_MESSAGES["raised_by"])
     if raised_by == "representative" and not _present(values.get("representative_basis")):
-        errors["representative_basis"] = "Say how you are authorised to act for the household."
+        errors["representative_basis"] = neutral_text(INTAKE_ERROR_MESSAGES["representative_basis"])
     if not _present(values.get("home_ref")):
-        errors["home_ref"] = "Enter the home reference from your handover pack."
+        errors["home_ref"] = neutral_text(INTAKE_ERROR_MESSAGES["home_ref"])
     if values.get("kind") not in CONCERN_KINDS:
-        errors["kind"] = "Choose what your concern is about."
+        errors["kind"] = neutral_text(INTAKE_ERROR_MESSAGES["kind"])
     if not _present(values.get("statement")):
-        errors["statement"] = "Tell us your concern in your own words."
-    return {k: neutral_text(v) for k, v in errors.items()}
+        errors["statement"] = neutral_text(INTAKE_ERROR_MESSAGES["statement"])
+    try:
+        normalize_support_needed(values.get("support_needed"))
+    except ValueError:
+        errors["support_needed"] = neutral_text(INTAKE_ERROR_MESSAGES["support_needed"])
+    return errors
+
+
+def intake_error_summary(errors: Mapping[str, str]) -> str:
+    """One plain sentence that leads an error list, so no one has to scan a form to find it."""
+    if not errors:
+        return ""
+    count = len(errors)
+    return neutral_text(
+        f"There {'is 1 thing' if count == 1 else f'are {count} things'} to fix before we can "
+        "record this. If it is easier, tell a member of staff and they will do it with you."
+    )
 
 
 def _present(value: object) -> bool:
@@ -388,7 +509,13 @@ class AftercareRegister:
         reg.concerns = dict(sorted(stored.items(), key=lambda item: _concern_number(item[0])))
         for n, (cid, rec) in enumerate(reg.concerns.items(), start=1):
             outcome = rec.get("outcome")
-            remedy = rec.get("remedy")
+            has_support = "support_needed" in rec
+            support = rec.get("support_needed", [])
+            valid_support = (
+                isinstance(support, list)
+                and all(isinstance(s, str) and s in SUPPORT_OPTION_CODES for s in support)
+                and len(set(support)) == len(support)
+            )
             if (
                 cid != f"AC-{n:03d}"
                 or rec.get("id") != cid
@@ -397,101 +524,66 @@ class AftercareRegister:
                 or rec.get("kind") not in CONCERN_KINDS
                 or rec.get("investigation") not in INVESTIGATION
                 or rec.get("dismissed_by_sensor") is not False
-                or not _present(rec.get("home_ref"))
-                or not _present(rec.get("statement"))
                 or not _present(rec.get("owner"))
-                or not _present(rec.get("accessible_route"))
-                or not isinstance(remedy, Mapping)
-                or remedy.get("status") not in REMEDY_STATUSES
+                or not valid_support
+                or rec.get("remedy", {}).get("status") not in REMEDY_STATUSES
                 or (rec["investigation"] == "outcome_recorded") != (outcome is not None)
                 or (
                     outcome is not None
                     and (
-                        not isinstance(outcome, Mapping)
-                        or outcome.get("outcome") not in OUTCOMES
-                        or outcome.get("basis") not in HUMAN_BASES
+                        outcome.get("basis") not in HUMAN_BASES
                         or not _present(outcome.get("evidence"))
                     )
                 )
                 or (
-                    remedy["status"] in ("completed", "not_needed")
-                    and (outcome is None or not _present(remedy.get("evidence")))
-                )
-                or (remedy.get("evidence") is not None and not _present(remedy.get("evidence")))
-                or (
-                    rec["route"] == "staff_recorded"
-                    and (
-                        rec.get("channel") not in NON_DIGITAL_CHANNELS
-                        or not _present(rec.get("recorded_by"))
-                    )
+                    rec["remedy"]["status"] in ("completed", "not_needed")
+                    and (outcome is None or not _present(rec["remedy"].get("evidence")))
                 )
             ):
                 raise ValueError(f"Snapshot concern {cid} is not valid.")
-            neutral_text(rec["home_ref"])
             neutral_text(rec["owner"])
-            neutral_text(rec["accessible_route"])
-            if rec["route"] == "staff_recorded":
-                neutral_text(rec["recorded_by"])
-            sensor_ctx = rec.get("sensor_context")
-            if sensor_ctx is not None:
-                if not isinstance(sensor_ctx, Mapping) or not sensor_ctx:
-                    raise ValueError(f"Snapshot concern {cid} sensor context is not valid.")
-                _context(sensor_ctx)
             if outcome is not None:
                 neutral_text(outcome["evidence"])
-            if remedy.get("evidence") is not None:
-                neutral_text(remedy["evidence"])
+            remedy_evidence = rec["remedy"].get("evidence")
+            if remedy_evidence is not None:
+                if not isinstance(remedy_evidence, str):
+                    raise ValueError(f"Snapshot concern {cid} is not valid.")
+                if remedy_evidence.strip():
+                    neutral_text(remedy_evidence)
+            if rec.get("sensor_context") is not None:
+                if not isinstance(rec["sensor_context"], Mapping):
+                    raise ValueError(f"Snapshot concern {cid} is not valid.")
+                _context(rec["sensor_context"])
+            if not has_support:
+                rec["support_needed"] = []
         for closure in reg.closures:
-            if (
-                not isinstance(closure, Mapping)
-                or closure.get("kind") not in CLOSURE_KINDS
-                or not _present(closure.get("home_ref"))
-                or not _present(closure.get("owner"))
-            ):
+            if closure.get("kind") not in CLOSURE_KINDS or not _present(closure.get("owner")):
                 raise ValueError("Snapshot closure is not valid.")
-            neutral_text(closure["home_ref"])
             neutral_text(closure["owner"])
-        for pid, pack in reg.packs.items():
-            if not isinstance(pack, Mapping) or pack.get("concern_id") not in reg.concerns:
-                raise ValueError("Snapshot pack has no concern.")
-            if (
-                pack.get("id") != pid
-                or pack.get("task") != PACK_TASK
-                or "sensor_context" in pack
-                or not _present(pack.get("reviewer_function"))
-                or not _present(pack.get("notice"))
-                or not _present(pack.get("manual_route"))
-                or not _present(pack.get("approval"))
-                or not isinstance(pack.get("recorded_facts"), list)
-                or not pack["recorded_facts"]
-                or not all(_present(f) for f in pack["recorded_facts"])
-                or not isinstance(pack.get("questions_for_investigator"), list)
-                or not pack["questions_for_investigator"]
-                or not all(_present(q) for q in pack["questions_for_investigator"])
-                or (pack.get("ai_summary") is not None and not _present(pack.get("ai_summary")))
-            ):
-                raise ValueError(f"Snapshot pack {pid} is not valid.")
-            neutral_text(pack["reviewer_function"])
-            neutral_text(pack["notice"])
-            neutral_text(pack["manual_route"])
-            neutral_text(pack["approval"])
-            for fact in pack["recorded_facts"]:
-                neutral_text(fact)
-            for question in pack["questions_for_investigator"]:
-                neutral_text(question)
-            if pack.get("ai_summary") is not None:
-                neutral_text(pack["ai_summary"])
+        if any(p.get("concern_id") not in reg.concerns for p in reg.packs.values()):
+            raise ValueError("Snapshot pack has no concern.")
+        for pack in reg.packs.values():
+            ai_summary = pack.get("ai_summary")
+            if ai_summary is not None:
+                if not isinstance(ai_summary, str) or not ai_summary.strip():
+                    raise ValueError("Snapshot pack is not valid.")
+                neutral_text(ai_summary)
+            for list_key in ("recorded_facts", "questions_for_investigator"):
+                entries = pack.get(list_key)
+                if not isinstance(entries, list) or not all(isinstance(v, str) for v in entries):
+                    raise ValueError("Snapshot pack is not valid.")
+                for entry in entries:
+                    neutral_text(entry)
+            for str_key in ("approval", "manual_route", "notice"):
+                val = pack.get(str_key)
+                if not _present(val):
+                    raise ValueError("Snapshot pack is not valid.")
+                neutral_text(str(val))
             review = pack.get("review")
             if review is not None:
-                if (
-                    not isinstance(review, Mapping)
-                    or review.get("action") not in PACK_ACTIONS
-                    or not _present(review.get("by"))
-                    or not _present(review.get("reason"))
-                ):
-                    raise ValueError(f"Snapshot pack {pid} review is not valid.")
-                neutral_text(review["by"])
-                neutral_text(review["reason"])
+                if not isinstance(review, Mapping) or not _present(review.get("reason")):
+                    raise ValueError("Snapshot pack is not valid.")
+                neutral_text(str(review["reason"]))
         return reg
 
     def _get(self, cid: str) -> Record:
@@ -516,6 +608,7 @@ class AftercareRegister:
         recorded_by: str | None = None,
         channel: str | None = None,
         sensor_context: Mapping[str, str] | None = None,
+        support_needed: object = None,
     ) -> Record:
         if route not in ROUTES:
             raise ValueError("Route must be digital or staff_recorded.")
@@ -523,12 +616,15 @@ class AftercareRegister:
             raise ValueError("Raised by must be household or representative.")
         if kind not in CONCERN_KINDS:
             raise ValueError("Concern kind must be discomfort, higher_bill, control_use or other.")
+        support = normalize_support_needed(support_needed)
         extra: Record = {}
         if route == "staff_recorded":
             if channel not in NON_DIGITAL_CHANNELS:
-                raise ValueError("Channel must be phone, in_person, paper or assisted_visit.")
+                raise ValueError(
+                    "Channel must be phone, in_person, paper, assisted_visit or representative."
+                )
             extra = {
-                "recorded_by": neutral_text(_text(recorded_by, "Recording staff member")),
+                "recorded_by": _text(recorded_by, "Recording staff member"),
                 "channel": channel,
             }
         if raised_by == "representative":
@@ -539,12 +635,13 @@ class AftercareRegister:
             "id": cid,
             "route": route,
             "raised_by": raised_by,
-            "home_ref": neutral_text(_text(home_ref, "Home reference")),
+            "home_ref": _text(home_ref, "Home reference"),
             "kind": kind,
             "statement": _text(statement, "Concern statement"),
             "owner": neutral_text(_text(owner, "Human owner")),
             "next_update": date.fromisoformat(next_update).isoformat(),
-            "accessible_route": neutral_text(ACCESSIBLE_ROUTE),
+            "accessible_route": ACCESSIBLE_ROUTE,
+            "support_needed": support,
             "investigation": "received",
             "outcome": None,
             "remedy": {"status": "not_assessed", "evidence": None},
@@ -588,12 +685,12 @@ class AftercareRegister:
             raise ValueError("Basis must be a human investigation, not a sensor reading.")
         if rec["investigation"] == "outcome_recorded":
             raise ValueError("An outcome is already recorded for this concern.")
-        checked_evidence = neutral_text(_text(evidence, "Outcome evidence"))
+        clean_evidence = neutral_text(_text(evidence, "Outcome evidence"))
         rec["investigation"] = "outcome_recorded"
         rec["outcome"] = {
             "outcome": outcome,
             "basis": basis,
-            "evidence": checked_evidence,
+            "evidence": clean_evidence,
         }
         if outcome == "remedy_needed" and rec["remedy"]["status"] == "not_assessed":
             rec["remedy"]["status"] = "open"
@@ -605,18 +702,18 @@ class AftercareRegister:
         self._own(rec, owner)
         if status not in REMEDY_STATUSES or status == "not_assessed":
             raise ValueError("Remedy status must be open, in_progress, completed or not_needed.")
-        checked_evidence: str | None
+        cleaned_evidence: str | None = None
+        if evidence is not None:
+            if not isinstance(evidence, str):
+                raise ValueError("Remedy evidence is required.")
+            if evidence.strip():
+                cleaned_evidence = neutral_text(evidence.strip())
         if status in ("completed", "not_needed"):
-            checked_evidence = neutral_text(_text(evidence, "Remedy evidence"))
+            if cleaned_evidence is None:
+                _text(evidence, "Remedy evidence")
             if rec["investigation"] != "outcome_recorded":
                 raise ValueError("Record an investigation outcome before completing a remedy.")
-        elif evidence is None:
-            checked_evidence = None
-        elif not isinstance(evidence, str):
-            raise ValueError("Remedy evidence is required.")
-        else:
-            checked_evidence = neutral_text(evidence.strip()) if evidence.strip() else None
-        rec["remedy"] = {"status": status, "evidence": checked_evidence}
+        rec["remedy"] = {"status": status, "evidence": cleaned_evidence}
         rec["history"].append({"event": f"remedy_{status}"})
         return deepcopy(rec)
 
@@ -625,7 +722,7 @@ class AftercareRegister:
         if kind not in CLOSURE_KINDS:
             raise ValueError("Closure kind must be handover or financial.")
         item = {
-            "home_ref": neutral_text(_text(home_ref, "Home reference")),
+            "home_ref": _text(home_ref, "Home reference"),
             "kind": kind,
             "closed_on": date.fromisoformat(closed_on).isoformat(),
             "owner": neutral_text(_text(owner, "Closure owner")),
@@ -655,7 +752,7 @@ class AftercareRegister:
         """Household-facing view: owner, next update, outcome and remedy, without sensor context."""
         rec = deepcopy(self._get(cid))
         rec.pop("sensor_context", None)
-        rec["protection"] = neutral_text(PROTECTION)
+        rec["protection"] = PROTECTION
         return rec
 
     def evaluator_view(
@@ -685,9 +782,9 @@ class AftercareRegister:
             if c["id"] in unresolved_ids
             and c["home_ref"] in closed["handover"] | closed["financial"]
         )
-        unknowns = ["Households that did not raise a concern may still have one."]
+        unknowns = [neutral_text(EVALUATOR_UNKNOWNS[1])]
         if baseline is None:
-            unknowns.insert(0, "Baseline coverage is unknown.")
+            unknowns.insert(0, neutral_text(EVALUATOR_UNKNOWNS[0]))
         return {
             "homes_handed_over": total,
             "homes_with_baseline": _fraction(len(baseline), total)
@@ -702,7 +799,7 @@ class AftercareRegister:
             ),
             "unresolved_with_handover_or_financial_closure": unresolved_after_closure,
             "concerns_outside_stated_scope": out_of_scope,
-            "unknowns": [neutral_text(u) for u in unknowns],
+            "unknowns": unknowns,
             "notice": neutral_text(EVALUATOR_NOTICE),
         }
 
@@ -720,15 +817,18 @@ class AftercareRegister:
             f"Investigation: {rec['investigation']}.",
             f"Remedy status: {rec['remedy']['status']}.",
         ]
-        questions = [
-            "What did the household describe, in their own words?",
-            "What does a visit or conversation with the household show?",
-            "What remedy, if any, does the household need, and who owns it?",
-        ]
+        questions = list(PACK_QUESTIONS)
         summary = None if ai_summary is None else neutral_text(_text(ai_summary, "AI summary"))
+        task_entry = _registry_get(PACK_TASK) or {}
         pack: Record = {
             "id": f"PK-{len(self.packs) + 1:03d}",
             "task": PACK_TASK,
+            "requirement": "FR-036",
+            "kind": neutral_text(str(task_entry.get("kind", "proposal-pack"))),
+            "state": neutral_text(str(task_entry.get("state", "disabled"))),
+            "approval_state": neutral_text(str(task_entry.get("approval_state", "unapproved"))),
+            "live_authorized": _authorizes_live(PACK_TASK, None),
+            "requires_human_review": True,
             "concern_id": cid,
             "household_statement": rec["statement"],
             "recorded_facts": [neutral_text(f) for f in facts],
@@ -737,7 +837,7 @@ class AftercareRegister:
             "source": "ai" if summary else "template",
             "approval": neutral_text(PACK_NOT_REVIEWED),
             "approved": False,
-            "reviewer_function": neutral_text(_text(rec["owner"], "Human owner")),
+            "reviewer_function": rec["owner"],
             "review": None,
             "manual_route": neutral_text(PACK_MANUAL_ROUTE),
             "notice": neutral_text(EVALUATOR_NOTICE),
@@ -750,20 +850,16 @@ class AftercareRegister:
         if pack_id not in self.packs:
             raise KeyError(pack_id)
         pack = self.packs[pack_id]
-        checked_reviewer = neutral_text(_text(reviewer, "Owner"))
-        self._own(self._get(pack["concern_id"]), checked_reviewer)
+        self._own(self._get(pack["concern_id"]), reviewer)
         if action not in PACK_ACTIONS:
             raise ValueError("Action must be accept or reject.")
         if pack["review"] is not None:
             raise ValueError("This pack has already been reviewed.")
-        checked_reason = neutral_text(_text(reason, "Reason"))
         pack["review"] = {
-            "by": checked_reviewer,
+            "by": reviewer.strip(),
             "action": action,
-            "reason": checked_reason,
+            "reason": neutral_text(_text(reason, "Reason")),
         }
-        pack["approval"] = neutral_text(
-            "Accepted for reference" if action == "accept" else "Rejected"
-        )
+        pack["approval"] = neutral_text(PACK_APPROVAL_LABELS[action])
         pack["approved"] = action == "accept"
         return deepcopy(pack)

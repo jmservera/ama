@@ -385,7 +385,10 @@ class QualityGateTests(unittest.TestCase):
 
 class ControlledRuleRegistryTests(unittest.TestCase):
     def test_every_gate_kind_has_a_rule_with_full_metadata(self) -> None:
-        self.assertEqual({r.gate for r in gates.CONTROLLED_RULES}, set(gates.GATE_KINDS))
+        self.assertEqual(
+            {r.gate for r in gates.CONTROLLED_RULES},
+            set(gates.GATE_KINDS) | {r.gate for r in gates.TRANSITION_RULES},
+        )
         for rule in gates.CONTROLLED_RULES:
             record = rule.as_record()
             with self.subTest(gate=rule.gate, source=rule.source):
@@ -414,6 +417,47 @@ class ControlledRuleRegistryTests(unittest.TestCase):
             self.assertEqual(gate.outcome, gates.PASS)
         early = gates.finance_gate(True, "x", on="2026-11-12")
         self.assertEqual(early.outcome, gates.UNKNOWN)
+
+
+class RuleProvenanceExposureTests(unittest.TestCase):
+    META = {"source", "effective_date", "version", "reviewer"}
+
+    def emitted(self) -> list[gates.GateResult]:
+        hold = {"accountable_role": "Building Safety Liaison"}
+        actor = {"role": "Building Safety Liaison", "email": "b@x.test"}
+        return [
+            gates.safety_release_gate(hold, actor, [], on="2026-11-03"),
+            *gates.booking_gates({}, None, on="2026-11-30"),
+            gates.evidence_gate(None, "Owner", on="2026-11-30"),
+            gates.quality_gate(None, "Owner", on="2026-11-30"),
+            gates.capacity_gate(None, "No capacity record.", on="2026-11-30"),
+            gates.eligibility_gate(None, "x", "Grants Officer", on="2026-11-30"),
+            gates.authority_gate(None, "x", on="2026-11-30"),
+            gates.finance_gate(None, "x", on="2026-11-30"),
+        ]
+
+    def test_every_emitted_gate_result_exposes_a_registered_rule(self) -> None:
+        results = self.emitted()
+        self.assertEqual({r.gate for r in results}, set(gates.GATE_KINDS))
+        for result in results:
+            with self.subTest(gate=result.gate):
+                rule = result.as_record()["rule"]
+                self.assertTrue(self.META <= set(rule))
+                self.assertTrue(all(str(rule[k]).strip() for k in self.META))
+                self.assertIn(result.rule, gates.CONTROLLED_RULES)
+
+    def test_no_rule_is_defined_outside_the_registry(self) -> None:
+        defined = [v for v in vars(gates).values() if isinstance(v, gates.GateRule)]
+        defined += list(gates.BOOKING_RULES.values())
+        self.assertTrue(set(defined) <= set(gates.CONTROLLED_RULES))
+
+    def test_rule_without_a_reviewer_or_version_is_refused(self) -> None:
+        for kw in ({"reviewer": " "}, {"version": ""}, {"source": ""}):
+            args = dict(gate="g", source="s", effective_date="2026-01-01", version="1")
+            args.update(reviewer="R")
+            args.update(kw)
+            with self.subTest(kw=kw), self.assertRaises(ValueError):
+                gates.GateRule(**args)
 
 
 Store_any: Any = Store
@@ -553,6 +597,31 @@ class GateBoundaryTests(unittest.TestCase):
                     gates.safety_release_gate(hold, who, ["b@x.test"]), (gates.UNKNOWN,)
                 )
         self.assertSafe(gates.safety_release_gate(hold, actor, ["b@x.test"]), (gates.PASS,))
+
+
+class TransitionRuleAttachmentTests(unittest.TestCase):
+    def test_pre_transition_rules_are_registered_and_honestly_unreviewed(self) -> None:
+        for rule in gates.TRANSITION_RULES:
+            with self.subTest(gate=rule.gate):
+                self.assertIn(rule, gates.CONTROLLED_RULES)
+                self.assertIn(rule, gates.unreviewed_rules())
+
+    def test_refusals_keep_the_gate_result_rule(self) -> None:
+        result = gates.finance_gate(False, "Over budget.")
+        errors = (gates.GateResultError("x", result), gates.GateResultPermissionError("x", result))
+        for error in errors:
+            self.assertEqual(error.record["rule"], gates.FINANCE_RULE.as_record())
+        paused = gates.RuleGatedPermissionError("paused", gates.PAUSE_RULE)
+        self.assertIs(paused.rule, gates.PAUSE_RULE)
+
+    def test_gate_error_carries_rule_records(self) -> None:
+        from zava_forward.core.store import GateError as _GateError
+
+        GateError: Any = _GateError
+        error = GateError(["Not ready."], [gates.STOCK_RULE])
+        self.assertEqual(error.reasons, ["Not ready."])
+        self.assertEqual(error.rules, [gates.STOCK_RULE.as_record()])
+        self.assertEqual(GateError(["x"]).rules, [])
 
 
 if __name__ == "__main__":

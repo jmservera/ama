@@ -160,5 +160,68 @@ class CrossChecks(unittest.TestCase):
         self.assertIn("makes no production", readme)
 
 
+class DeployedImageAndProbeInvariants(unittest.TestCase):
+    PLACEHOLDER = "mcr.microsoft.com/k8se/quickstart:latest"
+
+    def test_every_deployed_container_image_is_a_parameter_never_a_literal(self) -> None:
+        for name, (_, text) in workloads().items():
+            with self.subTest(workload=name):
+                images = re.findall(r"^\s+image: (.+)$", text, re.MULTILINE)
+                self.assertTrue(images, "no container image")
+                for image in images:
+                    self.assertRegex(image.strip(), r"^[A-Za-z]\w*$")
+
+    def test_module_never_embeds_the_placeholder_image(self) -> None:
+        module = (INFRA / "modules/containerapps.bicep").read_text()
+        self.assertNotIn("quickstart", module)
+        self.assertNotRegex(module, r"image: '")
+
+    def test_main_passes_all_four_images_and_only_bootstraps_with_the_placeholder(
+        self,
+    ) -> None:
+        main = (INFRA / "main.bicep").read_text()
+        for wired in (
+            "apiImage: apiImage",
+            "agentImage: agentImage",
+            "importImage: importImage",
+            "orchestratorImage: empty(orchestratorImage) ? '"
+            + self.PLACEHOLDER
+            + "' : orchestratorImage",
+        ):
+            self.assertIn(wired, main)
+        self.assertEqual(main.count(self.PLACEHOLDER), 4)
+        self.assertIn("publicSimulationRequiresRealApiImage", main)
+
+    def test_probe_timings_are_bounded_and_startup_budget_covers_slow_starts(self) -> None:
+        text = (INFRA / "modules/containerapps.bicep").read_text()
+        api = text.split("resource api ", 1)[1].split("resource apiAuth ", 1)[0]
+        probes = {
+            m.group(1): {k: int(v) for k, v in re.findall(r"(\w+): (\d+)", m.group(2))}
+            for m in re.finditer(r"type: '(\w+)', httpGet: \{[^}]*\}, ([^}\n]+) \}", api)
+        }
+        self.assertEqual(set(probes), {"Startup", "Readiness", "Liveness"})
+        for kind, values in probes.items():
+            with self.subTest(probe=kind):
+                self.assertGreaterEqual(values["periodSeconds"], 1)
+                self.assertLessEqual(values["timeoutSeconds"], values["periodSeconds"] + 2)
+                self.assertGreaterEqual(values["failureThreshold"], 1)
+        startup = probes["Startup"]
+        budget = (
+            startup["initialDelaySeconds"] + startup["periodSeconds"] * startup["failureThreshold"]
+        )
+        self.assertGreaterEqual(budget, 60)
+        self.assertLessEqual(budget, 300)
+
+    def test_queue_workers_scale_from_zero_with_a_finite_cap(self) -> None:
+        text = (INFRA / "modules/containerapps.bicep").read_text()
+        agents = text.split("resource agents ", 1)[1].split("resource orchestrator ", 1)[0]
+        self.assertIn("minReplicas: 0", agents)
+        self.assertRegex(agents, r"maxReplicas: [1-9]\d?\n")
+        self.assertIn("type: 'azure-queue'", agents)
+        importer = text.split("resource importJob ", 1)[1]
+        self.assertRegex(importer, r"maxExecutions: [1-9]\d?\n")
+        self.assertIn("type: 'azure-queue'", importer)
+
+
 if __name__ == "__main__":
     unittest.main()

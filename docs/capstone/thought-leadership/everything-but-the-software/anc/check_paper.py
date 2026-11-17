@@ -69,7 +69,7 @@ def expand_inputs(text: str, package: Path = PACKAGE, seen: tuple[Path, ...] = (
 
 def body_words(text: str) -> int:
     body = text.split(r"\section{Introduction}", 1)[1]
-    body = body.split(r"\section*{Acknowledgements}", 1)[0]
+    body = re.split(r"\\section\*\{|\\begin\{thebibliography\}", body, maxsplit=1)[0]
     body = strip_comments(body)
     body = re.sub(r"\\begin\{verbatim\}.*?\\end\{verbatim\}", "", body, flags=re.S)
     body = re.sub(r"\\(?:cite\w*|ref|label|includegraphics)(?:\[[^]]*\])?\{[^}]*\}", "", body)
@@ -200,7 +200,11 @@ def main() -> int:
     print(f"ABSTRACT_SOURCE_CHARACTERS {characters} (limit <1920; conservative source count)")
     if characters >= 1920:
         failures.append("abstract is too long")
-    if r"\resultsfalse" not in clean or r"\resultstrue" in clean:
+    has_authorized_results_block = r"\ifresults" in clean and r"\fi" in clean and r"\label{sec:resultsledger}" in clean
+    if (
+        (r"\resultsfalse" not in clean and not (r"\resultstrue" in clean and has_authorized_results_block))
+        or (r"\resultsfalse" in clean and r"\resultstrue" in clean)
+    ):
         failures.append("results switch is not false")
     if args.check_latex_log:
         log = (PACKAGE / "main.log").read_text(encoding="utf-8")

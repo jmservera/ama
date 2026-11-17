@@ -23,16 +23,29 @@
   var transition = 0;
   var sessionChannel = new BroadcastChannel("resident-demo-session");
   var callbackController = null;
+  var agendaAvailable = false;
+  function isAgendaAvailable(payload) {
+    if (!payload) return false;
+    if (typeof payload.agenda_available === "boolean") return payload.agenda_available;
+    return Boolean(payload.callbacks_available);
+  }
   var assistant = window.mountResidentAssistant(document.body, api, showSignin, function (search) {
     if (callbackController) callbackController.searchFromChat(search);
   });
-  assistant.setSession(false);
+  function syncAssistant(signedIn, available) {
+    assistant.setSession(signedIn, available);
+    if (typeof assistant.setAgendaAvailable === "function") {
+      assistant.setAgendaAvailable(available);
+    }
+  }
+  syncAssistant(false, agendaAvailable);
   function removeAppointments() {
     if (callbackController) callbackController.dispose();
     callbackController = null;
   }
 
   var signedInLede = lede.textContent;
+  var callbackUnavailableLede = " Synthetic callback booking is not connected in this showcase environment. Nobody will call you.";
   var callbackLede = " You can try synthetic callback booking below. Nobody will call you.";
   var signedOutLede = "Sign in to see how your home improvement is going. Your home and works records are read-only.";
 
@@ -72,7 +85,7 @@
     transition += 1;
     sessionId = "";
     removeAppointments();
-    assistant.setSession(false);
+    syncAssistant(false, agendaAvailable);
     content.textContent = "";
     content.hidden = true;
     hideAccount();
@@ -84,6 +97,9 @@
     var held = sessionId;
     api("/demo/session").then(function (res) {
       if (current !== transition) return;
+      if (res.ok && (typeof res.body.agenda_available === "boolean" || typeof res.body.callbacks_available === "boolean")) {
+        agendaAvailable = isAgendaAvailable(res.body);
+      }
       if (!res.ok || res.body.session_id !== held) {
         showSignin("Your sign-in changed in another tab. Please sign in again.");
       }
@@ -278,6 +294,14 @@
       return section;
     }
     var latest = history[history.length - 1];
+    var status = el("div", null, "sensor-status");
+    status.setAttribute("role", "group");
+    status.setAttribute("aria-label", "Sensor reading status");
+    var freshness = sensors.freshness || {};
+    var fresh = freshness.state === "recent";
+    if (!sensors.stale) status.appendChild(el("p")).appendChild(badge(fresh ? "check" : "info", "Reading status: " + (freshness.text || "Freshness unknown."), fresh ? "ok" : ""));
+    status.appendChild(el("p", "Source: " + (sensors.source || "Synthetic demo data. Not calibrated."), "sensor-source"));
+    section.appendChild(status);
     var recorded = el("p", "Latest stored reading: ");
     recorded.appendChild(sensorTime(latest.observed_at, " (UK time)"));
     section.appendChild(recorded);
@@ -554,7 +578,7 @@
       needed.forEach(function (item) { withIcon(ul.appendChild(el("li")), "alert", ""); ul.lastChild.lastChild.textContent = ""; ul.lastChild.appendChild(el("span", item.text)); });
       box.appendChild(ul);
     }
-    if (view.callbacks_available) {
+    if (isAgendaAvailable(view)) {
       var optional = el("p", "Optional: ");
       var link = el("a", "Book a synthetic callback");
       link.href = "#sec-help";
@@ -634,7 +658,8 @@
   function render(view, announce) {
     removeAppointments();
     endLoading();
-    assistant.setSession(true);
+    agendaAvailable = isAgendaAvailable(view);
+    syncAssistant(true, agendaAvailable);
     content.textContent = "";
     if (view.home) {
       var strip = el("div", null, "home-strip");
@@ -642,7 +667,7 @@
       strip.appendChild(badge("info", "Synthetic showcase record - read-only"));
       content.appendChild(strip);
     }
-    content.appendChild(sectionNav(view.callbacks_available));
+    content.appendChild(sectionNav(agendaAvailable));
     content.appendChild(summarySection(view));
     var grid = el("div", null, "status-grid");
     grid.appendChild(statusSection(view));
@@ -658,7 +683,7 @@
     help.appendChild(hl);
     help.appendChild(el("p", view.help.note));
     content.appendChild(help);
-    if (view.callbacks_available) {
+    if (agendaAvailable) {
       var callbacks = el("section", null, "card callbacks");
       callbacks.setAttribute("aria-labelledby", "callback-title");
       content.appendChild(callbacks);
@@ -681,15 +706,25 @@
       b.disabled = true;
       b.setAttribute("aria-disabled", "true");
       li.appendChild(b);
-      li.appendChild(el("span", appointment ? "You cannot change live works appointments here." + (view.callbacks_available ? " Use the form above for local synthetic callbacks only." : "") : u.reason, "why"));
+      li.appendChild(el("span", appointment ? "You cannot change live works appointments here." + (agendaAvailable ? " Use the form above for local synthetic callbacks only." : "") : u.reason, "why"));
       ul.appendChild(li);
     });
+    if (!agendaAvailable) {
+      var cbLi = el("li");
+      var cbBtn = el("button", "Synthetic callbacks");
+      cbBtn.type = "button";
+      cbBtn.disabled = true;
+      cbBtn.setAttribute("aria-disabled", "true");
+      cbLi.appendChild(cbBtn);
+      cbLi.appendChild(el("span", "The local callback agenda is not connected in this showcase. Use the contact routes above.", "why"));
+      ul.appendChild(cbLi);
+    }
     unavailable.appendChild(ul);
     content.appendChild(unavailable);
 
     errorEl.hidden = true;
     signin.hidden = true;
-    lede.textContent = signedInLede + (view.callbacks_available ? callbackLede : "");
+    lede.textContent = signedInLede + (agendaAvailable ? callbackLede : callbackUnavailableLede);
     content.hidden = false;
     accountEmail.textContent = view.account.email;
     account.hidden = false;
@@ -737,6 +772,8 @@
     errorTitle.focus();
   }
 
+  var BUSY_FALLBACK = "The showcase is busy because several people are viewing it at once. Nothing is wrong with your case. Please try again in a few seconds.";
+
   function api(path, options) {
     options = options || {};
     var current = transition;
@@ -748,28 +785,72 @@
     }
     return fetch(path, { method: options.method || "GET", headers: headers, body: options.body, cache: "no-store", credentials: "same-origin" })
       .then(function (r) {
-        return r.json().then(function (body) {
-          if (current === transition && body.session_changed) showSignin(body.error);
-          return { ok: r.ok, status: r.status, body: body, retryAfter: Number(r.headers && r.headers.get && r.headers.get("Retry-After")) };
+        var rawRetry = r.headers && r.headers.get ? r.headers.get("Retry-After") : null;
+        var hasRetryAfter = rawRetry !== null && String(rawRetry).trim() !== "";
+        return r.json().catch(function (err) {
+          if (r.ok) throw err;
+          return {};
+        }).then(function (body) {
+          var safeBody = body && typeof body === "object" ? body : {};
+          if (current === transition && safeBody.session_changed) showSignin(safeBody.error);
+          return {
+            ok: r.ok,
+            status: r.status,
+            body: safeBody,
+            retryAfter: hasRetryAfter ? Number(rawRetry) : NaN,
+            hasRetryAfter: hasRetryAfter
+          };
         });
       });
   }
 
+  function retryWaitSeconds(res) {
+    if (!res || res.status !== 503) return 0;
+    var rawBody = res.body ? res.body.retry_after_seconds : undefined;
+    var hasBodyHint = rawBody !== undefined && rawBody !== null && typeof rawBody !== "boolean";
+    if (!res.hasRetryAfter && !hasBodyHint) return 0;
+    var bodyNum = hasBodyHint ? Number(rawBody) : NaN;
+    if (Number.isFinite(bodyNum) && bodyNum > 0) {
+      return Math.min(10, Math.max(1, Math.round(bodyNum)));
+    }
+    if (Number.isFinite(res.retryAfter) && res.retryAfter > 0) {
+      return Math.min(10, Math.max(1, Math.round(res.retryAfter)));
+    }
+    return 3;
+  }
+
+  function busyErrorCopy(res, fallback) {
+    var errText = res && res.body && typeof res.body.error === "string" ? res.body.error.trim() : "";
+    if (retryWaitSeconds(res) > 0) {
+      if (!errText) return BUSY_FALLBACK;
+      if (/try again in a few seconds/i.test(errText)) return errText;
+      return errText + (/[.!?]$/.test(errText) ? "" : ".") + " Please try again in a few seconds.";
+    }
+    return errText || fallback;
+  }
+
   function loadView(announce, retried) {
     var current = transition;
+    mainEl.setAttribute("aria-busy", "true");
     if (!loading) statusEl.textContent = "Loading your progress\u2026";
     return api("/demo/view").then(function (res) {
       if (current !== transition) return;
-      if (res.status === 503 && !retried) {
-        var wait = res.retryAfter > 0 && res.retryAfter <= 10 ? res.retryAfter : 3;
-        statusEl.textContent = "The showcase is busy. Trying again in a few seconds\u2026";
+      var wait = retryWaitSeconds(res);
+      if (wait > 0 && !retried) {
+        if (loadingTimer !== null) {
+          clearTimeout(loadingTimer);
+          loadingTimer = null;
+        }
+        loading = false;
+        mainEl.setAttribute("aria-busy", "true");
+        statusEl.textContent = "The showcase is busy because several people are viewing it at once. Retrying automatically in " + wait + (wait === 1 ? " second" : " seconds") + ". If it stays busy, try again in a few seconds\u2026";
         return new Promise(function (resolve) { setTimeout(resolve, wait * 1000); }).then(function () {
           if (current === transition) return loadView(announce, true);
         });
       }
       if (res.ok) render(res.body, announce);
       else if (res.status === 401) showSignin("Please sign in again.");
-      else fail(res.body.error || "Something went wrong.");
+      else fail(busyErrorCopy(res, "Something went wrong."));
     });
   }
 
@@ -790,8 +871,12 @@
       .then(function (res) {
         clearTimeout(slow);
         if (current !== transition) return;
-        if (!res.ok) { fail(res.body.error || "The showcase is not available right now."); return; }
+        if (!res.ok) { fail(busyErrorCopy(res, "The showcase is not available right now.")); return; }
         csrf = res.body.csrf;
+        if (typeof res.body.agenda_available === "boolean" || typeof res.body.callbacks_available === "boolean") {
+          agendaAvailable = isAgendaAvailable(res.body);
+          syncAssistant(Boolean(res.body.signed_in), agendaAvailable);
+        }
         if (res.body.signed_in) {
           sessionId = res.body.session_id;
           return loadView();
@@ -849,7 +934,7 @@
           start();
           return;
         }
-        showSignin(res.body.error || "We could not sign you in.");
+        showSignin(busyErrorCopy(res, "We could not sign you in."));
       })
       .catch(function () {
         if (current === transition) showSignin("We could not reach the showcase. Check your connection, then select Sign in to try again.");

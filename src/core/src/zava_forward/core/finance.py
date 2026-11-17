@@ -755,14 +755,14 @@ class FinanceMixin:
         try:
             limits = el.load_limits(Path(path))
         except el.LimitsError as exc:
-            return dict(status="Held", signal=el.UNAPPROVED, reason=str(exc), findings=[], notice=el.NOTICE)
+            return el.held(str(exc))
         try:
             with self.lock:
                 exposure = el.committed_exposure(deepcopy(list(self.cases.values())))
             return el.assess(limits, exposure)
         except (el.LimitsError, ArithmeticError, AttributeError, TypeError, ValueError) as exc:
             reason = str(exc) if isinstance(exc, el.LimitsError) else "Recorded commitments cannot be read."
-            return dict(status="Held", signal=el.UNAPPROVED, reason=reason, findings=[], notice=el.NOTICE)
+            return el.held(reason)
 
 
 def _scan_python_files_for_authority_calls(paths: list[Path]) -> list[str]:

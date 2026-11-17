@@ -103,7 +103,10 @@ class ProtocolPlanningTests(unittest.TestCase):
                 )
 
     def test_given_allocation_choices_when_totaled_then_all_39_resource_cells_match(self) -> None:
-        rows = table_rows(self.protocol, "tab:pilotresources")
+        rows = table_rows(
+            (PACKAGE / "anc/measurement-provenance.tex").read_text(encoding="utf-8"),
+            "tab:pilotresources",
+        )
         expected = [resources(n) for n in ALLOCATIONS]
         self.assertEqual([row[0] for row in rows], list(expected[0]))
         for row in rows:
@@ -156,11 +159,13 @@ class ProtocolPlanningTests(unittest.TestCase):
         self.assertNotEqual(len(b), len(d))
         self.assertIn("D also has fewer fresh sessions", self.protocol)
 
-    def test_given_selected_allocation_when_rendered_then_abstract_and_native_labels_agree(self) -> None:
+    def test_given_selected_allocation_when_rendered_then_current_sample_and_historical_labels_agree(self) -> None:
         abstract = self.manuscript.split(r"\begin{abstract}", 1)[1].split(
             r"\end{abstract}", 1
         )[0]
-        self.assertIn("12 (default), 21 or 33", " ".join(abstract.split()))
+        abstract_prose = " ".join(abstract.split())
+        self.assertIn("21 repository trajectories in every condition", abstract_prose)
+        self.assertIn("All 315 allocated trajectories finished", abstract_prose)
         labels = {}
         for stem in ("fig-pilot-design", "fig-experiment-measures"):
             scene = json.loads((PACKAGE / f"{stem}.excalidraw").read_text())
@@ -187,7 +192,7 @@ class ProtocolPlanningTests(unittest.TestCase):
         for marker in (
             "prospective reporting requirements",
             "candidate independent-cell analysis",
-            "scheduling label alone",
+            "label alone cannot establish their dependence or independence",
             "forecast and approval are required separately",
         ):
             with self.subTest(marker=marker):
@@ -204,7 +209,9 @@ class ProtocolPlanningTests(unittest.TestCase):
             self.assertIn(marker, text)
 
     def test_given_cost_sensitivity_when_evaluated_then_all_nine_cells_match(self) -> None:
-        rows = table_rows(self.manuscript, "tab:costscenario")
+        rows = table_rows(
+            (PACKAGE / "anc/case-audits.tex").read_text(encoding="utf-8"), "tab:costscenario"
+        )
         self.assertEqual(len(rows), 3)
         for row, delta in zip(rows, (Fraction(0), Fraction(1, 2), Fraction(1))):
             self.assertEqual(len(row), 4)

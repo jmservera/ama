@@ -42,7 +42,7 @@ OVERRIDES = {
         else "operator@example.test"
         if key == "alertEmail"
         else "uksouth"
-        if key in {"location", "sqlLocation"}
+        if key in {"location", "sqlLocation", "aiModelLocation"}
         else "synthetic-reviewed-reference"
     )
     for key in pipeline.OVERRIDES

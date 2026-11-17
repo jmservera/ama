@@ -79,8 +79,19 @@ HEADERS = {
 }
 GENERIC_DENIAL = "We could not sign you in with those details."
 UNAVAILABLE = "The showcase is not available right now."
-BUSY = "The showcase is busy right now. Try again in a few seconds."
+BUSY = (
+    "The showcase is busy because several people are viewing it at once. "
+    "Nothing is wrong with your case. Try again in a few seconds."
+)
+MIN_RETRY_AFTER_SECONDS = 1
+MAX_RETRY_AFTER_SECONDS = 10
 RETRY_AFTER_SECONDS = 3
+
+
+def clamp_retry_after(seconds: object) -> int:
+    if isinstance(seconds, bool) or not isinstance(seconds, int):
+        raise ValueError("retry_after_seconds must be an integer")
+    return max(MIN_RETRY_AFTER_SECONDS, min(MAX_RETRY_AFTER_SECONDS, seconds))
 
 
 class Reader(Protocol):
@@ -124,6 +135,7 @@ class ResidentDemo:
         assistant_advisor: Advisor | None = None,
         agenda: Agenda | None = None,
         chat_log: ChatLog | None = None,
+        retry_after_seconds: int = RETRY_AFTER_SECONDS,
         representative_grants: tuple[rs.RepresentativeShowcaseGrant, ...] = (),
     ):
         self.client_address = client_address
@@ -131,6 +143,7 @@ class ResidentDemo:
         self.codec, self.limiter, self.allowed_hosts = codec, limiter, allowed_hosts
         self.expires_at = min(expires_at, rs.AUTHORITY_END)
         self.host, self.port, self.clock = host, port, clock
+        self.retry_after_seconds = clamp_retry_after(retry_after_seconds)
         self.slots = threading.BoundedSemaphore(MAX_CONCURRENT)
         self.by_handle = {codec.handle(case): case for case in identity.cases.values()}
         self._rep_by_email: dict[str, str] = {}
@@ -316,7 +329,8 @@ class ResidentDemo:
             return None
         view: dict[str, Any] = rs.showcase_view(row, self.now())
         view["account"] = {"email": self.identity.email_for(row.case_id)}
-        view["callbacks_available"] = self.agenda is not None
+        view["agenda_available"] = self.agenda is not None
+        view["callbacks_available"] = view["agenda_available"]
         return view
 
     def row_for(self, token: str | None) -> rs.ShowcaseRow | None:
@@ -439,11 +453,12 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
 
         def _route(self) -> None:
             if not app.slots.acquire(blocking=False):
+                wait = app.retry_after_seconds
                 self._send(
                     503,
-                    json.dumps(dict(error=BUSY, retry_after=RETRY_AFTER_SECONDS)).encode(),
+                    json.dumps(dict(error=BUSY, retry_after_seconds=wait)).encode(),
                     "application/json; charset=utf-8",
-                    extra={"Retry-After": str(RETRY_AFTER_SECONDS)},
+                    extra={"Retry-After": str(wait)},
                 )
                 return
             try:
@@ -511,6 +526,7 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                     self._json(200, payload, (cookie,))
                 else:
                     signed_in = signed is not None and signed[0] in app.by_handle
+                    agenda_available = app.agenda is not None
                     self._json(
                         200,
                         dict(
@@ -518,6 +534,8 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                             signed_in=signed_in,
                             session_id=signed[1] if signed_in and signed else None,
                             banner=rs.BANNER,
+                            agenda_available=agenda_available,
+                            callbacks_available=agenda_available,
                         ),
                         (cookie,),
                     )
@@ -671,7 +689,9 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                     base = (
                         advise(topic, case, FakeProvider())
                         if isinstance(topic, Topic)
-                        else chat.answer(topic, view, value)
+                        else chat.answer(
+                            topic, view, value, callbacks_available=app.agenda is not None
+                        )
                     )
                     advice = (
                         app.assistant_advisor.answer_question(
@@ -688,7 +708,12 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                             else advise(topic, case, app.assistant_provider)
                         )
                         if isinstance(topic, Topic)
-                        else chat.answer(topic, view, value if "question" in body else "")
+                        else chat.answer(
+                            topic,
+                            view,
+                            value if "question" in body else "",
+                            callbacks_available=app.agenda is not None,
+                        )
                     )
                     if (
                         "question" in body

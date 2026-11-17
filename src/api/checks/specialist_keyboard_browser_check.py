@@ -43,12 +43,13 @@ STATUS_ATTRS = {"role": "status", "aria-live": "polite", "aria-atomic": "true"}
 EXPECTED_REGIONS: dict[str, tuple[str, ...]] = {
     "resident-choice": ("Measure choices by version",),
     "hazard-triage": ("Hazard referrals for this home", "Scoped pause and release evidence"),
-    "asset-board": ("Investment inputs", "Phase checks and benefits"),
+    "asset-board": ("Investment inputs", "Phase checks and benefits", "Portfolio summary in words"),
     "programme-queue": ("Same-home step states",),
     "technical-queue": ("Sign-off validity after design changes",),
     "safety-lead": ("Hazard referrals for this home", "Scoped pause and release evidence"),
     "data-operator": ("Open exceptions and prerequisites",),
     "contractor-job-pack": ("Evidence checklist for this job pack",),
+    "finance-funding": ("Funding indicators and their state",),
 }
 # Legitimate no-table states on this fixture. They are gaps, not passes and not invented tables.
 NO_REGION_GAPS: dict[str, str] = {
@@ -58,7 +59,6 @@ NO_REGION_GAPS: dict[str, str] = {
         "quality-queue",
         "procurement-packages",
         "finance-invoices",
-        "finance-funding",
         "staff-job-pack-intake",
     )
 }
