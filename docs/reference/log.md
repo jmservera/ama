@@ -12122,6 +12122,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
 
+## [2026-11-17] update | Issue 118 hardened deployment status re-measured on main (Refs #118)
+
+* Re-ran the offline infrastructure tests on main `eb51af5c9` (container contract, Bicep policy, governance, edge module, pipeline, container hosting). All pass, and no defect was reproduced, so no source fix or regression test was added.
+* Criteria 1 to 4 stay delivered offline. Criterion 5 stays unmet: `infra/defender-decision.json` still records audit-only Policy, an open Deny choice, deferred Defender plans and pending cost approval, and the Bicep defaults match it (`enableDefenderPlans` false, `DoNotEnforce`). The owner decision has no code step.
+* Not run or proven: the `src/check-container.py` image run, hosted CI for this head, live Azure state and load tests. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-17 issue-118).
 ## [2026-11-17] assessment | Service continuity evidence on main (Refs #122)
 
 * Measured the continuity, suspension, manual-fallback, recovery and version tests on main `eb51af5c9`: `src/api` test_operator_suspension.py (18), test_continuity.py (22), test_continuity_epoch_export.py (77, 39 skipped for the owned local MSSQL opt-in), test_epic149_manual_fallback_continuity.py (10); `src/core` test_recovery.py (15) and test_version.py (3). All passed; no defect reproduced, so no source change or regression test was made.
