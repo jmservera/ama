@@ -204,6 +204,11 @@ All numeric targets are labelled **provisional, not owner-agreed**. Juan Manuel
 Servera is the exercise Legal, Compliance and DPO owner, not an invented real
 company approver. Rule recall has no fixed threshold: the baseline precedes
 that owner decision. Reports have no overall `passed` or aggregate release score.
+`test_regulatory_answers` also pins refusal of case, soft-hyphen, fullwidth, compound
+lookup-plus-action and legal-permission variants (2026-11-17 probe: no unsafe non-refusal
+found); it is a regression guard, not a new threshold or a wider adversarial set.
+In a worktree, set `PYTHONPATH` to that tree's `src/agents/src` and `src/core/src` as well,
+or a stale installed `zava-forward-agents` copy is imported instead.
 The legacy 13-case report also no longer exposes an overall pass.
 
 The frozen [development cases](./evals/regulatory_gates_cases.json) and independent
