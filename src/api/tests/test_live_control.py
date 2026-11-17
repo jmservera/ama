@@ -60,6 +60,23 @@ class ControlTests(unittest.TestCase):
                     lc.parse(item)
                 self.assertEqual(str(caught.exception), "CONTROL_INVALID")
 
+    def test_owner_and_approval_must_be_accountable_text(self) -> None:
+        for value in ("nobody", "<owner>", "x" * 161):
+            for field in ("owner", "approval_reference"):
+                with self.subTest(field=field, value=value[:12]):
+                    with self.assertRaises(StreamError) as caught:
+                        lc.parse(document(**{field: value}))
+                    self.assertEqual(str(caught.exception), "CONTROL_INVALID")
+
+    def test_start_refuses_a_placeholder_owner_and_writes_nothing(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "control.json"
+            args = ["start", "--file", str(path), "--approval", "ref-1", "--homes", HOMES[0]]
+            args += ["--expires-at", EXPIRES, "--owner", "nobody"]
+            with patch("sys.stderr", io.StringIO()):
+                self.assertEqual(lc.main(args, now=NOW), 2)
+            self.assertFalse(path.exists())
+
     def test_one_hundred_homes_is_the_largest_cohort(self) -> None:
         homes = [f"HOME-{i:03d}" for i in range(100)]
         self.assertEqual(len(lc.parse(document(homes=homes)).homes), 100)
