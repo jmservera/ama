@@ -12121,3 +12121,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a dated deploy and verification note to [infra/README.md](../../infra/README.md#live-deploy-of-main-488c5a0c8-and-browser-verification-2026-11-17-refs-462): image digest, revision `--0000011`, an image-only metadata diff, the real-HTTPS login and negative-path results, the registry-window trap defect, cost admission, limits and the expiry and stop plan.
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
+
+## [2026-11-17] update | Usability programme demo-first desktop-only slice (Refs #155)
+
+* Added a demo-first, desktop-only first slice to the [usability testing programme plan](research/ux/usability-test-programme-plan.md): employee workbench and resident showcase surfaces at 1280 CSS px, six in-scope scripts, no participant data in the repository, proxy sessions labelled as not user validation.
+* Added a doc-contract regression test for the slice in `src/core/tests/test_usability_programme.py`. No participant, session, SA-010 agreement or result exists; no #155 criterion is ticked.

@@ -1,7 +1,7 @@
 ---
 title: Usability testing programme plan with representative users (issue 155)
 description: Moderated usability testing programme specification, contract-derived task scripts, SA-010 aggregate-only measures, severity/backlog findings contract, negative/inconclusive outcome rules, and labelled synthetic walkthrough baseline, with human participant sessions unexecuted
-ms.date: 2026-11-15
+ms.date: 2026-11-17
 ms.topic: reference
 ---
 
@@ -230,6 +230,43 @@ single bundle (`o16_counted_under`) via `reconcile_o16()` before comparing runs.
 | `B3-change-impact` | `change-impact` (`O08`, `O09`, `O11`, `O16`; `O16` single-count rule) | `Spreadsheet rework across teams` vs `workflow` | `programme-coordinator`, `retrofit-case-team`, `procurement-contracts`, `finance-grants` (`FR-009`, `FR-015`, `AC-034`, `AC-043`) | Zero `silent_scope_or_date_changes` and zero `unowned_rework_handoffs` | Survey scope change invalidates readiness; supplier capacity delay; grant/tenure hold |
 | `B4-handover-aftercare` | `handover-aftercare` (`O12`, `O13`, `O14`, `O21`, `O22`) | `Standard pack and reactive repairs chasing` vs `workflow` | `resident`, `quality-assurance`, `housing-resident-engagement`, `repairs-building-safety` (`FR-015`, `FR-032`, `NFR-008`, `NFR-009`) | Zero `premature_closures_or_unaccepted_handovers` and zero `unrouted_defect_escalations` | Post-install defect reopens case; worker receipt shown as Submitted not Accepted; formal complaint route |
 | `B5-funding-evidence` | `funding-evidence` (`O16`, `O23`, `O24`; `O16` single-count rule) | `Manual evidence assembly at claim time` vs `workflow` | `finance-grants`, `quality-assurance`, `digital-auditor` (`FR-015`, `AC-042`, `NFR-009`) | Zero `unsupported_or_unreviewed_claim_items` and zero `self_approved_evidence_signoffs` | Missing/stale attachment holds claim; replaced evidence requires fresh independent review; `O16` counted once |
+
+## Demo-first, desktop-only first slice
+
+The first sessions run on the two surfaces that already exist, not on a
+production service. This slice narrows where and on what the programme starts;
+it removes nothing from the full programme above.
+
+| Surface | Location | Viewport | Data and label |
+| --- | --- | --- | --- |
+| Employee workbench demo | `src/api/src/zava_forward/api/web/` | Desktop, 1280 CSS px only | Constructed synthetic cases; `Synthetic walkthrough - not user validation` unless a real representative attends |
+| Resident showcase demo | `src/api/src/zava_forward/api/resident_demo/web/` | Desktop, 1280 CSS px only | `Synthetic showcase - not a live resident service`; no real resident identity |
+
+Scripts in this slice:
+
+* Employee view: `T0` (find-case task, the SA-009 hypothesis), `T4` (handoff
+  owner) and `T5` (advisory AI review with the assistant switched off as the
+  manual path).
+* Resident view: `R-J1` (choose each proposed measure), `R-J2` (pause,
+  withdraw or ask for more time) and `R-J3` (compare appointment offers and
+  confirmations), each with its staffed telephone or
+  printed fallback.
+
+Rules for the slice:
+
+* Tablet (768), mobile (360), reflow (320), field use and assistive-technology
+  device matrices stay in the full programme and are not claimed here. Keyboard
+  operation, 200% text resize and 400% zoom are still checked at the 1280 CSS px
+  desktop width, because the accessibility clauses above apply to every session.
+* No participant data is stored in this repository. Aggregate measures only,
+  after the `SA-010` agreement with named staff representatives; the agreement
+  is still unrecorded, so no staff session is scheduled by this page.
+* Sessions with colleagues or other proxies are `proxy-pilot` runs and carry the
+  non-validation label. The resident demo must not be offered to real residents
+  as a service, and every resident session stays voluntary with a manual route.
+* Every outcome, including negative and inconclusive ones, goes into the results
+  record. Nothing in this slice fills a human result row or ticks a #155
+  criterion.
 
 ## Measures (aggregate only, SA-010)
 
