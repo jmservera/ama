@@ -12126,3 +12126,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Updated [journey-learning-test-bundles.md](research/ux/journey-learning-test-bundles.md) to record the constructed-input command and the cross-layer scenario tests, and added a core unit test that compares the protocol bundle table with the scorer's bundle definitions.
 * No experiment, participant data, Atlas-owner mapping or DPO decision is claimed; the two unmet criteria stay unmet. Saved minutes remain capacity.
+## [2026-11-17] update | WCAG baseline guard-suite measurement refreshed (Refs #151)
+
+* Added a dated counted-measurement section to [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md#counted-guard-suite-measurement-2026-11-17-151): guard test totals, 22 web assets, 15 table builders and 9 `aria-invalid` sites re-measured against source, plus one regression test that keeps the asset and `aria-invalid` counts in step.
+* Manual screen-reader and keyboard rows stay `Not run` and the target level stays pending O-1. No conformance claim; #151 stays open.
+## [2026-11-17] update | Identifier leak copy audit on exception screens (Refs #153)
+
+* Added an [identifier leak audit](research/ux/content-standard.md#identifier-leak-audit-2026-11-17-153) section to the content standard: two snake_case identifiers shown to staff on the data steward and digital operator screens were reworded, and a lexical regression guard was added. Named-human review of resident-facing wording (criterion 5) remains unmet.
