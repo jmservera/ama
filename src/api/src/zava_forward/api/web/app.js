@@ -2454,6 +2454,37 @@ const MAP_SIGNALS = {
   hazard: { label: "Safety issue open", code: "!" },
 };
 
+const SENSOR_STATES = {
+  fresh: { short: "Sensor recent", mark: "\u2713" },
+  stale: { short: "Sensor reading out of date", mark: "!" },
+  offline: { short: "Sensor offline", mark: "!" },
+  "no-readings": { short: "No sensor readings", mark: "\u2013" },
+  "consent-withheld": { short: "Sensor readings withheld", mark: "\u2013" },
+  unavailable: { short: "Sensor readings unavailable", mark: "?" },
+  restricted: { short: "Sensor readings not shown for your role", mark: "\u2013" },
+  "not-connected": { short: "Sensors not connected", mark: "\u2013" },
+  "not-loaded": { short: "Sensor status not loaded", mark: "\u2013" },
+  "future-dated": { short: "Sensor time unclear", mark: "?" },
+};
+const sensorInfo = (p) => SENSOR_STATES[p.sensor?.state] || { short: "Sensor status unknown", mark: "?" };
+const sensorAlert = (p) => Boolean(p.sensor?.alert);
+const sensorReading = (sensor) => {
+  const parts = [];
+  if (typeof sensor?.temperature_c === "number") parts.push(`${sensor.temperature_c} \u00b0C`);
+  if (typeof sensor?.humidity_pct === "number") parts.push(`${sensor.humidity_pct}% relative humidity`);
+  return parts.join(", ");
+};
+const sensorBadge = (p) => h("span", { class: `sensor-badge${sensorAlert(p) ? " alert" : ""}` },
+  h("span", { "aria-hidden": "true" }, sensorInfo(p).mark), ` ${sensorInfo(p).short}`);
+const sensorLine = (p) => [sensorInfo(p).short, sensorReading(p.sensor)].filter(Boolean).join(", ");
+const withSensor = (base, p) => p.sensor ? `${base}. ${sensorLine(p)}` : base;
+const sensorTimeText = (sensor) => {
+  if (!sensor?.observed_at) return "No reading time recorded";
+  const when = new Date(sensor.observed_at);
+  const age = Math.max(0, Math.round((sensor.age_seconds || 0) / 60));
+  return `${when.toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/London" })} (UK time), ${age < 120 ? `${age} minutes` : age < 2880 ? `${Math.round(age / 60)} hours` : `${Math.round(age / 1440)} days`} ago`;
+};
+
 function mapSymbol(kind) {
   const shape = kind === "hazard" ? svg("path", { d: "M14 2 L26 26 H2 Z" })
     : kind === "long" ? svg("rect", { x: 2, y: 2, width: 24, height: 24 })
@@ -2494,6 +2525,13 @@ function mapPanel(coordinator = null, filters = null) {
   const caseId = h("dd");
   const stage = h("dd");
   const status = h("dd");
+  const sensorState = h("dd");
+  const sensorValues = h("dd");
+  const sensorWhen = h("dd");
+  const sensorSource = h("dd");
+  const sensorBox = h("div", { class: "map-sensor-box" }, h("h4", {}, "Indoor sensor"),
+    h("dl", { class: "map-sensor-list" }, h("dt", {}, "Sensor status"), sensorState, h("dt", {}, "Latest reading"), sensorValues,
+      h("dt", {}, "Last reading time"), sensorWhen, h("dt", {}, "Source"), sensorSource));
   const navigate = h("a", { class: "btn" }, "Open home");
   const restoreMarker = (id) => {
     const target = markers.get(id)?.getElement();
@@ -2511,7 +2549,8 @@ function mapPanel(coordinator = null, filters = null) {
       h("button", { type: "button", class: "alt map-home-close", "aria-label": "Close home summary",
         onclick: () => closeHome() }, h("span", { "aria-hidden": "true" }, "\u00d7"))),
     address, h("dl", {}, h("dt", {}, "Case"), caseId, h("dt", {}, "Current stage"), stage,
-      h("dt", {}, "Map status"), status), navigate);
+      h("dt", {}, "Map status"), status),
+    sensorBox, navigate);
   const showHome = (point, focus = true) => {
     selectedId = point.id;
     title.textContent = point.name || point.id;
@@ -2519,6 +2558,11 @@ function mapPanel(coordinator = null, filters = null) {
     caseId.textContent = point.id;
     stage.textContent = point.stage || "Unknown";
     status.replaceChildren(mapSymbol(point.kind), MAP_SIGNALS[point.kind].label);
+    sensorBox.hidden = !point.sensor;
+    sensorState.replaceChildren(sensorBadge(point), h("span", { class: "sr-only" }, `. ${point.sensor?.label || ""}`));
+    sensorValues.textContent = sensorReading(point.sensor) || "No values shown";
+    sensorWhen.textContent = sensorTimeText(point.sensor);
+    sensorSource.textContent = point.sensor?.source || "No synthetic reading shown for this home.";
     navigate.href = `#/case/${encodeURIComponent(point.id)}`;
     homeCard.hidden = false;
     if (focus) title.focus();
@@ -2527,10 +2571,18 @@ function mapPanel(coordinator = null, filters = null) {
   const listEmpty = h("p", { class: "muted", "data-maplist-empty": "", hidden: true }, "No mapped homes in this view. Choose Show these as a list for all selected cases.");
   const listUl = h("ul", { "aria-labelledby": "maplist-h", class: "plainlist" });
   const listBox = h("details", { class: "maplist" }, listHead, listEmpty, listUl);
+  let alertsOnly = false, lastView = null;
+  const sensorFilterInput = h("input", { type: "checkbox", id: "map-sensor-alerts",
+    onchange: () => { alertsOnly = sensorFilterInput.checked; if (lastView) renderView(lastView, false); } });
+  const sensorFilterNote = h("p", { class: "muted", "aria-live": "polite" });
+  const sensorFilter = h("div", { class: "map-sensor-filter", hidden: Boolean(coordinator) }, sensorFilterInput,
+    h("label", { for: "map-sensor-alerts" }, "Show only homes with stale or offline sensors"),
+    h("p", { class: "muted", id: "map-sensor-alerts-hint" }, "Applies to individual homes. Zoom in until homes are shown one by one."), sensorFilterNote);
+  sensorFilterInput.setAttribute("aria-describedby", "map-sensor-alerts-hint");
   const sidebar = h("aside", { class: "map-info", "aria-label": "Map information and home summary" },
     h("p", {}, "Select a home for a summary, then choose Open home. Escape closes the summary first."),
     h("p", {}, Object.entries(MAP_SIGNALS).map(([kind, signal]) => h("span", { class: `key ${kind}` }, mapSymbol(kind), signal.label))),
-    info, tileNote, listBox, open);
+    sensorFilter, info, tileNote, listBox, open);
   const mapStage = h("div", { class: "map-stage" }, el, homeCard);
   const filterSlot = filters ? h("div", { class: "map-filter-slot" }, filters) : null;
   const dialog = h("dialog", { class: "map-dialog", "aria-labelledby": "map-title",
@@ -2588,19 +2640,67 @@ function mapPanel(coordinator = null, filters = null) {
   };
   disposeMapPanel = dispose;
   signal.addEventListener("abort", dispose, { once: true });
-  const renderList = (d) => {
-    const empty = !d.items.length;
+  const renderList = (d, items = d.items) => {
+    const empty = !items.length;
     listEmpty.hidden = !empty;
     if (empty) listEmpty.removeAttribute("hidden");
     else listEmpty.setAttribute("hidden", "");
-    listUl.replaceChildren(...d.items.map((p) => {
+    listUl.replaceChildren(...items.map((p) => {
       if (d.mode === "clusters") {
         const label = `${p.count} homes, ${p.hazards} with a safety issue open`;
         return h("li", {}, h("button", { type: "button", class: "linkbtn", "aria-label": `${label}. Zoom in to this area`,
           onclick: () => { map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18), { animate: false }); listHead.focus(); } }, label));
       }
-      return h("li", {}, h("a", { href: `#/case/${encodeURIComponent(p.id)}` }, `${p.name}, ${MAP_SIGNALS[p.kind].label}`));
+      return h("li", {}, h("a", { href: `#/case/${encodeURIComponent(p.id)}` }, withSensor(`${p.name}, ${MAP_SIGNALS[p.kind].label}`, p)));
     }));
+  };
+  const markerIcon = (p) => {
+    const icon = mapSymbol(p.kind);
+    if (sensorAlert(p)) icon.append(h("span", { class: "sensor-flag" }, "S"));
+    return icon;
+  };
+  const renderView = (d) => {
+    const points = d.mode === "points";
+    const items = alertsOnly && points ? d.items.filter(sensorAlert) : d.items;
+    sensorFilterNote.textContent = alertsOnly
+      ? (points ? `${items.length} of ${d.items.length} homes have a stale or offline sensor.` : "Zoom in to individual homes to filter by sensor status.")
+      : "";
+    info.setAttribute("role", "status");
+    info.textContent = coordinator
+      ? `${d.total} permitted records in this selection; ${d.mapped} with coordinates; ${d.missing_geocode} with unknown or invalid coordinates. ${d.in_view} mapped records in this viewport, ${d.shown} ${d.mode === "clusters" ? "clusters" : "markers"}. The record list includes every selected case.`
+      : d.mode === "clusters"
+      ? `${d.total} homes in this view, grouped into ${d.shown} areas. Zoom in to see each home.`
+      : `${d.total} ${d.total === 1 ? "home" : "homes"} shown`;
+    renderList(d, items);
+    const focusedMarker = [...markers].find(([, marker]) => marker.getElement() === document.activeElement)?.[0];
+    const cardFocused = homeCard.contains(document.activeElement);
+    const previousSelection = selectedId;
+    markers.clear();
+    layer.clearLayers();
+    items.forEach((p) => {
+      if (d.mode === "clusters") {
+        const label = `${p.count} homes, ${p.hazards} with a safety issue open. Zoom in to this area`;
+        const icon = h("div", { class: `cluster${p.hazards ? " hazard" : ""}`, "aria-hidden": "true" },
+          h("span", {}, `${p.count} homes`),
+          h("span", { class: "cluster-safety" }, `Safety: ${p.hazards}`));
+        const m = L.marker([p.lat, p.lon], { icon: L.divIcon({ className: "map-cluster", html: icon, iconSize: [104, 50] }),
+          keyboard: true, autoPanOnFocus: false, title: label, alt: label });
+        mapAction(m, () => map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18), { animate: false }));
+        m.addTo(layer);
+        return;
+      }
+      const label = withSensor(`${p.name}, ${MAP_SIGNALS[p.kind].label}`, p);
+      const m = L.marker([p.lat, p.lon], { icon: L.divIcon({ className: "map-marker", html: markerIcon(p), iconSize: [28, 28] }),
+        keyboard: true, autoPanOnFocus: false, bubblingMouseEvents: false, title: label, alt: label });
+      mapAction(m, () => showHome(p));
+      m.addTo(layer);
+      markers.set(p.id, m);
+    });
+    const current = d.mode === "points" && items.find((point) => point.id === previousSelection);
+    if (current) showHome(current, false);
+    else closeHome(false);
+    if (cardFocused && !current) el.focus({ preventScroll: true });
+    else if (focusedMarker) restoreMarker(focusedMarker);
   };
   let fitting = false, seq = 0;
   const draw = async (fit) => {
@@ -2669,42 +2769,8 @@ function mapPanel(coordinator = null, filters = null) {
       if (my === seq) el.removeAttribute("aria-busy");
     }
     if (signal.aborted || my !== seq) return;
-    info.setAttribute("role", "status");
-    info.textContent = coordinator
-      ? `${d.total} permitted records in this selection; ${d.mapped} with coordinates; ${d.missing_geocode} with unknown or invalid coordinates. ${d.in_view} mapped records in this viewport, ${d.shown} ${d.mode === "clusters" ? "clusters" : "markers"}. The record list includes every selected case.`
-      : d.mode === "clusters"
-      ? `${d.total} homes in this view, grouped into ${d.shown} areas. Zoom in to see each home.`
-      : `${d.total} ${d.total === 1 ? "home" : "homes"} shown`;
-    renderList(d);
-    const focusedMarker = [...markers].find(([, marker]) => marker.getElement() === document.activeElement)?.[0];
-    const cardFocused = homeCard.contains(document.activeElement);
-    const previousSelection = selectedId;
-    markers.clear();
-    layer.clearLayers();
-    d.items.forEach((p) => {
-      if (d.mode === "clusters") {
-        const label = `${p.count} homes, ${p.hazards} with a safety issue open. Zoom in to this area`;
-        const icon = h("div", { class: `cluster${p.hazards ? " hazard" : ""}`, "aria-hidden": "true" },
-          h("span", {}, `${p.count} homes`),
-          h("span", { class: "cluster-safety" }, `Safety: ${p.hazards}`));
-        const m = L.marker([p.lat, p.lon], { icon: L.divIcon({ className: "map-cluster", html: icon, iconSize: [104, 50] }),
-          keyboard: true, autoPanOnFocus: false, title: label, alt: label });
-        mapAction(m, () => map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18), { animate: false }));
-        m.addTo(layer);
-        return;
-      }
-      const label = `${p.name}, ${MAP_SIGNALS[p.kind].label}`;
-      const m = L.marker([p.lat, p.lon], { icon: L.divIcon({ className: "map-marker", html: mapSymbol(p.kind), iconSize: [28, 28] }),
-        keyboard: true, autoPanOnFocus: false, bubblingMouseEvents: false, title: label, alt: label });
-      mapAction(m, () => showHome(p));
-      m.addTo(layer);
-      markers.set(p.id, m);
-    });
-    const current = d.mode === "points" && d.items.find((point) => point.id === previousSelection);
-    if (current) showHome(current, false);
-    else closeHome(false);
-    if (cardFocused && !current) el.focus({ preventScroll: true });
-    else if (focusedMarker) restoreMarker(focusedMarker);
+    lastView = d;
+    renderView(d);
     if (fit && d.bounds) {
       fitting = true;
       map.fitBounds([[d.bounds[0], d.bounds[1]], [d.bounds[2], d.bounds[3]]], {

@@ -1,0 +1,272 @@
+PASS owned server is running and responsive on loopback
+PASS expanded filters use smaller count text
+PASS Open cases keeps visible keyboard focus
+PASS Open cases API supplies individual homes
+PASS Open cases renders the exact selected homes
+PASS Open cases restores original header controls
+PASS Open cases restores the exact home list after header round trip
+PASS Safety issues open keeps visible keyboard focus
+PASS Safety issues open API supplies individual homes
+PASS Safety issues open renders the exact selected homes
+PASS Safety issues open restores original header controls
+PASS Safety issues open restores the exact home list after header round trip
+PASS Waiting 60+ days keeps visible keyboard focus
+PASS Waiting 60+ days API supplies individual homes
+PASS Waiting 60+ days renders the exact selected homes
+PASS Waiting 60+ days restores original header controls
+PASS Waiting 60+ days restores the exact home list after header round trip
+PASS Awaiting resident decision keeps visible keyboard focus
+PASS Awaiting resident decision API supplies individual homes
+PASS Awaiting resident decision renders the exact selected homes
+PASS Awaiting resident decision restores original header controls
+PASS Awaiting resident decision restores the exact home list after header round trip
+PASS Funding in progress keeps visible keyboard focus
+PASS Funding in progress API supplies individual homes
+PASS Funding in progress renders the exact selected homes
+PASS Funding in progress restores original header controls
+PASS Funding in progress restores the exact home list after header round trip
+PASS Residents needing extra support keeps visible keyboard focus
+PASS Residents needing extra support API supplies individual homes
+PASS Residents needing extra support renders the exact selected homes
+PASS Residents needing extra support restores original header controls
+PASS Residents needing extra support restores the exact home list after header round trip
+PASS zero-result support filter is exercised
+PASS filter progress stays outside the compact control group
+PASS first flag activation issues one map request
+PASS selected flag suppresses duplicate reads
+PASS held safety read comes from real local API
+PASS latest area selection survives older successful flag response
+PASS original filter and area nodes return to header
+PASS filters and map fit at 320x900
+PASS filter label and focus fit at 320x900
+PASS filter label and focus fit at 320x900
+PASS filter label and focus fit at 320x900
+PASS filter label and focus fit at 320x900
+PASS filter label and focus fit at 320x900
+PASS filter label and focus fit at 320x900
+PASS axe zero violations: expanded-filters-320x900
+PASS axe no unresolved ARIA references: expanded-filters-320x900
+PASS filters and map fit at 390x900
+PASS filter label and focus fit at 390x900
+PASS filter label and focus fit at 390x900
+PASS filter label and focus fit at 390x900
+PASS filter label and focus fit at 390x900
+PASS filter label and focus fit at 390x900
+PASS filter label and focus fit at 390x900
+PASS axe zero violations: expanded-filters-390x900
+PASS axe no unresolved ARIA references: expanded-filters-390x900
+PASS filters and map fit at 1280x900
+PASS filter label and focus fit at 1280x900
+PASS filter label and focus fit at 1280x900
+PASS filter label and focus fit at 1280x900
+PASS filter label and focus fit at 1280x900
+PASS filter label and focus fit at 1280x900
+PASS filter label and focus fit at 1280x900
+PASS axe zero violations: expanded-filters-1280x900
+PASS axe no unresolved ARIA references: expanded-filters-1280x900
+PASS filters and map fit at 390x568
+PASS filter label and focus fit at 390x568
+PASS filter label and focus fit at 390x568
+PASS filter label and focus fit at 390x568
+PASS filter label and focus fit at 390x568
+PASS filter label and focus fit at 390x568
+PASS filter label and focus fit at 390x568
+PASS axe zero violations: expanded-filters-390x568
+PASS axe no unresolved ARIA references: expanded-filters-390x568
+PASS embedded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True} =
+PASS embedded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True} +
+PASS embedded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True} -
+PASS embedded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True} ArrowLeft
+PASS embedded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True} ArrowRight
+PASS embedded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True} ArrowUp
+PASS embedded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True} ArrowDown
+PASS embedded #leaflet leaves browser shortcut unchanged: {'metaKey': True} =
+PASS embedded #leaflet leaves browser shortcut unchanged: {'metaKey': True} +
+PASS embedded #leaflet leaves browser shortcut unchanged: {'metaKey': True} -
+PASS embedded #leaflet leaves browser shortcut unchanged: {'metaKey': True} ArrowLeft
+PASS embedded #leaflet leaves browser shortcut unchanged: {'metaKey': True} ArrowRight
+PASS embedded #leaflet leaves browser shortcut unchanged: {'metaKey': True} ArrowUp
+PASS embedded #leaflet leaves browser shortcut unchanged: {'metaKey': True} ArrowDown
+PASS embedded #leaflet leaves browser shortcut unchanged: {'altKey': True} =
+PASS embedded #leaflet leaves browser shortcut unchanged: {'altKey': True} +
+PASS embedded #leaflet leaves browser shortcut unchanged: {'altKey': True} -
+PASS embedded #leaflet leaves browser shortcut unchanged: {'altKey': True} ArrowLeft
+PASS embedded #leaflet leaves browser shortcut unchanged: {'altKey': True} ArrowRight
+PASS embedded #leaflet leaves browser shortcut unchanged: {'altKey': True} ArrowUp
+PASS embedded #leaflet leaves browser shortcut unchanged: {'altKey': True} ArrowDown
+PASS embedded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} =
+PASS embedded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} +
+PASS embedded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} -
+PASS embedded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} ArrowLeft
+PASS embedded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} ArrowRight
+PASS embedded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} ArrowUp
+PASS embedded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} ArrowDown
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True} =
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True} +
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True} -
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True} ArrowLeft
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True} ArrowRight
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True} ArrowUp
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True} ArrowDown
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'metaKey': True} =
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'metaKey': True} +
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'metaKey': True} -
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'metaKey': True} ArrowLeft
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'metaKey': True} ArrowRight
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'metaKey': True} ArrowUp
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'metaKey': True} ArrowDown
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'altKey': True} =
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'altKey': True} +
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'altKey': True} -
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'altKey': True} ArrowLeft
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'altKey': True} ArrowRight
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'altKey': True} ArrowUp
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'altKey': True} ArrowDown
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} =
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} +
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} -
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} ArrowLeft
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} ArrowRight
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} ArrowUp
+PASS embedded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} ArrowDown
+PASS embedded browser shortcuts issue no map requests
+PASS keyboard marker opens summary without navigation
+PASS axe zero violations: embedded-home
+PASS axe no unresolved ARIA references: embedded-home
+PASS embedded close icon is at card top right
+PASS embedded map click dismisses and restores marker focus
+PASS embedded summary reflows at 320px
+PASS axe zero violations: embedded-320
+PASS axe no unresolved ARIA references: embedded-320
+PASS embedded summary reflows at 390px
+PASS axe zero violations: embedded-390
+PASS axe no unresolved ARIA references: embedded-390
+PASS same card moves into left information panel
+PASS near-fullscreen layout has narrow left panel and larger map
+PASS native dialog contains backward keyboard focus
+PASS modal background cannot receive application focus
+PASS Escape closes summary first, then expanded map
+PASS axe zero violations: expanded-home
+PASS axe no unresolved ARIA references: expanded-home
+PASS expanded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True} =
+PASS expanded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True} +
+PASS expanded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True} -
+PASS expanded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True} ArrowLeft
+PASS expanded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True} ArrowRight
+PASS expanded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True} ArrowUp
+PASS expanded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True} ArrowDown
+PASS expanded #leaflet leaves browser shortcut unchanged: {'metaKey': True} =
+PASS expanded #leaflet leaves browser shortcut unchanged: {'metaKey': True} +
+PASS expanded #leaflet leaves browser shortcut unchanged: {'metaKey': True} -
+PASS expanded #leaflet leaves browser shortcut unchanged: {'metaKey': True} ArrowLeft
+PASS expanded #leaflet leaves browser shortcut unchanged: {'metaKey': True} ArrowRight
+PASS expanded #leaflet leaves browser shortcut unchanged: {'metaKey': True} ArrowUp
+PASS expanded #leaflet leaves browser shortcut unchanged: {'metaKey': True} ArrowDown
+PASS expanded #leaflet leaves browser shortcut unchanged: {'altKey': True} =
+PASS expanded #leaflet leaves browser shortcut unchanged: {'altKey': True} +
+PASS expanded #leaflet leaves browser shortcut unchanged: {'altKey': True} -
+PASS expanded #leaflet leaves browser shortcut unchanged: {'altKey': True} ArrowLeft
+PASS expanded #leaflet leaves browser shortcut unchanged: {'altKey': True} ArrowRight
+PASS expanded #leaflet leaves browser shortcut unchanged: {'altKey': True} ArrowUp
+PASS expanded #leaflet leaves browser shortcut unchanged: {'altKey': True} ArrowDown
+PASS expanded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} =
+PASS expanded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} +
+PASS expanded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} -
+PASS expanded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} ArrowLeft
+PASS expanded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} ArrowRight
+PASS expanded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} ArrowUp
+PASS expanded #leaflet leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} ArrowDown
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True} =
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True} +
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True} -
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True} ArrowLeft
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True} ArrowRight
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True} ArrowUp
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True} ArrowDown
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'metaKey': True} =
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'metaKey': True} +
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'metaKey': True} -
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'metaKey': True} ArrowLeft
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'metaKey': True} ArrowRight
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'metaKey': True} ArrowUp
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'metaKey': True} ArrowDown
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'altKey': True} =
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'altKey': True} +
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'altKey': True} -
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'altKey': True} ArrowLeft
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'altKey': True} ArrowRight
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'altKey': True} ArrowUp
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'altKey': True} ArrowDown
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} =
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} +
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} -
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} ArrowLeft
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} ArrowRight
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} ArrowUp
+PASS expanded .map-marker:has(.map-symbol.normal) leaves browser shortcut unchanged: {'ctrlKey': True, 'metaKey': True, 'altKey': True, 'shiftKey': True} ArrowDown
+PASS expanded browser shortcuts issue no map requests
+PASS redraw preserves action focus and restores recreated marker focus
+PASS original embedded marker was replaced safely
+PASS map animations are disabled including reduced motion
+PASS Shift++ changes map zoom by 1
+PASS = changes map zoom by 1
+PASS - changes map zoom by -1
+PASS keyboard pan immediately reaches its 80px endpoint
+PASS summary focus scrolls into view at 320px
+PASS expanded map reflows at 320px
+PASS axe zero violations: expanded-320
+PASS axe no unresolved ARIA references: expanded-320
+PASS summary focus scrolls into view at 390px
+PASS expanded map reflows at 390px
+PASS axe zero violations: expanded-390
+PASS axe no unresolved ARIA references: expanded-390
+PASS summary focus scrolls into view at 1280px
+PASS expanded map reflows at 1280px
+PASS axe zero violations: expanded-1280
+PASS axe no unresolved ARIA references: expanded-1280
+PASS forced colours keep status symbol and words
+PASS axe zero violations: expanded-failed-map
+PASS axe no unresolved ARIA references: expanded-failed-map
+PASS filter removes a selected home rather than leaving stale details
+PASS home navigation disposes map and dialog
+PASS expanded manual path exits modal and navigates to case list
+PASS coordinator card never reconstructs withheld personal fields
+PASS axe zero violations: coordinator-expanded-home
+PASS axe no unresolved ARIA references: coordinator-expanded-home
+PASS coordinator manual list shortcut restores external list focus
+PASS facets held after map route disposal and before destination rendering
+PASS Expand click during pending facets cannot reopen disposed map
+PASS obsolete map slot is disconnected and controls are inert and disabled
+PASS retained Expand events cannot reopen disposed map
+PASS case list renders without disposed map, dialog or scroll lock
+PASS embedded two latest fit requests held
+PASS embedded both draws request bounds without viewport clipping
+PASS embedded genuine successful fit response has bounds
+PASS embedded session expiry leaves route signals live
+PASS embedded late successful draw settles without rejection
+PASS embedded late responses never fit or redraw the disposed map
+PASS embedded late responses start no further map requests
+PASS embedded session expiry removes map, dialog and body lock
+PASS expanded two latest fit requests held
+PASS expanded both draws request bounds without viewport clipping
+PASS expanded genuine successful fit response has bounds
+PASS collapse resize starts a real viewport draw
+PASS expanded session expiry leaves route signals live
+PASS expanded late successful draw settles without rejection
+PASS expanded late responses never fit or redraw the disposed map
+PASS expanded late responses start no further map requests
+PASS expanded session expiry removes map, dialog and body lock
+PASS browser default font is 32px on an unstyled document
+PASS real app inherits the 32px browser default
+PASS expanded map reflows at 640px with a 32px browser default
+PASS enlarged-text filters preserve width and minimum map height
+PASS enlarged-text filter labels fit
+PASS enlarged-text filter labels fit
+PASS enlarged-text filter labels fit
+PASS enlarged-text filter labels fit
+PASS enlarged-text filter labels fit
+PASS enlarged-text filter labels fit
+PASS axe zero violations: expanded-640-default-font-32
+PASS axe no unresolved ARIA references: expanded-640-default-font-32
+PASS enlarged-font map has no uncaught JavaScript errors ([])
+PASS no uncaught JavaScript errors ([])

@@ -123,6 +123,15 @@ class DesignSystem(unittest.TestCase):
         self.assertIn("@media(max-width:600px)", CSS)
         self.assertNotRegex(CSS, r"min-width:\s*(?:3[6-9]\d|[4-9]\d\d|\d{4})px")
 
+    def test_narrow_navigation_is_compact_and_keeps_touch_targets(self):
+        narrow = [m for m in re.findall(r"@media\(max-width:600px\)\{(.*)\}", CSS)]
+        self.assertTrue(any("#nav{column-gap:var(--sp-1)}" in block for block in narrow))
+        self.assertTrue(any("#nav a{padding-inline:var(--sp-1)}" in block for block in narrow))
+        self.assertIn("#nav a{min-height:2.5rem;", CSS)
+        self.assertIn(
+            ".screen-evidence p>a:only-child{display:inline-block;min-height:1.5rem;", CSS
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

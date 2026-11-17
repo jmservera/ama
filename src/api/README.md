@@ -356,7 +356,9 @@ Closing and reopening retains history, draft, skill and pending reads in the
 current page session/context. Moving focus into the page hides chat without
 redirecting focus or cancelling pending work; the visible launcher remains
 available. Setup and incoming replies never refocus the composer, even while
-chat is visible. Replies, status and inline errors use polite live updates.
+chat is visible. The composer shows a visible instruction, linked to the
+question field, that Enter sends, Shift and Enter add a new line and Escape
+closes the chat. Replies, status and inline errors use polite live updates.
 New messages follow the end only when the conversation was already at the
 bottom and focus is outside its history; reading older messages or focusing
 Sources preserves the scroll position. Loading, status and error size changes
@@ -990,6 +992,18 @@ without map gestures. The expanded Coordinator list shortcut exits the map and
 focuses Selected records. No resident consent, approval, safety or data-access
 authority changes.
 
+Issue #1818: each employee map home point also carries a bounded `sensor`
+summary (`zava_forward.core.sensor_map`): newest synthetic temperature and
+relative humidity, a text state (fresh, stale, offline, no readings, consent
+withheld, restricted, not connected), `calibrated: false` and a synthetic
+source note. Values appear only for roles allowed the quality-evidence view
+and only after the per-home consent check; one latest-row query per home, at
+most 100 homes per response, never for clusters or the Coordinator map. The
+home card, area list and marker labels show it as text, and **Show only homes
+with stale or offline sensors** filters the loaded points. This is stored
+synthetic data, not live Azure IoT Hub transport; that walkthrough criterion
+stays open.
+
 Run the focused constructed-data browser check from `src/api`:
 
 ```bash
@@ -1019,6 +1033,23 @@ verifies no dialog or page scroll lock survives. Enlarged-font coverage uses a
 geometry, overflow and summary close/exit behavior. Acquire the shared heavy-check lock
 nonblocking before execution. Automated results are not human
 assistive-technology, staff usability or full WCAG acceptance.
+
+Issue #1836: the map sidebar holds two adjacent `role=status` paragraphs, the
+result count and the tile fallback note, so a selector matching both fails in
+Playwright strict mode. Use `count_notice` and `tile_notice` from
+`checks.map_tile_status_browser_check`. That focused check serves synthetic
+tile responses, then aborts them, reaches "0 homes shown" in each state and
+asserts the fallback note is hidden when tiles load and visible when they fail.
+It also demonstrates, as an intentional and labelled step, that the old
+selector is ambiguous. It needs no axe file; run it from `src/api`:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m checks.map_tile_status_browser_check
+```
+
+`tests/test_map_status_locators.py` guards the helper and the harness without a
+browser.
+
 
 ## Workspace script recovery (#524)
 
@@ -5832,6 +5863,8 @@ generator's daily pattern, within the display bounds. It is suppressed with a pl
 there are fewer than 6 readings, the latest reading is missing or faulted, or the history is
 stale. Charts use a dashed line with hollow squares and a `Latest stored` divider, and the data
 table lists forecast rows as `Forecast (estimate)`. The wording is descriptive, not diagnostic.
+
+The `sensors` envelope also carries `freshness` (none, recent within 15 minutes, retained, stale or future with plain text), a `source` note (synthetic, not calibrated) and `calibrated: false`. With at least one stored reading the view shows a "Reading status" badge (not shown when the history is stale, where a "not recent" caution replaces it) and a "Source" line. With no stored readings it shows neither, only a plain "no readings" sentence. None of these claims live measurement.
 
 The view applied to the live database still reports no sensors until it is re-applied after
 `sensor_register` and `sensor_reading` exist (see `infra/README.md`), and the generated

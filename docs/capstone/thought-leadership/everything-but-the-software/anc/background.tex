@@ -4,8 +4,8 @@
 
 Lehman's laws and Parnas's software-aging account motivate maintenance
 alongside growth~\cite{lehman1980laws,lehman1997metrics,parnas1994aging}.
-The 1997 formulation states the declining-quality law; it supplies no
-data for or against it. Eick et~al. report mixed evidence from
+The 1997 formulation states that quality declines without maintenance,
+but supplies no data for or against that law. Eick et~al. report mixed evidence from
 fifteen-plus years of change history~\cite{eick2001decay}, and a systematic
 review finds uneven support across systems~\cite{herraiz2013laws}.
 Feature count and churn describe activity. A regression loses still-required,
@@ -20,15 +20,14 @@ Reported debt costs concern different settings: a vendor-associated
 39-codebase study reports 124\% longer issue resolution in low-quality
 files~\cite{tornhill2022codered}; 43 developers self-report about 23\%
 of working time lost to debt~\cite{besker2018cripples}.
-These are not universal productivity coefficients.
+Both estimates are specific to their settings and measurement methods.
 
 \paragraph{What survives the next session?}\label{sec:inheritance}
 Code, tests and deployment assumptions survive through the repository;
 instructions and handovers survive through procedural context.
 Either channel can preserve a sound decision or a mistake.
-Here ``software entropy'' provides an engineering analogy for the maintenance
-problem. The proposed measurements concern retained behaviour, adaptation
-and resource use.
+Here ``software entropy'' is an analogy for this maintenance burden.
+The study measures retained behaviour, adaptation and resource use.
 
 \begin{figure}[!htbp]
 \centering
@@ -45,25 +44,29 @@ Zhang et~al. study false justifications after
 wrong answers~\cite{zhang2023snowball}; Sinha et~al. vary erroneous prior
 state updates in a controlled execution task
 ~\cite[Secs.~2.2--3, Figs.~5--6]{sinha2025illusion}.
-Laban et~al.'s 39\% relative multi-turn performance drop concerns
-simulated underspecified conversations, not repository defects;
+Laban et~al. report a 39\% relative performance drop in simulated multi-turn
+conversations with incomplete specifications. Their study concerns conversation
+history, so it provides no direct estimate of repository defects;
 locators refer to their arXiv v1
 ~\cite[Secs.~3.3, 6.1, App.~F]{laban2025lost}.
 
 Pan et~al.'s SWE-Maintain more directly tests repository inheritance:
-100 three-event episodes from 50 Python repositories, with fresh
-sessions and matched later tasks under developer and agent histories.
+100 sequences of three maintenance tasks from 50 Python repositories.
+Later tasks are matched across developer-written and agent-written histories,
+with a fresh session for each task.
 Across 1,996 paired later events, agent history reduces current-task
-resolution by 5.6 points; requiring earlier tests also to pass gives
+resolution by 5.6 points; requiring both current and earlier tests to pass gives
 a 14.0-point gap. Unweighted mean current-task gaps grow from 4.0 to
 7.2 points between the second and third events. In the selected
 619-event clean-history subset, the current-task difference is
 $-1.1$ points, interval $[-3.8,+1.6]$, and cumulative event resolution
 differs by $+2.7$, interval $[-0.5,+6.1]$
 ~\cite[Secs.~4.1--4.2, Tables~2--3]{pan2026swemaintain}.
-This favours inherited behavioural failures over complexity alone as
-the main observed channel, without establishing a general decay law
-or a randomised repair effect.
+The pattern points to inherited behavioural failures as the main observed
+channel. Complexity alone explains less of the difference. Because the
+clean-history subset was selected rather than randomly repaired, the
+comparison cannot establish what a repair intervention would achieve
+or how widely the pattern applies.
 
 \begin{figure}[!htbp]
 \centering
@@ -90,9 +93,9 @@ generations and collaboration settings.
 
 Instruction files themselves require
 maintenance~\cite{nigh2025agentsmd,rajasekaran2025context}.
-Mohsenimofidi et~al.'s 169 commits have 242 overlapping assignments
-across nine categories; 78 instruction additions, 59 modifications
-and 23 removals are three overlapping categories
+Mohsenimofidi et~al. assign 242 labels across nine categories to 169 commits.
+A commit can receive several labels: 78 include instruction additions,
+59 modifications and 23 removals
 ~\cite[Sec.~4.3, Table~2]{mohsenimofidi2026context}.
 Chatlatanagulchai et~al.'s sampled maintenance labels likewise include
 addition and pruning~\cite{chatlatanagulchai2026readmes}.
@@ -108,9 +111,10 @@ count edit types, not net token growth or effects on agent success.}
 \label{fig:instructionmaintenance}
 \end{figure}
 
-Gloaguen et~al. report 20\%/23\% higher inference cost with LLM-written
-context and slightly lower success, by 0.5/2 points, without significant
-differences from no-file baselines. Developer-written files outperform
+In their two benchmark comparisons, Gloaguen et~al. report 20\% and 23\%
+higher inference cost with LLM-written context files. Success was lower by
+0.5 and 2 percentage points, respectively; the success differences from
+the no-file baselines were not statistically significant. Developer-written files outperform
 LLM-written ones on CTXbench ($p=0.038$)
 ~\cite[Sec.~4.2, Tables~2--3]{gloaguen2026agentsmd}.
 SkillOpt and Jiang et~al. provide counterevidence to treating retained
@@ -147,9 +151,8 @@ without training~\cite[Sec.~2]{madaan2023selfrefine}. Reflexion retains
 linguistic feedback in episodic memory for subsequent trials rather than
 updating model weights~\cite[Sec.~3]{shinn2023reflexion}. CRITIC uses
 external tools to check and revise an output
-~\cite[Sec.~3]{gou2024critic}. These are precedents for reflective
-correction, not evidence that every retained lesson or revision improves
-later feature work. Their feedback and repeated-trial budgets differ from
+~\cite[Sec.~3]{gou2024critic}. These methods show how agents can revise work using feedback. Whether a
+retained lesson or revision helps with later features still needs testing. Their feedback and repeated-trial budgets differ from
 the present protocol, whose hidden evaluator outputs never reach agents.
 
 Ng coauthored MedAgentBench, which evaluates task completion in an
@@ -158,17 +161,15 @@ interactive medical-record environment rather than chatbot answers alone
 Its evaluation of observable action outcomes informs the measurement focus
 of this protocol.
 
-The two owner-selected videos illustrate these boundaries rather than
-provide experimental findings. In the Ng/Moroney talk, Ng describes
+The two owner-selected videos illustrate proposed practices. In the Ng/Moroney talk, Ng describes
 human-feedback iteration; Moroney later warns about code structure and
 describes task-level reflection~\cite{philia2026ngmoroney}.
 In the separate memory presentation, a speaker identifying herself as
 Anthropic staff describes persistent memory and asynchronous
 transcript-driven curation, with human review of proposed updates
-~\cite{beamnxw2026memorytalk}. Both sources are third-party uploads
-checked through automatic captions, not audio-verified research reports.
-Their role here is to illustrate proposed practices; the study below
-tests the narrower between-feature intervention.
+~\cite{beamnxw2026memorytalk}. Both sources are third-party uploads checked through automatic captions.
+The audio was not verified, and neither video supplies experimental
+findings. The study below tests the narrower between-feature intervention.
 
 \paragraph{Engineering rationale.}\label{sec:practitioners}\label{sec:theory}
 Beck's alternation of features and tidying aims to restore future
@@ -191,6 +192,6 @@ execution checks~\cite{delimarsky2025speckit,boeckeler2025sdd,agarwal2026sdd,was
 Microsoft's Hypervelocity Engineering Core supplies file-based
 Research--Plan--Implement--Review handovers; the author's coordinator
 added autonomous dispatch. The reported case snapshot is
-\texttt{plugins-v3.3.106}, not proof of its installation date
+\texttt{plugins-v3.3.106}; its installation date remains unverified
 ~\cite{hvecore}. Additional source qualifications and reproducibility detail
 are in the supplement.

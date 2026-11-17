@@ -10,6 +10,7 @@ import base64
 import copy
 import json
 import os
+import re
 import runpy
 import socket
 import subprocess
@@ -143,7 +144,10 @@ def run_browser(base: str) -> None:
                 )
                 check(
                     f"{kind} marker has a status name",
-                    page.get_by_role("button", name=f"Pat Test, {label}", exact=True).count() == 1,
+                    page.get_by_role(
+                        "button", name=re.compile(rf"^Pat Test, {re.escape(label)}(\. .+)?$")
+                    ).count()
+                    == 1,
                 )
             check("key uses the same three symbols", page.locator(".key .map-symbol").count() == 3)
             check(

@@ -1,0 +1,37 @@
+test_premise_is_unprovable_when_the_container_does_not_change_width (test_map_viewport_premise.ViewportPremiseTests.test_premise_is_unprovable_when_the_container_does_not_change_width) ... PASS a viewport change still requests the map once the resize settles
+FAIL
+test_read_for_the_resized_viewport_satisfies_the_premise (test_map_viewport_premise.ViewportPremiseTests.test_read_for_the_resized_viewport_satisfies_the_premise) ... PASS a viewport change still requests the map once the resize settles
+ok
+test_read_pending_from_the_previous_step_does_not_satisfy_the_premise (test_map_viewport_premise.ViewportPremiseTests.test_read_pending_from_the_previous_step_does_not_satisfy_the_premise) ... PASS a viewport change still requests the map once the resize settles
+FAIL
+test_read_with_the_old_viewport_width_after_the_resize_is_not_attributed (test_map_viewport_premise.ViewportPremiseTests.test_read_with_the_old_viewport_width_after_the_resize_is_not_attributed) ... PASS a viewport change still requests the map once the resize settles
+FAIL
+
+======================================================================
+FAIL: test_premise_is_unprovable_when_the_container_does_not_change_width (test_map_viewport_premise.ViewportPremiseTests.test_premise_is_unprovable_when_the_container_does_not_change_width)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/tests/test_map_viewport_premise.py", line 114, in test_premise_is_unprovable_when_the_container_does_not_change_width
+    with self.assertRaises(AssertionError):
+AssertionError: AssertionError not raised
+
+======================================================================
+FAIL: test_read_pending_from_the_previous_step_does_not_satisfy_the_premise (test_map_viewport_premise.ViewportPremiseTests.test_read_pending_from_the_previous_step_does_not_satisfy_the_premise)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/tests/test_map_viewport_premise.py", line 97, in test_read_pending_from_the_previous_step_does_not_satisfy_the_premise
+    with self.assertRaises(AssertionError):
+AssertionError: AssertionError not raised
+
+======================================================================
+FAIL: test_read_with_the_old_viewport_width_after_the_resize_is_not_attributed (test_map_viewport_premise.ViewportPremiseTests.test_read_with_the_old_viewport_width_after_the_resize_is_not_attributed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1828-map-shortcuts/src/api/tests/test_map_viewport_premise.py", line 108, in test_read_with_the_old_viewport_width_after_the_resize_is_not_attributed
+    with self.assertRaises(AssertionError):
+AssertionError: AssertionError not raised
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+FAILED (failures=3)

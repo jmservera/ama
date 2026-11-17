@@ -277,11 +277,15 @@ MAP_RENDERED = """expected => {
       || panel.querySelector('[role=alert]')) return false;
   const list = [...panel.querySelectorAll('.maplist li')];
   const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  // Home labels may be followed by ". <sensor status>"; clusters never are.
+  const base = (text, known) => known.filter(k => text === k || text.startsWith(k + '. '))
+    .sort((a, b) => b.length - a.length)[0] ?? text;
   return panel.querySelector('.map-info [role=status]')?.textContent === expected.status
-    && same(list.map(e => e.textContent), expected.labels)
+    && same(list.map(e => base(e.textContent, expected.labels)), expected.labels)
     && same(list.flatMap(e => [...e.querySelectorAll('a')].map(a => a.getAttribute('href'))),
             expected.links)
-    && same([...map.querySelectorAll('.leaflet-marker-icon')].map(e => e.title).sort(),
+    && same([...map.querySelectorAll('.leaflet-marker-icon')]
+              .map(e => base(e.title, expected.markers)).sort(),
             [...expected.markers].sort());
 }"""
 

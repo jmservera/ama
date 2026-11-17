@@ -12012,6 +12012,37 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
   No experiment, paid call, VM mutation, scoring/registration change, commit,
   push or external publication occurred; hosted CI and independent exact-head
   review remain unperformed.
+
+## [2026-11-15] update | White-paper narrative, learning and TODO disposition
+
+* Revised the [paper package](../capstone/thought-leadership/everything-but-the-software/README.md#narrative-learning-and-todo-reconciliation-15-november)
+  around the interrupted workflow, explicit hypotheses, mostly stable retention
+  and selective benefits, then methodological learning for a later paper.
+  Attributed author reflections and the full-RPI hypothesis remain distinct
+  from observed findings. Longer tasks and greater spending require a new
+  approved study, not a retroactive protocol change.
+* Moved detailed theory, assumed economics, future-design/hybrid candidates
+  and historical resource arithmetic into the existing additive Supplement.
+  The single PDF has 72 pages, with the Supplement starting on page 45,
+  three pages earlier than v21. All 34 existing table data bodies, seven
+  displayed equations, three prompts, 61 source bindings and unchanged
+  empirical/chart/diagram assets are preserved.
+* Recorded the [author-TODO disposition and remaining-work plan](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#narrative-learning-and-todo-reconciliation-15-november):
+  acknowledgement receipt is corrected to 14 November; an expected response
+  by 29 November is not clearance. Selected excerpt permission is scoped,
+  unsupported acknowledgements removed, and final-version author/employer
+  approval, arXiv/deposit checks and source verification remain separate.
+  Public scheduling/export inspection does not replace pending VM chronology
+  or establish independent provider conditions.
+* Structural checks pass; 72 of 73 authoring tests pass. The native browser
+  diagram-export test failed because its browser was unavailable; the
+  incomplete task-local download was stopped. Tectonic compilation and
+  nonblank/in-bounds/reference checks pass with only the inherited `inputenc`
+  notice; selected PDF renders were inspected. A coupled body-word counter
+  fix has one focused regression. The new v22 binding preserves earlier
+  records. No new experiment, paid call, VM access, scoring or registration
+  change, external submission, hosted CI or independent exact-head review
+  was performed.
 ## [2026-11-14] update | Registered screen to journey, task flow and design artefact map (Refs #156)
 
 * Added a dated, additive map to the [Prototype Profile Review](research/ux/zava-forward-prototype-profile-review.md#registered-screen-to-journey-task-flow-and-design-artefact-map-2026-11-14-refs-156): sixteen registered screens and routes, each with a journey link and a task flow or named gap; twelve link a written design record.
@@ -12025,3 +12056,62 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added the [threat model](research/resident-demo-threat-model-2026-11-16.md) covering public fake-email login, the shared demo credential, session handling, cross-case access, database fields and deployment isolation, and linked it from the showcase section of the API README and this index.
 * Local checks recorded in the dated RPI changes record. No Azure mutation, deployment or spend occurred; criteria needing owner pre-spend approval, hosted checks and coordinator assessment stay unmet. No security acceptance is claimed.
+
+## [2026-11-16] update | Plain-language paper and active Supplement revision
+
+* Reviewed all 70 active sections/subsections of the
+  [paper and ancillary TeX inputs](../capstone/thought-leadership/everything-but-the-software/README.md#human-readability-source-revision-16-november)
+  for computer scientists and data scientists using LLMs in the SDLC.
+  Clarified measurement terms and shortened dense qualifications while
+  preserving scientific uncertainty, results and study design.
+* Preserved seven displayed equations, all 40 table environments, three
+  prompts, citations, bibliography, 61 source bindings and author TODOs.
+  Added a source-only revision binding with prior digests retained.
+* Structural checks and 73 of 74 authoring tests pass. The unchanged native
+  diagram exporter requires an unavailable browser. A separate 73-page PDF
+  passes nonblank, page-boundary and unresolved-reference checks; seven
+  rendered pages were inspected. Only the inherited `inputenc` warning remains.
+  The existing PDF changed outside this build and is left uncommitted with
+  owner confirmation. No experiment, scoring or protocol change occurred;
+  scientific review, hosted CI and final approvals remain separate.
+
+## [2026-11-16] lint | Conservative scientific-prose follow-up
+
+* Checked the article and seven active imported TeX inputs, including the
+  owner's staged abstract revision. Further edits are limited to wording in
+  the article and sentence rhythm in the Supplement introduction.
+* Updated the [paper guide](../capstone/thought-leadership/everything-but-the-software/README.md#conservative-prose-follow-up-16-november),
+  revision record, current-source binding, matching digest guard and index.
+  Prior bindings are unchanged. Direct intake comparison preserves tables,
+  equations, citations, labels, numeric tokens, literal inputs and comments.
+* Structural checks and 73 of 74 package tests pass. The unchanged diagram
+  exporter cannot import `esbuild`, as at intake. No compiler is available
+  on PATH; no new PDF or layout review is claimed. The existing PDF is
+  byte-for-byte unchanged. Independent review, hosted CI and final approvals
+  remain separate.
+* Independent review of the first prose-pass commit found an inherited
+  strict-bound error in the abstract. Corrected below ten to at most ten,
+  matching the methods and results without changing observations. The
+  original finding is retained in the revision record.
+
+## [2026-11-16] update | Apply approved paper copy-review recommendations
+
+* Applied the five approved findings to the article and two active TeX inputs:
+  study-scoped wording, earlier historical-reporting context, explicit
+  first-person attribution, provenance-verification limits and descriptive
+  Gemini CR1 wording. Results, equations, citations and scientific uncertainty
+  are preserved.
+* Updated the [paper guide](../capstone/thought-leadership/everything-but-the-software/README.md#copy-review-recommendations-16-november),
+  revision record, index and additive source binding. The active Supplement
+  content digest is refreshed with its preceding value retained; dated
+  historical bindings are unchanged.
+* Structural checks and 73 of 74 package tests pass. The unchanged diagram
+  exporter cannot import `esbuild`. No compiler is available on PATH;
+  the existing PDF is unchanged and no new layout review is claimed.
+  Independent review, hosted checks and final approvals remain separate.
+
+## [2026-11-17] update | Resident demo threat model addendum after main integration (Refs #462)
+
+* Added the [threat model update](research/resident-demo-threat-model-update-2026-11-17.md) for main `1c9ac230`: the derived sensor `freshness`, `source` and `calibrated` keys, the validation provenance table separating historical, original and newly witnessed evidence, and the unproved items. The 2026-11-16 threat model is preserved unchanged and linked from this index.
+* Qualified the API README sentence about the resident sensor status badge and source line (empty history shows neither; stale history replaces the badge with a caution). Documentation only.
+* The candidate was brought onto main by a non-rewriting merge; no source file was edited by hand. No Azure mutation, deployment, spend, secret read or model call occurred. Hosted checks, the complete current-base gate, SQL, image and browser acceptance and independent review remain separate.

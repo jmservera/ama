@@ -12,16 +12,16 @@
   "historical_inputs_retained_in_git": true,
   "files": {
     "anc/additional-evidence.tex": {
-      "content_sha256": "8c0978c03be4a8b5901d79667f91c5651e459a90fc100e75024eb7d18d5b966e"
+      "content_sha256": "a32fa066c6da3133d2200b5205f5a76b9f674b36a3d5fe274e50b8867493d716"
     },
     "anc/case-audits.tex": {
-      "content_sha256": "d730539a0559c902566aa45f8a97a0f2bf21696bb32b8eeadf240a76401a5ce2"
+      "content_sha256": "7ead2c0de20fd5136d65e6f55c785571392b6055e225a0cf4e04f6de5e1c85c9"
     },
     "anc/deferred-measures.tex": {
-      "content_sha256": "686eceb8f7d5e62cb0db4537cb43c02d78701cfd136f16c9d2d45894fa9c85e1"
+      "content_sha256": "7346b69e089fdf713b9b73e614ba97acd6c247584928a566f4583b1ab686034d"
     },
     "anc/measurement-provenance.tex": {
-      "content_sha256": "84a146925fc67399f8c4828f963b5bdc0c60f64e0d9f4d97edef0e8369be7d1e"
+      "content_sha256": "bb665b2da622b57e2ff3c06fb95c32186b01ba85e3806c090f09fe1eefe62a17"
     }
   },
   "author_review_revision": {
@@ -345,6 +345,141 @@
       "anc/study-results-2026-11-15.json": "98c1ddcc3f9f52928c7227689bb25c2083dd142aa6d95375e24a5e6f04cabc91"
     },
     "unchanged_figure_revision": "chart_interpretation_revision"
+  },
+  "narrative_learning_revision": {
+    "date": "2026-11-15",
+    "scope": "Narrative and author-TODO reconciliation; detailed theory, assumed economics, future candidates and historical resource planning relocated into the existing Supplement. Public scheduling source/export inspection only; no VM access, experiment, scoring or registration change.",
+    "baseline_commit": "1172b5a6637e8e12d51b8f9836292959aabcef44",
+    "prior_delivery_revision": "provenance_readability_revision",
+    "prior_active_content_sha256": {
+      "anc/case-audits.tex": "d730539a0559c902566aa45f8a97a0f2bf21696bb32b8eeadf240a76401a5ce2",
+      "anc/measurement-provenance.tex": "84a146925fc67399f8c4828f963b5bdc0c60f64e0d9f4d97edef0e8369be7d1e"
+    },
+    "delivery_sha256": "a6505384de4f49aa033fbed7bd12d23f990f51dc4d227699a75a501cc9b9a88c",
+    "delivery_pages": 72,
+    "supplement_start_page": 45,
+    "reviewed_pages": [1, 35, 36, 45, 51, 52, 68],
+    "preservation_checks": {
+      "existing_table_data_bodies": 34,
+      "displayed_equations": 7,
+      "literal_prompts": 3,
+      "source_register_bindings": 61,
+      "experimental_assets_unchanged": true,
+      "author_todos_dispositioned_not_all_resolved": true
+    },
+    "source_sha256": {
+      "main.tex": "8606c96c6415313e49d462fbb7d0325c2d0aab19362ba841a96e95dd0212bdf6",
+      "anc/background.tex": "b44c0bce3676771daa5695a07271f86c9ed7e34481a3625719303d3bd89f2ead",
+      "anc/experiment-protocol.tex": "4ad80c975962d3e0b255f97478b59413070e13f11714d580577157bc1d9a37f7",
+      "anc/supplement-section.tex": "1d1f9e6f6aea3f1b22580e8f11969e20c908011fab684a2120e469b1a9891b27",
+      "anc/additional-evidence.tex": "9194a87c35bb31dd9242ac96da5c1b005e23af13ecd7f0aa2be187cfd47fd384",
+      "anc/case-audits.tex": "8cb7fa9db5e60afd1c1858d34071269b897f1b4b7a8b581911bbce3d1421e667",
+      "anc/deferred-measures.tex": "98e854941e7d9280588ff622da470e038f7ad6d883792136018a3bfb6dd0f831",
+      "anc/measurement-provenance.tex": "16e479865089657bc2a842994bc516eb81fb6b9aab641e0e9f4089c33a81c50f",
+      "references.bib": "9f1591d786ac533d3d0216ec8105acf6f7d0593422247ddaf46860ef7991e76e",
+      "anc/export_results_charts.mjs": "cb028b8170069980f8a1878c005536cb5ab0c9576dab4fbe366cd68b46efb480",
+      "anc/study-results-2026-11-15.json": "98c1ddcc3f9f52928c7227689bb25c2083dd142aa6d95375e24a5e6f04cabc91"
+    },
+    "unchanged_figure_revision": "chart_interpretation_revision",
+    "validation_limits": "Inherited inputenc warning; browser exporter could not run because its required Playwright browser was unavailable. No independent exact-head review, hosted CI, clearance or venue acceptance is established."
+  },
+  "author_voice_revision": {
+    "date": "2026-11-15",
+    "scope": "First-person singular for the participant-observer's case actions and reflections; future-study limitations stated through design scope. No experimental results or protocol changed.",
+    "prior_delivery_revision": "narrative_learning_revision",
+    "delivery_sha256": "8fc72c56d892fdf7be42a6f06c8c3880d51372e64ac2822d32887c4949c91908",
+    "delivery_pages": 71,
+    "supplement_start_page": 45,
+    "reviewed_pages": [1, 8, 34, 36, 45, 69, 70, 71],
+    "source_sha256": {
+      "main.tex": "8ace88a8a0d2de39cf58130d94f12db938092ee4049cb3a406f3571ce60058a9"
+    },
+    "validation_limits": "Two-pass pdfLaTeX completed with two ignored infinite-glue-shrinkage diagnostics at main.tex:1988. Structural checks pass; the native diagram-export test requires an unavailable Playwright browser. No independent exact-head review, hosted CI, clearance or venue acceptance is established."
+  },
+  "style_revision": {
+    "date": "2026-11-15",
+    "scope": "Direct prose revision of the abstract, case narrative, discussion and conclusion. Results, study design, formulas, tables, figures and source evidence remain unchanged.",
+    "prior_delivery_revision": "author_voice_revision",
+    "delivery_sha256": "6125792d2db26738fbcb74876e1d89423898641236ffc8e6a1a7bfca00e59868",
+    "delivery_pages": 72,
+    "supplement_start_page": 45,
+    "reviewed_pages": [1, 11, 35, 36, 37, 45, 70],
+    "source_sha256": {
+      "main.tex": "1e50321bbe7069ad42583f3b252a59c101d8993655354ffac1e62b1f3adab813"
+    },
+    "validation_limits": "Tectonic produced a valid 72-page PDF and the structural checker passed. The 74-test package suite passed 73 tests; the native diagram-export test could not launch because its Playwright browser was unavailable. No experiment or model query was run; independent exact-head review, hosted CI, clearance and venue acceptance remain separate."
+  },
+  "human_readability_revision": {
+    "date": "2026-11-16",
+    "scope": "Plain-language editorial review of all 70 active sections/subsections for computer scientists and data scientists using LLMs in the SDLC. The 16 November abstract follow-up preserves the author's first paragraph and narrates the hidden-test design. No results, equations, table bodies, prompts, citations or study design changed.",
+    "prior_delivery_revision": "style_revision",
+    "delivery_status": "source-only; existing main.pdf excluded",
+    "validation_pdf_sha256": "e708e941705523fc22870b33603913d7a0f0e00b5134c9a3c383ae679ea91cad",
+    "pre_question_validation_pdf_sha256": "0e5842ee3b4d4a3e77bfccae8617c89f54e313423cf982bc7aa01151333f5dd0",
+    "pre_story_validation_pdf_sha256": "0485c6de0ea76ef1af8834a96d098dd70675198fffee19f3fdd47581998d62fc",
+    "validation_pdf_pages": 73,
+    "validation_supplement_start_page": 46,
+    "validation_source_register_start_page": 70,
+    "reviewed_pages": [1, 15, 21, 36, 46, 51, 73],
+    "prior_active_content_sha256": {
+      "anc/additional-evidence.tex": "8c0978c03be4a8b5901d79667f91c5651e459a90fc100e75024eb7d18d5b966e",
+      "anc/case-audits.tex": "6f28c15914c434190475f45a28f4a9843b55c43cac1b25b21212389c6ff7978d",
+      "anc/deferred-measures.tex": "686eceb8f7d5e62cb0db4537cb43c02d78701cfd136f16c9d2d45894fa9c85e1",
+      "anc/measurement-provenance.tex": "45ad9c93009ca135e9165cb0aaba8511baee60a9979ed489fd46d09dbabeb324"
+    },
+    "source_sha256": {
+      "main.tex": "7047179d91c6f6c6c54e89557b9c8c3fee2193f834f38b81732e49887e4e791e",
+      "anc/background.tex": "9e3b2f93159e833cc4ff876cca08bd2837d6b3132d50bf9736c424e607f58bfc",
+      "anc/experiment-protocol.tex": "02b9481f2bd5d3207ab42d430f929079e876d78de32c5b9690527a7784491b18",
+      "anc/supplement-section.tex": "28047e8d289fb250a6af9aa633d26c888aabf6c72b99868c8bd01170f9060fef",
+      "anc/additional-evidence.tex": "28eb743b5bab60354de3086a433a84261809616de47a4238a183cf548c7688d4",
+      "anc/case-audits.tex": "229f5e9f275641d0874451167d0f25dd9bebd0e91cd5680bbb4a4eb5bdffb95d",
+      "anc/deferred-measures.tex": "36464df072e2f13548352c786b1e462ad1bf1a9d203da25a45243a2643f9742a",
+      "anc/measurement-provenance.tex": "dedbafcdcd8d87312141a16f78c48732be5eaa27605fd37d69495e9642a6c68d"
+    },
+    "pre_story_source_sha256": {
+      "main.tex": "a95490c336692be1d2212a46e1cc0da43b4b3abe065a70fe2a4d2f99fe6dde8b"
+    },
+    "validation_limits": "Separate external validation PDF only. The existing main.pdf changed outside this revision's build and is excluded from delivery with owner confirmation. Historical source/PDF bindings remain unchanged. Scientific review, hosted CI, author/employer approval and venue acceptance remain separate."
+  },
+  "prose_polish_revision": {
+    "date": "2026-11-16",
+    "scope": "Conservative scientific-prose pass across main.tex and its seven active TeX inputs, including the owner-approved staged abstract revision. Further edits are limited to flagged wording in the article and sentence rhythm in the Supplement introduction; technical terms and qualified claims remain intact.",
+    "prior_delivery_revision": "human_readability_revision",
+    "delivery_status": "source-only; existing main.pdf excluded",
+    "intake_main_sha256": "bbc5f27dd1a18608161d84451e2a0dab55bbcd9bb250b011e9c8c4000c1abf5a",
+    "unchanged_pdf_sha256": "c39812f602c488ab5158ad2a63e83d79b7a576f003c94d7a5a4a4f8f85a5e6d0",
+    "review_correction": "Independent review of a5080d83 found that the inherited abstract claim below ten was stricter than the methods and results support. Corrected to at most ten, matching the <=10 target and no-functions-exceeded-10 result; no observations changed.",
+    "source_sha256": {
+      "main.tex": "299bc45daa24b0abb494a66c1da30b3ccb29f02abe85a55963566690d14415bd",
+      "anc/background.tex": "9e3b2f93159e833cc4ff876cca08bd2837d6b3132d50bf9736c424e607f58bfc",
+      "anc/experiment-protocol.tex": "02b9481f2bd5d3207ab42d430f929079e876d78de32c5b9690527a7784491b18",
+      "anc/supplement-section.tex": "a3c0b060ac77d8373acecf71ab06d97a2f5a89ecd670d0518b7cfb61636ec64a",
+      "anc/additional-evidence.tex": "28eb743b5bab60354de3086a433a84261809616de47a4238a183cf548c7688d4",
+      "anc/case-audits.tex": "229f5e9f275641d0874451167d0f25dd9bebd0e91cd5680bbb4a4eb5bdffb95d",
+      "anc/deferred-measures.tex": "36464df072e2f13548352c786b1e462ad1bf1a9d203da25a45243a2643f9742a",
+      "anc/measurement-provenance.tex": "dedbafcdcd8d87312141a16f78c48732be5eaa27605fd37d69495e9642a6c68d"
+    }
+  },
+  "copy_review_revision": {
+    "date": "2026-11-16",
+    "scope": "Apply the five approved copy-review recommendations: study-scoped wording for an untested procedure, earlier identification of historical reporting requirements, first-person attribution of supplied registration/runtime information, explicit limits of provenance links and descriptive Gemini CR1 wording. No study design, outcomes or analysis changed.",
+    "prior_delivery_revision": "prose_polish_revision",
+    "delivery_status": "source-only; existing main.pdf excluded",
+    "unchanged_pdf_sha256": "c39812f602c488ab5158ad2a63e83d79b7a576f003c94d7a5a4a4f8f85a5e6d0",
+    "prior_active_content_sha256": {
+      "anc/measurement-provenance.tex": "2a0ef6678fbacc94446fb263e97a2361d50ca354d5746fed3529a25dc5a3c5b6"
+    },
+    "source_sha256": {
+      "main.tex": "cd6f1e81bcb349e89e61fe7b3ec1e6392cf5cdc9012a31be5ed2ffe0a4878e8b",
+      "anc/background.tex": "9e3b2f93159e833cc4ff876cca08bd2837d6b3132d50bf9736c424e607f58bfc",
+      "anc/experiment-protocol.tex": "5211334607aa9025aec92e1826355981efa3d497f82d898bc91d3eeb4f510123",
+      "anc/supplement-section.tex": "a3c0b060ac77d8373acecf71ab06d97a2f5a89ecd670d0518b7cfb61636ec64a",
+      "anc/additional-evidence.tex": "28eb743b5bab60354de3086a433a84261809616de47a4238a183cf548c7688d4",
+      "anc/case-audits.tex": "229f5e9f275641d0874451167d0f25dd9bebd0e91cd5680bbb4a4eb5bdffb95d",
+      "anc/deferred-measures.tex": "36464df072e2f13548352c786b1e462ad1bf1a9d203da25a45243a2643f9742a",
+      "anc/measurement-provenance.tex": "4f09f69256d74543cdb4e177e4b603181f4deefc6180d257a321cb955b7c2c4a"
+    }
   },
   "restored_citation_keys": [
     "bacchelli2013review",

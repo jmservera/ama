@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-15
+ms.date: 2026-11-16
 ms.topic: overview
 ---
 
@@ -44,17 +44,50 @@ projection, source/icon provenance and explicit integration/privacy/compliance
 limits. Prepared materials do not establish live listening, composure,
 production acceptance or a higher score.
 
+The paper's [16 November source-only readability revision](../capstone/thought-leadership/everything-but-the-software/README.md#human-readability-source-revision-16-november)
+clarifies the article and all active TeX inputs for computer scientists and
+data scientists working with LLMs in the SDLC. Equations, tables, prompts and
+citations are preserved. A separate 73-page PDF validates the source; the
+existing PDF is excluded at the owner's request. Structural checks and
+73 of 74 authoring tests pass; the browser diagram exporter remains
+unavailable. The following delivery descriptions retain their dated scope.
+
+The later [conservative prose follow-up](../capstone/thought-leadership/everything-but-the-software/README.md#conservative-prose-follow-up-16-november)
+includes the owner's abstract edits and checks all seven active TeX inputs,
+with only small further wording changes. It preserves earlier bindings and
+the existing PDF. Structural checks and 73 of 74 tests pass; the unchanged
+diagram exporter cannot import `esbuild`. No compiler is available on PATH,
+so this follow-up has no fresh PDF or rendered-layout validation.
+
+The approved [copy-review recommendations](../capstone/thought-leadership/everything-but-the-software/README.md#copy-review-recommendations-16-november)
+narrow an unsupported absolute, distinguish historical reporting instructions,
+clarify attribution and verification limits, and use descriptive result wording.
+The source-only update retains earlier bindings and the existing PDF.
+Structural checks and 73 of 74 tests pass; the unchanged diagram exporter
+still lacks `esbuild`. Scientific and final approvals remain separate.
+
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
-The current v21 coauthored delivery has 70 pages, with the additive Supplement
-starting on page 48 and the source/digest register on pages 68-70. The
+The current v22 coauthored delivery has 72 pages, with the additive Supplement
+starting on page 45 and the source/digest register on pages 70-72. The
+[15 November narrative and TODO revision](../capstone/thought-leadership/everything-but-the-software/README.md#narrative-learning-and-todo-reconciliation-15-november)
+connects the interrupted workflow, hypotheses, unexpected findings and learning
+for a separately designed future study. Detailed theory, assumed economics
+and unapproved follow-up/resource candidates move into the existing Supplement.
+The [remaining-work plan](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#remaining-work-in-dependency-order)
+separates VM chronology and metadata, inference/source checks, deposit and
+approval obligations. The supplied acknowledgement corrects clearance receipt
+to 14 November; the expected 29 November response is not approval.
+Structural checks and 72 of 73 tests pass; the browser diagram-export check
+is unavailable. Existing table data, equations, prompts, figures, source values
+and historical bindings are preserved. The preceding v21 70-page delivery
+(Supplement page 48) remains in the binding and dated record. The
 [15 November provenance and readability revision](../capstone/thought-leadership/everything-but-the-software/README.md#provenance-and-readability-15-november)
 moves 61 unique identifiers out of prose, adds local arm/checkpoint/uncertainty
-explanations and shortens repeated result and assistance histories. All
-existing table fields, displayed equations, prompts and prior records are
-preserved; 72 authoring tests and structural checks pass. The overall page
-count has not grown. The preceding v20 70-page delivery (Supplement page 51)
+explanations and shortens repeated result and assistance histories. Its
+then-current 72 authoring tests and structural checks passed with no page
+growth. The preceding v20 70-page delivery (Supplement page 51)
 remains in the binding and dated record. The
 [15 November final-results and chart interpretation record](../capstone/thought-leadership/everything-but-the-software/README.md#final-results-and-chart-interpretation-15-november)
 incorporates all 315 completed trajectories, sixteen execution sources, updated
@@ -1129,6 +1162,7 @@ or infra acceptance claimed.
 | [Resident Chat Learning Record (synthetic demo)](./research/ux/resident-chat-learning-record.md) | What the synthetic resident demo chat saves per question, why, its 14-day and 2,000-row bounds, the operator summary of unrouted questions, and that real-resident use needs DPO and Legal approval (#163 deferred). Refs #466 | 2026-11-01 |
 | [Resident Demo Web App UX Redesign Specification](./research/ux/resident-demo-redesign-2026-11-04.md) | UX specification for the #462 resident showcase addressing 2026-11-04 owner demo feedback: hidden form during sign-in loading with preserved email on error, icon-only `Account` button, top case summary (rules default, opt-in AI with source links and fallback), sticky section navigation, timeline/documents/funding hierarchy, and relocated temperature/humidity sensors with 24-hour synthetic forecast. Design specification only; no code modified, no user or screen-reader acceptance claimed. Refs #462. The 2026-11-04 live sensors walk (#1072) found the fail-closed no-readings message and records the blocked seed and the owner decision needed. | 2026-11-04 |
 | [Resident Demo Threat Model (Issue #462)](./research/resident-demo-threat-model-2026-11-16.md) | Design-time threat assessment of the synthetic resident showcase: public fake-email login, shared demo credential, session handling, cross-case access, database fields and deployment isolation, with accepted risks. Not a penetration test, security acceptance, DPO approval or deployment authority. Refs #462. | 2026-11-16 |
+| [Resident Demo Threat Model Update for Main 1c9ac230 (Issue #462)](./research/resident-demo-threat-model-update-2026-11-17.md) | Dated addendum after a non-rewriting integration of current main: derived sensor freshness keys, validation provenance (historical, original and newly witnessed) and what stays unproved. Not a security acceptance, penetration test, DPO approval or deployment authority. Refs #462. | 2026-11-17 |
 | [Chat and Memory Data Protection Analysis Record](./research/chat-memory-dpia.md) | Draft only: [staff hardening boundary](./research/chat-memory-dpia.md#staff-chat-engineering-boundary-2026-10-27-refs-157162159164163) records canonical question warning, shared cited routes, default-deny dispatch, bounded context and content-free consumption receipts. Provider terms documented 2026-11-01 (vendor documentation, not DPO-accepted) and a blank DPO and Legal decision pack added. No approved retention, lawful basis, notice or DPIA; no live activation or human accessibility/evaluation acceptance (#157/#162/#159/#164/#163) | 2026-11-01 |
 | [Chat Storage Approval for the Synthetic-Data Demo](./research/chat-demo-storage-approval-2026-11-01.md) | Owner decision 2026-11-01 enabling chat storage for the synthetic-data demo only: DPIA, lawful basis, notice and 30-day retention references the deploy settings point to. Not a production or real-data approval; #163 criteria 2 and 5 stay deferred | 2026-11-01 |
 | [Easy Auth Intermittent 500s Under Concurrency](./research/easy-auth-intermittent-500-2026-11-03.md) | Empty-body 500s on the cutover test demo API (issue 810): ingress `Http` was insufficient; sidecar logs and stub A/B isolate the API's HTTP/1.0 close-per-response as the cause, fixed in source, deployed (image 4d56cf609) and verified live (0 x 500 in about 1,300 further requests, including signed-in resident traffic; staff-token burst still open) | 2026-11-04 |

@@ -55,7 +55,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         )
         for name, (sha256, _) in PROMPTS.items():
             self.assertEqual(bindings["literal_inputs"][f"anc/{name}"], sha256)
-        for name, sha256 in bindings["provenance_readability_revision"]["source_sha256"].items():
+        for name, sha256 in bindings["copy_review_revision"]["source_sha256"].items():
             with self.subTest(source=name):
                 self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), sha256)
 
@@ -167,20 +167,35 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("hard provider spending cap", text)
         self.assertIn("raw packets and mappings", text)
 
-    def test_judging_delivery_binding_preserves_the_historical_measurement_record(self):
+    def test_human_readability_binding_preserves_the_historical_measurement_record(self):
         bindings = json.loads((ANC / "supplement-integration.json").read_text())
-        current = bindings["provenance_readability_revision"]
+        previous = bindings["author_voice_revision"]
+        style = bindings["style_revision"]
+        current = bindings["human_readability_revision"]
         finalization = bindings["finalization_revision"]
         runtime_flow = bindings["runtime_flow_revision"]
         historical = bindings["measurement_provenance_revision"]
 
         self.assertEqual(
-            hashlib.sha256((PACKAGE / "main.pdf").read_bytes()).hexdigest(),
-            current["delivery_sha256"],
+            previous["delivery_sha256"],
+            "8fc72c56d892fdf7be42a6f06c8c3880d51372e64ac2822d32887c4949c91908",
         )
-        self.assertEqual(current["delivery_pages"], 70)
-        self.assertLessEqual(current["delivery_pages"], bindings["chart_interpretation_revision"]["delivery_pages"])
-        self.assertEqual(current["prior_delivery_revision"], "chart_interpretation_revision")
+        self.assertEqual(previous["delivery_pages"], 71)
+        self.assertEqual(
+            previous["source_sha256"]["main.tex"],
+            "8ace88a8a0d2de39cf58130d94f12db938092ee4049cb3a406f3571ce60058a9",
+        )
+        self.assertEqual(
+            style["delivery_sha256"],
+            "6125792d2db26738fbcb74876e1d89423898641236ffc8e6a1a7bfca00e59868",
+        )
+        self.assertEqual(style["prior_delivery_revision"], "author_voice_revision")
+        self.assertEqual(style["delivery_pages"], 72)
+        self.assertEqual(style["supplement_start_page"], 45)
+        self.assertEqual(current["prior_delivery_revision"], "style_revision")
+        self.assertEqual(current["delivery_status"], "source-only; existing main.pdf excluded")
+        self.assertEqual(len(current["source_sha256"]), 8)
+        self.assertEqual(bindings["provenance_readability_revision"]["delivery_pages"], 70)
         self.assertEqual(bindings["chart_interpretation_revision"]["delivery_pages"], 70)
         self.assertEqual(bindings["chart_interpretation_revision"]["supplement_start_page"], 51)
         self.assertEqual(bindings["final_results_revision"]["delivery_pages"], 69)
@@ -321,11 +336,11 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("primary_estimates_available=true", protocol)
         self.assertIn("two completed GPT trajectories", protocol)
         self.assertIn("63 versus 63", protocol)
-        self.assertIn("exploratory pilot/estimation study", protocol)
+        self.assertIn("completed study is exploratory", protocol)
         self.assertNotIn("attestation remains absent", protocol)
         self.assertNotIn("missing intervention attestation", manuscript)
-        self.assertIn("not an independent verification", supplement)
-        self.assertIn("not mean paired statistical resampling", supplement)
+        self.assertIn("have not been independently verified", supplement)
+        self.assertIn("does not match trajectories into statistical pairs", supplement)
         self.assertIn("not multiplicity-adjusted", supplement)
 
     def test_given_report_refresh_when_coverage_compared_then_intervals_and_bounds_stay_separate(self):
@@ -371,7 +386,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
             with self.subTest(table=label):
                 self.assertEqual([row[-1] for row in table_rows(supplement, label)], expected)
         normalised = " ".join(supplement.split())
-        self.assertIn("not the complete-scenario estimand", normalised)
+        self.assertIn("different question from a comparison covering every scheduled scenario", normalised)
         self.assertIn("not the unrated dimensions within observed trajectories", normalised)
         self.assertIn("not substituted for the full-allocation bounds", normalised)
 
@@ -383,9 +398,11 @@ class MeasurementProvenanceTests(unittest.TestCase):
         )
 
         self.assertIn("owner-reported manager approval", approval_note)
-        self.assertIn("27 October 2026 CELA submission", approval_note)
-        self.assertIn("confirm that the applicable clearance process covers the final draft", approval_note)
-        self.assertIn("not a separately inspected final-version clearance", approval_note)
+        self.assertIn("AICC acknowledgement of 14 November 2026", approval_note)
+        self.assertIn("expected by 29 November 2026, not guaranteed approval", approval_note)
+        self.assertIn("Confirm that the applicable clearance process covers the final draft", approval_note)
+        self.assertIn("CELA/final-version clearance remains pending", approval_note)
+        self.assertNotIn("27 October 2026 CELA submission", approval_note)
         self.assertNotIn("CELA approved", approval_note)
 
     def test_given_finalization_when_metadata_recovered_then_history_is_not_rerun(self):
@@ -418,9 +435,10 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("institutional-abstract support", source_review)
 
     def test_given_falsifiable_predictions_when_read_then_verdicts_and_future_design_are_explicit(self):
+        from check_paper import expand_inputs
         from test_protocol_planning import table_rows
 
-        manuscript = " ".join((PACKAGE / "main.tex").read_text().split())
+        manuscript = " ".join(expand_inputs((PACKAGE / "main.tex").read_text()).split())
         protocol = " ".join((ANC / "experiment-protocol.tex").read_text().split())
         rows = table_rows((ANC / "experiment-protocol.tex").read_text(), "tab:predictionverdicts")
 
@@ -438,27 +456,27 @@ class MeasurementProvenanceTests(unittest.TestCase):
             "N=30",
             "Latin-square",
             r"2\times2",
-            "Sonnet +0.26 and Gemini +0.15 intervals span zero",
+            "Sonnet~5.5 and Gemini~4 Argon showed small B--D gains",
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, manuscript)
         self.assertIn("comes almost entirely from GPT~6.1 Sol acquiring the ninth feature", protocol)
 
     def test_runtime_flow_separates_development_commands_from_tool_free_judging(self):
-        protocol = (ANC / "experiment-protocol.tex").read_text()
+        protocol = " ".join((ANC / "experiment-protocol.tex").read_text().split())
 
         self.assertIn(r"\label{sec:runtimeboundaries}", protocol)
         self.assertIn(r"{fig-runtime-boundaries.png}", protocol)
         self.assertIn(r"\texttt{isolated\_exec}", protocol)
         self.assertIn("fresh isolated container", protocol)
-        self.assertIn("Validated filesystem/Git state is replayed", protocol)
-        self.assertIn("processes and memory do not persist", protocol)
+        self.assertIn("restores validated filesystem/Git state", protocol)
+        self.assertIn("no surviving candidate processes or process memory", protocol)
         self.assertIn("no command tools or candidate-repository access", protocol)
         self.assertIn("outside the replay container", protocol)
         self.assertIn("isolation or collection failure", protocol)
-        self.assertIn("successfully collected candidate failure", protocol)
+        self.assertIn("collection succeeds and the candidate fails", protocol)
         self.assertIn("re-adds four for its protected supervisor", protocol)
-        self.assertIn("not capability-free", protocol)
+        self.assertIn("capabilities remain at the container level", protocol)
 
     def test_given_final_results_when_tables_checked_then_snapshot_values_and_unknowns_match(self):
         from test_protocol_planning import table_rows
@@ -576,9 +594,10 @@ class MeasurementProvenanceTests(unittest.TestCase):
                 self.assertIn(r"\armlegend", table)
         self.assertIn("final ten-feature repository before the withheld extension", prose)
         self.assertIn("acquisition means implementing a required capability", prose)
-        self.assertIn("identification bounds instead span the possible success rates", prose)
+        self.assertIn("assigned first to failure and then to success", prose)
         self.assertIn("sampling uncertainty", prose)
-        self.assertIn("proposed for a separately registered follow-up", manuscript)
+        self.assertIn("offer design inputs for a future study", manuscript)
+        self.assertIn("require separate development and review", manuscript)
         self.assertNotIn("those options execution", manuscript)
 
 if __name__ == "__main__":
