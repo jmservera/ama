@@ -1632,6 +1632,35 @@ Owner-approved, resource group `ama` only. Local `docker build`, then push insid
 * Signed-in walkthrough: see the [dated review note](../docs/reference/research/ux/zava-forward-prototype-profile-review.md#live-redesign-deploy-and-signed-in-walkthrough-2026-11-04-refs-462-refs-521). The sensors section showed its fail-closed message only (#1072). Resolved for the test resident by the [live sensors seed](#live-sensors-seed-for-the-test-resident-2026-11-04-refs-1072-refs-462).
 * This is a manual out-of-band deploy; no Bicep deployment or complete local gate was run.
 
+### Live deploy of main `488c5a0c8` and browser verification (2026-11-17, Refs #462)
+
+Owner-approved synthetic demo only, resource group `ama` only, no production claim. Local `docker build` of
+`src/api/Dockerfile.resident-demo` (runs as uid 10001), pushed inside a trapped registry window. The trap's rule
+removal used the wrong JSON field (`value` instead of `ipAddressOrRange`), so the push script reported
+`RESTORE_MISMATCH` and the single IP rule was removed by hand straight afterwards; readback matched the captured
+prior state (Deny, no rules, public access Disabled, exports disabled).
+
+* Image `zava-resident-demo:488c5a0c8`, digest `sha256:f6ce2bdef37fb4ca7ae0f682bce552b9f91b96b80c0b59b92aebad3525ebad28`.
+  Resident revision `--0000010` to `--0000011`, 100 percent, Healthy. A projected metadata diff (image, min/max, CPU,
+  memory, ingress, identity type, env names) showed the image as the only change.
+* `infra/sql/resident-showcase.sql` is unchanged since the previous deploy, so no SQL job ran. SQL `retrofit` stays
+  Standard capacity 10; no secret, role, tenant, employee app or other resource group change.
+* Browser (Playwright Chromium, desktop 1280, real HTTPS URL, credentials read in-process from the owner file and
+  never printed): sign-in page lang, landmarks and labels; real fake-email login reached the mapped synthetic home
+  (Flat 1, Tebay Drive) with the synthetic and "does not prove who you are" notices and no safeguarding, finance or
+  staff terms; `__Host-` session cookie Secure, HttpOnly, SameSite Strict; wrong password and unknown email gave the
+  same generic message; login without CSRF 403; forged session 401; `/staff`, `/api/cases`, `/admin` 404; sign-out
+  ended the session (401). Evidence under `.copilot-tracking/evidence/2026-11-17-resident-showcase-live/`.
+* The login limiter (5 failures per source in 600 seconds, in memory) blocked a real login after earlier failed test
+  runs, which confirms the bound; the later run waited out the window.
+* Limits: cold start was about 42 seconds to first byte; desktop only; no whole-WCAG, human, legal or production
+  acceptance; own-case content beyond the rendered summary, assistant and AI paths were not exercised.
+* Cost: RG `ama` actual month-to-date USD 85.39 at 18:05Z before deploying (cap USD 700, RG-only, billing lags). The
+  change adds no resource; incremental compute is a 0.25 vCPU/0.5 GiB revision for under an hour.
+* Expiry and stop plan: `ZF_DEMO_EXPIRES_AT` reads back `2028-01-01T00:00:00Z` (serving refuses from then).
+  To stop earlier run `az containerapp ingress disable -n ca-resident-demo -g ama`; ingress is currently external,
+  as before this deploy, and minimum replicas stay 0. Rollback is the previous digest `sha256:24a9cbe3...b28`.
+
 ### Live sensors seed for the test resident (2026-11-04, Refs #1072, Refs #462)
 
 Owner-approved until the end of November 2026: one-off in-VNet job runs to the private demo SQL database, public network access kept Disabled, no firewall rule, spec restored with readback.

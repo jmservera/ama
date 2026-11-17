@@ -12115,3 +12115,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added the [threat model update](research/resident-demo-threat-model-update-2026-11-17.md) for main `1c9ac230`: the derived sensor `freshness`, `source` and `calibrated` keys, the validation provenance table separating historical, original and newly witnessed evidence, and the unproved items. The 2026-11-16 threat model is preserved unchanged and linked from this index.
 * Qualified the API README sentence about the resident sensor status badge and source line (empty history shows neither; stale history replaces the badge with a caution). Documentation only.
 * The candidate was brought onto main by a non-rewriting merge; no source file was edited by hand. No Azure mutation, deployment, spend, secret read or model call occurred. Hosted checks, the complete current-base gate, SQL, image and browser acceptance and independent review remain separate.
+
+## [2026-11-17] update | Resident showcase deployed to Azure and verified in a browser (Refs #462)
+
+* Added a dated deploy and verification note to [infra/README.md](../../infra/README.md#live-deploy-of-main-488c5a0c8-and-browser-verification-2026-11-17-refs-462): image digest, revision `--0000011`, an image-only metadata diff, the real-HTTPS login and negative-path results, the registry-window trap defect, cost admission, limits and the expiry and stop plan.
+* Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.

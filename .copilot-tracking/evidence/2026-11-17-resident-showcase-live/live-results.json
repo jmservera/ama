@@ -1,0 +1,85 @@
+{
+ "signed_in_excerpt": "Skip to the main content\nSynthetic showcase - not a live resident service. Everything here is invented test information. The shared demonstration sign-in does not prove who you are. Do not use this to make any decision.\nLegal and Data Protection Officer review is still outstanding. Do not use this for real resident data or decisions.\nZ\n\nZava North Homes\nHome improvement progress\n\nYour home improvement progress\n\nYour home and works records are read-only. Synthetic callback booking is not connected in this showcase environment. Nobody will call you.\n\nYou are signed in. Your progress is shown below.\n Flat 1, 157,159,161,163,165,167 Tebay Drive, Newcastle upon Tyne, NE5 2XH\nSynthetic showcase record - read-only\nSummary\nStatus\nNeeded from you\nTimeline\nDocuments\nFunding\nHelp\nSensors\nShowcase limits\nCase summary\n\nBased only on the recorded facts shown on this page for your home. Neither rules nor AI can make decisions, approve documents, book works, or give consent.\n\nSummary by rules. Not an instruction.\n\nYour home at Flat 1, 157,159,161,163,165,167 Tebay Drive, Newcastle upon Tyne, NE5 2XH is at the Contact paused stage. Contact is paused. Next step: We will not contact you until the pause is lifted. You can ask for help below. Planned improvements: External wall insulation (block), dMEV ventilation. Document requests are not shown in this view. Nothing is recorded as needed from you right now.\n\nSources in your record:\n\nCurrent status and next step\nWhat is needed from you\nCase timeline and planned improvements\nDocuments and checks\nUse my own case record to generate an AI summary (optional). This is not consent to works.\nGenerate AI summary\n\nCurrent status and next step\n\nStage: Contact paused\n\nWhere things are\n\nContact is paused.\n\nWhat happens next\n\nWe will not contact you until the pause is lifted. You can ask for help below.\n\nWhat is needed from you\n\nNo action needed\n\nNothing is needed from you right now. Zava North Homes is working on the current step. We will contact you if we need anything.\n\nCase timeline and planned improvements\n1. Survey\n Current stage\n2. Assessment and design\n Not started\n3. Resident agreement\n Not started\n4. Funding and final checks\n Not started\n5. Installation works\n Not started\n6. Quality and handover\n Not started\nPlanned improvements\n External wall insulation (block)\n dMEV ventilation\nDocuments and checks\n\nThese are recorded facts from your case file, not a decision that any document is approved. A clean file check only means the file was scanned; a person still needs to review it. Uploading or downloading files is not available in ",
+ "canary_terms_present": [],
+ "email_shown_in_page": false,
+ "cookies": {
+  "__Host-zfdemo-csrf": {
+   "secure": true,
+   "httpOnly": false,
+   "sameSite": "Strict",
+   "path": "/"
+  },
+  "__Host-zfdemo": {
+   "secure": true,
+   "httpOnly": true,
+   "sameSite": "Strict",
+   "path": "/"
+  }
+ },
+ "signed_in_view_status_no_session_header": 409,
+ "view_response": {
+  "view": [
+   "account",
+   "agenda_available",
+   "banner",
+   "callbacks_available",
+   "documents",
+   "help",
+   "home",
+   "measures",
+   "needed",
+   "next_step",
+   "progress",
+   "read_only",
+   "sensors",
+   "stage",
+   "summary",
+   "timeline",
+   "unavailable",
+   "viewer"
+  ]
+ },
+ "after_signout_view_status": 401,
+ "signin_form_visible_after_signout": true,
+ "login_post_without_csrf": 403,
+ "forged_view_status": 401,
+ "staff_paths": {
+  "/staff": 404,
+  "/api/cases": 404,
+  "/admin": 404,
+  "/demo/cases/1": 404
+ },
+ "denial_messages": [
+  [
+   "Your home improvement progress",
+   "",
+   "Sign in to see how your home improvement is going. Your home and works records are read-only.",
+   "",
+   "Sign in to the showcase",
+   "",
+   "Enter the example email address you were given and the shared demonstration password.",
+   "",
+   "We could not sign you in with those details.",
+   "Email address",
+   "Password",
+   ""
+  ],
+  [
+   "Your home improvement progress",
+   "",
+   "Sign in to see how your home improvement is going. Your home and works records are read-only.",
+   "",
+   "Sign in to the showcase",
+   "",
+   "Enter the example email address you were given and the shared demonstration password.",
+   "",
+   "We could not sign you in with those details.",
+   "Email address",
+   "Password",
+   ""
+  ]
+ ],
+ "denial_identical": true,
+ "attempts_used": 2,
+ "note": "Sanitised: credentials and fake email are scrubbed; password-in-response was not separately asserted."
+}
