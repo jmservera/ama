@@ -38,7 +38,7 @@ class MapTileDecisionRecord(unittest.TestCase):
                 self.assertRegex(prd, rf"\b{req}\b")
 
     def test_record_matches_the_code_it_describes(self) -> None:
-        self.assertIsNone(tile_config({"ZF_ENV": "production"})["url"])
+        self.assertIsNone(tile_config({"ZF_ENV": "production"})["url"])  # type: ignore[no-untyped-call]
         js = (WEB / "app.js").read_text()
         self.assertIn("Show the map areas as a list (keyboard and screen reader friendly)", js)
         self.assertIn(
