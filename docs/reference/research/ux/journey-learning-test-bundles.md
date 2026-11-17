@@ -1,7 +1,7 @@
 ---
 title: Journey learning-test bundles with non-AI comparators
 description: Experiment protocol for the five candidate journey learning-test bundles, with comparators, net-effort measures, stop rules, boundaries and scope exclusions (issue #129, first slice)
-ms.date: 2026-11-04
+ms.date: 2026-11-17
 ms.topic: reference
 ---
 
@@ -130,4 +130,17 @@ decided here.
   report states any stop before the effort figures and repeats the capacity
   and constructed-case labels. Still no run has happened and no run record is
   stored.
-* A first bundle run with its stop rule checked, then the other four.
+* Delivered (fourth slice, 2026-11-10, PR #1374): a bounded, versioned
+  constructed-input command in the same module feeds one numeric run into the
+  unchanged scorer and report renderer and prints to stdout only. It stores no
+  run and collects no participant data.
+* Delivered (2026-11-15): cross-layer scenario tests in
+  `src/api/tests/test_learning_test_bundle_scenarios.py` exercise each bundle's
+  stop rule against the role screens on constructed inputs. They are not an
+  experiment.
+* Drift guard (2026-11-17): a core unit test compares the bundle table above
+  with the scorer's bundle definitions, so a change to atlas IDs, linked
+  requirements, comparator or stop rule in one place fails until the other
+  matches.
+* A first bundle run with its stop rule checked, then the other four. This
+  still needs participants, facilitators and the DPO retention decision.
