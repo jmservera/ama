@@ -12127,3 +12127,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added the owner direction of 2026-11-02 to the [BRD](../brds/agentic-retrofit-programme-brd.md) decision OD-53 and the [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) question OQ-029: the routine exception is approved in principle subject to named Legal/Compliance approval, and the synthetic-data demo display is not an OD-53 or RULE-020 approval.
 * Measured gap before the edit: neither document recorded either direction. Normative wording is unchanged; per-message named human review stays the default, the exception stays OFF and OD-53 stays OPEN. Criterion 5 of #441 stays unmet.
 * Added `tools/test_resident_portal_docs.py`. No status upgrade, memory change or deployment.
+## [2026-11-17] update | Identifier leak copy audit on exception screens (Refs #153)
+
+* Added an [identifier leak audit](research/ux/content-standard.md#identifier-leak-audit-2026-11-17-153) section to the content standard: two snake_case identifiers shown to staff on the data steward and digital operator screens were reworded, and a lexical regression guard was added. Named-human review of resident-facing wording (criterion 5) remains unmet.
