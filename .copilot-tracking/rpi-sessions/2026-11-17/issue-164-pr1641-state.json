@@ -1,0 +1,4 @@
+{"task_id":"issue-164-pr1641","task_slug":"issue-164-pr1641","parent_task":null,"mode":"automatic","active_phase":"Research","status":"active","session_status":"running",
+"artifact_paths":{"research":".copilot-tracking/research/2026-11-17/issue-164-pr1641-main-1117-research.md","plan":null,"details":null,"critique":null,"changes":null,"review":null},
+"confirmed_decisions":[{"decision":"Tier FULL expected; merge (no rebase) current main into PR head; no push; no rpi-checks --all","status":"confirmed","evidence":"coordinator brief 2026-11-17"}],
+"blockers":[],"next_action":{"phase":"Plan","action":"Merge origin/main and resolve conflicts"},"prioritized_follow_ups":[]}
