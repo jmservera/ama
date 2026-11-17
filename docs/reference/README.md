@@ -409,6 +409,9 @@ records five read-only ARM metadata reads of the existing hub, consumer group, d
 Bicep-declared job names (both `ResourceNotFound`). It is configuration only: it shows no ingestion,
 runtime or build proof, no execution, no budget or transport authority and no cost measurement, and
 the whole #110, #140, #184 and #440 criteria stay open.
+The [2026-11-17 epic 109 closure audit](./research/iot-sensor-analytics-research-plan.md#epic-109-closure-audit-against-main-eb51af5c9-2026-11-17-refs-109)
+maps the children and criteria to merged evidence and lists the unmet criteria; documentation only, nothing
+is ticked or closed and the epic stays open.
 The [2026-11-12 narrow engineering design proposal](./research/iot-sensor-analytics-research-plan.md#narrow-engineering-design-proposal-2026-11-12-refs-184)
 proposes run-specific correlation, receive semantics, an attempt fence, finite model admission and staged
 minimal changes with approval handoffs; it is design only, changes no source, grants no approval and
