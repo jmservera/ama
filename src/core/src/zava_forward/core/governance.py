@@ -502,7 +502,13 @@ class GovernanceMixin:
         if c.get("pilot"):
             self.require_capture_open()
         home = c.get("home") or {}
-        for kind, scope in (("home", c["id"]), ("home", home.get("address")), ("archetype", home.get("type"))):
+        from .procurement import ACTIVE
+
+        orders = (self.data.get("procurement") or {}).get("work_orders", [])
+        packages = {w["package"] for w in orders if w.get("case_id") == c["id"] and w.get("state") in ACTIVE}
+        scopes = [("home", c["id"]), ("home", home.get("address")), ("archetype", home.get("type"))]
+        scopes += [("work package", pkg) for pkg in sorted(packages)]
+        for kind, scope in scopes:
             if scope:
                 self.require_not_paused(kind, scope)
 
