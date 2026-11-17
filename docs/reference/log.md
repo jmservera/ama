@@ -12126,6 +12126,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Measured the declared alert set against the runbook: `alert-<job>-failed` for the optional ranking jobs (`rank`, `rank-publish`) resolves to the `job-auth` anchor because `operationalMonitoring.bicep` has no ranking branch. Added a `Job ranking` section to [infra/monitoring-runbooks.md](../../infra/monitoring-runbooks.md#job-ranking), a pointer in `Job auth`, and a regression test in `infra/tests/test_alert_runbook_signal_matrix.py` that every job suffix resolves to a section naming it.
 * The Bicep anchor itself is unchanged (infrastructure change, full tier); it stays a follow-up. No deployment, appointment, rendering or billing evidence is added, and no #146 criterion is newly proven.
+## [2026-11-17] update | Issue 118 hardened deployment status re-measured on main (Refs #118)
+
+* Re-ran the offline infrastructure tests on main `eb51af5c9` (container contract, Bicep policy, governance, edge module, pipeline, container hosting). All pass, and no defect was reproduced, so no source fix or regression test was added.
+* Criteria 1 to 4 stay delivered offline. Criterion 5 stays unmet: `infra/defender-decision.json` still records audit-only Policy, an open Deny choice, deferred Defender plans and pending cost approval, and the Bicep defaults match it (`enableDefenderPlans` false, `DoNotEnforce`). The owner decision has no code step.
+* Not run or proven: the `src/check-container.py` image run, hosted CI for this head, live Azure state and load tests. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-17 issue-118).
 ## [2026-11-17] assessment | Service continuity evidence on main (Refs #122)
 
 * Measured the continuity, suspension, manual-fallback, recovery and version tests on main `eb51af5c9`: `src/api` test_operator_suspension.py (18), test_continuity.py (22), test_continuity_epoch_export.py (77, 39 skipped for the owned local MSSQL opt-in), test_epic149_manual_fallback_continuity.py (10); `src/core` test_recovery.py (15) and test_version.py (3). All passed; no defect reproduced, so no source change or regression test was made.
