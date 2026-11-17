@@ -12121,3 +12121,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a dated deploy and verification note to [infra/README.md](../../infra/README.md#live-deploy-of-main-488c5a0c8-and-browser-verification-2026-11-17-refs-462): image digest, revision `--0000011`, an image-only metadata diff, the real-HTTPS login and negative-path results, the registry-window trap defect, cost admission, limits and the expiry and stop plan.
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
+
+## [2026-11-17] update | Archive tag and legacy deletion status assessed (Refs #202)
+
+* Measured main `eb51af5c`: no tracked file under `mvp/` or `prototype/`; annotated tag `v0.21.0` (`0096b113`, target `65a514ed2`) is on `origin`; no GitHub release exists; `main` has no branch protection; `mvp-ci.yml` and `mvp-validation.yml` remain dispatch-only. Corrected the stale README claim that the tag was local and unpublished. Evidence in `.copilot-tracking/research/2026-11-17/issue-202-research.md`.
+* Unmet and owner-gated: the `v0.21.0` GitHub release, removal of the dispatch-only legacy workflows, and the dedicated registry PR clause. Issue #202 stays open; nothing was deleted.
