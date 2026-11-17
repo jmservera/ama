@@ -445,7 +445,8 @@ PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
 
 It starts the employee site on loopback with `ZF_ENV=production` and the
 trusted-proxy provider, then runs axe and keyboard checks on the case view and
-the employee chat widget. Synthetic data only; see the
+the employee chat widget, plus a 320 px (400 percent zoom equivalent) reflow and a
+reduced-motion check. Synthetic data only; see the
 [acceptance protocol](../../docs/reference/research/ux/production-ux-acceptance-protocol.md).
 
 The shared browser check starts actual local applications with constructed data,

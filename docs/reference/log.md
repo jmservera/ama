@@ -12121,3 +12121,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a dated deploy and verification note to [infra/README.md](../../infra/README.md#live-deploy-of-main-488c5a0c8-and-browser-verification-2026-11-17-refs-462): image digest, revision `--0000011`, an image-only metadata diff, the real-HTTPS login and negative-path results, the registry-window trap defect, cost admission, limits and the expiry and stop plan.
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
+
+## [2026-11-17] update | Production AT acceptance: reflow and reduced-motion checks (Refs #619)
+
+* Extended the automated production-configuration check in `src/api/checks` with a 320 px zoom-equivalent reflow step and a reduced-motion step, with a unit test for the overflow helper, and recorded the local result and a person-run checklist in the [production acceptance protocol](research/ux/production-ux-acceptance-protocol.md).
+* Synthetic data and a local Chromium run only. Every person-run record row stays `Not run`; no screen reader, real resident, conformance or production-acceptance claim is made. Issue #619 remains open.
