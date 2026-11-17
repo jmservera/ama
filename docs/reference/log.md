@@ -12126,6 +12126,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Extended the automated production-configuration check in `src/api/checks` with a 320 px zoom-equivalent reflow step and a reduced-motion step, with a unit test for the overflow helper, and recorded the local result and a person-run checklist in the [production acceptance protocol](research/ux/production-ux-acceptance-protocol.md).
 * Synthetic data and a local Chromium run only. Every person-run record row stays `Not run`; no screen reader, real resident, conformance or production-acceptance claim is made. Issue #619 remains open.
+## [2026-11-17] update | Archive tag and legacy deletion status assessed (Refs #202)
+
+* Measured main `eb51af5c`: no tracked file under `mvp/` or `prototype/`; annotated tag `v0.21.0` (`0096b113`, target `65a514ed2`) is on `origin`; no GitHub release exists; `main` has no branch protection; `mvp-ci.yml` and `mvp-validation.yml` remain dispatch-only. Corrected the stale README claim that the tag was local and unpublished. Evidence in `.copilot-tracking/research/2026-11-17/issue-202-research.md`.
+* Unmet and owner-gated: the `v0.21.0` GitHub release, removal of the dispatch-only legacy workflows, and the dedicated registry PR clause. Issue #202 stays open; nothing was deleted.
 ## [2026-11-17] update | Regulatory alerts and home chat UX re-measured on main eb51af5c (Refs #215)
 
 * Re-ran the focused local evidence for #215 on base `eb51af5c` with the worktree sources first on `PYTHONPATH`: 73 unit tests (UX check, keyboard and provenance, live-region semantics, accessibility cues) passed, and `src/api/checks/regulatory_ux_check.py` passed 21 synthetic browser states with axe skipped because no trusted copy was supplied. The check reports staff comprehension as "Not run; unmet".

@@ -1372,6 +1372,24 @@ apply and what-if runs first. Confirm `/healthz` and the ledger-verify job
 afterwards. No traffic splitting is used, and a guarded redeploy of an earlier
 release identity would be a separate, tested change.
 
+### Assessment against main (issue 144, 2026-11-17)
+
+Assessed on `origin/main` eb51af5c9 with targeted local tests only, run one at a
+time (no Azure, no full gate): `infra/tests/test_container_hosting_completeness.py`,
+`test_container_contract.py` and `test_bicep_containerapp_demo_wiring.py` pass;
+`src/agents/tests/test_worker.py` (19), `src/api/tests/test_scale_fixture_load_and_restart.py`
+(4), `test_restart_audit.py` (1) and `test_scale_load.py` (7) pass. The two records
+on main, `scale-load-2026-11-01.json` and `scale-restart-2026-11-13.json`, both state
+`meets_declared_workload: false`, and every route's p95 exceeds the NFR-002 staff
+thresholds, so they show behaviour at the fixture size, not capacity.
+
+The load, restart and hardening-inspection artifacts described in later issue
+comments (`scale-load-2026-11-15.json`, `test_container_load_and_restart_144.py`,
+`inspect_runtime_container_hardening`) are on the stacked branch of the open
+pull request 1641 and are not on `main`; this page does not rely on them. The
+worker and job image criterion and deployed hardening stay unmet: both need a live
+Azure deployment, which this assessment did not perform.
+
 ### Separate-process load and restart run (issue 144, 2026-11-13)
 
 Local loopback run of `src/api/tests/test_scale_fixture_load_and_restart.py`
