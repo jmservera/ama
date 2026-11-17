@@ -95,6 +95,7 @@ DRY_RUN_REPOSITORY = "jmservera/ama"
 
 DRY_RUN_DEPLOY_PARAMETERS: dict[str, Any] = {
     "alertEmail": "ops-alerts@zavanorthhomes.co.uk",
+    "aiModelLocation": "uksouth",
     "entraBearerOnly": False,
     "entraClientId": "11111111-2222-4333-8444-555555555555",
     "location": "uksouth",

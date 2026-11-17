@@ -719,36 +719,6 @@ def overdue_tasks(
             str(named),
             path,
         )
-    for index, sg in enumerate(raw_safeguarding_items(case)):
-        if not is_open_safety_item(sg):
-            continue
-        follow = (
-            sg.get("accepted_by")
-            or (sg.get("destination") if sg.get("accepted_at") else None)
-            or sg.get("sender")
-            or {}
-        )
-        named = (
-            (follow.get("name") if isinstance(follow, Mapping) else follow)
-            or sg.get("owner")
-            or sg.get("named_owner")
-            or UNKNOWN
-        )
-        path = f"safeguarding/{index}"
-        deadline(
-            sg.get("response_due_at") or sg.get("due_at"),
-            sg.get("responded_at") or sg.get("completed_at"),
-            "Safeguarding referral response",
-            str(named),
-            path,
-        )
-        deadline(
-            sg.get("resident_update_due_at"),
-            sg.get("resident_updated_at"),
-            "Safeguarding resident update",
-            str(named),
-            path,
-        )
     update = case.get("resident_update") or {}
     deadline(
         update.get("due_at"),
@@ -837,7 +807,7 @@ def context(
         follow = hazard.get("accepted_by") or hazard.get("sender") or {}
         named = follow.get("name") or hazard.get("owner") or UNKNOWN
         path = f"hazards/{index}"
-        item = hazard_clock(hazard, now, reason_ok=reason_ok)
+        item = hazard_clock(dict(hazard), now, reason_ok=reason_ok)
         if not hazard.get("released"):
             block(
                 "Safety review",

@@ -17,7 +17,7 @@ class LiveAnnouncementTests(unittest.TestCase):
     def test_transcript_is_a_polite_log_announcing_additions_and_text(self) -> None:
         self.assertRegex(
             WIDGET,
-            r'role: "log", "aria-live": "polite", "aria-relevant": "additions text"',
+            r'role: "log", "aria-live": "polite", "aria-relevant": "additions"',
         )
         self.assertNotIn('"aria-live": "assertive"', WIDGET)
 

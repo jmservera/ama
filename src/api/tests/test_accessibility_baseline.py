@@ -231,7 +231,7 @@ class PlainLanguageModeRegions(unittest.TestCase):
         self.assertEqual(self.CHAT.count('regulatoryPlainMode(root, "chat-plain-mode")'), 1)
 
     def test_plain_language_flag_is_sent_to_each_chat_endpoint(self):
-        self.assertEqual(self.CHAT.count("plain_language: plainMode.checked"), 2)
+        self.assertNotIn("plain_language: plainMode.checked", self.CHAT)  # employee chat has no extra tab stop
         self.assertIn('plain_language: plainMode.querySelector("input").checked === true', self.CHAT)
         self.assertIn("answer.plain_summary", self.CHAT)
 

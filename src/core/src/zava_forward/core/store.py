@@ -57,7 +57,7 @@ from .import_refusals import ImportRefusalsMixin
 from .documents import ACCEPTED, MAX_BYTES, open_document_store
 from .procurement import ProcurementMixin
 from .quality import QualityMixin, handover_blockers, quality_evidence_gate
-from .workflows import MANAGER_ROLES, WorkflowMixin, handoff_view, hazard_view, safeguarding_view
+from .workflows import MANAGER_ROLES, WorkflowMixin, handoff_view, hazard_view
 
 if TYPE_CHECKING:
     from .complaints_route import ComplaintsReceiver
@@ -674,14 +674,8 @@ class Store(
                 )
         for sg in taskqueues.raw_safeguarding_items(c):
             if gates._safeguarding_item_closed(sg) is not True:
-                projected = taskqueues.project_safety_clock_and_owner(
-                    sg, case=c, staff=staff, default_kind="safeguarding"
-                )
                 entries.append(
-                    (
-                        sg.get("category") or "Safeguarding",
-                        projected["named_owner"],
-                    )
+                    (sg.get("category") or "Safeguarding", taskqueues.ESCALATION_OWNER)
                 )
         return entries
 
@@ -1246,15 +1240,10 @@ class Store(
             for row in d["stock_reconciliation"]:
                 row["status"] = stock.query_status(c, row["id"])
             staff_list = self.data.get("staff") or list(self.staff.values())
-            sg_views = [
-                safeguarding_view(s, case_id, index=i, case=c, as_of=self.as_of, staff=staff_list)
-                for i, s in enumerate(taskqueues.raw_safeguarding_items(c))
-            ]
-            d["safeguarding_items"] = sg_views
             d["hazards"] = [
                 hazard_view(h, case_id, case=c, as_of=self.as_of, staff=staff_list)
                 for h in c["hazards"]
-            ] + [deepcopy(s) for s in sg_views]
+            ]
             if user is None or not projection.is_contractor(user):
                 d["work"] = self.work_context(c, user)
             if c.get("handoff"):

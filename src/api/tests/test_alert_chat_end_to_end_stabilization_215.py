@@ -230,8 +230,7 @@ class WorkbenchSourceTests(unittest.TestCase):
         self.assertIn('api("/api/chat/threads", { case_id: caseId }', CHAT_JS)
         self.assertIn("Context: case ${caseId}. Only facts your role may see are used.", CHAT_JS)
         self.assertIn(
-            'api("/api/chat/unstored-ask", '
-            "{ content: question, skill, case_id: caseId, plain_language: plainMode.checked }",
+            'api("/api/chat/unstored-ask", { content: question, skill, case_id: caseId }',
             CHAT_JS,
         )
 

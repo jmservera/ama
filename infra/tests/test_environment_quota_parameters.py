@@ -293,7 +293,7 @@ class EnvironmentQuotaParametersTests(unittest.TestCase):
 
     def test_quota_and_budget_bounds_and_module_forwarding(self) -> None:
         self._assert_contract(self.main, self.sql)
-        self.assertEqual(len(self.guard["parameters"]), 30)
+        self.assertEqual(len(self.guard["parameters"]), 32)
         for name, spec in self.guard["parameters"].items():
             self.assertEqual(spec["minLength"], 1, name)
             self.assertIn("Empty means", spec["metadata"]["description"], name)
@@ -534,6 +534,7 @@ class EnvironmentQuotaParametersTests(unittest.TestCase):
             "alertEmail": "alerts@zava-housing.example",
             "location": "uksouth",
             "sqlLocation": "ukwest",
+            "aiModelLocation": "uksouth",
             "regionCheckReference": (
                 "docs/reference/research/spending-review-2026-11-01.md"
                 "#612cbed78a35a4ab426571aa7d2aeb0ae6d691dd"

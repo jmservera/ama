@@ -134,8 +134,6 @@ const employeeChat = (() => {
     ui.beforeInput.append(ui.node("small",
       "Do not enter personal or sensitive resident information. Chat cannot approve or change records.",
       { id: "employee-chat-entry-warning", class: "chat-widget-meta" }));
-    const plainMode = h("input", { type: "checkbox", id: "employee-chat-plain-mode" });
-    ui.beforeInput.append(h("label", { class: "chat-widget-meta", for: "employee-chat-plain-mode" }, plainMode, " Plain-language answers"));
     input.addEventListener("input", () => {
       if (input.value) {
         input.dataset.caseDirty = "true";
@@ -166,9 +164,9 @@ const employeeChat = (() => {
             if (!current()) return;
             tid = thread.id;
           }
-          answer = await api(`/api/chat/threads/${encodeURIComponent(tid)}/ask`, { content: question, skill, plain_language: plainMode.checked }, signal);
+          answer = await api(`/api/chat/threads/${encodeURIComponent(tid)}/ask`, { content: question, skill }, signal);
         } else {
-          answer = await api("/api/chat/unstored-ask", { content: question, skill, case_id: caseId, plain_language: plainMode.checked }, signal);
+          answer = await api("/api/chat/unstored-ask", { content: question, skill, case_id: caseId }, signal);
         }
         if (!current()) return;
         const view = attribution(answer);

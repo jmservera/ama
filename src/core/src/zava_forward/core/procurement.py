@@ -508,10 +508,10 @@ class ProcurementMixin(AppointmentMixin):
         self._need_manager(user, "record completion")
         with self._proc_operation(user, "complete", wid=wid):
             w = self._work_order(wid)
+            self._resident_work_order_clear(w)
             self.require_appointment_commitment(w)
             self._existing_capacity(w)
             self.require_safety_clear(self.cases[w["case_id"]])
-            self._resident_work_order_clear(w)
             self._wo_move(w, COMPLETED, user, _clean(note))
             w.update(completed_by=user["name"], completed_at=_now())
             cur = w["versions"][-1]

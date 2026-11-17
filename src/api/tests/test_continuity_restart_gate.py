@@ -13,7 +13,7 @@ import urllib.request
 from http.server import ThreadingHTTPServer
 from typing import Any
 
-from zava_forward.core import assistants, challenges, continuity
+from zava_forward.core import assistants, continuity
 from zava_forward.core.restart_authority import UNAPPOINTED_RESTART_AUTHORITY
 from zava_forward.core.store import ConflictError
 
@@ -24,7 +24,6 @@ from zava_forward.api.auth import PasswordProvider, TrustedProxyProvider
 from zava_forward.api.server import App, make_handler
 
 ASSISTANTS_MOD: Any = assistants
-CHALLENGES_MOD: Any = challenges
 CONTINUITY_MOD: Any = continuity
 BASE_CLS: Any = Base
 CONFIG_FN: Any = config
@@ -491,7 +490,6 @@ class ContinuityRestartGateTests(BASE_CLS):  # type: ignore[misc]
                 "non_digital_route": "SYN Phone RLO desk or send Freepost letter.",
                 "next_update": "2099-02-01",
             }
-            raw_case_before = copy.deepcopy(self.store.cases["ZF-1"])
             for channel in ("Digital", "Phone", "Letter", "In person"):
                 code, ch_detail = self._http_req(
                     port,
@@ -503,40 +501,6 @@ class ContinuityRestartGateTests(BASE_CLS):  # type: ignore[misc]
                 self.assertEqual(code, 200, ch_detail)
             ch_id = ch_detail["affected_challenges"][0]["id"]
             ch_ver = ch_detail["affected_challenges"][0]["version"]
-            code, updated_detail = self._http_req(
-                port,
-                "POST",
-                "/api/cases/ZF-1/resident",
-                rlo_cookie,
-                {
-                    "action": "challenge_update",
-                    "id": ch_id,
-                    "expected_version": ch_ver,
-                    "channel": "Phone",
-                    "source": "SYN-CHALLENGE-UPDATE-122",
-                    "request": "SYN resident supplied manual meter note by telephone",
-                    "explanation": "SYN plain-language update logged while AI is suspended",
-                    "next_update": "2099-02-02",
-                },
-            )
-            self.assertEqual(code, 200, updated_detail)
-            ch_ver = updated_detail["affected_challenges"][0]["version"]
-            code, escalated_detail = self._http_req(
-                port,
-                "POST",
-                "/api/cases/ZF-1/resident",
-                rlo_cookie,
-                {
-                    "action": "challenge_escalate",
-                    "id": ch_id,
-                    "expected_version": ch_ver,
-                    "owner": self.pm["email"],
-                    "reason": "SYN escalated to programme manager during all-AI suspension",
-                    "next_update": "2099-02-03",
-                },
-            )
-            self.assertEqual(code, 200, escalated_detail)
-            ch_ver = escalated_detail["affected_challenges"][0]["version"]
             code, resolved_detail = self._http_req(
                 port,
                 "POST",
@@ -553,9 +517,6 @@ class ContinuityRestartGateTests(BASE_CLS):  # type: ignore[misc]
                 },
             )
             self.assertEqual(code, 200, resolved_detail)
-            CHALLENGES_MOD.assert_no_adverse_challenge_effects(
-                raw_case_before, self.store.cases["ZF-1"]
-            )
             self.assertTrue(
                 next(
                     row

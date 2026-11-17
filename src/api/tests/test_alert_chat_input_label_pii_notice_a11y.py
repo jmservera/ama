@@ -42,7 +42,7 @@ class EmployeeChatInputTests(unittest.TestCase):
             self.assertIn("employee-chat-error", ids)
 
     def test_notice_sits_before_the_prompt_in_reading_order(self) -> None:
-        self.assertIn("form.append(beforeInput, input, tools, reason)", WIDGET)
+        self.assertIn("form.append(beforeInput, input, keys, tools, reason)", WIDGET)
         self.assertIn("ui.beforeInput.append(", CHAT)
 
     def test_empty_submission_is_announced_and_returns_focus(self) -> None:

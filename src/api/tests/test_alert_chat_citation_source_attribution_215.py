@@ -176,7 +176,7 @@ class WarningBannerTests(unittest.TestCase):
         self.assertIn('{ id: "employee-chat-entry-warning", class: "chat-widget-meta" }', CHAT)
         self.assertIn("ui.beforeInput.append(", CHAT)
         # The banner lives in the form; answers and withheld replies only append to the log.
-        self.assertIn("form.append(beforeInput, input, tools, reason);", WIDGET)
+        self.assertIn("form.append(beforeInput, input, keys, tools, reason);", WIDGET)
         self.assertNotIn(
             "beforeInput", WIDGET[WIDGET.index("function message(") : WIDGET.index("let observer")]
         )
@@ -192,7 +192,7 @@ class WarningBannerTests(unittest.TestCase):
     def test_input_stays_described_by_the_banner_for_every_outcome(self) -> None:
         self.assertIn(
             'input.setAttribute("aria-describedby", '
-            '"employee-chat-entry-warning employee-chat-error")',
+            '"employee-chat-entry-warning employee-chat-error employee-chat-keys")',
             CHAT,
         )
         # Answer, withheld, abstain, refused and fallback all use the same message call.

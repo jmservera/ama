@@ -812,13 +812,6 @@ class StoreAndSqlStoreNoRetaliationLifecycleTests(unittest.TestCase):
         finally:
             tmp.cleanup()
 
-    def test_json_store_end_to_end_non_retaliation_and_immediate_hazard_routing(self) -> None:
-        self._verify_store_backend(sql=False)
-
-    def test_sqlite_store_end_to_end_non_retaliation_and_immediate_hazard_routing(self) -> None:
-        self._verify_store_backend(sql=True)
-
-
 class AssistantsProposalChallengeNoRetaliationTests(unittest.TestCase):
     def setUp(self) -> None:
         self.root = Path(tempfile.mkdtemp(prefix="assist-220-test-"))

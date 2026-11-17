@@ -17,8 +17,7 @@ class ChatPanelAccessibilityTests(unittest.TestCase):
         for attribute in (
             'role: "log"',
             '"aria-live": "polite"',
-            '"aria-relevant": "additions text"',
-            '"aria-atomic": "false"',
+            '"aria-relevant": "additions"',
             '"aria-label"',
         ):
             self.assertIn(attribute, log.group(0))

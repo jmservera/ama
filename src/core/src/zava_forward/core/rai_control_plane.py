@@ -616,7 +616,7 @@ REQUIREMENT_TRACEABILITY: tuple[dict[str, Any], ...] = (
         "status": "verified_with_live_deferral",
         "acceptance_checks": (
             "src/core/tests/test_challenges.py::ResponseProtection.test_view_states_plain_language_protection_and_adds_no_adverse_fields",
-            "src/core/tests/test_issue_220_challenge_route.py::JsonStoreChallengeSafeguardTests.test_all_target_kinds_submit_update_escalate_resolve_without_retaliation_or_refusal",
+            "src/core/tests/test_issue_220_challenge_route.py::ChallengeRegisterLifecycleAndSafeguardsTests.test_submit_update_escalate_resolve_across_all_four_subjects_and_channels",
         ),
         "deferral": {
             "open_question": OQ_018,
