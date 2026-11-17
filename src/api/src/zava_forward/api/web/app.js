@@ -2231,7 +2231,7 @@ async function exceptionsView(savedNotice = "") {
         h("p", { class: "muted" }, data.note || ""),
         h("dl", {},
           h("dt", {}, "Signed-in viewer"), h("dd", {}, h("code", { translate: "no" }, viewerEmail)),
-          h("dt", {}, "Named roles"), h("dd", {}, "None configured (data_steward and digital_operator are unassigned)"),
+          h("dt", {}, "Named roles"), h("dd", {}, "None named yet (no data steward and no digital operator)"),
           h("dt", {}, "Owner"), h("dd", {}, "Programme owner"),
           h("dt", {}, "Next action"), h("dd", {}, "Ask the programme owner to name a data steward and a digital operator before opening exception items."))),
       renderExceptionOutageSection(data.banner, data.sources, data.unrouted.slice(1)),
