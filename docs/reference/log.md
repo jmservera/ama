@@ -12126,3 +12126,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added a demo-first, desktop-only first slice to the [usability testing programme plan](research/ux/usability-test-programme-plan.md): employee workbench and resident showcase surfaces at 1280 CSS px, six in-scope scripts, no participant data in the repository, proxy sessions labelled as not user validation.
 * Added a doc-contract regression test for the slice in `src/core/tests/test_usability_programme.py`. No participant, session, SA-010 agreement or result exists; no #155 criterion is ticked.
+## [2026-11-17] update | Identifier leak copy audit on exception screens (Refs #153)
+
+* Added an [identifier leak audit](research/ux/content-standard.md#identifier-leak-audit-2026-11-17-153) section to the content standard: two snake_case identifiers shown to staff on the data steward and digital operator screens were reworded, and a lexical regression guard was added. Named-human review of resident-facing wording (criterion 5) remains unmet.
