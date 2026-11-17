@@ -1646,11 +1646,12 @@ prior state (Deny, no rules, public access Disabled, exports disabled).
 * `infra/sql/resident-showcase.sql` is unchanged since the previous deploy, so no SQL job ran. SQL `retrofit` stays
   Standard capacity 10; no secret, role, tenant, employee app or other resource group change.
 * Browser (Playwright Chromium, desktop 1280, real HTTPS URL, credentials read in-process from the owner file and
-  never printed): sign-in page lang, landmarks and labels; real fake-email login reached the mapped synthetic home
-  (Flat 1, Tebay Drive) with the synthetic and "does not prove who you are" notices and no safeguarding, finance or
+  never printed): the sign-in form was shown and a real fake-email login returned a signed-in page for
+  "Flat 1, Tebay Drive" (the case mapping was not compared against an independent expected value in this run), with the synthetic and "does not prove who you are" notices and no safeguarding, finance or
   staff terms; `__Host-` session cookie Secure, HttpOnly, SameSite Strict; wrong password and unknown email gave the
   same generic message; login without CSRF 403; forged session 401; `/staff`, `/api/cases`, `/admin` 404; sign-out
-  ended the session (401). Evidence under `.copilot-tracking/evidence/2026-11-17-resident-showcase-live/`.
+  ended the session (401). The sign-in page language, landmarks and labels were not asserted in `live-results.json`.
+  A probe of the view endpoint without the session-binding header returned 409 (see the evidence note in the changes file). Evidence under `.copilot-tracking/evidence/2026-11-17-resident-showcase-live/`.
 * The login limiter (5 failures per source in 600 seconds, in memory) blocked a real login after earlier failed test
   runs, which confirms the bound; the later run waited out the window.
 * Limits: cold start was about 42 seconds to first byte; desktop only; no whole-WCAG, human, legal or production
@@ -1659,7 +1660,7 @@ prior state (Deny, no rules, public access Disabled, exports disabled).
   change adds no resource; incremental compute is a 0.25 vCPU/0.5 GiB revision for under an hour.
 * Expiry and stop plan: `ZF_DEMO_EXPIRES_AT` reads back `2028-01-01T00:00:00Z` (serving refuses from then).
   To stop earlier run `az containerapp ingress disable -n ca-resident-demo -g ama`; ingress is currently external,
-  as before this deploy, and minimum replicas stay 0. Rollback is the previous digest `sha256:24a9cbe3...b28`.
+  as before this deploy, and minimum replicas stay 0. Rollback is the previous digest `sha256:24a9cbe34593ca297976aea4b78c8f445ef261898e5d4329bc3eee0db23ab28b`.
 
 ### Live sensors seed for the test resident (2026-11-04, Refs #1072, Refs #462)
 

@@ -16,8 +16,12 @@ Plan: .copilot-tracking/plans/2026-11-17/resident-showcase-azure-deploy-462-plan
 * P02: local build `zava-resident-demo:488c5a0c8` (uid 10001), digest `sha256:f6ce2bde...ad28`. ACR window trapped; the trap
   removed rules via the wrong JSON field, reported RESTORE_MISMATCH, rule removed by hand, readback equal to prior state.
 * P03: `az containerapp update` image-only; `--0000010` to `--0000011`; metadata diff showed only the image.
-* P04: real-HTTPS Playwright run passed (login, correct synthetic home, generic denials, CSRF 403, forged 401, staff 404,
+* P04: real-HTTPS Playwright run passed (login returning a signed-in page for the mapped synthetic home, not compared against an independent expected value, generic denials, CSRF 403, forged 401, staff 404,
   sign-out 401). A first run exhausted the in-memory limiter (5 per source per 600 s) and was repeated after the window.
+  Note on `signed_in_view_status_no_session_header: 409` in `live-results.json`: the recorded value is unaltered. The server
+  (`resident_demo/app.py`) answers 409 "session_changed" when the view request lacks the single session-binding header
+  the page script sends, so this was a probe without that header, not a failed sign-in; it is not a pass or fail claim.
+  Sign-in page lang, landmarks and labels were not asserted in that file.
   Evidence: `.copilot-tracking/evidence/2026-11-17-resident-showcase-live/`. The account-menu screenshot showed the fake
   email and was deleted.
 * P05: expiry `2028-01-01T00:00:00Z`; ingress external as before; min 0. Docs: infra/README.md, docs/reference/log.md.

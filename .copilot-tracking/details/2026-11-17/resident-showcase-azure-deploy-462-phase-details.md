@@ -43,4 +43,3 @@ Ingress state: left as found (external true, as the owner approved demo) unless 
 record it. Confirm replicas return to 0 by scale-to-zero. Record expiry (`ZF_DEMO_EXPIRES_AT`, readback of the
 non-secret value) and stop plan: `az containerapp ingress disable` or the `--no-ingress` rerun. Update
 infra/README.md deploy note, docs/reference/log.md, commit.
-EOF
