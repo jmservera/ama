@@ -181,7 +181,7 @@ class ExceptionRegisterScreen(unittest.TestCase):
     def test_empty_or_roles_not_named_is_not_an_all_clear(self) -> None:
         body = text(self.out["empty"]["out"])
         for phrase in (
-            "roles_not_named",
+            "roles not named yet",
             "No data steward or digital operator is named yet.",
             "This is not an all clear",
             "No role named for you",

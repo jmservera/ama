@@ -1350,7 +1350,7 @@ const operatorBlockerState = (blocker) => {
 };
 const exceptionRegisterStates = {
   ok: "State: Loaded (ok; not an all clear)",
-  roles_not_named: "State: Action needed (roles_not_named)"
+  roles_not_named: "State: Action needed (roles not named yet)"
 };
 const exceptionRegisterState = (value) => operatorLookup(exceptionRegisterStates, value, "State: Unknown");
 const exceptionItemStates = {

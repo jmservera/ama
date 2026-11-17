@@ -343,6 +343,27 @@ class GoldenRunTests(unittest.TestCase):
         bare = chat_eval.enablement_decision(self.report, dict(approved_by="x"))
         self.assertEqual(bare["threshold_checks"][0]["outcome"], "insufficient")
 
+    def test_malformed_thresholds_are_insufficient_not_pass_or_crash(self) -> None:
+        b = self.report["bindings"]
+        bad: list[dict[str, Any]] = [
+            dict(minimum_rates=dict(abstention="high")),
+            dict(minimum_rates=dict(abstention=-1)),
+            dict(minimum_rates=dict(abstention=0.1), maximum_critical_error_rate=True),
+            dict(minimum_rates=dict(abstention=0.1), maximum_critical_error_rate=5),
+        ]
+        for t in bad:
+            e = chat_eval.enablement_decision(self.report, dict(approved_by="x", bindings=b, **t))
+            self.assertIn("insufficient", {c["outcome"] for c in e["threshold_checks"]}, t)
+            self.assertNotIn("fail", {c["outcome"] for c in e["threshold_checks"]}, t)
+            self.assertEqual((e["outcome"], e["state"]), ("insufficient", "disabled"))
+
+    def test_blank_approver_is_not_an_approval(self) -> None:
+        t = dict(
+            approved_by="  ", bindings=self.report["bindings"], minimum_rates=dict(abstention=0.0)
+        )
+        e = chat_eval.enablement_decision(self.report, t)
+        self.assertEqual((e["thresholds"], e["threshold_checks"]), ("not approved", []))
+
     def test_unapproved_thresholds_are_not_applied(self) -> None:
         self.assertEqual(self.report["enablement"]["threshold_checks"], [])
 
