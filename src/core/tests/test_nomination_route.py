@@ -15,36 +15,40 @@ _CORE_DIR = Path(__file__).resolve().parents[1]
 _SRC_ROOT = _CORE_DIR.parent
 
 
-def _module_outside_worktree(mod: object) -> bool:
-    mod_file = getattr(mod, "__file__", None)
-    if isinstance(mod_file, str):
-        return not Path(mod_file).resolve().is_relative_to(_SRC_ROOT)
-    mod_paths = getattr(mod, "__path__", None)
-    if mod_paths is not None:
-        for entry in mod_paths:
-            if isinstance(entry, str) and not Path(entry).resolve().is_relative_to(_SRC_ROOT):
-                return True
-    return False
+def _outside_source(path: str) -> bool:
+    return not Path(path).resolve().is_relative_to(_SRC_ROOT)
+
+
+def _foreign_zava_modules() -> list[str]:
+    """Loaded zava_forward modules whose file is outside this worktree's src."""
+    return sorted(
+        name
+        for name, mod in list(sys.modules.items())
+        if (name == "zava_forward" or name.startswith("zava_forward."))
+        and isinstance(mod_file := getattr(mod, "__file__", None), str)
+        and _outside_source(mod_file)
+    )
 
 
 def _bootstrap_worktree_paths() -> None:
-    """Keep bare unittest discover isolated to this worktree without breaking suite imports."""
+    """Keep bare unittest discover isolated to this worktree without splitting module identity.
+
+    Foreign modules already imported (for example a noneditable install loaded by an earlier
+    test module) cannot be replaced without splitting exception and patch identities, so the
+    layout is rejected before any sys.path change instead of purging sys.modules.
+    """
+    foreign = _foreign_zava_modules()
+    if foreign:
+        raise ImportError(
+            "unsupported layout: zava_forward modules were loaded from outside "
+            f"{_SRC_ROOT} before test_nomination_route; use an editable install or the "
+            f"source roots on sys.path (foreign: {', '.join(foreign[:5])})"
+        )
     for target in (_SRC_ROOT / "agents" / "src", _CORE_DIR / "tests", _CORE_DIR / "src"):
         path_str = str(target)
         if path_str in sys.path:
             sys.path.remove(path_str)
         sys.path.insert(0, path_str)
-    if any(
-        (name == "zava_forward" or name.startswith("zava_forward."))
-        and _module_outside_worktree(mod)
-        for name, mod in list(sys.modules.items())
-    ):
-        for name in [
-            key
-            for key in list(sys.modules)
-            if key == "zava_forward" or key.startswith("zava_forward.")
-        ]:
-            sys.modules.pop(name, None)
 
 
 _bootstrap_worktree_paths()
@@ -54,6 +58,9 @@ from zava_forward.core import nomination_route as nr  # noqa: E402
 from zava_forward.core import resident_decisions, taskqueues  # noqa: E402
 from zava_forward.core.sqlstore import SqlStore  # noqa: E402
 from zava_forward.core.store import ConflictError, GateError, Store  # noqa: E402
+
+if _foreign_zava_modules():
+    raise ImportError(f"zava_forward resolved outside {_SRC_ROOT}: {_foreign_zava_modules()[:5]}")
 
 MEASURES = ("Loft insulation", "Cavity wall")
 

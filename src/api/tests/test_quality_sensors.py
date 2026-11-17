@@ -36,6 +36,19 @@ def stamp(seconds: float) -> str:
     return datetime.fromtimestamp(seconds, UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def exposes(body: Any, value: str) -> bool:
+    """True when value is in a key or string, or is a numeric leaf equal to it (not an epoch)."""
+    if isinstance(body, dict):
+        return any(exposes(k, value) or exposes(v, value) for k, v in body.items())
+    if isinstance(body, list | tuple):
+        return any(exposes(item, value) for item in body)
+    if isinstance(body, bool):
+        return False
+    if isinstance(body, int | float):
+        return body == float(value)
+    return value in str(body)
+
+
 class CapturingProvider(ta.Provider):
     """Mock: cites the first retained readings it was given, or only the home when told not to."""
 
@@ -864,19 +877,18 @@ class Http(Seed, ta.ApiTests):
         self.ready(cite=False, leak="23.7")
         tid, p = self.proactive()
         self.assertEqual(p["review_flag"]["status"], "uncited")
-        self.assertIn("23.7", json.dumps(p["output"]))
+        self.assertTrue(exposes(p["output"], "23.7"))
         qa = self.people["Quality Inspector"]
         p = self.service.review(
             qa, tid, "verify", p["revision"], "Compared the sources.", source_verified=True
         )
         edited = dict(p["output"], summary="Edited: indoor 24.9 degC was recorded.")
         p = self.service.review(qa, tid, "edit-accept", p["revision"], "Edited.", edited)
-        self.assertIn("24.9", json.dumps(self.request(f"/api/assistants/proposals/{tid}")[1]))
+        self.assertTrue(exposes(self.request(f"/api/assistants/proposals/{tid}")[1], "24.9"))
         self.set_consent("declined")
         for name, body in self._after_withdrawal(tid).items():
-            text = json.dumps(body)
             for derived in ("23.7", "24.9"):
-                self.assertNotIn(derived, text, name)
+                self.assertFalse(exposes(body, derived), name)
         shown = self.request(f"/api/assistants/proposals/{tid}")[1]
         self.assertEqual(shown["output"]["findings"], [])
         self.assertTrue(any("edited_output" in e for e in shown["provenance"]))
@@ -1816,6 +1828,42 @@ class MssqlReadModel(ta.MssqlFixture, ReadModel):
 @MSSQL
 class MssqlHttp(ta.MssqlFixture, Http):
     pass
+
+
+class WithdrawnCanaryMatch(unittest.TestCase):
+    # Epoch seconds from the retained 1837 failure and a 24.9 sibling, as numeric metadata.
+    METADATA = {
+        "created_at": 1794924123.7340033,
+        "as_of": 1794924123.7119958,
+        "at": 1794924124.9123,
+    }
+
+    def test_numeric_timestamps_containing_the_canary_are_not_exposure(self) -> None:
+        text = json.dumps(self.METADATA)
+        for canary in ("23.7", "24.9"):
+            self.assertIn(canary, text)
+            self.assertFalse(exposes(self.METADATA, canary), canary)
+
+    def test_actual_withdrawn_text_and_numbers_are_still_exposure(self) -> None:
+        cases = {
+            "23.7": (
+                {"summary": "Indoor 23.7 degC was recorded."},
+                {"unknowns": ["Whether 23.7 degC is typical."]},
+                {"findings": [{"text": "Reading of 23.7 degC."}]},
+                {"temperature_c": 23.7},
+                {"temperature_c": 23.70},
+                {"Indoor 23.7 degC": "key"},
+            ),
+            "24.9": (
+                {"edited_output": {"summary": "Edited: indoor 24.9 degC was recorded."}},
+                {"temperature_c": 24.9},
+            ),
+        }
+        for canary, bodies in cases.items():
+            for body in bodies:
+                self.assertTrue(exposes(body, canary), body)
+                self.assertTrue(exposes({"projection": body, **self.METADATA}, canary), body)
+                self.assertTrue(exposes([self.METADATA, body], canary), body)
 
 
 class AccountSummaryName(unittest.TestCase):
