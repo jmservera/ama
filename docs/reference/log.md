@@ -12126,6 +12126,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Extended the automated production-configuration check in `src/api/checks` with a 320 px zoom-equivalent reflow step and a reduced-motion step, with a unit test for the overflow helper, and recorded the local result and a person-run checklist in the [production acceptance protocol](research/ux/production-ux-acceptance-protocol.md).
 * Synthetic data and a local Chromium run only. Every person-run record row stays `Not run`; no screen reader, real resident, conformance or production-acceptance claim is made. Issue #619 remains open.
+## [2026-11-17] update | Regulatory alerts and home chat UX re-measured on main eb51af5c (Refs #215)
+
+* Re-ran the focused local evidence for #215 on base `eb51af5c` with the worktree sources first on `PYTHONPATH`: 73 unit tests (UX check, keyboard and provenance, live-region semantics, accessibility cues) passed, and `src/api/checks/regulatory_ux_check.py` passed 21 synthetic browser states with axe skipped because no trusted copy was supplied. The check reports staff comprehension as "Not run; unmet".
+* No defect was reproduced, so no source or test changed. The unavailable states (503 alerts, chat errors) already name an owner, a next action and a human route.
+* Criterion 3 (WCAG 2.2 AA, pending human assistive-technology testing under #155) and criterion 5 (comprehension testing with repairs, housing and grants staff, which needs owner authorisation) stay unticked. Scoped automated checks are engineering evidence, not conformance or staff acceptance. #1818 and #1641 scope was not touched. Independent review and hosted CI remain separate.
 ## [2026-11-17] update | WCAG baseline guard-suite measurement refreshed (Refs #151)
 
 * Added a dated counted-measurement section to [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md#counted-guard-suite-measurement-2026-11-17-151): guard test totals, 22 web assets, 15 table builders and 9 `aria-invalid` sites re-measured against source, plus one regression test that keeps the asset and `aria-invalid` counts in step.
