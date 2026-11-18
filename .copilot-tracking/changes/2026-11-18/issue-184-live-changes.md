@@ -14,7 +14,7 @@ Adverse/process note: the first `plan-done` witness call (seq 3) was refused bec
 | Simulator never connects to, discovers or represents installed real devices | Already ticked, not re-proven | Live runs used `SYN-` demo identities |
 | No device key or connection string in source, logs or telemetry | Already ticked, supported | #185 live note: no key text in job output |
 
-Supporting live fact: demo hub budget `budget-iot-cutover-test-rzsrg` USD 25 monthly, two enabled notifications (80 percent actual, 100 percent forecast).
+Supporting live fact: demo hub budget `budget-[hub]` USD 25 monthly, two enabled notifications (80 percent actual, 100 percent forecast).
 
 Validation: relative links checked below; `git diff` is docs only.
 

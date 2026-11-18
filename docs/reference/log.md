@@ -13151,3 +13151,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 1830 live audit (Refs #1830)
 
 * Added [issue-1830-live-20261118T1648Z-2026-11-18.md](research/issue-1830-live-20261118T1648Z-2026-11-18.md): timing reports from seven retained full receipts, 54 candidate tests passing on unmerged branch `ci/gate-preflight-benchmark-1830`; no criterion ticked. No source change.
+
+## [2026-11-18] add | Issue 185 fifth live re-verification (Refs #185)
+
+* Added [issue-185-live-r5-reverification-2026-11-18.md](research/issue-185-live-r5-reverification-2026-11-18.md): demo hub reports zero devices, no 185 job or role assignment remains, retained logs and repository scan show no key text, 36 focused tests pass; durable storage, X.509 and scale stay unproven.
