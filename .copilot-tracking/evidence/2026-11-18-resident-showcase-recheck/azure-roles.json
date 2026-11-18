@@ -1,0 +1,18 @@
+[
+  {
+    "role": "AcrPull",
+    "scope": "/subscriptions/[subscription-id redacted]/resourcegroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg"
+  },
+  {
+    "role": "Key Vault Secrets User",
+    "scope": "/subscriptions/[subscription-id redacted]/resourcegroups/ama/providers/Microsoft.KeyVault/vaults/kv-cutovertest-rzsrg/secrets/resident-demo-password-verifier"
+  },
+  {
+    "role": "Key Vault Secrets User",
+    "scope": "/subscriptions/[subscription-id redacted]/resourcegroups/ama/providers/Microsoft.KeyVault/vaults/kv-cutovertest-rzsrg/secrets/resident-demo-session-key"
+  },
+  {
+    "role": "Cognitive Services OpenAI User",
+    "scope": "/subscriptions/[subscription-id redacted]/resourcegroups/ama/providers/Microsoft.CognitiveServices/accounts/aoai-resident-469"
+  }
+]
