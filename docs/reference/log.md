@@ -13135,3 +13135,18 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 119 live run 4 (Refs #119)
 
 * Added [issue-119-live-r4-map-evidence-2026-11-18.md](research/issue-119-live-r4-map-evidence-2026-11-18.md): fresh live probe on revision `--0000032`, full re-read of the OSMF tile policy and copyright page. Both criteria stay unticked (no licensed provider, no screen reader run). Named screenshots removed; no source change.
+## [2026-11-18] add | Coordinator contract criteria audit (Refs #1204)
+
+* Added [coordinator-contract-criteria-1204-live-2026-11-18.md](research/coordinator-contract-criteria-1204-live-2026-11-18.md): per-sub-claim record for the one unticked criterion. Instruction text and guard tests are proven on main; runtime liveness over all ticks is unproven for the demo. No agent-file change.
+
+## [2026-11-18] add | Issue 1258 live closure run 2 (Refs #1258)
+
+* Added [issue-1258-live-closure-r2-2026-11-18.md](research/issue-1258-live-closure-r2-2026-11-18.md) with a raw folder: real ext4 `strace` first-publication syscall order, a kernel-injected fsync EIO giving `DurabilityUnconfirmedError` with the record kept, 110 passing tests, and an observed hosted-check gap. Criteria 1 to 4 proven (offline or real syscall); criterion 5 unproven; no source change, no Azure resource
+
+## [2026-11-18] add | Issue 223 live run 2 (Refs #223)
+
+* Added [issue-223-live-r2-2026-11-18.md](research/issue-223-live-r2-2026-11-18.md): offline gate and 43 focused tests pass again, live review retention re-proved on `ca-cutover-test-demo-api`, per-criterion table unchanged (no criterion ticked; OQ-017 holder, human participants and live-model defects remain open). No source change.
+
+## [2026-11-18] add | Issue 1830 live audit (Refs #1830)
+
+* Added [issue-1830-live-20261118T1648Z-2026-11-18.md](research/issue-1830-live-20261118T1648Z-2026-11-18.md): timing reports from seven retained full receipts, 54 candidate tests passing on unmerged branch `ci/gate-preflight-benchmark-1830`; no criterion ticked. No source change.
