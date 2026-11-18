@@ -13262,3 +13262,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 1837 standalone nomination forms evidence (Refs #1837)
 
 * Added [issue-1837-live-demo-evidence-2026-11-18.md](research/issue-1837-live-demo-evidence-2026-11-18.md) with failing-first, axe and live negative-probe evidence; the deployed demo image predates the repaired script and an axe target-size finding stays open.
+## [2026-11-18] add | Issue 153 wording defect fix (Refs #153)
+
+* Added [wording-defects-fix-153-live-r5-2026-11-18.md](research/wording-defects-fix-153-live-r5-2026-11-18.md): Finance limit and handoff owner wording fixed in source with tests; per-criterion table, named human review still unproven.
