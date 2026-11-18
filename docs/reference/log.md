@@ -12737,6 +12737,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Per-year ledger verification test evidence (Refs #114)
 
 * Added [issue-114-per-year-ledger-verification-evidence-2026-11-18.md](research/ledger-verification/issue-114-per-year-ledger-verification-evidence-2026-11-18.md) and the retained raw unit-test run: criterion C1 proven by test on the local implementation; the deployed image still lacks the reliance check (owner image roll). No source changed.
+
 ## [2026-11-18] add | Employee loading feedback and Today's briefing live demo evidence (Refs #531)
 
 * Added [issue-531-live-demo-evidence-2026-11-18.md](research/issue-531-live-demo-evidence-2026-11-18.md): signed-in employee session on the live demo shows the static loading shell, per-panel feedback, briefing labels, sources, refresh time, outcome-based review wording with required reasons, and axe 0 violations. Cold start, script retry and unverified output were simulated in the browser; no review was recorded; the live `app.js` and `style.css` trail main by two days but not in briefing or loading code. Criterion 7 is proven for the demo with stated limits. No source changed.
