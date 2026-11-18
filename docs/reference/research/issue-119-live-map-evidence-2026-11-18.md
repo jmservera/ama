@@ -33,10 +33,10 @@ page (first attempt, retained as adverse evidence). Evidence files are under
 | Map renders with tiles | Overview shows "Map of open cases" with 443 homes shown; 15 loaded tile images, 33 tile requests, no failed request, no console message; attribution "Leaflet \| (c) OpenStreetMap contributors" visible | `probe2.json`, [screenshot](../../../.copilot-tracking/evidence/2026-11-18/issue-119-live/map-desktop-1366.png) |
 | What a tile request carries | HTTP 200, `Referer` is the app origin only, default browser User-Agent (headless Chromium), response `Cache-Control: max-age=87635, stale-while-revalidate=604800` | `probe3.json` `tile` |
 | OSM Tile Usage Policy, re-read | Best-effort, no SLA; access may be blocked without notice; attribution, identifying User-Agent and Referer required; no bulk or offline use; "Commercial services ... access may be withdrawn at any point"; subject to the OSMF Privacy Policy | `osm-tile-policy-2026-11-18.txt` (page text retained) |
-| List alternative present | `details.maplist` "Show the map areas as a list (keyboard and screen reader friendly)" holds 443 links, each named with home, status and sensor state | `probe2.json`, [screenshot](../../../.copilot-tracking/evidence/2026-11-18/issue-119-live/map-list-open-1366.png) |
+| List alternative present | `details.maplist` "Show the map areas as a list (keyboard and screen reader friendly)" holds 443 links, each named with home, status and sensor state | `probe2.json` |
 | Accessibility tree of the sidebar | Chromium accessibility snapshot exposes a `complementary` landmark named "Map information and home summary", two `status` regions, the list as `list` with `listitem` links and the `details` summary | `probe2.json` `aria_snapshot_map_info` |
-| Keyboard path | Focus on the summary, Enter opens it, Tab moves to the first list link (visible focus ring), Enter opens that case page | `probe3.json` `keyboard`, [focus](../../../.copilot-tracking/evidence/2026-11-18/issue-119-live/keyboard-focus-list-1366.png), [case](../../../.copilot-tracking/evidence/2026-11-18/issue-119-live/keyboard-opened-case-1366.png) |
-| Tiles blocked (provider unavailable simulated by aborting the tile host in the browser) | The status note reads "The map background could not load. The homes and the list of map areas still work..."; the list still has 443 items | `probe3.json` `blocked`, [screenshot](../../../.copilot-tracking/evidence/2026-11-18/issue-119-live/tiles-blocked-list-works-1366.png) |
+| Keyboard path | Focus on the summary, Enter opens it, Tab moves to the first list link (visible focus ring), Enter opens that case page | `probe3.json` `keyboard` |
+| Tiles blocked (provider unavailable simulated by aborting the tile host in the browser) | The status note reads "The map background could not load. The homes and the list of map areas still work..."; the list still has 443 items | `probe3.json` `blocked` |
 
 ## Acceptance criteria
 
@@ -47,8 +47,9 @@ page (first attempt, retained as adverse evidence). Evidence files are under
 
 ## Adverse and corrective evidence
 
-* The first probe went to `/app` and found no map (`probe1-landing-no-map.json`,
-  `landing-no-map.png`); the map is on `#/overview`. Kept as run.
+* On 2026-11-18 (r3) five screenshots that showed resident and officer names were removed from `.copilot-tracking/evidence/2026-11-18/issue-119-live/`: `map-list-open`, `keyboard-focus-list`, `keyboard-opened-case`, `tiles-blocked-list-works` and `landing-no-map`. Person names in the probe JSON link text were redacted to `[name removed]` at independent review. `map-desktop-1366.png` shows no names and is kept.
+
+* The first probe went to `/app` and found no map (`probe1-landing-no-map.json`); the map is on `#/overview`. Kept as run.
 * The list holds 443 items inside a `details` element; announcement order and
   verbosity under real assistive technology were not observed.
 * The test host runs headless Chromium, so the User-Agent in the tile request is

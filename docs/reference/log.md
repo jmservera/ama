@@ -13044,6 +13044,14 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [content-recheck-153-live-2026-11-18.md](research/content-recheck-153-live-2026-11-18.md): fresh desktop probes of the deployed demo; hold and envelope wording and an Unassigned owner still live, generic 404 and 403 bodies lack owner and next action; no named-reviewer record exists so that criterion stays unproven; no source change, nothing created in Azure
 
+## [2026-11-18] add | Issue 189 live audit round 3 (Refs #189)
+
+* Added [simulator-run-controls-live-189-r3-2026-11-18.md](research/simulator-run-controls-live-189-r3-2026-11-18.md): live budget and hub re-read, wall-clock run meter exercise, adverse finding on alert recipients; criterion 3 stays unticked.
+
+## [2026-11-18] update | Issue 119 live evidence screenshots (Refs #119)
+
+* Removed five screenshots that showed resident and officer names from the issue 119 live evidence folder and dropped their links in [issue-119-live-map-evidence-2026-11-18.md](research/issue-119-live-map-evidence-2026-11-18.md); names in the probe JSON link text were redacted as well
+
 ## [2026-11-18] add | Issue 195 live epic evidence (Refs #195)
 
 * Added [issue-195-live-epic-evidence-2026-11-18.md](research/issue-195-live-epic-evidence-2026-11-18.md): per-criterion results for the checkpoint, child-issue and deployed-image criteria; running revision healthy, build provenance unproven; legacy-reference guard fix for D2 held back as FULL tier (30 violations unchanged at head)
@@ -13059,3 +13067,14 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 125 live re-audit (Refs #125)
 
 * Added [issue-125-live-r2-discovery-assistant-2026-11-18.md](research/issue-125-live-r2-discovery-assistant-2026-11-18.md): repeated live probes (no discovery route, identical to control), deny-by-default CLI output, 47 of 47 tests in a clean installed environment resolving the earlier 46 of 47 caveat; all three criteria remain unproven for the demo; no source change, nothing created in Azure
+## [2026-11-18] add | Issue 162 live audit (Refs #162)
+
+* Added [issue-162-live-audit-2026-11-18.md](research/issue-162-live-audit-2026-11-18.md) with retained raw output: live break-glass refusals each add one intact audit-chain entry (2068 to 2070), the grant path with purpose is proven locally only (33 tests, stored audit rows), policy decided for the demo only; criterion 6 stays unticked; no source change, no Azure resource created.
+
+## [2026-11-18] add | Issue 184 live fourth audit (Refs #184)
+
+* Added [issue-184-live-r4-2026-11-18.md](research/issue-184-live-r4-2026-11-18.md) with retained sanitised outputs: #185 and #189 still open, the demo hub has a USD 25 budget with 80 and 100 percent alerts, owner and expiry controls proven in source and 135 tests only; no source change, nothing created in Azure, no criterion ticked.
+
+## [2026-11-18] add | Issue 185 live fourth audit (Refs #185)
+
+* Added [issue-185-live-r4-audit-2026-11-18.md](research/issue-185-live-r4-audit-2026-11-18.md): repository IoT identity tests pass with the optional SDK, credential scan clean, demo hub now reports zero devices (closing the run 3 adverse observation); durable storage, X.509 and production ownership stay unproven. No source change.
