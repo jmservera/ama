@@ -12380,3 +12380,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Live demo evidence for simulator stage 2 (Refs #184)
 
 * Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.
+
+## [2026-11-18] add | Live check of the resident demo authority end (Refs #521)
+
+* Added [resident-demo-authority-live-521-2026-11-18.md](research/resident-demo-authority-live-521-2026-11-18.md): source and focused tests, the live `ZF_DEMO_EXPIRES_AT` of 2028-01-01T00:00:00Z and a desktop sign-in proof. The live SQL window and the image source commit stay unproven (private network). No source or Azure changes.
