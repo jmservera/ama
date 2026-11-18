@@ -8,6 +8,7 @@ blocked, and constructed thresholds are offline-only.
 
 from __future__ import annotations
 
+import copy
 import math
 import re
 from collections.abc import Iterable, Mapping, Sequence
@@ -16,7 +17,7 @@ from datetime import datetime
 from typing import Any
 
 from zava_forward.core.diagnostic_logging import SENSITIVE
-from zava_forward.core.rai_release import named
+from zava_forward.core.rai_release import named, named_human
 
 INSTALLED = "installed"
 CANDIDATE = "candidate-disabled"
@@ -97,6 +98,14 @@ ALERTS: tuple[AlertEntry, ...] = (
         "jobs",
         "modules/operationalMonitoring.bicep",
         "'job-import'",
+    ),
+    _a(
+        "job-rank",
+        CANDIDATE,
+        DIGITAL,
+        "jobs",
+        "modules/operationalMonitoring.bicep",
+        "'job-rank'",
     ),
     _a("job-auth", CANDIDATE, DIGITAL, "jobs", "modules/operationalMonitoring.bicep", "'job-auth'"),
     _a(
@@ -197,6 +206,20 @@ WITHIN = "within-threshold"
 BREACH = "breach"
 
 
+FICTIONAL_APPROVER_TOKENS = frozenset(
+    {"fictional", "placeholder", "mock", "tbd", "synthetic", "fixture"}
+)
+
+
+def _named_human_approver(value: Any) -> bool:
+    """True only for a named human approver free of bot, system or fictional placeholder tokens."""
+    if not named_human(value):
+        return False
+    assert isinstance(value, str)
+    tokens = set(re.split(r"[^a-z0-9]+", value.casefold()))
+    return not bool(FICTIONAL_APPROVER_TOKENS & tokens)
+
+
 def _count(value: Any) -> bool:
     return isinstance(value, int) and not isinstance(value, bool) and value >= 0
 
@@ -228,7 +251,7 @@ def evaluate_indicator(
         result["reason"] = "threshold missing or invalid"
         return result
     assert threshold is not None
-    if not constructed and not named(threshold.get("approved_by")):
+    if not constructed and not _named_human_approver(threshold.get("approved_by")):
         result["reason"] = "live threshold needs named human approval"
         return result
     if not (_count(events) and _count(denominator)) or events > denominator:
@@ -260,19 +283,32 @@ HARM_INDICATORS = (
     "cohort_errors",
     "review_effort",
 )
+REVIEW_EFFORT_STAGES = ("preparation", "review", "correction", "re_review")
+INDICATOR_CATEGORIES: dict[str, str] = {
+    "unsupported_claims": "harm",
+    "critical_misses": "harm",
+    "stale_review_attempts": "quality",
+    "challenges": "quality",
+    "cohort_errors": "disparity",
+    "review_effort": "review_burden",
+}
 DECLARED = "declared"
 
 
 def check_monitoring_declaration(
-    declaration: Mapping[str, Any] | None, *, task_enabled: bool
+    declaration: Mapping[str, Any] | None,
+    *,
+    task_enabled: bool = True,
+    live: bool = False,
 ) -> dict[str, Any]:
     """Check one task or serving release declaration; it never reports a green or approved state.
 
     Each indicator in `HARM_INDICATORS` needs either `applicable: False` with a `reason`, or a
     `denominator`, `window` and a threshold that is constructed (offline only) or approved by a
-    named human. The release needs named monitoring and incident owners and a response. Ownership
-    and the manual-route status are exposed even when the task is disabled or the declaration is
-    blocked, so a switched-off task still shows who monitors it.
+    named human. When `live=True`, constructed thresholds are rejected as missing live approval.
+    The release needs named monitoring and incident owners and a response. Ownership and the
+    manual-route status are exposed even when the task is disabled or the declaration is blocked,
+    so a switched-off task still shows who monitors it.
     """
     record: Mapping[str, Any] = declaration or {}
     manual = record.get("manual_route_status")
@@ -309,6 +345,20 @@ def check_monitoring_declaration(
         elif not named(entry.get("window")):
             missing.append(f"indicator:{name}:window")
         else:
+            if name == "review_effort":
+                if "effort_stages" in entry:
+                    stages = entry.get("effort_stages")
+                    if not (
+                        isinstance(stages, Sequence)
+                        and not isinstance(stages, str | bytes)
+                        and tuple(stages) == REVIEW_EFFORT_STAGES
+                    ):
+                        missing.append("indicator:review_effort:effort_stages")
+                if (
+                    "approval_rate_is_safety" in entry
+                    and entry.get("approval_rate_is_safety") is not False
+                ):
+                    missing.append("indicator:review_effort:approval_rate_is_safety")
             threshold = entry.get("threshold")
             check = evaluate_indicator(
                 events=0,
@@ -321,9 +371,125 @@ def check_monitoring_declaration(
                 missing.append(f"indicator:{name}:threshold")
             elif check["offline_only"]:
                 result["offline_only"] = True
+                if live:
+                    missing.append(f"indicator:{name}:threshold")
     if not missing:
         result["status"] = DECLARED
     return result
+
+
+TASK_DECLARATION_SPECS: dict[str, tuple[str, str, bool]] = {
+    "stock-prioritisation": ("Retrofit Programme Manager", "reviewed_proposals", True),
+    "assessment-preparation": ("Retrofit Programme Manager", "reviewed_proposals", True),
+    "funding-evidence": ("Retrofit Programme Manager", "reviewed_proposals", True),
+    "works-resident-coordination": ("Retrofit Programme Manager", "reviewed_proposals", True),
+    "quality-evidence": ("Retrofit Programme Manager", "reviewed_proposals", True),
+    "briefing": ("Retrofit Programme Manager", "sampled_drafts", True),
+    "message": ("Retrofit Programme Manager", "sampled_drafts", True),
+    "summary": ("Retrofit Programme Manager", "sampled_drafts", True),
+    "priority": ("Retrofit Programme Manager", "sampled_explanations", True),
+    "funding_draft": ("Grants and Evidence Officer", "sampled_drafts", True),
+    "read_document": ("Retrofit Programme Manager", "sampled_filing_notes", True),
+    "chat-case-conversation": ("Retrofit Programme Manager", "sampled_cited_answers", False),
+    "aftercare-concern-pack": ("Retrofit Programme Manager", "reviewed_concern_packs", True),
+}
+
+
+def task_declaration(task_id: str) -> dict[str, Any]:
+    """Return a fresh offline-constructed harm/quality/disparity/review-burden declaration."""
+    if task_id not in TASK_DECLARATION_SPECS:
+        raise KeyError(f"Unknown AI task for monitoring declaration: {task_id}")
+    owner_role, unit, stateful_proposals = TASK_DECLARATION_SPECS[task_id]
+    indicators: dict[str, dict[str, Any]] = {
+        "unsupported_claims": {
+            "category": INDICATOR_CATEGORIES["unsupported_claims"],
+            "applicable": True,
+            "denominator": 30,
+            "denominator_unit": unit,
+            "window": "P7D",
+            "threshold": {"limit": 0.0, "min_sample": 20, "constructed": True},
+        },
+        "critical_misses": {
+            "category": INDICATOR_CATEGORIES["critical_misses"],
+            "applicable": True,
+            "denominator": 30,
+            "denominator_unit": unit,
+            "window": "P7D",
+            "threshold": {"limit": 0.02, "min_sample": 20, "constructed": True},
+        },
+        "stale_review_attempts": (
+            {
+                "category": INDICATOR_CATEGORIES["stale_review_attempts"],
+                "applicable": True,
+                "denominator": 30,
+                "denominator_unit": "proposal_review_attempts",
+                "window": "P7D",
+                "threshold": {"limit": 0.05, "min_sample": 20, "constructed": True},
+            }
+            if stateful_proposals
+            else {
+                "category": INDICATOR_CATEGORIES["stale_review_attempts"],
+                "applicable": False,
+                "reason": (
+                    "Stateless cited reading aid emits no persisted approval-bound proposal "
+                    "record subject to stale-state review; answers bind live source versions."
+                ),
+            }
+        ),
+        "challenges": {
+            "category": INDICATOR_CATEGORIES["challenges"],
+            "applicable": True,
+            "denominator": 30,
+            "denominator_unit": unit,
+            "window": "P7D",
+            "threshold": {"limit": 0.1, "min_sample": 20, "constructed": True},
+        },
+        "cohort_errors": {
+            "category": INDICATOR_CATEGORIES["cohort_errors"],
+            "applicable": True,
+            "denominator": 50,
+            "denominator_unit": "evaluated_cohort_cases",
+            "window": "P28D",
+            "threshold": {"limit": 0.05, "min_sample": 30, "constructed": True},
+        },
+        "review_effort": {
+            "category": INDICATOR_CATEGORIES["review_effort"],
+            "applicable": True,
+            "denominator": 30,
+            "denominator_unit": "completed_human_reviews",
+            "window": "P7D",
+            "effort_stages": list(REVIEW_EFFORT_STAGES),
+            "approval_rate_is_safety": False,
+            "threshold": {"limit": 0.15, "min_sample": 20, "constructed": True},
+        },
+    }
+    return copy.deepcopy(
+        {
+            "task_id": task_id,
+            "monitoring_owner": (
+                f"{owner_role} with Safety and Assurance Lead "
+                "(role proposal; named human appointment pending OD-51)"
+            ),
+            "incident_owner": (
+                f"Digital service owner and {owner_role} "
+                "(role proposal; named human appointment pending OD-51)"
+            ),
+            "response": (
+                "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or "
+                "suspend serving release authority via assistant_release.change, and use the "
+                "manual case route without raw content export."
+            ),
+            "manual_route_status": (
+                "Manual case controls and named reviewer route remain active without model calls"
+            ),
+            "indicators": indicators,
+        }
+    )
+
+
+def task_declarations() -> dict[str, dict[str, Any]]:
+    """Return fresh per-task harm monitoring declarations for all 13 registered AI tasks."""
+    return {task_id: task_declaration(task_id) for task_id in TASK_DECLARATION_SPECS}
 
 
 AI_DIMENSIONS = ("calls", "tokens", "cost")
@@ -367,7 +533,7 @@ def evaluate_ai_limits(
         "runbook": "ai-limits",
         "owner": owner if named(owner) else None,
     }
-    if not constructed and not named(approved_by):
+    if not constructed and not _named_human_approver(approved_by):
         result["reason"] = "live limits need named human approval"
         return result
     expiry, now = _aware(expires_at), _aware(as_of)

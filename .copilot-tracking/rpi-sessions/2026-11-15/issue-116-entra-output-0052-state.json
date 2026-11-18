@@ -1,0 +1,69 @@
+{
+  "task_id": "issue-116-entra-output-0052",
+  "task_slug": "issue-116-entra-output-0052",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/issue-116-entra-output-0052-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/issue-116-entra-output-0052-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/issue-116-entra-output-0052-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/issue-116-entra-output-0052-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/issue-116-entra-output-0052-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/issue-116-entra-output-0052-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute full RPI loop (rpi-research, rpi-plan, rpi-plan-critique, rpi-implement, rpi-review) in automatic mode for Issue #116 remaining RAI provider-boundary output recheck and document derivative/manual fallback guards, validate with focused tier, and commit locally without pushing",
+      "status": "confirmed",
+      "evidence": "Explicit caller prompt direction"
+    },
+    {
+      "decision": "Operate in active assigned worktree /home/azureuser/source/ama-demo-wt/feat-116-entra-output-0052 on branch feat/ai-116-entra-output-0052 anchored to target parent feat/demo-164-chat-grounding-provenance-0900 (9a0dd54fa)",
+      "status": "confirmed",
+      "evidence": "Environment context cwd and git worktree verification"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready; selected Option C (projection-diff withheld-value recheck across outputs, citations, explanations, errors, review records, and exports + data_protection approved derivative or scoped necessity exception and resident consent hold preserving storage, manual reading, permitted download, and manual/hazard routes)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-116-entra-output-0052-research.md (C1-C12)"
+    },
+    {
+      "decision": "Critique execution Complete; verdict Revise; applied all six direct planner findings (PC-001 role-aware funding.draft/doc.summary gating, PC-002 ai_eval synthetic_safe + actual-mode block + Ai.look_at necessity_exception threading, PC-003 store.detail + _facts/ai_run fallback sanitization + ai_priority/_rec_view, PC-004 clean ai_output preservation on quarantine/attribution + rebinding r before statement_sources/publish_output, PC-005 ai_live_report(user) + ai_tasks.review + full-branch continuity_export projection + ChatNotFound 404 on revoked case, PC-006 visible scalar subtraction + add_document metadata guard) and finalized plan as Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/issue-116-entra-output-0052-plan-critique.md and .copilot-tracking/plans/2026-11-15/issue-116-entra-output-0052-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Review execution Complete; outcome Conformant; assessed full supplied boundary (P01, P02, P03, PC-001..PC-006, 4 local-judgment updates, 13 added regression tests, and focused validation tier across 858 tests + ruff + mypy); routed RV-001 [Low] engineering-quality cleanup and external OD-14/OD-19 + Entra B2B governance to post-Review follow-up backlog",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-116-entra-output-0052-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection among ranked follow-up choices (1, 2, or 3), Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Extract a shared post-provider record-visibility scrubbing helper across ai_tasks._record_view, Store._rec_view, and ChatIsolation.scrub_thread",
+      "rationale": "High ease of implementation and KISS/DRY engineering-quality leverage: removes parallel withheld-value scrubbing logic across JSON/SQLite AI records and resumed chat histories",
+      "evidence": "RV-001 in .copilot-tracking/reviews/logs/2026-11-15/issue-116-entra-output-0052-review.md (src/core/src/zava_forward/core/ai_tasks.py, store.py, chat_isolation.py)"
+    },
+    {
+      "rank": 2,
+      "task": "Graduate projection.py and ai_tasks.py out of ADR-0006 mypy ignore_errors and ruff format-exclude lists in src/core/pyproject.toml",
+      "rationale": "Moderate effort, strong static-verification and maintainability leverage on security-critical visibility projection and AI output-recheck modules",
+      "evidence": "RV-001 in .copilot-tracking/reviews/logs/2026-11-15/issue-116-entra-output-0052-review.md and src/core/pyproject.toml"
+    },
+    {
+      "rank": 3,
+      "task": "Organisational control-owner sign-off on OD-14 / OD-19 reason-visibility role list (ZF_REASON_ROLES) and live Microsoft Entra B2B tenant configuration",
+      "rationale": "High governance value to close the external organisational/cloud portion of Issue #116, ranked third because it depends on external DPO/tenant administration rather than local repository edits",
+      "evidence": "src/core/src/zava_forward/core/projection.py (DEFAULT_REASON_ROLES, OD-14, OD-19) and Issue #116"
+    }
+  ]
+}

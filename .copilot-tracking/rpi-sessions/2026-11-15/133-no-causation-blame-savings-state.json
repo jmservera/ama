@@ -1,0 +1,59 @@
+{
+  "task_id": "rpi-133-no-causation-blame-savings-20261115T0316Z",
+  "task_slug": "133-no-causation-blame-savings",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/133-no-causation-blame-savings-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/133-no-causation-blame-savings-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/133-no-causation-blame-savings-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/133-no-causation-blame-savings-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/133-no-causation-blame-savings-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/133-no-causation-blame-savings-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready. Enforce hardened deterministic neutral_text (NFKC/invisible/whitespace normalization + clause-scoped uncertainty) across all aftercare generated, templated, staff-summary, quality-aftercare, FR-036 concern-pack proposal/review, and snapshot-restore boundaries while preserving verbatim resident statements.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/133-no-causation-blame-savings-research.md"
+    },
+    {
+      "decision": "Single-pass rpi-plan-critique executed (verdict: Revise; findings PC-001..PC-005). All five direct planner corrections applied directly to plan and phase details without repeating critique; plan finalized as Ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/133-no-causation-blame-savings-plan-critique.md"
+    },
+    {
+      "decision": "Single-pass rpi-review executed across full task boundary (P01..P03, FR-1..FR-5, NFR-1..NFR-2, Acceptance Criteria, PC-001..PC-005). Execution status: Complete; Outcome: Residual work (zero blocking defects; two Low-severity hardening items RV-001 and RV-002 routed to distinct follow-up alongside Issue #133 Criterion 1).",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/133-no-causation-blame-savings-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked follow-up item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Add explicit App restart SQLite readback assertion after rejected HTTP 400 calls in src/api/tests/test_aftercare_served.py (RV-002)",
+      "rationale": "Highest ease of implementation (small additive test check), direct verification value across SQLite reopen cycles, and zero production blast radius.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/133-no-causation-blame-savings-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Harden AftercareService intra-VIEW_ROLES owner 403 precedence ordering and homes=None home_ref ValidationError mapping in src/core/src/zava_forward/core/aftercare_intake.py (RV-001)",
+      "rationale": "Small localized service refactor with strong KISS/single-boundary leverage: guarantees 403-before-400 even for non-owner VIEW_ROLES callers and eliminates residual AftercareRegister ValueError fallthrough when homes=None.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/133-no-causation-blame-savings-review.md"
+    },
+    {
+      "rank": 3,
+      "task": "Prove Issue #133 Criterion 1 (accessible non-digital household/representative concern route) and obtain human DPO sign-off on outcome data",
+      "rationale": "Highest programme-closure value to complete all 6/6 Issue #133 criteria, ranked third due to larger scope and external human DPO governance dependency.",
+      "evidence": ".copilot-tracking/plans/2026-11-15/133-no-causation-blame-savings-plan.md"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "cold_first_request_ms": {
+    "dashboard": 1867.0,
+    "detail": 78.8,
+    "list": 203.5
+  },
+  "cost_drivers": {
+    "achieved_requests_per_second": 3.87,
+    "assistant_calls": 0,
+    "billed_gib_seconds_at_limit": 67.8,
+    "billed_vcpu_seconds_at_limit": 33.9,
+    "cost": "Unknown",
+    "cost_note": "No price source or budget is set (BRD OD-51); model cost from these drivers once a price source exists.",
+    "declared_limits": {
+      "max_replicas": 4,
+      "memory_gib": 1.0,
+      "vcpu": 0.5
+    },
+    "peak_rss_mib_including_fixture_build": 1057.8,
+    "process_cpu_seconds": 51.54,
+    "replicas": 1,
+    "requests": 252,
+    "rss_after_run_mib": 715.6,
+    "sql_statements": 1014,
+    "sql_statements_per_request": 4.02
+  },
+  "declared_workload": {
+    "duration_seconds": 1800,
+    "events": 600000,
+    "homes": 60000,
+    "inference_per_home": false,
+    "requests_per_second": 5.0,
+    "sessions": 20
+  },
+  "environment": {
+    "machine": "x86_64",
+    "python": "3.12.3"
+  },
+  "executed_workload": {
+    "drain_seconds": 7.84,
+    "duration_seconds": 60.0,
+    "events_in_fixture": 53821,
+    "fixture_seed": 11,
+    "homes": 60000,
+    "in_window_requests": 232,
+    "in_window_requests_per_second": 3.87,
+    "inference_per_home": false,
+    "meets_declared_workload": false,
+    "observation_window_seconds": 60.0,
+    "request_mix": {
+      "dashboard": 1,
+      "detail": 3,
+      "list": 6
+    },
+    "sessions": 20,
+    "target_requests_per_second": 5.0,
+    "throughput_tolerance": 0.05
+  },
+  "fixture_setup_seconds": 31.2,
+  "routes": {
+    "dashboard": {
+      "errors": 0,
+      "nfr_002_threshold_ms": 3000,
+      "p50_ms": 11943.5,
+      "p95_ms": 18302.8,
+      "p95_within_threshold": false,
+      "p99_ms": 18474.8,
+      "requests": 22
+    },
+    "detail": {
+      "errors": 0,
+      "nfr_002_threshold_ms": 1000,
+      "p50_ms": 7652.0,
+      "p95_ms": 14730.1,
+      "p95_within_threshold": false,
+      "p99_ms": 17832.2,
+      "requests": 77
+    },
+    "list": {
+      "errors": 0,
+      "nfr_002_threshold_ms": 1000,
+      "p50_ms": 9187.7,
+      "p95_ms": 14805.2,
+      "p95_within_threshold": false,
+      "p99_ms": 15618.1,
+      "requests": 153
+    }
+  },
+  "scope": "Local single-process run over fictional data. Not production scale, not autoscaling or availability evidence, not an Azure measurement."
+}

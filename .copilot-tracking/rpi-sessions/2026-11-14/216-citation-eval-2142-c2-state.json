@@ -1,0 +1,56 @@
+{
+  "task_id": "216-citation-eval-2142-c2",
+  "task_slug": "216-citation-eval-2142-c2",
+  "parent_task": {
+    "task_id": "216-citation-eval-2142-c1",
+    "task_slug": "216-citation-eval-2142-c1"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14/216-citation-eval-2142-c2-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14/216-citation-eval-2142-c2-plan.md",
+    "details": ".copilot-tracking/details/2026-11-14/216-citation-eval-2142-c2-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-14/216-citation-eval-2142-c2-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-14/216-citation-eval-2142-c2-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c2-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research disposition reused from 216-citation-eval-2142-c1-review.md (RV-001..RV-007); Planning Readiness Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-14/216-citation-eval-2142-c2-research.md; .copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c1-review.md"
+    },
+    {
+      "decision": "Single final-candidate critique executed (Verdict: Revise); PC-001 applied directly and plan finalized",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-14/216-citation-eval-2142-c2-plan-critique.md; .copilot-tracking/plans/2026-11-14/216-citation-eval-2142-c2-plan.md"
+    },
+    {
+      "decision": "Post-implementation Review executed once (Execution: Complete; Outcome: Defects found); routed RV-001..RV-003 to child hardening loop 216-citation-eval-2142-c3",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c2-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Select child follow-up 216-citation-eval-2142-c3 in non-interactive automatic mode to close RV-001..RV-003"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Close RV-001..RV-003 in src/core (recompute adversarial prompts in _verify_agreed_gates_report, verify comparison evidence in resolve_regulatory_surface, and use collision-free tagged encoding in _normalize_json_value)",
+      "rationale": "Small surgical hardening in regulatory_eval_gates.py closing the final three tamper/collision findings",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c2-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Delegate duplicated src/agents regulatory_chat evaluation helpers to zava_forward.core.regulatory_eval_gates",
+      "rationale": "Optional cross-package cleanup outside src/core scope",
+      "evidence": ".copilot-tracking/changes/2026-11-14/216-citation-eval-2142-changes.md"
+    }
+  ]
+}

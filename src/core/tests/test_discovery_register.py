@@ -134,6 +134,41 @@ class ConstraintTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             d.add_evidence(disputed, self.sup)
 
+    def test_domain_decide_stays_unvalidated_until_nominated_owner_validates(self) -> None:
+        c = d.add_evidence(d.add_evidence(self.c, self.sup), self.con)
+        domain_done = d.decide(c, "Domain Lead", "Procurement and Contracts", True, "Domain ok")
+        self.assertTrue(domain_done.is_company_finding)
+        self.assertFalse(domain_done.owner_validated)
+        self.assertEqual(domain_done.finding_status, d.CANDIDATE_FINDING_STATUS)
+
+        owner = d.DiscoveryOwner("Sponsor Jane", "Owner Alex", "accepted handover", "Director Sam")
+        promoted = d.validate_owner_finding(
+            domain_done,
+            owner,
+            definitions(True),
+            by="Owner Alex",
+            note="Validated against agreed endpoint and event dictionary",
+        )
+        self.assertTrue(promoted.owner_validated)
+        self.assertEqual(promoted.finding_status, d.VALIDATED_FINDING_STATUS)
+        row = d.register_rows([promoted])[0]
+        self.assertTrue(row["owner_validated"])
+        self.assertEqual(row["finding_status"], d.VALIDATED_FINDING_STATUS)
+        self.assertEqual(row["supporting_evidence"], (self.sup,))
+        self.assertEqual(row["contradicting_evidence"], (self.con,))
+
+    def test_forged_owner_validated_raises_governance_violation(self) -> None:
+        with self.assertRaises(d.GovernanceViolationError):
+            d.Constraint(
+                "CAP",
+                "Capacity",
+                ("Procurement and Contracts",),
+                status=d.VALIDATED,
+                validated_by="Domain Lead",
+                owner_validated=True,
+                owner_validated_by="Owner Alex",
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

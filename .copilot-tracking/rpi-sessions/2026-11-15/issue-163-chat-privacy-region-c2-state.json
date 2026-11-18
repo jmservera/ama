@@ -1,0 +1,61 @@
+{
+  "task_id": "issue-163-chat-privacy-region-c2",
+  "task_slug": "issue-163-chat-privacy-region-c2",
+  "parent_task": {
+    "task_id": "issue-163-chat-privacy-region",
+    "task_slug": "issue-163-chat-privacy-region"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/issue-163-chat-privacy-region-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/issue-163-chat-privacy-region-c2-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/issue-163-chat-privacy-region-c2-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/issue-163-chat-privacy-region-c2-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/issue-163-chat-privacy-region-c2-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/issue-163-chat-privacy-region-c2-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Selected Rank 1 post-Review follow-up in non-interactive automatic mode (owner correction-cycle grant 2026-11-09 / #1798) to remediate Cycle 1 findings RV-001 through RV-005 before freezing the Refs #163 commit",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-163-chat-privacy-region-review.md (RV-001 through RV-005)"
+    },
+    {
+      "decision": "Research disposition: reused; Planning Readiness: Ready (parent research C1-C16 plus parent review RV-001 through RV-005 establish complete file, symbol, and test evidence with zero unresolved research gaps)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-163-chat-privacy-region-research.md and .copilot-tracking/reviews/logs/2026-11-15/issue-163-chat-privacy-region-review.md"
+    },
+    {
+      "decision": "Plan critique execution: Complete; Verdict: Revise; Direct dispositions applied: PC-001 (added readiness_report env=None and non-mapping no-echo assertions alongside build_foundry_query in P02-T02) and PC-002 (referenced exact test_storage_refused_when_provider_or_region_unapproved method in test_chat_privacy.py); significant/divergent user decision required: none",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/issue-163-chat-privacy-region-c2-plan-critique.md and .copilot-tracking/plans/2026-11-15/issue-163-chat-privacy-region-c2-plan.md"
+    },
+    {
+      "decision": "Review execution: Complete; Outcome: Defects found (0 Critical, 0 High, 1 Medium, 2 Low: RV-001 evaluate_provider_position actual-mode DPO_LEGAL_APPROVED gate, RV-002 ChatPrivacy.purge_expired retention_days check, RV-003 len(days) <= 5 bound before int(days)); Assessed boundary: Full Cycle 2 P01-P02 diff; Review path: .copilot-tracking/reviews/logs/2026-11-15/issue-163-chat-privacy-region-c2-review.md",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-163-chat-privacy-region-c2-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Proceed with child Cycle 3 task issue-163-chat-privacy-region-c3 to close RV-001 through RV-003 before committing"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Remediate Cycle 2 review findings RV-001 through RV-003 in bounded child Cycle 3 (evaluate_provider_position actual-mode DPO_LEGAL_APPROVED gate, purge_expired retention_days guard, and len(days) <= 5 bound)",
+      "rationale": "Three surgical 1-line fixes in chat_provider_position.py and chat_privacy.py close all remaining actual-mode and edge-case gaps before freezing the Refs #163 commit",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-163-chat-privacy-region-c2-review.md (RV-001 through RV-003)"
+    },
+    {
+      "rank": 2,
+      "task": "Obtain named DPO and Legal sign-off on decisions D1-D8 in docs/reference/research/chat-memory-dpia.md before enabling live personal-data chat/memory storage or retention",
+      "rationale": "Remaining human-governance acceptance criterion on Issue #163 (criterion 2) required before pilot/production chat/memory enablement",
+      "evidence": "docs/reference/research/chat-memory-dpia.md (C7, C14)"
+    }
+  ]
+}
