@@ -12399,3 +12399,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Discovery assistant live demo evidence (Refs #125)
 
 * Added [issue-125-live-discovery-assistant-evidence-2026-11-18.md](research/issue-125-live-discovery-assistant-evidence-2026-11-18.md): the assistant is not exposed on the live demo API and its boundary denies writes; all three criteria stay unticked (readiness and comparison unprovable for the demo, no-write shown only at demo scope).
+
+## [2026-11-18] add | Alert and home chat populated-state proof (Refs #215)
+
+* Added [issue-215-live-populated-states-evidence-2026-11-18.md](research/issue-215-live-populated-states-evidence-2026-11-18.md): the deployed client JS rendered against mocked alert and chat responses because the live law store is not loaded; no colour-only status, keyboard, plain-language show and hide, no-source and doubt route results, with per-criterion status. WCAG as a whole and staff comprehension stay unproven and unticked.
