@@ -1,0 +1,245 @@
+{
+ "me": {
+  "s": 200,
+  "role": "Retrofit Programme Manager"
+ },
+ "n": 16,
+ "sample_keys": [
+  "address",
+  "area",
+  "closed",
+  "days",
+  "focus",
+  "funding",
+  "hazard",
+  "id",
+  "last_contact",
+  "next_visit",
+  "owner",
+  "owner_code",
+  "phone",
+  "postcode",
+  "rank",
+  "reasons",
+  "resident",
+  "stage",
+  "status",
+  "support",
+  "support_coverage",
+  "support_status",
+  "town",
+  "wave",
+  "work"
+ ],
+ "summ": [
+  {
+   "id": "ZF-2025-0331",
+   "stage": "Waiting for block programme",
+   "closed": false
+  },
+  {
+   "id": "ZF-2025-0148",
+   "stage": "Waiting for block programme",
+   "closed": false
+  },
+  {
+   "id": "ZF-2025-0150",
+   "stage": "Waiting for block programme",
+   "closed": false
+  },
+  {
+   "id": "ZF-2025-0151",
+   "stage": "Waiting for block programme",
+   "closed": false
+  },
+  {
+   "id": "ZF-2025-0031",
+   "stage": "Waiting for block programme",
+   "closed": false
+  },
+  {
+   "id": "ZF-2025-0032",
+   "stage": "Waiting for block programme",
+   "closed": false
+  },
+  {
+   "id": "ZF-2025-0389",
+   "stage": "Waiting for block programme",
+   "closed": false
+  },
+  {
+   "id": "ZF-2025-0339",
+   "stage": "Waiting for block programme",
+   "closed": false
+  },
+  {
+   "id": "ZF-2025-0340",
+   "stage": "Waiting for block programme",
+   "closed": false
+  },
+  {
+   "id": "ZF-2025-0364",
+   "stage": "Waiting for block programme",
+   "closed": false
+  },
+  {
+   "id": "ZF-2026-0742",
+   "stage": "Final checks before ordering",
+   "closed": false
+  },
+  {
+   "id": "ZF-2026-0741",
+   "stage": "Final checks before ordering",
+   "closed": false
+  }
+ ],
+ "detail_keys": [
+  "appointments",
+  "can_advance",
+  "can_record_resident",
+  "challenge_assurance",
+  "challenge_guarantees",
+  "challenge_targets",
+  "checklist",
+  "closed",
+  "contacts",
+  "contractor",
+  "days_in_stage",
+  "decision",
+  "documents",
+  "funding",
+  "funding_ok",
+  "gate",
+  "hazards",
+  "history",
+  "home",
+  "id",
+  "measure_decisions",
+  "measures",
+  "nomination_permissions",
+  "owner",
+  "owner_code",
+  "owner_role",
+  "quality_handover_blockers",
+  "reason",
+  "redress_route",
+  "resident",
+  "resident_retention",
+  "stage",
+  "stage_since",
+  "status",
+  "stock_epc",
+  "stock_fabric",
+  "stock_link",
+  "stock_reconciliation",
+  "stock_reconciliation_events",
+  "suggestions",
+  "support_coverage",
+  "support_status",
+  "synthetic_stock_anchor_id",
+  "technical_missing",
+  "waiting_on",
+  "wave",
+  "work"
+ ],
+ "nom_perms": {
+  "can_view": true,
+  "can_write": true,
+  "can_submit_digital": true,
+  "can_submit_staff_recorded_non_digital": true,
+  "can_assign_third_party_owner": true,
+  "can_reassign_owner": true,
+  "acknowledgeable_nomination_ids": [],
+  "correctable_nomination_ids": [],
+  "editable_nomination_ids": [],
+  "staff_owners": [
+   {
+    "email": "[email]",
+    "name": "Aadi Kapoor",
+    "role": "Retrofit Programme Manager"
+   }
+  ],
+  "representative_authorities": [],
+  "channels": [
+   "digital",
+   "staff_recorded_non_digital",
+   "Digital",
+   "Phone",
+   "Letter",
+   "In person",
+   "Trusted intermediary"
+  ],
+  "challenge_channels": [
+   "digital",
+   "staff_recorded_non_digital",
+   "Digital",
+   "Phone",
+   "Letter",
+   "In person"
+  ],
+  "assisted_channels": [
+   {
+    "value": "phone",
+    "label": "Phone"
+   },
+   {
+    "value": "paper",
+    "label": "Paper"
+   },
+   {
+    "value": "letter",
+    "label": "Letter"
+   },
+   {
+    "value": "in_person",
+    "label": "In person"
+   },
+   {
+    "value": "trusted_intermediary",
+    "label": "Trusted intermediary"
+   }
+  ]
+ },
+ "hazards": [
+  {
+   "category": "Damp and mould",
+   "priority": "Significant",
+   "noticed": "2025-12-21",
+   "referred": "2025-12-28",
+   "repaired": "2026-03-06",
+   "released": false,
+   "job": "RJ-700309",
+   "owner": "Karen Lawson",
+   "state": "Repair evidenced, hold active",
+   "service_authority": "Existing hazard and repairs service",
+   "classification": "Unverified report; service categorisation not recorded here",
+   "source": null,
+   "aware_at": null,
+   "sent_at": null,
+   "received_at": null,
+   "accepted_at": null,
+   "response_due_at": null,
+   "responded_at": null,
+   "resident_update_due_at": null,
+   "resident_updated_at": null,
+   "hold": {
+    "scope": "Home",
+    "case_id": "ZF-2025-0331",
+    "status": "Active",
+    "accountable_role": null,
+    "legacy": true
+   },
+   "follow_up": null,
+   "accountable_owner": "Karen Lawson",
+   "clock_text": "Hazard clock: elapsed time unknown; no response target window recorded; response unknown."
+  }
+ ],
+ "html": [
+  200,
+  "{'_text': '<!doctype html><html lang=\"en-GB\"><head><meta charset=\"utf-8\"><title>Referral and challenge routes for ZF-2025-0331</title></head><body><main><h1>Referral, acknowledgement, and challenge routes (ZF-2025-0331)</h1><p>Urgent hazards use the hazard reporting route immediately and are never q"
+ ],
+ "proposals": [
+  200,
+  "{'proposals': [], 'disabled': 'Operator authority, finite allowance and expiry are required.', 'manual': 'Open the case for ordinary human work.', 'next_after': None}"
+ ]
+}

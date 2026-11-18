@@ -416,6 +416,9 @@ re-run. The production X.509 receiver and indoor schema stay unproven.
 For #185, the [live device identity evidence](./research/issue-185-live-device-identity-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: Hub-generated symmetric device keys issued, used for sending
 and all identities removed. Durable secret storage and X.509 stay unproven.
+For #220, the [live challenge route evidence](./research/issue-220-live-challenge-route-evidence-2026-11-18.md)
+records a 2026-11-18 demo run: guarantees, assurance flags and forbidden-field refusals observed
+live, and a blocking defect that refuses every Entra-signed-in staff write to the route.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
 
 For #109, the [live device monitoring evidence](./research/issue-109-live-device-monitoring-evidence-2026-11-18.md)
