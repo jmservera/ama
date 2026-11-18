@@ -1,0 +1,53 @@
+{
+ "task_id": "issue-202-live-20261118T1643Z",
+ "task_slug": "issue-202-live",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-18/issue-202-live-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-18/issue-202-live-plan.md",
+  "details": ".copilot-tracking/details/2026-11-18/issue-202-live-phase-details.md",
+  "critique": ".copilot-tracking/critiques/2026-11-18/issue-202-live-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-18/issue-202-live-changes.md",
+  "review": ".copilot-tracking/reviews/logs/2026-11-18/issue-202-live-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Demo, desktop only; docs-only audit, focused tier",
+   "status": "owner 2026-11-18",
+   "evidence": "brief"
+  },
+  {
+   "decision": "Critique executed once, verdict Complete / Revise, findings applied",
+   "status": "done",
+   "evidence": ".copilot-tracking/critiques/2026-11-18/issue-202-live-critique.md"
+  },
+  {
+   "decision": "Review executed once, Complete / Conformant",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/logs/2026-11-18/issue-202-live-review.md"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "owner decides criteria 4 and 5"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Delete mvp-ci and mvp-validation workflow files and references (full tier)",
+   "rationale": "Criterion 5 remains unproven",
+   "evidence": "research note"
+  },
+  {
+   "rank": 2,
+   "task": "Re-enable or retire rubric scoring workflow",
+   "rationale": "No score on deletion commit",
+   "evidence": "workflows-and-protection.txt"
+  }
+ ]
+}
