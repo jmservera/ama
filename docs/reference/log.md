@@ -13088,6 +13088,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-185-live-r4-audit-2026-11-18.md](research/issue-185-live-r4-audit-2026-11-18.md): repository IoT identity tests pass with the optional SDK, credential scan clean, demo hub now reports zero devices (closing the run 3 adverse observation); durable storage, X.509 and production ownership stay unproven. No source change.
 
+## [2026-11-18] add | Issue 151 live fourth audit, role routes (Refs #151)
+
+* Added [issue-151-live-r4-role-routes-evidence-2026-11-18.md](research/issue-151-live-r4-role-routes-evidence-2026-11-18.md): seven role screens with 0 axe violations and clean keyboard walks, two role-gate denials, no screen reader run; criterion 4 stays partly proven for the demo.
+
 ## [2026-11-18] add | Fourth live audit of nomination route (Refs #130)
 
 * Added [issue-130-live-r4-nomination-route-audit-2026-11-18.md](research/issue-130-live-r4-nomination-route-audit-2026-11-18.md): new revision 0000032 on the same image digest, same 403 write refusal, form-encoded 400 explained by the JSON-only API, 83 offline tests pass, per-criterion proven or unproven table; unticked representative criterion unproven; no source change, nothing created in Azure
