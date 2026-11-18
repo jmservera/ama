@@ -25,7 +25,8 @@ REGISTER = Path(__file__).resolve().parent / "law" / "law-source-register.json"
 NO_SOURCE = "No source is held for this topic. Do not rely on this system; ask the named owner."
 PARTIAL = "This source is held only in part, so the answer may be incomplete."
 NOT_REVIEWED = "Not yet reviewed by a named owner. This is a reference copy, not legal advice."
-STATUSES = ("in_force", "guidance", "consultation", "historical")
+FUTURE_PHASE = "Uncommenced future phase, not an active operational rule."
+STATUSES = ("in_force", "guidance", "consultation", "future_phase", "historical")
 COMPLETENESS = ("full", "partial")
 
 APPEND_ONLY = ("reg_source", "reg_version", "reg_provision", "reg_gap")
@@ -386,6 +387,8 @@ class LawStore:
             out.append("Historical source. Not the current operational authority.")
         if d.get("status") == "consultation":
             out.append("Consultation material, not a final rule.")
+        if d.get("status") == "future_phase":
+            out.append(FUTURE_PHASE)
         if d.get("review_status") != "reviewed":
             out.append(NOT_REVIEWED)
         return out

@@ -1,0 +1,58 @@
+{
+  "task_id": "issue-128-cohort-ai-eval",
+  "task_slug": "ai-128-cohort-ai-eval",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/ai-128-cohort-ai-eval-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/ai-128-cohort-ai-eval-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/ai-128-cohort-ai-eval-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/ai-128-cohort-ai-eval-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/ai-128-cohort-ai-eval-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/ai-128-cohort-ai-eval-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute complete automatic RPI loop (rpi-research -> rpi-plan -> rpi-plan-critique -> rpi-implement -> rpi-review) on feat/ai-128-cohort-ai-eval stacked on origin/feat/demo-164-chat-grounding-provenance-0900 (36aeddae345426fdf8ee53565fef1540979de967), commit all code/tests/tracking locally with Refs #128, and do not push or open a PR",
+      "status": "confirmed",
+      "evidence": "Caller prompt explicit continuous-execution rule and non-interactive mode instruction"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready. Extend paired_equity.py and cohort_eval.py in src/core (plus tests and src/core/README.md) without editing journey_register.py to preserve clean merge compatibility with sibling branch #1735 and downstream src/agents and src/api callers.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/ai-128-cohort-ai-eval-research.md (C1-C12)"
+    },
+    {
+      "decision": "Plan critique executed once (.copilot-tracking/reviews/plans/2026-11-15/ai-128-cohort-ai-eval-plan-critique.md, verdict Revise); all 6 planner-owned findings (PC-001..PC-006) resolved directly in plan and phase details without conflict with user direction. Plan finalized Ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-15/ai-128-cohort-ai-eval-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Post-implementation Review executed once (.copilot-tracking/reviews/logs/2026-11-15/ai-128-cohort-ai-eval-review.md); execution status Complete, outcome Conformant across assessed boundary P01-P03 (paired_equity.py, cohort_eval.py, tests, src/core/README.md) with zero defects.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/ai-128-cohort-ai-eval-review.md#outcome"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked follow-up work item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Reconcile sibling #1735 appointment-status expansions (reschedule_requested, cancelled) in paired_equity contrasts after #1735 merges",
+      "rationale": "Small deterministic contrast alignment once sibling journey_register PR #1735 merges upstream",
+      "evidence": ".copilot-tracking/plans/2026-11-15/ai-128-cohort-ai-eval-plan.md#follow-up-items"
+    },
+    {
+      "rank": 2,
+      "task": "Connect operational/population fairness evaluation harness once real approved datasets and live DPO/RAI sign-offs exist",
+      "rationale": "Requires external real-stock datasets and live OQ-018 owner sign-off outside demonstrator scope",
+      "evidence": ".copilot-tracking/plans/2026-11-15/ai-128-cohort-ai-eval-plan.md#follow-up-items"
+    }
+  ]
+}

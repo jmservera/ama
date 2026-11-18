@@ -115,7 +115,48 @@ def missing_contract(record: Mapping[str, Any], task: Mapping[str, Any]) -> list
         missing.append("frozen evaluation summary")
     if not valid_consumption(record.get("consumption")):
         missing.append("consumption configuration")
+    if not valid_monitoring_declaration(record.get("monitoring_declaration"), task):
+        missing.append("monitoring_declaration")
     return missing
+
+
+def valid_monitoring_declaration(value: object, task: Mapping[str, Any]) -> bool:
+    """Release monitoring declaration must cover every task-applicable harm and review indicator."""
+    if not isinstance(value, Mapping):
+        return False
+    from . import monitoring_coverage
+
+    check = monitoring_coverage.check_monitoring_declaration(
+        value,
+        task_enabled=bool(task.get("enabled", True)),
+        live=False,
+    )
+    if check["missing"]:
+        return False
+    indicators = value.get("indicators")
+    if not isinstance(indicators, Mapping):
+        return False
+    task_decl = task.get("monitoring_declaration")
+    task_indicators = task_decl.get("indicators") if isinstance(task_decl, Mapping) else None
+    if isinstance(task_indicators, Mapping):
+        for name, task_entry in task_indicators.items():
+            if not isinstance(task_entry, Mapping):
+                continue
+            rec_entry = indicators.get(name)
+            if not isinstance(rec_entry, Mapping):
+                return False
+            if task_entry.get("applicable") is not False and rec_entry.get("applicable") is False:
+                return False
+            if name == "review_effort" and rec_entry.get("applicable") is not False:
+                stages = rec_entry.get("effort_stages")
+                if not (
+                    isinstance(stages, Sequence)
+                    and not isinstance(stages, str | bytes)
+                    and tuple(stages) == monitoring_coverage.REVIEW_EFFORT_STAGES
+                    and rec_entry.get("approval_rate_is_safety") is False
+                ):
+                    return False
+    return True
 
 
 def frozen_evaluation(record: Mapping[str, Any]) -> bool:
@@ -192,6 +233,23 @@ def missing_binding(
         or record.get("serving_model") != binding.get("model_version")
     ):
         missing.append("actual authorisation with serving-version attestation")
+    if live and "monitoring_declaration" in record:
+        from . import monitoring_coverage
+
+        live_check = monitoring_coverage.check_monitoring_declaration(
+            record.get("monitoring_declaration"),
+            task_enabled=True,
+            live=True,
+        )
+        if live_check["missing"]:
+            missing.append("named-human approved live monitoring thresholds")
+    if live and ("approved_by" in record or "named_approval_id" in record):
+        from . import rai_control_plane
+
+        if not rai_control_plane.valid_named_human_approver(record.get("approved_by")):
+            missing.append("named human approved_by (OQ-017)")
+        if not rai_control_plane.valid_named_approval_id(record.get("named_approval_id")):
+            missing.append("named_approval_id (OQ-017)")
     return missing
 
 

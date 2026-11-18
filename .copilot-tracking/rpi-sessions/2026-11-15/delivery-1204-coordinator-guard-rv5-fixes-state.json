@@ -1,0 +1,61 @@
+{
+  "task_id": "issue-1204-rv5-fixes",
+  "task_slug": "delivery-1204-coordinator-guard-rv5-fixes",
+  "parent_task": {
+    "task_id": "issue-1204-rv4-fixes",
+    "task_slug": "delivery-1204-coordinator-guard-rv4-fixes"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/delivery-1204-coordinator-guard-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/delivery-1204-coordinator-guard-rv5-fixes-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/delivery-1204-coordinator-guard-rv5-fixes-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-11-15/delivery-1204-coordinator-guard-rv5-fixes-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/delivery-1204-coordinator-guard-rv5-fixes-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/delivery-1204-coordinator-guard-rv5-fixes-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Autonomously selected parent task issue-1204-rv4-fixes ranked follow-up #1 in non-interactive automatic mode to resolve RV-001 through RV-005 while preserving all prior review logs untouched.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/delivery-1204-coordinator-guard-rv4-fixes-review.md#findings"
+    },
+    {
+      "decision": "Research disposition: satisfied-and-skipped; Planning Readiness: Ready. Parent research (.copilot-tracking/research/2026-11-15/delivery-1204-coordinator-guard-research.md) and review log (.copilot-tracking/reviews/logs/2026-11-15/delivery-1204-coordinator-guard-rv4-fixes-review.md) provide exact symbol-level evidence for RV-001 through RV-005.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/delivery-1204-coordinator-guard-rv4-fixes-review.md"
+    },
+    {
+      "decision": "Single-pass plan critique execution: Complete; verdict: Revise (0 Critical, 1 High, 2 Medium, 0 Low; user response required: no). Applied direct planner corrections PC-001..PC-003 to plan and phase details without repeating critique.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-15/delivery-1204-coordinator-guard-rv5-fixes-plan-critique.md"
+    },
+    {
+      "decision": "Post-implementation Review execution: Complete; outcome: Defects found (0 Critical, 3 High, 2 Medium, 0 Low). Routed RV-001..RV-005 to rpi-implement as child follow-up work without transitioning back to Implement inside issue-1204-rv5-fixes.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/delivery-1204-coordinator-guard-rv5-fixes-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Selected ranked follow-up #1 in non-interactive automatic mode: child task issue-1204-rv6-fixes (delivery-1204-coordinator-guard-rv6-fixes)."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Resolve RV-001..RV-005 in tools/check-coordinator-handoff.py, .github/agents/ama-backlog-delivery-coordinator.agent.md, and tools/test_check_coordinator_handoff.py (subclause-indexed launch check, multi-ready capacity launch check, mandatory verified blocker ref on non-capacity waits/pauses, target-only table link evidence, and active-row live session matching)",
+      "rationale": "Closes all five post-implementation review defects in existing Focused-tier files so coordinator handoff validation is conformant before final local commit.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/delivery-1204-coordinator-guard-rv5-fixes-review.md#findings"
+    },
+    {
+      "rank": 2,
+      "task": "Wire python3 tools/check-coordinator-handoff.py into tools/rpi-checks.py static validation in a dedicated gate-tooling PR",
+      "rationale": "Extends focused-tier coordinator contract validation to full-gate static runs once approved under full-tier gate validation (#1294).",
+      "evidence": ".copilot-tracking/plans/2026-11-15/delivery-1204-coordinator-guard-plan.md#follow-up-items"
+    }
+  ]
+}

@@ -76,7 +76,7 @@ WORKFLOWS = (
 )
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
-    "src-ci.yml": "4fb913e1ac29772b4a4a6ee82a08f05ab0a917d3cd64974dd461dc960e159122",
+    "src-ci.yml": "9346fcfb84d15ba69f5449ba55652a51457fd866e709808c7606acd9f62a6b18",
     "mvp-ci.yml": "a0f227717e1d6f675898e2ff6d45f493ce88851ad236c578f2dbcb7921bd0179",
     "mvp-validation.yml": "841e06bad7856c6cf9102a7f383ee027ec24e88ad27360f8ab7462d0eb76da8d",
     "src-deploy.yml": "3c2f1ed59b1486fc1316a48207cc4ef7d6a830bbba1dcad4152acab4bd2f1bbc",
@@ -196,6 +196,7 @@ SENSOR_MSSQL_REQUIRED_TESTS = _sql_tests(
     "test_matches_pure_derivation_over_retained_rows_and_is_reproducible",
     "test_read_only_and_no_task_without_approved_rule",
     "test_reopened_store_reproduces_signal_without_writes",
+    "test_reproduce_retained_matches_pure_reproduction_and_fails_closed_read_only",
     "test_stale_and_missing_readings_are_insufficient",
     "test_unmapped_or_invalid_home_is_insufficient",
     "test_unreadable_store_is_insufficient_with_no_priority_effect",

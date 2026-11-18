@@ -132,6 +132,9 @@ resource app 'Microsoft.App/containerApps@2025-07-01' = {
         image: image
         resources: { cpu: json('0.25'), memory: '0.5Gi' }
         env: [
+          { name: 'ZF_CONTAINER_HARDENING', value: 'enforced' }
+          { name: 'PYTHONDONTWRITEBYTECODE', value: '1' }
+          { name: 'TMPDIR', value: '/tmp' }
           { name: 'ZF_DEMO_EXPIRES_AT', value: expiresAt }
           { name: 'ZF_DEMO_ALLOWED_HOSTS', value: '${appName}.${environment.properties.defaultDomain}' }
           { name: 'ZF_DEMO_CLIENT_ADDRESS', value: 'ingress-rightmost' }
@@ -154,7 +157,9 @@ resource app 'Microsoft.App/containerApps@2025-07-01' = {
           { type: 'Readiness', httpGet: { path: '/healthz', port: 8089, httpHeaders: [{ name: 'Host', value: '${appName}.${environment.properties.defaultDomain}' }] }, periodSeconds: 5, timeoutSeconds: 3, successThreshold: 1, failureThreshold: 3 }
           { type: 'Liveness', httpGet: { path: '/healthz', port: 8089, httpHeaders: [{ name: 'Host', value: '${appName}.${environment.properties.defaultDomain}' }] }, periodSeconds: 10, timeoutSeconds: 5, failureThreshold: 6 }
         ]
+        volumeMounts: [{ volumeName: 'tmp', mountPath: '/tmp' }]
       }]
+      volumes: [{ name: 'tmp', storageType: 'EmptyDir' }]
       scale: { minReplicas: 0, maxReplicas: 1 }
     }
   }

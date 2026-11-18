@@ -18,6 +18,7 @@ Case detail, the map, statistics, visits and writes still use
 the in-memory copy kept in step with the change sequence; the full-list export
 and the closed list also fall back to it.
 """
+import copy
 import hashlib
 import json
 import logging
@@ -33,7 +34,7 @@ from zava_forward.core.ai import Ai
 from .chatthreads import SQLITE_DDL as CHAT_DDL, MEMORY_ADDED as CHAT_MEMORY_ADDED
 from .doc_controls import open_scanner
 from .documents import open_document_store
-from .store import ConflictError, GateError, Store
+from .store import ConflictError, GateError, LedgerRelianceError as LedgerRelianceError, Store
 from .resident_decisions import resident_status
 
 SCHEMA = """
@@ -51,6 +52,14 @@ CREATE TABLE IF NOT EXISTS cases (
   queue_new INTEGER NOT NULL DEFAULT 0, queue_priority INTEGER NOT NULL DEFAULT 0,
   queue_stale INTEGER NOT NULL DEFAULT 0, queue_blocked INTEGER NOT NULL DEFAULT 0,
   queue_overdue INTEGER NOT NULL DEFAULT 0, queue_unowned INTEGER NOT NULL DEFAULT 0);
+CREATE TABLE IF NOT EXISTS continuity_gate_state (
+  id INTEGER PRIMARY KEY CHECK (id = 1), gate_version TEXT NOT NULL, epoch INTEGER NOT NULL DEFAULT 0);
+CREATE TABLE IF NOT EXISTS continuity_open_holds (
+  scope TEXT PRIMARY KEY, incident_id TEXT NOT NULL, epoch INTEGER NOT NULL);
+CREATE TRIGGER IF NOT EXISTS continuity_gate_no_delete BEFORE DELETE ON continuity_gate_state
+  BEGIN SELECT RAISE(ABORT, 'continuity gate state cannot be deleted'); END;
+CREATE TRIGGER IF NOT EXISTS continuity_gate_monotonic BEFORE UPDATE ON continuity_gate_state WHEN NEW.epoch < OLD.epoch
+  BEGIN SELECT RAISE(ABORT, 'continuity gate epoch is monotonic'); END;
 """
 
 REC_ORDER_IDS = 100  # identifiers kept per backfill batch record
@@ -201,6 +210,7 @@ class SqlStore(Store):
         self.data = dict(staff=[], recommendations=[])
         self._rv, self._snap = {}, {}
         self._proc_snap = {}
+        self._proc_loaded = {}
         self._recs = {}
         self._rec_ord = {}
         self._seed(data_path)
@@ -279,6 +289,9 @@ class SqlStore(Store):
     def continuity_suspension(self, task):
         """Read the persisted suspension from the database, so another process's suspension is seen without a cache."""
         with self.dblock:
+            hold = continuity.gate_hold(self.db, mssql=hasattr(self, "_env"))
+            if hold is not None:
+                return hold
             row = self.db.execute("SELECT value FROM meta WHERE key='continuity'").fetchone()
         return continuity.active(continuity.load(row[0] if row else None), task)
 
@@ -317,6 +330,7 @@ class SqlStore(Store):
                     self.db.execute("UPDATE cases SET " + ", ".join(f"{c}=?" for c in CASE_COLS) + " WHERE id=?", r[1:] + (cid,))
                 self._meta_set("rank_policy", want)
                 self._meta_set("support_encoding", stock.SUPPORT_ENCODING)
+            continuity.sync_sql_gate(self.db, read_meta=True, mssql=hasattr(self, "_env"))
             self.db.execute("COMMIT")
         except BaseException:
             self.db.execute("ROLLBACK")
@@ -759,9 +773,11 @@ class SqlStore(Store):
         self._meta_set("rec_order_review", REC_REVIEW)
 
     def _queue_fingerprint(self):
+        policy_row = self.db.execute("SELECT value FROM meta WHERE key='handoff_policy'").fetchone()
+        policy = json.loads(policy_row[0]) if policy_row else None
         return json.dumps(
             [taskqueues.VERSION, self.as_of, controls.today(), ranking.CURRENT,
-             taskqueues.MEMBERSHIP_REVISION],
+             taskqueues.MEMBERSHIP_REVISION, policy],
             sort_keys=True,
         )
 
@@ -787,10 +803,14 @@ class SqlStore(Store):
         cases = {cid: json.loads(body) for cid, body in rows}
         selected = list(cases.values())
         data = {}
-        for name in ("buildings", "procurement"):
+        for name in ("buildings", "procurement", "handoff_policy"):
             row = self.db.execute("SELECT value FROM meta WHERE key=?", (name,)).fetchone()
             if row:
                 data[name] = json.loads(row[0])
+        data["staff"] = [
+            json.loads(r[0])
+            for r in self.db.execute("SELECT body FROM staff ORDER BY email").fetchall()
+        ]
         if ids is not None and any(c.get("building_id") for c in selected):
             # Building validation checks all linked home IDs, not just changed homes.
             cases = {cid: json.loads(body) for cid, body in
@@ -871,7 +891,8 @@ class SqlStore(Store):
                         self._insert_ignore("staff", ("email", "body"), (s["email"].lower(), json.dumps(s)))
                     for doc in self.DOCS:
                         if doc in src:
-                            self._meta_set(doc, json.dumps(src[doc]))
+                            raw_doc = continuity.dump_sql(src[doc]) if doc == "continuity" else json.dumps(src[doc])
+                            self._meta_set(doc, raw_doc)
                     if src.get("as_of") and not os.environ.get("ZF_AS_OF"):
                         self._meta_set("as_of", src["as_of"])
                     self._insert_ignore("meta", ("key", "value"), ("seq", "1"))
@@ -881,12 +902,13 @@ class SqlStore(Store):
                     ))
                     self.as_of = self.db.execute("SELECT value FROM meta WHERE key='as_of'").fetchone()[0]
                     self._refresh_queue_membership()
+                    continuity.sync_sql_gate(self.db, read_meta=True, mssql=hasattr(self, "_env"))
                 self.db.execute("COMMIT")
             except BaseException:
                 self.db.execute("ROLLBACK")
                 raise
 
-    MERGE_PRESERVED_DOCS = ("continuity",)
+    MERGE_PRESERVED_DOCS = ("continuity", "rights_requests")
     MERGE_BATCH = 50
 
     def merge_seed(self, data_path, *, apply=False, expect_added=None, actor="seed-merge"):
@@ -937,6 +959,16 @@ class SqlStore(Store):
                     row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
                     if row is None:
                         report["docs_inserted"].append(key)
+                    elif key == "continuity":
+                        try:
+                            stored_doc = continuity.unwrap_sql(json.loads(row[0]))
+                            same_doc = canon(stored_doc) == canon(src[key])
+                        except (ValueError, TypeError):
+                            same_doc = False
+                        if same_doc:
+                            report["docs_identical"].append(key)
+                        else:
+                            report["docs_preserved"].append(key)
                     elif canon(json.loads(row[0])) == canon(src[key]):
                         report["docs_identical"].append(key)
                     elif key in self.MERGE_PRESERVED_DOCS:
@@ -956,7 +988,10 @@ class SqlStore(Store):
                             f"INSERT INTO cases (id, rowversion, seq, {', '.join(CASE_COLS)}) VALUES (?,1,?,{','.join('?' * len(CASE_COLS))})",
                             [(r[0], new) + r[1:] for r in map(self._row, new_cases[start:start + self.MERGE_BATCH])])
                     for key in report["docs_inserted"]:
-                        self._meta_set(key, json.dumps(src[key]))
+                        doc_val = continuity.dump_sql(src[key]) if key == "continuity" else json.dumps(src[key])
+                        self._meta_set(key, doc_val)
+                        if key == "continuity":
+                            continuity.sync_sql_gate(self.db, doc_val, mssql=hasattr(self, "_env"))
                     self._refresh_queue_membership(None)
                     detail = (f"cases_added={len(new_cases)}; docs_added={','.join(report['docs_inserted']) or 'none'}; "
                               f"seed_sha256={hashlib.sha256(raw).hexdigest()}")
@@ -973,15 +1008,16 @@ class SqlStore(Store):
 
     @staticmethod
     def _row(c):
-        nxt = next((a["date"] for a in c["appointments"] if a["outcome"] == "Booked"), None)
+        nxt = next((a["date"] for a in c["appointments"] if isinstance(a, dict) and a.get("outcome") == "Booked"), None)
         name, home = c["resident"]["name"], c["home"]
         return (c["id"], c["stage"], home["area"], c["wave"], c["owner_code"], int(bool(c["closed"])),
-                int(any(not h["released"] for h in c["hazards"])), home["postcode"], home["address"], json.dumps(c),
+                int(taskqueues.has_open_safety(c)), home["postcode"], home["address"], json.dumps(c),
                 int(ranking._support(c)), int(c["days_in_stage"]), ranking.sql_key(c), c["contractor"]["name"],
                 " ".join([name, home["address"], home["postcode"], c["id"]]).lower(), " ".join([home["address"], home["postcode"], c["id"]]).lower(),
                 name.split(" ")[-1].lower(), (c["contacts"][-1]["at"] if c["contacts"] else None) or "0000", nxt or "9999",
                 resident_status(c), c["funding"]["status"],
                 int(any((record.get("resolution") or {}).get("outcome") == "Correction recorded"
+                        or record.get("prior_correction_preserved") is True
                         for record in c.get("affected_challenges", []))))
 
     def _db_seq(self):
@@ -1126,7 +1162,8 @@ class SqlStore(Store):
             SELECT c.id, json_extract(ch.value, '$.id'), json_extract(ch.value, '$.target')
             FROM cases AS c, json_each(c.body, '$.affected_challenges') AS ch
             WHERE c.priority_correction = 1
-              AND json_extract(ch.value, '$.resolution.outcome') = 'Correction recorded'
+              AND (json_extract(ch.value, '$.resolution.outcome') = 'Correction recorded'
+                   OR json_extract(ch.value, '$.prior_correction_preserved') = 1)
         """).fetchall()
         return [(cid, rid, json.loads(target)) for cid, rid, target in rows]
 
@@ -1189,8 +1226,8 @@ class SqlStore(Store):
                             raise ConflictError(rid)
                         recs.append((rid, known[0] + 1, rec, body))
                 proc_body = self._proc_write()
-                # Shared validation can change when packages, holds or linked homes change.
-                shared = bool({"buildings", "procurement"} & proc_body.keys()) or any(
+                # Shared validation can change when packages, holds, handoff policy or linked homes change.
+                shared = bool({"buildings", "procurement", "handoff_policy"} & proc_body.keys()) or any(
                     self.cases[cid].get("building_id")
                     or json.loads(self._snap[cid]).get("building_id")
                     for cid, _ in changed
@@ -1240,6 +1277,8 @@ class SqlStore(Store):
                     self._drop_unsaved_recommendations()
                 raise
             self._proc_snap.update(proc_body)
+            for key in proc_body:
+                self._proc_loaded[key] = copy.deepcopy(self.data[key])
             for cid, body in changed:
                 self._rv[cid] += 1
                 self._snap[cid] = body
@@ -1336,8 +1375,13 @@ class SqlStore(Store):
         for key, body in self._proc_snap.items():
             if body is None:
                 self.data.pop(key, None)
+                self._proc_loaded.pop(key, None)
+            elif key == "continuity":
+                self.data[key] = continuity.load(body)
+                self._proc_loaded[key] = copy.deepcopy(self.data[key])
             else:
                 self.data[key] = json.loads(body)
+                self._proc_loaded[key] = copy.deepcopy(self.data[key])
         for cid in touched:
             row = self.db.execute("SELECT rowversion, body FROM cases WHERE id=?", (cid,)).fetchone()
             if row:
@@ -1346,7 +1390,19 @@ class SqlStore(Store):
         self._sync()
 
     # ---- procurement and governance data kept as checked documents
-    DOCS = ("procurement", "governance", "continuity", "buildings", "schemes", "form_schemas", "bulk_edits", "import_exceptions", "aftercare")
+    DOCS = (
+        "procurement",
+        "governance",
+        "continuity",
+        "buildings",
+        "schemes",
+        "form_schemas",
+        "bulk_edits",
+        "import_exceptions",
+        "aftercare",
+        "handoff_policy",
+        "rights_requests",
+    )
 
     def _proc_sync(self):
         snapshots, loaded = {}, {}
@@ -1354,13 +1410,16 @@ class SqlStore(Store):
             row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
             snapshots[key] = row[0] if row else None
             if row:
-                loaded[key] = json.loads(row[0])
+                loaded[key] = continuity.load(row[0]) if key == "continuity" else json.loads(row[0])
+        loaded_copy = {}
         for key in self.DOCS:
             if key in loaded:
                 self.data[key] = loaded[key]
+                loaded_copy[key] = copy.deepcopy(loaded[key])
             else:
                 self.data.pop(key, None)
         self._proc_snap = snapshots
+        self._proc_loaded = loaded_copy
 
     def _proc_write(self):
         """Inside the save transaction: write changed documents, refusing if someone else changed one first."""
@@ -1368,13 +1427,23 @@ class SqlStore(Store):
         for key in self.DOCS:
             if key not in self.data:
                 continue
-            body = json.dumps(self.data[key])
-            if body == self._proc_snap.get(key):
-                continue
+            if key == "continuity":
+                prior_snap = self._proc_snap.get(key)
+                if prior_snap is None and self.data[key] == continuity.blank():
+                    continue
+                if prior_snap is not None and self.data[key] == self._proc_loaded.get(key):
+                    continue
+                body = continuity.dump_sql(self.data[key])
+            else:
+                body = json.dumps(self.data[key])
+                if body == self._proc_snap.get(key):
+                    continue
             row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
             if (row[0] if row else None) != self._proc_snap.get(key):
                 raise ConflictError(key)
             self._meta_set(key, body)
+            if key == "continuity":
+                continuity.sync_sql_gate(self.db, body, mssql=hasattr(self, "_env"))
             written[key] = body
         return written
 
@@ -1419,6 +1488,91 @@ class SqlStore(Store):
     def ledger_head(self):
         with self.dblock:
             return tuple(self.db.execute("SELECT count, hash FROM audit_head WHERE id=1").fetchone())
+
+    def _reliance_lock(self):
+        return self.dblock
+
+    def write_year_digests(self, *, before=None):
+        """Seal every year before `before` (default: current year) under `dblock` without `_SyncLock`."""
+        cutoff = (
+            f"{datetime.now().year:04d}"
+            if before is None
+            else (f"{before:04d}" if type(before) is int else str(before))
+        )
+        with self.dblock:
+            return [
+                ledger.write_year_digest(self.digest_dir, d)
+                for d in ledger.year_digests(list(self.audit_entries()), before=cutoff)
+            ]
+
+    def _reliance_audit_snapshot(self):
+        with self.dblock:
+            for _ in range(5):
+                head_row = self.db.execute("SELECT count, hash FROM audit_head WHERE id=1").fetchone()
+                if head_row is None:
+                    return [], False, [
+                        dict(code="audit_head_missing", year=None, reason="the audit ledger has no head")
+                    ]
+                rows = self.db.execute(
+                    "SELECT seq, at, who, action, case_id, detail, prev, hash FROM audit ORDER BY seq"
+                ).fetchall()
+                after_row = self.db.execute("SELECT count, hash FROM audit_head WHERE id=1").fetchone()
+                if after_row is not None and tuple(head_row) == tuple(after_row):
+                    break
+            else:
+                return [], False, [
+                    dict(
+                        code="audit_unreadable",
+                        year=None,
+                        reason="the audit ledger kept changing while read",
+                    )
+                ]
+            raw_count, raw_hash = head_row[0], head_row[1]
+            problems = []
+            head_valid = (
+                type(raw_count) is int
+                and raw_count >= 0
+                and isinstance(raw_hash, str)
+                and bool(ledger.HEX64_RE.fullmatch(raw_hash))
+                and (raw_count != 0 or raw_hash == ledger.GENESIS)
+            )
+            if not head_valid:
+                problems.append(
+                    dict(
+                        code="audit_head_malformed",
+                        year=None,
+                        reason="audit_head has malformed count or hash",
+                    )
+                )
+            entries, prev_seq = [], 0
+            for idx, row in enumerate(rows, start=1):
+                seq, at, who, action, case_id, detail, prev, h = row
+                if type(seq) is not int or seq < 1 or seq <= prev_seq:
+                    return [], False, [
+                        dict(
+                            code="audit_entry_malformed",
+                            entry=idx,
+                            year=None,
+                            reason="audit entry sequence is malformed",
+                        )
+                    ]
+                prev_seq = seq
+                entry = dict(at=at, who=who, action=action, case=case_id, detail=detail, prev=prev, hash=h)
+                bad = self._validate_audit_entry_shape(entry, idx)
+                if bad is not None:
+                    return [], False, [bad]
+                entries.append(entry)
+            actual_head = entries[-1]["hash"] if entries else ledger.GENESIS
+            head_ok = head_valid and (len(entries), actual_head) == (raw_count, raw_hash)
+            if head_valid and not head_ok:
+                problems.append(
+                    dict(
+                        code="audit_head_mismatch",
+                        year=None,
+                        reason="the chain differs from audit_head",
+                    )
+                )
+            return entries, head_ok, problems
 
     def ready(self):
         try:

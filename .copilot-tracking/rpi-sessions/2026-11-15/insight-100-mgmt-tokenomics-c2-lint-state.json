@@ -1,0 +1,83 @@
+{
+  "task_id": "issue-100-mgmt-tokenomics-c2-lint",
+  "task_slug": "insight-100-mgmt-tokenomics-c2-lint",
+  "parent_task": {
+    "task_id": "issue-100-mgmt-tokenomics",
+    "task_slug": "insight-100-mgmt-tokenomics"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/insight-100-mgmt-tokenomics-c2-lint-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/insight-100-mgmt-tokenomics-c2-lint-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/insight-100-mgmt-tokenomics-c2-lint-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/insight-100-mgmt-tokenomics-c2-lint-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/insight-100-mgmt-tokenomics-c2-lint-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/insight-100-mgmt-tokenomics-c2-lint-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute confirmed automatic RPI child loop (rpi-research, rpi-plan, rpi-plan-critique, rpi-implement, rpi-review) on feat/insight-100-mgmt-tokenomics (PR #1792 targeting feat/demo-164-chat-grounding-provenance-0900 / PR #1641) for the c2 Ruff line-length=100 formatting fix under Focused validation tier and commit locally without push",
+      "status": "confirmed",
+      "evidence": "Explicit caller direction in non-interactive prompt"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready (PR #1792 passed 8/10 CI jobs and failed solely in src-core and src-api Step 6 Lint; only tokenomics.py and progress.py need package-scoped ruff format at line-length=100; augment test globs with test_*tokenomics*.py so all Issue #100 invariant and API tests execute)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/insight-100-mgmt-tokenomics-c2-lint-research.md (C1-C8)"
+    },
+    {
+      "decision": "Plan critique execution: executed (single final-candidate pass via rpi-plan-critique)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/insight-100-mgmt-tokenomics-c2-lint-plan-critique.md"
+    },
+    {
+      "decision": "Plan critique verdict: Pass (0 Critical, 0 High, 0 Medium, 0 Low; direct dispositions: none required; user decisions required: none; Plan status: Ready)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-15/insight-100-mgmt-tokenomics-c2-lint-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Review execution: Complete (single-pass rpi-review across full plan P01-P02, AST invariance check, and Focused src/core + src/api Ruff/mypy/unittest validation)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/insight-100-mgmt-tokenomics-c2-lint-review.md#execution-status"
+    },
+    {
+      "decision": "Review outcome: Conformant (0 Critical, 0 High, 0 Medium, 0 Low; assessed boundary full plan P01-P02 reconciled)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/insight-100-mgmt-tokenomics-c2-lint-review.md#outcome"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user post-Review follow-up selection (ranked choice 1-4, Stop automatic session, or Switch to manual mode)"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Push frozen local HEAD on feat/insight-100-mgmt-tokenomics to origin and verify hosted src-core and src-api CI checks pass 10/10 on PR #1792",
+      "rationale": "Lowest effort and highest immediate delivery impact to turn PR #1792 green, held back only by the caller Do-not-push boundary.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/insight-100-mgmt-tokenomics-c2-lint-review.md#residual-work"
+    },
+    {
+      "rank": 2,
+      "task": "Gate unlinked JSON recommendation historical acceptance on resolved_at <= as_of and document the 5-external + 3-metered TCA component mapping (RV-002)",
+      "rationale": "High ease of implementation and KISS pure-function engineering leverage in tokenomics.py plus one-sentence clarification in src/core/README.md.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/insight-100-mgmt-tokenomics-review.md (RV-002), src/core/src/zava_forward/core/tokenomics.py"
+    },
+    {
+      "rank": 3,
+      "task": "Filter SQL ai_meter ledger rows to synthetic-admitted roots in zava_forward.api.progress._ai_economics for hybrid databases (RV-001)",
+      "rationale": "Clean SOLID boundary isolation and defense-in-depth if /api/progress runs against a hybrid SQL database mixing synthetic and non-synthetic ledger calls.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/insight-100-mgmt-tokenomics-review.md (RV-001), src/api/src/zava_forward/api/progress.py"
+    },
+    {
+      "rank": 4,
+      "task": "Close OD-51 tariff and spend-ceiling governance decision and wire live Azure Cost Management billing export reconciliation (#100, #432)",
+      "rationale": "Highest end-to-end commercial impact once project owner approval exists, ranked fourth due to external governance prerequisite.",
+      "evidence": "docs/case_study_48_addendum.md (OD-51), .copilot-tracking/reviews/logs/2026-11-15/insight-100-mgmt-tokenomics-review.md"
+    }
+  ]
+}

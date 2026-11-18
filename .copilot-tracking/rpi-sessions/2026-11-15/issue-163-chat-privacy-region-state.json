@@ -1,0 +1,68 @@
+{
+  "task_id": "issue-163-chat-privacy-region",
+  "task_slug": "issue-163-chat-privacy-region",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/issue-163-chat-privacy-region-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/issue-163-chat-privacy-region-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/issue-163-chat-privacy-region-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/issue-163-chat-privacy-region-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/issue-163-chat-privacy-region-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/issue-163-chat-privacy-region-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute continuous automatic RPI loop (rpi-research, rpi-plan, rpi-plan-critique, rpi-implement, rpi-review) on feat/chat-163-privacy-region stacked onto feat/demo-164-chat-grounding-provenance-0900 with focused validation and local commit (Refs #163) without push or PR",
+      "status": "confirmed",
+      "evidence": "Explicit caller direction in non-interactive prompt"
+    },
+    {
+      "decision": "Keep Issue #163 criterion 2 (Lawful basis, staff notice and a DPIA decision are recorded by the DPO and Legal; no retention period is set before approval) explicitly gated on human DPO/Legal sign-off",
+      "status": "confirmed",
+      "evidence": "Explicit caller direction and repository legal/regulatory evidence rules"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-163-chat-privacy-region-research.md (C1-C16)"
+    },
+    {
+      "decision": "Plan critique execution: complete; verdict: Revise; direct planner dispositions resolved for PC-001, PC-002, PC-003, PC-004, PC-005; no user decision required; Plan status: ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/issue-163-chat-privacy-region-plan-critique.md and .copilot-tracking/plans/2026-11-15/issue-163-chat-privacy-region-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Implementation execution: complete across P01, P02, and P03; focused validation passed",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-15/issue-163-chat-privacy-region-changes.md"
+    },
+    {
+      "decision": "Review execution: Complete; Outcome: Defects found (RV-001 through RV-005 routed to child task issue-163-chat-privacy-region-c2); assessed boundary: P01 through P03",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-163-chat-privacy-region-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Selected Rank 1 post-Review follow-up in non-interactive automatic mode (child task issue-163-chat-privacy-region-c2) to resolve RV-001 through RV-005 before freezing the Refs #163 commit"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Remediate Cycle 1 review findings RV-001 through RV-005 in child RPI task issue-163-chat-privacy-region-c2",
+      "rationale": "Closes actual-mode pre-DPO-signoff retention/approval bypass, build_foundry_query default env=None gap, ASCII 1..36500 retention bounds, unverified modified abuse-monitoring claims, and doc/test hygiene before freezing the Refs #163 commit",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-163-chat-privacy-region-review.md (RV-001 through RV-005)"
+    },
+    {
+      "rank": 2,
+      "task": "Obtain named DPO and Legal sign-off on decisions D1-D8 in docs/reference/research/chat-memory-dpia.md before enabling live personal-data chat/memory storage or retention",
+      "rationale": "Remaining human-governance acceptance criterion on Issue #163 (criterion 2) required before pilot/production chat/memory enablement",
+      "evidence": "docs/reference/research/chat-memory-dpia.md (C7, C14)"
+    }
+  ]
+}

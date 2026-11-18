@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 from typing import Any
 
-from zava_forward.core import chat_panel
+from zava_forward.core import ai_eval, chat_panel
 
 from zava_forward.agents import chat_eval, chat_heldout
 
@@ -123,6 +123,47 @@ class HeldOutGateTests(unittest.TestCase):
         dev = copy.deepcopy(DEV)
         dev["scenarios"][0]["turns"][0]["say"] = "short words"
         self.assertTrue(chat_heldout.leaks(leaked, dev))
+
+    def test_unfrozen_blank_or_unknown_turn_expectations_block_scoring(self) -> None:
+        for bad_expect in ({}, {"error": "   "}, {"kind": "invented"}):
+            unfrozen = copy.deepcopy(SET)
+            unfrozen["scenarios"][0]["turns"][0]["expect"] = bad_expect
+            got = run(unfrozen)
+            self.assertFalse(got["scored"])
+            self.assertEqual(got["outcome"], "insufficient")
+            self.assertTrue(got["problems"])
+
+    def test_tampered_expected_outcomes_digest_blocks_scoring(self) -> None:
+        valid_digest = ai_eval.expected_outcomes_digest(SET)
+        ok = run(SET, expected_outcomes_sha256=valid_digest)
+        self.assertTrue(ok["scored"], ok["problems"])
+        tampered = run(SET, expected_outcomes_sha256="f" * 64)
+        self.assertFalse(tampered["scored"])
+        self.assertIn(
+            "expected outcomes differ from the frozen outcome digest", tampered["problems"]
+        )
+
+    def test_heldout_report_exposes_chat_failures_review_effort_and_disabled_state(
+        self,
+    ) -> None:
+        got = run(SET)
+        self.assertIn("chat_specific", got)
+        self.assertEqual(got["review_effort"]["status"], "not measured")
+        self.assertEqual(len(got["review_effort"]["missing_inputs"]), 4)
+        self.assertTrue(
+            {
+                "task",
+                "model",
+                "prompt_version",
+                "policy_version",
+                "source_version",
+                "memory_version",
+            }
+            <= set(got["bindings"])
+        )
+        self.assertEqual(got["enablement"]["state"], "disabled")
+        self.assertFalse(got["enablement"]["thresholds_approved"])
+        self.assertFalse(got["enablement"]["live_reliance_permitted"])
 
 
 if __name__ == "__main__":

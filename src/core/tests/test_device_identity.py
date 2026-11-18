@@ -571,6 +571,35 @@ class RotationTests(unittest.TestCase):
         with self.assertRaisesRegex(di.DeviceIdentityError, "ROTATION_STATE_MISMATCH"):
             di.rotate(manifest, registry, store)
 
+    def test_manifest_records_default_dps_sas_approach_across_lifecycle(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        planned = di.plan("run-001", di.CREDENTIAL_OWNER_ROLE, sensors(2))
+        self.assertEqual(planned.approach, "per-device symmetric SAS / DPS enrollment group")
+        self.assertEqual(planned.credential_owner, "Platform Engineering / IoT Operations Owner")
+        provisioned = di.provision(planned, registry, store)
+        self.assertEqual(provisioned.approach, di.DEVICE_IDENTITY_APPROACH)
+        rotated = di.rotate(provisioned, registry, store)
+        self.assertEqual(rotated.approach, di.DEVICE_IDENTITY_APPROACH)
+        di.teardown(rotated, registry, store)
+
+    def test_teardown_returns_verified_zero_residual_receipt(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        provisioned = di.provision(
+            di.plan("run-001", di.CREDENTIAL_OWNER_ROLE, sensors(3)),
+            registry,
+            store,
+        )
+        receipt = di.teardown(provisioned, registry, store)
+        self.assertTrue(receipt.verified_zero_residual)
+        self.assertEqual(receipt.removed_count, 3)
+        self.assertEqual(receipt.revoked_credential_count, 3)
+        self.assertEqual(receipt.residual_simulated_count, 0)
+        self.assertEqual(receipt.residual_simulated_identities, ())
+        self.assertEqual(receipt.residual_credential_count, 0)
+        self.assertEqual(receipt.approach, di.DEVICE_IDENTITY_APPROACH)
+        self.assertEqual(receipt.credential_owner, di.CREDENTIAL_OWNER_ROLE)
+        self.assertTrue(receipt.verify())
+
 
 class DemoHomesParserTests(unittest.TestCase):
     FIVE = "ZF-2025-0355,ZF-2025-0382,ZF-2025-0286,ZF-2026-0829,ZF-2026-0892"

@@ -8,12 +8,18 @@ import os
 import sqlite3
 import sys
 
+from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
 from zava_forward.core.document_rescan import run
 from zava_forward.core.documents import DocumentStoreError
 from zava_forward.core.factory import open_store
 
 
 def main(argv: list[str] | None = None) -> int:
+    try:
+        enforce_from_env()
+    except ContainerHardeningError as error:
+        print(f"Refusing to start: {error}", file=sys.stderr, flush=True)
+        return 2
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--limit", type=int, default=100)
     parser.add_argument("--after", nargs=2, metavar=("CASE_ID", "DOC_ID"))

@@ -19,6 +19,11 @@ from pathlib import Path
 from typing import Any
 
 from zava_forward.core import chat_panel
+from zava_forward.core.ai_eval import (
+    chat_enablement_state,
+    expected_outcome_problems,
+    expected_outcomes_digest,
+)
 
 from zava_forward.agents import chat_eval
 
@@ -91,9 +96,14 @@ def freeze_problems(
     if stale:
         problems.append("bindings changed since freeze: " + ", ".join(stale))
     spec = json.loads(raw.decode("utf-8"))
-    if not spec.get("scenarios"):
-        problems.append("no scenarios in the held-out set")
-    problems += leaks(spec, development)
+    outcome_problems = expected_outcome_problems(spec)
+    problems += outcome_problems
+    if "expected_outcomes_sha256" in manifest and manifest[
+        "expected_outcomes_sha256"
+    ] != expected_outcomes_digest(spec):
+        problems.append("expected outcomes differ from the frozen outcome digest")
+    if not outcome_problems:
+        problems += leaks(spec, development)
     return problems
 
 
@@ -113,13 +123,22 @@ def run_heldout(
     dev = json.loads(Path(development).read_text(encoding="utf-8"))
     problems = freeze_problems(raw, manifest, implementer=implementer, development=dev)
     if problems:
-        return dict(outcome="insufficient", scored=False, problems=problems)
+        return dict(
+            outcome="insufficient",
+            scored=False,
+            problems=problems,
+            enablement=chat_enablement_state(),
+        )
     if not results_input(raw):
         return dict(
-            outcome="insufficient", scored=False, problems=["no scenarios in the held-out set"]
+            outcome="insufficient",
+            scored=False,
+            problems=["no scenarios in the held-out set"],
+            enablement=chat_enablement_state(),
         )
+    spec = json.loads(raw.decode("utf-8"))
     results = []
-    for sc in json.loads(raw.decode("utf-8"))["scenarios"]:
+    for sc in spec["scenarios"]:
         with tempfile.TemporaryDirectory() as tmp:
             results.append(chat_eval.run_scenario(copy.deepcopy(sc), tmp))
     summary = chat_eval.summarise(results)
@@ -130,6 +149,12 @@ def run_heldout(
         problems=[],
         scenarios=len(results),
         failures=[f for r in results for f in r["failures"]],
+        critical_errors=summary["critical_errors"],
         rates=summary["rates"],
+        bindings=chat_eval.bindings(raw),
+        expected_outcomes_sha256=expected_outcomes_digest(spec),
+        chat_specific=summary["chat_specific"],
+        review_effort=summary["review_effort"],
+        enablement=chat_enablement_state(),
         claim="scripted provider only; no actual-model or human effectiveness is claimed",
     )
