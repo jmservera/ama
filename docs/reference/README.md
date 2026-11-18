@@ -504,6 +504,10 @@ A [second run](./research/issue-138-live-cicd-pipeline-run2-evidence-2026-11-18.
 worktree with the same outcome: the what-if and smoke checks pass, while the OIDC variables, protected
 environments, runner and image release remain unconfigured and unobserved.
 
+A [third run](./research/issue-138-live-r3-2026-11-18.md) retains sanitised raw outputs, finds that
+`summarize_plan` refuses the live what-if (14 Unsupported entries) and gives a per-criterion proven or unproven table;
+nothing is ticked.
+
 For #118, the [hardened deployment live evidence](./research/issue-118-hardened-deployment-live-evidence-2026-11-18.md)
 records the Azure Policy and Defender decision and read-only live probes (enactment not proven).
 A [rerun](./research/issue-118-live-20261118T1512Z-2026-11-18.md) retains sanitised raw outputs and adds a per-criterion table;
@@ -511,7 +515,9 @@ the decision is proven for the demo, while live Defender tiers stay unreadable (
 
 For #117, the [live scan evidence](./research/issue-117-live-scan-evidence-2026-11-18.md)
 proves refusal of unsafe uploads on the demo's synthetic scanner (Defender for Storage is off; clean path and legal hold
-live unproven).
+live unproven). A [second pass](./research/issue-117-live-r2-audit-2026-11-18.md) corrects that reading: Defender
+for Storage malware scanning is enabled on the demo account, but the app still runs the synthetic scanner
+(`ZF_SCANNER` unset), so the real engine stays unproven for the app path.
 
 For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analysis-live-evidence-2026-11-18.md)
 records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human
@@ -1296,6 +1302,7 @@ or infra acceptance claimed.
 | [Tokenomics pitch criteria status (#435)](./research/tokenomics-pitch-criteria-435-live-2026-11-18.md) | Per-criterion proven or unproven record for the three unticked criteria: placement decision proven but deck revalidation not evidenced, mentor confirmation unprovable, finite batch decision proven for the synthetic demo via #432 |
 | [Learning-test bundles live audit, second pass (#129)](./research/issue-129-live-r2-2026-11-18.md) | Core and api bundle suites rerun with raw output, signed-in probe of the demo for a bundle route (none discoverable, 403 control), per-criterion table; Atlas-owner mapping unproven |
 | [Stabilization checkpoint triage, epic gating and verdicts (#440)](./research/stabilization-checkpoint-triage-440-live-2026-11-18.md) | Four deduplicated issue drafts with severity, reproduction, links and acceptance criteria, the epics each blocking finding gates, and a continue, fix or pivot verdict for the 16 open epics; live re-observation of the time status 500 and anonymous 302 |
+| [Epic 195 demo proof, per-criterion results](./research/issue-195-live-epic-evidence-2026-11-18.md) | Proven and unproven results for the three unticked epic criteria (checkpoint, child issues, deployed image provenance) and the legacy-reference guard fix for triage draft D2, held back as FULL tier |
 | [Nomination test bootstrap isolation proof (#1847)](./research/nomination-bootstrap-isolation-proof-1847-2026-11-18.md) | Per-criterion proven or unproven record for the six criteria: source, editable and noneditable layouts in both orders, identity and origin probes, the original bootstrap failing (1 failure, 20 errors), and the unrun full gate |
 | [Held-out AI batch, tokens per proposal (#432)](./research/ai-heldout-batch-432-live-2026-11-18.md) | Measured live batch on 12 synthetic cases (gpt-4.1-nano): 180 to 225 tokens per proposal, 2,522 total, USD 0.000744 list price under a recorded owner authority; per-criterion status for #432; billing reconciliation not done (owner waiver) | 2026-11-18 |
 | [Capstone pitch Tokenomics status (#435)](./research/capstone-pitch-435-live-2026-11-18.md) | Per-criterion status for #435 on the synthetic demo: placement decision recorded (earlier note had criterion 1 unevidenced; deck coverage observed, raw output not retained), spend authority proven via #432, mentor confirmation not provable | 2026-11-18 |
@@ -1304,6 +1311,7 @@ or infra acceptance claimed.
 | [Five assistants live demo re-verification (#107)](./research/issue-107-live-r2-assistants-evidence-2026-11-18.md) | Second pass with raw output: 7 MSSQL 2022 race and revocation tests, 80 SQLite proxy tests, read-only live probe showing default-off and no tokens; approved-release and delivered-build criterion still unproven |
 | [Case chat citation and refusal gates, live (#216)](./research/eval-gates-live-216-2026-11-18.md) | Graded and adversarial 30-prompt run of the live demo case chat: refusals 10 of 10, citations valid 7 of 7 on the model path, but only 9 model calls available (demo meter); per-criterion status, adverse evidence and spend overshoot disclosed | 2026-11-18 |
 | [Epic 104 bounded AI audit with live read (#104)](./research/issue-104-epic-audit-live-2026-11-18.md) | Per-criterion table for the five epic criteria (two unmet, three consistent), exact remaining demo gaps for #107, #108, #164 and #216 by class, and a fresh read-only probe of the demo; nothing ticked | 2026-11-18 |
+| [Epic 81 safety, consent and lifecycle audit with live form retest (#81)](./research/issue-81-epic-audit-live-2026-11-18.md) | Per-criterion table for the four epic criteria (two unproven), live retest showing form-encoded nomination submissions still return 400 on the deployed image (#1837), and the FULL-tier need for the fix; nothing ticked | 2026-11-18 |
 | [Issue 1274 release-download audit (#1274)](./research/issue-1274-release-downloads-audit-live-2026-11-18.md) | Per-criterion table: actionlint retrieval delivered and re-verified, criteria 1, 3 and 4 partly proven, AWF 0.28.23 bootstrap open (FULL tier if code needed) | 2026-11-18 |
 | [AI evaluation harness live demo evidence (#108)](./research/issue-108-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the eight unticked criteria: deployed model, version and rate limits confirmed, subscription quota unproven, live app AI report read, offline one-lever comparison tested; no criterion newly tickable | 2026-11-18 |
 | [AI evaluation harness audit, live round 2 (#108)](./research/issue-108-harness-audit-live-r2-2026-11-18.md) | Harness rerun (116 tests OK), regional model, version and capacity recheck, and a per-criterion proven or unproven table; subscription quota still unproven |
