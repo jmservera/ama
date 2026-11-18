@@ -13215,6 +13215,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 222 live third re-run (Refs #222)
 
 * Added [cohort-evaluation-live-r3-2026-11-18.md](research/cohort-evaluation-live-r3-2026-11-18.md) with retained output: 36 agents and 36 core tests pass, seeded defects detected (4 of 4 ranking, 3 of 3 AI), activation blocked in every run, live snapshot carries no cohort fields; the OQ-018 owner-approval criterion stays unproven. Docs only.
+
 ## [2026-11-18] add | Issue 154 live third run (Refs #154)
 
 * Added [issue-154-live-resident-ux-r3-2026-11-18.md](research/issue-154-live-resident-ux-r3-2026-11-18.md): network trace and Azure resource check support 5a for the demo; 5b (usability validation) stays unproven; corrects round 1 on the assistant textarea
