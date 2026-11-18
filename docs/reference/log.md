@@ -13123,3 +13123,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 144 live run 4 (Refs #144)
 
 * Added [issue-144-live-r4-2026-11-18.md](research/issue-144-live-r4-2026-11-18.md) with a raw folder: read-only az state of four apps and nine jobs, an empty `src-deploy.yml` run list and a scripted replica probe on revision `--0000032`. Criteria 1 (pipeline clause) and 3 (only non-root enforced) stay unproven; no source, Azure resource or load change.
+
+## [2026-11-18] add | Issue 223 live run 2 (Refs #223)
+
+* Added [issue-223-live-r2-2026-11-18.md](research/issue-223-live-r2-2026-11-18.md): offline gate and 43 focused tests pass again, live review retention re-proved on `ca-cutover-test-demo-api`, per-criterion table unchanged (no criterion ticked; OQ-017 holder, human participants and live-model defects remain open). No source change.
