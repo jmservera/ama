@@ -12192,6 +12192,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
 
+## [2026-11-17] update | Production AT acceptance: reflow and reduced-motion checks (Refs #619)
+
+* Extended the automated production-configuration check in `src/api/checks` with a 320 px zoom-equivalent reflow step and a reduced-motion step, with a unit test for the overflow helper, and recorded the local result and a person-run checklist in the [production acceptance protocol](research/ux/production-ux-acceptance-protocol.md).
+* Synthetic data and a local Chromium run only. Every person-run record row stays `Not run`; no screen reader, real resident, conformance or production-acceptance claim is made. Issue #619 remains open.
 ## [2026-11-17] update | AI metering inventory and drift test (Refs #432)
 
 * Added a [current-main metering inventory](resources/ai-tokenomics.md#current-main-metering-inventory-2026-11-17-refs-432) to the Tokenomics page: code and test mapping for each #432 criterion, corrections to stale gap text, unmet criteria 5 and 8, and the smallest next step. Documentation only; no cost, billing reconciliation or live batch is claimed.
@@ -12231,3 +12235,15 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [deployed-parity-live-2026-11-18.md](research/deployed-parity-live-2026-11-18.md) with a per-criterion proven/unproven table for the unticked #350 criteria, measured read-only on the synthetic demo with Playwright and Azure CLI (one Programme Manager account, desktop).
 * The 2026-10-16 gaps for model deployment, map tiles and the baseline (980 cases) are stale; browser-style anonymous API requests still get 302, `/api/time/status` returns 500 (SQL ProgrammingError), law store and photo remain unavailable. No source or Azure change was made; #350 stays open.
+## [2026-11-18] update | Measured held-out AI batch run live for the demo (Refs #432)
+
+* Added [the batch note](research/ai-heldout-batch-432-live-2026-11-18.md) and its inputs and reports: 12 synthetic proposals on `gpt-4.1-nano`, 180 to 225 tokens each (2,522 total), USD 0.000744 at list price under a recorded owner spend authority (cap USD 0.50). The first attempt stopped on a network-blocked call and is preserved; the batch then ran inside the demo container.
+* Criterion 5 (billing reconciliation) stays unproven under the owner waiver; criterion 8 is met for the synthetic demo only. No source changed; #432 stays open.
+
+## [2026-11-18] observation | Live demo Entra sign-in proof, Refs #349
+
+* Added [entra-signin-live-demo-2026-11-18.md](research/entra-signin-live-demo-2026-11-18.md): desktop Playwright proof on `ca-cutover-test-demo-api` of Entra callback, role-scoped `/api/me`, `/app` entry, logout, anonymous 401 and forged-header denial, plus the resident demo sign-in and sign-out. Read-only Azure checks; no resource changed.
+* Criteria 1, 2 and 4 of #349 stay unproven for the demo (tenant-owner provisioning, in-VNet vault path, staff roster); 3 and 5 are partly proven; 6 is proven. Wrong-role denial inside the employee app needs a second staff account.
+## [2026-11-18] add | Live Azure backfill and live series evidence (Refs #188)
+
+* Added [issue-188-live-backfill-evidence-2026-11-18.md](research/issue-188-live-backfill-evidence-2026-11-18.md): per-criterion proven/unproven record of a demo run on live Azure SQL. Production receiver and indoor-schema proof remain open.
