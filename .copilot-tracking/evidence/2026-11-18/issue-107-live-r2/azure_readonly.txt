@@ -1,0 +1,56 @@
+# az containerapp show (read-only)
+{
+  "envNames": [
+    "APPLICATIONINSIGHTS_CONNECTION_STRING",
+    "OTEL_SERVICE_NAMESPACE",
+    "AZURE_CLIENT_ID",
+    "SQL_SERVER",
+    "SQL_DATABASE",
+    "BLOB_ENDPOINT",
+    "QUEUE_ENDPOINT",
+    "KEY_VAULT_URI",
+    "EVIDENCE_STORE",
+    "SHAREPOINT_SITE_ID",
+    "ZF_TILE_URL",
+    "ZF_TILE_ATTRIBUTION",
+    "ZF_STORE",
+    "ZF_SQL_SERVER",
+    "ZF_SQL_DATABASE",
+    "ZF_SQL_AUTH",
+    "ZF_SQL_CLIENT_ID",
+    "ZF_DOC_STORE",
+    "ZF_BLOB_ACCOUNT_URL",
+    "ZF_BLOB_CONTAINER",
+    "ZF_BLOB_CLIENT_ID",
+    "ZF_AUTH",
+    "ZF_TRUSTED_PROXY",
+    "ZF_ENV",
+    "ZF_ENTRA_TENANT_ID",
+    "ENTRA_TENANT_ID",
+    "ENTRA_CLIENT_ID",
+    "AI_ENDPOINT",
+    "AI_DEPLOYMENT",
+    "AI_DEPLOYMENT_STRONG",
+    "CHAT_DPIA_REF",
+    "CHAT_LAWFUL_BASIS_REF",
+    "CHAT_NOTICE_REF",
+    "CHAT_RETENTION_REF",
+    "CHAT_RETENTION_DAYS",
+    "ZF_CHAT_DEMO_ACTIVATION",
+    "ZF_DEPLOYMENT_PROFILE",
+    "AI_MODEL_VERSION",
+    "AI_MODEL_VERSION_STRONG"
+  ],
+  "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5368f4e4009cc32937377862e6d242c124005ed39081e1d9caa3b6b5dc17e5fb",
+  "revision": "ca-cutover-test-demo-api--0000031",
+  "state": "Running"
+}
+# deployments
+[
+  {
+    "model": "gpt-4.1-nano",
+    "name": "standard",
+    "sku": "GlobalStandard",
+    "version": "2025-04-14"
+  }
+]

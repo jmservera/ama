@@ -24,5 +24,5 @@ RUN --mount=type=bind,from=build,source=/wheels,target=/wheels \
     && rm requirements.txt
 USER 10001:10001
 # No working data is baked into the image. Mount the dataset at /data and a writable volume at /state.
-ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 ZF_DATA=/data/zavaforward.json ZF_STATE=/state
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TMPDIR=/tmp ZF_DATA=/data/zavaforward.json ZF_STATE=/state
 CMD ["python", "-m", "zava_forward.agents"]

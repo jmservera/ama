@@ -191,6 +191,21 @@ class GateTests(unittest.TestCase):
                 finally:
                     path.write_text(saved)
 
+    def test_core_unit_suite_gets_the_longer_timeout_in_the_planned_contract(self) -> None:
+        self.assertEqual((gate.suite_timeout("core"), gate.suite_timeout("api")), (3600, 1800))
+        receipt = {
+            "owner": "a" * 24,
+            "sql": {},
+            "images": {},
+            "extras": [],
+            "executed_groups": ["project-core", "project-agents"],
+        }
+        suites = [row for row in gate.required_checks(self.root, receipt) if row["suite"]]
+        self.assertEqual(
+            {row["group"]: row["timeout_seconds"] for row in suites},
+            {"project-core": 3600, "project-agents": 1800},
+        )
+
     def test_employee_chat_check_is_in_the_browser_contract_and_dispatched(self) -> None:
         checks = gate.required_checks(
             self.root,
@@ -487,6 +502,12 @@ class GateTests(unittest.TestCase):
             "test_reopened_store_reproduces_signal_without_writes "
             "(test_sensor_analysis_mssql.MssqlRetainedAnalysisTests."
             "test_reopened_store_reproduces_signal_without_writes)",
+            gate.SENSOR_MSSQL_REQUIRED_TESTS,
+        )
+        self.assertIn(
+            "test_reproduce_retained_matches_pure_reproduction_and_fails_closed_read_only "
+            "(test_sensor_analysis_mssql.MssqlRetainedAnalysisTests."
+            "test_reproduce_retained_matches_pure_reproduction_and_fails_closed_read_only)",
             gate.SENSOR_MSSQL_REQUIRED_TESTS,
         )
 

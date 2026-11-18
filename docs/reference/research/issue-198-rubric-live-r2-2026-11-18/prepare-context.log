@@ -1,0 +1,35 @@
+INFO: Wrote <tmp>/context.json
+{
+  "should_score": true,
+  "bootstrap": false,
+  "baseline_total": 79,
+  "reasons": [
+    "changed artifacts: brd, pitch, prd, solution-code"
+  ],
+  "changed_artifacts": [
+    "brd",
+    "pitch",
+    "prd",
+    "solution-code"
+  ],
+  "removed_files": [],
+  "open_criteria": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "A5",
+    "A6",
+    "A7",
+    "B1",
+    "B2",
+    "B3",
+    "B4",
+    "B5",
+    "B6",
+    "B7",
+    "C1",
+    "C2",
+    "C3"
+  ]
+}

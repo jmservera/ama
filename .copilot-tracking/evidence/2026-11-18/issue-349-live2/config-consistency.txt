@@ -1,0 +1,5 @@
+auth clientId == env ENTRA_CLIENT_ID: yes
+issuer tenant == env ENTRA_TENANT_ID: yes
+issuer tenant == az login tenant: yes
+audiences contain clientId and api://clientId: yes
+clientId is not literal systemAssignedIdentity: yes

@@ -1,0 +1,60 @@
+{
+ "discovery_assistant_acceptance.py": {
+  "imports": [
+   "collections.abc",
+   "dataclasses",
+   "zava_forward.core"
+  ],
+  "flagged_imports": [],
+  "builtin_io_calls": []
+ },
+ "discovery_assistant_boundary.py": {
+  "imports": [
+   "collections.abc",
+   "dataclasses",
+   "re",
+   "typing"
+  ],
+  "flagged_imports": [],
+  "builtin_io_calls": []
+ },
+ "discovery_assistant_demo.py": {
+  "imports": [
+   "collections.abc",
+   "dataclasses",
+   "json",
+   "sys",
+   "typing",
+   "zava_forward.core",
+   "zava_forward.core.version"
+  ],
+  "flagged_imports": [],
+  "builtin_io_calls": [
+   "print"
+  ]
+ },
+ "discovery_assistant_drafting.py": {
+  "imports": [
+   "collections.abc",
+   "dataclasses",
+   "datetime",
+   "re"
+  ],
+  "flagged_imports": [
+   "datetime"
+  ],
+  "builtin_io_calls": []
+ },
+ "discovery_assistant_evaluation.py": {
+  "imports": [
+   "collections.abc",
+   "dataclasses",
+   "hashlib",
+   "json",
+   "re",
+   "typing"
+  ],
+  "flagged_imports": [],
+  "builtin_io_calls": []
+ }
+}

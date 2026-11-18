@@ -26,7 +26,7 @@ MATRIX = {
     "alert-${applicationPrefix}-ledger-verify-missing": "ledger-verify-missing",
     "alert-${name}-secret-expiry": "vault-expiry",
     "alert-${name}-denied-access": "vault-denied",
-    "alert-${jobName}-failed": "job-orchestrator|job-ledger|job-import|job-auth",
+    "alert-${jobName}-failed": "job-orchestrator|job-ledger|job-import|job-rank|job-auth",
     "alert-${prefix}-${failure.suffix}": (
         "iot-ingress-throttle|iot-routing-dropped|iot-routing-invalid|iot-routing-orphaned"
     ),
@@ -122,9 +122,7 @@ class AlertRunbookSignalMatrixTests(unittest.TestCase):
                 self.assertIn(name.replace("${name}", "${vaultName}"), RUNBOOK)
 
     def test_rule_descriptions_link_runbook_and_owner(self) -> None:
-        module = (INFRA / "modules/operationalMonitoring.bicep").read_text(
-            encoding="utf-8"
-        )
+        module = (INFRA / "modules/operationalMonitoring.bicep").read_text(encoding="utf-8")
         sections = _sections()
         descriptions = re.findall(r"description: '([^\n]*Runbook:[^\n]*)'", module)
         self.assertEqual(len(descriptions), 4)
@@ -134,6 +132,33 @@ class AlertRunbookSignalMatrixTests(unittest.TestCase):
                 self.assertIn("${runbookBase}#", text)
         for anchor in re.findall(r"\$\{runbookBase\}#([a-z-]+)", module):
             self.assertIn(anchor, sections)
+
+    def test_existing_rule_descriptions_link_runbook_and_owner(self) -> None:
+        sections = _sections()
+        found: dict[str, str] = {}
+        for rel in ("main.bicep", "modules/keyvault.bicep"):
+            text = (INFRA / rel).read_text(encoding="utf-8")
+            self.assertIn("var runbookBase = 'https://github.com/jmservera/ama/", text)
+            for name, body in re.findall(
+                r"^resource \w+ 'Microsoft\.Insights/(?:metricAlerts|scheduledQueryRules)@[^']+'"
+                r"[^{]*\{\s*name: '([^']+)'(.*?)^\}",
+                text,
+                flags=re.MULTILINE | re.DOTALL,
+            ):
+                found[name] = body
+        self.assertEqual(
+            set(found),
+            {name for name, anchor in MATRIX.items() if not anchor.startswith(("job-", "iot-"))}
+            - {"alert-${prefix}-agent-tasks-poison", "alert-${prefix}-ai-limits"},
+        )
+        for name, body in found.items():
+            with self.subTest(alert=name):
+                match = re.search(
+                    r"description: '[^\n]*Owner: [^\n]*\$\{runbookBase\}#([a-z-]+)", body
+                )
+                self.assertIsNotNone(match)
+                self.assertEqual(match.group(1), MATRIX[name])
+                self.assertIn(match.group(1), sections)
 
     def test_ai_limit_breach_covers_calls_tokens_budget_expiry(self) -> None:
         sections = _sections()
@@ -155,12 +180,41 @@ class AlertRunbookSignalMatrixTests(unittest.TestCase):
             "job-orchestrator",
             "job-ledger",
             "job-import",
+            "job-rank",
             "job-auth",
             "iot-routing-dropped",
         ):
             with self.subTest(anchor=anchor):
                 self.assertIn(anchor, sections)
                 self.assertRegex(_owned_body(anchor, sections), OWNER_PATTERN)
+
+    def test_every_job_suffix_resolves_to_section_naming_it(self) -> None:
+        module = (INFRA / "modules/operationalMonitoring.bicep").read_text(
+            encoding="utf-8"
+        )
+        ternary = re.search(r"\$\{(endsWith\(jobName.*?)\}\.", module).group(1)
+        clauses = re.findall(
+            r"((?:endsWith\(jobName, '[^']+'\)(?: \|\| )?)+) \? '([a-z-]+)'", ternary
+        )
+        fallback = re.search(r": '([a-z-]+)'$", ternary).group(1)
+
+        def resolve(suffix: str) -> str:
+            for tests, anchor in clauses:
+                if f"'-{suffix}'" in tests:
+                    return anchor
+            return fallback
+
+        suffixes = set(re.findall(r"'job-\$\{applicationPrefix\}-([a-z-]+)'", MAIN)) | {
+            "ledger-verify",
+            "audit",
+        }
+        self.assertTrue({"rank", "rank-publish", "auth-renewal"} <= suffixes)
+        sections = _sections()
+        for suffix in sorted(suffixes):
+            anchor = resolve(suffix)
+            with self.subTest(suffix=suffix, anchor=anchor):
+                self.assertIn(anchor, sections)
+                self.assertRegex(sections[anchor][1], rf"`(?:[^`]*-)?{suffix}`")
 
     def test_main_wires_operational_monitoring_with_action_group(self) -> None:
         self.assertIn("module operationalMonitoring", MAIN)

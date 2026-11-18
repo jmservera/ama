@@ -1,9 +1,13 @@
 import argparse
+import json
 import os
 import sqlite3
 import sys
+from collections.abc import Mapping, Sequence
 from pathlib import Path
+from urllib.parse import urlparse
 
+from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
 from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 from zava_forward.core.exception_queue import STEWARD, ExceptionQueue
 from zava_forward.core.exception_register import staff_from_env
@@ -174,13 +178,92 @@ def _transfer(args: argparse.Namespace) -> int:
     return 0
 
 
-def main(argv: list[str]) -> int:
+def _valid_url(raw: str, *, schemes: tuple[str, ...]) -> bool:
+    parsed = urlparse(raw)
+    return parsed.scheme in schemes and bool(parsed.hostname)
+
+
+def _run_job(active_env: Mapping[str, str]) -> int:
+    import_queue = active_env.get("IMPORT_QUEUE", "").strip()
+    queue_endpoint = active_env.get("QUEUE_ENDPOINT", "").strip()
+    blob_endpoint = active_env.get("BLOB_ENDPOINT", "").strip()
+    store_backend = active_env.get("ZF_STORE", "").strip().lower()
+    sql_server = active_env.get("SQL_SERVER", "").strip()
+    sql_database = active_env.get("SQL_DATABASE", "").strip()
+    dispatch_mode = active_env.get("ZF_IMPORT_DISPATCH", "standby").strip().lower()
+    if not import_queue:
+        print(
+            "zava-forward-import run: IMPORT_QUEUE is required.",
+            file=sys.stderr,
+            flush=True,
+        )
+        return 2
+    if queue_endpoint and not _valid_url(queue_endpoint, schemes=("https",)):
+        print(
+            "zava-forward-import run: QUEUE_ENDPOINT must be an https URL.",
+            file=sys.stderr,
+            flush=True,
+        )
+        return 2
+    if blob_endpoint and not _valid_url(blob_endpoint, schemes=("https",)):
+        print(
+            "zava-forward-import run: BLOB_ENDPOINT must be an https URL.",
+            file=sys.stderr,
+            flush=True,
+        )
+        return 2
+    if store_backend not in ("json", "sqlite") and (not sql_server or not sql_database):
+        print(
+            "zava-forward-import run: SQL_SERVER and SQL_DATABASE are required for mssql job runs.",
+            file=sys.stderr,
+            flush=True,
+        )
+        return 2
+    if dispatch_mode not in ("", "standby", "off"):
+        print(
+            "zava-forward-import run: autonomous queue dispatch is gated off; "
+            "expected standby mode.",
+            file=sys.stderr,
+            flush=True,
+        )
+        return 2
+    print(
+        json.dumps(
+            {
+                "importQueue": import_queue,
+                "job": "importer",
+                "mode": "standby",
+                "status": "ok",
+                "version": __version__,
+            },
+            sort_keys=True,
+        ),
+        flush=True,
+    )
+    return 0
+
+
+def main(
+    argv: Sequence[str] | None = None,
+    env: Mapping[str, str] | None = None,
+) -> int:
+    active_env = os.environ if env is None else env
+    try:
+        enforce_from_env(active_env)
+    except ContainerHardeningError as error:
+        print(f"Refusing to start: {error}", file=sys.stderr, flush=True)
+        return 2
     install_diagnostic_redaction()
-    if not argv:
+    raw_args = list(sys.argv[1:] if argv is None else argv)
+    if not raw_args:
         print(f"zava-forward-import {__version__}")
         return 0
     parser = argparse.ArgumentParser(prog="zava_forward.importer")
     sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser(
+        "run",
+        help="validate event-triggered Container Apps job settings in bounded standby mode",
+    )
     p = sub.add_parser(
         "preview", help="show mapping, conflicts and a row-level preview; changes nothing"
     )
@@ -201,7 +284,9 @@ def main(argv: list[str]) -> int:
         "transfer", help="copy refused files from a ledger into the served store; repeat is safe"
     )
     tr.add_argument("db", type=Path)
-    args = parser.parse_args(argv)
+    args = parser.parse_args(raw_args)
+    if args.command == "run":
+        return _run_job(active_env)
     if args.command == "stage":
         return _stage(args)
     if args.command == "exceptions":
@@ -226,4 +311,5 @@ def main(argv: list[str]) -> int:
     return 1 if prev.blocking else 0
 
 
-sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

@@ -1,0 +1,36 @@
+# Dockerfiles: USER / read-only / caps
+src/agents/Dockerfile:22:USER 10001:10001
+src/api/Dockerfile:30:USER 10001:10001
+src/importer/Dockerfile:24:USER 10001:10001
+src/orchestrator/Dockerfile:26:USER 10001:10001
+# CI scan and tests
+.github/workflows/mvp-ci.yml:33:          (cd src/api && PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests)
+.github/workflows/mvp-ci.yml:34:          (cd src/orchestrator && PYTHONPATH=../core/tests python3 -m unittest discover -s tests)
+.github/workflows/mvp-ci.yml:78:        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+.github/workflows/mvp-ci.yml:86:        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+.github/workflows/mvp-ci.yml:91:          scan-type: image
+.github/workflows/mvp-ci.yml:92:          skip-setup-trivy: true
+.github/workflows/mvp-ci.yml:131:          PYTHONPATH=tests:../core/tests:../agents/tests python3 -m unittest test_mssqlstore test_lawstore.MssqlStoreTests \
+.github/workflows/mvp-validation.yml:32:        run: python -m unittest discover -s tests -v
+.github/workflows/mvp-validation.yml:41:          python -m unittest discover -s infra/tests -v
+.github/workflows/src-ci.yml:88:        run: python -m unittest discover -s tests -v
+# Bicep app
+infra/public-edge-existing.bicep
+infra/resident-demo.bicep
+infra/staff-initializer-rbac.bicep
+infra/modules/containerapps.bicep
+infra/modules/edge-existing-auth.bicep
+# Front Door / WAF / Private Link
+infra/network-posture-inventory.json
+infra/modules/edge.bicep
+infra/modules/network.bicep
+infra/tests/test_diagnostic_log_privacy.py
+infra/tests/__pycache__/test_bicep_policy.cpython-312-pytest-9.1.1.pyc
+infra/tests/test_bicep_policy.py
+infra/tests/test_network_posture.py
+infra/tests/test_edge_module.py
+infra/README.md
+246:    publicEdgeRequiresProductionProfile: !enablePublicEdge || (!isDev && !allowPublicNetworkAccess) ? 'ok' : ''
+249:    publicEdgeRequiresApplications: !enablePublicEdge || deployApplications ? 'ok' : ''
+503:    privateLinkLocation: location
+767:output publicEdgeHostName string = enablePublicEdge ? edge!.outputs.publicHostName : ''

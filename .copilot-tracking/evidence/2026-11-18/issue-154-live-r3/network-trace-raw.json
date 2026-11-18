@@ -1,0 +1,79 @@
+{
+ "hosts": [
+  "[env-domain]"
+ ],
+ "request_count": 9,
+ "non_get_requests": [
+  {
+   "method": "POST",
+   "host": "[env-domain]",
+   "path": "/demo/login",
+   "type": "fetch"
+  }
+ ],
+ "requests": [
+  {
+   "method": "GET",
+   "host": "[env-domain]",
+   "path": "/",
+   "type": "document"
+  },
+  {
+   "method": "GET",
+   "host": "[env-domain]",
+   "path": "/demo.css",
+   "type": "stylesheet"
+  },
+  {
+   "method": "GET",
+   "host": "[env-domain]",
+   "path": "/chat-widget.css",
+   "type": "stylesheet"
+  },
+  {
+   "method": "GET",
+   "host": "[env-domain]",
+   "path": "/chat-widget.js",
+   "type": "script"
+  },
+  {
+   "method": "GET",
+   "host": "[env-domain]",
+   "path": "/assistant.js",
+   "type": "script"
+  },
+  {
+   "method": "GET",
+   "host": "[env-domain]",
+   "path": "/demo.js",
+   "type": "script"
+  },
+  {
+   "method": "GET",
+   "host": "[env-domain]",
+   "path": "/demo/session",
+   "type": "fetch"
+  },
+  {
+   "method": "POST",
+   "host": "[env-domain]",
+   "path": "/demo/login",
+   "type": "fetch"
+  },
+  {
+   "method": "GET",
+   "host": "[env-domain]",
+   "path": "/demo/view",
+   "type": "fetch"
+  }
+ ],
+ "dom": {
+  "links_scheme": [],
+  "forms": [
+   "/demo/login",
+   null
+  ],
+  "textareas": 1,
+  "text_inputs": 1
+ }
+}

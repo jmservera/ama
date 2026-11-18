@@ -220,7 +220,9 @@ def _run(
     manifest["inputs"] = copy.deepcopy(cases)
     if approval:
         cohort_eval.approve(manifest, approval)
-    return dict(cohort_eval.evaluate(manifest, observe(cases, manifest, rank_fn)))
+    return dict(
+        cohort_eval.export_record(cohort_eval.evaluate(manifest, observe(cases, manifest, rank_fn)))
+    )
 
 
 def run(defects: bool = False, rank_fn: Ranker | None = None) -> dict[str, Any]:

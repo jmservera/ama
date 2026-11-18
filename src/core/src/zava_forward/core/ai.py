@@ -276,6 +276,13 @@ class Ai:
             return dict(kw, **receipt, task=task, release=selected,
                         prompt_version=ai_prompts.version(task) if task in ai_prompts.PROMPTS else None,
                         latency_ms=round((time.perf_counter() - t0) * 1000, 1))
+        from . import ai_registry
+        if not ai_registry.is_registered(task):
+            return out(text=template, source="template", model=None, validated=True, registered=False,
+                       reason="AI feature is not registered; use the manual route")
+        if not ai_registry.is_dispatch_enabled(task):
+            return out(text=template, source="template", model=None, validated=True, enabled=False,
+                       reason="AI feature is disabled; use the manual route")
         if off:
             return out(text=template, source="template", model=None, validated=True, reason="workflow-only mode selected")
         dep = self.strong if strong else self.fast
@@ -294,7 +301,7 @@ class Ai:
         try:
             if ai_consumption.CURRENT.get() is None:
                 root = ai_consumption.reference(uuid.uuid4().hex)
-                context = ai_consumption.CallContext(root, root, task.replace("_", "-"), "retrofit-case",
+                context = ai_consumption.CallContext(root, root, ai_registry.consumption_capability(task), "retrofit-case",
                                                      self.configuration(dep, 0.3, 700),
                                                      ai_consumption.reference(ai_prompts.version(task)) if task in ai_prompts.PROMPTS else ai_consumption.reference(system))
                 with ai_consumption.call_context(context):
@@ -316,9 +323,19 @@ class Ai:
                        reason=f"result discarded: {held}")
         return out(text=text, source="ai", model=dep, validated=True, reason=None)
 
-    def look_at(self, name, data, mime, off=False):
+    def look_at(self, name, data, mime, off=False, *, derivative=None, necessity_exception=None,
+                case_id=None, doc_id=None, resident_consent=None, doc=None):
         """Describe an uploaded document. Reads text and images; other types are stored only."""
         export_fields.scalars(dict(name=name, mime=mime), ("name", "mime"))
+        from . import ai_registry
+        if not ai_registry.is_registered("read_document"):
+            return dict(text="The file is stored. AI reading is not registered; add a short note about what it is.",
+                        source="template", model=None, validated=True, registered=False, task="read_document",
+                        reason="AI feature is not registered; use the manual route")
+        if not ai_registry.is_dispatch_enabled("read_document"):
+            return dict(text="The file is stored. AI reading is disabled; add a short note about what it is.",
+                        source="template", model=None, validated=True, enabled=False, task="read_document",
+                        reason="AI feature is disabled; use the manual route")
         system, instruction = ai_prompts.render("read_document", name=name)
         if mime.startswith("image/"):
             if mime not in IMAGE_TYPES or len(data) > MAX_IMAGE_BYTES:
@@ -336,7 +353,10 @@ class Ai:
         if held:
             return dict(text="The file is stored. AI reading is suspended; add a short note about what it is.", source="template",
                         model=None, validated=True, task="read_document", reason=held)
-        protected = data_protection.dispatch_hold("raw_document", os.environ)
+        protected = data_protection.document_model_hold(
+            doc, os.environ, case_id=case_id, doc_id=doc_id,
+            derivative=derivative, necessity_exception=necessity_exception,
+            resident_consent=resident_consent)
         if protected:
             return dict(text="The file is stored. It is not sent to AI; add a short note about what it is.", source="template",
                         model=None, validated=True, task="read_document", reason=protected)
@@ -354,13 +374,18 @@ class Ai:
                             reason="Release changed before dispatch; use the manual route.")
             if ai_consumption.CURRENT.get() is None:
                 root = ai_consumption.reference(uuid.uuid4().hex)
-                context = ai_consumption.CallContext(root, root, "read-document", "document",
+                context = ai_consumption.CallContext(root, root, ai_registry.consumption_capability("read_document"), "document",
                                                      self.configuration(self.strong, 0.3, 500),
                                                      ai_consumption.reference(ai_prompts.version("read_document")))
                 with ai_consumption.call_context(context):
                     text = self._chat(self.strong, system, content, 500, receipt=receipt)
             else:
                 text = self._chat(self.strong, system, content, 500, receipt=receipt)
+            if not text or FORBIDDEN.search(text):
+                return dict(text="The file is stored. Add a short note about what it is.",
+                            source="template", model=self.strong, validated=False, ai_text=text,
+                            task="read_document", release=selected, **receipt,
+                            reason="model output failed validation")
             held = self.gate("read_document", self.strong) if self.gate else None
             if self.release and selected != self.release("read_document", self.strong):
                 held = "activation release changed; use the manual route"

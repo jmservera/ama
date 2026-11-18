@@ -18,7 +18,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, Protocol
 
-from zava_forward.core import assistants, telemetry
+from zava_forward.core import ai_registry, assistants, telemetry
 from zava_forward.core.ai_consumption import CallContext, call_context, captured_readings, reference
 
 MAX_MESSAGE_CHARS = 64000
@@ -80,6 +80,7 @@ class TaskMessage:
             not isinstance(task, dict)
             or set(task) != set(TASK_KEYS)
             or task["capability"] not in assistants.REGISTRY
+            or not ai_registry.is_registered(task["capability"])
         ):
             raise ValueError("Malformed task message.")
         max_tokens, timeout = raw["max_tokens"], raw["timeout"]

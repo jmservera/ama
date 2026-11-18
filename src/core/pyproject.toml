@@ -72,6 +72,8 @@ module = ["zava_forward.core.chat_panel", "test_chat_panel", "tests.test_chat_pa
           "zava_forward.core.source_monitor", "zava_forward.core.forms",
           "zava_forward.core.ranking_publication_runner",
           "zava_forward.core.simulation_lane",
+          "zava_forward.core.ledger_digest_blob",
+          "test_ledger_digest_blob", "tests.test_ledger_digest_blob",
           "test_ranking_publication_runner", "tests.test_ranking_publication_runner",
           "test_ranking_tiebreak_audit", "tests.test_ranking_tiebreak_audit"]
 disallow_untyped_calls = false
@@ -94,6 +96,7 @@ module = ["test_stock_reconciliation", "tests.test_stock_reconciliation",
           "test_sensor_privacy", "tests.test_sensor_privacy",
           "test_sensor_faults", "tests.test_sensor_faults",
           "test_resident_decisions", "tests.test_resident_decisions",
+          "test_resident_journey_design", "tests.test_resident_journey_design",
           "test_priority_order", "tests.test_priority_order"]
 disallow_untyped_calls = false
 
@@ -150,4 +153,11 @@ disallow_untyped_calls = false
 [[tool.mypy.overrides]]
 module = ["zava_forward.core.sensor_review_draft", "test_sensor_review_draft",
           "tests.test_sensor_review_draft"]
+disallow_untyped_calls = false
+
+# Typed offline held-out evaluation and tokenomics comparison call migrated untyped core helpers.
+[[tool.mypy.overrides]]
+module = ["zava_forward.core.heldout_eval", "zava_forward.core.tokenomics_comparison",
+          "test_heldout_eval", "tests.test_heldout_eval",
+          "test_tokenomics_comparison", "tests.test_tokenomics_comparison"]
 disallow_untyped_calls = false

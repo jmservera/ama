@@ -1,0 +1,77 @@
+{
+  "task_id": "issue-122-restart-gate-0228-c4",
+  "task_slug": "issue-122-restart-gate-0228-c4",
+  "parent_task": {
+    "task_id": "issue-122-restart-gate-0228-c3",
+    "task_slug": "issue-122-restart-gate-0228-c3"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/issue-122-restart-gate-0228-c4-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/issue-122-restart-gate-0228-c4-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/issue-122-restart-gate-0228-c4-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/issue-122-restart-gate-0228-c4-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/issue-122-restart-gate-0228-c4-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/issue-122-restart-gate-0228-c4-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Initialized automatic RPI loop c4 for Issue #122 PR #1787 CI job 132800541482 failure in test_quality_sensors_c7.Upgrade (SQLite ALTER TABLE assistant_tasks DROP COLUMN dispatched trigger validation on assistant_tasks_gate_update and assistant_tasks_hold_update)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-122-restart-gate-0228-c4-research.md"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready (three-wave focused research C1-C7 established both the c7 DROP COLUMN dispatched failure and the contrarian e2 UPDATE assistant_tasks SET dispatched=?,revision=revision+1 trap, converging on column-scoped BEFORE UPDATE OF / UPDATE(...) trigger guards)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-122-restart-gate-0228-c4-research.md"
+    },
+    {
+      "decision": "Critique execution: Complete (single-pass rpi-plan-critique executed on candidate plan and phase details)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/issue-122-restart-gate-0228-c4-plan-critique.md"
+    },
+    {
+      "decision": "Critique verdict: Pass (0 findings across Critical/High/Medium/Low; zero user decisions required; plan finalized as Ready after Critique)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-15/issue-122-restart-gate-0228-c4-plan.md"
+    },
+    {
+      "decision": "Review execution: Complete (single-pass rpi-review completed across P01 and P02)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-122-restart-gate-0228-c4-review.md"
+    },
+    {
+      "decision": "Review outcome: Conformant (assessed boundary: Cycle 4 P01-T01, P01-T02, P02-T01 across assistants.py and test_restart_gate_sql_fences.py; 0 Critical, 0 High, 0 Medium, 0 Low findings)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-122-restart-gate-0228-c4-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await post-Review selection of a ranked follow-up work item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Push feat/platform-122-restart-gate-0228 via outer orchestrator/owner workflow and verify all 10 hosted Source projects CI jobs pass on PR #1787",
+      "rationale": "Highest immediate ease and delivery impact: 9/10 CI jobs already passed on 573b86b41 and Cycle 4 fixes the single remaining test_quality_sensors_c7 failure while validating live SQL Server 2022 T-SQL triggers in hosted mssql CI",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-122-restart-gate-0228-c4-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Record appointed OD-35 / OQ-017 human restart authority delegation and execute owner-witnessed operational continuity/restart drill",
+      "rationale": "Required organizational governance acceptance criterion for closing Issue #122 once named human delegation sign-off is available",
+      "evidence": "docs/reference/research/ai/rai-governance-controls.md"
+    },
+    {
+      "rank": 3,
+      "task": "Provision immutable external Azure ledger-head container and execute owned Azure SQL continuity/restart drill",
+      "rationale": "Completes external cloud custody proof for Issue #122 beyond local/CI SQLite and disposable SQL Server 2022 tests",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-122-restart-gate-0228-c4-review.md"
+    }
+  ]
+}

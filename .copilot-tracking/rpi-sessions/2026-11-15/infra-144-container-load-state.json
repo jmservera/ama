@@ -1,0 +1,69 @@
+{
+  "task_id": "issue-144",
+  "task_slug": "infra-144-container-load",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/infra-144-container-load-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/infra-144-container-load-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/infra-144-container-load-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/infra-144-container-load-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/infra-144-container-load-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/infra-144-container-load-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run confirmed continuous automatic RPI loop (research, plan, critique, implement, review) for Issue #144 without pausing between phases",
+      "status": "confirmed",
+      "evidence": "User prompt instruction (2026-11-15)"
+    },
+    {
+      "decision": "Apply Focused validation tier (infra/tests/test_container_hosting_144.py, container load/restart/hardening verification, ruff check/format) and commit without pushing",
+      "status": "confirmed",
+      "evidence": "User prompt instruction (2026-11-15)"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready. Converged on Bicep EmptyDir + ZF_CONTAINER_HARDENING=enforced spec paired with zava_forward.core.container_hardening startup enforcement, pipeline.py rank-publish maintenance check, dated 60,000-home load/restart JSON evidence, and infra/tests/test_container_hosting_144.py",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/infra-144-container-load-research.md (C1-C19)"
+    },
+    {
+      "decision": "Critique execution: Complete; Critique verdict: Revise; Critique path: .copilot-tracking/reviews/plans/2026-11-15/infra-144-container-load-plan-critique.md; Direct dispositions: PC-001, PC-002, PC-003, PC-004, PC-005 applied directly to plan and phase details without divergent user questions; Planning status: Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/infra-144-container-load-plan-critique.md; .copilot-tracking/plans/2026-11-15/infra-144-container-load-plan.md"
+    },
+    {
+      "decision": "Review execution: Complete; Review outcome: Conformant; Assessed boundary: Full task (P01-P04, FR-1..FR-5, NFR-1..NFR-2, PC-001..PC-005, and 4 Issue #144 criteria under Focused validation); Review path: .copilot-tracking/reviews/logs/2026-11-15/infra-144-container-load-review.md",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/infra-144-container-load-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked follow-up work item, Stop automatic session, or Switch to manual mode."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Wire explicit API agent-result intake route (`ZF_AGENT_RESULT_ROUTE`) and end-to-end worker post-back contract",
+      "rationale": "Highest engineering-quality leverage and modest effort inside repo code: transitions `ca-forward-<env>-agents` from safe queue standby to authenticated API result delivery with idempotent duplicate handling across worker crash redeliveries.",
+      "evidence": "infra/modules/containerapps.bicep (`agents` resource omits `ZF_AGENT_RESULT_ROUTE`); src/agents/src/zava_forward/agents/worker.py; infra/README.md"
+    },
+    {
+      "rank": 2,
+      "task": "Execute and record a live staging `src-deploy.yml` rollout receipt and post-deploy job verification",
+      "rationale": "High operational value once Azure federation and GitHub environment approvals are exercised: captures live Container Apps revision/probe, `ledger-verify`, `rank-publish`, and `orchestrator run` receipts.",
+      "evidence": ".github/workflows/src-deploy.yml; infra/scripts/pipeline.py; infra/README.md (`## Hardened source image rollout (#118)`)"
+    },
+    {
+      "rank": 3,
+      "task": "Adopt ARM Container Apps `securityContext` properties if exposed by a future `Microsoft.App` API schema",
+      "rationale": "Defense-in-depth platform cleanup complementing `ZF_CONTAINER_HARDENING=enforced` once Azure Container Apps ARM templates support host-level `readOnlyRootFilesystem` and capability drop declarations.",
+      "evidence": "infra/modules/containerapps.bicep (`Microsoft.App/containerApps@2025-07-01`); infra/README.md"
+    }
+  ]
+}

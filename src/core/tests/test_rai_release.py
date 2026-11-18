@@ -4,6 +4,7 @@ import copy
 import unittest
 from typing import Any
 
+from zava_forward.core import monitoring_coverage as mc
 from zava_forward.core import rai_release as rai
 
 
@@ -48,6 +49,7 @@ class ReleaseContract(unittest.TestCase):
                 "alert_threshold_percent": 80,
                 "alert_contact": "Fixture owner",
             },
+            "monitoring_declaration": mc.task_declaration("stock-prioritisation"),
         }
 
     def select(self, record: dict[str, Any], live: bool = False) -> list[str]:
@@ -60,6 +62,17 @@ class ReleaseContract(unittest.TestCase):
             self.select(self.record, live=True),
         )
         self.record["evidence_class"] = "actual"
+        self.assertIn(
+            "named-human approved live monitoring thresholds",
+            self.select(self.record, live=True),
+        )
+        for entry in self.record["monitoring_declaration"]["indicators"].values():
+            if entry.get("applicable") is not False:
+                entry["threshold"] = {
+                    "limit": entry["threshold"]["limit"],
+                    "min_sample": entry["threshold"]["min_sample"],
+                    "approved_by": "Amina Okafor, RAI Assurance Lead",
+                }
         self.assertEqual(self.select(self.record, live=True), [])
 
     def test_every_required_contract_field_fails_closed_when_missing(self) -> None:
@@ -82,6 +95,7 @@ class ReleaseContract(unittest.TestCase):
             "scope",
             "evaluation_summary",
             "consumption",
+            "monitoring_declaration",
         ):
             with self.subTest(field=key):
                 rec = copy.deepcopy(self.record)

@@ -136,6 +136,23 @@ class NonRetaliationApi(test_resident_api.ResidentApi):
         ]
         self.assertEqual(statuses, ["Accepted"])
 
+    def test_hazard_concern_is_routed_to_hazard_intake_and_saves_nothing(self) -> None:
+        self.seed_hazard_and_consent()
+        before = self.protected()
+        hazards = copy.deepcopy(self.store.cases["ZF-1"]["hazards"])
+        code, detail = self.call(
+            "/api/cases/ZF-1/resident",
+            "sam",
+            dict(self.challenge_payload(), hazard_concern=True),
+        )
+        self.assertEqual(code, 400, detail)
+        self.assertEqual(detail["route"], "independent_hazard_intake")
+        self.assertTrue(detail["immediate"])
+        self.assertIn("Nothing was saved", detail["message"])
+        self.assertNotIn("affected_challenges", self.store.cases["ZF-1"])
+        self.assertEqual(self.protected(), before)
+        self.assertEqual(self.store.cases["ZF-1"]["hazards"], hazards)
+
     def test_raised_challenge_carries_explicit_assurance(self) -> None:
         self.seed_hazard_and_consent()
         hazards = copy.deepcopy(self.store.cases["ZF-1"]["hazards"])

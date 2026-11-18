@@ -1,20 +1,20 @@
 ---
 title: DRAFT Tokenomics Placement and Rehearsal Outline for the Capstone Pitch
-description: Draft of where AI Tokenomics sits in the current deck, the segment wording and a rehearsal outline; records the owner placement and batch decisions of 2026-11-13 for #435 AC1 and AC4; no rehearsal, measurement or assessment is recorded
+description: Draft of where AI Tokenomics sits in the current deck, the segment wording and a rehearsal outline; records the owner placement and batch decisions of 2026-11-13 for #435 AC1 and AC4; no rehearsal or measurement is recorded
 author: AMA programme
-ms.date: 2026-11-13
+ms.date: 2026-11-17
 ms.topic: how-to
 ---
 
 ## Status
 
-DRAFT. Nothing here is a rehearsal result, a measurement, a rebuilt deck or an
-assessment. Issue #435 stays open. The owner decided on 2026-11-13 that Slide
-22 (S18) stays on the main route with the B25 and B27 appendix question cards
+DRAFT. Nothing here is a rehearsal result, a measurement or a rebuilt deck.
+The assessment and statement audit are separate documents linked below. Issue #435 stays open. The owner decided on 2026-11-13 that
+Slide 22 (S18) stays on the main route with the B25 and B27 appendix question cards
 on the 55-slide v2 deck, that the USD 0.44 per home figure stays as an
 explicitly labelled scenario, and that a finite held-out token measurement
 batch of up to USD 5 is authorised. Those decisions are recorded under
-criteria 1 and 4 below; no other criterion is met.
+criteria 1 and 4 below; criteria 2 and 3 remain open.
 
 The deck has moved since the
 [2026-10-22 brief](../history/tokenomics-pitch-brief.md) was written. The
@@ -106,10 +106,12 @@ rehearsal happens. Do not fill them in beforehand.
 | --- | --- |
 | 1 Owner decides placement; deck rebuilt if changed | Owner decision recorded 2026-11-13: Slide 22 on the main route plus B25 (page 53) and B27 (page 55) question cards on the 55-slide v2 deck, USD 0.44 per home kept as a labelled scenario. Criterion not ticked: no deck rebuild is claimed here |
 | 2 Mentor confirms meaning of Tokenomics and figure or method | Unmet. Needs the mentor; the meaning stays owner-reported |
-| 3 Segment rehearsed inside the timed route; notes stored | Unmet. Outline drafted; nothing performed or timed |
+| 3 Segment rehearsed inside the timed route; notes stored | Open. The [run sheet](./tokenomics-rehearsal-notes.md) is stored, but its rehearsal record is blank, so no performed timing exists in the repository; a presenter run is still needed before this is proven |
 | 4 Owner decides on a finite measured token batch, spend authority recorded | Owner decision recorded 2026-11-13: a held-out batch of up to USD 5 is authorised. Not run: it waits for the live Azure OpenAI step during the authorised Azure sync, and no result is claimed. Criterion not ticked |
-| 5 Revised deck challenged against the complete assessment guide | Unmet. No revised deck exists; no assessment is claimed. Apply the full [assessment guide](../../reference/method/ama-capstone-assessment-guide.md), including section and individual floors, to the final deck |
-| 6 Every Tokenomics statement sourced and labelled, no price, saving or payback claim | Unmet. Segment wording is drafted with sources; the S18 modelled figure conflicts and the existing deck and notes have not been audited statement by statement |
+| 5 Revised deck challenged against the complete assessment guide | Delivered as an offline challenge of the unchanged 55-slide deck: [capstone-assessment-challenge.md](./capstone-assessment-challenge.md) applies the full [assessment guide](../../reference/method/ama-capstone-assessment-guide.md) with floors; it is not an assessor score, and no deck rebuild exists |
+| 6 Every Tokenomics statement sourced and labelled, no price, saving or payback claim | Delivered as a statement audit of the deck and notes: [current-deck-assessment-2026-11-12.md](./current-deck-assessment-2026-11-12.md) with the [Q&A brief](../tokenomics-qa-brief.md); the S18 USD 0.44 per home figure stays a labelled planning scenario, not a price, saving or payback claim |
+
+Update 2026-11-18: the placement decision and the spend authority are evidenced for the synthetic demo in [capstone-pitch-435-live-2026-11-18.md](../../reference/research/capstone-pitch-435-live-2026-11-18.md); the 12-proposal measured batch ran under #432. Mentor confirmation and a timed rehearsal remain unperformed.
 
 ## Decisions Needed From the Owner
 

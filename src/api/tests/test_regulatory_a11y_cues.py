@@ -40,7 +40,7 @@ class RegulatoryCueTests(unittest.TestCase):
         self.assertNotEqual(by_state["refused"], by_state["answer"])
 
     def test_state_text_is_still_visible_and_classes_are_applied(self) -> None:
-        alert = 'h("h3", { class: regulatoryStateClass(alert.result) }, `Status: ${alert.result}`)'
+        alert = "`Status: ${regulatoryStateLabel(alert.result)}`"
         lookup = (
             'h("h3", { class: regulatoryStateClass(answer.kind) }, `Lookup status: ${answer.kind}`)'
         )
@@ -53,6 +53,18 @@ class RegulatoryCueTests(unittest.TestCase):
     def test_unrecognised_state_falls_back_to_unknown_not_unmarked(self) -> None:
         fallback = 'regulatoryStates.has(value) ? value.replace(" ", "-") : "unknown"'
         self.assertIn(fallback, JS)
+
+    def test_alert_state_label_is_always_a_known_word_and_has_a_plain_summary(self) -> None:
+        self.assertIn("const regulatoryStateLabel = (value) =>", JS)
+        self.assertIn('(regulatoryStates.has(value) ? value : "unknown")', JS)
+        self.assertNotIn("Status: ${alert.result}", JS)
+        alert = JS[JS.index("function regulatoryAlertsPanel") : JS.index("const lookupMeanings")]
+        self.assertIn('"aria-labelledby": `regulatory-alert-${index}`', alert)
+        summary = alert[alert.index('class: "regulatory-plain-summary"') :]
+        summary = summary[: summary.index("Decision owner")]
+        self.assertIn("Plain-language summary: ", summary)
+        self.assertIn("Safe action:", summary)
+        self.assertNotIn("plain-explanation", summary)
 
     def test_escape_closes_chat_disclosure_and_restores_summary_focus(self) -> None:
         start = JS.index('root.addEventListener("keydown"')
@@ -79,6 +91,27 @@ class RegulatoryCueTests(unittest.TestCase):
                 self.assertIsNone(BANNED.search(text))
                 self.assertTrue(text.isascii())
                 self.assertNotIn("\u2014", text)
+
+    def test_plain_mode_change_is_announced_with_visible_text(self) -> None:
+        body = JS[JS.index("function regulatoryPlainMode") : JS.index("const regulatoryStates")]
+        self.assertIn('class: "regulatory-mode-state"', body)
+        self.assertNotIn("role", body)
+        self.assertIn('"aria-live": "polite", "aria-atomic": "true"', body)
+        self.assertNotIn("status", body)
+        self.assertIn('regulatoryPlainMode(root, "alerts-plain-mode")', JS)
+        self.assertIn('const plainMode = regulatoryPlainMode(root, "chat-plain-mode")', JS)
+        self.assertIn("Plain-language explanations are shown.", body)
+        self.assertIn("Plain-language explanations are hidden.", body)
+        self.assertIn("state.textContent = input.checked", body)
+
+    def test_always_visible_status_copy_avoids_technical_terms(self) -> None:
+        technical = re.compile(r"\b(inference|bounded|audit window)\b", re.I)
+        shown = re.findall(r'"([^"\n]*(?:model|control|audit)[^"\n]*)"', JS)
+        self.assertGreater(len(shown), 3)
+        for text in shown:
+            with self.subTest(text=text[:50]):
+                self.assertIsNone(technical.search(text))
+        self.assertIn("No AI model is used", JS)
 
     def test_no_new_invalid_field_site_in_chat_script(self) -> None:
         self.assertNotIn("aria-invalid", JS)

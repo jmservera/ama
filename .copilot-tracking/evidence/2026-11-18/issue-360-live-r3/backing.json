@@ -1,0 +1,46 @@
+[
+  {
+    "n": "sql-cutover-test-rzsrg",
+    "pna": "Disabled"
+  }
+]
+[
+  {
+    "n": "kv-cutovertest-rzsrg",
+    "pna": "Disabled"
+  }
+]
+[
+  {
+    "da": "Deny",
+    "n": "stcutovertestrzsrg",
+    "pna": "Disabled"
+  }
+]
+[
+  {
+    "n": "crcutovertestrzsrg",
+    "pna": "Disabled"
+  }
+]
+[
+  {
+    "n": "aoai-resident-469",
+    "pna": "Enabled"
+  },
+  {
+    "n": "aif-cutover-test-rzsrg",
+    "pna": "Disabled"
+  }
+]
+WARNING: The behavior of this command has been altered by the following extension: azure-iot
+[
+  {
+    "n": "[hub]",
+    "pna": "Disabled"
+  }
+]
+{
+  "n": "evhns-cutover-test-demo",
+  "pna": "Enabled"
+}

@@ -1,0 +1,27 @@
+[
+ {
+  "path": "/api/cases/NO-SUCH-CASE",
+  "status": 404,
+  "body": "{\"error\": \"Case not found.\"}"
+ },
+ {
+  "path": "/api/cases/NO-SUCH-CASE/handoff",
+  "status": 404,
+  "body": "{\"error\": \"Case not found.\"}"
+ },
+ {
+  "path": "/api/packages/NOPE",
+  "status": 403,
+  "body": "{\"error\": \"Your role does not include this.\"}"
+ },
+ {
+  "path": "/api/finance/NOPE",
+  "status": 403,
+  "body": "{\"error\": \"Your role does not include this.\"}"
+ },
+ {
+  "path": "/api/no-such-endpoint",
+  "status": 403,
+  "body": "{\"error\": \"Your role does not include this.\"}"
+ }
+]

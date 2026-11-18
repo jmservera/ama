@@ -17,11 +17,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from zava_forward.core import aftercare, ai_registry, assistants, ranking
+from zava_forward.core import aftercare, ai_registry, assistants, bounded_ai, ranking
 from zava_forward.core.ai_consumption import (
+    CURRENT,
     CallContext,
     Consumption,
     DispatchHeld,
+    call_context,
     reference,
 )
 from zava_forward.core.ai_consumption_demo import END, MODEL, START, DemoPort
@@ -80,6 +82,27 @@ class RegistryGuard(unittest.TestCase):
         for task_id in ("chat-case-conversation", "aftercare-concern-pack"):
             entry = ai_registry.tasks()[task_id]
             self.assertEqual((entry["enabled"], entry["state"]), (False, "disabled"))
+
+    def test_bounded_ai_audit_confirms_thirteen_propose_only_and_non_exercise_blocked(
+        self,
+    ) -> None:
+        audit = bounded_ai.audit_registered_capabilities({})
+        self.assertTrue(audit["ok"], audit["violations"])
+        self.assertEqual(audit["count"], 13)
+        self.assertEqual(set(audit["capabilities"]), EXPECTED)
+        for cap_id, row in audit["capabilities"].items():
+            with self.subTest(capability=cap_id):
+                self.assertTrue(row["propose_only"])
+                self.assertFalse(row["non_exercise_enabled"])
+        demo_env = {
+            ai_registry.DEMO_SWITCH: "approved-2026-11-03",
+            ai_registry.DEMO_PROFILE: ai_registry.DEMO_PROFILE_VALUE,
+        }
+        demo_gate = bounded_ai.verify_non_exercise_enablement(
+            "chat-case-conversation", env=demo_env
+        )
+        self.assertFalse(demo_gate["allowed"])
+        self.assertIn("demo-activation-is-exercise-only", demo_gate["reasons"])
 
 
 class AssistantNonMutation(unittest.TestCase):
@@ -150,6 +173,33 @@ class AssistantNonMutation(unittest.TestCase):
                     if name.startswith("zava_forward.core."):
                         self.assertIn(name.split(".")[2], allowed_core, name)
 
+    def test_worker_execution_with_snapshot_contract_never_mutates_controlled_records(self) -> None:
+        specs = [dict(id="ZF-1", days=14), dict(id="ZF-2", days=28)]
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "eval.json"
+            cases = [harness.build_case(s) for s in specs]
+            path.write_text(json.dumps(dict(staff=[harness.OWNER, harness.OTHER], cases=cases)))
+            store = Store(str(path), str(Path(tmp) / "live.json"), str(Path(tmp) / "audit.jsonl"))
+            reg = aftercare.AftercareRegister()
+            reg.raise_concern(
+                route="digital",
+                raised_by="household",
+                home_ref="H1",
+                kind="discomfort",
+                statement="Radiators heat unevenly.",
+                owner="Aftercare Lead",
+                next_update="2026-12-01",
+            )
+            before = bounded_ai.snapshot_controlled_records(store, aftercare=reg)
+            for capability in ASSISTANTS:
+                result, _ = self.handle(capability, good_text())
+                self.assertIsNone(result.failure)
+                assert result.output is not None
+                bounded_ai.enforce_proposal_only(capability, result.envelope)
+                bounded_ai.enforce_proposal_only(capability, result.output)
+            after = bounded_ai.snapshot_controlled_records(store, aftercare=reg)
+            bounded_ai.assert_controlled_records_unchanged(before, after)
+
 
 class RankingImmutability(unittest.TestCase):
     def test_ai_recommendation_is_proposed_and_never_changes_the_ranking_or_cases(self) -> None:
@@ -210,6 +260,37 @@ class ChatBoundaries(unittest.TestCase):
                 model("system", "prompt")
             self.assertEqual(calls, [])
             self.assertIn("activation-not-approved", str(caught.exception))
+
+    def test_direct_chat_model_call_binds_chat_task_context_and_preserves_outer_panel_context(
+        self,
+    ) -> None:
+        seen_contexts: list[CallContext | None] = []
+
+        def provider(*args: Any) -> dict[str, Any]:
+            seen_contexts.append(CURRENT.get())
+            return returned("Grounded answer [[ZF-1: Stage: Survey]]")
+
+        model = ChatModel(AgentWorker(provider), admission=lambda: None)
+        out = model("system", "prompt")
+        self.assertIn("ZF-1", out.text)
+        self.assertEqual(len(seen_contexts), 1)
+        assert seen_contexts[0] is not None
+        self.assertEqual(seen_contexts[0].capability, ai_registry.CHAT_TASK)
+        self.assertNotEqual(seen_contexts[0].capability, "evidence")
+        self.assertIsNone(CURRENT.get())
+
+        outer = CallContext(
+            root=reference("outer-panel-root"),
+            attempt=reference("outer-panel-attempt"),
+            capability=ai_registry.CHAT_TASK,
+            case_type="retrofit-case",
+            configuration=reference("outer-panel-config"),
+            prompt=reference("outer-panel-prompt"),
+            depth=2,
+        )
+        with call_context(outer):
+            model("system", "prompt")
+        self.assertIs(seen_contexts[-1], outer)
 
 
 class ConcernPack(unittest.TestCase):
@@ -452,6 +533,60 @@ class Nfr012Limits(unittest.TestCase):
             assistants.Limits({**good, "ZF_ASSIST_EXPIRES": "2999-01-01T00:00:00"}).valid
         )
 
+    def test_non_human_owners_and_pre_registered_alertless_price_swap_are_rejected(self) -> None:
+        for non_human in ("AI", "system", "copilot-bot", "unapproved", "unknown", "none"):
+            with self.subTest(owner=non_human), self.assertRaises(ValueError):
+                self.authorize("assessment-preparation", owner=non_human)
+            with self.subTest(alert_owner=non_human), self.assertRaises(ValueError):
+                self.authorize("assessment-preparation", alert_owner=non_human)
+
+        scratch = Consumption(DemoPort(Path(self.tmp.name) / "scratch.sqlite"))
+        future_real_pid = str(
+            scratch.price(
+                source="https://prices.azure.com/api/retail/prices",
+                source_hash=reference("price"),
+                retrieved=START,
+                version="v1",
+                model=MODEL,
+                currency="USD",
+                start=START,
+                end=END,
+                input_rate="1",
+                output_rate="2",
+                cached_rate="0.5",
+                synthetic=False,
+            )
+        )
+        swap_ledger = Consumption(DemoPort(Path(self.tmp.name) / "swap.sqlite"))
+        swap_ledger.authorize(
+            authority="pre-registered-without-alert",
+            owner="Named Budget Holder",
+            evidence="synthetic-test",
+            price=future_real_pid,
+            capability="funding-draft",
+            configuration=self.config,
+            start=START,
+            end=END,
+            max_calls=2,
+            max_depth=1,
+            budgets=[dict(id=reference("synth-period"), calls=2, tokens=1000, amount="1")],
+        )
+        with self.assertRaises(ValueError):
+            swap_ledger.price(
+                source="https://prices.azure.com/api/retail/prices",
+                source_hash=reference("price"),
+                retrieved=START,
+                version="v1",
+                model=MODEL,
+                currency="USD",
+                start=START,
+                end=END,
+                input_rate="1",
+                output_rate="2",
+                cached_rate="0.5",
+                synthetic=False,
+            )
+
 
 class HeldOutAdapters(unittest.TestCase):
     def test_live_batch_runs_only_inside_a_complete_authorisation(self) -> None:
@@ -516,6 +651,37 @@ class HeldOutAdapters(unittest.TestCase):
         before = copy.deepcopy(m)
         run(Spy(), auth(max_calls=0), m=m)
         self.assertEqual(m, before)
+
+    def test_heldout_and_chat_eval_reject_non_human_or_placeholder_approvers(self) -> None:
+        ok_chat = dict(
+            authorised_by="jane.doe@zavanorth.org.uk",
+            max_calls=10,
+            max_tokens=1000,
+            max_budget=5,
+            budget_currency="GBP",
+            expires_at="2026-12-01T00:00:00+00:00",
+        )
+        now = "2026-11-04T00:00:00Z"
+        for bad in (
+            "AI",
+            "system",
+            "copilot-bot",
+            "assistant",
+            "llm",
+            "unapproved",
+            "unknown",
+            "none",
+            "unavailable",
+        ):
+            with self.subTest(approver=bad):
+                blocked = Spy()
+                refused = run(blocked, auth(approved_by=bad))
+                self.assertEqual(refused["outcome"], "refused")
+                self.assertEqual(blocked.calls, [])
+                chat_res = chat_eval.call_authorization(
+                    {**ok_chat, "authorised_by": bad}, 1, 1, now=now
+                )
+                self.assertEqual(chat_res["outcome"], "blocked")
 
 
 if __name__ == "__main__":

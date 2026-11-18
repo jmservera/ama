@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench Content Standard, Glossary and Copy Audit
 description: Plain-language content standard, status and next-action glossary, blocked-message pattern, AI label wording and the copy audit of the core flow (issue #153)
-ms.date: 2026-11-12
+ms.date: 2026-11-18
 ms.topic: reference
 ---
 
@@ -191,7 +191,7 @@ are candidate copy, not approved communications.
 | --- | --- | --- |
 | `app.js`, `index.html`, `welcome.html`: entry, account, work lists, case, overview | Signed-out/session-ended, loading/error/empty queues, recorded task owner/reason/action, safety text, manual path | Core statuses use words; safety remains independent. Long task/source explanations need comprehension testing. Welcome is a research demonstrator, not a resident service |
 | `app.js`: resident drafts, document reading, briefing, priority and funding | Exact AI label, optional templates/rules, unreviewed and reviewed drafts, failed requests | Draft-only heading and named-review/no-send explanation clarified. Priority review status and funding approval terminology need a separate end-to-end review; not globally certified |
-| `assistants.js`, `chat.js`: proposal, source check, review, chat and alerts | Proposed/ready/stale/failed/reviewed, exact AI warning, unknown source coverage, historical lookup | "Requested using" replaces technical "Invocation"; proposal review now explicitly excludes approval, consent and safety decisions. Quotes, source titles and user/model text remain verbatim. 2026-11-12 (owner-approved): the card's default view stays task-focused; the permitted-source record and the AI usage and change record now sit together under one native details disclosure, "Suggestion details (technical, for audit and support)", unchanged and keyboard reachable. The edit field is labelled "Edited proposal (technical JSON format)". Warnings, reasons, unknowns, consent and review controls remain outside it. Constructed-fixture browser checks only; no human wording or assistive-technology acceptance |
+| `assistants.js`, `chat.js`: proposal, source check, review, chat and alerts | Proposed/ready/stale/failed/reviewed, exact AI warning, unknown source coverage, historical lookup | "Requested using" replaces technical "Invocation"; proposal review now explicitly excludes approval, consent and safety decisions. Quotes, source titles and user/model text remain verbatim. 2026-11-12 (owner-approved): the card's default view stays task-focused; the permitted-source record and the AI usage and change record now sit together under one native details disclosure, "Suggestion details (technical, for audit and support)", unchanged and keyboard reachable. The edit field is labelled "Edited proposal (technical JSON format)". Warnings, reasons, unknowns, consent and review controls remain outside it. Constructed-fixture browser checks only; no human wording or assistive-technology acceptance. 2026-11-14 (#215): always-visible alert and lookup copy no longer says "Inference is disabled", "Active bounded control" or "Audit records only"; it says "No AI model is used", "Active: a limited, recorded check" and "Counts come from audit records only". Lexical guard only, no staff comprehension test |
 | `panels.js`: resident measure/representative, updates and complaints | Not recorded/paused/withdrawn decisions, scoped source/date checks, update owner/due/basis, separate response and remedy | Review-date label now says authority is unavailable from that date. Complaint response closure never promises remedy completion or live dispatch |
 | `ops.js`: quality, appointments and capacity | Independent acceptance/defect/reinspection/handover, offer and three separate confirmations, provider failure | Offer, consent and confirmation remain separate. Existing instructions are staff-facing, not resident-ready text; no live contact |
 | `panels.js`: finance, grants, technical and stock; `app.js`: documents/import/building | Payment pause, grant stages, sign-offs, competing sources, missing files, CSV errors, shared-work restrictions | The stored finance value "Keep on hold" is now displayed as "Keep payment paused" (2026-11-03); the stored value is unchanged and no migration was performed. Lexical allowance does not mean plain-language compliance |
@@ -246,6 +246,32 @@ error would not establish real accountability.
 | Errors/blocked steps give reason, owner, next action | Final-check reasons and the generic fallback tested; partial, residuals above prevent universal acceptance |
 | Exact AI label and reviewed-draft authority | Exact label retained; draft/proposal disclaimer strengthened. Partial, not a global certification of every reviewed/error state |
 | Named human resident wording review before use | Reviewer appointed below; actual review of exact copy Not run. No use authorized |
+
+### Identifier leak audit (2026-11-17, #153)
+
+A scan of prose-like string literals in all served scripts and pages for
+snake_case identifiers found two person-visible leaks on the data steward and
+digital operator exception screens. Both now use plain words.
+
+| Location | Before | After |
+| --- | --- | --- |
+| `app.js`, operator access screen, Named roles row | None configured (data_steward and digital_operator are unassigned) | None named yet (no data steward and no digital operator) |
+| `role-screens.js`, exception register state | State: Action needed (roles_not_named) | State: Action needed (roles not named yet) |
+
+`src/api/tests/test_content_standard.py` now fails on any such identifier in a
+capitalised prose literal in an audited file. The guard is lexical; it does not
+parse JavaScript, check dynamic text or replace the named-human wording review.
+No resident comprehension or named human approval is established.
+
+### Live demo audit (2026-11-18, #153)
+
+A Playwright pass over the deployed synthetic demo (desktop, 13 staff views, the signed-in resident page and
+read-only error probes) is recorded in
+[plain-language-live-153-2026-11-18](../plain-language-live-153-2026-11-18.md). Banned terms were absent from the
+scanned views and the exact AI label appeared on Assistant proposals. Open findings: a snake_case record path in
+queue "Source" lines, a requirement code in an aftercare AI line, reason-only API errors (404 and 403) with no
+owner or next action, a bare unknown-page response and two unexplained abbreviations on the resident page.
+The named human wording review is still not run.
 
 ## Human review
 

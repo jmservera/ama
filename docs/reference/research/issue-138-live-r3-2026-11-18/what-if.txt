@@ -1,0 +1,4 @@
+exit 0
+status Succeeded
+{'Ignore': 82, 'Create': 99, 'Modify': 15, 'Unsupported': 14}
+summarize_plan refused: What-if contains deletion or unresolved/unsupported changes

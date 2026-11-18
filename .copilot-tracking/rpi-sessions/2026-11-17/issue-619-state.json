@@ -1,0 +1,53 @@
+{
+ "task_id": "619",
+ "task_slug": "issue-619-production-at-acceptance",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-17-issue-619-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-17-issue-619-plan.md",
+  "details": ".copilot-tracking/details/2026-11-17-issue-619-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-17-issue-619-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-17-issue-619-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-17-issue-619-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Research executed; Ready",
+   "status": "done",
+   "evidence": ".copilot-tracking/research/2026-11-17-issue-619-research.md"
+  },
+  {
+   "decision": "Critique executed once; verdict proceed, amendments applied",
+   "status": "done",
+   "evidence": ".copilot-tracking/critique/2026-11-17-issue-619-critique.md"
+  },
+  {
+   "decision": "Review executed once; conformant for scope",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/2026-11-17-issue-619-review.md"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "commit"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Person-run AT/zoom/consent session on production build",
+   "rationale": "unmet criteria",
+   "evidence": "protocol"
+  },
+  {
+   "rank": 2,
+   "task": "Resident-site reflow check",
+   "rationale": "gap",
+   "evidence": "research"
+  }
+ ]
+}

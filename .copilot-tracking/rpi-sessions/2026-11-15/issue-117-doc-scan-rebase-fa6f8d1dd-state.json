@@ -1,0 +1,67 @@
+{
+  "task_id": "issue-117-doc-scan-rebase-fa6f8d1dd",
+  "task_slug": "issue-117-doc-scan-rebase-fa6f8d1dd",
+  "parent_task": {
+    "task_id": "issue-117-doc-scan",
+    "task_slug": "issue-117-doc-scan"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/issue-117-doc-scan-rebase-fa6f8d1dd-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/issue-117-doc-scan-rebase-fa6f8d1dd-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/issue-117-doc-scan-rebase-fa6f8d1dd-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/issue-117-doc-scan-rebase-fa6f8d1dd-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/issue-117-doc-scan-rebase-fa6f8d1dd-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/issue-117-doc-scan-rebase-fa6f8d1dd-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Continue confirmed automatic RPI child loop (issue-117-doc-scan-rebase-fa6f8d1dd) on branch feat/demo-117-doc-scan to rebase 4d91dae33 onto origin/feat/demo-164-chat-grounding-provenance-0900 (fa6f8d1dd), run focused validation (ruff check ., ruff format --check ., mypy, and #117 document malware scan quarantine tests in src/core and src/api), and leave git status --short empty without pushing.",
+      "status": "confirmed",
+      "evidence": "Explicit caller continuation prompt, 2026-11-15"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready. Read-only git merge-tree proved store.py (Store.focus) is the sole conflict out of 4 overlapping files onto fa6f8d1dd, resolved by combining #76 _open_safety_items and #117 is_available_case_document, with worktree-local PYTHONPATH/MYPYPATH isolation and post-Review clean tracking commit.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-117-doc-scan-rebase-fa6f8d1dd-research.md (C1-C8)"
+    },
+    {
+      "decision": "Critique execution: Complete; Verdict: Revise; Critique path: .copilot-tracking/reviews/plans/2026-11-15/issue-117-doc-scan-rebase-fa6f8d1dd-plan-critique.md; Direct dispositions: PC-001 applied directly (separated P03-T01 pre-Review reconciliation preserving original #117 Residual work / RV-001 Review outcomes from parent RPI Agent post-Review final 10-file tracking commit), PC-002 applied directly (added explicit zava_forward.{core,agents,api}.__file__ worktree prefix assertion to NFR-REB-01 and P02 Validation Expectations); Planning status finalized as Ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/issue-117-doc-scan-rebase-fa6f8d1dd-plan-critique.md; .copilot-tracking/plans/2026-11-15/issue-117-doc-scan-rebase-fa6f8d1dd-plan.md"
+    },
+    {
+      "decision": "Review execution: Complete; Outcome: Conformant; Assessed boundary: full P01-P03 rebase of 4d91dae33 onto fa6f8d1dd as e9c31f7fa051d5fd58795aa7feae7e404760433b, Store.focus conflict resolution, worktree-isolated ruff/mypy/#117/#76/inventory/rename validation across src/core and src/api, and pre-Review tracking reconciliation preserving parent #117 Residual work (RV-001); Review path: .copilot-tracking/reviews/logs/2026-11-15/issue-117-doc-scan-rebase-fa6f8d1dd-review.md.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-117-doc-scan-rebase-fa6f8d1dd-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked post-Review follow-up work item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Add direct SqlStore.rescan_pending() reopen persistence and out['blocked'] counter unit-test assertions in src/core/tests/test_document_rescan.py (RV-001)",
+      "rationale": "Highest ease of implementation (~15 lines in existing SqlStore test harness), directly hardens regression coverage of batch rescan sweeps",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-117-doc-scan-review.md (RV-001)"
+    },
+    {
+      "rank": 2,
+      "task": "Provision Azure Storage Defender malware scanning tags and quarantine infrastructure wiring in Bicep/deployment workflows",
+      "rationale": "High operational security value for live cloud pilot readiness complementing the core/API fail-closed scan gate",
+      "evidence": "docs/adrs/0002-pilot-readiness-architecture.md; .copilot-tracking/research/2026-11-15/issue-117-doc-scan-research.md (C2)"
+    },
+    {
+      "rank": 3,
+      "task": "Deliver remaining Issue #117 retention schedule and legal-hold DPO/Legal governance sign-off and automated purge evidence",
+      "rationale": "Completes the remaining unchecked governance/retention criteria on Issue #117 beyond upload malware scanning",
+      "evidence": "GitHub Issue #117; src/api/tests/test_document_controls.py (RetentionTests)"
+    }
+  ]
+}

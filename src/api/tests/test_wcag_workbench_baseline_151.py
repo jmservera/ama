@@ -612,6 +612,21 @@ console.log(JSON.stringify({
         ):
             self.assertIn(item, doc)
 
+    def test_counted_guard_measurement_section_matches_source(self) -> None:
+        doc = DOC_PATH.read_text()
+        section = doc.split("## Counted guard-suite measurement (2026-11-17, #151)")[1].split(
+            "\n## "
+        )[0]
+        assets = [p for p in WEB.glob("*") if p.suffix in {".js", ".html", ".css"}]
+        self.assertIn(f"| Served web assets | {len(assets)} ", section)
+        self.assertEqual(len(assets), 23)
+        invalid = sum(
+            p.read_text().count('setAttribute("aria-invalid", "true")') for p in WEB.glob("*.js")
+        )
+        self.assertIn(f"| `aria-invalid` sites | {invalid} |", section)
+        self.assertIn("we do not claim conformance", section)
+        self.assertIn("`Not run`", section)
+
 
 if __name__ == "__main__":
     unittest.main()
