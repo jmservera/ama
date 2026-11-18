@@ -475,6 +475,11 @@ For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analys
 records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human
 sign-off and R1 lacks the official standards texts. Read-only demo probes are recorded.
 
+For #1288, the [quality sensor live evidence](./research/issue-1288-live-quality-sensor-evidence-2026-11-18.md)
+records a 2026-11-18 demo read and denial probe plus local mock-provider and SQL Server runs. Criteria 4
+and 8 cannot be proven on the demo (no approved release record, no simulator run); criteria 3 and 5 to 7
+are proven as local engineering evidence only.
+
 For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root
 runtime, scale-out from 0 to 4 replicas under a 60 s load run, and the Container Apps
