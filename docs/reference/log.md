@@ -12863,3 +12863,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Issue 200 src repoint audit (Refs #200)
 
 * Added [src-repoint-live-audit-200-2026-11-18.md](research/src-repoint-live-audit-200-2026-11-18.md): criteria 2 proven, criterion 3 proven except a fresh tag deployment; no source change
+
+## [2026-11-18] update | Issue 111 signed-in sensor evidence re-run (Refs #111)
+
+* Added [issue-111-live2-sensor-evidence-2026-11-18.md](research/issue-111-live2-sensor-evidence-2026-11-18.md) with raw test output, redacted staff-signed sensors payload and screenshot; R1 to R3 stays unproven. No source change.
