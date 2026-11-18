@@ -12729,3 +12729,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Resident and representative UX live demo evidence (Refs #154)
 
 * Added [issue-154-live-resident-ux-evidence-2026-11-18.md](research/issue-154-live-resident-ux-evidence-2026-11-18.md): no live resident contact is observed on the synthetic showcase; validation through the usability programme and the representative view stay unproven for the demo (no participants or SA-010 agreement; no live case has a representative). No source changed.
+
+## [2026-11-18] add | Cohort evaluation live demo re-run (Refs #222)
+
+* Added [cohort-evaluation-live-2026-11-18.md](research/cohort-evaluation-live-2026-11-18.md) with retained raw output under `research/evaluation/cohort-eval-live-2026-11-18/`; corrected the earlier blocker count (eight insufficient-sample plus one unapproved-thresholds); the live snapshot has no cohort fields; OQ-018 stays unproven and unticked. No source changed.
