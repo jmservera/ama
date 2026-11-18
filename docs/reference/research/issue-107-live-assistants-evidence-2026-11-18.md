@@ -22,7 +22,7 @@ Scope: synthetic demo, desktop only. Owner decisions of 2026-11-18 authorise liv
 
 ## Criterion 2: approved exercise record and delivered-build acceptance
 
-Live probe (`live_probe.py`, Playwright Chromium, Entra demo employee account, role `Retrofit Programme Manager`, credentials read at run time and never printed) on `ca-cutover-test-demo-api`. Image `zava-forward-api@sha256:5368f4e4...c5fb`, revision `0000031`, `ZF_STORE=mssql`, `ZF_SQL_AUTH=msi`, `ZF_DEPLOYMENT_PROFILE=demo`, `AI_DEPLOYMENT=standard`, `AI_MODEL_VERSION=gpt-4.1-nano-2025-04-14`. The `standard` deployment on `aif-cutover-test-rzsrg` reports model `gpt-4.1-nano` version `2025-04-14`, `GlobalStandard`.
+Live probe (`live_probe.py`, Playwright Chromium, Entra demo employee account, role `Retrofit Programme Manager`, credentials read at run time and never printed) on `ca-cutover-test-demo-api`. Image `zava-forward-api@sha256:5368f4e4...c17e5fb`, revision `0000031`, `ZF_STORE=mssql`, `ZF_SQL_AUTH=msi`, `ZF_DEPLOYMENT_PROFILE=demo`, `AI_DEPLOYMENT=standard`, `AI_MODEL_VERSION=gpt-4.1-nano-2025-04-14`. The `standard` deployment on `aif-cutover-test-rzsrg` reports model `gpt-4.1-nano` version `2025-04-14`, `GlobalStandard`.
 
 * `GET /api/assistants` lists all five assistants at registry version 1.0.0, each with a binding (provider, endpoint, deployment, prompt, policy, data, provenance, permission and model versions) and `release.missing = ["approved, unexpired release record"]`. Owner shown as "RAI task owner not appointed (OQ-017)"; release, residual-risk, suspension and restart holders are all `gap`.
 * `GET /api/assistants/forecast`: `proactive: false`, `call_allowance: 0`. `GET /api/assistants/proposals`: no proposals, "Operator authority, finite allowance and expiry are required."
@@ -35,3 +35,11 @@ Live probe (`live_probe.py`, Playwright Chromium, Entra demo employee account, r
 * The first invoke run used only the first case and got 403 for all five; the preserved script now walks the visible cases. The overwritten first output is not kept; the final `live_probe_invoke.json` shows the 403 cases too.
 * `live-workbench.png` shows the landing page, not a proof; the proof is the JSON.
 * The probe wrote five retained denial proposals and a few metric reads into the demo store; nothing else was changed.
+
+## Evidence limits
+
+* Criterion 1 is partly proven: revocation, restart and allowance races on local SQL Server 2022; the old-image and non-replenishment path on a SQLite proxy only, not Azure SQL.
+* RAI metrics were read before the invokes only; the zero provider call claim rests on `envelope: null` and `release: null` per invoke. The invoke JSON shows fallback 16 and consumption 16.
+* Azure CLI facts, the SQL Server banner, the runtime and the test commit are operator-observed, raw output not retained.
+* live-workbench.png is a landing page and not evidence. The demo store now holds five denial proposals. Synthetic persona identifiers are retained in the probe JSON.
+* Independent exact-head review and hosted CI are outstanding.
