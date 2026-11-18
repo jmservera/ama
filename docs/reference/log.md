@@ -12689,3 +12689,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Discovery assistant live demo evidence (Refs #125)
 
 * Added [issue-125-live-discovery-assistant-evidence-2026-11-18.md](research/issue-125-live-discovery-assistant-evidence-2026-11-18.md): the assistant is not exposed on the live demo API and its boundary denies writes; all three criteria stay unticked (readiness and comparison unprovable for the demo, no-write shown only at demo scope).
+
+## [2026-11-18] add | Rubric src counting and mvp stop state (Refs #198)
+
+* Added [issue-198-rubric-src-counting-evidence-2026-11-18.md](research/issue-198-rubric-src-counting-evidence-2026-11-18.md): current registry and 79/100 score re-verified, five of seven criteria proven, criteria 3 and 4 recorded as historically unprovable pending an owner waiver or rewording.
