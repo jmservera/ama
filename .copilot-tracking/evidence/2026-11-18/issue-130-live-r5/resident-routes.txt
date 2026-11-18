@@ -1,0 +1,5 @@
+/ 200
+/api/me 404
+/challenge 404
+/api/challenge 404
+/nomination 404

@@ -13184,6 +13184,30 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-129-live-r3-2026-11-18.md](research/issue-129-live-r3-2026-11-18.md): 26 core and 6 api bundle tests pass, report CLI refusal check, signed-in probe of revision 0000032 finds no bundle route; Atlas-owner mapping confirmation stays unproven. Docs only.
 
+## [2026-11-18] add | Issue 215 live re-verification (Refs #215)
+
+* Added [regulatory-ux-live-215-2026-11-18.md](research/regulatory-ux-live-215-2026-11-18.md): signed-in desktop probe of revision 0000032; keyboard, plain-language toggle and axe pass on two panels, law store unloaded so only the unknown state is visible, deployed build differs from main; staff comprehension testing unproven. Docs only.
+
+## [2026-11-18] add | Issue 96 live third re-verification (Refs #96)
+
+* Added [issue-96-live-r3-reverification-2026-11-18.md](research/issue-96-live-r3-reverification-2026-11-18.md): live probe again returns zero registered form schemas, search finds no code path that records an approval, 79 focused core tests pass with raw output retained; the approved-schema criterion stays unproven for the demo. Docs only.
+
+## [2026-11-18] add | Issue 116 live round 3 (Refs #116)
+
+* Added [issue-116-live-r3-evidence-2026-11-18.md](research/issue-116-live-r3-evidence-2026-11-18.md): read-only sweep of 88 GET paths as the one reason role finds no reason value; 52 core and 57 api offline tests pass; second role still unobtainable; no box ticked. No source change.
+
+## [2026-11-18] add | Issue 114 live re-verification (Refs #114)
+
+* Added [issue-114-live-reverify-2026-11-18.md](research/issue-114-live-reverify-2026-11-18.md): 62 tests pass for per-year verification; deployed image gap and missing multi-year live data keep the criterion unticked. Docs only.
+
+## [2026-11-18] add | Issue 138 live fourth run (Refs #138)
+
+* Added [issue-138-live-r4-2026-11-18.md](research/issue-138-live-r4-2026-11-18.md): fresh read-only and what-if probes find no federated credentials, runners, protected environments or deploy runs; live smoke passes and fails closed when unreachable; no criterion ticked. Docs only.
+
+## [2026-11-18] add | Issue 130 live fifth audit (Refs #130)
+
+* Added [issue-130-live-r5-nomination-route-audit-2026-11-18.md](research/issue-130-live-r5-nomination-route-audit-2026-11-18.md): same revision 0000032 and image digest, same live 403 write refusal and form-encoded 400, 83 offline tests pass, resident app exposes no nomination or challenge route; representative participation stays unproven for the demo. Docs only.
+
 ## [2026-11-18] add | Issue 153 live re-check, fourth run (Refs #153)
 
 * Added [content-recheck-153-live-r4-2026-11-18.md](research/content-recheck-153-live-r4-2026-11-18.md): repeat Playwright and HTTP probes of the demo match the third run (`Held`/`envelope` on Finance, "Unassigned" owner, generic error bodies); named wording review unproven. Docs only.

@@ -1,0 +1,16 @@
+{
+ "role": "Retrofit Programme Manager",
+ "/api/form-schemas": {
+  "status": 200,
+  "ctype": "application/json",
+  "len": 15,
+  "body": "{\"schemas\": []}",
+  "schema_count": 0
+ },
+ "/api/form-schemas.csv": {
+  "status": 200,
+  "ctype": "text/csv; charset=utf-8",
+  "len": 2,
+  "body": "\r\n"
+ }
+}
