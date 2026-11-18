@@ -436,6 +436,7 @@ records a 2026-11-18 demo run: Hub-generated symmetric device keys issued, used 
 and this run's identities removed (run 3 adds the home-to-device mapping). Durable secret storage and X.509 stay unproven; a [fourth audit](./research/issue-185-live-r4-audit-2026-11-18.md)
 re-ran the repository tests and read the hub at zero devices; a [fifth re-verification](./research/issue-185-live-r5-reverification-2026-11-18.md)
 repeats the hub read, log and repository scans and tests without creating identities.
+A [sixth note](./research/issue-185-live-r6-sas-adapter-2026-11-18.md) records Hub-generated SAS enrolment added to the registry adapter, covered by simulator tests only.
 For #110, the [live IoT identity evidence](./research/issue-110-live-iot-identity-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: three distinct Hub identities sent schema-versioned readings with
 stable IDs, read back from Event Hub; production X.509 receiver stays unproven.

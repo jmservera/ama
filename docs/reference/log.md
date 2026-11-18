@@ -13292,3 +13292,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Employee chat helper line fix (Refs #215)
 
 * Added [issue-215-live-helper-line-fix-2026-11-18.md](research/issue-215-live-helper-line-fix-2026-11-18.md): clipped helper line reproduced and fixed in `src/api` chat widget with a regression test; per-criterion table; staff comprehension remains unproven
+
+## [2026-11-18] add | Issue 185 SAS enrolment in registry adapter (Refs #185)
+
+* Added [issue-185-live-r6-sas-adapter-2026-11-18.md](research/issue-185-live-r6-sas-adapter-2026-11-18.md): `SasEnrollment` (Hub-generated keys, DISABLED, never read) in `device_registry_azure.py` with 4 simulator tests; not run live; durable storage and FULL-tier gate stay open.
