@@ -12230,8 +12230,17 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-17] update | Identifier leak copy audit on exception screens (Refs #153)
 
 * Added an [identifier leak audit](research/ux/content-standard.md#identifier-leak-audit-2026-11-17-153) section to the content standard: two snake_case identifiers shown to staff on the data steward and digital operator screens were reworded, and a lexical regression guard was added. Named-human review of resident-facing wording (criterion 5) remains unmet.
+
+## [2026-11-18] add | Deployed demo parity live proof (Refs #350)
+
+* Added [deployed-parity-live-2026-11-18.md](research/deployed-parity-live-2026-11-18.md) with a per-criterion proven/unproven table for the unticked #350 criteria, measured read-only on the synthetic demo with Playwright and Azure CLI (one Programme Manager account, desktop).
+* The 2026-10-16 gaps for model deployment, map tiles and the baseline (980 cases) are stale; browser-style anonymous API requests still get 302, `/api/time/status` returns 500 (SQL ProgrammingError), law store and photo remain unavailable. No source or Azure change was made; #350 stays open.
 ## [2026-11-18] update | Measured held-out AI batch run live for the demo (Refs #432)
 
+## [2026-11-18] ingest | Live digest mismatch alert proof on the demo (Refs #115)
+
+* Added [digest-verification-alert-live-2026-11-18.md](research/digest-verification-alert-live-2026-11-18.md): baseline verifier run intact, forced mismatch on a copy, `LEDGER_DIGEST_ALERT`, fired Azure Monitor alert, cleanup.
+* Mailbox delivery, the live cron schedule and the retention lock (deferred to #1908) are recorded as unproven or deferred. Indexed in the README.
 * Added [the batch note](research/ai-heldout-batch-432-live-2026-11-18.md) and its inputs and reports: 12 synthetic proposals on `gpt-4.1-nano`, 180 to 225 tokens each (2,522 total), USD 0.000744 at list price under a recorded owner spend authority (cap USD 0.50). The first attempt stopped on a network-blocked call and is preserved; the batch then ran inside the demo container.
 * Criterion 5 (billing reconciliation) stays unproven under the owner waiver; criterion 8 is met for the synthetic demo only. No source changed; #432 stays open.
 
@@ -12247,3 +12256,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [public-browser-access-live-demo-2026-11-18.md](research/public-browser-access-live-demo-2026-11-18.md): landing, `/healthz`, sign-in to Entra, anonymous 401 for non-browser clients, SQL public access Disabled and 22 of 25 authenticated read routes on `ca-cutover-test-demo-api`. Read-only; no resource created.
 * Browser-originated anonymous API calls are still redirected (#350), `/api/time/status` returns 500 (new candidate defect) and parity stays partly proven. No source changed; #344 stays open.
+## [2026-11-18] add | Live device identity and provisioning evidence (Refs #185)
+
+* Added [issue-185-live-device-identity-evidence-2026-11-18.md](research/issue-185-live-device-identity-evidence-2026-11-18.md): demo run with Hub-generated symmetric keys, sending and teardown on the demo hub. Durable storage and X.509 remain unproven.
+## [2026-11-18] add | Container hosting live evidence (Refs #144)
+
+* Added [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): per-criterion record of a demo probe on live Azure. Non-root and digest-pinned images observed; the pipeline run, read-only root file system and capability drop stay unproven.
