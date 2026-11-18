@@ -405,6 +405,9 @@ For #79, the [live ranking publication evidence](./research/issue-79-live-rankin
 records a 2026-11-18 demo run on live Azure: the unsigned policy refused, a scheduled
 job firing and create-only Blob publication. The named owner signature and Blob
 immutability stay unproven.
+For #96, the [live form schema approval evidence](./research/issue-96-live-form-schema-approval-evidence-2026-11-18.md)
+records that the demo holds no registered schema and no shipped path records
+an approval, so the approved-schema criterion stays unproven.
 For #221, the [restart authority and drill evidence](./research/issue-221-restart-authority-and-drill-evidence-2026-11-18.md)
 records repository test proof of the RULE-024 and NFR-014 criteria on
 2026-11-18; no live drill was run.
