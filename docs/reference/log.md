@@ -13187,6 +13187,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 215 live re-verification (Refs #215)
 
 * Added [regulatory-ux-live-215-2026-11-18.md](research/regulatory-ux-live-215-2026-11-18.md): signed-in desktop probe of revision 0000032; keyboard, plain-language toggle and axe pass on two panels, law store unloaded so only the unknown state is visible, deployed build differs from main; staff comprehension testing unproven. Docs only.
+
 ## [2026-11-18] add | Issue 96 live third re-verification (Refs #96)
 
 * Added [issue-96-live-r3-reverification-2026-11-18.md](research/issue-96-live-r3-reverification-2026-11-18.md): live probe again returns zero registered form schemas, search finds no code path that records an approval, 79 focused core tests pass with raw output retained; the approved-schema criterion stays unproven for the demo. Docs only.
