@@ -12935,6 +12935,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Resident portal docs nine-criterion audit (Refs #441)
 
 * Extended [resident-portal-441-live-status-2026-11-18.md](research/resident-portal-441-live-status-2026-11-18.md) with a per-criterion proven/unproven table: criterion 5 stays unproven (owner decision), criteria 3 and 9 need publication-time rechecks; no source, Azure or credential action, no tick changed
+
 ## [2026-11-18] update | Cohort evaluation second live re-run (Refs #222)
 
 * Added [cohort-evaluation-live-r2-2026-11-18.md](research/cohort-evaluation-live-r2-2026-11-18.md) with retained output and a per-criterion table: five criteria proven on the synthetic fixture, the OQ-018 owner-approval criterion unproven.
