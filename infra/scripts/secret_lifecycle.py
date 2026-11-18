@@ -75,6 +75,9 @@ def check_secrets(inventory, listed, now):
             age = (now - parse_time(updated)).days
             if age > entry["rotationIntervalDays"]:
                 findings.append((entry["name"], "rotation-overdue", f"{age} days since last change, interval {entry['rotationIntervalDays']}"))
+    inventoried = {entry["name"] for entry in inventory["secrets"]}
+    for name in sorted(set(by_name) - inventoried):
+        findings.append((name, "uninventoried", "secret has no inventory entry, owner, rotation interval or expiry alert"))
     return findings
 
 

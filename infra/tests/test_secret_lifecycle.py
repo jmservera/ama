@@ -69,6 +69,15 @@ class CheckTests(unittest.TestCase):
         self.assertIn(("entra-client-secret", "no-expiry"), self.kinds([self.secret("entra-client-secret", None)]))
 
 
+    def test_uninventoried_vault_secret_is_a_finding(self) -> None:
+        listed = [self.secret("entra-client-secret", "2027-04-01T00:00:00Z"),
+                  self.secret("entra-token-store-sas", "2026-10-30T00:00:00Z", "2026-10-14T12:00:00Z"),
+                  self.secret("resident-demo-password-verifier", "2026-11-30T00:00:00Z", "2026-10-10T00:00:00Z"),
+                  self.secret("resident-demo-session-key", "2026-11-30T00:00:00Z", "2026-10-10T00:00:00Z"),
+                  self.secret("stray-unowned-secret", None)]
+        self.assertEqual(self.kinds(listed), {("stray-unowned-secret", "uninventoried")})
+
+
 class ReviewAndRotationTests(unittest.TestCase):
     def test_review_record_is_pending_and_dated(self) -> None:
         record = LIFE.access_review(INVENTORY, [

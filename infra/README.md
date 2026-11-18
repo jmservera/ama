@@ -425,6 +425,16 @@ checks; private identity-backed acceptance remains separate.
 | Automatic post-deployment checks | Local HTTP negative/positive tests and fake-command orchestration; live ingress/authentication/SQL/model/restart acceptance unmet |
 | No secret values in logs/repository | Pinned workflows, no stored-secret inputs, captured command output and canary regression checks; end-to-end live log audit not performed |
 
+Measured GitHub state, 2026-11-17 (read-only API; base `eb51af5c`, no workflow
+dispatched, no Azure action): `src-deploy.yml` has 0 runs; all 100 sampled
+`infra-plan.yml` runs were `skipped` because the repository variable
+`INFRA_PLAN_ENABLED` is unset; only the `copilot`, `dev-plan`, `test-plan` and
+`pilot-plan` environments exist, with no reviewers, administrator bypass allowed,
+no variables and no self-hosted runners; `main` has no branch protection.
+`pipeline.py verify-environment` on `dev-plan` fails closed as designed. These are
+owner setup gaps, not code defects. Evidence:
+`.copilot-tracking/research/2026-11-17-issue-138-research.md`.
+
 All six live issue criteria remain unchecked. Local checks:
 `python3 -m pip install PyYAML==6.0.3`, then
 `python3 -m unittest discover -s infra/tests -p test_pipeline.py -v`.
@@ -1372,6 +1382,24 @@ apply and what-if runs first. Confirm `/healthz` and the ledger-verify job
 afterwards. No traffic splitting is used, and a guarded redeploy of an earlier
 release identity would be a separate, tested change.
 
+### Assessment against main (issue 144, 2026-11-17)
+
+Assessed on `origin/main` eb51af5c9 with targeted local tests only, run one at a
+time (no Azure, no full gate): `infra/tests/test_container_hosting_completeness.py`,
+`test_container_contract.py` and `test_bicep_containerapp_demo_wiring.py` pass;
+`src/agents/tests/test_worker.py` (19), `src/api/tests/test_scale_fixture_load_and_restart.py`
+(4), `test_restart_audit.py` (1) and `test_scale_load.py` (7) pass. The two records
+on main, `scale-load-2026-11-01.json` and `scale-restart-2026-11-13.json`, both state
+`meets_declared_workload: false`, and every route's p95 exceeds the NFR-002 staff
+thresholds, so they show behaviour at the fixture size, not capacity.
+
+The load, restart and hardening-inspection artifacts described in later issue
+comments (`scale-load-2026-11-15.json`, `test_container_load_and_restart_144.py`,
+`inspect_runtime_container_hardening`) are on the stacked branch of the open
+pull request 1641 and are not on `main`; this page does not rely on them. The
+worker and job image criterion and deployed hardening stay unmet: both need a live
+Azure deployment, which this assessment did not perform.
+
 ### Separate-process load and restart run (issue 144, 2026-11-13)
 
 Local loopback run of `src/api/tests/test_scale_fixture_load_and_restart.py`
@@ -1482,7 +1510,7 @@ exercise DPO is Juan Manuel Servera; no real-company delegation is inferred.
 
 ## Key Vault secret lifecycle
 
-Secrets are listed in [secret-inventory.json](secret-inventory.json) with an owner, rotation interval and expiry alert window. `infra/scripts/secret_lifecycle.py` checks vault metadata against it (never secret values), produces the access review record and prints the rotation steps. Run `python3 -m unittest discover -s infra/tests -q` for its tests.
+Secrets are listed in [secret-inventory.json](secret-inventory.json) with an owner, rotation interval and expiry alert window. `infra/scripts/secret_lifecycle.py` checks vault metadata against it (never secret values) and reports any vault secret that has no inventory entry as `uninventoried`, produces the access review record and prints the rotation steps. Run `python3 -m unittest discover -s infra/tests -q` for its tests.
 
 | Secret | Rotation interval | Expiry alert | Owner |
 | --- | --- | --- | --- |
