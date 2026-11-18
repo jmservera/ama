@@ -1,0 +1,83 @@
+{
+  "task_id": "issue-115-c2-rebase-164-0905",
+  "task_slug": "immutable-blob-ledger-digests-115-c2-rebase",
+  "parent_task": {
+    "task_id": "issue-115-rebase-164-0820",
+    "task_slug": "immutable-blob-ledger-digests-115-rebase"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/immutable-blob-ledger-digests-115-c2-rebase-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/immutable-blob-ledger-digests-115-c2-rebase-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/immutable-blob-ledger-digests-115-c2-rebase-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/immutable-blob-ledger-digests-115-c2-rebase-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/immutable-blob-ledger-digests-115-c2-rebase-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/immutable-blob-ledger-digests-115-c2-rebase-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute confirmed automatic RPI child loop (Research -> Plan -> Implement -> Review) rebasing feat/demo-115-blob-ledger (1b66fd607) onto origin/feat/demo-164-chat-grounding-provenance-0900 (e282dc327, PR #1641), resolving infra/tests/test_monitoring_alerts.py to preserve both #146 and #115 assertions, running focused validation matching src-ci.yml, and committing updated .copilot-tracking/ artifacts without pushing",
+      "status": "confirmed",
+      "evidence": "User prompt instruction on branch feat/demo-115-blob-ledger"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready (sole rebase conflict across 84cb5608a..1b66fd607 vs fa6f8d1dd..e282dc327 is AlertOwnerAndRunbookTests in infra/tests/test_monitoring_alerts.py; infra/tests discovery requires infra/tests ahead of src/api/tests plus src/orchestrator/src on PYTHONPATH; infra ruff checks use src-ci.yml isolated E,F,I,B,UP flags)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/immutable-blob-ledger-digests-115-c2-rebase-research.md (C1-C8)"
+    },
+    {
+      "decision": "Plan critique execution: executed (single final-candidate pass via rpi-plan-critique)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/immutable-blob-ledger-digests-115-c2-rebase-plan-critique.md"
+    },
+    {
+      "decision": "Plan critique verdict: Pass (0 Critical, 0 High, 0 Medium, 0 Low; direct dispositions: none required; user decisions required: none)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-15/immutable-blob-ledger-digests-115-c2-rebase-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Review execution: Complete (single-pass rpi-review across rebased commits 63ebab9e0..1c572b4a9 atop e282dc327, merged infra/tests/test_monitoring_alerts.py, and src-ci.yml validation evidence)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/immutable-blob-ledger-digests-115-c2-rebase-review.md#execution-status"
+    },
+    {
+      "decision": "Review outcome: Conformant (0 Critical, 0 High, 0 Medium, 0 Low; assessed boundary P01 and P02 reconciled; 600 infra/tests + 18 core ledger + 52 core cross-feature + 30 orchestrator + ruff + mypy + Bicep checks passed)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/immutable-blob-ledger-digests-115-c2-rebase-review.md#outcome"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user post-Review follow-up selection (ranked choice 1-4, Stop automatic session, or Switch to manual mode)"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Push rebased feat/demo-115-blob-ledger (e282dc327 base) to origin and verify hosted CI checks once owner push authorization is granted",
+      "rationale": "Fast operational verification with high PR #1641 stack readiness value, held back only by caller Do-not-push boundary",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/immutable-blob-ledger-digests-115-rebase-review.md#plan-follow-up-assessment"
+    },
+    {
+      "rank": 2,
+      "task": "Harden zava_forward.core.ledger_digest_blob with RV-001 (suppress transport __cause__ chaining for traceback safety) and RV-002 (parse x-ms-creation-time header duration & optional require_sealed_years_before check)",
+      "rationale": "Self-contained src/core defense-in-depth improvement with clean KISS/error-boundary leverage",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/immutable-blob-ledger-digests-115-review.md (RV-001, RV-002)"
+    },
+    {
+      "rank": 3,
+      "task": "Delegate zava_forward.orchestrator.digest_blob internals to zava_forward.core.ledger_digest_blob while preserving the containerapps python -m zava_forward.orchestrator.digest_blob --publish CLI contract",
+      "rationale": "Moderate-effort local refactor eliminating duplicated digest parsing across core and orchestrator",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/immutable-blob-ledger-digests-115-review.md#plan-follow-up-assessment"
+    },
+    {
+      "rank": 4,
+      "task": "Obtain Legal audit-retention duration sign-off (#121), execute irreversible Azure lockImmutabilityPolicy on deployed ledger-digests container, and capture live ledger-verify + Azure Monitor LEDGER_DIGEST_OK / LEDGER_DIGEST_ALERT evidence",
+      "rationale": "Highest end-to-end compliance impact required to close Issue #115, ranked fourth due to external human Legal and live Azure subscription prerequisites",
+      "evidence": ".copilot-tracking/research/2026-11-15/immutable-blob-ledger-digests-115-research.md (C1, C7, C11)"
+    }
+  ]
+}

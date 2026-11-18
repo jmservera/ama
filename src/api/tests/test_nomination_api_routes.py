@@ -660,6 +660,72 @@ class NominationApiRoutesTests(unittest.TestCase):
         self.assertEqual(stored_ack["route_mode"], "staff_recorded_non_digital")
         self.assertEqual(stored_ack["assisted_channel"], "Phone")
 
+    @unittest.skipUnless(_playwright_available(), "playwright unavailable")
+    def test_standalone_route_forms_submit_in_browser(self) -> None:
+        from playwright.sync_api import sync_playwright
+
+        self.assertEqual(
+            self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
+        )
+        nom_id = self.call_json("/api/cases/ZF-1", "sam")[1]["nomination_records"][0]["id"]
+        self.seed_priority_proposal()
+        statuses: list[int] = []
+
+        with sync_playwright() as pw:
+            browser = self._launch_headless_chromium(pw)
+            try:
+                context = browser.new_context()
+                context.add_cookies(
+                    [
+                        {
+                            "name": "zf_session",
+                            "value": self._login_cookie("sam").split("=", 1)[1],
+                            "url": self.base,
+                        }
+                    ]
+                )
+                page = context.new_page()
+                page.on(
+                    "response",
+                    lambda r: statuses.append(r.status) if "/resident" in r.url else None,
+                )
+                page.goto(self.base + "/api/cases/ZF-1?view=nomination-routes-html")
+                page.locator("summary", has_text=f"Record acknowledgement for {nom_id}").click()
+                key = f"#nomination-ack-{nom_id}"
+                page.select_option(f"{key}-channel", "digital")
+                page.fill(f"{key}-acknowledgement_ref", "SYN-STANDALONE-ACK")
+                page.fill(f"{key}-non_digital_route", "Phone Sam or visit housing hub")
+                page.fill(f"{key}-next_update", "2099-03-01")
+                with page.expect_navigation():
+                    page.locator(f"{key} button[type='submit']").click()
+                page.locator("summary", has_text=f"Record correction for {nom_id}").click()
+                key = f"#nomination-correct-{nom_id}"
+                page.select_option(f"{key}-channel", "digital")
+                page.fill(f"{key}-account", "Synthetic corrected account")
+                page.fill(f"{key}-source", "SYN-STANDALONE-CORRECTION")
+                page.fill(f"{key}-reported_subject_ref", "SYN-SUBJECT")
+                page.fill(f"{key}-next_update", "2099-03-02")
+                with page.expect_navigation():
+                    page.locator(f"{key} button[type='submit']").click()
+                page.locator("summary", has_text="Record supplied challenge").click()
+                key = "#challenge-open-route"
+                page.select_option(f"{key}-channel", "digital")
+                page.fill(f"{key}-source", "SYN-STANDALONE-CHALLENGE")
+                page.fill(f"{key}-request", "Synthetic supplied challenge")
+                page.fill(f"{key}-explanation", "Synthetic explanation")
+                page.fill(f"{key}-non_digital_route", "Phone Sam or visit housing hub")
+                page.fill(f"{key}-next_update", "2099-03-03")
+                with page.expect_navigation():
+                    page.locator(f"{key} button[type='submit']").click()
+            finally:
+                browser.close()
+
+        self.assertEqual(statuses, [200, 200, 200])
+        stored_ack = self.call_json("/api/cases/ZF-1", "sam")[1]["nomination_records"][0][
+            "acknowledgement"
+        ]
+        self.assertEqual(stored_ack["reference"], "SYN-STANDALONE-ACK")
+
 
 if __name__ == "__main__":
     unittest.main()

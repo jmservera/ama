@@ -32,7 +32,7 @@ class InputBounds(unittest.TestCase):
         self.addCleanup(patcher.stop)
 
     def test_oversized_text_run_uses_template_and_names_the_error(self) -> None:
-        out = self.ai.run("draft", "sys", "x" * (MAX_TEXT_BYTES + 1), "TEMPLATE")
+        out = self.ai.run("funding_draft", "sys", "x" * (MAX_TEXT_BYTES + 1), "TEMPLATE")
         self.assertEqual(out["source"], "template")
         self.assertEqual(out["text"], "TEMPLATE")
         self.assertEqual(out["error"], "InputRefused")
@@ -48,7 +48,7 @@ class InputBounds(unittest.TestCase):
         self.urlopen.assert_not_called()
 
     def test_bounded_text_still_reaches_the_meter(self) -> None:
-        self.ai.run("draft", "sys", "short", "TEMPLATE")
+        self.ai.run("funding_draft", "sys", "short", "TEMPLATE")
         self.assertEqual(self.meter.reserved, 1)
 
     def test_oversized_image_is_stored_not_sent(self) -> None:

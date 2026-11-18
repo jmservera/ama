@@ -1,0 +1,54 @@
+{
+  "task_id": "issue-126",
+  "task_slug": "issue-126-residual-source-assessment",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-17/issue-126-residual-source-assessment-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-17/issue-126-residual-source-assessment-plan.md",
+    "details": ".copilot-tracking/details/2026-11-17/issue-126-residual-source-assessment-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-17/issue-126-residual-source-assessment-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-17/issue-126-residual-source-assessment-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-17/issue-126-residual-source-assessment-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run full prospective RPI loop (Research, Plan with one critique, Implement bounded read-only assessment evidence, one Review) locally on branch docs/rai-residual-source-assessment-126 over declared parent 01baf8d3df86a28f754da8545d0e8f12012bf350 (PR #1641); no push, PR, deploy or acceptance claim",
+      "status": "confirmed",
+      "evidence": "Caller intake brief for issue #126; evidence launch record in /mnt/tmp/ama-run-74bd1fe9-126-assess-20261117T1305/evidence-126-assess/issue-126/events.jsonl"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-17/issue-126-residual-source-assessment-research.md"
+    },
+    {
+      "decision": "Critique executed once (verdict Revise); PC-001..PC-005 applied directly; no user decision required; not repeated",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-17/issue-126-residual-source-assessment-plan-critique.md"
+    },
+    {
+      "decision": "Implement complete: 22-row table (1 implemented/source-tested, 1 proposed, 20 insufficient, 0 observed, 0 accepted); two test batches passed (251 and 270 tests); no non-RPI file changed",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-17/issue-126-residual-source-assessment-changes.md"
+    },
+    {
+      "decision": "Review executed once (independent code-review agent); outcome Partial; assessed boundary 22 rows at 01baf8d3; finding 1 citation corrected afterwards in table; findings 2-4 routed to follow-ups",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-17/issue-126-residual-source-assessment-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Commit locally (no push); then user selects a follow-up or stops"
+  },
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Run the deferred bounded test batch (test_data_protection, test_ai_register_completeness, test_source_monitor, test_ledger_digest_blob, test_regulatory_privacy, test_challenges) and refresh dependent rows", "rationale": "Cheapest way to convert unperformed rows to source-tested evidence", "evidence": "review log findings and table cross-row limits"},
+    {"rank": 2, "task": "Fix Review findings 2-4: label MAP-01 test as context, explain MN-3.2 tier rule, retain verification script", "rationale": "Small fidelity improvements", "evidence": ".copilot-tracking/reviews/logs/2026-11-17/issue-126-residual-source-assessment-review.md"},
+    {"rank": 3, "task": "Supply qualified human, DPO/Legal, real-model, witnessed-restore and EU-applicability evidence through authorised channels", "rationale": "Required for any observed or accepted disposition", "evidence": "table missing-evidence columns"}
+  ]
+}

@@ -361,9 +361,37 @@ class ChatMixin:
         return self.chat_repo.list(user_key(user), None if include_archived else ACTIVE)
 
     def chat_resume(self, user, tid):
-        """The thread and its messages in order, for the owner only."""
+        """The thread and its messages in order, for the owner only, projected for current case/field visibility."""
+        from . import projection
         t = self._chat_owned(user, tid)
-        return dict(t, messages=self.chat_repo.messages(tid))
+        msgs = self.chat_repo.messages(tid)
+        cid = t.get("case_id") or ""
+        is_reg = str(t.get("title") or "").startswith("regulatory_guidance:")
+        if (
+            not is_reg
+            and isinstance(user, dict)
+            and user.get("role")
+            and hasattr(self, "cases")
+            and hasattr(self, "detail")
+        ):
+            email = str(user.get("email") or "").lower()
+            live_u = self.staff.get(email, user) if getattr(self, "staff", None) and email in self.staff else user
+            if cid and cid in self.cases and projection.project_case_visibility(live_u, self.cases[cid]) is None:
+                raise ChatNotFound(tid)
+            withheld = projection.withheld_scope_values(self, live_u, [cid] if cid else [])
+            if withheld:
+                refusal = "That cannot be shared here. Check the case record with a role that has a recorded need."
+                projected = []
+                for m in msgs:
+                    if m.get("role") == "assistant" and (
+                        projection.contains_withheld_value(m.get("content"), withheld)
+                        or any(projection.contains_withheld_value(ev, withheld) for ev in (m.get("evidence") or ()))
+                    ):
+                        projected.append(dict(m, content=refusal, evidence=[], withheld=True))
+                    else:
+                        projected.append(m)
+                msgs = projected
+        return dict(t, messages=msgs)
 
     def chat_archive(self, user, tid, expected_version=None):
         from .store import ConflictError

@@ -1,0 +1,63 @@
+{
+  "task_id": "issue-76",
+  "task_slug": "ux-76-hazard-clock-owner",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/ux-76-hazard-clock-owner-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/ux-76-hazard-clock-owner-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/ux-76-hazard-clock-owner-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/ux-76-hazard-clock-owner-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/ux-76-hazard-clock-owner-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/ux-76-hazard-clock-owner-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute full automatic RPI loop (Research -> Plan -> Implement -> Review) on branch feat/ux-76-hazard-clock-owner targeting feat/demo-164-chat-grounding-provenance-0900 (PR #1641) under focused validation tier and commit locally with Refs #76 without pushing",
+      "status": "confirmed",
+      "evidence": "Caller intake brief for Issue #76"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready; converged on Option A (shared safety clock + accountable-owner projection in taskqueues.py + workflows.py + store.py/sqlstore.py/projection.py and self-contained rendering in web/app.js workSummary + safetyPanel without modifying web/role-screens.js)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/ux-76-hazard-clock-owner-research.md (C1-C18)"
+    },
+    {
+      "decision": "Critique execution complete (Verdict: Revise); applied all five planner-owned findings (PC-001..PC-005) directly to plan and phase details without requiring user decisions or repeating critique",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/ux-76-hazard-clock-owner-plan-critique.md; .copilot-tracking/plans/2026-11-15/ux-76-hazard-clock-owner-plan.md (## Critique Disposition)"
+    },
+    {
+      "decision": "Implementation execution complete across full plan (P01-P04) with focused-tier validation green across src/core and src/api and web/role-screens.js untouched",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-15/ux-76-hazard-clock-owner-changes.md"
+    },
+    {
+      "decision": "Review execution complete (Execution status: Complete; Outcome: Conformant) across full P01-P04 boundary and refreshed web-design-guidelines check on src/api/src/zava_forward/api/web/app.js with zero defects",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/ux-76-hazard-clock-owner-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked post-Review follow-up work item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Publish stacked PR for feat/ux-76-hazard-clock-owner targeting feat/demo-164-chat-grounding-provenance-0900 (PR #1641) and verify hosted CI + rubric checks",
+      "rationale": "Highest delivery value and lowest effort once pushing is authorized: brings the verified local Refs #76 commit through hosted CI, exact-head independent review, and final Issue #76 acceptance-criterion closure after merge.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/ux-76-hazard-clock-owner-review.md (## Residual Work); .github/copilot-instructions.md (## Branch and Pull Request Workflow)"
+    },
+    {
+      "rank": 2,
+      "task": "Model distinct Awaab's Law 5-working-day written-summary and 12-week preventative-works timestamps in synthetic fixtures and external hazard-service date forms",
+      "rationale": "Moderate effort and engineering-quality leverage: extends recorded service timing beyond first-awareness 24h/7d/14d clocks and response/resident-update dates without inventing unrecorded statutory dates.",
+      "evidence": ".copilot-tracking/plans/2026-11-15/ux-76-hazard-clock-owner-plan.md (## Critique Disposition, Residual risk); .copilot-tracking/reviews/logs/2026-11-15/ux-76-hazard-clock-owner-review.md (## Residual Work)"
+    }
+  ]
+}
