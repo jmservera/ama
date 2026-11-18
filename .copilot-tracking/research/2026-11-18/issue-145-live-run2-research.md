@@ -9,4 +9,4 @@ ms.date: 2026-11-18
 * Authority: owner decisions 2026-11-18 (demo, desktop, resource group `ama`, cap USD 700, no drills on the live DB, no Key Vault rotation, no production change).
 * Existing evidence: `docs/reference/research/issue-145-live-pitr-restore-evidence-2026-11-18.md` (PITR of `retrofit` to `retrofit-pitr145`, deleted) and `sql-ledger-live-2026-11-18.md` (#114 drill).
 * Disposition so far: `reused` for the PITR and drill evidence; fresh read-only re-verification of Azure state planned.
-* Planning Readiness: pending the re-verification and the code check for restore reconciliation of release, suspension and allowance state.
+* Planning Readiness: Ready. The re-verification and the code check are complete; the outcome is in the run2 re-verification note.

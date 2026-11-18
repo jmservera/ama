@@ -18,6 +18,8 @@ Refs #145. Synthetic demo, desktop only. This run adds to [the first live restor
 
 ## Fresh read-only checks (2026-11-18T10:53Z)
 
+The results below come from read-only `az` calls; raw `az` output not retained.
+
 | Check | Result |
 | --- | --- |
 | Databases on `sql-cutover-test-rzsrg` | `retrofit` (Standard S0, 10 DTU, Online) and `master`; the throwaway `retrofit-pitr145` and the #114 drill databases are absent |
@@ -32,7 +34,7 @@ The blob container listing was blocked by the storage network rules, so only the
 
 ## Why restore resurrection (R3) cannot be proven on the demo
 
-Release status (`assistant_releases`), task suspension and its epoch, and spent allowance (`assistant_allowance`) are rows in the SQL database ([assistant_release.py](../../../src/core/src/zava_forward/core/assistant_release.py), [continuity.py](../../../src/core/src/zava_forward/core/continuity.py)). A point-in-time restore rewinds them with the rest of the database. The #114 drill showed that rewind directly: the restored ledger returned to 602 entries and the erased case came back unredacted until `reapply_deletions` ran. The only reconciliation code is `reapply_deletions` in [recovery.py](../../../src/core/src/zava_forward/core/recovery.py), driven by an erasure register held outside the database. A search of `src/core`, `src/agents` and `src/api` found no equivalent that re-applies a revocation, suspension or spent allowance after a restore. A drill would therefore be expected to show a revoked or suspended state coming back, which is a product gap, not a proof. Closing it needs a `src` change (an out-of-database register for release, suspension and allowance decisions) and the full validation tier, which this run does not take. The three tables are also empty on the demo, so a restore of the demo alone would be vacuous. Recorded as a finding for follow-up.
+Release status (`assistant_releases`), task suspension and its epoch, and spent allowance (`assistant_allowance`) are rows in the SQL database ([assistant_release.py](../../../src/core/src/zava_forward/core/assistant_release.py), [continuity.py](../../../src/core/src/zava_forward/core/continuity.py)). A point-in-time restore rewinds them with the rest of the database. The #114 drill showed that rewind directly: the restored ledger returned to 602 entries and the erased case came back unredacted until `reapply_deletions` ran. The only reconciliation code is `reapply_deletions` in [recovery.py](../../../src/core/src/zava_forward/core/recovery.py), driven by an erasure register held outside the database. A search of `src/core`, `src/agents` and `src/api` found no equivalent that re-applies a revocation, suspension or spent allowance after a restore. To reproduce the search, run `git grep -nE "reapply_deletions|reconcil|restore" -- src/core src/agents src/api` and read the hits in `src/core`; the result is a search result, not a proof of absence. A drill would therefore be expected to show a revoked or suspended state coming back, which is a product gap, not a proof. Closing it needs a `src` change (an out-of-database register for release, suspension and allowance decisions) and the full validation tier, which this run does not take. The three tables are also empty on the demo, so a restore of the demo alone would be vacuous. Recorded as a finding for follow-up.
 
 ## Final per-criterion record
 

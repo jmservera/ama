@@ -12380,6 +12380,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Live demo evidence for simulator stage 2 (Refs #184)
 
 * Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.
+
 ## [2026-11-18] add | Issue 145 restore re-verification (Refs #145)
 
 * Added [issue-145-live-run2-reverification-2026-11-18.md](research/issue-145-live-run2-reverification-2026-11-18.md): read-only re-check of the demo SQL backup settings and cleanup, plus a code finding that no mechanism re-applies release, suspension or spent-allowance state after a restore (R3 unproven). No Azure or source changes.
