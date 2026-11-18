@@ -74,3 +74,9 @@ staff. The local protocol is
   failures are not hidden and the final scripts are retained.
 * The resident app cold start (minimum replicas 0) timed out the first page
   load; a `curl` warm-up fixed it.
+
+## Evidence limits
+
+* `chat-1-open.png` and `chat-2-state.png` are byte-identical and show the alerts panel, not an open chat. `chat-3-open-keyboard.png` shows the AI assistance tab, not the chat dialog. Only `homechat-1-open.png` shows the chat open; do not rely on the other three as chat evidence.
+* The Reflow row rests on `alerts-3-zoom200.png`.
+* The axe run on the chat dialog reported 1 incomplete item that is not characterised here; it stays open and no accessibility conformance is claimed.

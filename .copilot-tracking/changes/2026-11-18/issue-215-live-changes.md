@@ -8,7 +8,7 @@ ms.date: 2026-11-18
 
 * Added `docs/reference/research/issue-215-live-alert-chat-ux-evidence-2026-11-18.md`.
 * Added index entry in `docs/reference/README.md` and log entry in `docs/reference/log.md`.
-* Added evidence under `.copilot-tracking/evidence/2026-11-18/issue-215-live/` (three scripts, redacted JSON, six screenshots).
+* Added evidence under `.copilot-tracking/evidence/2026-11-18/issue-215-live/` (three scripts, redacted JSON, eight screenshots, three of them mislabelled (see the note)).
 * No `src/` change. Azure was read-only: nothing created, so nothing to delete.
 
 ## Per-criterion table
