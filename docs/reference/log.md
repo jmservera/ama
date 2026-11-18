@@ -13259,3 +13259,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 138 fifth run, summarize_plan Unsupported regression test (Refs #138)
 
 * Added [issue-138-live-r5-2026-11-18.md](research/issue-138-live-r5-2026-11-18.md): `summarize_plan` already rejects `Unsupported`; a new infra test pins it (33 tests pass, mutation check fails as expected); settings checks unchanged, no criterion ticked
+## [2026-11-18] add | Issue 1837 standalone nomination forms evidence (Refs #1837)
+
+* Added [issue-1837-live-demo-evidence-2026-11-18.md](research/issue-1837-live-demo-evidence-2026-11-18.md) with failing-first, axe and live negative-probe evidence; the deployed demo image predates the repaired script and an axe target-size finding stays open.
