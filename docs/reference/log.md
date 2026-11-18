@@ -12779,3 +12779,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Eval gate local test rerun and rescoring limits (Refs #216)
 
 * Updated [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md): 101 existing gate tests run locally with raw output retained; container scores labelled "Observed; raw output not retained"; no new model call; the unticked criterion stays partly proven.
+
+## [2026-11-18] add | Chat grounding live demo evidence, second pass (Refs #164)
+
+* Added [issue-164-live-chat-grounding-evidence-r2-2026-11-18.md](research/issue-164-live-chat-grounding-evidence-r2-2026-11-18.md): UI-driven probe of seven asks with raw output, labelled screenshots and offline test output retained; no source change, no Azure resource created; no criterion newly tickable.
