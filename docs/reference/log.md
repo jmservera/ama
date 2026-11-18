@@ -12868,6 +12868,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [src-repoint-live-audit-200-2026-11-18.md](research/src-repoint-live-audit-200-2026-11-18.md): criteria 2 proven, criterion 3 proven except a fresh tag deployment; no source change
 
+## [2026-11-18] update | Issue 111 signed-in sensor evidence re-run (Refs #111)
+
+* Added [issue-111-live2-sensor-evidence-2026-11-18.md](research/issue-111-live2-sensor-evidence-2026-11-18.md) with raw test output, redacted staff-signed sensors payload and screenshot; R1 to R3 stays unproven. No source change.
+
 ## [2026-11-18] add | Issue 96 live form workspace evidence (Refs #96)
 
 * Added [issue-96-live-demo-evidence-2026-11-18.md](research/issue-96-live-demo-evidence-2026-11-18.md): read-only live probe found zero registered form schemas and no approval path; criterion 1 unproven, no source change
