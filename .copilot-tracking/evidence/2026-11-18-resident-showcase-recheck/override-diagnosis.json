@@ -1,0 +1,43 @@
+{
+ "login": 200,
+ "baseline_vs_baseline_diff_paths": [
+  "/sensors/freshness/age_seconds"
+ ],
+ "case_override_diff_paths": [
+  "/sensors/freshness/age_seconds"
+ ],
+ "case_id_override_diff_paths": [
+  "/sensors/freshness/age_seconds"
+ ],
+ "email_override_diff_paths": [
+  "/sensors/freshness/age_seconds"
+ ],
+ "x_case_id_diff_paths": [
+  "/sensors/freshness/age_seconds"
+ ],
+ "x_forwarded_user_diff_paths": [
+  "/sensors/freshness/age_seconds"
+ ],
+ "base1_keys": [
+  "account",
+  "agenda_available",
+  "banner",
+  "callbacks_available",
+  "documents",
+  "help",
+  "home",
+  "measures",
+  "needed",
+  "next_step",
+  "progress",
+  "read_only",
+  "sensors",
+  "stage",
+  "summary",
+  "timeline",
+  "unavailable",
+  "viewer"
+ ],
+ "account_email_is_signed_in_user": true,
+ "override_account_email_unchanged": true
+}
