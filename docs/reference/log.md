@@ -12242,3 +12242,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Live Azure backfill and live series evidence (Refs #188)
 
 * Added [issue-188-live-backfill-evidence-2026-11-18.md](research/issue-188-live-backfill-evidence-2026-11-18.md): per-criterion proven/unproven record of a demo run on live Azure SQL. Production receiver and indoor-schema proof remain open.
+
+## [2026-11-18] add | Azure SQL point-in-time restore evidence (Refs #145)
+
+* Added [issue-145-live-pitr-restore-evidence-2026-11-18.md](research/issue-145-live-pitr-restore-evidence-2026-11-18.md): live PITR of the demo database to a throwaway copy (deleted), audit-chain prefix match and a per-criterion record.
+* Native ledger verification, resurrection checks, erasure and hold reapplication, #121 retention match and independent witness stay unproven for the demo.
