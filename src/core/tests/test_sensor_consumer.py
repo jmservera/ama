@@ -98,6 +98,18 @@ class SensorConsumerTests(unittest.TestCase):
         self.assertEqual(stored[0], "sensor-fault-input-v1")
         self.assertEqual(float(stored[1]), float(str(row["temperature_c"])))
 
+    def test_accepted_reading_writes_register_row_once(self) -> None:
+        row = observations()[0]
+        register = "SELECT sensor_id, home_id, source_type FROM sensor_register"
+        self.assertEqual(self.store.db.execute(register).fetchall(), [])
+        self.assert_rejected({**row, "temperature_c": "999"}, "RANGE")
+        self.assertEqual(self.store.db.execute(register).fetchall(), [])
+        self.assertEqual(self.consume([row])[0].status, "accepted")
+        later = {**row, "reading_id": "R-LATER", "observed_at": "2024-10-01T01:30:00Z"}
+        self.consume([later])
+        stored = [tuple(r) for r in self.store.db.execute(register).fetchall()]
+        self.assertEqual(stored, [(row["sensor_id"], row["home_id"], "SYNTHETIC")])
+
     def test_observed_series_returns_retained_accepted_payload(self) -> None:
         row = {**observations()[0], "temperature_c": "20", "seed": "-0"}
         self.assertEqual(self.consume([row])[0].status, "accepted")

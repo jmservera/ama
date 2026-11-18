@@ -255,7 +255,7 @@ def assess(limits: Record | None, exposure: Record | None, today: date | None = 
     mismatched observation is Unknown, never treated as within limits.
     """
     if limits is None:
-        return held("No person-approved envelope or tolerances are recorded.")
+        return held("No person-approved investment limit or tolerances are recorded.")
     if not isinstance(limits, dict):
         return _held("The approved limits record is not readable, so it cannot be relied on.")
     try:

@@ -1,0 +1,10 @@
+Failing-first run, 2026-11-18, detached worktree at 9da3fcd0dbc0f148ccc2abc350de3bfd96757392 (issue source),
+with only src/api/tests/test_nomination_api_routes.py copied from this branch:
+
+command: python3 -m unittest tests.test_nomination_api_routes.NominationApiRoutesTests.test_standalone_route_forms_submit_in_browser
+         tests.test_nomination_api_routes.NominationApiRoutesTests.test_route_form_script_posts_json_with_csrf_header_and_page_loads_it
+result:  Ran 2 tests in 36.7s, FAILED (failures=1, errors=1)
+  ERROR test_standalone_route_forms_submit_in_browser: playwright TimeoutError: Locator.click timeout 30000ms
+        (the native urlencoded submit never completed a successful navigation; issue observed HTTP 400)
+  FAIL  test_route_form_script_posts_json_...: '<script src="/nomination-routes.js" defer></script>' not found in routes page
+Same two tests pass on main (cfd272051) with the branch test file: 8 tests OK for the whole module.

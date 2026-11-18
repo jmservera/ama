@@ -463,6 +463,7 @@ unchanged image, adds 105 offline tests and a per-criterion table, and separates
 The [fourth audit](./research/issue-130-live-r4-nomination-route-audit-2026-11-18.md) sees a new revision on the
 same image digest, the same 403 write refusal, and explains the form-encoded 400 as a JSON-only API.
 The [fifth audit](./research/issue-130-live-r5-nomination-route-audit-2026-11-18.md) finds the same revision, image and 403, and adds a resident-app route check.
+The [identity 403 fix note](./research/issue-130-identity-403-live-2026-11-18.md) explains the cause of that 403 (whole-dict actor comparison), the key-based fix, its regression tests and the unproven representative-evidence criterion.
 For #124, the [Phase 0 discovery evidence](./research/issue-124-phase0-discovery-evidence-2026-11-18.md)
 records a 2026-11-18 offline and synthetic-data run: nomination, endpoint, dictionary and two-sided
 constraint rules proven in code, and the three unticked criteria stated as needing sponsor, owner
@@ -496,6 +497,8 @@ For #1818, the [live IoT map walkthrough evidence](./research/issue-1818-live-io
 records a 2026-11-18 demo run: nine synthetic messages through IoT Hub, an Event Hub route and Azure SQL, then
 fresh and stale sensor status in the employee map, accessible list, stale filter and resident `#sec-sensors`
 (desktop). No source change; the round 6 receiver fix stays unmerged.
+The [receiver register fix note](./research/issue-1818-sensor-register-receiver-fix-2026-11-18.md)
+lands that fix as a local candidate with a per-criterion proven or unproven table.
 For #2008, the [synthetic demo workbook and import evidence](./research/issue-2008-demo-workbook-import-evidence-2026-11-18.md)
 adds a generated `.xlsx` (generator in `tools/`), its local row-level preview and a run of the deployed CSV check
 with the staff test sign-in; conflicts show only locally because the web screen reads CSV only. No source change.
@@ -533,6 +536,9 @@ nothing is ticked.
 
 A [fourth run](./research/issue-138-live-r4-2026-11-18.md) repeats the probes with retained output and finds
 the same state (0 federated credentials, 0 runners, no protected environments, 0 `src-deploy.yml` runs); nothing is ticked.
+
+A [fifth run](./research/issue-138-live-r5-2026-11-18.md) adds a regression test that `summarize_plan` rejects an
+`Unsupported` what-if entry (production code already did) and repeats the settings checks; nothing is ticked.
 
 For #118, the [hardened deployment live evidence](./research/issue-118-hardened-deployment-live-evidence-2026-11-18.md)
 records the Azure Policy and Defender decision and read-only live probes (enactment not proven).
@@ -1362,6 +1368,7 @@ or infra acceptance claimed.
 | [AI evaluation harness live re-verification, round 3 (#108)](./research/issue-108-live-r3-2026-11-18.md) | Harness rerun (116 OK), quota routes retried (usages empty, Microsoft.Quota unregistered), signed-in live AI report read, manager routes still 403; per-criterion table, no criterion newly tickable | 2026-11-18 |
 | [Entra roles and field-level visibility live demo evidence (#116)](./research/issue-116-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the four unticked criteria: reason-role enforcement observed for one role, AI refusal observed, document hold and provider payloads not provable live, four boxes stay unticked |
 | [Assisted form workspace live demo evidence (#96)](./research/issue-96-live-demo-evidence-2026-11-18.md) | Per-criterion demo record: the deployed demo holds no registered schema and no code path approves one, so criterion 1 stays unticked; the other five rest on offline tests |
+| [Standalone nomination forms live demo evidence (#1837)](./research/issue-1837-live-demo-evidence-2026-11-18.md) | Per-criterion record: transport repaired in source by #1878, deployed demo image still lacks the script, new regression and axe evidence, open target-size finding |
 | [Entra roles and field-level visibility live demo evidence, round 2 (#116)](./research/issue-116-live-r2-evidence-2026-11-18.md) | Second live pass: reason strings absent from exports, proposals, AI report and audit surfaces for the one reason role; second role unobtainable without directory privilege; four boxes stay unticked |
 | [Entra roles and field-level visibility live demo evidence, round 3 (#116)](./research/issue-116-live-r3-evidence-2026-11-18.md) | Third live pass: read-only sweep of 88 GET paths for the one reason role finds no reason value; offline role, provider-spy and document tests re-run; four boxes stay unticked |
 | [Data protection, retention and rights live demo evidence (#121)](./research/issue-121-live-data-protection-evidence-2026-11-18.md) | Per-criterion demo record for the eight unticked criteria: live register, model location and retention settings read; deployed register older than source; approvals deferred to #1906 to #1908 |
@@ -1421,10 +1428,12 @@ or infra acceptance claimed.
 | [Content audit of deployed demo screens, second run (#153)](./research/content-audit-live-153-2026-11-18.md) | Playwright audit of 43 redacted staff and resident screens, case-page tabs included, findings N1 to N6 and per-criterion result; human-review criterion stays unproven |
 | [Content re-check and per-criterion audit, third run (#153)](./research/content-recheck-153-live-2026-11-18.md) | Fresh live probes of Finance, case tab and API error bodies; R1 to R7 findings; named-reviewer criterion unproven, three ticked criteria partly proven |
 | [Content re-check, fourth run (#153)](./research/content-recheck-153-live-r4-2026-11-18.md) | Repeat live probes on revision 0000032 match the third run; per-criterion table; named wording review still unproven |
+| [Wording defect fix and per-criterion result (#153)](./research/wording-defects-fix-153-live-r5-2026-11-18.md) | Source fix for the Finance "Held"/"envelope" wording and the handoff "Unassigned" owner wording, local test evidence, per-criterion proven/unproven table |
 | [Human-review effectiveness demo evidence (#223)](./research/human-review-live-223-2026-11-18.md) | Offline harness, targeted tests and a live review-record probe on the synthetic demo; per-criterion proven/unproven table. Real-reviewer competence, measured effort and OQ-017 authority stay unproven. |
 | [Cut-over Gate Demo Proof, Live Run 2026-11-18](./research/cutover-gate-live-2026-11-18.md) | Per-criterion results for the three unticked issue 201 criteria: repointing and healthy revision proven, src build provenance unproven (private registry), mvp/data (archive v0.21.0) and sign-off owner-only, legacy-reference checker failing on three test files. |
 | [Cut-over Gate Demo Proof, Second Live Run 2026-11-18](./research/cutover-gate-live-r2-2026-11-18.md) | Second per-criterion table for issue 201: in-container proof that the running image holds only the three src distributions; build-run record still absent; mvp/data and sign-off owner-only; legacy-reference violations grew to 45. |
 | [Post-Cleanup References and Live Health, Live Run 2026-11-18](./research/issue-203-live-references-evidence-2026-11-18.md) | Per-criterion results for the two unticked issue 203 criteria: legacy-reference checker reports 11 violations in three regression-test files (documents clean), deployed revision healthy and pull-request CI green, build provenance and main-branch CI unproven. |
+| [Legacy-Reference Checker Exemption and Live Health, Issue 203, 2026-11-18](./research/issue-203-checker-live-evidence-2026-11-18.md) | Checker now exits 0 through documented guard and dated-record exemptions; criterion 1 stays unproven (literal), criterion 5 partly proven (revision 0000032 healthy, PR CI green; no build provenance or main push CI). |
 | [Post-Cleanup References and Live Health, Second Live Run 2026-11-18](./research/issue-203-refs-verify-live-2026-11-18.md) | Per-criterion results for the two unticked issue 203 criteria with retained raw output: 20 legacy-reference violations remain and need a full-tier checker change; deployed revision healthy and pull-request CI green; build provenance and main-branch CI unproven. |
 | [Entra Browser Sign-in Proof on the Deployed Demo](./research/entra-signin-live-demo-2026-11-18.md) | Issue 349: live Playwright proof of Entra sign-in, anonymous 401, role-scoped `/api/me`, logout and denial paths on the demo apps, per-criterion status and what a real-user tenant registration still needs |
 | [Repoint to src Audit and Live Image Evidence](./research/src-repoint-live-audit-200-2026-11-18.md) | Issue 200: per-criterion audit of CI, Docker and live revision on the demo; local image contract passes, fresh tag push not performed |
@@ -1510,6 +1519,7 @@ official links for every snapshot. Check it before relying on any file below.
 | [Scientific Paper Writing and Review](./method/scientific-paper-writing-and-review.md) | Genre-sensitive writing techniques, evidence and venue-policy qualifications, and a dated four-source register |
 | [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | Coaching prompt that turns a recurring task into a Goal Card for an agent working in an assess, act, check and adjust loop |
 | [Operator Suspension Drill Protocol](./method/operator-suspension-drill-protocol.md) | Witnessed suspension and manual fallback drill steps and blank record; no drill run or authority appointed (Refs #221) |
+| [RPI Gate Preflight and Timing Method](./method/rpi-gate-preflight.md) | Non-receipt change-specific preflight (refuses all selected execution, exit 5), read-only full-gate timing analysis and benchmark protocol; partial delivery of issue #1830 (Refs #1830) |
 | [Knowledge Base Log](./log.md) | Chronological record of knowledge base changes |
 
 ### Agents

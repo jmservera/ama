@@ -517,6 +517,22 @@ class PipelineTests(unittest.TestCase):
             with self.assertRaises(pipeline.PipelineError):
                 pipeline.summarize_plan(plan, SUBSCRIPTION, SHA)
 
+    def test_plan_rejects_unsupported_entry_among_valid_changes(self):
+        valid = [
+            {"resourceId": RESOURCE, "changeType": kind}
+            for kind in ("Create", "Modify", "NoChange")
+        ]
+        accepted = pipeline.summarize_plan(
+            {"status": "Succeeded", "changes": valid}, SUBSCRIPTION, SHA
+        )
+        self.assertEqual(accepted["change_counts"], {"Create": 1, "Modify": 1, "NoChange": 1})
+        plan = {
+            "status": "Succeeded",
+            "changes": [*valid, {"resourceId": RESOURCE, "changeType": "Unsupported"}],
+        }
+        with self.assertRaisesRegex(pipeline.PipelineError, "unresolved/unsupported"):
+            pipeline.summarize_plan(plan, SUBSCRIPTION, SHA)
+
     def test_sql_precondition_is_not_vacuous(self):
         for servers in ([], [{}], [{"publicNetworkAccess": "Enabled"}], None):
             with patch.object(pipeline, "az", return_value=servers):

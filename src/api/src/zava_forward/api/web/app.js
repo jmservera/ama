@@ -803,7 +803,7 @@ const MANAGER_TARGET = "a Retrofit Programme Manager or Programme Support Office
 function handoffAttention(hd, now = Date.now()) {
   const waited = Number.isFinite(Date.parse(hd.offered_at)) ? Math.max(0, Math.round((now - Date.parse(hd.offered_at)) / 36e5)) : null;
   const elapsed = waited === null ? "Waiting time unknown" : `Waiting ${waited} ${waited === 1 ? "hour" : "hours"}`;
-  const target = `${hd.proposed_receiver || hd.to_name || "Unassigned"} (${hd.destination || hd.to_role || "role unknown"})`;
+  const target = `${hd.proposed_receiver || hd.to_name || "a receiver not yet named"} (${hd.destination || hd.to_role || "role unknown"})`;
   if (hd.state === "Escalated") return `State: Escalated: unaccepted handoff. ${elapsed}. Waiting for ${target}. Escalated to ${hd.escalation_owner || "a named manager"}.`;
   const due = Date.parse(hd.due_at);
   const overdue = Number.isFinite(due) && due < now;
@@ -823,8 +823,8 @@ function pendingHandoffs() {
       h("ul", { class: "list" }, rows.map((x) => h("li", {},
       h("a", { href: `#/case/${encodeURIComponent(x.case_id)}` }, `${x.resident}, ${x.address}`),
       h("div", {}, handoffAttention(x)),
-      h("div", { class: "muted" }, `${x.status}. Current owner: ${x.accountable_owner}; proposed receiver: ${x.proposed_receiver || "Unassigned"}; confirmed receiver: ${x.confirmed_receiver || "Unconfirmed"}; destination: ${x.destination || "Unknown"}; chase: ${x.chase_owner || "Unassigned"}.`),
-      h("div", { class: "muted" }, `Urgency: ${x.urgency || "Unknown"}; due: ${x.due_at || "Unknown"}; next action: ${x.next_action || "Unknown"}. Resident update: ${x.resident_update_owner || "Unassigned"}, ${x.resident_update_due_at || "Unknown"}.`),
+      h("div", { class: "muted" }, `${x.status}. Current owner: ${x.accountable_owner}; proposed receiver: ${x.proposed_receiver || "No one named yet. Next action: ask the case lead to name one"}; confirmed receiver: ${x.confirmed_receiver || "Unconfirmed"}; destination: ${x.destination || "Unknown"}; chase: ${x.chase_owner || "No one named yet. Next action: ask the case lead to name one"}.`),
+      h("div", { class: "muted" }, `Urgency: ${x.urgency || "Unknown"}; due: ${x.due_at || "Unknown"}; next action: ${x.next_action || "Unknown"}. Resident update: ${x.resident_update_owner || "No one named yet. Next action: ask the case lead to name one"}, ${x.resident_update_due_at || "Unknown"}.`),
       h("div", {}, x.to_code === me.user.code ? "Open to record receipt, accept or decline." : "Open to chase, escalate or withdraw.")))));
   }).catch((e) => {
     if (e.name === "AbortError") return;
@@ -932,8 +932,8 @@ async function handoffWaitingView() {
             h("td", {}, x.status),
             h("td", {}, waitingHours(x.age_hours)),
             h("td", {}, waitingTime(x.due_at)),
-            h("td", {}, x.chase_owner || "Unassigned"),
-            h("td", {}, x.proposed_receiver || "Unassigned"),
+            h("td", {}, x.chase_owner || "No one named yet. Next action: ask the case lead to name one"),
+            h("td", {}, x.proposed_receiver || "No one named yet. Next action: ask the case lead to name one"),
             h("td", {}, escalation(x)))))))),
     recheck);
 }
@@ -1576,9 +1576,9 @@ function handoffPanel(c, id, refresh) {
   const kids = [h("h2", {}, "Handoff to a colleague")];
   if (hd) kids.push(
     ["Offered", "Received", "Escalated"].includes(hd.state) && h("p", { role: "status" }, handoffAttention(hd)),
-    h("p", { role: "status" }, `${hd.status}. Current accountable owner: ${hd.accountable_owner}. Destination: ${hd.destination || "Unknown"}. Proposed receiver: ${hd.proposed_receiver || "Unassigned"}. Confirmed receiver: ${hd.confirmed_receiver || "Unconfirmed"}. Chase owner: ${hd.chase_owner || "Unassigned"}.`),
+    h("p", { role: "status" }, `${hd.status}. Current accountable owner: ${hd.accountable_owner}. Destination: ${hd.destination || "Unknown"}. Proposed receiver: ${hd.proposed_receiver || "No one named yet. Next action: ask the case lead to name one"}. Confirmed receiver: ${hd.confirmed_receiver || "Unconfirmed"}. Chase owner: ${hd.chase_owner || "No one named yet. Next action: ask the case lead to name one"}.`),
     h("p", {}, `Urgency: ${hd.urgency || "Unknown"}. Due: ${hd.due_at || "Unknown"}. Next action: ${hd.next_action || "Unknown"}.`),
-    h("p", {}, `Resident update owner: ${hd.resident_update_owner || "Unassigned"}; commitment: ${hd.resident_update_due_at || "Unknown"}. No message is sent automatically.`),
+    h("p", {}, `Resident update owner: ${hd.resident_update_owner || "No one named yet. Next action: ask the case lead to name one"}; commitment: ${hd.resident_update_due_at || "Unknown"}. No message is sent automatically.`),
     hd.state === "Escalated" && h("p", {}, `Escalated to ${hd.escalation_owner}. ${hd.answer_note}`));
   if (open) {
     kids.push(h("p", { role: "status" }, `Offered to ${hd.to_name} by ${hd.offered_by} on ${fmtDate(hd.offered_at)}. Waiting for an answer. The case stays with ${hd.from_name} until it is accepted.`),
