@@ -1,0 +1,48 @@
+{
+ "steps": [
+  {
+   "step": "probe/openapi.json",
+   "status": 404
+  },
+  {
+   "step": "probe/docs",
+   "status": 404
+  },
+  {
+   "step": "axe_workbench_1366",
+   "url_path": "/app",
+   "version": "4.10.3",
+   "violations": [],
+   "passes": 32
+  },
+  {
+   "step": "axe_case_1366",
+   "version": "4.10.3",
+   "violations": [],
+   "passes": 34
+  },
+  {
+   "step": "case_ownership_text",
+   "owner_visible": true,
+   "next_action_visible": true,
+   "human_review_text": true,
+   "manual_alt": true
+  },
+  {
+   "step": "axe_resident_signed_out_1366",
+   "version": "4.10.3",
+   "violations": [],
+   "passes": 24
+  },
+  {
+   "step": "axe_resident_signed_in_1366",
+   "version": "4.10.3",
+   "violations": [],
+   "passes": 21
+  },
+  {
+   "step": "resident_text",
+   "manual_route": false
+  }
+ ]
+}

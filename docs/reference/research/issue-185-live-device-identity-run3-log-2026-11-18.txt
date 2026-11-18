@@ -1,0 +1,17 @@
+
+
+2026-11-18T12:36:31.6048495Z stdout F {"event": "mapping", "homes": 3, "devices": 3, "one_device_per_home": true, "ids_embed_stock_sensor_key": true}
+2026-11-18T12:36:31.7901079Z stdout F {"event": "start", "pre_existing": []}
+2026-11-18T12:36:31.9166430Z stdout F {"event": "created", "device": "SYN-<sensor-key-home-1>", "status": 200, "auth": "sas", "keys_generated": true, "distinct": true}
+2026-11-18T12:36:31.9621362Z stdout F {"event": "created", "device": "SYN-<sensor-key-home-2>", "status": 200, "auth": "sas", "keys_generated": true, "distinct": true}
+2026-11-18T12:36:32.0257569Z stdout F {"event": "created", "device": "SYN-<sensor-key-home-3>", "status": 200, "auth": "sas", "keys_generated": true, "distinct": true}
+2026-11-18T12:36:32.0257885Z stdout F {"event": "keys_unique_across_devices", "value": true}
+2026-11-18T12:36:32.4269125Z stdout F {"event": "d2c_send", "device": "SYN-<sensor-key-home-1>", "status": 204}
+2026-11-18T12:36:32.6793777Z stdout F {"event": "d2c_send", "device": "SYN-<sensor-key-home-2>", "status": 204}
+2026-11-18T12:36:32.9005985Z stdout F {"event": "d2c_send", "device": "SYN-<sensor-key-home-3>", "status": 204}
+2026-11-18T12:36:32.9191853Z stdout F {"event": "d2c_with_wrong_key", "status": 401}
+2026-11-18T12:36:33.0094049Z stdout F {"event": "deleted", "device": "SYN-<sensor-key-home-1>", "status": 204}
+2026-11-18T12:36:33.0422938Z stdout F {"event": "deleted", "device": "SYN-<sensor-key-home-2>", "status": 204}
+2026-11-18T12:36:33.0782482Z stdout F {"event": "deleted", "device": "SYN-<sensor-key-home-3>", "status": 204}
+2026-11-18T12:36:33.2157597Z stdout F {"event": "remaining_after_teardown", "devices": []}
+2026-11-18T12:36:33.2157927Z stdout F {"event": "leak_check", "key_in_output": false}
