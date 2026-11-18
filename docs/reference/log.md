@@ -12935,6 +12935,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Cohort evaluation second live re-run (Refs #222)
 
 * Added [cohort-evaluation-live-r2-2026-11-18.md](research/cohort-evaluation-live-r2-2026-11-18.md) with retained output and a per-criterion table: five criteria proven on the synthetic fixture, the OQ-018 owner-approval criterion unproven.
+
 ## [2026-11-18] add | Issue 358 live pass 3 retained evidence (Refs #358)
 
 * Added [issue-358-live3-evidence-2026-11-18.md](research/issue-358-live3-evidence-2026-11-18.md) with raw outputs under `research/issue-358-live3-2026-11-18/`: 126-test baseline, scratch-copy expiry-guard mutation (nine failures), throwaway app absent, demo API Key Vault reference intact, delegating `main()`. No source change and no Azure write; the full setup run on the demo app stays unproven.
