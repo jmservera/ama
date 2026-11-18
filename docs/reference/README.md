@@ -464,6 +464,10 @@ records a 2026-11-18 read-only demo run: a live what-if of the real template, th
 smoke checks against the demo API, the fail-closed environment gate and the unconfigured OIDC,
 environment and runner prerequisites. All six criteria stay unticked.
 
+A [second run](./research/issue-138-live-cicd-pipeline-run2-evidence-2026-11-18.md) repeated the audit from a clean
+worktree with the same outcome: the what-if and smoke checks pass, while the OIDC variables, protected
+environments, runner and image release remain unconfigured and unobserved.
+
 For #118, the [hardened deployment live evidence](./research/issue-118-hardened-deployment-live-evidence-2026-11-18.md)
 records the Azure Policy and Defender decision and read-only live probes (enactment not proven).
 
