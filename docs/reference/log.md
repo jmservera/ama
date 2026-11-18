@@ -13187,6 +13187,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 96 live third re-verification (Refs #96)
 
 * Added [issue-96-live-r3-reverification-2026-11-18.md](research/issue-96-live-r3-reverification-2026-11-18.md): live probe again returns zero registered form schemas, search finds no code path that records an approval, 79 focused core tests pass with raw output retained; the approved-schema criterion stays unproven for the demo. Docs only.
+
 ## [2026-11-18] add | Issue 116 live round 3 (Refs #116)
 
 * Added [issue-116-live-r3-evidence-2026-11-18.md](research/issue-116-live-r3-evidence-2026-11-18.md): read-only sweep of 88 GET paths as the one reason role finds no reason value; 52 core and 57 api offline tests pass; second role still unobtainable; no box ticked. No source change.
