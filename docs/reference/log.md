@@ -12935,3 +12935,38 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Resident demo authority live check, run 2 (Refs #521)
 
 * Added [resident-demo-authority-live-521-r2-2026-11-18.md](research/resident-demo-authority-live-521-r2-2026-11-18.md) with retained read-only `az` output, a fresh desktop Playwright sign-in and a per-criterion table: live `ZF_DEMO_EXPIRES_AT` 2028-01-01T00:00:00Z on a healthy revision; SQL login refused (private-only server), registry and activity log give no commit or apply time, so criterion 4 stays partly proven; no source change, no Azure resource created
+## [2026-11-18] add | Issue 1274 release-download audit (Refs #1274)
+
+* Added [issue-1274-release-downloads-audit-live-2026-11-18.md](research/issue-1274-release-downloads-audit-live-2026-11-18.md): per-criterion table (actionlint half delivered by PR 1275 and re-verified locally; criteria 1, 3 and 4 partly proven; AWF 0.28.23 bootstrap still open and FULL-tier if code is needed); no source or workflow change, nothing ticked
+
+## [2026-11-18] add | Live monitoring coverage check (Refs #146)
+
+* Added [monitoring-coverage-live-146-2026-11-18.md](research/monitoring-coverage-live-146-2026-11-18.md): read-only az monitor evidence with a per-criterion table; ledger digest alerts installed, job failure, poison queue, IoT alerts and workbook absent, owners proposed only, KQL blocked by workspace network rules.
+
+## [2026-11-18] update | Rubric src counting and mvp stop, live r2 audit (Refs #198)
+
+* Added [issue-198-rubric-live-r2-2026-11-18.md](research/issue-198-rubric-live-r2-2026-11-18.md) with retained raw outputs: no mvp or prototype glob, 949 `solution-code` files, score 79/100; criteria 3 and 4 stay unprovable; `test_safe_output_runtime.py` has 10 failures tied to a retired `mvp/` sample path and missing triggers; no workflow, registry or source change
+
+## [2026-11-18] add | Post-cleanup references second live run (Refs #203)
+
+* Added [issue-203-refs-verify-live-2026-11-18.md](research/issue-203-refs-verify-live-2026-11-18.md) with retained raw output: criterion 1 still fails with 20 violations and needs a full-tier change to the legacy-reference checker (not made here); criterion 5 partly proven; no source, tool or Azure change
+
+## [2026-11-18] update | Resident portal docs nine-criterion audit (Refs #441)
+
+* Extended [resident-portal-441-live-status-2026-11-18.md](research/resident-portal-441-live-status-2026-11-18.md) with a per-criterion proven/unproven table: criterion 5 stays unproven (owner decision), criteria 3 and 9 need publication-time rechecks; no source, Azure or credential action, no tick changed
+
+## [2026-11-18] update | Cohort evaluation second live re-run (Refs #222)
+
+* Added [cohort-evaluation-live-r2-2026-11-18.md](research/cohort-evaluation-live-r2-2026-11-18.md) with retained output and a per-criterion table: five criteria proven on the synthetic fixture, the OQ-018 owner-approval criterion unproven.
+
+## [2026-11-18] add | Issue 358 live pass 3 retained evidence (Refs #358)
+
+* Added [issue-358-live3-evidence-2026-11-18.md](research/issue-358-live3-evidence-2026-11-18.md) with raw outputs under `research/issue-358-live3-2026-11-18/`: 126-test baseline, scratch-copy expiry-guard mutation (nine failures), throwaway app absent, demo API Key Vault reference intact, delegating `main()`. No source change and no Azure write; the full setup run on the demo app stays unproven.
+
+## [2026-11-18] update | Challenge route live third pass (Refs #220)
+
+* Extended [issue-220-live-challenge-route-evidence-2026-11-18.md](research/issue-220-live-challenge-route-evidence-2026-11-18.md): demo revision and the Entra staff-write defect are unchanged, so the unticked criterion stays unproven live; no source change, no Azure resource created
+
+## [2026-11-18] add | Alert and home chat UX live run 3 (Refs #215)
+
+* Added [issue-215-live-rerun3-evidence-2026-11-18.md](research/issue-215-live-rerun3-evidence-2026-11-18.md): desktop Playwright re-check on the unchanged demo image; law store still not loaded, chat axe incomplete characterised, clipped helper line recorded, per-criterion proven or unproven table; no source change, no Azure resource created

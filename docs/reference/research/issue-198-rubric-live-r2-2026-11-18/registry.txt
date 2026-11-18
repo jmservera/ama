@@ -1,0 +1,13 @@
+# registry globs
+grep exit=1
+# tracked paths under mvp/ prototype/
+0
+# solution-code entry
+29:    {"id": "solution-code",
+30-      "title": "Solution source code",
+31-      "status": "active",
+32-      "extractor": "text",
+33-      "include": ["src/**/*", "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/*.py"],
+34-      "exclude": ["**/node_modules/**", "**/.venv/**", "**/__pycache__/**", "**/bin/**", "**/obj/**", "**/dist/**", "src/**/web/vendor/**", "src/**/data/**", "**/*.egg-info/**", "**/build/**"],
+35-      "criteria": ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]
+rubric_version 2
