@@ -5,7 +5,7 @@ ms.date: 2026-11-18
 ms.topic: reference
 ---
 
-Scope: synthetic demo, desktop only, on `main` at `d7d7fdee3c2a123e777c1c6ad1496610a6a80502` (worktree head). Owner decisions of 2026-11-18 apply: live Azure authorised in resource group `ama`, no drills, no Key Vault rotation, no production change; billing reconciliation, DPO and Legal approval and person-run assistive-technology testing are not needed for the demo. This note creates no issue, changes no source and mutates no Azure resource. Refs #440.
+Scope: synthetic demo, desktop only, on `main` at `d7d7fdee3c2a123e777c1c6ad1496610a6a80502` (the branch base; main has moved since). Owner decisions of 2026-11-18 apply: live Azure authorised in resource group `ama`, no drills, no Key Vault rotation, no production change; billing reconciliation, DPO and Legal approval and person-run assistive-technology testing are not needed for the demo. This note creates no issue, changes no source and mutates no Azure resource. Refs #440.
 
 ## Evidence base
 
@@ -117,7 +117,7 @@ Verdicts are proposals from merged and live evidence, not owner decisions. No pi
 | --- | --- | --- | --- | --- |
 | #73 Home case and role-based workbench | #76, #79, #80 | none | Continue | Ranking hardening #1258 and #1259 are independent; closure waits on the three children and their acceptance checks |
 | #81 Safety, consent, lifecycle | #130 | #1837 | Fix | Nomination submissions defect gates #130 and the epic; consent and approval boundaries are otherwise unchanged |
-| #89 Provider capacity, work orders, quality | none | none | Continue; ready for the owner to tick the stabilization criterion | All seven children closed (#90, #91, #92, #132, #133, #1384, #1402); 2026-11-15 scoped checkpoint recommended continue and no defect was confirmed; live API reads for the epic surfaces answer 200 today; PR #1641 merged 2026-11-18. Not yet ready to tick: the 2026-11-15 record requires the checkpoint to merge to main, exact-head hosted CI and independent review, then an owner tick |
+| #89 Provider capacity, work orders, quality | none | none | Continue; no open child, the tick waits on the listed prerequisites | All seven children closed (#90, #91, #92, #132, #133, #1384, #1402); 2026-11-15 scoped checkpoint recommended continue and no defect was confirmed; live API reads for the epic surfaces answer 200 today; PR #1641 merged 2026-11-18. The tick waits on this: the 2026-11-15 record requires the checkpoint to merge to main, exact-head hosted CI and independent review, then an owner tick |
 | #93 Finance, grants, form-assisted evidence | #96 | none | Continue | #96 open |
 | #100 Management insight, forecasting, export | none | none | Continue; closure waits on merge, hosted CI, independent review and owner tick | Live `/api/ai/report` shows the consumption block with `token_cost` Unknown rather than zero, which is partial support only: management views and explicit denominators for the AI-economics criterion were not verified here and stay unproven. Provisional tariff approval stays an owner item under #432 |
 | #104 Bounded AI assistance with human review | #107, #108, #435 | none | Continue | Human-effectiveness and independence evidence needs people and is not provable in the demo; #1840 is independent |
@@ -139,3 +139,7 @@ Counts: 14 continue (#113 conditional on D1 adoption), 2 fix (#81, #195), 0 pivo
 * Not re-run: full local suites (the heavy gate lock was held by another job and `rpi-checks.py --all` is not permitted here), SQL Server and browser harnesses, and the Entra browser flow beyond the single probe above. The prior 2026-11-15 test counts are historical.
 * D1 root cause is unproven (no SQL error text); D2 to D4 are static or tool reproductions.
 * No issue was created; the drafts above need owner or coordinator filing. No epic criterion is ticked and no issue is closed by this note.
+
+## Evidence limits
+
+* `.copilot-tracking/evidence/2026-11-18/issue-440-live/time-capture-screen.png` shows the signed-out landing page, not a time-capture screen; the probe's `time_screen_text` is empty. It is not time-capture evidence.

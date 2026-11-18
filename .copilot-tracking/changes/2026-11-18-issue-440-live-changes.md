@@ -21,11 +21,11 @@ Read-only: `az containerapp show` (two apps) and `az containerapp logs show`; on
 
 | Criterion | Result | Evidence and limit |
 | --- | --- | --- |
-| 7. Triage confirmed findings into deduplicated issue drafts with severity, reproduction, requirement/ADR links, acceptance criteria and dependencies | Proven (as drafts) | Four drafts D1 to D4 in the triage note; 13 further findings mapped to existing owners. Drafts are not filed (instructed); filing is the owner or coordinator step |
-| 7. State which epics each blocking finding gates | Proven | Part 2 table: D1 gates #350 criterion 9 (and #113 only if adopted), D2 gates #195, #1837 gates #81; none gates the other epics |
-| 7. Per-epic scoped verdict from merged evidence | Proven as proposals | 14 continue, 2 fix (#81, #195), 0 pivot. Owner approves pivots, deferrals and any closure; #89 and #100 still need merge, hosted CI, independent review and an owner tick |
+| 7. Triage confirmed findings into deduplicated issue drafts with severity, reproduction, requirement/ADR links, acceptance criteria and dependencies | Drafted, unfiled | Four drafts D1 to D4 in the triage note; 13 further findings mapped to existing owners. Drafts are not filed (instructed); filing is the owner or coordinator step |
+| 7. State which epics each blocking finding gates | Drafted | Part 2 table: D1 gates #350 criterion 9 (and #113 only if adopted), D2 gates #195, #1837 gates #81; none gates the other epics |
+| 7. Per-epic scoped verdict from merged evidence | Proposed | 14 continue, 2 fix (#81, #195), 0 pivot. Owner approves pivots, deferrals and any closure; #89 and #100 still need merge, hosted CI, independent review and an owner tick |
 | 7. Epics unticked or closed, issues filed | Not done by design | No tick, no closure, no issue created |
-| 8. Coordinator change static review | Proven | HVE static review Pass at HEAD d7d7fdee3; findings F1 and F2 Medium, F3 to F7 Low; reviewer was not fresh-context (nested delegation unavailable) |
+| 8. Coordinator change static review | Pass, not independent | HVE static review Pass at HEAD d7d7fdee3; findings F1 and F2 Medium, F3 to F7 Low; reviewer was not fresh-context (nested delegation unavailable) |
 | 8. Coordinator behaviour testing | Partly proven | 5 scenarios, simulation fidelity, Pass provisional; executor model proxy and grading not independent |
 | 8. Coordinator host validation | Unproven | Deferred: needs an enforced-sandbox native `copilot` session where `/agent` lists the coordinator; recorded against the file sha256. `check-coordinator-handoff.py` exit 0 and 11 tests OK are mechanical checks only; no hosted CI observed |
 | 8. "No unsupported acceptance ticks or issue closure" | Proven | Nothing ticked or closed; criterion 8 should stay unticked because host validation is Deferred |
