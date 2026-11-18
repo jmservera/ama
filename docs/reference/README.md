@@ -418,6 +418,8 @@ cases carry a safeguarding item, so that half stays unproven without writing dem
 For #96, the [live form schema approval evidence](./research/issue-96-live-form-schema-approval-evidence-2026-11-18.md)
 records that the demo holds no registered schema and no shipped path records
 an approval, so the approved-schema criterion stays unproven.
+The [third run](./research/issue-96-live-r3-reverification-2026-11-18.md) repeats the
+read-only probe and keeps the raw test and search output; the criterion stays unproven.
 For #80, the [staged transition thresholds evidence](./research/issue-80-live-transition-thresholds-evidence-2026-11-18.md)
 records that the one unticked criterion, owner-set thresholds, is a human decision and
 cannot be proven for the demo; 125 importer tests passed.
@@ -443,6 +445,7 @@ For #220, the [live challenge route evidence](./research/issue-220-live-challeng
 records a 2026-11-18 demo run: guarantees, assurance flags and forbidden-field refusals observed
 live, and a blocking defect that refuses every Entra-signed-in staff write to the route.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
+The [fourth run](./research/issue-220-live-r4-challenge-route-2026-11-18.md) finds the same image and 403 on revision 0000032; the open criterion stays unproven live.
 For #130, the [live nomination route evidence](./research/issue-130-live-nomination-route-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: route panels and permissions read live, representative options absent
 without confirmed authority, writes refused by the same identity defect, and the unticked
@@ -549,6 +552,9 @@ sign-off and R1 lacks the official standards texts. Read-only demo probes are re
 
 A later #111 re-run, the [signed-in sensor evidence](./research/issue-111-live2-sensor-evidence-2026-11-18.md),
 retains raw test output and a redacted staff-signed sensors payload; the R1 to R3 disposition is unchanged.
+
+A third #111 re-run, the [live sensor evidence](./research/issue-111-live3-sensor-evidence-2026-11-18.md),
+re-confirms C1 and C2 as engineering evidence on revision 0000032; R1 to R3 stays unproven.
 
 For #1288, the [quality sensor live evidence](./research/issue-1288-live-quality-sensor-evidence-2026-11-18.md)
 records a 2026-11-18 demo read and denial probe plus local mock-provider and SQL Server runs. Criteria 4
@@ -1342,6 +1348,7 @@ or infra acceptance claimed.
 | [Capstone pitch Tokenomics status, third pass (#435)](./research/capstone-pitch-435-live-r3-2026-11-18.md) | Per-criterion table with retained deck and Azure read-only outputs: placement decision and spend authority proven, mentor confirmation and timed rehearsal unproven, criterion 3 tick conflicts with the rehearsal notes | 2026-11-18 |
 | [Five assistants live demo evidence (#107)](./research/issue-107-live-assistants-evidence-2026-11-18.md) | Two unticked criteria: independent-worker revocation, restart and allowance races proven on local disposable SQL Server 2022 (7 tests) plus SQLite proxies; live demo denies all five assistants with no provider call, approved-release and delivered-build criterion unproven (OQ-017 approver gap) |
 | [Five assistants live demo re-verification (#107)](./research/issue-107-live-r2-assistants-evidence-2026-11-18.md) | Second pass with raw output: 7 MSSQL 2022 race and revocation tests, 80 SQLite proxy tests, read-only live probe showing default-off and no tokens; approved-release and delivered-build criterion still unproven |
+| [Five assistants live demo re-verification, third pass (#107)](./research/issue-107-live-r3-assistants-evidence-2026-11-18.md) | ACR is private so no older image can be pulled; same-image restart (revision 0000032) kept denial and the SUS-1 suspension with zero tokens; SUS-1 origin traced; both criteria stay unticked. Docs only. |
 | [Case chat citation and refusal gates, live (#216)](./research/eval-gates-live-216-2026-11-18.md) | Graded and adversarial 30-prompt run of the live demo case chat: refusals 10 of 10, citations valid 7 of 7 on the model path, but only 9 model calls available (demo meter); per-criterion status, adverse evidence and spend overshoot disclosed | 2026-11-18 |
 | [Epic 113 Azure platform audit with live read (#113)](./research/issue-113-epic-audit-live-2026-11-18.md) | Per-criterion table for the three epic criteria (none tickable for the demo), per-child roll-up of unticked criteria into demo-provable gaps and production-only items, and a GET-only read of the demo; nothing ticked. |
 | [Epic 136 Bicep infrastructure audit with live read (#136)](./research/issue-136-live-20261118T1638Z-2026-11-18.md) | Four epic criteria and six open children with proven and unproven status, plus a read-only live probe of the demo group; nothing ticked, evidence folder retained. |
@@ -1351,6 +1358,7 @@ or infra acceptance claimed.
 | [Issue 1274 release-download audit (#1274)](./research/issue-1274-release-downloads-audit-live-2026-11-18.md) | Per-criterion table: actionlint retrieval delivered and re-verified, criteria 1, 3 and 4 partly proven, AWF 0.28.23 bootstrap open (FULL tier if code needed) | 2026-11-18 |
 | [AI evaluation harness live demo evidence (#108)](./research/issue-108-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the eight unticked criteria: deployed model, version and rate limits confirmed, subscription quota unproven, live app AI report read, offline one-lever comparison tested; no criterion newly tickable | 2026-11-18 |
 | [AI evaluation harness audit, live round 2 (#108)](./research/issue-108-harness-audit-live-r2-2026-11-18.md) | Harness rerun (116 tests OK), regional model, version and capacity recheck, and a per-criterion proven or unproven table; subscription quota still unproven |
+| [AI evaluation harness live re-verification, round 3 (#108)](./research/issue-108-live-r3-2026-11-18.md) | Harness rerun (116 OK), quota routes retried (usages empty, Microsoft.Quota unregistered), signed-in live AI report read, manager routes still 403; per-criterion table, no criterion newly tickable | 2026-11-18 |
 | [Entra roles and field-level visibility live demo evidence (#116)](./research/issue-116-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the four unticked criteria: reason-role enforcement observed for one role, AI refusal observed, document hold and provider payloads not provable live, four boxes stay unticked |
 | [Assisted form workspace live demo evidence (#96)](./research/issue-96-live-demo-evidence-2026-11-18.md) | Per-criterion demo record: the deployed demo holds no registered schema and no code path approves one, so criterion 1 stays unticked; the other five rest on offline tests |
 | [Entra roles and field-level visibility live demo evidence, round 2 (#116)](./research/issue-116-live-r2-evidence-2026-11-18.md) | Second live pass: reason strings absent from exports, proposals, AI report and audit surfaces for the one reason role; second role unobtainable without directory privilege; four boxes stay unticked |
@@ -1366,6 +1374,7 @@ or infra acceptance claimed.
 | [Employee loading feedback and Today's briefing live demo evidence (#531)](./research/issue-531-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the unticked live-verification criterion: loading shell, per-panel feedback, briefing labels, sources, review wording and axe observed on the live build; cold start, retry and unverified output simulated in the browser; no review recorded; live app.js and style.css behind main |
 | [Employee loading feedback and Today's briefing live re-verification, second pass (#531)](./research/issue-531-live-r2-2026-11-18-note.md) | Adds a replica-poll cold-start attempt, parity re-check and a recorded UI reject; per-criterion proven and unproven table |
 | [Conversational assistant experience live demo evidence (#159)](./research/issue-159-live-chat-experience-evidence-2026-11-18.md) | Per-criterion demo record for the unticked keyboard, announcement and screen-reader criterion: keyboard operation and live-region announcements proven on the live panel, screen-reader testing deferred |
+| [Per-user chat epic live re-verification (#157)](./research/issue-157-live-chat-epic-recheck-2026-11-18.md) | Per-criterion verdicts for the two open epic criteria, fresh live chat status, thread isolation, break-glass refusal and audit probes on revision 0000032, and the owner and process blockers |
 | [Assistive-technology, consent and Fluent/WCAG acceptance live demo evidence (#619)](./research/issue-619-live-at-consent-evidence-2026-11-18.md) | Per-criterion demo record: keyboard, axe, zoom-equivalent reflow and the synthetic resident consent journey proven on the live demo; person-run screen reader, zoom and real-resident criteria stay production-only |
 | [Accessibility, equity and journey ownership live demo evidence (#128)](./research/issue-128-live-equity-evidence-2026-11-18.md) | Per-criterion demo record: aggregate-only measures proven at source level, desktop axe 0 violations on four live surfaces; protocol agreement and person-run testing stay unproven |
 | [Accessibility, equity and journey ownership live demo evidence, run 2 (#128)](./research/issue-128-live2-equity-evidence-2026-11-18.md) | Re-run with retained commands and raw output: protocol criterion unproven, aggregate-only proven at source level, desktop axe clean on four live pages |
@@ -1461,6 +1470,7 @@ or infra acceptance claimed.
 | [Chat Administrator and Break-Glass Demo-Only Disclaimer](./research/chat-demo-breakglass-disclaimer-2026-11-03.md) | Owner decision 2026-11-03: metadata-only administrator and break-glass policy for the synthetic-data demo, recorded as unreviewed by the DPO and Legal. Not a production or real-data approval (#162 criterion 6) | 2026-11-03 |
 | [Chat Break-Glass Live Proof on the Synthetic Demo](./research/chat-breakglass-live-proof-2026-11-18.md) | Live proof that demo break-glass is default-deny and audited per refusal; grant path proven by tests only; policy decided for the demo only (#162 criterion 6) | 2026-11-18 |
 | [Assistant Panel Keyboard and Announcement Live Proof](./research/assistant-ux-live-159-2026-11-18.md) | Playwright proof that the workbench assistant is keyboard operable and announces new messages on the demo; screen-reader testing unproven (#159) | 2026-11-18 |
+| [Regulatory Alerts and Home Chat Live Proof](./research/regulatory-ux-live-215-2026-11-18.md) | Playwright and axe proof of keyboard, plain-language and non-colour status on the demo alerts and cited lookup panels; staff comprehension testing unproven |
 | [Chat and Memory User Isolation Live Proof on the Synthetic Demo](./research/issue-162-live-isolation-evidence-2026-11-18.md) | Live demo probes (anonymous, resident session replay, forged identity, client owner fields, foreign ids, own-record controls) with raw output; real two-Entra-user foreign read not provable live; criterion 6 unchanged (Refs #162) |
 | [Issue 162 Live Audit with Per-Criterion Table](./research/issue-162-live-audit-2026-11-18.md) | Fresh live and local audit with retained raw output: refusals audited live (chain 2068 to 2070), grant rows proven locally, per-criterion table, production-only items; criterion 6 left unticked (Refs #162) | 2026-11-18 |
 | [Live Monitoring Coverage Check on the Demo](./research/monitoring-coverage-live-146-2026-11-18.md) | Read-only Azure Monitor observations: ledger digest alerts installed; job failure, poison queue, IoT alerts and workbook not installed; runbooks name proposed owners only; raw output not retained (Refs #146) | 2026-11-18 |
