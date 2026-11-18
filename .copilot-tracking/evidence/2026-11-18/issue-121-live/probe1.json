@@ -1,0 +1,242 @@
+{
+ "/api/me": {
+  "status": 200,
+  "body": {
+   "role": "Retrofit Programme Manager",
+   "identity_source": "entra",
+   "app_roles": [
+    "ZavaForward.ProgrammeManager"
+   ],
+   "staff_listed": 4,
+   "note": "name, oid, tid and staff list removed after capture; raw identity response not retained"
+  }
+ },
+ "/api/data-protection": {
+  "status": 200,
+  "body": {
+   "label": "synthetic-demo",
+   "owners": "DPO and Legal (named owners not yet recorded; issue #121 dependency)",
+   "dpo_reviewed": false,
+   "classes": [
+    {
+     "id": "fixture_resident",
+     "name": "Constructed resident fixtures",
+     "kind": "constructed",
+     "purpose": "Offline development and demonstration",
+     "audience": "Developers and demonstration users",
+     "storage": "Fixture files and demo SQL; entirely constructed",
+     "special_category": false,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "staff_identity",
+     "name": "Staff identities and role assignments",
+     "kind": "actual",
+     "purpose": "Access control and attribution of actions",
+     "audience": "Administrators and auditors",
+     "storage": "Entra ID claims, SQL actor columns",
+     "special_category": false,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "tenant_identity",
+     "name": "Actual tenant or representative identities",
+     "kind": "actual",
+     "purpose": "Future case management under the tenancy contract",
+     "audience": "Case staff",
+     "storage": "Not collected by the demonstrator",
+     "special_category": true,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "ART9",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "ART9",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "review_record",
+     "name": "Reviewer identity and review decisions",
+     "kind": "actual",
+     "purpose": "Evidence of named human approval",
+     "audience": "Approvers and auditors",
+     "storage": "SQL review and approval rows, audit ledger",
+     "special_category": false,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "raw_document",
+     "name": "Uploaded document and image bytes",
+     "kind": "actual",
+     "purpose": "Evidence storage for a case",
+     "audience": "Case staff",
+     "storage": "Blob storage with scan tags",
+     "special_category": true,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "ART9",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER",
+      "NECESSITY"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "ART9",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER",
+      "NECESSITY"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "prompt_output",
+     "name": "Prompts, outputs and citations",
+     "kind": "actual",
+     "purpose": "Bounded assistant answers with sources",
+     "audience": "Signed-in staff",
+     "storage": "Not stored by Zava except chat threads; provider copy unknown",
+     "special_category": false,
+     "provider_copy": "Provider abuse-monitoring and retention terms unknown",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "audit_ledger",
+     "name": "Audit ledger entries",
+     "kind": "actual",
+     "purpose": "Tamper-evident record of actions",
+     "audience": "Auditors",
+     "storage": "Append-only SQL ledger, digests in Blob with an unlocked immutability policy",
+     "special_category": false,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "telemetry",
+     "name": "Diagnostics, telemetry and token counts",
+     "kind": "actual",
+     "purpose": "Operation and metering without content",
+     "audience": "Operators",
+     "storage": "Process output, Azure Monitor",
+     "special_category": false,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    }
+   ],
+   "statement": "Recorded references are not verified DPO or Legal approval. Local deletion is not provider erasure."
+  }
+ },
+ "/api/retention": {
+  "status": 200,
+  "body": {
+   "label": "synthetic-demo placeholder period from the trigger; not an approved retention schedule. The DPO and Legal set the real periods (PR-003, OD-14).",
+   "as_of": "2026-11-18",
+   "records": []
+  }
+ },
+ "/api/audit-check": {
+  "status": 200,
+  "body": {
+   "intact": true,
+   "entries": 1610,
+   "head": "9a36dac18ef2e8afb815334c096868f713930d3833b852dbe47cef6e5742317a",
+   "problem": null,
+   "digests_checked": 0,
+   "digest_mismatches": []
+  }
+ }
+}
