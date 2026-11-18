@@ -12931,3 +12931,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Direct ingress live third measurement (Refs #360)
 
 * Extended [direct-ingress-live-demo-2026-11-18.md](research/direct-ingress-live-demo-2026-11-18.md) with a 14:00 UTC measurement and per-criterion table: criteria c and e need owner decisions, d stays partly proven (AI call not reproduced today); no source change, no Azure resource created
+
+## [2026-11-18] add | Live monitoring coverage check (Refs #146)
+
+* Added [monitoring-coverage-live-146-2026-11-18.md](research/monitoring-coverage-live-146-2026-11-18.md): read-only az monitor evidence with a per-criterion table; ledger digest alerts installed, job failure, poison queue, IoT alerts and workbook absent, owners proposed only, KQL blocked by workspace network rules.
