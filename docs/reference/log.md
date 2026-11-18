@@ -12737,6 +12737,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Deployed demo parity proof, live run 2 (Refs #350)
 
 * Added [deployed-parity-live-r2-2026-11-18.md](research/deployed-parity-live-r2-2026-11-18.md) with raw outputs, 17 screenshots and scripts: no criterion fully proven; browser-UA anonymous API still 302, `/api/time/status` 500 reproduced, own-queue CSV (133) disagrees with the list (16), law store, photo and release authority deferred as human-owned. No source changed.
+
 ## [2026-11-18] add | Per-year ledger verification test evidence (Refs #114)
 
 * Added [issue-114-per-year-ledger-verification-evidence-2026-11-18.md](research/ledger-verification/issue-114-per-year-ledger-verification-evidence-2026-11-18.md) and the retained raw unit-test run: criterion C1 proven by test on the local implementation; the deployed image still lacks the reliance check (owner image roll). No source changed.
