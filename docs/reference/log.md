@@ -13019,6 +13019,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Third live audit of nomination route (Refs #130)
 
 * Added [issue-130-live-r3-nomination-route-audit-2026-11-18.md](research/issue-130-live-r3-nomination-route-audit-2026-11-18.md): same image and 403 write defect, 105 offline tests pass, per-criterion proven or unproven table, production-only items separated; unticked representative criterion unproven; no source change, nothing created in Azure
+
 ## [2026-11-18] add | Issue 129 live second pass (Refs #129)
 
 * Added [issue-129-live-r2-2026-11-18.md](research/issue-129-live-r2-2026-11-18.md) and its evidence folder: suites rerun (26 core, 6 api) and a signed-in demo probe showing no bundle route; atlas-owner confirmation unproven
