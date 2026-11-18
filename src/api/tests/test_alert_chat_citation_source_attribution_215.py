@@ -33,7 +33,7 @@ class SourceOriginAttributionTests(unittest.TestCase):
         expected = {
             "decision-rules": (
                 "label: RULE_LABEL",
-                "Origin: decision_rule. Source: deterministic decision rules "
+                "Source: deterministic decision rules "
                 "from recorded case facts (0 generative calls).",
             ),
             "decision-rules-fallback": (
@@ -42,7 +42,7 @@ class SourceOriginAttributionTests(unittest.TestCase):
             ),
             "generative-grounded": (
                 "label: MODEL_LABEL",
-                "Origin: generative_model. Source: generative AI model",
+                "Source: generative AI model",
             ),
         }
         for origin, (label_ref, phrase) in expected.items():
