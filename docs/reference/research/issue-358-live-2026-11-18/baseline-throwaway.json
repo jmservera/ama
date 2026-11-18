@@ -1,0 +1,12 @@
+[
+  {
+    "hasId": true,
+    "hasKv": true,
+    "name": "kvref"
+  },
+  {
+    "hasId": false,
+    "hasKv": false,
+    "name": "plain1"
+  }
+]
