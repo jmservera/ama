@@ -12959,3 +12959,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Alert and home chat UX live run 3 (Refs #215)
 
 * Added [issue-215-live-rerun3-evidence-2026-11-18.md](research/issue-215-live-rerun3-evidence-2026-11-18.md): desktop Playwright re-check on the unchanged demo image; law store still not loaded, chat axe incomplete characterised, clipped helper line recorded, per-criterion proven or unproven table; no source change, no Azure resource created
+
+## [2026-11-18] add | Capstone pitch preparation third pass (Refs #435)
+
+* Added [capstone-pitch-435-live-r3-2026-11-18.md](research/capstone-pitch-435-live-r3-2026-11-18.md) with retained deck inspection and Azure read-only output: criteria 1 and 4 proven for the demo, criterion 2 not provable, criterion 3 tick not supported by the rehearsal notes; no source or deck change, no Azure resource created
