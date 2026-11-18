@@ -12273,3 +12273,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Container hosting live evidence (Refs #144)
 
 * Added [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): per-criterion record of a demo probe on live Azure. Non-root and digest-pinned images observed; the pipeline run, read-only root file system and capability drop stay unproven.
+
+## [2026-11-18] add | Issue 221 restart authority and drill evidence (Refs #221)
+
+* Added [issue-221-restart-authority-and-drill-evidence-2026-11-18.md](research/issue-221-restart-authority-and-drill-evidence-2026-11-18.md): repository test proof for RULE-024 and NFR-014; no live drill.
