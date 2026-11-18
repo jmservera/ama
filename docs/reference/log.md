@@ -12911,6 +12911,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Case chat gates third live pass (Refs #216)
 
 * Updated [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md): all 30 prompts rerun in four throwaway servers with raw output retained (18 model calls, 20,128 tokens); refusals 10 of 10, 9 of 9 cited model answers valid, three strict failures disclosed; 107 core and agents tests pass. No source change.
+
 ## [2026-11-18] add | Public browser access third live pass (Refs #344)
 
 * Added [public-browser-access-live-r3-2026-11-18.md](research/public-browser-access-live-r3-2026-11-18.md): reproduced the anonymous 401, Entra sign-in and private SQL results and classed the `/api/time/status` 500 as a database-side ProgrammingError from the container log. Browser-style API redirect stays unproven. No Azure change was made.
