@@ -12992,6 +12992,22 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [assistant-ux-live-159-2026-11-18.md](research/assistant-ux-live-159-2026-11-18.md): desktop Playwright keyboard-only run on the demo; keyboard operability and live-region announcements proven, screen-reader testing unproven; no source change, no Azure resource created, probe thread deleted
 
+## [2026-11-18] add | Chat grounding live demo audit, third pass (Refs #164)
+
+* Added [issue-164-live-chat-grounding-evidence-r3-2026-11-18.md](research/issue-164-live-chat-grounding-evidence-r3-2026-11-18.md): re-ran the UI probe and registry read on revision 0000031; findings unchanged (no actual-model result, thresholds proposed, accountable individual unknown, resident-contact ask falls back without a route). No source change, no Azure resource created, probe thread deleted
+
+## [2026-11-18] add | Phase 0 discovery audit second live pass (Refs #124)
+
+* Added [issue-124-live-r2-phase0-discovery-audit-2026-11-18.md](research/issue-124-live-r2-phase0-discovery-audit-2026-11-18.md): 59 core discovery tests and the probe re-run, no consumer or deployed discovery surface found, per-criterion table with the owner-only items; no criterion ticked and no source or Azure change
+
+## [2026-11-18] add | Service continuity live audit (Refs #122)
+
+* Added [issue-122-continuity-live-audit-2026-11-18.md](research/issue-122-continuity-live-audit-2026-11-18.md): constructed suspension and restart drill tests pass (6 core, 20 api); read-only live `/api/continuity` and export probe; the witnessed authorised drill criterion is unproven for the demo (drills prohibited, restart authority unappointed); leftover probe suspension SUS-1 recorded; no source change, no Azure resource created
+
+## [2026-11-18] add | Issue 79 live ranking proof with retained evidence (Refs #79)
+
+* Added [issue-79-live-ranking-2026-11-18.md](research/issue-79-live-ranking-2026-11-18.md) and its evidence folder: demo run with retained raw output. Determinism and hash verification proven again; named owner signature, scheduled run of the shipped entry point and write-once retention unproven; no source change; throwaway job and container deleted.
+
 ## [2026-11-18] add | Hardened deployment audit rerun with retained evidence (Refs #118)
 
 * Added [issue-118-live-20261118T1512Z-2026-11-18.md](research/issue-118-live-20261118T1512Z-2026-11-18.md) and its evidence folder: policy and Defender decision proven as a recorded demo decision; live Defender tiers and repository policy assignments unproven (read access denied, assignments not deployed)
@@ -13003,3 +13019,14 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 129 live second pass (Refs #129)
 
 * Added [issue-129-live-r2-2026-11-18.md](research/issue-129-live-r2-2026-11-18.md) and its evidence folder: suites rerun (26 core, 6 api) and a signed-in demo probe showing no bundle route; atlas-owner confirmation unproven
+## [2026-11-18] add | Issue 128 live audit run 2 (Refs #128)
+
+* Added [issue-128-live2-equity-evidence-2026-11-18.md](research/issue-128-live2-equity-evidence-2026-11-18.md) and its evidence folder: protocol agreement still unproven, aggregate-only measures proven at source level (26 core tests), desktop axe clean on four live synthetic demo pages.
+
+## [2026-11-18] add | Issue 151 live audit round 3 (Refs #151)
+
+* Added [issue-151-live-r3-wcag-evidence-2026-11-18.md](research/issue-151-live-r3-wcag-evidence-2026-11-18.md): resident app, contrast heuristic, page title and keyboard case-open probes on the live demo; criterion 4 stays unticked (screen reader unproven, one employee role only)
+
+## [2026-11-18] add | Issue 153 live content re-check (Refs #153)
+
+* Added [content-recheck-153-live-2026-11-18.md](research/content-recheck-153-live-2026-11-18.md): fresh desktop probes of the deployed demo; hold and envelope wording and an Unassigned owner still live, generic 404 and 403 bodies lack owner and next action; no named-reviewer record exists so that criterion stays unproven; no source change, nothing created in Azure
