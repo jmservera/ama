@@ -12384,3 +12384,12 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Hardened deployment live evidence (Refs #118)
 
 * Added [issue-118-hardened-deployment-live-evidence-2026-11-18.md](research/issue-118-hardened-deployment-live-evidence-2026-11-18.md): the policy and Defender decision is recorded and consistent with the demo; live Defender tiers are unreadable (AuthorizationFailed) and repository policy assignments are not deployed. No source or Azure changes.
+## [2026-11-18] add | Live demo evidence for service continuity and export (Refs #122)
+
+* Added [issue-122-live-continuity-evidence-2026-11-18.md](research/issue-122-live-continuity-evidence-2026-11-18.md): synthetic version change and reversal on the demo API, offline verification of two evidence exports, default-disabled assistants with template fallback, and a per-criterion record. The drill criterion stays unproven by owner decision.
+## [2026-11-18] add | Phase 0 discovery evidence for the demo (Refs #124)
+
+* Added [issue-124-phase0-discovery-evidence-2026-11-18.md](research/issue-124-phase0-discovery-evidence-2026-11-18.md): contract rules and synthetic-pack coverage recorded offline (no live Azure surface exists); sponsor nomination, dictionary validation and the evidence-backed constraint register cannot be proven for the demo and stay unticked.
+## [2026-11-18] add | Discovery assistant live demo evidence (Refs #125)
+
+* Added [issue-125-live-discovery-assistant-evidence-2026-11-18.md](research/issue-125-live-discovery-assistant-evidence-2026-11-18.md): the assistant is not exposed on the live demo API and its boundary denies writes; all three criteria stay unticked (readiness and comparison unprovable for the demo, no-write shown only at demo scope).
