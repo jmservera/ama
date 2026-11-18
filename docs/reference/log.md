@@ -13064,6 +13064,14 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-138-live-r3-2026-11-18.md](research/issue-138-live-r3-2026-11-18.md) with retained sanitised outputs: OIDC, environments, runner and image release still unconfigured, live what-if succeeds but `summarize_plan` refuses it, smoke and secret checks partly proven; no source change, nothing created in Azure
 
+## [2026-11-18] add | Epic 113 live audit (Refs #113)
+
+* Added [issue-113-epic-audit-live-2026-11-18.md](research/issue-113-epic-audit-live-2026-11-18.md): per-criterion table for the three epic criteria (all unmet or not satisfiable for the demo), per-child roll-up of unticked criteria split into demo-provable gap and production-only, and a GET-only live probe on image digest 5368f4e4; no source change, nothing ticked, no Azure resource created.
+
+## [2026-11-18] add | Issue 93 epic audit with live read (Refs #93)
+
+* Added [issue-93-epic-audit-live-2026-11-18.md](research/issue-93-epic-audit-live-2026-11-18.md): per-criterion table (checkpoint #440 and child closure unmet, no-automated-authority consistent), #96 approved-schema gap classed as owner decision, five read-only live GETs and 269 offline core tests (45 SQL opt-in skips); no source change, nothing created in Azure
+
 ## [2026-11-18] add | Issue 125 live re-audit (Refs #125)
 
 * Added [issue-125-live-r2-discovery-assistant-2026-11-18.md](research/issue-125-live-r2-discovery-assistant-2026-11-18.md): repeated live probes (no discovery route, identical to control), deny-by-default CLI output, 47 of 47 tests in a clean installed environment resolving the earlier 46 of 47 caveat; all three criteria remain unproven for the demo; no source change, nothing created in Azure
@@ -13083,3 +13091,14 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Fourth live audit of nomination route (Refs #130)
 
 * Added [issue-130-live-r4-nomination-route-audit-2026-11-18.md](research/issue-130-live-r4-nomination-route-audit-2026-11-18.md): new revision 0000032 on the same image digest, same 403 write refusal, form-encoded 400 explained by the JSON-only API, 83 offline tests pass, per-criterion proven or unproven table; unticked representative criterion unproven; no source change, nothing created in Azure
+## [2026-11-18] add | Quality sensor third live audit (Refs #1288)
+
+* Added [issue-1288-live-r3-quality-sensor-evidence-2026-11-18.md](research/issue-1288-live-r3-quality-sensor-evidence-2026-11-18.md): read-only live probe that did not invoke the assistant (no metric change), first screenshot of the real sensor panel, readings now stale and no simulator job, 304 focused local tests OK; criteria 4 and 8 unproven for the demo, production-only items listed; no source change.
+
+## [2026-11-18] add | Issue 1259 live second audit (Refs #1259)
+
+* Added [2026-11-18-ranking-archive-unusable-1259-live-r2.md](research/2026-11-18-ranking-archive-unusable-1259-live-r2.md) with retained red-before output (seven failures on pre-fix source) and a real-filesystem schedule, verify and publish table for a regular file, dangling link and absent folder; final-criterion gates stay unproven; no source change, no Azure action.
+
+## [2026-11-18] add | Issue 200 live second audit (Refs #200)
+
+* Added [issue-200-live-20261118T1618Z-2026-11-18.md](research/issue-200-live-20261118T1618Z-2026-11-18.md) with evidence folder: live exec proof (uid 10001, empty `/data`, no capabilities) on the demo API and resident app, 52 revisions keeping historical tags; fresh tag deployment left unproven because the registry is private and a window would change shared posture. No source change.
