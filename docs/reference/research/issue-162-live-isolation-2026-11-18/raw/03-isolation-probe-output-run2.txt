@@ -1,0 +1,43 @@
+ANON GET /api/chat/threads | 302 https://login.microsoftonline.com/<tenant>
+ANON GET /api/chat/memory | 302 https://login.microsoftonline.com/<tenant>
+ANON GET /api/chat/status | 302 https://login.microsoftonline.com/<tenant>
+ANON GET /api/chat/threads/CT-0000000000000000 | 302 https://login.microsoftonline.com/<tenant>
+ANON POST /api/chat/memory | 302
+RESIDENT sign-in on resident app | cookies: __Host-zfdemo,__Host-zfdemo-csrf
+RESIDENT app GET /api/chat/threads | 404
+RESIDENT app GET /api/chat/memory | 404
+RESIDENT cookie replayed to staff API GET /api/chat/threads | 302 https://login.microsoftonline.com/<tenant>
+RESIDENT cookie replayed to staff API GET /api/chat/memory | 302 https://login.microsoftonline.com/<tenant>
+STAFF /api/me has account block | True keys 8
+STAFF memory status before | 200 {"active": false, "reason": "not opted in", "opted_in": false, "global_enabled": true, "task_enabled": true, "notice": "Memory is off until you turn it on. It keeps short working preferences you choos
+STAFF before counts | threads 0 memory 0
+STAFF create thread | 200 CT-9a<id>
+STAFF memory opt-in | 200 {"ok": true}
+STAFF add memory | 200 {"id": "CM-<redacted>"}
+STAFF forged X-MS-CLIENT-PRINCIPAL GET threads | 200 same-owner-view: True
+STAFF forged X-MS-CLIENT-PRINCIPAL GET memory | 200 same-owner-view: True
+STAFF forged X-MS-CLIENT-PRINCIPAL GET /api/me unchanged | 200 True
+STAFF forged X-MS-CLIENT-PRINCIPAL-NAME/-ID GET threads | 200 same-owner-view: True
+STAFF forged X-MS-CLIENT-PRINCIPAL-NAME/-ID GET memory | 200 same-owner-view: True
+STAFF forged X-MS-CLIENT-PRINCIPAL-NAME/-ID GET /api/me unchanged | 200 True
+STAFF GET threads?owner | 200 same-owner-view: True
+STAFF GET threads?user | 200 same-owner-view: True
+STAFF GET threads?user_id | 200 same-owner-view: True
+STAFF GET threads?email | 200 same-owner-view: True
+STAFF POST ask with body field owner | 400 {"error": "Only content and skill are accepted."}
+STAFF POST ask with body field user | 400 {"error": "Only content and skill are accepted."}
+STAFF POST ask with body field email | 400 {"error": "Only content and skill are accepted."}
+STAFF GET /api/chat/threads/CT-<nonexistent> | 404 {"error": "Not found."}
+STAFF POST /api/chat/threads/CT-<nonexistent>/ask | 404 {"error": "Not found."}
+STAFF POST /api/chat/threads/CT-<nonexistent>/messages | 404 {"error": "Not found."}
+STAFF POST /api/chat/threads/CT-<nonexistent>/archive | 404 {"error": "Not found."}
+STAFF POST /api/chat/threads/CT-<nonexistent>/delete | 404 {"error": "Not found."}
+STAFF POST /api/chat/memory/00000000000000000000000000000000/edit | 404 {"error": "Not found."}
+STAFF POST /api/chat/memory/00000000000000000000000000000000/delete | 404 {"error": "Not found."}
+STAFF positive control own thread GET | 200 id-matches: True
+STAFF positive control own memory list | 200 contains-own: True
+CLEANUP delete own memory item | 200
+CLEANUP delete own thread | 200
+CLEANUP memory opt-out (user had no items and was not opted in) | 200
+STAFF after cleanup counts | threads 0 memory 0 restored: True
+STAFF memory status after | 200 {"active": false, "reason": "not opted in", "opted_in": false, "global_enabled": true, "task_enabled": true, "notice": "Memory is off until you turn it on. It keeps short working preferences you choose, for you only. You can see, edit or delete every item, or clear all. It never holds resident or special-category data, never changes rules, ranking or permissions, and is never cited as evidence. Items expire when the approved retention period ends; it is Unknown until the DPO approves it.", "retention": {"working_preference": "30 days", "terminology": "30 days", "task_context": "30 days"}}

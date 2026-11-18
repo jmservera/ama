@@ -424,7 +424,7 @@ with demo SAS devices: joint per-home queries, handover seam and idempotent
 re-run. The production X.509 receiver and indoor schema stay unproven.
 For #185, the [live device identity evidence](./research/issue-185-live-device-identity-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: Hub-generated symmetric device keys issued, used for sending
-and all identities removed. Durable secret storage and X.509 stay unproven.
+and this run's identities removed (run 3 adds the home-to-device mapping). Durable secret storage, hub-wide zero devices and X.509 stay unproven.
 For #110, the [live IoT identity evidence](./research/issue-110-live-iot-identity-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: three distinct Hub identities sent schema-versioned readings with
 stable IDs, read back from Event Hub; production X.509 receiver stays unproven.
@@ -436,6 +436,11 @@ For #130, the [live nomination route evidence](./research/issue-130-live-nominat
 records a 2026-11-18 demo run: route panels and permissions read live, representative options absent
 without confirmed authority, writes refused by the same identity defect, and the unticked
 representative-participation criterion stated as unprovable for the demo.
+For #129, the [learning-test bundle evidence](./research/issue-129-live-learning-test-evidence-2026-11-18.md)
+records a 2026-11-18 local run of 32 existing tests with raw output retained: bundles and scope exclusions
+proven for constructed cases only, atlas-owner mapping confirmation unproven.
+The [second run](./research/issue-130-live-r2-nomination-route-evidence-2026-11-18.md) retains raw output,
+confirms the same image and 403 defect, and keeps the criterion unproven.
 For #124, the [Phase 0 discovery evidence](./research/issue-124-phase0-discovery-evidence-2026-11-18.md)
 records a 2026-11-18 offline and synthetic-data run: nomination, endpoint, dictionary and two-sided
 constraint rules proven in code, and the three unticked criteria stated as needing sponsor, owner
@@ -448,6 +453,10 @@ For #184, the [live simulator stream evidence](./research/issue-184-live-simulat
 records the child-story status on 2026-11-18: #185 and #189 are still open, the demo hub has
 a budget alert, and the live owner and time limit cannot be shown on the demo API.
 
+For #184, the [run 2 live stream evidence](./research/issue-184-live-simulator-stream-run2-evidence-2026-11-18.md)
+runs the repository simulator loop with Hub-generated symmetric keys on the demo hub, reads all 9 messages
+back from Event Hub and retains the raw job output; the child-closure criterion stays unproven.
+
 For #109, the [live device monitoring evidence](./research/issue-109-live-device-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of IoT Hub connection state and a connectivity metric alert.
 Hub `lastActivityTime` did not update; the #440 checkpoint and child-closure criteria stay unproven.
@@ -455,9 +464,11 @@ For #146, the [live monitoring evidence](./research/issue-146-live-monitoring-ev
 records a 2026-11-18 demo run: installed alert inventory, a fired test alert, throwaway job-failure,
 IoT and workbook deployments, and the private-link limit that blocks workbook rendering and the poison-queue proof.
 A [re-run](./research/issue-146-live-monitoring-rerun-2026-11-18.md) adds a job-failure alert that fired on the real failed-job signal (Total aggregation; the Maximum shape did not) and lists the gaps.
+A [second pass](./research/issue-146-live2-monitoring-evidence-2026-11-18.md) retains redacted raw output of the installed alerts, fired alerts, job metric and query-access state.
 
 For #189, the [simulator run controls live evidence](./research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo check of the budget alerts, hub owner tag and deterministic owner, time-limit and alert controls; no simulator job is deployed.
+A [second pass](./research/simulator-run-controls-live-189-2026-11-18.md) adds a signed-in probe of the deployed admin endpoint (403 for staff; no administrator role granted), an offline start, stop and capacity exercise with raw output, and the USD 5.16 observed spend.
 
 For #138, the [CI/CD OIDC and what-if live evidence](./research/issue-138-live-cicd-oidc-evidence-2026-11-18.md)
 records a 2026-11-18 read-only demo run: a live what-if of the real template, the post-deployment
@@ -470,6 +481,10 @@ environments, runner and image release remain unconfigured and unobserved.
 
 For #118, the [hardened deployment live evidence](./research/issue-118-hardened-deployment-live-evidence-2026-11-18.md)
 records the Azure Policy and Defender decision and read-only live probes (enactment not proven).
+
+For #117, the [live scan evidence](./research/issue-117-live-scan-evidence-2026-11-18.md)
+proves refusal of unsafe uploads on the demo's synthetic scanner (Defender for Storage is off; clean path and legal hold
+live unproven).
 
 For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analysis-live-evidence-2026-11-18.md)
 records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human
@@ -1251,10 +1266,13 @@ or infra acceptance claimed.
 | [AI evaluation harness live demo evidence (#108)](./research/issue-108-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the eight unticked criteria: deployed model, version and rate limits confirmed, subscription quota unproven, live app AI report read, offline one-lever comparison tested; no criterion newly tickable | 2026-11-18 |
 | [Entra roles and field-level visibility live demo evidence (#116)](./research/issue-116-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the four unticked criteria: reason-role enforcement observed for one role, AI refusal observed, document hold and provider payloads not provable live, four boxes stay unticked |
 | [Data protection, retention and rights live demo evidence (#121)](./research/issue-121-live-data-protection-evidence-2026-11-18.md) | Per-criterion demo record for the eight unticked criteria: live register, model location and retention settings read; deployed register older than source; approvals deferred to #1906 to #1908 |
+| [Map tile provider and accessible list live demo evidence (#119)](./research/issue-119-live-map-evidence-2026-11-18.md) | Per-criterion demo record: deployed public OSM tile provider, policy re-read, list alternative, keyboard and tile-failure proofs; no screen reader run, no licensed provider |
 | [Chat grounding and human-review boundaries live demo evidence (#164)](./research/issue-164-live-chat-grounding-evidence-2026-11-18.md) | Per-criterion demo record for the five unticked criteria: task registered and disabled, thresholds proposed not approved, three live asks answered by rules with zero model calls, human exercises and approvals unproven |
+| [Chat grounding live demo evidence, second pass (#164)](./research/issue-164-live-chat-grounding-evidence-r2-2026-11-18.md) | Chat widget driven in Playwright with grounded, abstention, approve, diagnose, consent, contact and injection asks; raw output and labelled screenshots retained; refusal routes shown for three asks; contact ask fell back without a refusal route; criteria 1, 2 and 4 partly proven, 3 unproven |
 | [Employee loading feedback and Today's briefing live demo evidence (#531)](./research/issue-531-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the unticked live-verification criterion: loading shell, per-panel feedback, briefing labels, sources, review wording and axe observed on the live build; cold start, retry and unverified output simulated in the browser; no review recorded; live app.js and style.css behind main |
 | [Conversational assistant experience live demo evidence (#159)](./research/issue-159-live-chat-experience-evidence-2026-11-18.md) | Per-criterion demo record for the unticked keyboard, announcement and screen-reader criterion: keyboard operation and live-region announcements proven on the live panel, screen-reader testing deferred |
 | [Assistive-technology, consent and Fluent/WCAG acceptance live demo evidence (#619)](./research/issue-619-live-at-consent-evidence-2026-11-18.md) | Per-criterion demo record: keyboard, axe, zoom-equivalent reflow and the synthetic resident consent journey proven on the live demo; person-run screen reader, zoom and real-resident criteria stay production-only |
+| [Accessibility, equity and journey ownership live demo evidence (#128)](./research/issue-128-live-equity-evidence-2026-11-18.md) | Per-criterion demo record: aggregate-only measures proven at source level, desktop axe 0 violations on four live surfaces; protocol agreement and person-run testing stay unproven |
 | [Per-year ledger verification test evidence (#114)](./research/ledger-verification/issue-114-per-year-ledger-verification-evidence-2026-11-18.md) | Retained raw run (40 tests OK) proving per-year audit and ledger digest verification before reliance; deployed-image gap noted |
 | [Retrofit Operating-Data Exercise Pack](./research/retrofit-synthetic-data/README.md) | Version 2.0.0: fifteen months of constructed operating records for 980 candidate homes. The case presents a professional team aware of bottlenecks but not where they occur. The pack covers the tracker, stage event log, property register, CRM contacts, supplier appointments, safety holds, QA and evidence, grant and finance, capacity, board reports and issues log, with realistic record-keeping imperfections, a data dictionary and a manifest. These records are for the exercise and are not evidence of actual company performance. The answer key and generator are held outside the knowledge base so analysis can stay blind. Stock-to-case link report and synthetic fabric attributes for the 60,000-home stock added; synthetic EPC, survey records and a seeded EPC conflict manifest added (#170); per-user chat and memory test fixtures (personas, threads, memory, isolation and deletion cases) added (#172) | 2026-10-15 |
 | [Program Manager Document Workspace Journey](./research/ux/program-manager-document-workspace-journey.md) | Stakeholder-informed JTBD analysis, journey map, accessibility requirements and design handoff for the repository-backed Program Workbench canvas. All behavioural findings remain reported or assumed pending direct user research | 2026-10-02 |
@@ -1289,12 +1307,14 @@ or infra acceptance claimed.
 | [Deployed Demo Parity Proof, Live Run 2026-11-18](./research/deployed-parity-live-2026-11-18.md) | Per-criterion proven and unproven results for the unticked issue 350 criteria on the synthetic demo (Playwright and Azure CLI): browser API 302 still failing, models and OSM map configured, assistants release-gated, law store and photo deferred, time status 500 defect. |
 | [Deployed Demo Parity Proof, Live Run 2 2026-11-18](./research/deployed-parity-live-r2-2026-11-18.md) | Re-measurement of the ten unticked issue 350 criteria with retained raw output: browser API 302 still failing, 16 assets served (8 older than head), ledger 1,722 entries, CSV own-queue 133 versus list 16, time status 500 reproduced, law store and photo deferred. |
 | [Plain-language copy audit on the live demo (#153)](./research/plain-language-live-153-2026-11-18.md) | Playwright audit of status names, errors and AI labels on the synthetic demo against the content standard; five open findings and a per-criterion proven/unproven table. Named human wording review stays unproven. |
+| [Content audit of deployed demo screens, second run (#153)](./research/content-audit-live-153-2026-11-18.md) | Playwright audit of 43 redacted staff and resident screens, case-page tabs included, findings N1 to N6 and per-criterion result; human-review criterion stays unproven |
 | [Human-review effectiveness demo evidence (#223)](./research/human-review-live-223-2026-11-18.md) | Offline harness, targeted tests and a live review-record probe on the synthetic demo; per-criterion proven/unproven table. Real-reviewer competence, measured effort and OQ-017 authority stay unproven. |
 | [Cut-over Gate Demo Proof, Live Run 2026-11-18](./research/cutover-gate-live-2026-11-18.md) | Per-criterion results for the three unticked issue 201 criteria: repointing and healthy revision proven, src build provenance unproven (private registry), mvp/data (archive v0.21.0) and sign-off owner-only, legacy-reference checker failing on three test files. |
 | [Post-Cleanup References and Live Health, Live Run 2026-11-18](./research/issue-203-live-references-evidence-2026-11-18.md) | Per-criterion results for the two unticked issue 203 criteria: legacy-reference checker reports 11 violations in three regression-test files (documents clean), deployed revision healthy and pull-request CI green, build provenance and main-branch CI unproven. |
 | [Entra Browser Sign-in Proof on the Deployed Demo](./research/entra-signin-live-demo-2026-11-18.md) | Issue 349: live Playwright proof of Entra sign-in, anonymous 401, role-scoped `/api/me`, logout and denial paths on the demo apps, per-criterion status and what a real-user tenant registration still needs |
 | [Issue 349 Tenant Prerequisites, Live Demo Re-verification](./research/issue-349-tenant-prerequisites-live-2026-11-18.md) | Issue 349: per-criterion proven/unproven status from read-only Azure checks (auth config, vault path, private endpoint) and Playwright runs with the test sign-in |
 | [WCAG 2.2 Automated Evidence on the Live Demo Workbench](./research/issue-151-live-wcag-axe-evidence-2026-11-18.md) | Issue 151: axe-core 4.10.3 and keyboard scans of 13 workbench screens on the demo as the Programme Manager role, per-criterion status, limits and follow-ups |
+| [WCAG 2.2 Automated Evidence on the Live Demo, Round 2](./research/issue-151-live-wcag-axe-evidence-r2-2026-11-18.md) | Issue 151: second axe-core 4.10.3 and keyboard scan of the employee workbench and resident demo app with raw axe output retained, contrast incompletes sampled, adverse results kept and a per-criterion table |
 | [Rubric src Counting and mvp Stop, State and Remaining Criteria](./research/issue-198-rubric-src-counting-evidence-2026-11-18.md) | Issue 198: registry and score state on main (79/100, no mvp or prototype globs), per-criterion table; criteria 3 and 4 are historical and unprovable |
 | [Usability Programme Evidence on the Live Demo](./research/issue-155-live-usability-programme-evidence-2026-11-18.md) | Issue 155: per-criterion status; the SA-010 staff-agreement criterion cannot be proven on the demo, code gate and live read-only checks recorded (the signed-in workbench was not captured) |
 | [Operator Suspension Live Demo Evidence](./research/issue-221-live-suspension-restart-evidence-2026-11-18.md) | Issue 221: unintended live `all` suspension, manual-route and restart-denial observations, deployed build accepting a placeholder restart authority; per-criterion table |
@@ -1315,6 +1335,7 @@ or infra acceptance claimed.
 | [Cohort and missing-data evaluation, live demo re-run](./research/cohort-evaluation-live-2026-11-18.md) | Issue 222: retained raw evaluation output, read-only live probe (443 ranked entries, no cohort fields) and per-criterion table; OQ-018 stays unproven | 2026-11-18 |
 | [Chat Administrator and Break-Glass Demo-Only Disclaimer](./research/chat-demo-breakglass-disclaimer-2026-11-03.md) | Owner decision 2026-11-03: metadata-only administrator and break-glass policy for the synthetic-data demo, recorded as unreviewed by the DPO and Legal. Not a production or real-data approval (#162 criterion 6) | 2026-11-03 |
 | [Chat Break-Glass Live Proof on the Synthetic Demo](./research/chat-breakglass-live-proof-2026-11-18.md) | Live proof that demo break-glass is default-deny and audited per refusal; grant path proven by tests only; policy decided for the demo only (#162 criterion 6) | 2026-11-18 |
+| [Chat and Memory User Isolation Live Proof on the Synthetic Demo](./research/issue-162-live-isolation-evidence-2026-11-18.md) | Live demo probes (anonymous, resident session replay, forged identity, client owner fields, foreign ids, own-record controls) with raw output; real two-Entra-user foreign read not provable live; criterion 6 unchanged (Refs #162) |
 | [Gap Analysis and Next Build](./research/gap-analysis-next-build.md) | Dated gaps/build direction and #65 recovery retained; PM/UX closure matrix pins four drafts, recommends learning-only retirement for #19/#24/#27 and keeps #58 unresolved with capability/requirement/evidence queue. No wholesale import, product acceptance or resource deletion | 2026-10-13 |
 | [Decision 1 Behaviour Specification](./research/decision-1-behaviour-specification.md) | Clean-rebuild contract linked to the overall application design: workbench/API integration, scoring versus generation, human review and application boundaries, tasks, thresholds, provider contract, guard, liabilities and tests | 2026-10-11 |
 | [Zava Forward API README](../../src/api/README.md) (split per project in M6 of #199: [core](../../src/core/README.md), [agents](../../src/agents/README.md), [orchestrator](../../src/orchestrator/README.md), [importer](../../src/importer/README.md)) | Continuing local/Azure application on retained constructed cases and private stock geography; real SQL/model evidence, Entra initialization, welcome/photo/account choice and current tests distinguished from historical snapshots. Full workflow, human, recovery, accessibility and production acceptance remain separate; evaluation dataset registry and seeded 60,000-home fixture added; frozen protocol, BG-011 MDE register, release decisions and breach pauses recorded (#126, no approvals claimed); importer Excel transition library (preview, quarantine, export, comparison) added for #80 with thresholds, UI and AI assist still open | 2026-10-15 |
