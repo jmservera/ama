@@ -12251,3 +12251,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Live Azure backfill and live series evidence (Refs #188)
 
 * Added [issue-188-live-backfill-evidence-2026-11-18.md](research/issue-188-live-backfill-evidence-2026-11-18.md): per-criterion proven/unproven record of a demo run on live Azure SQL. Production receiver and indoor-schema proof remain open.
+
+## [2026-11-18] add | Container hosting live evidence (Refs #144)
+
+* Added [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): per-criterion record of a demo probe on live Azure. Non-root and digest-pinned images observed; the pipeline run, read-only root file system and capability drop stay unproven.
