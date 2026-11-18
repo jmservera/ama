@@ -315,6 +315,15 @@ def check_secrets(
                         f"{age} days since last change, interval {interval}",
                     )
                 )
+    inventoried = {str(entry["name"]) for entry in inventory["secrets"]}
+    for name in sorted(set(by_name) - inventoried):
+        findings.append(
+            (
+                name,
+                "uninventoried",
+                "secret has no inventory entry, owner, rotation interval or expiry alert",
+            )
+        )
     return findings
 
 

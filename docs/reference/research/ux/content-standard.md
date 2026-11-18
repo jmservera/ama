@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench Content Standard, Glossary and Copy Audit
 description: Plain-language content standard, status and next-action glossary, blocked-message pattern, AI label wording and the copy audit of the core flow (issue #153)
-ms.date: 2026-11-12
+ms.date: 2026-11-17
 ms.topic: reference
 ---
 
@@ -246,6 +246,22 @@ error would not establish real accountability.
 | Errors/blocked steps give reason, owner, next action | Final-check reasons and the generic fallback tested; partial, residuals above prevent universal acceptance |
 | Exact AI label and reviewed-draft authority | Exact label retained; draft/proposal disclaimer strengthened. Partial, not a global certification of every reviewed/error state |
 | Named human resident wording review before use | Reviewer appointed below; actual review of exact copy Not run. No use authorized |
+
+### Identifier leak audit (2026-11-17, #153)
+
+A scan of prose-like string literals in all served scripts and pages for
+snake_case identifiers found two person-visible leaks on the data steward and
+digital operator exception screens. Both now use plain words.
+
+| Location | Before | After |
+| --- | --- | --- |
+| `app.js`, operator access screen, Named roles row | None configured (data_steward and digital_operator are unassigned) | None named yet (no data steward and no digital operator) |
+| `role-screens.js`, exception register state | State: Action needed (roles_not_named) | State: Action needed (roles not named yet) |
+
+`src/api/tests/test_content_standard.py` now fails on any such identifier in a
+capitalised prose literal in an audited file. The guard is lexical; it does not
+parse JavaScript, check dynamic text or replace the named-human wording review.
+No resident comprehension or named human approval is established.
 
 ## Human review
 

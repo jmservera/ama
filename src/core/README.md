@@ -5728,6 +5728,12 @@ safeguards across submit, update, escalate and resolve (`source`, `policy`, `pro
 representative resident/staff workflow acceptance, workbench UI wiring for update/escalate, and
 owner approval of the `max_days` hazard follow-up threshold remain separate human governance items.
 
+Assessment, 2026-11-17 (issue #220 stays open): criteria 1 to 4 remain proven by the tests above and
+`src/api/tests/test_challenge_non_retaliation_hazard_guard.py`. For criterion 5, that file also shows that a challenge
+opened with `hazard_concern=true` is refused with a pointer to the independent hazard intake, saves nothing and
+leaves the protected state and hazard clock unchanged. Constructed tests still cannot show actual hazard-response
+delay, representative resident or staff acceptance, or an owner-approved referral age limit, so criterion 5 stays unmet.
+
 ## Aftercare concern route and evaluator view (#133)
 
 `zava_forward.core.aftercare.AftercareRegister` is a store-independent register for constructed
