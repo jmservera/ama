@@ -13047,3 +13047,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 138 live third audit (Refs #138)
 
 * Added [issue-138-live-r3-2026-11-18.md](research/issue-138-live-r3-2026-11-18.md) with retained sanitised outputs: OIDC, environments, runner and image release still unconfigured, live what-if succeeds but `summarize_plan` refuses it, smoke and secret checks partly proven; no source change, nothing created in Azure
+
+## [2026-11-18] add | Issue 184 live fourth audit (Refs #184)
+
+* Added [issue-184-live-r4-2026-11-18.md](research/issue-184-live-r4-2026-11-18.md) with retained sanitised outputs: #185 and #189 still open, the demo hub has a USD 25 budget with 80 and 100 percent alerts, owner and expiry controls proven in source and 135 tests only; no source change, nothing created in Azure, no criterion ticked.
