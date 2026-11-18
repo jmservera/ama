@@ -12192,6 +12192,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
 
+## [2026-11-17] update | AI metering inventory and drift test (Refs #432)
+
+* Added a [current-main metering inventory](resources/ai-tokenomics.md#current-main-metering-inventory-2026-11-17-refs-432) to the Tokenomics page: code and test mapping for each #432 criterion, corrections to stale gap text, unmet criteria 5 and 8, and the smallest next step. Documentation only; no cost, billing reconciliation or live batch is claimed.
+* Added `src/core/tests/test_ai_metering_inventory.py`, which fails when a cited path, ledger method or test name no longer exists.
 ## [2026-11-17] update | Ranking job alert runbook coverage (Refs #146)
 
 * Measured the declared alert set against the runbook: `alert-<job>-failed` for the optional ranking jobs (`rank`, `rank-publish`) resolves to the `job-auth` anchor because `operationalMonitoring.bicep` has no ranking branch. Added a `Job ranking` section to [infra/monitoring-runbooks.md](../../infra/monitoring-runbooks.md#job-ranking), a pointer in `Job auth`, and a regression test in `infra/tests/test_alert_runbook_signal_matrix.py` that every job suffix resolves to a section naming it.
