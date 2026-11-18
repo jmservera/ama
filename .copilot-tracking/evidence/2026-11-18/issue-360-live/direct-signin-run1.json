@@ -1,0 +1,30 @@
+{
+ "welcome_title": "Welcome to Zava Forward | Zava North Homes",
+ "app_anonymous_url_host": "login.microsoftonline.com",
+ "callback_returned_to_app": true,
+ "app_title": "Zava Forward | Zava North Homes",
+ "me_status": 200,
+ "me": {
+  "role": "Retrofit Programme Manager",
+  "app_roles": [
+   "ZavaForward.ProgrammeManager"
+  ],
+  "view_only": false,
+  "identity_source": "entra",
+  "auth_provider": "trusted-proxy"
+ },
+ "stats_status": 200,
+ "stats": {},
+ "chat_status_http": 200,
+ "chat_activation": "demo-only",
+ "ai_http": 403,
+ "ai_body_excerpt": "",
+ "role_probe": {
+  "/api/sensors": 403,
+  "/api/staff": 403
+ },
+ "forged_with_session": [
+  "Retrofit Programme Manager",
+  "Retrofit Programme Manager"
+ ]
+}
