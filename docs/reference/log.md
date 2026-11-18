@@ -12332,6 +12332,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [stabilization-checkpoint-triage-440-live-2026-11-18.md](research/stabilization-checkpoint-triage-440-live-2026-11-18.md): four issue drafts (time status 500, legacy-reference guard allowlist, unreachable ChatIsolation turn, AI golden path), duplicates mapped to existing owners, blocking findings mapped to epics, and per-epic verdicts (14 continue, 2 fix, 0 pivot). No issue created, no criterion ticked, no source changed. The coordinator HVE Builder review is Deferred at host validation.
 
+## [2026-11-18] add | Five assistants live demo evidence (Refs #107)
+
+* Added [issue-107-live-assistants-evidence-2026-11-18.md](research/issue-107-live-assistants-evidence-2026-11-18.md): per-criterion record of the two unticked criteria. Independent-worker race, revocation and restart tests pass on a disposable local SQL Server 2022; the live demo denies all five assistants with no provider call; the approved-release and delivered-build criterion stays unproven because no OQ-017 approver is appointed.
 ## [2026-11-18] add | IoT Hub distinct device identity live evidence (Refs #110)
 
 * Added [issue-110-live-iot-identity-evidence-2026-11-18.md](research/issue-110-live-iot-identity-evidence-2026-11-18.md): C1 proven for the demo with three Hub-issued SAS identities, schema version and stable reading IDs read back from Event Hub. Production X.509 receiver stays unproven.
