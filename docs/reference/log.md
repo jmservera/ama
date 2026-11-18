@@ -12787,3 +12787,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Eval gate local test rerun and rescoring limits (Refs #216)
 
 * Updated [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md): 101 existing gate tests run locally with raw output retained; container scores labelled "Observed; raw output not retained"; no new model call; the unticked criterion stays partly proven.
+
+## [2026-11-18] add | Chat and memory user isolation live proof (Refs #162)
+
+* Added [issue-162-live-isolation-evidence-2026-11-18.md](research/issue-162-live-isolation-evidence-2026-11-18.md) with probe, raw output and screenshots: anonymous, resident-session and forged-identity requests never reach another user's chat or memory on the live demo; own synthetic records cleaned up; a true two-Entra-user foreign read is unproven live (one staff identity); criterion 6 stays unticked; no src change.
