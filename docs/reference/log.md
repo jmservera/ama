@@ -12729,3 +12729,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Resident and representative UX live demo evidence (Refs #154)
 
 * Added [issue-154-live-resident-ux-evidence-2026-11-18.md](research/issue-154-live-resident-ux-evidence-2026-11-18.md): no live resident contact is observed on the synthetic showcase; validation through the usability programme and the representative view stay unproven for the demo (no participants or SA-010 agreement; no live case has a representative). No source changed.
+
+## [2026-11-18] assessment | Issue 441 resident portal documentation status (Refs #441)
+
+* Added [resident-portal-441-live-status-2026-11-18.md](research/resident-portal-441-live-status-2026-11-18.md): criterion 5 (FR-044/AC-084 owner disposition) stays unproven for the demo because the 2026-11-02 direction says demo display does not satisfy it and no named disposition exists. The other eight ticked criteria were not re-assessed.
+* Documentation only. No Azure action, credential, source or wording change; no tick or closure.
