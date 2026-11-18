@@ -12709,6 +12709,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Direct ingress live re-run (Refs #360)
 
 * Appended a second live measurement to [direct-ingress-live-demo-2026-11-18.md](research/direct-ingress-live-demo-2026-11-18.md): configuration, anonymous denial and staff sign-in reconfirmed; the resident credential is not an Entra identity, so second-role denial stays unproven; c and e stay unproven, d stays partly proven.
+
 ## [2026-11-18] add | Rubric src counting and mvp stop state (Refs #198)
 
 * Added [issue-198-rubric-src-counting-evidence-2026-11-18.md](research/issue-198-rubric-src-counting-evidence-2026-11-18.md): current registry and 79/100 score re-verified, five of seven criteria proven, criteria 3 and 4 recorded as historically unprovable pending an owner waiver or rewording.
