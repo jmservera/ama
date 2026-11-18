@@ -12848,6 +12848,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-146-live2-monitoring-evidence-2026-11-18.md](research/issue-146-live2-monitoring-evidence-2026-11-18.md) with redacted raw output: eight installed alerts, no workbook, fired job-failure and digest alerts, job metric, private query access. Poison queue, workbook rendering, named owners and the tokenomics dashboard stay unproven; no source change.
 
+## [2026-11-18] add | Quality sensor live re-verification (Refs #1288)
+
+* Added [issue-1288-live-r2-quality-sensor-evidence-2026-11-18.md](research/issue-1288-live-r2-quality-sensor-evidence-2026-11-18.md): fresh retained readings seen on the demo, release gate unchanged, per-criterion table; no source change.
+
 ## [2026-11-18] add | Issue 1818 live IoT map walkthrough evidence (Refs #1818)
 
 * Added [issue-1818-live-iot-map-walkthrough-evidence-2026-11-18.md](research/issue-1818-live-iot-map-walkthrough-evidence-2026-11-18.md): job output (9 sent, 9 stored), employee map cards, list and stale filter, and resident sensor view for a fresh and a stale reading, with a per-criterion table. No source change; the unmerged receiver fix is disclosed.

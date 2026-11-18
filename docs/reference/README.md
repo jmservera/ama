@@ -499,6 +499,10 @@ records a 2026-11-18 demo read and denial probe plus local mock-provider and SQL
 and 8 cannot be proven on the demo (no approved release record, no simulator run); criteria 3 and 5 to 7
 are proven as local engineering evidence only.
 
+For #1288, the [second live re-verification](./research/issue-1288-live-r2-quality-sensor-evidence-2026-11-18.md)
+records fresh retained readings on the demo and an unchanged release gate (no model call); criteria 3 to 8
+stay unticked.
+
 For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root
 runtime, scale-out from 0 to 4 replicas under a 60 s load run, and the Container Apps
