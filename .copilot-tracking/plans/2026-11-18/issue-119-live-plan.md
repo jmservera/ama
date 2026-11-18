@@ -1,10 +1,11 @@
 ---
-title: Issue 119 live plan
+title: Issue 119 live closure plan
 ms.date: 2026-11-18
 ---
 
-* [x] Phase 1: gather live evidence (done in Research).
-* [x] Phase 2: write `docs/reference/research/issue-119-live-map-evidence-2026-11-18.md`, index and log entries.
-* [x] Phase 3: per-criterion table in the changes record, review, commit.
+* [x] Phase 1: live probe (Playwright) and read-only az tile env; redact names and host.
+* [x] Phase 2: re-read OSMF tile policy and copyright page.
+* [x] Phase 3: write docs/reference/research note, index and log entries.
+* [x] Phase 4: markdown link check, secret scan, commit.
 
-Details: `.copilot-tracking/details/2026-11-18/issue-119-live-details.md`. Tier: FOCUSED (no src change). Validation: link and diff review, evidence leak scan.
+Tier: FOCUSED, docs-only; no src change; no rpi-checks --all. Details: [details](../../details/2026-11-18/issue-119-live-details.md).
