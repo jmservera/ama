@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from zava_forward.core import assistants
+from zava_forward.core import assistants, telemetry
 from zava_forward.core.ai import Ai
 
 from zava_forward.agents.dispatch import (
@@ -103,11 +103,20 @@ class ApiResultSink:
         self.transport = transport
 
     def post(self, result: ResultMessage) -> None:
+        with telemetry.operation(
+            "http.client", parent=result.traceparent, method="POST"
+        ) as observation:
+            self._post(result, observation)
+
+    def _post(self, result: ResultMessage, observation: telemetry.Observation) -> None:
         headers = {
             "Authorization": f"Bearer {self.token()}",
             "Content-Type": "application/json",
         }
+        if parent := telemetry.carrier():
+            headers["traceparent"] = parent
         status, _ = self.transport("POST", self.url, headers, result.to_json().encode("utf-8"))
+        observation.http_status(status)
         if status not in ACCEPTED:
             raise RuntimeError(f"Result post-back failed with status {status}.")
 

@@ -616,6 +616,13 @@ The runbook's Demo Routing Decision section records owner decision
 `keep_console_alerts_for_demo`: the demo keeps console log export for the
 ledger alerts and defers candidate `9c2a59f6` to production.
 
+The [16 November OTel contract](../../infra/monitoring-runbooks.md#explicit-otlp-instrumentation-2026-11-16)
+adds opt-in, content-free OTLP spans/metrics and restricted audit correlation,
+with offline coverage and explicit live/SLO gaps. Direct Azure export is deferred
+after SDK inspection found implicit metadata and secondary traffic. Agent 365
+remains a conditional future proposal with unresolved content-schema/privacy
+compatibility, not a substitute for domain controls or meaningful explanations.
+
 For #115, the [live digest mismatch alert proof](./research/digest-verification-alert-live-2026-11-18.md)
 records a forced mismatch on a copy, the verifier alert marker and the fired Azure Monitor alert on the demo;
 the retention lock stays deferred to production (#1908).

@@ -1697,6 +1697,62 @@ class GateTests(unittest.TestCase):
             with self.subTest(argv=argv), self.assertRaises(gate.GateError):
                 runner.command(argv)
 
+    def test_local_docker_endpoint_reaches_isolated_subprocess(self) -> None:
+        for index, host in enumerate((None, "unix:///run/user/1000/docker.sock")):
+            with self.subTest(host=host), patch.dict(os.environ):
+                os.environ.pop("DOCKER_HOST", None)
+                if host is not None:
+                    os.environ["DOCKER_HOST"] = host
+                os.environ["DOCKER_CONTEXT"] = "untrusted-remote"
+                os.environ["AZURE_TOKEN"] = "must-not-propagate"
+                runner = self.runner(self.out / str(index))
+                runner.snapshot = self.root
+                result = runner.command(
+                    [
+                        sys.executable,
+                        "-c",
+                        (
+                            "import os; print(os.environ['DOCKER_HOST']); "
+                            "assert 'DOCKER_CONTEXT' not in os.environ; "
+                            "assert 'AZURE_TOKEN' not in os.environ"
+                        ),
+                    ]
+                )
+                self.assertEqual(result.strip(), host or "unix:///var/run/docker.sock")
+
+    def test_remote_or_malformed_docker_endpoints_block(self) -> None:
+        for host in (
+            "",
+            "tcp://127.0.0.1:2375",
+            "ssh://example.invalid",
+            "unix://user@host/socket",
+            "unix://relative",
+            "unix:///tmp/socket?option=1",
+            "unix:///tmp/socket#fragment",
+            "unix:///tmp/socket\n",
+        ):
+            with (
+                self.subTest(host=host),
+                patch.dict(os.environ, {"DOCKER_HOST": host}),
+                self.assertRaisesRegex(gate.GateError, "absolute local Unix socket"),
+            ):
+                self.runner()
+
+    def test_docker_endpoint_is_bound_to_tool_identity(self) -> None:
+        identities = []
+        with (
+            patch.object(gate.shutil, "which", return_value=sys.executable),
+            patch.object(gate.subprocess, "check_output", return_value="29.9.3\n") as probe,
+        ):
+            for host in ("unix:///var/run/docker.sock", "unix:///run/user/1000/docker.sock"):
+                with patch.dict(os.environ, {"DOCKER_HOST": host}):
+                    identities.append(gate.tool_identity())
+                    probe.assert_called_with(
+                        ["docker", "--host", host, "version", "--format={{.Server.Version}}"],
+                        text=True,
+                    )
+        self.assertNotEqual(identities[0], identities[1])
+
     def test_timeout_blocks(self) -> None:
         runner = self.runner()
         runner.snapshot = self.root

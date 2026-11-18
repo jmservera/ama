@@ -528,6 +528,14 @@ def validate_stack(root: Path, base: str, heads: list[str]) -> list[str]:
     return resolved
 
 
+def docker_host() -> str:
+    """Select an explicit local daemon without inheriting Docker configuration."""
+    host = os.environ.get("DOCKER_HOST", "unix:///var/run/docker.sock")
+    if not re.fullmatch(r"unix://(/[^\x00-\x20?#]+)", host):
+        raise GateError("DOCKER_HOST must select an absolute local Unix socket")
+    return host
+
+
 def tool_identity() -> dict[str, dict[str, str]]:
     result: dict[str, dict[str, str]] = {}
     for name in TOOLS:
@@ -535,10 +543,12 @@ def tool_identity() -> dict[str, dict[str, str]]:
         if not path:
             raise GateError(f"Missing required tool: {name}")
         result[name] = {"sha256": digest(Path(path).resolve())}
+    host = docker_host()
     result["docker-server"] = {
+        "endpoint": host,
         "version": subprocess.check_output(
-            ["docker", "version", "--format={{.Server.Version}}"], text=True
-        ).strip()
+            ["docker", "--host", host, "version", "--format={{.Server.Version}}"], text=True
+        ).strip(),
     }
     return result
 
@@ -1941,6 +1951,7 @@ class Runner:
         self.sql_identity: dict[str, str] = {}
         self.env = {
             "PATH": os.environ.get("PATH", os.defpath),
+            "DOCKER_HOST": docker_host(),
             "HOME": str(out / "home"),
             "TMPDIR": str(out / "tmp"),
             "XDG_CACHE_HOME": str(out / "cache"),

@@ -1,6 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
+ms.date: 2026-11-16
 ms.date: 2026-11-18
 ms.topic: reference
 ---
@@ -12356,6 +12357,16 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Corrected the screen map prose to sixteen rows (thirteen employee plus three resident) with thirteen linking a written design record, and linked the `programme-queue-paging-v1` proposal for `programme-queue`. No acceptance or human gate is claimed.
 
+## [2026-11-16] update | Agent observability and conditional Agent 365 proposal
+
+* Indexed the [OTLP instrumentation contract](../../infra/monitoring-runbooks.md#explicit-otlp-instrumentation-2026-11-16):
+  default-off SDK spans/metrics, random trace-to-protected-audit joins,
+  configuration/privacy bounds, synthetic checks and source/live-gap matrix.
+* Recorded the owner-selected OTLP-first boundary after direct Azure exporter
+  inspection found implicit machine/locale metadata and secondary traffic.
+  Agent 365 stays future-only with unresolved schema/content/identity,
+  tenant/license/privacy/ingestion gates; no cloud, legal, SLO or human
+  explanation acceptance follows.
 ## [2026-11-16] add | Resident demo threat model for the synthetic Azure showcase (Refs #462)
 
 * Added the [threat model](research/resident-demo-threat-model-2026-11-16.md) covering public fake-email login, the shared demo credential, session handling, cross-case access, database fields and deployment isolation, and linked it from the showcase section of the API README and this index.

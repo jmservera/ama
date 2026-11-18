@@ -18,7 +18,7 @@ import urllib.parse
 import urllib.request
 import uuid
 from dataclasses import replace
-from . import ai_consumption, ai_prompts, ai_transport, data_protection, export_fields
+from . import ai_consumption, ai_prompts, ai_transport, data_protection, export_fields, telemetry
 
 SCOPE = "https://cognitiveservices.azure.com"
 _ACTIONS = (r"sent|approved|authori[sz]ed|signed off|rejected|declined|updated|changed|amended|edited|"
@@ -159,6 +159,14 @@ class Ai:
                     input_bound=len(body) if isinstance(user, str) else None)
 
     def _request(self, deployment, system, user, max_tokens, timeout, temperature, receipt):
+        with telemetry.operation("chat") as observation:
+            try:
+                return self._request_body(deployment, system, user, max_tokens, timeout, temperature, receipt)
+            finally:
+                if usage := receipt.get("usage"):
+                    observation.usage(usage["prompt_tokens"], usage["completion_tokens"])
+
+    def _request_body(self, deployment, system, user, max_tokens, timeout, temperature, receipt):
         seal = ai_consumption.SIMULATION_SEAL.get()
         if ai_consumption.CAPTURED_READINGS.get() and seal is None:
             raise ai_consumption.DispatchWithdrawn("captured-readings-transmission-unavailable")
