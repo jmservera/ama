@@ -12737,6 +12737,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Cohort evaluation live demo re-run (Refs #222)
 
 * Added [cohort-evaluation-live-2026-11-18.md](research/cohort-evaluation-live-2026-11-18.md) with retained raw output under `research/evaluation/cohort-eval-live-2026-11-18/`; corrected the earlier blocker count (eight insufficient-sample plus one unapproved-thresholds); the live snapshot has no cohort fields; OQ-018 stays unproven and unticked. No source changed.
+
 ## [2026-11-18] add | Deployed demo parity proof, live run 2 (Refs #350)
 
 * Added [deployed-parity-live-r2-2026-11-18.md](research/deployed-parity-live-r2-2026-11-18.md) with raw outputs, 17 screenshots and scripts: no criterion fully proven; browser-UA anonymous API still 302, `/api/time/status` 500 reproduced, own-queue CSV (133) disagrees with the list (16), law store, photo and release authority deferred as human-owned. No source changed.
