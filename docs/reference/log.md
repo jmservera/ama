@@ -13191,3 +13191,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 153 live re-check, fourth run (Refs #153)
 
 * Added [content-recheck-153-live-r4-2026-11-18.md](research/content-recheck-153-live-r4-2026-11-18.md): repeat Playwright and HTTP probes of the demo match the third run (`Held`/`envelope` on Finance, "Unassigned" owner, generic error bodies); named wording review unproven. Docs only.
+
+## [2026-11-18] add | Issue 220 live fourth run (Refs #220)
+
+* Added [issue-220-live-r4-challenge-route-2026-11-18.md](research/issue-220-live-r4-challenge-route-2026-11-18.md): same image digest on revision 0000032, same live 403 on staff writes, forbidden fields refused, protected state unchanged, 21 offline tests pass; the no-retaliation criterion stays unproven live. Docs only.
