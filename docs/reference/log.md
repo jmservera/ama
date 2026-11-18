@@ -12332,6 +12332,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [stabilization-checkpoint-triage-440-live-2026-11-18.md](research/stabilization-checkpoint-triage-440-live-2026-11-18.md): four issue drafts (time status 500, legacy-reference guard allowlist, unreachable ChatIsolation turn, AI golden path), duplicates mapped to existing owners, blocking findings mapped to epics, and per-epic verdicts (14 continue, 2 fix, 0 pivot). No issue created, no criterion ticked, no source changed. The coordinator HVE Builder review is Deferred at host validation.
 
+## [2026-11-18] add | Chat break-glass live proof (Refs #162)
+
+* Added [chat-breakglass-live-proof-2026-11-18.md](research/chat-breakglass-live-proof-2026-11-18.md): refused break-glass attempts on the live demo each add one audit entry with an intact chain; grant path not provable live without a config change; policy decided for the demo only. Criterion 6 left unticked.
 ## [2026-11-18] add | Issue 111 sensor analysis live evidence (Refs #111)
 
 * Added [issue-111-sensor-analysis-live-evidence-2026-11-18.md](research/issue-111-sensor-analysis-live-evidence-2026-11-18.md): the R1 to R3 criterion cannot be proven on the demo because R2 and R3 need named human sign-off and R1 lacks the official standards texts; read-only live probes recorded.
