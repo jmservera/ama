@@ -12713,3 +12713,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Resident and representative UX live demo evidence (Refs #154)
 
 * Added [issue-154-live-resident-ux-evidence-2026-11-18.md](research/issue-154-live-resident-ux-evidence-2026-11-18.md): no live resident contact is observed on the synthetic showcase; validation through the usability programme and the representative view stay unproven for the demo (no participants or SA-010 agreement; no live case has a representative). No source changed.
+
+## [2026-11-18] add | Assistive-technology, consent and Fluent/WCAG live demo evidence (Refs #619)
+
+* Added [issue-619-live-at-consent-evidence-2026-11-18.md](research/issue-619-live-at-consent-evidence-2026-11-18.md): keyboard operation, axe (0 violations), zoom-equivalent reflow, reduced motion and the synthetic resident consent journey proven on the live demo; screen reader, person-run zoom and a real resident journey stay unproven and production-only. No source changed; #619 stays open.
