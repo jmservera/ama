@@ -12331,3 +12331,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Stabilization checkpoint triage and epic verdicts (Refs #440)
 
 * Added [stabilization-checkpoint-triage-440-live-2026-11-18.md](research/stabilization-checkpoint-triage-440-live-2026-11-18.md): four issue drafts (time status 500, legacy-reference guard allowlist, unreachable ChatIsolation turn, AI golden path), duplicates mapped to existing owners, blocking findings mapped to epics, and per-epic verdicts (14 continue, 2 fix, 0 pivot). No issue created, no criterion ticked, no source changed. The coordinator HVE Builder review is Deferred at host validation.
+
+## [2026-11-18] add | WCAG 2.2 live axe and keyboard evidence (Refs #151)
+
+* Added [issue-151-live-wcag-axe-evidence-2026-11-18.md](research/issue-151-live-wcag-axe-evidence-2026-11-18.md): axe-core 4.10.3 and Tab-walk scans of the 13 Programme Manager screens on the live demo. Zero axe violations, no keyboard trap, no 320 px horizontal scroll; three contrast results incomplete. The manual screen-reader and keyboard criterion stays unticked (screen reader is production-only, #1907; one role only). No source changed.
