@@ -12264,3 +12264,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Container hosting live evidence (Refs #144)
 
 * Added [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): per-criterion record of a demo probe on live Azure. Non-root and digest-pinned images observed; the pipeline run, read-only root file system and capability drop stay unproven.
+
+## [2026-11-18] add | CI/CD pipeline OIDC and what-if live evidence (Refs #138)
+
+* Added [issue-138-live-cicd-oidc-evidence-2026-11-18.md](research/issue-138-live-cicd-oidc-evidence-2026-11-18.md): per-criterion record of read-only checks. A live what-if succeeded and the smoke checks passed against the demo API, but OIDC variables, protected environments, a runner and any workflow run are absent, so no criterion is fully proven.
