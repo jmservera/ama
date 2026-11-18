@@ -13019,3 +13019,26 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 117 live second pass (Refs #117)
 
 * Added [issue-117-live-r2-audit-2026-11-18.md](research/issue-117-live-r2-audit-2026-11-18.md) and its raw folder: unsafe uploads refused live again, 64 offline tests pass; corrected the Defender reading (malware scanning on upload is enabled on the demo account, app scanner still local); throwaway account test blocked by permissions and deleted; no source change
+## [2026-11-18] add | Issue 119 live second run (Refs #119)
+
+* Added [issue-119-live-r2-map-evidence-2026-11-18.md](research/issue-119-live-r2-map-evidence-2026-11-18.md) and its evidence folder: the deployed demo still uses the public OSM tiles; list alternative and keyboard path re-proven; Azure Maps, OS, MapTiler and OSM pages re-read; added a dated update to [map-tile-provider-options.md](research/ux/map-tile-provider-options.md). Both criteria stay open (no licensed provider, no screen reader run); no source change, nothing created in Azure.
+
+## [2026-11-18] add | Third live audit of nomination route (Refs #130)
+
+* Added [issue-130-live-r3-nomination-route-audit-2026-11-18.md](research/issue-130-live-r3-nomination-route-audit-2026-11-18.md): same image and 403 write defect, 105 offline tests pass, per-criterion proven or unproven table, production-only items separated; unticked representative criterion unproven; no source change, nothing created in Azure
+
+## [2026-11-18] add | Issue 129 live second pass (Refs #129)
+
+* Added [issue-129-live-r2-2026-11-18.md](research/issue-129-live-r2-2026-11-18.md) and its evidence folder: suites rerun (26 core, 6 api) and a signed-in demo probe showing no bundle route; atlas-owner confirmation unproven
+
+## [2026-11-18] add | Issue 128 live audit run 2 (Refs #128)
+
+* Added [issue-128-live2-equity-evidence-2026-11-18.md](research/issue-128-live2-equity-evidence-2026-11-18.md) and its evidence folder: protocol agreement still unproven, aggregate-only measures proven at source level (26 core tests), desktop axe clean on four live synthetic demo pages.
+
+## [2026-11-18] add | Issue 151 live audit round 3 (Refs #151)
+
+* Added [issue-151-live-r3-wcag-evidence-2026-11-18.md](research/issue-151-live-r3-wcag-evidence-2026-11-18.md): resident app, contrast heuristic, page title and keyboard case-open probes on the live demo; criterion 4 stays unticked (screen reader unproven, one employee role only)
+
+## [2026-11-18] add | Issue 153 live content re-check (Refs #153)
+
+* Added [content-recheck-153-live-2026-11-18.md](research/content-recheck-153-live-2026-11-18.md): fresh desktop probes of the deployed demo; hold and envelope wording and an Unassigned owner still live, generic 404 and 403 bodies lack owner and next action; no named-reviewer record exists so that criterion stays unproven; no source change, nothing created in Azure
