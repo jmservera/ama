@@ -505,7 +505,9 @@ the decision is proven for the demo, while live Defender tiers stay unreadable (
 
 For #117, the [live scan evidence](./research/issue-117-live-scan-evidence-2026-11-18.md)
 proves refusal of unsafe uploads on the demo's synthetic scanner (Defender for Storage is off; clean path and legal hold
-live unproven).
+live unproven). A [second pass](./research/issue-117-live-r2-audit-2026-11-18.md) corrects that reading: Defender
+for Storage malware scanning is enabled on the demo account, but the app still runs the synthetic scanner
+(`ZF_SCANNER` unset), so the real engine stays unproven for the app path.
 
 For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analysis-live-evidence-2026-11-18.md)
 records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human

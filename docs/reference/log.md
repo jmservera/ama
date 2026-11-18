@@ -13015,3 +13015,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 76 live second pass (Refs #76)
 
 * Added [issue-76-live-r2-2026-11-18.md](research/issue-76-live-r2-2026-11-18.md): masked screenshots of the hazard clock and named owner and of the queue definitions on the demo; hazard partly proven (clock Unknown), safeguarding unproven (no demo item); no source change, nothing created in Azure
+
+## [2026-11-18] add | Issue 117 live second pass (Refs #117)
+
+* Added [issue-117-live-r2-audit-2026-11-18.md](research/issue-117-live-r2-audit-2026-11-18.md) and its raw folder: unsafe uploads refused live again, 64 offline tests pass; corrected the Defender reading (malware scanning on upload is enabled on the demo account, app scanner still local); throwaway account test blocked by permissions and deleted; no source change
