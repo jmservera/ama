@@ -1,0 +1,18 @@
+{
+ "forms": [
+  {
+   "id": "ru-record",
+   "labels": [
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+   ]
+  }
+ ],
+ "rep_section_text": "Decision for each measure\n\nThese start as not recorded. Only write what the resident told you. Contact or access is never treated as a yes.\n\nRead-only resident decisions. Neighbourhood, Resident Engagement and Retrofit coordination staff record supplied answers.\n\nResident decisions by measure\nMeasure\tTheir answer\tVersions\nExternal wall insulation (block): Current scope not recorded\tWaiting for resident: Not recorded. Action needed: Needs human review\tWaiting for resident: None\ndMEV ventilation: Current scope not recorded\tWaiting for resident: Not recorded. Action needed: Needs human review\tWaiting for resident: None\nRepresentative authority\n\nA person confirms authority with the resident. Scheduling or interpreting is not authority for works consent. A changed safe contact, expired, dispute",
+ "nom_section_text": "Nominations and self-referrals\n\nRecord supplied digital or staff-recorded non-digital acknowledgements and competing corrections. Urgent hazards use the hazard reporting route immediately. A named person owns every review and response.\n\nNo nomination or self-referral is recorded for this home.",
+ "challenge_text": "Challenge a suggestion or ask for a correction\n\nRecord only what the person supplied, including digital, phone, letter or in-person requests. A person owns the response. Nothing is sent here. Ask the named officer for accessible human help without using this screen. Urgent hazard response continues separately.\n\nA challenge never means consent, refusal or a sanction. It does not close another request, change priority or delay safety work. A recorded human correction makes only suggestions and reviews that used that version need a fresh review. It does not change source information or policy automatically.\n\nA challenge or correction never lowers your priority, eligibility or place in the queue.\nIt never records you as refusing or withdrawing, or changes your consent.\nIt never pauses, holds or extends the clock on any hazard or safeguarding response.\n\nAssurance: Raising this challenge or correction will not be held against you. We have not recorded you as refusing, and no safety or hazard response has been paused or delayed.\n\nSuggestion details\n\nBrowse older suggestions or enter an exact recorded suggestion reference. Suggestions without a source version can still be challenged by sug"
+}
