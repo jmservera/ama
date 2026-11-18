@@ -12988,6 +12988,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [assistant-ux-live-159-2026-11-18.md](research/assistant-ux-live-159-2026-11-18.md): desktop Playwright keyboard-only run on the demo; keyboard operability and live-region announcements proven, screen-reader testing unproven; no source change, no Azure resource created, probe thread deleted
 
+## [2026-11-18] add | Hardened deployment audit rerun with retained evidence (Refs #118)
+
+* Added [issue-118-live-20261118T1512Z-2026-11-18.md](research/issue-118-live-20261118T1512Z-2026-11-18.md) and its evidence folder: policy and Defender decision proven as a recorded demo decision; live Defender tiers and repository policy assignments unproven (read access denied, assignments not deployed)
+
 ## [2026-11-18] add | Issue 76 live second pass (Refs #76)
 
 * Added [issue-76-live-r2-2026-11-18.md](research/issue-76-live-r2-2026-11-18.md): masked screenshots of the hazard clock and named owner and of the queue definitions on the demo; hazard partly proven (clock Unknown), safeguarding unproven (no demo item); no source change, nothing created in Azure
