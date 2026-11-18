@@ -12975,6 +12975,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Rubric failure 1397 live run-history proof (Refs #1397)
 
 * Added [rubric-1397-live-run-history-2026-11-18.md](research/rubric-1397-live-run-history-2026-11-18.md): artifacts of run 42838857558 show the selected payload was the empty-details placeholder and the complete card was refused at `Maximum allowed: 1`; successor run 42841391974 and PR 1398 show recovery. No workflow, source or paid rerun.
+
 ## [2026-11-18] add | Assistant panel keyboard and announcement live proof (Refs #159)
 
 * Added [assistant-ux-live-159-2026-11-18.md](research/assistant-ux-live-159-2026-11-18.md): desktop Playwright keyboard-only run on the demo; keyboard operability and live-region announcements proven, screen-reader testing unproven; no source change, no Azure resource created, probe thread deleted
