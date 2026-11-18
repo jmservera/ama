@@ -12325,3 +12325,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Stabilization checkpoint triage and epic verdicts (Refs #440)
 
 * Added [stabilization-checkpoint-triage-440-live-2026-11-18.md](research/stabilization-checkpoint-triage-440-live-2026-11-18.md): four issue drafts (time status 500, legacy-reference guard allowlist, unreachable ChatIsolation turn, AI golden path), duplicates mapped to existing owners, blocking findings mapped to epics, and per-epic verdicts (14 continue, 2 fix, 0 pivot). No issue created, no criterion ticked, no source changed. The coordinator HVE Builder review is Deferred at host validation.
+
+## [2026-11-18] add | Chat grounding live demo evidence (Refs #164)
+
+* Added [issue-164-live-chat-grounding-evidence-2026-11-18.md](research/issue-164-live-chat-grounding-evidence-2026-11-18.md): per-criterion record for the five unticked criteria. The chat task is registered and disabled with proposed, unapproved thresholds and no named accountable individual; three live asks (cited answer, approve refusal, injection) were answered by rules with zero model calls because a held unknown liability routes the task to workflow-only. Human exercises, payload and provider approval and any bound model result stay unproven. No source or Azure resource changed.
