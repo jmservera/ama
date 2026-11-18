@@ -12863,3 +12863,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Issue 200 src repoint audit (Refs #200)
 
 * Added [src-repoint-live-audit-200-2026-11-18.md](research/src-repoint-live-audit-200-2026-11-18.md): criteria 2 proven, criterion 3 proven except a fresh tag deployment; no source change
+
+## [2026-11-18] update | Issue 108 harness audit live round 2 (Refs #108)
+
+* Added [issue-108-harness-audit-live-r2-2026-11-18.md](research/issue-108-harness-audit-live-r2-2026-11-18.md): harness rerun (116 tests OK), deployment, version and rate limits confirmed in uksouth and swedencentral, subscription quota unproven; no source change

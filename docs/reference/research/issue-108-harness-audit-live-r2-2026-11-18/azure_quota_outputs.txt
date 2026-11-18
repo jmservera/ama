@@ -1,0 +1,61 @@
+== deployments aoai-resident-469
+[
+  {
+    "cap": 1,
+    "model": "gpt-4.1-mini",
+    "name": "resident-mini",
+    "retire": null,
+    "rl": [
+      {
+        "c": 1.0,
+        "k": "request"
+      },
+      {
+        "c": 1000.0,
+        "k": "token"
+      }
+    ],
+    "sku": "Standard",
+    "state": "Succeeded",
+    "ver": "2025-04-14"
+  }
+]
+== usage swedencentral
+== deployments aif-cutover-test-rzsrg
+[
+  {
+    "cap": 10,
+    "model": "gpt-4.1-nano",
+    "name": "standard",
+    "retire": null,
+    "rl": [
+      {
+        "c": 10.0,
+        "k": "request"
+      },
+      {
+        "c": 10000.0,
+        "k": "token"
+      }
+    ],
+    "sku": "GlobalStandard",
+    "state": "Succeeded",
+    "ver": "2025-04-14"
+  }
+]
+== usage uksouth
+== usage list uksouth (unfiltered, count and OpenAI-like names)
+0
+== usage list swedencentral (unfiltered, count and OpenAI-like names)
+0
+0
+== model catalogue uksouth
+gpt-4.1-mini 2025-04-14 Legacy [('Standard', 1000000, 10, '2027-04-14T00:00:00+00:00'), ('GlobalStandard', 1000000, 10, '2027-04-14T00:00:00+00:00'), ('GlobalStandard', 10000000, 10, '2028-04-13T00:00:00+00:00'), ('DeveloperTier', 250, 50, '2028-04-13T00:00:00+00:00'), ('GlobalProvisionedManaged', 30000, None, '2027-04-14T00:00:00+00:00'), ('ProvisionedManaged', 30000, None, '2027-04-14T00:00:00+00:00'), ('GlobalBatch', 100000000, 10, '2027-04-14T00:00:00+00:00')]
+gpt-4.1-nano 2025-04-14 Legacy [('GlobalStandard', 1000000, 10, '2027-04-14T00:00:00+00:00'), ('GlobalStandard', 1000000, 10, '2028-04-13T00:00:00+00:00'), ('DeveloperTier', 250, 50, '2028-04-13T00:00:00+00:00'), ('GlobalProvisionedManaged', 30000, None, '2027-04-14T00:00:00+00:00'), ('GlobalBatch', 100000000, 10, '2027-04-14T00:00:00+00:00')]
+gpt-4.1-mini 2025-04-14 Legacy [('Standard', 1000000, 10, '2027-04-14T00:00:00+00:00'), ('GlobalStandard', 1000000, 10, '2027-04-14T00:00:00+00:00'), ('GlobalStandard', 10000000, 10, '2028-04-13T00:00:00+00:00'), ('DeveloperTier', 250, 50, '2028-04-13T00:00:00+00:00'), ('GlobalProvisionedManaged', 30000, None, '2027-04-14T00:00:00+00:00'), ('ProvisionedManaged', 30000, None, '2027-04-14T00:00:00+00:00'), ('GlobalBatch', 100000000, 10, '2027-04-14T00:00:00+00:00')]
+gpt-4.1-nano 2025-04-14 Legacy [('GlobalStandard', 1000000, 10, '2027-04-14T00:00:00+00:00'), ('GlobalStandard', 1000000, 10, '2028-04-13T00:00:00+00:00'), ('DeveloperTier', 250, 50, '2028-04-13T00:00:00+00:00'), ('GlobalProvisionedManaged', 30000, None, '2027-04-14T00:00:00+00:00'), ('GlobalBatch', 100000000, 10, '2027-04-14T00:00:00+00:00')]
+== model catalogue swedencentral
+gpt-4.1-mini 2025-04-14 Legacy [('Standard', 1000000, 10, '2027-04-14T00:00:00+00:00'), ('GlobalStandard', 1000000, 10, '2027-04-14T00:00:00+00:00'), ('DataZoneStandard', 1000000, 10, '2027-04-14T00:00:00+00:00'), ('GlobalStandard', 10000000, 10, '2028-04-13T00:00:00+00:00'), ('Standard', 10000000, 10, '2028-04-13T00:00:00+00:00'), ('DeveloperTier', 250, 50, '2028-04-13T00:00:00+00:00'), ('GlobalProvisionedManaged', 30000, None, '2027-04-14T00:00:00+00:00'), ('ProvisionedManaged', 30000, None, '2027-04-14T00:00:00+00:00'), ('DataZoneProvisionedManaged', 100000, None, '2027-04-14T00:00:00+00:00'), ('GlobalBatch', 100000000, 10, '2027-04-14T00:00:00+00:00'), ('DataZoneBatch', 100000000, 10, '2027-04-14T00:00:00+00:00')]
+gpt-4.1-nano 2025-04-14 Legacy [('GlobalStandard', 1000000, 10, '2027-04-14T00:00:00+00:00'), ('GlobalStandard', 1000000, 10, '2028-04-13T00:00:00+00:00'), ('Standard', 1000000, 10, '2028-04-13T00:00:00+00:00'), ('DeveloperTier', 250, 50, '2028-04-13T00:00:00+00:00'), ('DataZoneStandard', 1000000, 10, '2027-04-14T00:00:00+00:00'), ('DataZoneProvisionedManaged', 100000, None, '2027-04-14T00:00:00+00:00'), ('GlobalProvisionedManaged', 30000, None, '2027-04-14T00:00:00+00:00'), ('ProvisionedManaged', 30000, None, '2027-04-14T00:00:00+00:00'), ('ProvisionedManaged', 30000, None, '2028-04-13T00:00:00+00:00'), ('GlobalBatch', 100000000, 10, '2027-04-14T00:00:00+00:00'), ('DataZoneBatch', 100000000, 10, '2027-04-14T00:00:00+00:00')]
+gpt-4.1-mini 2025-04-14 Legacy [('Standard', 1000000, 10, '2027-04-14T00:00:00+00:00'), ('GlobalStandard', 1000000, 10, '2027-04-14T00:00:00+00:00'), ('DataZoneStandard', 1000000, 10, '2027-04-14T00:00:00+00:00'), ('GlobalStandard', 10000000, 10, '2028-04-13T00:00:00+00:00'), ('Standard', 10000000, 10, '2028-04-13T00:00:00+00:00'), ('DeveloperTier', 250, 50, '2028-04-13T00:00:00+00:00'), ('GlobalProvisionedManaged', 30000, None, '2027-04-14T00:00:00+00:00'), ('ProvisionedManaged', 30000, None, '2027-04-14T00:00:00+00:00'), ('DataZoneProvisionedManaged', 100000, None, '2027-04-14T00:00:00+00:00'), ('GlobalBatch', 100000000, 10, '2027-04-14T00:00:00+00:00'), ('DataZoneBatch', 100000000, 10, '2027-04-14T00:00:00+00:00')]
+gpt-4.1-nano 2025-04-14 Legacy [('GlobalStandard', 1000000, 10, '2027-04-14T00:00:00+00:00'), ('GlobalStandard', 1000000, 10, '2028-04-13T00:00:00+00:00'), ('Standard', 1000000, 10, '2028-04-13T00:00:00+00:00'), ('DeveloperTier', 250, 50, '2028-04-13T00:00:00+00:00'), ('DataZoneStandard', 1000000, 10, '2027-04-14T00:00:00+00:00'), ('DataZoneProvisionedManaged', 100000, None, '2027-04-14T00:00:00+00:00'), ('GlobalProvisionedManaged', 30000, None, '2027-04-14T00:00:00+00:00'), ('ProvisionedManaged', 30000, None, '2027-04-14T00:00:00+00:00'), ('ProvisionedManaged', 30000, None, '2028-04-13T00:00:00+00:00'), ('GlobalBatch', 100000000, 10, '2027-04-14T00:00:00+00:00'), ('DataZoneBatch', 100000000, 10, '2027-04-14T00:00:00+00:00')]
