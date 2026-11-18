@@ -1,0 +1,14 @@
+2026-11-18T10:57:04.0945690Z stdout F {"step": "store", "cls": "MssqlStore", "has_reliance": false}
+2026-11-18T10:57:04.1079257Z stdout F {"step": "entries", "count": 1610, "keys": ["action", "at", "case", "detail", "hash", "prev", "who"], "head": "9a36dac18ef2e8afb815334c096868f713930d3833b852dbe47cef6e5742317a"}
+2026-11-18T10:57:04.1305418Z stdout F {"step": "verify_ledger", "intact": true, "entries": 1610, "digests": 0}
+2026-11-18T10:57:04.1758499Z stdout F {"step": "verify_by_year", "intact": true, "years": {"2026": 1610}}
+2026-11-18T10:57:04.1873877Z stdout F {"step": "tamper-edit-detail", "expected": 806, "intact": false, "at_entry": 806, "reason": "content does not match its hash"}
+2026-11-18T10:57:04.1988373Z stdout F {"step": "tamper-delete-entry", "expected": 806, "intact": false, "at_entry": 806, "reason": "previous hash does not match the entry before it"}
+2026-11-18T10:57:04.2102195Z stdout F {"step": "tamper-reorder", "intact": false, "at_entry": 806, "reason": "previous hash does not match the entry before it"}
+2026-11-18T10:57:04.2218207Z stdout F {"step": "tamper-truncate-vs-digest", "intact": false, "mismatches": ["chain is shorter than the digest"]}
+2026-11-18T10:57:04.2495191Z stdout F {"step": "tamper-rewrite-tail-vs-digest", "chain_intact_alone": true, "intact_with_digest": false, "mismatches": ["chain differs from the digest"]}
+2026-11-18T10:57:04.2518146Z stdout F {"step": "two-year-seal-intact", "intact": true, "sealed": ["2025"], "years": {"2025": 100, "2026": 100}}
+2026-11-18T10:57:04.2536155Z stdout F {"step": "two-year-tamper-2025", "intact": false, "problems": {"2025": ["content does not match its hash"]}}
+2026-11-18T10:57:04.2592756Z stdout F {"step": "native-sp_verify_database_ledger", "ok": false, "error": "ProgrammingError", "text": "Driver Error: Syntax error or access violation; DDBC Error: [Microsoft][SQL Server]VIEW LEDGER CONTENT permission denied in database 'retrofit'."}
+2026-11-18T10:57:04.2621794Z stdout F {"step": "ledger-blocks", "ok": false, "error": "ProgrammingError", "text": "Driver Error: Syntax error or access violation; DDBC Error: [Microsoft][SQL Server]VIEW LEDGER CONTENT permission denied in database 'retrofit'."}
+2026-11-18T10:57:04.6091436Z stdout F {"step": "ledger-tables", "ok": true, "rows": [[64]]}
