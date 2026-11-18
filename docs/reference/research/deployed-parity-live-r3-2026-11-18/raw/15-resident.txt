@@ -1,0 +1,4 @@
+anon landed https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/
+final https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/ | Your home improvement progress - synthetic showcase, not live
+h1: Your home improvement progress
+resident /api/cases 404
