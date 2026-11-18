@@ -1,0 +1,20 @@
+{
+  "secrets": [
+    {
+      "id": true,
+      "kv": true,
+      "n": "kvref"
+    },
+    {
+      "id": false,
+      "kv": false,
+      "n": "plain1"
+    },
+    {
+      "id": false,
+      "kv": false,
+      "n": "new-synthetic-1234"
+    }
+  ],
+  "state": "Succeeded"
+}
