@@ -12848,6 +12848,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-146-live2-monitoring-evidence-2026-11-18.md](research/issue-146-live2-monitoring-evidence-2026-11-18.md) with redacted raw output: eight installed alerts, no workbook, fired job-failure and digest alerts, job metric, private query access. Poison queue, workbook rendering, named owners and the tokenomics dashboard stay unproven; no source change.
 
+## [2026-11-18] update | Issue 1258 archive ancestor durability evidence (Refs #1258)
+
+* Added [issue-1258-archive-ancestor-durability-2026-11-18.md](research/issue-1258-archive-ancestor-durability-2026-11-18.md): main already holds the fix (PR #1328); 110 offline tests pass and fail against the pre-fix source; criterion 5 stays a process gate. No source change.
+
 ## [2026-11-18] add | Archive unusable-path failing-first evidence (Refs #1259)
 
 * Added [2026-11-18-ranking-archive-unusable-1259-failing-first.md](research/2026-11-18-ranking-archive-unusable-1259-failing-first.md): regression class red on the parent of the fix, green on main, with a per-criterion table. No source change; no Azure action; the FULL-receipt criterion stays unticked.
@@ -12867,3 +12871,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Issue 144 hosting proof with raw output (Refs #144)
 
 * Added [issue-144-hosting-proof-live-2026-11-18.md](research/issue-144-hosting-proof-live-2026-11-18.md) and its raw folder: criteria 1 and 3 stay unproven (pipeline clause; hardening beyond non-root); job count reconciled to eight; no source change
+## [2026-11-18] add | Five assistants live re-verification (Refs #107)
+
+* Added [issue-107-live-r2-assistants-evidence-2026-11-18.md](research/issue-107-live-r2-assistants-evidence-2026-11-18.md): fresh raw MSSQL and SQLite test output and a read-only live probe, per-criterion table; no source change. The approved-release criterion stays unproven (OQ-017).
