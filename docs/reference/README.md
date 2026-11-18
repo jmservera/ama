@@ -428,6 +428,8 @@ and this run's identities removed (run 3 adds the home-to-device mapping). Durab
 For #110, the [live IoT identity evidence](./research/issue-110-live-iot-identity-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: three distinct Hub identities sent schema-versioned readings with
 stable IDs, read back from Event Hub; production X.509 receiver stays unproven.
+A second run, the [live IoT Hub to SQL rerun](./research/issue-110-live2-iot-sql-evidence-2026-11-18.md),
+sent 6 readings from 3 devices, all 6 stored in Azure SQL, with cleanup read back.
 For #220, the [live challenge route evidence](./research/issue-220-live-challenge-route-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: guarantees, assurance flags and forbidden-field refusals observed
 live, and a blocking defect that refuses every Entra-signed-in staff write to the route.
