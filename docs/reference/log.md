@@ -12791,3 +12791,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Eval gate local test rerun and rescoring limits (Refs #216)
 
 * Updated [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md): 101 existing gate tests run locally with raw output retained; container scores labelled "Observed; raw output not retained"; no new model call; the unticked criterion stays partly proven.
+
+## [2026-11-18] add | Live WCAG axe and keyboard evidence, round 2 (Refs #151)
+
+* Added [issue-151-live-wcag-axe-evidence-r2-2026-11-18.md](research/issue-151-live-wcag-axe-evidence-r2-2026-11-18.md): 16 live screens (13 Programme Manager screens, one case view, two resident app screens) with 0 axe violations, raw axe output retained and redacted, contrast incompletes resolved by sampling, document title finding kept. The manual screen-reader and keyboard criterion stays unticked (screen reader production-only, other roles unavailable). No source changed.
