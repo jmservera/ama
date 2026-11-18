@@ -12196,6 +12196,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added a demo-first, desktop-only first slice to the [usability testing programme plan](research/ux/usability-test-programme-plan.md): employee workbench and resident showcase surfaces at 1280 CSS px, six in-scope scripts, no participant data in the repository, proxy sessions labelled as not user validation.
 * Added a doc-contract regression test for the slice in `src/core/tests/test_usability_programme.py`. No participant, session, SA-010 agreement or result exists; no #155 criterion is ticked.
+## [2026-11-17] update | Ranking job alert runbook coverage (Refs #146)
+
+* Measured the declared alert set against the runbook: `alert-<job>-failed` for the optional ranking jobs (`rank`, `rank-publish`) resolves to the `job-auth` anchor because `operationalMonitoring.bicep` has no ranking branch. Added a `Job ranking` section to [infra/monitoring-runbooks.md](../../infra/monitoring-runbooks.md#job-ranking), a pointer in `Job auth`, and a regression test in `infra/tests/test_alert_runbook_signal_matrix.py` that every job suffix resolves to a section naming it.
+* The Bicep anchor itself is unchanged (infrastructure change, full tier); it stays a follow-up. No deployment, appointment, rendering or billing evidence is added, and no #146 criterion is newly proven.
 ## [2026-11-17] update | Issue 118 hardened deployment status re-measured on main (Refs #118)
 
 * Re-ran the offline infrastructure tests on main `eb51af5c9` (container contract, Bicep policy, governance, edge module, pipeline, container hosting). All pass, and no defect was reproduced, so no source fix or regression test was added.
