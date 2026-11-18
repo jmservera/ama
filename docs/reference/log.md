@@ -13163,6 +13163,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 76 live safeguarding re-check, pass 3 (Refs #76)
 
 * Added [issue-76-live-r3-2026-11-18.md](research/issue-76-live-r3-2026-11-18.md): read-only probe, 16 cases, 1 hazard clock, 0 safeguarding items; renderer shipped in the deployed `/app.js`; 9 api and 29 core tests pass; criterion stays unticked. No source change.
+
 ## [2026-11-18] add | Issue 185 fifth live re-verification (Refs #185)
 
 * Added [issue-185-live-r5-reverification-2026-11-18.md](research/issue-185-live-r5-reverification-2026-11-18.md): demo hub reports zero devices, no 185 job or role assignment remains, retained logs and repository scan show no key text, 36 focused tests pass; durable storage, X.509 and scale stay unproven.
