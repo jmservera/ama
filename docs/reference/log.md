@@ -12899,3 +12899,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Five assistants live re-verification (Refs #107)
 
 * Added [issue-107-live-r2-assistants-evidence-2026-11-18.md](research/issue-107-live-r2-assistants-evidence-2026-11-18.md): fresh raw MSSQL and SQLite test output and a read-only live probe, per-criterion table; no source change. The approved-release criterion stays unproven (OQ-017).
+
+## [2026-11-18] update | Case chat gates third live pass (Refs #216)
+
+* Updated [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md): all 30 prompts rerun in four throwaway servers with raw output retained (18 model calls, 20,128 tokens); refusals 10 of 10, 9 of 9 cited model answers valid, three strict failures disclosed; 107 core and agents tests pass. No source change.
