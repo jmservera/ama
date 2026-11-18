@@ -52,15 +52,15 @@ No credential or private record was read or printed. The SQL server has public n
 | Ledger tables | 64 | 64 |
 | `assistant_allowance`, `assistant_releases`, `assistant_dispatch_gate`, `assistant_tasks`, `chat_memory`, `notice_ack` | 0 each | 0 each |
 
-The restored audit head equals the source's entry 1003 hash, so the restore is an exact prefix of the live chain taken at the requested time (last entry 1 second before the requested 08:17:55). Counts that differ are tables the live demo kept writing to after the restore point.
+The restored audit head equals the source's entry 1003 hash, so the restore is consistent with being a prefix of the live chain (only the head hash was compared) taken at the requested time (last entry 1 second before the requested 08:17:55). Counts that differ are tables the live demo kept writing to after the restore point.
 
 Limit found: the managed identity lacks `VIEW LEDGER CONTENT`, so `sys.sp_verify_database_ledger` returned a permission error on the restored copy and on the source. The native engine verification did not run. The recorded ledger result is the application hash-chain verification only. Granting the permission would change a database control, which this run was not authorised to do.
 
 ## Observed recovery figures
 
 * Restore duration, request to online: about 57 minutes at this size. This is one observation for a small demo database, not a recovery time objective.
-* Recovery point achieved: the last audit entry in the restored copy is 1 second before the requested time. This is one observation, not a guarantee; Azure documents log backups roughly every 10 minutes as the nominal RPO and the objective remains recorded as undecided with owners under criterion 3.
-* Cost: one S0 database for about 4 minutes online plus the restore period, and one 0.5 vCPU job for about 5 minutes. Both are far below the USD 700 cap and were deleted. Azure billing reconciliation is not needed for the demo.
+* Recovery point achieved: the last audit entry in the restored copy is 1 second before the requested time. This is one observation, not a guarantee; the roughly 10-minute log-backup interval is an unretained recollection of Azure documentation and the objective remains recorded as undecided with owners under criterion 3.
+* Cost: one S0 database for about 4 minutes online plus the restore period, and one 0.5 vCPU job for about 5 minutes. Both are far below the USD 700 cap and were deleted. These are estimates, not reconciled billing; reconciliation is production-only.
 
 ## Per-criterion status
 
@@ -84,3 +84,7 @@ Limit found: the managed identity lacks `VIEW LEDGER CONTENT`, so `sys.sp_verify
 * Native ledger verification needs `VIEW LEDGER CONTENT` for the verifying identity or an admin-run check; record as a follow-up, not a demo blocker.
 * A resurrection test (R3) needs seeded revocation, suspension and allowance state in a throwaway database, restored over a point before and after the change.
 * The 57 minute duration is a single small-database sample; sizing the pilot objective is still an owner decision.
+
+## Evidence limits
+
+* The raw probe output (row counts, head hash, source counts of 1100 and 1481) is not retained in the repository; treat those figures as the worker's observations.
