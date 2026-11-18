@@ -1,0 +1,10 @@
+# az rest GET subscription pricings
+{
+  "value": []
+}
+# az security assessment list (read)
+WARNING: Discriminator source is absent or null, use base class ResourceDetails.
+WARNING: Discriminator source is absent or null, use base class ResourceDetails.
+WARNING: Discriminator source is absent or null, use base class ResourceDetails.
+# sql server ATP
+Enabled

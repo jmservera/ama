@@ -493,6 +493,8 @@ environments, runner and image release remain unconfigured and unobserved.
 
 For #118, the [hardened deployment live evidence](./research/issue-118-hardened-deployment-live-evidence-2026-11-18.md)
 records the Azure Policy and Defender decision and read-only live probes (enactment not proven).
+A [rerun](./research/issue-118-live-20261118T1512Z-2026-11-18.md) retains sanitised raw outputs and adds a per-criterion table;
+the decision is proven for the demo, while live Defender tiers stay unreadable (AuthorizationFailed).
 
 For #117, the [live scan evidence](./research/issue-117-live-scan-evidence-2026-11-18.md)
 proves refusal of unsafe uploads on the demo's synthetic scanner (Defender for Storage is off; clean path and legal hold
