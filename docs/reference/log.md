@@ -12325,3 +12325,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Stabilization checkpoint triage and epic verdicts (Refs #440)
 
 * Added [stabilization-checkpoint-triage-440-live-2026-11-18.md](research/stabilization-checkpoint-triage-440-live-2026-11-18.md): four issue drafts (time status 500, legacy-reference guard allowlist, unreachable ChatIsolation turn, AI golden path), duplicates mapped to existing owners, blocking findings mapped to epics, and per-epic verdicts (14 continue, 2 fix, 0 pivot). No issue created, no criterion ticked, no source changed. The coordinator HVE Builder review is Deferred at host validation.
+
+## [2026-11-18] add | Entra roles and field-level visibility live demo evidence (Refs #116)
+
+* Added [issue-116-live-demo-evidence-2026-11-18.md](research/issue-116-live-demo-evidence-2026-11-18.md): per-criterion record of the four unticked criteria on the deployed demo. One role was read live and an unknown AI task was refused before any provider call; the two-role comparison, document hold, stored outputs and provider payloads could not be shown live, and OD-14 and OD-19 confirmation is a human decision. All four boxes stay unticked.
