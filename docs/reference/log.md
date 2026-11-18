@@ -12276,3 +12276,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Container hosting live evidence (Refs #144)
 
 * Added [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): per-criterion record of a demo probe on live Azure. Non-root and digest-pinned images observed; the pipeline run, read-only root file system and capability drop stay unproven.
+## [2026-11-18] add | Cohort and missing-data evaluation demo record (Refs #222)
+
+* Added [cohort-evaluation-demo-2026-11-18.md](research/cohort-evaluation-demo-2026-11-18.md): 36 cohort tests re-run, seven blockers observed, per-criterion table. The OQ-018 owner-approval criterion stays unproven.
