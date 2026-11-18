@@ -13151,3 +13151,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 1830 live audit (Refs #1830)
 
 * Added [issue-1830-live-20261118T1648Z-2026-11-18.md](research/issue-1830-live-20261118T1648Z-2026-11-18.md): timing reports from seven retained full receipts, 54 candidate tests passing on unmerged branch `ci/gate-preflight-benchmark-1830`; no criterion ticked. No source change.
+
+## [2026-11-18] add | Issue 76 live safeguarding re-check, pass 3 (Refs #76)
+
+* Added [issue-76-live-r3-2026-11-18.md](research/issue-76-live-r3-2026-11-18.md): read-only probe, 16 cases, 1 hazard clock, 0 safeguarding items; renderer shipped in the deployed `/app.js`; 9 api and 29 core tests pass; criterion stays unticked. No source change.
