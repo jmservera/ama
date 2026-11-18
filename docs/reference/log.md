@@ -13051,3 +13051,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 138 live third audit (Refs #138)
 
 * Added [issue-138-live-r3-2026-11-18.md](research/issue-138-live-r3-2026-11-18.md) with retained sanitised outputs: OIDC, environments, runner and image release still unconfigured, live what-if succeeds but `summarize_plan` refuses it, smoke and secret checks partly proven; no source change, nothing created in Azure
+
+## [2026-11-18] add | Issue 162 live audit (Refs #162)
+
+* Added [issue-162-live-audit-2026-11-18.md](research/issue-162-live-audit-2026-11-18.md) with retained raw output: live break-glass refusals each add one intact audit-chain entry (2068 to 2070), the grant path with purpose is proven locally only (33 tests, stored audit rows), policy decided for the demo only; criterion 6 stays unticked; no source change, no Azure resource created.
