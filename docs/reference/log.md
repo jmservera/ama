@@ -12911,6 +12911,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 349 tenant prerequisites live round 3 (Refs #349)
 
 * Added [issue-349-tenant-prerequisites-live-r3-2026-11-18.md](research/issue-349-tenant-prerequisites-live-r3-2026-11-18.md): redirect URI seen by Entra, curl 401s, Key Vault reference and private vault facts, per-criterion table; criteria 1, 3 and 4 stay unproven in part, no source or Azure change.
+
 ## [2026-11-18] add | Employee loading feedback live re-verification, second pass (Refs #531)
 
 * Added [issue-531-live-r2-2026-11-18-note.md](research/issue-531-live-r2-2026-11-18-note.md) and its evidence folder: no scale-to-zero in 10 minutes so real cold start stays unproven; reject recorded through the live UI; deployed `app.js` and `style.css` still behind main; no source change
