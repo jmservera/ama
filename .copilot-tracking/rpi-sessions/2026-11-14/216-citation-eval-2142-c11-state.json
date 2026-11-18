@@ -1,0 +1,55 @@
+{
+  "task_id": "216-citation-eval-2142-c11",
+  "task_slug": "216-citation-eval-2142-c11",
+  "parent_task": {
+    "task_id": "216-citation-eval-2142-c10",
+    "task_slug": "216-citation-eval-2142-c10"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14/216-citation-eval-2142-c11-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14/216-citation-eval-2142-c11-plan.md",
+    "details": ".copilot-tracking/details/2026-11-14/216-citation-eval-2142-c11-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-14/216-citation-eval-2142-c11-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-14/216-citation-eval-2142-c11-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c11-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Spawn automatic child task 216-citation-eval-2142-c11 from 216-citation-eval-2142-c10 to resolve RV-023..RV-025 in src/core",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c10-review.md"
+    },
+    {
+      "decision": "Research disposition executed (3-wave focused cycle); Planning Readiness Ready for RV-023..RV-025",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-14/216-citation-eval-2142-c11-research.md"
+    },
+    {
+      "decision": "Plan critique executed once (Complete, Revise); applied PC-001..PC-004 directly and finalized plan",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-14/216-citation-eval-2142-c11-plan-critique.md"
+    },
+    {
+      "decision": "Review executed once (Complete, Defects found); RV-023..RV-025 resolved, routed RV-026..RV-029 to child loop 216-citation-eval-2142-c12",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c11-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Execute child RPI loop 216-citation-eval-2142-c12 to resolve RV-026..RV-029"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Resolve RV-026..RV-029 in src/core",
+      "rationale": "Closes all 4 findings from c11 independent review inside src/core",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c11-review.md"
+    }
+  ]
+}

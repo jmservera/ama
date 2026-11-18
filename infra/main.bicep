@@ -22,6 +22,7 @@ param teamsWebhookUrl string = ''
 param evidenceStore string = 'blob'
 param sharePointSiteId string = ''
 @description('Monthly budget in the billing currency. Notifications above 80 percent actual and 100 percent forecast are not a hard cap.')
+@minValue(1)
 param monthlyBudget int = 300
 param budgetStartDate string = utcNow('yyyy-MM-01')
 @description('Enable new job/IoT alert candidates only after separate named-human signal, owner and threshold approval. Defaults disabled; see infra/monitoring-runbooks.md.')
@@ -100,8 +101,11 @@ param zoneRedundant bool = false
 @allowed(['serverless', 'provisioned'])
 param sqlTier string = 'serverless'
 @description('SQL vCores: serverless maximum or provisioned count.')
+@minValue(1)
+@maxValue(80)
 param sqlVCores int = 2
 @description('Serverless only. Auto-pause delay in minutes: -1 disables, otherwise 15 to 10080.')
+@minValue(-1)
 param sqlAutoPauseDelayMinutes int = 60
 @description('SQL backup storage redundancy. Empty derives Zone when zoneRedundant, otherwise Local.')
 @allowed(['', 'Local', 'Zone', 'Geo', 'GeoZone'])
@@ -167,6 +171,13 @@ param chatRetentionDays int = 0
 param enableRankingArchiveBlob bool = false
 @description('Demo-only, default-off opt-in (Refs #136, #1288): start the API with the public fixture simulation lane at ZF_SIM_STORE/ZF_SIM_KEY_FILE under /state/public-simulation, replica-local and VOLATILE (lost on replica replacement or scale to zero), at most one API replica. Requires demoDirectIngress, the development profile, browser authentication, deployed applications and a real API image. Not durable history, live IoT Hub ingestion, a real selected-home reading path, whole-issue acceptance or a deployment approval; it never changes the durable SQL admission, budgets or model settings.')
 param enablePublicSimulationLane bool = false
+@description('Days ledger digests stay immutable on the ledger-digests Blob container (Refs #115). Must be at least 1 and no shorter than the legal audit retention period once decided; ARM creates an unlocked time-based WORM policy and irreversible locking is an owner action.')
+@minValue(1)
+param ledgerDigestImmutabilityDays int = 365
+@description('Enable container-level versioned immutable storage and WORM policy creation on ledger-digests (Refs #115). Development only may pass false on disposable stacks; production rejects false.')
+param ledgerDigestImmutableStorage bool = true
+@description('Require locked WORM retention headers during scheduled ledger digest publish and verification on ledgerVerify (Refs #115). Development only may pass false before owner lock; production rejects false.')
+param ledgerDigestRequireRetentionLock bool = true
 @description('Days ranking archive records stay immutable. 0 (unset) creates no policy: the duration and its approval are a manual prerequisite and no immutable release may be claimed. A positive value creates an unlocked policy; locking is an owner action.')
 @minValue(0)
 param rankingArchiveImmutabilityDays int = 0
@@ -181,6 +192,7 @@ var publicAccess = isDev && allowPublicNetworkAccess
 var purgeProtection = !isDev || keyVaultPurgeProtection
 
 var prefix = '${workload}-${environmentName}'
+var runbookBase = 'https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md'
 var applicationPrefix = demoDirectIngress ? '${prefix}-demo' : prefix
 var ledgerJobName = demoDirectIngress ? 'job-${applicationPrefix}-audit' : 'job-${applicationPrefix}-ledger-verify'
 var unique = take(uniqueString(resourceGroup().id, location, 'v2'), 5)
@@ -198,6 +210,25 @@ var storageBlobDataContributor = 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
 var storageQueueDataContributor = '974c5e8b-45b9-4653-ba55-5f855dd0fb88'
 var storageQueueDataSender = 'c6a89b2d-59bc-44d0-9896-0f6e12d7b80a'
 
+var uuidHexCharacters = split('0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,-', ',')
+var regionSlugCharacters = split('a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,0,1,2,3,4,5,6,7,8,9,-', ',')
+
+var normalizedRegionCheck = toLower(trim(regionCheckReference))
+var regionCheckWords = split(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(normalizedRegionCheck, '-', ' '), '_', ' '), '/', ' '), '#', ' '), '.', ' '), ':', ' '), ',', ' '), ';', ' '), '(', ' '), ')', ' '), ' ')
+var regionCheckIsUuid = length(normalizedRegionCheck) == 36 && empty(reduce(uuidHexCharacters, normalizedRegionCheck, (remaining, digit) => replace(remaining, digit, ''))) && length(split(normalizedRegionCheck, '-')) == 5 && take(skip(normalizedRegionCheck, 8), 1) == '-' && take(skip(normalizedRegionCheck, 13), 1) == '-' && take(skip(normalizedRegionCheck, 18), 1) == '-' && take(skip(normalizedRegionCheck, 23), 1) == '-'
+var regionCheckRecorded = !empty(normalizedRegionCheck) && !regionCheckIsUuid && !contains(normalizedRegionCheck, 'placeholder') && !contains(normalizedRegionCheck, 'example.invalid') && !contains(normalizedRegionCheck, 'n/a') && !contains(normalizedRegionCheck, '00000000-0000-0000-0000-000000000000') && !contains(regionCheckWords, 'todo') && !contains(regionCheckWords, 'tbd') && !contains(regionCheckWords, 'assumed') && !contains(regionCheckWords, 'assumption') && !contains(regionCheckWords, 'unverified') && !contains(regionCheckWords, 'pending') && !contains(regionCheckWords, 'unknown') && !contains(regionCheckWords, 'none') && !contains(regionCheckWords, 'na') && !contains(regionCheckWords, 'skip')
+
+var normalizedQuotaCheck = toLower(trim(quotaCheckReference))
+var quotaCheckWords = split(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(normalizedQuotaCheck, '-', ' '), '_', ' '), '/', ' '), '#', ' '), '.', ' '), ':', ' '), ',', ' '), ';', ' '), '(', ' '), ')', ' '), ' ')
+var quotaCheckIsUuid = length(normalizedQuotaCheck) == 36 && empty(reduce(uuidHexCharacters, normalizedQuotaCheck, (remaining, digit) => replace(remaining, digit, ''))) && length(split(normalizedQuotaCheck, '-')) == 5 && take(skip(normalizedQuotaCheck, 8), 1) == '-' && take(skip(normalizedQuotaCheck, 13), 1) == '-' && take(skip(normalizedQuotaCheck, 18), 1) == '-' && take(skip(normalizedQuotaCheck, 23), 1) == '-'
+var quotaCheckRecorded = !empty(normalizedQuotaCheck) && !quotaCheckIsUuid && !contains(normalizedQuotaCheck, 'placeholder') && !contains(normalizedQuotaCheck, 'example.invalid') && !contains(normalizedQuotaCheck, 'n/a') && !contains(normalizedQuotaCheck, '00000000-0000-0000-0000-000000000000') && !contains(quotaCheckWords, 'todo') && !contains(quotaCheckWords, 'tbd') && !contains(quotaCheckWords, 'assumed') && !contains(quotaCheckWords, 'assumption') && !contains(quotaCheckWords, 'unverified') && !contains(quotaCheckWords, 'pending') && !contains(quotaCheckWords, 'unknown') && !contains(quotaCheckWords, 'none') && !contains(quotaCheckWords, 'na') && !contains(quotaCheckWords, 'skip')
+
+var normalizedLocation = toLower(trim(location))
+var normalizedSqlLocation = toLower(trim(sqlLocation))
+var sqlLocationSegments = split(normalizedSqlLocation, '-')
+var sqlLocationIsUuid = length(normalizedSqlLocation) == 36 && empty(reduce(uuidHexCharacters, normalizedSqlLocation, (remaining, digit) => replace(remaining, digit, ''))) && length(sqlLocationSegments) == 5 && take(skip(normalizedSqlLocation, 8), 1) == '-' && take(skip(normalizedSqlLocation, 13), 1) == '-' && take(skip(normalizedSqlLocation, 18), 1) == '-' && take(skip(normalizedSqlLocation, 23), 1) == '-'
+var sqlLocationSelected = !empty(normalizedSqlLocation) && sqlLocation == normalizedSqlLocation && length(normalizedSqlLocation) >= 3 && !sqlLocationIsUuid && contains('abcdefghijklmnopqrstuvwxyz', take(normalizedSqlLocation, 1)) && !contains(sqlLocationSegments, '') && empty(reduce(regionSlugCharacters, normalizedSqlLocation, (remaining, digit) => replace(remaining, digit, ''))) && !contains(normalizedSqlLocation, 'placeholder') && !contains(sqlLocationSegments, 'todo') && !contains(sqlLocationSegments, 'tbd') && !contains(sqlLocationSegments, 'assumed') && !contains(sqlLocationSegments, 'assumption') && !contains(sqlLocationSegments, 'unverified') && !contains(sqlLocationSegments, 'pending') && !contains(sqlLocationSegments, 'unknown') && !contains(sqlLocationSegments, 'none') && !contains(sqlLocationSegments, 'na') && !contains(sqlLocationSegments, 'skip')
+
 module guard 'modules/guard.bicep' = {
   name: 'parameter-guard'
   params: {
@@ -206,9 +237,10 @@ module guard 'modules/guard.bicep' = {
     productionProfileForbidsPublicNetworkAccess: isDev || !allowPublicNetworkAccess ? 'ok' : ''
     productionProfileRequiresKeyVaultPurgeProtection: isDev || keyVaultPurgeProtection ? 'ok' : ''
     productionProfileRequiresRegistryQuarantine: isDev || registryQuarantineEnabled ? 'ok' : ''
-    regionCheckMustBeRecorded: !empty(regionCheckReference) ? 'ok' : ''
-    quotaCheckMustBeRecorded: !empty(quotaCheckReference) ? 'ok' : ''
-    deploymentLocationsMustBeSelected: !empty(location) && !empty(sqlLocation) && !empty(aiModelLocation) ? 'ok' : ''
+    productionProfileRequiresImmutableLedgerDigests: isDev || (ledgerDigestImmutableStorage && ledgerDigestRequireRetentionLock && ledgerDigestImmutabilityDays >= 365) ? 'ok' : ''
+    regionCheckMustBeRecorded: regionCheckRecorded ? 'ok' : ''
+    quotaCheckMustBeRecorded: quotaCheckRecorded ? 'ok' : ''
+    deploymentLocationsMustBeSelected: !empty(normalizedLocation) && location == normalizedLocation && sqlLocationSelected && !empty(aiModelLocation) ? 'ok' : ''
     aiFallbackLocationMustDiffer: empty(aiModelFallbackLocation) || aiModelFallbackLocation != aiModelLocation ? 'ok' : ''
     modelCapacityMustFitBudget: chatModelCapacity <= modelCapacityBudget ? 'ok' : ''
     publicEdgeRequiresProductionProfile: !enablePublicEdge || (!isDev && !allowPublicNetworkAccess) ? 'ok' : ''
@@ -293,6 +325,8 @@ module storage 'modules/storage.bicep' = {
     zoneIds: network.outputs.zoneIds
     enableLock: enableLocks
     zoneRedundant: zoneRedundant
+    ledgerDigestImmutabilityDays: ledgerDigestImmutabilityDays
+    ledgerDigestImmutableStorage: ledgerDigestImmutableStorage
     enableRankingArchive: enableRankingArchiveBlob
     rankingArchiveImmutabilityDays: rankingArchiveImmutabilityDays
     roleAssignments: [
@@ -445,6 +479,9 @@ module apps 'modules/containerapps.bicep' = if (deployApplications || deployEnvi
     zoneRedundant: zoneRedundant
     evidenceStore: evidenceStore
     sharePointSiteId: sharePointSiteId
+    ledgerDigestContainer: storage.outputs.ledgerDigestContainer
+    ledgerDigestRequireRetentionLock: ledgerDigestRequireRetentionLock
+    ledgerDigestMinRetentionDays: ledgerDigestImmutabilityDays
     rankingArchiveContainer: storage.outputs.rankingArchiveContainer
     apiImage: apiImage
     enableApiAi: enableApiAi
@@ -493,6 +530,7 @@ resource agentThrottle 'Microsoft.Insights/metricAlerts@2018-03-01' = {
   location: 'global'
   tags: allTags
   properties: {
+    description: 'Foundry client errors above threshold. Owner: Digital service owner (proposed role, actual appointment pending). Runbook: ${runbookBase}#foundry-client-errors.'
     severity: 2
     enabled: true
     scopes: [foundry.outputs.id]
@@ -520,6 +558,7 @@ resource sqlCpu 'Microsoft.Insights/metricAlerts@2018-03-01' = {
   location: 'global'
   tags: allTags
   properties: {
+    description: 'SQL CPU above threshold. Owner: Digital service owner (proposed role, actual appointment pending). Runbook: ${runbookBase}#sql-cpu.'
     severity: 3
     enabled: true
     scopes: [resourceId('Microsoft.Sql/servers/databases', 'sql-${prefix}-${unique}', 'retrofit')]
@@ -548,6 +587,7 @@ resource apiErrors 'Microsoft.Insights/metricAlerts@2018-03-01' = if (deployAppl
   location: 'global'
   tags: allTags
   properties: {
+    description: 'API 5xx responses above threshold. Owner: Digital service owner (proposed role, actual appointment pending). Runbook: ${runbookBase}#api-errors.'
     severity: 2
     enabled: true
     scopes: [apps!.outputs.apiId]
@@ -576,6 +616,7 @@ resource apiRestarts 'Microsoft.Insights/metricAlerts@2018-03-01' = if (deployAp
   location: 'global'
   tags: allTags
   properties: {
+    description: 'API container restarts above threshold. Owner: Digital service owner (proposed role, actual appointment pending). Runbook: ${runbookBase}#api-restarts.'
     severity: 3
     enabled: true
     scopes: [apps!.outputs.apiId]
@@ -604,7 +645,7 @@ resource ledgerDigestMismatch 'Microsoft.Insights/scheduledQueryRules@2023-03-15
   tags: allTags
   properties: {
     displayName: 'Ledger does not match the immutable digests'
-    description: 'The scheduled ledger verification job reported LEDGER_DIGEST_ALERT, or the job run failed. Proposed owner: Digital service owner, actual appointment pending. Runbook: https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md#ledger-digest-mismatch.'
+    description: 'The scheduled ledger verification job reported LEDGER_DIGEST_ALERT, or the job run failed. Owner: Digital service owner (proposed role, actual appointment pending). Runbook: ${runbookBase}#ledger-digest-mismatch.'
     severity: 1
     enabled: true
     scopes: [monitoring.outputs.workspaceId]
@@ -631,7 +672,7 @@ resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-
   tags: allTags
   properties: {
     displayName: 'Ledger verification did not report success'
-    description: 'No LEDGER_DIGEST_OK line from the daily verification job in 26 hours: the job failed to start or run, or logs are missing. Table names are unconfirmed until checked in the deployed workspace. Proposed owner: Digital service owner, actual appointment pending. Runbook: https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md#ledger-verify-missing.'
+    description: 'No LEDGER_DIGEST_OK line from the daily verification job in 26 hours: the job failed to start or run, or logs are missing. Table names are unconfirmed until checked in the deployed workspace. Owner: Digital service owner (proposed role, actual appointment pending). Runbook: ${runbookBase}#ledger-verify-missing.'
     severity: 1
     enabled: true
     scopes: [monitoring.outputs.workspaceId]

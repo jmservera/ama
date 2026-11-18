@@ -28,10 +28,21 @@ import os
 import re
 import time
 import uuid
+from collections.abc import Mapping
 from datetime import datetime, timedelta, timezone
+from typing import Any
 
 from zava_forward.core import identity
+from zava_forward.core.chat_provider_position import (
+    DPO_LEGAL_APPROVED,
+    MODEL_PROVIDER_CONTRACT,
+    ProviderPositionEvaluation,
+    evaluate_provider_position,
+    is_demo_or_synthetic_ref,
+    is_valid_governance_ref,
+)
 from zava_forward.core.chatthreads import MAX_CONTENT, MEMORY_ID_PREFIX, user_key
+from zava_forward.core.data_protection import actual_mode
 
 WARNING = ("Do not type health, disability, safeguarding, religion, ethnicity, sexual orientation, trade union, criminal, "
            "financial hardship or other special-category details, and do not paste resident contact details. Use the case record "
@@ -79,19 +90,7 @@ DATA_MAP = (
          rights="Metadata retained; DPO to confirm"),
 )
 
-MODEL_PROVIDER_POSITION = dict(
-    provider="Azure OpenAI through the existing Foundry deployments (ADR 0001 to ADR 0003)", region="uksouth (owner decision 2026-10-15)",
-    zava_stores_prompts=False, foundry_agent_memory=False,
-    documented_terms=dict(
-        source="https://learn.microsoft.com/en-us/azure/foundry/responsible-ai/openai/data-privacy",
-        source_date="2026-06-05", retrieved="2026-11-01", status="vendor_documentation_not_dpo_accepted",
-        summary=("Prompts and completions are not shared with other customers or used to train or improve models without permission; models are stateless; "
-                 "standard processing stays in the resource geography, Global and DataZone deployments may process elsewhere; "
-                 "abuse monitoring may store and human-review flagged samples unless modified monitoring is approved; "
-                 "processing is governed by the Microsoft Data Protection Addendum.")),
-    open_items=("DPO and Legal must accept or reject the documented terms and confirm the deployment type (Standard, DataZone or "
-                "Global) and whether modified abuse monitoring is approved; not verified against the deployment.",
-                "International transfer position, if any, stays Unknown until the DPO records it."))
+MODEL_PROVIDER_POSITION: dict[str, Any] = dict(MODEL_PROVIDER_CONTRACT)
 
 DIAGNOSTIC_FIELDS = frozenset({"thread_id", "user_key", "case_id", "task", "role", "count", "status", "at", "event", "latency_ms"})
 def redact(text):
@@ -117,52 +116,115 @@ class ChatPrivacy:
     """Privacy rules over the Store's chat repository (chatthreads.py, #160). Threads and messages are owned by the
     `owner` column there; only chat_memory is new. No tables or connections are created here."""
 
-    def __init__(self, store, env=None):
+    def __init__(self, store: Any, env: Mapping[str, str] | None = None) -> None:
         if not hasattr(store, "chat_repo"):
             raise TypeError("ChatPrivacy needs a Store with the chat repository.")
         self.store = store
-        self.env = os.environ if env is None else env
+        self.env: Mapping[str, str] = os.environ if env is None else env
 
-    def _ref(self, key):
+    def _ref(self, key: str) -> str:
         return (self.env.get(key) or "").strip()
 
-    def decision(self):
-        """The recorded DPO and Legal decision. Storage stays refused until all three references exist."""
-        refs = dict(dpia_ref=self._ref("CHAT_DPIA_REF"), lawful_basis_ref=self._ref("CHAT_LAWFUL_BASIS_REF"), notice_ref=self._ref("CHAT_NOTICE_REF"))
-        missing = [k for k, v in refs.items() if not v]
-        days = self._ref("CHAT_RETENTION_DAYS")
-        retention_set = bool(self._ref("CHAT_RETENTION_REF")) and days.isdigit() and int(days) > 0
-        return dict(refs=refs, approved=not missing, missing=missing, retention_days=int(days) if retention_set else None,
-                    retention="Unknown: no period set until CHAT_RETENTION_REF and CHAT_RETENTION_DAYS are recorded" if not retention_set else f"{int(days)} days",
-                    owner="Juan Manuel Servera (DPO, Legal and Compliance, 2026-10-15)",
-                    performance_use="Prohibited: chat and memory content is excluded from performance measurement without a separate decision (RULE-026)")
+    def provider_position(self) -> ProviderPositionEvaluation:
+        """Evaluate runtime model provider residency, zero-training, disclosure and transfer posture."""
+        return evaluate_provider_position(self.env)
 
-    def _require(self):
+    def decision(self) -> dict[str, Any]:
+        """The recorded DPO and Legal decision. Storage stays refused until references and provider posture pass."""
+        is_actual = actual_mode(self.env)
+        refs = dict(
+            dpia_ref=self._ref("CHAT_DPIA_REF"),
+            lawful_basis_ref=self._ref("CHAT_LAWFUL_BASIS_REF"),
+            notice_ref=self._ref("CHAT_NOTICE_REF"),
+        )
+        missing = [k for k, v in refs.items() if not is_valid_governance_ref(v, actual=False)]
+        synthetic_in_actual = (
+            [k for k, v in refs.items() if v and is_demo_or_synthetic_ref(v)] if is_actual else []
+        )
+        actual_hold = is_actual and not DPO_LEGAL_APPROVED
+        pos = self.provider_position()
+        approved = (
+            not missing
+            and not synthetic_in_actual
+            and not actual_hold
+            and bool(pos["valid"])
+        )
+        ret_ref = self._ref("CHAT_RETENTION_REF")
+        days = self._ref("CHAT_RETENTION_DAYS")
+        retention_ref_ok = is_valid_governance_ref(ret_ref, actual=is_actual)
+        days_valid = (
+            1 <= len(days) <= 5
+            and days.isascii()
+            and days.isdigit()
+            and 1 <= int(days) <= 36500
+        )
+        retention_set = approved and retention_ref_ok and days_valid
+        return dict(
+            refs=refs,
+            approved=approved,
+            missing=missing,
+            synthetic_refs_in_actual_mode=synthetic_in_actual,
+            actual_mode_unapproved=actual_hold,
+            provider_position=pos,
+            dpo_legal_approved=DPO_LEGAL_APPROVED,
+            retention_days=int(days) if retention_set else None,
+            retention=(
+                "Unknown: no period set until DPO/Legal approval, provider position, "
+                "CHAT_RETENTION_REF and CHAT_RETENTION_DAYS are recorded"
+                if not retention_set
+                else f"{int(days)} days"
+            ),
+            owner="Juan Manuel Servera (DPO, Legal and Compliance, 2026-10-15)",
+            performance_use=(
+                "Prohibited: chat and memory content is excluded from performance measurement "
+                "without a separate decision (RULE-026)"
+            ),
+        )
+
+    def _require(self) -> dict[str, Any]:
         d = self.decision()
         if not d["approved"]:
-            raise ChatNotApproved("Chat and memory storage is refused until the DPIA, lawful basis and staff notice references are recorded: "
-                                  + ", ".join(d["missing"]))
+            if d["missing"]:
+                raise ChatNotApproved(
+                    "Chat and memory storage is refused until the DPIA, lawful basis and staff "
+                    "notice references are recorded: " + ", ".join(d["missing"])
+                )
+            if d["synthetic_refs_in_actual_mode"]:
+                raise ChatNotApproved(
+                    "Chat and memory storage is refused in actual data mode with synthetic or "
+                    "demo references: " + ", ".join(d["synthetic_refs_in_actual_mode"])
+                )
+            if d["actual_mode_unapproved"]:
+                raise ChatNotApproved(
+                    "Chat and memory storage is refused in actual data mode until named human "
+                    "DPO and Legal sign-off is recorded in the repository."
+                )
+            raise ChatNotApproved(
+                "Chat and memory storage is refused because the model provider data-handling or "
+                "region position is unapproved: "
+                + ", ".join(d["provider_position"]["violations"])
+            )
         return d
 
     @staticmethod
-    def _now():
+    def _now() -> str:
         return datetime.now(timezone.utc).isoformat(timespec="milliseconds")
 
-    def _expiry(self, d):
+    def _expiry(self, d: dict[str, Any]) -> str | None:
         if not d["retention_days"]:
             return None
         return (datetime.now(timezone.utc) + timedelta(days=d["retention_days"])).isoformat(timespec="milliseconds")
 
-    def start_thread(self, user, case_id="", task=""):
+    def start_thread(self, user: dict[str, Any], case_id: str = "", task: str = "") -> str:
         self._require()
-        return self.store.chat_create_thread(user, case_id=case_id, task=task)["id"]
+        return str(self.store.chat_create_thread(user, case_id=case_id, task=task)["id"])
 
-    def add_message(self, user, thread_id, role, content):
+    def add_message(self, user: dict[str, Any], thread_id: str, role: str, content: str) -> list[str]:
         """Store a redacted message in the caller's own thread. Returns the redaction kinds found, for the warning."""
         self._require()
         text, kinds = redact(str(content)[:MAX_CONTENT])
         self.store.chat_add_message(user, thread_id, role, text)
-        return kinds
+        return list(kinds)
 
     def _enabled(self, scope, ref, default):
         c = self.store.chat_repo.get_control(scope, ref)
@@ -180,13 +242,33 @@ class ChatPrivacy:
     def memory_status(self, user, task=""):
         """Why memory is or is not in use for this user and task. Off by default; every switch must be on."""
         owner = user_key(user)
+        d = self.decision()
         gl, opted = self._enabled("global", "all", True), self._enabled("user", owner, False)
         tk = self._enabled("task", task, True) if task else True
-        reason = None if (gl and opted and tk) else ("disabled by an administrator" if not gl else "not opted in" if not opted else f"disabled for task {task}")
-        return dict(active=reason is None, reason=reason, opted_in=opted, global_enabled=gl, task_enabled=tk, notice=MEMORY_NOTICE,
-                    retention={c: self.decision()["retention"] for c in MEMORY_CLASSES})
+        reason = (
+            None
+            if (d["approved"] and gl and opted and tk)
+            else (
+                "disabled by an administrator"
+                if not gl
+                else "not opted in"
+                if not opted
+                else f"disabled for task {task}"
+                if not tk
+                else "chat and memory privacy or provider position is not approved"
+            )
+        )
+        return dict(
+            active=reason is None,
+            reason=reason,
+            opted_in=opted,
+            global_enabled=gl,
+            task_enabled=tk,
+            notice=MEMORY_NOTICE,
+            retention={c: d["retention"] for c in MEMORY_CLASSES},
+        )
 
-    def opt_in(self, user, acknowledged):
+    def opt_in(self, user: dict[str, Any], acknowledged: bool) -> None:
         """Informed opt-in: the user must acknowledge the notice, and the recorded staff notice must exist."""
         self._require()
         if acknowledged is not True:
@@ -242,7 +324,15 @@ class ChatPrivacy:
         if task not in REGISTRY:
             raise ValueError("Memory needs a known assistant task, so the per-task switch can apply.")
 
-    def add_memory(self, user, content, item_class="working_preference", source="typed by the user", *, task):
+    def add_memory(
+        self,
+        user: dict[str, Any],
+        content: str,
+        item_class: str = "working_preference",
+        source: str = "typed by the user",
+        *,
+        task: str,
+    ) -> dict[str, Any]:
         """Opt-in memory. Refused if memory is off, or if the text looks special-category (rather than stored masked).
         The task is required so the per-task administrator switch always applies (fails closed)."""
         d = self._require()
@@ -345,14 +435,14 @@ class ChatPrivacy:
         return dict(threads=len(threads), messages=sum(t["message_count"] for t in threads), memory=len(memory))
 
     def purge_expired(self, now=None):
-        """Delete memory past its expiry. Nothing expires while no retention period is approved."""
+        """Delete memory past its recorded expiry. Items created before a retention period is approved have no expiry."""
         repo = self.store.chat_repo
         with repo.txn():
             n = repo.purge_memory(now or self._now())
             repo.commit()
         return n
 
-    def purge_retention(self, now=None):
+    def purge_retention(self, now: str | None = None) -> dict[str, Any]:
         """Apply the recorded retention period: delete threads created longer ago than it (age-based, owner decision 2026-11-03; later activity does not extend it), and expired memory. Does nothing while no period is recorded."""
         days = self.decision()["retention_days"]
         if not days:

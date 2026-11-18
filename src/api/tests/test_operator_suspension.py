@@ -696,6 +696,15 @@ class OperatorIncident(Base):
             reopened_json.continuity_view(self.pm)["suspensions"][0]["status"], "Suspended"
         )
 
+    def test_nfr_014_suspension_and_manual_fallback_drill(self) -> None:
+        drill(self)
+        s = self.store.continuity_view(self.pm)["suspensions"][-1]
+        held = (s["status"], s["restart_rule"], s["automatic_restart"])
+        self.assertEqual(held, ("Suspended", "RULE-024", False))
+        self.assertTrue(self.store.continuity_block(CAP))
+        cases = json.dumps(self.store.cases["ZF-1"])
+        self.assertIn("Synthetic manual fallback", cases)
+
     def test_incident_snapshot_and_reopen(self) -> None:
         drill(self)
         from zava_forward.core.store import Store
@@ -956,6 +965,11 @@ class OperatorIncident(Base):
         self.assertEqual(s["restart_authority"], AUTHORITY)
         self.assertIn("OD-35", s["actual_authority"])
         self.assertEqual(s["trigger"], "guardrail breach")
+        self.assertEqual((s["restart_rule"], s["automatic_restart"]), ("RULE-024", False))
+        with self.assertRaises(PermissionError):
+            self.store.restart_decide(
+                provision(self), dict(id=s["id"], decision="Restart", automatic=True)
+            )
         self.store.log_call(self.pm, "ZF-1", "Spoke", "Synthetic drill call")
         with self.assertRaises(PermissionError):
             self.store.restart_decide(provision(self), dict(id=s["id"], decision="Restart"))
@@ -1064,6 +1078,412 @@ class OperatorIncident(Base):
         self.assertEqual(
             self.other().store.continuity_view(self.pm)["suspensions"][0]["status"], "Suspended"
         )
+
+    def test_nfr_014_http_breach_hazard_and_rule_024_restart_drill(self) -> None:
+        from zava_forward.core import governance
+
+        from test_auth import ENV, principal
+        from zava_forward.api.auth import TrustedProxyProvider
+        from zava_forward.api.server import App, make_handler
+
+        qi = self.people["Quality Inspector"]
+        pm = self.pm
+        pso = provision(self)
+        rlo = self.people["Resident Liaison Officer"]
+        bsl1 = self.people["Building Safety Liaison"]
+        bsl2 = dict(
+            code="BSL-DRILL-2",
+            name="Human Safety Witness",
+            email="bsl-drill-2@example.test",
+            role="Building Safety Liaison",
+            oid="eeeeeeee-0000-0000-0000-000000000202",
+        )
+
+        oids = {
+            qi["email"]: "eeeeeeee-0000-0000-0000-000000000101",
+            pm["email"]: "eeeeeeee-0000-0000-0000-000000000102",
+            pso["email"]: "eeeeeeee-0000-0000-0000-000000000103",
+            rlo["email"]: "eeeeeeee-0000-0000-0000-000000000104",
+            bsl1["email"]: "eeeeeeee-0000-0000-0000-000000000105",
+            bsl2["email"]: bsl2["oid"],
+        }
+        with self.store.lock, self.store.dblock:
+            for email, oid_val in oids.items():
+                if email == bsl2["email"]:
+                    self.store.staff[email] = dict(bsl2)
+                    self.store.db.execute(
+                        "INSERT INTO staff (email, body) VALUES (?, ?)",
+                        (email, json.dumps(bsl2)),
+                    )
+                else:
+                    self.store.staff[email]["oid"] = oid_val
+                    row = self.store.db.execute(
+                        "SELECT body FROM staff WHERE email=?", (email,)
+                    ).fetchone()
+                    doc = json.loads(row[0])
+                    doc["oid"] = oid_val
+                    self.store.db.execute(
+                        "UPDATE staff SET body=? WHERE email=?",
+                        (json.dumps(doc), email),
+                    )
+            self.store.cases["ZF-1"]["home"]["type"] = "Mid terrace"
+            self.store.cases["ZF-2"]["home"]["type"] = "Semi-detached"
+            self.store.save()
+
+        protocol: dict[str, Any] = {
+            key: f"Synthetic demonstration {key}" for key, _ in governance.PROTOCOL_FIELDS
+        }
+        benefits: dict[str, Any] = {
+            key: f"Synthetic demonstration {key}" for key, _ in governance.BG011_FIELDS
+        }
+        benefits.update(
+            ai_denominator="per accepted handover",
+            ai_quality_floor="Synthetic floor: no critical misses",
+            ai_cost_components="Synthetic platform, review and assurance effort",
+            mde_cycle_time_pct=10,
+            mde_coordination_hours_pct=10,
+        )
+        self.store.protocol_freeze(pm, dict(protocol, synthetic=True))
+        self.store.protocol_approve(
+            pso, dict(dpia_ref="DPIA-221-DRILL", lawful_basis_ref="LB-221-DRILL")
+        )
+        self.store.benefits_record(pm, benefits)
+        self.store.benefits_approve(pso, {})
+
+        # Step 1: Active AI baseline before incident trigger.
+        ready = self.run_ready(CAP)
+        self.assertEqual(ready["state"], "ready")
+        calls_before_suspend = self.provider.calls
+        self.assertGreater(calls_before_suspend, 0)
+
+        provider = TrustedProxyProvider(self.store, dict(ENV))
+        app = App(self.store, provider=provider)
+        server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
+        thread = threading.Thread(target=server.serve_forever)
+        thread.start()
+
+        def hdr(email: str, *roles: str) -> dict[str, str]:
+            return {
+                "Content-Type": "application/json",
+                "X-ZF-CSRF": "1",
+                "X-MS-CLIENT-PRINCIPAL": principal(roles=roles, oid=oids[email], email=email),
+            }
+
+        def req(
+            method: str,
+            path: str,
+            headers: dict[str, str],
+            payload: dict[str, Any] | None = None,
+        ) -> tuple[int, Any]:
+            data = None if payload is None else json.dumps(payload).encode("utf-8")
+            request = urllib.request.Request(
+                f"http://127.0.0.1:{server.server_port}{path}",
+                data=data,
+                headers=headers,
+                method=method,
+            )
+            try:
+                with urllib.request.urlopen(request, timeout=10) as resp:
+                    return resp.status, json.load(resp)
+            except urllib.error.HTTPError as err:
+                try:
+                    return err.code, json.load(err)
+                finally:
+                    err.close()
+
+        qi_hdr = hdr(qi["email"], "ZavaForward.QualityInspector")
+        pm_hdr = hdr(pm["email"], "ZavaForward.ProgrammeManager")
+        pso_hdr = hdr(pso["email"], "ZavaForward.SupportOfficer", "ZavaForward.AIRestart")
+        rlo_hdr = hdr(rlo["email"], "ZavaForward.LiaisonOfficer")
+        bsl1_hdr = hdr(bsl1["email"], "ZavaForward.SafetyLiaison")
+        bsl2_hdr = hdr(bsl2["email"], "ZavaForward.SafetyLiaison")
+
+        breach_payload = dict(
+            scope_kind="home",
+            scope="ZF-1",
+            owner="Quality Inspector",
+            evidence="SYN-HTTP-BREACH-221",
+            containment="Pause home ZF-1 retrofit progression",
+            resident_impact="Manual liaison continuity active; statutory safety open",
+            remediation="Verify citations and record post-breach release",
+            restart_authority=AUTHORITY,
+            synthetic=True,
+        )
+
+        try:
+            # RULE-024 HTTP negative checks on breach & continuity suspension records.
+            for bad_auth in (
+                "",
+                "TBD",
+                "Unavailable: OD-35 authority unappointed",
+                "automatic",
+                "CM-0123456789abcdef",
+            ):
+                code, _ = req(
+                    "POST",
+                    "/api/governance/breach",
+                    qi_hdr,
+                    dict(breach_payload, restart_authority=bad_auth),
+                )
+                self.assertEqual(code, 400)
+                if bad_auth != "Unavailable: OD-35 authority unappointed":
+                    c_code, _ = req(
+                        "POST",
+                        "/api/continuity/suspend",
+                        qi_hdr,
+                        dict(incident(CAP), restart_authority=bad_auth),
+                    )
+                    self.assertEqual(c_code, 400)
+
+            code, _ = req(
+                "POST",
+                "/api/governance/breach",
+                qi_hdr,
+                dict(breach_payload, restart_authority=qi["email"]),
+            )
+            self.assertEqual(code, 403)
+            code, _ = req(
+                "POST",
+                "/api/continuity/suspend",
+                qi_hdr,
+                dict(incident(CAP), restart_authority=qi["email"]),
+            )
+            self.assertEqual(code, 403)
+            code, _ = req(
+                "POST",
+                "/api/continuity/suspend",
+                qi_hdr,
+                dict(incident(CAP), automatic=True),
+            )
+            self.assertEqual(code, 403)
+
+            # Step 2: Record guardrail breach and AI operator suspension over HTTP.
+            code, breach = req("POST", "/api/governance/breach", qi_hdr, breach_payload)
+            self.assertEqual(code, 200)
+            self.assertEqual(
+                (breach["restart_authority"], breach["restart_rule"], breach["automatic_restart"]),
+                (AUTHORITY, "RULE-024", False),
+            )
+
+            code, suspended = req("POST", "/api/continuity/suspend", qi_hdr, incident(CAP))
+            self.assertEqual(code, 200)
+            self.assertEqual(suspended["status"], "Suspended")
+
+            # Step 3: Verify AI containment and quarantined pre-breach proposal over HTTP.
+            self.assertFalse(self.service.detail(pm, ready["id"])["actionable"])
+            with self.assertRaises(PermissionError):
+                self.verify(ready)
+            denied_task = self.service.invoke(pm, CAP, "ZF-1")
+            self.assertFalse(self.service.execute(denied_task["id"]))
+            self.assertEqual(self.provider.calls, calls_before_suspend)
+            code, exported = req("GET", "/api/continuity/export", pm_hdr)
+            self.assertEqual(code, 200)
+            quarantined = next(
+                row for row in exported["assistant_proposals"] if row["id"] == ready["id"]
+            )
+            self.assertFalse(quarantined["relied_on"])
+            self.assertFalse(quarantined["actionable"])
+            self.assertFalse(quarantined["epoch_current"])
+
+            # Step 4: Verify manual fallback on unaffected home while paused archetype blocks.
+            code, _ = req(
+                "POST",
+                "/api/cases/ZF-1/call",
+                rlo_hdr,
+                {"outcome": "Spoke", "note": "Blocked while Mid terrace paused"},
+            )
+            self.assertEqual(code, 403)
+            code, _ = req(
+                "POST",
+                "/api/cases/ZF-2/call",
+                rlo_hdr,
+                {"outcome": "Spoke", "note": "SYN manual fallback during AI suspension"},
+            )
+            self.assertEqual(code, 200)
+
+            # Step 5: Statutory Awaab's Law hazard workflow succeeds end-to-end on paused ZF-1.
+            code, bsl1_me = req("GET", "/api/me", bsl1_hdr)
+            self.assertEqual(code, 200)
+            h_index = len(self.store.cases["ZF-1"]["hazards"])
+            code, _ = req(
+                "POST",
+                "/api/cases/ZF-1/hazard-raise",
+                rlo_hdr,
+                {
+                    "category": "Damp and mould",
+                    "priority": "Emergency",
+                    "note": "SYN emergency damp hazard during HTTP drill",
+                    "source": "SYN resident emergency call",
+                    "aware_at": "2026-03-01T09:00:00+00:00",
+                },
+            )
+            self.assertEqual(code, 200)
+            code, _ = req(
+                "POST",
+                "/api/cases/ZF-1/hazard-refer",
+                rlo_hdr,
+                {
+                    "index": h_index,
+                    "to": bsl1_me["user"]["email"],
+                    "job": "SYN-HTTP-HAZ-221",
+                    "evidence": "SYN emergency repairs desk ticket",
+                },
+            )
+            self.assertEqual(code, 200)
+            code, _ = req(
+                "POST",
+                "/api/cases/ZF-1/hazard-receive",
+                bsl1_hdr,
+                {"index": h_index, "evidence": "SYN repairs receipt"},
+            )
+            self.assertEqual(code, 200)
+            code, _ = req(
+                "POST",
+                "/api/cases/ZF-1/hazard-accept",
+                bsl1_hdr,
+                {"index": h_index, "evidence": "SYN safety acceptance"},
+            )
+            self.assertEqual(code, 200)
+            code, _ = req(
+                "POST",
+                "/api/cases/ZF-1/hazard-times",
+                bsl1_hdr,
+                {
+                    "index": h_index,
+                    "evidence": "SYN emergency attendance times",
+                    "response_due_at": "2026-03-02T09:00:00+00:00",
+                    "responded_at": "2026-03-01T13:00:00+00:00",
+                    "resident_update_due_at": "2026-03-02T13:00:00+00:00",
+                    "resident_updated_at": "2026-03-01T15:00:00+00:00",
+                },
+            )
+            self.assertEqual(code, 200)
+            code, _ = req(
+                "POST",
+                "/api/cases/ZF-1/hazard-repaired",
+                bsl1_hdr,
+                {"index": h_index, "evidence": "SYN emergency make-safe certificate"},
+            )
+            self.assertEqual(code, 200)
+            code, _ = req(
+                "POST",
+                "/api/cases/ZF-1/hazard-release",
+                bsl2_hdr,
+                {
+                    "index": h_index,
+                    "note": "SYN independent safety clearance",
+                    "evidence": "SYN independent inspection report",
+                },
+            )
+            self.assertEqual(code, 200)
+            # Clearing safety hold does not clear RULE-024 guardrail pause.
+            code, _ = req(
+                "POST",
+                "/api/cases/ZF-1/call",
+                rlo_hdr,
+                {"outcome": "Spoke", "note": "Still paused until RULE-024 restart"},
+            )
+            self.assertEqual(code, 403)
+
+            # Step 6: Corrective evidence & post-breach release, enforcing actor separation.
+            propose_body = {
+                "id": suspended["id"],
+                "corrective_evidence": "synthetic:http-corrective-221",
+                "test_id": "test_nfr_014_suspension_and_manual_fallback_drill",
+                "result": "Pass",
+                "evidence_class": "constructed-fixture",
+            }
+            code, _ = req("POST", "/api/continuity/restart-propose", qi_hdr, propose_body)
+            self.assertEqual(code, 403)
+            code, proposed = req("POST", "/api/continuity/restart-propose", pm_hdr, propose_body)
+            self.assertEqual(code, 200)
+
+            code, rel = req(
+                "POST",
+                "/api/governance/release",
+                pm_hdr,
+                {
+                    "scope_kind": "tranche",
+                    "scope": "Wave 1",
+                    "requirements": "RULE-020, RULE-024",
+                    "evidence": "SYN post-breach release pack",
+                    "unresolved": "None",
+                    "envelope_ref": "ENV-HTTP-221",
+                    "economics_report_ref": "SYN AI economics report",
+                    "economics_limit_breach": "None",
+                    "approvers": ["SYN Executive Sponsor"],
+                    "decision": "Release",
+                    "synthetic": True,
+                },
+            )
+            self.assertEqual(code, 200)
+
+            gov_restart_body = {
+                "id": breach["id"],
+                "release_id": rel["id"],
+                "authority_ref": AUTHORITY,
+                "remediation_evidence": "SYN verified citation remediation",
+            }
+            # Neither breach recorder (qi) nor release recorder (pm) can authorise restart.
+            for denied_hdr in (qi_hdr, pm_hdr):
+                code, _ = req("POST", "/api/governance/restart", denied_hdr, gov_restart_body)
+                self.assertEqual(code, 403)
+            code, _ = req(
+                "POST",
+                "/api/governance/restart",
+                pso_hdr,
+                dict(gov_restart_body, authority_ref="TBD"),
+            )
+            self.assertEqual(code, 403)
+
+            # Step 7: Distinct-human RULE-024 restart over trusted HTTP route.
+            code, restarted_gov = req("POST", "/api/governance/restart", pso_hdr, gov_restart_body)
+            self.assertEqual(code, 200)
+            self.assertEqual(restarted_gov["status"], "Restart authorised")
+            self.assertEqual(restarted_gov["restart"]["restart_rule"], "RULE-024")
+            self.assertFalse(restarted_gov["restart"]["automatic_restart"])
+
+            code, _ = req(
+                "POST",
+                "/api/cases/ZF-1/call",
+                rlo_hdr,
+                {"outcome": "Spoke", "note": "SYN post-restart liaison call"},
+            )
+            self.assertEqual(code, 200)
+
+            decide_body = decision(proposed)
+            code, _ = req("POST", "/api/continuity/restart-decide", pm_hdr, decide_body)
+            self.assertEqual(code, 403)
+            code, _ = req(
+                "POST",
+                "/api/continuity/restart-decide",
+                pso_hdr,
+                dict(decide_body, authority_ref="TBD"),
+            )
+            self.assertEqual(code, 403)
+            code, decided_cont = req("POST", "/api/continuity/restart-decide", pso_hdr, decide_body)
+            self.assertEqual(code, 200)
+            self.assertEqual(decided_cont["status"], "Restarted")
+            self.assertTrue(decided_cont["actual_hold"])
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(10)
+            app.assistants.stop()
+
+        # Step 8: Durable SQL reopen and audit chain verification.
+        reopened = self.other().store
+        pm_reopened = dict(pm, oid=oids[pm["email"]])
+        gov_closed = reopened.governance_view(pm_reopened)["breaches"][0]
+        self.assertEqual(gov_closed["status"], "Restart authorised")
+        self.assertEqual(gov_closed["restart"]["authority_ref"], AUTHORITY)
+        cont_closed = reopened.continuity_view(pm_reopened)["suspensions"][0]
+        self.assertEqual(cont_closed["status"], "Restarted")
+        self.assertEqual(cont_closed["restart"]["restart_rule"], "RULE-024")
+        self.assertFalse(cont_closed["restart"]["automatic_restart"])
+        self.assertIsNone(continuity.active(reopened._cont(), CAP, constructed=True))
+        self.assertIsNotNone(reopened.continuity_block(CAP))
+        self.assertTrue(reopened.verify_audit())
 
 
 if __name__ == "__main__":

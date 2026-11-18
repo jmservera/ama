@@ -39,9 +39,13 @@ class WorkloadContracts(unittest.TestCase):
             "modules/containerapps.bicep:api",
             "modules/containerapps.bicep:agents",
             "modules/containerapps.bicep:orchestrator",
+            "modules/containerapps.bicep:tokenRenewal",
             "modules/containerapps.bicep:ledgerVerify",
+            "modules/containerapps.bicep:rankingPublish",
             "modules/containerapps.bicep:importJob",
             "resident-demo.bicep:app",
+            "live-receiver-job.bicep:job",
+            "live-simulator-job.bicep:job",
         ):
             self.assertIn(expected, names)
 

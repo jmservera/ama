@@ -56,6 +56,7 @@ def block(label, text, limit=2000):
 class ChatIsolation:
     def __init__(self, store, env=None, model=None, clock=None):
         self.store = store
+        self.sensors = None
         self.env = os.environ if env is None else env
         self.privacy = ChatPrivacy(store, env=self.env)
         self.model = model
@@ -88,6 +89,14 @@ class ChatIsolation:
             export_fields.status_inputs(self.store._case(case_id))
             return export_fields.chat_case(d)
 
+    def ai_consent_state(self, case_id):
+        """The recorded resident AI and data-use consent: None when no state is recorded, else the raw value."""
+        with self.store.lock:
+            resident = self.store._case(case_id).get("resident") or {}
+        if "ai_data_use_consent" not in resident:
+            return None
+        return resident["ai_data_use_consent"] or ""
+
     def case_facts(self, user, case_id):
         """Recorded facts for the stateless rules reply, from the user's own projection. None when out of scope."""
         from zava_forward.core.chat_case_answers import case_facts
@@ -96,7 +105,18 @@ class ChatIsolation:
             if d is None:
                 return None
             export_fields.status_inputs(self.store._case(case_id))
-            return case_facts(d, reason_visible=projection.can_see_reason(user))
+            facts = case_facts(d, reason_visible=projection.can_see_reason(user))
+        return {**facts, **self._sensor_facts(user, case_id)}
+
+    def _sensor_facts(self, user, case_id):
+        """Retained-reading facts through the injected authorised view; empty when absent or not permitted."""
+        if self.sensors is None:
+            return {}
+        from zava_forward.core.chat_case_answers import sensor_facts
+        try:
+            return sensor_facts(self.sensors(user, case_id))
+        except (PermissionError, ValueError, LookupError):
+            return {}
 
     def memory_for(self, user, task=""):
         """Opt-in, switch-gated and labelled non-authoritative items from the #285 lifecycle; empty unless active."""
@@ -124,11 +144,31 @@ class ChatIsolation:
     def _withheld(self, user, thread, reply):
         if TOOLISH.search(reply):
             return True
-        if thread["case_id"] and not projection.can_see_reason(user):
-            c = self.store.cases.get(thread["case_id"])
-            secret = c and c["resident"].get("adjustment")
-            return bool(secret and secret != "None" and secret in reply)
-        return False
+        cid = thread.get("case_id") or ""
+        withheld = projection.withheld_scope_values(self.store, user, [cid] if cid else [])
+        return projection.contains_withheld_value(reply, withheld)
+
+    def scrub_thread(self, user, thread):
+        """Re-apply live case access and field-level visibility to a resumed chat thread."""
+        u = self.current_user(user)
+        cid = thread.get("case_id") or ""
+        cases_map = getattr(self.store, "cases", {}) or {}
+        if cid and (
+            projection.project_case_visibility(u, cases_map[cid]) is None
+            if cid in cases_map
+            else self.store.detail(cid, u) is None
+        ):
+            raise ChatNotFound(thread.get("id") or cid)
+        msgs = []
+        for m in thread.get("messages", ()):
+            if m.get("role") == "assistant" and (
+                self._withheld(u, thread, m.get("content") or "")
+                or any(self._withheld(u, thread, str(ev)) for ev in (m.get("evidence") or ()))
+            ):
+                msgs.append(dict(m, content=REFUSAL, evidence=[], withheld=True))
+            else:
+                msgs.append(dict(m))
+        return dict(thread, messages=msgs)
 
     def turn(self, user, tid, content):
         """One chat turn: store the user's message, ask the model with the owner-only prompt, store the checked reply."""

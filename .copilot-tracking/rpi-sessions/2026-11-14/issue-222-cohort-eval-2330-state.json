@@ -1,0 +1,58 @@
+{
+  "task_id": "issue-222-cohort-eval-2330",
+  "task_slug": "issue-222-cohort-eval-2330",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14/issue-222-cohort-eval-2330-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14/issue-222-cohort-eval-2330-plan.md",
+    "details": ".copilot-tracking/details/2026-11-14/issue-222-cohort-eval-2330-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-14/issue-222-cohort-eval-2330-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-14/issue-222-cohort-eval-2330-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-14/issue-222-cohort-eval-2330-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "User requested full automatic RPI loop (research, plan, implement, review) on feat/ai-222-cohort-eval-2330 stacked on origin/feat/demo-164-chat-grounding-provenance-0900; Focused validation tier; commit locally with Refs #222 and do not push.",
+      "status": "confirmed",
+      "evidence": "user prompt"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready. Enforce OQ-018 pre-live dated human owner approval boundary (owner_approval_status, lawful_analysis_fields_approved, live_activation_allowed) and synthetic_not_fairness_evidence + non_fairness_provenance_notice across cohort_eval.py, ai_eval.py, cohort runners, and server.py (/api/ai/report and manager-only /api/ai/cohort-evaluation).",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-14/issue-222-cohort-eval-2330-research.md (C1-C17)"
+    },
+    {
+      "decision": "Plan critique executed once (verdict: Revise). Applied all three direct planner corrections (PC-001 cohorts fallback & full manifest_digest, PC-002 server.py:get_kind ai_report & GET_ENDPOINTS string registration & cohort_evaluation_export(), PC-003 fairness_evidence/live_activation_allowed/pending_owner_approval/undated-vs-expired predicates) and finalized plan as Ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-14/issue-222-cohort-eval-2330-plan-critique.md; .copilot-tracking/plans/2026-11-14/issue-222-cohort-eval-2330-plan.md"
+    },
+    {
+      "decision": "Post-implementation Review executed once (execution: Complete; outcome: Conformant) across full task boundary P01..P03 (src/core, src/agents, src/api, READMEs, and 274 Focused validation tests). Routed RV-001 [Low] and external OQ-018 governance ratification to Follow-up.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-14/issue-222-cohort-eval-2330-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection among ranked follow-up choices, Stop automatic session, or Switch to manual mode."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Align src/core/README.md lawful_analysis_fields parenthetical with _valid_lawful_fields (RV-001)",
+      "rationale": "Highest ease of implementation (single-sentence documentation clarification or optional dimension-to-field cross-check), clean engineering hygiene, and zero external blockers.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-14/issue-222-cohort-eval-2330-review.md (RV-001); src/core/README.md; src/core/src/zava_forward/core/cohort_eval.py"
+    },
+    {
+      "rank": 2,
+      "task": "Ratify OQ-018 production cohorts, lawful analysis fields, and thresholds with named Programme Owner, DPO, and RAI Owner sign-off plus custodian-held non-synthetic split",
+      "rationale": "High governance value required to close the final non-synthetic live-use acceptance criterion on Issue #222, gated on human authority holders outside code.",
+      "evidence": ".copilot-tracking/plans/2026-11-14/issue-222-cohort-eval-2330-plan.md (## Follow-Up Items); docs/reference/research/evaluation/cohort-evaluation-review-pack.md"
+    }
+  ]
+}

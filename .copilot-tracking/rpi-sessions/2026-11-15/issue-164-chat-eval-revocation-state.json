@@ -1,0 +1,58 @@
+{
+  "task_id": "issue-164-chat-eval-revocation",
+  "task_slug": "issue-164-chat-eval-revocation",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/issue-164-chat-eval-revocation-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/issue-164-chat-eval-revocation-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/issue-164-chat-eval-revocation-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-11-15/issue-164-chat-eval-revocation-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/issue-164-chat-eval-revocation-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/issue-164-chat-eval-revocation-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run confirmed automatic RPI loop (rpi-research, rpi-plan, rpi-plan-critique, rpi-implement, rpi-review) for Issue #164 local-testable RAI multi-turn and revocation criteria on branch feat/ai-164-chat-revocation-0042 stacked on feat/demo-164-chat-grounding-provenance-0900 without pushing",
+      "status": "confirmed",
+      "evidence": "User prompt instruction (2026-11-15)"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready with pure-core zava_forward.core.ai_eval, RegulatoryChat mid-thread consent/refusal hardening, held-out frozen expected-outcome enforcement, and separate /api/ai/report chat_evaluation reporting",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-164-chat-eval-revocation-research.md (C1-C17)"
+    },
+    {
+      "decision": "Plan critique executed once with verdict Revise; direct planner fixes PC-001 through PC-004 applied (post-detail ai_consent_state + transactional re-check, non-destructive revoke_source + WORKFLOW_RULES comparator, strict closed-set expected_outcome_problems + canonical REVIEW_EFFORT_INPUTS, and per-package mypy/ruff with Any-typed core collaborators)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-15/issue-164-chat-eval-revocation-plan-critique.md and .copilot-tracking/plans/2026-11-15/issue-164-chat-eval-revocation-plan.md"
+    },
+    {
+      "decision": "Review executed once (Execution status: Complete; Outcome: Conformant) across full P01-P04 local-testable Issue #164 boundary with RV-001 routed to distinct post-merge owner governance follow-up",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-164-chat-eval-revocation-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked post-Review follow-up work item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Author non-implementer held-out manifest protocol and 4-component reviewer timing worksheet for Issue #164",
+      "rationale": "Highest ease of implementation and engineering leverage: directly structures the four missing REVIEW_EFFORT_INPUTS and frozen expected_outcomes_sha256 workflow without requiring live model spend",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-164-chat-eval-revocation-review.md (RV-001) and src/core/src/zava_forward/core/ai_eval.py (REVIEW_EFFORT_INPUTS)"
+    },
+    {
+      "rank": 2,
+      "task": "Execute owner-gated serving-model held-out run, human effectiveness trial, and threshold sign-off for Issue #164",
+      "rationale": "Required governance gate before chat-case-conversation can move from disabled, contingent on owner budget authorization, independent labeller, and named accountable reviewer",
+      "evidence": ".copilot-tracking/plans/2026-11-15/issue-164-chat-eval-revocation-plan.md (Follow-Up Items) and src/agents/src/zava_forward/agents/chat_eval.py (enablement_decision)"
+    }
+  ]
+}

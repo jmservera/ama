@@ -1,0 +1,50 @@
+{
+  "task_id": "216-citation-eval-2142-c15",
+  "task_slug": "216-citation-eval-2142-c15",
+  "parent_task": {
+    "task_id": "216-citation-eval-2142-c14",
+    "task_slug": "216-citation-eval-2142-c14"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14/216-citation-eval-2142-c15-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14/216-citation-eval-2142-c15-plan.md",
+    "details": ".copilot-tracking/details/2026-11-14/216-citation-eval-2142-c15-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-14/216-citation-eval-2142-c15-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-14/216-citation-eval-2142-c15-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c15-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research disposition executed (3-wave focused cycle on RV-038..RV-040); Planning Readiness Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-14/216-citation-eval-2142-c15-research.md"
+    },
+    {
+      "decision": "Single-pass plan critique executed (Complete, Pass with folded PC-001)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-14/216-citation-eval-2142-c15-plan-critique.md"
+    },
+    {
+      "decision": "Single-pass Review executed (Complete, Defects found: RV-041..RV-043 inside src/core) and routed to child loop 216-citation-eval-2142-c16",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c15-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Execute child task 216-citation-eval-2142-c16 to close RV-041..RV-043 inside src/core"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Wire src/api HTTP endpoints and src/agents renderer to RegulatoryChat.surface / enforce_ship_gate in a separate multi-package PR",
+      "rationale": "Outside the caller's explicit src/core boundary for this branch",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c14-review.md"
+    }
+  ]
+}

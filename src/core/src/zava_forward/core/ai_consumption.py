@@ -12,13 +12,15 @@ import json
 import logging
 import re
 import uuid
-from collections.abc import Callable, Iterator, Mapping
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from decimal import Decimal, localcontext
 from typing import Any, Protocol
+
+from . import rai_release
 
 LOG = logging.getLogger(__name__)
 SCHEMA = "ai-consumption-v1"
@@ -120,7 +122,80 @@ def usage(value: object) -> dict[str, int | None] | None:
         type(cached) is not int or not 0 <= cached <= value["prompt_tokens"]
     ):
         return None
-    return {**{k: value[k] for k in keys}, "cached_tokens": cached}
+    reasoning = value.get("reasoning_tokens")
+    if reasoning is None:
+        details = value.get("completion_tokens_details")
+        reasoning = details.get("reasoning_tokens") if isinstance(details, dict) else None
+    if reasoning is not None and (
+        type(reasoning) is not int or not 0 <= reasoning <= value["completion_tokens"]
+    ):
+        return None
+    extra = {} if reasoning is None else {"reasoning_tokens": reasoning}
+    return {**{k: value[k] for k in keys}, "cached_tokens": cached, **extra}
+
+
+def tariff_basis(synthetic_flags: set[bool]) -> str:
+    """Name the tariff basis so offline/demo and live evidence are never blended silently."""
+    if not synthetic_flags:
+        return UNKNOWN
+    if synthetic_flags == {True}:
+        return "offline-demo-tariff"
+    if synthetic_flags == {False}:
+        return "live-tariff-supplied-unverified"
+    return "mixed-demo-and-live-tariff"
+
+
+def _day(value: Any) -> str:
+    return datetime.fromtimestamp(value, UTC).date().isoformat()
+
+
+def cost_per_accepted_outcome(
+    *,
+    price_retrieved: Iterable[object],
+    financial_source: object,
+    reconciliation: object,
+    token_cost: object,
+    accepted: int,
+    quality_status: object,
+) -> dict[str, Any]:
+    """Cost per accepted proposal only from a dated price and a reconciled bill; else unpriced."""
+    base: dict[str, Any] = dict(
+        cost=None,
+        quality_floor="met" if quality_status == "Pass" else "not-met-or-unknown",
+    )
+    dates = list(price_retrieved)
+    if not dates or not all(
+        isinstance(d, int | float) and not isinstance(d, bool) and d > 0 for d in dates
+    ):
+        return base | dict(reason="unpriced: dated price source absent")
+    if not financial_source or reconciliation != "reconciled" or token_cost == UNKNOWN:
+        return base | dict(reason="unpriced: reconciled billing record absent")
+    if accepted <= 0:
+        return base | dict(reason="unpriced: no accepted outcome")
+    with localcontext() as ctx:
+        ctx.prec = 80
+        cost = format(amount(str(token_cost)) / accepted, "f")
+    return base | dict(cost=cost, reason="priced", price_retrieved=sorted({_day(d) for d in dates}))
+
+
+def token_breakdown(tokens: list[Mapping[str, Any] | None]) -> dict[str, Any]:
+    """Cached, uncached, completion and reasoning totals; Unknown if any call lacks one."""
+
+    def total(derive: Callable[[Mapping[str, Any]], int | None]) -> Any:
+        values = [None if t is None else derive(t) for t in tokens]
+        return UNKNOWN if not values or None in values else sum(v for v in values if v is not None)
+
+    return dict(
+        input_tokens=total(lambda t: t["prompt_tokens"]),
+        cached_input_tokens=total(lambda t: t.get("cached_tokens")),
+        uncached_input_tokens=total(
+            lambda t: (
+                None if t.get("cached_tokens") is None else t["prompt_tokens"] - t["cached_tokens"]
+            ),
+        ),
+        completion_tokens=total(lambda t: t["completion_tokens"]),
+        reasoning_tokens=total(lambda t: t.get("reasoning_tokens")),
+    )
 
 
 def capability_usage(
@@ -129,8 +204,9 @@ def capability_usage(
     outputs: Mapping[str, Any],
     reviews: Mapping[str, Any],
     unresolved: set[str],
+    prices: Mapping[str, Any],
 ) -> dict[str, dict[str, Any]]:
-    """Per-assistant call, token and accepted-proposal attribution; opaque fields only."""
+    """Per-assistant call, token, tariff-basis and accepted-proposal attribution; opaque only."""
     groups: dict[str, dict[str, list[dict[str, Any]]]] = {}
     for call in calls:
         groups.setdefault(call["capability"], {}).setdefault(call["root"], []).append(call)
@@ -154,6 +230,16 @@ def capability_usage(
         known = bool(accepted) and all(root in measured for root in accepted)
         result[capability] = dict(
             calls=sum(len(v) for v in roots.values()),
+            tariff_basis=tariff_basis(
+                {prices[a["price"]]["synthetic"] for v in roots.values() for a in v}
+            ),
+            token_breakdown=token_breakdown(
+                [
+                    completions[a["id"]]["tokens"] if a["id"] in completions else None
+                    for v in roots.values()
+                    for a in v
+                ]
+            ),
             proposals=len(roots),
             proposals_with_known_tokens=len(measured),
             total_tokens=sum(measured.values()) if measured else UNKNOWN,
@@ -448,6 +534,25 @@ class Consumption:
         pid = reference(json.dumps(body, sort_keys=True))
         with self.port.transaction() as db:
             records = self._read(db)
+            if not synthetic:
+                for r in records:
+                    if (
+                        r["kind"] == "authority"
+                        and r["price"] == pid
+                        and not (
+                            rai_release.named_human(r.get("owner"))
+                            and rai_release.named(r.get("alert"))
+                            and rai_release.named_human(r.get("alert_owner"))
+                            and all(
+                                b["calls"] and b["tokens"] and amount(b["amount"])
+                                for b in r["budgets"]
+                            )
+                        )
+                    ):
+                        raise ValueError(
+                            "Beyond the exercise a named human approving owner, an owned alert "
+                            "and finite positive limits are required."
+                        )
             budgets = {
                 b["id"]
                 for r in records
@@ -482,6 +587,8 @@ class Consumption:
         An authority whose price is not recorded as synthetic lies beyond the exercise: it needs
         a named approving owner, finite positive call, token and money limits and an owned alert.
         """
+        if not all(isinstance(v, str) and v.strip() for v in (authority, owner, evidence)):
+            raise ValueError("Authority, owner and evidence are required.")
         if not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", capability):
             raise ValueError("A capability identifier is required.")
         begin, finish = timestamp(start), timestamp(end)
@@ -520,7 +627,11 @@ class Consumption:
         with self.port.transaction() as db:
             records = self._read(db)
             known = next((r for r in records if r["kind"] == "price" and r["id"] == price), None)
-            if known is not None and not known["synthetic"]:
+            if (
+                (known is not None and not known["synthetic"])
+                or alert is not None
+                or alert_owner is not None
+            ):
                 self._require_bounds(owner, selected, alert, alert_owner)
                 body.update(alert=reference(alert or ""), alert_owner=reference(alert_owner or ""))
             previous = next((r for r in records if r.get("id") == aid), None)
@@ -554,14 +665,75 @@ class Consumption:
     def _require_bounds(
         owner: str, budgets: list[dict[str, Any]], alert: str | None, alert_owner: str | None
     ) -> None:
-        if not all(isinstance(v, str) and v.strip() for v in (owner, alert, alert_owner)):
+        if not (
+            rai_release.named_human(owner)
+            and rai_release.named(alert)
+            and rai_release.named_human(alert_owner)
+        ):
             raise ValueError(
-                "Beyond the exercise an approving owner and an owned alert are required."
+                "Beyond the exercise a named human approving owner and a human-owned alert "
+                "are required."
             )
         if any(not b["calls"] or not b["tokens"] or not amount(b["amount"]) for b in budgets):
             raise ValueError(
                 "Beyond the exercise finite positive call, token and money limits are required."
             )
+
+    def non_exercise_status(
+        self,
+        capability: str,
+        *,
+        configuration: str | None = None,
+        model: str | None = None,
+        now: float | None = None,
+    ) -> dict[str, Any]:
+        """Read-only check for an unexpired, human-owned non-exercise budget."""
+        reasons: list[str] = []
+        with self._scope(None) as db:
+            records = self._read(db)
+            clock = self.port.now(db) if now is None else now
+            authorities = [
+                r
+                for r in records
+                if r["kind"] == "authority"
+                and r["capability"] == capability
+                and (configuration is None or r["configuration"] == configuration)
+            ]
+            authority = next(
+                (r for r in reversed(authorities) if r["start"] <= clock < r["end"]), None
+            )
+            if authority is None:
+                reasons.append("authority-expired" if authorities else "authority-unknown")
+                return dict(allowed=False, capability=capability, reasons=reasons)
+            prices = [
+                r
+                for r in records
+                if r["kind"] == "price"
+                and r["id"] == authority["price"]
+                and (model is None or r["model"] == model)
+                and r["retrieved"] <= clock
+                and r["start"] <= clock < r["end"]
+            ]
+            price = prices[-1] if prices else None
+            if price is None or price["synthetic"]:
+                reasons.append("non-synthetic-price-missing")
+            if not (authority.get("alert") and authority.get("alert_owner")):
+                reasons.append("alert-unowned")
+            if not (1 <= authority["max_calls"] <= 100 and 1 <= authority["max_depth"] <= 100):
+                reasons.append("request-bounds-invalid")
+            if not authority["budgets"] or any(
+                not b["calls"] or not b["tokens"] or not amount(b["amount"])
+                for b in authority["budgets"]
+            ):
+                reasons.append("finite-positive-limits-missing")
+            if price is not None and self._currency_hold(
+                records,
+                {b["id"] for b in authority["budgets"]},
+                price["id"],
+                price["currency"],
+            ):
+                reasons.append("currency-mismatch")
+        return dict(allowed=not reasons, capability=capability, reasons=reasons)
 
     @staticmethod
     def _charge(price: Mapping[str, Any], used: Mapping[str, Any]) -> Decimal | None:
@@ -1291,7 +1463,7 @@ class Consumption:
             if all(r["id"] in completions and completions[r["id"]]["tokens"] for r in attempts):
                 totals.append(sum(completions[r["id"]]["tokens"]["total_tokens"] for r in attempts))
         spread = batch_spread(totals, batch, len(roots))
-        by_capability = capability_usage(calls, completions, outputs, reviews, unresolved)
+        by_capability = capability_usage(calls, completions, outputs, reviews, unresolved, prices)
         alerts = [r for r in records if r["kind"] == "alert" and begin <= r["at"] < finish]
         return dict(
             schema=SCHEMA,
@@ -1321,6 +1493,7 @@ class Consumption:
                 **spread,
             ),
             by_capability=by_capability,
+            tariff_basis=tariff_basis({prices[r["price"]]["synthetic"] for r in calls}),
             unjoined_outputs=unjoined,
             unjoined_reviews=unjoined_reviews,
             accepted_proposals=accepted,
@@ -1328,6 +1501,14 @@ class Consumption:
             token_cost=cost,
             projected_token_charge=format(projected, "f") if projected is not None else UNKNOWN,
             cost_per_accepted_proposal=ratio,
+            cost_per_accepted_outcome=cost_per_accepted_outcome(
+                price_retrieved=[prices[r["price"]].get("retrieved") for r in calls],
+                financial_source=bill["id"] if bill else None,
+                reconciliation=status,
+                token_cost=cost,
+                accepted=accepted,
+                quality_status=quality_status,
+            ),
             reconciliation=status,
             variance_fraction=variance,
             currency=next(iter(currencies)) if len(currencies) == 1 else UNKNOWN,

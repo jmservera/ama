@@ -98,7 +98,7 @@ class Offline(unittest.TestCase):
 class WrapperBodies(Offline):
     def test_run_chat_wire_body_is_exactly_the_serializer_contract(self) -> None:
         system, user = "SYN-SYSTEM", "SYN-USER \u00e9"
-        out = self.client.run("syn-task-name", system, user, "SYN-TEMPLATE-CANARY")
+        out = self.client.run("summary", system, user, "SYN-TEMPLATE-CANARY")
         self.assertEqual(out["source"], "ai")
         request = self.transport.requests[0]
         self.assertEqual(
@@ -114,7 +114,7 @@ class WrapperBodies(Offline):
         )
         self.assertEqual(request.data, ai.Ai.provider_body(system, user, 700, 0.3))
         self.assertNotIn(b"\xc3", request.data)
-        for hidden in (TOKEN, "SYN-TEMPLATE-CANARY", "syn-task-name"):
+        for hidden in (TOKEN, "SYN-TEMPLATE-CANARY", "summary"):
             self.assertNotIn(hidden.encode(), request.data)
         self.assertEqual(
             request.full_url,
@@ -124,7 +124,7 @@ class WrapperBodies(Offline):
         self.assertEqual(request.get_header("Authorization"), f"Bearer {TOKEN}")
 
     def test_strong_run_changes_only_the_deployment_in_the_url(self) -> None:
-        self.client.run("syn-task", "s", "u", "t", strong=True)
+        self.client.run("summary", "s", "u", "t", strong=True)
         self.assertIn("/deployments/strong-dep/", self.transport.requests[0].full_url)
         self.assertEqual(self.transport.body()["max_tokens"], 700)
 
@@ -146,9 +146,9 @@ class WrapperBodies(Offline):
         self.assertIn("/deployments/fast-dep/", self.transport.requests[0].full_url)
 
     def test_run_and_evidence_do_not_call_the_provider_when_not_permitted(self) -> None:
-        self.client.run("syn-task", "s", "u", "t", off=True)
+        self.client.run("summary", "s", "u", "t", off=True)
         self.client.endpoint = ""
-        self.client.run("syn-task", "s", "u", "t")
+        self.client.run("summary", "s", "u", "t")
         self.assertEqual(self.client.evidence("s", "u")["outcome"], "disabled")
         self.assert_no_provider_call()
 

@@ -214,6 +214,8 @@ class ExceptionRegisterMixin:
                             f"Recommendation {self._case_label(rec)}: record could not be read, "
                             "so a failed AI run is not routed."
                         )
+                policy = self.data.get("handoff_policy")
+                staff_rows = self.data.get("staff")
                 for case in cases:
                     if case.get("closed"):
                         continue
@@ -221,9 +223,13 @@ class ExceptionRegisterMixin:
                         overdue = taskqueues.overdue_tasks(
                             case,
                             as_of=as_of,
-                            handoff=handoff_view(case),  # type: ignore[no-untyped-call]
+                            handoff=handoff_view(  # type: ignore[no-untyped-call]
+                                case, as_of=as_of, policy=policy, staff=staff_rows
+                            ),
                         )
-                        row = handoff_ageing(case, as_of)  # type: ignore[no-untyped-call]
+                        row = handoff_ageing(  # type: ignore[no-untyped-call]
+                            case, as_of, policy=policy
+                        )
                         feed_stranded_tasks(queue, overdue, operator)
                         if row:
                             feed_unaccepted_handoffs(queue, [row], operator)
