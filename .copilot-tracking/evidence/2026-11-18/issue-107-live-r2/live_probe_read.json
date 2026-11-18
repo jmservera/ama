@@ -1,0 +1,3232 @@
+{
+ "me": {
+  "status": 200,
+  "role": "Retrofit Programme Manager"
+ },
+ "assistants": {
+  "status": 200,
+  "full": {
+   "assistants": [
+    {
+     "id": "stock-prioritisation",
+     "version": "1.0.0",
+     "release": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "stock-prioritisation",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "3768ed36e3242c28",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:bb974eaf2f8b",
+      "data_version": "bd66b741abf300ac",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "0fb3bef9c37875ca",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "[sha256-redacted]",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "model_bounds": {
+      "calls_per_attempt": 1,
+      "max_attempts": 2,
+      "max_calls_per_request": 2,
+      "max_agent_depth": 1,
+      "tools": 0,
+      "attempt_ceiling": 3
+     },
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "categories": [
+      "home",
+      "survey",
+      "ranking"
+     ],
+     "purpose": "Explain stock facts and prepare a data-owner query"
+    },
+    {
+     "id": "assessment-preparation",
+     "version": "1.0.0",
+     "release": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "assessment-preparation",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "227fbd67300191c2",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:38aadbe30ceb",
+      "data_version": "85e08cf5af33f7cd",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "0fb3bef9c37875ca",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "[sha256-redacted]",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "model_bounds": {
+      "calls_per_attempt": 1,
+      "max_attempts": 2,
+      "max_calls_per_request": 2,
+      "max_agent_depth": 1,
+      "tools": 0,
+      "attempt_ceiling": 3
+     },
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "categories": [
+      "home",
+      "survey",
+      "measures",
+      "technical",
+      "documents"
+     ],
+     "purpose": "Prepare a survey/design evidence checklist"
+    },
+    {
+     "id": "funding-evidence",
+     "version": "1.0.0",
+     "release": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "funding-evidence",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "a3a511de0e461d78",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:f182f3b38088",
+      "data_version": "5dabe1a2162e5f62",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "72ba62e46f523209",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "[sha256-redacted]",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "model_bounds": {
+      "calls_per_attempt": 1,
+      "max_attempts": 2,
+      "max_calls_per_request": 2,
+      "max_agent_depth": 1,
+      "tools": 0,
+      "attempt_ceiling": 3
+     },
+     "roles": [
+      "Grants and Evidence Officer",
+      "Retrofit Programme Manager"
+     ],
+     "categories": [
+      "home",
+      "measures",
+      "funding",
+      "finance",
+      "grants",
+      "documents"
+     ],
+     "purpose": "Prepare application/claim evidence gaps"
+    },
+    {
+     "id": "works-resident-coordination",
+     "version": "1.0.0",
+     "release": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "works-resident-coordination",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "46d998c3de7ac61e",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:afb0ef7dde7a",
+      "data_version": "3f0a66365555e8d1",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "2123c2c05cef7a89",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "[sha256-redacted]",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "model_bounds": {
+      "calls_per_attempt": 1,
+      "max_attempts": 2,
+      "max_calls_per_request": 2,
+      "max_agent_depth": 1,
+      "tools": 0,
+      "attempt_ceiling": 3
+     },
+     "roles": [
+      "Retrofit Coordinator",
+      "Resident Liaison Officer",
+      "Retrofit Programme Manager"
+     ],
+     "categories": [
+      "home",
+      "measures",
+      "preferences",
+      "appointments",
+      "handoff",
+      "capacity",
+      "requests"
+     ],
+     "purpose": "Draft an update or committed-capacity option"
+    },
+    {
+     "id": "quality-evidence",
+     "version": "1.0.0",
+     "release": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "quality-evidence",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "9582b9a76f52d5ef",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:a7ce4702fe12",
+      "data_version": "e5b6512806ccbbf0",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "03579f28ea6debec",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "[sha256-redacted]",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "model_bounds": {
+      "calls_per_attempt": 1,
+      "max_attempts": 2,
+      "max_calls_per_request": 2,
+      "max_agent_depth": 1,
+      "tools": 0,
+      "attempt_ceiling": 3
+     },
+     "roles": [
+      "Quality Inspector",
+      "Retrofit Programme Manager"
+     ],
+     "categories": [
+      "home",
+      "measures",
+      "quality",
+      "checklists",
+      "documents",
+      "sensors"
+     ],
+     "purpose": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings"
+    }
+   ],
+   "registered_tasks": [
+    {
+     "id": "stock-prioritisation",
+     "kind": "assistant",
+     "version": "1.0.0",
+     "purpose": "Explain stock facts and prepare a data-owner query",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Explain stock facts and prepare a data-owner query",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; a person verifies and accepts",
+     "affected": [
+      "residents",
+      "staff",
+      "providers"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "survey",
+      "ranking"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "3768ed36e3242c28",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:bb974eaf2f8b",
+      "data_version": "bd66b741abf300ac",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "0fb3bef9c37875ca",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "[sha256-redacted]",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "stock-prioritisation",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced."
+    },
+    {
+     "id": "assessment-preparation",
+     "kind": "assistant",
+     "version": "1.0.0",
+     "purpose": "Prepare a survey/design evidence checklist",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Prepare a survey/design evidence checklist",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; a person verifies and accepts",
+     "affected": [
+      "residents",
+      "staff",
+      "providers"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "survey",
+      "measures",
+      "technical",
+      "documents"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "227fbd67300191c2",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:38aadbe30ceb",
+      "data_version": "85e08cf5af33f7cd",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "0fb3bef9c37875ca",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "[sha256-redacted]",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "assessment-preparation",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced."
+    },
+    {
+     "id": "funding-evidence",
+     "kind": "assistant",
+     "version": "1.0.0",
+     "purpose": "Prepare application/claim evidence gaps",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Prepare application/claim evidence gaps",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; a person verifies and accepts",
+     "affected": [
+      "residents",
+      "staff",
+      "providers"
+     ],
+     "roles": [
+      "Grants and Evidence Officer",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "measures",
+      "funding",
+      "finance",
+      "grants",
+      "documents"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "a3a511de0e461d78",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:f182f3b38088",
+      "data_version": "5dabe1a2162e5f62",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "72ba62e46f523209",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "[sha256-redacted]",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "funding-evidence",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced."
+    },
+    {
+     "id": "works-resident-coordination",
+     "kind": "assistant",
+     "version": "1.0.0",
+     "purpose": "Draft an update or committed-capacity option",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Draft an update or committed-capacity option",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; a person verifies and accepts",
+     "affected": [
+      "residents",
+      "staff",
+      "providers"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Resident Liaison Officer",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "measures",
+      "preferences",
+      "appointments",
+      "handoff",
+      "capacity",
+      "requests"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "46d998c3de7ac61e",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:afb0ef7dde7a",
+      "data_version": "3f0a66365555e8d1",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "2123c2c05cef7a89",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "[sha256-redacted]",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "works-resident-coordination",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced."
+    },
+    {
+     "id": "quality-evidence",
+     "kind": "assistant",
+     "version": "1.0.0",
+     "purpose": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; a person verifies and accepts",
+     "affected": [
+      "residents",
+      "staff",
+      "providers"
+     ],
+     "roles": [
+      "Quality Inspector",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "measures",
+      "quality",
+      "checklists",
+      "documents",
+      "sensors"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "9582b9a76f52d5ef",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:a7ce4702fe12",
+      "data_version": "e5b6512806ccbbf0",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "03579f28ea6debec",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "[sha256-redacted]",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "quality-evidence",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced."
+    },
+    {
+     "id": "priority",
+     "kind": "retained-path",
+     "version": "2026-10-15.1",
+     "purpose": "Explain a suggested order of work for a person to accept or reject",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Explain a suggested order of work for a person to accept or reject",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Advisory; ranking and queue membership unchanged",
+     "affected": [
+      "residents",
+      "staff"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "stage",
+      "safety",
+      "ranking"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "binding": {
+      "registry_version": "2026-10-15.1",
+      "schema_version": "legacy-text-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "15ed5b165b2074a1",
+      "policy_version": "legacy-forbidden-output-filter-v1:[sha256-redacted]",
+      "data_version": "2a633f68879b0315",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "87ab689eb1791440",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "[sha256-redacted]",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "legacy:priority",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced."
+    },
+    {
+     "id": "funding_draft",
+     "kind": "retained-path",
+     "version": "2026-10-15.1",
+     "purpose": "Draft funding application wording",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Draft funding application wording",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Draft wording; no submission or eligibility decision",
+     "affected": [
+      "residents",
+      "funders"
+     ],
+     "roles": [
+      "Grants and Evidence Officer",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "measures",
+      "funding"
+     ],
+     "accountable_function": "Grants and Evidence Officer",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "binding": {
+      "registry_version": "2026-10-15.1",
+      "schema_version": "legacy-text-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "05094b0e0b3c0a78",
+      "policy_version": "legacy-forbidden-output-filter-v1",
+      "data_version": "7ff8794229c8c359",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "20d72285485e2f77",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "[sha256-redacted]",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "legacy:funding_draft",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced."
+    },
+    {
+     "id": "chat-case-conversation",
+     "kind": "chat",
+     "version": "2026-10-15.1",
+     "purpose": "Answer questions about a case with cited sources; refuse approve, decide, consent, diagnose and resident-contact asks",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Answer questions about a case with cited sources; refuse approve, decide, consent, diagnose and resident-contact asks",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Cited reading aid; no write, approval or decision",
+     "affected": [
+      "staff",
+      "residents"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "survey",
+      "measures",
+      "stage"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "disabled; enabling needs approved thresholds, a named accountable individual and the evidence in required_enablement_evidence",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; the panel answers nothing without a model.",
+     "enabled": false,
+     "state": "disabled",
+     "thresholds": {
+      "status": "proposed",
+      "approved_by": null,
+      "approved_on": null,
+      "proposed": {
+       "critical_failures": 0,
+       "open_critical_gaps": 0,
+       "memory_poisoning_pass_rate": 1,
+       "prompt_injection_pass_rate": 1,
+       "permission_pass_rate": 1,
+       "out_of_scope_refusal_rate": 1
+      }
+     },
+     "demo_activation": {
+      "status": "demo-only",
+      "accountable_owner": "jmservera",
+      "decision_date": "2026-11-03",
+      "basis": "demo-only; the owner superseded DPO and Legal review for the demonstrator with a visible disclaimer",
+      "switch": "ZF_CHAT_DEMO_ACTIVATION",
+      "switch_value": "approved-2026-11-03",
+      "required_profile": "ZF_DEPLOYMENT_PROFILE=demo",
+      "outstanding": "DPO and Legal review outstanding; no Legal, DPO or RAI approval is recorded or implied",
+      "disclaimer": "Demonstration only. Answers are generated by an AI model from synthetic case facts, may be wrong, and are not reviewed or approved. No DPO, Legal or RAI approval exists. Check the sources."
+     },
+     "required_enablement_evidence": [
+      "approved thresholds",
+      "accountable individual",
+      "independently labelled held-out set",
+      "actual-model evaluation within a finite authorisation",
+      "authorised human exercises"
+     ],
+     "binding": null,
+     "release_denial": {
+      "missing": [
+       "Task is disabled and has no runtime binding or release evidence."
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "status": {
+      "task": "chat-case-conversation",
+      "state": "disabled",
+      "owner_role": "Retrofit Programme Manager",
+      "owner_individual": null,
+      "owner_gap": true,
+      "reason": "disabled; enabling needs approved thresholds, a named accountable individual and the evidence in required_enablement_evidence"
+     }
+    },
+    {
+     "id": "aftercare-concern-pack",
+     "kind": "proposal-pack",
+     "version": "2026-10-15.1",
+     "purpose": "Draft an optional aftercare concern pack for the named owner to review; no outcome, remedy or dismissal",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Draft an optional aftercare concern pack for the named owner to review; no outcome, remedy or dismissal",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; the named owner accepts or rejects; a sensor reading is never a basis",
+     "affected": [
+      "residents",
+      "staff"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "requests",
+      "history"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "disabled; no model route is bound, the pack is a template and an optional model summary needs registration, release and the owner's review",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the concern record and the named owner; no model call.",
+     "enabled": false,
+     "state": "disabled",
+     "binding": null,
+     "release_denial": {
+      "missing": [
+       "Task is disabled and has no runtime binding or release evidence."
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "status": {
+      "task": "aftercare-concern-pack",
+      "state": "disabled",
+      "owner_role": "Retrofit Programme Manager",
+      "owner_individual": null,
+      "owner_gap": true,
+      "reason": "disabled; no model route is bound, the pack is a template and an optional model summary needs registration, release and the owner's review"
+     }
+    }
+   ],
+   "disabled": "Operator authority, finite allowance and expiry are required.",
+   "proactive": false,
+   "principal": "service:retrofit-evidence-proposals",
+   "rule": "synthetic-gaps-2026-10-13-v1",
+   "limits": {
+    "scan_interval": 60,
+    "scan_size": 20,
+    "input_chars": 12000,
+    "output_chars": 8000,
+    "output_tokens": 600,
+    "timeout": 20,
+    "active_calls": 2,
+    "attempts": 2,
+    "backoff": 30,
+    "lease": 60
+   },
+   "manual": "Use the ordinary case controls; proposals never approve or change the case."
+  }
+ },
+ "forecast": {
+  "status": 200,
+  "full": {
+   "period_seconds": 86400,
+   "proactive": false,
+   "rule": "synthetic-gaps-2026-10-13-v1",
+   "scan_interval": 60,
+   "scan_size": 20,
+   "cases_reachable_per_period": 28800,
+   "call_allowance": 0,
+   "assistants": [
+    {
+     "id": "stock-prioritisation",
+     "rule": "Missing/unknown home.epc, home.type or home.built; supplied survey.epc/type/built conflicts with home.",
+     "open_cases_in_scope": 3,
+     "eligible_cases": 0,
+     "new_proposals": 0,
+     "max_calls_per_request": 2,
+     "max_calls_this_period": 0,
+     "held": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused."
+    },
+    {
+     "id": "assessment-preparation",
+     "rule": "Missing Survey/Design metadata/content hash or technical.design_version; relevant permitted source signature changes.",
+     "open_cases_in_scope": 3,
+     "eligible_cases": 3,
+     "new_proposals": 3,
+     "max_calls_per_request": 2,
+     "max_calls_this_period": 6,
+     "held": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused."
+    },
+    {
+     "id": "funding-evidence",
+     "rule": "Missing measures, funding.route/reference, grants or budget amount; incomplete supplied invoice ref/lines/milestone inputs; claim-phase grant lacks sourced history or hashed Funding evidence metadata; relevant permitted terms/evidence signature changes.",
+     "open_cases_in_scope": 3,
+     "eligible_cases": 3,
+     "new_proposals": 3,
+     "max_calls_per_request": 2,
+     "max_calls_this_period": 6,
+     "held": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused."
+    },
+    {
+     "id": "works-resident-coordination",
+     "rule": "handoff.state=Offered/Received/Escalated; past appointment.date with missing/Booked/Planned/No access/Missed outcome; past open service_request.next_update.",
+     "open_cases_in_scope": 3,
+     "eligible_cases": 3,
+     "new_proposals": 3,
+     "max_calls_per_request": 2,
+     "max_calls_this_period": 6,
+     "held": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused."
+    },
+    {
+     "id": "quality-evidence",
+     "rule": "Missing/unknown measures; not exactly one active (non-Superseded) quality record per measure; current work not Accepted/Handed over; missing/conflicting checklist item evidence or checklist version mismatch; current evidence version or relevant permitted signature changes; retained consented synthetic readings captured for a case with a quality record, one proposal per six-hour bucket of the latest reading (a review flag only, not a threshold, defect or acceptance).",
+     "open_cases_in_scope": 3,
+     "eligible_cases": 3,
+     "new_proposals": 2,
+     "max_calls_per_request": 2,
+     "max_calls_this_period": 4,
+     "held": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused."
+    }
+   ],
+   "max_calls_this_period": 22,
+   "cost": "Unknown: no price source is set (BRD OD-51).",
+   "basis": "Upper bound from current case state; routine case edits can add proposals later. Read-only.",
+   "manual": "Proactive scans stay off unless an operator enables them; use the ordinary case controls."
+  }
+ },
+ "rai_metrics": {
+  "status": 200,
+  "full": {
+   "status": "counted",
+   "metrics": {
+    "invocation": 7,
+    "refusal": 0,
+    "withheld": 0,
+    "validation_failure": 0,
+    "fallback": 16,
+    "human_review": 0,
+    "override": 0,
+    "consumption": 16,
+    "latency_samples": 0,
+    "tokens": 0
+   },
+   "latency_seconds_total": 0,
+   "persisted": 87,
+   "replay": {
+    "duplicates": 0,
+    "new": 0,
+    "outside_window": 0,
+    "invalid": 0
+   }
+  }
+ },
+ "proposals": {
+  "status": 200,
+  "full": {
+   "proposals": [
+    {
+     "capability": "quality-evidence",
+     "case_id": "ZF-2025-0031",
+     "continuity_epoch": 1,
+     "created_at": 1795007301.386,
+     "envelope": null,
+     "id": "[sha256-redacted]",
+     "manual": "Review the ordinary case with Quality Inspector, Retrofit Programme Manager.",
+     "manual_requested": true,
+     "output": null,
+     "proposal_identity": {
+      "capability": "quality-evidence",
+      "purpose": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings"
+     },
+     "reason": "Operator authority, finite allowance and expiry are required.",
+     "release": null,
+     "review": null,
+     "snapshot": {
+      "citations": {
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0700Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0700Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0705Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0705Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0710Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0710Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0715Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0715Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0720Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0720Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0725Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0725Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0730Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0730Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0735Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0735Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0740Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0740Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T1250Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T1250Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T1255Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T1255Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T1300Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T1300Z"
+       },
+       "source:checklists": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/checklists"
+       },
+       "source:documents": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/documents"
+       },
+       "source:home": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/home"
+       },
+       "source:measures": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/measures"
+       },
+       "source:quality": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/quality"
+       },
+       "source:sensors": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/sensors"
+       }
+      },
+      "exercise_predicate": "Missing/unknown measures; not exactly one active (non-Superseded) quality record per measure; current work not Accepted/Handed over; missing/conflicting checklist item evidence or checklist version mismatch; current evidence version or relevant permitted signature changes; retained consented synthetic readings captured for a case with a quality record, one proposal per six-hour bucket of the latest reading (a review flag only, not a threshold, defect or acceptance).",
+      "exercise_rule": "Selected synthetic gap predicates, not approved company rules.",
+      "registry": "1.0.0",
+      "registry_hash": "[sha256-redacted]",
+      "rule_hash": "[sha256-redacted]",
+      "rules": "synthetic-gaps-2026-10-13-v1",
+      "schema": "evidence-proposal-v1",
+      "schema_hash": "[sha256-redacted]",
+      "sources": {
+       "checklists": {
+        "External wall insulation (block); dMEV ventilation": {
+         "items": [
+          "Wall surface checked before fitting",
+          "Fixings and thickness match the design",
+          "Vents, meters and sills finished",
+          "Finish clean and sealed",
+          "Guarantee issued"
+         ],
+         "name": "Wall insulation",
+         "version": "QC-WALL v1"
+        }
+       },
+       "documents": [],
+       "home": {
+        "address": "Flat 3, 157,159,161,163,165,167 Tebay Drive",
+        "built": 1974,
+        "epc": "D",
+        "postcode": "NE5 2XH",
+        "tenure": "Social rent",
+        "town": "Newcastle upon Tyne",
+        "type": "Low-rise flat"
+       },
+       "measures": [
+        "External wall insulation (block); dMEV ventilation"
+       ],
+       "quality": [
+        {
+         "checklist_version": "QC-WALL v1",
+         "evidence_version": null,
+         "items": [
+          {
+           "evidence": "Missing/unverified synthetic evidence",
+           "label": "Wall surface checked before fitting"
+          },
+          {
+           "evidence": "Missing/unverified synthetic evidence",
+           "label": "Fixings and thickness match the design"
+          },
+          {
+           "evidence": "Missing/unverified synthetic evidence",
+           "label": "Vents, meters and sills finished"
+          },
+          {
+           "evidence": "Missing/unverified synthetic evidence",
+           "label": "Finish clean and sealed"
+          },
+          {
+           "evidence": "Missing/unverified synthetic evidence",
+           "label": "Guarantee issued"
+          }
+         ],
+         "measure": "External wall insulation (block); dMEV ventilation",
+         "state": "Submitted"
+        }
+       ],
+       "sensors": {
+        "after": [],
+        "after_absent": "No retained readings from the first quality evidence record onward.",
+        "anchor": {
+         "at": "2026-10-13T09:00:00Z",
+         "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect.",
+         "name": "quality_record_anchor"
+        },
+        "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+        "before": [],
+        "before_absent": "No retained readings before the first quality evidence record.",
+        "calibrated": false,
+        "citation_keys": [
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0700Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0705Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0710Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0715Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0720Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0725Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0730Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0735Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0740Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T1250Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T1255Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T1300Z"
+        ],
+        "future_dated_excluded": false,
+        "home_id": "ZF-2025-0031",
+        "kind": "synthetic-retained-readings",
+        "latest": {
+         "humidity_pct": "82.16",
+         "observed_at": "2026-11-18T13:00:00Z",
+         "provenance_class": "synthetic-weather-derived",
+         "reading_id": "LIVE-S7XBQ3HG3P5-20261118T1300Z",
+         "sensor_id": "S7XBQ3HG3P5",
+         "temperature_c": "9.89"
+        },
+        "max_readings": {
+         "context_each": 4,
+         "window": 12
+        },
+        "provenance": {
+         "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+        },
+        "readings": [
+         {
+          "humidity_pct": "92.80",
+          "observed_at": "2026-11-18T07:00:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0700Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.37"
+         },
+         {
+          "humidity_pct": "92.92",
+          "observed_at": "2026-11-18T07:05:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0705Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.37"
+         },
+         {
+          "humidity_pct": "93.21",
+          "observed_at": "2026-11-18T07:10:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0710Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.39"
+         },
+         {
+          "humidity_pct": "93.57",
+          "observed_at": "2026-11-18T07:15:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0715Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.42"
+         },
+         {
+          "humidity_pct": "93.88",
+          "observed_at": "2026-11-18T07:20:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0720Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.47"
+         },
+         {
+          "humidity_pct": "94.05",
+          "observed_at": "2026-11-18T07:25:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0725Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.53"
+         },
+         {
+          "humidity_pct": "93.97",
+          "observed_at": "2026-11-18T07:30:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0730Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.61"
+         },
+         {
+          "humidity_pct": "93.71",
+          "observed_at": "2026-11-18T07:35:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0735Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.70"
+         },
+         {
+          "humidity_pct": "93.43",
+          "observed_at": "2026-11-18T07:40:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0740Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.79"
+         },
+         {
+          "humidity_pct": "82.33",
+          "observed_at": "2026-11-18T12:50:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T1250Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "9.98"
+         },
+         {
+          "humidity_pct": "82.21",
+          "observed_at": "2026-11-18T12:55:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T1255Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "9.91"
+         },
+         {
+          "humidity_pct": "82.16",
+          "observed_at": "2026-11-18T13:00:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T1300Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "9.89"
+         }
+        ],
+        "retrofit_context": {
+         "available": false,
+         "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+        },
+        "state": "ok",
+        "units": {
+         "humidity_pct": "%RH",
+         "temperature_c": "degC"
+        },
+        "version": "retained-reading-view-v2"
+       }
+      },
+      "unknowns": [
+       "source.documents",
+       "source.quality.0.evidence_version",
+       "source.sensors.before",
+       "source.sensors.after"
+      ]
+     },
+     "source_signature": "[sha256-redacted]",
+     "verification": null,
+     "version": "1.0.0",
+     "state": "disabled",
+     "fence": 0,
+     "owner": "",
+     "lease_until": 0,
+     "attempts": 0,
+     "not_before": 0,
+     "revision": 1,
+     "stale": false,
+     "provenance": [
+      {
+       "actor": "[email]",
+       "kind": "invocation",
+       "mode": "reactive",
+       "purpose": null,
+       "release": null,
+       "release_denial": {
+        "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+        "authority_holders": [
+         {
+          "authority": "release",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "residual-risk acceptance",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "suspension",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "restart",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         }
+        ],
+        "manual": "Use the ordinary case controls.",
+        "missing": [
+         "approved, unexpired release record"
+        ],
+        "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+        "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+        "task": "quality-evidence"
+       },
+       "rules": "synthetic-gaps-2026-10-13-v1"
+      }
+     ],
+     "history_next_offset": null,
+     "history_count": 1,
+     "display_state": "suspended",
+     "epoch_current": true,
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "quality-evidence",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "actionable": false,
+     "relied_on": false,
+     "suspension": "SUS-1",
+     "review_flag": null
+    },
+    {
+     "capability": "works-resident-coordination",
+     "case_id": "ZF-2025-0031",
+     "continuity_epoch": 0,
+     "created_at": 1794995954.496,
+     "envelope": null,
+     "id": "[sha256-redacted]",
+     "manual": "Review the ordinary case with Retrofit Coordinator, Resident Liaison Officer, Retrofit Programme Manager.",
+     "manual_requested": true,
+     "output": null,
+     "proposal_identity": {
+      "capability": "works-resident-coordination",
+      "purpose": "Draft an update or committed-capacity option"
+     },
+     "reason": "Operator authority, finite allowance and expiry are required.",
+     "release": null,
+     "review": null,
+     "snapshot": {
+      "citations": {
+       "source:appointments": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/appointments"
+       },
+       "source:capacity": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/capacity"
+       },
+       "source:handoff": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/handoff"
+       },
+       "source:home": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/home"
+       },
+       "source:measures": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/measures"
+       },
+       "source:preferences": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/preferences"
+       },
+       "source:requests": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/requests"
+       }
+      },
+      "exercise_predicate": "handoff.state=Offered/Received/Escalated; past appointment.date with missing/Booked/Planned/No access/Missed outcome; past open service_request.next_update.",
+      "exercise_rule": "Selected synthetic gap predicates, not approved company rules.",
+      "registry": "1.0.0",
+      "registry_hash": "[sha256-redacted]",
+      "rule_hash": "[sha256-redacted]",
+      "rules": "synthetic-gaps-2026-10-13-v1",
+      "schema": "evidence-proposal-v1",
+      "schema_hash": "[sha256-redacted]",
+      "sources": {
+       "appointments": [
+        {
+         "date": "2025-12-16",
+         "outcome": "Held for roles with a recorded need",
+         "slot": "AM",
+         "type": "Retrofit assessment"
+        },
+        {
+         "date": "2026-10-15",
+         "outcome": "Booked",
+         "slot": "AM",
+         "type": "Assessment"
+        }
+       ],
+       "capacity": [
+        {
+         "committed": 170,
+         "contractor": "Northern Facade Systems Ltd",
+         "evidence": "SYNTHETIC simulation issued-order allocation; not a verified contract.",
+         "package": "PKG-SYN-001",
+         "period_from": "2025-09-18",
+         "period_to": "2026-11-12"
+        }
+       ],
+       "handoff": {
+        "at": null,
+        "state": "Offered",
+        "to_code": "E-52744c178b82"
+       },
+       "home": {
+        "address": "Flat 3, 157,159,161,163,165,167 Tebay Drive",
+        "built": 1974,
+        "epc": "D",
+        "postcode": "NE5 2XH",
+        "tenure": "Social rent",
+        "town": "Newcastle upon Tyne",
+        "type": "Low-rise flat"
+       },
+       "measures": [
+        "External wall insulation (block); dMEV ventilation"
+       ],
+       "preferences": {
+        "preferred": "Text message",
+        "unavailable": ""
+       },
+       "requests": [
+        {
+         "id": "SR-SYN-001",
+         "next_update": "2026-10-14",
+         "status": "Open"
+        }
+       ]
+      },
+      "unknowns": [
+       "source.preferences.unavailable",
+       "source.handoff.at"
+      ]
+     },
+     "source_signature": "[sha256-redacted]",
+     "verification": null,
+     "version": "1.0.0",
+     "state": "disabled",
+     "fence": 0,
+     "owner": "",
+     "lease_until": 0,
+     "attempts": 0,
+     "not_before": 0,
+     "revision": 1,
+     "stale": false,
+     "provenance": [
+      {
+       "actor": "[email]",
+       "kind": "invocation",
+       "mode": "reactive",
+       "purpose": null,
+       "release": null,
+       "release_denial": {
+        "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+        "authority_holders": [
+         {
+          "authority": "release",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "residual-risk acceptance",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "suspension",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "restart",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         }
+        ],
+        "manual": "Use the ordinary case controls.",
+        "missing": [
+         "approved, unexpired release record"
+        ],
+        "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+        "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+        "task": "works-resident-coordination"
+       },
+       "rules": "synthetic-gaps-2026-10-13-v1"
+      }
+     ],
+     "history_next_offset": null,
+     "history_count": 1,
+     "display_state": "suspended",
+     "epoch_current": false,
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "works-resident-coordination",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "actionable": false,
+     "relied_on": false,
+     "suspension": "SUS-1",
+     "review_flag": null
+    },
+    {
+     "capability": "stock-prioritisation",
+     "case_id": "ZF-2025-0031",
+     "continuity_epoch": 0,
+     "created_at": 1794995951.969,
+     "envelope": null,
+     "id": "[sha256-redacted]",
+     "manual": "Review the ordinary case with Retrofit Coordinator, Retrofit Programme Manager.",
+     "manual_requested": true,
+     "output": null,
+     "proposal_identity": {
+      "capability": "stock-prioritisation",
+      "purpose": "Explain stock facts and prepare a data-owner query"
+     },
+     "reason": "Operator authority, finite allowance and expiry are required.",
+     "release": null,
+     "review": null,
+     "snapshot": {
+      "citations": {
+       "source:home": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/home"
+       },
+       "source:ranking": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/ranking"
+       },
+       "source:survey": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/survey"
+       }
+      },
+      "exercise_predicate": "Missing/unknown home.epc, home.type or home.built; supplied survey.epc/type/built conflicts with home.",
+      "exercise_rule": "Selected synthetic gap predicates, not approved company rules.",
+      "registry": "1.0.0",
+      "registry_hash": "[sha256-redacted]",
+      "rule_hash": "[sha256-redacted]",
+      "rules": "synthetic-gaps-2026-10-13-v1",
+      "schema": "evidence-proposal-v1",
+      "schema_hash": "[sha256-redacted]",
+      "sources": {
+       "home": {
+        "address": "Flat 3, 157,159,161,163,165,167 Tebay Drive",
+        "built": 1974,
+        "epc": "D",
+        "postcode": "NE5 2XH",
+        "tenure": "Social rent",
+        "town": "Newcastle upon Tyne",
+        "type": "Low-rise flat"
+       },
+       "ranking": {
+        "disclosure": "Resident support and safety ranking inputs are not disclosed to this audience.",
+        "policy": {
+         "content_hash": "[sha256-redacted]",
+         "effective_date": "2026-10-09",
+         "owner": "to be named",
+         "policy_id": "zava-forward-home-ranking",
+         "rules": [
+          {
+           "code": "safety_open",
+           "label": "Open safety issue first",
+           "order": 1
+          },
+          {
+           "code": "support",
+           "label": "Residents needing priority support or an adjustment next",
+           "order": 2
+          },
+          {
+           "code": "waiting_days",
+           "label": "Longest time in the current stage next",
+           "order": 3
+          },
+          {
+           "code": "stage_order",
+           "label": "Earlier programme stage next",
+           "order": 4
+          },
+          {
+           "code": "case_id",
+           "label": "Case id as the final fixed tie-break",
+           "order": 5
+          }
+         ],
+         "status": "Draft rule order, not yet signed off by an owner",
+         "version": "1.0.0"
+        },
+        "reasons": [
+         {
+          "code": "waiting_days",
+          "text": "Waiting 212 days in this stage"
+         },
+         {
+          "code": "stage_order",
+          "text": "At 'Waiting for block programme'"
+         }
+        ],
+        "stage": "Waiting for block programme",
+        "waiting_days": 212
+       },
+       "survey": {
+        "built": null,
+        "epc": null,
+        "evidence_hash": null,
+        "status": null,
+        "type": null,
+        "version": null
+       }
+      },
+      "unknowns": [
+       "source.survey.epc",
+       "source.survey.type",
+       "source.survey.built",
+       "source.survey.version",
+       "source.survey.status",
+       "source.survey.evidence_hash"
+      ]
+     },
+     "source_signature": "[sha256-redacted]",
+     "verification": null,
+     "version": "1.0.0",
+     "state": "disabled",
+     "fence": 0,
+     "owner": "",
+     "lease_until": 0,
+     "attempts": 0,
+     "not_before": 0,
+     "revision": 1,
+     "stale": false,
+     "provenance": [
+      {
+       "actor": "[email]",
+       "kind": "invocation",
+       "mode": "reactive",
+       "purpose": null,
+       "release": null,
+       "release_denial": {
+        "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+        "authority_holders": [
+         {
+          "authority": "release",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "residual-risk acceptance",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "suspension",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "restart",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         }
+        ],
+        "manual": "Use the ordinary case controls.",
+        "missing": [
+         "approved, unexpired release record"
+        ],
+        "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+        "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+        "task": "stock-prioritisation"
+       },
+       "rules": "synthetic-gaps-2026-10-13-v1"
+      }
+     ],
+     "history_next_offset": null,
+     "history_count": 1,
+     "display_state": "suspended",
+     "epoch_current": false,
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "stock-prioritisation",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "actionable": false,
+     "relied_on": false,
+     "suspension": "SUS-1",
+     "review_flag": null
+    },
+    {
+     "attempts": 0,
+     "capability": "quality-evidence",
+     "case_id": "ZF-2025-0031",
+     "continuity_epoch": 0,
+     "created_at": 1794995955.613,
+     "envelope": null,
+     "fence": 0,
+     "id": "[sha256-redacted]",
+     "lease_until": 0,
+     "manual": "Review the ordinary case with Quality Inspector, Retrofit Programme Manager.",
+     "manual_requested": true,
+     "not_before": 0,
+     "output": null,
+     "owner": "",
+     "proposal_identity": {
+      "capability": "quality-evidence",
+      "purpose": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings"
+     },
+     "reason": "Operator authority, finite allowance and expiry are required.",
+     "release": null,
+     "review": null,
+     "revision": 2,
+     "snapshot": {
+      "citations": {
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0645Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0645Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0650Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0650Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0655Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0655Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0700Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0700Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0705Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0705Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0710Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0710Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0715Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0715Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0720Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0720Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0725Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0725Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0730Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0730Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0735Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0735Z"
+       },
+       "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0740Z": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "sensor_reading/S7XBQ3HG3P5/LIVE-S7XBQ3HG3P5-20261118T0740Z"
+       },
+       "source:checklists": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/checklists"
+       },
+       "source:documents": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/documents"
+       },
+       "source:home": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/home"
+       },
+       "source:measures": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/measures"
+       },
+       "source:quality": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/quality"
+       },
+       "source:sensors": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/sensors"
+       }
+      },
+      "exercise_predicate": "Missing/unknown measures; not exactly one active (non-Superseded) quality record per measure; current work not Accepted/Handed over; missing/conflicting checklist item evidence or checklist version mismatch; current evidence version or relevant permitted signature changes; retained consented synthetic readings captured for a case with a quality record, one proposal per six-hour bucket of the latest reading (a review flag only, not a threshold, defect or acceptance).",
+      "exercise_rule": "Selected synthetic gap predicates, not approved company rules.",
+      "registry": "1.0.0",
+      "registry_hash": "[sha256-redacted]",
+      "rule_hash": "[sha256-redacted]",
+      "rules": "synthetic-gaps-2026-10-13-v1",
+      "schema": "evidence-proposal-v1",
+      "schema_hash": "[sha256-redacted]",
+      "sources": {
+       "checklists": {
+        "External wall insulation (block); dMEV ventilation": {
+         "items": [
+          "Wall surface checked before fitting",
+          "Fixings and thickness match the design",
+          "Vents, meters and sills finished",
+          "Finish clean and sealed",
+          "Guarantee issued"
+         ],
+         "name": "Wall insulation",
+         "version": "QC-WALL v1"
+        }
+       },
+       "documents": [],
+       "home": {
+        "address": "Flat 3, 157,159,161,163,165,167 Tebay Drive",
+        "built": 1974,
+        "epc": "D",
+        "postcode": "NE5 2XH",
+        "tenure": "Social rent",
+        "town": "Newcastle upon Tyne",
+        "type": "Low-rise flat"
+       },
+       "measures": [
+        "External wall insulation (block); dMEV ventilation"
+       ],
+       "quality": [
+        {
+         "checklist_version": "QC-WALL v1",
+         "evidence_version": null,
+         "items": [
+          {
+           "evidence": "Missing/unverified synthetic evidence",
+           "label": "Wall surface checked before fitting"
+          },
+          {
+           "evidence": "Missing/unverified synthetic evidence",
+           "label": "Fixings and thickness match the design"
+          },
+          {
+           "evidence": "Missing/unverified synthetic evidence",
+           "label": "Vents, meters and sills finished"
+          },
+          {
+           "evidence": "Missing/unverified synthetic evidence",
+           "label": "Finish clean and sealed"
+          },
+          {
+           "evidence": "Missing/unverified synthetic evidence",
+           "label": "Guarantee issued"
+          }
+         ],
+         "measure": "External wall insulation (block); dMEV ventilation",
+         "state": "Submitted"
+        }
+       ],
+       "sensors": {
+        "after": [],
+        "after_absent": "No retained readings from the first quality evidence record onward.",
+        "anchor": {
+         "at": "2026-10-13T09:00:00Z",
+         "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect.",
+         "name": "quality_record_anchor"
+        },
+        "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+        "before": [],
+        "before_absent": "No retained readings before the first quality evidence record.",
+        "calibrated": false,
+        "citation_keys": [
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0645Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0650Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0655Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0700Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0705Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0710Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0715Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0720Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0725Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0730Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0735Z",
+         "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0740Z"
+        ],
+        "future_dated_excluded": false,
+        "home_id": "ZF-2025-0031",
+        "kind": "synthetic-retained-readings",
+        "latest": {
+         "humidity_pct": "93.43",
+         "observed_at": "2026-11-18T07:40:00Z",
+         "provenance_class": "synthetic-weather-derived",
+         "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0740Z",
+         "sensor_id": "S7XBQ3HG3P5",
+         "temperature_c": "6.79"
+        },
+        "max_readings": {
+         "context_each": 4,
+         "window": 12
+        },
+        "provenance": {
+         "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+        },
+        "readings": [
+         {
+          "humidity_pct": "94.23",
+          "observed_at": "2026-11-18T06:45:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0645Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.13"
+         },
+         {
+          "humidity_pct": "93.53",
+          "observed_at": "2026-11-18T06:50:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0650Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.25"
+         },
+         {
+          "humidity_pct": "93.01",
+          "observed_at": "2026-11-18T06:55:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0655Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.34"
+         },
+         {
+          "humidity_pct": "92.80",
+          "observed_at": "2026-11-18T07:00:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0700Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.37"
+         },
+         {
+          "humidity_pct": "92.92",
+          "observed_at": "2026-11-18T07:05:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0705Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.37"
+         },
+         {
+          "humidity_pct": "93.21",
+          "observed_at": "2026-11-18T07:10:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0710Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.39"
+         },
+         {
+          "humidity_pct": "93.57",
+          "observed_at": "2026-11-18T07:15:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0715Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.42"
+         },
+         {
+          "humidity_pct": "93.88",
+          "observed_at": "2026-11-18T07:20:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0720Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.47"
+         },
+         {
+          "humidity_pct": "94.05",
+          "observed_at": "2026-11-18T07:25:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0725Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.53"
+         },
+         {
+          "humidity_pct": "93.97",
+          "observed_at": "2026-11-18T07:30:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0730Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.61"
+         },
+         {
+          "humidity_pct": "93.71",
+          "observed_at": "2026-11-18T07:35:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0735Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.70"
+         },
+         {
+          "humidity_pct": "93.43",
+          "observed_at": "2026-11-18T07:40:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0740Z",
+          "sensor_id": "S7XBQ3HG3P5",
+          "temperature_c": "6.79"
+         }
+        ],
+        "retrofit_context": {
+         "available": false,
+         "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+        },
+        "state": "ok",
+        "units": {
+         "humidity_pct": "%RH",
+         "temperature_c": "degC"
+        },
+        "version": "retained-reading-view-v2"
+       }
+      },
+      "unknowns": [
+       "source.documents",
+       "source.quality.0.evidence_version",
+       "source.sensors.before",
+       "source.sensors.after"
+      ]
+     },
+     "source_signature": "[sha256-redacted]",
+     "state": "disabled",
+     "verification": null,
+     "version": "1.0.0",
+     "stale": true,
+     "provenance": [
+      {
+       "actor": "[email]",
+       "kind": "invocation",
+       "mode": "reactive",
+       "purpose": null,
+       "release": null,
+       "release_denial": {
+        "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+        "authority_holders": [
+         {
+          "authority": "release",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "residual-risk acceptance",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "suspension",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "restart",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         }
+        ],
+        "manual": "Use the ordinary case controls.",
+        "missing": [
+         "approved, unexpired release record"
+        ],
+        "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+        "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+        "task": "quality-evidence"
+       },
+       "rules": "synthetic-gaps-2026-10-13-v1"
+      },
+      {
+       "actor": "[email]",
+       "kind": "invocation",
+       "mode": "reactive",
+       "purpose": null,
+       "release": null,
+       "release_denial": {
+        "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+        "authority_holders": [
+         {
+          "authority": "release",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "residual-risk acceptance",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "suspension",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "restart",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         }
+        ],
+        "manual": "Use the ordinary case controls.",
+        "missing": [
+         "approved, unexpired release record"
+        ],
+        "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+        "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+        "task": "quality-evidence"
+       },
+       "rules": "synthetic-gaps-2026-10-13-v1"
+      }
+     ],
+     "history_next_offset": null,
+     "history_count": 2,
+     "display_state": "suspended",
+     "epoch_current": false,
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "quality-evidence",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "actionable": false,
+     "relied_on": false,
+     "suspension": "SUS-1",
+     "review_flag": null
+    },
+    {
+     "capability": "assessment-preparation",
+     "case_id": "ZF-2025-0031",
+     "continuity_epoch": 0,
+     "created_at": 1794995952.878,
+     "envelope": null,
+     "id": "[sha256-redacted]",
+     "manual": "Review the ordinary case with Retrofit Coordinator, Retrofit Programme Manager.",
+     "manual_requested": true,
+     "output": null,
+     "proposal_identity": {
+      "capability": "assessment-preparation",
+      "purpose": "Prepare a survey/design evidence checklist"
+     },
+     "reason": "Operator authority, finite allowance and expiry are required.",
+     "release": null,
+     "review": null,
+     "snapshot": {
+      "citations": {
+       "source:documents": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/documents"
+       },
+       "source:home": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/home"
+       },
+       "source:measures": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/measures"
+       },
+       "source:survey": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/survey"
+       },
+       "source:technical": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/technical"
+       }
+      },
+      "exercise_predicate": "Missing Survey/Design metadata/content hash or technical.design_version; relevant permitted source signature changes.",
+      "exercise_rule": "Selected synthetic gap predicates, not approved company rules.",
+      "registry": "1.0.0",
+      "registry_hash": "[sha256-redacted]",
+      "rule_hash": "[sha256-redacted]",
+      "rules": "synthetic-gaps-2026-10-13-v1",
+      "schema": "evidence-proposal-v1",
+      "schema_hash": "[sha256-redacted]",
+      "sources": {
+       "documents": [
+        {
+         "at": "2025-07-20",
+         "content_sha256": null,
+         "id": "D1",
+         "kind": "EPC",
+         "version": null
+        },
+        {
+         "at": "2025-12-16",
+         "content_sha256": null,
+         "id": "D2",
+         "kind": "Survey",
+         "version": null
+        }
+       ],
+       "home": {
+        "address": "Flat 3, 157,159,161,163,165,167 Tebay Drive",
+        "built": 1974,
+        "epc": "D",
+        "postcode": "NE5 2XH",
+        "tenure": "Social rent",
+        "town": "Newcastle upon Tyne",
+        "type": "Low-rise flat"
+       },
+       "measures": [
+        "External wall insulation (block); dMEV ventilation"
+       ],
+       "survey": {
+        "built": null,
+        "epc": null,
+        "evidence_hash": null,
+        "status": null,
+        "type": null,
+        "version": null
+       },
+       "technical": {
+        "design_version": null
+       }
+      },
+      "unknowns": [
+       "source.survey.epc",
+       "source.survey.type",
+       "source.survey.built",
+       "source.survey.version",
+       "source.survey.status",
+       "source.survey.evidence_hash",
+       "source.technical.design_version",
+       "source.documents.0.version",
+       "source.documents.0.content_sha256",
+       "source.documents.1.version",
+       "source.documents.1.content_sha256"
+      ]
+     },
+     "source_signature": "[sha256-redacted]",
+     "verification": null,
+     "version": "1.0.0",
+     "state": "disabled",
+     "fence": 0,
+     "owner": "",
+     "lease_until": 0,
+     "attempts": 0,
+     "not_before": 0,
+     "revision": 1,
+     "stale": false,
+     "provenance": [
+      {
+       "actor": "[email]",
+       "kind": "invocation",
+       "mode": "reactive",
+       "purpose": null,
+       "release": null,
+       "release_denial": {
+        "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+        "authority_holders": [
+         {
+          "authority": "release",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "residual-risk acceptance",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "suspension",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "restart",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         }
+        ],
+        "manual": "Use the ordinary case controls.",
+        "missing": [
+         "approved, unexpired release record"
+        ],
+        "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+        "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+        "task": "assessment-preparation"
+       },
+       "rules": "synthetic-gaps-2026-10-13-v1"
+      }
+     ],
+     "history_next_offset": null,
+     "history_count": 1,
+     "display_state": "suspended",
+     "epoch_current": false,
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "assessment-preparation",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "actionable": false,
+     "relied_on": false,
+     "suspension": "SUS-1",
+     "review_flag": null
+    },
+    {
+     "capability": "funding-evidence",
+     "case_id": "ZF-2025-0031",
+     "continuity_epoch": 0,
+     "created_at": 1794995953.74,
+     "envelope": null,
+     "id": "[sha256-redacted]",
+     "manual": "Review the ordinary case with Grants and Evidence Officer, Retrofit Programme Manager.",
+     "manual_requested": true,
+     "output": null,
+     "proposal_identity": {
+      "capability": "funding-evidence",
+      "purpose": "Prepare application/claim evidence gaps"
+     },
+     "reason": "Operator authority, finite allowance and expiry are required.",
+     "release": null,
+     "review": null,
+     "snapshot": {
+      "citations": {
+       "source:documents": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/documents"
+       },
+       "source:finance": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/finance"
+       },
+       "source:funding": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/funding"
+       },
+       "source:grants": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/grants"
+       },
+       "source:home": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/home"
+       },
+       "source:measures": {
+        "content_hash": "[sha256-redacted]",
+        "locator": "case:ZF-2025-0031/measures"
+       }
+      },
+      "exercise_predicate": "Missing measures, funding.route/reference, grants or budget amount; incomplete supplied invoice ref/lines/milestone inputs; claim-phase grant lacks sourced history or hashed Funding evidence metadata; relevant permitted terms/evidence signature changes.",
+      "exercise_rule": "Selected synthetic gap predicates, not approved company rules.",
+      "registry": "1.0.0",
+      "registry_hash": "[sha256-redacted]",
+      "rule_hash": "[sha256-redacted]",
+      "rules": "synthetic-gaps-2026-10-13-v1",
+      "schema": "evidence-proposal-v1",
+      "schema_hash": "[sha256-redacted]",
+      "sources": {
+       "documents": [
+        {
+         "at": "2025-07-20",
+         "content_sha256": null,
+         "id": "D1",
+         "kind": "EPC",
+         "version": null
+        },
+        {
+         "at": "2025-12-16",
+         "content_sha256": null,
+         "id": "D2",
+         "kind": "Survey",
+         "version": null
+        }
+       ],
+       "finance": {
+        "budget": {
+         "amount": 10200,
+         "status": "Proposed"
+        },
+        "commitments": [],
+        "invoices": [
+         {
+          "evidence_hash": null,
+          "id": "INV-SYN-001",
+          "kind": "Invoice",
+          "lines": [
+           {
+            "amount": 500,
+            "measure": "External wall insulation (block); dMEV ventilation",
+            "milestone_ref": "",
+            "quantity": 1
+           }
+          ],
+          "ref": "SYNTHETIC-ZF-2025-0031",
+          "status": "Received",
+          "supplier": "Northern Facade Systems Ltd",
+          "version": null,
+          "work_order": "UNKNOWN-SOURCE-ORDER"
+         }
+        ]
+       },
+       "funding": {
+        "reference": "",
+        "route": "Not decided",
+        "status": "Not started",
+        "terms_hash": null,
+        "terms_version": null
+       },
+       "grants": [
+        {
+         "evidence": [],
+         "id": "GR-SYN-001",
+         "scheme": "Zava Forward Exercise Fund",
+         "state": "Not recorded"
+        }
+       ],
+       "home": {
+        "address": "Flat 3, 157,159,161,163,165,167 Tebay Drive",
+        "built": 1974,
+        "epc": "D",
+        "postcode": "NE5 2XH",
+        "tenure": "Social rent",
+        "town": "Newcastle upon Tyne",
+        "type": "Low-rise flat"
+       },
+       "measures": [
+        "External wall insulation (block); dMEV ventilation"
+       ]
+      },
+      "unknowns": [
+       "source.documents.0.version",
+       "source.documents.0.content_sha256",
+       "source.documents.1.version",
+       "source.documents.1.content_sha256",
+       "source.funding.reference",
+       "source.funding.terms_version",
+       "source.funding.terms_hash",
+       "source.finance.commitments",
+       "source.finance.invoices.0.version",
+       "source.finance.invoices.0.evidence_hash",
+       "source.finance.invoices.0.lines.0.milestone_ref",
+       "source.grants.0.evidence"
+      ]
+     },
+     "source_signature": "[sha256-redacted]",
+     "verification": null,
+     "version": "1.0.0",
+     "state": "disabled",
+     "fence": 0,
+     "owner": "",
+     "lease_until": 0,
+     "attempts": 0,
+     "not_before": 0,
+     "revision": 1,
+     "stale": false,
+     "provenance": [
+      {
+       "actor": "[email]",
+       "kind": "invocation",
+       "mode": "reactive",
+       "purpose": null,
+       "release": null,
+       "release_denial": {
+        "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+        "authority_holders": [
+         {
+          "authority": "release",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "residual-risk acceptance",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "suspension",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         },
+         {
+          "authority": "restart",
+          "holder": null,
+          "reference": "OQ-017",
+          "status": "gap"
+         }
+        ],
+        "manual": "Use the ordinary case controls.",
+        "missing": [
+         "approved, unexpired release record"
+        ],
+        "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+        "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+        "task": "funding-evidence"
+       },
+       "rules": "synthetic-gaps-2026-10-13-v1"
+      }
+     ],
+     "history_next_offset": null,
+     "history_count": 1,
+     "display_state": "suspended",
+     "epoch_current": false,
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "funding-evidence",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "actionable": false,
+     "relied_on": false,
+     "suspension": "SUS-1",
+     "review_flag": null
+    }
+   ],
+   "disabled": "Operator authority, finite allowance and expiry are required.",
+   "manual": "Open the case for ordinary human work.",
+   "next_after": null
+  }
+ }
+}
