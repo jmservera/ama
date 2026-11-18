@@ -31,7 +31,7 @@ failed attempts) are under
 
 | Observation | Result | Evidence |
 | --- | --- | --- |
-| Anonymous browser request to `/api/me` | 302 to `login.microsoftonline.com` (`RedirectToLoginPage`) | `run1.json`, `employee-1-entra-redirect.png` |
+| Anonymous browser request to `/api/me` | 302 to `login.microsoftonline.com` (`RedirectToLoginPage`) | `run1.json` |
 | Anonymous non-browser request (`curl`) to `/api/me`, `/api/cases`, `/workspace-shell.js` | 401 each; `X-Requested-With: XMLHttpRequest` gives 403; invalid bearer token gives 401 | curl status codes recorded in the changes record |
 | Forged `X-MS-CLIENT-PRINCIPAL-NAME` and `-ID` headers, no session | 401 (curl); 302 to Entra (Playwright request) | `run1.json` |
 | Forged `X-ZF-Role: Admin` header, no session | 401 | curl |
@@ -40,7 +40,7 @@ failed attempts) are under
 | Positive platform-authenticated API request | `/api/cases` 200; `/api/workorders/x/job-pack` 404 (unknown id); `/api/law/alerts` 503 (law service not configured, existing behaviour) | `run1.json` |
 | Forged header sent with a valid session | Role unchanged (`Retrofit Programme Manager`): the header is ignored | `logout-run1.json` |
 | Workbench entry | `/sign-in` shows the Entra account picker (select-account prompt), selecting the account lands on `/app` titled "Zava Forward" with the briefing and filters | `employee-2b-workbench.png` |
-| Logout | `/.auth/logout` ends at Entra sign-out; the next `/api/me` is 302 to Entra again | `logout-run1.json`, `employee-3-after-logout.png` |
+| Logout | `/.auth/logout` ends at Entra sign-out; the next `/api/me` is 302 to Entra again | `logout-run1.json` (the logout screenshot was removed because it displayed the test account sign-in address) |
 | Resident demo sign-in (shared demo credentials, form) | `/demo/login` 200, `/demo/view` 200; before sign-in `/demo/view` 401 | `resident-run5.json`, `resident-2-signed-in.png` |
 | Resident session against staff paths | `/api/me`, `/api/cases`, `/api/staff`, `/demo/staff`, `/demo/admin` all 404 (the resident app exposes no staff surface) | `resident-run5.json` |
 | Wrong credentials on the resident app | Wrong password 401; the employee Entra account on the resident form 401; neither gets a session | `resident-run5.json` |
@@ -81,8 +81,8 @@ failed attempts) are under
 | 2 | Credential reaches the private vault through an approved in-VNet path | Unproven | The app carries one app-level secret; the vault path was not inspected and Key Vault rotation was excluded. Nothing here proves the in-VNet delivery |
 | 3 | API auth and runtime audience use the real registration; edge callback added with `--public-url` and prior callbacks preserved | Partly proven | Sign-in callback works end to end on the demo edge and the audiences match the registration. The callback list and `initialize-api-auth.py` history were not read |
 | 4 | Private staff roster reconciled in the VNet, replicas reloaded, no fictional identity | Unproven for the demo | `/api/me` shows `bound` false: the account is admitted by Entra identity and role, not a roster. A roster is a real-staff feature; the demo has none |
-| 5 | Real user completes callback, role-scoped `/api/me`, workbench entry; logout and account switching; wrong-role and unknown-staff denial | Proven with the test account, not a real user | Callback, `/api/me`, `/app` entry, logout and account picker are shown. Wrong-account denial is shown at the resident form and at Entra; a wrong-role denial inside the employee app needs a second staff account with a different role, which the demo does not have. Real-user and unknown-staff denial are unproven |
-| 6 | Anonymous 401 and forged-header denial in browser mode, with a positive authenticated request | Proven | See the observations table. Browsers get a 302 to Entra by design; non-browser and XHR clients get 401 or 403 |
+| 5 | Real user completes callback, role-scoped `/api/me`, workbench entry; logout and account switching; wrong-role and unknown-staff denial | Proven with the test account, not a real user | Callback, `/api/me`, `/app` entry, logout and account picker are shown. Wrong-account denial is shown at the resident form only (the Entra-side denial has no retained evidence); a wrong-role denial inside the employee app needs a second staff account with a different role, which the demo does not have. Real-user and unknown-staff denial are unproven |
+| 6 | Anonymous 401 and forged-header denial in browser mode, with a positive authenticated request | Partly proven: browser-mode 302s are retained in `run1.json`; the non-browser 401 and forged-header results are not retained, so they stay unproven here | See the observations table. Browsers get a 302 to Entra by design; non-browser and XHR clients get 401 or 403 |
 
 ## What a real-user tenant registration would still need
 

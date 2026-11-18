@@ -20,6 +20,6 @@ Live actions: Playwright desktop runs against ca-cutover-test-demo-api and ca-re
 | 3 | API auth and audience use real registration; callback with prior callbacks preserved | Partly proven: callback works, audiences match; callback list not read |
 | 4 | Private staff roster reconciled in VNet | Unproven: `bound` false, demo has no roster |
 | 5 | Real user sign-in, `/api/me`, workbench, logout, wrong-role and unknown-staff denial | Proven with test account only; wrong-role inside employee app and real-user parts unproven |
-| 6 | Anonymous 401, forged-header denial, positive authenticated request | Proven |
+| 6 | Anonymous 401, forged-header denial, positive authenticated request | Partly proven (browser 302s retained; 401 and forged-header results not retained) |
 
 Validation: documentation link and diff review; literal scan of evidence files for the three credential values found no match; no unit tests apply (no src change).
