@@ -13160,6 +13160,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-1830-live-20261118T1648Z-2026-11-18.md](research/issue-1830-live-20261118T1648Z-2026-11-18.md): timing reports from seven retained full receipts, 54 candidate tests passing on unmerged branch `ci/gate-preflight-benchmark-1830`; no criterion ticked. No source change.
 
+## [2026-11-18] add | Issue 128 live run 3 (Refs #128)
+
+* Added [issue-128-live3-equity-evidence-2026-11-18.md](research/issue-128-live3-equity-evidence-2026-11-18.md) and its evidence folder: protocol agreement still unproven (needs named humans), aggregate-only proven at source level (26 core tests), resident page confirmed loaded with manual-route wording, desktop axe clean on four live pages. No source change, no criterion ticked.
+
 ## [2026-11-18] add | Issue 164 live audit, pass 4 (Refs #164)
 
 * Added [issue-164-live-20261118T1707Z-2026-11-18.md](research/issue-164-live-20261118T1707Z-2026-11-18.md): registry still disabled with proposed thresholds and unknown individual, seven live asks rules-only with zero model calls, 54 offline tests pass; no criterion ticked. No source change.
@@ -13183,3 +13187,14 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 114 live re-verification (Refs #114)
 
 * Added [issue-114-live-reverify-2026-11-18.md](research/issue-114-live-reverify-2026-11-18.md): 62 tests pass for per-year verification; deployed image gap and missing multi-year live data keep the criterion unticked. Docs only.
+## [2026-11-18] add | Issue 138 live fourth run (Refs #138)
+
+* Added [issue-138-live-r4-2026-11-18.md](research/issue-138-live-r4-2026-11-18.md): fresh read-only and what-if probes find no federated credentials, runners, protected environments or deploy runs; live smoke passes and fails closed when unreachable; no criterion ticked. Docs only.
+
+## [2026-11-18] add | Issue 130 live fifth audit (Refs #130)
+
+* Added [issue-130-live-r5-nomination-route-audit-2026-11-18.md](research/issue-130-live-r5-nomination-route-audit-2026-11-18.md): same revision 0000032 and image digest, same live 403 write refusal and form-encoded 400, 83 offline tests pass, resident app exposes no nomination or challenge route; representative participation stays unproven for the demo. Docs only.
+
+## [2026-11-18] add | Issue 153 live re-check, fourth run (Refs #153)
+
+* Added [content-recheck-153-live-r4-2026-11-18.md](research/content-recheck-153-live-r4-2026-11-18.md): repeat Playwright and HTTP probes of the demo match the third run (`Held`/`envelope` on Finance, "Unassigned" owner, generic error bodies); named wording review unproven. Docs only.

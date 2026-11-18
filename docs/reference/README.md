@@ -459,6 +459,7 @@ The [third audit](./research/issue-130-live-r3-nomination-route-audit-2026-11-18
 unchanged image, adds 105 offline tests and a per-criterion table, and separates production-only items.
 The [fourth audit](./research/issue-130-live-r4-nomination-route-audit-2026-11-18.md) sees a new revision on the
 same image digest, the same 403 write refusal, and explains the form-encoded 400 as a JSON-only API.
+The [fifth audit](./research/issue-130-live-r5-nomination-route-audit-2026-11-18.md) finds the same revision, image and 403, and adds a resident-app route check.
 For #124, the [Phase 0 discovery evidence](./research/issue-124-phase0-discovery-evidence-2026-11-18.md)
 records a 2026-11-18 offline and synthetic-data run: nomination, endpoint, dictionary and two-sided
 constraint rules proven in code, and the three unticked criteria stated as needing sponsor, owner
@@ -525,6 +526,9 @@ environments, runner and image release remain unconfigured and unobserved.
 A [third run](./research/issue-138-live-r3-2026-11-18.md) retains sanitised raw outputs, finds that
 `summarize_plan` refuses the live what-if (14 Unsupported entries) and gives a per-criterion proven or unproven table;
 nothing is ticked.
+
+A [fourth run](./research/issue-138-live-r4-2026-11-18.md) repeats the probes with retained output and finds
+the same state (0 federated credentials, 0 runners, no protected environments, 0 `src-deploy.yml` runs); nothing is ticked.
 
 For #118, the [hardened deployment live evidence](./research/issue-118-hardened-deployment-live-evidence-2026-11-18.md)
 records the Azure Policy and Defender decision and read-only live probes (enactment not proven).
@@ -1364,6 +1368,7 @@ or infra acceptance claimed.
 | [Assistive-technology, consent and Fluent/WCAG acceptance live demo evidence (#619)](./research/issue-619-live-at-consent-evidence-2026-11-18.md) | Per-criterion demo record: keyboard, axe, zoom-equivalent reflow and the synthetic resident consent journey proven on the live demo; person-run screen reader, zoom and real-resident criteria stay production-only |
 | [Accessibility, equity and journey ownership live demo evidence (#128)](./research/issue-128-live-equity-evidence-2026-11-18.md) | Per-criterion demo record: aggregate-only measures proven at source level, desktop axe 0 violations on four live surfaces; protocol agreement and person-run testing stay unproven |
 | [Accessibility, equity and journey ownership live demo evidence, run 2 (#128)](./research/issue-128-live2-equity-evidence-2026-11-18.md) | Re-run with retained commands and raw output: protocol criterion unproven, aggregate-only proven at source level, desktop axe clean on four live pages |
+| [Accessibility, equity and journey ownership live demo evidence, run 3 (#128)](./research/issue-128-live3-equity-evidence-2026-11-18.md) | Run 3: protocol agreement still unproven, aggregate-only proven at source level, resident page confirmed loaded with manual-route wording |
 | [Per-year ledger verification test evidence (#114)](./research/ledger-verification/issue-114-per-year-ledger-verification-evidence-2026-11-18.md) | Retained raw run (40 tests OK) proving per-year audit and ledger digest verification before reliance; deployed-image gap noted |
 | [Retrofit Operating-Data Exercise Pack](./research/retrofit-synthetic-data/README.md) | Version 2.0.0: fifteen months of constructed operating records for 980 candidate homes. The case presents a professional team aware of bottlenecks but not where they occur. The pack covers the tracker, stage event log, property register, CRM contacts, supplier appointments, safety holds, QA and evidence, grant and finance, capacity, board reports and issues log, with realistic record-keeping imperfections, a data dictionary and a manifest. These records are for the exercise and are not evidence of actual company performance. The answer key and generator are held outside the knowledge base so analysis can stay blind. Stock-to-case link report and synthetic fabric attributes for the 60,000-home stock added; synthetic EPC, survey records and a seeded EPC conflict manifest added (#170); per-user chat and memory test fixtures (personas, threads, memory, isolation and deletion cases) added (#172) | 2026-10-15 |
 | [Program Manager Document Workspace Journey](./research/ux/program-manager-document-workspace-journey.md) | Stakeholder-informed JTBD analysis, journey map, accessibility requirements and design handoff for the repository-backed Program Workbench canvas. All behavioural findings remain reported or assumed pending direct user research | 2026-10-02 |
@@ -1404,6 +1409,7 @@ or infra acceptance claimed.
 | [Plain-language copy audit on the live demo (#153)](./research/plain-language-live-153-2026-11-18.md) | Playwright audit of status names, errors and AI labels on the synthetic demo against the content standard; five open findings and a per-criterion proven/unproven table. Named human wording review stays unproven. |
 | [Content audit of deployed demo screens, second run (#153)](./research/content-audit-live-153-2026-11-18.md) | Playwright audit of 43 redacted staff and resident screens, case-page tabs included, findings N1 to N6 and per-criterion result; human-review criterion stays unproven |
 | [Content re-check and per-criterion audit, third run (#153)](./research/content-recheck-153-live-2026-11-18.md) | Fresh live probes of Finance, case tab and API error bodies; R1 to R7 findings; named-reviewer criterion unproven, three ticked criteria partly proven |
+| [Content re-check, fourth run (#153)](./research/content-recheck-153-live-r4-2026-11-18.md) | Repeat live probes on revision 0000032 match the third run; per-criterion table; named wording review still unproven |
 | [Human-review effectiveness demo evidence (#223)](./research/human-review-live-223-2026-11-18.md) | Offline harness, targeted tests and a live review-record probe on the synthetic demo; per-criterion proven/unproven table. Real-reviewer competence, measured effort and OQ-017 authority stay unproven. |
 | [Cut-over Gate Demo Proof, Live Run 2026-11-18](./research/cutover-gate-live-2026-11-18.md) | Per-criterion results for the three unticked issue 201 criteria: repointing and healthy revision proven, src build provenance unproven (private registry), mvp/data (archive v0.21.0) and sign-off owner-only, legacy-reference checker failing on three test files. |
 | [Cut-over Gate Demo Proof, Second Live Run 2026-11-18](./research/cutover-gate-live-r2-2026-11-18.md) | Second per-criterion table for issue 201: in-container proof that the running image holds only the three src distributions; build-run record still absent; mvp/data and sign-off owner-only; legacy-reference violations grew to 45. |
