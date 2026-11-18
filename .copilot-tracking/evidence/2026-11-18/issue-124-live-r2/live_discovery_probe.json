@@ -1,0 +1,9 @@
+{
+ "openapi_status": 404,
+ "path_count": 0,
+ "discovery_like_paths": [],
+ "sample_paths": [],
+ "/api/discovery": 403,
+ "/api/phase0/discovery": 403,
+ "/api/zz-nonexistent-control": 403
+}
