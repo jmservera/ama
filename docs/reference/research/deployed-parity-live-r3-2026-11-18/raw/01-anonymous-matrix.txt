@@ -1,0 +1,14 @@
+UTC 2026-11-18T14:04:40Z
+path | native | browser+json | browser+html
+/api/cases | 401 | 302 | 302
+/api/me | 401 | 302 | 302
+/api/staff | 401 | 302 | 302
+/api/assistants | 401 | 302 | 302
+/api/stats | 401 | 302 | 302
+/api/law | 401 | 302 | 302
+/api/time/status | 401 | 302 | 302
+/api/account/photo | 401 | 302 | 302
+/cases.html | 401 | 302 | 302
+/app | 401 | 302 | 302
+/healthz | 200 | 200 | 200
+/ | 200 | 200 | 200

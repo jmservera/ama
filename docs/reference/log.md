@@ -12868,6 +12868,34 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [src-repoint-live-audit-200-2026-11-18.md](research/src-repoint-live-audit-200-2026-11-18.md): criteria 2 proven, criterion 3 proven except a fresh tag deployment; no source change
 
+## [2026-11-18] update | Issue 111 signed-in sensor evidence re-run (Refs #111)
+
+* Added [issue-111-live2-sensor-evidence-2026-11-18.md](research/issue-111-live2-sensor-evidence-2026-11-18.md) with raw test output, redacted staff-signed sensors payload and screenshot; R1 to R3 stays unproven. No source change.
+
+## [2026-11-18] add | Issue 96 live form workspace evidence (Refs #96)
+
+* Added [issue-96-live-demo-evidence-2026-11-18.md](research/issue-96-live-demo-evidence-2026-11-18.md): read-only live probe found zero registered form schemas and no approval path; criterion 1 unproven, no source change
+
+## [2026-11-18] update | Issue 116 live round 2 (Refs #116)
+
+* Added [issue-116-live-r2-evidence-2026-11-18.md](research/issue-116-live-r2-evidence-2026-11-18.md): reason-value leak scan on the deployed demo, second role blocked by Graph privileges; no source change
+
+## [2026-11-18] add | Issue 110 live IoT Hub to SQL rerun (Refs #110)
+
+* Added [issue-110-live2-iot-sql-evidence-2026-11-18.md](research/issue-110-live2-iot-sql-evidence-2026-11-18.md): bounded job sent 6 and stored 6 through IoT Hub into Azure SQL; devices, job and temporary roles removed; no source change
+
+## [2026-11-18] update | Issue 108 harness audit live round 2 (Refs #108)
+
+* Added [issue-108-harness-audit-live-r2-2026-11-18.md](research/issue-108-harness-audit-live-r2-2026-11-18.md): harness rerun (116 tests OK), deployment, version and rate limits confirmed in uksouth and swedencentral, subscription quota unproven; no source change
+
+## [2026-11-18] add | Issue 154 live resident UX audit round 2 (Refs #154)
+
+* Added [issue-154-live-resident-ux-audit-r2-2026-11-18.md](research/issue-154-live-resident-ux-audit-r2-2026-11-18.md): desktop audit against the UX standards with retained raw output and three resident screenshots (workbench screenshots not retained), per-criterion table; criteria 3 and 5b unproven. No source change.
+
+## [2026-11-18] add | Issue 2008 synthetic demo workbook for the import (Refs #2008)
+
+* Added [issue-2008-demo-workbook-import-evidence-2026-11-18.md](research/issue-2008-demo-workbook-import-evidence-2026-11-18.md), the workbook, its CSV and raw evidence under `research/demo-workbook/`, and the generator `tools/make-demo-case-list.py`. Local preview shows clean, mapping and conflict rows; the deployed demo screen shows mapping and two row problems for the CSV; the web screen has no `.xlsx` upload or conflict check, so that part of criterion 3 stays unproven. No source change.
+
 ## [2026-11-18] add | Epic 104 bounded AI audit with live read (Refs #104)
 
 * Added [issue-104-epic-audit-live-2026-11-18.md](research/issue-104-epic-audit-live-2026-11-18.md): per-criterion table for epic 104 (criteria 1 and 2 unmet, 3 to 5 consistent with live read), exact remaining demo gaps for #107, #108, #164 and #216 by class, and a read-only live probe; nothing ticked, no source change, no Azure resource created
@@ -12883,3 +12911,14 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Employee loading feedback live re-verification, second pass (Refs #531)
 
 * Added [issue-531-live-r2-2026-11-18-note.md](research/issue-531-live-r2-2026-11-18-note.md) and its evidence folder: no scale-to-zero in 10 minutes so real cold start stays unproven; reject recorded through the live UI; deployed `app.js` and `style.css` still behind main; no source change
+## [2026-11-18] add | Deployed demo parity proof, live run 3 (Refs #350)
+
+* Added [deployed-parity-live-r3-2026-11-18.md](research/deployed-parity-live-r3-2026-11-18.md) with raw outputs, 4 screenshots (12 showing personal names or addresses not retained) and scripts: no criterion fully proven; browser-UA anonymous API still 302, `/api/time/status` 500 reproduced, own-queue CSV 133 against list 16; new active release-scope suspension, closed CSV now 537. No source changed.
+
+## [2026-11-18] add | Resident showcase live check r3 (Refs #462)
+
+* Added [resident-showcase-live-r3-2026-11-18.md](research/resident-showcase-live-r3-2026-11-18.md): live desktop Playwright proof of login, correct-case data and negative paths, exact five-failure rate limit, #455 rubric history and an unresolved High review thread, arithmetic cost estimate; no source or Azure change; criterion 2 stays unmet
+
+## [2026-11-18] update | Direct ingress live third measurement (Refs #360)
+
+* Extended [direct-ingress-live-demo-2026-11-18.md](research/direct-ingress-live-demo-2026-11-18.md) with a 14:00 UTC measurement and per-criterion table: criteria c and e need owner decisions, d stays partly proven (AI call not reproduced today); no source change, no Azure resource created
