@@ -1,0 +1,75 @@
+# Azure CLI read-only, 2026-11-18T16:23:26Z
+[
+  {
+    "created": "2026-11-18T16:20:23+00:00",
+    "n": "ca-cutover-test-demo-api--0000032",
+    "traffic": 100
+  }
+]
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+[
+  {
+    "cron": null,
+    "n": "job-cutover-test-init",
+    "tags": {
+      "owner": "[owner]",
+      "purpose": "cutover-private-proof"
+    },
+    "trigger": "Manual"
+  },
+  {
+    "cron": null,
+    "n": "job-cutover-test-verify",
+    "tags": {
+      "owner": "[owner]",
+      "purpose": "cutover-private-proof"
+    },
+    "trigger": "Manual"
+  },
+  {
+    "cron": null,
+    "n": "job-cutover-test-ledger-verify",
+    "tags": {
+      "dataClassification": "constructed-non-identifying",
+      "environment": "test",
+      "owner": "[owner]",
+      "purpose": "non-production-demonstrator",
+      "workload": "ledger-verify"
+    },
+    "trigger": "Manual"
+  },
+  {
+    "cron": null,
+    "n": "job-cutover-test-import",
+    "tags": {
+      "dataClassification": "constructed-non-identifying",
+      "environment": "test",
+      "owner": "[owner]",
+      "purpose": "non-production-demonstrator",
+      "workload": "import"
+    },
+    "trigger": "Manual"
+  },
+  {
+    "cron": null,
+    "n": "job-cutover-test-orchestrator",
+    "tags": {
+      "dataClassification": "constructed-non-identifying",
+      "environment": "test",
+      "owner": "[owner]",
+      "purpose": "non-production-demonstrator",
+      "workload": "orchestrator"
+    },
+    "trigger": "Manual"
+  },
+  {
+    "cron": null,
+    "n": "job-cutover-test-smoke",
+    "tags": {
+[
+  {
+    "n": "sensor-readings",
+    "partitions": 2,
+    "status": "Active"
+  }
+]

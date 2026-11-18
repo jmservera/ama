@@ -13088,6 +13088,22 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-185-live-r4-audit-2026-11-18.md](research/issue-185-live-r4-audit-2026-11-18.md): repository IoT identity tests pass with the optional SDK, credential scan clean, demo hub now reports zero devices (closing the run 3 adverse observation); durable storage, X.509 and production ownership stay unproven. No source change.
 
+## [2026-11-18] add | Issue 145 live fourth audit (Refs #145)
+
+* Added [issue-145-live-run4-audit-2026-11-18.md](research/issue-145-live-run4-audit-2026-11-18.md) with retained redacted read-only Azure output (Local backup redundancy, 14 day retention, no long-term retention, throwaway copies absent), the repository parameter and runbook check, and a per-criterion table: C4, R3 and R5 stay unproven, C4 and R5 are production-only, R3 needs a `src/core` reapply change at the FULL tier. No source change, nothing created in Azure, no criterion ticked.
+
+## [2026-11-18] add | Issue 151 live fourth audit, role routes (Refs #151)
+
+* Added [issue-151-live-r4-role-routes-evidence-2026-11-18.md](research/issue-151-live-r4-role-routes-evidence-2026-11-18.md): seven role screens with 0 axe violations and clean keyboard walks, two role-gate denials, no screen reader run; criterion 4 stays partly proven for the demo.
+
+## [2026-11-18] add | Fourth live audit of nomination route (Refs #130)
+
+* Added [issue-130-live-r4-nomination-route-audit-2026-11-18.md](research/issue-130-live-r4-nomination-route-audit-2026-11-18.md): new revision 0000032 on the same image digest, same 403 write refusal, form-encoded 400 explained by the JSON-only API, 83 offline tests pass, per-criterion proven or unproven table; unticked representative criterion unproven; no source change, nothing created in Azure
+
+## [2026-11-18] add | Quality sensor third live audit (Refs #1288)
+
+* Added [issue-1288-live-r3-quality-sensor-evidence-2026-11-18.md](research/issue-1288-live-r3-quality-sensor-evidence-2026-11-18.md): read-only live probe that did not invoke the assistant (no metric change), first screenshot of the real sensor panel, readings now stale and no simulator job, 304 focused local tests OK; criteria 4 and 8 unproven for the demo, production-only items listed; no source change.
+
 ## [2026-11-18] add | Issue 1259 live second audit (Refs #1259)
 
 * Added [2026-11-18-ranking-archive-unusable-1259-live-r2.md](research/2026-11-18-ranking-archive-unusable-1259-live-r2.md) with retained red-before output (seven failures on pre-fix source) and a real-filesystem schedule, verify and publish table for a regular file, dangling link and absent folder; final-criterion gates stay unproven; no source change, no Azure action.
