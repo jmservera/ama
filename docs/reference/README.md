@@ -416,10 +416,17 @@ re-run. The production X.509 receiver and indoor schema stay unproven.
 For #185, the [live device identity evidence](./research/issue-185-live-device-identity-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: Hub-generated symmetric device keys issued, used for sending
 and all identities removed. Durable secret storage and X.509 stay unproven.
+For #110, the [live IoT identity evidence](./research/issue-110-live-iot-identity-evidence-2026-11-18.md)
+records a 2026-11-18 demo run: three distinct Hub identities sent schema-versioned readings with
+stable IDs, read back from Event Hub; production X.509 receiver stays unproven.
 For #220, the [live challenge route evidence](./research/issue-220-live-challenge-route-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: guarantees, assurance flags and forbidden-field refusals observed
 live, and a blocking defect that refuses every Entra-signed-in staff write to the route.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
+
+For #184, the [live simulator stream evidence](./research/issue-184-live-simulator-stream-evidence-2026-11-18.md)
+records the child-story status on 2026-11-18: #185 and #189 are still open, the demo hub has
+a budget alert, and the live owner and time limit cannot be shown on the demo API.
 
 For #109, the [live device monitoring evidence](./research/issue-109-live-device-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of IoT Hub connection state and a connectivity metric alert.
@@ -429,10 +436,17 @@ records a 2026-11-18 demo run: installed alert inventory, a fired test alert, th
 IoT and workbook deployments, and the private-link limit that blocks workbook rendering and the poison-queue proof.
 A [re-run](./research/issue-146-live-monitoring-rerun-2026-11-18.md) adds a job-failure alert that fired on the real failed-job signal (Total aggregation; the Maximum shape did not) and lists the gaps.
 
+For #189, the [simulator run controls live evidence](./research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md)
+records a 2026-11-18 demo check of the budget alerts, hub owner tag and deterministic owner, time-limit and alert controls; no simulator job is deployed.
+
 For #138, the [CI/CD OIDC and what-if live evidence](./research/issue-138-live-cicd-oidc-evidence-2026-11-18.md)
 records a 2026-11-18 read-only demo run: a live what-if of the real template, the post-deployment
 smoke checks against the demo API, the fail-closed environment gate and the unconfigured OIDC,
 environment and runner prerequisites. All six criteria stay unticked.
+
+For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analysis-live-evidence-2026-11-18.md)
+records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human
+sign-off and R1 lacks the official standards texts. Read-only demo probes are recorded.
 
 For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root
@@ -1198,8 +1212,10 @@ or infra acceptance claimed.
 | [Tokenomics pitch criteria status (#435)](./research/tokenomics-pitch-criteria-435-live-2026-11-18.md) | Per-criterion proven or unproven record for the three unticked criteria: placement decision proven but deck revalidation not evidenced, mentor confirmation unprovable, finite batch decision proven for the synthetic demo via #432 |
 | [Stabilization checkpoint triage, epic gating and verdicts (#440)](./research/stabilization-checkpoint-triage-440-live-2026-11-18.md) | Four deduplicated issue drafts with severity, reproduction, links and acceptance criteria, the epics each blocking finding gates, and a continue, fix or pivot verdict for the 16 open epics; live re-observation of the time status 500 and anonymous 302 |
 | [Held-out AI batch, tokens per proposal (#432)](./research/ai-heldout-batch-432-live-2026-11-18.md) | Measured live batch on 12 synthetic cases (gpt-4.1-nano): 180 to 225 tokens per proposal, 2,522 total, USD 0.000744 list price under a recorded owner authority; per-criterion status for #432; billing reconciliation not done (owner waiver) | 2026-11-18 |
+| [Five assistants live demo evidence (#107)](./research/issue-107-live-assistants-evidence-2026-11-18.md) | Two unticked criteria: independent-worker revocation, restart and allowance races proven on local disposable SQL Server 2022 (7 tests) plus SQLite proxies; live demo denies all five assistants with no provider call, approved-release and delivered-build criterion unproven (OQ-017 approver gap) |
 | [Case chat citation and refusal gates, live (#216)](./research/eval-gates-live-216-2026-11-18.md) | Graded and adversarial 30-prompt run of the live demo case chat: refusals 10 of 10, citations valid 7 of 7 on the model path, but only 9 model calls available (demo meter); per-criterion status, adverse evidence and spend overshoot disclosed | 2026-11-18 |
 | [AI evaluation harness live demo evidence (#108)](./research/issue-108-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the eight unticked criteria: deployed model, version and rate limits confirmed, subscription quota unproven, live app AI report read, offline one-lever comparison tested; no criterion newly tickable | 2026-11-18 |
+| [Chat grounding and human-review boundaries live demo evidence (#164)](./research/issue-164-live-chat-grounding-evidence-2026-11-18.md) | Per-criterion demo record for the five unticked criteria: task registered and disabled, thresholds proposed not approved, three live asks answered by rules with zero model calls, human exercises and approvals unproven |
 | [Retrofit Operating-Data Exercise Pack](./research/retrofit-synthetic-data/README.md) | Version 2.0.0: fifteen months of constructed operating records for 980 candidate homes. The case presents a professional team aware of bottlenecks but not where they occur. The pack covers the tracker, stage event log, property register, CRM contacts, supplier appointments, safety holds, QA and evidence, grant and finance, capacity, board reports and issues log, with realistic record-keeping imperfections, a data dictionary and a manifest. These records are for the exercise and are not evidence of actual company performance. The answer key and generator are held outside the knowledge base so analysis can stay blind. Stock-to-case link report and synthetic fabric attributes for the 60,000-home stock added; synthetic EPC, survey records and a seeded EPC conflict manifest added (#170); per-user chat and memory test fixtures (personas, threads, memory, isolation and deletion cases) added (#172) | 2026-10-15 |
 | [Program Manager Document Workspace Journey](./research/ux/program-manager-document-workspace-journey.md) | Stakeholder-informed JTBD analysis, journey map, accessibility requirements and design handoff for the repository-backed Program Workbench canvas. All behavioural findings remain reported or assumed pending direct user research | 2026-10-02 |
 | [Customer Journey Atlas and Company-Role Maps](./research/ux/customer-journeys/customer-journey-atlas.md) | Nine company-role contributions cover employees, professionals, residents/representatives, suppliers and external assurance readers: 28 stage-based maps, two missing subjourneys, motivations/pains/gains and 24 practical/exploratory agent requests with authority, fallback and non-AI comparisons. Snapshot provenance reconciled to Zava naming and current five-assistant operator evidence; no user/benefit validation or authority expansion | 2026-10-14 |
@@ -1237,6 +1253,7 @@ or infra acceptance claimed.
 | [Human-review effectiveness test on the demo](./research/human-review-effectiveness-live-demo-2026-11-18.md) | Issue 223: offline gate results, live review retention on the demo app and a per-criterion proven or unproven table; no participant, OQ-017 holder or seeded live trial |
 | [Cohort and missing-data evaluation on the demo](./research/cohort-evaluation-demo-2026-11-18.md) | Issue 222: offline cohort test run at head e01b3d2, blockers observed and a per-criterion table; OQ-018 owner approval stays unproven and deferred (#1905, #1906) | 2026-11-18 |
 | [Chat Administrator and Break-Glass Demo-Only Disclaimer](./research/chat-demo-breakglass-disclaimer-2026-11-03.md) | Owner decision 2026-11-03: metadata-only administrator and break-glass policy for the synthetic-data demo, recorded as unreviewed by the DPO and Legal. Not a production or real-data approval (#162 criterion 6) | 2026-11-03 |
+| [Chat Break-Glass Live Proof on the Synthetic Demo](./research/chat-breakglass-live-proof-2026-11-18.md) | Live proof that demo break-glass is default-deny and audited per refusal; grant path proven by tests only; policy decided for the demo only (#162 criterion 6) | 2026-11-18 |
 | [Gap Analysis and Next Build](./research/gap-analysis-next-build.md) | Dated gaps/build direction and #65 recovery retained; PM/UX closure matrix pins four drafts, recommends learning-only retirement for #19/#24/#27 and keeps #58 unresolved with capability/requirement/evidence queue. No wholesale import, product acceptance or resource deletion | 2026-10-13 |
 | [Decision 1 Behaviour Specification](./research/decision-1-behaviour-specification.md) | Clean-rebuild contract linked to the overall application design: workbench/API integration, scoring versus generation, human review and application boundaries, tasks, thresholds, provider contract, guard, liabilities and tests | 2026-10-11 |
 | [Zava Forward API README](../../src/api/README.md) (split per project in M6 of #199: [core](../../src/core/README.md), [agents](../../src/agents/README.md), [orchestrator](../../src/orchestrator/README.md), [importer](../../src/importer/README.md)) | Continuing local/Azure application on retained constructed cases and private stock geography; real SQL/model evidence, Entra initialization, welcome/photo/account choice and current tests distinguished from historical snapshots. Full workflow, human, recovery, accessibility and production acceptance remain separate; evaluation dataset registry and seeded 60,000-home fixture added; frozen protocol, BG-011 MDE register, release decisions and breach pauses recorded (#126, no approvals claimed); importer Excel transition library (preview, quarantine, export, comparison) added for #80 with thresholds, UI and AI assist still open | 2026-10-15 |
