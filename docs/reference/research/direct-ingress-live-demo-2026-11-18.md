@@ -68,3 +68,42 @@ Status: unproven; nothing to retire and no authorisation on record. No Front Doo
 * Decide the browser JSON API 302 versus 401 edge behaviour (#350 item 1).
 * Owner: record migration approval (c) and Front Door retirement authorisation (e); confirm whether public access on `evhns-cutover-test-demo` and `aoai-resident-469` is intended.
 * A second staff account with a different role for role denial; a deliberate restart check if a drill is later authorised.
+
+## Re-run at 11:30 UTC on 2026-11-18
+
+A second, independent measurement under the same owner decisions. Evidence is in `.copilot-tracking/evidence/2026-11-18/issue-360-live-rerun/` (`rerun_proof.py`, `rerun-proof-run1.json`, `anonymous-curl.txt`, configuration JSON, `staff-signed-in.png`). Credentials were read at run time; the script scrubs them from output. Azure access was read-only and no resource was created.
+
+| Check | Result on re-run | File |
+| --- | --- | --- |
+| Demo environment | `internal` false, Succeeded, subnet `snet-aca-demo`; original environment still internal with public network access Disabled | `env-demo.json`, `env-orig.json` |
+| Subnet NSG | `allow-internet-https-in` (443, priority 100) and `allow-vnet-in` | `nsg-demo.json` |
+| Ingress | API and resident apps external, `allowInsecure` false, minimum replicas 0 | `apps.json` |
+| Backing services | SQL server, Key Vault, storage (default Deny, bypass None), registry, Foundry `aif-cutover-test-rzsrg` and IoT Hub: public access Disabled. Adverse, unchanged: `evhns-cutover-test-demo` and `aoai-resident-469` are Enabled | `backing.json` |
+| Front Door | `az afd profile list` and a Cdn or FrontDoor type search in `ama` returned empty; group `ama` Succeeded | `afd.json`, `fd-resources.json`, `rg.txt` |
+| Anonymous, non-browser | `/healthz`, `/`, `/welcome.html` 200; `/api/me`, `/api/cases`, `/app` 401; forged `X-ZF-Role` and principal headers 401; invalid bearer 401; HTTP 301 to HTTPS; TLS 1.3, Microsoft-issued certificate | `anonymous-curl.txt` |
+| Anonymous, browser User-Agent and JSON Accept | `/api/me` and `/api/cases` return 302 (to Entra), not 401: the browser-mode denial gap from #350 item 1 persists | `rerun-proof-run1.json` |
+| Staff browser sign-in | Redirect to `login.microsoftonline.com`, return to the app origin, title "Zava Forward | Zava North Homes", `/api/me` role `Retrofit Programme Manager`, `identity_source` `entra`; `/api/cases?view=all` total 443; `/api/sensors` 403; a forged `X-ZF-Role: Admin` left the session role unchanged in the first run (the re-run records only status 200); a POST without the CSRF header returned 403 | `rerun-proof-run1.json`, `staff-signed-in.png` |
+| Second identity | Not possible. the resident showcase credential file is the credential for the separate resident showcase login on `ca-resident-demo` (form login, not Entra) and cannot act as a second staff role. The attempt to use it on the Entra prompt timed out at the username step (disabled Next button); the attempt is retained in `rerun-proof-run1.json`. Anonymous probes of the resident app returned 404 for `/api/cases`, `/workbench`, `/app` and `/api/me`; its `/healthz` timed out on a cold start and returned 200 on retry | `rerun-proof-run1.json`, `anonymous-curl.txt` |
+| Replicas | Two replicas of the API app; not queried separately, no restart drill (excluded) | `replicas.txt` |
+| AI call | Not repeated; the 08:36 run result stands | see above |
+
+### Per-criterion result after the re-run
+
+| Criterion | State on #360 | Result | Basis |
+| --- | --- | --- | --- |
+| a | Ticked | Proven live | External environment, own subnet, NSG 443 and private backing services reconfirmed |
+| b | Ticked | Not re-tested | Offline unit tests |
+| c | Unticked | Unproven | No owner approval of the migration plan on record; an agent cannot supply it |
+| d | Unticked | Partly proven | Health, welcome, HTTPS, non-browser denial, real sign-in, role claim, shared SQL state and (08:36 run) an AI call proven; browser-mode 401 fails (302); second-role denial and restart persistence unproven |
+| e | Unticked | Unproven | No Front Door resources exist, but authorisation and the order after d are not on record |
+| f | Ticked | Not re-tested | Documentation |
+
+Both runs agree. No box on #360 is ticked by this note.
+
+### Evidence limits
+
+* The subscription id in `env-demo.json` is redacted to `<subscription-id>`; the file is otherwise as captured.
+* A blank-page screenshot of the failed resident attempt at the username step was removed; the failure is recorded only in `rerun-proof-run1.json`.
+* The forged role header probe records an HTTP 200 status only, so it does not prove the role was ignored; the earlier run is relied on for that.
+* The browser-mode `/api/me` result (302) and the non-browser result (401 in `anonymous-curl.txt`) come from different clients and are not interchangeable.
+* No throwaway Azure resource was created. Azure CLI configuration output is retained only in the JSON files listed above.
