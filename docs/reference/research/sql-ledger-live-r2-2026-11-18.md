@@ -10,7 +10,7 @@ Refs #114. Scope is the synthetic desktop demo in resource group `ama`, database
 
 ## Method
 
-A throwaway Container Apps job `job-114-r2-probe` (orchestrator image already in use, existing user-assigned identity, 0.5 vCPU) ran [probe.py](./sql-ledger-live-r2-2026-11-18/probe.py) once successfully at about 10:57Z (an earlier execution `job-114-r2-probe-2r7mad8` failed with a `KeyError` in the probe itself and is preserved as adverse evidence; the script was then patched). The probe only reads `retrofit`. Tamper steps mutate in-memory copies of the live audit entries. Output is in [probe-job.log](./sql-ledger-live-r2-2026-11-18/probe-job.log). The job was deleted afterwards; `az containerapp job list` shows no job with `114` in its name. No credential, token or private record is recorded.
+A throwaway Container Apps job `job-114-r2-probe` (orchestrator image already in use, existing user-assigned identity, 0.5 vCPU) ran [probe.py](./sql-ledger-live-r2-2026-11-18/probe.py) once successfully at about 10:57Z (an earlier execution `job-114-r2-probe-2r7mad8` failed with a `KeyError` in the probe itself and is described here as adverse evidence, but its log is raw output not retained; the script was then patched). The probe only reads `retrofit`. Tamper steps mutate in-memory copies of the live audit entries. Output is in [probe-job.log](./sql-ledger-live-r2-2026-11-18/probe-job.log). The job was deleted afterwards; `az containerapp job list` shows no job with `114` in its name (raw output not retained). No credential, token or private record is recorded.
 
 ## Observations
 
@@ -27,7 +27,7 @@ A throwaway Container Apps job `job-114-r2-probe` (orchestrator image already in
 | Native `sp_verify_database_ledger` and `sys.database_ledger_blocks` | Permission denied: `VIEW LEDGER CONTENT` is not held by the identity; not granted (would change a database control) |
 | Ledger tables | 64 in `retrofit` (`sys.tables` where `ledger_type <> 0`) |
 
-Local re-run on this branch: `PYTHONPATH=src:tests python3 -m unittest tests.test_recovery tests.test_sqlstore tests.test_ledger_digest_blob` from `src/core` ran 62 tests, OK. The digest container comparison (`digests: 0` in the probe because the job's local digest directory was empty) is covered by [digest-verification-alert-live-2026-11-18.md](./digest-verification-alert-live-2026-11-18.md), not by this run.
+Local re-run on this branch: `PYTHONPATH=src:tests python3 -m unittest tests.test_recovery tests.test_sqlstore tests.test_ledger_digest_blob` from `src/core` ran 62 tests, OK (raw output not retained). The digest container comparison (`digests: 0` in the probe because the job's local digest directory was empty) is covered by [digest-verification-alert-live-2026-11-18.md](./digest-verification-alert-live-2026-11-18.md), not by this run.
 
 ## Per-criterion status
 
@@ -47,3 +47,5 @@ Local re-run on this branch: `PYTHONPATH=src:tests python3 -m unittest tests.tes
 
 * The probe output is the retained log; row counts depend on the live demo, which keeps writing.
 * Costs are estimates, not billing.
+* Raw output not retained: the failed first job execution (`KeyError`), the empty job list after cleanup, and the 62-test local run.
+* Hosted CI, human approval and independent exact-head review are not observed.
