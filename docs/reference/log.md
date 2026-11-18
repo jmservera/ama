@@ -13131,3 +13131,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 144 live run 4 (Refs #144)
 
 * Added [issue-144-live-r4-2026-11-18.md](research/issue-144-live-r4-2026-11-18.md) with a raw folder: read-only az state of four apps and nine jobs, an empty `src-deploy.yml` run list and a scripted replica probe on revision `--0000032`. Criteria 1 (pipeline clause) and 3 (only non-root enforced) stay unproven; no source, Azure resource or load change.
+
+## [2026-11-18] add | Issue 1258 live closure run 2 (Refs #1258)
+
+* Added [issue-1258-live-closure-r2-2026-11-18.md](research/issue-1258-live-closure-r2-2026-11-18.md) with a raw folder: real ext4 `strace` first-publication syscall order, a kernel-injected fsync EIO giving `DurabilityUnconfirmedError` with the record kept, 110 passing tests, and an observed hosted-check gap. Criteria 1 to 4 proven (offline or real syscall); criterion 5 unproven; no source change, no Azure resource

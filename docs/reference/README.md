@@ -497,6 +497,9 @@ A [second pass](./research/issue-146-live2-monitoring-evidence-2026-11-18.md) re
 For #1258, the [archive ancestor durability evidence](./research/issue-1258-archive-ancestor-durability-2026-11-18.md)
 records that main already syncs new archive ancestors before confirming; criteria 1-4 are proven offline and criterion 5 is a process gate.
 
+A [second run](./research/issue-1258-live-closure-r2-2026-11-18.md) adds real ext4 `strace` syscall order and a kernel-injected fsync EIO
+for the first publication; criterion 5 stays unproven for the demo and no crash proof is claimed.
+
 For #189, the [simulator run controls live evidence](./research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo check of the budget alerts, hub owner tag and deterministic owner, time-limit and alert controls; no simulator job is deployed.
 A [second pass](./research/simulator-run-controls-live-189-2026-11-18.md) adds a signed-in probe of the deployed admin endpoint (403 for staff; no administrator role granted), an offline start, stop and capacity exercise with raw output, and the USD 5.16 observed spend.
