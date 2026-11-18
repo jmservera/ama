@@ -475,6 +475,11 @@ For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analys
 records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human
 sign-off and R1 lacks the official standards texts. Read-only demo probes are recorded.
 
+For #1288, the [quality sensor live evidence](./research/issue-1288-live-quality-sensor-evidence-2026-11-18.md)
+records a 2026-11-18 demo read and denial probe plus local mock-provider and SQL Server runs. Criteria 4
+and 8 cannot be proven on the demo (no approved release record, no simulator run); criteria 3 and 5 to 7
+are proven as local engineering evidence only.
+
 For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root
 runtime, scale-out from 0 to 4 replicas under a 60 s load run, and the Container Apps
@@ -1288,6 +1293,7 @@ or infra acceptance claimed.
 | [Azure SQL Restore Re-verification and Resurrection Gap](./research/issue-145-live-run2-reverification-2026-11-18.md) | Issue 145 run 2: read-only demo backup and cleanup checks, why release, suspension and allowance resurrection cannot be proven, final per-criterion record |
 | [Service Continuity, Versioning and Export Evidence on the Demo](./research/issue-122-live-continuity-evidence-2026-11-18.md) | Issue 122: 2026-11-18 live version change and reversal, offline export verification, default-disabled assistants, per-criterion proven/unproven record |
 | [Regulatory Alert and Home Chat UX Live Demo Proof](./research/issue-215-live-alert-chat-ux-evidence-2026-11-18.md) | Issue 215: desktop Playwright and axe evidence for the alerts panel and home chat on the demo, per-criterion status; no alert card can render without a law store and staff comprehension testing stays unrun |
+| [Regulatory Alert and Home Chat UX Populated-State Proof](./research/issue-215-live-populated-states-evidence-2026-11-18.md) | Issue 215 run 2: deployed client rendered against mocked alert and chat responses; keyboard, plain-language, no-source, doubt route and axe results; comprehension testing still unprovable for the demo |
 | [Direct Ingress and Sign-in Live Proof on the Demo](./research/direct-ingress-live-demo-2026-11-18.md) | Issue 360: live proof of direct Container Apps HTTPS ingress, sign-in, role, shared SQL state and a real chat AI call, with criteria c, d and e proven or unproven for the demo |
 | [Public Browser Access on the Deployed Demo](./research/public-browser-access-live-demo-2026-11-18.md) | Issue 344: live curl, Playwright and read-only Azure evidence for public HTTPS landing, Entra sign-in, anonymous 401, private SQL and authenticated route reachability on the demo, per-criterion status |
 | [Public Browser Access on the Deployed Demo, Rerun](./research/public-browser-access-live-rerun-2026-11-18.md) | Issue 344 second live pass: reproduced curl, Playwright sign-in and private SQL results, new policy exemption check, per-criterion status |

@@ -12658,6 +12658,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.
 
+## [2026-11-18] add | Quality sensor values and grounded flag live evidence (Refs #1288)
+
+* Added [issue-1288-live-quality-sensor-evidence-2026-11-18.md](research/issue-1288-live-quality-sensor-evidence-2026-11-18.md): per-criterion record for criteria 3 to 8. Live retained readings, stale state and denied invoke observed; local mock-provider and SQL evidence for 3 and 5 to 7; 4 and 8 unproven for the demo. Test-harness notes recorded, no source change.
+
 ## [2026-11-18] add | Live check of the resident demo authority end (Refs #521)
 
 * Added [resident-demo-authority-live-521-2026-11-18.md](research/resident-demo-authority-live-521-2026-11-18.md): source and focused tests, the live `ZF_DEMO_EXPIRES_AT` of 2028-01-01T00:00:00Z and a desktop sign-in proof. The live SQL window and the image source commit stay unproven (private network). No source or Azure changes.
@@ -12709,6 +12713,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Direct ingress live re-run (Refs #360)
 
 * Appended a second live measurement to [direct-ingress-live-demo-2026-11-18.md](research/direct-ingress-live-demo-2026-11-18.md): configuration, anonymous denial and staff sign-in reconfirmed; the resident credential is not an Entra identity, so second-role denial stays unproven; c and e stay unproven, d stays partly proven.
+## [2026-11-18] add | Alert and home chat populated-state proof (Refs #215)
+
+* Added [issue-215-live-populated-states-evidence-2026-11-18.md](research/issue-215-live-populated-states-evidence-2026-11-18.md): the deployed client JS rendered against mocked alert and chat responses because the live law store is not loaded; no colour-only status, keyboard, plain-language show and hide, no-source and doubt route results, with per-criterion status. WCAG as a whole and staff comprehension stay unproven and unticked.
 
 ## [2026-11-18] add | Rubric src counting and mvp stop state (Refs #198)
 
