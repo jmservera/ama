@@ -12795,6 +12795,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Nomination test bootstrap isolation per-criterion proof (Refs #1847)
 
 * Added [nomination-bootstrap-isolation-proof-1847-2026-11-18.md](research/nomination-bootstrap-isolation-proof-1847-2026-11-18.md): five criteria proven with fresh-process evidence on main; the full gate and external receipt remain unproven. No source or test change.
+
 ## [2026-11-18] add | Issue 184 live simulator stream run 2 (Refs #184)
 
 * Added [issue-184-live-simulator-stream-run2-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-run2-evidence-2026-11-18.md) with two retained redacted job logs: the repository simulator loop streamed 3 slots (9 messages) to the demo hub with Hub-generated symmetric keys, all 9 read back from Event Hub; devices, job and temporary roles deleted. The child-closure criterion is not proven (#185 and #189 open). A lost Registry Contributor assignment and a short first read window are recorded as adverse findings.
