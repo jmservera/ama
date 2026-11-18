@@ -61,3 +61,8 @@ Only one criterion was unticked on the issue; the ticked criteria were not re-pr
 ## Validation
 
 Documentation and evidence only, FOCUSED tier: Markdown and link review, `git diff`, and local scoring by `scripts/score_inner.py` over the saved raw output. `rpi-checks.py --all` was not run.
+
+## Evidence limits
+
+* The "20 on the deployed endpoint" model calls in the spend paragraph were earlier demo use, not part of this run; `report-live.json` records 0 model calls for this run.
+* The "about 12 to 13" calls from the first, lost run are an unretained estimate with no raw output.
