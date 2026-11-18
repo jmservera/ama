@@ -78,3 +78,10 @@ Evidence files are under `.copilot-tracking/evidence/2026-11-18/issue-116-live/`
   moves beyond the demo.
 
 None of these changes the code. The four boxes stay unticked.
+
+## Evidence limits
+
+* The raw `az` environment-name output is not retained.
+* "Sees the reason" rests on the field key being present; no vulnerability value was present for this case.
+* `unknown_ai_task_post` 403 in `probe2.json` is superseded by `probe5.json`.
+* Independent exact-head review and hosted CI are outstanding; no criterion is ticked.
