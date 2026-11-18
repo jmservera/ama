@@ -12911,6 +12911,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Resident showcase live check r3 (Refs #462)
 
 * Added [resident-showcase-live-r3-2026-11-18.md](research/resident-showcase-live-r3-2026-11-18.md): live desktop Playwright proof of login, correct-case data and negative paths, exact five-failure rate limit, #455 rubric history and an unresolved High review thread, arithmetic cost estimate; no source or Azure change; criterion 2 stays unmet
+
 ## [2026-11-18] update | Direct ingress live third measurement (Refs #360)
 
 * Extended [direct-ingress-live-demo-2026-11-18.md](research/direct-ingress-live-demo-2026-11-18.md) with a 14:00 UTC measurement and per-criterion table: criteria c and e need owner decisions, d stays partly proven (AI call not reproduced today); no source change, no Azure resource created
