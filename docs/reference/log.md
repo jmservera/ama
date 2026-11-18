@@ -12236,6 +12236,15 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added an [identifier leak audit](research/ux/content-standard.md#identifier-leak-audit-2026-11-17-153) section to the content standard: two snake_case identifiers shown to staff on the data steward and digital operator screens were reworded, and a lexical regression guard was added. Named-human review of resident-facing wording (criterion 5) remains unmet.
 
+## [2026-11-18] update | Live Azure SQL load, restore and deletion evidence for the demo (Refs #114)
+
+* Added [sql-ledger-live-2026-11-18.md](research/sql-ledger-live-2026-11-18.md) with its evidence folder. A 30-minute, five-session, two-writer run against the demo API met every p95 limit with no errors; a point-in-time restore of a throwaway database plus `reapply_deletions` re-redacted an erased case; the throwaway databases, jobs and blob container were deleted.
+* The deployed demo image lacks the per-year reliance check, so that part of criterion 1 stays unproven live. Cross-server restore is not offered by Azure SQL point-in-time restore. No source changed.
+## [2026-11-18] update | Live synthetic resident showcase proof (Refs #462)
+
+* Added [resident-showcase-live-proof-2026-11-18.md](research/resident-showcase-live-proof-2026-11-18.md): desktop Playwright evidence against the deployed `ca-resident-demo` (login, generic denials, rate limit, forged and tampered cookies, case binding, sign out), resource and grant inventory, actual cost (USD 440.90 since 2026-10-01 against the USD 700 cap) and the stop plan, with a per-criterion table.
+* Unproven: hosted CI and rubric on a pushed head, live session expiry wait, and the source commit behind the image digest (private registry). No source, infra or Azure change; production-only items are deferred by owner decision.
+
 ## [2026-11-18] add | Deployed demo parity live proof (Refs #350)
 
 * Added [deployed-parity-live-2026-11-18.md](research/deployed-parity-live-2026-11-18.md) with a per-criterion proven/unproven table for the unticked #350 criteria, measured read-only on the synthetic demo with Playwright and Azure CLI (one Programme Manager account, desktop).
@@ -12257,6 +12266,15 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-188-live-backfill-evidence-2026-11-18.md](research/issue-188-live-backfill-evidence-2026-11-18.md): per-criterion proven/unproven record of a demo run on live Azure SQL. Production receiver and indoor-schema proof remain open.
 
+## [2026-11-18] add | Live device monitoring evidence (Refs #109)
+
+* Added [issue-109-live-device-monitoring-evidence-2026-11-18.md](research/issue-109-live-device-monitoring-evidence-2026-11-18.md): demo SAS device connection state, a fired connectivity metric alert and a negative `lastActivityTime` finding. The #440 checkpoint and child-closure criteria stay unproven; no source changed.
+## [2026-11-18] add | Tokenomics pitch criteria status (Refs #435)
+
+* Added [tokenomics-pitch-criteria-435-live-2026-11-18.md](research/tokenomics-pitch-criteria-435-live-2026-11-18.md): per-criterion record for the three unticked criteria. The finite-batch decision is proven for the synthetic demo through the #432 batch; the placement decision is recorded but deck rebuild and revalidation are not evidenced; the mentor confirmation cannot be proven. No source or Azure change.
+## [2026-11-18] add | Cut-over gate demo proof (Refs #201)
+
+* Added [cutover-gate-live-2026-11-18.md](research/cutover-gate-live-2026-11-18.md): per-criterion record from repo checks and read-only Azure CLI; records an adverse legacy-reference checker failure.
 ## [2026-11-18] test | Direct ingress and sign-in live proof on the demo (Refs #360)
 
 * Added [direct ingress live note](research/direct-ingress-live-demo-2026-11-18.md) with per-criterion results for #360 c, d and e. Demo health, welcome, HTTPS, Entra browser sign-in, role claim, shared SQL state and a real chat AI call proven; browser-mode API 401 still fails; migration approval, Front Door retirement authorisation, second-role denial and restart persistence unproven. Cites #349, #350 and the #344 historical edge record without repeating them. No Azure resource created or changed.
@@ -12280,3 +12298,19 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Case chat live evaluation gates (Refs #216)
 
 * Added [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md) and its evidence folder: 30-prompt graded and adversarial run of the demo case chat. Refusals 10 of 10 and model-path citations 7 of 7, with the model reached on only 9 turns because the demo meter held further calls; the gate is partly proven for the demo and the production-only criteria remain unproven.
+## [2026-11-18] add | Regulatory alert and home chat UX live demo proof (Refs #215)
+
+* Added [issue-215-live-alert-chat-ux-evidence-2026-11-18.md](research/issue-215-live-alert-chat-ux-evidence-2026-11-18.md): read-only desktop proof on the demo apps. The alerts panel shows only the explicit unknown state because the law store is not loaded; keyboard and axe checks pass for the reachable controls; the plain-language toggle shows no visible effect on the deployed image; staff comprehension testing stays unrun.
+## [2026-11-18] add | Issue 221 restart authority and drill evidence (Refs #221)
+
+* Added [issue-221-restart-authority-and-drill-evidence-2026-11-18.md](research/issue-221-restart-authority-and-drill-evidence-2026-11-18.md): repository test proof for RULE-024 and NFR-014; no live drill.
+## [2026-11-18] add | Cohort and missing-data evaluation demo record (Refs #222)
+
+* Added [cohort-evaluation-demo-2026-11-18.md](research/cohort-evaluation-demo-2026-11-18.md): 36 cohort tests re-run, seven blockers observed, per-criterion table. The OQ-018 owner-approval criterion stays unproven.
+
+## [2026-11-18] add | AI evaluation harness live demo evidence (Refs #108)
+
+* Added [issue-108-live-demo-evidence-2026-11-18.md](research/issue-108-live-demo-evidence-2026-11-18.md): per-criterion record of the unticked criteria on live Azure. Deployment names, versions and rate limits are confirmed; subscription quota, independent labelling, human detection, cost comparison, restart SQL checks and live one-lever measurement stay unproven.
+## [2026-11-18] add | CI/CD pipeline OIDC and what-if live evidence (Refs #138)
+
+* Added [issue-138-live-cicd-oidc-evidence-2026-11-18.md](research/issue-138-live-cicd-oidc-evidence-2026-11-18.md): per-criterion record of read-only checks. A live what-if succeeded and the smoke checks passed against the demo API, but OIDC variables, protected environments, a runner and any workflow run are absent, so no criterion is fully proven.
