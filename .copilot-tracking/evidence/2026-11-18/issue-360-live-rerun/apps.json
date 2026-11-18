@@ -1,0 +1,26 @@
+[
+  {
+    "ext": true,
+    "insecure": false,
+    "minrep": 0,
+    "n": "ca-cutover-test-api"
+  },
+  {
+    "ext": null,
+    "insecure": null,
+    "minrep": 0,
+    "n": "ca-cutover-test-agents"
+  },
+  {
+    "ext": true,
+    "insecure": false,
+    "minrep": 0,
+    "n": "ca-cutover-test-demo-api"
+  },
+  {
+    "ext": true,
+    "insecure": false,
+    "minrep": 0,
+    "n": "ca-resident-demo"
+  }
+]

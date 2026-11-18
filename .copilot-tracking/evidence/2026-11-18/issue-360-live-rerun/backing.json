@@ -1,0 +1,43 @@
+Disabled
+[
+  {
+    "n": "kv-cutovertest-rzsrg",
+    "pna": "Disabled"
+  }
+]
+[
+  {
+    "byp": "None",
+    "def": "Deny",
+    "n": "stcutovertestrzsrg",
+    "pna": "Disabled"
+  }
+]
+[
+  {
+    "n": "crcutovertestrzsrg",
+    "pna": "Disabled"
+  }
+]
+[
+  {
+    "n": "aoai-resident-469",
+    "pna": "Enabled"
+  },
+  {
+    "n": "aif-cutover-test-rzsrg",
+    "pna": "Disabled"
+  }
+]
+[
+  {
+    "n": "iot-cutover-test-rzsrg",
+    "pna": "Disabled"
+  }
+]
+[
+  {
+    "n": "evhns-cutover-test-demo",
+    "pna": "Enabled"
+  }
+]
