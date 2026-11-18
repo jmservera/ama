@@ -13063,3 +13063,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 138 live third audit (Refs #138)
 
 * Added [issue-138-live-r3-2026-11-18.md](research/issue-138-live-r3-2026-11-18.md) with retained sanitised outputs: OIDC, environments, runner and image release still unconfigured, live what-if succeeds but `summarize_plan` refuses it, smoke and secret checks partly proven; no source change, nothing created in Azure
+
+## [2026-11-18] add | Epic 113 live audit (Refs #113)
+
+* Added [issue-113-epic-audit-live-2026-11-18.md](research/issue-113-epic-audit-live-2026-11-18.md): per-criterion table for the three epic criteria (all unmet or not satisfiable for the demo), per-child roll-up of unticked criteria split into demo-provable gap and production-only, and a GET-only live probe on image digest 5368f4e4; no source change, nothing ticked, no Azure resource created.

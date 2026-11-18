@@ -1,0 +1,897 @@
+{
+ "/api/me": {
+  "status": 200,
+  "body": {
+   "user": {
+    "code": "E-431883ca6856",
+    "name": "[staff name 1]",
+    "email": "[email]",
+    "role": "Retrofit Programme Manager",
+    "oid": "[guid]",
+    "tid": "[guid]",
+    "identity_source": "entra",
+    "display_email": "",
+    "app_admin": false,
+    "view_only": false,
+    "app_roles": [
+     "ZavaForward.ProgrammeManager"
+    ],
+    "auth_provider": "trusted-proxy",
+    "rule_roles": []
+   },
+   "counts": {
+    "mine": 16,
+    "hazards": 1,
+    "open": 443
+   },
+   "staff": [
+    {
+     "code": "E-431883ca6856",
+     "name": "[staff name 1]",
+     "email": "[email]",
+     "role": "Retrofit Programme Manager",
+     "case_ids": [
+      "ZF-2025-0029",
+      "ZF-2025-0030",
+      "ZF-2025-0031"
+     ]
+    },
+    {
+     "code": "E-da3669d9053c",
+     "name": "MOD Administrator",
+     "email": "[email]",
+     "role": "Retrofit Programme Manager"
+    },
+    {
+     "code": "E-431883ca6856",
+     "name": "[staff name 1]",
+     "email": "[email]",
+     "role": "Retrofit Programme Manager"
+    },
+    {
+     "code": "E-144c833bac54",
+     "name": "[staff name 2]",
+     "email": "[email]",
+     "role": "Building Safety Liaison"
+    }
+   ],
+   "account": {
+    "name": "[staff name 1]",
+    "email": "",
+    "provider": "trusted-proxy"
+   },
+   "services": {
+    "photo": false,
+    "law_alerts": false,
+    "assistants": true,
+    "cases": true
+   },
+   "map": {
+    "tiles": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    "attribution": "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"
+   },
+   "navigation": [
+    {
+     "href": "#/",
+     "label": "My cases",
+     "scope": "My assigned cases"
+    },
+    {
+     "href": "#/all",
+     "label": "All cases",
+     "scope": "All permitted open cases"
+    },
+    {
+     "href": "#/overview",
+     "label": "Overview",
+     "scope": "Programme overview"
+    },
+    {
+     "href": "#/progress",
+     "label": "Progress dashboard",
+     "scope": "Synthetic programme progress"
+    },
+    {
+     "href": "#/visits",
+     "label": "Visits",
+     "scope": "Programme visits"
+    },
+    {
+     "href": "#/funding",
+     "label": "Funding",
+     "scope": "Programme funding evidence"
+    },
+    {
+     "href": "#/finance",
+     "label": "Finance",
+     "scope": "Finance review queue"
+    },
+    {
+     "href": "#/capacity",
+     "label": "Capacity and work orders",
+     "scope": "Programme capacity"
+    },
+    {
+     "href": "#/closed",
+     "label": "Closed cases",
+     "scope": "Closed case directory"
+    },
+    {
+     "href": "#/assistants",
+     "label": "Assistant proposals",
+     "scope": "My permitted proposals"
+    },
+    {
+     "href": "#/time",
+     "label": "Time capture",
+     "scope": "My time records"
+    },
+    {
+     "href": "#/aftercare",
+     "label": "Aftercare concerns",
+     "scope": "Synthetic assisted aftercare concerns"
+    },
+    {
+     "href": "#/screens",
+     "label": "Specialist screens",
+     "scope": "Installed role screens"
+    }
+   ],
+   "work_queues": {
+    "version": "work-queues-1",
+    "default": {
+     "view": "mine",
+     "q": "",
+     "stage": "",
+     "area": "",
+     "flag": "",
+     "sort": "urgent",
+     "wave": "",
+     "owner": "",
+     "queue": ""
+    },
+    "selection": null,
+    "clock": "Dataset as_of snapshot, not a live hazard-service clock",
+    "status": "Engineering definitions; operational owner ratification remains open",
+    "definitions": [
+     {
+      "id": "new",
+      "label": "Newly arrived",
+      "definition": "Current stage started within 7 days, including day 7.",
+      "available": true,
+      "limitation": null
+     },
+     {
+      "id": "priority",
+      "label": "Approved priority",
+      "definition": "Open cases ranked under an owner-approved ranking policy; not AI advice.",
+      "available": false,
+      "limitation": "Ranking policy approval with a named owner is not recorded."
+     },
+     {
+      "id": "stale",
+      "label": "Stale evidence",
+      "definition": "Last supplied EPC record older than 30 days, Survey record older than 180 days, or a technical sign-off marked Needs reassessment. These are review triggers, not expiry dates.",
+      "available": true,
+      "limitation": null
+     },
+     {
+      "id": "blocked",
+      "label": "Blockers",
+      "definition": "Recorded safety, stock or shared-building stops, or unmet final-check prerequisites. A future-step prerequisite does not stop the current stage.",
+      "available": true,
+      "limitation": null
+     },
+     {
+      "id": "overdue",
+      "label": "Overdue tasks",
+      "definition": "A recorded pending handoff, resident update, nomination or self-referral next update, or external safety-service deadline is before the snapshot and completion is not evidenced. Not a statutory calculation, and never a priority or eligibility change.",
+      "available": true,
+      "limitation": null
+     },
+     {
+      "id": "unowned",
+      "label": "Unowned handoffs",
+      "definition": "Sent, received or escalated handoffs without accepted ownership. The sender retains chase responsibility; a proposed receiver is not a confirmed owner.",
+      "available": true,
+      "limitation": null
+     }
+    ]
+   }
+  }
+ },
+ "/api/audit-check": {
+  "status": 200,
+  "body": {
+   "intact": true,
+   "entries": 2076,
+   "head": "e0e7ac30584a1a47154ffedbca41ed5ff5dfd217c28867324feafdbc1d266687",
+   "problem": null,
+   "digests_checked": 0,
+   "digest_mismatches": []
+  }
+ },
+ "/api/data-protection": {
+  "status": 200,
+  "body": {
+   "label": "synthetic-demo",
+   "owners": "DPO and Legal (named owners not yet recorded; issue #121 dependency)",
+   "dpo_reviewed": false,
+   "classes": [
+    {
+     "id": "fixture_resident",
+     "name": "Constructed resident fixtures",
+     "kind": "constructed",
+     "purpose": "Offline development and demonstration",
+     "audience": "Developers and demonstration users",
+     "storage": "Fixture files and demo SQL; entirely constructed",
+     "special_category": false,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "staff_identity",
+     "name": "Staff identities and role assignments",
+     "kind": "actual",
+     "purpose": "Access control and attribution of actions",
+     "audience": "Administrators and auditors",
+     "storage": "Entra ID claims, SQL actor columns",
+     "special_category": false,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "tenant_identity",
+     "name": "Actual tenant or representative identities",
+     "kind": "actual",
+     "purpose": "Future case management under the tenancy contract",
+     "audience": "Case staff",
+     "storage": "Not collected by the demonstrator",
+     "special_category": true,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "ART9",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "ART9",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "review_record",
+     "name": "Reviewer identity and review decisions",
+     "kind": "actual",
+     "purpose": "Evidence of named human approval",
+     "audience": "Approvers and auditors",
+     "storage": "SQL review and approval rows, audit ledger",
+     "special_category": false,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "raw_document",
+     "name": "Uploaded document and image bytes",
+     "kind": "actual",
+     "purpose": "Evidence storage for a case",
+     "audience": "Case staff",
+     "storage": "Blob storage with scan tags",
+     "special_category": true,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "ART9",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER",
+      "NECESSITY"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "ART9",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER",
+      "NECESSITY"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "prompt_output",
+     "name": "Prompts, outputs and citations",
+     "kind": "actual",
+     "purpose": "Bounded assistant answers with sources",
+     "audience": "Signed-in staff",
+     "storage": "Not stored by Zava except chat threads; provider copy unknown",
+     "special_category": false,
+     "provider_copy": "Provider abuse-monitoring and retention terms unknown",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "audit_ledger",
+     "name": "Audit ledger entries",
+     "kind": "actual",
+     "purpose": "Tamper-evident record of actions",
+     "audience": "Auditors",
+     "storage": "Append-only SQL ledger, digests in Blob with an unlocked immutability policy",
+     "special_category": false,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "telemetry",
+     "name": "Diagnostics, telemetry and token counts",
+     "kind": "actual",
+     "purpose": "Operation and metering without content",
+     "audience": "Operators",
+     "storage": "Process output, Azure Monitor",
+     "special_category": false,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    }
+   ],
+   "statement": "Recorded references are not verified DPO or Legal approval. Local deletion is not provider erasure."
+  }
+ },
+ "/api/retention": {
+  "status": 200,
+  "body": {
+   "label": "synthetic-demo placeholder period from the trigger; not an approved retention schedule. The DPO and Legal set the real periods (PR-003, OD-14).",
+   "as_of": "2026-11-18",
+   "records": []
+  }
+ },
+ "/api/continuity": {
+  "status": 200,
+  "body": {
+   "epoch": 1,
+   "suspensions": [
+    {
+     "scope": "all",
+     "scope_kind": "release",
+     "reason": "Demo probe: negative test",
+     "incident_owner": "Demo owner",
+     "containment": "None; probe is refused",
+     "communication": {
+      "owner": "Demo owner",
+      "audience": "Demo staff",
+      "sent": false,
+      "note": "Constructed communication record only: nothing is sent and no resident is contacted automatically."
+     },
+     "recorded_by": "[email]",
+     "recorded_at": "2026-11-18T11:51",
+     "status": "Suspended",
+     "restart": null,
+     "in_flight_note": "A provider call already in flight may complete and stay charged or unknown; its result is quarantined. Remote cancellation and exactly-once billing are not claimed.",
+     "synthetic": false,
+     "trigger": "guardrail breach",
+     "evidence": "SYN-221-PROBE",
+     "resident_impact": "None",
+     "remediation": "None",
+     "restart_authority": "TBD",
+     "actor": {
+      "email": "[email]",
+      "code": "E-431883ca6856",
+      "oid": "[guid]"
+     },
+     "actual_authority": "Unavailable: OD-35 and RULE-020 acceptance not established.",
+     "actual_hold": true,
+     "proposals": [],
+     "snapshot_complete": false,
+     "incident_versions": {
+      "complete": false,
+      "versions": [
+       {
+        "task": "aftercare-concern-pack",
+        "binding": null,
+        "release": null,
+        "disabled": true,
+        "missing": [
+         "Task is disabled and has no runtime binding or release evidence."
+        ]
+       },
+       {
+        "task": "assessment-preparation",
+        "binding": {
+         "registry_version": "1.0.0",
+         "schema_version": "evidence-proposal-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "227fbd67300191c2",
+         "policy_version": "synthetic-gaps-2026-10-13-v1:38aadbe30ceb",
+         "data_version": "85e08cf5af33f7cd",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "0fb3bef9c37875ca",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "9988a58074c388e45aa3a82c0d4a69d6bcc0c1cf2547f24612bd3bdefa856c97",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "briefing",
+        "binding": {
+         "registry_version": "2026-10-15.1",
+         "schema_version": "legacy-text-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "b4b77f4cf772b67e",
+         "policy_version": "legacy-forbidden-output-filter-v1",
+         "data_version": "fd193779e8934b0e",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "6e19defc75a1af99",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "0c69e4d2f176e46362ae98c494c2d99751fbb0e3d78d837505469cbd59fc4100",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "chat-case-conversation",
+        "binding": null,
+        "release": null,
+        "disabled": true,
+        "missing": [
+         "Task is disabled and has no runtime binding or release evidence."
+        ]
+       },
+       {
+        "task": "funding-evidence",
+        "binding": {
+         "registry_version": "1.0.0",
+         "schema_version": "evidence-proposal-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "a3a511de0e461d78",
+         "policy_version": "synthetic-gaps-2026-10-13-v1:f182f3b38088",
+         "data_version": "5dabe1a2162e5f62",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "72ba62e46f523209",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "f8395f6ca7caf2fca50756092aee88f58e07088950d5ca5f00fcf16e92f23a49",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "funding_draft",
+        "binding": {
+         "registry_version": "2026-10-15.1",
+         "schema_version": "legacy-text-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "05094b0e0b3c0a78",
+         "policy_version": "legacy-forbidden-output-filter-v1",
+         "data_version": "7ff8794229c8c359",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "20d72285485e2f77",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "2f597c9e37921a79aa7bb72e3bedd1ccad00093a2c3fc813e54981ca2b9fd6ee",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "message",
+        "binding": {
+         "registry_version": "2026-10-15.1",
+         "schema_version": "legacy-text-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "0a6be41a81a76db8",
+         "policy_version": "legacy-forbidden-output-filter-v1",
+         "data_version": "d679814cf564c114",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "1f177a9f03b9a60e",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "03d111a4676fec7def0757bd87e71c21b123f3ebdef0173571fa6e4d300a8a43",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "priority",
+        "binding": {
+         "registry_version": "2026-10-15.1",
+         "schema_version": "legacy-text-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "15ed5b165b2074a1",
+         "policy_version": "legacy-forbidden-output-filter-v1:b66fdaccdcbd46a0eb257572a2b8f0fb98e7eafd53b468b67084d9a19761be2c",
+         "data_version": "2a633f68879b0315",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "87ab689eb1791440",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "997b3e3e251d5baa5519a429cc9aad732dfaf41ce3fa680d23c7e6f8a27b66fc",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "quality-evidence",
+        "binding": {
+         "registry_version": "1.0.0",
+         "schema_version": "evidence-proposal-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "9582b9a76f52d5ef",
+         "policy_version": "synthetic-gaps-2026-10-13-v1:a7ce4702fe12",
+         "data_version": "e5b6512806ccbbf0",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "03579f28ea6debec",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "2937577c7a3f2036a52c005341b387a9f62765d5d468d71e640b7ca8d194eefe",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "read_document",
+        "binding": {
+         "registry_version": "2026-10-15.1",
+         "schema_version": "legacy-text-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "a430d3d670fcf0d7",
+         "policy_version": "legacy-forbidden-output-filter-v1",
+         "data_version": "59ff3f6085e6fb60",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "9ed5ad30eb216233",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "f1f67f925f9471da9a0dc4aac31e6afdaffb5a9642d0c5d625bcc7455c8ee023",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "stock-prioritisation",
+        "binding": {
+         "registry_version": "1.0.0",
+         "schema_version": "evidence-proposal-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "3768ed36e3242c28",
+         "policy_version": "synthetic-gaps-2026-10-13-v1:bb974eaf2f8b",
+         "data_version": "bd66b741abf300ac",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "0fb3bef9c37875ca",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "3c530e0935be27ed0f647d53ada2f562b62d6d55be4897b45125bd9eb0e02f4d",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "summary",
+        "binding": {
+         "registry_version": "2026-10-15.1",
+         "schema_version": "legacy-text-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "bcac8ba6c5fd65c6",
+         "policy_version": "legacy-forbidden-output-filter-v1",
+         "data_version": "98157c739a1588d2",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "6e19defc75a1af99",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "ceefc3ff3e1fa8702a91e98d665e776839a3681d3ba22d07bdcfb10b799d007f",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "works-resident-coordination",
+        "binding": {
+         "registry_version": "1.0.0",
+         "schema_version": "evidence-proposal-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "46d998c3de7ac61e",
+         "policy_version": "synthetic-gaps-2026-10-13-v1:afb0ef7dde7a",
+         "data_version": "3f0a66365555e8d1",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "2123c2c05cef7a89",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "4c0c5d1332419db89d8cb12c5fb3fd6f9f887762a1d1ff983235872996153fa4",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       }
+      ]
+     },
+     "id": "SUS-1",
+     "epoch": 1,
+     "affected": [],
+     "affected_assistant_tasks": [],
+     "affected_assistant_total": 0,
+     "affected_assistant_truncated": false
+    }
+   ],
+   "history_valid": true,
+   "changes": [
+    {
+     "kind": "configuration",
+     "subject": "zf-demo-continuity-probe-122",
+     "from_version": "v0",
+     "to_version": "v1",
+     "reason": "Synthetic demo probe for issue 122 version, evaluation and reversal evidence",
+     "evaluation": {
+      "result": "pass",
+      "reference": "demo probe, no runtime effect"
+     },
+     "recorded_by": "[email]",
+     "recorded_at": "2026-11-18T10:49",
+     "reverses": null,
+     "synthetic": true,
+     "status": "Reversed",
+     "id": "CHG-1",
+     "superseded_by": "CHG-2"
+    },
+    {
+     "kind": "configuration",
+     "subject": "zf-demo-continuity-probe-122",
+     "from_version": "v1",
+     "to_version": "v0",
+     "reason": "Synthetic demo probe finished; restore prior version",
+     "evaluation": {
+      "result": "pass",
+      "reference": "restores CHG-1 prior version"
+     },
+     "recorded_by": "[email]",
+     "recorded_at": "2026-11-18T10:49",
+     "reverses": "CHG-1",
+     "status": "Applied",
+     "synthetic": true,
+     "id": "CHG-2"
+    }
+   ],
+   "effective": {
+    "configuration:zf-demo-continuity-probe-122": {
+     "version": "v0",
+     "change": "CHG-2"
+    }
+   },
+   "suspended": [
+    {
+     "id": "SUS-1",
+     "scope": "all"
+    }
+   ],
+   "note": "Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused."
+  }
+ },
+ "/api/health": {
+  "status": 403,
+  "body": {
+   "error": "Your role does not include this."
+  }
+ },
+ "/api/chat/status": {
+  "status": 200,
+  "body": {
+   "warning": "Do not type health, disability, safeguarding, religion, ethnicity, sexual orientation, trade union, criminal, financial hardship or other special-category details, and do not paste resident contact details. Use the case record instead. Matching text is masked before it is saved, but masking can miss things.",
+   "retention": "30 days",
+   "storage_approved": true,
+   "activation": "demo-only",
+   "demo_activation": true,
+   "demo_disclaimer": "Demonstration only. Answers are generated by an AI model from synthetic case facts, may be wrong, and are not reviewed or approved. No DPO, Legal or RAI approval exists. Check the sources.",
+   "role_limits": {
+    "Retrofit Coordinator": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "Resident Liaison Officer": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "Building Safety Liaison": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "Grants and Evidence Officer": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "Quality Inspector": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "Retrofit Programme Manager": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "Programme Support Officer": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "Contractor": {
+     "access": false,
+     "calls_per_request": 0,
+     "turns_per_thread": 0,
+     "output_tokens": 0
+    },
+    "Application Administrator": {
+     "access": false,
+     "calls_per_request": 0,
+     "turns_per_thread": 0,
+     "output_tokens": 0
+    }
+   },
+   "your_role_limits": {
+    "access": true,
+    "calls_per_request": 1,
+    "turns_per_thread": 30,
+    "output_tokens": 600
+   },
+   "limits": {
+    "calls_per_turn": 1,
+    "calls_per_request": 1,
+    "retries": 0,
+    "output_tokens": 600,
+    "turns_per_thread": 30,
+    "context_chars": 16000,
+    "history_chars": 4000,
+    "memory_used": false,
+    "memory_caps": {
+     "max_items": 50,
+     "max_item_chars": 1000,
+     "prompt_injection": false
+    },
+    "agent_depth": 1,
+    "calls_per_request_basis": "Cap of one model call per question. A question refused before the model is called uses none. When the provider reports no call count, one call is assumed.",
+    "authority": "engineering caps, not spend authorization"
+   }
+  }
+ },
+ "/api/documents": {
+  "status": 403,
+  "body": {
+   "error": "Your role does not include this."
+  }
+ }
+}
