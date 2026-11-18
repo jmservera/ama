@@ -409,6 +409,12 @@ For #185, the [live device identity evidence](./research/issue-185-live-device-i
 records a 2026-11-18 demo run: Hub-generated symmetric device keys issued, used for sending
 and all identities removed. Durable secret storage and X.509 stay unproven.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
+
+For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
+records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root
+runtime, scale-out from 0 to 4 replicas under a 60 s load run, and the Container Apps
+platform limit on read-only root file system and capability drop. No pipeline run
+and no production scale are shown.
 For the 2026-11-05 current-main contract, retention and handover boundary, see the
 [fifth stabilization checkpoint](../architecture/cutover-evidence-pack.md#fifth-stabilization-checkpoint-current-main-sensor-contract-retention-and-handover-2026-11-05-refs-440-184-110)
 (documentation only; the live-sim wire schema is not admitted by the main consumer and nothing is accepted).

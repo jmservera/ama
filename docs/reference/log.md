@@ -12255,3 +12255,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Live device identity and provisioning evidence (Refs #185)
 
 * Added [issue-185-live-device-identity-evidence-2026-11-18.md](research/issue-185-live-device-identity-evidence-2026-11-18.md): demo run with Hub-generated symmetric keys, sending and teardown on the demo hub. Durable storage and X.509 remain unproven.
+## [2026-11-18] add | Container hosting live evidence (Refs #144)
+
+* Added [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): per-criterion record of a demo probe on live Azure. Non-root and digest-pinned images observed; the pipeline run, read-only root file system and capability drop stay unproven.
