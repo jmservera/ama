@@ -1,0 +1,112 @@
+env=cae-cutover-test-demo
+{
+  "internal": false,
+  "loc": "UK South",
+  "publicNetworkAccess": "Enabled"
+}
+[
+  {
+    "n": "SQL_SERVER",
+    "s": null,
+    "v": "sql-cutover-test-rzsrg.database.windows.net"
+  },
+  {
+    "n": "SQL_DATABASE",
+    "s": null,
+    "v": "retrofit"
+  },
+  {
+    "n": "EVIDENCE_STORE",
+    "s": null,
+    "v": "blob"
+  },
+  {
+    "n": "ZF_STORE",
+    "s": null,
+    "v": "mssql"
+  },
+  {
+    "n": "ZF_SQL_SERVER",
+    "s": null,
+    "v": "sql-cutover-test-rzsrg.database.windows.net"
+  },
+  {
+    "n": "ZF_SQL_DATABASE",
+    "s": null,
+    "v": "retrofit"
+  },
+  {
+    "n": "ZF_SQL_AUTH",
+    "s": null,
+    "v": "msi"
+  },
+  {
+    "n": "ZF_SQL_CLIENT_ID",
+    "s": null,
+    "v": "<guid-redacted>"
+  },
+  {
+    "n": "ZF_DOC_STORE",
+    "s": null,
+    "v": "azure-blob"
+  }
+]
+{
+  "pna": "Disabled",
+  "restrictOutbound": "Disabled"
+}
+0
+[
+  {
+    "conn": "Approved",
+    "n": "pe-aif-cutover-test-rzsrg",
+    "state": "Succeeded",
+    "tgt": "account"
+  },
+  {
+    "conn": "Approved",
+    "n": "pe-ampls-cutover-test",
+    "state": "Succeeded",
+    "tgt": "azuremonitor"
+  },
+  {
+    "conn": "Approved",
+    "n": "pe-crcutovertestrzsrg",
+    "state": "Succeeded",
+    "tgt": "registry"
+  },
+  {
+    "conn": "Approved",
+    "n": "pe-iot-cutover-test-rzsrg",
+    "state": "Succeeded",
+    "tgt": "iotHub"
+  },
+  {
+    "conn": "Approved",
+    "n": "pe-kv-cutovertest-rzsrg",
+    "state": "Succeeded",
+    "tgt": "vault"
+  },
+  {
+    "conn": "Approved",
+    "n": "pe-sql-cutover-test-rzsrg",
+    "state": "Succeeded",
+    "tgt": "sqlServer"
+  },
+  {
+    "conn": "Approved",
+    "n": "pe-stcutovertestrzsrg-blob",
+    "state": "Succeeded",
+    "tgt": "blob"
+  },
+  {
+    "conn": "Approved",
+    "n": "pe-stcutovertestrzsrg-queue",
+    "state": "Succeeded",
+    "tgt": "queue"
+  }
+]
+retrofit
+master
+drill114src
+1
