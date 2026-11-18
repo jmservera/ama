@@ -1,0 +1,17 @@
+[
+  {
+    "n": "snet-aca",
+    "nsg": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/networkSecurityGroups/nsg-cutover-test-aca",
+    "prefix": "10.40.0.0/23"
+  },
+  {
+    "n": "snet-pe",
+    "nsg": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/networkSecurityGroups/nsg-cutover-test-pe",
+    "prefix": "10.40.4.0/24"
+  },
+  {
+    "n": "snet-aca-demo",
+    "nsg": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/networkSecurityGroups/nsg-cutover-test-aca-demo",
+    "prefix": "10.40.6.0/23"
+  }
+]

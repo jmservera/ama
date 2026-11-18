@@ -1,0 +1,48 @@
+{
+ "anonymous_api_me": {
+  "status": 302,
+  "location_host": "login.microsoftonline.com"
+ },
+ "anonymous_api_me_json_accept": 302,
+ "forged_header_api_me": {
+  "status": 302
+ },
+ "healthz": 200,
+ "employee": {
+  "account": "employee-test-account",
+  "redirected_to_entra": true,
+  "callback_returned_to_app": true,
+  "me_status": 200,
+  "me": {
+   "role": "Retrofit Programme Manager",
+   "app_roles": [
+    "ZavaForward.ProgrammeManager"
+   ],
+   "view_only": false,
+   "identity_source": "entra",
+   "auth_provider": "trusted-proxy",
+   "tid_is_guid": true,
+   "oid_is_guid": true,
+   "account_provider": "trusted-proxy",
+   "services": {
+    "photo": false,
+    "law_alerts": false,
+    "assistants": true,
+    "cases": true
+   },
+   "navigation_count": 13,
+   "bound": false
+  },
+  "workbench_url_path": "/",
+  "probe_status": {
+   "/api/cases": 200,
+   "/api/workorders/x/job-pack": 404,
+   "/api/law/alerts": 503
+  }
+ },
+ "resident": {
+  "account": "resident-test-account",
+  "redirected_to_entra": true,
+  "error": "TimeoutError"
+ }
+}

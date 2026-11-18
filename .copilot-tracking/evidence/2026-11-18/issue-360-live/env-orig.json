@@ -1,0 +1,5 @@
+{
+  "internal": true,
+  "publicNet": "Disabled",
+  "subnet": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/virtualNetworks/vnet-cutover-test/subnets/snet-aca"
+}
