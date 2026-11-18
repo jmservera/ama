@@ -13031,3 +13031,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 153 live content re-check (Refs #153)
 
 * Added [content-recheck-153-live-2026-11-18.md](research/content-recheck-153-live-2026-11-18.md): fresh desktop probes of the deployed demo; hold and envelope wording and an Unassigned owner still live, generic 404 and 403 bodies lack owner and next action; no named-reviewer record exists so that criterion stays unproven; no source change, nothing created in Azure
+
+## [2026-11-18] add | Issue 81 epic audit with live form retest (Refs #81)
+
+* Added [issue-81-epic-audit-live-2026-11-18.md](research/issue-81-epic-audit-live-2026-11-18.md): per-criterion table for epic 81 (criteria 1 and 2 unproven), live retest of the three standalone nomination forms (HTTP 400 on image digest 5368f4e4), fix classed FULL tier and left to #1837; no source change, nothing created in Azure
