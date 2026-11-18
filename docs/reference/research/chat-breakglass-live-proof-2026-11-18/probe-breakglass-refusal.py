@@ -11,8 +11,4 @@ with sync_playwright() as pw:
     print("refused-2",pg.evaluate(JS,["/api/chat/breakglass",dict(target="other.user@example.invalid",purpose="x")]))
     chk("after-2")
     pg.screenshot(path="shots/app-after-breakglass-probe.png")
-    ids=pg.evaluate("async()=>(await (await fetch('/api/chat/threads')).json()).map(t=>[t.id,t.title])")
-    print("threads",ids[:5])
-    for i,t in ids:
-        if t=="New chat" and not t.strip()=="" :
-            print("del",i,pg.evaluate(JS,[f"/api/chat/threads/{i}/delete",{}]))
+# The delete-all "New chat" loop used during the live run was removed here because it deleted unrelated synthetic threads.

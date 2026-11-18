@@ -43,3 +43,11 @@ Result: criterion 6 is partly proven. The refusal and audit behaviour is proven 
 ## Side effect and disclosure
 
 Opening a chat from the probe created a thread, and my cleanup then deleted every thread titled "New chat" for the staff test user, not only the one I created. About 15 empty synthetic demo threads of that test user were removed. No other user's data was touched, and the user's non-default threads were not affected. The over-broad delete was an error in the cleanup filter.
+
+## Evidence limits
+
+* `app-after-breakglass-probe.png` shows only the staff "Today's briefing" page; it is not proof of the refusal or of any audit entry.
+* The audit counts 1517, 1518 and 1519 and the earlier 1487 run have no retained raw output; treat them as observations.
+* `login.py` writes session cookies to `/tmp/state-*.json`; that scratch file is not part of the evidence and must be deleted after use.
+* The probe's delete-all "New chat" loop removed about 15 synthetic threads beyond those it created. This is an owner-visible deviation and the loop is removed from the committed script.
+* No cost-bearing Azure action was taken.
