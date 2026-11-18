@@ -12332,6 +12332,27 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [stabilization-checkpoint-triage-440-live-2026-11-18.md](research/stabilization-checkpoint-triage-440-live-2026-11-18.md): four issue drafts (time status 500, legacy-reference guard allowlist, unreachable ChatIsolation turn, AI golden path), duplicates mapped to existing owners, blocking findings mapped to epics, and per-epic verdicts (14 continue, 2 fix, 0 pivot). No issue created, no criterion ticked, no source changed. The coordinator HVE Builder review is Deferred at host validation.
 
+## [2026-11-18] add | Live nomination route evidence (Refs #130)
+
+* Added [issue-130-live-nomination-route-evidence-2026-11-18.md](research/issue-130-live-nomination-route-evidence-2026-11-18.md): per-criterion record of a demo run. Route panels, permissions and the absence of a representative option without confirmed authority observed live; every write refused by the known Entra identity defect; the unticked representative-participation criterion cannot be proven for the demo.
+## [2026-11-18] add | Live task queue hazard clock evidence (Refs #76)
+
+* Added [issue-76-live-task-queue-evidence-2026-11-18.md](research/issue-76-live-task-queue-evidence-2026-11-18.md): per-criterion record of a read-only live demo run. The hazard case card shows a safety clock line and a named accountable owner, but the clock is unknown for lack of a timestamp, and no demo case has a safeguarding item.
+## [2026-11-18] add | Form schema approval live evidence (Refs #96)
+
+* Added [issue-96-live-form-schema-approval-evidence-2026-11-18.md](research/issue-96-live-form-schema-approval-evidence-2026-11-18.md): the demo has no registered schema and no shipped path records an approval; the approved-schema criterion is unproven and deferred to #1905 to #1908.
+## [2026-11-18] add | Entra roles and field-level visibility live demo evidence (Refs #116)
+
+* Added [issue-116-live-demo-evidence-2026-11-18.md](research/issue-116-live-demo-evidence-2026-11-18.md): per-criterion record of the four unticked criteria on the deployed demo. One role was read live and an unknown AI task was refused before any provider call; the two-role comparison, document hold, stored outputs and provider payloads could not be shown live, and OD-14 and OD-19 confirmation is a human decision. All four boxes stay unticked.
+## [2026-11-18] add | Excel transition thresholds demo record (Refs #80)
+
+* Added [issue-80-live-transition-thresholds-evidence-2026-11-18.md](research/issue-80-live-transition-thresholds-evidence-2026-11-18.md): the one unticked criterion (owner-set staged transition thresholds) is unproven and cannot be proven for the demo; 125 importer tests passed. No source or Azure change.
+## [2026-11-18] add | Chat grounding live demo evidence (Refs #164)
+
+* Added [issue-164-live-chat-grounding-evidence-2026-11-18.md](research/issue-164-live-chat-grounding-evidence-2026-11-18.md): per-criterion record for the five unticked criteria. The chat task is registered and disabled with proposed, unapproved thresholds and no named accountable individual; three live asks (cited answer, approve refusal, injection) were answered by rules with zero model calls because a held unknown liability routes the task to workflow-only. Human exercises, payload and provider approval and any bound model result stay unproven. No source or Azure resource changed.
+## [2026-11-18] add | Five assistants live demo evidence (Refs #107)
+
+* Added [issue-107-live-assistants-evidence-2026-11-18.md](research/issue-107-live-assistants-evidence-2026-11-18.md): per-criterion record of the two unticked criteria. Independent-worker race, revocation and restart tests pass on a disposable local SQL Server 2022; the live demo denies all five assistants with no provider call; the approved-release and delivered-build criterion stays unproven because no OQ-017 approver is appointed.
 ## [2026-11-18] add | IoT Hub distinct device identity live evidence (Refs #110)
 
 * Added [issue-110-live-iot-identity-evidence-2026-11-18.md](research/issue-110-live-iot-identity-evidence-2026-11-18.md): C1 proven for the demo with three Hub-issued SAS identities, schema version and stable reading IDs read back from Event Hub. Production X.509 receiver stays unproven.
