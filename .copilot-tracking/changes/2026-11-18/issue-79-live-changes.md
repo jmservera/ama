@@ -15,4 +15,4 @@ Files: docs/reference/research/issue-79-live-ranking-publication-evidence-2026-1
 
 ## Live actions and cleanup
 
-Created `job-demo79-ranking-publish` and container `ranking-archive-demo79`; both deleted and verified absent. No secrets printed. Driver and output: phase-witness evidence dir `live-run/`.
+Created `job-demo79-ranking-publish` and container `ranking-archive-demo79`; both deleted and verified absent. No secrets printed. Driver and output: phase-witness evidence dir `live-run/` (not retained in this PR).
