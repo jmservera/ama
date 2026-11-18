@@ -12325,3 +12325,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Stabilization checkpoint triage and epic verdicts (Refs #440)
 
 * Added [stabilization-checkpoint-triage-440-live-2026-11-18.md](research/stabilization-checkpoint-triage-440-live-2026-11-18.md): four issue drafts (time status 500, legacy-reference guard allowlist, unreachable ChatIsolation turn, AI golden path), duplicates mapped to existing owners, blocking findings mapped to epics, and per-epic verdicts (14 continue, 2 fix, 0 pivot). No issue created, no criterion ticked, no source changed. The coordinator HVE Builder review is Deferred at host validation.
+
+## [2026-11-18] add | Simulator run controls live evidence (Refs #189)
+
+* Added [issue-189-simulator-run-controls-live-evidence-2026-11-18.md](research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md): per-criterion record. Budget alerts and the hub owner tag are proven live; the time limit is proven in code only because no simulator job is deployed.
