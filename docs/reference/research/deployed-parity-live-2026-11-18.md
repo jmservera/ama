@@ -9,7 +9,7 @@ Refs #350. Scope: the synthetic demo only, desktop only, resource group `ama`. O
 ## Method and evidence boundaries
 
 * Target: `ca-cutover-test-demo-api` (revision image `zava-forward-api@sha256:5368f4e4...`, `ZF_AUTH=trusted-proxy`, `ZF_DEPLOYMENT_PROFILE=demo`) and `ca-resident-demo`.
-* Browser: Playwright Chromium, desktop viewport 1440x900. Credentials were read from the owner's files at runtime inside the scripts in [scripts/](deployed-parity-live-2026-11-18/scripts/); no credential, cookie or token is printed or stored in the repository. Session state files were kept outside the repository and deleted.
+* Browser: Playwright Chromium, desktop viewport 1440x900. Session state is written by the scripts to `/tmp/state-*.json` and was not committed. Credentials were read from the owner's files at runtime inside the scripts in [scripts/](deployed-parity-live-2026-11-18/scripts/); no credential, cookie or token is printed or stored in the repository. Session state files were kept outside the repository and deleted.
 * Only one staff account was available: a Retrofit Programme Manager (`ZavaForward.ProgrammeManager`). Per-role proof for other roles is therefore not possible here.
 * Requests were reads only (GET). No case was edited, no consent recorded, no money or release action taken, nothing created in Azure, so nothing needed deleting.
 * Screenshots: [overview](deployed-parity-live-2026-11-18/screens/staff-overview.png), [all cases](deployed-parity-live-2026-11-18/screens/staff-all.png), [time capture](deployed-parity-live-2026-11-18/screens/staff-time.png), [law viewer](deployed-parity-live-2026-11-18/screens/staff-law.png), [resident home](deployed-parity-live-2026-11-18/screens/resident-home.png).
@@ -39,7 +39,7 @@ The issue text is partly stale. Observed on 2026-11-18:
 
 ### 1. Browser-mode 401 versus 302 (unproven, failing)
 
-Anonymous requests to the demo API, 2026-11-18 08:16 UTC (`curl -A ... -H Accept`):
+Raw curl, API and container-log output below was not retained in the repository; only the screenshots and scripts are. Anonymous requests to the demo API, 2026-11-18 08:16 UTC (`curl -A ... -H Accept`):
 
 | Path | Native curl | Browser UA, Accept: application/json | Browser UA, Accept: text/html |
 | --- | --- | --- | --- |
@@ -51,7 +51,7 @@ The page redirect is preserved, but every anonymous protected API request with a
 
 ### 2. Tenant/staff prerequisite and rows/assets (partly proven)
 
-Proven: the staff Entra sign-in lands on `/app` (title "Zava Forward | Zava North Homes"); `/api/me` returns role `Retrofit Programme Manager`, `identity_source=entra`, `auth_provider=trusted-proxy`. Rendered through the browser: My cases, All cases, Overview (heatmap, funnel, map), Progress dashboard, Visits, Funding, Finance, Time capture and the law viewer; each loaded, only Time capture and law showed errors (items 7 and 9).
+Screenshots are retained only for Overview, All cases, Time capture and law; the other screens were observed but not captured. Proven: the staff Entra sign-in lands on `/app` (title "Zava Forward | Zava North Homes"); `/api/me` returns role `Retrofit Programme Manager`, `identity_source=entra`, `auth_provider=trusted-proxy`. Rendered through the browser: My cases, All cases, Overview (heatmap, funnel, map), Progress dashboard, Visits, Funding, Finance, Time capture and the law viewer; each loaded, only Time capture and law showed errors (items 7 and 9).
 Unproven: the remaining dated feature rows and the other historical assets (for example `panels.js`, `timecapture.js` rendered in every state) were not individually executed, and no other role account exists. The parity matrix rows stay Blocked for them.
 
 ### 3. Synthetic baseline (partly proven)
