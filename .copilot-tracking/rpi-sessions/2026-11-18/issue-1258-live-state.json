@@ -1,1 +1,30 @@
-{"task_id":"1258","task_slug":"issue-1258-live","parent_task":null,"mode":"automatic","active_phase":"Follow-up","status":"completed","session_status":"running","artifact_paths":{"research":".copilot-tracking/research/2026-11-18/issue-1258-live-research.md","plan":".copilot-tracking/plans/2026-11-18/issue-1258-live-plan.md","details":".copilot-tracking/details/2026-11-18/issue-1258-live-details.md","critique":".copilot-tracking/critiques/2026-11-18/issue-1258-live-critique.md","changes":".copilot-tracking/changes/2026-11-18/issue-1258-live-changes.md","review":".copilot-tracking/reviews/2026-11-18/issue-1258-live-review.md"},"confirmed_decisions":[],"blockers":[],"next_action":{"phase":"Research","action":"verify criteria against main"},"prioritized_follow_ups":[]}
+{
+ "task_id": "1258",
+ "task_slug": "issue-1258-live",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-18/issue-1258-live-r2-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-18/issue-1258-live-r2-plan.md",
+  "details": ".copilot-tracking/details/2026-11-18/issue-1258-live-r2-details.md",
+  "critique": ".copilot-tracking/critiques/2026-11-18/issue-1258-live-r2-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-18/issue-1258-live-r2-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-18/issue-1258-live-r2-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Research disposition executed; FOCUSED tier while no src change",
+   "status": "confirmed",
+   "evidence": "research r2"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "commit local candidate"
+ },
+ "prioritized_follow_ups": []
+}
