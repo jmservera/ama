@@ -12192,6 +12192,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
 
+## [2026-11-17] update | Record owner FR-044/AC-084 directions in BRD OD-53 and PRD OQ-029 (Refs #441)
+
+* Added the owner direction of 2026-11-02 to the [BRD](../brds/agentic-retrofit-programme-brd.md) decision OD-53 and the [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) question OQ-029: the routine exception is approved in principle subject to named Legal/Compliance approval, and the synthetic-data demo display is not an OD-53 or RULE-020 approval.
+* Measured gap before the edit: neither document recorded either direction. Normative wording is unchanged; per-message named human review stays the default, the exception stays OFF and OD-53 stays OPEN. Criterion 5 of #441 stays unmet.
+* Added `tools/test_resident_portal_docs.py`. No status upgrade, memory change or deployment.
 ## [2026-11-17] update | Production AT acceptance: reflow and reduced-motion checks (Refs #619)
 
 * Extended the automated production-configuration check in `src/api/checks` with a 320 px zoom-equivalent reflow step and a reduced-motion step, with a unit test for the overflow helper, and recorded the local result and a person-run checklist in the [production acceptance protocol](research/ux/production-ux-acceptance-protocol.md).
