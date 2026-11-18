@@ -45,3 +45,10 @@ Observed for the only hazard case in the demo (`ZF-2025-0331`, Damp and mould, S
 
 * Names are synthetic demo staff. The screenshots show the first name of the signed-in account only.
 * One hazard case is a thin sample; results do not generalise to other data.
+
+## Evidence limits
+
+* `hazard-case-card.png` and `hazard-safety-block.png` are byte-identical top-of-card captures and do not show the safety clock or accountable owner lines.
+* The test counts (9 and 29) have no retained output.
+* A signed-in session file was created under /tmp during the probe, outside the repository, and is deleted; none is retained.
+* Independent exact-head review and hosted CI are outstanding; no criterion is ticked.
