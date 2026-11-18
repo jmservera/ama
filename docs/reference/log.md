@@ -13011,3 +13011,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 76 live second pass (Refs #76)
 
 * Added [issue-76-live-r2-2026-11-18.md](research/issue-76-live-r2-2026-11-18.md): masked screenshots of the hazard clock and named owner and of the queue definitions on the demo; hazard partly proven (clock Unknown), safeguarding unproven (no demo item); no source change, nothing created in Azure
+
+## [2026-11-18] add | Third live audit of nomination route (Refs #130)
+
+* Added [issue-130-live-r3-nomination-route-audit-2026-11-18.md](research/issue-130-live-r3-nomination-route-audit-2026-11-18.md): same image and 403 write defect, 105 offline tests pass, per-criterion proven or unproven table, production-only items separated; unticked representative criterion unproven; no source change, nothing created in Azure
