@@ -413,6 +413,10 @@ For #185, the [live device identity evidence](./research/issue-185-live-device-i
 records a 2026-11-18 demo run: Hub-generated symmetric device keys issued, used for sending
 and all identities removed. Durable secret storage and X.509 stay unproven.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
+
+For #109, the [live device monitoring evidence](./research/issue-109-live-device-monitoring-evidence-2026-11-18.md)
+records a 2026-11-18 demo probe of IoT Hub connection state and a connectivity metric alert.
+Hub `lastActivityTime` did not update; the #440 checkpoint and child-closure criteria stay unproven.
 For #146, the [live monitoring evidence](./research/issue-146-live-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: installed alert inventory, a fired test alert, throwaway job-failure,
 IoT and workbook deployments, and the private-link limit that blocks workbook rendering and the poison-queue proof.
