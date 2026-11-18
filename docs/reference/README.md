@@ -437,6 +437,10 @@ The runbook's Demo Routing Decision section records owner decision
 `keep_console_alerts_for_demo`: the demo keeps console log export for the
 ledger alerts and defers candidate `9c2a59f6` to production.
 
+For #115, the [live digest mismatch alert proof](./research/digest-verification-alert-live-2026-11-18.md)
+records a forced mismatch on a copy, the verifier alert marker and the fired Azure Monitor alert on the demo;
+the retention lock stays deferred to production (#1908).
+
 For finance #96/#98/#99, the
 [working field-review contract](../../src/core/README.md#unapproved-working-field-review-96-98-99)
 and [authenticated endpoint](../../src/api/README.md#working-form-review-and-held-finance-decisions-96-98-99)

@@ -12232,6 +12232,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added an [identifier leak audit](research/ux/content-standard.md#identifier-leak-audit-2026-11-17-153) section to the content standard: two snake_case identifiers shown to staff on the data steward and digital operator screens were reworded, and a lexical regression guard was added. Named-human review of resident-facing wording (criterion 5) remains unmet.
 ## [2026-11-18] update | Measured held-out AI batch run live for the demo (Refs #432)
 
+## [2026-11-18] ingest | Live digest mismatch alert proof on the demo (Refs #115)
+
+* Added [digest-verification-alert-live-2026-11-18.md](research/digest-verification-alert-live-2026-11-18.md): baseline verifier run intact, forced mismatch on a copy, `LEDGER_DIGEST_ALERT`, fired Azure Monitor alert, cleanup.
+* Mailbox delivery, the live cron schedule and the retention lock (deferred to #1908) are recorded as unproven or deferred. Indexed in the README.
 * Added [the batch note](research/ai-heldout-batch-432-live-2026-11-18.md) and its inputs and reports: 12 synthetic proposals on `gpt-4.1-nano`, 180 to 225 tokens each (2,522 total), USD 0.000744 at list price under a recorded owner spend authority (cap USD 0.50). The first attempt stopped on a network-blocked call and is preserved; the batch then ran inside the demo container.
 * Criterion 5 (billing reconciliation) stays unproven under the owner waiver; criterion 8 is met for the synthetic demo only. No source changed; #432 stays open.
 
