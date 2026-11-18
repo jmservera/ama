@@ -12255,3 +12255,15 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Tokenomics pitch criteria status (Refs #435)
 
 * Added [tokenomics-pitch-criteria-435-live-2026-11-18.md](research/tokenomics-pitch-criteria-435-live-2026-11-18.md): per-criterion record for the three unticked criteria. The finite-batch decision is proven for the synthetic demo through the #432 batch; the placement decision is recorded but deck rebuild and revalidation are not evidenced; the mentor confirmation cannot be proven. No source or Azure change.
+## [2026-11-18] add | Human-review effectiveness demo run (Refs #223)
+
+* Added [human-review-effectiveness-live-demo-2026-11-18.md](research/human-review-effectiveness-live-demo-2026-11-18.md): offline gate run, live review retention on `ca-cutover-test-demo-api` and a per-criterion table. The scripted competent panel passes and default-accept and automation-bias panels fail; no competent human, OQ-017 holder or live seeded-defect trial exists, so no #223 criterion is ticked.
+## [2026-11-18] add | Live monitoring evidence for the demo (Refs #146)
+
+* Added [issue-146-live-monitoring-evidence-2026-11-18.md](research/issue-146-live-monitoring-evidence-2026-11-18.md): per-criterion record of live alerts, a fired test alert and throwaway deployments in resource group `ama`. Poison-queue alerting, workbook rendering and named owners stay unproven; a Sev1 ledger digest mismatch alert was observed firing.
+## [2026-11-18] add | Live device identity and provisioning evidence (Refs #185)
+
+* Added [issue-185-live-device-identity-evidence-2026-11-18.md](research/issue-185-live-device-identity-evidence-2026-11-18.md): demo run with Hub-generated symmetric keys, sending and teardown on the demo hub. Durable storage and X.509 remain unproven.
+## [2026-11-18] add | Container hosting live evidence (Refs #144)
+
+* Added [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): per-criterion record of a demo probe on live Azure. Non-root and digest-pinned images observed; the pipeline run, read-only root file system and capability drop stay unproven.
