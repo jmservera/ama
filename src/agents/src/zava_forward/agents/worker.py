@@ -19,8 +19,8 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
 from zava_forward.core import telemetry
+from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
 from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 
 from zava_forward.agents.dispatch import AgentWorker, ResultSink, TaskQueue, run_once
