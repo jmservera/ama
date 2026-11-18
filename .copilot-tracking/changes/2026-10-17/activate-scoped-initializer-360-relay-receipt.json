@@ -194,7 +194,7 @@
       },
       {
         "changeType": "Ignore",
-        "resourceId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Devices/IotHubs/iot-cutover-test-rzsrg"
+        "resourceId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Devices/IotHubs/[hub]"
       },
       {
         "changeType": "Ignore",
@@ -290,7 +290,7 @@
       },
       {
         "changeType": "Ignore",
-        "resourceId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-iot-cutover-test-rzsrg.nic.5dfd506e-d1dc-41bd-9bf5-6354e31d49e7"
+        "resourceId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-[hub].nic.5dfd506e-d1dc-41bd-9bf5-6354e31d49e7"
       },
       {
         "changeType": "Ignore",
@@ -454,7 +454,7 @@
       },
       {
         "changeType": "Ignore",
-        "resourceId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateEndpoints/pe-iot-cutover-test-rzsrg"
+        "resourceId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateEndpoints/pe-[hub]"
       },
       {
         "changeType": "Ignore",

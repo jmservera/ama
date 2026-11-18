@@ -93,7 +93,7 @@ needed: both questions and relevant output shapes are directly verified.
 
 | ID | Source | Evidence |
 | --- | --- | --- |
-| C1 | infra/iot-hub-live.bicepparam:1-9 | using iot-hub-live.bicep; name iot-cutover-test-rzsrg, location uksouth, SKU B1, unitCount 1 |
+| C1 | infra/iot-hub-live.bicepparam:1-9 | using iot-hub-live.bicep; name [hub], location uksouth, SKU B1, unitCount 1 |
 | C2 | infra/tests/test_iothub_module.py:85-86 | Current assertion only checks /events/api-consumer substring |
 | C3 | infra/tests/test_bicep_policy.py:615-630 | Existing main-profile build-params coverage discovered |
 | C4 | infra/tests/test_iothub_module.py:206-213 | values helper supplies fixture hub and template defaults |
