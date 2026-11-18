@@ -12932,6 +12932,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Extended [direct-ingress-live-demo-2026-11-18.md](research/direct-ingress-live-demo-2026-11-18.md) with a 14:00 UTC measurement and per-criterion table: criteria c and e need owner decisions, d stays partly proven (AI call not reproduced today); no source change, no Azure resource created
 
+## [2026-11-18] add | Live monitoring coverage check (Refs #146)
+
+* Added [monitoring-coverage-live-146-2026-11-18.md](research/monitoring-coverage-live-146-2026-11-18.md): read-only az monitor evidence with a per-criterion table; ledger digest alerts installed, job failure, poison queue, IoT alerts and workbook absent, owners proposed only, KQL blocked by workspace network rules.
+
 ## [2026-11-18] update | Rubric src counting and mvp stop, live r2 audit (Refs #198)
 
 * Added [issue-198-rubric-live-r2-2026-11-18.md](research/issue-198-rubric-live-r2-2026-11-18.md) with retained raw outputs: no mvp or prototype glob, 949 `solution-code` files, score 79/100; criteria 3 and 4 stay unprovable; `test_safe_output_runtime.py` has 10 failures tied to a retired `mvp/` sample path and missing triggers; no workflow, registry or source change
