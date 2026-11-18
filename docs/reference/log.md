@@ -12374,3 +12374,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Live demo evidence for simulator stage 2 (Refs #184)
 
 * Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.
+## [2026-11-18] add | Phase 0 discovery evidence for the demo (Refs #124)
+
+* Added [issue-124-phase0-discovery-evidence-2026-11-18.md](research/issue-124-phase0-discovery-evidence-2026-11-18.md): contract rules and synthetic-pack coverage recorded offline (no live Azure surface exists); sponsor nomination, dictionary validation and the evidence-backed constraint register cannot be proven for the demo and stay unticked.
