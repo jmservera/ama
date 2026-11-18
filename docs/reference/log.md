@@ -13246,3 +13246,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 1818 receiver sensor_register fix (Refs #1818)
 
 * Added [issue-1818-sensor-register-receiver-fix-2026-11-18.md](research/issue-1818-sensor-register-receiver-fix-2026-11-18.md): the held fix as a candidate, focused test results, and a per-criterion table. The full gate was not run because the heavy lock was held.
+## [2026-11-18] add | Issue 203 checker exemption (Refs #203)
+
+* Added [issue-203-checker-live-evidence-2026-11-18.md](research/issue-203-checker-live-evidence-2026-11-18.md): the legacy-reference checker exempts three regression-test files and dated live-evidence notes (47 violations to 0, 8 tests pass); criterion 1 stays unproven pending owner agreement and criterion 5 stays partly proven.
+
+## [2026-11-18] add | RPI gate preflight and timing tools re-created (Refs #1830)
+
+* Re-created `tools/rpi-preflight.py`, `tools/rpi-gate-timing.py`, their two unit test files and the [method](method/rpi-gate-preflight.md) from retained candidate `a2c27fda6`, and recorded a per-criterion audit in [issue-1830-live-r2-tools-2026-11-18.md](research/issue-1830-live-r2-tools-2026-11-18.md). The preflight still refuses all selected execution (exit 5); no gate file changed, no full gate run, no live Azure. No #1830 criterion is ticked.
