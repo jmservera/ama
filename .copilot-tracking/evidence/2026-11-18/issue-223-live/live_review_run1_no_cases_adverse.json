@@ -1,0 +1,41 @@
+{
+ "me": {
+  "status": 200,
+  "role": "Retrofit Programme Manager"
+ },
+ "cases": {
+  "status": 200,
+  "count": 0
+ },
+ "case_id": null,
+ "runs": {
+  "workflow_only": {
+   "status": 403,
+   "keys": [
+    "_text_len"
+   ],
+   "source": null,
+   "model": null,
+   "verified": null,
+   "rec_status": null,
+   "id": null,
+   "citations": null,
+   "shown_output": "None",
+   "err": null
+  },
+  "ai_default": {
+   "status": 403,
+   "keys": [
+    "_text_len"
+   ],
+   "source": null,
+   "model": null,
+   "verified": null,
+   "rec_status": null,
+   "id": null,
+   "citations": null,
+   "shown_output": "None",
+   "err": null
+  }
+ }
+}
