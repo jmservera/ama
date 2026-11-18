@@ -1,0 +1,10 @@
+# smoke live (host omitted)
+Post-deployment health and all three authentication-denial checks passed
+exit $?
+# smoke unreachable
+pipeline.PipelineError: Post-deployment health check failed; expected HTTP 200
+# unit tests
+OK
+Post-deployment health and all three authentication-denial checks passed
+Post-deployment health and all three authentication-denial checks passed
+Post-deployment health and all three authentication-denial checks passed

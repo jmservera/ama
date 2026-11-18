@@ -418,6 +418,8 @@ cases carry a safeguarding item, so that half stays unproven without writing dem
 For #96, the [live form schema approval evidence](./research/issue-96-live-form-schema-approval-evidence-2026-11-18.md)
 records that the demo holds no registered schema and no shipped path records
 an approval, so the approved-schema criterion stays unproven.
+The [third run](./research/issue-96-live-r3-reverification-2026-11-18.md) repeats the
+read-only probe and keeps the raw test and search output; the criterion stays unproven.
 For #80, the [staged transition thresholds evidence](./research/issue-80-live-transition-thresholds-evidence-2026-11-18.md)
 records that the one unticked criterion, owner-set thresholds, is a human decision and
 cannot be proven for the demo; 125 importer tests passed.
@@ -459,6 +461,7 @@ The [third audit](./research/issue-130-live-r3-nomination-route-audit-2026-11-18
 unchanged image, adds 105 offline tests and a per-criterion table, and separates production-only items.
 The [fourth audit](./research/issue-130-live-r4-nomination-route-audit-2026-11-18.md) sees a new revision on the
 same image digest, the same 403 write refusal, and explains the form-encoded 400 as a JSON-only API.
+The [fifth audit](./research/issue-130-live-r5-nomination-route-audit-2026-11-18.md) finds the same revision, image and 403, and adds a resident-app route check.
 For #124, the [Phase 0 discovery evidence](./research/issue-124-phase0-discovery-evidence-2026-11-18.md)
 records a 2026-11-18 offline and synthetic-data run: nomination, endpoint, dictionary and two-sided
 constraint rules proven in code, and the three unticked criteria stated as needing sponsor, owner
@@ -525,6 +528,9 @@ environments, runner and image release remain unconfigured and unobserved.
 A [third run](./research/issue-138-live-r3-2026-11-18.md) retains sanitised raw outputs, finds that
 `summarize_plan` refuses the live what-if (14 Unsupported entries) and gives a per-criterion proven or unproven table;
 nothing is ticked.
+
+A [fourth run](./research/issue-138-live-r4-2026-11-18.md) repeats the probes with retained output and finds
+the same state (0 federated credentials, 0 runners, no protected environments, 0 `src-deploy.yml` runs); nothing is ticked.
 
 For #118, the [hardened deployment live evidence](./research/issue-118-hardened-deployment-live-evidence-2026-11-18.md)
 records the Azure Policy and Defender decision and read-only live probes (enactment not proven).
@@ -1350,6 +1356,7 @@ or infra acceptance claimed.
 | [Entra roles and field-level visibility live demo evidence (#116)](./research/issue-116-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the four unticked criteria: reason-role enforcement observed for one role, AI refusal observed, document hold and provider payloads not provable live, four boxes stay unticked |
 | [Assisted form workspace live demo evidence (#96)](./research/issue-96-live-demo-evidence-2026-11-18.md) | Per-criterion demo record: the deployed demo holds no registered schema and no code path approves one, so criterion 1 stays unticked; the other five rest on offline tests |
 | [Entra roles and field-level visibility live demo evidence, round 2 (#116)](./research/issue-116-live-r2-evidence-2026-11-18.md) | Second live pass: reason strings absent from exports, proposals, AI report and audit surfaces for the one reason role; second role unobtainable without directory privilege; four boxes stay unticked |
+| [Entra roles and field-level visibility live demo evidence, round 3 (#116)](./research/issue-116-live-r3-evidence-2026-11-18.md) | Third live pass: read-only sweep of 88 GET paths for the one reason role finds no reason value; offline role, provider-spy and document tests re-run; four boxes stay unticked |
 | [Data protection, retention and rights live demo evidence (#121)](./research/issue-121-live-data-protection-evidence-2026-11-18.md) | Per-criterion demo record for the eight unticked criteria: live register, model location and retention settings read; deployed register older than source; approvals deferred to #1906 to #1908 |
 | [Map tile provider and accessible list live demo evidence (#119)](./research/issue-119-live-map-evidence-2026-11-18.md) | Per-criterion demo record: deployed public OSM tile provider, policy re-read, list alternative, keyboard and tile-failure proofs; no screen reader run, no licensed provider |
 | [Map tile provider and accessible list live demo evidence, second run (#119)](./research/issue-119-live-r2-map-evidence-2026-11-18.md) | Repeat live proof of the deployed OSM provider, list alternative and keyboard path; vendor pages re-read; production-only items separated; no screen reader run, no licensed provider |
@@ -1397,6 +1404,7 @@ or infra acceptance claimed.
 | [Chat Storage Approval for the Synthetic-Data Demo](./research/chat-demo-storage-approval-2026-11-01.md) | Owner decision 2026-11-01 enabling chat storage for the synthetic-data demo only: DPIA, lawful basis, notice and 30-day retention references the deploy settings point to. Not a production or real-data approval; #163 criteria 2 and 5 stay deferred | 2026-11-01 |
 | [Azure SQL Ledger Load, Restore and Deletion Evidence (Demo)](./research/sql-ledger-live-2026-11-18.md) | Live measured evidence for #114 on the synthetic demo: 30-minute five-session load against PRD limits, cost estimate, point-in-time restore with deletion re-application (DH-005), and the per-year ledger verification gap in the deployed image | 2026-11-18 |
 | [Azure SQL Ledger Tamper Evidence and Per-Year Verification Rerun (Demo)](./research/sql-ledger-live-r2-2026-11-18.md) | Second live run for #114: tamper detection on live audit entries (edit, delete, reorder, truncate, digest), per-year sealing, native ledger check blocked by permission, per-criterion record | 2026-11-18 |
+| [Issue 114 Live Re-verification (Demo)](./research/issue-114-live-reverify-2026-11-18.md) | Per-criterion re-check of #114: 62 local tests pass for per-year verification; deployed image lacks the reliance gate, so the live criterion stays unproven | 2026-11-18 |
 | [Easy Auth Intermittent 500s Under Concurrency](./research/easy-auth-intermittent-500-2026-11-03.md) | Empty-body 500s on the cutover test demo API (issue 810): ingress `Http` was insufficient; sidecar logs and stub A/B isolate the API's HTTP/1.0 close-per-response as the cause, fixed in source, deployed (image 4d56cf609) and verified live (0 x 500 in about 1,300 further requests, including signed-in resident traffic; staff-token burst still open) | 2026-11-04 |
 | [Deployed Demo Parity Proof, Live Run 2026-11-18](./research/deployed-parity-live-2026-11-18.md) | Per-criterion proven and unproven results for the unticked issue 350 criteria on the synthetic demo (Playwright and Azure CLI): browser API 302 still failing, models and OSM map configured, assistants release-gated, law store and photo deferred, time status 500 defect. |
 | [Deployed Demo Parity Proof, Live Run 2 2026-11-18](./research/deployed-parity-live-r2-2026-11-18.md) | Re-measurement of the ten unticked issue 350 criteria with retained raw output: browser API 302 still failing, 16 assets served (8 older than head), ledger 1,722 entries, CSV own-queue 133 versus list 16, time status 500 reproduced, law store and photo deferred. |
@@ -1404,6 +1412,7 @@ or infra acceptance claimed.
 | [Plain-language copy audit on the live demo (#153)](./research/plain-language-live-153-2026-11-18.md) | Playwright audit of status names, errors and AI labels on the synthetic demo against the content standard; five open findings and a per-criterion proven/unproven table. Named human wording review stays unproven. |
 | [Content audit of deployed demo screens, second run (#153)](./research/content-audit-live-153-2026-11-18.md) | Playwright audit of 43 redacted staff and resident screens, case-page tabs included, findings N1 to N6 and per-criterion result; human-review criterion stays unproven |
 | [Content re-check and per-criterion audit, third run (#153)](./research/content-recheck-153-live-2026-11-18.md) | Fresh live probes of Finance, case tab and API error bodies; R1 to R7 findings; named-reviewer criterion unproven, three ticked criteria partly proven |
+| [Content re-check, fourth run (#153)](./research/content-recheck-153-live-r4-2026-11-18.md) | Repeat live probes on revision 0000032 match the third run; per-criterion table; named wording review still unproven |
 | [Human-review effectiveness demo evidence (#223)](./research/human-review-live-223-2026-11-18.md) | Offline harness, targeted tests and a live review-record probe on the synthetic demo; per-criterion proven/unproven table. Real-reviewer competence, measured effort and OQ-017 authority stay unproven. |
 | [Cut-over Gate Demo Proof, Live Run 2026-11-18](./research/cutover-gate-live-2026-11-18.md) | Per-criterion results for the three unticked issue 201 criteria: repointing and healthy revision proven, src build provenance unproven (private registry), mvp/data (archive v0.21.0) and sign-off owner-only, legacy-reference checker failing on three test files. |
 | [Cut-over Gate Demo Proof, Second Live Run 2026-11-18](./research/cutover-gate-live-r2-2026-11-18.md) | Second per-criterion table for issue 201: in-container proof that the running image holds only the three src distributions; build-run record still absent; mvp/data and sign-off owner-only; legacy-reference violations grew to 45. |
