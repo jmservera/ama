@@ -13,7 +13,7 @@ Files: research note `docs/reference/research/issue-155-live-usability-programme
 | --- | --- | --- |
 | Test plan names tasks, participants, accessibility support, consent, data handling | Proven (already ticked) | Plan file present; 15 core usability tests pass |
 | Task scripts derive from journey contract and bundles | Proven (already ticked) | Same |
-| Measures aggregate only; audit-use statement agreed with staff first (SA-010) | Unproven | Code gate refuses unagreed runs and tests pass, but staff agreement needs named human staff; production-only. Demo shows no measures surface (route probes uninformative: control also 403) |
+| Measures aggregate only; audit-use statement agreed with staff first (SA-010) | Unproven | Code gate refuses unagreed runs and tests pass, but staff agreement needs named human staff; production-only. Route probes uninformative (control also 403) |
 | Findings logged with severity and linked to backlog | Proven (already ticked) | Code and plan present |
 | Negative and inconclusive outcomes; synthetic walkthroughs labelled | Proven (already ticked) | Plan states the label |
 

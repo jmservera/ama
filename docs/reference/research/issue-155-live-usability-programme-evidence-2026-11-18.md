@@ -54,9 +54,7 @@ masks cells below five). The other part needs a named human staff
 representative to agree the audit-use statement before any measure is
 reported. The demo has no real staff, and the owner has ruled
 representative-user sessions production-only. The agreement record in the plan
-stays blank (`Not agreed`) and is left so. The live demo shows no usability
-measures surface to the test employee, which is consistent with nothing being
-reported but does not prove it, given the uninformative probes above.
+stays blank (`Not agreed`) and is left so.
 
 ## Limits
 
