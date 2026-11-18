@@ -527,6 +527,9 @@ A [third run](./research/issue-138-live-r3-2026-11-18.md) retains sanitised raw 
 `summarize_plan` refuses the live what-if (14 Unsupported entries) and gives a per-criterion proven or unproven table;
 nothing is ticked.
 
+A [fourth run](./research/issue-138-live-r4-2026-11-18.md) repeats the probes with retained output and finds
+the same state (0 federated credentials, 0 runners, no protected environments, 0 `src-deploy.yml` runs); nothing is ticked.
+
 For #118, the [hardened deployment live evidence](./research/issue-118-hardened-deployment-live-evidence-2026-11-18.md)
 records the Azure Policy and Defender decision and read-only live probes (enactment not proven).
 A [rerun](./research/issue-118-live-20261118T1512Z-2026-11-18.md) retains sanitised raw outputs and adds a per-criterion table;

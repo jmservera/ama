@@ -13184,6 +13184,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-129-live-r3-2026-11-18.md](research/issue-129-live-r3-2026-11-18.md): 26 core and 6 api bundle tests pass, report CLI refusal check, signed-in probe of revision 0000032 finds no bundle route; Atlas-owner mapping confirmation stays unproven. Docs only.
 
+## [2026-11-18] add | Issue 138 live fourth run (Refs #138)
+
+* Added [issue-138-live-r4-2026-11-18.md](research/issue-138-live-r4-2026-11-18.md): fresh read-only and what-if probes find no federated credentials, runners, protected environments or deploy runs; live smoke passes and fails closed when unreachable; no criterion ticked. Docs only.
+
 ## [2026-11-18] add | Issue 130 live fifth audit (Refs #130)
 
 * Added [issue-130-live-r5-nomination-route-audit-2026-11-18.md](research/issue-130-live-r5-nomination-route-audit-2026-11-18.md): same revision 0000032 and image digest, same live 403 write refusal and form-encoded 400, 83 offline tests pass, resident app exposes no nomination or challenge route; representative participation stays unproven for the demo. Docs only.
