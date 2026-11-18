@@ -12737,6 +12737,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Employee loading feedback and Today's briefing live demo evidence (Refs #531)
 
 * Added [issue-531-live-demo-evidence-2026-11-18.md](research/issue-531-live-demo-evidence-2026-11-18.md): signed-in employee session on the live demo shows the static loading shell, per-panel feedback, briefing labels, sources, refresh time, outcome-based review wording with required reasons, and axe 0 violations. Cold start, script retry and unverified output were simulated in the browser; no review was recorded; the live `app.js` and `style.css` trail main by two days but not in briefing or loading code. Criterion 7 is proven for the demo with stated limits. No source changed.
+
 ## [2026-11-18] assessment | Issue 441 resident portal documentation status (Refs #441)
 
 * Added [resident-portal-441-live-status-2026-11-18.md](research/resident-portal-441-live-status-2026-11-18.md): criterion 5 (FR-044/AC-084 owner disposition) stays unproven for the demo because the 2026-11-02 direction says demo display does not satisfy it and no named disposition exists. The other eight ticked criteria were not re-assessed.
