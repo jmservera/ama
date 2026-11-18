@@ -12381,6 +12381,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.
 
+## [2026-11-18] add | Issue 155 usability programme live evidence (Refs #155)
+
+* Added [issue-155-live-usability-programme-evidence-2026-11-18.md](research/issue-155-live-usability-programme-evidence-2026-11-18.md): the SA-010 criterion stays unproven for the demo because it needs named staff agreement; the code gate refusal and a read-only live check (the signed-in workbench was not captured) are recorded. No source changed.
 ## [2026-11-18] update | Container hosting live evidence second run (Refs #144)
 
 * Updated [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): repeated probes show non-root only; the root file system is writable, `ZF_CONTAINER_HARDENING` is absent from every deployed app and job, and no `src-deploy.yml` run exists. Criteria 1 and 3 stay unticked.
