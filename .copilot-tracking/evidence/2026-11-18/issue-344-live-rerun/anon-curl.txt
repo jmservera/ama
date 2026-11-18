@@ -1,0 +1,10 @@
+/healthz 200
+/readyz 404
+/ 200
+/welcome.html 200
+/api/me 401
+/api/cases 401
+/app 401
+/workspace-shell.js 401
+browser-UA json /api/me 302 https://login.microsoftonline.com/<tenant-id>/oauth
+http->https 301
