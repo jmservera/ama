@@ -1,0 +1,52 @@
+{
+ "task_id": "issue-128-live",
+ "task_slug": "issue-128-live",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "complete",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-18-issue-128-live-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-18-issue-128-live-plan.md",
+  "details": ".copilot-tracking/details/2026-11-18-issue-128-live-details.md",
+  "critique": ".copilot-tracking/critiques/2026-11-18-issue-128-live-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-18-issue-128-live-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-18-issue-128-live-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Demo only, desktop; live Azure authorised rg ama cap USD 700; docs/evidence only; Tier FOCUSED",
+   "status": "confirmed",
+   "evidence": "Owner decisions 2026-11-18"
+  },
+  {
+   "decision": "Research executed; Ready",
+   "status": "recorded",
+   "evidence": "research file"
+  },
+  {
+   "decision": "Critique executed once; proceed; findings applied",
+   "status": "recorded",
+   "evidence": ".copilot-tracking/critiques/2026-11-18-issue-128-live-critique.md"
+  },
+  {
+   "decision": "Review executed once; conformant docs-only",
+   "status": "recorded",
+   "evidence": ".copilot-tracking/reviews/2026-11-18-issue-128-live-review.md"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "Coordinator publishes"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Named human agreement of protocol and audit-use statement",
+   "rationale": "Only route to tick the criterion",
+   "evidence": "equity-journey-test-plan.md"
+  }
+ ]
+}

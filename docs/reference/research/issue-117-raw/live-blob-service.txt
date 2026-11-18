@@ -1,0 +1,35 @@
+{
+  "automaticSnapshotPolicyEnabled": null,
+  "changeFeed": null,
+  "containerDeleteRetentionPolicy": {
+    "allowPermanentDelete": null,
+    "days": 30,
+    "enabled": true
+  },
+  "cors": {
+    "corsRules": []
+  },
+  "defaultServiceVersion": null,
+  "deleteRetentionPolicy": {
+    "allowPermanentDelete": false,
+    "days": 30,
+    "enabled": true
+  },
+  "isVersioningEnabled": true,
+  "lastAccessTimeTrackingPolicy": null,
+  "name": "default",
+  "resourceGroup": "ama",
+  "restorePolicy": null,
+  "sku": {
+    "name": "Standard_LRS",
+    "tier": "Standard"
+  },
+  "staticWebsite": {
+    "defaultIndexDocumentPath": null,
+    "enabled": false,
+    "errorDocument404Path": null,
+    "indexDocument": null
+  },
+  "systemData": null,
+  "type": "Microsoft.Storage/storageAccounts/blobServices"
+}
