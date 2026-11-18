@@ -70,3 +70,11 @@ Observation, not a defect claim: the response carried `Content-Security-Policy`,
 * Expiry of a live session after 1,800 seconds was not waited out; the cookie lifetime was read and expiry is covered by the domain tests.
 * Source commit behind the deployed digest: registry reachable only from the private network.
 * Production identity, resident enrolment, Legal or DPO approval, assistive-technology and mobile checks: out of scope for the synthetic desktop demo by owner decision.
+
+## Evidence limits
+
+* Five screenshots are committed, not four. They show only the fake demo address, and the filled-form shot masks both fields.
+* The cost figures, revision, image digest and role assignments were read live and are not retained in `live-checks.json`.
+* The retained JSON shows status codes 401 and 429 and the query-parameter overrides; the fifth-failure 429 detail and the header-override tests are operator-observed, not retained.
+* The retained JSON also records a `phone` canary hit that this note does not otherwise discuss.
+* Criteria 1, 2 and 6 stay open; #462 is not closed by this record.
