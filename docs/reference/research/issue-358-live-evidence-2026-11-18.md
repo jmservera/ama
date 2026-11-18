@@ -52,3 +52,10 @@ or stored. Evidence is in `issue-358-live-2026-11-18/`.
 | 3. Conflict with #352, delegating `main()` kept | Not re-tested here | Recorded as delivered by #374; no re-verification attempted |
 
 Key Vault secret rotation and any production app were not touched.
+
+## Evidence limits
+
+* `post-delete-check.txt` is empty, so the deletion of the throwaway app has no retained output; treat the deletion claim as an unverified observation.
+* The mutation output keeps only its tail; the baseline of 126 passing tests and the restored empty diff are not retained.
+* Run 1 is described, not retained; `roundtrip.py` is the corrected run 2 script.
+* The retained output includes an Azure subscription identifier and a Key Vault URL; neither is a secret.
