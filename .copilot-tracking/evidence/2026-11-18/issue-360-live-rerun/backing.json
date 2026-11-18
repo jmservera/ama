@@ -31,7 +31,7 @@ Disabled
 ]
 [
   {
-    "n": "iot-cutover-test-rzsrg",
+    "n": "[hub]",
     "pna": "Disabled"
   }
 ]

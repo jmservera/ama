@@ -13135,3 +13135,34 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 146 live closure re-verification (Refs #146)
 
 * Added [issue-146-live3-monitoring-closure-2026-11-18.md](research/issue-146-live3-monitoring-closure-2026-11-18.md) with a raw folder: installed alerts, fired alerts, job-failure rule shape comparison on fresh failures (Maximum did not fire, Total did), queue diagnostic setting, IoT signal, and Playwright proof of in-app AI usage by capability with unreconciled state. Three throwaway rules and one job from an earlier worker were deleted. No criterion is ticked.
+## [2026-11-18] add | Issue 117 live third pass (Refs #117)
+
+* Added [issue-117-live-r3-closure-2026-11-18.md](research/issue-117-live-r3-closure-2026-11-18.md) and its raw folder: two unsafe uploads refused live again with the document list unchanged (5 and 5), 64 offline tests pass, Defender malware scanning on upload still enabled on the demo account. The real-engine path stays unproven because `ZF_SCANNER=defender` was not set on the demo API; no source, Azure resource or criterion change.
+
+## [2026-11-18] add | Issue 119 live run 4 (Refs #119)
+
+* Added [issue-119-live-r4-map-evidence-2026-11-18.md](research/issue-119-live-r4-map-evidence-2026-11-18.md): fresh live probe on revision `--0000032`, full re-read of the OSMF tile policy and copyright page. Both criteria stay unticked (no licensed provider, no screen reader run). Named screenshots removed; no source change.
+
+## [2026-11-18] add | Coordinator contract criteria audit (Refs #1204)
+
+* Added [coordinator-contract-criteria-1204-live-2026-11-18.md](research/coordinator-contract-criteria-1204-live-2026-11-18.md): per-sub-claim record for the one unticked criterion. Instruction text and guard tests are proven on main; runtime liveness over all ticks is unproven for the demo. No agent-file change.
+
+## [2026-11-18] add | Issue 1258 live closure run 2 (Refs #1258)
+
+* Added [issue-1258-live-closure-r2-2026-11-18.md](research/issue-1258-live-closure-r2-2026-11-18.md) with a raw folder: real ext4 `strace` first-publication syscall order, a kernel-injected fsync EIO giving `DurabilityUnconfirmedError` with the record kept, 110 passing tests, and an observed hosted-check gap. Criteria 1 to 4 proven (offline or real syscall); criterion 5 unproven; no source change, no Azure resource
+
+## [2026-11-18] add | Issue 223 live run 2 (Refs #223)
+
+* Added [issue-223-live-r2-2026-11-18.md](research/issue-223-live-r2-2026-11-18.md): offline gate and 43 focused tests pass again, live review retention re-proved on `ca-cutover-test-demo-api`, per-criterion table unchanged (no criterion ticked; OQ-017 holder, human participants and live-model defects remain open). No source change.
+
+## [2026-11-18] add | Issue 1830 live audit (Refs #1830)
+
+* Added [issue-1830-live-20261118T1648Z-2026-11-18.md](research/issue-1830-live-20261118T1648Z-2026-11-18.md): timing reports from seven retained full receipts, 54 candidate tests passing on unmerged branch `ci/gate-preflight-benchmark-1830`; no criterion ticked. No source change.
+
+## [2026-11-18] add | Issue 185 fifth live re-verification (Refs #185)
+
+* Added [issue-185-live-r5-reverification-2026-11-18.md](research/issue-185-live-r5-reverification-2026-11-18.md): demo hub reports zero devices, no 185 job or role assignment remains, retained logs and repository scan show no key text, 36 focused tests pass; durable storage, X.509 and scale stay unproven.
+
+## [2026-11-18] add | Issue 129 live third pass (Refs #129)
+
+* Added [issue-129-live-r3-2026-11-18.md](research/issue-129-live-r3-2026-11-18.md): 26 core and 6 api bundle tests pass, report CLI refusal check, signed-in probe of revision 0000032 finds no bundle route; Atlas-owner mapping confirmation stays unproven. Docs only.

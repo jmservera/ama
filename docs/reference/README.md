@@ -430,7 +430,8 @@ re-run. The production X.509 receiver and indoor schema stay unproven.
 For #185, the [live device identity evidence](./research/issue-185-live-device-identity-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: Hub-generated symmetric device keys issued, used for sending
 and this run's identities removed (run 3 adds the home-to-device mapping). Durable secret storage and X.509 stay unproven; a [fourth audit](./research/issue-185-live-r4-audit-2026-11-18.md)
-re-ran the repository tests and read the hub at zero devices.
+re-ran the repository tests and read the hub at zero devices; a [fifth re-verification](./research/issue-185-live-r5-reverification-2026-11-18.md)
+repeats the hub read, log and repository scans and tests without creating identities.
 For #110, the [live IoT identity evidence](./research/issue-110-live-iot-identity-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: three distinct Hub identities sent schema-versioned readings with
 stable IDs, read back from Event Hub; production X.509 receiver stays unproven.
@@ -449,6 +450,7 @@ records a 2026-11-18 local run of 32 existing tests with raw output retained: bu
 proven for constructed cases only, atlas-owner mapping confirmation unproven.
 The [second pass](./research/issue-129-live-r2-2026-11-18.md) reruns the suites and adds a signed-in
 Playwright probe of the demo showing no discoverable bundle screen or route; the atlas-owner item stays unproven.
+The [third pass](./research/issue-129-live-r3-2026-11-18.md) adds a stdin report CLI refusal check and a probe of revision 0000032; the atlas-owner item stays unproven.
 The [second run](./research/issue-130-live-r2-nomination-route-evidence-2026-11-18.md) retains raw output,
 confirms the same image and 403 defect, and keeps the criterion unproven.
 The [third audit](./research/issue-130-live-r3-nomination-route-audit-2026-11-18.md) repeats the probe on the
@@ -497,6 +499,9 @@ A [second pass](./research/issue-146-live2-monitoring-evidence-2026-11-18.md) re
 For #1258, the [archive ancestor durability evidence](./research/issue-1258-archive-ancestor-durability-2026-11-18.md)
 records that main already syncs new archive ancestors before confirming; criteria 1-4 are proven offline and criterion 5 is a process gate.
 
+A [second run](./research/issue-1258-live-closure-r2-2026-11-18.md) adds real ext4 `strace` syscall order and a kernel-injected fsync EIO
+for the first publication; criterion 5 stays unproven for the demo and no crash proof is claimed.
+
 For #189, the [simulator run controls live evidence](./research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo check of the budget alerts, hub owner tag and deterministic owner, time-limit and alert controls; no simulator job is deployed.
 A [second pass](./research/simulator-run-controls-live-189-2026-11-18.md) adds a signed-in probe of the deployed admin endpoint (403 for staff; no administrator role granted), an offline start, stop and capacity exercise with raw output, and the USD 5.16 observed spend.
@@ -525,7 +530,9 @@ For #117, the [live scan evidence](./research/issue-117-live-scan-evidence-2026-
 proves refusal of unsafe uploads on the demo's synthetic scanner (Defender for Storage is off; clean path and legal hold
 live unproven). A [second pass](./research/issue-117-live-r2-audit-2026-11-18.md) corrects that reading: Defender
 for Storage malware scanning is enabled on the demo account, but the app still runs the synthetic scanner
-(`ZF_SCANNER` unset), so the real engine stays unproven for the app path.
+(`ZF_SCANNER` unset), so the real engine stays unproven for the app path. A
+[third pass](./research/issue-117-live-r3-closure-2026-11-18.md) reconfirms both results and records why the
+`ZF_SCANNER=defender` change was not made for the demo.
 
 For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analysis-live-evidence-2026-11-18.md)
 records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human
@@ -1315,7 +1322,9 @@ or infra acceptance claimed.
 | [Phase 0 Retrofit-Flow Discovery Contract and Governance Guard](./research/company/phase0-retrofit-flow-discovery-contract.md) | Deterministic `src/core` Phase 0 discovery contract (`discovery_contract`, `discovery_register`, `discovery_flow`) for Issue #124 and `BG-011`: human discovery-owner nomination and `accepted handover` endpoint gate, 15-state / 15-event PAS 2035 lifecycle dictionary (grounded in BSI overview snapshot; licensed PAS 2035 text not held), non-imputed flow/wait/loop evaluation, ranked constraint register requiring both `supporting_evidence` and `contradicting_evidence`, and fail-closed `owner_validated=False` / `candidate_hypothesis_not_company_finding` guard. Live Zava North Homes nomination, domain validation and 12-month extract remain open human gates | 2026-11-15 |
 | [Cohort and Missing-Data Evaluation Review Pack](./research/evaluation/cohort-evaluation-review-pack.md) | DRAFT, unapproved, not executed owner review pack for issue #222 (v0.2.0 correction returned for owner approval): synthetic paired-scenario manifest, proposed held-out custody and independent reviewer protocol (roles unfilled), sample-size, error-rule and uncertainty options, critical-error and review-burden handling, Unknown-support policy proposal, AC traceability and owner checklist; no fairness evidence | 2026-10-20 |
 | [Tokenomics pitch criteria status (#435)](./research/tokenomics-pitch-criteria-435-live-2026-11-18.md) | Per-criterion proven or unproven record for the three unticked criteria: placement decision proven but deck revalidation not evidenced, mentor confirmation unprovable, finite batch decision proven for the synthetic demo via #432 |
+| [Coordinator contract criteria (#1204)](./research/coordinator-contract-criteria-1204-live-2026-11-18.md) | Per-sub-claim proven or unproven record for the unticked liveness criterion: instruction text and guard tests proven on main, runtime liveness over all ticks unproven for the demo |
 | [Learning-test bundles live audit, second pass (#129)](./research/issue-129-live-r2-2026-11-18.md) | Core and api bundle suites rerun with raw output, signed-in probe of the demo for a bundle route (none discoverable, 403 control), per-criterion table; Atlas-owner mapping unproven |
+| [Learning-test bundles live audit, third pass (#129)](./research/issue-129-live-r3-2026-11-18.md) | Suites rerun (26 and 6), CLI refusal check, signed-in probe of revision 0000032; Atlas-owner mapping unproven |
 | [Stabilization checkpoint triage, epic gating and verdicts (#440)](./research/stabilization-checkpoint-triage-440-live-2026-11-18.md) | Four deduplicated issue drafts with severity, reproduction, links and acceptance criteria, the epics each blocking finding gates, and a continue, fix or pivot verdict for the 16 open epics; live re-observation of the time status 500 and anonymous 302 |
 | [Epic 195 demo proof, per-criterion results](./research/issue-195-live-epic-evidence-2026-11-18.md) | Proven and unproven results for the three unticked epic criteria (checkpoint, child issues, deployed image provenance) and the legacy-reference guard fix for triage draft D2, held back as FULL tier |
 | [Nomination test bootstrap isolation proof (#1847)](./research/nomination-bootstrap-isolation-proof-1847-2026-11-18.md) | Per-criterion proven or unproven record for the six criteria: source, editable and noneditable layouts in both orders, identity and origin probes, the original bootstrap failing (1 failure, 20 errors), and the unrun full gate |
@@ -1339,6 +1348,7 @@ or infra acceptance claimed.
 | [Data protection, retention and rights live demo evidence (#121)](./research/issue-121-live-data-protection-evidence-2026-11-18.md) | Per-criterion demo record for the eight unticked criteria: live register, model location and retention settings read; deployed register older than source; approvals deferred to #1906 to #1908 |
 | [Map tile provider and accessible list live demo evidence (#119)](./research/issue-119-live-map-evidence-2026-11-18.md) | Per-criterion demo record: deployed public OSM tile provider, policy re-read, list alternative, keyboard and tile-failure proofs; no screen reader run, no licensed provider |
 | [Map tile provider and accessible list live demo evidence, second run (#119)](./research/issue-119-live-r2-map-evidence-2026-11-18.md) | Repeat live proof of the deployed OSM provider, list alternative and keyboard path; vendor pages re-read; production-only items separated; no screen reader run, no licensed provider |
+| [Map tile provider and accessible list live demo evidence, fourth run (#119)](./research/issue-119-live-r4-map-evidence-2026-11-18.md) | Fresh live probe, full re-read of the OSMF tile policy and copyright page; demo provider terms proven, licensed provider and screen reader run unproven; production-only items listed |
 | [Chat grounding and human-review boundaries live demo evidence (#164)](./research/issue-164-live-chat-grounding-evidence-2026-11-18.md) | Per-criterion demo record for the five unticked criteria: task registered and disabled, thresholds proposed not approved, three live asks answered by rules with zero model calls, human exercises and approvals unproven |
 | [Chat grounding live demo evidence, second pass (#164)](./research/issue-164-live-chat-grounding-evidence-r2-2026-11-18.md) | Chat widget driven in Playwright with grounded, abstention, approve, diagnose, consent, contact and injection asks; raw output and labelled screenshots retained; refusal routes shown for three asks; contact ask fell back without a refusal route; criteria 1, 2 and 4 partly proven, 3 unproven |
 | [Chat grounding live demo audit, third pass (#164)](./research/issue-164-live-chat-grounding-evidence-r3-2026-11-18.md) | Re-run of the live widget probe and registry read on the same revision; unchanged findings, per-criterion table and production-only items |
@@ -1397,6 +1407,7 @@ or infra acceptance claimed.
 | [Issue 200 Live Audit, Container Criterion](./research/issue-200-live-20261118T1618Z-2026-11-18.md) | Second audit of issue 200: live exec proof of non-root, no-data containers on the demo API and resident app, 52-revision history with historical tags; criterion 3 parts a to c proven, fresh tag deployment not performed |
 | [Issue 202 Live Audit, Archive Tag and Legacy Deletion](./research/issue-202-live-20261118T1643Z-2026-11-18.md) | Audit of issue 202: registry-first ordering proven (#302 before #499), `v0.21.0` published, no tracked legacy files; the two `mvp-*` workflow files remain dispatch-only and disabled and the active ruleset requires no checks, so the workflow criterion is not fully proven; no source change |
 | [Issue 470 Live Audit, Faster Local Gate](./research/issue-470-live-20261118T1639Z-2026-11-18.md) | Per-criterion audit of issue 470: 109 gate tests pass proving criteria 1, 2, 3 and 5; criterion 4 (measured full-run before/after) unproven because the full gate was not run |
+| [Issue 1830 Live Audit, Gate Preflight and Timing](./research/issue-1830-live-20261118T1648Z-2026-11-18.md) | Per-criterion audit of issue 1830 with timing reports from seven retained full receipts; criteria 1 and 3 partly evidenced, 2 and 4 unproven (the preflight candidate refuses all selected execution); no source change |
 | [Issue 349 Tenant Prerequisites, Live Demo Re-verification](./research/issue-349-tenant-prerequisites-live-2026-11-18.md) | Issue 349: per-criterion proven/unproven status from read-only Azure checks (auth config, vault path, private endpoint) and Playwright runs with the test sign-in |
 | [Issue 349 Tenant Prerequisites, Live Demo Round 3](./research/issue-349-tenant-prerequisites-live-r3-2026-11-18.md) | Issue 349: third live check adding the Entra authorize redirect URI, fresh curl and browser results and read-only vault and Easy Auth facts; per-criterion status |
 | [WCAG 2.2 Automated Evidence on the Live Demo Workbench](./research/issue-151-live-wcag-axe-evidence-2026-11-18.md) | Issue 151: axe-core 4.10.3 and keyboard scans of 13 workbench screens on the demo as the Programme Manager role, per-criterion status, limits and follow-ups |
@@ -1428,6 +1439,7 @@ or infra acceptance claimed.
 | [Public Browser Access on the Deployed Demo, Rerun](./research/public-browser-access-live-rerun-2026-11-18.md) | Issue 344 second live pass: reproduced curl, Playwright sign-in and private SQL results, new policy exemption check, per-criterion status |
 | [Public Browser Access on the Deployed Demo, Third Pass](./research/public-browser-access-live-r3-2026-11-18.md) | Issue 344 third live pass: reproduced anonymous 401, Entra sign-in and private SQL; `/api/time/status` 500 classed as a database-side ProgrammingError; per-criterion status |
 | [Human-review effectiveness test on the demo](./research/human-review-effectiveness-live-demo-2026-11-18.md) | Issue 223: offline gate results, live review retention on the demo app and a per-criterion proven or unproven table; no participant, OQ-017 holder or seeded live trial |
+| [Human-review effectiveness audit, live run 2](./research/issue-223-live-r2-2026-11-18.md) | Issue 223: re-run of the offline gate and live review retention on the demo with a per-criterion table; no source change, no participant or OQ-017 holder |
 | [Cohort and missing-data evaluation on the demo](./research/cohort-evaluation-demo-2026-11-18.md) | Issue 222: offline cohort test run at head e01b3d2, blockers observed and a per-criterion table; OQ-018 owner approval stays unproven and deferred (#1905, #1906) | 2026-11-18 |
 | [Cohort and missing-data evaluation, live demo re-run](./research/cohort-evaluation-live-2026-11-18.md) | Issue 222: retained raw evaluation output, read-only live probe (443 ranked entries, no cohort fields) and per-criterion table; OQ-018 stays unproven | 2026-11-18 |
 | [Cohort and missing-data evaluation, second live re-run](./research/cohort-evaluation-live-r2-2026-11-18.md) | Issue 222: fresh raw output at base 1a79804d1, read-only live probe and per-criterion table; OQ-018 stays unproven | 2026-11-18 |

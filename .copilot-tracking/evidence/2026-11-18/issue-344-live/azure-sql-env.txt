@@ -77,7 +77,7 @@ env=cae-cutover-test-demo
   },
   {
     "conn": "Approved",
-    "n": "pe-iot-cutover-test-rzsrg",
+    "n": "pe-[hub]",
     "state": "Succeeded",
     "tgt": "iotHub"
   },

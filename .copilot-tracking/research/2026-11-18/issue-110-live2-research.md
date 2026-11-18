@@ -13,7 +13,7 @@ Research disposition: `reused` plus a bounded new probe.
 * Prior worktree `issue-110-20261117T2307` and `issue-110-live-20261118T1349Z` history: PR #1941 merged `docs/reference/research/issue-110-live-iot-identity-evidence-2026-11-18.md` (3 distinct SAS identities, Event Hub read-back, raw job output kept outside the repo).
 * Gap named by that note: Event Hub read-back does not show SQL ingestion; the SQL leg is in the #1818 round 7 note (stored=9) with an unmerged receiver image.
 * Prior state file `issue-110-live-state.json` is tracked and must not be overwritten; this task uses `issue-110-live2-state.json`.
-* Hub `iot-cutover-test-rzsrg` (B1): public access Disabled, local auth disabled flag true (read-only `az iot hub list`).
+* Hub `[hub]` (B1): public access Disabled, local auth disabled flag true (read-only `az iot hub list`).
 
 ## Plan input
 
