@@ -12871,6 +12871,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 96 live form workspace evidence (Refs #96)
 
 * Added [issue-96-live-demo-evidence-2026-11-18.md](research/issue-96-live-demo-evidence-2026-11-18.md): read-only live probe found zero registered form schemas and no approval path; criterion 1 unproven, no source change
+
 ## [2026-11-18] update | Issue 116 live round 2 (Refs #116)
 
 * Added [issue-116-live-r2-evidence-2026-11-18.md](research/issue-116-live-r2-evidence-2026-11-18.md): reason-value leak scan on the deployed demo, second role blocked by Graph privileges; no source change
