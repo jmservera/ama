@@ -13064,6 +13064,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-138-live-r3-2026-11-18.md](research/issue-138-live-r3-2026-11-18.md) with retained sanitised outputs: OIDC, environments, runner and image release still unconfigured, live what-if succeeds but `summarize_plan` refuses it, smoke and secret checks partly proven; no source change, nothing created in Azure
 
+## [2026-11-18] add | Issue 93 epic audit with live read (Refs #93)
+
+* Added [issue-93-epic-audit-live-2026-11-18.md](research/issue-93-epic-audit-live-2026-11-18.md): per-criterion table (checkpoint #440 and child closure unmet, no-automated-authority consistent), #96 approved-schema gap classed as owner decision, five read-only live GETs and 269 offline core tests (45 SQL opt-in skips); no source change, nothing created in Azure
+
 ## [2026-11-18] add | Issue 125 live re-audit (Refs #125)
 
 * Added [issue-125-live-r2-discovery-assistant-2026-11-18.md](research/issue-125-live-r2-discovery-assistant-2026-11-18.md): repeated live probes (no discovery route, identical to control), deny-by-default CLI output, 47 of 47 tests in a clean installed environment resolving the earlier 46 of 47 caveat; all three criteria remain unproven for the demo; no source change, nothing created in Azure
