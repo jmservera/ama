@@ -401,6 +401,10 @@ bindings, retained-history/SQL recovery and finite cost/rate/time controls.
 Local fake-network/actual-constructed-SQLite evidence is not actual Hub,
 credential lifecycle, Azure SQL handover, active budget alerts or whole AC-066.
 
+For #79, the [live ranking publication evidence](./research/issue-79-live-ranking-publication-evidence-2026-11-18.md)
+records a 2026-11-18 demo run on live Azure: the unsigned policy refused, a scheduled
+job firing and create-only Blob publication. The named owner signature and Blob
+immutability stay unproven.
 For #221, the [restart authority and drill evidence](./research/issue-221-restart-authority-and-drill-evidence-2026-11-18.md)
 records repository test proof of the RULE-024 and NFR-014 criteria on
 2026-11-18; no live drill was run.
@@ -412,6 +416,9 @@ re-run. The production X.509 receiver and indoor schema stay unproven.
 For #185, the [live device identity evidence](./research/issue-185-live-device-identity-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: Hub-generated symmetric device keys issued, used for sending
 and all identities removed. Durable secret storage and X.509 stay unproven.
+For #220, the [live challenge route evidence](./research/issue-220-live-challenge-route-evidence-2026-11-18.md)
+records a 2026-11-18 demo run: guarantees, assurance flags and forbidden-field refusals observed
+live, and a blocking defect that refuses every Entra-signed-in staff write to the route.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
 
 For #109, the [live device monitoring evidence](./research/issue-109-live-device-monitoring-evidence-2026-11-18.md)
@@ -1188,6 +1195,7 @@ or infra acceptance claimed.
 | [Phase 0 Retrofit-Flow Discovery Contract and Governance Guard](./research/company/phase0-retrofit-flow-discovery-contract.md) | Deterministic `src/core` Phase 0 discovery contract (`discovery_contract`, `discovery_register`, `discovery_flow`) for Issue #124 and `BG-011`: human discovery-owner nomination and `accepted handover` endpoint gate, 15-state / 15-event PAS 2035 lifecycle dictionary (grounded in BSI overview snapshot; licensed PAS 2035 text not held), non-imputed flow/wait/loop evaluation, ranked constraint register requiring both `supporting_evidence` and `contradicting_evidence`, and fail-closed `owner_validated=False` / `candidate_hypothesis_not_company_finding` guard. Live Zava North Homes nomination, domain validation and 12-month extract remain open human gates | 2026-11-15 |
 | [Cohort and Missing-Data Evaluation Review Pack](./research/evaluation/cohort-evaluation-review-pack.md) | DRAFT, unapproved, not executed owner review pack for issue #222 (v0.2.0 correction returned for owner approval): synthetic paired-scenario manifest, proposed held-out custody and independent reviewer protocol (roles unfilled), sample-size, error-rule and uncertainty options, critical-error and review-burden handling, Unknown-support policy proposal, AC traceability and owner checklist; no fairness evidence | 2026-10-20 |
 | [Tokenomics pitch criteria status (#435)](./research/tokenomics-pitch-criteria-435-live-2026-11-18.md) | Per-criterion proven or unproven record for the three unticked criteria: placement decision proven but deck revalidation not evidenced, mentor confirmation unprovable, finite batch decision proven for the synthetic demo via #432 |
+| [Stabilization checkpoint triage, epic gating and verdicts (#440)](./research/stabilization-checkpoint-triage-440-live-2026-11-18.md) | Four deduplicated issue drafts with severity, reproduction, links and acceptance criteria, the epics each blocking finding gates, and a continue, fix or pivot verdict for the 16 open epics; live re-observation of the time status 500 and anonymous 302 |
 | [Held-out AI batch, tokens per proposal (#432)](./research/ai-heldout-batch-432-live-2026-11-18.md) | Measured live batch on 12 synthetic cases (gpt-4.1-nano): 180 to 225 tokens per proposal, 2,522 total, USD 0.000744 list price under a recorded owner authority; per-criterion status for #432; billing reconciliation not done (owner waiver) | 2026-11-18 |
 | [Case chat citation and refusal gates, live (#216)](./research/eval-gates-live-216-2026-11-18.md) | Graded and adversarial 30-prompt run of the live demo case chat: refusals 10 of 10, citations valid 7 of 7 on the model path, but only 9 model calls available (demo meter); per-criterion status, adverse evidence and spend overshoot disclosed | 2026-11-18 |
 | [AI evaluation harness live demo evidence (#108)](./research/issue-108-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the eight unticked criteria: deployed model, version and rate limits confirmed, subscription quota unproven, live app AI report read, offline one-lever comparison tested; no criterion newly tickable | 2026-11-18 |
@@ -1220,6 +1228,8 @@ or infra acceptance claimed.
 | [Deployed Demo Parity Proof, Live Run 2026-11-18](./research/deployed-parity-live-2026-11-18.md) | Per-criterion proven and unproven results for the unticked issue 350 criteria on the synthetic demo (Playwright and Azure CLI): browser API 302 still failing, models and OSM map configured, assistants release-gated, law store and photo deferred, time status 500 defect. |
 | [Cut-over Gate Demo Proof, Live Run 2026-11-18](./research/cutover-gate-live-2026-11-18.md) | Per-criterion results for the three unticked issue 201 criteria: repointing and healthy revision proven, src build provenance unproven (private registry), mvp/data (archive v0.21.0) and sign-off owner-only, legacy-reference checker failing on three test files. |
 | [Entra Browser Sign-in Proof on the Deployed Demo](./research/entra-signin-live-demo-2026-11-18.md) | Issue 349: live Playwright proof of Entra sign-in, anonymous 401, role-scoped `/api/me`, logout and denial paths on the demo apps, per-criterion status and what a real-user tenant registration still needs |
+| [Issue 358 Live Evidence](./research/issue-358-live-evidence-2026-11-18.md) | Credential-expiry guard mutation check and a live ARM round-trip showing the secrets rebuild preserves Key Vault references on a throwaway app; full setup path unproven |
+| [Azure SQL Point-in-Time Restore Evidence on the Demo](./research/issue-145-live-pitr-restore-evidence-2026-11-18.md) | Issue 145: 2026-11-18 live restore of the demo database to a throwaway copy, audit-chain prefix match, observed restore time, per-criterion proven/unproven record |
 | [Regulatory Alert and Home Chat UX Live Demo Proof](./research/issue-215-live-alert-chat-ux-evidence-2026-11-18.md) | Issue 215: desktop Playwright and axe evidence for the alerts panel and home chat on the demo, per-criterion status; no alert card can render without a law store and staff comprehension testing stays unrun |
 | [Direct Ingress and Sign-in Live Proof on the Demo](./research/direct-ingress-live-demo-2026-11-18.md) | Issue 360: live proof of direct Container Apps HTTPS ingress, sign-in, role, shared SQL state and a real chat AI call, with criteria c, d and e proven or unproven for the demo |
 | [Public Browser Access on the Deployed Demo](./research/public-browser-access-live-demo-2026-11-18.md) | Issue 344: live curl, Playwright and read-only Azure evidence for public HTTPS landing, Entra sign-in, anonymous 401, private SQL and authenticated route reachability on the demo, per-criterion status |

@@ -12266,6 +12266,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-188-live-backfill-evidence-2026-11-18.md](research/issue-188-live-backfill-evidence-2026-11-18.md): per-criterion proven/unproven record of a demo run on live Azure SQL. Production receiver and indoor-schema proof remain open.
 
+## [2026-11-18] add | Azure SQL point-in-time restore evidence (Refs #145)
+
+* Added [issue-145-live-pitr-restore-evidence-2026-11-18.md](research/issue-145-live-pitr-restore-evidence-2026-11-18.md): live PITR of the demo database to a throwaway copy (deleted), audit-chain prefix match and a per-criterion record.
+* Native ledger verification, resurrection checks, erasure and hold reapplication, #121 retention match and independent witness stay unproven for the demo.
 ## [2026-11-18] add | Live device monitoring evidence (Refs #109)
 
 * Added [issue-109-live-device-monitoring-evidence-2026-11-18.md](research/issue-109-live-device-monitoring-evidence-2026-11-18.md): demo SAS device connection state, a fired connectivity metric alert and a negative `lastActivityTime` finding. The #440 checkpoint and child-closure criteria stay unproven; no source changed.
@@ -12298,6 +12302,15 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Case chat live evaluation gates (Refs #216)
 
 * Added [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md) and its evidence folder: 30-prompt graded and adversarial run of the demo case chat. Refusals 10 of 10 and model-path citations 7 of 7, with the model reached on only 9 turns because the demo meter held further calls; the gate is partly proven for the demo and the production-only criteria remain unproven.
+## [2026-11-18] add | Issue 358 live evidence (Refs #358)
+
+* Added [issue-358-live-evidence-2026-11-18.md](research/issue-358-live-evidence-2026-11-18.md): expiry-guard mutation check and live Key Vault reference preservation round-trip on a deleted throwaway app. The full setup-entra.py run on the deployed app stays unproven.
+## [2026-11-18] add | Challenge route live evidence (Refs #220)
+
+* Added [issue-220-live-challenge-route-evidence-2026-11-18.md](research/issue-220-live-challenge-route-evidence-2026-11-18.md): per-criterion record of a demo run. Guarantees, assurance flags and forbidden-field refusals observed live; staff writes by an Entra principal are refused by an identity comparison defect, so live positive-write proof stays open.
+## [2026-11-18] add | Live ranking publication evidence (Refs #79)
+
+* Added [issue-79-live-ranking-publication-evidence-2026-11-18.md](research/issue-79-live-ranking-publication-evidence-2026-11-18.md): per-criterion record of a demo run on live Azure. Unsigned policy refused, create-only Blob publication shown with a demo-only synthetic owner; the named owner signature and immutable retention stay unproven.
 ## [2026-11-18] add | Regulatory alert and home chat UX live demo proof (Refs #215)
 
 * Added [issue-215-live-alert-chat-ux-evidence-2026-11-18.md](research/issue-215-live-alert-chat-ux-evidence-2026-11-18.md): read-only desktop proof on the demo apps. The alerts panel shows only the explicit unknown state because the law store is not loaded; keyboard and axe checks pass for the reachable controls; the plain-language toggle shows no visible effect on the deployed image; staff comprehension testing stays unrun.
@@ -12314,3 +12327,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | CI/CD pipeline OIDC and what-if live evidence (Refs #138)
 
 * Added [issue-138-live-cicd-oidc-evidence-2026-11-18.md](research/issue-138-live-cicd-oidc-evidence-2026-11-18.md): per-criterion record of read-only checks. A live what-if succeeded and the smoke checks passed against the demo API, but OIDC variables, protected environments, a runner and any workflow run are absent, so no criterion is fully proven.
+
+## [2026-11-18] add | Stabilization checkpoint triage and epic verdicts (Refs #440)
+
+* Added [stabilization-checkpoint-triage-440-live-2026-11-18.md](research/stabilization-checkpoint-triage-440-live-2026-11-18.md): four issue drafts (time status 500, legacy-reference guard allowlist, unreachable ChatIsolation turn, AI golden path), duplicates mapped to existing owners, blocking findings mapped to epics, and per-epic verdicts (14 continue, 2 fix, 0 pivot). No issue created, no criterion ticked, no source changed. The coordinator HVE Builder review is Deferred at host validation.
