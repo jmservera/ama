@@ -13016,6 +13016,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-76-live-r2-2026-11-18.md](research/issue-76-live-r2-2026-11-18.md): masked screenshots of the hazard clock and named owner and of the queue definitions on the demo; hazard partly proven (clock Unknown), safeguarding unproven (no demo item); no source change, nothing created in Azure
 
+## [2026-11-18] add | Issue 117 live second pass (Refs #117)
+
+* Added [issue-117-live-r2-audit-2026-11-18.md](research/issue-117-live-r2-audit-2026-11-18.md) and its raw folder: unsafe uploads refused live again, 64 offline tests pass; corrected the Defender reading (malware scanning on upload is enabled on the demo account, app scanner still local); throwaway account test blocked by permissions and deleted; no source change
+
 ## [2026-11-18] add | Issue 119 live second run (Refs #119)
 
 * Added [issue-119-live-r2-map-evidence-2026-11-18.md](research/issue-119-live-r2-map-evidence-2026-11-18.md) and its evidence folder: the deployed demo still uses the public OSM tiles; list alternative and keyboard path re-proven; Azure Maps, OS, MapTiler and OSM pages re-read; added a dated update to [map-tile-provider-options.md](research/ux/map-tile-provider-options.md). Both criteria stay open (no licensed provider, no screen reader run); no source change, nothing created in Azure.
