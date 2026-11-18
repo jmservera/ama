@@ -13044,6 +13044,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [content-recheck-153-live-2026-11-18.md](research/content-recheck-153-live-2026-11-18.md): fresh desktop probes of the deployed demo; hold and envelope wording and an Unassigned owner still live, generic 404 and 403 bodies lack owner and next action; no named-reviewer record exists so that criterion stays unproven; no source change, nothing created in Azure
 
+## [2026-11-18] update | Issue 119 live evidence screenshots (Refs #119)
+
+* Removed five screenshots that showed resident and officer names from the issue 119 live evidence folder and dropped their links in [issue-119-live-map-evidence-2026-11-18.md](research/issue-119-live-map-evidence-2026-11-18.md); names in the probe JSON link text were redacted as well
+
 ## [2026-11-18] add | Issue 195 live epic evidence (Refs #195)
 
 * Added [issue-195-live-epic-evidence-2026-11-18.md](research/issue-195-live-epic-evidence-2026-11-18.md): per-criterion results for the checkpoint, child-issue and deployed-image criteria; running revision healthy, build provenance unproven; legacy-reference guard fix for D2 held back as FULL tier (30 violations unchanged at head)
