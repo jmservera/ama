@@ -1,0 +1,6 @@
+src/core/src/zava_forward/core/store.py:1709:    def add_document(self, user, case_id, name, kind, data, metadata=None):
+src/core/src/zava_forward/core/store.py:1732:                scan = self.scan_new_document(case_id, did, name, data, mime)
+src/core/src/zava_forward/core/store.py:1805:            self.require_clean(doc)
+src/core/src/zava_forward/core/store.py:1870:            self.require_clean(doc)
+src/core/src/zava_forward/core/doc_controls.py:216:    def scan_new_document(self, case_id, did, name, data, mime):
+src/core/src/zava_forward/core/doc_controls.py:228:    def require_clean(doc):
