@@ -1,0 +1,18 @@
+[
+  {
+    "acc": "Allow",
+    "dir": "Inbound",
+    "n": "allow-internet-https-in",
+    "port": "443",
+    "pri": 100,
+    "src": "Internet"
+  },
+  {
+    "acc": "Allow",
+    "dir": "Inbound",
+    "n": "allow-vnet-in",
+    "port": "*",
+    "pri": 200,
+    "src": "VirtualNetwork"
+  }
+]

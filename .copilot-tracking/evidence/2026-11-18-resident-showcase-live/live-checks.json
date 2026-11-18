@@ -1,0 +1,265 @@
+[
+ {
+  "check": "landing",
+  "status": 200,
+  "host": "ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+  "title": "Your home improvement progress - synthetic showcase, not live"
+ },
+ {
+  "check": "headers",
+  "hsts": null,
+  "csp": true,
+  "xcto": "nosniff",
+  "xfo": "DENY"
+ },
+ {
+  "check": "http_redirect",
+  "status": 301,
+  "location": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapp"
+ },
+ {
+  "check": "signed_out_session",
+  "signed_in": false
+ },
+ {
+  "check": "view_unauth",
+  "status": 401
+ },
+ {
+  "check": "login_no_csrf",
+  "status": 403
+ },
+ {
+  "check": "login_bad_origin",
+  "status": 403
+ },
+ {
+  "check": "wrong_password",
+  "status": 401,
+  "same_body_as_unknown": true,
+  "body": {
+   "error": "We could not sign you in with those details."
+  },
+  "session_cookie_set": false
+ },
+ {
+  "check": "unknown_email",
+  "status": 401,
+  "session_cookie_set": false
+ },
+ {
+  "check": "staff_route",
+  "path": "/api/cases",
+  "status": 404
+ },
+ {
+  "check": "staff_route",
+  "path": "/workbench",
+  "status": 404
+ },
+ {
+  "check": "staff_route",
+  "path": "/api/staff",
+  "status": 404
+ },
+ {
+  "check": "staff_route",
+  "path": "/admin",
+  "status": 404
+ },
+ {
+  "check": "staff_route",
+  "path": "/demo/staff",
+  "status": 404
+ },
+ {
+  "check": "staff_route",
+  "path": "/.env",
+  "status": 404
+ },
+ {
+  "check": "forged_cookie_view",
+  "status": 401
+ },
+ {
+  "check": "forged_cookie_session",
+  "signed_in": false
+ },
+ {
+  "check": "login_wait_seconds",
+  "seconds": 150
+ },
+ {
+  "check": "signed_in_page",
+  "has_synthetic_banner": true,
+  "has_signout": false,
+  "chars": 6581
+ },
+ {
+  "check": "pw_in_page",
+  "leaked": false
+ },
+ {
+  "check": "cookie_flags",
+  "__Host-zfdemo-csrf": {
+   "secure": true,
+   "httpOnly": false,
+   "sameSite": "Strict",
+   "path": "/",
+   "expires_in_s": 1654
+  },
+  "__Host-zfdemo": {
+   "secure": true,
+   "httpOnly": true,
+   "sameSite": "Strict",
+   "path": "/",
+   "expires_in_s": 1654
+  }
+ },
+ {
+  "check": "view_ok",
+  "status": 200
+ },
+ {
+  "check": "view_keys",
+  "keys": [
+   "account",
+   "account.email",
+   "agenda_available",
+   "banner",
+   "callbacks_available",
+   "documents",
+   "documents.presented",
+   "documents.presented.[].generated",
+   "documents.presented.[].id",
+   "documents.presented.[].issues",
+   "documents.presented.[].kind",
+   "documents.presented.[].scan_label",
+   "documents.presented.[].scan_status",
+   "documents.presented.[].status_label",
+   "documents.requests",
+   "help",
+   "help.note",
+   "help.routes",
+   "help.summary",
+   "home",
+   "home.address",
+   "home.postcode",
+   "home.town",
+   "measures",
+   "needed",
+   "next_step",
+   "progress",
+   "read_only",
+   "sensors",
+   "sensors.calibrated",
+   "sensors.forecast",
+   "sensors.forecast.cadence_hours",
+   "sensors.forecast.horizon_hours",
+   "sensors.forecast.note",
+   "sensors.forecast.points",
+   "sensors.forecast.points.[].forecast_at",
+   "sensors.forecast.points.[].humidity_pct",
+   "sensors.forecast.points.[].temperature_c",
+   "sensors.forecast.reason",
+   "sensors.forecast.synthetic",
+   "sensors.freshness",
+   "sensors.freshness.age_seconds",
+   "sensors.freshness.state",
+   "sensors.freshness.text",
+   "sensors.history",
+   "sensors.history.[].humidity_pct",
+   "sensors.history.[].humidity_status",
+   "sensors.history.[].observed_at",
+   "sensors.history.[].temperature_c",
+   "sensors.history.[].temperature_status",
+   "sensors.note",
+   "sensors.source",
+   "sensors.stale",
+   "sensors.synthetic",
+   "stage",
+   "summary",
+   "summary.label",
+   "summary.sources",
+   "summary.sources.[].href",
+   "summary.sources.[].label",
+   "summary.text",
+   "timeline",
+   "timeline.[].name",
+   "timeline.[].state",
+   "unavailable",
+   "unavailable.[].feature",
+   "unavailable.[].reason",
+   "viewer",
+   "viewer.kind"
+  ]
+ },
+ {
+  "check": "canary_scan",
+  "hits": [
+   "phone"
+  ],
+  "email_fields": [
+   "account.email"
+  ],
+  "staff_in_text_only": [
+   "nknown in this view. ask staff to check it.\", \"issues\":",
+   "nknown in this view. ask staff to check it.\", \"issues\":",
+   "nknown in this view. ask staff to check it.\", \"issues\":"
+  ],
+  "password_in_text": [
+   "gn-in uses a shared demo password and does not prove who y"
+  ],
+  "at_signs": 1
+ },
+ {
+  "check": "view_no_session_header",
+  "status": 409
+ },
+ {
+  "check": "view_wrong_session_header",
+  "status": 409
+ },
+ {
+  "check": "case_override",
+  "path": "case",
+  "status": 200,
+  "same_case": true
+ },
+ {
+  "check": "case_override",
+  "path": "case_id",
+  "status": 200,
+  "same_case": true
+ },
+ {
+  "check": "case_override",
+  "path": "email",
+  "status": 200,
+  "same_case": true
+ },
+ {
+  "check": "after_logout_session",
+  "signed_in": false
+ },
+ {
+  "check": "after_logout_view",
+  "status": 401
+ },
+ {
+  "check": "replay_old_cookie_after_logout",
+  "status": 401,
+  "note": "stateless signed cookie; threat model T5"
+ },
+ {
+  "check": "tampered_cookie_view",
+  "status": 401
+ },
+ {
+  "check": "rate_limit",
+  "codes": [
+   401,
+   429
+  ]
+ }
+]
