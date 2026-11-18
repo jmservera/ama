@@ -1,0 +1,4 @@
+2026-11-18T14:16:26.7246420Z stderr F 2026-11-18 14:16:26,724 zava_forward.api.server ERROR http-error GET /api/time/status status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False
+2026-11-18T14:16:26.7247847Z stderr F 2026-11-18 14:16:26,724 zava_forward.api.server WARNING http-response GET /api/time/status status=500
+2026-11-18T14:16:27.1200323Z stderr F 2026-11-18 14:16:27,119 zava_forward.api.server ERROR http-error GET /api/time/status status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False
+2026-11-18T14:16:27.1201805Z stderr F 2026-11-18 14:16:27,119 zava_forward.api.server WARNING http-response GET /api/time/status status=500
