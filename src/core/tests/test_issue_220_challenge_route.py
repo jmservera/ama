@@ -458,6 +458,7 @@ class JsonStoreChallengeSafeguardTests(unittest.TestCase):
             {r["id"] for r in views if r["review_stale"]},
         )
 
+
 class SqlStoreChallengeSafeguardTests(JsonStoreChallengeSafeguardTests):
     sql = True
 

@@ -142,6 +142,7 @@ def build_non_retaliation_assurance(
         "waits_for_challenge_review": False,
     }
 
+
 # Case state a challenge or data-correction request must never change: ranking inputs (priority,
 # queue rank), eligibility/tenure state, resident consent and participation, and hazard records
 # with their response clocks.

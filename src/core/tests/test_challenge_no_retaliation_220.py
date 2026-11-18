@@ -812,6 +812,7 @@ class StoreAndSqlStoreNoRetaliationLifecycleTests(unittest.TestCase):
         finally:
             tmp.cleanup()
 
+
 class AssistantsProposalChallengeNoRetaliationTests(unittest.TestCase):
     def setUp(self) -> None:
         self.root = Path(tempfile.mkdtemp(prefix="assist-220-test-"))

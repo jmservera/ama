@@ -4761,6 +4761,7 @@ class JsonResidentDecisions(unittest.TestCase):
             "plain_language_explanation",
             sam_detail["nomination_records"][0],
         )
+
     def test_forward_refused_or_rolled_back_retry_keeps_stale_pending_untouched(self) -> None:
         receiver = self.pending_attempt()
         for user, kw in (
@@ -4791,6 +4792,7 @@ class JsonResidentDecisions(unittest.TestCase):
             resident_decisions._IN_FLIGHT.get(self.store, set()).discard(("ZF-1", "SR-1", 1))
         self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
         self.assertNotIn("superseded_by_attempt", self.route()["attempts"][0])
+
 
 class SyntheticReceiver:
     """Constructed receiver: records envelopes, never touches a network."""

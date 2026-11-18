@@ -222,5 +222,6 @@ class HazardSafeguardingClockAndOwnerCoreTests(unittest.TestCase):
             self.assertTrue(unallocated[key])
             self.assertNotIn(str(unallocated[key]).lower(), {"unknown", "anonymous", "none"})
 
+
 if __name__ == "__main__":
     unittest.main()
