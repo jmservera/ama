@@ -13016,6 +13016,18 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-76-live-r2-2026-11-18.md](research/issue-76-live-r2-2026-11-18.md): masked screenshots of the hazard clock and named owner and of the queue definitions on the demo; hazard partly proven (clock Unknown), safeguarding unproven (no demo item); no source change, nothing created in Azure
 
+## [2026-11-18] add | Issue 117 live second pass (Refs #117)
+
+* Added [issue-117-live-r2-audit-2026-11-18.md](research/issue-117-live-r2-audit-2026-11-18.md) and its raw folder: unsafe uploads refused live again, 64 offline tests pass; corrected the Defender reading (malware scanning on upload is enabled on the demo account, app scanner still local); throwaway account test blocked by permissions and deleted; no source change
+
+## [2026-11-18] add | Issue 119 live second run (Refs #119)
+
+* Added [issue-119-live-r2-map-evidence-2026-11-18.md](research/issue-119-live-r2-map-evidence-2026-11-18.md) and its evidence folder: the deployed demo still uses the public OSM tiles; list alternative and keyboard path re-proven; Azure Maps, OS, MapTiler and OSM pages re-read; added a dated update to [map-tile-provider-options.md](research/ux/map-tile-provider-options.md). Both criteria stay open (no licensed provider, no screen reader run); no source change, nothing created in Azure.
+
+## [2026-11-18] add | Third live audit of nomination route (Refs #130)
+
+* Added [issue-130-live-r3-nomination-route-audit-2026-11-18.md](research/issue-130-live-r3-nomination-route-audit-2026-11-18.md): same image and 403 write defect, 105 offline tests pass, per-criterion proven or unproven table, production-only items separated; unticked representative criterion unproven; no source change, nothing created in Azure
+
 ## [2026-11-18] add | Issue 129 live second pass (Refs #129)
 
 * Added [issue-129-live-r2-2026-11-18.md](research/issue-129-live-r2-2026-11-18.md) and its evidence folder: suites rerun (26 core, 6 api) and a signed-in demo probe showing no bundle route; atlas-owner confirmation unproven
@@ -13035,3 +13047,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 81 epic audit with live form retest (Refs #81)
 
 * Added [issue-81-epic-audit-live-2026-11-18.md](research/issue-81-epic-audit-live-2026-11-18.md): per-criterion table for epic 81 (criteria 1 and 2 unproven), live retest of the three standalone nomination forms (HTTP 400 on image digest 5368f4e4), fix classed FULL tier and left to #1837; no source change, nothing created in Azure
+## [2026-11-18] add | Issue 138 live third audit (Refs #138)
+
+* Added [issue-138-live-r3-2026-11-18.md](research/issue-138-live-r3-2026-11-18.md) with retained sanitised outputs: OIDC, environments, runner and image release still unconfigured, live what-if succeeds but `summarize_plan` refuses it, smoke and secret checks partly proven; no source change, nothing created in Azure

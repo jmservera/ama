@@ -450,6 +450,8 @@ The [second pass](./research/issue-129-live-r2-2026-11-18.md) reruns the suites 
 Playwright probe of the demo showing no discoverable bundle screen or route; the atlas-owner item stays unproven.
 The [second run](./research/issue-130-live-r2-nomination-route-evidence-2026-11-18.md) retains raw output,
 confirms the same image and 403 defect, and keeps the criterion unproven.
+The [third audit](./research/issue-130-live-r3-nomination-route-audit-2026-11-18.md) repeats the probe on the
+unchanged image, adds 105 offline tests and a per-criterion table, and separates production-only items.
 For #124, the [Phase 0 discovery evidence](./research/issue-124-phase0-discovery-evidence-2026-11-18.md)
 records a 2026-11-18 offline and synthetic-data run: nomination, endpoint, dictionary and two-sided
 constraint rules proven in code, and the three unticked criteria stated as needing sponsor, owner
@@ -500,6 +502,10 @@ A [second run](./research/issue-138-live-cicd-pipeline-run2-evidence-2026-11-18.
 worktree with the same outcome: the what-if and smoke checks pass, while the OIDC variables, protected
 environments, runner and image release remain unconfigured and unobserved.
 
+A [third run](./research/issue-138-live-r3-2026-11-18.md) retains sanitised raw outputs, finds that
+`summarize_plan` refuses the live what-if (14 Unsupported entries) and gives a per-criterion proven or unproven table;
+nothing is ticked.
+
 For #118, the [hardened deployment live evidence](./research/issue-118-hardened-deployment-live-evidence-2026-11-18.md)
 records the Azure Policy and Defender decision and read-only live probes (enactment not proven).
 A [rerun](./research/issue-118-live-20261118T1512Z-2026-11-18.md) retains sanitised raw outputs and adds a per-criterion table;
@@ -507,7 +513,9 @@ the decision is proven for the demo, while live Defender tiers stay unreadable (
 
 For #117, the [live scan evidence](./research/issue-117-live-scan-evidence-2026-11-18.md)
 proves refusal of unsafe uploads on the demo's synthetic scanner (Defender for Storage is off; clean path and legal hold
-live unproven).
+live unproven). A [second pass](./research/issue-117-live-r2-audit-2026-11-18.md) corrects that reading: Defender
+for Storage malware scanning is enabled on the demo account, but the app still runs the synthetic scanner
+(`ZF_SCANNER` unset), so the real engine stays unproven for the app path.
 
 For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analysis-live-evidence-2026-11-18.md)
 records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human
@@ -1309,6 +1317,7 @@ or infra acceptance claimed.
 | [Entra roles and field-level visibility live demo evidence, round 2 (#116)](./research/issue-116-live-r2-evidence-2026-11-18.md) | Second live pass: reason strings absent from exports, proposals, AI report and audit surfaces for the one reason role; second role unobtainable without directory privilege; four boxes stay unticked |
 | [Data protection, retention and rights live demo evidence (#121)](./research/issue-121-live-data-protection-evidence-2026-11-18.md) | Per-criterion demo record for the eight unticked criteria: live register, model location and retention settings read; deployed register older than source; approvals deferred to #1906 to #1908 |
 | [Map tile provider and accessible list live demo evidence (#119)](./research/issue-119-live-map-evidence-2026-11-18.md) | Per-criterion demo record: deployed public OSM tile provider, policy re-read, list alternative, keyboard and tile-failure proofs; no screen reader run, no licensed provider |
+| [Map tile provider and accessible list live demo evidence, second run (#119)](./research/issue-119-live-r2-map-evidence-2026-11-18.md) | Repeat live proof of the deployed OSM provider, list alternative and keyboard path; vendor pages re-read; production-only items separated; no screen reader run, no licensed provider |
 | [Chat grounding and human-review boundaries live demo evidence (#164)](./research/issue-164-live-chat-grounding-evidence-2026-11-18.md) | Per-criterion demo record for the five unticked criteria: task registered and disabled, thresholds proposed not approved, three live asks answered by rules with zero model calls, human exercises and approvals unproven |
 | [Chat grounding live demo evidence, second pass (#164)](./research/issue-164-live-chat-grounding-evidence-r2-2026-11-18.md) | Chat widget driven in Playwright with grounded, abstention, approve, diagnose, consent, contact and injection asks; raw output and labelled screenshots retained; refusal routes shown for three asks; contact ask fell back without a refusal route; criteria 1, 2 and 4 partly proven, 3 unproven |
 | [Chat grounding live demo audit, third pass (#164)](./research/issue-164-live-chat-grounding-evidence-r3-2026-11-18.md) | Re-run of the live widget probe and registry read on the same revision; unchanged findings, per-criterion table and production-only items |
