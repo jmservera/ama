@@ -32,3 +32,9 @@ Result: `Ran 36 tests in 2.329s`, `OK`. The evaluation output prints seven block
 ## Why the last criterion cannot be proven for the demo
 
 OQ-018 asks Data and Performance, Resident Engagement, the DPO and competent task owners to approve representative cohorts, lawful fairness-analysis fields, sample sufficiency and thresholds. That is a named-human approval for live use. The 2026-11-18 owner decisions exclude DPO and Legal approval for the demo and keep production use deferred to #1905 (legal) and #1906 (DPO). The criterion also says synthetic results are not fairness evidence, so no run can satisfy it. The gate correctly keeps the `unapproved_thresholds` blocker in force, which is the intended demo behaviour. The issue stays open with this one criterion; do not close it.
+
+## Evidence limits
+
+* An independent re-run reported nine blocker lines (eight `insufficient_sample` and one `unapproved_thresholds`), not the seven stated above; the 36 passing tests reproduce exactly.
+* The head named in this note is the branch base, not the candidate head.
+* Test output was not retained as a file. The OQ-018 owner approval stays unproven.
