@@ -13091,6 +13091,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Fourth live audit of nomination route (Refs #130)
 
 * Added [issue-130-live-r4-nomination-route-audit-2026-11-18.md](research/issue-130-live-r4-nomination-route-audit-2026-11-18.md): new revision 0000032 on the same image digest, same 403 write refusal, form-encoded 400 explained by the JSON-only API, 83 offline tests pass, per-criterion proven or unproven table; unticked representative criterion unproven; no source change, nothing created in Azure
+
 ## [2026-11-18] add | Quality sensor third live audit (Refs #1288)
 
 * Added [issue-1288-live-r3-quality-sensor-evidence-2026-11-18.md](research/issue-1288-live-r3-quality-sensor-evidence-2026-11-18.md): read-only live probe that did not invoke the assistant (no metric change), first screenshot of the real sensor panel, readings now stale and no simulator job, 304 focused local tests OK; criteria 4 and 8 unproven for the demo, production-only items listed; no source change.
