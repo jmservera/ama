@@ -529,7 +529,9 @@ For #117, the [live scan evidence](./research/issue-117-live-scan-evidence-2026-
 proves refusal of unsafe uploads on the demo's synthetic scanner (Defender for Storage is off; clean path and legal hold
 live unproven). A [second pass](./research/issue-117-live-r2-audit-2026-11-18.md) corrects that reading: Defender
 for Storage malware scanning is enabled on the demo account, but the app still runs the synthetic scanner
-(`ZF_SCANNER` unset), so the real engine stays unproven for the app path.
+(`ZF_SCANNER` unset), so the real engine stays unproven for the app path. A
+[third pass](./research/issue-117-live-r3-closure-2026-11-18.md) reconfirms both results and records why the
+`ZF_SCANNER=defender` change was not made for the demo.
 
 For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analysis-live-evidence-2026-11-18.md)
 records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human
@@ -1345,6 +1347,7 @@ or infra acceptance claimed.
 | [Data protection, retention and rights live demo evidence (#121)](./research/issue-121-live-data-protection-evidence-2026-11-18.md) | Per-criterion demo record for the eight unticked criteria: live register, model location and retention settings read; deployed register older than source; approvals deferred to #1906 to #1908 |
 | [Map tile provider and accessible list live demo evidence (#119)](./research/issue-119-live-map-evidence-2026-11-18.md) | Per-criterion demo record: deployed public OSM tile provider, policy re-read, list alternative, keyboard and tile-failure proofs; no screen reader run, no licensed provider |
 | [Map tile provider and accessible list live demo evidence, second run (#119)](./research/issue-119-live-r2-map-evidence-2026-11-18.md) | Repeat live proof of the deployed OSM provider, list alternative and keyboard path; vendor pages re-read; production-only items separated; no screen reader run, no licensed provider |
+| [Map tile provider and accessible list live demo evidence, fourth run (#119)](./research/issue-119-live-r4-map-evidence-2026-11-18.md) | Fresh live probe, full re-read of the OSMF tile policy and copyright page; demo provider terms proven, licensed provider and screen reader run unproven; production-only items listed |
 | [Chat grounding and human-review boundaries live demo evidence (#164)](./research/issue-164-live-chat-grounding-evidence-2026-11-18.md) | Per-criterion demo record for the five unticked criteria: task registered and disabled, thresholds proposed not approved, three live asks answered by rules with zero model calls, human exercises and approvals unproven |
 | [Chat grounding live demo evidence, second pass (#164)](./research/issue-164-live-chat-grounding-evidence-r2-2026-11-18.md) | Chat widget driven in Playwright with grounded, abstention, approve, diagnose, consent, contact and injection asks; raw output and labelled screenshots retained; refusal routes shown for three asks; contact ask fell back without a refusal route; criteria 1, 2 and 4 partly proven, 3 unproven |
 | [Chat grounding live demo audit, third pass (#164)](./research/issue-164-live-chat-grounding-evidence-r3-2026-11-18.md) | Re-run of the live widget probe and registry read on the same revision; unchanged findings, per-criterion table and production-only items |

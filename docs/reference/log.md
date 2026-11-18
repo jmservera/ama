@@ -13132,6 +13132,14 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-144-live-r4-2026-11-18.md](research/issue-144-live-r4-2026-11-18.md) with a raw folder: read-only az state of four apps and nine jobs, an empty `src-deploy.yml` run list and a scripted replica probe on revision `--0000032`. Criteria 1 (pipeline clause) and 3 (only non-root enforced) stay unproven; no source, Azure resource or load change.
 
+## [2026-11-18] add | Issue 117 live third pass (Refs #117)
+
+* Added [issue-117-live-r3-closure-2026-11-18.md](research/issue-117-live-r3-closure-2026-11-18.md) and its raw folder: two unsafe uploads refused live again with the document list unchanged (5 and 5), 64 offline tests pass, Defender malware scanning on upload still enabled on the demo account. The real-engine path stays unproven because `ZF_SCANNER=defender` was not set on the demo API; no source, Azure resource or criterion change.
+
+## [2026-11-18] add | Issue 119 live run 4 (Refs #119)
+
+* Added [issue-119-live-r4-map-evidence-2026-11-18.md](research/issue-119-live-r4-map-evidence-2026-11-18.md): fresh live probe on revision `--0000032`, full re-read of the OSMF tile policy and copyright page. Both criteria stay unticked (no licensed provider, no screen reader run). Named screenshots removed; no source change.
+
 ## [2026-11-18] add | Coordinator contract criteria audit (Refs #1204)
 
 * Added [coordinator-contract-criteria-1204-live-2026-11-18.md](research/coordinator-contract-criteria-1204-live-2026-11-18.md): per-sub-claim record for the one unticked criterion. Instruction text and guard tests are proven on main; runtime liveness over all ticks is unproven for the demo. No agent-file change.

@@ -1,9 +1,9 @@
 {
  "tile": {
   "status": 200,
-  "req_referer": "https://<app-fqdn>/",
+  "req_referer": "https://ca-cutover-test-demo-api.<app-fqdn-suffix>/",
   "req_user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
-  "resp_cache_control": "max-age=87635, stale-while-revalidate=604800, stale-if-error=604800",
+  "resp_cache_control": "max-age=87231, stale-while-revalidate=604800, stale-if-error=604800",
   "resp_content_type": "image/png",
   "resp_access_control": "*"
  },
@@ -15,7 +15,7 @@
    "#/case/Z"
   ],
   "after_activate_hash": "case",
-  "h1_after": "[name removed]0"
+  "h1_after": "[resident name removed]"
  },
  "blocked": {
   "status_texts": [

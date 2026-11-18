@@ -1,20 +1,17 @@
 ---
-title: Issue 119 live research (opening)
+title: Issue 119 live closure research (fourth run)
 ms.date: 2026-11-18
 ---
 
 ## Scope
 
-Issue 119, demo scope, desktop only. Criteria: (1) provider licence, cost, coverage and processor terms recorded; (2) screen reader test of the list alternative. Planned: read deployed tile config and CSP, open the employee map with Playwright, capture list alternative and tile state, read source and docs.
+Re-verify the two unticked criteria of #119 on the synthetic demo (desktop only) after the merged
+evidence of runs 1 to 3. Disposition: executed (fresh live probe plus re-read of vendor pages that
+earlier runs left unverified). Production-only items are separated.
 
-## Status
+Prior evidence: docs/reference/research/issue-119-live-map-evidence-2026-11-18.md and
+issue-119-live-r2-map-evidence-2026-11-18.md; options review ux/map-tile-provider-options.md.
 
-Opened before substantive search. Findings are appended below as gathered.
+## Planning Readiness
 
-## Findings
-
-* Deployed `ZF_TILE_URL` is public OSM; map is on `#/overview`; 443 homes, 15 tiles loaded, no failures.
-* List alternative has 443 links, keyboard path works, tile-blocked state keeps the list working.
-* OSM Tile Usage Policy re-read 2026-11-18; best-effort, commercial access may be withdrawn.
-* No screen reader on host; person-run AT not needed for the demo.
-* Research disposition: executed. Planning Readiness: Ready. Evidence: `.copilot-tracking/evidence/2026-11-18/issue-119-live/`; note: `docs/reference/research/issue-119-live-map-evidence-2026-11-18.md`.
+Ready: docs-only, FOCUSED tier. Read-only Azure (az containerapp show); no resources created.
