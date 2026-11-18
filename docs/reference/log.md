@@ -13199,3 +13199,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 153 live re-check, fourth run (Refs #153)
 
 * Added [content-recheck-153-live-r4-2026-11-18.md](research/content-recheck-153-live-r4-2026-11-18.md): repeat Playwright and HTTP probes of the demo match the third run (`Held`/`envelope` on Finance, "Unassigned" owner, generic error bodies); named wording review unproven. Docs only.
+
+## [2026-11-18] add | Issue 107 live third pass (Refs #107)
+
+* Added [issue-107-live-r3-assistants-evidence-2026-11-18.md](research/issue-107-live-r3-assistants-evidence-2026-11-18.md): registry is private so the old-image path stays proxy-only; a live same-image revision restart (0000031 to 0000032) kept denial, zero tokens and the SUS-1 suspension; SUS-1 traced to the #122 probe; the approved-release side stays unproven (OQ-017); no criterion ticked. Docs only.
