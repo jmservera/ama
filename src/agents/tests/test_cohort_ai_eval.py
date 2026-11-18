@@ -1,5 +1,6 @@
 import contextlib
 import io
+import json
 import unittest
 from typing import Any
 
@@ -51,6 +52,15 @@ class CohortAiEvalTests(unittest.TestCase):
         with contextlib.redirect_stdout(out):
             self.assertEqual(cae.main(["--unavailable"]), 0)
         self.assertIn("mode unavailable", out.getvalue())
+        json_out = io.StringIO()
+        with contextlib.redirect_stdout(json_out):
+            self.assertEqual(cae.main(["--json"]), 0)
+        exported = json.loads(json_out.getvalue())
+        self.assertEqual(exported["owner_approval_status"], "unapproved")
+        self.assertFalse(exported["lawful_analysis_fields_approved"])
+        self.assertFalse(exported["live_activation_allowed"])
+        self.assertTrue(exported["synthetic_not_fairness_evidence"])
+        self.assertIn("OQ-018", exported["non_fairness_provenance_notice"])
 
 
 if __name__ == "__main__":

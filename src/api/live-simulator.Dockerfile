@@ -29,5 +29,5 @@ RUN --mount=type=bind,from=build,source=/wheels,target=/wheels \
 USER 10001:10001
 # No dataset and no device certificate is baked into the image. Mount the dataset at /data and the
 # per-device certificates at /certs. The default command is a stdout dry run that sends nothing.
-ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 ZF_DATA=/data/zavaforward.json ZF_STATE=/state ZF_SIM_CERT_DIR=/certs
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TMPDIR=/tmp ZF_DATA=/data/zavaforward.json ZF_STATE=/state ZF_SIM_CERT_DIR=/certs
 CMD ["python", "-m", "zava_forward.api.live_simulator", "--once"]

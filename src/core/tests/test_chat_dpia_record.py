@@ -58,11 +58,26 @@ class ChatDpiaRecordGuard(unittest.TestCase):
             )
 
     def test_unrecorded_decisions_match_unset_references(self) -> None:
-        decision = cp.ChatPrivacy(SimpleNamespace(chat_repo=None), env={}).decision()  # type: ignore[no-untyped-call]
+        decision = cp.ChatPrivacy(SimpleNamespace(chat_repo=None), env={}).decision()
         self.assertFalse(decision["approved"])
+        self.assertFalse(decision["dpo_legal_approved"])
         self.assertEqual(decision["missing"], ["dpia_ref", "lawful_basis_ref", "notice_ref"])
         self.assertIsNone(decision["retention_days"])
         self.assertIn("Not recorded", section(self.text, "Decision pack for the DPO and Legal"))
+
+    def test_model_provider_and_region_contract_is_documented_in_dpia_record(self) -> None:
+        provider_sec = section(self.text, "Model provider and region")
+        for expected in (
+            "chat_provider_position",
+            "uksouth",
+            "DataZoneStandard",
+            "GlobalStandard",
+            "CHAT_PROVIDER_TRAINING",
+            "CHAT_TRANSFER_REF",
+            "CHAT_ABUSE_MONITORING_MODIFIED_REF",
+            "Azure AI Content Safety",
+        ):
+            self.assertIn(expected, provider_sec)
 
     def test_retention_is_unknown_in_the_record(self) -> None:
         for row in cp.DATA_MAP:

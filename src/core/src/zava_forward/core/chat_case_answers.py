@@ -9,6 +9,8 @@ from collections.abc import Callable, Mapping
 from functools import partial
 from typing import Any
 
+from .doc_controls import is_available_case_document
+
 VALUE_LIMIT = 240
 MAX_CITATIONS = 20
 TRUNCATED = "Further recorded detail is not shown here. Open the case card to see all of it."
@@ -16,15 +18,73 @@ FUNDING_DOCUMENTS = ("EPC", "Survey", "Design", "Funding evidence")
 OTHER_CASE = re.compile(r"\bZF-\d+\b", re.I)
 CONTROL = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]")
 
+SAFETY_SEQUENCE = "workflow/safety-sequence"
+VISIT_CONSENT = "workflow/visit-consent"
+CHAT_BOUNDARY = "workflow/chat-boundary"
+AI_CONSENT = "workflow/ai-consent-boundary"
+DOMAIN_BOUNDARY = "workflow/domain-boundary"
+ORIGIN_RULE = "[Origin: decision_rule]"
+RULES_FIRST = frozenset({"unblock", "claim", "pas2035", "sensor"})
+HAZARD_WORDS = re.compile(r"damp|mould|mold|ventil|moisture|condens", re.I)
+# Fixed workflow rules, citable by id. They are rules, not recorded facts about any case.
+RULES: dict[str, str] = {
+    CHAT_BOUNDARY: (
+        "A person schedules visits and completes safety steps in the case workflow. "
+        "This chat cannot book a visit or approve a safety step, record consent or change a record."
+    ),
+    AI_CONSENT: (
+        "Resident consent to AI and data use is not recorded as given for this case. "
+        "Use the manual case-card path: open the case card, check the consent record with the "
+        "named officer and carry on by hand. Chat cannot record or assume consent."
+    ),
+    SAFETY_SEQUENCE: (
+        "Safety stop sequence: hazard referral, then receipt by the responsible owner, then "
+        "acceptance, then repair evidence, then an independent restart decision by a different "
+        "person. The chat takes none of these steps."
+    ),
+    VISIT_CONSENT: (
+        "Before a non-emergency visit to a home, the named officer must confirm the "
+        "resident's consent and access with the resident, and the resident's consent is "
+        "recorded by the named officer using the case consent control. Chat cannot record "
+        "or assume either."
+    ),
+    DOMAIN_BOUNDARY: (
+        "Grant eligibility, PAS 2035 sign-off and sensor or damp findings are decided by the "
+        "named roles in the case workflow. This chat only restates what the case record shows. "
+        "It does not confirm a legal duty, approve a claim or sign-off, "
+        "or determine a technical cause."
+    ),
+}
+
 INTENTS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
     (name, re.compile(pattern, re.I))
     for name, pattern in (
+        (
+            "sensor",
+            r"\b(sensors?|readings?|dew\s*points?|mou?ld\s+risk|iot|ventilat\w*|"
+            r"(?:fault|sensor)\s+flags?)\b",
+        ),
+        (
+            "pas2035",
+            r"^(?!.*\b(?:ignore|disregard)\b).*\b(pas\s*-?\s*2035|sign\s*-?\s*offs?|signed\s+off|coordinator\w*|"
+            r"retrofit\s+(?:coordinator|assess\w*|design\w*)|design\s+version)\b",
+        ),
+        (
+            "claim",
+            r"\b(claimable|eligib\w*|ready\s+to\s+(?:claim|submit)|claims?\s+(?:ready|position|status)|grants?\s+claims?|"
+            r"funding\s+(?:ready|readiness))\b",
+        ),
         ("funding", r"\b(fund\w*|grants?|claims?|money|financ\w*|budget|invoic\w*|paid)\b"),
         (
             "unblock",
             r"\b(unblock\w*|how\s+(?:can|do|to)\s+(?:i|we)\s+(?:fix|resolve|clear)|"
             r"fix\w*\s+(?:this\s+|the\s+)?safety|"
-            r"should\s+(?:i|we)\s+(?:schedule|book|arrange))\b",
+            r"should\s+(?:i|we)\s+(?:schedule|book|arrange)|"
+            r"(?:can|could|may)\s+(?:i|we)\s+(?:schedule|book|arrange|go\s+ahead\s+with)\s+"
+            r"(?:a\s+|the\s+)?visit|"
+            r"what\s+(?:can|could|should|must)\s+(?:i|we)\s+do\s+(?:to|about)\s+"
+            r"(?:get|move|clear|restart|resolve|fix)|"
+            r"get\s+(?:this|it|the\s+case)\s+moving)\b",
         ),
         (
             "blocked",
@@ -41,6 +101,7 @@ INTENTS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
             r"\b(next|what\s+now|what\s+should|do\s+now|action|happens?\s+now|move\s+(it\s+)?on)\b",
         ),
         ("owner", r"\b(who|owner\w*|owns?|responsible|assigned|in\s+charge)\b"),
+        ("sensor", r"\b(temperatures?|humidity|moisture|thresholds?)\b"),
         (
             "status",
             r"\b(status|stage|where|progress|update|state|how\s+is|how\s+far|going\s+on)\b",
@@ -103,8 +164,66 @@ def case_facts(detail: Mapping[str, Any], *, reason_visible: bool) -> dict[str, 
             put(f"checklist.{i}.missing", item.get("kind"))
     for i, item in enumerate(detail.get("technical_missing") or []):
         put(f"technical_missing.{i}", item if isinstance(item, str) else item.get("item"))
-    kinds = sorted({str(d.get("kind")) for d in _rows(detail.get("documents")) if d.get("kind")})
+    for i, row in enumerate(_rows(detail.get("grants"))[:4]):
+        for key in ("id", "scheme", "state"):
+            put(f"grants.{i}.{key}", row.get(key))
+        eligibility, pending = row.get("eligibility"), row.get("pending")
+        if isinstance(eligibility, Mapping):
+            put(f"grants.{i}.eligibility", eligibility.get("outcome"))
+            put(f"grants.{i}.eligibility_source", eligibility.get("source"))
+        if isinstance(pending, Mapping):
+            put(f"grants.{i}.pending", pending.get("to"))
+    technical = detail.get("technical")
+    if isinstance(technical, Mapping):
+        from zava_forward.core.signoffs import SIGNOFFS
+
+        put("pas2035.design_version", technical.get("design_version"))
+        signoffs = technical.get("signoffs")
+        for key, spec in SIGNOFFS.items():
+            given = signoffs.get(key) if isinstance(signoffs, Mapping) else None
+            given = given if isinstance(given, Mapping) else {}
+            p = f"pas2035.signoff.{key}"
+            put(f"{p}.label", str(spec["label"]))
+            put(f"{p}.role", spec["roles"][0])  # type: ignore[index]
+            put(f"{p}.status", given.get("status") or "Not given")
+            put(f"{p}.by", given.get("by"))
+    for i, row in enumerate(_rows(detail.get("sensor_review_drafts"))[:4]):
+        put(f"sensor.{i}.task_key", row.get("task_key"))
+        put(f"sensor.{i}.state", row.get("state"))
+    kinds = sorted(
+        {
+            str(d.get("kind"))
+            for d in _rows(detail.get("documents"))
+            if is_available_case_document(d) and d.get("kind")
+        }
+    )
     put("documents", ", ".join(kinds) if kinds else "none recorded")
+    return facts
+
+
+def sensor_facts(view: Mapping[str, Any]) -> dict[str, str]:
+    """Facts from the retained-reading view the user is already authorised to see."""
+    facts: dict[str, str] = {}
+
+    def put(path: str, value: Any) -> None:
+        if value not in (None, "", [], {}):
+            facts[path] = _text(value)
+
+    grounding = view.get("grounding") or {}
+    values = grounding.get("values") or {}
+    put("sensor.state", view.get("state"))
+    put("sensor.detail", view.get("detail") or view.get("conflict_notice"))
+    put("sensor.conflict", view.get("conflict_notice"))
+    put("sensor.latest.citation", grounding.get("citation"))
+    for key in ("temperature_c", "humidity_pct", "observed_at"):
+        put(f"sensor.latest.{key}", values.get(key))
+    if values:
+        put("sensor.source", grounding.get("source_text"))
+        put("sensor.freshness", view.get("freshness_text"))
+        put("sensor.health", (view.get("health") or {}).get("text"))
+        put("sensor.watch", (view.get("advisory") or {}).get("text"))
+        put("sensor.thresholds", (view.get("advisory") or {}).get("thresholds"))
+    put("sensor.not_retained", grounding.get("not_retained_text"))
     return facts
 
 
@@ -255,18 +374,18 @@ def _blocked(r: Reply) -> None:
 
 
 def _unblock(r: Reply) -> None:
-    r.say(
-        "A person schedules visits and completes the safety step in the case workflow. "
-        "This chat cannot book a visit or approve a safety step.",
-        [],
-    )
+    r.say(RULES[CHAT_BOUNDARY], [CHAT_BOUNDARY])
     hazards = _indexes(r.facts, "hazards")
     if hazards:
         r.say("Open safety items on the record:")
         for i in hazards:
             line, cites = r.cited(partial(_hazard_line, r, i))
             r.say(f"* {line}", cites)
+    r.say(RULES[SAFETY_SEQUENCE], [SAFETY_SEQUENCE])
+    r.say(RULES[VISIT_CONSENT], [VISIT_CONSENT])
     _blocked(r)
+    if r.fact("work.next_action") and not _indexes(r.facts, "work.blockers"):
+        _next(r)
 
 
 def _hazard_line(r: Reply, i: int) -> str:
@@ -276,6 +395,42 @@ def _hazard_line(r: Reply, i: int) -> str:
     if state:
         text += f", {state}"
     return text + (f". Owner: {owner}." if owner else ". No owner is recorded for this.")
+
+
+def _sensor(r: Reply) -> None:
+    cite = r.fact("sensor.latest.citation")
+    if not cite:
+        conflict = r.fact("sensor.conflict")
+        if conflict:
+            r.say(
+                "Retained sensor readings conflict, so no single value is selected. "
+                + conflict
+                + " Use the ordinary quality check, or ask the quality team to inspect the home."
+            )
+            if r.fact("sensor.not_retained"):
+                r.say(r.facts["sensor.not_retained"])
+            if r.fact("stage"):
+                r.say(f"Case stage: {r.facts['stage']}.")
+            return
+        detail = r.fact("sensor.detail")
+        if detail:
+            r.say(f"No retained sensor reading is shown for this case. {detail}")
+        return _damp(r)
+    temperature = r.fact("sensor.latest.temperature_c")
+    humidity = r.fact("sensor.latest.humidity_pct")
+    observed = r.fact("sensor.latest.observed_at")
+    r.say(
+        f"Latest retained reading [{cite}]: temperature_c {temperature} degC, "
+        f"humidity_pct {humidity} %RH (relative humidity), observed {observed}."
+    )
+    if r.fact("sensor.source"):
+        r.say(f"Reading source: {r.facts['sensor.source']}")
+    for path in ("sensor.freshness", "sensor.health", "sensor.watch", "sensor.thresholds"):
+        if r.fact(path):
+            r.say(r.facts[path])
+    if r.fact("sensor.not_retained"):
+        r.say(r.facts["sensor.not_retained"])
+    r.say("These readings are synthetic and not calibrated. A person decides any action.")
 
 
 def _funding_missing(r: Reply) -> list[tuple[str, list[str]]]:
@@ -397,7 +552,116 @@ def _status(r: Reply) -> None:
         r.say(f"Days in this stage: {days}.")
 
 
+def _domain_head(r: Reply) -> None:
+    r.say(f"{ORIGIN_RULE} Recorded case fields and fixed rules, not generative AI.")
+
+
+def _domain_close(r: Reply, who: str) -> None:
+    r.say(RULES[DOMAIN_BOUNDARY], [DOMAIN_BOUNDARY])
+    r.say(f"A person decides. {who}")
+
+
+def _grant_line(r: Reply, p: str) -> str:
+    source, pending = r.fact(f"{p}.eligibility_source"), r.fact(f"{p}.pending")
+    return (
+        f"{r.fact(f'{p}.id') or 'Grant'} {r.fact(f'{p}.scheme')}: "
+        f"state {r.fact(f'{p}.state') or 'not recorded'}. "
+        f"Eligibility: {r.fact(f'{p}.eligibility') or 'not assessed'}."
+        + (f" Eligibility evidence: {source}." if source else " No eligibility evidence recorded.")
+        + (f" Change waiting for approval: {pending}." if pending else "")
+    )
+
+
+def _signoff_line(r: Reply, p: str) -> str:
+    by = r.fact(f"{p}.by")
+    return (
+        f"{r.fact(f'{p}.label')}: {r.fact(f'{p}.status')}"
+        + (f" by {by}" if by else "")
+        + f". Responsible role: {r.fact(f'{p}.role')}."
+    )
+
+
+def _sensor_line(r: Reply, i: int) -> str:
+    return (
+        f"Sensor review draft {r.fact(f'sensor.{i}.task_key')}: "
+        f"{r.fact(f'sensor.{i}.state') or 'state not recorded'}, manual review only."
+    )
+
+
+def _claim(r: Reply) -> None:
+    _domain_head(r)
+    grants = _indexes(r.facts, "grants")
+    if not grants:
+        r.say("No grant record is shown on this case card for your role.")
+        _funding(r)
+        _domain_close(r, "This chat cannot submit, claim or approve a grant. " + _who_to_ask(r))
+        return
+    for i in grants:
+        line, cites = r.cited(partial(_grant_line, r, f"grants.{i}"))
+        r.say(f"* {line}", cites)
+    missing = _funding_missing(r)
+    if missing:
+        r.say("Evidence still missing for a claim:")
+        for line, cites in missing:
+            r.say(f"* {line}", cites)
+    _domain_close(r, "This chat cannot submit, claim or approve a grant. " + _who_to_ask(r))
+
+
+def _pas2035(r: Reply) -> None:
+    _domain_head(r)
+    keys = sorted(
+        {m.group(1) for k in r.facts if (m := re.match(r"pas2035\.signoff\.(\w+)\.", k))},
+        key=list(_signoff_order()).index,
+    )
+    version = r.fact("pas2035.design_version")
+    if not keys:
+        r.say("No design or sign-off is recorded on this case card yet.")
+    else:
+        if version:
+            r.say(f"Recorded design version: {version}.")
+        for key in keys:
+            p = f"pas2035.signoff.{key}"
+            line, cites = r.cited(partial(_signoff_line, r, p))
+            r.say(f"* {line}", cites)
+    missing = [(k, v) for k, v in sorted(r.facts.items()) if k.startswith("technical_missing.")]
+    for path, _ in missing:
+        line, cites = r.cited(partial(_fact_line, r, path, "Still open: {}"))
+        r.say(f"* {line}", cites)
+    _domain_close(r, "Sign-offs are given in the case workflow by a different person each time.")
+
+
+def _signoff_order() -> list[str]:
+    from zava_forward.core.signoffs import SIGNOFFS
+
+    return list(SIGNOFFS)
+
+
+def _damp(r: Reply) -> None:
+    _domain_head(r)
+    shown = False
+    for i in _indexes(r.facts, "hazards"):
+        if not HAZARD_WORDS.search(r.facts.get(f"hazards.{i}.category", "")):
+            continue
+        line, cites = r.cited(partial(_hazard_line, r, i))
+        r.say(f"* Open safety item: {line}", cites)
+        shown = True
+    for i in _indexes(r.facts, "sensor"):
+        line, cites = r.cited(partial(_sensor_line, r, i))
+        r.say(f"* {line}", cites)
+        shown = True
+    if "Survey" in r.facts.get("documents", ""):
+        r.fact("documents")
+        r.say("A survey document is on the record.")
+        shown = True
+    if not shown:
+        r.say("No damp, ventilation or sensor evidence is recorded on this case card.")
+    _domain_close(r, "Sensor readings do not establish a root cause. " + _who_to_ask(r))
+
+
 ANSWERS = {
+    "claim": _claim,
+    "pas2035": _pas2035,
+    "sensor": _sensor,
     "unblock": _unblock,
     "funding": _funding,
     "blocked": _blocked,

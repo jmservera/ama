@@ -368,6 +368,13 @@ receipt records what ran and what was skipped.
   dependency manifests, compiled `src/*/src` code), markdown under `src/`,
   tooling or extra checks, and every non-inert move when the candidate selected
   no project group (for example a docs-only candidate).
+* Unit suite timeout (issue #470): the `project-core` unit suite has a 3600 s
+  ceiling (`SUITE_TIMEOUTS` in `tools/rpi-checks.py`); other project suites keep
+  1800 s. Core took 1535 s sequentially on a loaded host (4059 tests), which
+  left too little margin under 1800 s. The ceiling only bounds a hang; a timeout
+  or failing test still fails the group. The planned and executed value is part
+  of the command identity, so receipts made before this change with a 1800 s
+  core suite fail verification and must be regenerated.
 
 #### Measuring full-gate scheduling
 

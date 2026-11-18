@@ -70,6 +70,17 @@ class LoopTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             f.loop_counts([f.Loop("P1", "other", D(2026, 1, 1))])
 
+    def test_flow_summaries_carry_unvalidated_governance_fields(self) -> None:
+        summary = f.baseline_summary(
+            [f.Candidate("P1", D(2026, 1, 5))], D(2026, 1, 1), D(2026, 12, 31)
+        )
+        legs = f.leg_summary([f.LifecycleEvent("P1", "installation", D(2026, 1, 1))], "P1")
+        waits = f.waits_by_party([f.Wait("P1", "Supplier A", D(2026, 1, 1))], D(2026, 1, 11))[0]
+        loops = f.loop_summary([f.Loop("P1", "return", D(2026, 1, 2))])
+        for payload in (summary, legs, waits, loops):
+            self.assertIs(payload["owner_validated"], False)
+            self.assertEqual(payload["finding_status"], "candidate_hypothesis_not_company_finding")
+
 
 if __name__ == "__main__":
     unittest.main()

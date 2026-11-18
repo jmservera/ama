@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import difflib
 import json
+from collections.abc import Mapping
 from datetime import date, timedelta
 from typing import Any
 
-from zava_forward.core import lawstore, rule_engine, rulecards
+from zava_forward.core import lawstore, regulatory_output_guard, rule_engine, rulecards
 
 EXERCISE_OWNER = "Juan Manuel Servera"
 LABEL = "EXERCISE ONLY: approvals and regression evidence are simulated, not legal approval."
@@ -825,3 +826,303 @@ class SourceMonitor:
                 "rolled_back",
                 dict(actor=EXERCISE_OWNER, at=today, reason=reason, activation_id=release["id"]),
             )
+
+    def watch_summary(
+        self,
+        *,
+        today: str,
+        summary_overrides: Mapping[str, str] | None = None,
+        active_overrides: Mapping[str, bool] | None = None,
+        telemetry: regulatory_output_guard.GuardTelemetry | None = None,
+    ) -> dict[str, Any]:
+        """Return guarded regulatory watch items, human-activation status, and guard telemetry."""
+        return watch_summary(
+            self.law,
+            today=today,
+            summary_overrides=summary_overrides,
+            active_overrides=active_overrides,
+            telemetry=telemetry,
+        )
+
+
+def _table_exists(sql: Any, table: str) -> bool:
+    rows = (
+        sql.all("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table,))
+        if sql.dialect == "sqlite"
+        else sql.all("SELECT name FROM sys.tables WHERE name=?", (table,))
+    )
+    return bool(rows)
+
+
+def watch_summary(
+    law: Any,
+    *,
+    today: str,
+    summary_overrides: Mapping[str, str] | None = None,
+    active_overrides: Mapping[str, bool] | None = None,
+    telemetry: regulatory_output_guard.GuardTelemetry | None = None,
+) -> dict[str, Any]:
+    """Assemble guarded source watch summaries, candidate diffs, and review items."""
+    day = _day(today)
+    rules = getattr(law, "rules", None)
+    statuses: list[dict[str, Any]] = []
+    source_items: list[dict[str, Any]] = []
+
+    raw_sources = law.sources()["sources"]
+    for src in raw_sources:
+        sid = str(src["id"])
+        detail = law.source(sid)
+        provisions = [str(p["id"]) for p in detail["provisions"][:5]]
+        primary_provision = provisions[0] if provisions else None
+        active_cards: list[str] = []
+        if rules is not None:
+            for card_id in rules._source_cards(sid):
+                ver = rules.is_active(card_id, day)
+                if ver is None:
+                    continue
+                card = next(c for c in rules.history(card_id) if c["version"] == ver)
+                _, elig_state = rule_engine.citation_eligibility(law, card, day)
+                if elig_state == "active":
+                    active_cards.append(f"{card_id}@v{ver}")
+
+        eff = src.get("effective")
+        retrieved = str(src["retrieved"])
+        source_date = str(eff) if eff else retrieved
+        human_activated = (
+            bool(active_cards)
+            and src["status"] in ("in_force", "guidance")
+            and src["review_status"] == "reviewed"
+            and (not eff or str(eff) <= day)
+        )
+        candidate_active = (
+            bool(active_overrides[sid])
+            if active_overrides is not None and sid in active_overrides
+            else human_activated
+        )
+        ref_target = primary_provision or sid
+        if summary_overrides is not None and sid in summary_overrides:
+            candidate_summary = summary_overrides[sid]
+        elif human_activated:
+            cards_txt = ", ".join(active_cards)
+            candidate_summary = (
+                f"{src['title']} ({ref_target}; status {src['status']}; "
+                f"source date {source_date}; retrieved {retrieved}): human rule activation "
+                f"active ({cards_txt}). Reference summary only, not legal advice; legal "
+                "applicability and satisfaction of any duty are not assessed."
+            )
+        else:
+            candidate_summary = (
+                f"{src['title']} ({ref_target}; status {src['status']}; "
+                f"source date {source_date}; retrieved {retrieved}): human rule activation "
+                "not active; not an active operational rule. Reference summary only, not "
+                "legal advice; legal applicability and satisfaction of any duty are not "
+                "assessed."
+            )
+
+        safe_summary, decision = regulatory_output_guard.guard_regulatory_text(
+            candidate_summary,
+            status=str(src["status"]),
+            effective=str(eff) if eff else None,
+            retrieved=retrieved,
+            as_of=day,
+            review_status=str(src["review_status"]),
+            human_rule_activated=human_activated,
+            active_operational_rule=candidate_active,
+            source_id=sid,
+            provision_id=primary_provision,
+            telemetry=telemetry,
+        )
+        safe_title, _ = regulatory_output_guard.guard_regulatory_text(
+            str(src["title"]),
+            status=str(src["status"]),
+            effective=str(eff) if eff else None,
+            retrieved=retrieved,
+            as_of=day,
+            source_id=sid,
+            provision_id=primary_provision,
+        )
+        guard_dict = decision.to_status_dict()
+        statuses.append(guard_dict)
+        source_items.append(
+            {
+                "source_id": sid,
+                "title": safe_title,
+                "version": src["version"],
+                "status": src["status"],
+                "source_date": source_date,
+                "effective": eff,
+                "retrieved": retrieved,
+                "review_status": src["review_status"],
+                "provision_ids": provisions,
+                "primary_provision": primary_provision,
+                "active_cards": active_cards,
+                "human_rule_activated": human_activated,
+                "active_operational_rule": bool(
+                    candidate_active and human_activated and decision.passed
+                ),
+                "caveats": list(src.get("caveats", ())),
+                "freshness": source_freshness(law, sid, day),
+                "summary": safe_summary,
+                "output_guard": guard_dict,
+            }
+        )
+
+    change_items: list[dict[str, Any]] = []
+    with law.sql.lock:
+        has_changes = _table_exists(law.sql, "reg_monitor_change")
+        has_events = _table_exists(law.sql, "reg_monitor_event")
+        change_rows = (
+            law.sql.all("SELECT * FROM reg_monitor_change ORDER BY id") if has_changes else []
+        )
+        for row in change_rows:
+            cid = str(row["id"])
+            change = json.loads(row["body"])
+            events = (
+                [
+                    dict(id=er["id"], action=er["action"], **json.loads(er["body"]))
+                    for er in law.sql.all(
+                        "SELECT * FROM reg_monitor_event WHERE change_id=? ORDER BY id", (cid,)
+                    )
+                ]
+                if has_events
+                else []
+            )
+            actions = [str(ev["action"]) for ev in events]
+            rolled_back = "rolled_back" in actions
+            activated = "activated" in actions and not rolled_back
+            meta = change.get("metadata") or {}
+            cand_status = str(meta.get("status") or "consultation")
+            cand_eff = meta.get("effective")
+            cand_eff_str = str(cand_eff) if cand_eff else None
+            human_activated = (
+                activated
+                and cand_status in ("in_force", "guidance")
+                and (not cand_eff_str or cand_eff_str <= day)
+            )
+            candidate_active = (
+                bool(active_overrides[cid])
+                if active_overrides is not None and cid in active_overrides
+                else human_activated
+            )
+            approvals = [ev for ev in events if ev["action"] == "approved"]
+            interp = (
+                str(approvals[-1]["evidence"]["interpretation"])
+                if approvals and "evidence" in approvals[-1]
+                else None
+            )
+            detected = str(change.get("detected") or day)
+            sid = str(change["source_id"])
+            if summary_overrides is not None and cid in summary_overrides:
+                cand_summary = summary_overrides[cid]
+            else:
+                act_note = (
+                    "human release activated"
+                    if human_activated
+                    else "pending named human review and regression; not an active operational rule"
+                )
+                extra = f" Owner note: {interp}" if interp else ""
+                cand_summary = (
+                    f"Candidate change {cid[:12]} for {sid} (status {cand_status}; "
+                    f"source date {cand_eff_str or detected}; retrieved {detected}): "
+                    f"{act_note}.{extra}"
+                )
+
+            safe_summary, decision = regulatory_output_guard.guard_regulatory_text(
+                cand_summary,
+                status=cand_status,
+                effective=cand_eff_str,
+                retrieved=detected,
+                as_of=day,
+                review_status="reviewed" if human_activated else "not_reviewed",
+                human_rule_activated=human_activated,
+                active_operational_rule=candidate_active,
+                source_id=sid,
+                telemetry=telemetry,
+            )
+            guard_dict = decision.to_status_dict()
+            statuses.append(guard_dict)
+            change_items.append(
+                {
+                    "candidate_id": cid,
+                    "source_id": sid,
+                    "detected": detected,
+                    "categories": list(change.get("categories", ())),
+                    "candidate_status": cand_status,
+                    "candidate_effective": cand_eff_str,
+                    "verified": bool(approvals),
+                    "release_state": actions[-1] if actions else "open_review",
+                    "human_rule_activated": human_activated,
+                    "active_operational_rule": bool(
+                        candidate_active and human_activated and decision.passed
+                    ),
+                    "summary": safe_summary,
+                    "output_guard": guard_dict,
+                }
+            )
+
+    review_items: list[dict[str, Any]] = []
+    if rules is not None:
+        for rev in rules.reviews():
+            rid = f"review-{rev['id']}"
+            assessment = rev.get("assessment") or {}
+            raw_interp = str(assessment.get("interpretation") or "")
+            raw_note = str(rev.get("note") or "")
+            sid = str(rev["source_id"])
+            detected = str(rev["detected"])
+            eff = rev.get("source_effective")
+            eff_str = str(eff) if eff else None
+            candidate_active = (
+                bool(active_overrides[rid])
+                if active_overrides is not None and rid in active_overrides
+                else False
+            )
+            if summary_overrides is not None and rid in summary_overrides:
+                cand_summary = summary_overrides[rid]
+            else:
+                detail_txt = raw_interp or raw_note
+                cand_summary = (
+                    f"Review item #{rev['id']} for {rev['card_id']} on {sid} "
+                    f"(source date {eff_str or detected}; retrieved {detected}; "
+                    f"review status {rev['status']}): not an active operational rule until "
+                    f"human rule activation. {detail_txt}".strip()
+                )
+            safe_summary, decision = regulatory_output_guard.guard_regulatory_text(
+                cand_summary,
+                status="in_force" if rev["status"] == "assessed" else "consultation",
+                effective=eff_str,
+                retrieved=detected,
+                as_of=day,
+                review_status="not_reviewed" if rev["status"] == "open" else "reviewed",
+                human_rule_activated=False,
+                active_operational_rule=candidate_active,
+                source_id=sid,
+                telemetry=telemetry,
+            )
+            guard_dict = decision.to_status_dict()
+            statuses.append(guard_dict)
+            review_items.append(
+                {
+                    "id": rev["id"],
+                    "card_id": rev["card_id"],
+                    "source_id": sid,
+                    "status": rev["status"],
+                    "detected": detected,
+                    "source_effective": eff_str,
+                    "human_rule_activated": False,
+                    "active_operational_rule": False,
+                    "summary": safe_summary,
+                    "output_guard": guard_dict,
+                }
+            )
+
+    merged = regulatory_output_guard.merge_guard_statuses(statuses)
+    if telemetry is not None:
+        merged["telemetry"] = telemetry.snapshot()
+    return {
+        "label": LABEL,
+        "as_of": day,
+        "sources": source_items,
+        "changes": change_items,
+        "reviews": review_items,
+        "output_guard": merged,
+    }

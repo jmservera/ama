@@ -15,6 +15,7 @@ from typing import Any, Protocol
 
 from . import ai_registry, identity, projection
 from .controls import RESIDENT_VIEW_ROLES
+from .doc_controls import is_clean_upload
 from .documents import ACCEPTED
 
 type Record = dict[str, Any]
@@ -589,11 +590,7 @@ def list_candidates(store: FormStore, user: Record, case_id: str) -> list[Record
     with store.lock:
         _actor(store, user)
         case = store._case(case_id)
-        visible = {
-            d["id"]
-            for d in case["documents"]
-            if not d.get("generated") and d.get("scan", {}).get("status") == "clean"
-        }
+        visible = {d["id"] for d in case["documents"] if is_clean_upload(d)}
         return deepcopy(
             [batch for batch in case.get("form_staging", []) if batch["source"]["id"] in visible]
         )

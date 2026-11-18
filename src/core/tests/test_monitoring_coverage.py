@@ -404,6 +404,55 @@ class DeclarationTests(unittest.TestCase):
         self.assertIsNone(result["monitoring_owner"])
         self.assertIn("monitoring_owner", result["missing"])
 
+    def test_all_registered_task_declarations_cover_harm_and_complete_review_effort(self) -> None:
+        declarations = mc.task_declarations()
+        self.assertEqual(len(declarations), 13)
+        for task_id, decl in declarations.items():
+            enabled = task_id not in ("chat-case-conversation", "aftercare-concern-pack")
+            with self.subTest(task=task_id):
+                offline = mc.check_monitoring_declaration(decl, task_enabled=enabled, live=False)
+                self.assertEqual(offline["status"], mc.DECLARED)
+                self.assertEqual(offline["missing"], [])
+                self.assertTrue(offline["offline_only"])
+                live = mc.check_monitoring_declaration(decl, task_enabled=enabled, live=True)
+                self.assertEqual(live["status"], mc.BLOCKED)
+                self.assertTrue(any(m.endswith(":threshold") for m in live["missing"]))
+                effort = decl["indicators"]["review_effort"]
+                self.assertEqual(tuple(effort["effort_stages"]), mc.REVIEW_EFFORT_STAGES)
+                self.assertIs(effort["approval_rate_is_safety"], False)
+
+    def test_review_effort_rejects_partial_stages_or_approval_rate_as_safety(self) -> None:
+        bad_stages = mc.task_declaration("stock-prioritisation")
+        bad_stages["indicators"]["review_effort"]["effort_stages"] = ["review", "correction"]
+        res_stages = mc.check_monitoring_declaration(bad_stages, task_enabled=True)
+        self.assertEqual(res_stages["status"], mc.BLOCKED)
+        self.assertIn("indicator:review_effort:effort_stages", res_stages["missing"])
+
+        bad_flag = mc.task_declaration("stock-prioritisation")
+        bad_flag["indicators"]["review_effort"]["approval_rate_is_safety"] = True
+        res_flag = mc.check_monitoring_declaration(bad_flag, task_enabled=True)
+        self.assertEqual(res_flag["status"], mc.BLOCKED)
+        self.assertIn("indicator:review_effort:approval_rate_is_safety", res_flag["missing"])
+
+    def test_bot_and_fictional_approvers_block_live_indicator_and_ai_limits(self) -> None:
+        for bad_approver in (
+            "system",
+            "Copilot Agent",
+            "release-bot",
+            "Data lead (fictional)",
+            "DPO placeholder",
+            "Mock RAI Owner",
+            "TBD",
+            "Fixture Approver",
+        ):
+            with self.subTest(approver=bad_approver):
+                ind = _evaluate(
+                    threshold={"limit": 0.1, "min_sample": 20, "approved_by": bad_approver}
+                )
+                self.assertEqual(ind["status"], mc.BLOCKED)
+                lim = _ai(constructed=False, approved_by=bad_approver)
+                self.assertEqual(lim["status"], mc.BLOCKED)
+
 
 if __name__ == "__main__":
     unittest.main()

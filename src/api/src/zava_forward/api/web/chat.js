@@ -58,7 +58,7 @@ const employeeChat = (() => {
       + "Earlier assistant replies are not sent back. These are engineering caps, not spend authorization. "
       + "A question over a cap gets workflow-only help; continue with the ordinary case workflow.";
   }
-  const RULE_PARTS = ["ga" + "te.", "work.", "waiting_on", "hazards."];
+  const RULE_PARTS = ["ga" + "te.", "work.", "waiting_on", "hazards.", "sensor.source", "sensor.conflict", "sensor.watch", "sensor.thresholds", "sensor.health", "sensor.freshness", "sensor.not_retained"];
   function sourceLine(source) {
     const id = String(source.id || "");
     const kind = source.source_kind || (id.startsWith("workflow/") ? "workflow-rule"
@@ -66,6 +66,10 @@ const employeeChat = (() => {
     const tag = kind === "workflow-rule" ? "[Workflow rule]" : kind === "decision-rule" ? "[Decision rule]" : "[Case record]";
     return `${tag} ${id}: ${source.text}`;
   }
+  const ORIGIN = "Answer origin: ";
+  const RULE_LABEL = ORIGIN + "Deterministic decision or workflow rule (not generative AI; no record changed)";
+  const MODEL_LABEL = ORIGIN + "Generative model suggestion (unapproved; check cited sources; no record changed)";
+  const WITHHELD_LABEL = ORIGIN + "Withheld. Cited sources did not support a stated status or figure (no record changed)";
   function attribution(answer) {
     const isAnswer = answer.kind === "answer";
     const calls = answer.consumption && answer.consumption.model_calls > 0;
@@ -73,17 +77,17 @@ const employeeChat = (() => {
       : isAnswer && answer.model ? "generative-grounded" : "");
     const check = " Check the sources.";
     if (source === "decision-rules-fallback") return {
-      label: "Decision model (case rules; generative draft withheld), no record changed",
-      detail: "Source: deterministic decision rules from recorded case facts; generative draft did not pass source check." + check };
+      label: RULE_LABEL,
+      detail: "Source: deterministic decision rules from recorded case facts. The generative draft did not pass the source check and was not shown." + check };
     if (source === "decision-rules") return {
-      label: "Decision model (case rules), no record changed",
+      label: RULE_LABEL,
       detail: "Source: deterministic decision rules from recorded case facts (0 generative calls)." + check };
     if (source === "generative-grounded") return {
-      label: "Model-generated, not approved. Demo only.",
+      label: MODEL_LABEL,
       detail: `Source: generative AI model (${answer.model}) grounded on case rules and records. AI-generated content may be incorrect.${check}` };
-    if (calls && !isAnswer) return {
-      label: "Generative draft withheld by source check. No record changed.",
-      detail: "Source: generative draft did not pass the source check. No record changed." };
+    if (source === "withheld" || source === "abstain" || (calls && !isAnswer)) return {
+      label: source === "abstain" ? ORIGIN + "Withheld. The permitted sources do not cover the question (no record changed)" : WITHHELD_LABEL,
+      detail: "Source: no answer was shown. The reply checks stopped the draft. No record changed." };
     return { label: answer.workflow_only ? "Workflow-only help, no record changed" : answer.label,
       detail: "Workflow-only or unverified help. No record changed." };
   }
@@ -166,7 +170,7 @@ const employeeChat = (() => {
         }
         if (!current()) return;
         const view = attribution(answer);
-        ui.message("assistant", answer.reply, {
+        ui.message("assistant", answer.plain_summary ? `Plain-language summary: ${answer.plain_summary}\n\n${answer.reply}` : answer.reply, {
           label: view.label,
           outcome: outcomeNames[answer.kind] || "unknown",
           detail: `Skill: ${answer.skill}. ${usageNote(answer.consumption)}${view.detail}`,
@@ -287,12 +291,18 @@ function regulatoryGuidance(role) {
 
 function regulatoryPlainMode(root, id) {
   const input = h("input", { type: "checkbox", id, checked: true });
+  const state = h("span", { class: "regulatory-mode-state", "aria-live": "polite", "aria-atomic": "true" }, "Plain-language explanations are shown.");
   root.classList.add("regulatory", "plain-language");
-  input.addEventListener("change", () => root.classList.toggle("plain-language", input.checked));
-  return h("label", { class: "regulatory-mode", for: id }, input, " Plain-language explanations");
+  input.addEventListener("change", () => {
+    root.classList.toggle("plain-language", input.checked);
+    state.textContent = input.checked ? "Plain-language explanations are shown." : "Plain-language explanations are hidden.";
+  });
+  return h("div", { class: "regulatory-mode" },
+    h("label", { for: id }, input, " Plain-language explanations"), state);
 }
 
 const regulatoryStates = new Set(["breach risk", "attention", "unknown", "clear", "not applicable", "answer", "refused", "conflict"]);
+const regulatoryStateLabel = (value) => (regulatoryStates.has(value) ? value : "unknown");
 const regulatoryStateClass = (value) => `regulatory-state state-${regulatoryStates.has(value) ? value.replace(" ", "-") : "unknown"}`;
 
 function regulatorySources(citations) {
@@ -352,8 +362,10 @@ function regulatoryAlertsPanel(caseId) {
     try {
       const data = await api(`/api/law/alerts?case=${encodeURIComponent(caseId)}`);
       const alerts = (data.homes || []).flatMap((home) => home.alerts);
-      list.replaceChildren(...alerts.map((alert) => h("article", { class: "regulatory-alert" },
-        h("h3", { class: regulatoryStateClass(alert.result) }, `Status: ${alert.result}`),
+      list.replaceChildren(...alerts.map((alert, index) => h("article", { class: "regulatory-alert", "aria-labelledby": `regulatory-alert-${index}` },
+        h("h3", { id: `regulatory-alert-${index}`, class: regulatoryStateClass(alert.result) }, `Status: ${regulatoryStateLabel(alert.result)}`),
+        h("p", { class: "regulatory-plain-summary" }, h("strong", {}, "Plain-language summary: "),
+          `status ${regulatoryStateLabel(alert.result)}. Safe action: ${alert.safe_action || "use the human owner route; do not infer an action"}. Decision owner: ${alert.decision_owner || "unassigned"}.`),
         h("p", { class: "plain-explanation" }, meanings[alert.result] || meanings.unknown),
         alert.exercise && h("p", {}, "synthetic-demo: fictional exercise control, not law or operational approval."),
         h("dl", {},
@@ -362,9 +374,9 @@ function regulatoryAlertsPanel(caseId) {
           h("dt", {}, "Decision owner"), h("dd", {}, `${alert.decision_owner || "Unassigned"}; route: ${alert.escalation_role || "unknown"}`),
           h("dt", {}, "Clock"), h("dd", {}, `${alert.clock || "No approved clock held"}; due: ${alert.due_at || "unknown, not calculated here"}`),
           h("dt", {}, "Check recorded at"), h("dd", {}, `${alert.at || "unknown"}; step: ${alert.step || "unknown"}; card: ${alert.card_id}@${alert.card_version}`),
-          h("dt", {}, "Current control"), h("dd", {}, alert.active_control ? "Active bounded control" : "Not active or source uncertain; retained risk still needs human review"),
+          h("dt", {}, "Current control"), h("dd", {}, alert.active_control ? "Active: a limited, recorded check" : "Not active or source uncertain; retained risk still needs human review"),
           h("dt", {}, "Latest check"), h("dd", {}, `${alert.latest_result || "unknown"} at ${alert.latest_evaluated_at || "unknown"}`)),
-        h("p", {}, alert.usage ? "Model calls per check and alert: 0. Inference is disabled for every role. Service cost: Unknown; price and billing allocation are not held." : "Historical model usage was not recorded. Service cost: Unknown."),
+        h("p", {}, alert.usage ? "Model calls per check and alert: 0. No AI model is used for any role. Service cost: Unknown; price and billing allocation are not held." : "Historical model usage was not recorded. Service cost: Unknown."),
         h("h4", {}, "Source and status"), regulatorySources(alert.citations),
         h("p", {}, `Owner acknowledgement: ${alert.requires_acknowledgement ? "required" : "not outstanding"}. Owner outcome: ${alert.requires_outcome ? "required" : "not outstanding"}. This panel cannot acknowledge, decide compliance or restart stopped retrofit work.`))));
       status.className = data.coverage_status && data.coverage_status !== "unknown" ? "" : "regulatory-state state-unknown";
@@ -406,7 +418,7 @@ function regulatoryChatPanel(caseId) {
     const n = new Intl.NumberFormat();
     const day = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeZone: "UTC" })
       .format(new Date(`${usage.period}T00:00:00Z`));
-    usageStatus.textContent = `Your current role: ${usage.role}. Recorded usage for ${day} (UTC): ${n.format(usage.recorded_turns)} turns; ${n.format(usage.outcomes.answer)} answers, ${n.format(usage.outcomes.refused)} refusals, ${n.format(usage.outcomes.conflict)} conflicts. ${usage.coverage === "bounded_partial" ? "Partial audit window." : "Audit records only."} This is not an exact turn total. Model-call limit per role and UTC day: 0. Service cost: Unknown; accepted-check counts, prices, billing allocation and review effort are not held.`;
+    usageStatus.textContent = `Your current role: ${usage.role}. Recorded usage for ${day} (UTC): ${n.format(usage.recorded_turns)} turns; ${n.format(usage.outcomes.answer)} answers, ${n.format(usage.outcomes.refused)} refusals, ${n.format(usage.outcomes.conflict)} conflicts. ${usage.coverage === "bounded_partial" ? "Counts cover part of the audit period only." : "Counts come from audit records only."} This is not an exact turn total. Model-call limit per role and UTC day: 0. Service cost: Unknown; accepted-check counts, prices, billing allocation and review effort are not held.`;
   };
   const refreshUsage = async () => {
     try { showUsage(await api("/api/chat/regulatory/usage")); }
@@ -417,13 +429,15 @@ function regulatoryChatPanel(caseId) {
   const input = h("textarea", { id: "regulatory-question", name: "regulatory-question", autocomplete: "off", maxlength: "1000", rows: "3", "aria-describedby": "regulatory-privacy" });
   const button = h("button", { type: "submit" }, "Look up cited sources");
   let tid = null;
+  const plainMode = regulatoryPlainMode(root, "chat-plain-mode");
   const show = (answer, thread) => {
     const sections = answer.sections;
     const item = h("li", { class: "regulatory-turn" },
       h("h3", { class: regulatoryStateClass(answer.kind) }, `Lookup status: ${answer.kind}`),
       h("p", { class: "plain-explanation" }, lookupMeanings[answer.kind] || lookupMeanings.refused),
+      answer.plain_summary ? h("p", { class: "regulatory-plain-summary" }, h("strong", {}, "Plain-language summary: "), answer.plain_summary) :null,
       h("p", {}, answer.label || "synthetic-demo: not legal advice or approval"),
-      h("p", {}, answer.usage ? "Model calls for this question: 0. Inference is disabled. Service cost: Unknown, not zero." : "Historical model usage was not recorded. Service cost: Unknown."));
+      h("p", {}, answer.usage ? "Model calls for this question: 0. No AI model is used. Service cost: Unknown, not zero." : "Historical model usage was not recorded. Service cost: Unknown."));
     if (sections) {
       item.append(h("h4", {}, "What the sources say"),
         h("p", { class: "plain-explanation" }, "These are exact excerpts, not a decision about which duty applies. Check the source status and dates."),
@@ -468,7 +482,7 @@ function regulatoryChatPanel(caseId) {
   };
   root.append(h("p", {}, "synthetic-demo only. Exact source excerpts and recorded facts, not legal interpretation. Ask about hazard sources or automated decisions. Safety routes and deterministic alerts remain independent."),
     privacy, usageStatus,
-    regulatoryPlainMode(root, "chat-plain-mode"),
+    plainMode,
     h("p", { class: "plain-explanation" }, "Use short questions to find sources. Missing, conflicting, stale or future sources are not proof of a duty. For lease, grant or contract terms, obtain the actual document and ask the named human owner."),
     regulatoryGuidance(me.user.role),
     liveLog, h("form", { onsubmit: async (event) => {
@@ -481,7 +495,7 @@ function regulatoryChatPanel(caseId) {
       status.textContent = "Looking up cited sources. Human safety routes remain available.";
       try {
         if (!tid) tid = (await api("/api/chat/regulatory/threads", { case_id: caseId })).id;
-        const answer = await api(`/api/chat/regulatory/threads/${encodeURIComponent(tid)}/ask`, { content: question });
+        const answer = await api(`/api/chat/regulatory/threads/${encodeURIComponent(tid)}/ask`, { content: question, plain_language: plainMode.querySelector("input").checked === true });
         log.append(h("li", {}, h("strong", {}, "You"), " ", question));
         show(answer, tid);
         status.textContent = `${answer.kind}: synthetic-demo turn stored with its sources.${answer.escalation ? " Conflict sent to the exercise owner for human review." : ""}`;

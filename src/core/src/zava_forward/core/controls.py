@@ -48,6 +48,22 @@ def text(value, label, limit=300, required=True):
 
 MEMORY_REF = re.compile(r"(?<![A-Za-z0-9])(?:CM-[0-9a-f]{12,}(?![0-9A-Za-z-])|memory:(?=\S)|chat-memory(?![-\w.]))", re.I)
 MEMORY_REFUSAL = "Memory is never evidence and cannot be cited."
+SENSOR_REF = re.compile(
+    r"(?<![A-Za-z0-9_])(?:"
+    r"SENSOR_REVIEW_DUE(?![A-Za-z0-9_-])"
+    r"|SENSOR-RH-PERSISTENCE-EXERCISE(?![A-Za-z0-9_-])"
+    r"|NO_EXERCISE_SIGNAL(?![A-Za-z0-9_-])"
+    r"|NO_SIGNAL(?![A-Za-z0-9_-])"
+    r"|REVIEW_CANDIDATE(?![A-Za-z0-9_-])"
+    r"|(?:sensor-(?:analysis-exercise|comparator-exercise|review-draft|fault-input|live-weather-sim|ingest-handover|backfill-integrated)|live-sim-reading)-v\d+(?![A-Za-z0-9_-])"
+    r"|(?:sensor|sensor_reading|sensor_signal|sensor_analysis|sensor_review_draft|sensor_candidate|iot-hub|iot_hub):(?=\S)"
+    r"|source:sensors(?![A-Za-z0-9_-])"
+    r"|(?:LIVE-)?SENS-(?:SYN|[0-9]{2,})[A-Z0-9-]*(?![A-Za-z0-9_-])"
+    r"|SYN-SENS-[A-Z0-9-]+(?![A-Za-z0-9_-])"
+    r")",
+    re.I,
+)
+SENSOR_REFUSAL = "Sensor telemetry, signals, absence of alerts and unapproved sensor review drafts are never authoritative evidence."
 
 
 def is_memory_reference(value: object) -> bool:
@@ -55,11 +71,18 @@ def is_memory_reference(value: object) -> bool:
     return isinstance(value, str) and MEMORY_REF.search(value) is not None
 
 
+def is_sensor_reference(value: object) -> bool:
+    """True when the text cites a sensor reading, signal, absence-of-alert token, rule or review draft."""
+    return isinstance(value, str) and SENSOR_REF.search(value) is not None
+
+
 def evidence_text(value, label, limit=300, required=True):
-    """Text for a controlled decision's evidence or source; chat memory is refused."""
+    """Text for a controlled decision's evidence or source; chat memory and sensor telemetry are refused."""
     value = text(value, label, limit, required)
     if is_memory_reference(value):
         raise ValueError(MEMORY_REFUSAL)
+    if is_sensor_reference(value):
+        raise ValueError(SENSOR_REFUSAL)
     return value
 
 
