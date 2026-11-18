@@ -64,3 +64,10 @@ Every resident-workflow write by an Entra-signed-in employee is refused with the
 
 * `route-view.png` is a raw HTML fragment, not a styled page, and is not accessibility evidence.
 * `probe1.py` and `probe1.json` are retained alongside the other raw outputs and are part of the evidence.
+
+## Third pass (2026-11-18, 14:30 UTC)
+
+* `ca-cutover-test-demo-api` still runs revision `ca-cutover-test-demo-api--0000031`, digest `sha256:5368f4e4...e17e5fb`, last modified 2026-11-17T19:41:58Z; `/healthz` returns 200. Observed; raw output not retained.
+* `resident_decisions._operation` at this base still compares the full principal with the roster row (line 1112), so no live successful write can be exercised and the browser probes were not repeated. Observed; raw output not retained.
+* The 5 core and 9 api offline guard tests pass again. Observed; raw output not retained.
+* Result: the per-criterion table above stands. "No retaliation, inferred refusal or delayed hazard response" stays unproven live and unticked. No source, Azure or credential change.
