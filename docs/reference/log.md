@@ -12242,3 +12242,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Live Azure backfill and live series evidence (Refs #188)
 
 * Added [issue-188-live-backfill-evidence-2026-11-18.md](research/issue-188-live-backfill-evidence-2026-11-18.md): per-criterion proven/unproven record of a demo run on live Azure SQL. Production receiver and indoor-schema proof remain open.
+
+## [2026-11-18] observation | Live demo public browser access proof, Refs #344
+
+* Added [public-browser-access-live-demo-2026-11-18.md](research/public-browser-access-live-demo-2026-11-18.md): landing, `/healthz`, sign-in to Entra, anonymous 401 for non-browser clients, SQL public access Disabled and 22 of 25 authenticated read routes on `ca-cutover-test-demo-api`. Read-only; no resource created.
+* Browser-originated anonymous API calls are still redirected (#350), `/api/time/status` returns 500 (new candidate defect) and parity stays partly proven. No source changed; #344 stays open.
