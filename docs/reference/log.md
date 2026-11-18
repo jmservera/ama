@@ -12899,3 +12899,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Five assistants live re-verification (Refs #107)
 
 * Added [issue-107-live-r2-assistants-evidence-2026-11-18.md](research/issue-107-live-r2-assistants-evidence-2026-11-18.md): fresh raw MSSQL and SQLite test output and a read-only live probe, per-criterion table; no source change. The approved-release criterion stays unproven (OQ-017).
+
+## [2026-11-18] add | Public browser access third live pass (Refs #344)
+
+* Added [public-browser-access-live-r3-2026-11-18.md](research/public-browser-access-live-r3-2026-11-18.md): reproduced the anonymous 401, Entra sign-in and private SQL results and classed the `/api/time/status` 500 as a database-side ProgrammingError from the container log. Browser-style API redirect stays unproven. No Azure change was made.
