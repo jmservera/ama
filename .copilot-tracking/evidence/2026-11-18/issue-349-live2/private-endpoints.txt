@@ -1,0 +1,8 @@
+pe-aif-cutover-test-rzsrg	/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.CognitiveServices/accounts/aif-cutover-test-rzsrg	Approved
+pe-ampls-cutover-test	/subscriptions/<sub>/resourceGroups/ama/providers/microsoft.insights/privateLinkScopes/ampls-cutover-test	Approved
+pe-crcutovertestrzsrg	/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg	Approved
+pe-iot-cutover-test-rzsrg	/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.Devices/IotHubs/iot-cutover-test-rzsrg	Approved
+pe-kv-cutovertest-rzsrg	/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.KeyVault/vaults/kv-cutovertest-rzsrg	Approved
+pe-sql-cutover-test-rzsrg	/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.Sql/servers/sql-cutover-test-rzsrg	Approved
+pe-stcutovertestrzsrg-blob	/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.Storage/storageAccounts/stcutovertestrzsrg	Approved
+pe-stcutovertestrzsrg-queue	/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.Storage/storageAccounts/stcutovertestrzsrg	Approved

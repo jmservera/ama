@@ -1,0 +1,9 @@
+document keys: [{'id': '..', 'name': 'EPC certificate.pdf', 'kind': 'EPC', 'at': '..', 'by': '..', 'generated': '..'}, {'id': '..', 'name': 'Retrofit assessment report.pdf', 'kind': 'Survey', 'at': '..', 'by': '..', 'generated': '..'}, {'id': '..', 'name': 'Retrofit design.pdf', 'kind': 'Design', 'at': '..', 'by': '..', 'generated': '..'}, {'id': '..', 'name': 'Resident agreement to works.pdf', 'kind': 'Consent', 'at': '..', 'by': '..', 'generated': '..'}, {'id': '..', 'name': 'Funding evidence pack.pdf', 'kind': 'Funding evidence', 'at': '..', 'by': '..', 'generated': '..'}]
+GET /api/docs/<id> 404 application/json 28 bytes sha256 cec265dce653
+GET /api/docs/<id> 404 application/json 28 bytes sha256 cec265dce653
+case keys ['documents', 'funding', 'id', 'wave', 'closed', 'stage', 'synthetic_stock_anchor_id', 'stage_since', 'days_in_stage', 'waiting_on', 'reason', 'owner_code', 'owner', 'owner_role', 'resident', 'home', 'measures', 'contractor', 'decision', 'funding_ok', 'contacts', 'appointments', 'hazards', 'history', 'stock_link', 'stock_fabric', 'stock_epc', 'finance', 'checklist', 'technical_missing', 'quality_handover_blockers', 'challenge_targets', 'challenge_guarantees', 'challenge_assurance', 'nomination_permissions', 'support_status', 'support_coverage', 'stock_reconciliation', 'stock_reconciliation_events', 'work']
+GET /api/docs/<case>/<id> 200 text/plain 110 bytes b'EPC certificate.pdf\nCase ZF-20' generated= True
+GET /api/docs/<case>/<id> 200 text/plain 124 bytes b'Retrofit assessment report.pdf' generated= True
+GET /api/docs/<case>/<id> 200 text/plain 113 bytes b'Retrofit design.pdf\nCase ZF-20' generated= True
+GET /api/docs/<case>/<id> 200 text/plain 126 bytes b'Resident agreement to works.pd' generated= True
+GET /api/docs/<case>/<id> 200 text/plain 129 bytes b'Funding evidence pack.pdf\nCase' generated= True
