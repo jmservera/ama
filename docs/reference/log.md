@@ -12661,6 +12661,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Azure SQL ledger tamper evidence rerun (Refs #114)
 
 * Added [sql-ledger-live-r2-2026-11-18.md](research/sql-ledger-live-r2-2026-11-18.md): live read-only probe of the demo ledger (1,610 entries intact), in-memory tamper detection, per-year sealing, and the open gaps (deployed image lacks the reliance check; `VIEW LEDGER CONTENT` not held). Criteria stay unticked pending the image roll.
+
 ## [2026-11-18] add | Issue 145 restore re-verification (Refs #145)
 
 * Added [issue-145-live-run2-reverification-2026-11-18.md](research/issue-145-live-run2-reverification-2026-11-18.md): read-only re-check of the demo SQL backup settings and cleanup, plus a code finding that no mechanism re-applies release, suspension or spent-allowance state after a restore (R3 unproven). No Azure or source changes.
