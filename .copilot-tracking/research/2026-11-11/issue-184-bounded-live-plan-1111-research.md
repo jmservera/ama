@@ -28,7 +28,7 @@ Observations dated 2026-11-10 come from the prior admitted cloud-readiness resea
 | Binding | Recorded value | Date | Current status |
 | --- | --- | --- | --- |
 | Resource group, region | `ama`, uksouth | 2026-11-10 | Unknown now |
-| IoT Hub | `iot-cutover-test-rzsrg`; B1 x1; local auth disabled; public network disabled; 2 partitions; 1-day retention; 0 custom routes; fallback route on; 1 private endpoint connection; consumer group `api-consumer` | 2026-11-10 17:54Z | Unknown now |
+| IoT Hub | `[hub]`; B1 x1; local auth disabled; public network disabled; 2 partitions; 1-day retention; 0 custom routes; fallback route on; 1 private endpoint connection; consumer group `api-consumer` | 2026-11-10 17:54Z | Unknown now |
 | Demo API app | `ca-cutover-test-demo-api`, revision `--0000027`, digest-pinned private-registry image, user-assigned identity, `ZF_SENSOR_REVIEW_DRAFTS` not set; image source commit unknown | 2026-11-10 | Unknown now |
 | Container Apps environment | `cae-cutover-test-demo` | 2026-11-10 | Unknown now |
 | Declared jobs | `job-live-simulator`, `job-live-receiver`: not found | 2026-11-10 | Authored in Bicep, never deployed |
@@ -38,7 +38,7 @@ Observations dated 2026-11-10 come from the prior admitted cloud-readiness resea
 | Regional quota limit and unit | Unknown (empty usage list) | 2026-11-10 | Unknown |
 | GlobalStandard serving region | Not attested | | Unknown |
 | SQL sensor tables, control, policy, resident view | Absent on 2026-10-29; current Unknown | | Unknown |
-| Event Hubs namespace `eh-iot-cutover-test-rzsrg` and hub `sensor-readings` | Intended keyless route; namespace existence never read; hub identity None and 0 custom routes imply the adapter is not activated | 2026-11-10 | Unknown |
+| Event Hubs namespace `eh-[hub]` and hub `sensor-readings` | Intended keyless route; namespace existence never read; hub identity None and 0 custom routes imply the adapter is not activated | 2026-11-10 | Unknown |
 
 Subscription ID, currency and offer, budget headroom and active alert: not in nonsecret repo records. Unknown.
 

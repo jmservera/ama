@@ -432,7 +432,8 @@ re-run. The production X.509 receiver and indoor schema stay unproven.
 For #185, the [live device identity evidence](./research/issue-185-live-device-identity-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: Hub-generated symmetric device keys issued, used for sending
 and this run's identities removed (run 3 adds the home-to-device mapping). Durable secret storage and X.509 stay unproven; a [fourth audit](./research/issue-185-live-r4-audit-2026-11-18.md)
-re-ran the repository tests and read the hub at zero devices.
+re-ran the repository tests and read the hub at zero devices; a [fifth re-verification](./research/issue-185-live-r5-reverification-2026-11-18.md)
+repeats the hub read, log and repository scans and tests without creating identities.
 For #110, the [live IoT identity evidence](./research/issue-110-live-iot-identity-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: three distinct Hub identities sent schema-versioned readings with
 stable IDs, read back from Event Hub; production X.509 receiver stays unproven.
@@ -451,6 +452,7 @@ records a 2026-11-18 local run of 32 existing tests with raw output retained: bu
 proven for constructed cases only, atlas-owner mapping confirmation unproven.
 The [second pass](./research/issue-129-live-r2-2026-11-18.md) reruns the suites and adds a signed-in
 Playwright probe of the demo showing no discoverable bundle screen or route; the atlas-owner item stays unproven.
+The [third pass](./research/issue-129-live-r3-2026-11-18.md) adds a stdin report CLI refusal check and a probe of revision 0000032; the atlas-owner item stays unproven.
 The [second run](./research/issue-130-live-r2-nomination-route-evidence-2026-11-18.md) retains raw output,
 confirms the same image and 403 defect, and keeps the criterion unproven.
 The [third audit](./research/issue-130-live-r3-nomination-route-audit-2026-11-18.md) repeats the probe on the
@@ -530,7 +532,9 @@ For #117, the [live scan evidence](./research/issue-117-live-scan-evidence-2026-
 proves refusal of unsafe uploads on the demo's synthetic scanner (Defender for Storage is off; clean path and legal hold
 live unproven). A [second pass](./research/issue-117-live-r2-audit-2026-11-18.md) corrects that reading: Defender
 for Storage malware scanning is enabled on the demo account, but the app still runs the synthetic scanner
-(`ZF_SCANNER` unset), so the real engine stays unproven for the app path.
+(`ZF_SCANNER` unset), so the real engine stays unproven for the app path. A
+[third pass](./research/issue-117-live-r3-closure-2026-11-18.md) reconfirms both results and records why the
+`ZF_SCANNER=defender` change was not made for the demo.
 
 For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analysis-live-evidence-2026-11-18.md)
 records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human
@@ -1322,6 +1326,7 @@ or infra acceptance claimed.
 | [Tokenomics pitch criteria status (#435)](./research/tokenomics-pitch-criteria-435-live-2026-11-18.md) | Per-criterion proven or unproven record for the three unticked criteria: placement decision proven but deck revalidation not evidenced, mentor confirmation unprovable, finite batch decision proven for the synthetic demo via #432 |
 | [Coordinator contract criteria (#1204)](./research/coordinator-contract-criteria-1204-live-2026-11-18.md) | Per-sub-claim proven or unproven record for the unticked liveness criterion: instruction text and guard tests proven on main, runtime liveness over all ticks unproven for the demo |
 | [Learning-test bundles live audit, second pass (#129)](./research/issue-129-live-r2-2026-11-18.md) | Core and api bundle suites rerun with raw output, signed-in probe of the demo for a bundle route (none discoverable, 403 control), per-criterion table; Atlas-owner mapping unproven |
+| [Learning-test bundles live audit, third pass (#129)](./research/issue-129-live-r3-2026-11-18.md) | Suites rerun (26 and 6), CLI refusal check, signed-in probe of revision 0000032; Atlas-owner mapping unproven |
 | [Stabilization checkpoint triage, epic gating and verdicts (#440)](./research/stabilization-checkpoint-triage-440-live-2026-11-18.md) | Four deduplicated issue drafts with severity, reproduction, links and acceptance criteria, the epics each blocking finding gates, and a continue, fix or pivot verdict for the 16 open epics; live re-observation of the time status 500 and anonymous 302 |
 | [Epic 195 demo proof, per-criterion results](./research/issue-195-live-epic-evidence-2026-11-18.md) | Proven and unproven results for the three unticked epic criteria (checkpoint, child issues, deployed image provenance) and the legacy-reference guard fix for triage draft D2, held back as FULL tier |
 | [Nomination test bootstrap isolation proof (#1847)](./research/nomination-bootstrap-isolation-proof-1847-2026-11-18.md) | Per-criterion proven or unproven record for the six criteria: source, editable and noneditable layouts in both orders, identity and origin probes, the original bootstrap failing (1 failure, 20 errors), and the unrun full gate |
@@ -1446,6 +1451,7 @@ or infra acceptance claimed.
 | [Chat and Memory User Isolation Live Proof on the Synthetic Demo](./research/issue-162-live-isolation-evidence-2026-11-18.md) | Live demo probes (anonymous, resident session replay, forged identity, client owner fields, foreign ids, own-record controls) with raw output; real two-Entra-user foreign read not provable live; criterion 6 unchanged (Refs #162) |
 | [Issue 162 Live Audit with Per-Criterion Table](./research/issue-162-live-audit-2026-11-18.md) | Fresh live and local audit with retained raw output: refusals audited live (chain 2068 to 2070), grant rows proven locally, per-criterion table, production-only items; criterion 6 left unticked (Refs #162) | 2026-11-18 |
 | [Live Monitoring Coverage Check on the Demo](./research/monitoring-coverage-live-146-2026-11-18.md) | Read-only Azure Monitor observations: ledger digest alerts installed; job failure, poison queue, IoT alerts and workbook not installed; runbooks name proposed owners only; raw output not retained (Refs #146) | 2026-11-18 |
+| [Issue 146 Monitoring Closure Re-verification (Live Demo)](./research/issue-146-live3-monitoring-closure-2026-11-18.md) | Fresh live per-criterion result: source-shape job-failure alert did not fire on two fresh failures while the Total shape did; in-app AI usage by capability with unreconciled state shown; workbook, poison and IoT alerts and named owners still unproven (Refs #146) | 2026-11-18 |
 | [Gap Analysis and Next Build](./research/gap-analysis-next-build.md) | Dated gaps/build direction and #65 recovery retained; PM/UX closure matrix pins four drafts, recommends learning-only retirement for #19/#24/#27 and keeps #58 unresolved with capability/requirement/evidence queue. No wholesale import, product acceptance or resource deletion | 2026-10-13 |
 | [Decision 1 Behaviour Specification](./research/decision-1-behaviour-specification.md) | Clean-rebuild contract linked to the overall application design: workbench/API integration, scoring versus generation, human review and application boundaries, tasks, thresholds, provider contract, guard, liabilities and tests | 2026-10-11 |
 | [Zava Forward API README](../../src/api/README.md) (split per project in M6 of #199: [core](../../src/core/README.md), [agents](../../src/agents/README.md), [orchestrator](../../src/orchestrator/README.md), [importer](../../src/importer/README.md)) | Continuing local/Azure application on retained constructed cases and private stock geography; real SQL/model evidence, Entra initialization, welcome/photo/account choice and current tests distinguished from historical snapshots. Full workflow, human, recovery, accessibility and production acceptance remain separate; evaluation dataset registry and seeded 60,000-home fixture added; frozen protocol, BG-011 MDE register, release decisions and breach pauses recorded (#126, no approvals claimed); importer Excel transition library (preview, quarantine, export, comparison) added for #80 with thresholds, UI and AI assist still open | 2026-10-15 |
