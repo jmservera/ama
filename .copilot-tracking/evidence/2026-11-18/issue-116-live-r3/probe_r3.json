@@ -1,0 +1,468 @@
+{
+ "endpoints": {
+  "/api/coordinator?as_of=2026-10-10T12:00:00Z": {
+   "status": 200,
+   "bytes": 54787,
+   "reason_value_hits": 0
+  },
+  "/api/me": {
+   "status": 200,
+   "bytes": 4380,
+   "reason_value_hits": 0
+  },
+  "/api/account/photo": {
+   "status": 503,
+   "bytes": 92,
+   "reason_value_hits": 0
+  },
+  "/api/cases?view=all": {
+   "status": 200,
+   "bytes": 187650,
+   "reason_value_hits": 0
+  },
+  "/api/cases?view=all&q=<probe>": {
+   "status": 200,
+   "bytes": 244,
+   "reason_value_hits": 0
+  },
+  "/api/cases.csv?view=all": {
+   "status": 200,
+   "bytes": 87203,
+   "reason_value_hits": 0
+  },
+  "/api/cases/ZF-1": {
+   "status": 200,
+   "bytes": 18040,
+   "reason_value_hits": 0
+  },
+  "/api/ranking/policy": {
+   "status": 200,
+   "bytes": 722,
+   "reason_value_hits": 0
+  },
+  "/api/ranking/snapshot": {
+   "status": 200,
+   "bytes": 53762,
+   "reason_value_hits": 0
+  },
+  "/api/ranking/publication": {
+   "status": 200,
+   "bytes": 368,
+   "reason_value_hits": 0
+  },
+  "/api/ai/priority": {
+   "status": 200,
+   "bytes": 24,
+   "reason_value_hits": 0
+  },
+  "/api/facets": {
+   "status": 200,
+   "bytes": 1036,
+   "reason_value_hits": 0
+  },
+  "/api/stats": {
+   "status": 200,
+   "bytes": 2340,
+   "reason_value_hits": 0
+  },
+  "/api/progress": {
+   "status": 200,
+   "bytes": 4122,
+   "reason_value_hits": 0
+  },
+  "/api/closed-cases": {
+   "status": 200,
+   "bytes": 4955,
+   "reason_value_hits": 0
+  },
+  "/api/closed-cases.csv": {
+   "status": 200,
+   "bytes": 2417,
+   "reason_value_hits": 0
+  },
+  "/api/map": {
+   "status": 200,
+   "bytes": 140563,
+   "reason_value_hits": 0
+  },
+  "/api/visits?view=all": {
+   "status": 200,
+   "bytes": 12675,
+   "reason_value_hits": 0
+  },
+  "/api/funding": {
+   "status": 200,
+   "bytes": 42220,
+   "reason_value_hits": 0
+  },
+  "/api/briefing": {
+   "status": 200,
+   "bytes": 3050,
+   "reason_value_hits": 0
+  },
+  "/api/audit-check": {
+   "status": 200,
+   "bytes": 173,
+   "reason_value_hits": 0
+  },
+  "/api/handoffs": {
+   "status": 200,
+   "bytes": 3355,
+   "reason_value_hits": 0
+  },
+  "/api/handoffs/unaccepted": {
+   "status": 500,
+   "bytes": 176,
+   "reason_value_hits": 0
+  },
+  "/api/handoffs/unaccepted.csv": {
+   "status": 500,
+   "bytes": 176,
+   "reason_value_hits": 0
+  },
+  "/api/handoffs/unowned": {
+   "status": 403,
+   "bytes": 45,
+   "reason_value_hits": 0
+  },
+  "/api/handoffs/escalated": {
+   "status": 403,
+   "bytes": 45,
+   "reason_value_hits": 0
+  },
+  "/api/packages": {
+   "status": 200,
+   "bytes": 3050,
+   "reason_value_hits": 0
+  },
+  "/api/workorders": {
+   "status": 200,
+   "bytes": 1414820,
+   "reason_value_hits": 0
+  },
+  "/api/workorders/WO-0001/job-pack": {
+   "status": 404,
+   "bytes": 43,
+   "reason_value_hits": 0
+  },
+  "/api/workorders/WO-0001/field-intake": {
+   "status": 404,
+   "bytes": 43,
+   "reason_value_hits": 0
+  },
+  "/api/handoffs.csv": {
+   "status": 200,
+   "bytes": 1673,
+   "reason_value_hits": 0
+  },
+  "/api/packages.csv": {
+   "status": 200,
+   "bytes": 3015,
+   "reason_value_hits": 0
+  },
+  "/api/workorders.csv": {
+   "status": 200,
+   "bytes": 1276981,
+   "reason_value_hits": 0
+  },
+  "/api/visits.csv": {
+   "status": 200,
+   "bytes": 5426,
+   "reason_value_hits": 0
+  },
+  "/api/funding.csv": {
+   "status": 200,
+   "bytes": 21160,
+   "reason_value_hits": 0
+  },
+  "/api/finance.csv": {
+   "status": 200,
+   "bytes": 1707,
+   "reason_value_hits": 0
+  },
+  "/api/asset/stock-queue.csv": {
+   "status": 200,
+   "bytes": 2,
+   "reason_value_hits": 0
+  },
+  "/api/checklists.csv": {
+   "status": 200,
+   "bytes": 1280,
+   "reason_value_hits": 0
+  },
+  "/api/form-schemas.csv": {
+   "status": 200,
+   "bytes": 2,
+   "reason_value_hits": 0
+  },
+  "/api/checklists": {
+   "status": 200,
+   "bytes": 988,
+   "reason_value_hits": 0
+  },
+  "/api/ai/report": {
+   "status": 200,
+   "bytes": 50987,
+   "reason_value_hits": 0
+  },
+  "/api/ai/cohort-evaluation": {
+   "status": 403,
+   "bytes": 45,
+   "reason_value_hits": 0
+  },
+  "/api/ai/heldout-evaluation": {
+   "status": 403,
+   "bytes": 45,
+   "reason_value_hits": 0
+  },
+  "/api/finance": {
+   "status": 200,
+   "bytes": 3186,
+   "reason_value_hits": 0
+  },
+  "/api/finance/exposure": {
+   "status": 200,
+   "bytes": 468,
+   "reason_value_hits": 0
+  },
+  "/api/asset/stock-queue": {
+   "status": 200,
+   "bytes": 25,
+   "reason_value_hits": 0
+  },
+  "/api/resident/choice-queue": {
+   "status": 200,
+   "bytes": 26597,
+   "reason_value_hits": 0
+  },
+  "/api/governance": {
+   "status": 200,
+   "bytes": 9218,
+   "reason_value_hits": 0
+  },
+  "/api/continuity": {
+   "status": 200,
+   "bytes": 10887,
+   "reason_value_hits": 0
+  },
+  "/api/continuity/export": {
+   "status": 200,
+   "bytes": 2068520,
+   "reason_value_hits": 0
+  },
+  "/api/exceptions": {
+   "status": 200,
+   "bytes": 1281,
+   "reason_value_hits": 0
+  },
+  "/api/retention": {
+   "status": 200,
+   "bytes": 194,
+   "reason_value_hits": 0
+  },
+  "/api/data-protection": {
+   "status": 200,
+   "bytes": 4629,
+   "reason_value_hits": 0
+  },
+  "/api/docs/ZF-1/none": {
+   "status": 404,
+   "bytes": 28,
+   "reason_value_hits": 0
+  },
+  "/api/resident/choice-queue.csv?limit=2": {
+   "status": 200,
+   "bytes": 514,
+   "reason_value_hits": 0
+  },
+  "/api/time/status": {
+   "status": 500,
+   "bytes": 176,
+   "reason_value_hits": 0
+  },
+  "/api/time/mine": {
+   "status": 500,
+   "bytes": 176,
+   "reason_value_hits": 0
+  },
+  "/api/time/mine.csv": {
+   "status": 500,
+   "bytes": 176,
+   "reason_value_hits": 0
+  },
+  "/api/time/report": {
+   "status": 500,
+   "bytes": 176,
+   "reason_value_hits": 0
+  },
+  "/api/time/report.csv": {
+   "status": 500,
+   "bytes": 176,
+   "reason_value_hits": 0
+  },
+  "/api/law/watch": {
+   "status": 503,
+   "bytes": 41,
+   "reason_value_hits": 0
+  },
+  "/api/law/sources": {
+   "status": 503,
+   "bytes": 41,
+   "reason_value_hits": 0
+  },
+  "/api/law/sources.csv": {
+   "status": 503,
+   "bytes": 41,
+   "reason_value_hits": 0
+  },
+  "/api/law/search?q=<probe>": {
+   "status": 503,
+   "bytes": 41,
+   "reason_value_hits": 0
+  },
+  "/api/law/cards": {
+   "status": 503,
+   "bytes": 41,
+   "reason_value_hits": 0
+  },
+  "/api/law/cards/reviews": {
+   "status": 503,
+   "bytes": 41,
+   "reason_value_hits": 0
+  },
+  "/api/law/cards/hazard-awareness-clock": {
+   "status": 503,
+   "bytes": 41,
+   "reason_value_hits": 0
+  },
+  "/api/law/alerts": {
+   "status": 503,
+   "bytes": 184,
+   "reason_value_hits": 0
+  },
+  "/api/aftercare/form": {
+   "status": 403,
+   "bytes": 72,
+   "reason_value_hits": 0
+  },
+  "/api/aftercare/concerns": {
+   "status": 200,
+   "bytes": 165,
+   "reason_value_hits": 0
+  },
+  "/api/aftercare/concerns.csv": {
+   "status": 200,
+   "bytes": 2,
+   "reason_value_hits": 0
+  },
+  "/api/aftercare/evaluator": {
+   "status": 200,
+   "bytes": 5320,
+   "reason_value_hits": 0
+  },
+  "/api/assistants": {
+   "status": 200,
+   "bytes": 44735,
+   "reason_value_hits": 0
+  },
+  "/api/assistants/forecast": {
+   "status": 200,
+   "bytes": 3413,
+   "reason_value_hits": 0
+  },
+  "/api/assistants/rai-metrics": {
+   "status": 200,
+   "bytes": 328,
+   "reason_value_hits": 0
+  },
+  "/api/assistants/proposals": {
+   "status": 200,
+   "bytes": 52717,
+   "reason_value_hits": 0
+  },
+  "/api/assistants/proposals.csv": {
+   "status": 200,
+   "bytes": 1079,
+   "reason_value_hits": 0
+  },
+  "/api/assistants/simulation/quality": {
+   "status": 200,
+   "bytes": 280,
+   "reason_value_hits": 0
+  },
+  "/api/chat/status": {
+   "status": 200,
+   "bytes": 2314,
+   "reason_value_hits": 0
+  },
+  "/api/chat/threads": {
+   "status": 200,
+   "bytes": 360,
+   "reason_value_hits": 0
+  },
+  "/api/chat/memory": {
+   "status": 200,
+   "bytes": 2,
+   "reason_value_hits": 0
+  },
+  "/api/buildings/SYN-B1": {
+   "status": 404,
+   "bytes": 59,
+   "reason_value_hits": 0
+  },
+  "/api/form-schemas": {
+   "status": 200,
+   "bytes": 15,
+   "reason_value_hits": 0
+  },
+  "/api/cases/ZF-1/form-candidates": {
+   "status": 200,
+   "bytes": 15,
+   "reason_value_hits": 0
+  },
+  "/api/cases/ZF-1/form-review": {
+   "status": 200,
+   "bytes": 199,
+   "reason_value_hits": 0
+  },
+  "/api/cases/ZF-1/form-review/SYN-DRAFT/held-export": {
+   "status": 404,
+   "bytes": 23,
+   "reason_value_hits": 0
+  },
+  "/api/cases/ZF-1/form-review/SYN-DRAFT/proposal-freshness": {
+   "status": 404,
+   "bytes": 43,
+   "reason_value_hits": 0
+  },
+  "/api/nothing": {
+   "status": 403,
+   "bytes": 45,
+   "reason_value_hits": 0
+  }
+ },
+ "me": {
+  "role": "Retrofit Programme Manager",
+  "app_roles": [
+   "ZavaForward.ProgrammeManager"
+  ],
+  "view_only": false,
+  "identity_source": "entra",
+  "provider": null
+ },
+ "distinct_reason_values": 3,
+ "cases": 50,
+ "unknown_task_refusal": [
+  400,
+  "{\"error\": \"Unknown request.\"}"
+ ],
+ "status_counts": {
+  "200": 60,
+  "503": 9,
+  "500": 7,
+  "403": 6,
+  "404": 6
+ },
+ "total_reason_value_hits": 0,
+ "hit_endpoints": []
+}
