@@ -424,6 +424,10 @@ records a 2026-11-18 demo run: guarantees, assurance flags and forbidden-field r
 live, and a blocking defect that refuses every Entra-signed-in staff write to the route.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
 
+For #184, the [live simulator stream evidence](./research/issue-184-live-simulator-stream-evidence-2026-11-18.md)
+records the child-story status on 2026-11-18: #185 and #189 are still open, the demo hub has
+a budget alert, and the live owner and time limit cannot be shown on the demo API.
+
 For #109, the [live device monitoring evidence](./research/issue-109-live-device-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of IoT Hub connection state and a connectivity metric alert.
 Hub `lastActivityTime` did not update; the #440 checkpoint and child-closure criteria stay unproven.
@@ -431,10 +435,17 @@ For #146, the [live monitoring evidence](./research/issue-146-live-monitoring-ev
 records a 2026-11-18 demo run: installed alert inventory, a fired test alert, throwaway job-failure,
 IoT and workbook deployments, and the private-link limit that blocks workbook rendering and the poison-queue proof.
 
+For #189, the [simulator run controls live evidence](./research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md)
+records a 2026-11-18 demo check of the budget alerts, hub owner tag and deterministic owner, time-limit and alert controls; no simulator job is deployed.
+
 For #138, the [CI/CD OIDC and what-if live evidence](./research/issue-138-live-cicd-oidc-evidence-2026-11-18.md)
 records a 2026-11-18 read-only demo run: a live what-if of the real template, the post-deployment
 smoke checks against the demo API, the fail-closed environment gate and the unconfigured OIDC,
 environment and runner prerequisites. All six criteria stay unticked.
+
+For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analysis-live-evidence-2026-11-18.md)
+records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human
+sign-off and R1 lacks the official standards texts. Read-only demo probes are recorded.
 
 For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root
@@ -1239,6 +1250,7 @@ or infra acceptance claimed.
 | [Human-review effectiveness test on the demo](./research/human-review-effectiveness-live-demo-2026-11-18.md) | Issue 223: offline gate results, live review retention on the demo app and a per-criterion proven or unproven table; no participant, OQ-017 holder or seeded live trial |
 | [Cohort and missing-data evaluation on the demo](./research/cohort-evaluation-demo-2026-11-18.md) | Issue 222: offline cohort test run at head e01b3d2, blockers observed and a per-criterion table; OQ-018 owner approval stays unproven and deferred (#1905, #1906) | 2026-11-18 |
 | [Chat Administrator and Break-Glass Demo-Only Disclaimer](./research/chat-demo-breakglass-disclaimer-2026-11-03.md) | Owner decision 2026-11-03: metadata-only administrator and break-glass policy for the synthetic-data demo, recorded as unreviewed by the DPO and Legal. Not a production or real-data approval (#162 criterion 6) | 2026-11-03 |
+| [Chat Break-Glass Live Proof on the Synthetic Demo](./research/chat-breakglass-live-proof-2026-11-18.md) | Live proof that demo break-glass is default-deny and audited per refusal; grant path proven by tests only; policy decided for the demo only (#162 criterion 6) | 2026-11-18 |
 | [Gap Analysis and Next Build](./research/gap-analysis-next-build.md) | Dated gaps/build direction and #65 recovery retained; PM/UX closure matrix pins four drafts, recommends learning-only retirement for #19/#24/#27 and keeps #58 unresolved with capability/requirement/evidence queue. No wholesale import, product acceptance or resource deletion | 2026-10-13 |
 | [Decision 1 Behaviour Specification](./research/decision-1-behaviour-specification.md) | Clean-rebuild contract linked to the overall application design: workbench/API integration, scoring versus generation, human review and application boundaries, tasks, thresholds, provider contract, guard, liabilities and tests | 2026-10-11 |
 | [Zava Forward API README](../../src/api/README.md) (split per project in M6 of #199: [core](../../src/core/README.md), [agents](../../src/agents/README.md), [orchestrator](../../src/orchestrator/README.md), [importer](../../src/importer/README.md)) | Continuing local/Azure application on retained constructed cases and private stock geography; real SQL/model evidence, Entra initialization, welcome/photo/account choice and current tests distinguished from historical snapshots. Full workflow, human, recovery, accessibility and production acceptance remain separate; evaluation dataset registry and seeded 60,000-home fixture added; frozen protocol, BG-011 MDE register, release decisions and breach pauses recorded (#126, no approvals claimed); importer Excel transition library (preview, quarantine, export, comparison) added for #80 with thresholds, UI and AI assist still open | 2026-10-15 |
