@@ -1,0 +1,5 @@
+Throwaway storage account <throwaway-storage-account> (rg ama, uksouth, Standard_LRS) created 2026-11-18 ~15:42 UTC.
+Shared-key upload: KeyBasedAuthenticationNotPermitted (policy). New account Defender isEnabled=false.
+PUT defenderForStorageSettings (malware scanning on upload) -> operationStatus MissingPermissions on
+Microsoft.Security/datascanners/write for the signed-in principal; onUpload.isEnabled stayed false.
+No blob was uploaded. Account deleted; resource list for the name returns 0.
