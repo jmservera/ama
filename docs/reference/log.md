@@ -12908,6 +12908,14 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-107-live-r2-assistants-evidence-2026-11-18.md](research/issue-107-live-r2-assistants-evidence-2026-11-18.md): fresh raw MSSQL and SQLite test output and a read-only live probe, per-criterion table; no source change. The approved-release criterion stays unproven (OQ-017).
 
+## [2026-11-18] add | Public browser access third live pass (Refs #344)
+
+* Added [public-browser-access-live-r3-2026-11-18.md](research/public-browser-access-live-r3-2026-11-18.md): reproduced the anonymous 401, Entra sign-in and private SQL results and classed the `/api/time/status` 500 as a database-side ProgrammingError from the container log. Browser-style API redirect stays unproven. No Azure change was made.
+
+## [2026-11-18] add | Issue 349 tenant prerequisites live round 3 (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-r3-2026-11-18.md](research/issue-349-tenant-prerequisites-live-r3-2026-11-18.md): redirect URI seen by Entra, curl 401s, Key Vault reference and private vault facts, per-criterion table; criteria 1, 3 and 4 stay unproven in part, no source or Azure change.
+
 ## [2026-11-18] add | Employee loading feedback live re-verification, second pass (Refs #531)
 
 * Added [issue-531-live-r2-2026-11-18-note.md](research/issue-531-live-r2-2026-11-18-note.md) and its evidence folder: no scale-to-zero in 10 minutes so real cold start stays unproven; reject recorded through the live UI; deployed `app.js` and `style.css` still behind main; no source change
