@@ -43,3 +43,10 @@ Refs #96. Scope is the synthetic desktop demo under the owner decisions of 2026-
 
 * Any approval of a schema, template or source policy, which is a human act.
 * Live behaviour of staging, review, validation, export or stale marking, because the demo has no schema and a live write was out of scope for a docs-only run.
+
+## Evidence limits
+
+* `run1.json` was removed from the candidate because it held the test account display name, tenant id and object id; the claims that relied on it are no longer backed by a retained file.
+* The export and stale-marking rows are offline code observations only. Issue #96 audit comments record them as unproven; nothing here proves them.
+* The 67-test result and the "no code path sets Approved" search have no retained raw output.
+* Independent exact-head review and hosted CI are outstanding; no criterion is ticked.
