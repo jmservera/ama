@@ -12779,3 +12779,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Eval gate local test rerun and rescoring limits (Refs #216)
 
 * Updated [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md): 101 existing gate tests run locally with raw output retained; container scores labelled "Observed; raw output not retained"; no new model call; the unticked criterion stays partly proven.
+
+## [2026-11-18] update | Simulator run controls second live pass (Refs #189)
+
+* Added [simulator-run-controls-live-189-2026-11-18.md](research/simulator-run-controls-live-189-2026-11-18.md): read-only budget, hub and metric checks, a staff probe of the deployed admin endpoint (403), and an offline start, stop and capacity exercise with raw output retained. The live admin run could not be exercised (no administrator role, no job); the criterion stays unticked.

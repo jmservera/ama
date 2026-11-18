@@ -458,6 +458,7 @@ A [re-run](./research/issue-146-live-monitoring-rerun-2026-11-18.md) adds a job-
 
 For #189, the [simulator run controls live evidence](./research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo check of the budget alerts, hub owner tag and deterministic owner, time-limit and alert controls; no simulator job is deployed.
+A [second pass](./research/simulator-run-controls-live-189-2026-11-18.md) adds a signed-in probe of the deployed admin endpoint (403 for staff; no administrator role granted), an offline start, stop and capacity exercise with raw output, and the USD 5.16 observed spend.
 
 For #138, the [CI/CD OIDC and what-if live evidence](./research/issue-138-live-cicd-oidc-evidence-2026-11-18.md)
 records a 2026-11-18 read-only demo run: a live what-if of the real template, the post-deployment

@@ -1,0 +1,5 @@
+me GET /api/me 200 {}
+status GET /api/admin/simulator-control 403 {"error": "Only an application administrator can use simulator run control.", "code": "ADMIN_REQUIRED"}
+start-no-body POST /api/admin/simulator-control/start 403 
+stop-no-body POST /api/admin/simulator-control/stop 403 
+unknown GET /api/admin/simulator-control/nope 403 {"error": "Only an application administrator can use simulator run control.", "code": "ADMIN_REQUIRED"}
