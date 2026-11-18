@@ -12,13 +12,13 @@ keywords:
 estimated_reading_time: 3
 ---
 
-Refs #80. Scope is the synthetic desktop demo, authorised by the owner on 2026-11-18. Nothing here is production evidence. Production-only parts stay deferred to #1905 to #1908.
+Refs #80. Scope is the synthetic desktop demo, authorised by the owner on 2026-11-18. Nothing here is production evidence. Production-only parts stay deferred.
 
 ## Per-criterion result
 
 | Criterion in #80 | Result | Evidence |
 | --- | --- | --- |
-| Owners set the staged transition thresholds (ADR 0001 open item) | Unproven, and cannot be proven for the demo | The [ADR](../../adrs/0001-azure-architecture.md#staged-transition-proposed-thresholds-to-be-set-by-owners) still reads "proposed, thresholds to be set by owners". Stage 1 exit needs reconciliation, quarantine and drift measures to meet "owner-set targets for N consecutive cycles"; neither the targets nor N exist. A grep of `src/importer/src` finds no threshold setting. The criterion is a decision by named owners (import owner, quarantine owner, staff representatives); the 2026-11-18 owner decision names none and excludes DPO and Legal approval for the demo. A number written here by an agent would not be an owner-set threshold. |
+| Owners set the staged transition thresholds (ADR 0001 open item) | Unproven, and cannot be proven for the demo | The [ADR](../../adrs/0001-azure-architecture.md#staged-transition-proposed-thresholds-to-be-set-by-owners) still reads "proposed, thresholds to be set by owners". Stage 1 exit needs reconciliation, quarantine and drift measures to meet "owner-set targets for N consecutive cycles"; neither the targets nor N exist. A grep of `src/importer/src` finds no threshold setting. The criterion is a decision by named owners (import owner, quarantine owner); the 2026-11-18 owner decision names none and excludes DPO and Legal approval for the demo. A number written here by an agent would not be an owner-set threshold. |
 
 The three ticked criteria were not re-opened.
 
@@ -30,3 +30,8 @@ The three ticked criteria were not re-opened.
 ## What would close the criterion
 
 Named owners approve, in the ADR or a recorded decision, a target for each measure in ADR 0001 "Transition measures" and a value for N, then a person ticks the box.
+
+## Evidence limits
+
+* The 125-test result is a local observation; raw output is not retained.
+* "Not deployed to the demo API" is inferred from the importer README, which says the HTTP surface is not built.
