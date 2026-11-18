@@ -453,6 +453,8 @@ The [second run](./research/issue-130-live-r2-nomination-route-evidence-2026-11-
 confirms the same image and 403 defect, and keeps the criterion unproven.
 The [third audit](./research/issue-130-live-r3-nomination-route-audit-2026-11-18.md) repeats the probe on the
 unchanged image, adds 105 offline tests and a per-criterion table, and separates production-only items.
+The [fourth audit](./research/issue-130-live-r4-nomination-route-audit-2026-11-18.md) sees a new revision on the
+same image digest, the same 403 write refusal, and explains the form-encoded 400 as a JSON-only API.
 For #124, the [Phase 0 discovery evidence](./research/issue-124-phase0-discovery-evidence-2026-11-18.md)
 records a 2026-11-18 offline and synthetic-data run: nomination, endpoint, dictionary and two-sided
 constraint rules proven in code, and the three unticked criteria stated as needing sponsor, owner
@@ -541,6 +543,10 @@ For #1288, the [second live re-verification](./research/issue-1288-live-r2-quali
 records fresh retained readings on the demo and an unchanged release gate (no model call); criteria 3 to 8
 stay unticked.
 
+For #1288, the [third live audit](./research/issue-1288-live-r3-quality-sensor-evidence-2026-11-18.md)
+adds a screenshot of the real sensor panel (stale reading, missing pre-retrofit context), a read-only probe with
+no model call and a local test re-run; criteria 3 to 8 stay unticked.
+
 For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root
 runtime, scale-out from 0 to 4 replicas under a 60 s load run, and the Container Apps
@@ -548,6 +554,8 @@ platform limit on read-only root file system and capability drop. No pipeline ru
 and no production scale are shown.
 The [third run](./research/issue-144-hosting-proof-live-2026-11-18.md) retains redacted raw
 output, reconciles the job count to eight and records a 120-client run with cold-start latency.
+The [fourth run](./research/issue-144-live-r4-2026-11-18.md) re-probes revision `--0000032` (same image digest) and keeps
+criteria 1 and 3 unproven: no `src-deploy.yml` run exists and only non-root is enforced in the deployed replica.
 For the 2026-11-05 current-main contract, retention and handover boundary, see the
 [fifth stabilization checkpoint](../architecture/cutover-evidence-pack.md#fifth-stabilization-checkpoint-current-main-sensor-contract-retention-and-handover-2026-11-05-refs-440-184-110)
 (documentation only; the live-sim wire schema is not admitted by the main consumer and nothing is accepted).
@@ -1391,6 +1399,7 @@ or infra acceptance claimed.
 | [WCAG 2.2 Automated Evidence on the Live Demo Workbench](./research/issue-151-live-wcag-axe-evidence-2026-11-18.md) | Issue 151: axe-core 4.10.3 and keyboard scans of 13 workbench screens on the demo as the Programme Manager role, per-criterion status, limits and follow-ups |
 | [WCAG 2.2 Automated Evidence on the Live Demo, Round 2](./research/issue-151-live-wcag-axe-evidence-r2-2026-11-18.md) | Issue 151: second axe-core 4.10.3 and keyboard scan of the employee workbench and resident demo app with raw axe output retained, contrast incompletes sampled, adverse results kept and a per-criterion table |
 | [WCAG 2.2 Live Audit Round 3 for the Demo](./research/issue-151-live-r3-wcag-evidence-2026-11-18.md) | Issue 151: resident app axe and keyboard states, contrast heuristic (disabled controls only), single page title finding and keyboard case open; criterion 4 stays unticked |
+| [WCAG 2.2 Live Audit Round 4, Role Routes, for the Demo](./research/issue-151-live-r4-role-routes-evidence-2026-11-18.md) | Issue 151: axe and keyboard scan of nine role screens on the live demo, per-criterion proven and unproven table |
 | [Rubric src Counting and mvp Stop, State and Remaining Criteria](./research/issue-198-rubric-src-counting-evidence-2026-11-18.md) | Issue 198: registry and score state on main (79/100, no mvp or prototype globs), per-criterion table; criteria 3 and 4 are historical and unprovable |
 | [Rubric Scoring Failed on Main, Live Run-History Proof](./research/rubric-1397-live-run-history-2026-11-18.md) | Issue 1397: no longer failing on main; consumed payload was the placeholder (second call refused at max 1); recovery via run 42841391974 and PR 1398; per-criterion table |
 | [Rubric src Counting and mvp Stop, Live r2 Audit](./research/issue-198-rubric-live-r2-2026-11-18.md) | Issue 198 second audit with retained raw output: 5 of 7 proven, criteria 3 and 4 unprovable; new finding of 10 stale-mvp test failures and two `mvp-*.yml` workflows |
@@ -1405,6 +1414,7 @@ or infra acceptance claimed.
 | [Azure SQL Point-in-Time Restore Evidence on the Demo](./research/issue-145-live-pitr-restore-evidence-2026-11-18.md) | Issue 145: 2026-11-18 live restore of the demo database to a throwaway copy, audit-chain prefix match, observed restore time, per-criterion proven/unproven record |
 | [Azure SQL Restore Re-verification and Resurrection Gap](./research/issue-145-live-run2-reverification-2026-11-18.md) | Issue 145 run 2: read-only demo backup and cleanup checks, why release, suspension and allowance resurrection cannot be proven, final per-criterion record |
 | [Azure SQL Point-in-Time Restore Rerun with Raw Output](./research/issue-145-live-run3-pitr-rerun-2026-11-18.md) | Issue 145 run 3: second live restore with redacted raw probe output retained, chain and prefix match, native ledger denial, retention settings and the resurrection gap |
+| [Issue 145 Run 4 Audit with Retained Azure Output](./research/issue-145-live-run4-audit-2026-11-18.md) | Issue 145 run 4: retained read-only Azure backup, retention and cleanup output, repository parameter check, per-criterion proven and unproven table, production-only items |
 | [Agentic Workflow Detection Runs Tracker Assessment](./research/issue-1086-aw-detection-runs-2026-11-18.md) | Issue 1086: classification of 113 gh-aw detection warnings (108 cancellations), no threat found, remaining optional follow-up |
 | [Service Continuity, Versioning and Export Evidence on the Demo](./research/issue-122-live-continuity-evidence-2026-11-18.md) | Issue 122: 2026-11-18 live version change and reversal, offline export verification, default-disabled assistants, per-criterion proven/unproven record |
 | [Regulatory Alert and Home Chat UX Live Demo Proof](./research/issue-215-live-alert-chat-ux-evidence-2026-11-18.md) | Issue 215: desktop Playwright and axe evidence for the alerts panel and home chat on the demo, per-criterion status; no alert card can render without a law store and staff comprehension testing stays unrun |
