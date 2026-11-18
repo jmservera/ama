@@ -12823,3 +12823,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Issue 146 second live monitoring pass (Refs #146)
 
 * Added [issue-146-live2-monitoring-evidence-2026-11-18.md](research/issue-146-live2-monitoring-evidence-2026-11-18.md) with redacted raw output: eight installed alerts, no workbook, fired job-failure and digest alerts, job metric, private query access. Poison queue, workbook rendering, named owners and the tokenomics dashboard stay unproven; no source change.
+
+## [2026-11-18] add | Quality sensor live re-verification (Refs #1288)
+
+* Added [issue-1288-live-r2-quality-sensor-evidence-2026-11-18.md](research/issue-1288-live-r2-quality-sensor-evidence-2026-11-18.md): fresh retained readings seen on the demo, release gate unchanged, per-criterion table; no source change.
