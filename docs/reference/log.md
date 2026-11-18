@@ -12863,3 +12863,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Issue 200 src repoint audit (Refs #200)
 
 * Added [src-repoint-live-audit-200-2026-11-18.md](research/src-repoint-live-audit-200-2026-11-18.md): criteria 2 proven, criterion 3 proven except a fresh tag deployment; no source change
+
+## [2026-11-18] add | Issue 2008 synthetic demo workbook for the import (Refs #2008)
+
+* Added [issue-2008-demo-workbook-import-evidence-2026-11-18.md](research/issue-2008-demo-workbook-import-evidence-2026-11-18.md), the workbook, its CSV and raw evidence under `research/demo-workbook/`, and the generator `tools/make-demo-case-list.py`. Local preview shows clean, mapping and conflict rows; the deployed demo screen shows mapping and two row problems for the CSV; the web screen has no `.xlsx` upload or conflict check, so that part of criterion 3 stays unproven. No source change.
