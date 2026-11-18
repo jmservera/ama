@@ -1,0 +1,11 @@
+Ref,Resident name,Property address,Post code,Workflow stage,Status,Case owner,Notes
+DEMO-001,Demo Resident 01,"1 Fictional Row, Exampletown",ZZ1 1AA,Survey booked,Open,Demo Officer A,
+DEMO-002,Demo Resident 02,"2 Fictional Row, Exampletown",ZZ1 1AB,Assessment,Open,Demo Officer A,Gas safety date missing in source
+DEMO-003,Demo Resident 03,"3 Fictional Row, Exampletown",ZZ1 1AD,Design,Open,Demo Officer B,
+DEMO-004,Demo Resident 04,"4 Fictional Row, Exampletown",ZZ1 1AE,Install,On hold,Demo Officer B,
+DEMO-005,Demo Resident 05,"5 Fictional Row, Exampletown",ZZ1 1AF,Handover,Open,Demo Officer C,
+DEMO-006,Demo Resident 06,"6 Fictional Row, Exampletown",ZZ1 1AG,Survey booked,Open,Demo Officer C,
+DEMO-007,Demo Resident 07,,ZZ1 1AH,Assessment,Open,Demo Officer A,Address missing
+DEMO-008,Demo Resident 08,"8 Fictional Row, Exampletown",ZZ-18,Design,Open,Demo Officer B,Postcode typed wrongly
+DEMO-009,Demo Resident 09,"9 Fictional Row, Exampletown",ZZ1 1AJ,,Open,Demo Officer C,Stage not filled in
+DEMO-002,Demo Resident 10,"10 Fictional Row, Exampletown",ZZ1 1AK,Install,Open,Demo Officer A,Reuses DEMO-002

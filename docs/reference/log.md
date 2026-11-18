@@ -12848,6 +12848,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-146-live2-monitoring-evidence-2026-11-18.md](research/issue-146-live2-monitoring-evidence-2026-11-18.md) with redacted raw output: eight installed alerts, no workbook, fired job-failure and digest alerts, job metric, private query access. Poison queue, workbook rendering, named owners and the tokenomics dashboard stay unproven; no source change.
 
+## [2026-11-18] update | Issue 1258 archive ancestor durability evidence (Refs #1258)
+
+* Added [issue-1258-archive-ancestor-durability-2026-11-18.md](research/issue-1258-archive-ancestor-durability-2026-11-18.md): main already holds the fix (PR #1328); 110 offline tests pass and fail against the pre-fix source; criterion 5 stays a process gate. No source change.
+
 ## [2026-11-18] add | Archive unusable-path failing-first evidence (Refs #1259)
 
 * Added [2026-11-18-ranking-archive-unusable-1259-failing-first.md](research/2026-11-18-ranking-archive-unusable-1259-failing-first.md): regression class red on the parent of the fix, green on main, with a per-criterion table. No source change; no Azure action; the FULL-receipt criterion stays unticked.
@@ -12867,3 +12871,30 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Issue 116 live round 2 (Refs #116)
 
 * Added [issue-116-live-r2-evidence-2026-11-18.md](research/issue-116-live-r2-evidence-2026-11-18.md): reason-value leak scan on the deployed demo, second role blocked by Graph privileges; no source change
+## [2026-11-18] add | Issue 110 live IoT Hub to SQL rerun (Refs #110)
+
+* Added [issue-110-live2-iot-sql-evidence-2026-11-18.md](research/issue-110-live2-iot-sql-evidence-2026-11-18.md): bounded job sent 6 and stored 6 through IoT Hub into Azure SQL; devices, job and temporary roles removed; no source change
+
+## [2026-11-18] update | Issue 108 harness audit live round 2 (Refs #108)
+
+* Added [issue-108-harness-audit-live-r2-2026-11-18.md](research/issue-108-harness-audit-live-r2-2026-11-18.md): harness rerun (116 tests OK), deployment, version and rate limits confirmed in uksouth and swedencentral, subscription quota unproven; no source change
+
+## [2026-11-18] add | Issue 154 live resident UX audit round 2 (Refs #154)
+
+* Added [issue-154-live-resident-ux-audit-r2-2026-11-18.md](research/issue-154-live-resident-ux-audit-r2-2026-11-18.md): desktop audit against the UX standards with retained raw output and three resident screenshots (workbench screenshots not retained), per-criterion table; criteria 3 and 5b unproven. No source change.
+
+## [2026-11-18] add | Issue 2008 synthetic demo workbook for the import (Refs #2008)
+
+* Added [issue-2008-demo-workbook-import-evidence-2026-11-18.md](research/issue-2008-demo-workbook-import-evidence-2026-11-18.md), the workbook, its CSV and raw evidence under `research/demo-workbook/`, and the generator `tools/make-demo-case-list.py`. Local preview shows clean, mapping and conflict rows; the deployed demo screen shows mapping and two row problems for the CSV; the web screen has no `.xlsx` upload or conflict check, so that part of criterion 3 stays unproven. No source change.
+
+## [2026-11-18] add | Epic 104 bounded AI audit with live read (Refs #104)
+
+* Added [issue-104-epic-audit-live-2026-11-18.md](research/issue-104-epic-audit-live-2026-11-18.md): per-criterion table for epic 104 (criteria 1 and 2 unmet, 3 to 5 consistent with live read), exact remaining demo gaps for #107, #108, #164 and #216 by class, and a read-only live probe; nothing ticked, no source change, no Azure resource created
+
+## [2026-11-18] update | Issue 144 hosting proof with raw output (Refs #144)
+
+* Added [issue-144-hosting-proof-live-2026-11-18.md](research/issue-144-hosting-proof-live-2026-11-18.md) and its raw folder: criteria 1 and 3 stay unproven (pipeline clause; hardening beyond non-root); job count reconciled to eight; no source change
+
+## [2026-11-18] add | Five assistants live re-verification (Refs #107)
+
+* Added [issue-107-live-r2-assistants-evidence-2026-11-18.md](research/issue-107-live-r2-assistants-evidence-2026-11-18.md): fresh raw MSSQL and SQLite test output and a read-only live probe, per-criterion table; no source change. The approved-release criterion stays unproven (OQ-017).
