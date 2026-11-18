@@ -453,6 +453,10 @@ For #184, the [live simulator stream evidence](./research/issue-184-live-simulat
 records the child-story status on 2026-11-18: #185 and #189 are still open, the demo hub has
 a budget alert, and the live owner and time limit cannot be shown on the demo API.
 
+For #184, the [run 2 live stream evidence](./research/issue-184-live-simulator-stream-run2-evidence-2026-11-18.md)
+runs the repository simulator loop with Hub-generated symmetric keys on the demo hub, reads all 9 messages
+back from Event Hub and retains the raw job output; the child-closure criterion stays unproven.
+
 For #109, the [live device monitoring evidence](./research/issue-109-live-device-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of IoT Hub connection state and a connectivity metric alert.
 Hub `lastActivityTime` did not update; the #440 checkpoint and child-closure criteria stay unproven.

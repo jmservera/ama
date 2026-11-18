@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-11-15
+ms.date: 2026-11-18
 ms.topic: reference
 ---
 
@@ -12791,6 +12791,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Eval gate local test rerun and rescoring limits (Refs #216)
 
 * Updated [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md): 101 existing gate tests run locally with raw output retained; container scores labelled "Observed; raw output not retained"; no new model call; the unticked criterion stays partly proven.
+
+## [2026-11-18] add | Issue 184 live simulator stream run 2 (Refs #184)
+
+* Added [issue-184-live-simulator-stream-run2-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-run2-evidence-2026-11-18.md) with two retained redacted job logs: the repository simulator loop streamed 3 slots (9 messages) to the demo hub with Hub-generated symmetric keys, all 9 read back from Event Hub; devices, job and temporary roles deleted. The child-closure criterion is not proven (#185 and #189 open). A lost Registry Contributor assignment and a short first read window are recorded as adverse findings.
 
 ## [2026-11-18] add | Live WCAG axe and keyboard evidence, round 2 (Refs #151)
 
