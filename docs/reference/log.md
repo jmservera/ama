@@ -13043,3 +13043,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 153 live content re-check (Refs #153)
 
 * Added [content-recheck-153-live-2026-11-18.md](research/content-recheck-153-live-2026-11-18.md): fresh desktop probes of the deployed demo; hold and envelope wording and an Unassigned owner still live, generic 404 and 403 bodies lack owner and next action; no named-reviewer record exists so that criterion stays unproven; no source change, nothing created in Azure
+
+## [2026-11-18] add | Issue 138 live third audit (Refs #138)
+
+* Added [issue-138-live-r3-2026-11-18.md](research/issue-138-live-r3-2026-11-18.md) with retained sanitised outputs: OIDC, environments, runner and image release still unconfigured, live what-if succeeds but `summarize_plan` refuses it, smoke and secret checks partly proven; no source change, nothing created in Azure

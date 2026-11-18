@@ -502,6 +502,10 @@ A [second run](./research/issue-138-live-cicd-pipeline-run2-evidence-2026-11-18.
 worktree with the same outcome: the what-if and smoke checks pass, while the OIDC variables, protected
 environments, runner and image release remain unconfigured and unobserved.
 
+A [third run](./research/issue-138-live-r3-2026-11-18.md) retains sanitised raw outputs, finds that
+`summarize_plan` refuses the live what-if (14 Unsupported entries) and gives a per-criterion proven or unproven table;
+nothing is ticked.
+
 For #118, the [hardened deployment live evidence](./research/issue-118-hardened-deployment-live-evidence-2026-11-18.md)
 records the Azure Policy and Defender decision and read-only live probes (enactment not proven).
 A [rerun](./research/issue-118-live-20261118T1512Z-2026-11-18.md) retains sanitised raw outputs and adds a per-criterion table;
