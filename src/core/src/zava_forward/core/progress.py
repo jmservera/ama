@@ -7,6 +7,7 @@ import re
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
+from . import tokenomics
 from .insights import STAGE_ORDER
 from .quality import EVENT_TYPES, TRANSITIONS
 
@@ -605,6 +606,7 @@ def report(
     cohort: Record,
     scenario: Record | None,
     audit_intact: bool | None,
+    ai_consumption_economics: Record | None = None,
 ) -> Record:
     end = timestamp(as_of, "As-of")
     beginning = timestamp(start, "Period start") if start is not None else None
@@ -612,6 +614,14 @@ def report(
         raise ValueError("As-of cannot be in the future.")
     if beginning is not None and beginning > end:
         raise ValueError("Period start must not be later than as-of.")
+    econ = (
+        ai_consumption_economics
+        if ai_consumption_economics is not None
+        else tokenomics.summarize_ai_consumption_economics(
+            start=_iso(beginning) if beginning else None,
+            as_of=_iso(end),
+        )
+    )
     histories = [history(case, end, beginning) for case in sorted(cases, key=lambda c: c["id"])]
     exceptions = [
         dict(case_id=item["case_id"], **exception)
@@ -688,6 +698,7 @@ def report(
         else "Failed",
         histories=histories,
         forecast=forecast(len(cases), scenario),
+        ai_consumption_economics=econ,
         exceptions=exceptions,
     )
 

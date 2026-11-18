@@ -7,16 +7,38 @@ import hashlib
 import json
 import os
 import uuid
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from datetime import UTC, datetime
+from enum import Enum
 from typing import Any
 from urllib.parse import quote
 
-from zava_forward.core import projection
+from zava_forward.core import identity, projection
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
+from zava_forward.core.chat_panel import REFUSED, consent_guidance, out_of_scope
 from zava_forward.core.chat_privacy import redact
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
-from zava_forward.core.regulatory_privacy import retention_report
+from zava_forward.core.regulatory_eval_gates import (
+    _verify_comparison_evidence,
+    refuse_question,
+    resolve_regulatory_surface,
+    verify_reply_grounding,
+)
+from zava_forward.core.regulatory_output_guard import (
+    ADVISORY_REVIEW_TEXT,
+    GuardDecision,
+    GuardTelemetry,
+    ViolationCategory,
+    advisory_review_summary,
+    inspect_regulatory_output,
+)
+from zava_forward.core.regulatory_privacy import (
+    MANUAL_PATH,
+    build_foundry_query,
+    is_trusted_proxy_user,
+    resolve_entra_regulatory_roles,
+    retention_report,
+)
 from zava_forward.core.regulatory_usage import MAX_BYTES, MAX_POSITIONS, offline_usage, summarize
 from zava_forward.core.rule_engine import citation_eligibility
 from zava_forward.core.source_monitor import card_freshness
@@ -25,6 +47,17 @@ TASK = "regulatory-home-chat"
 SCHEMA = "regulatory-chat-v1"
 OWNER = "Juan Manuel Servera"
 MARKER = "synthetic-demo"
+SHIP_GATE_REFUSAL = (
+    "Extractive regulatory chat has no verified measured value over deterministic rule cards; "
+    "serve rule cards alone."
+)
+
+
+class _UnsetType(Enum):
+    UNSET = 0
+
+
+_UNSET = _UnsetType.UNSET
 HAZARD_ROLES = (
     "Building Safety Liaison",
     "Resident Liaison Officer",
@@ -49,36 +82,85 @@ class RegulatoryChat:
         refuse: Callable[[str], str | None],
         env: Any = None,
         clock: Callable[[], datetime] | None = None,
+        *,
+        ship_gate_comparison: Mapping[str, Any] | None | _UnsetType = _UNSET,
+        enforce_ship_gate: bool | None = None,
+        guard_telemetry: GuardTelemetry | None = None,
     ) -> None:
+        if enforce_ship_gate is not None and type(enforce_ship_gate) is not bool:
+            raise TypeError("enforce_ship_gate must be a bool or None.")
+        if (
+            ship_gate_comparison is not _UNSET
+            and ship_gate_comparison is not None
+            and not isinstance(ship_gate_comparison, Mapping)
+        ):
+            raise TypeError("ship_gate_comparison must be a mapping or None.")
         self.iso, self.store, self.law = isolation, isolation.store, law
         self.render, self.classify, self.refuse = render, classify, refuse
         self.env = os.environ if env is None else env
         self.clock = clock or (lambda: datetime.now(UTC))
+        self.ship_gate_comparison: Mapping[str, Any] | None = (
+            ship_gate_comparison if isinstance(ship_gate_comparison, Mapping) else None
+        )
+        self.enforce_ship_gate: bool = (
+            (ship_gate_comparison is not _UNSET) if enforce_ship_gate is None else enforce_ship_gate
+        )
+        self.guard_telemetry: GuardTelemetry = (
+            guard_telemetry if guard_telemetry is not None else GuardTelemetry()
+        )
+
+    @classmethod
+    def ship_gated(
+        cls,
+        isolation: ChatIsolation,
+        law: Any,
+        render: Callable[[dict[str, Any]], dict[str, Any]],
+        classify: Callable[[str], str | None],
+        refuse: Callable[[str], str | None],
+        env: Any = None,
+        clock: Callable[[], datetime] | None = None,
+        *,
+        ship_gate_comparison: Mapping[str, Any] | None = None,
+        guard_telemetry: GuardTelemetry | None = None,
+    ) -> RegulatoryChat:
+        return cls(
+            isolation,
+            law,
+            render,
+            classify,
+            refuse,
+            env=env,
+            clock=clock,
+            ship_gate_comparison=ship_gate_comparison,
+            enforce_ship_gate=True,
+            guard_telemetry=guard_telemetry,
+        )
+
+    def _require_ship_gate(self) -> None:
+        if self.enforce_ship_gate and not _verify_comparison_evidence(self.ship_gate_comparison):
+            raise ChatForbidden(SHIP_GATE_REFUSAL)
 
     def admit(self, user: dict[str, Any]) -> dict[str, Any]:
+        if bool(user.get("view_only")):
+            raise ChatForbidden("View-only administrators cannot use regulatory chat.")
+        has_entra_markers = (
+            identity.is_entra(user)
+            or "oid" in user
+            or "tid" in user
+            or user.get("auth_mode") == "trusted-proxy"
+        )
+        verified_entra: dict[str, Any] | None = None
+        if has_entra_markers:
+            verified_entra = identity.verified(user)
+            if verified_entra is None:
+                raise ChatForbidden("A verified Entra principal is required for regulatory chat.")
         marker = self.store.data.get("regulatory_chat_exercise")
         if hasattr(self.store, "assistant_connection"):
             with self.store.dblock:
                 row = self.store.db.execute(
                     "SELECT value FROM meta WHERE key=?", ("regulatory_chat_exercise",)
                 ).fetchone()
-                person = self.store.db.execute(
-                    "SELECT body FROM staff WHERE email=?", (user_key(user),)
-                ).fetchone()
             marker = row[0] if row else None
-            if not person:
-                raise ChatForbidden("The staff principal is no longer provisioned.")
-            person = json.loads(person[0])
-            user = (
-                dict(
-                    person,
-                    role=user["role"],
-                    auth_provider="trusted-proxy",
-                    rule_roles=user.get("rule_roles", []),
-                )
-                if user.get("auth_provider") == "trusted-proxy"
-                else person
-            )
         if (
             self.env.get("ZF_REGULATORY_CHAT") != MARKER
             or marker != MARKER
@@ -93,18 +175,43 @@ class RegulatoryChat:
                     "Synthetic-demo chat needs explicitly simulated privacy references."
                 )
         self.iso.privacy._require()
-        if hasattr(self.store, "assistant_connection"):
-            if not projection.allowed(user, "chat"):
-                raise ChatForbidden("The current staff role does not include chat.")
-            return dict(user)
-        current = self.iso.current_user(user)
-        if user.get("auth_provider") == "trusted-proxy":
+        try:
+            current = dict(self.iso.current_user(user))
+        except ChatForbidden:
+            if hasattr(self.store, "assistant_connection") and not identity.is_entra(user):
+                raise ChatForbidden("The staff principal is no longer provisioned.") from None
+            raise
+        if is_trusted_proxy_user(user):
+            if "app_roles" in user or "entra_roles" in user:
+                caps = sorted(resolve_entra_regulatory_roles(user))
+            else:
+                caps = [str(r) for r in (user.get("rule_roles") or ()) if isinstance(r, str)]
+            if "regulatory_chat" not in caps:
+                raise ChatForbidden(
+                    "The ZavaForward.RegulatoryChat capability is required for regulatory chat."
+                )
             current = dict(
                 current,
                 role=user["role"],
                 auth_provider="trusted-proxy",
-                rule_roles=user.get("rule_roles", []),
+                rule_roles=caps,
             )
+            if verified_entra is not None:
+                for claim_key in (
+                    "oid",
+                    "tid",
+                    "identity_source",
+                    "app_roles",
+                    "bound",
+                    "derived_code",
+                    "derived_email",
+                    "view_only",
+                ):
+                    if claim_key in verified_entra:
+                        current[claim_key] = verified_entra[claim_key]
+            for extra_key in ("auth_mode", "entra_roles"):
+                if extra_key in user:
+                    current[extra_key] = user[extra_key]
             if not projection.allowed(current, "chat"):
                 raise ChatForbidden("The authenticated staff role does not include chat.")
         return dict(current)
@@ -121,6 +228,7 @@ class RegulatoryChat:
 
     def start(self, user: dict[str, Any], case_id: str) -> str:
         user = self.admit(user)
+        self._require_ship_gate()
         if not case_id or self.store.detail(case_id, user) is None:
             raise ChatNotFound(case_id)
         row = self.store.chat_create_thread(
@@ -230,20 +338,36 @@ class RegulatoryChat:
             exercise=True,
         )
 
+    def _question_refusal(self, question: str) -> str | None:
+        reason = self.refuse(question)
+        if reason:
+            return reason
+        hit = out_of_scope(question)
+        return f"{REFUSED}{hit[1]}" if hit else None
+
     def bundle(self, user: dict[str, Any], cid: str, question: str) -> dict[str, Any]:
         """Minimise after the normal server projection; never retrieve memory or private notes."""
         at = self.clock().isoformat(timespec="seconds")
         day = at[:10]
         kind = self.classify(question)
         result: dict[str, Any] = dict(
-            sources=[], facts=[], cards=[], as_of=at, conflict=False, refusal=self.refuse(question)
+            sources=[],
+            facts=[],
+            cards=[],
+            as_of=at,
+            conflict=False,
+            refusal=self._question_refusal(question),
         )
         if result["refusal"] or self.law is None:
             return result
         detail = self.store.detail(cid, user)
         if detail is None:
             raise ChatNotFound(cid)
+        blocked = consent_guidance(self.iso.ai_consent_state(cid))
+        if blocked:
+            return dict(result, refusal=blocked)
         sources: dict[str, Any] = {}
+        card_provisions: list[list[str]] = []
         signatures = set()
         with self.law.sql.lock:
             for latest_card in self.law.rules.cards():
@@ -301,6 +425,7 @@ class RegulatoryChat:
                         source_freshness=card_freshness(self.law, card, day),
                     )
                 )
+                card_provisions.append(list(card["provisions"]))
                 signatures.add((card["safe_default"], card["clock"]))
                 for pid in card["provisions"]:
                     sources[pid] = self._source(self.law.provision(pid))
@@ -308,6 +433,21 @@ class RegulatoryChat:
         result["sources"] = list(sources.values())
         if len(sources) > 4:
             result["refusal"] = "Too many conflicting versions; ask the named owner."
+        if result["refusal"]:
+            result["sources"] = []
+            result["facts"] = []
+            result["cards"] = []
+            result["conflict"] = False
+            result["unknown"] = "No permitted structured home fact selected for this purpose."
+            return result
+        if len(result["cards"]) > 1:
+            provs_per_source: dict[str, int] = {}
+            for pid in sources:
+                base_sid = pid.split("@v", 1)[0]
+                provs_per_source[base_sid] = provs_per_source.get(base_sid, 0) + 1
+            for card_entry, pids in zip(result["cards"], card_provisions, strict=True):
+                if any(provs_per_source.get(pid.split("@v", 1)[0], 0) > 1 for pid in pids):
+                    card_entry["provision_ids"] = pids
         if result["sources"] and not result["conflict"] and kind == "hazard-awareness-clock":
             if user["role"] in HAZARD_ROLES:
                 for i, hazard in enumerate(detail.get("hazards", [])[:2]):
@@ -323,6 +463,163 @@ class RegulatoryChat:
         if not result["facts"]:
             result["unknown"] = "No permitted structured home fact selected for this purpose."
         return result
+
+    def foundry_query(self, user: dict[str, Any], cid: str, question: object) -> dict[str, Any]:
+        """Build a question-scoped, canary-free Foundry query after admission and projection."""
+        user = self.admit(user)
+        if not isinstance(question, str) or not 1 <= len(question.strip()) <= 1000:
+            raise ValueError("Question must contain 1 to 1000 characters.")
+        clean_q = question.strip()
+        refusal = self._question_refusal(clean_q)
+        if refusal:
+            self.store.audit(
+                user_key(user),
+                "chat.regulatory.foundry_query",
+                cid,
+                json.dumps(
+                    dict(
+                        permitted=False,
+                        role=user["role"],
+                        reason="refused_question",
+                        label=MARKER,
+                    ),
+                    sort_keys=True,
+                ),
+            )
+            return dict(
+                permitted=False,
+                refusal=refusal,
+                fields={},
+                dropped=[],
+                unneeded_for_question=[],
+                special_category_dropped=[],
+                dpo_reviewed=False,
+                manual_path=MANUAL_PATH,
+            )
+        detail = self.store.detail(cid, user)
+        if detail is None:
+            raise ChatNotFound(cid)
+        blocked = consent_guidance(self.iso.ai_consent_state(cid))
+        if blocked:
+            self.store.audit(
+                user_key(user),
+                "chat.regulatory.foundry_query",
+                cid,
+                json.dumps(
+                    dict(
+                        permitted=False,
+                        role=user["role"],
+                        reason="ai_consent_not_given",
+                        label=MARKER,
+                    ),
+                    sort_keys=True,
+                ),
+            )
+            return dict(
+                permitted=False,
+                refusal=blocked,
+                fields={},
+                dropped=[],
+                unneeded_for_question=[],
+                special_category_dropped=[],
+                dpo_reviewed=False,
+                manual_path=MANUAL_PATH,
+            )
+        day = self.clock().isoformat(timespec="seconds")[:10]
+        kind = self.classify(clean_q)
+        candidate: dict[str, Any] = dict(as_of=day, case_id=cid)
+        for k, v in detail.items():
+            if k not in candidate:
+                candidate[k] = v
+        resident = detail.get("resident")
+        if isinstance(resident, dict):
+            for rk, rv in resident.items():
+                if rk not in candidate:
+                    candidate[rk] = rv
+        hazards = detail.get("hazards")
+        if isinstance(hazards, list):
+            candidate["hazard_count"] = len(hazards)
+            candidate["active_hold_count"] = sum(
+                1
+                for h in hazards
+                if isinstance(h, dict)
+                and isinstance(h.get("hold"), dict)
+                and h["hold"].get("status") == "Active"
+            )
+        decisions = detail.get("automated_decisions")
+        if isinstance(decisions, list):
+            candidate["automated_decision_count"] = len(decisions)
+        if self.law is not None:
+            with self.law.sql.lock:
+                for latest_card in self.law.rules.cards():
+                    active = self.law.rules.is_active(latest_card["card_id"], day)
+                    if active is None:
+                        continue
+                    card = next(
+                        c
+                        for c in self.law.rules.history(latest_card["card_id"])
+                        if c["version"] == active
+                    )
+                    if (
+                        not card["exercise"]
+                        or not card["approved_by"]
+                        or not card["check"]
+                        or (kind is not None and card["check"]["kind"] != kind)
+                    ):
+                        continue
+                    candidate["card_id"] = str(card["card_id"])
+                    candidate["card_version"] = f"v{active}"
+                    candidate["check_kind"] = str(card["check"]["kind"])
+                    if card["provisions"]:
+                        pid = str(card["provisions"][0])
+                        candidate["provision_id"] = pid
+                        prov = self.law.provision(pid)
+                        candidate["source_id"] = str(prov["source_id"])
+                        candidate["version"] = f"v{prov['version']}"
+                    break
+        low = clean_q.lower()
+        provision_only = any(
+            term in low
+            for term in ("provision", "source", "section", "legislation", "statute", "cite")
+        ) and not any(
+            term in low
+            for term in ("home", "case", "property", "clock", "hold", "overdue", "check", "this ")
+        )
+        purpose = "rule_lookup" if provision_only else "check_explain"
+        topic = (
+            "provision_lookup"
+            if provision_only
+            else (
+                kind if kind in ("hazard-awareness-clock", "automated-decision-safeguard") else None
+            )
+        )
+        built = build_foundry_query(
+            purpose,
+            candidate,
+            question=clean_q,
+            question_topic=topic,
+            user=user,
+            env=self.env,
+        )
+        self.store.audit(
+            user_key(user),
+            "chat.regulatory.foundry_query",
+            cid,
+            json.dumps(
+                dict(
+                    permitted=bool(built["permitted"]),
+                    purpose=built["purpose"],
+                    question_topic=built["question_topic"],
+                    kept_count=len(built["fields"]),
+                    dropped_count=len(built["dropped"]),
+                    special_category_dropped_count=len(built["special_category_dropped"]),
+                    role=user["role"],
+                    label=MARKER,
+                ),
+                sort_keys=True,
+            ),
+        )
+        return built
 
     @staticmethod
     def _source(p: dict[str, Any]) -> dict[str, Any]:
@@ -343,12 +640,270 @@ class RegulatoryChat:
             currentness="Local snapshot only; live currentness not verified.",
         )
 
+    @staticmethod
+    def _bundle_answer_activated(snap: Mapping[str, Any]) -> tuple[bool, str | None]:
+        as_of_raw = snap.get("as_of")
+        as_of_day = as_of_raw[:10] if isinstance(as_of_raw, str) and len(as_of_raw) >= 10 else None
+        sources = snap.get("sources")
+        if not isinstance(sources, list) or not sources:
+            return False, None
+        first_sid: str | None = None
+        for src in sources:
+            if not isinstance(src, Mapping):
+                return False, first_sid
+            sid = str(src["id"]) if isinstance(src.get("id"), str) and src.get("id") else None
+            if first_sid is None:
+                first_sid = sid
+            if src.get("status") not in ("in_force", "guidance", "recorded-synthetic-demo"):
+                return False, sid
+            if src.get("review_status") in ("not_reviewed", "historical"):
+                return False, sid
+            eff = src.get("effective")
+            if isinstance(eff, str) and eff and as_of_day is not None and eff > as_of_day:
+                return False, sid
+        cards = snap.get("cards")
+        if not isinstance(cards, list) or not cards:
+            return False, first_sid
+        for card in cards:
+            if not isinstance(card, Mapping):
+                return False, first_sid
+            card_state = str(card.get("status") or card.get("state") or "").strip().lower()
+            if card_state in ("draft", "retired", "rejected", "superseded"):
+                return False, first_sid
+            if card.get("active") is False or card.get("approved") is False:
+                return False, first_sid
+            if "approved_by" in card and not str(card.get("approved_by") or "").strip():
+                return False, first_sid
+            card_eff = card.get("effective")
+            if (
+                isinstance(card_eff, str)
+                and card_eff
+                and as_of_day is not None
+                and card_eff > as_of_day
+            ):
+                return False, first_sid
+        return True, None
+
+    def _guard_turn_reply(
+        self, snap: Mapping[str, Any], reply: dict[str, Any]
+    ) -> tuple[dict[str, Any], GuardDecision]:
+        guarded = copy.deepcopy(reply)
+        violations: list[ViolationCategory] = []
+        reasons: list[str] = []
+        prior = guarded.get("output_guard")
+        if isinstance(prior, Mapping) and prior.get("passed") is False:
+            raw_v = prior.get("violations")
+            if isinstance(raw_v, list):
+                for item in raw_v:
+                    if (
+                        item
+                        in (
+                            "duty_satisfied",
+                            "legal_advice",
+                            "future_law_applied_as_active",
+                        )
+                        and item not in violations
+                    ):
+                        violations.append(item)
+            raw_r = prior.get("reasons")
+            if isinstance(raw_r, list):
+                for r_item in raw_r:
+                    if isinstance(r_item, str) and r_item not in reasons:
+                        reasons.append(r_item)
+
+        offending_sid: str | None = None
+        if guarded.get("kind") == "answer":
+            activated, offending_sid = self._bundle_answer_activated(snap)
+            if not activated:
+                if "future_law_applied_as_active" not in violations:
+                    violations.append("future_law_applied_as_active")
+                reason_tag = f"unactivated_answer:{offending_sid or 'bundle'}"
+                if reason_tag not in reasons:
+                    reasons.append(reason_tag)
+
+        stripped_reply = str(guarded.get("reply") or "")
+        raw_sources = snap.get("sources")
+        if isinstance(raw_sources, list):
+            for src in raw_sources:
+                if isinstance(src, Mapping):
+                    sid = str(src.get("id") or "")
+                    stext = str(src.get("text") or "")
+                    if sid and stext:
+                        stripped_reply = stripped_reply.replace(
+                            f"Quoted source [{sid}]: {stext}", ""
+                        )
+                        stripped_reply = stripped_reply.replace(f'[{sid}] "{stext}"', "")
+        raw_facts = snap.get("facts")
+        if isinstance(raw_facts, list):
+            for fact in raw_facts:
+                if isinstance(fact, Mapping):
+                    fid = str(fact.get("id") or "")
+                    ftext = str(fact.get("text") or "")
+                    if fid and ftext:
+                        stripped_reply = stripped_reply.replace(f"[{fid}] {ftext}", "")
+
+        newly_detected = False
+        reply_dec = inspect_regulatory_output(stripped_reply, on_violation="rewrite")
+        if not reply_dec.passed:
+            newly_detected = True
+            for v in reply_dec.violations:
+                if v not in violations:
+                    violations.append(v)
+            for r in reply_dec.reasons:
+                if r not in reasons:
+                    reasons.append(r)
+
+        if isinstance(guarded.get("answer"), str):
+            ans_dec = inspect_regulatory_output(guarded["answer"], on_violation="rewrite")
+            if not ans_dec.passed:
+                newly_detected = True
+                for v in ans_dec.violations:
+                    if v not in violations:
+                        violations.append(v)
+                for r in ans_dec.reasons:
+                    if r not in reasons:
+                        reasons.append(r)
+                guarded["answer"] = ans_dec.rewritten_text or ADVISORY_REVIEW_TEXT
+
+        sections = guarded.get("sections")
+        if isinstance(sections, dict):
+            if isinstance(sections.get("unknown_or_missing"), list):
+                cleaned_unknowns: list[str] = []
+                for entry in sections["unknown_or_missing"]:
+                    dec = inspect_regulatory_output(str(entry), on_violation="rewrite")
+                    if not dec.passed:
+                        newly_detected = True
+                        for v in dec.violations:
+                            if v not in violations:
+                                violations.append(v)
+                        for r in dec.reasons:
+                            if r not in reasons:
+                                reasons.append(r)
+                        cleaned_unknowns.append(dec.rewritten_text or ADVISORY_REVIEW_TEXT)
+                    else:
+                        cleaned_unknowns.append(str(entry))
+                sections["unknown_or_missing"] = cleaned_unknowns
+            for skey in ("unknown_or_conflict", "safe_next_action", "who_decides"):
+                if isinstance(sections.get(skey), str):
+                    dec = inspect_regulatory_output(sections[skey], on_violation="rewrite")
+                    if not dec.passed:
+                        newly_detected = True
+                        for v in dec.violations:
+                            if v not in violations:
+                                violations.append(v)
+                        for r in dec.reasons:
+                            if r not in reasons:
+                                reasons.append(r)
+                        sections[skey] = dec.rewritten_text or ADVISORY_REVIEW_TEXT
+
+        if violations:
+            advisory = advisory_review_summary(
+                source_id=offending_sid,
+                human_rule_activated=False if offending_sid else None,
+            )
+            if guarded.get("kind") != "refused" or newly_detected:
+                guarded["kind"] = "refused"
+                guarded["requires_human"] = True
+                guarded["citations"] = []
+                if isinstance(sections, dict):
+                    if isinstance(sections.get("what_sources_say"), list):
+                        sections["what_sources_say"] = []
+                    elif isinstance(sections.get("what_sources_say"), str):
+                        sections["what_sources_say"] = "No verified active source quoted."
+                    if isinstance(sections.get("recorded_home_facts"), list):
+                        sections["recorded_home_facts"] = []
+                    elif isinstance(sections.get("recorded_home_facts"), str):
+                        sections["recorded_home_facts"] = "None quoted on a refused lookup."
+                    if isinstance(sections.get("unknown_or_missing"), list):
+                        sections["unknown_or_missing"] = [advisory]
+                    elif isinstance(sections.get("unknown_or_conflict"), str):
+                        sections["unknown_or_conflict"] = advisory
+                if (
+                    newly_detected
+                    or not inspect_regulatory_output(
+                        str(guarded.get("reply") or ""), on_violation="reject"
+                    ).passed
+                ):
+                    guarded["reply"] = advisory
+            decision = GuardDecision(
+                checked=True,
+                passed=False,
+                action="rewritten",
+                violations=tuple(violations),
+                reasons=tuple(reasons),
+                rewritten_text=str(guarded.get("reply") or ""),
+            )
+        else:
+            decision = GuardDecision(
+                checked=True,
+                passed=True,
+                action="passed",
+                violations=(),
+                reasons=(),
+                rewritten_text=None,
+            )
+        guarded["output_guard"] = decision.to_status_dict()
+        return guarded, decision
+
     def ask(self, user: dict[str, Any], tid: str, question: object) -> dict[str, Any]:
         user, thread = self.thread(user, tid)
+        self._require_ship_gate()
         if not isinstance(question, str) or not 1 <= len(question.strip()) <= 1000:
             raise ValueError("Question must contain 1 to 1000 characters.")
-        masked: str = redact(question.strip())[0]
-        reply = self.render(self.bundle(user, thread["case_id"], masked))
+        raw_q = question.strip()
+        pre_redact_refusal = self._question_refusal(raw_q)
+        masked: str = redact(raw_q)[0]
+        if self.enforce_ship_gate:
+            canonical_refusal = refuse_question(raw_q) or refuse_question(masked)
+            if canonical_refusal is not None:
+                snap: dict[str, Any] = dict(
+                    sources=[],
+                    facts=[],
+                    cards=[],
+                    as_of=self.clock().isoformat(timespec="seconds"),
+                    conflict=False,
+                    refusal=canonical_refusal,
+                    unknown="No permitted structured home fact selected for this purpose.",
+                )
+            elif pre_redact_refusal:
+                snap = dict(
+                    sources=[],
+                    facts=[],
+                    cards=[],
+                    as_of=self.clock().isoformat(timespec="seconds"),
+                    conflict=False,
+                    refusal=pre_redact_refusal,
+                    unknown="No permitted structured home fact selected for this purpose.",
+                )
+            else:
+                snap = self.bundle(user, thread["case_id"], masked)
+            raw_reply = self.render(copy.deepcopy(snap))
+            if not isinstance(raw_reply, dict):
+                raise ChatForbidden(
+                    "Rendered regulatory chat reply failed extractive bundle grounding "
+                    "verification; serve rule cards alone."
+                )
+            reply = copy.deepcopy(raw_reply)
+            if not verify_reply_grounding(snap, reply):
+                raise ChatForbidden(
+                    "Rendered regulatory chat reply failed extractive bundle grounding "
+                    "verification; serve rule cards alone."
+                )
+        elif pre_redact_refusal:
+            at = self.clock().isoformat(timespec="seconds")
+            snap = dict(
+                sources=[],
+                facts=[],
+                cards=[],
+                as_of=at,
+                conflict=False,
+                refusal=pre_redact_refusal,
+            )
+            reply = self.render(snap)
+        else:
+            snap = self.bundle(user, thread["case_id"], masked)
+            reply = self.render(snap)
+        reply, guard_decision = self._guard_turn_reply(snap, reply)
         outcome = reply["kind"]
         usage = offline_usage(TASK, SCHEMA, outcome, reply["as_of"])
         reply["usage"] = usage
@@ -361,6 +916,23 @@ class RegulatoryChat:
             try:
                 with repo.txn():
                     user, thread = self.thread(user, tid)
+                    blocked = consent_guidance(self.iso.ai_consent_state(thread["case_id"]))
+                    if blocked and reply.get("kind") != "refused":
+                        blocked_snap: dict[str, Any] = dict(
+                            sources=[],
+                            facts=[],
+                            cards=[],
+                            as_of=reply["as_of"],
+                            conflict=False,
+                            refusal=blocked,
+                        )
+                        reply, guard_decision = self._guard_turn_reply(
+                            blocked_snap, self.render(blocked_snap)
+                        )
+                        outcome = reply["kind"]
+                        usage = offline_usage(TASK, SCHEMA, outcome, reply["as_of"])
+                        reply["usage"] = usage
+                        text = encode(reply)
                     owner = self._owner(user, thread["case_id"]) if outcome == "conflict" else None
                     fresh = repo.get(tid, user_key(user))
                     if (
@@ -437,7 +1009,65 @@ class RegulatoryChat:
                     "The turn and any referral were saved, but their audit failed. "
                     "Reload stored history before retrying; metering may be incomplete."
                 ) from exc
+        self.guard_telemetry.record_decision(guard_decision)
         return dict(reply, turn=seq, **({"escalation": receipt} if receipt else {}))
+
+    def surface(
+        self,
+        user: dict[str, Any],
+        cid: str,
+        question: object,
+        *,
+        comparison: Mapping[str, Any] | None | _UnsetType = _UNSET,
+    ) -> dict[str, Any]:
+        """Return the ship-gated regulatory surface, defaulting to rule cards with links alone."""
+        user = self.admit(user)
+        if not isinstance(cid, str) or not cid or self.store.detail(cid, user) is None:
+            raise ChatNotFound(str(cid))
+        if not isinstance(question, str) or not 1 <= len(question.strip()) <= 1000:
+            raise ValueError("Question must contain 1 to 1000 characters.")
+        effective_comparison = self.ship_gate_comparison if comparison is _UNSET else comparison
+        resolved_comparison = (
+            effective_comparison if isinstance(effective_comparison, Mapping) else None
+        )
+        raw_q = question.strip()
+        masked: str = redact(raw_q)[0]
+        canonical_refusal = refuse_question(raw_q) or refuse_question(masked)
+        if canonical_refusal is not None:
+            snap: dict[str, Any] = dict(
+                sources=[],
+                facts=[],
+                cards=[],
+                as_of=self.clock().isoformat(timespec="seconds"),
+                conflict=False,
+                refusal=canonical_refusal,
+                unknown="No permitted structured home fact selected for this purpose.",
+            )
+        else:
+            snap = self.bundle(user, cid, masked)
+        candidate_reply: dict[str, Any] | None = None
+        if _verify_comparison_evidence(effective_comparison):
+            try:
+                rendered = self.render(copy.deepcopy(snap))
+                if isinstance(rendered, Mapping):
+                    rendered_copy = copy.deepcopy(dict(rendered))
+                    guarded_copy, surf_decision = self._guard_turn_reply(snap, rendered_copy)
+                    self.guard_telemetry.record_decision(surf_decision)
+                    if not surf_decision.passed:
+                        candidate_reply = None
+                    else:
+                        kind = guarded_copy.get("kind")
+                        as_of = guarded_copy.get("as_of")
+                        if (
+                            type(kind) is str
+                            and kind in ("answer", "conflict", "refused")
+                            and type(as_of) is str
+                        ):
+                            usage = offline_usage(TASK, SCHEMA, kind, as_of)
+                            candidate_reply = {**guarded_copy, "usage": usage}
+            except Exception:
+                candidate_reply = None
+        return resolve_regulatory_surface(snap, resolved_comparison, chat_reply=candidate_reply)
 
     def _owner(self, sender: dict[str, Any], case_id: str) -> dict[str, Any]:
         staff = list(self.store.staff.values())
@@ -455,9 +1085,7 @@ class RegulatoryChat:
                 "Named synthetic-demo owner is missing or ambiguous; no turn was sent."
             )
         owner = self.admit(owners[0])
-        if sender.get("auth_provider") == "trusted-proxy" and "regulatory_chat" not in owner.get(
-            "rule_roles", []
-        ):
+        if is_trusted_proxy_user(sender) and "regulatory_chat" not in owner.get("rule_roles", []):
             raise ChatForbidden("The named owner lacks the separately assigned chat capability.")
         if sender["role"] in HAZARD_ROLES and owner["role"] not in HAZARD_ROLES:
             raise ChatForbidden("The named owner's current role cannot read these hazard facts.")
@@ -549,6 +1177,9 @@ class RegulatoryChat:
 
     def doubt(self, user: dict[str, Any], tid: str, seq: object) -> dict[str, Any]:
         user, thread = self.thread(user, tid)
+        blocked = consent_guidance(self.iso.ai_consent_state(thread["case_id"]))
+        if blocked:
+            raise ChatForbidden(blocked)
         if type(seq) is not int:
             raise ValueError("Select one stored assistant turn.")
         messages = thread["messages"]
@@ -568,6 +1199,9 @@ class RegulatoryChat:
             try:
                 with repo.txn():
                     user, thread = self.thread(user, tid)
+                    blocked = consent_guidance(self.iso.ai_consent_state(thread["case_id"]))
+                    if blocked:
+                        raise ChatForbidden(blocked)
                     owner = self._owner(user, thread["case_id"])
                     fresh = repo.get(tid, user_key(user))
                     if (

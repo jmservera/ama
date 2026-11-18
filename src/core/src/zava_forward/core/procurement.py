@@ -21,6 +21,7 @@ from datetime import UTC, date, datetime
 from . import controls, gates, job_pack, projection
 from .appointments import AppointmentCommittedError, AppointmentMixin
 from .change_provenance import _actor
+from .doc_controls import is_clean_upload
 from .documents import DocumentStoreError
 from .workflows import MANAGER_ROLES, _now, _today
 
@@ -201,7 +202,7 @@ class ProcurementMixin(AppointmentMixin):
         cid, doc_id = details.get("source_case_id"), details.get("document_id")
         c = self.cases.get(cid)
         doc = next((d for d in c.get("documents", []) if d["id"] == doc_id), None) if c else None
-        if (not doc or doc.get("generated") or doc.get("scan", {}).get("status") != "clean"
+        if (not doc or not is_clean_upload(doc)
                 or str(doc.get("version")) != details.get("source_version") or not doc.get("content_sha256")):
             raise ValueError("Capacity source/version is missing, changed or unverified. Upload and check the original commitment document.")
         try:
@@ -507,10 +508,10 @@ class ProcurementMixin(AppointmentMixin):
         self._need_manager(user, "record completion")
         with self._proc_operation(user, "complete", wid=wid):
             w = self._work_order(wid)
+            self._resident_work_order_clear(w)
             self.require_appointment_commitment(w)
             self._existing_capacity(w)
             self.require_safety_clear(self.cases[w["case_id"]])
-            self._resident_work_order_clear(w)
             self._wo_move(w, COMPLETED, user, _clean(note))
             w.update(completed_by=user["name"], completed_at=_now())
             cur = w["versions"][-1]

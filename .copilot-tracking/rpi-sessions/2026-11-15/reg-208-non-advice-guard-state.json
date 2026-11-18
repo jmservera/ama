@@ -1,0 +1,62 @@
+{
+  "task_id": "issue-208-non-advice-guard",
+  "task_slug": "reg-208-non-advice-guard",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/reg-208-non-advice-guard-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/reg-208-non-advice-guard-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/reg-208-non-advice-guard-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/reg-208-non-advice-guard-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/reg-208-non-advice-guard-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/reg-208-non-advice-guard-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute full RPI loop (Research, Plan, Implement, Review) automatically on feat/reg-208-non-advice-guard targeting feat/demo-164-chat-grounding-provenance-0900",
+      "status": "confirmed",
+      "evidence": "Explicit caller instruction in non-interactive session"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/reg-208-non-advice-guard-research.md (C1-C20)"
+    },
+    {
+      "decision": "Implement canonical deterministic non-advice/duty/future-law guard in zava_forward.core.regulatory_output_guard and wire into SourceMonitor, regulatory_chat (core+agents), chat_panel, assistants, and API /api/law/watch + compliance/chat/workbench payloads",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/reg-208-non-advice-guard-research.md (C1-C20)"
+    },
+    {
+      "decision": "Plan critique executed once with verdict Revise; direct planner corrections PC-001, PC-002, PC-003, and PC-004 applied directly; Planning status ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/reg-208-non-advice-guard-plan-critique.md; .copilot-tracking/plans/2026-11-15/reg-208-non-advice-guard-plan.md"
+    },
+    {
+      "decision": "Review executed once across full task boundary (P01-P03); execution Complete, outcome Conformant; RV-001 [Low] routed to follow-up",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/reg-208-non-advice-guard-review.md"
+    },
+    {
+      "decision": "Resolved follow-up RV-001 by restoring untouched lines on the four ruff-format-excluded files, rebasing onto origin/feat/demo-164-chat-grounding-provenance-0900 (04e5da42e1ae0b172245a4ca85ff4d2b6232a8f2), and passing directory-mode lint/format/mypy and focused unit/HTTP suites",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-15/reg-208-non-advice-guard-changes.md; .copilot-tracking/reviews/logs/2026-11-15/reg-208-non-advice-guard-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked post-Review follow-up work item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Optional interactive regulatory watch panel in src/api/src/zava_forward/api/web/law.js",
+      "rationale": "High operator value and low effort now that GET /api/law/watch and App.guard_telemetry are live; visualizes source diffs, unactivated rule reviews, and output-guard counters in the compliance workbench",
+      "evidence": ".copilot-tracking/research/2026-11-15/reg-208-non-advice-guard-research.md (C12, C14); .copilot-tracking/reviews/logs/2026-11-15/reg-208-non-advice-guard-review.md"
+    }
+  ]
+}

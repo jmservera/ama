@@ -16,7 +16,23 @@ param sqlAdminGroupName = 'sg-zava-forward-sql-admins' // PLACEHOLDER
 param sqlAdminGroupObjectId = '00000000-0000-0000-0000-000000000000' // PLACEHOLDER
 param entraClientId = '' // PLACEHOLDER: set after infra/scripts/create-api-app-registration.sh
 param zoneRedundant = false
+param monthlyBudget = 300
+param iotHubSku = 'B1'
+param iotHubUnits = 1
+param iotHubRetentionDays = 1
+param iotHubMonthlyCost = 60
 param sqlTier = 'serverless' // dev: auto-pause permitted
+param sqlVCores = 2
+param sqlAutoPauseDelayMinutes = 60
+param modelDeployments = [
+  {
+    name: 'standard'
+    model: 'gpt-4.1-nano'
+    version: '2025-04-14'
+    skuName: 'GlobalStandard'
+    capacity: 1
+  }
+]
 param apiMinReplicas = 0
 param enableLocks = false
 param deploymentProfile = 'production'

@@ -1,0 +1,108 @@
+<!-- markdownlint-disable-file -->
+# RPI Plan Critique: Issue 136 From-Empty Bicep Deployment Reproducibility
+
+## Metadata
+
+* Task ID: infra-136-bicep-repro
+* Critique date: 2026-11-15
+* Plan: .copilot-tracking/plans/2026-11-15/infra-136-bicep-repro-plan.md
+* Phase details: .copilot-tracking/details/2026-11-15/infra-136-bicep-repro-phase-details.md
+* Critique execution status: Complete
+
+## Inputs and Criterion Boundary
+
+* Task context and caller requirements: Single-pass internal plan critique for Issue `#136` on branch `feat/infra-136-bicep-repro` targeting `feat/demo-164-chat-grounding-provenance-0900` (`PR #1641`) at the Focused validation tier (`unittest discover -s infra/tests`, `ruff check`, `ruff format --isolated --line-length 100 --check`, `mypy --strict`, and `az bicep build-params`, without running `tools/rpi-checks.py`). Must prove acceptance criterion *"A from-empty deployment is reproducible from the repository without undocumented steps"* via `verify_from_empty_deployment_reproducibility` and `infra/tests/test_from_empty_reproducibility_136.py` across sub-criteria (a) 6-step registration (`preflight`, `what-if`, `deploy`, `sql-init`, `seed`, `smoke`) in `infra/scripts/pipeline.py` and `infra/README.md` with zero undocumented manual steps, (b) defaultless parameter coverage in `infra/main.bicep` across `infra/parameters/dev.bicepparam` / `prod.bicepparam` or `infra/scripts/pipeline.py` injection, and (c) deterministic offline execution of the full 6-step pipeline sequence from repository files alone.
+* Research and evidence considered: .copilot-tracking/research/2026-11-15/infra-136-bicep-repro-research.md (`C1`-`C22`), .copilot-tracking/plans/2026-11-15/infra-136-bicep-repro-plan.md, .copilot-tracking/details/2026-11-15/infra-136-bicep-repro-phase-details.md, infra/scripts/pipeline.py, infra/main.bicep, infra/modules/guard.bicep, infra/main.bicepparam, infra/main.pilot.example.bicepparam, infra/scripts/bicep_inventory.py, infra/scripts/create-sql-users.py, infra/scripts/create-sql-users.sql, infra/scripts/resident_sensor_seed.py, infra/entra/app-registration.json, infra/secret-inventory.json, infra/defender-decision.json, infra/tests/test_bicep_architecture_inventory_136.py, infra/tests/test_pipeline.py, infra/tests/test_governance.py, infra/tests/test_environment_quota_parameters.py, infra/tests/test_bicep_policy.py, infra/tests/test_container_hosting_completeness.py, infra/tests/test_identity_rbac.py, infra/README.md, src/orchestrator/src/zava_forward/orchestrator/rebuild.py, src/api/tests/test_iot_credential_hygiene.py, src/core/src/zava_forward/core/synthetic/cutover_audit.py, src/core/tests/test_cutover_audit.py, tools/rename-zava-tests.py, and .github/workflows/src-ci.yml.
+* Decisions, dependencies, and acceptance criteria considered: Confirmed caller scope (`FR-1` through `FR-5`, `NFR-1` through `NFR-3`, `AC-1` through `AC-5`), compatibility with commit `252125ad2` (`bicep_inventory.py` and `test_bicep_architecture_inventory_136.py`), Focused validation tier without `tools/rpi-checks.py`, and local-only commit without pushing.
+* Assessment boundary: Evaluates plan soundness, AST/import/runtime compatibility across Python 3.12 and existing test suites, Bicep/`.bicepparam` compilation and hygiene contracts, and offline determinism from repository files alone. Cannot establish live Azure subscription provisioning, live Entra tenant role grants, or live Container Apps runtime execution.
+
+## Coverage Assessment
+
+| Requirement, research, phase, or task ID | Coverage | Evidence or concern |
+|------------------------------------------|----------|---------------------|
+| FR-1, AC-1 (`C1`-`C6`, `C11`-`C13`, `C22`) | Partial | Canonical 6-step registry (`preflight`, `what-if`, `deploy`, `sql-init`, `seed`, `smoke`) and sibling `infra/README.md` subsection preserve `bicep_inventory.py` (`operation` choices and 12-row sequence table), but `P02-T02` specifies ordered `Rebuild stage(s)` comparison against `rebuild.py` `STAGES`, which conflicts with `P02-T01` grouping `applications`/`authentication` under `deploy` before `sql-init`/`seed` (`PC-002`). |
+| FR-2, AC-2, P01-T01 (`C7`-`C10`, `C14`-`C16`) | Partial | `infra/parameters/dev.bicepparam` and `infra/parameters/prod.bicepparam` cover all 3 defaultless parameters (`alertEmail`, `sqlAdminGroupName`, `sqlAdminGroupObjectId`) and satisfy `guard.bicep` and `test_governance.py`, but `parse_bicepparam_file` and test fixture hygiene need explicit multi-line bracket-depth and credential-scanner safeguards (`PC-004`). |
+| FR-3, NFR-1, AC-3, P02-T02 (`C1`, `C2`, `C19`) | Partial | Offline 6-step dry-run exercises real `pipeline.py` functions without subprocesses, but `pipeline.parameters()` looks up root `PARAMETER_FILES` rather than `infra/parameters/{dev,prod}.bicepparam` unless patched, and `pipeline.deployment()` writes to `os.environ["GITHUB_STEP_SUMMARY"]` in CI unless `os.environ` is isolated with `clear=True` (`PC-003`). |
+| FR-4, NFR-2, AC-4, P02-T01 (`C17`, `C18`, `C20`) | Partial | Lazy `spec_from_file_location` delegation avoids `sys.path` dependency, but Python 3.12 `@dataclass` raises `AttributeError` when `test_pipeline.py` executes `pipeline.py` without inserting `"pipeline"` into `sys.modules` if `from __future__ import annotations` is present (`PC-001`). |
+| FR-5, NFR-3, AC-5, P03-T01, P04-T01 (`C21`, `C22`) | Covered | Positive/mutation test ownership (`<= 14` focused tests), `.copilot-tracking/` leak prevention, Markdown style rules, cacheless validation flags, and local commit handoff are concrete and complete once `PC-001` through `PC-004` assertions are folded in. |
+
+## Verdict
+
+* Verdict: Revise
+* Rationale: Overall architecture, `bicep_inventory.py` coexistence, and Bicep guard parameterization are well-grounded, capability-complete, and fully aligned with confirmed caller decisions, but four concrete implementation traps (`PC-001` through `PC-004`) would cause Python 3.12 `@dataclass` import crashes in `test_pipeline.py`, self-contradictory `rebuild.py` stage ordering errors in Check (a), root-file substitution / `GITHUB_STEP_SUMMARY` pollution during Check (c), or multi-line `.bicepparam` parse divergence. All four findings are direct planner corrections requiring zero user input.
+
+## Findings
+
+<!-- rpi:critique id=PC-001 -->
+### PC-001 [High]: Python 3.12 `@dataclass` failure under `spec_from_file_location` when module is absent from `sys.modules`
+
+* Related IDs: FR-1, FR-4, NFR-2, AC-4, P02, P02-T01, P02-T02, P04-T01 (`C17`, `C18`)
+* Evidence: infra/tests/test_pipeline.py:22-25, infra/scripts/pipeline.py:1-25, .copilot-tracking/details/2026-11-15/infra-136-bicep-repro-phase-details.md:170-191,200-270,348-352
+* Concern: `infra/tests/test_pipeline.py:22-25` loads `infra/scripts/pipeline.py` via `SPEC = importlib.util.spec_from_file_location("pipeline", ...)` and calls `SPEC.loader.exec_module(pipeline)` without inserting `"pipeline"` into `sys.modules`. Verified on Python 3.12, `@dataclass(frozen=True)` resolves stringified field annotations (`from __future__ import annotations`) via `sys.modules.get(cls.__module__).__dict__` inside `dataclasses._is_type`, raising `AttributeError: 'NoneType' object has no attribute '__dict__'` whenever `cls.__module__` is absent from `sys.modules`. Adding `from __future__ import annotations` alongside `@dataclass(frozen=True) class FromEmptyStep` in `infra/scripts/pipeline.py` crashes `infra/tests/test_pipeline.py` on import, and omitting `sys.modules[spec.name] = mod` prior to `spec.loader.exec_module(mod)` in `pipeline._load_reproducibility_module()`, `reproducibility_check._load_pipeline_module()`, or `test_from_empty_reproducibility_136.py` triggers the same crash for frozen dataclasses in `reproducibility_check.py`.
+* Impact: Breaks untouched `infra/tests/test_pipeline.py` collection and/or breaks cross-module lazy loading in `verify_from_empty_deployment_reproducibility` (`FR-4`, `AC-4`).
+* Smallest useful change: Update `P02-T01`, `P02-T02`, and `P04-T01` to require: (1) `infra/scripts/pipeline.py` must NOT add `from __future__ import annotations` (keep eager Python 3.12 annotations `str | None` and `tuple[str, ...]` on `@dataclass(frozen=True) class FromEmptyStep`); (2) every `spec_from_file_location` loader in `pipeline.py`, `reproducibility_check.py`, and `test_from_empty_reproducibility_136.py` must register `sys.modules[spec.name] = module` before calling `spec.loader.exec_module(module)`; and (3) `P04-T01` must explicitly test loading `pipeline.py` via `spec_from_file_location` without `"pipeline"` in `sys.modules` and calling `pipeline.verify_from_empty_deployment_reproducibility`.
+* Action owner: planner
+* Exact resolving evidence: Revised `P02-T01`, `P02-T02`, and `P04-T01` detail sections prohibiting `from __future__ import annotations` in `pipeline.py`, requiring pre-`exec_module` `sys.modules` registration in custom loaders, and adding an unregistered-module `spec_from_file_location` regression assertion in `test_from_empty_reproducibility_136.py`.
+* Decision route: Direct planner correction (planner can apply directly without user confirmation).
+
+<!-- rpi:critique id=PC-002 -->
+### PC-002 [High]: Stage-order contradiction between 6-step `FROM_EMPTY_STEPS` grouping (`P02-T01`) and ordered `rebuild.py` `STAGES` check (`P02-T02`)
+
+* Related IDs: FR-1, AC-1, P02-T01, P02-T02, P03-T01 (`C6`, `C12`, `C22`)
+* Evidence: src/orchestrator/src/zava_forward/orchestrator/rebuild.py:34-66, infra/scripts/bicep_inventory.py:553-557, .copilot-tracking/details/2026-11-15/infra-136-bicep-repro-phase-details.md:176-182,226
+* Concern: `rebuild.py` defines `STAGES` in two-pass deployment order where `sql-users` (stage 6) and `seed` (stage 7) run between `credential` (stage 5) and `applications` (stage 8) / `authentication` (stage 9). Because the caller-mandated canonical 6-step sequence is `("preflight", "what-if", "deploy", "sql-init", "seed", "smoke")`, `P02-T01` groups `("discover", "images", "credential", "applications", "authentication")` into Step 3 (`deploy`) ahead of Step 4 (`sql-init`: `("sql-users",)`) and Step 5 (`seed`: `("seed", "staff")`). However, `P02-T02` (line 226) specifies verifying that *"the ordered `Rebuild stage(s)` across the 6 steps cover every stage in `rebuild.py` `STAGES`"*. Concatenating `rebuild_stages` in 6-step order yields `..., "applications", "authentication", "sql-users", "seed", "staff", ...`, which does NOT equal `tuple(rebuild_stages)` and would cause `verify_step_registration_and_docs` to fail against its own canonical registry.
+* Impact: Causes immediate Check (a) failure during implementation or tempts deviation from the caller-confirmed 6-step order (`preflight`, `what-if`, `deploy`, `sql-init`, `seed`, `smoke`).
+* Smallest useful change: Update `P02-T02` Check (a) and `P03-T01` so `verify_step_registration_and_docs` enforces: (1) exact 6-step order `("preflight", "what-if", "deploy", "sql-init", "seed", "smoke")`, (2) exact per-step tuple equality between each README row's `Rebuild stage(s)` and `step.rebuild_stages` in `pipeline.FROM_EMPTY_STEPS` (preserving relative `rebuild.py` stage order within every individual step), and (3) exact disjoint 17-stage set partition across the 6 steps (`len(observed_stages) == len(rebuild_stages)` with zero duplicates and `frozenset(observed_stages) == frozenset(rebuild_stages)`), while `bicep_inventory.py` continues to enforce linear 17-stage sequence order on the preceding 12-row table.
+* Action owner: planner
+* Exact resolving evidence: Revised `P02-T02` Check (a) and `P03-T01` detail sections specifying per-step ordered `rebuild_stages` parity plus 17-stage disjoint partition (`len` + `frozenset` with duplicate rejection) and explanatory README note on Bicep two-pass consolidation under `deploy`.
+* Decision route: Direct planner correction (planner can apply directly without user confirmation).
+
+<!-- rpi:critique id=PC-003 -->
+### PC-003 [Medium]: Offline dry-run `PARAMETER_FILES` indirection bypasses `infra/parameters/*.bicepparam` and ambient `os.environ` leaks into `GITHUB_STEP_SUMMARY` / digest
+
+* Related IDs: FR-2, FR-3, NFR-1, AC-2, AC-3, P02-T02, P04-T01 (`C1`, `C2`, `C20`)
+* Evidence: infra/scripts/pipeline.py:29-33,120-129,296-302,388-403,431, .copilot-tracking/details/2026-11-15/infra-136-bicep-repro-phase-details.md:239-265
+* Concern: Two runtime couplings inside `infra/scripts/pipeline.py` affect `execute_from_empty_dry_run` in `P02-T02`:
+  1. `pipeline.parameters(infra, environment)` resolves `infra / PARAMETER_FILES[environment]`, which maps `"dev"` to `"main.bicepparam"` and `"pilot"` to `"main.pilot.example.bicepparam"`. Unless `execute_from_empty_dry_run` patches `PARAMETER_FILES` on the isolated `pipeline` module instance (`{"dev": "parameters/dev.bicepparam", "pilot": "parameters/prod.bicepparam"}`) AND parses the actual `--file` path passed into its in-memory `az("bicep", "build-params", "--file", path, "--stdout")` stub via `parse_bicepparam_file`, `pipeline.parameters()` and `pipeline.deployment()` will either read the legacy root `.bicepparam` files or ignore `--file` mutations on `infra/parameters/{dev,prod}.bicepparam`.
+  2. `pipeline.deployment()` invokes `publish_step_summary()`, which appends Markdown to `os.environ["GITHUB_STEP_SUMMARY"]` whenever set (always set in GitHub Actions workflows such as `.github/workflows/src-ci.yml`), and hashes `json.dumps(compiled)` (insertion-ordered) into `parameter_sha256`. Without `unittest.mock.patch.dict(os.environ, synthetic_env, clear=True)` and deterministic key insertion (`sort_keys=True` on `DEPLOY_PARAMETERS` plus deterministic `.bicepparam` key order), hosted CI runs will pollute the live GitHub Actions PR step summary and ambient environment variables can perturb `sequence_digest`.
+* Impact: Could leave mutations to `infra/parameters/{dev,prod}.bicepparam` unexercised by dry-run `what-if`/`deploy`, append fake deployment summaries to hosted GitHub Actions runs, or allow ambient env vars to alter `sequence_digest`.
+* Smallest useful change: Specify in `P02-T02` Check (c) and `P04-T01` that `execute_from_empty_dry_run`: (1) patches `PARAMETER_FILES` on the isolated `pipeline` module to route `"dev"` -> `"parameters/dev.bicepparam"` and `"pilot"` -> `"parameters/prod.bicepparam"` and parses the exact `Path(file_arg)` received by the in-memory `az("bicep", "build-params", ...)` adapter offline via `parse_bicepparam_file`; (2) wraps dry-run execution in `patch.dict(os.environ, synthetic_env, clear=True)` (omitting `GITHUB_STEP_SUMMARY` and serializing `DEPLOY_PARAMETERS` with `sort_keys=True`); and (3) tests in `P04-T01` that a pre-existing `GITHUB_STEP_SUMMARY` file is untouched and ambient `RELEASE_SHA` / `DEPLOY_PARAMETERS` env vars do not change `sequence_digest`.
+* Action owner: planner
+* Exact resolving evidence: Revised `P02-T02` and `P04-T01` detail sections specifying `PARAMETER_FILES` patching, file-arg-driven offline `build-params` emulation, `patch.dict(os.environ, ..., clear=True)` isolation, and `GITHUB_STEP_SUMMARY` non-pollution test coverage.
+* Decision route: Direct planner correction (planner can apply directly without user confirmation).
+
+<!-- rpi:critique id=PC-004 -->
+### PC-004 [Medium]: Multi-line `.bicepparam` literal parsing and repository scanner hygiene on new `.bicepparam` and test files
+
+* Related IDs: FR-2, FR-3, NFR-1, AC-2, P01-T01, P02-T02, P04-T01 (`C8`, `C9`, `C15`, `C16`)
+* Evidence: infra/main.bicepparam:24-32, infra/main.pilot.example.bicepparam:27-35, infra/tests/test_environment_quota_parameters.py:293-305, src/api/tests/test_iot_credential_hygiene.py:23-60,90-95, src/core/src/zava_forward/core/synthetic/cutover_audit.py:22-36, .copilot-tracking/details/2026-11-15/infra-136-bicep-repro-phase-details.md:94-112,211-214,358-365
+* Concern: Three repository-specific parsing and scanner details need explicit lock-in across `P01-T01`, `P02-T02`, and `P04-T01`:
+  1. Both `dev.bicepparam` and `prod.bicepparam` assign multi-line, comma-free Bicep array/object syntax (`param modelDeployments = [\n  {\n    name: 'standard'\n ... }\n]`). While `P02-T02` specifies bracket-depth tracking for `parse_bicep_parameters`, it describes `parse_bicepparam_file` only in terms of literal string/bool/int values; without comment stripping and `[]` / `{}` / `()` depth-tracked multi-line value parsing in `parse_bicepparam_file`, offline compilation inside `verify_from_empty_deployment_reproducibility` cannot stay both `az`-independent (`NFR-1`) and faithful to `modelDeployments`.
+  2. `test_environment_quota_parameters.py:295-298` enforces repository conventions of zero `"chat"` substrings in dev/pilot `.bicepparam` files and zero `"AutoPause"` substrings in pilot/production `.bicepparam` files, and `cutover_audit.py:22` scans `.bicepparam`, `.py`, and `.md` files for retired tokens (`mvp-ci.yml`, `mvp-validation.yml`, `zavaforward_mvp`, `mvp/`, `prototype/`).
+  3. `src/api/tests/test_iot_credential_hygiene.py:23-60` scans every `.py` and `.bicepparam` file under `infra/` (including `infra/tests/*.py`) for `SharedAccessKey=<20+ base64 chars>`, `SharedAccessSignature ... sr=... sig=...`, `HostName=*.azure-devices.net;...`, and `-----BEGIN ... PRIVATE KEY-----`. Any negative secret-hygiene mutation test in `test_from_empty_reproducibility_136.py` that embeds a literal matching string in source will fail `src/api/tests/test_iot_credential_hygiene.py`.
+* Impact: Prevents multi-line `.bicepparam` parse failures without invoking `az` inside `verify_from_empty_deployment_reproducibility` and avoids cross-suite scanner failures in `src/api/tests/test_iot_credential_hygiene.py` and `cutover_audit.py`.
+* Smallest useful change: Update `P01-T01`, `P02-T02`, and `P04-T01` to specify: (1) `parse_bicepparam_file` strips `//` and `/* ... */` comments outside single-quoted strings and tracks `[]` / `{}` / `()` depth across multi-line `param <name> = <expr>` assignments (parsing Bicep array/object blocks as well as string/bool/int literals purely in stdlib with zero `az` calls inside `verify_from_empty_deployment_reproducibility`); (2) `dev.bicepparam` and `prod.bicepparam` exclude `"chat"` substrings, `prod.bicepparam` excludes `"AutoPause"`, and all created/edited files exclude retired `mvp/` / `prototype/` / `zavaforward_mvp` tokens; and (3) `P04-T01` cross-checks offline `parse_bicepparam_file` parsed values against `az bicep build-params --stdout` (guarded only in the test by `if shutil.which("az")` or `REQUIRE_AZ_BICEP`) and constructs any synthetic secret-rejection fixture strings dynamically (for example `"SharedAccessKey=" + "A" * 24 + "=="` or `password=` tokens, never literal PEM/IoT keys in source).
+* Action owner: planner
+* Exact resolving evidence: Revised `P01-T01`, `P02-T02`, and `P04-T01` detail sections codifying multi-line Bicep literal parsing in `parse_bicepparam_file`, `.bicepparam` substring/cutover hygiene, offline-vs-`az bicep build-params` parity testing, and dynamic construction of any negative secret test strings.
+* Decision route: Direct planner correction (planner can apply directly without user confirmation).
+
+## Strengths and Residual Risk
+
+* Strong AST and Markdown boundary preservation: Keeping `pipeline.py` positional `operation` choices at `("plan", "deploy", "publish", "changed-images", "verify-environment")` and placing `### Canonical from-empty pipeline step registry` as a sibling `### ` heading immediately after `### Reproducible from-empty deployment sequence` cleanly preserves every invariant asserted by `infra/scripts/bicep_inventory.py` and `infra/tests/test_bicep_architecture_inventory_136.py`.
+* Complete defaultless parameter and guard alignment: Research accurately identified the exact 3 defaultless parameters among the 61 parameters in `infra/main.bicep` (`alertEmail`, `sqlAdminGroupName`, `sqlAdminGroupObjectId`) and aligned `infra/parameters/prod.bicepparam` (`environmentName = 'pilot'`, `deploymentProfile = 'production'`, `enableLocks = true`, `allowPublicNetworkAccess = false`, `sqlTier = 'provisioned'`) with `infra/modules/guard.bicep` (`pilotRequiresProductionProfile`, `pilotRequiresLocks`) and `infra/tests/test_governance.py` (which forbids `infra/main.pilot.bicepparam` while permitting `infra/parameters/prod.bicepparam`).
+* Accepted residual risk: Offline reproducibility verification and deterministic in-memory dry-run execution prove repository IaC, parameter, script, and runbook completeness without undocumented steps, and intentionally do not substitute for live Azure resource-group deployments, live Entra tenant consent, or `#144` real worker image cutover.
+
+## Questions or Blocking Evidence Gaps
+
+* None. All four findings are fully resolved from repository evidence and confirmed caller decisions.
+
+## Limitations
+
+* This critique is a static and Python-runtime contract review bounded to repository files and supplied research/plan artifacts; no repository source files were modified and `tools/rpi-checks.py` was intentionally not invoked per caller instructions.
+
+## Recommended Next Action
+
+* Highest-impact finding: PC-001
+* Action owner: planning_parent
+* Smallest next action: Apply direct planner revisions for `PC-001`, `PC-002`, `PC-003`, and `PC-004` to `.copilot-tracking/plans/2026-11-15/infra-136-bicep-repro-plan.md` (`Critique Disposition`) and `.copilot-tracking/details/2026-11-15/infra-136-bicep-repro-phase-details.md` (`P01-T01`, `P02-T01`, `P02-T02`, `P03-T01`, `P04-T01`), transition the plan to Ready without a second critique pass, and continue to `rpi-implement`.
+* User response required: no
