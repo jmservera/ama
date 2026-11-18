@@ -12737,6 +12737,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Azure SQL point-in-time restore rerun with raw output (Refs #145)
 
 * Added [issue-145-live-run3-pitr-rerun-2026-11-18.md](research/issue-145-live-run3-pitr-rerun-2026-11-18.md) and its [raw probe output](research/issue-145-live-r3-raw-probe-2026-11-18.txt): second demo restore (about 34 minutes), application chain intact and prefix match at entry 1694, native ledger verification denied, retention settings recorded, resurrection still unproven. Resources deleted.
+
 ## [2026-11-18] add | Assistive-technology, consent and Fluent/WCAG live demo evidence (Refs #619)
 
 * Added [issue-619-live-at-consent-evidence-2026-11-18.md](research/issue-619-live-at-consent-evidence-2026-11-18.md): keyboard operation, axe (0 violations), zoom-equivalent reflow, reduced motion and the synthetic resident consent journey proven on the live demo; screen reader, person-run zoom and a real resident journey stay unproven and production-only. No source changed; #619 stays open.
