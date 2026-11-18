@@ -12868,6 +12868,14 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [src-repoint-live-audit-200-2026-11-18.md](research/src-repoint-live-audit-200-2026-11-18.md): criteria 2 proven, criterion 3 proven except a fresh tag deployment; no source change
 
+## [2026-11-18] update | Issue 111 signed-in sensor evidence re-run (Refs #111)
+
+* Added [issue-111-live2-sensor-evidence-2026-11-18.md](research/issue-111-live2-sensor-evidence-2026-11-18.md) with raw test output, redacted staff-signed sensors payload and screenshot; R1 to R3 stays unproven. No source change.
+
+## [2026-11-18] add | Issue 96 live form workspace evidence (Refs #96)
+
+* Added [issue-96-live-demo-evidence-2026-11-18.md](research/issue-96-live-demo-evidence-2026-11-18.md): read-only live probe found zero registered form schemas and no approval path; criterion 1 unproven, no source change
+
 ## [2026-11-18] update | Issue 116 live round 2 (Refs #116)
 
 * Added [issue-116-live-r2-evidence-2026-11-18.md](research/issue-116-live-r2-evidence-2026-11-18.md): reason-value leak scan on the deployed demo, second role blocked by Graph privileges; no source change
@@ -12903,3 +12911,22 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Public browser access third live pass (Refs #344)
 
 * Added [public-browser-access-live-r3-2026-11-18.md](research/public-browser-access-live-r3-2026-11-18.md): reproduced the anonymous 401, Entra sign-in and private SQL results and classed the `/api/time/status` 500 as a database-side ProgrammingError from the container log. Browser-style API redirect stays unproven. No Azure change was made.
+## [2026-11-18] add | Issue 349 tenant prerequisites live round 3 (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-r3-2026-11-18.md](research/issue-349-tenant-prerequisites-live-r3-2026-11-18.md): redirect URI seen by Entra, curl 401s, Key Vault reference and private vault facts, per-criterion table; criteria 1, 3 and 4 stay unproven in part, no source or Azure change.
+
+## [2026-11-18] add | Employee loading feedback live re-verification, second pass (Refs #531)
+
+* Added [issue-531-live-r2-2026-11-18-note.md](research/issue-531-live-r2-2026-11-18-note.md) and its evidence folder: no scale-to-zero in 10 minutes so real cold start stays unproven; reject recorded through the live UI; deployed `app.js` and `style.css` still behind main; no source change
+
+## [2026-11-18] add | Deployed demo parity proof, live run 3 (Refs #350)
+
+* Added [deployed-parity-live-r3-2026-11-18.md](research/deployed-parity-live-r3-2026-11-18.md) with raw outputs, 4 screenshots (12 showing personal names or addresses not retained) and scripts: no criterion fully proven; browser-UA anonymous API still 302, `/api/time/status` 500 reproduced, own-queue CSV 133 against list 16; new active release-scope suspension, closed CSV now 537. No source changed.
+
+## [2026-11-18] add | Resident showcase live check r3 (Refs #462)
+
+* Added [resident-showcase-live-r3-2026-11-18.md](research/resident-showcase-live-r3-2026-11-18.md): live desktop Playwright proof of login, correct-case data and negative paths, exact five-failure rate limit, #455 rubric history and an unresolved High review thread, arithmetic cost estimate; no source or Azure change; criterion 2 stays unmet
+
+## [2026-11-18] update | Direct ingress live third measurement (Refs #360)
+
+* Extended [direct-ingress-live-demo-2026-11-18.md](research/direct-ingress-live-demo-2026-11-18.md) with a 14:00 UTC measurement and per-criterion table: criteria c and e need owner decisions, d stays partly proven (AI call not reproduced today); no source change, no Azure resource created

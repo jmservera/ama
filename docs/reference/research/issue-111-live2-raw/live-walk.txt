@@ -1,0 +1,5 @@
+GET /api/cases status 200
+cases returned: 16
+repeat identical: True
+sensor-drafts status 200
+cases with sensor payload (of first 16): 1
