@@ -12658,6 +12658,22 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.
 
+## [2026-11-18] add | Live check of the resident demo authority end (Refs #521)
+
+* Added [resident-demo-authority-live-521-2026-11-18.md](research/resident-demo-authority-live-521-2026-11-18.md): source and focused tests, the live `ZF_DEMO_EXPIRES_AT` of 2028-01-01T00:00:00Z and a desktop sign-in proof. The live SQL window and the image source commit stay unproven (private network). No source or Azure changes.
+
+## [2026-11-18] add | Data protection live evidence (Refs #121)
+
+* Added [issue-121-live-data-protection-evidence-2026-11-18.md](research/issue-121-live-data-protection-evidence-2026-11-18.md): per-criterion record of the eight unticked criteria on the deployed demo. The live register, model location and retention settings were read; the deployed register is older than the source register; DPO/Legal approvals and owners stay deferred to #1906 to #1908; no live refused dispatch was exercised. No source or Azure changes.
+
+## [2026-11-18] add | Azure SQL ledger tamper evidence rerun (Refs #114)
+
+* Added [sql-ledger-live-r2-2026-11-18.md](research/sql-ledger-live-r2-2026-11-18.md): live read-only probe of the demo ledger (1,610 entries intact), in-memory tamper detection, per-year sealing, and the open gaps (deployed image lacks the reliance check; `VIEW LEDGER CONTENT` not held). Criteria stay unticked pending the image roll.
+
+## [2026-11-18] add | Issue 145 restore re-verification (Refs #145)
+
+* Added [issue-145-live-run2-reverification-2026-11-18.md](research/issue-145-live-run2-reverification-2026-11-18.md): read-only re-check of the demo SQL backup settings and cleanup, plus a code finding that no mechanism re-applies release, suspension or spent-allowance state after a restore (R3 unproven). No Azure or source changes.
+
 ## [2026-11-18] add | Human-review effectiveness demo evidence (Refs #223)
 
 * Added [human-review-live-223-2026-11-18.md](research/human-review-live-223-2026-11-18.md): per-criterion record from the offline harness, targeted tests and a live review-record probe. Scripted panels prove the gate and measurement; real reviewers, measured time and OQ-017 authority are unproven. No source or Azure changes.
@@ -12693,3 +12709,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Rubric src counting and mvp stop state (Refs #198)
 
 * Added [issue-198-rubric-src-counting-evidence-2026-11-18.md](research/issue-198-rubric-src-counting-evidence-2026-11-18.md): current registry and 79/100 score re-verified, five of seven criteria proven, criteria 3 and 4 recorded as historically unprovable pending an owner waiver or rewording.
+## [2026-11-18] add | Resident and representative UX live demo evidence (Refs #154)
+
+* Added [issue-154-live-resident-ux-evidence-2026-11-18.md](research/issue-154-live-resident-ux-evidence-2026-11-18.md): no live resident contact is observed on the synthetic showcase; validation through the usability programme and the representative view stay unproven for the demo (no participants or SA-010 agreement; no live case has a representative). No source changed.
