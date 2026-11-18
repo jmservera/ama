@@ -17,9 +17,9 @@ Evidence: [live_check.py](../../../.copilot-tracking/evidence/2026-11-18-issue-5
 | Check | Result |
 |-------|--------|
 | Source single truth | `src/core/src/zava_forward/core/resident-demo.json` carries `maximum_expiry_utc` `2028-01-01T00:00:00Z`; `resident_showcase.AUTHORITY_END` reads it. |
-| Source tests | `src/core` `test_resident_showcase` and `test_resident_showcase_sql`: 82 tests OK (27 skipped, SQL-dependent). `infra` `test_resident_demo_secrets` and `test_resident_demo_deploy`: 33 tests OK. |
-| Live app setting | `az containerapp show -g ama -n ca-resident-demo`: `ZF_DEMO_EXPIRES_AT` is `2028-01-01T00:00:00Z`, revision `ca-resident-demo--0000012`, min replicas 0. |
-| Demo API app | `ca-cutover-test-demo-api` (revision `0000031`, min 0) has no expiry setting, as the infra README records. |
+| Source tests | `src/core` `test_resident_showcase` and `test_resident_showcase_sql`: 82 tests OK (27 skipped, SQL-dependent). `infra` `test_resident_demo_secrets` and `test_resident_demo_deploy`: 33 tests OK (raw output not retained). |
+| Live app setting | `az containerapp show -g ama -n ca-resident-demo`: `ZF_DEMO_EXPIRES_AT` is `2028-01-01T00:00:00Z`, revision `ca-resident-demo--0000012`, min replicas 0 (raw `az` output not retained). |
+| Demo API app | `ca-cutover-test-demo-api` (revision `0000031`, min 0) has no expiry setting, as the infra README records (raw `az` output not retained). |
 | Live sign-in | Playwright desktop run against the public HTTPS URL: correct demo login succeeds (`signed_in` true), page title carries "synthetic showcase, not live", password absent from page text. |
 | Cookies | `__Host-zfdemo`: Secure, HttpOnly, SameSite=Strict; `__Host-zfdemo-csrf`: Secure, SameSite=Strict. |
 | Session binding and sign out | `/demo/view` without the session-binding header returns 409; after sign out `/demo/session` reports `signed_in` false. |
@@ -31,11 +31,17 @@ Evidence: [live_check.py](../../../.copilot-tracking/evidence/2026-11-18-issue-5
 | 1 (ticked) Authority end consistent across code, SQL, helper, docs, tests | Source re-checked, not re-ticked here | Constant and focused tests above. The January 2027 wording in the issue is historical; source holds the 2028 boundary. |
 | 2 (ticked) Cost estimate and cap, no resource or role added | Not re-derived | Prior record stands; this run added nothing. Actual spend read on 2026-11-18 in the [#462 live note](./resident-showcase-live-proof-2026-11-18.md): USD 440.90 against the USD 700 cap. |
 | 3 (ticked) Rotation and renewal steps documented | Not re-derived | No Key Vault rotation per owner decision. |
-| 4 Live Azure change applied after owner confirmation, verified and recorded | Partly proven | Proven: the live app expiry setting is `2028-01-01T00:00:00Z` and a real HTTPS sign-in works. Owner confirmation of the exact value is the issue's 2026-11-03/04 decisions. Unproven: the live SQL constraint and `allowed_case` windows, because the server `sql-cutover-test-rzsrg` has public access disabled and is reachable only from the private network; and the source commit behind the deployed image digest, because the registry is private. A successful sign-in shows the row is valid now, not that it ends on 2028-01-01. |
+| 4 Live Azure change applied after owner confirmation, verified and recorded | Partly proven | Observed during the run, raw `az` output not retained: the live app expiry setting is `2028-01-01T00:00:00Z` and a real HTTPS sign-in works. Owner confirmation of the exact value is the issue's 2026-11-03/04 decisions. Unproven: the live SQL constraint and `allowed_case` windows, because the server `sql-cutover-test-rzsrg` has public access disabled and is reachable only from the private network; and the source commit behind the deployed image digest, because the registry is private. A successful sign-in shows the row is valid now, not that it ends on 2028-01-01. |
 
 ## Not proven and why
 
 * Live SQL window and constraint: private-only server, and executing queries through the app container would go beyond a read-only check. A person with network access can run the read-only probe in the infra README section "Live state check".
 * Expiry behaviour at the cutoff and after a 1,800 second session: not waited out; covered by unit tests.
-* Applied-change timestamp and the authorising confirmation of the 2028 value: the issue records the decision; the apply time is not in Azure metadata read here (revision `0000012` dates from 2026-11-17).
+* Applied-change timestamp and the authorising confirmation of the 2028 value: the issue records the decision; the apply time is not in Azure metadata read here (revision `0000012` dates from 2026-11-17; raw output not retained).
 * Issue #521 stays open on this record.
+
+## Evidence limits
+
+* Retained: `live-checks.json` (key names and flags only) and the two screenshots in the evidence folder.
+* Raw output not retained: the `az containerapp show` results (setting, revisions, replicas) and the source and infra test runs (82 and 33 tests).
+* Hosted CI, human approval and independent exact-head review are not observed.
