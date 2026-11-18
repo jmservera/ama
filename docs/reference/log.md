@@ -12931,3 +12931,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Direct ingress live third measurement (Refs #360)
 
 * Extended [direct-ingress-live-demo-2026-11-18.md](research/direct-ingress-live-demo-2026-11-18.md) with a 14:00 UTC measurement and per-criterion table: criteria c and e need owner decisions, d stays partly proven (AI call not reproduced today); no source change, no Azure resource created
+
+## [2026-11-18] add | Issue 1274 release-download audit (Refs #1274)
+
+* Added [issue-1274-release-downloads-audit-live-2026-11-18.md](research/issue-1274-release-downloads-audit-live-2026-11-18.md): per-criterion table (actionlint half delivered by PR 1275 and re-verified locally; criteria 1, 3 and 4 partly proven; AWF 0.28.23 bootstrap still open and FULL-tier if code is needed); no source or workflow change, nothing ticked
