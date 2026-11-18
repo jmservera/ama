@@ -12231,3 +12231,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [entra-signin-live-demo-2026-11-18.md](research/entra-signin-live-demo-2026-11-18.md): desktop Playwright proof on `ca-cutover-test-demo-api` of Entra callback, role-scoped `/api/me`, `/app` entry, logout, anonymous 401 and forged-header denial, plus the resident demo sign-in and sign-out. Read-only Azure checks; no resource changed.
 * Criteria 1, 2 and 4 of #349 stay unproven for the demo (tenant-owner provisioning, in-VNet vault path, staff roster); 3 and 5 are partly proven; 6 is proven. Wrong-role denial inside the employee app needs a second staff account.
+## [2026-11-18] add | Live Azure backfill and live series evidence (Refs #188)
+
+* Added [issue-188-live-backfill-evidence-2026-11-18.md](research/issue-188-live-backfill-evidence-2026-11-18.md): per-criterion proven/unproven record of a demo run on live Azure SQL. Production receiver and indoor-schema proof remain open.

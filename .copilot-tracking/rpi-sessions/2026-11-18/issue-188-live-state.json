@@ -1,0 +1,54 @@
+{
+ "task_id": "188-live",
+ "task_slug": "issue-188-live",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "stopped",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-18/issue-188-live-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-18/issue-188-live-plan.md",
+  "details": ".copilot-tracking/details/2026-11-18/issue-188-live-details.md",
+  "critique": ".copilot-tracking/plans/2026-11-18/issue-188-live-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-18/issue-188-live-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-18/issue-188-live-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "critique executed once, verdict proceed with constraints",
+   "status": "applied",
+   "evidence": ".copilot-tracking/plans/2026-11-18/issue-188-live-critique.md"
+  },
+  {
+   "decision": "review executed once, conformant for demo scope",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/2026-11-18/issue-188-live-review.md"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "owner selects follow-up"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Production X.509 receiver proof on Standard namespace",
+   "rationale": "largest unproven gap",
+   "evidence": "issue-188 research note"
+  },
+  {
+   "rank": 2,
+   "task": "Approved handover tolerance",
+   "rationale": "bounds are engineering only",
+   "evidence": "research note"
+  },
+  {
+   "rank": 3,
+   "task": "Indoor-schema live stream",
+   "rationale": "indoor backfill has no live home",
+   "evidence": "research note"
+  }
+ ]
+}
