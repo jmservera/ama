@@ -1,0 +1,4 @@
+['app_admin', 'app_roles', 'auth_provider', 'code', 'display_email', 'email', 'identity_source', 'name', 'oid', 'role', 'rule_roles', 'tid', 'view_only']
+actor ok ['app_admin', 'app_roles', 'auth_provider', 'code', 'display_email', 'email', 'identity_source', 'name', 'oid', 'role', 'rule_roles', 'tid', 'view_only']
+row None
+PermissionError Reload your current staff identity before recording this step.
