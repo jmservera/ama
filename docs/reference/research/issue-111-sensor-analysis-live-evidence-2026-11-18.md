@@ -35,3 +35,7 @@ A signed-in walk of `/api/cases/{id}/sensors` was not performed: it would show e
 ## Unmet
 
 * R1 official standards texts, R2 reviewer and Asset sign-off, R3 agreed limits. Issue 111 criterion 3 stays unticked.
+
+## Evidence limits
+
+* The test count and the HTTP probe results are observed but not retained as raw output.
