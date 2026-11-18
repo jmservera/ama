@@ -13132,6 +13132,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-144-live-r4-2026-11-18.md](research/issue-144-live-r4-2026-11-18.md) with a raw folder: read-only az state of four apps and nine jobs, an empty `src-deploy.yml` run list and a scripted replica probe on revision `--0000032`. Criteria 1 (pipeline clause) and 3 (only non-root enforced) stay unproven; no source, Azure resource or load change.
 
+## [2026-11-18] add | Issue 146 live closure re-verification (Refs #146)
+
+* Added [issue-146-live3-monitoring-closure-2026-11-18.md](research/issue-146-live3-monitoring-closure-2026-11-18.md) with a raw folder: installed alerts, fired alerts, job-failure rule shape comparison on fresh failures (Maximum did not fire, Total did), queue diagnostic setting, IoT signal, and Playwright proof of in-app AI usage by capability with unreconciled state. Three throwaway rules and one job from an earlier worker were deleted. No criterion is ticked.
+
 ## [2026-11-18] add | Issue 117 live third pass (Refs #117)
 
 * Added [issue-117-live-r3-closure-2026-11-18.md](research/issue-117-live-r3-closure-2026-11-18.md) and its raw folder: two unsafe uploads refused live again with the document list unchanged (5 and 5), 64 offline tests pass, Defender malware scanning on upload still enabled on the demo account. The real-engine path stays unproven because `ZF_SCANNER=defender` was not set on the demo API; no source, Azure resource or criterion change.
@@ -13159,3 +13163,18 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 164 live audit, pass 4 (Refs #164)
 
 * Added [issue-164-live-20261118T1707Z-2026-11-18.md](research/issue-164-live-20261118T1707Z-2026-11-18.md): registry still disabled with proposed thresholds and unknown individual, seven live asks rules-only with zero model calls, 54 offline tests pass; no criterion ticked. No source change.
+## [2026-11-18] add | Issue 184 live run 5 (Refs #184)
+
+* Added [issue-184-live-r5-2026-11-18.md](research/issue-184-live-r5-2026-11-18.md) with retained read-only outputs: #185 and #189 still open, hub budget alert present, 135 simulator tests pass, source scan finds fixtures only; no criterion ticked. No source change.
+
+## [2026-11-18] add | Issue 76 live safeguarding re-check, pass 3 (Refs #76)
+
+* Added [issue-76-live-r3-2026-11-18.md](research/issue-76-live-r3-2026-11-18.md): read-only probe, 16 cases, 1 hazard clock, 0 safeguarding items; renderer shipped in the deployed `/app.js`; 9 api and 29 core tests pass; criterion stays unticked. No source change.
+
+## [2026-11-18] add | Issue 185 fifth live re-verification (Refs #185)
+
+* Added [issue-185-live-r5-reverification-2026-11-18.md](research/issue-185-live-r5-reverification-2026-11-18.md): demo hub reports zero devices, no 185 job or role assignment remains, retained logs and repository scan show no key text, 36 focused tests pass; durable storage, X.509 and scale stay unproven.
+
+## [2026-11-18] add | Issue 129 live third pass (Refs #129)
+
+* Added [issue-129-live-r3-2026-11-18.md](research/issue-129-live-r3-2026-11-18.md): 26 core and 6 api bundle tests pass, report CLI refusal check, signed-in probe of revision 0000032 finds no bundle route; Atlas-owner mapping confirmation stays unproven. Docs only.

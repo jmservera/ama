@@ -1,0 +1,52 @@
+# hub
+WARNING: The behavior of this command has been altered by the following extension: azure-iot
+[hub]	B1	1	Disabled
+WARNING: The behavior of this command has been altered by the following extension: azure-iot
+# stats
+ERROR: 'statistics' is misspelled or not recognized by the system.
+
+https://aka.ms/cli_ref
+Read more about the command in reference docs
+# budgets
+WARNING: This command is in preview and under development. Reference and support levels: https://aka.ms/CLI_refstatus
+[
+  {
+    "amt": "300.0",
+    "cur": "90.60676648730548",
+    "n": "budget-forward-test",
+    "notif": [
+      "actual80",
+      "forecast100"
+    ]
+  },
+  {
+    "amt": "300.0",
+    "cur": "90.60676648730548",
+    "n": "budget-cutover-test",
+    "notif": [
+      "actual80",
+      "forecast100"
+    ]
+  },
+  {
+    "amt": "25.0",
+    "cur": "5.48387096774193",
+    "n": "budget-[hub]",
+    "notif": [
+      "actual80",
+      "forecast100"
+    ]
+  }
+]
+# residue
+0
+# apps
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "img": "[registry].azurecr.io/zava-forward-api@sha256:5368f4e4009cc32937377862e6d242c124005ed39081e1d9caa3b6b5dc17e5fb",
+  "rev": "ca-cutover-test-demo-api--0000032"
+}
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+# devices 2026-11-18T17:07:29Z
+ERROR: {'Message': '{"errorCode":401002,"message":"Unauthorized access","trackingId":"EEFA7396FDF64F17A469C778EA804990-G2:-TimeStamp:2026-11-18T17:07:31.062006767Z","timestampUtc":"2026-11-18T17:07:31.062006767Z","info":null}', 'ExceptionMessage': ''}
+# note: device count via data plane returned 401002 Unauthorized (hub public network access Disabled); count not observable this run. Earlier run 4 recheck at 16:13Z read 0.

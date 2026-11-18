@@ -64,7 +64,7 @@ private/keyless production defaults and clearly distinguishing interim auth.
 ### Deeper
 
 * C5: live read-only inventory (`az resource list -g ama`, 2026-10-29)
-  already contains `iot-cutover-test-rzsrg`, B1/one unit/uksouth, two partitions,
+  already contains `[hub]`, B1/one unit/uksouth, two partitions,
   one-day retention, private endpoint, public Disabled, local auth disabled.
   Reuse it; creating a second hub would violate one-hub/minimum-cost intent.
 * C6: live diagnostics currently enable Connections/DeviceIdentityOperations;
