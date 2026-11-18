@@ -70,7 +70,7 @@ with sync_playwright() as p:
         hv = pg.evaluate("p=>fetch(p).then(async r=>({s:r.status,k:Object.keys(await r.json().catch(()=>({})))}))", f"/api/cases/{cid}/resident-view")
         res["employee"]["resident_view_probe"] = hv
     pg.goto(EMPAPP + "/#/"); pg.wait_for_load_state("networkidle"); pg.wait_for_timeout(2000); mask(pg)
-    pg.screenshot(path=os.path.join(OUT, "03-workbench-signed-in.png"))
+    pg.screenshot(path=os.path.join(OUT, "03-workbench-landing-signed-out.png"))
     t = pg.inner_text("body").lower()
     res["employee"]["body_mentions"] = {k: (k in t) for k in ["representative", "resident", "interpreter", "non-digital", "offer", "commitment"]}
     b.close()
