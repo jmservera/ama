@@ -12795,6 +12795,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 184 live simulator stream run 2 (Refs #184)
 
 * Added [issue-184-live-simulator-stream-run2-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-run2-evidence-2026-11-18.md) with two retained redacted job logs: the repository simulator loop streamed 3 slots (9 messages) to the demo hub with Hub-generated symmetric keys, all 9 read back from Event Hub; devices, job and temporary roles deleted. The child-closure criterion is not proven (#185 and #189 open). A lost Registry Contributor assignment and a short first read window are recorded as adverse findings.
+
 ## [2026-11-18] add | Live WCAG axe and keyboard evidence, round 2 (Refs #151)
 
 * Added [issue-151-live-wcag-axe-evidence-r2-2026-11-18.md](research/issue-151-live-wcag-axe-evidence-r2-2026-11-18.md): 16 live screens (13 Programme Manager screens, one case view, two resident app screens) with 0 axe violations, raw axe output retained and redacted, contrast incompletes resolved by sampling, document title finding kept. The manual screen-reader and keyboard criterion stays unticked (screen reader production-only, other roles unavailable). No source changed.
