@@ -429,7 +429,8 @@ with demo SAS devices: joint per-home queries, handover seam and idempotent
 re-run. The production X.509 receiver and indoor schema stay unproven.
 For #185, the [live device identity evidence](./research/issue-185-live-device-identity-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: Hub-generated symmetric device keys issued, used for sending
-and this run's identities removed (run 3 adds the home-to-device mapping). Durable secret storage, hub-wide zero devices and X.509 stay unproven.
+and this run's identities removed (run 3 adds the home-to-device mapping). Durable secret storage and X.509 stay unproven; a [fourth audit](./research/issue-185-live-r4-audit-2026-11-18.md)
+re-ran the repository tests and read the hub at zero devices.
 For #110, the [live IoT identity evidence](./research/issue-110-live-iot-identity-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: three distinct Hub identities sent schema-versioned readings with
 stable IDs, read back from Event Hub; production X.509 receiver stays unproven.
@@ -461,6 +462,8 @@ restates the owner-only items without ticking any criterion.
 For #125, the [live discovery assistant evidence](./research/issue-125-live-discovery-assistant-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: no assistant route on the live API, deny-by-default boundary output,
 and all three criteria left open with the reason each cannot be fully proven for the demo.
+A [second run](./research/issue-125-live-r2-discovery-assistant-2026-11-18.md) repeats the probes and shows
+that the one failing test passes in a clean installed environment (47 of 47); all three criteria stay open.
 
 For #184, the [live simulator stream evidence](./research/issue-184-live-simulator-stream-evidence-2026-11-18.md)
 records the child-story status on 2026-11-18: #185 and #189 are still open, the demo hub has
@@ -469,6 +472,9 @@ a budget alert, and the live owner and time limit cannot be shown on the demo AP
 For #184, the [run 2 live stream evidence](./research/issue-184-live-simulator-stream-run2-evidence-2026-11-18.md)
 runs the repository simulator loop with Hub-generated symmetric keys on the demo hub, reads all 9 messages
 back from Event Hub and retains the raw job output; the child-closure criterion stays unproven.
+
+A [fourth run](./research/issue-184-live-r4-2026-11-18.md) retains sanitised outputs, finds the demo hub budget
+alert (USD 25, 80 and 100 percent) and a per-criterion table; #185 and #189 stay open and nothing is ticked.
 
 For #109, the [live device monitoring evidence](./research/issue-109-live-device-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of IoT Hub connection state and a connectivity metric alert.
@@ -492,6 +498,8 @@ records that main already syncs new archive ancestors before confirming; criteri
 For #189, the [simulator run controls live evidence](./research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo check of the budget alerts, hub owner tag and deterministic owner, time-limit and alert controls; no simulator job is deployed.
 A [second pass](./research/simulator-run-controls-live-189-2026-11-18.md) adds a signed-in probe of the deployed admin endpoint (403 for staff; no administrator role granted), an offline start, stop and capacity exercise with raw output, and the USD 5.16 observed spend.
+
+A [third pass](./research/simulator-run-controls-live-189-r3-2026-11-18.md) re-reads the live budgets and hub, runs the run meter on a real clock (time-limit halt) and records that budget alert recipients are noreply or invalid addresses; criterion 3 stays unproven as a live conjunction.
 
 For #138, the [CI/CD OIDC and what-if live evidence](./research/issue-138-live-cicd-oidc-evidence-2026-11-18.md)
 records a 2026-11-18 read-only demo run: a live what-if of the real template, the post-deployment
@@ -1410,6 +1418,7 @@ or infra acceptance claimed.
 | [Chat Break-Glass Live Proof on the Synthetic Demo](./research/chat-breakglass-live-proof-2026-11-18.md) | Live proof that demo break-glass is default-deny and audited per refusal; grant path proven by tests only; policy decided for the demo only (#162 criterion 6) | 2026-11-18 |
 | [Assistant Panel Keyboard and Announcement Live Proof](./research/assistant-ux-live-159-2026-11-18.md) | Playwright proof that the workbench assistant is keyboard operable and announces new messages on the demo; screen-reader testing unproven (#159) | 2026-11-18 |
 | [Chat and Memory User Isolation Live Proof on the Synthetic Demo](./research/issue-162-live-isolation-evidence-2026-11-18.md) | Live demo probes (anonymous, resident session replay, forged identity, client owner fields, foreign ids, own-record controls) with raw output; real two-Entra-user foreign read not provable live; criterion 6 unchanged (Refs #162) |
+| [Issue 162 Live Audit with Per-Criterion Table](./research/issue-162-live-audit-2026-11-18.md) | Fresh live and local audit with retained raw output: refusals audited live (chain 2068 to 2070), grant rows proven locally, per-criterion table, production-only items; criterion 6 left unticked (Refs #162) | 2026-11-18 |
 | [Live Monitoring Coverage Check on the Demo](./research/monitoring-coverage-live-146-2026-11-18.md) | Read-only Azure Monitor observations: ledger digest alerts installed; job failure, poison queue, IoT alerts and workbook not installed; runbooks name proposed owners only; raw output not retained (Refs #146) | 2026-11-18 |
 | [Gap Analysis and Next Build](./research/gap-analysis-next-build.md) | Dated gaps/build direction and #65 recovery retained; PM/UX closure matrix pins four drafts, recommends learning-only retirement for #19/#24/#27 and keeps #58 unresolved with capability/requirement/evidence queue. No wholesale import, product acceptance or resource deletion | 2026-10-13 |
 | [Decision 1 Behaviour Specification](./research/decision-1-behaviour-specification.md) | Clean-rebuild contract linked to the overall application design: workbench/API integration, scoring versus generation, human review and application boundaries, tasks, thresholds, provider contract, guard, liabilities and tests | 2026-10-11 |
