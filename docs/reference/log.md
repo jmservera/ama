@@ -12197,6 +12197,18 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added the owner direction of 2026-11-02 to the [BRD](../brds/agentic-retrofit-programme-brd.md) decision OD-53 and the [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) question OQ-029: the routine exception is approved in principle subject to named Legal/Compliance approval, and the synthetic-data demo display is not an OD-53 or RULE-020 approval.
 * Measured gap before the edit: neither document recorded either direction. Normative wording is unchanged; per-message named human review stays the default, the exception stays OFF and OD-53 stays OPEN. Criterion 5 of #441 stays unmet.
 * Added `tools/test_resident_portal_docs.py`. No status upgrade, memory change or deployment.
+## [2026-11-17] update | Production AT acceptance: reflow and reduced-motion checks (Refs #619)
+
+* Extended the automated production-configuration check in `src/api/checks` with a 320 px zoom-equivalent reflow step and a reduced-motion step, with a unit test for the overflow helper, and recorded the local result and a person-run checklist in the [production acceptance protocol](research/ux/production-ux-acceptance-protocol.md).
+* Synthetic data and a local Chromium run only. Every person-run record row stays `Not run`; no screen reader, real resident, conformance or production-acceptance claim is made. Issue #619 remains open.
+## [2026-11-17] update | AI metering inventory and drift test (Refs #432)
+
+* Added a [current-main metering inventory](resources/ai-tokenomics.md#current-main-metering-inventory-2026-11-17-refs-432) to the Tokenomics page: code and test mapping for each #432 criterion, corrections to stale gap text, unmet criteria 5 and 8, and the smallest next step. Documentation only; no cost, billing reconciliation or live batch is claimed.
+* Added `src/core/tests/test_ai_metering_inventory.py`, which fails when a cited path, ledger method or test name no longer exists.
+## [2026-11-17] update | Ranking job alert runbook coverage (Refs #146)
+
+* Measured the declared alert set against the runbook: `alert-<job>-failed` for the optional ranking jobs (`rank`, `rank-publish`) resolves to the `job-auth` anchor because `operationalMonitoring.bicep` has no ranking branch. Added a `Job ranking` section to [infra/monitoring-runbooks.md](../../infra/monitoring-runbooks.md#job-ranking), a pointer in `Job auth`, and a regression test in `infra/tests/test_alert_runbook_signal_matrix.py` that every job suffix resolves to a section naming it.
+* The Bicep anchor itself is unchanged (infrastructure change, full tier); it stays a follow-up. No deployment, appointment, rendering or billing evidence is added, and no #146 criterion is newly proven.
 ## [2026-11-17] update | Issue 118 hardened deployment status re-measured on main (Refs #118)
 
 * Re-ran the offline infrastructure tests on main `eb51af5c9` (container contract, Bicep policy, governance, edge module, pipeline, container hosting). All pass, and no defect was reproduced, so no source fix or regression test was added.
@@ -12223,3 +12235,31 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-17] update | Identifier leak copy audit on exception screens (Refs #153)
 
 * Added an [identifier leak audit](research/ux/content-standard.md#identifier-leak-audit-2026-11-17-153) section to the content standard: two snake_case identifiers shown to staff on the data steward and digital operator screens were reworded, and a lexical regression guard was added. Named-human review of resident-facing wording (criterion 5) remains unmet.
+
+## [2026-11-18] add | Deployed demo parity live proof (Refs #350)
+
+* Added [deployed-parity-live-2026-11-18.md](research/deployed-parity-live-2026-11-18.md) with a per-criterion proven/unproven table for the unticked #350 criteria, measured read-only on the synthetic demo with Playwright and Azure CLI (one Programme Manager account, desktop).
+* The 2026-10-16 gaps for model deployment, map tiles and the baseline (980 cases) are stale; browser-style anonymous API requests still get 302, `/api/time/status` returns 500 (SQL ProgrammingError), law store and photo remain unavailable. No source or Azure change was made; #350 stays open.
+## [2026-11-18] update | Measured held-out AI batch run live for the demo (Refs #432)
+
+## [2026-11-18] ingest | Live digest mismatch alert proof on the demo (Refs #115)
+
+* Added [digest-verification-alert-live-2026-11-18.md](research/digest-verification-alert-live-2026-11-18.md): baseline verifier run intact, forced mismatch on a copy, `LEDGER_DIGEST_ALERT`, fired Azure Monitor alert, cleanup.
+* Mailbox delivery, the live cron schedule and the retention lock (deferred to #1908) are recorded as unproven or deferred. Indexed in the README.
+* Added [the batch note](research/ai-heldout-batch-432-live-2026-11-18.md) and its inputs and reports: 12 synthetic proposals on `gpt-4.1-nano`, 180 to 225 tokens each (2,522 total), USD 0.000744 at list price under a recorded owner spend authority (cap USD 0.50). The first attempt stopped on a network-blocked call and is preserved; the batch then ran inside the demo container.
+* Criterion 5 (billing reconciliation) stays unproven under the owner waiver; criterion 8 is met for the synthetic demo only. No source changed; #432 stays open.
+
+## [2026-11-18] observation | Live demo Entra sign-in proof, Refs #349
+
+* Added [entra-signin-live-demo-2026-11-18.md](research/entra-signin-live-demo-2026-11-18.md): desktop Playwright proof on `ca-cutover-test-demo-api` of Entra callback, role-scoped `/api/me`, `/app` entry, logout, anonymous 401 and forged-header denial, plus the resident demo sign-in and sign-out. Read-only Azure checks; no resource changed.
+* Criteria 1, 2 and 4 of #349 stay unproven for the demo (tenant-owner provisioning, in-VNet vault path, staff roster); 3 and 5 are partly proven; 6 is proven. Wrong-role denial inside the employee app needs a second staff account.
+## [2026-11-18] add | Live Azure backfill and live series evidence (Refs #188)
+
+* Added [issue-188-live-backfill-evidence-2026-11-18.md](research/issue-188-live-backfill-evidence-2026-11-18.md): per-criterion proven/unproven record of a demo run on live Azure SQL. Production receiver and indoor-schema proof remain open.
+
+## [2026-11-18] add | Live device identity and provisioning evidence (Refs #185)
+
+* Added [issue-185-live-device-identity-evidence-2026-11-18.md](research/issue-185-live-device-identity-evidence-2026-11-18.md): demo run with Hub-generated symmetric keys, sending and teardown on the demo hub. Durable storage and X.509 remain unproven.
+## [2026-11-18] add | Container hosting live evidence (Refs #144)
+
+* Added [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): per-criterion record of a demo probe on live Azure. Non-root and digest-pinned images observed; the pipeline run, read-only root file system and capability drop stay unproven.
