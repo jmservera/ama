@@ -1,0 +1,55 @@
+{
+ "total_cases": 16,
+ "cases_with_hazard_flag": [
+  "ZF-2025-0331"
+ ],
+ "cases_with_support_flag": 16,
+ "list_clock_counts": {
+  "ZF-2025-0331": [
+   1,
+   0
+  ]
+ },
+ "detail_status": 200,
+ "detail_keys_hazard": {
+  "hazards": 1
+ },
+ "detail_hazards": [
+  {
+   "category": "Damp and mould",
+   "owner": "Karen Lawson",
+   "aware_at": null,
+   "response_due_at": null,
+   "responded_at": null,
+   "accountable_owner": "Karen Lawson",
+   "clock_text": "Hazard clock: elapsed time unknown; no response target window recorded; response unknown."
+  }
+ ],
+ "detail_safeguarding": [],
+ "detail_work_clocks": {
+  "hazard": [
+   {
+    "kind": "Hazard",
+    "accountable_owner": "Karen Lawson",
+    "clock_text": "Hazard clock: elapsed time unknown; no response target window recorded; response unknown.",
+    "owner": "Karen Lawson",
+    "owner_named": true,
+    "owner_status": "Named follow-up owner recorded.",
+    "response_state": "Unknown",
+    "resident_update_state": "Unknown",
+    "aware_at": "Unknown",
+    "elapsed_hours": null,
+    "response_due_at": "Unknown",
+    "resident_update_due_at": "Unknown",
+    "authority": "Existing hazard and repairs service",
+    "case_id": "ZF-2025-0331",
+    "source": "case:ZF-2025-0331/hazards/0",
+    "version": "Unknown",
+    "as_of": "2026-10-16"
+   }
+  ],
+  "safeguarding": []
+ },
+ "page_text_has_hazard_clock": false,
+ "page_text_has_accountable_owner": false
+}
