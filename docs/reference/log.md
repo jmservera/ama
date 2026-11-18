@@ -12863,3 +12863,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Issue 200 src repoint audit (Refs #200)
 
 * Added [src-repoint-live-audit-200-2026-11-18.md](research/src-repoint-live-audit-200-2026-11-18.md): criteria 2 proven, criterion 3 proven except a fresh tag deployment; no source change
+
+## [2026-11-18] add | Issue 110 live IoT Hub to SQL rerun (Refs #110)
+
+* Added [issue-110-live2-iot-sql-evidence-2026-11-18.md](research/issue-110-live2-iot-sql-evidence-2026-11-18.md): bounded job sent 6 and stored 6 through IoT Hub into Azure SQL; devices, job and temporary roles removed; no source change
