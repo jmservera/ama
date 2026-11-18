@@ -12384,3 +12384,21 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Live check of the resident demo authority end (Refs #521)
 
 * Added [resident-demo-authority-live-521-2026-11-18.md](research/resident-demo-authority-live-521-2026-11-18.md): source and focused tests, the live `ZF_DEMO_EXPIRES_AT` of 2028-01-01T00:00:00Z and a desktop sign-in proof. The live SQL window and the image source commit stay unproven (private network). No source or Azure changes.
+## [2026-11-18] add | Issue 155 usability programme live evidence (Refs #155)
+
+* Added [issue-155-live-usability-programme-evidence-2026-11-18.md](research/issue-155-live-usability-programme-evidence-2026-11-18.md): the SA-010 criterion stays unproven for the demo because it needs named staff agreement; the code gate refusal and a read-only live check (the signed-in workbench was not captured) are recorded. No source changed.
+## [2026-11-18] update | Container hosting live evidence second run (Refs #144)
+
+* Updated [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): repeated probes show non-root only; the root file system is writable, `ZF_CONTAINER_HARDENING` is absent from every deployed app and job, and no `src-deploy.yml` run exists. Criteria 1 and 3 stay unticked.
+## [2026-11-18] add | Hardened deployment live evidence (Refs #118)
+
+* Added [issue-118-hardened-deployment-live-evidence-2026-11-18.md](research/issue-118-hardened-deployment-live-evidence-2026-11-18.md): the policy and Defender decision is recorded and consistent with the demo; live Defender tiers are unreadable (AuthorizationFailed) and repository policy assignments are not deployed. No source or Azure changes.
+## [2026-11-18] add | Live demo evidence for service continuity and export (Refs #122)
+
+* Added [issue-122-live-continuity-evidence-2026-11-18.md](research/issue-122-live-continuity-evidence-2026-11-18.md): synthetic version change and reversal on the demo API, offline verification of two evidence exports, default-disabled assistants with template fallback, and a per-criterion record. The drill criterion stays unproven by owner decision.
+## [2026-11-18] add | Phase 0 discovery evidence for the demo (Refs #124)
+
+* Added [issue-124-phase0-discovery-evidence-2026-11-18.md](research/issue-124-phase0-discovery-evidence-2026-11-18.md): contract rules and synthetic-pack coverage recorded offline (no live Azure surface exists); sponsor nomination, dictionary validation and the evidence-backed constraint register cannot be proven for the demo and stay unticked.
+## [2026-11-18] add | Discovery assistant live demo evidence (Refs #125)
+
+* Added [issue-125-live-discovery-assistant-evidence-2026-11-18.md](research/issue-125-live-discovery-assistant-evidence-2026-11-18.md): the assistant is not exposed on the live demo API and its boundary denies writes; all three criteria stay unticked (readiness and comparison unprovable for the demo, no-write shown only at demo scope).
