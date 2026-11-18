@@ -12230,11 +12230,19 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-17] update | Identifier leak copy audit on exception screens (Refs #153)
 
 * Added an [identifier leak audit](research/ux/content-standard.md#identifier-leak-audit-2026-11-17-153) section to the content standard: two snake_case identifiers shown to staff on the data steward and digital operator screens were reworded, and a lexical regression guard was added. Named-human review of resident-facing wording (criterion 5) remains unmet.
+## [2026-11-18] update | Measured held-out AI batch run live for the demo (Refs #432)
 
 ## [2026-11-18] ingest | Live digest mismatch alert proof on the demo (Refs #115)
 
 * Added [digest-verification-alert-live-2026-11-18.md](research/digest-verification-alert-live-2026-11-18.md): baseline verifier run intact, forced mismatch on a copy, `LEDGER_DIGEST_ALERT`, fired Azure Monitor alert, cleanup.
 * Mailbox delivery, the live cron schedule and the retention lock (deferred to #1908) are recorded as unproven or deferred. Indexed in the README.
+* Added [the batch note](research/ai-heldout-batch-432-live-2026-11-18.md) and its inputs and reports: 12 synthetic proposals on `gpt-4.1-nano`, 180 to 225 tokens each (2,522 total), USD 0.000744 at list price under a recorded owner spend authority (cap USD 0.50). The first attempt stopped on a network-blocked call and is preserved; the batch then ran inside the demo container.
+* Criterion 5 (billing reconciliation) stays unproven under the owner waiver; criterion 8 is met for the synthetic demo only. No source changed; #432 stays open.
+
+## [2026-11-18] observation | Live demo Entra sign-in proof, Refs #349
+
+* Added [entra-signin-live-demo-2026-11-18.md](research/entra-signin-live-demo-2026-11-18.md): desktop Playwright proof on `ca-cutover-test-demo-api` of Entra callback, role-scoped `/api/me`, `/app` entry, logout, anonymous 401 and forged-header denial, plus the resident demo sign-in and sign-out. Read-only Azure checks; no resource changed.
+* Criteria 1, 2 and 4 of #349 stay unproven for the demo (tenant-owner provisioning, in-VNet vault path, staff roster); 3 and 5 are partly proven; 6 is proven. Wrong-role denial inside the employee app needs a second staff account.
 ## [2026-11-18] add | Live Azure backfill and live series evidence (Refs #188)
 
 * Added [issue-188-live-backfill-evidence-2026-11-18.md](research/issue-188-live-backfill-evidence-2026-11-18.md): per-criterion proven/unproven record of a demo run on live Azure SQL. Production receiver and indoor-schema proof remain open.
