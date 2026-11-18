@@ -12899,3 +12899,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Five assistants live re-verification (Refs #107)
 
 * Added [issue-107-live-r2-assistants-evidence-2026-11-18.md](research/issue-107-live-r2-assistants-evidence-2026-11-18.md): fresh raw MSSQL and SQLite test output and a read-only live probe, per-criterion table; no source change. The approved-release criterion stays unproven (OQ-017).
+
+## [2026-11-18] add | Issue 349 tenant prerequisites live round 3 (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-r3-2026-11-18.md](research/issue-349-tenant-prerequisites-live-r3-2026-11-18.md): redirect URI seen by Entra, curl 401s, Key Vault reference and private vault facts, per-criterion table; criteria 1, 3 and 4 stay unproven in part, no source or Azure change.

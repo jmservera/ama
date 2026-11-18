@@ -1,0 +1,22 @@
+[
+  {
+    "n": "ZF_AUTH",
+    "set": true
+  },
+  {
+    "n": "ZF_TRUSTED_PROXY",
+    "set": true
+  },
+  {
+    "n": "ZF_ENTRA_TENANT_ID",
+    "set": true
+  },
+  {
+    "n": "ENTRA_TENANT_ID",
+    "set": true
+  },
+  {
+    "n": "ENTRA_CLIENT_ID",
+    "set": true
+  }
+]
