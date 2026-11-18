@@ -554,6 +554,8 @@ platform limit on read-only root file system and capability drop. No pipeline ru
 and no production scale are shown.
 The [third run](./research/issue-144-hosting-proof-live-2026-11-18.md) retains redacted raw
 output, reconciles the job count to eight and records a 120-client run with cold-start latency.
+The [fourth run](./research/issue-144-live-r4-2026-11-18.md) re-probes revision `--0000032` (same image digest) and keeps
+criteria 1 and 3 unproven: no `src-deploy.yml` run exists and only non-root is enforced in the deployed replica.
 For the 2026-11-05 current-main contract, retention and handover boundary, see the
 [fifth stabilization checkpoint](../architecture/cutover-evidence-pack.md#fifth-stabilization-checkpoint-current-main-sensor-contract-retention-and-handover-2026-11-05-refs-440-184-110)
 (documentation only; the live-sim wire schema is not admitted by the main consumer and nothing is accepted).

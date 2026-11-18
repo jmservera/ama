@@ -13111,3 +13111,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 200 live second audit (Refs #200)
 
 * Added [issue-200-live-20261118T1618Z-2026-11-18.md](research/issue-200-live-20261118T1618Z-2026-11-18.md) with evidence folder: live exec proof (uid 10001, empty `/data`, no capabilities) on the demo API and resident app, 52 revisions keeping historical tags; fresh tag deployment left unproven because the registry is private and a window would change shared posture. No source change.
+
+## [2026-11-18] add | Issue 144 live run 4 (Refs #144)
+
+* Added [issue-144-live-r4-2026-11-18.md](research/issue-144-live-r4-2026-11-18.md) with a raw folder: read-only az state of four apps and nine jobs, an empty `src-deploy.yml` run list and a scripted replica probe on revision `--0000032`. Criteria 1 (pipeline clause) and 3 (only non-root enforced) stay unproven; no source, Azure resource or load change.
