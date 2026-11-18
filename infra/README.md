@@ -4309,9 +4309,10 @@ The executor, under separate admission, runs these in order and stops at the fir
    and the control share mounted read-only. The receiver identity needs AcrPull, Azure Event Hubs
    Data Receiver on `sensor-readings`, `SELECT` on `dbo.cases`,
    `dbo.sensor_consumer_control` and `dbo.sensor_consumer_policy`, and `SELECT, INSERT` on
-   `dbo.sensor_reading`, `dbo.sensor_delivery` and `dbo.sensor_data_quality_exception`; the
-   list was checked against the statements `SensorConsumer.process` runs (no `sensor_register`
-   read, no DDL, seeding or metadata write) and nothing wider may be granted. The tables must
+   `dbo.sensor_reading`, `dbo.sensor_register`, `dbo.sensor_delivery` and
+   `dbo.sensor_data_quality_exception`; the list was checked against the statements
+   `SensorConsumer.process` runs (an accepted reading also inserts its sensor's `sensor_register`
+   row when absent, so the resident view and map join find it; no DDL, seeding or metadata write) and nothing wider may be granted. The tables must
    already exist: a setup or admin identity provisions them separately, and the receiver
    refuses rather than creating schema. The
    simulator identity stays read-only on `dbo.cases`. Start one execution per window; the receiver

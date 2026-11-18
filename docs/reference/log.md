@@ -13243,3 +13243,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 1258 third live re-verification (Refs #1258)
 
 * Added [issue-1258-live-r3-2026-11-18.md](research/issue-1258-live-r3-2026-11-18.md) with raw outputs: 110 core and 36 API wiring tests pass, real ext4 syscall order and injected fsync EIO reproduced; criterion 5 stays unproven for the demo.
+## [2026-11-18] add | Issue 1818 receiver sensor_register fix (Refs #1818)
+
+* Added [issue-1818-sensor-register-receiver-fix-2026-11-18.md](research/issue-1818-sensor-register-receiver-fix-2026-11-18.md): the held fix as a candidate, focused test results, and a per-criterion table. The full gate was not run because the heavy lock was held.

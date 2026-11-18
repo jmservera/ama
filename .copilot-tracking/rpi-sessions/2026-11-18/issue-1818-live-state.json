@@ -1,53 +1,64 @@
 {
- "task_id": "issue-1818-live7",
- "task_slug": "issue-1818-live7",
+ "task_id": "issue-1818-live8",
+ "task_slug": "issue-1818-live8",
  "parent_task": null,
  "mode": "automatic",
  "active_phase": "Follow-up",
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-18/issue1818-live7-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-18/issue1818-live7-plan.md",
-  "details": ".copilot-tracking/details/2026-11-18/issue1818-live7-phase-details.md",
-  "critique": ".copilot-tracking/critiques/2026-11-18/issue1818-live7-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-18/issue1818-live7-changes.md",
-  "review": ".copilot-tracking/reviews/logs/2026-11-18/issue1818-live7-review.md"
+  "research": ".copilot-tracking/research/2026-11-18/issue1818-live8-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-18/issue1818-live8-plan.md",
+  "details": ".copilot-tracking/details/2026-11-18/issue1818-live8-phase-details.md",
+  "critique": ".copilot-tracking/critiques/2026-11-18/issue1818-live8-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-18/issue1818-live8-changes.md",
+  "review": ".copilot-tracking/reviews/logs/2026-11-18/issue1818-live8-review.md"
  },
  "confirmed_decisions": [
   {
    "decision": "Research disposition",
    "status": "executed",
-   "evidence": "rounds 1-6 reused; Ready"
+   "evidence": "round 7 reused; Ready"
   },
   {
    "decision": "Critique",
-   "status": "executed; verdict proceed with amendments; C1-C4 applied directly",
-   "evidence": ".copilot-tracking/critiques/2026-11-18/issue1818-live7-critique.md"
+   "status": "executed; proceed with amendments; C1-C4 applied directly",
+   "evidence": ".copilot-tracking/critiques/2026-11-18/issue1818-live8-critique.md"
+  },
+  {
+   "decision": "Tier FULL; gate not run",
+   "status": "heavy lock held",
+   "evidence": "/tmp/ama-rpi-heavy.lock"
   },
   {
    "decision": "Review",
-   "status": "executed once; conformant for scope; follow-ups routed",
-   "evidence": ".copilot-tracking/reviews/logs/2026-11-18/issue1818-live7-review.md"
+   "status": "executed once; conformant for focused scope",
+   "evidence": ".copilot-tracking/reviews/logs/2026-11-18/issue1818-live8-review.md"
   }
  ],
  "blockers": [],
  "next_action": {
   "phase": "Follow-up",
-  "action": "commit then user selects follow-up"
+  "action": "coordinator publishes; full gate when lock free"
  },
  "prioritized_follow_ups": [
   {
    "rank": 1,
-   "task": "Land receiver sensor_register fix (full tier)",
-   "rationale": "demo depends on unmerged image",
-   "evidence": "R7-1"
+   "task": "Run full gate when lock free",
+   "rationale": "FULL tier",
+   "evidence": "R8-1"
   },
   {
    "rank": 2,
-   "task": "Fix resident chart axis labels",
-   "rationale": "cosmetic overlap",
-   "evidence": "R7-2"
+   "task": "Approve receiver INSERT grant",
+   "rationale": "permission widening",
+   "evidence": "R8-2"
+  },
+  {
+   "rank": 3,
+   "task": "Re-run browser and SQL Server grant tests",
+   "rationale": "criterion 4",
+   "evidence": "R8-3"
   }
  ]
 }

@@ -496,6 +496,8 @@ For #1818, the [live IoT map walkthrough evidence](./research/issue-1818-live-io
 records a 2026-11-18 demo run: nine synthetic messages through IoT Hub, an Event Hub route and Azure SQL, then
 fresh and stale sensor status in the employee map, accessible list, stale filter and resident `#sec-sensors`
 (desktop). No source change; the round 6 receiver fix stays unmerged.
+The [receiver register fix note](./research/issue-1818-sensor-register-receiver-fix-2026-11-18.md)
+lands that fix as a local candidate with a per-criterion proven or unproven table.
 For #2008, the [synthetic demo workbook and import evidence](./research/issue-2008-demo-workbook-import-evidence-2026-11-18.md)
 adds a generated `.xlsx` (generator in `tools/`), its local row-level preview and a run of the deployed CSV check
 with the staff test sign-in; conflicts show only locally because the web screen reads CSV only. No source change.
