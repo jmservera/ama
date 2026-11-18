@@ -12995,6 +12995,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Chat grounding live demo audit, third pass (Refs #164)
 
 * Added [issue-164-live-chat-grounding-evidence-r3-2026-11-18.md](research/issue-164-live-chat-grounding-evidence-r3-2026-11-18.md): re-ran the UI probe and registry read on revision 0000031; findings unchanged (no actual-model result, thresholds proposed, accountable individual unknown, resident-contact ask falls back without a route). No source change, no Azure resource created, probe thread deleted
+
 ## [2026-11-18] add | Phase 0 discovery audit second live pass (Refs #124)
 
 * Added [issue-124-live-r2-phase0-discovery-audit-2026-11-18.md](research/issue-124-live-r2-phase0-discovery-audit-2026-11-18.md): 59 core discovery tests and the probe re-run, no consumer or deployed discovery surface found, per-criterion table with the owner-only items; no criterion ticked and no source or Azure change
