@@ -451,6 +451,7 @@ Hub `lastActivityTime` did not update; the #440 checkpoint and child-closure cri
 For #146, the [live monitoring evidence](./research/issue-146-live-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: installed alert inventory, a fired test alert, throwaway job-failure,
 IoT and workbook deployments, and the private-link limit that blocks workbook rendering and the poison-queue proof.
+A [re-run](./research/issue-146-live-monitoring-rerun-2026-11-18.md) adds a job-failure alert that fired on the real failed-job signal (Total aggregation; the Maximum shape did not) and lists the gaps.
 
 For #189, the [simulator run controls live evidence](./research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo check of the budget alerts, hub owner tag and deterministic owner, time-limit and alert controls; no simulator job is deployed.
