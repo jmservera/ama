@@ -12863,3 +12863,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Issue 200 src repoint audit (Refs #200)
 
 * Added [src-repoint-live-audit-200-2026-11-18.md](research/src-repoint-live-audit-200-2026-11-18.md): criteria 2 proven, criterion 3 proven except a fresh tag deployment; no source change
+
+## [2026-11-18] add | Issue 154 live resident UX audit round 2 (Refs #154)
+
+* Added [issue-154-live-resident-ux-audit-r2-2026-11-18.md](research/issue-154-live-resident-ux-audit-r2-2026-11-18.md): desktop audit against the UX standards with retained raw output and three resident screenshots (workbench screenshots not retained), per-criterion table; criteria 3 and 5b unproven. No source change.
