@@ -43,9 +43,9 @@ The driver:
 | Criterion in #185 | Result | Evidence |
 | --- | --- | --- |
 | Approach decided and recorded with the owner of credentials | Already ticked; the 2026-11-18 owner decision (Hub-generated symmetric keys, no X.509) is recorded here | Brief and this note |
-| Each home maps to one device identity and one stock home ID | Already ticked; not re-proven live | Source tests from earlier work |
+| Each home maps to one device identity and one stock home ID | Already ticked; Proven live for the demo in run 3: three homes mapped to three distinct `SYN-` plus sensor-key ids (`one_device_per_home: true`) | Run 3 section below; run 3 job log |
 | Credentials are issued and stored without appearing in source or logs | Proven for the demo scope | Hub generated the keys; they existed only in the job process memory; no key text in job output, the repository or the committed artifacts. Durable storage (for example Key Vault) was not exercised because the owner excluded Key Vault work, so "stored" means held in memory for the run only. The repository adapter `device_registry_azure.py` supports X.509 thumbprints only, so it was not exercised. |
-| Teardown removes all simulated identities | Proven for the demo hub | Delete 204 for all three, per-id read-back empty, hub statistics at 0 devices |
+| Teardown removes all simulated identities | Proven for the demo hub | Delete 204 for all three and per-id read-back empty at 12:36:33Z. Hub-wide statistics afterwards showed 2 and then 3 devices (see the adverse observation in the run 3 section), so a hub-wide zero is not shown | Run 3 job log and operator file |
 
 ## What this does not prove
 
@@ -76,9 +76,27 @@ Operator-side checks after the run:
 
 Limits found: Log Analytics queries from the operator machine are refused by the workspace network perimeter, so the output was streamed with `az containerapp job logs show` while the replica was kept alive for 150 seconds; the persisted workspace copy was not read. The run did not exercise durable secret storage (Key Vault excluded by the owner), so "stored" means held in process memory only.
 
+## Third run with repository identity mapping and retained operator output (2026-11-18, 12:35 to 12:45 UTC)
+
+Throwaway job `job-185c-probe` (same method as run 2). The job imported the repository `sensor_identity.sensor_key` from the demo API image and named each device `SYN-<sensor key>` for stock homes ZF-2025-0029 to 0031. Raw output: [job log](issue-185-live-device-identity-run3-log-2026-11-18.txt) (device ids replaced by placeholders); [operator output](issue-185-live-device-identity-run3-operator-2026-11-18.txt).
+
+| Step | Result |
+| --- | --- |
+| Mapping | 3 homes, 3 distinct devices, each id equals `SYN-` plus the repository sensor key of its home (`one_device_per_home: true`) |
+| Pre-existing devices | none |
+| Create with Hub-generated keys | 3 of 3 returned 200, type `sas`, primary and secondary present and different, keys unique across devices |
+| Send with issued key | 3 of 3 returned 204; wrong key 401 |
+| Delete and in-job read-back | 3 of 3 returned 204; `remaining_after_teardown: []` at 12:36:33Z |
+| Key text in job output | none (`key_in_output: false`); 0 matches for `primaryKey`, `secondaryKey`, `SharedAccessSignature` in the retained log |
+
+Adverse observation, kept: `az iot hub show-stats` after teardown showed 2 total devices (12:38Z) and then 3 enabled (12:39Z), and a second read-back job at 12:41Z found devices with the same three ids (HTTP 200). My devices were gone at 12:36:33Z, and another worker's probe job (`job-184r2-probe`) was present in the group. Because the ids derive deterministically from the same stock homes, these are almost certainly that worker's recreations, not residue of this run; I did not delete them (not mine) and cannot attribute them with the evidence held. The hub count therefore cannot show "0 devices" for this run; the proof of teardown is the in-job delete 204 and 404-equivalent empty read-back at 12:36:33Z, taken before any foreign creation. Lesson: use run-unique device ids (as runs 1 and 2 did) when the hub is shared.
+
+Operator-side: job `job-185c-probe` and the read-back job `job-185d-probe` deleted; both temporary Registry Contributor assignments deleted; remaining assignments are the two pre-existing ones (2026-10-16, 2026-10-30); hub public network access Disabled and local auth disabled (raw output retained in the operator file).
+
 ## Evidence limits
 
-* The operator-side results (show-stats count, job and role-assignment deletion, hub settings) have no retained raw output; they are operator-observed.
+* The operator-side results (show-stats count, job and role-assignment deletion, hub settings) are retained in `issue-185-live-device-identity-run3-operator-2026-11-18.txt`. The first `show-stats` call in that file returned a 401 (errorCode 401002) before a later call succeeded; the cause was not investigated (Observed; raw output not retained for any diagnosis).
 * "Stored" for the issued credential means held in memory for the run only; no durable credential store was proven.
-* The second run is not in the log entry, and the job output is not redacted by a retained step.
+* The attribution of the same-id devices to another worker's job `job-184r2-probe` rests on a job list that is not in the retained output (Observed; raw output not retained). The hub residue of those foreign devices is not cleared; the other worker or the owner should clear it.
+* The job output was not passed through a retained redaction step; the leak check counts are stated above.
 * Independent exact-head review and hosted CI are outstanding; no criterion is ticked.

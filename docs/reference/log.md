@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-11-15
+ms.date: 2026-11-18
 ms.topic: reference
 ---
 
@@ -12792,6 +12792,30 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Updated [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md): 101 existing gate tests run locally with raw output retained; container scores labelled "Observed; raw output not retained"; no new model call; the unticked criterion stays partly proven.
 
+## [2026-11-18] add | Nomination test bootstrap isolation per-criterion proof (Refs #1847)
+
+* Added [nomination-bootstrap-isolation-proof-1847-2026-11-18.md](research/nomination-bootstrap-isolation-proof-1847-2026-11-18.md): five criteria proven with fresh-process evidence on main; the full gate and external receipt remain unproven. No source or test change.
+
+## [2026-11-18] add | Issue 184 live simulator stream run 2 (Refs #184)
+
+* Added [issue-184-live-simulator-stream-run2-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-run2-evidence-2026-11-18.md) with two retained redacted job logs: the repository simulator loop streamed 3 slots (9 messages) to the demo hub with Hub-generated symmetric keys, all 9 read back from Event Hub; devices, job and temporary roles deleted. The child-closure criterion is not proven (#185 and #189 open). A lost Registry Contributor assignment and a short first read window are recorded as adverse findings.
+
+## [2026-11-18] add | Live WCAG axe and keyboard evidence, round 2 (Refs #151)
+
+* Added [issue-151-live-wcag-axe-evidence-r2-2026-11-18.md](research/issue-151-live-wcag-axe-evidence-r2-2026-11-18.md): 16 live screens (13 Programme Manager screens, one case view, two resident app screens) with 0 axe violations, raw axe output retained and redacted, contrast incompletes resolved by sampling, document title finding kept. The manual screen-reader and keyboard criterion stays unticked (screen reader production-only, other roles unavailable). No source changed.
+
+## [2026-11-18] add | Content audit of deployed demo screens, second run (Refs #153)
+
+* Added [content-audit-live-153-2026-11-18.md](research/content-audit-live-153-2026-11-18.md) with scripts, a hit summary and 43 redacted screenshots: findings on "Unassigned", "Held", "envelope" and an unexplained refusal code; AI wording and resident page hold; the named-human review criterion stays unproven. Indexed in the README.
+
+## [2026-11-18] add | Issue 117 live scan evidence (Refs #117)
+
+* Added [issue-117-live-scan-evidence-2026-11-18.md](research/issue-117-live-scan-evidence-2026-11-18.md) with retained raw output: 64 offline tests pass; live demo refuses the synthetic marker and a type-mismatched upload and records neither; the live scanner is the synthetic local one because Defender for Storage is disabled. Clean path, real engine and live legal hold stay unproven. No source change.
+
+## [2026-11-18] update | Live device identity run 3 (Refs #185)
+
+* Updated [issue-185-live-device-identity-evidence-2026-11-18.md](research/issue-185-live-device-identity-evidence-2026-11-18.md): run 3 proves the home-to-device mapping live and keeps operator output in a retained file; the hub-wide device count after teardown showed devices with the same ids that are not attributed to this run; no criterion is ticked.
+
 ## [2026-11-18] add | Equity and journey ownership live demo status (Refs #128)
 
 * Added [issue-128-live-equity-evidence-2026-11-18.md](research/issue-128-live-equity-evidence-2026-11-18.md): aggregate-only measures proven at source level and desktop axe clean on four live surfaces; the protocol agreement cannot be proven; no source change.
@@ -12827,3 +12851,14 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Archive unusable-path failing-first evidence (Refs #1259)
 
 * Added [2026-11-18-ranking-archive-unusable-1259-failing-first.md](research/2026-11-18-ranking-archive-unusable-1259-failing-first.md): regression class red on the parent of the fix, green on main, with a per-criterion table. No source change; no Azure action; the FULL-receipt criterion stays unticked.
+## [2026-11-18] add | Quality sensor live re-verification (Refs #1288)
+
+* Added [issue-1288-live-r2-quality-sensor-evidence-2026-11-18.md](research/issue-1288-live-r2-quality-sensor-evidence-2026-11-18.md): fresh retained readings seen on the demo, release gate unchanged, per-criterion table; no source change.
+
+## [2026-11-18] add | Issue 1818 live IoT map walkthrough evidence (Refs #1818)
+
+* Added [issue-1818-live-iot-map-walkthrough-evidence-2026-11-18.md](research/issue-1818-live-iot-map-walkthrough-evidence-2026-11-18.md): job output (9 sent, 9 stored), employee map cards, list and stale filter, and resident sensor view for a fresh and a stale reading, with a per-criterion table. No source change; the unmerged receiver fix is disclosed.
+
+## [2026-11-18] update | Issue 200 src repoint audit (Refs #200)
+
+* Added [src-repoint-live-audit-200-2026-11-18.md](research/src-repoint-live-audit-200-2026-11-18.md): criteria 2 proven, criterion 3 proven except a fresh tag deployment; no source change
