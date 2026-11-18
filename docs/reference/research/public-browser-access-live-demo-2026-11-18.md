@@ -45,7 +45,7 @@ and are not re-tested here.
 | SQL server `sql-cutover-test-rzsrg` | `publicNetworkAccess` Disabled, 0 firewall rules, minimal TLS 1.2, private endpoint `pe-sql-cutover-test-rzsrg` Approved; the app reads it by name with `ZF_SQL_AUTH=msi` | `azure-sql-env.txt` |
 | Authenticated web assets | All 11 probed assets (`app.js`, `assistants.js`, `index.html`, `law.html`, `law.js`, `ops.js`, `panels.js`, `timecapture.js`, `chat.js`, Leaflet files) return 200 | `access_proof.json` |
 | Authenticated read APIs | 22 of 25 GET routes return 200 (cases, CSV, facets, ranking, stats, map, visits, handoffs, packages, work orders, checklists, finance, funding, retention, briefing, assistants, governance, AI report, audit check, continuity) | `access_proof.json` |
-| Authenticated read APIs that did not pass | `/api/law` 503 (law store not configured, known), `/api/account/photo` 503 (token store disabled, known), `/api/time/status` 500 (new, see below) | `access_proof.json` |
+| Authenticated read APIs that did not pass | `/api/law` 503 (law store not configured, known), `/api/account/photo` 503 (token store disabled, known), `/api/time/status` 500 (known, re-observed; already recorded in log.md, see below) | `access_proof.json` |
 
 ## Adverse and unexpected results
 
@@ -80,6 +80,6 @@ and are not re-tested here.
   needed for the demo.
 * Decide whether to change Easy Auth so browser-originated API calls return
   401, which needs an owner-approved infrastructure change.
-* Investigate and file the `/api/time/status` 500.
+* Investigate the known `/api/time/status` 500 (already recorded in log.md).
 * Optional: add Front Door and WAF in front of the demo if the owner wants the
   #143 premium edge rather than direct ingress.
