@@ -408,6 +408,8 @@ immutability stay unproven.
 For #76, the [live task queue evidence](./research/issue-76-live-task-queue-evidence-2026-11-18.md)
 records the hazard clock and named owner on the live demo case card. The clock reads
 unknown because the record has no timestamp, and no demo case has a safeguarding item.
+The [second pass](./research/issue-76-live-r2-2026-11-18.md) adds masked screenshots and the
+visible queue definitions; the criterion stays partly proven.
 For #96, the [live form schema approval evidence](./research/issue-96-live-form-schema-approval-evidence-2026-11-18.md)
 records that the demo holds no registered schema and no shipped path records
 an approval, so the approved-schema criterion stays unproven.
@@ -1366,6 +1368,7 @@ or infra acceptance claimed.
 | [Azure SQL Point-in-Time Restore Evidence on the Demo](./research/issue-145-live-pitr-restore-evidence-2026-11-18.md) | Issue 145: 2026-11-18 live restore of the demo database to a throwaway copy, audit-chain prefix match, observed restore time, per-criterion proven/unproven record |
 | [Azure SQL Restore Re-verification and Resurrection Gap](./research/issue-145-live-run2-reverification-2026-11-18.md) | Issue 145 run 2: read-only demo backup and cleanup checks, why release, suspension and allowance resurrection cannot be proven, final per-criterion record |
 | [Azure SQL Point-in-Time Restore Rerun with Raw Output](./research/issue-145-live-run3-pitr-rerun-2026-11-18.md) | Issue 145 run 3: second live restore with redacted raw probe output retained, chain and prefix match, native ledger denial, retention settings and the resurrection gap |
+| [Agentic Workflow Detection Runs Tracker Assessment](./research/issue-1086-aw-detection-runs-2026-11-18.md) | Issue 1086: classification of 113 gh-aw detection warnings (108 cancellations), no threat found, remaining optional follow-up |
 | [Service Continuity, Versioning and Export Evidence on the Demo](./research/issue-122-live-continuity-evidence-2026-11-18.md) | Issue 122: 2026-11-18 live version change and reversal, offline export verification, default-disabled assistants, per-criterion proven/unproven record |
 | [Regulatory Alert and Home Chat UX Live Demo Proof](./research/issue-215-live-alert-chat-ux-evidence-2026-11-18.md) | Issue 215: desktop Playwright and axe evidence for the alerts panel and home chat on the demo, per-criterion status; no alert card can render without a law store and staff comprehension testing stays unrun |
 | [Regulatory Alert and Home Chat UX Populated-State Proof](./research/issue-215-live-populated-states-evidence-2026-11-18.md) | Issue 215 run 2: deployed client rendered against mocked alert and chat responses; keyboard, plain-language, no-source, doubt route and axe results; comprehension testing still unprovable for the demo |

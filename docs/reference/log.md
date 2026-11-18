@@ -12972,6 +12972,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-215-live-rerun3-evidence-2026-11-18.md](research/issue-215-live-rerun3-evidence-2026-11-18.md): desktop Playwright re-check on the unchanged demo image; law store still not loaded, chat axe incomplete characterised, clipped helper line recorded, per-criterion proven or unproven table; no source change, no Azure resource created
 
+## [2026-11-18] add | Agentic workflow detection runs tracker assessment (Refs #1086)
+
+* Added [issue-1086-aw-detection-runs-2026-11-18.md](research/issue-1086-aw-detection-runs-2026-11-18.md): 108 of 113 tracker warnings come from concurrency-cancelled Rubric Scorer runs; no threat detected; no workflow change made.
+
 ## [2026-11-18] add | Capstone pitch preparation third pass (Refs #435)
 
 * Added [capstone-pitch-435-live-r3-2026-11-18.md](research/capstone-pitch-435-live-r3-2026-11-18.md) with retained deck inspection and Azure read-only output: criteria 1 and 4 proven for the demo, criterion 2 not provable, criterion 3 tick not supported by the rehearsal notes; no source or deck change, no Azure resource created
@@ -12987,3 +12991,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Hardened deployment audit rerun with retained evidence (Refs #118)
 
 * Added [issue-118-live-20261118T1512Z-2026-11-18.md](research/issue-118-live-20261118T1512Z-2026-11-18.md) and its evidence folder: policy and Defender decision proven as a recorded demo decision; live Defender tiers and repository policy assignments unproven (read access denied, assignments not deployed)
+## [2026-11-18] add | Issue 76 live second pass (Refs #76)
+
+* Added [issue-76-live-r2-2026-11-18.md](research/issue-76-live-r2-2026-11-18.md): masked screenshots of the hazard clock and named owner and of the queue definitions on the demo; hazard partly proven (clock Unknown), safeguarding unproven (no demo item); no source change, nothing created in Azure
