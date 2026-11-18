@@ -1,0 +1,23 @@
+AI priority task, mode biased (synthetic): status blocked, activation allowed False
+sensor_completeness/complete: n=42 errors=2 sufficient=False review_burden=0.119
+sensor_completeness/partial: n=6 errors=1 sufficient=False review_burden=0.0
+support_need/none: n=42 errors=3 sufficient=False review_burden=0.119
+support_need/declared: n=6 errors=0 sufficient=False review_burden=0.0
+source_completeness/complete: n=42 errors=2 sufficient=False review_burden=0.0
+source_completeness/partial: n=6 errors=1 sufficient=False review_burden=0.8333
+appointment_history/regular: n=42 errors=2 sufficient=False review_burden=0.119
+appointment_history/missed: n=6 errors=1 sufficient=False review_burden=0.0
+seeded ['history-3-b', 'sensor-1-b', 'source-2-b'], detected ['history-3-b', 'sensor-1-b', 'source-2-b']
+blocker insufficient_sample: sensor_completeness/complete: n=42 below minimum sample
+blocker insufficient_sample: sensor_completeness/partial: n=6 below minimum sample
+blocker insufficient_sample: support_need/none: n=42 below minimum sample
+blocker insufficient_sample: support_need/declared: n=6 below minimum sample
+blocker insufficient_sample: source_completeness/complete: n=42 below minimum sample
+blocker insufficient_sample: source_completeness/partial: n=6 below minimum sample
+blocker insufficient_sample: appointment_history/regular: n=42 below minimum sample
+blocker insufficient_sample: appointment_history/missed: n=6 below minimum sample
+blocker unjustified_exclusion: history-3-b excluded or deprioritised without approved reason
+blocker unjustified_exclusion: sensor-1-b excluded or deprioritised without approved reason
+blocker unjustified_exclusion: source-2-b excluded or deprioritised without approved reason
+blocker unapproved_thresholds: cohorts, lawful fields or thresholds lack named owner approval bound to this manifest digest (OQ-018)
+OQ-018: representative cohorts, lawful analysis fields, sample sufficiency and thresholds need owner approval before live use; synthetic results are not fairness evidence.
