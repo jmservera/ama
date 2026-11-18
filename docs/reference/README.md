@@ -413,6 +413,11 @@ For #146, the [live monitoring evidence](./research/issue-146-live-monitoring-ev
 records a 2026-11-18 demo run: installed alert inventory, a fired test alert, throwaway job-failure,
 IoT and workbook deployments, and the private-link limit that blocks workbook rendering and the poison-queue proof.
 
+For #138, the [CI/CD OIDC and what-if live evidence](./research/issue-138-live-cicd-oidc-evidence-2026-11-18.md)
+records a 2026-11-18 read-only demo run: a live what-if of the real template, the post-deployment
+smoke checks against the demo API, the fail-closed environment gate and the unconfigured OIDC,
+environment and runner prerequisites. All six criteria stay unticked.
+
 For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root
 runtime, scale-out from 0 to 4 replicas under a 60 s load run, and the Container Apps
