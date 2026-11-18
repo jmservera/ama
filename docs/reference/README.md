@@ -409,6 +409,9 @@ For #185, the [live device identity evidence](./research/issue-185-live-device-i
 records a 2026-11-18 demo run: Hub-generated symmetric device keys issued, used for sending
 and all identities removed. Durable secret storage and X.509 stay unproven.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
+For #146, the [live monitoring evidence](./research/issue-146-live-monitoring-evidence-2026-11-18.md)
+records a 2026-11-18 demo run: installed alert inventory, a fired test alert, throwaway job-failure,
+IoT and workbook deployments, and the private-link limit that blocks workbook rendering and the poison-queue proof.
 
 For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root
