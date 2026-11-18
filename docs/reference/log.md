@@ -13215,6 +13215,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 108 live re-verification, round 3 (Refs #108)
 
 * Added [issue-108-live-r3-2026-11-18.md](research/issue-108-live-r3-2026-11-18.md) with raw evidence: 116 harness tests OK, deployments and rate limits reconfirmed, quota headroom still unproven (usages empty, Microsoft.Quota unregistered), live AI report read, manager routes 403 for the Programme Manager demo account; no criterion newly tickable.
+
 ## [2026-11-18] add | Issue 107 live third pass (Refs #107)
 
 * Added [issue-107-live-r3-assistants-evidence-2026-11-18.md](research/issue-107-live-r3-assistants-evidence-2026-11-18.md): registry is private so the old-image path stays proxy-only; a live same-image revision restart (0000031 to 0000032) kept denial, zero tokens and the SUS-1 suspension; SUS-1 traced to the #122 probe; the approved-release side stays unproven (OQ-017); no criterion ticked. Docs only.
