@@ -46,6 +46,11 @@ def store_fixture() -> Mock:
     return Mock(cases={"SYN-1": {}, "SYN-2": {}})
 
 
+class PropertyMockError:
+    def __iter__(self) -> Any:
+        raise AssertionError("store.cases must not be read when cost inputs are invalid")
+
+
 def broken_ids() -> MagicMock:
     ids = MagicMock(spec=list)
     ids.__len__.return_value = 2
@@ -376,6 +381,182 @@ class LoadcheckEvidenceTests(unittest.TestCase):
                 self.assertTrue(Path(env["ZF_STATE"]).is_relative_to(tmp))
                 self.assertTrue(Path(env["ZF_DATA"]).is_relative_to(env["ZF_STATE"]))
                 self.assertFalse(Path(env["ZF_STATE"]).exists())
+
+    def test_evaluate_cost_reports_measured_against_target_and_preserves_rate_precision(
+        self,
+    ) -> None:
+        within = loadcheck.evaluate_cost(
+            vcore_seconds=120.0,
+            meter_rate_per_vcore_second=0.00014494,
+            target_cost=0.05,
+        )
+        self.assertEqual(
+            within,
+            {
+                "status": "measured",
+                "vcore_seconds": 120.0,
+                "meter_rate_per_vcore_second": 0.00014494,
+                "measured_cost": 0.0173928,
+                "target_cost": 0.05,
+                "within_target": True,
+                "missing_inputs": [],
+                "azure_live_run_human_gated": True,
+            },
+        )
+        breached = loadcheck.evaluate_cost(
+            vcore_seconds=120.0,
+            meter_rate_per_vcore_second=0.00014494,
+            target_cost=0.01,
+        )
+        self.assertIs(breached["within_target"], False)
+        no_target = loadcheck.evaluate_cost(
+            vcore_seconds=-0.0,
+            meter_rate_per_vcore_second=0.00014494,
+            target_cost=None,
+        )
+        self.assertEqual(no_target["status"], "measured")
+        self.assertEqual(no_target["vcore_seconds"], 0.0)
+        self.assertEqual(no_target["measured_cost"], 0.0)
+        self.assertIsNone(no_target["within_target"])
+        self.assertEqual(no_target["missing_inputs"], ["target_cost"])
+
+    def test_evaluate_cost_reports_unknown_when_omitted_and_rejects_invalid_inputs(self) -> None:
+        unknown = loadcheck.evaluate_cost()
+        self.assertEqual(
+            unknown,
+            {
+                "status": "Unknown",
+                "vcore_seconds": None,
+                "meter_rate_per_vcore_second": None,
+                "measured_cost": None,
+                "target_cost": None,
+                "within_target": None,
+                "missing_inputs": [
+                    "vcore_seconds",
+                    "meter_rate_per_vcore_second",
+                    "target_cost",
+                ],
+                "azure_live_run_human_gated": True,
+            },
+        )
+        partial = loadcheck.evaluate_cost(vcore_seconds=45.5, target_cost=0.25)
+        self.assertEqual(partial["status"], "Unknown")
+        self.assertIsNone(partial["measured_cost"])
+        self.assertIsNone(partial["within_target"])
+        self.assertEqual(partial["missing_inputs"], ["meter_rate_per_vcore_second"])
+
+        bad_cases: list[tuple[float | None, float | None, float | None]] = [
+            (-0.1, 0.00015, 0.5),
+            (10.0, 0.0, 0.5),
+            (10.0, -0.0001, 0.5),
+            (10.0, 0.00015, -0.01),
+            (float("nan"), 0.00015, 0.5),
+            (10.0, float("inf"), 0.5),
+            (True, 0.00015, 0.5),
+            (10.0, False, 0.5),
+            (10**400, 0.00015, 0.5),
+        ]
+        for vc, rate, target in bad_cases:
+            with self.subTest(vc=vc, rate=rate, target=target), self.assertRaises(ValueError):
+                loadcheck.evaluate_cost(vc, rate, target)
+
+        untouched = Mock()
+        untouched.configure_mock(**{"cases": PropertyMockError()})
+        with self.assertRaises(ValueError):
+            loadcheck.run(untouched, {}, 1.0, vcore_seconds=-1.0)
+
+    def test_run_records_measured_load_latency_and_cost_sections(self) -> None:
+        report = self.run_once(sessions=2, writers=1, seconds=2.0)
+        total = sum(c["n"] for c in report["classes"].values())
+        self.assertEqual(
+            report["load"],
+            {
+                "sessions": 2,
+                "writers": 1,
+                "seconds": 2.0,
+                "total_requests": total,
+                "achieved_rps": round(total / 2.0, 4),
+            },
+        )
+        self.assertEqual(report["classes"]["list"]["limit"], 1.0)
+        self.assertEqual(report["classes"]["detail"]["limit"], 1.0)
+        self.assertEqual(report["classes"]["write"]["limit"], 2.0)
+        self.assertEqual(report["cost"]["status"], "Unknown")
+        self.assertIs(report["cost"]["azure_live_run_human_gated"], True)
+
+    def test_cli_cost_flags_record_prd_target_evaluation_and_exit_codes(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            seed = Path(tmp) / "synthetic.json"
+            seed.write_text(
+                json.dumps(
+                    {
+                        "cases": [{"id": "SYN-1"}],
+                        "staff": [{"role": "Retrofit Programme Manager"}],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            scenarios: list[tuple[list[str], int, str, bool | None]] = [
+                (
+                    ["--vcore-seconds", "100", "--meter-rate", "0.00015", "--cost-target", "0.05"],
+                    0,
+                    "measured",
+                    True,
+                ),
+                (
+                    ["--vcore-seconds", "100", "--meter-rate", "0.00015", "--cost-target", "0.01"],
+                    1,
+                    "measured",
+                    False,
+                ),
+                (
+                    ["--vcore-seconds", "100", "--meter-rate", "0.00015"],
+                    0,
+                    "measured",
+                    None,
+                ),
+                ([], 0, "Unknown", None),
+            ]
+            for extra, expected_code, expected_status, expected_within in scenarios:
+                with self.subTest(extra=extra):
+                    out = io.StringIO()
+                    with (
+                        patch.dict(os.environ, {}, clear=True),
+                        patch.object(tempfile, "tempdir", tmp),
+                        patch("zava_forward.core.factory.open_store", return_value=store_fixture()),
+                        patch.object(threading, "Thread", InlineThread),
+                        patch.object(time, "monotonic", side_effect=[0] + [0, 2] * 5),
+                        patch.object(time, "time", side_effect=AssertionError("wall clock used")),
+                        patch.object(time, "perf_counter", side_effect=itertools.count(0, 0.125)),
+                        contextlib.redirect_stdout(out),
+                    ):
+                        code = loadcheck.main(
+                            ["--data", str(seed), "--homes", "1", "--seconds", "1", *extra]
+                        )
+                    self.assertEqual(code, expected_code)
+                    payload = json.loads(out.getvalue())
+                    self.assertEqual(payload["cost"]["status"], expected_status)
+                    self.assertIs(payload["cost"]["within_target"], expected_within)
+                    self.assertIs(payload["cost"]["azure_live_run_human_gated"], True)
+                    self.assertIn("load", payload)
+
+            for bad_flags in (
+                ["--vcore-seconds", "-1"],
+                ["--meter-rate", "0"],
+                ["--cost-target", "nan"],
+                ["--vcore-seconds", "1e400"],
+            ):
+                with self.subTest(bad_flags=bad_flags):
+                    with (
+                        patch.dict(os.environ, {}, clear=True),
+                        patch.object(tempfile, "tempdir", tmp),
+                        patch("zava_forward.core.factory.open_store") as factory,
+                        contextlib.redirect_stderr(io.StringIO()),
+                        self.assertRaises(SystemExit) as exit_status,
+                    ):
+                        loadcheck.main(["--data", str(seed), "--homes", "1", *bad_flags])
+                    self.assertEqual(exit_status.exception.code, 2)
+                    factory.assert_not_called()
 
 
 if __name__ == "__main__":

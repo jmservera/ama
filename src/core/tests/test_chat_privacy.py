@@ -66,8 +66,33 @@ class ChatPrivacyBehaviour(_TestCase):
         self.assertEqual(self.store.chat_list_threads(U1), [])
 
     def test_no_retention_period_before_approval(self) -> None:
+        self.assertIsNone(self.cp(CHAT_RETENTION_DAYS="30", CHAT_RETENTION_REF="SYNTH-RET-1").decision()["retention_days"])
         self.assertIsNone(self.cp(**APPROVED, CHAT_RETENTION_DAYS="30").decision()["retention_days"])
         self.assertEqual(self.cp(**APPROVED, CHAT_RETENTION_DAYS="30", CHAT_RETENTION_REF="SYNTH-RET-1").decision()["retention_days"], 30)
+
+    def test_storage_refused_when_provider_or_region_unapproved(self) -> None:
+        c = self.cp(**APPROVED, CHAT_PROVIDER_REGION="eastus")
+        self.assertFalse(c.decision()["approved"])
+        with self.assertRaises(ChatNotApproved):
+            c.start_thread(U1, "ZF-1", TASK)
+        for bad_days in ("\u00b2", "\u0663\u0660", "36501", "9" * 5000):
+            d = self.cp(
+                **APPROVED, CHAT_RETENTION_REF="SYNTH-RET-1", CHAT_RETENTION_DAYS=bad_days
+            ).decision()
+            self.assertIsNone(d["retention_days"])
+        actual = self.cp(
+            ZF_DATA_PROCESSING="actual",
+            CHAT_DPIA_REF="DPIA-2026-99",
+            CHAT_LAWFUL_BASIS_REF="LB-2026-99",
+            CHAT_NOTICE_REF="NOTICE-2026-99",
+            CHAT_RETENTION_REF="RET-2026-99",
+            CHAT_RETENTION_DAYS="30",
+        )
+        self.assertFalse(actual.decision()["approved"])
+        self.assertTrue(actual.decision()["actual_mode_unapproved"])
+        self.assertIsNone(actual.decision()["retention_days"])
+        with self.assertRaises(ChatNotApproved):
+            actual.start_thread(U1, "ZF-1", TASK)
 
     def test_no_expiry_without_retention(self) -> None:
         c = self.cp(**APPROVED)
@@ -75,6 +100,33 @@ class ChatPrivacyBehaviour(_TestCase):
         c.add_memory(U1, "likes tables", task=TASK)
         self.assertIsNone(c.export(U1)["memory"][0]["expires_at"])
         self.assertEqual(c.purge_expired("9999"), 0)
+        seeded = self.cp(**APPROVED, CHAT_RETENTION_REF="SYNTH-RET-1", CHAT_RETENTION_DAYS="1")
+        seeded.add_memory(U1, "expiring note", task=TASK)
+        self.assertEqual(len(c.export(U1)["memory"]), 2)
+        invalid_provider = self.cp(**APPROVED, CHAT_PROVIDER_REGION="eastus")
+        self.assertFalse(invalid_provider.memory_status(U1, TASK)["active"])
+        self.assertEqual(invalid_provider.prompt_memory(U1, TASK), [])
+        self.assertEqual(invalid_provider.purge_expired("0000-01-01T00:00:00+00:00"), 0)
+        self.assertEqual(invalid_provider.purge_expired("9999-01-01T00:00:00+00:00"), 1)
+        remaining = c.export(U1)["memory"]
+        self.assertEqual(len(remaining), 1)
+        self.assertIsNone(remaining[0]["expires_at"])
+        self.assertEqual(remaining[0]["content"], "likes tables")
+        seeded.add_memory(U1, "second expiring note", task=TASK)
+        actual_hold = self.cp(
+            ZF_DATA_PROCESSING="actual",
+            CHAT_DPIA_REF="DPIA-2026-99",
+            CHAT_LAWFUL_BASIS_REF="LB-2026-99",
+            CHAT_NOTICE_REF="NOTICE-2026-99",
+            CHAT_RETENTION_REF="RET-2026-99",
+            CHAT_RETENTION_DAYS="1",
+            CHAT_PROVIDER_REGION="uksouth",
+            CHAT_DEPLOYMENT_TYPE="Standard",
+        )
+        self.assertFalse(actual_hold.memory_status(U1, TASK)["active"])
+        self.assertEqual(actual_hold.prompt_memory(U1, TASK), [])
+        self.assertEqual(actual_hold.purge_expired("9999-01-01T00:00:00+00:00"), 1)
+        self.assertEqual([m["content"] for m in c.export(U1)["memory"]], ["likes tables"])
 
     def test_rights_run_through_the_160_chat_repository(self) -> None:
         c = self.cp(**APPROVED)

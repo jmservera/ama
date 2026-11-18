@@ -130,6 +130,13 @@ def run_sql(request: dict[str, Any], db: Any, management: Any = None) -> dict[st
 
 
 def main() -> int:
+    from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
+
+    try:
+        enforce_from_env()
+    except ContainerHardeningError as error:
+        print(f"Refusing to start: {error}", flush=True)
+        return 2
     request = None
     try:
         encoded = os.environ.pop("ZF_STAFF_REQUEST")

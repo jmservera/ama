@@ -3,6 +3,7 @@ import base64
 import binascii
 import json
 import logging
+import math
 import os
 import secrets
 import sys
@@ -14,13 +15,14 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
+from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
 from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
-from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, controls, form_export, form_review, forms, profile
+from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, controls, form_export, form_review, forms, heldout_eval, profile, tokenomics_comparison
 
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
 from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine, staff_intake
-from zava_forward.api import auth, simulator_admin
+from zava_forward.api import auth, plain_language, sensor_badges, simulator_admin
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
@@ -31,15 +33,21 @@ from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARNING
 from zava_forward.core.chat_panel import ChatPanel, chat_skills, TASK as CHAT_TASK, MAX_INPUT_CHARS, MAX_HISTORY_CHARS, MAX_THREAD_TURNS, all_role_limits, role_limits, AGENT_DEPTH, MEMORY_CAPS, CALLS_PER_REQUEST_BASIS
 from zava_forward.core.regulatory_chat import RegulatoryChat, TASK as REGULATORY_TASK
+from zava_forward.core.regulatory_output_guard import (
+    ADVISORY_REVIEW_TEXT,
+    GuardTelemetry,
+    inspect_regulatory_output,
+    merge_guard_statuses,
+)
 from zava_forward.agents import regulatory_chat
-from zava_forward.core.source_monitor import dated_card
+from zava_forward.core.source_monitor import dated_card, watch_summary
 from zava_forward.core.chatthreads import ChatNotFound
 from zava_forward.core.documents import DocumentStoreError
 from zava_forward.core.ranking_publication import ArchiveStorageError
 from zava_forward.core.factory import open_store
 from zava_forward.api.timecapture import TimeCapture
 from zava_forward.api.static_assets import StaticAssets
-from zava_forward.core.store import MANAGER_ROLES, ConflictError, GateError
+from zava_forward.core.store import MANAGER_ROLES, ConflictError, GateError, Store
 from zava_forward.core.aftercare_intake import AftercareService
 from zava_forward.core.aftercare_store import DocumentStateStore
 from zava_forward.core.synthetic import sensor_scenarios
@@ -107,11 +115,13 @@ class App:
                 raise ai_consumption.DispatchWithdrawn("captured-readings-transmission-unavailable")
             return ai.evidence(*args)
 
-        self.assistants = Assistants(store, provider=AgentWorker(fenced).provider_call, transport=lambda: store.ai)
+        self.guard_telemetry = GuardTelemetry()
+        self.assistants = Assistants(store, provider=AgentWorker(fenced).provider_call, transport=lambda: store.ai, guard_telemetry=self.guard_telemetry)
         self.chat = ChatIsolation(store)
+        self.chat.sensors = self.assistants.sensors
         self.panel = ChatPanel(self.chat, ChatModel(
             AgentWorker(lambda *args: store.ai.evidence(*args)),
-            admission=lambda: chat_admission(store)))
+            admission=lambda: chat_admission(store)), guard_telemetry=self.guard_telemetry)
         self.simulation, self.simulation_reason = None, "not-configured"
         try:
             self.simulation = simulation_lane.Lane.open(os.environ, working=(getattr(store, "db_path", ""),))
@@ -123,7 +133,7 @@ class App:
         scenario_homes = sorted({str(x["rows"][0]["home_id"]) for x in scenarios})
         self.aftercare = AftercareService(DocumentStateStore(store), homes=scenario_homes, cohort=scenario_homes, scenarios=scenarios)
         self.regulatory = RegulatoryChat(
-            self.chat, law, regulatory_chat.answer, regulatory_chat.purpose, regulatory_chat.refusal
+            self.chat, law, regulatory_chat.answer, regulatory_chat.purpose, regulatory_chat.refusal, guard_telemetry=self.guard_telemetry
         )
         self.law_lock = threading.Lock()
         self.engine = None
@@ -183,13 +193,24 @@ EXPORT_KINDS = {"/api/finance.csv": "finance_queue", "/api/asset/stock-queue.csv
                 "/api/handoffs/unaccepted.csv": "handoffs"}
 
 
-def _max_age_hours(url):
-    """Optional ageing limit shared by the unaccepted-handoff JSON and CSV routes; the first value wins, blank means none."""
-    raw = parse_qs(url.query, keep_blank_values=True).get("max_age_hours", [None])[0]
-    limit = float(raw) if raw not in (None, "") else None
-    if limit is not None and not 0 < limit < 1e6:
-        raise ValueError
+def _parse_max_age_hours(raw):
+    if raw in (None, ""):
+        return None
+    if isinstance(raw, bool):
+        raise ValueError("max_age_hours must be a positive number of hours.")
+    try:
+        limit = float(raw)
+    except (TypeError, ValueError):
+        raise ValueError("max_age_hours must be a positive number of hours.") from None
+    if not math.isfinite(limit) or not 0 < limit < 1e6:
+        raise ValueError("max_age_hours must be a positive number of hours.")
     return limit
+
+
+def _max_age_hours(url):
+    """Optional ageing limit shared by handoff JSON and CSV routes; the first value wins, blank means none."""
+    raw = parse_qs(url.query, keep_blank_values=True).get("max_age_hours", [None])[0]
+    return _parse_max_age_hours(raw)
 
 
 def concern_export_row(item):
@@ -224,6 +245,352 @@ def all_proposals(read_page, max_pages=200):
         if not after:
             return rows
     raise ValueError("Too many proposals for one file; narrow the list to one case.")
+
+
+def _guard_prose(
+    text: str,
+    telemetry: GuardTelemetry,
+    *,
+    source_status: str | None = None,
+    effective_date: str | None = None,
+    as_of_date: str | None = None,
+    human_rule_activated: bool | None = None,
+    active_operational_rule: bool = False,
+    source_date: str | None = None,
+    retrieval_date: str | None = None,
+    provision: str | None = None,
+) -> tuple[str, dict]:
+    dec = inspect_regulatory_output(
+        text,
+        status=source_status,
+        effective=effective_date or source_date,
+        retrieved=retrieval_date,
+        as_of=as_of_date,
+        human_rule_activated=human_rule_activated,
+        active_operational_rule=active_operational_rule,
+        provision_id=provision,
+        on_violation="rewrite",
+        telemetry=telemetry,
+    )
+    if dec.passed:
+        return text, dec.to_status_dict()
+    return dec.rewritten_text or ADVISORY_REVIEW_TEXT, dec.to_status_dict()
+
+
+def _guard_law_sources_payload(listing: dict, telemetry: GuardTelemetry, today: str) -> dict:
+    sources_out = []
+    all_statuses = []
+    for raw in listing.get("sources", []):
+        item = dict(raw)
+        item_statuses = []
+        item["title"], st = _guard_prose(
+            str(item.get("title", "")),
+            telemetry,
+            as_of_date=today,
+            source_date=item.get("effective"),
+            retrieval_date=item.get("retrieved"),
+            provision=item.get("id"),
+        )
+        item_statuses.append(st)
+        caveats_out = []
+        for cav in item.get("caveats", []):
+            safe_cav, cst = _guard_prose(
+                str(cav),
+                telemetry,
+                as_of_date=today,
+                source_date=item.get("effective"),
+                retrieval_date=item.get("retrieved"),
+                provision=item.get("id"),
+            )
+            caveats_out.append(safe_cav)
+            item_statuses.append(cst)
+        item["caveats"] = caveats_out
+        merged = merge_guard_statuses(item_statuses)
+        item["output_guard"] = merged
+        all_statuses.append(merged)
+        sources_out.append(item)
+    gaps_out = []
+    for raw_gap in listing.get("gaps", []):
+        gap = dict(raw_gap)
+        g_statuses = []
+        for field in ("answer", "reason"):
+            if isinstance(gap.get(field), str):
+                gap[field], gst = _guard_prose(gap[field], telemetry, as_of_date=today)
+                g_statuses.append(gst)
+        g_merged = merge_guard_statuses(g_statuses)
+        gap["output_guard"] = g_merged
+        all_statuses.append(g_merged)
+        gaps_out.append(gap)
+    return dict(
+        listing,
+        sources=sources_out,
+        gaps=gaps_out,
+        output_guard=merge_guard_statuses(all_statuses, telemetry=telemetry),
+    )
+
+
+def _guard_law_source_detail(src: dict, telemetry: GuardTelemetry, today: str) -> dict:
+    out = dict(src)
+    statuses = []
+    out["title"], st = _guard_prose(
+        str(out.get("title", "")),
+        telemetry,
+        as_of_date=today,
+        source_date=out.get("effective"),
+        retrieval_date=out.get("retrieved"),
+        provision=out.get("id"),
+    )
+    statuses.append(st)
+    caveats_out = []
+    for cav in out.get("caveats", []):
+        safe_cav, cst = _guard_prose(
+            str(cav),
+            telemetry,
+            as_of_date=today,
+            source_date=out.get("effective"),
+            retrieval_date=out.get("retrieved"),
+            provision=out.get("id"),
+        )
+        caveats_out.append(safe_cav)
+        statuses.append(cst)
+    out["caveats"] = caveats_out
+    provs_out = []
+    for raw_p in out.get("provisions", []):
+        p = dict(raw_p)
+        if isinstance(p.get("heading"), str):
+            p["heading"], pst = _guard_prose(
+                p["heading"],
+                telemetry,
+                as_of_date=today,
+                source_date=out.get("effective"),
+                retrieval_date=out.get("retrieved"),
+                provision=p.get("id"),
+            )
+            statuses.append(pst)
+        provs_out.append(p)
+    out["provisions"] = provs_out
+    out["output_guard"] = merge_guard_statuses(statuses, telemetry=telemetry)
+    return out
+
+
+def _guard_law_provision(prov: dict, telemetry: GuardTelemetry, today: str) -> dict:
+    out = dict(prov)
+    statuses = []
+    for field in ("title", "heading"):
+        if isinstance(out.get(field), str):
+            out[field], st = _guard_prose(
+                out[field],
+                telemetry,
+                as_of_date=today,
+                source_date=out.get("effective"),
+                retrieval_date=out.get("retrieved"),
+                provision=out.get("id"),
+            )
+            statuses.append(st)
+    caveats_out = []
+    for cav in out.get("caveats", []):
+        safe_cav, cst = _guard_prose(
+            str(cav),
+            telemetry,
+            as_of_date=today,
+            source_date=out.get("effective"),
+            retrieval_date=out.get("retrieved"),
+            provision=out.get("id"),
+        )
+        caveats_out.append(safe_cav)
+        statuses.append(cst)
+    out["caveats"] = caveats_out
+    out["output_guard"] = merge_guard_statuses(statuses, telemetry=telemetry)
+    return out
+
+
+def _guard_law_search(found: dict, telemetry: GuardTelemetry, today: str) -> dict:
+    out = dict(found)
+    statuses = []
+    provs_out = []
+    for raw_p in out.get("provisions", []):
+        guarded_p = _guard_law_provision(raw_p, telemetry, today)
+        statuses.append(guarded_p["output_guard"])
+        provs_out.append(guarded_p)
+    out["provisions"] = provs_out
+    gaps_out = []
+    for raw_gap in out.get("no_source_held", []):
+        gap = dict(raw_gap)
+        g_statuses = []
+        for field in ("answer", "reason"):
+            if isinstance(gap.get(field), str):
+                gap[field], gst = _guard_prose(gap[field], telemetry, as_of_date=today)
+                g_statuses.append(gst)
+        g_merged = merge_guard_statuses(g_statuses)
+        gap["output_guard"] = g_merged
+        statuses.append(g_merged)
+        gaps_out.append(gap)
+    out["no_source_held"] = gaps_out
+    out["output_guard"] = merge_guard_statuses(statuses, telemetry=telemetry)
+    return out
+
+
+def _guard_rulecard_dict(
+    law, card: dict, today: str, telemetry: GuardTelemetry
+) -> tuple[dict, dict]:
+    out = dated_card(law, card, today) if "source_freshness" not in card else dict(card)
+    active_ver = law.rules.is_active(out["card_id"], today)
+    cits, elig = rule_engine.citation_eligibility(law, out, today)
+    declared_active = out.get("state") == "active" or active_ver == out.get("version")
+    legally_eligible = elig == "active"
+    human_activated = bool(declared_active and legally_eligible)
+    ineligible_status = next(
+        (
+            str(c.get("status"))
+            for c in cits
+            if c.get("status") in ("consultation", "future_phase", "historical")
+        ),
+        "future_phase" if declared_active and not legally_eligible else "in_force",
+    )
+    eff_date = out.get("effective")
+    prov_id = (out.get("provisions") or [out.get("card_id")])[0]
+    retrieved = cits[0].get("retrieved") if cits else None
+    statuses = []
+    for field in ("title", "trigger", "applicability", "clock", "safe_default"):
+        if isinstance(out.get(field), str):
+            out[field], st = _guard_prose(
+                out[field],
+                telemetry,
+                source_status=(
+                    ineligible_status if declared_active and not legally_eligible else "in_force"
+                ),
+                effective_date=eff_date if declared_active else None,
+                as_of_date=today,
+                human_rule_activated=human_activated if declared_active else False,
+                active_operational_rule=declared_active,
+                source_date=eff_date,
+                retrieval_date=retrieved,
+                provision=str(prov_id),
+            )
+            statuses.append(st)
+    return out, merge_guard_statuses(statuses)
+
+
+def _guard_rule_reviews_payload(reviews: list[dict], telemetry: GuardTelemetry, today: str) -> dict:
+    items_out = []
+    statuses = []
+    for raw in reviews:
+        item = dict(raw)
+        item_statuses = []
+        if isinstance(item.get("note"), str) and item["note"]:
+            item["note"], st = _guard_prose(
+                item["note"],
+                telemetry,
+                as_of_date=today,
+                human_rule_activated=False,
+                active_operational_rule=False,
+                source_date=item.get("source_effective"),
+                provision=item.get("source_id"),
+            )
+            item_statuses.append(st)
+        else:
+            _, st = _guard_prose(
+                f"Review item for {item.get('card_id', 'rule card')}: pending human review.",
+                telemetry,
+                as_of_date=today,
+                human_rule_activated=False,
+                active_operational_rule=False,
+            )
+            item_statuses.append(st)
+        merged = merge_guard_statuses(item_statuses)
+        item["output_guard"] = merged
+        statuses.append(merged)
+        items_out.append(item)
+    return {
+        "reviews": items_out,
+        "output_guard": merge_guard_statuses(statuses, telemetry=telemetry),
+    }
+
+
+def _guard_check_or_alert_dict(item: dict, telemetry: GuardTelemetry, today: str) -> dict:
+    out = dict(item)
+    cits = out.get("citations") or []
+    active_ctrl = bool(out.get("active_control", False))
+    ineligible_cit = next(
+        (
+            c
+            for c in cits
+            if c.get("status") in ("consultation", "future_phase", "historical")
+            or (isinstance(c.get("effective"), str) and c["effective"] > today)
+        ),
+        None,
+    )
+    src_status = str(ineligible_cit["status"]) if (active_ctrl and ineligible_cit) else "in_force"
+    eff_date = (
+        str(ineligible_cit["effective"])
+        if (active_ctrl and ineligible_cit and ineligible_cit.get("effective"))
+        else (cits[0].get("effective") if cits else None)
+    )
+    retrieved = cits[0].get("retrieved") if cits else None
+    prov_id = cits[0].get("id") if cits else out.get("card_id")
+    human_ok = bool(active_ctrl and ineligible_cit is None)
+    statuses = []
+    for field in ("safe_action", "noticed", "label"):
+        if isinstance(out.get(field), str) and out[field]:
+            out[field], st = _guard_prose(
+                out[field],
+                telemetry,
+                source_status=src_status,
+                effective_date=eff_date if active_ctrl else None,
+                as_of_date=today,
+                human_rule_activated=human_ok if active_ctrl else None,
+                active_operational_rule=active_ctrl,
+                source_date=eff_date,
+                retrieval_date=retrieved,
+                provision=str(prov_id) if prov_id else None,
+            )
+            statuses.append(st)
+    if isinstance(out.get("events"), list):
+        events_out = []
+        for ev in out["events"]:
+            ev_copy = dict(ev)
+            if (
+                isinstance(ev_copy.get("note"), str)
+                and ev_copy["note"]
+                and ev_copy["note"] != projection.NOTE_HELD
+            ):
+                ev_copy["note"], est = _guard_prose(ev_copy["note"], telemetry, as_of_date=today)
+                statuses.append(est)
+            events_out.append(ev_copy)
+        out["events"] = events_out
+    out["output_guard"] = merge_guard_statuses(statuses)
+    return out
+
+
+def _guard_alerts_payload(payload: dict, telemetry: GuardTelemetry, today: str) -> dict:
+    out = dict(payload)
+    statuses = []
+    homes_out = []
+    for raw_home in out.get("homes", []):
+        home = dict(raw_home)
+        alerts_out = []
+        for raw_alert in home.get("alerts", []):
+            guarded_a = _guard_check_or_alert_dict(raw_alert, telemetry, today)
+            statuses.append(guarded_a["output_guard"])
+            alerts_out.append(guarded_a)
+        home["alerts"] = alerts_out
+        homes_out.append(home)
+    out["homes"] = homes_out
+    out["output_guard"] = merge_guard_statuses(statuses, telemetry=telemetry)
+    return out
+
+
+def _guard_checkpoint_payload(payload: dict, telemetry: GuardTelemetry, today: str) -> dict:
+    out = dict(payload)
+    statuses = []
+    checks_out = []
+    for raw_c in out.get("checks", []):
+        guarded_c = _guard_check_or_alert_dict(raw_c, telemetry, today)
+        statuses.append(guarded_c["output_guard"])
+        checks_out.append(guarded_c)
+    out["checks"] = checks_out
+    out["output_guard"] = merge_guard_statuses(statuses, telemetry=telemetry)
+    return out
 
 
 def law_source_rows(listing):
@@ -306,8 +673,8 @@ def get_kind(path):
         return path[len("/api/"):]
     return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ranking/publication": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
-            "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/handoffs/unaccepted": "handoffs", "/api/packages": "packages",
-            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/resident/choice-queue": "resident_choice_queue", "/api/finance": "finance_queue", "/api/finance/exposure": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/exceptions": "exceptions", "/api/continuity/export": "continuity_export", "/api/retention": "retention", "/api/data-protection": "data_protection"}.get(path, "unknown")
+            "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/handoffs/unaccepted": "handoffs", "/api/handoffs/unowned": "handoffs", "/api/handoffs/escalated": "handoffs", "/api/packages": "packages",
+            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/ai/cohort-evaluation": "ai_report", "/api/ai/heldout-evaluation": "ai_report", "/api/ai/candidate-comparison": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/resident/choice-queue": "resident_choice_queue", "/api/finance": "finance_queue", "/api/finance/exposure": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/exceptions": "exceptions", "/api/continuity/export": "continuity_export", "/api/retention": "retention", "/api/data-protection": "data_protection"}.get(path, "unknown")
 
 
 GOVERNANCE_ACTIONS = {"protocol-freeze": "protocol_freeze", "protocol-approve": "protocol_approve", "benefits-record": "benefits_record",
@@ -545,7 +912,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(*simulator_admin.handle(s, u, "GET", url.path))
             if url.path == "/api/governance":
                 try:
-                    result = s.governance_view(u)
+                    result = (
+                        s.governance_view(u, assistants_service=app.assistants)
+                        if isinstance(s, Store)
+                        else s.governance_view(u)
+                    )
                     values = parse_qs(url.query, keep_blank_values=True)
                     if values.keys() - {"assessment"} or any(len(v) != 1 for v in values.values()):
                         raise ValueError("Supply only one optional declared assessment parameter.")
@@ -553,7 +924,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         assessment = json.loads(values["assessment"][0])
                         if assessment is None:
                             raise ValueError("An explicit assessment must be an object, not null.")
-                        result = s.governance_view(u, assessment)
+                        result = (
+                            s.governance_view(u, assessment, assistants_service=app.assistants)
+                            if isinstance(s, Store)
+                            else s.governance_view(u, assessment)
+                        )
                     return self._json(200, result)
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
@@ -661,21 +1036,30 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._rule_alerts(u, url.path, None, q)
                 if url.path == "/api/law/cards" or url.path.startswith("/api/law/cards/"):
                     return self._rulecards(u, url.path, None)
+                if not projection.allowed(u, "law"):
+                    return self._json(403, {"error": "Your role does not include this."})
                 if app.law is None:
                     return self._json(503, {"error": "The law store is not loaded."})
                 parts = [unquote(x) for x in url.path.strip("/").split("/")]
                 try:
                     with app.law_lock:
+                        day = datetime.now(UTC).date().isoformat()
+                        if parts == ["api", "law", "watch"]:
+                            raw_as_of = (q.get("as_of") or [""])[0].strip()
+                            as_of = rulecards._day(raw_as_of) if raw_as_of else day
+                            return self._json(200, watch_summary(app.law, today=as_of, telemetry=app.guard_telemetry))
                         if parts == ["api", "law", "sources"]:
-                            return self._json(200, app.law.sources())
+                            return self._json(200, _guard_law_sources_payload(app.law.sources(), app.guard_telemetry, day))
                         if parts == ["api", "law", "sources.csv"]:
-                            return self._csv("law-sources.csv", law_source_rows(app.law.sources()))
+                            return self._csv("law-sources.csv", law_source_rows(_guard_law_sources_payload(app.law.sources(), app.guard_telemetry, day)))
                         if len(parts) == 4 and parts[:3] == ["api", "law", "sources"]:
-                            return self._json(200, app.law.source(parts[3]))
+                            return self._json(200, _guard_law_source_detail(app.law.source(parts[3]), app.guard_telemetry, day))
                         if len(parts) == 4 and parts[:3] == ["api", "law", "provisions"]:
-                            return self._json(200, app.law.provision(parts[3]))
+                            return self._json(200, _guard_law_provision(app.law.provision(parts[3]), app.guard_telemetry, day))
                         if parts == ["api", "law", "search"]:
-                            return self._json(200, app.law.search(q.get("q", [""])[0][:200]))
+                            return self._json(200, _guard_law_search(app.law.search(q.get("q", [""])[0][:200]), app.guard_telemetry, day))
+                except rulecards.RuleError as exc:
+                    return self._json(400, {"error": str(exc)})
                 except KeyError:
                     pass
                 return self._json(404, {"error": "Not found."})
@@ -724,6 +1108,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 out["navigation"] = navigation(u)
                 if not projection.is_contractor(u):
                     out["work_queues"] = taskqueues.contract(ranking.CURRENT)
+                if projection.allowed(u, "law"):
+                    out["regulatory_output_guard"] = app.guard_telemetry.snapshot()
                 return self._json(200, out)
             if url.path == "/api/account/photo":
                 try:
@@ -824,6 +1210,23 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._send(200, list_export.to_csv(rows), "text/csv; charset=utf-8",
                                       {"Content-Disposition": 'attachment; filename="unaccepted-handoffs.csv"'})
                 return self._json(200, rows)
+            if url.path in ("/api/handoffs/unowned", "/api/handoffs/escalated"):
+                try:
+                    limit = _max_age_hours(url)
+                except ValueError:
+                    return self._json(400, {"error": "max_age_hours must be a positive number of hours."})
+                as_of_param = parse_qs(url.query, keep_blank_values=True).get("as_of", [None])[0]
+                as_of_arg = as_of_param if as_of_param not in (None, "") else None
+                try:
+                    if url.path == "/api/handoffs/unowned":
+                        rows = s.unowned_handoffs(u, as_of=as_of_arg, max_age_hours=limit)
+                    else:
+                        rows = s.escalated_handoffs(u, as_of=as_of_arg, max_age_hours=limit)
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                return self._json(200, rows)
             if url.path in ("/api/packages", "/api/workorders"):
                 try:
                     limit = offset = None
@@ -903,7 +1306,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(403, {"error": "Only a manager can see the AI evaluation report."})
                 from zava_forward.core import ai_registry
 
-                from zava_forward.agents import ai_eval
+                from zava_forward.agents import ai_eval, chat_eval
                 try:
                     q = parse_qs(url.query, keep_blank_values=True)
                     if set(q) - {"start", "end", "as_of"} or any(len(v) != 1 or not v[0] for v in q.values()):
@@ -915,16 +1318,55 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     ai_consumption.report_period(start, end, as_of)
                     consumption = dict(coverage="unavailable", token_cost="Unknown",
                                        cost_per_accepted_proposal="Unknown",
+                                       cost_per_accepted_outcome=dict(
+                                           cost=None, quality_floor="not-met-or-unknown",
+                                           reason="unpriced: reconciled billing record absent"),
                                        reason="Durable SQL consumption ledger unavailable.")
                     if app.assistants.sql:
                         try:
                             consumption = app.assistants.consumption.report(start=start, end=end, as_of=as_of)
                         except ai_consumption.DispatchHeld as error:
                             consumption["reason"] = str(error)
-                    return self._json(200, {"evaluation": ai_eval.run_eval(), "live": s.ai_live_report(),
-                                            "registry": ai_registry.registry(), "consumption": consumption})
+                    evaluation = dict(ai_eval.run_eval())
+                    heldout_suite = heldout_eval.canonical_offline_heldout_suite()
+                    evaluation["held_out"] = heldout_eval.compact_report_summary(heldout_suite)
+                    evaluation["tokenomics_comparison"] = tokenomics_comparison.compact_comparison_summary(
+                        tokenomics_comparison.canonical_offline_candidate_comparison(heldout_suite)
+                    )
+                    live_bounds = {k: q[k][0] for k in ("start", "end", "as_of") if k in q}
+                    return self._json(
+                        200,
+                        {
+                            "evaluation": evaluation,
+                            "chat_evaluation": chat_eval.run_eval(),
+                            "live": (
+                                s.ai_live_report(u, assistants_service=app.assistants, **live_bounds)
+                                if isinstance(s, Store)
+                                else s.ai_live_report(u, **live_bounds)
+                            ),
+                            "registry": ai_registry.registry(),
+                            "consumption": consumption,
+                        },
+                    )
                 except ValueError as error:
                     return self._json(400, {"error": str(error)})
+            if url.path == "/api/ai/cohort-evaluation":
+                if u["role"] not in MANAGER_ROLES:
+                    return self._json(403, {"error": "Only a manager can see the cohort evaluation record."})
+                if url.query:
+                    return self._json(400, {"error": "Unknown cohort evaluation parameter."})
+                from zava_forward.agents import ai_eval
+                return self._json(200, ai_eval.cohort_evaluation_export())
+            if url.path == "/api/ai/heldout-evaluation":
+                if u["role"] not in MANAGER_ROLES:
+                    return self._json(403, {"error": "Only a manager can see the held-out AI evaluation record."})
+                if url.query:
+                    return self._json(400, {"error": "Unknown held-out evaluation parameter."})
+                suite = heldout_eval.canonical_offline_heldout_suite()
+                return self._json(200, {
+                    "held_out": suite,
+                    "tokenomics_comparison": tokenomics_comparison.canonical_offline_candidate_comparison(suite),
+                })
             if url.path.startswith("/api/docs/"):
                 try:
                     _, _, _, cid, did = url.path.split("/")
@@ -942,7 +1384,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 if len(parts) != 4:
                     return self._json(404, {"error": "Case not found."})
                 try:
-                    return self._json(200, app.assistants.sensors(u, unquote(parts[2])))
+                    return self._json(200, sensor_badges.annotate(app.assistants.sensors(u, unquote(parts[2]))))
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
                 except KeyError:
@@ -978,6 +1420,33 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(404, {"error": "Home case not found."})
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
+            if url.path.startswith("/api/cases/") and url.path.endswith("/representative-view"):
+                parts = url.path.strip("/").split("/")
+                if len(parts) != 4:
+                    return self._json(404, {"error": "Case not found."})
+                if u.get("role") not in controls.RESIDENT_VIEW_ROLES:
+                    return self._json(
+                        403,
+                        {"error": "Representative views need current resident-workflow staff."},
+                    )
+                try:
+                    rep_ref = q.get("representative_ref", [None])[0]
+                    session_id = q.get("session_id", [None])[0]
+                    return self._json(
+                        200,
+                        s.representative_view(
+                            u,
+                            unquote(parts[2]),
+                            rep_ref,
+                            session_id=session_id,
+                        ),
+                    )
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except KeyError:
+                    return self._json(404, {"error": "Case not found."})
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
             if url.path.startswith("/api/cases/"):
                 from zava_forward.api import nomination_routes
                 d = s.detail(url.path.rsplit("/", 1)[1], u)
@@ -1001,11 +1470,12 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             try:
                 with app.law_lock:
                     engine = app.rule_engine()
+                    day = datetime.now(UTC).date().isoformat()
                     if body is None and parts == ["api", "law", "alerts"]:
                         case_id = (query or {}).get("case", [None])[0]
                         if case_id:
                             app.store.detail(case_id, user)
-                        return self._json(200, engine.alerts(user, case_id))
+                        return self._json(200, _guard_alerts_payload(engine.alerts(user, case_id), app.guard_telemetry, day))
                     if body is not None and len(parts) == 4 and parts[2] == "checks":
                         if body:
                             raise ValueError("Check inputs, trigger and time are server-derived.")
@@ -1015,7 +1485,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                             c for c in checkpoint["checks"]
                             if user["role"] in c["audience"] or user["email"] == c["decision_owner"]
                         ]
-                        return self._json(200, checkpoint)
+                        return self._json(200, _guard_checkpoint_payload(checkpoint, app.guard_telemetry, day))
                     if body is not None and len(parts) == 5 and parts[2] == "alerts":
                         if app.provider.name != "trusted-proxy":
                             raise PermissionError("Alert decisions require a trusted named owner.")
@@ -1053,19 +1523,19 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             rules.distinct = lambda actor, author: identity.distinct(app.store, actor, author)
             try:
                 with app.law_lock:
+                    day = datetime.now(UTC).date().isoformat()
                     if body is None:
-                        day = datetime.now(UTC).date().isoformat()
                         if len(parts) == 3:
-                            cards = [dated_card(app.law, c, day) for c in rules.cards()]
-                            return self._json(200, {"cards": cards})
+                            pairs = [_guard_rulecard_dict(app.law, c, day, app.guard_telemetry) for c in rules.cards()]
+                            return self._json(200, {"cards": [p[0] for p in pairs], "output_guard": merge_guard_statuses([p[1] for p in pairs], telemetry=app.guard_telemetry)})
                         if len(parts) == 4 and parts[3] == "reviews":
-                            return self._json(200, {"reviews": rules.reviews()})
+                            return self._json(200, _guard_rule_reviews_payload(rules.reviews(), app.guard_telemetry, day))
                         if len(parts) == 4:
                             history = rules.history(parts[3])
                             if not history:
                                 return self._json(404, {"error": "Card not found."})
-                            versions = [dated_card(app.law, c, day) for c in history]
-                            return self._json(200, {"versions": versions, "active_version": rules.is_active(parts[3])})
+                            pairs = [_guard_rulecard_dict(app.law, c, day, app.guard_telemetry) for c in history]
+                            return self._json(200, {"versions": [p[0] for p in pairs], "active_version": rules.is_active(parts[3]), "output_guard": merge_guard_statuses([p[1] for p in pairs], telemetry=app.guard_telemetry)})
                     elif len(parts) == 3:
                         allowed = {"card_id", *rulecards.FIELDS}
                         if set(body) - allowed:
@@ -1087,7 +1557,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         if identity.is_entra(user) and not identity.link(app.store, user, strict=True):
                             raise rulecards.RuleError("identity continuity is unavailable")
                         version = rules.propose(cid, user["email"].strip().lower(), rulecards.AUTHOR, **fields)
-                        return self._json(201, {"version": version, "versions": rules.history(cid)})
+                        pairs = [_guard_rulecard_dict(app.law, c, day, app.guard_telemetry) for c in rules.history(cid)]
+                        return self._json(201, {"version": version, "versions": [p[0] for p in pairs], "output_guard": merge_guard_statuses([p[1] for p in pairs], telemetry=app.guard_telemetry)})
                     elif len(parts) == 6:
                         if set(body) - {"note"}:
                             raise ValueError("Only note is accepted; authority and event dates are server-derived.")
@@ -1103,7 +1574,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                             rules.hold(*args, note=body.get("note"))
                         else:
                             actions[action](*args)
-                        return self._json(200, {"versions": rules.history(cid)})
+                        pairs = [_guard_rulecard_dict(app.law, c, day, app.guard_telemetry) for c in rules.history(cid)]
+                        return self._json(200, {"versions": [p[0] for p in pairs], "output_guard": merge_guard_statuses([p[1] for p in pairs], telemetry=app.guard_telemetry)})
             except rulecards.RuleError as e:
                 return self._json(409, {"error": str(e)})
             except ValueError as e:
@@ -1123,13 +1595,16 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 if not post and parts == ["status"]:
                     c.current_user(user)
                     demo = ai_registry.demo_activation_honoured(CHAT_TASK)
+                    dec = c.privacy.decision()
                     return self._json(200, {
-                        "warning": CHAT_WARNING, "retention": c.privacy.decision()["retention"],
-                        "storage_approved": c.privacy.decision()["approved"],
+                        "warning": CHAT_WARNING, "retention": dec["retention"],
+                        "storage_approved": dec["approved"],
+                        "provider_position": dec["provider_position"],
                         "activation": "demo-only" if demo else "disabled; approval evidence required",
                         "demo_activation": demo,
                         "demo_disclaimer": ai_registry.DEMO_ACTIVATION["disclaimer"] if demo else None,
                         "role_limits": all_role_limits(), "your_role_limits": role_limits(c.current_user(user).get("role")),
+                        "output_guard": app.guard_telemetry.snapshot(),
                         "limits": {"calls_per_turn": 1, "calls_per_request": 1, "retries": 0, "output_tokens": 600,
                                    "turns_per_thread": MAX_THREAD_TURNS,
                                    "context_chars": MAX_INPUT_CHARS, "history_chars": MAX_HISTORY_CHARS,
@@ -1141,6 +1616,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(200, {"label": "synthetic-demo", "enabled": True,
                                                "privacy": app.regulatory.privacy_status(user),
                                                "usage": app.regulatory.usage_status(user),
+                                               "output_guard": app.guard_telemetry.snapshot(),
                                                "warning": CHAT_WARNING})
                     if not post and parts == ["regulatory", "inbox"]:
                         return self._json(200, app.regulatory.inbox(user))
@@ -1153,9 +1629,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     if len(parts) == 3 and parts[1] == "threads" and not post:
                         return self._json(200, app.regulatory.history(user, parts[2]))
                     if len(parts) == 4 and parts[1] == "threads" and post:
-                        if parts[3] == "ask" and set(body) == {"content"}:
+                        if parts[3] == "ask" and set(body) - {plain_language.FIELD} == {"content"}:
+                            plain, body = plain_language.split_flag(body)
                             with app.law_lock:
-                                return self._json(200, app.regulatory.ask(user, parts[2], body["content"]))
+                                return self._json(200, plain_language.apply(
+                                    app.regulatory.ask(user, parts[2], body["content"]), plain, telemetry=app.guard_telemetry))
                         if parts[3] == "doubt" and set(body) == {"turn"}:
                             return self._json(200, app.regulatory.doubt(user, parts[2], body["turn"]))
                         raise ValueError("Only content for ask or turn for doubt is accepted.")
@@ -1170,24 +1648,32 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                                or permitted and t["owner_role"] == role]
                     return self._json(200, threads)
                 if not post and len(parts) == 2 and parts[0] == "threads":
-                    thread = s.chat_resume(c.current_user(user), parts[1])
+                    current = c.current_user(user)
+                    thread = s.chat_resume(current, parts[1])
                     if thread["title"].startswith(REGULATORY_TASK + ":"):
                         self._regulatory_access(user)
                         thread = app.regulatory.history(user, parts[1])
+                    else:
+                        thread = c.scrub_thread(current, thread)
                     return self._json(200, thread)
                 if not post and parts == ["memory"]:
                     return self._json(200, c.privacy.list_memory(c.current_user(user)))
                 if not post and parts == ["memory", "status"]:
                     return self._json(200, c.privacy.memory_status(c.current_user(user), (parse_qs(urlparse(self.path).query).get("task") or [""])[0]))
                 if post and parts == ["unstored-ask"]:
-                    if set(body) - {"content", "skill", "case_id"}:
+                    if set(body) - {"content", "skill", "case_id", plain_language.FIELD}:
                         app.panel.record_validation_refused(user)
                         raise ValueError("Only content, skill and case_id are accepted.")
+                    try:
+                        plain, body = plain_language.split_flag(body)
+                    except ValueError:
+                        app.panel.record_validation_refused(user)
+                        raise
                     u = c.current_user(user)
                     if c.privacy.decision()["approved"]:
                         raise ValueError("Chat storage is approved. Use a chat thread.")
-                    return self._json(200, app.panel.ask_unstored(
-                        u, str(body.get("case_id") or ""), body.get("content"), skill=body.get("skill")))
+                    return self._json(200, plain_language.apply(app.panel.ask_unstored(
+                        u, str(body.get("case_id") or ""), body.get("content"), skill=body.get("skill")), plain, telemetry=app.guard_telemetry))
                 if post and parts == ["threads"]:
                     u = c.current_user(user)
                     if body.get("case_id") and s.detail(body["case_id"], u) is None:
@@ -1216,15 +1702,22 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         answer = app.panel.ask(u, tid, body.get("content"))
                         return self._json(200, dict(answer, withheld=answer["kind"] == "withheld"))
                     if parts[2] == "ask":
-                        if set(body) - {"content", "skill"}:
+                        if set(body) - {"content", "skill", plain_language.FIELD}:
                             app.panel.record_validation_refused(u, tid)
                             raise ValueError("Only content and skill are accepted.")
+                        try:
+                            plain, body = plain_language.split_flag(body)
+                        except ValueError:
+                            app.panel.record_validation_refused(u, tid)
+                            raise
                         if "skill" in body and body["skill"] is None:
                             app.panel.record_validation_refused(u, tid)
                             raise ValueError("Choose a listed skill or omit skill for legacy chat.")
-                        return self._json(200, app.panel.ask(u, tid, body.get("content"), skill=body.get("skill")))
+                        return self._json(200, plain_language.apply(
+                            app.panel.ask(u, tid, body.get("content"), skill=body.get("skill")), plain, telemetry=app.guard_telemetry))
                     if parts[2] == "proposals":
                         # Proposal-only: the existing assistants path queues it for the independent review.
+                        c.privacy._require()
                         t = s.chat_resume(u, tid)
                         if not t["case_id"]:
                             raise ValueError("Open the panel from a case to request a proposal.")
@@ -1438,6 +1931,23 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, s.bulk_edit_preview(u, body))
                 if url.path == "/api/bulk-edits/apply":
                     return self._json(200, s.bulk_edit_apply(u, body))
+                if url.path == "/api/handoffs/escalate-overdue":
+                    if u["role"] not in MANAGER_ROLES:
+                        raise PermissionError("Only a programme manager can escalate overdue handoffs.")
+                    limit = _parse_max_age_hours(body.get("max_age_hours"))
+                    as_of_raw = body.get("as_of")
+                    if as_of_raw is not None and not isinstance(as_of_raw, str):
+                        raise ValueError("Ageing needs an as-of time with a timezone.")
+                    from zava_forward.core.sqlstore import CommittedReloadError
+                    try:
+                        return self._json(200, s.escalate_overdue_handoffs(
+                            u,
+                            as_of=as_of_raw or None,
+                            max_age_hours=limit,
+                            reason=body.get("reason"),
+                        ))
+                    except CommittedReloadError as error:
+                        return self._json(409, {"error": str(error), "outcome": "committed"})
                 if len(parts) == 4 and parts[:2] == ["api", "assistants"] and parts[3] == "invoke":
                     return self._json(202, app.assistants.invoke(u, parts[2], body.get("case_id")))
                 if url.path in ("/api/assistants/simulation/quality/observe", "/api/assistants/simulation/quality/request"):
@@ -1451,6 +1961,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, app.assistants.review(
                         u, parts[3], body.get("action"), body.get("revision"), body.get("note", ""),
                         body.get("output"), body.get("source_verified", False)))
+                if len(parts) == 5 and parts[:3] == ["api", "assistants", "proposals"] and parts[4] == "challenge":
+                    return self._json(200, app.assistants.challenge(u, parts[3], body))
                 if url.path == "/api/time/acknowledge":
                     ver = app.time.acknowledge(u)
                     s.audit(u["email"], "time_notice_acknowledged", "-", f"notice {ver}")
@@ -1509,6 +2021,62 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, getattr(s, GOVERNANCE_ACTIONS[parts[2]])(u, body))
                 if url.path == "/api/import-check":
                     return self._json(200, s.import_check(body.get("text", "")))
+                if url.path == "/api/ai/candidate-comparison":
+                    if u["role"] not in MANAGER_ROLES:
+                        raise PermissionError("Only a manager can run an AI candidate comparison.")
+                    if url.query:
+                        raise ValueError("Unknown candidate comparison parameter.")
+                    allowed_keys = {
+                        "candidates",
+                        "manifest",
+                        "baseline",
+                        "rendered_prompts",
+                        "tuning_examples",
+                        "finance_confirmed_saving",
+                        "default_tariff",
+                    }
+                    if set(body) - allowed_keys:
+                        raise ValueError("Unknown candidate comparison field.")
+                    manifest_in = body.get("manifest")
+                    baseline_in = body.get("baseline")
+                    if manifest_in is None or baseline_in is None:
+                        default_manifest = heldout_eval.canonical_heldout_manifest()
+                        if manifest_in is None:
+                            manifest_in = default_manifest
+                        if baseline_in is None:
+                            default_suite = heldout_eval.canonical_offline_heldout_suite()
+                            baseline_in = default_suite["baseline_candidate"]
+                    rendered_prompts = body.get("rendered_prompts", ())
+                    if not isinstance(rendered_prompts, (list, tuple)) or not all(
+                        isinstance(item, str) for item in rendered_prompts
+                    ):
+                        raise ValueError("rendered_prompts must be a list of strings.")
+                    tuning_examples = body.get("tuning_examples", ())
+                    if not isinstance(tuning_examples, (list, tuple)) or not all(
+                        isinstance(item, (str, dict)) for item in tuning_examples
+                    ):
+                        raise ValueError("tuning_examples must be a list of strings or objects.")
+                    tariff_in = body.get("default_tariff", heldout_eval.DEFAULT_OFFLINE_TARIFF)
+                    if tariff_in is not None and not isinstance(tariff_in, dict):
+                        raise ValueError("default_tariff must be an object or null.")
+                    comparison = tokenomics_comparison.compare_candidates(
+                        manifest_in,
+                        baseline_in,
+                        body.get("candidates"),
+                        rendered_prompts=rendered_prompts,
+                        tuning_examples=tuning_examples,
+                        finance_confirmed_saving=body.get("finance_confirmed_saving", False),
+                        default_tariff=tariff_in,
+                    )
+                    summary = comparison["summary"]
+                    s.audit(
+                        u["email"],
+                        "ai_candidate_comparison",
+                        "-",
+                        f"baseline={comparison['baseline_id']} total={summary['total_candidates']} "
+                        f"passed={summary['passed_candidates']} savings={summary['verified_saving_candidates']}",
+                    )
+                    return self._json(200, comparison)
                 if url.path == "/api/ai/priority":
                     from zava_forward.core.sqlstore import CommittedReloadError
                     try:
@@ -1542,6 +2110,34 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(409, {"error": str(error), "outcome": "committed"})
                 if len(parts) == 4 and parts[:2] == ["api", "cases"]:
                     cid, act = parts[2], parts[3]
+                    if act == "representative-view":
+                        from zava_forward.core.resident_journey_design import (
+                            RepresentativeAccessBlockedError,
+                            RepresentativeScopeDeniedError,
+                        )
+
+                        if not projection.allowed(u, "case", "POST") and not projection.allowed(
+                            u, "case"
+                        ):
+                            return self._json(403, {"error": "Your role does not include this."})
+                        if u.get("role") not in controls.RESIDENT_VIEW_ROLES:
+                            return self._json(
+                                403,
+                                {
+                                    "error": (
+                                        "Representative views need current resident-workflow staff."
+                                    )
+                                },
+                            )
+                        try:
+                            return self._json(
+                                200, s.representative_action_check(u, unquote(cid), body)
+                            )
+                        except (
+                            RepresentativeAccessBlockedError,
+                            RepresentativeScopeDeniedError,
+                        ) as blocked_err:
+                            return self._json(403, blocked_err.to_payload())
                     if act == "sensor-draft":
                         from zava_forward.core.sqlstore import CommittedReloadError
 
@@ -1626,7 +2222,18 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     elif act == "retention-approve":
                         s.approve_retention_deletion(u, cid, body.get("id"))
                     elif act == "read-doc":
-                        return self._json(200, s.read_document(u, cid, body.get("id"), body.get("mode")))
+                        return self._json(
+                            200,
+                            s.read_document(
+                                u,
+                                cid,
+                                body.get("id"),
+                                body.get("mode"),
+                                derivative=body.get("ai_derivative", body.get("derivative")),
+                                derivative_text=body.get("derivative_text"),
+                                necessity_exception=body.get("necessity_exception"),
+                            ),
+                        )
                     elif act == "resident":
                         from zava_forward.api import nomination_routes
                         from zava_forward.core.resident_decisions import ResidentCommittedError
@@ -1661,10 +2268,10 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     elif act == "funding-draft":
                         return self._json(200, dict(s.detail(cid, u), ai=s.funding_draft(u, cid, body.get("mode"))))
                     elif act == "funding":
-                        s.funding_step(u, cid, body.get("action"), body.get("text", ""))
+                        s.funding_step(u, cid, body.get("action"), body.get("text", ""), body=body)
                     elif act == "draft":
                         s._case(cid)
-                        return self._json(200, s.draft(cid, body.get("kind", "update")))
+                        return self._json(200, s.draft(cid, body.get("kind", "update"), user=u))
                     else:
                         return self._json(404, {"error": "Not found."})
                     detail = s.detail(cid, u)
@@ -1716,6 +2323,11 @@ class _Server(ThreadingHTTPServer):
 
 
 def main() -> None:
+    try:
+        enforce_from_env()
+    except ContainerHardeningError as error:
+        print(f"Refusing to start: {error}", file=sys.stderr, flush=True)
+        raise SystemExit(2) from None
     install_diagnostic_redaction()
     password = os.environ.get("ZF_PASSWORD") or secrets.token_urlsafe(9)
     try:

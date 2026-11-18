@@ -1,0 +1,66 @@
+{
+  "task_id": "issue-108-heldout-eval-c1",
+  "task_slug": "ai-108-heldout-eval-c1",
+  "parent_task": {
+    "task_id": "issue-108-heldout-eval-tokenomics",
+    "task_slug": "ai-108-heldout-eval"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/ai-108-heldout-eval-c1-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/ai-108-heldout-eval-c1-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/ai-108-heldout-eval-c1-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/ai-108-heldout-eval-c1-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/ai-108-heldout-eval-c1-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/ai-108-heldout-eval-c1-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute confirmed automatic Cycle 1 (c1) RPI loop on feat/ai-108-heldout-eval-0228, rebasing onto origin/feat/demo-164-chat-grounding-provenance-0900 and resolving all 5 independent review findings without pushing",
+      "status": "confirmed",
+      "evidence": "Caller prompt explicitly requested full c1 RPI loop (research, plan, implement, review), parent rebase, 5 review fixes, focused validation, and clean local commit without push"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready; converged on pinned HELDOUT-FREEZE-2026-10-15 constants, expected_serving_model override, strict summary-candidate verification, _check_statement_support, ready_for_evaluation pre-gate, and chat_evaluation-aware rebase",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/ai-108-heldout-eval-c1-research.md (C1-C15)"
+    },
+    {
+      "decision": "Single-pass plan critique executed (verdict: Revise); PC-001 through PC-004 applied directly by planner (pyproject.toml ruff/mypy configuration + isolated modified-file check, SHA-256 hex digest stripping in _check_statement_support, unfrozen-manifest compatibility + response/summary gate_failures parity, exact capability_version_drift blocker + non-string sequence guards); plan finalized Implementation-ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/ai-108-heldout-eval-c1-plan-critique.md"
+    },
+    {
+      "decision": "Single-pass post-implementation Review executed (execution: Complete)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/ai-108-heldout-eval-c1-review.md (full task boundary P01-P04)"
+    },
+    {
+      "decision": "Post-implementation Review outcome: Conformant across full task boundary P01-P04 (0 defects; 1 low non-blocking parent-branch lineage sync follow-up RV-001)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/ai-108-heldout-eval-c1-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection among ranked follow-up choices, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Push rebased feat/ai-108-heldout-eval-0228, open stacked PR targeting feat/demo-164-chat-grounding-provenance-0900, and run independent exact-head review plus hosted CI",
+      "rationale": "Highest immediate delivery value and lowest effort once Cycle 1 commits are finalized locally",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/ai-108-heldout-eval-c1-review.md (RV-001 and Closeout Routing Record)"
+    },
+    {
+      "rank": 2,
+      "task": "Owner-authorized live Azure OpenAI held-out batch execution, regional quota attestation, and human participant / OQ-018 cohort sign-off for Issue #108",
+      "rationale": "Required external governance and live-endpoint evidence to move Issue #108 from Refs #108 to full closure",
+      "evidence": ".copilot-tracking/plans/2026-11-15/ai-108-heldout-eval-c1-plan.md (Follow-Up Items)"
+    }
+  ]
+}

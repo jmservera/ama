@@ -76,7 +76,9 @@ def _request_state(facts: DocumentFacts, kind: str) -> str:
         return "unknown"
     return (
         "provided"
-        if any(d.kind == kind and not d.generated for d in facts.documents)
+        if any(
+            d.kind == kind and not d.generated and d.scan_status == "clean" for d in facts.documents
+        )
         else "missing"
     )
 
@@ -159,7 +161,7 @@ def needed_from_you(stage: str, closed: bool, documents: dict[str, Any]) -> list
                 }
             )
     for document in documents["presented"] or []:
-        if document["scan_status"] in ("pending", "infected", "mismatch"):
+        if not document.get("generated") and document["scan_status"] != "clean":
             items.append(
                 {
                     "kind": "document",

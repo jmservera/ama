@@ -1,4 +1,5 @@
 """Constructed release records for offline tests. Fixtures are labelled synthetic and grant no real authorisation."""
+import copy
 import json
 import time
 
@@ -9,6 +10,15 @@ from zava_forward.core import ai_registry, rai_release
 
 def fixture(task, binding, model="test-model", cls="constructed-fixture", expires=None, **over):
     spec = ai_registry.get(task.removeprefix("legacy:"))
+    decl = copy.deepcopy(spec["monitoring_declaration"])
+    if cls == "actual":
+        for entry in decl["indicators"].values():
+            if entry.get("applicable") is not False and isinstance(entry.get("threshold"), dict):
+                entry["threshold"] = dict(
+                    limit=entry["threshold"]["limit"],
+                    min_sample=entry["threshold"]["min_sample"],
+                    approved_by="Amina Okafor, RAI Assurance Lead",
+                )
     rec = dict(binding, task=task, evidence_class=cls, evidence=["constructed-fixture:synthetic-demo"],
                residual_risk_decision="Accept", residual_risk_note="Constructed fixture; not a real decision.",
                serving_model=model, approver=dict(name="Fixture Approver", email="approver@example.test",
@@ -19,11 +29,15 @@ def fixture(task, binding, model="test-model", cls="constructed-fixture", expire
                accountable_owner="Fixture Approver (not live authority)",
                impact_assessment="Constructed synthetic scenario only; no real resident reliance.",
                material_change_triggers=list(rai_release.CHANGE_TRIGGERS), evaluation_decision="Pass")
-    rec.update(scope=spec["scope"], consumption=dict(max_calls=100, max_tokens=2000000, alert_threshold_percent=80,
-                                                    alert_contact="Fixture Approver (not live authority)"))
+    rec.update(scope=spec["scope"], monitoring_declaration=decl,
+               consumption=dict(max_calls=100, max_tokens=2000000, alert_threshold_percent=80,
+                                alert_contact="Fixture Approver (not live authority)"))
     rec["evaluation_summary"] = dict(evaluation_version=rai_release.EVALUATION_VERSION, decision="Pass",
                                      summary="Constructed synthetic evaluation summary; no real evaluation.",
                                      evidence_digest=rai_release.digest(rec["evidence"]))
+    if cls == "actual":
+        rec["approved_by"] = "Amina Okafor, RAI Assurance Lead"
+        rec["named_approval_id"] = "OQ017-APPROVAL-2026-01"
     rec.update(over)
     return rec
 
