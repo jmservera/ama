@@ -12871,6 +12871,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 2008 synthetic demo workbook for the import (Refs #2008)
 
 * Added [issue-2008-demo-workbook-import-evidence-2026-11-18.md](research/issue-2008-demo-workbook-import-evidence-2026-11-18.md), the workbook, its CSV and raw evidence under `research/demo-workbook/`, and the generator `tools/make-demo-case-list.py`. Local preview shows clean, mapping and conflict rows; the deployed demo screen shows mapping and two row problems for the CSV; the web screen has no `.xlsx` upload or conflict check, so that part of criterion 3 stays unproven. No source change.
+
 ## [2026-11-18] add | Epic 104 bounded AI audit with live read (Refs #104)
 
 * Added [issue-104-epic-audit-live-2026-11-18.md](research/issue-104-epic-audit-live-2026-11-18.md): per-criterion table for epic 104 (criteria 1 and 2 unmet, 3 to 5 consistent with live read), exact remaining demo gaps for #107, #108, #164 and #216 by class, and a read-only live probe; nothing ticked, no source change, no Azure resource created
