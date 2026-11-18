@@ -12325,3 +12325,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Stabilization checkpoint triage and epic verdicts (Refs #440)
 
 * Added [stabilization-checkpoint-triage-440-live-2026-11-18.md](research/stabilization-checkpoint-triage-440-live-2026-11-18.md): four issue drafts (time status 500, legacy-reference guard allowlist, unreachable ChatIsolation turn, AI golden path), duplicates mapped to existing owners, blocking findings mapped to epics, and per-epic verdicts (14 continue, 2 fix, 0 pivot). No issue created, no criterion ticked, no source changed. The coordinator HVE Builder review is Deferred at host validation.
+
+## [2026-11-18] add | Live demo evidence for simulator stage 2 (Refs #184)
+
+* Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.

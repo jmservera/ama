@@ -421,6 +421,10 @@ records a 2026-11-18 demo run: guarantees, assurance flags and forbidden-field r
 live, and a blocking defect that refuses every Entra-signed-in staff write to the route.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
 
+For #184, the [live simulator stream evidence](./research/issue-184-live-simulator-stream-evidence-2026-11-18.md)
+records the child-story status on 2026-11-18: #185 and #189 are still open, the demo hub has
+a budget alert, and the live owner and time limit cannot be shown on the demo API.
+
 For #109, the [live device monitoring evidence](./research/issue-109-live-device-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of IoT Hub connection state and a connectivity metric alert.
 Hub `lastActivityTime` did not update; the #440 checkpoint and child-closure criteria stay unproven.
