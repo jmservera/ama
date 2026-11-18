@@ -20,7 +20,7 @@ owner's files at run time and never printed. No source code changed.
 * Plan present: [usability-test-programme-plan.md](ux/usability-test-programme-plan.md)
   (dated 2026-11-15) with code in `src/core/src/zava_forward/core/usability_programme.py`.
 * Unit tests: `PYTHONPATH=src:tests python3 -m unittest tests.test_usability_programme -q`
-  from `src/core`: 15 tests, OK.
+  from `src/core`: 15 tests, OK (observed; raw output not retained).
 * Gate behaviour, run locally against the default plan: the staff agreement
   flag is `False` (`agreed_with_staff`), and `validate_audit_use_agreement()`
   refuses with `SA-010 gate: staff audit-use statement must be agreed with
@@ -29,9 +29,8 @@ owner's files at run time and never printed. No source code changed.
   `Retrofit Programme Manager`, Entra sign-in), Playwright Chromium 1366 by 900,
   2026-11-18. Script and outputs under
   `.copilot-tracking/evidence/2026-11-18/issue-155-live/` (`live_proof.py`,
-  `live-proof.json`, `workbench-signed-in.png`).
-  * The signed-in workbench home contains none of the strings `usability`,
-    `sus score`, `survey`, `participant`, `audit-use`, `session recording`.
+  `live-proof.json`, `workbench-landing-signed-out.png`).
+  * `workbench-landing-signed-out.png` shows the signed-out landing page ("Sign in to the workbench"), not a signed-in workbench; the script saved it under the name `workbench-signed-in.png` before the rename. The string check in `live-proof.json` was taken from that page state, so it supports no claim about the signed-in workbench. No negative claim about usability, survey or participant strings in the workbench is made.
   * Probes of `/api/usability`, `/api/usability-programme` and
     `/api/telemetry/users` returned 403, but so did a nonexistent control route
     (`/api/zz-nonexistent-control`). These probes therefore show nothing about
@@ -64,3 +63,9 @@ reported but does not prove it, given the uninformative probes above.
 One role, one account, desktop only. No sessions were run, so there are no
 usability results, thresholds remain hypotheses and the criterion stays
 unticked.
+
+## Evidence limits
+
+* The signed-in workbench home was not captured. The route after Entra sign-in did not render as a workbench in this run, and the run was not repeated.
+* The unit-test result and the gate behaviour were observed locally; raw output was not retained.
+* The 403 route probes are uninformative, as stated above.

@@ -19,7 +19,7 @@ Files: research note `docs/reference/research/issue-155-live-usability-programme
 
 ## Validation
 
-* `python3 -m unittest tests.test_usability_programme -q` in `src/core` (PYTHONPATH=src:tests): 15 tests OK.
-* Live Playwright read-only run: signed in, no usability strings on the workbench home.
+* `python3 -m unittest tests.test_usability_programme -q` in `src/core` (PYTHONPATH=src:tests): 15 tests OK (raw output not retained).
+* Live Playwright read-only run: sign-in succeeded (`/api/me` returned the test role), but the screenshot shows the signed-out landing page; no claim is made about workbench strings.
 * mypy and ruff: not applicable, no Python source under `src/` or `infra/` changed.
 * Hosted CI and independent review: not run here; coordinator publishes.
