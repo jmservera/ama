@@ -405,6 +405,9 @@ For #188, the [live Azure backfill and live series evidence](./research/issue-18
 records a 2026-11-18 demo run on live Azure SQL through the IoT Hub and Event Hub
 with demo SAS devices: joint per-home queries, handover seam and idempotent
 re-run. The production X.509 receiver and indoor schema stay unproven.
+For #185, the [live device identity evidence](./research/issue-185-live-device-identity-evidence-2026-11-18.md)
+records a 2026-11-18 demo run: Hub-generated symmetric device keys issued, used for sending
+and all identities removed. Durable secret storage and X.509 stay unproven.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
 
 For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
