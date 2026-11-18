@@ -12658,6 +12658,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.
 
+## [2026-11-18] add | Issue 145 restore re-verification (Refs #145)
+
+* Added [issue-145-live-run2-reverification-2026-11-18.md](research/issue-145-live-run2-reverification-2026-11-18.md): read-only re-check of the demo SQL backup settings and cleanup, plus a code finding that no mechanism re-applies release, suspension or spent-allowance state after a restore (R3 unproven). No Azure or source changes.
+
 ## [2026-11-18] add | Human-review effectiveness demo evidence (Refs #223)
 
 * Added [human-review-live-223-2026-11-18.md](research/human-review-live-223-2026-11-18.md): per-criterion record from the offline harness, targeted tests and a live review-record probe. Scripted panels prove the gate and measurement; real reviewers, measured time and OQ-017 authority are unproven. No source or Azure changes.
