@@ -1,0 +1,28 @@
+200 /api/me | user={code,name,email,role,oid,tid}; counts={mine,hazards,open}; staff=[4]; account={name,email,provider}; services={photo,law_alerts,assistants,cases}; map={tiles,attribution}; navigation=[13]; work_queues={version,default,selection,clock,status,definitions}
+200 /api/stats | kpis={open,completed,hazards,long,nodecision,funding}; stages=[20]; areas=[11]; waves=[5]; ages=[4]; funding=[4]; contractors=[4]; team=[1]
+500 /api/time/status | error=The service hit an unexpected error. Owner: application supp
+503 /api/law | error=The law store is not loaded.
+503 /api/law/sources | error=The law store is not loaded.
+503 /api/account/photo | error=Microsoft photo access is not available. Sign in again after
+200 /api/assistants | assistants=[5]; registered_tasks=[9]; disabled=Operator authority, finite allowance and expiry are required; proactive=False; principal=service:retrofit-evidence-proposals; rule=synthetic-gaps-2026-10-13-v1; limits={scan_interval,scan_size,input_chars,output_chars,output_tokens,timeout}; manual=Use the ordinary case controls; proposals never approve or c
+200 /api/continuity | epoch=0; suspensions=[0]; history_valid=True; changes=[2]; effective={configuration:zf-demo-continuity-probe-122}; suspended=[0]; note=Manual case work, resident challenge and hazard response con
+403 /api/ledger | error=Your role does not include this.
+403 /api/ledger/verify | error=Your role does not include this.
+200 /api/map | mode=points; total=443; shown=443; cap=500; bounds=[4]; items=[443]
+403 /api/sensors | error=Your role does not include this.
+200 /api/visits | list[30]
+200 /api/packages | list[1]
+200 /api/workorders | list[601]
+200 /api/finance | list[13]
+200 /api/funding | list[167]
+200 /api/handoffs | list[4]
+200 /api/checklists | Loft insulation={version,items}; Wall insulation={version,items}; Heat pump={version,items}; Solar panels={version,items}; General={version,items}
+403 /api/documents | error=Your role does not include this.
+403 /api/digests | error=Your role does not include this.
+403 /api/staff | error=Your role does not include this.
+403 /api/roles | error=Your role does not include this.
+403 /api/consent | error=Your role does not include this.
+200 /api/chat/threads | list[0]
+403 /api/jobs | error=Your role does not include this.
+403 /api/health | error=Your role does not include this.
+404 /readyz | Not found

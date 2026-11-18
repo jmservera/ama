@@ -12709,3 +12709,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Resident and representative UX live demo evidence (Refs #154)
 
 * Added [issue-154-live-resident-ux-evidence-2026-11-18.md](research/issue-154-live-resident-ux-evidence-2026-11-18.md): no live resident contact is observed on the synthetic showcase; validation through the usability programme and the representative view stay unproven for the demo (no participants or SA-010 agreement; no live case has a representative). No source changed.
+
+## [2026-11-18] add | Deployed demo parity proof, live run 2 (Refs #350)
+
+* Added [deployed-parity-live-r2-2026-11-18.md](research/deployed-parity-live-r2-2026-11-18.md) with raw outputs, 17 screenshots and scripts: no criterion fully proven; browser-UA anonymous API still 302, `/api/time/status` 500 reproduced, own-queue CSV (133) disagrees with the list (16), law store, photo and release authority deferred as human-owned. No source changed.
