@@ -453,6 +453,8 @@ The [second run](./research/issue-130-live-r2-nomination-route-evidence-2026-11-
 confirms the same image and 403 defect, and keeps the criterion unproven.
 The [third audit](./research/issue-130-live-r3-nomination-route-audit-2026-11-18.md) repeats the probe on the
 unchanged image, adds 105 offline tests and a per-criterion table, and separates production-only items.
+The [fourth audit](./research/issue-130-live-r4-nomination-route-audit-2026-11-18.md) sees a new revision on the
+same image digest, the same 403 write refusal, and explains the form-encoded 400 as a JSON-only API.
 For #124, the [Phase 0 discovery evidence](./research/issue-124-phase0-discovery-evidence-2026-11-18.md)
 records a 2026-11-18 offline and synthetic-data run: nomination, endpoint, dictionary and two-sided
 constraint rules proven in code, and the three unticked criteria stated as needing sponsor, owner
