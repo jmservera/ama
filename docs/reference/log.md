@@ -13064,6 +13064,26 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-138-live-r3-2026-11-18.md](research/issue-138-live-r3-2026-11-18.md) with retained sanitised outputs: OIDC, environments, runner and image release still unconfigured, live what-if succeeds but `summarize_plan` refuses it, smoke and secret checks partly proven; no source change, nothing created in Azure
 
+## [2026-11-18] add | Epic 113 live audit (Refs #113)
+
+* Added [issue-113-epic-audit-live-2026-11-18.md](research/issue-113-epic-audit-live-2026-11-18.md): per-criterion table for the three epic criteria (all unmet or not satisfiable for the demo), per-child roll-up of unticked criteria split into demo-provable gap and production-only, and a GET-only live probe on image digest 5368f4e4; no source change, nothing ticked, no Azure resource created.
+
+## [2026-11-18] add | Issue 93 epic audit with live read (Refs #93)
+
+* Added [issue-93-epic-audit-live-2026-11-18.md](research/issue-93-epic-audit-live-2026-11-18.md): per-criterion table (checkpoint #440 and child closure unmet, no-automated-authority consistent), #96 approved-schema gap classed as owner decision, five read-only live GETs and 269 offline core tests (45 SQL opt-in skips); no source change, nothing created in Azure
+
+## [2026-11-18] add | Issue 125 live re-audit (Refs #125)
+
+* Added [issue-125-live-r2-discovery-assistant-2026-11-18.md](research/issue-125-live-r2-discovery-assistant-2026-11-18.md): repeated live probes (no discovery route, identical to control), deny-by-default CLI output, 47 of 47 tests in a clean installed environment resolving the earlier 46 of 47 caveat; all three criteria remain unproven for the demo; no source change, nothing created in Azure
+
+## [2026-11-18] add | Issue 162 live audit (Refs #162)
+
+* Added [issue-162-live-audit-2026-11-18.md](research/issue-162-live-audit-2026-11-18.md) with retained raw output: live break-glass refusals each add one intact audit-chain entry (2068 to 2070), the grant path with purpose is proven locally only (33 tests, stored audit rows), policy decided for the demo only; criterion 6 stays unticked; no source change, no Azure resource created.
+
+## [2026-11-18] add | Issue 184 live fourth audit (Refs #184)
+
+* Added [issue-184-live-r4-2026-11-18.md](research/issue-184-live-r4-2026-11-18.md) with retained sanitised outputs: #185 and #189 still open, the demo hub has a USD 25 budget with 80 and 100 percent alerts, owner and expiry controls proven in source and 135 tests only; no source change, nothing created in Azure, no criterion ticked.
+
 ## [2026-11-18] add | Issue 185 live fourth audit (Refs #185)
 
 * Added [issue-185-live-r4-audit-2026-11-18.md](research/issue-185-live-r4-audit-2026-11-18.md): repository IoT identity tests pass with the optional SDK, credential scan clean, demo hub now reports zero devices (closing the run 3 adverse observation); durable storage, X.509 and production ownership stay unproven. No source change.
