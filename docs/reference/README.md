@@ -429,7 +429,8 @@ with demo SAS devices: joint per-home queries, handover seam and idempotent
 re-run. The production X.509 receiver and indoor schema stay unproven.
 For #185, the [live device identity evidence](./research/issue-185-live-device-identity-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: Hub-generated symmetric device keys issued, used for sending
-and this run's identities removed (run 3 adds the home-to-device mapping). Durable secret storage, hub-wide zero devices and X.509 stay unproven.
+and this run's identities removed (run 3 adds the home-to-device mapping). Durable secret storage and X.509 stay unproven; a [fourth audit](./research/issue-185-live-r4-audit-2026-11-18.md)
+re-ran the repository tests and read the hub at zero devices.
 For #110, the [live IoT identity evidence](./research/issue-110-live-iot-identity-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: three distinct Hub identities sent schema-versioned readings with
 stable IDs, read back from Event Hub; production X.509 receiver stays unproven.
@@ -470,6 +471,9 @@ For #184, the [run 2 live stream evidence](./research/issue-184-live-simulator-s
 runs the repository simulator loop with Hub-generated symmetric keys on the demo hub, reads all 9 messages
 back from Event Hub and retains the raw job output; the child-closure criterion stays unproven.
 
+A [fourth run](./research/issue-184-live-r4-2026-11-18.md) retains sanitised outputs, finds the demo hub budget
+alert (USD 25, 80 and 100 percent) and a per-criterion table; #185 and #189 stay open and nothing is ticked.
+
 For #109, the [live device monitoring evidence](./research/issue-109-live-device-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of IoT Hub connection state and a connectivity metric alert.
 Hub `lastActivityTime` did not update; the #440 checkpoint and child-closure criteria stay unproven.
@@ -492,6 +496,8 @@ records that main already syncs new archive ancestors before confirming; criteri
 For #189, the [simulator run controls live evidence](./research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo check of the budget alerts, hub owner tag and deterministic owner, time-limit and alert controls; no simulator job is deployed.
 A [second pass](./research/simulator-run-controls-live-189-2026-11-18.md) adds a signed-in probe of the deployed admin endpoint (403 for staff; no administrator role granted), an offline start, stop and capacity exercise with raw output, and the USD 5.16 observed spend.
+
+A [third pass](./research/simulator-run-controls-live-189-r3-2026-11-18.md) re-reads the live budgets and hub, runs the run meter on a real clock (time-limit halt) and records that budget alert recipients are noreply or invalid addresses; criterion 3 stays unproven as a live conjunction.
 
 For #138, the [CI/CD OIDC and what-if live evidence](./research/issue-138-live-cicd-oidc-evidence-2026-11-18.md)
 records a 2026-11-18 read-only demo run: a live what-if of the real template, the post-deployment
@@ -1300,6 +1306,7 @@ or infra acceptance claimed.
 | [Tokenomics pitch criteria status (#435)](./research/tokenomics-pitch-criteria-435-live-2026-11-18.md) | Per-criterion proven or unproven record for the three unticked criteria: placement decision proven but deck revalidation not evidenced, mentor confirmation unprovable, finite batch decision proven for the synthetic demo via #432 |
 | [Learning-test bundles live audit, second pass (#129)](./research/issue-129-live-r2-2026-11-18.md) | Core and api bundle suites rerun with raw output, signed-in probe of the demo for a bundle route (none discoverable, 403 control), per-criterion table; Atlas-owner mapping unproven |
 | [Stabilization checkpoint triage, epic gating and verdicts (#440)](./research/stabilization-checkpoint-triage-440-live-2026-11-18.md) | Four deduplicated issue drafts with severity, reproduction, links and acceptance criteria, the epics each blocking finding gates, and a continue, fix or pivot verdict for the 16 open epics; live re-observation of the time status 500 and anonymous 302 |
+| [Epic 195 demo proof, per-criterion results](./research/issue-195-live-epic-evidence-2026-11-18.md) | Proven and unproven results for the three unticked epic criteria (checkpoint, child issues, deployed image provenance) and the legacy-reference guard fix for triage draft D2, held back as FULL tier |
 | [Nomination test bootstrap isolation proof (#1847)](./research/nomination-bootstrap-isolation-proof-1847-2026-11-18.md) | Per-criterion proven or unproven record for the six criteria: source, editable and noneditable layouts in both orders, identity and origin probes, the original bootstrap failing (1 failure, 20 errors), and the unrun full gate |
 | [Held-out AI batch, tokens per proposal (#432)](./research/ai-heldout-batch-432-live-2026-11-18.md) | Measured live batch on 12 synthetic cases (gpt-4.1-nano): 180 to 225 tokens per proposal, 2,522 total, USD 0.000744 list price under a recorded owner authority; per-criterion status for #432; billing reconciliation not done (owner waiver) | 2026-11-18 |
 | [Capstone pitch Tokenomics status (#435)](./research/capstone-pitch-435-live-2026-11-18.md) | Per-criterion status for #435 on the synthetic demo: placement decision recorded (earlier note had criterion 1 unevidenced; deck coverage observed, raw output not retained), spend authority proven via #432, mentor confirmation not provable | 2026-11-18 |
