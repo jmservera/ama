@@ -12252,6 +12252,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-188-live-backfill-evidence-2026-11-18.md](research/issue-188-live-backfill-evidence-2026-11-18.md): per-criterion proven/unproven record of a demo run on live Azure SQL. Production receiver and indoor-schema proof remain open.
 
+## [2026-11-18] add | Human-review effectiveness demo run (Refs #223)
+
+* Added [human-review-effectiveness-live-demo-2026-11-18.md](research/human-review-effectiveness-live-demo-2026-11-18.md): offline gate run, live review retention on `ca-cutover-test-demo-api` and a per-criterion table. The scripted competent panel passes and default-accept and automation-bias panels fail; no competent human, OQ-017 holder or live seeded-defect trial exists, so no #223 criterion is ticked.
 ## [2026-11-18] add | Live monitoring evidence for the demo (Refs #146)
 
 * Added [issue-146-live-monitoring-evidence-2026-11-18.md](research/issue-146-live-monitoring-evidence-2026-11-18.md): per-criterion record of live alerts, a fired test alert and throwaway deployments in resource group `ama`. Poison-queue alerting, workbook rendering and named owners stay unproven; a Sev1 ledger digest mismatch alert was observed firing.
