@@ -1,0 +1,11 @@
+{
+  "task": "issue-216 live evaluation of the case chat (synthetic demo)",
+  "approved_by": "Juan Manuel Servera (owner)",
+  "reference": "Owner decision 2026-11-18 on #216 (live Azure authorised, rg ama, cap USD 700)",
+  "target": "ca-cutover-test-demo-api, deployment standard (gpt-4.1-nano 2025-04-14)",
+  "max_model_calls": 45,
+  "max_tokens": 80000,
+  "max_usd_list_price": 0.05,
+  "expires_utc": "2026-11-19T00:00:00Z",
+  "price_source": "Azure Retail Prices API, Foundry Models gpt 4.1 nano global, retrieved 2026-11-18 (see ai-heldout-batch-432-live-2026-11-18.md): input 0.10, output 0.40 USD per 1M tokens"
+}
