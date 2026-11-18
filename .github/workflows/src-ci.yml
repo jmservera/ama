@@ -106,10 +106,12 @@ jobs:
           PYTHONPATH=.:src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
             python -m checks.employee_acceptance_check
           python -m checks.design_system_browser_check
-          curl --fail --silent --show-error --location --retry 2 \
-            --connect-timeout 10 --max-time 30 \
+          curl --fail --silent --show-error --location --retry 5 --retry-all-errors \
+            --retry-delay 5 --connect-timeout 10 --max-time 30 \
             https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.3/axe.min.js \
-            --output "$RUNNER_TEMP/axe-4.10.3.min.js"
+            --output "$RUNNER_TEMP/axe-4.10.3.min.js.part"
+          echo "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb  $RUNNER_TEMP/axe-4.10.3.min.js.part" | sha256sum --check --strict -
+          mv "$RUNNER_TEMP/axe-4.10.3.min.js.part" "$RUNNER_TEMP/axe-4.10.3.min.js"
           PYTHONPATH="$GITHUB_WORKSPACE/src/api/tests:$GITHUB_WORKSPACE/src/core/tests:$GITHUB_WORKSPACE/src/agents/tests" \
             python -m checks.regulatory_ux_check --axe "$RUNNER_TEMP/axe-4.10.3.min.js" --out "$RUNNER_TEMP/regulatory-ux-results.json"
           PYTHONPATH="$GITHUB_WORKSPACE/src/api/tests:$GITHUB_WORKSPACE/src/core/tests:$GITHUB_WORKSPACE/src/agents/tests" \

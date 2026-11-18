@@ -3232,6 +3232,18 @@ os.fstat(3)
             self.assertEqual(len(builds), 1)
             self.assertEqual("--no-cache" in builds[0], cache == "fresh" and not stress)
 
+    def test_src_ci_axe_download_is_bounded_and_verified_before_use(self) -> None:
+        root = Path(__file__).resolve().parents[1]
+        text = (root / ".github/workflows/src-ci.yml").read_text()
+        part = '"$RUNNER_TEMP/axe-4.10.3.min.js.part"'
+        final = '"$RUNNER_TEMP/axe-4.10.3.min.js"'
+        self.assertIn("--retry 5 --retry-all-errors", text)
+        self.assertIn(f"--output {part}", text)
+        check = f'echo "{gate.AXE_SHA256}  $RUNNER_TEMP/axe-4.10.3.min.js.part" | sha256sum'
+        self.assertIn(check, text)
+        self.assertLess(text.index(check), text.index(f"mv {part} {final}"))
+        self.assertLess(text.index(f"mv {part} {final}"), text.index(f"--axe {final}"))
+
     def test_real_src_ci_jobs_are_pinned_and_every_step_classified(self) -> None:
         root = Path(__file__).resolve().parents[1]
         text = (root / ".github/workflows/src-ci.yml").read_text()

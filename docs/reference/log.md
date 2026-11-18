@@ -13276,3 +13276,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 153 wording defect fix (Refs #153)
 
 * Added [wording-defects-fix-153-live-r5-2026-11-18.md](research/wording-defects-fix-153-live-r5-2026-11-18.md): Finance limit and handoff owner wording fixed in source with tests; per-criterion table, named human review still unproven.
+
+## [2026-11-18] add | Issue 1274 axe download hardening (Refs #1274)
+
+* Added [issue-1274-axe-download-hardening-2026-11-18.md](research/issue-1274-axe-download-hardening-2026-11-18.md): src-ci axe-core download verified and retried, retained 504 logs for 1243, 1271 and 1273 classified; AWF bootstrap still open.
