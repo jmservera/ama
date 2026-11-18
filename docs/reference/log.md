@@ -12935,3 +12935,18 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Resident portal docs nine-criterion audit (Refs #441)
 
 * Extended [resident-portal-441-live-status-2026-11-18.md](research/resident-portal-441-live-status-2026-11-18.md) with a per-criterion proven/unproven table: criterion 5 stays unproven (owner decision), criteria 3 and 9 need publication-time rechecks; no source, Azure or credential action, no tick changed
+## [2026-11-18] update | Cohort evaluation second live re-run (Refs #222)
+
+* Added [cohort-evaluation-live-r2-2026-11-18.md](research/cohort-evaluation-live-r2-2026-11-18.md) with retained output and a per-criterion table: five criteria proven on the synthetic fixture, the OQ-018 owner-approval criterion unproven.
+
+## [2026-11-18] add | Issue 358 live pass 3 retained evidence (Refs #358)
+
+* Added [issue-358-live3-evidence-2026-11-18.md](research/issue-358-live3-evidence-2026-11-18.md) with raw outputs under `research/issue-358-live3-2026-11-18/`: 126-test baseline, scratch-copy expiry-guard mutation (nine failures), throwaway app absent, demo API Key Vault reference intact, delegating `main()`. No source change and no Azure write; the full setup run on the demo app stays unproven.
+
+## [2026-11-18] update | Challenge route live third pass (Refs #220)
+
+* Extended [issue-220-live-challenge-route-evidence-2026-11-18.md](research/issue-220-live-challenge-route-evidence-2026-11-18.md): demo revision and the Entra staff-write defect are unchanged, so the unticked criterion stays unproven live; no source change, no Azure resource created
+
+## [2026-11-18] add | Alert and home chat UX live run 3 (Refs #215)
+
+* Added [issue-215-live-rerun3-evidence-2026-11-18.md](research/issue-215-live-rerun3-evidence-2026-11-18.md): desktop Playwright re-check on the unchanged demo image; law store still not loaded, chat axe incomplete characterised, clipped helper line recorded, per-criterion proven or unproven table; no source change, no Azure resource created

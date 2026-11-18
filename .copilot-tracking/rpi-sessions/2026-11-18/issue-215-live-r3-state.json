@@ -1,0 +1,59 @@
+{
+ "task_id": "issue-215-live",
+ "task_slug": "issue-215-live",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "stopped",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-18/issue-215-live-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-18/issue-215-live-plan.md",
+  "details": ".copilot-tracking/details/2026-11-18/issue-215-live-details.md",
+  "critique": ".copilot-tracking/critiques/2026-11-18/issue-215-live-20261118T1427Z-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-18/issue-215-live-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-18/issue-215-live-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Synthetic demo, desktop only; live Azure authorised read-only; no src changes planned (FOCUSED tier, no rpi-checks --all)",
+   "status": "owner-confirmed 2026-11-18",
+   "evidence": "task brief"
+  },
+  {
+   "decision": "Critique executed once, verdict proceed, compatible findings applied",
+   "status": "done",
+   "evidence": ".copilot-tracking/critiques/2026-11-18/issue-215-live-20261118T1427Z-critique.md"
+  },
+  {
+   "decision": "Review executed once; outcome conformant for docs/evidence; criteria 3 and 5 unproven",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/2026-11-18/issue-215-live-review.md"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "Coordinator publishes"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Load law store on demo API",
+   "rationale": "unblocks alert card proof",
+   "evidence": "employee-run1.json"
+  },
+  {
+   "rank": 2,
+   "task": "Redeploy API from head",
+   "rationale": "plain-language announced state",
+   "evidence": "employee-run1.json mode_html"
+  },
+  {
+   "rank": 3,
+   "task": "Staff comprehension session",
+   "rationale": "criterion 5",
+   "evidence": "acceptance protocol"
+  }
+ ]
+}
