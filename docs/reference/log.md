@@ -12381,6 +12381,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.
 
+## [2026-11-18] add | Data protection live evidence (Refs #121)
+
+* Added [issue-121-live-data-protection-evidence-2026-11-18.md](research/issue-121-live-data-protection-evidence-2026-11-18.md): per-criterion record of the eight unticked criteria on the deployed demo. The live register, model location and retention settings were read; the deployed register is older than the source register; DPO/Legal approvals and owners stay deferred to #1906 to #1908; no live refused dispatch was exercised. No source or Azure changes.
 ## [2026-11-18] add | Issue 155 usability programme live evidence (Refs #155)
 
 * Added [issue-155-live-usability-programme-evidence-2026-11-18.md](research/issue-155-live-usability-programme-evidence-2026-11-18.md): the SA-010 criterion stays unproven for the demo because it needs named staff agreement; the code gate refusal and a read-only live check (the signed-in workbench was not captured) are recorded. No source changed.
