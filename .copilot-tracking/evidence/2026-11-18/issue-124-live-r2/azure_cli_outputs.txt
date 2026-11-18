@@ -1,0 +1,6 @@
+api rev ca-cutover-test-demo-api--0000031 digest sha256:5368f4e4...c17e5fb; resident rev ca-resident-demo--0000012; eventhub sensor-readings only
+/openapi.json -> 401
+/api/discovery -> 401
+/api/phase0 -> 401
+/health -> 401
+no public openapi JSONDecodeError
