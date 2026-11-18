@@ -1,0 +1,3 @@
+2026-11-18T08:09:29Z {"step": "before-erasure", "case": "ZF-2025-0001", "resident_erased": false, "ledger": {"intact": true, "entries": 602, "head": "c732de9555c0d46fe8ba7dd020a4106d990dd493426d60ddc6713f69170797c8", "problem": null, "digests_checked": 0, "digest_mismatches": []}}
+2026-11-18T08:09:30Z {"step": "register-entry-written", "entry": {"case": "ZF-2025-0001", "reason": "DH-005 drill 2026-11-18", "at": "2026-11-18T08:09:29"}}
+2026-11-18T08:09:30Z {"step": "after-erasure", "case": "ZF-2025-0001", "resident_erased": true, "ledger": {"intact": true, "entries": 603, "head": "35fe0c4579c37ddd9cb65828e44ad3b8e5f21c7c2d4525fe66f09ac7b364c659", "problem": null, "digests_checked": 0, "digest_mismatches": []}}

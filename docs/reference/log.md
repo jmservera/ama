@@ -12222,3 +12222,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-17] update | Identifier leak copy audit on exception screens (Refs #153)
 
 * Added an [identifier leak audit](research/ux/content-standard.md#identifier-leak-audit-2026-11-17-153) section to the content standard: two snake_case identifiers shown to staff on the data steward and digital operator screens were reworded, and a lexical regression guard was added. Named-human review of resident-facing wording (criterion 5) remains unmet.
+
+## [2026-11-18] update | Live Azure SQL load, restore and deletion evidence for the demo (Refs #114)
+
+* Added [sql-ledger-live-2026-11-18.md](research/sql-ledger-live-2026-11-18.md) with its evidence folder. A 30-minute, five-session, two-writer run against the demo API met every p95 limit with no errors; a point-in-time restore of a throwaway database plus `reapply_deletions` re-redacted an erased case; the throwaway databases, jobs and blob container were deleted.
+* The deployed demo image lacks the per-year reliance check, so that part of criterion 1 stays unproven live. Cross-server restore is not offered by Azure SQL point-in-time restore. No source changed.
