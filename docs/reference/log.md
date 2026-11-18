@@ -12795,6 +12795,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 117 live scan evidence (Refs #117)
 
 * Added [issue-117-live-scan-evidence-2026-11-18.md](research/issue-117-live-scan-evidence-2026-11-18.md) with retained raw output: 64 offline tests pass; live demo refuses the synthetic marker and a type-mismatched upload and records neither; the live scanner is the synthetic local one because Defender for Storage is disabled. Clean path, real engine and live legal hold stay unproven. No source change.
+
 ## [2026-11-18] update | Live device identity run 3 (Refs #185)
 
 * Updated [issue-185-live-device-identity-evidence-2026-11-18.md](research/issue-185-live-device-identity-evidence-2026-11-18.md): run 3 proves the home-to-device mapping live and keeps operator output in a retained file; the hub-wide device count after teardown showed devices with the same ids that are not attributed to this run; no criterion is ticked.
