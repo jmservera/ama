@@ -413,6 +413,8 @@ records the hazard clock and named owner on the live demo case card. The clock r
 unknown because the record has no timestamp, and no demo case has a safeguarding item.
 The [second pass](./research/issue-76-live-r2-2026-11-18.md) adds masked screenshots and the
 visible queue definitions; the criterion stays partly proven.
+The [third pass](./research/issue-76-live-r3-2026-11-18.md) re-probes read-only: still 0 of 16
+cases carry a safeguarding item, so that half stays unproven without writing demo data.
 For #96, the [live form schema approval evidence](./research/issue-96-live-form-schema-approval-evidence-2026-11-18.md)
 records that the demo holds no registered schema and no shipped path records
 an approval, so the approved-schema criterion stays unproven.
