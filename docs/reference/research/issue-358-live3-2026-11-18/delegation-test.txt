@@ -1,0 +1,5 @@
+# Command: not recorded; single delegation unittest for initialize-api-auth.py main() (exact test id not retained)
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+OK
