@@ -1,0 +1,67 @@
+{
+  "task_id": "issue-137-rv-fixes",
+  "task_slug": "infra-137-env-quotas-rv-fixes",
+  "parent_task": {
+    "task_id": "issue-137",
+    "task_slug": "infra-137-env-quotas"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/infra-137-env-quotas-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/infra-137-env-quotas-rv-fixes-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/infra-137-env-quotas-rv-fixes-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/infra-137-env-quotas-rv-fixes-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/infra-137-env-quotas-rv-fixes-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/infra-137-env-quotas-rv-fixes-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Autonomously selected parent task issue-137 ranked follow-up #1 in non-interactive automatic mode to resolve routed defects RV-001, RV-002, and RV-003 before local git commit while preserving the original parent review log untouched.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/infra-137-env-quotas-review.md#findings"
+    },
+    {
+      "decision": "Research disposition: satisfied-and-skipped; Planning Readiness: Ready. Parent research (.copilot-tracking/research/2026-11-15/infra-137-env-quotas-research.md) and exact-head post-implementation review (.copilot-tracking/reviews/logs/2026-11-15/infra-137-env-quotas-review.md) provide complete primary-source evidence for RV-001, RV-002, and RV-003.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/infra-137-env-quotas-review.md"
+    },
+    {
+      "decision": "Single-pass plan critique execution: Complete; verdict: Revise (.copilot-tracking/reviews/plans/2026-11-15/infra-137-env-quotas-rv-fixes-plan-critique.md). Applied PC-001 (non-hyphenated CLI redaction probes, complete AC-1 positive/negative CLI vectors, row-scoped compiled-default and infra/modules path checks) and PC-002 (chatModel* wiring target prose without enableDemoChat and explicit non-alphanumeric lookaround documentation) directly; finalized child plan as Ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-15/infra-137-env-quotas-rv-fixes-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Post-implementation Review execution: Complete; outcome: Conformant (.copilot-tracking/reviews/logs/2026-11-15/infra-137-env-quotas-rv-fixes-review.md). Assessed full P01 boundary (RV-001, RV-002, RV-003, PC-001, PC-002) with 0 open defects across 606 REQUIRE_AZ_BICEP=1 infra/tests, az bicep, ruff, mypy --strict, and independent read-only code-review.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/infra-137-env-quotas-rv-fixes-review.md#outcome"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection among ranked post-Review follow-up choices, Stop automatic session, or Switch to manual mode."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Run the complete local RPI gate (python3 tools/rpi-checks.py --all --base <reviewed-main-sha> --out <new-external-directory>) and verify the external receipt before pushing or opening a PR targeting main.",
+      "rationale": "Single-command publication gate with high governance impact: repository D4 rules require a verified full external gate receipt and hosted CI before publishing infra/ Bicep and deployment-script changes to main.",
+      "evidence": "src/README.md#local-rpi-gate"
+    },
+    {
+      "rank": 2,
+      "task": "Execute fresh read-only Azure SQL (GP_Gen5), Foundry/OpenAI (gpt-4.1-nano), Container Apps, IoT Hub, and availability-zone queries (R4, R5, R7, R8, R9, R11, R14-R17) on the bound pilot subscription and record human sign-off before completing a private pilot .bicepparam copy.",
+      "rationale": "Required external cloud and human governance gate for live pilot deployment approval beyond offline deterministic template/ledger verification (Refs #137).",
+      "evidence": "infra/README.md#read-only-pilot-capability-and-quota-evidence-2026-10-18-refs-137"
+    },
+    {
+      "rank": 3,
+      "task": "Triage pre-existing non-isolated Ruff 0.17.3 notices (112 diagnostics across older untouched infra/ scripts and tests) in a standalone hygiene PR after stacked infrastructure branches merge.",
+      "rationale": "Low-risk maintainability cleanup deliberately excluded from Issue #137 to avoid cross-worktree conflicts across 30+ untouched files.",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/infra-137-env-quotas-plan-critique.md#pc-005"
+    }
+  ]
+}

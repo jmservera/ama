@@ -1,0 +1,64 @@
+{
+  "task_id": "issue-124",
+  "task_slug": "phase0-retrofit-flow-discovery-124",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/phase0-retrofit-flow-discovery-124-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/phase0-retrofit-flow-discovery-124-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/phase0-retrofit-flow-discovery-124-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/phase0-retrofit-flow-discovery-124-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute confirmed automatic RPI loop (Research -> Plan with critique -> Implement -> Review) for Issue #124 on branch feat/gov-124-phase0-discovery using focused validation tier without pushing or opening a PR.",
+      "status": "confirmed",
+      "evidence": "Caller prompt for Issue #124 on 2026-11-15"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready. Implement unified Phase 0 contract in discovery_contract.py, additively enrich discovery_register.py and discovery_flow.py with owner_validated and finding_status governance fields, and document in docs/reference/research/company/phase0-retrofit-flow-discovery-contract.md.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/phase0-retrofit-flow-discovery-124-research.md (C1-C16)"
+    },
+    {
+      "decision": "Critique execution: completed (1 run); verdict: Revise; critique path: .copilot-tracking/reviews/plans/2026-11-15/phase0-retrofit-flow-discovery-124-plan-critique.md; direct dispositions: PC-001..PC-004 applied directly to plan and phase details without user decision required.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/phase0-retrofit-flow-discovery-124-plan-critique.md"
+    },
+    {
+      "decision": "Review execution: Complete (1 run); outcome: Defects found; assessed boundary: full task P01-P03 in commit 0c2457297 on feat/gov-124-phase0-discovery; review path: .copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-review.md; routed RV-001, RV-002, and RV-003 to later rpi-implement follow-up work and retained optional CSV extract adapter as distinct follow-up.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Research",
+    "action": "Spawned child automatic RPI correction loop issue-124-c1 (phase0-retrofit-flow-discovery-124-c1) to remediate RV-001, RV-002, and RV-003."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Harden FlowDiscoveryReport promotion gap rejection, baseline cohort filtering, as_of cutoff enforcement, zero-event semantics, and separate unknown/disputed wait counters (RV-001, RV-003)",
+      "rationale": "Highest immediate value and minimal localized touch in discovery_contract.py + test_discovery_contract.py; closes fail-closed report promotion and cohort boundary edge cases cleanly (KISS, explicit fail-closed invariants without fallbacks).",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-review.md (RV-001, RV-003)"
+    },
+    {
+      "rank": 2,
+      "task": "Enforce deep MappingProxyType container immutability on FlowDiscoveryReport, role-matched validated_role checks on dictionary specs, and canonical stage ordering on LifecycleDictionary (RV-002)",
+      "rationale": "Small localized stdlib refactoring using types.MappingProxyType and explicit role provenance fields to eliminate post-validation container mutability and direct-init bypasses.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/phase0-retrofit-flow-discovery-124-review.md (RV-002)"
+    },
+    {
+      "rank": 3,
+      "task": "Optional CSV extract adapter mapping synthetic retrofit-flow year-one CSV tables into discovery_contract records",
+      "rationale": "Low-effort additive adapter once sponsor/owner direction approves moving beyond pure in-memory contract rules.",
+      "evidence": ".copilot-tracking/plans/2026-11-15/phase0-retrofit-flow-discovery-124-plan.md (Follow-Up Items); docs/brds/retrofit-flow-discovery-brief.md"
+    }
+  ]
+}

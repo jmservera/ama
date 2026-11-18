@@ -133,6 +133,27 @@ def automation_bias(
     return competent(prop, facts, rec, required)
 
 
+def misses_class(defect_class: str) -> Panel:
+    """Competent except that it accepts the one seeded defect of ``defect_class`` unread."""
+
+    def panel(
+        prop: Proposal, facts: dict[str, str], rec: dict[str, Any], required: list[str]
+    ) -> Decision:
+        if prop["defect"] == defect_class:
+            return "accept", "", None, 1
+        return competent(prop, facts, rec, required)
+
+    return panel
+
+
+def over_reject(
+    prop: Proposal, facts: dict[str, str], rec: dict[str, Any], required: list[str]
+) -> Decision:
+    """Rejects every proposal and cites a resolving label, so defects pass but controls cannot."""
+    label = next(iter(facts.items()))
+    return "reject", f"not relied on {SOURCE_TAG}{label[0]}: {label[1]}]", None, 1
+
+
 PANELS: dict[str, Panel] = {
     "competent": competent,
     "default_accept": default_accept,
@@ -302,6 +323,27 @@ def workflow_only(spec: dict[str, Any], workdir: str) -> dict[str, Any]:
     )
 
 
+def comparison(panels: dict[str, dict[str, Any]], wf: dict[str, Any]) -> dict[str, Any]:
+    """Detection, corrections and effort per panel against the workflow-only comparator.
+
+    Workflow-only output carries no seeded defects, so it has no detection rate; it only sets
+    the effort baseline for the same case and workload.
+    """
+    return {
+        name: dict(
+            detection_rate=p["detection_rate"],
+            detected=p["detected"],
+            defects=p["defects"],
+            corrections=p["corrections"],
+            effort_units=p["effort_units"],
+            workflow_only_effort_units=wf["effort_units"],
+            effort_delta_units=p["effort_units"] - wf["effort_units"],
+            gate_passed=p["gate_passed"],
+        )
+        for name, p in panels.items()
+    }
+
+
 def load_spec(golden: Path = GOLDEN) -> dict[str, Any]:
     """Load the golden spec; reviewer codes resolve to staff emails (none stored publicly)."""
     spec: dict[str, Any] = json.loads(golden.read_text(encoding="utf-8"))
@@ -323,6 +365,13 @@ def run_review_test(golden: Path = GOLDEN) -> dict[str, Any]:
         unauthorised = run_panel("unauthorised_competent", competent, spec, tmp, OTHER)
     with tempfile.TemporaryDirectory() as tmp:
         wf = workflow_only(spec, tmp)
+    sensitivity: dict[str, dict[str, Any]] = {}
+    for cls in sorted({p["defect"] for p in spec["proposals"] if p["defect"]}):
+        with tempfile.TemporaryDirectory() as tmp:
+            sensitivity[f"misses_{cls}"] = run_panel(f"misses_{cls}", misses_class(cls), spec, tmp)
+    with tempfile.TemporaryDirectory() as tmp:
+        sensitivity["over_reject"] = run_panel("over_reject", over_reject, spec, tmp)
+    missed = [p for k, p in sensitivity.items() if k.startswith("misses_")]
     authority = spec["reviewer_authority"]
     comp = panels["competent"]
     baselines = [panels["default_accept"], panels["automation_bias"]]
@@ -351,12 +400,21 @@ def run_review_test(golden: Path = GOLDEN) -> dict[str, Any]:
         and [r["action"] for r in unauthorised["rows"]] == [r["action"] for r in comp["rows"]]
         and all(not r["gate_satisfied"] for r in unauthorised["rows"]),
         audit_chain_verifies=all(p["audit_verified"] for p in (*panels.values(), unauthorised)),
+        each_missed_defect_class_fails_gate=bool(missed)
+        and all(
+            not p["gate_passed"] and p["detected"] == p["defects"] - 1 and p["defects"] > 0
+            for p in missed
+        ),
+        over_rejecting_reviewer_cannot_pass=not sensitivity["over_reject"]["gate_passed"]
+        and sensitivity["over_reject"]["false_rejects"] > 0,
     )
     return dict(
         version=spec["version"],
         panels=panels,
         unauthorised_reviewer_control=unauthorised,
         workflow_only=wf,
+        comparison=comparison(panels, wf),
+        sensitivity=sensitivity,
         checks=checks,
         passed=all(checks.values()),
         effort_note="scripted comparison units, same case and workload (one review per "
@@ -603,8 +661,18 @@ def main(argv: list[str] | None = None) -> int:
             f"false rejects {p['false_rejects']}, effort {p['effort_units']}, "
             f"gate {'PASS' if p['gate_passed'] else 'FAIL'}"
         )
+    for name, p in rep["sensitivity"].items():
+        print(
+            f"sensitivity {name}: detected {p['detected']} of {p['defects']}, "
+            f"false rejects {p['false_rejects']}, gate {'PASS' if p['gate_passed'] else 'FAIL'}"
+        )
     wf = rep["workflow_only"]
     print(f"workflow-only, same case: effort {wf['effort_units']}, defects {wf['seeded_defects']}")
+    for name, c in rep["comparison"].items():
+        print(
+            f"vs workflow-only, {name}: detection rate {c['detection_rate']}, "
+            f"corrections {c['corrections']}, effort delta {c['effort_delta_units']:+d} units"
+        )
     for k, v in rep["checks"].items():
         print(("PASS " if v else "FAIL ") + k)
     print(f"human effectiveness: {rep['evidence']['human_effectiveness']}")

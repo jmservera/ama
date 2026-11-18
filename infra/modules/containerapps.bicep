@@ -33,16 +33,27 @@ param zoneRedundant bool = false
 @allowed(['blob', 'sharepoint'])
 param evidenceStore string = 'blob'
 param sharePointSiteId string = ''
+@description('Immutable Blob container name for hash-chained ledger head and sealed-year digests (Refs #115).')
+param ledgerDigestContainer string = 'ledger-digests'
+@description('Require locked WORM retention headers during scheduled ledger digest publish and verification (Refs #115).')
+param ledgerDigestRequireRetentionLock bool = true
+@description('Minimum required immutable retention days enforced by scheduled ledger digest publish and verification (Refs #115).')
+@minValue(1)
+param ledgerDigestMinRetentionDays int = 365
 @description('Ranking archive container name for the Blob JSON archive (Refs #1258). Empty keeps the API on its existing configuration, where the store selects the local folder archive (a dev/test adapter, not evidence of durable storage).')
 param rankingArchiveContainer string = ''
+@minLength(1)
 param apiImage string
 @description('Minimum API replicas. Default 0 permits scale-to-zero for cost-safe demos and cold starts; set 2 explicitly for always-on production replicas.')
 @minValue(0)
 @maxValue(4)
 param apiMinReplicas int = 0
 param enableApiAi bool = false
+@minLength(1)
 param agentImage string
+@minLength(1)
 param orchestratorImage string
+@minLength(1)
 param importImage string
 
 var queueEndpoint = 'https://${storageAccountName}.queue.${environment().suffixes.storage}'
@@ -117,6 +128,12 @@ var publicSimulationKey = '/state/public-simulation/hmac.key'
 // Fixed trusted startup recipe: initialise only an empty pair, validate, then run the ordinary API module. Faults, including a missing module in an older image, leave the files untouched and the API starts with the lane unavailable.
 var publicSimulationRecipe = '''
 import os, sys
+from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
+try:
+    enforce_from_env()
+except ContainerHardeningError as error:
+    print("Refusing to start: " + str(error), file=sys.stderr, flush=True)
+    raise SystemExit(2) from None
 store = "/state/public-simulation/store.sqlite"
 key = "/state/public-simulation/hmac.key"
 try:
@@ -132,10 +149,25 @@ os.execv(sys.executable, [sys.executable, "-m", "zava_forward.api"])
 var chatDemoActive = demoDirectIngress && chatDemoActivation == 'approved-2026-11-03'
 var chatEnabled = !empty(trim(chatDpiaRef)) && !empty(trim(chatLawfulBasisRef)) && !empty(trim(chatNoticeRef)) && !empty(trim(chatRetentionRef)) && chatRetentionDays > 0
 
-var commonEnv = [
+var hardeningEnv = [
+  { name: 'ZF_CONTAINER_HARDENING', value: 'enforced' }
+  { name: 'PYTHONDONTWRITEBYTECODE', value: '1' }
+  { name: 'TMPDIR', value: '/tmp' }
+  { name: 'ZF_STATE', value: '/state' }
+]
+var scratchVolumes = [
+  { name: 'tmp', storageType: 'EmptyDir' }
+  { name: 'state', storageType: 'EmptyDir' }
+]
+var scratchVolumeMounts = [
+  { volumeName: 'tmp', mountPath: '/tmp' }
+  { volumeName: 'state', mountPath: '/state' }
+]
+
+var commonEnv = concat(hardeningEnv, [
   { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: appInsightsConnectionString }
   { name: 'OTEL_SERVICE_NAMESPACE', value: 'zava-forward' }
-]
+])
 
 resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
   name: 'ca-${prefix}-api'
@@ -232,8 +264,10 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
             { type: 'Readiness', httpGet: { path: '/healthz', port: 8088 }, periodSeconds: 5, timeoutSeconds: 3, successThreshold: 1, failureThreshold: 3 }
             { type: 'Liveness', httpGet: { path: '/healthz', port: 8088 }, periodSeconds: 10, timeoutSeconds: 5, failureThreshold: 6 }
           ]
+          volumeMounts: scratchVolumeMounts
         }
       ]
+      volumes: scratchVolumes
       scale: {
         minReplicas: apiMinReplicas
         maxReplicas: enablePublicSimulationLane ? 1 : 4
@@ -315,12 +349,14 @@ resource tokenRenewal 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && d
         image: orchestratorImage
         command: ['python', '-m', 'zava_forward.orchestrator.token_store']
         resources: { cpu: json('0.25'), memory: '0.5Gi' }
-        env: [
+        env: concat(hardeningEnv, [
           { name: 'AZURE_CLIENT_ID', value: tokenMaintenanceClientId }
           { name: 'TOKEN_STORAGE_ACCOUNT', value: tokenStoreAccountName }
           { name: 'KEY_VAULT_URI', value: keyVaultUri }
-        ]
+        ])
+        volumeMounts: scratchVolumeMounts
       }]
+      volumes: scratchVolumes
     }
   }
 }
@@ -361,8 +397,10 @@ resource agents 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads &
             { name: 'API_BASE_URL', value: 'https://${api!.properties.configuration.ingress.fqdn}' }
             { name: 'API_AUDIENCE', value: 'api://${entraClientId}' }
           ])
+          volumeMounts: scratchVolumeMounts
         }
       ]
+      volumes: scratchVolumes
       scale: {
         minReplicas: 0
         maxReplicas: 5
@@ -413,6 +451,8 @@ resource orchestrator 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && d
         {
           name: 'orchestrator'
           image: orchestratorImage
+          command: ['python', '-m', 'zava_forward.orchestrator']
+          args: ['run']
           resources: { cpu: json('0.25'), memory: '0.5Gi' }
           env: concat(commonEnv, [
             { name: 'AZURE_CLIENT_ID', value: identityClientIds.orchestrator }
@@ -421,8 +461,10 @@ resource orchestrator 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && d
             { name: 'API_BASE_URL', value: 'https://${api!.properties.configuration.ingress.fqdn}' }
             { name: 'API_AUDIENCE', value: 'api://${entraClientId}' }
           ])
+          volumeMounts: scratchVolumeMounts
         }
       ]
+      volumes: scratchVolumes
     }
   }
 }
@@ -464,12 +506,16 @@ resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && d
             { name: 'ZF_SQL_AUTH', value: 'msi' }
             { name: 'ZF_SQL_CLIENT_ID', value: identityClientIds.api }
             { name: 'ZF_DIGEST_ACCOUNT_URL', value: blobEndpoint }
-            { name: 'ZF_DIGEST_CONTAINER', value: 'ledger-digests' }
+            { name: 'ZF_DIGEST_CONTAINER', value: ledgerDigestContainer }
             { name: 'ZF_DIGEST_CLIENT_ID', value: identityClientIds.api }
             { name: 'ZF_DIGEST_DIR', value: '/tmp/digests' }
+            { name: 'ZF_DIGEST_REQUIRE_RETENTION_LOCK', value: ledgerDigestRequireRetentionLock ? 'true' : 'false' }
+            { name: 'ZF_DIGEST_MIN_RETENTION_DAYS', value: string(ledgerDigestMinRetentionDays) }
           ])
+          volumeMounts: scratchVolumeMounts
         }
       ]
+      volumes: scratchVolumes
     }
   }
 }
@@ -515,8 +561,10 @@ resource rankingPublish 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads &&
             { name: 'ZF_RANKING_ARCHIVE', value: 'azure-blob' }
             { name: 'ZF_RANKING_BLOB_CONTAINER', value: rankingArchiveContainer }
           ])
+          volumeMounts: scratchVolumeMounts
         }
       ]
+      volumes: scratchVolumes
     }
   }
 }
@@ -565,17 +613,22 @@ resource importJob 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && depl
         {
           name: 'import'
           image: importImage
+          command: ['python', '-m', 'zava_forward.importer']
+          args: ['run']
           resources: { cpu: json('0.5'), memory: '1Gi' }
           env: concat(commonEnv, [
             { name: 'AZURE_CLIENT_ID', value: identityClientIds.import }
+            { name: 'ZF_STORE', value: 'mssql' }
             { name: 'SQL_SERVER', value: sqlServerFqdn }
             { name: 'SQL_DATABASE', value: sqlDatabaseName }
             { name: 'BLOB_ENDPOINT', value: blobEndpoint }
             { name: 'QUEUE_ENDPOINT', value: queueEndpoint }
             { name: 'IMPORT_QUEUE', value: 'import-jobs' }
           ])
+          volumeMounts: scratchVolumeMounts
         }
       ]
+      volumes: scratchVolumes
     }
   }
 }

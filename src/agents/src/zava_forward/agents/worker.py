@@ -19,6 +19,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
+from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
 from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 
 from zava_forward.agents.dispatch import AgentWorker, ResultSink, TaskQueue, run_once
@@ -95,6 +96,11 @@ def main(argv: list[str] | None = None) -> int:
     """`serve` runs the queue worker, `health` checks it, no argument prints the version."""
     import sys
 
+    try:
+        enforce_from_env()
+    except ContainerHardeningError as error:
+        print(f"Refusing to start: {error}", file=sys.stderr, flush=True)
+        return 2
     install_diagnostic_redaction()
     args = sys.argv[1:] if argv is None else argv
     heartbeat = Path(os.environ.get("ZF_STATE", "/state")) / HEARTBEAT_NAME

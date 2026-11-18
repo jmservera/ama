@@ -905,6 +905,7 @@ class ConsumptionApi(unittest.TestCase):
                                     report["accepted_proposals"], before["accepted_proposals"]
                                 )
                                 self.assertEqual(report["cost_per_accepted_proposal"], "Unknown")
+                                self.assertIsNone(report["cost_per_accepted_outcome"]["cost"])
                                 # An unsaved in-memory status is not authoritative.
                                 if rec["status"] in ("Accepted", "Edited", "Rejected"):
                                     with self.assertRaisesRegex(ValueError, "already"):
@@ -2085,9 +2086,17 @@ class ConsumptionApi(unittest.TestCase):
                 with urllib.request.urlopen(base) as response:
                     held = json.load(response)
                     self.assertEqual(response.status, 200)
-                self.assertEqual(set(held), {"evaluation", "live", "registry", "consumption"})
+                self.assertEqual(
+                    set(held),
+                    {"evaluation", "chat_evaluation", "live", "registry", "consumption"},
+                )
                 self.assertEqual(set(held["evaluation"]), set(result["evaluation"]))
                 self.assertEqual(held["evaluation"]["version"], result["evaluation"]["version"])
+                self.assertEqual(set(held["chat_evaluation"]), set(result["chat_evaluation"]))
+                self.assertEqual(
+                    held["chat_evaluation"]["version"], result["chat_evaluation"]["version"]
+                )
+                self.assertEqual(held["chat_evaluation"]["enablement"]["state"], "disabled")
                 self.assertEqual(held["registry"], result["registry"])
                 self.assertEqual(
                     held["consumption"],
@@ -2095,6 +2104,11 @@ class ConsumptionApi(unittest.TestCase):
                         coverage="unavailable",
                         token_cost="Unknown",
                         cost_per_accepted_proposal="Unknown",
+                        cost_per_accepted_outcome=dict(
+                            cost=None,
+                            quality_floor="not-met-or-unknown",
+                            reason="unpriced: reconciled billing record absent",
+                        ),
                         reason=hold,
                     ),
                 )

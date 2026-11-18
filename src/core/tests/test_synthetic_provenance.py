@@ -66,6 +66,46 @@ class ProvenanceRegisterTests(unittest.TestCase):
         sensor = next(d for d in REGISTER["datasets"] if d["id"] == "DS-SENSOR")
         self.assertIn("generator-and-small-fixture-tests-delivered", sensor["generation_status"])
 
+    def test_weather_source_and_resident_data_flag_are_enforced(self) -> None:
+        weather = next(s for s in REGISTER["sources"] if s["id"] == "SRC-OPEN-METEO-ERA5")
+        self.assertEqual(weather["retrieval_date"], "2026-10-27")
+        self.assertIn("CC BY 4.0", weather["licence"])
+        self.assertIs(weather["contains_real_resident_data"], False)
+        self.assertEqual(
+            privacy.dataset_source_issues(REGISTER["datasets"], REGISTER["sources"]), []
+        )
+        sensor = next(d for d in REGISTER["datasets"] if d["id"] == "DS-SENSOR")
+        self.assertIn("SRC-OPEN-METEO-ERA5", sensor["sources"])
+        source = {**weather}
+        for value in (True, None, "false"):
+            with self.subTest(value=value):
+                self.assertIn(
+                    "SRC-OPEN-METEO-ERA5:contains_real_resident_data_not_false",
+                    privacy.source_issues([{**source, "contains_real_resident_data": value}]),
+                )
+        del source["contains_real_resident_data"]
+        self.assertTrue(privacy.source_issues([source]))
+
+    def test_dataset_source_issues_reject_unregistered_duplicate_and_resident_sources(self) -> None:
+        src = {"id": "S1", "contains_real_resident_data": False}
+        ds = {"id": "D1", "sources": ["S1"], "personal_data": "none"}
+        self.assertEqual(privacy.dataset_source_issues([ds], [src]), [])
+        self.assertEqual(
+            privacy.dataset_source_issues([{**ds, "sources": ["S9"]}], [src]),
+            ["D1:unregistered_source:S9"],
+        )
+        self.assertEqual(
+            privacy.dataset_source_issues([ds], [{**src, "contains_real_resident_data": True}]),
+            ["D1:real_resident_data_source:S1"],
+        )
+        self.assertEqual(
+            privacy.dataset_source_issues([ds], [src, src]), ["S1:duplicate_source_id"]
+        )
+        self.assertEqual(
+            privacy.dataset_source_issues([{**ds, "personal_data": ""}], [src]),
+            ["D1:missing_personal_data_statement"],
+        )
+
     def test_all_public_payloads_pass_production_checker(self) -> None:
         self.assertEqual(privacy.public_issues(ROOT), [])
 
@@ -85,10 +125,12 @@ class ProvenanceRegisterTests(unittest.TestCase):
                 "attribution": "Test source",
                 "url": "https://example.test/source",
                 "retrieval_date": "2026-10-16",
+                "permitted_use": "Test use only",
+                "contains_real_resident_data": False,
             }
         ]
         self.assertEqual(privacy.source_issues(valid), [])
-        for field in ("licence", "attribution", "url", "retrieval_date"):
+        for field in ("licence", "attribution", "url", "retrieval_date", "permitted_use"):
             with self.subTest(field=field):
                 self.assertTrue(privacy.source_issues([{**valid[0], field: None}]))
         for field in ("licence", "attribution"):

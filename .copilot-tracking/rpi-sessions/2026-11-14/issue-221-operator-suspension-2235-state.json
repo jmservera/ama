@@ -1,0 +1,58 @@
+{
+  "task_id": "issue-221-operator-suspension-2235",
+  "task_slug": "issue-221-operator-suspension-2235",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14/issue-221-operator-suspension-2235-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14/issue-221-operator-suspension-2235-plan.md",
+    "details": ".copilot-tracking/details/2026-11-14/issue-221-operator-suspension-2235-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-14/issue-221-operator-suspension-2235-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-14/issue-221-operator-suspension-2235-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-14/issue-221-operator-suspension-2235-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute full RPI loop (Research, Plan, Implement, Review) in automatic mode for Issue #221 remaining criteria 5 and 6 and commit locally without pushing",
+      "status": "confirmed",
+      "evidence": "Explicit caller prompt direction"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready (convergence selected: shared zava_forward.core.restart_authority RULE-024 validator wired into governance.py and continuity.py, preserving UNAPPOINTED_RESTART_AUTHORITY default on omitted continuity.suspend while blocking placeholders/AI/self-approval, plus core and api NFR-014 end-to-end drill tests)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-14/issue-221-operator-suspension-2235-research.md (C1-C16)"
+    },
+    {
+      "decision": "Plan critique execution: Complete; verdict: Revise; direct dispositions applied: PC-001 (non-short-circuiting recorded_by/actor sequences + self.staff release-recorder lookup + unconditional restart_decide actor separation), PC-002 (non-echoing error messages + PermissionError contract on invalid/unappointed authority_ref), PC-003 (12+ hex MEMORY_REF test inputs + boundary-matched composite placeholders and actor name/code), PC-004 (isolated 8-step HTTP drill fixture, post-breach Release prerequisite, safety-hold independence check, zero pyproject.toml edits, full api unittest discovery); Plan Readiness: Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-14/issue-221-operator-suspension-2235-plan-critique.md; .copilot-tracking/plans/2026-11-14/issue-221-operator-suspension-2235-plan.md"
+    },
+    {
+      "decision": "Review execution: Complete; outcome: Conformant; assessed boundary: full task (P01, P02, FR-1..FR-4, NFR-1..NFR-2, AC-1..AC-4, PC-001..PC-004, Entra OID cross-provider identity separation update, and canonical plan Follow-Up Items); zero defects, decision gaps, or material evidence gaps; RV-001 [Low] non-functional formatting churn note routed as non-blocking follow-up context",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/issue-221-operator-suspension-2235-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked follow-up item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Appoint live operational OD-35 restart authority and witness human execution of operator-suspension-drill-protocol.md before pilot activation",
+      "rationale": "Highest value and governance impact: constructed software drills prove RULE-024 and NFR-014 controls in code while actual_hold=True intentionally blocks live operational restart until Building Safety Lead, Executive Sponsor, and Project Owner record real OD-35 appointment and witnessed drill sign-off",
+      "evidence": "docs/reference/method/operator-suspension-drill-protocol.md; .copilot-tracking/reviews/2026-11-14/issue-221-operator-suspension-2235-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Note AST-identical Ruff formatting scope in governance.py during pull request description/review (RV-001)",
+      "rationale": "Easiest follow-up (zero code change): explains during PR review why untouched legacy lines in governance.py were reformatted by ruff format while only release_record, breach_record, and breach_restart changed semantically",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/issue-221-operator-suspension-2235-review.md (RV-001)"
+    }
+  ]
+}

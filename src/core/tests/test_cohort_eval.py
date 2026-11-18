@@ -1,9 +1,27 @@
 import copy
 import unittest
+from collections.abc import Callable, Mapping
 from typing import Any
 
 from cohort_eval_fixture import approved, clean_observed, manifest, seeded
-from zava_forward.core import cohort_eval
+from zava_forward.core import cohort_eval, rai_release, ranking
+
+_policy_hash: Callable[[Mapping[str, Any]], str] = ranking.policy_hash
+_rule_order_hash: Callable[[Mapping[str, Any]], str] = ranking.rule_order_hash
+_BASE_POLICY: dict[str, Any] = ranking.CURRENT
+
+
+def signed_ranking_policy(owner: str = "Priya Shah, Asset Lead") -> dict[str, Any]:
+    pol = copy.deepcopy(_BASE_POLICY)
+    pol["owner"] = owner
+    pol["status"] = "Signed off by named policy owner"
+    pol["signoff"] = {
+        "signed_by": owner,
+        "signed_on": "2026-11-14",
+        "rule_order_hash": _rule_order_hash(pol),
+    }
+    pol["content_hash"] = _policy_hash(pol)
+    return pol
 
 
 def codes(record: dict[str, Any]) -> set[str]:
@@ -278,6 +296,381 @@ class CohortEvalTests(unittest.TestCase):
         m2["cases"][0]["id"] = "renamed"
         obs2[0]["id"] = "renamed"
         self.assertNotEqual(base["record_hash"], cohort_eval.evaluate(m2, obs2)["record_hash"])
+
+    def test_default_unapproved_and_fictional_offline_records_enforce_oq018_boundary(self) -> None:
+        raw = manifest()
+        raw.pop("approval", None)
+        unapproved = cohort_eval.evaluate(raw, clean_observed(raw))
+        self.assertEqual(unapproved["owner_approval_status"], "unapproved")
+        self.assertFalse(unapproved["lawful_analysis_fields_approved"])
+        self.assertFalse(unapproved["live_activation_allowed"])
+        self.assertTrue(unapproved["synthetic_not_fairness_evidence"])
+        self.assertIn("OQ-018", unapproved["non_fairness_provenance_notice"])
+
+        offline = cohort_eval.evaluate(manifest(), clean_observed(manifest()))
+        self.assertEqual(offline["owner_approval_status"], "pending_owner_approval")
+        self.assertFalse(offline["lawful_analysis_fields_approved"])
+        self.assertFalse(offline["live_activation_allowed"])
+        self.assertFalse(offline["fairness_evidence"])
+        self.assertTrue(offline["synthetic_not_fairness_evidence"])
+        self.assertEqual(
+            set(offline["lawful_analysis_fields"]),
+            set(manifest()["cohorts"]),
+        )
+
+    def test_dated_real_human_owner_approval_requires_non_synthetic_and_bound_lawful_fields(
+        self,
+    ) -> None:
+        dated_owners = {
+            "cohorts_owner": "Priya Shah, Data Lead",
+            "lawful_fields_owner": "Tom Reed, DPO",
+            "thresholds_owner": "Amina Okafor, RAI Owner",
+            "approved_at": "2026-11-14",
+        }
+        synth = manifest()
+        synth["lawful_analysis_fields"] = [
+            "sensor_completeness",
+            "support_need",
+            "appointment_history",
+        ]
+        cohort_eval.approve(synth, dated_owners)
+        synth_rec = cohort_eval.evaluate(synth, clean_observed(synth))
+        self.assertEqual(synth_rec["owner_approval_status"], "pending_owner_approval")
+        self.assertFalse(synth_rec["lawful_analysis_fields_approved"])
+        self.assertFalse(synth_rec["live_activation_allowed"])
+        self.assertFalse(synth_rec["fairness_evidence"])
+        self.assertTrue(synth_rec["synthetic_not_fairness_evidence"])
+
+        live_ready = copy.deepcopy(synth)
+        live_ready["synthetic"] = False
+        cohort_eval.approve(live_ready, dated_owners)
+        ok_rec = cohort_eval.evaluate(live_ready, clean_observed(live_ready), live=True)
+        self.assertEqual(ok_rec["owner_approval_status"], "approved")
+        self.assertTrue(ok_rec["lawful_analysis_fields_approved"])
+        self.assertTrue(ok_rec["live_activation_allowed"])
+        self.assertTrue(ok_rec["activation_allowed"])
+        self.assertTrue(ok_rec["fairness_evidence"])
+        self.assertTrue(ok_rec["synthetic_not_fairness_evidence"])
+
+        live_ready["lawful_analysis_fields"].append("contact_channel")
+        edited = cohort_eval.evaluate(live_ready, clean_observed(live_ready), live=True)
+        self.assertEqual(edited["owner_approval_status"], "unapproved")
+        self.assertFalse(edited["lawful_analysis_fields_approved"])
+        self.assertFalse(edited["live_activation_allowed"])
+        self.assertFalse(edited["activation_allowed"])
+
+    def test_invalid_lawful_analysis_fields_block_approval_and_fairness_evidence(self) -> None:
+        for bad_fields in ([], [""], "sensor_completeness", None):
+            m = manifest()
+            m["synthetic"] = False
+            m["lawful_analysis_fields"] = bad_fields
+            cohort_eval.approve(
+                m,
+                {
+                    "cohorts_owner": "Priya Shah, Data Lead",
+                    "lawful_fields_owner": "Tom Reed, DPO",
+                    "thresholds_owner": "Amina Okafor, RAI Owner",
+                    "approved_at": "2026-11-14",
+                },
+            )
+            rec = cohort_eval.evaluate(m, clean_observed(m))
+            self.assertIn("unapproved_lawful_analysis_fields", codes(rec))
+            self.assertEqual(rec["owner_approval_status"], "unapproved")
+            self.assertFalse(rec["lawful_analysis_fields_approved"])
+            self.assertFalse(rec["fairness_evidence"])
+            self.assertFalse(rec["activation_allowed"])
+
+    def test_export_record_enforces_hash_and_oq018_non_fairness_invariants(self) -> None:
+        rec = cohort_eval.evaluate(manifest(), clean_observed(manifest()))
+        exported = cohort_eval.export_record(rec)
+        self.assertEqual(exported["record_hash"], rec["record_hash"])
+        self.assertTrue(exported["synthetic_not_fairness_evidence"])
+        self.assertFalse(exported["live_activation_allowed"])
+
+        tampered_hash = dict(rec, owner_approval_status="approved")
+        with self.assertRaises(ValueError):
+            cohort_eval.export_record(tampered_hash)
+
+        forged_body = {
+            k: v
+            for k, v in dict(
+                rec,
+                fairness_evidence=True,
+                live_activation_allowed=True,
+                owner_approval_status="approved",
+                lawful_analysis_fields_approved=True,
+            ).items()
+            if k != "record_hash"
+        }
+        forged = {**forged_body, "record_hash": rai_release.digest(forged_body)}
+        with self.assertRaises(ValueError):
+            cohort_eval.export_record(forged)
+
+    def test_retained_cohort_version_counts_and_abstention_accounting(self) -> None:
+        m = manifest()
+        m["cohort_version"] = "cohorts-2026-11"
+        m["prompt_version"] = "triage-prompt-v2"
+        m["model_version"] = "gpt-4o-2026-08"
+        approved(m)
+        obs = clean_observed(m)
+        obs[0]["outcome"] = "abstained"
+        m["cases"][0]["expected"] = "abstained"
+        approved(m)
+        rec = cohort_eval.evaluate(m, obs)
+        self.assertEqual(rec["status"], "ready")
+        self.assertEqual(rec["aggregation_rule"], "per_cohort_unaveraged")
+        self.assertFalse(rec["population_fairness_established"])
+        self.assertEqual(rec["cohort_definitions"]["cohorts"], m["cohorts"])
+        self.assertEqual(rec["version_definitions"]["cohort_version"], "cohorts-2026-11")
+        self.assertEqual(rec["version_definitions"]["prompt_version"], "triage-prompt-v2")
+        self.assertEqual(rec["version_definitions"]["model_version"], "gpt-4o-2026-08")
+        self.assertEqual(
+            rec["counts"],
+            {"eligible": 24, "tested": 24, "abstained": 1, "failed": 0, "missing": 0},
+        )
+        complete_row = rec["dimensions"]["source_completeness"]["cohorts"]["complete"]
+        self.assertEqual(complete_row["eligible"], 12)
+        self.assertEqual(complete_row["tested"], 12)
+        self.assertEqual(complete_row["abstained"], 1)
+        self.assertEqual(complete_row["failed"], 0)
+        self.assertEqual(complete_row["abstention_rate"], round(1 / 12, 4))
+
+    def test_ai_task_requires_signed_ranking_policy_and_transparent_non_ai_comparison(self) -> None:
+        pol = signed_ranking_policy()
+        m = manifest()
+        m["task_kind"] = "ai_task"
+        approved(m)
+        base_obs = clean_observed(m)
+        disposition = {"by": "Amina Okafor, RAI Owner", "decision": "accept", "rationale": "ok"}
+
+        missing_both = cohort_eval.evaluate(m, base_obs, disposition)
+        self.assertIn("unapproved_ranking_policy", codes(missing_both))
+        self.assertIn("missing_non_ai_comparison", codes(missing_both))
+        self.assertFalse(missing_both["activation_allowed"])
+
+        tampered = copy.deepcopy(pol)
+        tampered["rules"] = list(reversed(tampered["rules"]))
+        tampered_rec = cohort_eval.evaluate(
+            m,
+            base_obs,
+            disposition,
+            ranking_policy=tampered,
+            non_ai_observed=base_obs,
+        )
+        self.assertIn("invalid_ranking_policy_hash", codes(tampered_rec))
+        self.assertFalse(tampered_rec["activation_allowed"])
+
+        regressed_ai = copy.deepcopy(base_obs)
+        regressed_ai[0]["outcome"] = "deprioritised"
+        reg_rec = cohort_eval.evaluate(
+            m,
+            regressed_ai,
+            disposition,
+            ranking_policy=pol,
+            non_ai_observed=base_obs,
+        )
+        self.assertIn("ai_regression_vs_non_ai", codes(reg_rec))
+        self.assertTrue(reg_rec["non_ai_comparison"]["regression_detected"])
+        self.assertFalse(reg_rec["activation_allowed"])
+
+        ok_rec = cohort_eval.evaluate(
+            m,
+            base_obs,
+            ranking_policy=pol,
+            non_ai_observed=base_obs,
+        )
+        self.assertEqual(ok_rec["status"], "ready")
+        self.assertTrue(ok_rec["activation_allowed"])
+        self.assertFalse(ok_rec["non_ai_comparison"]["regression_detected"])
+        self.assertEqual(ok_rec["version_definitions"]["ranking_policy_hash"], pol["content_hash"])
+        self.assertIn("ranking_policy", ok_rec["input_digests"])
+        self.assertIn("non_ai_observed", ok_rec["input_digests"])
+
+    def test_missing_sensor_and_non_response_never_lower_service_or_allow_prohibited_inference(
+        self,
+    ) -> None:
+        m = manifest()
+        m["cohorts"]["sensor_completeness"] = ["present", "declined"]
+        for idx, c in enumerate(m["cases"]):
+            c["cohorts"]["sensor_completeness"] = "present" if idx % 2 == 0 else "declined"
+        m["seeded_defects"] = ["c02"]
+        approved(m)
+
+        obs = clean_observed(m)
+        obs[1]["service_level"] = "reduced"
+        obs[3]["inferences"] = {"vulnerability": "inferred_frail", "refusal": "non_engaged"}
+        disposition = {
+            "by": "Amina Okafor, RAI Owner",
+            "decision": "accept",
+            "rationale": "reviewed",
+        }
+        rec = cohort_eval.evaluate(m, obs, disposition)
+        self.assertIn("service_lowered", codes(rec))
+        self.assertIn("prohibited_inference", codes(rec))
+        self.assertIn("c02", rec["detected_defects"])
+        declined_row = rec["dimensions"]["sensor_completeness"]["cohorts"]["declined"]
+        self.assertEqual(declined_row["failed"], 2)
+        self.assertEqual(declined_row["errors"], 2)
+        self.assertFalse(rec["activation_allowed"])
+        self.assertFalse(rec["fairness_evidence"])
+
+    def test_non_human_or_placeholder_threshold_and_disposition_approvals_are_rejected(
+        self,
+    ) -> None:
+        for bad_owner in ("Copilot Agent", "TBD", "to be named"):
+            m = manifest()
+            cohort_eval.approve(
+                m,
+                {
+                    "cohorts_owner": "Priya Shah, Data Lead",
+                    "lawful_fields_owner": "Tom Reed, DPO",
+                    "thresholds_owner": bad_owner,
+                },
+            )
+            rec = cohort_eval.evaluate(m, clean_observed(m))
+            self.assertIn("unapproved_thresholds", codes(rec), bad_owner)
+            self.assertFalse(rec["activation_allowed"])
+
+        m_exp = manifest()
+        cohort_eval.approve(
+            m_exp,
+            {
+                "cohorts_owner": "Priya Shah, Data Lead",
+                "lawful_fields_owner": "Tom Reed, DPO",
+                "thresholds_owner": "Amina Okafor, RAI Owner",
+                "expires": 50.0,
+            },
+        )
+        exp_rec = cohort_eval.evaluate(m_exp, clean_observed(m_exp), now=100.0)
+        self.assertIn("unapproved_thresholds", codes(exp_rec))
+        self.assertFalse(exp_rec["activation_allowed"])
+
+        m_seed, obs_seed = seeded()
+        bot_disp = cohort_eval.evaluate(
+            m_seed,
+            obs_seed,
+            {"by": "AI assistant", "decision": "accept", "rationale": "automated"},
+        )
+        self.assertIsNone(bot_disp["disposition"])
+        self.assertFalse(bot_disp["activation_allowed"])
+
+        m_abs = manifest()
+        m_abs["thresholds"]["max_abstention_rate"] = 0.05
+        m_abs["cases"][0]["expected"] = "abstained"
+        approved(m_abs)
+        obs_abs = clean_observed(m_abs)
+        abs_rec = cohort_eval.evaluate(m_abs, obs_abs)
+        self.assertIn("threshold_exceeded", codes(abs_rec))
+        self.assertFalse(abs_rec["activation_allowed"])
+
+    def test_protected_characteristic_fields_require_bound_dpo_minimum_necessary_approval(
+        self,
+    ) -> None:
+        m = manifest()
+        m["lawful_analysis_fields"] = [
+            "source_completeness",
+            "support_need",
+            "appointment_history",
+            "disability",
+        ]
+        approved(m)
+        disposition = {
+            "by": "Amina Okafor, RAI Owner",
+            "decision": "accept",
+            "rationale": "reviewed",
+        }
+        blocked = cohort_eval.evaluate(m, clean_observed(m), disposition)
+        self.assertIn("unapproved_protected_characteristic", codes(blocked))
+        self.assertFalse(blocked["activation_allowed"])
+
+        cohort_eval.approve_protected_characteristics(
+            m,
+            {
+                "dpo_owner": "Tom Reed, DPO",
+                "lawful_basis": "Equality Act 2010 public-sector duty audit",
+                "minimum_necessary_justification": "Approved disability adjustment parity check",
+                "approved_at": "2026-11-14",
+                "approved_fields": ["disability"],
+            },
+        )
+        cleared = cohort_eval.evaluate(m, clean_observed(m))
+        self.assertNotIn("unapproved_thresholds", codes(cleared))
+        self.assertNotIn("unapproved_protected_characteristic", codes(cleared))
+        self.assertTrue(cleared["activation_allowed"])
+        self.assertFalse(cleared["fairness_evidence"])
+        self.assertFalse(cleared["population_fairness_established"])
+
+        gen = manifest()
+        gen["synthetic"] = False
+        gen["cohort_origin"] = "generated"
+        cohort_eval.approve(
+            gen,
+            {
+                "cohorts_owner": "Priya Shah, Data Lead",
+                "lawful_fields_owner": "Tom Reed, DPO",
+                "thresholds_owner": "Amina Okafor, RAI Owner",
+                "approved_at": "2026-11-14",
+            },
+        )
+        gen_rec = cohort_eval.evaluate(gen, clean_observed(gen), live=True)
+        self.assertFalse(gen_rec["fairness_evidence"])
+        self.assertFalse(gen_rec["live_activation_allowed"])
+        self.assertFalse(gen_rec["population_fairness_established"])
+
+    def test_geography_and_archetype_dimensions_require_bound_relevance_approval(self) -> None:
+        m = manifest()
+        m["cohorts"]["geography"] = ["urban_compact", "rural_dispersed"]
+        m["cohorts"]["archetype"] = ["post_1945_masonry", "non_traditional_solid_wall"]
+        for idx, c in enumerate(m["cases"]):
+            c["cohorts"]["geography"] = "urban_compact" if idx % 2 == 0 else "rural_dispersed"
+            c["cohorts"]["archetype"] = (
+                "post_1945_masonry" if idx < 12 else "non_traditional_solid_wall"
+            )
+        approved(m)
+
+        unapproved = cohort_eval.evaluate(m, clean_observed(m))
+        self.assertIn("unapproved_context_dimension", codes(unapproved))
+        self.assertFalse(unapproved["activation_allowed"])
+
+        cohort_eval.approve_context_dimensions(
+            m,
+            {
+                "geography": {
+                    "approved_by": "Priya Shah, Data Lead",
+                    "relevant": True,
+                    "rationale": "Contractor travel dispersal audit",
+                    "approved_at": "2026-11-14",
+                },
+                "archetype": {
+                    "approved_by": "Priya Shah, Data Lead",
+                    "relevant": True,
+                    "rationale": "Solid-wall survey parity audit",
+                    "approved_at": "2026-11-14",
+                },
+            },
+        )
+        ok_rec = cohort_eval.evaluate(m, clean_observed(m))
+        self.assertNotIn("unapproved_thresholds", codes(ok_rec))
+        self.assertNotIn("unapproved_context_dimension", codes(ok_rec))
+        self.assertEqual(ok_rec["status"], "ready")
+        self.assertTrue(ok_rec["activation_allowed"])
+
+    def test_sensor_completeness_fixtures_reject_provisioning_and_invented_thresholds(
+        self,
+    ) -> None:
+        m_prov = manifest()
+        m_prov["cases"][0]["sensor_device_id"] = "SYN-1001"
+        approved(m_prov)
+        prov_rec = cohort_eval.evaluate(m_prov, clean_observed(m_prov))
+        self.assertIn("sensor_fixture_provisions_device", codes(prov_rec))
+        self.assertFalse(prov_rec["activation_allowed"])
+
+        m_thresh = manifest()
+        m_thresh["thresholds"]["dew_point_threshold_c"] = 11.8
+        approved(m_thresh)
+        thresh_rec = cohort_eval.evaluate(m_thresh, clean_observed(m_thresh))
+        self.assertIn("sensor_fixture_invents_threshold", codes(thresh_rec))
+        self.assertFalse(thresh_rec["activation_allowed"])
 
 
 if __name__ == "__main__":

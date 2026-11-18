@@ -1,0 +1,642 @@
+{
+  "schemaVersion": "1.0",
+  "description": "Deterministic network-posture, private-endpoint, exercise-exception, and Key Vault managed-identity secret contract for Zava Forward Bicep infrastructure.",
+  "architectureInventoryModule": "infra/scripts/bicep_inventory.py",
+  "secretLifecycleInventory": "infra/secret-inventory.json",
+  "documentationDiagram": "docs/architecture/network-posture.md",
+  "vnet": {
+    "bicepPath": "infra/modules/network.bicep",
+    "resourceType": "Microsoft.Network/virtualNetworks",
+    "nameExpression": "vnet-${prefix}",
+    "defaultCidr": "10.40.0.0/16",
+    "subnets": [
+      {
+        "id": "snet-aca",
+        "name": "snet-aca",
+        "bicepPath": "infra/modules/network.bicep",
+        "defaultCidr": "10.40.0.0/23",
+        "nsgNameExpression": "nsg-${prefix}-aca",
+        "delegation": "Microsoft.App/environments",
+        "privateEndpointNetworkPolicies": null,
+        "conditionalOn": null,
+        "purpose": "Primary internal Azure Container Apps workload-profile environment subnet"
+      },
+      {
+        "id": "snet-pe",
+        "name": "snet-pe",
+        "bicepPath": "infra/modules/network.bicep",
+        "defaultCidr": "10.40.4.0/24",
+        "nsgNameExpression": "nsg-${prefix}-pe",
+        "delegation": null,
+        "privateEndpointNetworkPolicies": "Enabled",
+        "conditionalOn": null,
+        "purpose": "Dedicated private-endpoint subnet hosting all core data-store and AMPLS NICs (inbound TCP 443 and 1433 from VirtualNetwork; deny-all fallback)"
+      },
+      {
+        "id": "snet-aca-demo",
+        "name": "snet-aca-demo",
+        "bicepPath": "infra/modules/network.bicep",
+        "defaultCidr": "10.40.6.0/23",
+        "nsgNameExpression": "nsg-${prefix}-aca-demo",
+        "delegation": "Microsoft.App/environments",
+        "privateEndpointNetworkPolicies": null,
+        "conditionalOn": "demoDirectIngress",
+        "purpose": "Optional isolated direct-HTTPS Container Apps demo environment subnet retaining private backing services"
+      }
+    ],
+    "standaloneChildSubnets": [
+      {
+        "id": "issue360-publisher-20261019-subnet",
+        "name": "issue360-publisher-20261019-subnet",
+        "bicepPath": "infra/private-proof-publisher.bicep",
+        "defaultCidr": "10.40.8.0/28",
+        "nsgNameExpression": "issue360-publisher-20261019-nsg",
+        "defaultOutboundAccess": false,
+        "purpose": "Undeployed bounded temporary private ACR publisher VM subnet inside existing vnet-cutover-test"
+      }
+    ]
+  },
+  "privateDnsZones": [
+    {
+      "key": "sql",
+      "zoneName": "privatelink.database.windows.net",
+      "bicepExpression": "privatelink${environment().suffixes.sqlServerHostname}",
+      "bicepPath": "infra/modules/network.bicep",
+      "vnetLinkNameExpression": "link-${prefix}",
+      "registrationEnabled": false,
+      "conditionalOn": null
+    },
+    {
+      "key": "blob",
+      "zoneName": "privatelink.blob.core.windows.net",
+      "bicepExpression": "privatelink.blob.${environment().suffixes.storage}",
+      "bicepPath": "infra/modules/network.bicep",
+      "vnetLinkNameExpression": "link-${prefix}",
+      "registrationEnabled": false,
+      "conditionalOn": null
+    },
+    {
+      "key": "queue",
+      "zoneName": "privatelink.queue.core.windows.net",
+      "bicepExpression": "privatelink.queue.${environment().suffixes.storage}",
+      "bicepPath": "infra/modules/network.bicep",
+      "vnetLinkNameExpression": "link-${prefix}",
+      "registrationEnabled": false,
+      "conditionalOn": null
+    },
+    {
+      "key": "vault",
+      "zoneName": "privatelink.vaultcore.azure.net",
+      "bicepExpression": "privatelink.vaultcore.azure.net",
+      "bicepPath": "infra/modules/network.bicep",
+      "vnetLinkNameExpression": "link-${prefix}",
+      "registrationEnabled": false,
+      "conditionalOn": null
+    },
+    {
+      "key": "acr",
+      "zoneName": "privatelink.azurecr.io",
+      "bicepExpression": "privatelink${environment().suffixes.acrLoginServer}",
+      "bicepPath": "infra/modules/network.bicep",
+      "vnetLinkNameExpression": "link-${prefix}",
+      "registrationEnabled": false,
+      "conditionalOn": null
+    },
+    {
+      "key": "cognitive",
+      "zoneName": "privatelink.cognitiveservices.azure.com",
+      "bicepExpression": "privatelink.cognitiveservices.azure.com",
+      "bicepPath": "infra/modules/network.bicep",
+      "vnetLinkNameExpression": "link-${prefix}",
+      "registrationEnabled": false,
+      "conditionalOn": null
+    },
+    {
+      "key": "openai",
+      "zoneName": "privatelink.openai.azure.com",
+      "bicepExpression": "privatelink.openai.azure.com",
+      "bicepPath": "infra/modules/network.bicep",
+      "vnetLinkNameExpression": "link-${prefix}",
+      "registrationEnabled": false,
+      "conditionalOn": null
+    },
+    {
+      "key": "aiServices",
+      "zoneName": "privatelink.services.ai.azure.com",
+      "bicepExpression": "privatelink.services.ai.azure.com",
+      "bicepPath": "infra/modules/network.bicep",
+      "vnetLinkNameExpression": "link-${prefix}",
+      "registrationEnabled": false,
+      "conditionalOn": null
+    },
+    {
+      "key": "monitor",
+      "zoneName": "privatelink.monitor.azure.com",
+      "bicepExpression": "privatelink.monitor.azure.com",
+      "bicepPath": "infra/modules/network.bicep",
+      "vnetLinkNameExpression": "link-${prefix}",
+      "registrationEnabled": false,
+      "conditionalOn": null
+    },
+    {
+      "key": "oms",
+      "zoneName": "privatelink.oms.opinsights.azure.com",
+      "bicepExpression": "privatelink.oms.opinsights.azure.com",
+      "bicepPath": "infra/modules/network.bicep",
+      "vnetLinkNameExpression": "link-${prefix}",
+      "registrationEnabled": false,
+      "conditionalOn": null
+    },
+    {
+      "key": "ods",
+      "zoneName": "privatelink.ods.opinsights.azure.com",
+      "bicepExpression": "privatelink.ods.opinsights.azure.com",
+      "bicepPath": "infra/modules/network.bicep",
+      "vnetLinkNameExpression": "link-${prefix}",
+      "registrationEnabled": false,
+      "conditionalOn": null
+    },
+    {
+      "key": "agentsvc",
+      "zoneName": "privatelink.agentsvc.azure-automation.net",
+      "bicepExpression": "privatelink.agentsvc.azure-automation.net",
+      "bicepPath": "infra/modules/network.bicep",
+      "vnetLinkNameExpression": "link-${prefix}",
+      "registrationEnabled": false,
+      "conditionalOn": null
+    },
+    {
+      "key": "iotHub",
+      "zoneName": "privatelink.azure-devices.net",
+      "bicepExpression": "privatelink.azure-devices.net",
+      "bicepPath": "infra/modules/network.bicep",
+      "vnetLinkNameExpression": "link-${prefix}",
+      "registrationEnabled": false,
+      "conditionalOn": null
+    },
+    {
+      "key": "iotHubEndpoint",
+      "zoneName": "privatelink.servicebus.windows.net",
+      "bicepExpression": "privatelink.servicebus.windows.net",
+      "bicepPath": "infra/modules/network.bicep",
+      "vnetLinkNameExpression": "link-${prefix}",
+      "registrationEnabled": false,
+      "conditionalOn": null
+    },
+    {
+      "key": "acaInternalDefaultDomain",
+      "zoneName": "<aca-defaultDomain>",
+      "bicepExpression": "defaultDomain",
+      "bicepPath": "infra/modules/envDns.bicep",
+      "vnetLinkNameExpression": "link-${prefix}",
+      "registrationEnabled": false,
+      "conditionalOn": "!externalEnvironment"
+    }
+  ],
+  "dataStores": [
+    {
+      "id": "sql",
+      "storeCategory": "SQL",
+      "mainModuleName": "sql",
+      "bicepPath": "infra/modules/sql.bicep",
+      "resourceType": "Microsoft.Sql/servers",
+      "posture": "private-endpoint",
+      "peSymbolicName": "endpoint",
+      "peDeploymentName": "pe-${name}",
+      "peResourceNamePattern": "pe-sql-${prefix}-${unique}",
+      "subnetId": "snet-pe",
+      "groupId": "sqlServer",
+      "dnsZoneKeys": [
+        "sql"
+      ],
+      "conditionalOn": null,
+      "publicNetworkAccess": "Disabled (unconditional across all profiles)",
+      "localAuthDisabled": true,
+      "scopedResources": []
+    },
+    {
+      "id": "storage-blob",
+      "storeCategory": "Storage",
+      "mainModuleName": "storage",
+      "bicepPath": "infra/modules/storage.bicep",
+      "resourceType": "Microsoft.Storage/storageAccounts",
+      "posture": "private-endpoint",
+      "peSymbolicName": "blobEndpoint",
+      "peDeploymentName": "pe-${name}-blob",
+      "peResourceNamePattern": "pe-st${compact}${unique}-blob",
+      "subnetId": "snet-pe",
+      "groupId": "blob",
+      "dnsZoneKeys": [
+        "blob"
+      ],
+      "conditionalOn": null,
+      "publicNetworkAccess": "Disabled by default (guarded by parameter-guard; NP-EX-001 covers dev-only opt-in)",
+      "localAuthDisabled": true,
+      "scopedResources": []
+    },
+    {
+      "id": "storage-queue",
+      "storeCategory": "Storage",
+      "mainModuleName": "storage",
+      "bicepPath": "infra/modules/storage.bicep",
+      "resourceType": "Microsoft.Storage/storageAccounts",
+      "posture": "private-endpoint",
+      "peSymbolicName": "queueEndpoint",
+      "peDeploymentName": "pe-${name}-queue",
+      "peResourceNamePattern": "pe-st${compact}${unique}-queue",
+      "subnetId": "snet-pe",
+      "groupId": "queue",
+      "dnsZoneKeys": [
+        "queue"
+      ],
+      "conditionalOn": null,
+      "publicNetworkAccess": "Disabled by default (guarded by parameter-guard; NP-EX-001 covers dev-only opt-in)",
+      "localAuthDisabled": true,
+      "scopedResources": []
+    },
+    {
+      "id": "auth-token-store-blob",
+      "storeCategory": "Storage",
+      "mainModuleName": "auth-token-store",
+      "bicepPath": "infra/modules/authTokenStore.bicep",
+      "resourceType": "Microsoft.Storage/storageAccounts",
+      "posture": "private-endpoint",
+      "peSymbolicName": "endpoint",
+      "peDeploymentName": "pe-${name}-blob",
+      "peResourceNamePattern": "pe-st${compact}auth${unique}-blob",
+      "subnetId": "snet-pe",
+      "groupId": "blob",
+      "dnsZoneKeys": [
+        "blob"
+      ],
+      "conditionalOn": "enableEntraTokenStore",
+      "publicNetworkAccess": "Disabled by default (guarded by parameter-guard; NP-EX-001 covers dev-only opt-in)",
+      "localAuthDisabled": true,
+      "scopedResources": []
+    },
+    {
+      "id": "keyvault",
+      "storeCategory": "Key Vault",
+      "mainModuleName": "keyvault",
+      "bicepPath": "infra/modules/keyvault.bicep",
+      "resourceType": "Microsoft.KeyVault/vaults",
+      "posture": "private-endpoint",
+      "peSymbolicName": "endpoint",
+      "peDeploymentName": "pe-${name}",
+      "peResourceNamePattern": "pe-kv-${compact}-${unique}",
+      "subnetId": "snet-pe",
+      "groupId": "vault",
+      "dnsZoneKeys": [
+        "vault"
+      ],
+      "conditionalOn": null,
+      "publicNetworkAccess": "Disabled by default (guarded by parameter-guard; RBAC-only authorization)",
+      "localAuthDisabled": true,
+      "scopedResources": []
+    },
+    {
+      "id": "acr",
+      "storeCategory": "ACR",
+      "mainModuleName": "registry",
+      "bicepPath": "infra/modules/registry.bicep",
+      "resourceType": "Microsoft.ContainerRegistry/registries",
+      "posture": "private-endpoint",
+      "peSymbolicName": "endpoint",
+      "peDeploymentName": "pe-${name}",
+      "peResourceNamePattern": "pe-cr${compact}${unique}",
+      "subnetId": "snet-pe",
+      "groupId": "registry",
+      "dnsZoneKeys": [
+        "acr"
+      ],
+      "conditionalOn": null,
+      "publicNetworkAccess": "Disabled by default (Premium SKU, adminUserEnabled: false, anonymousPullEnabled: false)",
+      "localAuthDisabled": true,
+      "scopedResources": []
+    },
+    {
+      "id": "foundry",
+      "storeCategory": "AI Services",
+      "mainModuleName": "foundry",
+      "bicepPath": "infra/modules/foundry.bicep",
+      "resourceType": "Microsoft.CognitiveServices/accounts",
+      "posture": "private-endpoint",
+      "peSymbolicName": "endpoint",
+      "peDeploymentName": "pe-${name}",
+      "peResourceNamePattern": "pe-aif-${prefix}-${unique}",
+      "subnetId": "snet-pe",
+      "groupId": "account",
+      "dnsZoneKeys": [
+        "cognitive",
+        "openai",
+        "aiServices"
+      ],
+      "conditionalOn": null,
+      "publicNetworkAccess": "Disabled by default (disableLocalAuth: true)",
+      "localAuthDisabled": true,
+      "scopedResources": []
+    },
+    {
+      "id": "iothub",
+      "storeCategory": "IoT Hub",
+      "mainModuleName": "iothub",
+      "bicepPath": "infra/modules/iothub.bicep",
+      "resourceType": "Microsoft.Devices/IotHubs",
+      "posture": "private-endpoint",
+      "peSymbolicName": "hubEndpoint",
+      "peDeploymentName": "pe-${name}",
+      "peResourceNamePattern": "pe-iot-${prefix}-${unique}",
+      "subnetId": "snet-pe",
+      "groupId": "iotHub",
+      "dnsZoneKeys": [
+        "iotHub",
+        "iotHubEndpoint"
+      ],
+      "conditionalOn": null,
+      "publicNetworkAccess": "Disabled by default (disableLocalAuth: true, X.509/MI routing)",
+      "localAuthDisabled": true,
+      "scopedResources": []
+    },
+    {
+      "id": "telemetry-eventhub",
+      "storeCategory": "Event Hub",
+      "mainModuleName": "iothub",
+      "bicepPath": "infra/modules/iothub.bicep",
+      "resourceType": "Microsoft.EventHub/namespaces",
+      "posture": "private-endpoint",
+      "peSymbolicName": "telemetryEndpoint",
+      "peDeploymentName": "pe-eh-${name}",
+      "peResourceNamePattern": "pe-eh-iot-${prefix}-${unique}",
+      "subnetId": "snet-pe",
+      "groupId": "namespace",
+      "dnsZoneKeys": [
+        "iotHubEndpoint"
+      ],
+      "conditionalOn": null,
+      "publicNetworkAccess": "Disabled (unconditional across all profiles; trustedServiceAccessEnabled for IoT Hub MI route)",
+      "localAuthDisabled": true,
+      "scopedResources": []
+    },
+    {
+      "id": "ampls",
+      "storeCategory": "Telemetry Store (AMPLS)",
+      "mainModuleName": "monitoring",
+      "bicepPath": "infra/modules/monitoring.bicep",
+      "resourceType": "microsoft.insights/privateLinkScopes",
+      "posture": "private-endpoint",
+      "peSymbolicName": "endpoint",
+      "peDeploymentName": "pe-ampls",
+      "peResourceNamePattern": "pe-ampls-${prefix}",
+      "subnetId": "snet-pe",
+      "groupId": "azuremonitor",
+      "dnsZoneKeys": [
+        "monitor",
+        "oms",
+        "ods",
+        "agentsvc",
+        "blob"
+      ],
+      "conditionalOn": null,
+      "publicNetworkAccess": "PrivateOnly ingestion and query; publicNetworkAccessForIngestion and Query Disabled on scoped resources",
+      "localAuthDisabled": true,
+      "scopedResources": [
+        {
+          "bicepPath": "infra/modules/monitoring.bicep",
+          "resourceType": "Microsoft.OperationalInsights/workspaces",
+          "scopeSymbolicName": "workspaceScope"
+        },
+        {
+          "bicepPath": "infra/modules/monitoring.bicep",
+          "resourceType": "Microsoft.Insights/components",
+          "scopeSymbolicName": "appInsightsScope"
+        }
+      ]
+    }
+  ],
+  "sharedPrivateLinkOrigins": [
+    {
+      "id": "frontdoor-aca-origin",
+      "bicepPath": "infra/modules/edge.bicep",
+      "callers": [
+        "infra/main.bicep",
+        "infra/public-edge-existing.bicep"
+      ],
+      "resourceType": "Microsoft.Cdn/profiles/originGroups/origins",
+      "targetResourceType": "Microsoft.App/managedEnvironments",
+      "groupId": "managedEnvironments",
+      "conditionalOn": "enablePublicEdge"
+    }
+  ],
+  "existingStoreReferences": [
+    {
+      "bicepPath": "infra/modules/authTokenStore.bicep",
+      "resourceType": "Microsoft.KeyVault/vaults",
+      "coveredBy": "keyvault",
+      "coverageKind": "dataStore",
+      "purpose": "Scoped Key Vault Secrets Officer RBAC assignment for token-renewal identity on existing private Key Vault"
+    },
+    {
+      "bicepPath": "infra/modules/authTokenStore.bicep",
+      "resourceType": "Microsoft.ContainerRegistry/registries",
+      "coveredBy": "acr",
+      "coverageKind": "dataStore",
+      "purpose": "Scoped AcrPull RBAC assignment for token-renewal job identity on existing private ACR"
+    },
+    {
+      "bicepPath": "infra/staff-initializer-rbac.bicep",
+      "resourceType": "Microsoft.Storage/storageAccounts",
+      "coveredBy": "storage-blob",
+      "coverageKind": "dataStore",
+      "purpose": "Conditional container-scoped staff-results RBAC grant on existing private Storage Account"
+    },
+    {
+      "bicepPath": "infra/public-edge-existing.bicep",
+      "resourceType": "Microsoft.OperationalInsights/workspaces",
+      "coveredBy": "ampls",
+      "coverageKind": "dataStore",
+      "purpose": "WAF diagnostic settings sink on existing AMPLS-scoped Log Analytics Workspace"
+    },
+    {
+      "bicepPath": "infra/iot-hub-live.bicep",
+      "resourceType": "Microsoft.Devices/IotHubs",
+      "coveredBy": "NP-EX-003",
+      "coverageKind": "exerciseException",
+      "purpose": "Child api-consumer group and metrics-only diagnostics reconciliation on existing private-endpoint-backed exercise hub"
+    },
+    {
+      "bicepPath": "infra/iot-hub-live.bicep",
+      "resourceType": "Microsoft.OperationalInsights/workspaces",
+      "coveredBy": "NP-EX-003",
+      "coverageKind": "exerciseException",
+      "purpose": "Metrics-only diagnostic sink on existing exercise Log Analytics Workspace"
+    },
+    {
+      "bicepPath": "infra/resident-demo.bicep",
+      "resourceType": "Microsoft.KeyVault/vaults",
+      "coveredBy": "NP-EX-005",
+      "coverageKind": "exerciseException",
+      "purpose": "Existing private Key Vault supplying demo-password-verifier and demo-session-key via user-assigned managed identity"
+    },
+    {
+      "bicepPath": "infra/resident-demo.bicep",
+      "resourceType": "Microsoft.ContainerRegistry/registries",
+      "coveredBy": "NP-EX-005",
+      "coverageKind": "exerciseException",
+      "purpose": "Existing private ACR supplying digest-pinned resident-demo image via user-assigned managed identity"
+    }
+  ],
+  "exerciseExceptions": [
+    {
+      "id": "NP-EX-001",
+      "storeCategory": "Storage / Key Vault / ACR / AI Services / IoT Hub",
+      "bicepPath": "infra/main.bicep",
+      "resourceType": "parameter:allowPublicNetworkAccess",
+      "owner": "Juan Manuel Servera (@jmservera)",
+      "policyExceptionRef": "EX-001 (infra/policy-exceptions.json)",
+      "rationale": "Development-profile operator opt-in parameter (default false across all committed main*.bicepparam files) preserved for bounded synthetic development troubleshooting when no private jumpbox is active.",
+      "compensatingControls": [
+        "Defaults to false in infra/main.bicep and all three infra/main*.bicepparam files",
+        "Blocked mechanically by infra/modules/guard.bicep when deploymentProfile == 'production', environmentName == 'pilot', or demoDirectIngress == true",
+        "Never applies to Azure SQL (infra/modules/sql.bicep) or telemetry Event Hub (infra/modules/iothub.bicep), which disable publicNetworkAccess unconditionally",
+        "Local/shared-key auth remains disabled (RBAC/Entra-only)"
+      ]
+    },
+    {
+      "id": "NP-EX-002",
+      "storeCategory": "AI Services (Standalone Resident Prototype)",
+      "bicepPath": "infra/resident-assistant.bicep",
+      "resourceType": "Microsoft.CognitiveServices/accounts",
+      "owner": "Juan Manuel Servera (@jmservera)",
+      "policyExceptionRef": "docs/architecture/resident-assistant-prototype.md",
+      "rationale": "Standalone opt-in (enabled = false by default) Sweden Central Azure OpenAI S0 account (aoai-resident-469) explicitly outside the core UK South private staff boundary for synthetic resident showcase testing only.",
+      "compensatingControls": [
+        "Disabled by default (param enabled bool = false) and excluded from infra/main.bicep",
+        "disableLocalAuth: true with Cognitive Services OpenAI User RBAC restricted to showcase managed identity",
+        "Hard SQL-enforced lifetime USD20 reservation ledger and synthetic-only resident data boundary"
+      ]
+    },
+    {
+      "id": "NP-EX-003",
+      "storeCategory": "IoT Hub (Standalone Child Reconciliation)",
+      "bicepPath": "infra/iot-hub-live.bicep",
+      "resourceType": "Microsoft.Devices/IotHubs",
+      "owner": "Juan Manuel Servera (@jmservera)",
+      "policyExceptionRef": "infra/README.md#live-iot-hub-child-reconciliation",
+      "rationale": "Additive child-resource template attaching consumer group api-consumer and metrics-only diagnostic settings to existing exercise hub iot-cutover-test-rzsrg without re-issuing a hub PUT or altering its existing private endpoint.",
+      "compensatingControls": [
+        "Guarded by infra/modules/iothub-scope-guard.bicep to resource group ama and hub prefix iot-",
+        "Verified publicNetworkAccess: Disabled and disableLocalAuth: true on existing exercise hub"
+      ]
+    },
+    {
+      "id": "NP-EX-004",
+      "storeCategory": "Storage (ACA Environment Certificate Share)",
+      "bicepPath": "infra/live-simulator-job.bicep",
+      "relatedBicepPaths": [
+        "infra/live-receiver-job.bicep"
+      ],
+      "resourceType": "Microsoft.App/managedEnvironments/storages (AzureFile mount)",
+      "owner": "Juan Manuel Servera (@jmservera)",
+      "policyExceptionRef": "infra/README.md",
+      "rationale": "Undeployed standalone synthetic telemetry jobs mount an operator-staged Container Apps environment AzureFile share (certStorageName) read-only for synthetic X.509 device certificates (<device>.pem, <device>.key, control.json) inside the existing internal ACA VNet environment.",
+      "compensatingControls": [
+        "Mounted strictly read-only (mountOptions: 'ro') inside existing internal VNet-integrated Container Apps environment",
+        "Holds synthetic exercise device certificates only, never staff or production credentials"
+      ]
+    },
+    {
+      "id": "NP-EX-005",
+      "storeCategory": "SQL / Key Vault / ACR (Standalone Resident Showcase)",
+      "bicepPath": "infra/resident-demo.bicep",
+      "resourceType": "Microsoft.App/containerApps (external showcase dependencies)",
+      "owner": "Juan Manuel Servera (@jmservera)",
+      "policyExceptionRef": "docs/architecture/README.md",
+      "rationale": "Standalone resident showcase Container App consumes pre-provisioned private ACA environment, existing private Key Vault, existing private ACR, and independently supplied showcase SQL server FQDN rather than re-provisioning private endpoints.",
+      "compensatingControls": [
+        "Enforces ZF_SQL_AUTH = 'msi' (managed identity only, zero SQL passwords)",
+        "Reads demo-password-verifier and demo-session-key exclusively from Key Vault via user-assigned managed identity"
+      ]
+    },
+    {
+      "id": "NP-EX-006",
+      "storeCategory": "Volatile Simulation Store (EmptyDir SQLite)",
+      "bicepPath": "infra/modules/containerapps.bicep",
+      "resourceType": "EmptyDir:/state/public-simulation/store.sqlite",
+      "owner": "Juan Manuel Servera (@jmservera)",
+      "policyExceptionRef": "infra/main.bicep (enablePublicSimulationLane)",
+      "rationale": "Opt-in public simulation lane (enablePublicSimulationLane = false by default) writes synthetic exercise state to a single-replica volatile EmptyDir scratch volume rather than Azure SQL.",
+      "compensatingControls": [
+        "Off by default (enablePublicSimulationLane = false) and blocked by parameter-guard unless demoDirectIngress is enabled with max 1 API replica",
+        "Explicitly non-durable, isolated from staff Azure SQL data, and wiped on replica restart"
+      ]
+    },
+    {
+      "id": "NP-EX-007",
+      "storeCategory": "External Document SaaS (Proposed SharePoint)",
+      "bicepPath": "infra/main.bicep",
+      "resourceType": "parameter:evidenceStore=sharepoint",
+      "owner": "Juan Manuel Servera (@jmservera)",
+      "policyExceptionRef": "docs/architecture/README.md#state-trade-offs-and-known-limits",
+      "rationale": "Microsoft 365 SharePoint Online is a Microsoft Graph SaaS service (Sites.Selected) without customer VNet private-link endpoints, and remains an unimplemented topology parameter (default evidenceStore is private 'blob').",
+      "compensatingControls": [
+        "Default evidenceStore is 'blob' backed by pe-${name}-blob in snet-pe",
+        "Architecture documentation explicitly marks SharePoint adapter unimplemented"
+      ]
+    }
+  ],
+  "secretBindings": [
+    {
+      "containerAppBicepPath": "infra/modules/containerapps.bicep",
+      "containerAppNameExpression": "ca-${prefix}-api",
+      "containerSecretName": "entra-client-secret",
+      "containerSecretNameParam": "entraClientSecretName",
+      "keyVaultSecretName": "entra-client-secret",
+      "keyVaultUrlPattern": "${keyVaultUri}/secrets/${entraClientSecretName}",
+      "managedIdentityRef": "identityIds.api",
+      "conditionalOn": "requireEntraAuth && entraCredentialStore == 'keyVault'",
+      "consumers": [
+        "authConfigs.identityProviders.azureActiveDirectory.registration.clientSecretSettingName"
+      ]
+    },
+    {
+      "containerAppBicepPath": "infra/modules/containerapps.bicep",
+      "containerAppNameExpression": "ca-${prefix}-api",
+      "containerSecretName": "entra-token-store-sas",
+      "containerSecretNameParam": null,
+      "keyVaultSecretName": "entra-token-store-sas",
+      "keyVaultUrlPattern": "${keyVaultUri}/secrets/entra-token-store-sas",
+      "managedIdentityRef": "identityIds.api",
+      "conditionalOn": "enableEntraTokenStore",
+      "consumers": [
+        "env:AUTH_TOKEN_STORE_ROTATION.secretRef",
+        "authConfigs.login.tokenStore.azureBlobStorage.sasUrlSettingName"
+      ]
+    },
+    {
+      "containerAppBicepPath": "infra/resident-demo.bicep",
+      "containerAppNameExpression": "ca-resident-demo",
+      "containerSecretName": "demo-password-verifier",
+      "containerSecretNameParam": "verifierSecret",
+      "keyVaultSecretName": "resident-demo-password-verifier",
+      "keyVaultUrlPattern": "${vault.properties.vaultUri}secrets/${verifierSecret}",
+      "managedIdentityRef": "identity.id",
+      "conditionalOn": null,
+      "consumers": [
+        "env:ZF_DEMO_PASSWORD_VERIFIER.secretRef"
+      ]
+    },
+    {
+      "containerAppBicepPath": "infra/resident-demo.bicep",
+      "containerAppNameExpression": "ca-resident-demo",
+      "containerSecretName": "demo-session-key",
+      "containerSecretNameParam": "sessionSecret",
+      "keyVaultSecretName": "resident-demo-session-key",
+      "keyVaultUrlPattern": "${vault.properties.vaultUri}secrets/${sessionSecret}",
+      "managedIdentityRef": "identity.id",
+      "conditionalOn": null,
+      "consumers": [
+        "env:ZF_DEMO_SESSION_KEY.secretRef"
+      ]
+    }
+  ]
+}
