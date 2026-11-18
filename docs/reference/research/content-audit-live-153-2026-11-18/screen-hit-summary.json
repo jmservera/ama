@@ -1,0 +1,339 @@
+{
+ "staff-cases": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/",
+  "visible_chars": 18866,
+  "banned_term_hits": [
+   "unassigned"
+  ],
+  "hit_lines": [
+   "Urgency: Unknown; due: Unknown; next action: Unknown. Resident update: Unassigned, Unknown.",
+   "Urgency: Unknown; due: Unknown; next action: Unknown. Resident update: Unassigned, Unknown.",
+   "Urgency: Unknown; due: Unknown; next action: Unknown. Resident update: Unassigned, Unknown.",
+   "Urgency: Unknown; due: Unknown; next action: Unknown. Resident update: Unassigned, Unknown."
+  ]
+ },
+ "staff-overview": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/overview",
+  "visible_chars": 3597,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-progress": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/progress",
+  "visible_chars": 2457,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-visits": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/visits",
+  "visible_chars": 5884,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-funding": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/funding",
+  "visible_chars": 11835,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-finance": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/finance",
+  "visible_chars": 2379,
+  "banned_term_hits": [
+   "envelope"
+  ],
+  "hit_lines": [
+   "Pause for human decision. Held. No person-approved envelope or tolerances are recorded."
+  ]
+ },
+ "staff-time": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/time",
+  "visible_chars": 458,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-assistants": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/assistants",
+  "visible_chars": 6052,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-capacity": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/capacity",
+  "visible_chars": 26260,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-aftercare": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/aftercare",
+  "visible_chars": 2687,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-closed": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/closed",
+  "visible_chars": 3835,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-law": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/law.html",
+  "visible_chars": 346,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-all": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/all",
+  "visible_chars": 46144,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-handoff-waiting": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/handoff-waiting",
+  "visible_chars": 537,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-import": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/import",
+  "visible_chars": 619,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-screens": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/screens",
+  "visible_chars": 733,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-1": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0029",
+  "visible_chars": 2238,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-1-blockers-and-safety": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0029",
+  "visible_chars": 6786,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-1-survey-and-assessment": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0029",
+  "visible_chars": 2515,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-1-funding": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0029",
+  "visible_chars": 2654,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-1-resident": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0029",
+  "visible_chars": 5998,
+  "banned_term_hits": [
+   "holds"
+  ],
+  "hit_lines": [
+   "It never pauses, holds or extends the clock on any hazard or safeguarding response."
+  ]
+ },
+ "staff-case-1-contractor-and-works": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0029",
+  "visible_chars": 1619,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-1-quality-and-handover": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0029",
+  "visible_chars": 9016,
+  "banned_term_hits": [
+   "unassigned"
+  ],
+  "hit_lines": [
+   "Resident update owner: Unassigned; commitment: Unknown. No message is sent automatically."
+  ]
+ },
+ "staff-case-1-ai-assistance": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0029",
+  "visible_chars": 2356,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-1-history": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0029",
+  "visible_chars": 2546,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-2": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0030",
+  "visible_chars": 2264,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-2-blockers-and-safety": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0030",
+  "visible_chars": 6620,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-2-survey-and-assessment": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0030",
+  "visible_chars": 2230,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-2-funding": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0030",
+  "visible_chars": 3237,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-2-resident": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0030",
+  "visible_chars": 6019,
+  "banned_term_hits": [
+   "holds"
+  ],
+  "hit_lines": [
+   "It never pauses, holds or extends the clock on any hazard or safeguarding response."
+  ]
+ },
+ "staff-case-2-contractor-and-works": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0030",
+  "visible_chars": 1648,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-2-quality-and-handover": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0030",
+  "visible_chars": 8922,
+  "banned_term_hits": [
+   "unassigned"
+  ],
+  "hit_lines": [
+   "Resident update owner: Unassigned; commitment: Unknown. No message is sent automatically."
+  ]
+ },
+ "staff-case-2-ai-assistance": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0030",
+  "visible_chars": 2383,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-2-history": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0030",
+  "visible_chars": 2556,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-3": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0031",
+  "visible_chars": 2287,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-3-blockers-and-safety": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0031",
+  "visible_chars": 6618,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-3-survey-and-assessment": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0031",
+  "visible_chars": 2087,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-3-funding": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0031",
+  "visible_chars": 2746,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-3-contractor-and-works": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0031",
+  "visible_chars": 1644,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-3-quality-and-handover": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0031",
+  "visible_chars": 8920,
+  "banned_term_hits": [
+   "unassigned"
+  ],
+  "hit_lines": [
+   "Resident update owner: Unassigned; commitment: Unknown. No message is sent automatically."
+  ]
+ },
+ "staff-case-3-ai-assistance": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0031",
+  "visible_chars": 7965,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "staff-case-3-history": {
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0031",
+  "visible_chars": 2936,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "resident-home": {
+  "url": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/",
+  "visible_chars": 6422,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "resident-status": {
+  "url": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/#sec-status",
+  "visible_chars": 6422,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "resident-needed-from-you": {
+  "url": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/#sec-actions",
+  "visible_chars": 6422,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "resident-timeline": {
+  "url": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/#sec-timeline",
+  "visible_chars": 6422,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "resident-documents": {
+  "url": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/#sec-documents",
+  "visible_chars": 6422,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "resident-funding": {
+  "url": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/#sec-funding",
+  "visible_chars": 6422,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "resident-help": {
+  "url": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/#sec-help",
+  "visible_chars": 6422,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "resident-sensors": {
+  "url": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/#sec-sensors",
+  "visible_chars": 6422,
+  "banned_term_hits": [],
+  "hit_lines": []
+ },
+ "resident-showcase-limits": {
+  "url": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/#sec-unavailable",
+  "visible_chars": 6422,
+  "banned_term_hits": [],
+  "hit_lines": []
+ }
+}

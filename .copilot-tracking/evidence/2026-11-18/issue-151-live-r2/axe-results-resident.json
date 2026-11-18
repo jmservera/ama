@@ -1,0 +1,93 @@
+{
+ "axe": "4.10.3",
+ "axe_sha256": "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb",
+ "tags": [
+  "wcag2a",
+  "wcag2aa",
+  "wcag21a",
+  "wcag21aa",
+  "wcag22aa"
+ ],
+ "viewport": "1366x900",
+ "target": "resident",
+ "screens": {
+  "resident-signin": {
+   "title": "Your home improvement progress - synthetic showcase, not live",
+   "h1": [
+    "Your home improvement progress"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:0",
+    "header:1"
+   ],
+   "live": 6,
+   "lang": "en-GB",
+   "text": "Skip to the main content\nSynthetic showcase - not a live resident service. Everything here is invented test information. The shared demonstration sign-in does n",
+   "axe": {
+    "violations": [],
+    "incomplete": [
+     {
+      "id": "aria-valid-attr-value",
+      "impact": "critical",
+      "nodes": 1
+     }
+    ]
+   },
+   "keyboard": {
+    "stops": 5,
+    "trap": false,
+    "completed_cycle": false,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 2
+   },
+   "reflow_320_horizontal_scroll": false
+  },
+  "resident-home": {
+   "title": "Your home improvement progress - synthetic showcase, not live",
+   "h1": [
+    "Your home improvement progress"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "live": 7,
+   "lang": "en-GB",
+   "text": "Skip to the main content\nSynthetic showcase - not a live resident service. Everything here is invented test information. The shared demonstration sign-in does n",
+   "axe": {
+    "violations": [],
+    "incomplete": [
+     {
+      "id": "aria-valid-attr-value",
+      "impact": "critical",
+      "nodes": 1
+     },
+     {
+      "id": "color-contrast",
+      "impact": "serious",
+      "nodes": 8
+     }
+    ],
+    "contrast_sample": {
+     "sampled": 8,
+     "unresolved": 0,
+     "below": [],
+     "min": 15.52
+    }
+   },
+   "keyboard": {
+    "stops": 7,
+    "trap": false,
+    "completed_cycle": true,
+    "without_indicator": 0,
+    "not_in_viewport": 7,
+    "unnamed": 1
+   },
+   "reflow_320_horizontal_scroll": false
+  }
+ },
+ "signed_in": true
+}
