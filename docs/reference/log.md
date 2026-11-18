@@ -12871,6 +12871,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 110 live IoT Hub to SQL rerun (Refs #110)
 
 * Added [issue-110-live2-iot-sql-evidence-2026-11-18.md](research/issue-110-live2-iot-sql-evidence-2026-11-18.md): bounded job sent 6 and stored 6 through IoT Hub into Azure SQL; devices, job and temporary roles removed; no source change
+
 ## [2026-11-18] update | Issue 108 harness audit live round 2 (Refs #108)
 
 * Added [issue-108-harness-audit-live-r2-2026-11-18.md](research/issue-108-harness-audit-live-r2-2026-11-18.md): harness rerun (116 tests OK), deployment, version and rate limits confirmed in uksouth and swedencentral, subscription quota unproven; no source change
