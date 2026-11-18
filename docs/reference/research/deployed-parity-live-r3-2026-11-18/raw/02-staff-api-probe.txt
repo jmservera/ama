@@ -1,0 +1,28 @@
+200 /api/me | user={code,name,email,role,oid,tid}; counts={mine,hazards,open}; staff=[4]; account={name,email,provider}; services={photo,law_alerts,assistants,cases}; map={tiles,attribution}; navigation=[13]; work_queues={version,default,selection,clock,status,definitions}
+200 /api/stats | kpis={open,completed,hazards,long,nodecision,funding}; stages=[20]; areas=[11]; waves=[5]; ages=[4]; funding=[4]; contractors=[4]; team=[1]
+403 /api/staff | error=Your role does not include this.
+200 /api/cases?view=mine&limit=1 | items=[1]; total=16; limit=1; offset=0; sort=urgent; policy_version=1.0.0; policy_hash=b66fdaccdcbd46a0eb257572a2b8f0fb98e7eafd53b468b67084d9a19761; as_of=2026-10-16; ranked_total=443; next_cursor=00099998840017ZF-2025-0331
+200 /api/cases?view=all&limit=1 | items=[1]; total=443; limit=1; offset=0; sort=urgent; policy_version=1.0.0; policy_hash=b66fdaccdcbd46a0eb257572a2b8f0fb98e7eafd53b468b67084d9a19761; as_of=2026-10-16; ranked_total=443; next_cursor=00099996280016ZF-2025-0122
+200 /api/map | mode=points; total=443; shown=443; cap=500; bounds=[4]; items=[443]
+200 /api/assistants | assistants=[5]; registered_tasks=[9]; disabled=Operator authority, finite allowance and expiry are required; proactive=False; principal=service:retrofit-evidence-proposals; rule=synthetic-gaps-2026-10-13-v1; limits={scan_interval,scan_size,input_chars,output_chars,output_tokens,timeout}; manual=Use the ordinary case controls; proposals never approve or c
+200 /api/assistants/proposals | proposals=[6]; disabled=Operator authority, finite allowance and expiry are required; manual=Open the case for ordinary human work.; next_after=None
+200 /api/assistants/rai-metrics | status=counted; metrics={invocation,refusal,withheld,validation_failure,fallback,human_review}; latency_seconds_total=0; persisted=87; replay={duplicates,new,outside_window,invalid}
+200 /api/governance | protocol=[0]; benefits={}; verdicts={cycle_time,coordination_hours}; value_claims=[0]; releases=[0]; release_gaps=[3]; breaches=[0]; paused=[0]; capture_open=False; capture_blockers=[2]; note=Emergency and statutory hazard response continues outside an; rai_evidence={baseline,current_assessment,assessment_authority,findings,revision,history_record_count}
+200 /api/ai/priority | recommendation=None
+200 /api/audit-check | intact=True; entries=1943; head=33b7be32ce62e4e8a54bf00d4d357b157b6cca7250810b889c2a77978cce; problem=None; digests_checked=0; digest_mismatches=[0]
+200 /api/continuity | epoch=1; suspensions=[1]; history_valid=True; changes=[2]; effective={configuration:zf-demo-continuity-probe-122}; suspended=[1]; note=Manual case work, resident challenge and hazard response con
+403 /api/ledger/digest | error=Your role does not include this.
+403 /api/sensors | error=Your role does not include this.
+500 /api/time/status | error=The service hit an unexpected error. Owner: application supp
+403 /api/time | error=Your role does not include this.
+503 /api/law | error=The law store is not loaded.
+503 /api/law/sources | error=The law store is not loaded.
+503 /api/law/alerts | status=unknown; error=The law store is not loaded; rule checks are unknown.; safe_route=Use the existing human emergency or hazard service now; do n
+503 /api/account/photo | error=Microsoft photo access is not available. Sign in again after
+200 /api/visits | list[30]
+200 /api/finance | list[13]
+200 /api/funding | list[167]
+200 /api/handoffs | list[4]
+200 /api/chat/threads | list[0]
+200 /api/retention | label=synthetic-demo placeholder period from the trigger; not an a; as_of=2026-11-18; records=[0]
+200 /api/data-protection | label=synthetic-demo; owners=DPO and Legal (named owners not yet recorded; issue #121 dep; dpo_reviewed=False; classes=[8]; statement=Recorded references are not verified DPO or Legal approval. 

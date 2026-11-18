@@ -1,0 +1,20 @@
+2026-11-18T14:59:28Z
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "name": "ca-cutover-test-demo-api",
+  "provisioning": "Succeeded",
+  "revision": "ca-cutover-test-demo-api--0000031",
+  "running": "Running"
+}
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "name": "ca-resident-demo",
+  "provisioning": "Succeeded",
+  "revision": "ca-resident-demo--0000012",
+  "running": "Running"
+}
+{
+  "name": "evhns-cutover-test-demo",
+  "sku": "Basic",
+  "status": "Active"
+}

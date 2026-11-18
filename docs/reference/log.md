@@ -12868,6 +12868,14 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [src-repoint-live-audit-200-2026-11-18.md](research/src-repoint-live-audit-200-2026-11-18.md): criteria 2 proven, criterion 3 proven except a fresh tag deployment; no source change
 
+## [2026-11-18] update | Issue 111 signed-in sensor evidence re-run (Refs #111)
+
+* Added [issue-111-live2-sensor-evidence-2026-11-18.md](research/issue-111-live2-sensor-evidence-2026-11-18.md) with raw test output, redacted staff-signed sensors payload and screenshot; R1 to R3 stays unproven. No source change.
+
+## [2026-11-18] add | Issue 96 live form workspace evidence (Refs #96)
+
+* Added [issue-96-live-demo-evidence-2026-11-18.md](research/issue-96-live-demo-evidence-2026-11-18.md): read-only live probe found zero registered form schemas and no approval path; criterion 1 unproven, no source change
+
 ## [2026-11-18] update | Issue 116 live round 2 (Refs #116)
 
 * Added [issue-116-live-r2-evidence-2026-11-18.md](research/issue-116-live-r2-evidence-2026-11-18.md): reason-value leak scan on the deployed demo, second role blocked by Graph privileges; no source change
@@ -12903,3 +12911,90 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Case chat gates third live pass (Refs #216)
 
 * Updated [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md): all 30 prompts rerun in four throwaway servers with raw output retained (18 model calls, 20,128 tokens); refusals 10 of 10, 9 of 9 cited model answers valid, three strict failures disclosed; 107 core and agents tests pass. No source change.
+## [2026-11-18] add | Public browser access third live pass (Refs #344)
+
+* Added [public-browser-access-live-r3-2026-11-18.md](research/public-browser-access-live-r3-2026-11-18.md): reproduced the anonymous 401, Entra sign-in and private SQL results and classed the `/api/time/status` 500 as a database-side ProgrammingError from the container log. Browser-style API redirect stays unproven. No Azure change was made.
+
+## [2026-11-18] add | Issue 349 tenant prerequisites live round 3 (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-r3-2026-11-18.md](research/issue-349-tenant-prerequisites-live-r3-2026-11-18.md): redirect URI seen by Entra, curl 401s, Key Vault reference and private vault facts, per-criterion table; criteria 1, 3 and 4 stay unproven in part, no source or Azure change.
+
+## [2026-11-18] add | Employee loading feedback live re-verification, second pass (Refs #531)
+
+* Added [issue-531-live-r2-2026-11-18-note.md](research/issue-531-live-r2-2026-11-18-note.md) and its evidence folder: no scale-to-zero in 10 minutes so real cold start stays unproven; reject recorded through the live UI; deployed `app.js` and `style.css` still behind main; no source change
+
+## [2026-11-18] add | Deployed demo parity proof, live run 3 (Refs #350)
+
+* Added [deployed-parity-live-r3-2026-11-18.md](research/deployed-parity-live-r3-2026-11-18.md) with raw outputs, 4 screenshots (12 showing personal names or addresses not retained) and scripts: no criterion fully proven; browser-UA anonymous API still 302, `/api/time/status` 500 reproduced, own-queue CSV 133 against list 16; new active release-scope suspension, closed CSV now 537. No source changed.
+
+## [2026-11-18] add | Resident showcase live check r3 (Refs #462)
+
+* Added [resident-showcase-live-r3-2026-11-18.md](research/resident-showcase-live-r3-2026-11-18.md): live desktop Playwright proof of login, correct-case data and negative paths, exact five-failure rate limit, #455 rubric history and an unresolved High review thread, arithmetic cost estimate; no source or Azure change; criterion 2 stays unmet
+
+## [2026-11-18] update | Direct ingress live third measurement (Refs #360)
+
+* Extended [direct-ingress-live-demo-2026-11-18.md](research/direct-ingress-live-demo-2026-11-18.md) with a 14:00 UTC measurement and per-criterion table: criteria c and e need owner decisions, d stays partly proven (AI call not reproduced today); no source change, no Azure resource created
+
+## [2026-11-18] add | Resident demo authority live check, run 2 (Refs #521)
+
+* Added [resident-demo-authority-live-521-r2-2026-11-18.md](research/resident-demo-authority-live-521-r2-2026-11-18.md) with retained read-only `az` output, a fresh desktop Playwright sign-in and a per-criterion table: live `ZF_DEMO_EXPIRES_AT` 2028-01-01T00:00:00Z on a healthy revision; SQL login refused (private-only server), registry and activity log give no commit or apply time, so criterion 4 stays partly proven; no source change, no Azure resource created
+
+## [2026-11-18] add | Issue 1274 release-download audit (Refs #1274)
+
+* Added [issue-1274-release-downloads-audit-live-2026-11-18.md](research/issue-1274-release-downloads-audit-live-2026-11-18.md): per-criterion table (actionlint half delivered by PR 1275 and re-verified locally; criteria 1, 3 and 4 partly proven; AWF 0.28.23 bootstrap still open and FULL-tier if code is needed); no source or workflow change, nothing ticked
+
+## [2026-11-18] add | Live monitoring coverage check (Refs #146)
+
+* Added [monitoring-coverage-live-146-2026-11-18.md](research/monitoring-coverage-live-146-2026-11-18.md): read-only az monitor evidence with a per-criterion table; ledger digest alerts installed, job failure, poison queue, IoT alerts and workbook absent, owners proposed only, KQL blocked by workspace network rules.
+
+## [2026-11-18] update | Rubric src counting and mvp stop, live r2 audit (Refs #198)
+
+* Added [issue-198-rubric-live-r2-2026-11-18.md](research/issue-198-rubric-live-r2-2026-11-18.md) with retained raw outputs: no mvp or prototype glob, 949 `solution-code` files, score 79/100; criteria 3 and 4 stay unprovable; `test_safe_output_runtime.py` has 10 failures tied to a retired `mvp/` sample path and missing triggers; no workflow, registry or source change
+
+## [2026-11-18] add | Post-cleanup references second live run (Refs #203)
+
+* Added [issue-203-refs-verify-live-2026-11-18.md](research/issue-203-refs-verify-live-2026-11-18.md) with retained raw output: criterion 1 still fails with 20 violations and needs a full-tier change to the legacy-reference checker (not made here); criterion 5 partly proven; no source, tool or Azure change
+
+## [2026-11-18] update | Resident portal docs nine-criterion audit (Refs #441)
+
+* Extended [resident-portal-441-live-status-2026-11-18.md](research/resident-portal-441-live-status-2026-11-18.md) with a per-criterion proven/unproven table: criterion 5 stays unproven (owner decision), criteria 3 and 9 need publication-time rechecks; no source, Azure or credential action, no tick changed
+
+## [2026-11-18] update | Cohort evaluation second live re-run (Refs #222)
+
+* Added [cohort-evaluation-live-r2-2026-11-18.md](research/cohort-evaluation-live-r2-2026-11-18.md) with retained output and a per-criterion table: five criteria proven on the synthetic fixture, the OQ-018 owner-approval criterion unproven.
+
+## [2026-11-18] add | Issue 358 live pass 3 retained evidence (Refs #358)
+
+* Added [issue-358-live3-evidence-2026-11-18.md](research/issue-358-live3-evidence-2026-11-18.md) with raw outputs under `research/issue-358-live3-2026-11-18/`: 126-test baseline, scratch-copy expiry-guard mutation (nine failures), throwaway app absent, demo API Key Vault reference intact, delegating `main()`. No source change and no Azure write; the full setup run on the demo app stays unproven.
+
+## [2026-11-18] update | Challenge route live third pass (Refs #220)
+
+* Extended [issue-220-live-challenge-route-evidence-2026-11-18.md](research/issue-220-live-challenge-route-evidence-2026-11-18.md): demo revision and the Entra staff-write defect are unchanged, so the unticked criterion stays unproven live; no source change, no Azure resource created
+
+## [2026-11-18] add | Alert and home chat UX live run 3 (Refs #215)
+
+* Added [issue-215-live-rerun3-evidence-2026-11-18.md](research/issue-215-live-rerun3-evidence-2026-11-18.md): desktop Playwright re-check on the unchanged demo image; law store still not loaded, chat axe incomplete characterised, clipped helper line recorded, per-criterion proven or unproven table; no source change, no Azure resource created
+
+## [2026-11-18] add | Agentic workflow detection runs tracker assessment (Refs #1086)
+
+* Added [issue-1086-aw-detection-runs-2026-11-18.md](research/issue-1086-aw-detection-runs-2026-11-18.md): 108 of 113 tracker warnings come from concurrency-cancelled Rubric Scorer runs; no threat detected; no workflow change made.
+
+## [2026-11-18] add | Capstone pitch preparation third pass (Refs #435)
+
+* Added [capstone-pitch-435-live-r3-2026-11-18.md](research/capstone-pitch-435-live-r3-2026-11-18.md) with retained deck inspection and Azure read-only output: criteria 1 and 4 proven for the demo, criterion 2 not provable, criterion 3 tick not supported by the rehearsal notes; no source or deck change, no Azure resource created
+
+## [2026-11-18] add | Rubric failure 1397 live run-history proof (Refs #1397)
+
+* Added [rubric-1397-live-run-history-2026-11-18.md](research/rubric-1397-live-run-history-2026-11-18.md): artifacts of run 42838857558 show the selected payload was the empty-details placeholder and the complete card was refused at `Maximum allowed: 1`; successor run 42841391974 and PR 1398 show recovery. No workflow, source or paid rerun.
+
+## [2026-11-18] add | Assistant panel keyboard and announcement live proof (Refs #159)
+
+* Added [assistant-ux-live-159-2026-11-18.md](research/assistant-ux-live-159-2026-11-18.md): desktop Playwright keyboard-only run on the demo; keyboard operability and live-region announcements proven, screen-reader testing unproven; no source change, no Azure resource created, probe thread deleted
+
+## [2026-11-18] add | Hardened deployment audit rerun with retained evidence (Refs #118)
+
+* Added [issue-118-live-20261118T1512Z-2026-11-18.md](research/issue-118-live-20261118T1512Z-2026-11-18.md) and its evidence folder: policy and Defender decision proven as a recorded demo decision; live Defender tiers and repository policy assignments unproven (read access denied, assignments not deployed)
+
+## [2026-11-18] add | Issue 76 live second pass (Refs #76)
+
+* Added [issue-76-live-r2-2026-11-18.md](research/issue-76-live-r2-2026-11-18.md): masked screenshots of the hazard clock and named owner and of the queue definitions on the demo; hazard partly proven (clock Unknown), safeguarding unproven (no demo item); no source change, nothing created in Azure

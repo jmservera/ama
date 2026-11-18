@@ -1,0 +1,4 @@
+{
+  "env": "/subscriptions/<subscription>/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test-demo",
+  "rev": "ca-cutover-test-demo-api--0000031"
+}
