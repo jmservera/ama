@@ -31,3 +31,10 @@ Refs #220. Validation tier: FOCUSED (documentation and evidence only; no `src/` 
 
 1. Fix Entra principal versus roster comparison in `resident_decisions._operation` (FULL tier; redeploy needs owner approval).
 2. Rerun `run1.py` after redeploy; exercise `challenge_open` with an AI priority suggestion.
+
+## Re-verification (second live pass, 2026-11-18)
+
+* The base already contains the first live evidence note (merged as #1930), so this pass did not repeat the browser probes.
+* `ca-cutover-test-demo-api` still runs revision `ca-cutover-test-demo-api--0000031` with image digest `sha256:5368f4e4...e17e5fb`, last modified 2026-11-17T19:41:58Z, so the live behaviour recorded in the research note is unchanged.
+* `resident_decisions._operation` at this base still contains the `actor != _person(store, user.get("email"))` comparison, so the Entra staff-write defect is unfixed and no live success path can be exercised.
+* Result: every row of the per-criterion table above stands. The unticked criterion "No retaliation, inferred refusal or delayed hazard response" remains unproven live and must stay unticked. No source, Azure or credential change; nothing to delete.
