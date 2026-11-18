@@ -55,3 +55,18 @@ CI enforces `--read-only --cap-drop ALL --security-opt no-new-privileges` for th
 * The three-job and worker images (`-orchestrator`, `-importer`) were inspected by reference only; no job execution or exec probe was run on them.
 * Restart and audit-persistence behaviour were not re-run.
 * No Playwright proof applies: the criteria concern container hosting, not a web page.
+
+## Second run, 2026-11-18 (issue-144-live, rpi-144-live)
+
+Repeated read-only probes against resource group `ama`; no resource was created, changed or deleted, no load was generated, and no credentials were used.
+
+| Probe | Result | Reading |
+| --- | --- | --- |
+| `az containerapp job list -g ama` | 8 jobs, all on digest-pinned `crcutovertestrzsrg.azurecr.io` images (`-orchestrator`, `-importer`, `-api`, `-cutover-proof`) | Images are real and immutable by digest. |
+| `gh run list --workflow src-deploy.yml` | No runs | "Deployed through the pipeline" remains unproven. |
+| `az acr repository show-tags` | Refused: registry is private (`publicNetworkAccess` Disabled, Premium) | Digests cannot be matched to versioned tags from this host. The firewall was not changed. |
+| `az containerapp exec` into the demo API replica (revision `--0000031`) | `uid=10001(app)`, `CapEff` all zero, `NoNewPrivs: 0`, `/` mounted `overlay rw`, `/usr` write denied by permission, `/tmp` writable | Non-root is real. The root file system is writable, so read-only is not enforced. `NoNewPrivs: 0` shows the runtime privilege lock is not active. |
+| `ZF_CONTAINER_HARDENING` on the API, agents, resident-demo apps and the orchestrator and import jobs | Not set on any of them, and the demo API has no `EmptyDir` volumes | Adverse: the deployed revisions predate or lack the in-process hardening that main's Bicep and `infra/tests/test_container_hosting_144.py` describe, so that control is not live in the demo. |
+| `securityContext` in the deployed template | `null` | Platform-level rootfs and capability controls remain undeclarable. |
+
+Per-criterion status after this run: criterion 1 unproven (pipeline clause; images are real and digest-versioned), criterion 3 unproven (non-root only; read-only file system, capability drop and in-process hardening not live). Fixing criterion 3 means redeploying a revision built from current main, which is a deployment change outside the owner's demo authorisation for this task.
