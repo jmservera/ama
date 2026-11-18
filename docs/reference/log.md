@@ -13288,3 +13288,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 164 contact refusal gap (Refs #164)
 
 * Added [issue-164-contact-refusal-gap-2026-11-18.md](research/issue-164-contact-refusal-gap-2026-11-18.md): send-style resident-contact asks now refuse with the contact-log route; source and tests changed in `src/core`.
+
+## [2026-11-18] add | Employee chat helper line fix (Refs #215)
+
+* Added [issue-215-live-helper-line-fix-2026-11-18.md](research/issue-215-live-helper-line-fix-2026-11-18.md): clipped helper line reproduced and fixed in `src/api` chat widget with a regression test; per-criterion table; staff comprehension remains unproven
