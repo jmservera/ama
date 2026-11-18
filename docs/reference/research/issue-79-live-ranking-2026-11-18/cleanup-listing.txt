@@ -1,0 +1,6 @@
+# post-delete listing 2026-11-18T15:20:13Z
+jobs:
+containers:
+acr repos:
+0
+(end)
