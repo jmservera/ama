@@ -1,0 +1,36 @@
+{
+ "values": {
+  "None": "adjustment",
+  "Communication support": "adjustment",
+  "Interpreter": "adjustment",
+  "Large print": "adjustment"
+ },
+ "/api/continuity": {
+  "hits": 3,
+  "contexts": [
+   "\", \"reason\": \"Demo probe: negative test\", \"incident_owner\": \"Demo owner\", \"containment\": \"None; probe is refused\", \"communication\": {\"",
+   "\": false, \"trigger\": \"guardrail breach\", \"evidence\": \"SYN-221-PROBE\", \"resident_impact\": \"None\", \"remediation\": \"None\", \"restart_autho"
+  ]
+ },
+ "/api/data-protection": {
+  "hits": 7,
+  "contexts": [
+   "e files and demo SQL; entirely constructed\", \"special_category\": false, \"provider_copy\": \"None known; provider terms are unverified\", ",
+   "rage\": \"Entra ID claims, SQL actor columns\", \"special_category\": false, \"provider_copy\": \"None known; provider terms are unverified\", "
+  ]
+ },
+ "/api/resident/choice-queue.csv?limit=2": {
+  "hits": 2,
+  "contexts": [
+   ",Measure name withheld: current Not recorded; Measure name withheld: current Not recorded,None recorded,No commitment recorded,0,2,2,4",
+   ",Measure name withheld: current Not recorded; Measure name withheld: current Not recorded,None recorded,No commitment recorded,0,2,2,4"
+  ]
+ },
+ "/api/continuity/export": {
+  "hits": 367,
+  "contexts": [
+   "\", \"reason\": \"Demo probe: negative test\", \"incident_owner\": \"Demo owner\", \"containment\": \"None; probe is refused\", \"communication\": {\"",
+   "\": false, \"trigger\": \"guardrail breach\", \"evidence\": \"SYN-221-PROBE\", \"resident_impact\": \"None\", \"remediation\": \"None\", \"restart_autho"
+  ]
+ }
+}

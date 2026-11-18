@@ -13183,3 +13183,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 129 live third pass (Refs #129)
 
 * Added [issue-129-live-r3-2026-11-18.md](research/issue-129-live-r3-2026-11-18.md): 26 core and 6 api bundle tests pass, report CLI refusal check, signed-in probe of revision 0000032 finds no bundle route; Atlas-owner mapping confirmation stays unproven. Docs only.
+
+## [2026-11-18] add | Issue 116 live round 3 (Refs #116)
+
+* Added [issue-116-live-r3-evidence-2026-11-18.md](research/issue-116-live-r3-evidence-2026-11-18.md): read-only sweep of 88 GET paths as the one reason role finds no reason value; 52 core and 57 api offline tests pass; second role still unobtainable; no box ticked. No source change.
