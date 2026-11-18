@@ -13160,6 +13160,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-1830-live-20261118T1648Z-2026-11-18.md](research/issue-1830-live-20261118T1648Z-2026-11-18.md): timing reports from seven retained full receipts, 54 candidate tests passing on unmerged branch `ci/gate-preflight-benchmark-1830`; no criterion ticked. No source change.
 
+## [2026-11-18] add | Issue 128 live run 3 (Refs #128)
+
+* Added [issue-128-live3-equity-evidence-2026-11-18.md](research/issue-128-live3-equity-evidence-2026-11-18.md) and its evidence folder: protocol agreement still unproven (needs named humans), aggregate-only proven at source level (26 core tests), resident page confirmed loaded with manual-route wording, desktop axe clean on four live pages. No source change, no criterion ticked.
+
 ## [2026-11-18] add | Issue 164 live audit, pass 4 (Refs #164)
 
 * Added [issue-164-live-20261118T1707Z-2026-11-18.md](research/issue-164-live-20261118T1707Z-2026-11-18.md): registry still disabled with proposed thresholds and unknown individual, seven live asks rules-only with zero model calls, 54 offline tests pass; no criterion ticked. No source change.
