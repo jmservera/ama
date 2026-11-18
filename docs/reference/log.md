@@ -12710,6 +12710,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-125-live-discovery-assistant-evidence-2026-11-18.md](research/issue-125-live-discovery-assistant-evidence-2026-11-18.md): the assistant is not exposed on the live demo API and its boundary denies writes; all three criteria stay unticked (readiness and comparison unprovable for the demo, no-write shown only at demo scope).
 
+## [2026-11-18] update | Direct ingress live re-run (Refs #360)
+
+* Appended a second live measurement to [direct-ingress-live-demo-2026-11-18.md](research/direct-ingress-live-demo-2026-11-18.md): configuration, anonymous denial and staff sign-in reconfirmed; the resident credential is not an Entra identity, so second-role denial stays unproven; c and e stay unproven, d stays partly proven.
+
 ## [2026-11-18] add | Alert and home chat populated-state proof (Refs #215)
 
 * Added [issue-215-live-populated-states-evidence-2026-11-18.md](research/issue-215-live-populated-states-evidence-2026-11-18.md): the deployed client JS rendered against mocked alert and chat responses because the live law store is not loaded; no colour-only status, keyboard, plain-language show and hide, no-source and doubt route results, with per-criterion status. WCAG as a whole and staff comprehension stay unproven and unticked.
@@ -12733,3 +12737,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Per-year ledger verification test evidence (Refs #114)
 
 * Added [issue-114-per-year-ledger-verification-evidence-2026-11-18.md](research/ledger-verification/issue-114-per-year-ledger-verification-evidence-2026-11-18.md) and the retained raw unit-test run: criterion C1 proven by test on the local implementation; the deployed image still lacks the reliance check (owner image roll). No source changed.
+## [2026-11-18] add | Post-cleanup references and live health evidence (Refs #203)
+
+* Added [issue-203-live-references-evidence-2026-11-18.md](research/issue-203-live-references-evidence-2026-11-18.md): the legacy-reference checker fails with 11 violations in three regression-test files (documents clean); the demo revision is healthy and pull-request CI is green, but build provenance and main-branch CI stay unproven. No source changed.
