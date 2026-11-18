@@ -1,0 +1,74 @@
+{
+  "task_id": "issue-126-rai-prd-separation",
+  "task_slug": "governance-126-rai-prd-separation",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/governance-126-rai-prd-separation-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/governance-126-rai-prd-separation-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/governance-126-rai-prd-separation-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/governance-126-rai-prd-separation-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/governance-126-rai-prd-separation-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/governance-126-rai-prd-separation-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Confirmed automatic RPI session for Issue #126 RAI closure and PRD separation slice on branch feat/governance-126-rai-prd-separation targeting feat/demo-164-chat-grounding-provenance-0900 (PR #1641)",
+      "status": "confirmed",
+      "evidence": "Caller prompt explicitly requested full RPI loop in order (research, plan, implement, review) under .copilot-tracking/.../2026-11-15/ with focused validation tier and frozen local commit without push."
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready (convergence mode)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/governance-126-rai-prd-separation-research.md (C1-C12, W1)"
+    },
+    {
+      "decision": "Plan critique execution: executed once on final candidate",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/governance-126-rai-prd-separation-plan-critique.md"
+    },
+    {
+      "decision": "Plan critique verdict: Revise; direct planner dispositions applied for PC-001, PC-002, PC-003, and PC-004; finalized without repeating critique",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-15/governance-126-rai-prd-separation-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Review execution: Complete",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/governance-126-rai-prd-separation-review.md#execution-status"
+    },
+    {
+      "decision": "Review outcome: Conformant. Assessed boundary: full P01-P03 implementation across src/core/src/zava_forward/core/governance.py, src/core/tests/test_governance.py, src/core/README.md, docs/case_study_48_addendum.md, docs/prds/zava-forward-retrofit-programme-demonstrator.md, docs/adrs/0002-pilot-readiness-architecture.md, docs/reference/README.md, and docs/reference/log.md against Contracts 1-3, FR-1..FR-3, NFR-1..NFR-2, AC-1..AC-5, and PC-001..PC-004. Zero blocking defects; optional low-severity hardening observations RV-001 and RV-002 and external human/legal Issue #126 prerequisites routed as follow-ups.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/governance-126-rai-prd-separation-review.md#outcome"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection among ranked follow-up choices (1..3), Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Scope positive current-contract token checks in GovernanceDocumentationContractTests to each document's #126 subsection and clarify detached server-computed snapshot wording (RV-001, RV-002)",
+      "rationale": "Highest ease of implementation (small localized test-helper and doc wording refinement in src/core) with clean engineering-quality leverage by tightening subsection specificity and Python dict terminology without changing runtime contracts.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/governance-126-rai-prd-separation-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Fresh independent prd-quality-reviewer pass and human Product Owner sign-off on consolidated PRD v0.21.0 (OD-35 to OD-55)",
+      "rationale": "High governance value to close unsigned PRD v0.21.0 review status after open decisions settle, ranked second because it depends on human Product Owner sign-off outside code.",
+      "evidence": "docs/prds/zava-forward-retrofit-programme-demonstrator.md; docs/case_study_48_addendum.md"
+    },
+    {
+      "rank": 3,
+      "task": "Qualified human, DPO/legal, and safety Responsible AI acceptance, EU AI Act applicability determination, and OD-36 DPIA / lawful-basis sign-off before live pilot release (#126)",
+      "rationale": "Required before unblocking live pilot capture or affected dispatch on Issue #126, ranked third on ease because it requires external legal/DPO, safety, and budget-owner sign-offs.",
+      "evidence": "src/core/src/zava_forward/core/governance.py; docs/case_study_48_addendum.md"
+    }
+  ]
+}

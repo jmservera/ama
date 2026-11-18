@@ -386,6 +386,18 @@ safety/consent/finance/continuity controls remain independent. See the
 for local JSON/SQLite/disposable SQL and hardened-image evidence; none establishes
 the separate real AI/Azure, human, legal/privacy or operational gates.
 
+On 2026-11-15, `governance_view` and `_rai_view` add explicit read-only fields
+enforcing that `prd_quality_review` and `prd_owner_acceptance` remain separate
+from `baseline.acceptance_scope` (`baseline-assessment-and-remediation-planning
+only`) and from `dispositions_complete`, ignoring stored-register overrides and
+rejecting extra claim fields. `_rai_view` also exposes `affected_dispatch`
+(`DISABLED until appropriate evidence and qualified approvals exist`),
+`conditional_eu_assurance` (`Applies only after qualified applicability
+review`), and per-finding `conditional_eu` / `applicability_review` guards so
+`EU-COND-01`, `EU-COND-02` and `EU-COND-04` stay `NOT_ASSESSED`, `UNCHANGED`,
+`Open` and `Unknown` alongside the eleven `PARTIAL` (`DOWNGRADED` / `CONFIRMED`)
+and eight other `NOT_ASSESSED` checks until qualified human applicability review.
+
 ### 1. Durable store: Azure SQL or PostgreSQL
 
 Proposal: Azure SQL Database behind the `Store` interface, not PostgreSQL.

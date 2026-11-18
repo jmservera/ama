@@ -840,8 +840,20 @@ function workSummary(work) {
     h("p", { class: "next-action" }, `Next action: ${work.next_action}`),
     h("p", { class: "muted" }, `Source: ${work.source}; evidence: ${work.evidence}; version: ${work.version}; recorded: ${work.recorded_at}; recorded as of: ${work.as_of}.`),
     work.handoff && h("p", {}, `Destination: ${work.handoff.destination}; proposed receiver: ${work.handoff.proposed_receiver}; confirmed receiver: ${work.handoff.confirmed_receiver}; chase owner: ${work.handoff.chase_owner}; resident-update owner: ${work.handoff.resident_update_owner}.`),
-    (work.hazard_clocks || []).map((clock) => h("p", { class: "safety-clock" },
-      `${clock.clock_text || "Safety clock: elapsed time and target window not supplied."} Accountable owner: ${clock.accountable_owner || "Building Safety lead (escalation owner)"}. Safety clock in this recorded view: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; awareness: ${clock.aware_at}; named follow-up owner: ${clock.owner}; service response due: ${clock.response_due_at}; resident update due: ${clock.resident_update_due_at}. ${clock.authority} owns timing. ${clock.owner_status} Service response: ${clock.response_state}; resident update: ${clock.resident_update_state}.`)),
+    (work.hazard_clocks || []).map((clock) => {
+      const clockSummary = clock.clock_label
+        ? ` Clock: ${clock.clock_label} (${clock.clock_status === "fail_closed_missing_timestamp"
+          ? "fail-closed: timestamp not recorded"
+          : clock.clock_status === "completed"
+            ? `completed${clock.clock_deadline_utc ? `, target ${clock.clock_deadline_utc}` : ""}`
+            : `${clock.clock_status}, ${clock.clock_remaining_hours}h remaining, due ${clock.clock_deadline_utc}`}).`
+        : "";
+      const ownerSummary = clock.named_owner
+        ? ` Accountable owner: ${clock.named_owner} (${clock.owner_role || "Building Safety Liaison"}, ID ${clock.owner_id || "recorded"})${clock.unassigned ? ` [Unassigned item; escalation owner: ${clock.escalation_owner || clock.named_owner}]` : ""}.`
+        : "";
+      return h("p", { class: "safety-clock" },
+        `${clock.clock_text || "Safety clock: elapsed time and target window not supplied."} Accountable owner: ${clock.accountable_owner || "Building Safety lead (escalation owner)"}. Safety clock in this recorded view: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; awareness: ${clock.aware_at}; named follow-up owner: ${clock.owner}; service response due: ${clock.response_due_at}; resident update due: ${clock.resident_update_due_at}. ${clock.authority} owns timing. ${clock.owner_status} Service response: ${clock.response_state}; resident update: ${clock.resident_update_state}.${clockSummary}${ownerSummary}`);
+    }),
     (work.safeguarding_clocks || []).map((clock) => h("p", { class: "safeguarding-clock" },
       `Safeguarding clock in this recorded view: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; referred: ${clock.referred_at}; named accountable owner: ${clock.owner} (${clock.owner_role}); response due: ${clock.response_due_at}. ${clock.authority} owns timing. ${clock.owner_status} Response: ${clock.response_state}.`)));
 }
@@ -1056,7 +1068,12 @@ async function caseView(id) {
   session.controller?.dispose();
   const assistantPanel = assistantCasePanel(id, session);
   const r = c.resident, hm = c.home;
-  const openHaz = c.hazards.filter((x) => !x.released);
+  const openHaz = [
+    ...(c.hazards || []),
+    ...(c.safeguarding_items || []).filter(
+      (s) => !(c.hazards || []).some((x) => x.standalone_safeguarding && x.id === s.id)
+    )
+  ].filter((x) => !x.released);
   const msg = h("div", { role: "status" });
   const refresh = async (fn, submitted = []) => {
     const sent = snapshotCaseFields(submitted);
@@ -1672,7 +1689,104 @@ function safetyPanel(c, id, refresh) {
     const found = x[`${prefix}_identity`] || ((x.history || []).find((e) => e.action === action) || {}).actor || {};
     return { ...found, email: "email" in found ? found.email : x[`${prefix}_by_email`], name: "name" in found ? found.name : x[`${prefix}_by`] };
   };
-  const items = c.hazards.map((x, i) => {
+  const cleanPersonName = (val) => {
+    if (!val) return null;
+    const raw = typeof val === "object" ? val.name : val;
+    if (typeof raw !== "string") return null;
+    const trimmed = raw.trim();
+    if (!trimmed || ["unknown", "anonymous", "unassigned", "none", "tbd", "to be named", "not assigned"].includes(trimmed.toLowerCase())) return null;
+    return trimmed;
+  };
+  const resolvePerson = (cand, fallbackRole, prefix) => {
+    const name = cleanPersonName(cand);
+    if (!name) return null;
+    const match = (me.staff || []).find((s) => lower(s.name) === lower(name) || (cand && typeof cand === "object" && ((cand.code && s.code === cand.code) || (cand.email && lower(s.email) === lower(cand.email)))));
+    const role = (cand && typeof cand === "object" && cleanPersonName(cand.role)) || (match && match.role) || fallbackRole;
+    const personId = (cand && typeof cand === "object" && (cand.code || cand.id || cand.oid || cand.email)) || (match && (match.code || match.oid || match.email)) || `${prefix}:${name.toUpperCase().replace(/\s+/g, "-")}`;
+    return { name, role, id: personId };
+  };
+  const describeClockAndOwner = (x, defaultKind = "hazard") => {
+    const isSg = defaultKind === "safeguarding" || lower(x.item_kind || x.kind) === "safeguarding" || lower(x.category).startsWith("safeguard");
+    const defaultRole = (x.hold && x.hold.accountable_role) || liaison;
+    let clockLabel = x.clock_label;
+    let clockStatus = x.clock_status;
+    let clockRemaining = x.clock_remaining_hours;
+    let clockDeadline = x.clock_deadline_utc;
+    if (!clockLabel || !clockStatus) {
+      const pri = lower(x.priority);
+      const hours = isSg
+        ? (["emergency", "immediate", "urgent", "p1"].includes(pri) ? 24 : 48)
+        : (["emergency", "p1"].includes(pri) ? 24 : (pri === "routine" || (pri === "significant" && Boolean(x.accepted_at)) ? 336 : 168));
+      clockLabel = isSg
+        ? (hours === 24 ? "Safeguarding 24h emergency response clock" : "Safeguarding 48h referral response clock")
+        : (hours === 24 ? "Awaab's Law 24h emergency action clock (recorded reference)"
+          : hours === 336 ? "Operational 14d work-start clock (recorded reference)"
+            : "Operational 7d hazard investigation clock (recorded reference)");
+      const parseUtc = (v) => {
+        if (typeof v !== "string" || !v.trim()) return null;
+        const raw = v.trim().length === 10 ? `${v.trim()}T00:00:00Z` : (/[zZ]|[+-]\d\d:\d\d$/.test(v.trim()) ? v.trim() : "");
+        if (!raw) return null;
+        const ms = Date.parse(raw);
+        return Number.isNaN(ms) ? null : ms;
+      };
+      const doneMs = parseUtc(x.responded_at || x.completed_at);
+      const dueMs = parseUtc(x.response_due_at || x.due_at);
+      const awareMs = parseUtc(x.aware_at || x.raised_at || x.reported_at);
+      const targetMs = dueMs !== null ? dueMs : (awareMs !== null ? awareMs + hours * 3600 * 1000 : null);
+      const nowMs = (c.work && parseUtc(c.work.as_of)) || Date.now();
+      if (doneMs !== null && doneMs <= nowMs) {
+        clockStatus = "completed";
+        clockDeadline = targetMs !== null ? new Date(targetMs).toISOString().replace(".000Z", "Z") : null;
+        clockRemaining = targetMs !== null ? 0 : null;
+      } else if (targetMs === null) {
+        clockStatus = "fail_closed_missing_timestamp";
+        clockDeadline = null;
+        clockRemaining = null;
+      } else {
+        clockDeadline = new Date(targetMs).toISOString().replace(".000Z", "Z");
+        clockRemaining = Math.round(((targetMs - nowMs) / 3600000) * 10) / 10;
+        clockStatus = targetMs < nowMs ? "overdue" : "running";
+      }
+    }
+    let namedOwner = cleanPersonName(x.named_owner || x.accountable_owner);
+    let ownerRole = x.owner_role;
+    let ownerId = x.owner_id;
+    let unassigned = typeof x.unassigned === "boolean" ? x.unassigned : null;
+    let escalationOwner = cleanPersonName(x.escalation_owner);
+    if (!namedOwner || unassigned === null || !escalationOwner) {
+      const directCands = [
+        x.accepted_by,
+        ...(x.accepted_at ? [x.destination] : []),
+        x.sender,
+        x.follow_up,
+        x.owner
+      ];
+      let direct = null;
+      for (const cand of directCands) {
+        direct = resolvePerson(cand, defaultRole, "OWNER");
+        if (direct) break;
+      }
+      const esc = (!x.accepted_at && resolvePerson(x.destination, defaultRole, "ESC"))
+        || resolvePerson(c.owner ? { name: c.owner, code: c.owner_code, role: c.owner_role } : null, "Resident Liaison Officer", "CASE-OWNER")
+        || (safeStaff[0] && resolvePerson(safeStaff[0], safeStaff[0].role, "ESC"))
+        || { name: isSg ? "Safeguarding duty lead" : "Building Safety Liaison duty lead", role: liaison, id: isSg ? "ESC-SG-DUTY" : "ESC-BSL-DUTY" };
+      unassigned = !direct;
+      const chosen = direct || esc;
+      namedOwner = chosen.name;
+      ownerRole = ownerRole || chosen.role;
+      ownerId = ownerId || chosen.id;
+      escalationOwner = escalationOwner || esc.name;
+    }
+    const clockText = clockStatus === "fail_closed_missing_timestamp"
+      ? `${clockLabel}: fail-closed (timestamp not recorded)`
+      : clockStatus === "completed"
+        ? `${clockLabel}: completed${clockDeadline ? ` (target ${clockDeadline})` : ""}`
+        : `${clockLabel}: ${clockStatus}, ${clockRemaining}h remaining (due ${clockDeadline})`;
+    const ownerText = `Accountable owner: ${namedOwner} (${ownerRole || defaultRole}, ID ${ownerId || "recorded"})${unassigned ? ` — Unassigned item; escalation owner: ${escalationOwner}` : ""}`;
+    return h("p", { class: "safety-clock-owner" }, `Clock: ${clockText}. ${ownerText}.`);
+  };
+  const hazardRows = (c.hazards || []).filter((x) => !x.standalone_safeguarding);
+  const items = hazardRows.map((x, i) => {
     const p = `hz-${i}`;
     const caseRef = x.job || "reference not recorded";
     const referred = Boolean(x.referral_version);
@@ -1780,6 +1894,7 @@ function safetyPanel(c, id, refresh) {
     return h("li", { class: "safety-item" },
       h("h3", {}, `Reported safety concern: ${x.category} (${x.priority || "urgency not recorded"})`),
       h("div", { class: `status-line ${statusClass}` }, status),
+      describeClockAndOwner(x, "hazard"),
       h("dl", { class: "safety-facts" },
         h("dt", {}, "External case"), h("dd", {}, x.job || "Not recorded yet"),
         h("dt", {}, "Zava coordinator"), h("dd", {}, coordinator || "Not assigned yet"),
@@ -1805,6 +1920,20 @@ function safetyPanel(c, id, refresh) {
           h("li", {}, `Repair evidence: ${x.repair_evidence || "Not recorded"}`),
           Object.entries(timingLabels).map(([key, [label]]) => h("li", {}, `${label}: ${x[key] || "Unknown (external service owns timing)"}`))))
     );
+  });
+  const sgRows = (c.safeguarding_items && c.safeguarding_items.length)
+    ? c.safeguarding_items
+    : (c.hazards || []).filter((x) => x.standalone_safeguarding);
+  const sgItems = sgRows.map((x) => {
+    const sgStatusClass = x.released ? "ok" : "danger";
+    const sgStatus = x.released
+      ? `Safeguarding restriction lifted on home ${id}.`
+      : `Retrofit work stopped on home ${id} for safeguarding review (${x.state || "Active"}).`;
+    return h("li", { class: "safeguarding-item" },
+      h("h3", {}, `Recorded safeguarding concern: ${x.category || "Safeguarding"} (${x.priority || "Significant"})`),
+      h("div", { class: `status-line ${sgStatusClass}` }, sgStatus),
+      describeClockAndOwner(x, "safeguarding"),
+      h("p", { class: "muted" }, `${x.service_authority || "Designated safeguarding lead and statutory safeguarding route"} owns statutory safeguarding triage and response.`));
   });
   const cat = h("select", { id: "hz-cat", "aria-describedby": "hz-cat-hint" }, HAZ_CATEGORIES.map((x) => h("option", {}, x)));
   const pri = h("select", { id: "hz-pri", "aria-describedby": "hz-pri-hint" }, HAZ_PRIORITIES.map((x) => h("option", {}, x)));
@@ -1837,7 +1966,10 @@ function safetyPanel(c, id, refresh) {
     h("p", {}, h("button", { type: "submit", class: "alt" }, "Record safety observation and stop retrofit work"))));
   return h("section", { class: "card" }, h("h2", {}, "Safety referrals and stopped retrofit work"),
     h("p", { class: "muted" }, "The existing hazard and repairs service owns categorisation, clocks, resident updates and closure. These are unverified reports and human-recorded external evidence, not service commands or verified transport. No message is sent here. Use the existing hazard service immediately for urgent concerns; AI and stopped retrofit work must not delay it."),
-    items.length ? h("ul", { class: "list" }, items) : h("p", {}, "No safety issues recorded."),
+    items.length || sgItems.length ? [
+      items.length > 0 && h("ul", { class: "list" }, items),
+      sgItems.length > 0 && h("ul", { class: "list safeguarding-items" }, sgItems)
+    ] : h("p", {}, "No safety issues recorded."),
     h("div", {}, h("h3", {}, "Raise a safety observation (also available after retrofit closure)"),
       h("p", { id: "hz-raise-intro", class: "muted" }, "Use this form whenever a resident, surveyor, contractor or colleague reports or spots a potential hazard at this home, even after retrofit works are closed. Saving this form immediately stops retrofit work on this home until repair and safety clearance are evidenced. For urgent concerns, contact the hazard and repairs service immediately by phone or portal first, because this form does not send an alert or create a repairs job."),
       raise));

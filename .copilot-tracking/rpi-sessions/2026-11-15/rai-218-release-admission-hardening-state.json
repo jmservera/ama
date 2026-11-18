@@ -1,0 +1,55 @@
+{
+  "task_id": "issue-218-rai-release-admission-hardening",
+  "task_slug": "rai-218-release-admission-hardening",
+  "parent_task": {
+    "task_id": "issue-218-rai-release-discipline",
+    "task_slug": "rai-218-release-discipline"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/rai-218-release-admission-hardening-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/rai-218-release-admission-hardening-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/rai-218-release-admission-hardening-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-11-15/rai-218-release-admission-hardening-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/rai-218-release-admission-hardening-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/rai-218-release-admission-hardening-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Autonomously selected ranked follow-up #1 from parent task issue-218-rai-release-discipline in non-interactive automatic session to close RV-001 and RV-002 before freezing branch HEAD.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/rai-218-release-discipline-review.md (RV-001, RV-002)"
+    },
+    {
+      "decision": "Child Research disposition executed; Planning Readiness Ready. Converged on partial-key + bool-expiry hardening in rai_release.missing_binding, unconditional setdefault OQ-017 enforcement on SQL rows in assistant_release.assessment(..., live=True), and read-only runtime/legacy binding assessment in rai_control_plane._inspect_sql_live_releases.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/rai-218-release-admission-hardening-research.md (C1..C9)"
+    },
+    {
+      "decision": "Child single final-candidate critique executed (verdict: Revise); applied direct planner dispositions PC-001 (_assistants/_ai_registry Any aliases, safe legacy route/deployment lookup, elif LEGACY fail-closed guard, DB-clock fallback) and PC-002 (all_resolved key and positive-then-drifted /api/ai/report regression test). Plan finalized as Ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-15/rai-218-release-admission-hardening-plan-critique.md; .copilot-tracking/plans/2026-11-15/rai-218-release-admission-hardening-plan.md"
+    },
+    {
+      "decision": "Child single post-implementation Review executed (execution: Complete; outcome: Conformant; assessed boundary: P01..P02 closing RV-001 and RV-002 with zero open findings).",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/rai-218-release-admission-hardening-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await coordinator/user post-Review follow-up selection, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Record live owner appointments and determinations for OQ-017, OQ-018, and OQ-019 once named Zava North Homes office-holders, representative non-synthetic cohort manifests, and Legal/DPO Article 22 sign-off are supplied",
+      "rationale": "Clears the remaining owner-deferred real-AI delivery gate items that are intentionally held fail-closed outside offline demonstrator acceptance.",
+      "evidence": "src/core/src/zava_forward/core/rai_control_plane.py (REQUIREMENT_TRACEABILITY, exercise_acceptance_report)"
+    }
+  ]
+}

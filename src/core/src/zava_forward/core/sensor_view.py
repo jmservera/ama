@@ -10,11 +10,14 @@ digest. Values are withheld unless the sensors' recorded monitoring consent is g
 
 import hashlib
 import json
+import math
 from collections.abc import Iterable, Mapping, Sequence
 from datetime import UTC, datetime, timedelta
+from math import isfinite
 from typing import Any, Protocol
 
 VERSION = "retained-reading-view-v2"
+ANALYSIS_VERSION = "sensor-view-analysis-exercise-v1"
 KIND = "synthetic-retained-readings"
 UNITS = dict(temperature_c="degC", humidity_pct="%RH")
 WINDOW_MAX = 12
@@ -24,6 +27,12 @@ CONTROL_MAX = 100
 WINDOW_DAYS = 366
 CONTEXT_DAYS = 30
 FRESH_SECONDS = 900
+TREND_DAYS = 7
+TREND_SIDE_MAX = 12
+TREND_MIN_SIDE = 3
+TREND_MIN_SPAN_SECONDS = 86400
+TREND_STEADY = dict(temperature_c=0.5, humidity_pct=2.0)
+TREND_LABELS = dict(temperature_c="Temperature", humidity_pct="Moisture (relative humidity)")
 STAMP = "%Y-%m-%dT%H:%M:%SZ"
 COLUMNS = (
     "reading_id",
@@ -34,6 +43,7 @@ COLUMNS = (
     "scenario",
     "schema_version",
 )
+NOT_RETAINED = ("dew_point_c", "mould_risk_index")
 STATES = ("ok", "no-readings", "consent-withheld", "unavailable")
 MANUAL = "Use the ordinary quality check; no one is waiting on sensor values."
 CALIBRATION = "Not calibrated. These values are not a verified indoor measurement."
@@ -56,6 +66,19 @@ AS_OF_RULE = (
     f"within {CONTEXT_DAYS} days of the quality evidence record time and never after this "
     f"request, so they may be older than {WINDOW_DAYS} days. Later-dated readings are "
     "excluded and are never treated as recent. Current freshness is not asserted by this evidence."
+)
+PLAUSIBLE_HUMIDITY_PCT = (0.0, 100.0)
+PLAUSIBLE_TEMPERATURE_C = (-40.0, 60.0)
+WATCH_HUMIDITY_PCT = 75.0
+WATCH_TEMPERATURE_C = 16.0
+WATCH_LABEL = "Sensor watch"
+WATCH_FRAMING = (
+    "Sensor watch - inspection required before changing case status. "
+    "Advisory only: sensor readings never approve or change a case or hazard."
+)
+WATCH_THRESHOLDS = (
+    "EXERCISE VALUE, not a sourced standard: humidity at or above 75 %RH or "
+    "temperature at or below 16 degC."
 )
 ANCHOR_NAME = "quality_record_anchor"
 ANCHOR_MEANING = (
@@ -245,10 +268,14 @@ def _select(
     newest: bool,
     lower: datetime | None = None,
     upper: datetime | None = None,
+    sensor_id: str | None = None,
 ) -> list[dict[str, Any]]:
     """At most `limit` retained synthetic readings for one home, bounded by count and time."""
     where: list[str] = ["home_id=?", "source_type='SYNTHETIC'"]
     args: list[object] = [home_id]
+    if sensor_id is not None:
+        where.append("sensor_id=?")
+        args.append(sensor_id)
     if lower is not None:
         where.append("observed_at>=?")
         args.append(_bound(lower, mssql))
@@ -268,6 +295,81 @@ def _select(
 def key_of(reading: Mapping[str, Any]) -> str:
     """Citation key over the retained composite key (sensor_id, reading_id)."""
     return f"sensor:{reading['sensor_id']}:{reading['reading_id']}"
+
+
+def reading_text(reading: Mapping[str, Any]) -> str:
+    """The exact retained values of one reading, led by its `[sensor:...]` citation."""
+    return (
+        f"[{key_of(reading)}] temperature_c {reading['temperature_c']} {UNITS['temperature_c']}, "
+        f"humidity_pct {reading['humidity_pct']} {UNITS['humidity_pct']} (relative humidity), "
+        f"observed {reading['observed_at']}."
+    )
+
+
+def grounding(sensors: Mapping[str, Any] | None) -> dict[str, Any]:
+    """Decision-rule text for the latest retained reading, naming what is not retained."""
+    clashes = list((sensors or {}).get("conflicting_readings") or [])
+    latest = (sensors or {}).get("latest")
+    out: dict[str, Any] = dict(
+        origin="decision_rule",
+        not_retained=list(NOT_RETAINED),
+        not_retained_text=(
+            "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained "
+            "for this home and are not shown or estimated."
+        ),
+    )
+    if clashes:
+        conflicting_citations = [
+            str(key) for clash in clashes for key in (clash.get("citation_keys") or [])
+        ]
+        joined = ", ".join(conflicting_citations)
+        return dict(
+            out,
+            citation=None,
+            values=None,
+            conflicting_citations=conflicting_citations,
+            text=(
+                "Retained readings disagree for the same sensor and time"
+                + (f" ({joined})" if joined else "")
+                + ". Do not pick one; use the ordinary quality check."
+            ),
+        )
+    if not latest:
+        return dict(out, citation=None, values=None, text="No retained reading is available.")
+    prov_class = str(latest.get("provenance_class") or "synthetic-unclassified")
+    prov_map = (sensors or {}).get("provenance") or {}
+    source_text = str(
+        prov_map.get(prov_class) or CLASSES.get(prov_class, CLASSES["synthetic-unclassified"])
+    )
+    return dict(
+        out,
+        citation=key_of(latest),
+        provenance_class=prov_class,
+        source_text=source_text,
+        values=dict(
+            temperature_c=latest["temperature_c"],
+            humidity_pct=latest["humidity_pct"],
+            observed_at=latest["observed_at"],
+        ),
+        text=reading_text(latest),
+    )
+
+
+def conflicts(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """Retained readings sharing a sensor and observation time but disagreeing on values."""
+    groups: dict[tuple[object, object], dict[tuple[object, object], Mapping[str, Any]]] = {}
+    for r in rows:
+        group = groups.setdefault((r["sensor_id"], r["observed_at"]), {})
+        group[(r["temperature_c"], r["humidity_pct"])] = r
+    return [
+        dict(
+            sensor_id=sensor_id,
+            observed_at=observed_at,
+            citation_keys=sorted(key_of(r) for r in group.values()),
+        )
+        for (sensor_id, observed_at), group in sorted(groups.items(), key=str)
+        if len(group) > 1
+    ]
 
 
 def citations(source: Mapping[str, Any]) -> dict[str, Any]:
@@ -384,6 +486,13 @@ def capture_source(
     rows = window + before + after
     out["provenance"] = {c: CLASSES[c] for c in _classes(rows)}
     out["citation_keys"] = sorted(citations(out))
+    clashes = conflicts(rows)
+    if clashes:
+        out["conflicting_readings"] = clashes
+        out["conflict_notice"] = (
+            "Retained readings disagree for the same sensor and time. Do not pick one; "
+            "route to a person."
+        )
     return {k: v for k, v in out.items() if v is not None or k == "latest"}
 
 
@@ -407,21 +516,178 @@ def signature(sensors: Mapping[str, Any] | None) -> dict[str, Any]:
     )
 
 
+def _canonical(value: object) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=str)
+
+
+def rows_digest(rows: Iterable[Mapping[str, Any]]) -> str:
+    """Digest of readings keyed (sensor_id, reading_id); row order and repeats never matter."""
+    keyed = {(str(r["sensor_id"]), str(r["reading_id"])): r for r in rows}
+    body = [_canonical(keyed[k]) for k in sorted(keyed)]
+    return hashlib.sha256(_canonical(body).encode("ascii")).hexdigest()
+
+
+def reproducibility(out: Mapping[str, Any]) -> dict[str, Any]:
+    """Versioned canonical digests of the retained inputs and the derived outputs for one `as_of`.
+
+    The same retained readings and `as_of` always give the same digests, whatever order the rows
+    were stored or read in. Exercise values only; not a calibrated or operational rule.
+    """
+    rows = [r for key in ("readings", "before", "after") for r in out.get(key, [])]
+    trend = out.get("trend") or {}
+    inputs = _canonical(
+        [out.get("home_id"), out.get("state"), rows_digest(rows), trend.get("input_digest")]
+    )
+    ordered = {
+        k: sorted(out[k], key=lambda r: (r["observed_at"], r["sensor_id"], r["reading_id"]))
+        for k in ("readings", "before", "after")
+        if k in out
+    }
+    return dict(
+        analysis_version=ANALYSIS_VERSION,
+        as_of=out.get("generated_at"),
+        input_digest=hashlib.sha256(inputs.encode("ascii")).hexdigest(),
+        output_digest=hashlib.sha256(_canonical(dict(out, **ordered)).encode("ascii")).hexdigest(),
+        reading_count=len({(r["sensor_id"], r["reading_id"]) for r in rows}),
+    )
+
+
+def _number(value: object) -> float | None:
+    try:
+        number = float(str(value))
+    except ValueError:
+        return None
+    return number if math.isfinite(number) else None
+
+
+def _trend_base(reason: str | None) -> dict[str, Any]:
+    insufficient = {
+        key: dict(
+            direction="insufficient",
+            text=f"{label}: not enough retained readings to show a 7-day direction.",
+        )
+        for key, label in TREND_LABELS.items()
+    }
+    return dict(
+        version=VERSION,
+        window_days=TREND_DAYS,
+        advisory_only=True,
+        provenance=dict(
+            advisory_only=True,
+            affects_stage_gates=False,
+            basis="Deterministic comparison of earlier and later retained synthetic readings.",
+            calibrated=False,
+            note="Directionality only. It is not a verified indoor measurement, a hazard "
+            "decision or quality acceptance.",
+        ),
+        steady_within=dict(TREND_STEADY),
+        sensor_id=None,
+        readings_used=0,
+        reason=reason,
+        variables=insufficient,
+        summary="Insufficient readings for a 7-day trend. " + MANUAL,
+    )
+
+
+def trend_summary(
+    db: Connection, home_id: str, sensor_id: str | None, now: float, mssql: bool = False
+) -> dict[str, Any]:
+    """Advisory 7-day direction for one sensor from at most 2 x TREND_SIDE_MAX retained readings.
+
+    Compares the mean of the earlier half with the later half. Read only; it never enters the
+    captured source, its digest or any stage gate.
+    """
+    if not sensor_id:
+        return _trend_base("No retained readings for this home.")
+    try:
+        as_of = _utc(int(now)).replace(microsecond=0)
+        edge = as_of + timedelta(seconds=1)
+        lower = as_of - timedelta(days=TREND_DAYS)
+        rows = {
+            (r["sensor_id"], r["reading_id"]): r
+            for newest in (False, True)
+            for r in _select(db, mssql, home_id, TREND_SIDE_MAX, newest, lower, edge, sensor_id)
+        }
+    except Exception:
+        return _trend_base("Retained readings could not be read for the trend.")
+    ordered = sorted(rows.values(), key=lambda r: (r["observed_at"], r["reading_id"]))
+    if conflicts(ordered):
+        clashed = _trend_base("Retained readings disagree for the same sensor and time.")
+        clashed.update(
+            sensor_id=sensor_id, readings_used=len(ordered), input_digest=rows_digest(ordered)
+        )
+        return clashed
+    out = _trend_base("Fewer than 6 readings, or under 24 hours of readings, in the last 7 days.")
+    out.update(sensor_id=sensor_id, readings_used=len(ordered), input_digest=rows_digest(ordered))
+    if len(ordered) < 2 * TREND_MIN_SIDE:
+        return out
+    first, last = (
+        datetime.strptime(ordered[i]["observed_at"], STAMP).replace(tzinfo=UTC) for i in (0, -1)
+    )
+    if (last - first).total_seconds() < TREND_MIN_SPAN_SECONDS:
+        return out
+    half = len(ordered) // 2
+    parts: list[str] = []
+    for key, label in TREND_LABELS.items():
+        sides = [
+            [n for r in part if (n := _number(r[key])) is not None]
+            for part in (ordered[:half], ordered[half:])
+        ]
+        if min(map(len, sides)) < TREND_MIN_SIDE:
+            continue
+        change = sum(sides[1]) / len(sides[1]) - sum(sides[0]) / len(sides[0])
+        direction = (
+            "steady" if abs(change) < TREND_STEADY[key] else "rising" if change > 0 else "falling"
+        )
+        unit = UNITS[key]
+        out["variables"][key] = dict(
+            direction=direction,
+            change=round(change, 2),
+            unit=unit,
+            text=f"{label} is {direction} over the last 7 days ({change:+.1f} {unit}).",
+        )
+        parts.append(out["variables"][key]["text"])
+    if parts:
+        out.update(
+            reason=None,
+            summary=" ".join(parts) + " Advisory only; synthetic and not calibrated.",
+        )
+    return out
+
+
 def view(
     db: Connection, home_id: str, reference: datetime | None, now: float, mssql: bool = False
 ) -> dict[str, Any]:
-    """Employee read model: the captured source plus freshness from the capture's own latest."""
+    """Employee read model with versioned input and output digests for the request `as_of`."""
+    out = _view(db, home_id, reference, now, mssql)
+    out["reproducibility"] = reproducibility(out)
+    return out
+
+
+def _view(
+    db: Connection, home_id: str, reference: datetime | None, now: float, mssql: bool = False
+) -> dict[str, Any]:
+    """The captured source plus freshness from the capture's own latest."""
     out = capture_source(db, home_id, reference, now, mssql)
     out.update(
         generated_at=_text(_utc(int(now))),
         freshness="unknown",
         freshness_text="No reading is available.",
         manual_route=MANUAL,
+        advisory=advisory(out),
+        health=reading_health(out),
+        grounding=grounding(out),
     )
     if out["state"] in ("consent-withheld", "unavailable"):
         out["freshness_text"] = out["detail"]
+        out["trend"] = _trend_base(out["detail"])
         return out
     latest = out["latest"]
+    out["trend"] = (
+        _trend_base(str(out["conflict_notice"]))
+        if out.get("conflicting_readings")
+        else trend_summary(db, home_id, latest["sensor_id"] if latest else None, now, mssql)
+    )
     if latest:
         age = _age(latest, now)
         if age < 0:
@@ -441,6 +707,93 @@ def view(
                 else "Latest reading is older than 15 minutes. Treat it as out of date."
             ),
         )
+    return out
+
+
+def reading_health(sensors: Mapping[str, Any] | None) -> dict[str, str]:
+    """Whether the latest retained reading can be read and is physically possible.
+
+    Read-only and clock-free. ``fault`` means a value is missing or not a finite number;
+    ``out_of_range`` means a value is outside the physical limits for a home sensor;
+    ``conflict`` means retained rows disagree for the same sensor and timestamp. None of these
+    states change a case, hazard or gate.
+    """
+    if (sensors or {}).get("conflicting_readings"):
+        return dict(
+            state="conflict",
+            text=(
+                "Retained readings disagree for the same sensor and time. "
+                "Do not rely on them; use the ordinary quality check."
+            ),
+        )
+    latest = (sensors or {}).get("latest")
+    if not latest:
+        return dict(state="none", text="No reading is available to check.")
+    try:
+        humidity = float(latest["humidity_pct"])
+        temperature = float(latest["temperature_c"])
+    except (KeyError, TypeError, ValueError):
+        humidity = temperature = float("nan")
+    if not (isfinite(humidity) and isfinite(temperature)):
+        return dict(state="fault", text="The latest reading is missing a value or cannot be read.")
+    low_h, high_h = PLAUSIBLE_HUMIDITY_PCT
+    low_t, high_t = PLAUSIBLE_TEMPERATURE_C
+    if not (low_h <= humidity <= high_h and low_t <= temperature <= high_t):
+        return dict(
+            state="out_of_range",
+            text=(
+                f"The latest reading is outside the possible range ({low_h:g} to {high_h:g} %RH, "
+                f"{low_t:g} to {high_t:g} degC). Do not rely on it."
+            ),
+        )
+    return dict(state="ok", text="The latest reading is within the possible range.")
+
+
+def advisory(sensors: Mapping[str, Any] | None) -> dict[str, Any]:
+    """Plain-language damp and mould watch from the latest retained reading.
+
+    Deterministic and advisory only. The text label states the outcome, so colour is never the
+    only signal. It reads no clock and changes no case or hazard state.
+    """
+    latest = (sensors or {}).get("latest")
+    out: dict[str, Any] = dict(
+        label="No watch",
+        watch=False,
+        reasons=[],
+        text="No reading is available, so no sensor watch is raised.",
+        thresholds=WATCH_THRESHOLDS,
+        framing=WATCH_FRAMING,
+    )
+    if (sensors or {}).get("conflicting_readings"):
+        out["text"] = (
+            "Retained readings disagree for the same sensor and time, "
+            "so no sensor watch is raised. " + WATCH_FRAMING
+        )
+        return out
+    if not latest:
+        return out
+    reasons: list[str] = []
+    try:
+        humidity = float(latest["humidity_pct"])
+        temperature = float(latest["temperature_c"])
+    except (KeyError, TypeError, ValueError):
+        out["text"] = "The latest reading could not be read, so no sensor watch is raised."
+        return out
+    if humidity >= WATCH_HUMIDITY_PCT:
+        reasons.append(f"Humidity {humidity:g} %RH is at or above {WATCH_HUMIDITY_PCT:g} %RH.")
+    if temperature <= WATCH_TEMPERATURE_C:
+        reasons.append(
+            f"Temperature {temperature:g} degC is at or below {WATCH_TEMPERATURE_C:g} degC."
+        )
+    if reasons:
+        out.update(
+            label=WATCH_LABEL,
+            watch=True,
+            reasons=reasons,
+            text=f"{WATCH_LABEL}: " + " ".join(reasons) + " " + WATCH_FRAMING,
+        )
+    else:
+        out["text"] = "Latest reading is within the watch values. " + WATCH_FRAMING
     return out
 
 

@@ -16,9 +16,7 @@ FORBIDDEN_PROJECTIONS = re.compile(
 class MonitoringWorkbookSlaBudgetTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.workbook = json.loads(
-            (INFRA / "monitoring-workbook.json").read_text(encoding="utf-8")
-        )
+        cls.workbook = json.loads((INFRA / "monitoring-workbook.json").read_text(encoding="utf-8"))
         cls.items = {item["name"]: item for item in cls.workbook["items"]}
 
     def _query(self, name: str) -> str:
@@ -69,9 +67,7 @@ class MonitoringWorkbookSlaBudgetTests(unittest.TestCase):
             if item["type"] != 3:
                 continue
             query = item["content"]["query"]
-            projected = " ".join(
-                re.findall(r"\b(?:project|by)\b([^|]*)", query, re.IGNORECASE)
-            )
+            projected = " ".join(re.findall(r"\b(?:project|by)\b([^|]*)", query, re.IGNORECASE))
             with self.subTest(panel=name):
                 self.assertIsNone(FORBIDDEN_PROJECTIONS.search(projected))
 

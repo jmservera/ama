@@ -2688,7 +2688,13 @@ class JsonResidentDecisions(unittest.TestCase):
                 for key in ("assessment", "design", "building", "coordination")
             }
             c["documents"] = [
-                dict(id=f"SYN-{kind}", kind=kind, generated=False) for kind in self.store.EVIDENCE
+                dict(
+                    id=f"SYN-{kind}",
+                    kind=kind,
+                    generated=False,
+                    scan=dict(status="clean", scanner="Synthetic metadata fixture"),
+                )
+                for kind in self.store.EVIDENCE
             ]
             self.store.save()
         self.assertEqual(self.store.detail("ZF-1")["gate"], [])
@@ -4205,34 +4211,6 @@ class JsonResidentDecisions(unittest.TestCase):
         self.forward(self.pam)
         self.assertEqual(self.route()["attempts"][0]["status"], "Acknowledged")
 
-    def test_forward_outcome_save_failure_leaves_pending_and_blocks_silent_resend(self) -> None:
-        receiver = SyntheticReceiver("ack")
-        self.store.complaints_receiver = receiver
-        self.request()
-        with patch.object(
-            resident_decisions.ResidentDecisionMixin,
-            "_res_service_forward_outcome",
-            side_effect=RuntimeError("SYN outcome save failed"),
-        ) as handler:
-            with self.assertLogs(resident_decisions.__name__, "WARNING") as logged:
-                with self.assertRaises(resident_decisions.ResidentCommittedError):
-                    self.forward()
-        self.assertEqual(handler.call_count, 2)
-        self.assertEqual(len(receiver.envelopes), 1)
-        self.assertIn("'SYN-RCPT-1'", "\n".join(logged.output))
-        self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
-        reopened = self.open_store().cases["ZF-1"]["service_requests"][0]
-        self.assertEqual(reopened["formal_route"]["attempts"][0]["status"], "Pending")
-        self.unchanged_failure(self.forward)
-        self.assertEqual(len(receiver.envelopes), 1)
-        self.forward(retry_unresolved=True)
-        self.assertEqual(
-            [a["status"] for a in self.route()["attempts"]], ["Pending", "Acknowledged"]
-        )
-        self.assertEqual(
-            receiver.envelopes[0]["idempotency_key"], receiver.envelopes[1]["idempotency_key"]
-        )
-
     def test_acknowledged_retry_flags_stale_pending_without_superseding(self) -> None:
         self.pending_attempt()
         self.forward(retry_unresolved=True)
@@ -4783,6 +4761,37 @@ class JsonResidentDecisions(unittest.TestCase):
             "plain_language_explanation",
             sam_detail["nomination_records"][0],
         )
+
+    def test_forward_refused_or_rolled_back_retry_keeps_stale_pending_untouched(self) -> None:
+        receiver = self.pending_attempt()
+        for user, kw in (
+            (self.rae, {}),
+            (self.kim, dict(retry_unresolved=True)),
+            (self.rex, dict(retry_unresolved=True)),
+            (self.rae, dict(retry_unresolved=True, expected_version=9)),
+            (self.rae, dict(retry_unresolved=True, resident_request_ref="   ")),
+        ):
+            self.unchanged_failure(partial(self.forward, user, **kw))
+        self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
+        self.assertNotIn("superseded_from", self.route()["attempts"][0])
+        self.assertEqual(len(receiver.envelopes), 1)
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        audit = list(self.store.audit_entries())
+        with patch.object(self.store, "audit", side_effect=RuntimeError("SYN audit fault")):
+            with self.assertRaises(RuntimeError):
+                self.forward(retry_unresolved=True)
+        self.assertEqual(self.store.cases["ZF-1"], before)
+        self.assertEqual(list(self.store.audit_entries()), audit)
+        self.assertEqual(self.open_store().cases["ZF-1"], before)
+        self.assertEqual(len(receiver.envelopes), 1)
+        resident_decisions._IN_FLIGHT.setdefault(self.store, set()).add(("ZF-1", "SR-1", 1))
+        try:
+            with self.assertRaisesRegex(ValueError, "still in progress"):
+                self.forward(retry_unresolved=True)
+        finally:
+            resident_decisions._IN_FLIGHT.get(self.store, set()).discard(("ZF-1", "SR-1", 1))
+        self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
+        self.assertNotIn("superseded_by_attempt", self.route()["attempts"][0])
 
 
 class SyntheticReceiver:

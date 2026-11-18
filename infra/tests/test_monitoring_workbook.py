@@ -12,9 +12,7 @@ class MonitoringWorkbookTests(unittest.TestCase):
     def test_optional_tables_are_bare_union_sources_with_projection_after_union(
         self,
     ) -> None:
-        workbook = json.loads(
-            (INFRA / "monitoring-workbook.json").read_text(encoding="utf-8")
-        )
+        workbook = json.loads((INFRA / "monitoring-workbook.json").read_text(encoding="utf-8"))
         queries = {
             item["name"]: item["content"]["query"]
             for item in workbook["items"]
@@ -35,9 +33,7 @@ class MonitoringWorkbookTests(unittest.TestCase):
                 self.assertEqual(queries[panel].split(";", 1)[0], expected)
 
     def _items(self) -> dict:
-        workbook = json.loads(
-            (INFRA / "monitoring-workbook.json").read_text(encoding="utf-8")
-        )
+        workbook = json.loads((INFRA / "monitoring-workbook.json").read_text(encoding="utf-8"))
         return {item["name"]: item for item in workbook["items"]}
 
     def test_required_panels_and_columns_are_present(self) -> None:
@@ -84,9 +80,7 @@ class MonitoringWorkbookTests(unittest.TestCase):
                 self.assertIsNone(forbidden.search(query.replace("Log has", "")))
 
     def test_workbook_placeholders_are_declared_in_bicep(self) -> None:
-        bicep = (INFRA / "modules" / "operationalMonitoring.bicep").read_text(
-            encoding="utf-8"
-        )
+        bicep = (INFRA / "modules" / "operationalMonitoring.bicep").read_text(encoding="utf-8")
         raw = (INFRA / "monitoring-workbook.json").read_text(encoding="utf-8")
         for placeholder in set(re.findall(r"__[A-Z_]+__", raw)):
             self.assertIn(placeholder, bicep)
