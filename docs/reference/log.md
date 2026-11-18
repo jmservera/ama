@@ -12710,6 +12710,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-125-live-discovery-assistant-evidence-2026-11-18.md](research/issue-125-live-discovery-assistant-evidence-2026-11-18.md): the assistant is not exposed on the live demo API and its boundary denies writes; all three criteria stay unticked (readiness and comparison unprovable for the demo, no-write shown only at demo scope).
 
+## [2026-11-18] add | Alert and home chat populated-state proof (Refs #215)
+
+* Added [issue-215-live-populated-states-evidence-2026-11-18.md](research/issue-215-live-populated-states-evidence-2026-11-18.md): the deployed client JS rendered against mocked alert and chat responses because the live law store is not loaded; no colour-only status, keyboard, plain-language show and hide, no-source and doubt route results, with per-criterion status. WCAG as a whole and staff comprehension stay unproven and unticked.
+
 ## [2026-11-18] add | Rubric src counting and mvp stop state (Refs #198)
 
 * Added [issue-198-rubric-src-counting-evidence-2026-11-18.md](research/issue-198-rubric-src-counting-evidence-2026-11-18.md): current registry and 79/100 score re-verified, five of seven criteria proven, criteria 3 and 4 recorded as historically unprovable pending an owner waiver or rewording.

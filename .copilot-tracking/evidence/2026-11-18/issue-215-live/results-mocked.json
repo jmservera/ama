@@ -1,0 +1,115 @@
+{
+ "dt_per_alert": [
+  [
+   "What was noticed",
+   "Safe action",
+   "Decision owner",
+   "Clock",
+   "Check recorded at",
+   "Current control",
+   "Latest check"
+  ],
+  [
+   "What was noticed",
+   "Safe action",
+   "Decision owner",
+   "Clock",
+   "Check recorded at",
+   "Current control",
+   "Latest check"
+  ],
+  [
+   "What was noticed",
+   "Safe action",
+   "Decision owner",
+   "Clock",
+   "Check recorded at",
+   "Current control",
+   "Latest check"
+  ]
+ ],
+ "alert_headings": [
+  "Status: breach risk",
+  "Status: unknown",
+  "Status: clear"
+ ],
+ "plain_summaries": [],
+ "no_source_items": [
+  "No source held for this answer. Do not infer a duty or terms; ask the named human owner.",
+  "No source held for this answer. Do not infer a duty or terms; ask the named human owner."
+ ],
+ "alert_status_line": "3 visible alerts. Coverage: partial. Only alerts permitted for your role are shown.",
+ "alert_first_dd": [
+  "Synthetic: hazard report recorded without an acknowledgement time",
+  "Use the human hazard service now and record the awareness time",
+  "Building Safety Liaison; route: Retrofit Programme Manager",
+  "Synthetic exercise clock: 24 hours from awareness; due: 2026-11-19T10:00:00Z",
+  "2026-11-18T10:00:00Z; step: intake; card: [email]",
+  "Active bounded control",
+  "breach risk at 2026-11-18T10:00:00Z"
+ ],
+ "alert_axe_plain_on": {
+  "violations": [],
+  "incomplete": []
+ },
+ "alert_tab_walk": [
+  {
+   "tag": "BUTTON",
+   "name": "Refresh alerts",
+   "ring": true
+  }
+ ],
+ "plain_off_class": "card regulatory",
+ "plain_off_display": [
+  "none",
+  "none",
+  "none",
+  "none",
+  "none"
+ ],
+ "alert_axe_plain_off": {
+  "violations": [],
+  "incomplete": []
+ },
+ "state_colours": [
+  [
+   "Status: breach risk",
+   "rgb(36, 36, 36)",
+   "rgba(0, 0, 0, 0)",
+   "6px double"
+  ],
+  [
+   "Status: unknown",
+   "rgb(36, 36, 36)",
+   "rgba(0, 0, 0, 0)",
+   "4px dashed"
+  ],
+  [
+   "Status: clear",
+   "rgb(36, 36, 36)",
+   "rgba(0, 0, 0, 0)",
+   "4px solid"
+  ]
+ ],
+ "chat_status": "Synthetic source lookup available. No legal approval is implied.",
+ "chat_turns": "You Which source covers hazard awareness?\nLookup status: answer\n\nIn plain words: sources were found and quoted below. This is not a decision about which duty applies.\n\nsynthetic-demo: not legal advice or approval\n\nModel calls for this question: 0. Inference is disabled. Service cost: Unknown, not zero.\n\nWhat the sources say\n\nThese are exact excerpts, not a decision about which duty applies. Check the source status and dates.\n\n[demo-prov-1] Synthetic excerpt about hazard awareness\nRecorded home facts\n\n[F1] Synthetic recorded fact\n\nUnknown or missing\nContract incorporation not held\nSafe next action\n\nAsk the named owner\n\nWho decides\n\nBuilding Safety Liaison\n\ndemo-prov-1 | Status: in force | Effective: 2025-10-27 | Retrieved/observed: 2026-11-01\n\nIn plain words: sending this to the named owner asks a person to check it. Sending does not approve or decide anything, and no resident is contacted.\n\nIn doubt: send this turn to Juan Manuel Servera\nYou What does the contract say about funding?\nLookup status: refused\n\nIn plain words: the lookup cannot answer this question. Ask the named owner, who decides what to do next.\n\nsynthetic-demo: not legal advice or approval\n\nModel calls for this question: 0. Inference is disabled. Service cost: Unknown, not zero.\n\nNo source held for this question.\n\nNo source held for this answer. Do not infer a duty or terms; ask the named human owner.\nIn plain words: the lookup found nothing it can show. Treat the question as open and ask the named owner what to do next.\n\nIn plain words: sending this to the named owner asks a person to check it. Sending does not approve or decide anything, and no resident is contacted.\n\nIn doubt: send this turn to Juan Manuel Servera",
+ "chat_turn_headings": [
+  "Lookup status: answer",
+  "Lookup status: refused"
+ ],
+ "chat_doubt_buttons": [
+  "In doubt: send this turn to Juan Manuel Servera",
+  "In doubt: send this turn to Juan Manuel Servera"
+ ],
+ "chat_doubt_after": [
+  "synthetic-demo: sent to Juan Manuel Servera's exercise inbox. No legal approval or resident message.",
+  [
+   "Sent to exercise owner; awaiting human review|true",
+   "In doubt: send this turn to Juan Manuel Servera|null"
+  ]
+ ],
+ "chat_axe": {
+  "violations": [],
+  "incomplete": []
+ }
+}
