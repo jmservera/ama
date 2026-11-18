@@ -1,0 +1,38 @@
+[
+  {
+    "p": "SQL_ThreatDetection_Audit",
+    "r": "Microsoft.Sql/servers"
+  },
+  {
+    "p": "SQL_Auditing_Audit",
+    "r": "Microsoft.Sql/servers"
+  },
+  {
+    "p": "feedbf84-6b99-488c-acc2-71c829aa5ffc",
+    "r": "Microsoft.Sql/servers"
+  },
+  {
+    "p": "83a214f7-d01a-484b-91a9-ed54470c9a6a",
+    "r": "Microsoft.EventHub/namespaces"
+  },
+  {
+    "p": "fc5e4038-4584-4632-8c85-c0448d374b2c",
+    "r": "Microsoft.Network/virtualNetworks"
+  },
+  {
+    "p": "0b60c0b2-2dc2-4e1c-b5c9-abbed971de53",
+    "r": "Microsoft.KeyVault/vaults"
+  },
+  {
+    "p": "090c7b07-b4ed-4561-ad20-e9075f3ccaff",
+    "r": "Microsoft.ContainerRegistry/registries"
+  },
+  {
+    "p": "d6759c02-b87f-42b7-892e-71b3f471d782",
+    "r": "Microsoft.CognitiveServices/accounts"
+  },
+  {
+    "p": "037eea7a-bd0a-46c5-9a66-03aea78705d3",
+    "r": "Microsoft.CognitiveServices/accounts"
+  }
+]
