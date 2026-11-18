@@ -12328,3 +12328,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Stabilization checkpoint triage and epic verdicts (Refs #440)
 
 * Added [stabilization-checkpoint-triage-440-live-2026-11-18.md](research/stabilization-checkpoint-triage-440-live-2026-11-18.md): four issue drafts (time status 500, legacy-reference guard allowlist, unreachable ChatIsolation turn, AI golden path), duplicates mapped to existing owners, blocking findings mapped to epics, and per-epic verdicts (14 continue, 2 fix, 0 pivot). No issue created, no criterion ticked, no source changed. The coordinator HVE Builder review is Deferred at host validation.
+
+## [2026-11-18] add | Live task queue hazard clock evidence (Refs #76)
+
+* Added [issue-76-live-task-queue-evidence-2026-11-18.md](research/issue-76-live-task-queue-evidence-2026-11-18.md): per-criterion record of a read-only live demo run. The hazard case card shows a safety clock line and a named accountable owner, but the clock is unknown for lack of a timestamp, and no demo case has a safeguarding item.

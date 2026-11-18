@@ -405,6 +405,9 @@ For #79, the [live ranking publication evidence](./research/issue-79-live-rankin
 records a 2026-11-18 demo run on live Azure: the unsigned policy refused, a scheduled
 job firing and create-only Blob publication. The named owner signature and Blob
 immutability stay unproven.
+For #76, the [live task queue evidence](./research/issue-76-live-task-queue-evidence-2026-11-18.md)
+records the hazard clock and named owner on the live demo case card. The clock reads
+unknown because the record has no timestamp, and no demo case has a safeguarding item.
 For #221, the [restart authority and drill evidence](./research/issue-221-restart-authority-and-drill-evidence-2026-11-18.md)
 records repository test proof of the RULE-024 and NFR-014 criteria on
 2026-11-18; no live drill was run.
