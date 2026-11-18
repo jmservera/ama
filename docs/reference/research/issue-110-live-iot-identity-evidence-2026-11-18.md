@@ -59,3 +59,9 @@ The job output was retrieved with `az containerapp job logs show` and is retaine
 * Created and removed: job `job-110-probe`, two role assignments, three devices. Verified: no `110` jobs remain, hub shows 0 devices, public network access Disabled and local auth disabled.
 * The Azure Event Hubs Data Receiver assignment on the hub dated 2026-10-16 pre-dates this run and was left alone.
 * No source files changed; validation tier is the focused tier.
+
+## Evidence limits
+
+* The raw job output is held outside the repository under the phase-witness evidence directory and is not committed; the checks are driver self-reports, not per-request captures.
+* The Azure stats, public-network and local-auth observations are operator-observed, raw output not retained.
+* No criterion is ticked by this note; the owner ticks. Independent exact-head review and hosted CI are outstanding.
