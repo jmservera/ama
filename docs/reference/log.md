@@ -13091,6 +13091,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 1259 live second audit (Refs #1259)
 
 * Added [2026-11-18-ranking-archive-unusable-1259-live-r2.md](research/2026-11-18-ranking-archive-unusable-1259-live-r2.md) with retained red-before output (seven failures on pre-fix source) and a real-filesystem schedule, verify and publish table for a regular file, dangling link and absent folder; final-criterion gates stay unproven; no source change, no Azure action.
+
 ## [2026-11-18] add | Issue 200 live second audit (Refs #200)
 
 * Added [issue-200-live-20261118T1618Z-2026-11-18.md](research/issue-200-live-20261118T1618Z-2026-11-18.md) with evidence folder: live exec proof (uid 10001, empty `/data`, no capabilities) on the demo API and resident app, 52 revisions keeping historical tags; fresh tag deployment left unproven because the registry is private and a window would change shared posture. No source change.
