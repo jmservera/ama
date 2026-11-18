@@ -75,3 +75,10 @@ Operator-side checks after the run:
 | Hub network and auth | public network access Disabled, local auth disabled, unchanged |
 
 Limits found: Log Analytics queries from the operator machine are refused by the workspace network perimeter, so the output was streamed with `az containerapp job logs show` while the replica was kept alive for 150 seconds; the persisted workspace copy was not read. The run did not exercise durable secret storage (Key Vault excluded by the owner), so "stored" means held in process memory only.
+
+## Evidence limits
+
+* The operator-side results (show-stats count, job and role-assignment deletion, hub settings) have no retained raw output; they are operator-observed.
+* "Stored" for the issued credential means held in memory for the run only; no durable credential store was proven.
+* The second run is not in the log entry, and the job output is not redacted by a retained step.
+* Independent exact-head review and hosted CI are outstanding; no criterion is ticked.
