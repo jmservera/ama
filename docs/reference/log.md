@@ -12868,6 +12868,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [src-repoint-live-audit-200-2026-11-18.md](research/src-repoint-live-audit-200-2026-11-18.md): criteria 2 proven, criterion 3 proven except a fresh tag deployment; no source change
 
+## [2026-11-18] update | Issue 116 live round 2 (Refs #116)
+
+* Added [issue-116-live-r2-evidence-2026-11-18.md](research/issue-116-live-r2-evidence-2026-11-18.md): reason-value leak scan on the deployed demo, second role blocked by Graph privileges; no source change
+
 ## [2026-11-18] add | Issue 110 live IoT Hub to SQL rerun (Refs #110)
 
 * Added [issue-110-live2-iot-sql-evidence-2026-11-18.md](research/issue-110-live2-iot-sql-evidence-2026-11-18.md): bounded job sent 6 and stored 6 through IoT Hub into Azure SQL; devices, job and temporary roles removed; no source change
