@@ -406,6 +406,9 @@ records a 2026-11-18 demo run on live Azure SQL through the IoT Hub and Event Hu
 with demo SAS devices: joint per-home queries, handover seam and idempotent
 re-run. The production X.509 receiver and indoor schema stay unproven.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
+For #146, the [live monitoring evidence](./research/issue-146-live-monitoring-evidence-2026-11-18.md)
+records a 2026-11-18 demo run: installed alert inventory, a fired test alert, throwaway job-failure,
+IoT and workbook deployments, and the private-link limit that blocks workbook rendering and the poison-queue proof.
 For the 2026-11-05 current-main contract, retention and handover boundary, see the
 [fifth stabilization checkpoint](../architecture/cutover-evidence-pack.md#fifth-stabilization-checkpoint-current-main-sensor-contract-retention-and-handover-2026-11-05-refs-440-184-110)
 (documentation only; the live-sim wire schema is not admitted by the main consumer and nothing is accepted).
