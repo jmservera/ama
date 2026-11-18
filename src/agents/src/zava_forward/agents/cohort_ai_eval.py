@@ -116,8 +116,10 @@ def _run(mode: str, approval: dict[str, str] | None = None) -> dict[str, Any]:
     if approval:
         cohort_eval.approve(manifest, approval)
     return dict(
-        cohort_eval.evaluate(
-            manifest, cohort_ranking_eval.observe(cases, manifest, make_rank_fn(mode))
+        cohort_eval.export_record(
+            cohort_eval.evaluate(
+                manifest, cohort_ranking_eval.observe(cases, manifest, make_rank_fn(mode))
+            )
         )
     )
 

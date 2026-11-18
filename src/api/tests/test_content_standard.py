@@ -22,6 +22,7 @@ AUDITED_FILES = (
     "role-screens.js",
     "simulator-control.js",
     "staff-intake.js",
+    "nomination-routes.js",
     "law.js",
     "law.html",
     "index.html",

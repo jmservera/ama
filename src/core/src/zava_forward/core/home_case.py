@@ -13,6 +13,7 @@ from copy import deepcopy
 from typing import Any
 
 from . import buildings, change_provenance, projection
+from .doc_controls import is_available_case_document
 
 Record = dict[str, Any]
 HISTORY = "home_case_versions"
@@ -60,7 +61,9 @@ def links(data: Record, case: Record) -> Record:
             for w in sorted(orders, key=lambda w: (w["package"], w["id"]))
         ],
         "hazard_ids": sorted(str(h.get("id", f"index-{i}")) for i, h in enumerate(case["hazards"])),
-        "document_ids": sorted(str(d["id"]) for d in case.get("documents", [])),
+        "document_ids": sorted(
+            str(d["id"]) for d in case.get("documents", []) if is_available_case_document(d)
+        ),
         "quality_measures": sorted(str(q["measure"]) for q in case.get("quality", [])),
         "resident_service_ids": sorted(
             str(r["id"]) for r in case.get("service_requests", []) if "id" in r
@@ -155,7 +158,9 @@ def view(store: Any, user: Record, case_id: str) -> Record:
                 "closed": case["closed"],
                 "funding_confirmed": case.get("funding_ok") is True,
                 "documents": [
-                    {k: d.get(k) for k in ("id", "name", "kind")} for d in case.get("documents", [])
+                    {k: d.get(k) for k in ("id", "name", "kind")}
+                    for d in case.get("documents", [])
+                    if is_available_case_document(d)
                 ],
                 "quality": [
                     {"measure": q["measure"], "state": q["state"]} for q in case.get("quality", [])

@@ -42,3 +42,4 @@
 .chat-widget .check{margin:0;font-size:.85rem;line-height:1.3}
 @keyframes chat-widget-spin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.chat-widget-loading::before{animation:none}.chat-widget,.chat-widget-launcher{transition:none}}
+.chat-widget :is(button,summary,textarea,select,input,[tabindex]):focus-visible,.chat-widget-launcher:focus-visible{outline:var(--focus-w) solid var(--focus-ink);outline-offset:var(--focus-off);box-shadow:0 0 0 var(--focus-off) var(--focus)}

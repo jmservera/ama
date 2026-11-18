@@ -7,13 +7,19 @@ reads or changes invoices or payment status, and nothing is submitted to a
 funder by the system.
 """
 import os
+from collections.abc import Mapping
 from copy import deepcopy
 from datetime import UTC, datetime
 
 from . import controls as k
 from . import gates
 from .change_provenance import _actor
-from .finance import _identity, identity_well_formed
+from .finance import (
+    _identity,
+    classify_finance_operation,
+    guard_no_automated_finance_authority,
+    identity_well_formed,
+)
 
 GRANT_FLOW = {"Not recorded": ("Opportunity",), "Opportunity": ("Award",), "Award": ("Claimable",), "Claimable": ("Submitted",),
               "Submitted": ("Accepted", "Rejected"), "Accepted": ("Cash received",), "Rejected": ("Claimable",), "Cash received": ()}
@@ -123,11 +129,30 @@ def grant_summary(c):
 
 class GrantMixin:
     def grant_action(self, user, case_id, body):
+        action = body.get("action") if isinstance(body, Mapping) else None
+        pending_to = None
+        if isinstance(body, Mapping) and action == "grant_approve":
+            if hasattr(self, "_sync") and hasattr(self, "lock"):
+                with self.lock:
+                    self._sync()
+                    case_snapshot = (getattr(self, "cases", None) or {}).get(case_id)
+            else:
+                case_snapshot = (getattr(self, "cases", None) or {}).get(case_id)
+            if isinstance(case_snapshot, Mapping):
+                gid = body.get("id")
+                for item in case_snapshot.get("grants") or []:
+                    if isinstance(item, Mapping) and item.get("id") == gid:
+                        pend = item.get("pending")
+                        if isinstance(pend, Mapping):
+                            pending_to = pend.get("to")
+                        break
+        op = classify_finance_operation("grant_action", action, body, pending_to=pending_to)
+        guard_no_automated_finance_authority(user, operation=op)
         k.refuse_bulk(body)
-        action = body.get("action")
+        guard_no_automated_finance_authority(user, operation=op, body=body)
         if action not in GRANT_ACTIONS:
             raise ValueError("Unknown step.")
-        with self._finance_operation(user, case_id) as (user, c):
+        with self._finance_operation(user, case_id, operation=op) as (user, c):
             grants = c.setdefault("grants", [])
             if action == "grant_open":
                 g = dict(id=k.next_id(grants, "GR"), scheme=k.text(body.get("scheme"), "the scheme or funder", 80), state="Not recorded",

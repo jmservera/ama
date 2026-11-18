@@ -4,6 +4,7 @@
 import argparse
 import base64
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -14,7 +15,9 @@ import time
 import urllib.error
 import urllib.request
 from collections import Counter
+from dataclasses import dataclass
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 from uuid import UUID
 
@@ -26,10 +29,34 @@ IMAGE_PARAMETERS = {
     "orchestrator": "orchestratorImage",
     "importer": "importImage",
 }
+RELEASE_MANIFEST_FILE = "release-manifest.json"
+PLAN_IMMUTABLE_IMAGE_RE = re.compile(r"^[a-z0-9.-]+/[a-z0-9._/-]+@sha256:[0-9a-f]{64}$")
+WORKLOAD_IMAGE_PARAMETERS = {
+    "api": "apiImage",
+    "agents": "agentImage",
+    "orchestrator": "orchestratorImage",
+    "auth-renewal": "orchestratorImage",
+    "ledger-verify": "orchestratorImage",
+    "rank-publish": "orchestratorImage",
+    "import": "importImage",
+}
+HARDENING_CONTRACT: dict[str, Any] = {
+    "uid": 10001,
+    "gid": 10001,
+    "read_only_rootfs_compatible": True,
+    "writable_scratch_mounts": ["/tmp", "/state"],
+    "capabilities_dropped": ["ALL"],
+    "no_new_privileges": True,
+    "runtime_enforcement_env": "ZF_CONTAINER_HARDENING=enforced",
+}
 PARAMETER_FILES = {
     "dev": "main.bicepparam",
     "test": "main.test.bicepparam",
     "pilot": "main.pilot.example.bicepparam",
+}
+ENVIRONMENT_PARAMETER_FILES = {
+    "dev": "parameters/dev.bicepparam",
+    "prod": "parameters/prod.bicepparam",
 }
 OVERRIDES = {
     "location",
@@ -43,6 +70,184 @@ OVERRIDES = {
     "entraClientId",
     "entraBearerOnly",
 }
+INJECTED_PARAMETERS = frozenset(
+    OVERRIDES
+    | {
+        "workload",
+        "environmentName",
+        "allowPublicNetworkAccess",
+        "deployApplications",
+    }
+    | set(IMAGE_PARAMETERS.values())
+)
+
+
+@dataclass(frozen=True)
+class FromEmptyStep:
+    """Canonical step registration in the reproducible from-empty deployment sequence."""
+
+    step_id: str
+    pipeline_hook: str
+    rebuild_stages: tuple[str, ...]
+    artifacts: tuple[str, ...]
+    manual_prerequisite_owner: str | None
+    description: str
+
+
+FROM_EMPTY_STEP_ORDER: tuple[str, ...] = (
+    "preflight",
+    "what-if",
+    "deploy",
+    "sql-init",
+    "seed",
+    "smoke",
+)
+FROM_EMPTY_STEPS: tuple[FromEmptyStep, ...] = (
+    FromEmptyStep(
+        step_id="preflight",
+        pipeline_hook="verify-environment",
+        rebuild_stages=("parameters",),
+        artifacts=(
+            "infra/scripts/pipeline.py",
+            "infra/scripts/tenant-readiness-preflight.py",
+            "infra/entra/app-registration.json",
+            "infra/secret-inventory.json",
+            "infra/defender-decision.json",
+        ),
+        manual_prerequisite_owner="Juan Manuel Servera (@jmservera)",
+        description=(
+            "Validate tenant readiness, secret inventory, Defender/policy governance baseline, "
+            "and protected GitHub deployment environment rules."
+        ),
+    ),
+    FromEmptyStep(
+        step_id="what-if",
+        pipeline_hook="plan",
+        rebuild_stages=("dependencies",),
+        artifacts=(
+            "infra/main.bicep",
+            "infra/governance.bicep",
+            "infra/parameters/dev.bicepparam",
+            "infra/parameters/prod.bicepparam",
+            "infra/scripts/deploy.py",
+            "infra/scripts/pipeline.py",
+        ),
+        manual_prerequisite_owner=None,
+        description=(
+            "Compile environment parameters, enforce compile-time isolation guards, "
+            "and summarize resource-group ARM what-if changes inside ama."
+        ),
+    ),
+    FromEmptyStep(
+        step_id="deploy",
+        pipeline_hook="publish,deploy",
+        rebuild_stages=(
+            "discover",
+            "images",
+            "credential",
+            "applications",
+            "authentication",
+        ),
+        artifacts=(
+            "infra/main.bicep",
+            "infra/modules/containerapps.bicep",
+            "src/api/Dockerfile",
+            "src/agents/Dockerfile",
+            "src/orchestrator/Dockerfile",
+            "src/importer/Dockerfile",
+            "infra/scripts/deploy.py",
+            "infra/scripts/pipeline.py",
+            "infra/scripts/setup-entra.py",
+            "infra/scripts/credential_arm.py",
+        ),
+        manual_prerequisite_owner=None,
+        description=(
+            "Publish immutable ACR image digests, apply ARM resource-group deployment, "
+            "and reconcile Entra application credentials and EasyAuth bindings."
+        ),
+    ),
+    FromEmptyStep(
+        step_id="sql-init",
+        pipeline_hook="check_sql",
+        rebuild_stages=("sql-users",),
+        artifacts=(
+            "infra/scripts/create-sql-users.py",
+            "infra/scripts/create-sql-users.sql",
+            "infra/sql/resident-showcase.sql",
+            "infra/sql/resident-assistant.sql",
+            "infra/staff-initializer-rbac.bicep",
+        ),
+        manual_prerequisite_owner=None,
+        description=(
+            "Verify private-only Azure SQL posture and apply idempotent contained Entra "
+            "database users, least-privilege role grants, and SQL DDL scripts."
+        ),
+    ),
+    FromEmptyStep(
+        step_id="seed",
+        pipeline_hook="seed",
+        rebuild_stages=("seed", "staff"),
+        artifacts=(
+            "src/importer/Dockerfile",
+            "src/orchestrator/src/zava_forward/orchestrator/rebuild_azure.py",
+            "infra/scripts/resident_sensor_seed.py",
+            "infra/scripts/initialize-workbench-staff.py",
+        ),
+        manual_prerequisite_owner=None,
+        description=(
+            "Load deterministic synthetic retrofit and IoT sensor records without reseeding "
+            "populated stores, and reconcile synthetic staff roster bindings."
+        ),
+    ),
+    FromEmptyStep(
+        step_id="smoke",
+        pipeline_hook="smoke",
+        rebuild_stages=(
+            "health",
+            "api-denial",
+            "browser-redirect",
+            "workload-sql",
+            "model-standard",
+            "model-capable",
+            "restart",
+        ),
+        artifacts=(
+            "infra/scripts/pipeline.py",
+            "infra/scripts/private-cutover-proof.py",
+            "src/orchestrator/src/zava_forward/orchestrator/rebuild.py",
+            "src/orchestrator/src/zava_forward/orchestrator/rebuild_azure.py",
+        ),
+        manual_prerequisite_owner=None,
+        description=(
+            "Execute post-deployment health, three unauthenticated/forged-header 401 denials, "
+            "browser sign-in redirect, private SQL/AI round-trips, and replica restart checks."
+        ),
+    ),
+)
+FORBIDDEN_CHECK_PATTERN = re.compile(
+    r"(?:placeholder|example\.invalid|n/a"
+    r"|(?<![a-z0-9])(?:todo|tbd|assumed|assumption|unverified|pending|unknown|none|na|skip)(?![a-z0-9]))",
+    re.IGNORECASE,
+)
+EMBEDDED_UUID_PATTERN = re.compile(
+    r"(?<![0-9a-f])[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}(?![0-9a-f])",
+    re.IGNORECASE,
+)
+FORBIDDEN_REGION_SLUGS = frozenset(
+    {
+        "placeholder",
+        "todo",
+        "tbd",
+        "assumed",
+        "assumption",
+        "unverified",
+        "pending",
+        "unknown",
+        "none",
+        "na",
+        "skip",
+    }
+)
 
 
 class PipelineError(RuntimeError):
@@ -126,9 +331,24 @@ def parameters(infra: Path, environment: str) -> dict[str, Any]:
     for key in ("sqlAdminGroupObjectId", "entraClientId"):
         if UUID(overrides[key]).int == 0:
             raise PipelineError(f"Unresolved identity parameter: {key}")
+    for key in ("regionCheckReference", "quotaCheckReference"):
+        normalized_check = overrides[key].strip()
+        if (
+            not normalized_check
+            or FORBIDDEN_CHECK_PATTERN.search(normalized_check)
+            or EMBEDDED_UUID_PATTERN.search(normalized_check)
+        ):
+            raise PipelineError(f"Unresolved or invalid recorded check parameter: {key}")
     for key in ("location", "sqlLocation", "aiModelLocation"):
-        if not re.fullmatch(r"[a-z][a-z0-9]+", overrides[key]):
+        region_slug = overrides[key]
+        if (
+            not re.fullmatch(r"[a-z][a-z0-9]+", region_slug)
+            or region_slug in FORBIDDEN_REGION_SLUGS
+            or "placeholder" in region_slug
+        ):
             raise PipelineError(f"Invalid region parameter: {key}")
+    if overrides["location"] != "uksouth":
+        raise PipelineError("Primary location parameter must be uksouth")
     values.update(
         {
             "workload": {"value": "forward"},
@@ -182,23 +402,112 @@ def publish(project: str, destination: Path) -> None:
     )
 
 
-def release_images(directory: Path, server: str) -> dict[str, str]:
-    images: dict[str, str] = {}
+def build_release_manifest(directory: Path, server: str) -> dict[str, Any]:
+    sha = source_sha()
+    tag = release_tag()
+    project_records: dict[str, dict[str, str]] = {}
+    parameter_images: dict[str, str] = {}
     for project in PROJECTS:
-        record = json.loads((directory / f"{project}.json").read_text())
-        image = record["image"]
+        record_path = directory / f"{project}.json"
+        if not record_path.is_file():
+            raise PipelineError(f"Missing release metadata file for project {project}")
+        record = json.loads(record_path.read_text())
+        if not isinstance(record, dict):
+            raise PipelineError("Release metadata record must be a JSON object")
+        image = record.get("image")
         if (
-            record["project"] != project
-            or record["source_sha"] != source_sha()
-            or record["tag"] != release_tag()
+            record.get("project") != project
+            or record.get("source_sha") != sha
+            or record.get("tag") != tag
+            or not isinstance(image, str)
+            or "quickstart" in image.lower()
             or not re.fullmatch(
                 re.escape(f"{server}/zava-forward-{project}@sha256:") + r"[0-9a-f]{64}", image
             )
         ):
             raise PipelineError("Release metadata does not match this run, project and registry")
+        parameter_key = IMAGE_PARAMETERS[project]
+        project_records[project] = {
+            "dockerfile": f"src/{project}/Dockerfile",
+            "image": image,
+            "parameter": parameter_key,
+            "repository": f"zava-forward-{project}",
+        }
+        parameter_images[parameter_key] = image
+    workloads = {
+        workload: {
+            "image": parameter_images[param_key],
+            "parameter": param_key,
+        }
+        for workload, param_key in WORKLOAD_IMAGE_PARAMETERS.items()
+    }
+    return {
+        "schema_version": 1,
+        "registry": server,
+        "source_sha": sha,
+        "tag": tag,
+        "hardening": dict(HARDENING_CONTRACT),
+        "projects": project_records,
+        "workloads": workloads,
+    }
+
+
+def verify_release_manifest(manifest: dict[str, Any], server: str) -> dict[str, str]:
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("schema_version") != 1
+        or manifest.get("registry") != server
+        or manifest.get("source_sha") != source_sha()
+        or manifest.get("tag") != release_tag()
+        or manifest.get("hardening") != HARDENING_CONTRACT
+    ):
+        raise PipelineError("Release manifest metadata or hardening contract is invalid")
+    projects = manifest.get("projects")
+    workloads = manifest.get("workloads")
+    if not isinstance(projects, dict) or set(projects) != set(PROJECTS):
+        raise PipelineError("Release manifest projects do not match canonical workload set")
+    if not isinstance(workloads, dict) or set(workloads) != set(WORKLOAD_IMAGE_PARAMETERS):
+        raise PipelineError("Release manifest workloads do not cover all hosted apps and jobs")
+    images: dict[str, str] = {}
+    for project in PROJECTS:
+        entry = projects[project]
+        if not isinstance(entry, dict):
+            raise PipelineError("Release manifest project entry must be an object")
+        image = entry.get("image")
+        expected_param = IMAGE_PARAMETERS[project]
+        if (
+            entry.get("parameter") != expected_param
+            or entry.get("dockerfile") != f"src/{project}/Dockerfile"
+            or entry.get("repository") != f"zava-forward-{project}"
+            or not isinstance(image, str)
+            or "quickstart" in image.lower()
+            or not re.fullmatch(
+                re.escape(f"{server}/zava-forward-{project}@sha256:") + r"[0-9a-f]{64}", image
+            )
+        ):
+            raise PipelineError("Release metadata does not match this run, project and registry")
+        images[expected_param] = image
+    for workload, expected_param in WORKLOAD_IMAGE_PARAMETERS.items():
+        binding = workloads[workload]
+        if (
+            not isinstance(binding, dict)
+            or binding.get("parameter") != expected_param
+            or binding.get("image") != images[expected_param]
+        ):
+            raise PipelineError(f"Release manifest workload {workload} image binding mismatch")
+    return images
+
+
+def release_images(directory: Path, server: str) -> dict[str, str]:
+    manifest = build_release_manifest(directory, server)
+    images = verify_release_manifest(manifest, server)
+    (directory / RELEASE_MANIFEST_FILE).write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n"
+    )
+    for project in PROJECTS:
+        image = images[IMAGE_PARAMETERS[project]]
         # Deploy identity must have AcrPull only, without quarantine bypass.
         run("docker", "pull", image)
-        images[IMAGE_PARAMETERS[project]] = image
     return images
 
 
@@ -359,7 +668,11 @@ def deployment(infra: Path, environment: str, output: Path, images_directory: Pa
             if len(matches) != 1:
                 raise PipelineError("PR planning requires all four initialized workload resources")
             image = matches[0]["properties"]["template"]["containers"][0]["image"]
-            if not isinstance(image, str) or "@sha256:" not in image:
+            if (
+                not isinstance(image, str)
+                or "quickstart" in image.lower()
+                or PLAN_IMMUTABLE_IMAGE_RE.fullmatch(image) is None
+            ):
                 raise PipelineError("PR planning requires existing immutable workload images")
             compiled["parameters"][key] = {"value": image}
         maintenance = [
@@ -369,6 +682,7 @@ def deployment(infra: Path, environment: str, output: Path, images_directory: Pa
             in {
                 f"job-forward-{environment}-auth-renewal",
                 f"job-forward-{environment}-ledger-verify",
+                f"job-forward-{environment}-rank-publish",
             }
         ]
         if any(
@@ -394,6 +708,9 @@ def deployment(infra: Path, environment: str, output: Path, images_directory: Pa
         summary = summarize_plan(plan, subscription, sha)
         summary["parameter_sha256"] = hashlib.sha256(parameter_file.read_bytes()).hexdigest()
         if images_directory is not None:
+            manifest_path = images_directory / RELEASE_MANIFEST_FILE
+            if manifest_path.is_file():
+                summary["release_manifest"] = json.loads(manifest_path.read_text())
             summary["deployment_status"] = "Failed"
         output.write_text(json.dumps(summary, indent=2) + "\n")
         publish_step_summary("What-if result", what_if_lines(summary, environment))
@@ -429,6 +746,31 @@ def deployment(infra: Path, environment: str, output: Path, images_directory: Pa
                 [f"* Environment: {environment}", "* Status: Succeeded"]
                 + [f"* Check passed: {name}" for name in summary["checks"]],
             )
+
+
+def _load_reproducibility_module() -> ModuleType:
+    module_name = "_ama_infra_reproducibility_check"
+    cached = sys.modules.get(module_name)
+    if isinstance(cached, ModuleType):
+        return cached
+    module_path = Path(__file__).resolve().with_name("reproducibility_check.py")
+    spec = importlib.util.spec_from_file_location(module_name, module_path)
+    if spec is None or spec.loader is None:
+        raise PipelineError(f"Cannot load reproducibility verifier from {module_path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def execute_from_empty_dry_run(repo_root: Path = ROOT, environment: str = "dev") -> Any:
+    module = _load_reproducibility_module()
+    return module.execute_from_empty_dry_run(repo_root=repo_root, environment=environment)
+
+
+def verify_from_empty_deployment_reproducibility(repo_root: Path = ROOT) -> Any:
+    module = _load_reproducibility_module()
+    return module.verify_from_empty_deployment_reproducibility(repo_root=repo_root)
 
 
 def main() -> int:

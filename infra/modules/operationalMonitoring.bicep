@@ -34,7 +34,7 @@ resource jobFailures 'Microsoft.Insights/metricAlerts@2018-03-01' = [for jobName
   location: 'global'
   tags: tags
   properties: {
-    description: 'Candidate failed-execution presence check; proposed owner: Digital service owner, actual appointment pending. Runbook: ${runbookBase}#${endsWith(jobName, '-orch') || endsWith(jobName, '-orchestrator') ? 'job-orchestrator' : endsWith(jobName, '-audit') || endsWith(jobName, '-ledger-verify') ? 'job-ledger' : endsWith(jobName, '-load') || endsWith(jobName, '-import') ? 'job-import' : 'job-auth'}. Verify state dimension before activation.'
+    description: 'Candidate failed-execution presence check; proposed owner: Digital service owner, actual appointment pending. Runbook: ${runbookBase}#${endsWith(jobName, '-orch') || endsWith(jobName, '-orchestrator') ? 'job-orchestrator' : endsWith(jobName, '-audit') || endsWith(jobName, '-ledger-verify') ? 'job-ledger' : endsWith(jobName, '-load') || endsWith(jobName, '-import') ? 'job-import' : endsWith(jobName, '-rank') || endsWith(jobName, '-rank-publish') ? 'job-rank' : 'job-auth'}. Verify state dimension before activation.'
     severity: 2
     enabled: candidateAlertsEnabled
     scopes: [resourceId('Microsoft.App/jobs', jobName)]

@@ -1,6 +1,6 @@
 {
   "warning": "SYNTHETIC DATA REGISTER. Records provenance and visibility of every generated dataset. Not Zava North Homes data.",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "register_date": "2026-11-03",
   "dictionary": "data-dictionary.md",
   "rules": [
@@ -9,7 +9,8 @@
     "Private datasets stay under restricted support/ or the per-user ZF_DATA folder outside the repository; src/**/data is ignored as a defensive rule, not an approved output destination (ADR 0006).",
     "Real map addresses are anchors only, not evidence about a real household. Runtime chat and tenant bindings can contain personal data and are outside the synthetic-fixture guarantee.",
     "Generated status is independent of visibility: a tested generator does not establish materialization of the full-stock dataset.",
-    "The offline source audit rejects missing retrieval dates and provisional licence/attribution wording; the OS copyright year (SRC-ONS-BOUNDARIES) is an owner decision of 2026 recorded in external_use_status and still to confirm before external use."
+    "The offline source audit rejects missing retrieval dates and provisional licence/attribution wording; the OS copyright year (SRC-ONS-BOUNDARIES) is an owner decision of 2026 recorded in external_use_status and still to confirm before external use.",
+    "Every source records licence, retrieval_date, attribution, url, permitted_use and contains_real_resident_data=false; every dataset source must be registered, so real resident data is never mixed with synthetic or external sources."
   ],
   "sources": [
     {
@@ -19,7 +20,9 @@
       "licence": "ODbL 1.0",
       "retrieval_date": "2026-09-30",
       "attribution": "Contains OpenStreetMap data (c) OpenStreetMap contributors",
-      "verification": "recorded in support/synthetic-data/retrofit-flow/zava-forward-year-one/stock-geography/README-private.txt"
+      "verification": "recorded in support/synthetic-data/retrofit-flow/zava-forward-year-one/stock-geography/README-private.txt",
+      "permitted_use": "Private map anchors for synthetic stock geography under ODbL attribution and share-alike; no resident attributes taken from it",
+      "contains_real_resident_data": false
     },
     {
       "id": "SRC-CENSUS-TS054",
@@ -29,7 +32,9 @@
       "retrieval_date": "2026-10-01",
       "attribution": "Source: Office for National Statistics, Census 2021. Contains public sector information licensed under the Open Government Licence v3.0",
       "verification": "retrieval date set to 2026-10-01 by owner decision (jmservera, recorded on #175, 2026-11-02): the retrieval date is the first commit date in this repository that references the source (068fb08ce, checked with git log -S). Licence confirmed 2026-11-01 against the ONS terms page",
-      "reference_date": "2021-03-21"
+      "reference_date": "2021-03-21",
+      "permitted_use": "Aggregate local-authority tenure shares to shape the synthetic stock mix; no household-level use",
+      "contains_real_resident_data": false
     },
     {
       "id": "SRC-IMD-2025",
@@ -39,7 +44,9 @@
       "retrieval_date": "2026-10-01",
       "attribution": "Source: Ministry of Housing, Communities and Local Government. Contains public sector information licensed under the Open Government Licence v3.0",
       "verification": "retrieval date set to 2026-10-01 by owner decision (jmservera, recorded on #175, 2026-11-02): the retrieval date is the first commit date in this repository that references the source (068fb08ce, checked with git log -S). Licence confirmed 2026-11-01 against the gov.uk publication page",
-      "reference_date": "2025-10-30"
+      "reference_date": "2025-10-30",
+      "permitted_use": "LSOA-level deprivation context for synthetic stock attributes; area data, not household data",
+      "contains_real_resident_data": false
     },
     {
       "id": "SRC-ONS-BOUNDARIES",
@@ -48,8 +55,10 @@
       "licence": "Open Government Licence v3.0",
       "retrieval_date": "2026-10-01",
       "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0. Contains OS data (c) Crown copyright and database right 2026",
-   "external_use_status": "OS copyright year 2026 is an owner decision (2026-11-03); to confirm before external use",
-      "verification": "retrieval date set to 2026-10-01 by owner decision (jmservera, recorded on #175, 2026-11-02): the retrieval date is the first commit date in this repository that references the source (068fb08ce, checked with git log -S). OS acknowledgement year 2026 set by owner decision 2026-11-03 and marked to confirm before external use against the named LSOA 2021 BGC and LAD December 2021 BFC product notices. 2026-11-03 recheck: the ONS licences page (https://www.ons.gov.uk/methodology/geography/licences) gives the statement with a literal [year] placeholder and the ArcGIS item records for both products (LSOA 2021 BGC V5, LAD December 2021 BFC) only link to that page, so no official source names the year; the owner chose 2026. Licence and the two required statements confirmed 2026-11-01 against the ONS digital-boundaries guidance"
+      "external_use_status": "OS copyright year 2026 is an owner decision (2026-11-03); to confirm before external use",
+      "verification": "retrieval date set to 2026-10-01 by owner decision (jmservera, recorded on #175, 2026-11-02): the retrieval date is the first commit date in this repository that references the source (068fb08ce, checked with git log -S). OS acknowledgement year 2026 set by owner decision 2026-11-03 and marked to confirm before external use against the named LSOA 2021 BGC and LAD December 2021 BFC product notices. 2026-11-03 recheck: the ONS licences page (https://www.ons.gov.uk/methodology/geography/licences) gives the statement with a literal [year] placeholder and the ArcGIS item records for both products (LSOA 2021 BGC V5, LAD December 2021 BFC) only link to that page, so no official source names the year; the owner chose 2026. Licence and the two required statements confirmed 2026-11-01 against the ONS digital-boundaries guidance",
+      "permitted_use": "Geographic boundaries for assigning synthetic stock to areas; external use pending the OS acknowledgement year confirmation",
+      "contains_real_resident_data": false
     },
     {
       "id": "SRC-OWNER-MODEL",
@@ -58,7 +67,22 @@
       "licence": "Internal project material",
       "retrieval_date": "2026-09-30",
       "attribution": "Project owner estimates, not company facts",
-      "verification": "internal; not an external retrieval"
+      "verification": "internal; not an external retrieval",
+      "permitted_use": "Internal portfolio-mix assumptions for synthetic stock; estimates, not company facts",
+      "contains_real_resident_data": false
+    },
+    {
+      "id": "SRC-OPEN-METEO-ERA5",
+      "name": "Open-Meteo historical weather API (ERA5 reanalysis), Durham cell 54.75/-1.5, hourly 2023-2024",
+      "url": "https://open-meteo.com/en/docs/historical-weather-api",
+      "licence": "CC BY 4.0 (Open-Meteo API data, non-commercial free tier); underlying ERA5 is Copernicus Climate Change Service material",
+      "retrieval_date": "2026-10-27",
+      "attribution": "Weather data by Open-Meteo.com (https://open-meteo.com/), CC BY 4.0; underlying ERA5 is Copernicus Climate Change Service (C3S) material; values summarised",
+      "permitted_use": "Synthetic-demo-only outdoor climate pairing for synthetic indoor projections (owner approval owner-approvals-2026-10-27-b); not production or Legal approval",
+      "contains_real_resident_data": false,
+      "external_use_status": "underlying C3S reuse legally unverified; the 2026-10-22 terms snapshot records CC BY 4.0 and API non-commercial conditions",
+      "verification": "retained packet docs/reference/research/climate-paired-source-178/open-meteo-era5-durham-2023-2024-metadata.json, raw SHA-256 af76a90414d9ad8f19dacc95a38f06d4c4321a91bdf030ba231558c42506051e",
+      "reference_date": "2024-12-31"
     }
   ],
   "datasets": [
@@ -83,7 +107,9 @@
       "visibility": "public",
       "location": "docs/reference/research/retrofit-synthetic-data/manifest.json",
       "sources": [],
-      "validation": {"root_label": true},
+      "validation": {
+        "root_label": true
+      },
       "data_dictionary": "data-dictionary.md",
       "personal_data": "none"
     },
@@ -93,7 +119,9 @@
       "visibility": "public",
       "location": "docs/reference/research/retrofit-synthetic-data/scenario-manifest.json",
       "sources": [],
-      "validation": {"root_label": true},
+      "validation": {
+        "root_label": true
+      },
       "data_dictionary": "data-dictionary.md",
       "personal_data": "none; versioned scenario and inventory-review metadata only"
     },
@@ -132,7 +160,10 @@
       "name": "AI priority evaluation scenarios (constructed cases and scripted model outputs)",
       "visibility": "public",
       "location": "src/agents/evals/ai_priority_golden.json",
-      "validation": {"marker_field": "note", "exemption": "Constructed scenario container; child cases inherit the root declaration. All text remains pattern-scanned."},
+      "validation": {
+        "marker_field": "note",
+        "exemption": "Constructed scenario container; child cases inherit the root declaration. All text remains pattern-scanned."
+      },
       "sources": [],
       "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
       "personal_data": "none; constructed cases"
@@ -142,7 +173,10 @@
       "name": "Human-review effectiveness seeded proposals (constructed case, scripted outputs)",
       "visibility": "public",
       "location": "src/agents/evals/review_effectiveness_golden.json",
-      "validation": {"marker_field": "description", "exemption": "Constructed scenario container; child proposals inherit the root declaration. All text remains pattern-scanned."},
+      "validation": {
+        "marker_field": "description",
+        "exemption": "Constructed scenario container; child proposals inherit the root declaration. All text remains pattern-scanned."
+      },
       "sources": [],
       "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
       "personal_data": "none; constructed cases"
@@ -152,7 +186,9 @@
       "name": "Document, form-schema and seeded-defect fixtures (120 families)",
       "visibility": "public",
       "location": "src/importer/evals/document_form_fixtures.json",
-      "validation": {"collection": "families"},
+      "validation": {
+        "collection": "families"
+      },
       "sources": [],
       "data_dictionary": "data-dictionary.md#document-and-form-data",
       "personal_data": "none; constructed documents, gold labels await human adjudication"
@@ -185,7 +221,9 @@
       "generation_status": "generator-and-small-fixture-tests-delivered; full-stock-materialization-not-verified",
       "location": "ZF_DATA/sensor-backfill",
       "generator": "src/core/src/zava_forward/core/synthetic/sensor_backfill.py",
-      "sources": [],
+      "sources": [
+        "SRC-OPEN-METEO-ERA5"
+      ],
       "data_dictionary": "data-dictionary.md#sensor-data",
       "personal_data": "none; seeded fictional home IDs and synthetic readings only",
       "open_item": "Full-run scope/storage, verified external climate and live simulator acceptance remain open. Climate is a synthetic seasonal model, not retrieved Met Office or Environment Agency data."
@@ -205,7 +243,9 @@
       "name": "Derived stock fabric, link diagnostics and linked-case snapshot",
       "visibility": "private",
       "location": "ZF_DATA/stock-fabric",
-      "sources": ["SRC-OSM"],
+      "sources": [
+        "SRC-OSM"
+      ],
       "generator": "src/core/src/zava_forward/core/synthetic/stock_fabric.py",
       "data_dictionary": "data-dictionary.md#derived-stock-fabric-and-link-reports",
       "personal_data": "Fabric is invented. Linked-case output can retain private input; never publish or certify arbitrary supplied inputs."
@@ -215,7 +255,10 @@
       "name": "Stock EPC, survey, seeded-conflict manifest and summary",
       "visibility": "private",
       "location": "support/synthetic-data/retrofit-flow/zava-forward-year-one/stock-geography/",
-      "sources": ["SRC-OSM", "SRC-OWNER-MODEL"],
+      "sources": [
+        "SRC-OSM",
+        "SRC-OWNER-MODEL"
+      ],
       "generator": "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_stock_epc.py",
       "data_dictionary": "data-dictionary.md#stock-epc-surveys-and-conflicts",
       "personal_data": "Synthetic stock attributes/conflict diagnostics on private source anchors; not lodged certificates or company evidence. Private outputs not inspected."
@@ -225,7 +268,9 @@
       "name": "Fictional form template and Finance authority/binding review pack (#97; not approved)",
       "visibility": "public",
       "location": "src/core/evals/fictional_form_review_pack.json",
-      "validation": {"root_label": true},
+      "validation": {
+        "root_label": true
+      },
       "sources": [],
       "data_dictionary": "data-dictionary.md#document-and-form-data",
       "personal_data": "none; invented template, field policies and unresolved Finance decision fields, no approval, signature or real scheme term"
@@ -235,7 +280,9 @@
       "name": "Constructed document control and retention cases",
       "visibility": "public",
       "location": "src/core/evals/document_control_fixtures.json",
-      "validation": {"collection": "cases"},
+      "validation": {
+        "collection": "cases"
+      },
       "sources": [],
       "data_dictionary": "data-dictionary.md#document-and-form-data",
       "personal_data": "Constructed home references and metadata, not real documents or retention approvals."
@@ -245,7 +292,10 @@
       "name": "Constructed multi-turn chat development scenarios",
       "visibility": "public",
       "location": "src/agents/evals/chat_golden.json",
-      "validation": {"marker_field": "note", "exemption": "Scripted nested scenarios inherit the root constructed/synthetic declaration; all text is scanned."},
+      "validation": {
+        "marker_field": "note",
+        "exemption": "Scripted nested scenarios inherit the root constructed/synthetic declaration; all text is scanned."
+      },
       "sources": [],
       "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
       "personal_data": "Scripted questions, replies, citations and expected outcomes; not real conversations."
@@ -256,7 +306,10 @@
       "visibility": "public",
       "location": "src/agents/evals/",
       "files_glob": "regulatory_*.json",
-      "validation": {"marker_field": "label", "exemption": "Synthetic development case/report containers inherit their root label, not operational legal or human evidence."},
+      "validation": {
+        "marker_field": "label",
+        "exemption": "Synthetic development case/report containers inherit their root label, not operational legal or human evidence."
+      },
       "sources": [],
       "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
       "personal_data": "Synthetic questions, expected/actual outcomes, metrics and fixture fingerprints."
@@ -266,7 +319,9 @@
       "name": "Draft paired-scenario cohort evaluation manifest (unapproved, not executed)",
       "visibility": "public",
       "location": "src/agents/evals/cohort_manifest_draft.json",
-      "validation": {"root_label": true},
+      "validation": {
+        "root_label": true
+      },
       "sources": [],
       "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
       "personal_data": "none; wholly fictional paired scenarios, agent-authored proposals, not approved labels or fairness evidence"
@@ -276,7 +331,11 @@
       "name": "Evaluation dataset metadata registry",
       "visibility": "public",
       "location": "src/agents/evals/registry.json",
-      "validation": {"collection": "datasets", "label": "contains_real_data", "exemption": "Metadata, not resident records; registered public eval payloads are checked separately."},
+      "validation": {
+        "collection": "datasets",
+        "label": "contains_real_data",
+        "exemption": "Metadata, not resident records; registered public eval payloads are checked separately."
+      },
       "sources": [],
       "data_dictionary": "data-dictionary.md#document-and-form-data",
       "personal_data": "Project owner attribution and fixture paths, not resident data."
@@ -294,6 +353,7 @@
   ],
   "open_items": [
     "Retrieval dates and licence wording for SRC-CENSUS-TS054, SRC-IMD-2025 and SRC-ONS-BOUNDARIES need owner confirmation against the official pages.",
-    "Owner decision: full-stock sensor run scope/storage, live simulator volume/cadence and verified external climate inputs (DS-SENSOR)."
+    "Owner decision: full-stock sensor run scope/storage, live simulator volume/cadence and verified external climate inputs (DS-SENSOR).",
+    "NASA POWER MERRA-2 sensitivity data (climate-paired-source-178) is retained but not registered: its licence text was not retrieved (HTTP 403 on 2026-10-22), so it must not feed any dataset until a licence is recorded."
   ]
 }

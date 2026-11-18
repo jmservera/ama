@@ -58,7 +58,7 @@ jobs:
     if: ${{ !cancelled() && needs.image-paths.result == 'success' }}
     name: src-${{ matrix.project }}
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.changes.result == 'success' && needs.changes.outputs.matrix || '{"include":[{"project":"core","dist":"zava-forward-core","deps":"","image":false,"run":true},{"project":"api","dist":"zava-forward-api","deps":"-e ../core -e ../agents","image":true,"run":true},{"project":"agents","dist":"zava-forward-agents","deps":"-e ../core","image":true,"run":true},{"project":"orchestrator","dist":"zava-forward-orchestrator","deps":"-e ../core","image":true,"run":true},{"project":"importer","dist":"zava-forward-import","deps":"-e ../core","image":true,"run":true}]}') }}

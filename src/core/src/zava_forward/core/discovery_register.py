@@ -16,6 +16,7 @@ synthetic demonstration data.
   with supporting and contradicting evidence recorded. A dispute stays visible.
 """
 
+import re
 from dataclasses import dataclass, field, replace
 from datetime import date
 
@@ -34,7 +35,64 @@ REQUIRED_EVENTS = (
 )
 PROPOSED, VALIDATED, DISPUTED = "PROPOSED", "VALIDATED", "DISPUTED"
 SUPPORTS, CONTRADICTS = "supports", "contradicts"
+CANDIDATE_FINDING_STATUS = "candidate_hypothesis_not_company_finding"
+VALIDATED_FINDING_STATUS = "owner_validated_company_finding"
 NOT_FINDING = "Candidate only. Not a company finding until the named owner validates it."
+
+_PLACEHOLDER_ACTORS = frozenset(
+    {
+        "tbd",
+        "todo",
+        "tbc",
+        "pending",
+        "unknown",
+        "n/a",
+        "na",
+        "none",
+        "null",
+        "placeholder",
+        "unassigned",
+        "unappointed",
+        "self",
+        "same person",
+        "same operator",
+    }
+)
+_AUTOMATED_ACTOR_TOKENS = frozenset(
+    {
+        "ai",
+        "agent",
+        "bot",
+        "automation",
+        "automated",
+        "automatic",
+        "copilot",
+        "llm",
+        "model",
+        "system",
+        "workflow",
+        "scheduler",
+        "pipeline",
+        "service",
+        "script",
+    }
+)
+
+
+class GovernanceViolationError(ValueError):
+    """Raised when a discovery output claims owner validation without governance gates."""
+
+
+def is_valid_human_actor(value: str) -> bool:
+    """Return True only when value names a non-placeholder human actor."""
+    cleaned = value.strip()
+    if not cleaned:
+        return False
+    lowered = " ".join(cleaned.lower().split())
+    if lowered in _PLACEHOLDER_ACTORS:
+        return False
+    tokens = set(re.findall(r"[a-z0-9]+", lowered))
+    return not bool(tokens & _AUTOMATED_ACTOR_TOKENS)
 
 
 @dataclass(frozen=True)
@@ -111,9 +169,43 @@ class Constraint:
     validated_by: str = ""
     decision_note: str = ""
     proposed_by: str = field(default="", compare=False)
+    owner_validated: bool = False
+    owner_validated_by: str = ""
+
+    def __post_init__(self) -> None:
+        if not self.owner_validated:
+            return
+        if self.status != VALIDATED or not is_valid_human_actor(self.validated_by):
+            raise GovernanceViolationError(
+                "owner_validated requires prior domain-owner VALIDATED status by a human actor"
+            )
+        if not self.supporting_evidence or not self.contradicting_evidence:
+            raise GovernanceViolationError(
+                "owner_validated requires both supporting_evidence and contradicting_evidence"
+            )
+        if not is_valid_human_actor(self.owner_validated_by):
+            raise GovernanceViolationError(
+                "owner_validated requires a named human nominated discovery owner"
+            )
+        if self.owner_validated_by.strip().lower() == self.proposed_by.strip().lower():
+            raise GovernanceViolationError(
+                "The proposing analyst cannot record discovery-owner validation"
+            )
 
     def of(self, direction: str) -> tuple[Evidence, ...]:
         return tuple(e for e in self.evidence if e.direction == direction)
+
+    @property
+    def supporting_evidence(self) -> tuple[Evidence, ...]:
+        return self.of(SUPPORTS)
+
+    @property
+    def contradicting_evidence(self) -> tuple[Evidence, ...]:
+        return self.of(CONTRADICTS)
+
+    @property
+    def finding_status(self) -> str:
+        return VALIDATED_FINDING_STATUS if self.owner_validated else CANDIDATE_FINDING_STATUS
 
     @property
     def is_company_finding(self) -> bool:
@@ -165,6 +257,44 @@ def decide(
     )
 
 
+def validate_owner_finding(
+    constraint: Constraint,
+    discovery_owner: DiscoveryOwner,
+    definitions: list[EventDefinition],
+    *,
+    by: str,
+    note: str,
+) -> Constraint:
+    """Promote a domain-validated hypothesis only after owner, endpoint, and dictionary gates."""
+    if not (
+        is_valid_human_actor(discovery_owner.nominated_by)
+        and is_valid_human_actor(discovery_owner.owner)
+        and is_valid_human_actor(discovery_owner.endpoint_agreed_by)
+        and discovery_owner.nominated_by.strip().lower() != discovery_owner.owner.strip().lower()
+        and discovery_owner.status() == "ENDPOINT_AGREED"
+    ):
+        raise GovernanceViolationError(
+            "Discovery owner must be nominated by a distinct human sponsor with ENDPOINT_AGREED"
+        )
+    gaps = dictionary_gaps(definitions)
+    if gaps:
+        raise GovernanceViolationError(
+            f"Lifecycle event dictionary has unresolved gaps: {'; '.join(gaps)}"
+        )
+    if not is_valid_human_actor(by) or by.strip() != discovery_owner.owner.strip():
+        raise GovernanceViolationError(
+            "Only the nominated human discovery owner may validate a company finding"
+        )
+    if not note.strip():
+        raise GovernanceViolationError("A discovery-owner validation note is required")
+    return replace(
+        constraint,
+        owner_validated=True,
+        owner_validated_by=by.strip(),
+        decision_note=note.strip(),
+    )
+
+
 def register_rows(constraints: list[Constraint]) -> list[dict[str, object]]:
     """Rows in the order given, which is the proposed test order, not a ranking of fact."""
     return [
@@ -175,6 +305,10 @@ def register_rows(constraints: list[Constraint]) -> list[dict[str, object]]:
             status=c.status,
             supporting=len(c.of(SUPPORTS)),
             contradicting=len(c.of(CONTRADICTS)),
+            supporting_evidence=c.supporting_evidence,
+            contradicting_evidence=c.contradicting_evidence,
+            owner_validated=c.owner_validated,
+            finding_status=c.finding_status,
             gaps=evidence_gaps(c),
             notice="" if c.is_company_finding else NOT_FINDING,
         )

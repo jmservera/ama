@@ -1,0 +1,61 @@
+{
+  "task_id": "issue-116-entra-output-0052-c1-rebase",
+  "task_slug": "issue-116-entra-output-0052-c1-rebase",
+  "parent_task": {
+    "task_id": "issue-116-entra-output-0052-c1",
+    "task_slug": "issue-116-entra-output-0052-c1"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/issue-116-entra-output-0052-c1-rebase-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/issue-116-entra-output-0052-c1-rebase-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/issue-116-entra-output-0052-c1-rebase-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/issue-116-entra-output-0052-c1-rebase-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/issue-116-entra-output-0052-c1-rebase-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/issue-116-entra-output-0052-c1-rebase-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Confirmed automatic child continuation inside Cycle 1 (c1-rebase, spending no new correction cycle) to rebase feat/ai-116-entra-output-0052 (7b882614d..e7d05fab4) onto newly merged parent tip origin/feat/demo-164-chat-grounding-provenance-0900 (0c1fa1da4, PR #1769), resolve store.py conflict, update c1 changes/review records, validate Focused tier, and leave a clean local commit without pushing",
+      "status": "confirmed",
+      "evidence": "Explicit caller prompt direction and parent rank-1 follow-up in .copilot-tracking/rpi-sessions/2026-11-15/issue-116-entra-output-0052-c1-state.json"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready; selected clean rebase of 7b882614d..e7d05fab4 onto 0c1fa1da4 resolving the 2 store.py hunks (_queue_candidates handoff_policy cache key and _work_context 4-arg handoff_view) while preserving 7b882614d formatting + role-visibility changes and 0c1fa1da4 taskqueues.MEMBERSHIP_REVISION=4 / sqlstore._queue_fingerprint, followed by a clean tracking commit updating c1-changes.md and c1-review.md plus c1-rebase RPI artifacts",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-116-entra-output-0052-c1-rebase-research.md (C1-C6)"
+    },
+    {
+      "decision": "Critique execution: Complete; Verdict: Revise; Critique path: .copilot-tracking/reviews/plans/2026-11-15/issue-116-entra-output-0052-c1-rebase-plan-critique.md; Direct dispositions: PC-001 applied directly (mapped non-existent test_design_system_source_contract.py to canonical src/api/tests/test_design_system.py with explicit disclosure), PC-002 applied directly (added src/api to PYTHONPATH for test_handoff_escalation_api_83.py), PC-003 applied directly (path-preserving find+tar archive across git rebase and separation of P02-T01 pre-review reconciliation from post-review tracking commit); Planning Readiness: ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/issue-116-entra-output-0052-c1-rebase-plan-critique.md; .copilot-tracking/plans/2026-11-15/issue-116-entra-output-0052-c1-rebase-plan.md"
+    },
+    {
+      "decision": "Review execution: Complete; Outcome: Conformant; Assessed boundary: Rebase of feat/ai-116-entra-output-0052 onto origin/feat/demo-164-chat-grounding-provenance-0900 (d8cb35d25 / PR #1770 atop 0c1fa1da4 / PR #1769 -> fc44a697c..41091c2a0), store.py conflict resolution, c1-changes.md and c1-review.md updates, and Focused + cross-feature #83/#133/#116 validation; Review path: .copilot-tracking/reviews/logs/2026-11-15/issue-116-entra-output-0052-c1-rebase-review.md",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-116-entra-output-0052-c1-rebase-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await post-Review follow-up selection (ranked follow-up item, Stop automatic session, or Switch to manual mode) or coordinator push/review of rebased branch feat/ai-116-entra-output-0052"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Extract shared post-provider record-visibility scrubbing helper across ai_tasks._record_view, Store._rec_view, and ChatIsolation.scrub_thread",
+      "rationale": "KISS and DRY cleanup reducing duplicated field-visibility redaction logic across single-turn records and multi-turn chat threads",
+      "evidence": ".copilot-tracking/plans/2026-11-15/issue-116-entra-output-0052-c1-plan.md (Follow-Up Items)"
+    },
+    {
+      "rank": 2,
+      "task": "Confirm organisational control-owner sign-off on OD-14 / OD-19 (ZF_REASON_ROLES) and live Microsoft Entra B2B tenant configuration",
+      "rationale": "External governance prerequisites for full production closure of Issue #116 outside repository code",
+      "evidence": ".copilot-tracking/plans/2026-11-15/issue-116-entra-output-0052-c1-plan.md (Follow-Up Items)"
+    }
+  ]
+}
