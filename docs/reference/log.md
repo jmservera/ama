@@ -12787,3 +12787,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Eval gate local test rerun and rescoring limits (Refs #216)
 
 * Updated [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md): 101 existing gate tests run locally with raw output retained; container scores labelled "Observed; raw output not retained"; no new model call; the unticked criterion stays partly proven.
+
+## [2026-11-18] add | Content audit of deployed demo screens, second run (Refs #153)
+
+* Added [content-audit-live-153-2026-11-18.md](research/content-audit-live-153-2026-11-18.md) with scripts, a hit summary and 43 redacted screenshots: findings on "Unassigned", "Held", "envelope" and an unexplained refusal code; AI wording and resident page hold; the named-human review criterion stays unproven. Indexed in the README.
