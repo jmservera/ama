@@ -12737,6 +12737,23 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Per-year ledger verification test evidence (Refs #114)
 
 * Added [issue-114-per-year-ledger-verification-evidence-2026-11-18.md](research/ledger-verification/issue-114-per-year-ledger-verification-evidence-2026-11-18.md) and the retained raw unit-test run: criterion C1 proven by test on the local implementation; the deployed image still lacks the reliance check (owner image roll). No source changed.
+## [2026-11-18] add | Employee loading feedback and Today's briefing live demo evidence (Refs #531)
+
+* Added [issue-531-live-demo-evidence-2026-11-18.md](research/issue-531-live-demo-evidence-2026-11-18.md): signed-in employee session on the live demo shows the static loading shell, per-panel feedback, briefing labels, sources, refresh time, outcome-based review wording with required reasons, and axe 0 violations. Cold start, script retry and unverified output were simulated in the browser; no review was recorded; the live `app.js` and `style.css` trail main by two days but not in briefing or loading code. Criterion 7 is proven for the demo with stated limits. No source changed.
+
+## [2026-11-18] assessment | Issue 441 resident portal documentation status (Refs #441)
+
+* Added [resident-portal-441-live-status-2026-11-18.md](research/resident-portal-441-live-status-2026-11-18.md): criterion 5 (FR-044/AC-084 owner disposition) stays unproven for the demo because the 2026-11-02 direction says demo display does not satisfy it and no named disposition exists. The other eight ticked criteria were not re-assessed.
+* Documentation only. No Azure action, credential, source or wording change; no tick or closure.
+
+## [2026-11-18] add | Issue 349 tenant prerequisites live re-verification (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-2026-11-18.md](research/issue-349-tenant-prerequisites-live-2026-11-18.md): per-criterion status for the six acceptance criteria on the synthetic demo. Vault path proven (Key Vault reference, public access disabled, approved private endpoint); sign-in, anonymous and forged-header denial proven with the test account; registration provenance, redirect list and staff roster unproven because Graph is unreadable and no roster exists. Read-only Azure; nothing created.
+* Updated the research index. Open question: tenant-owner confirmation of the registration.
+
+## [2026-11-18] add | Issue 358 live recheck (Refs #358)
+
+* Added [issue-358-live-recheck-2026-11-18.md](research/issue-358-live-recheck-2026-11-18.md): confirmed the throwaway app is deleted, re-ran 126 setup tests, confirmed the delegating `main()`, and read the demo API Key Vault reference. No Azure write or source change; the full `setup-entra.py` run stays unproven.
 
 ## [2026-11-18] add | Post-cleanup references and live health evidence (Refs #203)
 
