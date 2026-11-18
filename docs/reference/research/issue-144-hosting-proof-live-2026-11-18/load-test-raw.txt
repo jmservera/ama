@@ -1,0 +1,7 @@
+13:40:55Z replicas 0
+13:41:04Z replicas 1
+13:41:14Z replicas 2
+13:41:24Z replicas 3
+13:41:34Z replicas 3
+13:41:43Z replicas 4
+start 13:40:53Z n 1752 rps 38.9 codes {'200': 1752} p50 1.067 p95 27.819 p99 29.16 max 29.479
