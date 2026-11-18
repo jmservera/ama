@@ -13284,3 +13284,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 154 live fourth run (Refs #154)
 
 * Added [issue-154-live-resident-ux-r4-2026-11-18.md](research/issue-154-live-resident-ux-r4-2026-11-18.md): the demo entrypoint could not load representative grants; added an optional `ZF_DEMO_REP_GRANTS_PATH` loader with tests. Criterion 3 proven locally, not live; 5b remains unmet.
+
+## [2026-11-18] add | Issue 164 contact refusal gap (Refs #164)
+
+* Added [issue-164-contact-refusal-gap-2026-11-18.md](research/issue-164-contact-refusal-gap-2026-11-18.md): send-style resident-contact asks now refuse with the contact-log route; source and tests changed in `src/core`.
