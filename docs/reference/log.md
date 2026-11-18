@@ -13215,6 +13215,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 157 live re-verification (Refs #157)
 
 * Added [issue-157-live-chat-epic-recheck-2026-11-18.md](research/issue-157-live-chat-epic-recheck-2026-11-18.md): fresh live probes of the chat endpoints and a per-criterion verdict; both open epic criteria stay unproven for the demo because they need owner and PR-process actions.
+
 ## [2026-11-18] add | Issue 220 live fourth run (Refs #220)
 
 * Added [issue-220-live-r4-challenge-route-2026-11-18.md](research/issue-220-live-r4-challenge-route-2026-11-18.md): same image digest on revision 0000032, same live 403 on staff writes, forbidden fields refused, protected state unchanged, 21 offline tests pass; the no-retaliation criterion stays unproven live. Docs only.
