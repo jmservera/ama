@@ -225,7 +225,7 @@ retry under separate approval.
 
 Normal suffix `auth-renewal`, demo `auth`; only with token storage and background
 workloads. The ranking jobs (`rank`, `rank-publish`) currently resolve to this
-anchor in the alert description; see [job ranking](#job-ranking). Proposed
+anchor in the alert description; see [job ranking](#job-rank). Proposed
 owner: Digital service owner. Triage: expiry/binding and
 execution metadata without fetching SAS or tokens. Response: follow
 [Key Vault lifecycle](./README.md#key-vault-secret-lifecycle) and preserve
