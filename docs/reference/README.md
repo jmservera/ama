@@ -456,6 +456,9 @@ records a 2026-11-18 read-only demo run: a live what-if of the real template, th
 smoke checks against the demo API, the fail-closed environment gate and the unconfigured OIDC,
 environment and runner prerequisites. All six criteria stay unticked.
 
+For #118, the [hardened deployment live evidence](./research/issue-118-hardened-deployment-live-evidence-2026-11-18.md)
+records the Azure Policy and Defender decision and read-only live probes (enactment not proven).
+
 For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analysis-live-evidence-2026-11-18.md)
 records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human
 sign-off and R1 lacks the official standards texts. Read-only demo probes are recorded.
