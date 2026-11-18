@@ -1,0 +1,16 @@
+app.js | 200 | 203579 bytes | served 6887887dcee0b2d6 | repo 18b0536b0814252c | DIFF
+assistants.js | 200 | 21811 bytes | served 25624e8ef13a6ca1 | repo 16c2b473b5504bd2 | DIFF
+index.html | 200 | 4281 bytes | served 26676584f63fc897 | repo 3270ca3e1dc56596 | DIFF
+law.html | 200 | 1857 bytes | served 90f39b7b74c9a316 | repo cd8beb133531d04e | DIFF
+law.js | 200 | 5248 bytes | served 6048fbeb51493a9f | repo 6048fbeb51493a9f | match
+ops.js | 200 | 51317 bytes | served fc8507809e0d8aba | repo 6186021cab09e5a5 | DIFF
+panels.js | 200 | 67901 bytes | served 63c2937d0c961d08 | repo e4c3dee1de0946ea | DIFF
+style.css | 200 | 32796 bytes | served 16bddd7ccd2a0a67 | repo 7a40588b8c9e5679 | DIFF
+timecapture.js | 200 | 10041 bytes | served 4283df2d67e4221c | repo 4283df2d67e4221c | match
+welcome.html | 200 | 2273 bytes | served 51df2b7618d180cf | repo f04c167c4088ab9a | DIFF
+zava-logo.png | 200 | 14325 bytes | served 92a6cd06c63f978a | repo 92a6cd06c63f978a | match
+vendor/LICENSE | 200 | 1369 bytes | served bbc959aaef7488b3 | repo bbc959aaef7488b3 | match
+vendor/leaflet.css | 200 | 14145 bytes | served 337bfca5cabd03b3 | repo 337bfca5cabd03b3 | match
+vendor/leaflet.js | 200 | 147552 bytes | served db49d009c841f5ca | repo db49d009c841f5ca | match
+vendor/images/layers.png | 200 | 696 bytes | served 1dbbe9d028e292f3 | repo 1dbbe9d028e292f3 | match
+vendor/images/marker-icon.png | 200 | 1466 bytes | served 574c3a5cca85f411 | repo 574c3a5cca85f411 | match
