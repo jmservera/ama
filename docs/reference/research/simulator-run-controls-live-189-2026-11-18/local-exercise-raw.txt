@@ -1,0 +1,16 @@
+status-before: HTTP 200 -> {"activity": "unverified", "approval_reference": null, "availability": "unavailable", "budget_alert": {"detail": "The run control has no budget alert field. No budget alert is recorded or verified live (#146); the approval reference is not evidence that an alert exists.", "live_verified": false, "status": "not_recorded"}, "capacity": null, "cohort_size": null, "manual_route": "Manual route: an operator with write acc
+start-no-confirm: HTTP 400 -> {"code": "CONFIRMATION_REQUIRED", "error": "Tick the confirmation box before you continue."}
+start-blank-owner: HTTP 400 -> {"code": "CONTROL_INVALID", "error": "The owner, approval reference, expiry or home list is not valid. Fix it and try again."}
+start-expiry-too-far: HTTP 400 -> {"code": "CONTROL_WINDOW_INVALID", "error": "The expiry must be in the future and at most 14 days away."}
+start-rate-too-high-2000-homes: HTTP 400 -> {"code": "CONTROL_INVALID", "error": "The owner, approval reference, expiry or home list is not valid. Fix it and try again."}
+  audit: <actor> ('sim_control_start', '-', 'Finite simulator run permitted for 5 homes until 2026-11-18T14:35:56Z.')
+start-ok: HTTP 200 -> {"audit_recorded": true, "changed": true, "ok": true, "status": {"activity": "unverified", "approval_reference": {"status": "declared_unverified", "value": "issue-189-demo"}, "availability": "configured", "budget_alert": {"detail": "The run control has no budget alert field. No budget alert is recorded or verified live (#146); the approval reference is not evidence that an alert exists.", "live_verified": false, "sta
+start-again: HTTP 409 -> {"code": "ALREADY_RUNNING", "error": "A run is already permitted. Stop it before you start a different one."}
+  audit: <actor> ('sim_control_stop', '-', 'Finite simulator run stopped by an administrator.')
+stop-ok: HTTP 200 -> {"audit_recorded": true, "changed": true, "ok": true, "status": {"activity": "unverified", "approval_reference": {"status": "declared_unverified", "value": "issue-189-demo"}, "availability": "configured", "budget_alert": {"detail": "The run control has no budget alert field. No budget alert is recorded or verified live (#146); the approval reference is not evidence that an alert exists.", "live_verified": false, "sta
+status-after: HTTP 200 -> {"activity": "unverified", "approval_reference": {"status": "declared_unverified", "value": "issue-189-demo"}, "availability": "configured", "budget_alert": {"detail": "The run control has no budget alert field. No budget alert is recorded or verified live (#146); the approval reference is not evidence that an alert exists.", "live_verified": false, "status": "not_recorded"}, "capacity": {"daily_budget": 360000, "hom
+rate limits: Limits(max_per_second=10.0, batch_size=50, attempts=4, backoff_base_seconds=1.0, backoff_cap_seconds=30.0)
+capacity N=1: ok
+capacity N=60: ok
+capacity N=1000: ok
+capacity N=5000: refused B1_QUOTA_HEADROOM
