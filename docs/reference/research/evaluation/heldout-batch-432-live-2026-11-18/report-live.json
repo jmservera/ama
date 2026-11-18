@@ -1,0 +1,157 @@
+{
+  "accrued_usd": "0.000744",
+  "approved_by": "Juan Manuel Servera",
+  "budget_usd": "0.50",
+  "calls": 12,
+  "currency": "USD",
+  "evidence_label": "measured held-out batch",
+  "mode": "live",
+  "model": "gpt-4.1-nano",
+  "outcome": "completed",
+  "problems": [],
+  "rows": [
+    {
+      "cached": 0,
+      "id": "h01",
+      "input": 70,
+      "measured": true,
+      "output": 135,
+      "total": 205,
+      "usd": "0.000061"
+    },
+    {
+      "cached": 0,
+      "id": "h02",
+      "input": 77,
+      "measured": true,
+      "output": 122,
+      "total": 199,
+      "usd": "0.000056"
+    },
+    {
+      "cached": 0,
+      "id": "h03",
+      "input": 73,
+      "measured": true,
+      "output": 151,
+      "total": 224,
+      "usd": "0.000068"
+    },
+    {
+      "cached": 0,
+      "id": "h04",
+      "input": 70,
+      "measured": true,
+      "output": 145,
+      "total": 215,
+      "usd": "0.000065"
+    },
+    {
+      "cached": 0,
+      "id": "h05",
+      "input": 72,
+      "measured": true,
+      "output": 134,
+      "total": 206,
+      "usd": "0.000061"
+    },
+    {
+      "cached": 0,
+      "id": "h06",
+      "input": 75,
+      "measured": true,
+      "output": 142,
+      "total": 217,
+      "usd": "0.000064"
+    },
+    {
+      "cached": 0,
+      "id": "h07",
+      "input": 76,
+      "measured": true,
+      "output": 127,
+      "total": 203,
+      "usd": "0.000058"
+    },
+    {
+      "cached": 0,
+      "id": "h08",
+      "input": 73,
+      "measured": true,
+      "output": 142,
+      "total": 215,
+      "usd": "0.000064"
+    },
+    {
+      "cached": 0,
+      "id": "h09",
+      "input": 73,
+      "measured": true,
+      "output": 152,
+      "total": 225,
+      "usd": "0.000068"
+    },
+    {
+      "cached": 0,
+      "id": "h10",
+      "input": 75,
+      "measured": true,
+      "output": 144,
+      "total": 219,
+      "usd": "0.000065"
+    },
+    {
+      "cached": 0,
+      "id": "h11",
+      "input": 72,
+      "measured": true,
+      "output": 142,
+      "total": 214,
+      "usd": "0.000064"
+    },
+    {
+      "cached": 0,
+      "id": "h12",
+      "input": 76,
+      "measured": true,
+      "output": 104,
+      "total": 180,
+      "usd": "0.000049"
+    }
+  ],
+  "source": "provider usage envelope via AgentWorker.provider_call",
+  "spend_authority_ref": "Owner decision 2026-11-18 on #432: live Azure authorised for the synthetic demo, resource group ama, demo cap USD 700; this batch capped at USD 0.50 and 12 calls",
+  "spread": {
+    "input": {
+      "count": 12,
+      "max": 77,
+      "mean": 73.5,
+      "min": 70,
+      "p50": 73.0,
+      "p90": 76
+    },
+    "output": {
+      "count": 12,
+      "max": 152,
+      "mean": 136.67,
+      "min": 104,
+      "p50": 142.0,
+      "p90": 151
+    },
+    "total": {
+      "count": 12,
+      "max": 225,
+      "mean": 210.17,
+      "min": 180,
+      "p50": 214.5,
+      "p90": 224
+    }
+  },
+  "stop_reason": "exhausted",
+  "tokens": {
+    "cached": 0,
+    "input": 882,
+    "output": 1640,
+    "total": 2522
+  }
+}
