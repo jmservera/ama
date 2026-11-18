@@ -13016,6 +13016,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-76-live-r2-2026-11-18.md](research/issue-76-live-r2-2026-11-18.md): masked screenshots of the hazard clock and named owner and of the queue definitions on the demo; hazard partly proven (clock Unknown), safeguarding unproven (no demo item); no source change, nothing created in Azure
 
+## [2026-11-18] add | Issue 128 live audit run 2 (Refs #128)
+
+* Added [issue-128-live2-equity-evidence-2026-11-18.md](research/issue-128-live2-equity-evidence-2026-11-18.md) and its evidence folder: protocol agreement still unproven, aggregate-only measures proven at source level (26 core tests), desktop axe clean on four live synthetic demo pages.
+
 ## [2026-11-18] add | Issue 151 live audit round 3 (Refs #151)
 
 * Added [issue-151-live-r3-wcag-evidence-2026-11-18.md](research/issue-151-live-r3-wcag-evidence-2026-11-18.md): resident app, contrast heuristic, page title and keyboard case-open probes on the live demo; criterion 4 stays unticked (screen reader unproven, one employee role only)
