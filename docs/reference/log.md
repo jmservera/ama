@@ -12226,3 +12226,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-17] update | Identifier leak copy audit on exception screens (Refs #153)
 
 * Added an [identifier leak audit](research/ux/content-standard.md#identifier-leak-audit-2026-11-17-153) section to the content standard: two snake_case identifiers shown to staff on the data steward and digital operator screens were reworded, and a lexical regression guard was added. Named-human review of resident-facing wording (criterion 5) remains unmet.
+
+## [2026-11-18] add | Deployed demo parity live proof (Refs #350)
+
+* Added [deployed-parity-live-2026-11-18.md](research/deployed-parity-live-2026-11-18.md) with a per-criterion proven/unproven table for the unticked #350 criteria, measured read-only on the synthetic demo with Playwright and Azure CLI (one Programme Manager account, desktop).
+* The 2026-10-16 gaps for model deployment, map tiles and the baseline (980 cases) are stale; browser-style anonymous API requests still get 302, `/api/time/status` returns 500 (SQL ProgrammingError), law store and photo remain unavailable. No source or Azure change was made; #350 stays open.
