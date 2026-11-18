@@ -19,7 +19,7 @@ Issue #124 has three unticked criteria (owner nomination and endpoint; lifecycle
 ## Method
 
 * Code under test: `src/core/src/zava_forward/core/discovery_contract.py`, `discovery_flow.py`, `discovery_register.py`. The probe imports the worktree copy by path.
-* Offline tests: `PYTHONPATH=src:tests python3 -m unittest test_discovery_contract test_discovery_flow test_discovery_register` from `src/core`, 59 tests, all OK.
+* Offline tests: `PYTHONPATH=src:tests python3 -m unittest test_discovery_contract test_discovery_flow test_discovery_register` from `src/core`, 59 tests, all OK (output retained in `.copilot-tracking/evidence/2026-11-18/issue-124-live/unittest.txt`).
 * Probe: `.copilot-tracking/evidence/2026-11-18/issue-124-live/probe.py` with output `probe.json`. It exercises the contract with placeholder human names (they are not nominations) and counts the synthetic CSVs. No network, no credentials, no Azure call.
 * Live Azure: not applicable. A search of `src/api`, `src/orchestrator`, `src/agents` and `src/importer` finds no runtime consumer of the discovery modules, so the deployed apps (`ca-cutover-test-demo-api`, `ca-resident-demo`) expose nothing to probe. No Azure resource was created or changed, so there is nothing to delete. No source changed (Tier FOCUSED).
 
