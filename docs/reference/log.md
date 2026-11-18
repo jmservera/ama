@@ -12908,6 +12908,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-107-live-r2-assistants-evidence-2026-11-18.md](research/issue-107-live-r2-assistants-evidence-2026-11-18.md): fresh raw MSSQL and SQLite test output and a read-only live probe, per-criterion table; no source change. The approved-release criterion stays unproven (OQ-017).
 
+## [2026-11-18] update | Case chat gates third live pass (Refs #216)
+
+* Updated [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md): all 30 prompts rerun in four throwaway servers with raw output retained (18 model calls, 20,128 tokens); refusals 10 of 10, 9 of 9 cited model answers valid, three strict failures disclosed; 107 core and agents tests pass. No source change.
+
 ## [2026-11-18] add | Public browser access third live pass (Refs #344)
 
 * Added [public-browser-access-live-r3-2026-11-18.md](research/public-browser-access-live-r3-2026-11-18.md): reproduced the anonymous 401, Entra sign-in and private SQL results and classed the `/api/time/status` 500 as a database-side ProgrammingError from the container log. Browser-style API redirect stays unproven. No Azure change was made.
@@ -12987,6 +12991,26 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Assistant panel keyboard and announcement live proof (Refs #159)
 
 * Added [assistant-ux-live-159-2026-11-18.md](research/assistant-ux-live-159-2026-11-18.md): desktop Playwright keyboard-only run on the demo; keyboard operability and live-region announcements proven, screen-reader testing unproven; no source change, no Azure resource created, probe thread deleted
+
+## [2026-11-18] add | Chat grounding live demo audit, third pass (Refs #164)
+
+* Added [issue-164-live-chat-grounding-evidence-r3-2026-11-18.md](research/issue-164-live-chat-grounding-evidence-r3-2026-11-18.md): re-ran the UI probe and registry read on revision 0000031; findings unchanged (no actual-model result, thresholds proposed, accountable individual unknown, resident-contact ask falls back without a route). No source change, no Azure resource created, probe thread deleted
+
+## [2026-11-18] add | Phase 0 discovery audit second live pass (Refs #124)
+
+* Added [issue-124-live-r2-phase0-discovery-audit-2026-11-18.md](research/issue-124-live-r2-phase0-discovery-audit-2026-11-18.md): 59 core discovery tests and the probe re-run, no consumer or deployed discovery surface found, per-criterion table with the owner-only items; no criterion ticked and no source or Azure change
+
+## [2026-11-18] add | Service continuity live audit (Refs #122)
+
+* Added [issue-122-continuity-live-audit-2026-11-18.md](research/issue-122-continuity-live-audit-2026-11-18.md): constructed suspension and restart drill tests pass (6 core, 20 api); read-only live `/api/continuity` and export probe; the witnessed authorised drill criterion is unproven for the demo (drills prohibited, restart authority unappointed); leftover probe suspension SUS-1 recorded; no source change, no Azure resource created
+
+## [2026-11-18] add | Issue 79 live ranking proof with retained evidence (Refs #79)
+
+* Added [issue-79-live-ranking-2026-11-18.md](research/issue-79-live-ranking-2026-11-18.md) and its evidence folder: demo run with retained raw output. Determinism and hash verification proven again; named owner signature, scheduled run of the shipped entry point and write-once retention unproven; no source change; throwaway job and container deleted.
+
+## [2026-11-18] add | Hardened deployment audit rerun with retained evidence (Refs #118)
+
+* Added [issue-118-live-20261118T1512Z-2026-11-18.md](research/issue-118-live-20261118T1512Z-2026-11-18.md) and its evidence folder: policy and Defender decision proven as a recorded demo decision; live Defender tiers and repository policy assignments unproven (read access denied, assignments not deployed)
 
 ## [2026-11-18] add | Issue 76 live second pass (Refs #76)
 

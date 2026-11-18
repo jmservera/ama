@@ -405,6 +405,9 @@ For #79, the [live ranking publication evidence](./research/issue-79-live-rankin
 records a 2026-11-18 demo run on live Azure: the unsigned policy refused, a scheduled
 job firing and create-only Blob publication. The named owner signature and Blob
 immutability stay unproven.
+A second run, [live ranking proof with retained evidence](./research/issue-79-live-ranking-2026-11-18.md),
+keeps the raw outputs; it repeats the proof of the two ticked criteria and leaves the
+owner signature, schedule and retention unproven.
 For #76, the [live task queue evidence](./research/issue-76-live-task-queue-evidence-2026-11-18.md)
 records the hazard clock and named owner on the live demo case card. The clock reads
 unknown because the record has no timestamp, and no demo case has a safeguarding item.
@@ -448,7 +451,9 @@ confirms the same image and 403 defect, and keeps the criterion unproven.
 For #124, the [Phase 0 discovery evidence](./research/issue-124-phase0-discovery-evidence-2026-11-18.md)
 records a 2026-11-18 offline and synthetic-data run: nomination, endpoint, dictionary and two-sided
 constraint rules proven in code, and the three unticked criteria stated as needing sponsor, owner
-workshops and an approved company extract.
+workshops and an approved company extract. The [second live pass](./research/issue-124-live-r2-phase0-discovery-audit-2026-11-18.md)
+re-runs the tests and probe, finds no consumer or deployed surface for the discovery modules, and
+restates the owner-only items without ticking any criterion.
 For #125, the [live discovery assistant evidence](./research/issue-125-live-discovery-assistant-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: no assistant route on the live API, deny-by-default boundary output,
 and all three criteria left open with the reason each cannot be fully proven for the demo.
@@ -495,6 +500,8 @@ environments, runner and image release remain unconfigured and unobserved.
 
 For #118, the [hardened deployment live evidence](./research/issue-118-hardened-deployment-live-evidence-2026-11-18.md)
 records the Azure Policy and Defender decision and read-only live probes (enactment not proven).
+A [rerun](./research/issue-118-live-20261118T1512Z-2026-11-18.md) retains sanitised raw outputs and adds a per-criterion table;
+the decision is proven for the demo, while live Defender tiers stay unreadable (AuthorizationFailed).
 
 For #117, the [live scan evidence](./research/issue-117-live-scan-evidence-2026-11-18.md)
 proves refusal of unsafe uploads on the demo's synthetic scanner (Defender for Storage is off; clean path and legal hold
@@ -1300,6 +1307,7 @@ or infra acceptance claimed.
 | [Map tile provider and accessible list live demo evidence (#119)](./research/issue-119-live-map-evidence-2026-11-18.md) | Per-criterion demo record: deployed public OSM tile provider, policy re-read, list alternative, keyboard and tile-failure proofs; no screen reader run, no licensed provider |
 | [Chat grounding and human-review boundaries live demo evidence (#164)](./research/issue-164-live-chat-grounding-evidence-2026-11-18.md) | Per-criterion demo record for the five unticked criteria: task registered and disabled, thresholds proposed not approved, three live asks answered by rules with zero model calls, human exercises and approvals unproven |
 | [Chat grounding live demo evidence, second pass (#164)](./research/issue-164-live-chat-grounding-evidence-r2-2026-11-18.md) | Chat widget driven in Playwright with grounded, abstention, approve, diagnose, consent, contact and injection asks; raw output and labelled screenshots retained; refusal routes shown for three asks; contact ask fell back without a refusal route; criteria 1, 2 and 4 partly proven, 3 unproven |
+| [Chat grounding live demo audit, third pass (#164)](./research/issue-164-live-chat-grounding-evidence-r3-2026-11-18.md) | Re-run of the live widget probe and registry read on the same revision; unchanged findings, per-criterion table and production-only items |
 | [Employee loading feedback and Today's briefing live demo evidence (#531)](./research/issue-531-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the unticked live-verification criterion: loading shell, per-panel feedback, briefing labels, sources, review wording and axe observed on the live build; cold start, retry and unverified output simulated in the browser; no review recorded; live app.js and style.css behind main |
 | [Employee loading feedback and Today's briefing live re-verification, second pass (#531)](./research/issue-531-live-r2-2026-11-18-note.md) | Adds a replica-poll cold-start attempt, parity re-check and a recorded UI reject; per-criterion proven and unproven table |
 | [Conversational assistant experience live demo evidence (#159)](./research/issue-159-live-chat-experience-evidence-2026-11-18.md) | Per-criterion demo record for the unticked keyboard, announcement and screen-reader criterion: keyboard operation and live-region announcements proven on the live panel, screen-reader testing deferred |
@@ -1363,6 +1371,7 @@ or infra acceptance claimed.
 | [Resident and Representative UX Audit on the Live Demo, Round 2](./research/issue-154-live-resident-ux-audit-r2-2026-11-18.md) | Issue 154: desktop audit of the synthetic resident showcase and workbench resident screens against the UX standards, retained raw output, per-criterion table |
 | [Issue 358 Live Evidence](./research/issue-358-live-evidence-2026-11-18.md) | Credential-expiry guard mutation check and a live ARM round-trip showing the secrets rebuild preserves Key Vault references on a throwaway app; full setup path unproven |
 | [Issue 358 Live Recheck](./research/issue-358-live-recheck-2026-11-18.md) | Second pass: throwaway app deletion confirmed, delegating `main()` and expiry tests re-run, demo app Key Vault reference read; full setup path still unproven |
+| [Issue 122 Continuity Live Audit](./research/issue-122-continuity-live-audit-2026-11-18.md) | Constructed drill tests (26 OK) and read-only live continuity probe; the witnessed-drill criterion remains unproven for the demo; leftover SUS-1 suspension recorded |
 | [Issue 358 Live Pass 3](./research/issue-358-live3-evidence-2026-11-18.md) | Third pass retaining raw test, scratch-copy mutation, Azure read-only and delegation outputs with a per-criterion table; full setup path still unproven |
 | [Azure SQL Point-in-Time Restore Evidence on the Demo](./research/issue-145-live-pitr-restore-evidence-2026-11-18.md) | Issue 145: 2026-11-18 live restore of the demo database to a throwaway copy, audit-chain prefix match, observed restore time, per-criterion proven/unproven record |
 | [Azure SQL Restore Re-verification and Resurrection Gap](./research/issue-145-live-run2-reverification-2026-11-18.md) | Issue 145 run 2: read-only demo backup and cleanup checks, why release, suspension and allowance resurrection cannot be proven, final per-criterion record |
