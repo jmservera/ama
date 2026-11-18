@@ -12328,3 +12328,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Stabilization checkpoint triage and epic verdicts (Refs #440)
 
 * Added [stabilization-checkpoint-triage-440-live-2026-11-18.md](research/stabilization-checkpoint-triage-440-live-2026-11-18.md): four issue drafts (time status 500, legacy-reference guard allowlist, unreachable ChatIsolation turn, AI golden path), duplicates mapped to existing owners, blocking findings mapped to epics, and per-epic verdicts (14 continue, 2 fix, 0 pivot). No issue created, no criterion ticked, no source changed. The coordinator HVE Builder review is Deferred at host validation.
+
+## [2026-11-18] add | Excel transition thresholds demo record (Refs #80)
+
+* Added [issue-80-live-transition-thresholds-evidence-2026-11-18.md](research/issue-80-live-transition-thresholds-evidence-2026-11-18.md): the one unticked criterion (owner-set staged transition thresholds) is unproven and cannot be proven for the demo; 125 importer tests passed. No source or Azure change.
