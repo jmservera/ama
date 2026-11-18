@@ -12709,6 +12709,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Rubric src counting and mvp stop state (Refs #198)
 
 * Added [issue-198-rubric-src-counting-evidence-2026-11-18.md](research/issue-198-rubric-src-counting-evidence-2026-11-18.md): current registry and 79/100 score re-verified, five of seven criteria proven, criteria 3 and 4 recorded as historically unprovable pending an owner waiver or rewording.
+
 ## [2026-11-18] add | Public browser access live rerun (Refs #344)
 
 * Added [public-browser-access-live-rerun-2026-11-18.md](research/public-browser-access-live-rerun-2026-11-18.md): reproduced the anonymous 401, Entra sign-in and private SQL results and added the policy exemption count (0). Browser-style API redirect and `/api/time/status` 500 stay open. Read-only; no resource created.
