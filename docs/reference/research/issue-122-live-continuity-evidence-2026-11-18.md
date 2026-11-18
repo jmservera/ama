@@ -1,6 +1,6 @@
 ---
 title: Live service continuity, versioning and export evidence for issue 122 (demo)
-description: Recorded run on 2026-11-18 against the demo API covering version change and reversal, independent export verification, default-disabled assistants and template fallback, with a per-criterion proven/unproven record
+description: Recorded run on 2026-11-18 against the demo API covering version change and reversal, independent export verification, default-disabled assistants and template fallback, with a per-criterion record (observed, raw output not retained, or unproven)
 author: AMA RPI agent
 ms.date: 2026-11-18
 ms.topic: reference
@@ -41,15 +41,15 @@ The point-in-time restore of the demo SQL database, with audit-chain prefix matc
 
 | Criterion | Status | Evidence or reason |
 | --- | --- | --- |
-| Disable mechanism and tested manual fallback exist | Proven for the demo (read only) | Observation 9 shows assistants disabled by default with the manual path named; observation 10 shows template fallback on every recorded AI output; repository tests in the #221 note cover suspension and manual fallback. No live suspension was exercised (drills excluded) |
-| Model, rule and configuration changes are versioned, evaluated and reversible | Proven for the demo | Observations 2 and 3: evaluated (`pass`), versioned (`v0` to `v1`), reversed with a linked record; effective version read at each step. A `fail` evaluation path (status Blocked) was not run live |
-| Export tests retain evidence independent of the AI supplier | Proven for the demo | Observations 5 to 8, 10 |
+| Disable mechanism and tested manual fallback exist | Observed; raw output not retained (read only) | Observation 9 shows assistants disabled by default with the manual path named; observation 10 shows template fallback on every recorded AI output; repository tests in the #221 note cover suspension and manual fallback. No live suspension was exercised (drills excluded) |
+| Model, rule and configuration changes are versioned, evaluated and reversible | Observed; raw output not retained | Observations 2 and 3: evaluated (`pass`), versioned (`v0` to `v1`), reversed with a linked record; effective version read at each step. A `fail` evaluation path (status Blocked) was not run live |
+| Export tests retain evidence independent of the AI supplier | Observed; raw output not retained | Observations 5 to 8, 10 |
 | Persist suspension, owner, containment, communication, restart decision | Not re-proven live | Suspension changes live state and counts as a drill; covered by repository tests only |
 | Recheck epoch at invoke, scan, claim, dispatch, complete and reliance | Not re-proven live | Repository and SQL tests only; the live epoch reads 0 |
 | Independent SQL connection, race and old-image restart tests | Not re-proven live | Needs concurrent suspend and a second image; drills excluded |
 | In-flight calls complete but late results quarantined | Not re-proven live | Assistants are disabled on the demo, so no in-flight call exists |
 | Corrective evidence and distinct human approval gate restart | Not re-proven live | See #221 note; live restart is a drill |
-| Preserve reconstructable history without current reliance | Proven for the demo | Export 6 holds the reversed change, ledger chain and AI records, and verifies offline |
+| Preserve reconstructable history without current reliance | Observed; raw output not retained | Export 6 holds the reversed change, ledger chain and AI records, and verifies offline |
 | Manual case work, challenge and hazard response remain during suspension | Partly proven | The continuity view states it (`note`); no live suspension was exercised |
 | Witnessed authorised drill of suspension, communication and restart | Unproven | Excluded by the owner for the demo; production work (#1905 to #1908) |
 
@@ -59,3 +59,10 @@ The point-in-time restore of the demo SQL database, with audit-chain prefix matc
 * Observation values come from this worker's run; the raw JSON is not committed because the export carries about 1.2 MB of demo audit data.
 * Restore evidence is by citation, not a second restore.
 * A restored database was not compared with the export, and document blobs were not tested.
+
+## Evidence limits
+
+* Observations 1 to 10 were read from this worker's live run. The raw responses and the saved export bundles were not retained, so none of them can be re-checked from this repository. The criteria above are therefore labelled "Observed; raw output not retained", not "Proven".
+* Observations 7 and 8 (offline `verify_export`, tamper test) used the saved bundles; without them the commands cannot be re-run here, and their output was not captured.
+* No Playwright screenshot of the continuity view was taken.
+* The digests and counts in the table are transcribed values, not retained output.

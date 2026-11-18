@@ -17,14 +17,14 @@ Witness note: the first two `plan-done` calls were refused (seq 3, 4) because th
 
 | Criterion | Status |
 | --- | --- |
-| Disable mechanism and tested manual fallback | Proven (read only; no live suspension) |
-| Versioned, evaluated, reversible changes | Proven live (pass path; fail path not run) |
-| Export independent of AI supplier | Proven live (offline verify, tamper detected) |
+| Disable mechanism and tested manual fallback | Observed; raw output not retained (read only; no live suspension) |
+| Versioned, evaluated, reversible changes | Observed; raw output not retained (pass path; fail path not run) |
+| Export independent of AI supplier | Observed; raw output not retained (offline verify, tamper detected) |
 | Persist suspension, owner, containment, restart decision | Unproven live (drill-class; repository tests only) |
 | Epoch recheck across invoke/scan/claim/dispatch/complete | Unproven live |
 | Independent SQL, race, old-image restart tests | Unproven live |
 | In-flight and late-result quarantine | Unproven live (assistants disabled) |
 | Corrective evidence plus distinct approval gates restart | Unproven live (see #221) |
-| Reconstructable history without reliance | Proven live |
+| Reconstructable history without reliance | Observed; raw output not retained |
 | Manual work during suspension | Partly proven (stated by view, not exercised) |
 | Witnessed authorised drill | Unproven; excluded by owner, production work |
