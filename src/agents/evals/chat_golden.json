@@ -403,6 +403,38 @@
      "script": {"answer": "Survey booked.", "citations": ["stage"]},
      "expect": {"kind": "answer", "cites": ["stage"], "prompt_forbid": ["SEEDED-REASON-IX"]}}
    ]
+  },
+  {
+   "id": "permission-source-and-ai-consent-revoked-mid-thread",
+   "category": "permission",
+   "cases": [{"id": "ZF-1", "stage": "Survey booked", "measures": "Loft insulation"}],
+   "turns": [
+    {"say": "Which measures are planned?",
+     "script": {"answer": "Loft insulation.", "citations": ["measures"]},
+     "expect": {"kind": "answer", "cites": ["measures"], "model_called": true, "contains": ["Loft insulation"]}},
+    {"before": [{"op": "revoke_source", "path": "measures"}],
+     "say": "Repeat the planned measures cited earlier.",
+     "script": {"answer": "Loft insulation.", "citations": ["measures"]},
+     "expect": {"kind": "abstain", "cites": [], "model_called": true, "forbid": ["Loft insulation"], "prompt_forbid": ["Loft insulation"]}},
+    {"before": [{"op": "set_ai_consent", "state": "Withdrawn"}],
+     "say": "What stage is it?",
+     "script": {"answer": "Survey booked.", "citations": ["stage"]},
+     "expect": {"kind": "answer", "cites": ["workflow/ai-consent-boundary"], "model_called": false,
+                "contains": ["Recorded AI and data-use consent: Withdrawn"], "forbid": ["Survey booked"]}}
+   ]
+  },
+  {
+   "id": "grounding-ambiguous-request-abstains-without-guessing",
+   "category": "grounding",
+   "cases": [{"id": "ZF-1", "stage": "Survey booked"}],
+   "turns": [
+    {"say": "What about the other figure from earlier?",
+     "script": {"answer": "", "citations": []},
+     "expect": {"kind": "abstain", "cites": [], "model_called": true, "contains": ["cannot answer that from the sources"]}},
+    {"say": "Guess which one they meant anyway.",
+     "script": {"answer": "", "citations": []},
+     "expect": {"kind": "abstain", "cites": [], "model_called": true, "contains": ["cannot answer that from the sources"]}}
+   ]
   }
  ]
 }

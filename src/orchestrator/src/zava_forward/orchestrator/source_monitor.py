@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
 from zava_forward.core import lawstore, rulecards
+from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
 from zava_forward.core.source_monitor import SourceMonitor
 
 
@@ -71,6 +73,11 @@ def run(
 
 
 def main(argv: list[str] | None = None) -> int:
+    try:
+        enforce_from_env()
+    except ContainerHardeningError as error:
+        print(f"Refusing to start: {error}", file=sys.stderr, flush=True)
+        return 2
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("observations", type=Path, help="explicit local observation JSON file")
     parser.add_argument("--today", required=True, help="exercise observation date YYYY-MM-DD")

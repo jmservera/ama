@@ -1,0 +1,69 @@
+{
+  "task_id": "223-human-review-effectiveness-2305",
+  "task_slug": "human-review-effectiveness-223-2305",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14/human-review-effectiveness-223-2305-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14/human-review-effectiveness-223-2305-plan.md",
+    "details": ".copilot-tracking/details/2026-11-14/human-review-effectiveness-223-2305-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-14/human-review-effectiveness-223-2305-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-14/human-review-effectiveness-223-2305-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-14/human-review-effectiveness-223-2305-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Deliver locally verifiable Issue #223 human-review effectiveness gate and automation-bias harness in src/core on feat/ai-223-human-review-effectiveness-2305 targeting feat/demo-164-chat-grounding-provenance-0900",
+      "status": "confirmed",
+      "evidence": "Caller prompt and Issue #223 (AC-070, FR-026, FR-027, NFR-009, OQ-017)"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-14/human-review-effectiveness-223-2305-research.md"
+    },
+    {
+      "decision": "Plan critique executed once (verdict: Revise); PC-001, PC-002, PC-003, and PC-004 applied directly; Plan finalized Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-14/human-review-effectiveness-223-2305-plan-critique.md; .copilot-tracking/plans/2026-11-14/human-review-effectiveness-223-2305-plan.md"
+    },
+    {
+      "decision": "Implementation P01-P03 completed and validated cleanly (mypy, ruff check, ruff format --check, unittest test_*223*.py)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-14/human-review-effectiveness-223-2305-changes.md"
+    },
+    {
+      "decision": "Post-implementation Review executed once (Execution status: Complete; Outcome: Conformant; Assessed boundary: full_task P01-P03 in src/core; RV-001 and RV-002 routed as Low non-blocking follow-ups alongside OQ-017)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-14/human-review-effectiveness-223-2305-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked post-Review follow-up work item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Harden standalone human_review_gate callers with Store-authoritative staff lookup, review_evidence cross-field checks, sub-label hazard hashes, and discrepancy-derived source rules when scenario=None (RV-001)",
+      "rationale": "Highest ease of implementation, strong defense-in-depth value for future API/orchestrator callers, and clean IoC/SOLID decoupling from optional ReviewScenario metadata",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-14/human-review-effectiveness-223-2305-review.md (RV-001); src/core/src/zava_forward/core/human_review_effectiveness.py"
+    },
+    {
+      "rank": 2,
+      "task": "Retain per-row reviewer_reason, edited_text, and optional measured workflow_seconds in score_human_session and bind live=True AuthorityPolicy to approved_on <= on plus pooled trial receipts (RV-002)",
+      "rationale": "Low implementation complexity in pure Python, high audit reproducibility value ahead of participant trials, and KISS single-artifact session output",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-14/human-review-effectiveness-223-2305-review.md (RV-002); src/core/src/zava_forward/core/human_review_effectiveness.py"
+    },
+    {
+      "rank": 3,
+      "task": "Appoint competent-review authority holders and owner-defined oversight thresholds under OQ-017, then run blind human reviewer sessions on blank_worksheet() and pool_human_sessions()",
+      "rationale": "External human governance dependency with highest release-readiness impact; required before live=True human-oversight acceptance can be claimed",
+      "evidence": "docs/prds/zava-forward-retrofit-programme-demonstrator.md; .copilot-tracking/plans/2026-11-14/human-review-effectiveness-223-2305-plan.md"
+    }
+  ]
+}

@@ -2,9 +2,307 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-31
+ms.date: 2026-11-15
 ms.topic: reference
 ---
+
+## Model provider data-handling and region position contract (2026-11-15, Refs #163)
+
+`chat_provider_position` (`MODEL_PROVIDER_CONTRACT`, `evaluate_provider_position`,
+`require_provider_position`, `is_demo_or_synthetic_ref`, and
+`is_valid_governance_ref`) records and enforces the technical residency and
+data-handling posture for Azure OpenAI / Microsoft Foundry chat and memory
+without claiming human DPO or Legal approval:
+
+* Residency allowlist: primary domestic `uksouth` permits regional `Standard`
+  deployments only (`residency_zone="uk_south"`; `uksouth` + `DataZoneStandard`
+  fails closed because the UK is outside Microsoft's EU Data Zone). Allowlisted
+  EEA EU data-zone regions (`swedencentral`, `westeurope`, `northeurope`,
+  `francecentral`, `germanywestcentral`, `italynorth`, `polandcentral`,
+  `spaincentral`) permit `Standard` or `DataZoneStandard`
+  (`residency_zone="eu_data_zone"`) only when `CHAT_TRANSFER_REF` records valid
+  cross-border transfer sign-off. `GlobalStandard` and non-UK/non-EEA regions
+  fail closed unconditionally. Because `infra/main.bicep` currently defaults
+  `chatModelSku` to `GlobalStandard` and `infra/modules/containerapps.bicep`
+  does not inject `CHAT_PROVIDER_REGION` or `CHAT_DEPLOYMENT_TYPE`,
+  `constructed`-mode synthetic evaluations fall back to `uksouth` / `Standard`
+  with `deployment_attested=False` (`True` only when both settings are
+  explicitly supplied and approved), whereas `ZF_DATA_PROCESSING=actual` fails
+  closed (`unattested_region_in_actual_mode`,
+  `unattested_deployment_in_actual_mode`) if either setting is omitted.
+* Zero model training and disclosures: any enabled or unrecognised
+  `CHAT_PROVIDER_TRAINING` flag fails closed (`provider_training_prohibited`).
+  `CONTENT_FILTERING_DISCLOSURE` and `ABUSE_MONITORING_DISCLOSURE` separate
+  synchronous stateless Azure AI Content Safety harm filtering from
+  platform-default up-to-30-day flagged-sample storage and Microsoft human
+  review (`CHAT_ABUSE_MONITORING_MODIFIED_REF` records
+  `mode="modified_recorded_unverified"` with
+  `modified_abuse_monitoring_verified=False`, keeping conservative `30`-day and
+  `human_review_possible=True` defaults until DPO/Legal subscription
+  verification), while keeping `uksouth` reviewer residency marked unverified
+  (`uk_reviewer_residency_verified=False`).
+* Governance-reference hygiene, actual-mode human gate and pre-approval
+  retention boundary: bare placeholder tokens (`yes`, `true`, `1`, `approved`,
+  `tbd`) are rejected in all modes, synthetic/demo references (`SYNTH-*`,
+  `SYN-*`, `SYNTHETIC-*`, demo approval records, and `chat-memory-dpia.md`) are
+  rejected when `ZF_DATA_PROCESSING=actual`, and `ZF_DATA_PROCESSING=actual`
+  stays refused (`actual_mode_unapproved=True`,
+  `actual_mode_dpo_legal_unapproved` in `evaluate_provider_position`,
+  `retention_days=None`) while
+  `DPO_LEGAL_APPROVED` is `False` even if non-synthetic reference strings are
+  supplied. `ChatPrivacy.decision()`, `regulatory_privacy.readiness_report()`,
+  `regulatory_privacy.build_foundry_query()`, and `GET /api/chat/status` wire
+  this evaluation fail-closed (with `ChatPrivacy.provider_position()`,
+  `ChatPrivacy.decision()["provider_position"]`, `/api/chat/status`
+  `provider_position`, and `regulatory_privacy.readiness_report()` never echoing
+  raw reference strings or unallowlisted environment values), keeping
+  `retention_days=None` before approval (ASCII `1..36500` only when approved)
+  and `dpo_legal_approved=False` until named DPO and Legal sign-off (`Refs #163`).
+
+Run the focused `#163` provider-position suite from `src/core` with:
+
+```bash
+PYTHONPATH=src:tests python3 -m unittest tests/test_chat_provider_position.py tests/test_chat_privacy.py tests/test_chat_dpia_record.py -v
+```
+
+## Responsible AI release control plane, traceability and separated readiness (2026-11-15, Refs #218)
+
+`rai_control_plane` enforces deterministic `OQ-017` rejection of any live AI
+task activation (`activate_live_task`, `Store.activate_ai_task_live`,
+`assistant_release.record`, `Assistants.record_release`, and `rai_release.missing_binding`)
+unless both a non-empty named human `approved_by` and a non-placeholder
+`named_approval_id` are supplied for an enabled registered task, together with
+named-human live monitoring thresholds and an appointed release approver. Every
+rejected live activation attempt raises `LiveActivationApprovalError` (`OQ-017`)
+and persists a tamper-evident `rai_live_activation_rejected` audit entry outside
+any rolled-back SQL release transaction (plus a `live-activation-rejected` row
+in `assistant_events` when the SQL assistant store is active).
+
+`REQUIREMENT_TRACEABILITY`, `requirement_traceability()`,
+`requirement_traceability_map()`, `verify_traceability_targets()`, and
+`traceability_summary()` provide a machine-readable requirement-to-acceptance
+traceability register covering all 15 Epic `#218` requirement, acceptance,
+open-question, and rule identifiers (`FR-051` to `FR-054`, `NFR-014`, `AC-069`
+to `AC-073`, `OQ-017` to `OQ-019`, `RULE-024`, and `RULE-020`), verifying AST
+resolution of every referenced unit-test class and method while recording
+explicit owner/live deferrals (`OQ-017`, `OQ-018`, `OQ-019`) without fabricating
+live-provider or human sign-off.
+
+`exercise_acceptance_report()` and `Store.rai_readiness_report()` emit two
+disjoint sections across `Assistants.registry`, `ai_tasks.live_report`, and
+`GovernanceMixin.governance_view`: `rai_exercise_acceptance` (evaluating the
+deterministic RAI control checks and traceability completeness independently of
+live provider wiring) and `real_ai_delivery_gate` (evaluating real-AI provider
+wiring, serving-model attestation, actual-release binding, and owner live-use
+sign-off). Run the focused `#218` core suite from `src/core` with:
+
+```bash
+PYTHONPATH=src:tests python3 -m unittest tests/test_rai_control_plane_218.py -v
+```
+
+## Deterministic no-automated-finance-authority guard and invariant check (2026-11-15, Refs #93)
+
+`finance` enforces the `RULE-010` / `AC-035` boundary that no automated, system,
+agent, worker, orchestrator, unauthenticated, non-human, or AI proposal-apply
+path can perform any of the four protected financial and grant operations in
+`PROTECTED_FINANCE_OPERATIONS` (`submit_bid`, `approve_match_funding`,
+`certify_claim`, `record_cash`). `classify_finance_operation` and
+`guard_no_automated_finance_authority` execute at entry across
+`FinanceMixin.finance_action`, `FinanceMixin._finance_operation`, `validate_sql`,
+`GrantMixin.grant_action`, `Store.funding_step`, and `form_review.action`,
+refusing automated or non-human callers, stored non-human finance designations,
+AI proposal auto-apply payloads (`proposal_id`, `recommendation_id`,
+`assistant_task_id`, `ai_proposal`, `from_proposal`, `apply_proposal`,
+`auto_apply`, `envelope`), and automated shortcut actions with
+`AutomatedFinanceAuthorityRefusedError` (a structured `ValueError` carrying
+`operation`, `actor_kind`, `reason`, `rule="RULE-010"`,
+`code="automated_finance_authority_refused"`, and `as_record()`), leaving
+in-memory, SQLite/SQL, and hash-chained audit records untouched while preserving
+`PermissionError` / `AuthorityGateError` for human role, independence, and
+delegated-authority checks (`#94`, `#95`).
+
+`verify_no_automated_finance_authority(store=None)` provides a deterministic,
+side-effect-free runtime and test invariant check: it verifies that
+`funding-evidence` and `funding_draft` remain strictly `propose-only` in
+`bounded_ai` and `ai_registry`, AST-scans core automation modules plus sibling
+`agents` and `orchestrator` sources for zero references to gated authority
+methods, executes live refusal probes across all four protected operations on an
+isolated temporary synthetic store, and asserts zero state or audit mutation on
+any supplied `Store` or `SqlStore`. Run the focused `#93` invariant suite from
+`src/core` with:
+
+```bash
+PYTHONPATH=src:tests python3 -m unittest tests/test_finance_no_automated_path_93.py -v
+```
+
+## Management-view AI consumption economics and explicit denominators (2026-11-15, Refs #100)
+
+`tokenomics` (`summarize_ai_consumption_economics`, `store_ai_consumption_economics`,
+and `assert_tokenomics_invariants`) computes the read-only `ai-consumption-economics/v1`
+summary (`ai_consumption_economics`) required across management views (BRD Required
+Management Views, `FR-052`, `NFR-012`, `OD-51`; PRD `FR-061`, `NFR-017`). Every
+payload carries explicit integer denominators at top level and under
+`denominators` (`proposal_count`, `accepted_outcome_count`, `metered_call_count`,
+`unmetered_call_count`, plus `unreviewed_proposal_count`,
+`rejected_or_withdrawn_count`, and `workflow_only_excluded_count`). Workflow-only
+and template fallback drafts (`workflow_only=True`, `source in {"template", "manual"}`,
+or `eligible is False`) are excluded from AI proposal and accepted-outcome
+denominators.
+
+Cost fields use exact `Decimal` strings or `"Unknown"`, never `0`, `0.0`, `"0"`,
+or `"0.00"` for missing evidence:
+
+* Whenever no price source is configured, `OD-51` remains `"open"`, billing is not
+  reconciled, currencies conflict, or any unmetered or unpriced call exists,
+  `token_cost`, `total_cost_of_ai`, `token_cost_per_accepted_outcome`,
+  `cost_per_accepted_outcome`, and `quality_qualified_cost_per_accepted_outcome`
+  all report `"Unknown"`.
+* Whenever `accepted_outcome_count == 0`, per-accepted-outcome fields report
+  `"Unknown"`, even when `token_cost` is priced and reconciled.
+* `total_cost_of_ai` and `cost_per_accepted_outcome` remain `"Unknown"` unless all
+  eight Total Cost of AI components (`tokens`, `embeddings_search_indexing`,
+  `retry_amplification`, `prompt_context_overhead`, `observability_eval`,
+  `guardrails`, `hosting_idle`, `human_review_exception_time`) carry reconciled
+  same-currency amounts.
+* `booked_value` defaults to `"Unknown"` unless finance-approved cash saving
+  evidence is explicitly supplied, keeping released staff time separate from
+  booked financial value.
+
+`Store.ai_consumption_economics` surfaces this summary without mutating store or
+audit state across `insights.stats` (`Store.stats`), `progress.report`
+(`Store.progress_report` and `progress.export_csv`), `coordinator.read`, and
+`ai_tasks.live_report` (`Store.ai_live_report`). Offline synthetic coverage in
+`src/core/tests/test_management_tokenomics_invariant_100.py` does not close
+`OD-51` or establish live Azure billing reconciliation (`Refs #100`).
+
+## Exercise-scenario safety and resident consent gate verification (2026-11-15, Refs #81)
+
+`safety_consent_exercise_gate` (`verify_exercise_safety_and_consent_gates` and
+`verify_store_safety_and_consent_invariants`) runs deterministic offline gate
+verification across all six core exercise scenario suites (`constructed_workbench`,
+`resident_preview`, `sensor_retrofit`, `scale_matrix`,
+`authorised_exception_controls`, and `learning_bundles`) on both JSON `Store`
+(`use_sql=False`) and SQLite `SqlStore` (`use_sql=True`), plus any caller-supplied
+`extra_stores`:
+
+* Safety gate invariant (`RULE-001`, `PRD FR-008`, `BRD BG-003`): every controlled
+  progression attempt (`advance`, `signoff_give`, `issue_work_order`,
+  `reissue_work_order`, appointment confirmation activation, `Booked` appointment
+  recording, `complete_work_order`, `correct_work_order`, `accept_quality`, and
+  `hand_over_quality`) is refused fail-closed with zero case, work-order, or audit
+  mutation whenever safety evidence is unresolved, including active hazards,
+  repaired-but-unreleased referrals, same-person release attempts, open standalone
+  `safeguarding_items` or item-shaped `safeguarding` records, non-boolean
+  `released` flags, and missing or malformed safety containers, while emergency
+  referral (`BRD FR-002`) remains open and sensor telemetry cannot clear a hold.
+* Resident agreement and authorised-exception invariant (`RULE-002`, `BRD FR-011`,
+  `BRD FR-014`, `PRD FR-008`, `BRD BG-005`): every attempt to issue, activate,
+  advance, complete, accept, or hand over work without a valid current-scope
+  resident or confirmed-representative `Accepted` decision or a valid current-scope,
+  in-window, resident-notified `authorised_works_exceptions` record approved by a
+  named human (`validate_authorised_works_exception`) is refused fail-closed, and retention
+  deletion removes `authorised_works_exceptions` alongside other `RESIDENT_FIELDS`.
+  All rule records and scenarios in this module are unreviewed offline exercise
+  fixtures, never live legal sign-off or live resident consent evidence.
+
+## Immutable Blob ledger digests and scheduled verification (2026-11-15, Refs #115)
+
+`ledger_digest_blob` provides pure offline and Blob-transport verification for
+the hash-chained audit ledger anchors stored in the `ledger-digests` container.
+`verify_container_retention_lock` validates container `immutabilityPolicies`
+properties (`immutabilityPeriodSinceCreationInDays >= min_retention_days`,
+`allowProtectedAppendWrites == False`, rejection of mutually exclusive ARM
+append-write flags, `publicAccess == "None"`, optional container-level
+`immutableStorageWithVersioning: { enabled: True }`, and storage-account
+lifecycle deletion prefix disjointness), distinguishing pre-lock ARM deployment
+templates (`require_locked=False`, `immutability_policy_state="Unlocked"`,
+`locked=False`) from runtime locked WORM enforcement (`require_locked=True`,
+`immutability_policy_state="Locked"`, `locked=True`). `verify_blob_retention_headers`
+validates `x-ms-immutability-policy-mode: locked`, future UTC
+`x-ms-immutability-policy-until-date`, and minimum retention duration against
+creation timestamps (`created_at` or `x-ms-creation-time`) on remote digest blobs.
+
+`BlobLedgerDigestStore` writes root `digest-{count:010d}.json` and sealed
+`year-{YYYY}.json` anchors create-only (`If-None-Match: *`), verifying read-back
+logical field equality on `409`/`412` conflict responses, suppressing underlying
+transport exception chains (`from None`), and exposing no overwrite or delete
+path. `synthesize_immutability_posture`, `publish_ledger_digests` (plus
+`publish_ledger_digests_with_posture` and `publish_store_digests`),
+`verify_ledger_digests`, `reconcile_ledger_digests`, `run_scheduled_verification`,
+and `zava_forward.orchestrator.digest_blob` record weakest-link container
+immutability posture metadata (`immutability_policy_state`, `retention_days`,
+`locked`, plus `live_worm_lock_human_gated=True` and
+`retention_schedule_human_gated=True`), fail closed when a retention lock is
+required (`require_retention_lock=True` / `ZF_DIGEST_REQUIRE_RETENTION_LOCK=true`)
+but absent, unlocked, expired, or shorter than `ZF_DIGEST_MIN_RETENTION_DAYS`,
+and emit sanitized console markers (`LEDGER_DIGEST_OK` on intact verification,
+`LEDGER_DIGEST_ALERT` with `exit_code == 1` on any mismatch, missing/unlocked
+retention policy, unconfigured scheduled environment, or transport error)
+scrubbed through `monitoring_coverage.sanitize_diagnostic` with zero URL, SAS,
+or token leakage. Offline unit and compiled Bicep tests do not prove live Azure
+WORM policy locking or Legal retention-schedule approval (`Refs #115`).
+
+## Hazard and safeguarding clock and named owner projection (2026-11-15, Refs #76)
+
+`taskqueues.project_safety_clock_and_owner` and `taskqueues.context` (`MEMBERSHIP_REVISION = 5`)
+project an explicit operational reference clock (`clock_label`, `clock_status`,
+`clock_remaining_hours`, `clock_deadline_utc`, `clock_basis`) and a non-blank
+accountable owner (`named_owner`, `accountable_owner`, `owner_role`, `owner_id`,
+`unassigned`, `escalation_owner`, `escalation_owner_role`, `escalation_owner_id`)
+for every active hazard and safeguarding item across `Store`, `SqlStore`, and
+`MssqlStore` with staff-order-invariant `code` -> `email` -> `name` lookup and
+sorted role fallback. External hazard and safeguarding authorities retain statutory
+ownership of categorisation, clocks, and closure (`RULE-003`): recorded external
+deadlines take precedence, awareness timestamps derive operational reference
+windows (24h emergency / 7d investigation / 14d work-start for hazards; 24h
+urgent / 48h referral response for safeguarding), and missing timestamps fail
+closed (`fail_closed_missing_timestamp`) rather than guessing. Unaccepted
+referrals preserve receipt-is-not-acceptance (`FR-003`) by flagging
+`unassigned=True` while surfacing the designated escalation owner so no safety
+item is ever blank or anonymous. Standalone safeguarding items (`safeguarding_items`
+and item-shaped `safeguarding` records, excluding note-only canary fixtures)
+appear in `detail["safeguarding_items"]` and `detail["hazards"]` with
+`hold_notes` redaction for non-reason staff and default-deny withholding for
+contractors (`PR-002`).
+
+## Offline RAI held-out evaluation and tokenomics candidate comparison (2026-11-15, Refs #108)
+
+`heldout_eval` freezes task, model, prompt, policy and source versions across all
+five registered assistants and all six retained legacy task families, together
+with an independently labelled synthetic held-out split, categorical expected
+outcomes, full expected-answer prose, critical-error definitions, cohorts,
+sample floors and human-authorized thresholds bound to `HELDOUT-FREEZE-2026-10-15`
+by statically pinned `FROZEN_THRESHOLDS_DIGEST` and `FROZEN_MANIFEST_DIGEST`
+(flagging `capability_version_drift` if live assistant or legacy prompt/policy/task
+versions change without an explicit re-freeze). `check_prompt_tuning_isolation` renders all five
+assistant request payloads and all six legacy prompt templates (plus any caller
+prompts or tuning examples) and fails closed if any held-out case identifier or
+six-word expected-answer shingle leaks into prompts or tuning.
+
+`evaluate_heldout` executes the offline validators across controls, ambiguity,
+abstention, source integrity and factual support without network calls, recording
+critical errors, safety priority critical misses, usable coverage, unaveraged
+per-cohort subgroup results (with `SYNTHETIC_NON_FAIRNESS_NOTICE`), hashes,
+split, seed, denominators, `actual_serving_version` (reported explicitly as
+`unattested (offline scripted fixture)` when offline), token usage, explicit
+unknown liabilities, reviewer protocol, `pass`/`fail`/`insufficient` outcomes and
+`calibration.status == "not_applicable"` because bounded text and citation
+proposals carry no calibrated probability scores.
+
+`tokenomics_comparison` compares candidate configurations against the frozen
+held-out split and recorded baseline (`manifest_digest`-verified) using exact
+`Decimal` arithmetic in matching currencies. Summary candidates without `responses`
+must supply verified `evaluation_outcome`, `accepted_case_ids` and `gate_failures`,
+and candidate `lever_config.prompt` values are checked for held-out leakage. Any
+cheaper candidate that raises `critical_misses`, `unsupported_claims`,
+`overrides`, `reopened_cases` or `critical_errors`, loses a baseline-accepted
+case, mismatches serving version or currency, leaks held-out material or leaves
+unknown liabilities is classified as
+`outcome="failure"` (`is_saving=False`), never a saving. Every routing, caching,
+model or prompt candidate must alter exactly one lever at a time on the identical
+held-out cases, and `time_released_minutes` stays capacity-only unless finance
+confirms a cash saving. Synthetic offline passage is engineering evidence only
+and never grants live release, OQ-018 fairness clearance or live spend authority.
 
 ## Retained sensor readings for employees and Quality evidence (Refs #1288, #107)
 
@@ -379,9 +677,32 @@ controlled domain approval. Actual reviewer detection, corrections and total
 preparation/review effort against paired workflow-only scenarios remain
 unmeasured; #223 is not satisfied by these tests.
 
-The #222 cohort manifest in open PR #421 still needs owner approval before
-evaluator implementation. Cohorts, lawful fields, sample sufficiency and
-thresholds remain unapproved, and synthetic results cannot prove fairness.
+The #222 and #128 cohort evaluator (`cohort_eval.evaluate`, `cohort_eval.export_record`,
+`cohort_eval.approve_protected_characteristics`, `cohort_eval.approve_context_dimensions`)
+enforces the OQ-018 pre-live owner-approval boundary fail-closed. Every record
+retains `cohort_definitions`, `version_definitions`, `counts` (`eligible`, `tested`,
+`abstained`, `failed`, `missing`), subgroup sufficiency, exclusions, review burden,
+Wilson uncertainty, `ranking_policy`, `non_ai_comparison`, human `disposition`,
+`owner_approval_status` (`unapproved`, `pending_owner_approval`, or
+`approved`), `lawful_analysis_fields`, `lawful_analysis_fields_approved`,
+`live_activation_allowed`, `synthetic_not_fairness_evidence`, and
+`non_fairness_provenance_notice`. Protected-characteristic fields require
+digest-bound DPO minimum-necessary approval (`unapproved_protected_characteristic`),
+optional `geography` and `archetype` dimensions require digest-bound relevance
+approval (`unapproved_context_dimension`), missing/declined sensor or non-response
+cases fail if service or priority is lowered or if vulnerability, refusal or
+protected characteristics are inferred, and sensor fixtures block device
+provisioning (`sensor_fixture_provisioning_forbidden`) or invented hazard/dew-point
+thresholds (`sensor_fixture_invented_threshold`). `owner_approval_status` reaches `approved` and
+`lawful_analysis_fields_approved` reaches `True` only when non-fictional named
+human approvals for cohorts, lawful analysis fields (exact-set matched to the
+manifest dimensions), and thresholds carry valid ISO dates and a matching
+`manifest_digest` (which excludes approval envelopes). Synthetic or generated runs never set `fairness_evidence: True` or
+`live_activation_allowed: True`, a recorded human disposition never authorises a failing or unapproved cohort (`activation_allowed: False`), and `export_record` rejects tampered hashes,
+missing non-fairness disclaimers, or live-activation claims on synthetic or
+unapproved records. Cohorts, lawful fields, sample sufficiency and thresholds
+remain owner-unapproved in the repository (OQ-018), and synthetic results
+cannot prove fairness.
 Actual release/residual-risk/review/restart holders remain unknown under
 OQ-017; every denial built by `assistant_release.denial()` now carries
 `authority_holders` (the disabled-task path in `assistants.py` does not), listing the release,
@@ -535,10 +856,18 @@ changed. Local recording and a receiver receipt stay separate: only a non-empty
 `receipt_ref` from the receiver gives `Acknowledged`; a receiver error or
 malformed reply gives `Unconfirmed` (receipt unknown, not proof of non-receipt),
 and only a receiver that raises `NotSent` gives `Failed` with `not_sent`. A send
-whose outcome could not be saved stays `Pending`. `Pending`, `Unconfirmed` and
+whose outcome could not be saved is retried once against the local store (never
+re-contacting the receiver), logs its `receipt_ref` on persistent failure, and
+stays `Pending` until superseded. `Pending`, `Unconfirmed`, `Superseded` and
 legacy `Failed` attempts without `not_sent` are unresolved: a resend needs
 `retry_unresolved` after reconciliation, and the in-flight check is per store
-instance only. The outcome is bound to the reservation id the send committed.
+instance only. Recording an explicit `service_forward` retry with
+`retry_unresolved` when no send is in flight marks any stale `Pending` attempt
+`Superseded` (`superseded_from="Pending"`, `superseded_at`,
+`superseded_by_attempt`) inside the same reservation transaction without
+creating a `supersession` dual-approval record, keeping all original attempt
+fields and the stable `route_key`. The outcome is bound to the reservation id
+the send committed.
 Independent review forwarding needs the named reviewer's own identity (code or
 oid continuity), with no manager bypass; unknown identity fails closed.
 All attempts share one `route_key` idempotency key. The caller must supply
@@ -944,7 +1273,16 @@ passed to the `Pacer`; the replay span (days x 86,400 s / speed) must fit
 `max_seconds`. `RunController` starts only against a recorded, untampered estimate whose
 complete body matches the current plan, estimate and alert amount, allows one run, stops it, scales homes and rate down (never up) and
 inherits the `Pacer` hard deadline. Prices are public list estimates, not a quote.
-Owner and alert names must be real: blank, `TBD`/`none`/`n/a` style placeholders and `<template>` values are refused.
+Owner and alert names must be real: blank, `TBD`/`TBC`/`pending`/`none`/`n/a` style placeholders and `<template>` values are refused.
+`RunPlan` optionally takes `budget_alert_gbp`, `budget_cap_gbp` (declared together as strings) and
+`planned_cost_gbp` (must remain `"0"` unless GBP alert and cap are declared); `synthetic.run_governance`
+then applies the run owner, `max_seconds` time limit and a GBP budget alert, while `RunController.admit(cost_gbp)`
+and `RunController.check_time_limit()` halt and stop the run before the cap (`RUN_BUDGET_HALT`) or at
+the deadline (`RUN_DEADLINE`) and freeze elapsed runtime. Costs are caller-declared planning figures, not billing data;
+`RunController.status()` reports a consistent owner, time-limit (`time_limit_seconds`, `elapsed_seconds`,
+`remaining_seconds`) and USD/GBP budget-alert (`alert_reference`, `alert_fires_at_usd`, `budget_alert_gbp`,
+`alert_raised`, `halt_reason`) snapshot across `idle`, `running` and `stopped` states
+(CLI: `--budget-alert-gbp`, `--budget-cap-gbp`, `--planned-cost-gbp`).
 Nothing here sends traffic or verifies the live Azure budget alert (#146).
 A static test (`InfraAlignmentTests`) keeps the plan's tier, units, price and 80 percent alert
 threshold aligned with `infra/main.bicep` and the budget in `infra/modules/iothub.bicep`; it
@@ -1012,9 +1350,35 @@ Limits. Tests run the real SDK against a simulator of the documented REST condit
 table; Azure behaviour (412, status codes, ETag format, list limits, RBAC) is unobserved.
 A hub with more than 100 unmarked devices in one listing makes `list_run` refuse, not guess.
 One process per run ID; cross-process contention is not fenced. An injected client may keep
-its own transport retries. The Registry-before-credential order and the lack of an
-authentication update remain unresolved, and credential issuance, storage, rotation and
-teardown for the whole of #185 remain open.
+its own transport retries. Live Azure DPS enrollment-group transport remains gated behind
+Platform Engineering / IoT Operations Owner authorization (ADR 0003 decision 6).
+
+### Simulated `SIM-*` DPS / symmetric SAS provisioning and teardown (`synthetic.live_provisioning`)
+
+`synthetic.live_provisioning` records the decided simulated device identity approach
+(`per-device symmetric SAS / DPS enrollment group`) and the named credential owner role
+(`Platform Engineering / IoT Operations Owner`) across `ProvisioningManifest`
+(`ProvisioningPlan`), `plan_simulated_provisioning`, `device_identity.Manifest`, and
+`device_provision.report`.
+
+* `plan_simulated_provisioning` and `plan_simulated_register` map each consenting synthetic
+  stock home 1:1 to a `SIM-<sensor_key>` device identity and refuse blank, placeholder,
+  personal-data, or secret-bearing credential owner strings.
+* `SymmetricSasCredentialStore` generates an ephemeral enrollment-group master key in memory
+  at runtime, derives per-device symmetric SAS keys via HMAC-SHA256 inside non-repr private
+  storage, and returns only immutable opaque `secretref://dps-sas/...` references.
+* `redact_provisioning_secrets` and `SecretRedactingFilter` scrub symmetric keys, connection
+  strings, SAS tokens, and PEM blocks from returned summaries, audit records, exceptions, and
+  logger calls so raw secret values never appear in source or logs.
+* `teardown_simulated_identities` (aliased as `deprovision_simulated_devices` and re-exported
+  from `synthetic.device_provision`) deterministically removes every targeted `SIM-*`
+  simulated device identity, preserves non-simulated registry entries, revokes associated
+  credentials, fails closed if any residual simulated identity or credential remains, and
+  returns a SHA-256 verifiable `TeardownReceipt` confirming zero residual simulated identities.
+
+```bash
+PYTHONPATH=src:tests python3 -m unittest discover -s tests -p "test_*provision*.py" -q
+```
 
 ## Journey ownership register and human-review routing (#128)
 
@@ -1027,16 +1391,7 @@ reasons and counts. The route has no score and never changes rank or service. Co
 data only; no usability, accessibility or fairness evidence. See the
 [test plan](../../docs/reference/research/ux/equity-journey-test-plan.md).
 
-`paired_equity.evaluate(pairs, anchors, seeded_defects, rank)` checks constructed pairs that
-differ in one attribute (source completeness, sensor completeness, support or contact need,
-appointment history) and
-requires the subject to be ranked (not excluded) no lower than the reference and its review route to have no rank
-effect. Each dimension has a fixture-local predeclared contrast (not a production mapping or
-approved policy); confounded, no-contrast or mislabeled pairs, and pairs whose case ID is missing or
-shared with an anchor, are listed in `invalid_pairs`,
-block the record and are not counted as tested. It reports tested and failed counts per dimension, never averages a failing dimension
-away, and blocks on a missing dimension or an undetected seeded defect. It uses the deterministic
-policy by default, approves nothing and is not fairness evidence; AI task cohorts are not covered.
+`paired_equity.evaluate(pairs, anchors, seeded_defects, rank, *, policy, ai_task, thresholds, disposition, protected_fields_approval, context_approvals)` checks constructed pairs against predeclared independent contrasts (`paired_equity.predeclared_cohorts()`) across source completeness, sensor completeness (`missing` and `declined`), support or contact need, and provider-versus-resident appointment history (`provider_cancelled`, `provider_delayed`, `no_response`, `prior_no_access`), plus optional `geography` and `archetype` dimensions when approved as relevant (`context_approvals` bound to `paired_equity.input_digest(pairs, anchors)`). It requires the subject to be ranked (not excluded) no lower than the reference, service not to be lowered, no prohibited inference of vulnerability, refusal or protected characteristics, and the review route to have no rank effect. Confounded, no-contrast, mislabeled or contradicted-expectation pairs, and pairs whose case ID is missing or shared with an anchor, are listed in `invalid_pairs`, block the record and are not counted as tested. When `policy` or `ai_task` is supplied, it verifies named ranking-policy ownership and signoff/rule-order/content hashes, compares AI outputs transparently against the deterministic non-AI baseline (`non_ai_comparison`), retains safe abstentions (`abstained: True`, `fallback_to_non_ai: True`) separately from deprioritisation or service-lowering defects, enforces DPO minimum-necessary approval on protected-characteristic fields, and blocks sensor-fixture provisioning or invented hazard/dew-point thresholds. It retains `cohort_definitions`, `version_definitions`, `counts` (`eligible`, `tested`, `abstained`, `failed`), per-dimension sufficiency, exclusions, review burden, Wilson uncertainty and human `disposition`, never averages a failing dimension away, blocks on unapproved or insufficient thresholds (`thresholds`) or undetected seeded defects, and keeps `fairness_evidence: False` on constructed pairs and `activation_allowed: False` whenever any check or approval fails.
 
 ```bash
 python -m unittest discover -s tests -p test_paired_equity.py -q
@@ -1165,14 +1520,25 @@ sourced`).
 
 `review_task_candidate` proposes a `SENSOR_REVIEW_DUE` condition-review task
 only for a sufficient review signal under a named `RuleApproval` for the
-current policy version. The default policy has no approval, so no task is
-proposed. It creates nothing: no store, task, ranking, hazard, clock, hold,
-resident-report or AI write, and no raw reading or sensor identifier in its
-output. Not yet built: store or scheduler wiring, an approved rule, and the R2
-method sign-off and R3 limits that gate any measure beyond an exercise rule.
+current analysis version, policy version and threshold label. The default policy
+has no approval, so no task is proposed. `version_provenance` builds an
+explicit `VersionProvenance` record (`analysis_version`, `comparator_version`,
+`schema_version`, `policy_version`, `policy_digest`, `threshold_label`,
+`humidity_threshold_pct`, `max_staleness_hours`, `rule_id`, `rule_approved`,
+`approver_role` and `approval_reference` only when approved, window/as-of
+timestamps, `input_digest`, and `output_digest`), and `reproduce_review_task`
+and `reproduce_sensor_analysis` deterministically re-derive provenance, signal
+and candidate from retained rows alone regardless of arrival order. Nothing here
+creates a store write, operational task, ranking change, hazard diagnosis,
+clock, hold, resident-report mutation or AI call, and no raw reading,
+`reading_id` or `sensor_id` appears in any output. Not yet built: store or
+scheduler task wiring, an approved non-exercise rule, and the R1-R3 research
+sign-off and limits that gate any measure beyond an exercise rule.
 
-`sensor_analysis_store.analyse_retained(consumer, home_id, window, as_of)` runs
-the derivation over readings retained in the SQL store. It uses only read-only
+`sensor_analysis_store.analyse_retained(consumer, home_id, window, as_of)` and
+`sensor_analysis_store.reproduce_retained(consumer, home_id, window, as_of,
+policy)` run the derivation and full provenance/review-task reproduction over
+window-bounded readings retained in the SQL store. They use only read-only
 `SensorConsumer` methods: `retained_envelopes` for the window and `home_consent`
 for trusted consent. `live-sim-reading-v1` rows are climate-shaped outdoor
 readings, not indoor measurements: they are never passed to the indoor
@@ -1181,8 +1547,8 @@ derivation, and a window holding only such rows is `INSUFFICIENT` with reason
 versioned and approved scope (any declined control declines the home; anything other
 than all-granted is unknown). If the store cannot be read, the result is
 `INSUFFICIENT` with reason `RETAINED_READINGS_UNAVAILABLE` and priority effect
-`NONE`; the manual review route is unchanged. It writes nothing and creates no
-task.
+`NONE` (`review_task` is `None`); the manual review route is unchanged. Both
+entry points write nothing and create no task.
 
 `sensor_status_text.status_text(signal)` gives the plain-language status for a
 signal, and `map_and_list(signals)` returns the map statuses and the accessible
@@ -1301,6 +1667,70 @@ active-time and primary delay code rules, persistence and screens.
 
 ```bash
 python -m unittest discover -s tests -p 'test_discovery_flow.py' -q
+```
+
+### Phase 0 unified retrofit-flow discovery contract and governance guard (Refs #124)
+
+`discovery_contract` unifies Phase 0 retrofit-flow discovery (`BG-011`,
+`RULE-019`, `OD-16`, `OD-18`) in pure standard-library Python without company
+data, network calls or AI dependencies, and aligns `discovery_register` and
+`discovery_flow` outputs under one fail-closed governance contract:
+
+* `NominatedDiscoveryOwner`, `nominate_discovery_owner`, and
+  `agree_discovery_endpoint` require distinct named human sponsor and owner
+  actors (rejecting blank, placeholder, self-nominated and AI/automated actors)
+  and explicit agreement on the `accepted handover` endpoint (`ENDPOINT_AGREED`).
+* `LifecycleDictionary` (`build_default_lifecycle_dictionary`) defines the 10
+  ordered PAS 2035 and retrofit flow stages through `accepted handover`
+  (enforced in canonical `1..10` `REQUIRED_FLOW_STAGE_CODES` order by
+  `LifecycleDictionary.__post_init__`) plus `paused`, `excluded`, `withdrawn`,
+  `cancelled` and `reopened_aftercare` states, 15 distinct lifecycle events, 8
+  timestamp specifications (keeping `active_days=None` unless explicit
+  active-work start and finish timestamps exist), 7 wait states and 4
+  return-loop kinds (`return`, `rejection`, `repeat visit`, `reopen`), each
+  verifying `validated_role == owner_role` alongside human validator identity
+  across both required seed items and any appended dictionary extensions.
+* `evaluate_property_flow` restricts cohort aggregations strictly to in-window
+  `baseline_candidate_ids` on or before `as_of` (recording unmatched-cohort and
+  post-cutoff records in `gaps`), retains zero-event and non-progressing
+  baseline candidates with `zero_event_candidate_ids` grounded strictly in
+  lifecycle event presence, computes both the `BG-011`
+  `assessment-to-ready-to-install` leg and end-to-end / post-installation
+  `accepted handover` legs, verifies `accepted handover` prerequisite events
+  and unresolved post-handover `reopen` blocks while keeping intended energy
+  outcomes separate, reports separate `unknown_cause_count` and
+  `disputed_cause_count` counters on `waits_by_party` rows alongside
+  `unknown_or_disputed_count`, exposes `to_json_dict(signing_key=...)` for
+  HMAC-SHA256 authenticated cross-process JSON serialization (while preserving
+  unkeyed `to_json_dict()` for in-process provenance checks), and converts
+  nested `FlowDiscoveryReport` mappings to read-only `FrozenDict` (`dict`
+  subclass preserving `dataclasses.asdict()`, with low-level
+  `dict.__setitem__` tampering caught by `verify_digest()`) bound to evaluated
+  provenance, non-blank `dictionary_schema_digest`, and a verified SHA-256
+  `calculation_digest`.
+* `RankedConstraintRegister` (`build_seed_constraint_register`) enforces
+  contiguous `1..N` ranking across the five candidate hypotheses, requires both
+  non-empty `supporting_evidence` and non-empty `contradicting_evidence` tuples
+  plus all five `ConstraintTestAssessment` criteria for acceptance, enforces
+  proposer separation, and preserves `DISPUTED` hypotheses visibly inside
+  validated registers and packs as non-findings.
+* `enforce_governance_guard(..., signing_key=...)`, `validate_flow_report`,
+  `validate_owner_finding` (`discovery_register`), and dataclass `__post_init__`
+  checks stamp `owner_validated=False` and
+  `finding_status="candidate_hypothesis_not_company_finding"` across all
+  discovery outputs until the nominated human discovery owner records formal
+  validation with `ENDPOINT_AGREED`, zero dictionary or flow gaps, zero invalid
+  accepted handovers, sub-artifact signer parity, matching non-blank
+  `dictionary_schema_digest`, and an intact `calculation_digest`, raising
+  `GovernanceViolationError` on any invalid promotion, seal replay, unkeyed JSON
+  forgery, schema-mismatched `Mapping`, or tampered report across all five
+  canonical dataclasses and disjoint `Mapping` shapes.
+
+See [Phase 0 Retrofit-Flow Discovery Contract](../../docs/reference/research/company/phase0-retrofit-flow-discovery-contract.md)
+for standards provenance and open Zava North Homes human governance gates.
+
+```bash
+PYTHONPATH=src:tests python3 -m unittest discover -s tests -p 'test_discovery*.py' -v
 ```
 
 ## Appointment agreements and visit evidence (#87)
@@ -4404,7 +4834,7 @@ repository. Tests: `tests/test_seed_merge.py`, and `MssqlLedgerMigration` in
 * Protocol (RULE-019, AC-062): a version freezes all thirteen required fields. A different person approves it with the OD-36 DPIA and lawful measurement-basis references. A change needs a reason and a new approval. `capture_gate()` keeps Phase 0 capture closed until the latest version and the BG-011 register are approved.
 * Benefits register (BG-011, OD-18): event definitions and the MDE are recorded. `target_verdict` never returns pass or fail when the MDE is missing or exceeds a target (20% cycle time, 25% coordination hours); it returns "Not assessable" or "Interval estimate only".
 * Release decisions (RULE-020, AC-063): each phase (Phase 0 capture, Shadow testing, Live pilot) and tranche has a Release or Withhold record with requirements, evidence, unresolved issues, cost and risk envelope reference and named approvers. Releasing Phase 0 capture needs the capture gate; Shadow testing needs entry evidence, and Shadow testing and Live pilot need Phase 0 capture released first.
-* Guardrail breach (RULE-024, AC-078): `breach_record` (managers, quality inspectors and building safety liaisons, so a hazard-aware role can raise a breach without waiting for a manager) pauses the home, work package, archetype or workstream. `breach_restart` needs a different person, the OD-35 authority reference, accepted remediation evidence and a Release decision recorded after the breach. `guard_case_event` calls `require_not_paused` (home by case id or address, archetype by home type) and, for cases flagged `pilot`, `require_capture_open` in `log_call`, `set_decision`, `advance` and `return_case`; emergency and statutory hazard response continues outside any pause.
+* Guardrail breach (RULE-024, AC-078): `breach_record` (managers, quality inspectors and building safety liaisons, so a hazard-aware role can raise a breach without waiting for a manager) pauses the home, work package, archetype or workstream, explicitly naming and validating a distinct human `restart_authority` (rejecting blank, placeholder, unappointed, chat-memory, automated/AI and self-designating values via `restart_authority.py`) with `restart_rule="RULE-024"` and `automatic_restart=False`. `breach_restart` refuses automatic restart flags and needs a manager distinct from both the breach recorder and the post-breach `Release` recorder, the matching OD-35 authority reference, accepted remediation evidence and a Release decision recorded after the breach. `guard_case_event` calls `require_not_paused` (home by case id or address, archetype by home type) and, for cases flagged `pilot`, `require_capture_open` in `log_call`, `set_decision`, `advance` and `return_case`; emergency and statutory hazard response continues outside any pause.
 
 * AI running-cost line and value claims (Tokenomics delta, BRD NFR-012 and FR-052): `benefits_record` also requires an AI cost denominator (per assistant run, per accepted proposal or per accepted handover), the quality floor and the Total Cost of AI components beyond token cost. A missing dated price source records the cost as Unknown; no price, budget or target is set (BRD OD-51 open). `capture_gate()` stays closed without that line. `value_claim_record` stores a claim as capacity only (capacity gain, augmentation or automation, with a baseline); `value_claim_confirm` (a different person) records one of the five booked destinations and the budget owner's confirmation reference, and never signs for the owner. API actions `value-claim-record` and `value-claim-confirm`. `release_record` now also requires the AI economics report reference (or an explicit Unknown) and the AI limit breach (or None); a Release with an Unknown or missing report reference is refused (record Withhold); a Release that carries a breach needs the decision text and `economics_breach_approver`, who must be one of the named `approvers` and not the person recording, otherwise it is refused, and a Withhold needs neither. The report is a reference, not computed here, and no price, budget or target is set. Still missing: a budget owner and the real OD-51 decisions.
 
@@ -4442,6 +4872,27 @@ and cannot make completeness true. Reads initialize no defaults and write no aud
 This inventory does not change task-release admission, capture, breaches, consent,
 safety, finance, procurement or continuity.
 
+Both `governance_view` and `governance_view(...)["rai_evidence"]` also expose
+detached, immutable `prd_quality_review` (`satisfied=False`, `accepted=False`,
+`separate_from_report_acceptance=True`,
+`separate_from_remediation_completion=True`,
+`report_acceptance_scope="baseline-assessment-and-remediation-planning only"`)
+and `prd_owner_acceptance` (`accepted=False`,
+`separate_from_report_acceptance=True`,
+`separate_from_remediation_completion=True`,
+`report_acceptance_scope="baseline-assessment-and-remediation-planning only"`)
+projections (2026-11-15). Neither
+appending 22/22 claims, freezing/approving a protocol, recording benefits or
+release decisions, nor mutating stored governance keys can satisfy or overwrite
+current PRD quality review or human owner acceptance. `rai_evidence` also
+exposes `affected_dispatch="DISABLED until appropriate evidence and qualified
+approvals exist"` and `conditional_eu_assurance="Applies only after qualified
+applicability review"` alongside `live_use`, and marks `RAI_EU_CONDITIONAL`
+(`EU-COND-01`, `EU-COND-02`, `EU-COND-04`) with `conditional_eu=True` and
+`applicability_review="Required before conditional EU assurance applies"` while
+preserving `NOT_ASSESSED`, `UNCHANGED`, `Open`, `Unknown` and `Not
+independently established`.
+
 `GovernanceCommittedError` means SQL persisted but acknowledgement failed:
 reload and reconcile the event reference before another action. JSON retains
 best-effort in-process restoration and its existing cross-file crash/non-atomic
@@ -4469,14 +4920,24 @@ witnessed restore, real-model, qualified human or application acceptance.
   dropped sealed year. A self-consistent rewrite of a sealed year is caught only by
   its digest, so those files belong in the immutable Blob container. A malformed,
   duplicate or unreadable year digest file fails `--by-year` closed (`bad_digests`), and
-  the report lists `sealed_years`, so an empty digest folder is visible. Proven in
-  `src/core/tests/test_recovery.py`; run the scheduled `--by-year` check before relying on the ledger.
+  the report lists `sealed_years`, so an empty digest folder is visible. On `Store`,
+  `SqlStore`, and `MssqlStore`, `verify_ledger_before_reliance()` (and
+  `require_verified_ledger_for_reliance()`, raising secret-free `LedgerRelianceError`)
+  verifies the chain, `audit_head`, root `digest-*.json` anchors, and `year-YYYY.json`
+  files before sealing completed past years and enforcing intact sealed digests across
+  multi-year histories (`src/core/tests/test_recovery.py`, `src/core/tests/test_sqlstore.py`).
 * `python -m zava_forward.core.synthetic.loadcheck --data zavaforward.json --homes 60000` runs the
   NFR-002 mix (five sessions, two writers) against the configured store and prints
-  p50/p95/max per class. Local SQLite on 2026-10-15 over 60,000 labelled synthetic
-  homes for 30 s: list p95 0.28 s, detail 0.30 s, write 0.33 s, no errors (limits 1 s,
-  1 s, 2 s). Open items: the same run against Azure SQL, dashboard and import preview
-  classes, and cost (needs Azure meter rates and measured vCore time).
+  measured `load` (`sessions`, `writers`, `seconds`, `total_requests`, `achieved_rps`),
+  per-class `p50`/`p95`/`max` against `LIMITS` (`1.0 s`, `1.0 s`, `2.0 s`), and a
+  structured `cost` section (`--vcore-seconds`, `--meter-rate`, `--cost-target`). When
+  Azure SQL billed vCore-seconds and meter rate are supplied, `cost` records `status:
+  "measured"` and `within_target` (exiting `1` on a target breach); when omitted, `cost`
+  honestly reports `status: "Unknown"` with `missing_inputs` and
+  `azure_live_run_human_gated: true`. Local SQLite on 2026-10-15 over 60,000 labelled
+  synthetic homes for 30 s: list p95 0.28 s, detail 0.30 s, write 0.33 s, no errors.
+  Open items: the same run against live Azure SQL with billed vCore-seconds and meter
+  rates, plus dashboard and import preview classes.
 * `src/core/src/zava_forward/core/recovery.py` erases a resident's personal fields and keeps a
   personal-data-free deletion register outside the database. The register is one
   write-once entry per erasure under the reserved case id `_erasures` in the document
@@ -4562,14 +5023,26 @@ change register and a supplier-independent evidence export. Synthetic demonstrat
 * Suspend: `POST /api/continuity/suspend` records scope, incident owner, containment, constructed communication
   (never sent), and the affected queued, leased and ready proposals, and raises an epoch.
 * Enforcement: the epoch is read on the caller's own SQL connection at invoke, scan, claim, dispatch, complete and
-  review, and shown in list and detail views; it does not depend on disabled buttons. In-flight provider calls may
+  review, and shown in list and detail views; it does not depend on disabled buttons. On SQLite and SQL Server,
+  `continuity` writes also store a versioned SQL envelope (`gate_version = continuity-gate-v1`) and synchronise normalized
+  `continuity_gate_state` (`gate_version = continuity-gate-v1`, monotonic `epoch`) and
+  `continuity_open_holds` rows; SQLite and non-ledger SQL Server databases also install `continuity_gate_state`,
+  `assistant_attempts` and `assistant_tasks` DML triggers refusing delete/rollback, `'reserved'`/`'sending'`
+  attempts or `ready` verification/acceptance updates lacking the active `gate_version` or matching an open `all`/task
+  hold (SQL Server `WITH LEDGER = ON` databases omit DML triggers on system-versioned updatable ledger tables while
+  retaining `continuity_gate_state` / `continuity_open_holds` synchronisation and Python fail-closed fences) so pre-gate
+  or gate-mismatched worker images fail closed across queued, leased, ready and export views. In-flight provider calls may
   finish and stay charged or unknown; late results are quarantined and never actionable. No remote cancellation or
   exactly-once billing is claimed.
-* Manual fallback: suspended AI paths return the workflow template with the reason; case work, resident challenge
-  and hazard response are unaffected. Reject stays available.
-* Restart: `restart-propose` (corrective evidence) then `restart-decide` by a different manager, with the current
-  epoch and a named authority reference. Self-approved, stale, replayed or unauthorised restarts fail. The authority
-  reference is recorded, not verified.
+* Manual fallback: suspended AI paths return the workflow template with the reason; case work, accessible resident
+  challenge (intake, triage, resolution and priority correction) and independent statutory hazard response remain
+  available during whole-release suspension and gate-version mismatch. Reject stays available.
+* Restart: `restart-propose` (substantive non-placeholder `corrective_evidence` and `test_id`, bound with monotonic
+  `proposal_seq`) then `restart-decide` by a distinct OID-bound manager (`ZavaForward.AIRestart`), with the current
+  epoch and a named authority reference; `view_only` principals are refused across suspend, propose and decide.
+  Self-approved, stale, placeholder, digest-replayed, Keep-suspended claim-replayed, candidate-consumed claim-replayed
+  or unauthorised restarts fail and record full approver `actor` provenance. The authority reference is recorded, not
+  externally verified; OD-35 / OQ-017 human appointment, witnessed drills and external ledger-head custody remain open.
 * Changes: `POST /api/continuity/change` and `change-reverse` version model, rule and configuration changes with an
   evaluation result (a failed evaluation is Blocked); reversal is a superseding record.
 * Export: `GET /api/continuity/export` returns `zf-evidence-export/1` with a digest and ledger chain checked offline by
@@ -4736,19 +5209,44 @@ not a complete retention or rights implementation; the
 [draft DPIA](../../docs/reference/research/chat-memory-dpia.md#regulatory-assistant-dpia-draft-for-dpo-review-2026-10-16-refs-217)
 requires DPO review and remains unapproved.
 
-`regulatory_privacy.minimise_query(purpose, fields)` is a model-free guard for
-any future Foundry query. Each purpose (`rule_lookup`, `check_explain`,
-`alert_triage`) has a field allowlist; other fields and every special-category
-field are dropped and reported by name only, never value. An unknown purpose is
-refused with a manual path to the rule card and a named human. It is not wired
-to a live Foundry call, so the criterion stays partial.
+`regulatory_privacy.minimise_query(purpose, fields)` and
+`regulatory_privacy.build_foundry_query(...)` enforce deterministic field
+minimisation and special-category purpose controls before any Foundry query is
+formed. Each purpose (`rule_lookup`, `check_explain`, `alert_triage`) and
+question topic (`provision_lookup`, `hazard-awareness-clock`,
+`automated-decision-safeguard`) has an explicit scalar field allowlist; fields
+not needed for the question and every special-category field or cue are dropped
+and reported by field name only, never value. `check_special_category_purpose`
+enforces existing role-based `projection.can_see_reason` boundaries internally,
+checks `data_protection.dispatch_hold`, and blocks external model dispatch of
+special-category data while `dpo_reviewed` is false. `RegulatoryChat.foundry_query`
+admits the caller, projects the home through `store.detail`, excludes raw
+case/source/special-category values, and records a metadata-only
+`chat.regulatory.foundry_query` audit entry.
 
-`regulatory_privacy.record_human_decision(...)` builds the Art 22A to 22C record
-for a consequential decision on a system proposal. It refuses a blank or
-system-like decider, a role other than `approver`, empty or over-long reasons and
-a naive time, and always records `decided_by_system=False`. It is a pure builder,
-not wired to storage or an approval flow, and records no legal conclusion; the
-Art 22 criterion stays open until Legal and the DPO confirm it.
+`regulatory_privacy` also enforces separate, mutually non-implying Entra
+capabilities (`ZavaForward.RuleAuthor` -> `rule_author`,
+`ZavaForward.RuleOwner` -> `rule_owner`,
+`ZavaForward.RegulatoryChat` -> `regulatory_chat`) via
+`resolve_entra_regulatory_roles`, `require_regulatory_role`, and
+`enforce_separation_of_duties`. View-only `ApplicationAdmin` carries none of the
+three capabilities, forged `rule_roles` are overwritten from verified Entra
+claims, `RegulatoryChat.admit` requires `regulatory_chat` on trusted-proxy
+principals, and `RuleEngine.disposition` requires verified `rule_owner`
+capability.
+
+`regulatory_privacy.record_human_decision(...)` and
+`regulatory_privacy.ConsequentialDecisionGuard` enforce the UK GDPR Articles
+22A to 22C propose-and-flag safeguard in `LawStore`. System outputs are persisted
+only as `status="proposed"` (`effect="non_binding_proposal"`,
+`decided_by_system=False`), consequential execution is blocked
+until an `accepted` decision exists, bot/placeholder deciders and chat-memory
+reasons are rejected, proposer-versus-approver separation of duties is enforced,
+and `reg_consequential_proposal` / `reg_consequential_decision` rows are
+protected by SQLite `BEFORE UPDATE` and `BEFORE DELETE` abort triggers with
+metadata-only audit entries (`regulatory.art22.propose` /
+`regulatory.art22.decide`). Formal Legal and DPO sign-off remains an open human
+governance gate (`dpo_reviewed=False`).
 
 Rule/card approvals, source reviews, checks and alerts already retain append-only
 SQL history. SQL chat turn events now include actor/role, case/thread/sequence,
@@ -4759,39 +5257,64 @@ Metadata and linkable hashes are not anonymous; DPO retention review is still ne
 
 ### Data protection register and dispatch gate (#121)
 
-`data_protection` is a reference-only, model-free module (no SQL, no storage).
-`register_report(env)` lists eight data classes (constructed fixtures, staff and
-tenant identities, review records, raw document bytes, prompts/outputs/citations,
-audit, telemetry) with purpose, audience, storage and provider-copy position, and
-which approvals are still missing. Approvals are references read from
-`DP_<CLASS>_<GATE>_REF` (gates: `LAWFUL_BASIS`, `ART9`, `RETENTION`, `ERASURE`,
-`TRANSFER`, `NECESSITY`); `SYNTH-` references never count and values are never
-echoed. `model_dispatch(class_id, env, derivative)` permits only constructed
-fixtures by default, denies actual classes until their references exist, and
-refuses intact raw documents unless a `reviewed_redacted` derivative is named;
-every denial returns a manual path. `validate_task_payload` enforces declared
-field names, types and lengths for the three regulatory tasks and reports
-dropped names only. `rights_status` computes the one-calendar-month due date
-and state of logged requests in memory. It sets no retention period, records no
-lawful basis and verifies no DPO or Legal approval. It is not wired to any live
-model call or rights log, so the #121 acceptance criteria stay unmet.
+`data_protection` defines the whole-system RAI processing and retention inventory,
+minimum-necessary AI task manifests, intact attachment dispatch gate and
+persisted statutory rights-request ledger (`Refs #121`).
+
+* `register_report(env)` maps ten data classes: one constructed class
+  (`fixture_resident` under `subject_population="constructed_resident_fixture"`)
+  and nine actual personal-data or processing classes (`staff_identity`,
+  `tenant_identity`, `review_record`, `future_real_resident`, `raw_document`,
+  `prompt_output`, `audit_ledger`, `telemetry`, `provider_retained_copy`),
+  keeping current staff/tenant identities and review records strictly separate
+  from constructed resident fixtures and future real resident data. It reports
+  `subject_populations`, `whole_system_coverage` across inputs, raw
+  document/image bytes, prompts/outputs/citations, reviewer identity, audit,
+  telemetry/tokens, provider processing and provider retained copies, and
+  `hosting_region_vs_inference_residency`
+  (`uk_hosting_does_not_prove_uk_inference_residency: True`). Approvals are
+  references read from `DP_<CLASS>_<GATE>_REF` (`LAWFUL_BASIS`, `ART9`,
+  `RETENTION`, `ERASURE`, `TRANSFER`, `NECESSITY`); `SYNTH-` tokens never count,
+  values are never echoed, and `dpo_reviewed` stays `False`.
+* `TASKS` declares `purpose`, `audience`, `permitted_fields` (with `fields`
+  alias mapping each field to `(type, max_length)`), `prohibited` and
+  `necessity` across whole-system AI tasks (`rule_lookup`, `check_explain`,
+  `alert_triage`, `agent_chat`, `look_at_attachment`, `intake_summary`,
+  `case_brief`, `read_document`, `funding_draft`, `priority`).
+  `validate_task_payload` and `model_dispatch` strip undeclared and
+  special-category fields, reject empty or disallowed payloads, and set
+  `user_permission_establishes_necessity=False` so user permission never
+  establishes task necessity or bypasses field/length/special-category checks.
+* `dispatch_attachment_to_model` and `model_dispatch("raw_document", ...)`
+  enforce that permission to upload, store or download
+  (`storage_permission_granted=True`) never approves sending intact document or
+  image bytes to AI (`storage_approves_ai_dispatch=False`). Dispatch requires
+  either a human-reviewed `reviewed_redacted` derivative (`redaction_reviewer_id`
+  and `redaction_review_id`, non-synthetic and non-automated) or an explicitly
+  scoped non-synthetic necessity approval (`scoped_necessity_ref` or validated
+  `necessity_exception`), failing closed without fallback rescue and preserving
+  `manual_path`.
+* `RightsRequestLedger` (`record_rights_request`, `log_rights_action`,
+  `answer_rights_request`, `rights_status`) persists statutory rights requests
+  across `Store` (`live.json`), `SqlStore` (`meta` document `"rights_requests"`),
+  and atomic JSON files, alongside in-memory row lists. It records timezone-aware
+  receipt timestamps, one-calendar-month statutory deadlines (`due_date`),
+  `locate`/`export`/`erase` action logs and `subject_key`-free metadata audit
+  entries, while keeping local store deletion (`local_deleted`) strictly
+  separate from external model-provider erasure
+  (`provider_erasure_confirmed=False`).
 
 `GET /api/data-protection` (any signed-in staff role, read-only, no body
 accepted) returns `register_report(os.environ)` so owners and auditors can see
 which approvals are missing; reference values are never echoed and
 `dpo_reviewed` stays false.
 
-Slice 3 wires the gate into the model transport (`ai.Ai`). `dispatch_hold`
-reads `ZF_DATA_PROCESSING`: unset or `constructed` (the development path)
-changes nothing; any other value, including a typo, means actual processing,
-so `Ai.run` (class `prompt_output`), `Ai.look_at` (class `raw_document`, intact
-bytes, no derivative path yet) and a backstop in `Ai._request` refuse the call
-until the class has its non-synthetic references. The user sees the template or
-"file is stored" text plus the manual path. The default is constructed-only, so
-the control depends on operators setting the mode before any actual data is
-processed; it is not proof that none is. `Ai.evidence` and the chat model in
-`src/agents` are covered only by the `_request` backstop where they use it.
-No rights log is persisted.
+`dispatch_hold` and `document_model_hold` wire the gate into `ai.Ai` via
+`ZF_DATA_PROCESSING` (unset or `constructed` keeps constructed fixture flows
+unchanged; any other value, including a typo, activates actual-processing holds
+across `Ai.run`, `Ai.look_at` and the `Ai._request` transport backstop). Formal
+DPO and Legal sign-off of lawful basis, retention schedule, processor/transfer
+terms and live rights procedures remains an open human governance gate (`Refs #121`).
 
 ### Offline regulatory consumption (2026-10-27, #208)
 
@@ -4815,13 +5338,28 @@ reconstructed. Unmetered events in the selected role/window are explicit.
 Service cost and AI cost per accepted check remain Unknown, not zero. Missing
 inputs are owner-agreed acceptance/counts, dated prices, attributable billing/
 shared-service allocation and human review effort. No model evaluation or
-paid budget/expiry authority is created.
+paid budget/expiry authority is created. `regulatory_privacy.cost_record` and
+`regulatory_usage` (`check_usage_metering`, `chat_cost_record`,
+`check_cost_record`, `summarize_checks`, and `governed_metering_and_cost`)
+project both `chat` and `check` surfaces onto closed identifier, count, and
+version schemas (`cost="Unknown"` and `cost_minor_units=None` when
+`price_version="unpriced"`), enforce caller-owned chat and audience/owner-scoped
+check visibility, filter records against `CHAT_RETENTION_REF` /
+`CHAT_RETENTION_DAYS` (`dpo_reviewed=False`), and emit metadata-only
+`regulatory.metering.read` / `regulatory.metering.denied` audit events.
 
 Engine contract version 2 requires nonempty `reasons` as well as named human,
 source, evidence and decision timestamp before a significant-decision check is
 clear. An evidence ID alone, absent reasons or whitespace reasons stays unknown.
 Version 1 checkpoints are not reused. This is a bounded evidence check, not
 proof of a real human decision or UK GDPR compliance.
+
+Run the targeted #217 privacy, separation-of-duties, Art 22A-22C, and
+tokenomics proofs from `src/core`:
+
+```bash
+PYTHONPATH=src:tests python3 -m unittest discover -s tests -p 'test_*217*.py' -v
+```
 
 Run the synthetic core proofs with an installed editable package, from the
 repository root:
@@ -4832,33 +5370,176 @@ PYTHONPATH="$PWD/src/core/tests" python3 -m unittest \
   test_rulecards test_source_monitor -q
 ```
 
+### Owned citation/refusal evaluation gates and rule-card ship comparator (#216)
+
+`zava_forward.core.regulatory_eval_gates` keeps the offline regulatory chat
+evaluation gates and the deterministic rule-card shipping comparator inside
+`zava-forward-core`, preserving the one-way dependency boundary (`ALLOWED =
+{"core"}`) without importing `zava-forward-agents`.
+
+* `GATE_OWNERS`, `PROVISIONAL_THRESHOLDS` and `GATE_RULES` bind named exercise
+  gate owners (`LEGAL_GATE_OWNER` for `citation_validity` and
+  `COMPLIANCE_GATE_OWNER` for `refusal_accuracy`) with `GateRule` records
+  (`effective_date = "2026-10-16"`).
+* `DEFAULT_EVAL_CASES` and `ADVERSARIAL_PROMPTS` define the deterministic
+  graded and adversarial evaluation sets across supported citations, stale
+  monitoring-cadence labels, conflicting source versions, missing/future/
+  partial/held abstentions, untrusted prompt-injection provisions and
+  out-of-scope compliance, legal-advice, approval and safety-bypass prompts.
+* `evaluate_citation_and_refusal_gates` measures per-set and combined
+  per-check citation-validity and refusal-accuracy rates (`overall_pass =
+  None`) and emits both `case_set_sha256` (pre-run case definitions and
+  prompts) and `evaluated_outputs_sha256` (binding `actual` turn envelopes to
+  the evaluated cases). Without a valid independent `OwnerGateAgreement`
+  jointly signed in dual capacity by `LEGAL_GATE_OWNER` (`owner`) and
+  `COMPLIANCE_GATE_OWNER` (`compliance_owner` or `refusal_owner`) with an
+  `independent_grader` distinct from both gate owners, a pre-evaluation
+  `agreed_on` date (`<=` earliest evaluated case `as_of` date), and matching
+  `case_set_digest`, passing provisional runs resolve to
+  `GateResult.outcome == "unknown"` (`threshold_status =
+  "provisional_not_agreed"`), while threshold breaches or missing sets resolve
+  to `"fail"`.
+* `deterministic_rule_cards`, `observation_surface_digest`,
+  `compare_chat_against_rule_cards` (also aliased as
+  `compare_chat_against_deterministic_rule_cards`), `verify_reply_grounding`,
+  `resolve_regulatory_surface` and
+  `RegulatoryChat` (`surface`, `RegulatoryChat.ship_gated(...)`, and automatic
+  `enforce_ship_gate` enforcement on `start()` and `ask()` — including
+  canonical `refuse_question` and isolated-copy `verify_reply_grounding` bundle
+  checks before persisting any ship-gated `ask()` turn — whenever
+  `ship_gate_comparison` is supplied) share unified
+  whole-bundle validation across
+  extractive rendering, deterministic card projection and expected-bundle
+  derivation, enforce canonical `refuse_question` checks (including bounded
+  progressive/modal compliance-satisfaction, legal-obligation and regulatory
+  sign-off paraphrase patterns) directly inside `RegulatoryChat.surface` before
+  returning either `chat` or actionable `rule_cards`, project active,
+  `as_of`-current deterministic rule cards only when every actionable card
+  carries substantiated `source_freshness` (constituent monitoring `status`,
+  `last_success`, `cadence_days` and `due_on` records matching aggregate
+  status, exact 3-way canonical `source_monitor` freshness `label`, date rollup
+  and source `currentness` across rendering, card projection and turn grading)
+  and unambiguous provision linkage (preserving the 10-field
+  `regulatory-chat-v1` card envelope on single-card and distinct-source bundles
+  while attaching exact per-card `provision_ids` whenever a multi-card bundle
+  shares a multi-provision `source_id`) covering all active bundle
+  provisions without unflagged multi-version, duplicate-ID or divergent
+  `(safe_default, clock)` card-signature contradictions (isolating conflicting
+  snapshots under `conflict_provisions` with `cards = []` and `provisions = []`
+  when `conflict = True`, and failing closed on future-dated, held, draft,
+  partial, unreviewed, non-exercise, malformed-fact, unflagged-conflict,
+  unlinked-card, ambiguous multi-provision or explicitly refused bundles while
+  coercing non-canonical refusal text to `EMPTY_BUNDLE_REFUSAL`), verify
+  `gates_report["evaluated_outputs_sha256"]` and
+  `gates_report["report_integrity_sha256"]` alongside pre-evaluation dual-owner
+  agreement, full source/fact/card provenance, unconditional `expected`
+  ground-truth emptiness on refused/conflict turns, canonical refusal reason
+  membership across both expected/actual refused turns and standalone
+  adversarial `refuse` callbacks, `as_of` temporal currentness (including
+  UTC-conversion overflow guards) and per-case grades (requiring at least one
+  answer turn in `graded` and one prompt-triggered refused turn in
+  `adversarial`, and allowing only contract-valid canonical conservative
+  `false_refusal` envelopes under sub-`1.0` owner-agreed `min_rates` while
+  blocking any `unsafe_non_refusal`, `invalid_response` or missed standalone
+  adversarial prompt), check exact URL-encoded card routes
+  (`/api/law/cards/{quote(card_id, safe='')}`, where `card_id` is the
+  unversioned prefix of `card["id"]` with bounded ASCII `@v{version}`
+  alignment), versioned provision routes
+  (`/api/law/provisions/{quote(provision_id, safe='')}`) and full baseline
+  projection parity across answer and non-answer turns,   cryptographically bind non-synthetic paired `(role, participant, case_id,
+  task)` observations and mandatory timezone-aware `[agreed_on,
+  evaluation_timestamp]` observation timestamps (`observed_at` or
+  `recorded_at`, rejecting ambiguous date-only strings, post-evaluation
+  same-day instants, and owner gate / threshold / accepted-check definitions
+  post-dating observations) to
+  evaluated `cards` and `chat` surfaces via `observation_surface_digest`,
+  compare extractive chat against cards on non-regressing paired task
+  completion/comprehension/total-effort lift (`min_*_gain in [0, 1]`,
+  `max_elapsed_ratio in (0, 1]`) across `repairs`, `housing` and `grants`,
+  critical hazard misses across both `chat` and `cards` arms and beside-cost
+  economics (`cost_per_accepted_check`, `authorise_model_run`, plus an exact
+  unrounded check against the caller-supplied pre-evaluation owner-agreed
+  unit-cost ceiling `max_ai_cost_per_accepted_check_gbp` in
+  `benefit_thresholds` with zero repository-wide price or budget constants
+  while `BRD OD-51` remains open), stamp `evidence_scope =
+  "offline_workflow_evaluation_not_live_release_approval"`, verify `chat_reply`
+  directly against `bundle` via `grade_chat_turn`, and enforce `ship_mode =
+  "cards_only"` (`cards_alone = True`, `chat = None`) by default whenever chat
+  lacks measured value, exceeds its owner-agreed unit-cost ceiling or lacks
+  bundle grounding over deterministic rule cards with links. This remains an
+  offline workflow evaluation proof, not live model approval or operational
+  release sign-off.
+
+```bash
+cd src/core && python3 -m unittest discover -s tests -p 'test_*216*.py' -v
+```
+
 ### Version-bound affected-person challenges (#220)
 
-The existing resident operation records supplied challenges against retained
-priority suggestions (`kind != "ai_task"`). It does not replace measure-decision
-independent review or complaint/remedy controls. Both resident-information and
-recorded-reason permissions are required to read or write the new fields.
-`Store.detail` supplies `challenge_targets` with immutable proposal and separate
-human-decision version tokens; callers must echo both when opening a challenge.
-The registered server actor and current named owner remain authoritative.
-Eligibility includes both original generation candidates and cases retained in
-the human decision's `final_items`. A person may edit in an owned open case
+The resident operation records supplied challenges against retained priority
+suggestions, case-scoped `ai_task` suggestions and `form_staging` extraction
+batches (`form:<batch_id>`), while `Assistants.challenge` covers SQLite
+`assistant_tasks` proposals and `ChallengeRegister` provides the
+store-independent dependency and safeguard engine. It does not replace
+measure-decision independent review or complaint/remedy controls. Both
+resident-information and recorded-reason permissions are required to read or
+write challenge narratives. `Store.detail` supplies `challenge_targets` with
+immutable proposal and separate human-decision version tokens; callers must echo
+both when opening a challenge. The registered server actor and current named
+owner remain authoritative. Eligibility includes original generation candidates,
+cases retained in the human decision's `final_items`, case-linked `ai_task`
+outputs and case `form_staging` batches. A person may edit in an owned open case
 outside the original 40 candidates. That case can challenge the retained
 proposal/decision without changing the original generation `case_ids`, source
 hashes or proposal version. Its missing source hash stays Unknown; a source
 challenge is refused rather than inventing generation evidence.
 
 `challenge_open` requires `proposal_id`, `proposal_version`, `decision_version`,
-`target_kind` (`proposal`, `source` or `policy`), supplied `channel`, `source`,
-`request`, `explanation`, `owner`, `non_digital_route` and `next_update`.
-Digital means staff recording supplied digital evidence, not resident
-self-authentication. Phone, Letter and In person use the same controlled path.
-`challenge_resolve` requires `id`, `expected_version`, `resolution`,
-`resolution_ref`, `explanation` and `next_update`. The named owner or an existing
-authorised manager can record one terminal resolution, either
-`Correction recorded` or `Explanation recorded`. Opening evidence and the
-original human decision are retained; terminal corrections cannot be erased by
-a later resolution. These are human-supplied records, not automated redress.
+`target_kind` (`proposal`, `source`, `policy` or `human_decision`), supplied
+`channel`, `source`, `request`, `explanation`, `owner`, `non_digital_route` and
+`next_update`, with optional `submitted_by` (`The resident`, `Their
+representative` or `Nominee`), `representative_ref`, `hazard_concern` and
+`hazard_intake`. Digital means staff recording supplied digital evidence, not
+resident self-authentication. Phone, Letter, In person, Assisted visit and
+Trusted intermediary use the same controlled path; representative and nominee
+submissions record read-only `representative_authority_status` without inferring
+works consent or blocking intake. `challenge_update` appends supplementary
+evidence (`id`, `expected_version`, `channel`, `source`, `request`,
+`explanation`, `next_update`, plus optional representative and safety fields)
+while keeping the opening request immutable. `challenge_reopen` reopens a
+resolved challenge (`id`, `expected_version`, `channel`, `source`, `request`,
+`explanation`, `owner`, `next_update`, plus optional representative and safety
+fields, available in both `RESIDENT_ACTIONS` and `FOLLOWUP_ACTIONS`), archiving
+prior resolutions in `previous_resolutions` and setting
+`prior_correction_preserved: True` when a prior `Correction recorded` outcome
+existed so downstream `stale` fences (including `ai_tasks.review` and SQL
+`priority_correction` indexing) remain active until fresh human work.
+`challenge_escalate` transfers an open, reopened or escalated challenge to a
+distinct named human owner (`id`, `expected_version`, `owner`, `reason`,
+`next_update`) with monotonic optimistic concurrency. `challenge_resolve`
+requires `id`, `expected_version`, `resolution`, `resolution_ref`, `explanation`
+and `next_update`. The named owner or an existing authorised manager can record
+`Correction recorded` or `Explanation recorded`.
+
+Every challenge, correction, reopen, nomination and service-dispute write
+rejects forbidden adverse keys (`ChallengeSafeguardError`), enforces
+`assert_no_adverse_challenge_effects` and verifies live portfolio `_ranking()`
+invariance: priority and ranking never drop, no `refusal`, `no_access`,
+`sanction`, `withdrawn` or `negative_engagement` state is set or inferred, no
+unrelated task, return, service request, work order, package, handoff or
+resident update is closed, and no statutory or emergency hazard or safeguarding
+clock (`awaiting_hazard_action`, Awaab's Law 24h/7d/14d deadlines or
+`safeguarding` clocks) is paused, reset or delayed. Setting `hazard_concern=True`
+immediately records a receipt-dated `hazard_referral`
+(`waits_for_challenge_review: False`) without resetting `received_on` on later
+updates or reopens; supplying `hazard_intake` (`category`, `priority`, `source`,
+`aware_at` and optional `note`) atomically appends an active independent case
+hazard with `safety_raised` / `safety_emergency` audit evidence while preserving
+all existing hazard clocks. Records, views (`ChallengeRegister.view`,
+`Store.detail` / `SqlStore.detail`, `Assistants.detail`) and challenge audit
+entries expose machine-checkable `non_retaliation_assurance`
+(`build_non_retaliation_assurance`) and `hazard_clock_preserved: True`. These
+are human-supplied records, not automated redress.
 
 New priority generation hashes the actual audience-filtered case citation labels
 at input capture, before generation. These are citation-snapshot versions, not
@@ -4928,15 +5609,20 @@ Focused synthetic JSON/SQLite proof, with installed editable distributions:
 ```bash
 PYTHONPATH=src/core/tests:src/agents/tests:src/api/tests:src/api python3 -m unittest \
   test_resident_decisions.JsonResidentDecisions \
-  test_resident_decisions.SqlResidentDecisions test_resident_api -k challenge -q
+  test_resident_decisions.SqlResidentDecisions \
+  test_challenge_no_retaliation_220 \
+  test_no_retaliation_guard_220 \
+  test_challenge_no_retaliation_api_220 \
+  test_resident_api -k challenge -q
 ```
 
-This is a bounded retained-priority slice, not whole-system AC-071 acceptance.
-Other assistant/form paths, operational native SQL Server acceptance, qualified
-legal/RAI review and resident comprehension remain unproven. Seven constructed
-native SQL Server correction-race, dependency, entitlement and rollback
-regressions supplement the JSON/SQLite checks. Subsequent native cached-reader,
-atomic migration/restart, correction-flag rollback and persisted denial-audit
+This covers retained priority, `ai_task`, `form_staging` and SQLite
+`assistant_tasks` challenge routes plus runtime non-retaliation, non-refusal and
+zero-hazard-delay invariants, not operational native SQL Server acceptance,
+qualified legal/RAI review or resident comprehension. Seven constructed native
+SQL Server correction-race, dependency, entitlement and rollback regressions
+supplement the JSON/SQLite checks. Subsequent native cached-reader, atomic
+migration/restart, correction-flag rollback and persisted denial-audit
 regressions add focused coverage, not operational acceptance. The bounded
 60,000-case query measurement above is not a whole-workflow load claim.
 
@@ -4999,34 +5685,48 @@ is the provenance record. See the [API section](../api/README.md#synthetic-resid
 
 `zava_forward.core.challenges.ChallengeRegister` is a store-independent register for constructed
 challenges (FR-052, AC-071, FR-043). `record_digital` and `record_staff` (named staff, phone,
-in-person, paper or assisted-visit channel) record a challenge against a source, policy or proposal
-version and the human decision, with a human owner, a next-update date and a fixed accessible
-non-digital route statement. `view` shows only permitted explanations. Only the named owner can
-`review` or `resolve` with evidence. Graph nodes are `(kind, id, version)` tuples, so a correction
-to `POL-1/v1` does not touch dependents of `POL-1/v2`. A `corrected` outcome marks exactly the
-transitive dependents in the injected dependency graph stale and preserves prior versions; `upheld` and `withdrawn` mark
-nothing. The register has no consent, refusal, sanction, closure or hazard-clock fields and never
-reads or writes them. Passing `hazard_concern=True` records an immediate `hazard_referral` to the
-named owner on receipt, listed by `hazard_referrals()` until the owner records an evidenced handoff with `confirm_hazard_handoff()`, even after resolution; it neither starts nor changes
-any hazard clock, so the existing hazard process is not delayed by challenge review. `view()` adds a
-plain-language `protection` statement (a challenge does not change tenancy, repairs or services), and
-`overdue(today)` lists unresolved challenges past their promised next update for the human owner;
-neither changes any record. A hazard concern may carry `received_on`; the read-only
+in-person, paper or assisted-visit channel) record a challenge against a `source`, `policy`,
+`proposal` or `human_decision` version and the human decision reference, with a human owner, a
+next-update date and a fixed accessible non-digital route statement. `update` appends digital or
+staff-recorded supplementary statements and explanations while keeping the opening statement
+immutable, and `escalate` moves an unresolved challenge to a different named human owner with a
+recorded reason. `view` shows only permitted explanations across both initial and update entries,
+plus explicit `safeguards` (`no_retaliation`, `no_inferred_refusal`, `no_delayed_hazard_response`).
+Only the named owner can `review` or `resolve` with controlled evidence (chat-memory references are
+refused). Graph nodes are `(kind, id, version)` tuples, so a correction to `POL-1/v1` or
+`DEC-220/d1` does not touch dependents of `POL-1/v2` or `DEC-220/d2`. A `corrected` outcome marks
+exactly the transitive dependents in the injected dependency graph stale and preserves prior
+versions; `upheld` and `withdrawn` mark nothing. `FORBIDDEN_ADVERSE_FIELDS`,
+`reject_adverse_mapping` and `assert_no_adverse_challenge_effects` fail closed with
+`ChallengeSafeguardError` on any retaliation flag, priority/support degradation, unrelated closure,
+inferred resident refusal or hazard-clock/hold delay. Passing `hazard_concern=True` records an
+immediate `hazard_referral` to the named owner on receipt, listed by `hazard_referrals()` until the
+owner records an evidenced handoff with `confirm_hazard_handoff()`, even after update, escalation or
+resolution; updating or escalating an unhanded referral preserves its original `received_on` (dated
+or `None`) so ageing is never masked, and neither starts nor delays any statutory hazard clock.
+`view()` adds a plain-language `protection` statement (a challenge does not change tenancy, repairs
+or services), and `overdue(today)` lists unresolved challenges past their promised next update for
+the human owner; neither changes any record. A hazard concern may carry `received_on`; the read-only
 `hazard_referrals_overdue(today, max_days)` lists unhanded referrals older than the limit, of
 unknown age, or with a `received_on` in the future (flagged as a data-quality issue) so the owner
 can follow up. `max_days` is required because no limit has been owner-approved. It is a flag for
 human action, not a hazard clock.
 
-Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, and the
-no-retaliation and no-delayed-hazard-response criterion, which needs live workflow evidence and
-human review. Tests: `src/core/tests/test_challenges.py`.
+Store-backed persistence in JSON `Store` and SQLite `SqlStore` is covered via `affected_challenges`
+in `zava_forward.core.resident_decisions` (`challenge_open`, `challenge_update`,
+`challenge_reopen`, `challenge_escalate`, `challenge_resolve`), with public guard re-exports in
+`zava_forward.core.no_retaliation_guard`. Tests: `src/core/tests/test_challenges.py`,
+`src/core/tests/test_issue_220_challenge_route.py`,
+`src/core/tests/test_challenge_no_retaliation_220.py`, and
+`src/core/tests/test_no_retaliation_guard_220.py`.
 
-Status record, 2026-11-04 (issue #220 stays open): criteria 1 to 4 were delivered by #418, #641 and
-#693, with the ageing and protection helpers in #826 and #966. Criterion 5 (no retaliation, inferred
-refusal or delayed hazard response) is unmet. The remaining work is human: representative resident
-and staff acceptance, a measured hazard-response comparison on live workflow data, and owner approval
-of the hazard follow-up age limit. The register itself cannot prove it. A further code slice would
-only wire these read-only helpers into a staff view, which needs owner direction first.
+Status record, 2026-11-14 (issue #220 operational human gate stays open): criteria 1 to 4 were
+delivered by #418, #641 and #693, with ageing and protection helpers in #826 and #966. Locally
+verifiable deterministic `src/core` non-retaliation, non-inferred-refusal and non-delayed-hazard
+safeguards across submit, update, escalate and resolve (`source`, `policy`, `proposal`,
+`human_decision`) are enforced and unit-tested in `test_issue_220_challenge_route.py`. Live
+representative resident/staff workflow acceptance, workbench UI wiring for update/escalate, and
+owner approval of the `max_days` hazard follow-up threshold remain separate human governance items.
 
 Assessment, 2026-11-17 (issue #220 stays open): criteria 1 to 4 remain proven by the tests above and
 `src/api/tests/test_challenge_non_retaliation_hazard_guard.py`. For criterion 5, that file also shows that a challenge
@@ -5050,8 +5750,14 @@ untouched. The remedy status is separate and completion needs evidence.
 `unresolved()` keeps open concerns visible after closure. `evaluator_view(handed_over_homes,
 baseline_homes)` returns counts with stated denominators, unknown baseline coverage, outcomes
 including "no outcome yet", unresolved concerns and concerns outside the stated scope, with a
-fixed notice that it shows no causation, fault or savings. `neutral_text` rejects causation, blame
-or savings wording in templated text.
+fixed notice that it shows no causation, fault or savings. `neutral_text` and
+`neutral_violations` fold Unicode width, invisible characters and typographic punctuation, stop
+indirect `whether`/`if` uncertainty and negated disclaimers at clause boundaries, and reject
+causation claims, household/lifestyle blame and financial or energy savings promises across all
+templated text, staff investigation/remedy/sensor notes, optional `FR-036` concern-pack drafts and
+review reasons, snapshot restores (`AftercareRegister.from_state` and `AftercareService` state
+validation), and `quality.py:add_aftercare` handover follow-up notes, while preserving resident
+own-words statements and representative authority bases verbatim.
 
 `propose_pack(concern_id, ai_summary=None)` drafts an optional concern pack for the named owner. The
 pack is built from the record by template, so it exists when AI is unavailable; an optional AI
@@ -5364,6 +6070,39 @@ until Finance validates them. It stores nothing: no file, run record, database, 
 `ZF_DATA` access. Tests: `python -m unittest discover -s tests -p 'test_learning_test_bundles.py' -q`.
 This is not a real experiment, screen wiring, stored runs or multi-run aggregation; those stay held
 by the [protocol](../../docs/reference/research/ux/journey-learning-test-bundles.md).
+
+## Meaningful human-review effectiveness gate and automation-bias harness (Refs #223)
+
+`zava_forward.core.human_review_effectiveness` enforces a fail-closed `gates.GateResult`
+(`human_review_gate`, compatible with `gates.transition_allowed`) over `Store.ai_run` and
+`Store.review_ai` records (`AC-070`, `FR-026`, `FR-027`, `FR-028`, `NFR-009`, `OQ-017`).
+
+* Seeded critical defect coverage: eight constructed scenarios across `summary` and `message`
+  tasks pair AI proposals 1-to-1 against `Store.ai_run(..., mode="workflow")` on identical cases
+  (`ZF-223-A`, `ZF-223-B`), covering plausible-but-wrong (`wrong`), `stale`, `unsupported`, and
+  `incomplete` critical defects plus hedged and confident valid controls (`none`). Every seeded
+  defect carries resolving inline `[[...]]` citations (`verified == True`), proving that citation
+  validity alone and default acceptance cannot pass `human_review_gate`.
+* Retained provenance and freshness: passing the gate requires a registered, task-authorised
+  named human reviewer (refusing system, agent, and `TBD`/placeholder tokens), matching live
+  `ai_tasks.source_hashes`, retained `review_evidence.compared` (`ai` and `workflow`), hash-chain
+  audit verification (`Store.verify_audit()`), a substantive non-memory `reviewer_reason` citing a
+  resolving case `source_labels` key on all dispositions (`accept`, `edit`, and `reject`), and
+  clean discrepancy verification of `override_text` on `edit`.
+* Automation-bias harness and blind human worksheets: `run_automation_bias_harness` compares
+  `competent`, `default_accept`, `automation_bias` (accepting confident citation-valid proposals
+  while checking hedged ones), `citation_only`, and `unauthorised_competent` panels, reporting
+  overall and per-class detection, corrections, rejections, false rejects, zero gate leakage, and
+  total/net review effort against the workflow-only comparator. `blank_worksheet`,
+  `score_human_session`, and duplicate-rejecting `pool_human_sessions` prepare blind participant
+  scoring without claiming human-oversight closure: `PROVISIONAL_AUTHORITY` fails closed when
+  `live=True` until named human owners approve `OQ-017` delegations and complete participant trials.
+
+```bash
+cd src/core && python3 -m mypy && python3 -m ruff check . \
+  && python3 -m ruff format --check . \
+  && PYTHONPATH=src:tests python3 -m unittest discover -s tests -p 'test_*223*.py' -v
+```
 
 ## Usability testing programme contract and evaluator (#155)
 

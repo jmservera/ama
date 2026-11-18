@@ -11,6 +11,8 @@ from dataclasses import dataclass
 from datetime import date
 from typing import Any
 
+from .taskqueues import SAFEGUARDING_ITEM_KEYS
+
 PASS, FAIL, UNKNOWN = "pass", "fail", "unknown"
 OUTCOMES = (PASS, FAIL, UNKNOWN)
 GATE_KINDS = (
@@ -228,6 +230,70 @@ BOOKING_RULES = {
 }
 
 
+def _safeguarding_item_closed(item: Any) -> bool | None:
+    """Return True when closed, False when open, or None when malformed."""
+    if not isinstance(item, dict):
+        return None
+    rel = item.get("released")
+    if rel is not None:
+        return rel if type(rel) is bool else None
+    status = item.get("status")
+    if status is not None and not isinstance(status, str):
+        return None
+    return isinstance(status, str) and status.strip().casefold() in {
+        "closed",
+        "released",
+        "resolved",
+    }
+
+
+def _case_safety_state(case: dict[str, Any]) -> bool | None:
+    """Strict boolean safety clearance across hazards and standalone safeguarding records."""
+    if not isinstance(case, dict):
+        return None
+    hazards = case.get("hazards")
+    if not isinstance(hazards, list):
+        return None
+    has_open = False
+    for h in hazards:
+        if not isinstance(h, dict):
+            return None
+        rel = h.get("released")
+        if rel is not None and type(rel) is not bool:
+            return None
+        if rel is not True:
+            has_open = True
+    if "safeguarding_items" in case:
+        sg_items = case.get("safeguarding_items")
+        if not isinstance(sg_items, list):
+            return None
+        for item in sg_items:
+            closed = _safeguarding_item_closed(item)
+            if closed is None:
+                return None
+            if not closed:
+                has_open = True
+    if "safeguarding" in case and case.get("safeguarding") is not None:
+        legacy = case.get("safeguarding")
+        if isinstance(legacy, list):
+            for item in legacy:
+                closed = _safeguarding_item_closed(item)
+                if closed is None:
+                    return None
+                if not closed:
+                    has_open = True
+        elif isinstance(legacy, dict):
+            if set(legacy.keys()) & SAFEGUARDING_ITEM_KEYS:
+                closed = _safeguarding_item_closed(legacy)
+                if closed is None:
+                    return None
+                if not closed:
+                    has_open = True
+        else:
+            return None
+    return not has_open
+
+
 def booking_gates(
     case: dict[str, Any], resident_reasons: Iterable[str] | None, on: str | None = None
 ) -> list[GateResult]:
@@ -247,10 +313,7 @@ def booking_gates(
             on=on,
         )
     ]
-    hazards = case.get("hazards")
-    safe: bool | None = None
-    if isinstance(hazards, list):
-        safe = all(isinstance(h, dict) and h.get("released") is True for h in hazards)
+    safe = _case_safety_state(case)
     results.append(
         check(
             BOOKING_RULES["safety"],

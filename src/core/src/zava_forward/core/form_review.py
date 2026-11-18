@@ -7,7 +7,7 @@ from copy import deepcopy
 from datetime import UTC, date, datetime
 from typing import Any
 
-from . import forms
+from . import finance, forms
 from .change_provenance import controlled
 from .doc_controls import DocumentUnavailable
 from .store import ConflictError
@@ -609,8 +609,11 @@ def proposal_freshness(store: Any, user: Record, case_id: str, draft_id: str) ->
 
 def action(store: Any, user: Record, case_id: str, body: object) -> Record:
     if not isinstance(body, dict):
+        finance.guard_no_automated_finance_authority(user, operation="certify_claim")
         raise ValueError("Supply a single working-review action.")
     step = body.get("action")
+    op = finance.classify_finance_operation("form_review", step, body)
+    finance.guard_no_automated_finance_authority(user, operation=op, body=body)
     keys = {
         "open": {"action", "schema_id", "schema_version"},
         "review": {

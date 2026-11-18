@@ -8,6 +8,7 @@ from contextlib import contextmanager
 from typing import Any
 
 from .change_provenance import CommittedOutcomeError
+from .doc_controls import is_rescan_pending
 from .documents import DocumentStoreError
 from .store import ConflictError
 
@@ -23,9 +24,7 @@ def mark_committed(store: Any) -> None:
 
 
 def _pending(doc: Record) -> bool:
-    return (
-        not doc.get("generated") and (doc.get("scan") or {}).get("status", "pending") == "pending"
-    )
+    return is_rescan_pending(doc)
 
 
 @contextmanager

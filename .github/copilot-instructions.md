@@ -65,8 +65,22 @@ workflow/check names until a deliberate post-cut-over branch-protection update.
 There is no repository-wide documentation build or lint command. Validate
 documentation with Markdown/link review and the Git diff. Executable changes
 also require the relevant existing tests: for example, from `src/api`,
-`PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests -q`; migration regressions
-use `python3 tools/rename-zava-tests.py` from the repository root. Use the
+`PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests python3 -m unittest discover -s tests -q`
+(or from the repository root, include `src/api/tests` on `PYTHONPATH` alongside
+`src/core/tests` and `src/agents/tests` so cross-test helper imports resolve); migration regressions
+use `python3 tools/rename-zava-tests.py` from the repository root. Match
+`.github/workflows/src-ci.yml` locally before pushing by running bare
+`python3 -m mypy` inside each modified `src/<project>` directory (for `src/api`,
+`PYTHONPATH=../core/src:../agents/src python3 -m mypy`), running
+`python3 -m ruff format --isolated --line-length 100 --check` on modified
+`infra/` Python files in addition to `python3 -m ruff check`, updating the
+recipe SHA-256 in
+`docs/reference/research/retrofit-synthetic-data/scenario-manifest.json` (and
+running `test_scenario_manifest.py` and `test_needs_inventory.py`) whenever a
+workbench browser-check script under `src/api/checks/` changes, and running
+`src/api/tests/test_accessibility_baseline.py` and
+`src/api/tests/test_content_standard.py` whenever web UI files under
+`src/api/src/zava_forward/api/web/` change. Use the
 component guides and existing workflows rather than infer that no tests exist.
 
 Validation follows two tiers (owner decision D4, 2026-11-01, refined by issue
@@ -189,9 +203,11 @@ request. Do not commit or push directly to `main`.
   child as needed; never silently rebase, force-push, rewrite or merge work
   merely to manage branch lineage. Describe the change, the evidence or
   sources used and the validation performed.
-* Let the pull request checks, including the rubric scoring workflow, run
-  before merge. Address review feedback with further commits on the same
-  branch.
+* Let the pull request checks run before merge (`Source projects CI` runs on
+  pull requests to any branch, whereas the rubric scoring workflow runs only on
+  pull requests and pushes targeting `main`, so stacked child pull requests
+  validate in `Source projects CI` without triggering rubric scoring). Address
+  review feedback with further commits on the same branch.
 * Link each pull request to the issues it delivers. Use `Closes #N` only when
   the PR's reviewed evidence proves every acceptance criterion of that issue,
   and `Refs #N` with the unmet criteria otherwise; never use a closing keyword,

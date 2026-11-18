@@ -112,14 +112,42 @@ class Frame:
         return hashlib.sha256(wire(self.row)).hexdigest()
 
 
-_PLACEHOLDERS = frozenset({"tbd", "todo", "n/a", "na", "none", "unknown", "nobody", "unassigned"})
+_PLACEHOLDERS = frozenset(
+    {
+        "tbd",
+        "tbc",
+        "todo",
+        "pending",
+        "n/a",
+        "na",
+        "none",
+        "null",
+        "nil",
+        "unknown",
+        "nobody",
+        "unassigned",
+        "unowned",
+        "anonymous",
+        "anon",
+        "guest",
+        "unattended",
+        "system",
+        "auto",
+        "automated",
+        "bot",
+    }
+)
 
 
 def accountable_text(value: object) -> bool:
     """True for a real owner or alert name: non-blank, bounded, not a template or placeholder."""
     if not isinstance(value, str) or not value.strip() or len(value) > 160:
         return False
+    if any(ord(ch) < 32 or ord(ch) == 127 for ch in value):
+        return False
     text = value.strip()
+    if not any(ch.isalnum() for ch in text):
+        return False
     return text.casefold() not in _PLACEHOLDERS and not (text[0] == "<" and text[-1] == ">")
 
 
@@ -134,7 +162,28 @@ class RunBudget:
     daily_used_units: int = 0
     reserved_headroom_units: int = 40000
 
-    def validate(self, frames: tuple[Frame, ...]) -> int:
+    def _preflight_envelope(self) -> None:
+        if not all(
+            accountable_text(s) for s in (self.owner, self.cost_reference, self.alert_reference)
+        ):
+            raise StreamError("RUN_OWNER_COST_ALERT_REQUIRED")
+        if (
+            type(self.max_seconds) not in (int, float)
+            or not math.isfinite(self.max_seconds)
+            or not 1 <= self.max_seconds <= 3600
+        ):
+            raise StreamError("INVALID_RUN_LIMIT")
+        if (
+            type(self.max_messages) is not int
+            or not 1 <= self.max_messages <= 100000
+            or type(self.daily_used_units) is not int
+            or self.daily_used_units < 0
+            or type(self.reserved_headroom_units) is not int
+            or not 40000 <= self.reserved_headroom_units <= 400000
+        ):
+            raise StreamError("RUN_MESSAGE_LIMIT")
+
+    def preflight(self) -> None:
         if not all(
             accountable_text(s) for s in (self.owner, self.cost_reference, self.alert_reference)
         ):
@@ -151,9 +200,12 @@ class RunBudget:
             or self.daily_used_units < 0
             or type(self.reserved_headroom_units) is not int
             or not 40000 <= self.reserved_headroom_units <= 400000
-            or not frames
-            or len(frames) > self.max_messages
         ):
+            raise StreamError("RUN_MESSAGE_LIMIT")
+
+    def validate(self, frames: tuple[Frame, ...]) -> int:
+        self.preflight()
+        if not frames or len(frames) > self.max_messages:
             raise StreamError("RUN_MESSAGE_LIMIT")
         # Reserve 1 KiB for message properties as well as each actual body.
         units = sum(math.ceil((len(wire(frame.row)) + 1024) / 4096) for frame in frames)
@@ -320,6 +372,7 @@ class Pacer:
     ) -> None:
         if type(speed) not in (int, float) or not math.isfinite(speed) or not 0 < speed <= 1000:
             raise StreamError("INVALID_REPLAY_SPEED")
+        budget._preflight_envelope()
         self.speed = speed
         self.clock = clock
         self.deadline = clock() + budget.max_seconds
@@ -333,6 +386,12 @@ class Pacer:
         await self._wait_until(self.clock() + nominal_seconds / self.speed)
 
     async def admit_send(self) -> None:
+        if (
+            type(self.max_per_second) not in (int, float)
+            or not math.isfinite(self.max_per_second)
+            or not 0 < self.max_per_second <= 100
+        ):
+            raise StreamError("INVALID_RUN_RATE")
         while True:
             await self._wait_until(self.next_send)
             if self.clock() >= self.next_send:
@@ -341,6 +400,8 @@ class Pacer:
         self.next_send = self.last_send + 1 / self.max_per_second
 
     def set_max_per_second(self, rate: float) -> None:
+        if type(rate) not in (int, float) or not math.isfinite(rate) or not 0 < rate <= 100:
+            raise StreamError("INVALID_RUN_LIMIT")
         self.max_per_second = rate
         if self.last_send is not None:
             self.next_send = self.last_send + 1 / rate

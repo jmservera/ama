@@ -16,6 +16,8 @@ from azure.identity.aio import ManagedIdentityCredential
 from azure.iot.device import X509, Message
 from azure.iot.device.aio import IoTHubDeviceClient
 from zava_forward.core.sensor_consumer import ConsumerError, Observation, Receipt, preflight
+from zava_forward.core.synthetic.device_identity import DeviceIdentityError, verify_envelope
+from zava_forward.core.synthetic.live_readings import LIVE_VERSIONS
 from zava_forward.core.synthetic.run_plan import RunController
 from zava_forward.core.synthetic.sensor_identity import home_key
 from zava_forward.core.synthetic.sensor_stream import Frame, Pacer, RunBudget, StreamError, wire
@@ -150,6 +152,11 @@ def decode(event: EventData, bindings: Mapping[str, Binding]) -> Observation:
     except (UnicodeError, ValueError, RecursionError):
         raise StreamError("IOT_INVALID_JSON") from None
     result = preflight([row])[0]
+    if result.get("schema_version") in LIVE_VERSIONS:
+        try:
+            verify_envelope(device_id, result)
+        except DeviceIdentityError as error:
+            raise StreamError(str(error)) from None
     if result.get("sensor_id") != binding.sensor_id or result.get("home_id") != binding.home_id:
         raise StreamError("IOT_DEVICE_BINDING_MISMATCH")
     return result

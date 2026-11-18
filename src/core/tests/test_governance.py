@@ -1,6 +1,7 @@
 import copy
 import json
 import os
+import re
 import tempfile
 import unittest
 import uuid
@@ -270,6 +271,26 @@ class Gov:
         self.assertIn("breach_restart", self.actions())
         self.assertTrue(s.verify_audit())
 
+    def test_breach_names_restart_authority_and_blocks_automatic_restart(self):
+        self.approve_all()
+        s = self.store
+        b = s.breach_record(tf.U["QI-1"], BREACH)
+        self.assertEqual((b["restart_authority"], b["restart_rule"], b["automatic_restart"]), ("OD-35 demo", "RULE-024", False))
+        for bad_authority in ("", "TBD", "none", "automatic", "Unavailable: OD-35 authority unappointed", "CM-0123456789abcdef"):
+            with self.assertRaises(ValueError):
+                s.breach_record(tf.U["QI-1"], dict(BREACH, restart_authority=bad_authority))
+        with self.assertRaises(PermissionError):
+            s.breach_record(tf.U["QI-1"], dict(BREACH, restart_authority=tf.U["QI-1"]["email"]))
+        rel = s.release_record(self.pm1, dict(RELEASE, scope="Phase 0 capture"))
+        ok = dict(id=b["id"], release_id=rel["id"], authority_ref="OD-35 demo", remediation_evidence="r")
+        with self.assertRaises(PermissionError):
+            s.breach_restart(self.pm2, dict(ok, automatic=True))
+        with self.assertRaises(PermissionError):
+            s.breach_restart(self.pm2, dict(ok, authority_ref="Someone else"))
+        with self.assertRaises(PermissionError):
+            s.breach_restart(self.pm1, ok)
+        self.assertTrue(s.is_paused("archetype", "Solid wall"))
+
     def test_view_is_manager_only(self):
         with self.assertRaises(PermissionError):
             self.store.governance_view(tf.U["RLO-1"])
@@ -422,6 +443,132 @@ class EvidenceRegister(unittest.TestCase):
         self.assertTrue(v["dispositions_complete"])
         self.assertEqual(v["open_count"], 22)
         self.assertTrue(all(r["acceptance"] == "Unknown" for r in v["findings"]))
+
+    def test_prd_review_and_owner_acceptance_stay_separate_from_report_and_claims(self):
+        pm2 = tf.U["PM-2"]
+        gov0 = self.store.governance_view(self.pm, ASSESSMENT)
+        self.assertEqual(gov0["prd_quality_review"], g.PRD_QUALITY_REVIEW)
+        self.assertEqual(gov0["prd_owner_acceptance"], g.PRD_OWNER_ACCEPTANCE)
+        self.assertEqual(gov0["rai_evidence"]["prd_quality_review"], g.PRD_QUALITY_REVIEW)
+        self.assertEqual(gov0["rai_evidence"]["prd_owner_acceptance"], g.PRD_OWNER_ACCEPTANCE)
+        self.assertFalse(gov0["prd_quality_review"]["satisfied"])
+        self.assertFalse(gov0["prd_quality_review"]["accepted"])
+        self.assertFalse(gov0["prd_owner_acceptance"]["accepted"])
+        self.assertTrue(gov0["prd_quality_review"]["separate_from_report_acceptance"])
+        self.assertTrue(gov0["prd_quality_review"]["separate_from_remediation_completion"])
+        self.assertTrue(gov0["prd_owner_acceptance"]["separate_from_report_acceptance"])
+        self.assertTrue(gov0["prd_owner_acceptance"]["separate_from_remediation_completion"])
+        self.assertEqual(
+            gov0["rai_evidence"]["baseline"]["acceptance_scope"],
+            "baseline-assessment-and-remediation-planning only",
+        )
+        for forbidden in (
+            {"prd_quality_review": {"satisfied": True, "accepted": True}},
+            {"prd_owner_acceptance": {"accepted": True}},
+            {"affected_dispatch": "ENABLED"},
+            {"conditional_eu_assurance": "Satisfied"},
+            {"live_use": "APPROVED"},
+        ):
+            with self.subTest(forbidden=forbidden):
+                with self.assertRaises(ValueError):
+                    self.store.rai_evidence_record(self.pm, claim(**forbidden))
+        for i, fid in enumerate(FINDINGS):
+            self.store.rai_evidence_record(
+                self.pm,
+                claim(
+                    finding_id=fid,
+                    expected_revision=i,
+                    event_ref=f"SYN-SEP-{i}",
+                    evidence_tier="independent-acceptance",
+                    decision_maker_status="Unverified reference",
+                    decision_maker_ref="Synthetic exercise reviewer",
+                ),
+            )
+        self.store.protocol_freeze(self.pm, dict(PROTOCOL, synthetic=True))
+        self.store.protocol_approve(pm2, dict(dpia_ref="DPIA-DEMO", lawful_basis_ref="LB-DEMO"))
+        self.store.benefits_record(
+            self.pm, dict(BENEFITS, mde_cycle_time_pct=10, mde_coordination_hours_pct=10)
+        )
+        self.store.benefits_approve(pm2, {})
+        self.store.release_record(self.pm, dict(RELEASE, scope="Phase 0 capture"))
+        with self.store.lock:
+            self.store.data["governance"]["prd_quality_review"] = {"satisfied": True, "accepted": True}
+            self.store.data["governance"]["prd_owner_acceptance"] = {"accepted": True}
+            self.store.data["governance"]["affected_dispatch"] = "ENABLED"
+            self.store.data["governance"]["conditional_eu_assurance"] = "Applied"
+            self.store.save()
+        self.store = self.reopen()
+        gov = self.store.governance_view(self.pm, ASSESSMENT)
+        rai = gov["rai_evidence"]
+        self.assertTrue(rai["dispositions_complete"])
+        self.assertEqual(rai["current_disposition_count"], 22)
+        self.assertEqual(gov["prd_quality_review"], g.PRD_QUALITY_REVIEW)
+        self.assertEqual(gov["prd_owner_acceptance"], g.PRD_OWNER_ACCEPTANCE)
+        self.assertEqual(rai["prd_quality_review"], g.PRD_QUALITY_REVIEW)
+        self.assertEqual(rai["prd_owner_acceptance"], g.PRD_OWNER_ACCEPTANCE)
+        gov["prd_quality_review"]["accepted"] = True
+        rai["prd_owner_acceptance"]["accepted"] = True
+        fresh = self.store.governance_view(self.pm, ASSESSMENT)
+        self.assertFalse(fresh["prd_quality_review"]["accepted"])
+        self.assertFalse(fresh["rai_evidence"]["prd_owner_acceptance"]["accepted"])
+
+    def test_live_use_blocked_dispatch_disabled_and_conditional_eu_guards(self):
+        self.assertEqual(g.RAI_EU_CONDITIONAL, ("EU-COND-01", "EU-COND-02", "EU-COND-04"))
+        v0 = self.view()
+        self.assertEqual(v0["live_use"], "BLOCKED pending separate qualified evidence and approvals")
+        self.assertEqual(
+            v0["affected_dispatch"],
+            "DISABLED until appropriate evidence and qualified approvals exist",
+        )
+        self.assertEqual(
+            v0["conditional_eu_assurance"],
+            "Applies only after qualified applicability review",
+        )
+        by_id = {row["finding_id"]: row for row in v0["findings"]}
+        for fid, row in by_id.items():
+            is_eu = fid in g.RAI_EU_CONDITIONAL
+            self.assertEqual(row["conditional_eu"], is_eu)
+            self.assertEqual(
+                row["applicability_review"],
+                "Required before conditional EU assurance applies"
+                if is_eu
+                else "Not conditional EU check",
+            )
+        for i, fid in enumerate(g.RAI_EU_CONDITIONAL):
+            self.store.rai_evidence_record(
+                self.pm,
+                claim(
+                    finding_id=fid,
+                    expected_revision=i,
+                    event_ref=f"SYN-EU-{i}",
+                    evidence_tier="independent-acceptance",
+                    decision_maker_status="Unverified reference",
+                    decision_maker_ref="Synthetic legal note (not qualified review)",
+                ),
+            )
+        self.store = self.reopen()
+        v1 = self.view()
+        self.assertEqual(v1["live_use"], "BLOCKED pending separate qualified evidence and approvals")
+        self.assertEqual(
+            v1["affected_dispatch"],
+            "DISABLED until appropriate evidence and qualified approvals exist",
+        )
+        self.assertEqual(
+            v1["conditional_eu_assurance"],
+            "Applies only after qualified applicability review",
+        )
+        eu_rows = {row["finding_id"]: row for row in v1["findings"] if row["conditional_eu"]}
+        self.assertEqual(set(eu_rows), set(g.RAI_EU_CONDITIONAL))
+        for row in eu_rows.values():
+            self.assertEqual(row["baseline_status"], "NOT_ASSESSED")
+            self.assertEqual(row["baseline_verdict"], "UNCHANGED")
+            self.assertEqual(
+                row["applicability_review"],
+                "Required before conditional EU assurance applies",
+            )
+            self.assertEqual(row["closure"], "Open")
+            self.assertEqual(row["acceptance"], "Unknown")
+            self.assertEqual(row["evidence_adequacy"], "Not independently established")
 
     def test_invalid_promotions_and_primitives_leave_no_success(self):
         bad = [
@@ -601,6 +748,238 @@ class SqlEvidenceRegister(EvidenceRegister):
 @unittest.skipUnless(os.environ.get("ZF_RAI126_MSSQL") == "1", "opt-in task-owned loopback SQL")
 class MssqlEvidenceRegister(SqlEvidenceRegister):
     backend = "mssql"
+
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+DOC_LINK_RE = re.compile(r"(?<!!)\[[^\]]*\]\(([^)\s]+)\)")
+DOC_FENCE_RE = re.compile(r"```.*?```", re.S)
+DOC_HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$", re.M)
+TRACKING_SEGMENT = "." + "-".join(("copilot", "tracking"))
+
+
+def _github_slugs(markdown_text):
+    cleaned = DOC_FENCE_RE.sub("", markdown_text)
+    slugs = set()
+    counts = {}
+    for match in DOC_HEADING_RE.finditer(cleaned):
+        heading = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", match.group(2))
+        heading = heading.replace("`", "").strip().lower()
+        base = re.sub(r"[^\w\- ]", "", heading).replace(" ", "-")
+        seen = counts.get(base, 0)
+        counts[base] = seen + 1
+        slugs.add(base if seen == 0 else f"{base}-{seen}")
+    return slugs
+
+
+def _section_text(markdown_text, heading_line):
+    idx = markdown_text.index(heading_line)
+    level = len(heading_line.split(" ", 1)[0])
+    rest = markdown_text[idx + len(heading_line) :]
+    next_heading = re.search(rf"^#{{1,{level}}}\s+", rest, re.M)
+    end = idx + len(heading_line) + next_heading.start() if next_heading else len(markdown_text)
+    return markdown_text[idx:end]
+
+
+class GovernanceDocumentationContractTests(unittest.TestCase):
+    def setUp(self):
+        if not (REPO_ROOT / "docs").is_dir():
+            self.skipTest("repository docs are not in this image")
+
+    def test_addendum_prd_adr_and_core_guide_record_separation_and_preserve_history(self):
+        docs = {
+            "addendum": REPO_ROOT / "docs/case_study_48_addendum.md",
+            "prd": REPO_ROOT / "docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+            "adr": REPO_ROOT / "docs/adrs/0002-pilot-readiness-architecture.md",
+            "core_readme": REPO_ROOT / "src/core/README.md",
+        }
+        normalized = {
+            name: " ".join(path.read_text(encoding="utf-8").split())
+            for name, path in docs.items()
+        }
+        shared_tokens = (
+            "prd_quality_review",
+            "prd_owner_acceptance",
+            "baseline-assessment-and-remediation-planning only",
+            "DISABLED until appropriate evidence and qualified approvals exist",
+            "Applies only after qualified applicability review",
+            "EU-COND-01",
+            "EU-COND-02",
+            "EU-COND-04",
+        )
+        for name, text in normalized.items():
+            for token in shared_tokens:
+                self.assertIn(token, text, f"{name} missing {token!r}")
+        expected_history = {
+            "addendum": (
+                "0.12.0",
+                "0.14.0",
+                "0.16.0",
+                "0.21.0",
+                g.RAI_BASELINE,
+                "FAIL",
+                "Validate BLOCKED",
+                "Finalize NOT_EVALUATED",
+                "PARTIAL",
+                "NOT_ASSESSED",
+                "DOWNGRADED",
+                "INVALID_PAYLOAD",
+            ),
+            "prd": (
+                'version: "0.21.0"',
+                'status: "in-review"',
+                'historical_exercise_accepted_version: "0.12.0"',
+                "0.14.0",
+                g.RAI_BASELINE,
+                "FAIL",
+                "Validate BLOCKED",
+                "Finalize NOT_EVALUATED",
+                "PARTIAL",
+                "NOT_ASSESSED",
+                "DOWNGRADED",
+            ),
+            "adr": (
+                "Proposed.",
+                "PARTIAL",
+                "NOT_ASSESSED",
+                "DOWNGRADED",
+                "CONFIRMED",
+                "UNCHANGED",
+                "Open",
+                "Unknown",
+            ),
+            "core_readme": (
+                "0.14.0",
+                g.RAI_BASELINE,
+                "DOWNGRADED",
+                "NOT_ASSESSED",
+                "UNCHANGED",
+                "Open",
+                "Unknown",
+            ),
+        }
+        for name, tokens in expected_history.items():
+            for token in tokens:
+                self.assertIn(token, normalized[name], f"{name} lost historical token {token!r}")
+
+    def test_knowledge_index_and_append_only_log_record_issue_126_evidence(self):
+        index_raw = (REPO_ROOT / "docs/reference/README.md").read_text(encoding="utf-8")
+        index_norm = " ".join(index_raw.split())
+        for token in (
+            "#constructed-rai-evidence-claims-2026-10-18-126",
+            "#constructed-rai-evidence-register-engineering-2026-10-18",
+            "#constructed-finding-evidence-engineering-2026-10-18-126",
+            "#finding-evidence-register-engineering-2026-10-18-126",
+            "0.21.0",
+            "0.14.0",
+            "affected_dispatch",
+            "conditional_eu_assurance",
+            "EU-COND-01",
+            "EU-COND-02",
+            "EU-COND-04",
+            "OD-36",
+        ):
+            self.assertIn(token, index_norm)
+        log_raw = (REPO_ROOT / "docs/reference/log.md").read_text(encoding="utf-8")
+        prior_heading = "## 2026-11-14 provenance register hardening (#159)"
+        entry_heading = (
+            "## [2026-11-15] update | Governance PRD separation and conditional EU assurance boundaries (Refs #126)"
+        )
+        self.assertIn(prior_heading, log_raw)
+        self.assertIn(entry_heading, log_raw)
+        self.assertLess(log_raw.index(prior_heading), log_raw.index(entry_heading))
+        entry_norm = " ".join(_section_text(log_raw, entry_heading).split())
+        for token in (
+            "prd_quality_review",
+            "prd_owner_acceptance",
+            "affected_dispatch",
+            "conditional_eu_assurance",
+            "0.12.0",
+            "0.14.0",
+            "0.16.0",
+            "0.21.0",
+            g.RAI_BASELINE,
+            "FAIL / Validate BLOCKED / Finalize NOT_EVALUATED",
+            "PARTIAL",
+            "NOT_ASSESSED",
+            "DOWNGRADED",
+            "INVALID_PAYLOAD",
+            "OD-36",
+        ):
+            self.assertIn(token, entry_norm)
+
+    def test_links_anchors_and_no_tracking_leaks_across_governance_surfaces(self):
+        full_zero_tracking = (
+            REPO_ROOT / "src/core/src/zava_forward/core/governance.py",
+            REPO_ROOT / "src/core/README.md",
+            REPO_ROOT / "docs/adrs/0002-pilot-readiness-architecture.md",
+        )
+        for path in full_zero_tracking:
+            self.assertNotIn(TRACKING_SEGMENT, path.read_text(encoding="utf-8"), path.as_posix())
+        addendum_path = REPO_ROOT / "docs/case_study_48_addendum.md"
+        prd_path = REPO_ROOT / "docs/prds/zava-forward-retrofit-programme-demonstrator.md"
+        adr_path = REPO_ROOT / "docs/adrs/0002-pilot-readiness-architecture.md"
+        core_readme_path = REPO_ROOT / "src/core/README.md"
+        index_path = REPO_ROOT / "docs/reference/README.md"
+        log_path = REPO_ROOT / "docs/reference/log.md"
+
+        addendum_sec = _section_text(
+            addendum_path.read_text(encoding="utf-8"),
+            "### Constructed RAI Evidence Register Engineering (2026-10-18)",
+        )
+        prd_sec = _section_text(
+            prd_path.read_text(encoding="utf-8"),
+            "#### Constructed Finding-Evidence Engineering (2026-10-18, #126)",
+        )
+        index_raw = index_path.read_text(encoding="utf-8")
+        index_126_match = re.search(r"For issue #126,.*?(?:\n\n|\Z)", index_raw, re.S)
+        self.assertIsNotNone(index_126_match)
+        index_126_sec = index_126_match.group(0)
+        index_proj_docs = _section_text(index_raw, "### Project Documents")
+        log_sec = _section_text(
+            log_path.read_text(encoding="utf-8"),
+            "## [2026-11-15] update | Governance PRD separation and conditional EU assurance boundaries (Refs #126)",
+        )
+        for label, snippet in (
+            ("addendum #126", addendum_sec),
+            ("prd #126", prd_sec),
+            ("index #126", index_126_sec),
+            ("log 2026-11-15 #126", log_sec),
+        ):
+            self.assertNotIn(TRACKING_SEGMENT, snippet, label)
+
+        slug_cache = {}
+
+        def assert_links_resolve(source_path, markdown_snippet, check_fragments=True):
+            cleaned = DOC_FENCE_RE.sub("", markdown_snippet)
+            for match in DOC_LINK_RE.finditer(cleaned):
+                target = match.group(1)
+                if target.startswith(("http://", "https://", "mailto:")) or "{" in target or "<" in target:
+                    continue
+                if TRACKING_SEGMENT in target:
+                    continue
+                rel_part, sep, frag = target.partition("#")
+                target_file = (source_path.parent / rel_part).resolve() if rel_part else source_path
+                self.assertTrue(
+                    target_file.exists(),
+                    f"{source_path.relative_to(REPO_ROOT)} -> missing {target}",
+                )
+                if check_fragments and sep and frag and target_file.is_file():
+                    if target_file not in slug_cache:
+                        slug_cache[target_file] = _github_slugs(
+                            target_file.read_text(encoding="utf-8")
+                        )
+                    self.assertIn(
+                        frag,
+                        slug_cache[target_file],
+                        f"{source_path.relative_to(REPO_ROOT)} -> missing anchor #{frag} in {target_file.relative_to(REPO_ROOT)}",
+                    )
+
+        for full_doc in (addendum_path, prd_path, adr_path, core_readme_path):
+            assert_links_resolve(full_doc, full_doc.read_text(encoding="utf-8"), check_fragments=True)
+        assert_links_resolve(index_path, index_raw, check_fragments=False)
+        assert_links_resolve(index_path, index_126_sec, check_fragments=True)
+        assert_links_resolve(index_path, index_proj_docs, check_fragments=True)
+        assert_links_resolve(log_path, log_sec, check_fragments=True)
 
 
 if __name__ == "__main__":
