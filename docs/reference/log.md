@@ -12192,6 +12192,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
 
+## [2026-11-17] update | Record owner FR-044/AC-084 directions in BRD OD-53 and PRD OQ-029 (Refs #441)
+
+* Added the owner direction of 2026-11-02 to the [BRD](../brds/agentic-retrofit-programme-brd.md) decision OD-53 and the [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) question OQ-029: the routine exception is approved in principle subject to named Legal/Compliance approval, and the synthetic-data demo display is not an OD-53 or RULE-020 approval.
+* Measured gap before the edit: neither document recorded either direction. Normative wording is unchanged; per-message named human review stays the default, the exception stays OFF and OD-53 stays OPEN. Criterion 5 of #441 stays unmet.
+* Added `tools/test_resident_portal_docs.py`. No status upgrade, memory change or deployment.
 ## [2026-11-17] update | Production AT acceptance: reflow and reduced-motion checks (Refs #619)
 
 * Extended the automated production-configuration check in `src/api/checks` with a 320 px zoom-equivalent reflow step and a reduced-motion step, with a unit test for the overflow helper, and recorded the local result and a person-run checklist in the [production acceptance protocol](research/ux/production-ux-acceptance-protocol.md).
@@ -12252,6 +12257,19 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-188-live-backfill-evidence-2026-11-18.md](research/issue-188-live-backfill-evidence-2026-11-18.md): per-criterion proven/unproven record of a demo run on live Azure SQL. Production receiver and indoor-schema proof remain open.
 
+## [2026-11-18] add | Tokenomics pitch criteria status (Refs #435)
+
+* Added [tokenomics-pitch-criteria-435-live-2026-11-18.md](research/tokenomics-pitch-criteria-435-live-2026-11-18.md): per-criterion record for the three unticked criteria. The finite-batch decision is proven for the synthetic demo through the #432 batch; the placement decision is recorded but deck rebuild and revalidation are not evidenced; the mentor confirmation cannot be proven. No source or Azure change.
+## [2026-11-18] add | Cut-over gate demo proof (Refs #201)
+
+* Added [cutover-gate-live-2026-11-18.md](research/cutover-gate-live-2026-11-18.md): per-criterion record from repo checks and read-only Azure CLI; records an adverse legacy-reference checker failure.
+## [2026-11-18] test | Direct ingress and sign-in live proof on the demo (Refs #360)
+
+* Added [direct ingress live note](research/direct-ingress-live-demo-2026-11-18.md) with per-criterion results for #360 c, d and e. Demo health, welcome, HTTPS, Entra browser sign-in, role claim, shared SQL state and a real chat AI call proven; browser-mode API 401 still fails; migration approval, Front Door retirement authorisation, second-role denial and restart persistence unproven. Cites #349, #350 and the #344 historical edge record without repeating them. No Azure resource created or changed.
+## [2026-11-18] observation | Live demo public browser access proof, Refs #344
+
+* Added [public-browser-access-live-demo-2026-11-18.md](research/public-browser-access-live-demo-2026-11-18.md): landing, `/healthz`, sign-in to Entra, anonymous 401 for non-browser clients, SQL public access Disabled and 22 of 25 authenticated read routes on `ca-cutover-test-demo-api`. Read-only; no resource created.
+* Browser-originated anonymous API calls are still redirected (#350), `/api/time/status` returns 500 (new candidate defect) and parity stays partly proven. No source changed; #344 stays open.
 ## [2026-11-18] add | Human-review effectiveness demo run (Refs #223)
 
 * Added [human-review-effectiveness-live-demo-2026-11-18.md](research/human-review-effectiveness-live-demo-2026-11-18.md): offline gate run, live review retention on `ca-cutover-test-demo-api` and a per-criterion table. The scripted competent panel passes and default-accept and automation-bias panels fail; no competent human, OQ-017 holder or live seeded-defect trial exists, so no #223 criterion is ticked.
@@ -12268,3 +12286,13 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Live ranking publication evidence (Refs #79)
 
 * Added [issue-79-live-ranking-publication-evidence-2026-11-18.md](research/issue-79-live-ranking-publication-evidence-2026-11-18.md): per-criterion record of a demo run on live Azure. Unsigned policy refused, create-only Blob publication shown with a demo-only synthetic owner; the named owner signature and immutable retention stay unproven.
+## [2026-11-18] add | Cohort and missing-data evaluation demo record (Refs #222)
+
+* Added [cohort-evaluation-demo-2026-11-18.md](research/cohort-evaluation-demo-2026-11-18.md): 36 cohort tests re-run, seven blockers observed, per-criterion table. The OQ-018 owner-approval criterion stays unproven.
+
+## [2026-11-18] add | AI evaluation harness live demo evidence (Refs #108)
+
+* Added [issue-108-live-demo-evidence-2026-11-18.md](research/issue-108-live-demo-evidence-2026-11-18.md): per-criterion record of the unticked criteria on live Azure. Deployment names, versions and rate limits are confirmed; subscription quota, independent labelling, human detection, cost comparison, restart SQL checks and live one-lever measurement stay unproven.
+## [2026-11-18] add | CI/CD pipeline OIDC and what-if live evidence (Refs #138)
+
+* Added [issue-138-live-cicd-oidc-evidence-2026-11-18.md](research/issue-138-live-cicd-oidc-evidence-2026-11-18.md): per-criterion record of read-only checks. A live what-if succeeded and the smoke checks passed against the demo API, but OIDC variables, protected environments, a runner and any workflow run are absent, so no criterion is fully proven.

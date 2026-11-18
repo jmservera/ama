@@ -1,0 +1,27 @@
+## curl anonymous (UTC 2026-11-18T08:29:17Z)
+/ 200 
+/welcome.html 200 
+/healthz 200 
+/style.css 200 
+/zava-logo.png 200 
+/sign-in 302 https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/.auth/login/aad?post_login_redirect_uri=X
+/app 401 
+/api/me 401 
+/api/cases 401 
+/workspace-shell.js 401 
+/.auth/login/aad 302 https://login.microsoftonline.com/bccd6ad2-b77b-461c-bbc5-5b032e7930ba/oauth2/v2.0/authorize?response_type=code+id_token&redirect_uri=X&client_id=X&scope=op
+## XHR header
+401
+## http->https
+301 https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/healthz
+## healthz body
+ok
+## welcome title/sign-in link
+<title>Welcome to Zava Forward | Zava North Homes
+href="/sign-in"
+## headers
+HTTP/2 200 
+server: ZavaForward,Python/3.12.15
+x-content-type-options: nosniff
+strict-transport-security: max-age=31536000
+content-security-policy: default-src 'self'; img-src 'self' data: blob: https://tile.openstreetmap.org; frame-ancestors 'none'
