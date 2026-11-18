@@ -13067,6 +13067,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Epic 113 live audit (Refs #113)
 
 * Added [issue-113-epic-audit-live-2026-11-18.md](research/issue-113-epic-audit-live-2026-11-18.md): per-criterion table for the three epic criteria (all unmet or not satisfiable for the demo), per-child roll-up of unticked criteria split into demo-provable gap and production-only, and a GET-only live probe on image digest 5368f4e4; no source change, nothing ticked, no Azure resource created.
+
 ## [2026-11-18] add | Issue 93 epic audit with live read (Refs #93)
 
 * Added [issue-93-epic-audit-live-2026-11-18.md](research/issue-93-epic-audit-live-2026-11-18.md): per-criterion table (checkpoint #440 and child closure unmet, no-automated-authority consistent), #96 approved-schema gap classed as owner decision, five read-only live GETs and 269 offline core tests (45 SQL opt-in skips); no source change, nothing created in Azure
