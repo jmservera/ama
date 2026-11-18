@@ -12734,6 +12734,18 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-154-live-resident-ux-evidence-2026-11-18.md](research/issue-154-live-resident-ux-evidence-2026-11-18.md): no live resident contact is observed on the synthetic showcase; validation through the usability programme and the representative view stay unproven for the demo (no participants or SA-010 agreement; no live case has a representative). No source changed.
 
+## [2026-11-18] add | Azure SQL point-in-time restore rerun with raw output (Refs #145)
+
+* Added [issue-145-live-run3-pitr-rerun-2026-11-18.md](research/issue-145-live-run3-pitr-rerun-2026-11-18.md) and its [raw probe output](research/issue-145-live-r3-raw-probe-2026-11-18.txt): second demo restore (about 34 minutes), application chain intact and prefix match at entry 1694, native ledger verification denied, retention settings recorded, resurrection still unproven. Resources deleted.
+
+## [2026-11-18] add | Assistive-technology, consent and Fluent/WCAG live demo evidence (Refs #619)
+
+* Added [issue-619-live-at-consent-evidence-2026-11-18.md](research/issue-619-live-at-consent-evidence-2026-11-18.md): keyboard operation, axe (0 violations), zoom-equivalent reflow, reduced motion and the synthetic resident consent journey proven on the live demo; screen reader, person-run zoom and a real resident journey stay unproven and production-only. No source changed; #619 stays open.
+
+## [2026-11-18] add | Resident showcase live recheck (Refs #462)
+
+* Added [resident-showcase-live-recheck-2026-11-18.md](research/resident-showcase-live-recheck-2026-11-18.md): second desktop Playwright and read-only Azure pass on the synthetic showcase with retained evidence; criteria 6 and 7 proven for the demo, criterion 2 (hosted rubric) unproven, and a correction to the first note's override comparison. No source or Azure resource changed.
+
 ## [2026-11-18] add | Operator suspension live demo evidence (Refs #221)
 
 * Added [issue-221-live-suspension-restart-evidence-2026-11-18.md](research/issue-221-live-suspension-restart-evidence-2026-11-18.md): a refusal probe left scope `all` suspended on the demo (owner decision needed), live manual-route and restart-denial observations, and the deployed build accepted a placeholder restart authority; live restart and witnessed drill stay unproven.
