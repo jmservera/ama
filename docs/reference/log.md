@@ -12661,6 +12661,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Data protection live evidence (Refs #121)
 
 * Added [issue-121-live-data-protection-evidence-2026-11-18.md](research/issue-121-live-data-protection-evidence-2026-11-18.md): per-criterion record of the eight unticked criteria on the deployed demo. The live register, model location and retention settings were read; the deployed register is older than the source register; DPO/Legal approvals and owners stay deferred to #1906 to #1908; no live refused dispatch was exercised. No source or Azure changes.
+
 ## [2026-11-18] add | Azure SQL ledger tamper evidence rerun (Refs #114)
 
 * Added [sql-ledger-live-r2-2026-11-18.md](research/sql-ledger-live-r2-2026-11-18.md): live read-only probe of the demo ledger (1,610 entries intact), in-memory tamper detection, per-year sealing, and the open gaps (deployed image lacks the reliance check; `VIEW LEDGER CONTENT` not held). Criteria stay unticked pending the image roll.
