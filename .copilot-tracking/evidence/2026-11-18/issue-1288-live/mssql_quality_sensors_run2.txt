@@ -1,0 +1,129 @@
+test_actual_store_is_sql_server (test_quality_sensors.MssqlReadModel.test_actual_store_is_sql_server) ... ok
+test_bounded_synthetic_home_only_with_units_and_utc (test_quality_sensors.MssqlReadModel.test_bounded_synthetic_home_only_with_units_and_utc) ... ok
+test_capture_is_stable_across_clock_only_changes (test_quality_sensors.MssqlReadModel.test_capture_is_stable_across_clock_only_changes) ... ok
+test_changed_control_home_with_a_valid_marker_fails_closed_until_migrated (test_quality_sensors.MssqlReadModel.test_changed_control_home_with_a_valid_marker_fails_closed_until_migrated) ... ok
+test_context_change_outside_the_window_changes_the_capture_identity (test_quality_sensors.MssqlReadModel.test_context_change_outside_the_window_changes_the_capture_identity) ... ok
+test_context_only_capture_is_an_ok_capture_with_no_latest (test_quality_sensors.MssqlReadModel.test_context_only_capture_is_an_ok_capture_with_no_latest) ... ok
+test_context_rows_are_bounded_in_time_and_by_as_of (test_quality_sensors.MssqlReadModel.test_context_rows_are_bounded_in_time_and_by_as_of) ... ok
+test_control_missing_from_the_home_index_fails_closed (test_quality_sensors.MssqlReadModel.test_control_missing_from_the_home_index_fails_closed) ... ok
+test_controls_and_readings_are_read_by_key_not_by_table_scan (test_quality_sensors.MssqlReadModel.test_controls_and_readings_are_read_by_key_not_by_table_scan) ... ok
+test_declined_unsampled_control_for_the_home_withholds (test_quality_sensors.MssqlReadModel.test_declined_unsampled_control_for_the_home_withholds) ... ok
+test_equal_count_missing_plus_orphan_fails_closed_until_migrated (test_quality_sensors.MssqlReadModel.test_equal_count_missing_plus_orphan_fails_closed_until_migrated) ... ok
+test_equal_count_wrong_home_index_fails_closed_and_migration_repairs_it (test_quality_sensors.MssqlReadModel.test_equal_count_wrong_home_index_fails_closed_and_migration_repairs_it) ... ok
+test_failed_reconciliation_does_not_grant_a_granted_home (test_quality_sensors.MssqlReadModel.test_failed_reconciliation_does_not_grant_a_granted_home) ... Sensor consent index could not be reconciled; retained readings stay withheld.
+ok
+test_failed_reconciliation_fails_all_consent_closed_until_repaired (test_quality_sensors.MssqlReadModel.test_failed_reconciliation_fails_all_consent_closed_until_repaired) ... Sensor consent index could not be reconciled; retained readings stay withheld.
+Sensor consent index could not be reconciled; retained readings stay withheld.
+ok
+test_future_boundary_old_and_missing_readings (test_quality_sensors.MssqlReadModel.test_future_boundary_old_and_missing_readings) ... ok
+test_future_reading_is_never_the_latest_or_fresh (test_quality_sensors.MssqlReadModel.test_future_reading_is_never_the_latest_or_fresh) ... ok
+test_future_readings_beyond_a_day_are_reported_not_absent (test_quality_sensors.MssqlReadModel.test_future_readings_beyond_a_day_are_reported_not_absent) ... ok
+test_latest_is_in_the_captured_source_and_citations (test_quality_sensors.MssqlReadModel.test_latest_is_in_the_captured_source_and_citations) ... ok
+test_live_contract_rows_are_weather_derived_and_not_calibrated (test_quality_sensors.MssqlReadModel.test_live_contract_rows_are_weather_derived_and_not_calibrated) ... ok
+test_migration_restores_a_missing_index_without_replacing_policy_or_controls (test_quality_sensors.MssqlReadModel.test_migration_restores_a_missing_index_without_replacing_policy_or_controls) ... ok
+test_missing_state_marker_fails_closed_until_migrated_and_migration_is_idempotent (test_quality_sensors.MssqlReadModel.test_missing_state_marker_fails_closed_until_migrated_and_migration_is_idempotent) ... ok
+test_orphan_index_row_fails_closed_and_is_removed_by_migration (test_quality_sensors.MssqlReadModel.test_orphan_index_row_fails_closed_and_is_removed_by_migration) ... ok
+test_other_homes_declined_control_does_not_withhold_this_home (test_quality_sensors.MssqlReadModel.test_other_homes_declined_control_does_not_withhold_this_home) ... ok
+test_partial_index_fails_closed_until_migrated_and_then_sees_the_decline (test_quality_sensors.MssqlReadModel.test_partial_index_fails_closed_until_migrated_and_then_sees_the_decline) ... ok
+test_previous_format_marker_or_missing_guard_fails_closed_until_migrated (test_quality_sensors.MssqlReadModel.test_previous_format_marker_or_missing_guard_fails_closed_until_migrated) ... ok
+test_read_is_side_effect_free_and_generates_nothing (test_quality_sensors.MssqlReadModel.test_read_is_side_effect_free_and_generates_nothing) ... ok
+test_retrofit_context_is_unavailable_and_anchor_is_not_retrofit (test_quality_sensors.MssqlReadModel.test_retrofit_context_is_unavailable_and_anchor_is_not_retrofit) ... ok
+test_same_reading_id_from_two_sensors_has_two_citations (test_quality_sensors.MssqlReadModel.test_same_reading_id_from_two_sensors_has_two_citations) ... ok
+test_second_sensor_without_consent_withholds_the_home (test_quality_sensors.MssqlReadModel.test_second_sensor_without_consent_withholds_the_home) ... ok
+test_states_fail_closed (test_quality_sensors.MssqlReadModel.test_states_fail_closed) ... ok
+test_a_gate_that_cannot_be_written_sends_nothing (test_quality_sensors.MssqlHttp.test_a_gate_that_cannot_be_written_sends_nothing) ... ok
+test_a_manual_request_after_many_events_is_not_labelled_proactive (test_quality_sensors.MssqlHttp.test_a_manual_request_after_many_events_is_not_labelled_proactive) ... ok
+test_a_manual_request_before_claim_or_after_failure_is_not_autonomous_and_recovers (test_quality_sensors.MssqlHttp.test_a_manual_request_before_claim_or_after_failure_is_not_autonomous_and_recovers) ... ok
+test_a_manual_request_completed_before_a_scan_does_not_hide_the_autonomous_flag (test_quality_sensors.MssqlHttp.test_a_manual_request_completed_before_a_scan_does_not_hide_the_autonomous_flag) ... ok
+test_a_new_capture_in_the_same_schedule_is_its_own_task_and_a_request_reuses_it (test_quality_sensors.MssqlHttp.test_a_new_capture_in_the_same_schedule_is_its_own_task_and_a_request_reuses_it) ... ok
+test_a_new_reading_keeps_the_returned_flag_with_a_newer_readings_note (test_quality_sensors.MssqlHttp.test_a_new_reading_keeps_the_returned_flag_with_a_newer_readings_note) ... ok
+test_a_request_before_claim_is_manual_and_a_retry_follows_the_flag_at_its_own_claim (test_quality_sensors.MssqlHttp.test_a_request_before_claim_is_manual_and_a_retry_follows_the_flag_at_its_own_claim) ... ok
+test_a_request_during_an_in_flight_proactive_call_does_not_relabel_it (test_quality_sensors.MssqlHttp.test_a_request_during_an_in_flight_proactive_call_does_not_relabel_it) ... ok
+test_a_request_during_the_lease_of_a_new_capture_reuses_it_and_keeps_provenance (test_quality_sensors.MssqlHttp.test_a_request_during_the_lease_of_a_new_capture_reuses_it_and_keeps_provenance) ... ok
+test_active_chat_memory_is_never_evidence_for_a_chat_proposal (test_quality_sensors.MssqlHttp.test_active_chat_memory_is_never_evidence_for_a_chat_proposal)
+Issue 157: synthetic opted-in memory cannot reach the proposal's evidence or be cited. Simulated provider, no human review. ... FAIL
+test_capture_without_sensors_keeps_prior_shape (test_quality_sensors.MssqlHttp.test_capture_without_sensors_keeps_prior_shape) ... ok
+test_context_change_makes_the_old_task_stale (test_quality_sensors.MssqlHttp.test_context_change_makes_the_old_task_stale) ... ok
+test_context_only_capture_reaches_the_model_and_is_withheld_after_withdrawal (test_quality_sensors.MssqlHttp.test_context_only_capture_reaches_the_model_and_is_withheld_after_withdrawal) ... ok
+test_declined_unsampled_control_withholds_every_historical_projection (test_quality_sensors.MssqlHttp.test_declined_unsampled_control_withholds_every_historical_projection) ... ok
+test_delayed_claim_flag_states_the_captured_as_of_and_unknown_is_explicit (test_quality_sensors.MssqlHttp.test_delayed_claim_flag_states_the_captured_as_of_and_unknown_is_explicit) ... ok
+test_empty_capture_is_stable_across_seals (test_quality_sensors.MssqlHttp.test_empty_capture_is_stable_across_seals) ... ok
+test_exact_a_b_a_return_is_requeued_by_a_manual_request_and_for_other_assistants (test_quality_sensors.MssqlHttp.test_exact_a_b_a_return_is_requeued_by_a_manual_request_and_for_other_assistants) ... ok
+test_exact_a_b_a_return_requeues_the_stale_task_within_the_allowance (test_quality_sensors.MssqlHttp.test_exact_a_b_a_return_requeues_the_stale_task_within_the_allowance) ... ok
+test_flag_reports_matching_and_changed_readings_since_capture (test_quality_sensors.MssqlHttp.test_flag_reports_matching_and_changed_readings_since_capture) ... ok
+test_forecast_http_is_read_only_and_bounded (test_quality_sensors.MssqlHttp.test_forecast_http_is_read_only_and_bounded) ... ok
+test_invalid_payload_and_store_failure_leave_manual_api_available (test_quality_sensors.MssqlHttp.test_invalid_payload_and_store_failure_leave_manual_api_available) ... http-response GET /api/assistants/proposals status=503
+ok
+test_known_signature_is_not_proposed_again_by_scan (test_quality_sensors.MssqlHttp.test_known_signature_is_not_proposed_again_by_scan) ... ok
+test_manual_completion_then_proactive_scan_stays_manual (test_quality_sensors.MssqlHttp.test_manual_completion_then_proactive_scan_stays_manual) ... ok
+test_manual_request_is_not_an_autonomous_flag (test_quality_sensors.MssqlHttp.test_manual_request_is_not_an_autonomous_flag) ... ok
+test_non_sensor_a_b_a_with_a_new_reading_is_new_work_but_sensor_only_is_throttled (test_quality_sensors.MssqlHttp.test_non_sensor_a_b_a_with_a_new_reading_is_new_work_but_sensor_only_is_throttled) ... ok
+test_old_anchor_wording_names_both_horizons_in_the_ui_and_the_model (test_quality_sensors.MssqlHttp.test_old_anchor_wording_names_both_horizons_in_the_ui_and_the_model) ... ok
+test_person_request_queued_before_dispatch_wins_over_a_scan (test_quality_sensors.MssqlHttp.test_person_request_queued_before_dispatch_wins_over_a_scan) ... ok
+test_proactive_completion_then_manual_invocation_keeps_its_attribution (test_quality_sensors.MssqlHttp.test_proactive_completion_then_manual_invocation_keeps_its_attribution) ... ok
+test_proactive_output_without_sensor_citation_is_not_a_sensor_flag (test_quality_sensors.MssqlHttp.test_proactive_output_without_sensor_citation_is_not_a_sensor_flag) ... ok
+test_provider_failure_releases_the_gate_and_an_expired_gate_does_not_block (test_quality_sensors.MssqlHttp.test_provider_failure_releases_the_gate_and_an_expired_gate_does_not_block) ... ok
+test_rai_metrics_http_reads_sql_and_is_staff_only (test_quality_sensors.MssqlHttp.test_rai_metrics_http_reads_sql_and_is_staff_only) ... ok
+test_registry_invoke_list_detail_separate_review_and_denials (test_quality_sensors.MssqlHttp.test_registry_invoke_list_detail_separate_review_and_denials) ... ok
+test_reject_after_withdrawal_keeps_the_stored_snapshot_and_output (test_quality_sensors.MssqlHttp.test_reject_after_withdrawal_keeps_the_stored_snapshot_and_output) ... ok
+test_rejected_proposal_is_not_a_flag (test_quality_sensors.MssqlHttp.test_rejected_proposal_is_not_a_flag) ... ok
+test_release_or_epoch_change_offers_fresh_work_for_an_unchanged_case (test_quality_sensors.MssqlHttp.test_release_or_epoch_change_offers_fresh_work_for_an_unchanged_case) ... ok
+test_release_record_local_http (test_quality_sensors.MssqlHttp.test_release_record_local_http) ... ok
+test_replacement_is_bounded_without_dispatch_and_recovers_when_stable (test_quality_sensors.MssqlHttp.test_replacement_is_bounded_without_dispatch_and_recovers_when_stable) ... ok
+test_request_carries_as_of_and_freshness_and_the_flag_repeats_them (test_quality_sensors.MssqlHttp.test_request_carries_as_of_and_freshness_and_the_flag_repeats_them) ... ok
+test_request_marks_missing_sensor_evidence_as_unknown (test_quality_sensors.MssqlHttp.test_request_marks_missing_sensor_evidence_as_unknown) ... ok
+test_review_notes_are_withheld_with_consent_and_return_when_it_does (test_quality_sensors.MssqlHttp.test_review_notes_are_withheld_with_consent_and_return_when_it_does) ... ok
+test_same_bucket_arrival_is_new_evidence_for_the_model_and_stales_the_old_task (test_quality_sensors.MssqlHttp.test_same_bucket_arrival_is_new_evidence_for_the_model_and_stales_the_old_task) ... ok
+test_same_ids_and_values_reach_model_and_proactive_flag (test_quality_sensors.MssqlHttp.test_same_ids_and_values_reach_model_and_proactive_flag) ... ok
+test_scan_does_not_start_new_work_for_each_arrival_in_one_bucket (test_quality_sensors.MssqlHttp.test_scan_does_not_start_new_work_for_each_arrival_in_one_bucket) ... ok
+test_scan_reads_schedule_by_key_with_many_historical_tasks (test_quality_sensors.MssqlHttp.test_scan_reads_schedule_by_key_with_many_historical_tasks) ... ok
+test_sensor_churn_before_claim_is_one_task_one_dispatch_and_survives_restart (test_quality_sensors.MssqlHttp.test_sensor_churn_before_claim_is_one_task_one_dispatch_and_survives_restart) ... ok
+test_sensors_api_role_matrix (test_quality_sensors.MssqlHttp.test_sensors_api_role_matrix) ... ok
+test_stale_proposal_is_not_a_flag (test_quality_sensors.MssqlHttp.test_stale_proposal_is_not_a_flag) ... ok
+test_throttle_applies_with_an_unaccepted_quality_record (test_quality_sensors.MssqlHttp.test_throttle_applies_with_an_unaccepted_quality_record) ... ok
+test_throttle_applies_with_measures_and_no_quality_record (test_quality_sensors.MssqlHttp.test_throttle_applies_with_measures_and_no_quality_record) ... ok
+test_throttle_applies_with_no_measures (test_quality_sensors.MssqlHttp.test_throttle_applies_with_no_measures) ... ok
+test_unavailable_capture_is_stable_across_seals (test_quality_sensors.MssqlHttp.test_unavailable_capture_is_stable_across_seals) ... ok
+test_unavailable_model_gives_no_flag (test_quality_sensors.MssqlHttp.test_unavailable_model_gives_no_flag) ... ok
+test_unknown_dispatch_authority_is_requested_not_proactive (test_quality_sensors.MssqlHttp.test_unknown_dispatch_authority_is_requested_not_proactive) ... ok
+test_upgrade_adopts_the_serviced_legacy_task_and_does_not_call_again_in_the_bucket (test_quality_sensors.MssqlHttp.test_upgrade_adopts_the_serviced_legacy_task_and_does_not_call_again_in_the_bucket) ... ok
+test_upgrade_does_not_adopt_a_legacy_task_from_another_release (test_quality_sensors.MssqlHttp.test_upgrade_does_not_adopt_a_legacy_task_from_another_release) ... ok
+test_upgrade_makes_a_source_change_after_a_legacy_assessment_eligible (test_quality_sensors.MssqlHttp.test_upgrade_makes_a_source_change_after_a_legacy_assessment_eligible) ... ok
+test_verification_and_acceptance_are_refused_while_consent_is_withheld (test_quality_sensors.MssqlHttp.test_verification_and_acceptance_are_refused_while_consent_is_withheld) ... ok
+test_withdrawal_after_model_return_withholds_every_projection (test_quality_sensors.MssqlHttp.test_withdrawal_after_model_return_withholds_every_projection) ... ok
+test_withdrawal_after_the_pre_dispatch_check_sends_nothing (test_quality_sensors.MssqlHttp.test_withdrawal_after_the_pre_dispatch_check_sends_nothing) ... ok
+test_withdrawal_between_claim_and_dispatch_sends_nothing (test_quality_sensors.MssqlHttp.test_withdrawal_between_claim_and_dispatch_sends_nothing) ... ok
+test_withdrawal_cannot_commit_between_the_final_check_and_provider_transport (test_quality_sensors.MssqlHttp.test_withdrawal_cannot_commit_between_the_final_check_and_provider_transport) ... ok
+test_withdrawal_during_a_started_call_is_withheld_everywhere (test_quality_sensors.MssqlHttp.test_withdrawal_during_a_started_call_is_withheld_everywhere) ... ok
+test_withdrawal_withholds_uncited_derived_text_and_edited_output (test_quality_sensors.MssqlHttp.test_withdrawal_withholds_uncited_derived_text_and_edited_output) ... ok
+test_withheld_capture_is_stable_across_seals (test_quality_sensors.MssqlHttp.test_withheld_capture_is_stable_across_seals) ... ok
+
+======================================================================
+FAIL: test_active_chat_memory_is_never_evidence_for_a_chat_proposal (test_quality_sensors.MssqlHttp.test_active_chat_memory_is_never_evidence_for_a_chat_proposal)
+Issue 157: synthetic opted-in memory cannot reach the proposal's evidence or be cited. Simulated provider, no human review.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1288-live-20261118T1055Z/src/api/tests/test_assistants.py", line 1602, in test_active_chat_memory_is_never_evidence_for_a_chat_proposal
+    self.assertEqual([m["content"] for m in held], [canary])
+AssertionError: Lists differ: ['MEM[21 chars]ONLY', 'MEMORY-CANARY-SYNTHETIC-ONLY', 'MEMORY[115 chars]NLY'] != ['MEM[21 chars]ONLY']
+
+First list contains 5 additional elements.
+First extra element 1:
+'MEMORY-CANARY-SYNTHETIC-ONLY'
+
+- ['MEMORY-CANARY-SYNTHETIC-ONLY',
+?                                ^
+
++ ['MEMORY-CANARY-SYNTHETIC-ONLY']
+?                                ^
+
+-  'MEMORY-CANARY-SYNTHETIC-ONLY',
+-  'MEMORY-CANARY-SYNTHETIC-ONLY',
+-  'MEMORY-CANARY-SYNTHETIC-ONLY',
+-  'MEMORY-CANARY-SYNTHETIC-ONLY',
+-  'MEMORY-CANARY-SYNTHETIC-ONLY']
+
+----------------------------------------------------------------------
+Ran 94 tests in 447.296s
+
+FAILED (failures=1)

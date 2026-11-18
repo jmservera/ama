@@ -1,0 +1,130 @@
+{
+ "steps": [
+  {
+   "step": "launcher",
+   "visible": true,
+   "aria_label": "Chat",
+   "tag": "BUTTON"
+  },
+  {
+   "step": "tab_reaches_launcher",
+   "tab_presses": 44,
+   "reached": true
+  },
+  {
+   "step": "enter_opens_dialog_focus",
+   "focus": {
+    "tag": "H2",
+    "id": "employee-chat-title",
+    "name": "Employee assistant"
+   },
+   "role": "dialog",
+   "expanded": "true"
+  },
+  {
+   "step": "live_region_semantics",
+   "log": {
+    "role": "log",
+    "live": "polite",
+    "relevant": "additions",
+    "label": "Employee assistant conversation",
+    "tabindex": "0"
+   },
+   "status": {
+    "role": "status",
+    "live": "polite",
+    "atomic": "true"
+   },
+   "error": {
+    "role": "alert",
+    "live": "polite"
+   },
+   "input": {
+    "label": "Your work question",
+    "describedby": "employee-chat-entry-warning chat-privacy employee-chat-error employee-chat-keys chat-demo-disclaimer"
+   }
+  },
+  {
+   "step": "tab_from_heading_to_input",
+   "sequence": [
+    "Close chat",
+    "About this chat",
+    "Chat size",
+    "Employee assistant conversation",
+    "employee-chat-question"
+   ],
+   "reached": true
+  },
+  {
+   "step": "enter_sends_and_announces",
+   "announcements": [
+    {
+     "region": "log",
+     "text": "YouWhat is the current stage of this case and which sources support that?"
+    },
+    {
+     "region": "status",
+     "text": "Asking the assistant."
+    },
+    {
+     "region": "log",
+     "text": "AssistantOutcome: answerDecision model (case rules), no record changedStage: Waiting for block programme.\nStatus: Stopped until Karen Lawson obtains evidence an"
+    },
+    {
+     "region": "status",
+     "text": "Answer added. Check the sources before relying on it."
+    }
+   ],
+   "focus_after": {
+    "tag": "TEXTAREA",
+    "id": "employee-chat-question",
+    "name": "Your work question"
+   },
+   "log_items": 2
+  },
+  {
+   "step": "shift_enter_newline",
+   "value_has_newline": true
+  },
+  {
+   "step": "second_turn_announced",
+   "log_items": 4,
+   "announcements_total": 8
+  },
+  {
+   "step": "tab_order_in_dialog",
+   "sequence": [
+    "employee-chat-skill",
+    "Send",
+    "Skip to main content\n\n\n\n  Zava ForwardZa",
+    "Skip to main content",
+    "home"
+   ]
+  },
+  {
+   "step": "axe_wcag22aa_dialog",
+   "violations": [],
+   "passes": 21
+  },
+  {
+   "step": "escape_closes_returns_focus",
+   "dialog_hidden": true,
+   "focus": {
+    "tag": "BUTTON",
+    "id": "employee-chat-launcher",
+    "name": "Chat"
+   },
+   "expanded": "false"
+  },
+  {
+   "step": "threads_listed",
+   "count": 1
+  },
+  {
+   "step": "threads_deleted",
+   "statuses": [
+    200
+   ]
+  }
+ ]
+}

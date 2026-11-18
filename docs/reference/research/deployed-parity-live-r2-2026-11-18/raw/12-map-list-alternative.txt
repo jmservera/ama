@@ -1,0 +1,4 @@
+matches for 'map areas as a list': 1
+tag SUMMARY text Show the map areas as a list (keyboard and screen reader fri
+expanded list rows: 443
+leaflet markers/clusters: 443 | attribution:  Leaflet | © OpenStreetMap contributors

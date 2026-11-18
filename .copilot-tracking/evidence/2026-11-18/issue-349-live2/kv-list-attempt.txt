@@ -1,0 +1,3 @@
+ERROR: (Forbidden) Connection is not an approved private link and caller was ignored because bypass is not set to 'AzureServices' and PublicNetworkAccess is set to 'Disabled'. 
+Vault: kv-cutovertest-rzsrg;location=uksouth
+Code: Forbidden

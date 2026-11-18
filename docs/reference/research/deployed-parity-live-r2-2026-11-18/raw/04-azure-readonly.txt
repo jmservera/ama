@@ -1,0 +1,19 @@
+# Azure read-only checks 2026-11-18T11:40:39Z
+## Container App Jobs (name, trigger, cron)
+job-cutover-test-init	Manual	None
+job-cutover-test-verify	Manual	None
+job-cutover-test-ledger-verify	Manual	None
+job-cutover-test-import	Manual	None
+job-cutover-test-orchestrator	Manual	None
+job-cutover-test-smoke	Manual	None
+job-cutover-test-mi-http	Manual	None
+job-cutover-test-public-audit	Manual	None
+## Event Hub namespace
+Succeeded	Active	Basic
+sensor-readings	Active	2
+## Foundry deployments
+standard	gpt-4.1-nano	2025-04-14	Succeeded	10
+## Resident app
+ca-resident-demo--0000012	Running	zava-resident-demo@sha256:65481780cb3f5a55621f637fa783230004b263085dcaece1dfca93a928bbbd19
+## Active revisions api
+ca-cutover-test-demo-api--0000031	True	2026-11-17T19:42:06+00:00	100
