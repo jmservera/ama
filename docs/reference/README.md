@@ -450,6 +450,7 @@ records a 2026-11-18 local run of 32 existing tests with raw output retained: bu
 proven for constructed cases only, atlas-owner mapping confirmation unproven.
 The [second pass](./research/issue-129-live-r2-2026-11-18.md) reruns the suites and adds a signed-in
 Playwright probe of the demo showing no discoverable bundle screen or route; the atlas-owner item stays unproven.
+The [third pass](./research/issue-129-live-r3-2026-11-18.md) adds a stdin report CLI refusal check and a probe of revision 0000032; the atlas-owner item stays unproven.
 The [second run](./research/issue-130-live-r2-nomination-route-evidence-2026-11-18.md) retains raw output,
 confirms the same image and 403 defect, and keeps the criterion unproven.
 The [third audit](./research/issue-130-live-r3-nomination-route-audit-2026-11-18.md) repeats the probe on the
@@ -529,7 +530,9 @@ For #117, the [live scan evidence](./research/issue-117-live-scan-evidence-2026-
 proves refusal of unsafe uploads on the demo's synthetic scanner (Defender for Storage is off; clean path and legal hold
 live unproven). A [second pass](./research/issue-117-live-r2-audit-2026-11-18.md) corrects that reading: Defender
 for Storage malware scanning is enabled on the demo account, but the app still runs the synthetic scanner
-(`ZF_SCANNER` unset), so the real engine stays unproven for the app path.
+(`ZF_SCANNER` unset), so the real engine stays unproven for the app path. A
+[third pass](./research/issue-117-live-r3-closure-2026-11-18.md) reconfirms both results and records why the
+`ZF_SCANNER=defender` change was not made for the demo.
 
 For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analysis-live-evidence-2026-11-18.md)
 records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human
@@ -1321,6 +1324,7 @@ or infra acceptance claimed.
 | [Tokenomics pitch criteria status (#435)](./research/tokenomics-pitch-criteria-435-live-2026-11-18.md) | Per-criterion proven or unproven record for the three unticked criteria: placement decision proven but deck revalidation not evidenced, mentor confirmation unprovable, finite batch decision proven for the synthetic demo via #432 |
 | [Coordinator contract criteria (#1204)](./research/coordinator-contract-criteria-1204-live-2026-11-18.md) | Per-sub-claim proven or unproven record for the unticked liveness criterion: instruction text and guard tests proven on main, runtime liveness over all ticks unproven for the demo |
 | [Learning-test bundles live audit, second pass (#129)](./research/issue-129-live-r2-2026-11-18.md) | Core and api bundle suites rerun with raw output, signed-in probe of the demo for a bundle route (none discoverable, 403 control), per-criterion table; Atlas-owner mapping unproven |
+| [Learning-test bundles live audit, third pass (#129)](./research/issue-129-live-r3-2026-11-18.md) | Suites rerun (26 and 6), CLI refusal check, signed-in probe of revision 0000032; Atlas-owner mapping unproven |
 | [Stabilization checkpoint triage, epic gating and verdicts (#440)](./research/stabilization-checkpoint-triage-440-live-2026-11-18.md) | Four deduplicated issue drafts with severity, reproduction, links and acceptance criteria, the epics each blocking finding gates, and a continue, fix or pivot verdict for the 16 open epics; live re-observation of the time status 500 and anonymous 302 |
 | [Epic 195 demo proof, per-criterion results](./research/issue-195-live-epic-evidence-2026-11-18.md) | Proven and unproven results for the three unticked epic criteria (checkpoint, child issues, deployed image provenance) and the legacy-reference guard fix for triage draft D2, held back as FULL tier |
 | [Nomination test bootstrap isolation proof (#1847)](./research/nomination-bootstrap-isolation-proof-1847-2026-11-18.md) | Per-criterion proven or unproven record for the six criteria: source, editable and noneditable layouts in both orders, identity and origin probes, the original bootstrap failing (1 failure, 20 errors), and the unrun full gate |

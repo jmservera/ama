@@ -13132,6 +13132,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-144-live-r4-2026-11-18.md](research/issue-144-live-r4-2026-11-18.md) with a raw folder: read-only az state of four apps and nine jobs, an empty `src-deploy.yml` run list and a scripted replica probe on revision `--0000032`. Criteria 1 (pipeline clause) and 3 (only non-root enforced) stay unproven; no source, Azure resource or load change.
 
+## [2026-11-18] add | Issue 117 live third pass (Refs #117)
+
+* Added [issue-117-live-r3-closure-2026-11-18.md](research/issue-117-live-r3-closure-2026-11-18.md) and its raw folder: two unsafe uploads refused live again with the document list unchanged (5 and 5), 64 offline tests pass, Defender malware scanning on upload still enabled on the demo account. The real-engine path stays unproven because `ZF_SCANNER=defender` was not set on the demo API; no source, Azure resource or criterion change.
+
 ## [2026-11-18] add | Issue 119 live run 4 (Refs #119)
 
 * Added [issue-119-live-r4-map-evidence-2026-11-18.md](research/issue-119-live-r4-map-evidence-2026-11-18.md): fresh live probe on revision `--0000032`, full re-read of the OSMF tile policy and copyright page. Both criteria stay unticked (no licensed provider, no screen reader run). Named screenshots removed; no source change.
@@ -13155,3 +13159,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 185 fifth live re-verification (Refs #185)
 
 * Added [issue-185-live-r5-reverification-2026-11-18.md](research/issue-185-live-r5-reverification-2026-11-18.md): demo hub reports zero devices, no 185 job or role assignment remains, retained logs and repository scan show no key text, 36 focused tests pass; durable storage, X.509 and scale stay unproven.
+## [2026-11-18] add | Issue 129 live third pass (Refs #129)
+
+* Added [issue-129-live-r3-2026-11-18.md](research/issue-129-live-r3-2026-11-18.md): 26 core and 6 api bundle tests pass, report CLI refusal check, signed-in probe of revision 0000032 finds no bundle route; Atlas-owner mapping confirmation stays unproven. Docs only.
