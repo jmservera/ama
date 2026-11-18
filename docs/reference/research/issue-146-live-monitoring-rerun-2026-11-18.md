@@ -53,3 +53,12 @@ The ticked criteria (diagnostic log exclusion, RAI harm monitoring, AI-limit ale
 * `az resource list -g ama` shows no `tmp146` names after the run.
 * Email delivery to the ops mailbox was not observed; the Alerts Management record is the proof of firing.
 * Portal screenshots and Playwright proofs were not taken: no alert or workbook surface is reachable from a signed-in browser session in this environment.
+
+## Evidence limits
+
+* The statement that no `tmp146` resources remain is an operator observation; no `az resource list` output is retained. The deletion times of `tmp146b` and `tmp146c` are not recorded.
+* The firing time, failed-job counts and the 750-test result come from outputs that are not retained.
+* The Maximum alert shape is inconclusive: the test used a 24-hour window, not the source 15 minutes, and was watched for about 12 minutes.
+* The digest alert was proven only on a forced mismatch. The C4 and T2 labels differ between this note and the changes record; this note governs.
+* The state file was rewritten with a new task id and flat artifact paths; it supersedes the earlier state.
+* Independent exact-head review and hosted CI are outstanding; no criterion is ticked.
