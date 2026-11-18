@@ -12795,6 +12795,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Content audit of deployed demo screens, second run (Refs #153)
 
 * Added [content-audit-live-153-2026-11-18.md](research/content-audit-live-153-2026-11-18.md) with scripts, a hit summary and 43 redacted screenshots: findings on "Unassigned", "Held", "envelope" and an unexplained refusal code; AI wording and resident page hold; the named-human review criterion stays unproven. Indexed in the README.
+
 ## [2026-11-18] add | Issue 117 live scan evidence (Refs #117)
 
 * Added [issue-117-live-scan-evidence-2026-11-18.md](research/issue-117-live-scan-evidence-2026-11-18.md) with retained raw output: 64 offline tests pass; live demo refuses the synthetic marker and a type-mismatched upload and records neither; the live scanner is the synthetic local one because Defender for Storage is disabled. Clean path, real engine and live legal hold stay unproven. No source change.
