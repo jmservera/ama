@@ -12713,3 +12713,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Resident and representative UX live demo evidence (Refs #154)
 
 * Added [issue-154-live-resident-ux-evidence-2026-11-18.md](research/issue-154-live-resident-ux-evidence-2026-11-18.md): no live resident contact is observed on the synthetic showcase; validation through the usability programme and the representative view stay unproven for the demo (no participants or SA-010 agreement; no live case has a representative). No source changed.
+
+## [2026-11-18] add | Employee loading feedback and Today's briefing live demo evidence (Refs #531)
+
+* Added [issue-531-live-demo-evidence-2026-11-18.md](research/issue-531-live-demo-evidence-2026-11-18.md): signed-in employee session on the live demo shows the static loading shell, per-panel feedback, briefing labels, sources, refresh time, outcome-based review wording with required reasons, and axe 0 violations. Cold start, script retry and unverified output were simulated in the browser; no review was recorded; the live `app.js` and `style.css` trail main by two days but not in briefing or loading code. Criterion 7 is proven for the demo with stated limits. No source changed.
