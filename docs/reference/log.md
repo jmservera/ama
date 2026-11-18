@@ -13332,3 +13332,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Management Overview AI economics (Refs #100)
 
 * Added [management-tokenomics-overview-100-live-2026-11-19.md](research/management-tokenomics-overview-100-live-2026-11-19.md): Overview card with denominators and Unknown-not-zero, per-criterion table; #440 stabilization stays unproven.
+## [2026-11-18] add | Old-image incomplete completion classification (Refs #1840)
+
+* Added [the per-criterion note](./research/old-image-incomplete-completion-1840.md): fixture-level proof that incomplete mismatch completion is INSUFFICIENT; independent review and full tier remain open (Refs #1840).

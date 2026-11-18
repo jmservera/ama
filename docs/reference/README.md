@@ -1900,3 +1900,5 @@ explicitly), confirm no new defect or refactoring need on either epic surface, r
 independent review, and owner closure.
 For #144, the [deployed image audit](./research/issue-144-live-deployed-images-2026-11-19.md)
 records 12 live containers as real digest-pinned references; pipeline provenance, tags and deployed hardening remain unproven.
+
+The [old-image incomplete completion note](./research/old-image-incomplete-completion-1840.md) records per-criterion fixture evidence for issue 1840 (2026-11-18).
