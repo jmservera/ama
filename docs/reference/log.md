@@ -12935,6 +12935,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Resident demo authority live check, run 2 (Refs #521)
 
 * Added [resident-demo-authority-live-521-r2-2026-11-18.md](research/resident-demo-authority-live-521-r2-2026-11-18.md) with retained read-only `az` output, a fresh desktop Playwright sign-in and a per-criterion table: live `ZF_DEMO_EXPIRES_AT` 2028-01-01T00:00:00Z on a healthy revision; SQL login refused (private-only server), registry and activity log give no commit or apply time, so criterion 4 stays partly proven; no source change, no Azure resource created
+
 ## [2026-11-18] add | Issue 1274 release-download audit (Refs #1274)
 
 * Added [issue-1274-release-downloads-audit-live-2026-11-18.md](research/issue-1274-release-downloads-audit-live-2026-11-18.md): per-criterion table (actionlint half delivered by PR 1275 and re-verified locally; criteria 1, 3 and 4 partly proven; AWF 0.28.23 bootstrap still open and FULL-tier if code is needed); no source or workflow change, nothing ticked
