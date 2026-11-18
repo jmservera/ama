@@ -405,7 +405,16 @@ For #188, the [live Azure backfill and live series evidence](./research/issue-18
 records a 2026-11-18 demo run on live Azure SQL through the IoT Hub and Event Hub
 with demo SAS devices: joint per-home queries, handover seam and idempotent
 re-run. The production X.509 receiver and indoor schema stay unproven.
+For #185, the [live device identity evidence](./research/issue-185-live-device-identity-evidence-2026-11-18.md)
+records a 2026-11-18 demo run: Hub-generated symmetric device keys issued, used for sending
+and all identities removed. Durable secret storage and X.509 stay unproven.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
+
+For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
+records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root
+runtime, scale-out from 0 to 4 replicas under a 60 s load run, and the Container Apps
+platform limit on read-only root file system and capability drop. No pipeline run
+and no production scale are shown.
 For the 2026-11-05 current-main contract, retention and handover boundary, see the
 [fifth stabilization checkpoint](../architecture/cutover-evidence-pack.md#fifth-stabilization-checkpoint-current-main-sensor-contract-retention-and-handover-2026-11-05-refs-440-184-110)
 (documentation only; the live-sim wire schema is not admitted by the main consumer and nothing is accepted).
@@ -436,6 +445,10 @@ owner/threshold approvals remain unmet. No deployment or issue closure follows.
 The runbook's Demo Routing Decision section records owner decision
 `keep_console_alerts_for_demo`: the demo keeps console log export for the
 ledger alerts and defers candidate `9c2a59f6` to production.
+
+For #115, the [live digest mismatch alert proof](./research/digest-verification-alert-live-2026-11-18.md)
+records a forced mismatch on a copy, the verifier alert marker and the fired Azure Monitor alert on the demo;
+the retention lock stays deferred to production (#1908).
 
 For finance #96/#98/#99, the
 [working field-review contract](../../src/core/README.md#unapproved-working-field-review-96-98-99)
@@ -1183,6 +1196,7 @@ or infra acceptance claimed.
 | [Chat and Memory Data Protection Analysis Record](./research/chat-memory-dpia.md) | Draft only: [staff hardening boundary](./research/chat-memory-dpia.md#staff-chat-engineering-boundary-2026-10-27-refs-157162159164163) records canonical question warning, shared cited routes, default-deny dispatch, bounded context and content-free consumption receipts; [2026-11-15 runtime residency/handling contract](./research/chat-memory-dpia.md#enforced-model-provider-and-region-position-2026-11-15-refs-163) enforces `uksouth` `Standard` / EU data-zone allowlists, zero training, content-filtering vs 30-day abuse-monitoring disclosure, cross-border transfer gating and pre-approval retention blocking (`chat_provider_position.py`); and [whole-system processing, derivative-dispatch and persisted rights-ledger controls](./research/chat-memory-dpia.md#whole-system-processing-derivative-dispatch-and-rights-request-controls-2026-11-15-refs-121) enforce intact-attachment gating (`storage_approves_ai_dispatch=False`) and statutory rights tracking (`uk_hosting_does_not_prove_uk_inference_residency: True`, `provider_erasure_confirmed=False`). Vendor terms stay not DPO-accepted and decisions D1 to D8 stay Not recorded; no approved production retention, lawful basis, notice or DPIA (#121/#157/#162/#159/#164/#163) | 2026-11-15 |
 | [Chat Storage Approval for the Synthetic-Data Demo](./research/chat-demo-storage-approval-2026-11-01.md) | Owner decision 2026-11-01 enabling chat storage for the synthetic-data demo only: DPIA, lawful basis, notice and 30-day retention references the deploy settings point to. Not a production or real-data approval; #163 criteria 2 and 5 stay deferred | 2026-11-01 |
 | [Easy Auth Intermittent 500s Under Concurrency](./research/easy-auth-intermittent-500-2026-11-03.md) | Empty-body 500s on the cutover test demo API (issue 810): ingress `Http` was insufficient; sidecar logs and stub A/B isolate the API's HTTP/1.0 close-per-response as the cause, fixed in source, deployed (image 4d56cf609) and verified live (0 x 500 in about 1,300 further requests, including signed-in resident traffic; staff-token burst still open) | 2026-11-04 |
+| [Deployed Demo Parity Proof, Live Run 2026-11-18](./research/deployed-parity-live-2026-11-18.md) | Per-criterion proven and unproven results for the unticked issue 350 criteria on the synthetic demo (Playwright and Azure CLI): browser API 302 still failing, models and OSM map configured, assistants release-gated, law store and photo deferred, time status 500 defect. |
 | [Entra Browser Sign-in Proof on the Deployed Demo](./research/entra-signin-live-demo-2026-11-18.md) | Issue 349: live Playwright proof of Entra sign-in, anonymous 401, role-scoped `/api/me`, logout and denial paths on the demo apps, per-criterion status and what a real-user tenant registration still needs |
 | [Human-review effectiveness test on the demo](./research/human-review-effectiveness-live-demo-2026-11-18.md) | Issue 223: offline gate results, live review retention on the demo app and a per-criterion proven or unproven table; no participant, OQ-017 holder or seeded live trial |
 | [Chat Administrator and Break-Glass Demo-Only Disclaimer](./research/chat-demo-breakglass-disclaimer-2026-11-03.md) | Owner decision 2026-11-03: metadata-only administrator and break-glass policy for the synthetic-data demo, recorded as unreviewed by the DPO and Legal. Not a production or real-data approval (#162 criterion 6) | 2026-11-03 |
