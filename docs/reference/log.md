@@ -13067,6 +13067,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 184 live fourth audit (Refs #184)
 
 * Added [issue-184-live-r4-2026-11-18.md](research/issue-184-live-r4-2026-11-18.md) with retained sanitised outputs: #185 and #189 still open, the demo hub has a USD 25 budget with 80 and 100 percent alerts, owner and expiry controls proven in source and 135 tests only; no source change, nothing created in Azure, no criterion ticked.
+
 ## [2026-11-18] add | Issue 185 live fourth audit (Refs #185)
 
 * Added [issue-185-live-r4-audit-2026-11-18.md](research/issue-185-live-r4-audit-2026-11-18.md): repository IoT identity tests pass with the optional SDK, credential scan clean, demo hub now reports zero devices (closing the run 3 adverse observation); durable storage, X.509 and production ownership stay unproven. No source change.
