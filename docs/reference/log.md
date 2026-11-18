@@ -13183,3 +13183,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 129 live third pass (Refs #129)
 
 * Added [issue-129-live-r3-2026-11-18.md](research/issue-129-live-r3-2026-11-18.md): 26 core and 6 api bundle tests pass, report CLI refusal check, signed-in probe of revision 0000032 finds no bundle route; Atlas-owner mapping confirmation stays unproven. Docs only.
+
+## [2026-11-18] add | Issue 215 live re-verification (Refs #215)
+
+* Added [regulatory-ux-live-215-2026-11-18.md](research/regulatory-ux-live-215-2026-11-18.md): signed-in desktop probe of revision 0000032; keyboard, plain-language toggle and axe pass on two panels, law store unloaded so only the unknown state is visible, deployed build differs from main; staff comprehension testing unproven. Docs only.
