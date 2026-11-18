@@ -61,3 +61,10 @@ No criterion is newly tickable on #108 from this change. Criteria 1 and 6 are cl
 ## Resources and residue
 
 No Azure resource or role assignment was created. The probe read only; the app store is unchanged apart from read access. Focused tier; no `rpi-checks.py --all`.
+
+## Evidence limits
+
+* `live-landing-signed-in.png` shows the signed-out landing page, not a signed-in view.
+* The network states and the empty subscription quota result were observed live and are not retained in `azure_cli_outputs.txt`.
+* The large JSON file is a dump of seven live demo responses; the note's claims rest on it only where cited.
+* No criterion is newly proven by this record.
