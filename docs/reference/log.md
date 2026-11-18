@@ -13215,6 +13215,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 220 live fourth run (Refs #220)
 
 * Added [issue-220-live-r4-challenge-route-2026-11-18.md](research/issue-220-live-r4-challenge-route-2026-11-18.md): same image digest on revision 0000032, same live 403 on staff writes, forbidden fields refused, protected state unchanged, 21 offline tests pass; the no-retaliation criterion stays unproven live. Docs only.
+
 ## [2026-11-18] add | Issue 111 third live re-verification (Refs #111)
 
 * Added [issue-111-live3-sensor-evidence-2026-11-18.md](research/issue-111-live3-sensor-evidence-2026-11-18.md) with raw outputs: 26 core sensor tests pass, signed-in demo sensors payload re-read; R1 to R3 stays unproven (named sign-off needed, gate not on main). Docs only.
