@@ -12,7 +12,7 @@ Validation (FOCUSED, documentation only): `python3 -m unittest tests.test_simula
 | --- | --- | --- |
 | Cost estimate recorded before any run (ticked) | Proven (consistent) | Estimate helper output: B1, 1 unit, 30 messages. |
 | Quota headroom against tier from #140 (ticked) | Proven (consistent) | Live hub B1 capacity 1; 400000 per day quota. |
-| Run has an owner | Proven | Hub `owner` tag live; RUN_OWNER_REQUIRED refusal in code. |
+| Run has an owner | Proven in code; hub tag only live | Hub `owner` tag live; RUN_OWNER_REQUIRED refusal in code. |
 | Run has a time limit | Unproven live; proven in code | RUN_DEADLINE halt; no simulator job deployed, deployment is a production-affecting owner step. |
 | Run has a budget alert | Proven (configuration) | USD 25 budget, 80 percent actual and 100 percent forecast alerts enabled; firing not demonstrated (no spend, no drills). |
 

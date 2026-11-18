@@ -25,8 +25,12 @@ Scope: synthetic demo, resource group `ama`, desktop only, existing Azure CLI lo
 | --- | --- | --- |
 | Cost estimate for the declared N homes recorded before any run (ticked) | Previously ticked; consistent | The estimate helper reports tier B1, 1 unit, 30 messages for the declared sample against 400000 messages per day. |
 | Message quota headroom checked against the tier decided in #140 (ticked) | Previously ticked; consistent | Hub is B1 with capacity 1, matching the decision; headroom above. |
-| Run has an owner | Proven | Hub `owner` tag live; `RUN_OWNER_REQUIRED` refusal in code. The per-run owner in the admin-written `control.json` was not observed because no job is deployed. |
+| Run has an owner | Proven in code; hub tag only live | Hub `owner` tag live; `RUN_OWNER_REQUIRED` refusal in code. The per-run owner in the admin-written `control.json` was not observed because no job is deployed. |
 | Run has a time limit | Proven in code only | `RUN_DEADLINE` halt; template `replicaTimeout: 240`. Not provable live: no simulator job is deployed, and deploying one (device registration, certificates, image push) is a production-affecting owner step outside this task. |
 | Run has a budget alert | Proven (configuration); firing not demonstrated | The USD 25 IoT budget alerts at 80 percent actual and 100 percent forecast. Firing it would require spending to the threshold, which the cap and the no-drills rule forbid. |
 
 Recommendation: leave the criterion unticked until a simulator job is deployed and a run is observed with its time limit; then tick it. The owner may instead accept the table above as sufficient for the demo.
+
+## Evidence limits
+
+* `replicaTimeout: 240` has no cited source here, and the `RunGovernance` run output is not retained; treat both as unverified observations.
