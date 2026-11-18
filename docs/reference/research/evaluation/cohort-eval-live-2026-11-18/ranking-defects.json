@@ -1,0 +1,363 @@
+{
+  "record_version": "cohort-missing-data-evaluation-v1",
+  "task_id": "ranking-policy",
+  "policy_or_model_version": "1.0.0",
+  "synthetic": true,
+  "generated_cohort": true,
+  "population_fairness_established": false,
+  "aggregation_rule": "per_cohort_unaveraged",
+  "synthetic_not_fairness_evidence": true,
+  "non_fairness_provenance_notice": "Synthetic cohort evaluation results are constructed offline checks only and are never fairness evidence or live fairness clearance; live prioritisation requires dated human owner approval of cohorts, lawful analysis fields and thresholds (OQ-018).",
+  "owner_approval_status": "unapproved",
+  "lawful_analysis_fields": [
+    "sensor_completeness",
+    "support_need",
+    "source_completeness",
+    "appointment_history"
+  ],
+  "lawful_analysis_fields_approved": false,
+  "live_activation_allowed": false,
+  "fairness_evidence": false,
+  "missing_data_treatment": "unknown support routes to human review, never exclusion or demotion; sensor completeness and appointment history do not change rank",
+  "cohort_definitions": {
+    "cohort_version": "v1",
+    "cohorts": {
+      "sensor_completeness": [
+        "complete",
+        "partial"
+      ],
+      "support_need": [
+        "none",
+        "declared"
+      ],
+      "source_completeness": [
+        "complete",
+        "partial"
+      ],
+      "appointment_history": [
+        "regular",
+        "missed"
+      ]
+    },
+    "justified_reasons": [],
+    "missing_data_treatment": "unknown support routes to human review, never exclusion or demotion; sensor completeness and appointment history do not change rank"
+  },
+  "version_definitions": {
+    "record_version": "cohort-missing-data-evaluation-v1",
+    "manifest_digest": "68143fda3f929db54bf407af59d6eb4d98f612c517afdd447939834b0794b8f3",
+    "cohort_version": "v1",
+    "subject_version": "1.0.0",
+    "policy_version": null,
+    "ranking_policy_id": null,
+    "ranking_policy_hash": null,
+    "ranking_rule_order_hash": null,
+    "prompt_version": null,
+    "model_version": null
+  },
+  "ranking_policy": null,
+  "non_ai_comparison": null,
+  "input_digests": {
+    "manifest": "68143fda3f929db54bf407af59d6eb4d98f612c517afdd447939834b0794b8f3",
+    "observed": "36bcee7c5453441f78e267e8420d645c4c1d7007f79028bda098e35d1292db38"
+  },
+  "thresholds": {
+    "min_sample": 6,
+    "max_error_rate": 0.1,
+    "max_exclusion_gap": 0.1,
+    "max_review_burden_gap": 1.0
+  },
+  "approval": {},
+  "total_cases": 48,
+  "counts": {
+    "eligible": 48,
+    "tested": 48,
+    "abstained": 0,
+    "failed": 4,
+    "missing": 0
+  },
+  "dimensions": {
+    "sensor_completeness": {
+      "cohorts": {
+        "complete": {
+          "n": 42,
+          "eligible": 42,
+          "tested": 42,
+          "abstained": 0,
+          "failed": 2,
+          "missing": 0,
+          "errors": 2,
+          "excluded": 0,
+          "deprioritised": 2,
+          "review": 6,
+          "defects": 2,
+          "error_rate": 0.0476,
+          "abstention_rate": 0.0,
+          "exclusion_rate": 0.0476,
+          "review_burden": 0.1429,
+          "error_interval": [
+            0.0132,
+            0.1579
+          ],
+          "sufficient": false
+        },
+        "partial": {
+          "n": 6,
+          "eligible": 6,
+          "tested": 6,
+          "abstained": 0,
+          "failed": 2,
+          "missing": 0,
+          "errors": 2,
+          "excluded": 2,
+          "deprioritised": 0,
+          "review": 0,
+          "defects": 2,
+          "error_rate": 0.3333,
+          "abstention_rate": 0.0,
+          "exclusion_rate": 0.3333,
+          "review_burden": 0.0,
+          "error_interval": [
+            0.0968,
+            0.7
+          ],
+          "sufficient": false
+        }
+      },
+      "gaps": {
+        "exclusion": null,
+        "review_burden": null,
+        "abstention": null
+      }
+    },
+    "support_need": {
+      "cohorts": {
+        "none": {
+          "n": 42,
+          "eligible": 42,
+          "tested": 42,
+          "abstained": 0,
+          "failed": 4,
+          "missing": 0,
+          "errors": 4,
+          "excluded": 2,
+          "deprioritised": 2,
+          "review": 6,
+          "defects": 4,
+          "error_rate": 0.0952,
+          "abstention_rate": 0.0,
+          "exclusion_rate": 0.0952,
+          "review_burden": 0.1429,
+          "error_interval": [
+            0.0377,
+            0.2207
+          ],
+          "sufficient": false
+        },
+        "declared": {
+          "n": 6,
+          "eligible": 6,
+          "tested": 6,
+          "abstained": 0,
+          "failed": 0,
+          "missing": 0,
+          "errors": 0,
+          "excluded": 0,
+          "deprioritised": 0,
+          "review": 0,
+          "defects": 0,
+          "error_rate": 0.0,
+          "abstention_rate": 0.0,
+          "exclusion_rate": 0.0,
+          "review_burden": 0.0,
+          "error_interval": [
+            0.0,
+            0.3903
+          ],
+          "sufficient": false
+        }
+      },
+      "gaps": {
+        "exclusion": null,
+        "review_burden": null,
+        "abstention": null
+      }
+    },
+    "source_completeness": {
+      "cohorts": {
+        "complete": {
+          "n": 42,
+          "eligible": 42,
+          "tested": 42,
+          "abstained": 0,
+          "failed": 4,
+          "missing": 0,
+          "errors": 4,
+          "excluded": 2,
+          "deprioritised": 2,
+          "review": 0,
+          "defects": 4,
+          "error_rate": 0.0952,
+          "abstention_rate": 0.0,
+          "exclusion_rate": 0.0952,
+          "review_burden": 0.0,
+          "error_interval": [
+            0.0377,
+            0.2207
+          ],
+          "sufficient": false
+        },
+        "partial": {
+          "n": 6,
+          "eligible": 6,
+          "tested": 6,
+          "abstained": 0,
+          "failed": 0,
+          "missing": 0,
+          "errors": 0,
+          "excluded": 0,
+          "deprioritised": 0,
+          "review": 6,
+          "defects": 0,
+          "error_rate": 0.0,
+          "abstention_rate": 0.0,
+          "exclusion_rate": 0.0,
+          "review_burden": 1.0,
+          "error_interval": [
+            0.0,
+            0.3903
+          ],
+          "sufficient": false
+        }
+      },
+      "gaps": {
+        "exclusion": null,
+        "review_burden": null,
+        "abstention": null
+      }
+    },
+    "appointment_history": {
+      "cohorts": {
+        "regular": {
+          "n": 42,
+          "eligible": 42,
+          "tested": 42,
+          "abstained": 0,
+          "failed": 2,
+          "missing": 0,
+          "errors": 2,
+          "excluded": 2,
+          "deprioritised": 0,
+          "review": 6,
+          "defects": 2,
+          "error_rate": 0.0476,
+          "abstention_rate": 0.0,
+          "exclusion_rate": 0.0476,
+          "review_burden": 0.1429,
+          "error_interval": [
+            0.0132,
+            0.1579
+          ],
+          "sufficient": false
+        },
+        "missed": {
+          "n": 6,
+          "eligible": 6,
+          "tested": 6,
+          "abstained": 0,
+          "failed": 2,
+          "missing": 0,
+          "errors": 2,
+          "excluded": 0,
+          "deprioritised": 2,
+          "review": 0,
+          "defects": 2,
+          "error_rate": 0.3333,
+          "abstention_rate": 0.0,
+          "exclusion_rate": 0.3333,
+          "review_burden": 0.0,
+          "error_interval": [
+            0.0968,
+            0.7
+          ],
+          "sufficient": false
+        }
+      },
+      "gaps": {
+        "exclusion": null,
+        "review_burden": null,
+        "abstention": null
+      }
+    }
+  },
+  "seeded_defects": [
+    "history-2-b",
+    "history-3-b",
+    "sensor-1-b",
+    "sensor-4-b"
+  ],
+  "detected_defects": [
+    "history-2-b",
+    "history-3-b",
+    "sensor-1-b",
+    "sensor-4-b"
+  ],
+  "blockers": [
+    {
+      "code": "insufficient_sample",
+      "detail": "sensor_completeness/complete: n=42 below minimum sample"
+    },
+    {
+      "code": "insufficient_sample",
+      "detail": "sensor_completeness/partial: n=6 below minimum sample"
+    },
+    {
+      "code": "insufficient_sample",
+      "detail": "support_need/none: n=42 below minimum sample"
+    },
+    {
+      "code": "insufficient_sample",
+      "detail": "support_need/declared: n=6 below minimum sample"
+    },
+    {
+      "code": "insufficient_sample",
+      "detail": "source_completeness/complete: n=42 below minimum sample"
+    },
+    {
+      "code": "insufficient_sample",
+      "detail": "source_completeness/partial: n=6 below minimum sample"
+    },
+    {
+      "code": "insufficient_sample",
+      "detail": "appointment_history/regular: n=42 below minimum sample"
+    },
+    {
+      "code": "insufficient_sample",
+      "detail": "appointment_history/missed: n=6 below minimum sample"
+    },
+    {
+      "code": "unjustified_exclusion",
+      "detail": "history-2-b excluded or deprioritised without approved reason"
+    },
+    {
+      "code": "unjustified_exclusion",
+      "detail": "history-3-b excluded or deprioritised without approved reason"
+    },
+    {
+      "code": "unjustified_exclusion",
+      "detail": "sensor-1-b excluded or deprioritised without approved reason"
+    },
+    {
+      "code": "unjustified_exclusion",
+      "detail": "sensor-4-b excluded or deprioritised without approved reason"
+    },
+    {
+      "code": "unapproved_thresholds",
+      "detail": "cohorts, lawful fields or thresholds lack named owner approval bound to this manifest digest (OQ-018)"
+    }
+  ],
+  "disposition": null,
+  "status": "blocked",
+  "activation_allowed": false,
+  "authority_gap": "OQ-018: representative cohorts, lawful analysis fields, sample sufficiency and thresholds need owner approval before live use; synthetic results are not fairness evidence.",
+  "record_hash": "0490ee78a79a7768c26e34732965a28003de29e55a36610e1291a2930b2670e4"
+}

@@ -2,7 +2,7 @@
 import importlib.util, json, subprocess, sys
 spec = importlib.util.spec_from_file_location("se", "infra/scripts/setup-entra.py")
 se = importlib.util.module_from_spec(spec); sys.modules["se"] = se; spec.loader.exec_module(se)
-SUB = "e51ebc89-79d0-4a52-a82b-01a292eefd5b"
+SUB = "[subscription-id redacted]"
 ID = f"/subscriptions/{SUB}/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-358-throwaway"
 def rest(method, path, body=None):
     cmd = ["az", "rest", "--method", method, "--url", f"https://management.azure.com{path}{'&' if '?' in path else '?'}api-version={se.API_VERSION}"]

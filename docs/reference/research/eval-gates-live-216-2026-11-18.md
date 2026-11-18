@@ -58,9 +58,15 @@ Only one criterion was unticked on the issue; the ticked criteria were not re-pr
 * Citation validity against regulatory rule cards: the regulatory chat needs the `regulatory_chat` role (403 for the test account) and is not a model.
 * A full model run on all 30 prompts: the demo meter allows 20 calls per UTC day and held further calls; a rerun after 2026-11-19T00:00Z would be needed.
 
+## Local gate test run (rerun, 2026-11-18)
+
+The existing gate tests were run locally over the synthetic fixtures: `test_regulatory_eval_gates_216`, `test_regulatory_gates`, `test_regulatory_citation_card_gates`, `test_regulatory_output_guard`, `test_ai_eval`, `test_paired_trial` and `test_gate_agreement`. Result: 101 tests, OK. Raw output: [unit-tests-raw-2026-11-18.txt](./eval-gates-live-216-2026-11-18/unit-tests-raw-2026-11-18.txt). These tests check the gate logic (per-check results, hazard misses critical, unmeasured gate not met, cards-alone fallback), not the live model.
+
+The container-run scores above are "Observed; raw output not retained": the raw container output was not kept, so they cannot be rescored. No new live model call was made in the rerun, because the earlier exercise already exceeded the 45-call authorization and the same-day demo meter is spent; a full 30-prompt model run is deferred to after 2026-11-19T00:00Z. The unticked criterion stays partly proven; the production-only part (named Legal and Compliance owners, independent grader, larger set) stays unproven.
+
 ## Validation
 
-Documentation and evidence only, FOCUSED tier: Markdown and link review, `git diff`, and local scoring by `scripts/score_inner.py` over the saved raw output. `rpi-checks.py --all` was not run.
+Documentation and evidence only, FOCUSED tier: Markdown and link review, `git diff`, and the local unit-test run above. Container scoring by `scripts/score_inner.py` was done in the earlier run; its raw output was not retained, so it is not reproducible. `rpi-checks.py --all` was not run.
 
 ## Evidence limits
 
