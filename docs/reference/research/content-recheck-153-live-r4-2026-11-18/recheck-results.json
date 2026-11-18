@@ -1,0 +1,41 @@
+{
+ "staff-all": {
+  "signed_in": true,
+  "chars": 46959,
+  "hit_lines": []
+ },
+ "staff-finance": {
+  "signed_in": true,
+  "chars": 2373,
+  "hit_lines": [
+   "Pause for human decision. Held. No person-approved envelope or tolerances are recorded."
+  ]
+ },
+ "staff-handoff-waiting": {
+  "signed_in": true,
+  "chars": 531,
+  "hit_lines": []
+ },
+ "staff-case-quality": {
+  "chars": 9012,
+  "hit_lines": [
+   "Resident update owner: Unassigned; commitment: Unknown. No message is sent automatically."
+  ]
+ },
+ "GET unknown case": {
+  "status": 404,
+  "body": "{\"error\": \"Case not found.\"}"
+ },
+ "GET unknown route": {
+  "status": 403,
+  "body": "{\"error\": \"Your role does not include this.\"}"
+ },
+ "POST empty body to case resident": {
+  "status": 403,
+  "body": ""
+ },
+ "GET /api/cases unauthenticated": {
+  "status": 302,
+  "body": ""
+ }
+}

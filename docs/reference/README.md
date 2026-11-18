@@ -413,6 +413,8 @@ records the hazard clock and named owner on the live demo case card. The clock r
 unknown because the record has no timestamp, and no demo case has a safeguarding item.
 The [second pass](./research/issue-76-live-r2-2026-11-18.md) adds masked screenshots and the
 visible queue definitions; the criterion stays partly proven.
+The [third pass](./research/issue-76-live-r3-2026-11-18.md) re-probes read-only: still 0 of 16
+cases carry a safeguarding item, so that half stays unproven without writing demo data.
 For #96, the [live form schema approval evidence](./research/issue-96-live-form-schema-approval-evidence-2026-11-18.md)
 records that the demo holds no registered schema and no shipped path records
 an approval, so the approved-schema criterion stays unproven.
@@ -457,6 +459,7 @@ The [third audit](./research/issue-130-live-r3-nomination-route-audit-2026-11-18
 unchanged image, adds 105 offline tests and a per-criterion table, and separates production-only items.
 The [fourth audit](./research/issue-130-live-r4-nomination-route-audit-2026-11-18.md) sees a new revision on the
 same image digest, the same 403 write refusal, and explains the form-encoded 400 as a JSON-only API.
+The [fifth audit](./research/issue-130-live-r5-nomination-route-audit-2026-11-18.md) finds the same revision, image and 403, and adds a resident-app route check.
 For #124, the [Phase 0 discovery evidence](./research/issue-124-phase0-discovery-evidence-2026-11-18.md)
 records a 2026-11-18 offline and synthetic-data run: nomination, endpoint, dictionary and two-sided
 constraint rules proven in code, and the three unticked criteria stated as needing sponsor, owner
@@ -479,6 +482,9 @@ back from Event Hub and retains the raw job output; the child-closure criterion 
 
 A [fourth run](./research/issue-184-live-r4-2026-11-18.md) retains sanitised outputs, finds the demo hub budget
 alert (USD 25, 80 and 100 percent) and a per-criterion table; #185 and #189 stay open and nothing is ticked.
+
+A [fifth run](./research/issue-184-live-r5-2026-11-18.md) re-reads child states, hub budgets and the 135 simulator tests;
+the child-closure criterion stays unproven and nothing is ticked.
 
 For #109, the [live device monitoring evidence](./research/issue-109-live-device-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of IoT Hub connection state and a connectivity metric alert.
@@ -1355,12 +1361,14 @@ or infra acceptance claimed.
 | [Chat grounding and human-review boundaries live demo evidence (#164)](./research/issue-164-live-chat-grounding-evidence-2026-11-18.md) | Per-criterion demo record for the five unticked criteria: task registered and disabled, thresholds proposed not approved, three live asks answered by rules with zero model calls, human exercises and approvals unproven |
 | [Chat grounding live demo evidence, second pass (#164)](./research/issue-164-live-chat-grounding-evidence-r2-2026-11-18.md) | Chat widget driven in Playwright with grounded, abstention, approve, diagnose, consent, contact and injection asks; raw output and labelled screenshots retained; refusal routes shown for three asks; contact ask fell back without a refusal route; criteria 1, 2 and 4 partly proven, 3 unproven |
 | [Chat grounding live demo audit, third pass (#164)](./research/issue-164-live-chat-grounding-evidence-r3-2026-11-18.md) | Re-run of the live widget probe and registry read on the same revision; unchanged findings, per-criterion table and production-only items |
+| [Chat grounding live demo audit, fourth pass (#164)](./research/issue-164-live-20261118T1707Z-2026-11-18.md) | Fourth live re-run on revision 0000032: registry, status, seven widget asks with screenshots, 54 offline tests; per-criterion table unchanged, no criterion newly tickable |
 | [Employee loading feedback and Today's briefing live demo evidence (#531)](./research/issue-531-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the unticked live-verification criterion: loading shell, per-panel feedback, briefing labels, sources, review wording and axe observed on the live build; cold start, retry and unverified output simulated in the browser; no review recorded; live app.js and style.css behind main |
 | [Employee loading feedback and Today's briefing live re-verification, second pass (#531)](./research/issue-531-live-r2-2026-11-18-note.md) | Adds a replica-poll cold-start attempt, parity re-check and a recorded UI reject; per-criterion proven and unproven table |
 | [Conversational assistant experience live demo evidence (#159)](./research/issue-159-live-chat-experience-evidence-2026-11-18.md) | Per-criterion demo record for the unticked keyboard, announcement and screen-reader criterion: keyboard operation and live-region announcements proven on the live panel, screen-reader testing deferred |
 | [Assistive-technology, consent and Fluent/WCAG acceptance live demo evidence (#619)](./research/issue-619-live-at-consent-evidence-2026-11-18.md) | Per-criterion demo record: keyboard, axe, zoom-equivalent reflow and the synthetic resident consent journey proven on the live demo; person-run screen reader, zoom and real-resident criteria stay production-only |
 | [Accessibility, equity and journey ownership live demo evidence (#128)](./research/issue-128-live-equity-evidence-2026-11-18.md) | Per-criterion demo record: aggregate-only measures proven at source level, desktop axe 0 violations on four live surfaces; protocol agreement and person-run testing stay unproven |
 | [Accessibility, equity and journey ownership live demo evidence, run 2 (#128)](./research/issue-128-live2-equity-evidence-2026-11-18.md) | Re-run with retained commands and raw output: protocol criterion unproven, aggregate-only proven at source level, desktop axe clean on four live pages |
+| [Accessibility, equity and journey ownership live demo evidence, run 3 (#128)](./research/issue-128-live3-equity-evidence-2026-11-18.md) | Run 3: protocol agreement still unproven, aggregate-only proven at source level, resident page confirmed loaded with manual-route wording |
 | [Per-year ledger verification test evidence (#114)](./research/ledger-verification/issue-114-per-year-ledger-verification-evidence-2026-11-18.md) | Retained raw run (40 tests OK) proving per-year audit and ledger digest verification before reliance; deployed-image gap noted |
 | [Retrofit Operating-Data Exercise Pack](./research/retrofit-synthetic-data/README.md) | Version 2.0.0: fifteen months of constructed operating records for 980 candidate homes. The case presents a professional team aware of bottlenecks but not where they occur. The pack covers the tracker, stage event log, property register, CRM contacts, supplier appointments, safety holds, QA and evidence, grant and finance, capacity, board reports and issues log, with realistic record-keeping imperfections, a data dictionary and a manifest. These records are for the exercise and are not evidence of actual company performance. The answer key and generator are held outside the knowledge base so analysis can stay blind. Stock-to-case link report and synthetic fabric attributes for the 60,000-home stock added; synthetic EPC, survey records and a seeded EPC conflict manifest added (#170); per-user chat and memory test fixtures (personas, threads, memory, isolation and deletion cases) added (#172) | 2026-10-15 |
 | [Program Manager Document Workspace Journey](./research/ux/program-manager-document-workspace-journey.md) | Stakeholder-informed JTBD analysis, journey map, accessibility requirements and design handoff for the repository-backed Program Workbench canvas. All behavioural findings remain reported or assumed pending direct user research | 2026-10-02 |
@@ -1400,6 +1408,7 @@ or infra acceptance claimed.
 | [Plain-language copy audit on the live demo (#153)](./research/plain-language-live-153-2026-11-18.md) | Playwright audit of status names, errors and AI labels on the synthetic demo against the content standard; five open findings and a per-criterion proven/unproven table. Named human wording review stays unproven. |
 | [Content audit of deployed demo screens, second run (#153)](./research/content-audit-live-153-2026-11-18.md) | Playwright audit of 43 redacted staff and resident screens, case-page tabs included, findings N1 to N6 and per-criterion result; human-review criterion stays unproven |
 | [Content re-check and per-criterion audit, third run (#153)](./research/content-recheck-153-live-2026-11-18.md) | Fresh live probes of Finance, case tab and API error bodies; R1 to R7 findings; named-reviewer criterion unproven, three ticked criteria partly proven |
+| [Content re-check, fourth run (#153)](./research/content-recheck-153-live-r4-2026-11-18.md) | Repeat live probes on revision 0000032 match the third run; per-criterion table; named wording review still unproven |
 | [Human-review effectiveness demo evidence (#223)](./research/human-review-live-223-2026-11-18.md) | Offline harness, targeted tests and a live review-record probe on the synthetic demo; per-criterion proven/unproven table. Real-reviewer competence, measured effort and OQ-017 authority stay unproven. |
 | [Cut-over Gate Demo Proof, Live Run 2026-11-18](./research/cutover-gate-live-2026-11-18.md) | Per-criterion results for the three unticked issue 201 criteria: repointing and healthy revision proven, src build provenance unproven (private registry), mvp/data (archive v0.21.0) and sign-off owner-only, legacy-reference checker failing on three test files. |
 | [Cut-over Gate Demo Proof, Second Live Run 2026-11-18](./research/cutover-gate-live-r2-2026-11-18.md) | Second per-criterion table for issue 201: in-container proof that the running image holds only the three src distributions; build-run record still absent; mvp/data and sign-off owner-only; legacy-reference violations grew to 45. |
