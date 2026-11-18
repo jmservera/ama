@@ -1,12 +1,8 @@
----
-title: Issue 1830 live review
-ms.date: 2026-11-18
----
+# Issue 1830 live review (single pass, 2026-11-18)
 
-Review executed once by the worker (not independent). Outcome: conformant for a docs-only audit; no open material findings.
+Execution: once. Outcome: conformant for the delivered scope, with open items routed to later work.
 
-* Checked each research note number against the `rpi-gate-timing.py report` output and receipt fields; resumed receipt 1641-11180533 is excluded from full wall time.
-* Checked that no criterion is ticked or overclaimed; the jobs 1 versus 2 reading is labelled non-causal.
-* Checked the diff: three docs files plus tracking artifacts; no secret, cache or private data. No credential file was read. No Azure resource was touched, so none needs deletion.
-* Routed work: owner decision on a preflight trust boundary and a finite FULL-tier correction (or a timing-analysis-only partial merge); retained same-head receipts with lock-wait data.
-* Limits: independent exact-head review and hosted CI were not obtained.
+* Additive change; no gate group, receipt rule, lock, browser/SQL/scanner/fresh-image control altered. Existing 114 gate tests pass.
+* Preflight cannot produce a receipt and labels output as non-receipt feedback.
+* Selector grammar prevents shell injection (list argv, regex-validated); tracked-module check rejects invalid paths.
+* Residual: `PYTHONPATH` assembly in `preflight_unit` is hand-built and may diverge from `test_paths`; the 320px browser proof, #1828 rerun and multi-receipt benchmark remain open (follow-ups). FULL gate by coordinator required.

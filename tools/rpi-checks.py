@@ -3477,6 +3477,58 @@ def heavy_lock(timeout: int, inherited_fd: int | None = None) -> Iterator[None]:
         yield
 
 
+def preflight_unit(root: Path, value: str) -> None:
+    """Run one reviewed unit selector as development feedback; never writes a receipt."""
+    project, selector = extra_selector(value)
+    module = f"src/{project}/tests/{selector.split('.')[0]}.py"
+    if not git(root, "ls-files", "--", module):
+        raise GateError(f"Preflight selector {value} is not a tracked test module")
+    own = f"src/{project}"
+    path = ":".join(
+        [
+            str(root / own / "src"),
+            *[
+                str(root / entry)
+                for entry in test_paths(project, True).replace("<checkout>/", "").split(":")
+            ],
+            *[
+                str(root / f"src/{name}/src")
+                for name in ("core", "agents")
+                if name != project and (project == "api" or name == "core")
+            ],
+        ]
+    )
+    env = {**os.environ, "PYTHONPATH": path, "PYTHONDONTWRITEBYTECODE": "1"}
+    result = subprocess.run(
+        [sys.executable, "-m", "unittest", "-v", selector],
+        cwd=root / own,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    output = result.stdout + result.stderr
+    print(output, end="")
+    ran = re.search(r"^Ran (\d+) tests? in", output, re.MULTILINE)
+    if result.returncode != 0:
+        raise GateError(f"Preflight selector {value} failed")
+    if not ran or int(ran.group(1)) == 0:
+        raise GateError(f"Preflight selector {value} ran zero tests")
+    if re.search(r"^OK \(skipped=", output, re.MULTILINE):
+        raise GateError(f"Preflight selector {value} skipped tests; prerequisites are missing")
+
+
+def preflight(root: Path, values: list[str]) -> None:
+    for value in values:
+        extra_selector(value)
+    for value in values:
+        preflight_unit(root, value)
+    print(
+        f"Preflight passed for {len(values)} selector(s). This is development feedback, "
+        "not a receipt; the full gate is still required for the full tier."
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
@@ -3484,7 +3536,13 @@ def main() -> int:
     mode.add_argument("--changed", action="store_true")
     mode.add_argument("--resume", type=Path, metavar="FAILED_RECEIPT")
     mode.add_argument("--verify-receipt", type=Path)
-    parser.add_argument("--base", required=True)
+    mode.add_argument(
+        "--preflight",
+        action="append",
+        metavar="PROJECT:SELECTOR",
+        help="Run exact unit selectors as non-receipt feedback before a full gate",
+    )
+    parser.add_argument("--base")
     parser.add_argument("--out", type=Path)
     parser.add_argument("--extra-test", action="append", default=[])
     parser.add_argument("--lock-timeout", type=int, default=600)
@@ -3521,7 +3579,11 @@ def main() -> int:
     args = parser.parse_args()
     root = Path(git(Path.cwd(), "rev-parse", "--show-toplevel")).resolve()
     try:
-        if args.verify_receipt:
+        if args.preflight is None and not args.base:
+            raise GateError("--base is required")
+        if args.preflight is not None:
+            preflight(root, args.preflight)
+        elif args.verify_receipt:
             verify(
                 root,
                 args.verify_receipt.resolve(),

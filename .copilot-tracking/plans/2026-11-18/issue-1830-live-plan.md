@@ -1,11 +1,8 @@
----
-title: Issue 1830 live plan
-ms.date: 2026-11-18
----
+# Issue 1830 live plan
 
-Tier FOCUSED, docs/evidence only. Details: [phase details](../../details/2026-11-18/issue-1830-live-details.md). Critique: [critique](../../critiques/2026-11-18/issue-1830-live-critique.md).
+* [x] P1 Add `--preflight` mode to `tools/rpi-checks.py` (selector validation, zero-test rejection, non-receipt label).
+* [x] P2 Add focused tests in `tools/test_rpi_checks.py`.
+* [x] P3 Document preflight, browser/SQL recipes and benchmark method in `src/README.md`.
+* [x] P4 Demonstrate on real selectors; record per-criterion table.
 
-* [x] Phase 1: audit main and unmerged candidate; run candidate tests from a scratch export
-* [x] Phase 2: run read-only timing reports on retained full receipts
-* [x] Phase 3: write research note, index and log entries
-* [x] Phase 4: changes record with per-criterion table, review, commit
+Tier: FULL (gate-tool edit changes `tools/rpi-checks.py`, a gate tool). Coordinator runs the full gate; this worker does not run `--all`.

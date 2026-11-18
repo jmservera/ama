@@ -560,6 +560,33 @@ and rerun. Preserve original adverse findings. Local verification is not a
 replacement for independent review, owner publication permission or retained
 hosted checks, and it does not authorize changing required contexts.
 
+### Targeted preflight and gate timing (issue #1830)
+
+Before committing and starting a full gate, run exact unit selectors with
+`python3 tools/rpi-checks.py --preflight PROJECT:test_module[.Class.method]`
+(repeatable). It reuses the reviewed selector grammar, requires a tracked test
+module, and fails closed on a failing run, zero tests or skipped tests. It
+needs no `--base` or `--out`, takes no lock, writes no receipt and mutates no
+source. Its output is development feedback only and never satisfies a full-tier
+receipt or a hosted check.
+
+```bash
+python3 tools/rpi-checks.py --preflight api:test_production_config_a11y_check
+```
+
+For browser or SQL paths, rerun the one affected script directly with its real
+prerequisites (for example `python3 src/api/checks/<name>_browser_check.py`
+with Playwright and a local server, or the SQL test class named in the group
+contract); a missing prerequisite blocks the check, it is not skipped or faked.
+
+To benchmark the gate, retain each receipt directory, then compare the
+per-command start and end timestamps across receipts with the same host, head
+and base. The wall time is the span from first start to last end; group
+durations overlap under `--jobs` and must not be summed. Record the queue wait
+from the `Lock queued ... acquired` line. Optimization candidates are measured
+from the longest command and repeated setup, and no mandatory group, browser,
+SQL, scanner or fresh-image control is removed by this method.
+
 ### Stabilization validation ladder
 
 For the coordinator's recurring checkpoints (#440), select checks by the
