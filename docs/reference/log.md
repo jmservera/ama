@@ -12733,3 +12733,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Resident and representative UX live demo evidence (Refs #154)
 
 * Added [issue-154-live-resident-ux-evidence-2026-11-18.md](research/issue-154-live-resident-ux-evidence-2026-11-18.md): no live resident contact is observed on the synthetic showcase; validation through the usability programme and the representative view stay unproven for the demo (no participants or SA-010 agreement; no live case has a representative). No source changed.
+
+## [2026-11-18] add | Post-cleanup references and live health evidence (Refs #203)
+
+* Added [issue-203-live-references-evidence-2026-11-18.md](research/issue-203-live-references-evidence-2026-11-18.md): the legacy-reference checker fails with 11 violations in three regression-test files (documents clean); the demo revision is healthy and pull-request CI is green, but build provenance and main-branch CI stay unproven. No source changed.
