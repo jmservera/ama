@@ -1,0 +1,206 @@
+{
+  "cost": 719,
+  "interval": "PT1H",
+  "namespace": "Microsoft.App/jobs",
+  "resourceregion": "uksouth",
+  "timespan": "2026-11-18T00:34:39Z/2026-11-18T12:34:39Z",
+  "value": [
+    {
+      "displayDescription": "Executions run by the Container Apps Job",
+      "errorCode": "Success",
+      "id": "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-ledger-verify/providers/Microsoft.Insights/metrics/Executions",
+      "name": {
+        "localizedValue": "Job Executions",
+        "value": "Executions"
+      },
+      "resourceGroup": "ama",
+      "timeseries": [
+        {
+          "data": [
+            {
+              "timeStamp": "2026-11-18T00:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T01:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T02:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T03:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T04:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T05:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T06:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T07:34:00Z",
+              "total": 11.0
+            },
+            {
+              "timeStamp": "2026-11-18T08:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T09:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T10:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T11:34:00Z",
+              "total": 0.0
+            }
+          ],
+          "metadatavalues": [
+            {
+              "name": {
+                "localizedValue": "state",
+                "value": "state"
+              },
+              "value": "Failed"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "timeStamp": "2026-11-18T00:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T01:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T02:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T03:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T04:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T05:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T06:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T07:34:00Z",
+              "total": 6.0
+            },
+            {
+              "timeStamp": "2026-11-18T08:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T09:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T10:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T11:34:00Z",
+              "total": 0.0
+            }
+          ],
+          "metadatavalues": [
+            {
+              "name": {
+                "localizedValue": "state",
+                "value": "state"
+              },
+              "value": "Running"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "timeStamp": "2026-11-18T00:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T01:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T02:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T03:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T04:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T05:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T06:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T07:34:00Z",
+              "total": 6.0
+            },
+            {
+              "timeStamp": "2026-11-18T08:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T09:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T10:34:00Z",
+              "total": 0.0
+            },
+            {
+              "timeStamp": "2026-11-18T11:34:00Z",
+              "total": 0.0
+            }
+          ],
+          "metadatavalues": [
+            {
+              "name": {
+                "localizedValue": "state",
+                "value": "state"
+              },
+              "value": "Succeeded"
+            }
+          ]
+        }
+      ],
+      "type": "Microsoft.Insights/metrics",
+      "unit": "Count"
+    }
+  ]
+}
