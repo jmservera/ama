@@ -1,0 +1,14 @@
+Read-only SQL reachability probe, 2026-11-18 ~14:47 UTC (no credentials printed)
+
+az sql server show -g ama -n sql-cutover-test-rzsrg --query "{pna:publicNetworkAccess,state:state}"
+  {"pna": "Disabled", "state": "Ready"}
+
+TCP 1433 to sql-cutover-test-rzsrg.database.windows.net from this VM: connect succeeded (gateway reachable).
+
+Entra-token login with ODBC Driver 18 (token from the existing az login, not printed):
+  [42000] ... Connection was denied because Deny Public Network Access is set to Yes. (47073)
+
+Result: the constraint and allowed_case window cannot be read from here. Opening a firewall rule, a private endpoint or a throwaway SQL-capable job would change network or identity scope and is outside the owner decision (no production change), so it was not done.
+
+az acr repository show-tags -n crcutovertestrzsrg: denied (registry public access restricted), so the digest-to-commit mapping is not readable.
+az monitor activity-log (14 days, rg ama): 50 events, none for ca-resident-demo, so the apply time of revision 0000012 is not in the log; the revision list gives created 2026-11-17T20:19:26Z.

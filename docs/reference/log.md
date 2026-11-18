@@ -12932,6 +12932,18 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Extended [direct-ingress-live-demo-2026-11-18.md](research/direct-ingress-live-demo-2026-11-18.md) with a 14:00 UTC measurement and per-criterion table: criteria c and e need owner decisions, d stays partly proven (AI call not reproduced today); no source change, no Azure resource created
 
+## [2026-11-18] add | Resident demo authority live check, run 2 (Refs #521)
+
+* Added [resident-demo-authority-live-521-r2-2026-11-18.md](research/resident-demo-authority-live-521-r2-2026-11-18.md) with retained read-only `az` output, a fresh desktop Playwright sign-in and a per-criterion table: live `ZF_DEMO_EXPIRES_AT` 2028-01-01T00:00:00Z on a healthy revision; SQL login refused (private-only server), registry and activity log give no commit or apply time, so criterion 4 stays partly proven; no source change, no Azure resource created
+
+## [2026-11-18] add | Issue 1274 release-download audit (Refs #1274)
+
+* Added [issue-1274-release-downloads-audit-live-2026-11-18.md](research/issue-1274-release-downloads-audit-live-2026-11-18.md): per-criterion table (actionlint half delivered by PR 1275 and re-verified locally; criteria 1, 3 and 4 partly proven; AWF 0.28.23 bootstrap still open and FULL-tier if code is needed); no source or workflow change, nothing ticked
+
+## [2026-11-18] add | Live monitoring coverage check (Refs #146)
+
+* Added [monitoring-coverage-live-146-2026-11-18.md](research/monitoring-coverage-live-146-2026-11-18.md): read-only az monitor evidence with a per-criterion table; ledger digest alerts installed, job failure, poison queue, IoT alerts and workbook absent, owners proposed only, KQL blocked by workspace network rules.
+
 ## [2026-11-18] update | Rubric src counting and mvp stop, live r2 audit (Refs #198)
 
 * Added [issue-198-rubric-live-r2-2026-11-18.md](research/issue-198-rubric-live-r2-2026-11-18.md) with retained raw outputs: no mvp or prototype glob, 949 `solution-code` files, score 79/100; criteria 3 and 4 stay unprovable; `test_safe_output_runtime.py` has 10 failures tied to a retired `mvp/` sample path and missing triggers; no workflow, registry or source change
@@ -12963,3 +12975,14 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Agentic workflow detection runs tracker assessment (Refs #1086)
 
 * Added [issue-1086-aw-detection-runs-2026-11-18.md](research/issue-1086-aw-detection-runs-2026-11-18.md): 108 of 113 tracker warnings come from concurrency-cancelled Rubric Scorer runs; no threat detected; no workflow change made.
+## [2026-11-18] add | Capstone pitch preparation third pass (Refs #435)
+
+* Added [capstone-pitch-435-live-r3-2026-11-18.md](research/capstone-pitch-435-live-r3-2026-11-18.md) with retained deck inspection and Azure read-only output: criteria 1 and 4 proven for the demo, criterion 2 not provable, criterion 3 tick not supported by the rehearsal notes; no source or deck change, no Azure resource created
+
+## [2026-11-18] add | Rubric failure 1397 live run-history proof (Refs #1397)
+
+* Added [rubric-1397-live-run-history-2026-11-18.md](research/rubric-1397-live-run-history-2026-11-18.md): artifacts of run 42838857558 show the selected payload was the empty-details placeholder and the complete card was refused at `Maximum allowed: 1`; successor run 42841391974 and PR 1398 show recovery. No workflow, source or paid rerun.
+
+## [2026-11-18] add | Assistant panel keyboard and announcement live proof (Refs #159)
+
+* Added [assistant-ux-live-159-2026-11-18.md](research/assistant-ux-live-159-2026-11-18.md): desktop Playwright keyboard-only run on the demo; keyboard operability and live-region announcements proven, screen-reader testing unproven; no source change, no Azure resource created, probe thread deleted
