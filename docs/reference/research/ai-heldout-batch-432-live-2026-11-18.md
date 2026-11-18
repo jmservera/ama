@@ -39,7 +39,7 @@ Evidence label: `measured held-out batch`. Source: provider usage envelope retur
 
 | # | Criterion | Status | Evidence |
 | --- | --- | --- | --- |
-| 1 | Model call join and no raw content in telemetry | Ticked in the issue; not re-proven here | Prior delivery, see [ai-tokenomics.md](./resources/ai-tokenomics.md) |
+| 1 | Model call join and no raw content in telemetry | Ticked in the issue; not re-proven here | Prior delivery, see [ai-tokenomics.md](../resources/ai-tokenomics.md) |
 | 2 | Per-request call and depth bound | Ticked; not re-proven here | Prior delivery |
 | 3 | Limit, unknown price or liability stops dispatch | Ticked; partly exercised: attempt 1 charged the worst case and stopped on an unmeasured call | `report-live-attempt1-stopped.json` |
 | 4 | Dated price source, Unknown when none | Ticked; a dated source was retrieved for this batch | Price source above |
