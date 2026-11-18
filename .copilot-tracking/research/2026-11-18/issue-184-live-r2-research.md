@@ -15,7 +15,7 @@ Ready pending Azure facts (hub, route, job pattern from #110/#185 notes).
 
 ## Findings (Azure and source, 2026-11-18)
 
-* Hub `iot-cutover-test-rzsrg` (host redacted in the note), route `route-demo-sensor` (condition true, DeviceMessages) to endpoint `eh-demo-sensor`, entity `sensor-readings` in `evhns-cutover-test-demo`, 2 partitions, consumer group `$Default`. Public access Disabled, so a job in `cae-cutover-test-demo` is needed.
+* Hub `[hub]` (host redacted in the note), route `route-demo-sensor` (condition true, DeviceMessages) to endpoint `eh-demo-sensor`, entity `sensor-readings` in `evhns-cutover-test-demo`, 2 partitions, consumer group `$Default`. Public access Disabled, so a job in `cae-cutover-test-demo` is needed.
 * `live_simulator.run(list_homes, generator, sink, limits, max_slots=N)` is the real streaming loop; `Sink` is a two-method Protocol, so an out-of-repo SAS sink reuses the repository generator, pacing, retries and summary unchanged. `IotHubSink` itself is X.509 only and is not usable under the owner's no-X.509 decision.
 * Demo API image already carries `zava_forward.api` and the Azure SDKs; managed identity `id-cutover-test-api` holds only an Event Hubs Data Receiver on the hub scope, so temporary roles are needed (Registry Contributor on the hub, Event Hubs Data Receiver on the event hub).
 * Earlier #110, #185 and #188 notes proved devices, sends and Event Hub read-back with hand-written drivers; none ran the repository `run` loop and none retained Event Hub raw output.

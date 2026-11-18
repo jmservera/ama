@@ -36,7 +36,7 @@
 WARNING: The behavior of this command has been altered by the following extension: azure-iot
 [
   {
-    "n": "iot-cutover-test-rzsrg",
+    "n": "[hub]",
     "pna": "Disabled"
   }
 ]
