@@ -12381,6 +12381,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.
 
+## [2026-11-18] add | Hardened deployment live evidence (Refs #118)
+
+* Added [issue-118-hardened-deployment-live-evidence-2026-11-18.md](research/issue-118-hardened-deployment-live-evidence-2026-11-18.md): the policy and Defender decision is recorded and consistent with the demo; live Defender tiers are unreadable (AuthorizationFailed) and repository policy assignments are not deployed. No source or Azure changes.
 ## [2026-11-18] add | Live demo evidence for service continuity and export (Refs #122)
 
 * Added [issue-122-live-continuity-evidence-2026-11-18.md](research/issue-122-live-continuity-evidence-2026-11-18.md): synthetic version change and reversal on the demo API, offline verification of two evidence exports, default-disabled assistants with template fallback, and a per-criterion record. The drill criterion stays unproven by owner decision.
