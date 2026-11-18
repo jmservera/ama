@@ -12222,3 +12222,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-17] update | Identifier leak copy audit on exception screens (Refs #153)
 
 * Added an [identifier leak audit](research/ux/content-standard.md#identifier-leak-audit-2026-11-17-153) section to the content standard: two snake_case identifiers shown to staff on the data steward and digital operator screens were reworded, and a lexical regression guard was added. Named-human review of resident-facing wording (criterion 5) remains unmet.
+
+## [2026-11-18] add | Live Azure backfill and live series evidence (Refs #188)
+
+* Added [issue-188-live-backfill-evidence-2026-11-18.md](research/issue-188-live-backfill-evidence-2026-11-18.md): per-criterion proven/unproven record of a demo run on live Azure SQL. Production receiver and indoor-schema proof remain open.
