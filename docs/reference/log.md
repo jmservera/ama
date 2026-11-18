@@ -12868,6 +12868,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [src-repoint-live-audit-200-2026-11-18.md](research/src-repoint-live-audit-200-2026-11-18.md): criteria 2 proven, criterion 3 proven except a fresh tag deployment; no source change
 
+## [2026-11-18] add | Epic 104 bounded AI audit with live read (Refs #104)
+
+* Added [issue-104-epic-audit-live-2026-11-18.md](research/issue-104-epic-audit-live-2026-11-18.md): per-criterion table for epic 104 (criteria 1 and 2 unmet, 3 to 5 consistent with live read), exact remaining demo gaps for #107, #108, #164 and #216 by class, and a read-only live probe; nothing ticked, no source change, no Azure resource created
+
 ## [2026-11-18] update | Issue 144 hosting proof with raw output (Refs #144)
 
 * Added [issue-144-hosting-proof-live-2026-11-18.md](research/issue-144-hosting-proof-live-2026-11-18.md) and its raw folder: criteria 1 and 3 stay unproven (pipeline clause; hardening beyond non-root); job count reconciled to eight; no source change
