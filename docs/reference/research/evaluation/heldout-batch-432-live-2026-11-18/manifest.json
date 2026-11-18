@@ -1,0 +1,17 @@
+{
+  "versions": {"task": "synthetic-retrofit-proposal-summary-1", "model": "gpt-4.1-nano", "prompt": "heldout-432-live-p1", "policy": "demo-policy-2026-11-18", "source": "synthetic cases authored 2026-11-18"},
+  "held_out": {
+    "case_ids": ["h01","h02","h03","h04","h05","h06","h07","h08","h09","h10","h11","h12"],
+    "seed": "demo-seed-432",
+    "denominator": 12,
+    "labelled_by": "Demo labeller role (synthetic)",
+    "prompt_author": "Demo prompt author role (synthetic)",
+    "expected": {"h01":"accept","h02":"accept","h03":"accept","h04":"accept","h05":"accept","h06":"accept","h07":"accept","h08":"accept","h09":"accept","h10":"accept","h11":"accept","h12":"accept"},
+    "critical_errors": ["unsupported claim not in the supplied facts"]
+  },
+  "prompt_case_ids": [],
+  "tuning_case_ids": [],
+  "thresholds": {"max_critical_misses": 0, "min_accuracy": 0.9, "min_sample_per_cohort": 2},
+  "cohorts": {"pre-1945": ["h01","h03","h07","h09","h11"], "post-1945": ["h02","h04","h05","h06","h08","h10","h12"]},
+  "threshold_approval": {"by": "Juan Manuel Servera", "manifest_digest": "60e945bec8cb5890465b96578ebdd9ce27c34099a7da9431c69dd3df54f7b53f"}
+}
