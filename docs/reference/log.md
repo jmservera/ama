@@ -12374,3 +12374,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Live demo evidence for simulator stage 2 (Refs #184)
 
 * Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.
+
+## [2026-11-18] add | CI/CD pipeline audit, second live run (Refs #138)
+
+* Added [issue-138-live-cicd-pipeline-run2-evidence-2026-11-18.md](research/issue-138-live-cicd-pipeline-run2-evidence-2026-11-18.md): repeat read-only audit with the same result. What-if succeeded (99 Create, 15 Modify, 0 Delete, 14 Unsupported), smoke checks passed live, and no OIDC variable, protected environment, runner or federated credential exists. No criterion ticked.
