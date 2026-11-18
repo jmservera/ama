@@ -510,6 +510,7 @@ records that main already syncs new archive ancestors before confirming; criteri
 
 A [second run](./research/issue-1258-live-closure-r2-2026-11-18.md) adds real ext4 `strace` syscall order and a kernel-injected fsync EIO
 for the first publication; criterion 5 stays unproven for the demo and no crash proof is claimed.
+A [third run](./research/issue-1258-live-r3-2026-11-18.md) repeats both proofs on current main and adds the API wiring tests.
 
 For #189, the [simulator run controls live evidence](./research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo check of the budget alerts, hub owner tag and deterministic owner, time-limit and alert controls; no simulator job is deployed.

@@ -13239,3 +13239,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 111 third live re-verification (Refs #111)
 
 * Added [issue-111-live3-sensor-evidence-2026-11-18.md](research/issue-111-live3-sensor-evidence-2026-11-18.md) with raw outputs: 26 core sensor tests pass, signed-in demo sensors payload re-read; R1 to R3 stays unproven (named sign-off needed, gate not on main). Docs only.
+
+## [2026-11-18] add | Issue 1258 third live re-verification (Refs #1258)
+
+* Added [issue-1258-live-r3-2026-11-18.md](research/issue-1258-live-r3-2026-11-18.md) with raw outputs: 110 core and 36 API wiring tests pass, real ext4 syscall order and injected fsync EIO reproduced; criterion 5 stays unproven for the demo.
