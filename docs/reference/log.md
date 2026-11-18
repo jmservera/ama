@@ -12772,6 +12772,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-203-live-references-evidence-2026-11-18.md](research/issue-203-live-references-evidence-2026-11-18.md): the legacy-reference checker fails with 11 violations in three regression-test files (documents clean); the demo revision is healthy and pull-request CI is green, but build provenance and main-branch CI stay unproven. No source changed.
 
+## [2026-11-18] add | Capstone pitch Tokenomics per-criterion status (Refs #435)
+
+* Added [capstone-pitch-435-live-2026-11-18.md](research/capstone-pitch-435-live-2026-11-18.md): placement decision and deck coverage and the spend authority are evidenced for the demo; mentor confirmation cannot be proven; no deck or source change.
+
 ## [2026-11-18] update | Eval gate local test rerun and rescoring limits (Refs #216)
 
 * Updated [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md): 101 existing gate tests run locally with raw output retained; container scores labelled "Observed; raw output not retained"; no new model call; the unticked criterion stays partly proven.
