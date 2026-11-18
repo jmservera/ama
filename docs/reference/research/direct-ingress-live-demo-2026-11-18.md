@@ -107,3 +107,30 @@ Both runs agree. No box on #360 is ticked by this note.
 * The forged role header probe records an HTTP 200 status only, so it does not prove the role was ignored; the earlier run is relied on for that.
 * The browser-mode `/api/me` result (302) and the non-browser result (401 in `anonymous-curl.txt`) come from different clients and are not interchangeable.
 * No throwaway Azure resource was created. Azure CLI configuration output is retained only in the JSON files listed above.
+
+## Third measurement at 14:00 UTC on 2026-11-18
+
+Same owner decisions. Evidence is in `.copilot-tracking/evidence/2026-11-18/issue-360-live-r3/` (`signin_proof_r3.py`, run outputs, configuration JSON, two screenshots; the signed-in workbench screenshot showed personal names and is not retained); a literal scan of the 19 non-image files for each credential value found no match. Azure access was read-only; the only writes were two throwaway chat threads in the synthetic demo database, both deleted through the app (200). No resource was created.
+
+| Check | Result | File |
+| --- | --- | --- |
+| Environment and network | `cae-cutover-test-demo` external, Succeeded, subnet `snet-aca-demo`, environment public network access Enabled; the original environment is still internal and Disabled; NSG allows 443 from Internet at priority 100 | `env-demo.json`, `env-orig.json`, `nsg-demo.json` |
+| Apps | API (revision `0000031`, one replica now) and resident app external, `allowInsecure` false | `apps.json`, `replicas.txt` |
+| Backing services | SQL, Key Vault, storage (default Deny), registry, Foundry `aif-cutover-test-rzsrg` and IoT Hub Disabled. Adverse, unchanged: `evhns-cutover-test-demo` and `aoai-resident-469` Enabled | `backing.json` |
+| Front Door | No Front Door or Cdn resource in `ama`; group `ama` Succeeded | `fd-rg.txt` |
+| Anonymous | `/healthz`, `/`, `/welcome.html` 200; `/api/me`, `/api/cases`, `/app` 401; forged role header and invalid bearer 401; HTTP 301 to HTTPS; TLS 1.3 with a Microsoft-issued certificate | `anonymous-curl.txt` |
+| Browser-mode anonymous | `/api/me` and `/api/cases` return 302, so the 401 gap persists | `signin-run2.json` |
+| Staff sign-in and role | Redirect to `login.microsoftonline.com` and back; role `Retrofit Programme Manager`, `identity_source` `entra`; `/api/sensors` 403; forged role and principal headers leave the role unchanged | `signin-run2.json`, `3-workbench-signed-in.png` |
+| Persistence | 443 open cases in two separate logins; a thread created in one session was readable (200) from the second and then deleted. One replica and no restart drill, so this shows cross-session storage, not durability across restart. The thread list omitted the thread; only the direct fetch is evidence | `signin-run2.json` |
+| AI call | Adverse: both runs returned `workflow-only`, `model_calls` 0, `provider_outcome` `activation-not-approved`, although chat status reports demo-only activation honoured. The demo meter seeds one synthetic authority per UTC day capped at 20 calls (`chat_demo_meter.py`); other live AI proofs today probably spent it (inference, ledger not read). Not repeated or reset. The 08:36 UTC result on the same revision (`model_calls` 1, 1230 tokens) stands | `signin-run1.json`, `signin-run2.json`, `chat-status.json` |
+| Second role | Unavailable: the resident credential belongs to the separate resident showcase login | none |
+
+### Per-criterion result after the third measurement
+
+| Criterion | State on #360 | Result |
+| --- | --- | --- |
+| a | Ticked | Proven live again |
+| b, f | Ticked | Not re-tested |
+| c | Unticked | Unproven; owner approval of the migration plan is needed and cannot be supplied by an agent |
+| d | Unticked | Health, welcome, HTTPS, sign-in and role claim proven; anonymous denial proven except browser mode (302); persistence proven for cross-session reads only; AI not reproduced today; second role and restart unproven |
+| e | Unticked | Unproven; owner authorisation and ordering after d are needed |

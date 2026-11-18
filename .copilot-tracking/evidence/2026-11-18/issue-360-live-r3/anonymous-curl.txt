@@ -1,0 +1,12 @@
+https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/healthz 200
+https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/ 200
+https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/welcome.html 200
+https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/api/me 401
+https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/api/cases 401
+https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app 401
+https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/healthz 200
+https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/ 200
+HTTP: 301 https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/healthz
+forged: 401 401
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384 / X25519 / RSASSA-PSS
+*  issuer: C=US; O=Microsoft Corporation; CN=Microsoft TLS G2 RSA CA OCSP 16

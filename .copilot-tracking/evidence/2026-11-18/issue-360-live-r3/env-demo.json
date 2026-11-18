@@ -1,0 +1,6 @@
+{
+  "internal": false,
+  "pna": "Enabled",
+  "state": "Succeeded",
+  "subnet": "/subscriptions/<subscription>/resourceGroups/ama/providers/Microsoft.Network/virtualNetworks/vnet-cutover-test/subnets/snet-aca-demo"
+}

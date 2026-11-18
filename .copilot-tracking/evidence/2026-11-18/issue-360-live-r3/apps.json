@@ -1,0 +1,18 @@
+{
+  "env": "/subscriptions/<subscription>/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test-demo",
+  "external": true,
+  "fqdn": "ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+  "insecure": false,
+  "min": 0,
+  "name": "ca-cutover-test-demo-api",
+  "rev": "ca-cutover-test-demo-api--0000031"
+}
+{
+  "env": "/subscriptions/<subscription>/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test-demo",
+  "external": true,
+  "fqdn": "ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+  "insecure": false,
+  "min": 0,
+  "name": "ca-resident-demo",
+  "rev": "ca-resident-demo--0000012"
+}
