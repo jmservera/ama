@@ -1,0 +1,382 @@
+[
+  {
+    "name": "id-cutover-test-agents",
+    "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+  },
+  {
+    "name": "id-cutover-test-orchestrator",
+    "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+  },
+  {
+    "name": "id-cutover-test-import",
+    "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+  },
+  {
+    "name": "id-cutover-test-api",
+    "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+  },
+  {
+    "name": "nsg-cutover-test-aca",
+    "type": "Microsoft.Network/networkSecurityGroups"
+  },
+  {
+    "name": "privatelink.ods.opinsights.azure.com",
+    "type": "Microsoft.Network/privateDnsZones"
+  },
+  {
+    "name": "privatelink.servicebus.windows.net",
+    "type": "Microsoft.Network/privateDnsZones"
+  },
+  {
+    "name": "privatelink.services.ai.azure.com",
+    "type": "Microsoft.Network/privateDnsZones"
+  },
+  {
+    "name": "privatelink.database.windows.net",
+    "type": "Microsoft.Network/privateDnsZones"
+  },
+  {
+    "name": "privatelink.monitor.azure.com",
+    "type": "Microsoft.Network/privateDnsZones"
+  },
+  {
+    "name": "privatelink.agentsvc.azure-automation.net",
+    "type": "Microsoft.Network/privateDnsZones"
+  },
+  {
+    "name": "privatelink.azurecr.io",
+    "type": "Microsoft.Network/privateDnsZones"
+  },
+  {
+    "name": "privatelink.vaultcore.azure.net",
+    "type": "Microsoft.Network/privateDnsZones"
+  },
+  {
+    "name": "privatelink.blob.core.windows.net",
+    "type": "Microsoft.Network/privateDnsZones"
+  },
+  {
+    "name": "privatelink.oms.opinsights.azure.com",
+    "type": "Microsoft.Network/privateDnsZones"
+  },
+  {
+    "name": "privatelink.queue.core.windows.net",
+    "type": "Microsoft.Network/privateDnsZones"
+  },
+  {
+    "name": "privatelink.azure-devices.net",
+    "type": "Microsoft.Network/privateDnsZones"
+  },
+  {
+    "name": "privatelink.cognitiveservices.azure.com",
+    "type": "Microsoft.Network/privateDnsZones"
+  },
+  {
+    "name": "privatelink.openai.azure.com",
+    "type": "Microsoft.Network/privateDnsZones"
+  },
+  {
+    "name": "nsg-cutover-test-pe",
+    "type": "Microsoft.Network/networkSecurityGroups"
+  },
+  {
+    "name": "vnet-cutover-test",
+    "type": "Microsoft.Network/virtualNetworks"
+  },
+  {
+    "name": "privatelink.vaultcore.azure.net/link-cutover-test",
+    "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+  },
+  {
+    "name": "privatelink.blob.core.windows.net/link-cutover-test",
+    "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+  },
+  {
+    "name": "privatelink.azure-devices.net/link-cutover-test",
+    "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+  },
+  {
+    "name": "privatelink.ods.opinsights.azure.com/link-cutover-test",
+    "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+  },
+  {
+    "name": "privatelink.azurecr.io/link-cutover-test",
+    "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+  },
+  {
+    "name": "privatelink.queue.core.windows.net/link-cutover-test",
+    "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+  },
+  {
+    "name": "privatelink.servicebus.windows.net/link-cutover-test",
+    "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+  },
+  {
+    "name": "privatelink.services.ai.azure.com/link-cutover-test",
+    "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+  },
+  {
+    "name": "privatelink.monitor.azure.com/link-cutover-test",
+    "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+  },
+  {
+    "name": "privatelink.openai.azure.com/link-cutover-test",
+    "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+  },
+  {
+    "name": "privatelink.cognitiveservices.azure.com/link-cutover-test",
+    "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+  },
+  {
+    "name": "privatelink.database.windows.net/link-cutover-test",
+    "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+  },
+  {
+    "name": "privatelink.oms.opinsights.azure.com/link-cutover-test",
+    "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+  },
+  {
+    "name": "privatelink.agentsvc.azure-automation.net/link-cutover-test",
+    "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+  },
+  {
+    "name": "log-cutover-test",
+    "type": "Microsoft.OperationalInsights/workspaces"
+  },
+  {
+    "name": "ag-cutover-test-ops",
+    "type": "Microsoft.Insights/actiongroups"
+  },
+  {
+    "name": "ampls-cutover-test",
+    "type": "microsoft.insights/privateLinkScopes"
+  },
+  {
+    "name": "appi-cutover-test",
+    "type": "Microsoft.Insights/components"
+  },
+  {
+    "name": "pe-ampls-cutover-test",
+    "type": "Microsoft.Network/privateEndpoints"
+  },
+  {
+    "name": "pe-ampls-cutover-test.nic.1594de99-1566-4151-9663-fcfdd8fdec66",
+    "type": "Microsoft.Network/networkInterfaces"
+  },
+  {
+    "name": "crcutovertestrzsrg",
+    "type": "Microsoft.ContainerRegistry/registries"
+  },
+  {
+    "name": "stcutovertestrzsrg",
+    "type": "Microsoft.Storage/storageAccounts"
+  },
+  {
+    "name": "sql-cutover-test-rzsrg",
+    "type": "Microsoft.Sql/servers"
+  },
+  {
+    "name": "alert-kv-cutovertest-rzsrg-secret-expiry",
+    "type": "Microsoft.Insights/scheduledqueryrules"
+  },
+  {
+    "name": "alert-kv-cutovertest-rzsrg-denied-access",
+    "type": "Microsoft.Insights/scheduledqueryrules"
+  },
+  {
+    "name": "kv-cutovertest-rzsrg",
+    "type": "Microsoft.KeyVault/vaults"
+  },
+  {
+    "name": "aif-cutover-test-rzsrg",
+    "type": "Microsoft.CognitiveServices/accounts"
+  },
+  {
+    "name": "pe-stcutovertestrzsrg-queue",
+    "type": "Microsoft.Network/privateEndpoints"
+  },
+  {
+    "name": "pe-kv-cutovertest-rzsrg",
+    "type": "Microsoft.Network/privateEndpoints"
+  },
+  {
+    "name": "pe-stcutovertestrzsrg-blob",
+    "type": "Microsoft.Network/privateEndpoints"
+  },
+  {
+    "name": "pe-crcutovertestrzsrg",
+    "type": "Microsoft.Network/privateEndpoints"
+  },
+  {
+    "name": "aif-cutover-test-rzsrg/zava-forward-agents",
+    "type": "Microsoft.CognitiveServices/accounts/projects"
+  },
+  {
+    "name": "pe-aif-cutover-test-rzsrg",
+    "type": "Microsoft.Network/privateEndpoints"
+  },
+  {
+    "name": "pe-stcutovertestrzsrg-queue.nic.1ddfd037-2785-4fae-b574-883244181dd7",
+    "type": "Microsoft.Network/networkInterfaces"
+  },
+  {
+    "name": "pe-stcutovertestrzsrg-blob.nic.2f3de8c1-83d3-4e03-a836-f9d27a4bd6a1",
+    "type": "Microsoft.Network/networkInterfaces"
+  },
+  {
+    "name": "pe-kv-cutovertest-rzsrg.nic.d0e3f239-6c7d-4fd2-a5d7-bd0d6f87c5cb",
+    "type": "Microsoft.Network/networkInterfaces"
+  },
+  {
+    "name": "pe-crcutovertestrzsrg.nic.581a4025-6197-43bf-9102-7af7e8083823",
+    "type": "Microsoft.Network/networkInterfaces"
+  },
+  {
+    "name": "pe-aif-cutover-test-rzsrg.nic.823cc344-e8b8-4f68-986b-88bc83d678eb",
+    "type": "Microsoft.Network/networkInterfaces"
+  },
+  {
+    "name": "sql-cutover-test-rzsrg/master",
+    "type": "Microsoft.Sql/servers/databases"
+  },
+  {
+    "name": "alert-cutover-test-foundry-throttle",
+    "type": "Microsoft.Insights/metricalerts"
+  },
+  {
+    "name": "sql-cutover-test-rzsrg/retrofit",
+    "type": "Microsoft.Sql/servers/databases"
+  },
+  {
+    "name": "pe-sql-cutover-test-rzsrg",
+    "type": "Microsoft.Network/privateEndpoints"
+  },
+  {
+    "name": "pe-sql-cutover-test-rzsrg.nic.15a1c17e-15c6-461f-851a-0a2ac4d9cde6",
+    "type": "Microsoft.Network/networkInterfaces"
+  },
+  {
+    "name": "Application Insights Smart Detection",
+    "type": "microsoft.insights/actiongroups"
+  },
+  {
+    "name": "stcutovertestrzsrg-67928835-7b81-410d-bb16-fa99d72ee7c2",
+    "type": "Microsoft.EventGrid/systemTopics"
+  },
+  {
+    "name": "id-cutover-test-init",
+    "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+  },
+  {
+    "name": "iot-cutover-test-rzsrg",
+    "type": "Microsoft.Devices/IotHubs"
+  },
+  {
+    "name": "alert-cutover-test-sql-cpu",
+    "type": "Microsoft.Insights/metricalerts"
+  },
+  {
+    "name": "cae-cutover-test",
+    "type": "Microsoft.App/managedEnvironments"
+  },
+  {
+    "name": "pe-iot-cutover-test-rzsrg",
+    "type": "Microsoft.Network/privateEndpoints"
+  },
+  {
+    "name": "pe-iot-cutover-test-rzsrg.nic.5dfd506e-d1dc-41bd-9bf5-6354e31d49e7",
+    "type": "Microsoft.Network/networkInterfaces"
+  },
+  {
+    "name": "jollytree-20e6e99e.uksouth.azurecontainerapps.io",
+    "type": "Microsoft.Network/privateDnsZones"
+  },
+  {
+    "name": "job-cutover-test-init",
+    "type": "Microsoft.App/jobs"
+  },
+  {
+    "name": "jollytree-20e6e99e.uksouth.azurecontainerapps.io/link-cutover-test",
+    "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+  },
+  {
+    "name": "job-cutover-test-verify",
+    "type": "Microsoft.App/jobs"
+  },
+  {
+    "name": "alert-cutover-test-ledger-digest-mismatch",
+    "type": "Microsoft.Insights/scheduledqueryrules"
+  },
+  {
+    "name": "alert-cutover-test-ledger-verify-missing",
+    "type": "Microsoft.Insights/scheduledqueryrules"
+  },
+  {
+    "name": "job-cutover-test-ledger-verify",
+    "type": "Microsoft.App/jobs"
+  },
+  {
+    "name": "job-cutover-test-import",
+    "type": "Microsoft.App/jobs"
+  },
+  {
+    "name": "ca-cutover-test-api",
+    "type": "Microsoft.App/containerApps"
+  },
+  {
+    "name": "ca-cutover-test-agents",
+    "type": "Microsoft.App/containerApps"
+  },
+  {
+    "name": "job-cutover-test-orchestrator",
+    "type": "Microsoft.App/jobs"
+  },
+  {
+    "name": "alert-cutover-test-api-5xx",
+    "type": "Microsoft.Insights/metricalerts"
+  },
+  {
+    "name": "alert-cutover-test-api-restarts",
+    "type": "Microsoft.Insights/metricalerts"
+  },
+  {
+    "name": "job-cutover-test-smoke",
+    "type": "Microsoft.App/jobs"
+  },
+  {
+    "name": "job-cutover-test-mi-http",
+    "type": "Microsoft.App/jobs"
+  },
+  {
+    "name": "job-cutover-test-public-audit",
+    "type": "Microsoft.App/jobs"
+  },
+  {
+    "name": "nsg-cutover-test-aca-demo",
+    "type": "Microsoft.Network/networkSecurityGroups"
+  },
+  {
+    "name": "cae-cutover-test-demo",
+    "type": "Microsoft.App/managedEnvironments"
+  },
+  {
+    "name": "ca-cutover-test-demo-api",
+    "type": "Microsoft.App/containerApps"
+  },
+  {
+    "name": "id-resident-demo",
+    "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+  },
+  {
+    "name": "ca-resident-demo",
+    "type": "Microsoft.App/containerApps"
+  },
+  {
+    "name": "aoai-resident-469",
+    "type": "Microsoft.CognitiveServices/accounts"
+  },
+  {
+    "name": "evhns-cutover-test-demo",
+    "type": "Microsoft.EventHub/namespaces"
+  }
+]

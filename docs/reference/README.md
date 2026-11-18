@@ -436,6 +436,11 @@ For #130, the [live nomination route evidence](./research/issue-130-live-nominat
 records a 2026-11-18 demo run: route panels and permissions read live, representative options absent
 without confirmed authority, writes refused by the same identity defect, and the unticked
 representative-participation criterion stated as unprovable for the demo.
+For #129, the [learning-test bundle evidence](./research/issue-129-live-learning-test-evidence-2026-11-18.md)
+records a 2026-11-18 local run of 32 existing tests with raw output retained: bundles and scope exclusions
+proven for constructed cases only, atlas-owner mapping confirmation unproven.
+The [second run](./research/issue-130-live-r2-nomination-route-evidence-2026-11-18.md) retains raw output,
+confirms the same image and 403 defect, and keeps the criterion unproven.
 For #124, the [Phase 0 discovery evidence](./research/issue-124-phase0-discovery-evidence-2026-11-18.md)
 records a 2026-11-18 offline and synthetic-data run: nomination, endpoint, dictionary and two-sided
 constraint rules proven in code, and the three unticked criteria stated as needing sponsor, owner
@@ -455,9 +460,11 @@ For #146, the [live monitoring evidence](./research/issue-146-live-monitoring-ev
 records a 2026-11-18 demo run: installed alert inventory, a fired test alert, throwaway job-failure,
 IoT and workbook deployments, and the private-link limit that blocks workbook rendering and the poison-queue proof.
 A [re-run](./research/issue-146-live-monitoring-rerun-2026-11-18.md) adds a job-failure alert that fired on the real failed-job signal (Total aggregation; the Maximum shape did not) and lists the gaps.
+A [second pass](./research/issue-146-live2-monitoring-evidence-2026-11-18.md) retains redacted raw output of the installed alerts, fired alerts, job metric and query-access state.
 
 For #189, the [simulator run controls live evidence](./research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo check of the budget alerts, hub owner tag and deterministic owner, time-limit and alert controls; no simulator job is deployed.
+A [second pass](./research/simulator-run-controls-live-189-2026-11-18.md) adds a signed-in probe of the deployed admin endpoint (403 for staff; no administrator role granted), an offline start, stop and capacity exercise with raw output, and the USD 5.16 observed spend.
 
 For #138, the [CI/CD OIDC and what-if live evidence](./research/issue-138-live-cicd-oidc-evidence-2026-11-18.md)
 records a 2026-11-18 read-only demo run: a live what-if of the real template, the post-deployment
@@ -1250,7 +1257,9 @@ or infra acceptance claimed.
 | [AI evaluation harness live demo evidence (#108)](./research/issue-108-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the eight unticked criteria: deployed model, version and rate limits confirmed, subscription quota unproven, live app AI report read, offline one-lever comparison tested; no criterion newly tickable | 2026-11-18 |
 | [Entra roles and field-level visibility live demo evidence (#116)](./research/issue-116-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the four unticked criteria: reason-role enforcement observed for one role, AI refusal observed, document hold and provider payloads not provable live, four boxes stay unticked |
 | [Data protection, retention and rights live demo evidence (#121)](./research/issue-121-live-data-protection-evidence-2026-11-18.md) | Per-criterion demo record for the eight unticked criteria: live register, model location and retention settings read; deployed register older than source; approvals deferred to #1906 to #1908 |
+| [Map tile provider and accessible list live demo evidence (#119)](./research/issue-119-live-map-evidence-2026-11-18.md) | Per-criterion demo record: deployed public OSM tile provider, policy re-read, list alternative, keyboard and tile-failure proofs; no screen reader run, no licensed provider |
 | [Chat grounding and human-review boundaries live demo evidence (#164)](./research/issue-164-live-chat-grounding-evidence-2026-11-18.md) | Per-criterion demo record for the five unticked criteria: task registered and disabled, thresholds proposed not approved, three live asks answered by rules with zero model calls, human exercises and approvals unproven |
+| [Chat grounding live demo evidence, second pass (#164)](./research/issue-164-live-chat-grounding-evidence-r2-2026-11-18.md) | Chat widget driven in Playwright with grounded, abstention, approve, diagnose, consent, contact and injection asks; raw output and labelled screenshots retained; refusal routes shown for three asks; contact ask fell back without a refusal route; criteria 1, 2 and 4 partly proven, 3 unproven |
 | [Employee loading feedback and Today's briefing live demo evidence (#531)](./research/issue-531-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the unticked live-verification criterion: loading shell, per-panel feedback, briefing labels, sources, review wording and axe observed on the live build; cold start, retry and unverified output simulated in the browser; no review recorded; live app.js and style.css behind main |
 | [Conversational assistant experience live demo evidence (#159)](./research/issue-159-live-chat-experience-evidence-2026-11-18.md) | Per-criterion demo record for the unticked keyboard, announcement and screen-reader criterion: keyboard operation and live-region announcements proven on the live panel, screen-reader testing deferred |
 | [Assistive-technology, consent and Fluent/WCAG acceptance live demo evidence (#619)](./research/issue-619-live-at-consent-evidence-2026-11-18.md) | Per-criterion demo record: keyboard, axe, zoom-equivalent reflow and the synthetic resident consent journey proven on the live demo; person-run screen reader, zoom and real-resident criteria stay production-only |
@@ -1302,6 +1311,7 @@ or infra acceptance claimed.
 | [Issue 358 Live Recheck](./research/issue-358-live-recheck-2026-11-18.md) | Second pass: throwaway app deletion confirmed, delegating `main()` and expiry tests re-run, demo app Key Vault reference read; full setup path still unproven |
 | [Azure SQL Point-in-Time Restore Evidence on the Demo](./research/issue-145-live-pitr-restore-evidence-2026-11-18.md) | Issue 145: 2026-11-18 live restore of the demo database to a throwaway copy, audit-chain prefix match, observed restore time, per-criterion proven/unproven record |
 | [Azure SQL Restore Re-verification and Resurrection Gap](./research/issue-145-live-run2-reverification-2026-11-18.md) | Issue 145 run 2: read-only demo backup and cleanup checks, why release, suspension and allowance resurrection cannot be proven, final per-criterion record |
+| [Azure SQL Point-in-Time Restore Rerun with Raw Output](./research/issue-145-live-run3-pitr-rerun-2026-11-18.md) | Issue 145 run 3: second live restore with redacted raw probe output retained, chain and prefix match, native ledger denial, retention settings and the resurrection gap |
 | [Service Continuity, Versioning and Export Evidence on the Demo](./research/issue-122-live-continuity-evidence-2026-11-18.md) | Issue 122: 2026-11-18 live version change and reversal, offline export verification, default-disabled assistants, per-criterion proven/unproven record |
 | [Regulatory Alert and Home Chat UX Live Demo Proof](./research/issue-215-live-alert-chat-ux-evidence-2026-11-18.md) | Issue 215: desktop Playwright and axe evidence for the alerts panel and home chat on the demo, per-criterion status; no alert card can render without a law store and staff comprehension testing stays unrun |
 | [Regulatory Alert and Home Chat UX Populated-State Proof](./research/issue-215-live-populated-states-evidence-2026-11-18.md) | Issue 215 run 2: deployed client rendered against mocked alert and chat responses; keyboard, plain-language, no-source, doubt route and axe results; comprehension testing still unprovable for the demo |
