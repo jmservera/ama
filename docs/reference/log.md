@@ -12995,6 +12995,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Service continuity live audit (Refs #122)
 
 * Added [issue-122-continuity-live-audit-2026-11-18.md](research/issue-122-continuity-live-audit-2026-11-18.md): constructed suspension and restart drill tests pass (6 core, 20 api); read-only live `/api/continuity` and export probe; the witnessed authorised drill criterion is unproven for the demo (drills prohibited, restart authority unappointed); leftover probe suspension SUS-1 recorded; no source change, no Azure resource created
+
 ## [2026-11-18] add | Issue 79 live ranking proof with retained evidence (Refs #79)
 
 * Added [issue-79-live-ranking-2026-11-18.md](research/issue-79-live-ranking-2026-11-18.md) and its evidence folder: demo run with retained raw output. Determinism and hash verification proven again; named owner signature, scheduled run of the shipped entry point and write-once retention unproven; no source change; throwaway job and container deleted.
