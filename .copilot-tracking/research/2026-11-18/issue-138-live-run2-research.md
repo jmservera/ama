@@ -1,5 +1,5 @@
 ---
-title: Issue 138 live research (opening)
+title: Issue 138 live research
 ms.date: 2026-11-18
 ---
 

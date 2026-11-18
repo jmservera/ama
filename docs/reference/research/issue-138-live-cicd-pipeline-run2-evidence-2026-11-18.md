@@ -46,17 +46,17 @@ file was deleted. Subscription and tenant identifiers are omitted. Tier: focused
   produced that image.
 * What-if: `az deployment group what-if -g ama` of the real `infra/main.bicep` with the `test`
   parameter file (throwaway valid values, applications off) returned `Succeeded`: 99 Create, 15
-  Modify, 81 Ignore, 14 Unsupported, 0 Delete. The template names resources `*-forward-test-*`
+  Modify, 81 Ignore, 14 Unsupported, 0 Delete (raw command output not retained). The template names resources `*-forward-test-*`
   while the demo group holds `*-cutover-test-*`, so the pipeline would not update the demo in
   place. `summarize_plan` refuses this plan because of the 14 Unsupported entries.
 * Post-deployment checks: `pipeline.smoke()` passed against `ca-cutover-test-demo-api` ("health and
   all three authentication-denial checks passed") and failed against an unreachable host with
   "expected HTTP 200". Direct probes: `/healthz` 200, anonymous `/api/me` 401.
-  `infra/tests/test_pipeline.py` passed.
+  `infra/tests/test_pipeline.py` passed (raw command output not retained for the `smoke()` and probe results).
 * Secret audit: value-shaped patterns (account and shared-access keys, SAS signatures, private-key
   headers, GitHub tokens) matched only two test fixtures in `src/`. Neither deploy workflow uses a
   secrets context. The full log of `Source projects CI` run 44266028749 (23703 lines) had 0 matches
-  for the same patterns plus JWT shapes.
+  for the same patterns plus JWT shapes (raw command output not retained; the log was scanned locally and discarded).
 
 ## Acceptance criteria
 
@@ -84,6 +84,6 @@ No criterion can be ticked from this evidence, and the issue stays open.
 `gh api repos/jmservera/ama/{actions/variables,actions/secrets,actions/runners,environments}`;
 `gh run list -w infra-plan.yml`; `az identity federated-credential list -g ama --identity-name <name>`;
 `az acr list -g ama`; `az deployment group what-if -g ama --template-file infra/main.bicep --parameters @<temp> --mode Incremental`
-(parameters built with `pipeline.parameters`, temp file deleted);
+(parameters built with `pipeline.parameters` from throwaway values; the temp file was deleted and the what-if output was discarded);
 `python3 -m unittest discover -s infra/tests -p test_pipeline.py`; `pipeline.smoke` against the API FQDN;
 `git grep -nIE` value-shaped secret patterns; `gh run view <id> --log` scanned locally and discarded.
