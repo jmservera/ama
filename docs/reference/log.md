@@ -12661,6 +12661,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Live check of the resident demo authority end (Refs #521)
 
 * Added [resident-demo-authority-live-521-2026-11-18.md](research/resident-demo-authority-live-521-2026-11-18.md): source and focused tests, the live `ZF_DEMO_EXPIRES_AT` of 2028-01-01T00:00:00Z and a desktop sign-in proof. The live SQL window and the image source commit stay unproven (private network). No source or Azure changes.
+
 ## [2026-11-18] add | Data protection live evidence (Refs #121)
 
 * Added [issue-121-live-data-protection-evidence-2026-11-18.md](research/issue-121-live-data-protection-evidence-2026-11-18.md): per-criterion record of the eight unticked criteria on the deployed demo. The live register, model location and retention settings were read; the deployed register is older than the source register; DPO/Legal approvals and owners stay deferred to #1906 to #1908; no live refused dispatch was exercised. No source or Azure changes.
