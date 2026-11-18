@@ -13047,6 +13047,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 81 epic audit with live form retest (Refs #81)
 
 * Added [issue-81-epic-audit-live-2026-11-18.md](research/issue-81-epic-audit-live-2026-11-18.md): per-criterion table for epic 81 (criteria 1 and 2 unproven), live retest of the three standalone nomination forms (HTTP 400 on image digest 5368f4e4), fix classed FULL tier and left to #1837; no source change, nothing created in Azure
+
 ## [2026-11-18] add | Issue 138 live third audit (Refs #138)
 
 * Added [issue-138-live-r3-2026-11-18.md](research/issue-138-live-r3-2026-11-18.md) with retained sanitised outputs: OIDC, environments, runner and image release still unconfigured, live what-if succeeds but `summarize_plan` refuses it, smoke and secret checks partly proven; no source change, nothing created in Azure
