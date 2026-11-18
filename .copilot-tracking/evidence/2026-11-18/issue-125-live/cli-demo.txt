@@ -1,0 +1,285 @@
+{
+  "approved_solution": false,
+  "authority_decisions": [
+    {
+      "allowed": true,
+      "attempted": false,
+      "dispatched": false,
+      "note": "policy decision only; no tool is registered, dispatched or attempted",
+      "reason": "ALLOWED_READ_ONLY",
+      "tool": "query_approved_analytical_store",
+      "writes_to_source_system": false
+    },
+    {
+      "allowed": false,
+      "attempted": false,
+      "dispatched": false,
+      "note": "policy decision only; no tool is registered, dispatched or attempted",
+      "reason": "DENIED_BY_AUTHORITY_BOUNDARY",
+      "tool": "write_source_system",
+      "writes_to_source_system": false
+    },
+    {
+      "allowed": false,
+      "attempted": false,
+      "dispatched": false,
+      "note": "policy decision only; no tool is registered, dispatched or attempted",
+      "reason": "DENIED_BY_AUTHORITY_BOUNDARY",
+      "tool": "contact_resident",
+      "writes_to_source_system": false
+    },
+    {
+      "allowed": false,
+      "attempted": false,
+      "dispatched": false,
+      "note": "policy decision only; no tool is registered, dispatched or attempted",
+      "reason": "DENIED_BY_AUTHORITY_BOUNDARY",
+      "tool": "rank_properties",
+      "writes_to_source_system": false
+    },
+    {
+      "allowed": false,
+      "attempted": false,
+      "dispatched": false,
+      "note": "policy decision only; no tool is registered, dispatched or attempted",
+      "reason": "NOT_ON_READ_ONLY_ALLOWLIST",
+      "tool": "read_company_dataset",
+      "writes_to_source_system": false
+    }
+  ],
+  "calculation": {
+    "gaps": [
+      "unusable-timestamp:SYN-P2/install"
+    ],
+    "hours": {
+      "design": 60.0,
+      "install": 12.0,
+      "survey": 36.5
+    },
+    "source_references": [
+      "SYN-EVT-001",
+      "SYN-EVT-002",
+      "SYN-EVT-003",
+      "SYN-EVT-004",
+      "SYN-EVT-005",
+      "SYN-EVT-006"
+    ]
+  },
+  "company_connection": "DENY",
+  "comparison": {
+    "assistant_preferred": false,
+    "comparable_measures": [],
+    "criterion_met": false,
+    "human_result_pointers": [],
+    "invalid": [],
+    "missing_by_measure": {
+      "attribution-quality": [
+        "assistant",
+        "manual-analysis",
+        "conventional-bi",
+        "deterministic-workflow-reporting"
+      ],
+      "calculation-repeatability": [
+        "assistant",
+        "manual-analysis",
+        "conventional-bi",
+        "deterministic-workflow-reporting"
+      ],
+      "decision-usefulness": [
+        "assistant",
+        "manual-analysis",
+        "conventional-bi",
+        "deterministic-workflow-reporting"
+      ],
+      "error-severity": [
+        "assistant",
+        "manual-analysis",
+        "conventional-bi",
+        "deterministic-workflow-reporting"
+      ],
+      "event-accuracy": [
+        "assistant",
+        "manual-analysis",
+        "conventional-bi",
+        "deterministic-workflow-reporting"
+      ],
+      "identifier-reconciliation": [
+        "assistant",
+        "manual-analysis",
+        "conventional-bi",
+        "deterministic-workflow-reporting"
+      ],
+      "population-coverage": [
+        "assistant",
+        "manual-analysis",
+        "conventional-bi",
+        "deterministic-workflow-reporting"
+      ],
+      "review-effort": [
+        "assistant",
+        "manual-analysis",
+        "conventional-bi",
+        "deterministic-workflow-reporting"
+      ],
+      "traceability": [
+        "assistant",
+        "manual-analysis",
+        "conventional-bi",
+        "deterministic-workflow-reporting"
+      ],
+      "whole-life-value": [
+        "assistant",
+        "manual-analysis",
+        "conventional-bi",
+        "deterministic-workflow-reporting"
+      ]
+    }
+  },
+  "conventional_table": {
+    "basis": "same calculation as the draft; not an independent reporting engine",
+    "rows": [
+      {
+        "hours": 60.0,
+        "stage": "design"
+      },
+      {
+        "hours": 12.0,
+        "stage": "install"
+      },
+      {
+        "hours": 36.5,
+        "stage": "survey"
+      }
+    ]
+  },
+  "core_version": "0.1.0",
+  "demo_version": "discovery-assistant-demo-v1",
+  "design_hypothesis_status": "UNAPPROVED_DESIGN_HYPOTHESIS",
+  "draft": {
+    "fallback_reason": "NO_DRAFTER",
+    "model_used": false,
+    "source_references": [
+      "SYN-EVT-001",
+      "SYN-EVT-002",
+      "SYN-EVT-003",
+      "SYN-EVT-004",
+      "SYN-EVT-005",
+      "SYN-EVT-006"
+    ],
+    "status": "DRAFT_FOR_HUMAN_REVIEW",
+    "text": "design: 60 hours; install: 12 hours; survey: 36.5 hours. Sources: SYN-EVT-001, SYN-EVT-002, SYN-EVT-003, SYN-EVT-004, SYN-EVT-005, SYN-EVT-006.",
+    "validated_finding": false
+  },
+  "evidence_boundary": [
+    "Fictional fixture only: no company, resident or property data is read.",
+    "Expected figures are constructed, not observed by any analyst.",
+    "No participant, elapsed effort, benefit, preference or model evaluation exists.",
+    "Fallback text is deterministic code output, not an AI result.",
+    "Phase 0, access, privacy and human approvals remain unproven and are not replaced."
+  ],
+  "expected_arithmetic": {
+    "basis": "constructed expectation for this fictional fixture, not an observed result",
+    "expected_gaps": [
+      "unusable-timestamp:SYN-P2/install"
+    ],
+    "expected_hours": {
+      "design": 60.0,
+      "install": 12.0,
+      "survey": 36.5
+    },
+    "expected_source_references": [
+      "SYN-EVT-001",
+      "SYN-EVT-002",
+      "SYN-EVT-003",
+      "SYN-EVT-004",
+      "SYN-EVT-005",
+      "SYN-EVT-006"
+    ],
+    "mismatches": [],
+    "passed": true
+  },
+  "fixture": {
+    "events": [
+      {
+        "event_id": "SYN-EVT-001",
+        "property_id": "SYN-P1",
+        "stage": "survey",
+        "timestamp": "2026-03-02T09:00:00+00:00"
+      },
+      {
+        "event_id": "SYN-EVT-002",
+        "property_id": "SYN-P1",
+        "stage": "design",
+        "timestamp": "2026-03-03T09:00:00+00:00"
+      },
+      {
+        "event_id": "SYN-EVT-003",
+        "property_id": "SYN-P1",
+        "stage": "install",
+        "timestamp": "2026-03-05T21:00:00+00:00"
+      },
+      {
+        "event_id": "SYN-EVT-004",
+        "property_id": "SYN-P1",
+        "stage": "handover",
+        "timestamp": "2026-03-06T09:00:00+00:00"
+      },
+      {
+        "event_id": "SYN-EVT-005",
+        "property_id": "SYN-P2",
+        "stage": "survey",
+        "timestamp": "2026-03-09T10:00:00+01:00"
+      },
+      {
+        "event_id": "SYN-EVT-006",
+        "property_id": "SYN-P2",
+        "stage": "design",
+        "timestamp": "2026-03-09T21:30:00+00:00"
+      },
+      {
+        "event_id": "SYN-EVT-007",
+        "property_id": "SYN-P2",
+        "stage": "install",
+        "timestamp": "not-recorded"
+      }
+    ],
+    "explicitly_fictional": true,
+    "id": "zava-synthetic-discovery-demo-v1"
+  },
+  "helper_versions": {
+    "boundary": "discovery-assistant-boundary-v1",
+    "drafting": "discovery-assistant-drafting-v1",
+    "evaluation": "discovery-assistant-evaluation-v1"
+  },
+  "manual_path": "Manual analysis, conventional reporting and export remain available; nothing here needs a model.",
+  "overall_passed": true,
+  "readiness": {
+    "connection_to_company_data_permitted": false,
+    "invalid": [],
+    "missing": [
+      "accountable-owner",
+      "baseline-population",
+      "lifecycle-dictionary",
+      "source-identifier-map",
+      "access-privacy-controls",
+      "delay-attribution-handling",
+      "calculation-tests",
+      "human-reviewers",
+      "non-agent-comparator",
+      "manual-path"
+    ],
+    "missing_count": 10,
+    "next_step": "Supply named evidence for each missing item; do not connect company data.",
+    "satisfied": [],
+    "status": "NOT_READY"
+  },
+  "repeatability": {
+    "digests": [
+      "aa5313d7d6668f43b875bd9bfe7f3c0d1803ba03a7b49468f442df910eaa4f74",
+      "aa5313d7d6668f43b875bd9bfe7f3c0d1803ba03a7b49468f442df910eaa4f74",
+      "aa5313d7d6668f43b875bd9bfe7f3c0d1803ba03a7b49468f442df910eaa4f74"
+    ],
+    "identical": true,
+    "runs": 3
+  }
+}
