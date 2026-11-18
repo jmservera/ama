@@ -12738,13 +12738,16 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [resident-portal-441-live-status-2026-11-18.md](research/resident-portal-441-live-status-2026-11-18.md): criterion 5 (FR-044/AC-084 owner disposition) stays unproven for the demo because the 2026-11-02 direction says demo display does not satisfy it and no named disposition exists. The other eight ticked criteria were not re-assessed.
 * Documentation only. No Azure action, credential, source or wording change; no tick or closure.
+
 ## [2026-11-18] add | Issue 349 tenant prerequisites live re-verification (Refs #349)
 
 * Added [issue-349-tenant-prerequisites-live-2026-11-18.md](research/issue-349-tenant-prerequisites-live-2026-11-18.md): per-criterion status for the six acceptance criteria on the synthetic demo. Vault path proven (Key Vault reference, public access disabled, approved private endpoint); sign-in, anonymous and forged-header denial proven with the test account; registration provenance, redirect list and staff roster unproven because Graph is unreadable and no roster exists. Read-only Azure; nothing created.
 * Updated the research index. Open question: tenant-owner confirmation of the registration.
+
 ## [2026-11-18] add | Issue 358 live recheck (Refs #358)
 
 * Added [issue-358-live-recheck-2026-11-18.md](research/issue-358-live-recheck-2026-11-18.md): confirmed the throwaway app is deleted, re-ran 126 setup tests, confirmed the delegating `main()`, and read the demo API Key Vault reference. No Azure write or source change; the full `setup-entra.py` run stays unproven.
+
 ## [2026-11-18] add | Post-cleanup references and live health evidence (Refs #203)
 
 * Added [issue-203-live-references-evidence-2026-11-18.md](research/issue-203-live-references-evidence-2026-11-18.md): the legacy-reference checker fails with 11 violations in three regression-test files (documents clean); the demo revision is healthy and pull-request CI is green, but build provenance and main-branch CI stay unproven. No source changed.
