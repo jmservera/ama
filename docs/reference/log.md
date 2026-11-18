@@ -12332,6 +12332,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [stabilization-checkpoint-triage-440-live-2026-11-18.md](research/stabilization-checkpoint-triage-440-live-2026-11-18.md): four issue drafts (time status 500, legacy-reference guard allowlist, unreachable ChatIsolation turn, AI golden path), duplicates mapped to existing owners, blocking findings mapped to epics, and per-epic verdicts (14 continue, 2 fix, 0 pivot). No issue created, no criterion ticked, no source changed. The coordinator HVE Builder review is Deferred at host validation.
 
+## [2026-11-18] add | Issue 146 monitoring re-run (Refs #146)
+
+* Added [issue-146-live-monitoring-rerun-2026-11-18.md](research/issue-146-live-monitoring-rerun-2026-11-18.md): live alert inventory, a throwaway job-failure alert that fired with Total aggregation (Maximum did not), per-criterion table and gaps. Indexed in the README.
 ## [2026-11-18] add | Plain-language copy audit on the live demo (Refs #153)
 
 * Added [plain-language-live-153-2026-11-18.md](research/plain-language-live-153-2026-11-18.md) and its evidence folder: desktop Playwright scan of 13 staff views, the resident page and read-only error probes. Banned terms absent from scanned views and the AI label confirmed; five open findings (record path in queue source lines, requirement code, reason-only errors, bare unknown page, abbreviations). The named human wording review remains unproven. Extended [content-standard.md](research/ux/content-standard.md) is linked from the note.
