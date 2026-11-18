@@ -460,6 +460,10 @@ back from Event Hub and retains the raw job output; the child-closure criterion 
 For #109, the [live device monitoring evidence](./research/issue-109-live-device-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of IoT Hub connection state and a connectivity metric alert.
 Hub `lastActivityTime` did not update; the #440 checkpoint and child-closure criteria stay unproven.
+For #1818, the [live IoT map walkthrough evidence](./research/issue-1818-live-iot-map-walkthrough-evidence-2026-11-18.md)
+records a 2026-11-18 demo run: nine synthetic messages through IoT Hub, an Event Hub route and Azure SQL, then
+fresh and stale sensor status in the employee map, accessible list, stale filter and resident `#sec-sensors`
+(desktop). No source change; the round 6 receiver fix stays unmerged.
 For #146, the [live monitoring evidence](./research/issue-146-live-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: installed alert inventory, a fired test alert, throwaway job-failure,
 IoT and workbook deployments, and the private-link limit that blocks workbook rendering and the poison-queue proof.
