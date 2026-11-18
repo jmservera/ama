@@ -12975,6 +12975,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Capstone pitch preparation third pass (Refs #435)
 
 * Added [capstone-pitch-435-live-r3-2026-11-18.md](research/capstone-pitch-435-live-r3-2026-11-18.md) with retained deck inspection and Azure read-only output: criteria 1 and 4 proven for the demo, criterion 2 not provable, criterion 3 tick not supported by the rehearsal notes; no source or deck change, no Azure resource created
+
 ## [2026-11-18] add | Rubric failure 1397 live run-history proof (Refs #1397)
 
 * Added [rubric-1397-live-run-history-2026-11-18.md](research/rubric-1397-live-run-history-2026-11-18.md): artifacts of run 42838857558 show the selected payload was the empty-details placeholder and the complete card was refused at `Maximum allowed: 1`; successor run 42841391974 and PR 1398 show recovery. No workflow, source or paid rerun.
