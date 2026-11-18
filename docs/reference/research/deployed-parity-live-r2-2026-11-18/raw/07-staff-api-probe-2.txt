@@ -1,0 +1,32 @@
+200 /api/cases/<CASE> | documents=[5]; funding={route,status,reference,draft,approved_by}; id=<CASE>; wave=Wave 1; closed=False; stage=Final checks before ordering; synthetic_stock_anchor_id=SYN-NE-015323; stage_since=2025-10-06; days_in_stage=372; waiting_on=Karen Lawson; reason=to take the next step; owner_code=E-144c833bac54
+404 /api/cases/<CASE>/history | error=Case not found.
+200 /api/ranking/policy | policy_id=zava-forward-home-ranking; version=1.0.0; owner=to be named; status=Draft rule order, not yet signed off by an owner; effective_date=2026-10-09; content_hash=b66fdaccdcbd46a0eb257572a2b8f0fb98e7eafd53b468b67084d9a19761; rules=[5]; versions=[1]
+200 /api/ranking/snapshot | policy_id=zava-forward-home-ranking; policy_version=1.0.0; policy_hash=b66fdaccdcbd46a0eb257572a2b8f0fb98e7eafd53b468b67084d9a19761; as_of=2026-10-16; total=443; entries=[443]; snapshot_hash=27d32b36bef24872e913c9f6561060399a51266cb439885a4d07e63430c4
+200 /api/ranking/publication | count=0; problems=[0]; latest=None; overdue=True; schedule={cadence,minimum_frequency_hours,runner,owner,retention}; policy_signed=False; signoff_problems=[1]
+200 /api/facets | stages=[20]; areas=[11]; waves=[5]; contractors=[4]; sorts={urgent,waiting,contact,name,visit}
+200 /api/cases.csv?view=all | Reference,Resident,Address,Town,Postcode,Phone,Stage,Status,Owner,Days ... (rows omitted)
+200 /api/closed-cases.csv | id,resident,address,town,postcode,hazard,status,team,closed_on ... (rows omitted)
+403 /api/import-check | error=Your role does not include this.
+200 /api/retention | label=synthetic-demo placeholder period from the trigger; not an a; as_of=2026-11-18; records=[0]
+200 /api/governance | protocol=[0]; benefits={}; verdicts={cycle_time,coordination_hours}; value_claims=[0]; releases=[0]; release_gaps=[3]; breaches=[0]; paused=[0]; capture_open=False; capture_blockers=[2]; note=Emergency and statutory hazard response continues outside an; rai_evidence={baseline,current_assessment,assessment_authority,findings,revision,history_record_count}
+200 /api/ai/report | evaluation={version,prompt_version,scenarios,passed,results,summary}; live={prompt_version,tasks,fallback_reasons,reviewer_reasons}; registry={version,tasks,registry_hash,note}; consumption={schema,period,coverage,coverage_gaps,cohort,calls}
+200 /api/ai/priority | recommendation=None
+200 /api/audit-check | intact=True; entries=1722; head=bf8f51692491152ee93c685c98af009fe7149493bc652e5aa51d094b4cd7; problem=None; digests_checked=0; digest_mismatches=[0]
+403 /api/ledger/digest | error=Your role does not include this.
+200 /api/exceptions | state=roles_not_named; items=[0]; unrouted=[1]; sources=[2]; banner={state,text,components,last_checked,next_steps}; access={roles,viewer_roles,allowed_kinds,scope}; note=Viewing changes nothing. Recovery is a recorded, audited hum
+403 /api/exceptions/recovery | error=Your role does not include this.
+200 /api/data-protection | label=synthetic-demo; owners=DPO and Legal (named owners not yet recorded; issue #121 dep; dpo_reviewed=False; classes=[8]; statement=Recorded references are not verified DPO or Legal approval. 
+200 /api/progress | label=Demonstration data; start=2026-09-17; end=2026-10-16; as_of=2026-10-16; coverage={synthetic_cases,excluded_unmarked,known_lifecycle,unknown_lifecycle}; daily=[30]; weekly=[5]; time_to_close={median_days,p90_days,samples}; current={open,stalled,overdue,journey,teams}; ai={outcomes,eligible_records,unreviewed_or_unavailable,unknown_review_date,rules_or_templates,basis}
+400 /api/coordinator | error=As-of must include a date, time and timezone.
+200 /api/finance/exposure | status=Held; signal=Pause for human decision; reason=No person-approved envelope or tolerances are recorded.; findings=[0]; notice=Signal for a human decision only. It does not approve, resum; pause_signal={paused,decision_required,decision_owner,automatic_cut,reason}
+503 /api/law/cards | error=The law store is not loaded.
+503 /api/law/alerts | status=unknown; error=The law store is not loaded; rule checks are unknown.; safe_route=Use the existing human emergency or hazard service now; do n
+404 /api/assistants/releases | error=Not found.
+200 /api/assistants/proposals | proposals=[5]; disabled=Operator authority, finite allowance and expiry are required; manual=Open the case for ordinary human work.; next_after=None
+200 /api/assistants/rai-metrics | status=counted; metrics={invocation,refusal,withheld,validation_failure,fallback,human_review}; latency_seconds_total=0; persisted=86; replay={duplicates,new,outside_window,invalid}
+200 /api/form-schemas | schemas=[0]
+404 /api/chat | error=Not found.
+404 /api/aftercare | error=That concern was not found.
+200 /api/asset/stock-queue | items=[0]; total=0
+200 /api/resident/choice-queue | items=[50]; total=443; limit=50; offset=0
+403 /api/time | error=Your role does not include this.
