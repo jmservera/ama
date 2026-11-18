@@ -1,0 +1,93 @@
+{
+ "me": {
+  "status": 200,
+  "role": "Retrofit Programme Manager"
+ },
+ "cases": {
+  "status": 200,
+  "count": 16
+ },
+ "case_id": "ZF-2025-0331",
+ "runs": {
+  "workflow_only": {
+   "status": 200,
+   "keys": [
+    "approval",
+    "citations",
+    "continuity_epoch",
+    "dropped_uncited",
+    "envelope",
+    "generated_at",
+    "instruction_status",
+    "label",
+    "latency_ms",
+    "mode",
+    "model",
+    "prompt_version",
+    "reason",
+    "record_id",
+    "release",
+    "source",
+    "source_case_ids",
+    "statements",
+    "task",
+    "text",
+    "unresolved",
+    "validated",
+    "verified"
+   ],
+   "source": "template",
+   "model": null,
+   "verified": true,
+   "rec_status": null,
+   "id": null,
+   "citations": [
+    "Stage: Waiting for block programme",
+    "Waiting on: Helen Marsden",
+    "Open safety issues: 1"
+   ],
+   "shown_output": "None",
+   "err": null
+  },
+  "ai_default": {
+   "status": 200,
+   "keys": [
+    "approval",
+    "citations",
+    "continuity_epoch",
+    "dropped_uncited",
+    "envelope",
+    "generated_at",
+    "instruction_status",
+    "label",
+    "latency_ms",
+    "mode",
+    "model",
+    "prompt_version",
+    "reason",
+    "record_id",
+    "release",
+    "source",
+    "source_case_ids",
+    "statements",
+    "task",
+    "text",
+    "unresolved",
+    "validated",
+    "verified"
+   ],
+   "source": "template",
+   "model": null,
+   "verified": true,
+   "rec_status": null,
+   "id": null,
+   "citations": [
+    "Stage: Waiting for block programme",
+    "Waiting on: Helen Marsden",
+    "Open safety issues: 1"
+   ],
+   "shown_output": "None",
+   "err": null
+  }
+ }
+}

@@ -409,6 +409,9 @@ For #185, the [live device identity evidence](./research/issue-185-live-device-i
 records a 2026-11-18 demo run: Hub-generated symmetric device keys issued, used for sending
 and all identities removed. Durable secret storage and X.509 stay unproven.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
+For #146, the [live monitoring evidence](./research/issue-146-live-monitoring-evidence-2026-11-18.md)
+records a 2026-11-18 demo run: installed alert inventory, a fired test alert, throwaway job-failure,
+IoT and workbook deployments, and the private-link limit that blocks workbook rendering and the poison-queue proof.
 
 For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root
@@ -1199,6 +1202,7 @@ or infra acceptance claimed.
 | [Deployed Demo Parity Proof, Live Run 2026-11-18](./research/deployed-parity-live-2026-11-18.md) | Per-criterion proven and unproven results for the unticked issue 350 criteria on the synthetic demo (Playwright and Azure CLI): browser API 302 still failing, models and OSM map configured, assistants release-gated, law store and photo deferred, time status 500 defect. |
 | [Entra Browser Sign-in Proof on the Deployed Demo](./research/entra-signin-live-demo-2026-11-18.md) | Issue 349: live Playwright proof of Entra sign-in, anonymous 401, role-scoped `/api/me`, logout and denial paths on the demo apps, per-criterion status and what a real-user tenant registration still needs |
 | [Public Browser Access on the Deployed Demo](./research/public-browser-access-live-demo-2026-11-18.md) | Issue 344: live curl, Playwright and read-only Azure evidence for public HTTPS landing, Entra sign-in, anonymous 401, private SQL and authenticated route reachability on the demo, per-criterion status |
+| [Human-review effectiveness test on the demo](./research/human-review-effectiveness-live-demo-2026-11-18.md) | Issue 223: offline gate results, live review retention on the demo app and a per-criterion proven or unproven table; no participant, OQ-017 holder or seeded live trial |
 | [Chat Administrator and Break-Glass Demo-Only Disclaimer](./research/chat-demo-breakglass-disclaimer-2026-11-03.md) | Owner decision 2026-11-03: metadata-only administrator and break-glass policy for the synthetic-data demo, recorded as unreviewed by the DPO and Legal. Not a production or real-data approval (#162 criterion 6) | 2026-11-03 |
 | [Gap Analysis and Next Build](./research/gap-analysis-next-build.md) | Dated gaps/build direction and #65 recovery retained; PM/UX closure matrix pins four drafts, recommends learning-only retirement for #19/#24/#27 and keeps #58 unresolved with capability/requirement/evidence queue. No wholesale import, product acceptance or resource deletion | 2026-10-13 |
 | [Decision 1 Behaviour Specification](./research/decision-1-behaviour-specification.md) | Clean-rebuild contract linked to the overall application design: workbench/API integration, scoring versus generation, human review and application boundaries, tasks, thresholds, provider contract, guard, liabilities and tests | 2026-10-11 |
