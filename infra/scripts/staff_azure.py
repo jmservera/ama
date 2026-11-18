@@ -317,6 +317,10 @@ def execute(
     else:
         raise StaffJobError("Azure staff job name collision; existing resource was not changed.")
     env = {
+        "ZF_CONTAINER_HARDENING": "enforced",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "TMPDIR": "/tmp",
+        "ZF_STATE": "/state",
         "AZURE_CLIENT_ID": target["client"],
         "ZF_SQL_CLIENT_ID": target["client"],
         "ZF_SQL_AUTH": "msi",
@@ -350,8 +354,16 @@ def execute(
                         "resources": {"cpu": 0.5, "memory": "1Gi"},
                         "env": [{"name": k, "value": v} for k, v in env.items()]
                         + [{"name": "ZF_STAFF_REQUEST", "secretRef": "request"}],
+                        "volumeMounts": [
+                            {"volumeName": "tmp", "mountPath": "/tmp"},
+                            {"volumeName": "state", "mountPath": "/state"},
+                        ],
                     }
-                ]
+                ],
+                "volumes": [
+                    {"name": "tmp", "storageType": "EmptyDir"},
+                    {"name": "state", "storageType": "EmptyDir"},
+                ],
             },
         },
     }

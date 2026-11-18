@@ -564,6 +564,12 @@ class Release(Base):
             self.assertIn("actual authorisation with serving-version attestation", denied["missing"])
             binding["model_version"] = "test-model"
             db.execute("UPDATE assistant_releases SET body=? WHERE id=?", (rel.canonical(dict(fx, evidence_class="actual", model_version="test-model")), f"fx-{CAP}"))
+            self.assertIn(
+                "named-human approved live monitoring thresholds",
+                rel.admission(db, CAP, binding, now, live=True)["missing"],
+            )
+            actual_fx = release_support.fixture(CAP, binding, cls="actual", model_version="test-model")
+            db.execute("UPDATE assistant_releases SET body=? WHERE id=?", (rel.canonical(actual_fx), f"fx-{CAP}"))
             self.assertIsNone(rel.admission(db, CAP, binding, now, live=True))
 
     def test_no_controlled_domain_write_from_release_or_proposal(self):
@@ -702,7 +708,7 @@ class TaskReleaseRecord(Base):
     def test_contract_fields_required_on_authenticated_record_route(self):
         for key in ("release_version", "intended_use", "prohibited_uses", "affected_stakeholders",
                     "accountable_owner", "impact_assessment", "material_change_triggers", "evaluation_decision",
-                    "scope", "evaluation_summary", "consumption"):
+                    "scope", "evaluation_summary", "consumption", "monitoring_declaration"):
             b = body(self.service)
             del b[key]
             with self.subTest(field=key), self.assertRaises(ValueError):

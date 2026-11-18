@@ -1,0 +1,58 @@
+{
+  "task_id": "issue-220-criterion-5-affected-person-challenge-2305",
+  "task_slug": "220-affected-person-challenge-2305",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14/220-affected-person-challenge-2305-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14/220-affected-person-challenge-2305-plan.md",
+    "details": ".copilot-tracking/details/2026-11-14/220-affected-person-challenge-2305-phase-details.md",
+    "critique": ".copilot-tracking/critiques/2026-11-14/220-affected-person-challenge-2305-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-14/220-affected-person-challenge-2305-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-14/220-affected-person-challenge-2305-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Confirmed automatic full RPI loop requested by caller in non-interactive execution; focused validation tier with targeted challenge tests only",
+      "status": "confirmed",
+      "evidence": "caller prompt"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready; converge on hardening challenges.py and resident_decisions.py with test_issue_220_challenge_route.py",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-11-14/220-affected-person-challenge-2305-research.md (C1-C12)"
+    },
+    {
+      "decision": "Critique execution: executed once; verdict Revise; direct planner corrections applied for PC-001 (full non-affected_challenges case immutability, recursive forbidden-key scan, pre-schema ChallengeSafeguardError in _res_challenge_*), PC-002 (filter non-permitted update explanations in ChallengeRegister.view), and PC-003 (unconditional received_on preservation including None on active referred_on_receipt hazard referrals); plan implementation-ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/critiques/2026-11-14/220-affected-person-challenge-2305-critique.md; .copilot-tracking/plans/2026-11-14/220-affected-person-challenge-2305-plan.md"
+    },
+    {
+      "decision": "Post-implementation Review executed once at .copilot-tracking/reviews/logs/2026-11-14/220-affected-person-challenge-2305-review.md; execution status Complete; outcome Conformant across assessed local src/core Issue #220 Criterion 5 boundary; 0 RV defects; src/api workbench UI exposure and human operational governance gates preserved as distinct follow-ups",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-14/220-affected-person-challenge-2305-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection among ranked follow-up items, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Expose challenge_update, challenge_escalate, and target_kind='human_decision' in src/api workbench panels",
+      "rationale": "Ease: localized form/action update in src/api/src/zava_forward/api/web/panels.js; high user-facing value surfacing the new src/core lifecycle verbs cleanly under Fluent 2 and web-design-guidelines.",
+      "evidence": "src/api/src/zava_forward/api/web/panels.js; .copilot-tracking/reviews/logs/2026-11-14/220-affected-person-challenge-2305-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Complete human operational governance acceptance and owner max_days hazard follow-up threshold approval (#220)",
+      "rationale": "Ease: requires human resident/staff review and owner policy decision; necessary governance evidence to close Issue #220 end-to-end.",
+      "evidence": "GitHub Issue #220; src/core/README.md; .copilot-tracking/reviews/logs/2026-11-14/220-affected-person-challenge-2305-review.md"
+    }
+  ]
+}

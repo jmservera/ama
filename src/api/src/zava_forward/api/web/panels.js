@@ -812,7 +812,9 @@ function affectedChallengePanel(c, id, refresh) {
       ]] : []),
       ["source", "Supplied challenge evidence reference"], ["request", "The person's supplied request"],
       ["explanation", "Permitted plain-language explanation"], ["owner", "Named challenge owner", ["", ...staff.map((person) => person.email)]],
-      ["non_digital_route", "Accessible phone, letter or in-person route"], ["next_update", "Challenge next update date"]
+      ["non_digital_route", "Accessible phone, letter or in-person route"],
+      ["hazard_concern", "Safety concern mentioned in this request", ["No", "Yes - route urgent safety check separately now"]],
+      ["next_update", "Challenge next update date"]
     ], (body) => {
       const target = targets.find((item) => item.proposal_id === body.proposal_id);
       if (!target) throw new Error("Enter an exact recorded suggestion reference from the suggestion history.");

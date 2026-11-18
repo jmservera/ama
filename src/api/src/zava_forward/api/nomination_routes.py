@@ -458,7 +458,10 @@ def render_accessible_nomination_route_html(
     if can_write and targets:
         ch_key = "challenge-open-route"
         target_opts = "".join(
-            f'<option value="{_esc(t.get("proposal_id"))}">{_esc(t.get("proposal_id"))}</option>'
+            f'<option value="{_esc(t.get("proposal_id"))}" '
+            f'data-proposal-version="{_esc(t.get("proposal_version"))}" '
+            f'data-decision-version="{_esc(t.get("decision_version"))}">'
+            f"{_esc(t.get('proposal_id'))}</option>"
             for t in targets
         )
         rep_opts = "".join(f'<option value="{_esc(ref)}">{_esc(ref)}</option>' for ref in rep_refs)
@@ -551,5 +554,5 @@ def render_accessible_nomination_route_html(
         + challenge_form_html
         + ("".join(challenge_record_blocks) or "<p>No challenges recorded.</p>")
         + "</section>"
-        "</main></body></html>"
+        '</main><script src="/nomination-routes.js" defer></script></body></html>'
     )

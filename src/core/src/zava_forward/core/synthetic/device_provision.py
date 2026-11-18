@@ -14,9 +14,15 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from zava_forward.core.synthetic import device_identity as di
+from zava_forward.core.synthetic import live_provisioning as lp
 from zava_forward.core.synthetic import privacy, sensor_stock
 
 VERSION = "simulated-device-provision-v1"
+DEVICE_IDENTITY_APPROACH = di.DEVICE_IDENTITY_APPROACH
+CREDENTIAL_OWNER_ROLE = di.CREDENTIAL_OWNER_ROLE
+DEFAULT_CREDENTIAL_OWNER = CREDENTIAL_OWNER_ROLE
+teardown_simulated_identities = lp.teardown_simulated_identities
+deprovision_simulated_devices = lp.deprovision_simulated_devices
 _PLACEHOLDERS = frozenset({"tbc", "tbd", "todo", "n/a", "na", "none", "unknown", "unassigned"})
 ACTIONS = ("provision", "teardown")
 _CREDENTIALS = {
@@ -44,22 +50,34 @@ def build_manifest(register: Path, homes: int, run_id: str, owner: str, seed: in
     return di.plan(run_id, owner, sensors)
 
 
-def report(manifest: di.Manifest, action: str, mode: str) -> dict[str, object]:
+def report(
+    manifest: di.Manifest,
+    action: str,
+    mode: str,
+    *,
+    teardown_receipt: di.TeardownReceipt | None = None,
+) -> dict[str, object]:
+    if lp.contains_raw_secret(manifest.credential_owner):
+        raise ProvisionError("CREDENTIAL_OWNER_SECRET_MATERIAL")
     if privacy.pattern_issues(manifest.credential_owner):
         raise ProvisionError("CREDENTIAL_OWNER_PERSONAL_DATA")
-    return {
+    body: dict[str, object] = {
         "source_type": "SYNTHETIC",
         "contains_real_data": False,
         "version": VERSION,
         "mode": mode,
         "action": action,
         "run_id": manifest.run_id,
+        "approach": manifest.approach,
         "credential_owner": manifest.credential_owner,
         "owner_named": owner_named(manifest.credential_owner),
         "device_count": len(manifest.identities),
         "devices": [{"device_id": i.device_id, "home_id": i.home_id} for i in manifest.identities],
         "credentials": _CREDENTIALS[(mode, action)],
     }
+    if teardown_receipt is not None:
+        body["teardown_receipt"] = teardown_receipt.as_dict()
+    return body
 
 
 def run(
@@ -81,8 +99,8 @@ def run(
     if action == "provision":
         result = di.provision(manifest, registry, store)
         return report(result, action, "applied")
-    di.teardown(manifest, registry, store)
-    return report(manifest, action, "applied")
+    receipt = di.teardown(manifest, registry, store)
+    return report(manifest, action, "applied", teardown_receipt=receipt)
 
 
 def main(argv: Sequence[str] | None = None) -> int:

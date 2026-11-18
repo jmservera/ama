@@ -346,9 +346,10 @@ class ConsumptionTests(unittest.TestCase):
         usage = self.report()["by_capability"]
         self.assertEqual(list(usage), ["assessment", "funding-evidence"])
         self.assertEqual(
-            usage["assessment"],
+            {k: v for k, v in usage["assessment"].items() if k != "token_breakdown"},
             dict(
                 calls=1,
+                tariff_basis="offline-demo-tariff",
                 proposals=1,
                 proposals_with_known_tokens=1,
                 total_tokens=120,

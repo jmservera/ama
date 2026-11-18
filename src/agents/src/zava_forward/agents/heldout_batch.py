@@ -31,6 +31,8 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
+from zava_forward.core import rai_release
+
 from zava_forward.agents.heldout_freeze import check_freeze
 
 HARD_CAP_USD = Decimal("5.00")
@@ -67,6 +69,13 @@ def authorization_problems(auth: Mapping[str, Any], now: datetime | None = None)
         for key in TEXT_FIELDS
         if not isinstance(auth.get(key), str) or not auth[key].strip()
     ]
+    approved_by = auth.get("approved_by")
+    if (
+        isinstance(approved_by, str)
+        and approved_by.strip()
+        and not rai_release.named_human(approved_by)
+    ):
+        problems.append("approved_by must name a human owner, not a system, agent or placeholder")
     expires = auth.get("expires_utc")
     try:
         when = datetime.fromisoformat(expires) if isinstance(expires, str) else None

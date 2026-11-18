@@ -37,10 +37,20 @@ from typing import Any
 
 from zava_forward.core.ai_consumption import CallContext, call_context, reference, usage
 from zava_forward.core.assistants import REGISTRY
+from zava_forward.core.chat_case_answers import AI_CONSENT, RULES_FIRST
+from zava_forward.core.chat_case_answers import RULES as WORKFLOW_RULES
 from zava_forward.core.chat_case_answers import answer as grounded_answer
-from zava_forward.core.chat_isolation import CONTEXT_MESSAGES, ChatIsolation, block, neutralise
+from zava_forward.core.chat_case_answers import intent as case_intent
+from zava_forward.core.chat_isolation import (
+    CONTEXT_MESSAGES,
+    TOOLISH,
+    ChatIsolation,
+    block,
+    neutralise,
+)
 from zava_forward.core.chat_privacy import MEMORY_LIMIT, MEMORY_MAX, redact
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
+from zava_forward.core.regulatory_output_guard import GuardTelemetry, inspect_regulatory_output
 
 LABEL = "AI suggestion, not approved"
 ABSTAIN = (
@@ -87,23 +97,38 @@ FALLBACK_NOTE = (
     "included wording that no cited source supports. No record was changed. "
     "A person decides next steps."
 )
+RULES_ONLY_NOTE = (
+    "This reply comes from the case rules only. No generative AI model wrote it. "
+    "No record was changed. A person decides next steps."
+)
 SOURCE_LABELS = {
     "decision-rules": (
-        "Answered from the case rules and recorded case facts. No generative AI model "
-        "wrote this reply."
+        "Deterministic decision or workflow rule (not generative AI; no record changed)"
     ),
     "decision-rules-fallback": (
-        "Answered from the case rules and recorded case facts, because the generative AI "
-        "draft used wording that the case record does not support."
+        "Deterministic decision or workflow rule (not generative AI; no record changed). "
+        "The generative draft was not shown because its wording was not supported by the record."
     ),
     "generative-grounded": (
-        "Written by a generative AI model from the recorded case facts and case rules, "
-        "then checked against the sources it cites."
+        "Generative model suggestion (unapproved; check cited sources; no record changed)"
     ),
-    "withheld": "No answer was shown. The draft was stopped by the reply checks.",
-    "refused": "No answer was given. This is a decision for a person.",
-    "fallback": "No answer was drafted. Use the ordinary case workflow.",
+    "withheld": "Withheld: the reply checks stopped the draft (no record changed)",
+    "withheld-unsupported": (
+        "Withheld: cited sources did not support a stated status or figure (no record changed)"
+    ),
+    "refused": "No answer was given. This is a decision for a person. No record was changed.",
+    "fallback": "No answer was drafted. Use the ordinary case workflow. No record was changed.",
     "abstain": "No answer was given. The permitted sources do not cover the question.",
+}
+ANSWER_ORIGINS = {
+    "decision-rules": "decision_rule",
+    "decision-rules-fallback": "decision_rule",
+    "generative-grounded": "generative_model",
+    "withheld": "withheld",
+    "withheld-unsupported": "withheld",
+    "refused": "refused",
+    "fallback": "workflow_message",
+    "abstain": "withheld",
 }
 PRIORITY_KEYS = (
     "id",
@@ -329,15 +354,51 @@ BOUNDARY = (
 )
 
 
+CONSENT_STATES = ("Not requested", "Pending", "Declined", "Withdrawn")
+
+
+def consent_guidance(state: object) -> str | None:
+    """Deterministic guidance when a recorded resident AI consent state is not Given, else None.
+
+    A case with no recorded state is unchanged. Only listed states are echoed back.
+    """
+    if state is None or (isinstance(state, str) and state.strip().casefold() == "given"):
+        return None
+    text = state.strip() if isinstance(state, str) else ""
+    shown = text if text in CONSENT_STATES else "Not recorded"
+    return f"Recorded AI and data-use consent: {shown}. " + WORKFLOW_RULES[AI_CONSENT]
+
+
 def chat_skills() -> list[dict[str, str]]:
     """Public advisory lenses, not permissions to invoke proposal operations."""
     return [dict(id=key, purpose=str(value["purpose"])) for key, value in REGISTRY.items()]
 
 
+SENSOR_RULE_PATHS = (
+    "sensor.source",
+    "sensor.conflict",
+    "sensor.watch",
+    "sensor.thresholds",
+    "sensor.health",
+    "sensor.freshness",
+    "sensor.not_retained",
+)
+
+
 def skill_sources(skill: str, sources: dict[str, str]) -> dict[str, str]:
     if skill != GENERAL:
         categories = REGISTRY[skill]["categories"]
-        common = ("id", "stage", "status", "needs_notice", "named_contact", "waiting_on", "owner")
+        common = (
+            "id",
+            "stage",
+            "status",
+            "needs_notice",
+            "named_contact",
+            "waiting_on",
+            "owner",
+            "pas2035",
+            "sensor",
+        )
         sources = {
             key: value
             for key, value in sources.items()
@@ -397,10 +458,39 @@ def valid_usage(value: object) -> dict[str, int] | None:
     return result
 
 
+RULES_SOURCE_ROOTS = {
+    "unblock": ("hazards",),
+    "sensor": ("hazards",),
+    "claim": ("grants", "funding", "funding_ok", "technical_missing"),
+    "pas2035": ("grants", "funding", "funding_ok", "technical_missing"),
+}
+INFORMATIONAL_LEAD = re.compile(
+    r"^\W*(?:who|whose|what|when|where|which|why|status|has|have|is|are|was|were|does|did)\b",
+    re.I,
+)
+ACTION_REQUEST = re.compile(
+    r"\b(?:for\s+me|on\s+my\s+behalf|please|i\s+(?:want|need)\s+you"
+    r"|you\s+(?:to\s+|should\s+|can\s+|could\s+)?(?:approve|sign|certify|authori[sz]e))\b",
+    re.I,
+)
+APPROVAL_COMMAND = re.compile(
+    r"(?:^|[.!?;:]\s+)(?:(?:just|now|then|also|go\s+ahead\s+and)\s+)*"
+    r"(?:approve|certify|authori[sz]e|sign[\s-]off)\b",
+    re.I,
+)
+
+
 def out_of_scope(question: str) -> tuple[str, str] | None:
     """The kind and workflow route when the question asks the assistant to act, else None."""
     question = normalise_policy_text(question)
+    informational = (
+        bool(INFORMATIONAL_LEAD.match(question))
+        and not ACTION_REQUEST.search(question)
+        and not APPROVAL_COMMAND.search(question)
+    )
     for name, pattern, route in OUT_OF_SCOPE:
+        if name == "approve" and informational:
+            continue
         if pattern.search(question):
             return name, route
     return None
@@ -470,16 +560,25 @@ def parse_reply(text: str, allowed: dict[str, str]) -> tuple[str, list[str]] | N
 
 
 class ChatPanel:
-    def __init__(self, isolation: ChatIsolation, model: Model | None = None) -> None:
+    def __init__(
+        self,
+        isolation: ChatIsolation,
+        model: Model | None = None,
+        *,
+        guard_telemetry: GuardTelemetry | None = None,
+    ) -> None:
         self.iso = isolation
         self.model = model
+        self.guard_telemetry: GuardTelemetry = (
+            guard_telemetry if guard_telemetry is not None else GuardTelemetry()
+        )
 
     @staticmethod
     def _source_kind(cite: str) -> str:
         if cite.startswith("workflow/"):
             return "workflow-rule"
         path = cite.split("/", 1)[-1]
-        if path.startswith(("gate.", "work.", "waiting_on", "hazards.")):
+        if path.startswith(("gate.", "work.", "waiting_on", "hazards.", *SENSOR_RULE_PATHS)):
             return "decision-rule"
         return "case-record"
 
@@ -496,11 +595,13 @@ class ChatPanel:
             source = kind
         elif source is None:
             source = "decision-rules" if model == "workflow-only" else "generative-grounded"
+        label = "withheld-unsupported" if kind == "withheld" and text == UNGROUNDED else source
         return dict(
             kind=kind,
             reply=text,
             answer_source=source,
-            answer_source_label=SOURCE_LABELS.get(source, ""),
+            answer_origin=ANSWER_ORIGINS.get(source, "workflow_message"),
+            answer_source_label=SOURCE_LABELS.get(label, ""),
             citations=[
                 dict(id=c, text=sources.get(c, ""), source_kind=self._source_kind(c))
                 for c in citations
@@ -509,6 +610,30 @@ class ChatPanel:
             model=model,
             workflow_only=kind in ("fallback", "refused"),
         )
+
+    def _rules_answer(
+        self, user: dict[str, Any], case_id: str, question: str, skill: object
+    ) -> tuple[str, list[str], dict[str, str]] | None:
+        """Cited case-rule answer in the user's current scope, or None when nothing is citable."""
+        found = self.iso.case_facts(self.iso.current_user(user), case_id)
+        if not found:
+            return None
+        question = normalise_policy_text(question)
+        scoped = {f"{case_id}/{path}": value for path, value in found.items()}
+        if isinstance(skill, str):
+            kept = skill_sources(skill, scoped)
+            extra = RULES_SOURCE_ROOTS.get(case_intent(question) or "", ())
+            scoped = {
+                k: v
+                for k, v in scoped.items()
+                if k in kept or k.split("/", 1)[1].split(".", 1)[0] in extra
+            }
+        allowed = {k.split("/", 1)[1]: v for k, v in scoped.items()}
+        g_kind, body, g_cites = grounded_answer(case_id, question, allowed)
+        if g_kind != "answer" or not g_cites:
+            return None
+        pool = {**scoped, **WORKFLOW_RULES}
+        return redact(body)[0], g_cites, {k: v for k, v in pool.items() if k in g_cites}
 
     @staticmethod
     def _receipt(tid: str, role: object = None) -> dict[str, Any]:
@@ -627,14 +752,19 @@ class ChatPanel:
         sources = {f"{case_id}/{path}": value for path, value in facts.items()}
         refusal = out_of_scope(question[:MAX_CONTENT])
         cites: list[str]
+        blocked = consent_guidance(self.iso.ai_consent_state(case_id)) if case_id else None
         if refusal:
             kind, text, cites = "refused", REFUSED + refusal[1], []
+        elif blocked:
+            kind, text, cites = "answer", blocked + "\n" + UNSTORED_NOTE, [AI_CONSENT]
         else:
             kind, body, cites = grounded_answer(
                 case_id, normalise_policy_text(question[:MAX_CONTENT]), facts
             )
             text = body + "\n" + UNSTORED_NOTE
-        guidance = {key: value for key, value in sources.items() if key in cites}
+        guidance = {
+            key: value for key, value in {**sources, **WORKFLOW_RULES}.items() if key in cites
+        }
         store = self.iso.store
         with store.lock:
             store.audit(
@@ -746,12 +876,24 @@ class ChatPanel:
         if refusal:
             text = REFUSED + refusal[1]
             return finish("refused", text, [], model_name)
+        blocked = consent_guidance(iso.ai_consent_state(case_id)) if case_id else None
+        if blocked:
+            sources = {**sources, AI_CONSENT: WORKFLOW_RULES[AI_CONSENT]}
+            return finish("answer", blocked, [AI_CONSENT], model_name, "decision-rules")
         kind, text, cites = "abstain", ABSTAIN, []
+        rules_first = bool(
+            case_id
+            and sources
+            and not over_limit
+            and len(str(question or "")) <= MAX_QUESTION_CHARS
+            and len(masked) <= MAX_QUESTION_CHARS
+            and case_intent(normalise_policy_text(masked)) in RULES_FIRST
+        )
         if over_limit:
             kind, text = "fallback", THREAD_LIMIT_REACHED
         elif len(str(question or "")) > MAX_QUESTION_CHARS or len(masked) > MAX_QUESTION_CHARS:
             kind, text = "fallback", LIMIT_REACHED
-        elif sources and self.model is not None:
+        elif sources and self.model is not None and not rules_first:
             kept = [
                 m
                 for m in thread["messages"]
@@ -829,45 +971,57 @@ class ChatPanel:
             if current["role"] != user["role"] or current_sources != sources:
                 raw, kind, text = "", "withheld", WITHHELD
             if kind != "fallback":
-                if iso._withheld(user, thread, raw):
+                if TOOLISH.search(raw):
                     kind, text = "withheld", WITHHELD
                 else:
                     parsed = parse_reply(raw, sources)
                     if parsed:
-                        if iso._withheld(user, thread, parsed[0]) or ACTION_CLAIM.search(
-                            normalise_policy_text(parsed[0])
+                        cite_withheld = any(
+                            iso._withheld(user, thread, c)
+                            or iso._withheld(user, thread, str(sources.get(c, "")))
+                            for c in parsed[1]
+                        )
+                        if (
+                            cite_withheld
+                            or iso._withheld(user, thread, parsed[0])
+                            or ACTION_CLAIM.search(normalise_policy_text(parsed[0]))
+                            or not inspect_regulatory_output(
+                                parsed[0],
+                                on_violation="reject",
+                                telemetry=self.guard_telemetry,
+                            ).passed
                         ):
                             kind, text = "withheld", WITHHELD
                         elif unsupported_claims(parsed[0], [sources[c] for c in parsed[1]]):
                             kind, text = "withheld", UNGROUNDED
                         else:
                             kind, (text, cites) = "answer", (redact(parsed[0])[0], parsed[1])
-        elif sources:
+        elif sources and not rules_first:
             kind, text = "fallback", FALLBACK
         source = None
+        if rules_first:
+            rules = self._rules_answer(user, case_id, masked, skill)
+            if rules:
+                body, cites, sources = rules
+                kind, text, source = "answer", body + "\n" + RULES_ONLY_NOTE, "decision-rules"
         ungrounded = kind == "withheld" and text == UNGROUNDED
         if case_id and receipt["model_calls"] and (kind == "abstain" or ungrounded):
-            current = iso.current_user(user)
-            found = iso.case_facts(current, case_id)
-            if found:
-                scoped = {f"{case_id}/{path}": value for path, value in found.items()}
-                if isinstance(skill, str):
-                    scoped = {k: v for k, v in skill_sources(skill, scoped).items() if k in scoped}
-                allowed = {k.split("/", 1)[1]: v for k, v in scoped.items()}
-                g_kind, body, g_cites = grounded_answer(
-                    case_id, normalise_policy_text(masked), allowed
-                )
-                if g_kind == "answer" and g_cites:
-                    kind, text, cites = "answer", redact(body)[0] + "\n" + FALLBACK_NOTE, g_cites
-                    sources = {k: v for k, v in scoped.items() if k in g_cites}
-                    model_name, source = "workflow-only", "decision-rules-fallback"
+            rules = self._rules_answer(user, case_id, masked, skill)
+            if rules:
+                body, cites, sources = rules
+                kind, text = "answer", body + "\n" + FALLBACK_NOTE
+                model_name, source = "workflow-only", "decision-rules-fallback"
         if kind == "fallback" and text == FALLBACK and case_id:
             facts = iso.case_facts(iso.current_user(user), case_id)
             if facts:
                 grounded = {f"{case_id}/{path}": value for path, value in facts.items()}
                 kind, body, cites = grounded_answer(case_id, normalise_policy_text(masked), facts)
                 text = redact(body)[0] + "\n" + RULES_NOTE
-                sources = {key: value for key, value in grounded.items() if key in cites}
+                sources = {
+                    key: value
+                    for key, value in {**grounded, **WORKFLOW_RULES}.items()
+                    if key in cites
+                }
         return finish(kind, text, cites, model_name, source)
 
 

@@ -40,14 +40,17 @@ from zava_forward.core.store import ConflictError, GateError
 
 ON = os.environ.get("ZF_TEST_MSSQL") == "1"
 CHAT_MEMORY_DDL = next(d for d in CHAT_DDL if d.startswith("CREATE TABLE chat_memory ("))
-TABLES = ("chat_memory_control", "chat_memory", "chat_message", "chat_thread", "time_entry", "time_request", "time_enabled", "notice_ack", "assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance", "audit_head", "audit", "recommendations", "cases", "staff", "meta")
+TABLES = ("chat_memory_control", "chat_memory", "chat_message", "chat_thread", "time_entry", "time_request", "time_enabled", "notice_ack", "assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance", "continuity_open_holds", "continuity_gate_state", "audit_head", "audit", "recommendations", "cases", "staff", "meta")
 
 
 def wipe():
     from zava_forward.core.mssqlstore import _Conn, connection_string
     c = _Conn(connection_string())
     try:
-        c.execute("IF OBJECT_ID(N'audit_append_only', N'TR') IS NOT NULL DROP TRIGGER audit_append_only")
+        for tr in ("audit_append_only", "continuity_gate_no_delete", "continuity_gate_monotonic",
+                   "assistant_attempts_gate_insert", "assistant_attempts_gate_update",
+                   "assistant_tasks_gate_insert", "assistant_tasks_gate_update"):
+            c.execute(f"IF OBJECT_ID(N'{tr}', N'TR') IS NOT NULL DROP TRIGGER {tr}")
         for t in TABLES:
             c.execute(f"IF OBJECT_ID(N'{t}', N'U') IS NOT NULL DROP TABLE {t}")
     finally:

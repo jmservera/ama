@@ -11,6 +11,8 @@ param auditImmutabilityDays int = 365
 @description('Days ledger digests stay immutable. Must be no shorter than the legal audit retention period (open owner decision). The policy is created unlocked; locking is irreversible and is done by the owner.')
 @minValue(1)
 param ledgerDigestImmutabilityDays int = 365
+@description('Development only. Explicit false disables version-level immutable storage and WORM retention on ledger-digests for disposable stacks; production requires true.')
+param ledgerDigestImmutableStorage bool = true
 @description('Provision the private ranking-archive container for the Blob JSON ranking publication archive (Refs #1258, #136). Source definition only; default false keeps the existing container set.')
 param enableRankingArchive bool = false
 @description('Days ranking archive records stay immutable. 0 means no policy is created: the retention duration and its approval are a manual prerequisite and no immutable release may be claimed. A positive value creates an UNLOCKED time-based policy; locking is irreversible and is an owner action.')
@@ -66,7 +68,12 @@ var containers = ['evidence', 'imports', 'quarantine', 'exports', 'audit-archive
 resource blobContainers 'Microsoft.Storage/storageAccounts/blobServices/containers@2024-01-01' = [for container in containers: {
   parent: blobService
   name: container
-  properties: { publicAccess: 'None' }
+  properties: {
+    publicAccess: 'None'
+    immutableStorageWithVersioning: container == 'ledger-digests' && ledgerDigestImmutableStorage
+      ? { enabled: true }
+      : null
+  }
 }]
 
 resource auditRetention 'Microsoft.Storage/storageAccounts/blobServices/containers/immutabilityPolicies@2024-01-01' = {
@@ -78,7 +85,7 @@ resource auditRetention 'Microsoft.Storage/storageAccounts/blobServices/containe
   }
 }
 
-resource digestRetention 'Microsoft.Storage/storageAccounts/blobServices/containers/immutabilityPolicies@2024-01-01' = {
+resource digestRetention 'Microsoft.Storage/storageAccounts/blobServices/containers/immutabilityPolicies@2024-01-01' = if (ledgerDigestImmutableStorage) {
   parent: blobContainers[5]
   name: 'default'
   properties: {
@@ -201,4 +208,5 @@ module queueEndpoint 'privateEndpoint.bicep' = {
 
 output id string = account.id
 output name string = account.name
+output ledgerDigestContainer string = containers[5]
 output rankingArchiveContainer string = enableRankingArchive ? rankingArchive.name : ''

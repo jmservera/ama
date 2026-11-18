@@ -128,17 +128,77 @@ class PanelTests(roles.Matrix):
                     code, d = self.ask(tid, question)
                     self.assertEqual(code, 200, d)
                     self.assertEqual(d["kind"], "answer", d)
+                    unblock = "unblock" in question or "fix this safety" in question
                     self.assertIn(
-                        d["answer_source"], ("generative-grounded", "decision-rules-fallback")
+                        d["answer_source"],
+                        ("decision-rules",)
+                        if unblock
+                        else ("generative-grounded", "decision-rules-fallback"),
                     )
                     self.assertTrue(d["citations"], d)
-                    self.assertTrue(all(c["id"].startswith("ZF-4/") for c in d["citations"]))
+                    self.assertTrue(
+                        all(c["id"].startswith(("ZF-4/", "workflow/")) for c in d["citations"])
+                    )
                     self.assertTrue(
                         all(
-                            c["source_kind"] in ("decision-rule", "case-record")
+                            c["source_kind"] in ("decision-rule", "case-record", "workflow-rule")
                             for c in d["citations"]
                         )
                     )
+
+    def test_unblock_and_visit_questions_cite_workflow_rules_and_never_claim_actions(self) -> None:
+        self.model = lambda _p: envelope(
+            json.dumps(dict(answer="Visit booked on 3 March.", citations=["ZF-4/stage"]))
+        )
+        for question in (
+            "what can I do to unblock this case?",
+            "how can we fix this safety? Should we schedule a visit?",
+        ):
+            with self.subTest(question=question):
+                tid = self.thread(case="ZF-4")
+                code, d = self.ask(tid, question)
+                self.assertEqual((code, d["kind"]), (200, "answer"), d)
+                self.assertEqual(
+                    (d["answer_source"], d["answer_origin"]), ("decision-rules", "decision_rule")
+                )
+                self.assertEqual(d["consumption"]["model_calls"], 0)
+                ids = {c["id"] for c in d["citations"]}
+                self.assertLessEqual({"workflow/safety-sequence", "workflow/visit-consent"}, ids)
+                self.assertTrue(all(c["text"] for c in d["citations"]))
+                self.assertIn("cannot book a visit", d["reply"])
+                self.assertIn("independent restart decision", d["reply"])
+                self.assertNotIn("3 March", d["reply"])
+                self.assertIn("not generative AI", d["answer_source_label"])
+
+    def test_unblock_variants_fall_back_to_cited_rules_when_the_draft_is_withheld(self) -> None:
+        self.model = lambda _p: envelope(
+            json.dumps(dict(answer="I have scheduled the visit.", citations=["ZF-4/stage"]))
+        )
+        for question in (
+            "what can I do to unblock this case?",
+            "how can we fix this safety? Should we schedule a visit?",
+            "can we book a visit?",
+            "what should we do to get this moving?",
+        ):
+            with self.subTest(question=question):
+                tid = self.thread(case="ZF-4")
+                code, d = self.ask(tid, question)
+                self.assertEqual((code, d["kind"]), (200, "answer"), d)
+                self.assertEqual(d["answer_origin"], "decision_rule", d)
+                self.assertTrue(d["citations"] and all(c["text"] for c in d["citations"]))
+                self.assertIn("independent restart decision", d["reply"])
+                self.assertIn("cannot book a visit", d["reply"])
+                self.assertNotIn("scheduled the visit", d["reply"])
+                self.assertIn("not generative AI", d["answer_source_label"])
+
+    def test_generative_answer_is_labelled_generative_model(self) -> None:
+        self.model = lambda _p: envelope(
+            json.dumps(dict(answer="From the case card.", citations=["ZF-4/stage"]))
+        )
+        code, d = self.ask(self.thread(case="ZF-4"), "Please summarise this case")
+        self.assertEqual((code, d["kind"]), (200, "answer"), d)
+        self.assertEqual(d["answer_origin"], "generative_model")
+        self.assertTrue(d["citations"])
 
     def test_post_dispatch_provider_failure_settles_the_meter_as_ineligible(self) -> None:
         meter = MagicMock()
@@ -297,6 +357,29 @@ class PanelTests(roles.Matrix):
             ROLE, f"/api/chat/threads/{tid}/proposals", {"capability": "funding-evidence"}
         )
         self.assertIn(code, (400, 403), d)
+        with patch.object(Assistants, "invoke", return_value={"id": "P-SYN-1"}) as invoke_mock:
+            for invalid_env, expected_hint in (
+                ({"CHAT_PROVIDER_REGION": "eastus"}, "unapproved_region"),
+                ({"CHAT_DPIA_REF": ""}, "dpia_ref"),
+            ):
+                with patch.dict(os.environ, invalid_env):
+                    refused_code, refused_body = self.api(
+                        ROLE,
+                        f"/api/chat/threads/{tid}/proposals",
+                        {"capability": "assessment-preparation"},
+                    )
+                self.assertEqual(refused_code, 403, refused_body)
+                self.assertIn(expected_hint, refused_body["error"])
+            invoke_mock.assert_not_called()
+            self.assertEqual(self.api(ROLE, f"/api/chat/threads/{tid}")[1]["messages"], [])
+            accepted_code, accepted_body = self.api(
+                ROLE,
+                f"/api/chat/threads/{tid}/proposals",
+                {"capability": "assessment-preparation"},
+            )
+            self.assertEqual((accepted_code, accepted_body["id"]), (202, "P-SYN-1"))
+            self.assertEqual(invoke_mock.call_count, 1)
+            self.assertEqual(len(self.api(ROLE, f"/api/chat/threads/{tid}")[1]["messages"]), 1)
         bare = str(self.api(ROLE, "/api/chat/threads", {})[1]["id"])
         self.assertEqual(
             self.api(
@@ -464,6 +547,42 @@ class PanelTests(roles.Matrix):
         self.assertIs(self.api(ROLE, "/api/chat/status")[1]["storage_approved"], True)
         with patch.dict(os.environ, {k: "" for k in APPROVED}):
             self.assertIs(self.api(ROLE, "/api/chat/status")[1]["storage_approved"], False)
+
+    def test_status_exposes_provider_position_and_refuses_unapproved_region(self) -> None:
+        code, status = self.api(ROLE, "/api/chat/status")
+        self.assertEqual(code, 200)
+        pos = status["provider_position"]
+        self.assertTrue(pos["valid"])
+        self.assertEqual(pos["region"], "uksouth")
+        self.assertEqual(pos["residency_zone"], "uk_south")
+        self.assertTrue(pos["zero_model_training"])
+        self.assertFalse(pos["dpo_legal_approved"])
+        for ref_val in APPROVED.values():
+            self.assertNotIn(ref_val, json.dumps(pos))
+
+        with patch.dict(
+            os.environ,
+            {
+                "CHAT_PROVIDER_REGION": "PRIVATE-REGION-CANARY",
+                "CHAT_TRANSFER_REF": "PRIVATE-TRANSFER-CANARY",
+            },
+        ):
+            bad_code, bad_status = self.api(ROLE, "/api/chat/status")
+        self.assertEqual(bad_code, 200)
+        self.assertIs(bad_status["storage_approved"], False)
+        self.assertFalse(bad_status["provider_position"]["valid"])
+        self.assertEqual(bad_status["provider_position"]["region"], "unapproved")
+        dumped_bad = json.dumps(bad_status)
+        self.assertNotIn("PRIVATE-REGION-CANARY", dumped_bad)
+        self.assertNotIn("PRIVATE-TRANSFER-CANARY", dumped_bad)
+
+        with patch.dict(os.environ, {"CHAT_PROVIDER_TRAINING": "true"}):
+            train_status = self.api(ROLE, "/api/chat/status")[1]
+        self.assertIs(train_status["storage_approved"], False)
+        self.assertIn(
+            "provider_training_prohibited",
+            train_status["provider_position"]["violations"],
+        )
 
     def test_status_reports_role_limits_and_bounds(self) -> None:
         status = self.api(ROLE, "/api/chat/status")[1]
@@ -722,7 +841,8 @@ class PanelTests(roles.Matrix):
         for needle in (
             "admission.demo_disclaimer",
             "chat-demo-disclaimer",
-            "Model-generated, not approved. Demo only.",
+            "Answer origin: ",
+            "Generative model suggestion (unapproved; check cited sources; no record changed)",
         ):
             self.assertIn(needle, js)
 
@@ -1446,7 +1566,10 @@ class AttributionRenderTests(unittest.TestCase):
         rules, fallback, gen, legacy_gen, legacy_rules, withheld, abstain, refused = (
             g["text"] for g in got
         )
-        self.assertIn("Decision model (case rules), no record changed", rules)
+        self.assertIn(
+            "Answer origin: Deterministic decision or workflow rule (not generative AI; no record changed)",
+            rules,
+        )
         self.assertIn(
             "Source: deterministic decision rules from recorded case facts (0 generative calls). "
             "Check the sources.",
@@ -1460,14 +1583,27 @@ class AttributionRenderTests(unittest.TestCase):
         ):
             self.assertIn(tag, rules)
         self.assertIn(
-            "Decision model (case rules; generative draft withheld), no record changed", fallback
+            "Answer origin: Deterministic decision or workflow rule (not generative AI; no record changed)",
+            fallback,
         )
-        self.assertIn("generative draft did not pass source check. Check the sources.", fallback)
-        self.assertIn("Model-generated, not approved. Demo only.", gen)
+        self.assertIn("The generative draft did not pass the source check", fallback)
+        self.assertIn(
+            "Answer origin: Generative model suggestion (unapproved; check cited sources; no record changed)",
+            gen,
+        )
         self.assertIn("generative AI model (m-1) grounded on case rules and records", gen)
-        self.assertIn("Model-generated, not approved. Demo only.", legacy_gen)
-        self.assertIn("Decision model (case rules), no record changed", legacy_rules)
-        self.assertIn("Generative draft withheld by source check. No record changed.", withheld)
+        self.assertIn(
+            "Answer origin: Generative model suggestion (unapproved; check cited sources; no record changed)",
+            legacy_gen,
+        )
+        self.assertIn(
+            "Answer origin: Deterministic decision or workflow rule (not generative AI; no record changed)",
+            legacy_rules,
+        )
+        self.assertIn(
+            "Answer origin: Withheld. Cited sources did not support a stated status or figure (no record changed)",
+            withheld,
+        )
         self.assertNotIn("Workflow-only", withheld)
         self.assertIn("Workflow-only help, no record changed", abstain)
         self.assertEqual(got[0]["status"], "Answer added. Check the sources before relying on it.")

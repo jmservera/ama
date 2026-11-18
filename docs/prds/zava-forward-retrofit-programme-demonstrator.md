@@ -1788,6 +1788,22 @@ privacy/legal, held-out real-model, witnessed recovery, operational and current
 PRD quality/owner acceptance gates remain separate and unmet. No release,
 signature, capture, spending or live-use authority is inferred.
 
+As of 2026-11-15, the [core contract](../../src/core/README.md#constructed-rai-evidence-claims-2026-10-18-126)
+explicitly projects immutable `prd_quality_review` (`satisfied: false`,
+`accepted: false`) and `prd_owner_acceptance` (`accepted: false`) records in
+both `governance_view` and `rai_evidence`, keeping this `0.21.0` unsigned
+candidate and its preserved pre-merge resident quality outcome (`FAIL /
+Validate BLOCKED / Finalize NOT_EVALUATED`) separate from historical `0.12.0`
+exercise acceptance, `0.14.0` planning-only report acceptance
+(`baseline-assessment-and-remediation-planning only`) and 22/22
+`dispositions_complete` claim coverage. `rai_evidence` also projects
+`affected_dispatch` (`DISABLED until appropriate evidence and qualified
+approvals exist`) alongside `live_use` (`BLOCKED pending separate qualified
+evidence and approvals`) and `conditional_eu_assurance` (`Applies only after
+qualified applicability review`), with `EU-COND-01`, `EU-COND-02` and
+`EU-COND-04` preserving `NOT_ASSESSED`, `UNCHANGED`, `Open` and `Unknown`
+until qualified applicability review.
+
 ### Bounded-Agent Orchestration Pattern
 
 Orchestration is a deterministic, reviewable state graph, not an open-ended

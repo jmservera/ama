@@ -12,6 +12,8 @@ from collections import Counter
 from dataclasses import dataclass
 from datetime import date
 
+from .discovery_register import CANDIDATE_FINDING_STATUS
+
 UNKNOWN, DISPUTED = "UNKNOWN", "DISPUTED"
 UNATTRIBUTED = "Unattributed"
 LOOP_KINDS = ("return", "rejection", "repeat visit", "reopen")
@@ -48,6 +50,8 @@ def baseline_summary(candidates: list[Candidate], start: date, end: date) -> dic
         ),
         open_outcome_unknown=sum(not c.outcome_known for c in inside),
         duplicate_ids=sorted(i for i, n in ids.items() if n > 1),
+        owner_validated=False,
+        finding_status=CANDIDATE_FINDING_STATUS,
         notice=NOTICE,
     )
 
@@ -70,6 +74,17 @@ def leg_days(events: list[LifecycleEvent], property_id: str) -> dict[str, int | 
         ok = a in first and b in first and first[b] >= first[a]
         out[label] = (first[b] - first[a]).days if ok else None
     return out
+
+
+def leg_summary(events: list[LifecycleEvent], property_id: str) -> dict[str, object]:
+    """Governance-stamped handover-leg candidate summary for one property."""
+    return dict(
+        property_id=property_id,
+        legs=leg_days(events, property_id),
+        owner_validated=False,
+        finding_status=CANDIDATE_FINDING_STATUS,
+        notice=NOTICE,
+    )
 
 
 @dataclass(frozen=True)
@@ -105,6 +120,8 @@ def waits_by_party(waits: list[Wait], as_of: date) -> list[dict[str, object]]:
             days=n,
             open_waits=open_waits[p],
             unknown_or_disputed_cause=unexplained[p],
+            owner_validated=False,
+            finding_status=CANDIDATE_FINDING_STATUS,
             notice=NOTICE,
         )
         for p, n in sorted(days.items(), key=lambda kv: (-kv[1], kv[0]))
@@ -127,3 +144,16 @@ def loop_counts(loops: list[Loop]) -> dict[str, dict[str, int]]:
         row = out.setdefault(item.property_id, dict.fromkeys(LOOP_KINDS, 0))
         row[item.kind] += 1
     return out
+
+
+def loop_summary(loops: list[Loop]) -> dict[str, object]:
+    """Governance-stamped return, rejection, repeat-visit and reopen summary."""
+    counts = loop_counts(loops)
+    totals = {kind: sum(prop[kind] for prop in counts.values()) for kind in LOOP_KINDS}
+    return dict(
+        counts_by_property=counts,
+        totals_by_kind=totals,
+        owner_validated=False,
+        finding_status=CANDIDATE_FINDING_STATUS,
+        notice=NOTICE,
+    )

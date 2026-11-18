@@ -11,7 +11,8 @@ from zava_forward.core import ledger
 from zava_forward.core.synthetic import loadcheck
 from zava_forward.core import recovery
 from zava_forward.core.documents import AzureBlobDocumentStore, DocumentStoreError
-from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.sqlstore import LedgerRelianceError, SqlStore
+from zava_forward.core.store import Store
 
 
 def at(year):
@@ -108,6 +109,121 @@ class YearLedgerTests(unittest.TestCase):
                 rep = ledger.verify_years(chain([2024]), got)
                 self.assertFalse(rep["intact"])
                 self.assertEqual(rep["bad_digests"], ["year-2024.json"])
+
+    def _seed_file_store(self, tmp, entries):
+        data_path = Path(tmp) / "zavaforward.json"
+        data_path.write_text(json.dumps(dataset.DATA))
+        audit_path = Path(tmp) / "audit.jsonl"
+        audit_path.write_text("".join(json.dumps(e) + "\n" for e in entries))
+        return Store(str(data_path))
+
+    def test_file_store_pre_reliance_seals_past_years_and_passes_across_2024_2025_2026(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            s = self._seed_file_store(tmp, chain([2024, 2024, 2025, 2025, 2025, 2026]))
+            rep = s.verify_ledger_before_reliance(current_year=2026)
+            self.assertTrue(rep["reliance_allowed"])
+            self.assertTrue(rep["intact"])
+            self.assertEqual(rep["current_year"], "2026")
+            self.assertEqual(rep["entries"], 6)
+            self.assertEqual(rep["sealed_years"], ["2024", "2025"])
+            self.assertEqual(rep["sealed_digest_files"], ["year-2024.json", "year-2025.json"])
+            self.assertTrue(rep["years"]["2024"]["sealed"] and rep["years"]["2025"]["sealed"])
+            self.assertFalse(rep["years"]["2026"]["sealed"])
+            self.assertEqual(rep["problems"], [])
+            # Idempotent re-verification and default current_year path
+            again = s.require_verified_ledger_for_reliance()
+            self.assertTrue(again["reliance_allowed"])
+            # Next-year rollover seals 2026 too
+            rolled = s.require_verified_ledger_for_reliance(current_year=2027)
+            self.assertEqual(rolled["sealed_years"], ["2024", "2025", "2026"])
+            self.assertTrue(rolled["years"]["2026"]["sealed"])
+
+    def test_pre_reliance_refuses_to_seal_tampered_chain_and_blocks_reliance(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            bad = chain([2024, 2025, 2026])
+            bad[0] = dict(bad[0], detail="tampered-before-seal")
+            s = self._seed_file_store(tmp, bad)
+            rep = s.verify_ledger_before_reliance(current_year=2026)
+            self.assertFalse(rep["reliance_allowed"])
+            self.assertIn("chain_tampered", {p["code"] for p in rep["problems"]})
+            self.assertFalse(os.path.exists(s.digest_dir))
+            with self.assertRaises(LedgerRelianceError) as cm:
+                s.require_verified_ledger_for_reliance(current_year=2026)
+            self.assertFalse(cm.exception.report["reliance_allowed"])
+            self.assertIn("chain_tampered", {p["code"] for p in cm.exception.problems})
+            self.assertNotIn(tmp, json.dumps(rep))
+            self.assertNotIn(tmp, str(cm.exception))
+
+    def test_pre_reliance_blocks_corrupt_swapped_or_root_mismatched_digests_and_unsealed_past_years(self):
+        entries = chain([2024, 2025, 2026])
+        with self.subTest("unsealed_past_years_blocked_when_seal_disabled"), tempfile.TemporaryDirectory() as tmp:
+            s = self._seed_file_store(tmp, entries)
+            blocked = s.verify_ledger_before_reliance(current_year=2026, seal_past_years=False)
+            self.assertFalse(blocked["reliance_allowed"])
+            self.assertEqual(
+                [(p["code"], p.get("year")) for p in blocked["problems"]],
+                [("unsealed_past_year", "2024"), ("unsealed_past_year", "2025")],
+            )
+            allowed = s.verify_ledger_before_reliance(
+                current_year=2026, require_sealed_past_years=False, seal_past_years=False
+            )
+            self.assertTrue(allowed["reliance_allowed"])
+
+        with self.subTest("corrupt_and_swapped_year_digests"), tempfile.TemporaryDirectory() as tmp:
+            s = self._seed_file_store(tmp, entries)
+            s.require_verified_ledger_for_reliance(current_year=2026)
+            y2024 = Path(s.digest_dir) / "year-2024.json"
+            y2025 = Path(s.digest_dir) / "year-2025.json"
+            y2024.write_text(y2025.read_text())
+            swapped = s.verify_ledger_before_reliance(current_year=2026)
+            self.assertFalse(swapped["reliance_allowed"])
+            self.assertIn(
+                ("corrupt_year_digest", "2024"),
+                {(p["code"], p.get("year")) for p in swapped["problems"]},
+            )
+            self.assertTrue(any("mismatched" in p["reason"] for p in swapped["problems"]))
+            y2024.write_text("{corrupt")
+            corrupt = s.verify_ledger_before_reliance(current_year=2026)
+            self.assertFalse(corrupt["reliance_allowed"])
+            self.assertIn("corrupt_year_digest", {p["code"] for p in corrupt["problems"]})
+
+        with self.subTest("tampered_root_digest_and_dropped_sealed_year"), tempfile.TemporaryDirectory() as tmp:
+            s = self._seed_file_store(tmp, entries)
+            s.write_digest()
+            s.require_verified_ledger_for_reliance(current_year=2026)
+            root_file = Path(s.digest_dir) / "digest-0000000003.json"
+            payload = json.loads(root_file.read_text())
+            payload["head"] = "0" * 64
+            root_file.write_text(json.dumps(payload))
+            rep = s.verify_ledger_before_reliance(current_year=2026)
+            self.assertFalse(rep["reliance_allowed"])
+            self.assertIn("root_digest_mismatch", {p["code"] for p in rep["problems"]})
+            root_file.unlink()
+            # Rewrite audit.jsonl dropping 2024 as a fresh chain over 2025 and 2026
+            rewritten = chain([2025, 2026])
+            Path(s.audit_path).write_text("".join(json.dumps(e) + "\n" for e in rewritten))
+            dropped = s.verify_ledger_before_reliance(current_year=2026)
+            self.assertFalse(dropped["reliance_allowed"])
+            self.assertEqual(dropped["missing_years"], ["2024"])
+            self.assertIn("missing_audit_year", {p["code"] for p in dropped["problems"]})
+
+    def test_pre_reliance_blocks_corrupt_audit_file_non_dir_digests_and_malformed_entry_years(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            s = self._seed_file_store(tmp, chain([2024, 2025, 2026]))
+            Path(s.digest_dir).write_text("not-a-directory")
+            rep = s.verify_ledger_before_reliance(current_year=2026)
+            self.assertFalse(rep["reliance_allowed"])
+            self.assertIn("digest_store_unreadable", {p["code"] for p in rep["problems"]})
+            Path(s.digest_dir).unlink()
+            bad_year = ledger.make_entry("sam", "x", "ZF-1", "n0", ledger.GENESIS, "20X4-06-01T10:00:00")
+            Path(s.audit_path).write_text(json.dumps(bad_year) + "\n")
+            rep_year = s.verify_ledger_before_reliance(current_year=2026)
+            self.assertFalse(rep_year["reliance_allowed"])
+            self.assertIn("audit_entry_malformed", {p["code"] for p in rep_year["problems"]})
+            Path(s.audit_path).write_text("{corrupt-audit-jsonl\n")
+            rep_corrupt = s.verify_ledger_before_reliance(current_year=2026)
+            self.assertFalse(rep_corrupt["reliance_allowed"])
+            self.assertIn("audit_unreadable", {p["code"] for p in rep_corrupt["problems"]})
 
 
 class FakeRegisterBlob:

@@ -1,0 +1,74 @@
+{
+  "task_id": "issue-115-immutable-blob-ledger-digests",
+  "task_slug": "immutable-blob-ledger-digests-115",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/immutable-blob-ledger-digests-115-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/immutable-blob-ledger-digests-115-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/immutable-blob-ledger-digests-115-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/immutable-blob-ledger-digests-115-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/immutable-blob-ledger-digests-115-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/immutable-blob-ledger-digests-115-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Confirmed automatic RPI session across Research, Plan, Critique, Implement, and Review for Issue #115 with focused validation tier",
+      "status": "confirmed",
+      "evidence": "User prompt instruction on branch feat/demo-115-blob-ledger"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready (Selected Option A: typed zava_forward.core.ledger_digest_blob retention-lock & scheduled mismatch verifier + Bicep storage/main/containerapps hardening and policy/mutation tests)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/immutable-blob-ledger-digests-115-research.md (C1-C18)"
+    },
+    {
+      "decision": "Critique execution: completed single final-candidate rpi-plan-critique pass",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/immutable-blob-ledger-digests-115-plan-critique.md"
+    },
+    {
+      "decision": "Critique verdict & disposition: Revise -> Resolved directly in plan and phase details (PC-001 ARM append-write mutual exclusivity, PC-002 root anchor/env/marker/sanitizer parity, PC-003 exact main.bicep & containerapps assertions, PC-004 pyproject.toml & mypy scope, PC-005 missing-env scheduled alert); Planning status: Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-15/immutable-blob-ledger-digests-115-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Review execution: completed single post-implementation rpi-review pass across P01-P03",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/immutable-blob-ledger-digests-115-review.md"
+    },
+    {
+      "decision": "Review outcome: Residual work (assessed boundary: src/core/src/zava_forward/core/ledger_digest_blob.py, src/core/tests/test_ledger_digest_blob.py, infra/main.bicep, infra/modules/storage.bicep, infra/modules/containerapps.bicep, infra/tests/test_bicep_policy.py, infra/tests/test_monitoring_alerts.py; zero blocking defects; Low residual items RV-001 and RV-002 plus orchestrator delegation and live Azure WORM lock/Monitor proof routed to prioritized_follow_ups)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/immutable-blob-ledger-digests-115-review.md#outcome"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked follow-up work item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Harden zava_forward.core.ledger_digest_blob with RV-001 (suppress transport __cause__ chaining for traceback safety) and RV-002 (parse x-ms-creation-time header duration & optional require_sealed_years_before check)",
+      "rationale": "Easiest self-contained src/core improvement with direct defense-in-depth value and clean KISS/error-boundary leverage",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/immutable-blob-ledger-digests-115-review.md (RV-001, RV-002)"
+    },
+    {
+      "rank": 2,
+      "task": "Delegate zava_forward.orchestrator.digest_blob internals to zava_forward.core.ledger_digest_blob while preserving the containerapps python -m zava_forward.orchestrator.digest_blob --publish CLI contract",
+      "rationale": "High engineering-quality leverage (DRY, single source of truth, reduced maintenance across core and orchestrator) so the scheduled job executes the shared strictly typed core implementation",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/immutable-blob-ledger-digests-115-review.md#plan-follow-up-assessment"
+    },
+    {
+      "rank": 3,
+      "task": "Obtain Legal audit-retention duration sign-off (#121), execute irreversible Azure lockImmutabilityPolicy on deployed ledger-digests container, and capture live ledger-verify + Azure Monitor LEDGER_DIGEST_OK / LEDGER_DIGEST_ALERT evidence",
+      "rationale": "Highest compliance impact required to close Issue #115 end-to-end, ranked after offline code follow-ups due to external human Legal and live Azure subscription prerequisites",
+      "evidence": ".copilot-tracking/research/2026-11-15/immutable-blob-ledger-digests-115-research.md (C1, C7, C11)"
+    }
+  ]
+}
