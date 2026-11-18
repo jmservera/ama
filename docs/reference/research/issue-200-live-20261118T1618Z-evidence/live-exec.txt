@@ -1,0 +1,11 @@
+[93mUse ctrl + D to exit.[0m
+INFO: Connecting to the container 'api'...
+INFO: Successfully connected to container: 'api'. [ Revision: 'ca-cutover-test-demo-api--0000031', Replica: 'ca-cutover-test-demo-api--0000031-84949d7db9-655xw'].
+uid=10001(app) gid=10001(app) groups=10001(app)
+touch: cannot touch '/x': Permission denied
+evals
+ls: cannot access '/app/data': No such file or directory
+/data
+CapEff:	0000000000000000
+INFO: received success status from cluster
+[93mDisconnecting...[0m
