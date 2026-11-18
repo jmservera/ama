@@ -13131,3 +13131,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 144 live run 4 (Refs #144)
 
 * Added [issue-144-live-r4-2026-11-18.md](research/issue-144-live-r4-2026-11-18.md) with a raw folder: read-only az state of four apps and nine jobs, an empty `src-deploy.yml` run list and a scripted replica probe on revision `--0000032`. Criteria 1 (pipeline clause) and 3 (only non-root enforced) stay unproven; no source, Azure resource or load change.
+
+## [2026-11-18] add | Issue 119 live run 4 (Refs #119)
+
+* Added [issue-119-live-r4-map-evidence-2026-11-18.md](research/issue-119-live-r4-map-evidence-2026-11-18.md): fresh live probe on revision `--0000032`, full re-read of the OSMF tile policy and copyright page. Both criteria stay unticked (no licensed provider, no screen reader run). Named screenshots removed; no source change.
