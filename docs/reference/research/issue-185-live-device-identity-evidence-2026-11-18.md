@@ -16,7 +16,7 @@ Refs #185. Scope is the synthetic desktop demo, authorised by the owner on 2026-
 
 ## Method
 
-The hub `iot-cutover-test-rzsrg` (SKU B1) has public network access Disabled, so the run used a throwaway Container Apps job `job-185-probe` in `cae-cutover-test-demo`, with the `id-cutover-test-api` managed identity and a temporary IoT Hub Registry Contributor role on the hub. The driver stayed outside the repository, passed to the job as an environment variable, and printed device ids and HTTP codes only. Raw output: `live-run.txt` in the phase-witness evidence directory.
+The hub `iot-cutover-test-rzsrg` (SKU B1) has public network access Disabled, so the run used a throwaway Container Apps job `job-185-probe` in `cae-cutover-test-demo`, with the `id-cutover-test-api` managed identity and a temporary IoT Hub Registry Contributor role on the hub. The driver stayed outside the repository, passed to the job as an environment variable, and printed device ids and HTTP codes only. The raw output was not retained in the repository; the HTTP results below are operator-observed and the Azure cleanup was not independently re-queried.
 
 The driver:
 
