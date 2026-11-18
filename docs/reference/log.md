@@ -12791,3 +12791,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Eval gate local test rerun and rescoring limits (Refs #216)
 
 * Updated [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md): 101 existing gate tests run locally with raw output retained; container scores labelled "Observed; raw output not retained"; no new model call; the unticked criterion stays partly proven.
+
+## [2026-11-18] add | Nomination test bootstrap isolation per-criterion proof (Refs #1847)
+
+* Added [nomination-bootstrap-isolation-proof-1847-2026-11-18.md](research/nomination-bootstrap-isolation-proof-1847-2026-11-18.md): five criteria proven with fresh-process evidence on main; the full gate and external receipt remain unproven. No source or test change.
