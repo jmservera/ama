@@ -13253,3 +13253,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | RPI gate preflight and timing tools re-created (Refs #1830)
 
 * Re-created `tools/rpi-preflight.py`, `tools/rpi-gate-timing.py`, their two unit test files and the [method](method/rpi-gate-preflight.md) from retained candidate `a2c27fda6`, and recorded a per-criterion audit in [issue-1830-live-r2-tools-2026-11-18.md](research/issue-1830-live-r2-tools-2026-11-18.md). The preflight still refuses all selected execution (exit 5); no gate file changed, no full gate run, no live Azure. No #1830 criterion is ticked.
+## [2026-11-18] add | Issue 130 identity 403 fix evidence (Refs #130)
+
+* Added [issue-130-identity-403-live-2026-11-18.md](research/issue-130-identity-403-live-2026-11-18.md): root cause of the live 403 on Entra staff writes in `resident_decisions._operation`, key-based fix with three regression tests (JSON and SQLite), mutation probe, and the representative-evidence criterion stated as unproven for the demo. Code candidate, not deployed.

@@ -142,6 +142,12 @@ def _same_person(first, second):
                for key in ("email", "code", "oid"))
 
 
+def _same_signed_in_person(actor, roster_person):
+    """Immutable keys must match; display claims and tenant metadata on an Entra principal differ from the roster row."""
+    return all(_identity_value(actor, key) == _identity_value(roster_person, key)
+               for key in ("email", "code", "oid"))
+
+
 def _identity_status(identity):
     return "Known" if any(_identity_value(identity, key) for key in ("code", "oid")) else "Unknown"
 
@@ -1109,7 +1115,7 @@ def _operation(store, user, case_id, body):
         try:
             actor = _actor(store, user)
             k.require_role(actor, k.RESIDENT_VIEW_ROLES, "current resident-workflow staff")
-            if actor != _person(store, user.get("email")):
+            if not _same_signed_in_person(actor, _person(store, user.get("email"))):
                 raise PermissionError("Reload your current staff identity before recording this step.")
             c = store._case(case_id)
             before = deepcopy(c)
