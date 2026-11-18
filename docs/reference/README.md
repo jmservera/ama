@@ -428,6 +428,8 @@ and this run's identities removed (run 3 adds the home-to-device mapping). Durab
 For #110, the [live IoT identity evidence](./research/issue-110-live-iot-identity-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: three distinct Hub identities sent schema-versioned readings with
 stable IDs, read back from Event Hub; production X.509 receiver stays unproven.
+A second run, the [live IoT Hub to SQL rerun](./research/issue-110-live2-iot-sql-evidence-2026-11-18.md),
+sent 6 readings from 3 devices, all 6 stored in Azure SQL, with cleanup read back.
 For #220, the [live challenge route evidence](./research/issue-220-live-challenge-route-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: guarantees, assurance flags and forbidden-field refusals observed
 live, and a blocking defect that refuses every Entra-signed-in staff write to the route.
@@ -464,6 +466,9 @@ For #1818, the [live IoT map walkthrough evidence](./research/issue-1818-live-io
 records a 2026-11-18 demo run: nine synthetic messages through IoT Hub, an Event Hub route and Azure SQL, then
 fresh and stale sensor status in the employee map, accessible list, stale filter and resident `#sec-sensors`
 (desktop). No source change; the round 6 receiver fix stays unmerged.
+For #2008, the [synthetic demo workbook and import evidence](./research/issue-2008-demo-workbook-import-evidence-2026-11-18.md)
+adds a generated `.xlsx` (generator in `tools/`), its local row-level preview and a run of the deployed CSV check
+with the staff test sign-in; conflicts show only locally because the web screen reads CSV only. No source change.
 For #146, the [live monitoring evidence](./research/issue-146-live-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: installed alert inventory, a fired test alert, throwaway job-failure,
 IoT and workbook deployments, and the private-link limit that blocks workbook rendering and the poison-queue proof.
@@ -496,6 +501,9 @@ live unproven).
 For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analysis-live-evidence-2026-11-18.md)
 records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human
 sign-off and R1 lacks the official standards texts. Read-only demo probes are recorded.
+
+A later #111 re-run, the [signed-in sensor evidence](./research/issue-111-live2-sensor-evidence-2026-11-18.md),
+retains raw test output and a redacted staff-signed sensors payload; the R1 to R3 disposition is unchanged.
 
 For #1288, the [quality sensor live evidence](./research/issue-1288-live-quality-sensor-evidence-2026-11-18.md)
 records a 2026-11-18 demo read and denial probe plus local mock-provider and SQL Server runs. Criteria 4
@@ -1280,7 +1288,10 @@ or infra acceptance claimed.
 | [Case chat citation and refusal gates, live (#216)](./research/eval-gates-live-216-2026-11-18.md) | Graded and adversarial 30-prompt run of the live demo case chat: refusals 10 of 10, citations valid 7 of 7 on the model path, but only 9 model calls available (demo meter); per-criterion status, adverse evidence and spend overshoot disclosed | 2026-11-18 |
 | [Epic 104 bounded AI audit with live read (#104)](./research/issue-104-epic-audit-live-2026-11-18.md) | Per-criterion table for the five epic criteria (two unmet, three consistent), exact remaining demo gaps for #107, #108, #164 and #216 by class, and a fresh read-only probe of the demo; nothing ticked | 2026-11-18 |
 | [AI evaluation harness live demo evidence (#108)](./research/issue-108-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the eight unticked criteria: deployed model, version and rate limits confirmed, subscription quota unproven, live app AI report read, offline one-lever comparison tested; no criterion newly tickable | 2026-11-18 |
+| [AI evaluation harness audit, live round 2 (#108)](./research/issue-108-harness-audit-live-r2-2026-11-18.md) | Harness rerun (116 tests OK), regional model, version and capacity recheck, and a per-criterion proven or unproven table; subscription quota still unproven |
 | [Entra roles and field-level visibility live demo evidence (#116)](./research/issue-116-live-demo-evidence-2026-11-18.md) | Per-criterion demo record for the four unticked criteria: reason-role enforcement observed for one role, AI refusal observed, document hold and provider payloads not provable live, four boxes stay unticked |
+| [Assisted form workspace live demo evidence (#96)](./research/issue-96-live-demo-evidence-2026-11-18.md) | Per-criterion demo record: the deployed demo holds no registered schema and no code path approves one, so criterion 1 stays unticked; the other five rest on offline tests |
+| [Entra roles and field-level visibility live demo evidence, round 2 (#116)](./research/issue-116-live-r2-evidence-2026-11-18.md) | Second live pass: reason strings absent from exports, proposals, AI report and audit surfaces for the one reason role; second role unobtainable without directory privilege; four boxes stay unticked |
 | [Data protection, retention and rights live demo evidence (#121)](./research/issue-121-live-data-protection-evidence-2026-11-18.md) | Per-criterion demo record for the eight unticked criteria: live register, model location and retention settings read; deployed register older than source; approvals deferred to #1906 to #1908 |
 | [Map tile provider and accessible list live demo evidence (#119)](./research/issue-119-live-map-evidence-2026-11-18.md) | Per-criterion demo record: deployed public OSM tile provider, policy re-read, list alternative, keyboard and tile-failure proofs; no screen reader run, no licensed provider |
 | [Chat grounding and human-review boundaries live demo evidence (#164)](./research/issue-164-live-chat-grounding-evidence-2026-11-18.md) | Per-criterion demo record for the five unticked criteria: task registered and disabled, thresholds proposed not approved, three live asks answered by rules with zero model calls, human exercises and approvals unproven |
@@ -1337,6 +1348,7 @@ or infra acceptance claimed.
 | [Usability Programme Evidence on the Live Demo](./research/issue-155-live-usability-programme-evidence-2026-11-18.md) | Issue 155: per-criterion status; the SA-010 staff-agreement criterion cannot be proven on the demo, code gate and live read-only checks recorded (the signed-in workbench was not captured) |
 | [Operator Suspension Live Demo Evidence](./research/issue-221-live-suspension-restart-evidence-2026-11-18.md) | Issue 221: unintended live `all` suspension, manual-route and restart-denial observations, deployed build accepting a placeholder restart authority; per-criterion table |
 | [Resident and Representative UX on the Live Demo](./research/issue-154-live-resident-ux-evidence-2026-11-18.md) | Issue 154: no live resident contact observed on the synthetic showcase; usability-programme validation and the representative view cannot be proven for the demo |
+| [Resident and Representative UX Audit on the Live Demo, Round 2](./research/issue-154-live-resident-ux-audit-r2-2026-11-18.md) | Issue 154: desktop audit of the synthetic resident showcase and workbench resident screens against the UX standards, retained raw output, per-criterion table |
 | [Issue 358 Live Evidence](./research/issue-358-live-evidence-2026-11-18.md) | Credential-expiry guard mutation check and a live ARM round-trip showing the secrets rebuild preserves Key Vault references on a throwaway app; full setup path unproven |
 | [Issue 358 Live Recheck](./research/issue-358-live-recheck-2026-11-18.md) | Second pass: throwaway app deletion confirmed, delegating `main()` and expiry tests re-run, demo app Key Vault reference read; full setup path still unproven |
 | [Azure SQL Point-in-Time Restore Evidence on the Demo](./research/issue-145-live-pitr-restore-evidence-2026-11-18.md) | Issue 145: 2026-11-18 live restore of the demo database to a throwaway copy, audit-chain prefix match, observed restore time, per-criterion proven/unproven record |
