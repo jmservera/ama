@@ -12911,6 +12911,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Deployed demo parity proof, live run 3 (Refs #350)
 
 * Added [deployed-parity-live-r3-2026-11-18.md](research/deployed-parity-live-r3-2026-11-18.md) with raw outputs, 4 screenshots (12 showing personal names or addresses not retained) and scripts: no criterion fully proven; browser-UA anonymous API still 302, `/api/time/status` 500 reproduced, own-queue CSV 133 against list 16; new active release-scope suspension, closed CSV now 537. No source changed.
+
 ## [2026-11-18] add | Resident showcase live check r3 (Refs #462)
 
 * Added [resident-showcase-live-r3-2026-11-18.md](research/resident-showcase-live-r3-2026-11-18.md): live desktop Playwright proof of login, correct-case data and negative paths, exact five-failure rate limit, #455 rubric history and an unresolved High review thread, arithmetic cost estimate; no source or Azure change; criterion 2 stays unmet
