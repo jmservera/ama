@@ -46,3 +46,8 @@ Read-only: `gh issue view` and the sub-issues API for #184, #185 and #189 on 202
 * Whether the owner would defer #189's live owner and time-limit criterion for the demo. That is an owner decision; the brief gives none.
 * Ticking or closing #185 or #189 and the parent. Issue updates belong to the coordinator after review.
 * Production tier, X.509, scale beyond three identities, or any assistive-technology result.
+
+## Evidence limits
+
+* The raw budget output was summarised and not retained.
+* The run owner and time limit rows are unproven live; align with #189, where the owner row is proven in code with only a hub tag observed live.
