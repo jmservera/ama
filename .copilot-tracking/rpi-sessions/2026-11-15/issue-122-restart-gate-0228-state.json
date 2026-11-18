@@ -1,0 +1,64 @@
+{
+  "task_id": "issue-122-restart-gate-0228",
+  "task_slug": "issue-122-restart-gate-0228",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/issue-122-restart-gate-0228-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/issue-122-restart-gate-0228-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/issue-122-restart-gate-0228-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/issue-122-restart-gate-0228-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/issue-122-restart-gate-0228-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/issue-122-restart-gate-0228-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute full RPI loop (Research, Plan, Critique, Implement, Review) in automatic mode on branch feat/platform-122-restart-gate-0228 targeting feat/demo-164-chat-grounding-provenance-0900 (PR #1641) for Issue #122 remaining local RAI Incident and Restart criteria 1-3 in src/core and src/api, and commit locally with Refs #122 without pushing",
+      "status": "confirmed",
+      "evidence": "Explicit caller prompt direction"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready with converged SQL continuity-gate-v1 trigger + restart corrective-evidence/anti-replay hardening + suspension fallback and multi-connection/multi-process race test design",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-122-restart-gate-0228-research.md (C1-C18)"
+    },
+    {
+      "decision": "Plan critique executed (single-pass); verdict Revise; planner-direct findings PC-001 through PC-007 applied directly (NULL-safe NOT EXISTS triggers, set-based T-SQL inserted/deleted + BIN2 collations, portable WHERE NOT EXISTS seeding + MSSQL teardown lists, workspace-local .venv-122-local + subprocess PYTHONPATH/timeout, Assistants.suspended gate_version check + JSON-safe monotonic epoch sync, prose-safe corrective-evidence regex + casefolded anti-replay, HTTP view_only vs store audit distinction, strict mypy Any boundary aliases); plan finalized Ready for implementation",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/issue-122-restart-gate-0228-plan-critique.md; .copilot-tracking/plans/2026-11-15/issue-122-restart-gate-0228-plan.md"
+    },
+    {
+      "decision": "Review execution: Complete (single-pass); outcome: Defects found (RV-001..RV-005 routed to rpi-implement); assessed boundary: Full plan P01-P04 across src/core and src/api for Issue #122 local RAI Incident and Restart criteria 1-3; review path: .copilot-tracking/reviews/logs/2026-11-15/issue-122-restart-gate-0228-review.md",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-122-restart-gate-0228-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Transition completed parent task to Follow-up and advance Rank 1 child task issue-122-restart-gate-0228-c2 in non-interactive automatic mode to resolve RV-001..RV-005"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Resolve local review defects RV-001 through RV-005 across continuity.py, sqlstore.py, assistants.py, test_restart_gate_sql_fences.py, and test_continuity_restart_gate.py",
+      "rationale": "Highest ease, immediate correctness value, and fail-closed SQL engineering leverage: closes all 5 local defects blocking Issue #122 acceptance criteria 1-3 before freezing the local Refs #122 commit.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-122-restart-gate-0228-review.md (RV-001 through RV-005)"
+    },
+    {
+      "rank": 2,
+      "task": "Execute owner-witnessed operational continuity/restart drill and record appointed OD-35 / OQ-017 restart authority delegation once governance sign-off exists",
+      "rationale": "High governance value to unlock actual non-constructed restart authority on Issue #122; outside local code scope because human appointment and witness participation cannot be fabricated in code",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-122-restart-gate-0228-research.md (C2, C3, C16)"
+    },
+    {
+      "rank": 3,
+      "task": "Provision immutable external Azure ledger-head container and run owned Azure SQL continuity/restart drill",
+      "rationale": "Completes external custody and cloud database drill criteria on Issue #122 once Azure environment approval is granted",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-122-restart-gate-0228-research.md (C10, C16)"
+    }
+  ]
+}

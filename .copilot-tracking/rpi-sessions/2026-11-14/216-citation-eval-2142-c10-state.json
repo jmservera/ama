@@ -1,0 +1,61 @@
+{
+  "task_id": "216-citation-eval-2142-c10",
+  "task_slug": "216-citation-eval-2142-c10",
+  "parent_task": {
+    "task_id": "216-citation-eval-2142-c9",
+    "task_slug": "216-citation-eval-2142-c9"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14/216-citation-eval-2142-c10-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14/216-citation-eval-2142-c10-plan.md",
+    "details": ".copilot-tracking/details/2026-11-14/216-citation-eval-2142-c10-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-14/216-citation-eval-2142-c10-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-14/216-citation-eval-2142-c10-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c10-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Spawn automatic child task 216-citation-eval-2142-c10 from 216-citation-eval-2142-c9 to resolve remaining in-scope src/core review findings RV-018..RV-022",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c9-review.md"
+    },
+    {
+      "decision": "Research disposition reused; Planning Readiness Ready for RV-018..RV-022",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-14/216-citation-eval-2142-c10-research.md"
+    },
+    {
+      "decision": "Plan critique executed once (Complete, Revise); applied PC-001..PC-004 directly and finalized plan",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-14/216-citation-eval-2142-c10-plan-critique.md"
+    },
+    {
+      "decision": "Review executed once (Complete, Defects found); RV-018, RV-019, RV-021, RV-022 closed and RV-023..RV-025 routed to automatic child task 216-citation-eval-2142-c11",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c10-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Complete 216-citation-eval-2142-c10 after single-pass Review and advance to child task 216-citation-eval-2142-c11 for RV-023..RV-025"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Resolve RV-023..RV-025 in src/core (provision-specific card linkage, unflagged version/duplicate-ID conflict rejection, and strict refusal/conflict expected collection validation)",
+      "rationale": "Closes all remaining in-scope fail-closed findings in src/core",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c10-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Wire RegulatoryChat.surface into src/api regulatory chat HTTP route and deduplicate src/agents helpers",
+      "rationale": "Cross-package integration outside user-bounded src/core scope",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c9-review.md"
+    }
+  ]
+}

@@ -22,6 +22,7 @@ from collections.abc import Callable, Mapping, Sequence
 from typing import Any
 
 from zava_forward.core import ranking_archive_blob, ranking_publication_runner
+from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
 
 OK_MARKER = "RANKING_PUBLISH_OK"
 BLOCKED_MARKER = "RANKING_PUBLISH_BLOCKED"
@@ -93,6 +94,11 @@ def main(
     out: Callable[[str], object] = print,
 ) -> int:
     """python -m zava_forward.orchestrator.ranking_publish [--today YYYY-MM-DD]"""
+    try:
+        enforce_from_env(env)
+    except ContainerHardeningError as error:
+        print(f"Refusing to start: {error}", file=sys.stderr, flush=True)
+        return 2
     ap = argparse.ArgumentParser(description="Publish the ranking snapshot to the Blob archive.")
     ap.add_argument("--today", help="ISO run date; default is today in UTC")
     a = ap.parse_args(sys.argv[1:] if argv is None else argv)

@@ -17,6 +17,8 @@ param zoneRedundant bool = false
 @allowed(['serverless', 'provisioned'])
 param sqlTier string = 'serverless'
 @description('vCores: the serverless maximum, or the provisioned count.')
+@minValue(1)
+@maxValue(80)
 param maxVCores int = 2
 @description('Serverless only. Minutes idle before auto-pause; -1 disables. Ignored for provisioned.')
 @minValue(-1)

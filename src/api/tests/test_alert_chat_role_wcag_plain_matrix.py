@@ -106,7 +106,7 @@ class NonColourSignalTests(unittest.TestCase):
         self.assertTrue(all(contents))
 
     def test_alert_and_lookup_headings_carry_a_visible_text_label(self) -> None:
-        self.assertIn("`Status: ${alert.result}`", CHAT)
+        self.assertIn("`Status: ${regulatoryStateLabel(alert.result)}`", CHAT)
         self.assertIn("`Lookup status: ${answer.kind}`", CHAT)
         self.assertIn("No source held for this answer.", CHAT)
 
@@ -125,7 +125,7 @@ class PlainLanguageToggleTests(unittest.TestCase):
             CHAT.index("function regulatoryPlainMode") : CHAT.index("const regulatoryStates")
         ]
         self.assertIn('h("input", { type: "checkbox", id, checked: true })', body)
-        self.assertIn('h("label", { class: "regulatory-mode", for: id }', body)
+        self.assertIn('h("label", { for: id }, input, " Plain-language explanations")', body)
         self.assertIn("Plain-language explanations", body)
         self.assertIn('root.classList.toggle("plain-language", input.checked)', body)
         self.assertNotIn("onclick", body)
