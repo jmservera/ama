@@ -47,3 +47,10 @@ Limits: Azure SQL point-in-time restore cannot target another server, so the "th
 
 * Roll the demo image to main so `MssqlStore.verify_ledger_before_reliance` exists, then run yearly sealing against a database with more than one year of data.
 * A credential-file line was printed to the agent session once by mistake while checking file shape. The value is in no repository artifact; rotation is an owner decision (none authorised here).
+
+## Evidence limits
+
+* `sql-metrics-load.txt` has an unlabelled trailing line, and its `cpu_percent` block is identical to the DTU block; do not read it as an independent CPU measurement.
+* The "about 0.16 vCPU peak" figure, the "62 tests pass" result and the "verified absent" deletion check have no retained raw output; treat them as unverified observations.
+* An `az sql db copy` of `retrofit` started at 07:37Z, inside the 07:35Z to 08:05Z load window, and is a confounder on the maximum latencies.
+* The p95 results hold at demo scale (443 cases) only.
