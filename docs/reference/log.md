@@ -13155,3 +13155,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 1830 live audit (Refs #1830)
 
 * Added [issue-1830-live-20261118T1648Z-2026-11-18.md](research/issue-1830-live-20261118T1648Z-2026-11-18.md): timing reports from seven retained full receipts, 54 candidate tests passing on unmerged branch `ci/gate-preflight-benchmark-1830`; no criterion ticked. No source change.
+
+## [2026-11-18] add | Issue 129 live third pass (Refs #129)
+
+* Added [issue-129-live-r3-2026-11-18.md](research/issue-129-live-r3-2026-11-18.md): 26 core and 6 api bundle tests pass, report CLI refusal check, signed-in probe of revision 0000032 finds no bundle route; Atlas-owner mapping confirmation stays unproven. Docs only.
