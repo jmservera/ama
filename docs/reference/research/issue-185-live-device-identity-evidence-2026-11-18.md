@@ -58,3 +58,20 @@ The driver:
 * Created and removed: job `job-185-probe`; role assignment IoT Hub Registry Contributor for `id-cutover-test-api` on the hub; three devices.
 * After cleanup the hub still reports public network access Disabled and local auth disabled. An Azure Event Hubs Data Receiver assignment on the hub dated 2026-10-16 pre-dates this run and was left alone.
 * No source files changed; the validation tier is the focused tier.
+
+## Second run with retained output and operator-side re-query (2026-11-18, 10:05 to 10:15 UTC)
+
+This run repeats the first with the gaps the first left closed: the job output is kept in [the redacted log](issue-185-live-device-identity-run2-log-2026-11-18.txt) and the clean-up was re-queried from the operator side. Same method: throwaway job `job-185b-probe` in `cae-cutover-test-demo` with `id-cutover-test-api` and a temporary IoT Hub Registry Contributor assignment; driver kept in `/tmp` and deleted; device ids `SYN-185B-H01` to `H03`, each id encoding one stock home slot (the home-to-identity mapping stays proven by source tests, not re-proven here).
+
+Retained output, all three devices: create 200 with type `sas`, primary and secondary keys present and different (keys unique across all six); send with primary 204; send with secondary 204; send with a random wrong key 401; delete 204; registry read-back 404; no pre-existing device before the run; `key_in_output: false` (full key and 16-character prefix checked against the complete output). A search of the retained log for `primaryKey`, `secondaryKey` and `SharedAccessSignature` returned 0 matches.
+
+Operator-side checks after the run:
+
+| Check | Result |
+| --- | --- |
+| `az iot hub show-stats` | total, enabled and disabled device counts all 0 |
+| Job `job-185b-probe` | deleted; no job with 185 in its name remains in group `ama` |
+| Role assignment created for the run | deleted; remaining assignments are Event Hubs Data Receiver (2026-10-16) and an IoT Hub Registry Contributor dated 2026-10-30, both pre-existing and untouched |
+| Hub network and auth | public network access Disabled, local auth disabled, unchanged |
+
+Limits found: Log Analytics queries from the operator machine are refused by the workspace network perimeter, so the output was streamed with `az containerapp job logs show` while the replica was kept alive for 150 seconds; the persisted workspace copy was not read. The run did not exercise durable secret storage (Key Vault excluded by the owner), so "stored" means held in process memory only.
