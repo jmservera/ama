@@ -12815,3 +12815,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Issue 146 second live monitoring pass (Refs #146)
 
 * Added [issue-146-live2-monitoring-evidence-2026-11-18.md](research/issue-146-live2-monitoring-evidence-2026-11-18.md) with redacted raw output: eight installed alerts, no workbook, fired job-failure and digest alerts, job metric, private query access. Poison queue, workbook rendering, named owners and the tokenomics dashboard stay unproven; no source change.
+
+## [2026-11-18] add | Issue 1818 live IoT map walkthrough evidence (Refs #1818)
+
+* Added [issue-1818-live-iot-map-walkthrough-evidence-2026-11-18.md](research/issue-1818-live-iot-map-walkthrough-evidence-2026-11-18.md): job output (9 sent, 9 stored), employee map cards, list and stale filter, and resident sensor view for a fresh and a stale reading, with a per-criterion table. No source change; the unmerged receiver fix is disclosed.
