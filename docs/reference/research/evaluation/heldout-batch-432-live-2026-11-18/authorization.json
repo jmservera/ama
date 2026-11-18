@@ -1,0 +1,18 @@
+{
+  "approved_by": "Juan Manuel Servera",
+  "authority_ref": "Owner decision 2026-11-18 on #432: live Azure authorised for the synthetic demo, resource group ama, demo cap USD 700; this batch capped at USD 0.50 and 12 calls",
+  "expires_utc": "2026-11-19T00:00:00Z",
+  "max_calls": 12,
+  "max_total_tokens": 24000,
+  "max_prompt_tokens": 1500,
+  "max_completion_tokens": 400,
+  "max_budget_usd": "0.50",
+  "currency": "USD",
+  "model": "gpt-4.1-nano",
+  "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+  "deployment": "standard",
+  "input_usd_per_1m": "0.10",
+  "cached_input_usd_per_1m": "0.025",
+  "output_usd_per_1m": "0.40",
+  "price_source": "Azure Retail Prices API https://prices.azure.com/api/retail/prices, Foundry Models gpt 4.1 nano global meters, retrieved 2026-11-18; list price, not a billing record"
+}

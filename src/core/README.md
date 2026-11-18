@@ -842,6 +842,24 @@ Focused local constructed tests:
 python3 -m unittest discover -s tests -p test_resident_decisions.py -q
 ```
 
+### Nomination test layouts (#1847)
+
+`zava_forward` is a namespace package split across `src/core/src` and `src/agents/src`
+(no `zava_forward/__init__.py`). `src/core/tests/test_nomination_route.py` supports:
+
+* an editable install of `src/core` and `src/agents`, which supplies the distribution
+  metadata and resolves every module under `src/`;
+* the source roots (`src/core/src`, `src/agents/src`, `src/core/tests`) on `PYTHONPATH`;
+* a noneditable copy elsewhere on the path, provided no `zava_forward` module from it is
+  imported before the nomination module, because the source roots are then prepended first.
+
+It rejects any layout where a `zava_forward` module outside `src/` was already imported
+(for example a site-packages install loaded by an earlier test module). The module raises
+`ImportError` starting `unsupported layout` before changing `sys.path` and without removing
+anything from `sys.modules`, so `ConflictError`, `GateError`, `Store` and patch targets keep
+one identity. A post-import check repeats the foreign-module test. Fresh-process coverage in
+both import orders is in `src/core/tests/test_nomination_bootstrap.py`.
+
 ## Formal-complaints route boundary (#86)
 
 `complaints_route.py` defines a small receiver boundary and the
