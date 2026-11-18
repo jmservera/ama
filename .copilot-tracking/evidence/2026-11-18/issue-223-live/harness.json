@@ -1,0 +1,1264 @@
+{
+  "version": "2026-11-01",
+  "panels": {
+    "competent": {
+      "panel": "competent",
+      "rows": [
+        {
+          "proposal": "C-1",
+          "defect": null,
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": true,
+          "gate_note": "control accepted",
+          "effort_units": 4
+        },
+        {
+          "proposal": "C-2",
+          "defect": null,
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": true,
+          "gate_note": "control accepted",
+          "effort_units": 3
+        },
+        {
+          "proposal": "D-WRONG",
+          "defect": "wrong",
+          "citation_valid": true,
+          "action": "edit",
+          "reviewer": "owner@eval.example",
+          "reason": "mismatch: Days in stage differs from the case [source: Days in stage: 12]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": "Days in stage is 12; Open safety issues is 1",
+          "defect_corrected": true,
+          "gate_satisfied": true,
+          "gate_note": "defect corrected or rejected with source and reason",
+          "effort_units": 4
+        },
+        {
+          "proposal": "D-STALE",
+          "defect": "stale",
+          "citation_valid": true,
+          "action": "edit",
+          "reviewer": "owner@eval.example",
+          "reason": "mismatch: Owner differs from the case [source: Owner: Eval Owner]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": "Owner is Eval Owner; Open safety issues is 1",
+          "defect_corrected": true,
+          "gate_satisfied": true,
+          "gate_note": "defect corrected or rejected with source and reason",
+          "effort_units": 4
+        },
+        {
+          "proposal": "D-UNSUPPORTED",
+          "defect": "unsupported",
+          "citation_valid": true,
+          "action": "reject",
+          "reviewer": "owner@eval.example",
+          "reason": "unsupported: Planning permission differs from the case [source: Stage: Contacting resident]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": true,
+          "gate_satisfied": true,
+          "gate_note": "defect corrected or rejected with source and reason",
+          "effort_units": 4
+        },
+        {
+          "proposal": "D-INCOMPLETE",
+          "defect": "incomplete",
+          "citation_valid": true,
+          "action": "edit",
+          "reviewer": "owner@eval.example",
+          "reason": "incomplete: Open safety issues differs from the case [source: Open safety issues: 1]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": "Owner is Eval Owner; Stage is Contacting resident; Open safety issues is 1",
+          "defect_corrected": true,
+          "gate_satisfied": true,
+          "gate_note": "defect corrected or rejected with source and reason",
+          "effort_units": 4
+        }
+      ],
+      "effort_units": 23,
+      "reviews": 6,
+      "defects": 4,
+      "detected": 4,
+      "detection_rate": 1.0,
+      "corrections": 3,
+      "rejections": 1,
+      "false_rejects": 0,
+      "uncorrected_defects_through_gate": 0,
+      "uncorrected_defects": 0,
+      "gate_passed": true,
+      "audit_verified": true
+    },
+    "default_accept": {
+      "panel": "default_accept",
+      "rows": [
+        {
+          "proposal": "C-1",
+          "defect": null,
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": true,
+          "gate_note": "control accepted",
+          "effort_units": 1
+        },
+        {
+          "proposal": "C-2",
+          "defect": null,
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": true,
+          "gate_note": "control accepted",
+          "effort_units": 1
+        },
+        {
+          "proposal": "D-WRONG",
+          "defect": "wrong",
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "required evidence missing or unsupported: source_reason",
+          "effort_units": 1
+        },
+        {
+          "proposal": "D-STALE",
+          "defect": "stale",
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "required evidence missing or unsupported: source_reason",
+          "effort_units": 1
+        },
+        {
+          "proposal": "D-UNSUPPORTED",
+          "defect": "unsupported",
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "required evidence missing or unsupported: source_reason",
+          "effort_units": 1
+        },
+        {
+          "proposal": "D-INCOMPLETE",
+          "defect": "incomplete",
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "required evidence missing or unsupported: source_reason",
+          "effort_units": 1
+        }
+      ],
+      "effort_units": 6,
+      "reviews": 6,
+      "defects": 4,
+      "detected": 0,
+      "detection_rate": 0.0,
+      "corrections": 0,
+      "rejections": 0,
+      "false_rejects": 0,
+      "uncorrected_defects_through_gate": 0,
+      "uncorrected_defects": 4,
+      "gate_passed": false,
+      "audit_verified": true
+    },
+    "automation_bias": {
+      "panel": "automation_bias",
+      "rows": [
+        {
+          "proposal": "C-1",
+          "defect": null,
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": true,
+          "gate_note": "control accepted",
+          "effort_units": 4
+        },
+        {
+          "proposal": "C-2",
+          "defect": null,
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": true,
+          "gate_note": "control accepted",
+          "effort_units": 1
+        },
+        {
+          "proposal": "D-WRONG",
+          "defect": "wrong",
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "required evidence missing or unsupported: source_reason",
+          "effort_units": 1
+        },
+        {
+          "proposal": "D-STALE",
+          "defect": "stale",
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "required evidence missing or unsupported: source_reason",
+          "effort_units": 1
+        },
+        {
+          "proposal": "D-UNSUPPORTED",
+          "defect": "unsupported",
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "required evidence missing or unsupported: source_reason",
+          "effort_units": 1
+        },
+        {
+          "proposal": "D-INCOMPLETE",
+          "defect": "incomplete",
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "required evidence missing or unsupported: source_reason",
+          "effort_units": 1
+        }
+      ],
+      "effort_units": 9,
+      "reviews": 6,
+      "defects": 4,
+      "detected": 0,
+      "detection_rate": 0.0,
+      "corrections": 0,
+      "rejections": 0,
+      "false_rejects": 0,
+      "uncorrected_defects_through_gate": 0,
+      "uncorrected_defects": 4,
+      "gate_passed": false,
+      "audit_verified": true
+    }
+  },
+  "unauthorised_reviewer_control": {
+    "panel": "unauthorised_competent",
+    "rows": [
+      {
+        "proposal": "C-1",
+        "defect": null,
+        "citation_valid": true,
+        "action": "accept",
+        "reviewer": "other@eval.example",
+        "reason": "",
+        "source_case": [
+          "T-1"
+        ],
+        "source_hashes": {
+          "T-1": "585dad024a748adb"
+        },
+        "replacement": null,
+        "defect_corrected": false,
+        "gate_satisfied": false,
+        "gate_note": "reviewer holds no defined authority for this task",
+        "effort_units": 4
+      },
+      {
+        "proposal": "C-2",
+        "defect": null,
+        "citation_valid": true,
+        "action": "accept",
+        "reviewer": "other@eval.example",
+        "reason": "",
+        "source_case": [
+          "T-1"
+        ],
+        "source_hashes": {
+          "T-1": "585dad024a748adb"
+        },
+        "replacement": null,
+        "defect_corrected": false,
+        "gate_satisfied": false,
+        "gate_note": "reviewer holds no defined authority for this task",
+        "effort_units": 3
+      },
+      {
+        "proposal": "D-WRONG",
+        "defect": "wrong",
+        "citation_valid": true,
+        "action": "edit",
+        "reviewer": "other@eval.example",
+        "reason": "mismatch: Days in stage differs from the case [source: Days in stage: 12]",
+        "source_case": [
+          "T-1"
+        ],
+        "source_hashes": {
+          "T-1": "585dad024a748adb"
+        },
+        "replacement": "Days in stage is 12; Open safety issues is 1",
+        "defect_corrected": false,
+        "gate_satisfied": false,
+        "gate_note": "reviewer holds no defined authority for this task",
+        "effort_units": 4
+      },
+      {
+        "proposal": "D-STALE",
+        "defect": "stale",
+        "citation_valid": true,
+        "action": "edit",
+        "reviewer": "other@eval.example",
+        "reason": "mismatch: Owner differs from the case [source: Owner: Eval Owner]",
+        "source_case": [
+          "T-1"
+        ],
+        "source_hashes": {
+          "T-1": "585dad024a748adb"
+        },
+        "replacement": "Owner is Eval Owner; Open safety issues is 1",
+        "defect_corrected": false,
+        "gate_satisfied": false,
+        "gate_note": "reviewer holds no defined authority for this task",
+        "effort_units": 4
+      },
+      {
+        "proposal": "D-UNSUPPORTED",
+        "defect": "unsupported",
+        "citation_valid": true,
+        "action": "reject",
+        "reviewer": "other@eval.example",
+        "reason": "unsupported: Planning permission differs from the case [source: Stage: Contacting resident]",
+        "source_case": [
+          "T-1"
+        ],
+        "source_hashes": {
+          "T-1": "585dad024a748adb"
+        },
+        "replacement": null,
+        "defect_corrected": false,
+        "gate_satisfied": false,
+        "gate_note": "reviewer holds no defined authority for this task",
+        "effort_units": 4
+      },
+      {
+        "proposal": "D-INCOMPLETE",
+        "defect": "incomplete",
+        "citation_valid": true,
+        "action": "edit",
+        "reviewer": "other@eval.example",
+        "reason": "incomplete: Open safety issues differs from the case [source: Open safety issues: 1]",
+        "source_case": [
+          "T-1"
+        ],
+        "source_hashes": {
+          "T-1": "585dad024a748adb"
+        },
+        "replacement": "Owner is Eval Owner; Stage is Contacting resident; Open safety issues is 1",
+        "defect_corrected": false,
+        "gate_satisfied": false,
+        "gate_note": "reviewer holds no defined authority for this task",
+        "effort_units": 4
+      }
+    ],
+    "effort_units": 23,
+    "reviews": 6,
+    "defects": 4,
+    "detected": 0,
+    "detection_rate": 0.0,
+    "corrections": 0,
+    "rejections": 1,
+    "false_rejects": 0,
+    "uncorrected_defects_through_gate": 0,
+    "uncorrected_defects": 4,
+    "gate_passed": false,
+    "audit_verified": true
+  },
+  "workflow_only": {
+    "source": "template",
+    "mode": "workflow-only",
+    "verified": true,
+    "seeded_defects": 0,
+    "reviews": 6,
+    "effort_units": 24
+  },
+  "comparison": {
+    "competent": {
+      "detection_rate": 1.0,
+      "detected": 4,
+      "defects": 4,
+      "corrections": 3,
+      "effort_units": 23,
+      "workflow_only_effort_units": 24,
+      "effort_delta_units": -1,
+      "gate_passed": true
+    },
+    "default_accept": {
+      "detection_rate": 0.0,
+      "detected": 0,
+      "defects": 4,
+      "corrections": 0,
+      "effort_units": 6,
+      "workflow_only_effort_units": 24,
+      "effort_delta_units": -18,
+      "gate_passed": false
+    },
+    "automation_bias": {
+      "detection_rate": 0.0,
+      "detected": 0,
+      "defects": 4,
+      "corrections": 0,
+      "effort_units": 9,
+      "workflow_only_effort_units": 24,
+      "effort_delta_units": -15,
+      "gate_passed": false
+    }
+  },
+  "sensitivity": {
+    "misses_incomplete": {
+      "panel": "misses_incomplete",
+      "rows": [
+        {
+          "proposal": "C-1",
+          "defect": null,
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": true,
+          "gate_note": "control accepted",
+          "effort_units": 4
+        },
+        {
+          "proposal": "C-2",
+          "defect": null,
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": true,
+          "gate_note": "control accepted",
+          "effort_units": 3
+        },
+        {
+          "proposal": "D-WRONG",
+          "defect": "wrong",
+          "citation_valid": true,
+          "action": "edit",
+          "reviewer": "owner@eval.example",
+          "reason": "mismatch: Days in stage differs from the case [source: Days in stage: 12]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": "Days in stage is 12; Open safety issues is 1",
+          "defect_corrected": true,
+          "gate_satisfied": true,
+          "gate_note": "defect corrected or rejected with source and reason",
+          "effort_units": 4
+        },
+        {
+          "proposal": "D-STALE",
+          "defect": "stale",
+          "citation_valid": true,
+          "action": "edit",
+          "reviewer": "owner@eval.example",
+          "reason": "mismatch: Owner differs from the case [source: Owner: Eval Owner]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": "Owner is Eval Owner; Open safety issues is 1",
+          "defect_corrected": true,
+          "gate_satisfied": true,
+          "gate_note": "defect corrected or rejected with source and reason",
+          "effort_units": 4
+        },
+        {
+          "proposal": "D-UNSUPPORTED",
+          "defect": "unsupported",
+          "citation_valid": true,
+          "action": "reject",
+          "reviewer": "owner@eval.example",
+          "reason": "unsupported: Planning permission differs from the case [source: Stage: Contacting resident]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": true,
+          "gate_satisfied": true,
+          "gate_note": "defect corrected or rejected with source and reason",
+          "effort_units": 4
+        },
+        {
+          "proposal": "D-INCOMPLETE",
+          "defect": "incomplete",
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "required evidence missing or unsupported: source_reason",
+          "effort_units": 1
+        }
+      ],
+      "effort_units": 20,
+      "reviews": 6,
+      "defects": 4,
+      "detected": 3,
+      "detection_rate": 0.75,
+      "corrections": 2,
+      "rejections": 1,
+      "false_rejects": 0,
+      "uncorrected_defects_through_gate": 0,
+      "uncorrected_defects": 1,
+      "gate_passed": false,
+      "audit_verified": true
+    },
+    "misses_stale": {
+      "panel": "misses_stale",
+      "rows": [
+        {
+          "proposal": "C-1",
+          "defect": null,
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": true,
+          "gate_note": "control accepted",
+          "effort_units": 4
+        },
+        {
+          "proposal": "C-2",
+          "defect": null,
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": true,
+          "gate_note": "control accepted",
+          "effort_units": 3
+        },
+        {
+          "proposal": "D-WRONG",
+          "defect": "wrong",
+          "citation_valid": true,
+          "action": "edit",
+          "reviewer": "owner@eval.example",
+          "reason": "mismatch: Days in stage differs from the case [source: Days in stage: 12]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": "Days in stage is 12; Open safety issues is 1",
+          "defect_corrected": true,
+          "gate_satisfied": true,
+          "gate_note": "defect corrected or rejected with source and reason",
+          "effort_units": 4
+        },
+        {
+          "proposal": "D-STALE",
+          "defect": "stale",
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "required evidence missing or unsupported: source_reason",
+          "effort_units": 1
+        },
+        {
+          "proposal": "D-UNSUPPORTED",
+          "defect": "unsupported",
+          "citation_valid": true,
+          "action": "reject",
+          "reviewer": "owner@eval.example",
+          "reason": "unsupported: Planning permission differs from the case [source: Stage: Contacting resident]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": true,
+          "gate_satisfied": true,
+          "gate_note": "defect corrected or rejected with source and reason",
+          "effort_units": 4
+        },
+        {
+          "proposal": "D-INCOMPLETE",
+          "defect": "incomplete",
+          "citation_valid": true,
+          "action": "edit",
+          "reviewer": "owner@eval.example",
+          "reason": "incomplete: Open safety issues differs from the case [source: Open safety issues: 1]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": "Owner is Eval Owner; Stage is Contacting resident; Open safety issues is 1",
+          "defect_corrected": true,
+          "gate_satisfied": true,
+          "gate_note": "defect corrected or rejected with source and reason",
+          "effort_units": 4
+        }
+      ],
+      "effort_units": 20,
+      "reviews": 6,
+      "defects": 4,
+      "detected": 3,
+      "detection_rate": 0.75,
+      "corrections": 2,
+      "rejections": 1,
+      "false_rejects": 0,
+      "uncorrected_defects_through_gate": 0,
+      "uncorrected_defects": 1,
+      "gate_passed": false,
+      "audit_verified": true
+    },
+    "misses_unsupported": {
+      "panel": "misses_unsupported",
+      "rows": [
+        {
+          "proposal": "C-1",
+          "defect": null,
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": true,
+          "gate_note": "control accepted",
+          "effort_units": 4
+        },
+        {
+          "proposal": "C-2",
+          "defect": null,
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": true,
+          "gate_note": "control accepted",
+          "effort_units": 3
+        },
+        {
+          "proposal": "D-WRONG",
+          "defect": "wrong",
+          "citation_valid": true,
+          "action": "edit",
+          "reviewer": "owner@eval.example",
+          "reason": "mismatch: Days in stage differs from the case [source: Days in stage: 12]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": "Days in stage is 12; Open safety issues is 1",
+          "defect_corrected": true,
+          "gate_satisfied": true,
+          "gate_note": "defect corrected or rejected with source and reason",
+          "effort_units": 4
+        },
+        {
+          "proposal": "D-STALE",
+          "defect": "stale",
+          "citation_valid": true,
+          "action": "edit",
+          "reviewer": "owner@eval.example",
+          "reason": "mismatch: Owner differs from the case [source: Owner: Eval Owner]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": "Owner is Eval Owner; Open safety issues is 1",
+          "defect_corrected": true,
+          "gate_satisfied": true,
+          "gate_note": "defect corrected or rejected with source and reason",
+          "effort_units": 4
+        },
+        {
+          "proposal": "D-UNSUPPORTED",
+          "defect": "unsupported",
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "required evidence missing or unsupported: source_reason",
+          "effort_units": 1
+        },
+        {
+          "proposal": "D-INCOMPLETE",
+          "defect": "incomplete",
+          "citation_valid": true,
+          "action": "edit",
+          "reviewer": "owner@eval.example",
+          "reason": "incomplete: Open safety issues differs from the case [source: Open safety issues: 1]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": "Owner is Eval Owner; Stage is Contacting resident; Open safety issues is 1",
+          "defect_corrected": true,
+          "gate_satisfied": true,
+          "gate_note": "defect corrected or rejected with source and reason",
+          "effort_units": 4
+        }
+      ],
+      "effort_units": 20,
+      "reviews": 6,
+      "defects": 4,
+      "detected": 3,
+      "detection_rate": 0.75,
+      "corrections": 3,
+      "rejections": 0,
+      "false_rejects": 0,
+      "uncorrected_defects_through_gate": 0,
+      "uncorrected_defects": 1,
+      "gate_passed": false,
+      "audit_verified": true
+    },
+    "misses_wrong": {
+      "panel": "misses_wrong",
+      "rows": [
+        {
+          "proposal": "C-1",
+          "defect": null,
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": true,
+          "gate_note": "control accepted",
+          "effort_units": 4
+        },
+        {
+          "proposal": "C-2",
+          "defect": null,
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": true,
+          "gate_note": "control accepted",
+          "effort_units": 3
+        },
+        {
+          "proposal": "D-WRONG",
+          "defect": "wrong",
+          "citation_valid": true,
+          "action": "accept",
+          "reviewer": "owner@eval.example",
+          "reason": "",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "required evidence missing or unsupported: source_reason",
+          "effort_units": 1
+        },
+        {
+          "proposal": "D-STALE",
+          "defect": "stale",
+          "citation_valid": true,
+          "action": "edit",
+          "reviewer": "owner@eval.example",
+          "reason": "mismatch: Owner differs from the case [source: Owner: Eval Owner]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": "Owner is Eval Owner; Open safety issues is 1",
+          "defect_corrected": true,
+          "gate_satisfied": true,
+          "gate_note": "defect corrected or rejected with source and reason",
+          "effort_units": 4
+        },
+        {
+          "proposal": "D-UNSUPPORTED",
+          "defect": "unsupported",
+          "citation_valid": true,
+          "action": "reject",
+          "reviewer": "owner@eval.example",
+          "reason": "unsupported: Planning permission differs from the case [source: Stage: Contacting resident]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": true,
+          "gate_satisfied": true,
+          "gate_note": "defect corrected or rejected with source and reason",
+          "effort_units": 4
+        },
+        {
+          "proposal": "D-INCOMPLETE",
+          "defect": "incomplete",
+          "citation_valid": true,
+          "action": "edit",
+          "reviewer": "owner@eval.example",
+          "reason": "incomplete: Open safety issues differs from the case [source: Open safety issues: 1]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": "Owner is Eval Owner; Stage is Contacting resident; Open safety issues is 1",
+          "defect_corrected": true,
+          "gate_satisfied": true,
+          "gate_note": "defect corrected or rejected with source and reason",
+          "effort_units": 4
+        }
+      ],
+      "effort_units": 20,
+      "reviews": 6,
+      "defects": 4,
+      "detected": 3,
+      "detection_rate": 0.75,
+      "corrections": 2,
+      "rejections": 1,
+      "false_rejects": 0,
+      "uncorrected_defects_through_gate": 0,
+      "uncorrected_defects": 1,
+      "gate_passed": false,
+      "audit_verified": true
+    },
+    "over_reject": {
+      "panel": "over_reject",
+      "rows": [
+        {
+          "proposal": "C-1",
+          "defect": null,
+          "citation_valid": true,
+          "action": "reject",
+          "reviewer": "owner@eval.example",
+          "reason": "not relied on [source: Stage: Contacting resident]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "correct control rejected",
+          "effort_units": 1
+        },
+        {
+          "proposal": "C-2",
+          "defect": null,
+          "citation_valid": true,
+          "action": "reject",
+          "reviewer": "owner@eval.example",
+          "reason": "not relied on [source: Stage: Contacting resident]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "correct control rejected",
+          "effort_units": 1
+        },
+        {
+          "proposal": "D-WRONG",
+          "defect": "wrong",
+          "citation_valid": true,
+          "action": "reject",
+          "reviewer": "owner@eval.example",
+          "reason": "not relied on [source: Stage: Contacting resident]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "reason does not identify the seeded discrepancy and its source",
+          "effort_units": 1
+        },
+        {
+          "proposal": "D-STALE",
+          "defect": "stale",
+          "citation_valid": true,
+          "action": "reject",
+          "reviewer": "owner@eval.example",
+          "reason": "not relied on [source: Stage: Contacting resident]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "reason does not identify the seeded discrepancy and its source",
+          "effort_units": 1
+        },
+        {
+          "proposal": "D-UNSUPPORTED",
+          "defect": "unsupported",
+          "citation_valid": true,
+          "action": "reject",
+          "reviewer": "owner@eval.example",
+          "reason": "not relied on [source: Stage: Contacting resident]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "reason does not identify the seeded discrepancy and its source",
+          "effort_units": 1
+        },
+        {
+          "proposal": "D-INCOMPLETE",
+          "defect": "incomplete",
+          "citation_valid": true,
+          "action": "reject",
+          "reviewer": "owner@eval.example",
+          "reason": "not relied on [source: Stage: Contacting resident]",
+          "source_case": [
+            "T-1"
+          ],
+          "source_hashes": {
+            "T-1": "585dad024a748adb"
+          },
+          "replacement": null,
+          "defect_corrected": false,
+          "gate_satisfied": false,
+          "gate_note": "reason does not identify the seeded discrepancy and its source",
+          "effort_units": 1
+        }
+      ],
+      "effort_units": 6,
+      "reviews": 6,
+      "defects": 4,
+      "detected": 0,
+      "detection_rate": 0.0,
+      "corrections": 0,
+      "rejections": 4,
+      "false_rejects": 2,
+      "uncorrected_defects_through_gate": 0,
+      "uncorrected_defects": 4,
+      "gate_passed": false,
+      "audit_verified": true
+    }
+  },
+  "checks": {
+    "competent_detects_all_seeded_defects": true,
+    "no_uncorrected_defect_satisfies_gate": true,
+    "default_acceptance_cannot_pass": true,
+    "citation_validity_alone_cannot_pass": true,
+    "automation_bias_misses_confident_cited_defects": true,
+    "reviewer_source_reason_retained": true,
+    "reviewer_authority_defined": true,
+    "unauthorised_reviewer_cannot_pass": true,
+    "audit_chain_verifies": true,
+    "each_missed_defect_class_fails_gate": true,
+    "over_rejecting_reviewer_cannot_pass": true
+  },
+  "passed": true,
+  "effort_note": "scripted comparison units, same case and workload (one review per proposal on both sides); not measured reviewer time",
+  "evidence": {
+    "provider": "scripted",
+    "human_effectiveness": "not evaluated (no authorised competent reviewers)",
+    "reviewer_authority": {
+      "status": "provisional, pending OQ-017 owner decision",
+      "task": "summary",
+      "required_evidence": [
+        "reviewer",
+        "source_hashes",
+        "source_reason"
+      ],
+      "note": "Constructed for the offline test. Real competent-review authority is an OQ-017 decision by Sponsor, Programme, Safety, DPO/Legal and Assurance.",
+      "authorised_reviewers": [
+        "owner@eval.example"
+      ]
+    },
+    "open_items": [
+      "no authorised competent human reviewers have run this test; scripted panels are not people",
+      "reviewer authority and meaningful-oversight evidence remain OQ-017 owner decisions",
+      "effort is scripted comparison units, not measured reviewer time",
+      "thresholds and sample sizes are not approved; the seeded set is a demonstration slice"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+ "axe_alerts_panel": {
+  "violations": [],
+  "incomplete": [],
+  "passes": 15
+ },
+ "tab_walk": [
+  "alerts-plain-mode::in_alerts=true:in_chat=false",
+  "BUTTON:Refresh alerts:in_alerts=true:in_chat=false",
+  "ret-to:Home identifiedChecking leaseR:in_alerts=false:in_chat=false",
+  "ret-why::in_alerts=false:in_chat=false",
+  "ret-source::in_alerts=false:in_chat=false",
+  "ret-next::in_alerts=false:in_chat=false",
+  "BUTTON:Send back:in_alerts=false:in_chat=false",
+  "employee-chat-launcher::in_alerts=false:in_chat=false",
+  "BODY:Skip to main content\n\n\n\n  Zava:in_alerts=false:in_chat=false",
+  "A:Skip to main content:in_alerts=false:in_chat=false",
+  "home:Zava ForwardZava North Homes:in_alerts=false:in_chat=false",
+  "A:My cases:in_alerts=false:in_chat=false"
+ ],
+ "focus_visible_outline": {
+  "outlineStyle": "solid",
+  "outlineWidth": "3px",
+  "boxShadow": "rgb(242, 169, 0) 0px 0px 0px 2px"
+ },
+ "chat_open_after_enter": false,
+ "chat_open_after_space": false,
+ "axe_chat_panel_open": {
+  "violations": [],
+  "incomplete": [],
+  "passes": 1
+ },
+ "chat_textarea_disabled": true,
+ "chat_status_texts": [
+  "Recorded usage is not available yet. No model calls are permitted.",
+  "",
+  "Cited lookup is not available for your role. Owner: your team manager. Next action: ask them for access. Continue with the human owner route; safety and alerts do not depend on chat."
+ ],
+ "doubt_route_text_present": false,
+ "chat_closed_by_escape": true,
+ "summary_focused_after_escape": "BUTTON",
+ "reflow_scroll_overflow_x_at_683": false
+}

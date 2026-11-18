@@ -1,0 +1,53 @@
+{
+ "task_id": "issue-115-live",
+ "task_slug": "issue-115-live",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-18/issue-115-live-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-18/issue-115-live-plan.md",
+  "details": ".copilot-tracking/details/2026-11-18/issue-115-live-details.md",
+  "critique": ".copilot-tracking/research/2026-11-18/issue-115-live-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-18/issue-115-live-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-18/issue-115-live-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Retention lock deferred to #1908; demo only; live Azure authorised, no drills",
+   "status": "confirmed",
+   "evidence": "owner decision 2026-11-18"
+  },
+  {
+   "decision": "Critique executed once; verdict proceed",
+   "status": "done",
+   "evidence": ".copilot-tracking/research/2026-11-18/issue-115-live-critique.md"
+  },
+  {
+   "decision": "Review executed once; conformant with open items",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/2026-11-18/issue-115-live-review.md"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "commit and hand over"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Confirm ops mailbox delivery",
+   "rationale": "only unproven alert leg",
+   "evidence": "research note limits"
+  },
+  {
+   "rank": 2,
+   "task": "Explain Manual trigger vs Bicep cron",
+   "rationale": "scheduled leg",
+   "evidence": "research note limits"
+  }
+ ]
+}

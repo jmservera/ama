@@ -1,0 +1,26 @@
+import os, sys, re
+from playwright.sync_api import sync_playwright
+H="https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io"
+who=sys.argv[1]; base=sys.argv[2]
+h=os.path.expanduser("~")
+if who=="staff":
+    u=open(h+"/.ama-test-user-id").read().strip(); p=open(h+"/.ama-test-user").read().strip()
+else:
+    l=open(h+"/.ama-resident-test-user").read().splitlines(); u,p=l[0].strip(),l[1].strip()
+out=f"/tmp/state-{who}.json"
+with sync_playwright() as pw:
+    b=pw.chromium.launch(); c=b.new_context(viewport={"width":1440,"height":900}); pg=c.new_page()
+    pg.goto(base+"/sign-in" if who=="staff" else base+"/")
+    print("landed",re.sub(r"\?.*","",pg.url))
+    for _ in range(4):
+        try:
+            if pg.locator("input[name=loginfmt]").is_visible(timeout=3000):
+                pg.fill("input[name=loginfmt]",u); pg.click("input[type=submit]"); pg.wait_for_timeout(1500)
+            if pg.locator("input[name=passwd]").is_visible(timeout=3000):
+                pg.fill("input[name=passwd]",p); pg.click("input[type=submit]"); pg.wait_for_timeout(2000)
+            if pg.locator("#idBtn_Back").is_visible(timeout=2000): pg.click("#idBtn_Back"); pg.wait_for_timeout(2000)
+        except Exception as e: pass
+    pg.wait_for_load_state("networkidle")
+    print("final",re.sub(r"\?.*","",pg.url), pg.title())
+    pg.screenshot(path=f"shots/login-{who}.png")
+    c.storage_state(path=out); os.chmod(out,0o600)

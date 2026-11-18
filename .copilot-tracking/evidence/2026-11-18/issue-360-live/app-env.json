@@ -1,0 +1,14 @@
+[
+  {
+    "n": "ZF_STORE",
+    "v": "mssql"
+  },
+  {
+    "n": "ZF_AUTH",
+    "v": "trusted-proxy"
+  },
+  {
+    "n": "ZF_DEPLOYMENT_PROFILE",
+    "v": "demo"
+  }
+]
