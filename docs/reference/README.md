@@ -462,6 +462,8 @@ restates the owner-only items without ticking any criterion.
 For #125, the [live discovery assistant evidence](./research/issue-125-live-discovery-assistant-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: no assistant route on the live API, deny-by-default boundary output,
 and all three criteria left open with the reason each cannot be fully proven for the demo.
+A [second run](./research/issue-125-live-r2-discovery-assistant-2026-11-18.md) repeats the probes and shows
+that the one failing test passes in a clean installed environment (47 of 47); all three criteria stay open.
 
 For #184, the [live simulator stream evidence](./research/issue-184-live-simulator-stream-evidence-2026-11-18.md)
 records the child-story status on 2026-11-18: #185 and #189 are still open, the demo hub has
