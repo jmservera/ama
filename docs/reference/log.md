@@ -13112,6 +13112,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-200-live-20261118T1618Z-2026-11-18.md](research/issue-200-live-20261118T1618Z-2026-11-18.md) with evidence folder: live exec proof (uid 10001, empty `/data`, no capabilities) on the demo API and resident app, 52 revisions keeping historical tags; fresh tag deployment left unproven because the registry is private and a window would change shared posture. No source change.
 
+## [2026-11-18] add | Issue 201 second live audit (Refs #201)
+
+* Added [cutover-gate-live-r2-2026-11-18.md](research/cutover-gate-live-r2-2026-11-18.md): live revision 0000032 healthy, in-container listing shows only the three `zava-forward-*` distributions and no `mvp` tree; build-run record still unavailable; legacy-reference checker violations grew to 45.
+
 ## [2026-11-18] add | Issue 470 live audit (Refs #470)
 
 * Added [issue-470-live-20261118T1639Z-2026-11-18.md](research/issue-470-live-20261118T1639Z-2026-11-18.md): criteria 1, 2, 3 and 5 backed by 109 passing `tools.test_rpi_checks` tests; criterion 4 stays unproven (no full `--all` benchmark run). No source change.
