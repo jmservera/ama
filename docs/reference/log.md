@@ -12661,6 +12661,13 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 145 restore re-verification (Refs #145)
 
 * Added [issue-145-live-run2-reverification-2026-11-18.md](research/issue-145-live-run2-reverification-2026-11-18.md): read-only re-check of the demo SQL backup settings and cleanup, plus a code finding that no mechanism re-applies release, suspension or spent-allowance state after a restore (R3 unproven). No Azure or source changes.
+## [2026-11-18] add | Human-review effectiveness demo evidence (Refs #223)
+
+* Added [human-review-live-223-2026-11-18.md](research/human-review-live-223-2026-11-18.md): per-criterion record from the offline harness, targeted tests and a live review-record probe. Scripted panels prove the gate and measurement; real reviewers, measured time and OQ-017 authority are unproven. No source or Azure changes.
+
+## [2026-11-18] add | CI/CD pipeline audit, second live run (Refs #138)
+
+* Added [issue-138-live-cicd-pipeline-run2-evidence-2026-11-18.md](research/issue-138-live-cicd-pipeline-run2-evidence-2026-11-18.md): repeat read-only audit with the same result. What-if succeeded (99 Create, 15 Modify, 0 Delete, 14 Unsupported), smoke checks passed live, and no OIDC variable, protected environment, runner or federated credential exists. No criterion ticked.
 
 ## [2026-11-18] add | Issue 155 usability programme live evidence (Refs #155)
 
