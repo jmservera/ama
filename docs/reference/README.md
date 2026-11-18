@@ -436,6 +436,13 @@ For #130, the [live nomination route evidence](./research/issue-130-live-nominat
 records a 2026-11-18 demo run: route panels and permissions read live, representative options absent
 without confirmed authority, writes refused by the same identity defect, and the unticked
 representative-participation criterion stated as unprovable for the demo.
+For #124, the [Phase 0 discovery evidence](./research/issue-124-phase0-discovery-evidence-2026-11-18.md)
+records a 2026-11-18 offline and synthetic-data run: nomination, endpoint, dictionary and two-sided
+constraint rules proven in code, and the three unticked criteria stated as needing sponsor, owner
+workshops and an approved company extract.
+For #125, the [live discovery assistant evidence](./research/issue-125-live-discovery-assistant-evidence-2026-11-18.md)
+records a 2026-11-18 demo run: no assistant route on the live API, deny-by-default boundary output,
+and all three criteria left open with the reason each cannot be fully proven for the demo.
 
 For #184, the [live simulator stream evidence](./research/issue-184-live-simulator-stream-evidence-2026-11-18.md)
 records the child-story status on 2026-11-18: #185 and #189 are still open, the demo hub has
@@ -460,6 +467,8 @@ environment and runner prerequisites. All six criteria stay unticked.
 A [second run](./research/issue-138-live-cicd-pipeline-run2-evidence-2026-11-18.md) repeated the audit from a clean
 worktree with the same outcome: the what-if and smoke checks pass, while the OIDC variables, protected
 environments, runner and image release remain unconfigured and unobserved.
+For #118, the [hardened deployment live evidence](./research/issue-118-hardened-deployment-live-evidence-2026-11-18.md)
+records the Azure Policy and Defender decision and read-only live probes (enactment not proven).
 
 For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analysis-live-evidence-2026-11-18.md)
 records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human
@@ -1265,8 +1274,10 @@ or infra acceptance claimed.
 | [Cut-over Gate Demo Proof, Live Run 2026-11-18](./research/cutover-gate-live-2026-11-18.md) | Per-criterion results for the three unticked issue 201 criteria: repointing and healthy revision proven, src build provenance unproven (private registry), mvp/data (archive v0.21.0) and sign-off owner-only, legacy-reference checker failing on three test files. |
 | [Entra Browser Sign-in Proof on the Deployed Demo](./research/entra-signin-live-demo-2026-11-18.md) | Issue 349: live Playwright proof of Entra sign-in, anonymous 401, role-scoped `/api/me`, logout and denial paths on the demo apps, per-criterion status and what a real-user tenant registration still needs |
 | [WCAG 2.2 Automated Evidence on the Live Demo Workbench](./research/issue-151-live-wcag-axe-evidence-2026-11-18.md) | Issue 151: axe-core 4.10.3 and keyboard scans of 13 workbench screens on the demo as the Programme Manager role, per-criterion status, limits and follow-ups |
+| [Usability Programme Evidence on the Live Demo](./research/issue-155-live-usability-programme-evidence-2026-11-18.md) | Issue 155: per-criterion status; the SA-010 staff-agreement criterion cannot be proven on the demo, code gate and live read-only checks recorded (the signed-in workbench was not captured) |
 | [Issue 358 Live Evidence](./research/issue-358-live-evidence-2026-11-18.md) | Credential-expiry guard mutation check and a live ARM round-trip showing the secrets rebuild preserves Key Vault references on a throwaway app; full setup path unproven |
 | [Azure SQL Point-in-Time Restore Evidence on the Demo](./research/issue-145-live-pitr-restore-evidence-2026-11-18.md) | Issue 145: 2026-11-18 live restore of the demo database to a throwaway copy, audit-chain prefix match, observed restore time, per-criterion proven/unproven record |
+| [Service Continuity, Versioning and Export Evidence on the Demo](./research/issue-122-live-continuity-evidence-2026-11-18.md) | Issue 122: 2026-11-18 live version change and reversal, offline export verification, default-disabled assistants, per-criterion proven/unproven record |
 | [Regulatory Alert and Home Chat UX Live Demo Proof](./research/issue-215-live-alert-chat-ux-evidence-2026-11-18.md) | Issue 215: desktop Playwright and axe evidence for the alerts panel and home chat on the demo, per-criterion status; no alert card can render without a law store and staff comprehension testing stays unrun |
 | [Direct Ingress and Sign-in Live Proof on the Demo](./research/direct-ingress-live-demo-2026-11-18.md) | Issue 360: live proof of direct Container Apps HTTPS ingress, sign-in, role, shared SQL state and a real chat AI call, with criteria c, d and e proven or unproven for the demo |
 | [Public Browser Access on the Deployed Demo](./research/public-browser-access-live-demo-2026-11-18.md) | Issue 344: live curl, Playwright and read-only Azure evidence for public HTTPS landing, Entra sign-in, anonymous 401, private SQL and authenticated route reachability on the demo, per-criterion status |
