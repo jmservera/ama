@@ -12779,3 +12779,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Eval gate local test rerun and rescoring limits (Refs #216)
 
 * Updated [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md): 101 existing gate tests run locally with raw output retained; container scores labelled "Observed; raw output not retained"; no new model call; the unticked criterion stays partly proven.
+
+## [2026-11-18] update | Live device identity run 3 (Refs #185)
+
+* Updated [issue-185-live-device-identity-evidence-2026-11-18.md](research/issue-185-live-device-identity-evidence-2026-11-18.md): run 3 proves the home-to-device mapping live and keeps operator output in a retained file; the hub-wide device count after teardown showed devices with the same ids that are not attributed to this run; no criterion is ticked.
