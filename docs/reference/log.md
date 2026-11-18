@@ -13203,3 +13203,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 153 live re-check, fourth run (Refs #153)
 
 * Added [content-recheck-153-live-r4-2026-11-18.md](research/content-recheck-153-live-r4-2026-11-18.md): repeat Playwright and HTTP probes of the demo match the third run (`Held`/`envelope` on Finance, "Unassigned" owner, generic error bodies); named wording review unproven. Docs only.
+
+## [2026-11-18] add | Issue 154 live third run (Refs #154)
+
+* Added [issue-154-live-resident-ux-r3-2026-11-18.md](research/issue-154-live-resident-ux-r3-2026-11-18.md): network trace and Azure resource check support 5a for the demo; 5b (usability validation) stays unproven; corrects round 1 on the assistant textarea
