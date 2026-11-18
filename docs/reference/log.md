@@ -13160,6 +13160,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-1830-live-20261118T1648Z-2026-11-18.md](research/issue-1830-live-20261118T1648Z-2026-11-18.md): timing reports from seven retained full receipts, 54 candidate tests passing on unmerged branch `ci/gate-preflight-benchmark-1830`; no criterion ticked. No source change.
 
+## [2026-11-18] add | Issue 184 live run 5 (Refs #184)
+
+* Added [issue-184-live-r5-2026-11-18.md](research/issue-184-live-r5-2026-11-18.md) with retained read-only outputs: #185 and #189 still open, hub budget alert present, 135 simulator tests pass, source scan finds fixtures only; no criterion ticked. No source change.
+
 ## [2026-11-18] add | Issue 76 live safeguarding re-check, pass 3 (Refs #76)
 
 * Added [issue-76-live-r3-2026-11-18.md](research/issue-76-live-r3-2026-11-18.md): read-only probe, 16 cases, 1 hazard clock, 0 safeguarding items; renderer shipped in the deployed `/app.js`; 9 api and 29 core tests pass; criterion stays unticked. No source change.

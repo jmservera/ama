@@ -482,6 +482,9 @@ back from Event Hub and retains the raw job output; the child-closure criterion 
 A [fourth run](./research/issue-184-live-r4-2026-11-18.md) retains sanitised outputs, finds the demo hub budget
 alert (USD 25, 80 and 100 percent) and a per-criterion table; #185 and #189 stay open and nothing is ticked.
 
+A [fifth run](./research/issue-184-live-r5-2026-11-18.md) re-reads child states, hub budgets and the 135 simulator tests;
+the child-closure criterion stays unproven and nothing is ticked.
+
 For #109, the [live device monitoring evidence](./research/issue-109-live-device-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of IoT Hub connection state and a connectivity metric alert.
 Hub `lastActivityTime` did not update; the #440 checkpoint and child-closure criteria stay unproven.
