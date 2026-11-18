@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-16
+ms.date: 2026-11-17
 ms.topic: overview
 ---
 
@@ -775,10 +775,20 @@ For issue #126, the [constructed RAI evidence register](../../src/core/README.md
 and [API contract](../../src/api/README.md#constructed-rai-evidence-register-api-126)
 record append-only unverified claims for all 22 open baseline checks, with exact
 declared source/task/release comparison, explicit unknowns and current registered
-manager provenance. Local source/HTTP/disposable SQL/non-root image evidence is
-not a qualified assessment, human approval, closure or live-use acceptance.
-The [dated addendum note](../case_study_48_addendum.md#constructed-rai-evidence-register-engineering-2026-10-18)
-preserves historical report acceptance and separate real AI/SQL/Azure gates.
+manager provenance. On 2026-11-15, `governance_view` and `rai_evidence` also
+enforce explicit separation of pending PRD quality review and unsigned PRD
+`0.21.0` owner acceptance from `0.14.0` planning-only report acceptance and
+22/22 claim disposition counts, expose `affected_dispatch` (`DISABLED until
+appropriate evidence and qualified approvals exist`) alongside blocked
+`live_use`, and bind `conditional_eu_assurance` (`Applies only after qualified
+applicability review`) on `EU-COND-01`, `EU-COND-02` and `EU-COND-04`. Local
+source/HTTP/disposable SQL/non-root image evidence is not a qualified
+assessment, OD-36 DPIA/lawful-basis approval, human/budget-owner sign-off,
+closure or live-use acceptance. The [dated addendum note](../case_study_48_addendum.md#constructed-rai-evidence-register-engineering-2026-10-18),
+[PRD RAI engineering note](../prds/zava-forward-retrofit-programme-demonstrator.md#constructed-finding-evidence-engineering-2026-10-18-126)
+and [ADR 0002 note](../adrs/0002-pilot-readiness-architecture.md#finding-evidence-register-engineering-2026-10-18-126)
+preserve historical versions, negative/insufficient outcomes and separate real
+AI/SQL/Azure gates.
 
 For issue #153, the [chat and alert-panel copy audit](./research/ux/content-standard.md#chat-and-alert-panel-audit-extension-2026-10-18-153)
 extends the existing seven-file lexical guard to chat, including snapshot/envelope
@@ -1142,6 +1152,7 @@ or infra acceptance claimed.
 | [Agent Request Challenge](./research/company/agent-request-challenge.md) | Historical role-instrument alternatives, foundation, value tests and disagreements retained. 8 November qualification distinguishes the case's explicit L2-L4/human rights from the research conclusion about end-to-end mechanism; current scope/authority matrix is linked | 2026-11-08 |
 | [Agent What-If Study](./research/company/agent-what-if-study.md) | Historical 20-scenario richer-evidence/capacity thought experiment and original verdicts retained. 8 November qualification explains that bounded L3 drafts/L4 flags were already in the brief, not an unrestricted-autonomy request; no task activated | 2026-11-08 |
 | [Pilot Measurement Challenge](./research/company/pilot-measurement-challenge.md) | Role-agent challenge of measuring acceleration with a dashboard, short history and non-pilot comparison, plus the owner's modernisation decision: Comparison 1 and 2, frozen protocol, benefits scorecard, guardrails, vanity metrics and history sources | 2026-09-26 |
+| [Phase 0 Retrofit-Flow Discovery Contract and Governance Guard](./research/company/phase0-retrofit-flow-discovery-contract.md) | Deterministic `src/core` Phase 0 discovery contract (`discovery_contract`, `discovery_register`, `discovery_flow`) for Issue #124 and `BG-011`: human discovery-owner nomination and `accepted handover` endpoint gate, 15-state / 15-event PAS 2035 lifecycle dictionary (grounded in BSI overview snapshot; licensed PAS 2035 text not held), non-imputed flow/wait/loop evaluation, ranked constraint register requiring both `supporting_evidence` and `contradicting_evidence`, and fail-closed `owner_validated=False` / `candidate_hypothesis_not_company_finding` guard. Live Zava North Homes nomination, domain validation and 12-month extract remain open human gates | 2026-11-15 |
 | [Cohort and Missing-Data Evaluation Review Pack](./research/evaluation/cohort-evaluation-review-pack.md) | DRAFT, unapproved, not executed owner review pack for issue #222 (v0.2.0 correction returned for owner approval): synthetic paired-scenario manifest, proposed held-out custody and independent reviewer protocol (roles unfilled), sample-size, error-rule and uncertainty options, critical-error and review-burden handling, Unknown-support policy proposal, AC traceability and owner checklist; no fairness evidence | 2026-10-20 |
 | [Retrofit Operating-Data Exercise Pack](./research/retrofit-synthetic-data/README.md) | Version 2.0.0: fifteen months of constructed operating records for 980 candidate homes. The case presents a professional team aware of bottlenecks but not where they occur. The pack covers the tracker, stage event log, property register, CRM contacts, supplier appointments, safety holds, QA and evidence, grant and finance, capacity, board reports and issues log, with realistic record-keeping imperfections, a data dictionary and a manifest. These records are for the exercise and are not evidence of actual company performance. The answer key and generator are held outside the knowledge base so analysis can stay blind. Stock-to-case link report and synthetic fabric attributes for the 60,000-home stock added; synthetic EPC, survey records and a seeded EPC conflict manifest added (#170); per-user chat and memory test fixtures (personas, threads, memory, isolation and deletion cases) added (#172) | 2026-10-15 |
 | [Program Manager Document Workspace Journey](./research/ux/program-manager-document-workspace-journey.md) | Stakeholder-informed JTBD analysis, journey map, accessibility requirements and design handoff for the repository-backed Program Workbench canvas. All behavioural findings remain reported or assumed pending direct user research | 2026-10-02 |
@@ -1164,7 +1175,7 @@ or infra acceptance claimed.
 | [Resident Demo Web App UX Redesign Specification](./research/ux/resident-demo-redesign-2026-11-04.md) | UX specification for the #462 resident showcase addressing 2026-11-04 owner demo feedback: hidden form during sign-in loading with preserved email on error, icon-only `Account` button, top case summary (rules default, opt-in AI with source links and fallback), sticky section navigation, timeline/documents/funding hierarchy, and relocated temperature/humidity sensors with 24-hour synthetic forecast. Design specification only; no code modified, no user or screen-reader acceptance claimed. Refs #462. The 2026-11-04 live sensors walk (#1072) found the fail-closed no-readings message and records the blocked seed and the owner decision needed. | 2026-11-04 |
 | [Resident Demo Threat Model (Issue #462)](./research/resident-demo-threat-model-2026-11-16.md) | Design-time threat assessment of the synthetic resident showcase: public fake-email login, shared demo credential, session handling, cross-case access, database fields and deployment isolation, with accepted risks. Not a penetration test, security acceptance, DPO approval or deployment authority. Refs #462. | 2026-11-16 |
 | [Resident Demo Threat Model Update for Main 1c9ac230 (Issue #462)](./research/resident-demo-threat-model-update-2026-11-17.md) | Dated addendum after a non-rewriting integration of current main: derived sensor freshness keys, validation provenance (historical, original and newly witnessed) and what stays unproved. Not a security acceptance, penetration test, DPO approval or deployment authority. Refs #462. | 2026-11-17 |
-| [Chat and Memory Data Protection Analysis Record](./research/chat-memory-dpia.md) | Draft only: [staff hardening boundary](./research/chat-memory-dpia.md#staff-chat-engineering-boundary-2026-10-27-refs-157162159164163) records canonical question warning, shared cited routes, default-deny dispatch, bounded context and content-free consumption receipts. Provider terms documented 2026-11-01 (vendor documentation, not DPO-accepted) and a blank DPO and Legal decision pack added. No approved retention, lawful basis, notice or DPIA; no live activation or human accessibility/evaluation acceptance (#157/#162/#159/#164/#163) | 2026-11-01 |
+| [Chat and Memory Data Protection Analysis Record](./research/chat-memory-dpia.md) | Draft only: [staff hardening boundary](./research/chat-memory-dpia.md#staff-chat-engineering-boundary-2026-10-27-refs-157162159164163) records canonical question warning, shared cited routes, default-deny dispatch, bounded context and content-free consumption receipts; [2026-11-15 runtime residency/handling contract](./research/chat-memory-dpia.md#enforced-model-provider-and-region-position-2026-11-15-refs-163) enforces `uksouth` `Standard` / EU data-zone allowlists, zero training, content-filtering vs 30-day abuse-monitoring disclosure, cross-border transfer gating and pre-approval retention blocking (`chat_provider_position.py`); and [whole-system processing, derivative-dispatch and persisted rights-ledger controls](./research/chat-memory-dpia.md#whole-system-processing-derivative-dispatch-and-rights-request-controls-2026-11-15-refs-121) enforce intact-attachment gating (`storage_approves_ai_dispatch=False`) and statutory rights tracking (`uk_hosting_does_not_prove_uk_inference_residency: True`, `provider_erasure_confirmed=False`). Vendor terms stay not DPO-accepted and decisions D1 to D8 stay Not recorded; no approved production retention, lawful basis, notice or DPIA (#121/#157/#162/#159/#164/#163) | 2026-11-15 |
 | [Chat Storage Approval for the Synthetic-Data Demo](./research/chat-demo-storage-approval-2026-11-01.md) | Owner decision 2026-11-01 enabling chat storage for the synthetic-data demo only: DPIA, lawful basis, notice and 30-day retention references the deploy settings point to. Not a production or real-data approval; #163 criteria 2 and 5 stay deferred | 2026-11-01 |
 | [Easy Auth Intermittent 500s Under Concurrency](./research/easy-auth-intermittent-500-2026-11-03.md) | Empty-body 500s on the cutover test demo API (issue 810): ingress `Http` was insufficient; sidecar logs and stub A/B isolate the API's HTTP/1.0 close-per-response as the cause, fixed in source, deployed (image 4d56cf609) and verified live (0 x 500 in about 1,300 further requests, including signed-in resident traffic; staff-token burst still open) | 2026-11-04 |
 | [Chat Administrator and Break-Glass Demo-Only Disclaimer](./research/chat-demo-breakglass-disclaimer-2026-11-03.md) | Owner decision 2026-11-03: metadata-only administrator and break-glass policy for the synthetic-data demo, recorded as unreviewed by the DPO and Legal. Not a production or real-data approval (#162 criterion 6) | 2026-11-03 |
@@ -1535,3 +1546,19 @@ open-issue freshness) on `main` `e155c88ed`: 90 focused unit and local HTTP test
 0 skipped, lint and configured mypy clean, an invocation error retained, the original adverse qualifications preserved, no
 confirmed defect, remaining risks routed to existing owners, and a bounded CONTINUE. It is local and synthetic only and is not
 SQL Server, browser, hosted, Azure, retention-lock or approval evidence.
+
+Scoped `#440` stabilization checkpoints (2026-11-15) for
+[Epic #89](../architecture/cutover-evidence-pack.md#epic-89-scoped-stabilization-checkpoint-2026-11-15-refs-89-440)
+(provider capacity, work orders, leaseholder Section 20 consultation guard, staff-mediated job packs, per-measure quality
+acceptance, aftercare concern routing and lived-performance review, and bounded workspace script retry across closed children
+`#90`, `#91`, `#92`, `#132`, `#133`, `#1384`, and `#1402`) and
+[Epic #100](../architecture/cutover-evidence-pack.md#epic-100-scoped-stabilization-checkpoint-2026-11-15-refs-100-440)
+(coordinator heatmap and funnel, prospective event progression, declared scenario forecasts, constructed-scenario manifest
+integrity, management AI consumption economics, and AI-independent one-way evidence export packs across closed children
+`#101`, `#102`, and `#103` plus stacked `PR #1641` tokenomics increments) are recorded at parent-topic pin
+`74273202817f9068f9c55cb325b39df7879cba7b` (`origin/main` `5e0c7f74432ffce73cfeaa672e4e40a605ca6274`, merge-base
+`61e1917dd075a8307f0fd436c42cc41f47906846`). They reconcile document-qualified `BRD`, `PRD`, and `ADR` requirements, verify
+cross-cutting boundaries across 1,499 focused local unit and API test runs (recording opt-in SQL Server and Chromium skips
+explicitly), confirm no new defect or refactoring need on either epic surface, record authorized Azure, human, and deferred
+`#432` commercial tariff residuals, and recommend `continue` while keeping `#89` and `#100` open pending merge, hosted CI,
+independent review, and owner closure.

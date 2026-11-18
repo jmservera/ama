@@ -10,6 +10,15 @@ from datetime import date, timedelta
 from pathlib import Path
 
 import test_mvp
+from zava_forward.core import (
+    ai_tasks,
+    assistants,
+    chat_case_answers,
+    data_protection,
+    forms,
+    home_case,
+    projection,
+)
 from zava_forward.core.doc_controls import (DEFENDER_TAG, DefenderForStorageScanner, DocumentUnavailable, LocalSignatureScanner,
                                           TEST_MARKER, open_scanner)
 from zava_forward.core.documents import AzureBlobDocumentStore
@@ -49,14 +58,15 @@ class DefenderBlob(FakeBlob):
 class Base(unittest.TestCase):
     sql = False
 
-    def make(self, cases=None):
+    def make(self, cases=None, *, sql=None):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
         data = copy.deepcopy(test_mvp.DATA)
         data["cases"] += cases or []
         p = Path(tmp.name) / "zavaforward.json"
         p.write_text(json.dumps(data))
-        return SqlStore(str(p), os.path.join(tmp.name, "pw.sqlite")) if self.sql else Store(str(p))
+        use_sql = self.sql if sql is None else sql
+        return SqlStore(str(p), os.path.join(tmp.name, "pw.sqlite")) if use_sql else Store(str(p))
 
     def actions(self, st):
         return [e["action"] for e in st.audit_entries()]
@@ -184,6 +194,156 @@ class ScanTests(Base):
                 seen.add(u["scan_class"])
         self.assertEqual(seen, {"clean", "test-marker", "type-mismatch"})
         self.assertTrue(all(d["scan"]["status"] == "clean" for d in st.detail("ZF-1")["documents"]))
+
+    def test_quarantine_blocks_download_and_derivative_use_until_clean(self):
+        for use_sql in (False, True):
+            with self.subTest(sql=use_sql):
+                self._check_quarantine_gate(use_sql)
+
+    def _check_quarantine_gate(self, use_sql):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        seed_path = str(Path(tmp.name) / "zavaforward.json")
+        db_path = os.path.join(tmp.name, "pw.sqlite")
+        Path(seed_path).write_text(json.dumps(copy.deepcopy(test_mvp.DATA)))
+        blob = DefenderBlob()
+        st = SqlStore(seed_path, db_path) if use_sql else Store(seed_path)
+        st.docstore = AzureBlobDocumentStore(
+            "https://acct.blob.core.windows.net", "case-docs", sas="s=1", transport=blob
+        )
+        st.scanner = DefenderForStorageScanner(st.docstore)
+        doc = st.add_document(
+            SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1.4 ok", metadata=change_metadata(st, "ZF-1")
+        )
+        with st.lock:
+            if hasattr(st, "_touch"):
+                st._touch("ZF-1")
+            case = st._case("ZF-1")
+            case["form_staging"] = [{"batch_id": "B-1", "source": {"id": doc["id"]}}]
+            case["documents"][0]["summary"] = "SYN summary"
+            st.save()
+
+        states = (
+            (None, {"scan": None}),
+            (None, {}),
+            (None, {"scan": {"status": "pending", "scanner": "s", "at": "2026-11-15T00:00:00", "detail": "p"}}),
+            ("No threats found", {"scan": {"status": "failed", "scanner": "s", "at": "2026-11-15T00:00:00", "detail": "f"}}),
+            ("No threats found", {"scan": {"status": "infected", "scanner": "s", "at": "2026-11-15T00:00:00", "detail": "i"}}),
+            (
+                "No threats found",
+                {
+                    "scan": {"status": "clean", "scanner": "s", "at": "2026-11-15T00:00:00", "detail": "c"},
+                    "scan_status": "infected",
+                },
+            ),
+        )
+        for tag_result, fields in states:
+            with self.subTest(fields=fields):
+                blob.result = tag_result
+                with st.lock:
+                    if hasattr(st, "_touch"):
+                        st._touch("ZF-1")
+                    raw_doc = st._case("ZF-1")["documents"][0]
+                    raw_doc.pop("scan", None)
+                    raw_doc.pop("scan_status", None)
+                    raw_doc.update(copy.deepcopy(fields))
+                    raw_doc["summary"] = "SYN summary"
+                    st.save()
+
+                with self.assertRaises(DocumentUnavailable):
+                    st.get_document("ZF-1", doc["id"], SAM)
+                with self.assertRaises(DocumentUnavailable):
+                    st.read_document(SAM, "ZF-1", doc["id"])
+                if fields:
+                    with self.assertRaises(DocumentUnavailable):
+                        ai_tasks.run_document(st, SAM, "ZF-1", raw_doc, b"%PDF-1.4 ok")
+                    for mode_env in ({"ZF_DATA_MODE": "synthetic"}, {"ZF_DATA_MODE": "actual"}):
+                        hold = data_protection.document_model_hold(
+                            raw_doc,
+                            mode_env,
+                            case_id="ZF-1",
+                            doc_id=doc["id"],
+                            derivative="synthetic_safe",
+                        )
+                        self.assertIsNotNone(hold)
+                        self.assertIn("has not passed the content scan", hold)
+
+                detail = st.detail("ZF-1", SAM)
+                epc_item = next(r for r in detail["checklist"] if r["kind"] == "EPC")
+                self.assertFalse(epc_item["present"])
+                self.assertEqual(detail["documents"][0]["summary"], projection.NOTE_HELD)
+                self.assertEqual(
+                    chat_case_answers.case_facts(detail, reason_visible=True)["documents"],
+                    "none recorded",
+                )
+                epc_fresh = next(
+                    f
+                    for f in st.work_context(st._case("ZF-1"), PAM)["evidence_freshness"]
+                    if f["kind"] == "EPC"
+                )
+                self.assertEqual(epc_fresh["status"], "Unknown")
+                self.assertEqual(home_case.links(st.data, st._case("ZF-1"))["document_ids"], [])
+                self.assertEqual(home_case.view(st, SAM, "ZF-1")["home"]["documents"], [])
+                self.assertEqual(forms.list_candidates(st, PAM, "ZF-1"), [])
+                with self.assertRaises(ValueError):
+                    st._capacity_source(
+                        {
+                            "source_case_id": "ZF-1",
+                            "document_id": doc["id"],
+                            "source_version": str(raw_doc["version"]),
+                        }
+                    )
+                self.assertNotIn(
+                    f"Document: {doc['name']}", ai_tasks.source_labels(st._case("ZF-1"), True)
+                )
+                self.assertEqual(
+                    assistants.capture("assessment-preparation", st._case("ZF-1"))["sources"][
+                        "documents"
+                    ],
+                    [],
+                )
+
+        with st.lock:
+            if hasattr(st, "_touch"):
+                st._touch("ZF-1")
+            raw_doc = st._case("ZF-1")["documents"][0]
+            raw_doc["scan"] = {
+                "status": "failed",
+                "scanner": "s",
+                "at": "2026-11-15T00:00:00",
+                "detail": "f",
+            }
+            raw_doc["scan_status"] = "failed"
+            st.save()
+
+        blob.result = "No threats found"
+        self.assertEqual(st.rescan_document(SAM, "ZF-1", doc["id"])["status"], "clean")
+        self.assertEqual(st.get_document("ZF-1", doc["id"], SAM)[2], b"%PDF-1.4 ok")
+        clean_detail = st.detail("ZF-1", SAM)
+        self.assertTrue(next(r for r in clean_detail["checklist"] if r["kind"] == "EPC")["present"])
+        self.assertEqual(clean_detail["documents"][0]["summary"], "SYN summary")
+        self.assertEqual(
+            chat_case_answers.case_facts(clean_detail, reason_visible=True)["documents"], "EPC"
+        )
+        self.assertEqual(home_case.links(st.data, st._case("ZF-1"))["document_ids"], [doc["id"]])
+        self.assertEqual(len(forms.list_candidates(st, PAM, "ZF-1")), 1)
+        self.assertEqual(
+            [
+                d["id"]
+                for d in assistants.capture("assessment-preparation", st._case("ZF-1"))["sources"][
+                    "documents"
+                ]
+            ],
+            [doc["id"]],
+        )
+        if use_sql:
+            reopened = SqlStore(seed_path, db_path)
+            reopened.docstore = st.docstore
+            reopened.scanner = st.scanner
+            reopened_doc = reopened._case("ZF-1")["documents"][0]
+            self.assertEqual(reopened_doc["scan"]["status"], "clean")
+            self.assertEqual(reopened_doc["scan_status"], "clean")
+            self.assertEqual(reopened.get_document("ZF-1", doc["id"], SAM)[2], b"%PDF-1.4 ok")
 
 
 class RetentionTests(Base):

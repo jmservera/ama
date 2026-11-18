@@ -5,6 +5,7 @@ import csv
 import hashlib
 import json
 import re
+from collections import Counter
 from datetime import date
 from pathlib import Path
 
@@ -104,7 +105,7 @@ def source_issues(sources: list[dict[str, object]]) -> list[str]:
     issues = []
     for source in sources:
         sid = str(source["id"])
-        for field in ("licence", "attribution", "url"):
+        for field in ("licence", "attribution", "url", "permitted_use"):
             value = source.get(field)
             if not isinstance(value, str) or not value.strip():
                 issues.append(f"{sid}:missing_{field}")
@@ -119,6 +120,31 @@ def source_issues(sources: list[dict[str, object]]) -> list[str]:
                 raise ValueError
         except ValueError:
             issues.append(f"{sid}:missing_or_invalid_retrieval_date")
+        if source.get("contains_real_resident_data") is not False:
+            issues.append(f"{sid}:contains_real_resident_data_not_false")
+    return issues
+
+
+def dataset_source_issues(
+    datasets: list[dict[str, object]], sources: list[dict[str, object]]
+) -> list[str]:
+    """Check each dataset cites unique, registered sources and none that carry resident data."""
+    by_id = {str(source["id"]): source for source in sources}
+    counts = Counter(str(source["id"]) for source in sources)
+    issues = [f"{sid}:duplicate_source_id" for sid, n in sorted(counts.items()) if n > 1]
+    for dataset in datasets:
+        did = str(dataset["id"])
+        cited = dataset.get("sources")
+        if not isinstance(cited, list):
+            issues.append(f"{did}:invalid_sources")
+            continue
+        for sid in cited:
+            if sid not in by_id:
+                issues.append(f"{did}:unregistered_source:{sid}")
+            elif by_id[sid].get("contains_real_resident_data") is not False:
+                issues.append(f"{did}:real_resident_data_source:{sid}")
+        if not isinstance(dataset.get("personal_data"), str) or not dataset["personal_data"]:
+            issues.append(f"{did}:missing_personal_data_statement")
     return issues
 
 
@@ -218,6 +244,10 @@ def public_issues(root: Path, *, check_sources: bool = False) -> list[str]:
         if not isinstance(sources, list):
             raise ValueError("sources must be a list")
         issues.extend(source_issues(sources))
+        datasets = register["datasets"]
+        if not isinstance(datasets, list):
+            raise ValueError("datasets must be a list")
+        issues.extend(dataset_source_issues(datasets, sources))
     return issues
 
 

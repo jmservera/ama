@@ -504,6 +504,49 @@ class SqliteRescan(unittest.TestCase):
                 document_rescan.run(self.store, after=after)
         self.assertEqual(self.actions(), [])
 
+    def test_failed_verdict_stays_quarantined_until_manual_rescan_persists_clean(self) -> None:
+        from zava_forward.core.doc_controls import DocumentUnavailable
+
+        with patch.object(self.store.scanner, "scan", return_value=("failed", "SYN engine error")):
+            scan = self.store.scan_new_document("ZF-1", "d0", "SYN.txt", b"SYN body", "text/plain")
+        self.assertEqual(scan["status"], "failed")
+        self.assertEqual(self.store.docstore.get("ZF-1", "d0"), b"SYN body")
+
+        with self.store.lock:
+            self.store._touch("ZF-1")
+            docs = self.store._case("ZF-1")["documents"]
+            docs[0]["scan"] = dict(
+                status="failed", scanner="syn", at="2026-11-15T00:00:00", detail="SYN"
+            )
+            docs[0]["scan_status"] = "failed"
+            docs[1]["scan"] = None
+            docs[2]["scan_status"] = "infected"
+            docs[2]["scan"] = dict(
+                status="clean", scanner="syn", at="2026-11-15T00:00:00", detail="SYN"
+            )
+            self.store.save()
+
+        for did in ("d0", "d1", "d2"):
+            with self.assertRaises(DocumentUnavailable):
+                self.store.get_document("ZF-1", did, DATA["staff"][0])
+
+        sweep = document_rescan.run(self.store, limit=10)
+        self.assertEqual(sweep["checked"], 0)
+
+        with patch.object(self.store, "scanner", None):
+            with self.assertRaises(RuntimeError):
+                self.store.rescan_document(DATA["staff"][0], "ZF-1", "d0")
+
+        with patch.object(self.store.scanner, "scan", return_value=("clean", "SYN cleared")):
+            updated = self.store.rescan_document(DATA["staff"][0], "ZF-1", "d0")
+        self.assertEqual(updated["status"], "clean")
+
+        reopened = self.open_store()
+        reopened_d0 = next(d for d in reopened._case("ZF-1")["documents"] if d["id"] == "d0")
+        self.assertEqual(reopened_d0["scan"]["status"], "clean")
+        self.assertEqual(reopened_d0["scan_status"], "clean")
+        self.assertEqual(reopened.get_document("ZF-1", "d0", DATA["staff"][0])[2], b"SYN body")
+
 
 @unittest.skipUnless(
     os.environ.get("ZF_DOCUMENT_RESCAN_MSSQL") == "1", "requires owned loopback SQL Server"

@@ -624,6 +624,72 @@ class RegulatoryTests(unittest.TestCase):
         f.card(approve=False)
         self.assertEqual(service.ask(f.user, tid, "hazard")["citations"], [])
 
+    def test_mid_thread_ai_consent_withdrawal_blocks_ask_bundle_foundry_and_doubt(self) -> None:
+        for sql in (False, True):
+            f, service, tid = self.make(sql)
+            first = service.ask(f.user, tid, "hazard sources")
+            self.assertTrue(first["citations"])
+            with f.store.lock:
+                f.store._case("ZF-1").setdefault("resident", {})["ai_data_use_consent"] = (
+                    "Withdrawn"
+                )
+                f.store.save()
+            b = service.bundle(f.user, "ZF-1", "hazard")
+            self.assertEqual((b["sources"], b["facts"], b["cards"]), ([], [], []))
+            self.assertIn("Recorded AI and data-use consent: Withdrawn", b["refusal"])
+            fq = service.foundry_query(f.user, "ZF-1", "hazard")
+            self.assertFalse(fq["permitted"])
+            self.assertEqual(fq["fields"], {})
+            self.assertIn("Recorded AI and data-use consent: Withdrawn", fq["refusal"])
+            refused = service.ask(f.user, tid, "repeat hazard sources from turn 1")
+            self.assertEqual(refused["citations"], [])
+            self.assertNotIn(QUOTE, json.dumps(refused))
+            self.assertIn("Recorded AI and data-use consent: Withdrawn", refused["refusal"])
+            with self.assertRaises(ChatForbidden):
+                service.doubt(f.user, tid, first["turn"])
+            self.assertEqual(f.store.chat_list_threads(f.owner), [])
+
+    def test_unauthorised_actor_cannot_probe_ai_consent_state_before_access_check(self) -> None:
+        f, service, _ = self.make()
+        contractor = dict(
+            email="contractor-probe@example.test",
+            name="Probe Contractor",
+            role="Contractor",
+            code="CON-99",
+        )
+        f.store.staff[contractor["email"]] = contractor
+        with patch.object(
+            f.iso,
+            "ai_consent_state",
+            side_effect=AssertionError("must not probe consent before case access check"),
+        ):
+            with self.assertRaises((ChatNotFound, ChatForbidden)):
+                service.bundle(contractor, "ZF-1", "hazard")
+            with self.assertRaises((ChatNotFound, ChatForbidden)):
+                service.foundry_query(contractor, "ZF-1", "hazard")
+            with self.assertRaises(ChatNotFound):
+                service.bundle(f.user, "ZF-MISSING", "hazard")
+            with self.assertRaises(ChatNotFound):
+                service.foundry_query(f.user, "ZF-MISSING", "hazard")
+
+    def test_out_of_scope_fallback_routes_preserve_human_workflows_when_custom_refuse_is_none(
+        self,
+    ) -> None:
+        f, service, tid = self.make()
+        service.refuse = lambda _: None
+        first = service.ask(f.user, tid, "hazard sources")
+        self.assertTrue(first["citations"])
+        for prompt, route in (
+            ("Approve the hazard sign-off now.", "named reviewer"),
+            ("Decide the formal priority ranking.", "accountable person"),
+            ("Confirm resident consent on the case.", "consent control"),
+            ("Diagnose the damp cause from readings.", "qualified person"),
+            ("Send a message to the resident.", "contact log"),
+        ):
+            reply = service.ask(f.user, tid, prompt)
+            self.assertEqual(reply["citations"], [])
+            self.assertIn(route, (reply.get("refusal") or reply.get("reply") or "").lower())
+
 
 if __name__ == "__main__":
     unittest.main()

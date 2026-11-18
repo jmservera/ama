@@ -390,10 +390,12 @@ class QualityMixin:
             self.save()
 
     def add_aftercare(self, user, case_id, idx, note):
-        note = _clean(note)
-        if not note:
-            raise ValueError("Say what the resident reported or what was done.")
         with self._quality_operation(user, case_id) as (c, user):
+            note = _clean(note)
+            if not note:
+                raise ValueError("Say what the resident reported or what was done.")
+            if controls.is_memory_reference(note):
+                raise ValueError(controls.MEMORY_REFUSAL)
             rec = self._qrec(c, idx)
             if rec["state"] != HANDED:
                 raise ValueError("Aftercare can be recorded once the work has been handed over.")

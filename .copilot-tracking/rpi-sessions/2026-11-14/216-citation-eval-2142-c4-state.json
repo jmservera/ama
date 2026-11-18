@@ -1,0 +1,56 @@
+{
+  "task_id": "216-citation-eval-2142-c4",
+  "task_slug": "216-citation-eval-2142-c4",
+  "parent_task": {
+    "task_id": "216-citation-eval-2142-c3",
+    "task_slug": "216-citation-eval-2142-c3"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-14/216-citation-eval-2142-c4-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-14/216-citation-eval-2142-c4-plan.md",
+    "details": ".copilot-tracking/details/2026-11-14/216-citation-eval-2142-c4-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-14/216-citation-eval-2142-c4-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-14/216-citation-eval-2142-c4-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c4-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research disposition reused from 216-citation-eval-2142-c3-review.md (RV-001..RV-002); Planning Readiness Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-14/216-citation-eval-2142-c4-research.md; .copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c3-review.md"
+    },
+    {
+      "decision": "Single final-candidate critique executed (Verdict: Revise); PC-001 applied directly and plan finalized",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-14/216-citation-eval-2142-c4-plan-critique.md; .copilot-tracking/plans/2026-11-14/216-citation-eval-2142-c4-plan.md"
+    },
+    {
+      "decision": "Post-implementation Review executed (Execution: Complete; Outcome: Defects found; boundary: 216-citation-eval-2142-c4); routed RV-001..RV-002 to child task 216-citation-eval-2142-c5",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c4-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Execute ranked follow-up 1 as automatic child RPI loop 216-citation-eval-2142-c5 to resolve RV-001..RV-002 in src/core"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Enforce strict JSON-compatible replayable comparison inputs and base-type canonical tags in regulatory_eval_gates.py (RV-001..RV-002)",
+      "rationale": "Highest impact and immediate local-verification closure in src/core",
+      "evidence": ".copilot-tracking/reviews/2026-11-14/216-citation-eval-2142-c4-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Delegate duplicated src/agents regulatory_chat evaluation helpers to zava_forward.core.regulatory_eval_gates",
+      "rationale": "Optional cross-package cleanup outside src/core scope",
+      "evidence": ".copilot-tracking/changes/2026-11-14/216-citation-eval-2142-changes.md"
+    }
+  ]
+}

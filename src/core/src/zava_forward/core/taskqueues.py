@@ -1,14 +1,52 @@
 """Reproducible, read-only work queue context; never an approval or assignment."""
 
-from datetime import UTC, datetime, time
+from collections.abc import Mapping, Sequence
+from datetime import UTC, datetime, time, timedelta
 from typing import Any
 
+from .doc_controls import is_available_case_document
+
 VERSION = "work-queues-1"
-MEMBERSHIP_REVISION = 3
+MEMBERSHIP_REVISION = 5
 UNKNOWN = "Unknown"
 ESCALATION_OWNER = "Building Safety lead (escalation owner)"
 HELD = "Held for roles with a recorded need"
 PENDING = ("Offered", "Received", "Escalated")
+SAFEGUARDING_ITEM_KEYS = frozenset(
+    {
+        "id",
+        "status",
+        "state",
+        "priority",
+        "category",
+        "kind",
+        "item_kind",
+        "aware_at",
+        "raised_at",
+        "reported_at",
+        "noticed",
+        "response_due_at",
+        "due_at",
+        "responded_at",
+        "completed_at",
+        "resident_update_due_at",
+        "resident_updated_at",
+        "owner",
+        "named_owner",
+        "accountable_owner",
+        "sender",
+        "destination",
+        "accepted_by",
+        "accepted_at",
+        "follow_up",
+        "referred",
+        "repaired",
+        "released",
+    }
+)
+UNRECORDED_OWNER_TOKENS = frozenset(
+    {"", "unknown", "anonymous", "unassigned", "none", "tbd", "to be named", "not assigned"}
+)
 DEFAULT = dict(
     view="mine", q="", stage="", area="", flag="", sort="urgent", wave="", owner="", queue=""
 )
@@ -220,6 +258,413 @@ def timing(due: object, done: object, now: datetime) -> str:
     return "Overdue" if end < now else "Open"
 
 
+def _utc_iso(value: datetime) -> str:
+    return value.astimezone(UTC).isoformat().replace("+00:00", "Z")
+
+
+def _clean_name(value: object) -> str | None:
+    if not isinstance(value, str):
+        return None
+    text = value.strip()
+    if not text or text.lower() in UNRECORDED_OWNER_TOKENS:
+        return None
+    return text
+
+
+def raw_safeguarding_items(case: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """Return standalone safeguarding item dicts, ignoring note-only canary containers."""
+    items: list[dict[str, Any]] = []
+    explicit = case.get("safeguarding_items")
+    if isinstance(explicit, list):
+        items.extend(x for x in explicit if isinstance(x, dict))
+    legacy = case.get("safeguarding")
+    if isinstance(legacy, list):
+        items.extend(x for x in legacy if isinstance(x, dict))
+    elif isinstance(legacy, dict) and bool(set(legacy.keys()) & SAFEGUARDING_ITEM_KEYS):
+        items.append(legacy)
+    return items
+
+
+def is_safeguarding_item(item: Mapping[str, Any], *, default_kind: str = "hazard") -> bool:
+    if default_kind == "safeguarding":
+        return True
+    kind = str(item.get("item_kind") or item.get("kind") or "").strip().lower()
+    category = str(item.get("category") or "").strip().lower()
+    return kind == "safeguarding" or category.startswith("safeguard")
+
+
+def _raw_hazard_dicts(case: Mapping[str, Any]) -> list[Mapping[str, Any]]:
+    raw = case.get("hazards")
+    if not isinstance(raw, list):
+        return []
+    return [h for h in raw if isinstance(h, Mapping)]
+
+
+def _has_malformed_safety_containers(case: Mapping[str, Any]) -> bool:
+    if "hazards" in case:
+        raw_hazards = case.get("hazards")
+        if not isinstance(raw_hazards, list) or any(
+            not isinstance(h, Mapping) for h in raw_hazards
+        ):
+            return True
+    explicit_sg = case.get("safeguarding_items")
+    if explicit_sg is not None and (
+        not isinstance(explicit_sg, list) or any(not isinstance(x, Mapping) for x in explicit_sg)
+    ):
+        return True
+    legacy_sg = case.get("safeguarding")
+    if legacy_sg is not None:
+        if isinstance(legacy_sg, list):
+            if any(not isinstance(x, Mapping) for x in legacy_sg):
+                return True
+        elif not isinstance(legacy_sg, Mapping):
+            return True
+    return False
+
+
+def is_open_safety_item(item: Mapping[str, Any]) -> bool:
+    if "released" in item and not isinstance(item.get("released"), bool):
+        return True
+    if item.get("released") is True:
+        return False
+    status = str(item.get("status") or "").strip().lower()
+    return status not in {"closed", "released", "resolved"}
+
+
+def has_open_safety(case: Mapping[str, Any]) -> bool:
+    if _has_malformed_safety_containers(case):
+        return True
+    return any(is_open_safety_item(h) for h in _raw_hazard_dicts(case)) or any(
+        is_open_safety_item(s) for s in raw_safeguarding_items(case)
+    )
+
+
+def has_open_safeguarding(case: Mapping[str, Any]) -> bool:
+    return any(
+        is_open_safety_item(h) and is_safeguarding_item(h) for h in _raw_hazard_dicts(case)
+    ) or any(is_open_safety_item(s) for s in raw_safeguarding_items(case))
+
+
+def _staff_sort_key(member: Mapping[str, Any]) -> tuple[str, str, str]:
+    return (
+        str(member.get("code") or member.get("oid") or "").strip(),
+        str(member.get("email") or "").strip().lower(),
+        str(member.get("name") or "").strip().lower(),
+    )
+
+
+def _match_staff(
+    *,
+    code: str | None = None,
+    email: str | None = None,
+    name: str | None = None,
+    staff: Sequence[Mapping[str, Any]],
+) -> Mapping[str, Any] | None:
+    if not staff:
+        return None
+    ordered = sorted(staff, key=_staff_sort_key)
+    if code:
+        code_clean = code.strip()
+        if code_clean:
+            for member in ordered:
+                m_code = str(member.get("code") or member.get("oid") or "").strip()
+                if m_code and m_code == code_clean:
+                    return member
+    if email:
+        email_low = email.strip().lower()
+        if email_low:
+            for member in ordered:
+                m_email = str(member.get("email") or "").strip().lower()
+                if m_email and m_email == email_low:
+                    return member
+    if name:
+        name_low = name.strip().lower()
+        if name_low:
+            for member in ordered:
+                m_name = str(member.get("name") or "").strip().lower()
+                if m_name and m_name == name_low:
+                    return member
+    return None
+
+
+def _resolve_person(
+    candidate: object,
+    *,
+    staff: Sequence[Mapping[str, Any]],
+    fallback_role: str,
+    fallback_id_prefix: str,
+    explicit_code: object = None,
+    explicit_role: object = None,
+) -> tuple[str, str, str] | None:
+    raw_name: str | None = None
+    raw_role: str | None = _clean_name(explicit_role)
+    raw_code: str | None = _clean_name(explicit_code)
+    raw_email: str | None = None
+    if isinstance(candidate, Mapping):
+        raw_name = _clean_name(candidate.get("name"))
+        raw_role = _clean_name(candidate.get("role")) or raw_role
+        raw_code = (
+            _clean_name(candidate.get("code") or candidate.get("id") or candidate.get("oid"))
+            or raw_code
+        )
+        raw_email = _clean_name(candidate.get("email"))
+    elif isinstance(candidate, str):
+        cleaned = _clean_name(candidate)
+        if cleaned:
+            if "@" in cleaned:
+                raw_email = cleaned
+            else:
+                raw_name = cleaned
+    matched = _match_staff(code=raw_code, email=raw_email, name=raw_name, staff=staff)
+    final_name = (
+        (_clean_name(matched.get("name")) if matched else None) or raw_name or raw_email or raw_code
+    )
+    if not final_name:
+        return None
+    final_role = (
+        raw_role or (_clean_name(matched.get("role")) if matched else None) or fallback_role
+    )
+    final_id = (
+        raw_code
+        or (_clean_name(matched.get("code") or matched.get("oid")) if matched else None)
+        or raw_email
+        or (_clean_name(matched.get("email")) if matched else None)
+        or f"{fallback_id_prefix}:{final_name.upper().replace(' ', '-')}"
+    )
+    return (final_name, final_role, final_id)
+
+
+def project_safety_clock_and_owner(
+    item: Mapping[str, Any],
+    *,
+    case: Mapping[str, Any] | None = None,
+    as_of: str | None = None,
+    staff: Sequence[Mapping[str, Any]] | None = None,
+    default_kind: str = "hazard",
+) -> dict[str, Any]:
+    """Deterministic fail-closed clock and non-blank accountable/escalation owner projection."""
+    roster: Sequence[Mapping[str, Any]] = staff or ()
+    case_map: Mapping[str, Any] = case or {}
+    safeguarding = is_safeguarding_item(item, default_kind=default_kind)
+    item_kind = "safeguarding" if safeguarding else "hazard"
+    default_role = (
+        _clean_name((item.get("hold") or {}).get("accountable_role"))
+        if isinstance(item.get("hold"), Mapping)
+        else None
+    ) or "Building Safety Liaison"
+
+    direct_candidates: list[tuple[object, object, object]] = [
+        (item.get("accepted_by"), None, None),
+    ]
+    if bool(item.get("accepted_at")):
+        direct_candidates.append((item.get("destination"), None, None))
+    direct_candidates.extend(
+        [
+            (item.get("sender"), None, None),
+            (item.get("follow_up"), None, None),
+            (
+                item.get("owner"),
+                item.get("owner_id") or item.get("owner_code"),
+                item.get("owner_role"),
+            ),
+            (
+                item.get("named_owner"),
+                item.get("owner_id") or item.get("owner_code"),
+                item.get("owner_role"),
+            ),
+            (
+                item.get("accountable_owner"),
+                item.get("owner_id") or item.get("owner_code"),
+                item.get("owner_role"),
+            ),
+        ]
+    )
+    direct: tuple[str, str, str] | None = None
+    for cand, cand_code, cand_role in direct_candidates:
+        direct = _resolve_person(
+            cand,
+            staff=roster,
+            fallback_role=default_role,
+            fallback_id_prefix="OWNER",
+            explicit_code=cand_code,
+            explicit_role=cand_role,
+        )
+        if direct is not None:
+            break
+
+    escalation: tuple[str, str, str] | None = None
+    if not bool(item.get("accepted_at")) and item.get("destination"):
+        escalation = _resolve_person(
+            item.get("destination"),
+            staff=roster,
+            fallback_role=default_role,
+            fallback_id_prefix="ESC",
+        )
+    if escalation is None and case_map.get("owner"):
+        escalation = _resolve_person(
+            case_map.get("owner"),
+            staff=roster,
+            fallback_role=_clean_name(case_map.get("owner_role")) or "Resident Liaison Officer",
+            fallback_id_prefix="CASE-OWNER",
+            explicit_code=case_map.get("owner_code"),
+            explicit_role=case_map.get("owner_role"),
+        )
+    if escalation is None:
+        ordered_roster = sorted(
+            roster,
+            key=lambda m: str(m.get("code") or m.get("email") or m.get("name") or ""),
+        )
+        for target_role in (
+            "Building Safety Liaison",
+            "Retrofit Programme Manager",
+            "Programme Support Officer",
+            "Resident Liaison Officer",
+        ):
+            for member in ordered_roster:
+                if str(member.get("role") or "").strip() == target_role:
+                    escalation = _resolve_person(
+                        member,
+                        staff=roster,
+                        fallback_role=target_role,
+                        fallback_id_prefix="ESC",
+                    )
+                    if escalation is not None:
+                        break
+            if escalation is not None:
+                break
+    if escalation is None:
+        escalation = (
+            (
+                "Safeguarding duty lead",
+                "Building Safety Liaison",
+                "ESC-SG-DUTY",
+            )
+            if safeguarding
+            else (
+                "Building Safety Liaison duty lead",
+                "Building Safety Liaison",
+                "ESC-BSL-DUTY",
+            )
+        )
+
+    esc_name, esc_role, esc_id = escalation
+    if direct is not None:
+        d_name, d_role, d_id = direct
+        unassigned = False
+        legacy_owner = d_name
+        owner_named = True
+        named_owner = d_name
+        owner_role = d_role
+        owner_id = d_id
+    else:
+        unassigned = True
+        legacy_owner = UNKNOWN
+        owner_named = False
+        named_owner = esc_name
+        owner_role = esc_role
+        owner_id = esc_id
+
+    priority_raw = _clean_name(item.get("priority")) or UNKNOWN
+    pri_upper = priority_raw.upper()
+    if safeguarding:
+        if pri_upper in {"EMERGENCY", "IMMEDIATE", "URGENT", "P1"}:
+            window_hours = 24
+            clock_label = "Safeguarding 24h emergency response clock"
+        else:
+            window_hours = 48
+            clock_label = "Safeguarding 48h referral response clock"
+    else:
+        if pri_upper in {"EMERGENCY", "P1"}:
+            window_hours = 24
+            clock_label = "Awaab's Law 24h emergency action clock (recorded reference)"
+        elif pri_upper == "ROUTINE" or (
+            pri_upper == "SIGNIFICANT" and bool(item.get("accepted_at"))
+        ):
+            window_hours = 336
+            clock_label = "Operational 14d work-start clock (recorded reference)"
+        else:
+            window_hours = 168
+            clock_label = "Operational 7d hazard investigation clock (recorded reference)"
+
+    now = instant(as_of) if as_of else datetime.now(UTC)
+    if now is None:
+        now = datetime.now(UTC)
+    raw_aware = item.get("aware_at") or item.get("raised_at") or item.get("reported_at")
+    raw_due = item.get("response_due_at") or item.get("due_at")
+    raw_done = item.get("responded_at") or item.get("completed_at")
+    aware_dt = instant(raw_aware)
+    valid_aware = aware_dt if (aware_dt is not None and aware_dt <= now) else None
+    due_dt = instant(raw_due)
+    done_dt = instant(raw_done)
+
+    if due_dt is not None:
+        deadline: datetime | None = due_dt
+        clock_basis = "recorded_service_deadline"
+    elif valid_aware is not None:
+        deadline = valid_aware + timedelta(hours=window_hours)
+        clock_basis = "operational_reference_from_awareness"
+    else:
+        deadline = None
+        clock_basis = "missing_timestamp_fail_closed"
+
+    if done_dt is not None and done_dt <= now:
+        clock_status = "completed"
+        clock_deadline_utc: str | None = _utc_iso(deadline) if deadline is not None else None
+        clock_remaining_hours: float | None = 0.0 if deadline is not None else None
+    elif deadline is None:
+        clock_status = "fail_closed_missing_timestamp"
+        clock_deadline_utc = None
+        clock_remaining_hours = None
+    else:
+        clock_deadline_utc = _utc_iso(deadline)
+        clock_remaining_hours = round((deadline - now).total_seconds() / 3600, 1)
+        clock_status = "overdue" if deadline < now else "running"
+
+    category = _clean_name(item.get("category")) or (
+        "Safeguarding" if safeguarding else "Safety concern"
+    )
+    authority = (
+        "Designated safeguarding lead and statutory safeguarding route"
+        if safeguarding and default_kind == "safeguarding"
+        else "Existing hazard and repairs service"
+    )
+    return dict(
+        item_kind=item_kind,
+        category=category,
+        priority=priority_raw,
+        owner=legacy_owner,
+        owner_named=owner_named,
+        named_owner=named_owner,
+        accountable_owner=named_owner,
+        owner_role=owner_role,
+        owner_id=owner_id,
+        unassigned=unassigned,
+        escalation_owner=esc_name,
+        escalation_owner_role=esc_role,
+        escalation_owner_id=esc_id,
+        clock_label=clock_label,
+        clock_status=clock_status,
+        clock_deadline_utc=clock_deadline_utc,
+        clock_remaining_hours=clock_remaining_hours,
+        clock_basis=clock_basis,
+        aware_at=str(raw_aware) if valid_aware is not None and raw_aware else UNKNOWN,
+        elapsed_hours=int((now - valid_aware).total_seconds() // 3600)
+        if valid_aware is not None
+        else None,
+        response_due_at=str(raw_due) if raw_due else UNKNOWN,
+        resident_update_due_at=str(item.get("resident_update_due_at"))
+        if item.get("resident_update_due_at")
+        else UNKNOWN,
+        response_state=timing(raw_due, raw_done, now),
+        resident_update_state=timing(
+            item.get("resident_update_due_at"),
+            item.get("resident_updated_at"),
+            now,
+        ),
+        authority=authority,
+    )
+
+
 def overdue_tasks(
     case: dict[str, Any], *, as_of: str, handoff: dict[str, Any] | None
 ) -> list[dict[str, Any]]:
@@ -247,22 +692,31 @@ def overdue_tasks(
                 )
             )
 
-    for index, hazard in enumerate(case.get("hazards", [])):
-        follow = hazard.get("accepted_by") or hazard.get("sender") or {}
-        named = follow.get("name") or hazard.get("owner") or UNKNOWN
+    for index, hazard in enumerate(_raw_hazard_dicts(case)):
+        follow = (
+            hazard.get("accepted_by")
+            or (hazard.get("destination") if hazard.get("accepted_at") else None)
+            or hazard.get("sender")
+            or {}
+        )
+        named = (
+            (follow.get("name") if isinstance(follow, Mapping) else follow)
+            or hazard.get("owner")
+            or UNKNOWN
+        )
         path = f"hazards/{index}"
         deadline(
             hazard.get("response_due_at"),
             hazard.get("responded_at"),
             "External safety service response",
-            named,
+            str(named),
             path,
         )
         deadline(
             hazard.get("resident_update_due_at"),
             hazard.get("resident_updated_at"),
             "External safety service resident update",
-            named,
+            str(named),
             path,
         )
     update = case.get("resident_update") or {}
@@ -274,8 +728,11 @@ def overdue_tasks(
         "resident_update",
     )
     if handoff and handoff.get("state") in PENDING:
+        handoff_due = (
+            handoff.get("effective_due_at") or handoff.get("due_at") or handoff.get("sla_due_at")
+        )
         deadline(
-            handoff.get("due_at"),
+            handoff_due,
             None,
             "Handoff acceptance",
             handoff.get("chase_owner") or UNKNOWN,
@@ -303,6 +760,7 @@ def context(
     resident_reasons: list[str],
     technical_missing: list[dict[str, Any]],
     handoff: dict[str, Any] | None,
+    staff: Sequence[Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
     now = instant(as_of)
     if now is None:
@@ -345,11 +803,11 @@ def context(
 
     clocks: list[dict[str, Any]] = []
 
-    for index, hazard in enumerate(case.get("hazards", [])):
+    for index, hazard in enumerate(_raw_hazard_dicts(case)):
         follow = hazard.get("accepted_by") or hazard.get("sender") or {}
         named = follow.get("name") or hazard.get("owner") or UNKNOWN
         path = f"hazards/{index}"
-        item = hazard_clock(hazard, now, reason_ok=reason_ok)
+        item = hazard_clock(dict(hazard), now, reason_ok=reason_ok)
         if not hazard.get("released"):
             block(
                 "Safety review",
@@ -442,7 +900,11 @@ def context(
     freshness: list[dict[str, Any]] = []
     stale = False
     for kind, days in (("EPC", 30), ("Survey", 180)):
-        documents = [d for d in case.get("documents", []) if d.get("kind") == kind]
+        documents = [
+            d
+            for d in case.get("documents", [])
+            if d.get("kind") == kind and is_available_case_document(d)
+        ]
         doc = documents[-1] if documents else {}
         observed = instant(doc.get("at"))
         age = (now - observed).total_seconds() / 86400 if observed and observed <= now else None
@@ -476,11 +938,16 @@ def context(
     recorded_at = case.get("stage_since") or UNKNOWN
     returned_view: dict[str, Any] | None = None
     if not selected and pending and handoff:
-        next_action = (
-            text(handoff.get("next_action"))
-            if handoff.get("next_action")
-            else ("Ask the proposed receiver to accept or decline; the sender must keep chasing.")
-        )
+        if handoff.get("next_action"):
+            next_action = text(handoff.get("next_action"))
+        elif (
+            handoff.get("state") == "Escalated" or handoff.get("needs_escalation")
+        ) and isinstance(handoff.get("escalation_next_action"), str):
+            next_action = str(handoff["escalation_next_action"])
+        else:
+            next_action = (
+                "Ask the proposed receiver to accept or decline; the sender must keep chasing."
+            )
         source = origin("handoff")["source"]
         recorded_at = handoff.get("offered_at") or UNKNOWN
     returned = (case.get("returns") or [None])[-1]
@@ -539,12 +1006,24 @@ def context(
         technical_reassessment=reassess,
         handoff=dict(
             state=handoff.get("state") or UNKNOWN,
+            status=handoff.get("status") or handoff.get("state") or UNKNOWN,
+            accountable_owner=handoff.get("accountable_owner") or owner,
             destination=handoff.get("destination") or UNKNOWN,
             sender=handoff.get("from_name") or UNKNOWN,
             proposed_receiver=handoff.get("proposed_receiver") or UNKNOWN,
             confirmed_receiver=handoff.get("confirmed_receiver") or UNKNOWN,
             chase_owner=handoff.get("chase_owner") or UNKNOWN,
             resident_update_owner=handoff.get("resident_update_owner") or UNKNOWN,
+            due_at=handoff.get("effective_due_at") or handoff.get("due_at"),
+            approved_limit_hours=handoff.get("approved_limit_hours"),
+            elapsed_hours=handoff.get("elapsed_hours"),
+            overdue_hours=handoff.get("overdue_hours"),
+            overdue=bool(handoff.get("overdue")),
+            needs_escalation=bool(handoff.get("needs_escalation")),
+            escalation_status=handoff.get("escalation_status") or UNKNOWN,
+            escalation_target=handoff.get("escalation_target") or UNKNOWN,
+            escalation_target_role=handoff.get("escalation_target_role") or UNKNOWN,
+            escalation_next_action=handoff.get("escalation_next_action") or UNKNOWN,
         )
         if handoff
         else None,

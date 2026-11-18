@@ -1,0 +1,72 @@
+{
+  "task_id": "issue-154-rep-expiry-views-rebase-0c1fa1da4",
+  "task_slug": "issue-154-rep-expiry-views-rebase-0c1fa1da4",
+  "parent_task": {
+    "task_id": "issue-154-rep-expiry-views",
+    "task_slug": "issue-154-rep-expiry-views"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/issue-154-rep-expiry-views-rebase-0c1fa1da4-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/issue-154-rep-expiry-views-rebase-0c1fa1da4-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/issue-154-rep-expiry-views-rebase-0c1fa1da4-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/issue-154-rep-expiry-views-rebase-0c1fa1da4-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/issue-154-rep-expiry-views-rebase-0c1fa1da4-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/issue-154-rep-expiry-views-rebase-0c1fa1da4-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute confirmed automatic RPI rebase-continuation loop (rpi-research, rpi-plan, rpi-implement, rpi-review) on feat/ux-154-rep-expiry-views (99a596629) onto origin/feat/demo-164-chat-grounding-provenance-0900 (0c1fa1da4), resolve test_role_endpoint_inventory.py preserving both handoff overdue/escalation and representative view/expiry entries, update #154 tracking artifacts, run focused validation, and commit locally without pushing.",
+      "status": "confirmed",
+      "evidence": "Explicit caller rebase-continuation task prompt, 2026-11-15."
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready. Read-only git merge-tree verified server.py auto-merges cleanly and src/api/tests/test_role_endpoint_inventory.py is the sole conflict, resolved by unioning 0c1fa1da4 handoff routes and 99a596629 representative-view routes before updating tracked #154 artifacts post-rebase.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-154-rep-expiry-views-rebase-0c1fa1da4-research.md (C1-C7)"
+    },
+    {
+      "decision": "Single-pass plan critique execution Complete with verdict Pass (0 findings); finalized plan status Ready without a second critique.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/issue-154-rep-expiry-views-rebase-0c1fa1da4-plan-critique.md; .copilot-tracking/plans/2026-11-15/issue-154-rep-expiry-views-rebase-0c1fa1da4-plan.md (## Critique Disposition)"
+    },
+    {
+      "decision": "Implementation Complete across full-plan scope (P01, P02, P03): rebased 99a596629 onto 0c1fa1da4 as 3ed0c7deb preserving both route sets in test_role_endpoint_inventory.py, passed focused unittest/ruff/mypy/rename-zava-tests.py gates, and updated #154 tracking artifacts.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-15/issue-154-rep-expiry-views-rebase-0c1fa1da4-changes.md"
+    },
+    {
+      "decision": "Single-pass post-rebase Review execution Complete with outcome Conformant across P01-P03 (FR-REB-01..02, NFR-REB-01..02, AC1..AC4); zero defects, decision gaps, or evidence gaps.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-154-rep-expiry-views-rebase-0c1fa1da4-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked post-Review follow-up work item, Stop automatic session, or Switch to manual mode."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Render task-limited representative view and expired/held renewal cards in ResidentDemo UI (resident_demo/web/)",
+      "rationale": "Highest ease and immediate UX leverage once backend endpoints are rebased onto 0c1fa1da4.",
+      "evidence": ".copilot-tracking/changes/2026-11-15/issue-154-rep-expiry-views-changes.md"
+    },
+    {
+      "rank": 2,
+      "task": "Complete remaining Issue #154 Criterion 2 resident portal journey screen coverage (J1-J6)",
+      "rationale": "High product value toward closing parent Issue #154.",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-154-rep-expiry-views-research.md (C2)"
+    },
+    {
+      "rank": 3,
+      "task": "Prepare and record Issue #155 empirical resident and representative usability validation evidence (Issue #154 Criterion 5)",
+      "rationale": "Required human/resident validation gate before full Issue #154 closure.",
+      "evidence": "src/core/tests/test_resident_journey_design.py"
+    }
+  ]
+}

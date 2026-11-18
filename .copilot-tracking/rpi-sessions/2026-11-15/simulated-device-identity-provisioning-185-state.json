@@ -1,0 +1,74 @@
+{
+  "task_id": "issue-185-simulated-device-identity-provisioning",
+  "task_slug": "simulated-device-identity-provisioning-185",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/simulated-device-identity-provisioning-185-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/simulated-device-identity-provisioning-185-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/simulated-device-identity-provisioning-185-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/simulated-device-identity-provisioning-185-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/simulated-device-identity-provisioning-185-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/simulated-device-identity-provisioning-185-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Confirmed automatic RPI session requested directly by coordinator prompt for issue #185 across Research, Plan, Implement, and Review.",
+      "status": "confirmed",
+      "evidence": "Caller prompt explicitly specifies full RPI loop execution in non-interactive mode on feat/iot-185-device-provisioning."
+    },
+    {
+      "decision": "Focused validation tier selected for src/core unit tests, mypy, ruff check, and ruff format --check --line-length 100 without running tools/rpi-checks.py.",
+      "status": "confirmed",
+      "evidence": "Caller prompt Validation tier and Required Validation & Handoff sections."
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready. Converged on creating zava_forward.core.synthetic.live_provisioning for SIM-* per-device symmetric SAS / DPS enrollment group lifecycle with Platform Engineering / IoT Operations Owner, runtime secret vault + multi-layer redaction, and verified zero-residual TeardownReceipt, while additively aligning device_identity.py and device_provision.py without breaking SYN-* / CLI / assertNoLogs contracts.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/simulated-device-identity-provisioning-185-research.md (C1-C14)"
+    },
+    {
+      "decision": "Plan critique executed once on final candidate; verdict Revise; direct planner dispositions PC-001 through PC-004 applied and closed (post-getMessage log redaction, typed lifecycle/audit_log/SYNTHETIC list serialization, workspace-relative gitignored .venv fallback, and URI-first redaction + runtime vault purge assertions); Azure live network mutations accepted as out-of-scope residual risk per ADR 0003.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/simulated-device-identity-provisioning-185-plan-critique.md; .copilot-tracking/plans/2026-11-15/simulated-device-identity-provisioning-185-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Single-pass rpi-review executed (execution: Complete). Assessed full task boundary (P01, P02, FR-1..FR-3, NFR-1..NFR-2, AC-1..AC-4, PC-001..PC-004, test/change bounds, and src/core validation evidence).",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/simulated-device-identity-provisioning-185-review.md"
+    },
+    {
+      "decision": "Review outcome recorded as Conformant (RV findings: none; defects: none; non-blocking follow-ups routed to post-Review Follow-up checkpoint).",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/simulated-device-identity-provisioning-185-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked post-Review follow-up work item, Stop automatic session, or Switch to manual mode."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Add optional --id-scheme sim-dps flag to zava_forward.core.synthetic.device_provision CLI to drive SIM-* live_provisioning workflows directly from command line alongside default SYN-* dry-run/apply",
+      "rationale": "High ease of implementation and clean ergonomics unifying CLI entrypoints over live_provisioning and device_identity without altering existing --owner refusal defaults.",
+      "evidence": "src/core/src/zava_forward/core/synthetic/device_provision.py; .copilot-tracking/research/2026-11-15/simulated-device-identity-provisioning-185-research.md (C2, C8)"
+    },
+    {
+      "rank": 2,
+      "task": "Optional live Azure DPS enrollment-group adapter behind explicit opt-in extra once live Azure provisioning is authorized by Platform Engineering / IoT Operations Owner",
+      "rationale": "Strong inversion-of-control leverage plugging an Azure DPS SDK enrollment-group adapter into the existing Registry and CredentialStore protocols defined in device_identity.py and live_provisioning.py.",
+      "evidence": "docs/adrs/0003-journey-derived-capabilities-runtime-fit.md (decision 6); .copilot-tracking/reviews/logs/2026-11-15/simulated-device-identity-provisioning-185-review.md"
+    },
+    {
+      "rank": 3,
+      "task": "Tick proven acceptance criteria and close GitHub issue #185 after parent PR #1641 and feat/iot-185-device-provisioning review and merge",
+      "rationale": "Depends on coordinator/owner review, hosted CI, and merge to main per repository PR lifecycle rules since local HEAD remains frozen and unpushed.",
+      "evidence": "GitHub issue #185; .copilot-tracking/reviews/logs/2026-11-15/simulated-device-identity-provisioning-185-review.md"
+    }
+  ]
+}
