@@ -13296,3 +13296,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 185 SAS enrolment in registry adapter (Refs #185)
 
 * Added [issue-185-live-r6-sas-adapter-2026-11-18.md](research/issue-185-live-r6-sas-adapter-2026-11-18.md): `SasEnrollment` (Hub-generated keys, DISABLED, never read) in `device_registry_azure.py` with 4 simulator tests; not run live; durable storage and FULL-tier gate stay open.
+
+## [2026-11-18] add | Issue 189 deployed run-control verifier (Refs #189)
+
+* Added `synthetic.run_live_check` with tests and [issue-189-live-state-verifier-evidence-2026-11-18.md](research/issue-189-live-state-verifier-evidence-2026-11-18.md): live read-only check passes owner, tier, budget and alert configuration and fails recipient reachability; criterion 3 stays unproven for the demo.

@@ -522,6 +522,8 @@ A [second pass](./research/simulator-run-controls-live-189-2026-11-18.md) adds a
 
 A [third pass](./research/simulator-run-controls-live-189-r3-2026-11-18.md) re-reads the live budgets and hub, runs the run meter on a real clock (time-limit halt) and records that budget alert recipients are noreply or invalid addresses; criterion 3 stays unproven as a live conjunction.
 
+A [deployed run-control verifier](./research/issue-189-live-state-verifier-evidence-2026-11-18.md) adds `synthetic.run_live_check` (code and tests) and its read-only live result: owner tag, B1 tier, USD 25 budget and both alerts pass; recipients are noreply addresses, so alert delivery stays unproven.
+
 For #138, the [CI/CD OIDC and what-if live evidence](./research/issue-138-live-cicd-oidc-evidence-2026-11-18.md)
 records a 2026-11-18 read-only demo run: a live what-if of the real template, the post-deployment
 smoke checks against the demo API, the fail-closed environment gate and the unconfigured OIDC,
