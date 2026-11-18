@@ -12234,3 +12234,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Live Azure backfill and live series evidence (Refs #188)
 
 * Added [issue-188-live-backfill-evidence-2026-11-18.md](research/issue-188-live-backfill-evidence-2026-11-18.md): per-criterion proven/unproven record of a demo run on live Azure SQL. Production receiver and indoor-schema proof remain open.
+
+## [2026-11-18] add | Live device identity and provisioning evidence (Refs #185)
+
+* Added [issue-185-live-device-identity-evidence-2026-11-18.md](research/issue-185-live-device-identity-evidence-2026-11-18.md): demo run with Hub-generated symmetric keys, sending and teardown on the demo hub. Durable storage and X.509 remain unproven.
