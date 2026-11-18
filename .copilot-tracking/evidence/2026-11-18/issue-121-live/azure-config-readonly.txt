@@ -1,0 +1,76 @@
+## log analytics
+[
+  {
+    "location": "uksouth",
+    "name": "log-cutover-test",
+    "retentionInDays": 90
+  }
+]
+## app insights
+[
+  {
+    "location": "uksouth",
+    "name": "appi-cutover-test",
+    "retentionInDays": 90
+  }
+]
+## sql
+{
+  "location": "uksouth",
+  "name": "sql-cutover-test-rzsrg"
+}
+retrofit
+{
+  "pitrDays": 14
+}
+{
+  "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Sql/servers/sql-cutover-test-rzsrg/databases/retrofit/backupLongTermRetentionPolicies/default",
+  "monthlyRetention": "PT0S",
+  "name": "default",
+  "resourceGroup": "ama",
+  "timeBasedImmutability": "Disabled",
+  "timeBasedImmutabilityMode": null,
+  "type": "Microsoft.Sql/servers/databases/backupLongTermRetentionPolicies",
+  "weekOfYear": 0,
+  "weeklyRetention": "PT0S",
+  "yearlyRetention": "PT0S"
+}
+## storage
+[
+  {
+    "location": "uksouth",
+    "name": "stcutovertestrzsrg",
+    "sku": "Standard_LRS"
+  }
+]
+## ai
+[
+  {
+    "kind": "OpenAI",
+    "location": "swedencentral",
+    "name": "aoai-resident-469",
+    "sku": "S0"
+  },
+  {
+    "kind": "AIServices",
+    "location": "uksouth",
+    "name": "aif-cutover-test-rzsrg",
+    "sku": "S0"
+  }
+]
+## ca-cutover-test-demo-api
+AI_ENDPOINT	https://aif-cutover-test-rzsrg.openai.azure.com/
+AI_DEPLOYMENT	standard
+CHAT_RETENTION_DAYS	30
+ZF_CHAT_DEMO_ACTIVATION	approved-2026-11-03
+ZF_DEPLOYMENT_PROFILE	demo
+AI_MODEL_VERSION	gpt-4.1-nano-2025-04-14
+## ca-resident-demo
+CHAT_RETENTION_DAYS	30
+[
+  {
+    "model": "gpt-4.1-nano",
+    "n": "standard",
+    "sku": "GlobalStandard"
+  }
+]
