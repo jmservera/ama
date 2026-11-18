@@ -12871,6 +12871,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Issue 108 harness audit live round 2 (Refs #108)
 
 * Added [issue-108-harness-audit-live-r2-2026-11-18.md](research/issue-108-harness-audit-live-r2-2026-11-18.md): harness rerun (116 tests OK), deployment, version and rate limits confirmed in uksouth and swedencentral, subscription quota unproven; no source change
+
 ## [2026-11-18] add | Issue 154 live resident UX audit round 2 (Refs #154)
 
 * Added [issue-154-live-resident-ux-audit-r2-2026-11-18.md](research/issue-154-live-resident-ux-audit-r2-2026-11-18.md): desktop audit against the UX standards with retained raw output and three resident screenshots (workbench screenshots not retained), per-criterion table; criteria 3 and 5b unproven. No source change.
