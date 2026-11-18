@@ -14,6 +14,7 @@ from pathlib import Path
 
 from zava_forward.core import resident_showcase as rs
 from zava_forward.core import resident_showcase_sql as rsql
+from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
 from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 
 from .agenda import Agenda
@@ -23,6 +24,11 @@ from .chat_log import ChatLog
 
 
 def main() -> int:
+    try:
+        enforce_from_env()
+    except ContainerHardeningError as error:
+        print(f"Refusing to start: {error}", file=sys.stderr, flush=True)
+        return 2
     logging.basicConfig(level=logging.INFO)
     install_diagnostic_redaction()
     try:

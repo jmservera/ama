@@ -113,10 +113,9 @@ class RegulatoryDisclosureTests(unittest.TestCase):
 class ProvenanceAndOutcomeTests(unittest.TestCase):
     def test_each_reply_names_its_source_of_answer(self) -> None:
         for cue in (
-            "Model-generated, not approved. Demo only.",
-            "Decision model (case rules), no record changed",
-            "Decision model (case rules; generative draft withheld), no record changed",
-            "Generative draft withheld by source check. No record changed.",
+            "Generative model suggestion (unapproved; check cited sources; no record changed)",
+            "Deterministic decision or workflow rule (not generative AI; no record changed)",
+            "Withheld. Cited sources did not support a stated status or figure (no record changed)",
             "Workflow-only help, no record changed",
             "generative AI model (${answer.model})",
             "AI-generated content may be incorrect.",

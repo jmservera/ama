@@ -1,0 +1,52 @@
+{
+  "task_id": "issue-144-container-hardening",
+  "task_slug": "container-hardening-144",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/container-hardening-144-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/container-hardening-144-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/container-hardening-144-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-11-15/container-hardening-144-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/container-hardening-144-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/container-hardening-144-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute confirmed automatic RPI loop (Research -> Plan -> Critique -> Implement -> Review) for Issue #144 local container hardening and contract completeness on feat/infra-144-container-hardening without pushing or opening a PR",
+      "status": "confirmed",
+      "evidence": "Caller directive in prompt (2026-11-15)"
+    },
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready. Converged on closing importJob command/run contract, Dockerfile TMPDIR=/tmp + root-owned /app hardening invariants, staff_azure.py dynamic job scratch/hardening parity, pipeline.py release-manifest.json & PR plan digest/placeholder enforcement, and deterministic infra/tests coverage while preserving main.bicep stage-1 bootstrap defaults.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/container-hardening-144-research.md (C1-C19)"
+    },
+    {
+      "decision": "Critique execution: Complete; Verdict: Revise (0 Critical, 2 High, 3 Medium). Direct planner dispositions applied for PC-001 (ZF_STORE=mssql on importJob and importer run SQL env validation), PC-002 (exact compiled demoDirectIngress names ca-{prefix}-agents and job-{prefix}-rank), PC-003 (ZF_CONTAINER_HARDENING=enforced in staff_azure.py and startup enforce_from_env() in staff-azure-worker.py), PC-004 (release_tag() equality, Python 3.12 eager annotations in pipeline.py, summary release_manifest, and deploy.py --apply fixture compatibility), and PC-005 (preserving delivered-placeholder-workers in infra/README.md + importer run subprocess refusal coverage). Planning status finalized as Ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-15/container-hardening-144-plan-critique.md and .copilot-tracking/plans/2026-11-15/container-hardening-144-plan.md"
+    },
+    {
+      "decision": "Review execution: Complete; Outcome: Conformant. Assessed boundary: Full task (P01-P04) across local Dockerfiles, zava_forward.importer run, containerapps.bicep, pipeline.py release-manifest.json and PR plan guards, deploy.py --apply placeholder refusal, staff_azure.py / staff-azure-worker.py hardening parity, infra/README.md, and 274 passing TMPDIR=/dev/shm unit/integration tests + static checks.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/container-hardening-144-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user post-Review selection (ranked follow-up item, Stop automatic session, or Switch to manual mode)"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Authorized live Azure rollout, ACR @sha256 digest promotion, and 25-user load/hardening smoke verification for Issue #144",
+      "rationale": "Ranks #1 because local Dockerfiles, containerapps.bicep worker/job commands, pipeline release-manifest.json, and 274 deterministic tests are now complete; executing the operator-gated live Azure apply and runtime smoke/load verification is the remaining step to close Issue #144.",
+      "evidence": "infra/README.md (container-apps-hosting-and-jobs and infra/modules/containerapps.bicep rows) and .copilot-tracking/reviews/logs/2026-11-15/container-hardening-144-review.md"
+    }
+  ]
+}

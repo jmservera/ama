@@ -214,12 +214,28 @@ class AiEvalTests(unittest.TestCase):
     def test_report_carries_per_cohort_record_that_stays_blocked_and_synthetic(self):
         co = ai_eval.run_eval()["cohorts"]
         self.assertEqual((co["status"], co["activation_allowed"]), ("blocked", False))
+        self.assertEqual(co["owner_approval_status"], "unapproved")
+        self.assertFalse(co["lawful_analysis_fields_approved"])
+        self.assertFalse(co["live_activation_allowed"])
         self.assertTrue(co["synthetic"] and not co["fairness_evidence"])
+        self.assertTrue(co["synthetic_not_fairness_evidence"])
+        self.assertIn("OQ-018", co["non_fairness_provenance_notice"])
         self.assertIn("unapproved_thresholds", co["blockers"])
         self.assertEqual(set(co["dimensions"]), {"sensor_completeness", "support_need", "source_completeness", "appointment_history"})
         for labels in co["dimensions"].values():
             self.assertEqual(sum(row["n"] for row in labels.values()), co["total_cases"])
         self.assertTrue(co["ai_task_cohorts"].startswith("not evaluated"))
+        exp = ai_eval.cohort_evaluation_export()
+        self.assertEqual(exp["owner_approval_status"], "unapproved")
+        self.assertFalse(exp["lawful_analysis_fields_approved"])
+        self.assertFalse(exp["live_activation_allowed"])
+        self.assertTrue(exp["synthetic_not_fairness_evidence"])
+        self.assertIn("OQ-018", exp["non_fairness_provenance_notice"])
+        self.assertEqual(exp["ranking"]["record_hash"], co["record_hash"])
+        self.assertEqual(exp["ai_priority"]["task_id"], "ai-priority-recommendation")
+        self.assertEqual(exp["ai_priority"]["owner_approval_status"], "unapproved")
+        self.assertFalse(exp["ai_priority"]["lawful_analysis_fields_approved"])
+        self.assertTrue(exp["ai_priority"]["synthetic_not_fairness_evidence"])
 
     def test_a_critical_miss_fails_the_run(self):
         real = ai_eval.summarise

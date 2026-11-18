@@ -2,7 +2,7 @@
 title: Retrofit Flow and Constraint Discovery Brief
 description: Proposed evidence, team and bounded assistant requirements for identifying retrofit delivery constraints
 author: AMA Research Team
-ms.date: 2026-11-04
+ms.date: 2026-11-15
 ms.topic: concept
 ---
 
@@ -345,22 +345,32 @@ accepted-handover status.
 If the evidence cannot be assembled, the first investment is data ownership
 and workflow instrumentation rather than an agent.
 
-## Delivery Status (2026-11-04, issue 124)
+## Delivery Status (2026-11-15, issue 124)
 
-Merged PRs 895 and 1030 delivered the synthetic rule layer only: owner and
-accepted-handover endpoint status, ten-event dictionary gap check, a constraint
-register that stays a candidate until a named owner other than the proposer
-decides it, and baseline population and wait analysis. Source:
+Merged PRs 895 and 1030 delivered the initial synthetic rule slices in
 `src/core/src/zava_forward/core/discovery_register.py` and `discovery_flow.py`.
+The unified Phase 0 contract in
+`src/core/src/zava_forward/core/discovery_contract.py` (documented in
+[Phase 0 Retrofit-Flow Discovery Contract](../reference/research/company/phase0-retrofit-flow-discovery-contract.md))
+adds human sponsor/owner nomination and `accepted handover` endpoint validation,
+the full PAS 2035 and retrofit lifecycle dictionary (10 ordered flow stages plus
+`paused`, `excluded`, `withdrawn`, `cancelled` and `reopened_aftercare` states,
+15 distinct lifecycle events, 8 timestamp specifications with non-imputed active
+time, 7 wait states and 4 return-loop kinds), deterministic `BG-011` and
+handover-leg flow evaluation, the ranked constraint register requiring both
+`supporting_evidence` and `contradicting_evidence` plus the five-part constraint
+test, and the fail-closed governance guard enforcing `owner_validated=False` and
+`finding_status="candidate_hypothesis_not_company_finding"` across all discovery
+outputs until formal nominated-owner validation.
 
 | Acceptance criterion | Status |
 | --- | --- |
-| Discovery owner nominated and endpoint agreed | Unmet. Needs a sponsor decision |
-| Lifecycle and event dictionary validated | Unmet. Needs validation by each event's operational owner |
-| Constraint register with supporting and contradicting evidence | Unmet in substance. Rules exist; no real evidence, which needs the approved twelve-month extract |
-| Findings are not company findings until owners validate | Enforced as a rule and label in code; no findings exist yet |
+| Discovery owner nominated and endpoint agreed | Software contract enforced (`NominatedDiscoveryOwner`, `ENDPOINT = "accepted handover"`); company nomination unmet pending sponsor decision |
+| Lifecycle and event dictionary validated | PAS 2035 stage, event, timestamp, wait-state and return-loop schema and role gates implemented; company sign-off unmet pending each operational owner |
+| Constraint register with supporting and contradicting evidence | Ranked register (`1..N`) enforcing non-empty `supporting_evidence` and `contradicting_evidence` implemented; company evidence unmet pending approved twelve-month extract |
+| Findings are not company findings until owners validate | Enforced fail-closed (`GovernanceViolationError`) with `owner_validated=False` and `finding_status="candidate_hypothesis_not_company_finding"` across all outputs until nominated-owner validation |
 
-Only human steps remain: sponsor nomination, owner validation and an approved
-data extract. Persistence, a screen and extract import are not built and should
-wait for the nominated owner and approved data. Discovery stays fully manual
-when AI is unavailable.
+Only human governance steps remain: sponsor nomination, domain-owner validation
+and an approved twelve-month company data extract. Persistence, a screen and
+extract import are not built and should wait for the nominated owner and
+approved data. Discovery stays fully manual when AI is unavailable.

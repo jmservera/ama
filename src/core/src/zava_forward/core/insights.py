@@ -1,5 +1,6 @@
 """Read-only views over the case data: filters, statistics, map, visits, handover suggestions."""
 from collections import Counter, defaultdict
+from . import taskqueues, tokenomics
 from .resident_decisions import resident_status
 
 from .stock import support_coverage, support_status
@@ -29,7 +30,7 @@ SORTS = {
 
 
 def has_hazard(c):
-    return any(not h["released"] for h in c["hazards"])
+    return taskqueues.has_open_safety(c)
 
 
 def preferred_role(c):
@@ -95,7 +96,7 @@ def facets(cases):
         sorts=SORTS)
 
 
-def stats(cases, staff):
+def stats(cases, staff, *, recommendations=None, ai_consumption_economics=None):
     open_ = [c for c in cases if not c["closed"]]
     by_stage = Counter(c["stage"] for c in open_)
     ages = Counter()
@@ -109,6 +110,11 @@ def stats(cases, staff):
         k["open"] += 1
         k["booked"] += c["stage"] in ("Install booked", "Works under way")
         k["long"] += c["stage"] in ("With contractor", "Install booked") and c["days_in_stage"] >= LONG_WAIT
+    econ = (
+        ai_consumption_economics
+        if ai_consumption_economics is not None
+        else tokenomics.summarize_ai_consumption_economics(recommendations=recommendations)
+    )
     return dict(
         kpis=dict(open=len(open_), completed=len(cases) - len(open_), hazards=sum(has_hazard(c) for c in open_),
                   long=sum(c["days_in_stage"] >= LONG_WAIT for c in open_),
@@ -123,7 +129,8 @@ def stats(cases, staff):
         funding=[dict(label=k, n=v) for k, v in Counter(c["funding"]["status"] for c in open_).most_common()],
         contractors=[dict(name=k, **v) for k, v in sorted(contractors.items())],
         team=[dict(code=s["code"], name=s["name"], role=s["role"], open=load[s["code"]],
-                   hazards=sum(1 for c in open_ if c["owner_code"] == s["code"] and has_hazard(c))) for s in staff])
+                   hazards=sum(1 for c in open_ if c["owner_code"] == s["code"] and has_hazard(c))) for s in staff],
+        ai_consumption_economics=econ)
 
 
 def map_points(cases, f):
