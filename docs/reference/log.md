@@ -12792,6 +12792,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Updated [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md): 101 existing gate tests run locally with raw output retained; container scores labelled "Observed; raw output not retained"; no new model call; the unticked criterion stays partly proven.
 
+## [2026-11-18] update | Learning-test bundle local test evidence (Refs #129)
+
+* Added [issue-129-live-learning-test-evidence-2026-11-18.md](research/issue-129-live-learning-test-evidence-2026-11-18.md): 26 core and 6 api existing tests run with raw output retained; results labelled constructed, not measured. The atlas-owner mapping confirmation is unproven for the demo. Evidence under `.copilot-tracking/` (2026-11-18 issue-129-live).
+
 ## [2026-11-18] add | Live recheck of nomination route (Refs #130)
 
 * Added [issue-130-live-r2-nomination-route-evidence-2026-11-18.md](research/issue-130-live-r2-nomination-route-evidence-2026-11-18.md): second demo run with raw output retained; same image, writes still refused by the identity defect; per-criterion table; unticked criterion unproven; no source change.

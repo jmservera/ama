@@ -436,6 +436,9 @@ For #130, the [live nomination route evidence](./research/issue-130-live-nominat
 records a 2026-11-18 demo run: route panels and permissions read live, representative options absent
 without confirmed authority, writes refused by the same identity defect, and the unticked
 representative-participation criterion stated as unprovable for the demo.
+For #129, the [learning-test bundle evidence](./research/issue-129-live-learning-test-evidence-2026-11-18.md)
+records a 2026-11-18 local run of 32 existing tests with raw output retained: bundles and scope exclusions
+proven for constructed cases only, atlas-owner mapping confirmation unproven.
 The [second run](./research/issue-130-live-r2-nomination-route-evidence-2026-11-18.md) retains raw output,
 confirms the same image and 403 defect, and keeps the criterion unproven.
 For #124, the [Phase 0 discovery evidence](./research/issue-124-phase0-discovery-evidence-2026-11-18.md)
