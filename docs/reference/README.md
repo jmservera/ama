@@ -511,6 +511,8 @@ records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-
 runtime, scale-out from 0 to 4 replicas under a 60 s load run, and the Container Apps
 platform limit on read-only root file system and capability drop. No pipeline run
 and no production scale are shown.
+The [third run](./research/issue-144-hosting-proof-live-2026-11-18.md) retains redacted raw
+output, reconciles the job count to eight and records a 120-client run with cold-start latency.
 For the 2026-11-05 current-main contract, retention and handover boundary, see the
 [fifth stabilization checkpoint](../architecture/cutover-evidence-pack.md#fifth-stabilization-checkpoint-current-main-sensor-contract-retention-and-handover-2026-11-05-refs-440-184-110)
 (documentation only; the live-sim wire schema is not admitted by the main consumer and nothing is accepted).
