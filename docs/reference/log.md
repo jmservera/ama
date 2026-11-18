@@ -13280,3 +13280,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 1274 axe download hardening (Refs #1274)
 
 * Added [issue-1274-axe-download-hardening-2026-11-18.md](research/issue-1274-axe-download-hardening-2026-11-18.md): src-ci axe-core download verified and retried, retained 504 logs for 1243, 1271 and 1273 classified; AWF bootstrap still open.
+
+## [2026-11-18] add | Issue 154 live fourth run (Refs #154)
+
+* Added [issue-154-live-resident-ux-r4-2026-11-18.md](research/issue-154-live-resident-ux-r4-2026-11-18.md): the demo entrypoint could not load representative grants; added an optional `ZF_DEMO_REP_GRANTS_PATH` loader with tests. Criterion 3 proven locally, not live; 5b remains unmet.

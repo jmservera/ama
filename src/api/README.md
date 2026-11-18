@@ -5833,6 +5833,10 @@ synthetic-only chat learning record (14 days, 2,000 rows). Leave it unset
 unless deliberately enabling it; never set it for real residents. See
 [the learning record note](../../docs/reference/research/ux/resident-chat-learning-record.md).
 Read it with `python -m zava_forward.api.resident_demo.chat_log summary PATH`.
+`ZF_DEMO_REP_GRANTS_PATH` is an optional absolute path to a local synthetic JSON list of
+task-limited representative grants (`case_id`, `email`, `representative_ref`, `measure`, `tasks`,
+`valid_from`, `expires_at`, optional `revoked`; explicit UTC times, expiry mandatory). It holds no
+secret, any defect stops start-up, and leaving it unset keeps the resident-only showcase.
 `ZF_DEMO_ASSISTANT_ENABLED` defaults to `false`; an endpoint is needed only
 when deliberately enabling the separately gated AI integration. Keep the
 existing port 8089, image bind `0.0.0.0` and exact Host allowlist. The image's
