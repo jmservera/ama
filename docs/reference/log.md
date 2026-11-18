@@ -13091,6 +13091,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 145 live fourth audit (Refs #145)
 
 * Added [issue-145-live-run4-audit-2026-11-18.md](research/issue-145-live-run4-audit-2026-11-18.md) with retained redacted read-only Azure output (Local backup redundancy, 14 day retention, no long-term retention, throwaway copies absent), the repository parameter and runbook check, and a per-criterion table: C4, R3 and R5 stay unproven, C4 and R5 are production-only, R3 needs a `src/core` reapply change at the FULL tier. No source change, nothing created in Azure, no criterion ticked.
+
 ## [2026-11-18] add | Issue 151 live fourth audit, role routes (Refs #151)
 
 * Added [issue-151-live-r4-role-routes-evidence-2026-11-18.md](research/issue-151-live-r4-role-routes-evidence-2026-11-18.md): seven role screens with 0 axe violations and clean keyboard walks, two role-gate denials, no screen reader run; criterion 4 stays partly proven for the demo.
