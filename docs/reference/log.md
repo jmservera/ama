@@ -13016,6 +13016,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-76-live-r2-2026-11-18.md](research/issue-76-live-r2-2026-11-18.md): masked screenshots of the hazard clock and named owner and of the queue definitions on the demo; hazard partly proven (clock Unknown), safeguarding unproven (no demo item); no source change, nothing created in Azure
 
+## [2026-11-18] add | Issue 119 live second run (Refs #119)
+
+* Added [issue-119-live-r2-map-evidence-2026-11-18.md](research/issue-119-live-r2-map-evidence-2026-11-18.md) and its evidence folder: the deployed demo still uses the public OSM tiles; list alternative and keyboard path re-proven; Azure Maps, OS, MapTiler and OSM pages re-read; added a dated update to [map-tile-provider-options.md](research/ux/map-tile-provider-options.md). Both criteria stay open (no licensed provider, no screen reader run); no source change, nothing created in Azure.
+
 ## [2026-11-18] add | Third live audit of nomination route (Refs #130)
 
 * Added [issue-130-live-r3-nomination-route-audit-2026-11-18.md](research/issue-130-live-r3-nomination-route-audit-2026-11-18.md): same image and 403 write defect, 105 offline tests pass, per-criterion proven or unproven table, production-only items separated; unticked representative criterion unproven; no source change, nothing created in Azure
