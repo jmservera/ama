@@ -13184,6 +13184,22 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-129-live-r3-2026-11-18.md](research/issue-129-live-r3-2026-11-18.md): 26 core and 6 api bundle tests pass, report CLI refusal check, signed-in probe of revision 0000032 finds no bundle route; Atlas-owner mapping confirmation stays unproven. Docs only.
 
+## [2026-11-18] add | Issue 215 live re-verification (Refs #215)
+
+* Added [regulatory-ux-live-215-2026-11-18.md](research/regulatory-ux-live-215-2026-11-18.md): signed-in desktop probe of revision 0000032; keyboard, plain-language toggle and axe pass on two panels, law store unloaded so only the unknown state is visible, deployed build differs from main; staff comprehension testing unproven. Docs only.
+
+## [2026-11-18] add | Issue 96 live third re-verification (Refs #96)
+
+* Added [issue-96-live-r3-reverification-2026-11-18.md](research/issue-96-live-r3-reverification-2026-11-18.md): live probe again returns zero registered form schemas, search finds no code path that records an approval, 79 focused core tests pass with raw output retained; the approved-schema criterion stays unproven for the demo. Docs only.
+
+## [2026-11-18] add | Issue 116 live round 3 (Refs #116)
+
+* Added [issue-116-live-r3-evidence-2026-11-18.md](research/issue-116-live-r3-evidence-2026-11-18.md): read-only sweep of 88 GET paths as the one reason role finds no reason value; 52 core and 57 api offline tests pass; second role still unobtainable; no box ticked. No source change.
+
+## [2026-11-18] add | Issue 114 live re-verification (Refs #114)
+
+* Added [issue-114-live-reverify-2026-11-18.md](research/issue-114-live-reverify-2026-11-18.md): 62 tests pass for per-year verification; deployed image gap and missing multi-year live data keep the criterion unticked. Docs only.
+
 ## [2026-11-18] add | Issue 138 live fourth run (Refs #138)
 
 * Added [issue-138-live-r4-2026-11-18.md](research/issue-138-live-r4-2026-11-18.md): fresh read-only and what-if probes find no federated credentials, runners, protected environments or deploy runs; live smoke passes and fails closed when unreachable; no criterion ticked. Docs only.
@@ -13199,3 +13215,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 157 live re-verification (Refs #157)
 
 * Added [issue-157-live-chat-epic-recheck-2026-11-18.md](research/issue-157-live-chat-epic-recheck-2026-11-18.md): fresh live probes of the chat endpoints and a per-criterion verdict; both open epic criteria stay unproven for the demo because they need owner and PR-process actions.
+## [2026-11-18] add | Issue 220 live fourth run (Refs #220)
+
+* Added [issue-220-live-r4-challenge-route-2026-11-18.md](research/issue-220-live-r4-challenge-route-2026-11-18.md): same image digest on revision 0000032, same live 403 on staff writes, forbidden fields refused, protected state unchanged, 21 offline tests pass; the no-retaliation criterion stays unproven live. Docs only.
+
+## [2026-11-18] add | Issue 111 third live re-verification (Refs #111)
+
+* Added [issue-111-live3-sensor-evidence-2026-11-18.md](research/issue-111-live3-sensor-evidence-2026-11-18.md) with raw outputs: 26 core sensor tests pass, signed-in demo sensors payload re-read; R1 to R3 stays unproven (named sign-off needed, gate not on main). Docs only.
