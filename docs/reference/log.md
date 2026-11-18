@@ -13135,6 +13135,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Coordinator contract criteria audit (Refs #1204)
 
 * Added [coordinator-contract-criteria-1204-live-2026-11-18.md](research/coordinator-contract-criteria-1204-live-2026-11-18.md): per-sub-claim record for the one unticked criterion. Instruction text and guard tests are proven on main; runtime liveness over all ticks is unproven for the demo. No agent-file change.
+
 ## [2026-11-18] add | Issue 1258 live closure run 2 (Refs #1258)
 
 * Added [issue-1258-live-closure-r2-2026-11-18.md](research/issue-1258-live-closure-r2-2026-11-18.md) with a raw folder: real ext4 `strace` first-publication syscall order, a kernel-injected fsync EIO giving `DurabilityUnconfirmedError` with the record kept, 110 passing tests, and an observed hosted-check gap. Criteria 1 to 4 proven (offline or real syscall); criterion 5 unproven; no source change, no Azure resource
