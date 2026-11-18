@@ -10,7 +10,7 @@ Scope: synthetic demo, desktop only, read-only Azure CLI with the existing login
 
 | Criterion | Result | Evidence |
 | --- | --- | --- |
-| Azure Policy and Defender plans decided | Proven as a recorded decision; enactment not proven | See below |
+| Azure Policy and Defender plans decided | Decision recorded (audit-only policy, Defender deferred); not independently shown to be adopted. The criterion stays unticked pending owner acceptance | See below |
 
 The other four criteria are already ticked and were not re-audited.
 
@@ -27,7 +27,7 @@ For the demo, billing reconciliation and cost approval are out of scope by owner
 
 ## Live probes (2026-11-18)
 
-| Probe | Result |
+| Probe | Result (observed; raw output not retained) |
 | --- | --- |
 | `az policy assignment list` (subscription) | Empty list: the repository's `governance.bicep` assignments are not deployed at subscription scope |
 | `az policy assignment list --disable-scope-strict-match` | Count 0 |
@@ -45,3 +45,9 @@ For the demo, billing reconciliation and cost approval are out of scope by owner
 ## Adverse observations
 
 The live compliance state shows platform audit findings on the demo resources. They are reported, not remediated, per the no-production-change rule.
+
+## Evidence limits
+
+* The six live probes were read-only Azure CLI calls. Their raw output was not retained, and subscription and tenant identifiers were not copied into this repository. The results above are transcribed observations, labelled "Observed; raw output not retained".
+* The probe counts (2 non-compliant policies, 6 non-compliant resources, empty assignment list) can be regenerated only by repeating the calls against the live subscription.
+* The recorded decision itself is a repository file (`infra/defender-decision.json`) and can be checked directly.

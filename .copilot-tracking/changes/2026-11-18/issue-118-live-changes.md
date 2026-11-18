@@ -7,4 +7,4 @@ Added the evidence note, an index entry and a log entry. No source, infra or Azu
 | Image scan and tests in CI | Already ticked | Not re-audited |
 | Application defined in Bicep | Already ticked | Not re-audited |
 | Front Door Premium, WAF, Private Link before public edge | Already ticked | Not re-audited |
-| Azure Policy and Defender plans decided | Proven (decision recorded: audit-only policy, Defender deferred); enactment unproven | Research note; Defender tiers unreadable (AuthorizationFailed), repository policy assignments not deployed |
+| Azure Policy and Defender plans decided | Decision recorded (audit-only policy, Defender deferred); not independently shown to be adopted; stays unticked pending owner acceptance | Research note; Defender tiers unreadable (AuthorizationFailed), repository policy assignments not deployed |
