@@ -1,0 +1,4 @@
+Ran 135 tests in 13.488s
+
+OK
+{"approval_reference": "ref", "cohort_size": 1, "enabled": true, "expires_at": "2026-11-10T10:00:00Z", "homes": ["HOME-001"], "owner": "cli owner", "state": "send", "version": "live-sim-control-v1"}

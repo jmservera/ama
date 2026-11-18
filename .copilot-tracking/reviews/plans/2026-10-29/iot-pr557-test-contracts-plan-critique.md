@@ -47,7 +47,7 @@ ms.date: 2026-10-29
 | --- | --- | --- |
 | Caller scope and change budget | Covered | One source file, no generated targets, and two proposed new methods plus one helper fit the explicit ceilings. Existing tests remain. |
 | Research C1/C3, P01-T01 | Covered | Local build-params, return-code check, nested JSON parsing, whole template comparison and exact four-entry parameter map are explicit. |
-| Approved live values | Covered | infra/iot-hub-live.bicepparam specifies iot-cutover-test-rzsrg, uksouth, B1 and integer 1; plan lists the same values. |
+| Approved live values | Covered | infra/iot-hub-live.bicepparam specifies [hub], uksouth, B1 and integer 1; plan lists the same values. |
 | Research C2/C4/C5/C6, P01-T02 | Covered | Existing values helper supplies fixture; evaluator supports ARM format; proposed full equality follows an existing evaluated-name convention. |
 | Negative name coverage | Covered | Both wrong hub with retained suffix and wrong group use the same narrow assertion as the positive test. |
 | Referenced-template decision | Covered | Comparing parsed templateJson with independently compiled self.live proves the selected compiled contract, not just a source substring. |
