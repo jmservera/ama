@@ -4,17 +4,23 @@ Individual enrolment with per-device X.509 (ADR 0003 decision 6). Credential mat
 crosses the CredentialStore boundary; manifests, reprs and errors carry references, never secrets.
 """
 
+import hashlib
+import json
 import re
 import threading
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
+from datetime import datetime
 from typing import Protocol
 
-from zava_forward.core.synthetic import sensor_identity
+from zava_forward.core.synthetic import live_readings, sensor_identity
 
 VERSION = "simulated-device-identity-v1"
+DEVICE_IDENTITY_APPROACH = "per-device symmetric SAS / DPS enrollment group"
+CREDENTIAL_OWNER_ROLE = "Platform Engineering / IoT Operations Owner"
 RUN_ID = re.compile(r"[a-z0-9][a-z0-9-]{2,31}")
 SENSOR_ID = re.compile(r"[A-Z0-9][A-Z0-9_-]{0,19}")
+CANONICAL_SLOT = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z")
 MAX_DEVICES = 100
 _LOCKS: dict[str, threading.RLock] = {}
 _LOCKS_GUARD = threading.Lock()
@@ -83,14 +89,46 @@ class DeviceIdentity:
             raise DeviceIdentityError("INVALID_DEVICE_IDENTITY")
 
 
+def verify_envelope(device_id: str, row: Mapping[str, object]) -> None:
+    """Bind a message to its own per-home Hub identity, schema version and stable reading ID."""
+    sensor_id, home_id = row.get("sensor_id"), row.get("home_id")
+    if (
+        not isinstance(sensor_id, str)
+        or not isinstance(home_id, str)
+        or device_id != "SYN-" + sensor_id
+        or not sensor_identity.home_key(home_id)
+        or sensor_id != sensor_identity.sensor_key(home_id)
+    ):
+        raise DeviceIdentityError("DEVICE_ENVELOPE_MISMATCH")
+    if row.get("schema_version") not in live_readings.LIVE_VERSIONS:
+        raise DeviceIdentityError("SCHEMA_VERSION_REQUIRED")
+    observed = row.get("observed_at")
+    if not isinstance(observed, str) or not CANONICAL_SLOT.fullmatch(observed):
+        raise DeviceIdentityError("READING_ID_MISMATCH")
+    try:
+        slot = datetime.strptime(observed, "%Y-%m-%dT%H:%M:%SZ")
+    except ValueError:
+        raise DeviceIdentityError("READING_ID_MISMATCH") from None
+    grid = 5 if row.get("schema_version") == live_readings.SCHEMA_VERSION else 1
+    if slot.second or slot.microsecond or slot.minute % grid:
+        raise DeviceIdentityError("READING_ID_MISMATCH")
+    if row.get("reading_id") != live_readings.reading_id_for(sensor_id, slot):
+        raise DeviceIdentityError("READING_ID_MISMATCH")
+
+
 @dataclass(frozen=True)
 class Manifest:
     run_id: str
     credential_owner: str
     identities: tuple[DeviceIdentity, ...]
+    approach: str = DEVICE_IDENTITY_APPROACH
 
     def validate(self) -> None:
-        if not RUN_ID.fullmatch(self.run_id) or not self.credential_owner.strip():
+        if (
+            not RUN_ID.fullmatch(self.run_id)
+            or not self.credential_owner.strip()
+            or not self.approach.strip()
+        ):
             raise DeviceIdentityError("INVALID_MANIFEST")
         if not 1 <= len(self.identities) <= MAX_DEVICES:
             raise DeviceIdentityError("INVALID_DEVICE_COUNT")
@@ -104,7 +142,139 @@ class Manifest:
                 raise DeviceIdentityError("DEVICE_HOME_NOT_ONE_TO_ONE")
 
 
-def plan(run_id: str, credential_owner: str, sensors: Sequence[Mapping[str, object]]) -> Manifest:
+def _teardown_digest(
+    *,
+    run_id: str | None,
+    approach: str,
+    credential_owner: str,
+    removed_device_ids: tuple[str, ...],
+    removed_count: int,
+    revoked_credential_count: int,
+    residual_simulated_identities: tuple[str, ...],
+    residual_simulated_count: int,
+    residual_credential_count: int,
+    verified_zero_residual: bool,
+) -> str:
+    canonical = json.dumps(
+        {
+            "approach": approach,
+            "credential_owner": credential_owner,
+            "removed_count": removed_count,
+            "removed_device_ids": list(removed_device_ids),
+            "residual_credential_count": residual_credential_count,
+            "residual_simulated_count": residual_simulated_count,
+            "residual_simulated_identities": list(residual_simulated_identities),
+            "revoked_credential_count": revoked_credential_count,
+            "run_id": run_id,
+            "verified_zero_residual": verified_zero_residual,
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+@dataclass(frozen=True)
+class TeardownReceipt:
+    """Verifiable receipt proving deterministic simulated identity removal."""
+
+    run_id: str | None
+    approach: str
+    credential_owner: str
+    removed_device_ids: tuple[str, ...]
+    removed_count: int
+    revoked_credential_count: int
+    residual_simulated_identities: tuple[str, ...]
+    residual_simulated_count: int
+    residual_credential_count: int
+    verified_zero_residual: bool
+    verification_sha256: str
+
+    @classmethod
+    def verified(
+        cls,
+        *,
+        run_id: str | None,
+        approach: str,
+        credential_owner: str,
+        removed_device_ids: tuple[str, ...],
+        revoked_credential_count: int,
+    ) -> "TeardownReceipt":
+        removed = tuple(removed_device_ids)
+        digest = _teardown_digest(
+            run_id=run_id,
+            approach=approach,
+            credential_owner=credential_owner,
+            removed_device_ids=removed,
+            removed_count=len(removed),
+            revoked_credential_count=revoked_credential_count,
+            residual_simulated_identities=(),
+            residual_simulated_count=0,
+            residual_credential_count=0,
+            verified_zero_residual=True,
+        )
+        return cls(
+            run_id=run_id,
+            approach=approach,
+            credential_owner=credential_owner,
+            removed_device_ids=removed,
+            removed_count=len(removed),
+            revoked_credential_count=revoked_credential_count,
+            residual_simulated_identities=(),
+            residual_simulated_count=0,
+            residual_credential_count=0,
+            verified_zero_residual=True,
+            verification_sha256=digest,
+        )
+
+    def verify(self) -> bool:
+        expected = _teardown_digest(
+            run_id=self.run_id,
+            approach=self.approach,
+            credential_owner=self.credential_owner,
+            removed_device_ids=self.removed_device_ids,
+            removed_count=self.removed_count,
+            revoked_credential_count=self.revoked_credential_count,
+            residual_simulated_identities=self.residual_simulated_identities,
+            residual_simulated_count=self.residual_simulated_count,
+            residual_credential_count=self.residual_credential_count,
+            verified_zero_residual=self.verified_zero_residual,
+        )
+        return (
+            self.verified_zero_residual is True
+            and self.residual_simulated_count == 0
+            and self.residual_simulated_identities == ()
+            and self.residual_credential_count == 0
+            and self.removed_count == len(self.removed_device_ids)
+            and self.verification_sha256 == expected
+        )
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "source_type": "SYNTHETIC",
+            "contains_real_data": False,
+            "run_id": self.run_id,
+            "approach": self.approach,
+            "identity_approach": self.approach,
+            "credential_owner": self.credential_owner,
+            "removed_device_ids": list(self.removed_device_ids),
+            "removed_count": self.removed_count,
+            "revoked_credential_count": self.revoked_credential_count,
+            "residual_simulated_identities": list(self.residual_simulated_identities),
+            "residual_simulated_count": self.residual_simulated_count,
+            "residual_credential_count": self.residual_credential_count,
+            "verified_zero_residual": self.verified_zero_residual,
+            "verification_sha256": self.verification_sha256,
+        }
+
+
+def plan(
+    run_id: str,
+    credential_owner: str,
+    sensors: Sequence[Mapping[str, object]],
+    *,
+    approach: str = DEVICE_IDENTITY_APPROACH,
+) -> Manifest:
     """Map `Selection.sensors()` output to one identity per stock home; no credentials yet."""
     failure: DeviceIdentityError | None = None
     manifest: Manifest | None = None
@@ -116,7 +286,7 @@ def plan(run_id: str, credential_owner: str, sensors: Sequence[Mapping[str, obje
                 raise DeviceIdentityError("INVALID_DEVICE_IDENTITY")
             raw.append(DeviceIdentity("SYN-" + sensor_id, sensor_id, home_id))
         identities = tuple(raw)
-        manifest = Manifest(run_id, credential_owner, identities)
+        manifest = Manifest(run_id, credential_owner, identities, approach=approach)
         manifest.validate()
     except DeviceIdentityError as error:
         failure = error
@@ -178,7 +348,12 @@ def _provision_locked(manifest: Manifest, registry: Registry, store: CredentialS
         owner = _owner_of(registry, attempted.device_id) if attempted is not None else None
         if attempted is not None and owner == manifest.run_id:
             created.append(attempted)
-        rollback = Manifest(manifest.run_id, manifest.credential_owner, tuple(created))
+        rollback = Manifest(
+            manifest.run_id,
+            manifest.credential_owner,
+            tuple(created),
+            approach=manifest.approach,
+        )
         try:
             with _run_lock(rollback.run_id):
                 _teardown_locked(
@@ -196,7 +371,12 @@ def _provision_locked(manifest: Manifest, registry: Registry, store: CredentialS
         if owner is _UNKNOWN:
             raise DeviceIdentityError("PROVISION_ROLLBACK_INCOMPLETE") from None
         raise DeviceIdentityError("PROVISION_FAILED_ROLLED_BACK")
-    return Manifest(manifest.run_id, manifest.credential_owner, tuple(issued))
+    return Manifest(
+        manifest.run_id,
+        manifest.credential_owner,
+        tuple(issued),
+        approach=manifest.approach,
+    )
 
 
 def rotate(manifest: Manifest, registry: Registry, store: CredentialStore) -> Manifest:
@@ -268,7 +448,12 @@ def _rotate_locked(manifest: Manifest, registry: Registry, store: CredentialStor
     except Exception:
         errors += 1
         leftover = False
-    new_manifest = Manifest(run_id, manifest.credential_owner, tuple(issued))
+    new_manifest = Manifest(
+        run_id,
+        manifest.credential_owner,
+        tuple(issued),
+        approach=manifest.approach,
+    )
     if errors:
         raise DeviceIdentityError(f"ROTATION_REVOKE_FAILED:{errors}", new_manifest)
     if leftover:
@@ -295,21 +480,25 @@ def teardown(
     registry: Registry,
     store: CredentialStore,
     refs: Sequence[str] | None = None,
-) -> None:
+) -> TeardownReceipt:
     """Delete exactly the run's identities and credentials under the run lock (see below).
 
     Whole-run coverage is always enforced; partial cleanup is reserved for provisioning rollback.
     """
     failure: DeviceIdentityError | None = None
+    receipt: TeardownReceipt | None = None
     try:
         manifest.validate()
         with _run_lock(manifest.run_id):
-            _teardown_locked(manifest, registry, store, refs, full_run=True)
+            receipt = _teardown_locked(manifest, registry, store, refs, full_run=True)
     except DeviceIdentityError as error:
         failure = error
     if failure is not None:
         # Raised outside the handler so a caller's secret-bearing exception is never chained.
         raise DeviceIdentityError(str(failure)) from None
+    if receipt is None:
+        raise DeviceIdentityError("TEARDOWN_FAILED")
+    return receipt
 
 
 def _teardown_locked(
@@ -319,7 +508,7 @@ def _teardown_locked(
     refs: Sequence[str] | None,
     *,
     full_run: bool,
-) -> None:
+) -> TeardownReceipt:
     """Delete exactly the run's identities and credentials, then verify none remain.
 
     Adapter exceptions may carry secrets, so they are replaced by fixed error codes and the
@@ -328,8 +517,15 @@ def _teardown_locked(
     owned = {i.device_id for i in manifest.identities}
     explicit = [r for r in (refs if refs is not None else _refs(manifest)) if r]
     run_id = manifest.run_id
+    present_owned: list[str] = []
+    foreign: bool | None = False
     try:
-        foreign = any(registry.run_of(d) not in (None, run_id) for d in sorted(owned))
+        for device_id in sorted(owned):
+            tag = registry.run_of(device_id)
+            if tag not in (None, run_id):
+                foreign = True
+            elif tag == run_id:
+                present_owned.append(device_id)
     except Exception:
         foreign = None
     if foreign is None:
@@ -376,6 +572,13 @@ def _teardown_locked(
         raise DeviceIdentityError(f"TEARDOWN_INCOMPLETE:{len(remaining)}")
     if leftover:
         raise DeviceIdentityError("TEARDOWN_CREDENTIALS_REMAIN")
+    return TeardownReceipt.verified(
+        run_id=run_id,
+        approach=manifest.approach,
+        credential_owner=manifest.credential_owner,
+        removed_device_ids=tuple(present_owned),
+        revoked_credential_count=len(references),
+    )
 
 
 _UNKNOWN = object()

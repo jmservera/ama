@@ -1,0 +1,64 @@
+{
+  "task_id": "issue-100-mgmt-tokenomics",
+  "task_slug": "insight-100-mgmt-tokenomics",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/insight-100-mgmt-tokenomics-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/insight-100-mgmt-tokenomics-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/insight-100-mgmt-tokenomics-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/insight-100-mgmt-tokenomics-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/insight-100-mgmt-tokenomics-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/insight-100-mgmt-tokenomics-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute full automatic RPI loop (rpi-research, rpi-plan, rpi-plan-critique, rpi-implement, rpi-review) on feat/insight-100-mgmt-tokenomics targeting feat/demo-164-chat-grounding-provenance-0900 (PR #1641) under Focused validation tier and commit locally without push",
+      "status": "confirmed",
+      "evidence": "Explicit caller direction in non-interactive prompt"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/insight-100-mgmt-tokenomics-research.md (C1-C20)"
+    },
+    {
+      "decision": "Single-pass plan critique executed (verdict: Revise); PC-001 through PC-005 applied directly by planning_parent; Plan status Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/insight-100-mgmt-tokenomics-plan-critique.md and Critique Disposition in .copilot-tracking/plans/2026-11-15/insight-100-mgmt-tokenomics-plan.md"
+    },
+    {
+      "decision": "Single-pass post-implementation Review executed (execution: Complete; outcome: Residual work; assessed boundary: full plan P01-P04; RV-001 and RV-002 routed to distinct follow-ups)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/insight-100-mgmt-tokenomics-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Transition completed task to Follow-up and await user selection among ranked follow-ups, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Gate unlinked JSON recommendation historical acceptance on resolved_at <= as_of and document the 5-external + 3-metered TCA component mapping (RV-002)",
+      "rationale": "Highest ease of implementation and engineering-quality leverage: small pure-function guard in tokenomics.py plus one-sentence clarification in src/core/README.md.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/insight-100-mgmt-tokenomics-review.md (RV-002), src/core/src/zava_forward/core/tokenomics.py, src/core/README.md"
+    },
+    {
+      "rank": 2,
+      "task": "Filter SQL ai_meter ledger rows to synthetic-admitted roots in zava_forward.api.progress._ai_economics for hybrid databases (RV-001)",
+      "rationale": "High defense-in-depth value and clean SOLID boundary isolation if /api/progress ever runs against a hybrid SQL database containing mixed synthetic and non-synthetic ledger calls.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/insight-100-mgmt-tokenomics-review.md (RV-001), src/api/src/zava_forward/api/progress.py"
+    },
+    {
+      "rank": 3,
+      "task": "Close OD-51 tariff and spend-ceiling governance decision and wire live Azure Cost Management billing export reconciliation (#100, #432)",
+      "rationale": "High programme impact once commercial owner sign-off exists, enabling live reconciled Total Cost of AI and unit-cost reporting in deployed environments.",
+      "evidence": "docs/case_study_48_addendum.md (OD-51), .copilot-tracking/reviews/logs/2026-11-15/insight-100-mgmt-tokenomics-review.md"
+    }
+  ]
+}

@@ -4,16 +4,27 @@ from __future__ import annotations
 
 import copy
 import json
+import sys
 import unittest
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
-from zava_forward.core import rule_engine
+_TESTS_DIR = str(Path(__file__).resolve().parent)
+if _TESTS_DIR not in sys.path:
+    sys.path.insert(0, _TESTS_DIR)
 
-from regulatory_gate_fixture import answer_cases, oracle, rule_rows, run, sql_baseline
-from zava_forward.agents import regulatory_gates
+from zava_forward.core import rule_engine  # noqa: E402
+
+from regulatory_gate_fixture import (  # noqa: E402
+    answer_cases,
+    oracle,
+    rule_rows,
+    run,
+    sql_baseline,
+)
+from zava_forward.agents import regulatory_gates  # noqa: E402
 
 
 class RegulatoryGates(unittest.TestCase):

@@ -16,6 +16,8 @@ param purgeProtection bool = true
 @maxValue(365)
 param secretRotationDays int = 90
 
+var runbookBase = 'https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md'
+
 resource vault 'Microsoft.KeyVault/vaults@2024-11-01' = {
   name: name
   location: location
@@ -84,7 +86,7 @@ resource expiryAlert 'Microsoft.Insights/scheduledQueryRules@2023-03-15-preview'
   tags: tags
   properties: {
     displayName: 'Key Vault secret near expiry or expired (${name})'
-    description: 'A secret is within its Key Vault near-expiry window or has expired. Rotate it using infra/README.md, Key Vault secret lifecycle.'
+    description: 'A secret is within its Key Vault near-expiry window or has expired. Rotate it using infra/README.md, Key Vault secret lifecycle. Owner: Digital service owner (proposed role, appointment pending). Runbook: ${runbookBase}#vault-expiry.'
     severity: 2
     enabled: true
     scopes: [workspaceId]
@@ -111,7 +113,7 @@ resource deniedAccessAlert 'Microsoft.Insights/scheduledQueryRules@2023-03-15-pr
   tags: tags
   properties: {
     displayName: 'Key Vault data-plane access denied (${name})'
-    description: 'Repeated 401 or 403 results on the vault data plane. Review the caller and the access review record.'
+    description: 'Repeated 401 or 403 results on the vault data plane. Review the caller and the access review record. Owner: Digital service owner (proposed role, appointment pending). Runbook: ${runbookBase}#vault-denied.'
     severity: 3
     enabled: true
     scopes: [workspaceId]
