@@ -420,6 +420,10 @@ For #220, the [live challenge route evidence](./research/issue-220-live-challeng
 records a 2026-11-18 demo run: guarantees, assurance flags and forbidden-field refusals observed
 live, and a blocking defect that refuses every Entra-signed-in staff write to the route.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
+For #130, the [live nomination route evidence](./research/issue-130-live-nomination-route-evidence-2026-11-18.md)
+records a 2026-11-18 demo run: route panels and permissions read live, representative options absent
+without confirmed authority, writes refused by the same identity defect, and the unticked
+representative-participation criterion stated as unprovable for the demo.
 
 For #109, the [live device monitoring evidence](./research/issue-109-live-device-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of IoT Hub connection state and a connectivity metric alert.

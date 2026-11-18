@@ -12328,3 +12328,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Stabilization checkpoint triage and epic verdicts (Refs #440)
 
 * Added [stabilization-checkpoint-triage-440-live-2026-11-18.md](research/stabilization-checkpoint-triage-440-live-2026-11-18.md): four issue drafts (time status 500, legacy-reference guard allowlist, unreachable ChatIsolation turn, AI golden path), duplicates mapped to existing owners, blocking findings mapped to epics, and per-epic verdicts (14 continue, 2 fix, 0 pivot). No issue created, no criterion ticked, no source changed. The coordinator HVE Builder review is Deferred at host validation.
+
+## [2026-11-18] add | Live nomination route evidence (Refs #130)
+
+* Added [issue-130-live-nomination-route-evidence-2026-11-18.md](research/issue-130-live-nomination-route-evidence-2026-11-18.md): per-criterion record of a demo run. Route panels, permissions and the absence of a representative option without confirmed authority observed live; every write refused by the known Entra identity defect; the unticked representative-participation criterion cannot be proven for the demo.

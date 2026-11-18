@@ -1,0 +1,60 @@
+{
+ "case_status": 200,
+ "permission_keys": [
+  "acknowledgeable_nomination_ids",
+  "assisted_channels",
+  "can_assign_third_party_owner",
+  "can_reassign_owner",
+  "can_submit_digital",
+  "can_submit_staff_recorded_non_digital",
+  "can_view",
+  "can_write",
+  "challenge_channels",
+  "channels",
+  "correctable_nomination_ids",
+  "editable_nomination_ids",
+  "representative_authorities",
+  "staff_owners"
+ ],
+ "perms_scrubbed": {
+  "can_view": true,
+  "can_write": true,
+  "can_submit_digital": true,
+  "can_submit_staff_recorded_non_digital": true,
+  "can_assign_third_party_owner": true,
+  "can_reassign_owner": true,
+  "acknowledgeable_nomination_ids": "list[0]",
+  "correctable_nomination_ids": "list[0]",
+  "editable_nomination_ids": "list[0]",
+  "staff_owners": "list[1]",
+  "representative_authorities": "list[0]",
+  "channels": "list[7]",
+  "challenge_channels": "list[6]",
+  "assisted_channels": "list[5]"
+ },
+ "n_records": 0,
+ "record_valid": {
+  "status": 403,
+  "err": "Reload your current staff identity before recording this step."
+ },
+ "record_owner_not_staff": {
+  "status": 403,
+  "err": "Reload your current staff identity before recording this step."
+ },
+ "record_owner_role_name": {
+  "status": 403,
+  "err": "Reload your current staff identity before recording this step."
+ },
+ "record_unknown_hazard_null": {
+  "status": 403,
+  "err": "Reload your current staff identity before recording this step."
+ },
+ "record_representative_fields": {
+  "status": 400,
+  "err": "Supply only permitted route fields. Server-derived and unpermitted fields are not accepted: raised_by, representative_ref."
+ },
+ "n_records_after": 0,
+ "stage_unchanged": true,
+ "html_status": 200,
+ "html_excerpt": "{'_text': '<!doctype html><html lang=\"en-GB\"><head><meta charset=\"utf-8\"><title>Referral and challenge routes for ZF-2025-0331</title></head><body><main><h1>Referral, acknowledgement, and challenge routes (ZF-2025-0331)</h1><p>Urgent hazards use the hazard reporting route immediately and are never queued here. A named person owns every review and response.</p><section id=\"nominations-html\" aria-labelledby=\"nominations-html-title\"><h2 id=\"nominations-html-title\">Referrals and self-referrals</h2><p>No referrals recorded.</p></section><section id=\"challenges-html\" aria-labelledby=\"challenges-html-title\"><h2 id=\"challenges-html-title\">Priority suggestions and challenges</h2><p>No challenges recorded.</p></section></main></body></html>'}"
+}
