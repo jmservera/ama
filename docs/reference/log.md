@@ -12991,3 +12991,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 76 live second pass (Refs #76)
 
 * Added [issue-76-live-r2-2026-11-18.md](research/issue-76-live-r2-2026-11-18.md): masked screenshots of the hazard clock and named owner and of the queue definitions on the demo; hazard partly proven (clock Unknown), safeguarding unproven (no demo item); no source change, nothing created in Azure
+
+## [2026-11-18] add | Issue 153 live content re-check (Refs #153)
+
+* Added [content-recheck-153-live-2026-11-18.md](research/content-recheck-153-live-2026-11-18.md): fresh desktop probes of the deployed demo; hold and envelope wording and an Unassigned owner still live, generic 404 and 403 bodies lack owner and next action; no named-reviewer record exists so that criterion stays unproven; no source change, nothing created in Azure
