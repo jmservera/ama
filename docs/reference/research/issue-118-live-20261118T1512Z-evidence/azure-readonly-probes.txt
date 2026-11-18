@@ -1,0 +1,59 @@
+# az policy assignment list (subscription)
+[]
+# az policy assignment list -g ama
+[]
+# az policy state summarize -g ama
+{
+  "assign": [
+    {
+      "a": "/providers/microsoft.management/managementgroups/<GUID>/providers/microsoft.authorization/policyassignments/azure_security_baseline",
+      "r": 6
+    },
+    {
+      "a": "/providers/microsoft.management/managementgroups/<GUID>/providers/microsoft.authorization/policyassignments/mcapsgovdeploypolicies",
+      "r": 0
+    },
+    {
+      "a": "/providers/microsoft.management/managementgroups/<GUID>/providers/microsoft.authorization/policyassignments/mcapsgovauditpolicies",
+      "r": 1
+    },
+    {
+      "a": "/providers/microsoft.management/managementgroups/<GUID>/providers/microsoft.authorization/policyassignments/mcapsgovdenypolicies",
+      "r": 0
+    },
+    {
+      "a": "/subscriptions/<GUID>/providers/microsoft.authorization/policyassignments/dataprotectionsecuritycenter",
+      "r": 0
+    }
+  ],
+  "policies": 2,
+  "resources": 6
+}
+# az group show -n ama
+{
+  "location": "uksouth",
+  "name": "ama",
+  "tags": {}
+}
+# az security pricing list
+{
+  "value": []
+}
+# az security pricing show StorageAccounts
+ERROR: (AuthorizationFailed) The client '<GUID>' with object id '<GUID>' does not have authorization to perform action 'Microsoft.Security/pricings/read' over scope '/subscriptions/<GUID>/providers/Microsoft.Security/pricings/StorageAccounts' or the scope is invalid. If access was recently granted, please refresh your credentials.
+Code: AuthorizationFailed
+Message: The client '<GUID>' with object id '<GUID>' does not have authorization to perform action 'Microsoft.Security/pricings/read' over scope '/subscriptions/<GUID>/providers/Microsoft.Security/pricings/StorageAccounts' or the scope is invalid. If access was recently granted, please refresh your credentials.
+# az security pricing show SqlServers
+ERROR: (AuthorizationFailed) The client '<GUID>' with object id '<GUID>' does not have authorization to perform action 'Microsoft.Security/pricings/read' over scope '/subscriptions/<GUID>/providers/Microsoft.Security/pricings/SqlServers' or the scope is invalid. If access was recently granted, please refresh your credentials.
+Code: AuthorizationFailed
+Message: The client '<GUID>' with object id '<GUID>' does not have authorization to perform action 'Microsoft.Security/pricings/read' over scope '/subscriptions/<GUID>/providers/Microsoft.Security/pricings/SqlServers' or the scope is invalid. If access was recently granted, please refresh your credentials.
+# az security pricing show KeyVaults
+ERROR: (AuthorizationFailed) The client '<GUID>' with object id '<GUID>' does not have authorization to perform action 'Microsoft.Security/pricings/read' over scope '/subscriptions/<GUID>/providers/Microsoft.Security/pricings/KeyVaults' or the scope is invalid. If access was recently granted, please refresh your credentials.
+Code: AuthorizationFailed
+Message: The client '<GUID>' with object id '<GUID>' does not have authorization to perform action 'Microsoft.Security/pricings/read' over scope '/subscriptions/<GUID>/providers/Microsoft.Security/pricings/KeyVaults' or the scope is invalid. If access was recently granted, please refresh your credentials.
+# az security pricing show Containers
+ERROR: (AuthorizationFailed) The client '<GUID>' with object id '<GUID>' does not have authorization to perform action 'Microsoft.Security/pricings/read' over scope '/subscriptions/<GUID>/providers/Microsoft.Security/pricings/Containers' or the scope is invalid. If access was recently granted, please refresh your credentials.
+Code: AuthorizationFailed
+Message: The client '<GUID>' with object id '<GUID>' does not have authorization to perform action 'Microsoft.Security/pricings/read' over scope '/subscriptions/<GUID>/providers/Microsoft.Security/pricings/Containers' or the scope is invalid. If access was recently granted, please refresh your credentials.
+# resources in ama
+(resource inventory omitted from the retained output: it listed vault and secret-alert names and was not used as evidence)
