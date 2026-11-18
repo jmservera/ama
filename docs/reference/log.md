@@ -12795,6 +12795,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Chat grounding live demo evidence, second pass (Refs #164)
 
 * Added [issue-164-live-chat-grounding-evidence-r2-2026-11-18.md](research/issue-164-live-chat-grounding-evidence-r2-2026-11-18.md): UI-driven probe of seven asks with raw output, labelled screenshots and offline test output retained; no source change, no Azure resource created; no criterion newly tickable.
+
 ## [2026-11-18] update | Issue 146 second live monitoring pass (Refs #146)
 
 * Added [issue-146-live2-monitoring-evidence-2026-11-18.md](research/issue-146-live2-monitoring-evidence-2026-11-18.md) with redacted raw output: eight installed alerts, no workbook, fired job-failure and digest alerts, job metric, private query access. Poison queue, workbook rendering, named owners and the tokenomics dashboard stay unproven; no source change.
