@@ -13123,3 +13123,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 144 live run 4 (Refs #144)
 
 * Added [issue-144-live-r4-2026-11-18.md](research/issue-144-live-r4-2026-11-18.md) with a raw folder: read-only az state of four apps and nine jobs, an empty `src-deploy.yml` run list and a scripted replica probe on revision `--0000032`. Criteria 1 (pipeline clause) and 3 (only non-root enforced) stay unproven; no source, Azure resource or load change.
+
+## [2026-11-18] add | Issue 1830 live audit (Refs #1830)
+
+* Added [issue-1830-live-20261118T1648Z-2026-11-18.md](research/issue-1830-live-20261118T1648Z-2026-11-18.md): timing reports from seven retained full receipts, 54 candidate tests passing on unmerged branch `ci/gate-preflight-benchmark-1830`; no criterion ticked. No source change.
