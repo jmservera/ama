@@ -12955,3 +12955,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Alert and home chat UX live run 3 (Refs #215)
 
 * Added [issue-215-live-rerun3-evidence-2026-11-18.md](research/issue-215-live-rerun3-evidence-2026-11-18.md): desktop Playwright re-check on the unchanged demo image; law store still not loaded, chat axe incomplete characterised, clipped helper line recorded, per-criterion proven or unproven table; no source change, no Azure resource created
+
+## [2026-11-18] add | Assistant panel keyboard and announcement live proof (Refs #159)
+
+* Added [assistant-ux-live-159-2026-11-18.md](research/assistant-ux-live-159-2026-11-18.md): desktop Playwright keyboard-only run on the demo; keyboard operability and live-region announcements proven, screen-reader testing unproven; no source change, no Azure resource created, probe thread deleted
