@@ -13195,3 +13195,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 153 live re-check, fourth run (Refs #153)
 
 * Added [content-recheck-153-live-r4-2026-11-18.md](research/content-recheck-153-live-r4-2026-11-18.md): repeat Playwright and HTTP probes of the demo match the third run (`Held`/`envelope` on Finance, "Unassigned" owner, generic error bodies); named wording review unproven. Docs only.
+
+## [2026-11-18] add | Issue 157 live re-verification (Refs #157)
+
+* Added [issue-157-live-chat-epic-recheck-2026-11-18.md](research/issue-157-live-chat-epic-recheck-2026-11-18.md): fresh live probes of the chat endpoints and a per-criterion verdict; both open epic criteria stay unproven for the demo because they need owner and PR-process actions.
