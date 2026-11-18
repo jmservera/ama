@@ -1,0 +1,12 @@
+stats.kpis.open 443 | stats.kpis.completed 537 | stage sum 443
+map total/shown/cap 443 443 500 | map items unique 443
+list view=all total 443 | csv view=all rows 443 unique 443
+list view=mine total 16 | csv default rows 133 unique 133
+closed csv rows 20 | statuses ['Completed', 'Withdrawn']
+csv all refs == map ids: True
+/api/cases?view=mine&limit=1 total 16 {}
+/api/cases?view=mine&queue=&limit=1 total 16 {}
+csv mine rows 133
+['items', 'total', 'limit', 'offset', 'sort', 'policy_version', 'policy_hash', 'as_of', 'ranked_total', 'next_cursor']
+json mine items 16 total 16 | csv mine 133 | json subset of csv: True
+csv mine owners (count of distinct) 1 | top [133]

@@ -1,0 +1,24 @@
+# non-browser curl, 2026-11-18T11:31:57Z
+https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/healthz 200
+https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/ 200
+https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/welcome.html 200
+https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/api/me 401
+https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/api/cases 401
+https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app 401
+forged headers:
+401
+bad bearer:
+401
+plain http:
+301 https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/healthz
+tls:
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384 / X25519 / RSASSA-PSS
+*  issuer: C=US; O=Microsoft Corporation; CN=Microsoft TLS G2 RSA CA OCSP 16
+resident app (not Entra, separate login) staff-route probes:
+https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/healthz 000
+https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/ 200
+https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/api/cases 404
+https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/workbench 404
+https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/app 404
+https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/api/me 404
+resident /healthz retry after cold start: 200

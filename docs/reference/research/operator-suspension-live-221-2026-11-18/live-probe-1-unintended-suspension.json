@@ -1,0 +1,763 @@
+[
+ {
+  "step": "whoami-role-only",
+  "status": 200,
+  "body": {
+   "role": null
+  }
+ },
+ {
+  "step": "continuity-register",
+  "status": 200,
+  "body": {
+   "epoch": 0,
+   "suspensions": [],
+   "history_valid": true,
+   "changes": [
+    {
+     "kind": "configuration",
+     "subject": "zf-demo-continuity-probe-122",
+     "from_version": "v0",
+     "to_version": "v1",
+     "reason": "Synthetic demo probe for issue 122 version, evaluation and reversal evidence",
+     "evaluation": {
+      "result": "pass",
+      "reference": "demo probe, no runtime effect"
+     },
+     "recorded_by": "REDACTED@redacted.invalid",
+     "recorded_at": "2026-11-18T10:49",
+     "reverses": null,
+     "synthetic": true,
+     "status": "Reversed",
+     "id": "CHG-1",
+     "superseded_by": "CHG-2"
+    },
+    {
+     "kind": "configuration",
+     "subject": "zf-demo-continuity-probe-122",
+     "from_version": "v1",
+     "to_version": "v0",
+     "reason": "Synthetic demo probe finished; restore prior version",
+     "evaluation": {
+      "result": "pass",
+      "reference": "restores CHG-1 prior version"
+     },
+     "recorded_by": "REDACTED@redacted.invalid",
+     "recorded_at": "2026-11-18T10:49",
+     "reverses": "CHG-1",
+     "status": "Applied",
+     "synthetic": true,
+     "id": "CHG-2"
+    }
+   ],
+   "effective": {
+    "configuration:zf-demo-continuity-probe-122": {
+     "version": "v0",
+     "change": "CHG-2"
+    }
+   },
+   "suspended": [],
+   "note": "Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused."
+  }
+ },
+ {
+  "step": "suspend-placeholder-authority",
+  "status": 200,
+  "body": {
+   "scope": "all",
+   "scope_kind": "release",
+   "reason": "Demo probe: negative test",
+   "incident_owner": "Demo owner",
+   "containment": "None; probe is refused",
+   "communication": {
+    "owner": "Demo owner",
+    "audience": "Demo staff",
+    "sent": false,
+    "note": "Constructed communication record only: nothing is sent and no resident is contacted automatically."
+   },
+   "recorded_by": "REDACTED@redacted.invalid",
+   "recorded_at": "2026-11-18T11:51",
+   "status": "Suspended",
+   "restart": null,
+   "in_flight_note": "A provider call already in flight may complete and stay charged or unknown; its result is quarantined. Remote cancellation and exactly-once billing are not claimed.",
+   "synthetic": false,
+   "trigger": "guardrail breach",
+   "evidence": "SYN-221-PROBE",
+   "resident_impact": "None",
+   "remediation": "None",
+   "restart_authority": "TBD",
+   "actor": {
+    "email": "REDACTED@redacted.invalid",
+    "code": "E-REDACTED",
+    "oid": "OID-REDACTED"
+   },
+   "actual_authority": "Unavailable: OD-35 and RULE-020 acceptance not established.",
+   "actual_hold": true,
+   "proposals": [],
+   "snapshot_complete": false,
+   "incident_versions": {
+    "complete": false,
+    "versions": [
+     {
+      "task": "aftercare-concern-pack",
+      "binding": null,
+      "release": null,
+      "disabled": true,
+      "missing": [
+       "Task is disabled and has no runtime binding or release evidence."
+      ]
+     },
+     {
+      "task": "assessment-preparation",
+      "binding": {
+       "registry_version": "1.0.0",
+       "schema_version": "evidence-proposal-v1",
+       "provider": "azure-openai",
+       "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+       "deployment": "standard",
+       "prompt_version": "227fbd67300191c2",
+       "policy_version": "synthetic-gaps-2026-10-13-v1:38aadbe30ceb",
+       "data_version": "85e08cf5af33f7cd",
+       "provenance_version": "constructed-synthetic-demo-labelled",
+       "permission_version": "0fb3bef9c37875ca",
+       "model_version": "gpt-4.1-nano-2025-04-14",
+       "task_contract_version": "9988a58074c388e45aa3a82c0d4a69d6bcc0c1cf2547f24612bd3bdefa856c97",
+       "evaluation_version": "task-release-evaluation-v1"
+      },
+      "release": null,
+      "missing": [
+       "approved, unexpired release record"
+      ]
+     },
+     {
+      "task": "briefing",
+      "binding": {
+       "registry_version": "2026-10-15.1",
+       "schema_version": "legacy-text-v1",
+       "provider": "azure-openai",
+       "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+       "deployment": "standard",
+       "prompt_version": "b4b77f4cf772b67e",
+       "policy_version": "legacy-forbidden-output-filter-v1",
+       "data_version": "fd193779e8934b0e",
+       "provenance_version": "constructed-synthetic-demo-labelled",
+       "permission_version": "6e19defc75a1af99",
+       "model_version": "gpt-4.1-nano-2025-04-14",
+       "task_contract_version": "0c69e4d2f176e46362ae98c494c2d99751fbb0e3d78d837505469cbd59fc4100",
+       "evaluation_version": "task-release-evaluation-v1"
+      },
+      "release": null,
+      "missing": [
+       "approved, unexpired release record"
+      ]
+     },
+     {
+      "task": "chat-case-conversation",
+      "binding": null,
+      "release": null,
+      "disabled": true,
+      "missing": [
+       "Task is disabled and has no runtime binding or release evidence."
+      ]
+     },
+     {
+      "task": "funding-evidence",
+      "binding": {
+       "registry_version": "1.0.0",
+       "schema_version": "evidence-proposal-v1",
+       "provider": "azure-openai",
+       "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+       "deployment": "standard",
+       "prompt_version": "a3a511de0e461d78",
+       "policy_version": "synthetic-gaps-2026-10-13-v1:f182f3b38088",
+       "data_version": "5dabe1a2162e5f62",
+       "provenance_version": "constructed-synthetic-demo-labelled",
+       "permission_version": "72ba62e46f523209",
+       "model_version": "gpt-4.1-nano-2025-04-14",
+       "task_contract_version": "f8395f6ca7caf2fca50756092aee88f58e07088950d5ca5f00fcf16e92f23a49",
+       "evaluation_version": "task-release-evaluation-v1"
+      },
+      "release": null,
+      "missing": [
+       "approved, unexpired release record"
+      ]
+     },
+     {
+      "task": "funding_draft",
+      "binding": {
+       "registry_version": "2026-10-15.1",
+       "schema_version": "legacy-text-v1",
+       "provider": "azure-openai",
+       "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+       "deployment": "standard",
+       "prompt_version": "05094b0e0b3c0a78",
+       "policy_version": "legacy-forbidden-output-filter-v1",
+       "data_version": "7ff8794229c8c359",
+       "provenance_version": "constructed-synthetic-demo-labelled",
+       "permission_version": "20d72285485e2f77",
+       "model_version": "gpt-4.1-nano-2025-04-14",
+       "task_contract_version": "2f597c9e37921a79aa7bb72e3bedd1ccad00093a2c3fc813e54981ca2b9fd6ee",
+       "evaluation_version": "task-release-evaluation-v1"
+      },
+      "release": null,
+      "missing": [
+       "approved, unexpired release record"
+      ]
+     },
+     {
+      "task": "message",
+      "binding": {
+       "registry_version": "2026-10-15.1",
+       "schema_version": "legacy-text-v1",
+       "provider": "azure-openai",
+       "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+       "deployment": "standard",
+       "prompt_version": "0a6be41a81a76db8",
+       "policy_version": "legacy-forbidden-output-filter-v1",
+       "data_version": "d679814cf564c114",
+       "provenance_version": "constructed-synthetic-demo-labelled",
+       "permission_version": "1f177a9f03b9a60e",
+       "model_version": "gpt-4.1-nano-2025-04-14",
+       "task_contract_version": "03d111a4676fec7def0757bd87e71c21b123f3ebdef0173571fa6e4d300a8a43",
+       "evaluation_version": "task-release-evaluation-v1"
+      },
+      "release": null,
+      "missing": [
+       "approved, unexpired release record"
+      ]
+     },
+     {
+      "task": "priority",
+      "binding": {
+       "registry_version": "2026-10-15.1",
+       "schema_version": "legacy-text-v1",
+       "provider": "azure-openai",
+       "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+       "deployment": "standard",
+       "prompt_version": "15ed5b165b2074a1",
+       "policy_version": "legacy-forbidden-output-filter-v1:b66fdaccdcbd46a0eb257572a2b8f0fb98e7eafd53b468b67084d9a19761be2c",
+       "data_version": "2a633f68879b0315",
+       "provenance_version": "constructed-synthetic-demo-labelled",
+       "permission_version": "87ab689eb1791440",
+       "model_version": "gpt-4.1-nano-2025-04-14",
+       "task_contract_version": "997b3e3e251d5baa5519a429cc9aad732dfaf41ce3fa680d23c7e6f8a27b66fc",
+       "evaluation_version": "task-release-evaluation-v1"
+      },
+      "release": null,
+      "missing": [
+       "approved, unexpired release record"
+      ]
+     },
+     {
+      "task": "quality-evidence",
+      "binding": {
+       "registry_version": "1.0.0",
+       "schema_version": "evidence-proposal-v1",
+       "provider": "azure-openai",
+       "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+       "deployment": "standard",
+       "prompt_version": "9582b9a76f52d5ef",
+       "policy_version": "synthetic-gaps-2026-10-13-v1:a7ce4702fe12",
+       "data_version": "e5b6512806ccbbf0",
+       "provenance_version": "constructed-synthetic-demo-labelled",
+       "permission_version": "03579f28ea6debec",
+       "model_version": "gpt-4.1-nano-2025-04-14",
+       "task_contract_version": "2937577c7a3f2036a52c005341b387a9f62765d5d468d71e640b7ca8d194eefe",
+       "evaluation_version": "task-release-evaluation-v1"
+      },
+      "release": null,
+      "missing": [
+       "approved, unexpired release record"
+      ]
+     },
+     {
+      "task": "read_document",
+      "binding": {
+       "registry_version": "2026-10-15.1",
+       "schema_version": "legacy-text-v1",
+       "provider": "azure-openai",
+       "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+       "deployment": "standard",
+       "prompt_version": "a430d3d670fcf0d7",
+       "policy_version": "legacy-forbidden-output-filter-v1",
+       "data_version": "59ff3f6085e6fb60",
+       "provenance_version": "constructed-synthetic-demo-labelled",
+       "permission_version": "9ed5ad30eb216233",
+       "model_version": "gpt-4.1-nano-2025-04-14",
+       "task_contract_version": "f1f67f925f9471da9a0dc4aac31e6afdaffb5a9642d0c5d625bcc7455c8ee023",
+       "evaluation_version": "task-release-evaluation-v1"
+      },
+      "release": null,
+      "missing": [
+       "approved, unexpired release record"
+      ]
+     },
+     {
+      "task": "stock-prioritisation",
+      "binding": {
+       "registry_version": "1.0.0",
+       "schema_version": "evidence-proposal-v1",
+       "provider": "azure-openai",
+       "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+       "deployment": "standard",
+       "prompt_version": "3768ed36e3242c28",
+       "policy_version": "synthetic-gaps-2026-10-13-v1:bb974eaf2f8b",
+       "data_version": "bd66b741abf300ac",
+       "provenance_version": "constructed-synthetic-demo-labelled",
+       "permission_version": "0fb3bef9c37875ca",
+       "model_version": "gpt-4.1-nano-2025-04-14",
+       "task_contract_version": "3c530e0935be27ed0f647d53ada2f562b62d6d55be4897b45125bd9eb0e02f4d",
+       "evaluation_version": "task-release-evaluation-v1"
+      },
+      "release": null,
+      "missing": [
+       "approved, unexpired release record"
+      ]
+     },
+     {
+      "task": "summary",
+      "binding": {
+       "registry_version": "2026-10-15.1",
+       "schema_version": "legacy-text-v1",
+       "provider": "azure-openai",
+       "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+       "deployment": "standard",
+       "prompt_version": "bcac8ba6c5fd65c6",
+       "policy_version": "legacy-forbidden-output-filter-v1",
+       "data_version": "98157c739a1588d2",
+       "provenance_version": "constructed-synthetic-demo-labelled",
+       "permission_version": "6e19defc75a1af99",
+       "model_version": "gpt-4.1-nano-2025-04-14",
+       "task_contract_version": "ceefc3ff3e1fa8702a91e98d665e776839a3681d3ba22d07bdcfb10b799d007f",
+       "evaluation_version": "task-release-evaluation-v1"
+      },
+      "release": null,
+      "missing": [
+       "approved, unexpired release record"
+      ]
+     },
+     {
+      "task": "works-resident-coordination",
+      "binding": {
+       "registry_version": "1.0.0",
+       "schema_version": "evidence-proposal-v1",
+       "provider": "azure-openai",
+       "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+       "deployment": "standard",
+       "prompt_version": "46d998c3de7ac61e",
+       "policy_version": "synthetic-gaps-2026-10-13-v1:afb0ef7dde7a",
+       "data_version": "3f0a66365555e8d1",
+       "provenance_version": "constructed-synthetic-demo-labelled",
+       "permission_version": "2123c2c05cef7a89",
+       "model_version": "gpt-4.1-nano-2025-04-14",
+       "task_contract_version": "4c0c5d1332419db89d8cb12c5fb3fd6f9f887762a1d1ff983235872996153fa4",
+       "evaluation_version": "task-release-evaluation-v1"
+      },
+      "release": null,
+      "missing": [
+       "approved, unexpired release record"
+      ]
+     }
+    ]
+   },
+   "id": "SUS-1",
+   "epoch": 1,
+   "affected": [],
+   "affected_assistant_tasks": [],
+   "affected_assistant_total": 0,
+   "affected_assistant_truncated": false
+  }
+ },
+ {
+  "step": "suspend-ai-named-authority",
+  "status": 400,
+  "body": {
+   "error": "This scope is already suspended."
+  }
+ },
+ {
+  "step": "suspend-automatic-restart-flag",
+  "status": 400,
+  "body": {
+   "error": "This scope is already suspended."
+  }
+ },
+ {
+  "step": "suspend-self-designated-authority",
+  "status": 400,
+  "body": {
+   "error": "This scope is already suspended."
+  }
+ },
+ {
+  "step": "restart-propose-unknown-suspension",
+  "status": 400,
+  "body": {
+   "error": "Choose one of the suspensions."
+  }
+ },
+ {
+  "step": "continuity-register-after",
+  "status": 200,
+  "body": {
+   "epoch": 1,
+   "suspensions": [
+    {
+     "scope": "all",
+     "scope_kind": "release",
+     "reason": "Demo probe: negative test",
+     "incident_owner": "Demo owner",
+     "containment": "None; probe is refused",
+     "communication": {
+      "owner": "Demo owner",
+      "audience": "Demo staff",
+      "sent": false,
+      "note": "Constructed communication record only: nothing is sent and no resident is contacted automatically."
+     },
+     "recorded_by": "REDACTED@redacted.invalid",
+     "recorded_at": "2026-11-18T11:51",
+     "status": "Suspended",
+     "restart": null,
+     "in_flight_note": "A provider call already in flight may complete and stay charged or unknown; its result is quarantined. Remote cancellation and exactly-once billing are not claimed.",
+     "synthetic": false,
+     "trigger": "guardrail breach",
+     "evidence": "SYN-221-PROBE",
+     "resident_impact": "None",
+     "remediation": "None",
+     "restart_authority": "TBD",
+     "actor": {
+      "email": "REDACTED@redacted.invalid",
+      "code": "E-REDACTED",
+      "oid": "OID-REDACTED"
+     },
+     "actual_authority": "Unavailable: OD-35 and RULE-020 acceptance not established.",
+     "actual_hold": true,
+     "proposals": [],
+     "snapshot_complete": false,
+     "incident_versions": {
+      "complete": false,
+      "versions": [
+       {
+        "task": "aftercare-concern-pack",
+        "binding": null,
+        "release": null,
+        "disabled": true,
+        "missing": [
+         "Task is disabled and has no runtime binding or release evidence."
+        ]
+       },
+       {
+        "task": "assessment-preparation",
+        "binding": {
+         "registry_version": "1.0.0",
+         "schema_version": "evidence-proposal-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "227fbd67300191c2",
+         "policy_version": "synthetic-gaps-2026-10-13-v1:38aadbe30ceb",
+         "data_version": "85e08cf5af33f7cd",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "0fb3bef9c37875ca",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "9988a58074c388e45aa3a82c0d4a69d6bcc0c1cf2547f24612bd3bdefa856c97",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "briefing",
+        "binding": {
+         "registry_version": "2026-10-15.1",
+         "schema_version": "legacy-text-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "b4b77f4cf772b67e",
+         "policy_version": "legacy-forbidden-output-filter-v1",
+         "data_version": "fd193779e8934b0e",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "6e19defc75a1af99",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "0c69e4d2f176e46362ae98c494c2d99751fbb0e3d78d837505469cbd59fc4100",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "chat-case-conversation",
+        "binding": null,
+        "release": null,
+        "disabled": true,
+        "missing": [
+         "Task is disabled and has no runtime binding or release evidence."
+        ]
+       },
+       {
+        "task": "funding-evidence",
+        "binding": {
+         "registry_version": "1.0.0",
+         "schema_version": "evidence-proposal-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "a3a511de0e461d78",
+         "policy_version": "synthetic-gaps-2026-10-13-v1:f182f3b38088",
+         "data_version": "5dabe1a2162e5f62",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "72ba62e46f523209",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "f8395f6ca7caf2fca50756092aee88f58e07088950d5ca5f00fcf16e92f23a49",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "funding_draft",
+        "binding": {
+         "registry_version": "2026-10-15.1",
+         "schema_version": "legacy-text-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "05094b0e0b3c0a78",
+         "policy_version": "legacy-forbidden-output-filter-v1",
+         "data_version": "7ff8794229c8c359",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "20d72285485e2f77",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "2f597c9e37921a79aa7bb72e3bedd1ccad00093a2c3fc813e54981ca2b9fd6ee",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "message",
+        "binding": {
+         "registry_version": "2026-10-15.1",
+         "schema_version": "legacy-text-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "0a6be41a81a76db8",
+         "policy_version": "legacy-forbidden-output-filter-v1",
+         "data_version": "d679814cf564c114",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "1f177a9f03b9a60e",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "03d111a4676fec7def0757bd87e71c21b123f3ebdef0173571fa6e4d300a8a43",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "priority",
+        "binding": {
+         "registry_version": "2026-10-15.1",
+         "schema_version": "legacy-text-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "15ed5b165b2074a1",
+         "policy_version": "legacy-forbidden-output-filter-v1:b66fdaccdcbd46a0eb257572a2b8f0fb98e7eafd53b468b67084d9a19761be2c",
+         "data_version": "2a633f68879b0315",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "87ab689eb1791440",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "997b3e3e251d5baa5519a429cc9aad732dfaf41ce3fa680d23c7e6f8a27b66fc",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "quality-evidence",
+        "binding": {
+         "registry_version": "1.0.0",
+         "schema_version": "evidence-proposal-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "9582b9a76f52d5ef",
+         "policy_version": "synthetic-gaps-2026-10-13-v1:a7ce4702fe12",
+         "data_version": "e5b6512806ccbbf0",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "03579f28ea6debec",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "2937577c7a3f2036a52c005341b387a9f62765d5d468d71e640b7ca8d194eefe",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "read_document",
+        "binding": {
+         "registry_version": "2026-10-15.1",
+         "schema_version": "legacy-text-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "a430d3d670fcf0d7",
+         "policy_version": "legacy-forbidden-output-filter-v1",
+         "data_version": "59ff3f6085e6fb60",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "9ed5ad30eb216233",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "f1f67f925f9471da9a0dc4aac31e6afdaffb5a9642d0c5d625bcc7455c8ee023",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "stock-prioritisation",
+        "binding": {
+         "registry_version": "1.0.0",
+         "schema_version": "evidence-proposal-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "3768ed36e3242c28",
+         "policy_version": "synthetic-gaps-2026-10-13-v1:bb974eaf2f8b",
+         "data_version": "bd66b741abf300ac",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "0fb3bef9c37875ca",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "3c530e0935be27ed0f647d53ada2f562b62d6d55be4897b45125bd9eb0e02f4d",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "summary",
+        "binding": {
+         "registry_version": "2026-10-15.1",
+         "schema_version": "legacy-text-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "bcac8ba6c5fd65c6",
+         "policy_version": "legacy-forbidden-output-filter-v1",
+         "data_version": "98157c739a1588d2",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "6e19defc75a1af99",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "ceefc3ff3e1fa8702a91e98d665e776839a3681d3ba22d07bdcfb10b799d007f",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       },
+       {
+        "task": "works-resident-coordination",
+        "binding": {
+         "registry_version": "1.0.0",
+         "schema_version": "evidence-proposal-v1",
+         "provider": "azure-openai",
+         "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+         "deployment": "standard",
+         "prompt_version": "46d998c3de7ac61e",
+         "policy_version": "synthetic-gaps-2026-10-13-v1:afb0ef7dde7a",
+         "data_version": "3f0a66365555e8d1",
+         "provenance_version": "constructed-synthetic-demo-labelled",
+         "permission_version": "2123c2c05cef7a89",
+         "model_version": "gpt-4.1-nano-2025-04-14",
+         "task_contract_version": "4c0c5d1332419db89d8cb12c5fb3fd6f9f887762a1d1ff983235872996153fa4",
+         "evaluation_version": "task-release-evaluation-v1"
+        },
+        "release": null,
+        "missing": [
+         "approved, unexpired release record"
+        ]
+       }
+      ]
+     },
+     "id": "SUS-1",
+     "epoch": 1,
+     "affected": [],
+     "affected_assistant_tasks": [],
+     "affected_assistant_total": 0,
+     "affected_assistant_truncated": false
+    }
+   ],
+   "history_valid": true,
+   "changes": [
+    {
+     "kind": "configuration",
+     "subject": "zf-demo-continuity-probe-122",
+     "from_version": "v0",
+     "to_version": "v1",
+     "reason": "Synthetic demo probe for issue 122 version, evaluation and reversal evidence",
+     "evaluation": {
+      "result": "pass",
+      "reference": "demo probe, no runtime effect"
+     },
+     "recorded_by": "REDACTED@redacted.invalid",
+     "recorded_at": "2026-11-18T10:49",
+     "reverses": null,
+     "synthetic": true,
+     "status": "Reversed",
+     "id": "CHG-1",
+     "superseded_by": "CHG-2"
+    },
+    {
+     "kind": "configuration",
+     "subject": "zf-demo-continuity-probe-122",
+     "from_version": "v1",
+     "to_version": "v0",
+     "reason": "Synthetic demo probe finished; restore prior version",
+     "evaluation": {
+      "result": "pass",
+      "reference": "restores CHG-1 prior version"
+     },
+     "recorded_by": "REDACTED@redacted.invalid",
+     "recorded_at": "2026-11-18T10:49",
+     "reverses": "CHG-1",
+     "status": "Applied",
+     "synthetic": true,
+     "id": "CHG-2"
+    }
+   ],
+   "effective": {
+    "configuration:zf-demo-continuity-probe-122": {
+     "version": "v0",
+     "change": "CHG-2"
+    }
+   },
+   "suspended": [
+    {
+     "id": "SUS-1",
+     "scope": "all"
+    }
+   ],
+   "note": "Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused."
+  }
+ }
+]
