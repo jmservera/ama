@@ -12915,3 +12915,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Direct ingress live third measurement (Refs #360)
 
 * Extended [direct-ingress-live-demo-2026-11-18.md](research/direct-ingress-live-demo-2026-11-18.md) with a 14:00 UTC measurement and per-criterion table: criteria c and e need owner decisions, d stays partly proven (AI call not reproduced today); no source change, no Azure resource created
+
+## [2026-11-18] update | Challenge route live third pass (Refs #220)
+
+* Extended [issue-220-live-challenge-route-evidence-2026-11-18.md](research/issue-220-live-challenge-route-evidence-2026-11-18.md): demo revision and the Entra staff-write defect are unchanged, so the unticked criterion stays unproven live; no source change, no Azure resource created
