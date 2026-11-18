@@ -190,3 +190,15 @@ No UI file was changed.
 * Criterion 1 (licence, cost, coverage and processor terms recorded) is unmet. Binding terms need owner, DPO, procurement and legal approval.
 * Criterion 2 (screen-reader test of the list alternative) is unmet. It needs a human run with assistive technology using the protocol above.
 * No agent action remains. No provider is selected and no spend is authorised.
+
+## Update at 2026-11-18
+
+The [second live audit](../issue-119-live-r2-map-evidence-2026-11-18.md)
+re-read public vendor pages. The rows above are unchanged; this section only
+adds what is now re-read.
+
+* Azure Maps: 5,000 free Base Map Tiles, 15 tile requests per transaction, volume discounts from 100,000 transactions, Get Map Attribution nonbillable, residency by Europe or United States geography only (no UK geography). The paid rate still renders as "$-".
+* Ordnance Survey Maps API: API key required, Great Britain coverage, raster tiles that cannot be re-styled, update 15 working days after each product refresh. Plan prices and terms remain unread.
+* MapTiler Cloud: Free plan is for testing, proof of concept, prototyping, personal or non-commercial use; Flex 30 USD a month plus extra traffic; Custom prepaid with 99.9 percent SLA. The commercial-use row did not render.
+* OpenStreetMap: ODbL with credit and licence statement required; the full sentence on free tile access was truncated in the fetch.
+* The deployed demo still uses the public OSM tile service. No provider is selected and the production-only items listed in the live note stay open.
