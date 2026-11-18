@@ -12257,6 +12257,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-188-live-backfill-evidence-2026-11-18.md](research/issue-188-live-backfill-evidence-2026-11-18.md): per-criterion proven/unproven record of a demo run on live Azure SQL. Production receiver and indoor-schema proof remain open.
 
+## [2026-11-18] test | Direct ingress and sign-in live proof on the demo (Refs #360)
+
+* Added [direct ingress live note](research/direct-ingress-live-demo-2026-11-18.md) with per-criterion results for #360 c, d and e. Demo health, welcome, HTTPS, Entra browser sign-in, role claim, shared SQL state and a real chat AI call proven; browser-mode API 401 still fails; migration approval, Front Door retirement authorisation, second-role denial and restart persistence unproven. Cites #349, #350 and the #344 historical edge record without repeating them. No Azure resource created or changed.
 ## [2026-11-18] observation | Live demo public browser access proof, Refs #344
 
 * Added [public-browser-access-live-demo-2026-11-18.md](research/public-browser-access-live-demo-2026-11-18.md): landing, `/healthz`, sign-in to Entra, anonymous 401 for non-browser clients, SQL public access Disabled and 22 of 25 authenticated read routes on `ca-cutover-test-demo-api`. Read-only; no resource created.
