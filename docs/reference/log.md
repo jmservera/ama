@@ -13112,6 +13112,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-200-live-20261118T1618Z-2026-11-18.md](research/issue-200-live-20261118T1618Z-2026-11-18.md) with evidence folder: live exec proof (uid 10001, empty `/data`, no capabilities) on the demo API and resident app, 52 revisions keeping historical tags; fresh tag deployment left unproven because the registry is private and a window would change shared posture. No source change.
 
+## [2026-11-18] add | Issue 470 live audit (Refs #470)
+
+* Added [issue-470-live-20261118T1639Z-2026-11-18.md](research/issue-470-live-20261118T1639Z-2026-11-18.md): criteria 1, 2, 3 and 5 backed by 109 passing `tools.test_rpi_checks` tests; criterion 4 stays unproven (no full `--all` benchmark run). No source change.
+
 ## [2026-11-18] add | Issue 136 live epic audit (Refs #136)
 
 * Added [issue-136-live-20261118T1638Z-2026-11-18.md](research/issue-136-live-20261118T1638Z-2026-11-18.md) with evidence folder: per-criterion table for the epic, remaining criteria of open children #138, #142 to #146, and a read-only Azure probe; nothing ticked, no source change, no Azure resource created.
