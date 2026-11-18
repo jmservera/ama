@@ -56,3 +56,10 @@ chat widget and error states that need a state change.
 | Resident-facing wording is reviewed by a named human before any use | Unticked | Unproven. The reviewer was appointed on 2026-10-15 (Juan Manuel Servera), but a review record (name, role, date, exact text, outcome) cannot be produced by an automated run, and ticking it would be an approval this run cannot give. Under the owner decisions, DPO/Legal approval is not needed for the demo, but the named wording review is a person action. The exact resident wording to review is in `resident-signed-in-text.txt` |
 
 The unticked criterion stays unticked. Four ticked criteria were re-observed and two carry live caveats (F1 to F4).
+
+## Evidence limits
+
+* The F1 quote, the "Unknown twice" detail and the P1 page text are not in any retained file.
+* Three navigation timeouts and the Time capture error state occurred during capture and are not otherwise explained.
+* `staff-03.png` is a 500 error page that states an owner and next action; `staff-99-unknown.png` is a bare unknown-page response.
+* Independent exact-head review and hosted CI are outstanding; no criterion is ticked.
