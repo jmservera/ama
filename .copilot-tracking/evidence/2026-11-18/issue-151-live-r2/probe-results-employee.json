@@ -1,0 +1,238 @@
+{
+ "axe": "4.10.3",
+ "viewport": "1366x900",
+ "resident": {},
+ "employee": {
+  "titles": {
+   "my-cases": {
+    "title": "Zava Forward | Zava North Homes",
+    "h1": "My cases today"
+   },
+   "all": {
+    "title": "Zava Forward | Zava North Homes",
+    "h1": "All open cases"
+   },
+   "overview": {
+    "title": "Zava Forward | Zava North Homes",
+    "h1": "Overview"
+   },
+   "progress": {
+    "title": "Zava Forward | Zava North Homes",
+    "h1": "Progress dashboard"
+   },
+   "visits": {
+    "title": "Zava Forward | Zava North Homes",
+    "h1": "Visits coming up"
+   },
+   "funding": {
+    "title": "Zava Forward | Zava North Homes",
+    "h1": "Funding applications"
+   },
+   "finance": {
+    "title": "Zava Forward | Zava North Homes",
+    "h1": "Finance queue"
+   },
+   "capacity": {
+    "title": "Zava Forward | Zava North Homes",
+    "h1": "Capacity and work orders"
+   },
+   "closed": {
+    "title": "Zava Forward | Zava North Homes",
+    "h1": "Closed cases"
+   },
+   "assistants": {
+    "title": "Zava Forward | Zava North Homes",
+    "h1": "Role-owned assistant proposals"
+   },
+   "time": {
+    "title": "Zava Forward | Zava North Homes",
+    "h1": "Staff time capture"
+   },
+   "aftercare": {
+    "title": "Zava Forward | Zava North Homes",
+    "h1": "Aftercare concerns"
+   },
+   "screens": {
+    "title": "Zava Forward | Zava North Homes",
+    "h1": "Specialist screens"
+   }
+  },
+  "contrast": {
+   "my-cases": {
+    "n": 465,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "all": {
+    "n": 798,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "overview": {
+    "n": 307,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "progress": {
+    "n": 547,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "visits": {
+    "n": 126,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "funding": {
+    "n": 935,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "finance": {
+    "n": 116,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "capacity": {
+    "n": 1369,
+    "fail": 3,
+    "worst": [
+     {
+      "text": "Previous packages",
+      "ratio": 4.12,
+      "need": 4.5,
+      "size": 16
+     },
+     {
+      "text": "Next packages",
+      "ratio": 4.12,
+      "need": 4.5,
+      "size": 16
+     },
+     {
+      "text": "Previous work orders",
+      "ratio": 4.12,
+      "need": 4.5,
+      "size": 16
+     }
+    ],
+    "imgbg": 0
+   },
+   "closed": {
+    "n": 146,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "assistants": {
+    "n": 155,
+    "fail": 12,
+    "worst": [
+     {
+      "text": "Accept",
+      "ratio": 4.12,
+      "need": 4.5,
+      "size": 16
+     },
+     {
+      "text": "Edit",
+      "ratio": 4.12,
+      "need": 4.5,
+      "size": 16
+     },
+     {
+      "text": "Accept",
+      "ratio": 4.12,
+      "need": 4.5,
+      "size": 16
+     },
+     {
+      "text": "Edit",
+      "ratio": 4.12,
+      "need": 4.5,
+      "size": 16
+     },
+     {
+      "text": "Accept",
+      "ratio": 4.12,
+      "need": 4.5,
+      "size": 16
+     },
+     {
+      "text": "Edit",
+      "ratio": 4.12,
+      "need": 4.5,
+      "size": 16
+     },
+     {
+      "text": "Accept",
+      "ratio": 4.12,
+      "need": 4.5,
+      "size": 16
+     },
+     {
+      "text": "Edit",
+      "ratio": 4.12,
+      "need": 4.5,
+      "size": 16
+     }
+    ],
+    "imgbg": 0
+   },
+   "time": {
+    "n": 26,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "aftercare": {
+    "n": 87,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "screens": {
+    "n": 39,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   }
+  },
+  "keyboard_open_case": {
+   "activated": true,
+   "hash_after": "#/case/ZF-2025-0029",
+   "title_after": "Zava Forward | Zava North Homes",
+   "focus_after": "main:Back to the listVersioned home case: lin"
+  },
+  "case_axe": {
+   "violations": [],
+   "incomplete": [],
+   "passes": 30,
+   "inapplicable": 32
+  },
+  "case_keyboard": {
+   "stops": 17,
+   "trap": false,
+   "completed_cycle": false,
+   "without_indicator": 0,
+   "not_in_viewport": 0,
+   "unnamed": 0,
+   "first": [
+    "a:Back to the list",
+    "a:Versioned home case: links, shared build",
+    "button:Open next action",
+    "button:Case: why blocked. Resident decision or ",
+    "button:See all blockers",
+    "button:Review AI suggestions"
+   ]
+  },
+  "escape_dialogs": 0
+ }
+}
