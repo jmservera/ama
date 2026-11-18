@@ -12995,6 +12995,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Phase 0 discovery audit second live pass (Refs #124)
 
 * Added [issue-124-live-r2-phase0-discovery-audit-2026-11-18.md](research/issue-124-live-r2-phase0-discovery-audit-2026-11-18.md): 59 core discovery tests and the probe re-run, no consumer or deployed discovery surface found, per-criterion table with the owner-only items; no criterion ticked and no source or Azure change
+
 ## [2026-11-18] add | Service continuity live audit (Refs #122)
 
 * Added [issue-122-continuity-live-audit-2026-11-18.md](research/issue-122-continuity-live-audit-2026-11-18.md): constructed suspension and restart drill tests pass (6 core, 20 api); read-only live `/api/continuity` and export probe; the witnessed authorised drill criterion is unproven for the demo (drills prohibited, restart authority unappointed); leftover probe suspension SUS-1 recorded; no source change, no Azure resource created
