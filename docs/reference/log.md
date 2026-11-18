@@ -12273,3 +12273,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Container hosting live evidence (Refs #144)
 
 * Added [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): per-criterion record of a demo probe on live Azure. Non-root and digest-pinned images observed; the pipeline run, read-only root file system and capability drop stay unproven.
+
+## [2026-11-18] add | AI evaluation harness live demo evidence (Refs #108)
+
+* Added [issue-108-live-demo-evidence-2026-11-18.md](research/issue-108-live-demo-evidence-2026-11-18.md): per-criterion record of the unticked criteria on live Azure. Deployment names, versions and rate limits are confirmed; subscription quota, independent labelling, human detection, cost comparison, restart SQL checks and live one-lever measurement stay unproven.
