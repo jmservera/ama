@@ -401,6 +401,10 @@ bindings, retained-history/SQL recovery and finite cost/rate/time controls.
 Local fake-network/actual-constructed-SQLite evidence is not actual Hub,
 credential lifecycle, Azure SQL handover, active budget alerts or whole AC-066.
 
+For #79, the [live ranking publication evidence](./research/issue-79-live-ranking-publication-evidence-2026-11-18.md)
+records a 2026-11-18 demo run on live Azure: the unsigned policy refused, a scheduled
+job firing and create-only Blob publication. The named owner signature and Blob
+immutability stay unproven.
 For #188, the [live Azure backfill and live series evidence](./research/issue-188-live-backfill-evidence-2026-11-18.md)
 records a 2026-11-18 demo run on live Azure SQL through the IoT Hub and Event Hub
 with demo SAS devices: joint per-home queries, handover seam and idempotent

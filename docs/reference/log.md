@@ -12264,3 +12264,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Container hosting live evidence (Refs #144)
 
 * Added [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): per-criterion record of a demo probe on live Azure. Non-root and digest-pinned images observed; the pipeline run, read-only root file system and capability drop stay unproven.
+## [2026-11-18] add | Live ranking publication evidence (Refs #79)
+
+* Added [issue-79-live-ranking-publication-evidence-2026-11-18.md](research/issue-79-live-ranking-publication-evidence-2026-11-18.md): per-criterion record of a demo run on live Azure. Unsigned policy refused, create-only Blob publication shown with a demo-only synthetic owner; the named owner signature and immutable retention stay unproven.
