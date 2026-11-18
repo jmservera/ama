@@ -12276,3 +12276,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Container hosting live evidence (Refs #144)
 
 * Added [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): per-criterion record of a demo probe on live Azure. Non-root and digest-pinned images observed; the pipeline run, read-only root file system and capability drop stay unproven.
+
+## [2026-11-18] add | Case chat live evaluation gates (Refs #216)
+
+* Added [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md) and its evidence folder: 30-prompt graded and adversarial run of the demo case chat. Refusals 10 of 10 and model-path citations 7 of 7, with the model reached on only 9 turns because the demo meter held further calls; the gate is partly proven for the demo and the production-only criteria remain unproven.
