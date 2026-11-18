@@ -12734,6 +12734,18 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-154-live-resident-ux-evidence-2026-11-18.md](research/issue-154-live-resident-ux-evidence-2026-11-18.md): no live resident contact is observed on the synthetic showcase; validation through the usability programme and the representative view stay unproven for the demo (no participants or SA-010 agreement; no live case has a representative). No source changed.
 
+## [2026-11-18] add | Azure SQL point-in-time restore rerun with raw output (Refs #145)
+
+* Added [issue-145-live-run3-pitr-rerun-2026-11-18.md](research/issue-145-live-run3-pitr-rerun-2026-11-18.md) and its [raw probe output](research/issue-145-live-r3-raw-probe-2026-11-18.txt): second demo restore (about 34 minutes), application chain intact and prefix match at entry 1694, native ledger verification denied, retention settings recorded, resurrection still unproven. Resources deleted.
+
+## [2026-11-18] add | Assistive-technology, consent and Fluent/WCAG live demo evidence (Refs #619)
+
+* Added [issue-619-live-at-consent-evidence-2026-11-18.md](research/issue-619-live-at-consent-evidence-2026-11-18.md): keyboard operation, axe (0 violations), zoom-equivalent reflow, reduced motion and the synthetic resident consent journey proven on the live demo; screen reader, person-run zoom and a real resident journey stay unproven and production-only. No source changed; #619 stays open.
+
+## [2026-11-18] add | Resident showcase live recheck (Refs #462)
+
+* Added [resident-showcase-live-recheck-2026-11-18.md](research/resident-showcase-live-recheck-2026-11-18.md): second desktop Playwright and read-only Azure pass on the synthetic showcase with retained evidence; criteria 6 and 7 proven for the demo, criterion 2 (hosted rubric) unproven, and a correction to the first note's override comparison. No source or Azure resource changed.
+
 ## [2026-11-18] add | Operator suspension live demo evidence (Refs #221)
 
 * Added [issue-221-live-suspension-restart-evidence-2026-11-18.md](research/issue-221-live-suspension-restart-evidence-2026-11-18.md): a refusal probe left scope `all` suspended on the demo (owner decision needed), live manual-route and restart-denial observations, and the deployed build accepted a placeholder restart authority; live restart and witnessed drill stay unproven.
@@ -12772,6 +12784,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-203-live-references-evidence-2026-11-18.md](research/issue-203-live-references-evidence-2026-11-18.md): the legacy-reference checker fails with 11 violations in three regression-test files (documents clean); the demo revision is healthy and pull-request CI is green, but build provenance and main-branch CI stay unproven. No source changed.
 
+## [2026-11-18] add | Capstone pitch Tokenomics per-criterion status (Refs #435)
+
+* Added [capstone-pitch-435-live-2026-11-18.md](research/capstone-pitch-435-live-2026-11-18.md): placement decision and deck coverage and the spend authority are evidenced for the demo; mentor confirmation cannot be proven; no deck or source change.
+
 ## [2026-11-18] update | Eval gate local test rerun and rescoring limits (Refs #216)
 
 * Updated [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md): 101 existing gate tests run locally with raw output retained; container scores labelled "Observed; raw output not retained"; no new model call; the unticked criterion stays partly proven.
@@ -12779,3 +12795,50 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 184 live simulator stream run 2 (Refs #184)
 
 * Added [issue-184-live-simulator-stream-run2-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-run2-evidence-2026-11-18.md) with two retained redacted job logs: the repository simulator loop streamed 3 slots (9 messages) to the demo hub with Hub-generated symmetric keys, all 9 read back from Event Hub; devices, job and temporary roles deleted. The child-closure criterion is not proven (#185 and #189 open). A lost Registry Contributor assignment and a short first read window are recorded as adverse findings.
+## [2026-11-18] add | Live WCAG axe and keyboard evidence, round 2 (Refs #151)
+
+* Added [issue-151-live-wcag-axe-evidence-r2-2026-11-18.md](research/issue-151-live-wcag-axe-evidence-r2-2026-11-18.md): 16 live screens (13 Programme Manager screens, one case view, two resident app screens) with 0 axe violations, raw axe output retained and redacted, contrast incompletes resolved by sampling, document title finding kept. The manual screen-reader and keyboard criterion stays unticked (screen reader production-only, other roles unavailable). No source changed.
+
+## [2026-11-18] add | Content audit of deployed demo screens, second run (Refs #153)
+
+* Added [content-audit-live-153-2026-11-18.md](research/content-audit-live-153-2026-11-18.md) with scripts, a hit summary and 43 redacted screenshots: findings on "Unassigned", "Held", "envelope" and an unexplained refusal code; AI wording and resident page hold; the named-human review criterion stays unproven. Indexed in the README.
+
+## [2026-11-18] add | Issue 117 live scan evidence (Refs #117)
+
+* Added [issue-117-live-scan-evidence-2026-11-18.md](research/issue-117-live-scan-evidence-2026-11-18.md) with retained raw output: 64 offline tests pass; live demo refuses the synthetic marker and a type-mismatched upload and records neither; the live scanner is the synthetic local one because Defender for Storage is disabled. Clean path, real engine and live legal hold stay unproven. No source change.
+
+## [2026-11-18] update | Live device identity run 3 (Refs #185)
+
+* Updated [issue-185-live-device-identity-evidence-2026-11-18.md](research/issue-185-live-device-identity-evidence-2026-11-18.md): run 3 proves the home-to-device mapping live and keeps operator output in a retained file; the hub-wide device count after teardown showed devices with the same ids that are not attributed to this run; no criterion is ticked.
+
+## [2026-11-18] add | Equity and journey ownership live demo status (Refs #128)
+
+* Added [issue-128-live-equity-evidence-2026-11-18.md](research/issue-128-live-equity-evidence-2026-11-18.md): aggregate-only measures proven at source level and desktop axe clean on four live surfaces; the protocol agreement cannot be proven; no source change.
+
+## [2026-11-18] add | Chat and memory user isolation live proof (Refs #162)
+
+* Added [issue-162-live-isolation-evidence-2026-11-18.md](research/issue-162-live-isolation-evidence-2026-11-18.md) with probe, raw output and screenshots: anonymous, resident-session and forged-identity requests never reach another user's chat or memory on the live demo; own synthetic records cleaned up; a true two-Entra-user foreign read is unproven live (one staff identity); criterion 6 stays unticked; no src change.
+
+## [2026-11-18] update | Learning-test bundle local test evidence (Refs #129)
+
+* Added [issue-129-live-learning-test-evidence-2026-11-18.md](research/issue-129-live-learning-test-evidence-2026-11-18.md): 26 core and 6 api existing tests run with raw output retained; results labelled constructed, not measured. The atlas-owner mapping confirmation is unproven for the demo. Evidence under `.copilot-tracking/` (2026-11-18 issue-129-live).
+
+## [2026-11-18] add | Live recheck of nomination route (Refs #130)
+
+* Added [issue-130-live-r2-nomination-route-evidence-2026-11-18.md](research/issue-130-live-r2-nomination-route-evidence-2026-11-18.md): second demo run with raw output retained; same image, writes still refused by the identity defect; per-criterion table; unticked criterion unproven; no source change.
+
+## [2026-11-18] add | Map tile provider and accessible list live evidence (Refs #119)
+
+* Added [issue-119-live-map-evidence-2026-11-18.md](research/issue-119-live-map-evidence-2026-11-18.md): the deployed demo map uses the public OSM tiles; the policy was re-read; the list alternative, keyboard path and tile-failure behaviour were proven in Playwright; no screen reader was run and no licensed provider is chosen, so both criteria stay open. No source change.
+
+## [2026-11-18] update | Simulator run controls second live pass (Refs #189)
+
+* Added [simulator-run-controls-live-189-2026-11-18.md](research/simulator-run-controls-live-189-2026-11-18.md): read-only budget, hub and metric checks, a staff probe of the deployed admin endpoint (403), and an offline start, stop and capacity exercise with raw output retained. The live admin run could not be exercised (no administrator role, no job); the criterion stays unticked.
+
+## [2026-11-18] add | Chat grounding live demo evidence, second pass (Refs #164)
+
+* Added [issue-164-live-chat-grounding-evidence-r2-2026-11-18.md](research/issue-164-live-chat-grounding-evidence-r2-2026-11-18.md): UI-driven probe of seven asks with raw output, labelled screenshots and offline test output retained; no source change, no Azure resource created; no criterion newly tickable.
+
+## [2026-11-18] update | Issue 146 second live monitoring pass (Refs #146)
+
+* Added [issue-146-live2-monitoring-evidence-2026-11-18.md](research/issue-146-live2-monitoring-evidence-2026-11-18.md) with redacted raw output: eight installed alerts, no workbook, fired job-failure and digest alerts, job metric, private query access. Poison queue, workbook rendering, named owners and the tokenomics dashboard stay unproven; no source change.
