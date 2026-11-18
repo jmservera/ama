@@ -63,3 +63,10 @@ All writes were refused with the same 403, including those that should have retu
 
 * Obtain authorized representative and resident participation evidence before the unticked criterion can be ticked.
 * Fix the Entra identity comparison (full tier, owner-approved redeploy) and repeat `probe1.py` to prove live writes.
+
+## Evidence limits
+
+* "No representative option" is from an empty locator result, which also holds if the selector were absent.
+* The image digest and the 19 and 9 test results come from output that is not retained.
+* The 2026-11-17 issue comments report HTTP 400 "Could not read that." on browser form-encoded submissions; this note does not retest them, so the panel-render labels do not cover form submission.
+* Independent exact-head review and hosted CI are outstanding; no criterion is ticked.
