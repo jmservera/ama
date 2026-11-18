@@ -12935,6 +12935,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Post-cleanup references second live run (Refs #203)
 
 * Added [issue-203-refs-verify-live-2026-11-18.md](research/issue-203-refs-verify-live-2026-11-18.md) with retained raw output: criterion 1 still fails with 20 violations and needs a full-tier change to the legacy-reference checker (not made here); criterion 5 partly proven; no source, tool or Azure change
+
 ## [2026-11-18] update | Resident portal docs nine-criterion audit (Refs #441)
 
 * Extended [resident-portal-441-live-status-2026-11-18.md](research/resident-portal-441-live-status-2026-11-18.md) with a per-criterion proven/unproven table: criterion 5 stays unproven (owner decision), criteria 3 and 9 need publication-time rechecks; no source, Azure or credential action, no tick changed
