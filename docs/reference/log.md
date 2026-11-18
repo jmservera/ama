@@ -12863,3 +12863,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Issue 200 src repoint audit (Refs #200)
 
 * Added [src-repoint-live-audit-200-2026-11-18.md](research/src-repoint-live-audit-200-2026-11-18.md): criteria 2 proven, criterion 3 proven except a fresh tag deployment; no source change
+
+## [2026-11-18] update | Issue 144 hosting proof with raw output (Refs #144)
+
+* Added [issue-144-hosting-proof-live-2026-11-18.md](research/issue-144-hosting-proof-live-2026-11-18.md) and its raw folder: criteria 1 and 3 stay unproven (pipeline clause; hardening beyond non-root); job count reconciled to eight; no source change
