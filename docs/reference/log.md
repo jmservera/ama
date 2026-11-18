@@ -13067,6 +13067,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 125 live re-audit (Refs #125)
 
 * Added [issue-125-live-r2-discovery-assistant-2026-11-18.md](research/issue-125-live-r2-discovery-assistant-2026-11-18.md): repeated live probes (no discovery route, identical to control), deny-by-default CLI output, 47 of 47 tests in a clean installed environment resolving the earlier 46 of 47 caveat; all three criteria remain unproven for the demo; no source change, nothing created in Azure
+
 ## [2026-11-18] add | Issue 162 live audit (Refs #162)
 
 * Added [issue-162-live-audit-2026-11-18.md](research/issue-162-live-audit-2026-11-18.md) with retained raw output: live break-glass refusals each add one intact audit-chain entry (2068 to 2070), the grant path with purpose is proven locally only (33 tests, stored audit rows), policy decided for the demo only; criterion 6 stays unticked; no source change, no Azure resource created.
