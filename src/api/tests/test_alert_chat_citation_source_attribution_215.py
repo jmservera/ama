@@ -176,7 +176,8 @@ class WarningBannerTests(unittest.TestCase):
         self.assertIn('{ id: "employee-chat-entry-warning", class: "chat-widget-meta" }', CHAT)
         self.assertIn("ui.beforeInput.append(", CHAT)
         # The banner lives in the form; answers and withheld replies only append to the log.
-        self.assertIn("form.append(beforeInput, input, keys, tools, reason);", WIDGET)
+        self.assertIn("entry.append(beforeInput, input, keys, reason);", WIDGET)
+        self.assertIn("form.append(entry, tools);", WIDGET)
         self.assertNotIn(
             "beforeInput", WIDGET[WIDGET.index("function message(") : WIDGET.index("let observer")]
         )
