@@ -13039,3 +13039,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 153 live content re-check (Refs #153)
 
 * Added [content-recheck-153-live-2026-11-18.md](research/content-recheck-153-live-2026-11-18.md): fresh desktop probes of the deployed demo; hold and envelope wording and an Unassigned owner still live, generic 404 and 403 bodies lack owner and next action; no named-reviewer record exists so that criterion stays unproven; no source change, nothing created in Azure
+
+## [2026-11-18] add | Issue 189 live audit round 3 (Refs #189)
+
+* Added [simulator-run-controls-live-189-r3-2026-11-18.md](research/simulator-run-controls-live-189-r3-2026-11-18.md): live budget and hub re-read, wall-clock run meter exercise, adverse finding on alert recipients; criterion 3 stays unticked.

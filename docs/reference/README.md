@@ -493,6 +493,8 @@ For #189, the [simulator run controls live evidence](./research/issue-189-simula
 records a 2026-11-18 demo check of the budget alerts, hub owner tag and deterministic owner, time-limit and alert controls; no simulator job is deployed.
 A [second pass](./research/simulator-run-controls-live-189-2026-11-18.md) adds a signed-in probe of the deployed admin endpoint (403 for staff; no administrator role granted), an offline start, stop and capacity exercise with raw output, and the USD 5.16 observed spend.
 
+A [third pass](./research/simulator-run-controls-live-189-r3-2026-11-18.md) re-reads the live budgets and hub, runs the run meter on a real clock (time-limit halt) and records that budget alert recipients are noreply or invalid addresses; criterion 3 stays unproven as a live conjunction.
+
 For #138, the [CI/CD OIDC and what-if live evidence](./research/issue-138-live-cicd-oidc-evidence-2026-11-18.md)
 records a 2026-11-18 read-only demo run: a live what-if of the real template, the post-deployment
 smoke checks against the demo API, the fail-closed environment gate and the unconfigured OIDC,
