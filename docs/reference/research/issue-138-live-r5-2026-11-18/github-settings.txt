@@ -1,0 +1,13 @@
+## repo variables/secrets (names)
+GH_AW_DEFAULT_MAX_DAILY_AI_CREDITS
+COPILOT_GITHUB_TOKEN
+## environments
+copilot rules=0 admin_bypass=true
+dev-plan rules=0 admin_bypass=true
+pilot-plan rules=0 admin_bypass=true
+test-plan rules=0 admin_bypass=true
+## runners
+0
+## runs
+src-deploy.yml 0
+infra-plan.yml 2510

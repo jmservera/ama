@@ -13256,3 +13256,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 130 identity 403 fix evidence (Refs #130)
 
 * Added [issue-130-identity-403-live-2026-11-18.md](research/issue-130-identity-403-live-2026-11-18.md): root cause of the live 403 on Entra staff writes in `resident_decisions._operation`, key-based fix with three regression tests (JSON and SQLite), mutation probe, and the representative-evidence criterion stated as unproven for the demo. Code candidate, not deployed.
+## [2026-11-18] add | Issue 138 fifth run, summarize_plan Unsupported regression test (Refs #138)
+
+* Added [issue-138-live-r5-2026-11-18.md](research/issue-138-live-r5-2026-11-18.md): `summarize_plan` already rejects `Unsupported`; a new infra test pins it (33 tests pass, mutation check fails as expected); settings checks unchanged, no criterion ticked
