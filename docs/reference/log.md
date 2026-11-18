@@ -12299,6 +12299,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): per-criterion record of a demo probe on live Azure. Non-root and digest-pinned images observed; the pipeline run, read-only root file system and capability drop stay unproven.
 
+## [2026-11-18] add | Case chat live evaluation gates (Refs #216)
+
+* Added [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md) and its evidence folder: 30-prompt graded and adversarial run of the demo case chat. Refusals 10 of 10 and model-path citations 7 of 7, with the model reached on only 9 turns because the demo meter held further calls; the gate is partly proven for the demo and the production-only criteria remain unproven.
 ## [2026-11-18] add | Issue 358 live evidence (Refs #358)
 
 * Added [issue-358-live-evidence-2026-11-18.md](research/issue-358-live-evidence-2026-11-18.md): expiry-guard mutation check and live Key Vault reference preservation round-trip on a deleted throwaway app. The full setup-entra.py run on the deployed app stays unproven.
@@ -12332,3 +12335,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Simulator run controls live evidence (Refs #189)
 
 * Added [issue-189-simulator-run-controls-live-evidence-2026-11-18.md](research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md): per-criterion record. Budget alerts and the hub owner tag are proven live; the time limit is proven in code only because no simulator job is deployed.
+## [2026-11-18] add | Live demo evidence for simulator stage 2 (Refs #184)
+
+* Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.
