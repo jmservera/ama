@@ -20,7 +20,7 @@ Synthetic desktop demo; live Azure authorised in rg ama (cap USD 700, no drills,
 
 ## Evidence
 
-All under `.copilot-tracking/evidence/2026-11-18/issue-125-live/`: `offline-tests.txt`, `offline-tests-abs.txt`, `cli-demo.txt`, `probe1.py/json`, `probe2.py/json`, `static_scan.py/json`, `workbench-home.png`, `common.py`.
+All under `.copilot-tracking/evidence/2026-11-18/issue-125-live/`: `offline-tests.txt`, `offline-tests-abs.txt`, `cli-demo.txt`, `probe1.py/json`, `probe2.py/json`, `static_scan.py/json`, `probe1.py` writes `workbench-home.png`, kept once as `docs/reference/research/issue-125-live-workbench-home-2026-11-18.png`; `common.py`.
 
 ## Planning readiness
 

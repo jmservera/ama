@@ -12374,6 +12374,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Live demo evidence for simulator stage 2 (Refs #184)
 
 * Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.
+
 ## [2026-11-18] add | Discovery assistant live demo evidence (Refs #125)
 
 * Added [issue-125-live-discovery-assistant-evidence-2026-11-18.md](research/issue-125-live-discovery-assistant-evidence-2026-11-18.md): the assistant is not exposed on the live demo API and its boundary denies writes; all three criteria stay unticked (readiness and comparison unprovable for the demo, no-write shown only at demo scope).

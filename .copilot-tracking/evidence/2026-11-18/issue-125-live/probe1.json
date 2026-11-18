@@ -37,7 +37,7 @@
  },
  "GET /api/me": {
   "status": 200,
-  "snippet": "{'user': {'code': 'E-431883ca6856', 'name': 'Aadi Kapoor', 'email': '[email]', 'role': 'Retrofit Programme Manager', 'oid': '982d30b9-6db1-"
+  "snippet": "(account fields removed from the committed copy)"
  },
  "GET /api/health": {
   "status": 403,

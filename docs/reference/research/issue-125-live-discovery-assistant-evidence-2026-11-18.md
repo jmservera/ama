@@ -18,7 +18,7 @@ Refs #125. Scope is the synthetic desktop demo under the owner decisions of 2026
 
 * Live target: `ca-cutover-test-demo-api` (image digest `sha256:5368f4e4...e17e5fb`, revision `--0000031`), Entra sign-in with the employee demo account, Playwright Chromium at 1366 by 900. Credentials were read at run time and never printed.
 * Offline: the discovery assistant tests in `src/core/tests` and the `discovery-demo` command (PR #1355, `a0f7cf1`, ancestor of this branch).
-* Scripts and outputs: `.copilot-tracking/evidence/2026-11-18/issue-125-live/` (`probe1`, `probe2`, `static_scan`, `cli-demo.txt`, `offline-tests*.txt`). Screenshot: [workbench home](./issue-125-live-workbench-home-2026-11-18.png).
+* Scripts and outputs: `.copilot-tracking/evidence/2026-11-18/issue-125-live/` (`probe1`, `probe2`, `static_scan`, `cli-demo.txt`, `offline-tests*.txt`). Screenshot: [workbench home](./issue-125-live-workbench-home-2026-11-18.png); the resident names and the 443-case briefing in it are synthetic data. The committed `probe1.json` has the `/api/me` account fields removed.
 * No Azure resource was created or changed, so there is nothing to delete. No source changed.
 
 ## Observations
