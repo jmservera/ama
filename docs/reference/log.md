@@ -12279,3 +12279,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Container hosting live evidence (Refs #144)
 
 * Added [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): per-criterion record of a demo probe on live Azure. Non-root and digest-pinned images observed; the pipeline run, read-only root file system and capability drop stay unproven.
+
+## [2026-11-18] add | Issue 358 live evidence (Refs #358)
+
+* Added [issue-358-live-evidence-2026-11-18.md](research/issue-358-live-evidence-2026-11-18.md): expiry-guard mutation check and live Key Vault reference preservation round-trip on a deleted throwaway app. The full setup-entra.py run on the deployed app stays unproven.
