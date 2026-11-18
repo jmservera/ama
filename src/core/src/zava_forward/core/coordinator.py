@@ -194,6 +194,10 @@ def read(store: Any, user: Record, query: Mapping[str, str]) -> Record:
             cohort=cohort,
             scenario=None,
             audit_intact=intact,
+            ai_consumption_economics=store.ai_consumption_economics(
+                start=query.get("start"),
+                as_of=query.get("as_of"),
+            ),
         )
         return _assemble(
             store,
@@ -396,4 +400,5 @@ def _assemble(
         ),
         records=dict(items=records, total=len(drill), limit=limit, offset=offset),
         map=map_result,
+        ai_consumption_economics=evidence["ai_consumption_economics"],
     )

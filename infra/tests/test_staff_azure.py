@@ -402,6 +402,27 @@ class TransportTests(unittest.TestCase):
         self.assertEqual(put["properties"]["environmentId"], setup_fixture.ENV_ID)
         worker = put["properties"]["template"]["containers"][0]
         self.assertIn({"name": "ZF_STAFF_REQUEST", "secretRef": "request"}, worker["env"])
+        for required_env in (
+            {"name": "ZF_CONTAINER_HARDENING", "value": "enforced"},
+            {"name": "PYTHONDONTWRITEBYTECODE", "value": "1"},
+            {"name": "TMPDIR", "value": "/tmp"},
+            {"name": "ZF_STATE", "value": "/state"},
+        ):
+            self.assertIn(required_env, worker["env"])
+        self.assertEqual(
+            worker["volumeMounts"],
+            [
+                {"volumeName": "tmp", "mountPath": "/tmp"},
+                {"volumeName": "state", "mountPath": "/state"},
+            ],
+        )
+        self.assertEqual(
+            put["properties"]["template"]["volumes"],
+            [
+                {"name": "tmp", "storageType": "EmptyDir"},
+                {"name": "state", "storageType": "EmptyDir"},
+            ],
+        )
         self.assertTrue(
             all(
                 method in {"PUT", "DELETE"} and "/jobs/job-staff-" in url
@@ -1662,6 +1683,16 @@ class WorkerTests(unittest.TestCase):
         self.assertNotIn("'*'", role)
         self.assertNotIn("Contributor", role)
         self.assertIn("Microsoft.App/containerApps/revisions/restart/action", role)
+
+    def test_worker_fails_closed_under_enforced_container_hardening_violation(self):
+        output = io.StringIO()
+        with (
+            patch.dict(os.environ, {"ZF_CONTAINER_HARDENING": "enforced"}, clear=False),
+            redirect_stdout(output),
+            redirect_stderr(output),
+        ):
+            self.assertEqual(WORKER.main(), 2)
+        self.assertIn("Refusing to start:", output.getvalue())
 
 
 class ProfileCredentialTests(unittest.TestCase):

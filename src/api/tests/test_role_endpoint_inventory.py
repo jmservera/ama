@@ -19,19 +19,20 @@ GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api
                  "/api/facets", "/api/stats", "/api/progress", "/api/closed-cases", "/api/closed-cases.csv",
                  "/api/map", "/api/visits?view=all", "/api/funding", "/api/briefing",
                  "/api/audit-check",
-                 "/api/handoffs", "/api/handoffs/unaccepted", "/api/handoffs/unaccepted.csv", "/api/packages", "/api/workorders", "/api/workorders/WO-0001/job-pack", "/api/workorders/WO-0001/field-intake", "/api/handoffs.csv", "/api/packages.csv", "/api/workorders.csv", "/api/visits.csv", "/api/funding.csv", "/api/finance.csv", "/api/asset/stock-queue.csv", "/api/checklists.csv", "/api/form-schemas.csv", "/api/checklists", "/api/ai/report", "/api/finance", "/api/finance/exposure", "/api/asset/stock-queue", "/api/resident/choice-queue",
+                 "/api/handoffs", "/api/handoffs/unaccepted", "/api/handoffs/unaccepted.csv", "/api/handoffs/unowned", "/api/handoffs/escalated", "/api/packages", "/api/workorders", "/api/workorders/WO-0001/job-pack", "/api/workorders/WO-0001/field-intake", "/api/handoffs.csv", "/api/packages.csv", "/api/workorders.csv", "/api/visits.csv", "/api/funding.csv", "/api/finance.csv", "/api/asset/stock-queue.csv", "/api/checklists.csv", "/api/form-schemas.csv", "/api/checklists", "/api/ai/report", "/api/ai/cohort-evaluation", "/api/ai/heldout-evaluation", "/api/finance", "/api/finance/exposure", "/api/asset/stock-queue", "/api/resident/choice-queue",
                  "/api/governance", "/api/continuity", "/api/continuity/export", "/api/exceptions", "/api/retention", "/api/data-protection", "/api/docs/ZF-1/none",
                  "/api/resident/choice-queue.csv?limit=2",
-                 "/api/time/status", "/api/time/mine", "/api/time/mine.csv", "/api/time/report", "/api/time/report.csv", "/api/law/sources", "/api/law/sources.csv", "/api/law/search?q=x",
+                 "/api/time/status", "/api/time/mine", "/api/time/mine.csv", "/api/time/report", "/api/time/report.csv", "/api/law/watch", "/api/law/sources", "/api/law/sources.csv", "/api/law/search?q=x",
                  "/api/law/cards", "/api/law/cards/reviews", "/api/law/cards/hazard-awareness-clock", "/api/law/alerts",
                  "/api/aftercare/form", "/api/aftercare/concerns", "/api/aftercare/concerns.csv", "/api/aftercare/evaluator",
                  "/api/assistants", "/api/assistants/forecast", "/api/assistants/rai-metrics", "/api/assistants/proposals", "/api/assistants/proposals.csv", "/api/assistants/simulation/quality", "/api/chat/status", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1",
                  "/api/form-schemas", "/api/cases/ZF-1/form-candidates", "/api/cases/ZF-1/form-review", "/api/cases/ZF-1/form-review/SYN-DRAFT/held-export", "/api/cases/ZF-1/form-review/SYN-DRAFT/proposal-freshness", "/api/nothing"]
-POST_ENDPOINTS = [("/api/ranking/publish", {}), ("/api/workorders/WO-0001/field-capture", {}), ("/api/workorders/WO-0001/field-correct", {}), ("/api/workorders/WO-0001/field-acknowledge", {}), ("/api/workorders/WO-0001/field-escalate", {}), ("/api/bulk-edits/preview", {}), ("/api/bulk-edits/apply", {}), ("/api/exceptions/recovery", {}),
-                  ("/api/ai/priority", {"n": 3}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
+POST_ENDPOINTS = [("/api/ranking/publish", {}), ("/api/workorders/WO-0001/field-capture", {}), ("/api/workorders/WO-0001/field-correct", {}), ("/api/workorders/WO-0001/field-acknowledge", {}), ("/api/workorders/WO-0001/field-escalate", {}), ("/api/bulk-edits/preview", {}), ("/api/bulk-edits/apply", {}), ("/api/exceptions/recovery", {}), ("/api/handoffs/escalate-overdue", {}),
+                  ("/api/ai/priority", {"n": 3}), ("/api/ai/candidate-comparison", {}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
                   ("/api/form-schemas", {}), ("/api/cases/ZF-1/form-candidates", {}), ("/api/cases/ZF-1/form-review", {}),
                   ("/api/cases/ZF-1/form-review/SYN-DRAFT/held-export/freshness", {"draft_id": "SYN-DRAFT"}),
                   ("/api/cases/ZF-1/resident", {"action": "decision_record"}),
+                  ("/api/cases/ZF-1/representative-view", {"representative_ref": "SYN-REP", "action": "view_task_briefing"}),
                   ("/api/cases/ZF-1/technical", {"action": "signoff_give", "type": "design"}),
                   ("/api/cases/ZF-1/stock-reconciliation", {}),
                   ("/api/cases/ZF-1/stock-query-event", {"query_id": "SQ-1", "action": "resolve"}),
@@ -140,7 +141,7 @@ class RoleEndpointInventory(Matrix):
 
     def test_inventory_covers_dynamic_case_actions_added_by_integration(self):
         tested = {path.rsplit("/", 1)[-1] for path, _ in POST_ENDPOINTS}
-        for action in ("resident", "technical", "stock-reconciliation", "stock-query-event", "form-candidates", "form-review"):
+        for action in ("resident", "representative-view", "technical", "stock-reconciliation", "stock-query-event", "form-candidates", "form-review"):
             self.assertIn(action, tested)
 
     def test_every_role_against_every_endpoint(self):
@@ -188,7 +189,7 @@ class RoleEndpointInventory(Matrix):
 
     def test_contractor_audit_view_and_export_are_denied(self):
         ck = self.session("u7@example.test")
-        for path in ("/api/audit-check", "/api/cases.csv?view=all", "/api/continuity/export", "/api/ai/report", "/api/assistants/proposals"):
+        for path in ("/api/audit-check", "/api/cases.csv?view=all", "/api/continuity/export", "/api/ai/report", "/api/ai/cohort-evaluation", "/api/ai/heldout-evaluation", "/api/assistants/proposals"):
             self.assertEqual(self.call(ck, path)[0], 403, path)
 
     def test_staff_without_need_see_notes_held_but_need_roles_see_them(self):
@@ -259,6 +260,147 @@ class RoleEndpointInventory(Matrix):
             text = json.dumps(assistants.capture(cap, c))
             for canary in (REASON, NOTE_CANARY, OUTCOME_CANARY, PHONE, RESIDENT):
                 self.assertNotIn(canary, text, cap)
+
+    def test_post_provider_canaries_rechecked_across_roles_on_outputs_reviews_proposals_and_exports(self):
+        import release_support
+        c = self.store.cases["ZF-1"]
+        finance_canary = "FINANCE-DRAFT-CANARY-901"
+        safe_contact_canary = "SAFE-CONTACT-CANARY-116"
+        old_draft = c.get("funding", {}).get("draft")
+        old_safe_contact = c.get("resident_safe_contact")
+        old_recs = list(self.store.data.get("recommendations", []))
+        old_props = list(self.store.data.get("assistant_proposals", []))
+        release_support.install(self.store)
+        self.store.ai.endpoint = "http://adversarial.invalid"
+        try:
+            c.setdefault("funding", {})["draft"] = f"Grant note {REASON} and {finance_canary}"
+            c["resident_safe_contact"] = {"channel": safe_contact_canary}
+            # Seed adversarial assistant proposal whose model output & review note echo withheld fields
+            self.store.data.setdefault("assistant_proposals", []).append({
+                "id": "AP-ADV-116",
+                "capability": "stock-prioritisation",
+                "title": "Stock Prioritisation Assistant",
+                "case_id": "ZF-1",
+                "case_ids": ["ZF-1"],
+                "created_at": "2026-11-15T10:00:00Z",
+                "created_by": "u0@example.test",
+                "created_role": "Retrofit Programme Manager",
+                "source": "ai",
+                "model": "gpt-synth",
+                "prompt_version": "v1",
+                "source_hash": "abc123",
+                "case_version": 1,
+                "source_versions": {"ZF-1": "1"},
+                "status": "Pending human review",
+                "approved": False,
+                "live_write": False,
+                "output": {"headline": f"Echo {REASON} / {safe_contact_canary}", "band": "High"},
+                "fallback": {"headline": "Safe deterministic fallback", "band": "High"},
+                "citations": [f"Reason: {REASON}", "Stage: Survey booked"],
+                "unresolved": [f"Safe contact: {safe_contact_canary}"],
+                "abstention": None,
+                "verification_note": f"Verify {REASON}",
+                "review_note": f"Reviewed {NOTE_CANARY}",
+                "provenance": {"note": f"Note {OUTCOME_CANARY}"},
+            })
+            # Adversarial provider echoes REASON, safe_contact_canary, NOTE_CANARY, and OUTCOME_CANARY
+            self.store.ai._chat = lambda *a, **k: (
+                f"- Action for {safe_contact_canary} on {REASON} / {NOTE_CANARY} / {OUTCOME_CANARY} "
+                f"[[ZF-1: Stage: {c['stage']}]] [[Reason: {REASON}]]"
+            )
+            for role in ROLES:
+                ck = self.session(self.email(role))
+                reason_ok = role in projection.DEFAULT_REASON_ROLES
+                resident_ok = role in projection.RESIDENT_VIEW_ROLES and role != projection.CONTRACTOR
+                finance_ok = role in projection.FINANCE_VIEW
+
+                for path, body in (
+                    ("/api/cases/ZF-1/ai", {"task": "summary"}),
+                    ("/api/ai/priority", {"n": 2}),
+                ):
+                    code, text = self.call(ck, path, body)
+                    if role == projection.CONTRACTOR:
+                        self.assertEqual(code, 403, (role, path))
+                        for canary in (RESIDENT, PHONE):
+                            self.assertNotIn(canary, text, (role, path, canary))
+                    if not reason_ok:
+                        for canary in (REASON, NOTE_CANARY, OUTCOME_CANARY):
+                            self.assertNotIn(canary, text, (role, path, canary))
+                    if not resident_ok:
+                        self.assertNotIn(safe_contact_canary, text, (role, path))
+
+                for get_path in (
+                    "/api/cases/ZF-1",
+                    "/api/ai/priority",
+                    "/api/ai/report",
+                    "/api/assistants/proposals",
+                    "/api/assistants/proposals.csv",
+                    "/api/continuity/export",
+                ):
+                    code, text = self.call(ck, get_path)
+                    if role == projection.CONTRACTOR:
+                        if get_path != "/api/cases/ZF-1":
+                            self.assertIn(code, (403, 404), (role, get_path))
+                        for canary in (RESIDENT, PHONE):
+                            self.assertNotIn(canary, text, (role, get_path, canary))
+                    if not reason_ok:
+                        for canary in (REASON, NOTE_CANARY, OUTCOME_CANARY):
+                            self.assertNotIn(canary, text, (role, get_path, canary))
+                    if not resident_ok:
+                        self.assertNotIn(safe_contact_canary, text, (role, get_path))
+                    if not finance_ok:
+                        self.assertNotIn(finance_canary, text, (role, get_path))
+        finally:
+            self.store.ai.endpoint = ""
+            if hasattr(self.store.ai, "_chat"):
+                del self.store.ai._chat
+            if old_draft is None:
+                c.get("funding", {}).pop("draft", None)
+            else:
+                c["funding"]["draft"] = old_draft
+            if old_safe_contact is None:
+                c.pop("resident_safe_contact", None)
+            else:
+                c["resident_safe_contact"] = old_safe_contact
+            self.store.data["recommendations"] = old_recs
+            self.store.data["assistant_proposals"] = old_props
+            self.store.data.pop("ai_releases", None)
+
+    def test_document_ai_denial_preserves_role_source_permissions_and_manual_download(self):
+        import base64
+        from dataset import change_metadata
+        raw_doc = b"MATRIX-RAW-DOC-CANARY: manual surveyor reading remains available."
+        rc_ck = self.session(self.email("Retrofit Coordinator"))
+        code, doc_text = self.call(rc_ck, "/api/cases/ZF-1/upload", {
+            "name": "matrix-survey.txt",
+            "kind": "Survey",
+            "data": base64.b64encode(raw_doc).decode(),
+            **change_metadata(self.store, "ZF-1"),
+        })
+        self.assertEqual(code, 200, doc_text)
+        doc_id = next(d["id"] for d in json.loads(doc_text)["documents"] if d["name"] == "matrix-survey.txt")
+        c = self.store.cases["ZF-1"]
+        calls = []
+        self.store.ai.endpoint = "http://127.0.0.1:9"
+        self.store.ai._chat = lambda *a, **k: calls.append(1) or "Unexpected model call"
+        try:
+            for role in ROLES:
+                ck = self.session(self.email(role))
+                rd_code, rd_text = self.call(ck, "/api/cases/ZF-1/read-doc", {"id": doc_id})
+                dl_code, dl_text = self.call(ck, f"/api/docs/ZF-1/{doc_id}")
+                if role == projection.CONTRACTOR:
+                    self.assertEqual(rd_code, 403, role)
+                    self.assertEqual(dl_code, 403, role)
+                else:
+                    self.assertEqual(rd_code, 200, role)
+                    self.assertEqual(json.loads(rd_text)["source"], "template", role)
+                    self.assertEqual(dl_code, 200, role)
+                    self.assertIn("MATRIX-RAW-DOC-CANARY", dl_text, role)
+            self.assertEqual(calls, [])
+        finally:
+            self.store.ai.endpoint = ""
+            del self.store.ai._chat
+            c["documents"] = [d for d in c["documents"] if d["id"] != doc_id]
 
 
 del Matrix
