@@ -13131,3 +13131,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 144 live run 4 (Refs #144)
 
 * Added [issue-144-live-r4-2026-11-18.md](research/issue-144-live-r4-2026-11-18.md) with a raw folder: read-only az state of four apps and nine jobs, an empty `src-deploy.yml` run list and a scripted replica probe on revision `--0000032`. Criteria 1 (pipeline clause) and 3 (only non-root enforced) stay unproven; no source, Azure resource or load change.
+
+## [2026-11-18] add | Issue 146 live closure re-verification (Refs #146)
+
+* Added [issue-146-live3-monitoring-closure-2026-11-18.md](research/issue-146-live3-monitoring-closure-2026-11-18.md) with a raw folder: installed alerts, fired alerts, job-failure rule shape comparison on fresh failures (Maximum did not fire, Total did), queue diagnostic setting, IoT signal, and Playwright proof of in-app AI usage by capability with unreconciled state. Three throwaway rules and one job from an earlier worker were deleted. No criterion is ticked.
