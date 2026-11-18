@@ -13132,6 +13132,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-144-live-r4-2026-11-18.md](research/issue-144-live-r4-2026-11-18.md) with a raw folder: read-only az state of four apps and nine jobs, an empty `src-deploy.yml` run list and a scripted replica probe on revision `--0000032`. Criteria 1 (pipeline clause) and 3 (only non-root enforced) stay unproven; no source, Azure resource or load change.
 
+## [2026-11-18] add | Issue 146 live closure re-verification (Refs #146)
+
+* Added [issue-146-live3-monitoring-closure-2026-11-18.md](research/issue-146-live3-monitoring-closure-2026-11-18.md) with a raw folder: installed alerts, fired alerts, job-failure rule shape comparison on fresh failures (Maximum did not fire, Total did), queue diagnostic setting, IoT signal, and Playwright proof of in-app AI usage by capability with unreconciled state. Three throwaway rules and one job from an earlier worker were deleted. No criterion is ticked.
+
 ## [2026-11-18] add | Issue 117 live third pass (Refs #117)
 
 * Added [issue-117-live-r3-closure-2026-11-18.md](research/issue-117-live-r3-closure-2026-11-18.md) and its raw folder: two unsafe uploads refused live again with the document list unchanged (5 and 5), 64 offline tests pass, Defender malware scanning on upload still enabled on the demo account. The real-engine path stays unproven because `ZF_SCANNER=defender` was not set on the demo API; no source, Azure resource or criterion change.
@@ -13156,6 +13160,22 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-1830-live-20261118T1648Z-2026-11-18.md](research/issue-1830-live-20261118T1648Z-2026-11-18.md): timing reports from seven retained full receipts, 54 candidate tests passing on unmerged branch `ci/gate-preflight-benchmark-1830`; no criterion ticked. No source change.
 
+## [2026-11-18] add | Issue 128 live run 3 (Refs #128)
+
+* Added [issue-128-live3-equity-evidence-2026-11-18.md](research/issue-128-live3-equity-evidence-2026-11-18.md) and its evidence folder: protocol agreement still unproven (needs named humans), aggregate-only proven at source level (26 core tests), resident page confirmed loaded with manual-route wording, desktop axe clean on four live pages. No source change, no criterion ticked.
+
+## [2026-11-18] add | Issue 164 live audit, pass 4 (Refs #164)
+
+* Added [issue-164-live-20261118T1707Z-2026-11-18.md](research/issue-164-live-20261118T1707Z-2026-11-18.md): registry still disabled with proposed thresholds and unknown individual, seven live asks rules-only with zero model calls, 54 offline tests pass; no criterion ticked. No source change.
+
+## [2026-11-18] add | Issue 184 live run 5 (Refs #184)
+
+* Added [issue-184-live-r5-2026-11-18.md](research/issue-184-live-r5-2026-11-18.md) with retained read-only outputs: #185 and #189 still open, hub budget alert present, 135 simulator tests pass, source scan finds fixtures only; no criterion ticked. No source change.
+
+## [2026-11-18] add | Issue 76 live safeguarding re-check, pass 3 (Refs #76)
+
+* Added [issue-76-live-r3-2026-11-18.md](research/issue-76-live-r3-2026-11-18.md): read-only probe, 16 cases, 1 hazard clock, 0 safeguarding items; renderer shipped in the deployed `/app.js`; 9 api and 29 core tests pass; criterion stays unticked. No source change.
+
 ## [2026-11-18] add | Issue 185 fifth live re-verification (Refs #185)
 
 * Added [issue-185-live-r5-reverification-2026-11-18.md](research/issue-185-live-r5-reverification-2026-11-18.md): demo hub reports zero devices, no 185 job or role assignment remains, retained logs and repository scan show no key text, 36 focused tests pass; durable storage, X.509 and scale stay unproven.
@@ -13167,3 +13187,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 130 live fifth audit (Refs #130)
 
 * Added [issue-130-live-r5-nomination-route-audit-2026-11-18.md](research/issue-130-live-r5-nomination-route-audit-2026-11-18.md): same revision 0000032 and image digest, same live 403 write refusal and form-encoded 400, 83 offline tests pass, resident app exposes no nomination or challenge route; representative participation stays unproven for the demo. Docs only.
+## [2026-11-18] add | Issue 153 live re-check, fourth run (Refs #153)
+
+* Added [content-recheck-153-live-r4-2026-11-18.md](research/content-recheck-153-live-r4-2026-11-18.md): repeat Playwright and HTTP probes of the demo match the third run (`Held`/`envelope` on Finance, "Unassigned" owner, generic error bodies); named wording review unproven. Docs only.
