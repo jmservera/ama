@@ -13075,3 +13075,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 185 live fourth audit (Refs #185)
 
 * Added [issue-185-live-r4-audit-2026-11-18.md](research/issue-185-live-r4-audit-2026-11-18.md): repository IoT identity tests pass with the optional SDK, credential scan clean, demo hub now reports zero devices (closing the run 3 adverse observation); durable storage, X.509 and production ownership stay unproven. No source change.
+
+## [2026-11-18] add | Quality sensor third live audit (Refs #1288)
+
+* Added [issue-1288-live-r3-quality-sensor-evidence-2026-11-18.md](research/issue-1288-live-r3-quality-sensor-evidence-2026-11-18.md): read-only live probe that did not invoke the assistant (no metric change), first screenshot of the real sensor panel, readings now stale and no simulator job, 304 focused local tests OK; criteria 4 and 8 unproven for the demo, production-only items listed; no source change.

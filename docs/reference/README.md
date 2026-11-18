@@ -539,6 +539,10 @@ For #1288, the [second live re-verification](./research/issue-1288-live-r2-quali
 records fresh retained readings on the demo and an unchanged release gate (no model call); criteria 3 to 8
 stay unticked.
 
+For #1288, the [third live audit](./research/issue-1288-live-r3-quality-sensor-evidence-2026-11-18.md)
+adds a screenshot of the real sensor panel (stale reading, missing pre-retrofit context), a read-only probe with
+no model call and a local test re-run; criteria 3 to 8 stay unticked.
+
 For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root
 runtime, scale-out from 0 to 4 replicas under a 60 s load run, and the Container Apps
