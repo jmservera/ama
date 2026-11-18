@@ -12,6 +12,7 @@ correction as a new entry. Start each entry with a heading in this form so the
 log can be searched with simple tools:
 
 ```text
+
 ## [YYYY-MM-DD] type | Short title
 ```
 
@@ -1716,6 +1717,7 @@ metadata when the knowledge base was created.
   workflow fixture added one extra failure; restoring it made that test pass.
   All 19 targeted slide-citation and required-artifact tests passed. No
   unrelated historical fixture or actual score baseline was modified.
+
 ## [2026-10-11] update | Decision 1 rebuild specification and PR 58 learnings split
 
 * Added the [Decision 1 behaviour specification](./research/decision-1-behaviour-specification.md),
@@ -2426,6 +2428,7 @@ metadata when the knowledge base was created.
   legal rule, deployment or operational approval changed. Human acceptance
   remains PENDING and live use BLOCKED; legal currentness, representative
   fairness/oversight, held-out model quality and net benefit remain unassessed.
+
 ## [2026-10-14] update | BRD v0.17.0, PRD v0.15.0 and ADR 0003 from the journey atlas
 
 * Reviewed the customer journey atlas, the updated addendum and the Zava
@@ -3473,6 +3476,7 @@ metadata when the knowledge base was created.
   delegation decisions, direct human acceptance and real AI/SQL Server/Azure
   evidence remain open. Approved priority is visibly unavailable while the
   existing policy remains draft. Refs #76, not issue closure or deployment.
+
 ## [2026-10-16] ingest | Rule-card identity and source-review engineering slice
 
 * Extended the existing `src/core` rule-card/law stores and `src/api`
@@ -3491,6 +3495,7 @@ metadata when the knowledge base was created.
   passed. The six-test running loopback app exercise passed. Single RPI
   Review was conformant for the labelled local slice, with four explicitly
   routed deployment/human/product residuals; Refs #211 remains open.
+
 ## [2026-10-16] restructure | Complete live src path cut-over (#200)
 
 * Reused the merged source packages, generator imports and private-data guards.
@@ -3530,6 +3535,7 @@ metadata when the knowledge base was created.
   Step UI, hosted scheduling, tenant assignments, real staff precision and
   comprehension, retention policy, continuing-stock acceptance and live SQL
   Server/Azure verification remain unmet. Refs #212, not issue closure.
+
 ## [2026-10-16] query | Resident first-contact retention and confirmed field matrix (#86)
 
 * Applied [owner retention/matrix decisions](https://github.com/jmservera/ama/issues/86#issuecomment-6209881675)
@@ -3605,6 +3611,7 @@ metadata when the knowledge base was created.
   orchestrator: 21 passed. Core/orchestrator Ruff, format and mypy passed.
   Existing API law-store tests: 34 run/16 SQL Server skips; API rule tests:
   five passed. No live legal-source currentness or Azure acceptance is implied.
+
 ## [2026-10-16] update | Coordinator guards against accidental issue closing
 
 * PRs #321 and #326 auto-closed #200 and #86 because their bodies contained
@@ -3664,6 +3671,7 @@ metadata when the knowledge base was created.
 * Published PR #336 with Refs #327, no automatic issue-disposition reference.
   One plan critique passed and one implementation Review was Conformant.
   Hosted checks started; merge remains the owner's decision.
+
 ## [2026-10-16] update | Rule-engine gating regression coverage (Refs #329)
 
 * Tightened the [core deterministic-check contract](../../src/core/README.md#deterministic-checks-and-alerts-212)
@@ -3687,6 +3695,7 @@ metadata when the knowledge base was created.
 * Published PR #334 with references-only linkage. One RPI critique and one
   Review completed; Review Conformant with no findings. Hosted checks and the
   owner's merge decision remain separate from local regression evidence.
+
 ## [2026-10-16] update | Source monitor retrieval retry cadence (Refs #332)
 
 * Corrected the [core monitor](../../src/core/README.md#source-change-monitoring-and-review-213)
@@ -3768,6 +3777,7 @@ metadata when the knowledge base was created.
   attached and #86 remained open. One RPI Review completed with a Conformant
   outcome and no in-scope findings. Hosted checks and the owner's merge decision
   remain separate from the local evidence.
+
 ## [2026-10-16] update | Image-preserving infrastructure redeploy (Refs #322)
 
 * Applied the owner's 2026-10-16 decision: empty `orchestratorImage` in
@@ -3843,6 +3853,7 @@ metadata when the knowledge base was created.
   timings were 1.33-2.00 s cold and 0.3-222.6 ms repeated, with unchanged
   bounded context counts; README records this variability. One RPI Review
   was Conformant; hosted checks and the owner merge decision remain separate.
+
 ## [2026-10-16] update | Cut-over evidence refreshed after main integration (Refs #200, Refs #201)
 
 * Refreshed the [evidence pack](../architecture/cutover-evidence-pack.md) after
@@ -3872,6 +3883,7 @@ metadata when the knowledge base was created.
   merged PR references but unticked criteria and are listed for evidence-based
   ticking by the coordinator at merge time.
 * Updated the coordinator agent with the status and criteria upkeep rules.
+
 ## [2026-10-16] query | Private deployed-from-src proof (Refs #200, Refs #201)
 
 * Updated the [cut-over pack](../architecture/cutover-evidence-pack.md),
@@ -3929,6 +3941,7 @@ metadata when the knowledge base was created.
   One postimplementation Review ran: Complete execution, Not accepted for full
   #344 acceptance; tenant, browser API and positive-feature findings route to
   #349/#350. No merge or issue-body tick was performed.
+
 ## [2026-10-16] query | Hardened source deployment and honest criterion audit
 
 * Refs #118. Updated the reference index, source/infra READMEs and cut-over
@@ -3986,6 +3999,7 @@ metadata when the knowledge base was created.
   workflow/check names, live Azure operations or invented human approvals.
   Juan Manuel Servera remains the synthetic exercise Legal/Compliance/DPO
   owner; ADR 0005 acceptance is development-only, not operational reliance.
+
 ## [2026-10-16] decision | ADR 0005 accepted for synthetic development only (Refs #209)
 
 * Updated [ADR 0005](../adrs/0005-regulatory-compliance-assistant.md) to
@@ -4025,6 +4039,7 @@ metadata when the knowledge base was created.
   is unchanged. Owner agreement, independent grading, actual staff precision/
   acknowledgement/comprehension and continuing-stock acceptance remain unmet.
   Updated the knowledge-base index; did not modify memory or legal snapshots.
+
 ## [2026-10-16] implementation | Regulatory alert and home chat UX (Refs #215)
 
 * Added the [API UX guide and criterion audit](../../src/api/README.md#regulatory-alert-and-home-chat-ux-215)
@@ -4057,6 +4072,7 @@ metadata when the knowledge base was created.
   read, successful browser sign-in or operational approval. Private-network
   SQL staff binding/restart, actual admin consent and human acceptance remain
   separate gates. No private dataset or live Entra identifier was recorded.
+
 ## [2026-10-16] implementation | Regulatory security, privacy and audit (Refs #217)
 
 * Added separate trusted RegulatoryChat capability and matching local Entra
@@ -4078,6 +4094,7 @@ metadata when the knowledge base was created.
   and index. Synthetic local tests, lint/type checks and loopback HTTP only;
   no actual staff/resident data, Azure/tenant changes, model call or operational
   legal approval. Issue checkboxes remain for merge-time coordination.
+
 ## [2026-10-16] query | PR 347 deployment hardening review corrections
 
 * Refs #118. Merged origin/main into the existing topic branch and preserved
@@ -4142,6 +4159,7 @@ metadata when the knowledge base was created.
   comparative value and continuing-stock/Azure acceptance remain unmet.
   No issue checkbox, legal approval, live activation, private dataset, Azure
   resource or legacy application tree was changed.
+
 ## [2026-10-16] query | Offline CI/CD deployment pipeline
 
 * Refs #138. Added trusted default-branch PR what-if and main-only manual
@@ -4185,6 +4203,7 @@ metadata when the knowledge base was created.
   deployment/OIDC execution, new human approval, private-data read or
   operational/legal acceptance is claimed. ADR 0005 remains synthetic-only;
   real owners and sources remain gaps.
+
 ## [2026-10-16] implementation | Regulatory UX review regression gates
 
 * Refs #215. Merged origin/main into the existing PR branch and retained both
@@ -4227,6 +4246,7 @@ metadata when the knowledge base was created.
   source README and index. Full WCAG and staff comprehension remain unmet;
   no issue checkboxes, actual legal/consent/safety/financial approvals, Azure
   resources or real owner/source gaps are changed.
+
 ## [2026-10-16] implementation | Entra setup review findings and infra CI repair (Refs #351)
 
 * Merged current main into the existing setup topic without rewriting history;
@@ -4386,6 +4406,7 @@ metadata when the knowledge base was created.
   receipts are not regenerated. Refresh cadence/approval/live-protection
   policy is documented, not owner-approved. No resident, legal, safety,
   financial or operational approval is inferred; issue ticks stay unchanged.
+
 ## [2026-10-16] query | Offline historical climate source audit
 
 * Refs #178. Updated the existing sensor analytics research plan with the
@@ -4404,6 +4425,7 @@ metadata when the knowledge base was created.
   the exercise Legal, Compliance and DPO owner; dataset-specific reuse,
   competent method review and operational authority are not inferred.
   No issue checkboxes, executable files, private data or Azure state changed.
+
 ## [2026-10-16] update | Demo external environment created (#360)
 
 * Owner approved (via ask_user form): full migration at once, Key Vault
@@ -5276,6 +5298,7 @@ metadata when the knowledge base was created.
 * No Azure write during this continuation. Private-publisher authority decision,
   exact-image smoke/pin, real operator sign-in/roles/SQL/AI and later retirement
   remain open. External final-head gate/owner merge decision pending; no closure.
+
 ## [2026-10-17] query | Grant lifecycle and scoped human exercise authority (#95)
 
 * Fresh issue/source audit verified existing grant states and second approver,
@@ -6165,6 +6188,7 @@ metadata when the knowledge base was created.
 * Universal core-flow/error coverage, actual user comprehension and named
   resident-facing wording review remain unmet. This partial slice does not
   close the issue, approve resident use or establish WCAG/legal conformance.
+
 ## [2026-10-17] query | Consultation record and unknown confirmation hold (#92)
 
 * Audited the existing migrated procurement package and #90/#384 source;
@@ -6672,6 +6696,7 @@ metadata when the knowledge base was created.
   expired and closable as not planned (not done), #38 needs a check of the latest
   scorer run, #6 and #434 are auto-managed and stay open, #430 stays open, and
   #349, #350, #358, #360 still lack type, area and status labels and parents.
+
 ## [2026-10-20] update | Finite costed execution plan options for an unfinished Azure demo (#126)
 
 * Added a subsection to the existing Case Study 48 addendum and one index
@@ -7414,6 +7439,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Updated the reference index and package record without rewriting earlier
   log entries or the owner's memory. No private study edit, experiment,
   commit, push, complete publication gate or submission occurred.
+
 ## [2026-10-27] design | Resident advisory assistant prototype (Refs #469)
 
 * Added the [owner-decision design](../architecture/resident-assistant-prototype.md)
@@ -7687,6 +7713,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   change, not full-suite parity, hosted CI/deployed health, private backup
   verification, post-merge rubric comparison or whole-issue closure.
   All five issues remain Refs; owner merge and remaining acceptance are separate.
+
 ## [2026-10-27] deployment | Merged resident features from PR #474
 
 * Updated the [resident guide](../../src/api/README.md#synthetic-resident-showcase-462),
@@ -7735,6 +7762,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Original targeted validation and adverse hosted failure remain in dated RPI
   evidence. The correction requires exact full core CI tests, lint and mypy;
   no cloud, private dataset, heavy gate or real-use approval is introduced.
+
 ## [2026-10-23] update | First bounded local stabilization checkpoint (#440)
 
 * Added the executed current-main checkpoint to the existing cutover evidence
@@ -7778,6 +7806,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Refreshed only the public recipe SHA-256 in the [scenario manifest](./research/retrofit-synthetic-data/scenario-manifest.json) after correcting the [shared-IA browser check](../../src/api/checks/workbench_browser_check.py) to match #516's programme-neutral loading copy and scope/count response fields. The stale text wait reproduced PR #517's 30-second failure locally, including correct loading with external requests blocked; no CDN flake was identified.
 * Fixture IDs/defaults, inventory and manifest versions, unavailable full-journey status, pending owner review and all authority boundaries are unchanged. This source-binding maintenance is not a new scenario iteration, private-data read, full journey acceptance or operational approval.
+
 ## [2026-10-21] query | Meaningful human-review protocol preparation (#223)
 
 * Added a proposed, Not run protocol section to the existing agents README
@@ -7799,6 +7828,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Insufficient or NOT RUN, never Pass.
 * No exercise, evaluator, outcome or approval was added. OQ-017 stays open and
   all five #223 criteria stay unmet. The earlier entry is unchanged.
+
 ## [2026-10-20] query | Map tile provider licence, cost and privacy options (#119)
 
 * Added the [options review](./research/ux/map-tile-provider-options.md) and a
@@ -7854,6 +7884,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Documentation only. No provider is selected or bought, no terms, DPA, rate,
   licence or processor decision is made, no web retrieval was done, the screen
   reader remains not run, and both original issue criteria remain unmet.
+
 ## [2026-10-21] query | Paired historical climate access check (#178)
 
 * Tested anonymous retrieval of official paired North-East temperature and
@@ -7902,6 +7933,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Report statistics, raw fixtures and source selection are unchanged. Licence,
   reuse, human owner/legal decisions, production precision and regional coverage
   remain unresolved; no issue acceptance criterion is ticked.
+
 ## [2026-10-20] query | Fictional form template and Finance decision review pack (#97)
 
 * Added a registered fictional versioned form/template pack and reviewer guide
@@ -7922,6 +7954,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Files touched: the fictional form review guide, the core guide paragraph on the review pack, and this log (`ms.date`).
 * Contradiction found by independent full-diff review (FIN-001): both documents said the public fictional schema registers unchanged, but `register_schema` refuses its placeholder reviewer, and the focused test expects that refusal before registering a derived copy with a registered reviewer substituted.
 * Corrected both statements: the public file is refused as published; only a copy differing in `reviewer`, set to an existing registered person, registers, as `Unapproved`, recording no approval. No runtime, test, fixture, index, dictionary or provenance change; Finance FD-01..FD-14, template authority and OQ-015 stay unresolved and criterion 1 unmet. Earlier entries retained.
+
 ## [2026-10-20] query | Cohort and missing-data evaluation manifest preparation (#222)
 
 * Added a DRAFT, UNAPPROVED, NOT EXECUTED wholly synthetic paired-scenario
@@ -7983,6 +8016,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Evidence: mandatory complete publication gate includes `az bicep` commands
   forbidden by the task; no passing complete receipt or publication waiver is
   claimed. The dated assessment records validation/publication limitations.
+
 ## [2026-10-28] ingest | Employee case journey workspace specification (#526)
 
 * Filed the owner-supplied [employee case workspace design](./research/ux/employee-case-workspace-redesign.md)
@@ -8127,6 +8161,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * No snapshot was rewritten. No legal duty is declared satisfied or approved.
   @jmservera is asked to appoint a qualified Legal/Compliance reviewer;
   Finance/funder confirmation remains necessary for grant terms.
+
 ## [2026-10-27] engineering | Bounded IoT streaming (Refs #110, #184)
 
 * Extended the [existing IoT synthesis](./research/iot-sensor-analytics-research-plan.md#bounded-streaming-engineering-2026-10-27-refs-110-184)
@@ -8164,6 +8199,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   the separate opt-in SDK publisher and pacing library exist, while verified
   live operation, credential lifecycle and actual scenario consumer use
   remain unproven. No historical log entry or live approval was changed.
+
 ## [2026-10-27] implement | Synthetic regulatory conflict routing and consumption (Refs #208, #214, #216, #215, #217)
 
 * Extended existing cited-home chat with automatic supported-conflict referrals
@@ -8183,6 +8219,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   #440 remain unmet. Publication is separately blocked by the mandatory
   full-gate requirement versus the caller's explicit no-full-gate limit.
   No cloud deployment, model call, private dataset access or approval occurred.
+
 ## [2026-10-27] query | Bounded staff chat and draft privacy evidence
 
 * Updated [DPIA draft](./research/chat-memory-dpia.md) and its index entry:
@@ -8218,6 +8255,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Fluent 2, native semantics, non-colour signals and reduced motion remain.
   No live contact, portal implementation, operational Legal/DPO decision,
   human usability/AT acceptance or whole-issue closure is claimed.
+
 ## [2026-10-27] ingest | Source-only monitoring candidates (Refs #146)
 
 * Added [operator runbooks and the complete issue evidence/gap matrix](../../infra/monitoring-runbooks.md),
@@ -8392,6 +8430,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   evidence; remote metadata was not changed.
 * Existing hosted rubric 77/100 PASS is historical, not a new unpublished-head
   assessment. No score, scorer, rubric protection, Azure or sign-in changes.
+
 ## [2026-10-28] implementation | January resident demo authority source renewal (#521)
 
 * Updated the [knowledge index](./README.md) and
@@ -8819,6 +8858,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   threads remain unchanged pending authorized publication. No force-push,
   full publication gate, native Windows execution, hosted approval or owner
   merge approval is implied.
+
 ## [2026-10-30] query | Composed local sensor handover contract, Refs #188
 
 * Updated the existing IoT synthesis and index for optional composed replay,
@@ -9046,6 +9086,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   artefact; fixed in CSS and now asserted by the browser harness (21 states,
   zero violations, zero incompletes). No manual or assistive-technology
   assessment and no staff comprehension study was run; those criteria stay unmet.
+
 ## [2026-11-01] update | Synthetic determinism replay audit (Refs #176)
 
 * Added a one-command replay audit for the in-repo synthetic generators and a
@@ -9053,6 +9094,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   [retrofit synthetic data README](./research/retrofit-synthetic-data/README.md).
 * The original private stock register generator remains absent, so the
   byte-identical and manifest criteria stay partially met. No index change.
+
 ## [2026-11-01] refine | Briefing feedback guidance, Refs #531
 
 * Added a plain-language paragraph to Today's briefing saying how to correct
@@ -9061,6 +9103,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   [API guide](../../src/api/README.md#loading-feedback-and-todays-briefing-531).
 * Local pinned-axe browser check and unit tests passed. Live employee-site
   verification (criterion 7) remains unmet; no assistive-technology claim.
+
 ## [2026-11-01] observation | Regulatory evaluation gates re-verified, Refs #216
 
 * Re-ran the [#216 gates](../../src/agents/README.md#re-verification-2026-11-01) at
@@ -9071,6 +9114,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   remain the recommendation.
 * Unmet: owner agreement, independently graded or held-out sets, staff paired
   trial, alert precision and acknowledgement time, continuing-stock baseline.
+
 ## [2026-11-01] observation | Intermittent workspace script load, Refs #524
 
 * Recorded a working hypothesis for the intermittent `/vendor/leaflet.js` failure:
@@ -9128,6 +9172,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   ratification of supported device classes and widths (#152). The manifest
   records it as `proposed`; the decision, browsers, assistive tools, field or
   mobile use and complete AC-034/AC-043 acceptance remain open.
+
 ## [2026-11-01] update | AI consumption demo walk-through (Refs #432)
 
 * Added a credential-free synthetic walk-through
@@ -9144,6 +9189,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   and the API README. It reuses the local strict report on any `ZF_STORE`
   SQL store and re-runs a window. Actual Hub, Azure SQL and live handover
   remain unproven; no issue checkbox changes.
+
 ## [2026-11-01] update | Break-glass audit purpose and OD-46 options (#162)
 
 * Refused break-glass attempts now audit the redacted purpose as well as the
@@ -9160,6 +9206,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   and next action, and three more files in the lexical guard.
 * Issue #153 criteria for universal error coverage, named resident wording
   review and comprehension testing stay open. No regulatory snapshot changed.
+
 ## [2026-11-01] update | Executable design traceability gate (#156)
 
 * Added `tools/check-design-trace.py` and tests. It validates the 74-row screen
@@ -9179,6 +9226,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * RTO and RPO are recorded as undecided with owners; no point-in-time restore was
   performed (no authorized disposable infrastructure). Issue #145 criteria 2 to 4
   stay open. No regulatory snapshot changed.
+
 ## [2026-11-01] update | Container hosting status and local scale load run (#144)
 
 * Added an API startup probe, compiled scale, probe, limit and Single-revision
@@ -9197,6 +9245,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   the 60,000-home run: warm p95 above the NFR-002 thresholds on all routes.
 * Rewrote the rollback text to match the pipeline, which accepts only current-run
   digests. Issue #144 stays open. No regulatory snapshot changed.
+
 ## [2026-11-01] ingest | Atlas findings traced to role screens (#233)
 
 * Added `research/ux/atlas-screen-trace.md` (eleven perspectives, five atlas
@@ -9205,6 +9254,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   index and the #233 row of the prototype profile review.
 * Findings stay hypotheses until #155. Screens in open pull requests are not
   delivered. Accessibility and design-system criteria remain unproven.
+
 ## [2026-11-01] add | Today's briefing HAX design note (#531)
 
 * Added `research/ux/briefing-hax-design-note.md`, a dated mapping of HAX
@@ -9213,6 +9263,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Maintainer-authored; not a UX specialist output. Criterion 7 (live employee
   verification) and assistive-technology acceptance stay unmet. No regulatory
   snapshot changed.
+
 ## [2026-11-01] update | Key Vault secret lifecycle slice (#142)
 
 * Extended `infra/secret-inventory.json` to the two resident demo secrets, with the
@@ -9220,6 +9271,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   `review-status` to `infra/scripts/secret_lifecycle.py` with offline tests.
 * Issue #142 criteria 1 to 3 stay unmet: no live rotation exercise, executed signed
   review or Azure Monitor alert evaluation. No regulatory snapshot changed.
+
 ## [2026-11-01] verify | Resident sensor gauges and assistant re-verified on main (Refs #466)
 
 * Re-ran the resident core and api suites (99 tests, 1 opt-in skip), ruff and mypy
@@ -9231,6 +9283,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Issue #466 criterion 1 (owner confirms scope and priority) stays unmet; manual
   assistive-technology acceptance and live checks remain owner-run. No regulatory
   snapshot changed.
+
 ## [2026-11-01] query | Employee chat re-verification on current main (#530)
 
 * Re-ran the focused tier on main efebfc6d: core chat (99), agents chat
@@ -9253,6 +9306,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-01] update | Resident authority end (#521)
 
 * Documented coordinator steps for the live resident authority extension in infra/README.md and moved the browser-check fixture to the shared authority end (Refs #521). No live apply.
+
 ## [2026-11-01] update | IoT publisher credential hygiene tests (#184)
 
 * Added constructed local tests (repository text scan, fake-SDK log, truth
@@ -9326,6 +9380,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-recheck-changes.md`.
 * SQL, live employee-site verification, screen-reader and voice-control
   acceptance remain unproven; no source change was made.
+
 ## [2026-11-01] update | Register is_synthetic conformance check (Refs #167)
 
 * Added `coverage --register` to the core coverage tool and noted the result in the
@@ -9465,6 +9520,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   topic cleanly; the owner selected topic-only publication, leaving PR #692
   open. The isolated experiment candidate is a separate draft PR; no main
   merge, visibility mutation, OSF action or collection is authorized.
+
 ## [2026-11-01] update | Owner decisions D1 to D7 recorded
 
 * Recorded the owner's 2026-11-01 decisions on
@@ -9579,6 +9635,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Export-provenance clarification: the supplied CSV text's rows and column
   names are preserved with LF line endings. Its hash identifies the repository
   copy; unavailable original-download bytes were not independently compared.
+
 ## [2026-11-01] ingest | Chat storage approval for the synthetic-data demo
 
 * Added `research/chat-demo-storage-approval-2026-11-01.md`, recording the
@@ -9695,6 +9752,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   rejects the provisional OS copyright year in the ONS boundaries attribution,
   so the #175 source criterion stays unproven. Original RPI evidence is under
   `.copilot-tracking/` (2026-11-02 issue-175-source-retrieval-dates).
+
 ## [2026-11-02] update | Resident service issue screen added to atlas trace, Refs #232
 
 * Added a `resident-service-issues` read-only role screen (accessible service
@@ -9702,6 +9760,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   [atlas screen trace](research/ux/atlas-screen-trace.md). Desk research, not
   observed behaviour; browser, keyboard and assistive-technology validation of
   the screen is not performed. #232 stays open.
+
 ## [2026-11-02] update | AI metering (#432) owner-gate reconciliation
 
 * Re-ran the 40 focused consumption tests (pass) and recorded, per
@@ -9711,6 +9770,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   content changed. Self-review only; WCAG and assistive-technology acceptance
   are not claimed. Evidence is under `.copilot-tracking/` (2026-11-02
   issue-432-owner-gate).
+
 ## [2026-11-02] update | Issue 188 focused re-validation, Refs #188
 
 * Re-ran core (144) and api (89) sensor tests on main; all pass locally. No
@@ -9733,6 +9793,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   search, post-cleanup main rubric comparison, deployed and CI-green
   conjunction). Original RPI evidence is under `.copilot-tracking/`
   (2026-11-02 verify-refs-203).
+
 ## [2026-11-02] update | Asset and board screen browser check for issue 226
 
 * Added the `226` scenario to `src/api/checks/role_screens_browser_check.py`
@@ -9762,6 +9823,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   technology validation stays in #155 and the design-system proof in #150, so
   #227 stays open. Evidence is under `.copilot-tracking/` (2026-11-03
   issue-227 cross-home hazard queue).
+
 ## [2026-11-03] update | Technical queue blocks readiness on unresolved source conflicts (Refs #231)
 
 * The Technical queue no longer shows "Recorded evidence is complete" while a
@@ -9771,6 +9833,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   exists so none is claimed. Assistive-technology testing (#155) and Fluent
   component adoption (#150) remain unproven, so #231 stays open. Evidence is
   under `.copilot-tracking/` (2026-11-03 issue-231 source-conflict readiness).
+
 ## [2026-11-03] update | Finance decision display wording (Refs #153)
 
 * The Finance decision option and recorded decision now display "Keep
@@ -9809,6 +9872,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   keeps it labelled a proposed rule; rendered behaviour, WCAG 2.2 and
   design-system acceptance, and #155 validation stay unmet. Evidence is under
   `.copilot-tracking/` (2026-11-03 issue-233 withheld panel).
+
 ## [2026-11-02] update | Faster local gate controls (Refs #470)
 
 * Implemented the six owner-approved gate-speed recommendations in
@@ -9844,9 +9908,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Issue 572 post-#757 verification (Refs #572)
 
 * Re-verified criteria 1 to 3 on main with focused tests and recorded that #757 resolved the core typing blocker. Criterion 4 (fresh complete exact-head gate with browser and MSSQL) stays unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-572 post-757 verification).
+
 ## [2026-11-03] update | Coordinator policy for merged gate speedups (Refs #470)
 
 * Updated `.github/agents/ama-backlog-delivery-coordinator.agent.md` to describe API test shards (`test_shards`, `shard_helpers`), fail-closed sharding, per-child shard planning, closed stdin and the stack-member limits merged in #792, and added a stdin note to the `src/README.md` gate speed controls. Documentation only; no gate code changed. The #470 criterion for recorded before/after full-run timing remains unmet.
+
 ## [2026-11-03] update | Asset and board view states AI unavailable (Refs #226)
 
 * The `asset-board` AI cost panel now shows whether the AI report loaded and a
@@ -9859,6 +9925,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Issue 531 derive script retry counts in the loading check (Refs #531)
 
 * The loading browser check now reads `SCRIPT_RETRY_DELAYS` from `app.js` instead of hard-coding the attempt count, closing the drift follow-up from the earlier retry-check review. No product change. Criterion 7 (live employee verification) stays unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-531 derive-retry-counts).
+
 ## [2026-11-03] update | Regulatory alert and chat acceptance kit (Refs #215)
 
 * Added [the acceptance kit](./research/ux/regulatory-ux-acceptance-protocol.md): per-role keyboard and screen-reader scripts, a frozen answer key for the five comprehension tasks and blank record tables, plus `src/api/checks/regulatory_comprehension_score.py` for the predeclared thresholds. Unit-tested only.
@@ -9871,6 +9938,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Sensor simulation child status refresh (Refs #190)
 
 * Refreshed the [sensor analytics research plan](./research/iot-sensor-analytics-research-plan.md) child table: #191, #192 and #194 are closed on GitHub, #193 stays open on its consumer-test criterion. No story was closed or deferred. Parent criterion 1 stays unmet and unticked; criterion 2 is unchanged. Documentation only. Evidence is under `.copilot-tracking/` (2026-11-03 issue-190 child status refresh).
+
 ## [2026-11-03] update | Boundaries attribution year recheck (Refs #175)
 
 * Rechecked the OS copyright year for `SRC-ONS-BOUNDARIES` against the ONS licences page and the ArcGIS item records for both boundary products. The official statement uses a literal `[year]` placeholder and no product notice names a year, so the year stays unconfirmed and unticked; the owner must decide it. Criterion 2 stays unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-175 attribution year).
@@ -9882,6 +9950,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Design-system inventory covers role-screen classes (Refs #230)
 
 * Added layout, list and specialist-screen class rows to the [design system](./research/ux/design-system.md) component inventory and a test that every class used by the role screens is defined in CSS and listed. Fluent library adoption (#150) and assistive-technology validation (#155) remain unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-230 design-system classes).
+
 ## [2026-11-03] update | Atlas trace: withheld-items panel on resident-choice summary (Refs #233)
 
 * The `resident-choice` page summary now renders the "Not shown for this role"
@@ -9893,9 +9962,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | WCAG baseline target size rule check (Refs #151)
 
 * Recorded a 24 CSS px minimum height for link buttons and the map list summary in the [WCAG baseline](./research/ux/wcag-conformance-baseline.md), with a static test, and refreshed the automated-check status. Owner decisions O-1 to O-5, manual screen-reader and keyboard records and the rendered audit remain unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-151 target size).
+
 ## [2026-11-03] update | Finance screens AI economics section (Refs #225)
 
 * Both Finance screens (`finance-invoices`, `finance-funding`) now share one design-only AI economics panel: usage reconciled to billing, five Total Cost of AI components, booked-value status with the five value destinations, and Unknown for every missing input. No price, budget or target is set (BRD OD-51 open). Unit-tested only; WCAG browser and assistive-technology proof and observed validation (#155) remain unmet. Evidence under `.copilot-tracking/` dated 2026-11-03.
+
 ## [2026-11-03] update | Chat retention purge for threads and messages (Refs #163)
 
 * Added `ChatPrivacy.purge_retention` over the chat repository: deletes threads and messages idle longer than the recorded demo period and expired memory, and does nothing while no period is recorded. [The demo storage approval](./research/chat-demo-storage-approval-2026-11-01.md) now states this. Unit-tested only; no scheduler runs it.
@@ -9908,31 +9979,39 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] create | Journey learning-test bundles protocol (Refs #129)
 
 * Added `research/ux/journey-learning-test-bundles.md`: protocol for the five candidate bundles with non-AI comparators, a six-component net-effort measure (NFR-009), stop rules, manual and AI-unavailable paths, and the O10/O18 to O20 exclusion. Protocol only: no experiment run, no measured result; saved minutes stay capacity until Finance validates them. Unmet: running the bundles, atlas-owner confirmation of the mapping (the O16 overlap is the open question), ADR 0003 dependencies. Evidence under `.copilot-tracking/` (2026-11-03 issue-129 r1).
+
 ## [2026-11-03] update | Epic #89 scoped stabilization checkpoint (Refs #89)
 
 * Added an epic-scoped checkpoint to the [evidence pack](../architecture/cutover-evidence-pack.md#epic-89-scoped-stabilization-checkpoint-2026-11-03) on main b855aec86: requirement-to-test reconciliation for RULE-004, 007, 008, 013 and 023, a child ledger (#90 and #91 closed; #92, #132 and #133 open with unmerged PRs) and focused test, ruff and mypy results.
 * Flagged that the PRD and BRD give FR-016 and FR-017 different meanings. #89 criterion 1 (full checkpoint before closure) and criterion 2 (children closed or deferred) stay unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-89 epic checkpoint).
+
 ## [2026-11-03] update | Unaccepted handoff ageing and exception feed (Refs #83)
 
 * Added read-only `handoff_ageing`, `unaccepted_handoffs` and `feed_unaccepted_handoffs` in `src/core` with unit tests. No approved limit is invented: BG-010/OD-09 stays open and ageing flags only by the handoff's own due time or a caller-supplied approved limit. Not wired to API or screens; criterion 3 of #83 stays unmet. Unit-tested only. Evidence under `.copilot-tracking/` (2026-11-03 issue-83 r1).
+
 ## [2026-11-03] update | Discovery assistant readiness gate and read-only boundary (Refs #125)
 
 * Added a pure `discovery_assistant_boundary` module and tests in `src/core`: the brief's ten readiness items need named human evidence before the design hypothesis can reach "ready for owner decision" (never a connection or approval), and a default-deny read-only tool allowlist refuses every action the brief's authority boundary lists. No company data, model, store or write path is involved. Unit-tested only; all three #125 criteria stay unmet (see PR). Evidence under `.copilot-tracking/` (2026-11-03 issue-125 r1).
+
 ## [2026-11-03] update | AI running-cost line and booked-destination value claims (Refs #126)
 
 * The governance benefits register now requires an AI cost denominator, quality floor and Total Cost of AI components before the capture gate opens; a missing dated price source is recorded as Unknown. Value claims stay capacity until a different person records one booked destination and the budget owner's confirmation reference. Documented in `src/core/README.md`. Unit-tested with synthetic values only; no price, budget or target is set (BRD OD-51 open).
 * #126 criteria still unmet: real protocol/DPIA/lawful-basis approval, RAI closure items, and AI economics in release decisions. Evidence under `.copilot-tracking/` (2026-11-03 frozen-protocol 126 r1).
+
 ## [2026-11-03] update | AI usage and alerts panel on the asset and board view (Refs #100)
 
 * The asset-board screen now shows a ledger-wide panel of metered calls, retries, failures, calls with no recorded outcome, proposals and human-accepted proposals, held-call alerts with named owners and other Total Cost of AI components. Missing figures show Unknown, never zero; token counts are not shown as cost. Updated the atlas screen trace row. Unit-tested only; #100 criteria stay unmet (stabilization checkpoint, child closure, per-capability and limit views, live evidence). Evidence under `.copilot-tracking/` (2026-11-03 issue-100 r1).
+
 ## [2026-11-03] update | Map tile failure announcement (Refs #119)
 
 * The map panel now shows a polite status note when background tiles fail to load, pointing to the list alternative; the [screen-reader protocol](./research/ux/wcag-conformance-baseline.md#map-list-alternative-screen-reader-check-119) now includes the tile-block scenario. Unit-tested as present in the script only.
 * Both #119 criteria stay unmet: no licensed provider chosen (needs owner, procurement, DPO and legal decisions) and no screen-reader run. Evidence is under `.copilot-tracking/` (2026-11-03 issue-119 r1).
+
 ## [2026-11-03] update | Rubric before-and-after score record (Refs #198 #203)
 
 * Added a dated before-and-after score record to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#rubric-before-and-after-score-record-2026-11-03-refs-198-203): 47 baseline, 77 pre-cut-over, 77 after cleanup, no dip, with criteria effect for #198 and #203.
 * Unmet: #198 per-PR dual-window records and registry-PR ordering; #203 literal reference search, and deployed app plus CI proof. Evidence is under `.copilot-tracking/` (2026-11-03 score record).
+
 ## [2026-11-03] update | Journey ownership register and equity test plan (Refs #128)
 
 * Added the [equity, journey ownership and user research test plan](./research/ux/equity-journey-test-plan.md) and a pure `journey_register` module in `src/core` (blocked-by-default register of J1 to J6 and R1, plus a human-review route for missing data and incomplete appointments with no rank effect). Unit-tested only. No screen reader run, user research, owner assignment or protocol agreement exists; all three #128 criteria and the AI, geography and archetype cohort criteria stay unmet. Evidence under `.copilot-tracking/` (2026-11-03 issue-128 r1).
@@ -9949,25 +10028,32 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Issue #531 re-verification on main 61a4ac543 (Refs #531)
 
 * Recorded a fresh local re-verification of loading feedback and the HAX briefing (focused tests and the loading and briefing browser check with axe-core 4.10.3 all pass). No product or knowledge-base content changed. Criterion 7 (live employee-site verification) stays unmet and owner-run; screen-reader and voice-control acceptance is not claimed. Evidence is under `.copilot-tracking/` (2026-11-03 issue-531 reverify).
+
 ## [2026-11-03] update | Quality queue blocks handover on unnamed acceptance or ownerless defect (Refs #231)
 
 * The quality queue no longer shows handover readiness when an accepted record has no named or independent inspector, or an open defect has no named owner. Criteria 4 and 5 stay unmet (#151, #155, #150); no ticks changed. Evidence is under `.copilot-tracking/` (2026-11-03 issue-231 quality-acceptance-evidence).
+
 ## [2026-11-03] update | Retained ranking snapshot publication slice (Refs #79)
 
 * Added a pure `ranking_publication` module and tests in `src/core`: immutable dated archive of ranking snapshots, hash and registry verification, overdue check, and a stated schedule contract. Unit-tested only. #79 criteria 3 (named owner signs rule order) and 4 (scheduled publication, retention) stay unmet: no owner named, no scheduler wired, retention period not set. Evidence under `.copilot-tracking/` (2026-11-03 issue-79 r1).
+
 ## [2026-11-03] update | Investment envelope and downside limits pause signal (Refs #99)
 
 * Added `exposure_limits` in `src/core`: records an envelope and RULE-012 tolerances only with a human approval record, and returns a "Pause for human decision" signal on breach or unknown exposure. No company figures; not wired to store, API or UI.
 * Criterion 1 stays unmet (no Board-approved inputs); criterion 2 is proven in logic only on synthetic values. No ticks changed. Evidence is under `.copilot-tracking/` (2026-11-03 issue-99 exposure limits).
+
 ## [2026-11-03] update | Proactive predicate call forecast (Refs #107)
 
 * Documented `GET /api/assistants/forecast` in `src/agents/README.md`: a read-only per-assistant, per-period upper bound of model calls a proactive predicate would trigger, reported before proactive scans are enabled. Cost stays Unknown (no price source, BRD OD-51). Tokenomics criterion 3 is advanced in code and tests only; no issue ticks changed; criteria 2 (attribution) and the RAI items 1, 3, 5 and 8 remain unmet.
+
 ## [2026-11-03] update | Saved form manifests flagged stale (Refs #98)
 
 * The core form review `view` now reports `diagnostic_freshness` for each saved diagnostic manifest, marking it Stale when reviewed inputs, a bound source or the schema version changed. Snapshots are not altered. [Core README](../../src/core/README.md) records the boundary: approved-rule validation and reviewed pack assembly stay blocked on Finance and template authority; no issue criteria ticked. Unit-tested only. Evidence under `.copilot-tracking/` (2026-11-03 issue-98 manifest freshness).
+
 ## [2026-11-03] update | Automated axe and keyboard checks on the production configuration (Refs #619)
 
 * The [acceptance protocol](./research/ux/production-ux-acceptance-protocol.md) records a new automated check (`checks.production_config_a11y_browser_check`) that runs the employee case view and chat widget under `ZF_ENV=production` with the trusted-proxy provider. Per owner decision 2026-11-03 the screen reader, zoom and real resident consent criteria stay open until a production build exists; every record row is still `Not run`. Evidence is under `.copilot-tracking/` (2026-11-03 automated-a11y-619).
+
 ## [2026-11-03] update | DRAFT Tokenomics placement and rehearsal outline (Refs #435)
 
 * Added a [draft for owner review](../capstone/pitch/tokenomics-placement-draft.md): current-deck placement (S18 and B25 already carry Tokenomics), a flagged conflict between the S18 modelled per-home figure and the no-price criterion, draft segment wording and an unperformed rehearsal outline. All six issue criteria stay unmet; no decision, rehearsal, rebuild or assessment is recorded. Evidence is under `.copilot-tracking/` (2026-11-03 issue-435 tokenomics).
@@ -9980,22 +10066,28 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Added a proposed design contract to [suppliers.md](research/ux/customer-journeys/suppliers.md#design-contract-for-contractor-submission-correction-and-acknowledgement-proposed-2026-11-03): preconditions, seven plain-language states, separation of submission, acknowledgement and independent acceptance, withheld items, manual path and accessibility requirements for the later build slice.
 * Desk-research hypothesis only. Nothing is built; #228 criteria 3, 5 and 6 stay unmet (OD-47, supplier-scoped access, #155, #150). Evidence is under `.copilot-tracking/` (2026-11-03 issue-228 submission design contract).
+
 ## [2026-11-03] add | Easy Auth intermittent 500s investigation (Refs #810)
 
 * Added [the investigation note](./research/easy-auth-intermittent-500-2026-11-03.md) from a read-only Azure review and a 4 x 30 burst on the demo API. About 1 to 3 percent of forwarded requests return an empty-body 500 that the application does not produce; authentication-excluded paths are affected equally, and a no-auth app was clean. Platform logs were not readable (network perimeter), so the precise fault is unproven. Criteria 2 and 3 stay unmet pending an owner decision; no Azure resource was changed. Evidence under `.copilot-tracking/` (2026-11-03 issue-810).
+
 ## [2026-11-03] update | Resident pages demonstration-only Legal/DPO disclaimer (Refs #441)
 
 * Both synthetic resident pages (showcase and #444 preview) now state that Legal and DPO review is outstanding and the pages are demonstration only. This records the owner decision of 2026-11-03 (same basis as #766) and the [API README](../../src/api/README.md) notes it.
 * No Legal or DPO approval, consent, retention or data change is implied. #441 criteria 5 (FR-044/AC-084 owner disposition) and 9 (exact-head review and gates) stay unmet; no ticks changed. Unit-tested only; WCAG browser and assistive-technology proof stay unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-441 demo disclaimer).
+
 ## [2026-11-03] update | Resident demo authority extended to 31 December 2027 (Refs #521)
 
 * Owner decision 2026-11-03: the shared exclusive authority end in `resident-demo.json` moves to 2028-01-01T00:00:00Z (through 31 December 2027 UTC). Updated the infra and API READMEs, added a rotation and USD177 added-cost estimate note (USD700 cap unchanged), and moved the tests to the new instant with the earlier cutoffs proven accepted and the new limit refused. No Azure resource, SQL row or secret changed; live apply stays pending owner confirmation. Evidence is under `.copilot-tracking/` (2026-11-03 issue-521 demo authority).
+
 ## [2026-11-03] update | OS attribution year recorded for ONS boundaries (Refs #175)
 
 * The register now gives 2026 as the OS copyright and database-right year for SRC-ONS-BOUNDARIES, by owner decision (2026-11-03), flagged "to confirm before external use". The strict source audit passes; the year is not verified against an official notice. Evidence is under `.copilot-tracking/` (2026-11-03 issue-175 os-attribution-year).
+
 ## [2026-11-03] update | Aftercare concern register and evaluator view (Refs #133)
 
 * Added `zava_forward.core.aftercare.AftercareRegister`: digital and staff-recorded (non-digital) concern intake, named owner, human-evidenced investigation outcome, separate remedy status, closure that cannot erase a concern, and an evaluator view with denominators and unknowns. Documented in the [core README](../../src/core/README.md). Unit-tested only; no store, API, UI or AI pack. Evidence is under `.copilot-tracking/` (2026-11-03 issue-133 aftercare).
+
 ## [2026-11-03] update | Chat break-glass demo-only disclaimer (Refs #162)
 
 * Recorded the owner's demo-only administrator and break-glass policy in [a dated record](./research/chat-demo-breakglass-disclaimer-2026-11-03.md), marked unreviewed by the DPO and Legal, and linked it from the [DPIA record](./research/chat-memory-dpia.md). The break-glass response and audit entries now carry the disclaimer and `basis` `demo-only`. DPO and Legal review, production use and real data stay unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-162 demo disclaimer).
@@ -10003,6 +10095,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Asset and board structure tests (Refs #226)
 
 * Added unit tests pinning the asset and board view structure (shared panel and table components, captions, column scope, textual blocked state) and the absence of a role simulator. Test only; criteria 4 and 5 stay unmet pending assistive-technology testing and human review (#151, #155, #150). Evidence is under `.copilot-tracking/` (2026-11-03 issue-226 structure-test).
+
 ## [2026-11-03] update | Assistive-technology record completeness check (Refs #215)
 
 * Added `src/api/checks/regulatory_at_record_check.py` with seven unit tests, linked from the [acceptance kit](./research/ux/regulatory-ux-acceptance-protocol.md) and the API README. It checks only that per-role keyboard and screen-reader session records are complete and that failures state a barrier. No session has been run; #215 criteria 3 and 5 stay unmet and no ticks change. Evidence is under `.copilot-tracking/` (2026-11-03 issue-215 at-record-check).
@@ -10010,15 +10103,19 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Utilisation versus choice rule on package screen (Refs #233)
 
 * Stated on `procurement-packages` that offered capacity is not a booking or promise, that resident choice takes precedence and that packages are listed in reference order, not ranked by utilisation; updated the [atlas screen trace](./research/ux/atlas-screen-trace.md) tension status. Hypothesis, static evidence only; #233 criteria other than the hypothesis label stay unmet.
+
 ## [2026-11-03] update | Technical and quality screens rendered structure test (Refs #231)
 
 * Added unit tests pinning the rendered technical and quality queue trees (documented design-system classes only, no role simulator, headings and table captions). Test only; criteria 4 and 5 stay unmet pending #155 validation and #150 Fluent adoption.
+
 ## [2026-11-03] update | Programme queue paging in screen trace (Refs #230)
 
 * Updated [the atlas screen trace](./research/ux/atlas-screen-trace.md) programme coordinator row: Previous page and Next page controls reach every permitted case; scope filter still applies to the loaded page only; unit-tested only.
+
 ## [2026-11-03] update | Demo-only activation record for the employee chat model (Refs #891)
 
 * Added a demo-only activation record and an explicit env switch for `chat-case-conversation` (default denied; needs the switch value and the demo profile). [The demo storage approval](./research/chat-demo-storage-approval-2026-11-01.md) now states the boundaries. No Legal, DPO or RAI approval is claimed; deploy wiring and the live check remain outstanding. Evidence under `.copilot-tracking/` (2026-11-03 issue-891 r1).
+
 ## [2026-11-03] update | Data operator structure tests (Refs #229)
 
 * Added unit tests pinning the data steward and operator view structure (shared panel and table components, captions, column scope, textual Unresolved state) and the absence of a role simulator. Test only; criteria 4 and 5 stay unmet pending assistive-technology testing and human review (#151, #155, #150). Evidence is under `.copilot-tracking/` (2026-11-03 issue-229 structure-test).
@@ -10026,25 +10123,32 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Server-side resident choice queue (Refs #232)
 
 * Added a server-side cross-home resident choice queue endpoint and moved the Resident choice screen onto it. Authorization is limited to the four resident-choice roles and each home goes through the normal detail permission check. The queue summary now covers open homes in home ID order. Criteria 4 and 5 stay unmet pending assistive-technology testing and resident-consent evidence.
+
 ## [2026-11-03] update | Data protection register and model-dispatch gate slice (Refs #121)
 
 * Added a pure `data_protection` module and tests in `src/core`: a register of eight data classes with missing approvals, a model-dispatch gate that denies actual data until references exist (constructed fixtures only by default; intact documents need a reviewed redacted derivative), declared task field limits and a one-month rights clock. Reference-only: no lawful basis, Article 9 condition, retention period or transfer position is set, nothing is persisted or wired to a live model call, and no DPO or Legal approval is verified. #121 criteria stay unmet (see PR). Evidence under `.copilot-tracking/` (2026-11-03 issue-121 r1).
+
 ## [2026-11-03] update | Candidate comparison grader for AI tokenomics (Refs #108)
 
 * Added a pure `candidate_comparison` grader and tests in `src/agents`: cost per accepted proposal with a dated price source (Unknown otherwise), tokens per proposal and spread, one lever at a time on the same cases, and cheaper-but-worse candidates reported as failures. Offline and synthetic only; no live model, held-out data, price or approval. Documented in `src/agents/README.md`. Evidence is under `.copilot-tracking/` (2026-11-03 issue-108-r1).
+
 ## [2026-11-03] update | Held draft export of working form reviews (Refs #96)
 
 * Added core `form_export.draft_export`: a read-only export of a working form review with source links, versions, stale fields and open issues, fixed as Held, not reviewed, not submitted and eligibility not assessed. [Core README](../../src/core/README.md) records the boundary. Unit-tested only; no criteria ticked. Reviewed pack assembly stays blocked on Finance and template authority. Evidence under `.copilot-tracking/` (2026-11-03 issue-96 r1 held export).
+
 ## [2026-11-03] update | Phase 0 discovery register slice (Refs #124)
 
 * Added a pure `discovery_register` module and tests in `src/core`: owner nomination with accepted-handover endpoint status, a ten-event lifecycle dictionary gap check, and a constraint register that stays a candidate until a named owner other than the proposer decides, with supporting and contradicting evidence recorded. Synthetic fixtures only; no persistence or screens. Criteria 1 and 2 stay unmet (human nomination and validation); 3 and 4 are partly met in code only. Evidence under `.copilot-tracking/` (2026-11-03 issue-124 r1).
+
 ## [2026-11-03] update | Chat retention is age-based (Refs #163)
 
 * Owner decision 2026-11-03: `ChatPrivacy.purge_retention` now expires threads and messages a fixed period after creation instead of after idleness. Tests and the demo storage approval record are updated, with a demo-only disclaimer that DPO and Legal review is outstanding.
 * Criteria 2 and 5 stay unmet (DPO and Legal decisions). Touches the SQL repository, so the complete gate is for the coordinator.
+
 ## [2026-11-03] update | Contractor job pack and field evidence rules, staff-mediated proposal (Refs #132)
 
 * Added `job_pack` rules to core (pure, unit-tested, no persistence or API): job pack allow-list, worker-confirmed evidence receipts with original notes kept, acknowledgement separate from independent review, offline merge, provider no-show recovery that is never a resident refusal, and escalations that are never contract instructions. Staff-mediated intake is proposed over a provider portal; the owner decision and the #116 provider identity model remain open. See the [core README](../../src/core/README.md#contractor-job-pack-and-field-evidence-receipts-132-slice-1) and the dated evidence under `.copilot-tracking/` (2026-11-03 issue-132).
+
 ## [2026-11-03] update | Asset and board evidence class never borrows coverage (Refs #226)
 
 * The shared AI cost panel (asset-board and finance screens) showed the coverage value as the evidence class when no evidence label was recorded, and could show the cost component without one. It now reads Unknown and hides the component until an evidence label is recorded. Unit-tested only; criteria 4 and 5 (WCAG acceptance, #150 adoption) and observed validation (#155) remain unmet. Evidence under `.copilot-tracking/` (2026-11-03 issue-226 evidence class).
@@ -10052,9 +10156,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Finance browser check covers a constructed field draft (Refs #225)
 
 * Extended `src/api/checks/finance_screens_browser_check.py` with a fourth story: the Funding route and claim pack screen rendered in Chromium with a constructed field draft (routed response in the review view shape) showing a conflicting source candidate, a stale field with reviewed evidence, an Unknown field and Not ready readiness, with keyboard reach, reflow and pinned axe 4.10.3 results. Updated the `src/api/README.md` paragraph. Engineering evidence only; the draft is not server-built, and WCAG/AT acceptance (#151, #155), Fluent 2 conformance (#150) and observed validation stay unmet. Evidence under `.copilot-tracking/` (2026-11-03 issue-225 r2).
+
 ## [2026-11-03] create | Operator suspension drill protocol (Refs #221)
 
 * Added `method/operator-suspension-drill-protocol.md`: witnessed drill steps and a blank record for restart authority and manual fallback evidence. Protocol only: no drill run, no OD-35 authority appointed, no corrective test accepted; #221 criteria 5 and 6 stay unmet. Evidence under `.copilot-tracking/` (2026-11-03 issue-221 r1 drill protocol).
+
 ## [2026-11-03] update | Stage map and walkthrough drift check (Refs #233)
 
 * The atlas trace checker in `src/core` now compares the on-screen "Journey stages" list in `role-screens.js` with the same-home walkthrough table and reports differing stage names or screens. Offline check only; no screen, record, approval or AI behaviour changes. Criteria 1, 2, 4, 5 and 6 stay unmet (deferred theme, rendered tensions, no EX-HOME-901 fixture or stage 1 screen, #151, #150); only the hypothesis label is met. Evidence under `.copilot-tracking/` (2026-11-03 issue-233 stage-map drift).
@@ -10114,9 +10220,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Gate workflow pin matches the current src-ci.yml (Refs #608, Refs #572)
 
 * `tools/rpi-checks.py` re-pins `src-ci.yml` after the last #979 edit left the preflight reporting "Workflow matrix drift"; the exact-digest check is unchanged. A new test classifies every job and step of the real workflow. Focused tier only; the complete gate was not run. Evidence under `.copilot-tracking/` (2026-11-04 gate-matrix-drift).
+
 ## [2026-11-04] add | Usability testing programme plan (Refs #155)
 
 * New [usability test programme plan](research/ux/usability-test-programme-plan.md): hypotheses from SA-009, roles and participants, accessibility support, consent and aggregate-only data handling, task scripts derived from UX-01 to UX-08, J1 to J6 and the bundle protocol, findings log and results templates. Draft only: no participant, session, staff agreement or result exists; synthetic walkthroughs are labelled not user validation. Indexed in the reference README.
+
 ## [2026-11-04] update | Refused unstored and regulatory-thread chat turns leave a receipt (Refs #159)
 
 * An unstored assistant ask refused by the role gate or the current-user check, and a regulatory-thread turn refused for the missing RegulatoryChat capability, now each record one access-rejected audit receipt (0 model calls, tokens unknown, no question text). Responses and permissions are unchanged. Criterion 6 (named screen-reader run) and the tokenomics criterion stay unmet: 401 and validation-refused turns record nothing. Focused tests only; no gate, browser or assistive-technology run. Evidence under `.copilot-tracking/` (2026-11-04 issue-159-refusal-receipts).
@@ -10124,53 +10232,70 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | src-api strict mypy passes for the expected-denials test and browser check (Refs #920)
 
 * `src/api/pyproject.toml` adds the expected-denials test and browser check to the existing `disallow_untyped_calls = false` override for untyped App, provider and fixture calls, and the unused `type: ignore` is removed from `test_expected_denials.py`. No runtime change. `mypy` no longer reports these files; `ruff check` and the module tests pass. Focused tier only; the complete gate was not run.
+
 ## [2026-11-04] update | Browser-style anonymous API requests pinned to 401 (Refs #350)
 
 * A new executed test shows the src app answers anonymous `/api/*` requests with 401 JSON, including a browser User-Agent with Accept: application/json, while pages still redirect to sign-in. This is the app half of acceptance criterion 1 only: the platform EasyAuth redirect that returns 302 for browser API calls is unchanged and unverified (needs an infrastructure/security change and live Azure proof). All ten #350 criteria stay unmet. Focused tests, ruff and mypy only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-350-anon-api-401).
+
 ## [2026-11-04] update | Failed import feed for the exception queue (Refs #135)
 
 * Added a read-only `feed_failed_imports` in core that raises `failed_import` items for rejected importer batches and refused import files, keeping source identity, version and reason but no row values, without retrying or approving anything. Not wired to a live importer, store, API or UI; criteria 1, 5 and the owner-approved roles and runbooks stay unmet. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-135-r2-import-feed).
+
 ## [2026-11-04] update | Agents worker run loop, criterion 1 still unmet (Refs #144)
 
 * Added a tested cooperative run loop and a fail-closed `serve` command for the agents worker (`src/agents`), and updated the hosting status row in `infra/README.md`. `serve` refuses to start because the queue adapter and API post-back do not exist. Criteria 1, 3 and 4 and the Azure restore proof stay unmet. Focused tests only; no gate, image build or Azure run. Evidence under `.copilot-tracking/` (2026-11-04 issue-144-worker-run-loop).
+
 ## [2026-11-04] add | Acceptance register for AC-034 to AC-043 (Refs #134)
 
 * New `journey_acceptance` register in `src/core` records each of AC-034 to AC-043 as partial (named constructed-fixture evidence) or deferred (with reason); none is recorded as passing, and the check blocks missing criteria, reasons or evidence files. Eleven perspective walkthroughs, the store journey test and screen/accessibility evidence stay unmet. Focused tests only; no gate, browser or assistive-technology run. Evidence under `.copilot-tracking/` (2026-11-04 journey-contract-134-r6).
+
 ## [2026-11-04] update | Offline AI-limit evaluator and replay-safe event counter (Refs #146)
 
 * Added `evaluate_ai_limits` and `reconcile_events` to the core monitoring coverage module, with focused tests, and noted them in the [monitoring runbooks](../../infra/monitoring-runbooks.md). Calls, tokens, cost and expiry limits classify as breach, blocked, insufficient or within, never green; cost without a named price source is Unknown; a breach names the owner and the ai-limits runbook entry and holds no suspension authority. Event IDs are counted once per half-open window so restart replays do not double count.
 * Offline constructed fixtures only. No producer, alert, Bicep, live limit, price, appointee or deployment is added, so all four issue criteria and the harm and tokenomics criteria stay unmet. Focused tests, ruff and mypy only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 ai-limit-evaluator-146).
+
 ## [2026-11-04] update | What-if and deployment results shown on the run summary (Refs #138)
 
 * Merged work (PRs 357, 500, 672) already delivers the OIDC jobs, PR what-if, approval-gated deployment, versioned image release and automatic post-deployment checks; all six criteria remain unchecked because none has live Azure, federation or reviewer evidence. This slice makes the sanitized what-if change counts and the post-deployment check names appear in the GitHub job summary of the run, so they are visible from the PR checks and not only in a seven-day artifact. No resource names, deltas, parameters or secret values are written. Unmet: live OIDC federation scoped per environment, an approved live deployment, a real image push and a real post-deployment run. Focused infra tests only; no gate, Azure or Docker run. Evidence under `.copilot-tracking/` (2026-11-04 issue-138-run-summary).
+
 ## [2026-11-04] update | Read-only data protection register route (Refs #121)
 
 * `GET /api/data-protection` exposes the existing register (missing approvals per data class, no reference values, `dpo_reviewed` false) to signed-in staff. No lawful basis, retention period, Article 17(3) position or transfer approval is recorded or invented; the dispatch gate is not wired to model calls and rights requests are not persisted. All four issue criteria stay unmet. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-121-r6).
+
 ## [2026-11-04] update | Chat evaluation blocks actual calls without a finite authorisation (Refs #164)
 
 * `chat_eval.call_authorization` blocks actual-model calls unless a named owner authorisation sets finite call, token and budget limits and an unexpired date; it implies no spend authority. `enablement_decision` reports `actual_calls: blocked`. Offline, constructed fixtures only; no actual call, thresholds, reviewer, held-out set or human exercise exists, so #164 stays open. Evidence under `.copilot-tracking/` (2026-11-04 issue-164-call-authorization).
+
 ## [2026-11-04] update | WCAG baseline: form error identification inventory (Refs #151)
 
 * `wcag-conformance-baseline.md` records a static inventory of the seven `aria-invalid` sites (WCAG 3.3.1, 3.3.3) and narrows gap G-4; `test_accessibility_baseline.py` now fails if a new invalid-field site has no `aria-describedby` message link. Static inspection only: no screen reader, rendered or owner-decision evidence. Target level (O-1), full audit, manual role checks and map/table equivalents (#119) remain unmet.
+
 ## [2026-11-04] update | Plain-language finance and AI review refusals (Refs #153)
 
 * Finance refusals ("already on hold", "Release the hold first") and the AI review changed-source refusal now say "payment paused/restart payment" and state the next step. Stored values, audit names and approval logic are unchanged. Added a lexical test and a dated slice in the [content standard](./research/ux/content-standard.md). Criteria 2, 3 and 5 stay open: other typed server errors, `signoffs.py`, named human wording review and comprehension testing are unclaimed. Evidence is under `.copilot-tracking/` (2026-11-04 issue-153 refusals).
+
 ## [2026-11-04] update | What-if and deployment results shown on the run summary (Refs #138)
 
 * Merged work (PRs 357, 500, 672) already delivers the OIDC jobs, PR what-if, approval-gated deployment, versioned image release and automatic post-deployment checks; all six criteria remain unchecked because none has live Azure, federation or reviewer evidence. This slice makes the sanitized what-if change counts and the post-deployment check names appear in the GitHub job summary of the run, so they are visible from the PR checks and not only in a seven-day artifact. No resource names, deltas, parameters or secret values are written. Unmet: live OIDC federation scoped per environment, an approved live deployment, a real image push and a real post-deployment run. Focused infra tests only; no gate, Azure or Docker run. Evidence under `.copilot-tracking/` (2026-11-04 issue-138-run-summary).
+
 ## [2026-11-04] update | Manifest default queues checked against the real API (Refs #152)
 
 * Added `src/api/tests/test_workbench_live_defaults.py`: for each profile with a default, the real own-queue IDs, count and order, the all-cases scope and declared case endpoints must match `workbench-manifest.json`. Test-only, constructed fixtures. Criterion 1 (owner device decision) and full AC-034/043 stay unmet. Evidence under `.copilot-tracking/` (2026-11-04 issue-152-live-defaults).
+
 ## [2026-11-04] update | Learning-test net-effort comparison helper (Refs #129)
 
 * New `src/core` helper `learning_test_bundles.py` with unit tests: sums the six NFR-009 effort components per arm, reports median and range, applies each bundle's target-zero stop rule, excludes O10 and O18 to O20 and labels saved minutes as capacity. The [protocol](research/ux/journey-learning-test-bundles.md) and the index row now record it. No experiment has run; bundle runs and the atlas-owner mapping stay unmet.
+
 ## [2026-11-04] update | Assistants denial skipped for roles without staff access (Refs #920)
 
 * `/api/me` now reports `services.assistants`; the employee client skips `/api/assistants` for an admin-only account and shows plain words with the ordinary case controls as the manual path. Server 403 unchanged. Chromium check covers the new case; the admin-only landing still logs 403 on `/api/facets` (follow-up). No axe or live re-check. Evidence under `.copilot-tracking/` (2026-11-04 assistants-denial-920).
+
 ## [2026-11-03] feat | CSV exports for staff lists (Refs #80)
 
 * Added CSV exports for staff lists.
+
 ## [2026-11-04] update | Pooled human review sheets flag duplicates (Refs #952)
+
 ## [2026-11-04] update | Pooled human review sheets flag duplicates (Closes #952)
 
 * `pool_human_sessions` now fingerprints each answer sheet, flags identical repeats under `duplicate_sheets` and leaves them out of effort and detection totals. Exact duplicates only; near-duplicates and reviewer authority stay open. Evidence under `.copilot-tracking/` (2026-11-04 fu-952).
@@ -10187,12 +10312,15 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Request-read disconnect body-read test (Refs #953)
 
 * PRs 924 and 990 already deliver the 500/ERROR backend path and the request-read WARNING. This slice adds the missing regression test for a client reset during the POST body read. Unmet: the related #921 was not assessed. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-953 body-read test).
+
 ## [2026-11-04] update | Unresolved stock conflicts feed the exception queue (Refs #135)
 
 * `feed_stock_conflicts` raises a steward-owned `source_conflict` item per unresolved stock query on an open home, with both values, source, date, version, query owner and the original query kept; no winner is picked and eligibility stays Unknown. `raise_conflict` gained an optional `ref` for safe re-reads. Unmet and unchanged: store, API and UI, live wiring, integration and identity-conflict producers, owner-approved roles and runbooks. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-135 r7).
+
 ## [2026-11-04] update | Aftercare concern pack registered as an unreviewed proposal (Refs #133)
 
 * Slice 2 after PR 869: `AftercareRegister.propose_pack` and `review_pack` draft a template concern pack (works with AI unavailable), guard optional AI text for causation, blame and savings, and keep the pack unreviewed until the named owner accepts or rejects it without changing the concern. Task `aftercare-concern-pack` is registered in `ai_registry` as disabled and unapproved. Unmet: criteria 1 to 4 in live flows (no store, API or UI, evaluator role access and DPO position open), criterion 5 beyond register and pack text, and criterion 6 for any model route. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-133 concern pack).
+
 ## [2026-11-04] update | Real-store same-home journey test, #134 slice 3 (Refs #134)
 
 * Merged slices (#872 trace, #1010 AC-034 to AC-043 register) already deliver the trace and register. This slice adds a JSON-store journey test from EPC query to payment-status note with sibling and open-query negative controls, and fixes the trace to count the real `resident_decision_record` action (accepted answers only). Still unmet: eleven perspective walkthrough screens, keyboard and announcement evidence, SQL-store journey, any pass of AC-034 to AC-043. Constructed-fixture evidence, not user validation. Focused tier only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 journey-contract-134-r7).
@@ -10200,9 +10328,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Phase 0 baseline population and wait analysis (Refs #124)
 
 * PR 895 already delivers owner, dictionary and constraint register rules. This slice adds `discovery_flow`: baseline population summary, handover-leg days, waits by named party with unknown or disputed causes kept visible, and return, rejection, repeat-visit and reopen counts. Unmet: a real nominated owner and agreed endpoint, owner-validated dictionary, constraint register with real evidence, and any company finding. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 phase0-flow-124).
+
 ## [2026-11-04] update | Sensor analysis over retained SQL readings, #111 slice 2 (Refs #111)
 
 * Slice 1 (#871) delivered the pure exercise analysis. This slice adds `sensor_analysis_store.analyse_retained` and a read-only `SensorConsumer.home_consent`, so signals derive from retained store rows with trusted consent; an unreadable store gives INSUFFICIENT with no priority effect. No writes, no task creation, no approved rule. Unmet: scheduler or task-queue wiring, rule approval, AC-067 text mirror, R1 to R3 completion. SQLite unit tests only; no SQL Server run, no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-111 r2).
+
 ## [2026-11-04] update | Learning-test run validation and report (Refs #129)
 
 * Extended the net-effort helper in `src/core` with run validation (representative data retention stated false, single O16 owner per run and across runs, with every run in a cross-run check validated and ownerless or invalid O16 claims rejected) and a plain-text report that states a stop before effort figures. Protocol page next-slices updated. Unmet and unchanged: no bundle has been run as an experiment, atlas-owner confirmation of the mapping (O16), DPO retention decision. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-129 slice 3).
@@ -10218,6 +10348,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Unaccepted handoff ageing API route, #83 slice 2 (Refs #83)
 
 * PR 893 delivered core ageing and the exception feed. This slice adds the read-only `GET /api/handoffs/unaccepted` route (staff roles, role-scoped, optional caller-supplied `max_age_hours`, never defaulted) with HTTP tests for scope, bad input, no state change and the role inventory. Unmet: criterion 3 (approved times and out-of-hours routes under OD-09, a screen, automatic escalation, human acceptance). Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-83 r5).
+
 ## [2026-11-04] update | Exposure pause signal read from approved limits file (Refs #99)
 
 * `FinanceMixin.exposure_signal` compares recorded commitments with person-supplied limits (`approved-limits.json` or `ZF_APPROVED_LIMITS`); absent or malformed input is Held. Read-only; no figures invented. AC1 and AC2 of issue 99 remain unmet or partial; store persistence, API and UI are later slices.
@@ -10225,6 +10356,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Exposure signal fails closed on stale or malformed limits (Refs #99)
 
 * Review fixes: limits approved over 366 days ago or dated in the future are Held with a plain reason (`stale_reason`, `MAX_AGE_DAYS`, based on `approved_on`; the file schema records no expiry). Non-UTF-8 files and non-numeric commitment amounts now return Held instead of raising. Tests added; staleness horizon is an engineering default pending owner confirmation.
+
 ## [2026-11-04] update | Resident authority live state check (Refs #521)
 
 * PR 690, 742 and 877 already delivered the source extension and the live 2027-02-01 window. Added a read-only live state record to `infra/README.md`: app Healthy, expiry 2027-01-31T23:59:00Z, no Azure change made. Source cap 2028-01-01 differs from the live window; moving live to it needs a separate owner confirmation.
@@ -10240,9 +10372,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Resident demo plain-language and sign-in fixes (Refs #462)
 
 * Resident showcase copy and sign-in behaviour: plain-language sensor statuses (the out-of-range status now reads "Not shown: this value cannot be displayed" so it does not imply an unsafe value), a slow-start notice after 4 seconds, UK-time sensor history, clearer 320px sign-in, shorter sign-out failure copy, and sign-in validation that names the missing field, links it to the error with `aria-describedby`, moves focus to the first invalid field and clears `aria-invalid` on input. Behavioural Node tests (`src/api/tests/test_resident_demo_script.py`) replace source-text checks. Local focused tier only: sensors and demo browser checks passed against a loopback SQL Server; no gate, no deployment. PR 1044 supersedes PR 1042. The README index entry for #462 is unchanged. Evidence under `.copilot-tracking/` (2026-11-04 resident-demo-journey-462).
+
 ## [2026-11-04] update | Easy Auth empty-body 500s traced to ingress transport (Refs #810)
 
 * PR 883 only localised the fault. With owner approval 2026-11-04 a live A/B on `ca-cutover-test-demo-api` showed ingress transport `Auto` gives about 1 to 3 percent empty-body 500s under concurrency, the app serves 120 of 120 in-container requests, HTTP/1.1 keep-alive on the app does not help, and `Http` gave 0 x 500 in 600 requests across four paths. Live setting changed to `Http`; Bicep pins it. Unmet: internal mechanism (logs unreadable), Bicep deployment, independent review and hosted CI. Updated the research note and index row.
+
 ## [2026-11-04] update | Ranking publication wired to store and API, #79 slice 2 (Refs #79)
 
 * Slice 1 (#896) delivered the pure archive module. This slice adds manager-only `POST /api/ranking/publish` and `GET /api/ranking/publication` (audited, idempotent, read-back verification, overdue flag). Unmet: named policy owner and signed first rule order (human decision), a configured scheduler and a set retention period (deployment and Legal). Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-79-r2).
@@ -10250,9 +10384,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Deployed main to the demo apps; #810 still reproduces (Refs #810, Refs #462)
 
 * Deployed `b0080d4e1` to `ca-cutover-test-demo-api` and `ca-resident-demo` (resource group `ama`, owner-approved); registry restored to private. With transport `Http`, empty-body 500s under concurrency persist at about 2 to 3.5 percent, so #810 stays open. #462 320px sign-in verified; signed-in checks outstanding (shared password is owner-held). See `infra/README.md` and `.copilot-tracking/*/2026-11-04/deploy-main-810-462-*`.
+
 ## [2026-11-04] update | Easy Auth 500 root cause: API HTTP/1.0 close-per-response (Refs #810)
 
 * Sidecar logs showed `ResponseEnded` forwarding to the app; stub A/B and an in-container probe isolated the API's HTTP/1.0 connection close. The handler now speaks HTTP/1.1 keep-alive. The live demo API was verified with 0 empty-body 500s in 2,180 requests through a temporary command override. See the research note and `infra/README.md`. Issue 810 stays `Refs`: the new image is not yet deployed.
+
 ## [2026-11-04] update | Deployed HTTP/1.1 keep-alive image, override removed (Refs #810)
 
 * Built `zava-forward-api:4d56cf609` from main `4d56cf609` and pushed it to the private registry through the owner-allowed short public window (restored and read back: Deny, public disabled, exports disabled, no IP rules). `ca-cutover-test-demo-api` revision `--0000024` runs it with no command/args override. Burst tests through Easy Auth (2,140 requests including 200 unauthenticated 401s) gave 0 empty-body 500s. See `infra/README.md`.
@@ -10265,10 +10401,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Admin-only landing skips case requests (Refs #920)
 
 * Added `services.cases` to `/api/me`; an account without case access sees a plain-language page instead of 403s on `/api/facets` and `/api/cases`. Chromium check asserts no console errors. Issue stays open: other admin-only routes and live evidence are unproven. See `.copilot-tracking/*/2026-11-04-admin-landing-denial-920-*`.
+
 ## [2026-11-04] update | Legal briefing and capstone slide for #224
 
 * Added a briefing for the Legal contact under `research/rai/` with main points, ten recommendations and gaps, plus a one-slide deck in `docs/presentations/`. Read S.I. 2026/82 reg. 5 on 2026-11-04; EUR-Lex retrieval failed again, so the EU position stays unknown.
 * No decision, snapshot, card or rule changed. Criteria 1 and 5 of #224 stay unmet pending the Legal/DPO decision.
+
 ## [2026-11-04] update | Signed-in resident walkthrough and authenticated burst (Refs #462, Refs #810)
 
 * Signed in to `ca-resident-demo` as the synthetic resident test user with Playwright and walked the journey; recorded what works (generic login errors, secure cookies, synthetic labelling, 320px, sign-out) and what is broken or confusing (callback agenda returns 503 although the page invites booking, jargon, unexplained "Contact is paused", empty sensors) in the [prototype profile review](./research/ux/zava-forward-prototype-profile-review.md#signed-in-live-walkthrough-of-the-resident-showcase-2026-11-04-462). Bugs filed as #1053 and #1054.
@@ -10293,6 +10431,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Aftercare intake form definition and register snapshot (Refs #133)
 
 * Documented in `src/core/README.md` the plain-language household intake definition and a checked JSON snapshot restore for the aftercare register. No store, API or UI is wired; criteria 1, 2, 4, 5 and 6 remain unmet or partial, and 3 is proven only at register level. Evidence under `.copilot-tracking/*/2026-11-04-issue-133-intake-snapshot-*.md`.
+
 ## [2026-11-04] update | Sensor status text mirror (Refs #111)
 
 * Added pure `sensor_status_text` in `src/core`: one plain-language status per signal, with the map and accessible list built from the same entries (AC-067 text mirror). No readings, identifiers, diagnosis or priority change; each state names the manual route. Unit-tested only. Unmet: task-queue wiring, rule approval, R1 to R3, SQL Server run. Evidence under `.copilot-tracking/` (2026-11-04 issue-111 r3).
@@ -10312,6 +10451,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Live simulator container slice authored (Refs #184)
 
 * Added the pure `live_readings` generator, the `live_simulator` runner with stdout and in-memory sinks, `src/api/live-simulator.Dockerfile` and an authored, not deployed `infra/live-simulator-job.bicep`, documented with a cost estimate in `src/api/README.md`, `infra/README.md` and a short section in the IoT sensor research plan. Nothing was deployed or sent; devices, certificates, live approval and #110 acceptance of the new message version remain owner or sibling work. No issue is closed.
+
 ## [2026-11-04] update | Retrofit scenarios through the retained sensor store (Refs #190, Refs #193)
 
 * Added `src/core/tests/test_retrofit_scenarios_retained_store.py`, which ingests the four labelled retrofit exercise scenarios through `SensorConsumer` and reads them back with `analyse_retained` (#111). Test-only, exercise values, focused tests only. #190 criterion 1 and #193 criterion 3 stay unticked pending independent review. RPI evidence is under `.copilot-tracking/*/2026-11-04-issue-190-retained-store-*`.
@@ -10319,21 +10459,27 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Receipts for validation-refused unstored chat asks (Refs #159)
 
 * `ChatPanel.ask_unstored` now records one `chat.turn.unstored` receipt (0 model calls, no question text) when validation or the case lookup refuses a turn. Still unmet on #159: the named screen-reader test (criterion 6) and the 401 and route-validation receipts (tokenomics criterion). Evidence: `.copilot-tracking/*/2026-11-04/issue-159-validation-receipts-*`.
+
 ## [2026-11-04] update | WCAG 2.4.11 and 2.5.7 slice recorded (Refs #151)
 
 * Added `scroll-padding-block-end` so the fixed chat launcher cannot hide a focused control, two static tests, and a baseline audit row for 2.4.11 and 2.5.7. Rendered, screen-reader and owner-decision criteria remain unmet; no conformance claim.
+
 ## [2026-11-04] update | Per-assistant usage attribution in the consumption report (Refs #107)
 
 * Added `by_capability` to `Consumption.report` and a note in `src/core/README.md`. Tokenomics criterion 2 of #107 stays unmet: constructed ledger evidence only, no real accepted-output usage. No knowledge-base page changed.
+
 ## [2026-11-04] update | Saved held form export freshness check (Refs #96)
 
 * Added `form_export.export_freshness` in `src/core` (documented in `src/core/README.md`): a read-only check that a saved held export is Current, Stale for only the dependent fields, Invalid or Unavailable. Criteria 1, 5 and 6 of #96 remain unmet (approved template and rules, reviewed export, rule and approval propagation). Evidence: `.copilot-tracking/*/2026-11-04/issue-96-r2-export-freshness-*`.
+
 ## [2026-11-04] update | Held-out gate fails closed on an empty set (Refs #164)
 
 * `chat_heldout.run_heldout` and `freeze_problems` now report "no scenarios in the held-out set" and return `insufficient` instead of `pass` for a digest-matching empty set; `_shingles` treats texts shorter than six words as one shingle. Offline, scripted harness only; no held-out set, reviewer or actual-model evidence exists, so #164 stays open.
+
 ## [2026-11-04] update | Name the changed fields on stale form manifests (Refs #98)
 
 * `form_review.view` `diagnostic_freshness` now lists `changed_fields`, the fields whose reviewed value or state differ from each saved manifest, so only those need re-review. Documented in `src/core/README.md`. Core only; criteria 2 (approved rules) and 3 (reviewed pack) remain unmet and need Finance/template owner authority. No issue is closed.
+
 ## [2026-11-04] update | Issue 193 consumer evidence correction (Refs #193)
 
 * Corrected the IoT sensor research plan: production #111 and #133 modules exist and #996/#1032 tests drive the retrofit exercise scenarios through them, so the 2026-11-03 "do not exist" note is superseded. Criterion 3 is evidenced for test use only; the residual gap is no before and after delta consumption. Nothing ticked or closed.
@@ -10341,6 +10487,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 121 model dispatch gate wired into the AI transport (Refs #121)
 
 * Wired `data_protection.dispatch_hold` into `ai.Ai.run`, `look_at` and `_request`, driven by `ZF_DATA_PROCESSING` (constructed by default; anything else fails closed). Documented in `src/core/README.md`; behavioural tests in `test_data_protection.py`. No approval, retention period or legal conclusion is recorded and no criterion is ticked. Rights log still unpersisted.
+
 ## [2026-11-04] update | Live sensors seed and signed-in re-walk (Refs #1072, Refs #462)
 
 * Owner-approved one-off in-VNet job seeded 713 synthetic sensor readings for the test resident's home only (per-case `home.stock_id`), and re-applied the resident view with the `COALESCE` binding. Signed-in 390 px re-walk shows temperature, humidity and the 24-hour forecast. Method in `infra/README.md`, result in the prototype profile review. SQL stayed private, spec restored.
@@ -10348,9 +10495,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Booking evidence gate CI fix and refusal test (Refs #82)
 
 * Typed `Store._evidence_missing` to clear the mypy `no-untyped-call` failures in `test_gates.py`, and added a behavioural test that `require_booking_gates` refuses booking when evidence is missing or malformed. Documented in `src/core/README.md`. No behaviour change; no issue criteria ticked or closed.
+
 ## [2026-11-04] update | Issue 119 status record (Refs #119)
 
 * Added a dated status record to the map tile provider options page. Both acceptance criteria remain unmet and need human, legal and procurement steps. Nothing ticked or closed.
+
 ## [2026-11-04] update | Issue 83 remaining criterion blocked on OD-09 (Refs #83)
 
 * Rechecked merged PRs 311, 893 and 1036: criteria 1 and 2 are delivered, and core ageing plus the read-only unaccepted-handoff route exist. Criterion 3 stays unmet because the Housing and repairs leads have not approved response times and out-of-hours routes (OD-09). No limit was defaulted and nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-83 r6).
@@ -10362,9 +10511,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 220 criterion 5 status record (Refs #220)
 
 * Recorded in `src/core/README.md` which #220 criteria are delivered (1 to 4) and that criterion 5 awaits human acceptance, live hazard-response measurement and an owner-approved follow-up age limit. Nothing ticked or closed.
+
 ## [2026-11-04] update | Issue 223 status record (Refs #223)
 
 * Rechecked merged PRs 428, 638, 701, 817, 855, 941 and 974: the scripted gate, reviewer-authority enforcement and manual human-session intake exist and their focused tests, ruff and mypy pass. All five criteria stay unmet as human evidence because OQ-017 holders are unappointed and no competent reviewer has run the test. Docs-only record in `src/agents/README.md`; nothing ticked or closed.
+
 ## [2026-11-04] update | Issue 954 photo flag refresh: only the browser check remains (Refs #954)
 
 * Rechecked merged PRs 929 and 993: the flag re-check without reload is delivered and tested. The quiet 503/403 criterion is proven only in the node harness. A real-browser console check on an Entra-signed-in session remains a human step. Nothing ticked or closed.
@@ -10376,9 +10527,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 222 status record (Refs #222)
 
 * Added a dated status record to the cohort evaluation review pack. Merged PRs 636, 697, 821, 939 and 975 cover criteria 1 to 5; criterion 6 (OQ-018 owner and DPO approval) stays unmet and needs human steps. Nothing ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-222 r4).
+
 ## [2026-11-04] update | Issue 221 criteria 5 and 6 still human-gated (Refs #221)
 
 * Rechecked merged PRs 419, 504, 643, 830, 940, 956 and 973: criteria 1-4 are delivered, and the drill protocol and blank record are now on main. Criterion 5 stays unmet until the actual RULE-024/OD-35 restart authority is appointed. Criterion 6 stays unmet until a human-witnessed drill and corrective-test acceptance are recorded. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-221 r3).
+
 ## [2026-11-04] update | Issue 225 finance screens status (Refs #225)
 
 * Rechecked merged PRs 657, 785, 862, 937 and 978: the invoice, funding, field draft and AI economics criteria are delivered as engineering evidence. The WCAG 2.2 criterion stays unmet pending assistive-technology testing and human review (#151, #155). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-225 r1).
@@ -10386,36 +10539,47 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Admin-only case-data routes stay quiet (Refs #920)
 
 * The employee client now shows the plain-language "No case work for this account" page on all case-data routes for accounts without case access, instead of requesting data that returns 403. Chromium check covers 11 routes with no case-data requests, 4xx responses or console errors. Server authorisation unchanged. Evidence under `.copilot-tracking/` (2026-11-04 admin-routes-denial-920).
+
 ## [2026-11-04] update | Issue 217 status record, only human steps remain (Refs #217)
 
 * Merged PRs already deliver every code-level slice for #217. The DPIA draft now lists the remaining criteria with the person who must act (DPO, Entra administrator, Legal). Nothing is ticked and no approval is implied. Docs-only; no tests run. Evidence under `.copilot-tracking/` (2026-11-04 issue-217 r1).
+
 ## [2026-11-04] update | Issue 216 regulatory evaluation gates status (Refs #216)
 
 * Rechecked merged PRs 355, 506, 632, 684, 834, 890 and 963 and re-ran the focused gate tests (18 OK). Nothing was ticked or closed. Unmet and needing owner decisions: criterion 1 (owner thresholds, independent grader), criterion 4 (staff paired trial), AI cost per accepted check (Unknown) and any owner-authorised live run. Cards ship alone until then. Docs-only record; no source change.
+
 ## [2026-11-04] update | Issue 226 asset and board screen status (Refs #226)
 
 * Rechecked merged PRs 639, 710, 771, 800, 823, 870 and 960: criteria 1 to 3, 5 and the AI economics criterion are delivered as engineering evidence. The WCAG 2.2 criterion stays unmet pending assistive-technology testing and human review (#151, #155). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-226 r1).
+
 ## [2026-11-04] update | Issue 227 status record (Refs #227)
 
 * Added a dated status record to the safety journey page. Merged PRs 653, 776, 806, 831, 866, 934 and 962 cover criteria 1 to 4 and 6; criterion 5 (WCAG 2.2 baseline, assistive-technology and user testing under #151 and #155) stays unmet and needs human steps. Nothing ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-227 r5).
+
 ## [2026-11-04] update | Issue 230 programme screens status (Refs #230)
 
 * Rechecked merged PRs 662, 781, 818, 854, 931 and 969: criteria 1, 2, 3 and 5 are delivered as engineering evidence. Criterion 4 (WCAG 2.2, assistive-technology testing) stays unmet pending human review (#151, #155). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-230 r1).
+
 ## [2026-11-04] update | Issue 228 status record (Refs #228)
 
 * Added a dated delivery status record to the suppliers customer journey page. Merged PRs 655, 782, 820, 867, 930 and 967 cover criteria 1, 2, 4 and 6 as engineering evidence. Criterion 3 (OD-47 and supplier-scoped access) and criterion 5 (human and assistive-technology WCAG acceptance) stay unmet. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-228 r5).
+
 ## [2026-11-04] update | Issue 143 private networking and edge status (Refs #143)
 
 * Rechecked merged PRs 278, 352, 614 and 675: private-endpoint and DNS coverage, the Front Door Premium and WAF module and the production-profile public-access guard are delivered as engineering evidence. Criterion 3 (custom domain, TLS and Entra callbacks managed consistently) stays unmet pending the owner decision on the pilot domain and edge go/no-go, and live Entra reconciliation. Criterion 5 (production-profile deployment evidence) stays unmet and needs an owner with live Azure access. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-143 r2).
+
 ## [2026-11-04] update | Issue 231 technical and quality screens status (Refs #231)
 
 * Rechecked merged PRs 656, 769, 807, 828, 886 and 971: criteria 1-3 and 5 are delivered as engineering evidence. The WCAG 2.2 criterion stays unmet pending assistive-technology testing and human review (#151, #155). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-231 r1).
+
 ## [2026-11-04] update | Issue 140 IoT Hub module status (Refs #140)
 
 * Rechecked merged PRs 273, 498, 557, 910 and the README IoT Hub section: the module, tier/retention/cost, keyless receiver role, private network and diagnostics criteria are delivered as engineering evidence. Device provisioning approach (individual identities, DPS deferred) and an exercise owner are recorded; the operational credential-owner appointment and issue/rotate evidence (#185) remain unmet and need the owner. ADR 0003 and OD-43 stay open. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-140 r1).
+
 ## [2026-11-04] update | Issue 229 data screens status (Refs #229)
 
 * Rechecked merged PRs 654, 779, 819, 853, 932 and 968: criteria 1, 2, 3 and 5 are delivered as engineering evidence. The WCAG 2.2 criterion stays unmet pending assistive-technology testing and human review (#151, #155). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-229 r1).
+
 ## [2026-11-04] update | Issue 193 status record (Refs #193)
 
 * Rechecked merged PRs 505, 588, 700, 996, 1032 and 1082 and open PR 1087. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: tests drive the scenarios through production #111 and #133 code, but no consumer reads retrofit deltas, and R3 limits and owner tick or deferral are outstanding. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-193 r7).
@@ -10423,12 +10587,15 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 144 queue adapter slice (Refs #144)
 
 * Added a stdlib Azure Queue adapter for the agents `TaskQueue` port with poison-queue handling, tested with a scripted transport only. Criteria 1 to 5 stay unmet or partial; `serve` still refuses to start until the API post-back and token source exist. Evidence under `.copilot-tracking/` (2026-11-04 issue-144 queue adapter).
+
 ## [2026-11-04] update | Issue 146 monitoring declaration check (Refs #146)
 
 * Added an offline `check_monitoring_declaration` to the monitoring coverage module and noted it in `infra/monitoring-runbooks.md`. It reports Blocked or Declared per task release, never green, and shows owners and manual-route status for disabled tasks. All four issue criteria and the unmet RAI and tokenomics criteria stay unmet; nothing was ticked. Evidence under `.copilot-tracking/` (2026-11-04 monitoring-declaration-146).
+
 ## [2026-11-04] update | Issue 126 release decisions carry AI economics (Refs #126)
 
 * Phase and tranche release decisions now require the AI economics report reference and any AI limit breach; a Release with a breach needs the approvers' decision. Tokenomics criterion 3 is engineering-delivered with synthetic fixtures only. Nothing was ticked or closed; protocol, DPIA, lawful basis, OD-51 and RAI closure criteria remain unmet. Evidence under `.copilot-tracking/` (2026-11-04 issue-126 r2).
+
 ## [2026-11-04] update | Issue 233 choice before offered capacity (Refs #233)
 
 * Added a "Choice comes before offered capacity" text panel to the per-home `resident-choice` screen and recorded it in `research/ux/atlas-screen-trace.md`. Tested by a node render of the per-home screen (panel order within that screen, native paragraph, no capacity wording before the choice panels) plus source-level checks; browser rendering, same-home walk, WCAG 2.2 rendered evidence and user validation stay unmet.
@@ -10436,6 +10603,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 176 status record (Refs #176)
 
 * Rechecked merged PRs 237, 257, 309, 368, 633, 703, 843 and 1052. All available generators replay byte for byte; criteria 1 and 2 stay unmet only because the original private stock register generator and pinned inputs are absent. Added a status record to the retrofit synthetic data README.
+
 ## [2026-11-04] update | Second design traceability delta (Refs #156)
 
 * Added a second dated delta to the
@@ -10447,18 +10615,23 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   designs, blocked). Criterion 1 stays unmet: only human steps remain (supplied
   versioned designs, named design review, assistive-technology, content and user
   evidence). Evidence is under `.copilot-tracking/` (2026-11-04 issue-156 delta).
+
 ## [2026-11-04] update | Issue 145 status record (Refs #145)
 
 * Rechecked merged PR 673: criteria 1 (SQL tier, auto-pause and redundancy parameters, pilot recorded) and 3 (RTO and RPO undecided with owners) are delivered. Criterion 2 (PITR and ledger result) stays unmet: no authorised disposable Azure database. Criterion 4 stays unmet pending the approved #121 retention decisions. All RAI restore and erasure criteria stay unmet: they need the authorised drill, DPO and record-owner approval and independent witnesses; SQLite regressions are lower-tier evidence. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-145 record).
+
 ## [2026-11-04] update | Issue 154 status record (Refs #154)
 
 * Rechecked merged PRs 501, 652, 664 and 712 and the resident preview tests. Criteria 1 and 4 are delivered. Criteria 2, 3 and 5 stay unmet: actual service availability and assistive-technology acceptance, resident-session enforcement of representative views, and usability validation (#155 scripts not run). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-154 r1).
+
 ## [2026-11-04] update | Issue 185 status record (Refs #185)
 
 * Rechecked merged PRs 647 and 849 and the transport PRs 498 and 508. Criterion 2 is delivered. Criteria 1, 3 and 4 stay unmet: owner confirmation of credential ownership is not recorded, and live Key Vault issuance and live teardown are proven only against fakes. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-185 r3).
+
 ## [2026-11-04] update | Issue 188 status record (Refs #188)
 
 * Rechecked merged PRs 587, 645, 698, 791, 847 and 889. Local handover model, operator verifier and demo are delivered, but all three criteria stay unmet: each needs a live Hub to Azure SQL run, blocked on the #110 owner decisions and Azure access. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-188 r8).
+
 ## [2026-11-04] update | Issue 189 status record (Refs #189)
 
 * Rechecked merged PRs 508, 637, 707, 845 and 1092. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: owner, time limit and alert reference are enforced offline, but a live Azure budget alert and notification are not verified (#146, human/Azure step). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-189 r2).
@@ -10466,9 +10639,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 149 UX epic status (Refs #149)
 
 * Rechecked merged child PRs: only #150 is closed (1/16). All four epic criteria stay unmet: #440 stabilization triage, child acceptance, recorded human accessibility/content/usability results, and full design traceability. Remaining steps need owner decisions and named human testers. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-149 r1).
+
 ## [2026-11-04] update | Issue 148 status record (Refs #148)
 
 * Rechecked merged PRs 511 and 672: criteria 1 to 3 are delivered against a fake az. Criterion 4 stays unmet: dry-run exists but no disposable Azure rebuild or teardown run has been done or authorised; workload-sql and model stages remain operator-gated. Corrected a stale "no Azure adapter" line in the orchestrator README. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-148 r1).
+
 ## [2026-11-04] update | Issue 155 usability programme status (Refs #155)
 
 * Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
@@ -10480,33 +10655,43 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Aftercare sensor context guard (Refs #133)
 
 * Added `add_sensor_context` and a neutral-text guard on sensor context to the aftercare register; README note updated. Criteria 1, 2, 4 and 6 stay unmet in full, 3 and 5 only partly evidenced (register level). Evidence under `.copilot-tracking/` (2026-11-04 issue-133 sensor-context).
+
 ## [2026-11-04] update | Issue 125 drafting guard slice (Refs #125)
 
 * Added `discovery_assistant_drafting` to `src/core` (deterministic stage durations, draft-only narrative checked against calculated figures, deterministic fallback when no model is available) and a README section. Criteria 1 to 3 stay unmet and need human or deployment evidence. Evidence under `.copilot-tracking/` (issue-125-r6).
+
 ## [2026-11-04] update | Epic 136 resource coverage register (Refs #136)
 
 * Added a resource coverage register to infra/README.md: each architecture resource is in Bicep or recorded as manual or deferred with the owner. Criterion 2 is recorded but not machine-checked; criteria 1, 3, 4 and 5 stay unmet (stabilization checkpoint #440, nine open children, no from-empty rerun since 2026-10-12, epic status not refreshed).
+
 ## [2026-11-04] update | Issue 137 environment strategy status (Refs #137)
 
 * Rechecked merged PRs 306, 346 and 415. Criteria 1, 2, 3 and 5 are delivered. Criterion 4 stays unmet: region and capacity are parameters with fail-closed guards, but no authenticated live region and quota check exists (SQL and model usage, IoT quota, ACA zone evidence and subscription binding are unknown; owner and Azure step). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-137 r1).
+
 ## [2026-11-04] update | Issue 124 Phase 0 discovery status (Refs #124)
 
 * Rechecked merged PRs 895 and 1030: they delivered synthetic rules and analysis only. All four criteria stay unmet or label-only and need human steps (sponsor nomination, owner validation, approved extract). Nothing was ticked or closed. Added a status section to the [discovery brief](../brds/retrofit-flow-discovery-brief.md). Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-124 r3).
+
 ## [2026-11-04] update | Issue 114 Azure SQL store status (Refs #114)
 
 * Rechecked merged PRs 262, 403 and 908. They delivered offline per-year digests, a hardened load-check evidence contract and fail-closed digest verification, proven on SQLite only. All three criteria stay unmet: annual ledger reliance on Azure SQL, measured Azure load, latency and cost, and a witnessed DH-005 restore and deletion drill all need Azure or human steps. Nothing was ticked or closed. Docs-only record in the parity matrix; evidence under `.copilot-tracking/` (2026-11-04 issue-114 r1).
+
 ## [2026-11-04] update | Issue 115 status record (Refs #115)
 
 * Rechecked merged PRs 268, 404 and 916. Offline publication, verification, anchor checks and the read-only reconcile are delivered, but both criteria stay unmet: no owner-approved irreversible retention lock (exercise stays unlocked by the 2026-10-15 decision) and no hosted scheduled verification, alert delivery or recovery evidence (human/Azure steps). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-115 r2).
+
 ## [2026-11-04] update | Issue 118 hardened deployment status (Refs #118)
 
 * Rechecked merged PRs 347 and 614. Criteria 1 to 4 are delivered. Criterion 5 stays unmet: Policy is audit-only and Defender plans are defined but not activated; cost approval is pending in `infra/defender-decision.json` (owner decision, no Azure or code step). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-118 r1).
+
 ## [2026-11-04] update | Issue 123 epic status record (Refs #123)
 
 * Rechecked merged PRs 894, 895, 899, 901, 905, 1015 and the 928 checkpoint. The 928 record listed 894, 895, 901 and 905 as open; they are now merged, delivering offline readiness, register, ownership-routing and AI cost-line code for #125, #124, #128 and #126. Both epic criteria stay unmet: #440 is still open (finding triage and independent review artifacts unchecked) and children 124, 125, 126, 128, 129 remain open, needing owner nominations, DPIA and lawful basis, human accessibility and research sessions, and Atlas owner confirmation. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-123 status record).
+
 ## [2026-11-04] update | Issue 132 intake decision proposal (Refs #132)
 
 * Rechecked merged PRs 873 and 1080: core rules and a staff-only read-only job-pack route are delivered. Added proposed ADR 0007 recommending staff-mediated intake over a provider portal, with the identity approach. It is not accepted, so criterion 6 stays unmet, and criteria 2 to 5 stay unmet (no persistence, write routes or screen). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-132 r3).
+
 ## [2026-11-04] update | Issue 138 status record (Refs #138)
 
 * Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
@@ -10518,12 +10703,15 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 128 paired-cohort priority check (Refs #128)
 
 * Rechecked merged PR 901 (register and routing) and the ranking cohort work. Added `paired_equity` in `src/core`: constructed pairs differing in sensor completeness, support or contact need, or appointment history must not rank lower or change rank through review routing; per-dimension counts, seeded-defect detection, no averaging. Deterministic policy only; not fairness evidence. All #128 criteria stay unmet (no keyboard or screen reader run, no staffed review, no agreed protocol, no independently approved pair labels, no AI task cohorts). Updated the test plan page and index; evidence under `.copilot-tracking/` (2026-11-04 issue-128 r2).
+
 ## [2026-11-04] update | Issue 107 status record (Refs #107)
 
 * Rechecked merged PRs 287, 293, 301, 863, 913 and 915 and open PR 1095. Quarantine and suspension on an unexpected serving model and independent-connection revocation are already tested locally. Unmet: RAI release record approvals (OQ-017), authoritative serving-version attestation, Azure SQL race evidence and delivered-build evidence, plus Tokenomics usage attribution until PR 1095 merges. These need human, Azure or legal steps; no code change.
+
 ## [2026-11-04] update | Finance queue shows the exposure pause signal (Refs #99)
 
 * The Finance queue now shows the read-only `GET /api/finance/exposure` signal with a manual-check message when it is unavailable; it offers no approve, resume or accelerate control. Criteria 1 and 2 of issue 99 stay unmet: no Board-approved envelope or tolerances exist (human step) and no actual breach control is evidenced. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-99 exposure screen).
+
 ## [2026-11-04] update | Candidate comparison bound to the held-out freeze (Refs #108)
 
 * `compare_candidates` accepts an optional freeze manifest, reports `held_out.status`, and compares only on the frozen held-out case ids. Offline grader and synthetic tests only; no held-out data, live calls, regional model/quota confirmation or Finance validation. Criteria for model/quota confirmation, held-out freeze evidence and human/Azure evidence stay unmet. Evidence under `.copilot-tracking/` (2026-11-04 issue-108-r2).
@@ -10531,6 +10719,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 96 status record (Refs #96)
 
 * Rechecked merged PRs 377, 510, 888, 902 and 1083 and open PR 1093. Criteria 2, 3 and 4 stay met. The inherited review defects RV-001 and RV-002 are fixed in current code and covered by tests (original review left unchanged). Criteria 1, 5 and 6 stay unmet: they need an approved template, rules and reviewer authority from the Finance/template owner, so no reviewed export or rule/approval stale propagation can be built. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-96 r3).
+
 ## [2026-11-04] update | Epic 93 status record (Refs #93)
 
 * Rechecked merged PRs for #93 and its children. Code-level slices are delivered; the Finance journey page now lists unmet criteria (stabilization checkpoint #440, open children #96 and #99) and the human owners. Nothing is ticked. Docs-only; no tests run. Evidence under `.copilot-tracking/` (2026-11-04 issue-93 r1).
@@ -10538,18 +10727,23 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 159 status record (Refs #159)
 
 * Rechecked merged PRs 305, 307, 556, 661, 840, 1003 and 927 and open PR 1085 (validation-refused unstored asks; its rubric activation check failed and it needs review). Criteria 1 to 5 stay ticked. Criterion 6 stays unmet: no named human screen-reader and announcement run. The tokenomics criterion stays unmet: 401 without an actor and route-level key validation record no receipt, and cost is Unknown while OD-51 is open. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-159 status record).
+
 ## [2026-11-04] update | Issue 142 status record (Refs #142)
 
 * Rechecked merged PRs 265 and 681. The inventory, expiry windows, rotation ordering model, access review generator and status check are delivered and tested offline. Criteria 1 to 3 stay unmet: they need named owners, a live no-downtime rotation exercise, an executed signed access review with a schedule, and alert evaluation confirmed in Azure Monitor (human/Azure steps owned by the owner). Criterion 4 was already ticked. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-142 r2).
+
 ## [2026-11-04] update | Issue 79 status record (Refs #79)
 
 * Rechecked merged PRs 896, 1039, 1047 and 1096. Archive, manager publish and verify endpoints and sign-off status derivation exist, but criteria 3 and 4 stay unmet: no owner named and the rule order is an unsigned draft (human decision); no scheduler configured, no retention period set (Azure and Legal steps). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-79 r3).
+
 ## [2026-11-04] update | Issue 107 status record (Refs #107)
 
 * Rechecked merged PRs 287, 293, 301, 863, 913 and 915 and open PR 1095. Quarantine and suspension on an unexpected serving model and independent-connection revocation are already tested locally. Unmet: RAI release record approvals (OQ-017), authoritative serving-version attestation, Azure SQL race evidence and delivered-build evidence, plus Tokenomics usage attribution until PR 1095 merges. These need human, Azure or legal steps; no code change.
+
 ## [2026-11-04] update | Issue 98 status record (Refs #98)
 
 * Rechecked merged PRs 377, 424, 510, 888 and 1083. Criteria 1 and 4 stay ticked. Criteria 2 and 3 stay unmet: validation is structural and draft-only, and only Held diagnostic exports exist, because approved rules and an approved template need human Finance authority (FD-01 to FD-14; #96, #97). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-98 r2).
+
 ## [2026-11-04] update | Issue 110 status record (Refs #110)
 
 * Rechecked merged PRs 411, 508 and 910. Criteria 2 to 5 stay ticked. Criterion 1 stays unmet: offline per-device identity, schema version and stable reading ID code and tests exist, but no real distinct Hub identities were issued and no live stream was observed (tier, sizing, cost, network and device credential owner decisions; #140; human/Azure steps). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-110 r2).
@@ -10557,12 +10751,15 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 151 table headers and captions (Refs #151)
 
 * Audited every script-built workbench table in `src/api`: added captions and `scope="col"` to the funding queue, resident decisions, finance queue, contractors, team workload and sign-off tables, guarded by a static test, and updated the Tables row of `docs/reference/research/ux/wcag-conformance-baseline.md`. Criteria 1, 2, 4 and 5 stay unmet (owner level decision, full audit, human assistive-technology checks); nothing ticked or closed. Evidence under `.copilot-tracking/` (2026-11-04 issue-151 table-headers).
+
 ## [2026-11-04] update | Plain-language consultation and restart check wording, slice 3 (Refs #153)
 
 * Reworded the procurement consultation refusal and check reason and the gates.py restart checks from "release this hold" to "clear this stop" or "restart this stopped work", with a next action for Legal; added a lexical test and a dated paragraph in the [content standard](./research/ux/content-standard.md). Consultation status stays unknown; no approval or authority rule changed. Criteria 2, 3 and 5 remain unmet; named human review not run. Evidence under `.copilot-tracking/` (2026-11-04 issue-153 consultation gate wording).
+
 ## [2026-11-04] update | Issue 121 status record (Refs #121)
 
 * Rechecked merged PRs 919 and 1013 and open PR 1106. The register, dispatch gate, rights clock and read-only route are delivered offline, but all criteria except the constructed-fixture tick stay unmet: each needs a DPO or Legal decision, an approved transfer position, or a persisted rights log (SQL-sensitive, stacked after 1106). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-121 r4).
+
 ## [2026-11-04] update | Issue 92 status record (Refs #92)
 
 * Rechecked merged PRs 389, 900 and 1090: supplied four-state consultation records, a read-only letting and renewal gate and a held workflow entry are delivered. Both criteria stay unmet: no Legal-verified consultation status exists (authority stays Unverified), and no genuine let or renew transition exists for an unknown status to block (owner, Legal and Procurement decisions; provider package record dependency). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-92 r3).
@@ -10574,6 +10771,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-05] update | Issue 96 dependency stale propagation (Refs #96)
 
 * Core `forms.schema_impact`, `form_review.proposal_freshness`, `dependency_impact` and export/manifest freshness now stale only the fields, staged proposals and approval references that depend on a source or schema change, and report malformed or missing lineage as Unknown or Review required. Read-only; no approval, schema approval, reviewed export or AI use. The 2026-11-04 r5 "no slice" record is kept as dated evidence and rejected for this sub-criterion only. Criteria 1 and 5 and whole-issue completion stay unmet. Evidence under `.copilot-tracking/` (2026-11-05 issue-96-r6-dependency-invalidation).
+
 ## [2026-11-05] update | Backlog sync preserves confirmed active delivery (Refs #1207)
 
 * `tools/backlog-sync.py` gained `--active N,N|none`, a validated list of open issues with a coordinator-confirmed live RPI session or frozen unpublished candidate; they are kept or proposed In Progress even when earlier merged PRs exist and no PR is open.
@@ -10604,6 +10802,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Appended a dated continuation under the seventh checkpoint in the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#seventh-stabilization-checkpoint-current-main-ui-and-cache-recovery-2026-11-05-refs-440-96). On a clean detached exact-main auxiliary at `bb3a3b03`, the real-producer bytecode regression passed (exit 0) and the unchanged case-journey browser check passed (exit 0; 407 PASS, 0 FAIL, 320x800 summary bottom 1592.4 against the unchanged 1600 bound), both under one non-blocking hold of the heavy lock. The earlier unrun record is unchanged.
 * Focused observation only: not a full receipt, not #96 feature acceptance, not C7 or C8. No defect confirmed; no issue closed or ticked.
+
 ## [2026-11-02] query | Prospective whitepaper replication choices
 
 * Revised the [paper protocol](../capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex)
@@ -10677,6 +10876,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   inherited inputenc compatibility warning remains. Exact-head assessment,
   focused repository gate and hosted checks follow the committed candidate
   and are reported separately with the replacement PR.
+
 ## [2026-11-05] update | Local gate installs the API bytecode policy before API discovery (Refs #1215)
 
 * Diagnosis of the retained failed full receipt for issue 96 (head 38dc133f, base c6d5a8f3): the 68 core, agents and api `*.pyc` files in its snapshot were written within 0.34 s at 10:23:53Z during the project-api `unittest discover` run. The producer is the design-system harness server (`checks/design_system_browser_check.py`, reached from `test_chat_widget_layout`), whose child environment keeps only `PATH`, `HOME`, `LANG` and `PYTHONPATH` and so drops the runner's no-bytecode flags. The API-venv `.pth` bytecode policy was written only later, in the browser group. The logo-0600 snapshot held copies of the same files and is not a second producer. Which exact server process wrote the files is inferred from code, ordering and timing; the failed run kept no process trace.
@@ -10691,6 +10891,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Qualifies the 2026-10-18 shared observation contract synthesis: the consumer validates two separately closed input branches selected by `schema_version`, the 13-field indoor `sensor-fault-input-v1` and the 16-field synthetic-weather `live-sim-reading-v1`. Added a dated current-use note before the preserved historical section and aligned `src/core/README.md`, `src/api/README.md` and the index. Historical measurements and the section anchor are unchanged.
 * Weather and sunlight originals stay in the lossless retained envelope witness, not indoor observed series. No authenticated provenance, indoor calibration, statistical, live or approval claim; distinct seeds do not authenticate generator provenance; no criterion changes. Documentation only; fresh FULL on the resulting head is separate. Evidence under `.copilot-tracking/*/2026-11-06-doc-dual-schema-188-*`.
+
 ## [2026-11-05] update | Integrated parent topic preparation checkpoint (Refs #123 #440 #128)
 
 * Appended an eighth stabilization checkpoint to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128) recording the ordinary merge of remote parent `63dd5798` and fresh main `bb3a3b03` into the local parent topic (merge commit `6703b0b1`), the covered #1211, #1212, #1213 and #1221 children, document-qualified BRD, PRD and ADR identities, the final fresh-main-relative scope (39 files, bounded metric tooling, tests and documentation, not documentation only) and a FOCUSED tier recommendation pending coordinator admission.
@@ -10787,6 +10988,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Appended a [retained-evidence verification](../architecture/cutover-evidence-pack.md#retained-evidence-verification-of-the-sixteenth-checkpoint-2026-11-06-refs-440-184-185-188) that qualifies the sixteenth checkpoint with figures read from the child r20 receipt (sha256 `e5751469...`, head `6887377`, 205 commands, 192 exit 0 and 13 exit 1), the maintained SQL log (285 tests, one declared skip), the separate 68-test supplement and the image scans (42 instances per image, 17 unique IDs, fixable 0, not security-clean).
 * No new defect, issue or runtime run. CONTINUE independent lanes; HOLD closure of #184, #185 and #188. Live, credential, consent, calibration, validity and approval items stay unproven. Earlier records are unchanged. Local candidate pending coordinator reassessment.
+
 ## [2026-11-05] update | Rendered Chromium check of the #233 atlas tensions (Refs #233, Refs #149)
 
 * Adds `src/api/checks/atlas_tensions_browser_check.py` and documents it in `src/api/README.md`. One synthetic home is opened on Programme queue, Resident choice and Package queue through the real `/app`; the check asserts rendered "Not shown for this role" panels with same-home context, choice and withdrawal panels before "Choice comes before offered capacity", the explanation before the capacity table and package rows in reference order against a different delivered order and conflicting headroom, offered and use. No application, CSS, policy or data change.
@@ -10796,16 +10998,19 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-05] update | Index row for the #233 rendered tension check (Refs #233, Refs #149)
 
 * `docs/reference/README.md` row for #233 now names the bounded Chromium tension-sequence check and keeps its engineering-only boundary. No other knowledge base change.
+
 ## [2026-11-06] update | Document-control retention and hold refusal wording (Refs #153)
 
 * Reworded the two refusals in `approve_retention_deletion` (`doc_controls.py`): the legal-hold refusal now explains the hold, says nothing was deleted and keeps the existing "real hold needs the Legal delegate's decision" label; the not-due refusal explains the retention start date and demonstration periods. Message text only; types, predicates, audit events and deletion behaviour are unchanged.
 * Open decision recorded in the content standard: who decides a real hold has ended is not evidenced, so the copy only says a programme manager can record the release. `resident_decisions.py` keeps its old wording (out of scope).
 * Behaviour regression in `test_document_controls.py` and lexical guard in `test_content_standard.py`. No resident comprehension or named human approval is claimed; criteria stay unmet.
+
 ## [2026-11-07] update | Chat demo disclaimer stays visible; demo gates tested (Refs #891)
 
 * The employee chat panel now renders the demo disclaimer as its own bordered, non-shrinking note above the scrollable introduction. A real-browser run showed the previous placement was clipped to about 30 px at a 720 px viewport. The employee chat browser check proves visibility, `role=note`, the `aria-describedby` link, the model-generated label and axe WCAG 2.2 AA with reduced motion.
 * `src/api/tests/test_chat_panel.py` adds a regression that suspension, missing privacy references, retention and the one-call cap still hold with the demo switch on. Updated [the demo activation record](./research/chat-demo-storage-approval-2026-11-01.md) and the API README. No Legal, DPO or RAI approval is claimed.
 * Live check (criterion 6) is blocked: the deployed `ca-cutover-test-demo-api` revision already runs image `1f465bf5e` with both demo settings, but sign-in needs the owner-held test-user password, which the agent does not hold. Evidence is under `.copilot-tracking/` (2026-11-07 issue-891 chat demo).
+
 ## [2026-11-05] update | Ranking publication local runner (Refs #79)
 
 * Added `ranking_publication_runner` in `src/core`: an explicit-input schedule, publish and verify invocation with a one-day window, idempotent run key, fail-closed approval, source, archive and capacity checks, and an exercise mode that writes nothing. The daily schedule is reported as proposed, not approved. Criteria 3 (named owner sign-off) and 4 (scheduled and retained) stay unmet: no owner is named, no scheduler is deployed and no retention period is set. Evidence under `.copilot-tracking/` (2026-11-05 issue-79 r4).
@@ -10884,6 +11089,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-07] correction | Issue 79 unconfirmed runner outcome reports the real written value (Refs #79)
 
 * The r28 `committed_unconfirmed` runner outcome hardcoded `written` false even when this call created the record; the typed error now carries `written` (true, false or unknown as null) from the publish outcome and the runner reports it. The r28 entry is preserved as history. Author-corrected only; light checks passed, no FULL gate was run and FULL 799026a3 stays historical. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r29).
+
 ## [2026-11-07] correction | Scenario manifest recipe digest refreshed for the queue-sync checker (Refs #1262)
 
 * Updated the `recipe` source SHA-256 in [scenario-manifest.json](./research/retrofit-synthetic-data/scenario-manifest.json) to the corrected `src/api/checks/workbench_browser_check.py` bytes (`4bd825e9...a320`), because the validator compares recorded source digests with literal current bytes and hosted src-core failed with a stale hash after the #1262 checker change. Digest only: version 0.2.1, fixture case IDs, unavailable profiles and workflows, approval and evidence status, scenario semantics and the validator are unchanged, and no observed coverage is claimed. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-1262-r2-manifest-pin).
@@ -10899,6 +11105,7 @@ The data-operator check helper now requires the failure outcome sentence to star
 ## 2026-11-07 - Issue 149 operator check source-cell contract
 
 The data-operator browser check now reads the synthetic record ID from the Source or run reference cell of Kind-selected failed rows. The earlier failure was a checker contract error, not a product defect. Checker and tests only; maintained atlas (194) and data-operator (100, required axe) Chromium checks passed on the corrected source, with no whole-issue, accessibility or assistive-technology acceptance. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-149-parent-correction-3).
+
 ## [2026-11-07] update | Issue 79 root merged main 7c6d135d (Refs #79)
 
 * One normal merge of main `7c6d135d` (hotfix 1263: workbench check, live-defaults tests, scenario manifest) into the ranking publication root; only the log overlapped, no conflict and no root source change, prior head preserved at `preserve/issue-79-pre-main7c6d`. Light own-source checks passed; no FULL gate was run and the hotfix receipts do not validate ranking. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r30).
@@ -10968,6 +11175,7 @@ The data-operator browser check now reads the synthetic record ID from the Sourc
   fresh exact-head local gate and same-reviewer correction assessment remain
   required after this source change. No model run, new approval or changed
   operational authority follows.
+
 ## [2026-11-08] update | Issue 440 AI and employee chat current-main stabilization checkpoint (Refs #440, #157, #159, #104, #107)
 
 * Appended one dated section to the cut-over evidence pack for main `608c98e6` (covering merged #1275, #1271 and #1273): BRD, PRD and ADR identities, the corrected #157 and #159 status drift (no new adoption), where AI is invoked and the proposal-only authority ceiling for the five assistants and employee chat, focused installed-package selectors (core 124, agents 46, API 217 tests, 59 skips for SQL Server and Chromium, all exit 0, SQLite or fixture stores only), document-qualified traceability and two findings (F1 Low unreachable `ChatIsolation.turn` clean-up, F2 evaluation prompt differs from the live prompt). Historical SQL, browser and restart evidence stays source-qualified; no real-provider, Azure or human approval evidence. Recommendation is continue; nothing approved, ticked or closed. Records: `.copilot-tracking/*/2026-11-08-ai-main-stabilization-440-*`.
@@ -10979,6 +11187,7 @@ The data-operator browser check now reads the synthetic record ID from the Sourc
 ## 2026-11-08 - Issue 149 parent integration of main e2ecee25
 
 The parent topic merged main e2ecee25 with a normal merge and no conflicts. Focused unit, static and type checks and the maintained atlas (194) and data-operator (100, required axe) Chromium checks passed on the merged source. No whole-issue, accessibility or assistive-technology acceptance. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-149-parent-main-e2ec).
+
 ## [2026-11-08] update | Running exploratory study, coauthor and mixed-source history
 
 * Owner confirmed coauthorship/affiliation agreement for Isabel Cabezas Martin,
@@ -11143,6 +11352,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
   shared-case identity activation or a new database/platform adoption.
   Source, render, navigation and publication evidence is recorded in the
   current architecture text equivalent, communications review and PR.
+
 ## [2026-11-08] update | Local validation policy reconciliation (Refs #1294, #470)
 
 * Reconciled the local validation tiers: targeted local checks during development; focused tier (planned relevant local checks plus applicable hosted CI, no blanket `--changed` run) for small and documentation-only candidates; complete gate and verified external full receipt for major, SQL, infrastructure, deployment, security-sensitive and release work and for workflow, gate-tool, dependency and Dockerfile changes, strictest tier for mixed changes. Added a hosted-versus-local coverage comparison, the local-only checks (employee-chat axe harness, exact-count zero-skip chat-panel selector, extra SQL selector) and policy examples to the source guide, aligned the repository instructions, coordinator profile and retention policy wording. Absent, path-filtered, skipped or unobserved CI is stated not to be a pass. No workflow, tool, application, security-control or branch-protection change; the #470 full-gate timing measurement remains open. Records: `.copilot-tracking/*/2026-11-08/issue-1294-validation-policy-*`.
@@ -11185,11 +11395,13 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Qualified the dated 2026-11-09 checkpoint in [the cut-over evidence pack](../architecture/cutover-evidence-pack.md#qualification-c1-2026-11-09-refs-440) and the [index](README.md) after an independent readiness review: absence statements now read "not identified in the inspected paths", a differently named path remains unverified, the quality-evidence snapshot also holds permitted document metadata, and the selected tests did not exercise the sensor-to-Quality-model journey. The DF8 observation, the original research, plan, critique, changes, review and state are preserved with appended dated qualifications. Correction cycle 1 of 5; no earlier review-correction cycle recorded.
 * Not claimed: a runtime defect, approval, closure, tick, live, model or SQL evidence, hosted CI or merge readiness. No earlier entry changed.
+
 ## [2026-11-09] update | PR 1295 C3 navigation numbers and current-text corrections (Refs #1295)
 
 * `tools/capstone/Invoke-Capstone.ps1` now applies one baseline-to-physical mapping (baseline slides 13 to 54 move up one for the inserted page 13) to `page`, `pages`, `slide`, `slides` and `index` references, including no-space forms (`page40`), plural ranges (`pages 23-24`) and slash ranges (`pages 9/16`), while leaving numbers below 13 and part 55 notes unchanged. Five notes changed (QX, B13, B20, B26, B27); the deck, both generated pitch files, the preview PDF and the receipt were regenerated, and all other package members, protected cost slides and the 55 page images are unchanged. `Test-DeckInsertion.ps1` gained a literal independent table.
 * `docs/architecture/README.md` now separates the 14 October baseline diagrams (no sensor ingestion) from the 8 November continuation (source-coded finite sensor chain; no live deployment claimed). This index now states 55 slides with current physical page numbers; the dated 2026-10-29 54-slide entry is historical and kept. The discovery-journey R09 anchors now point to the actual headings (`#L33`, `#L253`, `#L327`).
 * Not changed, frozen for owner decision: current baseline page numbers in `docs/capstone/demo/runbook.md` and the QX manifest sentence "All 54 page numbers". No native, visual, assistive-technology, rehearsal or live approval is claimed.
+
 ## [2026-11-09] update | Issue 144 hosted-conflict main reconciliation (Refs #144)
 
 * Merged current `origin/main` d4d6827f (PR 1222) into the issue 144 branch with an ordinary merge, after recording a prospective plan. Both append-only entry sets in this log are retained (the issue 144 entries and main's later entries); the only overlapping path was this log. The cause of the hosted CONFLICTING report was not established; local merge-tree prediction is not hosted mergeability.
@@ -11258,6 +11470,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Appended a dated bounded subsection to [the cut-over evidence pack](../architecture/cutover-evidence-pack.md#current-main-priority-sql-regression-validation-2026-11-09-refs-1292) and an entry to the [index](README.md): at pinned `main` `ba71894bb`, one non-queued admission on a disposable SQL Server 2022 ran the 142-test priority module (split A 108 and B 34) and the two original resident-control methods with SQLite and in-memory parity (6): 148 tests, 67 on SQL Server, 0 skips, 0 failures, 540 s. Genuine prospective RPI records, one independent critique (Revise, applied) and the planning commit preceded execution.
 * Not claimed: root cause or fix of the unknown historical startup failure, a pre-fix failing-test re-proof, whole-SQL acceptance, a full-gate waiver, hosted CI, independent review, scale, lock-duration, Azure or live evidence, E5 or any source correction, or ticked or closed criteria for #1292, #81 or #440. Earlier entries unchanged.
+
 ## [2026-11-09] update | Lifecycle and simulator controls current-main checkpoint (Refs #440)
 
 * Appended a dated draft [checkpoint](../architecture/cutover-evidence-pack.md#lifecycle-and-simulator-controls-current-main-checkpoint-2026-11-09-refs-440-81-189-954-1292) for `main` `48350983` covering merged PRs 1240, 1313, 1315, 1317 and 1318 (issues #81, #189, #954, #1292), with an index sentence. Runtime source equivalence to the 189 and 954 browser runs is shown by tree identity and a 642-file manifest; document identities are compared; PR 1320 and #159 are excluded.
@@ -11302,6 +11515,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Audited the new Stage A aftercare evaluator table, wrapped it in the existing `table-scroll` region, raised the table inventory in `test_accessibility_baseline.py` from 11 to 12 and added a dated note to the Tables row of the [WCAG baseline](research/ux/wcag-conformance-baseline.md). Earlier entries unchanged.
 * Not claimed: WCAG conformance, assistive-technology, browser, served or human acceptance.
+
 ## [2026-11-09] update | Parent-topic Blob and Quality checkpoint (Refs #440 #1288 #1258 #1259 #136)
 
 * Appended a dated draft [checkpoint](../architecture/cutover-evidence-pack.md#parent-topic-blob-and-quality-checkpoint-2026-11-09-refs-440-1288-1258-1259-136) with an index paragraph: merged-main Blob identities and historical reuse kept separate from parent-topic Quality observations at local `34838154` (PR 1331 unmerged), one adverse local browser run (exit 1 at the simulation step, stale check versus the code-off route), the unreproducible 861 count, an unmet matrix with existing owners, and the merged-main resume requirement.
@@ -11321,6 +11535,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Appended a dated draft [checkpoint](../architecture/cutover-evidence-pack.md#merged-wave-checkpoint-2026-11-10-refs-440-149-153-1238-93-96-148) and one index paragraph: an actual local targeted observation of `main` `da4f52abb` after PRs 1343, 1346, 1345 and 1348 (699 tests run, 562 pass, 137 skip of which 132 distinct SQL opt-in skips, 0 failures; one adverse run-command fault kept), document-qualified BRD and PRD trace rows, fresh `main` at start and end (`6f24e554a` is a rubric-only bot commit) and the exclusions of PR 1351, #89 and #132.
 * Not claimed: SQL Server, Azure, live rebuild, actual-model, trusted resident binding, human approval, hosted CI, document approval, a correction-ledger change, or closure of any issue. Earlier entries unchanged.
+
 ## [2026-11-10] correction | Scenario manifest recipe digest refreshed for the empty-queue browser check (Refs #152)
 
 * Updated the `recipe` source SHA-256 in [scenario-manifest.json](./research/retrofit-synthetic-data/scenario-manifest.json) to the `src/api/checks/workbench_browser_check.py` bytes (`4bd825e9...a320` to `56409ec2...df9`) after the issue 152 empty-queue checks were added, because the validator compares recorded source digests with literal current bytes. Digest only: version, fixture case IDs, unavailable profiles and workflows, approval and evidence status, scenario semantics and the validator are unchanged, and no observed coverage is claimed. No index change. Evidence under `.copilot-tracking/` (2026-11-10 issue-152 correction 3).
@@ -11349,6 +11564,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-10] review | Issue 73 independent review qualification and follow-up #1360 (Refs #73, #135, #1360)
 
 * Added a record-only [independent review qualification](../../.copilot-tracking/reviews/2026-11-10-issue-73-independent-record-1110-independent-qualification.md) for head `af7b20a3`: approve with comments, 0 Critical or High, one non-blocking Medium diagnostic finding, filed as follow-up #1360 ([record](../../.copilot-tracking/github-issues/issue-1360.md)) under owner decision D5 with no repair allowance. Root targeted checks and the original witness verification are recorded; no source change and no hosted CI claim. Original records are unchanged.
+
 ## [2026-11-10] update | Discovery CLI feature-increment checkpoint on pinned main 0d262beee (Refs #440 #125)
 
 * Appended a dated [checkpoint](../architecture/cutover-evidence-pack.md#discovery-cli-feature-increment-checkpoint-2026-11-10-refs-440-125) to the cut-over evidence pack after the completed #125 increment (PR 1355, `a0f7cf182`). `main` `0d262beee` adds only a rubric score file. A bounded local matrix passed: 14 demo cases, 46 helper cases, 5 version and dependency-rule cases, a twice-run byte-identical CLI readback, extra-argument exit 2, a poisoned-environment comparison, an `strace` with no connect call and no write-mode open, and clean ruff and mypy (tool versions differ from the pins).
@@ -11371,6 +11587,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a dated, PROPOSED section "Programme case queue and paging: proposed v1 state and recovery design" to [`customer-journeys/programme.md`](./research/ux/customer-journeys/programme.md#programme-case-queue-and-paging-proposed-v1-state-and-recovery-design-2026-11-10-refs-156-230-149): goal, current-versus-proposed table from a read-only reading of pin `b471c56a066d678b50106d9051cfb788e2c9e573`, text wireframes (desktop, narrow, loading, failure, filtered-empty, empty, denied), task flow, reading/focus order, page-local versus portfolio semantics, recovery and manual boundary, content/accessibility notes and owner decisions O1-O6. The #230 paging engineering is cited only as a source-qualified local candidate.
 * Added one additive dated note to the [design-trace register](./research/ux/zava-forward-prototype-profile-review.md#known-screen-features-and-exact-trace-or-gap) and an index row. Register rows, the original fifteen-row and 74-row findings and prior statuses are unchanged; the trace check stays blocked because it cannot represent a partial proposed design for one screen, and no label was altered.
 * Not approved: no named human review, assistive-technology, usability, device or live evidence; not the other #230 roles, the other individual traces or whole #156 criterion 1. No source, checker, tooling or correction-allowance change; historical balance stays unknown. Original RPI evidence: `.copilot-tracking/*/2026-11-10/issue-156-programme-design-1110-*`.
+
 ## [2026-11-10] integration | Issue 73 parent refreshed onto main 736561ba (Refs #73, #135, #1360)
 
 * Ordinary merge (no rebase or rewrite) of main `736561ba` into the parent branch after the published PR 1361 state read CONFLICTING. The local merge was clean; it does not prove hosted mergeability or CI. Source, infra, tools and workflows are byte-identical to `27dab9b5`. See the [research](../../.copilot-tracking/research/2026-11-10-issue-73-current-base-1110-research.md) and [review](../../.copilot-tracking/reviews/2026-11-10-issue-73-current-base-1110-review.md) records. Both earlier log histories are preserved. No change to the #1360 follow-up or the exhausted C5 budget.
@@ -11535,11 +11752,13 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a dated subsection to the [IoT research plan](./research/iot-sensor-analytics-research-plan.md#narrow-engineering-design-proposal-2026-11-12-refs-184) and an index pointer: run correlation and receive semantics, expiry and attempt fence, finite model admission, staged minimal changes with tests, and separate future approval handoffs. Owner-selected 2026-11-12; PROPOSED only.
 * Evidence class: documentation only; no source, test, infrastructure or guard change, no Azure, model, SQL or credential action, no spend, no approval granted, no criterion tick. 2026-11-11 plan records unchanged.
 * Evidence under `.copilot-tracking/` (2026-11-12 issue-184-narrow-design-proposal-1112).
+
 ## [2026-11-12] update | Legacy AI usage attribution initial slice (Refs #432)
 
 * Corrected the stale statement in [AI tokenomics](./resources/ai-tokenomics.md) that legacy `Ai.run()` and `look_at()` discard provider usage: current source returns validated usage and the meter id and root, and the text-draft path joins its output and review. One ordering defect was fixed (usage is reported only after the ledger settles it) and the legacy text-draft join, missing and malformed usage as Unknown, provider failure and workflow-only no dispatch gained synthetic local tests. The resident chat host, `look_at` and priority proofs, price, billing and authority are excluded.
 * Evidence class: local observed on a synthetic loopback provider spy; no cost, price, billing or model claim, no criterion tick, no acceptance. Recommendation: continue, bounded (proposed, not a decision).
 * Evidence under `.copilot-tracking/` (2026-11-12 legacy-ai-usage-attribution-432-1112).
+
 ## [2026-11-12] update | Proposal card plain-language default with technical evidence retained (Refs #153)
 
 * Updated the assistant proposal card note in the [content standard](research/ux/content-standard.md): technical evidence (permitted sources, versions, hashes, AI usage and change record) moved into one native details disclosure and the edit field relabelled. Owner approval 2026-11-12; no audit removal, permission or approval change.
@@ -11618,16 +11837,19 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Documented in the [agents README](../../src/agents/README.md#ai-evaluation-harness) that the `ai_eval` evidence gate now derives per-task coverage from the task registry and reports exercised, template-fallback-only and not-evaluated tasks, with scripted `funding_draft` and `read_document` checks. Offline scaffolding only: not held-out accuracy, no live model, no human acceptance; the actual #108 history stays unknown.
 * Evidence under `.copilot-tracking/` (2026-11-13 108-offline-coverage-0008).
+
 ## [2026-11-12] update | Name the Bicep secret parameter for redeploys (Refs #358)
 
 * The [direct Entra setup section](../../infra/README.md#direct-entra-setup-and-acceptance) of `infra/README.md` now names `entraClientSecretName` and the `zava-forward-credential-name` tag for retaining the generated Key Vault secret name on later Bicep redeploys; the default would revert it.
 * Evidence class: source-derived only (`main.bicep`, `containerapps.bicep`, `setup-entra.py`); no live redeploy, Graph, Key Vault or cloud action, no sign-in claim, no criterion tick or closure. The earlier readiness result stays research-only `NOT_READY`, and its 278-test run with one missing-distribution error is not recorded as a pass.
 * Evidence under `.copilot-tracking/` (2026-11-12 secret-name-redeploy-358-2236).
+
 ## [2026-11-12] update | Demo cohort replay regression (Refs #176)
 
 * Added a local test that reads the [demo runbook](../capstone/demo/runbook.md#the-five-homes) five-home table and checks the seed 20260901, as-of 2026-10-13 synthetic build with the tests' fictional register reproduces each id (open, no hazard record, published property type and stage). Added a provenance bullet to the runbook and a section to the [synthetic data README](research/retrofit-synthetic-data/README.md#demo-cohort-replay-regression-2026-11-12-refs-176).
 * Test-only: no generator, manifest or scenario recipe source changed. Fictional inputs only; deployed-store, sensor, simulator and AI-scope checks are not covered. Criteria 1 and 2 of #176 stay unmet and unticked (original private register boundary).
 * Evidence under `.copilot-tracking/` (2026-11-12 issue-176-demo-cohort-replay-2236).
+
 ## [2026-11-12] update | Demo IoT-to-UI source trace rows (Refs #156 #184 #187 #189 #134)
 
 * Added a dated, additive section to the [prototype profile review](research/ux/zava-forward-prototype-profile-review.md#demo-iot-to-ui-source-trace-update-2026-11-12-refs-156-184-187-189-134) and an index row in the [index](./README.md): #189 now has a source screen `#/simulator` with a local browser check, #187 is a partial control surface, the employee Quality sensor panel design is Not supplied, source cadence is five minutes against the owner one-minute target, and the five-home scope of Quality AI is not verified by a bounded, nonexhaustive trace.
@@ -11667,6 +11889,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Packaged the three changed source/test blobs and the original research, plan, critique, Review and small-log records of local child 25a7135b1 byte-unchanged into a new parent. Two raw `before-*.json` snapshots, byte-identical to the public fixtures at main 33c261a63, are omitted; the manifest records both blobs and the restoration pointer. Nothing was deleted, moved or rewritten.
 * Source equivalence is a blob comparison, not a new runtime result; legacy fixtures remain unrecorded and whole #176 stays open. Frozen-source validation, base refresh and independent exact-head assessment are pending. Docs checkpoint PR1506 also appends this file; keep both entries when reconciled.
 * Evidence under `.copilot-tracking/changes/2026-11-13-demo-provenance-parent-176-0702-changes.md`.
+
 ## [2026-11-13] add | Post-1504 merged-main home-scope checkpoint (Refs #440 #74)
 
 * Appended a [draft checkpoint](../architecture/cutover-evidence-pack.md#post-1504-merged-main-home-scope-checkpoint-2026-11-13-refs-440-74) after PR 1504 merged as `33c261a63` (tree equal to the frozen head). Documentation only: records identities, source and document blobs, inherited focused source observations, hosted state (merged-head checks running or absent, not success) and unknowns.
@@ -11726,6 +11949,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Integrated the reviewed Wave-1416/1433 RPI evidence packages for the #521 Azure sync preflight, the #133 aftercare acceptance-criteria audit and the #152 aftercare navigation root cause, and updated the [live state check](../../infra/README.md) to record the read-only 2026-11-13 observation that `ca-resident-demo` carries `ZF_DEMO_EXPIRES_AT` `2028-01-01T00:00:00Z`.
 * Documentation only. Live SQL constraint and row verification remains pending; no tick or closure.
+
 ## [2026-11-13] add | Tokenomics presenter Q&A brief (Refs #435)
 
 * Added [tokenomics-qa-brief.md](../capstone/tokenomics-qa-brief.md) and linked it from the [capstone README](../capstone/README.md). It separates the labelled USD 0.44 per home scenario, the live ledger (Unknown until settled and approved) and the authorised, unrun held-out batch (up to USD 5.00; `heldout_batch` module absent in this checkout).
@@ -11735,6 +11959,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Audited issue #233 criteria on tensions and the connected same-home walk: both already have rendered Chromium checks (`atlas_tensions_browser_check`, `connected_home_browser_check`) that exited 0 at this head (`python -m checks.<name>` from `src/api`); no screen change was needed.
 * Updated [atlas-screen-trace.md](./research/ux/atlas-screen-trace.md) to describe the ZF-1 walk separately from the design-level EX-HOME-901 walk, and added a unit guard that the checker does not relabel it. Engineering evidence only; no tick or closure.
+
 ## [2026-11-13] add | Demo feature-wave stabilization checkpoint (Refs #440)
 
 * Appended a [section](../architecture/cutover-evidence-pack.md#demo-feature-wave-stabilization-checkpoint-2026-11-13-refs-440-1288-184-432-144-133-435-216) and an index row. Pinned to `origin/main` `34b11967b93df40b653d384ab3b136bb1fb842f9` (tree `dfe71a6354772012d894bf1e9f3ddb92cbba1610`) and qualified merged PRs 1514, 1515, 1516, 1518, 1519, 1520, 1523, 1525 and 1527 by recorded, not rerun, local evidence. Recorded the BRD draft, PRD in-review and ADR 0007 Proposed status, and that PR 1519 changed one PRD link only.
@@ -11744,6 +11969,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added a Demo Routing Decision section to the [monitoring runbooks](../../infra/monitoring-runbooks.md) recording owner decision `keep_console_alerts_for_demo`, AC1 to AC5 file-and-line proof and the deferral of candidate `9c2a59f6` to production, and noted it in the [index](README.md).
 * Local checks only: `infra/tests/test_bicep_policy.py` (61 tests passing) and `az bicep build` of all `infra/*.bicep` and `infra/modules/*.bicep` files. No deployment, cloud read, privacy acceptance or issue closure.
+
 ## [2026-11-13] add | Issue 203 close-out audit of references, links and CI (Refs #203)
 
 * Audit only, no tick or closure. The cut-over audit test passes (9 tests) and the inventory has no unclassified row. A relative-link scan of tracked Markdown found broken targets under `docs/reference/` only in earlier, immutable entries of this log; none in the index, research, regulatory, method or resources files.
@@ -11894,6 +12120,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
   repair and remaining evidence/approval limits. No experiment, paid call,
   VM change, registration, commit, push or publication occurred; hosted CI
   and independent exact-head review remain unperformed.
+
 ## [2026-11-13] update | Case safety panel usability (Closes #1530)
 
 * Added a safety issue card row to the component inventory in [design-system.md](research/ux/design-system.md) for the reworked case safety panel: labelled per-action forms, hints, a next-step callout and compact key facts.
@@ -11919,6 +12146,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added `tools/check-legacy-references.py` with tests: retired `mvp/` and `prototype/` paths must name archive `v0.21.0`, `zavaforward_mvp` and `properwarm_mvp` stay in dated records or guards, and changed Markdown relative links must resolve. Repointed the two architecture diagrams' source locators to `src/` and added the tag beside retained history in live pages, including the gap analysis, Decision 1 specification and synthetic data README.
 * Criteria 1 and 2 only, as a file-class check; not a line-by-line proof of the generated inventory, no all-link audit of historical debt, no tick or closure.
+
 ## [2026-11-13] update | Issue 144 hosting scale, probe and restart local evidence (Refs #144)
 
 * Added `infra/tests/test_container_hosting_completeness.py` (source contract over every declared app and job: limits, replica bounds, scale rules, probes, single revision, rollback path) and `src/api/tests/test_scale_fixture_load_and_restart.py` (separate API process, concurrent load, SIGKILL restart, audit chain check).
@@ -11963,6 +12191,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added `src/core/src/zava_forward/core/chat_provider_position.py` and wired fail-closed evaluation into `chat_privacy.py`, `regulatory_privacy.py` (`readiness_report` and `build_foundry_query`), and `GET /api/chat/status`: primary domestic `uksouth` `Standard` residency, bounded EEA EU data-zone allowlist gated on `CHAT_TRANSFER_REF`, unconditional rejection of `GlobalStandard` and third-country regions, zero model training enforcement (`CHAT_PROVIDER_TRAINING`), separate synchronous content-filtering and conservative 30-day abuse-monitoring disclosures (`CHAT_ABUSE_MONITORING_MODIFIED_REF`), actual-mode synthetic/demo reference rejection plus `DPO_LEGAL_APPROVED = False` live-mode hold, and pre-approval ASCII `1..36500` retention blocking.
 * Updated [Chat and Memory Data Protection Analysis Record](./research/chat-memory-dpia.md), `src/core/README.md` and the [reference index](./README.md). Issue #163 criterion 5 (technical model provider and region position) is recorded and unit-tested locally; Issue #163 criterion 2 (lawful basis, staff notice, DPIA decision and approved retention period) stays gated on human DPO and Legal sign-off with decisions D1 to D8 kept as Not recorded. Refs #163.
+
 ## [2026-11-15] ingest | Phase 0 retrofit-flow discovery contract and governance guard (Refs #124)
 
 * Added [phase0-retrofit-flow-discovery-contract.md](research/company/phase0-retrofit-flow-discovery-contract.md) and indexed it in [README.md](README.md), documenting the deterministic Phase 0 retrofit-flow discovery contract in `src/core/src/zava_forward/core/discovery_contract.py` alongside additive governance metadata in `discovery_register.py` and `discovery_flow.py` (`BG-011`, `RULE-019`, `OD-16`, `OD-18`).
@@ -11993,12 +12222,14 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added `affected_dispatch` (`DISABLED until appropriate evidence and qualified approvals exist`), `conditional_eu_assurance` (`Applies only after qualified applicability review`), and `RAI_EU_CONDITIONAL` (`EU-COND-01`, `EU-COND-02`, `EU-COND-04`) finding-level `conditional_eu` and `applicability_review` guards alongside `live_use` (`BLOCKED pending separate qualified evidence and approvals`).
 * Reconciled the [core governance contract](../../src/core/README.md#constructed-rai-evidence-claims-2026-10-18-126), [Case Study 48 Addendum](../case_study_48_addendum.md#constructed-rai-evidence-register-engineering-2026-10-18), [Zava Forward Workbench PRD](../prds/zava-forward-retrofit-programme-demonstrator.md#constructed-finding-evidence-engineering-2026-10-18-126), [ADR 0002](../adrs/0002-pilot-readiness-architecture.md#finding-evidence-register-engineering-2026-10-18-126) and [knowledge-base index](./README.md), preserving historical versions (`0.12.0`, `0.14.0`, `0.16.0`, unsigned `0.21.0`, baseline commit `1cb398c7b90bec05a5700008a97d0cfac494144a`) and negative/insufficient outcomes (`FAIL / Validate BLOCKED / Finalize NOT_EVALUATED`, `PARTIAL`, `NOT_ASSESSED`, `DOWNGRADED`, `INVALID_PAYLOAD`).
 * Focused local engineering evidence only (`src/core` JSON, SQLite and repository documentation contract tests, lint, format check and mypy). Real OD-36 DPIA/lawful-basis approval, fresh independent PRD quality review, human/budget-owner sign-off, qualified EU applicability review and live deployment remain unmet; issue #126 stays open.
+
 ## [2026-11-15] update | Scoped #440 stabilization checkpoints for Epic #89 and Epic #100 (Refs #89, Refs #100, Refs #440)
 
 * Appended dated `2026-11-15` `#440` scoped stabilization checkpoints for Epic `#89` (`#90`, `#91`, `#92`, `#132`, `#133`, `#1384`, `#1402`) and Epic `#100` (`#101`, `#102`, `#103`, plus management AI consumption economics on stacked `PR #1641`) to `docs/architecture/cutover-evidence-pack.md` and indexed both in `docs/reference/README.md` at parent-topic pin `74273202817f9068f9c55cb325b39df7879cba7b` (`origin/main` `5e0c7f74432ffce73cfeaa672e4e40a605ca6274`, merge-base `61e1917dd075a8307f0fd436c42cc41f47906846`).
 * Recorded source and normative document provenance (Case Study 48 original and addendum, draft `BRD v0.21.0`, in-review `PRD v0.21.0`, and `ADR-0001` through `ADR-0007` with Git blob SHAs and unsigned/proposed/exercise-only governance status), document-qualified requirement-to-code/test/journey traceability (preserving `BRD` versus `PRD` `FR-*` numbering divergences), and cross-cutting package, persistence, RBAC, consent/privacy, human-approval, and manual/AI-unavailable boundary checks.
 * Executed focused local regression and integration suites across `src/core` and `src/api` without invoking `tools/rpi-checks.py`: 322 Epic `#89` core tests (`31` MSSQL skipped), 257 Epic `#89` API/screen/companion tests (`38` opt-in browser/MSSQL skipped), 247 Epic `#100` core/tokenomics tests (`34` MSSQL skipped), 213 Epic `#100` served API tests (`21` opt-in browser/MSSQL skipped), 53 script-retry/manifest/consent/screen tests (`0` skipped), 382 cross-cutting dependency/auth/manual-fallback/doc-link/disposition-audit tests (`235` MSSQL skipped), and 25 `rename-zava-tests.py` checks (`0` skipped), all exiting `0` with zero new defects or refactoring needs confirmed on either epic surface.
 * Recorded authorized Azure-only, human-acceptance (`#155`, `#215`), needs-inventory (`#165`), contractor B2B (`#116`), contract-manager directory (`#349`, `#350`), and open/deferred commercial AI tariff (`#432`, `BRD::OD-51`, `PRD::OQ-027`) residuals, plus the `continue` recommendation gating Epic `#89` and Epic `#100` closure on merge to `main`, exact-head hosted CI, independent review, and owner verification.
+
 ## [2026-11-15] update | Issue #121 whole-system data protection inventory, derivative dispatch and persisted rights ledger (Refs #121)
 
 * `src/core/src/zava_forward/core/data_protection.py` and `sqlstore.py`: separated `fixture_resident` (`constructed_resident_fixture`) from nine `actual` personal-data and processing classes (`staff_identity`, `tenant_identity`, `review_record`, `future_real_resident`, `raw_document`, `prompt_output`, `audit_ledger`, `telemetry`, `provider_retained_copy`) with explicit `subject_populations`, `whole_system_coverage` and `hosting_region_vs_inference_residency` (`uk_hosting_does_not_prove_uk_inference_residency: True`).
@@ -12043,6 +12274,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-14] update | Issue #110 distinct device identity, schema version and stable reading ID
 
 * Added producer-side validation (`Reading.validate`, `require_distinct`, `validate_row`) in core, refusal of duplicate homes and invalid rows in the API live simulator, and cohort tests. Local offline evidence only; no live IoT Hub run. RPI artifacts are under `.copilot-tracking/*/2026-11-14-iot-distinct-device-identity-*`.
+
 ## [2026-11-15] update | Issue #159 conversational assistant keyboard, focus and live-region verification (Refs #159)
 
 * Added `src/api/tests/test_assistant_panel_a11y_159.py` (leaving `chat-widget.js`, `chat.js`, `role-screens.js`, `panels.js` and stylesheets unchanged) to verify keyboard-only operability, focus management, `revealBeside` overlap scroll clearance, Chromium CDP `Accessibility.getFullAXTree` semantics and `MutationObserver` polite live-region announcements across `#employee-chat-launcher`, `#employee-chat`, `#chat-panel` and `#workspace-status` using both unconditional Node-VM + real Python `ChatPanel` payloads and rendered headless Chromium on constructed synthetic data.
@@ -12053,6 +12285,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Expanded [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md) and refreshed its [index](README.md) entry with a structured eight-dimension WCAG 2.2 AA workbench audit (keyboard operation, focus order and visibility, name/role/value and non-colour cues, status messages, contrast, reflow and zoom, target size, and error identification), a complete accessible-equivalents register covering `mapPanel`, Overview `bars()` SVG charts, `ProgressViews` `<meter>` charts, coordinator heatmap/funnel, journey steppers, and all 15 script-built table builders, and explicit recorded gaps including `/law.html`.
 * Hardened workbench web assets under `src/api/src/zava_forward/api/web/`: disambiguated `bars()` disclosure summaries and added `.table-scroll` wrappers and empty-state rows (`app.js`), added a synchronized `[data-maplist-empty]` zero-item notice in `mapPanel` (`app.js`), added series-qualified `aria-label` text on `ProgressViews` `<meter>` bars (`progress.js`), completed `<caption class="sr-only">`, `.table-scroll` focusable regions, and `<th scope="row">` headers across `ops.js` (`sensorTable`, `packagesView`), `panels.js`, `app.js`, and `role-screens.js` (`screenTable` defaulting `rowHeader = true`), added a `.skip-link` bypass anchor on `welcome.html`, and added 24px/40px target-size rules plus `var(--muted)` contrast cleanup in `style.css`.
 * Updated `src/api/tests/test_accessibility_baseline.py` (15 captioned tables, 3 HTML zoom/language checks, expanded target-size selectors) and added `src/api/tests/test_wcag_workbench_baseline_151.py` exercising static invariants and Node-VM DOM parity. Engineering baseline evidence on synthetic data only: live assistive-technology, screen-reader, and human acceptance runs (#155) and owner target confirmation remain open, and no WCAG 2.2 conformance claim is made.
+
 ## [2026-11-15] update | Issue #155 usability testing programme specification and deterministic core evaluator (Refs #155)
 
 * Upgraded [usability-test-programme-plan.md](research/ux/usability-test-programme-plan.md) in place (`ms.date: 2026-11-15`), added `src/core/src/zava_forward/core/usability_programme.py` and `src/core/tests/test_usability_programme.py`, documented the contract in `src/core/README.md`, linked the specification test in [design-system.md](research/ux/design-system.md), and refreshed [README.md](README.md).
@@ -12113,6 +12346,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
   records. No new experiment, paid call, VM access, scoring or registration
   change, external submission, hosted CI or independent exact-head review
   was performed.
+
 ## [2026-11-14] update | Registered screen to journey, task flow and design artefact map (Refs #156)
 
 * Added a dated, additive map to the [Prototype Profile Review](research/ux/zava-forward-prototype-profile-review.md#registered-screen-to-journey-task-flow-and-design-artefact-map-2026-11-14-refs-156): sixteen registered screens and routes, each with a journey link and a task flow or named gap; twelve link a written design record.
@@ -12195,46 +12429,56 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-17] update | Cohort evaluation executable evidence re-measured (Refs #222)
 
 * Added a dated section to the [cohort evaluation review pack](research/evaluation/cohort-evaluation-review-pack.md) recording a re-run of the core and agents cohort tests and the `cohort_ranking_eval` runner (with and without `--defects`) on synthetic data. The draft banner and table are preserved. Criterion 6 (OQ-018 owner and DPO approval) stays unmet; synthetic results are not fairness evidence. Documentation only; no source, threshold, approval or live use changed.
+
 ## [2026-11-17] update | Record owner FR-044/AC-084 directions in BRD OD-53 and PRD OQ-029 (Refs #441)
 
 * Added the owner direction of 2026-11-02 to the [BRD](../brds/agentic-retrofit-programme-brd.md) decision OD-53 and the [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) question OQ-029: the routine exception is approved in principle subject to named Legal/Compliance approval, and the synthetic-data demo display is not an OD-53 or RULE-020 approval.
 * Measured gap before the edit: neither document recorded either direction. Normative wording is unchanged; per-message named human review stays the default, the exception stays OFF and OD-53 stays OPEN. Criterion 5 of #441 stays unmet.
 * Added `tools/test_resident_portal_docs.py`. No status upgrade, memory change or deployment.
+
 ## [2026-11-17] update | Production AT acceptance: reflow and reduced-motion checks (Refs #619)
 
 * Extended the automated production-configuration check in `src/api/checks` with a 320 px zoom-equivalent reflow step and a reduced-motion step, with a unit test for the overflow helper, and recorded the local result and a person-run checklist in the [production acceptance protocol](research/ux/production-ux-acceptance-protocol.md).
 * Synthetic data and a local Chromium run only. Every person-run record row stays `Not run`; no screen reader, real resident, conformance or production-acceptance claim is made. Issue #619 remains open.
+
 ## [2026-11-17] update | AI metering inventory and drift test (Refs #432)
 
 * Added a [current-main metering inventory](resources/ai-tokenomics.md#current-main-metering-inventory-2026-11-17-refs-432) to the Tokenomics page: code and test mapping for each #432 criterion, corrections to stale gap text, unmet criteria 5 and 8, and the smallest next step. Documentation only; no cost, billing reconciliation or live batch is claimed.
 * Added `src/core/tests/test_ai_metering_inventory.py`, which fails when a cited path, ledger method or test name no longer exists.
+
 ## [2026-11-17] update | Ranking job alert runbook coverage (Refs #146)
 
 * Measured the declared alert set against the runbook: `alert-<job>-failed` for the optional ranking jobs (`rank`, `rank-publish`) resolves to the `job-auth` anchor because `operationalMonitoring.bicep` has no ranking branch. Added a `Job ranking` section to [infra/monitoring-runbooks.md](../../infra/monitoring-runbooks.md#job-ranking), a pointer in `Job auth`, and a regression test in `infra/tests/test_alert_runbook_signal_matrix.py` that every job suffix resolves to a section naming it.
 * The Bicep anchor itself is unchanged (infrastructure change, full tier); it stays a follow-up. No deployment, appointment, rendering or billing evidence is added, and no #146 criterion is newly proven.
+
 ## [2026-11-17] update | Issue 118 hardened deployment status re-measured on main (Refs #118)
 
 * Re-ran the offline infrastructure tests on main `eb51af5c9` (container contract, Bicep policy, governance, edge module, pipeline, container hosting). All pass, and no defect was reproduced, so no source fix or regression test was added.
 * Criteria 1 to 4 stay delivered offline. Criterion 5 stays unmet: `infra/defender-decision.json` still records audit-only Policy, an open Deny choice, deferred Defender plans and pending cost approval, and the Bicep defaults match it (`enableDefenderPlans` false, `DoNotEnforce`). The owner decision has no code step.
 * Not run or proven: the `src/check-container.py` image run, hosted CI for this head, live Azure state and load tests. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-17 issue-118).
+
 ## [2026-11-17] assessment | Service continuity evidence on main (Refs #122)
 
 * Measured the continuity, suspension, manual-fallback, recovery and version tests on main `eb51af5c9`: `src/api` test_operator_suspension.py (18), test_continuity.py (22), test_continuity_epoch_export.py (77, 39 skipped for the owned local MSSQL opt-in), test_epic149_manual_fallback_continuity.py (10); `src/core` test_recovery.py (15) and test_version.py (3). All passed; no defect reproduced, so no source change or regression test was made.
 * Issue #122 criterion 11 (witnessed authorized drill) stays unmet: [the drill protocol](method/operator-suspension-drill-protocol.md) remains a blank record that only named people may complete, and the MSSQL-backed epoch tests were not run here. All actors in the passing tests are constructed.
 * Documentation only; no Azure, SQL, deployment or model action occurred.
+
 ## [2026-11-17] update | Archive tag and legacy deletion status assessed (Refs #202)
 
 * Measured main `eb51af5c`: no tracked file under `mvp/` or `prototype/`; annotated tag `v0.21.0` (`0096b113`, target `65a514ed2`) is on `origin`; no GitHub release exists; `main` has no branch protection; `mvp-ci.yml` and `mvp-validation.yml` remain dispatch-only. Corrected the stale README claim that the tag was local and unpublished. Evidence in `.copilot-tracking/research/2026-11-17/issue-202-research.md`.
 * Unmet and owner-gated: the `v0.21.0` GitHub release, removal of the dispatch-only legacy workflows, and the dedicated registry PR clause. Issue #202 stays open; nothing was deleted.
+
 ## [2026-11-17] update | Regulatory alerts and home chat UX re-measured on main eb51af5c (Refs #215)
 
 * Re-ran the focused local evidence for #215 on base `eb51af5c` with the worktree sources first on `PYTHONPATH`: 73 unit tests (UX check, keyboard and provenance, live-region semantics, accessibility cues) passed, and `src/api/checks/regulatory_ux_check.py` passed 21 synthetic browser states with axe skipped because no trusted copy was supplied. The check reports staff comprehension as "Not run; unmet".
 * No defect was reproduced, so no source or test changed. The unavailable states (503 alerts, chat errors) already name an owner, a next action and a human route.
 * Criterion 3 (WCAG 2.2 AA, pending human assistive-technology testing under #155) and criterion 5 (comprehension testing with repairs, housing and grants staff, which needs owner authorisation) stay unticked. Scoped automated checks are engineering evidence, not conformance or staff acceptance. #1818 and #1641 scope was not touched. Independent review and hosted CI remain separate.
+
 ## [2026-11-17] update | WCAG baseline guard-suite measurement refreshed (Refs #151)
 
 * Added a dated counted-measurement section to [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md#counted-guard-suite-measurement-2026-11-17-151): guard test totals, 22 web assets, 15 table builders and 9 `aria-invalid` sites re-measured against source, plus one regression test that keeps the asset and `aria-invalid` counts in step.
 * Manual screen-reader and keyboard rows stay `Not run` and the target level stays pending O-1. No conformance claim; #151 stays open.
+
 ## [2026-11-17] update | Identifier leak copy audit on exception screens (Refs #153)
 
 * Added an [identifier leak audit](research/ux/content-standard.md#identifier-leak-audit-2026-11-17-153) section to the content standard: two snake_case identifiers shown to staff on the data steward and digital operator screens were reworded, and a lexical regression guard was added. Named-human review of resident-facing wording (criterion 5) remains unmet.
@@ -12243,6 +12487,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [sql-ledger-live-2026-11-18.md](research/sql-ledger-live-2026-11-18.md) with its evidence folder. A 30-minute, five-session, two-writer run against the demo API met every p95 limit with no errors; a point-in-time restore of a throwaway database plus `reapply_deletions` re-redacted an erased case; the throwaway databases, jobs and blob container were deleted.
 * The deployed demo image lacks the per-year reliance check, so that part of criterion 1 stays unproven live. Cross-server restore is not offered by Azure SQL point-in-time restore. No source changed.
+
 ## [2026-11-18] update | Live synthetic resident showcase proof (Refs #462)
 
 * Added [resident-showcase-live-proof-2026-11-18.md](research/resident-showcase-live-proof-2026-11-18.md): desktop Playwright evidence against the deployed `ca-resident-demo` (login, generic denials, rate limit, forged and tampered cookies, case binding, sign out), resource and grant inventory, actual cost (USD 440.90 since 2026-10-01 against the USD 700 cap) and the stop plan, with a per-criterion table.
@@ -12252,6 +12497,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [deployed-parity-live-2026-11-18.md](research/deployed-parity-live-2026-11-18.md) with a per-criterion proven/unproven table for the unticked #350 criteria, measured read-only on the synthetic demo with Playwright and Azure CLI (one Programme Manager account, desktop).
 * The 2026-10-16 gaps for model deployment, map tiles and the baseline (980 cases) are stale; browser-style anonymous API requests still get 302, `/api/time/status` returns 500 (SQL ProgrammingError), law store and photo remain unavailable. No source or Azure change was made; #350 stays open.
+
 ## [2026-11-18] update | Measured held-out AI batch run live for the demo (Refs #432)
 
 ## [2026-11-18] ingest | Live digest mismatch alert proof on the demo (Refs #115)
@@ -12265,6 +12511,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [entra-signin-live-demo-2026-11-18.md](research/entra-signin-live-demo-2026-11-18.md): desktop Playwright proof on `ca-cutover-test-demo-api` of Entra callback, role-scoped `/api/me`, `/app` entry, logout, anonymous 401 and forged-header denial, plus the resident demo sign-in and sign-out. Read-only Azure checks; no resource changed.
 * Criteria 1, 2 and 4 of #349 stay unproven for the demo (tenant-owner provisioning, in-VNet vault path, staff roster); 3 and 5 are partly proven; 6 is proven. Wrong-role denial inside the employee app needs a second staff account.
+
 ## [2026-11-18] add | Live Azure backfill and live series evidence (Refs #188)
 
 * Added [issue-188-live-backfill-evidence-2026-11-18.md](research/issue-188-live-backfill-evidence-2026-11-18.md): per-criterion proven/unproven record of a demo run on live Azure SQL. Production receiver and indoor-schema proof remain open.
@@ -12273,31 +12520,40 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-145-live-pitr-restore-evidence-2026-11-18.md](research/issue-145-live-pitr-restore-evidence-2026-11-18.md): live PITR of the demo database to a throwaway copy (deleted), audit-chain prefix match and a per-criterion record.
 * Native ledger verification, resurrection checks, erasure and hold reapplication, #121 retention match and independent witness stay unproven for the demo.
+
 ## [2026-11-18] add | Live device monitoring evidence (Refs #109)
 
 * Added [issue-109-live-device-monitoring-evidence-2026-11-18.md](research/issue-109-live-device-monitoring-evidence-2026-11-18.md): demo SAS device connection state, a fired connectivity metric alert and a negative `lastActivityTime` finding. The #440 checkpoint and child-closure criteria stay unproven; no source changed.
+
 ## [2026-11-18] add | Tokenomics pitch criteria status (Refs #435)
 
 * Added [tokenomics-pitch-criteria-435-live-2026-11-18.md](research/tokenomics-pitch-criteria-435-live-2026-11-18.md): per-criterion record for the three unticked criteria. The finite-batch decision is proven for the synthetic demo through the #432 batch; the placement decision is recorded but deck rebuild and revalidation are not evidenced; the mentor confirmation cannot be proven. No source or Azure change.
+
 ## [2026-11-18] add | Cut-over gate demo proof (Refs #201)
 
 * Added [cutover-gate-live-2026-11-18.md](research/cutover-gate-live-2026-11-18.md): per-criterion record from repo checks and read-only Azure CLI; records an adverse legacy-reference checker failure.
+
 ## [2026-11-18] test | Direct ingress and sign-in live proof on the demo (Refs #360)
 
 * Added [direct ingress live note](research/direct-ingress-live-demo-2026-11-18.md) with per-criterion results for #360 c, d and e. Demo health, welcome, HTTPS, Entra browser sign-in, role claim, shared SQL state and a real chat AI call proven; browser-mode API 401 still fails; migration approval, Front Door retirement authorisation, second-role denial and restart persistence unproven. Cites #349, #350 and the #344 historical edge record without repeating them. No Azure resource created or changed.
+
 ## [2026-11-18] observation | Live demo public browser access proof, Refs #344
 
 * Added [public-browser-access-live-demo-2026-11-18.md](research/public-browser-access-live-demo-2026-11-18.md): landing, `/healthz`, sign-in to Entra, anonymous 401 for non-browser clients, SQL public access Disabled and 22 of 25 authenticated read routes on `ca-cutover-test-demo-api`. Read-only; no resource created.
 * Browser-originated anonymous API calls are still redirected (#350), `/api/time/status` returns 500 (new candidate defect) and parity stays partly proven. No source changed; #344 stays open.
+
 ## [2026-11-18] add | Human-review effectiveness demo run (Refs #223)
 
 * Added [human-review-effectiveness-live-demo-2026-11-18.md](research/human-review-effectiveness-live-demo-2026-11-18.md): offline gate run, live review retention on `ca-cutover-test-demo-api` and a per-criterion table. The scripted competent panel passes and default-accept and automation-bias panels fail; no competent human, OQ-017 holder or live seeded-defect trial exists, so no #223 criterion is ticked.
+
 ## [2026-11-18] add | Live monitoring evidence for the demo (Refs #146)
 
 * Added [issue-146-live-monitoring-evidence-2026-11-18.md](research/issue-146-live-monitoring-evidence-2026-11-18.md): per-criterion record of live alerts, a fired test alert and throwaway deployments in resource group `ama`. Poison-queue alerting, workbook rendering and named owners stay unproven; a Sev1 ledger digest mismatch alert was observed firing.
+
 ## [2026-11-18] add | Live device identity and provisioning evidence (Refs #185)
 
 * Added [issue-185-live-device-identity-evidence-2026-11-18.md](research/issue-185-live-device-identity-evidence-2026-11-18.md): demo run with Hub-generated symmetric keys, sending and teardown on the demo hub. Durable storage and X.509 remain unproven.
+
 ## [2026-11-18] add | Container hosting live evidence (Refs #144)
 
 * Added [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): per-criterion record of a demo probe on live Azure. Non-root and digest-pinned images observed; the pipeline run, read-only root file system and capability drop stay unproven.
@@ -12305,21 +12561,27 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Case chat live evaluation gates (Refs #216)
 
 * Added [eval-gates-live-216-2026-11-18.md](research/eval-gates-live-216-2026-11-18.md) and its evidence folder: 30-prompt graded and adversarial run of the demo case chat. Refusals 10 of 10 and model-path citations 7 of 7, with the model reached on only 9 turns because the demo meter held further calls; the gate is partly proven for the demo and the production-only criteria remain unproven.
+
 ## [2026-11-18] add | Issue 358 live evidence (Refs #358)
 
 * Added [issue-358-live-evidence-2026-11-18.md](research/issue-358-live-evidence-2026-11-18.md): expiry-guard mutation check and live Key Vault reference preservation round-trip on a deleted throwaway app. The full setup-entra.py run on the deployed app stays unproven.
+
 ## [2026-11-18] add | Challenge route live evidence (Refs #220)
 
 * Added [issue-220-live-challenge-route-evidence-2026-11-18.md](research/issue-220-live-challenge-route-evidence-2026-11-18.md): per-criterion record of a demo run. Guarantees, assurance flags and forbidden-field refusals observed live; staff writes by an Entra principal are refused by an identity comparison defect, so live positive-write proof stays open.
+
 ## [2026-11-18] add | Live ranking publication evidence (Refs #79)
 
 * Added [issue-79-live-ranking-publication-evidence-2026-11-18.md](research/issue-79-live-ranking-publication-evidence-2026-11-18.md): per-criterion record of a demo run on live Azure. Unsigned policy refused, create-only Blob publication shown with a demo-only synthetic owner; the named owner signature and immutable retention stay unproven.
+
 ## [2026-11-18] add | Regulatory alert and home chat UX live demo proof (Refs #215)
 
 * Added [issue-215-live-alert-chat-ux-evidence-2026-11-18.md](research/issue-215-live-alert-chat-ux-evidence-2026-11-18.md): read-only desktop proof on the demo apps. The alerts panel shows only the explicit unknown state because the law store is not loaded; keyboard and axe checks pass for the reachable controls; the plain-language toggle shows no visible effect on the deployed image; staff comprehension testing stays unrun.
+
 ## [2026-11-18] add | Issue 221 restart authority and drill evidence (Refs #221)
 
 * Added [issue-221-restart-authority-and-drill-evidence-2026-11-18.md](research/issue-221-restart-authority-and-drill-evidence-2026-11-18.md): repository test proof for RULE-024 and NFR-014; no live drill.
+
 ## [2026-11-18] add | Cohort and missing-data evaluation demo record (Refs #222)
 
 * Added [cohort-evaluation-demo-2026-11-18.md](research/cohort-evaluation-demo-2026-11-18.md): 36 cohort tests re-run, seven blockers observed, per-criterion table. The OQ-018 owner-approval criterion stays unproven.
@@ -12327,6 +12589,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | AI evaluation harness live demo evidence (Refs #108)
 
 * Added [issue-108-live-demo-evidence-2026-11-18.md](research/issue-108-live-demo-evidence-2026-11-18.md): per-criterion record of the unticked criteria on live Azure. Deployment names, versions and rate limits are confirmed; subscription quota, independent labelling, human detection, cost comparison, restart SQL checks and live one-lever measurement stay unproven.
+
 ## [2026-11-18] add | CI/CD pipeline OIDC and what-if live evidence (Refs #138)
 
 * Added [issue-138-live-cicd-oidc-evidence-2026-11-18.md](research/issue-138-live-cicd-oidc-evidence-2026-11-18.md): per-criterion record of read-only checks. A live what-if succeeded and the smoke checks passed against the demo API, but OIDC variables, protected environments, a runner and any workflow run are absent, so no criterion is fully proven.
@@ -12338,45 +12601,59 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 146 monitoring re-run (Refs #146)
 
 * Added [issue-146-live-monitoring-rerun-2026-11-18.md](research/issue-146-live-monitoring-rerun-2026-11-18.md): live alert inventory, a throwaway job-failure alert that fired with Total aggregation (Maximum did not), per-criterion table and gaps. Indexed in the README.
+
 ## [2026-11-18] add | Plain-language copy audit on the live demo (Refs #153)
 
 * Added [plain-language-live-153-2026-11-18.md](research/plain-language-live-153-2026-11-18.md) and its evidence folder: desktop Playwright scan of 13 staff views, the resident page and read-only error probes. Banned terms absent from scanned views and the AI label confirmed; five open findings (record path in queue source lines, requirement code, reason-only errors, bare unknown page, abbreviations). The named human wording review remains unproven. Extended [content-standard.md](research/ux/content-standard.md) is linked from the note.
+
 ## [2026-11-18] add | WCAG 2.2 live axe and keyboard evidence (Refs #151)
 
 * Added [issue-151-live-wcag-axe-evidence-2026-11-18.md](research/issue-151-live-wcag-axe-evidence-2026-11-18.md): axe-core 4.10.3 and Tab-walk scans of the 13 Programme Manager screens on the live demo. Zero axe violations, no keyboard trap, no 320 px horizontal scroll; three contrast results incomplete. The manual screen-reader and keyboard criterion stays unticked (screen reader is production-only, #1907; one role only). No source changed.
+
 ## [2026-11-18] add | Live nomination route evidence (Refs #130)
 
 * Added [issue-130-live-nomination-route-evidence-2026-11-18.md](research/issue-130-live-nomination-route-evidence-2026-11-18.md): per-criterion record of a demo run. Route panels, permissions and the absence of a representative option without confirmed authority observed live; every write refused by the known Entra identity defect; the unticked representative-participation criterion cannot be proven for the demo.
+
 ## [2026-11-18] add | Live task queue hazard clock evidence (Refs #76)
 
 * Added [issue-76-live-task-queue-evidence-2026-11-18.md](research/issue-76-live-task-queue-evidence-2026-11-18.md): per-criterion record of a read-only live demo run. The hazard case card shows a safety clock line and a named accountable owner, but the clock is unknown for lack of a timestamp, and no demo case has a safeguarding item.
+
 ## [2026-11-18] add | Form schema approval live evidence (Refs #96)
 
 * Added [issue-96-live-form-schema-approval-evidence-2026-11-18.md](research/issue-96-live-form-schema-approval-evidence-2026-11-18.md): the demo has no registered schema and no shipped path records an approval; the approved-schema criterion is unproven and deferred to #1905 to #1908.
+
 ## [2026-11-18] add | Entra roles and field-level visibility live demo evidence (Refs #116)
 
 * Added [issue-116-live-demo-evidence-2026-11-18.md](research/issue-116-live-demo-evidence-2026-11-18.md): per-criterion record of the four unticked criteria on the deployed demo. One role was read live and an unknown AI task was refused before any provider call; the two-role comparison, document hold, stored outputs and provider payloads could not be shown live, and OD-14 and OD-19 confirmation is a human decision. All four boxes stay unticked.
+
 ## [2026-11-18] add | Excel transition thresholds demo record (Refs #80)
 
 * Added [issue-80-live-transition-thresholds-evidence-2026-11-18.md](research/issue-80-live-transition-thresholds-evidence-2026-11-18.md): the one unticked criterion (owner-set staged transition thresholds) is unproven and cannot be proven for the demo; 125 importer tests passed. No source or Azure change.
+
 ## [2026-11-18] add | Chat grounding live demo evidence (Refs #164)
 
 * Added [issue-164-live-chat-grounding-evidence-2026-11-18.md](research/issue-164-live-chat-grounding-evidence-2026-11-18.md): per-criterion record for the five unticked criteria. The chat task is registered and disabled with proposed, unapproved thresholds and no named accountable individual; three live asks (cited answer, approve refusal, injection) were answered by rules with zero model calls because a held unknown liability routes the task to workflow-only. Human exercises, payload and provider approval and any bound model result stay unproven. No source or Azure resource changed.
+
 ## [2026-11-18] add | Five assistants live demo evidence (Refs #107)
 
 * Added [issue-107-live-assistants-evidence-2026-11-18.md](research/issue-107-live-assistants-evidence-2026-11-18.md): per-criterion record of the two unticked criteria. Independent-worker race, revocation and restart tests pass on a disposable local SQL Server 2022; the live demo denies all five assistants with no provider call; the approved-release and delivered-build criterion stays unproven because no OQ-017 approver is appointed.
+
 ## [2026-11-18] add | IoT Hub distinct device identity live evidence (Refs #110)
 
 * Added [issue-110-live-iot-identity-evidence-2026-11-18.md](research/issue-110-live-iot-identity-evidence-2026-11-18.md): C1 proven for the demo with three Hub-issued SAS identities, schema version and stable reading IDs read back from Event Hub. Production X.509 receiver stays unproven.
+
 ## [2026-11-18] add | Chat break-glass live proof (Refs #162)
 
 * Added [chat-breakglass-live-proof-2026-11-18.md](research/chat-breakglass-live-proof-2026-11-18.md): refused break-glass attempts on the live demo each add one audit entry with an intact chain; grant path not provable live without a config change; policy decided for the demo only. Criterion 6 left unticked.
+
 ## [2026-11-18] add | Issue 111 sensor analysis live evidence (Refs #111)
 
 * Added [issue-111-sensor-analysis-live-evidence-2026-11-18.md](research/issue-111-sensor-analysis-live-evidence-2026-11-18.md): the R1 to R3 criterion cannot be proven on the demo because R2 and R3 need named human sign-off and R1 lacks the official standards texts; read-only live probes recorded.
+
 ## [2026-11-18] add | Simulator run controls live evidence (Refs #189)
 
 * Added [issue-189-simulator-run-controls-live-evidence-2026-11-18.md](research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md): per-criterion record. Budget alerts and the hub owner tag are proven live; the time limit is proven in code only because no simulator job is deployed.
+
 ## [2026-11-18] add | Live demo evidence for simulator stage 2 (Refs #184)
 
 * Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.
@@ -12384,21 +12661,27 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | CI/CD pipeline audit, second live run (Refs #138)
 
 * Added [issue-138-live-cicd-pipeline-run2-evidence-2026-11-18.md](research/issue-138-live-cicd-pipeline-run2-evidence-2026-11-18.md): repeat read-only audit with the same result. What-if succeeded (99 Create, 15 Modify, 0 Delete, 14 Unsupported), smoke checks passed live, and no OIDC variable, protected environment, runner or federated credential exists. No criterion ticked.
+
 ## [2026-11-18] add | Issue 155 usability programme live evidence (Refs #155)
 
 * Added [issue-155-live-usability-programme-evidence-2026-11-18.md](research/issue-155-live-usability-programme-evidence-2026-11-18.md): the SA-010 criterion stays unproven for the demo because it needs named staff agreement; the code gate refusal and a read-only live check (the signed-in workbench was not captured) are recorded. No source changed.
+
 ## [2026-11-18] update | Container hosting live evidence second run (Refs #144)
 
 * Updated [issue-144-container-hosting-live-evidence-2026-11-18.md](research/issue-144-container-hosting-live-evidence-2026-11-18.md): repeated probes show non-root only; the root file system is writable, `ZF_CONTAINER_HARDENING` is absent from every deployed app and job, and no `src-deploy.yml` run exists. Criteria 1 and 3 stay unticked.
+
 ## [2026-11-18] add | Hardened deployment live evidence (Refs #118)
 
 * Added [issue-118-hardened-deployment-live-evidence-2026-11-18.md](research/issue-118-hardened-deployment-live-evidence-2026-11-18.md): the policy and Defender decision is recorded and consistent with the demo; live Defender tiers are unreadable (AuthorizationFailed) and repository policy assignments are not deployed. No source or Azure changes.
+
 ## [2026-11-18] add | Live demo evidence for service continuity and export (Refs #122)
 
 * Added [issue-122-live-continuity-evidence-2026-11-18.md](research/issue-122-live-continuity-evidence-2026-11-18.md): synthetic version change and reversal on the demo API, offline verification of two evidence exports, default-disabled assistants with template fallback, and a per-criterion record. The drill criterion stays unproven by owner decision.
+
 ## [2026-11-18] add | Phase 0 discovery evidence for the demo (Refs #124)
 
 * Added [issue-124-phase0-discovery-evidence-2026-11-18.md](research/issue-124-phase0-discovery-evidence-2026-11-18.md): contract rules and synthetic-pack coverage recorded offline (no live Azure surface exists); sponsor nomination, dictionary validation and the evidence-backed constraint register cannot be proven for the demo and stay unticked.
+
 ## [2026-11-18] add | Discovery assistant live demo evidence (Refs #125)
 
 * Added [issue-125-live-discovery-assistant-evidence-2026-11-18.md](research/issue-125-live-discovery-assistant-evidence-2026-11-18.md): the assistant is not exposed on the live demo API and its boundary denies writes; all three criteria stay unticked (readiness and comparison unprovable for the demo, no-write shown only at demo scope).
