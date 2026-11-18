@@ -1,6 +1,6 @@
 # Research: issue 223 live human-review effectiveness evidence (2026-11-18)
 
-Task: issue-223-live. Disposition: executed (in progress). Scope: docs/evidence only; synthetic demo; desktop.
+Task: issue-223-live. Disposition: executed. Scope: docs/evidence only; synthetic demo; desktop.
 Unticked criteria: five (seeded defects gated; reviewer/source/reason retained; detection/corrections/effort reported; default acceptance and citation validity cannot pass; automation-bias test and OQ-017 authority defined).
 Owner decisions 2026-11-18: live Azure authorised (rg ama, cap USD 700), no DPO/Legal, billing or person-run AT.
 

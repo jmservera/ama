@@ -1,6 +1,6 @@
 """Live demo probe for #223. Reads sign-in values at runtime; never prints them. Synthetic demo data only."""
 import json, os, sys
-sys.path.insert(0, os.path.expanduser("~/source/ama-wt/issue-223-live-20261118T1046Z/docs/reference/research/plain-language-live-153-2026-11-18/scripts"))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "plain-language-live-153-2026-11-18", "scripts"))
 from audit import login, H
 from playwright.sync_api import sync_playwright
 
@@ -31,7 +31,7 @@ with sync_playwright() as pw:
     b = pw.chromium.launch(); c = b.new_context(viewport={"width": 1440, "height": 900}); pg = c.new_page()
     u = open(home + "/.ama-test-user-id").read().strip(); p = open(home + "/.ama-test-user").read().strip()
     login(pg, u, p, H + "/sign-in")
-    pg.screenshot(path=OUT + "/screens/01-signed-in.png")
+    pg.screenshot(path=OUT + "/screens/01-staff-briefing.png")
     me = rec("whoami", c.request.get(H + "/api/me"))
     cases = rec("cases", c.request.get(H + "/api/cases"))
     items = cases.get("cases") or cases.get("items") or cases if isinstance(cases, (dict, list)) else []

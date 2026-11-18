@@ -4,7 +4,7 @@
   "status": 200,
   "body": {
    "user": {
-    "code": "E-431883ca6856",
+    "code": "E-REDACTED",
     "role": "Retrofit Programme Manager",
     "identity_source": "entra",
     "app_admin": false,
@@ -22,9 +22,9 @@
    },
    "staff": [
     {
-     "code": "E-431883ca6856",
+     "code": "E-REDACTED",
      "name": "Aadi Kapoor",
-     "email": "e-431883ca6856@entra.invalid",
+     "email": "e-REDACTED@entra.invalid",
      "role": "Retrofit Programme Manager",
      "case_ids": [
       "ZF-2025-0029",
@@ -33,21 +33,21 @@
      ]
     },
     {
-     "code": "E-da3669d9053c",
+     "code": "E-REDACTED",
      "name": "MOD Administrator",
-     "email": "e-da3669d9053c@entra.invalid",
+     "email": "e-REDACTED@entra.invalid",
      "role": "Retrofit Programme Manager"
     },
     {
-     "code": "E-431883ca6856",
+     "code": "E-REDACTED",
      "name": "Aadi Kapoor",
-     "email": "e-431883ca6856@entra.invalid",
+     "email": "e-REDACTED@entra.invalid",
      "role": "Retrofit Programme Manager"
     },
     {
-     "code": "E-144c833bac54",
+     "code": "E-REDACTED",
      "name": "Cassandra Dunn",
-     "email": "e-144c833bac54@entra.invalid",
+     "email": "e-REDACTED@entra.invalid",
      "role": "Building Safety Liaison"
     }
    ],
@@ -288,14 +288,14 @@
   "body": {
    "id": "d4fd0a99760e",
    "kind": "ai_task",
-   "user": "e-431883ca6856@entra.invalid",
+   "user": "e-REDACTED@entra.invalid",
    "created": "2026-11-18T10:49:00",
    "status": "Rejected",
    "prompt_version": "bcac8ba6c5fd65c6",
    "reviewer_action": "reject",
    "reviewer_reason": "Demo probe: contradicts source [source: Stage: x]",
    "override_text": null,
-   "resolved_by": "e-431883ca6856@entra.invalid",
+   "resolved_by": "e-REDACTED@entra.invalid",
    "resolved_at": "2026-11-18T10:49:00",
    "task": "summary",
    "case_ids": [
@@ -360,7 +360,7 @@
    "unresolved": [],
    "dropped_uncited": 0,
    "review_evidence": {
-    "reviewer": "e-431883ca6856@entra.invalid",
+    "reviewer": "e-REDACTED@entra.invalid",
     "disposition": "reject",
     "reason": "Demo probe: contradicts source [source: Stage: x]",
     "compared": {

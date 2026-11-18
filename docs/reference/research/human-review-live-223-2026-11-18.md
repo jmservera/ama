@@ -10,8 +10,8 @@ Scope: synthetic demo, desktop only, owner decisions of 2026-11-18. Evidence fol
 ## Evidence gathered
 
 * Offline harness `python3 -m zava_forward.agents.review_effectiveness --json` run from the worktree sources (`PYTHONPATH=src:../core/src` in `src/agents`): [harness-report.json](./human-review-live-223-2026-11-18/harness-report.json), `passed: true`, all 11 checks true.
-* Targeted tests: `src/agents` `tests.test_review_effectiveness` 37 tests OK ([test-agents.txt](./human-review-live-223-2026-11-18/test-agents.txt)); `src/core` `tests.test_human_review_effectiveness_223` 6 tests OK ([test-core.txt](./human-review-live-223-2026-11-18/test-core.txt)); `python3 -m mypy` in `src/agents` clean (67 files); `ruff format --isolated --line-length 100 --check` clean.
-* Live probe on `ca-cutover-test-demo-api` with Playwright sign-in as a Retrofit Programme Manager (credentials read at runtime, not printed): [scripts/live_probe.py](./human-review-live-223-2026-11-18/scripts/live_probe.py), [live-probe.json](./human-review-live-223-2026-11-18/live-probe.json), [screens/01-signed-in.png](./human-review-live-223-2026-11-18/screens/01-signed-in.png).
+* Targeted tests: `src/agents` `tests.test_review_effectiveness` 37 tests OK ([test-agents.txt](./human-review-live-223-2026-11-18/test-agents.txt)); `src/core` `tests.test_human_review_effectiveness_223` 6 tests OK ([test-core.txt](./human-review-live-223-2026-11-18/test-core.txt)); `python3 -m mypy` in `src/agents` clean (67 files; raw output not retained); `ruff format --isolated --line-length 100 --check` clean (raw output not retained).
+* Live probe on `ca-cutover-test-demo-api` with Playwright sign-in as a Retrofit Programme Manager (credentials read at runtime, not printed): [scripts/live_probe.py](./human-review-live-223-2026-11-18/scripts/live_probe.py), [live-probe.json](./human-review-live-223-2026-11-18/live-probe.json), [screens/01-staff-briefing.png](./human-review-live-223-2026-11-18/screens/01-staff-briefing.png).
 * The live AI summary on case ZF-2025-0331 returned a template draft (`source: template`, `model: null`): release admission was denied because no approved release exists and the RAI task owner is not appointed (OQ-017). Label "Not reviewed", "Not an instruction".
 * A reject with an empty reason returned 400 "Say why." A reject with a reason was stored with `reviewer_action`, `reviewer_reason`, `resolved_by`, `resolved_at`, case version and source versions. This created one rejected review record on the synthetic demo case.
 * An early probe attempt used a request context without the `X-ZF-CSRF` header and got an empty 403; the final probe posts from the page with the header, as the SPA does.
@@ -45,3 +45,10 @@ Scope: synthetic demo, desktop only, owner decisions of 2026-11-18. Evidence fol
 
 * Appoint OQ-017 reviewers and run one measured human session with the worksheet.
 * Appoint the RAI task owner and approve a release so live AI output can be reviewed against seeded defects.
+
+## Evidence limits
+
+* Account codes (`E-...`) and their derived `@entra.invalid` addresses in `live-probe.json` are redacted to `E-REDACTED` and `e-REDACTED@entra.invalid`; role and status fields are kept.
+* The probe script reads sign-in values at runtime from `~/.ama-test-user*` files that sit outside the repository; nothing from them is printed or stored.
+* The `mypy` and `ruff` results are observed; raw output not retained.
+* `screens/01-staff-briefing.png` shows the staff briefing on the demo (rules-derived summary, "Not an instruction"). It does not show a review record or the reject outcome; those rest on the retained `live-probe.json`.
