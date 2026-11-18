@@ -436,6 +436,13 @@ For #130, the [live nomination route evidence](./research/issue-130-live-nominat
 records a 2026-11-18 demo run: route panels and permissions read live, representative options absent
 without confirmed authority, writes refused by the same identity defect, and the unticked
 representative-participation criterion stated as unprovable for the demo.
+For #124, the [Phase 0 discovery evidence](./research/issue-124-phase0-discovery-evidence-2026-11-18.md)
+records a 2026-11-18 offline and synthetic-data run: nomination, endpoint, dictionary and two-sided
+constraint rules proven in code, and the three unticked criteria stated as needing sponsor, owner
+workshops and an approved company extract.
+For #125, the [live discovery assistant evidence](./research/issue-125-live-discovery-assistant-evidence-2026-11-18.md)
+records a 2026-11-18 demo run: no assistant route on the live API, deny-by-default boundary output,
+and all three criteria left open with the reason each cannot be fully proven for the demo.
 
 For #184, the [live simulator stream evidence](./research/issue-184-live-simulator-stream-evidence-2026-11-18.md)
 records the child-story status on 2026-11-18: #185 and #189 are still open, the demo hub has
