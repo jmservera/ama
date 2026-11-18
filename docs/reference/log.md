@@ -12879,3 +12879,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Five assistants live re-verification (Refs #107)
 
 * Added [issue-107-live-r2-assistants-evidence-2026-11-18.md](research/issue-107-live-r2-assistants-evidence-2026-11-18.md): fresh raw MSSQL and SQLite test output and a read-only live probe, per-criterion table; no source change. The approved-release criterion stays unproven (OQ-017).
+
+## [2026-11-18] add | Resident showcase live check r3 (Refs #462)
+
+* Added [resident-showcase-live-r3-2026-11-18.md](research/resident-showcase-live-r3-2026-11-18.md): live desktop Playwright proof of login, correct-case data and negative paths, exact five-failure rate limit, #455 rubric history and an unresolved High review thread, arithmetic cost estimate; no source or Azure change; criterion 2 stays unmet
