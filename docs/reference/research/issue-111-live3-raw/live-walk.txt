@@ -1,0 +1,14 @@
+app url path: /app
+/api/me 200
+/api/cases 200
+shape dict ['as_of', 'items', 'limit', 'next_cursor', 'offset', 'policy_hash', 'policy_version', 'ranked_total', 'sort', 'total']
+cases 16
+differing keys between two calls: []
+sensors 200 keys=['after', 'after_absent', 'age_seconds', 'anchor', 'as_of_rule', 'before', 'before_absent', 'calibrated', 'case_id', 'citation_keys', 'freshness', 'freshness_text'] identical=True sha=26b2b5d7543143c8
+  version="retained-reading-view-v2"
+  calibrated=false
+  freshness="stale"
+  state="ok"
+sensor payload found=True
+/api/sensor-drafts 403 {"error": "Your role does not include this."}
+/api/sensor-review-drafts 403 {"error": "Your role does not include this."}

@@ -13187,3 +13187,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 153 live re-check, fourth run (Refs #153)
 
 * Added [content-recheck-153-live-r4-2026-11-18.md](research/content-recheck-153-live-r4-2026-11-18.md): repeat Playwright and HTTP probes of the demo match the third run (`Held`/`envelope` on Finance, "Unassigned" owner, generic error bodies); named wording review unproven. Docs only.
+
+## [2026-11-18] add | Issue 111 third live re-verification (Refs #111)
+
+* Added [issue-111-live3-sensor-evidence-2026-11-18.md](research/issue-111-live3-sensor-evidence-2026-11-18.md) with raw outputs: 26 core sensor tests pass, signed-in demo sensors payload re-read; R1 to R3 stays unproven (named sign-off needed, gate not on main). Docs only.
