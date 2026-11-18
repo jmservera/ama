@@ -12257,6 +12257,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-188-live-backfill-evidence-2026-11-18.md](research/issue-188-live-backfill-evidence-2026-11-18.md): per-criterion proven/unproven record of a demo run on live Azure SQL. Production receiver and indoor-schema proof remain open.
 
+## [2026-11-18] add | Tokenomics pitch criteria status (Refs #435)
+
+* Added [tokenomics-pitch-criteria-435-live-2026-11-18.md](research/tokenomics-pitch-criteria-435-live-2026-11-18.md): per-criterion record for the three unticked criteria. The finite-batch decision is proven for the synthetic demo through the #432 batch; the placement decision is recorded but deck rebuild and revalidation are not evidenced; the mentor confirmation cannot be proven. No source or Azure change.
 ## [2026-11-18] add | Cut-over gate demo proof (Refs #201)
 
 * Added [cutover-gate-live-2026-11-18.md](research/cutover-gate-live-2026-11-18.md): per-criterion record from repo checks and read-only Azure CLI; records an adverse legacy-reference checker failure.
@@ -12283,3 +12286,13 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Challenge route live evidence (Refs #220)
 
 * Added [issue-220-live-challenge-route-evidence-2026-11-18.md](research/issue-220-live-challenge-route-evidence-2026-11-18.md): per-criterion record of a demo run. Guarantees, assurance flags and forbidden-field refusals observed live; staff writes by an Entra principal are refused by an identity comparison defect, so live positive-write proof stays open.
+## [2026-11-18] add | Cohort and missing-data evaluation demo record (Refs #222)
+
+* Added [cohort-evaluation-demo-2026-11-18.md](research/cohort-evaluation-demo-2026-11-18.md): 36 cohort tests re-run, seven blockers observed, per-criterion table. The OQ-018 owner-approval criterion stays unproven.
+
+## [2026-11-18] add | AI evaluation harness live demo evidence (Refs #108)
+
+* Added [issue-108-live-demo-evidence-2026-11-18.md](research/issue-108-live-demo-evidence-2026-11-18.md): per-criterion record of the unticked criteria on live Azure. Deployment names, versions and rate limits are confirmed; subscription quota, independent labelling, human detection, cost comparison, restart SQL checks and live one-lever measurement stay unproven.
+## [2026-11-18] add | CI/CD pipeline OIDC and what-if live evidence (Refs #138)
+
+* Added [issue-138-live-cicd-oidc-evidence-2026-11-18.md](research/issue-138-live-cicd-oidc-evidence-2026-11-18.md): per-criterion record of read-only checks. A live what-if succeeded and the smoke checks passed against the demo API, but OIDC variables, protected environments, a runner and any workflow run are absent, so no criterion is fully proven.
