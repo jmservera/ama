@@ -119,6 +119,50 @@ class RetainedAnalysisTests(unittest.TestCase):
         self.assertFalse(signal.diagnoses_hazard)
         self.assertEqual(signal.valid, 0)
 
+    def test_reproduce_retained_matches_pure_reproduction_and_fails_closed_read_only(self) -> None:
+        from test_sensor_consumer_live import live
+
+        approved = sa.AnalysisPolicy(
+            approval=sa.RuleApproval(
+                sa.RULE_ID, sa.ANALYSIS_VERSION, "Exercise reviewer", "EX-STORE-1"
+            )
+        )
+        first_stamp = WINDOW.start.strftime("%Y-%m-%dT%H:%M:%SZ")
+        last_stamp = (WINDOW.end - timedelta(seconds=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        window_rows = self.consumer.observed_series([HOME], {HOME: (first_stamp, last_stamp)})
+        before = self.snapshot()
+        retained_out = store.reproduce_retained(self.consumer, HOME, WINDOW, AS_OF, approved)
+        pure_out = sa.reproduce_review_task(
+            window_rows, approved, home_id=HOME, window=WINDOW, as_of=AS_OF
+        )
+        self.assertEqual(retained_out, pure_out)
+        self.assertEqual(self.snapshot(), before)
+        self.assertTrue(retained_out["provenance"]["rule_approved"])
+        self.assertEqual(retained_out["provenance"]["approval_reference"], "EX-STORE-1")
+        default_out = store.reproduce_retained(self.consumer, HOME, WINDOW, AS_OF)
+        self.assertIsNone(default_out["review_task"])
+        self.assertFalse(default_out["provenance"]["rule_approved"])
+        self.assertIsNone(default_out["provenance"]["approval_reference"])
+
+        self.consumer.configure(POLICY, [replace(CONTROL, consent="declined")])
+        declined = store.reproduce_retained(self.consumer, HOME, WINDOW, AS_OF, approved)
+        self.assertEqual(declined["signal"]["sufficiency"], sa.DECLINED)
+        self.assertIsNone(declined["review_task"])
+
+        self.consumer.configure(POLICY, [CONTROL])
+        self.store.db.execute("DELETE FROM sensor_reading")
+        self.store.db.execute("DELETE FROM sensor_delivery")
+        self.consumer.process(live(START + timedelta(hours=1, minutes=5)), RECEIVED)
+        weather = store.reproduce_retained(self.consumer, HOME, WINDOW, AS_OF, approved)
+        self.assertEqual(weather["signal"]["reasons"], (store.WEATHER_NOT_INDOOR,))
+        self.assertIsNone(weather["review_task"])
+
+        self.store.db.execute("DROP TABLE sensor_consumer_control")
+        broken = store.reproduce_retained(self.consumer, HOME, WINDOW, AS_OF, approved)
+        self.assertEqual(broken["signal"]["reasons"], (store.UNAVAILABLE,))
+        self.assertEqual(broken["signal"]["priority_effect"], "NONE")
+        self.assertIsNone(broken["review_task"])
+
 
 if __name__ == "__main__":
     unittest.main()

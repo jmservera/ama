@@ -155,6 +155,7 @@ def evaluate(expression, parameters: dict, variables: dict, context: dict | None
         "createObject": lambda *a: dict(zip(a[::2], a[1::2], strict=True)),
         "union": lambda *objects: {key: value for obj in objects for key, value in obj.items()},
         "true": lambda: True,
+        "false": lambda: False,
         "null": lambda: None,
         "format": lambda pattern, *args: pattern.format(*args),
         "replace": lambda value, old, new: value.replace(old, new),
@@ -229,6 +230,43 @@ def render_api_container(main: dict, **overrides) -> dict:
         "string": str,
     }
     return evaluate(api["properties"]["template"], values, apps["variables"], context)
+
+
+def render_ledger_verify_job(main: dict, **overrides) -> dict:
+    """Evaluate the compiled ledger-verify Container Apps Job of containerapps."""
+
+    class Attr(dict):
+        def __getattr__(self, name):
+            return self.get(name, "fixture")
+
+    apps = module_template(main, "containerapps")
+    job = next(
+        r
+        for r in resources(apps)
+        if r["type"] == "Microsoft.App/jobs"
+        and r["properties"]["template"]["containers"][0]["name"] == "ledger-verify"
+    )
+    fill = {"string": "fixture", "int": 1, "bool": False, "array": []}
+    values = {
+        name: spec.get("defaultValue", fill.get(spec["type"], Attr()))
+        for name, spec in apps["parameters"].items()
+    }
+    values.update(
+        storageAccountName="stfixture",
+        orchestratorImage="registry.example/orchestrator:fixture",
+        identityClientIds=Attr(api="api-client-id"),
+        identityIds=Attr(api="/subscriptions/sub/resourceGroups/ama/providers/id/api"),
+        **overrides,
+    )
+    values = {k: Attr(v) if isinstance(v, dict) else v for k, v in values.items()}
+    suffixes = Attr(storage="core.windows.net")
+    context = {
+        "tenant": lambda: Attr(tenantId="tenant"),
+        "environment": lambda: Attr(suffixes=suffixes),
+        "json": float,
+        "string": str,
+    }
+    return evaluate(job, values, apps["variables"], context)
 
 
 @unittest.skipUnless(
@@ -862,7 +900,7 @@ class BicepPolicyTests(unittest.TestCase):
         }
         self.assertEqual(jobs["import"]["eventTriggerConfig"]["scale"]["maxExecutions"], 2)
         self.assertEqual(jobs["import"]["eventTriggerConfig"]["scale"]["minExecutions"], 0)
-        for name in ("orchestrator", "ledger-verify", "auth-renewal"):
+        for name in ("orchestrator", "ledger-verify", "auth-renewal", "ranking-publish"):
             with self.subTest(job=name):
                 self.assertEqual(jobs[name]["scheduleTriggerConfig"]["parallelism"], 1)
                 self.assertGreater(jobs[name]["replicaTimeout"], 0)
@@ -1156,21 +1194,174 @@ class BicepPolicyTests(unittest.TestCase):
             self.assertNotIn("Log_s", query)
 
     def test_ledger_alert_queries_match_the_verifier_markers(self) -> None:
+        from zava_forward.core import ledger_digest_blob
         from zava_forward.orchestrator import digest_blob
 
-        queries = {
-            item["name"]: item["properties"]["criteria"]["allOf"][0]["query"]
-            for item in self.main["resources"]
+        self.assertEqual(ledger_digest_blob.ALERT_MARKER, digest_blob.ALERT_MARKER)
+        self.assertEqual(ledger_digest_blob.OK_MARKER, digest_blob.OK_MARKER)
+        self.assertEqual(
+            ledger_digest_blob.RECONCILE_ALERT_MARKER, digest_blob.RECONCILE_ALERT_MARKER
+        )
+        self.assertEqual(ledger_digest_blob.RECONCILE_OK_MARKER, digest_blob.RECONCILE_OK_MARKER)
+        self.assert_ledger_verification_controls(self.main)
+
+    def assert_ledger_verification_controls(self, template: dict) -> None:
+        from zava_forward.core import ledger_digest_blob as core_digest
+
+        rendered_default = render_ledger_verify_job(template)
+        self.assertIs(rendered_default["condition"], True)
+        self.assertIs(render_ledger_verify_job(template, deployWorkloads=False)["condition"], False)
+        self.assertIs(
+            render_ledger_verify_job(template, deployBackgroundWorkloads=False)["condition"], False
+        )
+        raw_apps = module_template(template, "containerapps")
+        raw_job = next(
+            r
+            for r in resources(raw_apps)
+            if r["type"] == "Microsoft.App/jobs"
+            and r["properties"]["template"]["containers"][0]["name"] == "ledger-verify"
+        )
+        self.assertEqual(
+            raw_job["condition"],
+            "[and(parameters('deployWorkloads'), parameters('deployBackgroundWorkloads'))]",
+        )
+        cfg = rendered_default["properties"]["configuration"]
+        self.assertEqual(cfg["triggerType"], "Schedule")
+        self.assertEqual(cfg["replicaRetryLimit"], 0)
+        sched = cfg["scheduleTriggerConfig"]
+        self.assertEqual(sched["cronExpression"], "0 2 * * *")
+        self.assertEqual(sched["parallelism"], 1)
+        self.assertEqual(sched["replicaCompletionCount"], 1)
+        container = rendered_default["properties"]["template"]["containers"][0]
+        self.assertEqual(
+            container["command"],
+            ["python", "-m", "zava_forward.orchestrator.digest_blob", "--publish"],
+        )
+        env = {entry["name"]: entry["value"] for entry in container["env"]}
+        self.assertEqual(
+            env[core_digest.ACCOUNT_URL_VAR], "https://stfixture.blob.core.windows.net"
+        )
+        self.assertEqual(env[core_digest.CONTAINER_VAR], core_digest.DEFAULT_CONTAINER)
+        self.assertEqual(env[core_digest.CLIENT_ID_VAR], "api-client-id")
+        self.assertEqual(env[core_digest.DIGEST_DIR_VAR], "/tmp/digests")
+        self.assertEqual(env[core_digest.REQUIRE_LOCK_VAR], "true")
+        self.assertEqual(env[core_digest.MIN_RETENTION_DAYS_VAR], "365")
+        self.assertEqual(env["ZF_STORE"], "mssql")
+        self.assertNotIn(core_digest.SAS_VAR, env)
+
+        main_lock_spec = template["parameters"]["ledgerDigestRequireRetentionLock"]
+        self.assertEqual(main_lock_spec.get("type"), "bool")
+        self.assertIs(main_lock_spec.get("defaultValue"), True)
+        apps_params = module(template, "containerapps")["properties"]["parameters"]
+        self.assertEqual(
+            apps_params["ledgerDigestRequireRetentionLock"],
+            {"value": "[parameters('ledgerDigestRequireRetentionLock')]"},
+        )
+        self.assertEqual(
+            apps_params["ledgerDigestMinRetentionDays"],
+            {"value": "[parameters('ledgerDigestImmutabilityDays')]"},
+        )
+
+        rendered_custom = render_ledger_verify_job(
+            template,
+            ledgerDigestContainer="custom-ledger-digests",
+            ledgerDigestRequireRetentionLock=False,
+            ledgerDigestMinRetentionDays=730,
+        )
+        custom_env = {
+            entry["name"]: entry["value"]
+            for entry in rendered_custom["properties"]["template"]["containers"][0]["env"]
+        }
+        self.assertEqual(custom_env[core_digest.CONTAINER_VAR], "custom-ledger-digests")
+        self.assertEqual(custom_env[core_digest.REQUIRE_LOCK_VAR], "false")
+        self.assertEqual(custom_env[core_digest.MIN_RETENTION_DAYS_VAR], "730")
+
+        alerts = [
+            item
+            for item in template["resources"]
             if item["type"] == "Microsoft.Insights/scheduledQueryRules"
             and "ledger-" in item["name"]
-        }
+        ]
+        self.assertEqual(len(alerts), 2)
+        expected_scope = [
+            "[reference(resourceId('Microsoft.Resources/deployments', 'monitoring'), "
+            "'2025-04-01').outputs.workspaceId.value]"
+        ]
+        expected_actions = [
+            "[reference(resourceId('Microsoft.Resources/deployments', 'monitoring'), "
+            "'2025-04-01').outputs.actionGroupId.value]"
+        ]
         by_kind = {
-            kind: next(q for n, q in queries.items() if f"ledger-{kind}" in n)
+            kind: next(item for item in alerts if f"ledger-{kind}" in item["name"])
             for kind in ("digest-mismatch", "verify-missing")
         }
-        self.assertEqual(len(queries), 2)
-        self.assertIn(f'Log has "{digest_blob.ALERT_MARKER}"', by_kind["digest-mismatch"])
-        self.assertIn(f'Log has "{digest_blob.OK_MARKER}"', by_kind["verify-missing"])
+        for kind, alert in by_kind.items():
+            self.assertEqual(
+                alert.get("condition"),
+                "[and(parameters('deployApplications'), parameters('deployBackgroundWorkloads'))]",
+            )
+            props = alert["properties"]
+            self.assertIs(props.get("enabled"), True, kind)
+            self.assertEqual(props.get("severity"), 1, kind)
+            self.assertEqual(props.get("scopes"), expected_scope, kind)
+            self.assertEqual(props.get("evaluationFrequency"), "PT1H", kind)
+            self.assertEqual(props.get("actions", {}).get("actionGroups"), expected_actions, kind)
+            all_of = props.get("criteria", {}).get("allOf", [])
+            self.assertEqual(len(all_of), 1, kind)
+            criterion = all_of[0]
+            self.assertEqual(criterion.get("timeAggregation"), "Count", kind)
+            self.assertEqual(
+                criterion.get("failingPeriods"),
+                {"numberOfEvaluationPeriods": 1, "minFailingPeriodsToAlert": 1},
+                kind,
+            )
+
+        mismatch_props = by_kind["digest-mismatch"]["properties"]
+        self.assertEqual(mismatch_props.get("windowSize"), "PT1H")
+        mismatch_crit = mismatch_props["criteria"]["allOf"][0]
+        self.assertEqual(mismatch_crit.get("operator"), "GreaterThan")
+        self.assertEqual(mismatch_crit.get("threshold"), 0)
+
+        missing_props = by_kind["verify-missing"]["properties"]
+        self.assertEqual(missing_props.get("windowSize"), "P1D")
+        self.assertEqual(missing_props.get("overrideQueryTimeRange"), "PT26H")
+        missing_crit = missing_props["criteria"]["allOf"][0]
+        self.assertEqual(missing_crit.get("operator"), "LessThan")
+        self.assertEqual(missing_crit.get("threshold"), 1)
+
+        base_params = {
+            name: spec["defaultValue"]
+            for name, spec in template["parameters"].items()
+            if "defaultValue" in spec
+        } | {"workload": "forward", "environmentName": "dev"}
+        for demo in (False, True):
+            params = {**base_params, "demoDirectIngress": demo}
+            expected_job_name = render_ledger_verify_job(
+                template,
+                prefix=evaluate(
+                    template["variables"]["applicationPrefix"], params, template["variables"]
+                ),
+                demoDirectIngress=demo,
+            )["name"]
+            mismatch_query = evaluate(mismatch_crit["query"], params, template["variables"])
+            self.assertIn(
+                f'ContainerAppConsoleLogs | where JobName startswith "{expected_job_name}"',
+                mismatch_query,
+            )
+            self.assertIn(f'Log has "{core_digest.ALERT_MARKER}"', mismatch_query)
+            missing_query = evaluate(missing_crit["query"], params, template["variables"])
+            self.assertIn(
+                f'ContainerAppConsoleLogs | where JobName startswith "{expected_job_name}"',
+                missing_query,
+            )
+            self.assertIn(f'Log has "{core_digest.OK_MARKER}"', missing_query)
+            self.assertIn("TimeGenerated > ago(26h)", missing_query)
+        mismatch_desc = evaluate(mismatch_props["description"], base_params, template["variables"])
+        missing_desc = evaluate(missing_props["description"], base_params, template["variables"])
+        self.assertIn(core_digest.MISMATCH_RUNBOOK, mismatch_desc)
+        self.assertIn(core_digest.PROPOSED_OWNER, mismatch_desc)
+        self.assertIn(core_digest.MISSING_RUNBOOK, missing_desc)
+        self.assertIn(core_digest.PROPOSED_OWNER, missing_desc)
 
     def test_environment_only_does_not_start_workloads(self) -> None:
         apps = module(self.main, "containerapps")
@@ -1953,18 +2144,17 @@ class BicepPolicyTests(unittest.TestCase):
         self.assert_retention_controls(self.main)
 
     def assert_retention_controls(self, template: dict) -> None:
+        from zava_forward.core import ledger_digest_blob as core_digest
+
         storage = module_template(template, "storage")
         policies = [
             r
             for r in resources(storage)
-            if r["type"].endswith("/immutabilityPolicies")
-            and "condition" not in r
-            and "ranking-archive" not in r["name"]
+            if r["type"].endswith("/immutabilityPolicies") and "ranking-archive" not in r["name"]
         ]
         self.assertEqual(len(policies), 2)
         names = {}
         for policy in policies:
-            self.assertNotIn("condition", policy)
             name = evaluate(policy["name"], {"name": "fixture"}, storage["variables"])
             names[name] = policy
         for container, param, append in (
@@ -1973,14 +2163,146 @@ class BicepPolicyTests(unittest.TestCase):
         ):
             name = f"fixture/default/{container}/default"
             self.assertIn(name, names, f"missing policy on {container}")
+            if container == "audit-archive":
+                self.assertNotIn("condition", names[name])
+            else:
+                self.assertEqual(
+                    names[name].get("condition"),
+                    "[parameters('ledgerDigestImmutableStorage')]",
+                )
+                self.assertIs(
+                    evaluate(
+                        names[name]["condition"],
+                        {"ledgerDigestImmutableStorage": True},
+                        storage["variables"],
+                    ),
+                    True,
+                )
+                self.assertIs(
+                    evaluate(
+                        names[name]["condition"],
+                        {"ledgerDigestImmutableStorage": False},
+                        storage["variables"],
+                    ),
+                    False,
+                )
             props = names[name]["properties"]
             self.assertEqual(
                 props.get("immutabilityPeriodSinceCreationInDays"), f"[parameters('{param}')]"
             )
             self.assertIs(props.get("allowProtectedAppendWrites"), append)
+            self.assertNotIn("allowProtectedAppendWritesAll", props)
+            self.assertNotIn("state", props)
             spec = storage["parameters"][param]
             self.assertGreaterEqual(spec.get("minValue", 0), 1, param)
             self.assertGreaterEqual(spec["defaultValue"], spec["minValue"], param)
+
+        storage_immutable_spec = storage["parameters"]["ledgerDigestImmutableStorage"]
+        self.assertEqual(storage_immutable_spec.get("type"), "bool")
+        self.assertIs(storage_immutable_spec.get("defaultValue"), True)
+        main_immutable_spec = template["parameters"]["ledgerDigestImmutableStorage"]
+        self.assertEqual(main_immutable_spec.get("type"), "bool")
+        self.assertIs(main_immutable_spec.get("defaultValue"), True)
+        self.assertEqual(
+            module(template, "storage")["properties"]["parameters"]["ledgerDigestImmutableStorage"],
+            {"value": "[parameters('ledgerDigestImmutableStorage')]"},
+        )
+
+        main_digest_spec = template["parameters"]["ledgerDigestImmutabilityDays"]
+        self.assertEqual(main_digest_spec.get("type"), "int")
+        self.assertGreaterEqual(main_digest_spec.get("minValue", 0), 1)
+        self.assertGreaterEqual(
+            main_digest_spec["defaultValue"], max(365, main_digest_spec["minValue"])
+        )
+        self.assertEqual(
+            module(template, "storage")["properties"]["parameters"]["ledgerDigestImmutabilityDays"],
+            {"value": "[parameters('ledgerDigestImmutabilityDays')]"},
+        )
+        digest_container = evaluate(
+            storage["outputs"]["ledgerDigestContainer"]["value"], {}, storage["variables"]
+        )
+        self.assertEqual(digest_container, core_digest.DEFAULT_CONTAINER)
+        self.assertEqual(
+            module(template, "containerapps")["properties"]["parameters"]["ledgerDigestContainer"][
+                "value"
+            ],
+            "[reference(resourceId('Microsoft.Resources/deployments', 'storage'), "
+            "'2025-04-01').outputs.ledgerDigestContainer.value]",
+        )
+
+        containers_list = evaluate(storage["variables"]["containers"], {}, storage["variables"])
+        self.assertIn(core_digest.DEFAULT_CONTAINER, containers_list)
+        container_copy = next(
+            r
+            for r in resources(storage)
+            if r["type"] == "Microsoft.Storage/storageAccounts/blobServices/containers"
+            and "copy" in r
+        )
+        digest_container_props: dict | None = None
+        for idx, container_name in enumerate(containers_list):
+            evaluated_container_props = evaluate(
+                container_copy["properties"],
+                {"ledgerDigestImmutableStorage": True},
+                storage["variables"],
+                {"copyIndex": lambda *_, i=idx: i},
+            )
+            if container_name == core_digest.DEFAULT_CONTAINER:
+                self.assertEqual(
+                    evaluated_container_props,
+                    {
+                        "publicAccess": "None",
+                        "immutableStorageWithVersioning": {"enabled": True},
+                    },
+                )
+                digest_container_props = evaluated_container_props
+                disabled_container_props = evaluate(
+                    container_copy["properties"],
+                    {"ledgerDigestImmutableStorage": False},
+                    storage["variables"],
+                    {"copyIndex": lambda *_, i=idx: i},
+                )
+                self.assertEqual(
+                    disabled_container_props,
+                    {"publicAccess": "None", "immutableStorageWithVersioning": None},
+                )
+            else:
+                self.assertEqual(
+                    evaluated_container_props,
+                    {"publicAccess": "None", "immutableStorageWithVersioning": None},
+                )
+        self.assertIsNotNone(digest_container_props)
+
+        lifecycle = next(
+            r
+            for r in resources(storage)
+            if r["type"] == "Microsoft.Storage/storageAccounts/managementPolicies"
+        )
+        rules = lifecycle["properties"]["policy"]["rules"]
+        self.assertGreaterEqual(len(rules), 1)
+        lifecycle_prefixes: list[str] = []
+        for rule in rules:
+            prefixes = rule["definition"]["filters"].get("prefixMatch", [])
+            self.assertGreaterEqual(len(prefixes), 1)
+            lifecycle_prefixes.extend(prefixes)
+
+        evaluated_digest_props = evaluate(
+            names[f"fixture/default/{core_digest.DEFAULT_CONTAINER}/default"]["properties"],
+            {"ledgerDigestImmutabilityDays": main_digest_spec["defaultValue"]},
+            storage["variables"],
+        )
+        report = core_digest.verify_container_retention_lock(
+            evaluated_digest_props,
+            container_properties=digest_container_props,
+            lifecycle_prefixes=lifecycle_prefixes,
+            container_name=digest_container,
+            require_locked=False,
+            require_immutable_versioning=True,
+            min_retention_days=main_digest_spec["defaultValue"],
+        )
+        self.assertTrue(report["intact"], report["problems"])
+        self.assertFalse(report["locked"])
+        self.assertEqual(report["immutability_policy_state"], "Unlocked")
+        self.assertEqual(report["retention_days"], main_digest_spec["defaultValue"])
 
     def test_ranking_archive_blob_wiring_is_opt_in_private_and_matches_the_provider(self) -> None:
         provider = (
@@ -2026,7 +2348,9 @@ class BicepPolicyTests(unittest.TestCase):
         policy = next(
             r
             for r in resources(storage)
-            if r["type"].endswith("/immutabilityPolicies") and "condition" in r
+            if r["type"].endswith("/immutabilityPolicies")
+            and "condition" in r
+            and "ranking-archive" in r["name"]
         )
         self.assertEqual(policy["properties"].get("allowProtectedAppendWrites"), False)
         self.assertNotIn("state", policy["properties"])
@@ -2466,6 +2790,29 @@ class BicepPolicyTests(unittest.TestCase):
             failures(deploymentProfile="development", keyVaultPurgeProtection=False), set()
         )
         self.assertEqual(
+            failures(ledgerDigestImmutableStorage=False),
+            {"productionProfileRequiresImmutableLedgerDigests"},
+        )
+        self.assertEqual(
+            failures(ledgerDigestRequireRetentionLock=False),
+            {"productionProfileRequiresImmutableLedgerDigests"},
+        )
+        self.assertEqual(
+            failures(
+                ledgerDigestImmutableStorage=False,
+                ledgerDigestRequireRetentionLock=False,
+            ),
+            {"productionProfileRequiresImmutableLedgerDigests"},
+        )
+        self.assertEqual(
+            failures(
+                deploymentProfile="development",
+                ledgerDigestImmutableStorage=False,
+                ledgerDigestRequireRetentionLock=False,
+            ),
+            set(),
+        )
+        self.assertEqual(
             failures(evidenceStore="sharepoint", sharePointSiteId=""),
             {"sharePointEvidenceStoreRequiresSiteId"},
         )
@@ -2679,6 +3026,278 @@ class BicepPolicyTests(unittest.TestCase):
             del module_template(mutated, "storage")["parameters"][param]["minValue"]
             self.assert_mutation_rejected(self.assert_retention_controls, mutated)
 
+        def mutate_digest_policy(mutator) -> None:
+            mutated = deepcopy(self.main)
+            storage = module_template(mutated, "storage")
+            digest_policy = next(
+                r
+                for r in resources(storage)
+                if r["type"] == kind
+                and "ledger-digests"
+                in evaluate(r["name"], {"name": "fixture"}, storage["variables"])
+            )
+            mutator(mutated, storage, digest_policy)
+            self.assert_mutation_rejected(self.assert_retention_controls, mutated)
+
+        for label, fn in (
+            (
+                "allow-append-true",
+                lambda _m, _s, p: p["properties"].__setitem__("allowProtectedAppendWrites", True),
+            ),
+            (
+                "mutually-exclusive-append-all-false",
+                lambda _m, _s, p: p["properties"].__setitem__(
+                    "allowProtectedAppendWritesAll", False
+                ),
+            ),
+            (
+                "mutually-exclusive-append-all-true",
+                lambda _m, _s, p: p["properties"].__setitem__(
+                    "allowProtectedAppendWritesAll", True
+                ),
+            ),
+            (
+                "readonly-state-in-arm-put",
+                lambda _m, _s, p: p["properties"].__setitem__("state", "Locked"),
+            ),
+            (
+                "main-min-value-removed",
+                lambda m, _s, _p: m["parameters"]["ledgerDigestImmutabilityDays"].pop(
+                    "minValue", None
+                ),
+            ),
+            (
+                "main-default-below-365",
+                lambda m, _s, _p: m["parameters"]["ledgerDigestImmutabilityDays"].__setitem__(
+                    "defaultValue", 30
+                ),
+            ),
+            (
+                "storage-param-forwarding-broken",
+                lambda m, _s, _p: module(m, "storage")["properties"]["parameters"][
+                    "ledgerDigestImmutabilityDays"
+                ].__setitem__("value", 365),
+            ),
+            (
+                "storage-output-wrong-container",
+                lambda _m, s, _p: s["outputs"]["ledgerDigestContainer"].__setitem__(
+                    "value", "evidence"
+                ),
+            ),
+            (
+                "containerapps-forwarding-broken",
+                lambda m, _s, _p: module(m, "containerapps")["properties"]["parameters"][
+                    "ledgerDigestContainer"
+                ].__setitem__("value", "ledger-digests"),
+            ),
+            (
+                "public-container-access",
+                lambda _m, s, _p: next(
+                    r
+                    for r in resources(s)
+                    if r["type"] == "Microsoft.Storage/storageAccounts/blobServices/containers"
+                    and "copy" in r
+                ).__setitem__("properties", {"publicAccess": "Blob"}),
+            ),
+            (
+                "container-immutable-versioning-removed",
+                lambda _m, s, _p: next(
+                    r
+                    for r in resources(s)
+                    if r["type"] == "Microsoft.Storage/storageAccounts/blobServices/containers"
+                    and "copy" in r
+                ).__setitem__("properties", {"publicAccess": "None"}),
+            ),
+            (
+                "main-immutable-default-false",
+                lambda m, _s, _p: m["parameters"]["ledgerDigestImmutableStorage"].__setitem__(
+                    "defaultValue", False
+                ),
+            ),
+            (
+                "storage-immutable-param-forwarding-broken",
+                lambda m, _s, _p: module(m, "storage")["properties"]["parameters"][
+                    "ledgerDigestImmutableStorage"
+                ].__setitem__("value", True),
+            ),
+            (
+                "lifecycle-overlaps-ledger-digests",
+                lambda _m, s, _p: next(
+                    r
+                    for r in resources(s)
+                    if r["type"] == "Microsoft.Storage/storageAccounts/managementPolicies"
+                )["properties"]["policy"]["rules"][0]["definition"]["filters"][
+                    "prefixMatch"
+                ].append("ledger-digests/"),
+            ),
+            (
+                "lifecycle-blank-wildcard-prefix",
+                lambda _m, s, _p: next(
+                    r
+                    for r in resources(s)
+                    if r["type"] == "Microsoft.Storage/storageAccounts/managementPolicies"
+                )["properties"]["policy"]["rules"][0]["definition"]["filters"][
+                    "prefixMatch"
+                ].__setitem__(0, ""),
+            ),
+        ):
+            with self.subTest(digest_mutation=label):
+                mutate_digest_policy(fn)
+
+    def test_mutations_reject_weakened_ledger_verification_and_mismatch_alerts(self) -> None:
+        def find_alert(template: dict, kind: str) -> dict:
+            return next(
+                r
+                for r in template["resources"]
+                if r["type"] == "Microsoft.Insights/scheduledQueryRules"
+                and f"ledger-{kind}" in r["name"]
+            )
+
+        def find_job(template: dict) -> dict:
+            apps = module_template(template, "containerapps")
+            return next(
+                r
+                for r in resources(apps)
+                if r["type"] == "Microsoft.App/jobs"
+                and r["properties"]["template"]["containers"][0]["name"] == "ledger-verify"
+            )
+
+        mutations = (
+            (
+                "remove-mismatch-alert",
+                lambda m: m["resources"].remove(find_alert(m, "digest-mismatch")),
+            ),
+            (
+                "remove-missing-alert",
+                lambda m: m["resources"].remove(find_alert(m, "verify-missing")),
+            ),
+            (
+                "disable-mismatch-alert",
+                lambda m: find_alert(m, "digest-mismatch")["properties"].__setitem__(
+                    "enabled", False
+                ),
+            ),
+            (
+                "disable-missing-alert",
+                lambda m: find_alert(m, "verify-missing")["properties"].__setitem__(
+                    "enabled", False
+                ),
+            ),
+            (
+                "lower-mismatch-severity",
+                lambda m: find_alert(m, "digest-mismatch")["properties"].__setitem__("severity", 2),
+            ),
+            (
+                "raise-mismatch-threshold",
+                lambda m: find_alert(m, "digest-mismatch")["properties"]["criteria"]["allOf"][
+                    0
+                ].__setitem__("threshold", 1),
+            ),
+            (
+                "flip-mismatch-operator",
+                lambda m: find_alert(m, "digest-mismatch")["properties"]["criteria"]["allOf"][
+                    0
+                ].__setitem__("operator", "LessThan"),
+            ),
+            (
+                "lower-missing-threshold",
+                lambda m: find_alert(m, "verify-missing")["properties"]["criteria"]["allOf"][
+                    0
+                ].__setitem__("threshold", 0),
+            ),
+            (
+                "remove-missing-time-range-override",
+                lambda m: find_alert(m, "verify-missing")["properties"].pop(
+                    "overrideQueryTimeRange", None
+                ),
+            ),
+            (
+                "empty-mismatch-action-groups",
+                lambda m: find_alert(m, "digest-mismatch")["properties"]["actions"].__setitem__(
+                    "actionGroups", []
+                ),
+            ),
+            (
+                "wrong-mismatch-scope",
+                lambda m: find_alert(m, "digest-mismatch")["properties"].__setitem__(
+                    "scopes", ["/subscriptions/wrong/workspace"]
+                ),
+            ),
+            (
+                "wrong-mismatch-marker",
+                lambda m: find_alert(m, "digest-mismatch")["properties"]["criteria"]["allOf"][
+                    0
+                ].__setitem__(
+                    "query",
+                    '[format(\'ContainerAppConsoleLogs | where JobName startswith "{0}" '
+                    "and Log has \"WRONG_ALERT\"', variables('ledgerJobName'))]",
+                ),
+            ),
+            (
+                "wrong-missing-marker",
+                lambda m: find_alert(m, "verify-missing")["properties"]["criteria"]["allOf"][
+                    0
+                ].__setitem__(
+                    "query",
+                    '[format(\'ContainerAppConsoleLogs | where JobName startswith "{0}" '
+                    'and Log has "WRONG_OK" | where TimeGenerated > ago(26h)\', '
+                    "variables('ledgerJobName'))]",
+                ),
+            ),
+            (
+                "manual-trigger-job",
+                lambda m: find_job(m)["properties"]["configuration"].__setitem__(
+                    "triggerType", "Manual"
+                ),
+            ),
+            (
+                "nonzero-retry-limit",
+                lambda m: find_job(m)["properties"]["configuration"].__setitem__(
+                    "replicaRetryLimit", 1
+                ),
+            ),
+            (
+                "wrong-schedule-cron",
+                lambda m: find_job(m)["properties"]["configuration"][
+                    "scheduleTriggerConfig"
+                ].__setitem__("cronExpression", "0 0 1 * *"),
+            ),
+            (
+                "hardcoded-container-env-ignoring-param",
+                lambda m: find_job(m)["properties"]["template"]["containers"][0].__setitem__(
+                    "env",
+                    find_job(m)["properties"]["template"]["containers"][0]["env"].replace(
+                        "parameters('ledgerDigestContainer')", "'ledger-digests'"
+                    ),
+                ),
+            ),
+            (
+                "injected-sas-env",
+                lambda m: find_job(m)["properties"]["template"]["containers"][0].__setitem__(
+                    "env",
+                    find_job(m)["properties"]["template"]["containers"][0]["env"][:-3]
+                    + ", createObject('name', 'ZF_DIGEST_SAS', 'value', 'sv=2024')))]",
+                ),
+            ),
+            (
+                "require-lock-forwarding-broken",
+                lambda m: module(m, "containerapps")["properties"]["parameters"][
+                    "ledgerDigestRequireRetentionLock"
+                ].__setitem__("value", False),
+            ),
+            (
+                "min-retention-forwarding-broken",
+                lambda m: module(m, "containerapps")["properties"]["parameters"][
+                    "ledgerDigestMinRetentionDays"
+                ].__setitem__("value", 30),
+            ),
+        )
+        for label, mutate in mutations:
+            with self.subTest(ledger_mutation=label):
+                mutated = deepcopy(self.main)
+                mutate(mutated)
+                self.assert_mutation_rejected(self.assert_ledger_verification_controls, mutated)
+
     def test_mutations_reject_missing_or_disconnected_private_endpoints(self) -> None:
         for name in SERVICES:
             for change in ("remove", "target", "subnet", "zones", "resource", "connection", "dns"):
@@ -2723,6 +3342,7 @@ class BicepPolicyTests(unittest.TestCase):
             "productionProfileForbidsPublicNetworkAccess",
             "productionProfileRequiresKeyVaultPurgeProtection",
             "productionProfileRequiresRegistryQuarantine",
+            "productionProfileRequiresImmutableLedgerDigests",
             "regionCheckMustBeRecorded",
             "quotaCheckMustBeRecorded",
             "deploymentLocationsMustBeSelected",

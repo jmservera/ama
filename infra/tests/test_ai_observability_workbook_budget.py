@@ -16,9 +16,7 @@ RAW_CONTENT_PROJECTION = re.compile(
 class AiObservabilityWorkbookBudgetTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        workbook = json.loads(
-            (INFRA / "monitoring-workbook.json").read_text(encoding="utf-8")
-        )
+        workbook = json.loads((INFRA / "monitoring-workbook.json").read_text(encoding="utf-8"))
         cls.items = {item["name"]: item["content"] for item in workbook["items"]}
 
     def test_capability_level_metered_tokens_and_calls(self) -> None:
