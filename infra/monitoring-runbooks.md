@@ -224,7 +224,9 @@ retry under separate approval.
 ### Job auth
 
 Normal suffix `auth-renewal`, demo `auth`; only with token storage and background
-workloads. Proposed owner: Digital service owner. Triage: expiry/binding and
+workloads. The ranking jobs (`rank`, `rank-publish`) currently resolve to this
+anchor in the alert description; see [job ranking](#job-rank). Proposed
+owner: Digital service owner. Triage: expiry/binding and
 execution metadata without fetching SAS or tokens. Response: follow
 [Key Vault lifecycle](./README.md#key-vault-secret-lifecycle) and preserve
 authentication, no logon bypass. Recovery: approved renewal and binding/expiry
