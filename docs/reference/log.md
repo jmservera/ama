@@ -13103,3 +13103,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 200 live second audit (Refs #200)
 
 * Added [issue-200-live-20261118T1618Z-2026-11-18.md](research/issue-200-live-20261118T1618Z-2026-11-18.md) with evidence folder: live exec proof (uid 10001, empty `/data`, no capabilities) on the demo API and resident app, 52 revisions keeping historical tags; fresh tag deployment left unproven because the registry is private and a window would change shared posture. No source change.
+
+## [2026-11-18] add | Issue 202 live audit (Refs #202)
+
+* Added [issue-202-live-20261118T1643Z-2026-11-18.md](research/issue-202-live-20261118T1643Z-2026-11-18.md) with evidence folder: registry-first ordering proven (#302 on 2026-10-15, deletion #499 on 2026-10-27), tag `v0.21.0` published, no tracked `mvp/` or `prototype/` file; `mvp-ci.yml` and `mvp-validation.yml` remain dispatch-only and disabled and the active ruleset requires no checks, so that criterion stays unproven; no GitHub release exists. No source change, no Azure action.
