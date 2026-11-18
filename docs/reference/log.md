@@ -12729,3 +12729,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Resident and representative UX live demo evidence (Refs #154)
 
 * Added [issue-154-live-resident-ux-evidence-2026-11-18.md](research/issue-154-live-resident-ux-evidence-2026-11-18.md): no live resident contact is observed on the synthetic showcase; validation through the usability programme and the representative view stay unproven for the demo (no participants or SA-010 agreement; no live case has a representative). No source changed.
+
+## [2026-11-18] add | Issue 358 live recheck (Refs #358)
+
+* Added [issue-358-live-recheck-2026-11-18.md](research/issue-358-live-recheck-2026-11-18.md): confirmed the throwaway app is deleted, re-ran 126 setup tests, confirmed the delegating `main()`, and read the demo API Key Vault reference. No Azure write or source change; the full `setup-entra.py` run stays unproven.
