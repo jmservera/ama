@@ -12851,6 +12851,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Archive unusable-path failing-first evidence (Refs #1259)
 
 * Added [2026-11-18-ranking-archive-unusable-1259-failing-first.md](research/2026-11-18-ranking-archive-unusable-1259-failing-first.md): regression class red on the parent of the fix, green on main, with a per-criterion table. No source change; no Azure action; the FULL-receipt criterion stays unticked.
+
 ## [2026-11-18] add | Quality sensor live re-verification (Refs #1288)
 
 * Added [issue-1288-live-r2-quality-sensor-evidence-2026-11-18.md](research/issue-1288-live-r2-quality-sensor-evidence-2026-11-18.md): fresh retained readings seen on the demo, release gate unchanged, per-criterion table; no source change.
