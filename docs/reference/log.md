@@ -12380,3 +12380,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Live demo evidence for simulator stage 2 (Refs #184)
 
 * Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.
+
+## [2026-11-18] add | Quality sensor values and grounded flag live evidence (Refs #1288)
+
+* Added [issue-1288-live-quality-sensor-evidence-2026-11-18.md](research/issue-1288-live-quality-sensor-evidence-2026-11-18.md): per-criterion record for criteria 3 to 8. Live retained readings, stale state and denied invoke observed; local mock-provider and SQL evidence for 3 and 5 to 7; 4 and 8 unproven for the demo. Test-harness notes recorded, no source change.
