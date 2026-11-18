@@ -13088,6 +13088,18 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-185-live-r4-audit-2026-11-18.md](research/issue-185-live-r4-audit-2026-11-18.md): repository IoT identity tests pass with the optional SDK, credential scan clean, demo hub now reports zero devices (closing the run 3 adverse observation); durable storage, X.509 and production ownership stay unproven. No source change.
 
+## [2026-11-18] add | Issue 145 live fourth audit (Refs #145)
+
+* Added [issue-145-live-run4-audit-2026-11-18.md](research/issue-145-live-run4-audit-2026-11-18.md) with retained redacted read-only Azure output (Local backup redundancy, 14 day retention, no long-term retention, throwaway copies absent), the repository parameter and runbook check, and a per-criterion table: C4, R3 and R5 stay unproven, C4 and R5 are production-only, R3 needs a `src/core` reapply change at the FULL tier. No source change, nothing created in Azure, no criterion ticked.
+
+## [2026-11-18] add | Issue 151 live fourth audit, role routes (Refs #151)
+
+* Added [issue-151-live-r4-role-routes-evidence-2026-11-18.md](research/issue-151-live-r4-role-routes-evidence-2026-11-18.md): seven role screens with 0 axe violations and clean keyboard walks, two role-gate denials, no screen reader run; criterion 4 stays partly proven for the demo.
+
+## [2026-11-18] add | Fourth live audit of nomination route (Refs #130)
+
+* Added [issue-130-live-r4-nomination-route-audit-2026-11-18.md](research/issue-130-live-r4-nomination-route-audit-2026-11-18.md): new revision 0000032 on the same image digest, same 403 write refusal, form-encoded 400 explained by the JSON-only API, 83 offline tests pass, per-criterion proven or unproven table; unticked representative criterion unproven; no source change, nothing created in Azure
+
 ## [2026-11-18] add | Quality sensor third live audit (Refs #1288)
 
 * Added [issue-1288-live-r3-quality-sensor-evidence-2026-11-18.md](research/issue-1288-live-r3-quality-sensor-evidence-2026-11-18.md): read-only live probe that did not invoke the assistant (no metric change), first screenshot of the real sensor panel, readings now stale and no simulator job, 304 focused local tests OK; criteria 4 and 8 unproven for the demo, production-only items listed; no source change.
@@ -13103,3 +13115,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 470 live audit (Refs #470)
 
 * Added [issue-470-live-20261118T1639Z-2026-11-18.md](research/issue-470-live-20261118T1639Z-2026-11-18.md): criteria 1, 2, 3 and 5 backed by 109 passing `tools.test_rpi_checks` tests; criterion 4 stays unproven (no full `--all` benchmark run). No source change.
+## [2026-11-18] add | Issue 136 live epic audit (Refs #136)
+
+* Added [issue-136-live-20261118T1638Z-2026-11-18.md](research/issue-136-live-20261118T1638Z-2026-11-18.md) with evidence folder: per-criterion table for the epic, remaining criteria of open children #138, #142 to #146, and a read-only Azure probe; nothing ticked, no source change, no Azure resource created.
+
+## [2026-11-18] add | Issue 144 live run 4 (Refs #144)
+
+* Added [issue-144-live-r4-2026-11-18.md](research/issue-144-live-r4-2026-11-18.md) with a raw folder: read-only az state of four apps and nine jobs, an empty `src-deploy.yml` run list and a scripted replica probe on revision `--0000032`. Criteria 1 (pipeline clause) and 3 (only non-root enforced) stay unproven; no source, Azure resource or load change.
