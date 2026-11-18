@@ -12915,3 +12915,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] update | Direct ingress live third measurement (Refs #360)
 
 * Extended [direct-ingress-live-demo-2026-11-18.md](research/direct-ingress-live-demo-2026-11-18.md) with a 14:00 UTC measurement and per-criterion table: criteria c and e need owner decisions, d stays partly proven (AI call not reproduced today); no source change, no Azure resource created
+
+## [2026-11-18] update | Cohort evaluation second live re-run (Refs #222)
+
+* Added [cohort-evaluation-live-r2-2026-11-18.md](research/cohort-evaluation-live-r2-2026-11-18.md) with retained output and a per-criterion table: five criteria proven on the synthetic fixture, the OQ-018 owner-approval criterion unproven.
