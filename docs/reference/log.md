@@ -13183,3 +13183,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 129 live third pass (Refs #129)
 
 * Added [issue-129-live-r3-2026-11-18.md](research/issue-129-live-r3-2026-11-18.md): 26 core and 6 api bundle tests pass, report CLI refusal check, signed-in probe of revision 0000032 finds no bundle route; Atlas-owner mapping confirmation stays unproven. Docs only.
+
+## [2026-11-18] add | Issue 96 live third re-verification (Refs #96)
+
+* Added [issue-96-live-r3-reverification-2026-11-18.md](research/issue-96-live-r3-reverification-2026-11-18.md): live probe again returns zero registered form schemas, search finds no code path that records an approval, 79 focused core tests pass with raw output retained; the approved-schema criterion stays unproven for the demo. Docs only.

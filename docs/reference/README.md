@@ -418,6 +418,8 @@ cases carry a safeguarding item, so that half stays unproven without writing dem
 For #96, the [live form schema approval evidence](./research/issue-96-live-form-schema-approval-evidence-2026-11-18.md)
 records that the demo holds no registered schema and no shipped path records
 an approval, so the approved-schema criterion stays unproven.
+The [third run](./research/issue-96-live-r3-reverification-2026-11-18.md) repeats the
+read-only probe and keeps the raw test and search output; the criterion stays unproven.
 For #80, the [staged transition thresholds evidence](./research/issue-80-live-transition-thresholds-evidence-2026-11-18.md)
 records that the one unticked criterion, owner-set thresholds, is a human decision and
 cannot be proven for the demo; 125 importer tests passed.
