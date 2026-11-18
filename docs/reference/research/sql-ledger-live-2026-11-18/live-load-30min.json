@@ -1,0 +1,48 @@
+{
+  "started_utc": "2026-11-18T07:35:04.653982+00:00",
+  "finished_utc": "2026-11-18T08:05:05.485489+00:00",
+  "seconds": 1800.0,
+  "warmup_seconds": 60.0,
+  "sessions": 5,
+  "writers": 2,
+  "classes": {
+    "list": {
+      "n": 6343,
+      "errors": 0,
+      "p50": 0.1735,
+      "p95": 0.2755,
+      "max": 3.6889,
+      "limit_p95": 1.0,
+      "ok": true
+    },
+    "detail": {
+      "n": 6344,
+      "errors": 0,
+      "p50": 0.0763,
+      "p95": 0.17,
+      "max": 4.9962,
+      "limit_p95": 1.0,
+      "ok": true
+    },
+    "dashboard": {
+      "n": 1269,
+      "errors": 0,
+      "p50": 0.115,
+      "p95": 0.187,
+      "max": 2.2636,
+      "limit_p95": 3.0,
+      "ok": true
+    },
+    "write": {
+      "n": 414,
+      "errors": 0,
+      "p50": 0.2292,
+      "p95": 0.3447,
+      "max": 3.0674,
+      "limit_p95": 2.0,
+      "ok": true
+    }
+  },
+  "total_measured": 14370,
+  "all_ok": true
+}
