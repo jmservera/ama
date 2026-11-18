@@ -12335,3 +12335,18 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | WCAG 2.2 live axe and keyboard evidence (Refs #151)
 
 * Added [issue-151-live-wcag-axe-evidence-2026-11-18.md](research/issue-151-live-wcag-axe-evidence-2026-11-18.md): axe-core 4.10.3 and Tab-walk scans of the 13 Programme Manager screens on the live demo. Zero axe violations, no keyboard trap, no 320 px horizontal scroll; three contrast results incomplete. The manual screen-reader and keyboard criterion stays unticked (screen reader is production-only, #1907; one role only). No source changed.
+## [2026-11-18] add | IoT Hub distinct device identity live evidence (Refs #110)
+
+* Added [issue-110-live-iot-identity-evidence-2026-11-18.md](research/issue-110-live-iot-identity-evidence-2026-11-18.md): C1 proven for the demo with three Hub-issued SAS identities, schema version and stable reading IDs read back from Event Hub. Production X.509 receiver stays unproven.
+## [2026-11-18] add | Chat break-glass live proof (Refs #162)
+
+* Added [chat-breakglass-live-proof-2026-11-18.md](research/chat-breakglass-live-proof-2026-11-18.md): refused break-glass attempts on the live demo each add one audit entry with an intact chain; grant path not provable live without a config change; policy decided for the demo only. Criterion 6 left unticked.
+## [2026-11-18] add | Issue 111 sensor analysis live evidence (Refs #111)
+
+* Added [issue-111-sensor-analysis-live-evidence-2026-11-18.md](research/issue-111-sensor-analysis-live-evidence-2026-11-18.md): the R1 to R3 criterion cannot be proven on the demo because R2 and R3 need named human sign-off and R1 lacks the official standards texts; read-only live probes recorded.
+## [2026-11-18] add | Simulator run controls live evidence (Refs #189)
+
+* Added [issue-189-simulator-run-controls-live-evidence-2026-11-18.md](research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md): per-criterion record. Budget alerts and the hub owner tag are proven live; the time limit is proven in code only because no simulator job is deployed.
+## [2026-11-18] add | Live demo evidence for simulator stage 2 (Refs #184)
+
+* Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.
