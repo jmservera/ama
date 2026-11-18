@@ -13067,6 +13067,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 162 live audit (Refs #162)
 
 * Added [issue-162-live-audit-2026-11-18.md](research/issue-162-live-audit-2026-11-18.md) with retained raw output: live break-glass refusals each add one intact audit-chain entry (2068 to 2070), the grant path with purpose is proven locally only (33 tests, stored audit rows), policy decided for the demo only; criterion 6 stays unticked; no source change, no Azure resource created.
+
 ## [2026-11-18] add | Issue 184 live fourth audit (Refs #184)
 
 * Added [issue-184-live-r4-2026-11-18.md](research/issue-184-live-r4-2026-11-18.md) with retained sanitised outputs: #185 and #189 still open, the demo hub has a USD 25 budget with 80 and 100 percent alerts, owner and expiry controls proven in source and 135 tests only; no source change, nothing created in Azure, no criterion ticked.
