@@ -115,3 +115,11 @@ as CI.
   contrast sample, and the single document title across routes.
 * Extend the same scan to the other roles when test accounts exist, and to
   dialog, error and status states.
+
+## Evidence limits
+
+* The Time capture screen was in its error state ("could not load") during the scan, so its 0 violations does not describe a loaded page.
+* Adverse, omitted from the results table: the keyboard walk recorded off-screen focus stops (21 on Capacity, 3 on Closed, 2 on Progress, 1 each on All cases and Overview).
+* Most screenshots were taken after the Tab walk and are scrolled; they do not show the page heading.
+* The JSON and one screenshot show the synthetic employee persona display name (Aadi Kapoor), already used across the repository evidence; no real account detail is retained.
+* Independent exact-head review and hosted CI are outstanding; no criterion is ticked.
