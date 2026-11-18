@@ -13215,6 +13215,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 154 live third run (Refs #154)
 
 * Added [issue-154-live-resident-ux-r3-2026-11-18.md](research/issue-154-live-resident-ux-r3-2026-11-18.md): network trace and Azure resource check support 5a for the demo; 5b (usability validation) stays unproven; corrects round 1 on the assistant textarea
+
 ## [2026-11-18] add | Issue 108 live re-verification, round 3 (Refs #108)
 
 * Added [issue-108-live-r3-2026-11-18.md](research/issue-108-live-r3-2026-11-18.md) with raw evidence: 116 harness tests OK, deployments and rate limits reconfirmed, quota headroom still unproven (usages empty, Microsoft.Quota unregistered), live AI report read, manager routes 403 for the Programme Manager demo account; no criterion newly tickable.
