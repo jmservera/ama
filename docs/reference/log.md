@@ -12335,3 +12335,21 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Chat grounding live demo evidence (Refs #164)
 
 * Added [issue-164-live-chat-grounding-evidence-2026-11-18.md](research/issue-164-live-chat-grounding-evidence-2026-11-18.md): per-criterion record for the five unticked criteria. The chat task is registered and disabled with proposed, unapproved thresholds and no named accountable individual; three live asks (cited answer, approve refusal, injection) were answered by rules with zero model calls because a held unknown liability routes the task to workflow-only. Human exercises, payload and provider approval and any bound model result stay unproven. No source or Azure resource changed.
+## [2026-11-18] add | Five assistants live demo evidence (Refs #107)
+
+* Added [issue-107-live-assistants-evidence-2026-11-18.md](research/issue-107-live-assistants-evidence-2026-11-18.md): per-criterion record of the two unticked criteria. Independent-worker race, revocation and restart tests pass on a disposable local SQL Server 2022; the live demo denies all five assistants with no provider call; the approved-release and delivered-build criterion stays unproven because no OQ-017 approver is appointed.
+## [2026-11-18] add | IoT Hub distinct device identity live evidence (Refs #110)
+
+* Added [issue-110-live-iot-identity-evidence-2026-11-18.md](research/issue-110-live-iot-identity-evidence-2026-11-18.md): C1 proven for the demo with three Hub-issued SAS identities, schema version and stable reading IDs read back from Event Hub. Production X.509 receiver stays unproven.
+## [2026-11-18] add | Chat break-glass live proof (Refs #162)
+
+* Added [chat-breakglass-live-proof-2026-11-18.md](research/chat-breakglass-live-proof-2026-11-18.md): refused break-glass attempts on the live demo each add one audit entry with an intact chain; grant path not provable live without a config change; policy decided for the demo only. Criterion 6 left unticked.
+## [2026-11-18] add | Issue 111 sensor analysis live evidence (Refs #111)
+
+* Added [issue-111-sensor-analysis-live-evidence-2026-11-18.md](research/issue-111-sensor-analysis-live-evidence-2026-11-18.md): the R1 to R3 criterion cannot be proven on the demo because R2 and R3 need named human sign-off and R1 lacks the official standards texts; read-only live probes recorded.
+## [2026-11-18] add | Simulator run controls live evidence (Refs #189)
+
+* Added [issue-189-simulator-run-controls-live-evidence-2026-11-18.md](research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md): per-criterion record. Budget alerts and the hub owner tag are proven live; the time limit is proven in code only because no simulator job is deployed.
+## [2026-11-18] add | Live demo evidence for simulator stage 2 (Refs #184)
+
+* Added [issue-184-live-simulator-stream-evidence-2026-11-18.md](research/issue-184-live-simulator-stream-evidence-2026-11-18.md): child-story status (#185 and #189 open), the demo hub budget alert, and why the live owner and time limit and the child-closure criterion are not proven for the demo. No source or Azure changes.
