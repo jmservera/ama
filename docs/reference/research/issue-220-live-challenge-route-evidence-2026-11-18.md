@@ -27,7 +27,7 @@ Four of the five acceptance criteria in #220 are already ticked. This note cover
 
 | Observation | Result |
 | --- | --- |
-| Route view `GET /api/cases/ZF-2025-0331?view=nomination-routes-html` | 200, accessible HTML: "Urgent hazards use the hazard reporting route immediately and are never queued here. A named person owns every review and response." |
+| Route view `GET /api/cases/ZF-2025-0331?view=nomination-routes-html` | 200, raw unstyled HTML fragment: "Urgent hazards use the hazard reporting route immediately and are never queued here. A named person owns every review and response." |
 | Case detail guarantees | Three plain-language guarantees: no lowered priority, eligibility or queue place; no refusal or withdrawal recorded and no consent change; no pause, hold or extension of any hazard or safeguarding clock |
 | Case detail assurance | `no_retaliation: true`, `inferred_refusal: false`, `hazard_response_delayed: false` with plain text |
 | Extra field `retaliation_flag`, `refusal`, `hazard_pause` or `priority_penalty` in a route write | 400 each, "Supply only permitted route fields", before any write |
@@ -59,3 +59,8 @@ Every resident-workflow write by an Entra-signed-in employee is refused with the
 
 * Fix the Entra identity comparison in `_operation` (compare identity fields, not the whole principal), add a test that uses an Entra principal, redeploy the demo image and repeat `run1.py`. This needs the full validation tier and owner approval for the redeploy.
 * Run a live priority suggestion with AI tasks enabled so `challenge_open` can be exercised.
+
+## Evidence limits
+
+* `route-view.png` is a raw HTML fragment, not a styled page, and is not accessibility evidence.
+* `probe1.py` and `probe1.json` are retained alongside the other raw outputs and are part of the evidence.
