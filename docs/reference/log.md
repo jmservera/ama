@@ -12444,6 +12444,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
 
+## [2026-11-17] update | Usability programme demo-first desktop-only slice (Refs #155)
+
+* Added a demo-first, desktop-only first slice to the [usability testing programme plan](research/ux/usability-test-programme-plan.md): employee workbench and resident showcase surfaces at 1280 CSS px, six in-scope scripts, no participant data in the repository, proxy sessions labelled as not user validation.
+* Added a doc-contract regression test for the slice in `src/core/tests/test_usability_programme.py`. No participant, session, SA-010 agreement or result exists; no #155 criterion is ticked.
 ## [2026-11-17] update | Journey learning-test protocol refresh and drift guard (Refs #129)
 
 * Updated [journey-learning-test-bundles.md](research/ux/journey-learning-test-bundles.md) to record the constructed-input command and the cross-layer scenario tests, and added a core unit test that compares the protocol bundle table with the scorer's bundle definitions.
