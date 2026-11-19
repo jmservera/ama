@@ -13478,3 +13478,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 1818 live retained-reading re-observation (Refs #1818)
 
 * Added [issue-1818-live-20261119-2026-11-19.md](research/issue-1818-live-20261119-2026-11-19.md) with redacted retained output: read-only map, stale filter and resident sensor view; the Hub to SQL leg was not re-run and the sender and receiver fix stay off main.
+## [2026-11-19] add | Issue 107 actual SQL coverage (Refs #107)
+
+* Added [issue-107-live-r4-criteria-2026-11-19.md](research/issue-107-live-r4-criteria-2026-11-19.md): material-mismatch and allowance race tests run on a throwaway SQL Server, plus a composite old-image test; delivered-build acceptance stays unproven.
