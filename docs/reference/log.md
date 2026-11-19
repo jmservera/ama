@@ -13347,3 +13347,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 100 live demo check (Refs #100)
 
 * Added [issue-100-live-2026-11-19.md](research/issue-100-live-2026-11-19.md): live probe shows the deployed demo image lacks the AI economics field, so criterion 2 is proven locally only; #440 stabilization stays unproven. No src change.
+## [2026-11-19] add | Epic 113 first unmet demo criterion (Refs #113)
+
+* Added [issue-113-first-unmet-demo-criterion-2026-11-19.md](research/issue-113-first-unmet-demo-criterion-2026-11-19.md): criterion 1 (#440 checkpoint) is first unmet and not code-satisfiable; live GitHub and Azure reads, per-criterion table, no source change.
