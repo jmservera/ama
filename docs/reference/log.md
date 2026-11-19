@@ -13591,3 +13591,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 108 first buildable criterion check (Refs #108)
 
 * Indexed [issue-108-live-20261119-2026-11-19.md](research/issue-108-live-20261119-2026-11-19.md): deployments re-read live, quota routes still empty or unregistered, 35 comparison tests pass; no criterion buildable. No source change.
+## [2026-11-19] add | Issue 111 live demo evidence (Refs #111)
+
+* Added [issue-111-live-demo-evidence-2026-11-19.md](research/issue-111-live-demo-evidence-2026-11-19.md): the two ticked criteria re-verified by the sensor analysis tests; R1 to R3 sign-off stays unproven (human reviewer gate). No source change.
