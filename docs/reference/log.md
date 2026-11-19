@@ -14081,3 +14081,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 121 live criteria re-observation (Refs #121)
 
 * Added [issue-121-live-20261119-2026-11-19.md](research/issue-121-live-20261119-2026-11-19.md): source register and 71 offline tests re-run, deployed digest unchanged; no source-closable gap, redeploy and owner approvals remain outside the demo brief.
+## [2026-11-19] add | Issue 223 live run 3 (Refs #223)
+
+* Added [issue-223-live-r3-2026-11-19.md](research/issue-223-live-r3-2026-11-19.md): focused tests re-run (37 and 6 OK) and per-criterion table; remaining items need humans or an OQ-017 appointment.

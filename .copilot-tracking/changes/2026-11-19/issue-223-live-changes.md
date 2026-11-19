@@ -1,18 +1,12 @@
-# Changes: issue 223 run 3 (2026-11-19)
+# Issue 223 changes, 2026-11-19
+Refs #223. Added docs/reference/research/issue-223-live-r3-2026-11-19.md, reference README entry and log entry. No source change; FOCUSED tier.
 
-Tier FOCUSED: docs only, no src, infra, SQL or deployment change. Refs #223.
-
-Files: docs/reference/research/issue-223-first-buildable-criterion-2026-11-19.md (new), docs/reference/README.md, docs/reference/log.md, .copilot-tracking artifacts.
-
-| Criterion | Result |
+| Criterion | Proven or unproven |
 | --- | --- |
-| Seeded critical defects detected and gated | Proven offline (scripted panel); unproven with people or live |
-| Reviewer, source and reason retained | Proven offline; live proven in run 2 |
-| Detection, corrections, effort vs workflow-only | Proven as scripted reporting; unproven as measurement |
+| Seeded critical defects detected and gate-blocked | Proven offline; unproven with humans |
+| Reviewer, source and reason retained | Proven |
+| Detection, corrections and effort reported on same scenarios | Reporting proven; measurement unproven (needs person) |
 | Default acceptance and citation validity alone cannot pass | Proven offline |
-| Automation-bias test; OQ-017 authority | Test proven offline; authority unproven |
+| Automation-bias test; OQ-017 authority | Test proven; authority unproven (owner appointment) |
 
-Validation: core test_human_review_effectiveness_223 6 OK; agents test_review_effectiveness 37 OK; offline gate passed true. mypy, ruff not applicable (no source change).
-
-Witness note: first plan-done to review-done calls were refused for missing state paths (details, changes, review); repaired and re-recorded (seq 8-11). Commit was amended once; a follow-up commit binds commit-complete.
-Second repair: implement-start re-recorded at the amended HEAD (seq 14+) because amend orphaned the first implement-start HEAD.
+Validation: tests.test_review_effectiveness 37 OK; tests.test_human_review_effectiveness_223 6 OK; mypy/ruff not applicable (no src change).
