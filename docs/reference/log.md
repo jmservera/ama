@@ -13435,3 +13435,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 1288 live audit 4 (Refs #1288)
 
 * Added [issue-1288-live-r4-quality-sensor-evidence-2026-11-19.md](research/issue-1288-live-r4-quality-sensor-evidence-2026-11-19.md): 304 local tests OK, read-only Azure probe, per-criterion table; criteria 4 and 8 unproven.
+## [2026-11-19] add | Issue 1258 criteria proof (Refs #1258)
+
+* Added [2026-11-19-ranking-archive-ancestor-durability-1258-live.md](research/2026-11-19-ranking-archive-ancestor-durability-1258-live.md): per-criterion table; criteria 1 to 4 proven by 57 passing tests, criterion 5 unproven for the demo. No source change.
