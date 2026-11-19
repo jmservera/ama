@@ -13396,3 +13396,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 104 criteria recheck (Refs #104)
 
 * Added [issue-104-criteria-recheck-live-2026-11-19.md](research/issue-104-criteria-recheck-live-2026-11-19.md): per-criterion table; the first unmet criterion needs owner decisions, not code. No source change.
+## [2026-11-19] add | Issue 136 live audit 2 (Refs #136)
+
+* Added [issue-136-live-20261119T0945Z-2026-11-19.md](research/issue-136-live-20261119T0945Z-2026-11-19.md) with evidence folder: per-criterion table; the #440 checkpoint is the first unmet criterion and is not closable by code. No source change.
