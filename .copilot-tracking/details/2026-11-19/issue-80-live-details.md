@@ -1,2 +1,5 @@
-# Issue 80 live details
-Phase 1: confirm criterion state from `gh issue view 80` and ADR 0001 line 216. Phase 2: changes and review records. Tier FOCUSED (documentation only).
+# Plan: issue 80 live (2026-11-19)
+
+1. Re-verify ADR wording and importer source for threshold settings (read-only).
+2. Record per-criterion table in the changes record; no src change (FOCUSED tier, docs-only).
+3. Review once; commit locally.
