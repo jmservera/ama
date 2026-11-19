@@ -12441,6 +12441,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Updated the [applicability pack](./regulatory/reviewed-updates/2026-11-01-adm-ai-act-applicability-review.md) and the [Legal briefing](./research/rai/legal-briefing-adm-ai-act.md) with a dated 2026-11-17 reading: S.I. 2026/82 reg. 5, the EU AI Act as made and Regulation (EU) 2026/1744 (Digital Omnibus on AI, OJ 2026-07-24), which moves the Chapter III high-risk application dates. This supersedes the earlier "retrieval failed" and "unverified delay" statements; the earlier rows are kept.
 * Still `Unknown`: ICO guidance (HTTP 403), consolidated EU text comparison, Article 22D regulations, snapshot line comparison and the EU territorial and role facts. All decisions stay `Pending`; no legal conclusion, approval or classification is made. Added regression test `tools/test_adm_evidence_pack.py`.
+## [2026-11-17] update | Document scan, retention and legal hold design (Refs #117)
+
+* Added the [design](../design/document-scan-retention-legal-hold.md) separating built behaviour from proposals, with an index row and an offline drift test (`tools/test_document_controls_design.py`).
+* Recorded that blob soft delete (30 days) and versioning leave bytes recoverable after an approved retention deletion. Real scanning, retention periods and hold authority stay open owner decisions. Documentation only; no live resource touched.
 ## [2026-11-17] update | Epic 109 closure audit against main (Refs #109)
 
 * Added a dated closure audit to [the IoT sensor analytics research plan](./research/iot-sensor-analytics-research-plan.md#epic-109-closure-audit-against-main-eb51af5c9-2026-11-17-refs-109) and an index entry in the [reference index](./README.md). It maps #110, #111 and #112 to merged evidence (including PR 1656) and lists the unmet criteria.
