@@ -1,5 +1,3 @@
-# Issue 1830 r4 details
+# Issue 1830 r4 details (2026-11-19)
 
-Phase 1: copy the verified outcome into docs/reference/research/issue-1830-live-r4-2026-11-19.md with a table of the four criteria.
-Phase 2: add an entry to docs/reference/log.md (append only) and a row to docs/reference/README.md.
-Validation: 54 unit tests (already run), git diff and link review. Tier FOCUSED: docs only.
+Validation: python3 -m unittest tools.test_rpi_preflight tools.test_rpi_gate_timing -q (Ran 54, OK, 2026-11-19). Tier FOCUSED; no Azure, no browser, no rpi-checks --all.
