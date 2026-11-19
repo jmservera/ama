@@ -1,13 +1,21 @@
-# Issue 76 live r5 research (2026-11-19)
+# Research: issue 76, fifth live pass (2026-11-19)
 
-Task: issue-76-live-r5. Only unticked criterion: "Hazard and safeguarding items show a clock and named owner".
+Refs #76. Synthetic desktop demo; owner decisions of 2026-11-18 apply. Research disposition: `reused`.
 
-Planning Readiness: Ready. Research disposition: reused.
+## Question
 
-Evidence reused:
+Which unticked acceptance criterion can be built or proven for the demo? Only one is unticked: "Hazard and safeguarding items show a clock and named owner".
 
-* docs/reference/research/issue-76-live-r4-2026-11-19.md: live probe, revision 0000033, safeguarding clock and named owner proven; hazard clock element and named owner proven, time values Unknown by design.
-* src/core/tests/test_hazard_safeguarding_clock_owner.py and test_hazard_safeguarding_clock_owner_76.py already cover the code path in src/core taskqueues.py and workflows.py.
-* Fresh run today: 35 tests (those two files plus test_taskqueues) OK. Live active revision still ca-cutover-test-demo-api--0000033 (read-only az query).
+## Evidence reused
 
-Finding: no remaining buildable gap. Inventing hazard awareness time would breach the no-invented-values rule; the Unknown-value call belongs to the issue owner.
+* [docs/reference/research/issue-76-live-r4-2026-11-19.md](../../../docs/reference/research/issue-76-live-r4-2026-11-19.md): live read-only probe of revision 0000033. Safeguarding clock (39 elapsed hours, referral and due times, named owner) and hazard clock element with named owner both render. Hazard time values are Unknown because the synthetic hazard record has no `aware_at`.
+* `src/core/src/zava_forward/core/taskqueues.py` `hazard_clock` and `project_safety_clock_and_owner`: already implement clock text, fail-closed missing timestamps and fallback accountable owner. Unknown is deliberate; the code never invents elapsed time.
+* Existing tests `test_hazard_safeguarding_clock_owner.py` and `test_hazard_safeguarding_clock_owner_76.py` cover them.
+
+## Local re-run
+
+`cd src/core && PYTHONPATH=src:tests python3 -m unittest test_taskqueues test_hazard_safeguarding_clock_owner -q`: 33 tests, OK (2026-11-19).
+
+## Planning Readiness
+
+Ready for a no-source-change outcome. The only gap (hazard time values) needs a synthetic record with an awareness timestamp, which is a data decision for the issue owner; fabricating a timestamp in code would break the fail-closed rule. No live probe was repeated: r4 is the same day and the demo was not changed.

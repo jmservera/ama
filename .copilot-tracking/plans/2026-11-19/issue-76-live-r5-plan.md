@@ -1,5 +1,8 @@
-# Plan: issue-76-live-r5
+# Plan: issue 76 fifth pass (2026-11-19)
 
-1. Phase 1: Re-run targeted tests and read live revision (done in research).
-2. Phase 2: Publish research note docs/reference/research/issue-76-live-r5-2026-11-19.md with per-criterion verdict; index and log entry.
-3. Phase 3: Commit; no src change, so FOCUSED tier, no mypy/ruff required.
+* Phase 1: Research reused (done).
+* Phase 2: Plan and one critique. No source change; record per-criterion table.
+* Phase 3: Implement: changes record and a research note under docs/reference/research/ with the table; index and log entry.
+* Phase 4: Review once; commit locally, no push.
+
+Tier: FOCUSED (documentation only; no src change). Blocker: hazard time values need an owner-approved synthetic awareness timestamp (data change on the demo), not code.
