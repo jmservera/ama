@@ -1,13 +1,7 @@
----
-title: Issue 138 ninth run research
-description: Opening research for the r9 audit of the six CI/CD acceptance criteria
-ms.date: 2026-11-19
----
+# Issue 138 live r9 research (2026-11-19)
 
-## Question
-
-Is any unticked criterion of #138 provable or buildable for the demo with code and tests? Baseline: [r8 note](../../docs/reference/research/issue-138-live-r8-2026-11-19.md).
-
-## Planning Readiness
-
-Ready. Research disposition: executed (read-only gh and az checks). Offline coverage for smoke, federation check, plan and no-secret-echo already exists in `infra/tests/test_pipeline.py`.
+Refs #138. Read-only recheck against [r8](../../docs/reference/research/issue-138-live-r8-2026-11-19.md).
+Observed 2026-11-19: repository variables only GH_AW_DEFAULT_MAX_DAILY_AI_CREDITS (no AZURE_*);
+environments copilot, dev-plan, pilot-plan, test-plan each with 0 protection rules; 0 self-hosted runners;
+0 src-deploy.yml runs. Every remaining criterion needs owner settings (Entra federation, environment
+reviewers, runner) or a pushed workflow run, which this worker may not perform. Disposition: stop, no source change.

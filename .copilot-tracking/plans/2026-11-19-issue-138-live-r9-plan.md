@@ -1,13 +1,5 @@
----
-title: Issue 138 r9 plan
-ms.date: 2026-11-19
----
+# Issue 138 live r9 plan and critique
 
-## Plan
-
-1. Record read-only state in [r9 note](../../docs/reference/research/issue-138-live-r9-2026-11-19.md).
-2. No source change; log the note in the knowledge base index and log.
-
-## Critique (executed once)
-
-Verdict: proceed, docs only. Adding a test would duplicate `infra/tests/test_pipeline.py`; no criterion is buildable without owner settings. Applied directly.
+Plan: no code; record per-criterion table in the changes record. Critique (once): buildable code
+(smoke, verify-federation, tests) already exists; a repo secret-scan test would touch security and need FULL tier,
+and would not prove the live-log half of C6. Verdict: proceed docs-only.

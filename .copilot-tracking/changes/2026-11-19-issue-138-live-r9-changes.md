@@ -1,23 +1,12 @@
----
-title: Issue 138 r9 changes
-ms.date: 2026-11-19
----
+# Issue 138 live r9 changes
 
-## Changes
+No source change. Tier FOCUSED, docs only; no tests applicable. Read-only gh calls only.
 
-* Added [r9 note](../../docs/reference/research/issue-138-live-r9-2026-11-19.md), index entry and log entry. No source change; tier FOCUSED (docs only).
-
-## Per-criterion status
-
-| Criterion | Status |
-| --- | --- |
-| OIDC federated credentials per environment | Unproven (0 credentials) |
-| what-if on infra PRs, attached | Unproven (no run, 0 runners) |
-| Approval per environment, same parameters | Unproven (0 protection rules) |
-| Versioned image built, pushed, referenced | Unproven (no run) |
-| Post-deployment checks fail the run | Unproven (offline tests only) |
-| No secret in logs or repository | Unproven (no logs) |
-
-## Validation
-
-Documentation link and diff review; read-only `gh` and `az` queries. No tests apply; `rpi-checks.py --all` not run.
+| Criterion | Status | Reason |
+| --- | --- | --- |
+| OIDC federated credentials per environment | Unproven | No AZURE_* variables; federation is owner Entra work |
+| what-if on infra PRs, attached | Unproven | 0 runners, no pushed PR |
+| Approval per environment, same templates | Unproven | 0 protection rules on environments |
+| Versioned image pushed and referenced | Unproven | 0 src-deploy runs |
+| Post-deploy checks fail the run | Unproven | Offline tests only; no run |
+| No secret in logs or repo | Unproven | No workflow log to audit |

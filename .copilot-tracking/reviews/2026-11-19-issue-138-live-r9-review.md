@@ -1,6 +1,4 @@
----
-title: Issue 138 r9 review
-ms.date: 2026-11-19
----
+# Issue 138 live r9 review
 
-Review executed once. Outcome: conformant. Boundary: docs-only diff (note, index, log, tracking). Links checked, no secrets or credential values present, no source or workflow change, and the six criteria stay unticked with stated reasons. Open work: owner creates federated credentials, environment protection and a runner, then a pushed run.
+Executed once. Outcome: conformant. Docs-only; claims match observed state; no criterion ticked; no secrets recorded.
+Routed: owner configures OIDC, environment protection and a runner, then a pushed run (follow-up).

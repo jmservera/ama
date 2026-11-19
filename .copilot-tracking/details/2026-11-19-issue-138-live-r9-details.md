@@ -1,6 +1,3 @@
----
-title: Issue 138 r9 details
-ms.date: 2026-11-19
----
+# Issue 138 live r9 details
 
-Phase 1: write the r9 note from the read-only commands. Phase 2: update `docs/reference/README.md` and append to `docs/reference/log.md`.
+Phase 1: reread state (done). Phase 2: write artifacts and commit (done). No source edit.
