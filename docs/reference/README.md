@@ -512,6 +512,9 @@ fresh and stale sensor status in the employee map, accessible list, stale filter
 (desktop). No source change; the round 6 receiver fix stays unmerged.
 The [receiver register fix note](./research/issue-1818-sensor-register-receiver-fix-2026-11-18.md)
 lands that fix as a local candidate with a per-criterion proven or unproven table.
+The [2026-11-19 retained-reading re-observation](./research/issue-1818-live-20261119-2026-11-19.md)
+records a read-only desktop check of the deployed map, stale filter and resident `#sec-sensors` with
+redacted output kept in the repository; the Hub to SQL leg was not re-run.
 For #2008, the [synthetic demo workbook and import evidence](./research/issue-2008-demo-workbook-import-evidence-2026-11-18.md)
 adds a generated `.xlsx` (generator in `tools/`), its local row-level preview and a run of the deployed CSV check
 with the staff test sign-in; conflicts show only locally because the web screen reads CSV only. No source change.
@@ -527,6 +530,7 @@ records that main already syncs new archive ancestors before confirming; criteri
 A [second run](./research/issue-1258-live-closure-r2-2026-11-18.md) adds real ext4 `strace` syscall order and a kernel-injected fsync EIO
 for the first publication; criterion 5 stays unproven for the demo and no crash proof is claimed.
 A [third run](./research/issue-1258-live-r3-2026-11-18.md) repeats both proofs on current main and adds the API wiring tests.
+A [fourth run](./research/issue-1258-live-r4-2026-11-19.md) repeats the ext4 syscall order and local checks at 910adb0a1; criterion 5 stays unproven.
 
 For #189, the [simulator run controls live evidence](./research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo check of the budget alerts, hub owner tag and deterministic owner, time-limit and alert controls; no simulator job is deployed.
@@ -1944,3 +1948,5 @@ For #144, the [deployed image audit](./research/issue-144-live-deployed-images-2
 records 12 live containers as real digest-pinned references; pipeline provenance, tags and deployed hardening remain unproven.
 
 The [old-image incomplete completion note](./research/old-image-incomplete-completion-1840.md) records per-criterion fixture evidence for issue 1840 (2026-11-18).
+
+For #1274, the [release-download criteria proof](./research/issue-1274-live-release-download-criteria-2026-11-19.md) records the retained 504 log, real checksum verification and the unproven AWF and hosted-CI criteria.

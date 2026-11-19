@@ -1,0 +1,6 @@
+Ran 110 tests in 5.785s
+
+OK
+Found 22 errors in 3 files (checked 402 source files)
+1 file already formatted
+All checks passed!
