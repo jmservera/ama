@@ -13927,3 +13927,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 1258 live run 4 criteria proof (Refs #1258)
 
 * Added [issue-1258-live-r4-2026-11-19.md](research/issue-1258-live-r4-2026-11-19.md): real ext4 ancestor-sync order and 110 passing tests; criterion 5 stays unproven for the demo. No source change.
+## [2026-11-19] add | Issue 1818 live retained-reading re-observation (Refs #1818)
+
+* Added [issue-1818-live-20261119-2026-11-19.md](research/issue-1818-live-20261119-2026-11-19.md) with redacted retained output: read-only map, stale filter and resident sensor view; the Hub to SQL leg was not re-run and the sender and receiver fix stay off main.
