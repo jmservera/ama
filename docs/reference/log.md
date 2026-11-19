@@ -13948,3 +13948,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## 2026-11-19 issue 1258 criteria check r5
 
 Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criterion 5 unproven for the demo.
+## [2026-11-19] add | Issue 1818 criteria reconciliation (Refs #1818)
+
+* Added [issue-1818-criteria-reconciliation-2026-11-19.md](research/issue-1818-criteria-reconciliation-2026-11-19.md): per-criterion table; corrects that the receiver register fix landed on main via #2105. No source change.
