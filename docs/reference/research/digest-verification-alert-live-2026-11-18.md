@@ -30,3 +30,13 @@ All times are UTC, 2026-11-18. The storage account `stcutovertestrzsrg` and the 
 * The deployed image predates the retention-posture fields in the repository verifier (output lacks them), so the run proves the chain-digest comparison only, not retention-header checks.
 * Query access to the Log Analytics workspace is denied from this host by network rules (`NspValidationFailedError`); marker text was read from the job console stream instead. The workspace network setting was not changed.
 * Browser proof is not applicable: the alert has no web surface that this run can sign in to, and Azure portal screenshots were not taken.
+
+## Addendum 2026-11-19: scheduled trigger proof
+
+Refs #115. Closes the cron gap listed above for the demo. The deployed `job-cutover-test-ledger-verify` stays `Manual` and was not changed. A throwaway job `job-cutover-test-ledger-verify-s` was created in resource group `ama` from that job's configuration with trigger `Schedule` (`*/5 * * * *`) and the read-only verifier command (no `--publish`), then deleted.
+
+* Created 08:46 UTC; the schedule started execution `job-cutover-test-ledger-verify-s-29917970` at 08:50:00 UTC with no manual start. Status `Succeeded`.
+* Output: `"intact": true`, `"digests": 2`, `"year_digests": 0`, `"entries": 2267`, `"problems": []`, then `LEDGER_DIGEST_OK ledger matches the immutable digests`.
+* Deleted afterwards; `az containerapp job list` shows no `verify-s` job.
+
+Combined with the 2026-11-18 forced mismatch (verifier exit 1, `LEDGER_DIGEST_ALERT`, fired Azure Monitor alert), a schedule-triggered run of the verifier and the alert path are each shown live on the demo. Not proven: one single scheduled run that detects a mismatch; email receipt at `ag-cutover-test-ops`; retention-header checks (deployed image predates them); the production cron on the deployed job (source `0 2 * * *` is covered offline by `test_bicep_policy.py`). No source change was needed.

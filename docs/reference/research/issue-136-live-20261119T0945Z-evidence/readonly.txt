@@ -1,0 +1,60 @@
+## gh state 2026-11-19T09:47:05Z
+#136 OPEN Epic: Bicep infrastructure as code and deployment pipeline unticked=2
+#440 OPEN test(delivery): add recurring stabilization gates and execute first checkpoint unticked=2
+#137 CLOSED Environment strategy and parameter sets (dev, test, pilot) unticked=0
+#138 OPEN CI/CD deployment pipeline with what-if, approvals and image release unticked=6
+#139 CLOSED Bicep quality gates beyond build and lint unticked=0
+#140 CLOSED Azure IoT Hub Bicep module with identity, networking and diagnostics unticked=0
+#141 CLOSED Identity, RBAC and Entra registration as code with least-privilege review unticked=0
+#142 OPEN Key Vault secret lifecycle: rotation, expiry and access review unticked=2
+#143 OPEN Private networking and public edge (Front Door Premium and WAF) unticked=2
+#144 OPEN Container hosting completeness: workers, scaling, revisions and load test unticked=2
+#145 OPEN Azure SQL pilot tier, backup restore and recovery proof unticked=1
+#146 OPEN Monitoring coverage: alerts, dashboards and runbooks unticked=4
+#147 CLOSED Azure Policy, Defender plans, locks and tagging as code unticked=0
+#148 CLOSED Repeatable from-empty rebuild and teardown automation unticked=0
+## az (read-only)
+     15 Microsoft.Network/privateDnsZones/virtualNetworkLinks
+     15 Microsoft.Network/privateDnsZones
+      8 Microsoft.Network/privateEndpoints
+      8 Microsoft.Network/networkInterfaces
+      8 Microsoft.App/jobs
+      6 Microsoft.ManagedIdentity/userAssignedIdentities
+      4 Microsoft.Insights/scheduledqueryrules
+      4 Microsoft.Insights/metricalerts
+      4 Microsoft.App/containerApps
+      3 Microsoft.Network/networkSecurityGroups
+      2 Microsoft.Sql/servers/databases
+      2 Microsoft.CognitiveServices/accounts
+      2 Microsoft.App/managedEnvironments
+      1 microsoft.insights/privateLinkScopes
+      1 microsoft.insights/actiongroups
+      1 Microsoft.Storage/storageAccounts
+      1 Microsoft.Sql/servers
+      1 Microsoft.OperationalInsights/workspaces
+      1 Microsoft.Network/virtualNetworks
+      1 Microsoft.KeyVault/vaults
+      1 Microsoft.Insights/components
+      1 Microsoft.Insights/actiongroups
+      1 Microsoft.EventHub/namespaces
+      1 Microsoft.EventGrid/systemTopics
+      1 Microsoft.Devices/IotHubs
+      1 Microsoft.ContainerRegistry/registries
+      1 Microsoft.CognitiveServices/accounts/projects
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "max": 4,
+  "min": 0,
+  "rev": "ca-cutover-test-demo-api--0000033",
+  "state": "Running"
+}
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+job-cutover-test-init	crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8...
+job-cutover-test-verify	crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8...
+job-cutover-test-ledger-verify	crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@sha256:e3b290bf...
+job-cutover-test-import	crcutovertestrzsrg.azurecr.io/zava-forward-importer@sha256:51b6a480...
+job-cutover-test-orchestrator	crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@sha256:e3b290bf...
+job-cutover-test-smoke	crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8...
+job-cutover-test-mi-http	crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8...
+job-cutover-test-public-audit	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:111b2622...
+6

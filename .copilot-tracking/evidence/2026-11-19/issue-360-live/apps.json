@@ -1,0 +1,27 @@
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+[
+  {
+    "ext": true,
+    "insecure": false,
+    "n": "ca-cutover-test-api",
+    "rev": "ca-cutover-test-api--0000010"
+  },
+  {
+    "ext": null,
+    "insecure": null,
+    "n": "ca-cutover-test-agents",
+    "rev": "ca-cutover-test-agents--0000003"
+  },
+  {
+    "ext": true,
+    "insecure": false,
+    "n": "ca-cutover-test-demo-api",
+    "rev": "ca-cutover-test-demo-api--0000033"
+  },
+  {
+    "ext": true,
+    "insecure": false,
+    "n": "ca-resident-demo",
+    "rev": "ca-resident-demo--0000014"
+  }
+]

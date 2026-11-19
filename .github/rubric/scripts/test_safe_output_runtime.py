@@ -157,9 +157,11 @@ def test_repository_operations_use_the_automatic_job_scoped_token():
 @pytest.mark.parametrize("event", ["pull_request", "push"])
 def test_tracking_only_changes_do_not_trigger_workflows(workflow: Path, event: str):
     config = yaml.load(workflow.read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
+    if event not in config["on"]:
+        pytest.skip(f"{workflow.name} does not declare {event}")
     trigger = config["on"][event]
     tracking = [".copilot-tracking/session.md", ".copilot-tracking/reviews/2026-10-13/result.md"]
-    source = "mvp/zavaforward_mvp/app.py"
+    source = "src/api/src/zava_forward/api/app.py"
 
     if "paths" in trigger:
         assert "paths-ignore" not in trigger

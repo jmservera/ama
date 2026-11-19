@@ -1,0 +1,39 @@
+## demo api
+{
+  "args": null,
+  "cmd": null,
+  "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5368f4e4009cc32937377862e6d242c124005ed39081e1d9caa3b6b5dc17e5fb",
+  "ready": "ca-cutover-test-demo-api--0000033",
+  "rev": "ca-cutover-test-demo-api--0000033",
+  "state": "Running",
+  "vols": null
+}
+## resident
+{
+  "cmd": null,
+  "img": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:65481780cb3f5a55621f637fa783230004b263085dcaece1dfca93a928bbbd19",
+  "ready": "ca-resident-demo--0000014",
+  "rev": "ca-resident-demo--0000014"
+}
+## revisions api
+ca-cutover-test-demo-api--emp-live-20261030-152210	2026-10-30T15:22:17+00:00	False	0	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:dab5e300f2c05deaaf5b9112b756a4b2dc9ed4dbf26e3a8d78c00125f4443311
+ca-cutover-test-demo-api--emp-live-20261031-011208	2026-10-31T01:12:15+00:00	False	0	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5086b5619f0a1a9c8ae0d3aea5d6de19e1c47494182169976ea4dae63dabded0
+ca-cutover-test-demo-api--emp-live-20261031-011847	2026-10-31T01:18:55+00:00	False	0	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5086b5619f0a1a9c8ae0d3aea5d6de19e1c47494182169976ea4dae63dabded0
+ca-cutover-test-demo-api--emp-live-20261031-023859	2026-10-31T02:39:05+00:00	False	0	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:0bd3a9030d56ff23403ebc40cb083b3c17d42357148393578ff37ba5c0ee2ec1
+ca-cutover-test-demo-api--emp-live-20261031-180457	2026-10-31T18:05:04+00:00	False	0	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:04538b7606e4f924e94e7d10bb394877ffead5072938e7e8e7e144338241165c
+ca-cutover-test-demo-api--emp-main-20261029-072248	2026-10-29T07:22:58+00:00	False	0	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:41db94689ae934e3daa6c7f8fb57d8de5cc58a53995efd50217189231ac1f0c1
+ca-cutover-test-demo-api--emp-main-ac0c9968	2026-11-01T02:28:32+00:00	False	0	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:3ad6063340fe6188a0fab464636046830f41071e8034991155dcaa0d1e5d4014
+ca-cutover-test-demo-api--emp-reapply-20261028-110058	2026-10-28T11:01:08+00:00	False	0	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:e6b6e7440c2b64577e96b6322c852bf630f1c5113608267132ebffc07d39fa19
+ca-cutover-test-demo-api--k810	2026-11-04T09:00:04+00:00	False	0	crcutovertestrzsrg.azurecr.io/zava-forward-api:891-1022
+ca-cutover-test-demo-api--m691-b6242b9	2026-11-03T02:12:14+00:00	False	0	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:ee38b306d508bb9c66228a43220df9d40d67f296cfae300166682bd8585b2252
+ca-cutover-test-demo-api--recover-20261031-011532	2026-10-31T01:15:39+00:00	False	0	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:dab5e300f2c05deaaf5b9112b756a4b2dc9ed4dbf26e3a8d78c00125f4443311
+ca-cutover-test-demo-api--rollback-20261028-103137	2026-10-28T10:32:22+00:00	False	0	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:0769b52dddc5d6b350c74d6711ae53eda45d3e903ee27fac6b5a6c1d6b8b6e7e
+ca-cutover-test-demo-api--t810	2026-11-04T09:02:59+00:00	False	0	crcutovertestrzsrg.azurecr.io/zava-forward-api:891-1022
+ca-cutover-test-demo-api--wncofr9	2026-10-17T11:14:02+00:00	False	0	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d
+## healthz
+200
+## acr
+{
+  "def": "Deny",
+  "pna": "Disabled"
+}
