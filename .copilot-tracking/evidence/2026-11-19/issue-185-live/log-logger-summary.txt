@@ -1,0 +1,7 @@
+      2 DEBUG:azure.identity.
+      2 DEBUG:msal.managed
+      1 DEBUG:msal.token
+      3 DEBUG:msrest.service
+     81 DEBUG:msrest.universal
+     10 DEBUG:uamqp.c
+     42 DEBUG:urllib3.connectionpool

@@ -1,40 +1,47 @@
 {
- "task_id": "issue-350-live",
+ "task_id": "issue-350-live-20261119",
  "task_slug": "issue-350-live",
  "parent_task": null,
  "mode": "automatic",
- "active_phase": "Review",
+ "active_phase": "Follow-up",
  "status": "completed",
- "session_status": "running",
+ "session_status": "stopped",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-19/issue-350-live-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-19/issue-350-live-plan.md",
-  "details": ".copilot-tracking/details/2026-11-19/issue-350-live-details.md",
-  "critique": ".copilot-tracking/challenges/2026-11-19/issue-350-live-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-19/issue-350-live-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-19/issue-350-live-review.md"
+  "research": ".copilot-tracking/research/2026-11-19/issue-350-live-r4-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-19/issue-350-live-r4-plan.md",
+  "details": ".copilot-tracking/details/2026-11-19/issue-350-live-r4-details.md",
+  "critique": ".copilot-tracking/critiques/2026-11-19/issue-350-live-r4-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-19/issue-350-live-r4-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-19/issue-350-live-r4-review.md"
  },
  "confirmed_decisions": [
   {
-   "decision": "Demo scope, desktop only; live Azure rg ama authorised, no production changes",
+   "decision": "Critique executed once: Approve",
    "status": "confirmed",
-   "evidence": "owner 2026-11-18"
+   "evidence": ".copilot-tracking/critiques/2026-11-19/issue-350-live-r4-critique.md"
   },
   {
-   "decision": "Critique executed once; verdict proceed; record-only",
+   "decision": "Demo only, FOCUSED, docs only",
    "status": "confirmed",
-   "evidence": ".copilot-tracking/challenges/2026-11-19/issue-350-live-critique.md"
+   "evidence": "brief"
   },
   {
-   "decision": "Critique executed once; verdict proceed; record-only",
+   "decision": "Review executed once: conformant docs-only",
    "status": "confirmed",
-   "evidence": ".copilot-tracking/challenges/2026-11-19/issue-350-live-critique.md"
+   "evidence": ".copilot-tracking/reviews/2026-11-19/issue-350-live-r4-review.md"
   }
  ],
  "blockers": [],
  "next_action": {
-  "phase": "Review",
-  "action": "commit"
+  "phase": "Follow-up",
+  "action": "coordinator publishes"
  },
- "prioritized_follow_ups": null
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Easy Auth edge design for browser-UA API 401 (FULL, with #349)",
+   "rationale": "criterion 1 failing live",
+   "evidence": "research note"
+  }
+ ]
 }

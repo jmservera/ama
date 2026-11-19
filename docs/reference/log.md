@@ -13386,3 +13386,61 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 200 live audit 3 (Refs #200)
 
 * Added [issue-200-live-20261119T0848Z-2026-11-19.md](research/issue-200-live-20261119T0848Z-2026-11-19.md) with evidence folder: read-only live probes of revision 33, per-criterion table; 3d proven by history only. No source change.
+## [2026-11-19] add | Epic 93 first unmet criterion re-check (Refs #93)
+
+* Added [issue-93-first-unmet-criterion-live-2026-11-19.md](research/issue-93-first-unmet-criterion-live-2026-11-19.md): 269 offline tests OK (45 skipped), read-only live finance probe, BRD identifier mismatch in the issue body, per-criterion table; checkpoint and child closure stay unproven.
+## [2026-11-19] add | Epic 73 child disposition audit, second pass (Refs #73)
+
+* Added [issue-73-epic-audit-live-r2-2026-11-19.md](research/issue-73-epic-audit-live-r2-2026-11-19.md) and `tools/test_epic_73_child_disposition.py`: one disposition per child, residual of #76, #79 and #80, read-only live check of revision 33; no criterion ticked.
+
+## [2026-11-19] add | Issue 104 criteria recheck (Refs #104)
+
+* Added [issue-104-criteria-recheck-live-2026-11-19.md](research/issue-104-criteria-recheck-live-2026-11-19.md): per-criterion table; the first unmet criterion needs owner decisions, not code. No source change.
+## [2026-11-19] add | Issue 136 live audit 2 (Refs #136)
+
+* Added [issue-136-live-20261119T0945Z-2026-11-19.md](research/issue-136-live-20261119T0945Z-2026-11-19.md) with evidence folder: per-criterion table; the #440 checkpoint is the first unmet criterion and is not closable by code. No source change.
+
+## [2026-11-19] add | Epic 149 first unmet demo criterion (Refs #149)
+
+* Added [issue-149-first-unmet-demo-criterion-2026-11-19.md](research/issue-149-first-unmet-demo-criterion-2026-11-19.md): criterion 1 (#440 checkpoint) is first unmet and not code-satisfiable; live GitHub and Azure reads, 48 local UX baseline tests, per-criterion table, no source change.
+## [2026-11-19] add | Issue 154 live round 5 (Refs #154)
+
+* Added [issue-154-live-resident-ux-r5-2026-11-19.md](research/issue-154-live-resident-ux-r5-2026-11-19.md): only criterion 5b is unticked and is out of demo scope; live app lacks the representative grants variable. No source change.
+
+## [2026-11-19] add | Issue 76 live re-check 4 (Refs #76)
+
+* Added [issue-76-live-r4-2026-11-19.md](research/issue-76-live-r4-2026-11-19.md) with evidence folder: read-only probe of revision 33 finds 1 safeguarding clock with named owner (39 h elapsed) and 1 hazard clock with Unknown times; per-criterion table. No source change.
+## [2026-11-19] add | Issue 165 scoped checkpoint live demo (Refs #165)
+
+* Added [issue-165-live-20261119T1001Z-2026-11-19.md](research/issue-165-live-20261119T1001Z-2026-11-19.md): local tests pass, IoT Hub is private and keyless with no device, per-criterion table; criteria 2 and 3 unproven. No source change.
+
+## [2026-11-19] add | Issue 360 live recheck (Refs #360)
+
+* Added [issue-360-live-20261119-2026-11-19.md](research/issue-360-live-20261119-2026-11-19.md) with evidence folder: read-only configuration, anonymous and staff sign-in probes; c and e unproven (owner decisions), d partly proven, browser-mode 302 noted as FULL-tier infra follow-up. No source change.
+## [2026-11-19] add | Issue 349 live round 5 (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-r5-2026-11-19.md](research/issue-349-tenant-prerequisites-live-r5-2026-11-19.md): live reproduction of round 4 plus a failed resident wrong-role probe; no source change.
+## [2026-11-19] add | Issue 120 criterion 3 recheck (Refs #120)
+
+* Added [issue-120-live-2026-11-19.md](research/issue-120-live-2026-11-19.md): criterion 3 mechanics exist and pass 38 local tests; not exercised on the deployed demo. No source change.
+
+## [2026-11-19] add | Issue 145 live audit 5 (Refs #145)
+
+* Added [issue-145-live-20261119T1024Z-2026-11-19.md](research/issue-145-live-20261119T1024Z-2026-11-19.md): read-only Azure SQL backup re-check, per-criterion table; R3 reapply gap needs FULL tier and was not implemented. No source change.
+
+## [2026-11-19] add | Issue 1844 live audit (Refs #1844)
+
+* Added [issue-1844-live-20261119-2026-11-19.md](research/issue-1844-live-20261119-2026-11-19.md): per-criterion table; all criteria are mobile or delivery-gate scope, none unmet for the desktop-only demo. No source change.
+
+## [2026-11-19] add | Issue 1288 live audit 4 (Refs #1288)
+
+* Added [issue-1288-live-r4-quality-sensor-evidence-2026-11-19.md](research/issue-1288-live-r4-quality-sensor-evidence-2026-11-19.md): 304 local tests OK, read-only Azure probe, per-criterion table; criteria 4 and 8 unproven.
+## [2026-11-19] add | Issue 1258 criteria proof (Refs #1258)
+
+* Added [2026-11-19-ranking-archive-ancestor-durability-1258-live.md](research/2026-11-19-ranking-archive-ancestor-durability-1258-live.md): per-criterion table; criteria 1 to 4 proven by 57 passing tests, criterion 5 unproven for the demo. No source change.
+## [2026-11-19] add | Issue 184 live re-verification, run 6 (Refs #184)
+
+* Added [issue-184-live-r6-2026-11-19.md](research/issue-184-live-r6-2026-11-19.md) with retained outputs: read-only live and local checks; the child-closure criterion stays unproven (owner action) and no source change was made.
+## [2026-11-19] add | Issue 185 live device identity proof (Refs #185)
+
+* Added [issue-185-live-20261119-2026-11-19.md](research/issue-185-live-20261119-2026-11-19.md): shipped IoT Hub registry adapter provisioned and tore down three identities on a throwaway F1 hub (deleted); storage of credentials and demo-hub teardown stay unproven. No source change.
