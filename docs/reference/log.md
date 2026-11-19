@@ -13276,3 +13276,27 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 153 wording defect fix (Refs #153)
 
 * Added [wording-defects-fix-153-live-r5-2026-11-18.md](research/wording-defects-fix-153-live-r5-2026-11-18.md): Finance limit and handoff owner wording fixed in source with tests; per-criterion table, named human review still unproven.
+
+## [2026-11-18] add | Issue 1274 axe download hardening (Refs #1274)
+
+* Added [issue-1274-axe-download-hardening-2026-11-18.md](research/issue-1274-axe-download-hardening-2026-11-18.md): src-ci axe-core download verified and retried, retained 504 logs for 1243, 1271 and 1273 classified; AWF bootstrap still open.
+
+## [2026-11-18] add | Issue 154 live fourth run (Refs #154)
+
+* Added [issue-154-live-resident-ux-r4-2026-11-18.md](research/issue-154-live-resident-ux-r4-2026-11-18.md): the demo entrypoint could not load representative grants; added an optional `ZF_DEMO_REP_GRANTS_PATH` loader with tests. Criterion 3 proven locally, not live; 5b remains unmet.
+
+## [2026-11-18] add | Issue 164 contact refusal gap (Refs #164)
+
+* Added [issue-164-contact-refusal-gap-2026-11-18.md](research/issue-164-contact-refusal-gap-2026-11-18.md): send-style resident-contact asks now refuse with the contact-log route; source and tests changed in `src/core`.
+
+## [2026-11-18] add | Employee chat helper line fix (Refs #215)
+
+* Added [issue-215-live-helper-line-fix-2026-11-18.md](research/issue-215-live-helper-line-fix-2026-11-18.md): clipped helper line reproduced and fixed in `src/api` chat widget with a regression test; per-criterion table; staff comprehension remains unproven
+
+## [2026-11-18] add | Issue 185 SAS enrolment in registry adapter (Refs #185)
+
+* Added [issue-185-live-r6-sas-adapter-2026-11-18.md](research/issue-185-live-r6-sas-adapter-2026-11-18.md): `SasEnrollment` (Hub-generated keys, DISABLED, never read) in `device_registry_azure.py` with 4 simulator tests; not run live; durable storage and FULL-tier gate stay open.
+
+## [2026-11-18] add | Issue 189 deployed run-control verifier (Refs #189)
+
+* Added `synthetic.run_live_check` with tests and [issue-189-live-state-verifier-evidence-2026-11-18.md](research/issue-189-live-state-verifier-evidence-2026-11-18.md): live read-only check passes owner, tier, budget and alert configuration and fails recipient reachability; criterion 3 stays unproven for the demo.

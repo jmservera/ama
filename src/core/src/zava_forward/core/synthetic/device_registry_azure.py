@@ -4,8 +4,10 @@ Source only and default off: importing this module, building the adapter, a dry 
 never imports the SDK, acquires a token or opens a connection. Authentication is an injected
 Microsoft Entra token credential (the SDK's `from_token_credential`); there is no connection
 string, service key, ambient credential discovery or fallback. The adapter creates identities
-DISABLED with an exact run marker and public X.509 thumbprints only. Issuing, storing, rotating
-or activating a credential is out of scope and stays with the credential lifecycle (#185).
+DISABLED with an exact run marker and either public X.509 thumbprints or a SAS enrolment with no
+key supplied, so the Hub generates the symmetric keys. The adapter never reads, returns or logs
+key material. Storing, rotating or activating a credential is out of scope and stays with the
+credential lifecycle (#185).
 
 Every write is conditional. Create sends `If-None-Match: *`, so an existing identity conflicts and
 is never adopted or overwritten. Delete sends the exact, non-wildcard ETag of an ownership
@@ -78,12 +80,26 @@ class X509Enrollment:
 
 
 @dataclass(frozen=True)
+class SasEnrollment:
+    """One known device whose symmetric keys the Hub generates; no key is ever supplied or read."""
+
+    device_id: str
+
+    def __post_init__(self) -> None:
+        if not (isinstance(self.device_id, str) and DEVICE_ID.fullmatch(self.device_id)):
+            raise RegistryError("INVALID_ENROLLMENT")
+
+
+Enrollment = X509Enrollment | SasEnrollment
+
+
+@dataclass(frozen=True)
 class EnrollmentSpec:
     """Finite enrolment for exactly one run; anything outside it is refused before SDK use."""
 
     run_id: str
-    enrollments: tuple[X509Enrollment, ...]
-    _by_id: dict[str, X509Enrollment] = field(init=False, repr=False, compare=False)
+    enrollments: tuple[Enrollment, ...]
+    _by_id: dict[str, Enrollment] = field(init=False, repr=False, compare=False)
 
     def __post_init__(self) -> None:
         items = self.enrollments
@@ -92,13 +108,14 @@ class EnrollmentSpec:
             and device_identity.RUN_ID.fullmatch(self.run_id) is not None
             and isinstance(items, tuple)
             and 1 <= len(items) <= device_identity.MAX_DEVICES
-            and all(isinstance(item, X509Enrollment) for item in items)
+            and all(isinstance(item, (X509Enrollment, SasEnrollment)) for item in items)
         )
         if valid:
             ids = [item.device_id for item in items]
             prints = [
                 p
                 for item in items
+                if isinstance(item, X509Enrollment)
                 for p in (item.primary_thumbprint, item.secondary_thumbprint)
                 if p
             ]
@@ -111,7 +128,7 @@ class EnrollmentSpec:
     def marker(self) -> str:
         return MARKER_PREFIX + self.run_id
 
-    def enrollment(self, device_id: str) -> X509Enrollment | None:
+    def enrollment(self, device_id: str) -> Enrollment | None:
         return self._by_id.get(device_id)
 
 
@@ -233,17 +250,22 @@ class AzureIotHubRegistry:
         self._run(run_id)
         enrollment = self._device(device_id)
         models = self._models()
-        thumbprint = models.X509Thumbprint(
-            primary_thumbprint=enrollment.primary_thumbprint,
-            secondary_thumbprint=enrollment.secondary_thumbprint,
-        )
+        if isinstance(enrollment, SasEnrollment):
+            # No symmetric_key: the Hub generates the pair, and the response is discarded below.
+            authentication = models.AuthenticationMechanism(type="sas")
+        else:
+            authentication = models.AuthenticationMechanism(
+                type="selfSigned",
+                x509_thumbprint=models.X509Thumbprint(
+                    primary_thumbprint=enrollment.primary_thumbprint,
+                    secondary_thumbprint=enrollment.secondary_thumbprint,
+                ),
+            )
         identity = models.Device(
             device_id=device_id,
             status="disabled",
             status_reason=self._spec.marker,
-            authentication=models.AuthenticationMechanism(
-                type="selfSigned", x509_thumbprint=thumbprint
-            ),
+            authentication=authentication,
             capabilities=models.DeviceCapabilities(iot_edge=False),
         )
         outcome = self._invoke(
@@ -343,7 +365,7 @@ class AzureIotHubRegistry:
         if run_id != self._spec.run_id:
             raise RegistryError("NOT_ENROLLED")
 
-    def _device(self, device_id: str) -> X509Enrollment:
+    def _device(self, device_id: str) -> Enrollment:
         enrollment = self._spec.enrollment(device_id) if isinstance(device_id, str) else None
         if enrollment is None:
             raise RegistryError("NOT_ENROLLED")

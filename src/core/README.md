@@ -1322,6 +1322,17 @@ python3 -m zava_forward.core.synthetic.run_plan --homes 30000 --owner "<name>" \
   --budget-usd 10 --alert-reference "<budget alert name>" --out estimate.json
 ```
 
+`synthetic.run_live_check` checks a deployed hub and its budgets from `az` JSON (no Azure call
+inside the package): hub owner tag, tier and capacity, a monthly budget cap, enabled actual and
+forecast alerts, and whether any recipient is a noreply or placeholder address. It exits 3 if
+any check fails and never prints an address. It does not prove an alert fires or a run exists.
+
+```bash
+az iot hub show -g <rg> -n <hub> > hub.json
+az consumption budget list -g <rg> > budgets.json
+python3 -m zava_forward.core.synthetic.run_live_check --hub hub.json --budgets budgets.json
+```
+
 From `src/core`, with the package installed:
 
 ```bash
