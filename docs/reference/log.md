@@ -14008,3 +14008,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 470 live re-check (Refs #470)
 
 * Added [issue-470-live-2026-11-19.md](research/issue-470-live-2026-11-19.md): 113 gate tests pass; criterion 4 (before and after full-run timing) stays unproven because the full gate was not run.
+## [2026-11-19] add | Issue 2061 single external demo environment decision record (Refs #2061)
+
+* Added [ADR 0008](../adrs/0008-single-external-demo-environment.md) (Proposed) and [issue-2061-live-single-environment-2026-11-19.md](research/issue-2061-live-single-environment-2026-11-19.md): read-only live inventory of two environments, identities and roles; Entra registrations unreadable with this login; criteria 2 to 8 stay unproven. No source or infra change.
