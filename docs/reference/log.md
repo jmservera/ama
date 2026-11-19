@@ -13746,3 +13746,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 1844 live re-run (Refs #1844)
 
 * Appended a re-run section to [issue-1844-live-20261119-2026-11-19.md](research/issue-1844-live-20261119-2026-11-19.md): no criterion unmet for the desktop-only demo, no source change.
+## [2026-11-19] add | Issue 1818 criteria reconciliation (Refs #1818)
+
+* Added [issue-1818-criteria-reconciliation-2026-11-19.md](research/issue-1818-criteria-reconciliation-2026-11-19.md): per-criterion table; corrects that the receiver register fix landed on main via #2105. No source change.
