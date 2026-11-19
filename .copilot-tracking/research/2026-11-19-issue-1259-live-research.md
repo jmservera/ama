@@ -1,11 +1,11 @@
 # Issue 1259 live research (2026-11-19)
 
-Planning Readiness: Ready. Research disposition: executed.
+Research disposition: executed. Planning Readiness: Ready.
 
-Open criteria: (4) regular-file and dangling-link regressions for schedule/verify/publish plus absent-directory coverage, with failure shown before the fix; (5) FULL receipt, independent exact-head assessment and hosted checks.
+## Findings
 
-Findings:
-* `UnusableArchivePathTests` in `src/core/tests/test_ranking_publication_runner.py` already covers regular file, dangling link, dangling ancestor and stat failure across verify, schedule, publish and exercise, plus the absent-directory first run tests. Landed with #1328.
-* Pre-fix source (`a80acadaa`) with HEAD's tests fails: regular_file/dangling_link/dangling_ancestor/stat_failure report `overdue True` instead of unknown, CLI exits 0, store status has no problems.
-* Criterion 5 needs a full receipt, independent assessment and hosted CI; owner decision forbids rpi-checks --all here.
-* Azure not needed: the behaviour is local filesystem only.
+* Criteria 1 to 3 are already ticked in the issue.
+* The fix and the regressions landed together in commit cd687abad (#1328): `UnusableArchivePathTests` in `src/core/tests/test_ranking_publication_runner.py` covers regular file, dangling link, dangling ancestor and stat failure for verify, schedule, publish and exercise, a main() exit-code test, and absent-directory first-run tests.
+* Criterion 4 gap: "demonstrate failure before fix" has no recorded evidence. It can be proven locally by running the current tests against the source tree of cd687abad^.
+* Criterion 5 (FULL receipt, independent exact-head assessment, hosted checks) needs a human and hosted CI; the brief forbids `rpi-checks.py --all`. Unprovable for the demo.
+* No source change is needed, so the tier is FOCUSED. Live Azure is not relevant to a local filesystem path guard.

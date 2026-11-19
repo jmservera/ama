@@ -1,11 +1,15 @@
 # Issue 1259 live changes (2026-11-19)
 
-No source change. Tier FOCUSED (tracking records only). Refs #1259.
+No source, test or knowledge-base change. Criterion 4 is already proven by [the failing-first note](../../docs/reference/research/2026-11-18-ranking-archive-unusable-1259-failing-first.md) and [the live second audit](../../docs/reference/research/2026-11-18-ranking-archive-unusable-1259-live-r2.md); a new note would duplicate them. Tier: FOCUSED.
+
+Re-run today: `cd src/core && PYTHONPATH=src:tests python3 -m unittest tests.test_ranking_publication_runner -q` gave 53 tests, OK. The same `UnusableArchivePathTests` class against the `cd687abad^` source (git archive to /tmp, removed afterwards) gave 6 tests, `FAILED (failures=7)`, with the representative mismatch `('problem', None, True)` against `('problem', None, None)`.
 
 | Criterion | Status | Evidence |
 | --- | --- | --- |
-| 1 Distinguish absent creatable dir from non-dir, dangling link, stat failure | Ticked in issue | Existing; HEAD tests pass |
-| 2 Unusable inputs report archive-unreadable and unknown window | Ticked in issue | Existing; HEAD tests pass |
-| 3 Absent-directory first run and path-free diagnostics preserved | Ticked in issue | Existing; HEAD tests pass |
-| 4 Regular-file and dangling-link regressions for schedule/verify/publish, absent-dir coverage, failure before fix | Proven | `UnusableArchivePathTests`; 53 tests OK at HEAD; against pre-fix src (`a80acadaa`) the unknown-state, CLI exit, store-status and path-free tests fail |
-| 5 Full receipt, independent exact-head assessment, hosted checks | Unproven | Needs rpi-checks --all, independent reviewer and hosted CI; not permitted or possible in this worker |
+| Distinguish absent creatable from unusable path | Proven (ticked) | prior notes, current tests |
+| Unknown window, archive-unreadable shape | Proven (ticked) | `check_unknown` |
+| Preserve first run and path-free diagnostics | Proven (ticked) | absent-directory tests |
+| Regressions and failure before fix | Proven (re-observed today) | runs above |
+| FULL receipt, independent exact-head assessment, hosted checks | Unproven | human and hosted gates; `rpi-checks.py --all` forbidden; no src change |
+
+Remaining criterion is human or hosted only, so implementation stops here.
