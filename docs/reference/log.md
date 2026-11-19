@@ -13312,6 +13312,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 189 deployed run-control verifier (Refs #189)
 
 * Added `synthetic.run_live_check` with tests and [issue-189-live-state-verifier-evidence-2026-11-18.md](research/issue-189-live-state-verifier-evidence-2026-11-18.md): live read-only check passes owner, tier, budget and alert configuration and fails recipient reachability; criterion 3 stays unproven for the demo.
+## [2026-11-19] add | Issue 129 criterion status, fourth pass (Refs #129)
+
+* Added [issue-129-live-r4-2026-11-19.md](./research/issue-129-live-r4-2026-11-19.md): the only unticked criterion is the Atlas-owner mapping confirmation, a human decision; no code criterion is unmet and no source changed.
 ## [2026-11-19] add | Issue 144 deployed image audit (Refs #144)
 
 * Added [issue-144-live-deployed-images-2026-11-19.md](research/issue-144-live-deployed-images-2026-11-19.md) and `infra/scripts/deployed_images.py`: 12 live containers are digest-pinned; pipeline provenance and deployed hardening unproven, no criterion ticked
@@ -13347,3 +13350,31 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Old-image incomplete completion classification (Refs #1840)
 
 * Added [the per-criterion note](./research/old-image-incomplete-completion-1840.md): fixture-level proof that incomplete mismatch completion is INSUFFICIENT; independent review and full tier remain open (Refs #1840).
+
+## [2026-11-19] add | Issue 100 live demo check (Refs #100)
+
+* Added [issue-100-live-2026-11-19.md](research/issue-100-live-2026-11-19.md): live probe shows the deployed demo image lacks the AI economics field, so criterion 2 is proven locally only; #440 stabilization stays unproven. No src change.
+## [2026-11-19] add | Epic 113 first unmet demo criterion (Refs #113)
+
+* Added [issue-113-first-unmet-demo-criterion-2026-11-19.md](research/issue-113-first-unmet-demo-criterion-2026-11-19.md): criterion 1 (#440 checkpoint) is first unmet and not code-satisfiable; live GitHub and Azure reads, per-criterion table, no source change.
+## [2026-11-19] add | Discovery assistant demo re-audit, run 3 (Refs #125)
+
+* Added [issue-125-live-r3-discovery-assistant-2026-11-19.md](research/issue-125-live-r3-discovery-assistant-2026-11-19.md): 47 of 47 tests, deny-by-default CLI output and unchanged live image; per-criterion table keeps all three criteria open and records why no source change is warranted.
+## [2026-11-19] add | Epic 81 audit round 2 (Refs #81)
+
+* Added [the per-criterion note](./research/issue-81-epic-audit-live-r2-2026-11-19.md): #1837 fix on main passes locally, deployed image not updated; criteria 1 and 2 stay unproven.
+## [2026-11-19] add | Public browser access fourth pass (Refs #344)
+
+* Added [public-browser-access-live-r4-2026-11-19.md](research/public-browser-access-live-r4-2026-11-19.md): fresh read-only evidence, criterion 1 unmet for browser clients, fix is infrastructure scope needing the full tier.
+## [2026-11-19] add | Issue 349 tenant prerequisites live round 4 (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-r4-2026-11-19.md](research/issue-349-tenant-prerequisites-live-r4-2026-11-19.md): live reproduction of round 3; no source change, criterion 1 needs a tenant owner; per-criterion table included.
+## [2026-11-19] add | Issue 164 fourth demo re-check (Refs #164)
+
+* Added [the per-criterion note](./research/issue-164-live-20261119T0909Z-2026-11-19.md): registered and disabled chat task confirmed, thresholds and real-model evidence stay person-gated; no source change.
+## [2026-11-19] update | Issue 198 stale-mvp test fixture (Refs #198)
+
+* Updated [issue-198-rubric-live-r2-2026-11-18.md](research/issue-198-rubric-live-r2-2026-11-18.md): the 10 stale-mvp test failures are fixed; criteria 3 and 4 stay unproven.
+## [2026-11-19] add | Issue 200 live audit 3 (Refs #200)
+
+* Added [issue-200-live-20261119T0848Z-2026-11-19.md](research/issue-200-live-20261119T0848Z-2026-11-19.md) with evidence folder: read-only live probes of revision 33, per-criterion table; 3d proven by history only. No source change.

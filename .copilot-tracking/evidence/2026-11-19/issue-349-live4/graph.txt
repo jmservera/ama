@@ -1,0 +1,1 @@
+az ad app list: ERROR Insufficient privileges to complete the operation.
