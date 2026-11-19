@@ -1,11 +1,11 @@
-# Issue 111 live changes
+# Changes: issue 111 live (2026-11-19)
 
-No source files changed. Artifacts only (tracking files and state).
+Added docs/reference/research/issue-111-live-demo-evidence-2026-11-19.md, an index row and a log entry. No source change; FOCUSED tier (documentation only).
 
-| Criterion | Status | Evidence |
-| --- | --- | --- |
-| Outputs are reproducible from retained readings | Previously ticked (not re-proven) | Issue body |
-| Thresholds are sourced or labelled exercise values | Previously ticked; gate test re-run, 18 OK | `test_sensor_analysis.py:251` |
-| R1 to R3 complete before use beyond an exercise rule | Unproven: needs human | Reviewer and Asset sign-off on R2 and agreed R3 limits are human; code guard already blocks use without a gate |
+| Criterion | Status |
+| --- | --- |
+| Outputs reproducible from retained readings | Proven (46 tests OK, 11 skipped, 1 expected failure) |
+| Thresholds sourced or labelled exercise | Proven (same run) |
+| R1 to R3 complete before use beyond exercise rule | Unproven: needs competent building-physics reviewer, Asset and agreed R3 limits; not waived |
 
-Validation: unit run above; mypy/ruff not applicable (no src change).
+Validation: `python3 -m unittest discover -s tests -p "*sensor_analysis*"` in src/core: OK. Link and diff review of docs. mypy/ruff n/a (no Python change). No Azure resources created.

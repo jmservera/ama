@@ -14072,3 +14072,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 124 live audit, third pass (Refs #124)
 
 * Added [issue-124-live-r3-phase0-discovery-audit-2026-11-19.md](research/issue-124-live-r3-phase0-discovery-audit-2026-11-19.md): 59 contract tests pass, no deployed or in-repo consumer of the discovery modules, live probe against newer demo revisions; the three unticked criteria stay owner-only. No source change.
+## [2026-11-19] add | Issue 111 live demo evidence (Refs #111)
+
+* Added [issue-111-live-demo-evidence-2026-11-19.md](research/issue-111-live-demo-evidence-2026-11-19.md): the two ticked criteria re-verified by the sensor analysis tests; R1 to R3 sign-off stays unproven (human reviewer gate). No source change.
