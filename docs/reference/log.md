@@ -13694,3 +13694,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 2061 single external demo environment decision record (Refs #2061)
 
 * Added [ADR 0008](../adrs/0008-single-external-demo-environment.md) (Proposed) and [issue-2061-live-single-environment-2026-11-19.md](research/issue-2061-live-single-environment-2026-11-19.md): read-only live inventory of two environments, identities and roles; Entra registrations unreadable with this login; criteria 2 to 8 stay unproven. No source or infra change.
+## [2026-11-19] add | Issue 223 live run 3 (Refs #223)
+
+* Added [issue-223-live-r3-2026-11-19.md](research/issue-223-live-r3-2026-11-19.md): focused tests re-run (37 and 6 OK) and per-criterion table; remaining items need humans or an OQ-017 appointment.
