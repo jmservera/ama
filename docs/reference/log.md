@@ -12437,6 +12437,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
 
+## [2026-11-17] update | Epic 109 closure audit against main (Refs #109)
+
+* Added a dated closure audit to [the IoT sensor analytics research plan](./research/iot-sensor-analytics-research-plan.md#epic-109-closure-audit-against-main-eb51af5c9-2026-11-17-refs-109) and an index entry in the [reference index](./README.md). It maps #110, #111 and #112 to merged evidence (including PR 1656) and lists the unmet criteria.
+* Documentation only. No source change, tick, closure or approval. #109, #110 and #111 stay open; live Hub identity, R1 to R3 and the #440 owner disposition remain unproven.
 ## [2026-11-17] update | Cohort evaluation executable evidence re-measured (Refs #222)
 
 * Added a dated section to the [cohort evaluation review pack](research/evaluation/cohort-evaluation-review-pack.md) recording a re-run of the core and agents cohort tests and the `cohort_ranking_eval` runner (with and without `--defects`) on synthetic data. The draft banner and table are preserved. Criterion 6 (OQ-018 owner and DPO approval) stays unmet; synthetic results are not fairness evidence. Documentation only; no source, threshold, approval or live use changed.
