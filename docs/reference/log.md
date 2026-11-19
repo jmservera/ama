@@ -14023,3 +14023,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 202 mvp workflow retirement evidence (Refs #202)
 
 * Indexed [2026-11-19-issue-202-mvp-workflow-retirement.md](research/2026-11-19-issue-202-mvp-workflow-retirement.md): `mvp/` and `prototype/` are absent; no ruleset requires `mvp-ci` or `mvp-validation`; deleting the two workflows needs the FULL tier and is not done.
+
+## [2026-11-19] update | Issue 1830 r4 check
+
+* Added [issue-1830-live-r4-2026-11-19.md](research/issue-1830-live-r4-2026-11-19.md): per-criterion table re-verified; no criterion can be built or proven for the demo without an owner trust-boundary decision. No source change.
