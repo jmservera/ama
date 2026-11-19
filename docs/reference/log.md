@@ -13913,3 +13913,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 223 live run 4
 
 * Added [issue-223-live-r4-2026-11-19.md](research/issue-223-live-r4-2026-11-19.md): focused tests re-run (37 and 6 OK); remaining criterion parts need human reviewers or an OQ-017 appointment.
+
+## [2026-11-19] add | Issue 344 fifth pass
+
+* Added [public-browser-access-live-r5-2026-11-19.md](research/public-browser-access-live-r5-2026-11-19.md): remaining criteria are infrastructure, SQL or owner decisions; no source change.
