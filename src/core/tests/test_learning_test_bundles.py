@@ -6,6 +6,7 @@ import sys
 import tempfile
 import unittest
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 
 from zava_forward.core import learning_test_bundles as ltb
@@ -220,6 +221,33 @@ def run(bundle: str, counts: dict[str, int], **extra: Any) -> dict[str, Any]:
         "cases": [case("a", 2, 1, counts)],
         **extra,
     }
+
+
+class ProtocolDocAgreement(unittest.TestCase):
+    DOC = (
+        Path(__file__).resolve().parents[3]
+        / "docs/reference/research/ux/journey-learning-test-bundles.md"
+    )
+
+    def protocol_rows(self) -> dict[str, list[str]]:
+        text = self.DOC.read_text(encoding="utf-8")
+        section = text.split("## Bundles", 1)[1].split("\n## ", 1)[0]
+        rows = [
+            [c.strip() for c in line.strip().strip("|").split("|")]
+            for line in section.splitlines()
+            if line.startswith("|")
+        ][2:]
+        return {r[0]: r for r in rows}
+
+    def test_protocol_bundle_table_matches_scorer(self) -> None:
+        rows = self.protocol_rows()
+        self.assertEqual(set(rows), {b.title for b in ltb.BUNDLES.values()})
+        for bundle in ltb.BUNDLES.values():
+            _, ids, reqs, comparator, stop = rows[bundle.title]
+            self.assertEqual(tuple(ids.split(", ")), bundle.atlas_ids)
+            self.assertEqual(tuple(reqs.split(", ")), bundle.linked_requirements)
+            self.assertEqual(comparator, bundle.comparator)
+            self.assertEqual(stop, bundle.stop_rule)
 
 
 class RunReports(unittest.TestCase):

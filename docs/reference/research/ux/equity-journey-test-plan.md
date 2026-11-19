@@ -30,7 +30,9 @@ Related evidence that already exists:
   resident journeys against the eight service-time measures in AC-071, and
   checks a supplied register. The draft has no owner, escalation, threshold or
   manual alternative test, so it reports `blocked`. The check never supplies an
-  owner or threshold.
+  owner or threshold. Each row's `design_ref` links to the journey heading in
+  the resident journeys page; a test resolves all seven anchors (2026-11-17,
+  they previously pointed at no heading).
 * The same module routes a case with missing source or sensor data, unknown
   support or an incomplete appointment to a human review route with reasons.
   The route carries no score and has no effect on rank or service. It counts

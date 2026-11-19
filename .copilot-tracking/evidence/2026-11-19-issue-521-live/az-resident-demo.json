@@ -1,0 +1,9 @@
+{
+  "created": "2026-10-26T23:16:04.6933335",
+  "env": "2028-01-01T00:00:00Z",
+  "image": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:65481780cb3f5a55621f637fa783230004b263085dcaece1dfca93a928bbbd19",
+  "max": 1,
+  "min": 0,
+  "rev": "ca-resident-demo--0000014",
+  "state": "Running"
+}

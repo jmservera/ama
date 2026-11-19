@@ -1,0 +1,49 @@
+Your home sensors and forecast
+
+Synthetic sensor history for your home. These are stored demo readings, not live measurements or safety advice.
+
+Reading status: The newest stored reading is older than 15 minutes. These are stored readings, not live.
+
+Source: Synthetic demo data from the simulator. Not calibrated, so not a verified measurement of your home.
+
+Latest stored reading: 19 Nov 2026, 10:50 (UK time)
+
+Temperature (°C)
+
+10.11 °C
+
+Humidity (%)
+
+86.88 %
+
+Demo display ranges are not safe or unsafe limits. Readings that are missing or look wrong appear as gaps, not zero.
+
+Simple 24-hour synthetic forecast (estimate)
+
+Simple 24-hour synthetic forecast (estimate): calculated from your home's recent synthetic readings and typical daily pattern. It is not a weather forecast or a live sensor feed. Demo display ranges (-10 to 45 °C and 0 to 100 %) are chart limits, not safe or unsafe household limits.
+
+Temperature history and 24-hour forecast (°C)
+-10
+17.5
+45
+Latest stored
+
+Across 39 readings: lowest 6.47 °C, highest 11.55 °C. The latest value is about the same as the first. Simple 24-hour forecast (estimate): 8.6 °C to 10.8 °C.
+
+Time (UK time): 17 Nov 2026, 19:00 to 19 Nov 2026, 10:50
+
+Solid line with circles: stored readings. Dashed line with hollow squares: forecast (estimate).
+
+Humidity history and 24-hour forecast (%)
+0
+50
+100
+Latest stored
+
+Across 39 readings: lowest 81.92 %, highest 96.72 %. The latest value is about the same as the first. Simple 24-hour forecast (estimate): 84.6 % to 88 %.
+
+Time (UK time): 17 Nov 2026, 19:00 to 19 Nov 2026, 10:50
+
+Solid line with circles: stored readings. Dashed line with hollow squares: forecast (estimate).
+
+Show sensor history and forecast as a table

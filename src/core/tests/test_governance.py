@@ -197,6 +197,19 @@ class Gov:
         s.raise_hazard(self.pm1, "ZF-1", "Damp and mould", "Emergency",
                        metadata=dict(source="Synthetic report", aware_at="2026-01-01T10:00:00Z"))
 
+    def test_work_package_breach_pauses_only_cases_with_active_orders_in_it(self):
+        s = self.store
+        self.approve_all()
+        s.data.setdefault("procurement", dict(packages=[], work_orders=[]))["work_orders"].append(
+            dict(id="WO-1", case_id="ZF-1", package="PKG-1", state="Appointed"))
+        b = s.breach_record(self.pm1, dict(BREACH, scope_kind="work package", scope="PKG-1"))
+        with self.assertRaisesRegex(PermissionError, "paused"):
+            s.log_call(self.geo, "ZF-1", "Spoke", "")
+        s.log_call(self.geo, "ZF-2", "Spoke", "")
+        rel = s.release_record(self.pm1, dict(RELEASE, scope="Phase 0 capture"))
+        s.breach_restart(self.pm2, dict(id=b["id"], release_id=rel["id"], authority_ref="OD-35 demo", remediation_evidence="Synthetic remediation"))
+        s.log_call(self.geo, "ZF-1", "Spoke", "")
+
     def test_breach_record_needs_an_authorised_role(self):
         with self.assertRaises(PermissionError):
             self.store.breach_record(tf.U["RLO-1"], BREACH)

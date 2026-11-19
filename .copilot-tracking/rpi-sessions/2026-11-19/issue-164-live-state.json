@@ -1,5 +1,5 @@
 {
- "task_id": "issue-164-live-20261119T0909Z",
+ "task_id": "issue-164-live-20261119T134556Z",
  "task_slug": "issue-164-live",
  "parent_task": null,
  "mode": "automatic",
@@ -7,41 +7,36 @@
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-19-issue-164-live-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-19-issue-164-live-plan.md",
-  "details": ".copilot-tracking/details/2026-11-19-issue-164-live-details.md",
-  "critique": ".copilot-tracking/critique/2026-11-19-issue-164-live-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-19-issue-164-live-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-19-issue-164-live-review.md"
+  "research": ".copilot-tracking/research/2026-11-19-issue-164-live-r6-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-19-issue-164-live-r6-plan.md",
+  "details": ".copilot-tracking/details/2026-11-19-issue-164-live-r6-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-19-issue-164-live-r6-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-19-issue-164-live-r6-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-19-issue-164-live-r6-review.md"
  },
  "confirmed_decisions": [
   {
-   "decision": "Demo scope, desktop only; approvals other than named person decisions waived by owner 2026-11-18",
-   "status": "confirmed",
-   "evidence": "task brief"
-  },
-  {
    "decision": "Critique executed once, verdict proceed",
    "status": "done",
-   "evidence": ".copilot-tracking/critique/2026-11-19-issue-164-live-critique.md"
+   "evidence": ".copilot-tracking/critique/2026-11-19-issue-164-live-r6-critique.md"
   },
   {
    "decision": "Review executed once, conformant, doc-only",
    "status": "done",
-   "evidence": ".copilot-tracking/reviews/2026-11-19-issue-164-live-review.md"
+   "evidence": ".copilot-tracking/reviews/2026-11-19-issue-164-live-r6-review.md"
   }
  ],
  "blockers": [],
  "next_action": {
   "phase": "Follow-up",
-  "action": "Owner names thresholds approver and accountable individual, or authorises finite chat call budget"
+  "action": "Owner approves thresholds and names accountable individual"
  },
  "prioritized_follow_ups": [
   {
    "rank": 1,
    "task": "Owner approves thresholds and names accountable individual",
    "rationale": "Unblocks criteria 1 and 2",
-   "evidence": "docs/reference/research/issue-164-live-20261119T0909Z-2026-11-19.md"
+   "evidence": "docs/reference/research/issue-164-live-20261119T134556Z-2026-11-19.md"
   }
  ]
 }

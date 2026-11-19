@@ -1,0 +1,12 @@
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "ready": "ca-cutover-test-demo-api--0000033",
+  "rev": "ca-cutover-test-demo-api--0000033"
+}
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "rev": "ca-resident-demo--0000014"
+}
+[
+  "sensor-readings"
+]

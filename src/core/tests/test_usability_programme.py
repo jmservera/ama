@@ -532,7 +532,7 @@ class UsabilityProgrammeTests(unittest.TestCase):
     ) -> None:
         text = SPEC_PATH.read_text(encoding="utf-8")
         plan = up.default_programme_plan()
-        self.assertIn("ms.date: 2026-11-15", text)
+        self.assertIn("ms.date: 2026-11-17", text)
         self.assertIn(up.SYNTHETIC_WALKTHROUGH_LABEL, text)
         self.assertIn("not_user_validation = True", text)
         self.assertIn("SA-010", text)
@@ -543,6 +543,25 @@ class UsabilityProgrammeTests(unittest.TestCase):
             self.assertIn(f"`{script.script_id}`", text)
         for cohort in plan.cohorts:
             self.assertIn(f"`{cohort.cohort_id}`", text)
+
+    def test_markdown_specification_scopes_a_demo_first_desktop_only_slice(self) -> None:
+        text = SPEC_PATH.read_text(encoding="utf-8")
+        heading = "## Demo-first, desktop-only first slice"
+        self.assertIn(heading, text)
+        section = text.split(heading, 1)[1].split("\n## ", 1)[0]
+        script_ids = {script.script_id for script in up.default_programme_plan().tasks}
+        for needle in (
+            "api/web/",
+            "resident_demo/web/",
+            "1280 CSS px",
+            "Synthetic showcase - not a live resident service",
+            up.SYNTHETIC_WALKTHROUGH_LABEL,
+            "No participant data",
+        ):
+            self.assertIn(needle, section)
+        for script_id in ("T0", "T4", "T5", "R-J1", "R-J2", "R-J3"):
+            self.assertIn(script_id, script_ids)
+            self.assertIn(f"`{script_id}`", section)
 
 
 if __name__ == "__main__":
