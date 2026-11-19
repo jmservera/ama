@@ -25,3 +25,7 @@ Status: implementation starting. Tier: FOCUSED (new read-only script, no src/ ch
 | Load test on declared fixture | ticked already; not re-proven |
 | Single-replica and restart with audit persistence | ticked already; not re-proven |
 | Tokenomics usage and cost drivers | ticked already; not re-proven |
+
+## Rerun 2026-11-19 (live-20261119T141822Z)
+
+No source edits. The audit script was re-run against a fresh live listing: 13 of 13 containers digest-pinned, exit 0; deployed securityContext null. Both unticked criteria stay unproven: the pipeline clause needs self-hosted runners with OIDC (src-deploy.yml never run), and Container Apps ARM has no read-only root or capability-drop field, so enforcing hardening means a production redeploy. Nothing buildable for the demo remains. Validation: FOCUSED, no src change, Azure access read-only.
