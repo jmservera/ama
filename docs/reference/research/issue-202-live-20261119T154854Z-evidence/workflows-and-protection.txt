@@ -1,0 +1,58 @@
+# retrieved 2026-11-19T15:49:43Z base 7ea3a1ff6
+infra-plan.yml
+mvp-ci.yml
+mvp-validation.yml
+rubric-score.lock.yml
+rubric-score.md
+src-ci.yml
+src-deploy.yml
+# workflow state
+.github/workflows/infra-plan.yml active
+.github/workflows/mvp-ci.yml disabled_manually
+.github/workflows/mvp-validation.yml disabled_manually
+.github/workflows/proper-warm-poc.yml disabled_manually
+.github/workflows/rubric-score.lock.yml disabled_manually
+.github/workflows/src-ci.yml active
+.github/workflows/src-deploy.yml active
+dynamic/agents/anthropic-code-agent active
+dynamic/agents/copilot-pull-request-reviewer active
+dynamic/copilot-swe-agent/copilot active
+dynamic/dependabot/dependabot-updates active
+dynamic/dependabot/update-graph active
+# rulesets
+main disabled required_checks=[]
+mainprotect active required_checks=[]
+# classic protection
+{"message":"Branch not protected","documentation_url":"https://docs.github.com/rest/branches/branch-protection#get-branch-protection","status":"404"}gh: Branch not protected (HTTP 404)
+# references (file:count)
+tools/test_src_cutover_repoint.py:1
+tools/rpi-checks.py:8
+tools/check-legacy-references.py:1
+.github/workflows/src-ci.yml:2
+.github/workflows/mvp-validation.yml:1
+.github/workflows/mvp-ci.yml:1
+.github/rubric/README.md:1
+infra/tests/test_pipeline.py:5
+infra/README.md:2
+src/core/tests/test_cutover_audit.py:2
+src/core/src/zava_forward/core/synthetic/cutover_audit.py:1
+src/api/README.md:1
+src/README.md:1
+# pinned hashes in rpi-checks
+    ("tools/rpi-checks.py", "tools/test_rpi_checks.py"),
+)
+WORKFLOWS = (
+    "src-ci.yml",
+    "mvp-ci.yml",
+    "mvp-validation.yml",
+    "src-deploy.yml",
+    "infra-plan.yml",
+)
+# Explicitly updated with the matrix whenever native workflow commands change.
+WORKFLOW_HASHES = {
+    "src-ci.yml": "26592e2db04031c64c8e162a410576f931e5105f889844dae1bd4758762b9abd",
+    "mvp-ci.yml": "a0f227717e1d6f675898e2ff6d45f493ce88851ad236c578f2dbcb7921bd0179",
+    "mvp-validation.yml": "841e06bad7856c6cf9102a7f383ee027ec24e88ad27360f8ab7462d0eb76da8d",
+    "src-deploy.yml": "bd0b6277ce104b698110cd88a63846c36ec7be463164db327f00dd5d32489623",
+    "infra-plan.yml": "4240d803e33e68e63e03d201f241fa21101e2e260848c276b32817624cca6056",
+}

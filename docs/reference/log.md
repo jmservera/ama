@@ -13882,3 +13882,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## 2026-11-19 Issue 117 scan check
 
 * Added research/issue-117-scan-before-availability-live-2026-11-19.md: scanning mechanism proven by existing tests; real malware engine unproven for the demo. No source change.
+
+## [2026-11-19] update | Issue 202 live refresh
+
+* Added [issue-202-live-20261119T154854Z-2026-11-19.md](research/issue-202-live-20261119T154854Z-2026-11-19.md): the workflow-removal criterion stays unticked pending a full-tier change; no source change.
