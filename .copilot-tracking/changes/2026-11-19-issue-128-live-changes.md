@@ -10,3 +10,5 @@ No source or documentation change outside `.copilot-tracking/`. Tier FOCUSED; rp
 | Usability measures aggregate only | Proven at source level | `cd src/core && PYTHONPATH=src:tests python3 -m unittest test_usability_programme test_journey_register`: 27 tests OK, 2026-11-19 |
 
 The single remaining criterion needs a named human agreement, so nothing can be built or proven for the demo. Unticked criteria: 1 (protocol agreed).
+
+Witness note: the first witness calls (seq 3 to 7) were refused because state artifact_paths were unset; state was corrected and the calls repeated (seq 8 to 12).
