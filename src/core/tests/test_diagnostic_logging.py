@@ -1,11 +1,14 @@
 """Diagnostic logs exclude personal data, raw readings and chat content (issue 146)."""
 
 import io
+import json
 import logging
 import unittest
 from pathlib import Path
 
+from telemetry_support import capture_telemetry
 from zava_forward.core import diagnostic_logging as dl
+from zava_forward.core import telemetry
 
 SRC = Path(__file__).resolve().parents[2]
 ENTRYPOINTS = (
@@ -26,6 +29,52 @@ CANARIES = (
 
 
 class RedactionTests(unittest.TestCase):
+    def test_structured_logs_use_trusted_context_not_extras(self) -> None:
+        self.handler.setFormatter(dl.StructuredFormatter())
+        with capture_telemetry(), telemetry.operation("chat"):
+            expected = telemetry.correlation()
+            expected_resource = telemetry.resource_attributes()
+            queued = self.logger.makeRecord(
+                self.logger.name, logging.INFO, __file__, 0, "queued message", (), None
+            )
+            try:
+                raise RuntimeError(CANARIES[1])
+            except RuntimeError:
+                self.logger.exception(
+                    "AI_LIMIT_BREACH reason=%s body=%s",
+                    "timeout",
+                    CANARIES[2],
+                    extra={
+                        "trace_id": "forged",
+                        "zf_trace_context": {"trace_id": "forged"},
+                        "zf_resource": {"user.email": CANARIES[0]},
+                        "resident": CANARIES[0],
+                    },
+                )
+        self.handler.handle(queued)
+        self.logger.warning("after span")
+        first, delayed, second = [json.loads(line) for line in self.output().splitlines()]
+        self.assertEqual(first["trace_id"], expected["trace_id"])
+        self.assertEqual(first["span_id"], expected["span_id"])
+        self.assertEqual(first["attributes"], {})
+        self.assertEqual(first["resource"], expected_resource)
+        self.assertEqual(delayed["trace_id"], expected["trace_id"])
+        self.assertEqual(delayed["resource"], expected_resource)
+        self.assertIn("AI_LIMIT_BREACH", first["body"])
+        self.assertNotIn("trace_id", second)
+        for value in (*CANARIES, "forged", "Traceback"):
+            self.assertNotIn(value, self.output())
+
+    def test_sdk_diagnostics_never_echo_endpoint_or_credential_values(self) -> None:
+        self.handler.setFormatter(dl.StructuredFormatter())
+        logger = logging.getLogger("opentelemetry.exporter.test")
+        logger.addHandler(self.handler)
+        self.addCleanup(logger.removeHandler, self.handler)
+        logger.warning("Failed to export to https://private-host.invalid secret=PRIVATE_KEY")
+        self.assertNotIn("private-host", self.output())
+        self.assertNotIn("PRIVATE_KEY", self.output())
+        self.assertIn("Telemetry SDK diagnostic", self.output())
+
     def setUp(self) -> None:
         dl.install_diagnostic_redaction(console=False)
         self.addCleanup(dl.uninstall_diagnostic_redaction)

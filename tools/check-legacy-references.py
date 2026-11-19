@@ -34,6 +34,11 @@ RECORD_PREFIXES = (
     "docs/capstone/thought-leadership/everything-but-the-software/anc/",
 )
 
+# Dated live-evidence research notes and their evidence folders quote old paths verbatim.
+RECORD_PATTERN = re.compile(
+    r"^docs/reference/research/(?:issue-\d+-|src-repoint-)[^/]*\d{4}-?\d{2}-?\d{2}[^/]*(?:/|\.md$)"
+)
+
 # Regression guards and migration tools that must name the old strings.
 GUARD_FILES = (
     "src/core/tests/test_cutover_audit.py",
@@ -42,6 +47,9 @@ GUARD_FILES = (
     "tools/rpi-checks.py",
     "tools/check-legacy-references.py",
     "tools/test_check_legacy_references.py",
+    "tools/test_epic_legacy_path_retirement.py",
+    "tools/test_epic_parity_matrix_old_paths.py",
+    "tools/test_private_mvp_data_exclusion.py",
     "infra/tests/test_pipeline.py",
     ".github/workflows/mvp-validation.yml",
     ".github/workflows/src-ci.yml",
@@ -71,7 +79,9 @@ def tracked_files(root: Path) -> list[str]:
 
 
 def is_exempt(path: str) -> bool:
-    return path in GUARD_FILES or path.startswith(RECORD_PREFIXES)
+    return (
+        path in GUARD_FILES or path.startswith(RECORD_PREFIXES) or bool(RECORD_PATTERN.match(path))
+    )
 
 
 def reference_violations(path: str, text: str) -> list[str]:

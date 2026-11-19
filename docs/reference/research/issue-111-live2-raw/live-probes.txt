@@ -1,0 +1,6 @@
+host redacted
+/healthz 200
+/health 401
+/openapi.json 401
+/app 401
+ca-cutover-test-demo-api--0000031	Healthy	Running

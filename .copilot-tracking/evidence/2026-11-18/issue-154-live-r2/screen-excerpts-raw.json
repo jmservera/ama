@@ -1,0 +1,112 @@
+{
+ "resident-choice": {
+  "first_headings": [
+   "Resident choice and update queue",
+   "Choose a home",
+   "Choice and update commitments across open homes (portfolio scope, not this home)",
+   ""
+  ],
+  "matching_lines": [
+   "Resident choice and update queue",
+   "Resident choice and update queue",
+   "Go to Portfolio choice and update commitments",
+   "Choice and update commitments across open homes (portfolio scope, not this home)",
+   "Read-only. Shows 100 of 443 open homes, in home ID order, as your role may see them. A paused or withdrawn measure is listed separately from contact and access. Open a home for the full version history.",
+   "Constructed demonstration data. The file has only the homes shown on this page, not every page or every open home. It is a read-only copy: editing it changes no records. It summarises choices, pauses, retained human reviews and the update commitment status without answer notes, names, contact or add",
+   "Choice and update commitments by home",
+   "Home Measure choices (latest version) Paused or withdrawn Update commitment",
+   "ZF-[id], [address] Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded; Waiting for resident: structural repair: current Not recorded State: None recorded Actio",
+   "ZF-[id], [address] Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: Boiler replacement: current Not recorded; Waiting for resident: heating controls: current Not recorded; Waiting for resident: loft top-up: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: Internal wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: Internal wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded; Waiting for resident: structural repair: current Not recorded State: None recorded Actio",
+   "ZF-[id], [address] Waiting for resident: Air source heat pump: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: Boiler replacement: current Not recorded; Waiting for resident: heating controls: current Not recorded; Waiting for resident: loft top-up: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], Flat 4, 23 Moorfield, Newcastle upon Tyne Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], Flat 6, 23 Moorfield, Newcastle upon Tyne Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], Flat 7, 23 Moorfield, Newcastle upon Tyne Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], Flat 8, 23 Moorfield, Newcastle upon Tyne Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], Flat 9, 23 Moorfield, Newcastle upon Tyne Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], Flat 12, 23 Moorfield, Newcastle upon Tyne Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], Flat 13, 23 Moorfield, Newcastle upon Tyne Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], Flat 14, 23 Moorfield, Newcastle upon Tyne Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], 32 8th Row, Ashington Waiting for resident: External wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded; Waiting for resident: structural repair: current Not recorded State: None recorded Actio",
+   "ZF-[id], [address] Waiting for resident: Boiler replacement: current Not recorded; Waiting for resident: heating controls: current Not recorded; Waiting for resident: loft top-up: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], 40 South View, Houghton-le-Spring Waiting for resident: Boiler replacement: current Not recorded; Waiting for resident: heating controls: current Not recorded; Waiting for resident: loft top-up: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded; Waiting for resident: structural repair: current Not recorded State: None recorded Actio",
+   "ZF-[id], [address] Waiting for resident: Boiler replacement: current Not recorded; Waiting for resident: heating controls: current Not recorded; Waiting for resident: loft top-up: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], 7 South View, Pelton Waiting for resident: External wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded; Waiting for resident: structural repair: current Not recorded State: None rec",
+   "ZF-[id], [address] Waiting for resident: External wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: Air source heat pump: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: Internal wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: Cavity wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: heating controls: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], 23 Sunnyside, Cramlington Waiting for resident: External wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded; Waiting for resident: structural repair: current Not recorded State: Non",
+   "ZF-[id], [address] Waiting for resident: Cavity wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: heating controls: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: Cavity wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: heating controls: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], 17 Lingdale, Belmont Waiting for resident: Boiler replacement: current Not recorded; Waiting for resident: heating controls: current Not recorded; Waiting for resident: loft top-up: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: Air source heat pump: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded; Waiting for resident: structural repair: current Not recorded State: None recorded Actio",
+   "ZF-[id], [address] Waiting for resident: Boiler replacement: current Not recorded; Waiting for resident: heating controls: current Not recorded; Waiting for resident: loft top-up: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], [address] Waiting for resident: External wall insulation (block): current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], 4 Hillside View, Roddymoor Waiting for resident: Cavity wall insulation: current Not recorded; Waiting for resident: loft insulation: current Not recorded; Waiting for resident: heating controls: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], 2 Auckland, Chester-le-Street Waiting for resident: External wall insulation: current Not recorded; Waiting for resident: dMEV ventilation: current Not recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id], 13 Ravensdowne, Northumberland Waiting for resident: Boiler replacement: current Not recorded; Waiting for resident: heating controls: current Not recorded; Waiting for resident: loft top-up: current Not recorded State: None recorded Action needed: No commitment recorded"
+  ]
+ },
+ "resident-service-issues": {
+  "first_headings": [
+   "Resident service issue queue",
+   "Choose a home",
+   "Open service issues across this page of homes"
+  ],
+  "matching_lines": [
+   "Resident choice and update queue",
+   "Home Open issues and next update Contact needs Update commitment",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded",
+   "ZF-[id] Confirmed: No open request recorded State: None recorded Action needed: No commitment recorded"
+  ]
+ },
+ "package-queue": {
+  "first_headings": [
+   "Package queue",
+   "Choose a home"
+  ],
+  "matching_lines": [
+   "Resident choice and update queue"
+  ]
+ }
+}

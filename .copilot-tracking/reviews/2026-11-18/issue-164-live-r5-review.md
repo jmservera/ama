@@ -1,0 +1,2 @@
+# Issue 164 r5 review (single pass)
+Outcome: conformant with open items. Pattern widened narrowly; negative controls pass; regulatory chat shares the pattern and its tests pass. Open: live redeploy and re-probe (production change, not authorised); threshold approval and reviewer (owner). Residual risk: other phrasings (for example imperative with adverbs) remain heuristic, as the pattern is lexical.

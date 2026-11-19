@@ -1,0 +1,12 @@
+# Command: python3 -m unittest infra.tests.test_setup_entra run on a temporary copy of infra/ with the expiry comparison mutated to always true (exact invocation not recorded; inferred from the evidence note)
+FAIL: test_expired_credential_rotates_without_removing_in_use_old_credential (infra.tests.test_setup_entra.SetupTests.test_expired_credential_rotates_without_removing_in_use_old_credential)
+FAIL: test_expired_keyvault_credential_is_never_reused_and_azure_guard_blocks_app_store (infra.tests.test_setup_entra.SetupTests.test_expired_keyvault_credential_is_never_reused_and_azure_guard_blocks_app_store) (expiry='2029-12-31T23:59:59Z')
+FAIL: test_expired_keyvault_credential_is_never_reused_and_azure_guard_blocks_app_store (infra.tests.test_setup_entra.SetupTests.test_expired_keyvault_credential_is_never_reused_and_azure_guard_blocks_app_store) (expiry='2030-01-01T00:00:00Z')
+FAIL: test_stored_credential_expiry_guards_generated_and_legacy_reuse (infra.tests.test_setup_entra.SetupTests.test_stored_credential_expiry_guards_generated_and_legacy_reuse) (legacy=False, expiry='2029-12-31T23:59:59Z')
+FAIL: test_stored_credential_expiry_guards_generated_and_legacy_reuse (infra.tests.test_setup_entra.SetupTests.test_stored_credential_expiry_guards_generated_and_legacy_reuse) (legacy=False, expiry='2030-01-01T00:00:00Z')
+FAIL: test_stored_credential_expiry_guards_generated_and_legacy_reuse (infra.tests.test_setup_entra.SetupTests.test_stored_credential_expiry_guards_generated_and_legacy_reuse) (legacy=False, expiry=None)
+FAIL: test_stored_credential_expiry_guards_generated_and_legacy_reuse (infra.tests.test_setup_entra.SetupTests.test_stored_credential_expiry_guards_generated_and_legacy_reuse) (legacy=True, expiry='2029-12-31T23:59:59Z')
+FAIL: test_stored_credential_expiry_guards_generated_and_legacy_reuse (infra.tests.test_setup_entra.SetupTests.test_stored_credential_expiry_guards_generated_and_legacy_reuse) (legacy=True, expiry='2030-01-01T00:00:00Z')
+FAIL: test_stored_credential_expiry_guards_generated_and_legacy_reuse (infra.tests.test_setup_entra.SetupTests.test_stored_credential_expiry_guards_generated_and_legacy_reuse) (legacy=True, expiry=None)
+Ran 126 tests in 4.910s
+FAILED (failures=9)

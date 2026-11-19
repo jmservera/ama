@@ -76,12 +76,31 @@ class RuleApproval:
 
 
 @dataclass(frozen=True)
+class ResearchGate:
+    """References to completed research phases R1 to R3; presence is attested, never inferred."""
+
+    r1_source_review: str
+    r2_reviewer_signoff: str
+    r3_synthetic_validation: str
+
+    def validate(self) -> None:
+        for value in (
+            self.r1_source_review,
+            self.r2_reviewer_signoff,
+            self.r3_synthetic_validation,
+        ):
+            if not isinstance(value, str) or not _LABEL.fullmatch(value):
+                raise ValueError("INVALID_RESEARCH_GATE")
+
+
+@dataclass(frozen=True)
 class AnalysisPolicy:
     version: str = ANALYSIS_VERSION
     humidity_threshold_pct: float = 75.0
     max_staleness_hours: int = 48
     threshold_label: str = EXERCISE_LABEL
     approval: RuleApproval | None = None
+    research_gate: ResearchGate | None = None
 
     def validate(self) -> None:
         if not isinstance(self.version, str) or not _LABEL.fullmatch(self.version):
@@ -91,6 +110,10 @@ class AnalysisPolicy:
         if not self.threshold_label.startswith(("EXERCISE VALUE", "SOURCED:")):
             raise ValueError("THRESHOLD_LABEL_REQUIRED")
         comparator._threshold(self.humidity_threshold_pct)
+        if self.threshold_label.startswith("SOURCED:") and self.research_gate is None:
+            raise ValueError("RESEARCH_GATE_REQUIRED")
+        if self.research_gate is not None:
+            self.research_gate.validate()
         if self.approval is not None:
             self.approval.validate()
 
@@ -526,19 +549,18 @@ def policy_digest(policy: AnalysisPolicy) -> str:
         if policy.rule_approved and policy.approval is not None
         else None
     )
-    body = json.dumps(
-        {
-            "policy_version": policy.version,
-            "humidity_threshold_pct": _norm_float(policy.humidity_threshold_pct),
-            "max_staleness_hours": policy.max_staleness_hours,
-            "threshold_label": policy.threshold_label,
-            "rule_id": RULE_ID,
-            "rule_approved": policy.rule_approved,
-            "approval": approved,
-        },
-        ensure_ascii=True,
-        sort_keys=True,
-    )
+    payload: dict[str, object] = {
+        "policy_version": policy.version,
+        "humidity_threshold_pct": _norm_float(policy.humidity_threshold_pct),
+        "max_staleness_hours": policy.max_staleness_hours,
+        "threshold_label": policy.threshold_label,
+        "rule_id": RULE_ID,
+        "rule_approved": policy.rule_approved,
+        "approval": approved,
+    }
+    if policy.research_gate is not None:
+        payload["research_gate"] = asdict(policy.research_gate)
+    body = json.dumps(payload, ensure_ascii=True, sort_keys=True)
     return hashlib.sha256(body.encode("ascii")).hexdigest()
 
 

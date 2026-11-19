@@ -1,0 +1,268 @@
+[
+  {
+    "actions": {
+      "actionGroups": [
+        "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.Insights/actionGroups/ag-cutover-test-ops"
+      ],
+      "customProperties": null
+    },
+    "autoMitigate": null,
+    "checkWorkspaceAlertsStorageConfigured": null,
+    "createdWithApiVersion": "2023-03-15-preview",
+    "criteria": {
+      "allOf": [
+        {
+          "dimensions": null,
+          "failingPeriods": {
+            "minFailingPeriodsToAlert": 1,
+            "numberOfEvaluationPeriods": 1
+          },
+          "metricMeasureColumn": null,
+          "metricName": null,
+          "operator": "GreaterThan",
+          "query": "AzureDiagnostics | where ResourceProvider == \"MICROSOFT.KEYVAULT\" and OperationName in (\"SecretNearExpiryEventGridNotification\", \"SecretExpiredEventGridNotification\") and Resource =~ \"kv-cutovertest-rzsrg\"",
+          "resourceIdColumn": null,
+          "threshold": 0.0,
+          "timeAggregation": "Count"
+        }
+      ]
+    },
+    "description": "A secret is within its Key Vault near-expiry window or has expired. Rotate it using infra/README.md, Key Vault secret lifecycle.",
+    "displayName": "Key Vault secret near expiry or expired (kv-cutovertest-rzsrg)",
+    "enabled": true,
+    "etag": null,
+    "evaluationFrequency": "1:00:00",
+    "id": "/subscriptions/<SUB>/resourceGroups/ama/providers/microsoft.insights/scheduledqueryrules/alert-kv-cutovertest-rzsrg-secret-expiry",
+    "isLegacyLogAnalyticsRule": null,
+    "isWorkspaceAlertsStorageConfigured": null,
+    "kind": null,
+    "location": "uksouth",
+    "muteActionsDuration": null,
+    "name": "alert-kv-cutovertest-rzsrg-secret-expiry",
+    "overrideQueryTimeRange": null,
+    "resourceGroup": "ama",
+    "scopes": [
+      "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.OperationalInsights/workspaces/log-cutover-test"
+    ],
+    "severity": 2,
+    "skipQueryValidation": null,
+    "systemData": {
+      "createdAt": "2026-10-16T12:08:02.265004+00:00",
+      "createdBy": "<object-id>",
+      "createdByType": "Application",
+      "lastModifiedAt": "2026-10-16T22:34:25.288474+00:00",
+      "lastModifiedBy": "<object-id>",
+      "lastModifiedByType": "Application"
+    },
+    "tags": {
+      "dataClassification": "constructed-non-identifying",
+      "environment": "test",
+      "owner": "Juan Manuel Servera",
+      "purpose": "non-production-demonstrator",
+      "workload": "zava-forward-demonstrator",
+      "zava-forward-deployment-profile": "development"
+    },
+    "targetResourceTypes": null,
+    "type": "Microsoft.Insights/scheduledQueryRules",
+    "windowSize": "1 day, 0:00:00"
+  },
+  {
+    "actions": {
+      "actionGroups": [
+        "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.Insights/actionGroups/ag-cutover-test-ops"
+      ],
+      "customProperties": null
+    },
+    "autoMitigate": null,
+    "checkWorkspaceAlertsStorageConfigured": null,
+    "createdWithApiVersion": "2023-03-15-preview",
+    "criteria": {
+      "allOf": [
+        {
+          "dimensions": null,
+          "failingPeriods": {
+            "minFailingPeriodsToAlert": 1,
+            "numberOfEvaluationPeriods": 1
+          },
+          "metricMeasureColumn": null,
+          "metricName": null,
+          "operator": "GreaterThan",
+          "query": "AzureDiagnostics | where ResourceProvider == \"MICROSOFT.KEYVAULT\" and Resource =~ \"kv-cutovertest-rzsrg\" and httpStatusCode_d in (401, 403)",
+          "resourceIdColumn": null,
+          "threshold": 4.0,
+          "timeAggregation": "Count"
+        }
+      ]
+    },
+    "description": "Repeated 401 or 403 results on the vault data plane. Review the caller and the access review record.",
+    "displayName": "Key Vault data-plane access denied (kv-cutovertest-rzsrg)",
+    "enabled": true,
+    "etag": null,
+    "evaluationFrequency": "0:15:00",
+    "id": "/subscriptions/<SUB>/resourceGroups/ama/providers/microsoft.insights/scheduledqueryrules/alert-kv-cutovertest-rzsrg-denied-access",
+    "isLegacyLogAnalyticsRule": null,
+    "isWorkspaceAlertsStorageConfigured": null,
+    "kind": null,
+    "location": "uksouth",
+    "muteActionsDuration": null,
+    "name": "alert-kv-cutovertest-rzsrg-denied-access",
+    "overrideQueryTimeRange": null,
+    "resourceGroup": "ama",
+    "scopes": [
+      "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.OperationalInsights/workspaces/log-cutover-test"
+    ],
+    "severity": 3,
+    "skipQueryValidation": null,
+    "systemData": {
+      "createdAt": "2026-10-16T12:08:02.280629+00:00",
+      "createdBy": "<object-id>",
+      "createdByType": "Application",
+      "lastModifiedAt": "2026-10-16T22:34:25.288474+00:00",
+      "lastModifiedBy": "<object-id>",
+      "lastModifiedByType": "Application"
+    },
+    "tags": {
+      "dataClassification": "constructed-non-identifying",
+      "environment": "test",
+      "owner": "Juan Manuel Servera",
+      "purpose": "non-production-demonstrator",
+      "workload": "zava-forward-demonstrator",
+      "zava-forward-deployment-profile": "development"
+    },
+    "targetResourceTypes": null,
+    "type": "Microsoft.Insights/scheduledQueryRules",
+    "windowSize": "1:00:00"
+  },
+  {
+    "actions": {
+      "actionGroups": [
+        "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.Insights/actionGroups/ag-cutover-test-ops"
+      ],
+      "customProperties": null
+    },
+    "autoMitigate": null,
+    "checkWorkspaceAlertsStorageConfigured": null,
+    "createdWithApiVersion": "2023-03-15-preview",
+    "criteria": {
+      "allOf": [
+        {
+          "dimensions": null,
+          "failingPeriods": {
+            "minFailingPeriodsToAlert": 1,
+            "numberOfEvaluationPeriods": 1
+          },
+          "metricMeasureColumn": null,
+          "metricName": null,
+          "operator": "GreaterThan",
+          "query": "ContainerAppConsoleLogs | where JobName startswith \"job-cutover-test-ledger-verify\" and Log has \"LEDGER_DIGEST_ALERT\"",
+          "resourceIdColumn": null,
+          "threshold": 0.0,
+          "timeAggregation": "Count"
+        }
+      ]
+    },
+    "description": "The scheduled ledger verification job reported LEDGER_DIGEST_ALERT, or the job run failed.",
+    "displayName": "Ledger does not match the immutable digests",
+    "enabled": true,
+    "etag": null,
+    "evaluationFrequency": "1:00:00",
+    "id": "/subscriptions/<SUB>/resourceGroups/ama/providers/microsoft.insights/scheduledqueryrules/alert-cutover-test-ledger-digest-mismatch",
+    "isLegacyLogAnalyticsRule": null,
+    "isWorkspaceAlertsStorageConfigured": null,
+    "kind": null,
+    "location": "uksouth",
+    "muteActionsDuration": null,
+    "name": "alert-cutover-test-ledger-digest-mismatch",
+    "overrideQueryTimeRange": null,
+    "resourceGroup": "ama",
+    "scopes": [
+      "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.OperationalInsights/workspaces/log-cutover-test"
+    ],
+    "severity": 1,
+    "skipQueryValidation": null,
+    "systemData": {
+      "createdAt": "2026-10-16T14:14:05.728581+00:00",
+      "createdBy": "<object-id>",
+      "createdByType": "Application",
+      "lastModifiedAt": "2026-10-16T14:14:05.728581+00:00",
+      "lastModifiedBy": "<object-id>",
+      "lastModifiedByType": "Application"
+    },
+    "tags": {
+      "dataClassification": "constructed-non-identifying",
+      "environment": "test",
+      "owner": "Juan Manuel Servera",
+      "purpose": "non-production-demonstrator",
+      "workload": "zava-forward-demonstrator"
+    },
+    "targetResourceTypes": null,
+    "type": "Microsoft.Insights/scheduledQueryRules",
+    "windowSize": "1:00:00"
+  },
+  {
+    "actions": {
+      "actionGroups": [
+        "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.Insights/actionGroups/ag-cutover-test-ops"
+      ],
+      "customProperties": null
+    },
+    "autoMitigate": null,
+    "checkWorkspaceAlertsStorageConfigured": null,
+    "createdWithApiVersion": "2023-03-15-preview",
+    "criteria": {
+      "allOf": [
+        {
+          "dimensions": null,
+          "failingPeriods": {
+            "minFailingPeriodsToAlert": 1,
+            "numberOfEvaluationPeriods": 1
+          },
+          "metricMeasureColumn": null,
+          "metricName": null,
+          "operator": "LessThan",
+          "query": "ContainerAppConsoleLogs | where JobName startswith \"job-cutover-test-ledger-verify\" and Log has \"LEDGER_DIGEST_OK\" | where TimeGenerated > ago(26h)",
+          "resourceIdColumn": null,
+          "threshold": 1.0,
+          "timeAggregation": "Count"
+        }
+      ]
+    },
+    "description": "No LEDGER_DIGEST_OK line from the daily verification job in 26 hours: the job failed to start or run, or logs are missing. Table names are unconfirmed until checked in the deployed workspace.",
+    "displayName": "Ledger verification did not report success",
+    "enabled": true,
+    "etag": null,
+    "evaluationFrequency": "1:00:00",
+    "id": "/subscriptions/<SUB>/resourceGroups/ama/providers/microsoft.insights/scheduledqueryrules/alert-cutover-test-ledger-verify-missing",
+    "isLegacyLogAnalyticsRule": null,
+    "isWorkspaceAlertsStorageConfigured": null,
+    "kind": null,
+    "location": "uksouth",
+    "muteActionsDuration": null,
+    "name": "alert-cutover-test-ledger-verify-missing",
+    "overrideQueryTimeRange": null,
+    "resourceGroup": "ama",
+    "scopes": [
+      "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.OperationalInsights/workspaces/log-cutover-test"
+    ],
+    "severity": 1,
+    "skipQueryValidation": null,
+    "systemData": {
+      "createdAt": "2026-10-16T14:14:05.869203+00:00",
+      "createdBy": "<object-id>",
+      "createdByType": "Application",
+      "lastModifiedAt": "2026-10-16T14:14:05.869203+00:00",
+      "lastModifiedBy": "<object-id>",
+      "lastModifiedByType": "Application"
+    },
+    "tags": {
+      "dataClassification": "constructed-non-identifying",
+      "environment": "test",
+      "owner": "Juan Manuel Servera",
+      "purpose": "non-production-demonstrator",
+      "workload": "zava-forward-demonstrator"
+    },
+    "targetResourceTypes": null,
+    "type": "Microsoft.Insights/scheduledQueryRules",
+    "windowSize": "1 day, 0:00:00"
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "n": "id-resident-demo",
+    "t": "Microsoft.ManagedIdentity/userAssignedIdentities"
+  },
+  {
+    "n": "ca-resident-demo",
+    "t": "Microsoft.App/containerApps"
+  },
+  {
+    "n": "aoai-resident-469",
+    "t": "Microsoft.CognitiveServices/accounts"
+  }
+]

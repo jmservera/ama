@@ -1,0 +1,119 @@
+{
+ "policy": {
+  "policy_id": "zava-forward-home-ranking",
+  "version": "1.0.0",
+  "owner": "to be named",
+  "status": "Draft rule order, not yet signed off by an owner",
+  "effective_date": "2026-10-09",
+  "content_hash": "b66fdaccdcbd46a0eb257572a2b8f0fb98e7eafd53b468b67084d9a19761be2c",
+  "rules": [
+   {
+    "order": 1,
+    "code": "safety_open",
+    "label": "Open safety issue first"
+   },
+   {
+    "order": 2,
+    "code": "support",
+    "label": "Residents needing priority support or an adjustment next"
+   },
+   {
+    "order": 3,
+    "code": "waiting_days",
+    "label": "Longest time in the current stage next"
+   },
+   {
+    "order": 4,
+    "code": "stage_order",
+    "label": "Earlier programme stage next"
+   },
+   {
+    "order": 5,
+    "code": "case_id",
+    "label": "Case id as the final fixed tie-break"
+   }
+  ],
+  "versions": [
+   "1.0.0"
+  ]
+ },
+ "publication": {
+  "count": 0,
+  "problems": [],
+  "latest": null,
+  "overdue": true,
+  "schedule": {
+   "cadence": "daily",
+   "minimum_frequency_hours": 24,
+   "runner": "deployment scheduler (not yet configured)",
+   "owner": "to be named",
+   "retention": "not set; archive keeps every snapshot until a named owner approves a purge"
+  },
+  "policy_signed": false,
+  "signoff_problems": [
+   "No named policy owner."
+  ]
+ },
+ "snapshot_total": 443,
+ "as_of": "2026-10-16",
+ "snapshot_hash": "27d32b36bef24872e913c9f6561060399a51266cb439885a4d07e63430c4ece7",
+ "policy_hash": "b66fdaccdcbd46a0eb257572a2b8f0fb98e7eafd53b468b67084d9a19761be2c",
+ "two_reads_identical_order": true,
+ "first_5": [
+  {
+   "id": "ZF-2025-0122",
+   "rank": 1,
+   "reason_codes": [
+    "safety_open",
+    "support",
+    "waiting_days",
+    "stage_order"
+   ],
+   "deciding_rule": null
+  },
+  {
+   "id": "ZF-2025-0257",
+   "rank": 2,
+   "reason_codes": [
+    "safety_open",
+    "support",
+    "waiting_days",
+    "stage_order"
+   ],
+   "deciding_rule": "waiting_days"
+  },
+  {
+   "id": "ZF-2025-0505",
+   "rank": 3,
+   "reason_codes": [
+    "safety_open",
+    "support",
+    "waiting_days",
+    "stage_order"
+   ],
+   "deciding_rule": "waiting_days"
+  },
+  {
+   "id": "ZF-2025-0331",
+   "rank": 4,
+   "reason_codes": [
+    "safety_open",
+    "support",
+    "waiting_days",
+    "stage_order"
+   ],
+   "deciding_rule": "waiting_days"
+  },
+  {
+   "id": "ZF-2026-0622",
+   "rank": 5,
+   "reason_codes": [
+    "safety_open",
+    "support",
+    "waiting_days",
+    "stage_order"
+   ],
+   "deciding_rule": "waiting_days"
+  }
+ ]
+}

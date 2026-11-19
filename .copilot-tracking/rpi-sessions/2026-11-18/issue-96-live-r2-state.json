@@ -1,0 +1,53 @@
+{
+ "task_id": "issue-96-live",
+ "task_slug": "issue-96-live",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-18-issue-96-live-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-18-issue-96-live-plan.md",
+  "details": ".copilot-tracking/details/2026-11-18-issue-96-live-details.md",
+  "critique": ".copilot-tracking/critiques/2026-11-18-issue-96-live-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-18-issue-96-live-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-18-issue-96-live-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Demo only, desktop; live Azure authorised in rg ama; tier FOCUSED, no src change; never rpi-checks --all",
+   "status": "confirmed",
+   "evidence": "Owner decisions 2026-11-18 and task brief"
+  },
+  {
+   "decision": "Research executed, Ready; critique executed once, all findings applied",
+   "status": "recorded",
+   "evidence": ".copilot-tracking/critiques/2026-11-18-issue-96-live-critique.md"
+  },
+  {
+   "decision": "Review executed once; conformant for focused tier; open items routed",
+   "status": "recorded",
+   "evidence": ".copilot-tracking/reviews/2026-11-18-issue-96-live-review.md"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "Owner selects follow-up"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Define a named human approval path for form schemas and source policy",
+   "rationale": "Only way to prove criterion 1",
+   "evidence": "No code path sets Approved; demo has zero schemas"
+  },
+  {
+   "rank": 2,
+   "task": "Seed one synthetic schema in the demo (owner approval needed) to prove staging, review and export live",
+   "rationale": "Live proof of criteria 2 to 6",
+   "evidence": "Empty form-candidates and form-review on the demo"
+  }
+ ]
+}

@@ -1,0 +1,29 @@
+[
+ {
+  "surface": "resident signed in",
+  "url": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/",
+  "title": "Your home improvement progress - synthetic showcase, not live",
+  "terms": [],
+  "snake_case": [],
+  "ai_lines": [
+   "Based only on the recorded facts shown on this page for your home. Neither rules nor AI can make decisions, approve documents, book works, or give consent.",
+   "Use my own case record to generate an AI summary (optional). This is not consent to works.",
+   "Generate AI summary"
+  ],
+  "chars": 6581,
+  "headings": [
+   "Your home improvement progress",
+   "Sign in to the showcase",
+   "We cannot show this page",
+   "Case summary",
+   "Current status and next step",
+   "What is needed from you",
+   "Case timeline and planned improvements",
+   "Documents and checks",
+   "Funding and household costs",
+   "Help and other ways to reach us",
+   "Your home sensors and forecast",
+   "Not available in this showcase"
+  ]
+ }
+]

@@ -298,6 +298,20 @@ class Matrix(MatrixServer):
         finally:
             del os.environ["ZF_REASON_ROLES"]
 
+    def test_reason_role_override_never_grants_the_contractor(self):
+        import os
+        from unittest import mock
+        self.assertEqual(
+            projection.DEFAULT_REASON_ROLES,
+            ("Resident Liaison Officer", "Building Safety Liaison", "Retrofit Programme Manager"),
+        )
+        with mock.patch.dict(os.environ, {"ZF_REASON_ROLES": "Contractor, Retrofit Programme Manager"}):
+            self.assertEqual(projection.reason_roles(), ("Retrofit Programme Manager",))
+            self.assertFalse(projection.can_see_reason(dict(role=projection.CONTRACTOR)))
+            self.assertTrue(projection.can_see_reason(dict(role="Retrofit Programme Manager")))
+        with mock.patch.dict(os.environ, {"ZF_REASON_ROLES": ""}):
+            self.assertEqual(projection.reason_roles(), ())
+
     def test_new_endpoints_for_every_role(self):
         mgr = {s["role"]: s for s in self.store.data["staff"]}["Retrofit Programme Manager"]
         pid = self.store.create_package(mgr, "Wave", "2026-01-01", "2099-12-31", "Loft", "CALL-1", "SYN-1")

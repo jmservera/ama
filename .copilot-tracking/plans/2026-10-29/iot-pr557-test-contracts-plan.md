@@ -54,7 +54,7 @@ documentation, scorecard, deployment or remote-write changes.
 * Invoke local az bicep build-params against iot-hub-live.bicepparam; assert
   success before parsing JSON.
 * Assert parsed templateJson equals self.live and parametersJson contains
-  exactly name iot-cutover-test-rzsrg, location uksouth, skuName B1, unitCount 1.
+  exactly name [hub], location uksouth, skuName B1, unitCount 1.
 * Evaluate consumer-group name with self.values(self.live) and compare exactly
   to fixture/events/api-consumer. Use this same assertion for negative mutations.
 

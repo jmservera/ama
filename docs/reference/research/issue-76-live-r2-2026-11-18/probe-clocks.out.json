@@ -1,0 +1,130 @@
+{
+ "status": 200,
+ "n": 16,
+ "rows": [
+  {
+   "id": "ZF-2025-0331",
+   "hazard": [
+    {
+     "owner_named": true,
+     "owner_role": null,
+     "response_state": "Unknown",
+     "elapsed_hours": null,
+     "aware_at": "Unknown",
+     "response_due_at": "Unknown",
+     "as_of": "2026-10-16"
+    }
+   ],
+   "safeguarding": [],
+   "hazard_keys": [
+    "accountable_owner",
+    "as_of",
+    "authority",
+    "aware_at",
+    "case_id",
+    "clock_text",
+    "elapsed_hours",
+    "kind",
+    "owner",
+    "owner_named",
+    "owner_status",
+    "resident_update_due_at",
+    "resident_update_state",
+    "response_due_at",
+    "response_state",
+    "source",
+    "version"
+   ]
+  },
+  {
+   "id": "ZF-2025-0148",
+   "hazard": [],
+   "safeguarding": [],
+   "hazard_keys": null
+  },
+  {
+   "id": "ZF-2025-0150",
+   "hazard": [],
+   "safeguarding": [],
+   "hazard_keys": null
+  },
+  {
+   "id": "ZF-2025-0151",
+   "hazard": [],
+   "safeguarding": [],
+   "hazard_keys": null
+  },
+  {
+   "id": "ZF-2025-0031",
+   "hazard": [],
+   "safeguarding": [],
+   "hazard_keys": null
+  },
+  {
+   "id": "ZF-2025-0032",
+   "hazard": [],
+   "safeguarding": [],
+   "hazard_keys": null
+  },
+  {
+   "id": "ZF-2025-0389",
+   "hazard": [],
+   "safeguarding": [],
+   "hazard_keys": null
+  },
+  {
+   "id": "ZF-2025-0339",
+   "hazard": [],
+   "safeguarding": [],
+   "hazard_keys": null
+  },
+  {
+   "id": "ZF-2025-0340",
+   "hazard": [],
+   "safeguarding": [],
+   "hazard_keys": null
+  },
+  {
+   "id": "ZF-2025-0364",
+   "hazard": [],
+   "safeguarding": [],
+   "hazard_keys": null
+  },
+  {
+   "id": "ZF-2026-0742",
+   "hazard": [],
+   "safeguarding": [],
+   "hazard_keys": null
+  },
+  {
+   "id": "ZF-2026-0741",
+   "hazard": [],
+   "safeguarding": [],
+   "hazard_keys": null
+  },
+  {
+   "id": "ZF-2025-0295",
+   "hazard": [],
+   "safeguarding": [],
+   "hazard_keys": null
+  },
+  {
+   "id": "ZF-2025-0320",
+   "hazard": [],
+   "safeguarding": [],
+   "hazard_keys": null
+  },
+  {
+   "id": "ZF-2025-0321",
+   "hazard": [],
+   "safeguarding": [],
+   "hazard_keys": null
+  },
+  {
+   "id": "ZF-2025-0298",
+   "hazard": [],
+   "safeguarding": [],
+   "hazard_keys": null
+  }
+ ]
+}

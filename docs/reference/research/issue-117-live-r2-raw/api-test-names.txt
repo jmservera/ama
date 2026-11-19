@@ -1,0 +1,3 @@
+test_clean_upload_is_available_and_scan_is_recorded (tests.test_document_controls.ScanTests.test_clean_upload_is_available_and_scan_is_recorded) ... ok
+test_defender_malicious_result_removes_the_document (tests.test_document_controls.ScanTests.test_defender_malicious_result_removes_the_document) ... ok
+test_pending_defender_scan_blocks_until_clean (tests.test_document_controls.ScanTests.test_pending_defender_scan_blocks_until_clean) ... ok
