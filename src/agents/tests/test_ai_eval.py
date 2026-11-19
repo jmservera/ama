@@ -322,3 +322,16 @@ class TaskCoverageTests(unittest.TestCase):
         with mock.patch.object(ai_eval.ai_tasks, "resolve", lambda label, sources: False):
             rep = ai_eval.run_eval()
         self.assertTrue(_failures(rep, "document"))
+
+
+AUDIT = Path(__file__).resolve().parents[3] / "docs/reference/research/evaluation/issue-108-closure-audit.md"
+
+
+class ClosureAuditDocTests(unittest.TestCase):
+    def test_audit_names_every_task_the_harness_does_not_evaluate(self):
+        text = AUDIT.read_text()
+        cov = ai_eval.run_eval()["evidence"]["task_coverage"]["tasks"]
+        missing = [t for t, row in cov.items() if row["status"] == ai_eval.NOT_EVALUATED and t not in text]
+        self.assertEqual(missing, [])
+        for phrase in ("eb51af5c9ab0b1353ac380fc8960ee8dd96d17c4", "not on main", "Refs #108"):
+            self.assertIn(phrase, text)
