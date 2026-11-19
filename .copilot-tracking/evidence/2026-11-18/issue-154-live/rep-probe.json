@@ -1,0 +1,188 @@
+{
+ "item_keys": [
+  "address",
+  "area",
+  "closed",
+  "days",
+  "focus",
+  "funding",
+  "hazard",
+  "id",
+  "last_contact",
+  "next_visit",
+  "owner",
+  "owner_code",
+  "phone",
+  "postcode",
+  "rank",
+  "reasons",
+  "resident",
+  "stage",
+  "status",
+  "support",
+  "support_coverage",
+  "support_status",
+  "town",
+  "wave",
+  "work"
+ ],
+ "probes": {
+  "ZF-2025-0331/(case)": {
+   "status": 200,
+   "body": "{\"documents\": [{\"id\": \"D1\", \"name\": \"EPC certificate.pdf\", \"kind\": \"EPC\", \"at\": \"2025-10-19\", \"by\": \"Helen Marsden\", \"ge"
+  },
+  "ZF-2025-0331/representative-view": {
+   "status": 404,
+   "body": "{\"error\": \"Case not found.\"}"
+  },
+  "ZF-2025-0331/representative-view?representative_ref=none": {
+   "status": 404,
+   "body": "{\"error\": \"Case not found.\"}"
+  },
+  "ZF-2025-0148/(case)": {
+   "status": 200,
+   "body": "{\"documents\": [{\"id\": \"D1\", \"name\": \"EPC certificate.pdf\", \"kind\": \"EPC\", \"at\": \"2025-07-20\", \"by\": \"Helen Marsden\", \"ge"
+  },
+  "ZF-2025-0148/representative-view": {
+   "status": 404,
+   "body": "{\"error\": \"Case not found.\"}"
+  },
+  "ZF-2025-0148/representative-view?representative_ref=none": {
+   "status": 404,
+   "body": "{\"error\": \"Case not found.\"}"
+  },
+  "ZF-2025-0150/(case)": {
+   "status": 200,
+   "body": "{\"documents\": [{\"id\": \"D1\", \"name\": \"EPC certificate.pdf\", \"kind\": \"EPC\", \"at\": \"2025-07-20\", \"by\": \"Helen Marsden\", \"ge"
+  },
+  "ZF-2025-0150/representative-view": {
+   "status": 404,
+   "body": "{\"error\": \"Case not found.\"}"
+  },
+  "ZF-2025-0150/representative-view?representative_ref=none": {
+   "status": 404,
+   "body": "{\"error\": \"Case not found.\"}"
+  }
+ },
+ "representative_keys_in_case_detail": {
+  "/resident/representative": null,
+  "/hazards[0]/service_authority": "\"Existing hazard and repairs service\"",
+  "/nomination_permissions/representative_authorities": [],
+  "/work/hazard_clocks[0]/authority": "\"Existing hazard and repairs service\""
+ },
+ "case_detail_top_keys": [
+  "appointments",
+  "can_advance",
+  "can_record_resident",
+  "challenge_assurance",
+  "challenge_guarantees",
+  "challenge_targets",
+  "checklist",
+  "closed",
+  "contacts",
+  "contractor",
+  "days_in_stage",
+  "decision",
+  "documents",
+  "funding",
+  "funding_ok",
+  "gate",
+  "hazards",
+  "history",
+  "home",
+  "id",
+  "measure_decisions",
+  "measures",
+  "nomination_permissions",
+  "owner",
+  "owner_code",
+  "owner_role",
+  "quality_handover_blockers",
+  "reason",
+  "redress_route",
+  "resident",
+  "resident_retention",
+  "stage",
+  "stage_since",
+  "status",
+  "stock_epc",
+  "stock_fabric",
+  "stock_link",
+  "stock_reconciliation",
+  "stock_reconciliation_events",
+  "suggestions",
+  "support_coverage",
+  "support_status",
+  "synthetic_stock_anchor_id",
+  "technical_missing",
+  "waiting_on",
+  "wave",
+  "work"
+ ],
+ "scan_all_listed_cases": {
+  "ZF-2025-0331": {
+   "resident_representative_set": false,
+   "rep_authorities": 0
+  },
+  "ZF-2025-0148": {
+   "resident_representative_set": false,
+   "rep_authorities": 0
+  },
+  "ZF-2025-0150": {
+   "resident_representative_set": false,
+   "rep_authorities": 0
+  },
+  "ZF-2025-0151": {
+   "resident_representative_set": false,
+   "rep_authorities": 0
+  },
+  "ZF-2025-0031": {
+   "resident_representative_set": false,
+   "rep_authorities": 0
+  },
+  "ZF-2025-0032": {
+   "resident_representative_set": false,
+   "rep_authorities": 0
+  },
+  "ZF-2025-0389": {
+   "resident_representative_set": false,
+   "rep_authorities": 0
+  },
+  "ZF-2025-0339": {
+   "resident_representative_set": false,
+   "rep_authorities": 0
+  },
+  "ZF-2025-0340": {
+   "resident_representative_set": false,
+   "rep_authorities": 0
+  },
+  "ZF-2025-0364": {
+   "resident_representative_set": false,
+   "rep_authorities": 0
+  },
+  "ZF-2026-0742": {
+   "resident_representative_set": false,
+   "rep_authorities": 0
+  },
+  "ZF-2026-0741": {
+   "resident_representative_set": false,
+   "rep_authorities": 0
+  },
+  "ZF-2025-0295": {
+   "resident_representative_set": false,
+   "rep_authorities": 0
+  },
+  "ZF-2025-0320": {
+   "resident_representative_set": false,
+   "rep_authorities": 0
+  },
+  "ZF-2025-0321": {
+   "resident_representative_set": false,
+   "rep_authorities": 0
+  },
+  "ZF-2025-0298": {
+   "resident_representative_set": false,
+   "rep_authorities": 0
+  }
+ }
+}

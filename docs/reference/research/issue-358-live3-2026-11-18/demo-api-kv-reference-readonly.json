@@ -1,0 +1,10 @@
+{
+  "prov": "Succeeded",
+  "secrets": [
+    {
+      "identity": "/subscriptions/[redacted]/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api",
+      "keyVaultUrl": "https://<vault>.vault.azure.net/secrets/<secret-name>",
+      "name": "<secret-name>"
+    }
+  ]
+}

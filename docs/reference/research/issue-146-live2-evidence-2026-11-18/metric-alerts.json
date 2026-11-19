@@ -1,0 +1,169 @@
+[
+  {
+    "actions": [
+      {
+        "actionGroupId": "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.Insights/actionGroups/ag-cutover-test-ops"
+      }
+    ],
+    "criteria": {
+      "allOf": [
+        {
+          "criterionType": "StaticThresholdCriterion",
+          "metricName": "ClientErrors",
+          "name": "throttled",
+          "operator": "GreaterThan",
+          "threshold": 20.0,
+          "timeAggregation": "Total"
+        }
+      ],
+      "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria"
+    },
+    "enabled": true,
+    "evaluationFrequency": "PT5M",
+    "id": "/subscriptions/<SUB>/resourcegroups/ama/providers/Microsoft.Insights/metricAlerts/alert-cutover-test-foundry-throttle",
+    "location": "global",
+    "name": "alert-cutover-test-foundry-throttle",
+    "resourceGroup": "ama",
+    "scopes": [
+      "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.CognitiveServices/accounts/aif-cutover-test-rzsrg"
+    ],
+    "severity": 2,
+    "tags": {
+      "dataClassification": "constructed-non-identifying",
+      "environment": "test",
+      "owner": "Juan Manuel Servera",
+      "purpose": "non-production-demonstrator",
+      "workload": "zava-forward-demonstrator",
+      "zava-forward-deployment-profile": "development"
+    },
+    "type": "Microsoft.Insights/metricAlerts",
+    "windowSize": "PT15M"
+  },
+  {
+    "actions": [
+      {
+        "actionGroupId": "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.Insights/actionGroups/ag-cutover-test-ops"
+      }
+    ],
+    "criteria": {
+      "allOf": [
+        {
+          "criterionType": "StaticThresholdCriterion",
+          "metricName": "cpu_percent",
+          "name": "cpu",
+          "operator": "GreaterThan",
+          "threshold": 85.0,
+          "timeAggregation": "Average"
+        }
+      ],
+      "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria"
+    },
+    "enabled": true,
+    "evaluationFrequency": "PT5M",
+    "id": "/subscriptions/<SUB>/resourcegroups/ama/providers/Microsoft.Insights/metricAlerts/alert-cutover-test-sql-cpu",
+    "location": "global",
+    "name": "alert-cutover-test-sql-cpu",
+    "resourceGroup": "ama",
+    "scopes": [
+      "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.Sql/servers/sql-cutover-test-rzsrg/databases/retrofit"
+    ],
+    "severity": 3,
+    "tags": {
+      "dataClassification": "constructed-non-identifying",
+      "environment": "test",
+      "owner": "Juan Manuel Servera",
+      "purpose": "non-production-demonstrator",
+      "workload": "zava-forward-demonstrator",
+      "zava-forward-deployment-profile": "development"
+    },
+    "type": "Microsoft.Insights/metricAlerts",
+    "windowSize": "PT15M"
+  },
+  {
+    "actions": [
+      {
+        "actionGroupId": "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.Insights/actionGroups/ag-cutover-test-ops"
+      }
+    ],
+    "criteria": {
+      "allOf": [
+        {
+          "criterionType": "StaticThresholdCriterion",
+          "dimensions": [
+            {
+              "name": "statusCodeCategory",
+              "operator": "Include",
+              "values": [
+                "5xx"
+              ]
+            }
+          ],
+          "metricName": "Requests",
+          "name": "server-errors",
+          "operator": "GreaterThan",
+          "threshold": 5.0,
+          "timeAggregation": "Total"
+        }
+      ],
+      "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria"
+    },
+    "enabled": true,
+    "evaluationFrequency": "PT1M",
+    "id": "/subscriptions/<SUB>/resourcegroups/ama/providers/Microsoft.Insights/metricAlerts/alert-cutover-test-api-5xx",
+    "location": "global",
+    "name": "alert-cutover-test-api-5xx",
+    "resourceGroup": "ama",
+    "scopes": [
+      "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-api"
+    ],
+    "severity": 2,
+    "tags": {
+      "dataClassification": "constructed-non-identifying",
+      "environment": "test",
+      "owner": "Juan Manuel Servera",
+      "purpose": "non-production-demonstrator",
+      "workload": "zava-forward-demonstrator"
+    },
+    "type": "Microsoft.Insights/metricAlerts",
+    "windowSize": "PT5M"
+  },
+  {
+    "actions": [
+      {
+        "actionGroupId": "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.Insights/actionGroups/ag-cutover-test-ops"
+      }
+    ],
+    "criteria": {
+      "allOf": [
+        {
+          "criterionType": "StaticThresholdCriterion",
+          "metricName": "RestartCount",
+          "name": "restarts",
+          "operator": "GreaterThan",
+          "threshold": 3.0,
+          "timeAggregation": "Total"
+        }
+      ],
+      "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria"
+    },
+    "enabled": true,
+    "evaluationFrequency": "PT5M",
+    "id": "/subscriptions/<SUB>/resourcegroups/ama/providers/Microsoft.Insights/metricAlerts/alert-cutover-test-api-restarts",
+    "location": "global",
+    "name": "alert-cutover-test-api-restarts",
+    "resourceGroup": "ama",
+    "scopes": [
+      "/subscriptions/<SUB>/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-api"
+    ],
+    "severity": 3,
+    "tags": {
+      "dataClassification": "constructed-non-identifying",
+      "environment": "test",
+      "owner": "Juan Manuel Servera",
+      "purpose": "non-production-demonstrator",
+      "workload": "zava-forward-demonstrator"
+    },
+    "type": "Microsoft.Insights/metricAlerts",
+    "windowSize": "PT15M"
+  }
+]

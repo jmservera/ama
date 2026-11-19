@@ -1,0 +1,36 @@
+{
+ "csv_sha256_before": "2e41bbf8c34690fe939c43b28bdb8475d3e01f6f2fb9287a0d3e72a3b0bb94aa",
+ "xlsx_sha256_before": "1c2ae3e68d32ed77d1a9bd5f40dea6e2a7e706a250c431d876037fb50a0a517c",
+ "landed_on_app_host": true,
+ "import_check_responses": [
+  200
+ ],
+ "result_text": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nAssistant proposals\nTime capture\nAftercare concerns\nSpecialist screens\nthe demo user\n\nRetrofit Programme Manager. Case workspace.\n\nBack to the list\nCheck a spreadsheet\n\nChoose any spreadsheet saved as CSV. We match the columns for you and list anything to fix. Your file is never changed.\n\nRejected import batches, failed model calls, stranded tasks and conflicting source values are tracked in the data steward and operator exception queue.\n\nSpreadsheet (CSV)\n\nYour file has not been changed.\n\n8 rows are ready to bring in. 0 match a home we already have a record for.\n\nWe found these columns: name: Resident name; address: Property address; postcode: Post code; phone: not found\n\nRows to fix\nRow 8: Check address\nRow 9: Check postcode looks wrong",
+ "raw_api": {
+  "status": 200,
+  "body": {
+   "columns": {
+    "name": "Resident name",
+    "address": "Property address",
+    "postcode": "Post code",
+    "phone": null
+   },
+   "ready": 8,
+   "to_fix": [
+    {
+     "row": 8,
+     "problem": "Check address"
+    },
+    {
+     "row": 9,
+     "problem": "Check postcode looks wrong"
+    }
+   ],
+   "matched_existing": 0,
+   "message": "Your file has not been changed."
+  }
+ },
+ "csv_sha256_after": "2e41bbf8c34690fe939c43b28bdb8475d3e01f6f2fb9287a0d3e72a3b0bb94aa",
+ "xlsx_sha256_after": "1c2ae3e68d32ed77d1a9bd5f40dea6e2a7e706a250c431d876037fb50a0a517c",
+ "source_unchanged": true
+}

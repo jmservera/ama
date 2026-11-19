@@ -56,7 +56,9 @@ window.ChatWidget = (() => {
     loading.hidden = true;
     const error = node("p", "", { id: `${id}-error`, role: "alert", "aria-live": "polite", "aria-atomic": "true", class: "chat-widget-error", tabindex: "-1" });
     error.hidden = true;
-    form.append(beforeInput, input, keys, tools, reason);
+    const entry = node("div", "", { class: "chat-widget-entry" });
+    entry.append(beforeInput, input, keys, reason);
+    form.append(entry, tools);
     root.append(header, intro, log, status, loading, error, form);
     document.body.append(launcher, root);
     let docked = false;

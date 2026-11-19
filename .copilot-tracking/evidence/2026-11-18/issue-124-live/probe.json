@@ -1,0 +1,239 @@
+{
+ "module_path": "/home/azureuser/source/ama-wt/issue-124-live-20261118T1045Z/src/core/src/zava_forward/core/discovery_contract.py",
+ "owner_default_status": "NOT_NOMINATED",
+ "agent_as_owner": {
+  "ok": false,
+  "error": "ValueError: Discovery owner must name a human actor, not a blank, placeholder or AI actor"
+ },
+ "same_person": {
+  "ok": false,
+  "error": "ValueError: Executive sponsor and nominated discovery owner must be distinct people"
+ },
+ "nominated_status": "ENDPOINT_NOT_AGREED",
+ "wrong_endpoint": {
+  "ok": false,
+  "error": "ValueError: Phase 0 discovery endpoint must be 'accepted handover', not 'installation'"
+ },
+ "agreed_status": "ENDPOINT_AGREED",
+ "note_owner": "Placeholder names exercise the rule only; they are not nominations.",
+ "dictionary": {
+  "stages": 15,
+  "events": 15,
+  "timestamps": 8,
+  "wait_states": 7,
+  "return_loops": 4,
+  "gaps_open": 49,
+  "gaps_sample": [
+   "The Asset Director and Retrofit Programme Manager has not validated stage 'candidate_identification'",
+   "The Resident Engagement and Housing has not validated stage 'resident_engagement_and_survey_booking'",
+   "The Retrofit Assessor and Retrofit Programme Manager has not validated stage 'pas2035_retrofit_assessment'"
+  ],
+  "owner_validated": false,
+  "finding_status": "candidate_hypothesis_not_company_finding"
+ },
+ "validate_dictionary_no_owner": {
+  "ok": false,
+  "error": "GovernanceViolationError: Discovery owner readiness is NOT_NOMINATED, expected ENDPOINT_AGREED"
+ },
+ "validate_dictionary_agent": {
+  "ok": false,
+  "error": "GovernanceViolationError: Lifecycle dictionary must have zero gaps before owner validation (49 open)"
+ },
+ "event_coverage": {
+  "candidate selection": {
+   "mapped_types": [
+    "CANDIDATE_IDENTIFIED"
+   ],
+   "rows": 992
+  },
+  "retrofit assessment completed": {
+   "mapped_types": [
+    "ASSESSMENT_COMPLETED"
+   ],
+   "rows": 857
+  },
+  "design approved": {
+   "mapped_types": [
+    "DESIGN_APPROVED"
+   ],
+   "rows": 801
+  },
+  "resident works decision recorded": {
+   "mapped_types": [
+    "RESIDENT_WORKS_DECISION"
+   ],
+   "rows": 634
+  },
+  "ready to install": {
+   "mapped_types": [],
+   "rows": 0
+  },
+  "work release": {
+   "mapped_types": [
+    "WORK_ORDER_ISSUED"
+   ],
+   "rows": 534
+  },
+  "appointment": {
+   "mapped_types": [],
+   "rows": 0
+  },
+  "installation": {
+   "mapped_types": [
+    "INSTALL_STARTED",
+    "INSTALL_COMPLETE"
+   ],
+   "rows": 946
+  },
+  "practical completion": {
+   "mapped_types": [
+    "INSTALL_COMPLETE"
+   ],
+   "rows": 465
+  },
+  "invoice": {
+   "mapped_types": [],
+   "rows": 0
+  },
+  "documentary completion": {
+   "mapped_types": [],
+   "rows": 0
+  },
+  "physical acceptance": {
+   "mapped_types": [
+    "QA_PASSED"
+   ],
+   "rows": 410
+  },
+  "evidence acceptance": {
+   "mapped_types": [
+    "EVIDENCE_ACCEPTED"
+   ],
+   "rows": 349
+  },
+  "resident handover": {
+   "mapped_types": [
+    "RESIDENT_HANDOVER"
+   ],
+   "rows": 332
+  },
+  "accepted handover": {
+   "mapped_types": [
+    "ACCEPTED_HANDOVER"
+   ],
+   "rows": 325
+  }
+ },
+ "event_coverage_unmapped_contract_events": [
+  "ready to install",
+  "appointment",
+  "invoice",
+  "documentary completion"
+ ],
+ "population": {
+  "candidates": 992,
+  "event_rows": 9859,
+  "distinct_candidates_in_events": 980,
+  "distinct_properties": 991,
+  "event_date_iso_rows": 8818,
+  "event_date_dmy_rows": 1041,
+  "event_date_iso_min": "2025-03-11",
+  "event_date_iso_max": "2026-10-07",
+  "accepted_handover_candidates": 322,
+  "all_rows_synthetic": true
+ },
+ "return_loop_signals": {
+  "DESIGN_RETURNED": 243,
+  "INSTALL_ABORTED": 21,
+  "DESIGN_RESCOPED": 28,
+  "CASE_REOPENED": 17,
+  "DESIGN_VARIATION_REQUESTED": 36
+ },
+ "delay_codes_on_candidates": {
+  "DLY-SUP-CAP": 84,
+  "DLY-RES-ACCESS": 49,
+  "DLY-OTHER": 28,
+  "DLY-RES-DECISION": 28,
+  "OTHER": 22,
+  "DLY-FUND": 21,
+  "DLY-LEASE": 18,
+  "DLY-SUP-EVID": 15
+ },
+ "delay_free_text_rows": 425,
+ "register": [
+  {
+   "rank": 1,
+   "code": "CAP",
+   "supporting": 0,
+   "contradicting": 0,
+   "gaps": [
+    "CAP: record supporting_evidence with traceable source_ref",
+    "CAP: record contradicting_evidence (or a searched counter-evidence extract record with direction='contradicts' and traceable source_ref)"
+   ],
+   "owner_validated": false,
+   "finding_status": "candidate_hypothesis_not_company_finding"
+  },
+  {
+   "rank": 2,
+   "code": "HANDOFF",
+   "supporting": 0,
+   "contradicting": 0,
+   "gaps": [
+    "HANDOFF: record supporting_evidence with traceable source_ref",
+    "HANDOFF: record contradicting_evidence (or a searched counter-evidence extract record with direction='contradicts' and traceable source_ref)"
+   ],
+   "owner_validated": false,
+   "finding_status": "candidate_hypothesis_not_company_finding"
+  },
+  {
+   "rank": 3,
+   "code": "RESIDENT",
+   "supporting": 0,
+   "contradicting": 0,
+   "gaps": [
+    "RESIDENT: record supporting_evidence with traceable source_ref",
+    "RESIDENT: record contradicting_evidence (or a searched counter-evidence extract record with direction='contradicts' and traceable source_ref)"
+   ],
+   "owner_validated": false,
+   "finding_status": "candidate_hypothesis_not_company_finding"
+  },
+  {
+   "rank": 4,
+   "code": "DEPEND",
+   "supporting": 0,
+   "contradicting": 0,
+   "gaps": [
+    "DEPEND: record supporting_evidence with traceable source_ref",
+    "DEPEND: record contradicting_evidence (or a searched counter-evidence extract record with direction='contradicts' and traceable source_ref)"
+   ],
+   "owner_validated": false,
+   "finding_status": "candidate_hypothesis_not_company_finding"
+  },
+  {
+   "rank": 5,
+   "code": "QUALITY",
+   "supporting": 0,
+   "contradicting": 0,
+   "gaps": [
+    "QUALITY: record supporting_evidence with traceable source_ref",
+    "QUALITY: record contradicting_evidence (or a searched counter-evidence extract record with direction='contradicts' and traceable source_ref)"
+   ],
+   "owner_validated": false,
+   "finding_status": "candidate_hypothesis_not_company_finding"
+  }
+ ],
+ "one_sided_gaps": [
+  "CAP: record contradicting_evidence (or a searched counter-evidence extract record with direction='contradicts' and traceable source_ref)"
+ ],
+ "two_sided_gaps": [],
+ "default_pack": {
+  "owner_status": "NOT_NOMINATED",
+  "flow_owner_validated": false,
+  "flow_finding_status": "candidate_hypothesis_not_company_finding",
+  "population": null
+ },
+ "validate_pack_without_owner": {
+  "ok": false,
+  "error": "GovernanceViolationError: Discovery owner readiness is NOT_NOMINATED, expected ENDPOINT_AGREED"
+ }
+}

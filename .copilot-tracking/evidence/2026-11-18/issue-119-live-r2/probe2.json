@@ -1,0 +1,33 @@
+{
+ "tile_requests": {
+  "count": 33,
+  "sample": [
+   "https://tile.openstreetmap.org/9/253/162.png",
+   "https://tile.openstreetmap.org/9/254/162.png",
+   "https://tile.openstreetmap.org/9/253/161.png"
+  ]
+ },
+ "tile_failures": [],
+ "console": [],
+ "me_map": {
+  "tiles": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  "attribution": "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"
+ },
+ "csp": "default-src 'self'; img-src 'self' data: blob: https://tile.openstreetmap.org; frame-ancestors 'none'",
+ "landing_url": "<app>/app#/overview",
+ "leaflet_present": 1,
+ "maplist_present": 1,
+ "list_items": 443,
+ "list_first_items": [
+  "<synthetic resident name>, Normal. Sensor reading out of date, <values>",
+  "<synthetic resident name>, Waiting 60+ days. Sensor reading out of date, <values>",
+  "<synthetic resident name>, Waiting 60+ days. Sensor readings not shown for your role"
+ ],
+ "tile_note": [
+  "443 homes shown",
+  ""
+ ],
+ "tile_imgs_loaded": 15,
+ "attribution": " Leaflet | © OpenStreetMap contributors",
+ "aria_snapshot_map_info": "- complementary \"Map information and home summary\":\n  - paragraph: Select a home for a summary, then choose Open home. Escape closes the summary first.\n  - paragraph: Normal Waiting 60+ days Safety issue open\n  - checkbox \"Show only homes with stale or offline sensors\"\n  - text: Show only homes with stale or offline sensors\n  - paragraph: Applies to individual homes. Zoom in until homes are shown one by one.\n  - paragraph\n  - status: 443 homes shown\n  - status\n  - group:\n    - text: Show the map areas as a list (keyboard and screen reader friendly)\n    - list \"Show the map areas as a list (keyboard and screen reader friendly)\":\n      - listitem: (x443) link \"<synthetic resident name>, <status>. <sensor text>\" with /url \"#/case/<ref>\" (names removed from retained copy)\n"
+}

@@ -1,7 +1,7 @@
 ---
 title: Monitoring candidates and operator runbooks
 description: Source-only alert catalogue, proposed routing, safe responses and unresolved monitoring acceptance
-ms.date: 2026-11-15
+ms.date: 2026-11-18
 ms.topic: how-to
 ---
 
@@ -33,6 +33,138 @@ does not disable, reapprove or attest to any of them.
 No Azure command, paid inference, real dataset or secret access is required by
 this authoring delivery. Future provisioning/activation is a separate action.
 Keep all resource operations inside `ama`; never delete that resource group.
+
+## Explicit OTLP Instrumentation (2026-11-16)
+
+The API and active queue worker contain an opt-in, manually instrumented OTel
+layer. This is source and offline synthetic evidence, not deployed Azure
+coverage or accepted PRD SLOs. Existing Application Insights settings do not
+enable it. Agent 365 remains a future proposal, not an installed SDK or live
+governance service.
+
+### Enablement and privacy boundary
+
+Install `zava-forward-core[telemetry]` with pip for a local package deployment.
+API/worker image locks already include SDK/OTLP HTTP dependencies; other core
+consumers require only the API and are not newly initialized.
+
+| Setting | Contract |
+|---|---|
+| `ZF_OTEL_EXPORTER` | `none` (default) or `otlp`; anything else fails startup |
+| `ZF_OTEL_ENDPOINT` | Explicit OTLP HTTP base URL, HTTPS except loopback HTTP; no credentials, query or fragment |
+| `ZF_OTEL_HEADERS` | Optional JSON authentication headers with bounded ASCII names/nonempty printable values and no leading whitespace, injected through approved secrets; never paste values in evidence |
+| `ZF_OTEL_ENVIRONMENT` | `local` default, or `test`, `development`, `staging`, `production` |
+| `ZF_OTEL_SAMPLE_RATIO` | Finite 0-1 root ratio, default 1; children inherit their parent's sampled decision |
+
+The exporter adds `/v1/traces` and `/v1/metrics` to the base URL. Approve
+collector identity, TLS/network restrictions, destination region, access,
+retention, volume/cost and deletion before enabling it. This change provisions
+no collector, credentials, permissions or routing. Plaintext HTTP is local-only.
+Disable the setting and restart to roll back exports; do not remove audit records.
+
+Only service/version/environment/SDK resources and closed operation, capability,
+method, status and error classifications are emitted. No host/user/process
+detectors, SQL text, dynamic HTTP paths, payloads, prompts, completions, model
+reasoning, exception events, business identifiers or hashes of them are added.
+W3C propagation accepts bounded version-00 `traceparent` only; no baggage or
+tracestate is forwarded. Context is diagnostic, never permission or release evidence.
+Structured console records pass through the existing guarded LogRecord path;
+caller extras are discarded, trace IDs come from active context and SDK
+diagnostics with destination/error details become fixed messages. `print` is
+outside that guard; this is not a claim that arbitrary application text is safe.
+
+Direct Azure Monitor exporter support is deliberately deferred. Inspection of
+version `1.0.0b59` found hostname/locale enrichment and SDK statistics/configuration
+traffic separate from the supplied resource. No exporter was started in that
+inspection. Do not patch private vendor globals or assert that deleting resource
+attributes suppresses its envelope metadata. An Azure collector/backend route
+needs separate compatibility and privacy verification.
+
+### Coverage and evidence matrix
+
+| Boundary | Source behavior and offline evidence | Remaining gap |
+|---|---|---|
+| API HTTP | Method/status SERVER spans; keep-alive parent/reset regression | Deployed ingress propagation and authorized collector receipt |
+| SQL-backed proposal queue | `other_sql` PRODUCER attempt, stored optional parent, unchanged task/fence/release authority | Not a new cloud-queue publisher; repeated enqueue can reuse a task |
+| In-process proposal execution | Application-controlled `invoke_workflow`, copied provider-thread context; synthetic audit/trace join and failure regressions | Live activation/restart/operational acceptance |
+| Active standalone worker | Service Bus CONSUMER, workflow, provider thread and post-back CLIENT correlation; optional backward-compatible carriers | Route remains independently gated; real queue/identity/API receipt unperformed |
+| Core `Ai._request` | GenAI client span; settled receipt token counts only; failures contain no exception payload | Other/custom provider adapters are not universal metering coverage |
+| Agent SQL transactions | Database-system classification and protected event `trace_context` JSON, no DDL change | Existing SQL access/retention duties still apply |
+| Orchestrator/importer/IoT/resident adapters | Existing behavior and authorities unchanged | Broader job/scenario and adapter instrumentation inventory deferred |
+| Harm, billing, meaningful explanations | Existing incident/release/consumption/audit controls remain authoritative | Automatic harm monitors, invoice reconciliation, named owners, meaningful user explanation acceptance and live drills unproved |
+
+The existing protected `assistant_events.body.trace_context` contains random
+`trace_id`/`span_id` values. An authorized investigator first locates the
+restricted task/audit record, then filters the collector on that trace ID.
+No case/task/meter/source identifiers are exported to construct this join.
+Keep the task snapshot, release/source versions, consent, human review and meter
+liability in the protected store; tracing does not replace them.
+
+### Metrics and safe synthetic receipt
+
+Histograms in seconds are `http.server.request.duration`,
+`gen_ai.invoke_agent.duration` (operation `invoke_workflow`) and
+`gen_ai.client.inference.duration` (`chat`). Explicit boundaries are
+`0.01 * 2^i` for `i=0..14`; retain count, sum and buckets. Validated settled
+tokens use `gen_ai.client.inference.usage.input_tokens` and `.output_tokens`
+counters, unit `{token}`. These development GenAI names follow the maintained
+[agent](https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md),
+[duration](https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-metrics.md)
+and [token](https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-token-metrics.md)
+conventions retrieved 2026-11-16; do not substitute the moved/stale generic
+`gen_ai.client.operation.duration` examples.
+
+Invocation histogram counts are completed attempts, including failed attempts.
+Each retry is a separate attempt, not another completed business scenario.
+Started-but-incomplete/cancelled work cannot be inferred as zero from completed
+histograms; use protected task states/audit over an explicit UTC window and
+retain unknown/incomplete denominators. A busy/stopped worker entrypoint is not
+a successful proposal. Do not calculate accepted scenario-completion p95,
+availability or an error budget from these invocation metrics alone.
+
+Batch queue is 512 spans, batch size 128, delay 5 seconds and exporter timeout
+5 seconds. Metrics export every 60 seconds with a 5-second timeout. Shutdown
+waits at most 5 seconds and reports a missed deadline; process exit can lose
+pending diagnostics. Exporters use memory, not offline disk persistence, and
+failures do not extend leases, release slots or trigger provider retries.
+At reduced head sampling, late errors can be absent; no claim to retain all
+error traces. Collector tail policies and resource budgets require approval.
+
+After installing the existing component dev extras, run only synthetic,
+in-memory SDK tests, with no exporter/model endpoint enabled:
+
+```bash
+cd src/core
+python3 -m unittest discover -s tests -p test_telemetry.py -q
+python3 -m unittest discover -s tests -p test_diagnostic_logging.py -q
+cd ../agents
+PYTHONPATH=../core/tests python3 -m unittest discover -s tests -p test_dispatch.py -q
+cd ../api
+PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests -p test_keepalive.py -q
+PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests -p test_assistants_dispatch.py -q
+```
+
+Retain command/result counts, source revision, real SDK span parent graph,
+serialized canary absence and the unchanged timeout/slot/audit assertions.
+These checks use synthetic stores/providers and in-memory exporters, not paid
+inference or a cloud receipt. Actual collector queries should group histogram
+counts/buckets by service, operation and bounded error/status only; aggregate
+within a declared window and show missing/unsampled evidence explicitly.
+Never add a case identifier as a query dimension.
+
+### Agent 365 adoption gates
+
+An enterprise proposal can assess Agent 365 inventory, identity/lifecycle and
+Defender/Purview oversight after existing domain governance is preserved.
+The [developer documentation](https://learn.microsoft.com/en-us/microsoft-agent-365/developer/)
+and linked observability requirements were checked 2026-11-16. Mandatory relevant
+payload/identity fields conflict with this content-free layer; supported
+redaction, feature parity and ingestion/schema behavior remain unresolved.
+Also require tenant/license eligibility, named accountable roles, privacy and
+retention approval, permitted network/identity scope and an authorized synthetic
+receipt. A vendor service is not proof of consent, legal compliance, safe
+autonomy or a meaningful explanation. No adoption, purchase or live activation
+is authorized here.
 
 ## Common Response and Recovery
 

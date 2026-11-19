@@ -1,0 +1,24 @@
+{
+ "case_status": 200,
+ "n_records_before": 0,
+ "route_view_status": 200,
+ "forms_present": {
+  "nomination_acknowledge": false,
+  "nomination_correct": false,
+  "challenge_open": false
+ },
+ "form_script_present": false,
+ "form_nomination_acknowledge": {
+  "status": 400,
+  "err": "Could not read that."
+ },
+ "form_nomination_correct": {
+  "status": 400,
+  "err": "Could not read that."
+ },
+ "form_challenge_open": {
+  "status": 400,
+  "err": "Could not read that."
+ },
+ "n_records_after": 0
+}

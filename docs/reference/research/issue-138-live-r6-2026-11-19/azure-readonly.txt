@@ -1,0 +1,15 @@
+## identities in ama
+id-cutover-test-orchestrator
+id-cutover-test-api
+id-cutover-test-agents
+id-cutover-test-import
+id-cutover-test-init
+id-resident-demo
+id-cutover-test-orchestrator federated: 0
+id-cutover-test-api federated: 0
+id-cutover-test-agents federated: 0
+id-cutover-test-import federated: 0
+id-cutover-test-init federated: 0
+id-resident-demo federated: 0
+## app registrations matching ama/zava/github
+ERROR: Insufficient privileges to complete the operation.

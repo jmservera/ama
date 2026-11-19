@@ -1,0 +1,70 @@
+{
+ "epoch": 1,
+ "suspensions": [
+  1,
+  {
+   "scope": "all",
+   "scope_kind": "release",
+   "reason": "Demo probe: negative test",
+   "incident_owner": "Demo owner",
+   "containment": "None; probe is refused",
+   "communication": "{...}",
+   "recorded_by": "<str>",
+   "recorded_at": "2026-11-18T11:51",
+   "status": "Suspended",
+   "restart": null,
+   "in_flight_note": "<str>",
+   "synthetic": false,
+   "trigger": "guardrail breach",
+   "evidence": "SYN-221-PROBE",
+   "resident_impact": "None",
+   "remediation": "None",
+   "restart_authority": "TBD",
+   "actor": "{...}",
+   "actual_authority": "Unavailable: OD-35 and RULE-020 acceptance not established.",
+   "actual_hold": true,
+   "proposals": [],
+   "snapshot_complete": false,
+   "incident_versions": "{...}",
+   "id": "SUS-1",
+   "epoch": 1,
+   "affected": [],
+   "affected_assistant_tasks": [],
+   "affected_assistant_total": 0,
+   "affected_assistant_truncated": false
+  }
+ ],
+ "history_valid": true,
+ "changes": [
+  2,
+  {
+   "kind": "configuration",
+   "subject": "zf-demo-continuity-probe-122",
+   "from_version": "v0",
+   "to_version": "v1",
+   "reason": "Synthetic demo probe for issue 122 version, evaluation and reversal evidence",
+   "evaluation": "{...}",
+   "recorded_by": "<str>",
+   "recorded_at": "2026-11-18T10:49",
+   "reverses": null,
+   "synthetic": true,
+   "status": "Reversed",
+   "id": "CHG-1",
+   "superseded_by": "CHG-2"
+  }
+ ],
+ "effective": {
+  "configuration:zf-demo-continuity-probe-122": {
+   "version": "v0",
+   "change": "CHG-2"
+  }
+ },
+ "suspended": [
+  1,
+  {
+   "id": "SUS-1",
+   "scope": "all"
+  }
+ ],
+ "note": "<str>"
+}

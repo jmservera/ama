@@ -1,0 +1,99 @@
+{
+ "status_text": "Alert coverage unknown: the law store is not loaded, so no rule checks have run. Use the existing human emergency or hazard service; do not wait for checks.",
+ "alert_count": 0,
+ "state_labels": [
+  {
+   "text": "Alert coverage unknown: the law store is not loaded, so no rule checks have run. Use the existing human emergency or hazard service; do not wait for checks.",
+   "cls": "regulatory-state state-unknown"
+  }
+ ],
+ "plain_toggle": 1,
+ "panel_text_sample": "Regulatory alerts for this home\n\nPossible emergency or hazard? Use the existing human emergency or hazard service now. Do not wait for alerts, chat or this application. No resident message is sent.\n\nPlain-language explanations\n\nProgramme: distinguish policy targets from duties in force. Check source status and dependencies before planning; a target or allocation is not an approved commitment or award.\n\nFor everyone handling data: use only the necessary resident information. Health and vulnerability information needs special care. Consent is not the same as another lawful basis. Significant dec",
+ "fields_present": {
+  "source": true,
+  "status": true,
+  "owner": true,
+  "action": false,
+  "clock": false,
+  "due": false,
+  "doubt": true,
+  "no source": false
+ },
+ "keyboard_tab_path": [
+  {
+   "tag": "INPUT",
+   "label": "",
+   "outline": "solid 3px",
+   "shadow": true
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Refresh alerts",
+   "outline": "solid 3px",
+   "shadow": true
+  }
+ ],
+ "plain_before": {
+  "checked": true,
+  "root_class": "card regulatory plain-language"
+ },
+ "plain_after_space": {
+  "checked": false,
+  "root_class": "card regulatory",
+  "announce": "MISSING; ids=1"
+ },
+ "plain_restored": {
+  "checked": true,
+  "announce": "MISSING; ids=1"
+ },
+ "axe": {
+  "violations": [],
+  "incomplete": [],
+  "passes": 16
+ },
+ "small_targets": [],
+ "text_without_colour": [
+  "Alert coverage unknown: the law store is not loaded, so no rule checks have run. Use the existing human emergency or hazard service; do not wait for checks."
+ ],
+ "ai_tab_selected": "true",
+ "chat_panel_html_head": "Ask the assistant about this case (optional)",
+ "outer_chat_open": true,
+ "chat_panel": 1,
+ "chat_open_after_enter": true,
+ "chat_text_sample": "Cited regulatory lookup (synthetic-demo)\n\nsynthetic-demo only. Exact source excerpts and recorded facts, not legal interpretation. Ask about hazard sources or automated decisions. Safety routes and deterministic alerts remain independent.\n\nSynthetic data only. Do not enter resident personal or special-category details. DPIA and retention review remain incomplete.\n\nRecorded usage is not available yet. No model calls are permitted.\n\nPlain-language explanations\n\nUse short questions to find sources. Missing, conflicting, stale or future sources are not proof of a duty. For lease, grant or contract terms, obtain the actual document and ask the named human owner.\n\nProgramme: distinguish policy tar",
+ "chat_controls": [
+  {
+   "tag": "INPUT",
+   "type": "checkbox",
+   "disabled": false,
+   "label": "Plain-language explanations"
+  },
+  {
+   "tag": "TEXTAREA",
+   "type": "textarea",
+   "disabled": true,
+   "label": "Cited source question"
+  },
+  {
+   "tag": "BUTTON",
+   "type": "submit",
+   "disabled": true,
+   "label": "Look up cited sources"
+  },
+  {
+   "tag": "BUTTON",
+   "type": "button",
+   "disabled": false,
+   "label": "Open my exercise doubt inbox (named owner only)"
+  }
+ ],
+ "chat_axe": {
+  "violations": [],
+  "incomplete": [],
+  "passes": 18
+ },
+ "chat_after_escape": {
+  "open": false,
+  "focus": "SUMMARY"
+ }
+}

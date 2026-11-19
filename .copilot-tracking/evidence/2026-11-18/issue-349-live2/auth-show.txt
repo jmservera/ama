@@ -1,0 +1,30 @@
+{
+ "platform": {
+  "enabled": true
+ },
+ "login": {
+  "preserveUrlFragmentsForLogins": false,
+  "tokenStore": {
+   "enabled": false
+  }
+ },
+ "registration": {
+  "clientId": "<GUID>",
+  "clientSecretSettingName": "entra-<hash>",
+  "openIdIssuer": "https://login.microsoftonline.com/<GUID>/v2.0"
+ },
+ "validation": {
+  "allowedAudiences": [
+   "<GUID>",
+   "api://<GUID>"
+  ],
+  "defaultAuthorizationPolicy": {
+   "allowedApplications": []
+  }
+ },
+ "login_cfg": {
+  "loginParameters": [
+   "prompt=select_account"
+  ]
+ }
+}

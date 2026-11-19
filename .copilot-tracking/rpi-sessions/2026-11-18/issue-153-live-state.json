@@ -1,4 +1,47 @@
-{"task_id":"issue-153-live","task_slug":"issue-153-live","parent_task":null,"mode":"automatic","active_phase":"Follow-up","status":"completed","session_status":"running",
-"artifact_paths":{"research":".copilot-tracking/research/2026-11-18-issue-153-live-research.md","plan":".copilot-tracking/plans/2026-11-18-issue-153-live-plan.md","details":".copilot-tracking/details/2026-11-18-issue-153-live-details.md","critique":".copilot-tracking/critique/2026-11-18-issue-153-live-critique.md","changes":".copilot-tracking/changes/2026-11-18-issue-153-live-changes.md","review":".copilot-tracking/reviews/2026-11-18-issue-153-live-review.md"},
-"confirmed_decisions":[{"decision":"Docs/evidence only; demo desktop; live Azure authorised","status":"confirmed","evidence":"owner brief 2026-11-18"},{"decision":"Critique executed once, verdict proceed, findings applied directly","status":"done","evidence":".copilot-tracking/critique/2026-11-18-issue-153-live-critique.md"}],
-"blockers":[],"next_action":{"phase":"Implement","action":"record changes then finalize docs"},"prioritized_follow_ups":null}
+{
+ "task_id": "issue-153-live-r5",
+ "task_slug": "issue-153-live-r5",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-18-issue-153-live-r5-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-18-issue-153-live-r5-plan.md",
+  "details": ".copilot-tracking/details/2026-11-18-issue-153-live-r5-details.md",
+  "critique": ".copilot-tracking/critiques/2026-11-18/issue-153-live-r5-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-18-issue-153-live-r5-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-18-issue-153-live-r5-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Demo only, desktop; live Azure authorised; FULL tier (src change), no rpi-checks --all, no push",
+   "status": "confirmed",
+   "evidence": "Owner decisions 2026-11-18"
+  },
+  {
+   "decision": "Critique executed once; proceed; amendments applied",
+   "status": "recorded",
+   "evidence": ".copilot-tracking/critiques/2026-11-18/issue-153-live-r5-critique.md"
+  },
+  {
+   "decision": "Review executed once; conformant for scope; open items routed",
+   "status": "recorded",
+   "evidence": ".copilot-tracking/reviews/2026-11-18-issue-153-live-r5-review.md"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "coordinator publishes"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Fix generic API error bodies (R5-R7) and other Unassigned fallbacks",
+   "rationale": "Unmet reason/owner/next action",
+   "evidence": "content-recheck-153-live-r4-2026-11-18.md"
+  }
+ ]
+}

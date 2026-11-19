@@ -1,0 +1,92 @@
+{
+ "me": {
+  "role": null,
+  "app_roles": null,
+  "view_only": null,
+  "identity_source": null
+ },
+ "case_count": 16,
+ "case_detail": {
+  "status": 200,
+  "bytes": 16736,
+  "canary_keys": [
+   "reason",
+   "resident.adjustment",
+   "resident.priority_support",
+   "stock_link.reason",
+   "suggestions.[].reasons",
+   "work.blockers.[].reason",
+   "work.reason"
+  ],
+  "canary_text_hits": 10
+ },
+ "cases_csv": {
+  "status": 200,
+  "bytes": 28485,
+  "header": "Reference,Resident,Address,Town,Postcode,Phone,Stage,Status,Owner,Days in stage,Last contact,Next visit\r",
+  "canary_text_hits": 0
+ },
+ "proposals": {
+  "status": 200,
+  "bytes": 52718,
+  "canary_keys": [
+   "proposals.[].provenance.[].release_denial.reason",
+   "proposals.[].reason",
+   "proposals.[].release_denial.reason",
+   "proposals.[].snapshot.sources.ranking.reasons",
+   "proposals.[].snapshot.sources.ranking.reasons.[].code",
+   "proposals.[].snapshot.sources.ranking.reasons.[].text"
+  ],
+  "canary_text_hits": 21
+ },
+ "proposals_csv": {
+  "status": 200,
+  "bytes": 1066,
+  "header": "id,case_id,capability,display_state,state,stale,epoch_current,relied_on,source_state,source_verified,source_verified_at,review_decision,reviewed_at\r",
+  "canary_text_hits": 0
+ },
+ "rai_metrics": {
+  "status": 200,
+  "bytes": 328,
+  "canary_keys": [],
+  "canary_text_hits": 0
+ },
+ "audit_check": {
+  "status": 200,
+  "bytes": 173,
+  "canary_keys": [],
+  "canary_text_hits": 0
+ },
+ "ai_report": {
+  "status": 200,
+  "bytes": 50747,
+  "canary_keys": [
+   "consumption.owned_alerts.[].reason",
+   "evaluation.results.[].measures.review.reason",
+   "evaluation.summary.reviewer.reasons",
+   "evaluation.summary.reviewer.reasons.[].action",
+   "evaluation.summary.reviewer.reasons.[].reason",
+   "live.fallback_reasons",
+   "live.fallback_reasons.AI is not configured",
+   "live.fallback_reasons.Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+   "live.fallback_reasons.Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused.",
+   "live.fallback_reasons.workflow-only mode selected",
+   "live.reviewer_reasons",
+   "live.reviewer_reasons.[].action",
+   "live.reviewer_reasons.[].reason",
+   "live.reviewer_reasons.[].task"
+  ],
+  "canary_text_hits": 63
+ },
+ "assistants": {
+  "status": 200,
+  "bytes": 44735,
+  "canary_keys": [
+   "assistants.[].release.reason",
+   "registered_tasks.[].release_denial.reason"
+  ],
+  "canary_text_hits": 23
+ },
+ "cases_with_reason_value": 16,
+ "app_title": "Zava Forward | Zava North Homes"
+}

@@ -1,0 +1,16 @@
+{
+ "name": "iot-hub-redacted",
+ "sku": {
+  "capacity": 1,
+  "name": "B1",
+  "tier": "Basic"
+ },
+ "tags": {
+  "dataClassification": "constructed-non-identifying",
+  "environment": "test",
+  "owner": "<named person>",
+  "purpose": "non-production-demonstrator",
+  "workload": "zava-forward-demonstrator",
+  "zava-forward-deployment-profile": "development"
+ }
+}

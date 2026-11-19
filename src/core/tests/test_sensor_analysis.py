@@ -246,6 +246,29 @@ class SensorAnalysisTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "CANDIDATE_MISMATCH"):
             sa.version_provenance(signal, APPROVED, candidate=None)
 
+    def test_sourced_threshold_requires_research_gate(self) -> None:
+        sourced = sa.AnalysisPolicy(threshold_label="SOURCED: BS 5250 table 2")
+        with self.assertRaisesRegex(ValueError, "RESEARCH_GATE_REQUIRED"):
+            sourced.validate()
+        gate = sa.ResearchGate("R1-SOURCES-1", "R2-SIGNOFF-1", "R3-SCENARIOS-1")
+        gated = replace(sourced, research_gate=gate)
+        gated.validate()
+        self.assertNotEqual(
+            sa.policy_digest(gated),
+            sa.policy_digest(
+                replace(
+                    gated, research_gate=replace(gate, r3_synthetic_validation="R3-SCENARIOS-2")
+                )
+            ),
+        )
+        with self.assertRaisesRegex(ValueError, "INVALID_RESEARCH_GATE"):
+            replace(sourced, research_gate=replace(gate, r2_reviewer_signoff="")).validate()
+        sa.AnalysisPolicy().validate()
+        self.assertEqual(
+            sa.policy_digest(sa.AnalysisPolicy()),
+            sa.policy_digest(replace(sa.AnalysisPolicy(), research_gate=None)),
+        )
+
     def test_digest_changes_with_calibration_flag(self) -> None:
         rows = [dict(r) for r in self.cases[next(iter(self.cases))].rows]
         base = sa.derive_signal(rows[0]["home_id"], rows, WINDOW, AS_OF, "granted")

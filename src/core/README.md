@@ -2,9 +2,20 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-11-15
+ms.date: 2026-11-18
 ms.topic: reference
 ---
+
+## Opt-in operational tracing
+
+`core[telemetry]` supplies an explicit SDK/OTLP HTTP layer; core alone needs only
+the OTel API and exports nothing. Disabled telemetry does not import the API
+or SDK, preserving deterministic generators and driverless helper commands.
+See the [enablement, privacy contract and
+synthetic receipt](../../infra/monitoring-runbooks.md#explicit-otlp-instrumentation-2026-11-16).
+SQL audit/consent/release/consumption remain authoritative. No prompts, outputs,
+SQL text, business identifiers or model reasoning are added to diagnostics.
+Agent 365 and direct Azure export are deferred.
 
 ## Model provider data-handling and region position contract (2026-11-15, Refs #163)
 
@@ -1309,6 +1320,17 @@ reads Bicep text only and proves nothing about the deployed budget.
 ```bash
 python3 -m zava_forward.core.synthetic.run_plan --homes 30000 --owner "<name>" \
   --budget-usd 10 --alert-reference "<budget alert name>" --out estimate.json
+```
+
+`synthetic.run_live_check` checks a deployed hub and its budgets from `az` JSON (no Azure call
+inside the package): hub owner tag, tier and capacity, a monthly budget cap, enabled actual and
+forecast alerts, and whether any recipient is a noreply or placeholder address. It exits 3 if
+any check fails and never prints an address. It does not prove an alert fires or a run exists.
+
+```bash
+az iot hub show -g <rg> -n <hub> > hub.json
+az consumption budget list -g <rg> > budgets.json
+python3 -m zava_forward.core.synthetic.run_live_check --hub hub.json --budgets budgets.json
 ```
 
 From `src/core`, with the package installed:

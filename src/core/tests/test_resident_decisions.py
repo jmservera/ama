@@ -20,7 +20,14 @@ from unittest.mock import patch
 
 from dataset import DATA, supplied_appointment_fixture, supplied_contract_fixture
 from sqlguard import require_task_owned_loopback
-from zava_forward.core import ai_tasks, assistants, controls, projection, resident_decisions
+from zava_forward.core import (
+    ai_tasks,
+    assistants,
+    controls,
+    identity,
+    projection,
+    resident_decisions,
+)
 from zava_forward.core.quality import checklist_for
 from zava_forward.core.resident_decisions import resident_gate
 from zava_forward.core.sqlstore import SqlStore
@@ -538,6 +545,48 @@ class JsonResidentDecisions(unittest.TestCase):
             self.open_store().cases["ZF-1"]["hazards"][-1]["hold"]["status"] == "Active"
         )
         self.assertNotIn("nomination_records", self.open_store().cases["ZF-1"])
+
+    def roster_bound_principal(self, **changes: Any) -> dict[str, Any]:
+        tenant, oid = "11111111-2222-4333-8444-555555555555", "aaaaaaaa-bbbb-4ccc-8ddd-111111111111"
+        data = json.loads(self.path.read_text())
+        data["staff"][0].update(oid=oid, tid=tenant)
+        self.reseed(data, "entra-roster")
+        principal = identity.principal(tenant, oid, self.sam["role"], name="SYN Entra Display")
+        principal.update(code=self.sam["code"], email=self.sam["email"])
+        principal["bound"] = dict(code=self.sam["code"], email=self.sam["email"])
+        return dict(principal, **changes)
+
+    def test_intake_entra_principal_matching_roster_identity_is_accepted(self) -> None:
+        principal = self.roster_bound_principal()
+        self.store.resident_action(principal, "ZF-1", self.nomination())
+        self.assertEqual(len(self.store.cases["ZF-1"]["nomination_records"]), 1)
+        self.assertEqual(list(self.store.audit_entries())[-1]["who"], self.sam["email"])
+
+    def test_intake_entra_principal_with_other_identity_is_refused_without_mutation(self) -> None:
+        principal = self.roster_bound_principal()
+        for label, forged in (
+            (
+                "code",
+                dict(principal, code="E-FORGED", bound=dict(principal["bound"], code="E-FORGED")),
+            ),
+            ("oid", dict(principal, oid="aaaaaaaa-bbbb-4ccc-8ddd-999999999999")),
+            ("unbound", {k: v for k, v in principal.items() if k != "bound"}),
+        ):
+            with self.subTest(forged=label):
+                before = copy.deepcopy(self.store.cases["ZF-1"])
+                audit = list(self.store.audit_entries())
+                with self.assertRaises((PermissionError, ValueError)):
+                    self.store.resident_action(forged, "ZF-1", self.nomination())
+                self.assertEqual(self.store.cases["ZF-1"], before)
+                self.assertEqual(list(self.store.audit_entries()), audit)
+
+    def test_intake_identity_differing_from_roster_person_is_refused(self) -> None:
+        principal = self.roster_bound_principal()
+        other = dict(self.rae, oid=principal["oid"])
+        with patch.object(resident_decisions, "_person", return_value=other):
+            self.unchanged_failure(
+                lambda: self.store.resident_action(principal, "ZF-1", self.nomination())
+            )
 
     def test_intake_tenure_unknown_case_wide_hold_and_reopen(self) -> None:
         for measure in MEASURES:

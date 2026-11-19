@@ -1,0 +1,12 @@
+# read 2026-11-18T17:07:04Z
+[{"id":"I_kwDOUU8JX88AAAABXRz8Xg","number":185,"state":"OPEN","title":"Simulated device identity and provisioning","url":"https://github.com/jmservera/ama/issues/185"},{"id":"I_kwDOUU8JX88AAAABXRz9vg","number":186,"state":"CLOSED","title":"Message schema, rate and volume","url":"https://github.com/jmservera/ama/issues/186"},{"id":"I_kwDOUU8JX88AAAABXRz_IQ","number":187,"state":"CLOSED","title":"Replay, speed controls and failure injection","url":"https://github.com/jmservera/ama/issues/187"},{"id":"I_kwDOUU8JX88AAAABXR0AZA","number":188,"state":"CLOSED","title":"Ingestion into the store and consistency with the backfill","url":"https://github.com/jmservera/ama/issues/188"},{"id":"I_kwDOUU8JX88AAAABXR0CAw","number":189,"state":"OPEN","title":"Cost, scale and run controls for the simulator","url":"https://github.com/jmservera/ama/issues/189"}]
+#185 OPEN updated 2026-11-16T16:48:43Z
+- [x] Approach decided and recorded with the owner of credentials
+- [x] Each simulated home maps to one device identity and one stock home ID
+- [ ] Credentials are issued and stored without appearing in source or logs
+- [ ] Teardown removes all simulated identities
+#189 OPEN updated 2026-11-16T23:44:30Z
+- [x] Cost estimate for the declared N homes recorded before any run
+- [x] Message quota headroom checked against the hub tier decided in #140
+- [ ] Run has an owner, a time limit and a budget alert
+[{"number":185,"title":"Simulated device identity and provisioning"},{"number":1204,"title":"fix(delivery): prevent unsupported idle ticks and stale coordinator handoffs"},{"number":1288,"title":"feat(quality): show retained sensor values and ground Quality AI review flags"},{"number":1208,"title":"Repair isolated Chromium prerequisite ordering in the full local gate"},{"number":140,"title":"Azure IoT Hub Bicep module with identity, networking and diagnostics"}]
