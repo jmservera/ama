@@ -13821,3 +13821,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 117 live closure, fifth pass (Refs #117)
 
 * Added [issue-117-live-r6-2026-11-19.md](research/issue-117-live-r6-2026-11-19.md): Defender for Storage is confirmed enabled on the demo account, but the demo API still uses the local scanner and a direct probe was blocked by storage network rules; the end-to-end Defender criterion stays unproven pending owner approval.
+## [2026-11-19] add | Issue 202 mvp workflow retirement evidence (Refs #202)
+
+* Indexed [2026-11-19-issue-202-mvp-workflow-retirement.md](research/2026-11-19-issue-202-mvp-workflow-retirement.md): `mvp/` and `prototype/` are absent; no ruleset requires `mvp-ci` or `mvp-validation`; deleting the two workflows needs the FULL tier and is not done.
