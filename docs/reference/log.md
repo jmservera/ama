@@ -13685,3 +13685,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 1844 live re-run (Refs #1844)
 
 * Appended a re-run section to [issue-1844-live-20261119-2026-11-19.md](research/issue-1844-live-20261119-2026-11-19.md): no criterion unmet for the desktop-only demo, no source change.
+## [2026-11-19] add | Issue 189 live re-observation (Refs #189)
+
+* Added [issue-189-live-20261119-2026-11-19.md](research/issue-189-live-20261119-2026-11-19.md) with redacted verifier output: owner tag, B1, USD 25 budget and both alerts pass; recipients unreachable; no simulator job. No source change; the live owned-run criterion stays unticked.
