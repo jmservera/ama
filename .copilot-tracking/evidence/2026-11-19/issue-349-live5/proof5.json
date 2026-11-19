@@ -1,0 +1,38 @@
+{
+ "anonymous_browser_api_me": {
+  "status": 302,
+  "host": "login.microsoftonline.com",
+  "authorize_redirect_uri": "https://<app-host>/.auth/login/aad/callback",
+  "response_type": [
+   "code id_token"
+  ],
+  "client_id_is_guid": true
+ },
+ "anonymous_xhr": 403,
+ "forged_principal_headers_no_session": 302,
+ "bad_bearer": 401,
+ "browser_redirected_to_entra": true,
+ "callback_returned_to_app": true,
+ "me_status": 200,
+ "me": {
+  "role": "Retrofit Programme Manager",
+  "app_roles": [
+   "ZavaForward.ProgrammeManager"
+  ],
+  "view_only": false,
+  "identity_source": "entra",
+  "auth_provider": "trusted-proxy",
+  "bound": null,
+  "tid_guid": true,
+  "navigation_count": 13
+ },
+ "authenticated_cases": 200,
+ "forged_headers_with_session": "Retrofit Programme Manager",
+ "app_title": "Zava Forward | Zava North Homes",
+ "after_logout_api_me": 302,
+ "relogin_shows_entra": true,
+ "account_picker_or_login_shown": "picker",
+ "resident_error": "TimeoutError: Page.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"#idSIButton9\")\n    - locator resolved to <input disabled value=\"Next\" type=\"submit\" id=\"idSIButton9\" data-report-value=\"Submit\"",
+ "resident_final_host": "chromewebdata",
+ "resident_page_title": ""
+}

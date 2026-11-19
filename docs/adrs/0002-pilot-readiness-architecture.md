@@ -1014,6 +1014,34 @@ Proposal (owner direction PR-004, OD-36; the DPIA is not done):
 * The staff notice and the paired-measurement definitions (OD-18) are inputs
   from the owner and the DPO, not built here.
 
+Current build (demonstrator, synthetic data; checked against
+`src/api/src/zava_forward/api/timecapture.py` on 2026-11-17):
+
+* Recording needs `ZF_TIME_CAPTURE=on`, a reference in each of
+  `DPIA_APPROVED`, `ZF_TIME_CONSULTATION` and `ZF_TIME_NOTICE_APPROVED`, and
+  `ZF_TIME_NOTICE_VERSION` equal to the current notice version, so a reworded
+  notice is never enabled on an approval of different wording. Bare yes, true,
+  on and 1 are refused. This checks that a reference exists, not that the
+  document is authentic or that a person approved it.
+* Enabling is two audited steps by managers in different roles: one requests
+  (`POST /api/time/request-enable`) and the other enables
+  (`POST /api/time/enable`). The enabling record names both people and is void
+  if a reference or the notice version later changes.
+* Each person acknowledges the current notice version
+  (`POST /api/time/acknowledge`, audited) before their own entries can be
+  recorded or listed.
+* Retention is not set in code. The tables share the SQL store's retention, so
+  the DPIA retention value remains an open input.
+
+Evidence that stays with named humans, so criterion 3 of issue 120 is unmet:
+
+| Evidence | Owner | State |
+| --- | --- | --- |
+| DPIA and lawful measurement basis (OD-36) | Data Protection Officer | Not done |
+| Staff notice wording approved | DPO, Legal and HR | Not done; the draft is `draft-1` |
+| Staff or union consultation record | HR or employee relations | Not done |
+| Administrator ratification of the enabling action | Owner and named managers | Not done |
+
 Rejected: always-on capture to gather a baseline early (breaks PR-004);
 passive activity tracking from screen or keystroke data (disproportionate,
 no support in the documents).

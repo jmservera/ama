@@ -1,0 +1,15 @@
+# read 2026-11-19T10:37:11Z
+184	OPEN	2026-11-13T16:07:57Z	feature,prd,adr,status:partially-delivered,area:synthetic-data
+185	OPEN	2026-11-16T16:48:43Z	story,prd,adr,status:partially-delivered,area:synthetic-data
+189	OPEN	2026-11-16T23:44:30Z	story,prd,adr,status:partially-delivered,status:not-started,area:synthetic-data
+185	open
+186	closed
+187	closed
+188	closed
+189	open
+## 185 comments
+2026-11-16T15:43:27Z	Owner decision (16 November 2026): use per-device symmetric SAS keys for the finite simulated IoT Hub exercise. Individual device-registry enrolment and jmservera as the exercise credential owner were already selected. This records the approach only: no key is created or stored by this comment, and 
+2026-11-16T16:48:43Z	Closure evidence correction (2026-11-16): the owner selected individual registry enrolment, jmservera as exercise credential owner, and per-device symmetric SAS keys (comments at 10:53Z and 15:43Z), so the approach criterion is now checked. The issue itself and the 15:43Z decision say no live key wa
+## 189 comments
+2026-11-15T08:54:19Z	Stacked child PR #1777 (`a00d974a2`) squash-merged into parent integration branch `feat/demo-164-chat-grounding-provenance-0900` (PR #1641) with all 10 CI checks passing and independent functional code review `APPROVE`. Keeping issue open pending parent integration into `main` and live Azure quota/b
+2026-11-16T23:44:30Z	Closure correction (2026-11-16): The C5 delivery comment explicitly leaves the whole live owned-run, time-limit and budget-alert criterion unproven; #1777 merged into still-open parent #1641, not main. Restored that criterion to unchecked; earlier cost and quota ticks are unchanged. The issue remain

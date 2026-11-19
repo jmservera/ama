@@ -1,0 +1,22 @@
+[
+  {
+    "n": "crcutovertestrzsrg",
+    "t": "Microsoft.ContainerRegistry/registries"
+  },
+  {
+    "n": "stcutovertestrzsrg",
+    "t": "Microsoft.Storage/storageAccounts"
+  },
+  {
+    "n": "sql-cutover-test-rzsrg",
+    "t": "Microsoft.Sql/servers"
+  },
+  {
+    "n": "kv-cutovertest-rzsrg",
+    "t": "Microsoft.KeyVault/vaults"
+  },
+  {
+    "n": "evhns-cutover-test-demo",
+    "t": "Microsoft.EventHub/namespaces"
+  }
+]

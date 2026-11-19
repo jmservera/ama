@@ -1,0 +1,10 @@
+{
+  "action": "RedirectToLoginPage",
+  "audiences": [
+    "<GUID>",
+    "api://<GUID>"
+  ],
+  "enabled": true,
+  "secretName": "entra-0dbb6bafc8af414fad0b5daa7695cbc9-7a8a02692e5a",
+  "tokenStore": false
+}
