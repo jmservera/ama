@@ -1,0 +1,6 @@
+Release record store unavailable; dispatch denied.
+..
+----------------------------------------------------------------------
+Ran 88 tests in 49.458s
+
+OK (skipped=18)

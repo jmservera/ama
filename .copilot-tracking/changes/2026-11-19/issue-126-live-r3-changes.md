@@ -1,20 +1,23 @@
----
-title: Issue 126 live r3 changes
-ms.date: 2026-11-19
----
+# Changes: issue #126 live run 3
 
-No source change. Only `.copilot-tracking/` artifacts and the state file were added. Tier: focused (documentation-only); basis: no src, SQL, security, infrastructure, deployment or gate change. Nothing was pushed; no Azure resource was created, so none needed deleting.
+Refs #126. Tier FOCUSED; no src, SQL, web or infra file changed. mypy, ruff and web checks not applicable.
 
-| Criterion | State | Status for the demo | Evidence |
-| --- | --- | --- | --- |
-| Protocol, DPIA and lawful basis approved before Phase 0 capture | unticked | Unproven: needs a named human approver; gate enforced in code and live | reused note |
-| Each phase and tranche has a recorded release decision | ticked | Proven by tests | reused note |
-| Guardrail breach pauses scope until restart authorised | ticked | Proven by tests | reused note |
-| BG-011 definitions and MDE, no verdict above MDE | ticked | Proven by tests | reused note |
-| Track 11 residuals and 11 unassessed checks with dispositions | unticked | Code delivered and tested; live register holds no claims; populating needs human evidence. Unproven | reused note |
-| Fresh current-source assessment with inline verifier evidence | unticked | Unproven: an assessment run, not code | n/a |
-| Qualified owners decide acceptance and residual-risk boundaries | unticked | Unproven: human decisions | n/a |
-| Build satisfies real AI, SQL and Azure contract and spending authorisation | unticked | Unproven: SQL scope needs the full tier | reused note |
+## Validation
 
-Reused evidence: [docs/reference/research/issue-126-live-2026-11-19.md](../../../docs/reference/research/issue-126-live-2026-11-19.md).
-Stop line: every remaining criterion is human-owned or production/full-tier; no demo code is buildable.
+* `cd src/core; PYTHONPATH=src:tests python3 -m unittest test_governance`: Ran 88, OK (skipped=18, opt-in SQL).
+* `cd src/api; PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests python3 -m unittest test_governance_evidence_api`: Ran 10, OK.
+* Live probe via Playwright on `ca-cutover-test-demo-api` revision 0000033: 200, 22 findings, live use BLOCKED.
+* No Azure resource created; nothing to delete.
+
+## Per-criterion table
+
+| Criterion | State | Reason |
+| --- | --- | --- |
+| Protocol, DPIA, lawful basis approved before capture | Unproven | Needs named human approval; capture stays closed |
+| Track 22 findings with dispositions | Code proven, live dispositions unproven | No qualified person has recorded claims |
+| Fresh current-source assessment | Unproven | Assessment run, not code |
+| Qualified owner acceptance | Unproven | Human decision |
+| Real AI, SQL, Azure contract | Unproven | 18 SQL tests skipped; throwaway SQL is FULL tier |
+| Phase/tranche decisions, breach pause, BG-011 MDE, registers (ticked) | Proven again | Tests and live probe above |
+
+Unmet criteria needing new code: none. Evidence: `docs/reference/research/issue-126-live-r3-2026-11-19.md`.

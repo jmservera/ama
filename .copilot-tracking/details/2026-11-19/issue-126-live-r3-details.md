@@ -1,6 +1,3 @@
----
-title: Issue 126 live r3 details
-ms.date: 2026-11-19
----
+# Details: issue #126 live run 3
 
-Phase 1 and 2 write dated tracking artifacts only. Phase 3 reviews them and commits locally. No test run is required beyond Git diff review; the reused test output is cited, not re-run.
+Artifacts only; tier FOCUSED. Commands recorded in the changes file.
