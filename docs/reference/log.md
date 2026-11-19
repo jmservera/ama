@@ -13359,3 +13359,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Public browser access fourth pass (Refs #344)
 
 * Added [public-browser-access-live-r4-2026-11-19.md](research/public-browser-access-live-r4-2026-11-19.md): fresh read-only evidence, criterion 1 unmet for browser clients, fix is infrastructure scope needing the full tier.
+## [2026-11-19] add | Issue 349 tenant prerequisites live round 4 (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-r4-2026-11-19.md](research/issue-349-tenant-prerequisites-live-r4-2026-11-19.md): live reproduction of round 3; no source change, criterion 1 needs a tenant owner; per-criterion table included.
