@@ -13645,3 +13645,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 151 manual check record status (Refs #151)
 
 * Updated [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md): the manual screen-reader and keyboard rows stay `Not run` because they need named people; person-run assistive-technology testing is out of demo scope. No source change.
+## [2026-11-19] add | Issue 153 named wording review status (Refs #153)
+
+* Added [issue-153-live-named-review-2026-11-19.md](research/ux/issue-153-live-named-review-2026-11-19.md): per-criterion table; the named human wording review remains unproven because it needs the appointed human reviewer.

@@ -1047,6 +1047,9 @@ The lexical guard now includes staff time capture. Juan Manuel Servera was
 appointed wording reviewer on 2026-10-15; completed exact-text review and actual
 resident/representative usability/AT acceptance remain Not run. No portal,
 live contact, operational authority or whole-issue closure is delivered.
+The [2026-11-19 demo re-check](./research/ux/issue-153-live-named-review-2026-11-19.md)
+records the per-criterion status: the named human wording review is the only unticked
+criterion and needs the appointed reviewer.
 A 2026-11-06 slice rewords the two document-retention refusals in
 `doc_controls.py` (legal hold; not yet due) and records the open question of who
 decides that a real hold has ended; see the
