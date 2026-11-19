@@ -13326,3 +13326,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Epic 218 first unmet demo criterion (Refs #218, #220)
 
 * Added [issue-218-first-unmet-demo-criterion-2026-11-19.md](research/issue-218-first-unmet-demo-criterion-2026-11-19.md): #220 criterion 5 selected; new core test proves a bound Entra principal records a staff route step with ranking, hazards and protected state unchanged (mutation probe reproduces the live 403); live proof still needs a redeploy. Per-criterion table included.
+## [2026-11-19] add | Issue 195 build provenance (Refs #195)
+
+* Added [issue-195-build-provenance-live-2026-11-19.md](research/issue-195-build-provenance-live-2026-11-19.md): live revision 0000033 read, commit provenance added to the api image, criteria 1 and 2 unproven, criterion 3 partly proven.
