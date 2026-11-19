@@ -13420,3 +13420,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 349 live round 5 (Refs #349)
 
 * Added [issue-349-tenant-prerequisites-live-r5-2026-11-19.md](research/issue-349-tenant-prerequisites-live-r5-2026-11-19.md): live reproduction of round 4 plus a failed resident wrong-role probe; no source change.
+## [2026-11-19] add | Issue 120 criterion 3 recheck (Refs #120)
+
+* Added [issue-120-live-2026-11-19.md](research/issue-120-live-2026-11-19.md): criterion 3 mechanics exist and pass 38 local tests; not exercised on the deployed demo. No source change.
