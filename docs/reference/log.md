@@ -13854,3 +13854,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] research | Issue 203 second live run
 
 * Added [issue-203-live-20261119T1527Z-2026-11-19.md](research/issue-203-live-20261119T1527Z-2026-11-19.md): criterion 1 now passes the legacy-reference checker; criterion 5 remains unproven.
+
+## [2026-11-19] add | Issue 223 live run 4 (Refs #223)
+
+* Added [issue-223-live-r4-2026-11-19.md](research/issue-223-live-r4-2026-11-19.md): offline gate re-run and per-criterion table; remaining items need humans.
