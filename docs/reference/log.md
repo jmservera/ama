@@ -13761,3 +13761,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 350 criterion 1 recheck r5 (Refs #350)
 
 * Appended a 14:12 UTC recheck to [issue-350-live-2026-11-19.md](research/issue-350-live-2026-11-19.md): browser-UA anonymous API calls still get 302 from Easy Auth; the fix is a FULL-tier edge change, so no source change was made.
+## [2026-11-19] add | Issue 349 live round 6 resident probe diagnosis (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-r6-2026-11-19.md](research/issue-349-tenant-prerequisites-live-r6-2026-11-19.md): the round 5 resident sign-in failure is an unresolved `sts.microsoftonline.com` on the worker host; per-criterion table, no source change.
