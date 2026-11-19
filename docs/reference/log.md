@@ -13834,3 +13834,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] research | Resident showcase live check r4 (#462)
 
 * Added [resident-showcase-live-r4-2026-11-19.md](research/resident-showcase-live-r4-2026-11-19.md): 36-check Playwright rerun, fixture-identifier regression proof and per-criterion table; criterion 2 stays unmet.
+
+## [2026-11-19] query | Coordinator tick liveness on a real window (#1204)
+
+* Added research/coordinator-tick-log-real-window-1204-live-2026-11-19.md and its index row: 216 real ticks pass the tick checker; the closure-batch and approval sub-claims stay unproven. Corrects the r2 claim that no tick_log existed locally.
