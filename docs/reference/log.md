@@ -13893,3 +13893,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 126 live criteria proof (Refs #126)
 
 * Added [issue-126-live-2026-11-19.md](research/issue-126-live-2026-11-19.md): 88 core and 10 API governance tests OK, read-only live probe (capture closed, 22 RAI findings, no claims) and per-criterion table; the approval, assessment and SQL/Azure criteria stay unproven. No source change.
+## [2026-11-19] add | Issue 126 criteria review (Refs #126)
+
+* Added [issue-126-live-2026-11-19.md](research/issue-126-live-2026-11-19.md): 88 governance tests pass; remaining criteria are human or production-only. No src change.
