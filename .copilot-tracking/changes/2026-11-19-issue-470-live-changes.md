@@ -11,4 +11,4 @@ Validation: `python3 -m unittest tools.test_rpi_checks -q` gave 113 tests OK. Li
 | 4 | before/after full-run timing in PR | UNPROVEN (needs --all, forbidden; PR not allowed) |
 | 5 | tests | proven |
 
-Re-run at head 7ea3a1ff6 (2026-11-19 15:5x UTC): `python3 -m unittest tools.test_rpi_checks -q` gave 113 tests OK in 109 s. Criterion 4 stays unproven: it needs two matched `--all` runs, which the brief forbids, and PR text is not allowed here. No src change; FOCUSED tier. Stopped after the one-line finding that every remaining criterion is production-only or needs owner authorisation.
+Re-confirmed in worktree issue-470-live-20261119T161320Z at head 46920a0dd: issue still has one unticked criterion (4), which needs two matched `--all` runs and a PR. The owner brief forbids `--all` and publishing, and `/tmp/ama-rpi-heavy.lock` is held. No code to build; nothing ticked or closed.
