@@ -2032,3 +2032,5 @@ records 12 live containers as real digest-pinned references; pipeline provenance
 The [old-image incomplete completion note](./research/old-image-incomplete-completion-1840.md) records per-criterion fixture evidence for issue 1840 (2026-11-18).
 
 For #1274, the [release-download criteria proof](./research/issue-1274-live-release-download-criteria-2026-11-19.md) records the retained 504 log, real checksum verification and the unproven AWF and hosted-CI criteria.
+
+Further 2026-11-19 live notes, all evidence only: [issue 108 re-check r2](./research/issue-108-live-r2-20261119-2026-11-19.md), [issue 120 time capture r2](./research/issue-120-live-2026-11-19-r2.md), [issue 126 protocol and benefits gates r3](./research/issue-126-live-r3-2026-11-19.md), [issue 146 monitoring status](./research/issue-146-live-20261119T154738Z-2026-11-19.md) and [issue 440 criteria verdict](./research/issue-440-live-criteria-verdict-2026-11-19.md).

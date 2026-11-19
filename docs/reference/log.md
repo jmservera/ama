@@ -13917,3 +13917,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 344 fifth pass
 
 * Added [public-browser-access-live-r5-2026-11-19.md](research/public-browser-access-live-r5-2026-11-19.md): remaining criteria are infrastructure, SQL or owner decisions; no source change.
+
+## [2026-11-19] add | Live notes for issues 108, 120, 126, 146 and 440
+
+* Added [issue 108 r2](research/issue-108-live-r2-20261119-2026-11-19.md), [issue 120 r2](research/issue-120-live-2026-11-19-r2.md), [issue 126 r3](research/issue-126-live-r3-2026-11-19.md), [issue 146](research/issue-146-live-20261119T154738Z-2026-11-19.md) and [issue 440](research/issue-440-live-criteria-verdict-2026-11-19.md): evidence only; unproven criteria stay unproven.
