@@ -13850,3 +13850,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 220 criterion 5 stop note, run 6 (Refs #220)
 
 * Added [issue-220-live-r6-criterion-5-2026-11-19.md](research/issue-220-live-r6-criterion-5-2026-11-19.md): 30 offline tests pass, live image digest unchanged, criterion stays unticked.
+
+## [2026-11-19] research | Issue 203 second live run
+
+* Added [issue-203-live-20261119T1527Z-2026-11-19.md](research/issue-203-live-20261119T1527Z-2026-11-19.md): criterion 1 now passes the legacy-reference checker; criterion 5 remains unproven.

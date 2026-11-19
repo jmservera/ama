@@ -1,0 +1,2 @@
+# Review (once): issue 203 live re-measurement
+Outcome: conformant. Evidence-only change; claims match saved raw outputs (checker.txt, unittest.txt, ci-runs.txt, grep-by-file.txt). Criterion 1 caveat and criterion 5 gaps stated. No secrets. Links resolve (checker links check on new note's folder links reviewed manually). Routed follow-up: dispatch src CI on main and record deploy provenance (needs publication, owner).
