@@ -12437,6 +12437,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
 
+## [2026-11-17] update | ADR 0002 decision 7 aligned with the built time-capture gates (Refs #120)
+
+* Added a "Current build" list and an unmet-evidence table to decision 7 of [ADR 0002](../adrs/0002-pilot-readiness-architecture.md): the notice approval reference and version match, the two-role request and enable steps, the per-person notice acknowledgement, and retention as an open DPIA input. Added one regression test in `src/api/tests/test_timecapture.py`.
+* No code behaviour changed. The DPIA, notice approval, consultation and administrator ratification remain unmet human evidence, so criterion 3 of #120 stays unticked.
 ## [2026-11-17] update | Issue 108 closure audit against main (Refs #108)
 
 * Added the [issue 108 closure audit](research/evaluation/issue-108-closure-audit.md): a per-criterion matrix against main `eb51af5c9`. It records that #1771 sits on the #1641 parent branch and not on main, that seven tasks remain not evaluated by the harness on main, and that subgroup accounting is not on main.
