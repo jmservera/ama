@@ -14027,3 +14027,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 1830 r4 check
 
 * Added [issue-1830-live-r4-2026-11-19.md](research/issue-1830-live-r4-2026-11-19.md): per-criterion table re-verified; no criterion can be built or proven for the demo without an owner trust-boundary decision. No source change.
+
+## [2026-11-19] update | Issue 1259 demo evidence
+
+* Added research/issue-1259-live-2026-11-19.md: failure-before-fix demonstration for the archive path regressions; the hosted-check and independent assessment criterion stays unproven.
