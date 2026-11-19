@@ -13838,3 +13838,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] query | Coordinator tick liveness on a real window (#1204)
 
 * Added research/coordinator-tick-log-real-window-1204-live-2026-11-19.md and its index row: 216 real ticks pass the tick checker; the closure-batch and approval sub-claims stay unproven. Corrects the r2 claim that no tick_log existed locally.
+
+## [2026-11-19] update | Issue 145 live audit 7
+
+* Added [issue-145-live-20261119T152518Z-2026-11-19.md](research/issue-145-live-20261119T152518Z-2026-11-19.md): read-only Azure SQL re-check and per-criterion table; no source change, no drill.
