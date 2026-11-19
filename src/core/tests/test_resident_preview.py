@@ -378,6 +378,33 @@ class SafeStart(Base):
         with self.assertRaises(rp.PreviewConfigError):
             self.start(fixture=not_json)
 
+    def test_refuses_missing_null_or_blank_fixture_identifiers(self) -> None:
+        marker_cases: dict[str, Any] = {
+            "missing": None,
+            "null": None,
+            "empty": "",
+            "blank": "  ",
+            "number": 7,
+        }
+        for name, value in marker_cases.items():
+            for both in (True, False):
+                data = json.loads(self.dataset.read_text())
+                fixture = json.loads(self.grants.read_text())
+                if name == "missing":
+                    data["synthetic_preview"].pop("fixture_id")
+                    if both:
+                        fixture["fixture"].pop("id")
+                else:
+                    data["synthetic_preview"]["fixture_id"] = value
+                    if both:
+                        fixture["fixture"]["id"] = value
+                d_path = Path(self.tmp.name) / f"d-{name}-{both}.json"
+                f_path = Path(self.tmp.name) / f"f-{name}-{both}.json"
+                d_path.write_text(json.dumps(data))
+                f_path.write_text(json.dumps(fixture))
+                with self.subTest(name=name, both=both), self.assertRaises(rp.PreviewConfigError):
+                    self.start(dataset=d_path, fixture=f_path)
+
     def test_refuses_files_under_the_normal_data_location(self) -> None:
         home = Path.home() / ".zava-forward"
         self.assertFalse(home.exists() and (home / "data" / "dataset.json").exists())

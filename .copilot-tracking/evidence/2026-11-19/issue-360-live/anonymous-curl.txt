@@ -1,0 +1,10 @@
+/healthz 200
+/ 200
+/welcome.html 200
+/api/me 401
+/api/cases 401
+/app 401
+forged-role 401
+bad-bearer 401
+browser-json /api/me 302
+http 301

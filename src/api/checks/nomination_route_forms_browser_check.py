@@ -17,12 +17,7 @@ TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]
 
 
 def scan(page: Any, axe: str, reports: list[dict[str, Any]], state: str) -> None:
-    """Run axe on the page; record target-size results without asserting them.
-
-    The standalone page ships without a stylesheet, so its disclosure summaries are about
-    19px high and axe reports target-size (WCAG 2.5.8). That is recorded as an open finding
-    rather than restyled inside this transport repair; every other axe rule must pass.
-    """
+    """Run axe on the page and record every result; the caller asserts none remain."""
     page.evaluate(axe)
     result: dict[str, Any] = page.evaluate(
         "async tags => await axe.run({include: [['main']]}, {runOnly: {type: 'tag', values: tags}})",
@@ -153,6 +148,7 @@ def run(axe_path: Path) -> dict[str, Any]:
         assert "SYN-CHECK-CHALLENGE" in json.dumps(detail["affected_challenges"])
         for report in reports:
             assert not report.get("violations"), report
+            assert not report.get("target_size_violations"), report
         return dict(
             outcome="passed",
             browser=version,

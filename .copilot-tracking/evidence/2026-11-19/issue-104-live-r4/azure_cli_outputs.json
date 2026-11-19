@@ -1,0 +1,35 @@
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "env": [
+    {
+      "n": "ZF_STORE",
+      "v": "mssql"
+    },
+    {
+      "n": "AI_ENDPOINT",
+      "v": "https://aif-cutover-test-rzsrg.openai.azure.com/"
+    },
+    {
+      "n": "AI_DEPLOYMENT",
+      "v": "standard"
+    },
+    {
+      "n": "AI_DEPLOYMENT_STRONG",
+      "v": "standard"
+    },
+    {
+      "n": "ZF_DEPLOYMENT_PROFILE",
+      "v": "demo"
+    },
+    {
+      "n": "AI_MODEL_VERSION",
+      "v": "gpt-4.1-nano-2025-04-14"
+    },
+    {
+      "n": "AI_MODEL_VERSION_STRONG",
+      "v": "gpt-4.1-nano-2025-04-14"
+    }
+  ],
+  "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5368f4e4...",
+  "rev": "ca-cutover-test-demo-api--0000033"
+}
