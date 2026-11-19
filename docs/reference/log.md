@@ -13481,3 +13481,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 107 actual SQL coverage (Refs #107)
 
 * Added [issue-107-live-r4-criteria-2026-11-19.md](research/issue-107-live-r4-criteria-2026-11-19.md): material-mismatch and allowance race tests run on a throwaway SQL Server, plus a composite old-image test; delivered-build acceptance stays unproven.
+
+## [2026-11-19] add | Issue 111 live demo evidence (Refs #111)
+
+* Added [issue-111-live-demo-evidence-2026-11-19.md](research/issue-111-live-demo-evidence-2026-11-19.md): the two ticked criteria re-verified by the sensor analysis tests; R1 to R3 sign-off stays unproven (human reviewer gate). No source change.
