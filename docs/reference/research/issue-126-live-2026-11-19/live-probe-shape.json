@@ -1,0 +1,75 @@
+{
+ "signed_in": true,
+ "me_status": 200,
+ "role": null,
+ "governance_status": 200,
+ "top_level_keys": [
+  "benefits",
+  "breaches",
+  "capture_blockers",
+  "capture_open",
+  "note",
+  "paused",
+  "protocol",
+  "rai_evidence",
+  "release_gaps",
+  "releases",
+  "value_claims",
+  "verdicts"
+ ],
+ "rai_keys": [
+  "acceptance",
+  "assessment_authority",
+  "baseline",
+  "current_assessment",
+  "current_disposition_count",
+  "dispositions_complete",
+  "findings",
+  "history_record_count",
+  "invalid_history_count",
+  "live_use",
+  "note",
+  "open_count",
+  "revision"
+ ],
+ "rai_summary": {
+  "history_record_count": 0,
+  "current_disposition_count": null,
+  "dispositions_complete": false,
+  "open_count": 22,
+  "acceptance": "Unknown",
+  "live_use": "BLOCKED pending separate qualified evidence and approvals"
+ },
+ "finding_count": 22,
+ "shape": {
+  "protocol": "list[0]",
+  "benefits": {},
+  "verdicts": {
+   "cycle_time": "dict[2]",
+   "coordination_hours": "dict[2]"
+  },
+  "value_claims": "list[0]",
+  "releases": "list[0]",
+  "release_gaps": "list[3]",
+  "breaches": "list[0]",
+  "paused": "list[0]",
+  "capture_open": false,
+  "capture_blockers": "list[2]",
+  "note": "Emergency and statutory hazard response continues outside any pause.",
+  "rai_evidence": {
+   "baseline": "dict[6]",
+   "current_assessment": null,
+   "assessment_authority": "Caller-declared, not deployment attestation",
+   "findings": "list[22]",
+   "revision": 0,
+   "history_record_count": 0,
+   "invalid_history_count": 0,
+   "current_disposition_count": null,
+   "dispositions_complete": false,
+   "open_count": 22,
+   "acceptance": "Unknown",
+   "live_use": "BLOCKED pending separate qualified evidence and approvals",
+   "note": "str"
+  }
+ }
+}

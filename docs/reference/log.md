@@ -13489,3 +13489,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 124 live audit, third pass (Refs #124)
 
 * Added [issue-124-live-r3-phase0-discovery-audit-2026-11-19.md](research/issue-124-live-r3-phase0-discovery-audit-2026-11-19.md): 59 contract tests pass, no deployed or in-repo consumer of the discovery modules, live probe against newer demo revisions; the three unticked criteria stay owner-only. No source change.
+
+## [2026-11-19] add | Issue 126 live criteria proof (Refs #126)
+
+* Added [issue-126-live-2026-11-19.md](research/issue-126-live-2026-11-19.md): 88 core and 10 API governance tests OK, read-only live probe (capture closed, 22 RAI findings, no claims) and per-criterion table; the approval, assessment and SQL/Azure criteria stay unproven. No source change.
