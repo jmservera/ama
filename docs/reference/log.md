@@ -13423,3 +13423,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 120 criterion 3 recheck (Refs #120)
 
 * Added [issue-120-live-2026-11-19.md](research/issue-120-live-2026-11-19.md): criterion 3 mechanics exist and pass 38 local tests; not exercised on the deployed demo. No source change.
+
+## [2026-11-19] add | Issue 145 live audit 5 (Refs #145)
+
+* Added [issue-145-live-20261119T1024Z-2026-11-19.md](research/issue-145-live-20261119T1024Z-2026-11-19.md): read-only Azure SQL backup re-check, per-criterion table; R3 reapply gap needs FULL tier and was not implemented. No source change.
