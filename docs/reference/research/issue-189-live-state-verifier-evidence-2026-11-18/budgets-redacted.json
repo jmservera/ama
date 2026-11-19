@@ -1,0 +1,116 @@
+[
+ {
+  "amount": "300.0",
+  "category": "Cost",
+  "currentSpend": {
+   "amount": "90.60676648730548",
+   "unit": "USD"
+  },
+  "name": "budget-forward-test",
+  "notifications": {
+   "actual80": {
+    "contactEmails": [
+     "<redacted>@example.invalid"
+    ],
+    "contactGroups": [],
+    "contactRoles": [],
+    "enabled": true,
+    "operator": "GreaterThan",
+    "threshold": "80.0"
+   },
+   "forecast100": {
+    "contactEmails": [
+     "<redacted>@example.invalid"
+    ],
+    "contactGroups": [],
+    "contactRoles": [],
+    "enabled": true,
+    "operator": "GreaterThan",
+    "threshold": "100.0"
+   }
+  },
+  "resourceGroup": "ama",
+  "timeGrain": "Monthly",
+  "timePeriod": {
+   "endDate": "2036-10-01T00:00:00Z",
+   "startDate": "2026-10-01T00:00:00Z"
+  },
+  "type": "Microsoft.Consumption/budgets"
+ },
+ {
+  "amount": "300.0",
+  "category": "Cost",
+  "currentSpend": {
+   "amount": "90.60676648730548",
+   "unit": "USD"
+  },
+  "name": "budget-cutover-test",
+  "notifications": {
+   "actual80": {
+    "contactEmails": [
+     "<redacted>@users.noreply.github.com"
+    ],
+    "contactGroups": [],
+    "contactRoles": [],
+    "enabled": true,
+    "operator": "GreaterThan",
+    "threshold": "80.0"
+   },
+   "forecast100": {
+    "contactEmails": [
+     "<redacted>@users.noreply.github.com"
+    ],
+    "contactGroups": [],
+    "contactRoles": [],
+    "enabled": true,
+    "operator": "GreaterThan",
+    "threshold": "100.0"
+   }
+  },
+  "resourceGroup": "ama",
+  "timeGrain": "Monthly",
+  "timePeriod": {
+   "endDate": "2036-10-01T00:00:00Z",
+   "startDate": "2026-10-01T00:00:00Z"
+  },
+  "type": "Microsoft.Consumption/budgets"
+ },
+ {
+  "amount": "25.0",
+  "category": "Cost",
+  "currentSpend": {
+   "amount": "5.48387096774193",
+   "unit": "USD"
+  },
+  "name": "budget-iot-hub-redacted",
+  "notifications": {
+   "actual80": {
+    "contactEmails": [
+     "<redacted>@users.noreply.github.com"
+    ],
+    "contactGroups": [],
+    "contactRoles": [],
+    "enabled": true,
+    "operator": "GreaterThan",
+    "threshold": "80.0"
+   },
+   "forecast100": {
+    "contactEmails": [
+     "<redacted>@users.noreply.github.com"
+    ],
+    "contactGroups": [],
+    "contactRoles": [],
+    "enabled": true,
+    "operator": "GreaterThan",
+    "threshold": "100.0"
+   }
+  },
+  "resourceGroup": "ama",
+  "timeGrain": "Monthly",
+  "timePeriod": {
+   "endDate": "2036-10-01T00:00:00Z",
+   "startDate": "2026-10-01T00:00:00Z"
+  },
+  "type": "Microsoft.Consumption/budgets"
+ }
+]

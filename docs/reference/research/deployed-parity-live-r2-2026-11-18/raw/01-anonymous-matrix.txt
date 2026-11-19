@@ -1,0 +1,13 @@
+# anonymous matrix 2026-11-18T11:38:38Z
+path | native-curl | browser-UA+Accept json | browser-UA+Accept html | redirect host (json case)
+/api/cases | 401 | 302 | 302 | login.microsoftonline.com
+/api/me | 401 | 302 | 302 | login.microsoftonline.com
+/api/staff | 401 | 302 | 302 | login.microsoftonline.com
+/api/assistants | 401 | 302 | 302 | login.microsoftonline.com
+/api/stats | 401 | 302 | 302 | login.microsoftonline.com
+/api/law | 401 | 302 | 302 | login.microsoftonline.com
+/api/time/status | 401 | 302 | 302 | login.microsoftonline.com
+/cases.html | 401 | 302 | 302 | login.microsoftonline.com
+/app | 401 | 302 | 302 | login.microsoftonline.com
+/healthz | 200 | 200 | 200 | 
+/ | 200 | 200 | 200 | 

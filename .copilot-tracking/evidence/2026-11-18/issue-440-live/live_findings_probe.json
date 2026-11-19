@@ -1,0 +1,25 @@
+{
+ "anon_fetch": {
+  "default": "redirect",
+  "json": "redirect",
+  "healthz": 200
+ },
+ "after_signin_title": "Zava Forward | Zava North Homes",
+ "api": {
+  "/api/me": 200,
+  "/api/time/status": 500,
+  "/api/law": 503,
+  "/api/account/photo": 503,
+  "/api/ai/report": 200,
+  "/api/continuity": 200,
+  "/api/audit-check": 200
+ },
+ "ai_report_keys": [
+  "consumption",
+  "evaluation",
+  "live",
+  "registry"
+ ],
+ "ai_consumption_cost": "Unknown",
+ "time_screen_text": []
+}

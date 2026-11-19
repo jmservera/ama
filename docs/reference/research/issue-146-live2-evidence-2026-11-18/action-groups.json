@@ -1,0 +1,68 @@
+[
+  {
+    "armRoleReceivers": [],
+    "automationRunbookReceivers": [],
+    "azureAppPushReceivers": [],
+    "azureFunctionReceivers": [],
+    "emailReceivers": [
+      {
+        "emailAddress": "<EMAIL>",
+        "name": "operations",
+        "status": "Enabled",
+        "useCommonAlertSchema": true
+      }
+    ],
+    "enabled": true,
+    "eventHubReceivers": [],
+    "groupShortName": "ama-ops",
+    "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/microsoft.insights/actionGroups/ag-cutover-test-ops",
+    "itsmReceivers": [],
+    "location": "Global",
+    "logicAppReceivers": [],
+    "name": "ag-cutover-test-ops",
+    "resourceGroup": "ama",
+    "smsReceivers": [],
+    "tags": {
+      "dataClassification": "constructed-non-identifying",
+      "environment": "test",
+      "owner": "Juan Manuel Servera",
+      "purpose": "non-production-demonstrator",
+      "workload": "zava-forward-demonstrator",
+      "zava-forward-deployment-profile": "development"
+    },
+    "type": "Microsoft.Insights/ActionGroups",
+    "voiceReceivers": [],
+    "webhookReceivers": []
+  },
+  {
+    "armRoleReceivers": [
+      {
+        "name": "Monitoring Contributor",
+        "roleId": "749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+        "useCommonAlertSchema": true
+      },
+      {
+        "name": "Monitoring Reader",
+        "roleId": "43d0d8ad-25c7-4714-9337-8ba259a9fe05",
+        "useCommonAlertSchema": true
+      }
+    ],
+    "automationRunbookReceivers": [],
+    "azureAppPushReceivers": [],
+    "azureFunctionReceivers": [],
+    "emailReceivers": [],
+    "enabled": true,
+    "eventHubReceivers": [],
+    "groupShortName": "SmartDetect",
+    "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/microsoft.insights/actionGroups/Application Insights Smart Detection",
+    "itsmReceivers": [],
+    "location": "Global",
+    "logicAppReceivers": [],
+    "name": "Application Insights Smart Detection",
+    "resourceGroup": "ama",
+    "smsReceivers": [],
+    "type": "Microsoft.Insights/ActionGroups",
+    "voiceReceivers": [],
+    "webhookReceivers": []
+  }
+]

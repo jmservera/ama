@@ -1,0 +1,48 @@
+{
+ "role": "Retrofit Programme Manager",
+ "nav": [
+  "#/",
+  "#/all",
+  "#/overview",
+  "#/progress",
+  "#/visits",
+  "#/funding",
+  "#/finance",
+  "#/capacity",
+  "#/closed",
+  "#/assistants",
+  "#/time",
+  "#/aftercare",
+  "#/screens"
+ ],
+ "report_status": 200,
+ "consumption": {
+  "coverage": "incomplete",
+  "reconciliation": "unreconciled",
+  "total_cost_of_ai": "Unknown",
+  "token_cost": "Unknown",
+  "currency": "USD",
+  "calls": 16,
+  "failures": 1,
+  "reason": null
+ },
+ "by_capability": {
+  "chat-case-conversation": {
+   "calls": 16,
+   "total_tokens": 17833
+  }
+ },
+ "owned_alerts_count": 30,
+ "after_click_has_nav": 13,
+ "case_count": 16,
+ "asset_hash": "#/screens?screen=asset-board&case=ZF-2025-0331",
+ "asset_view": {
+  "Metered usage by AI capability": true,
+  "Reconciliation with the bill": true,
+  "Total Cost of AI": true,
+  "chat-case-conversation": true,
+  "Held-call and limit alerts": true
+ },
+ "asset_text_head": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nAssistant proposals\nTime capture\nAftercare concerns\nSpecialist screens\n[staff name]\n\nRetrofit Programme Manager. Asset and board view. Selected home ZF-2025-0331.\n\nAsset and board view\nAsset and board view\nProgramme queue and connected home view\nTechnical queue\nQuality queue\nResident choice and update queue\nBuilding safety referral queue\nData steward and operator view\nPackage queue\nInvoice queue\nFunding route and claim pack\nResident service i",
+ "reconciliation_row_text": "Metered calls in the period (all capabilities)\n16\nCalls retried\n0\nCalls that did not return\n1\nCalls with no recorded outcome (cost Unknown)\n1\nProposals with at least one call\n16\nProposals not joined to an output record\n0\nReviews not joined\n0\nHuman-accepted proposals\n0\nLimits\nNo limit, budget or pric"
+}

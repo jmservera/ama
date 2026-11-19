@@ -1,0 +1,3 @@
+run 2026-11-18T08:40:41Z
+/api/me browser-UA json: 302  forged-role-header: 401  forged-principal: 401  bad-bearer: 401
+/api/cases browser-UA json: 302  forged-role-header: 401  forged-principal: 401  bad-bearer: 401

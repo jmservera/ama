@@ -1,0 +1,14 @@
+ZF_TILE_URL = https://tile.openstreetmap.org/{z}/{x}/{y}.png
+ZF_TILE_ATTRIBUTION = &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors
+ZF_STORE = mssql
+ZF_SQL_SERVER = sql-cutover-test-rzsrg.database.windows.net
+ZF_SQL_DATABASE = retrofit
+ZF_SQL_AUTH = msi
+ZF_DOC_STORE = azure-blob
+ZF_BLOB_ACCOUNT_URL = https://stcutovertestrzsrg.blob.core.windows.net
+ZF_BLOB_CONTAINER = evidence
+ZF_AUTH = trusted-proxy
+ZF_TRUSTED_PROXY = 1
+ZF_ENV = production
+ZF_CHAT_DEMO_ACTIVATION = approved-2026-11-03
+ZF_DEPLOYMENT_PROFILE = demo

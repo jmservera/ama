@@ -1,0 +1,89 @@
+{
+ "who": "staff",
+ "routes": [
+  "/app",
+  "/api/handoffs.csv",
+  "/api/handoffs/unaccepted.csv",
+  "/api/cases.csv?view=mine&sort=urgent"
+ ],
+ "findings": [
+  {
+   "surface": "landing after sign-in",
+   "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app",
+   "title": "Zava Forward | Zava North Homes",
+   "terms": [],
+   "snake_case": [
+    "measure_decisions"
+   ],
+   "ai_lines": [
+    "Allow AI suggestions",
+    "Use rules and templates, without AI",
+    "This choice applies to your briefing and draft requests until you sign out or reload. Rules and templates never call AI. Ordinary case work stays available.",
+    "Set by fixed rules, not by AI.",
+    "Written by rules and templates. No AI was used.",
+    "Open any case from the list or the sources below. Use rules and templates, without AI, to turn AI off."
+   ],
+   "chars": 19590,
+   "headings": [
+    "Filter",
+    "Today's briefing",
+    "Handoffs waiting for you",
+    "Which cases first? A second opinion",
+    "My cases today"
+   ]
+  },
+  {
+   "surface": "/app",
+   "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app",
+   "title": "Zava Forward | Zava North Homes",
+   "terms": [],
+   "snake_case": [
+    "measure_decisions"
+   ],
+   "ai_lines": [
+    "Allow AI suggestions",
+    "Use rules and templates, without AI",
+    "This choice applies to your briefing and draft requests until you sign out or reload. Rules and templates never call AI. Ordinary case work stays available.",
+    "Set by fixed rules, not by AI.",
+    "Written by rules and templates. No AI was used.",
+    "Open any case from the list or the sources below. Use rules and templates, without AI, to turn AI off."
+   ],
+   "chars": 19590,
+   "headings": [
+    "Filter",
+    "Today's briefing",
+    "Handoffs waiting for you",
+    "Which cases first? A second opinion",
+    "My cases today"
+   ]
+  },
+  {
+   "surface": "/api/handoffs.csv",
+   "error": "Error"
+  },
+  {
+   "surface": "/api/handoffs/unaccepted.csv",
+   "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/api/handoffs/unaccepted.csv",
+   "title": "",
+   "terms": [],
+   "snake_case": [],
+   "ai_lines": [],
+   "chars": 176,
+   "headings": []
+  },
+  {
+   "surface": "/api/cases.csv?view=mine&sort=urgent",
+   "error": "Error"
+  },
+  {
+   "surface": "unknown route",
+   "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/no-such-page-153",
+   "title": "",
+   "terms": [],
+   "snake_case": [],
+   "ai_lines": [],
+   "chars": 9,
+   "headings": []
+  }
+ ]
+}

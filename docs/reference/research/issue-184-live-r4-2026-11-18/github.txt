@@ -1,0 +1,17 @@
+# 2026-11-18 ~16:12 UTC, sanitised read-only output (ids of budgets scope only)
+## sub-issues of #184
+185 open Simulated device identity and provisioning
+186 closed Message schema, rate and volume
+187 closed Replay, speed controls and failure injection
+188 closed Ingestion into the store and consistency with the backfill
+189 open Cost, scale and run controls for the simulator
+## #185 and #189 criteria
+#185
+- [x] Approach decided and recorded with the owner of credentials
+- [x] Each simulated home maps to one device identity and one stock home ID
+- [ ] Credentials are issued and stored without appearing in source or logs
+- [ ] Teardown removes all simulated identities
+#189
+- [x] Cost estimate for the declared N homes recorded before any run
+- [x] Message quota headroom checked against the hub tier decided in #140
+- [ ] Run has an owner, a time limit and a budget alert

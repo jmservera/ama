@@ -1,0 +1,9 @@
+# python3 -m unittest discover -s infra/tests -p 'test_*alert*' (PYTHONPATH=src/core/src) and four named modules
+----------------------------------------------------------------------
+Ran 28 tests in 6.751s
+
+OK
+----------------------------------------------------------------------
+Ran 24 tests in 0.028s
+
+OK

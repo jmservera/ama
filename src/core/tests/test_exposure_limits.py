@@ -91,6 +91,9 @@ class ExposureLimits(unittest.TestCase):
     def test_unrecorded_limits_hold_and_pause(self) -> None:
         result = limits.assess(None, dict(committed=1))
         self.assertEqual((result["status"], result["signal"]), ("Held", limits.UNAPPROVED))
+        self.assertEqual(
+            result["reason"], "No person-approved investment limit or tolerances are recorded."
+        )
 
     def test_inputs_must_be_approved_and_valid(self) -> None:
         for bad in (None, {}, dict(APPROVAL, approver=" "), dict(APPROVAL, approved_on="x")):

@@ -64,6 +64,15 @@ class SensorAnalysisTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             replace(APPROVED, threshold_label="plausible").validate()
 
+    @unittest.expectedFailure
+    def test_policy_identity_binds_threshold(self) -> None:
+        # Measured gap (Refs #111): a changed threshold keeps the same policy_version, so an
+        # approval of that version would cover any threshold. Remove the decorator once fixed.
+        default = self.derive("normal")
+        strict = self.derive("normal", policy=sa.AnalysisPolicy(humidity_threshold_pct=40.0))
+        self.assertNotEqual(default.outcome, strict.outcome)
+        self.assertNotEqual(default.policy_version, strict.policy_version)
+
     def test_declined_unknown_stale_and_missing_never_lower_priority(self) -> None:
         declined = self.derive("sustained_high_humidity", consent="declined")
         unknown = self.derive("sustained_high_humidity", consent="unknown")
@@ -236,6 +245,29 @@ class SensorAnalysisTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValueError, "CANDIDATE_MISMATCH"):
             sa.version_provenance(signal, APPROVED, candidate=None)
+
+    def test_sourced_threshold_requires_research_gate(self) -> None:
+        sourced = sa.AnalysisPolicy(threshold_label="SOURCED: BS 5250 table 2")
+        with self.assertRaisesRegex(ValueError, "RESEARCH_GATE_REQUIRED"):
+            sourced.validate()
+        gate = sa.ResearchGate("R1-SOURCES-1", "R2-SIGNOFF-1", "R3-SCENARIOS-1")
+        gated = replace(sourced, research_gate=gate)
+        gated.validate()
+        self.assertNotEqual(
+            sa.policy_digest(gated),
+            sa.policy_digest(
+                replace(
+                    gated, research_gate=replace(gate, r3_synthetic_validation="R3-SCENARIOS-2")
+                )
+            ),
+        )
+        with self.assertRaisesRegex(ValueError, "INVALID_RESEARCH_GATE"):
+            replace(sourced, research_gate=replace(gate, r2_reviewer_signoff="")).validate()
+        sa.AnalysisPolicy().validate()
+        self.assertEqual(
+            sa.policy_digest(sa.AnalysisPolicy()),
+            sa.policy_digest(replace(sa.AnalysisPolicy(), research_gate=None)),
+        )
 
     def test_digest_changes_with_calibration_flag(self) -> None:
         rows = [dict(r) for r in self.cases[next(iter(self.cases))].rows]

@@ -803,7 +803,7 @@ const MANAGER_TARGET = "a Retrofit Programme Manager or Programme Support Office
 function handoffAttention(hd, now = Date.now()) {
   const waited = Number.isFinite(Date.parse(hd.offered_at)) ? Math.max(0, Math.round((now - Date.parse(hd.offered_at)) / 36e5)) : null;
   const elapsed = waited === null ? "Waiting time unknown" : `Waiting ${waited} ${waited === 1 ? "hour" : "hours"}`;
-  const target = `${hd.proposed_receiver || hd.to_name || "Unassigned"} (${hd.destination || hd.to_role || "role unknown"})`;
+  const target = `${hd.proposed_receiver || hd.to_name || "a receiver not yet named"} (${hd.destination || hd.to_role || "role unknown"})`;
   if (hd.state === "Escalated") return `State: Escalated: unaccepted handoff. ${elapsed}. Waiting for ${target}. Escalated to ${hd.escalation_owner || "a named manager"}.`;
   const due = Date.parse(hd.due_at);
   const overdue = Number.isFinite(due) && due < now;
@@ -823,8 +823,8 @@ function pendingHandoffs() {
       h("ul", { class: "list" }, rows.map((x) => h("li", {},
       h("a", { href: `#/case/${encodeURIComponent(x.case_id)}` }, `${x.resident}, ${x.address}`),
       h("div", {}, handoffAttention(x)),
-      h("div", { class: "muted" }, `${x.status}. Current owner: ${x.accountable_owner}; proposed receiver: ${x.proposed_receiver || "Unassigned"}; confirmed receiver: ${x.confirmed_receiver || "Unconfirmed"}; destination: ${x.destination || "Unknown"}; chase: ${x.chase_owner || "Unassigned"}.`),
-      h("div", { class: "muted" }, `Urgency: ${x.urgency || "Unknown"}; due: ${x.due_at || "Unknown"}; next action: ${x.next_action || "Unknown"}. Resident update: ${x.resident_update_owner || "Unassigned"}, ${x.resident_update_due_at || "Unknown"}.`),
+      h("div", { class: "muted" }, `${x.status}. Current owner: ${x.accountable_owner}; proposed receiver: ${x.proposed_receiver || "No one named yet. Next action: ask the case lead to name one"}; confirmed receiver: ${x.confirmed_receiver || "Unconfirmed"}; destination: ${x.destination || "Unknown"}; chase: ${x.chase_owner || "No one named yet. Next action: ask the case lead to name one"}.`),
+      h("div", { class: "muted" }, `Urgency: ${x.urgency || "Unknown"}; due: ${x.due_at || "Unknown"}; next action: ${x.next_action || "Unknown"}. Resident update: ${x.resident_update_owner || "No one named yet. Next action: ask the case lead to name one"}, ${x.resident_update_due_at || "Unknown"}.`),
       h("div", {}, x.to_code === me.user.code ? "Open to record receipt, accept or decline." : "Open to chase, escalate or withdraw.")))));
   }).catch((e) => {
     if (e.name === "AbortError") return;
@@ -932,8 +932,8 @@ async function handoffWaitingView() {
             h("td", {}, x.status),
             h("td", {}, waitingHours(x.age_hours)),
             h("td", {}, waitingTime(x.due_at)),
-            h("td", {}, x.chase_owner || "Unassigned"),
-            h("td", {}, x.proposed_receiver || "Unassigned"),
+            h("td", {}, x.chase_owner || "No one named yet. Next action: ask the case lead to name one"),
+            h("td", {}, x.proposed_receiver || "No one named yet. Next action: ask the case lead to name one"),
             h("td", {}, escalation(x)))))))),
     recheck);
 }
@@ -1576,9 +1576,9 @@ function handoffPanel(c, id, refresh) {
   const kids = [h("h2", {}, "Handoff to a colleague")];
   if (hd) kids.push(
     ["Offered", "Received", "Escalated"].includes(hd.state) && h("p", { role: "status" }, handoffAttention(hd)),
-    h("p", { role: "status" }, `${hd.status}. Current accountable owner: ${hd.accountable_owner}. Destination: ${hd.destination || "Unknown"}. Proposed receiver: ${hd.proposed_receiver || "Unassigned"}. Confirmed receiver: ${hd.confirmed_receiver || "Unconfirmed"}. Chase owner: ${hd.chase_owner || "Unassigned"}.`),
+    h("p", { role: "status" }, `${hd.status}. Current accountable owner: ${hd.accountable_owner}. Destination: ${hd.destination || "Unknown"}. Proposed receiver: ${hd.proposed_receiver || "No one named yet. Next action: ask the case lead to name one"}. Confirmed receiver: ${hd.confirmed_receiver || "Unconfirmed"}. Chase owner: ${hd.chase_owner || "No one named yet. Next action: ask the case lead to name one"}.`),
     h("p", {}, `Urgency: ${hd.urgency || "Unknown"}. Due: ${hd.due_at || "Unknown"}. Next action: ${hd.next_action || "Unknown"}.`),
-    h("p", {}, `Resident update owner: ${hd.resident_update_owner || "Unassigned"}; commitment: ${hd.resident_update_due_at || "Unknown"}. No message is sent automatically.`),
+    h("p", {}, `Resident update owner: ${hd.resident_update_owner || "No one named yet. Next action: ask the case lead to name one"}; commitment: ${hd.resident_update_due_at || "Unknown"}. No message is sent automatically.`),
     hd.state === "Escalated" && h("p", {}, `Escalated to ${hd.escalation_owner}. ${hd.answer_note}`));
   if (open) {
     kids.push(h("p", { role: "status" }, `Offered to ${hd.to_name} by ${hd.offered_by} on ${fmtDate(hd.offered_at)}. Waiting for an answer. The case stays with ${hd.from_name} until it is accepted.`),
@@ -3072,6 +3072,53 @@ async function coordinatorView() {
   await mp.draw(true);
 }
 
+// Formats the server's AI consumption economics; costs without a price source or outcome count stay Unknown, never zero.
+const AI_COST_ROWS = [
+  ["Token cost", "token_cost"],
+  ["Total cost of AI", "total_cost_of_ai"],
+  ["Token cost per accepted outcome", "token_cost_per_accepted_outcome"],
+  ["Cost per accepted outcome", "cost_per_accepted_outcome"],
+  ["Quality-qualified cost per accepted outcome", "quality_qualified_cost_per_accepted_outcome"],
+  ["Booked value", "booked_value"],
+];
+const AI_DENOMINATOR_ROWS = [
+  ["AI proposals", "proposal_count"],
+  ["Accepted outcomes", "accepted_outcome_count"],
+  ["Metered calls", "metered_call_count"],
+  ["Unmetered calls", "unmetered_call_count"],
+  ["Unreviewed proposals", "unreviewed_proposal_count"],
+  ["Rejected or withdrawn proposals", "rejected_or_withdrawn_count"],
+];
+function aiEconomicsRows(econ) {
+  const available = econ && typeof econ === "object";
+  const denominators = (available && econ.denominators) || {};
+  const currency = available && typeof econ.currency === "string" && econ.currency !== "Unknown" ? econ.currency : "";
+  const count = (value) => (Number.isFinite(value) ? new Intl.NumberFormat("en-GB").format(value) : "Unknown");
+  const cost = (value) => {
+    if (value === null || value === undefined || value === "" || value === "Unknown" || value === 0) return "Unknown";
+    return currency ? `${currency} ${value}` : String(value);
+  };
+  return {
+    available: Boolean(available),
+    denominators: AI_DENOMINATOR_ROWS.map(([label, key]) => [label, count(denominators[key])]),
+    costs: AI_COST_ROWS.map(([label, key]) => [label, cost(available ? econ[key] : null)]),
+    priceSource: available && econ.price_source ? String(econ.price_source) : "Unknown",
+    notice: (available && econ.non_benefit_notice) || "",
+  };
+}
+
+function aiEconomicsCard(econ) {
+  const rows = aiEconomicsRows(econ);
+  return h("section", { class: "card", "aria-labelledby": "ai-economics-heading" },
+    h("h2", { id: "ai-economics-heading" }, "AI consumption economics"),
+    !rows.available && h("p", { role: "status" }, "AI economics could not be loaded, so every figure below is Unknown. Reload the page or contact application support."),
+    h("p", { class: "muted" }, `Price source: ${rows.priceSource}. Unknown means no price source or no accepted outcome exists to divide by; it is not zero.`),
+    h("dl", {}, rows.denominators.flatMap(([label, value]) => [h("dt", {}, label), h("dd", {}, value)])),
+    h("h3", {}, "Cost figures"),
+    h("dl", {}, rows.costs.flatMap(([label, value]) => [h("dt", {}, label), h("dd", {}, value)])),
+    rows.notice && h("p", { class: "muted" }, rows.notice));
+}
+
 async function overviewView() {
   const st = await api("/api/stats");
   const k = st.kpis;
@@ -3107,6 +3154,7 @@ async function overviewView() {
         h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Contractors table" },
           h("table", {}, h("caption", { class: "sr-only" }, "Contractors and their open work"), h("thead", {}, h("tr", {}, ["Contractor", "Open", "On site or booked", "Stuck 60+ days"].map((x) => h("th", { scope: "col" }, x)))),
             h("tbody", {}, st.contractors.map((c) => h("tr", {}, h("th", { scope: "row" }, c.name), h("td", {}, c.open), h("td", {}, c.booked), h("td", {}, c.long)))))))),
+    aiEconomicsCard(st.ai_consumption_economics),
     h("section", { class: "card" }, h("h2", {}, "Team workload"),
       h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Team workload table" },
         h("table", {}, h("caption", { class: "sr-only" }, "Team workload by person"), h("thead", {}, h("tr", {}, ["Name", "Role", "Open cases", "With a safety issue"].map((x) => h("th", { scope: "col" }, x)))),

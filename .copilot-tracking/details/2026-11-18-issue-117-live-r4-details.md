@@ -1,0 +1,1 @@
+Phase 1 details: signature is assembled as concatenated literals so the repo file itself is not an AV hit. Match is a substring check on upload bytes, same as TEST_MARKER. Does not claim real malware assurance; module docstring wording kept.

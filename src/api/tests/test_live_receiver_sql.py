@@ -25,6 +25,7 @@ GRANTS = (
     "SELECT ON dbo.sensor_consumer_control",
     "SELECT ON dbo.sensor_consumer_policy",
     "SELECT, INSERT ON dbo.sensor_reading",
+    "SELECT, INSERT ON dbo.sensor_register",
     "SELECT, INSERT ON dbo.sensor_delivery",
     "SELECT, INSERT ON dbo.sensor_data_quality_exception",
 )
@@ -103,13 +104,19 @@ class ReceiverMinimumGrantTests(unittest.TestCase):
         old, new = dict(before[1]), dict(after[1])  # type: ignore[call-overload]
         changed = {name for name in new if old.get(name) != new[name]}
         self.assertGreater(len(old), 10)  # the whole application schema was compared
-        self.assertEqual(changed, {"sensor_reading", "sensor_delivery"}, (old, new))
+        self.assertEqual(
+            changed, {"sensor_reading", "sensor_register", "sensor_delivery"}, (old, new)
+        )
         row = self.admin.execute(
             "SELECT sensor_id, home_id, source_type, schema_version FROM sensor_reading"
         ).fetchall()
         self.assertEqual(
             [tuple(r) for r in row][0][1:], ("ZF-1", "SYNTHETIC", "live-sim-reading-v1")
         )
+        registered = self.admin.execute(
+            "SELECT sensor_id, home_id, source_type FROM sensor_register"
+        ).fetchall()
+        self.assertEqual([tuple(r) for r in registered], [("SENS-SYN-1", "ZF-1", "SYNTHETIC")])
         again = ingestion.consume([reading.row()], received_at=RECEIVED)
         self.assertTrue(again[0].replay)
 

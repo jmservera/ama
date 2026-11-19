@@ -1,0 +1,26 @@
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+----------------------------------------------------------------------
+Ran 304 tests in 377.664s
+
+OK (skipped=85)
+exit=0

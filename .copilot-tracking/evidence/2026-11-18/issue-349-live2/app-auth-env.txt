@@ -1,0 +1,7 @@
+ZF_AUTH	trusted-proxy
+ZF_TRUSTED_PROXY	1
+ZF_ENV	production
+ZF_ENTRA_TENANT_ID	<guid>
+ENTRA_TENANT_ID	<guid>
+ENTRA_CLIENT_ID	<guid>
+ZF_DEPLOYMENT_PROFILE	demo

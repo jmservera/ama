@@ -1,0 +1,16 @@
+{
+  "external": true,
+  "insecure": false,
+  "min": 0,
+  "n": "ca-cutover-test-demo-api",
+  "rev": "ca-cutover-test-demo-api--0000031",
+  "transport": "Http"
+}
+{
+  "external": true,
+  "insecure": false,
+  "min": 0,
+  "n": "ca-resident-demo",
+  "rev": "ca-resident-demo--0000012",
+  "transport": "Http"
+}

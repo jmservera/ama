@@ -1,0 +1,16 @@
+{
+  "probes": [
+    "Liveness",
+    "Readiness",
+    "Startup"
+  ],
+  "res": {
+    "cpu": 0.5,
+    "ephemeralStorage": "2Gi",
+    "memory": "1Gi"
+  },
+  "rules": [
+    "http"
+  ],
+  "vol": null
+}

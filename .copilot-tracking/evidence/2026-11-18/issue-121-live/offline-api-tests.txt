@@ -1,0 +1,4 @@
+Ran 18 tests in 98.904s
+
+OK
+(test_document_controls, api; command: PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests python3 -m unittest test_document_controls -q)
