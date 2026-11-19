@@ -13703,3 +13703,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 350 criterion 1 recheck r5 (Refs #350)
 
 * Appended a 14:12 UTC recheck to [issue-350-live-2026-11-19.md](research/issue-350-live-2026-11-19.md): browser-UA anonymous API calls still get 302 from Easy Auth; the fix is a FULL-tier edge change, so no source change was made.
+## [2026-11-19] add | Issue 440 checkpoint triage refresh (Refs #440)
+
+* Added [issue-440-live-checkpoint-refresh-2026-11-19.md](research/issue-440-live-checkpoint-refresh-2026-11-19.md): D2 guard violations 11 to 1, D4 largely delivered, D1 to D3 unchanged; criteria 7 and 8 stay unproven. No source change.
