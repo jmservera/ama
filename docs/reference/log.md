@@ -13612,3 +13612,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 1258 live run 4 criteria proof (Refs #1258)
 
 * Added [issue-1258-live-r4-2026-11-19.md](research/issue-1258-live-r4-2026-11-19.md): real ext4 ancestor-sync order and 110 passing tests; criterion 5 stays unproven for the demo. No source change.
+## [2026-11-19] add | Issue 1274 release-download criteria proof (Refs #1274)
+
+* Added [issue-1274-live-release-download-criteria-2026-11-19.md](research/issue-1274-live-release-download-criteria-2026-11-19.md): failing 504 endpoint from the retained #1243 job log, real actionlint 1.7.7 checksum verification, 12 installer tests, per-criterion table; AWF recovery and hosted CI stay unproven.
