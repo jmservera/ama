@@ -14107,3 +14107,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 1830 live r4 note
 
 * Added research/issue-1830-live-r4-2026-11-19.md: blockers unchanged; criterion 2 still needs the owner trust-boundary decision.
+
+## [2026-11-19] add | Issue 1830 fourth pass
+
+* Added [issue-1830-live-r4-2026-11-19.md](research/issue-1830-live-r4-2026-11-19.md): no buildable criterion; retained receipts gone; preflight execution still refused; no source change.
