@@ -1,0 +1,2 @@
+ca-cutover-test-demo-api /healthz 200 /health 401
+ca-resident-demo /healthz 200 /health 404

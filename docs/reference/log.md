@@ -13870,3 +13870,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 126 live RPI re-run
 
 * Re-ran core governance tests (88 OK, 18 skipped) and confirmed [issue-126-live-2026-11-19.md](research/issue-126-live-2026-11-19.md): no unmet demo criterion needs new code.
+
+## [2026-11-19] research | Issue 203 literal legacy-reference search
+
+* Added [issue-203-live-20261119-2026-11-19.md](research/issue-203-live-20261119-2026-11-19.md) with retained evidence: classified literal search for `mvp/`, `prototype/` and `PYTHONPATH=mvp` (checker 0 violations), and read-only deployed-app and CI checks. Criterion 1 proven for the demo; criterion 5 partly proven.
