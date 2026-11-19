@@ -7,14 +7,15 @@ name = "zava-forward-core"
 dynamic = ["version"]
 description = "Zava Forward shared domain, data access and rules library"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = ["opentelemetry-api==1.45.2"]
 
 [project.optional-dependencies]
 sql = ["mssql-python==1.15.0"]
 blob = ["azure-storage-blob==12.31.0"]
 # Keyless IoT Hub identity registry adapter (default off). azure-iot-hub imports six without declaring it.
 iothub = ["azure-iot-hub==2.7.0", "six==1.17.0"]
-dev = ["ruff==0.17.1", "mypy==2.4.0", "azure-iot-hub==2.7.0", "six==1.17.0"]
+telemetry = ["opentelemetry-sdk==1.45.2", "opentelemetry-exporter-otlp-proto-http==1.45.2"]
+dev = ["ruff==0.17.1", "mypy==2.4.0", "azure-iot-hub==2.7.0", "six==1.17.0", "opentelemetry-sdk==1.45.2", "opentelemetry-exporter-otlp-proto-http==1.45.2"]
 
 [tool.setuptools.dynamic]
 version = { attr = "zava_forward.core.version.__version__" }
@@ -71,6 +72,8 @@ module = ["zava_forward.core.chat_panel", "test_chat_panel", "tests.test_chat_pa
           "zava_forward.core.source_monitor", "zava_forward.core.forms",
           "zava_forward.core.ranking_publication_runner",
           "zava_forward.core.simulation_lane",
+          "zava_forward.core.ledger_digest_blob",
+          "test_ledger_digest_blob", "tests.test_ledger_digest_blob",
           "test_ranking_publication_runner", "tests.test_ranking_publication_runner",
           "test_ranking_tiebreak_audit", "tests.test_ranking_tiebreak_audit"]
 disallow_untyped_calls = false
@@ -93,6 +96,7 @@ module = ["test_stock_reconciliation", "tests.test_stock_reconciliation",
           "test_sensor_privacy", "tests.test_sensor_privacy",
           "test_sensor_faults", "tests.test_sensor_faults",
           "test_resident_decisions", "tests.test_resident_decisions",
+          "test_resident_journey_design", "tests.test_resident_journey_design",
           "test_priority_order", "tests.test_priority_order"]
 disallow_untyped_calls = false
 
@@ -149,4 +153,11 @@ disallow_untyped_calls = false
 [[tool.mypy.overrides]]
 module = ["zava_forward.core.sensor_review_draft", "test_sensor_review_draft",
           "tests.test_sensor_review_draft"]
+disallow_untyped_calls = false
+
+# Typed offline held-out evaluation and tokenomics comparison call migrated untyped core helpers.
+[[tool.mypy.overrides]]
+module = ["zava_forward.core.heldout_eval", "zava_forward.core.tokenomics_comparison",
+          "test_heldout_eval", "tests.test_heldout_eval",
+          "test_tokenomics_comparison", "tests.test_tokenomics_comparison"]
 disallow_untyped_calls = false

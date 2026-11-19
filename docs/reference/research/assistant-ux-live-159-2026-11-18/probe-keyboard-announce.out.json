@@ -1,0 +1,66 @@
+{
+ "launcher_present": 1,
+ "tabs_to_launcher": 44,
+ "tab_path_tail": [
+  "INPUT||ret-source",
+  "INPUT||ret-next",
+  "BUTTON|Send back|",
+  "BUTTON|Chat|employee-chat-launcher"
+ ],
+ "dialog_open": true,
+ "focus_after_open": "H2|Employee assistant|employee-chat-title",
+ "launcher_expanded": "true",
+ "log_attrs": {
+  "role": "log",
+  "live": "polite",
+  "relevant": "additions",
+  "label": "Employee assistant conversation",
+  "tabindex": "0"
+ },
+ "dialog_attrs": {
+  "role": "dialog",
+  "labelledby": "employee-chat-title",
+  "title": "Employee assistant"
+ },
+ "panel_tab_order": [
+  "BUTTON|Close chat|",
+  "SUMMARY|About this chat|",
+  "SUMMARY|Chat size|",
+  "DIV|Employee assistant conversation|",
+  "TEXTAREA|Your work question|employee-chat-question",
+  "SELECT|Agent skill|employee-chat-skill",
+  "BUTTON|Send|",
+  "BODY|Skip to main content\n\n\n\n  Zava ForwardZa|"
+ ],
+ "turns": [
+  {
+   "assistant_messages": 1,
+   "label_present": false,
+   "focus": "TEXTAREA|Your work question|employee-chat-question",
+   "text_head": "Assistant Outcome: answer Decision model (case rules), no record changed Recorded next step: Obtain external service evidence and an independent decision to restart retrofit work. Owner: [synthetic name redacted]."
+  },
+  {
+   "assistant_messages": 2,
+   "label_present": false,
+   "focus": "TEXTAREA|Your work question|employee-chat-question",
+   "text_head": "Assistant Outcome: workflow-only help Workflow-only help, no record changed I could not match that to a fact on case ZF-2025-0122. I can answer questions like these: * Why is this case blocked? * Why "
+  }
+ ],
+ "log_additions": [
+  "ARTICLE:YouWhat is the status of this case and what should I do next",
+  "ARTICLE:AssistantOutcome: answerDecision model (case rules), no reco",
+  "ARTICLE:YouWhich of those sources support that?",
+  "ARTICLE:AssistantOutcome: workflow-only helpWorkflow-only help, no r"
+ ],
+ "status_changes": [
+  "Asking the assistant.",
+  "Answer added. Check the sources before relying on it.",
+  "Asking the assistant.",
+  "Workflow-only help added. No assistant answer was given. Check the case card for recorded facts."
+ ],
+ "error_role": "role=alert present, hidden=true",
+ "after_escape": {
+  "hidden": true,
+  "focus": "BUTTON|Chat|employee-chat-launcher"
+ }
+}

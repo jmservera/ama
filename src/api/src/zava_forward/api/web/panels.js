@@ -812,7 +812,9 @@ function affectedChallengePanel(c, id, refresh) {
       ]] : []),
       ["source", "Supplied challenge evidence reference"], ["request", "The person's supplied request"],
       ["explanation", "Permitted plain-language explanation"], ["owner", "Named challenge owner", ["", ...staff.map((person) => person.email)]],
-      ["non_digital_route", "Accessible phone, letter or in-person route"], ["next_update", "Challenge next update date"]
+      ["non_digital_route", "Accessible phone, letter or in-person route"],
+      ["hazard_concern", "Safety concern mentioned in this request", ["No", "Yes - route urgent safety check separately now"]],
+      ["next_update", "Challenge next update date"]
     ], (body) => {
       const target = targets.find((item) => item.proposal_id === body.proposal_id);
       if (!target) throw new Error("Enter an exact recorded suggestion reference from the suggestion history.");
@@ -855,11 +857,13 @@ function affectedChallengePanel(c, id, refresh) {
 }
 
 function exposureNotice(x) {
+  const LIMIT_STATUS_WORDS = { Held: "Paused" };
+  const plainLimitText = (text) => String(text || "").replace(/\benvelope\b/gi, "investment limit");
   if (!x) return h("section", { "aria-labelledby": "exposure-h" }, h("h2", { id: "exposure-h" }, "Investment limits"),
     h("p", { role: "status" }, "Limit check unavailable. Treat acceleration as paused until a person checks the Board limits by hand. Owner: the finance lead. Next action: check the Board limits by hand and tell application support if the check stays unavailable."));
-  const rows = (x.findings || []).map((f) => h("li", {}, f.state === "Unknown" ? `${f.limit}: not known` : `${f.limit}: ${f.state}, ${f.observed} of ${f.maximum}${f.unit ? " " + f.unit : ""}`));
+  const rows = (x.findings || []).map((f) => h("li", {}, f.state === "Unknown" ? `${plainLimitText(f.limit)}: not known` : `${plainLimitText(f.limit)}: ${f.state}, ${f.observed} of ${f.maximum}${f.unit ? " " + f.unit : ""}`));
   return h("section", { "aria-labelledby": "exposure-h" }, h("h2", { id: "exposure-h" }, "Investment limits"),
-    h("p", { role: "status" }, `${x.signal}. ${x.status}. ${x.reason || ""}`), rows.length ? h("ul", {}, rows) : null,
+    h("p", { role: "status" }, `${x.signal}. ${LIMIT_STATUS_WORDS[x.status] || x.status}. ${plainLimitText(x.reason)}`), rows.length ? h("ul", {}, rows) : null,
     x.action ? h("p", {}, x.action) : null, h("p", { class: "muted" }, x.notice || ""));
 }
 

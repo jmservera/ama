@@ -660,6 +660,118 @@ class NominationApiRoutesTests(unittest.TestCase):
         self.assertEqual(stored_ack["route_mode"], "staff_recorded_non_digital")
         self.assertEqual(stored_ack["assisted_channel"], "Phone")
 
+    @unittest.skipUnless(_playwright_available(), "playwright unavailable")
+    def test_standalone_route_forms_submit_in_browser(self) -> None:
+        from playwright.sync_api import sync_playwright
+
+        self.assertEqual(
+            self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
+        )
+        nom_id = self.call_json("/api/cases/ZF-1", "sam")[1]["nomination_records"][0]["id"]
+        self.seed_priority_proposal()
+        statuses: list[int] = []
+
+        with sync_playwright() as pw:
+            browser = self._launch_headless_chromium(pw)
+            try:
+                context = browser.new_context()
+                context.add_cookies(
+                    [
+                        {
+                            "name": "zf_session",
+                            "value": self._login_cookie("sam").split("=", 1)[1],
+                            "url": self.base,
+                        }
+                    ]
+                )
+                page = context.new_page()
+                page.on(
+                    "response",
+                    lambda r: statuses.append(r.status) if "/resident" in r.url else None,
+                )
+                page.goto(self.base + "/api/cases/ZF-1?view=nomination-routes-html")
+                page.locator("summary", has_text=f"Record acknowledgement for {nom_id}").click()
+                key = f"#nomination-ack-{nom_id}"
+                page.select_option(f"{key}-channel", "digital")
+                page.fill(f"{key}-acknowledgement_ref", "SYN-STANDALONE-ACK")
+                page.fill(f"{key}-non_digital_route", "Phone Sam or visit housing hub")
+                page.fill(f"{key}-next_update", "2099-03-01")
+                with page.expect_navigation():
+                    page.locator(f"{key} button[type='submit']").click()
+                page.locator("summary", has_text=f"Record correction for {nom_id}").click()
+                key = f"#nomination-correct-{nom_id}"
+                page.select_option(f"{key}-channel", "digital")
+                page.fill(f"{key}-account", "Synthetic corrected account")
+                page.fill(f"{key}-source", "SYN-STANDALONE-CORRECTION")
+                page.fill(f"{key}-reported_subject_ref", "SYN-SUBJECT")
+                page.fill(f"{key}-next_update", "2099-03-02")
+                with page.expect_navigation():
+                    page.locator(f"{key} button[type='submit']").click()
+                page.locator("summary", has_text="Record supplied challenge").click()
+                key = "#challenge-open-route"
+                page.select_option(f"{key}-channel", "digital")
+                page.fill(f"{key}-source", "SYN-STANDALONE-CHALLENGE")
+                page.fill(f"{key}-request", "Synthetic supplied challenge")
+                page.fill(f"{key}-explanation", "Synthetic explanation")
+                page.fill(f"{key}-non_digital_route", "Phone Sam or visit housing hub")
+                page.fill(f"{key}-next_update", "2099-03-03")
+                with page.expect_navigation():
+                    page.locator(f"{key} button[type='submit']").click()
+            finally:
+                browser.close()
+
+        self.assertEqual(statuses, [200, 200, 200])
+        stored_ack = self.call_json("/api/cases/ZF-1", "sam")[1]["nomination_records"][0][
+            "acknowledgement"
+        ]
+        self.assertEqual(stored_ack["reference"], "SYN-STANDALONE-ACK")
+        detail = self.call_json("/api/cases/ZF-1", "sam")[1]
+        record = detail["nomination_records"][0]
+        self.assertEqual(record["owner"]["email"], "sam@example.test")
+        self.assertEqual(record["original"]["account"], "SYN resident referral account")
+        self.assertEqual(
+            [c["source"] for c in record["corrections"]], ["SYN-STANDALONE-CORRECTION"]
+        )
+        self.assertIn("SYN-STANDALONE-CHALLENGE", json.dumps(detail["affected_challenges"]))
+
+    def test_native_form_encoding_is_refused_and_writes_nothing(self) -> None:
+        self.assertEqual(
+            self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
+        )
+        before = self.call_json("/api/cases/ZF-1", "sam")[1]
+        nom_id = before["nomination_records"][0]["id"]
+        form = (
+            f"action=nomination_acknowledge&case_id=ZF-1&id={nom_id}&expected_version=1"
+            "&channel=digital&acknowledgement_ref=SYN-NATIVE&next_update=2099-03-01"
+        ).encode()
+        req = Request(
+            self.base + "/api/cases/ZF-1/resident",
+            form,
+            headers={
+                "Cookie": self._login_cookie("sam"),
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-ZF-CSRF": "1",
+            },
+        )
+        with self.assertRaises(HTTPError) as refused:
+            urlopen(req, timeout=10)
+        self.assertEqual(refused.exception.code, 400)
+        self.assertEqual(json.loads(refused.exception.read())["error"], "Could not read that.")
+        self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
+
+    def test_route_form_script_posts_json_with_csrf_header_and_page_loads_it(self) -> None:
+        self.assertEqual(
+            self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
+        )
+        _, ctype, html = self.request_raw("/api/cases/ZF-1?view=nomination-routes-html", "sam")
+        self.assertIn("text/html", ctype)
+        self.assertIn('<script src="/nomination-routes.js" defer></script>', html)
+        status, ctype, script = self.request_raw("/nomination-routes.js", "sam")
+        self.assertEqual(status, 200)
+        self.assertIn("javascript", ctype)
+        self.assertIn('"Content-Type": "application/json"', script)
+        self.assertIn('"X-ZF-CSRF": "1"', script)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -39,6 +39,21 @@ class ReferenceTests(unittest.TestCase):
         self.assertEqual(checker.reference_violations("docs/reference/log.md", line), [])
         self.assertEqual(checker.reference_violations("tools/rpi-checks.py", line), [])
 
+    def test_dated_live_evidence_is_exempt_but_other_research_is_not(self):
+        line = "mvp/zavaforward_mvp/a.py\n"
+        for path in (
+            "docs/reference/research/issue-198-rubric-live-r2-2026-11-18.md",
+            "docs/reference/research/issue-200-live-20261118T1618Z-evidence/probe.txt",
+            "docs/reference/research/src-repoint-live-audit-200-2026-11-18.md",
+            "tools/test_private_mvp_data_exclusion.py",
+        ):
+            self.assertEqual(checker.reference_violations(path, line), [], path)
+        for path in (
+            "docs/reference/research/issue-198-notes.md",
+            "docs/reference/research/ux/design-system-2026-11-18.md",
+        ):
+            self.assertEqual(len(checker.reference_violations(path, line)), 2, path)
+
     def test_repository_has_no_violations(self):
         root = Path(__file__).resolve().parents[1]
         self.assertEqual(checker.check_references(root), [])

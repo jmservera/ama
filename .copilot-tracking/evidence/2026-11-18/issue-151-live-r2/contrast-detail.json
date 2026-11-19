@@ -1,0 +1,118 @@
+{
+ "capacity": [
+  {
+   "t": "Previous packages",
+   "disabled": true,
+   "color": "rgb(107, 116, 123)",
+   "bg": "rgb(236, 239, 241)",
+   "opacity": "1",
+   "parentBg": "rgba(0, 0, 0, 0)"
+  },
+  {
+   "t": "Next packages",
+   "disabled": true,
+   "color": "rgb(107, 116, 123)",
+   "bg": "rgb(236, 239, 241)",
+   "opacity": "1",
+   "parentBg": "rgba(0, 0, 0, 0)"
+  }
+ ],
+ "assistants": [
+  {
+   "t": "Accept",
+   "disabled": true,
+   "color": "rgb(107, 116, 123)",
+   "bg": "rgb(236, 239, 241)",
+   "opacity": "1",
+   "parentBg": "rgba(0, 0, 0, 0)"
+  },
+  {
+   "t": "Edit",
+   "disabled": true,
+   "color": "rgb(107, 116, 123)",
+   "bg": "rgb(236, 239, 241)",
+   "opacity": "1",
+   "parentBg": "rgba(0, 0, 0, 0)"
+  },
+  {
+   "t": "Accept",
+   "disabled": true,
+   "color": "rgb(107, 116, 123)",
+   "bg": "rgb(236, 239, 241)",
+   "opacity": "1",
+   "parentBg": "rgba(0, 0, 0, 0)"
+  },
+  {
+   "t": "Edit",
+   "disabled": true,
+   "color": "rgb(107, 116, 123)",
+   "bg": "rgb(236, 239, 241)",
+   "opacity": "1",
+   "parentBg": "rgba(0, 0, 0, 0)"
+  },
+  {
+   "t": "Accept",
+   "disabled": true,
+   "color": "rgb(107, 116, 123)",
+   "bg": "rgb(236, 239, 241)",
+   "opacity": "1",
+   "parentBg": "rgba(0, 0, 0, 0)"
+  },
+  {
+   "t": "Edit",
+   "disabled": true,
+   "color": "rgb(107, 116, 123)",
+   "bg": "rgb(236, 239, 241)",
+   "opacity": "1",
+   "parentBg": "rgba(0, 0, 0, 0)"
+  },
+  {
+   "t": "Accept",
+   "disabled": true,
+   "color": "rgb(107, 116, 123)",
+   "bg": "rgb(236, 239, 241)",
+   "opacity": "1",
+   "parentBg": "rgba(0, 0, 0, 0)"
+  },
+  {
+   "t": "Edit",
+   "disabled": true,
+   "color": "rgb(107, 116, 123)",
+   "bg": "rgb(236, 239, 241)",
+   "opacity": "1",
+   "parentBg": "rgba(0, 0, 0, 0)"
+  },
+  {
+   "t": "Accept",
+   "disabled": true,
+   "color": "rgb(107, 116, 123)",
+   "bg": "rgb(236, 239, 241)",
+   "opacity": "1",
+   "parentBg": "rgba(0, 0, 0, 0)"
+  },
+  {
+   "t": "Edit",
+   "disabled": true,
+   "color": "rgb(107, 116, 123)",
+   "bg": "rgb(236, 239, 241)",
+   "opacity": "1",
+   "parentBg": "rgba(0, 0, 0, 0)"
+  },
+  {
+   "t": "Accept",
+   "disabled": true,
+   "color": "rgb(107, 116, 123)",
+   "bg": "rgb(236, 239, 241)",
+   "opacity": "1",
+   "parentBg": "rgba(0, 0, 0, 0)"
+  },
+  {
+   "t": "Edit",
+   "disabled": true,
+   "color": "rgb(107, 116, 123)",
+   "bg": "rgb(236, 239, 241)",
+   "opacity": "1",
+   "parentBg": "rgba(0, 0, 0, 0)"
+  }
+ ]
+}

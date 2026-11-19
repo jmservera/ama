@@ -1,0 +1,35 @@
+{
+  "ok": false,
+  "checks": [
+    {
+      "name": "owner_tag",
+      "passed": false,
+      "detail": "hub owner tag missing"
+    },
+    {
+      "name": "hub_tier",
+      "passed": true,
+      "detail": "sku B1 capacity 1"
+    },
+    {
+      "name": "budget_cap",
+      "passed": true,
+      "detail": "monthly amount 25.0"
+    },
+    {
+      "name": "alert_actual",
+      "passed": true,
+      "detail": "enabled actual threshold 80.0"
+    },
+    {
+      "name": "alert_forecast",
+      "passed": true,
+      "detail": "enabled forecast threshold 100.0"
+    },
+    {
+      "name": "recipient_reachable",
+      "passed": false,
+      "detail": "recipient classes {'unreachable': 2}"
+    }
+  ]
+}

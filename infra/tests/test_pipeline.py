@@ -474,6 +474,36 @@ class PipelineTests(unittest.TestCase):
                     with self.assertRaises(pipeline.PipelineError):
                         pipeline.verify_environment("test")
 
+    def test_federation_check_requires_exact_environment_subject(self):
+        good = {
+            "issuer": "https://token.actions.githubusercontent.com",
+            "audiences": ["api://AzureADTokenExchange"],
+            "subject": "repo:example/example:environment:test-plan",
+        }
+        bad = [
+            [],
+            [{**good, "subject": "repo:example/example:environment:test"}],
+            [{**good, "subject": "repo:example/example:ref:refs/heads/main"}],
+            [{**good, "issuer": "https://example.invalid"}],
+            [{**good, "audiences": ["api://other"]}],
+            [good, {**good, "subject": "repo:other/example:environment:test-plan"}],
+        ]
+        with patch.dict(os.environ, GITHUB_REPOSITORY="example/example"):
+            with patch.object(pipeline, "az", return_value=[good]):
+                pipeline.verify_federation("id-plan", "managed", "test-plan")
+            for credentials in bad:
+                with patch.object(pipeline, "az", return_value=credentials):
+                    with self.assertRaises(pipeline.PipelineError):
+                        pipeline.verify_federation("id-plan", "managed", "test-plan")
+            with patch.object(pipeline, "az", side_effect=[[good], [{"keyId": "x"}]]):
+                with self.assertRaises(pipeline.PipelineError):
+                    pipeline.verify_federation("app-id", "app", "test-plan")
+            with patch.object(pipeline, "az", side_effect=[[good], []]):
+                pipeline.verify_federation("app-id", "app", "test-plan")
+            for args in (("bad id", "managed", "test"), ("id", "managed", "prod")):
+                with self.assertRaises(pipeline.PipelineError):
+                    pipeline.verify_federation(*args)
+
     def test_sanitized_summary_contains_no_identifiers_or_deltas(self):
         plan = {
             "status": "Succeeded",
@@ -516,6 +546,22 @@ class PipelineTests(unittest.TestCase):
         ):
             with self.assertRaises(pipeline.PipelineError):
                 pipeline.summarize_plan(plan, SUBSCRIPTION, SHA)
+
+    def test_plan_rejects_unsupported_entry_among_valid_changes(self):
+        valid = [
+            {"resourceId": RESOURCE, "changeType": kind}
+            for kind in ("Create", "Modify", "NoChange")
+        ]
+        accepted = pipeline.summarize_plan(
+            {"status": "Succeeded", "changes": valid}, SUBSCRIPTION, SHA
+        )
+        self.assertEqual(accepted["change_counts"], {"Create": 1, "Modify": 1, "NoChange": 1})
+        plan = {
+            "status": "Succeeded",
+            "changes": [*valid, {"resourceId": RESOURCE, "changeType": "Unsupported"}],
+        }
+        with self.assertRaisesRegex(pipeline.PipelineError, "unresolved/unsupported"):
+            pipeline.summarize_plan(plan, SUBSCRIPTION, SHA)
 
     def test_sql_precondition_is_not_vacuous(self):
         for servers in ([], [{}], [{"publicNetworkAccess": "Enabled"}], None):
@@ -693,6 +739,76 @@ class PipelineTests(unittest.TestCase):
                             ROOT / "infra", "test", directory / "summary.json", None
                         )
                 self.assertEqual(az.call_count, 2)
+
+    def test_release_images_persists_and_verifies_consolidated_release_manifest(self):
+        with TemporaryDirectory() as temporary, patch.dict(os.environ, ENV):
+            directory = Path(temporary)
+            server = "example.azurecr.io"
+            tag = f"sha-{SHA}-r123-a1"
+            for index, project in enumerate(pipeline.PROJECTS, start=1):
+                digest = str(index) * 64
+                (directory / f"{project}.json").write_text(
+                    json.dumps(
+                        {
+                            "project": project,
+                            "image": f"{server}/zava-forward-{project}@sha256:{digest}",
+                            "source_sha": SHA,
+                            "tag": tag,
+                        }
+                    )
+                )
+            with patch.object(pipeline, "run", return_value="") as run:
+                resolved = pipeline.release_images(directory, server)
+            self.assertEqual(run.call_count, 4)
+            manifest = json.loads((directory / pipeline.RELEASE_MANIFEST_FILE).read_text())
+            self.assertEqual(manifest["schema_version"], 1)
+            self.assertEqual(manifest["source_sha"], SHA)
+            self.assertEqual(manifest["tag"], tag)
+            self.assertEqual(manifest["hardening"], pipeline.HARDENING_CONTRACT)
+            self.assertEqual(
+                manifest["workloads"]["orchestrator"]["image"], resolved["orchestratorImage"]
+            )
+            self.assertEqual(manifest["workloads"]["import"]["image"], resolved["importImage"])
+            for mutate in (
+                lambda m: m["hardening"].update(uid=0),
+                lambda m: m["projects"]["importer"].update(
+                    image="mcr.microsoft.com/k8se/quickstart@sha256:" + "4" * 64
+                ),
+                lambda m: m["workloads"]["rank-publish"].update(image=resolved["apiImage"]),
+            ):
+                broken = json.loads(json.dumps(manifest))
+                mutate(broken)
+                with self.assertRaises(pipeline.PipelineError):
+                    pipeline.verify_release_manifest(broken, server)
+
+    def test_pr_plan_rejects_placeholder_and_malformed_digest_images(self):
+        def resource(name, image):
+            return {"name": name, "properties": {"template": {"containers": [{"image": image}]}}}
+
+        valid = "example.azurecr.io/app@sha256:" + "b" * 64
+        for bad_image in (
+            "mcr.microsoft.com/k8se/quickstart:latest",
+            "mcr.microsoft.com/k8se/quickstart@sha256:" + "b" * 64,
+            "example.azurecr.io/importer@sha256:short",
+            "example.azurecr.io/importer:sha-1234",
+        ):
+            apps = [
+                resource("ca-forward-test-api", valid),
+                resource("ca-forward-test-agents", valid),
+            ]
+            jobs = [
+                resource("job-forward-test-orchestrator", valid),
+                resource("job-forward-test-import", bad_image),
+            ]
+            with (
+                self.subTest(bad_image=bad_image),
+                TemporaryDirectory() as temporary,
+                patch.dict(os.environ, ENV),
+                patch.object(pipeline, "parameters", return_value={"parameters": {}}),
+                patch.object(pipeline, "az", side_effect=[apps, jobs]),
+                self.assertRaisesRegex(pipeline.PipelineError, "immutable workload images"),
+            ):
+                pipeline.deployment(ROOT / "infra", "test", Path(temporary) / "s.json", None)
 
     def test_failed_what_if_never_applies(self):
         with TemporaryDirectory() as temporary, patch.dict(os.environ, ENV):

@@ -12,11 +12,13 @@ import json
 import hashlib
 import logging
 import os
+import re
 import uuid
 import weakref
 from contextlib import contextmanager
 from copy import deepcopy
 from datetime import UTC, date, datetime
+from typing import Any
 
 from . import challenges, complaints_route, identity, nomination_route
 from . import controls as k
@@ -41,8 +43,25 @@ AUTHORITY_STATUSES = ("Confirmed", "Unclear", "Disputed", "Revoked")
 RESIDENT_RETENTION_YEARS = 5
 RESIDENT_RETENTION_ID = "resident-decisions"
 RESIDENT_FIELDS = ("resident_scopes", "measure_decisions", "representative_authorities",
+                   "authorised_works_exceptions",
                    "resident_safe_contact", "resident_contact_history", "resident_reviews",
                    "nomination_records", "tenure_reports", "tenure_household_inventories")
+AUTHORISED_EXCEPTION_ROLES = frozenset({"Building Safety Liaison", "Retrofit Programme Manager"})
+AUTHORISED_EXCEPTION_RULE_ID = "RULE-002; BRD FR-008; BRD FR-011; BRD FR-014"
+_AUTOMATED_APPROVER_TOKENS = frozenset(
+    {
+        "ai",
+        "agent",
+        "assistant",
+        "auto",
+        "automated",
+        "bot",
+        "copilot",
+        "llm",
+        "model",
+        "system",
+    }
+)
 INTAKE_ACTIONS = ("nomination_record", "nomination_acknowledge", "nomination_correct", "nomination_review",
                   "tenure_intake", "tenure_legal_position",
                   "tenure_verify", "tenure_question_pack", "tenure_question_pack_review",
@@ -85,8 +104,15 @@ UNSET_TENURE_REASON = (
 MANAGERS = ("Retrofit Programme Manager", "Programme Support Officer")
 FORMAL_ROUTES = ("Complaint", "Independent review")
 FOLLOWUP_ACTIONS = ("service_open", "service_update", "service_close", "service_reopen", "service_reassign",
-                    "update_record", "remedy_confirm", "remedy_update", "challenge_open", "challenge_resolve",
-                    "service_supersede_authorize")
+                    "update_record", "remedy_confirm", "remedy_update", "challenge_open",
+                    "challenge_resolve", "service_supersede_authorize")
+CHALLENGE_CHANNELS = ("Digital", "Phone", "Letter", "In person", "Assisted visit",
+                      "Trusted intermediary")
+CHALLENGE_SUBMITTERS = ("The resident", "Their representative", "Nominee")
+NON_RETALIATION_ACTIONS = frozenset({
+    "challenge_open", "challenge_resolve", "nomination_record", "nomination_correct", "nomination_review",
+    "service_open", "service_reopen",
+})
 
 
 class ResidentCommittedError(RuntimeError):
@@ -113,6 +139,12 @@ def _identity_value(identity, key):
 
 def _same_person(first, second):
     return any(_identity_value(first, key) and _identity_value(first, key) == _identity_value(second, key)
+               for key in ("email", "code", "oid"))
+
+
+def _same_signed_in_person(actor, roster_person):
+    """Immutable keys must match; display claims and tenant metadata on an Entra principal differ from the roster row."""
+    return all(_identity_value(actor, key) == _identity_value(roster_person, key)
                for key in ("email", "code", "oid"))
 
 
@@ -619,6 +651,7 @@ def nomination_permissions(store, user, case):
                 name=person.get("name"),
                 role=person.get("role"),
             ))
+    staff_owners.sort(key=lambda owner: str(owner.get("email") or "").lower())
     return dict(
         can_view=True,
         can_write=can_write,
@@ -723,8 +756,47 @@ def _digest(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
+def _is_replaying_sql(store):
+    holder = getattr(store, "local", None)
+    ctx = getattr(holder, "resident_validation", None) if holder is not None else None
+    return bool(ctx and ctx.get("validating"))
+
+
+def _challenge_has_correction(record):
+    return ((record.get("resolution") or {}).get("outcome") == "Correction recorded"
+            or record.get("prior_correction_preserved") is True)
+
+
 def priority_binding(rec):
     """Bind original suggestion inputs separately from the retained human disposition."""
+    kind = rec.get("kind")
+    if kind == "ai_task":
+        prov = rec.get("provenance")
+        raw_hashes = prov.get("source_hashes") if isinstance(prov, dict) else None
+        original = {key: rec.get(key) for key in (
+            "id", "kind", "task", "created", "source", "model", "prompt_version",
+            "policy_version", "case_ids", "ai_output", "workflow_output", "sources", "release",
+        )}
+        original["source_hashes"] = deepcopy(raw_hashes if isinstance(raw_hashes, dict) else {})
+        decision = {
+            "status": deepcopy(rec.get("status")),
+            "resolved_by": deepcopy(rec.get("resolved_by")),
+            "resolved_at": deepcopy(rec.get("resolved_at")),
+            "reason": deepcopy(rec.get("reviewer_reason")
+                               if "reviewer_reason" in rec else rec.get("reason")),
+            "reviewer_action": deepcopy(rec.get("reviewer_action")),
+            "override_text": deepcopy(rec.get("override_text")),
+        }
+        return _digest(original), _digest(decision), decision
+    if kind == "form_staging":
+        original = {key: deepcopy(rec.get(key)) for key in (
+            "id", "kind", "case_id", "schema_id", "schema_version",
+            "schema_digest", "source", "candidates",
+        )}
+        decision = deepcopy(rec.get("human_decision") or {
+            "status": "Proposed", "resolved_by": None, "resolved_at": None, "reason": None,
+        })
+        return _digest(original), _digest(decision), decision
     original = {key: rec.get(key) for key in (
         "id", "created", "source", "model", "prompt_version", "policy_version",
         "source_versions", "case_ids", "items", "workflow_items", "ai_output", "release",
@@ -735,33 +807,140 @@ def priority_binding(rec):
     return _digest(original), _digest(decision), decision
 
 
-def _priority_record(store, rec_id):
+def _form_staging_records(case, catalog_only=False):
+    out = []
+    if not isinstance(case, dict):
+        return out
+    case_id = case.get("id")
+    drafts = case.get("form_reviews") or case.get("form_drafts") or []
+    held_drafts = {
+        hold.get("draft_id")
+        for hold in (case.get("finance_decision_holds") or [])
+        if isinstance(hold, dict)
+        and hold.get("status") == "Held"
+        and isinstance(hold.get("draft_id"), str)
+    }
+    linked_batches = set()
+    for draft in drafts:
+        if not isinstance(draft, dict) or draft.get("id") in held_drafts:
+            continue
+        for row in (draft.get("fields") or {}).values():
+            ev = (row or {}).get("evidence") or {}
+            if isinstance(ev.get("batch_id"), str):
+                linked_batches.add(ev["batch_id"])
+    challenged_ids = {
+        (ch.get("target") or {}).get("id")
+        for ch in (case.get("affected_challenges") or [])
+        if isinstance(ch, dict)
+    } | {
+        ch.get("proposal_id")
+        for ch in (case.get("affected_challenges") or [])
+        if isinstance(ch, dict)
+    }
+    for batch in case.get("form_staging") or []:
+        if not isinstance(batch, dict) or not isinstance(batch.get("id"), str):
+            continue
+        batch_id = batch["id"]
+        prop_id = f"form:{batch_id}"
+        if catalog_only and batch_id not in linked_batches and prop_id not in challenged_ids:
+            continue
+        verified_by = None
+        verified_at = None
+        for draft in drafts:
+            if not isinstance(draft, dict) or draft.get("id") in held_drafts:
+                continue
+            for row in (draft.get("fields") or {}).values():
+                ev = (row or {}).get("evidence") or {}
+                if ev.get("batch_id") == batch_id:
+                    ver = ev.get("verification") or {}
+                    verified_by = ver.get("verified_by") or row.get("updated_by") or draft.get("recorded_by")
+                    verified_at = ver.get("verified_at") or row.get("updated_at") or draft.get("recorded_at")
+                    break
+            if verified_by:
+                break
+        src = batch.get("source") or {}
+        src_ver = (f"{src.get('id')}:{src.get('version')}:{src.get('content_sha256')}"
+                   if src.get("id") else None)
+        pol_ver = (f"{batch.get('schema_id')}@{batch.get('schema_version')}:{batch.get('schema_digest')}"
+                   if batch.get("schema_id") else None)
+        proc = batch.get("processing") or {}
+        out.append(dict(
+            id=prop_id, kind="form_staging", case_id=case_id,
+            case_ids=[case_id] if case_id else [], schema_id=batch.get("schema_id"),
+            schema_version=batch.get("schema_version"), schema_digest=batch.get("schema_digest"),
+            source=proc.get("mode") or "ai", model=proc.get("model"),
+            prompt_version=proc.get("prompt_version"), policy_version=pol_ver,
+            source_versions={case_id: src_ver} if case_id and src_ver else {},
+            candidates=deepcopy(batch.get("candidates") or []),
+            resolved_by=verified_by,
+            human_decision=dict(
+                status="Accepted" if verified_by else "Proposed",
+                resolved_by=verified_by, resolved_at=verified_at, reason=None,
+            ),
+        ))
+    return out
+
+
+def _priority_record(store, rec_id, case=None):
     if not isinstance(rec_id, str) or not rec_id or len(rec_id) > 64:
-        raise ValueError("Choose a recorded priority suggestion for this case.")
+        raise ValueError("Choose a recorded suggestion for this case.")
+    if case is not None and rec_id.startswith("form:"):
+        found = next((r for r in _form_staging_records(case) if r["id"] == rec_id), None)
+        if not found:
+            raise ValueError("Choose a recorded suggestion for this case.")
+        return found
     if hasattr(store, "db"):
         with store.dblock:
             row = store.db.execute("SELECT body FROM recommendations WHERE id=?", (rec_id,)).fetchone()
         rec = json.loads(row[0]) if row else None
     else:
         rec = next((r for r in store.data["recommendations"] if r["id"] == rec_id), None)
-    if not rec or rec.get("kind") == "ai_task":
-        raise ValueError("Choose a recorded priority suggestion for this case.")
+    if not rec:
+        raise ValueError("Choose a recorded suggestion for this case.")
     return rec
+
+
+def _source_version_for(rec, case_id):
+    if rec.get("kind") == "ai_task":
+        prov = rec.get("provenance")
+        hashes = prov.get("source_hashes") if isinstance(prov, dict) else None
+        return hashes.get(case_id) if isinstance(hashes, dict) else None
+    sv = rec.get("source_versions")
+    return sv.get(case_id) if isinstance(sv, dict) else None
+
+
+def _policy_version_for(rec):
+    if rec.get("kind") == "ai_task":
+        return rec.get("policy_version") or rec.get("prompt_version")
+    return rec.get("policy_version")
+
+
+def _policy_id_for(rec):
+    if rec.get("kind") == "ai_task":
+        return f"ai-task:{rec.get('task') or 'task'}"
+    if rec.get("kind") == "form_staging":
+        return f"form-schema:{rec.get('schema_id') or 'form'}"
+    return "priority-ranking"
 
 
 def _dependency(rec, kind, case_id):
     if kind == "proposal":
         return dict(kind=kind, id=rec["id"], version=priority_binding(rec)[0])
+    if kind == "human_decision":
+        if not rec.get("resolved_by"):
+            raise ValueError("This suggestion has no recorded human decision yet. Challenge the suggestion instead.")
+        return dict(kind=kind, id=rec["id"], version=priority_binding(rec)[1])
     if kind == "source":
-        version = (rec.get("source_versions") or {}).get(case_id)
+        version = _source_version_for(rec, case_id)
         if not version:
             raise ValueError("This older suggestion has no recorded source version. Challenge the suggestion instead.")
         return dict(kind=kind, id=case_id, version=version)
     if kind == "policy":
-        if not rec.get("policy_version"):
+        pol_version = _policy_version_for(rec)
+        if not pol_version:
             raise ValueError("This suggestion has no recorded policy version. Challenge the suggestion instead.")
-        return dict(kind=kind, id="priority-ranking", version=rec["policy_version"])
-    raise ValueError("Choose proposal, source or policy.")
+        return dict(kind=kind, id=_policy_id_for(rec), version=pol_version)
+    raise ValueError("Choose proposal, source, policy or human_decision.")
 
 
 def priority_correction_lookup(store, sql_current=False):
@@ -772,7 +951,7 @@ def priority_correction_lookup(store, sql_current=False):
         rows = ((case["id"], record["id"], record["target"])
                 for case in store.cases.values()
                 for record in case.get("affected_challenges", [])
-                if (record.get("resolution") or {}).get("outcome") == "Correction recorded")
+                if _challenge_has_correction(record))
     lookup = {}
     for case_id, record_id, target in rows:
         key = (target["kind"], target["id"], target["version"])
@@ -802,13 +981,20 @@ def challenge_references_visible(store, user):
 
 def priority_challenge_state(store, rec, corrections=None):
     """Derive correction effects without rewriting original proposals or human decisions."""
-    if rec.get("kind") == "ai_task":
-        return dict(stale=False, review_stale=False, challenge_ids=[])
     dependencies = [_dependency(rec, "proposal", None)]
+    if rec.get("kind") == "ai_task":
+        prov = rec.get("provenance")
+        raw_hashes = prov.get("source_hashes") if isinstance(prov, dict) else None
+        source_map = raw_hashes if isinstance(raw_hashes, dict) else {}
+    else:
+        sv = rec.get("source_versions")
+        source_map = sv if isinstance(sv, dict) else {}
     dependencies += [dict(kind="source", id=cid, version=version)
-                     for cid, version in (rec.get("source_versions") or {}).items()]
-    if rec.get("policy_version"):
+                     for cid, version in source_map.items() if version]
+    if _policy_version_for(rec):
         dependencies.append(_dependency(rec, "policy", None))
+    if rec.get("resolved_by"):
+        dependencies.append(_dependency(rec, "human_decision", None))
     if corrections is None:
         corrections = priority_correction_lookup(store)
     causes = set().union(*(corrections.get((d["kind"], d["id"], d["version"]), set())
@@ -825,8 +1011,9 @@ def _priority_includes_case(rec, case_id):
 def challenge_catalog(store, case_id, *, can_view_intake=True, can_view_reason=True):
     out = []
     corrections = priority_correction_lookup(store)
+    ai_rows = []
     for rec in store.data["recommendations"]:
-        if rec.get("kind") == "ai_task" or not _priority_includes_case(rec, case_id):
+        if not _priority_includes_case(rec, case_id):
             continue
         original, decision_version, decision = priority_binding(rec)
         entry = dict(proposal_id=rec["id"], proposal_version=original,
@@ -928,13 +1115,29 @@ def _operation(store, user, case_id, body):
         try:
             actor = _actor(store, user)
             k.require_role(actor, k.RESIDENT_VIEW_ROLES, "current resident-workflow staff")
-            if actor != _person(store, user.get("email")):
+            if not _same_signed_in_person(actor, _person(store, user.get("email"))):
                 raise PermissionError("Reload your current staff identity before recording this step.")
             c = store._case(case_id)
             before = deepcopy(c)
+            before_ranking = store._ranking() if body["action"] in NON_RETALIATION_ACTIONS else None
             if sql:
                 context["rowversion"] = store._rv[case_id]
             detail = getattr(store, "_res_" + body["action"])(actor, c, context["body"])
+            if before_ranking is not None:
+                store._ranks = None
+                after_ranking = store._ranking()
+                added_hazard = len(c.get("hazards", [])) > len(before.get("hazards", []))
+                before_entry = before_ranking.get(case_id)
+                after_entry = after_ranking.get(case_id)
+                lowered = (
+                    before_entry is not None
+                    and after_entry is not None
+                    and after_entry["rank"] > before_entry["rank"]
+                )
+                if lowered or (not added_hazard and after_ranking != before_ranking):
+                    raise challenges.ChallengeSafeguardError(
+                        "Challenge or correction operation lowered or altered case priority ranking."
+                    )
             store.audit(actor["email"], f"resident_{body['action']}", case_id, detail)
             saving = True
             store.save()
@@ -1139,10 +1342,142 @@ def require_context(c, body):
     return measure, context
 
 
-def authority_for(c, ref, task, measure, context, version=None):
-    if retention_schedule(c)["expired"]:
+def _resolve_gate_clock(now: Any) -> tuple[datetime, str, str | None]:
+    from . import resident_journey_design
+
+    if now is None:
+        return datetime.now(UTC), k.today(), None
+    if isinstance(now, datetime):
+        parsed_dt = resident_journey_design.parse_iso_utc(now)
+        if parsed_dt is None:
+            raise ValueError("Invalid naive datetime reference clock.")
+        return parsed_dt, parsed_dt.date().isoformat(), parsed_dt.isoformat()
+    if not isinstance(now, str) or not now.strip():
+        raise ValueError("Invalid reference clock.")
+    raw = now.strip()
+    if len(raw) == 10:
+        day = date.fromisoformat(raw)
+        if day.isoformat() != raw:
+            raise ValueError("Invalid ISO reference date.")
+        dt = datetime(day.year, day.month, day.day, 12, 0, 0, tzinfo=UTC)
+        return dt, day.isoformat(), dt.isoformat()
+    parsed = resident_journey_design.parse_iso_utc(raw)
+    if parsed is None:
+        raise ValueError("Invalid ISO UTC reference timestamp.")
+    return parsed, parsed.date().isoformat(), parsed.isoformat()
+
+
+def _iso_day(value: object) -> str | None:
+    if not isinstance(value, str) or len(value) != 10:
+        return None
+    try:
+        parsed = date.fromisoformat(value)
+    except ValueError:
+        return None
+    return value if parsed.isoformat() == value else None
+
+
+def _clean_exception_field(value: object, *, limit: int = 300) -> str | None:
+    if not isinstance(value, str):
+        return None
+    cleaned = value.strip()
+    if not cleaned or len(cleaned) > limit:
+        return None
+    if k.is_memory_reference(cleaned) or k.is_sensor_reference(cleaned):
+        return None
+    return cleaned
+
+
+def validate_authorised_works_exception(
+    c: Any,
+    measure: Any,
+    context: Any,
+    *,
+    now: str | None = None,
+) -> dict[str, Any]:
+    """Fail-closed validator for an explicitly authorised works exception (RULE-002, FR-008, FR-014)."""
+    from . import resident_journey_design
+
+    def deny(reason: str) -> dict[str, Any]:
+        return dict(
+            permitted=False,
+            reason=reason,
+            rule_id=AUTHORISED_EXCEPTION_RULE_ID,
+            exception=None,
+        )
+
+    if not isinstance(c, dict):
+        return deny("Case record is missing or malformed.")
+    if not isinstance(measure, str) or measure not in case_measures(c):
+        return deny("Exception measure does not belong to this home.")
+    if (
+        not isinstance(context, dict)
+        or type(context.get("revision")) is not int
+        or type(context.get("design_version")) is not int
+    ):
+        return deny("Current measure scope and design context are unverified.")
+    try:
+        now_utc, check_day, _ = _resolve_gate_clock(now)
+    except ValueError:
+        return deny("Reference clock is missing or malformed.")
+    raw_map = c.get("authorised_works_exceptions")
+    if not isinstance(raw_map, dict):
+        return deny("No authorised works exception is recorded for this measure.")
+    versions = raw_map.get(measure)
+    if not isinstance(versions, list) or not versions or any(not isinstance(v, dict) for v in versions):
+        return deny("No valid authorised works exception list is recorded for this measure.")
+    exc = versions[-1]
+    if exc.get("status") != "Authorised":
+        return deny("Latest works exception is not in 'Authorised' status.")
+    if (
+        exc.get("measure") != measure
+        or type(exc.get("context_revision")) is not int
+        or exc["context_revision"] != context["revision"]
+        or type(exc.get("design_version")) is not int
+        or exc["design_version"] != context["design_version"]
+    ):
+        return deny("Works exception does not match the active scope revision and design version.")
+    for field_name in ("reference", "rule_source", "reason", "notification_ref"):
+        if _clean_exception_field(exc.get(field_name)) is None:
+            return deny(f"Works exception {field_name} is missing, out of bounds, or cites prohibited telemetry/memory.")
+    approver = _clean_exception_field(exc.get("approved_by"), limit=120)
+    if approver is None:
+        return deny("Works exception requires a named human approver.")
+    tokens = [tok for tok in re.split(r"[^a-z0-9]+", approver.casefold()) if tok]
+    if not tokens or any(tok in _AUTOMATED_APPROVER_TOKENS for tok in tokens):
+        return deny("Works exception cannot be approved by an automated or AI actor.")
+    role = exc.get("approved_by_role")
+    if not isinstance(role, str) or role.strip() not in AUTHORISED_EXCEPTION_ROLES:
+        return deny("Works exception requires Building Safety Liaison or Retrofit Programme Manager authority.")
+    effective_day = _iso_day(exc.get("effective_date"))
+    review_day = _iso_day(exc.get("review_date"))
+    if effective_day is None or review_day is None or not (effective_day <= check_day < review_day):
+        return deny("Works exception is outside its effective/review date window.")
+    if "expires_at" in exc and exc.get("expires_at") is not None:
+        parsed_exp = resident_journey_design.parse_iso_utc(exc.get("expires_at"))
+        if parsed_exp is None or now_utc >= parsed_exp:
+            return deny("Works exception has expired or has a malformed expiry timestamp.")
+    if type(exc.get("resident_notified")) is not bool or exc.get("resident_notified") is not True:
+        return deny("Works exception requires confirmed resident notification before work starts.")
+    return dict(
+        permitted=True,
+        reason="Valid human-authorised, resident-notified works exception is active for the current scope and design.",
+        rule_id=AUTHORISED_EXCEPTION_RULE_ID,
+        exception=deepcopy(exc),
+    )
+
+
+def authority_for(c, ref, task, measure, context, version=None, *, now=None):
+    from . import resident_journey_design
+
+    try:
+        now_utc, check_day, _ = _resolve_gate_clock(now)
+    except ValueError as err:
+        raise ValueError("Representative authority needs human confirmation through the safe contact route.") from err
+    if retention_schedule(c, today=check_day)["expired"]:
         raise ValueError("Resident records are past retention. Obtain current human-reviewed evidence.")
-    versions = c.get("representative_authorities", {}).get(ref, []) if isinstance(ref, str) else []
+    clean_ref = resident_journey_design.valid_representative_ref(ref)
+    versions = c.get("representative_authorities", {}).get(clean_ref, []) if clean_ref else []
     a = versions[-1] if versions else None
     if not a or (version is not None and a["version"] != version):
         raise ValueError("Representative authority needs human confirmation through the safe contact route.")
@@ -1150,18 +1485,22 @@ def authority_for(c, ref, task, measure, context, version=None):
             or a["measure"] != measure or a["context_revision"] != context["revision"]
             or a["safe_contact_ref"] != c.get("resident_safe_contact")
             or a["safe_contact_revision"] != len(c.get("resident_contact_history", []))
-            or not a["authority_date"] <= k.today() < a["review_date"]):
+            or not a["authority_date"] <= check_day < a["review_date"]):
         raise ValueError("Representative authority needs human confirmation through the safe contact route.")
+    if "expires_at" in a:
+        parsed_exp = resident_journey_design.parse_iso_utc(a.get("expires_at"))
+        if parsed_exp is None or now_utc >= parsed_exp:
+            raise ValueError("Representative authority needs human confirmation through the safe contact route.")
     return a
 
 
-def resident_gate(c, bindings=None):
+def resident_gate(c, bindings=None, *, now=None):
     """Case advance checks all measures; scoped work checks only explicit bindings."""
     if _inventory_managed(c):
         return [*_inventory_refusal(c), TENURE_HOLD]
     if not _home_tenure_recorded(c):
         return [UNSET_TENURE_REASON]
-    return _resident_decision_gate(c, bindings)
+    return _resident_decision_gate(c, bindings, now=now)
 
 
 def _home_tenure_recorded(c):
@@ -1170,8 +1509,13 @@ def _home_tenure_recorded(c):
     return isinstance(tenure, str) and tenure.strip().casefold() not in ("", "unknown")
 
 
-def _resident_decision_gate(c, bindings=None):
-    if retention_schedule(c)["expired"]:
+def _resident_decision_gate(c, bindings=None, *, now=None):
+    try:
+        _, check_day, now_iso = _resolve_gate_clock(now)
+    except ValueError:
+        return ["Resident decision or authority needs confirmation. Owner: Resident Liaison Officer. "
+                "Next action: review the affected measure's current scope, supplied answer and authority."]
+    if retention_schedule(c, today=check_day)["expired"]:
         return ["Resident records are past retention. Owner: Resident Liaison Officer. Next action: obtain current human-reviewed evidence."]
     if bindings is None:
         bindings = [dict(measure=m, context_revision=(current_context(c, m) or {}).get("revision"))
@@ -1187,15 +1531,18 @@ def _resident_decision_gate(c, bindings=None):
             if measure in seen:
                 raise ValueError("Choose each measure once.")
             seen.add(measure)
-            versions = c.get("measure_decisions", {}).get(measure, [])
-            answer = versions[-1] if versions else {}
-            if answer.get("context_revision") != context["revision"] or answer.get("status") != "Accepted":
-                raise ValueError("A current supplied resident acceptance is needed.")
             if c.get("resident_reviews", {}).get(measure, {}).get("status") == "Needs human review":
                 raise ValueError("Human review is needed.")
-            if answer.get("answered_by") == ANSWERED_BY[1]:
-                authority_for(c, answer.get("representative_ref"), "Works decision", measure, context,
-                              answer.get("authority_version"))
+            versions = c.get("measure_decisions", {}).get(measure, [])
+            answer = versions[-1] if versions else {}
+            if answer.get("context_revision") == context["revision"] and answer.get("status") == "Accepted":
+                if answer.get("answered_by") == ANSWERED_BY[1]:
+                    authority_for(c, answer.get("representative_ref"), "Works decision", measure, context,
+                                  answer.get("authority_version"), now=now_iso)
+            else:
+                exc_check = validate_authorised_works_exception(c, measure, context, now=now_iso)
+                if not exc_check["permitted"]:
+                    raise ValueError("A current supplied resident acceptance is needed.")
         except ValueError:
             why.append("Resident decision or authority needs confirmation. Owner: Resident Liaison Officer. "
                        "Next action: review the affected measure's current scope, supplied answer and authority.")
@@ -1915,19 +2262,35 @@ class ResidentDecisionMixin:
         return f"safe contact revision {len(c['resident_contact_history'])} recorded"
 
     def _res_representative_record(self, user, c, body):
+        from . import resident_journey_design
+
         measure, context = require_context(c, body)
         ref = k.text(body.get("representative_ref"), "the representative reference", 80)
+        if resident_journey_design.valid_representative_ref(ref) is None:
+            raise ValueError("Enter a specific representative reference, not Unknown.")
         status = k.choice(body.get("status"), AUTHORITY_STATUSES, "the authority status")
         tasks = body.get("tasks")
         if not isinstance(tasks, list) or not tasks or any(t not in AUTHORITY_TASKS for t in tasks):
             raise ValueError("Choose the representative's evidenced tasks.")
         try:
-            start = date.fromisoformat(body.get("authority_date", "")).isoformat()
-            review = date.fromisoformat(body.get("review_date", "")).isoformat()
+            start_day = date.fromisoformat(body.get("authority_date", ""))
+            review_day = date.fromisoformat(body.get("review_date", ""))
+            start = start_day.isoformat()
+            review = review_day.isoformat()
         except (TypeError, ValueError):
             raise ValueError("Enter the authority and review dates as YYYY-MM-DD.")
         if start > k.today() or review <= start:
             raise ValueError("Authority cannot start in the future and review must follow its source date.")
+        expires_iso = None
+        if "expires_at" in body:
+            parsed_exp = resident_journey_design.parse_iso_utc(body.get("expires_at"))
+            if parsed_exp is None:
+                raise ValueError("Enter the authority expiry timestamp with a time and timezone.")
+            start_utc = datetime(start_day.year, start_day.month, start_day.day, 0, 0, 0, tzinfo=UTC)
+            review_utc = datetime(review_day.year, review_day.month, review_day.day, 0, 0, 0, tzinfo=UTC)
+            if parsed_exp <= start_utc or parsed_exp > review_utc:
+                raise ValueError("Authority expiry must fall after its start date and within its review date.")
+            expires_iso = resident_journey_design.format_iso_utc(parsed_exp)
         safe = k.text(body.get("safe_contact_ref"), "the resident-confirmed safe contact reference", 80)
         if safe != c.get("resident_safe_contact"):
             raise ValueError("Confirm the resident's current safe contact route first.")
@@ -1940,6 +2303,8 @@ class ResidentDecisionMixin:
                    safe_contact_ref=safe, safe_contact_revision=len(c.get("resident_contact_history", [])),
                    source=source, resident_wishes=wishes,
                    recorded_by=user["email"], at=k.now())
+        if expires_iso is not None:
+            rec["expires_at"] = expires_iso
         c.setdefault("representative_authorities", {}).setdefault(ref, []).append(rec)
         return f"representative authority version {rec['version']} recorded"
 
@@ -1980,6 +2345,7 @@ class ResidentDecisionMixin:
         return f"scope revision {context['revision']}: {status} decision v{len(versions)}"
 
     def _res_service_open(self, user, c, body):
+        before_srv = deepcopy(c)
         route = k.choice(body.get("route"), ROUTES, "the route")
         owners = []
         for key, label in (("service_owner", "who deals with it"), ("redress_owner", "who owns the redress")):
@@ -2024,6 +2390,9 @@ class ResidentDecisionMixin:
                    review_decision_version=body.get("review_decision_version") if route == "Independent review" else None,
                    history=[])
         c.setdefault("service_requests", []).append(req)
+        challenges.assert_no_adverse_challenge_effects(
+            before_srv, c, allowed_case_keys=("service_requests",)
+        )
         return f"{req['id']} {route} opened"
 
     def _res_service_forward(self, user, c, body):
@@ -2214,6 +2583,7 @@ class ResidentDecisionMixin:
         return f"{req['id']} {key} response responsibility reassigned; remedy unchanged"
 
     def _res_service_reopen(self, user, c, body):
+        before_srv = deepcopy(c)
         req = k.find(c.get("service_requests", []), body.get("id"), "request")
         _version(body, req)
         if req["status"] != "Closed":
@@ -2225,6 +2595,9 @@ class ResidentDecisionMixin:
         note = k.text(body.get("note"), "why the response is reopened")
         req["status"] = "Open"
         self._response_event(req, user, note)
+        challenges.assert_no_adverse_challenge_effects(
+            before_srv, c, allowed_case_keys=("service_requests",)
+        )
         return f"{req['id']} response reopened; remedy unchanged"
 
     def _res_update_record(self, user, c, body):
@@ -2296,3 +2669,93 @@ class ResidentDecisionMixin:
         remedy["history"].append(dict(old=old, status=status, actor=_identity(user),
                                        at=remedy["at"], note=note, version=remedy["version"]))
         return f"{req['id']} remedy {status}; response unchanged"
+
+    def _representative_sessions(self):
+        from . import resident_journey_design
+
+        sessions = getattr(self, "_rep_session_store", None)
+        if sessions is None:
+            sessions = resident_journey_design.RepresentativeSessionStore()
+            self._rep_session_store = sessions
+        return sessions
+
+    def representative_view(self, user, cid, representative_ref, *, now=None, session_id=None):
+        from . import resident_journey_design
+
+        with self.lock:
+            k.require_role(user, k.RESIDENT_VIEW_ROLES, "current resident-workflow staff")
+            c = self._case(cid)
+            orders = getattr(self, "work_orders", ())
+            if isinstance(session_id, str) and session_id.strip():
+                sid = session_id.strip()
+                sessions = self._representative_sessions()
+                if sessions.get(sid) is not None:
+                    return sessions.session_view(
+                        sid,
+                        c,
+                        now=now,
+                        work_orders=orders,
+                        include_case_id=True,
+                    )
+                _, view = sessions.open_session(
+                    c,
+                    representative_ref,
+                    now=now,
+                    work_orders=orders,
+                    session_id=sid,
+                    include_case_id=True,
+                )
+                return view
+            return resident_journey_design.project_representative_view(
+                c,
+                representative_ref,
+                now=now,
+                work_orders=orders,
+                include_case_id=True,
+            )
+
+    def representative_action_check(self, user, cid, body, *, now=None):
+        from . import resident_journey_design
+
+        if not isinstance(body, dict):
+            raise ValueError("Supply the representative action check payload.")
+        with self.lock:
+            k.require_role(user, k.RESIDENT_VIEW_ROLES, "current resident-workflow staff")
+            c = self._case(cid)
+            orders = getattr(self, "work_orders", ())
+            rep_ref = body.get("representative_ref")
+            act = body.get("action")
+            measure = body.get("measure")
+            assistant_topic = body.get("assistant_topic")
+            session_id = body.get("session_id")
+            if isinstance(session_id, str) and session_id.strip():
+                sid = session_id.strip()
+                sessions = self._representative_sessions()
+                if sessions.get(sid) is None and rep_ref is not None:
+                    sessions.open_session(
+                        c,
+                        rep_ref,
+                        now=now,
+                        work_orders=orders,
+                        session_id=sid,
+                        include_case_id=False,
+                    )
+                return sessions.session_action(
+                    sid,
+                    c,
+                    act,
+                    measure=measure,
+                    assistant_topic=assistant_topic,
+                    now=now,
+                    work_orders=orders,
+                )
+            return resident_journey_design.enforce_representative_action(
+                c,
+                rep_ref,
+                act,
+                measure=measure,
+                assistant_topic=assistant_topic,
+                now=now,
+                work_orders=orders,
+            )
+

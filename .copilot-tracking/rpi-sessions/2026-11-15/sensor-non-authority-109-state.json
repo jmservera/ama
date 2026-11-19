@@ -1,0 +1,69 @@
+{
+  "task_id": "issue-109-sensor-non-authority",
+  "task_slug": "sensor-non-authority-109",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/sensor-non-authority-109-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/sensor-non-authority-109-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/sensor-non-authority-109-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/sensor-non-authority-109-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/sensor-non-authority-109-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-15/sensor-non-authority-109-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Confirmed automatic mode for continuous full RPI loop through Review without stopping at intermediate phases",
+      "status": "confirmed",
+      "evidence": "User prompt instruction: Run the full RPI loop continuously in a single run without stopping after any phase summary"
+    },
+    {
+      "decision": "Focused validation tier on branch feat/iot-109-sensor-non-authority targeting feat/demo-164-chat-grounding-provenance-0900 (#1641): src/core unit tests, mypy, ruff check, ruff format --check, and python3 tools/rename-zava-tests.py; exclude tools/rpi-checks.py and git push",
+      "status": "confirmed",
+      "evidence": "User prompt instructions"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready; converged on Option A (layered src/core non-authority runtime guards + end-to-end src/core acceptance suite)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/sensor-non-authority-109-research.md (C1..C18)"
+    },
+    {
+      "decision": "Plan critique execution Complete; verdict Revise; applied direct planner corrections PC-001..PC-004 (typed Callable/Protocol bindings for mypy --strict, workflows/doc_controls/WindowReceipt side-channel guards, _view unknown-key allowlist preservation, branch feat/iot-109-sensor-non-authority and rename-zava-tests.py)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/sensor-non-authority-109-plan-critique.md"
+    },
+    {
+      "decision": "Review execution Complete; outcome Conformant (Verdict: PASS across all 5 acceptance criteria of #109 src/core non-authority slice); assessed full boundary (P01..P03, FR-PLAN-01..FR-PLAN-05, NFR-PLAN-01..NFR-PLAN-02, PC-001..PC-004, 9 tests in test_sensor_non_authority.py, 576 src/core unit tests + 25 migration tests, ruff, and strict mypy); routed RV-001 [Low] and Epic #109 / Issue #440 cloud stabilization to post-Review follow-ups",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-15/sensor-non-authority-109-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection among ranked follow-up choices (1, 2, or 3), Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Graduate controls.py and ranking.py out of ADR-0006 mypy/ruff-format exclusions in src/core/pyproject.toml",
+      "rationale": "High ease of implementation and strong static-typing leverage: adds native type signatures to small non-authority guard surfaces and removes cast(...) wrappers in strict tests",
+      "evidence": "RV-001 in .copilot-tracking/reviews/2026-11-15/sensor-non-authority-109-review.md and src/core/pyproject.toml"
+    },
+    {
+      "rank": 2,
+      "task": "Extend src/api/tests/test_sensor_non_authority_boundary.py with active HTTP refusal assertions for sensor-cited hazard, clock, and hold requests",
+      "rationale": "Moderate effort and high end-to-end boundary value: complements passive SQL snapshot checks in src/api with HTTP-layer verification of the new src/core active refusal guards",
+      "evidence": ".copilot-tracking/research/2026-11-15/sensor-non-authority-109-research.md (C18: src/api/tests/test_sensor_non_authority_boundary.py)"
+    },
+    {
+      "rank": 3,
+      "task": "Complete Issue #440 / Epic #109 scoped stabilization checkpoint and live Azure IoT Hub + Azure SQL restart persistence verification",
+      "rationale": "High epic-closure impact for #109 (AC-066), ranked third because it requires external Azure IoT Hub / Azure SQL cloud environment execution beyond offline repository code",
+      "evidence": "docs/prds/zava-forward-retrofit-programme-demonstrator.md (AC-066) and GitHub Issue #109 / #440"
+    }
+  ]
+}

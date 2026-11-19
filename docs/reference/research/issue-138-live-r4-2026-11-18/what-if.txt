@@ -1,0 +1,3 @@
+status Succeeded
+{'Ignore': 81, 'Create': 99, 'Modify': 15, 'Unsupported': 14}
+summarize_plan refused: What-if includes a resource outside ama

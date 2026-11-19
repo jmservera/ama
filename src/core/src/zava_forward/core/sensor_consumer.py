@@ -16,7 +16,7 @@ from .mssqlstore import MssqlStore
 from .sensor_sql import SensorMssqlConnector
 from .sensor_view import home_digest
 from .sqlstore import SqlStore
-from .synthetic.live_readings import LIVE_VERSIONS, SUNLIGHT_UNIT
+from .synthetic.live_readings import LIVE_VERSIONS, SUNLIGHT_UNIT, reading_id_for
 from .synthetic.live_readings import SCHEMA_VERSION as LIVE_SCHEMA_VERSION
 from .synthetic.sensor_faults import READING_FIELDS, SCHEMA_VERSION
 from .synthetic.sensor_identity import home_key
@@ -617,7 +617,17 @@ class SensorConsumer:
             reading = reading.replace("VARCHAR(96)", f"VARCHAR(96) {self._collation}")
             reading = reading.replace("NVARCHAR(128)", f"NVARCHAR(128) {self._collation}")
             tables["sensor_reading"] = reading.rstrip(";")
+            register = STOCK_SQL_DDL.split("CREATE TABLE sensor_register", 1)[1]
+            register = register.split("CREATE TABLE sensor_reading", 1)[0]
+            register = register.replace("VARCHAR(73)", f"VARCHAR(73) {self._collation}")
+            register = register.replace("NVARCHAR(128)", f"NVARCHAR(128) {self._collation}")
+            tables["sensor_register"] = register.strip().rstrip(";")
         else:
+            tables["sensor_register"] = (
+                "(sensor_id TEXT PRIMARY KEY, home_id TEXT NOT NULL, dwelling_type TEXT,"
+                " age_band TEXT, retrofitted TEXT, heating_pattern TEXT, fault_profile TEXT,"
+                " source_type TEXT NOT NULL)"
+            )
             tables["sensor_reading"] = (
                 "("
                 + ", ".join(f"{c} TEXT" for c in READING_COLUMNS)
@@ -768,7 +778,7 @@ class SensorConsumer:
         five_minute = row["schema_version"] == LIVE_SCHEMA_VERSION
         if observed.second or (five_minute and observed.minute % 5):
             return "UTC_TIME"
-        if row["reading_id"] != f"LIVE-{row['sensor_id']}-{observed:%Y%m%dT%H%M}Z":
+        if row["reading_id"] != reading_id_for(str(row["sensor_id"]), observed):
             return "IDENTITY"
         for name in ("temperature_c", "humidity_pct"):
             if not NUMBER.fullmatch(str(row[name])) or abs(Decimal(str(row[name]))) > 999.99:
@@ -1014,6 +1024,12 @@ class SensorConsumer:
                     f" VALUES ({', '.join('?' for _ in READING_COLUMNS)})",
                     values,
                 )
+                db.execute(
+                    "INSERT INTO sensor_register (sensor_id, home_id, source_type)"
+                    " SELECT ?, ?, ? WHERE NOT EXISTS"
+                    " (SELECT 1 FROM sensor_register WHERE sensor_id=?)",
+                    (row["sensor_id"], row["home_id"], row["source_type"], row["sensor_id"]),
+                )
             db.execute(
                 "INSERT INTO sensor_delivery"
                 " (reference, status, reason, received_at, observation_body)"
@@ -1104,7 +1120,7 @@ class SensorConsumer:
                 window = " AND observed_at BETWEEN ? AND ?" if bounds else ""
                 stored = db.execute(
                     f"SELECT {', '.join(READING_COLUMNS)} FROM sensor_reading"
-                    f" WHERE home_id=?{window} ORDER BY observed_at, sensor_id",
+                    f" WHERE home_id=?{window} ORDER BY observed_at, sensor_id, reading_id",
                     (home, *bounds.get(home, ())),
                 ).fetchall()
                 fetched.extend(stored)

@@ -29,6 +29,7 @@ HOST = "zf-test-hub.azure-devices.net"
 RUN = "run-185"
 SECRET = "PRIVATE-SENTINEL-SECRET"
 TOKEN = "sentinel-entra-token-value"
+GENERATED_KEY = "HubGeneratedSentinelKey0123456789abcdefABCDEF="
 MARKER = dra.MARKER_PREFIX + RUN
 IDS = ("SYN-A1", "SYN-A2")
 
@@ -197,6 +198,12 @@ class HubSimulator:
         }
         if listing and self.list_omits_reason:
             view.pop("statusReason", None)
+        auth = current["body"].get("authentication")
+        if isinstance(auth, dict) and auth.get("type") == "sas":
+            view["authentication"] = {
+                "type": "sas",
+                "symmetricKey": {"primaryKey": GENERATED_KEY, "secondaryKey": GENERATED_KEY[::-1]},
+            }
         return view
 
     def reply(self, request: Any, status: int, body: Any) -> Any:
@@ -345,6 +352,70 @@ class ImportAndRefusalTests(HubCase):
         ):
             self.assertEqual(self.refused(call).code, "NOT_ENROLLED")
         self.assertEqual((self.credential.calls, self.hub.requests), ([], []))
+
+
+def make_sas_spec(ids: Sequence[str] = IDS, run: str = RUN) -> dra.EnrollmentSpec:
+    return dra.EnrollmentSpec(run, tuple(dra.SasEnrollment(d) for d in ids))
+
+
+class SasEnrollmentTests(HubCase):
+    def test_create_requests_hub_generated_keys_disabled_and_create_only(self) -> None:
+        registry = self.registry(make_sas_spec())
+        registry.create("SYN-A1", RUN)
+        (put,) = self.hub.seen("PUT")
+        self.assertEqual(
+            put.body,
+            {
+                "deviceId": "SYN-A1",
+                "status": "disabled",
+                "statusReason": MARKER,
+                "authentication": {"type": "sas"},
+                "capabilities": {"iotEdge": False},
+            },
+        )
+        self.assertEqual(put.header("If-None-Match"), "*")
+        self.assertNotIn("symmetricKey", json.dumps(put.body))
+
+    def test_hub_generated_keys_never_reach_the_caller_logs_errors_or_repr(self) -> None:
+        registry = self.registry(make_sas_spec())
+        with self.assertNoLogs():
+            registry.create("SYN-A1", RUN)
+            self.assertEqual(registry.run_of("SYN-A1"), RUN)
+            self.assertEqual(registry.list_run(RUN), ["SYN-A1"])
+        self.assertEqual(
+            self.hub.view("SYN-A1")["authentication"]["symmetricKey"]["primaryKey"], GENERATED_KEY
+        )
+        self.assertNotIn(GENERATED_KEY, repr(registry))
+        error = self.refused(lambda: registry.create("SYN-A1", RUN))
+        self.assertEqual(error.code, "IDENTITY_CONFLICT")
+        text = "".join(traceback.format_exception(error)) + repr(error)
+        self.assertNotIn(GENERATED_KEY, text)
+
+    def test_owned_sas_identity_is_deleted_with_the_exact_etag_and_leaves_none(self) -> None:
+        registry = self.registry(make_sas_spec())
+        for device in IDS:
+            registry.create(device, RUN)
+        for device in IDS:
+            registry.delete(device, RUN)
+        (first, second) = self.hub.seen("DELETE")
+        self.assertTrue((first.header("If-Match") or "").startswith('"ETAG'))
+        self.assertNotEqual(first.header("If-Match"), "*")
+        self.assertEqual(second.path, "/devices/SYN-A2")
+        self.assertEqual(registry.list_run(RUN), [])
+        self.assertEqual(self.hub.devices, {})
+
+    def test_mixed_enrolments_are_accepted_and_invalid_sas_ids_are_refused(self) -> None:
+        spec = dra.EnrollmentSpec(
+            RUN, (dra.SasEnrollment("SYN-A1"), dra.X509Enrollment("SYN-A2", thumb(2)))
+        )
+        self.registry(spec).create("SYN-A1", RUN)
+        bad_ids: list[Any] = ["A1", "SIM-A1", "", None, 7]
+        for bad in bad_ids:
+            with self.subTest(bad=bad), self.assertRaises(dra.RegistryError) as caught:
+                dra.SasEnrollment(bad)
+            self.assertEqual(caught.exception.code, "INVALID_ENROLLMENT")
+        error = self.refused(lambda: dra.EnrollmentSpec(RUN, (dra.SasEnrollment("SYN-A1"),) * 2))
+        self.assertEqual(error.code, "INVALID_ENROLLMENT")
 
 
 class CreateTests(HubCase):

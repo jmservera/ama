@@ -1,0 +1,27 @@
+## healthz demo api
+200
+## resident app
+{
+  "cmd": null,
+  "fqdn": "ca-resident-demo.[env-domain].uksouth.azurecontainerapps.io",
+  "img": "[registry].azurecr.io/zava-resident-demo@sha256:65481780cb3f5a55621f637fa783230004b263085dcaece1dfca93a928bbbd19",
+  "rev": "ca-resident-demo--0000012"
+}
+## live references to legacy
+.github/copilot-instructions.md:59:infra scripts; do not add `PYTHONPATH=mvp` workarounds. Image context is `src/`
+.github/rubric/README.md:594:the scored solution code. `solution-code` now includes `mvp/zavaforward_mvp/`,
+.github/rubric/README.md:612:counted through `src/**/*`, so the `mvp/zavaforward_mvp`, `mvp/web`, `mvp/tests`
+.github/rubric/scripts/test_safe_output_runtime.py:162:    source = "mvp/zavaforward_mvp/app.py"
+src/README.md:566:   fixtures, never a `PYTHONPATH=mvp` workaround.
+src/core/src/zava_forward/core/synthetic/cutover_audit.py:15:TOKEN = re.compile(r"mvp-ci\.yml|mvp-validation\.yml|zavaforward_mvp|(?<!\w)(?:mvp|prototype)/")
+src/core/src/zava_forward/core/synthetic/cutover_audit.py:38:    "mvp/zavaforward_mvp/ai_registry.py": ("src/core/src/zava_forward/core/ai_registry.py",),
+src/core/src/zava_forward/core/synthetic/cutover_audit.py:40:    "mvp/zavaforward_mvp/assistants.py": (
+tools/check-legacy-references.py:5:package names `zavaforward_mvp` and `properwarm_mvp` only in dated historical
+tools/check-legacy-references.py:20:PACKAGE_TOKEN = re.compile(r"zavaforward_mvp|properwarm_mvp")
+## src dockerfiles
+src/agents/Dockerfile
+src/api/Dockerfile
+src/importer/Dockerfile
+src/orchestrator/Dockerfile
+ls: cannot access 'mvp': No such file or directory
+ls: cannot access 'prototype': No such file or directory

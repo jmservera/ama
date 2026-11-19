@@ -1,0 +1,2 @@
+log-cutover-test	Disabled
+appi-cutover-test	Disabled

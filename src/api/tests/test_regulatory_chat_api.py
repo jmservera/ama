@@ -59,6 +59,19 @@ class RegulatoryApi(unittest.TestCase):
         )
         self.assertEqual(self.call(route, email="exercise-owner@example.test")[0], 404)
 
+    def test_plain_language_flag_adds_summary_and_keeps_sources(self) -> None:
+        route = f"/api/chat/regulatory/threads/{self.start()}/ask"
+        question = "What are the hazard sources?"
+        plain = self.call(route, dict(content=question, plain_language=True))[1]
+        normal = self.call(route, dict(content=question))[1]
+        self.assertEqual(plain["kind"], normal["kind"])
+        self.assertEqual(plain["citations"], normal["citations"])
+        self.assertIs(plain["plain_language"], True)
+        self.assertIn("plain_summary", plain)
+        self.assertNotIn("plain_summary", normal)
+        self.assertEqual(self.call(route, dict(content=question, plain_language="yes"))[0], 400)
+        self.assertEqual(self.call(route, dict(content=question, mode="plain"))[0], 400)
+
     def setUp(self) -> None:
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)

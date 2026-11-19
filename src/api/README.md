@@ -2,9 +2,92 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-31
+ms.date: 2026-11-18
 ms.topic: reference
 ---
+
+## Opt-in operational tracing
+
+`ZF_OTEL_EXPORTER=otlp` explicitly initializes the content-free pipeline in API
+startup; default `none` preserves legacy console formatting and exports nothing.
+Method/status HTTP spans reset per keep-alive request and join proposal execution,
+provider threads and protected audit events without exporting dynamic URLs.
+See the [settings, offline checks and outstanding collector/approval gaps](../../infra/monitoring-runbooks.md#explicit-otlp-instrumentation-2026-11-16).
+No Application Insights/Agent 365 ingestion or accepted SLO is claimed.
+
+## Management-view AI consumption economics endpoints (2026-11-15, Refs #100)
+
+Management JSON and CSV endpoints surface the `ai-consumption-economics/v1`
+`ai_consumption_economics` summary from `zava_forward.core.tokenomics` with
+explicit integer denominators (`proposal_count`, `accepted_outcome_count`,
+`metered_call_count`, `unmetered_call_count`) and `"Unknown"` (never `0` or
+`0.0`) whenever `OD-51` is open, pricing or billing reconciliation is absent, or
+`accepted_outcome_count == 0`:
+
+* `GET /api/stats` (`Store.stats`)
+* `GET /api/stats?report=progress` and `GET /api/cases.csv?report=progress`
+  (`Store.progress_report` and `progress.export_csv`, scoped to `start` and
+  `as_of`)
+* `GET /api/coordinator` (`coordinator.read`, scoped to `start` and `as_of`)
+* `GET /api/progress` (`zava_forward.api.progress.dashboard`, scoped to
+  `[start, end + 1 day)` over synthetic-admitted records only, with zero wall-clock
+  drift and zero raw recommendation text or reviewer prose in responses)
+* `GET /api/ai/report` (`live.ai_consumption_economics`, preserving the five
+  top-level keys `evaluation`, `chat_evaluation`, `live`, `registry`, and
+  `consumption` while forwarding optional `start`, `end`, and `as_of` bounds to
+  `Store.ai_live_report`)
+
+Focused HTTP endpoint coverage lives in
+`src/api/tests/test_management_tokenomics_api_100.py` (`Refs #100`).
+
+## Responsible AI exercise acceptance versus real-AI delivery gate in readiness endpoints (2026-11-15, Refs #218)
+
+`GET /api/assistants`, manager-only `GET /api/governance` (with or without
+`?assessment=...`), and `live` inside manager-only `GET /api/ai/report` forward
+the active `Assistants` service into `zava_forward.core.rai_control_plane` and
+surface two explicitly separated readiness sections: `rai_exercise_acceptance`
+and `real_ai_delivery_gate`. Operators and assessors can verify offline RAI
+exercise controls (`OQ-017` live activation rejection with audit emission,
+suspension/quarantine, manual fallback, synthetic non-fairness boundaries, and
+15-identifier requirement traceability) independently of `real_ai_delivery_gate`,
+which remains blocked until a live Azure OpenAI provider, serving-version
+attestation, and named human live approvals (`OQ-017` to `OQ-019`) are in force.
+`POST /api/assistants/releases` returns HTTP `403` citing `OQ-017` and records
+`rai_live_activation_rejected` whenever an `actual` or `live=true` release lacks
+a named human `approved_by` and `named_approval_id`. Focused API coverage lives
+in `src/api/tests/test_rai_release_readiness_api_218.py`.
+
+## Hazard and safeguarding clock and named owner in queues and case cards (2026-11-15, Refs #76)
+
+`workSummary` and `safetyPanel` in `web/app.js` render the projected operational
+reference clock (`clock_label`, `clock_status`, remaining hours and UTC target,
+or explicit fail-closed missing-timestamp state) and the named accountable owner
+(`named_owner`, `owner_role`, `owner_id`, plus unassigned escalation-owner
+notice when unallocated) across `My cases today`, `All open cases`, all
+specialist role queues rendered through `web/role-screens.js`, and case cards.
+`HAZ_CATEGORIES` includes `Safeguarding`, and standalone safeguarding records
+render in `safetyPanel` without modifying `web/role-screens.js` or altering
+counted accessibility and export baselines. Focused engineering coverage lives
+in `src/core/tests/test_hazard_safeguarding_clock_owner_76.py` and
+`src/api/tests/test_hazard_safeguarding_clock_owner_api_76.py`.
+
+## Offline RAI held-out evaluation and candidate comparison API (2026-11-15, Refs #108)
+
+Manager-only `GET /api/ai/heldout-evaluation` returns the side-effect-free
+offline `held_out` suite and canonical `tokenomics_comparison` report from
+`zava_forward.core`, rejecting non-managers and contractors (403) and any query
+string (400). `GET /api/ai/report` preserves its top-level `evaluation`,
+`chat_evaluation`, `live`, `registry` and `consumption` keys and adds compact
+`held_out` and `tokenomics_comparison` summaries inside `evaluation`.
+
+Manager-only `POST /api/ai/candidate-comparison` evaluates 1 to 50 candidate
+configurations against the frozen held-out split and recorded baseline, recording
+an `ai_candidate_comparison` audit entry and rejecting non-managers (403), query
+parameters (400) and unknown, unverified summary or malformed fields (400). Cheaper candidates with
+quality regressions, currency mismatches, prompt-lever held-out leakage or multi-lever changes are returned with `outcome="failure"`
+and `is_saving=false`. These endpoints run constructed offline evaluations with
+zero provider network calls and do not establish live Azure OpenAI benchmarks,
+human participant evaluation or live activation clearance.
 
 ## Handoff waiting times screen (2026-11-11, Refs #83)
 
@@ -41,7 +124,13 @@ Use the complete clean exact-head gate documented in the
 ## AI consumption report (#432)
 
 Manager-only `GET /api/ai/report` preserves evaluation/live/registry fields and
-adds `consumption`. Optional `start`, `end`, `as_of` are timezone-aware ISO
+adds `consumption`, with `evaluation.cohorts` exposing the OQ-018 approval and
+non-fairness boundary (`owner_approval_status`, `lawful_analysis_fields_approved`,
+`live_activation_allowed`, `synthetic_not_fairness_evidence`, and
+`non_fairness_provenance_notice`). Read-only manager endpoint
+`GET /api/ai/cohort-evaluation` exports the full `cohort_eval.export_record`-verified
+records for `ranking-policy` and `ai-priority-recommendation` (#222, OQ-018),
+rejecting non-managers (403), query parameters (400) and writes (404). Optional `start`, `end`, `as_of` on `GET /api/ai/report` are timezone-aware ISO
 timestamps with exclusive `[start,end)` call-time bounds. Defaults are today's
 UTC start through now. Invalid, empty, repeated or unknown parameters return an
 explicit error. The JSON report adds no UI or deployment changes.
@@ -445,7 +534,8 @@ PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
 
 It starts the employee site on loopback with `ZF_ENV=production` and the
 trusted-proxy provider, then runs axe and keyboard checks on the case view and
-the employee chat widget. Synthetic data only; see the
+the employee chat widget, plus a 320 px (400 percent zoom equivalent) reflow and a
+reduced-motion check. Synthetic data only; see the
 [acceptance protocol](../../docs/reference/research/ux/production-ux-acceptance-protocol.md).
 
 The shared browser check starts actual local applications with constructed data,
@@ -830,11 +920,17 @@ explicit synthetic privacy references, actual unavailable-model fallback,
 intercepted answer-rendering cases and pinned axe on the open dialog. It also
 intercepts `/api/chat/status` and the answer to prove the demo disclaimer is
 visible inside the panel (a bordered note, not colour alone) and a model answer
-is labelled "Model-generated, not approved. Demo only." (#891).
-The panel also names the source of each reply: "Decision model (case rules)"
-for deterministic answers, the same label with "generative draft withheld" after
-a failed source check, and "Generative draft withheld by source check" when a
-model was called but no answer was shown. Each source line is tagged
+is labelled "Generative model suggestion (unapproved; check cited sources; no
+record changed)" (#891). Every reply carries `answer_source` and a plain
+`answer_origin` (`decision_rule`, `generative_model`, `withheld`, `refused` or
+`workflow_message`). The panel shows "Answer origin:" text, never colour alone:
+"Deterministic decision or workflow rule (not generative AI; no record
+changed)", "Generative model suggestion (unapproved; ...)" or "Withheld. Cited
+sources did not support a stated status or figure (no record changed)".
+Case-unblock and next-step visit questions are answered from the case rules
+first, citing the case record and the fixed `workflow/` rules (safety stop
+sequence, visit consent, chat boundary), so they are not withheld with no
+sources (#164). Each source line is tagged
 `[Decision rule]`, `[Case record]` or `[Workflow rule]`, and the live status
 says "Reply withheld" or "Request refused" instead of "Answer added" when no
 answer was given (#159).
@@ -3983,12 +4079,20 @@ or `guardrail breach` in `trigger`, plus `scope`, `reason`, `incident_owner`,
 so incomplete reports never prevent immediate containment. Impacts and versions
 are derived inside the SQL write, not trusted from an HTTP preview.
 
-`restart-propose` takes `id`, `corrective_evidence`, `test_id`, `result: Pass`
-and `evidence_class: constructed-fixture`. This is explicitly a recorded
+`restart-propose` takes `id`, substantive non-placeholder `corrective_evidence`
+and `test_id`, `result: Pass` and `evidence_class: constructed-fixture`, binding
+a monotonic `proposal_seq` into `proposal_digest`. Placeholder text (`TBD`,
+`TODO`, `N/A`, `pending`, `unavailable`, self-approved/automatic-restart text),
+`view_only` principals, Keep-suspended rejected `(test_id, corrective_evidence)`
+replays, and claims already open or Restart-consumed for the same candidate
+release are refused. This is explicitly a recorded
 constructed claim, not a server-run test or actual acceptance. Incomplete
 incident/version evidence refuses restart. Proposal history is retained.
 `restart-decide` takes `id`, current `epoch`, exact `proposal_digest`,
-`decision` (`Restart` or `Keep suspended`) and matching `authority_ref`.
+`decision` (`Restart` or `Keep suspended`) and matching `authority_ref`,
+refusing `view_only` principals and previously decided `proposal_digest`
+replays while recording full approver `actor` identity (`email`, `name`, `code`,
+`oid`).
 Missing, failed, altered, stale, self-approved, untrusted and version-drifted
 evidence is refused and audited.
 Legacy impact completeness includes exact prior-release references/bindings and
@@ -4019,11 +4123,22 @@ share eligibility semantics. Bundle projection uses the current trusted provider
 not caller flags; provider switches/reopen preserve actual holds. Invalid task/
 scope/event history stays noncurrent without breaking generic evidence export.
 
-The issue's synthetic drill is `test_operator_suspension`; the already selected
+Normalized SQL `continuity_gate_state` (`continuity-gate-v1`),
+`continuity_open_holds`, and the versioned SQL `continuity` envelope fence
+`assistant_attempts` (`reserved` and `sending`) and `assistant_tasks`
+(`verify`, `accept`, and `edit-accept` review transitions) across independent
+SQL connections and mixed-version worker restarts so pre-gate or
+gate-mismatched processes fail closed across queued, leased, ready and exported
+proposals while manual case work, accessible resident challenge/correction and
+statutory hazard response remain available.
+
+The issue's synthetic drills are `test_operator_suspension`,
+`test_continuity_restart_gate` and core `test_restart_gate_sql_fences`; the already selected
 native SQL gate runs
 `test_assistants.MssqlDurabilityTests.test_operator_incident_drill` against its
 owned disposable database. These are engineering checks, not actual OD-35
-authority, threshold approval, competent evaluation or human drill acceptance.
+authority, threshold approval, competent evaluation, WCAG/resident accessibility
+acceptance, immutable external ledger custody or human drill acceptance.
 
 ## RAI task release API (#219)
 
@@ -5451,25 +5566,39 @@ chat-value ship test remain open.
 ### Affected-person challenge API and workbench (#220)
 
 `POST /api/cases/{id}/resident` reuses the existing authenticated resident action
-route for `challenge_open` and `challenge_resolve`. See the
+route for `challenge_open`, `challenge_update`, `challenge_reopen`,
+`challenge_escalate` and `challenge_resolve` across priority, `ai_task` and
+`form_staging` targets, while `POST /api/assistants/proposals/{tid}/challenge`
+handles `open`, `update`, `reopen`, `escalate` and `resolve` for SQLite
+assistant proposals with `revision` concurrency fencing. See the
 [core field and version contract](../core/README.md#version-bound-affected-person-challenges-220).
-The permitted case response includes `challenge_targets` and retained
-`affected_challenges`; neither is exposed without both existing resident-view
-and recorded-reason entitlements. Client actor/time overrides are rejected.
-SQL validates current identities, target/human-decision tokens and correction
-dependencies again at writer time. A saved operation whose acknowledgement
-cannot be projected/encoded is explicitly reported as HTTP 409 with
-`outcome: "committed"`; do not blindly retry it.
+Permitted case and assistant responses include `challenge_targets` /
+`affected_challenges` (or proposal `challenges`) together with
+`non_retaliation_assurance` and `hazard_clock_preserved: True`; challenge
+narratives are never exposed without both resident-view and recorded-reason
+entitlements, and sensor-withheld assistant views redact free-text challenge
+notes. Client actor/time overrides and forbidden adverse keys are rejected with
+HTTP 400. SQL validates current identities, target/human-decision tokens and
+correction dependencies again at writer time. A saved operation whose
+acknowledgement cannot be projected/encoded is explicitly reported as HTTP 409
+with `outcome: "committed"`; do not blindly retry it.
 
-The case workbench uses labelled native forms for supplied Digital or
-staff-recorded Phone/Letter/In person evidence, a named human owner, explanation,
-manual route, next update and terminal supplied resolution. It preserves unsaved
-drafts and their original version bindings across unrelated case refreshes,
-warns on navigation and confirms correction recording. Stale suggestions and
-historical human reviews have explicit text rather than colour-only status.
-No resident consent, refusal, sanction, remedy outcome, unrelated closure or
-safety-clock change is inferred; urgent safety intake must not wait for a
-challenge.
+The case workbench (`#affected-challenges` in `web/panels.js`) uses labelled
+native forms for supplied Digital or staff-recorded Phone, Letter, In person,
+Assisted visit and Trusted intermediary channels, direct resident or
+representative/nominee submission (`submitted_by` and optional
+`representative_ref`), an immediate safety-concern flag (`hazard_concern`), a
+named human owner, explanation, manual route, next update, terminal supplied
+resolution and resolved-challenge reopen (`#challenge-reopen-{id}`). It
+preserves unsaved drafts and their original version bindings across unrelated
+case refreshes, warns on navigation and confirms correction recording. Stale
+suggestions, historical human reviews and verified non-retaliation /
+safety-clock safeguards use explicit plain-language text rather than colour-only
+status. Raising, updating, reopening, escalating or resolving a challenge never
+lowers case priority, never infers consent, refusal, no-access, sanction or
+withdrawal, never closes unrelated work items, and never delays or pauses
+statutory or emergency safety clocks; urgent safety concerns route immediately
+without waiting for challenge review.
 
 History is paged in bounded windows of 50 with keyboard-operable Older/Newer
 controls and URL-bound page state. Every retained target and open or resolved
@@ -5704,6 +5833,10 @@ synthetic-only chat learning record (14 days, 2,000 rows). Leave it unset
 unless deliberately enabling it; never set it for real residents. See
 [the learning record note](../../docs/reference/research/ux/resident-chat-learning-record.md).
 Read it with `python -m zava_forward.api.resident_demo.chat_log summary PATH`.
+`ZF_DEMO_REP_GRANTS_PATH` is an optional absolute path to a local synthetic JSON list of
+task-limited representative grants (`case_id`, `email`, `representative_ref`, `measure`, `tasks`,
+`valid_from`, `expires_at`, optional `revoked`; explicit UTC times, expiry mandatory). It holds no
+secret, any defect stops start-up, and leaving it unset keeps the resident-only showcase.
 `ZF_DEMO_ASSISTANT_ENABLED` defaults to `false`; an endpoint is needed only
 when deliberately enabling the separately gated AI integration. Keep the
 existing port 8089, image bind `0.0.0.0` and exact Host allowlist. The image's
@@ -5951,3 +6084,58 @@ resident scope revision comes from the work order bindings and must still be cur
 independent quality review can accept or replace the evidence. A correction also updates the current quality
 item; the original notes and earlier corrections stay. Evidence recorded before C4 without a scope binding
 shows a blocker and cannot be accepted. A stale check and the save are atomic within one process only.
+
+## Older-image assistant release probe (#107, Refs only)
+
+`checks/old_image_sql_probe.py` is a diagnostic, not part of normal test discovery. It runs a fixed worker inside
+the retained older API image `zava-forward-api:rpi-41446a0c013d3ba3617610b6` (image ID
+`sha256:ad99bbb99df321f8d874b0df52ead4b3e24f4fb02c21a2245b278ea1a1e2cf78`, Git source unknown) against a
+disposable local SQL Server, while this checkout's connection revokes a release and changes a material control
+between restarts. The five steps are a positive-control invoke, a restart after revocation, a restart after a
+material mismatch, a restart that uses the remaining allowance, and a restart with a larger configured allowance.
+Provider calls are counted on a constructed local stub; no real AI provider or Azure resource is used.
+
+```bash
+cd src/api
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m checks.old_image_sql_probe --out /absolute/new/dir
+```
+
+Prerequisites: a local unix-socket Docker engine that holds that exact image ID, the SQL Server image used by
+`tools/sensor_sql_check.py`, this worktree's `src/` distributions installed, and a new `--out` directory outside
+the repository (its parent is resolved through symlinks and `..` and may not be inside the checkout; the folder
+is created exclusively). Exit 0 is ACCEPTED, 2 is VIOLATED, 3 is INSUFFICIENT and 4 is REFUSED (remote engine,
+wrong image, or unsafe output path).
+
+Topology: the run creates a uniquely named, run-labelled internal Docker network. Each worker is created on that
+network only (nonroot, read-only root, all capabilities dropped, memory, CPU and pid limits, a read-only probe
+mount and an environment allowlist) and reaches SQL Server at `sql-<run>:1433`. The SQL container joins the same
+network by alias and also stays on the default bridge, solely to publish 1433 on `127.0.0.1` for this checkout's
+independent host connection. No host networking, Docker socket, host gateway or other network is attached, and
+the network and container attachments are read back before use.
+
+Judging follows a fixed protocol. Every step must report exit 0, the full packaged-module set with a path and
+sha256, distribution versions, the requested task with its before state, an explicit result and its after state,
+and the re-invoke records; the five task identities and capability/case pairs must be distinct and match. A
+violation that trustworthy evidence proves (a dispatch after a read-back revocation or mismatch, a restored
+approval, a replenished allowance ceiling or consumed quantity) is kept even when a later step failed. After the
+supported mismatch execute and re-invoke complete, the release rows of both affected capabilities must be
+non-active in every later snapshot, including those after the remaining and larger allowance restarts, whatever
+their `prompt_version`: the injected mutation proves the trigger and is no exemption. The audit is bound to the
+release IDs recorded after provisioning; lost or malformed release state gives INSUFFICIENT. Anything
+missing or malformed, including a missing positive control, gives INSUFFICIENT, never a pass. Sampled `@@SPID`
+values are reported only: SQL Server may reuse them, so they neither prove nor disprove which session performed
+an operation; fresh-process evidence is the distinct container and its hostname.
+
+Bounds and cleanup: every host SQL login, query and readiness probe has a wall-clock limit inside a whole-run
+deadline, and command output is capped. A host call that blocks in the driver cannot be killed, so it is
+abandoned, the owned containers and network are removed, and the process exits after writing the report.
+Expected resource names are recorded before creation. An ambiguous create is reconciled only by exact name plus
+the owner and run labels and a verified full ID. Removal is retried a bounded number of times and absence is
+verified; the report lists expected, removed and remaining resources and errors, and an unresolved cleanup is
+never exit 0 and never hides a behavioural violation. The worker state directory is tmpfs, so state local to the
+worker is lost on restart.
+
+`python3 -m checks.old_image_sql_probe --self-test --out /absolute/new/dir` runs the same worker over SQLite from the
+current source. It checks the probe and judge only, is labelled `current-source-self-test`, and is not older-image
+evidence. `tests/test_old_image_sql_probe.py` covers the control logic against an in-memory Docker fake and never
+starts Docker or SQL Server.

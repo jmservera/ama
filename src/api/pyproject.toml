@@ -17,7 +17,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["ruff==0.17.1", "mypy==2.4.0", "playwright==1.64.0"]
+dev = ["ruff==0.17.1", "mypy==2.4.0", "playwright==1.64.0", "zava-forward-core[telemetry]>=0.1.0,<0.2"]
 
 [tool.setuptools.dynamic]
 version = { attr = "zava_forward.api.version.__version__" }
@@ -60,7 +60,7 @@ files = ["src", "tests", "checks"]
 
 [[tool.mypy.overrides]]
 module = [
-  "tests.test_content_standard", "test_content_standard", "zava_forward.core.*", "zava_forward.agents.*",
+  "tests.test_content_standard", "test_content_standard", "test_eval_candidate_regression_gate", "tests.test_eval_candidate_regression_gate", "zava_forward.core.*", "zava_forward.agents.*",
   "zava_forward.api.server", "zava_forward.api.auth", "zava_forward.api.timecapture", "zava_forward.api.sensor_handover_verify", "test_employee_live_acceptance", "tests.test_employee_live_acceptance", "test_sensor_consistency", "tests.test_sensor_consistency", "test_accessibility_baseline", "test_ai_boundary", "tests.test_ai_boundary", "test_ai_tasks", "test_assistant_release", "test_assistants", "test_rai_restart_sql_reconstruction", "tests.test_rai_restart_sql_reconstruction", "test_assistants_dispatch", "tests.test_assistants_dispatch", "test_auth", "test_chat_fixture_roles", "test_chat_isolation", "test_chat_panel", "tests.test_chat_panel", "test_continuity", "test_design_system", "test_document_controls", "test_lawstore", "test_ledger", "test_mssqlstore", "test_mvp", "test_ranking_policy", "test_ranking_scale", "test_ranking_publication_wiring", "tests.test_ranking_publication_wiring", "test_role_endpoint_inventory", "test_role_matrix", "test_timecapture", "test_ui_support", "test_workflows", "tests.test_accessibility_baseline", "tests.test_ai_tasks", "tests.test_assistant_release", "tests.test_assistants", "tests.test_auth", "tests.test_chat_fixture_roles", "tests.test_chat_isolation", "tests.test_continuity", "tests.test_design_system", "tests.test_document_controls", "tests.test_lawstore", "tests.test_ledger", "tests.test_mssqlstore", "tests.test_mvp", "tests.test_ranking_policy", "tests.test_ranking_scale", "tests.test_role_endpoint_inventory", "tests.test_role_matrix", "tests.test_timecapture", "tests.test_ui_support", "tests.test_workflows", "test_production_config_a11y_check", "tests.test_production_config_a11y_check", "assistants_browser_check", "browser_check", "checks.assistants_browser_check", "checks.browser_check", "quality_sensors_browser_check", "checks.quality_sensors_browser_check", "test_quality_sensors_e1", "tests.test_quality_sensors_e1",
 ]
 ignore_errors = true
@@ -109,14 +109,16 @@ module = ["test_ranking_tiebreak_read", "tests.test_ranking_tiebreak_read"]
 disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
-module = ["test_ai_consumption_api", "tests.test_ai_consumption_api"]
+module = ["test_ai_consumption_api", "tests.test_ai_consumption_api",
+          "test_heldout_eval_api", "tests.test_heldout_eval_api"]
 disallow_untyped_calls = false
 
 # Keep the new HTTP harness typed while calling the migrated Store/server boundary.
 [[tool.mypy.overrides]]
 module = ["test_stock_reconciliation_api", "tests.test_stock_reconciliation_api",
           "test_handoff_api", "tests.test_handoff_api", "test_hazard_api", "tests.test_hazard_api",
-          "test_resident_api", "tests.test_resident_api"]
+          "test_resident_api", "tests.test_resident_api",
+          "test_representative_expiry_api", "tests.test_representative_expiry_api"]
 disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]

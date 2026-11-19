@@ -19,6 +19,8 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
+from zava_forward.core import telemetry
+from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
 from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 
 from zava_forward.agents.dispatch import AgentWorker, ResultSink, TaskQueue, run_once
@@ -95,6 +97,11 @@ def main(argv: list[str] | None = None) -> int:
     """`serve` runs the queue worker, `health` checks it, no argument prints the version."""
     import sys
 
+    try:
+        enforce_from_env()
+    except ContainerHardeningError as error:
+        print(f"Refusing to start: {error}", file=sys.stderr, flush=True)
+        return 2
     install_diagnostic_redaction()
     args = sys.argv[1:] if argv is None else argv
     heartbeat = Path(os.environ.get("ZF_STATE", "/state")) / HEARTBEAT_NAME
@@ -115,7 +122,8 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         try:
             runtime = build_runtime(os.environ)
-        except ConfigError as error:
+            telemetry.initialize("zava-forward-agents")
+        except (ConfigError, ValueError) as error:
             print(
                 f"zava-forward-agents serve: {error} No tasks will be processed.",
                 file=sys.stderr,
@@ -123,16 +131,19 @@ def main(argv: list[str] | None = None) -> int:
             return NOT_CONFIGURED
         stop = threading.Event()
         install_signal_handlers(stop, runtime.worker)
-        serve(
-            runtime.queue,
-            runtime.worker,
-            runtime.sink,
-            runtime.limits,
-            stop,
-            idle=IDLE_SECONDS,
-            alive=lambda: limits_active(runtime.limits),
-            pulse=lambda: beat(heartbeat),
-        )
+        try:
+            serve(
+                runtime.queue,
+                runtime.worker,
+                runtime.sink,
+                runtime.limits,
+                stop,
+                idle=IDLE_SECONDS,
+                alive=lambda: limits_active(runtime.limits),
+                pulse=lambda: beat(heartbeat),
+            )
+        finally:
+            telemetry.shutdown()
         return EXPIRED if not limits_active(runtime.limits) else 0
     from zava_forward.agents.version import __version__
 

@@ -32,12 +32,29 @@ import tempfile
 import time
 from pathlib import Path
 
-from zava_forward.agents import cohort_ranking_eval
+from zava_forward.agents import cohort_ai_eval, cohort_ranking_eval
+from zava_forward.core import cohort_eval
 from zava_forward.core import ai_tasks, ai_registry
 from zava_forward.core.store import Store
 
 # The golden file lives in the project evals/ folder, outside the package; an installed image sets ZF_AI_GOLDEN.
 GOLDEN = Path(os.environ.get("ZF_AI_GOLDEN") or Path(__file__).resolve().parents[3] / "evals" / "ai_priority_golden.json")
+
+
+class GoldenFileError(FileNotFoundError):
+    """The AI golden file is missing; a non-editable install must set ZF_AI_GOLDEN."""
+
+
+def load_golden(golden=GOLDEN):
+    try:
+        with open(golden, "rb") as f:
+            return f.read()
+    except FileNotFoundError as exc:
+        raise GoldenFileError(
+            f"AI golden file not found at {golden}; set ZF_AI_GOLDEN to its location"
+        ) from exc
+
+
 OWNER = dict(code="EV-01", name="Eval Owner", email="owner@eval.example", role="Resident Liaison Officer")
 OTHER = dict(code="EV-02", name="Eval Other", email="other@eval.example", role="Resident Liaison Officer")
 
@@ -390,7 +407,7 @@ def run_task_checks(workdir, observed=None):
 PUBLIC_DOCUMENT = dict(
     name="public-guidance-note.txt", kind="Other",
     data=b"Constructed public fixture: a short note on loft insulation depth for a mid terrace home. It names no person and holds no private data.",
-    metadata=dict(source="constructed public fixture", source_version="v1", reason="offline harness document"))
+    metadata=dict(source="constructed public fixture", source_version="v1", reason="offline harness document", ai_derivative="synthetic_safe"))
 UNREAD_DOCUMENT = dict(name="constructed-register.xlsx", kind="Other", data=b"PK\x03\x04 constructed placeholder",
                        metadata=dict(source="constructed public fixture", source_version="v1", reason="offline harness document"))
 
@@ -598,22 +615,49 @@ def evidence_gate(raw, summary, scripted=True, coverage=None):
         critical_misses=summary["critical_misses"], open_items=list(OPEN_ITEMS))
 
 
+def cohort_evaluation_export():
+    """Exported cohort and missing-data evaluation records with OQ-018 pre-live enforcement."""
+    ranking_rec = cohort_eval.export_record(cohort_ranking_eval.run())
+    ai_rec = cohort_eval.export_record(cohort_ai_eval.run("faithful"))
+    return dict(
+        record_version=ranking_rec["record_version"],
+        authority_gap=ranking_rec["authority_gap"],
+        owner_approval_status=ranking_rec["owner_approval_status"],
+        lawful_analysis_fields=ranking_rec["lawful_analysis_fields"],
+        lawful_analysis_fields_approved=ranking_rec["lawful_analysis_fields_approved"],
+        live_activation_allowed=bool(
+            ranking_rec["live_activation_allowed"] and ai_rec["live_activation_allowed"]
+        ),
+        synthetic_not_fairness_evidence=True,
+        non_fairness_provenance_notice=ranking_rec["non_fairness_provenance_notice"],
+        ranking=ranking_rec,
+        ai_priority=ai_rec,
+        manual_path="Deterministic ranking needs no AI call; AI unavailability leaves deterministic ranking unchanged.",
+    )
+
+
 def cohort_report():
-    """Per-cohort record for the deterministic ranking; AI-task cohorts are not yet evaluated."""
-    rec = cohort_ranking_eval.run()
+    """Per-cohort record for the deterministic ranking; AI-task cohorts are not yet owner-approved."""
+    rec = cohort_eval.export_record(cohort_ranking_eval.run())
     dims = {d: {label: dict(n=row["n"], errors=row["errors"], review_burden=row["review_burden"],
                             sufficient=row["sufficient"]) for label, row in body["cohorts"].items()}
             for d, body in rec["dimensions"].items()}
-    return dict(task_id=rec["task_id"], status=rec["status"], activation_allowed=rec["activation_allowed"],
-                synthetic=rec["synthetic"], fairness_evidence=rec["fairness_evidence"], total_cases=rec["total_cases"],
+    return dict(record_version=rec["record_version"], task_id=rec["task_id"], status=rec["status"],
+                activation_allowed=rec["activation_allowed"], live_activation_allowed=rec["live_activation_allowed"],
+                owner_approval_status=rec["owner_approval_status"],
+                lawful_analysis_fields=rec["lawful_analysis_fields"],
+                lawful_analysis_fields_approved=rec["lawful_analysis_fields_approved"],
+                synthetic=rec["synthetic"], fairness_evidence=rec["fairness_evidence"],
+                synthetic_not_fairness_evidence=rec["synthetic_not_fairness_evidence"],
+                non_fairness_provenance_notice=rec["non_fairness_provenance_notice"],
+                authority_gap=rec["authority_gap"], total_cases=rec["total_cases"],
                 dimensions=dims, blockers=sorted({b["code"] for b in rec["blockers"]}), record_hash=rec["record_hash"],
                 ai_task_cohorts="not evaluated (no approved AI-task cohort manifest)",
                 note="synthetic, unapproved developer fixture (OQ-018); not fairness evidence and never averaged across cohorts")
 
 
 def run_eval(golden=GOLDEN):
-    with open(golden, "rb") as f:
-        raw = f.read()
+    raw = load_golden(golden)
     spec = json.loads(raw.decode("utf-8"))
     results = []
     observed = []

@@ -21,6 +21,7 @@ from zava_forward.core.sensor_consumer import ConsumerError, Receipt, SensorCons
 from zava_forward.core.synthetic import sensor_stock
 from zava_forward.core.synthetic.live_readings import Reading
 from zava_forward.core.synthetic.run_plan import RunController, RunPlan, record
+from zava_forward.core.synthetic.sensor_identity import sensor_key
 from zava_forward.core.synthetic.sensor_stream import (
     Frame,
     Pacer,
@@ -404,23 +405,25 @@ class MetadataTests(unittest.TestCase):
 
 class LiveSimulatorRowTests(unittest.TestCase):
     def test_live_reading_decodes_and_lands_once_per_home_and_slot(self) -> None:
+        sensor = sensor_key("ZF-1")
+        binding = Binding("SYN-" + sensor, sensor, "ZF-1")
         reading = Reading(
             "ZF-1",
-            "SENS-SYN-1",
-            "SYN-SENS-SYN-1",
+            sensor,
+            binding.device_id,
             datetime(2024, 10, 1, 1, 0, tzinfo=UTC),
             12.34,
             66.5,
             301.25,
             184,
         )
-        decoded = decode(event(reading.row()), {BINDING.device_id: BINDING})
+        decoded = decode(event(reading.row(), binding.device_id), {binding.device_id: binding})
         self.assertEqual(decoded["sunlight_wm2"], "301.25")
         with tempfile.TemporaryDirectory() as tmp:
             store = store_at(tmp, reset=True)
             self.addCleanup(store.db.close)
             ingestion = SensorIngestion(store)
-            ingestion.consumer.configure(POLICY, [CONTROL])
+            ingestion.consumer.configure(POLICY, [replace(CONTROL, sensor_id=sensor)])
             first = ingestion.consume([decoded], received_at="2024-10-01T02:00:00Z")
             again = ingestion.consume([decoded], received_at="2024-10-01T02:00:00Z")
             self.assertEqual((first[0].status, again[0].replay), ("accepted", True))

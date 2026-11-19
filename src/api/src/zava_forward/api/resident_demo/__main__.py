@@ -14,15 +14,22 @@ from pathlib import Path
 
 from zava_forward.core import resident_showcase as rs
 from zava_forward.core import resident_showcase_sql as rsql
+from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
 from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 
 from .agenda import Agenda
 from .aoai import configured_advisor
 from .app import ResidentDemo, serve
 from .chat_log import ChatLog
+from .rep_grants import load_grants
 
 
 def main() -> int:
+    try:
+        enforce_from_env()
+    except ContainerHardeningError as error:
+        print(f"Refusing to start: {error}", file=sys.stderr, flush=True)
+        return 2
     logging.basicConfig(level=logging.INFO)
     install_diagnostic_redaction()
     try:
@@ -39,6 +46,7 @@ def main() -> int:
             raise rs.ShowcaseConfigError(
                 "The local synthetic callback agenda is invalid."
             ) from None
+        rep_grants = load_grants(os.environ.get("ZF_DEMO_REP_GRANTS_PATH"))
         log_path = os.environ.get("ZF_DEMO_CHAT_LOG_PATH")
         try:
             chat_log = ChatLog(Path(log_path)) if log_path else None
@@ -66,6 +74,7 @@ def main() -> int:
         assistant_advisor=advisor,
         agenda=agenda,
         chat_log=chat_log,
+        representative_grants=rep_grants,
     )
     server = serve(app)
     print(

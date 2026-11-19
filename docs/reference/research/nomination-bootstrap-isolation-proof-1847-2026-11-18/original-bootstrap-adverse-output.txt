@@ -1,0 +1,5 @@
+Original bootstrap (7de4a8110^) restored temporarily, noneditable copy on PYTHONPATH, bulk-first:
+python3 -m unittest test_bulk_edits test_nomination_route -> Ran 55 tests, FAILED (failures=1, errors=20)
+identity-probe.py bulk -> KeyError: 'zava_forward.core.bulk_edits' (family purged; patch target gone)
+python3 -m unittest test_nomination_bootstrap -> Ran 3 tests, FAILED (failures=2)
+(working tree restored to main afterwards; git status clean of test edits)

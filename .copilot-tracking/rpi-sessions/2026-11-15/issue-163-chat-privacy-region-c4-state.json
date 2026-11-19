@@ -1,0 +1,67 @@
+{
+  "task_id": "issue-163-chat-privacy-region-c4",
+  "task_slug": "issue-163-chat-privacy-region-c4",
+  "parent_task": {
+    "task_id": "issue-163-chat-privacy-region-c3",
+    "task_slug": "issue-163-chat-privacy-region-c3"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/issue-163-chat-privacy-region-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/issue-163-chat-privacy-region-c4-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/issue-163-chat-privacy-region-c4-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/issue-163-chat-privacy-region-c4-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/issue-163-chat-privacy-region-c4-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/issue-163-chat-privacy-region-c4-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Selected Rank 1 post-Review follow-up in non-interactive automatic mode (owner correction-cycle grant 2026-11-09 / #1798, cycle 4 of <= 5) to close Cycle 3 finding RV-001 before freezing the Refs #163 commit",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-163-chat-privacy-region-c3-review.md (RV-001)"
+    },
+    {
+      "decision": "Research disposition: reused; Planning Readiness: Ready (Cycle 3 review RV-001 and infra/main.bicep + containerapps.bicep evidence fully specify the attestation requirement and Focused boundary)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-163-chat-privacy-region-c3-review.md"
+    },
+    {
+      "decision": "Cycle 4 single-pass plan critique execution: Complete; verdict: Revise; direct disposition: applied PC-001 directly to P01-T01 and P01-T02",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/issue-163-chat-privacy-region-c4-plan-critique.md"
+    },
+    {
+      "decision": "Cycle 4 post-implementation Review execution: Complete; outcome: Defects found (RV-001 High: POST /api/chat/threads/<tid>/proposals bypasses c.privacy._require(); RV-002 Medium: ChatPrivacy.purge_expired() stops purging previously recorded expires_at memory rows when provider/approval later becomes invalid); routed to child cycle issue-163-chat-privacy-region-c5",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-163-chat-privacy-region-c4-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Execute Rank 1 child cycle issue-163-chat-privacy-region-c5 to close RV-001 and RV-002"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Close Cycle 4 findings RV-001 (enforce c.privacy._require() on POST /api/chat/threads/<tid>/proposals) and RV-002 (preserve per-row expires_at purging in ChatPrivacy.purge_expired() independently of write approval)",
+      "rationale": "Highest leverage and ease: 2-line production fixes in server.py and chat_privacy.py closing privacy-gate bypass and storage-limitation expiry retention",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-163-chat-privacy-region-c4-review.md (RV-001, RV-002)"
+    },
+    {
+      "rank": 2,
+      "task": "Obtain named DPO and Legal sign-off on decisions D1-D8 in docs/reference/research/chat-memory-dpia.md before enabling live personal-data chat/memory storage or retention",
+      "rationale": "Remaining human-governance acceptance criterion on Issue #163 (criterion 2)",
+      "evidence": "docs/reference/research/chat-memory-dpia.md (C7, C14)"
+    },
+    {
+      "rank": 3,
+      "task": "Align infra/main.bicep chatModelSku default (currently GlobalStandard) and inject explicit CHAT_PROVIDER_REGION and CHAT_DEPLOYMENT_TYPE in infra/modules/containerapps.bicep in a separate Full-tier IaC PR after DPO/Legal D6 confirmation",
+      "rationale": "Infrastructure Bicep edits require the Full RPI gate and external receipt outside Issue #163 Focused scope",
+      "evidence": "infra/main.bicep:136 and infra/modules/containerapps.bicep:237"
+    }
+  ]
+}

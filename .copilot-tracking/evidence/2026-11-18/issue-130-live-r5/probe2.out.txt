@@ -1,0 +1,13 @@
+{
+ "form_encoded": [
+  400,
+  "{\"error\": \"Could not read that.\"}"
+ ],
+ "panels": {
+  "Representative authority": 1,
+  "Nominations and self-referrals": 1,
+  "Challenge a suggestion or ask for a correction": 1
+ },
+ "rep_options": 0,
+ "n_records_after": 0
+}

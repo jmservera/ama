@@ -1,7 +1,7 @@
 ---
 title: Monitoring candidates and operator runbooks
 description: Source-only alert catalogue, proposed routing, safe responses and unresolved monitoring acceptance
-ms.date: 2026-11-13
+ms.date: 2026-11-18
 ms.topic: how-to
 ---
 
@@ -33,6 +33,138 @@ does not disable, reapprove or attest to any of them.
 No Azure command, paid inference, real dataset or secret access is required by
 this authoring delivery. Future provisioning/activation is a separate action.
 Keep all resource operations inside `ama`; never delete that resource group.
+
+## Explicit OTLP Instrumentation (2026-11-16)
+
+The API and active queue worker contain an opt-in, manually instrumented OTel
+layer. This is source and offline synthetic evidence, not deployed Azure
+coverage or accepted PRD SLOs. Existing Application Insights settings do not
+enable it. Agent 365 remains a future proposal, not an installed SDK or live
+governance service.
+
+### Enablement and privacy boundary
+
+Install `zava-forward-core[telemetry]` with pip for a local package deployment.
+API/worker image locks already include SDK/OTLP HTTP dependencies; other core
+consumers require only the API and are not newly initialized.
+
+| Setting | Contract |
+|---|---|
+| `ZF_OTEL_EXPORTER` | `none` (default) or `otlp`; anything else fails startup |
+| `ZF_OTEL_ENDPOINT` | Explicit OTLP HTTP base URL, HTTPS except loopback HTTP; no credentials, query or fragment |
+| `ZF_OTEL_HEADERS` | Optional JSON authentication headers with bounded ASCII names/nonempty printable values and no leading whitespace, injected through approved secrets; never paste values in evidence |
+| `ZF_OTEL_ENVIRONMENT` | `local` default, or `test`, `development`, `staging`, `production` |
+| `ZF_OTEL_SAMPLE_RATIO` | Finite 0-1 root ratio, default 1; children inherit their parent's sampled decision |
+
+The exporter adds `/v1/traces` and `/v1/metrics` to the base URL. Approve
+collector identity, TLS/network restrictions, destination region, access,
+retention, volume/cost and deletion before enabling it. This change provisions
+no collector, credentials, permissions or routing. Plaintext HTTP is local-only.
+Disable the setting and restart to roll back exports; do not remove audit records.
+
+Only service/version/environment/SDK resources and closed operation, capability,
+method, status and error classifications are emitted. No host/user/process
+detectors, SQL text, dynamic HTTP paths, payloads, prompts, completions, model
+reasoning, exception events, business identifiers or hashes of them are added.
+W3C propagation accepts bounded version-00 `traceparent` only; no baggage or
+tracestate is forwarded. Context is diagnostic, never permission or release evidence.
+Structured console records pass through the existing guarded LogRecord path;
+caller extras are discarded, trace IDs come from active context and SDK
+diagnostics with destination/error details become fixed messages. `print` is
+outside that guard; this is not a claim that arbitrary application text is safe.
+
+Direct Azure Monitor exporter support is deliberately deferred. Inspection of
+version `1.0.0b59` found hostname/locale enrichment and SDK statistics/configuration
+traffic separate from the supplied resource. No exporter was started in that
+inspection. Do not patch private vendor globals or assert that deleting resource
+attributes suppresses its envelope metadata. An Azure collector/backend route
+needs separate compatibility and privacy verification.
+
+### Coverage and evidence matrix
+
+| Boundary | Source behavior and offline evidence | Remaining gap |
+|---|---|---|
+| API HTTP | Method/status SERVER spans; keep-alive parent/reset regression | Deployed ingress propagation and authorized collector receipt |
+| SQL-backed proposal queue | `other_sql` PRODUCER attempt, stored optional parent, unchanged task/fence/release authority | Not a new cloud-queue publisher; repeated enqueue can reuse a task |
+| In-process proposal execution | Application-controlled `invoke_workflow`, copied provider-thread context; synthetic audit/trace join and failure regressions | Live activation/restart/operational acceptance |
+| Active standalone worker | Service Bus CONSUMER, workflow, provider thread and post-back CLIENT correlation; optional backward-compatible carriers | Route remains independently gated; real queue/identity/API receipt unperformed |
+| Core `Ai._request` | GenAI client span; settled receipt token counts only; failures contain no exception payload | Other/custom provider adapters are not universal metering coverage |
+| Agent SQL transactions | Database-system classification and protected event `trace_context` JSON, no DDL change | Existing SQL access/retention duties still apply |
+| Orchestrator/importer/IoT/resident adapters | Existing behavior and authorities unchanged | Broader job/scenario and adapter instrumentation inventory deferred |
+| Harm, billing, meaningful explanations | Existing incident/release/consumption/audit controls remain authoritative | Automatic harm monitors, invoice reconciliation, named owners, meaningful user explanation acceptance and live drills unproved |
+
+The existing protected `assistant_events.body.trace_context` contains random
+`trace_id`/`span_id` values. An authorized investigator first locates the
+restricted task/audit record, then filters the collector on that trace ID.
+No case/task/meter/source identifiers are exported to construct this join.
+Keep the task snapshot, release/source versions, consent, human review and meter
+liability in the protected store; tracing does not replace them.
+
+### Metrics and safe synthetic receipt
+
+Histograms in seconds are `http.server.request.duration`,
+`gen_ai.invoke_agent.duration` (operation `invoke_workflow`) and
+`gen_ai.client.inference.duration` (`chat`). Explicit boundaries are
+`0.01 * 2^i` for `i=0..14`; retain count, sum and buckets. Validated settled
+tokens use `gen_ai.client.inference.usage.input_tokens` and `.output_tokens`
+counters, unit `{token}`. These development GenAI names follow the maintained
+[agent](https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md),
+[duration](https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-metrics.md)
+and [token](https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-token-metrics.md)
+conventions retrieved 2026-11-16; do not substitute the moved/stale generic
+`gen_ai.client.operation.duration` examples.
+
+Invocation histogram counts are completed attempts, including failed attempts.
+Each retry is a separate attempt, not another completed business scenario.
+Started-but-incomplete/cancelled work cannot be inferred as zero from completed
+histograms; use protected task states/audit over an explicit UTC window and
+retain unknown/incomplete denominators. A busy/stopped worker entrypoint is not
+a successful proposal. Do not calculate accepted scenario-completion p95,
+availability or an error budget from these invocation metrics alone.
+
+Batch queue is 512 spans, batch size 128, delay 5 seconds and exporter timeout
+5 seconds. Metrics export every 60 seconds with a 5-second timeout. Shutdown
+waits at most 5 seconds and reports a missed deadline; process exit can lose
+pending diagnostics. Exporters use memory, not offline disk persistence, and
+failures do not extend leases, release slots or trigger provider retries.
+At reduced head sampling, late errors can be absent; no claim to retain all
+error traces. Collector tail policies and resource budgets require approval.
+
+After installing the existing component dev extras, run only synthetic,
+in-memory SDK tests, with no exporter/model endpoint enabled:
+
+```bash
+cd src/core
+python3 -m unittest discover -s tests -p test_telemetry.py -q
+python3 -m unittest discover -s tests -p test_diagnostic_logging.py -q
+cd ../agents
+PYTHONPATH=../core/tests python3 -m unittest discover -s tests -p test_dispatch.py -q
+cd ../api
+PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests -p test_keepalive.py -q
+PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests -p test_assistants_dispatch.py -q
+```
+
+Retain command/result counts, source revision, real SDK span parent graph,
+serialized canary absence and the unchanged timeout/slot/audit assertions.
+These checks use synthetic stores/providers and in-memory exporters, not paid
+inference or a cloud receipt. Actual collector queries should group histogram
+counts/buckets by service, operation and bounded error/status only; aggregate
+within a declared window and show missing/unsampled evidence explicitly.
+Never add a case identifier as a query dimension.
+
+### Agent 365 adoption gates
+
+An enterprise proposal can assess Agent 365 inventory, identity/lifecycle and
+Defender/Purview oversight after existing domain governance is preserved.
+The [developer documentation](https://learn.microsoft.com/en-us/microsoft-agent-365/developer/)
+and linked observability requirements were checked 2026-11-16. Mandatory relevant
+payload/identity fields conflict with this content-free layer; supported
+redaction, feature parity and ingestion/schema behavior remain unresolved.
+Also require tenant/license eligibility, named accountable roles, privacy and
+retention approval, permitted network/identity scope and an authorized synthetic
+receipt. A vendor service is not proof of consent, legal compliance, safe
+autonomy or a meaningful explanation. No adoption, purchase or live activation
+is authorized here.
 
 ## Common Response and Recovery
 
@@ -224,11 +356,25 @@ retry under separate approval.
 ### Job auth
 
 Normal suffix `auth-renewal`, demo `auth`; only with token storage and background
-workloads. Proposed owner: Digital service owner. Triage: expiry/binding and
+workloads. The ranking jobs (`rank`, `rank-publish`) currently resolve to this
+anchor in the alert description; see [job ranking](#job-rank). Proposed
+owner: Digital service owner. Triage: expiry/binding and
 execution metadata without fetching SAS or tokens. Response: follow
 [Key Vault lifecycle](./README.md#key-vault-secret-lifecycle) and preserve
 authentication, no logon bypass. Recovery: approved renewal and binding/expiry
 verification; do not print or manually paste credentials.
+
+### Job rank
+
+Normal suffix `rank-publish`, demo `rank`; only when `enableRankingArchiveBlob`
+and background workloads are enabled. Proposed owner: Digital service owner,
+with Asset Strategy and Data and Performance. Triage: archive publication
+execution metadata, immutable blob container retention policy and snapshot
+digest without exporting property-level ranking rows into diagnostic logs.
+Response: hold automated archive publication, preserve the prior immutable
+ranking snapshot and human investment-committee approval boundary; never overwrite
+or weaken blob immutability to clear a failed run. Recovery: verified archive
+container policy, reconciled snapshot digest and authorized idempotent rerun.
 
 ## New Disabled IoT Candidates
 
@@ -403,7 +549,12 @@ offline checks with constructed fixtures; no producer, alert or live limit exist
 the six harm indicators, denominators, windows, thresholds, named monitoring and
 incident owners and a response. It reports Blocked with the missing items, or
 Declared (never approved or green), and it exposes ownership and manual-route status
-for a disabled task. No declaration is recorded for any real task.
+for a disabled task. Source declarations with offline-constructed thresholds and
+role-level owner proposals are recorded across all 13 registered AI tasks in
+[ai_registry.py](../src/core/src/zava_forward/core/ai_registry.py) and enforced on
+serving release contracts in
+[rai_release.py](../src/core/src/zava_forward/core/rai_release.py); live serving
+remains Blocked until named human threshold and owner approvals (OD-51) are recorded.
 It also provides
 an allowlist sanitiser for aggregate diagnostic events. Separately,
 [diagnostic_logging.py](../src/core/src/zava_forward/core/diagnostic_logging.py)
@@ -499,15 +650,15 @@ B/R/T IDs below label the issue's criteria positionally, not new requirements.
 | --- | --- | --- |
 | B1 job/poison/ledger/IoT alerts | Disabled job/IoT candidates; agent-tasks poison arrival candidate; existing ledger rules, 26h correction; import poison gap | Verified `StorageQueueLogs` signal and drill, an import poison producer, owned notification drill; #110/#115 actual acceptance |
 | B2 availability/errors/latency/cost vs budget dashboard | Workbook aggregate query sources, cost-vs-budget table with Unknown actual and Unreconciled variance | Actual instrumentation/tests, KQL/portal execution and financial cost feed/reconciliation |
-| B3 each alert runbook with owner | All eight existing rules/four budget notices and eight candidates catalogued; proposed roles | Named actual primary/backup appointments and response/escalation limits |
+| B3 each alert runbook with owner | All eight existing rules/four budget notices and eleven candidates catalogued; proposed roles; each rule description names its proposed owner and links its anchor, test-enforced | Named actual primary/backup appointments and response/escalation limits |
 | B4 diagnostic exclusion | Fail-closed redaction of every application log record, canary tests, no new log categories, metrics-only IoT | Platform diagnostic categories (Container Apps `allLogs`, SQL, Key Vault, storage) and DPO/privacy approval |
-| R1 indicators/denominators/window/thresholds/owners/response | RAI procedure and blocked workbook panel | Per-task/release approved declaration and real appointments |
-| R2 unsupported claims/critical misses/stale review/challenges/cohort errors/effort | Explicit indicator list in RAI procedure | Applicable producer coverage and complete review-effort evidence |
+| R1 indicators/denominators/window/thresholds/owners/response | RAI procedure, blocked workbook panel and per-task/serving-release `monitoring_declaration` contracts across all 13 registered AI tasks | Named actual human owner/threshold approvals (OD-51) and live telemetry producers |
+| R2 unsupported claims/critical misses/stale review/challenges/cohort errors/effort | Explicit 6-indicator task/release declarations including 4-stage `review_effort` (`approval_rate_is_safety=False`) | Live producer coverage and operational review-effort capture |
 | R3 missing samples/usage/approvals/thresholds not green | Typed empty query sources, null measurements, static Blocked/Unknown panels | Actual query/error/serving behavior; approved sufficiency and threshold evidence |
 | R4 seeded harm/breach creates incident and suspension | Existing authorized incident path documented | Owned signal-to-incident integration and actual accepted drill; no suspension from metric alert |
 | R5 restart reconciliation and disabled-task ownership/manual routes | Required response/recovery, blocked panel and an offline replay-safe window counter | Durable windows/denominators/repeated-event runtime coverage and appointment evidence |
 | R6 no raw prompts/source/sensitive reasons/tokens/identities | No new content logging; protected audit separation documented | Source-level exclusion/retention/access tests on existing telemetry |
-| R7 offline constructed vs named-human live thresholds | Disabled candidates labelled proposed, approval-reference boundary | Named actual human approvals, not a nonempty string or fixture |
+| R7 offline constructed vs named-human live thresholds | Disabled candidates labelled proposed, approval-reference boundary and executable live named-human threshold guard rejecting constructed/system/agent/fictional sign-offs | Named actual human approvals (OD-51), not a nonempty string or fixture |
 | R8 existing audit/report/UI, no new platform/future-IoT dependency | Reuse existing Azure Monitor and SQL audit/continuity paths; IoT rules independent | Actual runtime/report integration without adding a separate platform |
 | T1 calls/tokens/budget/expiry breach alerts owned/runbook | Disabled `ai-limits` candidate on the ledger `AI_LIMIT_BREACH` marker, owner and runbook link in the rule description; offline limit evaluator | OD-51 owners/limits, activation approval, delivered notification drill |
 | T2 capability/period usage beside Azure cost/variance | Workbook usage-by-capability-and-month panel from `AI_USAGE`, Azure cost record column and Unreconciled variance | Same-period billing feed, dated price and approved tolerance; console marker is non-authoritative |

@@ -75,6 +75,10 @@ resource job 'Microsoft.App/jobs@2025-07-01' = {
         args: ['--sink', 'iothub', '--once', '--max-per-second', string(maxPerSecond)]
         resources: { cpu: json('0.25'), memory: '0.5Gi' }
         env: [
+          { name: 'ZF_CONTAINER_HARDENING', value: 'enforced' }
+          { name: 'PYTHONDONTWRITEBYTECODE', value: '1' }
+          { name: 'TMPDIR', value: '/tmp' }
+          { name: 'ZF_STATE', value: '/state' }
           { name: 'ZF_SIM_HUB_HOSTNAME', value: hubHostname }
           { name: 'ZF_SIM_APPROVAL', value: approvalReference }
           { name: 'ZF_SIM_CERT_DIR', value: '/certs' }
@@ -85,9 +89,17 @@ resource job 'Microsoft.App/jobs@2025-07-01' = {
           { name: 'ZF_SQL_SERVER', value: sqlServerFqdn }
           { name: 'ZF_SQL_DATABASE', value: sqlDatabaseName }
         ]
-        volumeMounts: [{ volumeName: 'device-certs', mountPath: '/certs' }]
+        volumeMounts: [
+          { volumeName: 'device-certs', mountPath: '/certs' }
+          { volumeName: 'tmp', mountPath: '/tmp' }
+          { volumeName: 'state', mountPath: '/state' }
+        ]
       }]
-      volumes: [{ name: 'device-certs', storageType: 'AzureFile', storageName: certStorageName, mountOptions: 'ro' }]
+      volumes: [
+        { name: 'device-certs', storageType: 'AzureFile', storageName: certStorageName, mountOptions: 'ro' }
+        { name: 'tmp', storageType: 'EmptyDir' }
+        { name: 'state', storageType: 'EmptyDir' }
+      ]
     }
   }
   dependsOn: [guard]

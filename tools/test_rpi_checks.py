@@ -191,6 +191,21 @@ class GateTests(unittest.TestCase):
                 finally:
                     path.write_text(saved)
 
+    def test_core_unit_suite_gets_the_longer_timeout_in_the_planned_contract(self) -> None:
+        self.assertEqual((gate.suite_timeout("core"), gate.suite_timeout("api")), (3600, 1800))
+        receipt = {
+            "owner": "a" * 24,
+            "sql": {},
+            "images": {},
+            "extras": [],
+            "executed_groups": ["project-core", "project-agents"],
+        }
+        suites = [row for row in gate.required_checks(self.root, receipt) if row["suite"]]
+        self.assertEqual(
+            {row["group"]: row["timeout_seconds"] for row in suites},
+            {"project-core": 3600, "project-agents": 1800},
+        )
+
     def test_employee_chat_check_is_in_the_browser_contract_and_dispatched(self) -> None:
         checks = gate.required_checks(
             self.root,
@@ -487,6 +502,12 @@ class GateTests(unittest.TestCase):
             "test_reopened_store_reproduces_signal_without_writes "
             "(test_sensor_analysis_mssql.MssqlRetainedAnalysisTests."
             "test_reopened_store_reproduces_signal_without_writes)",
+            gate.SENSOR_MSSQL_REQUIRED_TESTS,
+        )
+        self.assertIn(
+            "test_reproduce_retained_matches_pure_reproduction_and_fails_closed_read_only "
+            "(test_sensor_analysis_mssql.MssqlRetainedAnalysisTests."
+            "test_reproduce_retained_matches_pure_reproduction_and_fails_closed_read_only)",
             gate.SENSOR_MSSQL_REQUIRED_TESTS,
         )
 
@@ -1675,6 +1696,62 @@ class GateTests(unittest.TestCase):
         ):
             with self.subTest(argv=argv), self.assertRaises(gate.GateError):
                 runner.command(argv)
+
+    def test_local_docker_endpoint_reaches_isolated_subprocess(self) -> None:
+        for index, host in enumerate((None, "unix:///run/user/1000/docker.sock")):
+            with self.subTest(host=host), patch.dict(os.environ):
+                os.environ.pop("DOCKER_HOST", None)
+                if host is not None:
+                    os.environ["DOCKER_HOST"] = host
+                os.environ["DOCKER_CONTEXT"] = "untrusted-remote"
+                os.environ["AZURE_TOKEN"] = "must-not-propagate"
+                runner = self.runner(self.out / str(index))
+                runner.snapshot = self.root
+                result = runner.command(
+                    [
+                        sys.executable,
+                        "-c",
+                        (
+                            "import os; print(os.environ['DOCKER_HOST']); "
+                            "assert 'DOCKER_CONTEXT' not in os.environ; "
+                            "assert 'AZURE_TOKEN' not in os.environ"
+                        ),
+                    ]
+                )
+                self.assertEqual(result.strip(), host or "unix:///var/run/docker.sock")
+
+    def test_remote_or_malformed_docker_endpoints_block(self) -> None:
+        for host in (
+            "",
+            "tcp://127.0.0.1:2375",
+            "ssh://example.invalid",
+            "unix://user@host/socket",
+            "unix://relative",
+            "unix:///tmp/socket?option=1",
+            "unix:///tmp/socket#fragment",
+            "unix:///tmp/socket\n",
+        ):
+            with (
+                self.subTest(host=host),
+                patch.dict(os.environ, {"DOCKER_HOST": host}),
+                self.assertRaisesRegex(gate.GateError, "absolute local Unix socket"),
+            ):
+                self.runner()
+
+    def test_docker_endpoint_is_bound_to_tool_identity(self) -> None:
+        identities = []
+        with (
+            patch.object(gate.shutil, "which", return_value=sys.executable),
+            patch.object(gate.subprocess, "check_output", return_value="29.9.3\n") as probe,
+        ):
+            for host in ("unix:///var/run/docker.sock", "unix:///run/user/1000/docker.sock"):
+                with patch.dict(os.environ, {"DOCKER_HOST": host}):
+                    identities.append(gate.tool_identity())
+                    probe.assert_called_with(
+                        ["docker", "--host", host, "version", "--format={{.Server.Version}}"],
+                        text=True,
+                    )
+        self.assertNotEqual(identities[0], identities[1])
 
     def test_timeout_blocks(self) -> None:
         runner = self.runner()
@@ -3154,6 +3231,18 @@ os.fstat(3)
             builds = [a for a in seen if a[:2] == ["docker", "build"]]
             self.assertEqual(len(builds), 1)
             self.assertEqual("--no-cache" in builds[0], cache == "fresh" and not stress)
+
+    def test_src_ci_axe_download_is_bounded_and_verified_before_use(self) -> None:
+        root = Path(__file__).resolve().parents[1]
+        text = (root / ".github/workflows/src-ci.yml").read_text()
+        part = '"$RUNNER_TEMP/axe-4.10.3.min.js.part"'
+        final = '"$RUNNER_TEMP/axe-4.10.3.min.js"'
+        self.assertIn("--retry 5 --retry-all-errors", text)
+        self.assertIn(f"--output {part}", text)
+        check = f'echo "{gate.AXE_SHA256}  $RUNNER_TEMP/axe-4.10.3.min.js.part" | sha256sum'
+        self.assertIn(check, text)
+        self.assertLess(text.index(check), text.index(f"mv {part} {final}"))
+        self.assertLess(text.index(f"mv {part} {final}"), text.index(f"--axe {final}"))
 
     def test_real_src_ci_jobs_are_pinned_and_every_step_classified(self) -> None:
         root = Path(__file__).resolve().parents[1]

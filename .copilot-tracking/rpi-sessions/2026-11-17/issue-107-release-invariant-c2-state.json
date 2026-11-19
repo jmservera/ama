@@ -1,0 +1,65 @@
+{
+  "task_id": "issue-107-release-invariant-c2",
+  "task_slug": "issue-107-release-invariant-c2",
+  "parent_task": {
+    "task_id": "issue-107-probe-c1",
+    "task_slug": "issue-107-probe-c1"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-17/issue-107-release-invariant-c2-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-17/issue-107-release-invariant-c2-plan.md",
+    "details": ".copilot-tracking/details/2026-11-17/issue-107-release-invariant-c2-details.md",
+    "critique": ".copilot-tracking/critiques/2026-11-17/issue-107-release-invariant-c2-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-17/issue-107-release-invariant-c2-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-17/issue-107-release-invariant-c2-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "FULL tier retained (security-sensitive release-admission diagnostic, actual SQL/image planned check); no downgrade",
+      "status": "recorded",
+      "evidence": "task brief"
+    },
+    {
+      "decision": "Original db7ad review, C1 plan/critique/review and the independent C1 functional finding preserved unchanged",
+      "status": "recorded",
+      "evidence": "evidence-107-c2/c1-functional-findings.json"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-11-17/issue-107-release-invariant-c2-research.md"
+    },
+    {
+      "decision": "Critique executed once (rubber-duck), verdict Revise, five findings applied directly",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/critiques/2026-11-17/issue-107-release-invariant-c2-critique.md"
+    },
+    {
+      "decision": "Review executed once; outcome conformant for bounded correction, not publishable; no open material findings",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/2026-11-17/issue-107-release-invariant-c2-review.md"
+    },
+    {
+      "decision": "Implementation validated by fakes and labelled SQLite self-test only; full gate, actual old-image SQL, independent exact-head review and hosted CI outstanding",
+      "status": "recorded",
+      "evidence": "changes record"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator runs actual old-image SQL check, full gate and independent exact-head review"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Actual old-packaged-code positive control and C1-C3 SQL run",
+      "rationale": "Only actual evidence can establish old-image behavior",
+      "evidence": "review gaps"
+    }
+  ]
+}

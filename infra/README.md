@@ -2,7 +2,7 @@
 title: Azure Infrastructure (Bicep)
 description: Bicep deployment of the proposed Zava Forward demonstrator Azure architecture
 author: AMA programme
-ms.date: 2026-10-30
+ms.date: 2026-11-15
 ms.topic: how-to
 ---
 
@@ -17,10 +17,17 @@ private production profile. They do not authorize deployment.
 
 ## Layout
 
-* `main.bicep`: resource group scope entry point wiring all modules.
-* `main.bicepparam`, `main.test.bicepparam`, `main.pilot.example.bicepparam`: dev, test and pilot parameter sets (see [Environments](#environments)); replace the marked placeholders.
-* `modules/`: identity, network (VNet, NSGs, private DNS), monitoring (Log Analytics, App Insights, AMPLS), Key Vault, storage, registry, SQL, Foundry, IoT Hub, Container Apps and the generic private endpoint.
+* `main.bicep`: resource group scope entry point wiring core, security, data, AI, IoT, hosting, optional token-store and optional public-edge modules.
+* `governance.bicep`, `public-edge-existing.bicep`, `iot-hub-live.bicep`, `staff-initializer-rbac.bicep`, `live-receiver-job.bicep`, `live-simulator-job.bicep`, `private-proof-publisher.bicep`, `resident-demo.bicep`, `resident-assistant.bicep`: subscription governance and additive operational/proof entry points.
+* `main.bicepparam`, `main.test.bicepparam`, `main.pilot.example.bicepparam`, `iot-hub-live.bicepparam`: dev, test, pilot and live IoT Hub parameter sets (see [Environments](#environments)); replace the marked placeholders.
+* `parameters/dev.bicepparam`, `parameters/prod.bicepparam`: canonical non-deployable development and production-profile parameter templates (`using '../main.bicep'`) supplying all defaultless `main.bicep` parameters for offline reproducibility verification.
+* `modules/`: 20 Bicep modules covering `guard`, `identity`, `network` (VNet, NSGs, private DNS), `envDns`, `privateEndpoint`, `monitoring` (Log Analytics, App Insights, AMPLS, action group), `operationalMonitoring` (workbook and metric/log alerts), `keyvault`, `storage` (blobs, WORM, lifecycle, queues), `authTokenStore`, `registry`, `sql` (Entra-only SQL and Ledger), `foundry`, `iothub`, `iothub-scope-guard`, `containerapps` (environment, API, EasyAuth, jobs), `edge`, `edge-existing-auth`, `edge-existing-guard` and `staff-initializer-guard`.
 * `role-assignments.json`: role-assignment matrix; `entra/app-registration.json`: declarative Entra registration and owners. Both are checked by `tests/test_identity_rbac.py`.
+* `network-posture-inventory.json`: deterministic VNet subnet, NSG, private DNS zone, VNet link, data-store private endpoint, exercise-exception and Key Vault managed-identity secret-binding contract paired with [`../docs/architecture/network-posture.md`](../docs/architecture/network-posture.md) and checked by `tests/test_network_posture.py`.
+* `secret-inventory.json`, `scripts/secret_lifecycle.py`: Key Vault secret inventory, staged zero-downtime Entra client-secret rotation verifier, 90-day data-plane `AzureDiagnostics` access auditor and HMAC-SHA256 signed review ledger CLI; see [Key Vault secret lifecycle](#key-vault-secret-lifecycle).
+* `scripts/bicep_inventory.py`: offline architecture-to-Bicep resource inventory, 20-module delivery matrix and from-empty deployment sequence verifier (`python3 infra/scripts/bicep_inventory.py --check`).
+* `scripts/reproducibility_check.py`: offline from-empty step registration, defaultless parameter coverage, and deterministic 6-step dry-run verifier (`python3 infra/scripts/reproducibility_check.py --check --dry-run`).
+* `scripts/pipeline.py`: CI deployment and verification CLI (`plan`, `deploy`, `publish`, `changed-images`, `verify-environment`, `verify-federation`) and canonical `FROM_EMPTY_STEPS` registry.
 * `scripts/create-sql-users.sql`: contained SQL users for the managed identities. `scripts/create-sql-users.py` runs the same grants idempotently from the Azure CLI login.
 * `scripts/create-api-app-registration.sh`: Entra app registration, app roles and secret (Key Vault) for API sign-in.
 * `scripts/setup-entra.py`: direct-demo or optional edge discovery, additive Entra registration/roles, private-roster assignments and auth wiring.
@@ -382,6 +389,12 @@ needs an approved ama-scoped deployment/resource custom role, template-required
 role-assignment rights and registry **AcrPull only**, without quarantine bypass.
 Do not grant subscription Owner or move governance/policy into this pipeline.
 Actual RBAC/federation and runner isolation require platform-owner verification.
+
+After creating each identity, check its trust with the read-only helper:
+`GITHUB_REPOSITORY=<owner>/<repo> python3 infra/scripts/pipeline.py verify-federation --identity <name> --identity-kind managed|app --github-environment <environment-name>`.
+It fails unless the identity has at least one federated credential, every credential has the
+GitHub issuer, the `api://AzureADTokenExchange` audience and the exact environment subject, and (for
+`app`) no client secret exists. It prints no identifiers.
 
 Quarantine is never disabled or bypassed. Test/pilot registries retain their
 quarantine policy: an independently approved scan/release process must make
@@ -1008,8 +1021,8 @@ remain an owner design decision, not an executable instruction here.
 | `enableLocks` | `false` | `false` | `true` |
 | `zoneRedundant` (storage ZRS, SQL zone, registry and Container Apps) | `false` | `false` | `false` PLACEHOLDER pending selected-region support and owner decision |
 | `apiMinReplicas` (API minimum, independent of security profile) | `0` | `0` | `0`; explicitly choose `2` for always-on production |
-| Service SKUs | IoT Hub `B1`/1 unit; SQL `GP_S_Gen5`/2 max vCores; Log Analytics `PerGB2018`; registry Premium; Foundry `S0`; Container Apps Consumption | same | same; not a pilot sizing approval |
-| Model SKU/quota inputs (`modelDeployments`) | `standard`: gpt-4.1-mini; `capable`: gpt-4.1; both version 2025-04-14, `GlobalStandard`, capacity 30 | same defaults, subject to checks | same defaults; catalog checked below, quota and approved subscription binding unknown |
+| Service SKUs | IoT Hub `B1`/1 unit; SQL serverless `GP_S_Gen5`/2 max vCores (`sqlAutoPauseDelayMinutes = 60`); Log Analytics `PerGB2018`; registry Premium; Foundry `S0`; Container Apps Consumption (`monthlyBudget = 300`, `iotHubMonthlyCost = 60`) | same (`serverless` `GP_S_Gen5`/2 max vCores) | IoT Hub `B1`/1 unit; SQL provisioned `GP_Gen5`/2 vCores PLACEHOLDER (`sqlTier = 'provisioned'`, ADR 0002 decision 1); Log Analytics `PerGB2018`; registry Premium; Foundry `S0`; Container Apps Consumption; not a pilot sizing approval |
+| Model SKU/quota inputs (`modelDeployments`) | `standard`: `gpt-4.1-nano`, version `2025-04-14`, `GlobalStandard`, capacity `1` | same (`gpt-4.1-nano`, `2025-04-14`, `GlobalStandard`, capacity `1`), subject to checks | same (`gpt-4.1-nano`, `2025-04-14`, `GlobalStandard`, capacity `1`); `gpt-4.1-nano` and `GP_Gen5` post-date the `2026-10-18` `R4`/`R8`/`R9` snapshot below and remain `Unknown` pending fresh target-subscription checks |
 | Retention (fixed unless a documented module input exists) | Log Analytics 90 days; SQL PITR 14 days; blob/container soft delete 30 days; ACR 30 days; audit/digest immutability 365 days unlocked; IoT 1 day | same | same; not a legally approved retention schedule |
 | `location` and `sqlLocation` | `uksouth` candidate, recheck | `uksouth` candidate, recheck | empty PLACEHOLDERs retained; pilot `uksouth` selected, separate SQL region unselected |
 | `aiModelLocation`, `aiModelFallbackLocation`, `modelCapacityBudget` | `uksouth`, no fallback, budget 30 | `uksouth`, no fallback, budget 30 | empty model region PLACEHOLDER, no fallback, budget 30 |
@@ -1032,14 +1045,22 @@ Rules:
   default inputs retains all controls; SQL cannot opt out in any profile.
 * `environmentName=pilot` with the development profile or public access is rejected by the parameter guard (`pilotRequiresProductionProfile`).
 * Promotion is by the same template version and a different parameter file: validate in dev, deploy the same commit to test with `what-if`, then to pilot after the owner approves the `what-if` output. Images are promoted by digest through the registry, never rebuilt per environment.
-* `location`, `sqlLocation`, `modelDeployments` (model/version/SKU/capacity),
-  `iotHubSku` and `iotHubUnits` are parameters. Do not infer that fixed service
-  SKUs or every retention period are entry-point configurable.
-* Empty `regionCheckReference` or `quotaCheckReference` fails a named guard;
-  empty locations also fail. These references point to actual dated reviewed
-  records, not approval tokens. Any nonempty string satisfies the mechanical
-  gate, so a human must verify contents, freshness and exact configuration.
-  Do not enter placeholder text to pass it.
+* `location`, `sqlLocation`, `sqlTier`, `sqlVCores` (`1..80`), `modelDeployments`
+  (model/version/SKU/capacity), `iotHubSku`, `iotHubUnits`, `iotHubRetentionDays`,
+  `iotHubMonthlyCost` (`1..700`) and `monthlyBudget` (`>= 1`, default `300`) are
+  bounded parameters; see the canonical
+  [environment, region, and quota parameter strategy](../docs/architecture/environment-region-quota-strategy.md).
+  Do not infer that fixed service SKUs or every retention period are entry-point
+  configurable.
+* Empty, whitespace-only, placeholder, word-bounded assumption/skip (`todo`,
+  `tbd`, `assumed`, `assumption`, `unverified`, `pending`, `unknown`, `none`,
+  `n/a`, `na`, `skip`, `example.invalid`), or UUID `regionCheckReference` /
+  `quotaCheckReference` values fail named Bicep and CLI guards; empty,
+  placeholder/assumption, or malformed locations also fail. These references
+  point to actual dated reviewed records, not approval tokens. Because offline
+  guards validate format rather than live Azure state, a human must still verify
+  record contents, freshness and exact configuration. Do not enter placeholder
+  text or raw subscription/tenant UUIDs.
 
 Region and quota choices are explicit parameters in every parameter set:
 `location`, `sqlLocation`, `aiModelLocation` (model account and deployments,
@@ -1076,11 +1097,16 @@ the [pilot example](./main.pilot.example.bicepparam) and the
 [Container Apps](./modules/containerapps.bicep), [SQL](./modules/sql.bicep),
 [IoT](./modules/iothub.bicep), [Foundry](./modules/foundry.bicep),
 [storage](./modules/storage.bicep) and [registry](./modules/registry.bicep)
-modules. These request Consumption/internal VNet; SQL `GP_S_Gen5`, maximum
+modules. At historical commit `612cbed7`, those files requested Consumption/internal VNet; SQL `GP_S_Gen5`, maximum
 2 vCores, minimum 0.5, auto-pause 60 minutes; IoT `B1`, one unit; Foundry
 `AIServices`/`S0`, OpenAI `gpt-4.1-mini` and `gpt-4.1`, each version
 `2025-04-14`, `GlobalStandard`, capacity 30; StorageV2 LRS (ZRS if selected);
-registry Premium. These are template requests, not approved pilot sizing.
+registry Premium. Subsequent repository updates moved `main.pilot.example.bicepparam`
+to provisioned SQL (`sqlTier = 'provisioned'`, `GP_Gen5`) and changed the default
+`modelDeployments` entry to `gpt-4.1-nano` (version `2025-04-14`, `GlobalStandard`,
+capacity `1`); neither `GP_Gen5` nor `gpt-4.1-nano` was queried in the `2026-10-18`
+`R4`/`R8`/`R9` snapshot below, so both remain `Unknown` until fresh `R4`, `R8` and
+`R9` queries are recorded on the target subscription. These are template requests, not approved pilot sizing.
 
 Initial queries ran on 2026-10-18 with Azure CLI 2.91.0; identical commands
 were reproduced on 2026-10-19 at 06:43 UTC. The table below records the
@@ -1337,37 +1363,45 @@ at those owner/live gates; no Azure deployment was performed for this authoring.
 
 ## Hardened source image rollout (#118)
 
-Refs #118. All six application containers are defined in
+Refs #118, #144. All seven application and maintenance job containers are defined in
 [`modules/containerapps.bicep`](./modules/containerapps.bicep): API, agents,
-orchestrator, import, token renewal and ledger verification. Compiled tests
+orchestrator, import, token renewal, ledger verification and ranking publication. Compiled tests
 verify each image parameter, API health probes and 2-4 replicas, plus the
 default-off Premium Front Door/WAF/Private Link edge. Maintenance jobs retain
 their direct Python module commands; no guard-bearing image path is required.
 Worker transport remains #144 (see the hosting status table below); a Bicep resource is not worker acceptance.
 
-Hosted hardening acceptance is **Partial**: the
+Hosted ARM schema hardening remains **Partial**, while in-process deployed container
+hardening is **Enforced** (#144): the
 [Container Apps 2025-07-01 schema](https://learn.microsoft.com/azure/templates/microsoft.app/2025-07-01/containerapps)
 and 2026-07-01 schema were checked on 2026-10-16 and expose no
 `readOnlyRootFilesystem`, capability-drop or `securityContext` settings for
-these container definitions. No unsupported property is added and no deployed
-kernel enforcement is claimed. Images remain non-root but no longer carry a
-fail-closed startup guard that would prevent Container Apps startup. Local/CI
-Docker contracts explicitly set `--read-only --cap-drop ALL --security-opt
-no-new-privileges` and verify the actual kernel state. They also exercise plain
-non-root startup for compatibility; this is not evidence of an Azure rollout.
-A future supported hosted configuration and private runtime proof are still
-required to meet the full hardening criterion. No hosting architecture change
-or deployment approval is inferred.
+these container definitions. No unsupported ARM property is added and no Azure host
+read-only root mount is claimed without a live private runtime receipt. Instead, every
+deployed Container App and Job specification (`modules/containerapps.bicep`,
+`resident-demo.bicep`, `live-receiver-job.bicep` and `live-simulator-job.bicep`) sets
+`ZF_CONTAINER_HARDENING=enforced`, `PYTHONDONTWRITEBYTECODE=1` and bounded `EmptyDir`
+scratch mounts (`/tmp`, plus `/state` on workloads outside `resident-demo`, which omits
+`ZF_STATE` under `FORBIDDEN_ENV_PREFIXES`). At startup,
+`zava_forward.core.container_hardening.enforce_from_env()` applies `umask(0o077)` and
+Linux `prctl(PR_SET_NO_NEW_PRIVS, 1)` and fails closed with exit code `2` unless the
+process runs as UID/GID `10001:10001`, `/proc/self/status` confirms `NoNewPrivs == 1`
+and zero `CapInh`/`CapPrm`/`CapEff`/`CapAmb` masks, `/` and `/app` reject writes, and
+declared scratch mounts are writable. Local/CI Docker contracts continue to set
+`--read-only --cap-drop ALL --security-opt no-new-privileges` and verify kernel state;
+plain local host developer runs leave `ZF_CONTAINER_HARDENING` unset for compatibility
+and are not evidence of an Azure rollout. No hosting architecture change or deployment
+approval is inferred.
 
-### Hosting completeness status (issue 144, 2026-11-01)
+### Hosting completeness status (issue 144, 2026-11-15)
 
 | Criterion | Status | Evidence |
 | --- | --- | --- |
-| Worker and job images real, versioned, deployed through the pipeline | Unmet | Images and the `src-deploy.yml` digest pipeline are real. The agents entrypoint has a tested run loop (`zava_forward.agents.worker`), a stdlib Azure Queue adapter (`zava_forward.agents.queue_azure`, scripted transport only, not run against Azure) and, since #1523, a Managed Identity token source (`runtime.identity_token`), an API post-back (`ApiResultSink`) and the wiring (`build_runtime`), all unit-tested locally. Per the Bicep configuration and current code, `serve` runs the queue loop only when `ZF_AGENT_RESULT_ROUTE=enabled`, which the Bicep deliberately omits, so a deployed worker would run a standby loop that keeps the heartbeat and processes no tasks. No live deployed pipeline receipt, live queue run or API post-back run exists, so the criterion stays Unmet. The orchestrator entrypoint still only prints a version |
-| Scale rules, probes, limits, rollback | Defined and compile-tested | `test_api_replicas_probes_and_private_edge_contract` asserts the API http rule (50 concurrent, 0 to 4 replicas), Startup, Liveness and Readiness probes, 0.5 vCPU/1 GiB limits, Single revision mode, the agents queue rule and job limits. `test_agents_app_has_no_hosted_probe_and_keeps_scale_limits_and_single_revision` pins the agents app: the worker has no listener and Container Apps probes are HTTP or TCP only, so it has no hosted probe (the `health` heartbeat command is a local diagnostic; its 120 s limit is checked arithmetically in `HeartbeatMarginTests` for one provider call at the largest accepted task timeout (read from the `TaskMessage.from_json` bound) plus the larger of the fault backoff and the idle wait, with a 2x margin; the pulse runs once per loop iteration, so a task with several provider calls and queue, token, post and ack latency are not bounded). No executable rollback test and no live rollout were run. Since 2026-11-13 `infra/tests/test_container_hosting_completeness.py` pins, for every declared app and job in the Bicep sources, bounded CPU and memory, bounded replicas and a scale rule, job timeout and retry limits, all three probes on the ingress port, single revision mode, and the documented rollback path. It reads the templates as text: a source contract, not a deployed scale, probe or rollback receipt |
-| Hardening enforced in the deployed app | Partial, platform-blocked | See the hosted hardening note above; CI Docker checks only |
-| Load test on the declared fixture | Run locally, not at declared scale | [`scale-load-2026-11-01.json`](../docs/architecture/scale-load-2026-11-01.json); separate-process closed-loop run [`scale-restart-2026-11-13.json`](../docs/architecture/scale-restart-2026-11-13.json) (see [Separate-process load and restart run](#separate-process-load-and-restart-run-issue-144-2026-11-13)) |
-| Single-replica restart with audit persistence | Verified on the SQL store | `src/api/tests/test_restart_audit.py` reopens the SQL store (not an API replica restart); ledger entries, chain and digest persist. `src/agents/tests/test_worker.py` `ReplicaRestartTests` simulates a worker killed before the post and between post and ack: after a manual lease release a replacement worker handles the redelivered task, and a post that was already made is repeated (at-least-once delivery; the duplicate carries the same task id and fence, but API-side dedupe is not built or tested). `src/api/tests/test_scale_fixture_load_and_restart.py` adds a real API process killed with SIGKILL and restarted on the same SQLite store, checked through `/api/audit-check` (local, one process; not a hosted replica). No hosted single-replica restart receipt and no Azure restore proof |
+| Worker and job images real, versioned, deployed through the pipeline | Pipeline and code verified locally; live rollout pending | All four source Dockerfiles (`api`, `agents`, `orchestrator`, `importer`) build pinned `python:3.12.9-slim-bookworm@sha256:...` non-root (`10001:10001`) images, `.github/workflows/src-deploy.yml` builds, scans, deploys to staging and promotes immutable `@sha256:` digests via `pipeline.py`, and `pipeline.py` plus `deploy.py` verify digest consistency across `auth-renewal`, `ledger-verify` and `rank-publish`. `zava_forward.agents` provides the tested queue/post-back loop (remaining in safe standby while `ZF_AGENT_RESULT_ROUTE` is omitted in Bicep), and `zava_forward.orchestrator` implements a bounded `run` mode (`args: ['run']` on `job-${prefix}-orchestrator`) validating queue/API configuration and running safe standby while bare invocation keeps its version print. Verified by `infra/tests/test_container_hosting_144.py`; no live Azure pipeline deployment receipt, live queue run or live API post-back run is claimed here |
+| Scale rules, probes, limits, rollback | Defined and compile-tested | `test_api_replicas_probes_and_private_edge_contract` asserts the API http rule (50 concurrent, 0 to 4 replicas), Startup, Liveness and Readiness probes, 0.5 vCPU/1 GiB limits, Single revision mode, the agents queue rule and job limits. `test_agents_app_has_no_hosted_probe_and_keeps_scale_limits_and_single_revision` pins the agents app: the worker has no listener and Container Apps probes are HTTP or TCP only, so it has no hosted probe (the `health` heartbeat command is a local diagnostic; its 120 s limit is checked arithmetically in `HeartbeatMarginTests` for one provider call at the largest accepted task timeout (read from the `TaskMessage.from_json` bound) plus the larger of the fault backoff and the idle wait, with a 2x margin; the pulse runs once per loop iteration, so a task with several provider calls and queue, token, post and ack latency are not bounded). No executable rollback test and no live rollout were run. Since 2026-11-13 `infra/tests/test_container_hosting_completeness.py` and since 2026-11-15 `infra/tests/test_container_hosting_144.py` pin bounded CPU and memory, bounded replicas and scale rules, job timeout and retry limits, all three probes on the ingress port, single revision mode, and the documented rollback path. They validate compiled Bicep and source contracts, not a live deployed Azure scale, probe or rollback receipt |
+| Hardening enforced in the deployed app | Enforced in deployed Bicep specs and runtime entrypoints (ARM schema partial) | Every deployed Container App and Job in `modules/containerapps.bicep` (including `publicSimulationRecipe`), `resident-demo.bicep`, `live-receiver-job.bicep` and `live-simulator-job.bicep` sets `ZF_CONTAINER_HARDENING=enforced`, `PYTHONDONTWRITEBYTECODE=1` and `EmptyDir` scratch volumes, and all 12 workload entrypoints invoke `zava_forward.core.container_hardening.enforce_from_env()` before opening sockets or queues. `infra/tests/test_container_hosting_144.py` verifies compiled Bicep specs, positive and mutation-negative runtime checks, Linux child-process `prctl(PR_SET_NO_NEW_PRIVS, 1)` + `umask(0o077)` kernel state, and OS-process exit-code-`2` refusal across `api`, `agents`, `orchestrator` and `importer`. Container Apps `2025-07-01` still lacks ARM `securityContext`, so Azure host-level rootfs enforcement awaits platform support and a live private runtime receipt |
+| Load test on the declared fixture | Run locally, not at declared scale | [`scale-load-2026-11-01.json`](../docs/architecture/scale-load-2026-11-01.json) and [`scale-load-2026-11-15.json`](../docs/architecture/scale-load-2026-11-15.json); separate-process closed-loop runs [`scale-restart-2026-11-13.json`](../docs/architecture/scale-restart-2026-11-13.json) and [`scale-restart-2026-11-15.json`](../docs/architecture/scale-restart-2026-11-15.json) (see [Separate-process load and restart run](#separate-process-load-and-restart-run-issue-144-2026-11-13) and the 2026-11-15 update below) |
+| Single-replica restart with audit persistence | Verified on the SQL store and separate OS API process | `src/api/tests/test_restart_audit.py` reopens the SQL store; ledger entries, chain and digest persist. `src/agents/tests/test_worker.py` `ReplicaRestartTests` and `infra/tests/test_container_hosting_144.py` verify worker crash before post/ack redelivers after lease release without task loss (at-least-once delivery; API-side dedupe remains separate scope). `src/api/tests/test_scale_fixture_load_and_restart.py` ([`scale-restart-2026-11-15.json`](../docs/architecture/scale-restart-2026-11-15.json)) and `infra/tests/test_container_hosting_144.py` verify a real single-process API server killed with `SIGKILL` and restarted on the same SQLite store preserves all pre-kill entries and an intact SHA-256 chain through `/api/audit-check` before and after post-restart writes (local single process; no hosted Azure replica restart receipt or Azure SQL restore proof) |
 
 Revision rollback: apps use `activeRevisionsMode: Single`, and a failed Startup
 or Readiness probe keeps the previous revision serving. There is no historical
@@ -1449,6 +1483,21 @@ set (BRD OD-51). The 708 MiB resident figure includes the fixture and the load
 client sharing the process, and approaches the 1 GiB limit, so size the memory
 limit against a hosted run.
 
+### Recorded 60,000-home load and restart verification (issue 144, 2026-11-15)
+
+Re-ran both local harnesses on 2026-11-15 over the 60,000 fictional-home SQLite
+`SqlStore` fixture (`53,821` deterministic contact and appointment events, seed `11`,
+no inference) and verified the recorded artifacts in
+[`infra/tests/test_container_hosting_144.py`](./tests/test_container_hosting_144.py):
+
+* Open-loop load harness (`src/api/tests/scale_load.py --homes 60000 --sessions 20 --rate 5.0 --duration 60`, record [`scale-load-2026-11-15.json`](../docs/architecture/scale-load-2026-11-15.json)): `252` total requests (`232` in the `60.0 s` observation window, `3.87 requests/s`, `7.84 s` drain), `0` errors across all routes, cold first-request latencies `203.5 ms` list / `78.8 ms` detail / `1,867.0 ms` dashboard, warm p95 `14,805.2 ms` list / `14,730.1 ms` detail / `18,302.8 ms` dashboard (above NFR-002 staff thresholds under single-process SQLite contention), `4.02` SQL statements per request, `715.6 MiB` RSS after run (`1,057.8 MiB` peak RSS including in-process fixture build), and `meets_declared_workload: false`.
+* Separate-process closed-loop load and `SIGKILL` restart harness (`src/api/tests/test_scale_fixture_load_and_restart.py --homes 60000 --concurrency 20 --seconds 60`, record [`scale-restart-2026-11-15.json`](../docs/architecture/scale-restart-2026-11-15.json)): `2.34 s` cold start to `/healthz` `200`, `448` requests across `64.3 s` (`6.97 requests/s`, `0` errors, overall p50 `2,824.2 ms` and p95 `4,598.8 ms`), isolated API server RSS `614.9 MiB` after load and `626.9 MiB` high-water (within the `1.0 GiB` container limit), `3` acknowledged audit writes before `SIGKILL` (no graceful shutdown), `2.11 s` restart readiness on the same SQLite store with all `3` entries and an intact SHA-256 chain reported by `/api/audit-check`, followed by `1` post-restart write advancing the intact chain to `4` entries, and `meets_declared_workload: false`.
+
+Both runs are local single-process SQLite measurements over synthetic data (`60 s`
+window and `53,821` events rather than the declared `1,800 s` and `600,000` events).
+Each run is not at declared scale, makes no production, autoscaling, multi-replica or
+availability claim, and is not an Azure Container Apps or Azure SQL measurement.
+
 Front Door Premium, WAF and origin Private Link remain infra-only gated
 definitions: `enablePublicEdge=false` by default, production/private profile
 required, no new edge deployed publicly. No Azure deployment or what-if, policy
@@ -1510,7 +1559,7 @@ exercise DPO is Juan Manuel Servera; no real-company delegation is inferred.
 
 ## Key Vault secret lifecycle
 
-Secrets are listed in [secret-inventory.json](secret-inventory.json) with an owner, rotation interval and expiry alert window. `infra/scripts/secret_lifecycle.py` checks vault metadata against it (never secret values), produces the access review record and prints the rotation steps. Run `python3 -m unittest discover -s infra/tests -q` for its tests.
+Secrets are listed in [secret-inventory.json](secret-inventory.json) with an owner, rotation interval and expiry alert window. `infra/scripts/secret_lifecycle.py` wraps `zava_forward.core.secret_lifecycle` to check vault metadata against the inventory, verify staged zero-downtime Entra client-secret rotation receipts, audit Key Vault data-plane `AzureDiagnostics` logs against [role-assignments.json](role-assignments.json), and maintain an append-only HMAC-SHA256 signed access review ledger. It also reports any vault secret that has no inventory entry as `uninventoried`. Every helper fails closed (`SecretExposureError`) if raw secret values, tokens, SAS strings or private keys appear anywhere in an input payload, and never reads or prints secret values. Run `PYTHONPATH=src/core/src python3 -m unittest src/core/tests/test_secret_lifecycle.py infra/tests/test_secret_lifecycle.py -q` for the deterministic unit and CLI suites.
 
 | Secret | Rotation interval | Expiry alert | Owner |
 | --- | --- | --- | --- |
@@ -1525,18 +1574,75 @@ Expiry alerting: the vault diagnostic setting sends all logs to Log Analytics, a
 
 ### Rotate the Entra client secret
 
-Run `secret_lifecycle.py rotation-plan --vault <vault> --app-id <id>`; `secret_lifecycle.py rotation-simulate` runs an offline model of the same order and exits non-zero if sign-in would fail at any step (tests also show that deleting the old credential first, or before the app refreshes, fails). The model proves the ordering only, not a live outage-free exercise. The order gives no downtime: append a new app credential (the old stays valid), write it as a new version of `entra-client-secret` with an expiry, let the versionless Container Apps reference refresh (up to 30 minutes) or restart the active revision, verify sign-in, then delete the old credential. Do not delete first. The repeatable scripted step is `create-api-app-registration.sh -v <vault>`; add an `--end-date` when setting the secret.
+Run `python3 infra/scripts/secret_lifecycle.py rotation-plan --vault <vault> --app-id <id>` to print the staged sequence and `python3 infra/scripts/secret_lifecycle.py rotation-simulate` to verify the ordering model offline. For an auditable zero-downtime rotation (in-place versionless `entra-client-secret` refresh or two-name `entraClientSecretName` switchover in `modules/containerapps.bicep`), verify each gate with metadata-only evidence JSON via `rotation-verify`:
+
+1. Append a second Entra app credential while keeping the prior credential active with at least 60 minutes of dual-secret overlap (exceeding Container Apps' 30-minute versionless Key Vault polling interval), stream the generated secret directly into Key Vault with `tr -d '\r\n'` and `--output none` so the credential value never prints to stdout or carries a trailing newline (`az ad app credential reset --id <app-id> --append --display-name container-apps-auth-YYYY-MM --years 1 --query password -o tsv | tr -d '\r\n' | az keyvault secret set --vault-name <vault> --name entra-client-secret --expires <iso> --file /dev/stdin --output none`), read credential `keyId` and validity metadata (`az ad app credential list --id <app-id>`) plus Key Vault version `created` and `expires` metadata (`az keyvault secret list-versions --vault-name <vault> --name entra-client-secret`) separately, and validate the `dual_secret_overlap` stage (`safeToRetirePriorCredential` remains `false`; `browserMode` is enforced by default unless `--allow-non-browser-mode` is explicitly passed for API-only test topologies).
+2. After at least 60 minutes of elapsed dual-secret overlap (`elapsedOverlapMinutes >= 60`), refresh the API Container App secret reference (restart the active revision, deploy a new revision, or switch `entraClientSecretName` to the staged secret name) so 100% of active traffic serves the newest Key Vault secret version on healthy replicas (`Running` or `RunningAtMaxScale`, `replicasReady >= 1`), record `containerApp.switchoverAt` (`>= overlapStart + 60m` and `>= nextVersionId.created`), confirm continuous bounded-gap zero-error probes starting at or after `switchoverAt` (`firstSampleAt >= switchoverAt`, `totalSamples >= 3`, `firstSampleAt`..`lastSampleAt` spanning `>= 60` seconds with `maxGapSeconds <= 60`, `/healthz` `200`, anonymous `/api/me` `401`, `/sign-in` `302`, and authenticated API session `200` with `"freshTokenExchangeVerified": true` proving live OAuth token redemption with the new client secret rather than cached session reuse), and run `rotation-verify` at stage `post_switchover` (passing `--signing-key-file` (`chmod 0600`, outside the Git worktree) or `--signing-key-env` (`>= 32` UTF-8 bytes) when authenticating `rotation-switchover-receipt.json` for step 3):
+
+```bash
+python3 infra/scripts/secret_lifecycle.py rotation-verify \
+  --evidence rotation-post-switchover.json \
+  --min-overlap-minutes 60 \
+  --signing-key-file ~/.config/zava-ops/kv-rotation-hmac.key \
+  --out rotation-switchover-receipt.json
+```
+
+3. Only when `rotation-verify` exits `0` with `"safeToRetirePriorCredential": true`, delete the prior Entra app credential by `keyId` and disable the prior Key Vault secret version, then record the `post_retire` receipt with `containerApp.switchoverAt`, `post_retire` probes collected entirely at or after retirement (`firstSampleAt >= retiredAt`, after `post_switchover` probes finished), and either `credentials.retiredPriorCredential` timestamps or `credentials.priorRetiredAt` paired with the `HMAC-SHA256`-signed `priorSwitchoverReceipt` verified with the matching `--signing-key-file` or `--signing-key-env` to prove pre-retirement overlap.
+4. If switchover or authenticated probes fail before step 3, keep the prior Entra credential and Key Vault version enabled, pin the Container App secret `keyVaultUrl` directly to `https://<vault>.vault.azure.net/secrets/entra-client-secret/<priorVersionId>` for an in-place secret (because Azure Key Vault versionless resolution returns `403 SecretDisabled` when the newest version is disabled rather than falling back to an older version) or revert `entraClientSecretName` to the distinct `priorSecretName` in a two-name staged switchover, record `containerApp.rollbackAt`, restore 100% Container Apps traffic to the prior revision, confirm continuous post-rollback probes (`firstSampleAt >= rollbackAt`, `/healthz` `200`, anonymous `/api/me` `401`, `/sign-in` `302`, and authenticated session `200` with `"freshTokenExchangeVerified": true`), and run `rotation-verify` with `"stage": "rollback"`. Rollback receipts confirm `"rollbackVerified": true` while keeping `"ok": false` and `"safeToRetirePriorCredential": false` so automated scripts never retire the working credential during recovery.
 
 ### Access review
 
-Quarterly (`reviewIntervalDays` 90), export `az role assignment list --scope <vault id> --include-inherited -o json` and run `secret_lifecycle.py review --assignments roles.json --reviewer <name>`. A named human sets each pending decision to keep or remove and the signed record is kept with the operations evidence. `secret_lifecycle.py review-status --record review.json` exits non-zero while any decision is pending, no reviewer is named or `nextReviewDue` has passed, so a scheduled run can flag a missing or stale review. Owner alone gives no data-plane access.
+Quarterly (`reviewIntervalDays` `90` in `secret-inventory.json`), review both Key Vault RBAC role assignments (`Owner` alone grants no data-plane secret access) and actual Key Vault `AzureDiagnostics` data-plane operations over the preceding 90-day window, then append an HMAC-SHA256 signed, SHA-256 hash-chained record to the operations review ledger:
+
+1. Export all RBAC assignments inherited by the vault (`--scope <vault-id> --include-inherited`, capturing root `/`, management groups, subscription, resource group, and vault directly from ARM) plus child-secret assignments (`--all`, filtered to `<vault-id>/secrets/*`) via `rbac-merge` (top-level ARM `{"value": [...]}` list envelopes are also unwrapped safely), export metadata-only `AzureDiagnostics` rows (`OperationName`, `identity_claim_oid_g`, `httpStatusCode_d`, `id_s`, `TimeGenerated`), map deployed managed identity principal OIDs (`api`, `token-maintenance`, `resident-demo`, `agents`, `orchestrator`, `import`) in `principals.json`, and run `access-audit`:
+
+```bash
+az role assignment list --scope "<vault-id>" --include-inherited -o json > roles-inherited.json
+az role assignment list --all -o json > roles-all.json
+python3 infra/scripts/secret_lifecycle.py rbac-merge \
+  --vault-id "<vault-id>" \
+  --inherited roles-inherited.json \
+  --all roles-all.json \
+  --out roles.json
+python3 infra/scripts/secret_lifecycle.py access-audit \
+  --vault-name <vault-name> \
+  --assignments roles.json \
+  --diagnostics kv-diagnostics-90d.json \
+  --expected-principals principals.json \
+  --window-days 90 \
+  --out kv-access-audit.json
+```
+
+* Expected caller policy is derived fail-closed from [role-assignments.json](role-assignments.json): `api` may hold vault-scoped `Key Vault Secrets User` and call `SecretGet` on `entra-client-secret` (including staged `entra-*` names) and `entra-token-store-sas`; `token-maintenance` may hold child-secret-scoped `Key Vault Secrets Officer` on `<vault-id>/secrets/entra-token-store-sas` only and call `SecretGet` and `SecretSet` on `entra-token-store-sas` only (vault-wide or subscription/resource-group data-plane grants raise `excess_rbac_privilege`); `resident-demo` may hold child-secret-scoped `Key Vault Secrets User` on `resident-demo-password-verifier` and `resident-demo-session-key` only; `agents`, `orchestrator` and `import` are forbidden from all Key Vault data-plane calls; any unmapped OID, foreign-vault RBAC assignment (`wrong_vault_rbac_scope`), or anonymous secret call is flagged.
+* OID-less platform expiry events (`SecretNearExpiryEventGridNotification` and `SecretExpiredEventGridNotification`) are counted under `systemNotificationCount` rather than false-positive caller anomalies, whereas OID-less secret operations (`SecretGet`, `SecretSet`, `SecretDelete`, `SecretList`) are bucketed under `<anonymous>` and flagged as `unexpected_caller`. Any HTTP `403` or repeated `401` (`>= 5` by default) raises `denied_access_activity`. `auditDigest` is a canonical SHA-256 integrity checksum over the audited snapshot that `review-sign` recomputes and binds under the human reviewer's `HMAC-SHA256` signature.
+
+2. A named human reviewer (never an empty string, placeholder or bot account) records explicit `keep` or `remove` decisions keyed by every `assignmentId` and `remediated`, `revoked` or `accepted_exception` dispositions with rationale keyed by every `anomalyId` in `decisions.json`, then signs and chains the record using an owner-only (`chmod 0600`, non-symlink) key file stored outside the Git repository worktree (`review-sign` enforces full `reviewIntervalDays` window coverage on the inaugural ledger entry and gapless `windowStart <= prev.windowEnd < windowEnd` continuity on chained entries):
+
+```bash
+python3 infra/scripts/secret_lifecycle.py review-sign \
+  --audit kv-access-audit.json \
+  --decisions decisions.json \
+  --reviewer "Juan Manuel Servera (@jmservera)" \
+  --key-file ~/.config/zava-ops/kv-review-hmac.key \
+  --key-id ops-2026-q4 \
+  --ledger ~/.config/zava-ops/kv-access-reviews.jsonl
+```
+
+3. Scheduled compliance checks run `ledger-verify` (and `review-status` for single standalone records), exiting non-zero if the ledger is empty, any `prevHash` or `entryHash` link is tampered, any `hmac-sha256` signature fails constant-time verification against `--keys-file` (`0600`, outside the repository), `vaultName` drifts across entries, audit windows leave an unreviewed gap, inter-review spacing exceeds 90 days, or the `nextReviewDue` calendar date has passed in UTC (`"overdue": true` after `23:59:59Z` on `nextReviewDue`):
+
+```bash
+python3 infra/scripts/secret_lifecycle.py ledger-verify \
+  --ledger ~/.config/zava-ops/kv-access-reviews.jsonl \
+  --keys-file ~/.config/zava-ops/kv-review-verify-keys.json \
+  --vault-name <vault-name>
+```
 
 ### Open items
 
-* Owner confirmation (or delegation) for each secret and for the review.
-* A live no-downtime rotation exercise in the test environment; only the ordering and checks are tested offline.
+* Owner confirmation (or delegation) for each secret and for the quarterly review signing key custody outside the repository.
+* A live operator-attended zero-downtime rotation exercise in the `ama` test environment producing an archived `rotation-verify` receipt; the staged verifier, rollback hold and ordering model are tested offline in CI.
+* Export of the first live 90-day `AzureDiagnostics` + RBAC snapshot from `ama` into an inaugural `review-sign` ledger entry.
 * Confirmation after deployment that the alert rules evaluate in Azure Monitor (not verified here; the template builds with `az bicep build`).
-* Scheduling the review and `check` runs (for example a calendar task or pipeline) is an owner choice.
 
 ## Disposable Key Vault for development
 
@@ -3925,45 +4031,136 @@ recorded in the current handover above. Live user photo/consent, changed-account
 acceptance, map acceptance and tenant naming/role transition remain distinct
 checks, not established by CLI authentication.
 
-## Resource coverage register (issue 136, 2026-11-04)
+## Resource coverage register (issue 136, 2026-11-15)
 
-Refs #136 criterion 2: every resource in the ADR 0001, 0002 and 0003
-architecture is in Bicep, or is recorded here as intentionally manual or
-deferred with a named owner. Owner is the repository owner (@jmservera) unless
-a human role is named; no other named person is recorded. This is a
-documentation record, not machine-checked and not live Azure evidence.
+Refs #136 engineering criteria: every resource in the ADR 0001, ADR 0002 and
+ADR 0003 architecture is either defined in Bicep or recorded below as
+intentionally manual or deferred with a named owner, every `infra/modules/*.bicep`
+file has a current delivery status, and the from-empty deployment sequence maps
+every stage to a repository template or script without undocumented steps.
+`python3 infra/scripts/bicep_inventory.py --check` (exercised in CI by
+`infra/tests/test_bicep_architecture_inventory_136.py`) machine-checks all three
+tables offline against the repository Bicep AST/source, ADR files, `deploy.py`,
+`pipeline.py` and `rebuild.py`. This proves repository IaC and runbook
+completeness; it does not substitute for live Azure apply runs, owner cost
+approvals, `#440` stabilization sign-off or `#144` real worker image defaults.
 
-| Resource or step | Where | Status |
+### Proposed architecture resource inventory (ADRs 0001, 0002, 0003)
+
+| Component ID | Proposed architecture resource | ADR source | Disposition | Bicep template or artifact | ARM resource types or external plane | Named owner | Status and notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `azure-subscription-and-rg` | Azure subscription, pre-created `ama` resource group and Entra SQL administrator group/object ID | ADR 0001 | `manual` | `infra/main.bicepparam`, `infra/scripts/deploy.py` | Azure subscription and resource-group plane (`az group show -n ama`) | Juan Manuel Servera (@jmservera) | Pre-created subscription and `ama` resource group; `deploy.py` targets the existing group without teardown |
+| `parameter-scope-guard` | Compile-time deployment profile, private-network and Entra guard invariants | ADR 0001 | `bicep` | `infra/modules/guard.bicep`, `infra/modules/edge-existing-guard.bicep`, `infra/modules/iothub-scope-guard.bicep`, `infra/modules/staff-initializer-guard.bicep` | Compile-time parameter guard (zero ARM resources) | Juan Manuel Servera (@jmservera) | Delivered; blocks invalid public/private combinations and scope drift at Bicep compile/plan time |
+| `managed-identities-and-rbac` | Workload user-assigned managed identities (`api`, `agents`, `orchestrator`, `import`) and least-privilege RBAC | ADR 0001 | `bicep` | `infra/modules/identity.bicep`, `infra/staff-initializer-rbac.bicep`, `infra/role-assignments.json` | `Microsoft.ManagedIdentity/userAssignedIdentities`, `Microsoft.Authorization/roleDefinitions`, `Microsoft.Authorization/roleAssignments` | Juan Manuel Servera (@jmservera) | Delivered; workload identities in `identity.bicep`, scoped RBAC across target resource modules and `staff-initializer-rbac.bicep` |
+| `network-vnet-nsg-dns-pe` | Virtual network (`10.20.0.0/16`), workload/private-endpoint subnets, NSGs, private DNS zones and private endpoints | ADR 0001 | `bicep` | `infra/modules/network.bicep`, `infra/modules/envDns.bicep`, `infra/modules/privateEndpoint.bicep` | `Microsoft.Network/virtualNetworks`, `Microsoft.Network/networkSecurityGroups`, `Microsoft.Network/privateDnsZones`, `Microsoft.Network/privateDnsZones/virtualNetworkLinks`, `Microsoft.Network/privateDnsZones/A`, `Microsoft.Network/privateEndpoints`, `Microsoft.Network/privateEndpoints/privateDnsZoneGroups` | Juan Manuel Servera (@jmservera) | Delivered; covers SQL, Storage (blob/queue), Key Vault, ACR, Foundry, IoT Hub, Event Hubs, AMPLS and Container Apps internal DNS |
+| `monitoring-logs-ampls-alerts` | Log Analytics workspace, Application Insights, Azure Monitor Private Link Scope, action group, operational workbook and alerts | ADR 0001 | `bicep` | `infra/modules/monitoring.bicep`, `infra/modules/operationalMonitoring.bicep`, `infra/main.bicep` | `Microsoft.OperationalInsights/workspaces`, `Microsoft.Insights/components`, `Microsoft.Insights/privateLinkScopes`, `Microsoft.Insights/privateLinkScopes/scopedResources`, `Microsoft.Insights/actionGroups`, `Microsoft.Insights/workbooks`, `Microsoft.Insights/metricAlerts`, `Microsoft.Insights/scheduledQueryRules` | Juan Manuel Servera (@jmservera) | Delivered; diagnostic settings, metric alerts, scheduled log-query alerts and workbook defined in Bicep (`#146` tracks pilot tuning) |
+| `consumption-budgets` | Resource-group monthly cost budget and dedicated IoT Hub transport budget | ADR 0001, ADR 0003 | `bicep` | `infra/main.bicep`, `infra/modules/iothub.bicep` | `Microsoft.Consumption/budgets` | Juan Manuel Servera (@jmservera) | Delivered; `budget-${prefix}` in `main.bicep` and IoT transport budget in `iothub.bicep` |
+| `key-vault-resource` | Azure Key Vault RBAC vault, delete lock, diagnostic settings and secret-expiry/denied-access alerts | ADR 0001 | `bicep` | `infra/modules/keyvault.bicep` | `Microsoft.KeyVault/vaults`, `Microsoft.Authorization/locks`, `Microsoft.Authorization/roleAssignments`, `Microsoft.Insights/diagnosticSettings`, `Microsoft.Insights/scheduledQueryRules` | Juan Manuel Servera (@jmservera) | Delivered; RBAC authorization enabled, purge protection configurable per profile |
+| `key-vault-secret-values` | Out-of-band Key Vault secret values (`entra-client-secret`, `entra-token-store-sas`, resident-demo secrets) | ADR 0001 | `manual` | `infra/secret-inventory.json`, `infra/scripts/credential_arm.py`, `infra/scripts/setup-entra.py` | Key Vault data plane (`az keyvault secret set`, never stored in Bicep parameters or Git) | Juan Manuel Servera (@jmservera) | Intentionally out of Bicep so secrets never enter ARM deployment history; seeded idempotently by `credential_arm.py` and `setup-entra.py` |
+| `storage-blobs-worm-queues` | StorageV2 account, 7 base Blob containers, unlocked WORM immutability policies, lifecycle rule, delete lock and 4 Storage queues | ADR 0001, ADR 0003 | `bicep` | `infra/modules/storage.bicep` | `Microsoft.Storage/storageAccounts`, `Microsoft.Storage/storageAccounts/blobServices`, `Microsoft.Storage/storageAccounts/blobServices/containers`, `Microsoft.Storage/storageAccounts/blobServices/containers/immutabilityPolicies`, `Microsoft.Storage/storageAccounts/managementPolicies`, `Microsoft.Storage/storageAccounts/queueServices`, `Microsoft.Storage/storageAccounts/queueServices/queues`, `Microsoft.Authorization/locks` | Juan Manuel Servera (@jmservera) | Delivered; provisions `evidence`, `imports`, `quarantine`, `exports`, `audit-archive`, `ledger-digests`, `staff-results` and `agent-tasks`/`import-jobs` + poison queues |
+| `ranking-archive-blob` | Opt-in ranking archive Blob container (`ranking-archive`), unlocked WORM policy and `rankingPublish` job | ADR 0001, ADR 0003 | `bicep-conditional` | `infra/modules/storage.bicep`, `infra/modules/containerapps.bicep`, `infra/main.bicep` | `Microsoft.Storage/storageAccounts/blobServices/containers`, `Microsoft.Storage/storageAccounts/blobServices/containers/immutabilityPolicies`, `Microsoft.App/jobs` | Juan Manuel Servera (@jmservera) | Delivered behind `enableRankingArchiveBlob` (default `false`); see `#1258` |
+| `worm-policy-irreversible-lock` | Irreversible `lockImmutabilityPolicy` transition on `audit-archive`, `ledger-digests` and `ranking-archive` | ADR 0001, ADR 0002 | `manual` | `infra/modules/storage.bicep` | Azure Storage ARM action `lockImmutabilityPolicy` after Legal retention sign-off | Juan Manuel Servera (@jmservera, Legal & Compliance sign-off) | Intentionally unlocked in Bicep for non-production; locking is irreversible on live containers |
+| `entra-token-store` | Dedicated Entra EasyAuth token-store Storage account (`auth-tokens`), maintenance identity and daily SAS renewal job | ADR 0001 | `bicep-conditional` | `infra/modules/authTokenStore.bicep`, `infra/modules/containerapps.bicep` | `Microsoft.Storage/storageAccounts`, `Microsoft.Storage/storageAccounts/blobServices`, `Microsoft.Storage/storageAccounts/blobServices/containers`, `Microsoft.ManagedIdentity/userAssignedIdentities`, `Microsoft.App/jobs` | Juan Manuel Servera (@jmservera) | Delivered behind `enableEntraTokenStore` for multi-replica EasyAuth session persistence |
+| `container-registry` | Azure Container Registry Premium with private endpoint, retention/quarantine policies and `AcrPull` RBAC | ADR 0001 | `bicep` | `infra/modules/registry.bicep` | `Microsoft.ContainerRegistry/registries`, `Microsoft.Authorization/roleAssignments`, `Microsoft.Insights/diagnosticSettings` | Juan Manuel Servera (@jmservera) | Delivered; image builds run via `infra/scripts/pipeline.py publish` or `az acr build` |
+| `azure-sql-and-ledger` | Entra-only Azure SQL logical server, `retrofit` database with SQL Ledger, auditing, threat protection, PITR and delete lock | ADR 0001, ADR 0003 | `bicep` | `infra/modules/sql.bicep`, `infra/sql-recovery-runbook.md` | `Microsoft.Sql/servers`, `Microsoft.Sql/servers/databases`, `Microsoft.Sql/servers/auditingSettings`, `Microsoft.Sql/servers/securityAlertPolicies`, `Microsoft.Sql/servers/databases/backupShortTermRetentionPolicies`, `Microsoft.Authorization/locks` | Juan Manuel Servera (@jmservera) | Delivered; SQL Ledger enabled on `retrofit` DB (`#145` tracks live PITR drill sign-off) |
+| `sql-contained-users-and-roster` | Contained Entra SQL database users (`api`, `import`) and synthetic staff roster SQL bindings | ADR 0001 | `manual` | `infra/scripts/create-sql-users.py`, `infra/scripts/create-sql-users.sql`, `infra/scripts/initialize-workbench-staff.py` | Azure SQL T-SQL data plane (`CREATE USER ... FROM EXTERNAL PROVIDER`) inside VNet | Juan Manuel Servera (@jmservera) | Intentionally outside ARM because T-SQL principal DDL requires Entra token auth inside the private SQL plane |
+| `ledger-digest-verification` | Immutable `ledger-digests` container, scheduled `ledgerVerify` Container Apps job and mismatch/missing alerts (`#115`) | ADR 0001, ADR 0002 | `bicep` | `infra/modules/storage.bicep`, `infra/modules/containerapps.bicep`, `infra/main.bicep` | `Microsoft.Storage/storageAccounts/blobServices/containers/immutabilityPolicies`, `Microsoft.App/jobs`, `Microsoft.Insights/scheduledQueryRules` | Juan Manuel Servera (@jmservera) | Delivered in Bicep (`#115`, superseding the stale 2026-11-04 'Not built' note) |
+| `microsoft-foundry-models` | Microsoft Foundry AIServices account, project, `gpt-4.1-mini` and `gpt-4.1` model deployments, RBAC and private endpoint | ADR 0001 | `bicep` | `infra/modules/foundry.bicep`, `infra/resident-assistant.bicep` | `Microsoft.CognitiveServices/accounts`, `Microsoft.CognitiveServices/accounts/projects`, `Microsoft.CognitiveServices/accounts/deployments`, `Microsoft.Authorization/roleAssignments`, `Microsoft.Insights/diagnosticSettings` | Juan Manuel Servera (@jmservera) | Delivered; `foundry.bicep` deploys primary account/project/models, `resident-assistant.bicep` supports isolated assistant deployment |
+| `container-apps-hosting-and-jobs` | Container Apps Environment, `api` app + EasyAuth config, background jobs (`agents`, `orchestrator`, `import`, maintenance) and resident demo app | ADR 0001, ADR 0003 | `bicep` | `infra/modules/containerapps.bicep`, `infra/resident-demo.bicep`, `infra/private-proof-publisher.bicep` | `Microsoft.App/managedEnvironments`, `Microsoft.App/containerApps`, `Microsoft.App/containerApps/authConfigs`, `Microsoft.App/jobs` | Juan Manuel Servera (@jmservera) | Provisioned in Bicep with explicit worker/job `command`/`args` overrides and hardening mounts; `main.bicep` retains pre-ACR stage-1 bootstrap image defaults while `#144` tracks live Azure rollout and load verification |
+| `iot-hub-and-eventhub-adapter` | Azure IoT Hub (`B1`), Standard Event Hubs keyless consumer adapter, private endpoints and live simulator/receiver jobs | ADR 0002, ADR 0003 | `bicep` | `infra/modules/iothub.bicep`, `infra/iot-hub-live.bicep`, `infra/live-receiver-job.bicep`, `infra/live-simulator-job.bicep` | `Microsoft.Devices/IotHubs`, `Microsoft.Devices/IotHubs/eventHubEndpoints/ConsumerGroups`, `Microsoft.EventHub/namespaces`, `Microsoft.EventHub/namespaces/eventhubs`, `Microsoft.EventHub/namespaces/eventhubs/consumergroups`, `Microsoft.EventHub/namespaces/networkRuleSets`, `Microsoft.App/jobs` | Juan Manuel Servera (@jmservera) | Delivered; `iotHubRoutingReady` gates live route wiring until private endpoint state is approved (`#140`) |
+| `iot-device-identities-and-certs` | Per-device IoT Hub registry identities and X.509/SAS field device credentials (`#185`) | ADR 0003 | `manual` | `infra/iot-hub-live.bicep` | Azure IoT Hub device identity registry data plane (`az iot hub device-identity`) | Juan Manuel Servera (@jmservera) | Intentionally outside ARM templates; per-device credentials are managed in the IoT Hub data plane |
+| `public-edge-frontdoor-waf` | Optional Azure Front Door Premium profile, WAF policy (DRS 2.1, Bot Manager 1.1, rate limit) and Private Link origin | ADR 0002 | `bicep-conditional` | `infra/modules/edge.bicep`, `infra/public-edge-existing.bicep`, `infra/modules/edge-existing-auth.bicep` | `Microsoft.Cdn/profiles`, `Microsoft.Cdn/profiles/afdEndpoints`, `Microsoft.Cdn/profiles/originGroups`, `Microsoft.Cdn/profiles/originGroups/origins`, `Microsoft.Cdn/profiles/afdEndpoints/routes`, `Microsoft.Cdn/profiles/securityPolicies`, `Microsoft.Cdn/profiles/customDomains`, `Microsoft.Network/FrontDoorWebApplicationFirewallPolicies`, `Microsoft.App/containerApps/authConfigs` | Juan Manuel Servera (@jmservera) | Delivered behind `enablePublicEdge` (default `false` per ADR 0001 direct-entry synthetic demo decision, `#143`) |
+| `custom-domain-dns-records` | External DNS zone `_dnsauth` TXT validation and CNAME records for `edgeCustomDomain` managed TLS | ADR 0002 | `manual` | `infra/modules/edge.bicep` | External DNS registrar / zone provider outside the `ama` resource group | Juan Manuel Servera (@jmservera) | Intentionally manual because domain registrar DNS lives outside the Azure resource group |
+| `gis-map-tile-provider` | GIS map tile URL parameter (`tileUrl` OSM demo default) and commercial pilot tile key (`Azure Maps` / `OS Data Hub` PSGA) | ADR 0002, ADR 0003 | `deferred` | `infra/main.bicep`, `infra/modules/containerapps.bicep` | `tileUrl` Container Apps parameter (`TILE_URL`); commercial Azure Maps / OS Data Hub account deferred to pilot | Juan Manuel Servera (@jmservera) | Demo `tileUrl` wiring is in Bicep; paid commercial tile resource is deferred until pilot scale |
+| `subscription-policy-and-defender` | Subscription-scope Azure Policy assignment (`DoNotEnforce` audit mode) and conditional Defender for Cloud pricing plans | ADR 0002 | `bicep-conditional` | `infra/governance.bicep`, `infra/defender-decision.json` | `Microsoft.Authorization/policyAssignments`, `Microsoft.Security/pricings` | Juan Manuel Servera (@jmservera) | Policy runs in `DoNotEnforce` audit mode; `enableDefenderPlans` stays `false` until the owner accepts a cost |
+| `entra-app-registration-and-roles` | Microsoft Entra ID application registration, app roles, `appRoleAssignmentRequired`, redirect URIs and staff role assignments | ADR 0001 | `manual` | `infra/entra/app-registration.json`, `infra/scripts/create-api-app-registration.sh`, `infra/scripts/setup-entra.py` | Microsoft Entra ID Graph API (`applications`, `servicePrincipals`, `appRoleAssignedTo`) | Juan Manuel Servera (@jmservera, Entra tenant owner) | Intentionally scripted outside ARM; declarative manifest in `infra/entra/app-registration.json` is reconciled by `setup-entra.py` |
+| `contractor-entra-b2b-policy` | Contractor Entra B2B guest invitation policy and cross-tenant access settings | ADR 0002 | `manual` | `infra/entra/app-registration.json` | Microsoft Entra ID tenant external collaboration and cross-tenant settings | Juan Manuel Servera (@jmservera, Entra tenant owner) | Intentionally manual tenant-wide security control; requires tenant administrator confirmation before contractor pilot onboarding |
+| `m365-teams-and-sharepoint-consent` | Microsoft 365 Teams Workflows webhook (`teamsWebhookUrl`) and Graph `Sites.Selected` SharePoint admin consent | ADR 0001 | `manual` | `infra/scripts/configure-m365-provisioner-app.sh`, `infra/scripts/grant-sharepoint-access.sh` | Microsoft 365 / Microsoft Graph tenant admin consent plane | Juan Manuel Servera (@jmservera, M365 tenant administrator) | Intentionally manual tenant consent; Bicep consumes only `evidenceStore`, `sharePointSiteId` and `teamsWebhookUrl` |
+| `github-environments-and-oidc` | GitHub protected environments, required reviewers, branch protection and Entra workload identity federation (OIDC) | ADR 0001 | `manual` | `.github/workflows/src-deploy.yml`, `infra/scripts/pipeline.py` | GitHub repository settings and Entra federated identity credentials | Juan Manuel Servera (@jmservera, platform owner) | Intentionally manual external control plane; `infra/scripts/pipeline.py verify-environment` checks environment protection at deploy time |
+| `deferred-egress-and-phase2-services` | Controlled outbound VNet egress (`Azure Firewall` / `NAT Gateway`) and Phase 2+ services (`Azure AI Search`, `Document Intelligence`, `Content Understanding`, `Service Bus`, `Power BI Embedded`) | ADR 0001 | `deferred` | `docs/adrs/0001-azure-architecture.md` | Deferred Phase 2+ Azure services; Phase 1 uses Azure SQL, Foundry, Storage queues and Blob evidence fallback | Juan Manuel Servera (@jmservera) | Explicitly out of Phase 1 demonstrator scope per ADR 0001; tracked for post-demonstrator scale phases |
+
+### Bicep module delivery matrix
+
+| Module path | Wired in entrypoint(s) | Provisioned ARM resource types | Delivery status | Notes and remaining gates |
+| --- | --- | --- | --- | --- |
+| `infra/modules/authTokenStore.bicep` | `infra/main.bicep` | `Microsoft.Authorization/roleAssignments`, `Microsoft.Insights/diagnosticSettings`, `Microsoft.ManagedIdentity/userAssignedIdentities`, `Microsoft.Storage/storageAccounts`, `Microsoft.Storage/storageAccounts/blobServices`, `Microsoft.Storage/storageAccounts/blobServices/containers` | `delivered-conditional` | Optional dedicated EasyAuth token store behind `enableEntraTokenStore` |
+| `infra/modules/containerapps.bicep` | `infra/main.bicep` | `Microsoft.App/containerApps`, `Microsoft.App/containerApps/authConfigs`, `Microsoft.App/jobs`, `Microsoft.App/managedEnvironments`, `Microsoft.Insights/diagnosticSettings` | `delivered-placeholder-workers` | Environment, `api`, EasyAuth, explicit worker/job `command`/`args` overrides (`orchestrator`, `importJob`, maintenance jobs) and hardening mounts delivered; `main.bicep` retains pre-ACR stage-1 `quickstart:latest` bootstrap defaults overridden by `@sha256:` release manifests (`#144` tracks live Azure rollout) |
+| `infra/modules/edge-existing-auth.bicep` | `infra/public-edge-existing.bicep` | `Microsoft.App/containerApps/authConfigs` | `delivered-conditional` | Updates existing API Container App EasyAuth forward-proxy settings for additive Front Door cutover |
+| `infra/modules/edge-existing-guard.bicep` | `infra/public-edge-existing.bicep` | `none (compile-time guard)` | `delivered-guard` | Compile-time parameter and auth invariant guard for `public-edge-existing.bicep` |
+| `infra/modules/edge.bicep` | `infra/main.bicep`, `infra/public-edge-existing.bicep` | `Microsoft.Cdn/profiles`, `Microsoft.Cdn/profiles/afdEndpoints`, `Microsoft.Cdn/profiles/afdEndpoints/routes`, `Microsoft.Cdn/profiles/customDomains`, `Microsoft.Cdn/profiles/originGroups`, `Microsoft.Cdn/profiles/originGroups/origins`, `Microsoft.Cdn/profiles/securityPolicies`, `Microsoft.Insights/diagnosticSettings`, `Microsoft.Network/FrontDoorWebApplicationFirewallPolicies` | `delivered-conditional` | Optional Front Door Premium + WAF + Private Link origin behind `enablePublicEdge` (`#143`) |
+| `infra/modules/envDns.bicep` | `infra/modules/containerapps.bicep` | `Microsoft.Network/privateDnsZones`, `Microsoft.Network/privateDnsZones/A`, `Microsoft.Network/privateDnsZones/virtualNetworkLinks` | `delivered-conditional` | Internal Container Apps Environment wildcard/root private DNS zone when `internalIngress` is enabled |
+| `infra/modules/foundry.bicep` | `infra/main.bicep` | `Microsoft.Authorization/roleAssignments`, `Microsoft.CognitiveServices/accounts`, `Microsoft.CognitiveServices/accounts/deployments`, `Microsoft.CognitiveServices/accounts/projects`, `Microsoft.Insights/diagnosticSettings` | `delivered` | Microsoft Foundry AIServices account, project, model deployments (`gpt-4.1-mini`, `gpt-4.1`), RBAC and private endpoint |
+| `infra/modules/guard.bicep` | `infra/main.bicep` | `none (compile-time guard)` | `delivered-guard` | Compile-time deployment profile, private-network, budget and Entra parameter guard for `main.bicep` |
+| `infra/modules/identity.bicep` | `infra/main.bicep` | `Microsoft.ManagedIdentity/userAssignedIdentities` | `delivered` | Four workload user-assigned managed identities (`api`, `agents`, `orchestrator`, `import`) |
+| `infra/modules/iothub-scope-guard.bicep` | `infra/iot-hub-live.bicep`, `infra/modules/iothub.bicep` | `none (compile-time guard)` | `delivered-guard` | Enforces SKU, partition and telemetry scope boundaries on IoT Hub templates |
+| `infra/modules/iothub.bicep` | `infra/main.bicep` | `Microsoft.Authorization/roleAssignments`, `Microsoft.Consumption/budgets`, `Microsoft.Devices/IotHubs`, `Microsoft.EventHub/namespaces`, `Microsoft.EventHub/namespaces/eventhubs`, `Microsoft.EventHub/namespaces/eventhubs/consumergroups`, `Microsoft.EventHub/namespaces/networkRuleSets`, `Microsoft.Insights/diagnosticSettings` | `delivered` | IoT Hub (`B1`), Standard Event Hubs keyless consumer namespace/hub/consumer group, transport budget and private endpoints (`iotHubRoutingReady` gates active route cutover, `#140`) |
+| `infra/modules/keyvault.bicep` | `infra/main.bicep` | `Microsoft.Authorization/locks`, `Microsoft.Authorization/roleAssignments`, `Microsoft.Insights/diagnosticSettings`, `Microsoft.Insights/scheduledQueryRules`, `Microsoft.KeyVault/vaults` | `delivered` | RBAC Key Vault, `CanNotDelete` lock, audit diagnostics, expiry/denied-access alerts and private endpoint |
+| `infra/modules/monitoring.bicep` | `infra/main.bicep` | `Microsoft.Insights/actionGroups`, `Microsoft.Insights/components`, `Microsoft.Insights/privateLinkScopes`, `Microsoft.Insights/privateLinkScopes/scopedResources`, `Microsoft.OperationalInsights/workspaces` | `delivered` | Log Analytics workspace, Application Insights, AMPLS, action group and private endpoint |
+| `infra/modules/network.bicep` | `infra/main.bicep` | `Microsoft.Network/networkSecurityGroups`, `Microsoft.Network/privateDnsZones`, `Microsoft.Network/privateDnsZones/virtualNetworkLinks`, `Microsoft.Network/virtualNetworks` | `delivered` | VNet (`10.20.0.0/16`), subnets, NSGs and 8 private DNS zones + VNet links |
+| `infra/modules/operationalMonitoring.bicep` | `infra/main.bicep` | `Microsoft.Insights/metricAlerts`, `Microsoft.Insights/scheduledQueryRules`, `Microsoft.Insights/workbooks` | `delivered` | Operational workbook plus queue-backlog, poison-queue, job-failure, SQL and HTTP latency/error alerts (`#146`) |
+| `infra/modules/privateEndpoint.bicep` | `infra/modules/authTokenStore.bicep`, `infra/modules/foundry.bicep`, `infra/modules/iothub.bicep`, `infra/modules/keyvault.bicep`, `infra/modules/monitoring.bicep`, `infra/modules/registry.bicep`, `infra/modules/sql.bicep`, `infra/modules/storage.bicep` | `Microsoft.Network/privateEndpoints`, `Microsoft.Network/privateEndpoints/privateDnsZoneGroups` | `delivered` | Reusable private endpoint and DNS zone group helper wired across 8 data/AI/monitoring modules |
+| `infra/modules/registry.bicep` | `infra/main.bicep` | `Microsoft.Authorization/roleAssignments`, `Microsoft.ContainerRegistry/registries`, `Microsoft.Insights/diagnosticSettings` | `delivered` | Premium ACR with retention/quarantine policies, `AcrPull` RBAC and private endpoint |
+| `infra/modules/sql.bicep` | `infra/main.bicep` | `Microsoft.Authorization/locks`, `Microsoft.Insights/diagnosticSettings`, `Microsoft.Sql/servers`, `Microsoft.Sql/servers/auditingSettings`, `Microsoft.Sql/servers/databases`, `Microsoft.Sql/servers/databases/backupShortTermRetentionPolicies`, `Microsoft.Sql/servers/securityAlertPolicies` | `delivered` | Entra-only Azure SQL server, `retrofit` Ledger database, auditing, Defender alert policy, PITR retention, delete lock and private endpoint |
+| `infra/modules/staff-initializer-guard.bicep` | `infra/live-receiver-job.bicep`, `infra/live-simulator-job.bicep`, `infra/private-proof-publisher.bicep`, `infra/resident-demo.bicep`, `infra/staff-initializer-rbac.bicep` | `none (compile-time guard)` | `delivered-guard` | Enforces subscription, resource-group and principal preconditions across additive operational/proof templates |
+| `infra/modules/storage.bicep` | `infra/main.bicep` | `Microsoft.Authorization/locks`, `Microsoft.Authorization/roleAssignments`, `Microsoft.Insights/diagnosticSettings`, `Microsoft.Storage/storageAccounts`, `Microsoft.Storage/storageAccounts/blobServices`, `Microsoft.Storage/storageAccounts/blobServices/containers`, `Microsoft.Storage/storageAccounts/blobServices/containers/immutabilityPolicies`, `Microsoft.Storage/storageAccounts/managementPolicies`, `Microsoft.Storage/storageAccounts/queueServices`, `Microsoft.Storage/storageAccounts/queueServices/queues` | `delivered` | StorageV2 account, 7 base containers + optional `ranking-archive`, unlocked WORM policies, lifecycle rule, 4 queues, RBAC, delete lock and blob/queue private endpoints |
+
+### Reproducible from-empty deployment sequence
+
+Every stage in the canonical 17-stage rebuild contract
+(`src/orchestrator/src/zava_forward/orchestrator/rebuild.py`, executed by
+`src/orchestrator/src/zava_forward/orchestrator/rebuild_azure.py`) and both
+operator (`infra/scripts/deploy.py`) and CI (`infra/scripts/pipeline.py`)
+paths maps to checked-in repository templates and scripts:
+
+| Step | Rebuild stage(s) | Action | Repository template or script | Verification check |
+| --- | --- | --- | --- | --- |
+| 1 | `prerequisite` | Confirm target Azure subscription, pre-created `ama` resource group, Entra SQL admin group/object ID, and (for CI) GitHub environment reviewers/OIDC owned by Juan Manuel Servera (@jmservera) | `infra/main.bicepparam`, `infra/main.test.bicepparam`, `infra/main.pilot.example.bicepparam`, `infra/scripts/pipeline.py` (`verify-environment`, `verify-federation`) | `az group show -n ama` succeeds; `python3 infra/scripts/pipeline.py verify-environment` confirms protected environment reviewers in CI; `python3 infra/scripts/pipeline.py verify-federation` lists the deploy identity's federated credentials read-only |
+| 2 | `parameters` | Validate Bicep parameter files, compile-time guards and subscription policy/Defender baseline (`what-if` preview before apply) | `infra/main.bicep`, `infra/governance.bicep`, `infra/defender-decision.json`, `infra/scripts/deploy.py`, `infra/scripts/pipeline.py` (`plan`) | `az bicep build --file infra/main.bicep` and `python3 infra/scripts/deploy.py` (default `what-if`) or `python3 infra/scripts/pipeline.py plan` exit 0 |
+| 3 | `dependencies` | Provision foundational resource-group infrastructure (identities, VNet/DNS/NSGs, monitoring/AMPLS/alerts, Key Vault, Storage/WORM/queues, ACR, Entra-only SQL + Ledger, Foundry, IoT Hub + Event Hubs, Container Apps environment) | `infra/main.bicep`, `infra/scripts/deploy.py` (`--apply`), `infra/scripts/pipeline.py` (`deploy`) | ARM deployment succeeds with `provisioningState == Succeeded` and outputs resource names/endpoints |
+| 4 | `discover` | Resolve provisioned ACR, Key Vault, SQL server/database, Storage, Foundry and Container Apps endpoints from the resource group | `src/orchestrator/src/zava_forward/orchestrator/rebuild_azure.py`, `infra/scripts/pipeline.py` (`changed-images`) | Discovered resource inventory has non-empty endpoints and matching workload managed identity client/principal IDs |
+| 5 | `images` | Build and push container images (`api`, `agents`, `orchestrator`, `importer`) to the private ACR (`pipeline.py release` stage label in `rebuild.py` maps to `pipeline.py publish` in CI and `az acr build` for operators) | `src/api/Dockerfile`, `src/agents/Dockerfile`, `src/orchestrator/Dockerfile`, `src/importer/Dockerfile`, `infra/scripts/pipeline.py` (`publish`, `changed-images`) | Immutable image digests exist in ACR repositories before workload rollout |
+| 6 | `credential` | Register or reconcile the Entra API application, app roles and client secret, storing secret values in Key Vault out of band of ARM history | `infra/entra/app-registration.json`, `infra/secret-inventory.json`, `infra/scripts/create-api-app-registration.sh`, `infra/scripts/credential_arm.py` | Key Vault secret metadata exists without secret literals in Bicep parameters or Git |
+| 7 | `sql-users` | Create idempotent contained Entra SQL database users (`api`, `import`) and least-privilege role grants (`db_datareader`, `db_datawriter`, `db_ddladmin` as scoped) | `infra/scripts/create-sql-users.py`, `infra/scripts/create-sql-users.sql`, `infra/staff-initializer-rbac.bicep` | Contained external-provider principals resolve in `sys.database_principals` |
+| 8 | `seed` | Run schema migrations and load synthetic Zava North Homes retrofit dataset into Azure SQL and Blob containers | `src/importer/Dockerfile`, `src/orchestrator/src/zava_forward/orchestrator/rebuild_azure.py` | Seed job exits 0 and synthetic homes/cases/journeys query cleanly |
+| 9 | `applications` | Update Container Apps (`api`) and background jobs (`agents`, `orchestrator`, `import`, `ledger-verify`, optional `auth-renewal`/`ranking-publish`) with built ACR image digests while preserving live tags | `infra/main.bicep`, `infra/modules/containerapps.bicep`, `infra/scripts/deploy.py` (`--apply`), `infra/scripts/pipeline.py` (`deploy`) | Active `api` revision and job templates reference expected ACR digests and workload managed identities |
+| 10 | `authentication` | Reconcile Entra redirect URIs, EasyAuth configuration (`Return401` / login redirect), optional token-store SAS and optional Front Door edge auth | `infra/scripts/setup-entra.py`, `infra/scripts/initialize-api-auth.py`, `infra/public-edge-existing.bicep` | EasyAuth `authConfigs/current` requires Entra sign-in and matches `entra/app-registration.json` |
+| 11 | `staff` | Reconcile private synthetic staff tenant members, Entra `appRoleAssignedTo` grants and SQL staff roster bindings | `infra/scripts/initialize-workbench-staff.py` | Every configured synthetic staff persona maps to its Entra app role and SQL row |
+| 12 | `health`, `api-denial`, `browser-redirect`, `workload-sql`, `model-standard`, `model-capable`, `restart` | Execute post-deploy smoke, unauthenticated API `401` denial, browser Entra redirect, managed-identity SQL read/write, Foundry `gpt-4.1-mini` + `gpt-4.1` round-trips, private-cutover probes and serving-replica restart | `src/orchestrator/src/zava_forward/orchestrator/rebuild.py`, `src/orchestrator/src/zava_forward/orchestrator/rebuild_azure.py`, `infra/scripts/private-cutover-proof.py`, `infra/private-proof-publisher.bicep` | All 7 post-deploy verification stages pass and the restarted serving replica reports healthy |
+
+### Canonical from-empty pipeline step registry
+
+`infra/scripts/pipeline.py` (`FROM_EMPTY_STEPS`) and
+`infra/scripts/reproducibility_check.py` (`verify_from_empty_deployment_reproducibility`)
+group the 17-stage rebuild contract (consolidating two-pass Bicep and ACR rollout
+under `deploy`) into six canonical pipeline steps executed deterministically
+offline from checked-in repository files, with pre-deployment tenant ownership
+recorded explicitly on `preflight` and zero unrecorded operator steps:
+
+| Step | Pipeline registration | Rebuild stage(s) | Repository template or script | Manual prerequisites | Verification check |
+| --- | --- | --- | --- | --- | --- |
+| `preflight` | `FROM_EMPTY_STEPS[0]` (`verify-environment`) | `parameters` | `infra/scripts/pipeline.py`, `infra/scripts/tenant-readiness-preflight.py`, `infra/entra/app-registration.json`, `infra/secret-inventory.json`, `infra/defender-decision.json` | Pre-created `ama` resource group, Entra SQL admin security group, and protected GitHub environment reviewers owned by Juan Manuel Servera (@jmservera) | `python3 infra/scripts/pipeline.py verify-environment --github-environment dev-release` and `python3 infra/scripts/reproducibility_check.py --check` exit 0 |
+| `what-if` | `FROM_EMPTY_STEPS[1]` (`plan`) | `dependencies` | `infra/main.bicep`, `infra/governance.bicep`, `infra/parameters/dev.bicepparam`, `infra/parameters/prod.bicepparam`, `infra/scripts/deploy.py`, `infra/scripts/pipeline.py` | none (automated from repository files) | `az bicep build-params --file infra/parameters/dev.bicepparam --stdout`, `az bicep build-params --file infra/parameters/prod.bicepparam --stdout`, and `python3 infra/scripts/pipeline.py plan` exit 0 |
+| `deploy` | `FROM_EMPTY_STEPS[2]` (`publish`, `deploy`) | `discover`, `images`, `credential`, `applications`, `authentication` | `infra/main.bicep`, `infra/modules/containerapps.bicep`, `src/api/Dockerfile`, `src/agents/Dockerfile`, `src/orchestrator/Dockerfile`, `src/importer/Dockerfile`, `infra/scripts/deploy.py`, `infra/scripts/pipeline.py`, `infra/scripts/setup-entra.py`, `infra/scripts/credential_arm.py` | none (automated from repository files) | ARM incremental deployment reaches `Succeeded` with immutable ACR digests and Entra EasyAuth configured |
+| `sql-init` | `FROM_EMPTY_STEPS[3]` (`check_sql`) | `sql-users` | `infra/scripts/create-sql-users.py`, `infra/scripts/create-sql-users.sql`, `infra/sql/resident-showcase.sql`, `infra/sql/resident-assistant.sql`, `infra/staff-initializer-rbac.bicep` | none (automated from repository files) | SQL `publicNetworkAccess` remains `Disabled` and contained Entra principals resolve with least-privilege roles |
+| `seed` | `FROM_EMPTY_STEPS[4]` (`seed`) | `seed`, `staff` | `src/importer/Dockerfile`, `src/orchestrator/src/zava_forward/orchestrator/rebuild_azure.py`, `infra/scripts/resident_sensor_seed.py`, `infra/scripts/initialize-workbench-staff.py` | none (automated from repository files) | Idempotent synthetic retrofit, IoT sensor, and staff roster initialization completes without reseeding populated stores |
+| `smoke` | `FROM_EMPTY_STEPS[5]` (`smoke`) | `health`, `api-denial`, `browser-redirect`, `workload-sql`, `model-standard`, `model-capable`, `restart` | `infra/scripts/pipeline.py`, `infra/scripts/private-cutover-proof.py`, `src/orchestrator/src/zava_forward/orchestrator/rebuild.py`, `src/orchestrator/src/zava_forward/orchestrator/rebuild_azure.py` | none (automated from repository files) | `/healthz` returns `200`, all three anonymous/forged `/api/me` probes return `401`, `/sign-in` returns `302`, and private SQL/AI/restart checks pass |
+
+## Ledger digest immutability and scheduled verification wiring (Refs #115, 2026-11-15)
+
+Source and compiled-template hardening for the `ledger-digests` Blob container
+immutability policy, Container Apps `ledgerVerify` scheduled job wiring, and
+Azure Monitor scheduled log-query alerts (`ledgerDigestMismatch` and
+`ledgerVerifyMissing`):
+
+| Parameter | Default | Effect |
 | --- | --- | --- |
-| Managed identities, role assignments, role definitions | `modules/identity.bicep`, `role-assignments.json` | In Bicep |
-| VNet, subnets, NSGs, private DNS, private endpoints | `modules/network.bicep`, `envDns.bicep`, `privateEndpoint.bicep` | In Bicep |
-| Log Analytics, Application Insights, private link scope, action group, alerts, workbook | `modules/monitoring.bicep`, `operationalMonitoring.bicep` | In Bicep |
-| Key Vault and secret definitions | `modules/keyvault.bicep` | In Bicep; secret values are set outside the repository (see `secret-inventory.json`) |
-| Storage (blob, immutable audit container, queues, lifecycle) | `modules/storage.bicep` | In Bicep |
-| Ranking archive Blob container and API settings (#1258) | `modules/storage.bicep`, `modules/containerapps.bicep`, `main.bicep` | Source definition, opt-in (`enableRankingArchiveBlob`, default false); immutability duration and lock are manual prerequisites; see [Ranking archive Blob wiring](#ranking-archive-blob-wiring-refs-136-1258-2026-11-09) |
-| Container Registry | `modules/registry.bicep` | In Bicep; image builds use `az acr build` or the release workflow |
-| Azure SQL server, database, auditing, threat protection, PITR | `modules/sql.bicep` | In Bicep |
-| SQL database users and grants | `scripts/create-sql-users.*` | Scripted, run by the in-VNet initializer; owner runs it |
-| Foundry account, project, model deployments | `modules/foundry.bicep` | In Bicep |
-| Container Apps environment, API, jobs | `modules/containerapps.bicep` | In Bicep |
-| Azure IoT Hub and Event Hubs consumer path | `modules/iothub.bicep`, `iot-hub-live.bicep` | In Bicep; live apply is an owner-gated Azure step (#140) |
-| Budget | `main.bicep` | In Bicep |
-| Policy assignment, locks | `governance.bicep` | In Bicep; policy is audit only |
-| Defender for Cloud plans | `governance.bicep`, `defender-decision.json` | Deferred: owner-approved cost is required before activation |
-| Front Door Premium, WAF, custom domain | `modules/edge*.bicep` | In Bicep, optional; deferred for the synthetic demo (ADR 0001 direct-entry decision, #143) |
-| Entra app registration, app roles, role assignment to staff | `entra/app-registration.json`, `scripts/setup-entra.py` | Intentionally manual in the tenant; owner runs the scripts |
-| Contractor B2B guest policy and cross-tenant settings | Entra tenant | Intentionally manual; tenant owner confirmation is open |
-| Microsoft 365 and SharePoint permission grants | `scripts/grant-sharepoint-access.sh` | Intentionally manual; admin consent by a tenant administrator |
-| GitHub environments, reviewers, OIDC federation, branch protection | GitHub and Entra settings | Intentionally manual; platform owner; unverified in this repository |
-| Azure subscription and `ama` resource group | Azure | Existing; no teardown (see Deploy) |
-| Azure AI Search, Service Bus, Content Understanding | none | Not in scope; deferred by ADR 0001 |
-| Ledger digest upload and scheduled verification | none | Not built; open item in ADR 0001 |
+| `ledgerDigestImmutabilityDays` | `365` | `@minValue(1)` (`>= 365` enforced in `production` profile via `productionProfileRequiresImmutableLedgerDigests`). Forwarded from `main.bicep` to `modules/storage.bicep` `digestRetention` (`allowProtectedAppendWrites: false`) and to `modules/containerapps.bicep` `ZF_DIGEST_MIN_RETENTION_DAYS`. ARM creates the time-based WORM policy in `Unlocked` state; irreversible policy locking (`lockImmutabilityPolicy`) remains an explicit owner action after Legal sets the retention schedule. |
+| `ledgerDigestImmutableStorage` | `true` | Configures container-level `immutableStorageWithVersioning: { enabled: true }` on `ledger-digests` only and gates `digestRetention` in `modules/storage.bicep`. `production` profile rejects `false` via `modules/guard.bicep` (`productionProfileRequiresImmutableLedgerDigests`). |
+| `ledgerDigestRequireRetentionLock` | `true` | Forwarded from `main.bicep` to `modules/containerapps.bicep` `ZF_DIGEST_REQUIRE_RETENTION_LOCK` on `ledgerVerify` so scheduled digest publication and verification fail closed when container WORM retention is absent, unlocked, or shorter than `ZF_DIGEST_MIN_RETENTION_DAYS`. `production` profile rejects `false`. |
 
-Unmet for #136: criteria 1 (the #440 stabilization checkpoint), 3 (children
-open: #137, #138, #140, #142, #143, #144, #145, #146, #148), 4 (from-empty
-deployment observed on 2026-10-12 but not reproven since) and 5 (status kept
-current in the epic). Criterion 2 is recorded here but its manual rows still
-need owner confirmation.
+* `modules/storage.bicep` exports `ledgerDigestContainer` (`ledger-digests`) and `main.bicep` binds it into `modules/containerapps.bicep` `ZF_DIGEST_CONTAINER` on the daily `0 2 * * *` `ledgerVerify` job (`replicaRetryLimit: 0`), preventing container-name drift across storage and scheduled verification.
+* `main.bicep` keeps Severity 1 `ledgerDigestMismatch` (`Log has "LEDGER_DIGEST_ALERT"`, `GreaterThan 0`, `PT1H`) and `ledgerVerifyMissing` (`Log has "LEDGER_DIGEST_OK"`, `LessThan 1`, `P1D` / `PT26H`) wired to the Log Analytics workspace and monitoring action group, with offline policy and negative-mutation checks in `tests/test_bicep_policy.py` and `tests/test_monitoring_alerts.py` cross-checked against `zava_forward.core.ledger_digest_blob` and `zava_forward.orchestrator.digest_blob`.
+* Offline compilation and unit tests do not establish live Azure policy locking, live Container Apps Job execution, or live Azure Monitor notification delivery (`Refs #115`).
 
 ## Ranking archive Blob wiring (Refs #136, #1258, 2026-11-09)
 
@@ -4118,9 +4315,10 @@ The executor, under separate admission, runs these in order and stops at the fir
    and the control share mounted read-only. The receiver identity needs AcrPull, Azure Event Hubs
    Data Receiver on `sensor-readings`, `SELECT` on `dbo.cases`,
    `dbo.sensor_consumer_control` and `dbo.sensor_consumer_policy`, and `SELECT, INSERT` on
-   `dbo.sensor_reading`, `dbo.sensor_delivery` and `dbo.sensor_data_quality_exception`; the
-   list was checked against the statements `SensorConsumer.process` runs (no `sensor_register`
-   read, no DDL, seeding or metadata write) and nothing wider may be granted. The tables must
+   `dbo.sensor_reading`, `dbo.sensor_register`, `dbo.sensor_delivery` and
+   `dbo.sensor_data_quality_exception`; the list was checked against the statements
+   `SensorConsumer.process` runs (an accepted reading also inserts its sensor's `sensor_register`
+   row when absent, so the resident view and map join find it; no DDL, seeding or metadata write) and nothing wider may be granted. The tables must
    already exist: a setup or admin identity provisions them separately, and the receiver
    refuses rather than creating schema. The
    simulator identity stays read-only on `dbo.cases`. Start one execution per window; the receiver

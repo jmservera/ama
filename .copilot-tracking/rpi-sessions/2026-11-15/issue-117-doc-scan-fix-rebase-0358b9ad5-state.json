@@ -1,0 +1,72 @@
+{
+  "task_id": "issue-117-doc-scan-fix-rebase-0358b9ad5",
+  "task_slug": "issue-117-doc-scan-fix-rebase-0358b9ad5",
+  "parent_task": {
+    "task_id": "issue-117-doc-scan-rebase-fa6f8d1dd",
+    "task_slug": "issue-117-doc-scan-rebase-fa6f8d1dd"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-15/issue-117-doc-scan-fix-rebase-0358b9ad5-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-15/issue-117-doc-scan-fix-rebase-0358b9ad5-plan.md",
+    "details": ".copilot-tracking/details/2026-11-15/issue-117-doc-scan-fix-rebase-0358b9ad5-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-15/issue-117-doc-scan-fix-rebase-0358b9ad5-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-15/issue-117-doc-scan-fix-rebase-0358b9ad5-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-15/issue-117-doc-scan-fix-rebase-0358b9ad5-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run confirmed automatic RPI child loop (issue-117-doc-scan-fix-rebase-0358b9ad5) on branch feat/demo-117-doc-scan to rebase onto origin/feat/demo-164-chat-grounding-provenance-0900 (0358b9ad5), fix test_resident_acceptance_never_clears_technical_or_hazard_gates in src/core/tests/test_resident_decisions.py while preserving 100% of #117 fail-closed malware scan quarantine tests, run focused src-ci.yml validation across src/core and src/api, and commit cleanly without pushing.",
+      "status": "confirmed",
+      "evidence": "Explicit caller prompt, 2026-11-15"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready. Reproduced the exact 2 test_resident_decisions failures (line 2526), proved is_available_case_document must remain fail-closed for generated=False uploads missing scan metadata per test_technical_evidence_usability.py, matched dataset.py's clean synthetic scan fixture convention, and proved conflict-free rebase onto 0358b9ad5 via git merge-tree.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-15/issue-117-doc-scan-fix-rebase-0358b9ad5-research.md (C1-C8)"
+    },
+    {
+      "decision": "Critique execution: Complete; Verdict: Pass (Ready); Critique path: .copilot-tracking/reviews/plans/2026-11-15/issue-117-doc-scan-fix-rebase-0358b9ad5-plan-critique.md; Direct dispositions: zero findings (0 Critical, 0 High, 0 Medium, 0 Low); Planning status finalized as Ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-15/issue-117-doc-scan-fix-rebase-0358b9ad5-plan-critique.md; .copilot-tracking/plans/2026-11-15/issue-117-doc-scan-fix-rebase-0358b9ad5-plan.md"
+    },
+    {
+      "decision": "Implementation execution: Complete across full plan P01-P03. Rebased feat/demo-117-doc-scan onto origin/feat/demo-164-chat-grounding-provenance-0900 (ad005cd5f atop 0358b9ad5, #117 replayed as 058fcc3e8), committed test(core) fix 3efbe346a7b8cb066a94b157271b6ac7ec39edd7 in src/core/tests/test_resident_decisions.py without modifying doc_controls.py, and passed src/core (484 focused + 3,660 full tests, ruff, mypy), src/api (44 tests incl. test_document_controls and test_role_endpoint_inventory, ruff, mypy), and tools/rename-zava-tests.py (25 tests).",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-15/issue-117-doc-scan-fix-rebase-0358b9ad5-changes.md"
+    },
+    {
+      "decision": "Review execution: Complete; Outcome: Conformant; Assessed boundary: full P01-P03 task boundary (rebase onto ad005cd5f/0358b9ad5, test_resident_decisions.py synthetic scan metadata fix 3efbe346a, worktree-isolated src-ci.yml validation across src/core and src/api, and #117 tracking reconciliation); Review path: .copilot-tracking/reviews/logs/2026-11-15/issue-117-doc-scan-fix-rebase-0358b9ad5-review.md.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-117-doc-scan-fix-rebase-0358b9ad5-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await user selection of a ranked post-Review follow-up work item, Stop automatic session, or Switch to manual mode"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Add direct SqlStore.rescan_pending() reopen persistence and out['blocked'] counter unit-test assertions in src/core/tests/test_document_rescan.py (RV-001)",
+      "rationale": "Highest ease of implementation (~15 lines in existing SqlStore test harness), directly hardens regression coverage of batch rescan sweeps",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-15/issue-117-doc-scan-review.md (RV-001)"
+    },
+    {
+      "rank": 2,
+      "task": "Provision Azure Storage Defender malware scanning tags and quarantine infrastructure wiring in Bicep/deployment workflows",
+      "rationale": "High operational security value for live cloud pilot readiness complementing the core/API fail-closed scan gate",
+      "evidence": "docs/adrs/0002-pilot-readiness-architecture.md; .copilot-tracking/research/2026-11-15/issue-117-doc-scan-research.md (C2)"
+    },
+    {
+      "rank": 3,
+      "task": "Deliver remaining Issue #117 retention schedule and legal-hold DPO/Legal governance sign-off and automated purge evidence",
+      "rationale": "Completes the remaining unchecked governance/retention criteria on Issue #117 beyond upload malware scanning",
+      "evidence": "GitHub Issue #117; src/api/tests/test_document_controls.py (RetentionTests)"
+    }
+  ]
+}

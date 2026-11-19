@@ -20,7 +20,14 @@ from unittest.mock import patch
 
 from dataset import DATA, supplied_appointment_fixture, supplied_contract_fixture
 from sqlguard import require_task_owned_loopback
-from zava_forward.core import ai_tasks, assistants, controls, projection, resident_decisions
+from zava_forward.core import (
+    ai_tasks,
+    assistants,
+    controls,
+    identity,
+    projection,
+    resident_decisions,
+)
 from zava_forward.core.quality import checklist_for
 from zava_forward.core.resident_decisions import resident_gate
 from zava_forward.core.sqlstore import SqlStore
@@ -538,6 +545,48 @@ class JsonResidentDecisions(unittest.TestCase):
             self.open_store().cases["ZF-1"]["hazards"][-1]["hold"]["status"] == "Active"
         )
         self.assertNotIn("nomination_records", self.open_store().cases["ZF-1"])
+
+    def roster_bound_principal(self, **changes: Any) -> dict[str, Any]:
+        tenant, oid = "11111111-2222-4333-8444-555555555555", "aaaaaaaa-bbbb-4ccc-8ddd-111111111111"
+        data = json.loads(self.path.read_text())
+        data["staff"][0].update(oid=oid, tid=tenant)
+        self.reseed(data, "entra-roster")
+        principal = identity.principal(tenant, oid, self.sam["role"], name="SYN Entra Display")
+        principal.update(code=self.sam["code"], email=self.sam["email"])
+        principal["bound"] = dict(code=self.sam["code"], email=self.sam["email"])
+        return dict(principal, **changes)
+
+    def test_intake_entra_principal_matching_roster_identity_is_accepted(self) -> None:
+        principal = self.roster_bound_principal()
+        self.store.resident_action(principal, "ZF-1", self.nomination())
+        self.assertEqual(len(self.store.cases["ZF-1"]["nomination_records"]), 1)
+        self.assertEqual(list(self.store.audit_entries())[-1]["who"], self.sam["email"])
+
+    def test_intake_entra_principal_with_other_identity_is_refused_without_mutation(self) -> None:
+        principal = self.roster_bound_principal()
+        for label, forged in (
+            (
+                "code",
+                dict(principal, code="E-FORGED", bound=dict(principal["bound"], code="E-FORGED")),
+            ),
+            ("oid", dict(principal, oid="aaaaaaaa-bbbb-4ccc-8ddd-999999999999")),
+            ("unbound", {k: v for k, v in principal.items() if k != "bound"}),
+        ):
+            with self.subTest(forged=label):
+                before = copy.deepcopy(self.store.cases["ZF-1"])
+                audit = list(self.store.audit_entries())
+                with self.assertRaises((PermissionError, ValueError)):
+                    self.store.resident_action(forged, "ZF-1", self.nomination())
+                self.assertEqual(self.store.cases["ZF-1"], before)
+                self.assertEqual(list(self.store.audit_entries()), audit)
+
+    def test_intake_identity_differing_from_roster_person_is_refused(self) -> None:
+        principal = self.roster_bound_principal()
+        other = dict(self.rae, oid=principal["oid"])
+        with patch.object(resident_decisions, "_person", return_value=other):
+            self.unchanged_failure(
+                lambda: self.store.resident_action(principal, "ZF-1", self.nomination())
+            )
 
     def test_intake_tenure_unknown_case_wide_hold_and_reopen(self) -> None:
         for measure in MEASURES:
@@ -2688,7 +2737,13 @@ class JsonResidentDecisions(unittest.TestCase):
                 for key in ("assessment", "design", "building", "coordination")
             }
             c["documents"] = [
-                dict(id=f"SYN-{kind}", kind=kind, generated=False) for kind in self.store.EVIDENCE
+                dict(
+                    id=f"SYN-{kind}",
+                    kind=kind,
+                    generated=False,
+                    scan=dict(status="clean", scanner="Synthetic metadata fixture"),
+                )
+                for kind in self.store.EVIDENCE
             ]
             self.store.save()
         self.assertEqual(self.store.detail("ZF-1")["gate"], [])
@@ -4205,34 +4260,6 @@ class JsonResidentDecisions(unittest.TestCase):
         self.forward(self.pam)
         self.assertEqual(self.route()["attempts"][0]["status"], "Acknowledged")
 
-    def test_forward_outcome_save_failure_leaves_pending_and_blocks_silent_resend(self) -> None:
-        receiver = SyntheticReceiver("ack")
-        self.store.complaints_receiver = receiver
-        self.request()
-        with patch.object(
-            resident_decisions.ResidentDecisionMixin,
-            "_res_service_forward_outcome",
-            side_effect=RuntimeError("SYN outcome save failed"),
-        ) as handler:
-            with self.assertLogs(resident_decisions.__name__, "WARNING") as logged:
-                with self.assertRaises(resident_decisions.ResidentCommittedError):
-                    self.forward()
-        self.assertEqual(handler.call_count, 2)
-        self.assertEqual(len(receiver.envelopes), 1)
-        self.assertIn("'SYN-RCPT-1'", "\n".join(logged.output))
-        self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
-        reopened = self.open_store().cases["ZF-1"]["service_requests"][0]
-        self.assertEqual(reopened["formal_route"]["attempts"][0]["status"], "Pending")
-        self.unchanged_failure(self.forward)
-        self.assertEqual(len(receiver.envelopes), 1)
-        self.forward(retry_unresolved=True)
-        self.assertEqual(
-            [a["status"] for a in self.route()["attempts"]], ["Pending", "Acknowledged"]
-        )
-        self.assertEqual(
-            receiver.envelopes[0]["idempotency_key"], receiver.envelopes[1]["idempotency_key"]
-        )
-
     def test_acknowledged_retry_flags_stale_pending_without_superseding(self) -> None:
         self.pending_attempt()
         self.forward(retry_unresolved=True)
@@ -4783,6 +4810,37 @@ class JsonResidentDecisions(unittest.TestCase):
             "plain_language_explanation",
             sam_detail["nomination_records"][0],
         )
+
+    def test_forward_refused_or_rolled_back_retry_keeps_stale_pending_untouched(self) -> None:
+        receiver = self.pending_attempt()
+        for user, kw in (
+            (self.rae, {}),
+            (self.kim, dict(retry_unresolved=True)),
+            (self.rex, dict(retry_unresolved=True)),
+            (self.rae, dict(retry_unresolved=True, expected_version=9)),
+            (self.rae, dict(retry_unresolved=True, resident_request_ref="   ")),
+        ):
+            self.unchanged_failure(partial(self.forward, user, **kw))
+        self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
+        self.assertNotIn("superseded_from", self.route()["attempts"][0])
+        self.assertEqual(len(receiver.envelopes), 1)
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        audit = list(self.store.audit_entries())
+        with patch.object(self.store, "audit", side_effect=RuntimeError("SYN audit fault")):
+            with self.assertRaises(RuntimeError):
+                self.forward(retry_unresolved=True)
+        self.assertEqual(self.store.cases["ZF-1"], before)
+        self.assertEqual(list(self.store.audit_entries()), audit)
+        self.assertEqual(self.open_store().cases["ZF-1"], before)
+        self.assertEqual(len(receiver.envelopes), 1)
+        resident_decisions._IN_FLIGHT.setdefault(self.store, set()).add(("ZF-1", "SR-1", 1))
+        try:
+            with self.assertRaisesRegex(ValueError, "still in progress"):
+                self.forward(retry_unresolved=True)
+        finally:
+            resident_decisions._IN_FLIGHT.get(self.store, set()).discard(("ZF-1", "SR-1", 1))
+        self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
+        self.assertNotIn("superseded_by_attempt", self.route()["attempts"][0])
 
 
 class SyntheticReceiver:

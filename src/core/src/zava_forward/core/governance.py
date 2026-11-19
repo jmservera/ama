@@ -21,6 +21,7 @@ person supplies. Fixtures that use it are labelled synthetic demonstration data.
   authority and a release decision for that scope. Emergency and statutory
   hazard response continues outside the pause.
 """
+
 import json
 import logging
 import os
@@ -31,28 +32,54 @@ from decimal import Decimal
 
 from . import controls as k, gates
 from .change_provenance import _actor
+from .restart_authority import (
+    RULE_024,
+    actor_snapshot,
+    actors_for_store,
+    ensure_distinct_restart_actor,
+    reject_automatic_restart,
+    validate_restart_authority,
+)
 
 MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
 BREACH_ROLES = MANAGER_ROLES + ("Quality Inspector", "Building Safety Liaison")
 PROTOCOL_FIELDS = (
-    ("event_dictionary", "the event dictionary"), ("accepted_handover_definition", "the accepted-handover definition"),
-    ("clock_pause_rules", "the clock and pause rules"), ("cohort_eligibility", "the cohort eligibility"),
-    ("entry_cutoff", "the entry cut-off"), ("denominators", "the denominators"),
-    ("matching_variables", "the matching variables"), ("primary_measures", "the primary measures"),
-    ("mde", "the minimum detectable effect"), ("thresholds", "the thresholds"),
-    ("unfinished_case_handling", "the unfinished-case handling"), ("exclusions", "the exclusions"),
+    ("event_dictionary", "the event dictionary"),
+    ("accepted_handover_definition", "the accepted-handover definition"),
+    ("clock_pause_rules", "the clock and pause rules"),
+    ("cohort_eligibility", "the cohort eligibility"),
+    ("entry_cutoff", "the entry cut-off"),
+    ("denominators", "the denominators"),
+    ("matching_variables", "the matching variables"),
+    ("primary_measures", "the primary measures"),
+    ("mde", "the minimum detectable effect"),
+    ("thresholds", "the thresholds"),
+    ("unfinished_case_handling", "the unfinished-case handling"),
+    ("exclusions", "the exclusions"),
     ("analysis_code_version", "the analysis code version"),
 )
 BG011_FIELDS = (
-    ("population_denominator", "the accepted-home population and denominator"), ("start_event", "the start event"),
-    ("stop_event", "the stop event"), ("elapsed_statistic", "the elapsed-time statistic"),
-    ("comparable_cohort", "the comparable baseline and cohort"), ("measurement_window", "the measurement window"),
+    ("population_denominator", "the accepted-home population and denominator"),
+    ("start_event", "the start event"),
+    ("stop_event", "the stop event"),
+    ("elapsed_statistic", "the elapsed-time statistic"),
+    ("comparable_cohort", "the comparable baseline and cohort"),
+    ("measurement_window", "the measurement window"),
     ("pause_rules", "the rules for pauses, incomplete cases, withdrawals and exclusions"),
-    ("effort_roles_tasks", "the coordination-hour roles and tasks, including shifted effort and recording cost"),
+    (
+        "effort_roles_tasks",
+        "the coordination-hour roles and tasks, including shifted effort and recording cost",
+    ),
 )
 AI_DENOMINATORS = ("per assistant run", "per accepted proposal", "per accepted handover")
 CAPACITY_ONLY = "Capacity only, not booked"
-BOOKED_DESTINATIONS = ("new revenue won", "revenue retained", "spend removed", "spend avoided", "capital freed")
+BOOKED_DESTINATIONS = (
+    "new revenue won",
+    "revenue retained",
+    "spend removed",
+    "spend avoided",
+    "capital freed",
+)
 CAPACITY_KINDS = ("capacity gain", "augmentation", "automation")
 BG011_TARGETS = dict(cycle_time=20.0, coordination_hours=25.0)
 PHASES = ("Phase 0 capture", "Shadow testing", "Live pilot")
@@ -61,20 +88,83 @@ SCOPE_KINDS = ("home", "work package", "archetype", "workstream")
 EMERGENCY_NOTE = "Emergency and statutory hazard response continues outside any pause."
 RAI_BASELINE = "1cb398c7b90bec05a5700008a97d0cfac494144a"
 RAI_RESIDUALS = (
-    "GOVERN-AUDIT-01", "GOVERN-AUDIT-02", "MAP-01", "MAP-02", "MAP-04",
-    "MEASURE-01", "MN-3.2", "MN-4.1", "MN-4.3", "T-RAI-001", "T-RAI-002",
+    "GOVERN-AUDIT-01",
+    "GOVERN-AUDIT-02",
+    "MAP-01",
+    "MAP-02",
+    "MAP-04",
+    "MEASURE-01",
+    "MN-3.2",
+    "MN-4.1",
+    "MN-4.3",
+    "T-RAI-001",
+    "T-RAI-002",
 )
 RAI_UNASSESSED = (
-    "GOVERN-AUDIT-04", "GOVERN-AUDIT-05", "MAP-05", "MEASURE-02", "MEASURE-03",
-    "MEASURE-04", "MN-2.3", "T-RAI-005", "EU-COND-01", "EU-COND-02", "EU-COND-04",
+    "GOVERN-AUDIT-04",
+    "GOVERN-AUDIT-05",
+    "MAP-05",
+    "MEASURE-02",
+    "MEASURE-03",
+    "MEASURE-04",
+    "MN-2.3",
+    "T-RAI-005",
+    "EU-COND-01",
+    "EU-COND-02",
+    "EU-COND-04",
 )
-RAI_TIERS = ("implemented/source-tested", "deployed-observed", "proposed",
-             "insufficient", "independent-acceptance")
-RAI_ASSESSMENT_FIELDS = {"source_commit", "task_id", "task_version", "release_version",
-                         "nonapplicability_reason"}
-RAI_CLAIM_FIELDS = {"finding_id", "baseline_commit", "assessment", "evidence_tier", "result",
-                    "references", "limitations", "decision_maker_status", "decision_maker_ref",
-                    "event_ref", "expected_revision"}
+RAI_EU_CONDITIONAL = (
+    "EU-COND-01",
+    "EU-COND-02",
+    "EU-COND-04",
+)
+RAI_AFFECTED_DISPATCH = "DISABLED until appropriate evidence and qualified approvals exist"
+RAI_CONDITIONAL_EU_ASSURANCE = "Applies only after qualified applicability review"
+PRD_QUALITY_REVIEW = dict(
+    status=(
+        "Pending fresh independent PRD quality review "
+        "(prior pre-merge resident draft FAIL / Validate BLOCKED / Finalize NOT_EVALUATED)"
+    ),
+    satisfied=False,
+    accepted=False,
+    separate_from_report_acceptance=True,
+    separate_from_remediation_completion=True,
+    report_acceptance_scope="baseline-assessment-and-remediation-planning only",
+)
+PRD_OWNER_ACCEPTANCE = dict(
+    status="Unsigned candidate pending separate human owner acceptance",
+    accepted=False,
+    separate_from_report_acceptance=True,
+    separate_from_remediation_completion=True,
+    report_acceptance_scope="baseline-assessment-and-remediation-planning only",
+)
+RAI_TIERS = (
+    "implemented/source-tested",
+    "deployed-observed",
+    "proposed",
+    "insufficient",
+    "independent-acceptance",
+)
+RAI_ASSESSMENT_FIELDS = {
+    "source_commit",
+    "task_id",
+    "task_version",
+    "release_version",
+    "nonapplicability_reason",
+}
+RAI_CLAIM_FIELDS = {
+    "finding_id",
+    "baseline_commit",
+    "assessment",
+    "evidence_tier",
+    "result",
+    "references",
+    "limitations",
+    "decision_maker_status",
+    "decision_maker_ref",
+    "event_ref",
+    "expected_revision",
+}
 
 
 class GovernanceCommittedError(RuntimeError):
@@ -90,13 +180,19 @@ def _rai_text(value, field, limit):
 def rai_assessment(value):
     """Validate a declared comparison context, not a deployment attestation."""
     if not isinstance(value, dict) or value.keys() != RAI_ASSESSMENT_FIELDS:
-        raise ValueError("Supply the exact source, task/version/release or nonapplicability assessment fields.")
+        raise ValueError(
+            "Supply the exact source, task/version/release or nonapplicability assessment fields."
+        )
     source = value["source_commit"]
     if not isinstance(source, str) or re.fullmatch("[0-9a-f]{40}", source) is None:
         raise ValueError("Supply the full lowercase 40-hex assessed source commit.")
     task_fields = ("task_id", "task_version", "release_version")
     if all(value[key] is None for key in task_fields):
-        _rai_text(value["nonapplicability_reason"], "the explicit task/release nonapplicability reason", 600)
+        _rai_text(
+            value["nonapplicability_reason"],
+            "the explicit task/release nonapplicability reason",
+            600,
+        )
     else:
         for key in task_fields:
             _rai_text(value[key], key, 200)
@@ -107,7 +203,9 @@ def rai_assessment(value):
 
 def _rai_claim(body):
     if not isinstance(body, dict) or body.keys() != RAI_CLAIM_FIELDS:
-        raise ValueError("Supply only the required RAI claim fields; actor, time, approval and closure are server-controlled or unavailable.")
+        raise ValueError(
+            "Supply only the required RAI claim fields; actor, time, approval and closure are server-controlled or unavailable."
+        )
     if body["finding_id"] not in RAI_RESIDUALS + RAI_UNASSESSED:
         raise ValueError("Choose one of the 22 baseline findings.")
     if body["baseline_commit"] != RAI_BASELINE:
@@ -124,11 +222,15 @@ def _rai_claim(body):
         _rai_text(ref, "each inert evidence reference", 500)
     status = body["decision_maker_status"]
     if status not in ("Unknown", "Unappointed", "Unverified reference"):
-        raise ValueError("Decision-maker authority must remain Unknown, Unappointed or an Unverified reference.")
+        raise ValueError(
+            "Decision-maker authority must remain Unknown, Unappointed or an Unverified reference."
+        )
     if status == "Unverified reference":
         _rai_text(body["decision_maker_ref"], "the unverified decision-maker reference", 500)
     elif body["decision_maker_ref"] is not None:
-        raise ValueError("Unknown or Unappointed decision-makers cannot have an asserted assignment.")
+        raise ValueError(
+            "Unknown or Unappointed decision-makers cannot have an asserted assignment."
+        )
     if type(body["expected_revision"]) is not int or body["expected_revision"] < 0:
         raise ValueError("Supply the current nonnegative integer register revision.")
     return deepcopy(body)
@@ -151,13 +253,15 @@ def _rai_view(governance, assessment):
             if not isinstance(row, dict):
                 raise ValueError("Malformed claim")
             _rai_claim({key: row.get(key) for key in RAI_CLAIM_FIELDS})
-            if (row.get("schema") != "rai-evidence-claim/v1"
-                    or row.get("verification") != "unverified claim"
-                    or row.get("evidence_class") != "constructed-fixture"
-                    or type(row.get("revision")) is not int
-                    or row["revision"] != len(valid) + 1
-                    or not isinstance(row.get("recorded_by"), dict)
-                    or not isinstance(row.get("recorded_at"), str)):
+            if (
+                row.get("schema") != "rai-evidence-claim/v1"
+                or row.get("verification") != "unverified claim"
+                or row.get("evidence_class") != "constructed-fixture"
+                or type(row.get("revision")) is not int
+                or row["revision"] != len(valid) + 1
+                or not isinstance(row.get("recorded_by"), dict)
+                or not isinstance(row.get("recorded_at"), str)
+            ):
                 raise ValueError("Malformed provenance")
         except ValueError:
             invalid += 1
@@ -166,41 +270,91 @@ def _rai_view(governance, assessment):
     findings = []
     for fid in RAI_RESIDUALS + RAI_UNASSESSED:
         claims = [r for r in valid if r["finding_id"] == fid]
-        current = [r for r in claims if context is not None and r["assessment"] == context
-                   and context["source_commit"] != RAI_BASELINE]
+        current = [
+            r
+            for r in claims
+            if context is not None
+            and r["assessment"] == context
+            and context["source_commit"] != RAI_BASELINE
+        ]
         residual = fid in RAI_RESIDUALS
-        findings.append(dict(
-            finding_id=fid, baseline_commit=RAI_BASELINE,
-            baseline_status="PARTIAL" if residual else "NOT_ASSESSED",
-            baseline_verdict=("CONFIRMED" if fid in ("T-RAI-001", "T-RAI-002") else
-                              "DOWNGRADED" if residual else "UNCHANGED"),
-            claims=deepcopy(claims), current_claims=deepcopy(current),
-            historical_claim_count=len(claims) - len(current),
-            disposition=current[-1]["evidence_tier"] if current else "insufficient",
-            closure="Open", acceptance="Unknown", evidence_adequacy="Not independently established"))
+        conditional_eu = fid in RAI_EU_CONDITIONAL
+        findings.append(
+            dict(
+                finding_id=fid,
+                baseline_commit=RAI_BASELINE,
+                baseline_status="PARTIAL" if residual else "NOT_ASSESSED",
+                baseline_verdict=(
+                    "CONFIRMED"
+                    if fid in ("T-RAI-001", "T-RAI-002")
+                    else "DOWNGRADED"
+                    if residual
+                    else "UNCHANGED"
+                ),
+                conditional_eu=conditional_eu,
+                applicability_review=(
+                    "Required before conditional EU assurance applies"
+                    if conditional_eu
+                    else "Not conditional EU check"
+                ),
+                claims=deepcopy(claims),
+                current_claims=deepcopy(current),
+                historical_claim_count=len(claims) - len(current),
+                disposition=current[-1]["evidence_tier"] if current else "insufficient",
+                closure="Open",
+                acceptance="Unknown",
+                evidence_adequacy="Not independently established",
+            )
+        )
     count = sum(bool(row["current_claims"]) for row in findings) if context is not None else None
     return dict(
-        baseline=dict(commit=RAI_BASELINE, prd_version="0.14.0", report_date="2026-10-14",
-                      report_ref="rai-report-ama-20261014", accepted_date="2026-10-15",
-                      acceptance_scope="baseline-assessment-and-remediation-planning only"),
-        current_assessment=deepcopy(context), assessment_authority="Caller-declared, not deployment attestation",
-        findings=findings, revision=len(history), history_record_count=len(history),
-        invalid_history_count=invalid, current_disposition_count=count,
-        dispositions_complete=count == 22 and invalid == 0, open_count=22,
-        acceptance="Unknown", live_use="BLOCKED pending separate qualified evidence and approvals",
-        note="All supplied evidence is an unverified constructed claim, not acceptance, delegation or closure.")
+        baseline=dict(
+            commit=RAI_BASELINE,
+            prd_version="0.14.0",
+            report_date="2026-10-14",
+            report_ref="rai-report-ama-20261014",
+            accepted_date="2026-10-15",
+            acceptance_scope="baseline-assessment-and-remediation-planning only",
+        ),
+        current_assessment=deepcopy(context),
+        assessment_authority="Caller-declared, not deployment attestation",
+        findings=findings,
+        revision=len(history),
+        history_record_count=len(history),
+        invalid_history_count=invalid,
+        current_disposition_count=count,
+        dispositions_complete=count == 22 and invalid == 0,
+        open_count=22,
+        acceptance="Unknown",
+        prd_quality_review=deepcopy(PRD_QUALITY_REVIEW),
+        prd_owner_acceptance=deepcopy(PRD_OWNER_ACCEPTANCE),
+        live_use="BLOCKED pending separate qualified evidence and approvals",
+        affected_dispatch=RAI_AFFECTED_DISPATCH,
+        conditional_eu_assurance=RAI_CONDITIONAL_EU_ASSURANCE,
+        note="All supplied evidence is an unverified constructed claim, not acceptance, delegation or closure.",
+    )
 
 
 def target_verdict(target_pct, mde_pct, observed_pct=None):
     """Never a pass or fail when the MDE is missing or larger than the target."""
     if mde_pct is None:
-        return dict(verdict="Not assessable", reason="The minimum detectable effect is not recorded.")
+        return dict(
+            verdict="Not assessable", reason="The minimum detectable effect is not recorded."
+        )
     if mde_pct > target_pct:
-        return dict(verdict="Interval estimate only",
-                    reason=f"The MDE ({mde_pct:g}%) exceeds the target ({target_pct:g}%), so report an interval estimate and caveat, not a pass or fail.")
+        return dict(
+            verdict="Interval estimate only",
+            reason=f"The MDE ({mde_pct:g}%) exceeds the target ({target_pct:g}%), so report an interval estimate and caveat, not a pass or fail.",
+        )
     if observed_pct is None:
-        return dict(verdict="Awaiting result", reason="The pilot can distinguish the target; no result is recorded.")
-    return dict(verdict="Pass" if observed_pct >= target_pct else "Fail", reason="The MDE does not exceed the target.")
+        return dict(
+            verdict="Awaiting result",
+            reason="The pilot can distinguish the target; no result is recorded.",
+        )
+    return dict(
+        verdict="Pass" if observed_pct >= target_pct else "Fail",
+        reason="The MDE does not exceed the target.",
+    )
 
 
 def _pct(value, label):
@@ -261,6 +415,7 @@ class GovernanceMixin:
 
     def _rai_evidence_append(self, user, body, context):
         from .store import ConflictError
+
         supplied = _rai_claim(body)
         with self.lock:
             actor = _actor(self, user)
@@ -273,7 +428,11 @@ class GovernanceMixin:
             validation = getattr(self.local, "change_validation", None) if sql else None
             previous = getattr(self.local, "rai_evidence_write", None) if sql else None
             before = deepcopy(self.data.get("governance"))
-            audit_size = None if sql else (os.path.getsize(self.audit_path) if os.path.exists(self.audit_path) else 0)
+            audit_size = (
+                None
+                if sql
+                else (os.path.getsize(self.audit_path) if os.path.exists(self.audit_path) else 0)
+            )
             audit_head = None if sql else self.last_hash
             saving = False
             if sql:
@@ -282,7 +441,9 @@ class GovernanceMixin:
             try:
                 g = self.data.get("governance", {})
                 if _rai_view(g, None)["invalid_history_count"]:
-                    raise ValueError("Malformed RAI history must be investigated before another append.")
+                    raise ValueError(
+                        "Malformed RAI history must be investigated before another append."
+                    )
                 history = g.get("rai_claims", [])
                 for row in history:
                     if row["event_ref"] == supplied["event_ref"]:
@@ -291,13 +452,21 @@ class GovernanceMixin:
                         retry = dict(supplied)
                         retry.pop("expected_revision")
                         if content != retry or row["recorded_by"] != identity:
-                            raise ConflictError("RAI event reference already records a different claim or actor.")
+                            raise ConflictError(
+                                "RAI event reference already records a different claim or actor."
+                            )
                         return deepcopy(row)
                 if supplied["expected_revision"] != len(history):
                     raise ConflictError("RAI register changed. Reload before appending a claim.")
-                record = dict(supplied, schema="rai-evidence-claim/v1", revision=len(history) + 1,
-                              recorded_by=identity, recorded_at=datetime.now(UTC).isoformat(timespec="microseconds"),
-                              evidence_class="constructed-fixture", verification="unverified claim")
+                record = dict(
+                    supplied,
+                    schema="rai-evidence-claim/v1",
+                    revision=len(history) + 1,
+                    recorded_by=identity,
+                    recorded_at=datetime.now(UTC).isoformat(timespec="microseconds"),
+                    evidence_class="constructed-fixture",
+                    verification="unverified claim",
+                )
                 self.data.setdefault("governance", {}).setdefault("rai_claims", []).append(record)
                 detail = json.dumps(record, sort_keys=True, separators=(",", ":"))
                 saving = True
@@ -317,7 +486,9 @@ class GovernanceMixin:
                         with self.dblock:
                             self._discard(self.local.pending[:])
                     except Exception:
-                        error.add_note("RAI SQL recovery failed; reload to establish the durable outcome.")
+                        error.add_note(
+                            "RAI SQL recovery failed; reload to establish the durable outcome."
+                        )
                         logging.getLogger(__name__).exception("RAI claim SQL recovery failed")
                 elif saving and not context["persisted"]:
                     if before is None:
@@ -330,9 +501,12 @@ class GovernanceMixin:
                                 audit.truncate(audit_size)
                         self.last_hash = audit_head
                         from .store import Store
+
                         Store.save(self)
                     except Exception:
-                        error.add_note("JSON restoration failed; durable outcome unknown. Reload before retrying.")
+                        error.add_note(
+                            "JSON restoration failed; durable outcome unknown. Reload before retrying."
+                        )
                         logging.getLogger(__name__).exception("RAI claim JSON restoration failed")
                 if context["persisted"]:
                     raise GovernanceCommittedError(
@@ -364,11 +538,23 @@ class GovernanceMixin:
         with self.lock:
             g = self._gov()
             versions = g["protocol_versions"]
-            reason = k.text(body.get("reason"), "why this version is needed", 300, required=bool(versions))
-            v = dict(version=len(versions) + 1, fields=fields, reason=reason or "First version", frozen_by=user["email"], frozen_at=k.now(),
-                     status="Frozen, awaiting approval", approval=None, synthetic=bool(body.get("synthetic")))
+            reason = k.text(
+                body.get("reason"), "why this version is needed", 300, required=bool(versions)
+            )
+            v = dict(
+                version=len(versions) + 1,
+                fields=fields,
+                reason=reason or "First version",
+                frozen_by=user["email"],
+                frozen_at=k.now(),
+                status="Frozen, awaiting approval",
+                approval=None,
+                synthetic=bool(body.get("synthetic")),
+            )
             versions.append(v)
-            self.audit(user["email"], "protocol_freeze", "-", f"protocol version {v['version']} frozen")
+            self.audit(
+                user["email"], "protocol_freeze", "-", f"protocol version {v['version']} frozen"
+            )
             self.save()
             return v
 
@@ -385,10 +571,20 @@ class GovernanceMixin:
             k.different_person(user, v["frozen_by"], "approve this protocol version")
             if v["approval"]:
                 raise ValueError("This protocol version is already approved.")
-            v["approval"] = dict(by=user["email"], at=k.now(), dpia_ref=k.text(body.get("dpia_ref"), "the approved OD-36 DPIA reference", 200),
-                                 lawful_basis_ref=k.text(body.get("lawful_basis_ref"), "the lawful measurement-basis decision reference", 200))
+            v["approval"] = dict(
+                by=user["email"],
+                at=k.now(),
+                dpia_ref=k.text(body.get("dpia_ref"), "the approved OD-36 DPIA reference", 200),
+                lawful_basis_ref=k.text(
+                    body.get("lawful_basis_ref"),
+                    "the lawful measurement-basis decision reference",
+                    200,
+                ),
+            )
             v["status"] = "Approved"
-            self.audit(user["email"], "protocol_approve", "-", f"protocol version {v['version']} approved")
+            self.audit(
+                user["email"], "protocol_approve", "-", f"protocol version {v['version']} approved"
+            )
             self.save()
             return v
 
@@ -397,8 +593,12 @@ class GovernanceMixin:
         k.refuse_bulk(body)
         _need_manager(user, "record the benefits register")
         defs = {key: k.text(body.get(key), label, 600) for key, label in BG011_FIELDS}
-        mde = dict(cycle_time=_pct(body.get("mde_cycle_time_pct"), "the cycle-time MDE"),
-                   coordination_hours=_pct(body.get("mde_coordination_hours_pct"), "the coordination-hours MDE"))
+        mde = dict(
+            cycle_time=_pct(body.get("mde_cycle_time_pct"), "the cycle-time MDE"),
+            coordination_hours=_pct(
+                body.get("mde_coordination_hours_pct"), "the coordination-hours MDE"
+            ),
+        )
         denominator = body.get("ai_denominator")
         if denominator not in AI_DENOMINATORS:
             raise ValueError("Choose the AI cost denominator: " + ", ".join(AI_DENOMINATORS) + ".")
@@ -410,10 +610,25 @@ class GovernanceMixin:
                        **_ai_cost_figures(price, body.get("ai_total_cost"), body.get("ai_accepted_outcomes")))
         with self.lock:
             g = self._gov()
-            entry = dict(goal="BG-011", definitions=defs, ai_running_cost=ai_cost, mde_pct=mde, targets_pct=dict(BG011_TARGETS), recorded_by=user["email"],
-                         recorded_at=k.now(), status="Recorded, awaiting approval", approved_by=None, synthetic=bool(body.get("synthetic")))
+            entry = dict(
+                goal="BG-011",
+                definitions=defs,
+                ai_running_cost=ai_cost,
+                mde_pct=mde,
+                targets_pct=dict(BG011_TARGETS),
+                recorded_by=user["email"],
+                recorded_at=k.now(),
+                status="Recorded, awaiting approval",
+                approved_by=None,
+                synthetic=bool(body.get("synthetic")),
+            )
             g["benefits"]["BG-011"] = entry
-            self.audit(user["email"], "benefits_record", "-", "BG-011 definitions, MDE and AI running-cost line recorded")
+            self.audit(
+                user["email"],
+                "benefits_record",
+                "-",
+                "BG-011 definitions, MDE and AI running-cost line recorded",
+            )
             self.save()
             return entry
 
@@ -435,7 +650,10 @@ class GovernanceMixin:
         if not e:
             return {name: target_verdict(t, None) for name, t in BG011_TARGETS.items()}
         observed = observed or {}
-        return {name: target_verdict(t, e["mde_pct"][name], observed.get(name)) for name, t in BG011_TARGETS.items()}
+        return {
+            name: target_verdict(t, e["mde_pct"][name], observed.get(name))
+            for name, t in BG011_TARGETS.items()
+        }
 
     def value_claim_record(self, user, body):
         """A value claim is capacity until Finance confirms one booked destination; recording never books value."""
@@ -444,14 +662,24 @@ class GovernanceMixin:
         kind = body.get("capacity_kind")
         if kind not in CAPACITY_KINDS:
             raise ValueError("Choose capacity gain, augmentation or automation.")
-        claim = dict(claim=k.text(body.get("claim"), "the value claim", 400), capacity_kind=kind,
-                     baseline=k.text(body.get("baseline"), "the baseline for this claim", 400), status=CAPACITY_ONLY,
-                     destination=None, budget_owner_ref=None, recorded_by=user["email"], recorded_at=k.now(), synthetic=bool(body.get("synthetic")))
+        claim = dict(
+            claim=k.text(body.get("claim"), "the value claim", 400),
+            capacity_kind=kind,
+            baseline=k.text(body.get("baseline"), "the baseline for this claim", 400),
+            status=CAPACITY_ONLY,
+            destination=None,
+            budget_owner_ref=None,
+            recorded_by=user["email"],
+            recorded_at=k.now(),
+            synthetic=bool(body.get("synthetic")),
+        )
         with self.lock:
             claims = self._gov().setdefault("value_claims", [])
             claim["id"] = self._next_id("VC", claims)
             claims.append(claim)
-            self.audit(user["email"], "value_claim_record", "-", f"{claim['id']} recorded as capacity")
+            self.audit(
+                user["email"], "value_claim_record", "-", f"{claim['id']} recorded as capacity"
+            )
             self.save()
             return claim
 
@@ -461,7 +689,9 @@ class GovernanceMixin:
         _need_manager(user, "record a booked destination")
         destination = body.get("destination")
         if destination not in BOOKED_DESTINATIONS:
-            raise ValueError("Choose one booked destination: " + ", ".join(BOOKED_DESTINATIONS) + ".")
+            raise ValueError(
+                "Choose one booked destination: " + ", ".join(BOOKED_DESTINATIONS) + "."
+            )
         ref = k.text(body.get("budget_owner_ref"), "the budget owner's confirmation reference", 200)
         with self.lock:
             claims = self._gov().setdefault("value_claims", [])
@@ -469,10 +699,20 @@ class GovernanceMixin:
             if not claim:
                 raise ValueError("Choose a recorded value claim.")
             if claim["status"] != CAPACITY_ONLY:
-                raise ValueError(f"{claim['id']} is already {claim['status']}; only a claim that is capacity only can be confirmed.")
+                raise ValueError(
+                    f"{claim['id']} is already {claim['status']}; only a claim that is capacity only can be confirmed."
+                )
             k.different_person(user, claim["recorded_by"], "record the booked destination")
-            claim.update(destination=destination, budget_owner_ref=ref, status="Booked", confirmed_by=user["email"], confirmed_at=k.now())
-            self.audit(user["email"], "value_claim_confirm", "-", f"{claim['id']} booked as {destination}")
+            claim.update(
+                destination=destination,
+                budget_owner_ref=ref,
+                status="Booked",
+                confirmed_by=user["email"],
+                confirmed_at=k.now(),
+            )
+            self.audit(
+                user["email"], "value_claim_confirm", "-", f"{claim['id']} booked as {destination}"
+            )
             self.save()
             return claim
 
@@ -482,9 +722,13 @@ class GovernanceMixin:
         versions = g["protocol_versions"]
         why = []
         if not versions:
-            why.append("No pilot protocol is frozen. Owner: programme manager. Next action: freeze version 1.")
+            why.append(
+                "No pilot protocol is frozen. Owner: programme manager. Next action: freeze version 1."
+            )
         elif not versions[-1]["approval"]:
-            why.append(f"Protocol version {versions[-1]['version']} is not approved with the DPIA and lawful measurement basis. Owner: programme manager.")
+            why.append(
+                f"Protocol version {versions[-1]['version']} is not approved with the DPIA and lawful measurement basis. Owner: programme manager."
+            )
         e = g["benefits"].get("BG-011")
         if not e or e["status"] != "Approved":
             why.append("The benefits register (BG-011 definitions and MDE) is not approved. Owner: programme manager.")
@@ -525,29 +769,82 @@ class GovernanceMixin:
         decision = body.get("decision")
         if decision not in DECISIONS:
             raise ValueError("Choose Release or Withhold.")
-        approvers = [a.strip() for a in (body.get("approvers") or []) if isinstance(a, str) and a.strip()]
+        approvers = [
+            a.strip() for a in (body.get("approvers") or []) if isinstance(a, str) and a.strip()
+        ]
         if not approvers:
             raise ValueError("Name at least one approver.")
-        rec = dict(scope_kind=scope_kind, scope=scope, decision=decision, requirements=k.text(body.get("requirements"), "the applicable requirements", 400),
-                   evidence=k.text(body.get("evidence"), "the acceptance evidence", 600), unresolved=k.text(body.get("unresolved"), "the unresolved issues (or none)", 400),
-                   envelope_ref=k.text(body.get("envelope_ref"), "the approved cost and risk envelope reference", 200), approvers=approvers,
-                   recorded_by=user["email"], recorded_at=k.now(), synthetic=bool(body.get("synthetic")))
-        breach = k.text(body.get("economics_limit_breach"), "the AI economics limit breach (or None)", 400)
-        rec.update(economics_report_ref=k.text(body.get("economics_report_ref"), "the AI economics report reference (or Unknown: no report)", 200),
-                   economics_limit_breach=breach)
-        if decision == "Release" and rec["economics_report_ref"].strip().lower() in ("unknown", "none", "n/a"):
-            raise ValueError("Release needs an AI economics report reference. With no report, record Withhold.")
+        rec = dict(
+            scope_kind=scope_kind,
+            scope=scope,
+            decision=decision,
+            requirements=k.text(body.get("requirements"), "the applicable requirements", 400),
+            evidence=k.text(body.get("evidence"), "the acceptance evidence", 600),
+            unresolved=k.text(body.get("unresolved"), "the unresolved issues (or none)", 400),
+            envelope_ref=k.text(
+                body.get("envelope_ref"), "the approved cost and risk envelope reference", 200
+            ),
+            approvers=approvers,
+            actor=actor_snapshot(user),
+            recorded_by=user["email"],
+            recorded_at=k.now(),
+            synthetic=bool(body.get("synthetic")),
+        )
+        breach = k.text(
+            body.get("economics_limit_breach"), "the AI economics limit breach (or None)", 400
+        )
+        rec.update(
+            economics_report_ref=k.text(
+                body.get("economics_report_ref"),
+                "the AI economics report reference (or Unknown: no report)",
+                200,
+            ),
+            economics_limit_breach=breach,
+        )
+        if decision == "Release" and rec["economics_report_ref"].strip().lower() in (
+            "unknown",
+            "none",
+            "n/a",
+        ):
+            raise ValueError(
+                "Release needs an AI economics report reference. With no report, record Withhold."
+            )
         if decision == "Release" and breach.strip().lower() not in ("none", "no", "n/a"):
-            rec["economics_breach_decision"] = k.text(body.get("economics_breach_decision"), "the approvers' decision on the AI economics limit breach", 400)
-            approver = k.text(body.get("economics_breach_approver"), "the approver who decides the AI economics limit breach", 120)
-            proposer = {str(user.get("email", "")).strip().lower(), str(user.get("name", "")).strip().lower()} - {""}
+            rec["economics_breach_decision"] = k.text(
+                body.get("economics_breach_decision"),
+                "the approvers' decision on the AI economics limit breach",
+                400,
+            )
+            approver = k.text(
+                body.get("economics_breach_approver"),
+                "the approver who decides the AI economics limit breach",
+                120,
+            )
+            proposer = {
+                str(user.get("email", "")).strip().lower(),
+                str(user.get("name", "")).strip().lower(),
+            } - {""}
             if approver not in approvers:
                 raise ValueError("The breach decision must be made by one of the named approvers.")
             if approver.lower() in proposer:
-                raise ValueError("The breach decision needs an approver other than the person recording the release.")
+                raise ValueError(
+                    "The breach decision needs an approver other than the person recording the release."
+                )
             rec["economics_breach_approver"] = approver
+        if decision == "Release" and scope == "Phase 0 capture":
+            self.require_capture_open()
+        if (
+            decision == "Release"
+            and scope in ("Shadow testing", "Live pilot")
+            and not self.is_released("Phase 0 capture")
+        ):
+            raise PermissionError(
+                f"{scope} cannot be released until Phase 0 capture is released. Owner: programme manager."
+            )
         if decision == "Release" and scope == "Shadow testing":
-            rec["shadow_entry_evidence"] = k.text(body.get("shadow_entry_evidence"), "the shadow-mode entry evidence", 400)
+            rec["shadow_entry_evidence"] = k.text(
+                body.get("shadow_entry_evidence"), "the shadow-mode entry evidence", 400
+            )
         with self.lock:
             if decision == "Release" and scope == "Phase 0 capture":
                 self.require_capture_open()
@@ -575,28 +872,59 @@ class GovernanceMixin:
     # ---- guardrail breach and restart
     def breach_record(self, user, body):
         k.refuse_bulk(body)
-        k.require_role(user, BREACH_ROLES, "a manager, quality inspector or building safety liaison can record a guardrail breach")
+        k.require_role(
+            user,
+            BREACH_ROLES,
+            "a manager, quality inspector or building safety liaison can record a guardrail breach",
+        )
         scope_kind = body.get("scope_kind")
         if scope_kind not in SCOPE_KINDS:
             raise ValueError("Choose home, work package, archetype or workstream.")
-        rec = dict(scope_kind=scope_kind, scope=k.text(body.get("scope"), "the affected scope", 120),
-                   owner=k.text(body.get("owner"), "the owner", 120), evidence=k.text(body.get("evidence"), "the evidence", 600),
-                   containment=k.text(body.get("containment"), "the containment", 400),
-                   resident_impact=k.text(body.get("resident_impact"), "the resident impact", 400),
-                   remediation=k.text(body.get("remediation"), "the remediation", 400),
-                   restart_authority=k.text(body.get("restart_authority"), "the restart authority (OD-35)", 200),
-                   recorded_by=user["email"], recorded_at=k.now(), status="Paused", restart=None, synthetic=bool(body.get("synthetic")))
+        restart_authority = validate_restart_authority(
+            body.get("restart_authority"),
+            label="the restart authority (OD-35)",
+            limit=200,
+            allow_unappointed_default=False,
+            disallowed_actors=actors_for_store(self, user),
+            authority_error=ValueError,
+        )
+        rec = dict(
+            scope_kind=scope_kind,
+            scope=k.text(body.get("scope"), "the affected scope", 120),
+            owner=k.text(body.get("owner"), "the owner", 120),
+            evidence=k.evidence_text(body.get("evidence"), "the evidence", 600),
+            containment=k.evidence_text(body.get("containment"), "the containment", 400),
+            resident_impact=k.evidence_text(
+                body.get("resident_impact"), "the resident impact", 400
+            ),
+            remediation=k.evidence_text(body.get("remediation"), "the remediation", 400),
+            restart_authority=restart_authority,
+            restart_rule=RULE_024,
+            automatic_restart=False,
+            actor=actor_snapshot(user),
+            recorded_by=user["email"],
+            recorded_at=k.now(),
+            status="Paused",
+            restart=None,
+            synthetic=bool(body.get("synthetic")),
+        )
         with self.lock:
             br = self._gov()["breaches"]
             rec["id"] = self._next_id("BRE", br)
             br.append(rec)
-            self.audit(user["email"], "breach_record", "-", f"{rec['id']} paused {scope_kind} {rec['scope']}")
+            self.audit(
+                user["email"],
+                "breach_record",
+                "-",
+                f"{rec['id']} paused {scope_kind} {rec['scope']}",
+            )
             self.save()
             return rec
 
     def breach_restart(self, user, body):
         k.refuse_bulk(body)
         _need_manager(user, "authorise a restart")
+        reject_automatic_restart(body)
         with self.lock:
             g = self._gov()
             b = next((x for x in g["breaches"] if x["id"] == body.get("id")), None)
@@ -604,35 +932,131 @@ class GovernanceMixin:
                 raise ValueError("Choose one of the breaches.")
             if b["status"] != "Paused":
                 raise ValueError("This breach is not paused.")
-            k.different_person(user, b["recorded_by"], "authorise the restart")
+            caller_actors = actors_for_store(self, user)
+            for caller in caller_actors:
+                ensure_distinct_restart_actor(
+                    caller,
+                    b.get("actor"),
+                    b.get("recorded_by"),
+                    prior_role_description="recorded the breach",
+                )
             rel = next((r for r in g["releases"] if r["id"] == body.get("release_id")), None)
             if not rel or rel["decision"] != "Release" or rel["recorded_at"] < b["recorded_at"]:
-                raise PermissionError("Restart needs a Release decision recorded after the breach. Owner: programme manager.")
-            b["restart"] = dict(by=user["email"], at=k.now(), release_id=rel["id"], authority_ref=k.text(body.get("authority_ref"), "the OD-35 authority reference", 200),
-                                remediation_evidence=k.text(body.get("remediation_evidence"), "the accepted remediation evidence", 600))
+                raise PermissionError(
+                    "Restart needs a Release decision recorded after the breach. Owner: programme manager."
+                )
+            rel_email = (rel.get("recorded_by") or "").strip().casefold()
+            rel_staff = (
+                self.staff.get(rel_email)
+                if rel_email and hasattr(self, "staff") and isinstance(self.staff, dict)
+                else None
+            ) or (
+                next(
+                    (
+                        s
+                        for s in self.data.get("staff", ())
+                        if (s.get("email") or "").strip().casefold() == rel_email
+                    ),
+                    None,
+                )
+                if rel_email
+                else None
+            )
+            for caller in caller_actors:
+                ensure_distinct_restart_actor(
+                    caller,
+                    rel.get("actor"),
+                    rel_staff,
+                    rel.get("recorded_by"),
+                    prior_role_description="recorded the post-breach release decision",
+                )
+            authority = validate_restart_authority(
+                body.get("authority_ref"),
+                label="the OD-35 authority reference",
+                limit=200,
+                allow_unappointed_default=False,
+                disallowed_actors=(b.get("actor"), b.get("recorded_by")),
+                authority_error=PermissionError,
+            )
+            try:
+                expected_authority = validate_restart_authority(
+                    b.get("restart_authority"),
+                    label="the restart authority (OD-35)",
+                    limit=200,
+                    allow_unappointed_default=False,
+                    disallowed_actors=(b.get("actor"), b.get("recorded_by")),
+                    authority_error=PermissionError,
+                )
+            except ValueError as err:
+                raise PermissionError(
+                    "The breach record lacks a valid RULE-024 human restart authority."
+                ) from err
+            if authority != expected_authority:
+                raise PermissionError(
+                    "The restart must cite the restart authority named on the breach record (RULE-024)."
+                )
+            b["restart"] = dict(
+                by=user["email"],
+                actor=actor_snapshot(user),
+                at=k.now(),
+                release_id=rel["id"],
+                authority_ref=authority,
+                restart_rule=RULE_024,
+                automatic_restart=False,
+                remediation_evidence=k.evidence_text(
+                    body.get("remediation_evidence"), "the accepted remediation evidence", 600
+                ),
+            )
             b["status"] = "Restart authorised"
             self.audit(user["email"], "breach_restart", "-", f"{b['id']} restart authorised")
             self.save()
             return b
 
     def paused_scopes(self):
-        return [dict(id=b["id"], scope_kind=b["scope_kind"], scope=b["scope"]) for b in self._gov()["breaches"] if b["status"] == "Paused"]
+        return [
+            dict(id=b["id"], scope_kind=b["scope_kind"], scope=b["scope"])
+            for b in self._gov()["breaches"]
+            if b["status"] == "Paused"
+        ]
 
     def is_paused(self, scope_kind, scope):
-        return any(p["scope_kind"] == scope_kind and p["scope"] == scope for p in self.paused_scopes())
+        return any(
+            p["scope_kind"] == scope_kind and p["scope"] == scope for p in self.paused_scopes()
+        )
 
     def require_not_paused(self, scope_kind, scope):
         if self.is_paused(scope_kind, scope):
             raise gates.RuleGatedPermissionError(f"This {scope_kind} is paused after a guardrail breach until restart is authorised. {EMERGENCY_NOTE}", gates.PAUSE_RULE)
 
-    def governance_view(self, user, assessment=None):
+    def governance_view(self, user, assessment=None, *, assistants_service=None):
+        from . import rai_control_plane
+
         with self.lock:
             actor = _actor(self, user)
             _need_manager(actor, "see the governance register")
             detached = copy(self)
             detached.data = dict(self.data, governance=deepcopy(self.data.get("governance", {})))
             g = detached._gov()
-            return dict(protocol=g["protocol_versions"], benefits=g["benefits"], verdicts=detached.benefit_verdicts(), value_claims=g.get("value_claims", []), releases=g["releases"],
-                        release_gaps=detached.release_gaps(), breaches=g["breaches"], paused=detached.paused_scopes(),
-                        capture_open=not detached.capture_gate(), capture_blockers=detached.capture_gate(), note=EMERGENCY_NOTE,
-                        rai_evidence=_rai_view(g, assessment))
+            rai = _rai_view(g, assessment)
+            payload = dict(
+                protocol=g["protocol_versions"],
+                benefits=g["benefits"],
+                verdicts=detached.benefit_verdicts(),
+                value_claims=g.get("value_claims", []),
+                releases=g["releases"],
+                release_gaps=detached.release_gaps(),
+                breaches=g["breaches"],
+                paused=detached.paused_scopes(),
+                capture_open=not detached.capture_gate(),
+                capture_blockers=detached.capture_gate(),
+                note=EMERGENCY_NOTE,
+                prd_quality_review=deepcopy(PRD_QUALITY_REVIEW),
+                prd_owner_acceptance=deepcopy(PRD_OWNER_ACCEPTANCE),
+                rai_evidence=rai,
+            )
+        readiness = rai_control_plane.exercise_acceptance_report(
+            self,
+            user=actor,
+            assistants_service=assistants_service,
+        )
+        return dict(payload, **readiness)

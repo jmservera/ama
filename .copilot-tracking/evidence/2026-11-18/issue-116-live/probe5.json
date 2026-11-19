@@ -1,0 +1,23 @@
+{
+ "ai_unknown_task": {
+  "status": 400,
+  "body": "{\"error\": \"Unknown request.\"}"
+ },
+ "ai_missing_task": {
+  "status": 400,
+  "body": "{\"error\": \"Unknown request.\"}"
+ },
+ "ai_unknown_case": {
+  "status": 404,
+  "body": "{\"error\": \"Case not found.\"}"
+ },
+ "readdoc_unknown_doc": {
+  "status": 404,
+  "body": "{\"error\": \"Case not found.\"}"
+ },
+ "readdoc_unknown_doc_plain": {
+  "status": 404,
+  "body": "{\"error\": \"Case not found.\"}"
+ },
+ "nongenerated_documents": 0
+}
