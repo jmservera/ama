@@ -14005,3 +14005,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 203 README archive-tag fix (Refs #203)
 
 * Added [issue-203-readme-tag-live-2026-11-19.md](research/issue-203-readme-tag-live-2026-11-19.md): the parity-matrix index row names tag v0.21.0, the legacy-reference checker exits 0; the deployed-app and CI criterion stays unproven.
+## [2026-11-19] add | Issue 470 live re-check (Refs #470)
+
+* Added [issue-470-live-2026-11-19.md](research/issue-470-live-2026-11-19.md): 113 gate tests pass; criterion 4 (before and after full-run timing) stays unproven because the full gate was not run.
