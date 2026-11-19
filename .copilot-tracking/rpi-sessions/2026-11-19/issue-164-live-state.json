@@ -1,5 +1,5 @@
 {
- "task_id": "issue-164-live-20261119T134556Z",
+ "task_id": "issue-164-live-20261119T142132Z",
  "task_slug": "issue-164-live",
  "parent_task": null,
  "mode": "automatic",
@@ -7,36 +7,41 @@
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-19-issue-164-live-r6-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-19-issue-164-live-r6-plan.md",
-  "details": ".copilot-tracking/details/2026-11-19-issue-164-live-r6-details.md",
-  "critique": ".copilot-tracking/critique/2026-11-19-issue-164-live-r6-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-19-issue-164-live-r6-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-19-issue-164-live-r6-review.md"
+  "research": ".copilot-tracking/research/2026-11-19/issue-164-live-r6-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-19/issue-164-live-r6-plan.md",
+  "details": ".copilot-tracking/details/2026-11-19/issue-164-live-r6-details.md",
+  "critique": ".copilot-tracking/critiques/2026-11-19/issue-164-live-r6-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-19/issue-164-live-r6-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-19/issue-164-live-r6-review.md"
  },
  "confirmed_decisions": [
   {
-   "decision": "Critique executed once, verdict proceed",
-   "status": "done",
-   "evidence": ".copilot-tracking/critique/2026-11-19-issue-164-live-r6-critique.md"
+   "decision": "demo only, FOCUSED tier, desktop",
+   "status": "confirmed",
+   "evidence": "Owner decisions 2026-11-18"
   },
   {
-   "decision": "Review executed once, conformant, doc-only",
+   "decision": "critique executed once, proceed, findings applied",
+   "status": "applied",
+   "evidence": ".copilot-tracking/critiques/2026-11-19/issue-164-live-r6-critique.md"
+  },
+  {
+   "decision": "review executed once, conformant focused tier with open items",
    "status": "done",
-   "evidence": ".copilot-tracking/reviews/2026-11-19-issue-164-live-r6-review.md"
+   "evidence": ".copilot-tracking/reviews/2026-11-19/issue-164-live-r6-review.md"
   }
  ],
  "blockers": [],
  "next_action": {
   "phase": "Follow-up",
-  "action": "Owner approves thresholds and names accountable individual"
+  "action": "coordinator publishes; owner approves thresholds and names reviewer"
  },
  "prioritized_follow_ups": [
   {
    "rank": 1,
    "task": "Owner approves thresholds and names accountable individual",
-   "rationale": "Unblocks criteria 1 and 2",
-   "evidence": "docs/reference/research/issue-164-live-20261119T134556Z-2026-11-19.md"
+   "rationale": "Unblocks the registration and binding criteria",
+   "evidence": "registry_offline.txt"
   }
  ]
 }
