@@ -13933,3 +13933,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 130 live run 6 nomination route audit (Refs #130)
 
 * Added [issue-130-live-r6-nomination-route-audit-2026-11-19.md](research/issue-130-live-r6-nomination-route-audit-2026-11-19.md): API revision 0000033 and resident revision 0000014 on the same API image digest, 66 offline core tests pass; the representative participation criterion stays unproven for the demo. Docs only.
+## [2026-11-19] add | Issue 521 live check, run 3 (Refs #521)
+
+* Added [resident-demo-authority-live-521-r3-2026-11-19.md](research/resident-demo-authority-live-521-r3-2026-11-19.md): live expiry `2028-01-01T00:00:00Z` re-observed on revision `0000014` with retained output; criterion 4 partly proven, SQL window, image commit and apply time unproven. No source change.
