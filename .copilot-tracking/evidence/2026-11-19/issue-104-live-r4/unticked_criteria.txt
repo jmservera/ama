@@ -1,0 +1,10 @@
+== 440
+- [ ] Triage confirmed findings into deduplicated, independently scoped RPI bug/refactor issues with severity, reproduction, requirement/ADR links, acceptance c
+- [ ] Deliver genuine research, plan/details, changes and independent review artifacts in the PR. Treat the coordinator change as a Major HVE Builder behavior c
+== 108
+- [ ] Model names, versions and quotas are confirmed in the chosen region
+- [ ] Any routing or caching option evaluated changes one lever at a time and is measured against the same held-out cases and a recorded baseline
+== 164
+- [ ] Thresholds are approved before a task is enabled; the chat task is registered with accountable reviewer and enable/disable state
+== 216
+- [ ] Citation validity and refusal accuracy gates set with owners and measured on a graded and adversarial set

@@ -1,0 +1,5 @@
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5368f4e4...",
+  "rev": "ca-cutover-test-demo-api--0000033"
+}

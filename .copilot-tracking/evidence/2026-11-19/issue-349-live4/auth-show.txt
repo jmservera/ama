@@ -1,0 +1,11 @@
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "action": "RedirectToLoginPage",
+  "aud": [
+    "<GUID>",
+    "api://<GUID>"
+  ],
+  "cid": "<GUID>",
+  "enabled": true,
+  "store": false
+}

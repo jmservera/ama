@@ -1,7 +1,7 @@
 ---
 title: Legal Briefing on UK Automated-Decision Rules and EU AI Act Applicability
 description: Briefing for the Legal contact with main points, open questions and recommendations for issue 224 and OQ-019; it prepares a decision and does not make one
-ms.date: 2026-11-04
+ms.date: 2026-11-17
 ms.topic: reference
 ---
 
@@ -69,10 +69,14 @@ stated date), `Repository` (a design fact in this repository), `Unknown`
 
 ### EU AI Act (Regulation (EU) 2024/1689)
 
-* Unknown: the EUR-Lex retrieval failed again on 2026-11-04 (bot challenge,
-  no body), so no text, commencement date or amendment was read from the
-  official source. Secondary mention of a delay to high-risk dates is
-  unverified and must not be relied on.
+* Official, retrieved 2026-11-17: the 2026-11-01 and 2026-11-04 EUR-Lex
+  retrievals failed, but a later retrieval read the Act as made (Article 113:
+  applies from 2 August 2026) and Regulation (EU) 2026/1744 (Digital Omnibus
+  on AI, dated 2026-07-08, OJ 2026-07-24), which amends Article 113(3) so that
+  Chapter III Sections 1 to 3 apply from 2 December 2027 (Annex III) and
+  2 August 2028 (Article 6(1) and Annex I). Details and sources are in the
+  [applicability pack](../../regulatory/reviewed-updates/2026-11-01-adm-ai-act-applicability-review.md).
+  These are source readings; the consolidated text was not compared.
 * The Act's reach depends on facts the repository does not hold: whether any
   system is placed on the EU market or put into service in the EU, whether
   the output is used in the EU, and the Zava role (provider, deployer or
@@ -95,7 +99,7 @@ Each is a proposal for the Legal and DPO owner to accept, change or reject.
 | 2 | For Articles 22A to 22C, list each workflow that could be a significant decision about a resident (prioritisation, offer, scheduling, contact, eligibility, access) and record whether a named human takes the decision with meaningful involvement | The test turns on actual human involvement, not on the design intent | Repository design only; no operational evidence |
 | 3 | Record the 22B position for special-category data (for example health, vulnerability or disability markers) and whether Article 6(1)(ea) is relied on anywhere | Article 22B (UK GDPR, carried-over source above) restricts these cases; Legal to confirm | Unknown; no lawful-basis map checked |
 | 4 | If any workflow is solely automated and significant, require the four Article 22C safeguards (information, representations, human intervention, contest) with a manual path and plain-language notice | Matches the repository's manual-path and resident-consent boundaries | Not built as a legal control |
-| 5 | Retrieve the EUR-Lex consolidated text and any amending acts by a method that works for a person (browser or official download), then record the EU decision | Automated retrieval is blocked; the EU position is `Unknown` until then | Failed 2026-11-01 and 2026-11-04 |
+| 5 | Compare the EUR-Lex consolidated text and any further amending acts with the 2026-11-17 readings (Act as made and Regulation (EU) 2026/1744), then record the EU decision | Consolidated text not compared; the EU position stays `Unknown` until Legal decides on territorial and role facts | Partly read 2026-11-17; earlier attempts failed 2026-11-01 and 2026-11-04 |
 | 6 | State the territorial facts before classifying: EU establishment, EU-located residents, EU market placement, model hosting region and intended use | Legal cannot decide scope without them | `Unknown` |
 | 7 | Check the ICO automated decision-making guidance and any Article 22D regulations, and compare the 2026-09-19 local snapshot with the point-in-time official text | Not retrieved; snapshot currentness is `Unknown` | Not done |
 | 8 | If Legal and DPO decide the citation needs changing, update the seed card citation and name its approver through the rule-card approval workflow (#211) | Card still cites Article 22 and has no approver | Not changed; awaits decision |
@@ -115,7 +119,8 @@ Each is a proposal for the Legal and DPO owner to accept, change or reject.
 ## Gaps Not Closed by This Briefing
 
 * No Legal or DPO decision is recorded; criteria 1 and 5 of #224 stay open.
-* EU AI Act text, commencement and amendments are unverified.
+* EU AI Act as made and Regulation (EU) 2026/1744 were read on 2026-11-17;
+  the consolidated text and any other amending act were not compared.
 * The local UK GDPR snapshot was not compared line by line with the official
   text; ICO guidance and Article 22D regulations were not read.
 * Real appointees, lawful-basis records and operational evidence of human

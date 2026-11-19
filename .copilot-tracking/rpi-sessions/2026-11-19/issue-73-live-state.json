@@ -1,30 +1,47 @@
 {
- "task_id": "issue-73-live",
- "task_slug": "issue-73-live",
+ "task_id": "issue-73-live-r2",
+ "task_slug": "issue-73-live-r2",
  "parent_task": null,
  "mode": "automatic",
  "active_phase": "Follow-up",
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-19-issue-73-live-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-19-issue-73-live-plan.md",
-  "details": ".copilot-tracking/details/2026-11-19-issue-73-live-details.md",
-  "critique": ".copilot-tracking/critique/2026-11-19-issue-73-live-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-19-issue-73-live-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-19-issue-73-live-review.md"
+  "research": ".copilot-tracking/research/2026-11-19-issue-73-live-r2-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-19-issue-73-live-r2-plan.md",
+  "details": ".copilot-tracking/details/2026-11-19-issue-73-live-r2-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-19-issue-73-live-r2-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-19-issue-73-live-r2-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-19-issue-73-live-r2-review.md"
  },
  "confirmed_decisions": [
   {
    "decision": "Demo only, desktop; FOCUSED tier; no rpi-checks --all; no push",
    "status": "confirmed",
    "evidence": "Task brief and owner decisions 2026-11-18"
+  },
+  {
+   "decision": "Critique executed once; verdict proceed, findings applied",
+   "status": "done",
+   "evidence": ".copilot-tracking/critique/2026-11-19-issue-73-live-r2-critique.md"
+  },
+  {
+   "decision": "Review executed once; conformant, no open findings",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/2026-11-19-issue-73-live-r2-review.md"
   }
  ],
  "blockers": [],
  "next_action": {
   "phase": "Follow-up",
-  "action": "Owner selects follow-up"
+  "action": "Owner records deferral/closure of #76, #79, #80, #440"
  },
- "prioritized_follow_ups": []
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Owner decision on deferral of #76/#79/#80",
+   "rationale": "Only path to epic criterion 2",
+   "evidence": "docs/reference/research/issue-73-epic-audit-live-r2-2026-11-19.md"
+  }
+ ]
 }
