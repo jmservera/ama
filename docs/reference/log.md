@@ -13389,3 +13389,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Epic 93 first unmet criterion re-check (Refs #93)
 
 * Added [issue-93-first-unmet-criterion-live-2026-11-19.md](research/issue-93-first-unmet-criterion-live-2026-11-19.md): 269 offline tests OK (45 skipped), read-only live finance probe, BRD identifier mismatch in the issue body, per-criterion table; checkpoint and child closure stay unproven.
+## [2026-11-19] add | Epic 73 child disposition audit, second pass (Refs #73)
+
+* Added [issue-73-epic-audit-live-r2-2026-11-19.md](research/issue-73-epic-audit-live-r2-2026-11-19.md) and `tools/test_epic_73_child_disposition.py`: one disposition per child, residual of #76, #79 and #80, read-only live check of revision 33; no criterion ticked.
