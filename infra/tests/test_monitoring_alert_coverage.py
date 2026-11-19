@@ -88,6 +88,12 @@ class AlertCoverageTests(unittest.TestCase):
                 )
         self.assertIn("#${failure.suffix}", MODULE)
 
+    def test_job_failure_rule_uses_total_aggregation(self) -> None:
+        # Live 2026-11-18: Maximum did not fire on two fresh failed executions; Total did.
+        block = _resource(MODULE, "jobFailures")
+        self.assertIn("timeAggregation: 'Total'", block)
+        self.assertNotIn("timeAggregation: 'Maximum'", block)
+
     def test_ai_limit_classes_link_owned_anchors(self) -> None:
         anchors = _anchors()
         text = _description(_resource(MODULE, "aiLimitBreach"))

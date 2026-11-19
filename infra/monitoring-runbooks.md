@@ -322,7 +322,7 @@ Recovery requires retained forecast record and Finance disposition.
 ## New Disabled Job Candidates
 
 Each `alert-${jobName}-failed` checks `Microsoft.App/jobs` `Executions`,
-dimension `state=Failed`, Maximum >0 over 15 minutes, every five minutes,
+dimension `state=Failed`, Total >0 over 15 minutes, every five minutes,
 severity 2. This is a proposed failure-presence filter, not an exact count of
 distinct executions. Provider dimension values and signal behavior need
 verification before activation. Only authored background jobs receive candidates;
