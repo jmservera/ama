@@ -14014,3 +14014,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 184 child stories closed (Refs #184)
 
 * Indexed [issue-184-child-stories-demo-2026-11-19.md](research/issue-184-child-stories-demo-2026-11-19.md): all five sub-issues of #184 are closed as completed (5 of 5); no source change, no live Azure action, other criteria not re-run.
+## [2026-11-19] add | Issue 146 monitoring criteria triage (Refs #146)
+
+* Indexed [issue-146-live-triage-2026-11-19.md](research/issue-146-live-triage-2026-11-19.md): fresh read-only inventory and per-criterion status; no source change.
