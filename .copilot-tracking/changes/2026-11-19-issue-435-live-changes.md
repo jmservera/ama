@@ -12,3 +12,4 @@ No source changes. Only tracking artifacts were added.
 | Statements sourced and labelled | Already ticked | Prior delivery |
 
 Validation: focused tier; git diff review only. No code tests apply.
+Witness note: earlier refusals at seq 3-7 came from a stale state file and are preserved.
