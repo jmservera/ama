@@ -18,7 +18,7 @@ import threading
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import cast
+from typing import Any, Protocol, cast
 
 from zava_forward.core.synthetic import device_identity as di
 from zava_forward.core.synthetic import privacy, sensor_identity, sensor_stock
@@ -426,6 +426,95 @@ class SymmetricSasCredentialStore:
     def active_count(self) -> int:
         with self._lock:
             return len(self._vault)
+
+
+class SecretBackend(Protocol):
+    """Durable secret storage addressed by opaque reference; values never leave the backend."""
+
+    def put(self, reference: str, value: str, run_id: str, device_id: str) -> None: ...
+
+    def delete(self, reference: str) -> None: ...
+
+    def list_entries(self) -> Sequence[tuple[str, str, str]]:
+        """Return `(reference, run_id, device_id)` for every stored secret."""
+        ...
+
+
+class KeyVaultSecretBackend:
+    """Key Vault-shaped backend over an injected `SecretClient` (keyless, no SDK import here)."""
+
+    _PREFIX = "zfsas-"
+
+    def __init__(self, client: Any) -> None:
+        self._client = client
+
+    def __repr__(self) -> str:
+        return "KeyVaultSecretBackend()"
+
+    @classmethod
+    def _name(cls, reference: str) -> str:
+        return cls._PREFIX + hashlib.sha256(reference.encode()).hexdigest()[:48]
+
+    def put(self, reference: str, value: str, run_id: str, device_id: str) -> None:
+        self._client.set_secret(
+            self._name(reference),
+            value,
+            tags={"ref": reference, "run": run_id, "device": device_id},
+        )
+
+    def delete(self, reference: str) -> None:
+        self._client.begin_delete_secret(self._name(reference)).wait()
+
+    def list_entries(self) -> Sequence[tuple[str, str, str]]:
+        entries: list[tuple[str, str, str]] = []
+        for props in self._client.list_properties_of_secrets():
+            tags = props.tags or {}
+            if str(props.name).startswith(self._PREFIX) and {"ref", "run", "device"} <= set(tags):
+                entries.append((tags["ref"], tags["run"], tags["device"]))
+        return tuple(entries)
+
+
+class DurableSasCredentialStore(SymmetricSasCredentialStore):
+    """SAS credential store persisting derived keys in a `SecretBackend`, recoverable on restart.
+
+    A new process rebuilds its opaque references from the backend, so teardown can still find and
+    revoke credentials issued earlier. Backend failures surface as a fixed code with no cause text.
+    """
+
+    def __init__(self, backend: SecretBackend) -> None:
+        super().__init__()
+        self._backend = backend
+        try:
+            recovered = tuple(backend.list_entries())
+        except Exception:
+            raise LiveProvisioningError("CREDENTIAL_BACKEND_FAILED") from None
+        for reference, run_id, device_id in recovered:
+            tail = reference.rsplit("/", 1)[-1]
+            if tail.isdigit():
+                self._seq = max(self._seq, int(tail))
+            self._vault[reference] = _VaultEntry(run_id, device_id, "")
+
+    def __repr__(self) -> str:
+        return f"DurableSasCredentialStore(active_references={self.active_count()})"
+
+    def issue(self, device_id: str, run_id: str) -> str:
+        reference = super().issue(device_id, run_id)
+        with self._lock:
+            key = self._vault[reference].derived_key_b64
+        try:
+            self._backend.put(reference, key, run_id, device_id)
+        except Exception:
+            super().revoke(reference)
+            raise LiveProvisioningError("CREDENTIAL_BACKEND_FAILED") from None
+        return reference
+
+    def revoke(self, reference: str) -> None:
+        if self.has_reference(reference):
+            try:
+                self._backend.delete(reference)
+            except Exception:
+                raise LiveProvisioningError("CREDENTIAL_BACKEND_FAILED") from None
+        super().revoke(reference)
 
 
 class SimulatedDeviceRegistry:
