@@ -1,0 +1,11 @@
+2026-11-19T14:00:53Z
+WARNING: The behavior of this command has been altered by the following extension: azure-iot
+N                       Sku    Units    Pna
+----------------------  -----  -------  --------
+iot-cutover-test-rzsrg  B1     1        Disabled
+WARNING: This command is in preview and under development. Reference and support levels: https://aka.ms/CLI_refstatus
+N                              Amt
+-----------------------------  -----
+budget-forward-test            300.0
+budget-cutover-test            300.0
+budget-iot-cutover-test-rzsrg  25.0

@@ -13679,3 +13679,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 184 child stories closed (Refs #184)
 
 * Indexed [issue-184-child-stories-demo-2026-11-19.md](research/issue-184-child-stories-demo-2026-11-19.md): all five sub-issues of #184 are closed as completed (5 of 5); no source change, no live Azure action, other criteria not re-run.
+## [2026-11-19] add | Issue 184 live re-verification, run 7 (Refs #184)
+
+* Added [issue-184-live-r7-2026-11-19.md](research/issue-184-live-r7-2026-11-19.md) with retained outputs: read-only live and local checks; the child-closure criterion stays unproven (owner action) and no source change was made.

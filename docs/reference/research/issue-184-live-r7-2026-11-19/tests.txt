@@ -1,0 +1,21 @@
+refused: BUDGET_ALERT_NOT_BELOW_CAP
+refused: INVALID_BUDGET
+----------------------------------------------------------------------
+Ran 91 tests in 5.529s
+
+OK
+{
+  "days": 1,
+  "estimated_cost_usd": 0.33,
+  "headroom_units_per_day": 359970,
+  "homes": 10,
+  "message_bytes": 512,
+  "messages_per_day": 30,
+  "metered_units_per_day": 30,
+  "price_basis": "Azure Retail Prices API list price, uksouth, retrieved 2026-10-27 (infra/README.md)",
+  "quota_units_per_day": 400000,
+  "records_per_home_day": 3,
+  "tier": "B1",
+  "total_messages": 30,
+  "units": 1
+}

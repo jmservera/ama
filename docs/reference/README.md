@@ -507,6 +507,9 @@ the child-closure criterion stays unproven and nothing is ticked.
 A [sixth run](./research/issue-184-live-r6-2026-11-19.md) repeats the read-only checks with 91 targeted tests; the
 criterion is still an owner action and nothing is ticked.
 
+A [seventh run](./research/issue-184-live-r7-2026-11-19.md) repeats the read-only checks with 91 targeted tests;
+the criterion is still an owner action and nothing is ticked.
+
 For #109, the [live device monitoring evidence](./research/issue-109-live-device-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of IoT Hub connection state and a connectivity metric alert.
 Hub `lastActivityTime` did not update; the #440 checkpoint and child-closure criteria stay unproven.
