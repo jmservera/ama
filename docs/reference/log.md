@@ -13633,3 +13633,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 145 live audit 6 (Refs #145)
 
 * Added [issue-145-live-20261119T1419Z-2026-11-19.md](research/issue-145-live-20261119T1419Z-2026-11-19.md): read-only Azure SQL backup re-check; no source change, no drill; every remaining criterion is production-only, human-owned or needs the FULL tier.
+## [2026-11-19] add | Issue 145 live audit 6 (Refs #145)
+
+* Added [issue-145-live-1409z-2026-11-19.md](research/issue-145-live-1409z-2026-11-19.md): fresh read-only Azure SQL backup settings and a per-criterion table; C4 has no approved #121 retention decision, R3 needs the FULL tier. No source change.
