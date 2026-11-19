@@ -13921,3 +13921,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Live notes for issues 108, 120, 126, 146 and 440
 
 * Added [issue 108 r2](research/issue-108-live-r2-20261119-2026-11-19.md), [issue 120 r2](research/issue-120-live-2026-11-19-r2.md), [issue 126 r3](research/issue-126-live-r3-2026-11-19.md), [issue 146](research/issue-146-live-20261119T154738Z-2026-11-19.md) and [issue 440](research/issue-440-live-criteria-verdict-2026-11-19.md): evidence only; unproven criteria stay unproven.
+## [2026-11-19] add | Issue 1274 release-download criteria proof (Refs #1274)
+
+* Added [issue-1274-live-release-download-criteria-2026-11-19.md](research/issue-1274-live-release-download-criteria-2026-11-19.md): failing 504 endpoint from the retained #1243 job log, real actionlint 1.7.7 checksum verification, 12 installer tests, per-criterion table; AWF recovery and hosted CI stay unproven.
