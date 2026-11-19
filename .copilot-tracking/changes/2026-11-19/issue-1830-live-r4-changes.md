@@ -1,10 +1,11 @@
-# Issue 1830 r4 changes (2026-11-19)
+# Changes r4
 
-Tier: FOCUSED, no source change. Only .copilot-tracking artifacts added. Validation: 54 unit tests OK.
+* Add docs/reference/research/issue-1830-live-r4-2026-11-19.md
+* Index and log entries
 
-| # | Criterion | State |
-| --- | --- | --- |
-| 1 | Timing, queue wait, critical path | Unproven beyond analyzer: no queue-wait data, no comparable receipt pair, reference receipt gone |
-| 2 | Preflight, 320px and #1828 rerun | Unproven: preflight refuses execution by design; owner trust-boundary decision needed |
-| 3 | Tests, docs, before/after | Partly proven: 54 tests pass; no optimization, no before/after |
-| 4 | RPI artifacts, review, hosted CI | Partly proven: artifacts and focused tier done; review and CI need a PR (not opened) |
+| # | Criterion | State | Reason |
+| --- | --- | --- | --- |
+| 1 | Measured wall time, queue wait, critical path | Partly proven | Analyzer exists; queue wait not recorded; reference receipt absent; no same head/base pair |
+| 2 | Change-specific preflight, 320px and #1828 reruns | Unproven | Preflight refuses all selected execution (rc 5) by design; needs owner trust or isolation choice and FULL tier |
+| 3 | Focused tests, docs, before/after benchmark | Partly proven | 54 tests pass; no optimization implemented, so no before/after |
+| 4 | Dated artifacts, tier, independent review, hosted CI | Partly proven | Dated artifacts and focused tier done; review and CI need a PR, not opened |

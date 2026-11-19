@@ -1,3 +1,3 @@
-# Issue 1830 r4 review (2026-11-19)
+# Review r4
 
-Executed once. Outcome: conformant for a no-code result. Open criteria 1-4 routed to the owner decision on the preflight trust boundary; not claimed as met.
+Outcome: conformant (docs only). Table matches re-run evidence; no source change; links resolve. Independent exact-head review and hosted CI remain for the coordinator.

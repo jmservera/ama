@@ -1,4 +1,3 @@
-# Issue 1830 r4 plan (2026-11-19)
+# Plan r4
 
-* [x] Re-run 54 preflight and timing tests.
-* [x] Record per-criterion table in changes; no src, tools or gate edit.
+Phase 1: record re-verification as docs note. Phase 2: commit. No src or tools edit; FOCUSED tier.

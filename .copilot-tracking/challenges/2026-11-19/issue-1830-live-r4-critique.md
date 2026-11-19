@@ -1,3 +1,3 @@
-# Issue 1830 r4 critique (2026-11-19)
+# Critique r4
 
-Verdict: proceed. Executed once. Risk: enabling preflight would weaken a security control without owner decision; rejected. No fabricated benchmark.
+Verdict: proceed. Building anything here would enable execution of repository code, a security control change needing owner direction. Single critique.
