@@ -13368,3 +13368,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 164 fourth demo re-check (Refs #164)
 
 * Added [the per-criterion note](./research/issue-164-live-20261119T0909Z-2026-11-19.md): registered and disabled chat task confirmed, thresholds and real-model evidence stay person-gated; no source change.
+## [2026-11-19] update | Issue 198 stale-mvp test fixture (Refs #198)
+
+* Updated [issue-198-rubric-live-r2-2026-11-18.md](research/issue-198-rubric-live-r2-2026-11-18.md): the 10 stale-mvp test failures are fixed; criteria 3 and 4 stay unproven.
