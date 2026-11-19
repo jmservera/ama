@@ -14059,3 +14059,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 344 seventh pass
 
 * Added [public-browser-access-live-r7-2026-11-19.md](research/public-browser-access-live-r7-2026-11-19.md): criteria 3 and 4 proven live read-only (healthz 200, anonymous API 401, SQL public access Disabled, no firewall rules, no policy assignments); criteria 1 (browser 401) and 5 need FULL-tier work; no source change.
+
+## [2026-11-19] add | Issue 108 live re-check 20261119T1621
+
+* Added [issue 108 re-check](research/issue-108-live-20261119T1621-2026-11-19.md): fresh read-only deployment and quota evidence and 102 offline tests; no criterion buildable as code. Refs #108.
