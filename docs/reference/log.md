@@ -14011,3 +14011,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 2061 single external demo environment decision record (Refs #2061)
 
 * Added [ADR 0008](../adrs/0008-single-external-demo-environment.md) (Proposed) and [issue-2061-live-single-environment-2026-11-19.md](research/issue-2061-live-single-environment-2026-11-19.md): read-only live inventory of two environments, identities and roles; Entra registrations unreadable with this login; criteria 2 to 8 stay unproven. No source or infra change.
+## [2026-11-19] add | Issue 184 child stories closed (Refs #184)
+
+* Indexed [issue-184-child-stories-demo-2026-11-19.md](research/issue-184-child-stories-demo-2026-11-19.md): all five sub-issues of #184 are closed as completed (5 of 5); no source change, no live Azure action, other criteria not re-run.
