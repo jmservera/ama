@@ -13987,3 +13987,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 146 live monitoring re-check (Refs #146)
 
 * Added [issue-146-live4-monitoring-2026-11-19.md](research/issue-146-live4-monitoring-2026-11-19.md): read-only alert and workbook inventory and a per-criterion result; no source change.
+## [2026-11-19] update | Issue 151 manual check record status (Refs #151)
+
+* Updated [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md): the manual screen-reader and keyboard rows stay `Not run` because they need named people; person-run assistive-technology testing is out of demo scope. No source change.
