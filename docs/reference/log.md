@@ -14055,3 +14055,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 220 live r7 stop note
 
 * Added [issue 220 r7](research/issue-220-live-r7-stop-2026-11-19.md): last criterion is offline proven, live unproven and production-only beyond that; no source change.
+
+## [2026-11-19] add | Issue 344 seventh pass
+
+* Added [public-browser-access-live-r7-2026-11-19.md](research/public-browser-access-live-r7-2026-11-19.md): criteria 3 and 4 proven live read-only (healthz 200, anonymous API 401, SQL public access Disabled, no firewall rules, no policy assignments); criteria 1 (browser 401) and 5 need FULL-tier work; no source change.
