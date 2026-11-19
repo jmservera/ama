@@ -12437,6 +12437,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
 
+## [2026-11-17] update | Journey register design references resolve (Refs #128)
+
+* Measured on main `eb51af5c9`: 0 of 7 `design_ref` anchors in `journey_register.draft()` (`#j1` to `#r1`) matched a heading in [resident journeys](research/ux/customer-journeys/residents.md). The anchors now use the heading slug (for example `#j1-choose-each-proposed-measure`), and a regression test resolves each one against the document headings.
+* Updated the [equity and journey test plan](research/ux/equity-journey-test-plan.md). No criterion is newly proven: keyboard and screen reader runs, owner assignment and protocol agreement remain human work. Targeted core tests, ruff and mypy only; no full gate.
 ## [2026-11-17] update | Work-package guardrail breach now pauses case events (Refs #126)
 
 * Assessed #126 against main `eb51af5c9`. The checked criteria have code and test evidence; the five unchecked criteria (protocol, DPIA and lawful-basis approval, residual and unassessed dispositions with qualified owners, fresh assessment, owner acceptance, real AI, SQL and Azure contract) remain human or cloud gated and no tick is proposed.

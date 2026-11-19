@@ -49,6 +49,12 @@ GAP = (
 )
 
 
+def _anchor(code: str, name: str) -> str:
+    """GitHub heading slug of the journey heading `### {code}: {name}` in the design document."""
+    text = f"{code}: {name}".lower()
+    return "".join(c for c in text if c.isalnum() or c in " -").replace(" ", "-")
+
+
 def draft() -> dict[str, Any]:
     """Draft register: every journey listed; none has an owner, threshold or tested alternative."""
     return {
@@ -58,7 +64,7 @@ def draft() -> dict[str, Any]:
             {
                 "id": code,
                 "name": name,
-                "design_ref": f"{DESIGN_DOC}#{code.lower()}",
+                "design_ref": f"{DESIGN_DOC}#{_anchor(code, name)}",
                 "owner": None,
                 "escalation": None,
                 "measures": {m: {"threshold": None, "approved_by": None} for m in MEASURES},

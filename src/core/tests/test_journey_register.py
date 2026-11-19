@@ -1,5 +1,7 @@
 import copy
+import re
 import unittest
+from pathlib import Path
 from typing import Any
 
 from zava_forward.core import journey_register as jr
@@ -17,6 +19,18 @@ def complete() -> dict[str, Any]:
 
 
 class JourneyRegisterTests(unittest.TestCase):
+    def test_design_refs_resolve_to_journey_headings(self) -> None:
+        root = Path(__file__).resolve().parents[3]
+        text = (root / jr.DESIGN_DOC).read_text(encoding="utf-8")
+        slugs = {
+            re.sub(r"[^a-z0-9 -]", "", h.lower()).replace(" ", "-")
+            for h in re.findall(r"^#{1,6} (.+?)\s*$", text, flags=re.M)
+        }
+        for journey in jr.draft()["journeys"]:
+            path, anchor = journey["design_ref"].split("#")
+            self.assertEqual(path, jr.DESIGN_DOC)
+            self.assertIn(anchor, slugs, journey["id"])
+
     def test_draft_lists_every_journey_and_measure_but_is_blocked(self) -> None:
         reg = jr.draft()
         self.assertEqual({j["id"] for j in reg["journeys"]}, set(jr.JOURNEYS))
