@@ -1,0 +1,8 @@
+enabled = False
+state = disabled
+approval_state = unapproved
+accountable_function = Retrofit Programme Manager
+accountable_individual = unknown
+manual_route = Use the ordinary case controls and the named function; the panel answers nothing without a model.
+thresholds proposed None None
+registered True dispatch_no_env False
