@@ -417,6 +417,8 @@ The [third pass](./research/issue-76-live-r3-2026-11-18.md) re-probes read-only:
 cases carry a safeguarding item, so that half stays unproven without writing demo data.
 The [fourth pass](./research/issue-76-live-r4-2026-11-19.md) finds a safeguarding clock and
 named owner live on `ZF-2025-0148`; the hazard clock still reads Unknown for lack of timestamps.
+The [fifth pass](./research/issue-76-live-r5-2026-11-19.md) re-runs 35 targeted tests and confirms
+revision 33 is still active; no source gap remains.
 For epic #73, the [criterion audit](./research/issue-73-epic-live-2026-11-19.md) tabulates every
 unticked criterion and adds a local HTTP test for the #76 clocks on list rows.
 The [second-pass child disposition audit](./research/issue-73-epic-audit-live-r2-2026-11-19.md)

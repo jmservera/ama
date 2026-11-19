@@ -13791,3 +13791,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 162 criterion 6 stop decision (Refs #162)
 
 * Added [issue-162-live-criterion6-stop-2026-11-19.md](research/issue-162-live-criterion6-stop-2026-11-19.md): 35 isolation tests OK; criterion 6 needs owner policy decisions or an unauthorised live config change
+## [2026-11-19] add | Issue 76 hazard and safeguarding clock, fifth pass (Refs #76)
+
+* Added [issue-76-live-r5-2026-11-19.md](research/issue-76-live-r5-2026-11-19.md): 35 targeted tests pass, live revision 33 still active, per-criterion verdict. No source change.
