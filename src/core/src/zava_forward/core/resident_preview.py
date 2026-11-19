@@ -473,6 +473,10 @@ def _real(path: str | Path, label: str) -> Path:
     return resolved
 
 
+def _usable_id(value: Any) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
 def safe_start(
     env: Any,
     dataset: str | Path,
@@ -506,6 +510,7 @@ def safe_start(
         or not isinstance(fixture_meta, dict)
         or fixture_meta.get("synthetic") is not True
         or fixture_meta.get("disposable") is not True
+        or not _usable_id(dataset_marker.get("fixture_id"))
         or dataset_marker.get("fixture_id") != fixture_meta.get("id")
     ):
         raise PreviewConfigError(
