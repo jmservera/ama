@@ -539,6 +539,8 @@ def render_accessible_nomination_route_html(
     return (
         "<!doctype html>"
         '<html lang="en-GB"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">'
+        '<link rel="stylesheet" href="/style.css">'
         f"<title>Referral and challenge routes for {_esc(case_id)}</title></head>"
         "<body><main>"
         f"<h1>Referral, acknowledgement, and challenge routes ({_esc(case_id)})</h1>"

@@ -766,6 +766,7 @@ class NominationApiRoutesTests(unittest.TestCase):
         _, ctype, html = self.request_raw("/api/cases/ZF-1?view=nomination-routes-html", "sam")
         self.assertIn("text/html", ctype)
         self.assertIn('<script src="/nomination-routes.js" defer></script>', html)
+        self.assertIn('<link rel="stylesheet" href="/style.css">', html)
         status, ctype, script = self.request_raw("/nomination-routes.js", "sam")
         self.assertEqual(status, 200)
         self.assertIn("javascript", ctype)
