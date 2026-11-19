@@ -14039,3 +14039,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 138 ninth live note
 
 * Added [issue-138-live-r9-2026-11-19.md](research/issue-138-live-r9-2026-11-19.md): read-only recheck; 0 federated credentials, 0 protection rules, 0 runners; all six criteria stay unproven. No source change.
+
+## [2026-11-19] add | Issue 146 monitoring status r6 (Refs #146)
+
+* Added [issue-146-live-20261119T160746Z-2026-11-19.md](research/issue-146-live-20261119T160746Z-2026-11-19.md): fresh read-only inventory and per-criterion status; no source change.
