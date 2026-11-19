@@ -114,6 +114,18 @@ class ReportTests(unittest.TestCase):
         self.assertEqual(report["queue_wait_seconds"], 3.0)
         self.assertEqual(report["lock_to_seal_seconds"], 43.0)
 
+    def test_repeated_identical_commands_are_listed_across_groups(self) -> None:
+        path = write_receipt(self.root / "a", [("a", 0, 10), ("b", 10, 40), ("c", 40, 45)])
+        receipt = json.loads(path.read_text())
+        receipt["commands"][2]["argv"] = ["python3", "-m", "ruff"]
+        path.write_text(json.dumps(receipt))
+        (path.parent / "receipt.sha256").write_text(hashlib.sha256(path.read_bytes()).hexdigest())
+        report = json.loads(run("report", str(path))[1])
+        self.assertEqual(len(report["repeated_commands"]), 1)
+        row = report["repeated_commands"][0]
+        self.assertEqual((row["runs"], row["seconds"], row["groups"]), (2, 40.0, ["a", "b"]))
+        self.assertFalse(row["setup"])
+
     def test_setup_commands_are_separated_by_exact_tokens(self) -> None:
         self.assertTrue(timing.is_setup(["python", "-m", "pip", "install"]))
         self.assertTrue(timing.is_setup(["docker", "build", "x"]))
