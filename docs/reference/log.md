@@ -13767,3 +13767,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 1818 live r3 re-observation (Refs #1818)
 
 * Added [issue-1818-live-r3-20261119-2026-11-19.md](research/issue-1818-live-r3-20261119-2026-11-19.md) with redacted retained output: same stale readings, filter and resident view at 14:14 UTC; the only unticked criterion needs the sender and receiver fix, a FULL-tier SQL change, so it was not built. No source change.
+## [2026-11-19] add | Issue 189 live re-observation (Refs #189)
+
+* Added [issue-189-live-20261119-2026-11-19.md](research/issue-189-live-20261119-2026-11-19.md) with redacted verifier output: owner tag, B1, USD 25 budget and both alerts pass; recipients unreachable; no simulator job. No source change; the live owned-run criterion stays unticked.
