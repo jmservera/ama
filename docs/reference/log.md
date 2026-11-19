@@ -12437,6 +12437,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
 
+## [2026-11-17] update | Work-package guardrail breach now pauses case events (Refs #126)
+
+* Assessed #126 against main `eb51af5c9`. The checked criteria have code and test evidence; the five unchecked criteria (protocol, DPIA and lawful-basis approval, residual and unassessed dispositions with qualified owners, fresh assessment, owner acceptance, real AI, SQL and Azure contract) remain human or cloud gated and no tick is proposed.
+* Found and fixed one RULE-024 gap: a `work package` breach was recorded as Paused but `guard_case_event` did not check it. Case events now stop for a case with an active work order in the paused package, and restart lifts the pause. A workstream breach has no case mapping and stays recorded-only, as now stated in [src/core/README.md](../../src/core/README.md).
+* Evidence: [research](../../.copilot-tracking/research/2026-11-17/issue-126-frozen-protocol-research.md) and [changes](../../.copilot-tracking/changes/2026-11-17/issue-126-frozen-protocol-changes.md). Focused tier; SQL, hosted CI and independent review remain separate.
 ## [2026-11-17] update | Map tile provider decision record (Refs #119)
 
 * Added the [decision record](../design/map-tile-provider-decision-record.md): no licensed provider selected, OSM for the synthetic demo only, production loads no tiles without `ZF_TILE_URL`, the gate before selection, and the accessible list as a standing requirement for every provider. Linked it from the [options review](research/ux/map-tile-provider-options.md) and the index, and added a focused test.
