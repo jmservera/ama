@@ -13389,6 +13389,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-138-live-r6-2026-11-19.md](research/issue-138-live-r6-2026-11-19.md): `verify-federation` helper with tests and live read-only evidence; all six criteria remain unproven.
 
+## [2026-11-19] add | Issue 138 seventh recheck (Refs #138)
+
+* Added [issue-138-live-r7-2026-11-19.md](research/issue-138-live-r7-2026-11-19.md): read-only recheck, state unchanged; all six criteria remain unproven and need owner action.
+
 ## [2026-11-19] add | Issue 109 research gate guard (Refs #109)
 
 * Added [issue-109-research-gate-guard-2026-11-19.md](research/issue-109-research-gate-guard-2026-11-19.md): `SOURCED:` sensor thresholds require R1 to R3 references in code; per-criterion table, #440 and children stay unproven.
