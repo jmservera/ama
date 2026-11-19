@@ -13706,3 +13706,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 440 checkpoint triage refresh (Refs #440)
 
 * Added [issue-440-live-checkpoint-refresh-2026-11-19.md](research/issue-440-live-checkpoint-refresh-2026-11-19.md): D2 guard violations 11 to 1, D4 largely delivered, D1 to D3 unchanged; criteria 7 and 8 stay unproven. No source change.
+## [2026-11-19] add | Issue 470 live re-check (Refs #470)
+
+* Added [issue-470-live-2026-11-19.md](research/issue-470-live-2026-11-19.md): 113 gate tests pass; criterion 4 (before and after full-run timing) stays unproven because the full gate was not run.
