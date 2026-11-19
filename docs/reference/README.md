@@ -1884,3 +1884,5 @@ cross-cutting boundaries across 1,499 focused local unit and API test runs (reco
 explicitly), confirm no new defect or refactoring need on either epic surface, record authorized Azure, human, and deferred
 `#432` commercial tariff residuals, and recommend `continue` while keeping `#89` and `#100` open pending merge, hosted CI,
 independent review, and owner closure.
+For #144, the [deployed image audit](./research/issue-144-live-deployed-images-2026-11-19.md)
+records 12 live containers as real digest-pinned references; pipeline provenance, tags and deployed hardening remain unproven.

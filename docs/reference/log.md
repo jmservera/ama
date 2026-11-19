@@ -13300,3 +13300,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 189 deployed run-control verifier (Refs #189)
 
 * Added `synthetic.run_live_check` with tests and [issue-189-live-state-verifier-evidence-2026-11-18.md](research/issue-189-live-state-verifier-evidence-2026-11-18.md): live read-only check passes owner, tier, budget and alert configuration and fails recipient reachability; criterion 3 stays unproven for the demo.
+## [2026-11-19] add | Issue 144 deployed image audit (Refs #144)
+
+* Added [issue-144-live-deployed-images-2026-11-19.md](research/issue-144-live-deployed-images-2026-11-19.md) and `infra/scripts/deployed_images.py`: 12 live containers are digest-pinned; pipeline provenance and deployed hardening unproven, no criterion ticked
