@@ -13719,3 +13719,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Demo evidence bundle 9 link fix
 
 * Replaced a link to an unpublished earlier issue 142 note in [issue-142-live-20261119T1418Z-2026-11-19.md](research/issue-142-live-20261119T1418Z-2026-11-19.md) with plain text so every relative link resolves.
+## [2026-11-19] add | Issue 1818 live retained-reading re-observation (Refs #1818)
+
+* Added [issue-1818-live-20261119-2026-11-19.md](research/issue-1818-live-20261119-2026-11-19.md) with redacted retained output: read-only map, stale filter and resident sensor view; the Hub to SQL leg was not re-run and the sender and receiver fix stay off main.
