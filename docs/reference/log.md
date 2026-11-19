@@ -13682,3 +13682,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 184 live re-verification, run 7 (Refs #184)
 
 * Added [issue-184-live-r7-2026-11-19.md](research/issue-184-live-r7-2026-11-19.md) with retained outputs: read-only live and local checks; the child-closure criterion stays unproven (owner action) and no source change was made.
+## [2026-11-19] update | Issue 1844 live re-run (Refs #1844)
+
+* Appended a re-run section to [issue-1844-live-20261119-2026-11-19.md](research/issue-1844-live-20261119-2026-11-19.md): no criterion unmet for the desktop-only demo, no source change.
