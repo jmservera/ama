@@ -13386,3 +13386,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 200 live audit 3 (Refs #200)
 
 * Added [issue-200-live-20261119T0848Z-2026-11-19.md](research/issue-200-live-20261119T0848Z-2026-11-19.md) with evidence folder: read-only live probes of revision 33, per-criterion table; 3d proven by history only. No source change.
+## [2026-11-19] add | Epic 93 first unmet criterion re-check (Refs #93)
+
+* Added [issue-93-first-unmet-criterion-live-2026-11-19.md](research/issue-93-first-unmet-criterion-live-2026-11-19.md): 269 offline tests OK (45 skipped), read-only live finance probe, BRD identifier mismatch in the issue body, per-criterion table; checkpoint and child closure stay unproven.

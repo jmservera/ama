@@ -1,0 +1,4 @@
+finance rows 13 {'Received': 7, 'Exceptions': 6} on_hold 6
+{'status': 'Held', 'signal': 'Pause for human decision', 'automatic_cut': None, 'decision_owner': None}
+funding 167 {'Draft ready': 1, 'To prepare': 25, 'Not started': 141} {None: 167}
+schemas {'schemas': []}
