@@ -543,6 +543,8 @@ A [third pass](./research/simulator-run-controls-live-189-r3-2026-11-18.md) re-r
 
 A [deployed run-control verifier](./research/issue-189-live-state-verifier-evidence-2026-11-18.md) adds `synthetic.run_live_check` (code and tests) and its read-only live result: owner tag, B1 tier, USD 25 budget and both alerts pass; recipients are noreply addresses, so alert delivery stays unproven.
 
+A [fifth pass](./research/issue-189-live-r5-2026-11-19.md) runs the simulator loop live on the demo hub under an owner and a hard expiry (halt observed), matches the hub budget by resource scope in the verifier, and keeps alert delivery unproven.
+
 For #138, the [CI/CD OIDC and what-if live evidence](./research/issue-138-live-cicd-oidc-evidence-2026-11-18.md)
 records a 2026-11-18 read-only demo run: a live what-if of the real template, the post-deployment
 smoke checks against the demo API, the fail-closed environment gate and the unconfigured OIDC,

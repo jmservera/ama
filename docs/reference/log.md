@@ -13525,6 +13525,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added [issue-185-live-20261119-2026-11-19.md](research/issue-185-live-20261119-2026-11-19.md): shipped IoT Hub registry adapter provisioned and tore down three identities on a throwaway F1 hub (deleted); storage of credentials and demo-hub teardown stay unproven. No source change.
 
+## [2026-11-19] add | Issue 189 governed live run (Refs #189)
+
+* Added [issue-189-live-r5-2026-11-19.md](research/issue-189-live-r5-2026-11-19.md) with evidence folder: live run with owner and hard expiry on the demo hub, live verifier output, per-criterion table. Alert delivery stays unproven; nothing ticked.
 ## [2026-11-19] add | Issue 1837 target-size repair (Refs #1837)
 
 * Added [issue-1837-live-demo-evidence-2026-11-19.md](research/issue-1837-live-demo-evidence-2026-11-19.md) with axe evidence: the standalone routes page links `/style.css` and the browser check asserts zero target-size violations; live write and hosted checks stay unproven.

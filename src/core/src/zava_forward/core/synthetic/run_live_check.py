@@ -59,8 +59,29 @@ def _enabled(notifications: object) -> dict[str, Mapping[str, Any]]:
     }
 
 
-def _select_budget(hub_name: str, budgets: Sequence[Mapping[str, Any]]) -> Mapping[str, Any] | None:
-    named = [b for b in budgets if b.get("name") == f"budget-{hub_name}"]
+def _scoped_to(hub: Mapping[str, Any], budget: Mapping[str, Any]) -> bool:
+    flt = budget.get("filter")
+    dims = flt.get("dimensions") if isinstance(flt, Mapping) else None
+    hub_id = hub.get("id")
+    if not isinstance(dims, Mapping) or not isinstance(hub_id, str) or not hub_id:
+        return False
+    values = dims.get("values")
+    return (
+        str(dims.get("name", "")).lower() == "resourceid"
+        and str(dims.get("operator", "")).lower() == "in"
+        and isinstance(values, list)
+        and hub_id.lower() in {str(v).lower() for v in values}
+    )
+
+
+def _select_budget(
+    hub: Mapping[str, Any], budgets: Sequence[Mapping[str, Any]]
+) -> Mapping[str, Any] | None:
+    """The budget scoped to the hub resource, else the one named `budget-<hub name>`."""
+    for budget in budgets:
+        if _scoped_to(hub, budget):
+            return budget
+    named = [b for b in budgets if b.get("name") == f"budget-{hub.get('name', '')}"]
     return named[0] if named else None
 
 
@@ -71,7 +92,7 @@ def verify_live_run_controls(
     expected_sku: str | None = None,
     expected_capacity: int | None = None,
 ) -> tuple[LiveCheck, ...]:
-    """Return one result per check; the hub budget is the one named `budget-<hub name>`."""
+    """Return one result per check; the budget is the hub-scoped one, else `budget-<hub name>`."""
     checks: list[LiveCheck] = []
     tags = hub.get("tags")
     owner = tags.get("owner") if isinstance(tags, Mapping) else None
@@ -93,7 +114,7 @@ def verify_live_run_controls(
         tier_ok = capacity == expected_capacity
     checks.append(LiveCheck("hub_tier", tier_ok, f"sku {sku_name} capacity {capacity}"))
 
-    budget = _select_budget(str(hub.get("name", "")), budgets)
+    budget = _select_budget(hub, budgets)
     try:
         amount = float(budget["amount"]) if budget is not None else 0.0
     except (KeyError, TypeError, ValueError):

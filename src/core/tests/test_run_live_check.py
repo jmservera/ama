@@ -40,6 +40,22 @@ class LiveRunControlTests(unittest.TestCase):
     def test_all_pass(self) -> None:
         self.assertEqual(_failed(HUB, [_budget()], expected_sku="B1", expected_capacity=1), set())
 
+    def test_budget_selected_by_hub_scope_not_name(self) -> None:
+        hub = {
+            **HUB,
+            "id": "/subscriptions/s/resourceGroups/ama/providers/Microsoft.Devices/IotHubs/iot-x",
+        }
+        scoped = {**_budget(), "name": "other-name"}
+        scoped["filter"] = {
+            "dimensions": {"name": "ResourceId", "operator": "In", "values": [hub["id"].upper()]}
+        }
+        self.assertEqual(_failed(hub, [scoped]), set())
+        elsewhere = {
+            **scoped,
+            "filter": {"dimensions": {"name": "ResourceId", "operator": "In", "values": ["/x"]}},
+        }
+        self.assertIn("budget_cap", _failed(hub, [elsewhere]))
+
     def test_noreply_and_invalid_recipients_fail_only_reachability(self) -> None:
         for email in ("1+u@users.noreply.github.com", "a@example.invalid", "nobody"):
             self.assertEqual(_failed(HUB, [_budget(email)]), {"recipient_reachable"})
