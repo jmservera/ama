@@ -28,6 +28,26 @@ Related decisions: [ADR 0003](../../adrs/0003-journey-derived-capabilities-runti
 (capture and review-signal design), BRD FR-048/AC-090 and RULE-014, and PRD
 FR-050 with AC-066 to AC-068.
 
+## Issue 110 closure audit against main (2026-11-17, Refs #110)
+
+Assessed against `origin/main` `eb51af5c9`, tier FOCUSED, no live Azure action.
+
+| Criterion | State | Evidence on main |
+| --- | --- | --- |
+| C1 distinct IoT Hub identity, schema version, stable reading ID | Unmet | Fixture identity tests pass (`test_iot_stream.py`); no device was issued and no live stream observed. Fixture identity is not a real Hub identity. |
+| C2 append on sensor ID plus reading ID idempotently | Ticked, unchanged | `test_sensor_ingestion.py` and `test_iot_stream.py` replay cases. |
+| C3 duplicate, out-of-order, unmapped, wrong-unit, clock-skewed, uncalibrated input handled and visible | Ticked, unchanged | Owned data-quality cases in `test_iot_stream.py` and the core consumer tests. |
+| C4 no public unauthenticated ingestion endpoint | Ticked, now test-guarded | New `src/api/tests/test_no_public_ingestion_surface.py` fails if an HTTP module imports the consumer or Event Hubs SDK, or defines an ingestion-style path. Mutation check: a consumer import added to `workbench.py` failed the test; reverting it passed. Hub public network access stays `Disabled` in `infra/modules/iothub.bicep` (infra not re-tested here). |
+| C5 no device key or connection string in source or telemetry | Ticked, unchanged | `test_iot_credential_hygiene.py` passes. |
+
+Measured: `test_iot_stream`, `test_iot_credential_hygiene` and the new guard, 51 tests, OK, against the
+worktree sources. `src/core` `test_device_registry_azure` and `test_iot_device_identity_enforcement`
+fail locally with `SDK_MISSING` because the optional Azure IoT SDK is not installed here; that is an
+environment gap, not a code defect, and those results are not counted as evidence. The editable install
+of `zava-forward-api` points at the main checkout, so worktree runs need `PYTHONPATH` set to the worktree
+`src` folders. Tier, sizing, cost, network and device-credential owner decisions remain open; the issue
+stays open and partially delivered.
+
 ## Bounded streaming engineering (2026-10-27, Refs #110, #184)
 
 The [2026-10-29 bounded live exercise](../../../infra/README.md#bounded-existing-hub-exercise-2026-10-29-refs-140-184-137)
