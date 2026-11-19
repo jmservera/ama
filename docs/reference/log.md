@@ -14017,3 +14017,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 146 monitoring criteria triage (Refs #146)
 
 * Indexed [issue-146-live-triage-2026-11-19.md](research/issue-146-live-triage-2026-11-19.md): fresh read-only inventory and per-criterion status; no source change.
+## [2026-11-19] add | Issue 76 hazard clock criterion, fifth pass (Refs #76)
+
+* Added [issue-76-live-r5-2026-11-19.md](research/issue-76-live-r5-2026-11-19.md): 33 targeted tests pass; the only gap is an owner data decision for the hazard awareness time. No source change.

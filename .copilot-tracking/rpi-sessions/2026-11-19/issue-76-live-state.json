@@ -1,24 +1,53 @@
 {
- "task_id": "issue-76-live-20261119",
- "task_slug": "issue-76-live",
+ "task_id": "issue-76-live-20261119T150244Z",
+ "task_slug": "issue-76-live-r5",
  "parent_task": null,
  "mode": "automatic",
- "active_phase": "Follow-up",
+ "active_phase": "Review",
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-19-issue-76-live-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-19-issue-76-live-plan.md",
-  "details": ".copilot-tracking/details/2026-11-19-issue-76-live-details.md",
-  "critique": ".copilot-tracking/critiques/2026-11-19-issue-76-live-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-19-issue-76-live-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-19-issue-76-live-review.md"
+  "research": ".copilot-tracking/research/2026-11-19/issue-76-live-r5-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-19/issue-76-live-r5-plan.md",
+  "details": ".copilot-tracking/details/2026-11-19/issue-76-live-r5-details.md",
+  "critique": ".copilot-tracking/plans/2026-11-19/issue-76-live-r5-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-19/issue-76-live-r5-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-19/issue-76-live-r5-review.md"
  },
- "confirmed_decisions": [],
- "blockers": [],
+ "confirmed_decisions": [
+  {
+   "decision": "Research reused r4 evidence plus local test re-run",
+   "status": "done",
+   "evidence": "research file"
+  },
+  {
+   "decision": "critique executed once, approved",
+   "status": "done",
+   "evidence": ".copilot-tracking/plans/2026-11-19/issue-76-live-r5-critique.md"
+  },
+  {
+   "decision": "review executed once, conformant",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/2026-11-19/issue-76-live-r5-review.md"
+  }
+ ],
+ "blockers": [
+  {
+   "id": "hazard-aware-at",
+   "summary": "Hazard time values need owner-approved synthetic awareness timestamp",
+   "resolution": "Owner data decision"
+  }
+ ],
  "next_action": {
   "phase": "Follow-up",
-  "action": "Owner picks: seed demo data and redeploy"
+  "action": "Owner decides hazard awareness data; criterion stays unticked"
  },
- "prioritized_follow_ups": []
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Add aware_at to synthetic hazard record if owner approves",
+   "rationale": "Only remaining gap",
+   "evidence": "docs/reference/research/issue-76-live-r5-2026-11-19.md"
+  }
+ ]
 }
