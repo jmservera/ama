@@ -13417,3 +13417,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 360 live recheck (Refs #360)
 
 * Added [issue-360-live-20261119-2026-11-19.md](research/issue-360-live-20261119-2026-11-19.md) with evidence folder: read-only configuration, anonymous and staff sign-in probes; c and e unproven (owner decisions), d partly proven, browser-mode 302 noted as FULL-tier infra follow-up. No source change.
+## [2026-11-19] add | Issue 349 live round 5 (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-r5-2026-11-19.md](research/issue-349-tenant-prerequisites-live-r5-2026-11-19.md): live reproduction of round 4 plus a failed resident wrong-role probe; no source change.
