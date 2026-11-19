@@ -13676,3 +13676,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 1830 live r3 re-verification (Refs #1830)
 
 * Added [issue-1830-live-r3-2026-11-19.md](research/issue-1830-live-r3-2026-11-19.md): 54 tests pass, preflight still refuses selected execution (exit 5), reference receipt absent. No source change; no #1830 criterion ticked.
+## [2026-11-19] add | Issue 184 child stories closed (Refs #184)
+
+* Indexed [issue-184-child-stories-demo-2026-11-19.md](research/issue-184-child-stories-demo-2026-11-19.md): all five sub-issues of #184 are closed as completed (5 of 5); no source change, no live Azure action, other criteria not re-run.
