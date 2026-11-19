@@ -14078,3 +14078,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 1259 live third audit (Refs #1259)
 
 * Added [2026-11-19-ranking-archive-unusable-1259-live-r3.md](research/2026-11-19-ranking-archive-unusable-1259-live-r3.md): fresh red-before output (seven failures on the pre-fix source), green output (110 tests) and a per-criterion table; the FULL receipt, independent assessment and hosted-check gates stay unmet.
+## [2026-11-19] add | Issue 121 live criteria re-observation (Refs #121)
+
+* Added [issue-121-live-20261119-2026-11-19.md](research/issue-121-live-20261119-2026-11-19.md): source register and 71 offline tests re-run, deployed digest unchanged; no source-closable gap, redeploy and owner approvals remain outside the demo brief.
