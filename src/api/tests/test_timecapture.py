@@ -538,5 +538,21 @@ class SharedStoreTests(unittest.TestCase):
             self.assertEqual(len(fresh.mine(SAM)), 1)
 
 
+class DecisionRecordTests(unittest.TestCase):
+    def test_adr_decision_7_names_the_controls_the_code_enforces(self):
+        root = Path(__file__).resolve().parents[3]
+        adr = (root / "docs/adrs/0002-pilot-readiness-architecture.md").read_text(encoding="utf-8")
+        section = adr.split("### 7. Staff time capture gated on DPIA", 1)[1].split("\n## ", 1)[0]
+        code = (Path(__file__).resolve().parents[1] / "src/zava_forward/api/timecapture.py").read_text(encoding="utf-8")
+        server = (Path(__file__).resolve().parents[1] / "src/zava_forward/api/server.py").read_text(encoding="utf-8")
+        for name in ("ZF_TIME_NOTICE_APPROVED", "ZF_TIME_NOTICE_VERSION", "ZF_TIME_CONSULTATION", "DPIA_APPROVED"):
+            self.assertIn(name, code)
+            self.assertIn(name, section)
+        for route in ("/api/time/request-enable", "/api/time/enable", "/api/time/acknowledge"):
+            self.assertIn(route, server)
+            self.assertIn(route, section)
+        self.assertIn("different roles", section)
+
+
 if __name__ == "__main__":
     unittest.main()
