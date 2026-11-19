@@ -519,6 +519,8 @@ lands that fix as a local candidate with a per-criterion proven or unproven tabl
 The [2026-11-19 retained-reading re-observation](./research/issue-1818-live-20261119-2026-11-19.md)
 records a read-only desktop check of the deployed map, stale filter and resident `#sec-sensors` with
 redacted output kept in the repository; the Hub to SQL leg was not re-run.
+The [round r3 re-observation](./research/issue-1818-live-r3-20261119-2026-11-19.md) repeats the read-only check
+at 14:14 UTC with the same result; the Hub to SQL send leg stays unproven from `main`.
 For #2008, the [synthetic demo workbook and import evidence](./research/issue-2008-demo-workbook-import-evidence-2026-11-18.md)
 adds a generated `.xlsx` (generator in `tools/`), its local row-level preview and a run of the deployed CSV check
 with the staff test sign-in; conflicts show only locally because the web screen reads CSV only. No source change.
