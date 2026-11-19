@@ -1,7 +1,7 @@
-# Research: issue 432 (live demo run)
+# Issue 432 live research (2026-11-19)
 
-Date: 2026-11-19. Disposition: executed (issue read only).
+Disposition: executed. Source: `gh issue view 432` body, retrieved 2026-11-19.
 
-Issue #432 (state CLOSED, read with `gh issue view 432`) lists nine acceptance criteria. All nine are ticked `[x]`; the Azure billing reconciliation criterion is ticked as "Deferred to production (#1908, owner decision 2026-11-18)".
+Finding: the issue has 9 acceptance criteria and 0 unticked (`grep -c '^- \[ \]'` returned 0). The billing reconciliation criterion is ticked as "Deferred to production (#1908, owner decision 2026-11-18)".
 
-Result: no unticked criterion, so no unmet DEMO criterion exists. Planning Readiness: Ready (no source change).
+Planning Readiness: Ready (no buildable or provable criterion remains).

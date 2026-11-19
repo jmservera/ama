@@ -1,0 +1,6 @@
+{"task_id":"issue-2008-live-20261119T141232Z","task_slug":"issue-2008-live","parent_task":null,"mode":"automatic","active_phase":"Follow-up","status":"completed","session_status":"stopped",
+"artifact_paths":{"research":".copilot-tracking/research/2026-11-19-issue-2008-live-20261119T141232Z-research.md","plan":".copilot-tracking/plans/2026-11-19-issue-2008-live-20261119T141232Z-plan.md","details":".copilot-tracking/details/2026-11-19-issue-2008-live-20261119T141232Z-details.md","critique":".copilot-tracking/critiques/2026-11-19-issue-2008-live-20261119T141232Z-critique.md","changes":".copilot-tracking/changes/2026-11-19-issue-2008-live-20261119T141232Z-changes.md","review":".copilot-tracking/reviews/2026-11-19-issue-2008-live-20261119T141232Z-review.md"},
+"confirmed_decisions":[{"decision":"critique and review each executed once; accepted","status":"done","evidence":"artifacts above"}],
+"blockers":[{"id":"B1","summary":"criterion 3 remainder needs src/api change and redeploy","resolution":"later user-selected full-tier work"}],
+"next_action":{"phase":"Follow-up","action":"none; stopped"},
+"prioritized_follow_ups":[{"rank":1,"task":"xlsx web import surface (#80)","rationale":"closes criterion 3","evidence":"2026-11-18 evidence note"}]}

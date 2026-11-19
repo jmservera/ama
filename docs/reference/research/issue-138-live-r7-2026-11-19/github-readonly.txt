@@ -1,0 +1,15 @@
+## repo variables
+["GH_AW_DEFAULT_MAX_DAILY_AI_CREDITS"]
+## secrets
+["COPILOT_GITHUB_TOKEN"]
+## environments (name, protection rules, admin bypass)
+copilot	0	true
+dev-plan	0	true
+pilot-plan	0	true
+test-plan	0	true
+## runners
+0
+## src-deploy runs
+0
+## infra-plan latest 100 run conclusions
+{"skipped":100}

@@ -1,0 +1,1 @@
+# Critique (executed once): plan is compatible with owner decisions. Changing storage network rules or ZF_SCANNER on the app is outside the cap on "no production changes/security change" and takes FULL tier; so the plan correctly stops. Verdict: compatible, no changes.

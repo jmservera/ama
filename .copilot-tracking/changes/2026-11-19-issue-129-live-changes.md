@@ -1,17 +1,11 @@
----
-title: Issue 129 changes
-ms.date: 2026-11-19
----
+# Issue 129 live changes, 2026-11-19
 
-# Changes
+No source, docs or test changes. Refs #129. Tier: FOCUSED; no mypy, ruff or unit tests apply (no code touched).
 
-Docs only; no source edits; FOCUSED tier. Refs #129.
+| Criterion | Status | Basis |
+| --- | --- | --- |
+| Bundles: story once, pre-visit pack, change impact and evidence reuse, accessible handover and aftercare, review-ready funding evidence | Ticked in issue; not re-run | Protocol and learning_test_bundles.py in src/core |
+| O10 and O18 to O20 stay out of scope | Ticked in issue; not re-run | Protocol scope section |
+| Atlas owner confirms bundle to opportunity mapping | Unproven | Needs the named atlas owner; mapping unconfirmed in protocol and ADR 0003; not waived by 2026-11-18 owner decisions; no live Azure or browser proof applies |
 
-| Criterion | Status |
-| --- | --- |
-| Five bundles defined | Proven earlier (ticked), unchanged |
-| O10 and O18 to O20 out of scope | Proven earlier (ticked), unchanged |
-| Atlas owner confirms bundle to opportunity mapping | Unproven; human decision, cannot be proven for the demo |
-
-Files: docs/reference/research/issue-129-live-r4-2026-11-19.md (new), docs/reference/README.md, docs/reference/log.md.
-Validation: link check and diff review (below).
+Every remaining criterion needs a human, so nothing was built. Live Azure and Playwright were not used.

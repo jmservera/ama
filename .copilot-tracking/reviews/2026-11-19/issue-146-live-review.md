@@ -1,0 +1,2 @@
+# Review: issue 146 live (2026-11-19)
+Executed once. Outcome: conformant for a docs-only triage. Boundary: three docs files. Links resolve (same directory); claims match the 2026-11-18 evidence and the fresh inventory. Routed follow-up: align the job-failure rule to Total aggregation under the FULL tier and retest on a fresh failure. No criterion ticked. Independent review and hosted CI outstanding.

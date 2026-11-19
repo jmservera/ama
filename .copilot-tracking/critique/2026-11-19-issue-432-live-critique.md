@@ -1,3 +1,3 @@
-# Critique: issue 432 (live demo run)
+# Issue 432 critique (2026-11-19)
 
-Executed once. Verdict: proceed. The plan is the smallest action consistent with the owner instruction to stop when no criterion is unmet. Risk: the issue ticks could overstate delivery; verifying delivered evidence is outside this task's brief and is not claimed.
+Executed once. Verdict: no-op plan is sound. Re-ticking or rebuilding ticked criteria would duplicate shipped work; the deferred billing criterion is owner-excluded from the demo. No finding conflicts with a confirmed decision.
