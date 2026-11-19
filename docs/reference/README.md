@@ -478,7 +478,9 @@ records a 2026-11-18 offline and synthetic-data run: nomination, endpoint, dicti
 constraint rules proven in code, and the three unticked criteria stated as needing sponsor, owner
 workshops and an approved company extract. The [second live pass](./research/issue-124-live-r2-phase0-discovery-audit-2026-11-18.md)
 re-runs the tests and probe, finds no consumer or deployed surface for the discovery modules, and
-restates the owner-only items without ticking any criterion.
+restates the owner-only items without ticking any criterion. The
+[third live pass](./research/issue-124-live-r3-phase0-discovery-audit-2026-11-19.md) repeats the checks
+against newer demo revisions with the same result.
 For #125, the [live discovery assistant evidence](./research/issue-125-live-discovery-assistant-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: no assistant route on the live API, deny-by-default boundary output,
 and all three criteria left open with the reason each cannot be fully proven for the demo.
