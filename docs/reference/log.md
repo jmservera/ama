@@ -13403,3 +13403,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Epic 149 first unmet demo criterion (Refs #149)
 
 * Added [issue-149-first-unmet-demo-criterion-2026-11-19.md](research/issue-149-first-unmet-demo-criterion-2026-11-19.md): criterion 1 (#440 checkpoint) is first unmet and not code-satisfiable; live GitHub and Azure reads, 48 local UX baseline tests, per-criterion table, no source change.
+## [2026-11-19] add | Issue 154 live round 5 (Refs #154)
+
+* Added [issue-154-live-resident-ux-r5-2026-11-19.md](research/issue-154-live-resident-ux-r5-2026-11-19.md): only criterion 5b is unticked and is out of demo scope; live app lacks the representative grants variable. No source change.
