@@ -14047,3 +14047,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 184 child stories live re-check (Refs #184)
 
 * Added [issue 184 child stories, live re-check](research/issue-184-child-stories-live-2026-11-19.md): sub-issues #185 to #189 all closed as completed (5 of 5); checkbox left for the owner. Indexed in the README.
+
+## [2026-11-19] add | Issue 202 live re-observation
+
+* Appended an addendum to [issue 202 mvp workflow retirement](research/2026-11-19-issue-202-mvp-workflow-retirement.md): `mainprotect` required checks list is empty; workflow removal still needs the FULL tier. Evidence only.

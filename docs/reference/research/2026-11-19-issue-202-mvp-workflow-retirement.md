@@ -27,3 +27,7 @@ Deleting the two workflows edits workflow files, a gate tool with pinned hashes 
 | Rubric registry PR merged first | Ticked in issue | Not re-proven |
 | Old workflows removed or replaced, protection updated | Unproven (blocked) | FULL tier needed; protection change out of scope; no required check references them |
 | No tracked file under `mvp/` | Ticked; re-observed absent | `ls mvp` fails |
+
+## Addendum, 2026-11-19 re-observation
+
+The active `mainprotect` ruleset carries a `required_status_checks` rule whose list is empty (`gh api repos/jmservera/ama/rulesets/<id>`), and `main` has no classic protection (HTTP 404). No required check names `mvp-ci` or `mvp-validation`, so nothing needs repointing. Removing the two workflow files still edits pinned-hash gate tooling and needs the FULL tier with an external receipt, so the criterion stays unticked. Working files: `.copilot-tracking/research/2026-11-19-issue-202-live-research-r2.md`.
