@@ -13438,3 +13438,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 1258 criteria proof (Refs #1258)
 
 * Added [2026-11-19-ranking-archive-ancestor-durability-1258-live.md](research/2026-11-19-ranking-archive-ancestor-durability-1258-live.md): per-criterion table; criteria 1 to 4 proven by 57 passing tests, criterion 5 unproven for the demo. No source change.
+## [2026-11-19] add | Issue 184 live re-verification, run 6 (Refs #184)
+
+* Added [issue-184-live-r6-2026-11-19.md](research/issue-184-live-r6-2026-11-19.md) with retained outputs: read-only live and local checks; the child-closure criterion stays unproven (owner action) and no source change was made.
